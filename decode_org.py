@@ -15,7 +15,7 @@ def createfile(filepath):
 
 convertedout = 'orgout'
 
-orgfile = open('MURA', 'rb')
+orgfile = open('GRAVITY', 'rb')
 
 file_header_orgtype = orgfile.read(6)
 orgtype = 0
@@ -108,11 +108,10 @@ def orgnl2outnl(orgnotelist):
     return notelist
 
 def parsetrack(notelist, trackid):
-    nlplacementtable = [[0,notelist,{}]]
     trackdata_json = {}
     if notelist != []:
         trackdata_json = _func_instrument.init_instrument_trackdataCONVPROJ()
-        trackdata_json['placements'] = _func_instrument.nlplacementsTABLE_to_nlplacementsCONVPROJ(nlplacementtable)
+        trackdata_json['notelist'] = _func_instrument.notelistTABLE_to_notelistCONVPROJ(notelist)
         trackdata_json['name'] = trackid
         tracklist.append(trackdata_json)
     return trackdata_json
@@ -136,11 +135,12 @@ parsetrack(orgnl2outnl(orgnotestable_perc7), 'perc7')
 parsetrack(orgnl2outnl(orgnotestable_perc8), 'perc8')
 
 json_root = {}
+json_root['datatype'] = 'otsn'
 json_root['mastervol'] = 1.0
 json_root['timesig_numerator'] = 4
 json_root['timesig_denominator'] = 4
 json_root['bpm'] = tempo
 json_root['tracks'] = tracklist
 
-with open('proj.json', 'w') as outfile:
+with open('proj.conv_otsn', 'w') as outfile:
         outfile.write(json.dumps(json_root, indent=2))

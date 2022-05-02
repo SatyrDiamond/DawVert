@@ -79,11 +79,14 @@ def lmms_encode_tracks(xmltag, json_tracks):
 		lmms_encode_inst_track(xml_track, json_singletrack)
 
 
-with open('proj.json', 'r') as progfile:
+with open('proj.conv_otmn', 'r') as progfile:
 		json_proj = json.loads(progfile.read())
 
-json_tracks = json_proj['tracks']
+if json_proj['datatype'] != 'otmn':
+	print("not an otmn convprojjson")
+	exit
 
+json_tracks = json_proj['tracks']
 xml_proj = ET.Element("lmms-project")
 xml_proj.set('type', "song")
 xml_head = ET.SubElement(xml_proj, "head")

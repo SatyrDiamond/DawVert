@@ -57,7 +57,9 @@ def lmms_decode_inst_track(trackxml):
 	trackjson['pan'] = hundredto1(trackxml_insttr.get('pan'))
 	trackjson['vol'] = hundredto1(trackxml_insttr.get('vol'))
 	trackjson_instdata['usemasterpitch'] = int(trackxml_insttr.get('usemasterpitch'))
-	trackjson_instdata['pitch'] = int(trackxml_insttr.get('pitch'))
+	trackjson_instdata['pitch'] = 0
+	if trackxml_insttr.get('pitch') != None:
+		trackjson_instdata['pitch'] = float(trackxml_insttr.get('pitch'))
 	trackjson_instdata['basenote'] = int(trackxml_insttr.get('basenote')) + 3
 	trackxml_chordcreator = trackxml_insttr.findall('chordcreator')[0]
 	trackjson_instdata['chordcreator'] = {}
@@ -87,7 +89,7 @@ def lmms_decode_tracks(tracksxml):
 			tracklist.append(lmms_decode_inst_track(trackxml))
 	return tracklist
 
-tree = ET.parse('test.mmp').getroot()
+tree = ET.parse('Future House(stock plugins).mmp').getroot()
 headxml = tree.findall('head')[0]
 tracksxml = tree.findall('song/trackcontainer/track')
 

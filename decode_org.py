@@ -96,7 +96,7 @@ def orgnl2outnl(orgnotelist):
 
         pre_note = orgnote[1]
         if 0 <= pre_note <= 95:
-            note = pre_note
+            note = pre_note + 12
         duration = (orgnote[2] / 4) * notetime
         pre_volume = orgnote[3]
         if 0 <= pre_volume <= 254:

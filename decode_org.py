@@ -15,7 +15,7 @@ def createfile(filepath):
 
 convertedout = 'orgout'
 
-orgfile = open('CURLY', 'rb')
+orgfile = open('MURA', 'rb')
 
 file_header_orgtype = orgfile.read(6)
 orgtype = 0
@@ -37,12 +37,13 @@ print("Loop Beginning: " + str(loop_beginning))
 loop_end = int.from_bytes(orgfile.read(4), "little")
 print("Loop End: " + str(loop_end))
 org_instrumentinfotable = []
+
 for x in range(16):
     pitch = int.from_bytes(orgfile.read(2), "little")
     Instrument = int.from_bytes(orgfile.read(1), "little")
     disable_sustaining_notes = int.from_bytes(orgfile.read(1), "little")
     number_of_notes = int.from_bytes(orgfile.read(2), "little")
-    print("note - pitch = " + str(pitch), end=" ")
+    print("pitch = " + str(pitch), end=" ")
     print("| Instrument = " + str(Instrument), end=" ")
     print("| disable_sustaining_notes = " + str(disable_sustaining_notes), end=" ")
     print("| number_of_notes = " + str(number_of_notes))
@@ -108,28 +109,31 @@ def orgnl2outnl(orgnotelist):
 
 def parsetrack(notelist, trackid):
     nlplacementtable = [[0,notelist,{}]]
-    trackdata_json = _func_instrument.init_instrument_trackdataCONVPROJ()
-    trackdata_json['placements'] = _func_instrument.nlplacementsTABLE_to_nlplacementsCONVPROJ(nlplacementtable)
-    trackdata_json['name'] = trackid
+    trackdata_json = {}
+    if notelist != []:
+        trackdata_json = _func_instrument.init_instrument_trackdataCONVPROJ()
+        trackdata_json['placements'] = _func_instrument.nlplacementsTABLE_to_nlplacementsCONVPROJ(nlplacementtable)
+        trackdata_json['name'] = trackid
+        tracklist.append(trackdata_json)
     return trackdata_json
 
 tracklist = []
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_note1), 'note1'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_note2), 'note2'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_note3), 'note3'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_note4), 'note4'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_note5), 'note5'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_note6), 'note6'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_note7), 'note7'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_note8), 'note8'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_perc1), 'perc1'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_perc2), 'perc2'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_perc3), 'perc3'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_perc4), 'perc4'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_perc5), 'perc5'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_perc6), 'perc6'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_perc7), 'perc7'))
-tracklist.append(parsetrack(orgnl2outnl(orgnotestable_perc8), 'perc8'))
+parsetrack(orgnl2outnl(orgnotestable_note1), 'note1')
+parsetrack(orgnl2outnl(orgnotestable_note2), 'note2')
+parsetrack(orgnl2outnl(orgnotestable_note3), 'note3')
+parsetrack(orgnl2outnl(orgnotestable_note4), 'note4')
+parsetrack(orgnl2outnl(orgnotestable_note5), 'note5')
+parsetrack(orgnl2outnl(orgnotestable_note6), 'note6')
+parsetrack(orgnl2outnl(orgnotestable_note7), 'note7')
+parsetrack(orgnl2outnl(orgnotestable_note8), 'note8')
+parsetrack(orgnl2outnl(orgnotestable_perc1), 'perc1')
+parsetrack(orgnl2outnl(orgnotestable_perc2), 'perc2')
+parsetrack(orgnl2outnl(orgnotestable_perc3), 'perc3')
+parsetrack(orgnl2outnl(orgnotestable_perc4), 'perc4')
+parsetrack(orgnl2outnl(orgnotestable_perc5), 'perc5')
+parsetrack(orgnl2outnl(orgnotestable_perc6), 'perc6')
+parsetrack(orgnl2outnl(orgnotestable_perc7), 'perc7')
+parsetrack(orgnl2outnl(orgnotestable_perc8), 'perc8')
 
 json_root = {}
 json_root['mastervol'] = 1.0
@@ -138,5 +142,5 @@ json_root['timesig_denominator'] = 4
 json_root['bpm'] = tempo
 json_root['tracks'] = tracklist
 
-with open('out.json', 'w') as outfile:
+with open('proj.json', 'w') as outfile:
         outfile.write(json.dumps(json_root, indent=2))

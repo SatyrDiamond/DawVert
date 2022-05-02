@@ -94,11 +94,12 @@ headxml = tree.findall('head')[0]
 tracksxml = tree.findall('song/trackcontainer/track')
 
 json_root = {}
+json_root['datatype'] = 'otmn'
 json_root['mastervol'] = float(hundredto1(headxml.get('mastervol')))
 json_root['timesig_numerator'] = int(headxml.get('timesig_numerator'))
 json_root['timesig_denominator'] = int(headxml.get('timesig_denominator'))
 json_root['bpm'] = int(headxml.get('bpm'))
 json_root['tracks'] = lmms_decode_tracks(tracksxml)
 
-with open('proj.json', 'w') as outfile:
+with open('proj.conv_otmn', 'w') as outfile:
         outfile.write(json.dumps(json_root, indent=2))

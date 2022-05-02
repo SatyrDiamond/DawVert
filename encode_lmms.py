@@ -22,6 +22,14 @@ def lmms_encode_notelist(xmltag, table_notelist):
 		xml_pattern.set('len', str(int(round(duration))))
 		xml_pattern.set('vol', str(vol))
 
+def lmms_encode_plugin(xmltag, json_singletrack):
+	pluginname = json_singletrack['instrumentdata']['plugin']
+	if pluginname == 'none':
+		xml_instrumentpreplugin = ET.SubElement(xmltag, "instrument")
+		xml_instrumentpreplugin.set('name', "tripleoscillator")
+	else:
+		xml_instrumentpreplugin = ET.SubElement(xmltag, "instrument")
+		xml_instrumentpreplugin.set('name', "tripleoscillator")
 
 def lmms_encode_inst_track(xmltag, json_singletrack):
 	xmltag.set('solo', "0")
@@ -47,6 +55,8 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
 		xml_instrumenttrack.set('pan', str(oneto100(json_singletrack['pan'])))
 	if json_singletrack['vol'] is not None:
 		xml_instrumenttrack.set('vol', str(oneto100(json_singletrack['vol'])))
+	lmms_encode_plugin(xml_instrumenttrack, json_singletrack)
+
 	#placements
 	json_placementlist = json_singletrack['placements']
 	table_placementlist = _func_instrument.nlplacementsCONVPROJ_to_nlplacementsTABLE(json_placementlist)
@@ -58,7 +68,7 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
 		xml_pattern.set('pos', str(int(table_placement[0] * 48)))
 		xml_pattern.set('muted', "0")
 		xml_pattern.set('steps', "16")
-		xml_pattern.set('name', "untitled")
+		xml_pattern.set('name', "")
 		xml_pattern.set('type', "1")
 		lmms_encode_notelist(xml_pattern, table_notelist)
 		tracksnum += 1
@@ -69,7 +79,7 @@ def lmms_encode_tracks(xmltag, json_tracks):
 		lmms_encode_inst_track(xml_track, json_singletrack)
 
 
-with open('org.json', 'r') as progfile:
+with open('proj.json', 'r') as progfile:
 		json_proj = json.loads(progfile.read())
 
 json_tracks = json_proj['tracks']

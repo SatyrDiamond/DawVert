@@ -15,7 +15,7 @@ def createfile(filepath):
 
 convertedout = 'orgout'
 
-orgfile = open('MURA', 'rb')
+orgfile = open('CURLY', 'rb')
 
 file_header_orgtype = orgfile.read(6)
 orgtype = 0
@@ -27,10 +27,11 @@ elif orgtype == b'Org-03':
     print("Organya Type: 3")
 tempo = int.from_bytes(orgfile.read(2), "little")
 print("Tempo: " + str(tempo))
-numerator = int.from_bytes(orgfile.read(1), "little")
-print("Numerator: " + str(numerator))
-denominator = int.from_bytes(orgfile.read(1), "little")
-print("Denominator: " + str(denominator))
+Steps_Per_Bar = int.from_bytes(orgfile.read(1), "little")
+print("Steps Per Bar: " + str(Steps_Per_Bar))
+Beats_per_Step = int.from_bytes(orgfile.read(1), "little")
+print("Beats per Step: " + str(Beats_per_Step))
+notetime = Steps_Per_Bar / Beats_per_Step
 loop_beginning = int.from_bytes(orgfile.read(4), "little")
 print("Loop Beginning: " + str(loop_beginning))
 loop_end = int.from_bytes(orgfile.read(4), "little")
@@ -59,7 +60,7 @@ def parse_orgtrack(instrumentinfotable_input, trackid):
         orgnotelist[x][1] = org_note 
     for x in range(org_numofnotes): #duration
         org_duration = int.from_bytes(orgfile.read(1), "little")
-        orgnotelist[x][2] = org_duration 
+        orgnotelist[x][2] = org_duration
     for x in range(org_numofnotes): #volume
         org_volume = int.from_bytes(orgfile.read(1), "little")
         orgnotelist[x][3] = org_volume
@@ -90,12 +91,12 @@ def orgnl2outnl(orgnotelist):
     notelist = []
     for currentnote in range(len(orgnotelist)):
         orgnote = orgnotelist[currentnote]
-        position = orgnote[0] / 4
+        position = (orgnote[0] / 4) * notetime
 
         pre_note = orgnote[1]
         if 0 <= pre_note <= 95:
             note = pre_note
-        duration = orgnote[2] / 4
+        duration = (orgnote[2] / 4) * notetime
         pre_volume = orgnote[3]
         if 0 <= pre_volume <= 254:
             volume = pre_volume / 254
@@ -132,10 +133,10 @@ tracklist.append(parsetrack(orgnl2outnl(orgnotestable_perc8), 'perc8'))
 
 json_root = {}
 json_root['mastervol'] = 1.0
-json_root['timesig_numerator'] = numerator
-json_root['timesig_denominator'] = denominator
+json_root['timesig_numerator'] = 4
+json_root['timesig_denominator'] = 4
 json_root['bpm'] = tempo
 json_root['tracks'] = tracklist
 
-with open('org.json', 'w') as outfile:
+with open('out.json', 'w') as outfile:
         outfile.write(json.dumps(json_root, indent=2))

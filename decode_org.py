@@ -2,6 +2,12 @@ import _func_instrument
 from configparser import ConfigParser
 import os
 import json
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("orgfile")
+
+args = parser.parse_args()
 
 def createfolder(filepath):
     isExist = os.path.exists(filepath)
@@ -15,7 +21,7 @@ def createfile(filepath):
 
 convertedout = 'orgout'
 
-orgfile = open('GRAVITY', 'rb')
+orgfile = open(args.orgfile, 'rb')
 
 file_header_orgtype = orgfile.read(6)
 orgtype = 0
@@ -93,14 +99,16 @@ def orgnl2outnl(orgnotelist):
     for currentnote in range(len(orgnotelist)):
         orgnote = orgnotelist[currentnote]
         position = (orgnote[0] / 4) * notetime
-
+        #note = 60
         pre_note = orgnote[1]
         if 0 <= pre_note <= 95:
             note = pre_note + 12
         duration = (orgnote[2] / 4) * notetime
+        #volume = 1.0
         pre_volume = orgnote[3]
         if 0 <= pre_volume <= 254:
             volume = pre_volume / 254
+        #pan = 0.0
         pre_pan = orgnote[4]
         if 0 <= pre_pan <= 12:
             pan = (pre_pan - 6) / 6

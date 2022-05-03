@@ -3,7 +3,7 @@ import _func_instrument
 import _func_audio
 import json
 
-print('--- LMMS to ConvJson OTMN ---')
+print('--- LMMS to ConvJsonOTMN ---')
 
 def hundredto1(input):
 	return float(input) * 0.01

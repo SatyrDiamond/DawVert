@@ -89,7 +89,7 @@ def lmms_decode_tracks(tracksxml):
 			tracklist.append(lmms_decode_inst_track(trackxml))
 	return tracklist
 
-tree = ET.parse('Future House(stock plugins).mmp').getroot()
+tree = ET.parse('test.mmp').getroot()
 headxml = tree.findall('head')[0]
 tracksxml = tree.findall('song/trackcontainer/track')
 

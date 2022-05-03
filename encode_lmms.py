@@ -1,6 +1,12 @@
 import json
 import xml.etree.ElementTree as ET 
 import _func_instrument
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("lmmsout")
+
+args = parser.parse_args()
 
 def onetime2lmmstime(input):
 	return int(round(float(input * 48)))
@@ -111,6 +117,5 @@ lmms_encode_tracks(xml_trackcontainer, json_tracks)
 
 outfile = ET.ElementTree(xml_proj)
 
-
 ET.indent(outfile)
-outfile.write('out.mmp', encoding='unicode')
+outfile.write(args.lmmsout, encoding='unicode')

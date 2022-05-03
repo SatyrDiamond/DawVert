@@ -1,15 +1,9 @@
 import json
 
-def notelist_getduration(notelistTABLE):
-	notelistdurationfinal = 0
-	for x in notelistTABLE:
-		notelistduration = x[0] + x[1]
-		if notelistduration > notelistdurationfinal:
-			notelistdurationfinal = notelistduration
-	return notelistdurationfinal
-
 def notelistTABLE_to_notelistCONVPROJ(notelistTABLE):
+	print('notelist (TABLE to CONVPROJ) started', end=' ')
 	notelist_table2json = []
+	printnotes = 0
 	for notelist_table2json_note in notelistTABLE:
 		outputjson = {}
 		outputjson['position'] = notelist_table2json_note[0]
@@ -18,9 +12,13 @@ def notelistTABLE_to_notelistCONVPROJ(notelistTABLE):
 		outputjson['vol'] = notelist_table2json_note[3]
 		outputjson['pan'] = notelist_table2json_note[4]
 		notelist_table2json.append(outputjson)
+		printnotes += 1
+	print(str(printnotes) + ' notes')
 	return notelist_table2json
 
 def notelistCONVPROJ_to_notelistTABLE(notelistCONVPROJ):
+	print('notelist (CONVPROJ to TABLE):', end=' ')
+	printnotes = 0
 	notelist_json2table = []
 	json_notelistinput_tmp = json.dumps(notelistCONVPROJ)
 	for notelist_json2table_note in json.loads(json_notelistinput_tmp):
@@ -36,18 +34,27 @@ def notelistCONVPROJ_to_notelistTABLE(notelistCONVPROJ):
 		del extravalue["vol"]
 		del extravalue["pan"]
 		notelist_json2table.append([position,duration,key,vol,pan,extravalue])
+		printnotes += 1
+	print(str(printnotes) + ' notes')
 	return notelist_json2table
 
 def nlplacementsTABLE_to_nlplacementsCONVPROJ(nlplacementsTABLE):
+	print('nlplacements (TABLE to ONVPROJ) started')
+	printnotes = 0
 	nlplacements_table2json = []
 	for nlplacements_table2json_notelist in nlplacementsTABLE:
 		outputjson = {}
 		outputjson['startat'] = nlplacements_table2json_notelist[0]
 		outputjson['notelist'] = notelistTABLE_to_notelistCONVPROJ(nlplacements_table2json_notelist[1])
 		nlplacements_table2json.append(outputjson)
+		printnotes += 1
+	print('nlplacements (TABLE to ONVPROJ): ' + str(printnotes) + ' placements')
 	return nlplacements_table2json
 
 def nlplacementsCONVPROJ_to_nlplacementsTABLE(nlplacementsCONVPROJ):
+	print('')
+	print('nlplacements (TABLE to ONVPROJ) started')
+	printnotes = 0
 	nlplacements_json2table = []
 	jsonnlplacementsinput_tmp = json.dumps(nlplacementsCONVPROJ)
 	for nlplacements_json2table_note in json.loads(jsonnlplacementsinput_tmp):
@@ -57,6 +64,8 @@ def nlplacementsCONVPROJ_to_nlplacementsTABLE(nlplacementsCONVPROJ):
 		del extravalue["startat"]
 		del extravalue["notelist"]
 		nlplacements_json2table.append([startat,notelist,extravalue])
+		printnotes += 1
+	print('nlplacements (TABLE to ONVPROJ) ended: ' + str(printnotes) + ' placements')
 	return nlplacements_json2table
 
 def init_instrument_trackdataCONVPROJ():

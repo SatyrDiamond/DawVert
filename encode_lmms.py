@@ -15,14 +15,14 @@ def onetime2lmmstime(input):
 def oneto100(input):
 	return round(float(input) * 100)
 
-def lmms_encode_notelist(xmltag, table_notelist):
-	for table_note in table_notelist:
+def lmms_encode_notelist(xmltag, json_notelist):
+	for json_note in json_notelist:
 		xml_pattern = ET.SubElement(xmltag, "note")
-		key = table_note[2]
-		position = int(round(float(table_note[0]) * 48))
-		pan = oneto100(table_note[4])
-		duration = int(round(float(table_note[1]) * 48))
-		vol = oneto100(table_note[3])
+		key = json_note['key']
+		position = int(round(float(json_note['position']) * 48))
+		pan = oneto100(json_note['pan'])
+		duration = int(round(float(json_note['duration']) * 48))
+		vol = oneto100(json_note['vol'])
 		xml_pattern.set('key', str(key))
 		xml_pattern.set('pos', str(int(round(position))))
 		xml_pattern.set('pan', str(pan))
@@ -66,18 +66,17 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
 
 	#placements
 	json_placementlist = json_singletrack['placements']
-	table_placementlist = _func_instrument.nlplacementsCONVPROJ_to_nlplacementsTABLE(json_placementlist)
 	tracksnum = 0
-	while tracksnum <= len(table_placementlist)-1:
-		table_placement = table_placementlist[tracksnum-1]
-		table_notelist = table_placement[1]
+	while tracksnum <= len(json_placementlist)-1:
+		json_placement = json_placementlist[tracksnum-1]
+		json_notelist = json_placement['notelist']
 		xml_pattern = ET.SubElement(xmltag, "pattern")
-		xml_pattern.set('pos', str(int(table_placement[0] * 48)))
+		xml_pattern.set('pos', str(int(json_placement['position'] * 48)))
 		xml_pattern.set('muted', "0")
 		xml_pattern.set('steps', "16")
 		xml_pattern.set('name', "")
 		xml_pattern.set('type', "1")
-		lmms_encode_notelist(xml_pattern, table_notelist)
+		lmms_encode_notelist(xml_pattern, json_notelist)
 		tracksnum += 1
 
 
@@ -99,14 +98,12 @@ def lmms_encode_audio_track(xmltag, json_singletrack):
 
 	#placements
 	json_placementlist = json_singletrack['placements']
-	table_placementlist = _func_audio.audioplacementsCONVPROJ_to_audioplacementsTABLE(json_placementlist)
-	while tracksnum <= len(table_placementlist)-1:
-		table_placement = table_placementlist[tracksnum-1]
-		table_notelist = table_placement[1]
+	while tracksnum <= len(json_placementlist)-1:
+		json_placement = json_placementlist[tracksnum-1]
 		xml_pattern = ET.SubElement(xmltag, "sampletco")
-		xml_pattern.set('pos', str(int(round(table_placement[0] * 48))))
-		xml_pattern.set('len', str(int(round(table_placement[1] * 48))))
-		xml_pattern.set('src', str(table_placement[2]))
+		xml_pattern.set('pos', str(int(round(json_placement['position'] * 48))))
+		xml_pattern.set('len', str(int(round(json_placement['duration'] * 48))))
+		xml_pattern.set('src', str(json_placement['file']))
 		tracksnum += 1
 
 def lmms_encode_tracks(xmltag, json_tracks):

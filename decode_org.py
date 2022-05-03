@@ -1,10 +1,13 @@
 import _func_instrument
-from configparser import ConfigParser
 import os
 import json
 import argparse
 
+print('--- Organya to ConvJsonOTSN ---')
+
 parser = argparse.ArgumentParser()
+parser.add_argument("notesizedivision")
+parser.add_argument("tempomultiply")
 parser.add_argument("orgfile")
 
 args = parser.parse_args()
@@ -19,19 +22,17 @@ def createfile(filepath):
     if not isExist:
         open(filepath, 'a').close()
 
+notesizedivision = args.notesizedivision
+
 convertedout = 'orgout'
 
 orgfile = open(args.orgfile, 'rb')
 
+tempomultiply = args.tempomultiply
+
 file_header_orgtype = orgfile.read(6)
-orgtype = 0
-if orgtype == b'Org-02':
-    orgtype = 2
-    print("Organya Type: 2")
-elif orgtype == b'Org-03':
-    orgtype = 3
-    print("Organya Type: 3")
-tempo = int.from_bytes(orgfile.read(2), "little")
+tempo = (int.from_bytes(orgfile.read(2), "little"))* int(tempomultiply)
+print("Organya Type: " + str(file_header_orgtype))
 print("Tempo: " + str(tempo))
 Steps_Per_Bar = int.from_bytes(orgfile.read(1), "little")
 print("Steps Per Bar: " + str(Steps_Per_Bar))
@@ -50,9 +51,9 @@ for x in range(16):
     disable_sustaining_notes = int.from_bytes(orgfile.read(1), "little")
     number_of_notes = int.from_bytes(orgfile.read(2), "little")
     print("pitch = " + str(pitch), end=" ")
-    print("| Instrument = " + str(Instrument), end=" ")
-    print("| disable_sustaining_notes = " + str(disable_sustaining_notes), end=" ")
-    print("| number_of_notes = " + str(number_of_notes))
+    print("| Inst = " + str(Instrument), end=" ")
+    print("| NoSustainingNotes = " + str(disable_sustaining_notes), end=" ")
+    print("| #notes = " + str(number_of_notes))
     org_instrumentinfotable.append([pitch,Instrument,disable_sustaining_notes,number_of_notes])
 def parse_orgtrack(instrumentinfotable_input, trackid):
     org_numofnotes = instrumentinfotable_input[trackid][3]
@@ -97,29 +98,33 @@ orgnotestable_perc8 = parse_orgtrack(org_instrumentinfotable, 15)
 def orgnl2outnl(orgnotelist):
     notelist = []
     for currentnote in range(len(orgnotelist)):
+        notejson = {}
         orgnote = orgnotelist[currentnote]
-        position = (orgnote[0] / 4) * notetime
-        #note = 60
+        notejson['position'] = ((orgnote[0] / 4) * notetime) / int(notesizedivision)
+        #note = 0
         pre_note = orgnote[1]
         if 0 <= pre_note <= 95:
-            note = pre_note + 12
-        duration = (orgnote[2] / 4) * notetime
+            key = pre_note + 24
+        notejson['key'] = key
+        notejson['duration'] = ((orgnote[2] / 4) * notetime) / int(notesizedivision)
         #volume = 1.0
         pre_volume = orgnote[3]
         if 0 <= pre_volume <= 254:
-            volume = pre_volume / 254
+            vol = pre_volume / 254
+        notejson['vol'] = vol
         #pan = 0.0
         pre_pan = orgnote[4]
         if 0 <= pre_pan <= 12:
             pan = (pre_pan - 6) / 6
-        notelist.append([position, duration, note, volume, pan, {}])
+        notejson['pan'] = pan
+        notelist.append(notejson)
     return notelist
 
 def parsetrack(notelist, trackid):
     trackdata_json = {}
     if notelist != []:
         trackdata_json = _func_instrument.init_instrument_trackdataCONVPROJ()
-        trackdata_json['notelist'] = _func_instrument.notelistTABLE_to_notelistCONVPROJ(notelist)
+        trackdata_json['notelist'] = notelist
         trackdata_json['name'] = trackid
         tracklist.append(trackdata_json)
     return trackdata_json

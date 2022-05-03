@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import _func_instrument
+import _func_audio
 import json
 
 def hundredto1(input):
@@ -81,12 +82,34 @@ def lmms_decode_inst_track(trackxml):
 	trackjson['placements'] = _func_instrument.nlplacementsTABLE_to_nlplacementsCONVPROJ(lmms_decode_nlplacements(trackxml))
 	return trackjson
 
+def lmms_decode_audioplacements(trackxml):
+	audioplacements = []
+	patternsxml = trackxml.findall('sampletco')
+	for patternxml in patternsxml:
+		position = float(patternxml.get('pos')) / 48
+		duration = float(patternxml.get('len')) / 48
+		file = patternxml.get('src')
+		audioplacements.append([position, duration, file, {}])
+	return audioplacements
+
+def lmms_decode_audio_track(trackxml):
+	trackjson = _func_audio.init_audio_trackdataCONVPROJ()
+	trackjson['name'] = trackxml.get('name')
+	trackjson['muted'] = int(trackxml.get('muted'))
+	trackxml_insttr = trackxml.findall('sampletrack')[0]
+	trackjson['pan'] = hundredto1(trackxml_insttr.get('pan'))
+	trackjson['vol'] = hundredto1(trackxml_insttr.get('vol'))
+	trackjson['placements'] = _func_audio.audioplacementsTABLE_to_audioplacementsCONVPROJ(lmms_decode_audioplacements(trackxml))
+	return trackjson
+
 def lmms_decode_tracks(tracksxml):
 	tracklist = []
 	for trackxml in tracksxml:
 		tracktype = trackxml.get('type')
 		if tracktype == "0":
 			tracklist.append(lmms_decode_inst_track(trackxml))
+		if tracktype == "2":
+			tracklist.append(lmms_decode_audio_track(trackxml))
 	return tracklist
 
 tree = ET.parse('test.mmp').getroot()

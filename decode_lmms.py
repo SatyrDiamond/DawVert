@@ -9,22 +9,24 @@ def hundredto1(input):
 def lmms_decode_pattern(notesxml):
 	notelist = []
 	for notexml in notesxml:
-		key = int(notexml.get('key'))
-		position = float(notexml.get('pos')) / 48
-		pan = hundredto1(notexml.get('pan'))
-		duration = float(notexml.get('len')) / 48
-		vol = hundredto1(notexml.get('vol'))
-		notelist.append([position, duration, key, vol, pan, {}])
+		notejson = {}
+		notejson['key'] = int(notexml.get('key'))
+		notejson['position'] = float(notexml.get('pos')) / 48
+		notejson['pan'] = hundredto1(notexml.get('pan'))
+		notejson['duration'] = float(notexml.get('len')) / 48
+		notejson['vol'] = hundredto1(notexml.get('vol'))
+		notelist.append(notejson)
 	return notelist
 
 def lmms_decode_nlplacements(trackxml):
 	nlplacements = []
 	patternsxml = trackxml.findall('pattern')
 	for patternxml in patternsxml:
-		position = float(patternxml.get('pos')) / 48
+		placementjson = {}
+		placementjson["position"] = float(patternxml.get('pos')) / 48
 		notesxml = patternxml.findall('note')
-		notelist = lmms_decode_pattern(notesxml)
-		nlplacements.append([position, notelist, {}])
+		placementjson["notelist"] = lmms_decode_pattern(notesxml)
+		nlplacements.append(placementjson)
 	return nlplacements
 
 def asdflfo(trackjson, xmlobj, type):
@@ -79,17 +81,18 @@ def lmms_decode_inst_track(trackxml):
 	trackjson_instdata['arpeggiator']['missrate'] = int(trackxml_arpeggiator.get('arpmiss')) #percent
 	trackjson_instdata['arpeggiator']['cyclenotes'] = int(trackxml_arpeggiator.get('arpcycle'))
 	trackjson_instdata['arpeggiator']['chord'] = int(trackxml_arpeggiator.get('arp'))
-	trackjson['placements'] = _func_instrument.nlplacementsTABLE_to_nlplacementsCONVPROJ(lmms_decode_nlplacements(trackxml))
+	trackjson['placements'] = lmms_decode_nlplacements(trackxml)
 	return trackjson
 
 def lmms_decode_audioplacements(trackxml):
 	audioplacements = []
 	patternsxml = trackxml.findall('sampletco')
 	for patternxml in patternsxml:
-		position = float(patternxml.get('pos')) / 48
-		duration = float(patternxml.get('len')) / 48
-		file = patternxml.get('src')
-		audioplacements.append([position, duration, file, {}])
+		audioplacementsjson = {}
+		audioplacementsjson['position'] = float(patternxml.get('pos')) / 48
+		audioplacementsjson['duration'] = float(patternxml.get('len')) / 48
+		audioplacementsjson['file'] = patternxml.get('src')
+		audioplacements.append(audioplacementsjson)
 	return audioplacements
 
 def lmms_decode_audio_track(trackxml):
@@ -99,7 +102,7 @@ def lmms_decode_audio_track(trackxml):
 	trackxml_insttr = trackxml.findall('sampletrack')[0]
 	trackjson['pan'] = hundredto1(trackxml_insttr.get('pan'))
 	trackjson['vol'] = hundredto1(trackxml_insttr.get('vol'))
-	trackjson['placements'] = _func_audio.audioplacementsTABLE_to_audioplacementsCONVPROJ(lmms_decode_audioplacements(trackxml))
+	trackjson['placements'] = lmms_decode_audioplacements(trackxml)
 	return trackjson
 
 def lmms_decode_tracks(tracksxml):

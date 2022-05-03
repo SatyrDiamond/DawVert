@@ -9,7 +9,7 @@ parser.add_argument("lmmsout")
 
 args = parser.parse_args()
 
-print('--- ConvJson OTMN to LMMS---')
+print('--- ConvJsonOTMN to LMMS---')
 
 def onetime2lmmstime(input):
 	return int(round(float(input * 48)))

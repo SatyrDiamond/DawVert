@@ -1,6 +1,7 @@
 import json
 import xml.etree.ElementTree as ET 
 import _func_instrument
+import _func_audio
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -79,11 +80,42 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
 		lmms_encode_notelist(xml_pattern, table_notelist)
 		tracksnum += 1
 
+
+def lmms_encode_audio_track(xmltag, json_singletrack):
+	xmltag.set('solo', "0")
+	xmltag.set('name', "untitled")
+	xmltag.set('type', "2")
+	xmltag.set('muted', "0")
+	tracksnum = 0
+	xml_sampletrack = ET.SubElement(xmltag, "sampletrack")
+	xml_sampletrack.set('pan', "0")
+	xml_sampletrack.set('vol', "100")
+	if json_singletrack['pan'] is not None:
+		xml_sampletrack.set('pan', str(oneto100(json_singletrack['pan'])))
+	if json_singletrack['vol'] is not None:
+		xml_sampletrack.set('vol', str(oneto100(json_singletrack['vol'])))
+	xmltag.set('name', json_singletrack['name'])
+	xmltag.set('muted', str(json_singletrack['muted']))
+
+	#placements
+	json_placementlist = json_singletrack['placements']
+	table_placementlist = _func_audio.audioplacementsCONVPROJ_to_audioplacementsTABLE(json_placementlist)
+	while tracksnum <= len(table_placementlist)-1:
+		table_placement = table_placementlist[tracksnum-1]
+		table_notelist = table_placement[1]
+		xml_pattern = ET.SubElement(xmltag, "sampletco")
+		xml_pattern.set('pos', str(int(round(table_placement[0] * 48))))
+		xml_pattern.set('len', str(int(round(table_placement[1] * 48))))
+		xml_pattern.set('src', str(table_placement[2]))
+		tracksnum += 1
+
 def lmms_encode_tracks(xmltag, json_tracks):
 	for json_singletrack in json_tracks:
 		xml_track = ET.SubElement(xml_trackcontainer, "track")
-		lmms_encode_inst_track(xml_track, json_singletrack)
-
+		if json_singletrack['type'] == "instrument":
+			lmms_encode_inst_track(xml_track, json_singletrack)
+		if json_singletrack['type'] == "audio":
+			lmms_encode_audio_track(xml_track, json_singletrack)
 
 with open('proj.conv_otmn', 'r') as progfile:
 		json_proj = json.loads(progfile.read())

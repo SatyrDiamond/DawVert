@@ -39,7 +39,7 @@ def notelistCONVPROJ_to_notelistTABLE(notelistCONVPROJ):
 	return notelist_json2table
 
 def nlplacementsTABLE_to_nlplacementsCONVPROJ(nlplacementsTABLE):
-	print('nlplacements (TABLE to ONVPROJ) started')
+	print('nlplacements (TABLE to CONVPROJ) started')
 	printnotes = 0
 	nlplacements_table2json = []
 	for nlplacements_table2json_notelist in nlplacementsTABLE:
@@ -48,12 +48,12 @@ def nlplacementsTABLE_to_nlplacementsCONVPROJ(nlplacementsTABLE):
 		outputjson['notelist'] = notelistTABLE_to_notelistCONVPROJ(nlplacements_table2json_notelist[1])
 		nlplacements_table2json.append(outputjson)
 		printnotes += 1
-	print('nlplacements (TABLE to ONVPROJ): ' + str(printnotes) + ' placements')
+	print('nlplacements (TABLE to CONVPROJ): ' + str(printnotes) + ' placements')
 	return nlplacements_table2json
 
 def nlplacementsCONVPROJ_to_nlplacementsTABLE(nlplacementsCONVPROJ):
 	print('')
-	print('nlplacements (TABLE to ONVPROJ) started')
+	print('nlplacements (CONVPROJ to TABLE) started')
 	printnotes = 0
 	nlplacements_json2table = []
 	jsonnlplacementsinput_tmp = json.dumps(nlplacementsCONVPROJ)
@@ -65,7 +65,7 @@ def nlplacementsCONVPROJ_to_nlplacementsTABLE(nlplacementsCONVPROJ):
 		del extravalue["notelist"]
 		nlplacements_json2table.append([startat,notelist,extravalue])
 		printnotes += 1
-	print('nlplacements (TABLE to ONVPROJ) ended: ' + str(printnotes) + ' placements')
+	print('nlplacements (CONVPROJ to TABLE) ended: ' + str(printnotes) + ' placements')
 	return nlplacements_json2table
 
 def init_instrument_trackdataCONVPROJ():

@@ -28,4 +28,6 @@ def removewarping(song):
 						currentpos += endpoint
 				else:
 					newplacements.append(placementdata)
+			else:
+				newplacements.append(placementdata)
 		trackdata['placements'] = newplacements

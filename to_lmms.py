@@ -1,6 +1,7 @@
 import json
 import xml.etree.ElementTree as ET 
 import argparse
+import _func_placements
 
 parser = argparse.ArgumentParser()
 parser.add_argument("cvpj")
@@ -243,6 +244,8 @@ with open(args.cvpj + '.cvpj', 'r') as projfile:
 		json_proj = json.loads(projfile.read())
 
 patternscount_forprinting = 0
+
+_func_placements.removewarping(json_proj)
 
 json_tracks = json_proj['tracks']
 xml_proj = ET.Element("lmms-project")

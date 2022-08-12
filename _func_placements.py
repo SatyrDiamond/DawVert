@@ -1,4 +1,5 @@
 import json
+import _func_notemod
 
 def removewarping(song):
 	for trackdata in song['tracks']:
@@ -20,10 +21,12 @@ def removewarping(song):
 						newplacementdata = {}
 						part_position = currentpos
 						part_duration = endpoint
-						print(str(part_position) + ' ' + str(min(part_duration,remainingduration)))
-						newplacementdata['position'] = trackposition + part_position
-						newplacementdata['notelist'] = tracknotelist
-						newplacements.append(newplacementdata)
+						trim_duration = min(part_duration,remainingduration)
+						print(str(part_position) + ' ' + str(trim_duration))
+						if trim_duration > 0:
+							newplacementdata['position'] = trackposition + part_position
+							newplacementdata['notelist'] = _func_notemod.trim(tracknotelist, trim_duration)
+							newplacements.append(newplacementdata)
 						remainingduration -= endpoint 
 						currentpos += endpoint
 				else:

@@ -57,7 +57,7 @@ for riffobject in riffobjects:
 		headerdata = BytesIO()
 		headerdata.write(riffobject[1])
 		headerdata.seek(8)
-		songname = headerdata.read(256).decode("utf-8").split('\x00',1)[0]
+		songname = headerdata.read(256).split(b'\x00')[0].decode("utf-8")
 		bpm = struct.unpack('d', headerdata.read(8))[0]
 
 	if riffobject[0] == b'CHNL':

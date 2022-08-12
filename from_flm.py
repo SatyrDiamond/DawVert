@@ -85,7 +85,7 @@ for riffobject in riffobjects:
 						if riff_clip_inside_part[0] == b'EVN2':
 							placement_json['position'] = notelist_position
 							placement_json['notelist'] = parse_evn2_notelist(riff_clip_inside_part[1])
-				if TrackType != {}:
+				if placement_json != {}:
 					placements.append(placement_json)
 
 

@@ -3,6 +3,7 @@ from io import BytesIO
 import json
 import _func_riff
 import struct
+import os.path
 
 import argparse
 
@@ -10,6 +11,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("flm")
 parser.add_argument("cvpj")
 args = parser.parse_args()
+
+samplepath = os.path.dirname(args.flm)
 
 def parse_evn2_notelist(evn2bytes):
 	notelistdata = BytesIO()
@@ -32,15 +35,25 @@ def parse_evn2_notelist(evn2bytes):
 	#	print(str(note))
 	return notelist
 
-def parse_evn2_test(evn2bytes):
+def parse_evnt_notelist(evn2bytes):
 	notelistdata = BytesIO()
 	notelistdata.write(evn2bytes)
 	fileobject.seek(0,2)
 	notelistdata_filesize = notelistdata.tell()
 	notelistdata.seek(0)
-	something = int.from_bytes(notelistdata.read(2), "little")
+	notelist = []
 	while notelistdata.tell() < notelistdata_filesize:
-		print(bytes(notelistdata.read(19)).hex())
+		notejson = {}
+		notejson['position'] = int.from_bytes(notelistdata.read(4), "little")/128
+		notejson['duration'] = struct.unpack('d', notelistdata.read(8))[0]
+		notejson['key'] = int.from_bytes(notelistdata.read(1), "little") - 72
+		notejson['vol'] = 1.0
+		notejson['pan'] = 0.0
+		notelistdata.read(5)
+		notelist.append(notejson)
+	#for note in notelist:
+	#	print(str(note))
+	return notelist
 
 fileobject = open(args.flm, 'rb')
 fileobject.seek(0,2)
@@ -48,7 +61,7 @@ filesize = fileobject.tell()
 fileobject.seek(0)
 headername = fileobject.read(4)
 
-riffobjects = _func_riff.readriffdata_debug(fileobject, 4)
+riffobjects = _func_riff.readriffdata(fileobject, 4)
 
 tracklist = []
 
@@ -56,7 +69,9 @@ for riffobject in riffobjects:
 	if riffobject[0] == b'HEAD':
 		headerdata = BytesIO()
 		headerdata.write(riffobject[1])
-		headerdata.seek(8)
+		headerdata.seek(0)
+		version_major = int.from_bytes(headerdata.read(4), "little")
+		version_minor = int.from_bytes(headerdata.read(4), "little")
 		songname = headerdata.read(256).split(b'\x00')[0].decode("utf-8")
 		bpm = struct.unpack('d', headerdata.read(8))[0]
 
@@ -67,7 +82,7 @@ for riffobject in riffobjects:
 		riffobjects_trkh = chnldata[1][1]
 		trkhdata = _func_riff.readriffdata(riffobjects_trkh,0)
 		for trkhobj in trkhdata:
-			print(str(trkhobj[0])+ " " + str(len(trkhobj[1])))
+			#print(str(trkhobj[0])+ " " + str(len(trkhobj[1])))
 			if trkhobj[0] == b'DESc':
 				TrackType = trkhobj[1][0]
 			if trkhobj[0] == b'CLIP':
@@ -86,6 +101,9 @@ for riffobject in riffobjects:
 						if riff_clip_inside_part[0] == b'EVN2':
 							placement_json['position'] = notelist_position
 							placement_json['notelist'] = parse_evn2_notelist(riff_clip_inside_part[1])
+						if riff_clip_inside_part[0] == b'EVNT':
+							placement_json['position'] = notelist_position
+							placement_json['notelist'] = parse_evnt_notelist(riff_clip_inside_part[1])
 				if placement_json != {}:
 					placements.append(placement_json)
 
@@ -106,7 +124,7 @@ for riffobject in riffobjects:
 		trackdata_json['pan'] = 0.0
 		trackdata_json['muted'] = 0
 		instrumentdata_json = {}
-		instrumentdata_json['plugin'] = "orgyana"
+		instrumentdata_json['plugin'] = "none"
 		trackdata_json['instrumentdata'] = instrumentdata_json
 		plugindata_json = {}
 		trackdata_json['plugindata'] = plugindata_json

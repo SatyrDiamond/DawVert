@@ -69,9 +69,7 @@ for riffobject in riffobjects:
 	if riffobject[0] == b'HEAD':
 		headerdata = BytesIO()
 		headerdata.write(riffobject[1])
-		headerdata.seek(0)
-		version_major = int.from_bytes(headerdata.read(4), "little")
-		version_minor = int.from_bytes(headerdata.read(4), "little")
+		headerdata.seek(8)
 		songname = headerdata.read(256).split(b'\x00')[0].decode("utf-8")
 		bpm = struct.unpack('d', headerdata.read(8))[0]
 

@@ -135,6 +135,7 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
 	xml_instrumenttrack.set('basenote', "57")
 	if 'basenote' in json_instrumentdata:
 		xml_instrumenttrack.set('basenote', str(json_instrumentdata['basenote'] - 3))
+	xml_instrumenttrack.set('fxch', str(json_instrumentdata['fxrack_channel']))
 	xml_instrumenttrack.set('pan', "0")
 	xml_instrumenttrack.set('pitchrange', "12")
 	xml_instrumenttrack.set('vol', "100")
@@ -234,11 +235,25 @@ def lmms_encode_audio_track(xmltag, json_singletrack):
 
 def lmms_encode_tracks(xmltag, json_tracks):
 	for json_singletrack in json_tracks:
-		xml_track = ET.SubElement(xml_trackcontainer, "track")
+		xml_track = ET.SubElement(xmltag, "track")
 		if json_singletrack['type'] == "instrument":
 			lmms_encode_inst_track(xml_track, json_singletrack)
 		if json_singletrack['type'] == "audio":
 			lmms_encode_audio_track(xml_track, json_singletrack)
+
+def lmms_encode_fxrack(xmltag, json_fxrack):
+	for json_fxchannel in json_fxrack:
+		xml_fxchannel = ET.SubElement(xmltag, "fxchannel")
+		xml_fxchannel.set('soloed', "0")
+		xml_fxchannel.set('name', json_fxchannel['name'])
+		xml_fxchannel.set('num', str(json_fxchannel['num']))
+		xml_fxchannel.set('volume', str(json_fxchannel['volume']))
+		xml_fxchannel.set('muted', str(json_fxchannel['muted']))
+		json_sends = json_fxchannel['sends']
+		for json_send in json_sends:
+			xml_send = ET.SubElement(xml_fxchannel, "send")
+			xml_send.set('channel', json_send['channel'])
+			xml_send.set('amount', json_send['amount'])
 
 with open(args.cvpj + '.cvpj', 'r') as projfile:
 		json_proj = json.loads(projfile.read())
@@ -248,6 +263,7 @@ patternscount_forprinting = 0
 _func_placements.removewarping(json_proj)
 
 json_tracks = json_proj['tracks']
+json_fxrack = json_proj['fxrack']
 xml_proj = ET.Element("lmms-project")
 xml_proj.set('type', "song")
 xml_head = ET.SubElement(xml_proj, "head")
@@ -271,7 +287,12 @@ xml_song = ET.SubElement(xml_proj, "song")
 xml_trackcontainer = ET.SubElement(xml_song, "trackcontainer")
 
 lmms_encode_tracks(xml_trackcontainer, json_tracks)
+
 print("Number of Patterns: " + str(patternscount_forprinting))
+xml_fxmixer = ET.SubElement(xml_song, "fxmixer")
+lmms_encode_fxrack(xml_fxmixer, json_fxrack)
+
+json_tracks = json_proj['tracks']
 
 outfile = ET.ElementTree(xml_proj)
 

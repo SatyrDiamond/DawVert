@@ -292,7 +292,9 @@ patternscount_forprinting = 0
 _func_placements.removewarping(json_proj)
 
 json_tracks = json_proj['tracks']
-json_fxrack = json_proj['fxrack']
+if 'fxrack' in json_proj:
+	json_fxrack = json_proj['fxrack']
+	lmms_encode_fxrack(xml_fxmixer, json_fxrack)
 xml_proj = ET.Element("lmms-project")
 xml_proj.set('type', "song")
 xml_head = ET.SubElement(xml_proj, "head")
@@ -319,7 +321,6 @@ lmms_encode_tracks(xml_trackcontainer, json_tracks)
 
 print("Number of Patterns: " + str(patternscount_forprinting))
 xml_fxmixer = ET.SubElement(xml_song, "fxmixer")
-lmms_encode_fxrack(xml_fxmixer, json_fxrack)
 
 json_tracks = json_proj['tracks']
 

@@ -161,6 +161,8 @@ def lmms_decode_inst_track(trackxml):
 	trackjson['pan'] = hundredto1(trackxml_insttr.get('pan'))
 	trackjson['vol'] = hundredto1(trackxml_insttr.get('vol'))
 	trackjson_instdata['usemasterpitch'] = int(trackxml_insttr.get('usemasterpitch'))
+	trackjson_instdata['fxrack_channel'] = int(trackxml_insttr.get('fxch'))
+	
 	trackjson_instdata['pitch'] = 0
 	if trackxml_insttr.get('pitch') != None:
 		trackjson_instdata['pitch'] = float(trackxml_insttr.get('pitch'))
@@ -225,11 +227,42 @@ def lmms_decode_tracks(tracksxml):
 			tracklist.append(lmms_decode_audio_track(trackxml))
 	return tracklist
 
+def lmms_decode_fx(fxchannelxml):
+	fxchain = []
+	fxchainxml = fxchannelxml.get('fxchain')
+	
+	
+	output = {}
+	return output
+
+def lmms_decode_fxmixer(fxxml):
+	fxlist = []
+	for fxchannelxml in fxxml:
+		fxchanneljson = {}
+		fxchanneljson['name'] = fxchannelxml.get('name')
+		fxchanneljson['muted'] = int(fxchannelxml.get('muted'))
+		fxchanneljson['num'] = int(fxchannelxml.get('num'))
+		fxchanneljson['volume'] = float(fxchannelxml.get('volume'))
+		fxchanneljson['fxchain'] = lmms_decode_fx(fxchannelxml)
+		sendlist = []
+		sendsxml = fxchannelxml.findall('send')
+		for sendxml in sendsxml:
+			sendentryjson = {}
+			sendentryjson['channel'] = sendxml.get('channel')
+			sendentryjson['amount'] = sendxml.get('amount')
+			sendlist.append(sendentryjson)
+		fxchanneljson['sends'] = sendlist
+		fxlist.append(fxchanneljson)
+	return fxlist
+
 tree = ET.parse(args.mpp).getroot()
 headxml = tree.findall('head')[0]
 tracksxml = tree.findall('song/trackcontainer/track')
+fxxml = tree.findall('song/fxmixer/fxchannel')
 
-bpm = int(headxml.get('bpm'))
+bpm = 140
+if headxml.get('bpm') != None:
+	bpm = int(headxml.get('bpm'))
 
 json_root = {}
 json_root['mastervol'] = float(hundredto1(headxml.get('mastervol')))
@@ -238,6 +271,7 @@ lmms_getvalue(4, json_root, headxml, 'timesig_numerator', 'timesig_numerator')
 lmms_getvalue(4, json_root, headxml, 'timesig_denominator', 'timesig_denominator')
 lmms_getvalue(140, json_root, headxml, 'bpm', 'bpm')
 json_root['tracks'] = lmms_decode_tracks(tracksxml)
+json_root['fxrack'] = lmms_decode_fxmixer(fxxml)
 
 with open(args.cvpj + '.cvpj', 'w') as outfile:
         outfile.write(json.dumps(json_root, indent=2))

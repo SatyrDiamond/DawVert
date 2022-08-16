@@ -109,7 +109,7 @@ for riffobject in riffobjects:
 						for riff_clip_inside_part in riff_clip_inside:
 							if TrackType == 0:
 								if riff_clip_inside_part[0] == b'CLHd':
-									if riff_clip_inside_part[1][0:8] == riff_clip_inside_part[1][8:16] != 0:
+									if riff_clip_inside_part[1][0:8] != 0 and riff_clip_inside_part[1][8:16] != 0:
 										placement_json['noteloop'] = {}
 										placement_json['noteloop']['duration'] = struct.unpack('d', riff_clip_inside_part[1][0:8])[0]
 										placement_json['noteloop']['endpoint'] = struct.unpack('d', riff_clip_inside_part[1][8:16])[0]

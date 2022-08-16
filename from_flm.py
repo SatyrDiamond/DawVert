@@ -27,9 +27,10 @@ def parse_evn2_notelist(evn2bytes):
 		notejson['position'] = int.from_bytes(notelistdata.read(4), "little")/128
 		notejson['duration'] = struct.unpack('d', notelistdata.read(8))[0]
 		notejson['key'] = int.from_bytes(notelistdata.read(1), "little") - 72
-		notejson['vol'] = 1.0
+		notelistdata.read(1)
+		notejson['vol'] = int.from_bytes(notelistdata.read(1), "little")/255
 		notejson['pan'] = 0.0
-		notelistdata.read(6)
+		notelistdata.read(4)
 		notelist.append(notejson)
 	#for note in notelist:
 	#	print(str(note))
@@ -107,10 +108,11 @@ for riffobject in riffobjects:
 						for riff_clip_inside_part in riff_clip_inside:
 							if TrackType == 0:
 								if riff_clip_inside_part[0] == b'CLHd':
-									placement_json['noteloop'] = {}
-									placement_json['noteloop']['duration'] = struct.unpack('d', riff_clip_inside_part[1][0:8])[0]
-									placement_json['noteloop']['endpoint'] = struct.unpack('d', riff_clip_inside_part[1][8:16])[0]
-									placement_json['noteloop']['startpoint'] = struct.unpack('d', riff_clip_inside_part[1][16:24])[0]
+									if riff_clip_inside_part[1][0:8] == riff_clip_inside_part[1][8:16] != 0:
+										placement_json['noteloop'] = {}
+										placement_json['noteloop']['duration'] = struct.unpack('d', riff_clip_inside_part[1][0:8])[0]
+										placement_json['noteloop']['endpoint'] = struct.unpack('d', riff_clip_inside_part[1][8:16])[0]
+										placement_json['noteloop']['startpoint'] = struct.unpack('d', riff_clip_inside_part[1][16:24])[0]
 								if riff_clip_inside_part[0] == b'EVN2':
 									placement_json['position'] = notelist_position
 									placement_json['notelist'] = parse_evn2_notelist(riff_clip_inside_part[1])

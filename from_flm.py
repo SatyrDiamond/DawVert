@@ -48,9 +48,10 @@ def parse_evnt_notelist(evn2bytes):
 		notejson['position'] = int.from_bytes(notelistdata.read(4), "little")/128
 		notejson['duration'] = struct.unpack('d', notelistdata.read(8))[0]
 		notejson['key'] = int.from_bytes(notelistdata.read(1), "little") - 72
-		notejson['vol'] = 1.0
+		notelistdata.read(1)
+		notejson['vol'] = int.from_bytes(notelistdata.read(1), "little")/255
 		notejson['pan'] = 0.0
-		notelistdata.read(5)
+		notelistdata.read(3)
 		notelist.append(notejson)
 	#for note in notelist:
 	#	print(str(note))

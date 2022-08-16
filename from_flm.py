@@ -76,59 +76,55 @@ for riffobject in riffobjects:
 	if riffobject[0] == b'CHNL':
 		chnldata = _func_riff.readriffdata(riffobject[1],8)
 		placements = []
-
-		riffobjects_trkh = chnldata[1][1]
-		trkhdata = _func_riff.readriffdata(riffobjects_trkh,0)
-		for trkhobj in trkhdata:
-			#print(str(trkhobj[0])+ " " + str(len(trkhobj[1])))
-			if trkhobj[0] == b'DESc':
-				TrackType = trkhobj[1][0]
-			if trkhobj[0] == b'CLIP':
-				clipobject = _func_riff.bytearray2BytesIO(trkhobj[1])
-				clipobject.seek(0)
-				notelist_position = int.from_bytes(clipobject.read(4), "little")/128
-				riff_clip_inside = _func_riff.readriffdata(clipobject,8)
-				placement_json = {}
-				for riff_clip_inside_part in riff_clip_inside:
-					if TrackType == 0:
-						if riff_clip_inside_part[0] == b'CLHd':
-							placement_json['noteloop'] = {}
-							placement_json['noteloop']['duration'] = struct.unpack('d', riff_clip_inside_part[1][0:8])[0]
-							placement_json['noteloop']['endpoint'] = struct.unpack('d', riff_clip_inside_part[1][8:16])[0]
-							placement_json['noteloop']['startpoint'] = struct.unpack('d', riff_clip_inside_part[1][16:24])[0]
-						if riff_clip_inside_part[0] == b'EVN2':
-							placement_json['position'] = notelist_position
-							placement_json['notelist'] = parse_evn2_notelist(riff_clip_inside_part[1])
-						if riff_clip_inside_part[0] == b'EVNT':
-							placement_json['position'] = notelist_position
-							placement_json['notelist'] = parse_evnt_notelist(riff_clip_inside_part[1])
-				if placement_json != {}:
-					placements.append(placement_json)
-
-
-		riffobjects_chhd = chnldata[0][1]
-		TrackName = riffobjects_chhd.split(b'\x00' * 1)[0].decode("utf-8")
-		print('Track Name: ' + TrackName)
 		trackdata_json = {}
-		trackdata_json['type'] = "instrument"
-		
-		trackdata_json['placements'] = placements
+		for chnlobj in chnldata:
+			if chnlobj[0] == b'CHHD':
+				riffobjects_chhd = chnlobj[1]
+				TrackName = riffobjects_chhd.split(b'\x00' * 1)[0].decode("utf-8")
+				print('Track Name: ' + TrackName)
+				trackdata_json['type'] = "instrument"
+				trackdata_json['name'] = TrackName
+				trackdata_json['vol'] = 1.0
+				trackdata_json['pan'] = 0.0
+				trackdata_json['muted'] = 0
+				instrumentdata_json = {}
+				instrumentdata_json['plugin'] = "none"
+				trackdata_json['instrumentdata'] = instrumentdata_json
+				plugindata_json = {}
+				trackdata_json['plugindata'] = plugindata_json
+			if chnlobj[0] == b'TRKH':
+				trkhdata = _func_riff.readriffdata(chnlobj[1],0)
+				for trkhobj in trkhdata:
+					#print(str(trkhobj[0])+ " " + str(len(trkhobj[1])))
+					if trkhobj[0] == b'DESc':
+						TrackType = trkhobj[1][0]
+					if trkhobj[0] == b'CLIP':
+						clipobject = _func_riff.bytearray2BytesIO(trkhobj[1])
+						clipobject.seek(0)
+						notelist_position = int.from_bytes(clipobject.read(4), "little")/128
+						riff_clip_inside = _func_riff.readriffdata(clipobject,8)
+						placement_json = {}
+						for riff_clip_inside_part in riff_clip_inside:
+							if TrackType == 0:
+								if riff_clip_inside_part[0] == b'CLHd':
+									placement_json['noteloop'] = {}
+									placement_json['noteloop']['duration'] = struct.unpack('d', riff_clip_inside_part[1][0:8])[0]
+									placement_json['noteloop']['endpoint'] = struct.unpack('d', riff_clip_inside_part[1][8:16])[0]
+									placement_json['noteloop']['startpoint'] = struct.unpack('d', riff_clip_inside_part[1][16:24])[0]
+								if riff_clip_inside_part[0] == b'EVN2':
+									placement_json['position'] = notelist_position
+									placement_json['notelist'] = parse_evn2_notelist(riff_clip_inside_part[1])
+								if riff_clip_inside_part[0] == b'EVNT':
+									placement_json['position'] = notelist_position
+									placement_json['notelist'] = parse_evnt_notelist(riff_clip_inside_part[1])
+						if placement_json != {}:
+							placements.append(placement_json)
 		if TrackType == 0:
 			trackdata_json['type'] = "instrument"
 		if TrackType == 2:
 			trackdata_json['type'] = "audio"
-		trackdata_json['name'] = TrackName
-		trackdata_json['vol'] = 1.0
-		trackdata_json['pan'] = 0.0
-		trackdata_json['muted'] = 0
-		instrumentdata_json = {}
-		instrumentdata_json['plugin'] = "none"
-		trackdata_json['instrumentdata'] = instrumentdata_json
-		plugindata_json = {}
-		trackdata_json['plugindata'] = plugindata_json
+		trackdata_json['placements'] = placements
 		tracklist.append(trackdata_json)
-
-
 
 
 json_root = {}

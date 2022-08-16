@@ -133,9 +133,16 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
 	if 'pitch' in json_instrumentdata:
 		xml_instrumenttrack.set('pitch', str(json_instrumentdata['pitch']))
 	xml_instrumenttrack.set('basenote', "57")
+	basenote = 60
 	if 'basenote' in json_instrumentdata:
-		xml_instrumenttrack.set('basenote', str(json_instrumentdata['basenote'] - 3))
-	xml_instrumenttrack.set('fxch', str(json_instrumentdata['fxrack_channel']))
+		basenote = json_instrumentdata['basenote']
+	if json_instrumentdata['plugin'] != 'sampler':
+		basenote += -3
+	xml_instrumenttrack.set('basenote', str(basenote))
+	if 'fxrack_channel' in json_instrumentdata:
+		xml_instrumenttrack.set('fxch', str(json_instrumentdata['fxrack_channel']))
+	else:
+		xml_instrumenttrack.set('fxch', '0')
 	xml_instrumenttrack.set('pan', "0")
 	xml_instrumenttrack.set('pitchrange', "12")
 	xml_instrumenttrack.set('vol', "100")
@@ -245,15 +252,37 @@ def lmms_encode_fxrack(xmltag, json_fxrack):
 	for json_fxchannel in json_fxrack:
 		xml_fxchannel = ET.SubElement(xmltag, "fxchannel")
 		xml_fxchannel.set('soloed', "0")
-		xml_fxchannel.set('name', json_fxchannel['name'])
 		xml_fxchannel.set('num', str(json_fxchannel['num']))
-		xml_fxchannel.set('volume', str(json_fxchannel['volume']))
-		xml_fxchannel.set('muted', str(json_fxchannel['muted']))
-		json_sends = json_fxchannel['sends']
-		for json_send in json_sends:
+		num = json_fxchannel['num']
+
+		if 'name' in json_fxchannel:
+			name = json_fxchannel['name']
+		else:
+			name = 'FX ' + str(num)
+
+		if 'volume' in json_fxchannel:
+			volume = json_fxchannel['volume']
+		else:
+			volume = 1
+
+		if 'muted' in json_fxchannel:
+			muted = json_fxchannel['muted']
+		else:
+			muted = 0
+
+		xml_fxchannel.set('name', name)
+		xml_fxchannel.set('volume', str(volume))
+		xml_fxchannel.set('muted', str(muted))
+		if 'sends' in json_fxchannel:
+			json_sends = json_fxchannel['sends']
+			for json_send in json_sends:
+				xml_send = ET.SubElement(xml_fxchannel, "send")
+				xml_send.set('channel', json_send['channel'])
+				xml_send.set('amount', json_send['amount'])
+		else:
 			xml_send = ET.SubElement(xml_fxchannel, "send")
-			xml_send.set('channel', json_send['channel'])
-			xml_send.set('amount', json_send['amount'])
+			xml_send.set('channel', '0')
+			xml_send.set('amount', '1')
 
 with open(args.cvpj + '.cvpj', 'r') as projfile:
 		json_proj = json.loads(projfile.read())

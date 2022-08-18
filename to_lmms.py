@@ -292,9 +292,6 @@ patternscount_forprinting = 0
 _func_placements.removewarping(json_proj)
 
 json_tracks = json_proj['tracks']
-if 'fxrack' in json_proj:
-	json_fxrack = json_proj['fxrack']
-	lmms_encode_fxrack(xml_fxmixer, json_fxrack)
 xml_proj = ET.Element("lmms-project")
 xml_proj.set('type', "song")
 xml_head = ET.SubElement(xml_proj, "head")
@@ -317,10 +314,20 @@ if json_proj['tracks'] is not None:
 xml_song = ET.SubElement(xml_proj, "song")
 xml_trackcontainer = ET.SubElement(xml_song, "trackcontainer")
 
+if 'fxrack' in json_proj:
+	xml_fxmixer = ET.SubElement(xml_song, "fxmixer")
+	json_fxrack = json_proj['fxrack']
+	lmms_encode_fxrack(xml_fxmixer, json_fxrack)
+
 lmms_encode_tracks(xml_trackcontainer, json_tracks)
 
 print("Number of Patterns: " + str(patternscount_forprinting))
-xml_fxmixer = ET.SubElement(xml_song, "fxmixer")
+
+if 'loop' in json_proj:
+	xml_timeline = ET.SubElement(xml_song, "timeline")
+	xml_timeline.set('lpstate', str(json_proj['loop']['enabled']))
+	xml_timeline.set('lp0pos', str(round(json_proj['loop']['start']*192)))
+	xml_timeline.set('lp1pos', str(round(json_proj['loop']['end']*192)))
 
 json_tracks = json_proj['tracks']
 

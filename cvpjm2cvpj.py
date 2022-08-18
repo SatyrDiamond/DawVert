@@ -1,5 +1,6 @@
 import json
 import argparse
+import _func_song
 
 parser = argparse.ArgumentParser()
 parser.add_argument("cvpjm")
@@ -95,6 +96,8 @@ del cvpj_json_out['tracks']
 del cvpj_json_out['instruments']
 
 cvpj_json_out['tracks'] = output_tracks
+
+_func_song.sort_by_cvpjm_inst(cvpj_json_out)
 
 with open(args.cvpj + '.cvpj', 'w') as outfile:
         outfile.write(json.dumps(cvpj_json_out, indent=2))

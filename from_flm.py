@@ -66,8 +66,10 @@ headername = fileobject.read(4)
 riffobjects = _func_riff.readriffdata(fileobject, 4)
 
 tracklist = []
-fxrack = []
-fxcount = 0
+
+flmtracks = []
+chnlcount = 0
+rackcount = 0
 
 for riffobject in riffobjects:
 	if riffobject[0] == b'HEAD':
@@ -77,31 +79,31 @@ for riffobject in riffobjects:
 		songname = headerdata.read(256).split(b'\x00')[0].decode("utf-8")
 		bpm = struct.unpack('d', headerdata.read(8))[0]
 
+	if riffobject[0] == b'RACK':
+		rackjson = {}
+		rackdata = _func_riff.readriffdata(riffobject[1],8)
+		for rackobj in rackdata:
+			if rackobj[0] == b'RPRM':
+				rackjson['vol'] = struct.unpack('f', rackobj[1][0:4])[0]
+		flmtracks.append(rackjson)
+		rackcount += 1
+
 	if riffobject[0] == b'CHNL':
 		chnldata = _func_riff.readriffdata(riffobject[1],8)
 		placements = []
-		trackdata_json = {}
 		fxchannel_json = {}
 		for chnlobj in chnldata:
 			if chnlobj[0] == b'CHHD':
 				riffobjects_chhd = chnlobj[1]
 				TrackName = riffobjects_chhd[0:256].split(b'\x00' * 1)[0].decode("utf-8")
-				trackdata_json['type'] = "instrument"
-				trackdata_json['name'] = TrackName
-				trackdata_json['fxrack_channel'] = fxcount
-				trackdata_json['vol'] = 1.0
-				trackdata_json['pan'] = 0.0
-				trackdata_json['muted'] = 0
+				flmtracks[chnlcount]['name'] = TrackName
+				flmtracks[chnlcount]['pan'] = 0.0
+				flmtracks[chnlcount]['muted'] = 0
 				instrumentdata_json = {}
 				instrumentdata_json['plugin'] = "none"
-				trackdata_json['instrumentdata'] = instrumentdata_json
+				flmtracks[chnlcount]['instrumentdata'] = instrumentdata_json
 				plugindata_json = {}
-				trackdata_json['plugindata'] = plugindata_json
-				fxchannel_json['name'] = TrackName
-				fxchannel_json['muted'] = 0
-				fxchannel_json['num'] = fxcount
-				fxchannel_json['vol'] = 1.0
-				
+				flmtracks[chnlcount]['plugindata'] = plugindata_json
 				
 			if chnlobj[0] == b'TRKH':
 				trkhdata = _func_riff.readriffdata(chnlobj[1],0)
@@ -134,15 +136,28 @@ for riffobject in riffobjects:
 		print('Track Name: ' + TrackName, end =" | Type: ")
 		print(TrackType)
 		if TrackType == 0:
-			trackdata_json['type'] = "instrument"
-			tracklist.append(trackdata_json)
+			flmtracks[chnlcount]['type'] = "instrument"
 		if TrackType == 2:
-			trackdata_json['type'] = "audio"
-			tracklist.append(trackdata_json)
-		trackdata_json['placements'] = placements
-		fxrack.append(fxchannel_json)
-		fxcount += 1
-TrackType
+			flmtracks[chnlcount]['type'] = "audio"
+		flmtracks[chnlcount]['placements'] = placements
+		chnlcount += 1
+		
+
+fxrack = []
+fxcount = 0
+for flmtrack in flmtracks:
+	fx_json = {}
+	fx_json['vol'] = flmtrack['vol']
+	fx_json['name'] = flmtrack['name']
+	fx_json['num'] = fxcount
+	flmtrack['fxrack_channel'] = fxcount
+	if 'type' in flmtrack:
+		if flmtrack['type'] == "instrument":
+			tracklist.append(flmtrack)
+		if flmtrack['type'] == "audio":
+			tracklist.append(flmtrack)
+	fxrack.append(fx_json)
+	fxcount += 1
 json_root = {}
 json_root['mastervol'] = 1.0
 json_root['timesig_numerator'] = 4

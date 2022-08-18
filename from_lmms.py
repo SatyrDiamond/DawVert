@@ -243,7 +243,7 @@ def lmms_decode_fxmixer(fxxml):
 		fxchanneljson['name'] = fxchannelxml.get('name')
 		fxchanneljson['muted'] = int(fxchannelxml.get('muted'))
 		fxchanneljson['num'] = int(fxchannelxml.get('num'))
-		fxchanneljson['volume'] = float(fxchannelxml.get('volume'))
+		fxchanneljson['vol'] = float(fxchannelxml.get('volume'))
 		fxchanneljson['fxchain'] = lmms_decode_fx(fxchannelxml)
 		sendlist = []
 		sendsxml = fxchannelxml.findall('send')

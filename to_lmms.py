@@ -260,8 +260,8 @@ def lmms_encode_fxrack(xmltag, json_fxrack):
 		else:
 			name = 'FX ' + str(num)
 
-		if 'volume' in json_fxchannel:
-			volume = json_fxchannel['volume']
+		if 'vol' in json_fxchannel:
+			volume = json_fxchannel['vol']
 		else:
 			volume = 1
 

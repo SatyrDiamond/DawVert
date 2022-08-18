@@ -1,7 +1,7 @@
 import json
 import xml.etree.ElementTree as ET 
 import argparse
-import _func_placements
+import _func_song
 
 parser = argparse.ArgumentParser()
 parser.add_argument("cvpj")

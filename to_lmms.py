@@ -125,6 +125,10 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
 		xmltag.set('name', json_singletrack['name'])
 	#instrumenttrack
 	json_instrumentdata = json_singletrack['instrumentdata']
+	if 'fxrack_channel' in json_instrumentdata:
+		xml_instrumenttrack.set('fxch', str(json_singletrack['fxrack_channel']))
+	else:
+		xml_instrumenttrack.set('fxch', '0')
 	xml_instrumenttrack = ET.SubElement(xmltag, "instrumenttrack")
 	xml_instrumenttrack.set('usemasterpitch', "1")
 	if 'usemasterpitch'in json_instrumentdata:
@@ -139,10 +143,6 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
 	if json_instrumentdata['plugin'] != 'sampler':
 		basenote += -3
 	xml_instrumenttrack.set('basenote', str(basenote))
-	if 'fxrack_channel' in json_instrumentdata:
-		xml_instrumenttrack.set('fxch', str(json_instrumentdata['fxrack_channel']))
-	else:
-		xml_instrumenttrack.set('fxch', '0')
 	xml_instrumenttrack.set('pan', "0")
 	xml_instrumenttrack.set('pitchrange', "12")
 	xml_instrumenttrack.set('vol', "100")

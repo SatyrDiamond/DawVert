@@ -42,3 +42,16 @@ def removewarping(song):
 				else:
 					newplacements.append(placementdata)
 			trackdata['placements'] = newplacements
+
+def sort_by_cvpjm_inst(song):
+	usedinstruments = []
+	newtracks = []
+	for track in song['tracks']:
+		if track['frominstrumentid'] not in usedinstruments:
+			usedinstruments.append(track['frominstrumentid'])
+	usedinstruments = sorted(usedinstruments)
+	for usedinstrument in usedinstruments:
+		for track in song['tracks']:
+			if track['frominstrumentid'] == usedinstrument:
+				newtracks.append(track)
+	song['tracks'] = newtracks

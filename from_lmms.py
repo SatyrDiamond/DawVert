@@ -140,6 +140,7 @@ def lmms_decode_inst_track(trackxml):
 	trackjson['name'] = trackxml.get('name')
 	print('Instrument Track Name: ' + trackjson['name'])
 	trackjson['muted'] = int(trackxml.get('muted'))
+	trackjson['fxrack_channel'] = int(trackxml_insttr.get('fxch'))
 	trackjson_instdata = trackjson['instrumentdata']
 	trackjson_instdata['plugindata'] = plugindata_json
 	trackxml_insttr = trackxml.findall('instrumenttrack')[0]
@@ -161,7 +162,6 @@ def lmms_decode_inst_track(trackxml):
 	trackjson['pan'] = hundredto1(trackxml_insttr.get('pan'))
 	trackjson['vol'] = hundredto1(trackxml_insttr.get('vol'))
 	trackjson_instdata['usemasterpitch'] = int(trackxml_insttr.get('usemasterpitch'))
-	trackjson_instdata['fxrack_channel'] = int(trackxml_insttr.get('fxch'))
 	
 	trackjson_instdata['pitch'] = 0
 	if trackxml_insttr.get('pitch') != None:

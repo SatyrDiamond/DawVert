@@ -85,6 +85,7 @@ for riffobject in riffobjects:
 		for rackobj in rackdata:
 			if rackobj[0] == b'RPRM':
 				rackjson['vol'] = struct.unpack('f', rackobj[1][0:4])[0]
+				rackjson['pan'] = (struct.unpack('f', rackobj[1][4:8])[0]*2)-1
 		flmtracks.append(rackjson)
 		rackcount += 1
 
@@ -97,7 +98,6 @@ for riffobject in riffobjects:
 				riffobjects_chhd = chnlobj[1]
 				TrackName = riffobjects_chhd[0:256].split(b'\x00' * 1)[0].decode("utf-8")
 				flmtracks[chnlcount]['name'] = TrackName
-				flmtracks[chnlcount]['pan'] = 0.0
 				flmtracks[chnlcount]['muted'] = 0
 				instrumentdata_json = {}
 				instrumentdata_json['plugin'] = "none"

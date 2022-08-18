@@ -66,6 +66,8 @@ headername = fileobject.read(4)
 riffobjects = _func_riff.readriffdata(fileobject, 4)
 
 tracklist = []
+fxrack = []
+fxcount = 0
 
 for riffobject in riffobjects:
 	if riffobject[0] == b'HEAD':
@@ -79,13 +81,15 @@ for riffobject in riffobjects:
 		chnldata = _func_riff.readriffdata(riffobject[1],8)
 		placements = []
 		trackdata_json = {}
+		fxchannel_json = {}
 		for chnlobj in chnldata:
 			if chnlobj[0] == b'CHHD':
 				riffobjects_chhd = chnlobj[1]
-				TrackName = riffobjects_chhd.split(b'\x00' * 1)[0].decode("utf-8")
+				TrackName = riffobjects_chhd[0:256].split(b'\x00' * 1)[0].decode("utf-8")
 				print('Track Name: ' + TrackName)
 				trackdata_json['type'] = "instrument"
 				trackdata_json['name'] = TrackName
+				trackdata_json['fxrack_channel'] = fxcount
 				trackdata_json['vol'] = 1.0
 				trackdata_json['pan'] = 0.0
 				trackdata_json['muted'] = 0
@@ -94,6 +98,12 @@ for riffobject in riffobjects:
 				trackdata_json['instrumentdata'] = instrumentdata_json
 				plugindata_json = {}
 				trackdata_json['plugindata'] = plugindata_json
+				fxchannel_json['name'] = TrackName
+				fxchannel_json['muted'] = 0
+				fxchannel_json['num'] = fxcount
+				fxchannel_json['vol'] = 1.0
+				
+				
 			if chnlobj[0] == b'TRKH':
 				trkhdata = _func_riff.readriffdata(chnlobj[1],0)
 				for trkhobj in trkhdata:
@@ -128,7 +138,8 @@ for riffobject in riffobjects:
 			trackdata_json['type'] = "audio"
 		trackdata_json['placements'] = placements
 		tracklist.append(trackdata_json)
-
+		fxrack.append(fxchannel_json)
+		fxcount += 1
 
 json_root = {}
 json_root['mastervol'] = 1.0
@@ -137,6 +148,7 @@ json_root['timesig_denominator'] = 4
 json_root['bpm'] = bpm
 json_root['title'] = songname
 json_root['tracks'] = tracklist
+json_root['fxrack'] = fxrack
 
 with open(args.cvpj + '.cvpj', 'w') as outfile:
     outfile.write(json.dumps(json_root, indent=2))

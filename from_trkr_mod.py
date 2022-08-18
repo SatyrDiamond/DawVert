@@ -176,7 +176,6 @@ def parse_song(modfile):
 		table_patterns.append(table_singlepattern)
 	return table_patterns
 
-table_patterns = []
 patterntable_all = parse_song(modfile)
 patterntable = patterntable_all[0]
 
@@ -184,7 +183,7 @@ current_channelnum = 0
 tickrow = 3
 
 outputtracks = []
-
+outputfx = []
 outputinsts = []
 
 for current_channelnum in range(number_of_channels):
@@ -209,10 +208,15 @@ for sample in range(31):
 	outputinst_track['plugindata'] = outputinst_track_plugindata
 	outputinst_track_final = {}
 	outputinst_track_final['id'] = sample+1
+	outputinst_track_final['fxrack_channel'] = sample+1
 	outputinst_track_final['volume'] = 0.3
 	outputinst_track_final['name'] = samples[sample][0]
 	outputinst_track_final['instrumentdata'] = outputinst_track
 	outputinsts.append(outputinst_track_final)
+	fxchannel = {}
+	fxchannel['name'] = samples[sample][0]
+	fxchannel['num'] = sample+1
+	outputfx.append(fxchannel)
 
 mainjson = {}
 mainjson['mastervol'] = 1.0
@@ -222,6 +226,7 @@ mainjson['timesig_denominator'] = 4
 mainjson['bpm'] = 140.0
 mainjson['multiple_instruments_in_single_track'] = 1
 mainjson['tracks'] = outputtracks
+mainjson['fxrack'] = outputfx
 mainjson['instruments'] = outputinsts
 
 with open(args.cvpjm + '.cvpjm', 'w') as f:

@@ -86,7 +86,6 @@ for riffobject in riffobjects:
 			if chnlobj[0] == b'CHHD':
 				riffobjects_chhd = chnlobj[1]
 				TrackName = riffobjects_chhd[0:256].split(b'\x00' * 1)[0].decode("utf-8")
-				print('Track Name: ' + TrackName)
 				trackdata_json['type'] = "instrument"
 				trackdata_json['name'] = TrackName
 				trackdata_json['fxrack_channel'] = fxcount
@@ -132,15 +131,18 @@ for riffobject in riffobjects:
 									placement_json['notelist'] = parse_evnt_notelist(riff_clip_inside_part[1])
 						if placement_json != {}:
 							placements.append(placement_json)
+		print('Track Name: ' + TrackName, end =" | Type: ")
+		print(TrackType)
 		if TrackType == 0:
 			trackdata_json['type'] = "instrument"
+			tracklist.append(trackdata_json)
 		if TrackType == 2:
 			trackdata_json['type'] = "audio"
+			tracklist.append(trackdata_json)
 		trackdata_json['placements'] = placements
-		tracklist.append(trackdata_json)
 		fxrack.append(fxchannel_json)
 		fxcount += 1
-
+TrackType
 json_root = {}
 json_root['mastervol'] = 1.0
 json_root['timesig_numerator'] = 4

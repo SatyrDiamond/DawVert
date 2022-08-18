@@ -139,7 +139,7 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
 	if json_instrumentdata['plugin'] != 'sampler':
 		basenote += -3
 	xml_instrumenttrack.set('basenote', str(basenote))
-	if 'fxrack_channel' in json_instrumentdata:
+	if 'fxrack_channel' in json_singletrack:
 		xml_instrumenttrack.set('fxch', str(json_singletrack['fxrack_channel']))
 	else:
 		xml_instrumenttrack.set('fxch', '0')

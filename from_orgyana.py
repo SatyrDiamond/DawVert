@@ -164,12 +164,19 @@ parsetrack(orgnl2outnl(orgnotestable_perc6), 'perc6', orginsttable[13], 1)
 parsetrack(orgnl2outnl(orgnotestable_perc7), 'perc7', orginsttable[14], 1)
 parsetrack(orgnl2outnl(orgnotestable_perc8), 'perc8', orginsttable[15], 1)
 
+json_loop = {}
+json_loop['enabled'] = int(1)
+json_loop['start'] = loop_beginning/16
+json_loop['end'] = loop_end/16
+
 json_root = {}
 json_root['mastervol'] = 1.0
 json_root['timesig_numerator'] = 4
 json_root['timesig_denominator'] = 4
 json_root['bpm'] = tempo
 json_root['tracks'] = tracklist
+json_root['loop'] = json_loop
 
 with open(args.cvpj + '.cvpj', 'w') as outfile:
     outfile.write(json.dumps(json_root, indent=2))
+

@@ -166,7 +166,8 @@ def lmms_decode_inst_track(trackxml):
 	trackjson_instdata['pitch'] = 0
 	if trackxml_insttr.get('pitch') != None:
 		trackjson_instdata['pitch'] = float(trackxml_insttr.get('pitch'))
-	trackjson_instdata['basenote'] = int(trackxml_insttr.get('basenote')) + 3
+	basenote = int(trackxml_insttr.get('basenote'))
+	trackjson_instdata['basenote'] = int(basenote)
 	trackxml_chordcreator = trackxml_insttr.findall('chordcreator')[0]
 	trackjson_instdata['chordcreator'] = {}
 	trackjson_instdata['chordcreator']['enabled'] = int(trackxml_chordcreator.get('chord-enabled'))
@@ -259,17 +260,25 @@ tree = ET.parse(args.mpp).getroot()
 headxml = tree.findall('head')[0]
 tracksxml = tree.findall('song/trackcontainer/track')
 fxxml = tree.findall('song/fxmixer/fxchannel')
+timelinexml = tree.find('song/timeline')
 
 bpm = 140
 if headxml.get('bpm') != None:
 	bpm = int(headxml.get('bpm'))
 
+loop = {}
+loop['enabled'] = int(timelinexml.get('lpstate'))
+loop['start'] = int(timelinexml.get('lp0pos'))/192
+loop['end'] = int(timelinexml.get('lp1pos'))/192
+
 json_root = {}
+json_root['mastervol'] = float(hundredto1(headxml.get('mastervol')))
 json_root['mastervol'] = float(hundredto1(headxml.get('mastervol')))
 json_root['masterpitch'] = float(hundredto1(headxml.get('masterpitch')))
 lmms_getvalue(4, json_root, headxml, 'timesig_numerator', 'timesig_numerator')
 lmms_getvalue(4, json_root, headxml, 'timesig_denominator', 'timesig_denominator')
 lmms_getvalue(140, json_root, headxml, 'bpm', 'bpm')
+json_root['loop'] = loop
 json_root['tracks'] = lmms_decode_tracks(tracksxml)
 json_root['fxrack'] = lmms_decode_fxmixer(fxxml)
 

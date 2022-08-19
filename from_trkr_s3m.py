@@ -86,7 +86,6 @@ for ptrInstrument in ptrInstruments:
 	instrumentjson_inst_plugindata['file'] = args.samplefolder + '/' + str(instrumentcount+1).zfill(2) + '.wav'
 	instrumentjson_inst['plugindata'] = instrumentjson_inst_plugindata
 	instrumentjson['instrumentdata'] = instrumentjson_inst
-	print(instrumentjson)
 	instrumentjson_table.append(instrumentjson)
 	fxchannel = {}
 	fxchannel['name'] = instrument_name

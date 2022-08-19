@@ -38,7 +38,8 @@ orderList = []
 for orderListByte in orderListBytes:
 	orderList.append(orderListByte)
 
-orderList.remove(255)
+if 255 in orderList:
+	orderList.remove(255)
 
 ptrInstruments = []
 for _ in range(instrumentCount):
@@ -53,7 +54,6 @@ outputfx = []
 outputtracks = []
 
 instrumentcount = 0
-print(ptrInstruments)
 for ptrInstrument in ptrInstruments:
 	modfile.seek(ptrInstrument)
 	instrumentjson = {}

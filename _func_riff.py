@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2022 Colby Ray
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from io import BytesIO
 
 def bytearray2BytesIO(bytearray):

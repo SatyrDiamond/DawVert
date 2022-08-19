@@ -38,8 +38,10 @@ orderList = []
 for orderListByte in orderListBytes:
 	orderList.append(orderListByte)
 
-if 255 in orderList:
+while 255 in orderList:
 	orderList.remove(255)
+
+print(orderList)
 
 ptrInstruments = []
 for _ in range(instrumentCount):
@@ -169,6 +171,7 @@ for current_channelnum in range(31):
 	singletrack['muted'] = 0
 	singletrack['placements'] = _func_noteconv.timednotes2notelistplacement_parse_timednotes(timednotes)
 	outputtracks.append(singletrack)
+
 
 mainjson = {}
 mainjson['mastervol'] = 1.0

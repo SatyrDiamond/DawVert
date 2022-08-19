@@ -53,6 +53,7 @@ outputfx = []
 outputtracks = []
 
 instrumentcount = 0
+print(ptrInstruments)
 for ptrInstrument in ptrInstruments:
 	modfile.seek(ptrInstrument)
 	instrumentjson = {}
@@ -72,9 +73,9 @@ for ptrInstrument in ptrInstruments:
 		instrument_internal = modfile.read(12)
 		instrument_name = modfile.read(28).decode().rstrip('\x00')
 		instrument_sig = modfile.read(4)
-	instrumentjson['id'] = instrumentcount
+	instrumentjson['id'] = instrumentcount+1
 	instrumentjson['name'] = instrument_name
-	instrumentjson['fxrack_channel'] = instrumentcount
+	instrumentjson['fxrack_channel'] = instrumentcount+1
 	instrumentjson['volume'] = 0.3
 	instrumentjson_inst = {}
 	instrumentjson_inst['plugin'] = "sampler"
@@ -82,13 +83,14 @@ for ptrInstrument in ptrInstruments:
 	instrumentjson_inst['pitch'] = 0
 	instrumentjson_inst['usemasterpitch'] = 1
 	instrumentjson_inst_plugindata = {}
-	instrumentjson_inst_plugindata['file'] = args.samplefolder + '/' + str(instrumentcount).zfill(2) + '.wav'
+	instrumentjson_inst_plugindata['file'] = args.samplefolder + '/' + str(instrumentcount+1).zfill(2) + '.wav'
 	instrumentjson_inst['plugindata'] = instrumentjson_inst_plugindata
 	instrumentjson['instrumentdata'] = instrumentjson_inst
+	print(instrumentjson)
 	instrumentjson_table.append(instrumentjson)
 	fxchannel = {}
 	fxchannel['name'] = instrument_name
-	fxchannel['num'] = instrumentcount
+	fxchannel['num'] = instrumentcount+1
 	outputfx.append(fxchannel)
 	instrumentcount += 1
 
@@ -137,7 +139,8 @@ for ptrPattern in ptrPatterns:
 						packed_info = int.from_bytes(modfile.read(1), "little")
 					if packed_note != None:
 						pattern_row[0][packed_what_channel][0] = packed_note-64
-					pattern_row[0][packed_what_channel][1] = packed_instrument
+					if packed_instrument != None:
+						pattern_row[0][packed_what_channel][1] = packed_instrument
 					if packed_volume != None:
 						pattern_row[0][packed_what_channel][2]['volume'] = packed_volume/64
 					else:

@@ -292,7 +292,7 @@ with open(args.cvpj + '.cvpj', 'r') as projfile:
 
 patternscount_forprinting = 0
 
-_func_placements.removewarping(json_proj)
+_func_song.removewarping(json_proj)
 
 json_tracks = json_proj['tracks']
 xml_proj = ET.Element("lmms-project")

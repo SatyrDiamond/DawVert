@@ -138,7 +138,11 @@ for ptrPattern in ptrPatterns:
 					if packed_what_command_info == 1:
 						packed_info = int.from_bytes(modfile.read(1), "little")
 					if packed_note != None:
-						pattern_row[0][packed_what_channel][0] = packed_note-64
+						packed_note = bin(packed_note)[2:].zfill(8)
+						packed_note_oct = int(packed_note[0:4], 2)-3
+						packed_note_tone = int(packed_note[4:8], 2)
+						final_note = packed_note_oct*12 + packed_note_tone
+						pattern_row[0][packed_what_channel][0] = final_note
 					if packed_instrument != None:
 						pattern_row[0][packed_what_channel][1] = packed_instrument
 					if packed_volume != None:

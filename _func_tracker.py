@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2022 Colby Ray
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 def get_channeldata_inside_pattern(patterntable_single, channel):
     output_table = []

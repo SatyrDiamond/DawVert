@@ -71,7 +71,11 @@ for ptrInstrument in ptrInstruments:
 		instrument_flags = int.from_bytes(modfile.read(1), "little")
 		instrument_c2spd = int.from_bytes(modfile.read(4), "little")
 		instrument_internal = modfile.read(12)
-		instrument_name = modfile.read(28).decode().rstrip('\x00')
+		instrument_namebytes = modfile.read(28)
+		try:
+			instrument_name = instrument_namebytes.decode().rstrip('\x00')
+		except:
+			instrument_name = ''
 		instrument_sig = modfile.read(4)
 	instrumentjson['id'] = instrumentcount+1
 	instrumentjson['name'] = instrument_name

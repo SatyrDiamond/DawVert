@@ -17,7 +17,7 @@ args = parser.parse_args()
 modfile = open(args.mod, 'rb')
 name = modfile.read(20).decode().rstrip('\x00')
 samples = []
-bpm = 140
+bpm = 125
 for _ in range(31):
 	sample_name = modfile.read(22).decode().rstrip('\x00')
 	sample_length = int.from_bytes(modfile.read(2), "big")

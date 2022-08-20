@@ -60,10 +60,11 @@ outputtracks = []
 
 instrumentcount = 0
 for ptrInstrument in ptrInstruments:
+	fxchannel = {}
 	modfile.seek(ptrInstrument)
 	instrumentjson = {}
 	instrumenttype = int.from_bytes(modfile.read(1), "little")
-	instrumentfilename = modfile.read(12)
+	instrumentfilenamebytes = modfile.read(12)
 	if instrumenttype == 0 or instrumenttype == 1:
 		instrument_ptrDataH = int.from_bytes(modfile.read(1), "little")
 		instrument_ptrDataL = int.from_bytes(modfile.read(2), "little")
@@ -77,11 +78,15 @@ for ptrInstrument in ptrInstruments:
 		instrument_c2spd = int.from_bytes(modfile.read(4), "little")
 		instrument_internal = modfile.read(12)
 		instrument_namebytes = modfile.read(28)
-		try:
-			instrument_name = instrument_namebytes.decode().rstrip('\x00')
-		except:
-			instrument_name = ''
 		instrument_sig = modfile.read(4)
+	try:
+		instrument_name = instrumentfilenamebytes.split(b'\x00' * 1)[0].decode("utf-8")
+	except:
+		instrument_name = str(instrumentcount)
+	try:
+		fxchannel['name'] = instrument_namebytes.split(b'\x00' * 1)[0].decode("utf-8")
+	except:
+		fxchannel['name'] = ''
 	instrumentjson['id'] = instrumentcount+1
 	instrumentjson['name'] = instrument_name
 	instrumentjson['fxrack_channel'] = instrumentcount+1
@@ -96,7 +101,6 @@ for ptrInstrument in ptrInstruments:
 	instrumentjson_inst['plugindata'] = instrumentjson_inst_plugindata
 	instrumentjson['instrumentdata'] = instrumentjson_inst
 	instrumentjson_table.append(instrumentjson)
-	fxchannel = {}
 	fxchannel['name'] = instrument_name
 	fxchannel['num'] = instrumentcount+1
 	outputfx.append(fxchannel)

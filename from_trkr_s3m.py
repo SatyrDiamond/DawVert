@@ -96,7 +96,7 @@ for ptrInstrument in ptrInstruments:
 	except:
 		instrument_name = ''
 	instrumentjson['id'] = instrumentcount+1
-	instrumentjson['name'] = instrument_name
+	instrumentjson['name'] = instrument_trackname
 	instrumentjson['fxrack_channel'] = instrumentcount+1
 	instrumentjson['volume'] = 0.3
 	instrumentjson_inst = {}
@@ -109,6 +109,7 @@ for ptrInstrument in ptrInstruments:
 	instrumentjson_inst['plugindata'] = instrumentjson_inst_plugindata
 	instrumentjson['instrumentdata'] = instrumentjson_inst
 	instrumentjson_table.append(instrumentjson)
+	fxchannel['name'] = instrument_name
 	fxchannel['num'] = instrumentcount+1
 	outputfx.append(fxchannel)
 	print("Instrument: " + str(instrumentcount) + " | Type: " + str(instrumenttype) + " | Name: " + instrument_name + " | Filename: " + instrument_filename)

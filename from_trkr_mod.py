@@ -189,7 +189,6 @@ patterntable_all = parse_song(modfile)
 patterntable = patterntable_all[0]
 
 current_channelnum = 0
-tickrow = 3
 
 outputtracks = []
 outputfx = []
@@ -203,7 +202,7 @@ if 'tempo' in veryfirstrow:
 for current_channelnum in range(number_of_channels):
 	_func_noteconv.timednotes2notelistplacement_track_start()
 	channelsong = _func_tracker.entire_song_channel(patterntable_all,current_channelnum,order_list)
-	timednotes = _func_tracker.convertchannel2timednotes(channelsong,tickrow)
+	timednotes = _func_tracker.convertchannel2timednotes(channelsong,6)
 	singletrack = {}
 	singletrack['name'] = "Channel " + str(current_channelnum+1)
 	singletrack['muted'] = 0

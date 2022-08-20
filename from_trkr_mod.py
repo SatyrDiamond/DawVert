@@ -150,6 +150,12 @@ def parse_mod_cell(modfile, firstrow):
 		output_param['volume'] = effect_parameter/64
 	if effect_type == 13:
 		output_extra['tracker_break_to_row'] = effect_parameter
+	if effect_type == 15:
+		print(effect_parameter)
+		if effect_parameter < 32:
+			output_extra['tracker_speed'] = effect_parameter
+		else:
+			output_extra['tempo'] = effect_parameter
 	return [output_note, output_inst, output_param, output_extra]
 
 def parse_mod_row(modfile, firstrow):

@@ -143,10 +143,10 @@ def lmms_decode_inst_track(trackxml):
 	trackjson['name'] = trackxml.get('name')
 	print('Instrument Track Name: ' + trackjson['name'])
 	trackjson['muted'] = int(trackxml.get('muted'))
-	trackjson['fxrack_channel'] = int(trackxml_insttr.get('fxch'))
 	trackjson_instdata = trackjson['instrumentdata']
 	trackjson_instdata['plugindata'] = plugindata_json
 	trackxml_insttr = trackxml.findall('instrumenttrack')[0]
+	trackjson['fxrack_channel'] = int(trackxml_insttr.get('fxch'))
 	trackxml_insttr_eldata = trackxml_insttr.findall('eldata')[0]
 	if trackxml_insttr_eldata.findall('elvol'):
 		realvalue = trackxml_insttr_eldata.findall('elvol')[0]

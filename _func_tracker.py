@@ -26,8 +26,9 @@ def convertchannel2timednotes(patterntable_channel, tickrow):
     current_key = None
     first_seperate = 0
     for notecommand in patterntable_channel:
+        #print(notecommand)
         if notecommand[0][0] == None:
-            if 'firstrow' in notecommand[0][3]:
+            if 'firstrow' in notecommand[1]:
                 if first_seperate == 1:
                     output_channel.append('seperate;')
                 if first_seperate == 0:
@@ -36,7 +37,7 @@ def convertchannel2timednotes(patterntable_channel, tickrow):
             if note_held == 1:
                 output_channel.append('note_off;' + str(current_key))
             note_held = 0
-            if 'firstrow' in notecommand[0][3]:
+            if 'firstrow' in notecommand[1]:
                 if first_seperate == 1:
                     output_channel.append('seperate;')
                 if first_seperate == 0:
@@ -44,7 +45,7 @@ def convertchannel2timednotes(patterntable_channel, tickrow):
         else:
             if note_held == 1:
                 output_channel.append('note_off;' + str(current_key))
-            if 'firstrow' in notecommand[0][3]:
+            if 'firstrow' in notecommand[1]:
                 if first_seperate == 1:
                     output_channel.append('seperate;')
                 if first_seperate == 0:
@@ -58,5 +59,8 @@ def convertchannel2timednotes(patterntable_channel, tickrow):
             if "volume" in notecommand[0][2]:
                 volume = notecommand[0][2]['volume']
             output_channel.append('note_on;' + str(notecommand[0][0])+','+str(volume))
+        if 'tracker_speed' in notecommand[1]:
+            tickrow = notecommand[1]['tracker_speed']
+            tickrowfinal = (int(tickrow)/6)/4
         output_channel.append('break;' + str(tickrowfinal))
     return output_channel

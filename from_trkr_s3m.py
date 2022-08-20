@@ -160,6 +160,11 @@ for ptrPattern in ptrPatterns:
 					if firstrow == 1:
 						pattern_row[0][packed_what_channel][3]['firstrow'] = 1
 						pattern_row[1]['firstrow'] = 1
+
+					if packed_what_command_info == 1 and packed_command == 1:
+						pattern_row[0][packed_what_channel][3]['tracker_speed'] = packed_info
+						pattern_row[1]['tracker_speed'] = packed_info
+
 					#print(packed_what_command_info, packed_what_volume, packed_what_note_instrument, packed_what_channel)
 			firstrow = 0
 			patterntable_single.append(pattern_row)

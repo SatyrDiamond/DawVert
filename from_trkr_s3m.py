@@ -58,12 +58,15 @@ instrumentjson_table = []
 outputfx = []
 outputtracks = []
 
+defualtvolume = []
+
 instrumentcount = 0
 for ptrInstrument in ptrInstruments:
 	fxchannel = {}
 	modfile.seek(ptrInstrument)
 	instrumentjson = {}
 	instrumenttype = int.from_bytes(modfile.read(1), "little")
+	instrument_volume = 1.0
 	instrumentfilenamebytes = modfile.read(12)
 	if instrumenttype == 0 or instrumenttype == 1:
 		instrument_ptrDataH = int.from_bytes(modfile.read(1), "little")
@@ -71,7 +74,7 @@ for ptrInstrument in ptrInstruments:
 		instrument_length = int.from_bytes(modfile.read(4), "little")
 		instrument_loopStart = int.from_bytes(modfile.read(4), "little")
 		instrument_loopEnd = int.from_bytes(modfile.read(4), "little")
-		instrumentjson['volume'] = int.from_bytes(modfile.read(1), "little")/64
+		instrument_volume = int.from_bytes(modfile.read(1), "little")/64
 		instrument_reserved = int.from_bytes(modfile.read(1), "little")
 		instrument_pack = int.from_bytes(modfile.read(1), "little")
 		instrument_flags = int.from_bytes(modfile.read(1), "little")
@@ -103,6 +106,7 @@ for ptrInstrument in ptrInstruments:
 	instrumentjson_table.append(instrumentjson)
 	fxchannel['num'] = instrumentcount+1
 	outputfx.append(fxchannel)
+	defualtvolume.append(instrument_volume)
 	instrumentcount += 1
 
 patterntable_all = []
@@ -159,7 +163,10 @@ for ptrPattern in ptrPatterns:
 					if packed_volume != None:
 						pattern_row[0][packed_what_channel][2]['volume'] = packed_volume/64
 					else:
-						pattern_row[0][packed_what_channel][2]['volume'] = 1.0
+						if packed_instrument != None:
+							pattern_row[0][packed_what_channel][2]['volume'] = defualtvolume[packed_instrument-1]
+						else:
+							pattern_row[0][packed_what_channel][2]['volume'] = 1.0
 					if firstrow == 1:
 						pattern_row[0][packed_what_channel][3]['firstrow'] = 1
 						pattern_row[1]['firstrow'] = 1

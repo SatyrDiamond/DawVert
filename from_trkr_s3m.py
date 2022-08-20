@@ -15,7 +15,9 @@ parser.add_argument("samplefolder")
 args = parser.parse_args()
 
 modfile = open(args.s3m, 'rb')
-name = modfile.read(28).decode().rstrip('\x00')
+
+name = modfile.read(28).split(b'\x00' * 1)[0].decode("utf-8")
+print("Song Name: " + str(name))
 sig1 = modfile.read(1)
 type = modfile.read(1)
 reserved = int.from_bytes(modfile.read(2), "little")
@@ -43,16 +45,17 @@ for orderListByte in orderListBytes:
 
 while 255 in orderList:
 	orderList.remove(255)
-
-print(orderList)
+print("Order List: " + str(orderList))
 
 ptrInstruments = []
 for _ in range(instrumentCount):
 	ptrInstruments.append(int.from_bytes(modfile.read(2), "little")*16)
+print("Instruments: " + str(len(ptrInstruments)))
 
 ptrPatterns = []
 for _ in range(patternPtrCount):
 	ptrPatterns.append(int.from_bytes(modfile.read(2), "little")*16)
+print("Patterns: " + str(len(ptrPatterns)))
 
 instrumentjson_table = []
 outputfx = []
@@ -83,13 +86,15 @@ for ptrInstrument in ptrInstruments:
 		instrument_namebytes = modfile.read(28)
 		instrument_sig = modfile.read(4)
 	try:
-		instrument_name = instrumentfilenamebytes.split(b'\x00' * 1)[0].decode("utf-8")
+		instrument_filename = instrumentfilenamebytes.split(b'\x00' * 1)[0].decode("utf-8")
+		instrument_trackname = instrument_filename
 	except:
-		instrument_name = str(instrumentcount)
+		instrument_filename = ''
+		instrument_trackname = str(instrumentcount)
 	try:
-		fxchannel['name'] = instrument_namebytes.split(b'\x00' * 1)[0].decode("utf-8")
+		instrument_name = instrument_namebytes.split(b'\x00' * 1)[0].decode("utf-8")
 	except:
-		fxchannel['name'] = ''
+		instrument_name = ''
 	instrumentjson['id'] = instrumentcount+1
 	instrumentjson['name'] = instrument_name
 	instrumentjson['fxrack_channel'] = instrumentcount+1
@@ -106,16 +111,21 @@ for ptrInstrument in ptrInstruments:
 	instrumentjson_table.append(instrumentjson)
 	fxchannel['num'] = instrumentcount+1
 	outputfx.append(fxchannel)
+	print("Instrument: " + str(instrumentcount) + " | Type: " + str(instrumenttype) + " | Name: " + instrument_name + " | Filename: " + instrument_filename)
 	defualtvolume.append(instrument_volume)
 	instrumentcount += 1
 
+patterncount = 1
 patterntable_all = []
+print("Pattern:",end=' ')
 for ptrPattern in ptrPatterns:
+	print(str(patterncount),end=' ')
 	patterntable_single = []
 	if ptrPattern != 0:
 		modfile.seek(ptrPattern)
 		pattern_packed_len = int.from_bytes(modfile.read(2), "little")
 		firstrow = 1
+		rowcount = 0
 		for _ in range(64):
 			pattern_done = 0
 			pattern_row_local = []
@@ -178,16 +188,22 @@ for ptrPattern in ptrPatterns:
 					#print(packed_what_command_info, packed_what_volume, packed_what_note_instrument, packed_what_channel)
 			firstrow = 0
 			patterntable_single.append(pattern_row)
+			rowcount += 1
 	patterntable_all.append(patterntable_single)
+	patterncount += 1
+print(' ')
 
 for current_channelnum in range(31):
+	print('Channel ' + str(current_channelnum+1) + ': ', end='')
 	_func_noteconv.timednotes2notelistplacement_track_start()
 	channelsong = _func_tracker.entire_song_channel(patterntable_all,current_channelnum,orderList)
 	timednotes = _func_tracker.convertchannel2timednotes(channelsong,initialSpeed)
+	placements = _func_noteconv.timednotes2notelistplacement_parse_timednotes(timednotes)
 	singletrack = {}
 	singletrack['name'] = "Channel " + str(current_channelnum+1)
 	singletrack['muted'] = 0
-	singletrack['placements'] = _func_noteconv.timednotes2notelistplacement_parse_timednotes(timednotes)
+	print(str(len(placements)) + ' Placements')
+	singletrack['placements'] = placements
 	outputtracks.append(singletrack)
 
 
@@ -196,6 +212,7 @@ mainjson['mastervol'] = 1.0
 mainjson['masterpitch'] = 0.0
 mainjson['timesig_numerator'] = 4
 mainjson['timesig_denominator'] = 4
+mainjson['title'] = name
 mainjson['bpm'] = initialTempo
 mainjson['multiple_instruments_in_single_track'] = 1
 mainjson['tracks'] = outputtracks

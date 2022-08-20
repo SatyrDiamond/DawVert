@@ -101,7 +101,6 @@ for ptrInstrument in ptrInstruments:
 	instrumentjson_inst['plugindata'] = instrumentjson_inst_plugindata
 	instrumentjson['instrumentdata'] = instrumentjson_inst
 	instrumentjson_table.append(instrumentjson)
-	fxchannel['name'] = instrument_name
 	fxchannel['num'] = instrumentcount+1
 	outputfx.append(fxchannel)
 	instrumentcount += 1

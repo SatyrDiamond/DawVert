@@ -17,6 +17,7 @@ args = parser.parse_args()
 modfile = open(args.mod, 'rb')
 name = modfile.read(20).decode().rstrip('\x00')
 samples = []
+bpm = 140
 for _ in range(31):
 	sample_name = modfile.read(22).decode().rstrip('\x00')
 	sample_length = int.from_bytes(modfile.read(2), "big")
@@ -151,7 +152,6 @@ def parse_mod_cell(modfile, firstrow):
 	if effect_type == 13:
 		output_extra['tracker_break_to_row'] = effect_parameter
 	if effect_type == 15:
-		print(effect_parameter)
 		if effect_parameter < 32:
 			output_extra['tracker_speed'] = effect_parameter
 		else:
@@ -195,6 +195,11 @@ outputtracks = []
 outputfx = []
 outputinsts = []
 
+veryfirstrow = patterntable_all[order_list[0]][0][1]
+
+if 'tempo' in veryfirstrow:
+	bpm = veryfirstrow['tempo']
+
 for current_channelnum in range(number_of_channels):
 	_func_noteconv.timednotes2notelistplacement_track_start()
 	channelsong = _func_tracker.entire_song_channel(patterntable_all,current_channelnum,order_list)
@@ -232,7 +237,7 @@ mainjson['mastervol'] = 1.0
 mainjson['masterpitch'] = 0.0
 mainjson['timesig_numerator'] = 4
 mainjson['timesig_denominator'] = 4
-mainjson['bpm'] = 140.0
+mainjson['bpm'] = bpm
 mainjson['multiple_instruments_in_single_track'] = 1
 mainjson['tracks'] = outputtracks
 mainjson['fxrack'] = outputfx

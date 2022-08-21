@@ -157,6 +157,8 @@ for ptrPattern in ptrPatterns:
 
 					if packed_what_note_instrument == 1:
 						packed_note = int.from_bytes(modfile.read(1), "little")
+						if packed_note == 255:
+							packed_note = None
 
 					if packed_what_note_instrument == 1:
 						packed_instrument = int.from_bytes(modfile.read(1), "little")
@@ -170,11 +172,11 @@ for ptrPattern in ptrPatterns:
 					if packed_what_command_info == 1:
 						packed_info = int.from_bytes(modfile.read(1), "little")
 					if packed_note != None:
-						bits_packed_note = bin(packed_note)[2:].zfill(8)
-						bits_packed_note_oct = int(bits_packed_note[0:4], 2)-4
-						bits_packed_note_tone = int(bits_packed_note[4:8], 2)
-						final_note = bits_packed_note_oct*12 + bits_packed_note_tone
-						
+						packed_note = bin(packed_note)[2:].zfill(8)
+						packed_note_oct = int(packed_note[0:4], 2)-4
+						packed_note_tone = int(packed_note[4:8], 2)
+						final_note = packed_note_oct*12 + packed_note_tone
+						pattern_row[0][packed_what_channel][0] = final_note
 					if packed_instrument != None:
 						pattern_row[0][packed_what_channel][1] = packed_instrument
 					if packed_volume != None:
@@ -191,12 +193,7 @@ for ptrPattern in ptrPatterns:
 					if packed_what_command_info == 1 and packed_command == 1:
 						pattern_row[0][packed_what_channel][3]['tracker_speed'] = packed_info
 						pattern_row[1]['tracker_speed'] = packed_info
-					if packed_note == 254:
-						pattern_row[0][packed_what_channel][0] = 'Cut'
-					elif packed_note == 255:
-						pattern_row[0][packed_what_channel][0] = None
-					else:
-						pattern_row[0][packed_what_channel][0] = final_note
+
 					#print(packed_what_command_info, packed_what_volume, packed_what_note_instrument, packed_what_channel)
 			firstrow = 0
 			patterntable_single.append(pattern_row)

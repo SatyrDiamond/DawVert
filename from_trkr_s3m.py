@@ -191,7 +191,6 @@ for ptrPattern in ptrPatterns:
 					if packed_what_command_info == 1 and packed_command == 1:
 						pattern_row[0][packed_what_channel][3]['tracker_speed'] = packed_info
 						pattern_row[1]['tracker_speed'] = packed_info
-					print(packed_note)
 					if packed_note == 254:
 						pattern_row[0][packed_what_channel][0] = 'Cut'
 					elif packed_note == 255:

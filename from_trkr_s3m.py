@@ -172,11 +172,14 @@ for ptrPattern in ptrPatterns:
 					if packed_what_command_info == 1:
 						packed_info = int.from_bytes(modfile.read(1), "little")
 					if packed_note != None:
-						packed_note = bin(packed_note)[2:].zfill(8)
-						packed_note_oct = int(packed_note[0:4], 2)-4
-						packed_note_tone = int(packed_note[4:8], 2)
-						final_note = packed_note_oct*12 + packed_note_tone
-						pattern_row[0][packed_what_channel][0] = final_note
+						bits_packed_note = bin(packed_note)[2:].zfill(8)
+						bits_packed_note_oct = int(bits_packed_note[0:4], 2)-4
+						bits_packed_note_tone = int(bits_packed_note[4:8], 2)
+						final_note = bits_packed_note_oct*12 + bits_packed_note_tone
+						if packed_note == 254:
+							pattern_row[0][packed_what_channel][0] = 'Cut'
+						else:
+							pattern_row[0][packed_what_channel][0] = final_note
 					if packed_instrument != None:
 						pattern_row[0][packed_what_channel][1] = packed_instrument
 					if packed_volume != None:
@@ -220,7 +223,7 @@ mainjson = {}
 mainjson['mastervol'] = 1.0
 mainjson['masterpitch'] = 0.0
 mainjson['timesig_numerator'] = 4
-mainjson['timesig_denominator'] = 4
+mainjson['timesig_denominator'] = 6
 mainjson['title'] = name
 mainjson['bpm'] = initialTempo
 mainjson['multiple_instruments_in_single_track'] = 1

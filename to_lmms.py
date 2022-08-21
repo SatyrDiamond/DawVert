@@ -304,11 +304,11 @@ xml_head.set('timesig_numerator', "4")
 xml_head.set('timesig_denominator', "4")
 xml_head.set('bpm', "140")
 bpm = 140
-if json_proj['tracks'] is not None:
+if json_proj['mastervol'] is not None:
 	xml_head.set('mastervol', str(oneto100(json_proj['mastervol'])))
-if json_proj['tracks'] is not None:
+if json_proj['timesig_numerator'] is not None:
 	xml_head.set('timesig_numerator', str(json_proj['timesig_numerator']))
-if json_proj['tracks'] is not None:
+if json_proj['timesig_denominator'] is not None:
 	xml_head.set('timesig_denominator', str(json_proj['timesig_denominator']))
 if json_proj['tracks'] is not None:
 	xml_head.set('bpm', str(json_proj['bpm']))

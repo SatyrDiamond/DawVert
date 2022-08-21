@@ -155,6 +155,8 @@ for ptrPattern in ptrPatterns:
 
 					if packed_what_note_instrument == 1:
 						packed_note = int.from_bytes(modfile.read(1), "little")
+						if packed_note == 255:
+							packed_note = None
 
 					if packed_what_note_instrument == 1:
 						packed_instrument = int.from_bytes(modfile.read(1), "little")

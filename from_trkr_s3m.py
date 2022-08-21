@@ -19,10 +19,6 @@ modfile = open(args.s3m, 'rb')
 name = modfile.read(28).split(b'\x00' * 1)[0].decode("utf-8")
 print("Song Name: " + str(name))
 sig1 = modfile.read(1)
-if sig1 != b'\x1a':
-	print('Not a S3M File')
-	exit()
-
 type = modfile.read(1)
 reserved = int.from_bytes(modfile.read(2), "little")
 orderCount = int.from_bytes(modfile.read(2), "little")
@@ -55,11 +51,17 @@ ptrInstruments = []
 for _ in range(instrumentCount):
 	ptrInstruments.append(int.from_bytes(modfile.read(2), "little")*16)
 print("Instruments: " + str(len(ptrInstruments)))
+if instrumentCount > 255:
+	print('Not a S3M File')
+	exit()
 
 ptrPatterns = []
 for _ in range(patternPtrCount):
 	ptrPatterns.append(int.from_bytes(modfile.read(2), "little")*16)
 print("Patterns: " + str(len(ptrPatterns)))
+if patternPtrCount > 255:
+	print('Not a S3M File')
+	exit()
 
 instrumentjson_table = []
 outputfx = []

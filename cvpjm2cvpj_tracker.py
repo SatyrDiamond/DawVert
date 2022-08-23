@@ -123,22 +123,23 @@ for instrument_placement in all_instrument_placements_table:
         out_track = {}
         instdata = find_instrument_id(instrument_placement[0], cvpjm_instrument_json)
         if instdata != None:
-          out_track['name'] = instdata['name']
-          out_track['instrumentdata'] = instdata['instrumentdata']
-          out_track['placements'] = singleinst_tracksplacement[1]
-          out_track['type'] = 'instrument'
-          out_track['vol'] = instdata['volume']
-          out_track['fxrack_channel'] = instdata['fxrack_channel']
-          out_track['frominstrumentid'] = singleinst_tracksplacement[0]
-          optimized_tracks.append(out_track)
+            if instdata['name'] == '':
+                out_track['name'] = str(instrument_placement[0])
+            else:
+                out_track['name'] = instdata['name']
+            out_track['instrumentdata'] = instdata['instrumentdata']
+            out_track['placements'] = singleinst_tracksplacement[1]
+            out_track['type'] = 'instrument'
+            out_track['vol'] = instdata['volume']
+            out_track['fxrack_channel'] = instdata['fxrack_channel']
+            out_track['frominstrumentid'] = singleinst_tracksplacement[0]
+            optimized_tracks.append(out_track)
 
 cvpj_json_out = cvpjm_json.copy()
 del cvpj_json_out['tracks']
 del cvpj_json_out['instruments']
 
 cvpj_json_out['tracks'] = optimized_tracks
-
-_func_song.sort_by_cvpjm_inst(cvpj_json_out)
 
 with open(args.cvpj + '.cvpj', 'w') as outfile:
         outfile.write(json.dumps(cvpj_json_out, indent=2))

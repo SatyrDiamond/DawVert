@@ -89,37 +89,37 @@ for cvpjm_track_json in cvpjm_tracks_json:
 all_instrument_placements_table = []
 for output_track in output_tracks:
     instrumentid = output_track['frominstrumentid']
-    print(instrumentid, end=": ")
+    #print(instrumentid, end=": ")
     for trackplacement in output_track['placements']:
         add_to_seperated_object(all_instrument_placements_table, trackplacement, instrumentid)
-        print('P', end=" ")
-    print()
+        #print('P', end=" ")
+    #print()
 
 #view combine instrument-placement
-print('\noutput:')
-for instrument_placement in all_instrument_placements_table:
-    print(instrument_placement[0], end=": ")
-    for placement in instrument_placement[1]:
-        print('P', end=" ")
-    print()
+#print('\noutput:')
+#for instrument_placement in all_instrument_placements_table:
+#    print(instrument_placement[0], end=": ")
+#    for placement in instrument_placement[1]:
+#        print('P', end=" ")
+ #   print()
 
 optimized_tracks = []
 #add instrument for each instrument
 for instrument_placement in all_instrument_placements_table:
-    print('\ninst:', instrument_placement[0])
+    #print('\ninst:', instrument_placement[0])
     singleinst_placements_table = []
     for placement in instrument_placement[1]:
         position = placement['position']
         add_to_seperated_object(singleinst_placements_table,placement,position)
     singleinst_tracksplacements = []
-    print('\npos-num output:')
+    #print('\npos-num output:')
     for singleinst_placement in singleinst_placements_table:
-        print(singleinst_placement[0], len(singleinst_placement[1]))
+        #print(singleinst_placement[0], len(singleinst_placement[1]))
         for number in range(len(singleinst_placement[1])):
             add_to_seperated_object(singleinst_tracksplacements,singleinst_placement[1][number],number)
-    print('\npos-placement output:')
+    #print('\npos-placement output:')
     for singleinst_tracksplacement in singleinst_tracksplacements:
-        print(singleinst_tracksplacement[0], len(singleinst_tracksplacement[1]))
+        #print(singleinst_tracksplacement[0], len(singleinst_tracksplacement[1]))
         out_track = {}
         instdata = find_instrument_id(instrument_placement[0], cvpjm_instrument_json)
         if instdata != None:

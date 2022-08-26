@@ -195,6 +195,12 @@ for offset_pattern in offset_patterns:
 
 					if cell_note != None:
 						pattern_row[0][cell_channel][0] = cell_note - 48
+					if cell_note == 254:
+						pattern_row[0][cell_channel][0] = 'Cut'
+					if cell_note == 255:
+						pattern_row[0][cell_channel][0] = 'Off'
+					if cell_note == 246:
+						pattern_row[0][cell_channel][0] = 'Cut'
 					if cell_instrument != None:
 						pattern_row[0][cell_channel][1] = cell_instrument
 					if firstrow == 1:

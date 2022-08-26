@@ -193,8 +193,9 @@ for offset_pattern in offset_patterns:
 						#print('cmdt=' + str(cell_commandtype), end=' ')
 						#print('cmdn=' + str(cell_commandnum), end=' ')
 
-					if cell_volpan <= 64:
-						pattern_row[0][cell_channel][2]['volume'] = cell_volpan/64
+					if cell_note != None:
+						if cell_volpan <= 64:
+							pattern_row[0][cell_channel][2]['volume'] = cell_volpan/64
 
 					if cell_note != None:
 						pattern_row[0][cell_channel][0] = cell_note - 48

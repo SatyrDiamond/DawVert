@@ -16,15 +16,13 @@ if height > 30:
 	print("image must be 30 pix high")
 	exit()
 
-def rgb_to_hex(rgb):
-    return '%02x%02x%02x' % rgb
-
 tracks = []
 for currentheight in range(height):
 	placements = []
 	for currentwidth in range(width):
 		placement = {}
-		placement['color'] = '#' + rgb_to_hex(image.getpixel((currentwidth, currentheight)))
+		color = image.getpixel((currentwidth, currentheight))
+		placement['color'] = [color[0]/255,color[1]/255,color[2]/255]
 		placement['position'] = currentwidth*4
 		placement['notelist'] = [{'key': 0,'position': 0.25,'pan': 0.0,'duration': 0.1,'vol': 1.0}]
 		placements.append(placement)

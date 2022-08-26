@@ -134,7 +134,7 @@ for offset_pattern in offset_patterns:
 			while pattern_done == 0:
 				channelvariable = bin(int.from_bytes(it_file.read(1), "little"))[2:].zfill(8)
 				cell_previous_maskvariable = int(channelvariable[0:1], 2)
-				cell_channel = int(channelvariable[1:8], 2)
+				cell_channel = int(channelvariable[1:8], 2) - 1
 				if int(channelvariable, 2) == 0:
 					pattern_done = 1
 				else:

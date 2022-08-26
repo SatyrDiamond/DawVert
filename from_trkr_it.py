@@ -175,8 +175,8 @@ for offset_pattern in offset_patterns:
 						cell_commandtype = int.from_bytes(it_file.read(1), "little")
 						cell_commandnum = int.from_bytes(it_file.read(1), "little")
 						table_lastcommand[cell_channel] = [cell_commandtype, cell_commandnum]
-						print('cmdt=' + str(cell_commandtype), end=' ')
-						print('cmdn=' + str(cell_commandnum), end=' ')
+						#print('cmdt=' + str(cell_commandtype), end=' ')
+						#print('cmdn=' + str(cell_commandnum), end=' ')
 
 
 					if maskvariable_last_note == 1:

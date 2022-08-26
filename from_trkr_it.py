@@ -201,8 +201,12 @@ for offset_pattern in offset_patterns:
 						pattern_row[0][cell_channel][0] = 'Off'
 					if cell_note == 246:
 						pattern_row[0][cell_channel][0] = 'Cut'
+
 					if cell_instrument != None:
 						pattern_row[0][cell_channel][1] = cell_instrument
+						
+					if cell_commandtype == 1:
+						pattern_row[1]['tracker_speed'] = cell_commandnum
 					if firstrow == 1:
 						pattern_row[1]['firstrow'] = 1
 					rowcount += 1

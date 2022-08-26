@@ -196,6 +196,8 @@ for offset_pattern in offset_patterns:
 					if cell_volpan != None:
 						if cell_volpan <= 64:
 							pattern_row[0][cell_channel][2]['volume'] = cell_volpan/64
+						elif 192 >= cell_volpan >= 128:
+							pattern_row[0][cell_channel][2]['pan'] = ((cell_volpan-128)/64-0.5)*2
 
 					if cell_note != None:
 						pattern_row[0][cell_channel][0] = cell_note - 48
@@ -204,7 +206,7 @@ for offset_pattern in offset_patterns:
 					if cell_note == 255:
 						pattern_row[0][cell_channel][0] = 'Off'
 					if cell_note == 246:
-						pattern_row[0][cell_channel][0] = 'Cut'
+						pattern_row[0][cell_channel][0] = 'Fade'
 
 					if cell_instrument != None:
 						pattern_row[0][cell_channel][1] = cell_instrument

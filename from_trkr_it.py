@@ -137,7 +137,7 @@ for offset_pattern in offset_patterns:
 				if int(channelvariable, 2) == 0:
 					pattern_done = 1
 				else:
-					print('ch:' + str(cell_channel) + '|', end=' ')
+					#print('ch:' + str(cell_channel) + '|', end=' ')
 					if cell_previous_maskvariable == 1:
 						maskvariable = bin(int.from_bytes(it_file.read(1), "little"))[2:].zfill(8)
 						table_previousmaskvariable[cell_channel] = maskvariable
@@ -161,21 +161,21 @@ for offset_pattern in offset_patterns:
 					if maskvariable_note == 1:
 						cell_note = int.from_bytes(it_file.read(1), "little")
 						table_lastnote[cell_channel] = cell_note
-						print('n=' + str(cell_note), end=' ')
+						#print('n=' + str(cell_note), end=' ')
 					if maskvariable_instrument == 1:
 						cell_instrument = int.from_bytes(it_file.read(1), "little")
 						table_lastinstrument[cell_channel] = cell_instrument
-						print('i=' + str(cell_instrument), end=' ')
+						#print('i=' + str(cell_instrument), end=' ')
 					if maskvariable_volpan == 1:
 						cell_volpan = int.from_bytes(it_file.read(1), "little")
 						table_lastvolpan[cell_channel] = cell_volpan
-						print('vp=' + str(cell_volpan), end=' ')
+						#print('vp=' + str(cell_volpan), end=' ')
 					if maskvariable_command == 1:
 						cell_commandtype = int.from_bytes(it_file.read(1), "little")
 						cell_commandnum = int.from_bytes(it_file.read(1), "little")
 						table_lastcommand[cell_channel] = [cell_commandtype, cell_commandnum]
-						print('cmdt=' + str(cell_commandtype), end=' ')
-						print('cmdn=' + str(cell_commandnum), end=' ')
+						#print('cmdt=' + str(cell_commandtype), end=' ')
+						#print('cmdn=' + str(cell_commandnum), end=' ')
 
 					if maskvariable_last_note == 1:
 						cell_note = table_lastnote[cell_channel]
@@ -199,14 +199,10 @@ for offset_pattern in offset_patterns:
 					if firstrow == 1:
 						pattern_row[1]['firstrow'] = 1
 					rowcount += 1
-					print('')
 			firstrow = 0
 			patterntable_single.append(pattern_row)
-			
 	patterntable_all.append(patterntable_single)
 	patterncount += 1
-print(' ')
-
 
 while 254 in orders:
 	orders.remove(254)

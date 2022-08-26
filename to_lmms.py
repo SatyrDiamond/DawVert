@@ -25,7 +25,9 @@ def lmms_encode_notelist(xmltag, json_notelist):
 		xml_pattern = ET.SubElement(xmltag, "note")
 		key = json_note['key'] + 60
 		position = int(round(float(json_note['position']) * 48))
-		pan = oneto100(json_note['pan'])
+		pan = 0
+		if 'pan' in json_note:
+			pan = oneto100(json_note['pan'])
 		duration = int(round(float(json_note['duration']) * 48))
 		vol = oneto100(json_note['vol'])
 		xml_pattern.set('key', str(key))

@@ -9,6 +9,7 @@ global position_notelist
 global output_noteslist
 global placements
 global currentplacement
+global note_pan
 #ActiveNotes: Position,Duration,Note,velocity
 ActiveNotes = []
 placements = []
@@ -16,8 +17,8 @@ output_noteslist = []
 position_global = 0
 position_notelist = 0
 
-def timednotes2notelist_note_on(key, velocity, program):
-    ActiveNotes.append([position_notelist,0,int(key),velocity, program])
+def timednotes2notelist_note_on(key, velocity, program, extra):
+    ActiveNotes.append([position_notelist,0,int(key),velocity, program, extra])
 
 def timednotes2notelist_rest(duration):
     global ActiveNotes
@@ -30,6 +31,7 @@ def timednotes2notelist_rest(duration):
 
 def timednotes2notelist_note_off(key):
     global ActiveNotes
+    global note_pan
     ActiveNoteTablePos = 0
     ActiveNoteFound = 0
     NumActiveNotes = len(ActiveNotes)
@@ -45,8 +47,9 @@ def timednotes2notelist_note_off(key):
             notejson['key'] = int(FoundNote[2])
             notejson['duration'] = float(FoundNote[1])
             notejson['vol'] = FoundNote[3]
-            notejson['pan'] = 0
             notejson['instrument'] = FoundNote[4]
+            if 'pan' in FoundNote[5]:
+                notejson['pan'] = FoundNote[5]['pan']
             output_noteslist.append(notejson)
         ActiveNoteTablePos += 1
 
@@ -55,6 +58,7 @@ def timednotes2notelistplacement_parse_timednotes(TimedNotesTable):
     currentprogram = 0
     ActiveNotes = []
     output_noteslist = []
+    extrajson = {}
     #ActiveNotes: Position,Duration,Note,ExtraVars
     timednotes2notelistplacement_placement_start()
     for TimedNote in TimedNotesTable:
@@ -67,7 +71,7 @@ def timednotes2notelistplacement_parse_timednotes(TimedNotesTable):
         else:
             TimedNoteValuesSecond = None
         if TimedNoteCommand == 'note_on':
-            timednotes2notelist_note_on(int(TimedNoteValuesFirst), float(TimedNoteValuesSecond), int(currentprogram))
+            timednotes2notelist_note_on(int(TimedNoteValuesFirst), float(TimedNoteValuesSecond), int(currentprogram), extrajson)
         if TimedNoteCommand == 'note_off':
             timednotes2notelist_note_off(int(TimedNoteValuesFirst))
         if TimedNoteCommand == 'break':
@@ -79,6 +83,9 @@ def timednotes2notelistplacement_parse_timednotes(TimedNotesTable):
             currentprogram = TimedNoteValuesFirst
             if currentprogram not in usedinstruments:
                 usedinstruments.append(currentprogram)
+
+        if TimedNoteCommand == 'pan':
+            extrajson['pan'] = TimedNoteValues[0]
     timednotes2notelistplacement_placement_end()
     return placements
 

@@ -175,8 +175,9 @@ for offset_pattern in offset_patterns:
 						cell_commandtype = int.from_bytes(it_file.read(1), "little")
 						cell_commandnum = int.from_bytes(it_file.read(1), "little")
 						table_lastcommand[cell_channel] = [cell_commandtype, cell_commandnum]
-						#print('cmdt=' + str(cell_commandtype), end=' ')
-						#print('cmdn=' + str(cell_commandnum), end=' ')
+						print('cmdt=' + str(cell_commandtype), end=' ')
+						print('cmdn=' + str(cell_commandnum), end=' ')
+
 
 					if maskvariable_last_note == 1:
 						cell_note = table_lastnote[cell_channel]
@@ -213,6 +214,8 @@ for offset_pattern in offset_patterns:
 						
 					if cell_commandtype == 1:
 						pattern_row[1]['tracker_speed'] = cell_commandnum
+					if cell_commandtype == 24:
+						pattern_row[0][cell_channel][2]['pan'] = ((cell_commandnum/255)-0.5)*2
 					if firstrow == 1:
 						pattern_row[1]['firstrow'] = 1
 					rowcount += 1

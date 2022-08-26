@@ -6,6 +6,9 @@ import xml.etree.ElementTree as ET
 import argparse
 import _func_song
 
+def rgb_to_hex(rgb):
+    return '%02x%02x%02x' % rgb
+
 parser = argparse.ArgumentParser()
 parser.add_argument("cvpj")
 parser.add_argument("mpp")
@@ -210,7 +213,9 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
 		xml_pattern.set('name', "")
 		xml_pattern.set('type', "1")
 		if 'color' in json_placement:
-			xml_pattern.set('color', str(json_placement['color']))
+			color = json_placement['color']
+			print(color)
+			xml_pattern.set('color', '#' + rgb_to_hex((int(color[0]*255),int(color[1]*255),int(color[2]*255))))
 		lmms_encode_notelist(xml_pattern, json_notelist)
 		tracksnum += 1
 

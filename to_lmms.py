@@ -209,9 +209,10 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
 		xml_pattern.set('steps', "16")
 		xml_pattern.set('name', "")
 		xml_pattern.set('type', "1")
+		if 'color' in json_placement:
+			xml_pattern.set('color', str(json_placement['color']))
 		lmms_encode_notelist(xml_pattern, json_notelist)
 		tracksnum += 1
-
 
 def lmms_encode_audio_track(xmltag, json_singletrack):
 	xmltag.set('solo', "0")

@@ -214,7 +214,6 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
 		xml_pattern.set('type', "1")
 		if 'color' in json_placement:
 			color = json_placement['color']
-			print(color)
 			xml_pattern.set('color', '#' + rgb_to_hex((int(color[0]*255),int(color[1]*255),int(color[2]*255))))
 		lmms_encode_notelist(xml_pattern, json_notelist)
 		tracksnum += 1

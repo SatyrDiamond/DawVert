@@ -10,6 +10,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("it")
+parser.add_argument("cvpjm")
 args = parser.parse_args()
 
 it_file = open(args.it, 'rb')
@@ -238,5 +239,5 @@ mainjson['tracks'] = outputtracks
 mainjson['fxrack'] = outputfx
 mainjson['instruments'] = instrumentjson_table
 
-with open('testout.cvpjm', 'w') as f:
+with open(args.cvpjm + '.cvpjm', 'w') as f:
     json.dump(mainjson, f, indent=2)

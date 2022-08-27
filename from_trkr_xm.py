@@ -69,9 +69,9 @@ def parse_xm_cell(databytes):
 			if cell_param:
 				output_param['volume'] = (cell_param)/64
 
-		if cell_vol != None:
-			if 80 >= cell_vol >= 16:
-				output_param['volume'] = (cell_vol-16)/64
+	if cell_vol != None:
+		if 80 >= cell_vol >= 16:
+			output_param['volume'] = (cell_vol-16)/64
 
 	return [output_note, output_inst, output_param, output_extra]
 

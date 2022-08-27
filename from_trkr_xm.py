@@ -54,6 +54,20 @@ def parse_xm_cell(databytes):
 	output_param = {}
 	output_extra = {}
 
+	#print(cell_note,cell_instrument,cell_vol,cell_effect,cell_param)
+
+	if cell_effect == 15:
+		if 31 >= cell_param:
+			output_extra['tracker_speed'] = cell_param
+
+	if cell_effect == 8:
+		if cell_param:
+			output_param['pan'] = ((cell_param/255)-0.5)*2
+
+	if cell_effect == 12:
+		if cell_param:
+			output_param['volume'] = (cell_param)/64
+
 	if cell_vol != None:
 		if 80 >= cell_vol >= 16:
 			output_param['volume'] = (cell_vol-16)/64

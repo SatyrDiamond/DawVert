@@ -11,7 +11,6 @@ from io import BytesIO
 
 
 def parse_xm_cell(databytes):
-
 	cell_note = None
 	cell_instrument = None
 	cell_vol = None
@@ -29,7 +28,7 @@ def parse_xm_cell(databytes):
 	packed_msb = int(packed_flags[0], 2)
 	if packed_msb == 1:
 		if packed_note == 1:
-			cell_note = int.from_bytes(databytes.read(1), "little") - 49
+			cell_note = int.from_bytes(databytes.read(1), "little")
 		if packed_instrument == 1:
 			cell_instrument = int.from_bytes(databytes.read(1), "little")
 		if packed_vol == 1:
@@ -39,13 +38,18 @@ def parse_xm_cell(databytes):
 		if packed_param == 1:
 			cell_param = int.from_bytes(databytes.read(1), "little")
 	else:
-		cell_note = packed_first - 49
+		cell_note = packed_first
 		cell_instrument = int.from_bytes(databytes.read(1), "little")
 		cell_vol = int.from_bytes(databytes.read(1), "little")
 		cell_effect = int.from_bytes(databytes.read(1), "little")
 		cell_param = int.from_bytes(databytes.read(1), "little")
 
 	output_note = cell_note
+	if cell_note != None:
+		if cell_note == 97:
+			output_note = 'Off'
+		else:
+			output_note = cell_note - 49
 	output_inst = cell_instrument
 	output_param = {}
 	output_extra = {}

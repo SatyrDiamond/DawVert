@@ -1,5 +1,7 @@
-import plugin_input
+# SPDX-FileCopyrightText: 2022 Colby Ray
+# SPDX-License-Identifier: GPL-3.0-or-later
 
+import plugin_input
 import os.path
 import math
 import json
@@ -138,7 +140,7 @@ class input_mod(plugin_input.base):
     def parse(self, input_file):
         global number_of_patterns
         global number_of_channels
-        samplefolder = os.path.splitext(input_file)[0]
+        samplefolder = os.path.splitext(os.path.abspath(input_file))[0]
         modfile = open(input_file, 'rb')
         name = modfile.read(20).decode().rstrip('\x00')
         samples = []

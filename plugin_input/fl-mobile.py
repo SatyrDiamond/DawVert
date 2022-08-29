@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2022 Colby Ray
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import plugin_input
 from io import BytesIO
 from functions import riff

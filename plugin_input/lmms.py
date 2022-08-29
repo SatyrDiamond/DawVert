@@ -1,7 +1,9 @@
+# SPDX-FileCopyrightText: 2022 Colby Ray
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import plugin_input
 import xml.etree.ElementTree as ET
 import json
-
 
 def hundredto1(input):
     return float(input) * 0.01
@@ -36,7 +38,7 @@ def lmms_decode_nlplacements(trackxml):
     patternsxml = trackxml.findall('pattern')
     printcountplace = 0
     for patternxml in patternsxml:
-        print('Input-LMMS | ┗━━━━ Placement ' + str(printcountplace+1) + ': ', end='')
+        print('Input-LMMS | └──── Placement ' + str(printcountplace+1) + ': ', end='')
         printcountplace += 1
         placementjson = {}
         placementjson["position"] = float(patternxml.get('pos')) / 48

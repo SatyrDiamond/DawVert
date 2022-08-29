@@ -1,5 +1,6 @@
 import plugin_output
 import xml.etree.ElementTree as ET
+from functions import song
 import json
 
 patternscount_forprinting = 0
@@ -300,6 +301,8 @@ class output_lmms(plugin_output.base):
     def parse(self, convproj_json, output_file):
         json_proj = json.loads(convproj_json)
         
+        #song.removewarping(json_proj)
+
         json_tracks = json_proj['tracks']
         xml_proj = ET.Element("lmms-project")
         xml_proj.set('type', "song")
@@ -344,6 +347,3 @@ class output_lmms(plugin_output.base):
         
         ET.indent(outfile)
         outfile.write(output_file, encoding='unicode')
-
-
-

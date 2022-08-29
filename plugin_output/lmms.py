@@ -195,7 +195,7 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
     while tracksnum <= len(json_placementlist)-1:
         global patternscount_forprinting
         patternscount_forprinting += 1
-        print('Output-LMMS | ┗━━━━ Placement ' + str(printcountplace+1) + ': ', end='')
+        print('Output-LMMS | ┗━━━━ Placement ' + str(printcountplace) + ': ', end='')
         printcountplace += 1
         json_placement = json_placementlist[tracksnum-1]
         json_notelist = json_placement['notelist']
@@ -301,7 +301,7 @@ class output_lmms(plugin_output.base):
     def parse(self, convproj_json, output_file):
         json_proj = json.loads(convproj_json)
         
-        #song.removewarping(json_proj)
+        song.removewarping(json_proj)
 
         json_tracks = json_proj['tracks']
         xml_proj = ET.Element("lmms-project")
@@ -347,3 +347,4 @@ class output_lmms(plugin_output.base):
         
         ET.indent(outfile)
         outfile.write(output_file, encoding='unicode')
+

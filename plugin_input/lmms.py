@@ -297,6 +297,4 @@ class input_lmms(plugin_input.base):
         json_root['tracks'] = lmms_decode_tracks(tracksxml)
         json_root['fxrack'] = lmms_decode_fxmixer(fxxml)
         json_root['convprojtype'] = 'single'
-        return json.dumps(json_root, indent=2)
-
-
+        return json.dumps(json_root)

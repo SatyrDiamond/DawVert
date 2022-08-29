@@ -167,5 +167,6 @@ class input_flm(plugin_input.base):
         json_root['title'] = songname
         json_root['tracks'] = tracklist
         json_root['fxrack'] = fxrack
+        json_root['convprojtype'] = 'single'
         
         return json.dumps(json_root, indent=2)

@@ -6,7 +6,6 @@ from functions import notemod
 
 def removewarping(song):
 	for trackdata in song['tracks']:
-		#print(trackdata['name'])
 		if trackdata['type'] == 'instrument':
 			newplacements = []
 			for placementdata in trackdata['placements']:
@@ -19,7 +18,8 @@ def removewarping(song):
 					startpoint = placementdata['noteloop']['startpoint']
 					endpoint = placementdata['noteloop']['endpoint']
 					remainingduration = duration + startpoint
-					#print('Func-Song | NoteLoop Unloop: ' + str(startpoint) + '-' + str(endpoint) + ' ' + str(duration))
+					print('Function-Song | removewarping: noteloop found in: ' + trackdata['name'])
+					print('Function-Song | ┗━━━━ ' + str(startpoint) + '-' + str(endpoint) + ' ' + str(duration))
 					if duration != endpoint:
 						while currentpos-duration <= duration:
 							newplacementdata = {}

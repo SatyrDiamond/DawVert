@@ -13,26 +13,25 @@ def removewarping(song):
 				firstsplit = 1
 				trackposition = placementdata['position']
 				tracknotelist = placementdata['notelist']
-				#print(json.dumps(placementdata, indent=2))
 				if 'noteloop' in placementdata:
 					currentpos = 0
 					duration = placementdata['noteloop']['duration']
 					startpoint = placementdata['noteloop']['startpoint']
 					endpoint = placementdata['noteloop']['endpoint']
 					remainingduration = duration + startpoint
-					print('----- ' + str(duration))
+					#print('Func-Song | NoteLoop Unloop: ' + str(startpoint) + '-' + str(endpoint) + ' ' + str(duration))
 					if duration != endpoint:
 						while currentpos-duration <= duration:
 							newplacementdata = {}
 							part_position = currentpos
 							part_duration = endpoint
 							trim_duration = min(part_duration,remainingduration)
-							print(str(part_position) + ' ' + str(trim_duration))
-							newnotelist = _func_notemod.trim(tracknotelist, trim_duration)
+							#print(str(part_position) + ' ' + str(trim_duration))
+							newnotelist = notemod.trim(tracknotelist, trim_duration)
 							if trim_duration > 0:
 								if firstsplit == 1:
 									newplacementdata['position'] = (trackposition + part_position + startpoint) - startpoint
-									newplacementdata['notelist'] = _func_notemod.move(newnotelist, -startpoint)
+									newplacementdata['notelist'] = notemod.move(newnotelist, -startpoint)
 								else:
 									newplacementdata['position'] = (trackposition + part_position) - startpoint
 									newplacementdata['notelist'] = newnotelist

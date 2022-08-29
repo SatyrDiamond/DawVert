@@ -1,7 +1,7 @@
 
 # DawVert
 
-Supported Inputs: LMMS, Orgyana
+Supported Inputs: LMMS, Orgyana, FL Studio Mobile
 
 Supported Outputs: LMMS
 

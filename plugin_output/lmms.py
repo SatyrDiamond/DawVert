@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2022 Colby Ray
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import plugin_output
 import xml.etree.ElementTree as ET
 from functions import song
@@ -196,7 +199,7 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
         global patternscount_forprinting
         patternscount_forprinting += 1
         printcountplace += 1
-        print('Output-LMMS | ┗━━━━ Placement ' + str(printcountplace) + ': ', end='')
+        print('Output-LMMS | └──── Placement ' + str(printcountplace) + ': ', end='')
         json_placement = json_placementlist[tracksnum-1]
         json_notelist = json_placement['notelist']
         xml_pattern = ET.SubElement(xmltag, "pattern")
@@ -230,7 +233,7 @@ def lmms_encode_audio_track(xmltag, json_singletrack):
 
     #placements
     printcountplace = 0
-    print('Output-LMMS | ┗━━━━ Placements:', end=' ')
+    print('Output-LMMS | └──── Placements:', end=' ')
     json_placementlist = json_singletrack['placements']
     while tracksnum <= len(json_placementlist)-1:
         printcountplace += 1

@@ -168,4 +168,5 @@ class input_xm(plugin_input.base):
         json_root['bpm'] = tempo
         json_root['tracks'] = tracklist
         json_root['loop'] = json_loop
+        json_root['convprojtype'] = 'single'
         return json.dumps(json_root)

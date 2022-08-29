@@ -8,6 +8,7 @@ import argparse
 from termcolor import colored
 from plugin_input import base as base_input
 from plugin_output import base as base_output
+from functions import cvpjconv
 
 def textprint(text):
 	print('DawVert | '+text)
@@ -45,6 +46,16 @@ else:
 
 if convproj_json == {} or convproj_json == None:
 	textprint_extra('Main', 'Plugin outputted no json')
+	exit()
+
+convproj_json_list = json.loads(convproj_json)
+
+if convproj_json_list['convprojtype'] == 'single':
+	print('DawVert | ConvProj Type: Single')
+elif convproj_json_list['convprojtype'] == 'multiple':
+	convproj_json = cvpjconv.convert_multiple_single(convproj_json)
+else:
+	print('DawVert | ConvProj Type Unsupported')
 	exit()
 
 for outputplugin in base_output.plugins:

@@ -43,6 +43,10 @@ else:
 	textprint_extra('Main', 'No Input Format Detected.')
 	exit()
 
+if convproj_json == {} or convproj_json == None:
+	textprint_extra('Main', 'Plugin outputted no json')
+	exit()
+
 for outputplugin in base_output.plugins:
 	outputpluginclass = outputplugin()
 	shortname = outputpluginclass.getshortname()

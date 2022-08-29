@@ -191,12 +191,12 @@ def lmms_encode_inst_track(xmltag, json_singletrack):
     #placements
     json_placementlist = json_singletrack['placements']
     tracksnum = 0
-    printcountplace = 1
+    printcountplace = 0
     while tracksnum <= len(json_placementlist)-1:
         global patternscount_forprinting
         patternscount_forprinting += 1
-        print('Output-LMMS | ┗━━━━ Placement ' + str(printcountplace) + ': ', end='')
         printcountplace += 1
+        print('Output-LMMS | ┗━━━━ Placement ' + str(printcountplace) + ': ', end='')
         json_placement = json_placementlist[tracksnum-1]
         json_notelist = json_placement['notelist']
         xml_pattern = ET.SubElement(xmltag, "pattern")
@@ -347,4 +347,3 @@ class output_lmms(plugin_output.base):
         
         ET.indent(outfile)
         outfile.write(output_file, encoding='unicode')
-

@@ -138,7 +138,7 @@ class input_mod(plugin_input.base):
     def parse(self, input_file):
         global number_of_patterns
         global number_of_channels
-        samplefolder = os.path.dirname(input_file)
+        samplefolder = os.path.splitext(input_file)[0]
         modfile = open(input_file, 'rb')
         name = modfile.read(20).decode().rstrip('\x00')
         samples = []

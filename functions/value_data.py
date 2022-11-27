@@ -1,5 +1,3 @@
-import numpy as np
-
 def add_to_seperated_object(seperated_object_table, objectdata, number):
     numberfound = 0
     if seperated_object_table == []:

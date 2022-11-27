@@ -1,0 +1,6 @@
+varint
+numpy
+mido
+lxml
+chardet
+xmodits_py

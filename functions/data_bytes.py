@@ -3,12 +3,17 @@
 
 from io import BytesIO
 
+# ----- Bytes -----
+
 def bytearray2BytesIO(bytearray):
 	riffinsideriffobj = BytesIO()
 	riffinsideriffobj.write(bytearray)
+	riffinsideriffobj.seek(0)
 	return riffinsideriffobj
 
-def readriffdata_debug(riffbytebuffer, offset):
+# ----- RIFF -----
+
+def riff_read_debug(riffbytebuffer, offset):
 	if isinstance(riffbytebuffer, (bytes, bytearray)) == True:
 		riffbytebuffer = bytearray2BytesIO(riffbytebuffer)
 	riffobjects = []
@@ -28,7 +33,7 @@ def readriffdata_debug(riffbytebuffer, offset):
 	print('--------')
 	return riffobjects
 
-def readriffdata(riffbytebuffer, offset):
+def riff_read(riffbytebuffer, offset):
 	if isinstance(riffbytebuffer, (bytes, bytearray)) == True:
 		riffbytebuffer = bytearray2BytesIO(riffbytebuffer)
 	riffobjects = []
@@ -41,3 +46,19 @@ def readriffdata(riffbytebuffer, offset):
 		chunkdata = riffbytebuffer.read(chunksize)
 		riffobjects.append([chunkname, chunkdata])
 	return riffobjects
+
+def riff_make(riffobjects):
+	riffobjectsbytes = BytesIO()
+	for riffobject in riffobjects:
+		riffobjectsbytes.write(riffobject[0])
+		riffobjectsbytes.write(len(riffobject[1]).to_bytes(4, "little"))
+		riffobjectsbytes.write(riffobject[1])
+	riffobjectsbytes.seek(0)
+	return riffobjectsbytes.read()
+
+def getmultival(stream, table):
+	output = []
+	riffinsideriffobj = BytesIO(stream)
+	for entry in table:
+		output.append(riffinsideriffobj.read(entry))
+	return output

@@ -8,63 +8,63 @@ def pmddecodenotes(pmdfile, recordspertrack, pitch):
     notelist = []
     currentpan = 0
     for pmdpos in range(recordspertrack):
-        note_position = pmdpos/4
         bitnotes = bin(int.from_bytes(pmdfile.read(3), "little"))[2:].zfill(24)
         pan = int.from_bytes(pmdfile.read(1), "little")
-        if pan != 0:
-            currentpan = (pan-4)/3
+        if pan != 0: currentpan = (pan-4)/3
         notenum = 11
         for bitnote in bitnotes:
             if bitnote == '1':
                 noteJ = {}
-                noteJ['position'] = note_position
+                noteJ['position'] = pmdpos
                 noteJ['key'] = notenum + pitch
-                noteJ['duration'] = 1/4
+                noteJ['duration'] = 1
                 noteJ['pan'] = currentpan
                 noteJ['vol'] = 1.0
                 notelist.append(noteJ)
             notenum -= 1
     return notelist
 
-def parsetrack(notelist, trackname):
+def parsetrack(notelist, trackname, vol):
     trkJ = {}
-    trkJi = {}
-    trkJi['plugin'] = "none"
+    instJ = {}
+    instJ['plugin'] = "none"
     trkJp = {}
     trkJ['type'] = "instrument"
-    trkJ['instrumentdata'] = trkJi
+    trkJ['instrument'] = trackname
     trkJ['plugindata'] = trkJp
     trkJ['notelist'] = notelist
     trkJ['name'] = trackname
-    trkJ['vol'] = 1
+    trkJ['vol'] = vol
     patJ = {}
     patJ['position'] = 0
     patJ['notelist'] = notelist
     trkJ['placements'] = [patJ]
-    return trkJ
+    trackordering.append(trackname)
+    trkJ['instdata'] = instJ
+    tracklist[trackname] = trkJ
 
-class input_pmd(plugin_input.base):
-    def __init__(self):
-        pass
-
-    def getname(self):
-        return 'PiyoPiyo'
-
+class input_pms(plugin_input.base):
+    def __init__(self): pass
+    def getshortname(self): return 'piyopiyo'
+    def getname(self): return 'PiyoPiyo'
+    def gettype(self): return 'r'
+    def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
         bytestream.seek(0)
         bytesdata = bytestream.read(3)
-        if bytesdata == b'PMD':
-            return True
-        else:
-            return False
+        if bytesdata == b'PMD': return True
+        else: return False
         bytestream.seek(0)
-
     def parse(self, input_file, extra_param):
+        global tracklist
+        global trackordering
+        global instruments
         pmdfile = open(input_file, 'rb')
         header = pmdfile.read(4)
         trackdatapos = int.from_bytes(pmdfile.read(4), "little")
         musicwait = int.from_bytes(pmdfile.read(4), "little")
+        bpm = (120/musicwait)*120
         print("[input-piyopiyo] MusicWait: " + str(musicwait))
         loopstart = int.from_bytes(pmdfile.read(4), "little")
         print("[input-piyopiyo] Loop Beginning: " + str(loopstart))
@@ -97,19 +97,22 @@ class input_pmd(plugin_input.base):
         notes2 = pmddecodenotes(pmdfile, recordspertrack, pmdtrackdata[1][0])
         notes3 = pmddecodenotes(pmdfile, recordspertrack, pmdtrackdata[2][0])
         notesP = pmddecodenotes(pmdfile, recordspertrack, 0)
-        tracklist = []
-        tracklist.append(parsetrack(notes1, 'note1'))
-        tracklist.append(parsetrack(notes2, 'note2'))
-        tracklist.append(parsetrack(notes3, 'note3'))
-        tracklist.append(parsetrack(notesP, 'drums'))
+        tracklist = {}
+        trackordering = []
+        instruments = {}
+        parsetrack(notes1, 'note1', pmdtrackdata[0][3]/250)
+        parsetrack(notes2, 'note2', pmdtrackdata[1][3]/250)
+        parsetrack(notes3, 'note3', pmdtrackdata[2][3]/250)
+        parsetrack(notesP, 'drums', TrackPVol/250)
         loopJ = {}
         loopJ['enabled'] = 1
         loopJ['start'] = loopstart/16
         loopJ['end'] = loopend/16
         rootJ = {}
-        rootJ['bpm'] = 140
-        rootJ['tracks'] = tracklist
+        rootJ['bpm'] = bpm
+        rootJ['trackdata'] = tracklist
+        rootJ['trackordering'] = trackordering
+        rootJ['instruments'] = instruments
         rootJ['loop'] = loopJ
-        rootJ['cvpjtype'] = 'single'
         return json.dumps(rootJ)
 

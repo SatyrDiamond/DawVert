@@ -52,7 +52,7 @@ def timednotes2notelist_note_off(key):
         ActiveNoteTablePos += 1
 
 def timednotes2notelistplacement_parse_timednotes(TimedNotesTable):
-    print("[func-noteconv] tn2np: " + str(len(TimedNotesTable)) + ' cmds', end='')
+    print("[note-conv] tn2np: " + str(len(TimedNotesTable)) + ' cmds', end='')
     global ActiveNotes
     currentprogram = 0
     ActiveNotes = []

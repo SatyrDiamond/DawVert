@@ -58,7 +58,7 @@ def convertchannel2timednotes(patterntable_channel, startinststr):
 def song2playlist(patterntable_all, number_of_channels, order_list, startinststr, color):
     projL_playlist = {}
     for current_channelnum in range(number_of_channels):
-        print('[func-tracker] Converting Channel ' + str(current_channelnum+1))
+        print('[song-tracker] Converting Channel ' + str(current_channelnum+1))
         note_convert.timednotes2notelistplacement_track_start()
         channelsong = entire_song_channel(patterntable_all,current_channelnum,order_list)
         timednotes = convertchannel2timednotes(channelsong, startinststr)

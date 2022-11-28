@@ -132,18 +132,27 @@ class input_s3m(plugin_input.base):
                 os.makedirs(os.getcwd() + '/samples/', exist_ok=True)
                 os.makedirs(samplefolder, exist_ok=True)
                 wave_path = samplefolder + str(s3m_numinst).zfill(2) + '.wav'
-                if s3m_inst_16bit == 0:
-                    sampledata = file_stream.read(s3m_inst_length)
-                    if s3m_samptype == 1:
-                        audio_wav.generate(wave_path, data_bytes.unsign_8(unsignedsampledata), 1, s3m_inst_c2spd, 8, loopdata)
-                    if s3m_samptype == 2: 
-                        audio_wav.generate(wave_path, sampledata, 1, s3m_inst_c2spd, 8, loopdata)
-                if s3m_inst_16bit == 1:
-                    sampledata = file_stream.read(s3m_inst_length*2)
-                    if s3m_samptype == 2:
-                        audio_wav.generate(wave_path, data_bytes.unsign_16(unsignedsampledata), 1, s3m_inst_c2spd, 16, loopdata)
-                    if s3m_samptype == 1: 
-                        audio_wav.generate(wave_path, sampledata, 1, s3m_inst_c2spd, 16, loopdata)
+                print(s3m_inst_16bit, s3m_samptype, s3m_inst_stereo)
+
+                t_samplelen = s3m_inst_length
+
+                if s3m_inst_16bit == 0: t_samplelen = t_samplelen
+                if s3m_inst_16bit == 1: t_samplelen = t_samplelen*2
+                wave_sampledata = file_stream.read(t_samplelen)
+                wave_bits = 8
+                wave_channels = 1
+                if s3m_inst_16bit == 1: wave_bits = 16
+                if s3m_inst_16bit == 0 and s3m_inst_stereo == 1: 
+                    wave_channels = 2
+                    wave_sampledata_second = file_stream.read(t_samplelen)
+                    wave_sampledata = data_bytes.mono2stereo(wave_sampledata, wave_sampledata_second, 1)
+                if s3m_inst_16bit == 1 and s3m_inst_stereo == 1:
+                    wave_channels = 2
+                    wave_sampledata_second = file_stream.read(t_samplelen)
+                    wave_sampledata = data_bytes.mono2stereo(wave_sampledata, wave_sampledata_second, 2)
+                if s3m_inst_16bit == 0 and s3m_samptype == 1: wave_sampledata = data_bytes.unsign_8(wave_sampledata)
+                if s3m_inst_16bit == 1 and s3m_samptype == 2: wave_sampledata = data_bytes.unsign_16(wave_sampledata)
+                audio_wav.generate(wave_path, wave_sampledata, wave_channels, s3m_inst_c2spd, wave_bits, loopdata)
 
             if t_inst_filename != '': cvpj_l_single_inst['name'] = t_inst_filename
             elif t_inst_name != '': cvpj_l_single_inst['name'] = t_inst_name

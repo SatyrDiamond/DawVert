@@ -210,7 +210,7 @@ def lmms_decode_nlpattern(notesX):
     printcountpat = 0
     for noteX in notesX:
         noteJ = {}
-        noteJ['key'] = int(noteX.get('key')) - 48
+        noteJ['key'] = int(noteX.get('key')) - 60
         noteJ['position'] = float(noteX.get('pos')) / 12
         noteJ['pan'] = hundredto1(noteX.get('pan'))
         noteJ['duration'] = float(noteX.get('len')) / 12

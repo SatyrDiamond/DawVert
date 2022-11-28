@@ -208,7 +208,7 @@ def lmms_encode_notelist(xmltag, json_notelist):
         global notescount_forprinting
         notescount_forprinting += 1
         patX = ET.SubElement(xmltag, "note")
-        key = json_note['key'] + 48
+        key = json_note['key'] + 60
         position = int(round(float(json_note['position']) * 12))
         pan = 0
         if 'pan' in json_note: pan = oneto100(json_note['pan'])

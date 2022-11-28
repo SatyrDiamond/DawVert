@@ -4,6 +4,7 @@
 import json
 
 def m2mi(song):
+    print('[song-convert] Converting from Multiple > MultipleIndexed')
     global cvpj_proj
     cvpj_proj = json.loads(song)
     cvpj_playlist = cvpj_proj['playlist']
@@ -24,6 +25,7 @@ def m2mi(song):
     return json.dumps(cvpj_proj)
 
 def r2m(song):
+    print('[song-convert] Converting from Regular > Multiple')
     cvpj_proj = json.loads(song)
     if 'trackordering' not in cvpj_proj:
         print('[error] trackordering not found')

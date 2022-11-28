@@ -142,7 +142,7 @@ class input_mod(plugin_input.base):
 
         file_stream = open(input_file, 'rb')
         mod_name = file_stream.read(20).decode().rstrip('\x00')
-        print("[input-mod] Song mod_name: " + str(mod_name))
+        print("[input-mod] Song Name: " + str(mod_name))
         table_samples = []
         cvpj_bpm = 125
         for mod_numinst in range(31):

@@ -20,7 +20,7 @@ class input_flp(plugin_input.base):
         if bytesdata == b'FLhd': return True
         else: return False
     def parse(self, input_file, extra_param):
-        FLP_Data = flpreconstructor.deconstruct(input_file)
+        FLP_Data = format_flp.deconstruct(input_file)
         #print(FLP_Data['FL_Main'])
 
         FL_Main = FLP_Data['FL_Main']

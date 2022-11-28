@@ -6,6 +6,7 @@ import json
 import math
 import base64
 from functions import format_flp
+from functions import note_mod
 
 def clamp(n, minn, maxn):
     return max(min(maxn, n), minn)
@@ -93,21 +94,15 @@ class output_cvpjs(plugin_output.base):
             #    pdataxs = base64.b64decode(pdata)
             #    T_Main['pluginparams'] = pdataxs
             #    T_Main['plugindata'] = b'\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00P\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00&\x00\x00\x00z\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-            #else:
-            #    T_Main['type'] = 0
-            #    T_Main['plugin'] = ''
-            #    T_Main['plugindata'] = b'\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00P\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00@\x00\x00\x00\x94\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-            #    if 'plugindata' in CVPJ_Inst:
-            #        samplerdata = CVPJ_Inst['plugindata'] 
-            #        if 'file' in samplerdata: T_Main['samplefilename'] = samplerdata['file'] 
-            T_Main['type'] = 0
-            T_Main['plugin'] = ''
-            T_Main['plugindata'] = b'\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00P\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00@\x00\x00\x00\x94\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-            if 'instdata' in CVPJ_Data:
+            if CVPJ_Inst['plugin'] == 'sampler':
+                T_Main['type'] = 0
+                T_Main['plugin'] = ''
                 if 'plugindata' in CVPJ_Inst:
                     samplerdata = CVPJ_Inst['plugindata'] 
                     if 'file' in samplerdata: T_Main['samplefilename'] = samplerdata['file'] 
-
+            else:
+                T_Main['type'] = 2
+                T_Main['plugin'] = ''
 
             FL_Channels[inst_id[CVPJ_Entry]] = T_Main
 
@@ -160,7 +155,10 @@ class output_cvpjs(plugin_output.base):
                         FL_playlistitem['position'] = int((CVPJ_Placement['position']*ppq)/4)
                         FL_playlistitem['patternbase'] = 20480
                         FL_playlistitem['itemindex'] = int(pat_id[CVPJ_Placement['fromindex']] + FL_playlistitem['patternbase'])
-                        FL_playlistitem['length'] = int((CVPJ_Placement['duration']*ppq)/4)
+                        if 'duration' in CVPJ_Placement:
+                            FL_playlistitem['length'] = int((CVPJ_Placement['duration']*ppq)/4)
+                        else:
+                            FL_playlistitem['length'] = note_mod.getduration(CVPJ_NotelistIndex[CVPJ_Placement['fromindex']]['notelist'])
                         FL_playlistitem['unknown1'] = 120
                         FL_playlistitem['unknown2'] = 25664
                         FL_playlistitem['unknown3'] = 32896

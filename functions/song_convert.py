@@ -3,6 +3,14 @@
 
 import json
 
+def m2mi_checkdup(cvpj_notelistindex, nledata):
+    for pattern in cvpj_notelistindex:
+        patterndat = cvpj_notelistindex[pattern]
+        if patterndat == nledata:
+            return pattern
+    else:
+        return None
+
 def m2mi(song):
     print('[song-convert] Converting from Multiple > MultipleIndexed')
     global cvpj_proj
@@ -16,10 +24,15 @@ def m2mi(song):
         for cvpj_placement in cvpj_placements:
             if cvpj_placement['type'] == 'instruments':
                 cvpj_notelist = cvpj_placement['notelist']
-                cvpj_notelistindex['m2mi_' + str(pattern_number)] = {}
-                cvpj_notelistindex['m2mi_' + str(pattern_number)]['notelist'] = cvpj_notelist.copy()
-                cvpj_placement['fromindex'] = 'm2mi_' + str(pattern_number)
-                del cvpj_placement['notelist']
+                temp_nle = {}
+                temp_nle['notelist'] = cvpj_notelist.copy()
+                checksamenl = m2mi_checkdup(cvpj_notelistindex, temp_nle)
+                if checksamenl != None:
+                    cvpj_placement['fromindex'] = checksamenl
+                else:
+                    cvpj_notelistindex['m2mi_' + str(pattern_number)] = temp_nle
+                    cvpj_placement['fromindex'] = 'm2mi_' + str(pattern_number)
+                    del cvpj_placement['notelist']
                 pattern_number += 1
     cvpj_proj['notelistindex'] = cvpj_notelistindex
     return json.dumps(cvpj_proj)

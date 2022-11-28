@@ -126,13 +126,13 @@ class input_s3m(plugin_input.base):
             if cvpj_inst_samplelocation != 0 and s3m_inst_length != 0:
                 loopdata = None
                 if s3m_inst_loopon == 1:
-                    loopdata = {'loop':[s3m_inst_loopStart, s3m_inst_loopEnd]}
+                    print(s3m_inst_loopStart, s3m_inst_loopEnd)
+                    loopdata = {'loop':[s3m_inst_loopStart, s3m_inst_loopEnd-1]}
                 print("[input-st3] Ripping Sample " + str(s3m_numinst))
                 file_stream.seek(cvpj_inst_samplelocation)
                 os.makedirs(os.getcwd() + '/samples/', exist_ok=True)
                 os.makedirs(samplefolder, exist_ok=True)
                 wave_path = samplefolder + str(s3m_numinst).zfill(2) + '.wav'
-                print(s3m_inst_16bit, s3m_samptype, s3m_inst_stereo)
 
                 t_samplelen = s3m_inst_length
 

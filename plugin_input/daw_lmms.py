@@ -28,6 +28,28 @@ fxlist['stereoenhancer'] = 'stereoenhancercontrols'
 fxlist['stereomatrix'] = 'stereomatrixcontrols'
 fxlist['waveshaper'] = 'waveshapercontrols'
 
+plugincolors = {}
+plugincolors['audiofileprocessor'] = [0.28, 0.28, 0.28]
+plugincolors['bitinvader'] = [0.86, 0.86, 0.86]
+plugincolors['papu'] = [0.60, 0.80, 0.14]
+plugincolors['gigplayer'] = [0.55, 0.00, 0.00]
+plugincolors['kicker'] = [0.51, 0.58, 0.58]
+plugincolors['lb302'] = [0.81, 0.65, 0.72]
+plugincolors['malletsstk'] = [0.55, 0.13, 0.07]
+plugincolors['monstro'] = [0.65, 0.68, 0.70]
+plugincolors['nes'] = [0.90, 0.13, 0.09]
+plugincolors['OPL2'] = [0.03, 0.33, 0.53]
+plugincolors['organic'] = [0.24, 0.76, 0.13]
+plugincolors['patman'] = [0.97, 1.00, 0.33]
+plugincolors['sf2player'] = [0.60, 0.61, 0.62]
+plugincolors['sfxr'] = [1.00, 0.70, 0.00]
+plugincolors['sid'] = [0.73, 0.69, 0.63]
+plugincolors['tripleoscillator'] = [1.00, 0.34, 0.13]
+plugincolors['vestige'] = [0.06, 0.60, 0.21]
+plugincolors['vibedstrings'] = [0.39, 0.47, 0.53]
+plugincolors['watsyn'] = [0.81, 0.87, 0.87]
+plugincolors['zynaddsubfx'] = [0.75, 0.75, 0.75]
+
 # ------- functions -------
 
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
@@ -83,11 +105,13 @@ def asdflfo(cvpj_l_track, xmlO, asdrtype):
     if speedx100 == 0: cvpj_l_track[asdrtype]['lfo']['speed'] = float(xmlO.get('lspd')) * 20000
     else: cvpj_l_track[asdrtype]['lfo']['speed'] = float(xmlO.get('lspd')) * 2000000
     cvpj_l_track[asdrtype]['lfo']['amount'] = float(xmlO.get('lamt'))
-def lmms_decodeplugin(trkX_insttr, cvpj_l_plugin, cvpj_l_inst):
+def lmms_decodeplugin(trkX_insttr, cvpj_l_plugin, cvpj_l_inst, cvpj_l_track):
     cvpj_l_inst['plugin'] = "none"
     trkX_instrument = trkX_insttr.findall('instrument')[0]
     pluginname = trkX_instrument.get('name')
     xml_plugin = trkX_instrument.findall(pluginname)[0]
+    if 'color' not in cvpj_l_track:
+        cvpj_l_track['color'] = plugincolors[pluginname]
     if pluginname == "sf2player":
         cvpj_l_inst['plugin'] = "soundfont2"
 
@@ -314,7 +338,7 @@ def lmms_decode_inst_track(trkX, name):
     cvpj_l_track['placements'] = lmms_decode_nlplacements(trkX)
 
     cvpj_l_track_plugindata = cvpj_l_track_inst['plugindata']
-    lmms_decodeplugin(trkX_insttr, cvpj_l_track_plugindata, cvpj_l_inst)
+    lmms_decodeplugin(trkX_insttr, cvpj_l_track_plugindata, cvpj_l_inst, cvpj_l_track)
 
     cvpj_l_track['instdata'] = cvpj_l_inst
     return cvpj_l_track

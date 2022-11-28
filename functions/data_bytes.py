@@ -6,13 +6,13 @@ import numpy as np
 
 # ----- Bytes -----
 
-def bytearray2BytesIO(bytearray):
-	riffinsideriffobj = BytesIO()
-	riffinsideriffobj.write(bytearray)
-	riffinsideriffobj.seek(0)
-	return riffinsideriffobj
+def bytearray2BytesIO(input):
+	data = BytesIO()
+	data.write(input)
+	data.seek(0)
+	return data
 
-# ----- Unsign -----
+# ----- audio -----
 
 def unsign_8(sampledata):
     sampledatabytes = np.frombuffer(sampledata, dtype='uint8')
@@ -23,6 +23,16 @@ def unsign_16(sampledata):
     sampledatabytes = np.frombuffer(sampledata, dtype='uint16')
     sampledatabytes = np.array(sampledatabytes) + 32768
     return sampledatabytes.tobytes('C')
+
+def mono2stereo(leftdata, rightdata, samplebytes):
+	leftdata_stream = bytearray2BytesIO(leftdata)
+	rightdata_stream = bytearray2BytesIO(rightdata)
+	output_stream = BytesIO()
+	for _ in range(int(len(leftdata)/samplebytes)):
+		output_stream.write(leftdata_stream.read(samplebytes))
+		output_stream.write(rightdata_stream.read(samplebytes))
+	output_stream.seek(0)
+	return output_stream.read()
 
 # ----- RIFF -----
 

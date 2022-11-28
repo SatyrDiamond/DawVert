@@ -37,6 +37,10 @@ def parsetrack(notelist, trackname, vol, samplefolder, wavid):
     else :
         instJ['plugin'] = "none"
     trkJp = {}
+    if wavid == 1: trkJ['color'] = [0.25, 0.38, 0.49]
+    if wavid == 2: trkJ['color'] = [0.36, 0.43, 0.46]
+    if wavid == 3: trkJ['color'] = [0.51, 0.57, 0.47]
+    if wavid == None: trkJ['color'] = [0.58, 0.64, 0.40]
     trkJ['type'] = "instrument"
     trkJ['instrument'] = trackname
     trkJ['plugindata'] = trkJp

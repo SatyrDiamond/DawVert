@@ -4,9 +4,9 @@
 import plugin_input
 import os.path
 import json
-import numpy as np
 from functions import song_tracker
 from functions import audio_wav
+from functions import data_bytes
 
 class input_s3m(plugin_input.base):
     def __init__(self): pass
@@ -123,8 +123,6 @@ class input_s3m(plugin_input.base):
             else: print("[input-st3] Instrument #" + str(s3m_numinst) + ': "' + t_inst_name + '", Filename:"' + t_inst_filename+ '"')
             table_defualtvol.append(s3m_inst_vol)
 
-            print(s3m_inst_loopStart, s3m_inst_loopEnd)
-
             if cvpj_inst_samplelocation != 0 and s3m_inst_length != 0:
                 loopdata = None
                 if s3m_inst_loopon == 1:
@@ -137,22 +135,15 @@ class input_s3m(plugin_input.base):
                 if s3m_inst_16bit == 0:
                     sampledata = file_stream.read(s3m_inst_length)
                     if s3m_samptype == 1:
-                        sampledatabytes = np.frombuffer(sampledata, dtype='uint8')
-                        sampledatabytes = np.array(sampledatabytes) + 128
-                        unsignedsampledata = sampledatabytes.tobytes('C')
-                        audio_wav.generate(wave_path, unsignedsampledata, 1, s3m_inst_c2spd, 8, loopdata)
-                    if s3m_samptype == 2: audio_wav.generate(wave_path, sampledata, 1, s3m_inst_c2spd, 8, loopdata)
+                        audio_wav.generate(wave_path, data_bytes.unsign_8(unsignedsampledata), 1, s3m_inst_c2spd, 8, loopdata)
+                    if s3m_samptype == 2: 
+                        audio_wav.generate(wave_path, sampledata, 1, s3m_inst_c2spd, 8, loopdata)
                 if s3m_inst_16bit == 1:
-                    wave_obj.setsampwidth(2)
-                    wave_obj.setnchannels(1)
-                    wave_obj.setframerate(s3m_inst_c2spd)
                     sampledata = file_stream.read(s3m_inst_length*2)
                     if s3m_samptype == 2:
-                        sampledatabytes = np.frombuffer(sampledata, dtype='uint16')
-                        sampledatabytes = np.array(sampledatabytes) + 32768
-                        unsignedsampledata = sampledatabytes.tobytes('C')
-                        audio_wav.generate(wave_path, unsignedsampledata, 1, s3m_inst_c2spd, 16, loopdata)
-                    if s3m_samptype == 1: audio_wav.generate(wave_path, sampledata, 1, s3m_inst_c2spd, 16, loopdata)
+                        audio_wav.generate(wave_path, data_bytes.unsign_16(unsignedsampledata), 1, s3m_inst_c2spd, 16, loopdata)
+                    if s3m_samptype == 1: 
+                        audio_wav.generate(wave_path, sampledata, 1, s3m_inst_c2spd, 16, loopdata)
 
             if t_inst_filename != '': cvpj_l_single_inst['name'] = t_inst_filename
             elif t_inst_name != '': cvpj_l_single_inst['name'] = t_inst_name

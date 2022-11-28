@@ -3,6 +3,9 @@
 
 import plugin_input
 import json
+import os.path
+from functions import audio_wav
+from functions import data_bytes
 
 def pmddecodenotes(pmdfile, recordspertrack, pitch):
     notelist = []
@@ -24,10 +27,15 @@ def pmddecodenotes(pmdfile, recordspertrack, pitch):
             notenum -= 1
     return notelist
 
-def parsetrack(notelist, trackname, vol):
+def parsetrack(notelist, trackname, vol, samplefolder, wavid):
     trkJ = {}
     instJ = {}
-    instJ['plugin'] = "none"
+    if wavid != None:
+        instJ['plugin'] = "sampler"
+        instJ['plugindata'] = {}
+        instJ['plugindata']['file'] = samplefolder + '/' + str(wavid) + '.wav'
+    else :
+        instJ['plugin'] = "none"
     trkJp = {}
     trkJ['type'] = "instrument"
     trkJ['instrument'] = trackname
@@ -73,6 +81,14 @@ class input_pms(plugin_input.base):
         recordspertrack = int.from_bytes(pmdfile.read(4), "little")
         print("[input-piyopiyo] Records Per Track: " + str(recordspertrack))
 
+        file_name = os.path.splitext(os.path.basename(input_file))[0]
+        if 'samplefolder' in extra_param:
+            samplefolder = extra_param['samplefolder'] + file_name + '/'
+        else:
+            samplefolder = os.getcwd() + '/samples/' + file_name + '/'
+            os.makedirs(os.getcwd() + '/samples/', exist_ok=True)
+        os.makedirs(samplefolder, exist_ok=True)
+
         pmdtrackdata = []
         for tracknum in range(3):
             print("[input-piyopiyo] Track " + str(tracknum+1), end=",")
@@ -88,6 +104,8 @@ class input_pms(plugin_input.base):
             trk_unk2 = pmdfile.read(8)
             trk_waveform = pmdfile.read(256)
             trk_envelope = pmdfile.read(64)
+            wave_path = samplefolder + str(tracknum+1) + '.wav'
+            audio_wav.generate(wave_path, data_bytes.unsign_8(trk_waveform), 1, 67000, 8, {'loop':[0, 256]})
             pmdtrackdata.append([(trk_octave-2)*12, trk_icon, trk_length, trk_volume, trk_waveform, trk_envelope])
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
@@ -100,10 +118,10 @@ class input_pms(plugin_input.base):
         tracklist = {}
         trackordering = []
         instruments = {}
-        parsetrack(notes1, 'note1', pmdtrackdata[0][3]/250)
-        parsetrack(notes2, 'note2', pmdtrackdata[1][3]/250)
-        parsetrack(notes3, 'note3', pmdtrackdata[2][3]/250)
-        parsetrack(notesP, 'drums', TrackPVol/250)
+        parsetrack(notes1, 'note1', pmdtrackdata[0][3]/250, samplefolder, 1)
+        parsetrack(notes2, 'note2', pmdtrackdata[1][3]/250, samplefolder, 2)
+        parsetrack(notes3, 'note3', pmdtrackdata[2][3]/250, samplefolder, 3)
+        parsetrack(notesP, 'drums', TrackPVol/250, samplefolder, None)
         loopJ = {}
         loopJ['enabled'] = 1
         loopJ['start'] = loopstart/16

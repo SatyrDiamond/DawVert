@@ -364,24 +364,27 @@ def lmms_decode_auto_track(trkX):
 def lmms_decode_effectslot(fxslotX):
     fxslotJ = {}
     fxpluginname = fxslotX.get('name')
-    fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
-    fxslotJ['enabled'] = int(fxslotX.get('on'))
-    fxslotJ['plugin'] = 'native-lmms'
-    fxcvpj_l_plugin = {}
-    fxcvpj_l_plugin['name'] = fxpluginname
-    fxcvpj_l_plugin['data'] = {}
-    for name, value in fxxml_plugin.attrib.items(): fxcvpj_l_plugin['data'][name] = value
-    for name in fxxml_plugin: fxcvpj_l_plugin['data'][name.tag] = name.get('value')
-    wet = float(fxslotX.get('wet'))
-    print('['+fxpluginname,end='] ')
-    if wet < 0:
-        fxslotJ['add_dry_minus_wet'] = 1
-        fxslotJ['wet'] = -wet
+    if fxpluginname != 'ladspaeffect':
+        fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
+        fxslotJ['enabled'] = int(fxslotX.get('on'))
+        fxslotJ['plugin'] = 'native-lmms'
+        fxcvpj_l_plugin = {}
+        fxcvpj_l_plugin['name'] = fxpluginname
+        fxcvpj_l_plugin['data'] = {}
+        for name, value in fxxml_plugin.attrib.items(): fxcvpj_l_plugin['data'][name] = value
+        for name in fxxml_plugin: fxcvpj_l_plugin['data'][name.tag] = name.get('value')
+        wet = float(fxslotX.get('wet'))
+        print('['+fxpluginname,end='] ')
+        if wet < 0:
+            fxslotJ['add_dry_minus_wet'] = 1
+            fxslotJ['wet'] = -wet
+        else:
+            fxslotJ['add_dry_minus_wet'] = 0
+            fxslotJ['wet'] = wet
+        fxslotJ['plugindata'] = fxcvpj_l_plugin
+        return fxslotJ
     else:
-        fxslotJ['add_dry_minus_wet'] = 0
-        fxslotJ['wet'] = wet
-    fxslotJ['plugindata'] = fxcvpj_l_plugin
-    return fxslotJ
+        return None
 def lmms_decode_fxchain(fxchainX):
     print('[input-lmms]    ├─ FX Chain: ',end='')
     fxchain = []

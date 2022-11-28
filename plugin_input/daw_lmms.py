@@ -472,7 +472,6 @@ class input_lmms(plugin_input.base):
         rootJ['trackdata'] = tracksout[0]
         rootJ['trackordering'] = tracksout[1]
         rootJ['fxrack'] = lmms_decode_fxmixer(fxX)
-        rootJ['type'] = 'r'
 
         for track in rootJ['trackdata']:
             autotrackdata = rootJ['trackdata'][track]

@@ -100,12 +100,14 @@ in_type = in_class.gettype()
 out_type = out_class.gettype()
 
 # --------- Info
-print('Input:',in_format)
-print('Output:',out_format)
+print('Input:',in_format, in_type)
+print('Output:',out_format, out_type)
 
 if in_type == out_type: print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 elif out_type == 'debug': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 elif in_type == 'm' and out_type == 'mi': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
+elif in_type == 'r' and out_type == 'm': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
+elif in_type == 'r' and out_type == 'mi': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 else:
 	print('[info] type Conversion from ' + typelist[in_type] + ' to ' + typelist[out_type] + ' not supported.')
 	exit()
@@ -118,10 +120,14 @@ if CVPJ_j == '{}' or CVPJ_j == None:
 
 # --------- Convert Type
 
+print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 if in_type == 'm' and out_type == 'mi': 
-	print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 	CVPJ_j = song_convert.m2mi(CVPJ_j)
-
+if in_type == 'r' and out_type == 'm': 
+	CVPJ_j = song_convert.r2m(CVPJ_j)
+if in_type == 'r' and out_type == 'mi': 
+	CVPJ_j = song_convert.r2m(CVPJ_j)
+	CVPJ_j = song_convert.m2mi(CVPJ_j)
 # --------- Output
 
 out_class.parse(CVPJ_j, out_file)

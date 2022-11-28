@@ -504,7 +504,7 @@ def reconstruct_basicparams(data_FLdt, channel):
     bio_basicparams = BytesIO()
     bio_basicparams.write(basicp_pan.to_bytes(4, "little"))
     bio_basicparams.write(basicp_volume.to_bytes(4, "little"))
-    bio_basicparams.write(basicp_pitch.to_bytes(4, "little", signed="True"))
+    bio_basicparams.write(int(basicp_pitch).to_bytes(4, "little", signed="True"))
     bio_basicparams.write(b'\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
     bio_basicparams.seek(0)
     reconstruct_flevent(data_FLdt, 219, bio_basicparams.read())

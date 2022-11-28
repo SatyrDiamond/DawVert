@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from io import BytesIO
+import numpy as np
 
 # ----- Bytes -----
 
@@ -10,6 +11,18 @@ def bytearray2BytesIO(bytearray):
 	riffinsideriffobj.write(bytearray)
 	riffinsideriffobj.seek(0)
 	return riffinsideriffobj
+
+# ----- Unsign -----
+
+def unsign_8(sampledata):
+    sampledatabytes = np.frombuffer(sampledata, dtype='uint8')
+    sampledatabytes = np.array(sampledatabytes) + 128
+    return sampledatabytes.tobytes('C')
+
+def unsign_16(sampledata):
+    sampledatabytes = np.frombuffer(sampledata, dtype='uint16')
+    sampledatabytes = np.array(sampledatabytes) + 32768
+    return sampledatabytes.tobytes('C')
 
 # ----- RIFF -----
 

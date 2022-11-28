@@ -101,7 +101,7 @@ class output_cvpjs(plugin_output.base):
                     samplerdata = CVPJ_Inst['plugindata'] 
                     if 'file' in samplerdata: T_Main['samplefilename'] = samplerdata['file'] 
             else:
-                T_Main['type'] = 2
+                T_Main['type'] = 0
                 T_Main['plugin'] = ''
 
             FL_Channels[inst_id[CVPJ_Entry]] = T_Main

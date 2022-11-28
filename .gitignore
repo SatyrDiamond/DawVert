@@ -1,0 +1,10 @@
+
+*.mmp
+*.cvpj
+*.flps
+*.bak
+*.flp
+flp_eventname.txt
+flp_parser_20.py
+*.s3m
+*.mmpz

@@ -94,7 +94,7 @@ class input_flp(plugin_input.base):
                     noteJ['finepitch'] = (flnote['finep']-120)*10
                     noteJ['release'] = flnote['rel']/128
                     noteJ['pan'] = (flnote['pan']-64)/64
-                    noteJ['vol'] = flnote['velocity']/128
+                    noteJ['vol'] = flnote['velocity']/100
                     noteJ['cutoff'] = flnote['mod_x']/255
                     noteJ['reso'] = flnote['mod_y']/255
                     notesJ.append(noteJ)

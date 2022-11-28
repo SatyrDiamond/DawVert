@@ -134,7 +134,7 @@ class output_cvpjs(plugin_output.base):
                         FL_Note['dur'] = int((note['duration']*ppq)/4)
                         if 'finepitch' in note: FL_Note['finep'] = int((note['finepitch']/10)+120)
                         if 'release' in note: FL_Note['rel'] = int(clamp(note['release'],0,1)*128)
-                        if 'vol' in note: FL_Note['velocity'] = int(clamp(note['vol'],0,1)*128)
+                        if 'vol' in note: FL_Note['velocity'] = int(clamp(note['vol'],0,1)*100)
                         if 'cutoff' in note: FL_Note['mod_x'] = int(clamp(note['cutoff'],0,1)*255)
                         if 'reso' in note: FL_Note['mod_y'] = int(clamp(note['reso'],0,1)*255)
                         if 'pan' in note: FL_Note['pan'] = int((clamp(note['pan'],-1,1)*64)+64)

@@ -145,7 +145,10 @@ class input_flp(plugin_input.base):
             if tm_type == 1: timemarkerJ['type'] = 'markerloop'
             if tm_type == 2: timemarkerJ['type'] = 'markerskip'
             if tm_type == 3: timemarkerJ['type'] = 'pause'
-            if tm_type == 8: timemarkerJ['type'] = 'timesig'
+            if tm_type == 8: 
+                timemarkerJ['type'] = 'timesig'
+                timemarkerJ['numerator'] = FL_TimeMarkers[timemarker]['numerator']
+                timemarkerJ['denominator'] = FL_TimeMarkers[timemarker]['denominator']
             if tm_type == 9: timemarkerJ['type'] = 'punchin'
             if tm_type == 10: timemarkerJ['type'] = 'punchout'
             timemarkersJ.append(timemarkerJ)

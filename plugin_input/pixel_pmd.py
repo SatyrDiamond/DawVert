@@ -63,7 +63,7 @@ def parsetrack(placements, trackid, trackname, vol, samplefolder, wavid):
     trkJ['name'] = trackname
     trkJ['vol'] = vol
     trkJ['placements'] = placements
-    trackordering.append(trackname)
+    trackordering.append(trackid)
     trkJ['instdata'] = instJ
     tracklist[trackid] = trkJ
 

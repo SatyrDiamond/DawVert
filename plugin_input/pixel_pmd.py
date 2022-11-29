@@ -9,25 +9,41 @@ from functions import data_bytes
 
 def pmddecodenotes(pmdfile, recordspertrack, pitch):
     notelist = []
+    placements = []
+    splitnotes = 16
+    splitcurrent = 0
+    placementpos = 0
     currentpan = 0
     for pmdpos in range(recordspertrack):
+        splitcurrent += 1
+
         bitnotes = bin(int.from_bytes(pmdfile.read(3), "little"))[2:].zfill(24)
         pan = int.from_bytes(pmdfile.read(1), "little")
         if pan != 0: currentpan = (pan-4)/3
+
         notenum = 11
         for bitnote in bitnotes:
             if bitnote == '1':
                 noteJ = {}
-                noteJ['position'] = pmdpos
+                noteJ['position'] = pmdpos - placementpos
                 noteJ['key'] = notenum + pitch
                 noteJ['duration'] = 1
                 noteJ['pan'] = currentpan
                 noteJ['vol'] = 1.0
                 notelist.append(noteJ)
             notenum -= 1
-    return notelist
+        if splitnotes == splitcurrent:
+            patJ = {}
+            patJ['position'] = placementpos
+            patJ['notelist'] = notelist
+            if notelist != []:
+                placements.append(patJ)
+            notelist = []
+            splitcurrent = 0
+            placementpos += splitnotes
+    return placements
 
-def parsetrack(notelist, trackname, vol, samplefolder, wavid):
+def parsetrack(placements, trackname, vol, samplefolder, wavid):
     trkJ = {}
     instJ = {}
     if wavid != None:
@@ -44,13 +60,9 @@ def parsetrack(notelist, trackname, vol, samplefolder, wavid):
     trkJ['type'] = "instrument"
     trkJ['instrument'] = trackname
     trkJ['plugindata'] = trkJp
-    trkJ['notelist'] = notelist
     trkJ['name'] = trackname
     trkJ['vol'] = vol
-    patJ = {}
-    patJ['position'] = 0
-    patJ['notelist'] = notelist
-    trkJ['placements'] = [patJ]
+    trkJ['placements'] = placements
     trackordering.append(trackname)
     trkJ['instdata'] = instJ
     tracklist[trackname] = trkJ

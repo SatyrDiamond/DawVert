@@ -138,15 +138,12 @@ class input_pms(plugin_input.base):
         parsetrack(notes2, 'Note #2', pmdtrackdata[1][3]/250, samplefolder, 2)
         parsetrack(notes3, 'Note #3', pmdtrackdata[2][3]/250, samplefolder, 3)
         parsetrack(notesP, 'Drums', TrackPVol/250, samplefolder, None)
-        loopJ = {}
-        loopJ['enabled'] = 1
-        loopJ['start'] = loopstart/16
-        loopJ['end'] = loopend/16
         rootJ = {}
         rootJ['bpm'] = bpm
         rootJ['trackdata'] = tracklist
         rootJ['trackordering'] = trackordering
         rootJ['instruments'] = instruments
-        rootJ['loop'] = loopJ
+        rootJ['timemarkers'] = []
+        rootJ['timemarkers'].append({'name': 'Loop', 'position': loopstart, 'end': loopend, 'type': 'loop'})
         return json.dumps(rootJ)
 

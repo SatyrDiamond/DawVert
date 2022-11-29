@@ -140,10 +140,10 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugin, cvpj_l_inst, cvpj_l_track):
         cvpj_l_plugin['continueacrossnotes'] = int(xml_plugin.get('stutter'))
         cvpj_l_plugin['file'] = xml_plugin.get('src')
         cvpj_l_plugin['loop'] = {}
-        cvpj_l_plugin['loop']['points'] = {}
-        cvpj_l_plugin['loop']['points']['end'] = float(xml_plugin.get('eframe'))
-        cvpj_l_plugin['loop']['points']['loop'] = float(xml_plugin.get('lframe'))
-        cvpj_l_plugin['loop']['points']['start'] = float(xml_plugin.get('sframe'))
+        cvpj_l_plugin['loop']['custompoints'] = {}
+        cvpj_l_plugin['loop']['custompoints']['end'] = float(xml_plugin.get('eframe'))
+        cvpj_l_plugin['loop']['custompoints']['loop'] = float(xml_plugin.get('lframe'))
+        cvpj_l_plugin['loop']['custompoints']['start'] = float(xml_plugin.get('sframe'))
         looped = int(xml_plugin.get('looped'))
         if looped == 0:
             cvpj_l_plugin['loop']['enabled'] = 0

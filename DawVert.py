@@ -6,6 +6,7 @@ import argparse
 from plugin_input import base as base_input
 from plugin_output import base as base_output
 from functions import song_convert
+from functions import plugin_convert
 
 print('DawVert: Daw Conversion Tool')
 
@@ -118,6 +119,10 @@ if CVPJ_j == '{}' or CVPJ_j == None:
 	print('[error] Input Plugin outputted no json')
 	exit()
 
+# --------- Plugins
+
+CVPJ_j = plugin_convert.convproj(CVPJ_j, in_type, out_format)
+
 # --------- Convert Type
 
 print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
@@ -128,6 +133,7 @@ if in_type == 'r' and out_type == 'm':
 if in_type == 'r' and out_type == 'mi': 
 	CVPJ_j = song_convert.r2m(CVPJ_j)
 	CVPJ_j = song_convert.m2mi(CVPJ_j)
+
 # --------- Output
 
 out_class.parse(CVPJ_j, out_file)

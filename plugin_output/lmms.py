@@ -101,9 +101,9 @@ def lmms_encode_plugin(xmltag, trkJ):
         if 'loop' in plugJ:
             trkJ_loop = plugJ['loop']
             if 'points' in trkJ_loop:
-                xml_sampler.set('eframe', str(trkJ_loop['points']['end']))
-                xml_sampler.set('lframe', str(trkJ_loop['points']['loop']))
-                xml_sampler.set('sframe', str(trkJ_loop['points']['start']))
+                xml_sampler.set('eframe', str(trkJ_loop['custompoints']['end']))
+                xml_sampler.set('lframe', str(trkJ_loop['custompoints']['loop']))
+                xml_sampler.set('sframe', str(trkJ_loop['custompoints']['start']))
             if 'enabled' in trkJ_loop: loopenabled = trkJ_loop['enabled']
             if 'mode' in trkJ_loop: mode = trkJ_loop['mode']
         if loopenabled == 0: xml_sampler.set('looped', '0')
@@ -115,6 +115,7 @@ def lmms_encode_plugin(xmltag, trkJ):
         if interpolation == "none": xml_sampler.set('interp', '0')
         if interpolation == "linear": xml_sampler.set('interp', '1')
         if interpolation == "sinc": xml_sampler.set('interp', '2')
+        else: xml_sampler.set('interp', '0')
     elif pluginname == 'soundfont2':
         print('[output-lmms]    ├─ Plugin: soundfont2 > sf2player')
         xml_instrumentpreplugin.set('name', "sf2player")

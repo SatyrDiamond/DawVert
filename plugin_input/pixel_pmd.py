@@ -122,10 +122,10 @@ class input_pms(plugin_input.base):
         tracklist = {}
         trackordering = []
         instruments = {}
-        parsetrack(notes1, 'note1', pmdtrackdata[0][3]/250, samplefolder, 1)
-        parsetrack(notes2, 'note2', pmdtrackdata[1][3]/250, samplefolder, 2)
-        parsetrack(notes3, 'note3', pmdtrackdata[2][3]/250, samplefolder, 3)
-        parsetrack(notesP, 'drums', TrackPVol/250, samplefolder, None)
+        parsetrack(notes1, 'Note #1', pmdtrackdata[0][3]/250, samplefolder, 1)
+        parsetrack(notes2, 'Note #2', pmdtrackdata[1][3]/250, samplefolder, 2)
+        parsetrack(notes3, 'Note #3', pmdtrackdata[2][3]/250, samplefolder, 3)
+        parsetrack(notesP, 'Drums', TrackPVol/250, samplefolder, None)
         loopJ = {}
         loopJ['enabled'] = 1
         loopJ['start'] = loopstart/16

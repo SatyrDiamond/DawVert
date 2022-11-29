@@ -236,6 +236,10 @@ def lmms_encode_inst_track(xmltag, trkJ):
     if 'name' in trkJ: xmltag.set('name', trkJ['name'])
     else: xmltag.set('name', 'untitled')
 
+    if 'color' in trkJ: 
+        color = trkJ['color']
+        xmltag.set('color', '#' + rgb_to_hex((int(color[0]*255),int(color[1]*255),int(color[2]*255))))
+
     instJ = trkJ['instdata']
 
     #instrumenttrack
@@ -426,6 +430,8 @@ class output_lmms(plugin_output.base):
         projX = ET.Element("lmms-project")
         projX.set('type', "song")
         projX.set('creator', "DawVert")
+        projX.set('creatorversion', "1.2.2")
+        projX.set('version', "1.0")
         headX = ET.SubElement(projX, "head")
         if 'masterpitch' in projJ: headX.set('masterpitch', str(int(projJ['masterpitch']/100)))
         else: headX.set('masterpitch', "0")

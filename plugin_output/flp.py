@@ -141,6 +141,10 @@ class output_cvpjs(plugin_output.base):
 
                         FL_Pattern['notes'].append(FL_Note)
 
+        if len(FL_Patterns) > 999:
+            print('[error] FLP patterns over 999 is unsupporteds.')
+            exit()
+
         FL_Playlist_BeforeSort = {}
         FL_Playlist_Sorted = {}
         FL_Playlist = []

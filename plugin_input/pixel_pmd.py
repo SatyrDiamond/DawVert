@@ -6,6 +6,7 @@ import json
 import os.path
 from functions import audio_wav
 from functions import data_bytes
+from functions import folder_samples
 
 def pmddecodenotes(pmdfile, recordspertrack, pitch):
     notelist = []
@@ -98,12 +99,7 @@ class input_pms(plugin_input.base):
         print("[input-piyopiyo] Records Per Track: " + str(recordspertrack))
 
         file_name = os.path.splitext(os.path.basename(input_file))[0]
-        if 'samplefolder' in extra_param:
-            samplefolder = extra_param['samplefolder'] + file_name + '/'
-        else:
-            samplefolder = os.getcwd() + '/samples/' + file_name + '/'
-            os.makedirs(os.getcwd() + '/samples/', exist_ok=True)
-        os.makedirs(samplefolder, exist_ok=True)
+        samplefolder = folder_samples.samplefolder(extra_param, file_name)
 
         pmdtrackdata = []
         for tracknum in range(3):

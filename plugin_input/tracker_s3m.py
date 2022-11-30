@@ -123,11 +123,35 @@ class input_s3m(plugin_input.base):
             else: print("[input-st3] Instrument #" + str(s3m_numinst) + ': "' + t_inst_name + '", Filename:"' + t_inst_filename+ '"')
             table_defualtvol.append(s3m_inst_vol)
 
+            if t_inst_filename != '': cvpj_l_single_inst['name'] = t_inst_filename
+            elif t_inst_name != '': cvpj_l_single_inst['name'] = t_inst_name
+            else: cvpj_l_single_inst['name'] = ' '
+
+            cvpj_l_single_inst['vol'] = 0.3
+            cvpj_l_single_inst['instdata'] = {}
+            cvpj_l_inst = cvpj_l_single_inst['instdata']
+            cvpj_l_inst['plugindata'] = {}
+            cvpj_l_plugin = cvpj_l_inst['plugindata']
+
+            if s3m_inst_type == 1:
+                cvpj_l_single_inst['color'] = [0.65, 0.57, 0.33]
+                cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
+                cvpj_l_plugin['file'] = samplefolder + str(s3m_numinst).zfill(2) + '.wav'
+            else:
+                cvpj_l_single_inst['color'] = [0.32, 0.27, 0.16]
+                cvpj_l_inst['plugin'] = 'none'
+
             if cvpj_inst_samplelocation != 0 and s3m_inst_length != 0:
-                loopdata = None
+                cvpj_l_plugin['loop'] = {}
                 if s3m_inst_loopon == 1:
+                    cvpj_l_plugin['loop']['enabled'] = 1
+                    cvpj_l_plugin['loop']['mode'] = "normal"
+                    cvpj_l_plugin['loop']['points'] = [s3m_inst_loopStart, s3m_inst_loopEnd-1]
                     print(s3m_inst_loopStart, s3m_inst_loopEnd)
                     loopdata = {'loop':[s3m_inst_loopStart, s3m_inst_loopEnd-1]}
+                else:
+                    cvpj_l_plugin['loop']['enabled'] = 0
+                    loopdata = None
                 print("[input-st3] Ripping Sample " + str(s3m_numinst))
                 file_stream.seek(cvpj_inst_samplelocation)
                 os.makedirs(os.getcwd() + '/samples/', exist_ok=True)
@@ -153,21 +177,6 @@ class input_s3m(plugin_input.base):
                 if s3m_inst_16bit == 0 and s3m_samptype == 1: wave_sampledata = data_bytes.unsign_8(wave_sampledata)
                 if s3m_inst_16bit == 1 and s3m_samptype == 2: wave_sampledata = data_bytes.unsign_16(wave_sampledata)
                 audio_wav.generate(wave_path, wave_sampledata, wave_channels, s3m_inst_c2spd, wave_bits, loopdata)
-
-            if t_inst_filename != '': cvpj_l_single_inst['name'] = t_inst_filename
-            elif t_inst_name != '': cvpj_l_single_inst['name'] = t_inst_name
-            else: cvpj_l_single_inst['name'] = ' '
-
-            cvpj_l_single_inst['vol'] = 0.3
-            cvpj_l_single_inst['instdata'] = {}
-            if s3m_inst_type == 1:
-                cvpj_l_single_inst['color'] = [0.65, 0.57, 0.33]
-                cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
-                cvpj_l_single_inst['instdata']['plugindata'] = {}
-                cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(s3m_numinst).zfill(2) + '.wav'
-            else:
-                cvpj_l_single_inst['color'] = [0.32, 0.27, 0.16]
-                cvpj_l_single_inst['instdata']['plugin'] = 'none'
 
             s3m_numinst += 1
 

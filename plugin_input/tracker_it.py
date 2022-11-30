@@ -357,7 +357,7 @@ class input_mod(plugin_input.base):
                                 if cell_volpan <= 64: pattern_row[1][cell_channel][2]['vol'] = cell_volpan/64
                                 elif 192 >= cell_volpan >= 128: pattern_row[1][cell_channel][2]['pan'] = ((cell_volpan-128)/64-0.5)*2
         
-                            if cell_note != None: pattern_row[1][cell_channel][0] = cell_note - 48
+                            if cell_note != None: pattern_row[1][cell_channel][0] = cell_note - 60
                             if cell_note == 254: pattern_row[1][cell_channel][0] = 'Cut'
                             if cell_note == 255: pattern_row[1][cell_channel][0] = 'Off'
                             if cell_note == 246: pattern_row[1][cell_channel][0] = 'Fade'
@@ -414,14 +414,12 @@ class input_mod(plugin_input.base):
                 if temp_firstsamplefound != None and temp_inst_is_single_sample == True:
                     temp_allsample = temp_firstsamplefound
                     cvpj_l_single_inst['instdata'] = {}
-                    cvpj_l_single_inst['instdata']['middlenote'] = 12
                     cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
                     cvpj_l_single_inst['instdata']['plugindata'] = {}
                     cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(temp_allsample) + '.wav'
                 else:
                     cvpj_l_single_inst['instdata'] = {}
                     cvpj_l_single_inst['instdata']['plugin'] = 'none'
-                    cvpj_l_single_inst['instdata']['middlenote'] = 12
                 cvpj_l_instrumentsorder.append(it_instname)
                 instrumentcount += 1
         if it_header_flag_useinst == 0:

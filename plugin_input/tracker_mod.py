@@ -8,6 +8,7 @@ import json
 import numpy as np
 from functions import song_tracker
 from functions import audio_wav
+from functions import folder_samples
 
 def splitbyte(value):
     first = value >> 4
@@ -129,12 +130,7 @@ class input_mod(plugin_input.base):
         text_inst_start = 'MOD_Inst_'
 
         file_name = os.path.splitext(os.path.basename(input_file))[0]
-        if 'samplefolder' in extra_param:
-            samplefolder = extra_param['samplefolder'] + file_name + '/'
-        else:
-            samplefolder = os.getcwd() + '/samples/' + file_name + '/'
-            os.makedirs(os.getcwd() + '/samples/', exist_ok=True)
-        os.makedirs(samplefolder, exist_ok=True)
+        samplefolder = folder_samples.samplefolder(extra_param, file_name)
 
         cvpj_l = {}
         cvpj_l_instruments = {}
@@ -208,11 +204,9 @@ class input_mod(plugin_input.base):
         patterntable_all = parse_song(file_stream)
         veryfirstrow = patterntable_all[t_orderlist[0]][0][0]
 
-        
         for sample in range(31):
             mod_inst_entry = table_samples[sample]
             print("[input-mod] Ripping Sample", sample)
-            os.makedirs(os.getcwd() + '/samples/', exist_ok=True)
             os.makedirs(samplefolder, exist_ok=True)
             wave_path = samplefolder + str(sample+1).zfill(2) + '.wav'
             mod_sampledata = file_stream.read(table_samples[sample][1]*2)

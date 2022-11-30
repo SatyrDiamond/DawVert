@@ -478,7 +478,12 @@ class output_lmms(plugin_output.base):
             notesX.set("height", "300")
             notesX.set("y", "5" )
             notesX.set("width", "389")
-            notesX.text = ET.CDATA(projJ['message'].replace('\n', '<br/>'))
+            print(projJ['message']['type'])
+            if 'type' in projJ['message']:
+                if projJ['message']['type'] == 'html':
+                    notesX.text = ET.CDATA(projJ['message']['text'])
+                if projJ['message']['type'] == 'text':
+                    notesX.text = ET.CDATA(projJ['message']['text'].replace('\n', '<br/>'))
 
         print("[output-lmms] Number of Notes: " + str(notescount_forprinting))
         print("[output-lmms] Number of Patterns: " + str(patternscount_forprinting))

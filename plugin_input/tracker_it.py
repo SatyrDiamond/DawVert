@@ -274,7 +274,7 @@ class input_mod(plugin_input.base):
             samplecount += 1
         
         if xmodits_exists == True:
-            xmodits.dump(input_file, samplefolder, index_raw=True, index_padding=0)
+            xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
 
         # ------------- Pattern -------------
         patterncount = 1
@@ -417,7 +417,7 @@ class input_mod(plugin_input.base):
                     cvpj_l_single_inst['instdata']['middlenote'] = 12
                     cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
                     cvpj_l_single_inst['instdata']['plugindata'] = {}
-                    cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(temp_allsample+1) + '.wav'
+                    cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(temp_allsample) + '.wav'
                 else:
                     cvpj_l_single_inst['instdata'] = {}
                     cvpj_l_single_inst['instdata']['plugin'] = 'none'

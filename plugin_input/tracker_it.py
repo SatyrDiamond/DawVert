@@ -417,7 +417,7 @@ class input_mod(plugin_input.base):
                     cvpj_l_single_inst['instdata']['middlenote'] = 12
                     cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
                     cvpj_l_single_inst['instdata']['plugindata'] = {}
-                    cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(temp_allsample).zfill(2) + '.wav'
+                    cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(temp_allsample+1) + '.wav'
                 else:
                     cvpj_l_single_inst['instdata'] = {}
                     cvpj_l_single_inst['instdata']['plugin'] = 'none'
@@ -439,7 +439,7 @@ class input_mod(plugin_input.base):
                 cvpj_l_single_inst['instdata']['middlenote'] = 12
                 cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
                 cvpj_l_single_inst['instdata']['plugindata'] = {}
-                cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(samplecount+1).zfill(2) + '.wav'
+                cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(samplecount+1) + '.wav'
                 cvpj_l_instrumentsorder.append(it_samplename)
                 samplecount += 1
 

@@ -98,6 +98,11 @@ def decode(wavfile):
 				out_instdata['loops'] = out_loops
 			if chunk_wavdata[0] == b'data':
 				out_wavdata = chunk_wavdata[1]
+				wav_length = len(out_wavdata)
+				wav_length = int(wav_length/(out_wavinfo['bits']/8))
+				wav_length = int(wav_length/(out_wavinfo['channels']/1))
+				out_wavinfo['length'] = wav_length
+
 	return (out_wavinfo, out_wavdata, out_instdata)
 
 def generate(file, data, channels, freq, bits, instdata):

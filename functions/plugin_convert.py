@@ -208,7 +208,7 @@ def convplug_inst(instdata, dawname):
 							instdata['plugindata']['plugin']['path'] = vstpaths['Grace']['path']
 						instdata['plugindata']['data'] = base64.b64encode(xmlout).decode('ascii')
 				else:
-					print("[plugin-convert] plugin: unchanged - Grace (VST) only supports '.wav' and format 1")
+					print("[plugin-convert] plugin: unchanged - Grace (VST) only supports Format 1 .WAV")
 
 # -------------------- sf2 > vst (juicysfplugin) --------------------
 			elif pluginname == 'soundfont2' and dawname not in supportedplugins['sf2']:

@@ -137,6 +137,8 @@ class input_s3m(plugin_input.base):
                 cvpj_l_single_inst['color'] = [0.32, 0.27, 0.16]
                 cvpj_l_inst['plugin'] = 'none'
 
+            cvpj_l_plugin['length'] = s3m_inst_length
+
             if cvpj_inst_samplelocation != 0 and s3m_inst_length != 0:
                 cvpj_l_plugin['loop'] = {}
                 if s3m_inst_loopon == 1:

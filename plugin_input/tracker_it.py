@@ -391,8 +391,37 @@ class input_mod(plugin_input.base):
                 elif it_singleinst['dosfilename'] != '': cvpj_l_single_inst['name'] = it_singleinst['dosfilename']
                 else: cvpj_l_single_inst['name'] = " "
                 cvpj_l_single_inst['vol'] = 0.3
-                cvpj_l_single_inst['instdata'] = {}
-                cvpj_l_single_inst['instdata']['plugin'] = 'none'
+
+                temp_inst_is_single_sample = True
+                temp_allsample = None
+                temp_firstsamplefound = None
+
+                for it_notesample_entry in it_singleinst['notesampletable']:
+                    temp_sampnum = it_notesample_entry[1]
+                    if temp_firstsamplefound == None and temp_sampnum != 0:
+                        temp_firstsamplefound = temp_sampnum
+                    elif temp_firstsamplefound != temp_sampnum and temp_sampnum != 0:
+                        temp_inst_is_single_sample = False
+
+                temp_nst_currentnote = -60
+
+                for it_notesample_entry in it_singleinst['notesampletable']:
+                    if it_notesample_entry[0] != temp_nst_currentnote:
+                        temp_inst_is_single_sample = False
+                        break
+                    temp_nst_currentnote += 1
+
+                if temp_firstsamplefound != None and temp_inst_is_single_sample == True:
+                    temp_allsample = temp_firstsamplefound
+                    cvpj_l_single_inst['instdata'] = {}
+                    cvpj_l_single_inst['instdata']['middlenote'] = 12
+                    cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
+                    cvpj_l_single_inst['instdata']['plugindata'] = {}
+                    cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(temp_allsample).zfill(2) + '.wav'
+                else:
+                    cvpj_l_single_inst['instdata'] = {}
+                    cvpj_l_single_inst['instdata']['plugin'] = 'none'
+                    cvpj_l_single_inst['instdata']['middlenote'] = 12
                 cvpj_l_instrumentsorder.append(it_instname)
                 instrumentcount += 1
         if it_header_flag_useinst == 0:

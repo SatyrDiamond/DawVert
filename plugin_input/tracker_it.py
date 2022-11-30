@@ -268,7 +268,7 @@ class input_mod(plugin_input.base):
                 print('[input-it] Sample not Valid')
                 exit()
             print("[input-it] Sample " + str(samplecount) + ': at offset ' + str(table_offset_sample))
-            it_singlesample['filename_dos'] = it_file.read(12).split(b'\x00' * 1)[0].decode("latin_1")
+            it_singlesample['dosfilename'] = it_file.read(12).split(b'\x00' * 1)[0].decode("latin_1")
             it_file.read(4)
             it_singlesample['name'] = it_file.read(26).split(b'\x00' * 1)[0].decode("latin_1")
             samplecount += 1
@@ -379,6 +379,7 @@ class input_mod(plugin_input.base):
 
         instrumentcount = 0
         samplecount = 0
+        it_header_flag_useinst = int(it_header_flag_useinst)
         if it_header_flag_useinst == 1:
             for IT_Inst in IT_Insts:
                 it_instname = startinststr + str(instrumentcount+1)
@@ -386,20 +387,24 @@ class input_mod(plugin_input.base):
                 cvpj_l_instruments[it_instname] = {}
                 cvpj_l_single_inst = cvpj_l_instruments[it_instname]
                 cvpj_l_single_inst['color'] = [0.71, 0.58, 0.47]
-                cvpj_l_single_inst['name'] = it_singleinst['name']
+                if it_singleinst['name'] != '': cvpj_l_single_inst['name'] = it_singleinst['name']
+                elif it_singleinst['dosfilename'] != '': cvpj_l_single_inst['name'] = it_singleinst['dosfilename']
+                else: cvpj_l_single_inst['name'] = " "
                 cvpj_l_single_inst['vol'] = 0.3
                 cvpj_l_single_inst['instdata'] = {}
                 cvpj_l_single_inst['instdata']['plugin'] = 'none'
                 cvpj_l_instrumentsorder.append(it_instname)
                 instrumentcount += 1
-        else:
+        if it_header_flag_useinst == 0:
             for IT_Sample in IT_Samples:
                 it_samplename = startinststr + str(samplecount+1)
                 it_singlesample = IT_Samples[IT_Sample]
                 cvpj_l_instruments[it_samplename] = {}
                 cvpj_l_single_inst = cvpj_l_instruments[it_samplename]
                 cvpj_l_single_inst['color'] = [0.71, 0.58, 0.47]
-                cvpj_l_single_inst['name'] = it_singlesample['name']
+                if it_singlesample['name'] != '': cvpj_l_single_inst['name'] = it_singlesample['name']
+                elif it_singlesample['dosfilename'] != '': cvpj_l_single_inst['name'] = it_singlesample['dosfilename']
+                else: cvpj_l_single_inst['name'] = " "
                 cvpj_l_single_inst['vol'] = 0.3
                 cvpj_l_single_inst['instdata'] = {}
                 cvpj_l_single_inst['instdata']['middlenote'] = 12

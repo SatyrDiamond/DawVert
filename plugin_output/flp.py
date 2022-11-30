@@ -137,7 +137,7 @@ class output_cvpjs(plugin_output.base):
                         if 'vol' in note: FL_Note['velocity'] = int(clamp(note['vol'],0,1)*100)
                         if 'cutoff' in note: FL_Note['mod_x'] = int(clamp(note['cutoff'],0,1)*255)
                         if 'reso' in note: FL_Note['mod_y'] = int(clamp(note['reso'],0,1)*255)
-                        if 'pan' in note: FL_Note['pan'] = int((clamp(note['pan'],-1,1)*64)+64)
+                        if 'pan' in note: FL_Note['pan'] = int((clamp(float(note['pan']),-1,1)*64)+64)
 
                         FL_Pattern['notes'].append(FL_Note)
 

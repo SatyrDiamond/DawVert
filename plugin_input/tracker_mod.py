@@ -162,14 +162,16 @@ class input_mod(plugin_input.base):
             if mod_inst_mod_name != "": cvpj_l_single_inst['name'] = mod_inst_mod_name
             else: cvpj_l_single_inst['name'] = ' '
             cvpj_l_single_inst['vol'] = 0.3
-            cvpj_l_single_inst['color'] = [0.47, 0.47, 0.47]
             cvpj_l_single_inst['instdata'] = {}
             cvpj_l_single_inst['instdata']['pitch'] = int((mod_inst_finetune/7)*100)
             if mod_inst_length != 0 and mod_inst_length != 1:
+                cvpj_l_single_inst['color'] = [0.53, 0.53, 0.53]
                 cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
                 cvpj_l_single_inst['instdata']['plugindata'] = {}
                 cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(mod_numinst).zfill(2) + '.wav'
-            else: cvpj_l_single_inst['instdata']['plugin'] = 'none'
+            else: 
+                cvpj_l_single_inst['color'] = [0.33, 0.33, 0.33]
+                cvpj_l_single_inst['instdata']['plugin'] = 'none'
             cvpj_l_instrumentsorder.append(text_inst_start + str(mod_numinst))
         mod_orderlist_length = int.from_bytes(file_stream.read(1), "big")
         mod_extravalue = int.from_bytes(file_stream.read(1), "big")
@@ -221,6 +223,22 @@ class input_mod(plugin_input.base):
                 audio_wav.generate(wave_path, wave_data, 1, 8272, 8, None)
             else:
                 audio_wav.generate(wave_path, wave_data, 1, 8272, 8, {'loop':[mod_inst_entry[4]*2, (mod_inst_entry[4]*2)+(mod_inst_entry[5]*2)]})
+
+        
+        for sample in range(31):
+            cvpj_l_single_inst = cvpj_l_instruments[text_inst_start + str(mod_numinst)]
+            cvpj_l_inst = cvpj_l_single_inst['instdata']
+            if 'plugindata' in cvpj_l_inst:
+                cvpj_l_plugin = cvpj_l_inst['plugindata']
+                cvpj_l_plugin['loop'] = {}
+                if mod_inst_entry[4] == 0 and mod_inst_entry[5] == 1:
+                    cvpj_l_plugin['loop']['enabled'] = 0
+                else:
+                    loopdata = [mod_inst_entry[4]*2, (mod_inst_entry[4]*2)+(mod_inst_entry[5]*2)]
+                    cvpj_l_plugin['loop']['enabled'] = 1
+                    cvpj_l_plugin['loop']['mode'] = "normal"
+                    cvpj_l_plugin['loop']['points'] = loopdata
+
 
         cvpj_l_playlist = song_tracker.song2playlist(patterntable_all, mod_num_channels, t_orderlist, text_inst_start, [0.47, 0.47, 0.47])
 

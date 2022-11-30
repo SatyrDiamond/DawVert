@@ -164,10 +164,12 @@ class input_mod(plugin_input.base):
                 cvpj_l_single_inst['color'] = [0.53, 0.53, 0.53]
                 cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
                 cvpj_l_single_inst['instdata']['plugindata'] = {}
+                cvpj_l_single_inst['instdata']['plugindata']['length'] = mod_inst_length
                 cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(mod_numinst).zfill(2) + '.wav'
             else: 
                 cvpj_l_single_inst['color'] = [0.33, 0.33, 0.33]
                 cvpj_l_single_inst['instdata']['plugin'] = 'none'
+
             cvpj_l_instrumentsorder.append(text_inst_start + str(mod_numinst))
         mod_orderlist_length = int.from_bytes(file_stream.read(1), "big")
         mod_extravalue = int.from_bytes(file_stream.read(1), "big")

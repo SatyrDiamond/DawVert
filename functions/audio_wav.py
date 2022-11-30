@@ -133,32 +133,29 @@ def generate(file, data, channels, freq, bits, instdata):
 	if wav_CHUNK_smpl != None:
 		table_chunks.append(wav_CHUNK_smpl)
 
-	for table_chunk in table_chunks:
-		print(table_chunk[0])
-
 	chunk_data_bytes = data_bytes.riff_make(table_chunks)
 	bytes_wavdata = b'WAVE' + chunk_data_bytes
 	chunks_main = data_bytes.riff_make([[b'RIFF',bytes_wavdata]])
 
 	file_object.write(chunks_main)
 
-def inject_smpl(instdata):
-	print("[audio-wav] Injecting 'smpl' chunk")
-	file_wav = open(wavfile, 'rb')
-	chunks_main = data_bytes.riff_read(file_wav, 0)
-	bytes_wavdata = chunks_main[0][1]
-	chunk_data_bytes = bytes_wavdata[0:4]
-	if chunk_data_bytes == b'WAVE':
-		chunks_wavdata = data_bytes.riff_read(bytes_wavdata, 4)
-		wav_CHUNK_smpl = makesmpl(instdata)
-		if wav_CHUNK_smpl != None:
-			table_chunks.append(wav_CHUNK_smpl)
-
-		for table_chunk in table_chunks:
-			print(table_chunk[0])
-
-	chunk_data_bytes = data_bytes.riff_make(table_chunks)
-	bytes_wavdata = b'WAVE' + chunk_data_bytes
-	chunks_main = data_bytes.riff_make([[b'RIFF',bytes_wavdata]])
-
-	file_object.write(chunks_main)
+#def inject_smpl(instdata):
+#	print("[audio-wav] Injecting 'smpl' chunk")
+#	file_wav = open(wavfile, 'rb')
+#	chunks_main = data_bytes.riff_read(file_wav, 0)
+#	bytes_wavdata = chunks_main[0][1]
+#	chunk_data_bytes = bytes_wavdata[0:4]
+#	if chunk_data_bytes == b'WAVE':
+#		chunks_wavdata = data_bytes.riff_read(bytes_wavdata, 4)
+#		wav_CHUNK_smpl = makesmpl(instdata)
+#		if wav_CHUNK_smpl != None:
+#			table_chunks.append(wav_CHUNK_smpl)
+#
+#		for table_chunk in table_chunks:
+#			print(table_chunk[0])
+#
+#	chunk_data_bytes = data_bytes.riff_make(table_chunks)
+#	bytes_wavdata = b'WAVE' + chunk_data_bytes
+#	chunks_main = data_bytes.riff_make([[b'RIFF',bytes_wavdata]])
+#
+#	file_object.write(chunks_main)

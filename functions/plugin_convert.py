@@ -171,8 +171,8 @@ def grace_create_region(gx_root, regionparams):
 
     return gx_root
 
-vstpaths = configparser.ConfigParser()
-vstpaths.read('vst.ini')
+vst2paths = configparser.ConfigParser()
+vst2paths.read('vst2.ini')
 
 def convplug_inst(instdata, dawname):
 	global supportedplugins
@@ -181,7 +181,7 @@ def convplug_inst(instdata, dawname):
 			pluginname = instdata['plugin']
 			plugindata = instdata['plugindata']
 
-# -------------------- sampler > vst (Grace) --------------------
+# -------------------- sampler > vst2 (Grace) --------------------
 			if pluginname == 'sampler' and dawname not in supportedplugins['sampler']:
 				sampler_data = instdata
 				sampler_file_data = instdata['plugindata']
@@ -199,27 +199,27 @@ def convplug_inst(instdata, dawname):
 								regionparams['loop'] = sampler_file_data['loops']['points']
 						grace_create_region(gx_root, regionparams)
 						xmlout = ET.tostring(gx_root, encoding='utf-8')
-						print('[plugin-convert] plugin: sampler > Grace (VST)')
-						instdata['plugin'] = 'vst'
+						print('[plugin-convert] Plugin: sampler > Grace (vst2)')
+						instdata['plugin'] = 'vst2'
 						instdata['plugindata'] = {}
 						instdata['plugindata']['plugin'] = {}
 						instdata['plugindata']['plugin']['name'] = 'Grace'
-						if 'Grace' in vstpaths:
-							instdata['plugindata']['plugin']['path'] = vstpaths['Grace']['path']
+						if 'Grace' in vst2paths:
+							instdata['plugindata']['plugin']['path'] = vst2paths['Grace']['path']
 						instdata['plugindata']['data'] = base64.b64encode(xmlout).decode('ascii')
 				else:
-					print("[plugin-convert] plugin: unchanged - Grace (VST) only supports Format 1 .WAV")
+					print("[plugin-convert] Plugin: unchanged - Grace (vst2) only supports Format 1 .WAV")
 
-# -------------------- sf2 > vst (juicysfplugin) --------------------
+# -------------------- sf2 > vst2 (juicysfplugin) --------------------
 			elif pluginname == 'soundfont2' and dawname not in supportedplugins['sf2']:
-				print('[plugin-convert] plugin: soundfont2 > juicysfplugin (VST)')
-				instdata['plugin'] = 'vst'
+				print('[plugin-convert] Plugin: soundfont2 > juicysfplugin (vst2)')
+				instdata['plugin'] = 'vst2'
 				sf2data = instdata['plugindata']
 				instdata['plugindata'] = {}
 				instdata['plugindata']['plugin'] = {}
 				instdata['plugindata']['plugin']['name'] = 'juicysfplugin'
-				if 'juicysfplugin' in vstpaths:
-					instdata['plugindata']['plugin']['path'] = vstpaths['juicysfplugin']['path']
+				if 'juicysfplugin' in vst2paths:
+					instdata['plugindata']['plugin']['path'] = vst2paths['juicysfplugin']['path']
 				jsfp_xml = ET.Element("MYPLUGINSETTINGS")
 				jsfp_params = ET.SubElement(jsfp_xml, "params")
 				jsfp_uiState = ET.SubElement(jsfp_xml, "uiState")
@@ -239,31 +239,31 @@ def convplug_inst(instdata, dawname):
 				if 'file' in sf2data: jsfp_soundFont.set('path', sf2data['file'])
 				else: jsfp_soundFont.set('path', '')
 				xmlout = ET.tostring(jsfp_xml, encoding='utf-8')
-				vstdata = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
-				instdata['plugindata']['data'] = base64.b64encode(vstdata).decode('ascii')
+				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
+				instdata['plugindata']['data'] = base64.b64encode(vst2data).decode('ascii')
 
 # -------------------- zynaddsubfx - from lmms --------------------
 			elif pluginname == 'zynaddsubfx' and dawname != 'lmms':
-				print('[plugin-convert] plugin: zynaddsubfx > ZynAddSubFX (VST)')
-				instdata['plugin'] = 'vst'
+				print('[plugin-convert] Plugin: zynaddsubfx > ZynAddSubFX (vst2)')
+				instdata['plugin'] = 'vst2'
 				zasfxdata = instdata['plugindata']['data']
 				instdata['plugindata'] = {}
 				instdata['plugindata']['plugin'] = {}
 				instdata['plugindata']['plugin']['name'] = 'ZynAddSubFX-2'
-				if 'ZynAddSubFX' in vstpaths:
-					instdata['plugindata']['plugin']['path'] = vstpaths['ZynAddSubFX-2']['path']
+				if 'ZynAddSubFX' in vst2paths:
+					instdata['plugindata']['plugin']['path'] = vst2paths['ZynAddSubFX-2']['path']
 				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
 				zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
 				instdata['plugindata']['data'] = base64.b64encode(zasfxdatafixed).decode('ascii')
 
 			else:
-				print('[plugin-convert] plugin: unchanged')
+				print('[plugin-convert] Plugin: unchanged')
 
 def convproj(cvpjdata, cvpjtype, dawname):
 	global supportedplugins
 	supportedplugins = {}
-	supportedplugins['sf2'] = ['lmms', 'fl']
-	supportedplugins['sampler'] = ['lmms', 'fl']
+	supportedplugins['sf2'] = ['lmms', 'flp']
+	supportedplugins['sampler'] = ['lmms', 'flp']
 	cvpj_l = json.loads(cvpjdata)
 	if cvpjtype == 'r':
 		if 'trackdata' in cvpj_l:

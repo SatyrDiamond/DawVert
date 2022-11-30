@@ -90,7 +90,7 @@ def lmms_encode_plugin(xmltag, trkJ):
         plugJ = instJ['plugindata']
 
     if pluginname == 'sampler':
-        print('[output-lmms]    ├─ Plugin: sampler > AudioFileProcessor')
+        print('[output-lmms]       Plugin: sampler > AudioFileProcessor')
         asdflfo_set(plugJ, xmltag)
         xml_instrumentpreplugin.set('name', "audiofileprocessor")
         xml_sampler = ET.SubElement(xml_instrumentpreplugin, "audiofileprocessor")
@@ -119,7 +119,7 @@ def lmms_encode_plugin(xmltag, trkJ):
         if interpolation == "sinc": xml_sampler.set('interp', '2')
         else: xml_sampler.set('interp', '0')
     elif pluginname == 'soundfont2':
-        print('[output-lmms]    ├─ Plugin: soundfont2 > sf2player')
+        print('[output-lmms]       Plugin: soundfont2 > sf2player')
         xml_instrumentpreplugin.set('name', "sf2player")
         xml_sf2 = ET.SubElement(xml_instrumentpreplugin, "sf2player")
         xml_sf2.set('bank', str(plugJ['bank']))
@@ -137,7 +137,7 @@ def lmms_encode_plugin(xmltag, trkJ):
         xml_sf2.set('chorusOn', str(plugJ['chorus']['enabled']))
         xml_sf2.set('chorusSpeed', str(plugJ['chorus']['speed']))
     elif pluginname == 'opl2':
-        print('[output-lmms]    ├─ Plugin: OPL2 > OPL2')
+        print('[output-lmms]       Plugin: OPL2 > OPL2')
         xml_instrumentpreplugin.set('name', "OPL2")
         xml_opl2 = ET.SubElement(xml_instrumentpreplugin, "OPL2")
         xml_opl2.set('op1_a', str(plugJ['op1']['envelope']['attack']))
@@ -168,8 +168,8 @@ def lmms_encode_plugin(xmltag, trkJ):
         xml_opl2.set('fm', str(plugJ['fm']))
         xml_opl2.set('trem_depth', str(plugJ['tremolo_depth']))
         xml_opl2.set('vib_depth', str(plugJ['vibrato_depth']))
-    elif pluginname == 'vst':
-        print('[output-lmms]    ├─ Plugin: vst > vestige')
+    elif pluginname == 'vst2':
+        print('[output-lmms]       Plugin: vst2 > vestige')
         xml_instrumentpreplugin.set('name', "vestige")
         xml_vst = ET.SubElement(xml_instrumentpreplugin, "vestige")
         if 'plugin' in plugJ:
@@ -177,7 +177,7 @@ def lmms_encode_plugin(xmltag, trkJ):
                 xml_vst.set('plugin', str(plugJ['plugin']['path']))
         xml_vst.set('chunk', str(plugJ['data']))
     elif pluginname == 'zynaddsubfx':
-        print('[output-lmms]    ├─ Plugin: zynaddsubfx > zynaddsubfx')
+        print('[output-lmms]       Plugin: zynaddsubfx > zynaddsubfx')
         xml_instrumentpreplugin.set('name', "zynaddsubfx")
         xml_zynaddsubfx = ET.SubElement(xml_instrumentpreplugin, "zynaddsubfx")
         xml_zynaddsubfx.set('bandwidth', str(plugJ['bandwidth']))
@@ -200,7 +200,7 @@ def lmms_encode_plugin(xmltag, trkJ):
         asdflfo_set(plugJ, xmltag)
         for lplugname in lmmsplugdata: xml_lmmsnat.set(lplugname, str(lmmsplugdata[lplugname]))
     else:
-        print('[output-lmms]    ├─ Plugin: '+pluginname+' > None')
+        print('[output-lmms]       Plugin: '+pluginname+' > None')
         xml_instrumentpreplugin.set('name', "audiofileprocessor")
 
 # ------- Notelist -------
@@ -309,7 +309,7 @@ def lmms_encode_inst_track(xmltag, trkJ):
         if 'basevelocity' in trkJ_midiport: trkX_midiport.set('basevelocity', str(trkJ_midiport['basevelocity']))
 
     print('[output-lmms] Instrument Track')
-    print('[output-lmms] └──┬─ Name: ' + trkJ['name'])
+    print('[output-lmms]       Name: ' + trkJ['name'])
     if 'fxchain' in instJ:
         lmms_encode_fxchain(trkX_insttr, instJ)
     lmms_encode_plugin(trkX_insttr, trkJ)
@@ -318,7 +318,7 @@ def lmms_encode_inst_track(xmltag, trkJ):
     json_placementlist = trkJ['placements']
     tracksnum = 0
     printcountplace = 0
-    print('[output-lmms]    └─ Placements: ', end='')
+    print('[output-lmms]       Placements: ', end='')
     while tracksnum <= len(json_placementlist)-1:
         global patternscount_forprinting
         patternscount_forprinting += 1
@@ -338,6 +338,8 @@ def lmms_encode_inst_track(xmltag, trkJ):
         lmms_encode_notelist(patX, json_notelist)
         tracksnum += 1
     print(' ')
+
+    print('[output-lmms]')
 
 # ------- Effects -------
 
@@ -367,7 +369,7 @@ def lmms_encode_effectslot(fxcX, json_fxslot):
     lmms_encode_effectplugin(fxslotX, json_fxslot)
     return fxslotX
 def lmms_encode_fxchain(xmltag, json_fxchannel):
-    print('[output-lmms]    ├─ FX Chain: ',end='')
+    print('[output-lmms]       FX Chain: ',end='')
     fxcX = ET.SubElement(xmltag, "fxchain")
     json_fxchain = json_fxchannel['fxchain']
     if 'enabled' in json_fxchannel: fxcX.set('enabled', str(json_fxchannel['enabled']))
@@ -388,7 +390,7 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
 
         if 'name' in fxchannelJ: name = fxchannelJ['name']
         else: name = 'FX ' + str(num)
-        print('[output-lmms] └──┬─ Name: ' + name)
+        print('[output-lmms]       Name: ' + name)
 
         if 'vol' in fxchannelJ: volume = fxchannelJ['vol']
         else: volume = 1
@@ -410,6 +412,7 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
             sendX = ET.SubElement(fxcX, "send")
             sendX.set('channel', '0')
             sendX.set('amount', '1')
+        print('[output-lmms]')
 
 # ------- Main -------
 

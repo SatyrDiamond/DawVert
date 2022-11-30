@@ -209,7 +209,7 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugin, cvpj_l_inst, cvpj_l_track):
         zdata = xml_plugin.findall('ZynAddSubFX-data')[0]
         cvpj_l_plugin['data'] = base64.b64encode(ET.tostring(zdata, encoding='utf-8')).decode('ascii')
     elif pluginname == "vestige":
-        cvpj_l_inst['plugin'] = "vst"
+        cvpj_l_inst['plugin'] = "vst2"
         cvpj_l_plugin['plugin'] = {}
         cvpj_l_plugin['plugin']['path'] = xml_plugin.get('plugin')
         cvpj_l_plugin['data'] = xml_plugin.get('chunk')
@@ -248,7 +248,7 @@ def lmms_decode_nlplacements(trkX):
     nlplacements = []
     patsX = trkX.findall('pattern')
     printcountplace = 0
-    print('[input-lmms]    └─ Placements: ', end='')
+    print('[input-lmms]       Placements: ', end='')
     for patX in patsX:
         printcountplace += 1
         placeJ = {}
@@ -276,7 +276,7 @@ def lmms_decode_inst_track(trkX, name):
 
     cvpj_l_track['name'] = trkX.get('name')
     print('[input-lmms] Instrument Track')
-    print('[input-lmms] └──┬─ Name: ' + cvpj_l_track['name'])
+    print('[input-lmms]       Name: ' + cvpj_l_track['name'])
 
     mutedval = int(lmms_getvalue(trkX, 'muted', ['track', name, 'enabled']))
     cvpj_l_track['enabled'] = int(not int(mutedval))
@@ -342,6 +342,7 @@ def lmms_decode_inst_track(trkX, name):
     lmms_decodeplugin(trkX_insttr, cvpj_l_track_plugindata, cvpj_l_inst, cvpj_l_track)
 
     cvpj_l_track['instdata'] = cvpj_l_inst
+    print('[input-lmms]')
     return cvpj_l_track
 
 # ------- Track: Automation -------
@@ -361,7 +362,7 @@ def lmms_decode_autoplacements(trkX):
     autoplacements = []
     autopatsX = trkX.findall('automationpattern')
     printcountplace = 0
-    print('[input-lmms]    └─ Placements: ', end='')
+    print('[input-lmms]       Placements: ', end='')
     for autopatX in autopatsX:
         placeJ = {}
         placeJ["position"] = float(autopatX.get('pos')) / 12
@@ -379,7 +380,7 @@ def lmms_decode_auto_track(trkX):
     cvpj_l_track['type'] = "auto"
     cvpj_l_track['name'] = trkX.get('name')
     print('[input-lmms] Automation Track')
-    print('[input-lmms] └──┬─ Name: ' + cvpj_l_track['name'])
+    print('[input-lmms]       Name: ' + cvpj_l_track['name'])
     cvpj_l_track['placements'] = lmms_decode_autoplacements(trkX)
     cvpj_l_track['enabled'] = int(not int(trkX.get('muted')))
     return cvpj_l_track
@@ -411,7 +412,7 @@ def lmms_decode_effectslot(fxslotX):
     else:
         return None
 def lmms_decode_fxchain(fxchainX):
-    print('[input-lmms]    ├─ FX Chain: ',end='')
+    print('[input-lmms]       FX Chain: ',end='')
     fxchain = []
     fxslotsX = fxchainX.findall('effect')
     for fxslotX in fxslotsX:
@@ -425,7 +426,7 @@ def lmms_decode_fxmixer(fxX):
         fx_name = fxcX.get('name')
         fx_num = fxcX.get('num')
         print('[input-lmms] FX ' + str(fx_num))
-        print('[input-lmms] └──┬─ Name: ' + fx_name)
+        print('[input-lmms]       Name: ' + fx_name)
         fxcJ = {}
         fxcJ['name'] = fx_name
         if fxcX.get('muted') != None: fxcJ['muted'] = int(fxcX.get('muted'))
@@ -442,6 +443,7 @@ def lmms_decode_fxmixer(fxX):
             sendlist.append(sendentryjson)
         fxcJ['sends'] = sendlist
         fxlist[str(fx_num)] = fxcJ
+        print('[input-lmms]')
     return fxlist
 
 # ------- Main -------

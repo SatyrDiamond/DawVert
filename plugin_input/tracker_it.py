@@ -274,7 +274,7 @@ class input_mod(plugin_input.base):
             samplecount += 1
         
         if xmodits_exists == True:
-            xmodits.dump(input_file, samplefolder, index_only=True)
+            xmodits.dump(input_file, samplefolder, index_raw=True, index_padding=0)
 
         # ------------- Pattern -------------
         patterncount = 1

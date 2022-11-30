@@ -7,6 +7,7 @@ import json
 from functions import song_tracker
 from functions import audio_wav
 from functions import data_bytes
+from functions import folder_samples
 
 class input_s3m(plugin_input.base):
     def __init__(self): pass
@@ -26,13 +27,8 @@ class input_s3m(plugin_input.base):
         file_stream = open(input_file, 'rb')
         
         s3m_modulename = os.path.splitext(os.path.basename(input_file))[0]
-        if 'samplefolder' in extra_param:
-            samplefolder = extra_param['samplefolder'] + s3m_modulename + '/'
-        else:
-            samplefolder = os.getcwd() + '/samples/' + s3m_modulename + '/'
-            os.makedirs(os.getcwd() + '/samples/', exist_ok=True)
-        os.makedirs(samplefolder, exist_ok=True)
-        
+        samplefolder = folder_samples.samplefolder(extra_param, s3m_modulename)
+
         cvpj_l = {}
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
@@ -154,7 +150,6 @@ class input_s3m(plugin_input.base):
                     loopdata = None
                 print("[input-st3] Ripping Sample " + str(s3m_numinst))
                 file_stream.seek(cvpj_inst_samplelocation)
-                os.makedirs(os.getcwd() + '/samples/', exist_ok=True)
                 os.makedirs(samplefolder, exist_ok=True)
                 wave_path = samplefolder + str(s3m_numinst).zfill(2) + '.wav'
 

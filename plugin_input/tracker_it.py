@@ -8,6 +8,11 @@ import json
 import numpy as np
 from functions import song_tracker
 from functions import audio_wav
+from functions import folder_samples
+
+try: import xmodits
+except: xmodits_exists = False
+else: xmodits_exists = True
 
 def splitbyte(value):
     first = value >> 4
@@ -122,13 +127,8 @@ class input_mod(plugin_input.base):
         startinststr = 'IT_Inst_'
 
         modulename = os.path.splitext(os.path.basename(input_file))[0]
-        if 'samplefolder' in extra_param:
-            samplefolder = extra_param['samplefolder'] + modulename + '/'
-        else:
-            samplefolder = os.getcwd() + '/samples/' + modulename + '/'
-            os.makedirs(os.getcwd() + '/samples/', exist_ok=True)
-        os.makedirs(samplefolder, exist_ok=True)
-        
+        samplefolder = folder_samples.samplefolder(extra_param, modulename)
+
         it_header_magic = it_file.read(4)
         if it_header_magic != b'IMPM':
             print('[error] Not an IT File')
@@ -180,11 +180,8 @@ class input_mod(plugin_input.base):
         for _ in range(it_header_patnum): table_offset_patterns.append(int.from_bytes(it_file.read(4), "little"))
         
         # ------------- Orders -------------
-        while 254 in table_orders:
-            table_orders.remove(254)
-        
-        while 255 in table_orders:
-            table_orders.remove(255)
+        while 254 in table_orders: table_orders.remove(254)
+        while 255 in table_orders: table_orders.remove(255)
         print("[input-it] Order List: " + str(table_orders))
         
         # ------------- Instruments -------------
@@ -263,17 +260,22 @@ class input_mod(plugin_input.base):
         IT_Samples = {}
         samplecount = 0
         for table_offset_sample in table_offset_samples:
+            IT_Samples[str(samplecount)] = {}
+            it_singlesample = IT_Samples[str(samplecount)]
             it_file.seek(table_offset_sample)
             sample_header = it_file.read(4)
             if sample_header != b'IMPS':
                 print('[input-it] Sample not Valid')
                 exit()
             print("[input-it] Sample " + str(samplecount) + ': at offset ' + str(table_offset_sample))
-            sample_filename_dos = it_file.read(12).split(b'\x00' * 1)[0].decode("latin_1")
+            it_singlesample['filename_dos'] = it_file.read(12).split(b'\x00' * 1)[0].decode("latin_1")
             it_file.read(4)
-            sample_name = it_file.read(26).split(b'\x00' * 1)[0].decode("latin_1")
+            it_singlesample['name'] = it_file.read(26).split(b'\x00' * 1)[0].decode("latin_1")
             samplecount += 1
         
+        if xmodits_exists == True:
+            xmodits.dump(input_file, samplefolder, index_only=True)
+
         # ------------- Pattern -------------
         patterncount = 1
         patterntable_all = []
@@ -376,18 +378,36 @@ class input_mod(plugin_input.base):
         cvpj_l_playlist = song_tracker.song2playlist(patterntable_all, 64, table_orders, startinststr, [0.71, 0.58, 0.47])
 
         instrumentcount = 0
-        for IT_Inst in IT_Insts:
-            it_instname = startinststr + str(instrumentcount+1)
-            it_singleinst = IT_Insts[IT_Inst]
-            cvpj_l_instruments[it_instname] = {}
-            cvpj_l_single_inst = cvpj_l_instruments[it_instname]
-            cvpj_l_single_inst['color'] = [0.71, 0.58, 0.47]
-            cvpj_l_single_inst['name'] = it_singleinst['name']
-            cvpj_l_single_inst['vol'] = 0.3
-            cvpj_l_single_inst['instdata'] = {}
-            cvpj_l_single_inst['instdata']['plugin'] = 'none'
-            cvpj_l_instrumentsorder.append(it_instname)
-            instrumentcount += 1
+        samplecount = 0
+        if it_header_flag_useinst == 1:
+            for IT_Inst in IT_Insts:
+                it_instname = startinststr + str(instrumentcount+1)
+                it_singleinst = IT_Insts[IT_Inst]
+                cvpj_l_instruments[it_instname] = {}
+                cvpj_l_single_inst = cvpj_l_instruments[it_instname]
+                cvpj_l_single_inst['color'] = [0.71, 0.58, 0.47]
+                cvpj_l_single_inst['name'] = it_singleinst['name']
+                cvpj_l_single_inst['vol'] = 0.3
+                cvpj_l_single_inst['instdata'] = {}
+                cvpj_l_single_inst['instdata']['plugin'] = 'none'
+                cvpj_l_instrumentsorder.append(it_instname)
+                instrumentcount += 1
+        else:
+            for IT_Sample in IT_Samples:
+                it_samplename = startinststr + str(samplecount+1)
+                it_singlesample = IT_Samples[IT_Sample]
+                cvpj_l_instruments[it_samplename] = {}
+                cvpj_l_single_inst = cvpj_l_instruments[it_samplename]
+                cvpj_l_single_inst['color'] = [0.71, 0.58, 0.47]
+                cvpj_l_single_inst['name'] = it_singlesample['name']
+                cvpj_l_single_inst['vol'] = 0.3
+                cvpj_l_single_inst['instdata'] = {}
+                cvpj_l_single_inst['instdata']['middlenote'] = 12
+                cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
+                cvpj_l_single_inst['instdata']['plugindata'] = {}
+                cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(samplecount+1).zfill(2) + '.wav'
+                cvpj_l_instrumentsorder.append(it_samplename)
+                samplecount += 1
 
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

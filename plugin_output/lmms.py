@@ -102,7 +102,7 @@ def lmms_encode_plugin(xmltag, trkJ):
         loopmode = "normal"
         if 'loop' in plugJ:
             trkJ_loop = plugJ['loop']
-            if 'points' in trkJ_loop:
+            if 'custompoints' in trkJ_loop:
                 xml_sampler.set('eframe', str(trkJ_loop['custompoints']['end']))
                 xml_sampler.set('lframe', str(trkJ_loop['custompoints']['loop']))
                 xml_sampler.set('sframe', str(trkJ_loop['custompoints']['start']))
@@ -251,13 +251,16 @@ def lmms_encode_inst_track(xmltag, trkJ):
     if 'usemasterpitch' in instJ: trkX_insttr.set('usemasterpitch', str(instJ['usemasterpitch']))
     trkX_insttr.set('pitch', "0")
     if 'pitch' in instJ: trkX_insttr.set('pitch', str(instJ['pitch']))
+    if 'plugin' in instJ: instplugin = instJ['plugin']
+    else: instplugin = None
     if 'middlenote' in instJ:
         middlenote = instJ['middlenote']
-        if 'plugin' in instJ: instplugin = instJ['plugin']
-        else: instplugin = None
         if instplugin == 'sampler': middlenote += 3
         if instplugin == 'soundfont2':  middlenote += 12
         if 'middlenote' in instJ: trkX_insttr.set('basenote', str(middlenote+57))
+    else:
+        if instplugin == 'sampler': trkX_insttr.set('basenote', str(60))
+        if instplugin == 'soundfont2': trkX_insttr.set('basenote', str(48))
     if 'fxrack_channel' in trkJ: trkX_insttr.set('fxch', str(trkJ['fxrack_channel']))
     else: trkX_insttr.set('fxch', '0')
     trkX_insttr.set('pan', "0")
@@ -315,29 +318,30 @@ def lmms_encode_inst_track(xmltag, trkJ):
     lmms_encode_plugin(trkX_insttr, trkJ)
 
     #placements
-    json_placementlist = trkJ['placements']
-    tracksnum = 0
-    printcountplace = 0
-    print('[output-lmms]       Placements: ', end='')
-    while tracksnum <= len(json_placementlist)-1:
-        global patternscount_forprinting
-        patternscount_forprinting += 1
-        printcountplace += 1
-        json_placement = json_placementlist[tracksnum-1]
-        json_notelist = json_placement['notelist']
-        patX = ET.SubElement(xmltag, "pattern")
-        patX.set('pos', str(int(json_placement['position'] * 12)))
-        patX.set('muted', "0")
-        patX.set('steps', "16")
-        patX.set('name', "")
-        if 'name' in json_placement: patX.set('name', json_placement['name'])
-        patX.set('type', "1")
-        if 'color' in json_placement:
-            color = json_placement['color']
-            patX.set('color', '#' + rgb_to_hex((int(color[0]*255),int(color[1]*255),int(color[2]*255))))
-        lmms_encode_notelist(patX, json_notelist)
-        tracksnum += 1
-    print(' ')
+    if 'placements' in trkJ:
+        json_placementlist = trkJ['placements']
+        tracksnum = 0
+        printcountplace = 0
+        print('[output-lmms]       Placements: ', end='')
+        while tracksnum <= len(json_placementlist)-1:
+            global patternscount_forprinting
+            patternscount_forprinting += 1
+            printcountplace += 1
+            json_placement = json_placementlist[tracksnum-1]
+            json_notelist = json_placement['notelist']
+            patX = ET.SubElement(xmltag, "pattern")
+            patX.set('pos', str(int(json_placement['position'] * 12)))
+            patX.set('muted', "0")
+            patX.set('steps', "16")
+            patX.set('name', "")
+            if 'name' in json_placement: patX.set('name', json_placement['name'])
+            patX.set('type', "1")
+            if 'color' in json_placement:
+                color = json_placement['color']
+                patX.set('color', '#' + rgb_to_hex((int(color[0]*255),int(color[1]*255),int(color[2]*255))))
+            lmms_encode_notelist(patX, json_notelist)
+            tracksnum += 1
+        print(' ')
 
     print('[output-lmms]')
 

@@ -434,7 +434,6 @@ class input_mod(plugin_input.base):
                 else: cvpj_l_single_inst['name'] = " "
                 cvpj_l_single_inst['vol'] = 0.3
                 cvpj_l_single_inst['instdata'] = {}
-                cvpj_l_single_inst['instdata']['middlenote'] = 12
                 cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
                 cvpj_l_single_inst['instdata']['plugindata'] = {}
                 cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(samplecount+1) + '.wav'

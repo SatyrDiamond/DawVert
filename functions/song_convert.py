@@ -76,3 +76,108 @@ def r2m(song):
                 cvpj_proj['instruments'][trackid] = singletrack_data
             temp_num_playlist += 1
     return json.dumps(cvpj_proj)
+
+def mi2m(song):
+    cvpj_proj = json.loads(song)
+    t_s_notelistindex = cvpj_proj['notelistindex']
+    t_s_playlist = cvpj_proj['playlist']
+    for pl_row in t_s_playlist:
+        pl_row_data = t_s_playlist[pl_row]
+        if 'placements' in pl_row_data:
+            pl_row_placements = pl_row_data['placements']
+            for pldata in pl_row_placements:
+                if 'type' in pldata:
+                    if pldata['type'] == 'instruments' and 'fromindex' in pldata:
+                        fromindex = pldata['fromindex']
+                        if fromindex in t_s_notelistindex:
+                            index_pl_data = t_s_notelistindex[fromindex]
+                            del pldata['fromindex']
+                            pldata['notelist'] = index_pl_data['notelist']
+                            if 'name' in index_pl_data: pldata['name'] = index_pl_data['name']
+                            if 'color' in index_pl_data: pldata['color'] = index_pl_data['color']
+    del cvpj_proj['notelistindex']
+    return json.dumps(cvpj_proj)
+
+def overlap(start1, end1, start2, end2):
+    return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
+
+def m2r_split_insts(placement):
+    del placement['type']
+    pl_nl = placement['notelist']
+    del placement['notelist']
+    pl_base = placement
+    splitted_instnotes = {}
+    out_inst_pl = {}
+    for note in pl_nl:
+        note_inst = note['instrument']
+        del note['instrument']
+        if note_inst not in splitted_instnotes:
+            splitted_instnotes[note_inst] = []
+        splitted_instnotes[note_inst].append(note)
+    for inst in splitted_instnotes:
+        out_pl = {}
+        out_pl['notelist'] = splitted_instnotes[inst]
+        if inst not in out_inst_pl: out_inst_pl[inst] = pl_base | out_pl
+    return out_inst_pl
+
+def m2r_addplacements(placements):
+    for placement in placements:
+        mpl_num = 0
+        success = 0
+        pla_s = placement['position']
+        pla_e = pla_s + placement['duration']
+        multiplacements = [[]]
+        while success == 0:
+            total_overlap = 0
+            for e_pla in multiplacements[mpl_num]:
+                e_pla_s = e_pla['position']
+                e_pla_e = e_pla_s + e_pla['duration']
+                total_overlap += overlap(e_pla_s, e_pla_e, pla_s, pla_e)
+            if total_overlap == 0:
+                multiplacements[mpl_num].append(placement)
+                success = 1
+                break
+            else:
+                multiplacements.append([])
+                mpl_num += 1
+    return multiplacements
+
+def m2r(song):
+    cvpj_proj = json.loads(song)
+
+    playlist = cvpj_proj['playlist']
+    cvpjm_instruments = cvpj_proj['instruments']
+    cvpjm_instrumentsorder = cvpj_proj['instrumentsorder']
+
+    del cvpj_proj['playlist']
+    del cvpj_proj['instruments']
+    del cvpj_proj['instrumentsorder']
+
+    cvpj_trackdata = {}
+    cvpj_trackordering = []
+
+    inst_pl = {}
+    for playlistentry in playlist:
+        plrow = playlist[playlistentry]
+        if 'placements' in plrow:
+            placements = plrow['placements']
+            for placement in placements:
+                if placement['type'] == 'instruments':
+                    splitted_insts = m2r_split_insts(placement)
+                    for inst in splitted_insts:
+                        if inst not in inst_pl:
+                            inst_pl[inst] = []
+                        inst_pl[inst].append(splitted_insts[inst])
+    for instrument in cvpjm_instrumentsorder:
+        if instrument in cvpjm_instruments:
+            trackdata = cvpjm_instruments[instrument]
+            cvpj_trackdata[instrument] = trackdata
+            trackdata['type'] = 'instrument'
+            if instrument in inst_pl:
+                cvpj_trackdata[instrument]['placements'] = inst_pl[instrument]
+            cvpj_trackordering.append(instrument)
+
+    cvpj_proj['trackdata'] = cvpj_trackdata
+    cvpj_proj['trackordering'] = cvpj_trackordering
+
+    return json.dumps(cvpj_proj)

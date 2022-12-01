@@ -70,6 +70,8 @@ class input_flp(plugin_input.base):
                     singleinstdata['instdata']['plugindata'] = {}
                     if 'samplefilename' in channeldata:
                         singleinstdata['instdata']['plugindata']['file'] = channeldata['samplefilename']
+                    else:
+                        singleinstdata['instdata']['plugindata']['file'] = ''
                 if channeldata['type'] == 2:
                     singleinstdata['instdata']['plugin'] = "native-fl"
                     singleinstdata['instdata']['plugindata'] = {}
@@ -88,7 +90,10 @@ class input_flp(plugin_input.base):
                 for flnote in patterndata['notes']:
                     noteJ = {}
                     noteJ['position'] = (flnote['pos']/ppq)*4
-                    noteJ['instrument'] = id_inst[str(flnote['rack'])]
+                    if str(flnote['rack']) in id_inst:
+                        noteJ['instrument'] = id_inst[str(flnote['rack'])]
+                    else:
+                        noteJ['instrument'] = ''
                     noteJ['duration'] = (flnote['dur']/ppq)*4
                     noteJ['key'] = flnote['key']-60
                     noteJ['finepitch'] = (flnote['finep']-120)*10

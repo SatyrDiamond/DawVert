@@ -92,9 +92,10 @@ def mi2m(song):
                         if fromindex in t_s_notelistindex:
                             index_pl_data = t_s_notelistindex[fromindex]
                             del pldata['fromindex']
-                            pldata['notelist'] = index_pl_data['notelist']
-                            if 'name' in index_pl_data: pldata['name'] = index_pl_data['name']
-                            if 'color' in index_pl_data: pldata['color'] = index_pl_data['color']
+                            if 'notelist' in index_pl_data:
+                                pldata['notelist'] = index_pl_data['notelist']
+                                if 'name' in index_pl_data: pldata['name'] = index_pl_data['name']
+                                if 'color' in index_pl_data: pldata['color'] = index_pl_data['color']
     del cvpj_proj['notelistindex']
     return json.dumps(cvpj_proj)
 
@@ -103,21 +104,22 @@ def overlap(start1, end1, start2, end2):
 
 def m2r_split_insts(placement):
     del placement['type']
-    pl_nl = placement['notelist']
-    del placement['notelist']
-    pl_base = placement
-    splitted_instnotes = {}
     out_inst_pl = {}
-    for note in pl_nl:
-        note_inst = note['instrument']
-        del note['instrument']
-        if note_inst not in splitted_instnotes:
-            splitted_instnotes[note_inst] = []
-        splitted_instnotes[note_inst].append(note)
-    for inst in splitted_instnotes:
-        out_pl = {}
-        out_pl['notelist'] = splitted_instnotes[inst]
-        if inst not in out_inst_pl: out_inst_pl[inst] = pl_base | out_pl
+    if 'notelist' in placement:
+        pl_nl = placement['notelist']
+        del placement['notelist']
+        pl_base = placement
+        splitted_instnotes = {}
+        for note in pl_nl:
+            note_inst = note['instrument']
+            del note['instrument']
+            if note_inst not in splitted_instnotes:
+                splitted_instnotes[note_inst] = []
+            splitted_instnotes[note_inst].append(note)
+        for inst in splitted_instnotes:
+            out_pl = {}
+            out_pl['notelist'] = splitted_instnotes[inst]
+            if inst not in out_inst_pl: out_inst_pl[inst] = pl_base | out_pl
     return out_inst_pl
 
 def m2r_addplacements(placements):

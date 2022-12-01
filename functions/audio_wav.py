@@ -159,6 +159,11 @@ def complete_wav_info(sampler_file_data):
 						sampler_file_data['loops'] = {}
 					wavloopdata = wavinfo[2]['loops'][next(iter(wavinfo[2]['loops']))]
 					sampler_file_data['loops']['points'] = [wavloopdata['start'], wavloopdata['end']]
+					if 'custompoints' not in sampler_file_data['loops']:
+						sampler_file_data['loops']['custompoints'] = {}
+						sampler_file_data['loops']['custompoints']['start'] = 0
+						sampler_file_data['loops']['custompoints']['loop'] = wavloopdata['start']/sampler_file_data['length']
+						sampler_file_data['loops']['custompoints']['end'] = wavloopdata['end']/sampler_file_data['length']
 		return wavformat
 	return None
 

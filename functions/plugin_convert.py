@@ -232,9 +232,9 @@ def convplug_inst(instdata, dawname):
 								regionparams['filename'] = sampler_file_data['file']
 								regionparams['length'] = sampler_file_data['length']
 								regionparams['start'] = 0
-								if 'loops' in sampler_file_data:
-									if 'points' in sampler_file_data['loops']:
-										regionparams['loop'] = sampler_file_data['loops']['points']
+								if 'loop' in sampler_file_data:
+									if 'points' in sampler_file_data['loop']:
+										regionparams['loop'] = sampler_file_data['loop']['points']
 								grace_create_region(gx_root, regionparams)
 								xmlout = ET.tostring(gx_root, encoding='utf-8')
 								replace_vst(instdata, 'Grace', xmlout)

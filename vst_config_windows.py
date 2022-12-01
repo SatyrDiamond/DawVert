@@ -54,8 +54,10 @@ if selecteddaw == 'cakewalk':
 	vstlist = reg_list(w_regkey_cakewalk)
 	for vstplugin in vstlist:
 		registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, vstplugin, 0, winreg.KEY_READ)
-		vst_is_v2 = winreg.QueryValueEx(registry_key, 'isVst')[0]
-		vst_is_v3 = winreg.QueryValueEx(registry_key, 'isVst3')[0]
+		try: vst_is_v2 = winreg.QueryValueEx(registry_key, 'isVst')[0]
+		except WindowsError: vst_is_v2 = 0
+		try: vst_is_v3 = winreg.QueryValueEx(registry_key, 'isVst3')[0]
+		except WindowsError: vst_is_v3 = 0
 		if vst_is_v2 == 1 or vst_is_v3 == 1:
 			vst_name = winreg.QueryValueEx(registry_key, 'FullName')[0]
 			vst_path = winreg.QueryValueEx(registry_key, 'FullPath')[0]

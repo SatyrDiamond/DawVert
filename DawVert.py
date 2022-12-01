@@ -109,6 +109,9 @@ elif out_type == 'debug': print('[info] ' + typelist[in_type] + ' > ' + typelist
 elif in_type == 'm' and out_type == 'mi': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 elif in_type == 'r' and out_type == 'm': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 elif in_type == 'r' and out_type == 'mi': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
+elif in_type == 'mi' and out_type == 'm': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
+elif in_type == 'm' and out_type == 'r': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
+elif in_type == 'mi' and out_type == 'r': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 else:
 	print('[info] type Conversion from ' + typelist[in_type] + ' to ' + typelist[out_type] + ' not supported.')
 	exit()
@@ -123,16 +126,25 @@ if CVPJ_j == '{}' or CVPJ_j == None:
 
 CVPJ_j = plugin_convert.convproj(CVPJ_j, in_type, out_format)
 
-# --------- Convert Type
+# --------- Convert Type -- mi <> m <> r
 
 print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 if in_type == 'm' and out_type == 'mi': 
 	CVPJ_j = song_convert.m2mi(CVPJ_j)
+if in_type == 'm' and out_type == 'r': 
+	CVPJ_j = song_convert.m2r(CVPJ_j)
+
 if in_type == 'r' and out_type == 'm': 
 	CVPJ_j = song_convert.r2m(CVPJ_j)
 if in_type == 'r' and out_type == 'mi': 
 	CVPJ_j = song_convert.r2m(CVPJ_j)
 	CVPJ_j = song_convert.m2mi(CVPJ_j)
+
+if in_type == 'mi' and out_type == 'm': 
+	CVPJ_j = song_convert.mi2m(CVPJ_j)
+if in_type == 'mi' and out_type == 'r': 
+	CVPJ_j = song_convert.mi2m(CVPJ_j)
+	CVPJ_j = song_convert.m2r(CVPJ_j)
 
 # --------- Output
 

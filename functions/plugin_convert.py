@@ -8,27 +8,16 @@ import pathlib
 from os.path import exists
 from functions import audio_wav
 
-def xml_addvalue(xmltag, name, value):
-    temp_xml = ET.SubElement(xmltag, name)
-    if value != None:
-        temp_xml.text = value
+global vst2paths
+global vst3paths
 
-def complete_wav_info(sampler_file_data):
-	if exists(sampler_file_data['file']) == True and pathlib.Path(sampler_file_data['file']).suffix == '.wav':
-		wavinfo = audio_wav.decode(sampler_file_data['file'])
-		sampler_file_data['length'] = wavinfo[0]['length']
-		wavformat = wavinfo[0]['format']
-		returnvalue = None
-		if wavinfo[2] != {}:
-			if 'loops' in wavinfo[2]:
-				if wavinfo[2]['loops'] != {}:
-					if 'loops' not in sampler_file_data:
-						sampler_file_data['loops'] = {}
-					wavloopdata = wavinfo[2]['loops'][next(iter(wavinfo[2]['loops']))]
-					sampler_file_data['loops']['points'] = [wavloopdata['start'], wavloopdata['end']]
-		return wavformat
-	return None
+global vst2path_loaded
+global vst3path_loaded
 
+vst2path_loaded = False
+vst3path_loaded = False
+
+# -------------------- Sampler Plugins --------------------
 def grace_create_main():
     gx_root = ET.Element("root")
 
@@ -106,7 +95,6 @@ def grace_create_main():
     gx_MidiMap = ET.SubElement(gx_root, "MidiMap")
 
     return gx_root
-
 def grace_create_region(gx_root, regionparams):
     gx_SampleGroup = gx_root.findall('SampleGroup')[0]
     gx_Region = ET.SubElement(gx_SampleGroup, "Region")
@@ -171,8 +159,73 @@ def grace_create_region(gx_root, regionparams):
 
     return gx_root
 
-vst2paths = configparser.ConfigParser()
-vst2paths.read('vst2.ini')
+# -------------------- VST List --------------------
+def replace_vst(instdata, name, data):
+	change_ok = 0
+	vst_path = ''
+	if vst2path_loaded == True:
+		if name in vst2paths:
+			if 'path64' in vst2paths[name]: 
+				vst_path = vst2paths[name]['path64']
+				print('[plugin-convert] Plugin: ' + instdata['plugin'] +' > ' + name + ' (VST2 64-bit)')
+				change_ok = 1
+			elif 'path32' in vst2paths[name]: 
+				vst_path = vst2paths[name]['path32']
+				print('[plugin-convert] Plugin: ' + instdata['plugin'] +' > ' + name + ' (VST2 32-bit)')
+				change_ok = 1
+			else:
+				print('[plugin-convert] Unchanged,', 'Plugin path of ' + name + ' not Found')
+		else: 
+			instdata['plugindata']['plugin']['path'] = ''
+			print('[plugin-convert] Unchanged,', 'Plugin ' + name + ' not Found')
+	else: 
+		instdata['plugindata']['plugin']['path'] = ''
+		print('[plugin-convert] Unchanged,', "VST2 list not found")
+	if change_ok == 1:
+		instdata['plugin'] = 'vst2'
+		instdata['plugindata'] = {}
+		instdata['plugindata']['plugin'] = {}
+		instdata['plugindata']['plugin']['name'] = name
+		instdata['plugindata']['plugin']['path'] = vst_path
+		instdata['plugindata']['data'] = base64.b64encode(data).decode('ascii')
+
+def vstlist_init(osplatform):
+	global vst2paths
+	global vst3paths
+	global vst2path_loaded
+	global vst3path_loaded
+	if osplatform == 'windows':
+		if exists('vst2_win.ini'):
+			vst2paths = configparser.ConfigParser()
+			vst2paths.read('vst2_win.ini')
+			vst2path_loaded = True
+			print('[plugin-convert] # of VST2 Plugins:', len(vst2paths))
+		if exists('vst3_win.ini'):
+			vst3paths = configparser.ConfigParser()
+			vst3paths.read('vst3_win.ini')
+			vst2path_loaded = True
+			print('[plugin-convert] # of VST3 Plugins:', len(vst3paths))
+
+def xml_addvalue(xmltag, name, value):
+    temp_xml = ET.SubElement(xmltag, name)
+    if value != None:
+        temp_xml.text = value
+
+def complete_wav_info(sampler_file_data):
+	if exists(sampler_file_data['file']) == True and pathlib.Path(sampler_file_data['file']).suffix == '.wav':
+		wavinfo = audio_wav.decode(sampler_file_data['file'])
+		sampler_file_data['length'] = wavinfo[0]['length']
+		wavformat = wavinfo[0]['format']
+		returnvalue = None
+		if wavinfo[2] != {}:
+			if 'loops' in wavinfo[2]:
+				if wavinfo[2]['loops'] != {}:
+					if 'loops' not in sampler_file_data:
+						sampler_file_data['loops'] = {}
+					wavloopdata = wavinfo[2]['loops'][next(iter(wavinfo[2]['loops']))]
+					sampler_file_data['loops']['points'] = [wavloopdata['start'], wavloopdata['end']]
+		return wavformat
+	return None
 
 def convplug_inst(instdata, dawname):
 	global supportedplugins
@@ -186,40 +239,31 @@ def convplug_inst(instdata, dawname):
 				sampler_data = instdata
 				sampler_file_data = instdata['plugindata']
 				wireturn = complete_wav_info(sampler_file_data)
-				if 'file' in sampler_file_data and wireturn != None and wireturn == 1:
-					file_extension = pathlib.Path(sampler_file_data['file']).suffix
-					if file_extension == '.wav':
-						gx_root = grace_create_main()
-						regionparams = {}
-						regionparams['filename'] = sampler_file_data['file']
-						regionparams['length'] = sampler_file_data['length']
-						regionparams['start'] = 0
-						if 'loops' in sampler_file_data:
-							if 'points' in sampler_file_data['loops']:
-								regionparams['loop'] = sampler_file_data['loops']['points']
-						grace_create_region(gx_root, regionparams)
-						xmlout = ET.tostring(gx_root, encoding='utf-8')
-						print('[plugin-convert] Plugin: sampler > Grace (vst2)')
-						instdata['plugin'] = 'vst2'
-						instdata['plugindata'] = {}
-						instdata['plugindata']['plugin'] = {}
-						instdata['plugindata']['plugin']['name'] = 'Grace'
-						if 'Grace' in vst2paths:
-							instdata['plugindata']['plugin']['path'] = vst2paths['Grace']['path']
-						instdata['plugindata']['data'] = base64.b64encode(xmlout).decode('ascii')
+				if vst2path_loaded == True:
+					if 'Grace' in vst2paths:
+						if 'file' in sampler_file_data and wireturn != None and wireturn == 1:
+							file_extension = pathlib.Path(sampler_file_data['file']).suffix
+							if file_extension == '.wav':
+								gx_root = grace_create_main()
+								regionparams = {}
+								regionparams['filename'] = sampler_file_data['file']
+								regionparams['length'] = sampler_file_data['length']
+								regionparams['start'] = 0
+								if 'loops' in sampler_file_data:
+									if 'points' in sampler_file_data['loops']:
+										regionparams['loop'] = sampler_file_data['loops']['points']
+								grace_create_region(gx_root, regionparams)
+								xmlout = ET.tostring(gx_root, encoding='utf-8')
+								replace_vst(instdata, 'Grace', xmlout)
+						else:
+							print("[plugin-convert] Unchanged, Grace (VST2) only supports Format 1 .WAV")
+					else:
+						print('[plugin-convert] Unchanged, Plugin Grace not Found')
 				else:
-					print("[plugin-convert] Plugin: unchanged - Grace (vst2) only supports Format 1 .WAV")
-
+					print('[plugin-convert] Unchanged, VST2 list not found')
 # -------------------- sf2 > vst2 (juicysfplugin) --------------------
 			elif pluginname == 'soundfont2' and dawname not in supportedplugins['sf2']:
-				print('[plugin-convert] Plugin: soundfont2 > juicysfplugin (vst2)')
-				instdata['plugin'] = 'vst2'
 				sf2data = instdata['plugindata']
-				instdata['plugindata'] = {}
-				instdata['plugindata']['plugin'] = {}
-				instdata['plugindata']['plugin']['name'] = 'juicysfplugin'
-				if 'juicysfplugin' in vst2paths:
-					instdata['plugindata']['plugin']['path'] = vst2paths['juicysfplugin']['path']
 				jsfp_xml = ET.Element("MYPLUGINSETTINGS")
 				jsfp_params = ET.SubElement(jsfp_xml, "params")
 				jsfp_uiState = ET.SubElement(jsfp_xml, "uiState")
@@ -240,30 +284,24 @@ def convplug_inst(instdata, dawname):
 				else: jsfp_soundFont.set('path', '')
 				xmlout = ET.tostring(jsfp_xml, encoding='utf-8')
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
-				instdata['plugindata']['data'] = base64.b64encode(vst2data).decode('ascii')
+				replace_vst(instdata, 'juicysfplugin', vst2data)
 
 # -------------------- zynaddsubfx - from lmms --------------------
 			elif pluginname == 'zynaddsubfx' and dawname != 'lmms':
-				print('[plugin-convert] Plugin: zynaddsubfx > ZynAddSubFX (vst2)')
-				instdata['plugin'] = 'vst2'
 				zasfxdata = instdata['plugindata']['data']
-				instdata['plugindata'] = {}
-				instdata['plugindata']['plugin'] = {}
-				instdata['plugindata']['plugin']['name'] = 'ZynAddSubFX-2'
-				if 'ZynAddSubFX' in vst2paths:
-					instdata['plugindata']['plugin']['path'] = vst2paths['ZynAddSubFX-2']['path']
 				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
 				zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
-				instdata['plugindata']['data'] = base64.b64encode(zasfxdatafixed).decode('ascii')
+				replace_vst(instdata, 'ZynAddSubFX', zasfxdatafixed)
 
 			else:
-				print('[plugin-convert] Plugin: unchanged')
+				print('[plugin-convert] Unchanged')
 
 def convproj(cvpjdata, cvpjtype, dawname):
 	global supportedplugins
+	vstlist_init('windows')
 	supportedplugins = {}
-	supportedplugins['sf2'] = ['lmms', 'flp']
-	supportedplugins['sampler'] = ['lmms', 'flp']
+	supportedplugins['sf2'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
+	supportedplugins['sampler'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
 	cvpj_l = json.loads(cvpjdata)
 	if cvpjtype == 'r':
 		if 'trackdata' in cvpj_l:

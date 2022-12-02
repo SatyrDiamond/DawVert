@@ -108,6 +108,7 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
     cvpj_instdata['pitch'] = 0
     cvpj_instdata['plugin'] = 'famistudio'
     cvpj_instdata['plugindata'] = FST_Instrument
+    cvpj_instdata['plugindata']['wave'] = wavetype
     cvpj_instdata['usemasterpitch'] = 1
     if wavetype == 'Square': cvpj_inst['color'] = [0.97, 0.56, 0.36]
     if wavetype == 'Triangle': cvpj_inst['color'] = [0.94, 0.33, 0.58]
@@ -218,7 +219,7 @@ class input_famistudio(plugin_input.base):
                         cvpj_note['instrument'] = InstShapes[Channel]+'-'+notedata['Instrument']
                         cvpj_note['duration'] = int(notedata['Duration'])/NoteLength
                         cvpj_note['position'] = int(notedata['Time'])/NoteLength
-                        cvpj_note['key'] = NoteToMidi(notedata['Value'])
+                        cvpj_note['key'] = NoteToMidi(notedata['Value']) + 24
                         patternnotelist.append(cvpj_note)
             Channel_Instances = FST_Channels[Channel]['Instances']
             for FST_Placement in Channel_Instances:

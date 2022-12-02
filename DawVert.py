@@ -124,7 +124,9 @@ if CVPJ_j == '{}' or CVPJ_j == None:
 
 # --------- Plugins
 
-CVPJ_j = plugin_convert.convproj(CVPJ_j, in_type, out_format)
+CVPJ_C = plugin_convert.convproj(CVPJ_j, in_type, out_type, out_format)
+if CVPJ_C != None: CVPJ_j = CVPJ_C
+
 
 # --------- Convert Type -- mi <> m <> r
 

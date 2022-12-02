@@ -420,6 +420,18 @@ class input_mod(plugin_input.base):
                 else:
                     cvpj_l_single_inst['instdata'] = {}
                     cvpj_l_single_inst['instdata']['plugin'] = 'none'
+
+                if it_singleinst['filtercutoff'] != None:
+                    plugdata = cvpj_l_single_inst['instdata']['plugindata']
+                    plugdata['filter'] = {}
+                    computedCutoff = (it_singleinst['filtercutoff'] * 512)
+                    outputcutoff = 131.0 * pow(2.0, computedCutoff * (5.29 / (127.0 * 512.0)))
+                    plugdata['filter']['cutoff'] = outputcutoff
+                    if it_singleinst['filterresonance'] != None: plugdata['filter']['reso'] = it_singleinst['filterresonance']/127
+                    else: plugdata['filter']['reso'] = 0
+                    plugdata['filter']['type'] = "lowpass"
+                    plugdata['filter']['wet'] = 1
+
                 cvpj_l_instrumentsorder.append(it_instname)
                 instrumentcount += 1
         if it_header_flag_useinst == 0:

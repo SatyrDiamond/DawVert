@@ -90,10 +90,8 @@ class input_flp(plugin_input.base):
                 for flnote in patterndata['notes']:
                     noteJ = {}
                     noteJ['position'] = (flnote['pos']/ppq)*4
-                    if str(flnote['rack']) in id_inst:
-                        noteJ['instrument'] = id_inst[str(flnote['rack'])]
-                    else:
-                        noteJ['instrument'] = ''
+                    if str(flnote['rack']) in id_inst: noteJ['instrument'] = id_inst[str(flnote['rack'])]
+                    else: noteJ['instrument'] = ''
                     noteJ['duration'] = (flnote['dur']/ppq)*4
                     noteJ['key'] = flnote['key']-60
                     noteJ['finepitch'] = (flnote['finep']-120)*10
@@ -107,7 +105,8 @@ class input_flp(plugin_input.base):
                 id_pat[str(pattern)] = 'FLPat' + str(pattern)
             if 'color' in patterndata:
                 color = patterndata['color'].to_bytes(4, "little")
-                notelistindexJ['FLPat' + str(pattern)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
+                if color != b'HQV\x00':
+                    notelistindexJ['FLPat' + str(pattern)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
             if 'name' in patterndata: notelistindexJ['FLPat' + str(pattern)]['name'] = patterndata['name']
 
         FL_Arrangement = FL_Arrangements['0']

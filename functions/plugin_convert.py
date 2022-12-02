@@ -17,7 +17,7 @@ global vst3path_loaded
 vst2path_loaded = False
 vst3path_loaded = False
 
-# -------------------- Sampler --------------------
+# -------------------- VST --------------------
 
 def grace_addvalue(xmltag, name, value):
     temp_xml = ET.SubElement(xmltag, name)
@@ -168,24 +168,26 @@ def grace_create_region(gx_root, regionparams):
 def replace_vst(instdata, name, data):
 	change_ok = 0
 	vst_path = ''
-	if vst2path_loaded == True:
-		if name in vst2paths:
-			if 'path64' in vst2paths[name]: 
-				vst_path = vst2paths[name]['path64']
-				print('[plugin-convert] Plugin: ' + instdata['plugin'] +' > ' + name + ' (VST2 64-bit)')
-				change_ok = 1
-			elif 'path32' in vst2paths[name]: 
-				vst_path = vst2paths[name]['path32']
-				print('[plugin-convert] Plugin: ' + instdata['plugin'] +' > ' + name + ' (VST2 32-bit)')
-				change_ok = 1
-			else:
-				print('[plugin-convert] Unchanged,', 'Plugin path of ' + name + ' not Found')
+	if 'plugindata' in instdata and 'plugin' in instdata:
+		if vst2path_loaded == True:
+			if name in vst2paths:
+				if 'path64' in vst2paths[name]: 
+					vst_path = vst2paths[name]['path64']
+					print('[plugin-convert] Plugin: ' + instdata['plugin'] +' > ' + name + ' (VST2 64-bit)')
+					change_ok = 1
+				elif 'path32' in vst2paths[name]: 
+					vst_path = vst2paths[name]['path32']
+					print('[plugin-convert] Plugin: ' + instdata['plugin'] +' > ' + name + ' (VST2 32-bit)')
+					change_ok = 1
+				else:
+					print('[plugin-convert] Unchanged,', 'Plugin path of ' + name + ' not Found')
+			else: 
+				instdata['plugindata']['plugin']['path'] = ''
+				print('[plugin-convert] Unchanged,', 'Plugin ' + name + ' not Found')
 		else: 
-			instdata['plugindata']['plugin']['path'] = ''
-			print('[plugin-convert] Unchanged,', 'Plugin ' + name + ' not Found')
+			print('[plugin-convert] Unchanged,', "VST2 list not found")
 	else: 
-		instdata['plugindata']['plugin']['path'] = ''
-		print('[plugin-convert] Unchanged,', "VST2 list not found")
+		print('[plugin-convert] Unchanged,', "No Plugin and/or PluginData defined")
 	if change_ok == 1:
 		instdata['plugin'] = 'vst2'
 		instdata['plugindata'] = {}
@@ -217,7 +219,7 @@ def convplug_inst(instdata, dawname):
 			pluginname = instdata['plugin']
 			plugindata = instdata['plugindata']
 
-# -------------------- sampler > vst2 (Grace) --------------------
+			# -------------------- sampler > vst2 (Grace) --------------------
 			if pluginname == 'sampler' and dawname not in supportedplugins['sampler']:
 				sampler_data = instdata
 				sampler_file_data = instdata['plugindata']
@@ -244,7 +246,8 @@ def convplug_inst(instdata, dawname):
 						print('[plugin-convert] Unchanged, Plugin Grace not Found')
 				else:
 					print('[plugin-convert] Unchanged, VST2 list not found')
-# -------------------- sf2 > vst2 (juicysfplugin) --------------------
+
+			# -------------------- sf2 > vst2 (juicysfplugin) --------------------
 			elif pluginname == 'soundfont2' and dawname not in supportedplugins['sf2']:
 				sf2data = instdata['plugindata']
 				jsfp_xml = ET.Element("MYPLUGINSETTINGS")
@@ -269,7 +272,7 @@ def convplug_inst(instdata, dawname):
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
 				replace_vst(instdata, 'juicysfplugin', vst2data)
 
-# -------------------- zynaddsubfx - from lmms --------------------
+			# -------------------- zynaddsubfx - from lmms --------------------
 			elif pluginname == 'zynaddsubfx' and dawname != 'lmms':
 				zasfxdata = instdata['plugindata']['data']
 				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
@@ -279,27 +282,29 @@ def convplug_inst(instdata, dawname):
 			else:
 				print('[plugin-convert] Unchanged')
 
-def convproj(cvpjdata, cvpjtype, dawname):
+def convproj(cvpjdata, in_type, out_type, dawname):
 	global supportedplugins
 	vstlist_init('windows')
 	supportedplugins = {}
 	supportedplugins['sf2'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
 	supportedplugins['sampler'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
-	cvpj_l = json.loads(cvpjdata)
-	if cvpjtype == 'r':
-		if 'trackdata' in cvpj_l:
-			for track in cvpj_l['trackdata']:
-				trackdata = cvpj_l['trackdata'][track]
-				if 'type' in trackdata:
-					if trackdata['type'] == 'instrument':
-						if 'instdata' in trackdata:
-							instdata = trackdata['instdata']
-							convplug_inst(instdata, dawname)
-	if cvpjtype == 'm' or cvpjtype == 'mi':
-		if 'instruments' in cvpj_l:
-			for track in cvpj_l['instruments']:
-				trackdata = cvpj_l['instruments'][track]
-				if 'instdata' in trackdata:
-					instdata = trackdata['instdata']
-					convplug_inst(instdata, dawname)
-	return json.dumps(cvpj_l, indent=2)
+	if out_type != 'debug':
+		cvpj_l = json.loads(cvpjdata)
+		if in_type == 'r':
+			if 'trackdata' in cvpj_l:
+				for track in cvpj_l['trackdata']:
+					trackdata = cvpj_l['trackdata'][track]
+					if 'type' in trackdata:
+						if trackdata['type'] == 'instrument':
+							if 'instdata' in trackdata:
+								instdata = trackdata['instdata']
+								convplug_inst(instdata, dawname)
+		if in_type == 'm' or in_type == 'mi':
+			if 'instruments' in cvpj_l:
+				for track in cvpj_l['instruments']:
+					trackdata = cvpj_l['instruments'][track]
+					if 'instdata' in trackdata:
+						instdata = trackdata['instdata']
+						convplug_inst(instdata, dawname)
+		return json.dumps(cvpj_l, indent=2)
+	return None

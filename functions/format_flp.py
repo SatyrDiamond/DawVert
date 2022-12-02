@@ -192,6 +192,7 @@ def deconstruct(inputfile):
     TimeMarker_id = 0
     FL_Arrangements = {}
     FL_FXCreationMode = 0
+    FL_TimeMarkers = {}
     T_FL_FXNum = -1
 
     for event in eventtable:
@@ -462,7 +463,7 @@ def reconstruct_arrangement(data_FLdt, arrangements):
             BytesIO_arrangement.write(item['position'].to_bytes(4, 'little'))
             BytesIO_arrangement.write(item['patternbase'].to_bytes(2, 'little'))
             BytesIO_arrangement.write(item['itemindex'].to_bytes(2, 'little'))
-            BytesIO_arrangement.write(item['length'].to_bytes(4, 'little'))
+            BytesIO_arrangement.write(int(item['length']).to_bytes(4, 'little'))
             BytesIO_arrangement.write(item['trackindex'].to_bytes(4, 'little'))
             BytesIO_arrangement.write(item['unknown1'].to_bytes(2, 'little'))
             BytesIO_arrangement.write(item['flags'].to_bytes(2, 'little'))

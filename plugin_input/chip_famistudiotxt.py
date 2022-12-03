@@ -53,11 +53,16 @@ def decode_fst(infile):
             FST_Instruments[instname] = {}
             FST_Instrument = FST_Instruments[instname]
             FST_Instrument['Name'] = cmd_params['Name']
+            FST_Instrument['Envelopes'] = {}
+            if 'N163WavePreset' in cmd_params: FST_Instrument['N163WavePreset'] = cmd_params['N163WavePreset']
+            if 'N163WaveSize' in cmd_params: FST_Instrument['N163WaveSize'] = cmd_params['N163WaveSize']
+            if 'N163WavePos' in cmd_params: FST_Instrument['N163WavePos'] = cmd_params['N163WavePos']
+            if 'N163WaveCount' in cmd_params: FST_Instrument['N163WaveCount'] = cmd_params['N163WaveCount']
         elif cmd_name == 'Envelope' and tabs_num == 2:
-            if cmd_params['Type'] == 'Volume': FST_Instrument['EnvVolume'] = cmd_params['Values']
-            if cmd_params['Type'] == 'DutyCycle': FST_Instrument['EnvDutyCycle'] = cmd_params['Values']
-            if cmd_params['Type'] == 'Pitch': FST_Instrument['EnvPitch'] = cmd_params['Values']
-    
+            envtype = cmd_params['Type']
+            FST_Instrument['Envelopes'][envtype] = {}
+            FST_Instrument['Envelopes'][envtype] = cmd_params
+
         elif cmd_name == 'Song' and tabs_num == 1:
             songname = cmd_params['Name']
             FST_Songs[songname] = cmd_params
@@ -106,14 +111,28 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
     cvpj_instdata = cvpj_inst["instdata"]
     cvpj_instdata['middlenote'] = 0
     cvpj_instdata['pitch'] = 0
-    cvpj_instdata['plugin'] = 'famistudio'
-    cvpj_instdata['plugindata'] = FST_Instrument
-    cvpj_instdata['plugindata']['wave'] = wavetype
+    if wavetype == 'Square' or wavetype == 'Triangle' or wavetype == 'Noise':
+        cvpj_instdata['plugin'] = 'famistudio'
+        cvpj_instdata['plugindata'] = FST_Instrument
+        cvpj_instdata['plugindata']['wave'] = wavetype
+    if wavetype == 'VRC6Square' or wavetype == 'VRC6Saw':
+        cvpj_instdata['plugin'] = 'famistudio-vrc6'
+        cvpj_instdata['plugindata'] = FST_Instrument
+        if wavetype == 'VRC6Saw': cvpj_instdata['plugindata']['wave'] = 'Saw'
+        if wavetype == 'VRC6Square': cvpj_instdata['plugindata']['wave'] = 'Square'
+    if wavetype == 'FDS':
+        cvpj_instdata['plugin'] = 'famistudio-fds'
+        cvpj_instdata['plugindata'] = FST_Instrument
+    if wavetype == 'N163':
+        cvpj_instdata['plugin'] = 'famistudio-n163'
+        cvpj_instdata['plugindata'] = FST_Instrument
     cvpj_instdata['usemasterpitch'] = 1
     if wavetype == 'Square': cvpj_inst['color'] = [0.97, 0.56, 0.36]
     if wavetype == 'Triangle': cvpj_inst['color'] = [0.94, 0.33, 0.58]
     if wavetype == 'Noise': cvpj_inst['color'] = [0.33, 0.74, 0.90]
-    if wavetype == 'Saw': cvpj_inst['color'] = [0.97, 0.97, 0.36]
+    if wavetype == 'FDS': cvpj_inst['color'] = [0.94, 0.94, 0.65]
+    if wavetype == 'Saw': cvpj_inst['color'] = [0.46, 0.52, 0.91]
+    if wavetype == 'N163': cvpj_inst['color'] = [0.97, 0.97, 0.36]
     cvpj_inst["name"] = wavetype+'-'+instname
     cvpj_inst["pan"] = 0.0
     cvpj_inst["vol"] = 0.6
@@ -128,7 +147,8 @@ def create_dpcm_inst(FST_Instrument, cvpj_l_instruments, cvpj_l_instrumentsorder
     cvpj_instdata = cvpj_inst["instdata"]
     cvpj_instdata['middlenote'] = 0
     cvpj_instdata['pitch'] = 0
-    cvpj_instdata['plugin'] = 'none'
+    cvpj_instdata['plugin'] = 'famistudio-dpcm'
+    cvpj_instdata['plugindata'] = FST_Instrument
     cvpj_instdata['usemasterpitch'] = 1
     cvpj_inst['color'] = [0.48, 0.83, 0.49]
     cvpj_inst["name"] = 'DPCM'
@@ -164,9 +184,14 @@ class input_famistudio(plugin_input.base):
         'Square2': 'Square', 
         'Triangle': 'Triangle', 
         'Noise': 'Noise', 
-        'VRC6Square1': 'Square', 
-        'VRC6Square2': 'Square', 
-        'VRC6Saw': 'Saw', 
+        'VRC6Square1': 'VRC6Square', 
+        'VRC6Square2': 'VRC6Square', 
+        'VRC6Saw': 'VRC6Saw', 
+        'FDS': 'FDS', 
+        'N163Wave1': 'N163', 
+        'N163Wave2': 'N163', 
+        'N163Wave3': 'N163', 
+        'N163Wave4': 'N163', 
         'S5BSquare1': 'Square', 
         'S5BSquare2': 'Square', 
         'S5BSquare3': 'Square'}
@@ -202,11 +227,11 @@ class input_famistudio(plugin_input.base):
             WaveType = None
             used_insts = get_used_insts(FST_Channels[Channel])
             if Channel in InstShapes: WaveType = InstShapes[Channel]
+            elif Channel == 'DPCM': 
+                create_dpcm_inst(FST_Instruments[inst], cvpj_l_instruments, cvpj_l_instrumentsorder)
             if WaveType != None:
                 for inst in used_insts:
                     create_inst(WaveType, FST_Instruments[inst], cvpj_l_instruments, cvpj_l_instrumentsorder)
-            if Channel == 'DPCM': 
-                create_dpcm_inst(FST_Instruments[inst], cvpj_l_instruments, cvpj_l_instrumentsorder)
 
         playlistnum = 1
         for Channel in FST_Channels:

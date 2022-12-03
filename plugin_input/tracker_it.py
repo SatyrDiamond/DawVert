@@ -428,7 +428,7 @@ class input_mod(plugin_input.base):
                         computedCutoff = (it_singleinst['filtercutoff'] * 512)
                         outputcutoff = 131.0 * pow(2.0, computedCutoff * (5.29 / (127.0 * 512.0)))
                         plugdata['filter']['cutoff'] = outputcutoff
-                        if it_singleinst['filterresonance'] != None: plugdata['filter']['reso'] = it_singleinst['filterresonance']/127 + 1
+                        if it_singleinst['filterresonance'] != None: plugdata['filter']['reso'] = (it_singleinst['filterresonance']/127)*6 + 1
                         else: plugdata['filter']['reso'] = 1
                         plugdata['filter']['type'] = "lowpass"
                         plugdata['filter']['wet'] = 1

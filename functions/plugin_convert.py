@@ -292,16 +292,17 @@ def convplug_inst(instdata, dawname):
 				magical8bitplug_addvalue(m8p_params, "isAdvancedPanelOpen_raw", 1.0)
 				magical8bitplug_addvalue(m8p_params, "isArpeggioEnabled_raw", 0.0)
 				m8p_dutyEnv = ET.SubElement(m8p_root, "dutyEnv")
-				if 'EnvDutyCycle' in fsd_data: 
-					magical8bitplug_addvalue(m8p_params, "isDutySequenceEnabled_raw", 1.0)
-					m8p_dutyEnv.text = fsd_data['EnvDutyCycle']
-				else: magical8bitplug_addvalue(m8p_params, "isDutySequenceEnabled_raw", 0.0)
 				m8p_pitchEnv = ET.SubElement(m8p_root, "pitchEnv")
 				m8p_volumeEnv = ET.SubElement(m8p_root, "volumeEnv")
-				if 'EnvVolume' in fsd_data: 
-					magical8bitplug_addvalue(m8p_params, "isVolumeSequenceEnabled_raw", 1.0)
-					m8p_volumeEnv.text = fsd_data['EnvVolume']
-				else: magical8bitplug_addvalue(m8p_params, "isVolumeSequenceEnabled_raw", 0.0)
+				for Envelope in fsd_data['Envelopes']:
+					if Envelope == "DutyCycle":
+						magical8bitplug_addvalue(m8p_params, "isDutySequenceEnabled_raw", 1.0)
+						m8p_dutyEnv.text = fsd_data['Envelopes'][Envelope]['Values']
+					else: magical8bitplug_addvalue(m8p_params, "isDutySequenceEnabled_raw", 0.0)
+					if Envelope == "Volume":
+						magical8bitplug_addvalue(m8p_params, "isVolumeSequenceEnabled_raw", 1.0)
+						m8p_volumeEnv.text = fsd_data['Envelopes'][Envelope]['Values']
+					else: magical8bitplug_addvalue(m8p_params, "isVolumeSequenceEnabled_raw", 0.0)
 				magical8bitplug_addvalue(m8p_params, "maxPoly", 8.0)
 				magical8bitplug_addvalue(m8p_params, "noiseAlgorithm_raw", 0.0)
 				if fsd_data['wave'] == 'Square': magical8bitplug_addvalue(m8p_params, "osc", 0.0)

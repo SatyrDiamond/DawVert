@@ -58,6 +58,16 @@ def decode_fst(infile):
             if 'N163WaveSize' in cmd_params: FST_Instrument['N163WaveSize'] = cmd_params['N163WaveSize']
             if 'N163WavePos' in cmd_params: FST_Instrument['N163WavePos'] = cmd_params['N163WavePos']
             if 'N163WaveCount' in cmd_params: FST_Instrument['N163WaveCount'] = cmd_params['N163WaveCount']
+
+            if 'Vrc7Patch' in cmd_params: FST_Instrument['Vrc7Patch'] = cmd_params['Vrc7Patch']
+            if 'Vrc7Reg0' in cmd_params: FST_Instrument['Vrc7Reg0'] = cmd_params['Vrc7Reg0']
+            if 'Vrc7Reg1' in cmd_params: FST_Instrument['Vrc7Reg1'] = cmd_params['Vrc7Reg1']
+            if 'Vrc7Reg2' in cmd_params: FST_Instrument['Vrc7Reg2'] = cmd_params['Vrc7Reg2']
+            if 'Vrc7Reg3' in cmd_params: FST_Instrument['Vrc7Reg3'] = cmd_params['Vrc7Reg3']
+            if 'Vrc7Reg4' in cmd_params: FST_Instrument['Vrc7Reg4'] = cmd_params['Vrc7Reg4']
+            if 'Vrc7Reg5' in cmd_params: FST_Instrument['Vrc7Reg5'] = cmd_params['Vrc7Reg5']
+            if 'Vrc7Reg6' in cmd_params: FST_Instrument['Vrc7Reg6'] = cmd_params['Vrc7Reg6']
+            if 'Vrc7Reg7' in cmd_params: FST_Instrument['Vrc7Reg7'] = cmd_params['Vrc7Reg7']
         elif cmd_name == 'Envelope' and tabs_num == 2:
             envtype = cmd_params['Type']
             FST_Instrument['Envelopes'][envtype] = {}
@@ -115,6 +125,9 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
         cvpj_instdata['plugin'] = 'famistudio'
         cvpj_instdata['plugindata'] = FST_Instrument
         cvpj_instdata['plugindata']['wave'] = wavetype
+    if wavetype == 'VRC7FM':
+        cvpj_instdata['plugin'] = 'famistudio-vrc7fm'
+        cvpj_instdata['plugindata'] = FST_Instrument
     if wavetype == 'VRC6Square' or wavetype == 'VRC6Saw':
         cvpj_instdata['plugin'] = 'famistudio-vrc6'
         cvpj_instdata['plugindata'] = FST_Instrument
@@ -131,7 +144,8 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
     if wavetype == 'Triangle': cvpj_inst['color'] = [0.94, 0.33, 0.58]
     if wavetype == 'Noise': cvpj_inst['color'] = [0.33, 0.74, 0.90]
     if wavetype == 'FDS': cvpj_inst['color'] = [0.94, 0.94, 0.65]
-    if wavetype == 'Saw': cvpj_inst['color'] = [0.46, 0.52, 0.91]
+    if wavetype == 'VRC6Square': cvpj_inst['color'] = [0.60, 0.44, 0.93]
+    if wavetype == 'VRC6Saw': cvpj_inst['color'] = [0.46, 0.52, 0.91]
     if wavetype == 'N163': cvpj_inst['color'] = [0.97, 0.97, 0.36]
     cvpj_inst["name"] = wavetype+'-'+instname
     cvpj_inst["pan"] = 0.0
@@ -187,6 +201,12 @@ class input_famistudio(plugin_input.base):
         'VRC6Square1': 'VRC6Square', 
         'VRC6Square2': 'VRC6Square', 
         'VRC6Saw': 'VRC6Saw', 
+        'VRC7FM1': 'VRC7FM', 
+        'VRC7FM2': 'VRC7FM', 
+        'VRC7FM3': 'VRC7FM', 
+        'VRC7FM4': 'VRC7FM', 
+        'VRC7FM5': 'VRC7FM', 
+        'VRC7FM6': 'VRC7FM', 
         'FDS': 'FDS', 
         'N163Wave1': 'N163', 
         'N163Wave2': 'N163', 

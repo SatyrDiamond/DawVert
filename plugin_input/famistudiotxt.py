@@ -159,7 +159,16 @@ class input_famistudio(plugin_input.base):
         with open('fst.json', "w") as fileout:
             json.dump(FST_Main, fileout, indent=4, sort_keys=True)
         
-        InstShapes = {'Square1': 'Square', 'Square2': 'Square', 'Triangle': 'Triangle', 'Noise': 'Noise', 'S5BSquare1': 'Square', 'S5BSquare2': 'Square', 'S5BSquare3': 'Square'}
+        InstShapes = {'Square1': 'Square', 
+        'Square2': 'Square', 
+        'Triangle': 'Triangle', 
+        'Noise': 'Noise', 
+        'VRC6Square1': 'Square', 
+        'VRC6Square2': 'Square', 
+        'VRC6Saw': 'Saw', 
+        'S5BSquare1': 'Square', 
+        'S5BSquare2': 'Square', 
+        'S5BSquare3': 'Square'}
 
         cvpj_l = {}
         cvpj_l_instruments = {}

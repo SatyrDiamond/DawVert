@@ -113,6 +113,7 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
     if wavetype == 'Square': cvpj_inst['color'] = [0.97, 0.56, 0.36]
     if wavetype == 'Triangle': cvpj_inst['color'] = [0.94, 0.33, 0.58]
     if wavetype == 'Noise': cvpj_inst['color'] = [0.33, 0.74, 0.90]
+    if wavetype == 'Saw': cvpj_inst['color'] = [0.97, 0.97, 0.36]
     cvpj_inst["name"] = wavetype+'-'+instname
     cvpj_inst["pan"] = 0.0
     cvpj_inst["vol"] = 0.6

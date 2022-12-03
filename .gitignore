@@ -33,3 +33,4 @@ zry_test.py
 *.flms
 flmdecode.py
 *.fxb
+*.fmf

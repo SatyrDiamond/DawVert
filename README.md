@@ -5,7 +5,7 @@ Supported Inputs (DAWs): FL Studio, LMMS
 
 Supported Inputs (Tracker): MOD, S3M, IT
 
-Supported Inputs (Others): PiyoPiyo
+Supported Inputs (Others): PiyoPiyo, FamiStudio
 
 Supported Outputs: LMMS, FL Studio
 

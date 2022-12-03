@@ -16,7 +16,7 @@ python3 DawVert.py <input> <output type> <output>
 input type: -it 
 input file: -i 
 output type: -ot 
-output type: -o
+output file: -o
 
 e.g: 
     python3 DawVert.py -i song.txt -ot flp -o out.flp

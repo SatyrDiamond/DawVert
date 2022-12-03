@@ -25,3 +25,12 @@ e.g:
 
 ```
 
+## VST Plugins
+
+[Grace](https://github.com/s-oram/Grace)
+
+[juicysfplugin](https://github.com/Birch-san/juicysfplugin)
+
+[Zyn-Fusion](https://zynaddsubfx.sourceforge.io/zyn-fusion.html)
+
+[Magical 8bit Plug 2](https://github.com/yokemura/Magical8bitPlug2)

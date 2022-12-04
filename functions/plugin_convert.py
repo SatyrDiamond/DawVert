@@ -169,20 +169,20 @@ def grace_create_region(gx_root, regionparams):
 	return gx_root
 
 # -------------------- VST List --------------------
-def replace_vst(instdata, name, data):
-	change_ok = 0
-	vst_path = ''
+def find_vstpath(name, instdata):
+	path_found = 0
+	vst_path = None
 	if 'plugindata' in instdata and 'plugin' in instdata:
 		if vst2path_loaded == True:
 			if name in vst2paths:
 				if 'path64' in vst2paths[name]: 
 					vst_path = vst2paths[name]['path64']
 					print('[plugin-convert] Plugin: ' + instdata['plugin'] +' > ' + name + ' (VST2 64-bit)')
-					change_ok = 1
+					path_found = 1
 				elif 'path32' in vst2paths[name]: 
 					vst_path = vst2paths[name]['path32']
 					print('[plugin-convert] Plugin: ' + instdata['plugin'] +' > ' + name + ' (VST2 32-bit)')
-					change_ok = 1
+					path_found = 1
 				else:
 					print('[plugin-convert] Unchanged,', 'Plugin path of ' + name + ' not Found')
 			else: 
@@ -192,13 +192,19 @@ def replace_vst(instdata, name, data):
 			print('[plugin-convert] Unchanged,', "VST2 list not found")
 	else: 
 		print('[plugin-convert] Unchanged,', "No Plugin and/or PluginData defined")
-	if change_ok == 1:
+	return vst_path
+
+def replace_vst_data(instdata, name, data):
+	vst_path = find_vstpath(name, instdata)
+	if vst_path != None:
 		instdata['plugin'] = 'vst2'
 		instdata['plugindata'] = {}
 		instdata['plugindata']['plugin'] = {}
 		instdata['plugindata']['plugin']['name'] = name
 		instdata['plugindata']['plugin']['path'] = vst_path
+		instdata['plugindata']['datatype'] = 'raw'
 		instdata['plugindata']['data'] = base64.b64encode(data).decode('ascii')
+
 def vstlist_init(osplatform):
 	global vst2paths
 	global vst3paths
@@ -243,7 +249,7 @@ def convplug_inst(instdata, dawname):
 										regionparams['loop'] = sampler_file_data['loop']['points']
 								grace_create_region(gx_root, regionparams)
 								xmlout = ET.tostring(gx_root, encoding='utf-8')
-								replace_vst(instdata, 'Grace', xmlout)
+								replace_vst_data(instdata, 'Grace', xmlout)
 						else:
 							print("[plugin-convert] Unchanged, Grace (VST2) only supports Format 1 .WAV")
 					else:
@@ -274,7 +280,7 @@ def convplug_inst(instdata, dawname):
 				else: jsfp_soundFont.set('path', '')
 				xmlout = ET.tostring(jsfp_xml, encoding='utf-8')
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
-				replace_vst(instdata, 'juicysfplugin', vst2data)
+				replace_vst_data(instdata, 'juicysfplugin', vst2data)
 
 			# -------------------- famistudio > vst2 (magical8bitplug) --------------------
 			elif pluginname == 'famistudio':
@@ -320,13 +326,13 @@ def convplug_inst(instdata, dawname):
 				magical8bitplug_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
 				xmlout = ET.tostring(m8p_root, encoding='utf-8')
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
-				replace_vst(instdata, 'Magical 8bit Plug 2', vst2data)
+				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
 			# -------------------- zynaddsubfx - from lmms --------------------
 			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
 				zasfxdata = instdata['plugindata']['data']
 				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
 				zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
-				replace_vst(instdata, 'ZynAddSubFX', zasfxdatafixed)
+				replace_vst_data(instdata, 'ZynAddSubFX', zasfxdatafixed)
 
 			else:
 				print('[plugin-convert] Unchanged')

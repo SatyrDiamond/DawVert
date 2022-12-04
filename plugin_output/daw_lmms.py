@@ -176,7 +176,7 @@ def lmms_encode_plugin(xmltag, trkJ):
             if 'path' in plugJ['plugin']:
                 xml_vst.set('plugin', str(plugJ['plugin']['path']))
         xml_vst.set('chunk', str(plugJ['data']))
-    elif pluginname == 'zynaddsubfx':
+    elif pluginname == 'zynaddsubfx-lmms':
         print('[output-lmms]       Plugin: zynaddsubfx > zynaddsubfx')
         xml_instrumentpreplugin.set('name', "zynaddsubfx")
         xml_zynaddsubfx = ET.SubElement(xml_instrumentpreplugin, "zynaddsubfx")

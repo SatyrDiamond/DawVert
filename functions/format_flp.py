@@ -198,6 +198,7 @@ def deconstruct(inputfile):
     for event in eventtable:
         event_id = event[0]
         event_data = event[1]
+
         if event_id == 199: FL_Main['Version'] = event_data.decode('utf-8').rstrip('\x00')
         if event_id == 156: FL_Main['Tempo'] = event_data/1000
         if event_id == 80: FL_Main['MainPitch'] = event_data
@@ -312,6 +313,7 @@ def deconstruct(inputfile):
     
     
         if event_id == 64: 
+            EnvelopeNum = 0
             T_FL_CurrentChannel = event_data
             #print('Channel:', event_data)
             if str(T_FL_CurrentChannel) not in FL_Channels:
@@ -336,7 +338,7 @@ def deconstruct(inputfile):
                 FL_Channels[str(T_FL_CurrentChannel)]['plugin'] = DefPluginName
                 FL_Channels[str(T_FL_CurrentChannel)]['plugindata'] = event_data
                 #print(event_data)
-                EnvelopeNum = 0
+
             if event_id == 203: 
                 event_text = event_data.decode('utf-16le').rstrip('\x00\x00')
                 #print('\\__PluginName:', event_text)

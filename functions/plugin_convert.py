@@ -23,6 +23,7 @@ def magical8bitplug_addvalue(xmltag, name, value):
 	temp_xml = ET.SubElement(xmltag, 'PARAM')
 	temp_xml.set('id', str(name))
 	temp_xml.set('value', str(value))
+
 def grace_addvalue(xmltag, name, value):
 	temp_xml = ET.SubElement(xmltag, name)
 	if value != None:
@@ -205,6 +206,23 @@ def replace_vst_data(instdata, name, data):
 		instdata['plugindata']['datatype'] = 'raw'
 		instdata['plugindata']['data'] = base64.b64encode(data).decode('ascii')
 
+def replace_vst_params(instdata, name, numparams, params):
+	vst_path = find_vstpath(name, instdata)
+	if vst_path != None:
+		instdata['plugin'] = 'vst2'
+		instdata['plugindata'] = {}
+		instdata['plugindata']['plugin'] = {}
+		instdata['plugindata']['plugin']['name'] = name
+		instdata['plugindata']['plugin']['path'] = vst_path
+		instdata['plugindata']['datatype'] = 'param'
+		instdata['plugindata']['numparams'] = numparams
+		instdata['plugindata']['params'] = params
+
+def vst_add_param(paramlist, num, name, value):
+	paramlist[str(num)] = {}
+	paramlist[str(num)]['name'] = name
+	paramlist[str(num)]['value'] = str(value)
+
 def vstlist_init(osplatform):
 	global vst2paths
 	global vst3paths
@@ -327,6 +345,7 @@ def convplug_inst(instdata, dawname):
 				xmlout = ET.tostring(m8p_root, encoding='utf-8')
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
 				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
+
 			# -------------------- zynaddsubfx - from lmms --------------------
 			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
 				zasfxdata = instdata['plugindata']['data']

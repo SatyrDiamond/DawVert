@@ -212,7 +212,21 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugin, cvpj_l_inst, cvpj_l_track):
         cvpj_l_inst['plugin'] = "vst2"
         cvpj_l_plugin['plugin'] = {}
         cvpj_l_plugin['plugin']['path'] = xml_plugin.get('plugin')
-        cvpj_l_plugin['data'] = xml_plugin.get('chunk')
+        vst_data = xml_plugin.get('chunk')
+        vst_numparams = xml_plugin.get('numparams')
+        if vst_data != None:
+            cvpj_l_plugin['datatype'] = 'raw'
+            cvpj_l_plugin['data'] = vst_data
+        elif vst_numparams != None:
+            cvpj_l_plugin['datatype'] = 'param'
+            cvpj_l_plugin['numparams'] = int(vst_numparams)
+            cvpj_l_plugin['params'] = {}
+            for param in range(int(vst_numparams)):
+                paramdata = xml_plugin.get('param'+str(param)).split(':')
+                cvpj_l_plugin['params'][str(param)] = {}
+                cvpj_l_plugin['params'][str(param)]['name'] = paramdata[1]
+                cvpj_l_plugin['params'][str(param)]['value'] = float(paramdata[2])
+
     else:
         cvpj_l_inst['plugin'] = "native-lmms"
         cvpj_l_plugin['name'] = pluginname

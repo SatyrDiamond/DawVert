@@ -175,7 +175,18 @@ def lmms_encode_plugin(xmltag, trkJ):
         if 'plugin' in plugJ:
             if 'path' in plugJ['plugin']:
                 xml_vst.set('plugin', str(plugJ['plugin']['path']))
-        xml_vst.set('chunk', str(plugJ['data']))
+        if plugJ['datatype'] == 'raw':
+            xml_vst.set('chunk', str(plugJ['data']))
+        elif plugJ['datatype'] == 'param':
+            numparams = plugJ['numparams']
+            params = plugJ['params']
+            numparams = plugJ['numparams']
+            xml_vst.set('numparams', str(numparams))
+            for param in range(numparams):
+                paramdata = plugJ['params'][str(param)]
+                pname = paramdata['name']
+                pval = paramdata['value']
+                xml_vst.set('param'+str(param), str(param)+':'+pname+':'+str(pval))
     elif pluginname == 'zynaddsubfx-lmms':
         print('[output-lmms]       Plugin: zynaddsubfx > zynaddsubfx')
         xml_instrumentpreplugin.set('name', "zynaddsubfx")

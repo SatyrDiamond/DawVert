@@ -196,7 +196,7 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugin, cvpj_l_inst, cvpj_l_track):
         cvpj_l_plugin['tremolo_depth'] = int(xml_plugin.get('trem_depth'))
         cvpj_l_plugin['vibrato_depth'] = int(xml_plugin.get('vib_depth'))
     elif pluginname == "zynaddsubfx":
-        cvpj_l_inst['plugin'] = "zynaddsubfx"
+        cvpj_l_inst['plugin'] = "zynaddsubfx-lmms"
         cvpj_l_plugin['bandwidth'] = xml_plugin.get('bandwidth')
         cvpj_l_plugin['filterfreq'] = xml_plugin.get('filterfreq')
         cvpj_l_plugin['filterq'] = xml_plugin.get('filterq')

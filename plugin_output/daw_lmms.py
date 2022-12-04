@@ -180,10 +180,9 @@ def lmms_encode_plugin(xmltag, trkJ):
         elif plugJ['datatype'] == 'param':
             numparams = plugJ['numparams']
             params = plugJ['params']
-            numparams = plugJ['numparams']
             xml_vst.set('numparams', str(numparams))
             for param in range(numparams):
-                paramdata = plugJ['params'][str(param)]
+                paramdata = params[str(param)]
                 pname = paramdata['name']
                 pval = paramdata['value']
                 xml_vst.set('param'+str(param), str(param)+':'+pname+':'+str(pval))

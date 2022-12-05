@@ -10,8 +10,10 @@ global output_noteslist
 global placements
 global currentplacement
 global note_pan
-#ActiveNotes: Position,Duration,Note,velocity
+global usedinstruments
+#ActiveNotes: Position,Duration,Note,velocity,program,extra
 ActiveNotes = []
+usedinstruments = []
 placements = []
 output_noteslist = []
 position_global = 0
@@ -36,25 +38,21 @@ def timednotes2notelist_note_off(key):
     ActiveNoteFound = 0
     NumActiveNotes = len(ActiveNotes)
     while ActiveNoteTablePos < NumActiveNotes and ActiveNoteFound == 0:
-        #print(ActiveNotes[ActiveNoteTablePos])
         if ActiveNotes[ActiveNoteTablePos][2] == key:
             ActiveNoteFound = 1
-            #print('found!')
             FoundNote = ActiveNotes.pop(ActiveNoteTablePos)
-            #print(FoundNote)
             notejson = {}
             notejson['position'] = float(FoundNote[0])
             notejson['key'] = int(FoundNote[2])
             notejson['duration'] = float(FoundNote[1])
             notejson['vol'] = FoundNote[3]
             notejson['instrument'] = FoundNote[4]
-            if 'pan' in FoundNote[5]:
-                notejson['pan'] = FoundNote[5]['pan']
+            if 'pan' in FoundNote[5]: notejson['pan'] = FoundNote[5]['pan']
             output_noteslist.append(notejson)
         ActiveNoteTablePos += 1
 
 def timednotes2notelistplacement_parse_timednotes(TimedNotesTable):
-    print("[func-noteconv] tn2np: " + str(len(TimedNotesTable)) + ' cmds', end='')
+    print("[note-conv] tn2np: " + str(len(TimedNotesTable)) + ' cmds', end='')
     global ActiveNotes
     currentprogram = 0
     ActiveNotes = []
@@ -73,7 +71,7 @@ def timednotes2notelistplacement_parse_timednotes(TimedNotesTable):
         else:
             TimedNoteValuesSecond = None
         if TimedNoteCommand == 'note_on':
-            timednotes2notelist_note_on(int(TimedNoteValuesFirst), float(TimedNoteValuesSecond), int(currentprogram), extrajson)
+            timednotes2notelist_note_on(int(TimedNoteValuesFirst), float(TimedNoteValuesSecond), currentprogram, extrajson)
             numnotecmds += 1
         if TimedNoteCommand == 'note_off':
             timednotes2notelist_note_off(int(TimedNoteValuesFirst))
@@ -89,8 +87,7 @@ def timednotes2notelistplacement_parse_timednotes(TimedNotesTable):
         if TimedNoteCommand == 'instrument':
             numnotecmds += 1
             currentprogram = TimedNoteValuesFirst
-            if currentprogram not in usedinstruments:
-                usedinstruments.append(currentprogram)
+            if currentprogram not in usedinstruments: usedinstruments.append(currentprogram)
         if TimedNoteCommand == 'pan':
             numnotecmds += 1
             extrajson['pan'] = TimedNoteValues[0]
@@ -133,7 +130,7 @@ def timednotes2notelistplacement_placement_end():
     global ActiveNotes
     global position_notelist
     timednotes2notelist_note_off_all()
-    currentplacement['type'] = "instrument"
+    currentplacement['type'] = "instruments"
     currentplacement['duration'] = position_notelist
     if output_noteslist != []:
         currentplacement['notelist'] = output_noteslist

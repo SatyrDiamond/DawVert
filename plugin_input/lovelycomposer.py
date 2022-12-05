@@ -40,7 +40,7 @@ lc_instlist[29] = ['Seashore Like'   ,'Noise'     ,1  ,0  ,0  ,False ,False ,[0.
 lc_instlist[30] = ['Stomp'           ,'Stomp'     ,0  ,1  ,-1 ,False ,False ,[0.83, 0.09, 0.42]]
 lc_instlist[31] = ['Twin Stomp'      ,'Stomp'     ,0  ,1  ,-1 ,False ,False ,[0.83, 0.09, 0.42]]
 lc_instlist[32] = ['Twin Drum'       ,'Drum'      ,0  ,2  ,0  ,False ,False ,[0.64, 0.64, 0.64]]
-lc_instlist[33] = ['Punch'           ,'Noise'     ,0  ,1  ,1  ,False ,False ,[0.99, 0.88, 0.80]]
+lc_instlist[33] = ['Punch'           ,'Punch'     ,0  ,1  ,1  ,False ,False ,[0.99, 0.88, 0.80]]
 lc_instlist[34] = ['Orchestra Hit'   ,'OrchHit'   ,0  ,0  ,0  ,False ,False ,[0.00, 0.00, 0.00]]
 
 lc_instlist[35] = ['Short Freq Noise','FreqNoise' ,0  ,0  ,0  ,False ,False ,[0.93, 0.93, 0.93]]
@@ -52,7 +52,7 @@ lc_instlist[46] = ['Pulse Brass'     ,'Pulse125'  ,0  ,0  ,0  ,False ,True  ,[0.
 lc_instlist[40] = ['Lo-Fi Piano'     ,'Pulse125'  ,0  ,1  ,0  ,False ,False ,[0.66, 0.76, 1.00]]
 lc_instlist[41] = ['Fiddle'          ,'Pulse125'  ,1  ,0  ,0  ,False ,False ,[0.83, 0.52, 0.25]]
 lc_instlist[42] = ['Glide 12.5% Pulse','Pulse125' ,0  ,0  ,0  ,True  ,False ,[0.17, 0.20, 0.37]]
-lc_instlist[43] = ['Dog'             ,'Drums-Dog' ,0  ,0  ,-1 ,False ,False ,[0.91, 0.76, 0.36]]
+lc_instlist[43] = ['Dog'             ,'Dog' ,0  ,0  ,-1 ,False ,False ,[0.91, 0.76, 0.36]]
 lc_instlist[45] = ['Robo Stomp'      ,'RoboStomp' ,0  ,0  ,-1 ,False ,False ,[0.35, 0.35, 0.35]]
 lc_instlist[47] =['Low-Reso Triangle','LowResoTri',0  ,0  ,0  ,False ,False ,[0.17, 0.20, 0.37]]
 lc_instlist[48] =['Low-Reso Xylophone','LowResoTri',0 ,1  ,0  ,False ,False ,[0.83, 0.52, 0.25]]
@@ -148,7 +148,33 @@ class input_lc(plugin_input.base):
         for used_instrument in used_instruments:
             cvpj_inst = {}
             cvpj_inst["instdata"] = {}
-            cvpj_inst["instdata"]['plugin'] = 'none'
+            if used_instrument == 'Sine':
+                cvpj_inst["instdata"]['plugin'] = 'shape-sine'
+                cvpj_inst["instdata"]['plugindata'] = {}
+            elif used_instrument == 'Square':
+                cvpj_inst["instdata"]['plugin'] = 'shape-square'
+                cvpj_inst["instdata"]['plugindata'] = {}
+            elif used_instrument == 'Triangle':
+                cvpj_inst["instdata"]['plugin'] = 'shape-triangle'
+                cvpj_inst["instdata"]['plugindata'] = {}
+            elif used_instrument == 'Saw':
+                cvpj_inst["instdata"]['plugin'] = 'shape-saw'
+                cvpj_inst["instdata"]['plugindata'] = {}
+            elif used_instrument == 'Noise':
+                cvpj_inst["instdata"]['plugin'] = 'retro-noise'
+                cvpj_inst["instdata"]['plugindata'] = {'type': '4bit'}
+            elif used_instrument == 'FreqNoise':
+                cvpj_inst["instdata"]['plugin'] = 'retro-noise'
+                cvpj_inst["instdata"]['plugindata'] = {'type': '1bit_short'}
+            elif used_instrument == 'Pulse25':
+                cvpj_inst["instdata"]['plugin'] = 'shape-pulse'
+                cvpj_inst["instdata"]['plugindata'] = {'duty': 0.25}
+            elif used_instrument == 'Pulse125':
+                cvpj_inst["instdata"]['plugin'] = 'shape-pulse'
+                cvpj_inst["instdata"]['plugindata'] = {'duty': 0.125}
+            else:
+                cvpj_inst["instdata"]['plugin'] = 'lovelycomposer'
+                cvpj_inst["instdata"]['plugindata'] = {'inst': used_instrument}
             cvpj_inst["name"] = used_instrument
             cvpj_l_instruments[used_instrument] = cvpj_inst
             cvpj_l_instrumentsorder.append(used_instrument)

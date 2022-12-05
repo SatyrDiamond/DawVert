@@ -23,6 +23,56 @@ def magical8bitplug_addvalue(xmltag, name, value):
 	temp_xml = ET.SubElement(xmltag, 'PARAM')
 	temp_xml.set('id', str(name))
 	temp_xml.set('value', str(value))
+def shape_magical8bitplug(pluginname, plugindata):
+	m8p_root = ET.Element("root")
+	m8p_params = ET.SubElement(m8p_root, "Params")
+	magical8bitplug_addvalue(m8p_params, "arpeggioDirection", 0.0)
+	magical8bitplug_addvalue(m8p_params, "arpeggioTime", 0.02999999932944775)
+	magical8bitplug_addvalue(m8p_params, "attack", 0.0)
+	magical8bitplug_addvalue(m8p_params, "bendRange", 12.0)
+	magical8bitplug_addvalue(m8p_params, "colorScheme", 1.0)
+	magical8bitplug_addvalue(m8p_params, "decay", 0.0)
+	magical8bitplug_addvalue(m8p_params, "duty", 0.0)
+	magical8bitplug_addvalue(m8p_params, "gain", 0.5)
+	magical8bitplug_addvalue(m8p_params, "isAdvancedPanelOpen_raw", 1.0)
+	magical8bitplug_addvalue(m8p_params, "isArpeggioEnabled_raw", 0.0)
+	magical8bitplug_addvalue(m8p_params, "isDutySequenceEnabled_raw", 0.0)
+	magical8bitplug_addvalue(m8p_params, "isVolumeSequenceEnabled_raw", 0.0)
+	magical8bitplug_addvalue(m8p_params, "maxPoly", 8.0)
+	magical8bitplug_addvalue(m8p_params, "noiseAlgorithm_raw", 0.0)
+	if pluginname == 'shape-square': 
+		magical8bitplug_addvalue(m8p_params, "osc", 0.0)
+		magical8bitplug_addvalue(m8p_params, "duty", 2.0)
+	elif pluginname == 'shape-pulse': 
+		magical8bitplug_addvalue(m8p_params, "osc", 0.0)
+		if 'duty' in plugindata: 
+			if plugindata['duty'] == 0.25: magical8bitplug_addvalue(m8p_params, "duty", 1.0)
+			elif plugindata['duty'] == 0.125: magical8bitplug_addvalue(m8p_params, "duty", 0.0)
+			else: magical8bitplug_addvalue(m8p_params, "duty", 0.0)
+		else: magical8bitplug_addvalue(m8p_params, "duty", 1.0)
+	elif pluginname == 'shape-triangle': 
+		magical8bitplug_addvalue(m8p_params, "osc", 1.0)
+		magical8bitplug_addvalue(m8p_params, "duty", 0.0)
+	elif pluginname == 'retro-noise': 
+		magical8bitplug_addvalue(m8p_params, "osc", 2.0)
+		if 'type' in plugindata: 
+			if plugindata['type'] == '4bit': magical8bitplug_addvalue(m8p_params, "duty", 0.0)
+			elif plugindata['type'] == '1bit_long': magical8bitplug_addvalue(m8p_params, "duty", 1.0)
+			elif plugindata['type'] == '1bit_short': magical8bitplug_addvalue(m8p_params, "duty", 2.0)
+			else: magical8bitplug_addvalue(m8p_params, "duty", 0.0)
+		else: magical8bitplug_addvalue(m8p_params, "duty", 0.0)
+	else: magical8bitplug_addvalue(m8p_params, "osc", 0.0)
+	magical8bitplug_addvalue(m8p_params, "pitchSequenceMode_raw", 0.0)
+	magical8bitplug_addvalue(m8p_params, "release", 0.0)
+	magical8bitplug_addvalue(m8p_params, "restrictsToNESFrequency_raw", 0.0)
+	magical8bitplug_addvalue(m8p_params, "suslevel", 1.0)
+	magical8bitplug_addvalue(m8p_params, "sweepInitialPitch", 0.0)
+	magical8bitplug_addvalue(m8p_params, "sweepTime", 0.1000000014901161)
+	magical8bitplug_addvalue(m8p_params, "vibratoDelay", 0.2999999821186066)
+	magical8bitplug_addvalue(m8p_params, "vibratoDepth", 0.0)
+	magical8bitplug_addvalue(m8p_params, "vibratoIgnoresWheel_raw", 1.0)
+	magical8bitplug_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
+	return m8p_root
 
 def grace_addvalue(xmltag, name, value):
 	temp_xml = ET.SubElement(xmltag, name)
@@ -241,12 +291,12 @@ def vstlist_init(osplatform):
 			print('[plugin-convert] # of VST3 Plugins:', len(vst3paths))
 
 def convplug_inst(instdata, dawname):
+	m8bp_shapesupported = ['shape-square', 'shape-triangle', 'retro-noise', 'shape-pulse']
 	global supportedplugins
 	if 'plugin' in instdata:
 		if 'plugindata' in instdata:
 			pluginname = instdata['plugin']
 			plugindata = instdata['plugindata']
-
 			# -------------------- sampler > vst2 (Grace) --------------------
 			if pluginname == 'sampler' and dawname not in supportedplugins['sampler']:
 				sampler_data = instdata
@@ -346,13 +396,14 @@ def convplug_inst(instdata, dawname):
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
 				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
 
-			# -------------------- zynaddsubfx - from lmms --------------------
-			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
-				zasfxdata = instdata['plugindata']['data']
-				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
-				zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
-				replace_vst_data(instdata, 'ZynAddSubFX', zasfxdatafixed)
+				# -------------------- shapes and retro noise --------------------
+			elif pluginname in m8bp_shapesupported :
+				m8p_root = shape_magical8bitplug(pluginname, plugindata)
+				xmlout = ET.tostring(m8p_root, encoding='utf-8')
+				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
+				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
 
+				# -------------------- zynaddsubfx - from lmms --------------------
 			else:
 				print('[plugin-convert] Unchanged')
 

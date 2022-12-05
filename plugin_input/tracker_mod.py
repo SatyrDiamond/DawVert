@@ -5,123 +5,107 @@ import plugin_input
 import os.path
 import math
 import json
-import wave
 import numpy as np
-from functions import tracker
-from functions import noteconv
+from functions import song_tracker
+from functions import audio_wav
+from functions import folder_samples
 
-def parse_mod_cell(modfile, firstrow):
+def splitbyte(value):
+    first = value >> 4
+    second = value & 0x0F
+    return (first, second)
+
+def parse_mod_cell(file_stream, firstrow):
     output_note = None
     output_inst = None
+    global table_samples
     output_param = {}
     output_extra = {}
-    if firstrow == 1:
-        output_extra['firstrow'] = 1
-    cell_p1 = int.from_bytes(modfile.read(2), "big")
-    cell_p2 = int.from_bytes(modfile.read(2), "big")
-    sample_low = cell_p2 >> 12
-    sample_high = cell_p1 >> 12
-    period = (cell_p1 & 0x0FFF) 
-    if period != 0:
-        note_period = 447902/(period*2)
-        output_note = (round(12 * math.log2(note_period / 440)) + 69)-72
-    effect_type = (cell_p2 & 0xF00) >> 8
-    effect_parameter = (cell_p2 & 0xFF) 
-    samplenum = sample_high << 4 | sample_low
-    if samplenum != 0:
-        output_inst = samplenum
-
-    if effect_type == 0 and effect_parameter != 0:
-        arpeggio_first = effect_parameter >> 4
-        arpeggio_second = effect_parameter & 0x0F
+    if firstrow == 1: output_extra['firstrow'] = 1
+    cell_p1 = int.from_bytes(file_stream.read(2), "big")
+    cell_p2 = int.from_bytes(file_stream.read(2), "big")
+    mod_inst_low = cell_p2 >> 12
+    mod_inst_high = cell_p1 >> 12
+    noteperiod = (cell_p1 & 0x0FFF) 
+    if noteperiod != 0: output_note = (round(12 * math.log2((447902/(noteperiod*2)) / 440)) + 69)-72
+    cell_fx_type = (cell_p2 & 0xF00) >> 8
+    cell_fx_param = (cell_p2 & 0xFF) 
+    cell_inst_num = mod_inst_high << 4 | mod_inst_low
+    if cell_inst_num != 0: output_inst = cell_inst_num
+    if cell_fx_type == 0 and cell_fx_param != 0:
+        arpeggio_first = cell_fx_param >> 4
+        arpeggio_second = cell_fx_param & 0x0F
         output_param['tracker_arpeggio'] = [arpeggio_first, arpeggio_second]
-    if effect_type == 1:
-        output_param['tracker_slide_up'] = effect_parameter
-    if effect_type == 2:
-        output_param['tracker_slide_down'] = effect_parameter
-    if effect_type == 3:
-        output_param['tracker_slide_to_note'] = effect_parameter
-    if effect_type == 4:
-        vibrato_speed = effect_parameter >> 4
-        vibrato_depth = effect_parameter & 0x0F
+    if cell_fx_type == 1: output_param['tracker_slide_up'] = cell_fx_param
+    if cell_fx_type == 2: output_param['tracker_slide_down'] = cell_fx_param
+    if cell_fx_type == 3: output_param['tracker_slide_to_note'] = cell_fx_param
+    if cell_fx_type == 4: 
         vibrato_params = {}
-        vibrato_params['speed'] = vibrato_speed
-        vibrato_params['depth'] = vibrato_depth
+        vibrato_params['speed'], vibrato_params['depth'] = splitbyte(cell_fx_param)
         output_param['vibrato'] = vibrato_params
-    if effect_type == 5:
-        pos = effect_parameter >> 4
-        neg = effect_parameter & 0x0F
+    if cell_fx_type == 5:
+        pos, neg = splitbyte(cell_fx_param)
         output_param['tracker_vol_slide_plus_slide_to_note'] = (neg*-1) + pos
-    if effect_type == 6:
-        pos = effect_parameter >> 4
-        neg = effect_parameter & 0x0F
+    if cell_fx_type == 6:
+        pos, neg = splitbyte(cell_fx_param)
         output_param['tracker_vol_slide_plus_vibrato'] = (neg*-1) + pos
-    if effect_type == 7:
-        tremolo_speed = effect_parameter >> 4
-        tremolo_depth = effect_parameter & 0x0F
+    if cell_fx_type == 7:
         tremolo_params = {}
-        tremolo_params['speed'] = tremolo_speed
-        tremolo_params['depth'] = tremolo_depth
+        tremolo_params['speed'], tremolo_params['depth'] = splitbyte(cell_fx_param)
         output_param['tremolo'] = tremolo_params
-    if effect_type == 8:
-        output_param['pan'] = (effect_parameter-128)/128
-    if effect_type == 9:
-        output_param['audio_sample_offset'] = effect_parameter*256
-    if effect_type == 10:
-        pos = effect_parameter >> 4
-        neg = effect_parameter & 0x0F
+    if cell_fx_type == 8: output_param['pan'] = (cell_fx_param-128)/128
+    if cell_fx_type == 9: output_param['audio_mod_inst_offset'] = cell_fx_param*256
+    if cell_fx_type == 10:
+        pos, neg = splitbyte(cell_fx_param)
         output_param['tracker_vol_slide'] = (neg*-1) + pos
-    if effect_type == 11:
-        output_extra['tracker_jump_to_offset'] = effect_parameter
-    #if output_inst != None:
-    #   output_param['vol'] = samples[output_inst-1][3]/64
-    if effect_type == 12:
-        output_param['vol'] = effect_parameter/64
-    if effect_type == 13:
-        output_extra['tracker_break_to_row'] = effect_parameter
-    if effect_type == 15:
-        if effect_parameter < 32:
-            output_extra['tracker_speed'] = effect_parameter
-        else:
-            output_extra['tempo'] = effect_parameter
+    if cell_fx_type == 11: output_extra['tracker_jump_to_offset'] = cell_fx_param
+    if cell_fx_type == 12: output_param['vol'] = cell_fx_param/64
+    else: 
+        if output_inst != None:
+            if output_inst < 32:
+                output_param['vol'] = table_samples[output_inst-1][3]/64
+    if cell_fx_type == 13: output_extra['tracker_break_to_row'] = cell_fx_param
+    if cell_fx_type == 15:
+        if cell_fx_param < 32: output_extra['tracker_speed'] = cell_fx_param
+        else: output_extra['tempo'] = cell_fx_param
     return [output_note, output_inst, output_param, output_extra]
 
-def parse_mod_row(modfile, firstrow):
+def parse_mod_row(file_stream, firstrow):
     global table_singlepattern
-    global number_of_channels
+    global mod_num_channels
     table_row = []
     globaljson = {}
-    for channel in range(number_of_channels):
-        celldata = parse_mod_cell(modfile, firstrow)
+    for channel in range(mod_num_channels):
+        celldata = parse_mod_cell(file_stream, firstrow)
         rowdata_global = celldata[3]
         globaljson = rowdata_global | globaljson
         table_row.append(celldata)
-    return [table_row, globaljson]
+    return [globaljson, table_row]
 
-def parse_pattern(modfile):
+def parse_pattern(file_stream):
     global table_singlepattern
     table_singlepattern = []
     firstrow = 1
     for row in range(64):
-        table_singlepattern.append(parse_mod_row(modfile, firstrow))
+        table_singlepattern.append(parse_mod_row(file_stream, firstrow))
         firstrow = 0
 
-def parse_song(modfile):
+def parse_song(file_stream):
     print("[input-mod] Decoding Pattern:",end=' ')
     table_patterns = []
-    for pattern in range(number_of_patterns+1):
+    for pattern in range(mod_num_patterns+1):
         print(str(pattern),end=' ')
-        parse_pattern(modfile)
+        parse_pattern(file_stream)
         table_patterns.append(table_singlepattern)
     print(' ')
     return table_patterns
 
 class input_mod(plugin_input.base):
-    def __init__(self):
-        pass
-
-    def getname(self):
-        return 'Tracker: Protracker Module'
+    def __init__(self): pass
+    def getshortname(self): return 'mod'
+    def getname(self): return 'Tracker: Protracker Module'
+    def gettype(self): return 'm'
+    def supported_autodetect(self): return True
 
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -129,178 +113,137 @@ class input_mod(plugin_input.base):
         IsMod = 1
         for _ in range(31):
             bytestream.read(24)
-            sample_finetune = int.from_bytes(bytestream.read(1), "big")
-            if 15 < sample_finetune:
-                IsMod = 0
-            sample_defaultvol = int.from_bytes(bytestream.read(1), "big")
-            if 64 < sample_defaultvol:
-                IsMod = 0
+            mod_inst_finetune = int.from_bytes(bytestream.read(1), "big")
+            if 15 < mod_inst_finetune: IsMod = 0
+            mod_inst_defaultvol = int.from_bytes(bytestream.read(1), "big")
+            if 64 < mod_inst_defaultvol: IsMod = 0
             bytestream.read(4)
-        if IsMod == 1:
-            return True
-        else:
-            return False
+        if IsMod == 1: return True
+        else: return False
         bytestream.seek(0)
 
     def parse(self, input_file, extra_param):
-        global number_of_patterns
-        global number_of_channels
+        global mod_num_patterns
+        global mod_num_channels
+        global table_samples
 
-        modulename = os.path.splitext(os.path.basename(input_file))[0]
-        if 'samplefolder' in extra_param:
-            samplefolder = extra_param['samplefolder'] + modulename + '/'
-        else:
-            samplefolder = os.getcwd() + '/samples/' + modulename + '/'
-            os.makedirs(os.getcwd() + '/samples/', exist_ok=True)
-        os.makedirs(samplefolder, exist_ok=True)
+        text_inst_start = 'MOD_Inst_'
 
-        modfile = open(input_file, 'rb')
-        name = modfile.read(20).decode().rstrip('\x00')
-        print("[input-mod] Song Name: " + str(name))
-        samples = []
-        bpm = 125
-        print("[input-mod] Tempo: " + str(bpm))
-        instrumentcount = 0
-        for _ in range(31):
-            sample_name = modfile.read(22).decode().rstrip('\x00')
-            sample_length = int.from_bytes(modfile.read(2), "big")
-            sample_finetune = int.from_bytes(modfile.read(1), "big")
-            sample_defaultvol = int.from_bytes(modfile.read(1), "big")
-            sample_loopstart = int.from_bytes(modfile.read(2), "big")
-            sample_looplength = int.from_bytes(modfile.read(2), "big")
-            print('[input-mod] Inst #' + str(instrumentcount) + ', Name:"' + sample_name + '"')
-            samples.append([sample_name, sample_length, sample_finetune, sample_defaultvol, sample_loopstart, sample_looplength])
-            instrumentcount += 1
-        order_list_length = int.from_bytes(modfile.read(1), "big")
-        extravalue = int.from_bytes(modfile.read(1), "big")
-        order_list = []
+        file_name = os.path.splitext(os.path.basename(input_file))[0]
+        samplefolder = folder_samples.samplefolder(extra_param, file_name)
+
+        cvpj_l = {}
+        cvpj_l_instruments = {}
+        cvpj_l_instrumentsorder = []
+
+        file_stream = open(input_file, 'rb')
+        mod_name = file_stream.read(20).decode().rstrip('\x00')
+        print("[input-mod] Song Name: " + str(mod_name))
+        table_samples = []
+        cvpj_bpm = 125
+        for mod_numinst in range(31):
+            mod_numinst += 1
+            mod_inst_mod_name = file_stream.read(22).decode().rstrip('\x00')
+            mod_inst_length = int.from_bytes(file_stream.read(2), "big")
+            mod_inst_finetune = int.from_bytes(file_stream.read(1), "big")
+            if mod_inst_finetune > 7: mod_inst_finetune -= 16
+            mod_inst_defaultvol = int.from_bytes(file_stream.read(1), "big")
+            mod_inst_loopstart = int.from_bytes(file_stream.read(2), "big")
+            mod_inst_looplength = int.from_bytes(file_stream.read(2), "big")
+            print('[input-mod] Instrument ' + str(mod_numinst) + ': ' + mod_inst_mod_name)
+            table_samples.append([mod_inst_mod_name, mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength])
+            cvpj_l_instruments[text_inst_start + str(mod_numinst)] = {}
+            #print([mod_inst_mod_name, mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength])
+            cvpj_l_single_inst = cvpj_l_instruments[text_inst_start + str(mod_numinst)]
+            if mod_inst_mod_name != "": cvpj_l_single_inst['name'] = mod_inst_mod_name
+            else: cvpj_l_single_inst['name'] = ' '
+            cvpj_l_single_inst['vol'] = 0.3
+            cvpj_l_single_inst['instdata'] = {}
+            cvpj_l_single_inst['instdata']['pitch'] = int((mod_inst_finetune/7)*100)
+            if mod_inst_length != 0 and mod_inst_length != 1:
+                cvpj_l_single_inst['color'] = [0.53, 0.53, 0.53]
+                cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
+                cvpj_l_single_inst['instdata']['plugindata'] = {}
+                cvpj_l_single_inst['instdata']['plugindata']['length'] = mod_inst_length
+                cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(mod_numinst).zfill(2) + '.wav'
+            else: 
+                cvpj_l_single_inst['color'] = [0.33, 0.33, 0.33]
+                cvpj_l_single_inst['instdata']['plugin'] = 'none'
+
+            cvpj_l_instrumentsorder.append(text_inst_start + str(mod_numinst))
+        mod_orderlist_length = int.from_bytes(file_stream.read(1), "big")
+        mod_extravalue = int.from_bytes(file_stream.read(1), "big")
+        t_orderlist = []
         for number in range(128):
-            ordernum = int.from_bytes(modfile.read(1), "big")
-            if number < order_list_length:
-                order_list.append(ordernum)
-        print("[input-mod] Order List: " + str(order_list))
-        sample_tag = modfile.read(4).decode()
-        number_of_patterns = max(order_list)
-        print("[input-mod] Patterns: " + str(number_of_patterns))
-        number_of_channels = 4
-        
-        if sample_tag == '6CHN':
-            number_of_channels = 6
-        if sample_tag == '8CHN':
-            number_of_channels = 8
-        if sample_tag == 'CD81':
-            number_of_channels = 8
-        if sample_tag == 'OKTA':
-            number_of_channels = 8
-        if sample_tag == 'OCTA':
-            number_of_channels = 8
-        if sample_tag == '6CHN':
-            number_of_channels = 6
-        if sample_tag[-2:] == 'CH':
-            number_of_channels = int(sample_tag[:2])
-        if sample_tag == '2CHN':
-            number_of_channels = 2
-        if sample_tag[-2:] == 'CN':
-            number_of_channels = int(sample_tag[:2])
-        if sample_tag == 'TDZ1':
-            number_of_channels = 1
-        if sample_tag == 'TDZ2':
-            number_of_channels = 2
-        if sample_tag == 'TDZ3':
-            number_of_channels = 3
-        if sample_tag == '5CHN':
-            number_of_channels = 5
-        if sample_tag == '7CHN':
-            number_of_channels = 7
-        if sample_tag == '9CHN':
-            number_of_channels = 9
-        if sample_tag == 'FLT4':
-            number_of_channels = 4
-        if sample_tag == 'FLT8':
-            number_of_channels = 8
-        print("[input-mod] Sample Tag: " + str(sample_tag))
-        print("[input-mod] Channels: " + str(number_of_channels))
+            ordernum = int.from_bytes(file_stream.read(1), "big")
+            if number < mod_orderlist_length: t_orderlist.append(ordernum)
+        print("[input-mod] Order List: " + str(t_orderlist))
+        mod_inst_tag = file_stream.read(4).decode()
+        mod_num_patterns = max(t_orderlist)
+        print("[input-mod] Patterns: " + str(mod_num_patterns))
+        mod_num_channels = 4
 
-        patterntable_all = parse_song(modfile)
-        patterntable = patterntable_all[0]
-        
-        print("[input-mod] Ripping Sample:",end=' ')
+        if mod_inst_tag == '6CHN': mod_num_channels = 6
+        if mod_inst_tag == '8CHN': mod_num_channels = 8
+        if mod_inst_tag == 'CD81': mod_num_channels = 8
+        if mod_inst_tag == 'OKTA': mod_num_channels = 8
+        if mod_inst_tag == 'OCTA': mod_num_channels = 8
+        if mod_inst_tag == '6CHN': mod_num_channels = 6
+        if mod_inst_tag[-2:] == 'CH': mod_num_channels = int(mod_inst_tag[:2])
+        if mod_inst_tag == '2CHN': mod_num_channels = 2
+        if mod_inst_tag[-2:] == 'CN': mod_num_channels = int(mod_inst_tag[:2])
+        if mod_inst_tag == 'TDZ1': mod_num_channels = 1
+        if mod_inst_tag == 'TDZ2': mod_num_channels = 2
+        if mod_inst_tag == 'TDZ3': mod_num_channels = 3
+        if mod_inst_tag == '5CHN': mod_num_channels = 5
+        if mod_inst_tag == '7CHN': mod_num_channels = 7
+        if mod_inst_tag == '9CHN': mod_num_channels = 9
+        if mod_inst_tag == 'FLT4': mod_num_channels = 4
+        if mod_inst_tag == 'FLT8': mod_num_channels = 8
+        print("[input-mod] Sample Tag: " + str(mod_inst_tag))
+        print("[input-mod] Channels: " + str(mod_num_channels))
+
+        patterntable_all = parse_song(file_stream)
+        veryfirstrow = patterntable_all[t_orderlist[0]][0][0]
+
         for sample in range(31):
-            print(str(sample),end=' ')
-            os.makedirs(os.getcwd() + '/samples/', exist_ok=True)
+            mod_inst_entry = table_samples[sample]
+            print("[input-mod] Ripping Sample", sample)
             os.makedirs(samplefolder, exist_ok=True)
-            wavpath = samplefolder + str(sample+1).zfill(2) + '.wav'
-            wavobj = wave.open(wavpath,'wb')
-            wavobj.setsampwidth(1)
-            wavobj.setnchannels(1)
-            wavobj.setframerate(8272)
-            sampledata = modfile.read(samples[sample][1]*2)
-            sampledatabytes = np.frombuffer(sampledata, dtype='uint8')
-            sampledatabytes = np.array(sampledatabytes) + 128
-            unsignedsampledata = sampledatabytes.tobytes('C')
-            wavobj.writeframesraw(unsignedsampledata)
-            wavobj.close()
-        print()
+            wave_path = samplefolder + str(sample+1).zfill(2) + '.wav'
+            mod_sampledata = file_stream.read(table_samples[sample][1]*2)
+            t_sampledata = np.frombuffer(mod_sampledata, dtype='uint8')
+            t_sampledata = np.array(t_sampledata) + 128
+            wave_data = t_sampledata.tobytes('C')
+            if mod_inst_entry[4] == 0 and mod_inst_entry[5] == 1:
+                audio_wav.generate(wave_path, wave_data, 1, 8272, 8, None)
+            else:
+                audio_wav.generate(wave_path, wave_data, 1, 8272, 8, {'loop':[mod_inst_entry[4]*2, (mod_inst_entry[4]*2)+(mod_inst_entry[5]*2)]})
 
-        current_channelnum = 0
-        
-        outputplaylist = []
-        outputfx = []
-        outputinsts = []
-        
-        veryfirstrow = patterntable_all[order_list[0]][0][1]
-        
-        if 'tempo' in veryfirstrow:
-            bpm = veryfirstrow['tempo']
-            print("[input-mod] Tempo Found: " + str(bpm))
-
-        for current_channelnum in range(number_of_channels):
-            print('[input-mod] Converting Channel ' + str(current_channelnum+1))
-            noteconv.timednotes2notelistplacement_track_start()
-            channelsong = tracker.entire_song_channel(patterntable_all,current_channelnum,order_list)
-            timednotes = tracker.convertchannel2timednotes(channelsong,6)
-            placements = noteconv.timednotes2notelistplacement_parse_timednotes(timednotes)
-            singletrack = {}
-            singletrack['name'] = "Channel " + str(current_channelnum+1)
-            singletrack['placements'] = placements
-            outputplaylist.append(singletrack)
         
         for sample in range(31):
-            strsample = str(sample+1)
-            trkJp = {}
-            trkJp['plugin'] = "sampler"
-            trkJp['basenote'] = 0
-            trkJp['pitch'] = 0
-            trkJp['usemasterpitch'] = 1
-            trkJp_plugindata = {}
-            trkJp_plugindata['file'] = samplefolder + '/' + strsample.zfill(2) + '.wav'
-            trkJp['plugindata'] = trkJp_plugindata
-            trkJ = {}
-            trkJ['id'] = 'mod_inst_'+str(instrumentcount)
-            trkJ['associd'] = sample+1
-            trkJ['fxrack_channel'] = sample+1
-            trkJ['vol'] = 0.3
-            samplename = samples[sample][0]
-            if samplename != '':
-                trkJ['name'] = samplename
-            trkJ['instrumentdata'] = trkJp
-            outputinsts.append(trkJ)
-            fxchannel = {}
-            fxchannel['name'] = samplename
-            fxchannel['num'] = sample+1
-            outputfx.append(fxchannel)
+            cvpj_l_single_inst = cvpj_l_instruments[text_inst_start + str(mod_numinst)]
+            cvpj_l_inst = cvpj_l_single_inst['instdata']
+            if 'plugindata' in cvpj_l_inst:
+                cvpj_l_plugin = cvpj_l_inst['plugindata']
+                cvpj_l_plugin['loop'] = {}
+                if mod_inst_entry[4] == 0 and mod_inst_entry[5] == 1:
+                    cvpj_l_plugin['loop']['enabled'] = 0
+                else:
+                    loopdata = [mod_inst_entry[4]*2, (mod_inst_entry[4]*2)+(mod_inst_entry[5]*2)]
+                    cvpj_l_plugin['loop']['enabled'] = 1
+                    cvpj_l_plugin['loop']['mode'] = "normal"
+                    cvpj_l_plugin['loop']['points'] = loopdata
 
-        rootJ = {}
-        rootJ['mastervol'] = 1.0
-        rootJ['masterpitch'] = 0.0
-        rootJ['timesig_numerator'] = 4
-        rootJ['timesig_denominator'] = 4
-        rootJ['title'] = name
-        rootJ['bpm'] = bpm
-        rootJ['playlist'] = outputplaylist
-        rootJ['fxrack'] = outputfx
-        rootJ['instruments'] = outputinsts
-        rootJ['cvpjtype'] = 'multiple'
-        rootJ['mi2s_fixedblock'] = 1
-        
-        return json.dumps(rootJ)
+
+        cvpj_l_playlist = song_tracker.song2playlist(patterntable_all, mod_num_channels, t_orderlist, text_inst_start, [0.47, 0.47, 0.47])
+
+        if 'tempo' in veryfirstrow: cvpj_bpm = veryfirstrow['tempo']
+        print("[input-mod] Tempo: " + str(cvpj_bpm))
+
+        cvpj_l['instruments'] = cvpj_l_instruments
+        cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
+        cvpj_l['playlist'] = cvpj_l_playlist
+        cvpj_l['bpm'] = cvpj_bpm
+        return json.dumps(cvpj_l)
+

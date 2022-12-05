@@ -255,6 +255,7 @@ class input_famistudio(plugin_input.base):
 
         playlistnum = 1
         for Channel in FST_Channels:
+            ChannelName = Channel
             cvpj_l_playlist[str(playlistnum)] = {}
             cvpj_l_playlist[str(playlistnum)]['color'] = [0.13, 0.15, 0.16]
             cvpj_l_playlist[str(playlistnum)]['name'] = Channel
@@ -269,13 +270,22 @@ class input_famistudio(plugin_input.base):
                 patternnotelist = cvpj_l_notelistindex[cvpj_patternid]['notelist']
                 for fst_note in Channel_Patterns[Pattern]:
                     notedata = Channel_Patterns[Pattern][fst_note]
-                    if 'Duration' in notedata and 'Instrument' in notedata:
-                        cvpj_note = {}
-                        cvpj_note['instrument'] = InstShapes[Channel]+'-'+notedata['Instrument']
-                        cvpj_note['duration'] = int(notedata['Duration'])/NoteLength
-                        cvpj_note['position'] = int(notedata['Time'])/NoteLength
-                        cvpj_note['key'] = NoteToMidi(notedata['Value']) + 24
-                        patternnotelist.append(cvpj_note)
+                    if ChannelName != 'DPCM':
+                        if 'Duration' in notedata and 'Instrument' in notedata:
+                            cvpj_note = {}
+                            cvpj_note['instrument'] = InstShapes[Channel]+'-'+notedata['Instrument']
+                            cvpj_note['duration'] = int(notedata['Duration'])/NoteLength
+                            cvpj_note['position'] = int(notedata['Time'])/NoteLength
+                            cvpj_note['key'] = NoteToMidi(notedata['Value']) + 24
+                            patternnotelist.append(cvpj_note)
+                    else:
+                        if 'Duration' in notedata:
+                            cvpj_note = {}
+                            cvpj_note['instrument'] = 'DPCM'
+                            cvpj_note['duration'] = int(notedata['Duration'])/NoteLength
+                            cvpj_note['position'] = int(notedata['Time'])/NoteLength
+                            cvpj_note['key'] = NoteToMidi(notedata['Value']) + 24
+                            patternnotelist.append(cvpj_note)
             Channel_Instances = FST_Channels[Channel]['Instances']
             for FST_Placement in Channel_Instances:
                 FST_PData = Channel_Instances[FST_Placement]

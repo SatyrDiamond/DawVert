@@ -157,7 +157,7 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
     cvpj_l_instruments[wavetype+'-'+instname] = cvpj_inst
     if wavetype+'-'+instname not in cvpj_l_instrumentsorder:
         cvpj_l_instrumentsorder.append(wavetype+'-'+instname)
-def create_dpcm_inst(FST_Instrument, cvpj_l_instruments, cvpj_l_instrumentsorder):
+def create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instruments, cvpj_l_instrumentsorder):
     instname = 'DPCM'
     cvpj_inst = {}
     cvpj_inst["enabled"] = 1
@@ -165,8 +165,7 @@ def create_dpcm_inst(FST_Instrument, cvpj_l_instruments, cvpj_l_instrumentsorder
     cvpj_instdata = cvpj_inst["instdata"]
     cvpj_instdata['middlenote'] = 0
     cvpj_instdata['pitch'] = 0
-    cvpj_instdata['plugin'] = 'famistudio-dpcm'
-    cvpj_instdata['plugindata'] = FST_Instrument
+    cvpj_instdata['plugin'] = 'none'
     cvpj_instdata['usemasterpitch'] = 1
     cvpj_inst['color'] = [0.48, 0.83, 0.49]
     cvpj_inst["name"] = 'DPCM'
@@ -234,6 +233,8 @@ class input_famistudio(plugin_input.base):
         PatternLength = int(FST_currentsong['PatternLength'])
         SongLength = int(FST_currentsong['Length'])
         NoteLength = int(FST_currentsong['NoteLength'])
+        DPCMMappings = FST_Main['DPCMMappings']
+        DPCMSamples = FST_Main['DPCMSamples']
 
         groovetable = []
         groovesplit = FST_Groove.split('-')
@@ -259,7 +260,7 @@ class input_famistudio(plugin_input.base):
             used_insts = get_used_insts(FST_Channels[Channel])
             if Channel in InstShapes: WaveType = InstShapes[Channel]
             elif Channel == 'DPCM': 
-                create_dpcm_inst(FST_Instruments[inst], cvpj_l_instruments, cvpj_l_instrumentsorder)
+                create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instruments, cvpj_l_instrumentsorder)
             if WaveType != None:
                 for inst in used_insts:
                     create_inst(WaveType, FST_Instruments[inst], cvpj_l_instruments, cvpj_l_instrumentsorder)

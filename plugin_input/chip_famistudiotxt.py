@@ -3,6 +3,9 @@ import json
 import plugin_input
 import json
 
+def average(lst):
+    return sum(lst) / len(lst)
+
 def get_used_insts(channeldata):
     usedinsts = []
     PatternList = channeldata['Patterns']
@@ -144,6 +147,7 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
     if wavetype == 'Triangle': cvpj_inst['color'] = [0.94, 0.33, 0.58]
     if wavetype == 'Noise': cvpj_inst['color'] = [0.33, 0.74, 0.90]
     if wavetype == 'FDS': cvpj_inst['color'] = [0.94, 0.94, 0.65]
+    if wavetype == 'VRC7FM': cvpj_inst['color'] = [1.00, 0.46, 0.44]
     if wavetype == 'VRC6Square': cvpj_inst['color'] = [0.60, 0.44, 0.93]
     if wavetype == 'VRC6Saw': cvpj_inst['color'] = [0.46, 0.52, 0.91]
     if wavetype == 'N163': cvpj_inst['color'] = [0.97, 0.97, 0.36]
@@ -225,10 +229,17 @@ class input_famistudio(plugin_input.base):
         FST_Instruments = FST_Main['Instruments']
         FST_currentsong = next(iter(FST_Main['Songs'].values()))
         FST_Channels = FST_currentsong['Channels']
-        FST_BeatLength = FST_currentsong['BeatLength']
+        FST_BeatLength = int(FST_currentsong['BeatLength'])
+        FST_Groove = FST_currentsong['Groove']
         PatternLength = int(FST_currentsong['PatternLength'])
         SongLength = int(FST_currentsong['Length'])
         NoteLength = int(FST_currentsong['NoteLength'])
+
+        groovetable = []
+        groovesplit = FST_Groove.split('-')
+        for groovenumber in groovesplit:
+            groovetable.append(int(groovenumber))
+        bpm = 60/(average(groovetable)/60*FST_BeatLength)
 
         PatternLengthList = []
         for number in range(SongLength):
@@ -301,5 +312,5 @@ class input_famistudio(plugin_input.base):
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['bpm'] = 140
+        cvpj_l['bpm'] = bpm
         return json.dumps(cvpj_l)

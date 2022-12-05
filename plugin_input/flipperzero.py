@@ -29,43 +29,44 @@ class input_fmf(plugin_input.base):
         f_fmf = open(input_file, 'r')
         lines_fmf = f_fmf.readlines()
         for line in lines_fmf:
-            fmf_command, fmf_param = line.rstrip().split(': ')
-            if fmf_command == 'BPM': fmf_BPM = int(fmf_param)
-            if fmf_command == 'Duration': fmf_Duration = int(fmf_param)
-            if fmf_command == 'Octave': fmf_Octave = int(fmf_param)
-            if fmf_command == 'Notes':
-                fmf_notes = fmf_param.split(',')
-                for fmf_note in fmf_notes:
-                    nospacenote = fmf_note.strip()
-                    part_Note = ''
-                    part_Duration = ''
-                    part_Oct = ''
-                    part_Period = 0
-                    number_parsemode = 'D'
-                    for notepart in nospacenote:
-                        #print(notepart, end='')
-                        if number_parsemode == 'D':
-                            if notepart.isalpha() == False: part_Duration += notepart
-                            if notepart == "#":
-                                part_Note += notepart
-                            if notepart.isalpha() == True:
-                                part_Note += notepart
-                                number_parsemode = 'O'
-                        if number_parsemode == 'O':
-                            if notepart == "#":
-                                part_Note += notepart
-                            if notepart.isnumeric() == True: part_Oct += notepart
-                            if notepart == '.': part_Period += 1
-                    
+            if line != "\n":
+                fmf_command, fmf_param = line.rstrip().split(': ')
+                if fmf_command == 'BPM': fmf_BPM = int(fmf_param)
+                if fmf_command == 'Duration': fmf_Duration = int(fmf_param)
+                if fmf_command == 'Octave': fmf_Octave = int(fmf_param)
+                if fmf_command == 'Notes':
+                    fmf_notes = fmf_param.split(',')
+                    for fmf_note in fmf_notes:
+                        nospacenote = fmf_note.strip()
+                        part_Note = ''
+                        part_Duration = ''
+                        part_Oct = ''
+                        part_Period = 0
+                        number_parsemode = 'D'
+                        for notepart in nospacenote:
+                            #print(notepart, end='')
+                            if number_parsemode == 'D':
+                                if notepart.isalpha() == False: part_Duration += notepart
+                                if notepart == "#":
+                                    part_Note += notepart
+                                if notepart.isalpha() == True:
+                                    part_Note += notepart
+                                    number_parsemode = 'O'
+                            if number_parsemode == 'O':
+                                if notepart == "#":
+                                    part_Note += notepart
+                                if notepart.isnumeric() == True: part_Oct += notepart
+                                if notepart == '.': part_Period += 1
+                        
 
-                    if part_Oct == '': output_Oct = (fmf_Octave-5)*12
-                    else: output_Oct = (int(part_Oct)-5)*12
-                    if part_Note in l_key: output_Note = l_key.index(part_Note)+output_Oct
-                    else: output_Note = None
-                    if part_Duration == '': output_Duration = fmf_Duration/16
-                    else: output_Duration = fmf_Duration*(1/int(part_Duration))
+                        if part_Oct == '': output_Oct = (fmf_Octave-5)*12
+                        else: output_Oct = (int(part_Oct)-5)*12
+                        if part_Note in l_key: output_Note = l_key.index(part_Note)+output_Oct
+                        else: output_Note = None
+                        if part_Duration == '': output_Duration = (fmf_Duration/16)/8
+                        else: output_Duration = (fmf_Duration*(1/int(part_Duration)))/8
 
-                    Notes.append([output_Note, output_Duration])
+                        Notes.append([output_Note, output_Duration])
 
 
 
@@ -96,7 +97,8 @@ class input_fmf(plugin_input.base):
         trackdata['name'] = 'Flipper Zero'
         trackdata['type'] = 'instrument'
         trackdata["instdata"] = {}
-        trackdata["instdata"]['plugin'] = 'none'
+        trackdata["instdata"]['plugin'] = 'shape-pulse'
+        trackdata["instdata"]['plugindata'] = {'duty': 0.125}
         trackdata['placements'] = [{}]
         trackdata['placements'][0]['position'] = 0
         trackdata['placements'][0]['notelist'] = notelist

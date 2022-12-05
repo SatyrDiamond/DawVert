@@ -79,6 +79,8 @@ def lc_parse_voice(sl_json, length):
     return notelist
 
 def lc_parse_placements(sl_json):
+    global patternpos
+    patternpos = []
     placements = []
     position = 0
     for sle in sl_json:
@@ -92,6 +94,7 @@ def lc_parse_placements(sl_json):
         placement['position'] = position
         if notelist != []:
             placements.append(placement)
+        patternpos.append(position)
         position += length
     return placements
 
@@ -181,6 +184,8 @@ class input_lc(plugin_input.base):
 
         startinststr = 'lc_instlist_'
 
+        cvpj_l['timemarkers'] = []
+        cvpj_l['timemarkers'].append({'name': 'Loop', 'position': patternpos[lc_loop_start_bar], 'type': 'loop'})
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist

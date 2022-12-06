@@ -232,9 +232,13 @@ class input_s3m(plugin_input.base):
                             if firstrow == 1:
                                 pattern_row[1][packed_what_channel][3]['firstrow'] = 1
                                 pattern_row[0]['firstrow'] = 1
-                            if packed_what_command_info == 1 and packed_command == 1:
-                                pattern_row[1][packed_what_channel][3]['tracker_speed'] = packed_info
-                                pattern_row[0]['tracker_speed'] = packed_info
+                            if packed_what_command_info == 1:
+                                if packed_command == 1:
+                                    pattern_row[1][packed_what_channel][3]['tracker_speed'] = packed_info
+                                    pattern_row[0]['tracker_speed'] = packed_info
+                                if packed_command == 3:
+                                    pattern_row[1][packed_what_channel][3]['tracker_break_to_row'] = packed_info
+                                    pattern_row[0]['tracker_break_to_row'] = packed_info
                     firstrow = 0
                     patterntable_single.append(pattern_row)
                     rowcount += 1

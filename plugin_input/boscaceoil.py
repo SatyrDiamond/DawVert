@@ -441,16 +441,20 @@ class input_ceol(plugin_input.base):
                 cvpj_instdata['plugin'] = 'general-midi'
                 cvpj_instdata['plugindata'] = {'bank':0, 'inst':ceol_inst_number}
             else: 
-            	cvpj_instdata['plugin'] = 'none'
-            	cvpj_instdata['plugindata'] = {}
+                cvpj_instdata['plugin'] = 'none'
+                cvpj_instdata['plugindata'] = {}
             cvpj_l_instruments[cvpj_instid] = cvpj_inst
             cvpj_l_instrumentsorder.append(cvpj_instid)
 
         ceol_numpattern = ceol_read()
         for patnum in range(ceol_numpattern):
-            cvpj_pat_id = 'ceol_'+str(patnum).zfill(3)
-
             cvpj_notelist = []
+
+            t_notepos_table = {}
+            for t_notepos in range(ceol_basic_patternlength):
+                t_notepos_table[t_notepos] = []
+
+            cvpj_pat_id = 'ceol_'+str(patnum).zfill(3)
 
             ceol_pat_key = ceol_read()
             ceol_pat_scale = ceol_read()
@@ -463,13 +467,18 @@ class input_ceol(plugin_input.base):
                 ceol_nl_len = ceol_read()
                 ceol_nl_pos = ceol_read()
                 ceol_read()
-                cvpj_notelist.append({'position': ceol_nl_pos, 'key': ceol_nl_key, 'instrument': 'ceol_'+str(ceol_pat_instrument).zfill(2), 'duration': ceol_nl_len})
+                t_notepos_table[ceol_nl_pos].append({'key': ceol_nl_key, 'instrument': 'ceol_'+str(ceol_pat_instrument).zfill(2), 'duration': ceol_nl_len})
+
             ceol_recordfilter = ceol_read()
             if ceol_recordfilter == 1:
                 for _ in range(32):
                     ceol_read()
                     ceol_read()
                     ceol_read()
+
+            for position in t_notepos_table:
+            	for note in t_notepos_table[position]:
+            		cvpj_notelist.append(note | {'position': position})
 
             cvpj_pat = {}
             if ceol_pat_palette in ceol_colors: cvpj_pat["color"] = ceol_colors[ceol_pat_palette]

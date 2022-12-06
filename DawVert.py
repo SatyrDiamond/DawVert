@@ -15,12 +15,19 @@ parser.add_argument("-i", default=None)
 parser.add_argument("-it", default=None)
 parser.add_argument("-o", default=None)
 parser.add_argument("-ot", default=None)
+#parser.add_argument("--samplefolder", default=None)
+parser.add_argument("--soundfont", default=None)
 args = parser.parse_args()
 
 in_file = args.i
 out_file = args.o
 in_format = args.it
 out_format = args.ot
+
+extra_json = {}
+
+if args.soundfont != None: extra_json['soundfont'] = args.soundfont
+#if args.samplefolder != None: extra_json['samplefolder'] = args.samplefolder
 
 typelist = {}
 typelist['r'] = 'Regular'
@@ -29,8 +36,6 @@ typelist['a'] = 'AnyPurpose'
 typelist['m'] = 'Multiple'
 typelist['mi'] = 'MultipleIndexed'
 typelist['debug'] = 'debug'
-
-extra_json = {}
 
 # --------- Input Plugin: Get List
 pluglist_input = {}
@@ -117,14 +122,14 @@ else:
 	exit()
 
 # --------- Parse to List
-CVPJ_j = in_class.parse(in_file, {})
+CVPJ_j = in_class.parse(in_file, extra_json)
 if CVPJ_j == '{}' or CVPJ_j == None:
 	print('[error] Input Plugin outputted no json')
 	exit()
 
 # --------- Plugins
 
-CVPJ_C = plugin_convert.convproj(CVPJ_j, in_type, out_type, out_format)
+CVPJ_C = plugin_convert.convproj(CVPJ_j, in_type, out_type, out_format, extra_json)
 if CVPJ_C != None: CVPJ_j = CVPJ_C
 
 

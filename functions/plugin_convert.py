@@ -219,6 +219,27 @@ def grace_create_region(gx_root, regionparams):
 
 	return gx_root
 
+def juicysfplugin_create(bank, patch, filename):
+	jsfp_xml = ET.Element("MYPLUGINSETTINGS")
+	jsfp_params = ET.SubElement(jsfp_xml, "params")
+	jsfp_uiState = ET.SubElement(jsfp_xml, "uiState")
+	jsfp_soundFont = ET.SubElement(jsfp_xml, "soundFont")
+	if 'bank' != None: jsfp_params.set('bank', str(bank/128))
+	else:jsfp_params.set('bank', "0")
+	if 'patch' != None: jsfp_params.set('preset', str(patch/128))
+	else:jsfp_params.set('preset', "0")
+	jsfp_params.set('attack', "0.0")
+	jsfp_params.set('decay', "0.0")
+	jsfp_params.set('sustain', "0.0")
+	jsfp_params.set('release', "0.0")
+	jsfp_params.set('filterCutOff', "0.0")
+	jsfp_params.set('filterResonance', "0.0")
+	jsfp_uiState.set('width', "500.0")
+	jsfp_uiState.set('height', "300.0")
+	if 'file' != None: jsfp_soundFont.set('path', filename)
+	else: jsfp_soundFont.set('path', '')
+	return jsfp_xml
+
 # -------------------- VST List --------------------
 def find_vstpath(name, instdata):
 	path_found = 0
@@ -290,7 +311,7 @@ def vstlist_init(osplatform):
 			vst2path_loaded = True
 			print('[plugin-convert] # of VST3 Plugins:', len(vst3paths))
 
-def convplug_inst(instdata, dawname):
+def convplug_inst(instdata, dawname, extra_json):
 	m8bp_shapesupported = ['shape-square', 'shape-triangle', 'retro-noise', 'shape-pulse']
 	global supportedplugins
 	if 'plugin' in instdata:
@@ -328,27 +349,43 @@ def convplug_inst(instdata, dawname):
 			# -------------------- sf2 > vst2 (juicysfplugin) --------------------
 			elif pluginname == 'soundfont2' and dawname not in supportedplugins['sf2']:
 				sf2data = instdata['plugindata']
-				jsfp_xml = ET.Element("MYPLUGINSETTINGS")
-				jsfp_params = ET.SubElement(jsfp_xml, "params")
-				jsfp_uiState = ET.SubElement(jsfp_xml, "uiState")
-				jsfp_soundFont = ET.SubElement(jsfp_xml, "soundFont")
-				if 'bank' in sf2data: jsfp_params.set('bank', str(sf2data['bank']/128))
-				else:jsfp_params.set('bank', "0")
-				if 'patch' in sf2data: jsfp_params.set('preset', str(sf2data['patch']/128))
-				else:jsfp_params.set('preset', "0")
-				jsfp_params.set('attack', "0.0")
-				jsfp_params.set('decay', "0.0")
-				jsfp_params.set('sustain', "0.0")
-				jsfp_params.set('release', "0.0")
-				jsfp_params.set('filterCutOff', "0.0")
-				jsfp_params.set('filterResonance', "0.0")
-				jsfp_uiState.set('width', "500.0")
-				jsfp_uiState.set('height', "300.0")
-				if 'file' in sf2data: jsfp_soundFont.set('path', sf2data['file'])
-				else: jsfp_soundFont.set('path', '')
+				if 'bank' in sf2data: sf2_bank = sf2data['bank']
+				else: sf2_bank = 0
+				if 'patch' in sf2data: sf2_patch = sf2data['patch']
+				else: sf2_params = 0
+				if 'file' in sf2data: sf2_filename = sf2data['file']
+				else: sf2_filename = 0
+				jsfp_xml = juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
 				xmlout = ET.tostring(jsfp_xml, encoding='utf-8')
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
 				replace_vst_data(instdata, 'juicysfplugin', vst2data)
+
+				# -------------------- general-midi --------------------
+			elif pluginname == 'general-midi':
+				if 'soundfont' in extra_json:
+					sffile = extra_json['soundfont']
+					gmdata = instdata['plugindata']
+					if dawname not in supportedplugins['sf2']:
+						jsfp_xml = juicysfplugin_create(gmdata['bank'], gmdata['inst'], sffile)
+						xmlout = ET.tostring(jsfp_xml, encoding='utf-8')
+						vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
+						replace_vst_data(instdata, 'juicysfplugin', vst2data)
+					else:
+						instdata['plugin'] = "soundfont2"
+						instdata['plugindata'] = {}
+						instdata['plugindata']['bank'] = gmdata['bank']
+						instdata['plugindata']['patch'] = gmdata['inst']
+						instdata['plugindata']['file'] = sffile
+						print('[plugin-convert] GM MIDI > soundfont2')
+				else:
+					print('[plugin-convert] Unchanged: soundfont argument not defiened.')
+
+				# -------------------- shapes and retro noise --------------------
+			elif pluginname in m8bp_shapesupported :
+				m8p_root = shape_magical8bitplug(pluginname, plugindata)
+				xmlout = ET.tostring(m8p_root, encoding='utf-8')
+				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
+				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
 
 			# -------------------- famistudio > vst2 (magical8bitplug) --------------------
 			elif pluginname == 'famistudio':
@@ -396,18 +433,17 @@ def convplug_inst(instdata, dawname):
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
 				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
 
-				# -------------------- shapes and retro noise --------------------
-			elif pluginname in m8bp_shapesupported :
-				m8p_root = shape_magical8bitplug(pluginname, plugindata)
-				xmlout = ET.tostring(m8p_root, encoding='utf-8')
-				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
-				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
-
 				# -------------------- zynaddsubfx - from lmms --------------------
+			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
+				zasfxdata = instdata['plugindata']['data']
+				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
+				zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
+				replace_vst_data(instdata, 'ZynAddSubFX', zasfxdatafixed)
+
 			else:
 				print('[plugin-convert] Unchanged')
 
-def convproj(cvpjdata, in_type, out_type, dawname):
+def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 	global supportedplugins
 	vstlist_init('windows')
 	supportedplugins = {}
@@ -423,13 +459,13 @@ def convproj(cvpjdata, in_type, out_type, dawname):
 						if trackdata['type'] == 'instrument':
 							if 'instdata' in trackdata:
 								instdata = trackdata['instdata']
-								convplug_inst(instdata, dawname)
+								convplug_inst(instdata, dawname, extra_json)
 		if in_type == 'm' or in_type == 'mi':
 			if 'instruments' in cvpj_l:
 				for track in cvpj_l['instruments']:
 					trackdata = cvpj_l['instruments'][track]
 					if 'instdata' in trackdata:
 						instdata = trackdata['instdata']
-						convplug_inst(instdata, dawname)
+						convplug_inst(instdata, dawname, extra_json)
 		return json.dumps(cvpj_l, indent=2)
 	return None

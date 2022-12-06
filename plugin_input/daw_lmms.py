@@ -51,24 +51,6 @@ plugincolors['vibedstrings'] = [0.39, 0.47, 0.53]
 plugincolors['watsyn'] = [0.81, 0.87, 0.87]
 plugincolors['zynaddsubfx'] = [0.75, 0.75, 0.75]
 
-def getvstdata(cvpj_l_plugin, xml_plugin):
-    cvpj_l_plugin['plugin'] = {}
-    cvpj_l_plugin['plugin']['path'] = xml_plugin.get('plugin')
-    vst_data = xml_plugin.get('chunk')
-    vst_numparams = xml_plugin.get('numparams')
-    if vst_data != None:
-        cvpj_l_plugin['datatype'] = 'raw'
-        cvpj_l_plugin['data'] = vst_data
-    elif vst_numparams != None:
-        cvpj_l_plugin['datatype'] = 'param'
-        cvpj_l_plugin['numparams'] = int(vst_numparams)
-        cvpj_l_plugin['params'] = {}
-        for param in range(int(vst_numparams)):
-            paramdata = xml_plugin.get('param'+str(param)).split(':')
-            cvpj_l_plugin['params'][str(param)] = {}
-            cvpj_l_plugin['params'][str(param)]['name'] = paramdata[1]
-            cvpj_l_plugin['params'][str(param)]['value'] = float(paramdata[2])
-
 # ------- functions -------
 
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
@@ -228,7 +210,22 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugin, cvpj_l_inst, cvpj_l_track):
         cvpj_l_plugin['data'] = base64.b64encode(ET.tostring(zdata, encoding='utf-8')).decode('ascii')
     elif pluginname == "vestige":
         cvpj_l_inst['plugin'] = "vst2"
-        getvstdata(cvpj_l_plugin, xml_plugin)
+        cvpj_l_plugin['plugin'] = {}
+        cvpj_l_plugin['plugin']['path'] = xml_plugin.get('plugin')
+        vst_data = xml_plugin.get('chunk')
+        vst_numparams = xml_plugin.get('numparams')
+        if vst_data != None:
+            cvpj_l_plugin['datatype'] = 'raw'
+            cvpj_l_plugin['data'] = vst_data
+        elif vst_numparams != None:
+            cvpj_l_plugin['datatype'] = 'param'
+            cvpj_l_plugin['numparams'] = int(vst_numparams)
+            cvpj_l_plugin['params'] = {}
+            for param in range(int(vst_numparams)):
+                paramdata = xml_plugin.get('param'+str(param)).split(':')
+                cvpj_l_plugin['params'][str(param)] = {}
+                cvpj_l_plugin['params'][str(param)]['name'] = paramdata[1]
+                cvpj_l_plugin['params'][str(param)]['value'] = float(paramdata[2])
 
     else:
         cvpj_l_inst['plugin'] = "native-lmms"
@@ -408,7 +405,7 @@ def lmms_decode_effectslot(fxslotX):
     fxslotJ = {}
     fxpluginname = fxslotX.get('name')
     if fxpluginname != 'ladspaeffect':
-        
+        fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
         fxslotJ['enabled'] = int(fxslotX.get('on'))
         wet = float(fxslotX.get('wet'))
         print('['+fxpluginname,end='] ')
@@ -419,23 +416,15 @@ def lmms_decode_effectslot(fxslotX):
             fxslotJ['add_dry_minus_wet'] = 0
             fxslotJ['wet'] = wet
 
-        if fxpluginname != 'vsteffect':
-            fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
-            fxslotJ['plugin'] = 'native-lmms'
-            fxcvpj_l_plugin = {}
-            fxcvpj_l_plugin['name'] = fxpluginname
-            fxcvpj_l_plugin['data'] = {}
-            for name, value in fxxml_plugin.attrib.items(): fxcvpj_l_plugin['data'][name] = value
-            for name in fxxml_plugin: fxcvpj_l_plugin['data'][name.tag] = name.get('value')
-            fxslotJ['plugindata'] = fxcvpj_l_plugin
-            return fxslotJ
-        else:
-            xml_plugin = fxslotX.findall('vsteffectcontrols')[0]
-            fxslotJ['plugin'] = 'vst2'
-            fxcvpj_l_plugin = {}
-            getvstdata(fxcvpj_l_plugin, xml_plugin)
-            fxslotJ['plugindata'] = fxcvpj_l_plugin
-            return fxslotJ
+
+        fxslotJ['plugin'] = 'native-lmms'
+        fxcvpj_l_plugin = {}
+        fxcvpj_l_plugin['name'] = fxpluginname
+        fxcvpj_l_plugin['data'] = {}
+        for name, value in fxxml_plugin.attrib.items(): fxcvpj_l_plugin['data'][name] = value
+        for name in fxxml_plugin: fxcvpj_l_plugin['data'][name.tag] = name.get('value')
+        fxslotJ['plugindata'] = fxcvpj_l_plugin
+        return fxslotJ
     else:
         return None
 def lmms_decode_fxchain(fxchainX):

@@ -338,5 +338,5 @@ class input_famistudio(plugin_input.base):
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['bpm'] = bpm * (denominator/numerator)
+        cvpj_l['bpm'] = bpm
         return json.dumps(cvpj_l)

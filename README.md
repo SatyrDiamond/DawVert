@@ -1,14 +1,6 @@
 
 # DawVert
 
-Supported Inputs (DAWs): FL Studio, LMMS
-
-Supported Inputs (Tracker): MOD, S3M, IT
-
-Supported Inputs (Others): FamiStudio, Bosca Ceoil, PiyoPiyo, Lovely Composer
-
-Supported Outputs: LMMS, FL Studio
-
 ## How to Use
 ```
 python3 DawVert.py <input> <output type> <output>
@@ -37,17 +29,17 @@ e.g:
 
 ## Supported DAWs
 
-| PluginType | DataType | Short Name | Name | 
-| --- | --- | --- | :--- |
-| Input | M-I | ```flp``` | FL Studio | 
-| Input | R | ```lmms``` | LMMS | 
-| Input | M | ```mod``` | ProTracker  | 
-| Input | M | ```s3m``` | Scream Tracker 3 | 
-| Input | M | ```it``` | Impulse Tracker | 
-| Input | M-I | ```fs_txt``` | FamiStudio Text | 
-| Input | M-I | ```ceol``` | Bosca Ceoil | 
-| Input | R | ```piyopiyo``` | PiyoPiyo | 
-| Input | M | ```lovelycomposer``` | Lovely Composer | 
-| output | M-I | ```flp``` | FL Studio | 
-| output | R | ```lmms``` | LMMS |
+| PluginType | DataType | Short Name | Name | Info | 
+| --- | --- | --- | :--- | :--- |
+| Input | M-I | ```flp``` | FL Studio |  | 
+| Input | R | ```lmms``` | LMMS |  | 
+| Input | M | ```mod``` | ProTracker | Tracker | 
+| Input | M | ```s3m``` | Scream Tracker 3 | Tracker | 
+| Input | M | ```it``` | Impulse Tracker | Tracker | 
+| Input | M-I | ```fs_txt``` | FamiStudio Text | Chiptune/Retro | 
+| Input | M-I | ```ceol``` | Bosca Ceoil | Chiptune/Retro | 
+| Input | M | ```lovelycomposer``` | Lovely Composer | Chiptune/Retro | 
+| Input | R | ```piyopiyo``` | PiyoPiyo | Chiptune/Retro | 
+| output | M-I | ```flp``` | FL Studio |  | 
+| output | R | ```lmms``` | LMMS | | 
 

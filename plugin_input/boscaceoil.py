@@ -437,10 +437,12 @@ class input_ceol(plugin_input.base):
             if ceol_inst_palette in ceol_colors: cvpj_inst["color"] = ceol_colors[ceol_inst_palette]
             else: cvpj_inst["color"] = [0.55, 0.55, 0.55]
             cvpj_instdata = cvpj_inst["instdata"]
-            if ceol_instinfo[1] == 'MIDI': 
+            if ceol_instinfo[0] == 'MIDI':
                 cvpj_instdata['plugin'] = 'general-midi'
                 cvpj_instdata['plugindata'] = {'bank':0, 'inst':ceol_inst_number}
-            else: cvpj_instdata['plugin'] = 'none'
+            else: 
+            	cvpj_instdata['plugin'] = 'none'
+            	cvpj_instdata['plugindata'] = {}
             cvpj_l_instruments[cvpj_instid] = cvpj_inst
             cvpj_l_instrumentsorder.append(cvpj_instid)
 

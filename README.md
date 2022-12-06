@@ -34,3 +34,20 @@ e.g:
 [Zyn-Fusion](https://zynaddsubfx.sourceforge.io/zyn-fusion.html)
 
 [Magical 8bit Plug 2](https://github.com/yokemura/Magical8bitPlug2)
+
+## Supported DAWs
+
+| PluginType | DataType | Short Name | Name | 
+| --- | --- | --- | :--- |
+| Input | M-I | ```flp``` | FL Studio | 
+| Input | R | ```lmms``` | LMMS | 
+| Input | M | ```mod``` | ProTracker  | 
+| Input | M | ```s3m``` | Scream Tracker 3 | 
+| Input | M | ```it``` | Impulse Tracker | 
+| Input | M-I | ```fs_txt``` | FamiStudio Text | 
+| Input | M-I | ```ceol``` | Bosca Ceoil | 
+| Input | R | ```piyopiyo``` | PiyoPiyo | 
+| Input | M | ```lovelycomposer``` | Lovely Composer | 
+| output | M-I | ```flp``` | FL Studio | 
+| output | R | ```lmms``` | LMMS |
+

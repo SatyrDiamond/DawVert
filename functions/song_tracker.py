@@ -25,34 +25,41 @@ def convertchannel2timednotes(patterntable_channel, startinststr):
     current_inst = None
     current_key = None
     first_seperate = 0
+    skip_rows = 0
     for notecommand in patterntable_channel:
-        if notecommand[1][0] == None:
-            if 'firstrow' in notecommand[0]:
-                if first_seperate == 1: output_channel.append('seperate;')
-                if first_seperate == 0: first_seperate = 1
-        elif notecommand[1][0] == 'Fade' or notecommand[1][0] == 'Cut' or notecommand[1][0] == 'Off':
-            if note_held == 1:
-                output_channel.append('note_off;' + str(current_key))
-            note_held = 0
-            if 'firstrow' in notecommand[0]:
-                if first_seperate == 1: output_channel.append('seperate;')
-                if first_seperate == 0: first_seperate = 1
-        else:
-            if note_held == 1:
-                output_channel.append('note_off;' + str(current_key))
-            if 'firstrow' in notecommand[0]:
-                if first_seperate == 1: output_channel.append('seperate;')
-                if first_seperate == 0: first_seperate = 1
-            if current_inst != notecommand[1][1] and isinstance(notecommand[1][1], int):
-                output_channel.append('instrument;' + startinststr + str(notecommand[1][1]))
-                current_inst = notecommand[1][1]
-            note_held = 1
-            current_key = notecommand[1][0]
-            vol = 1.0
-            if "vol" in notecommand[1][2]: vol = notecommand[1][2]['vol']
-            if "pan" in notecommand[1][2]: output_channel.append('pan;' + str(notecommand[1][2]['pan']))
-            output_channel.append('note_on;' + str(notecommand[1][0])+','+str(vol))
-        output_channel.append('break;' + str(1))
+        if 'firstrow' in notecommand[0]:
+            skip_rows = 0
+        if skip_rows == 0:
+            if notecommand[1][0] == None:
+                if 'firstrow' in notecommand[0]:
+                    if first_seperate == 1: output_channel.append('seperate;')
+                    if first_seperate == 0: first_seperate = 1
+            elif notecommand[1][0] == 'Fade' or notecommand[1][0] == 'Cut' or notecommand[1][0] == 'Off':
+                if note_held == 1:
+                    output_channel.append('note_off;' + str(current_key))
+                note_held = 0
+                if 'firstrow' in notecommand[0]:
+                    if first_seperate == 1: output_channel.append('seperate;')
+                    if first_seperate == 0: first_seperate = 1
+            else:
+                if note_held == 1:
+                    output_channel.append('note_off;' + str(current_key))
+                if 'firstrow' in notecommand[0]:
+                    if first_seperate == 1: output_channel.append('seperate;')
+                    if first_seperate == 0: first_seperate = 1
+                if current_inst != notecommand[1][1] and isinstance(notecommand[1][1], int):
+                    output_channel.append('instrument;' + startinststr + str(notecommand[1][1]))
+                    current_inst = notecommand[1][1]
+                note_held = 1
+                current_key = notecommand[1][0]
+                vol = 1.0
+                if "vol" in notecommand[1][2]: vol = notecommand[1][2]['vol']
+                if "pan" in notecommand[1][2]: output_channel.append('pan;' + str(notecommand[1][2]['pan']))
+                output_channel.append('note_on;' + str(notecommand[1][0])+','+str(vol))
+            output_channel.append('break;' + str(1))
+        if 'tracker_break_to_row' in notecommand[0]:
+            if notecommand[0]['tracker_break_to_row'] == 0:
+                skip_rows = 1
     return output_channel
 
 def song2playlist(patterntable_all, number_of_channels, order_list, startinststr, color):

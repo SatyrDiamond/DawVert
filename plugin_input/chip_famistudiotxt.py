@@ -330,12 +330,13 @@ class input_famistudio(plugin_input.base):
                 cvpj_l_playlist[str(playlistnum)]['placements'].append(cvpj_l_placement)
             playlistnum += 1
 
-        timesig = get_timesig(PatternLength, FST_BeatLength)
-        cvpj_l['timesig_numerator'], cvpj_l['timesig_denominator'] = timesig
+        numerator, denominator = get_timesig(PatternLength, FST_BeatLength)
+        cvpj_l['timesig_numerator'] = numerator
+        cvpj_l['timesig_denominator'] = denominator
 
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['bpm'] = bpm
+        cvpj_l['bpm'] = bpm * (denominator/numerator)
         return json.dumps(cvpj_l)

@@ -2,23 +2,7 @@ import shlex
 import json
 import plugin_input
 import json
-
-def get_timesig(patternLength, notesPerBeat):
-    MaxFactor = 1024
-    factor = 1
-    while (((patternLength * factor) % notesPerBeat) != 0 and factor <= MaxFactor):
-        factor *= 2
-    foundValidFactor = ((patternLength * factor) % notesPerBeat) == 0
-    numer = 4
-    denom = 4
-
-    if foundValidFactor == True:
-        numer = patternLength * factor / notesPerBeat
-        denom = 4 * factor
-    else: 
-        print('Error computing valid time signature, defaulting to 4/4.')
-
-    return (numer, denom)
+from functions import placements
 
 def average(lst):
     return sum(lst) / len(lst)
@@ -254,6 +238,7 @@ class input_famistudio(plugin_input.base):
         PatternLength = int(FST_currentsong['PatternLength'])
         SongLength = int(FST_currentsong['Length'])
         NoteLength = int(FST_currentsong['NoteLength'])
+        LoopPoint = int(FST_currentsong['LoopPoint'])
         DPCMMappings = FST_Main['DPCMMappings']
         DPCMSamples = FST_Main['DPCMSamples']
 
@@ -330,10 +315,21 @@ class input_famistudio(plugin_input.base):
                 cvpj_l_playlist[str(playlistnum)]['placements'].append(cvpj_l_placement)
             playlistnum += 1
 
-        numerator, denominator = get_timesig(PatternLength, FST_BeatLength)
-        cvpj_l['timesig_numerator'] = numerator
-        cvpj_l['timesig_denominator'] = denominator
+        timesig = placements.get_timesig(PatternLength, FST_BeatLength)
+        cvpj_l['timesig_numerator'] = timesig[0]
+        cvpj_l['timesig_denominator'] = timesig[1]
 
+        prevtimesig = timesig
+        currentpos = 0
+        for PatternLengthPart in PatternLengthList:
+            print(PatternLengthPart)
+            temptimesig = placements.get_timesig(PatternLengthPart, FST_BeatLength)
+            if prevtimesig != temptimesig:
+                print('place', temptimesig)
+            prevtimesig = temptimesig
+            currentpos += PatternLengthPart
+
+        cvpj_l['timemarkers'] = placements.make_timemarkers(timesig, PatternLengthList, LoopPoint)
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

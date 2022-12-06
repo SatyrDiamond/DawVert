@@ -132,10 +132,13 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
     cvpj_instdata = cvpj_inst["instdata"]
     cvpj_instdata['middlenote'] = 0
     cvpj_instdata['pitch'] = 0
-    if wavetype == 'Square' or wavetype == 'Triangle' or wavetype == 'Noise':
+    if wavetype == 'Square1' or wavetype == 'Square2' or wavetype == 'Triangle' or wavetype == 'Noise':
         cvpj_instdata['plugin'] = 'famistudio'
         cvpj_instdata['plugindata'] = FST_Instrument
-        cvpj_instdata['plugindata']['wave'] = wavetype
+        if wavetype == 'Square1' or wavetype == 'Square2':
+            cvpj_instdata['plugindata']['wave'] = 'Square'
+        else:
+            cvpj_instdata['plugindata']['wave'] = wavetype
     if wavetype == 'VRC7FM':
         cvpj_instdata['plugin'] = 'famistudio-vrc7fm'
         cvpj_instdata['plugindata'] = FST_Instrument
@@ -154,7 +157,8 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
         cvpj_instdata['plugin'] = 'famistudio-s5b'
         cvpj_instdata['plugindata'] = FST_Instrument
     cvpj_instdata['usemasterpitch'] = 1
-    if wavetype == 'Square': cvpj_inst['color'] = [0.97, 0.56, 0.36]
+    if wavetype == 'Square1': cvpj_inst['color'] = [0.97, 0.56, 0.36]
+    if wavetype == 'Square2': cvpj_inst['color'] = [0.97, 0.56, 0.36]
     if wavetype == 'Triangle': cvpj_inst['color'] = [0.94, 0.33, 0.58]
     if wavetype == 'Noise': cvpj_inst['color'] = [0.33, 0.74, 0.90]
     if wavetype == 'FDS': cvpj_inst['color'] = [0.94, 0.94, 0.65]
@@ -209,8 +213,8 @@ class input_famistudio(plugin_input.base):
         with open('fst.json', "w") as fileout:
             json.dump(FST_Main, fileout, indent=4, sort_keys=True)
         
-        InstShapes = {'Square1': 'Square', 
-        'Square2': 'Square', 
+        InstShapes = {'Square1': 'Square1', 
+        'Square2': 'Square2', 
         'Triangle': 'Triangle', 
         'Noise': 'Noise', 
         'VRC6Square1': 'VRC6Square', 

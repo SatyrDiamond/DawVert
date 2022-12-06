@@ -72,10 +72,12 @@ def lc_parse_voice(sl_json, length):
         lc_notedata = sl_json[notenum]
         lc_inst = lc_notedata['id']
         if lc_inst != None:
-            lc_note = lc_notedata['n']-60
-            notelist.append({'position': position, 'key': lc_note, 'instrument': lc_instlist[lc_inst][1], 'duration': 1})
-            if lc_instlist[lc_inst][1] not in used_instruments:
-                used_instruments.append(lc_instlist[lc_inst][1])
+            lc_note_p = lc_notedata['n']
+            if lc_note_p != None:
+                lc_note = lc_note_p-60
+                notelist.append({'position': position, 'key': lc_note, 'instrument': lc_instlist[lc_inst][1], 'duration': 1, 'vol': lc_notedata['x']/15})
+                if lc_instlist[lc_inst][1] not in used_instruments:
+                    used_instruments.append(lc_instlist[lc_inst][1])
         position += 1
     return notelist
 

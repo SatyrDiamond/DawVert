@@ -41,21 +41,6 @@ def oneto100(input): return round(float(input) * 100)
 
 # ------- Instruments and Plugins -------
 
-def getvstdata(plugJ, xml_vst):
-    if 'plugin' in plugJ:
-        if 'path' in plugJ['plugin']:
-            xml_vst.set('plugin', str(plugJ['plugin']['path']))
-    if plugJ['datatype'] == 'raw':
-        xml_vst.set('chunk', str(plugJ['data']))
-    elif plugJ['datatype'] == 'param':
-        numparams = plugJ['numparams']
-        params = plugJ['params']
-        xml_vst.set('numparams', str(numparams))
-        for param in range(numparams):
-            paramdata = params[str(param)]
-            pname = paramdata['name']
-            pval = paramdata['value']
-            xml_vst.set('param'+str(param), str(param)+':'+pname+':'+str(pval))
 def sec2exp(value): return (value * value)*5
 def asdflfo_set(jsonpath, trkX_insttr):
     eldataX = ET.SubElement(trkX_insttr, "eldata")
@@ -189,7 +174,20 @@ def lmms_encode_plugin(xmltag, trkJ):
         print('[output-lmms]       Plugin: vst2 > vestige')
         xml_instrumentpreplugin.set('name', "vestige")
         xml_vst = ET.SubElement(xml_instrumentpreplugin, "vestige")
-        getvstdata(plugJ, xml_vst)
+        if 'plugin' in plugJ:
+            if 'path' in plugJ['plugin']:
+                xml_vst.set('plugin', str(plugJ['plugin']['path']))
+        if plugJ['datatype'] == 'raw':
+            xml_vst.set('chunk', str(plugJ['data']))
+        elif plugJ['datatype'] == 'param':
+            numparams = plugJ['numparams']
+            params = plugJ['params']
+            xml_vst.set('numparams', str(numparams))
+            for param in range(numparams):
+                paramdata = params[str(param)]
+                pname = paramdata['name']
+                pval = paramdata['value']
+                xml_vst.set('param'+str(param), str(param)+':'+pname+':'+str(pval))
     elif pluginname == 'zynaddsubfx-lmms':
         print('[output-lmms]       Plugin: zynaddsubfx > zynaddsubfx')
         xml_instrumentpreplugin.set('name', "zynaddsubfx")
@@ -356,6 +354,7 @@ def lmms_encode_inst_track(xmltag, trkJ):
             lmms_encode_notelist(patX, json_notelist)
             tracksnum += 1
         print(' ')
+
     print('[output-lmms]')
 
 # ------- Effects -------

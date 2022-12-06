@@ -41,6 +41,7 @@ class input_flp(plugin_input.base):
         instrumentsJ = {}
         instrumentsorder = []
         notelistindexJ = {}
+        fxrackJ = {}
         playlistJ = {}
         timemarkersJ = []
 
@@ -138,6 +139,22 @@ class input_flp(plugin_input.base):
             if 'name' in FL_Tracks[track]:
                 playlistJ[str(track)]['name'] = FL_Tracks[track]['name']
 
+        for fxchannel in FL_Mixer:
+            fl_fxhan = FL_Mixer[str(fxchannel)]
+            fxrackJ[fxchannel] = {}
+
+            fxdata = fxrackJ[fxchannel]
+            fxdata["enabled"] = 0
+            fxdata["fxchain"] = []
+            fxdata["muted"] = 0
+            fxdata["sends"] = []
+            if 'name' in fl_fxhan:
+                fxdata["name"] = fl_fxhan['name']
+            for route in fl_fxhan['routing']:
+                fxdata["sends"].append({"amount": 1.0, "channel": route})
+            fxdata["vol"]: 1.0
+
+
         for timemarker in FL_TimeMarkers:
             tm_pos = FL_TimeMarkers[timemarker]['pos']/ppq*4
             tm_type = FL_TimeMarkers[timemarker]['type']
@@ -161,6 +178,7 @@ class input_flp(plugin_input.base):
         rootJ['instruments'] = instrumentsJ
         rootJ['notelistindex'] = notelistindexJ
         rootJ['playlist'] = playlistJ
+        rootJ['fxrack'] = fxrackJ
         rootJ['timemarkers'] = timemarkersJ
 
         return json.dumps(rootJ, indent=2)

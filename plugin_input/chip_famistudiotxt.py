@@ -159,6 +159,9 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
     if wavetype == 'N163':
         cvpj_instdata['plugin'] = 'famistudio-n163'
         cvpj_instdata['plugindata'] = FST_Instrument
+    if wavetype == 'S5B':
+        cvpj_instdata['plugin'] = 'famistudio-s5b'
+        cvpj_instdata['plugindata'] = FST_Instrument
     cvpj_instdata['usemasterpitch'] = 1
     if wavetype == 'Square': cvpj_inst['color'] = [0.97, 0.56, 0.36]
     if wavetype == 'Triangle': cvpj_inst['color'] = [0.94, 0.33, 0.58]
@@ -167,6 +170,7 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
     if wavetype == 'VRC7FM': cvpj_inst['color'] = [1.00, 0.46, 0.44]
     if wavetype == 'VRC6Square': cvpj_inst['color'] = [0.60, 0.44, 0.93]
     if wavetype == 'VRC6Saw': cvpj_inst['color'] = [0.46, 0.52, 0.91]
+    if wavetype == 'S5B': cvpj_inst['color'] = [0.58, 0.94, 0.33]
     if wavetype == 'N163': cvpj_inst['color'] = [0.97, 0.97, 0.36]
     cvpj_inst["name"] = wavetype+'-'+instname
     cvpj_inst["pan"] = 0.0
@@ -232,9 +236,9 @@ class input_famistudio(plugin_input.base):
         'N163Wave2': 'N163', 
         'N163Wave3': 'N163', 
         'N163Wave4': 'N163', 
-        'S5BSquare1': 'Square', 
-        'S5BSquare2': 'Square', 
-        'S5BSquare3': 'Square'}
+        'S5BSquare1': 'S5B', 
+        'S5BSquare2': 'S5B', 
+        'S5BSquare3': 'S5B'}
 
         cvpj_l = {}
         cvpj_l_instruments = {}

@@ -40,6 +40,7 @@ e.g:
 | Input | M-I | ```ceol``` | Bosca Ceoil | Chiptune/Retro | 
 | Input | M | ```lovelycomposer``` | Lovely Composer | Chiptune/Retro | 
 | Input | R | ```piyopiyo``` | PiyoPiyo | Chiptune/Retro | 
+| Input | R | ```flipper``` | Flipper Music Format | | 
 | output | M-I | ```flp``` | FL Studio |  | 
 | output | R | ```lmms``` | LMMS | | 
 

@@ -3,6 +3,23 @@ import json
 import plugin_input
 import json
 
+def get_timesig(patternLength, notesPerBeat):
+    MaxFactor = 1024
+    factor = 1
+    while (((patternLength * factor) % notesPerBeat) != 0 and factor <= MaxFactor):
+        factor *= 2
+    foundValidFactor = ((patternLength * factor) % notesPerBeat) == 0
+    numer = 4
+    denom = 4
+
+    if foundValidFactor == True:
+        numer = patternLength * factor / notesPerBeat
+        denom = 4 * factor
+    else: 
+        print('Error computing valid time signature, defaulting to 4/4.')
+
+    return (numer, denom)
+
 def average(lst):
     return sum(lst) / len(lst)
 
@@ -308,6 +325,9 @@ class input_famistudio(plugin_input.base):
                 cvpj_l_placement['fromindex'] = Channel+'-'+FST_PData['Pattern']
                 cvpj_l_playlist[str(playlistnum)]['placements'].append(cvpj_l_placement)
             playlistnum += 1
+
+        timesig = get_timesig(PatternLength, FST_BeatLength)
+        cvpj_l['timesig_numerator'], cvpj_l['timesig_denominator'] = timesig
 
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments

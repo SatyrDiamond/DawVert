@@ -26,6 +26,7 @@ def decode_fst(infile):
     FST_Main = {}
     
     FST_Instruments = {}
+    FST_Arpeggios = {}
     FST_Songs = {}
     FST_DPCMSamples = {}
     FST_DPCMMappings = {}
@@ -72,6 +73,11 @@ def decode_fst(infile):
             if 'Vrc7Reg5' in cmd_params: FST_Instrument['Vrc7Reg5'] = cmd_params['Vrc7Reg5']
             if 'Vrc7Reg6' in cmd_params: FST_Instrument['Vrc7Reg6'] = cmd_params['Vrc7Reg6']
             if 'Vrc7Reg7' in cmd_params: FST_Instrument['Vrc7Reg7'] = cmd_params['Vrc7Reg7']
+
+        elif cmd_name == 'Arpeggio' and tabs_num == 1:
+            arpname = cmd_params['Name']
+            FST_Arpeggios[arpname] = cmd_params
+
         elif cmd_name == 'Envelope' and tabs_num == 2:
             envtype = cmd_params['Type']
             FST_Instrument['Envelopes'][envtype] = {}
@@ -109,11 +115,12 @@ def decode_fst(infile):
             FST_Pattern[notetime] = cmd_params
     
         else:
-            print('unexpected command and/or wrong tabs')
+            print('unexpected command and/or wrong tabs:', cmd_name)
             exit()
     
     FST_Main['Instruments'] = FST_Instruments
     FST_Main['Songs'] = FST_Songs
+    FST_Main['Arpeggios'] = FST_Arpeggios
     FST_Main['DPCMSamples'] = FST_DPCMSamples
     FST_Main['DPCMMappings'] = FST_DPCMMappings
     return FST_Main
@@ -318,17 +325,6 @@ class input_famistudio(plugin_input.base):
         timesig = placements.get_timesig(PatternLength, FST_BeatLength)
         cvpj_l['timesig_numerator'] = timesig[0]
         cvpj_l['timesig_denominator'] = timesig[1]
-
-        prevtimesig = timesig
-        currentpos = 0
-        for PatternLengthPart in PatternLengthList:
-            print(PatternLengthPart)
-            temptimesig = placements.get_timesig(PatternLengthPart, FST_BeatLength)
-            if prevtimesig != temptimesig:
-                print('place', temptimesig)
-            prevtimesig = temptimesig
-            currentpos += PatternLengthPart
-
         cvpj_l['timemarkers'] = placements.make_timemarkers(timesig, PatternLengthList, LoopPoint)
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments

@@ -365,6 +365,8 @@ class input_it(plugin_input.base):
                 cvpj_l_instrumentsorder.append(it_samplename)
                 samplecount += 1
 
+        patlentable = song_tracker.get_len_table(patterntable_all, table_orders)
+        cvpj_l['timemarkers'] = placements.make_timemarkers([4,4], patlentable, None)
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist

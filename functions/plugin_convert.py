@@ -433,13 +433,12 @@ def convplug_inst(instdata, dawname, extra_json):
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
 				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
 
-				# -------------------- zynaddsubfx - from lmms --------------------
+				# -------------------- zynaddsubfx > vst2 (Zyn-Fusion) - from lmms --------------------
 			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
 				zasfxdata = instdata['plugindata']['data']
 				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
 				zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
 				replace_vst_data(instdata, 'ZynAddSubFX', zasfxdatafixed)
-
 			else:
 				print('[plugin-convert] Unchanged')
 

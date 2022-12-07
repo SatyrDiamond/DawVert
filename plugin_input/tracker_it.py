@@ -14,97 +14,7 @@ try: import xmodits
 except: xmodits_exists = False
 else: xmodits_exists = True
 
-def splitbyte(value):
-    first = value >> 4
-    second = value & 0x0F
-    return (first, second)
-
-def parse_mod_cell(file_stream, firstrow):
-    output_note = None
-    output_inst = None
-    global table_samples
-    output_param = {}
-    output_extra = {}
-    if firstrow == 1: output_extra['firstrow'] = 1
-    cell_p1 = int.from_bytes(file_stream.read(2), "big")
-    cell_p2 = int.from_bytes(file_stream.read(2), "big")
-    mod_inst_low = cell_p2 >> 12
-    mod_inst_high = cell_p1 >> 12
-    noteperiod = (cell_p1 & 0x0FFF) 
-    if noteperiod != 0: output_note = (round(12 * math.log2((447902/(noteperiod*2)) / 440)) + 69)-72
-    cell_fx_type = (cell_p2 & 0xF00) >> 8
-    cell_fx_param = (cell_p2 & 0xFF) 
-    cell_inst_num = mod_inst_high << 4 | mod_inst_low
-    if cell_inst_num != 0: output_inst = cell_inst_num
-    if cell_fx_type == 0 and cell_fx_param != 0:
-        arpeggio_first = cell_fx_param >> 4
-        arpeggio_second = cell_fx_param & 0x0F
-        output_param['tracker_arpeggio'] = [arpeggio_first, arpeggio_second]
-    if cell_fx_type == 1: output_param['tracker_slide_up'] = cell_fx_param
-    if cell_fx_type == 2: output_param['tracker_slide_down'] = cell_fx_param
-    if cell_fx_type == 3: output_param['tracker_slide_to_note'] = cell_fx_param
-    if cell_fx_type == 4: 
-        vibrato_params = {}
-        vibrato_params['speed'], vibrato_params['depth'] = splitbyte(cell_fx_param)
-        output_param['vibrato'] = vibrato_params
-    if cell_fx_type == 5:
-        pos, neg = splitbyte(cell_fx_param)
-        output_param['tracker_vol_slide_plus_slide_to_note'] = (neg*-1) + pos
-    if cell_fx_type == 6:
-        pos, neg = splitbyte(cell_fx_param)
-        output_param['tracker_vol_slide_plus_vibrato'] = (neg*-1) + pos
-    if cell_fx_type == 7:
-        tremolo_params = {}
-        tremolo_params['speed'], tremolo_params['depth'] = splitbyte(cell_fx_param)
-        output_param['tremolo'] = tremolo_params
-    if cell_fx_type == 8: output_param['pan'] = (cell_fx_param-128)/128
-    if cell_fx_type == 9: output_param['audio_mod_inst_offset'] = cell_fx_param*256
-    if cell_fx_type == 10:
-        pos, neg = splitbyte(cell_fx_param)
-        output_param['tracker_vol_slide'] = (neg*-1) + pos
-    if cell_fx_type == 11: output_extra['tracker_jump_to_offset'] = cell_fx_param
-    if cell_fx_type == 12: output_param['vol'] = cell_fx_param/64
-    else: 
-        if output_inst != None:
-            if output_inst < 32:
-                output_param['vol'] = table_samples[output_inst-1][3]/64
-    if cell_fx_type == 13: output_extra['tracker_break_to_row'] = cell_fx_param
-    if cell_fx_type == 15:
-        if cell_fx_param < 32: output_extra['tracker_speed'] = cell_fx_param
-        else: output_extra['tempo'] = cell_fx_param
-    return [output_note, output_inst, output_param, output_extra]
-
-def parse_mod_row(file_stream, firstrow):
-    global table_singlepattern
-    global mod_num_channels
-    table_row = []
-    globaljson = {}
-    for channel in range(mod_num_channels):
-        celldata = parse_mod_cell(file_stream, firstrow)
-        rowdata_global = celldata[3]
-        globaljson = rowdata_global | globaljson
-        table_row.append(celldata)
-    return [globaljson, table_row]
-
-def parse_pattern(file_stream):
-    global table_singlepattern
-    table_singlepattern = []
-    firstrow = 1
-    for row in range(64):
-        table_singlepattern.append(parse_mod_row(file_stream, firstrow))
-        firstrow = 0
-
-def parse_song(file_stream):
-    print("[input-mod] Decoding Pattern:",end=' ')
-    table_patterns = []
-    for pattern in range(mod_num_patterns+1):
-        print(str(pattern),end=' ')
-        parse_pattern(file_stream)
-        table_patterns.append(table_singlepattern)
-    print(' ')
-    return table_patterns
-
-class input_mod(plugin_input.base):
+class input_it(plugin_input.base):
     def __init__(self): pass
     def getshortname(self): return 'it'
     def getname(self): return 'Tracker: Impulse Tracker'
@@ -365,6 +275,7 @@ class input_mod(plugin_input.base):
                             if cell_instrument != None: pattern_row[1][cell_channel][1] = cell_instrument
                                 
                             if cell_commandtype == 1: pattern_row[0]['tracker_speed'] = cell_commandnum
+                            if cell_commandtype == 3: pattern_row[0]['tracker_break_to_row'] = cell_commandnum
                             if cell_commandtype == 24: pattern_row[1][cell_channel][2]['pan'] = ((cell_commandnum/255)-0.5)*2
                             if firstrow == 1: pattern_row[0]['firstrow'] = 1
                             rowcount += 1

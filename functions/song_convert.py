@@ -166,9 +166,19 @@ def m2r(song):
     del cvpj_proj['instrumentsorder']
 
     cvpj_trackdata = {}
-    cvpj_trackordering = []
+    cvpj_trackorder = []
 
-    inst_pl = {}
+    for instrument in cvpjm_instrumentsorder:
+        if instrument in cvpjm_instruments:
+            trackdata = cvpjm_instruments[instrument]
+            cvpj_trackdata[instrument] = trackdata
+            trackdata['type'] = 'instrument'
+            cvpj_trackdata[instrument]['laned'] = 1
+            cvpj_trackdata[instrument]['lanedata'] = {}
+            cvpj_trackdata[instrument]['laneordering'] = []
+            
+            cvpj_trackorder.append(instrument)
+
     for playlistentry in playlist:
         plrow = playlist[playlistentry]
         if 'placements' in plrow:
@@ -176,20 +186,17 @@ def m2r(song):
             for placement in placements:
                 if placement['type'] == 'instruments':
                     splitted_insts = m2r_split_insts(placement)
-                    for inst in splitted_insts:
-                        if inst not in inst_pl:
-                            inst_pl[inst] = []
-                        inst_pl[inst].append(splitted_insts[inst])
-    for instrument in cvpjm_instrumentsorder:
-        if instrument in cvpjm_instruments:
-            trackdata = cvpjm_instruments[instrument]
-            cvpj_trackdata[instrument] = trackdata
-            trackdata['type'] = 'instrument'
-            if instrument in inst_pl:
-                cvpj_trackdata[instrument]['placements'] = inst_pl[instrument]
-            cvpj_trackordering.append(instrument)
+                    for instrument in splitted_insts:
+                        lanedata = cvpj_trackdata[instrument]['lanedata']
+                        if playlistentry not in lanedata:
+                            lanedata[playlistentry] = {}
+                            if 'name' in playlist[playlistentry]:
+                                lanedata[playlistentry]['name'] = playlist[playlistentry]['name']
+                            cvpj_trackdata[instrument]['laneordering'].append(playlistentry)
+                            lanedata[playlistentry]['placements'] = []
+                        cvpj_trackdata[instrument]['lanedata'][playlistentry]['placements'].append(splitted_insts[instrument])
 
     cvpj_proj['trackdata'] = cvpj_trackdata
-    cvpj_proj['trackordering'] = cvpj_trackordering
+    cvpj_proj['trackordering'] = cvpj_trackorder
 
     return json.dumps(cvpj_proj)

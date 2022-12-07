@@ -1,6 +1,16 @@
 # SPDX-FileCopyrightText: 2022 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# [a]
+#  /\
+#   ⎸
+#  \/
+# [r] <--> [m] <--> [mi]
+#  /\                /\
+#   ⎸                 ⎸
+#   ⎸                /
+# [ri]--------------/
+
 import json
 
 def m2mi_checkdup(cvpj_notelistindex, nledata):

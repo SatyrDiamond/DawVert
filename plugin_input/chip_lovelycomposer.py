@@ -63,7 +63,7 @@ lc_instlist[50] = ['Low-Reso Flute'  ,'LowResoTri',1  ,0  ,0  ,True  ,False ,[0.
 
 used_instruments = []
 
-def lc_parse_voice(sl_json, length, partnum):
+def lc_parse_voice(sl_json, length):
     global used_instruments
     notelist = []
     previnst = None
@@ -75,13 +75,13 @@ def lc_parse_voice(sl_json, length, partnum):
             lc_note_p = lc_notedata['n']
             if lc_note_p != None:
                 lc_note = lc_note_p-60
-                notelist.append({'position': position, 'key': lc_note, 'instrument': lc_instlist[lc_inst][1]+'_'+str(partnum), 'duration': 1, 'vol': lc_notedata['x']/15})
-                if lc_instlist[lc_inst][1]+'_'+str(partnum) not in used_instruments:
-                    used_instruments.append(lc_instlist[lc_inst][1]+'_'+str(partnum))
+                notelist.append({'position': position, 'key': lc_note, 'instrument': lc_instlist[lc_inst][1], 'duration': 1, 'vol': lc_notedata['x']/15})
+                if lc_instlist[lc_inst][1] not in used_instruments:
+                    used_instruments.append(lc_instlist[lc_inst][1])
         position += 1
     return notelist
 
-def lc_parse_placements(sl_json, partnum):
+def lc_parse_placements(sl_json):
     global patternpos
     global patternlen
     patternpos = []
@@ -94,7 +94,7 @@ def lc_parse_placements(sl_json, partnum):
         placement = {}
         placement['type'] = 'instruments'
         placement['duration'] = length
-        notelist = lc_parse_voice(lc_notes, length, partnum)
+        notelist = lc_parse_voice(lc_notes, length)
         placement['notelist'] = notelist
         placement['position'] = position
         if notelist != []:
@@ -136,19 +136,19 @@ class input_lc(plugin_input.base):
         cvpj_l_playlist['1'] = {}
         cvpj_l_playlist['1']['name'] = "Part 1"
         cvpj_l_playlist['1']['color'] = [0.83, 0.09, 0.42]
-        cvpj_l_playlist['1']['placements'] = lc_parse_placements(lc_ch_p1, 1)
+        cvpj_l_playlist['1']['placements'] = lc_parse_placements(lc_ch_p1)
         cvpj_l_playlist['2'] = {}
         cvpj_l_playlist['2']['name'] = "Part 2"
         cvpj_l_playlist['2']['color'] = [0.91, 0.76, 0.36]
-        cvpj_l_playlist['2']['placements'] = lc_parse_placements(lc_ch_p2, 2)
+        cvpj_l_playlist['2']['placements'] = lc_parse_placements(lc_ch_p2)
         cvpj_l_playlist['3'] = {}
         cvpj_l_playlist['3']['name'] = "Part 3"
         cvpj_l_playlist['3']['color'] = [0.22, 0.36, 0.60]
-        cvpj_l_playlist['3']['placements'] = lc_parse_placements(lc_ch_p3, 3)
+        cvpj_l_playlist['3']['placements'] = lc_parse_placements(lc_ch_p3)
         cvpj_l_playlist['4'] = {}
         cvpj_l_playlist['4']['name'] = "Part 4"
         cvpj_l_playlist['4']['color'] = [0.44, 0.78, 0.66]
-        cvpj_l_playlist['4']['placements'] = lc_parse_placements(lc_ch_p4, 4)
+        cvpj_l_playlist['4']['placements'] = lc_parse_placements(lc_ch_p4)
         cvpj_l_playlist['5'] = {}
         cvpj_l_playlist['5']['name'] = "Chord"
         cvpj_l_playlist['5']['color'] = [0.64, 0.64, 0.64]

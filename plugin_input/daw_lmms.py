@@ -53,6 +53,24 @@ plugincolors['zynaddsubfx'] = [0.75, 0.75, 0.75]
 
 # ------- functions -------
 
+def getvstparams(plugindata, xmldata):
+    plugindata['plugin'] = {}
+    plugindata['plugin']['path'] = xmldata.get('plugin')
+    vst_data = xmldata.get('chunk')
+    vst_numparams = xmldata.get('numparams')
+    if vst_data != None:
+        plugindata['datatype'] = 'raw'
+        plugindata['data'] = vst_data
+    elif vst_numparams != None:
+        plugindata['datatype'] = 'param'
+        plugindata['numparams'] = int(vst_numparams)
+        plugindata['params'] = {}
+        for param in range(int(vst_numparams)):
+            paramdata = xmldata.get('param'+str(param)).split(':')
+            plugindata['params'][str(param)] = {}
+            plugindata['params'][str(param)]['name'] = paramdata[1]
+            plugindata['params'][str(param)]['value'] = float(paramdata[2])
+
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
 def lmms_getvalue(xmltag, xmlname, autoname):
     if xmltag.get(xmlname) != None: return float(xmltag.get(xmlname))
@@ -68,26 +86,26 @@ def lmms_getvalue(xmltag, xmlname, autoname):
 # ------- Instruments and Plugins -------
 
 def exp2sec(value): return math.sqrt(value/5)
-def asdflfo_get(trkX_insttr, cvpj_l_plugin):
+def asdflfo_get(trkX_insttr, cvpj_l_plugindata):
     elcX = trkX_insttr.findall('eldata')
     if len(elcX) != 0:
-        cvpj_l_plugin_asdrlfo = {}
+        cvpj_l_plugindata_asdrlfo = {}
         eldataX = elcX[0]
         if eldataX.findall('elvol'):
             realvalue = eldataX.findall('elvol')[0]
-            asdflfo(cvpj_l_plugin_asdrlfo, realvalue, 'volume')
+            asdflfo(cvpj_l_plugindata_asdrlfo, realvalue, 'volume')
         if eldataX.findall('elcut'):
             realvalue = eldataX.findall('elcut')[0]
-            asdflfo(cvpj_l_plugin_asdrlfo, realvalue, 'cutoff')
+            asdflfo(cvpj_l_plugindata_asdrlfo, realvalue, 'cutoff')
         if eldataX.findall('elres'):
             realvalue = eldataX.findall('elres')[0]
-            asdflfo(cvpj_l_plugin_asdrlfo, realvalue, 'reso')
-        cvpj_l_plugin['asdflfo'] = cvpj_l_plugin_asdrlfo
-        cvpj_l_plugin['filter'] = {}
-        cvpj_l_plugin['filter']['cutoff'] = float(eldataX.get('fcut'))
-        cvpj_l_plugin['filter']['wet'] = float(eldataX.get('fwet'))
-        cvpj_l_plugin['filter']['type'] = filtertype[int(eldataX.get('ftype'))]
-        cvpj_l_plugin['filter']['reso'] = float(eldataX.get('fres'))
+            asdflfo(cvpj_l_plugindata_asdrlfo, realvalue, 'reso')
+        cvpj_l_plugindata['asdflfo'] = cvpj_l_plugindata_asdrlfo
+        cvpj_l_plugindata['filter'] = {}
+        cvpj_l_plugindata['filter']['cutoff'] = float(eldataX.get('fcut'))
+        cvpj_l_plugindata['filter']['wet'] = float(eldataX.get('fwet'))
+        cvpj_l_plugindata['filter']['type'] = filtertype[int(eldataX.get('ftype'))]
+        cvpj_l_plugindata['filter']['reso'] = float(eldataX.get('fres'))
 def asdflfo(cvpj_l_track, xmlO, asdrtype):
     cvpj_l_track[asdrtype] = {}
     cvpj_l_track[asdrtype]['envelope'] = {}
@@ -106,7 +124,7 @@ def asdflfo(cvpj_l_track, xmlO, asdrtype):
     if speedx100 == 0: cvpj_l_track[asdrtype]['lfo']['speed'] = float(xmlO.get('lspd')) * 20000
     else: cvpj_l_track[asdrtype]['lfo']['speed'] = float(xmlO.get('lspd')) * 2000000
     cvpj_l_track[asdrtype]['lfo']['amount'] = float(xmlO.get('lamt'))
-def lmms_decodeplugin(trkX_insttr, cvpj_l_plugin, cvpj_l_inst, cvpj_l_track):
+def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track):
     cvpj_l_inst['plugin'] = "none"
     trkX_instrument = trkX_insttr.findall('instrument')[0]
     pluginname = trkX_instrument.get('name')
@@ -117,123 +135,107 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugin, cvpj_l_inst, cvpj_l_track):
         cvpj_l_inst['plugin'] = "soundfont2"
 
         cvpj_l_inst['middlenote'] -= 12
-        cvpj_l_plugin['bank'] = int(xml_plugin.get('bank'))
-        cvpj_l_plugin['patch'] = int(xml_plugin.get('patch'))
-        cvpj_l_plugin['file'] = xml_plugin.get('src')
-        cvpj_l_plugin['gain'] = float(xml_plugin.get('gain'))
-        cvpj_l_plugin['reverb'] = {}
-        cvpj_l_plugin['chorus'] = {}
-        cvpj_l_plugin['chorus']['depth'] = float(xml_plugin.get('chorusDepth'))
-        cvpj_l_plugin['chorus']['level'] = float(xml_plugin.get('chorusLevel'))
-        cvpj_l_plugin['chorus']['lines'] = float(xml_plugin.get('chorusNum'))
-        cvpj_l_plugin['chorus']['enabled'] = float(xml_plugin.get('chorusOn'))
-        cvpj_l_plugin['chorus']['speed'] = float(xml_plugin.get('chorusSpeed'))
-        cvpj_l_plugin['reverb']['damping'] = float(xml_plugin.get('reverbDamping'))
-        cvpj_l_plugin['reverb']['level'] = float(xml_plugin.get('reverbLevel'))
-        cvpj_l_plugin['reverb']['enabled'] = float(xml_plugin.get('reverbOn'))
-        cvpj_l_plugin['reverb']['roomsize'] = float(xml_plugin.get('reverbRoomSize'))
-        cvpj_l_plugin['reverb']['width'] = float(xml_plugin.get('reverbWidth'))
+        cvpj_l_plugindata['bank'] = int(xml_plugin.get('bank'))
+        cvpj_l_plugindata['patch'] = int(xml_plugin.get('patch'))
+        cvpj_l_plugindata['file'] = xml_plugin.get('src')
+        cvpj_l_plugindata['gain'] = float(xml_plugin.get('gain'))
+        cvpj_l_plugindata['reverb'] = {}
+        cvpj_l_plugindata['chorus'] = {}
+        cvpj_l_plugindata['chorus']['depth'] = float(xml_plugin.get('chorusDepth'))
+        cvpj_l_plugindata['chorus']['level'] = float(xml_plugin.get('chorusLevel'))
+        cvpj_l_plugindata['chorus']['lines'] = float(xml_plugin.get('chorusNum'))
+        cvpj_l_plugindata['chorus']['enabled'] = float(xml_plugin.get('chorusOn'))
+        cvpj_l_plugindata['chorus']['speed'] = float(xml_plugin.get('chorusSpeed'))
+        cvpj_l_plugindata['reverb']['damping'] = float(xml_plugin.get('reverbDamping'))
+        cvpj_l_plugindata['reverb']['level'] = float(xml_plugin.get('reverbLevel'))
+        cvpj_l_plugindata['reverb']['enabled'] = float(xml_plugin.get('reverbOn'))
+        cvpj_l_plugindata['reverb']['roomsize'] = float(xml_plugin.get('reverbRoomSize'))
+        cvpj_l_plugindata['reverb']['width'] = float(xml_plugin.get('reverbWidth'))
     elif pluginname == "audiofileprocessor":
         cvpj_l_inst['middlenote'] -= 3
         cvpj_l_inst['plugin'] = "sampler"
-        cvpj_l_plugin['reverse'] = int(xml_plugin.get('reversed'))
-        cvpj_l_plugin['amp'] = hundredto1(float(xml_plugin.get('amp')))
-        cvpj_l_plugin['continueacrossnotes'] = int(xml_plugin.get('stutter'))
-        cvpj_l_plugin['file'] = xml_plugin.get('src')
-        cvpj_l_plugin['loop'] = {}
-        cvpj_l_plugin['loop']['custompoints'] = {}
-        cvpj_l_plugin['loop']['custompoints']['end'] = float(xml_plugin.get('eframe'))
-        cvpj_l_plugin['loop']['custompoints']['loop'] = float(xml_plugin.get('lframe'))
-        cvpj_l_plugin['loop']['custompoints']['start'] = float(xml_plugin.get('sframe'))
+        cvpj_l_plugindata['reverse'] = int(xml_plugin.get('reversed'))
+        cvpj_l_plugindata['amp'] = hundredto1(float(xml_plugin.get('amp')))
+        cvpj_l_plugindata['continueacrossnotes'] = int(xml_plugin.get('stutter'))
+        cvpj_l_plugindata['file'] = xml_plugin.get('src')
+        cvpj_l_plugindata['loop'] = {}
+        cvpj_l_plugindata['loop']['custompoints'] = {}
+        cvpj_l_plugindata['loop']['custompoints']['end'] = float(xml_plugin.get('eframe'))
+        cvpj_l_plugindata['loop']['custompoints']['loop'] = float(xml_plugin.get('lframe'))
+        cvpj_l_plugindata['loop']['custompoints']['start'] = float(xml_plugin.get('sframe'))
         looped = int(xml_plugin.get('looped'))
         if looped == 0:
-            cvpj_l_plugin['loop']['enabled'] = 0
+            cvpj_l_plugindata['loop']['enabled'] = 0
         if looped == 1:
-            cvpj_l_plugin['loop']['enabled'] = 1
-            cvpj_l_plugin['loop']['mode'] = "normal"
+            cvpj_l_plugindata['loop']['enabled'] = 1
+            cvpj_l_plugindata['loop']['mode'] = "normal"
         if looped == 2:
-            cvpj_l_plugin['loop']['enabled'] = 1
-            cvpj_l_plugin['loop']['mode'] = "pingpong"
+            cvpj_l_plugindata['loop']['enabled'] = 1
+            cvpj_l_plugindata['loop']['mode'] = "pingpong"
         interpolation = int(xml_plugin.get('interp'))
-        if interpolation == 0: cvpj_l_plugin['interpolation'] = "none"
-        if interpolation == 1: cvpj_l_plugin['interpolation'] = "linear"
-        if interpolation == 2: cvpj_l_plugin['interpolation'] = "sinc"
-        asdflfo_get(trkX_insttr, cvpj_l_plugin)
+        if interpolation == 0: cvpj_l_plugindata['interpolation'] = "none"
+        if interpolation == 1: cvpj_l_plugindata['interpolation'] = "linear"
+        if interpolation == 2: cvpj_l_plugindata['interpolation'] = "sinc"
+        asdflfo_get(trkX_insttr, cvpj_l_plugindata)
     elif pluginname == "OPL2":
         cvpj_l_inst['plugin'] = "opl2"
-        cvpj_l_plugin['op1'] = {}
-        cvpj_l_plugin['op1']['envelope'] = {}
-        cvpj_l_plugin['op1']['envelope']['attack'] = int(xml_plugin.get('op1_a'))
-        cvpj_l_plugin['op1']['envelope']['decay'] = int(xml_plugin.get('op1_d'))
-        cvpj_l_plugin['op1']['envelope']['release'] = int(xml_plugin.get('op1_r'))
-        cvpj_l_plugin['op1']['envelope']['sustain'] = int(xml_plugin.get('op1_s'))
-        cvpj_l_plugin['op1']['freqmul'] = int(xml_plugin.get('op1_mul'))
-        cvpj_l_plugin['op1']['ksr'] = int(xml_plugin.get('op1_ksr'))
-        cvpj_l_plugin['op1']['level'] = int(xml_plugin.get('op1_lvl'))
-        cvpj_l_plugin['op1']['perc_env'] = int(xml_plugin.get('op1_perc'))
-        cvpj_l_plugin['op1']['scale'] = int(xml_plugin.get('op1_scale'))
-        cvpj_l_plugin['op1']['tremolo'] = int(xml_plugin.get('op1_trem'))
-        cvpj_l_plugin['op1']['vibrato'] = int(xml_plugin.get('op1_vib'))
-        cvpj_l_plugin['op1']['waveform'] = int(xml_plugin.get('op1_waveform'))
+        cvpj_l_plugindata['op1'] = {}
+        cvpj_l_plugindata['op1']['envelope'] = {}
+        cvpj_l_plugindata['op1']['envelope']['attack'] = int(xml_plugin.get('op1_a'))
+        cvpj_l_plugindata['op1']['envelope']['decay'] = int(xml_plugin.get('op1_d'))
+        cvpj_l_plugindata['op1']['envelope']['release'] = int(xml_plugin.get('op1_r'))
+        cvpj_l_plugindata['op1']['envelope']['sustain'] = int(xml_plugin.get('op1_s'))
+        cvpj_l_plugindata['op1']['freqmul'] = int(xml_plugin.get('op1_mul'))
+        cvpj_l_plugindata['op1']['ksr'] = int(xml_plugin.get('op1_ksr'))
+        cvpj_l_plugindata['op1']['level'] = int(xml_plugin.get('op1_lvl'))
+        cvpj_l_plugindata['op1']['perc_env'] = int(xml_plugin.get('op1_perc'))
+        cvpj_l_plugindata['op1']['scale'] = int(xml_plugin.get('op1_scale'))
+        cvpj_l_plugindata['op1']['tremolo'] = int(xml_plugin.get('op1_trem'))
+        cvpj_l_plugindata['op1']['vibrato'] = int(xml_plugin.get('op1_vib'))
+        cvpj_l_plugindata['op1']['waveform'] = int(xml_plugin.get('op1_waveform'))
 
-        cvpj_l_plugin['op2'] = {}
-        cvpj_l_plugin['op2']['envelope'] = {}
-        cvpj_l_plugin['op2']['envelope']['attack'] = int(xml_plugin.get('op2_a'))
-        cvpj_l_plugin['op2']['envelope']['decay'] = int(xml_plugin.get('op2_d'))
-        cvpj_l_plugin['op2']['envelope']['release'] = int(xml_plugin.get('op2_r'))
-        cvpj_l_plugin['op2']['envelope']['sustain'] = int(xml_plugin.get('op2_s'))
-        cvpj_l_plugin['op2']['freqmul'] = int(xml_plugin.get('op2_mul'))
-        cvpj_l_plugin['op2']['ksr'] = int(xml_plugin.get('op2_ksr'))
-        cvpj_l_plugin['op2']['level'] = int(xml_plugin.get('op2_lvl'))
-        cvpj_l_plugin['op2']['perc_env'] = int(xml_plugin.get('op2_perc'))
-        cvpj_l_plugin['op2']['scale'] = int(xml_plugin.get('op2_scale'))
-        cvpj_l_plugin['op2']['tremolo'] = int(xml_plugin.get('op2_trem'))
-        cvpj_l_plugin['op2']['vibrato'] = int(xml_plugin.get('op2_vib'))
-        cvpj_l_plugin['op2']['waveform'] = int(xml_plugin.get('op2_waveform'))
+        cvpj_l_plugindata['op2'] = {}
+        cvpj_l_plugindata['op2']['envelope'] = {}
+        cvpj_l_plugindata['op2']['envelope']['attack'] = int(xml_plugin.get('op2_a'))
+        cvpj_l_plugindata['op2']['envelope']['decay'] = int(xml_plugin.get('op2_d'))
+        cvpj_l_plugindata['op2']['envelope']['release'] = int(xml_plugin.get('op2_r'))
+        cvpj_l_plugindata['op2']['envelope']['sustain'] = int(xml_plugin.get('op2_s'))
+        cvpj_l_plugindata['op2']['freqmul'] = int(xml_plugin.get('op2_mul'))
+        cvpj_l_plugindata['op2']['ksr'] = int(xml_plugin.get('op2_ksr'))
+        cvpj_l_plugindata['op2']['level'] = int(xml_plugin.get('op2_lvl'))
+        cvpj_l_plugindata['op2']['perc_env'] = int(xml_plugin.get('op2_perc'))
+        cvpj_l_plugindata['op2']['scale'] = int(xml_plugin.get('op2_scale'))
+        cvpj_l_plugindata['op2']['tremolo'] = int(xml_plugin.get('op2_trem'))
+        cvpj_l_plugindata['op2']['vibrato'] = int(xml_plugin.get('op2_vib'))
+        cvpj_l_plugindata['op2']['waveform'] = int(xml_plugin.get('op2_waveform'))
 
-        cvpj_l_plugin['feedback'] = int(xml_plugin.get('feedback'))
-        cvpj_l_plugin['fm'] = int(xml_plugin.get('fm'))
-        cvpj_l_plugin['tremolo_depth'] = int(xml_plugin.get('trem_depth'))
-        cvpj_l_plugin['vibrato_depth'] = int(xml_plugin.get('vib_depth'))
+        cvpj_l_plugindata['feedback'] = int(xml_plugin.get('feedback'))
+        cvpj_l_plugindata['fm'] = int(xml_plugin.get('fm'))
+        cvpj_l_plugindata['tremolo_depth'] = int(xml_plugin.get('trem_depth'))
+        cvpj_l_plugindata['vibrato_depth'] = int(xml_plugin.get('vib_depth'))
     elif pluginname == "zynaddsubfx":
         cvpj_l_inst['plugin'] = "zynaddsubfx-lmms"
-        cvpj_l_plugin['bandwidth'] = xml_plugin.get('bandwidth')
-        cvpj_l_plugin['filterfreq'] = xml_plugin.get('filterfreq')
-        cvpj_l_plugin['filterq'] = xml_plugin.get('filterq')
-        cvpj_l_plugin['fmgain'] = xml_plugin.get('fmgain')
-        cvpj_l_plugin['forwardmidicc'] = xml_plugin.get('forwardmidicc')
-        cvpj_l_plugin['modifiedcontrollers'] = xml_plugin.get('modifiedcontrollers')
-        cvpj_l_plugin['portamento'] = xml_plugin.get('portamento')
-        cvpj_l_plugin['resbandwidth'] = xml_plugin.get('resbandwidth')
-        cvpj_l_plugin['rescenterfreq'] = xml_plugin.get('rescenterfreq')
+        cvpj_l_plugindata['bandwidth'] = xml_plugin.get('bandwidth')
+        cvpj_l_plugindata['filterfreq'] = xml_plugin.get('filterfreq')
+        cvpj_l_plugindata['filterq'] = xml_plugin.get('filterq')
+        cvpj_l_plugindata['fmgain'] = xml_plugin.get('fmgain')
+        cvpj_l_plugindata['forwardmidicc'] = xml_plugin.get('forwardmidicc')
+        cvpj_l_plugindata['modifiedcontrollers'] = xml_plugin.get('modifiedcontrollers')
+        cvpj_l_plugindata['portamento'] = xml_plugin.get('portamento')
+        cvpj_l_plugindata['resbandwidth'] = xml_plugin.get('resbandwidth')
+        cvpj_l_plugindata['rescenterfreq'] = xml_plugin.get('rescenterfreq')
         zdata = xml_plugin.findall('ZynAddSubFX-data')[0]
-        cvpj_l_plugin['data'] = base64.b64encode(ET.tostring(zdata, encoding='utf-8')).decode('ascii')
+        cvpj_l_plugindata['data'] = base64.b64encode(ET.tostring(zdata, encoding='utf-8')).decode('ascii')
     elif pluginname == "vestige":
         cvpj_l_inst['plugin'] = "vst2"
-        cvpj_l_plugin['plugin'] = {}
-        cvpj_l_plugin['plugin']['path'] = xml_plugin.get('plugin')
-        vst_data = xml_plugin.get('chunk')
-        vst_numparams = xml_plugin.get('numparams')
-        if vst_data != None:
-            cvpj_l_plugin['datatype'] = 'raw'
-            cvpj_l_plugin['data'] = vst_data
-        elif vst_numparams != None:
-            cvpj_l_plugin['datatype'] = 'param'
-            cvpj_l_plugin['numparams'] = int(vst_numparams)
-            cvpj_l_plugin['params'] = {}
-            for param in range(int(vst_numparams)):
-                paramdata = xml_plugin.get('param'+str(param)).split(':')
-                cvpj_l_plugin['params'][str(param)] = {}
-                cvpj_l_plugin['params'][str(param)]['name'] = paramdata[1]
-                cvpj_l_plugin['params'][str(param)]['value'] = float(paramdata[2])
-
+        getvstparams(cvpj_l_plugindata, xml_plugin)
     else:
         cvpj_l_inst['plugin'] = "native-lmms"
-        cvpj_l_plugin['name'] = pluginname
-        cvpj_l_plugin['data'] = {}
-        for name, value in xml_plugin.attrib.items(): cvpj_l_plugin['data'][name] = value
-        for name in xml_plugin: cvpj_l_plugin['data'][name.tag] = name.get('value')
-        asdflfo_get(trkX_insttr, cvpj_l_plugin)
+        cvpj_l_plugindata['name'] = pluginname
+        cvpj_l_plugindata['data'] = {}
+        for name, value in xml_plugin.attrib.items(): cvpj_l_plugindata['data'][name] = value
+        for name in xml_plugin: cvpj_l_plugindata['data'][name.tag] = name.get('value')
+        asdflfo_get(trkX_insttr, cvpj_l_plugindata)
 
 # ------- Notelist -------
 
@@ -418,12 +420,12 @@ def lmms_decode_effectslot(fxslotX):
 
 
         fxslotJ['plugin'] = 'native-lmms'
-        fxcvpj_l_plugin = {}
-        fxcvpj_l_plugin['name'] = fxpluginname
-        fxcvpj_l_plugin['data'] = {}
-        for name, value in fxxml_plugin.attrib.items(): fxcvpj_l_plugin['data'][name] = value
-        for name in fxxml_plugin: fxcvpj_l_plugin['data'][name.tag] = name.get('value')
-        fxslotJ['plugindata'] = fxcvpj_l_plugin
+        fxcvpj_l_plugindata = {}
+        fxcvpj_l_plugindata['name'] = fxpluginname
+        fxcvpj_l_plugindata['data'] = {}
+        for name, value in fxxml_plugin.attrib.items(): fxcvpj_l_plugindata['data'][name] = value
+        for name in fxxml_plugin: fxcvpj_l_plugindata['data'][name.tag] = name.get('value')
+        fxslotJ['plugindata'] = fxcvpj_l_plugindata
         return fxslotJ
     else:
         return None

@@ -1,4 +1,5 @@
 from functions import data_bytes
+from functions import placements
 import plugin_input
 import json
 
@@ -514,7 +515,9 @@ class input_ceol(plugin_input.base):
                     cvpj_l_playlist[str(plnum+1)]['placements'].append(cvpj_l_placement)
 
 
-
+        timesig = placements.get_timesig(ceol_basic_patternlength, ceol_basic_barlength)
+        cvpj_l['timesig_numerator'] = timesig[0]
+        cvpj_l['timesig_denominator'] = timesig[1]
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

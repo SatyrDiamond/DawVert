@@ -28,6 +28,7 @@ fxlist['spectrumanalyzer'] = 'spectrumanaylzercontrols'
 fxlist['stereoenhancer'] = 'stereoenhancercontrols'
 fxlist['stereomatrix'] = 'stereomatrixcontrols'
 fxlist['waveshaper'] = 'waveshapercontrols'
+fxlist['vsteffect'] = 'vsteffectcontrols'
 
 plugincolors = {}
 plugincolors['audiofileprocessor'] = [0.28, 0.28, 0.28]
@@ -69,7 +70,7 @@ def getvstparams(plugindata, xmldata):
             paramdata = xmldata.get('param'+str(param)).split(':')
             plugindata['params'][str(param)] = {}
             plugindata['params'][str(param)]['name'] = paramdata[1]
-            plugindata['params'][str(param)]['value'] = float(paramdata[2])
+            plugindata['params'][str(param)]['value'] = float(paramdata[-1])
 
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
 def lmms_getvalue(xmltag, xmlname, autoname):
@@ -406,21 +407,26 @@ def lmms_decode_auto_track(trkX):
 def lmms_decode_effectslot(fxslotX):
     fxslotJ = {}
     fxpluginname = fxslotX.get('name')
-    if fxpluginname != 'ladspaeffect':
-        fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
-        fxslotJ['enabled'] = int(fxslotX.get('on'))
-        wet = float(fxslotX.get('wet'))
+    fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
+    fxcvpj_l_plugindata = {}
+    fxslotJ['enabled'] = int(fxslotX.get('on'))
+    wet = float(fxslotX.get('wet'))
+    if wet < 0:
+        fxslotJ['add_dry_minus_wet'] = 1
+        fxslotJ['wet'] = -wet
+    else:
+        fxslotJ['add_dry_minus_wet'] = 0
+        fxslotJ['wet'] = wet
+
+    if fxpluginname == 'vsteffect':
+        print('[vst2',end='] ')
+        fxslotJ['plugin'] = "vst2"
+        getvstparams(fxcvpj_l_plugindata, fxxml_plugin)
+        fxslotJ['plugindata'] = fxcvpj_l_plugindata
+        return fxslotJ
+    elif fxpluginname != 'ladspaeffect':
         print('['+fxpluginname,end='] ')
-        if wet < 0:
-            fxslotJ['add_dry_minus_wet'] = 1
-            fxslotJ['wet'] = -wet
-        else:
-            fxslotJ['add_dry_minus_wet'] = 0
-            fxslotJ['wet'] = wet
-
-
         fxslotJ['plugin'] = 'native-lmms'
-        fxcvpj_l_plugindata = {}
         fxcvpj_l_plugindata['name'] = fxpluginname
         fxcvpj_l_plugindata['data'] = {}
         for name, value in fxxml_plugin.attrib.items(): fxcvpj_l_plugindata['data'][name] = value

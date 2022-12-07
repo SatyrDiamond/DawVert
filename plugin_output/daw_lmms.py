@@ -35,6 +35,22 @@ trackscount_forprinting = 0
 
 # ------- functions -------
 
+def setvstparams(plugindata, xmldata):
+    if 'plugin' in plugindata:
+        if 'path' in plugindata['plugin']:
+            xmldata.set('plugin', str(plugindata['plugin']['path']))
+    if plugindata['datatype'] == 'raw':
+        xmldata.set('chunk', str(plugindata['data']))
+    elif plugindata['datatype'] == 'param':
+        numparams = plugindata['numparams']
+        params = plugindata['params']
+        xmldata.set('numparams', str(numparams))
+        for param in range(numparams):
+            paramdata = params[str(param)]
+            pname = paramdata['name']
+            pval = paramdata['value']
+            xmldata.set('param'+str(param), str(param)+':'+pname+':'+str(pval))
+
 def rgb_to_hex(rgb): return '%02x%02x%02x' % rgb
 def onetime2lmmstime(input): return int(round(float(input * 12)))
 def oneto100(input): return round(float(input) * 100)
@@ -172,22 +188,10 @@ def lmms_encode_plugin(xmltag, trkJ):
         xml_opl2.set('vib_depth', str(plugJ['vibrato_depth']))
     elif pluginname == 'vst2':
         print('[output-lmms]       Plugin: vst2 > vestige')
+        plugJ = instJ['plugindata']
         xml_instrumentpreplugin.set('name', "vestige")
         xml_vst = ET.SubElement(xml_instrumentpreplugin, "vestige")
-        if 'plugin' in plugJ:
-            if 'path' in plugJ['plugin']:
-                xml_vst.set('plugin', str(plugJ['plugin']['path']))
-        if plugJ['datatype'] == 'raw':
-            xml_vst.set('chunk', str(plugJ['data']))
-        elif plugJ['datatype'] == 'param':
-            numparams = plugJ['numparams']
-            params = plugJ['params']
-            xml_vst.set('numparams', str(numparams))
-            for param in range(numparams):
-                paramdata = params[str(param)]
-                pname = paramdata['name']
-                pval = paramdata['value']
-                xml_vst.set('param'+str(param), str(param)+':'+pname+':'+str(pval))
+        setvstparams(plugJ, xml_vst)
     elif pluginname == 'zynaddsubfx-lmms':
         print('[output-lmms]       Plugin: zynaddsubfx > zynaddsubfx')
         xml_instrumentpreplugin.set('name', "zynaddsubfx")
@@ -363,15 +367,25 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
     fxplugname = json_fxslot['plugin']
     fxplugJ = json_fxslot['plugindata']
     if fxplugname == 'native-lmms':
+        fxslotX.set('name', str(json_fxslot['plugindata']['name']))
         lmmsplugdata = fxplugJ['data']
         lmmsplugname = fxplugJ['name']
         print('['+lmmsplugname,end='] ')
         xml_name = fxlist[lmmsplugname]
         xml_lmmsnat = ET.SubElement(fxslotX, xml_name)
         for lplugname in lmmsplugdata: xml_lmmsnat.set(lplugname, str(lmmsplugdata[lplugname]))
+    if fxplugname == 'vst2':
+        fxslotX.set('name', 'vsteffect')
+        print('[vst2',end='] ')
+        xml_vst2 = ET.SubElement(fxslotX, 'vsteffectcontrols')
+        setvstparams(fxplugJ, xml_vst2)
+        xml_vst2key = ET.SubElement(fxslotX, 'key')
+        xml_vst2keyatt = ET.SubElement(xml_vst2key, 'attribute')
+        xml_vst2keyatt.set('value', xml_vst2.get('plugin'))
+        xml_vst2keyatt.set('name', 'file')
+
 def lmms_encode_effectslot(fxcX, json_fxslot):
     fxslotX = ET.SubElement(fxcX, "effect")
-    fxslotX.set('name', str(json_fxslot['plugindata']['name']))
     if 'wet' in json_fxslot:
         wetvalue = json_fxslot['wet']
         if 'add_dry_minus_wet' in json_fxslot:
@@ -382,6 +396,7 @@ def lmms_encode_effectslot(fxcX, json_fxslot):
         fxslotX.set('wet', str(1))
     if 'enabled' in json_fxslot: fxslotX.set('on', str(json_fxslot['enabled']))
     else: fxslotX.set('on', str('1'))
+
     lmms_encode_effectplugin(fxslotX, json_fxslot)
     return fxslotX
 def lmms_encode_fxchain(xmltag, json_fxchannel):
@@ -392,7 +407,7 @@ def lmms_encode_fxchain(xmltag, json_fxchannel):
     else: fxcX.set('enabled', str('1'))
     fxcX.set('numofeffects', str(len(json_fxchannel['fxchain'])))
     for json_fxslot in json_fxchain:
-        if json_fxslot['plugin'] == 'native-lmms':
+        if json_fxslot['plugin'] == 'native-lmms' or 'vst2':
             fxslotX = lmms_encode_effectslot(fxcX, json_fxslot)
     print('')
 def lmms_encode_fxmixer(xmltag, json_fxrack):

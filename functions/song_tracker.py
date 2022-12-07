@@ -75,3 +75,19 @@ def song2playlist(patterntable_all, number_of_channels, order_list, startinststr
         projL_playlist[str(current_channelnum+1)]['name'] = 'Channel ' + str(current_channelnum+1)
         projL_playlist[str(current_channelnum+1)]['placements'] = placements
     return projL_playlist
+
+def get_len_table(patterntable_all, orders):
+    lentable = []
+    for pattern_num in orders:
+        patterntable_single = patterntable_all[pattern_num]
+        outlen = 0
+        parserow = 1
+        for patternrow in patterntable_single:
+            patglobalparam = patternrow[0]
+            if parserow == 1:
+                outlen += 1
+            if 'tracker_break_to_row' in patglobalparam:
+                if patglobalparam['tracker_break_to_row'] == 0:
+                    parserow = 0
+        lentable.append(outlen)
+    return lentable

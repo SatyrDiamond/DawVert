@@ -9,6 +9,7 @@ import numpy as np
 from functions import song_tracker
 from functions import audio_wav
 from functions import folder_samples
+from functions import placements
 
 try: import xmodits
 except: xmodits_exists = False

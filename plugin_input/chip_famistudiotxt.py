@@ -263,14 +263,12 @@ class input_famistudio(plugin_input.base):
         for number in range(SongLength):
             if str(number) not in FST_currentsong['PatternCustomSettings']: PatternLengthList.append(PatternLength)
             else: PatternLengthList.append(int(FST_currentsong['PatternCustomSettings'][str(number)]['Length']))
-        print(PatternLengthList)
 
         PointsPos = []
         PointsAdd = 0
         for number in range(SongLength):
             PointsPos.append(PointsAdd)
             PointsAdd += PatternLengthList[number]
-        print(PointsPos)
 
         for Channel in FST_Channels:
             WaveType = None

@@ -27,20 +27,24 @@ e.g:
 
 [Magical 8bit Plug 2](https://github.com/yokemura/Magical8bitPlug2)
 
-## Supported DAWs
+## Supported Inputs
 
-| PluginType | DataType | Short Name | Name | Info | 
-| --- | --- | --- | :--- | :--- |
-| Input | M-I | ```flp``` | FL Studio |  | 
-| Input | R | ```lmms``` | LMMS |  | 
-| Input | M | ```mod``` | ProTracker | Tracker | 
-| Input | M | ```s3m``` | Scream Tracker 3 | Tracker | 
-| Input | M | ```it``` | Impulse Tracker | Tracker | 
-| Input | M-I | ```fs_txt``` | FamiStudio Text | Chiptune/Retro | 
-| Input | M-I | ```ceol``` | Bosca Ceoil | Chiptune/Retro | 
-| Input | M | ```lovelycomposer``` | Lovely Composer | Chiptune/Retro | 
-| Input | R | ```piyopiyo``` | PiyoPiyo | Chiptune/Retro | 
-| Input | R | ```flipper``` | Flipper Music Format | | 
-| output | M-I | ```flp``` | FL Studio |  | 
-| output | R | ```lmms``` | LMMS | | 
+| DataType | Short Name | Name | Info | 
+| --- | --- | :--- | :--- |
+| M-I | ```flp``` | FL Studio |  | 
+| R | ```lmms``` | LMMS |  | 
+| M | ```mod``` | ProTracker | Tracker | 
+| M | ```s3m``` | Scream Tracker 3 | Tracker | 
+| M | ```it``` | Impulse Tracker | Tracker | 
+| M-I | ```fs_txt``` | FamiStudio Text | Chiptune/Retro | 
+| M-I | ```ceol``` | Bosca Ceoil | Chiptune/Retro | 
+| M | ```lovelycomposer``` | Lovely Composer | Chiptune/Retro | 
+| R | ```piyopiyo``` | PiyoPiyo | Chiptune/Retro | 
+| R | ```flipper``` | Flipper Music Format | | 
 
+## Supported Outputs
+
+| DataType | Short Name | Name | Info | 
+| --- | --- | :--- | :--- |
+| M-I | ```flp``` | FL Studio |  | 
+| R | ```lmms``` | LMMS | | 

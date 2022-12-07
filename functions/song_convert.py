@@ -187,16 +187,17 @@ def m2r(song):
                 if placement['type'] == 'instruments':
                     splitted_insts = m2r_split_insts(placement)
                     for instrument in splitted_insts:
-                        lanedata = cvpj_trackdata[instrument]['lanedata']
-                        if playlistentry not in lanedata:
-                            lanedata[playlistentry] = {}
-                            if 'name' in playlist[playlistentry]:
-                                lanedata[playlistentry]['name'] = playlist[playlistentry]['name']
-                            if 'color' in playlist[playlistentry]:
-                                lanedata[playlistentry]['color'] = playlist[playlistentry]['color']
-                            cvpj_trackdata[instrument]['laneordering'].append(playlistentry)
-                            lanedata[playlistentry]['placements'] = []
-                        cvpj_trackdata[instrument]['lanedata'][playlistentry]['placements'].append(splitted_insts[instrument])
+                        if instrument in cvpj_trackdata:
+                            lanedata = cvpj_trackdata[instrument]['lanedata']
+                            if playlistentry not in lanedata:
+                                lanedata[playlistentry] = {}
+                                if 'name' in playlist[playlistentry]:
+                                    lanedata[playlistentry]['name'] = playlist[playlistentry]['name']
+                                if 'color' in playlist[playlistentry]:
+                                    lanedata[playlistentry]['color'] = playlist[playlistentry]['color']
+                                cvpj_trackdata[instrument]['laneordering'].append(playlistentry)
+                                lanedata[playlistentry]['placements'] = []
+                            cvpj_trackdata[instrument]['lanedata'][playlistentry]['placements'].append(splitted_insts[instrument])
 
     cvpj_proj['trackdata'] = cvpj_trackdata
     cvpj_proj['trackordering'] = cvpj_trackorder

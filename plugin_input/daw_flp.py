@@ -181,4 +181,10 @@ class input_flp(plugin_input.base):
         rootJ['fxrack'] = fxrackJ
         rootJ['timemarkers'] = timemarkersJ
 
+        rootJ['title'] = FL_Main['Title']
+        rootJ['author'] = FL_Main['Author']
+        rootJ['message'] = {}
+        rootJ['message']['type'] = 'text'
+        rootJ['message']['text'] = FL_Main['Comment']
+
         return json.dumps(rootJ, indent=2)

@@ -241,6 +241,8 @@ class input_mod(plugin_input.base):
         if 'tempo' in veryfirstrow: cvpj_bpm = veryfirstrow['tempo']
         print("[input-mod] Tempo: " + str(cvpj_bpm))
 
+        cvpj_l['title'] = mod_name
+
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist

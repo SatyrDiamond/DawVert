@@ -366,6 +366,17 @@ class input_it(plugin_input.base):
                 samplecount += 1
 
         patlentable = song_tracker.get_len_table(patterntable_all, table_orders)
+
+        # ------------- Song Message -------------
+        it_file.seek(it_header_msgoffset)
+        it_songmessage = it_file.read(it_header_msglength).split(b'\x00' * 1)[0].decode("utf-8")
+
+        cvpj_l['title'] = it_header_songname
+
+        cvpj_l['message'] = {}
+        cvpj_l['message']['type'] = 'text'
+        cvpj_l['message']['text'] = it_songmessage
+
         cvpj_l['timemarkers'] = placements.make_timemarkers([4,4], patlentable, None)
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

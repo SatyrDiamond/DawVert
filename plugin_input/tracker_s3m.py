@@ -250,6 +250,9 @@ class input_s3m(plugin_input.base):
         cvpj_l_playlist = song_tracker.song2playlist(patterntable_all, 32, t_orderlist, startinststr, [0.65, 0.57, 0.33])
 
         patlentable = song_tracker.get_len_table(patterntable_all, t_orderlist)
+
+        cvpj_l['title'] = s3m_name
+
         cvpj_l['timemarkers'] = placements.make_timemarkers([4,4], patlentable, None)
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

@@ -20,5 +20,5 @@ class output_cvpj(plugin_output.base):
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
         with open(output_file, "w") as fileout:
-            fileout.write("CONVPROJ\n")
+            fileout.write("CONVPROJ__MI\n")
             json.dump(projJ, fileout, indent=4, sort_keys=True)

@@ -325,6 +325,10 @@ class input_famistudio(plugin_input.base):
             playlistnum += 1
 
         timesig = placements.get_timesig(PatternLength, FST_BeatLength)
+
+        if 'Name' in FST_Main: cvpj_l['title'] = FST_Main['Name']
+        if 'Author' in FST_Main: cvpj_l['author'] = FST_Main['Author']
+
         cvpj_l['timesig_numerator'] = timesig[0]
         cvpj_l['timesig_denominator'] = timesig[1]
         cvpj_l['timemarkers'] = placements.make_timemarkers(timesig, PatternLengthList, LoopPoint)

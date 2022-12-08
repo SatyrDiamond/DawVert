@@ -7,6 +7,7 @@ import math
 import base64
 from functions import format_flp
 from functions import note_mod
+from bs4 import BeautifulSoup
 
 def clamp(n, minn, maxn):
     return max(min(maxn, n), minn)
@@ -51,11 +52,28 @@ class output_cvpjs(plugin_output.base):
         FL_Main['ppq'] = ppq
         FL_Main['Shuffle'] = 0
         FL_Main['ShowInfo'] = 0
-        FL_Main['Title'] = ''
+        if 'title' in projJ: 
+            FL_Main['Title'] = projJ['title']
+            FL_Main['ShowInfo'] = 1
+        else: FL_Main['Title'] = ''
+
+        if 'author' in projJ: 
+            FL_Main['Author'] = projJ['author']
+            FL_Main['ShowInfo'] = 1
+        else: FL_Main['Author'] = ''
+
+        if 'message' in projJ: 
+            FL_Main['ShowInfo'] = 1
+            if projJ['message']['type'] == 'html':
+                bst = BeautifulSoup(projJ['message']['text'], "html.parser")
+                FL_Main['Comment'] = bst.get_text()
+            if projJ['message']['type'] == 'text':
+                FL_Main['Comment'] = projJ['message']['text']
+        else: 
+            FL_Main['Comment'] = ''
+
         FL_Main['Genre'] = ''
-        FL_Main['Author'] = ''
         FL_Main['ProjectDataPath'] = ''
-        FL_Main['Comment'] = ''
         if 'timesig_numerator' in projJ: FL_Main['Numerator'] = projJ['timesig_numerator']
         if 'timesig_denominator' in projJ: FL_Main['Denominator'] = projJ['timesig_denominator']
         if 'bpm' in projJ: FL_Main['Tempo'] = projJ['bpm']

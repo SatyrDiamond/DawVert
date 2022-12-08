@@ -53,13 +53,15 @@ class output_cvpjs(plugin_output.base):
         FL_Main['Shuffle'] = 0
         FL_Main['ShowInfo'] = 0
         if 'title' in projJ: 
-            FL_Main['Title'] = projJ['title']
-            FL_Main['ShowInfo'] = 1
+            if 'title' != '': 
+                FL_Main['Title'] = projJ['title']
+                FL_Main['ShowInfo'] = 1
         else: FL_Main['Title'] = ''
 
         if 'author' in projJ: 
-            FL_Main['Author'] = projJ['author']
-            FL_Main['ShowInfo'] = 1
+            if 'author' != '': 
+                FL_Main['Author'] = projJ['author']
+                FL_Main['ShowInfo'] = 1
         else: FL_Main['Author'] = ''
 
         if 'message' in projJ: 

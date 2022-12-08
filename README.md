@@ -19,11 +19,11 @@ e.g:
 
 ## VST Plugins
 
-[Grace](https://github.com/s-oram/Grace)
+[Grace](https://github.com/s-oram/Grace) (Sampler)
 
-[juicysfplugin](https://github.com/Birch-san/juicysfplugin)
+[juicysfplugin](https://github.com/Birch-san/juicysfplugin) (Soundfont 2)
 
-[Zyn-Fusion](https://zynaddsubfx.sourceforge.io/zyn-fusion.html)
+[Zyn-Fusion](https://zynaddsubfx.sourceforge.io/zyn-fusion.html) (ZynAddSubFX)
 
 [Magical 8bit Plug 2](https://github.com/yokemura/Magical8bitPlug2)
 

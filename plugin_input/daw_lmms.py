@@ -407,7 +407,6 @@ def lmms_decode_auto_track(trkX):
 def lmms_decode_effectslot(fxslotX):
     fxslotJ = {}
     fxpluginname = fxslotX.get('name')
-    fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
     fxcvpj_l_plugindata = {}
     fxslotJ['enabled'] = int(fxslotX.get('on'))
     wet = float(fxslotX.get('wet'))
@@ -425,6 +424,7 @@ def lmms_decode_effectslot(fxslotX):
         fxslotJ['plugindata'] = fxcvpj_l_plugindata
         return fxslotJ
     elif fxpluginname != 'ladspaeffect':
+        fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
         print('['+fxpluginname,end='] ')
         fxslotJ['plugin'] = 'native-lmms'
         fxcvpj_l_plugindata['name'] = fxpluginname
@@ -511,6 +511,7 @@ class input_lmms(plugin_input.base):
         trksX = tree.findall('song/trackcontainer/track')
         fxX = tree.findall('song/fxmixer/fxchannel')
         tlX = tree.find('song/timeline')
+        notesX = tree.find('song/projectnotes')
 
         bpm = 140
         if headX.get('bpm') != None: bpm = float(headX.get('bpm'))
@@ -521,7 +522,11 @@ class input_lmms(plugin_input.base):
         rootJ['timesig_numerator'] = lmms_getvalue(headX, 'timesig_numerator', None)
         rootJ['timesig_denominator'] = lmms_getvalue(headX, 'timesig_denominator', None)
         rootJ['bpm'] = lmms_getvalue(headX, 'bpm', ['main', 'bpm'])
-        #rootJ['loop'] = loop
+
+        rootJ['message'] = {}
+        rootJ['message']['type'] = 'html'
+        rootJ['message']['text'] = notesX.text
+
         tracksout = lmms_decode_tracks(trksX)
         rootJ['trackdata'] = tracksout[0]
         rootJ['trackordering'] = tracksout[1]

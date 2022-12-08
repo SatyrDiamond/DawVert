@@ -71,6 +71,10 @@ def getvstparams(plugindata, xmldata):
             plugindata['params'][str(param)] = {}
             plugindata['params'][str(param)]['name'] = paramdata[1]
             plugindata['params'][str(param)]['value'] = float(paramdata[-1])
+def hex_to_rgb(hexcodeinput):
+    hexcode = hexcodeinput.lstrip('#')
+    colorbytes = tuple(int(hexcode[i:i+2], 16) for i in (0, 2, 4))
+    return [colorbytes[0]/255, colorbytes[1]/255, colorbytes[2]/255]
 
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
 def lmms_getvalue(xmltag, xmlname, autoname):
@@ -310,6 +314,10 @@ def lmms_decode_inst_track(trkX, name):
     cvpj_l_inst['middlenote'] = int(trkX_insttr.get('basenote')) - 57
     cvpj_l_track['pan'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'pan', ['track', name, 'pan'])))
     cvpj_l_track['vol'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'vol', ['track', name, 'vol'])))
+    
+    if trkX.get('color') != None:
+        print(trkX.get('color'))
+        cvpj_l_track['color'] = hex_to_rgb(trkX.get('color'))
 
     #midi
     midiJ = {}

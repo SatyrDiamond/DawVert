@@ -489,6 +489,7 @@ class input_ceol(plugin_input.base):
             if ceol_pat_palette in ceol_colors: cvpj_pat["color"] = ceol_colors[ceol_pat_palette]
             else: cvpj_pat["color"] = [0.55, 0.55, 0.55]
             cvpj_pat["notelist"] = cvpj_notelist
+            cvpj_pat["name"] = str(patnum)
             cvpj_l_notelistindex[cvpj_pat_id] = cvpj_pat
 
         cvpj_l_playlist['1'] = {'color': [0.43, 0.52, 0.55], 'placements':[]}

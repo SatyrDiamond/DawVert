@@ -235,6 +235,13 @@ class output_cvpjs(plugin_output.base):
                     if timemarker['type'] == 'punchout': FL_TimeMarker['type'] = 10
                     FL_TimeMarkers[str(markernum)] = FL_TimeMarker
 
+        if 'fxrack' in projJ:
+            for cvpj_fx in projJ['fxrack']:
+                cvpj_fxdata = projJ['fxrack'][cvpj_fx]
+                FL_Mixer[cvpj_fx] = {}
+                if 'name' in cvpj_fxdata:
+                    FL_Mixer[cvpj_fx]['name'] = cvpj_fxdata['name']
+
         FL_Arrangements['0'] = {}
         FL_Arrangements['0']['items'] = FL_Playlist
         FL_Arrangements['0']['name'] = 'Arrangement'

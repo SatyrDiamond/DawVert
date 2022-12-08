@@ -313,21 +313,31 @@ def lmms_encode_inst_track(xmltag, trkJ):
             if trkJ_chordcreator['chord'] in chord: trkX_chordcreator.set('chord', str(chord[trkJ_chordcreator['chord']]))
             else: trkX_chordcreator.set('chord', '0')
 
+    trkX_midiport = ET.SubElement(trkX_insttr, "midiport")
     if 'midi' in instJ:
-        trkX_midiport = ET.SubElement(trkX_insttr, "midiport")
         trkJ_midiport = instJ['midi']
         trkJ_m_i = trkJ_midiport['in']
         trkJ_m_o = trkJ_midiport['out']
         if 'enabled' in trkJ_m_i: trkX_midiport.set('readable', str(trkJ_m_i['enabled']))
         if 'fixedvelocity' in trkJ_m_i: trkX_midiport.set('fixedinputvelocity', str(trkJ_m_i['fixedvelocity']-1))
         if 'channel' in trkJ_m_i: trkX_midiport.set('inputchannel', str(trkJ_m_i['channel']))
-
         if 'enabled' in trkJ_m_o: trkX_midiport.set('writable', str(trkJ_m_o['enabled']))
         if 'fixedvelocity' in trkJ_m_o: trkX_midiport.set('fixedoutputvelocity', str(trkJ_m_o['fixedvelocity']-1))
         if 'channel' in trkJ_m_o: trkX_midiport.set('outputchannel', str(trkJ_m_o['channel']))
         if 'fixednote' in trkJ_m_o: trkX_midiport.set('fixedoutputnote', str(trkJ_m_o['fixednote']-1))
-
         if 'basevelocity' in trkJ_midiport: trkX_midiport.set('basevelocity', str(trkJ_midiport['basevelocity']))
+    else:
+        trkX_midiport.set('fixedoutputvelocity',"-1")
+        trkX_midiport.set('readable',"0")
+        trkX_midiport.set('outputcontroller',"0")
+        trkX_midiport.set('basevelocity',"63")
+        trkX_midiport.set('outputprogram',"1")
+        trkX_midiport.set('writable',"0")
+        trkX_midiport.set('fixedinputvelocity',"-1")
+        trkX_midiport.set('inputchannel',"0")
+        trkX_midiport.set('inputcontroller',"0")
+        trkX_midiport.set('outputchannel',"1")
+        trkX_midiport.set('fixedoutputnote',"-1")
 
     print('[output-lmms] Instrument Track')
     print('[output-lmms]       Name: ' + trkJ['name'])
@@ -509,6 +519,7 @@ class output_lmms(plugin_output.base):
             json_fxrack = projJ['fxrack']
             lmms_encode_fxmixer(xml_fxmixer, json_fxrack)
 
+
         if 'message' in projJ:
             notesX = ET.SubElement(songX, "projectnotes")
             notesX.set("visible", "1")
@@ -516,12 +527,14 @@ class output_lmms(plugin_output.base):
             notesX.set("height", "300")
             notesX.set("y", "5" )
             notesX.set("width", "389")
-            print(projJ['message']['type'])
             if 'type' in projJ['message']:
                 if projJ['message']['type'] == 'html':
                     notesX.text = ET.CDATA(projJ['message']['text'])
                 if projJ['message']['type'] == 'text':
                     notesX.text = ET.CDATA(projJ['message']['text'].replace('\n', '<br/>'))
+        else:
+            notesX = ET.SubElement(songX, "projectnotes")
+            notesX.text = ET.CDATA("")
 
         print("[output-lmms] Number of Notes: " + str(notescount_forprinting))
         print("[output-lmms] Number of Patterns: " + str(patternscount_forprinting))

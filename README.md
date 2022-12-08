@@ -3,7 +3,7 @@
 
 ## How to Use
 ```
-python3 DawVert.py <input> <output type> <output>
+python3 DawVert.py -i <input> -ot <output type> -o <output>
 
 input type: -it 
 input file: -i 

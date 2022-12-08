@@ -421,8 +421,7 @@ def deconstruct(inputfile):
             if event_id == 147: FL_Mixer[str(T_FL_FXNum)]['outchannum'] = event_data
             if event_id == 204: 
                 event_text = event_data.decode('utf-16le').rstrip('\x00\x00')
-                #print('\\__FXName:', event_text)
-                FL_Mixer[str(T_FL_FXNum)]['name'] = event_text
+                FL_Mixer[str(T_FL_FXNum+1)]['name'] = event_text
 
     output = {}
     FL_Main['ppq'] = flp_ppq
@@ -889,10 +888,13 @@ def reconstruct_mixer(data_FLdt, mixer):
             if 'routing' in fxparams: fltrki_routing = fxparams['routing']
             if 'inchannum' in fxparams: fltrki_inchannum = fxparams['inchannum']
             if 'outchannum' in fxparams: fltrki_outchannum = fxparams['outchannum']
+            if 'name' in fxparams: 
+                reconstruct_flevent(data_FLdt, 204, fxparams['name'].encode('utf-16le') + b'\x00\x00')
         reconstruct_flevent(data_FLdt, 236, fltrki_data)
         for fltrki_slot in fltrki_slots:
             fxslotL = fltrki_slots[fltrki_slot]
             if fxslotL != None:
+                #print(fxslotL)
                 reconstruct_flevent(data_FLdt, 201, fxslotL['plugin'].encode('utf-16le') + b'\x00\x00')
                 reconstruct_flevent(data_FLdt, 212, fxslotL['data'])
                 if 'name' in fxslotL: reconstruct_flevent(data_FLdt, 203, fxslotL['name'].encode('utf-16le') + b'\x00\x00')

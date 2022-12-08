@@ -27,6 +27,13 @@ e.g:
 
 [Magical 8bit Plug 2](https://github.com/yokemura/Magical8bitPlug2)
 
+## Supported Outputs
+
+| DataType | Short Name | Name | Info | 
+| --- | --- | :--- | :--- |
+| M-I | ```flp``` | FL Studio |  | 
+| R | ```lmms``` | LMMS | | 
+
 ## Supported Inputs
 
 | DataType | Short Name | Name | Info | 
@@ -41,10 +48,3 @@ e.g:
 | M | ```lovelycomposer``` | Lovely Composer | Chiptune/Retro | 
 | R | ```piyopiyo``` | PiyoPiyo | Chiptune/Retro | 
 | R | ```flipper``` | Flipper Music Format | | 
-
-## Supported Outputs
-
-| DataType | Short Name | Name | Info | 
-| --- | --- | :--- | :--- |
-| M-I | ```flp``` | FL Studio |  | 
-| R | ```lmms``` | LMMS | | 

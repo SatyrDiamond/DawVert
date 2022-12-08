@@ -192,6 +192,8 @@ def m2r(song):
                             lanedata[playlistentry] = {}
                             if 'name' in playlist[playlistentry]:
                                 lanedata[playlistentry]['name'] = playlist[playlistentry]['name']
+                            if 'color' in playlist[playlistentry]:
+                                lanedata[playlistentry]['color'] = playlist[playlistentry]['color']
                             cvpj_trackdata[instrument]['laneordering'].append(playlistentry)
                             lanedata[playlistentry]['placements'] = []
                         cvpj_trackdata[instrument]['lanedata'][playlistentry]['placements'].append(splitted_insts[instrument])

@@ -24,9 +24,14 @@ def removelanes(projJ):
                     else: lr_t_l_placements = []
                     if 'name' in lr_t_trdata: ntp_name = lr_t_trdata['name']+' ['+lr_t_l_name+']'
                     else: ntp_name = '['+lr_t_l_name+']'
+
                     part_track_data = trackbase.copy()
                     part_track_data['name'] = ntp_name
                     part_track_data['placements'] = lr_t_l_placements
+
+                    if 'color' not in part_track_data and 'color' in lr_t_l_data:
+                        part_track_data['color'] = lr_t_l_data['color']
+
                     new_trackdata[splitnameid] = part_track_data
                     new_trackordering.append(splitnameid)
             else:

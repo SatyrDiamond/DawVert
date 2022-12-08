@@ -345,7 +345,6 @@ def convplug_inst(instdata, dawname, extra_json):
 						print('[plugin-convert] Unchanged, Plugin Grace not Found')
 				else:
 					print('[plugin-convert] Unchanged, VST2 list not found')
-
 			# -------------------- sf2 > vst2 (juicysfplugin) --------------------
 			elif pluginname == 'soundfont2' and dawname not in supportedplugins['sf2']:
 				sf2data = instdata['plugindata']
@@ -381,13 +380,8 @@ def convplug_inst(instdata, dawname, extra_json):
 					print('[plugin-convert] Unchanged: soundfont argument not defiened.')
 
 				# -------------------- shapes and retro noise --------------------
-			elif pluginname in m8bp_shapesupported :
-				m8p_root = shape_magical8bitplug(pluginname, plugindata)
-				xmlout = ET.tostring(m8p_root, encoding='utf-8')
-				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
-				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
 
-			# -------------------- famistudio > vst2 (magical8bitplug) --------------------
+			# -------------------- famistudio + retro shapes > vst2 (magical8bitplug) --------------------
 			elif pluginname == 'famistudio':
 				fsd_data = instdata['plugindata']
 				m8p_root = ET.Element("root")
@@ -432,8 +426,13 @@ def convplug_inst(instdata, dawname, extra_json):
 				xmlout = ET.tostring(m8p_root, encoding='utf-8')
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
 				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
+			elif pluginname in m8bp_shapesupported :
+				m8p_root = shape_magical8bitplug(pluginname, plugindata)
+				xmlout = ET.tostring(m8p_root, encoding='utf-8')
+				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
+				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
 
-				# -------------------- zynaddsubfx > vst2 (Zyn-Fusion) - from lmms --------------------
+			# -------------------- zynaddsubfx > vst2 (Zyn-Fusion) - from lmms --------------------
 			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
 				zasfxdata = instdata['plugindata']['data']
 				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 

@@ -99,7 +99,10 @@ class output_cvpjs(plugin_output.base):
             if 'fxrack_channel' in CVPJ_Data: T_Main['fxchannel'] = CVPJ_Data['fxrack_channel']
             if 'instdata' in CVPJ_Data:
                 CVPJ_Inst = CVPJ_Data['instdata']
-                if 'middlenote' in CVPJ_Inst: T_Main['middlenote'] = CVPJ_Inst['middlenote']+60
+                if 'notefx' in CVPJ_Inst:
+                    if 'pitch' in CVPJ_Inst['notefx']:
+                        if 'semitones' in CVPJ_Inst['notefx']['pitch']: 
+                            T_Main['middlenote'] = CVPJ_Inst['notefx']['pitch']['semitones']+60
                 if 'pitch' in CVPJ_Inst: T_Main['pitch'] = CVPJ_Inst['pitch']
                 if 'usemasterpitch' in CVPJ_Inst: T_Main['main_pitch'] = CVPJ_Inst['usemasterpitch']
             if 'color' in CVPJ_Data: 
@@ -189,10 +192,12 @@ class output_cvpjs(plugin_output.base):
                         FL_playlistitem['flags'] = 4
                         FL_playlistitem['trackindex'] = (-500 + int(CVPJ_playlistrow))*-1
                         if 'cut' in CVPJ_Placement:
-                            if 'start' in CVPJ_Placement['cut']:
-                                FL_playlistitem['startoffset'] = int((CVPJ_Placement['cut']['start']*ppq)/4)
-                            if 'end' in CVPJ_Placement['cut']:
-                                FL_playlistitem['endoffset'] = int((CVPJ_Placement['cut']['end']*ppq)/4)
+                            if 'type' in CVPJ_Placement['cut']:
+                                if CVPJ_Placement['cut']['type'] == 'cut':
+                                    if 'start' in CVPJ_Placement['cut']:
+                                        FL_playlistitem['startoffset'] = int((CVPJ_Placement['cut']['start']*ppq)/4)
+                                    if 'end' in CVPJ_Placement['cut']:
+                                        FL_playlistitem['endoffset'] = int((CVPJ_Placement['cut']['end']*ppq)/4)
                             FL_playlistitem['flags'] = 64
                         if FL_playlistitem['position'] not in FL_Playlist_BeforeSort:
                             FL_Playlist_BeforeSort[FL_playlistitem['position']] = []

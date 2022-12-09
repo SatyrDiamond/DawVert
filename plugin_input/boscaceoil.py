@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2022 Colby Ray
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from functions import data_bytes
 from functions import placements
 import plugin_input

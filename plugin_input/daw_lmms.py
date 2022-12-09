@@ -140,8 +140,6 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
             cvpj_l_track['color'] = plugincolors[pluginname]
         if pluginname == "sf2player":
             cvpj_l_inst['plugin'] = "soundfont2"
-
-            cvpj_l_inst['middlenote'] -= 12
             cvpj_l_plugindata['bank'] = int(xml_plugin.get('bank'))
             cvpj_l_plugindata['patch'] = int(xml_plugin.get('patch'))
             cvpj_l_plugindata['file'] = xml_plugin.get('src')
@@ -159,7 +157,6 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
             cvpj_l_plugindata['reverb']['roomsize'] = float(xml_plugin.get('reverbRoomSize'))
             cvpj_l_plugindata['reverb']['width'] = float(xml_plugin.get('reverbWidth'))
         elif pluginname == "audiofileprocessor":
-            cvpj_l_inst['middlenote'] -= 3
             cvpj_l_inst['plugin'] = "sampler"
             cvpj_l_plugindata['reverse'] = int(xml_plugin.get('reversed'))
             cvpj_l_plugindata['amp'] = hundredto1(float(xml_plugin.get('amp')))
@@ -310,7 +307,6 @@ def lmms_decode_inst_track(trkX, name):
     #trkX_insttr
     trkX_insttr = trkX.findall('instrumenttrack')[0]
     cvpj_l_track['fxrack_channel'] = int(trkX_insttr.get('fxch'))
-    cvpj_l_inst['middlenote'] = int(trkX_insttr.get('basenote')) - 57
     cvpj_l_track['pan'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'pan', ['track', name, 'pan'])))
     cvpj_l_track['vol'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'vol', ['track', name, 'vol'])))
     
@@ -370,10 +366,21 @@ def lmms_decode_inst_track(trkX, name):
         cvpj_l_inst_notefx['arpeggiator']['cyclenotes'] = int(trkX_arpeggiator.get('arpcycle'))
         cvpj_l_inst_notefx['arpeggiator']['chord'] = ','.join(str(item) for item in chord[int(trkX_arpeggiator.get('arp'))])
 
-    cvpj_l_track['placements'] = lmms_decode_nlplacements(trkX)
-
     cvpj_l_track_plugindata = cvpj_l_track_inst['plugindata']
     lmms_decodeplugin(trkX_insttr, cvpj_l_track_plugindata, cvpj_l_inst, cvpj_l_track)
+
+    xml_a_chordcreator = trkX_insttr.findall('arpeggiator')
+
+    if 'basenote' in trkX_insttr.attrib:
+        basenote = int(trkX_insttr.get('basenote'))-57
+        noteoffset = 0
+        if cvpj_l_track_inst['plugin'] == 'sampler': noteoffset = 3
+        if cvpj_l_track_inst['plugin'] == 'soundfont2': noteoffset = 12
+
+        cvpj_l_inst_notefx['pitch'] = {}
+        cvpj_l_inst_notefx['pitch']['semitones'] = basenote - noteoffset
+
+    cvpj_l_track['placements'] = lmms_decode_nlplacements(trkX)
 
     cvpj_l_track['instdata'] = cvpj_l_inst
     print('[input-lmms]')

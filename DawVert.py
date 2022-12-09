@@ -3,6 +3,7 @@
 
 import json
 import argparse
+
 from plugin_input import base as base_input
 from plugin_output import base as base_output
 from functions import song_convert
@@ -32,7 +33,7 @@ if args.soundfont != None: extra_json['soundfont'] = args.soundfont
 typelist = {}
 typelist['r'] = 'Regular'
 typelist['ri'] = 'RegularIndexed'
-typelist['a'] = 'AnyPurpose'
+typelist['a'] = 'Any'
 typelist['m'] = 'Multiple'
 typelist['mi'] = 'MultipleIndexed'
 typelist['debug'] = 'debug'
@@ -109,15 +110,22 @@ out_type = out_class.gettype()
 print('Input:',in_format, in_type)
 print('Output:',out_format, out_type)
 
-if in_type == out_type: print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
-elif out_type == 'debug': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
-elif in_type == 'm' and out_type == 'mi': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
-elif in_type == 'r' and out_type == 'm': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
-elif in_type == 'r' and out_type == 'mi': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
-elif in_type == 'mi' and out_type == 'm': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
-elif in_type == 'm' and out_type == 'r': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
-elif in_type == 'mi' and out_type == 'r': print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
-else:
+typeconvsupported = False
+
+if in_type == out_type: typeconvsupported = True
+if out_type == 'debug': typeconvsupported = True
+
+if in_type == 'm' and out_type == 'mi': typeconvsupported = True
+if in_type == 'm' and out_type == 'r': typeconvsupported = True
+
+#if in_type == 'r' and out_type == 'a': typeconvsupported = True
+if in_type == 'r' and out_type == 'm': typeconvsupported = True
+if in_type == 'r' and out_type == 'mi': typeconvsupported = True
+
+if in_type == 'mi' and out_type == 'm': typeconvsupported = True
+if in_type == 'mi' and out_type == 'r': typeconvsupported = True
+
+if typeconvsupported == False:
 	print('[info] type Conversion from ' + typelist[in_type] + ' to ' + typelist[out_type] + ' not supported.')
 	exit()
 
@@ -141,6 +149,8 @@ if in_type == 'm' and out_type == 'mi':
 if in_type == 'm' and out_type == 'r': 
 	CVPJ_j = song_convert.m2r(CVPJ_j)
 
+#if in_type == 'r' and out_type == 'a': 
+#	CVPJ_j = song_convert.r2a(CVPJ_j)
 if in_type == 'r' and out_type == 'm': 
 	CVPJ_j = song_convert.r2m(CVPJ_j)
 if in_type == 'r' and out_type == 'mi': 

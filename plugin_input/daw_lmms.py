@@ -75,7 +75,6 @@ def hex_to_rgb(hexcodeinput):
     hexcode = hexcodeinput.lstrip('#')
     colorbytes = tuple(int(hexcode[i:i+2], 16) for i in (0, 2, 4))
     return [colorbytes[0]/255, colorbytes[1]/255, colorbytes[2]/255]
-
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
 def lmms_getvalue(xmltag, xmlname, autoname):
     if xmltag.get(xmlname) != None: return float(xmltag.get(xmlname))
@@ -436,6 +435,7 @@ def lmms_decode_effectslot(fxslotX):
         fxslotJ['wet'] = wet
 
     if fxpluginname == 'vsteffect':
+        fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
         print('[vst2',end='] ')
         fxslotJ['plugin'] = "vst2"
         getvstparams(fxcvpj_l_plugindata, fxxml_plugin)
@@ -521,6 +521,7 @@ class input_lmms(plugin_input.base):
         except ET.ParseError: output = False
         return output
     def parse(self, input_file, extra_param):
+
         global autolist
         autolist = {}
 

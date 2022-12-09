@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 import pathlib
 from os.path import exists
 from functions import audio_wav
+from functions import data_bytes
 
 global vst2paths
 global vst3paths
@@ -263,7 +264,7 @@ def find_vstpath(name, instdata):
 		else: 
 			print('[plugin-convert] Unchanged,', "VST2 list not found")
 	else: 
-		print('[plugin-convert] Unchanged,', "No Plugin and/or PluginData defined")
+		print('[plugin-convert] Unchanged,', "No Plugin and PluginData defined")
 	return vst_path
 
 def replace_vst_data(instdata, name, data):
@@ -318,6 +319,51 @@ def convplug_inst(instdata, dawname, extra_json):
 		if 'plugindata' in instdata:
 			pluginname = instdata['plugin']
 			plugindata = instdata['plugindata']
+
+			# ---------------------------------------- 1 ----------------------------------------
+			if pluginname == 'native-fl':
+				if plugindata['name'].lower() == 'fruity soundfont player':
+					fl_sf2data = base64.b64decode(plugindata['data'])
+
+					fl_sf2st = data_bytes.bytearray2BytesIO(base64.b64decode(plugindata['data']))
+					flsf_unk = int.from_bytes(fl_sf2st.read(4), "little")
+					flsf_patch = int.from_bytes(fl_sf2st.read(4), "little")-1
+					flsf_bank = int.from_bytes(fl_sf2st.read(4), "little")
+					flsf_reverb_sendlvl = int.from_bytes(fl_sf2st.read(4), "little")
+					flsf_chorus_sendlvl = int.from_bytes(fl_sf2st.read(4), "little")
+					flsf_mod = int.from_bytes(fl_sf2st.read(4), "little")
+					flsf_asdf_A = int.from_bytes(fl_sf2st.read(4), "little") # max 5940
+					flsf_asdf_D = int.from_bytes(fl_sf2st.read(4), "little") # max 5940
+					flsf_asdf_S = int.from_bytes(fl_sf2st.read(4), "little") # max 127
+					flsf_asdf_R = int.from_bytes(fl_sf2st.read(4), "little") # max 5940
+					flsf_lfo_predelay = int.from_bytes(fl_sf2st.read(4), "little") # max 5900
+					flsf_lfo_amount = int.from_bytes(fl_sf2st.read(4), "little") # max 127
+					flsf_lfo_speed = int.from_bytes(fl_sf2st.read(4), "little") # max 127
+					flsf_cutoff = int.from_bytes(fl_sf2st.read(4), "little") # max 127
+
+					flsf_filelen = int.from_bytes(fl_sf2st.read(1), "little")
+					flsf_filename = fl_sf2st.read(flsf_filelen).decode('utf-8')
+
+					flsf_reverb_sendto = int.from_bytes(fl_sf2st.read(4), "little", signed="True")+1
+					flsf_reverb_builtin = int.from_bytes(fl_sf2st.read(1), "little")
+					flsf_chorus_sendto = int.from_bytes(fl_sf2st.read(4), "little", signed="True")+1
+					flsf_reverb_builtin = int.from_bytes(fl_sf2st.read(1), "little")
+					flsf_hqrender = int.from_bytes(fl_sf2st.read(1), "little")
+
+					instdata['plugin'] = "soundfont2"
+					instdata['plugindata'] = {}
+					instdata['plugindata']['file'] = flsf_filename
+					if flsf_patch > 127:
+						instdata['plugindata']['bank'] = 128
+						instdata['plugindata']['patch'] = flsf_patch-128
+					else:
+						instdata['plugindata']['bank'] = flsf_bank
+						instdata['plugindata']['patch'] = flsf_patch
+
+			# ---------------------------------------- 2 ----------------------------------------
+			pluginname = instdata['plugin']
+			plugindata = instdata['plugindata']
+
 			# -------------------- sampler > vst2 (Grace) --------------------
 			if pluginname == 'sampler' and dawname not in supportedplugins['sampler']:
 				sampler_data = instdata
@@ -345,7 +391,10 @@ def convplug_inst(instdata, dawname, extra_json):
 						print('[plugin-convert] Unchanged, Plugin Grace not Found')
 				else:
 					print('[plugin-convert] Unchanged, VST2 list not found')
-			# -------------------- sf2 > vst2 (juicysfplugin) --------------------
+
+			# -------------------- vst2 (juicysfplugin) --------------------
+
+			# ---------- from native soundfont2
 			elif pluginname == 'soundfont2' and dawname not in supportedplugins['sf2']:
 				sf2data = instdata['plugindata']
 				if 'bank' in sf2data: sf2_bank = sf2data['bank']
@@ -359,7 +408,7 @@ def convplug_inst(instdata, dawname, extra_json):
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
 				replace_vst_data(instdata, 'juicysfplugin', vst2data)
 
-				# -------------------- general-midi --------------------
+			# ---------- from general-midi
 			elif pluginname == 'general-midi':
 				if 'soundfont' in extra_json:
 					sffile = extra_json['soundfont']
@@ -379,9 +428,9 @@ def convplug_inst(instdata, dawname, extra_json):
 				else:
 					print('[plugin-convert] Unchanged: soundfont argument not defiened.')
 
-				# -------------------- shapes and retro noise --------------------
+			# -------------------- vst2 (magical8bitplug) --------------------
 
-			# -------------------- famistudio + retro shapes > vst2 (magical8bitplug) --------------------
+			# ---------- famistudio
 			elif pluginname == 'famistudio':
 				fsd_data = instdata['plugindata']
 				m8p_root = ET.Element("root")
@@ -426,6 +475,8 @@ def convplug_inst(instdata, dawname, extra_json):
 				xmlout = ET.tostring(m8p_root, encoding='utf-8')
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
 				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
+
+			# ---------- retro shapes
 			elif pluginname in m8bp_shapesupported :
 				m8p_root = shape_magical8bitplug(pluginname, plugindata)
 				xmlout = ET.tostring(m8p_root, encoding='utf-8')

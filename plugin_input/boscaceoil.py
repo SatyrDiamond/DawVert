@@ -419,6 +419,8 @@ class input_ceol(plugin_input.base):
 
         ceol_numinstrument = ceol_read()
 
+        t_key_offset = []
+
         for instnum in range(ceol_numinstrument):
             cvpj_instid = 'ceol_'+str(instnum).zfill(2)
 
@@ -447,7 +449,14 @@ class input_ceol(plugin_input.base):
             elif ceol_inst_number == 130: cvpj_instdata['plugin'] = 'shape-triangle'
             elif ceol_inst_number == 131: cvpj_instdata['plugin'] = 'shape-sine'
             elif ceol_inst_number == 132: cvpj_instdata['plugin'] = 'retro-noise'
+            elif ceol_inst_number == 365: 
+                cvpj_instdata['plugin'] = 'general-midi'
+                cvpj_instdata['plugindata'] = {'bank':128, 'inst':0}
             else: cvpj_instdata['plugin'] = 'none'
+
+            if ceol_inst_number == 365: t_key_offset.append(24)
+            else: t_key_offset.append(0)
+
             cvpj_l_instruments[cvpj_instid] = cvpj_inst
             cvpj_l_instrumentsorder.append(cvpj_instid)
 
@@ -468,7 +477,7 @@ class input_ceol(plugin_input.base):
             ceol_numnotes = ceol_read()
 
             for _ in range(ceol_numnotes):
-                ceol_nl_key = ceol_read()-60
+                ceol_nl_key = ceol_read()-60 + t_key_offset[ceol_pat_instrument]
                 ceol_nl_len = ceol_read()
                 ceol_nl_pos = ceol_read()
                 ceol_read()

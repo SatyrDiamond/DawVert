@@ -277,7 +277,7 @@ def lmms_encode_inst_track(xmltag, trkJ):
         else: trkX_insttr.set('basenote', str(middlenote+57))
     else:
         if instplugin == 'sampler': trkX_insttr.set('basenote', str(60))
-        elif instplugin == 'soundfont2': trkX_insttr.set('basenote', str(48))
+        elif instplugin == 'soundfont2': trkX_insttr.set('basenote', str(69))
         else: trkX_insttr.set('basenote', str(57))
     if 'fxrack_channel' in trkJ: trkX_insttr.set('fxch', str(trkJ['fxrack_channel']))
     else: trkX_insttr.set('fxch', '0')

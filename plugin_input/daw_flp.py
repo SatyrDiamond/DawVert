@@ -57,8 +57,11 @@ class input_flp(plugin_input.base):
                 singleinstdata['instdata'] = {}
                 singleinstdata['enabled'] = channeldata['enabled']
                 singleinstdata['fxrack_channel'] = channeldata['fxchannel']
-                if 'middlenote' in channeldata: singleinstdata['instdata']['middlenote'] = channeldata['middlenote']-60
-                else: singleinstdata['instdata']['middlenote'] = 0
+                middlenote = 0
+                if 'middlenote' in channeldata: middlenote = channeldata['middlenote'] - 60
+                singleinstdata['instdata']['notefx'] = {}
+                singleinstdata['instdata']['notefx']['pitch'] = {}
+                singleinstdata['instdata']['notefx']['pitch']['semitones'] = middlenote
                 singleinstdata['instdata']['pitch'] = channeldata['pitch']
                 singleinstdata['instdata']['usemasterpitch'] = channeldata['main_pitch']
                 singleinstdata['name'] = channeldata['name']
@@ -119,6 +122,7 @@ class input_flp(plugin_input.base):
             arrangementitemJ['fromindex'] = 'FLPat' + str(item['itemindex'] - item['patternbase'])
             if 'startoffset' in item or 'endoffset' in item:
                 arrangementitemJ['cut'] = {}
+                arrangementitemJ['cut']['type'] = 'cut'
                 if 'startoffset' in item: arrangementitemJ['cut']['start'] = item['startoffset']/ppq*4
                 if 'endoffset' in item: arrangementitemJ['cut']['end'] = item['endoffset']/ppq*4
             playlistline = (item['trackindex']*-1)+500

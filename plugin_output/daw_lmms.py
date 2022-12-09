@@ -270,15 +270,7 @@ def lmms_encode_inst_track(xmltag, trkJ):
     if 'pitch' in instJ: trkX_insttr.set('pitch', str(instJ['pitch']))
     if 'plugin' in instJ: instplugin = instJ['plugin']
     else: instplugin = None
-    if 'middlenote' in instJ:
-        middlenote = instJ['middlenote']
-        if instplugin == 'sampler': middlenote += 3
-        elif instplugin == 'soundfont2':  middlenote += 12
-        else: trkX_insttr.set('basenote', str(middlenote+57))
-    else:
-        if instplugin == 'sampler': trkX_insttr.set('basenote', str(60))
-        elif instplugin == 'soundfont2': trkX_insttr.set('basenote', str(69))
-        else: trkX_insttr.set('basenote', str(57))
+
     if 'fxrack_channel' in trkJ: trkX_insttr.set('fxch', str(trkJ['fxrack_channel']))
     else: trkX_insttr.set('fxch', '0')
     trkX_insttr.set('pan', "0")
@@ -312,6 +304,14 @@ def lmms_encode_inst_track(xmltag, trkJ):
             trkX_chordcreator.set('chordrange', str(trkJ_chordcreator['chordrange']))
             if trkJ_chordcreator['chord'] in chord: trkX_chordcreator.set('chord', str(chord[trkJ_chordcreator['chord']]))
             else: trkX_chordcreator.set('chord', '0')
+        if 'pitch' in instJ_notefx:
+            if 'semitones' in instJ_notefx['pitch']:
+                middlenote = instJ_notefx['pitch']['semitones']
+                if instplugin == 'sampler': middlenote += 3
+                if instplugin == 'soundfont2': middlenote += 12
+                trkX_insttr.set('basenote', str(middlenote+57))
+            else: trkX_insttr.set('basenote', str(57))
+        else: trkX_insttr.set('basenote', str(57))
 
     trkX_midiport = ET.SubElement(trkX_insttr, "midiport")
     if 'midi' in instJ:

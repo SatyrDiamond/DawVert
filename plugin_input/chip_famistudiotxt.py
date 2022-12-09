@@ -133,7 +133,6 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
     cvpj_inst["enabled"] = 1
     cvpj_inst["instdata"] = {}
     cvpj_instdata = cvpj_inst["instdata"]
-    cvpj_instdata['middlenote'] = 0
     cvpj_instdata['pitch'] = 0
     if wavetype == 'Square1' or wavetype == 'Square2' or wavetype == 'Triangle' or wavetype == 'Noise':
         cvpj_instdata['plugin'] = 'famistudio'
@@ -182,7 +181,6 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instruments, cvpj_l_instr
     cvpj_inst["enabled"] = 1
     cvpj_inst["instdata"] = {}
     cvpj_instdata = cvpj_inst["instdata"]
-    cvpj_instdata['middlenote'] = 0
     cvpj_instdata['pitch'] = 0
     cvpj_instdata['plugin'] = 'none'
     cvpj_instdata['usemasterpitch'] = 1

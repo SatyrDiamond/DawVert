@@ -205,7 +205,7 @@ def NoteToMidi(keytext):
 
 class input_famistudio(plugin_input.base):
     def __init__(self): pass
-    def getshortname(self): return 'fs_txt'
+    def getshortname(self): return 'famistudio_txt'
     def getname(self): return 'FamiStudio Text'
     def gettype(self): return 'mi'
     def supported_autodetect(self): return False

@@ -12,7 +12,7 @@ from functions import placements
 
 class input_s3m(plugin_input.base):
     def __init__(self): pass
-    def getshortname(self): return 's3m'
+    def getshortname(self): return 'trk_s3m'
     def getname(self): return 'Tracker: Scream Tracker 3 Module'
     def gettype(self): return 'm'
     def supported_autodetect(self): return True

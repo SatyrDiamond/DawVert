@@ -115,7 +115,7 @@ class input_gt_mnbs(plugin_input.base):
         if nbs_newformat == 1:
             nbs_new_version = int.from_bytes(nbs_file.read(1), "little")
             if nbs_new_version != 5:
-                print('only version 5 new-NBS or old format is supported.')
+                print('[input-mnbs] only version 5 new-NBS or old format is supported.')
                 exit()
             nbs_vanilla_inst_count = int.from_bytes(nbs_file.read(1), "little")
             nbs_songlength = int.from_bytes(nbs_file.read(2), "little")
@@ -130,12 +130,18 @@ class input_gt_mnbs(plugin_input.base):
             nbs_notes[playlistid+1] = {}
 
         nbs_song_name = getstring(nbs_file)
-        if nbs_song_name != None: cvpj_l['title'] = nbs_song_name
+        if nbs_song_name != None: 
+            cvpj_l['title'] = nbs_song_name
+            print('[input-mnbs] Song Title: '+nbs_song_name)
 
         nbs_song_author = getstring(nbs_file)
-        if nbs_song_author != None: cvpj_l['author'] = nbs_song_author
+        if nbs_song_author != None: 
+            cvpj_l['author'] = nbs_song_author
+            print('[input-mnbs] Song Author: '+nbs_song_author)
 
         nbs_song_orgauthor = getstring(nbs_file)
+        if nbs_song_author != None: print('[input-mnbs] Song Original Author: '+nbs_song_orgauthor)
+
         nbs_description = getstring(nbs_file)
 
         if nbs_description != None: song_message += nbs_description
@@ -143,8 +149,10 @@ class input_gt_mnbs(plugin_input.base):
 
         nbs_tempo = int.from_bytes(nbs_file.read(2), "little")
         tempo = (nbs_tempo/800)*120
+        print('[input-mnbs] Tempo: '+str(tempo))
         nbs_file.read(2)
         timesig_numerator = int.from_bytes(nbs_file.read(1), "little")
+        print('[input-mnbs] Time Signature: '+str(timesig_numerator)+'/4')
         nbs_file.read(4)
         nbs_file.read(4)
         nbs_file.read(4)
@@ -153,13 +161,17 @@ class input_gt_mnbs(plugin_input.base):
         nbs_song_sourcefilename = getstring(nbs_file)
         if nbs_newformat == 1:
             nbs_loopon = int.from_bytes(nbs_file.read(1), "little")
+            print('[input-mnbs] Loop Enabled: '+str(nbs_loopon))
             nbs_maxloopcount = int.from_bytes(nbs_file.read(1), "little")
+            print('[input-mnbs] Loop Max Count: '+str(nbs_maxloopcount))
             nbs_loopstarttick = int.from_bytes(nbs_file.read(2), "little")
+            print('[input-mnbs] Loop Start Tick: '+str(nbs_loopstarttick))
 
         # PART 2: NOTE BLOCKS
         notes_done = 0
         note_tick = -1
         split_duration = timesig_numerator*4
+        print_notes = 0
 
         while notes_done == 0:
             nbs_jump_tick = int.from_bytes(nbs_file.read(2), "little")
@@ -173,12 +185,13 @@ class input_gt_mnbs(plugin_input.base):
                         #print('T:'+str(note_tick), end=' ')
                         #print('L:'+str(note_layer), end=' ')
                         nbs_notes[note_layer][note_tick] = nbs_parsekey(nbs_file, nbs_newformat)
+                        print_notes += 1
                         nbs_jump_layer = int.from_bytes(nbs_file.read(2), "little")
                         if nbs_jump_layer == 0: layer_done = 1
                         note_layer += nbs_jump_layer
             if nbs_jump_tick == 0:
                 notes_done = 1
-                #print(nbs_jump_tick, 'Done')
+                print('[input-mnbs] Number of Notes: '+str(print_notes))
 
         for nbs_layer in nbs_notes:
             nbs_layerdata = nbs_notes[nbs_layer]
@@ -199,13 +212,14 @@ class input_gt_mnbs(plugin_input.base):
                     cvpj_notedata['pan'] = (nbs_notedata[2][0]/200)-0.5
                     cvpj_notedata['finepitch'] = nbs_notedata[2][0]
                 layer_placements[placementnum].append(cvpj_notedata)
-                #print(placementnum, note-placementnum, nbs_notedata)
+                #rint(placementnum, note-placementnum, nbs_notedata)
             for placenum in layer_placements:
                 cvpj_pl_data = {}
                 cvpj_pl_data['type'] = 'instruments'
                 cvpj_pl_data['position'] = placenum
                 cvpj_pl_data['notelist'] = layer_placements[placenum]
                 cvpj_l_playlist[nbs_layer]['placements'].append(cvpj_pl_data)
+            print('[input-mnbs] Layer '+str(nbs_layer)+' Placements: '+str(len(cvpj_l_playlist[nbs_layer]['placements'])))
 
         cvpj_l['message'] = {}
         cvpj_l['message']['type'] = 'text'

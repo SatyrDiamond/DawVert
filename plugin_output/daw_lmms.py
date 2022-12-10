@@ -311,6 +311,13 @@ def lmms_encode_inst_track(xmltag, trkJ):
                 if instplugin == 'soundfont2': middlenote += 12
                 trkX_insttr.set('basenote', str(middlenote+57))
             else: trkX_insttr.set('basenote', str(57))
+        else: 
+            if instplugin == 'sampler': trkX_insttr.set('basenote', str(60))
+            elif instplugin == 'soundfont2': trkX_insttr.set('basenote', str(69))
+            else: trkX_insttr.set('basenote', str(57))
+    else: 
+        if instplugin == 'sampler': trkX_insttr.set('basenote', str(60))
+        elif instplugin == 'soundfont2': trkX_insttr.set('basenote', str(69))
         else: trkX_insttr.set('basenote', str(57))
 
     trkX_midiport = ET.SubElement(trkX_insttr, "midiport")

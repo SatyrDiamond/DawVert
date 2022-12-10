@@ -80,13 +80,28 @@ class input_gt_mnbs(plugin_input.base):
         colors[14] = [0.61, 0.00, 0.23]
         colors[15] = [0.24, 0.24, 0.24]
 
+        gmmidi = {}
+        gmmidi[0] = 1
+        gmmidi[1] = 36
+        gmmidi[4] = 14
+        gmmidi[5] = 25
+        gmmidi[6] = 74
+        gmmidi[7] = 113
+        gmmidi[9] = 14
+        gmmidi[10] = 12
+        gmmidi[14] = 106
+
         for instnum in range(16):
             instid = 'NoteBlock'+str(instnum)
             cvpj_l_instruments[instid] = {}
             cvpj_l_instruments[instid]['name'] = noteblockinst[instnum]
             cvpj_l_instruments[instid]['color'] = colors[instnum]
             cvpj_l_instruments[instid]['instdata'] = {}
-            cvpj_l_instruments[instid]['instdata']['plugin'] = 'none'
+            if instnum in gmmidi:
+                cvpj_l_instruments[instid]['instdata']['plugin'] = 'general-midi'
+                cvpj_l_instruments[instid]['instdata']['plugindata'] = {'bank':0, 'inst':gmmidi[instnum]-1}
+            else:
+                cvpj_l_instruments[instid]['instdata']['plugin'] = 'none'
             cvpj_l_instrumentsorder.append(instid)
 
         # PART 1: HEADER

@@ -402,6 +402,20 @@ def convplug_inst(instdata, dawname, extra_json):
 					vstdxparams[15] = {"name": "LFO Rate","value": fldx_lforate}
 					replace_vst_params(instdata, 'DX10', 16, vstdxparams)
 
+			# ---------- from general-midi
+			elif pluginname == 'general-midi':
+				if 'soundfont' in extra_json:
+					sffile = extra_json['soundfont']
+					gmdata = instdata['plugindata']
+					instdata['plugin'] = "soundfont2"
+					instdata['plugindata'] = {}
+					instdata['plugindata']['bank'] = gmdata['bank']
+					instdata['plugindata']['patch'] = gmdata['inst']
+					instdata['plugindata']['file'] = sffile
+					print('[plugin-convert] GM MIDI > soundfont2')
+				else:
+					print('[plugin-convert] Soundfont argument not defiened.')
+
 			# ---------------------------------------- 2 ----------------------------------------
 			pluginname = instdata['plugin']
 			plugindata = instdata['plugindata']
@@ -449,26 +463,6 @@ def convplug_inst(instdata, dawname, extra_json):
 				xmlout = ET.tostring(jsfp_xml, encoding='utf-8')
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
 				replace_vst_data(instdata, 'juicysfplugin', vst2data)
-
-			# ---------- from general-midi
-			elif pluginname == 'general-midi':
-				if 'soundfont' in extra_json:
-					sffile = extra_json['soundfont']
-					gmdata = instdata['plugindata']
-					if dawname not in supportedplugins['sf2']:
-						jsfp_xml = juicysfplugin_create(gmdata['bank'], gmdata['inst'], sffile)
-						xmlout = ET.tostring(jsfp_xml, encoding='utf-8')
-						vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
-						replace_vst_data(instdata, 'juicysfplugin', vst2data)
-					else:
-						instdata['plugin'] = "soundfont2"
-						instdata['plugindata'] = {}
-						instdata['plugindata']['bank'] = gmdata['bank']
-						instdata['plugindata']['patch'] = gmdata['inst']
-						instdata['plugindata']['file'] = sffile
-						print('[plugin-convert] GM MIDI > soundfont2')
-				else:
-					print('[plugin-convert] Unchanged: soundfont argument not defiened.')
 
 			# -------------------- vst2 (magical8bitplug) --------------------
 

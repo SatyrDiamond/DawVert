@@ -549,7 +549,8 @@ class output_lmms(plugin_output.base):
 
         trksJ = projJ['trackdata']
         
+        
         outfile = ET.ElementTree(projX)
         
         ET.indent(outfile)
-        outfile.write(output_file, encoding='utf-8')
+        outfile.write(output_file, encoding='utf-8', xml_declaration = True)

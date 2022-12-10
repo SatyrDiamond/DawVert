@@ -40,11 +40,12 @@ e.g:
 | --- | --- | :--- | :--- |
 | M-I | ```flp``` | FL Studio |  | 
 | R | ```lmms``` | LMMS |  | 
-| M | ```mod``` | ProTracker | Tracker | 
-| M | ```s3m``` | Scream Tracker 3 | Tracker | 
-| M | ```it``` | Impulse Tracker | Tracker | 
-| M-I | ```fs_txt``` | FamiStudio Text | Chiptune/Retro | 
+| M | ```trk_mod``` | ProTracker | Tracker | 
+| M | ```trk_s3m``` | Scream Tracker 3 | Tracker | 
+| M | ```trk_it``` | Impulse Tracker | Tracker | 
+| M-I | ```famistudio_txt``` | FamiStudio Text | Chiptune/Retro | 
 | M-I | ```ceol``` | Bosca Ceoil | Chiptune/Retro | 
 | M | ```lovelycomposer``` | Lovely Composer | Chiptune/Retro | 
+| M | ```mnbs``` | Minecraft Note Block Studio |  | 
 | R | ```piyopiyo``` | PiyoPiyo | Chiptune/Retro | 
 | R | ```flipper``` | Flipper Music Format | | 

@@ -102,7 +102,7 @@ def parse_song(file_stream):
 
 class input_mod(plugin_input.base):
     def __init__(self): pass
-    def getshortname(self): return 'mod'
+    def getshortname(self): return 'trk_mod'
     def getname(self): return 'Tracker: Protracker Module'
     def gettype(self): return 'm'
     def supported_autodetect(self): return True

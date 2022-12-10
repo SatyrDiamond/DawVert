@@ -41,7 +41,7 @@ typelist['debug'] = 'debug'
 # --------- Input Plugin: Get List
 pluglist_input = {}
 pluglist_input_auto = {}
-print('  input plugins: ',end='')
+print('[info] Plugins (Input): ',end='')
 for inputplugin in base_input.plugins:
 	in_class_list = inputplugin()
 	shortname = in_class_list.getshortname()
@@ -55,7 +55,7 @@ print('')
 
 # --------- Output Plugin: Get List
 pluglist_output = {}
-print('  output plugins: ',end='')
+print('[info] Plugins (Output): ',end='')
 for outputplugin in base_output.plugins:
 	out_class_list = outputplugin()
 	shortname = out_class_list.getshortname()
@@ -107,9 +107,10 @@ in_type = in_class.gettype()
 out_type = out_class.gettype()
 
 # --------- Info
-print('Input:',in_format, in_type)
-print('Output:',out_format, out_type)
-
+print('[info] Input Format:',in_format)
+print('[info] Input DataType:',typelist[in_type])
+print('[info] Output Format:',out_format)
+print('[info] Output DataType:',typelist[out_type])
 typeconvsupported = False
 
 if in_type == out_type: typeconvsupported = True

@@ -413,12 +413,20 @@ class input_ceol(plugin_input.base):
         ceol_data = fs_ceol.readline().split(',')
 
         ceol_basic_versionnum = ceol_read()
+        print('[input-boscaceoil] Version Number: '+str(ceol_basic_versionnum))
         ceol_basic_swing = ceol_read()
+        print('[input-boscaceoil] Swing: '+str(ceol_basic_swing))
         ceol_basic_effect = ceol_read()
+        print('[input-boscaceoil] Effect: '+str(ceol_basic_effect))
         ceol_basic_effectvalue = ceol_read()
+        print('[input-boscaceoil] Effect Value: '+str(ceol_basic_effectvalue))
         ceol_basic_bpm = ceol_read()
+        print('[input-boscaceoil] BPM: '+str(ceol_basic_bpm))
         ceol_basic_patternlength = ceol_read()
+        print('[input-boscaceoil] Pattern Length: '+str(ceol_basic_patternlength))
         ceol_basic_barlength = ceol_read()
+        print('[input-boscaceoil] Bar Length: '+str(ceol_basic_barlength))
+        print('[input-boscaceoil] ')
 
         ceol_numinstrument = ceol_read()
 
@@ -426,6 +434,7 @@ class input_ceol(plugin_input.base):
 
         for instnum in range(ceol_numinstrument):
             cvpj_instid = 'ceol_'+str(instnum).zfill(2)
+            print('[input-boscaceoil] Instrument:', end=' ')
 
             ceol_inst_number = ceol_read()
             ceol_inst_type = ceol_read()
@@ -435,6 +444,13 @@ class input_ceol(plugin_input.base):
             ceol_inst_volume = ceol_read()
 
             ceol_instinfo = ceol_instlist[ceol_inst_number]
+
+            print(ceol_instinfo[1])
+            print('[input-boscaceoil]    Volume: '+str(ceol_inst_volume/256))
+            print('[input-boscaceoil]    Type: '+str(ceol_inst_type))
+            print('[input-boscaceoil]    Palette: '+str(ceol_inst_palette))
+            print('[input-boscaceoil]    Cutoff/Reso: '+str(ceol_inst_cutoff)+'/'+str(ceol_inst_resonance))
+            print('[input-boscaceoil] ')
 
             cvpj_inst = {}
             cvpj_inst["instdata"] = {}
@@ -465,6 +481,8 @@ class input_ceol(plugin_input.base):
 
         ceol_numpattern = ceol_read()
         for patnum in range(ceol_numpattern):
+            print('[input-boscaceoil] Pattern ' + str(patnum), end=', ')
+
             cvpj_notelist = []
 
             t_notepos_table = {}
@@ -476,15 +494,20 @@ class input_ceol(plugin_input.base):
             ceol_pat_key = ceol_read()
             ceol_pat_scale = ceol_read()
             ceol_pat_instrument = ceol_read()
+            print('Inst:'+str(ceol_pat_instrument), end=', ')
             ceol_pat_palette = ceol_read()
+            print('Pal:'+str(ceol_pat_palette), end=', ')
             ceol_numnotes = ceol_read()
+            print('#Notes:'+str(ceol_numnotes))
 
+            print_notes = 0
             for _ in range(ceol_numnotes):
                 ceol_nl_key = ceol_read()-60 + t_key_offset[ceol_pat_instrument]
                 ceol_nl_len = ceol_read()
                 ceol_nl_pos = ceol_read()
                 ceol_read()
                 t_notepos_table[ceol_nl_pos].append({'key': ceol_nl_key, 'instrument': 'ceol_'+str(ceol_pat_instrument).zfill(2), 'duration': ceol_nl_len})
+                print_notes += 1
 
             ceol_recordfilter = ceol_read()
             if ceol_recordfilter == 1:
@@ -527,10 +550,12 @@ class input_ceol(plugin_input.base):
                     cvpj_l_placement['fromindex'] = 'ceol_'+str(plpatnum).zfill(3)
                     cvpj_l_playlist[str(plnum+1)]['placements'].append(cvpj_l_placement)
 
+        print('[input-boscaceoil] ')
+
+        for channelnum in cvpj_l_playlist:
+        	print('[input-boscaceoil] Channel '+str(channelnum)+': ' + str(len(cvpj_l_playlist[channelnum]['placements'])) + ' Placements')
 
         timesig = placements.get_timesig(ceol_basic_patternlength, ceol_basic_barlength)
-        cvpj_l['timesig_numerator'] = timesig[0]
-        cvpj_l['timesig_denominator'] = timesig[1]
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

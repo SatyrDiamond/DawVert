@@ -123,6 +123,7 @@ def r2m(song):
     return json.dumps(cvpj_proj)
 
 def mi2m(song):
+    print('[song-convert] Converting from MultipleIndexed > Multiple')
     cvpj_proj = json.loads(song)
     t_s_notelistindex = cvpj_proj['notelistindex']
     t_s_playlist = cvpj_proj['playlist']
@@ -190,6 +191,7 @@ def m2r_addplacements(placements):
     return multiplacements
 
 def m2r(song):
+    print('[song-convert] Converting from Multiple > Regular')
     cvpj_proj = json.loads(song)
 
     playlist = cvpj_proj['playlist']

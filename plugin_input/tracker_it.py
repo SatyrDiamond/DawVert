@@ -17,7 +17,7 @@ else: xmodits_exists = True
 
 class input_it(plugin_input.base):
     def __init__(self): pass
-    def getshortname(self): return 'it'
+    def getshortname(self): return 'trk_it'
     def getname(self): return 'Tracker: Impulse Tracker'
     def gettype(self): return 'm'
     def supported_autodetect(self): return True

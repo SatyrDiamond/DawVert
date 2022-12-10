@@ -322,33 +322,32 @@ def convplug_inst(instdata, dawname, extra_json):
 
 			# ---------------------------------------- 1 ----------------------------------------
 			if pluginname == 'native-fl':
+				fl_plugdata = base64.b64decode(plugindata['data'])
+				fl_plugstr = data_bytes.bytearray2BytesIO(base64.b64decode(plugindata['data']))
 				if plugindata['name'].lower() == 'fruity soundfont player':
-					fl_sf2data = base64.b64decode(plugindata['data'])
+					flsf_unk = int.from_bytes(fl_plugstr.read(4), "little")
+					flsf_patch = int.from_bytes(fl_plugstr.read(4), "little")-1
+					flsf_bank = int.from_bytes(fl_plugstr.read(4), "little")
+					flsf_reverb_sendlvl = int.from_bytes(fl_plugstr.read(4), "little")
+					flsf_chorus_sendlvl = int.from_bytes(fl_plugstr.read(4), "little")
+					flsf_mod = int.from_bytes(fl_plugstr.read(4), "little")
+					flsf_asdf_A = int.from_bytes(fl_plugstr.read(4), "little") # max 5940
+					flsf_asdf_D = int.from_bytes(fl_plugstr.read(4), "little") # max 5940
+					flsf_asdf_S = int.from_bytes(fl_plugstr.read(4), "little") # max 127
+					flsf_asdf_R = int.from_bytes(fl_plugstr.read(4), "little") # max 5940
+					flsf_lfo_predelay = int.from_bytes(fl_plugstr.read(4), "little") # max 5900
+					flsf_lfo_amount = int.from_bytes(fl_plugstr.read(4), "little") # max 127
+					flsf_lfo_speed = int.from_bytes(fl_plugstr.read(4), "little") # max 127
+					flsf_cutoff = int.from_bytes(fl_plugstr.read(4), "little") # max 127
 
-					fl_sf2st = data_bytes.bytearray2BytesIO(base64.b64decode(plugindata['data']))
-					flsf_unk = int.from_bytes(fl_sf2st.read(4), "little")
-					flsf_patch = int.from_bytes(fl_sf2st.read(4), "little")-1
-					flsf_bank = int.from_bytes(fl_sf2st.read(4), "little")
-					flsf_reverb_sendlvl = int.from_bytes(fl_sf2st.read(4), "little")
-					flsf_chorus_sendlvl = int.from_bytes(fl_sf2st.read(4), "little")
-					flsf_mod = int.from_bytes(fl_sf2st.read(4), "little")
-					flsf_asdf_A = int.from_bytes(fl_sf2st.read(4), "little") # max 5940
-					flsf_asdf_D = int.from_bytes(fl_sf2st.read(4), "little") # max 5940
-					flsf_asdf_S = int.from_bytes(fl_sf2st.read(4), "little") # max 127
-					flsf_asdf_R = int.from_bytes(fl_sf2st.read(4), "little") # max 5940
-					flsf_lfo_predelay = int.from_bytes(fl_sf2st.read(4), "little") # max 5900
-					flsf_lfo_amount = int.from_bytes(fl_sf2st.read(4), "little") # max 127
-					flsf_lfo_speed = int.from_bytes(fl_sf2st.read(4), "little") # max 127
-					flsf_cutoff = int.from_bytes(fl_sf2st.read(4), "little") # max 127
+					flsf_filelen = int.from_bytes(fl_plugstr.read(1), "little")
+					flsf_filename = fl_plugstr.read(flsf_filelen).decode('utf-8')
 
-					flsf_filelen = int.from_bytes(fl_sf2st.read(1), "little")
-					flsf_filename = fl_sf2st.read(flsf_filelen).decode('utf-8')
-
-					flsf_reverb_sendto = int.from_bytes(fl_sf2st.read(4), "little", signed="True")+1
-					flsf_reverb_builtin = int.from_bytes(fl_sf2st.read(1), "little")
-					flsf_chorus_sendto = int.from_bytes(fl_sf2st.read(4), "little", signed="True")+1
-					flsf_reverb_builtin = int.from_bytes(fl_sf2st.read(1), "little")
-					flsf_hqrender = int.from_bytes(fl_sf2st.read(1), "little")
+					flsf_reverb_sendto = int.from_bytes(fl_plugstr.read(4), "little", signed="True")+1
+					flsf_reverb_builtin = int.from_bytes(fl_plugstr.read(1), "little")
+					flsf_chorus_sendto = int.from_bytes(fl_plugstr.read(4), "little", signed="True")+1
+					flsf_reverb_builtin = int.from_bytes(fl_plugstr.read(1), "little")
+					flsf_hqrender = int.from_bytes(fl_plugstr.read(1), "little")
 
 					instdata['plugin'] = "soundfont2"
 					instdata['plugindata'] = {}
@@ -359,6 +358,49 @@ def convplug_inst(instdata, dawname, extra_json):
 					else:
 						instdata['plugindata']['bank'] = flsf_bank
 						instdata['plugindata']['patch'] = flsf_patch
+				elif plugindata['name'].lower() == 'fruity dx10':
+					int.from_bytes(fl_plugstr.read(4), "little")
+					fldx_amp_att = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_amp_dec = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_amp_rel = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod_course = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod_fine = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod_init = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod_time = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod_sus = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod_rel = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod_velsen = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_vibrato = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_waveform = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod_thru = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_lforate = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod2_course = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod2_fine = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod2_init = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod2_time = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod2_sus = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod2_rel = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_mod2_velsen = int.from_bytes(fl_plugstr.read(4), "little")/65536
+					fldx_octave = (int.from_bytes(fl_plugstr.read(4), "little", signed="True")/6)+0.5
+
+					vstdxparams = {}
+					vstdxparams[0] = {"name": "Attack  ","value": fldx_amp_att}
+					vstdxparams[1] = {"name": "Decay   ","value": fldx_amp_dec}
+					vstdxparams[2] = {"name": "Release ","value": fldx_amp_rel}
+					vstdxparams[3] = {"name": "Coarse  ","value": fldx_mod_course}
+					vstdxparams[4] = {"name": "Fine    ","value": fldx_mod_fine}
+					vstdxparams[5] = {"name": "Mod Init","value": fldx_mod_init}
+					vstdxparams[6] = {"name": "Mod Dec ","value": fldx_mod_time}
+					vstdxparams[7] = {"name": "Mod Sus ","value": fldx_mod_sus}
+					vstdxparams[8] = {"name": "Mod Rel ","value": fldx_mod_rel}
+					vstdxparams[9] = { "name": "Mod Vel ","value": fldx_mod_velsen}
+					vstdxparams[10] = {"name": "Vibrato ","value": fldx_vibrato}
+					vstdxparams[11] = {"name": "Octave  ","value": fldx_octave}
+					vstdxparams[12] = {"name": "FineTune","value": 0.5}
+					vstdxparams[13] = {"name": "Waveform","value": fldx_waveform}
+					vstdxparams[14] = {"name": "Mod Thru","value": fldx_mod_thru}
+					vstdxparams[15] = {"name": "LFO Rate","value": fldx_lforate}
+					replace_vst_params(instdata, 'DX10', 16, vstdxparams)
 
 			# ---------------------------------------- 2 ----------------------------------------
 			pluginname = instdata['plugin']

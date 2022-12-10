@@ -253,7 +253,7 @@ class input_s3m(plugin_input.base):
 
         cvpj_l['title'] = s3m_name
 
-        cvpj_l['timemarkers'] = placements.make_timemarkers([4,4], patlentable, None)
+        cvpj_l['timemarkers'] = placements.make_timemarkers([4,16], patlentable, None)
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist

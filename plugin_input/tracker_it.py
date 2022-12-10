@@ -377,7 +377,7 @@ class input_it(plugin_input.base):
         cvpj_l['message']['type'] = 'text'
         cvpj_l['message']['text'] = it_songmessage
 
-        cvpj_l['timemarkers'] = placements.make_timemarkers([4,4], patlentable, None)
+        cvpj_l['timemarkers'] = placements.make_timemarkers([4,16], patlentable, None)
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist

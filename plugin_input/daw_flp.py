@@ -154,8 +154,9 @@ class input_flp(plugin_input.base):
             fxdata["sends"] = []
             if 'name' in fl_fxhan:
                 fxdata["name"] = fl_fxhan['name']
-            for route in fl_fxhan['routing']:
-                fxdata["sends"].append({"amount": 1.0, "channel": route})
+            if 'routing' in fl_fxhan:
+                for route in fl_fxhan['routing']:
+                    fxdata["sends"].append({"amount": 1.0, "channel": route})
             fxdata["vol"]: 1.0
 
 

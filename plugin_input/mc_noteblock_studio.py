@@ -209,8 +209,8 @@ class input_gt_mnbs(plugin_input.base):
                 cvpj_notedata['key'] = nbs_notedata[0]
                 if nbs_notedata[2] != None:
                     cvpj_notedata['vol'] = nbs_notedata[2][0]/100
-                    cvpj_notedata['pan'] = (nbs_notedata[2][0]/200)-0.5
-                    cvpj_notedata['finepitch'] = nbs_notedata[2][0]
+                    cvpj_notedata['pan'] = (nbs_notedata[2][1]/100)-1
+                    cvpj_notedata['finepitch'] = nbs_notedata[2][2]
                 layer_placements[placementnum].append(cvpj_notedata)
                 #rint(placementnum, note-placementnum, nbs_notedata)
             for placenum in layer_placements:

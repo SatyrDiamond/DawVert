@@ -62,10 +62,29 @@ class input_gt_mnbs(plugin_input.base):
         noteblockinst[14] = "Banjo (Hay)"
         noteblockinst[15] = "Pling (Glowstone)"
 
+        colors = {}
+        colors[0] = [0.00, 0.27, 0.55]
+        colors[1] = [0.13, 0.43, 0.18]
+        colors[2] = [0.61, 0.30, 0.31]
+        colors[3] = [0.61, 0.61, 0.00]
+        colors[4] = [0.49, 0.24, 0.48]
+        colors[5] = [0.40, 0.18, 0.12]
+        colors[6] = [0.61, 0.58, 0.25]
+        colors[7] = [0.61, 0.00, 0.61]
+        colors[8] = [0.21, 0.44, 0.49]
+        colors[9] = [0.61, 0.61, 0.61]
+        colors[10] = [0.00, 0.44, 0.61]
+        colors[11] = [0.61, 0.04, 0.05]
+        colors[12] = [0.61, 0.23, 0.06]
+        colors[13] = [0.00, 0.61, 0.00]
+        colors[14] = [0.61, 0.00, 0.23]
+        colors[15] = [0.24, 0.24, 0.24]
+
         for instnum in range(16):
             instid = 'NoteBlock'+str(instnum)
             cvpj_l_instruments[instid] = {}
             cvpj_l_instruments[instid]['name'] = noteblockinst[instnum]
+            cvpj_l_instruments[instid]['color'] = colors[instnum]
             cvpj_l_instruments[instid]['instdata'] = {}
             cvpj_l_instruments[instid]['instdata']['plugin'] = 'none'
             cvpj_l_instrumentsorder.append(instid)

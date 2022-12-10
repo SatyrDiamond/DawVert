@@ -46,6 +46,6 @@ e.g:
 | M-I | ```famistudio_txt``` | FamiStudio Text | Chiptune/Retro | 
 | M-I | ```ceol``` | Bosca Ceoil | Chiptune/Retro | 
 | M | ```lovelycomposer``` | Lovely Composer | Chiptune/Retro | 
-| M | ```mnbs``` | Minecraft Note Block Studio |  | 
 | R | ```piyopiyo``` | PiyoPiyo | Chiptune/Retro | 
+| M | ```mnbs``` | Minecraft Note Block Studio |  | 
 | R | ```flipper``` | Flipper Music Format | | 

@@ -146,7 +146,7 @@ class input_s3m(plugin_input.base):
                     cvpj_l_plugin['loop']['enabled'] = 1
                     cvpj_l_plugin['loop']['mode'] = "normal"
                     cvpj_l_plugin['loop']['points'] = [s3m_inst_loopStart, s3m_inst_loopEnd-1]
-                    print(s3m_inst_loopStart, s3m_inst_loopEnd)
+                    #print(s3m_inst_loopStart, s3m_inst_loopEnd)
                     loopdata = {'loop':[s3m_inst_loopStart, s3m_inst_loopEnd-1]}
                 else:
                     cvpj_l_plugin['loop']['enabled'] = 0

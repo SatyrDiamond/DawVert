@@ -18,12 +18,21 @@ def removelanes(projJ):
                 for laneid in lr_t_laneordering:
                     lr_t_l_data = lr_t_lanedata[laneid]
                     splitnameid = trackid+'_Lane'+laneid
-                    if 'name' in lr_t_l_data: lr_t_l_name = lr_t_l_data['name']
-                    else: lr_t_l_name = ''
                     if 'placements' in lr_t_l_data: lr_t_l_placements = lr_t_l_data['placements']
                     else: lr_t_l_placements = []
-                    if 'name' in lr_t_trdata: ntp_name = lr_t_trdata['name']+' ['+lr_t_l_name+']'
-                    else: ntp_name = '['+lr_t_l_name+']'
+
+                    if 'name' in lr_t_l_data: lr_t_l_name = lr_t_l_data['name']
+                    else: lr_t_l_name = None
+
+                    if 'name' in lr_t_trdata and lr_t_l_name != None: 
+                        ntp_name = lr_t_trdata['name']+' ['+lr_t_l_name+']'
+                    if 'name' in lr_t_trdata and lr_t_l_name == None: 
+                        ntp_name = lr_t_trdata['name']
+
+                    if 'name' not in lr_t_trdata and lr_t_l_name != None: 
+                        ntp_name = 'none'+' ['+lr_t_l_name+']'
+                    if 'name' not in lr_t_trdata and lr_t_l_name == None: 
+                        ntp_name = 'none'
 
                     part_track_data = trackbase.copy()
                     part_track_data['name'] = ntp_name

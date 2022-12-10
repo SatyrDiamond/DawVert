@@ -199,7 +199,13 @@ def deconstruct(inputfile):
         event_id = event[0]
         event_data = event[1]
 
-        if event_id == 199: FL_Main['Version'] = event_data.decode('utf-8').rstrip('\x00')
+        if event_id == 199: 
+            FLVersion = event_data.decode('utf-8').rstrip('\x00')
+            FLSplitted = FLVersion.split('.')
+            if int(FLSplitted[0]) < 20:
+                print('[error] FL version '+FLSplitted[0]+' is not supported.') 
+                exit()
+            FL_Main['Version'] = FLVersion
         if event_id == 156: FL_Main['Tempo'] = event_data/1000
         if event_id == 80: FL_Main['MainPitch'] = event_data
         if event_id == 17: FL_Main['Numerator'] = event_data

@@ -312,7 +312,7 @@ def vstlist_init(osplatform):
 			vst2path_loaded = True
 			print('[plugin-convert] # of VST3 Plugins:', len(vst3paths))
 
-def convplug_inst(instdata, dawname, extra_json):
+def convplug(instdata, dawname, extra_json):
 	m8bp_shapesupported = ['shape-square', 'shape-triangle', 'retro-noise', 'shape-pulse']
 	global supportedplugins
 	if 'plugin' in instdata:
@@ -544,13 +544,13 @@ def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 						if trackdata['type'] == 'instrument':
 							if 'instdata' in trackdata:
 								instdata = trackdata['instdata']
-								convplug_inst(instdata, dawname, extra_json)
+								convplug(instdata, dawname, extra_json)
 		if in_type == 'm' or in_type == 'mi':
 			if 'instruments' in cvpj_l:
 				for track in cvpj_l['instruments']:
 					trackdata = cvpj_l['instruments'][track]
 					if 'instdata' in trackdata:
 						instdata = trackdata['instdata']
-						convplug_inst(instdata, dawname, extra_json)
+						convplug(instdata, dawname, extra_json)
 		return json.dumps(cvpj_l, indent=2)
 	return None

@@ -288,7 +288,7 @@ def lmms_encode_inst_track(xmltag, trkJ):
             trkX_arpeggiator.set('arp-enabled', str(json_arpeggiator['enabled']))
             trkX_arpeggiator.set('arpmode', str(json_arpeggiator['mode']))
             trkX_arpeggiator.set('arpdir', str(arpdirection[json_arpeggiator['direction']]))
-            trkX_arpeggiator.set('arpskip', str(json_arpeggiator['skiprate']))
+            trkX_arpeggiator.set('arpskip', str(oneto100(json_arpeggiator['skiprate'])))
             arpvalue = json_arpeggiator['time']['value']
             arptype = json_arpeggiator['time']['type']
             if arptype == 'ms': trkX_arpeggiator.set('arptime', str(arpvalue))
@@ -479,6 +479,7 @@ class output_lmms(plugin_output.base):
     def gettype(self): return 'r'
     def parse(self, convproj_json, output_file):
         print('[output-lmms] Output Start')
+
         projJ = json.loads(convproj_json)
         
         placements.removelanes(projJ)

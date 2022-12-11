@@ -5,6 +5,7 @@ import base64
 import xml.etree.ElementTree as ET
 import pathlib
 import os
+import struct
 from functions import audio_wav
 from functions import data_bytes
 from functions import plug_vst
@@ -457,6 +458,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				print('[plug-conv] Unchanged')
 
 # -------------------- Func FX  --------------------
+# wolfshaper
 def wolfshaper_init():
 	global wolfshaperparams
 	wolfshaperparams = {}
@@ -474,13 +476,18 @@ def wolfshaper_init():
 def wolfshaper_setvalue(name, value):
 	global wolfshaperparams
 	wolfshaperparams[name] = value
-def wolfshaper_getdata(fxdata):
+def wolfshaper_addpoint(posX,posY,tension,pointtype):
+	global wolfshaperparams
+	#print(float.hex(posX)+','+float.hex(posY)+','+float.hex(tension)+','+str(pointtype)+';')
+	wolfshaperparams['graph'] += float.hex(posX)+','+float.hex(posY)+','+float.hex(tension)+','+str(pointtype)+';'
+def wolfshaper_replace(fxdata):
 	global wolfshaperparams
 	vstbytes = bytes()
 	for wolfshaperparam in wolfshaperparams:
 		if wolfshaperparam == 'graph': vstbytes += b'graph\x00'+wolfshaperparams['graph'].encode('utf-8')+b'\x00\x00'
 		else: vstbytes += str(wolfshaperparam).encode('utf-8')+b'\x00'+str(wolfshaperparams[wolfshaperparam]).encode('utf-8')+b'\x00'
 	vstbytes += b'\x00'
+	#print(vstbytes)
 	plug_vst.replace_data(fxdata, 'Wolf Shaper', vstbytes)
 
 # -------------------- FX --------------------
@@ -495,8 +502,13 @@ def convplug_fx(fxdata, dawname, extra_json, nameid):
 				mmp_plugdata = plugindata['data']
 				# -------------------- waveshaper > vst2 (Wolf Shaper) - from lmms --------------------
 				if mmp_plugname == 'waveshaper':
+					waveshapebytes = base64.b64decode(plugindata['data']['waveShape'])
+					waveshapepoints = [struct.unpack('f', waveshapebytes[i:i+4]) for i in range(0, len(waveshapebytes), 4)]
 					wolfshaper_init()
-					wolfshaper_getdata(fxdata)
+					for pointnum in range(50):
+						pointdata = waveshapepoints[pointnum*4][0]
+						wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
+					wolfshaper_replace(fxdata)
 			else:
 				print('[plug-conv] Unchanged')
 

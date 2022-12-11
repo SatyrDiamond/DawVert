@@ -5,6 +5,7 @@ import base64
 import json
 import math
 import plugin_input
+import os
 import xml.etree.ElementTree as ET
 
 lfoshape = ['sine', 'tri', 'saw', 'square', 'custom', 'random']
@@ -56,7 +57,10 @@ plugincolors['zynaddsubfx'] = [0.75, 0.75, 0.75]
 
 def getvstparams(plugindata, xmldata):
     plugindata['plugin'] = {}
-    plugindata['plugin']['path'] = xmldata.get('plugin')
+    if os.path.exists( xmldata.get('plugin')):
+        plugindata['plugin']['path'] = xmldata.get('plugin')
+    else:
+        plugindata['plugin']['path'] = lmms_vstpath+xmldata.get('plugin')
     vst_data = xmldata.get('chunk')
     vst_numparams = xmldata.get('numparams')
     if vst_data != None:
@@ -311,26 +315,32 @@ def lmms_decode_inst_track(trkX, name):
     cvpj_l_track['vol'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'vol', ['track', name, 'vol'])))
     
     if trkX.get('color') != None:
-        print(trkX.get('color'))
         cvpj_l_track['color'] = hex_to_rgb(trkX.get('color'))
 
     #midi
-    midiJ = {}
-    midi_outJ = {}
-    midi_inJ = {}
-    midiportX = trkX_insttr.findall('midiport')[0]
-    midi_inJ['enabled'] = int(midiportX.get('readable'))
-    if midiportX.get('inputchannel') != '0': midi_inJ['channel'] = int(midiportX.get('inputchannel'))
-    if midiportX.get('fixedinputvelocity') != '-1': midi_inJ['fixedvelocity'] = int(midiportX.get('fixedinputvelocity'))+1
-    midi_outJ['enabled'] = int(midiportX.get('writable'))
-    midi_outJ['channel'] = int(midiportX.get('outputchannel'))
-    midi_outJ['program'] = int(midiportX.get('outputprogram'))
-    if midiportX.get('fixedoutputvelocity') != '-1': midi_outJ['fixedvelocity'] = int(midiportX.get('fixedoutputvelocity'))+1
-    if midiportX.get('fixedoutputnote') != '-1': midi_outJ['fixednote'] = int(midiportX.get('fixedoutputnote'))+1
-    midiJ['basevelocity'] = int(midiportX.get('basevelocity'))
-    midiJ['out'] = midi_outJ
-    midiJ['in'] = midi_inJ
-    cvpj_l_inst['midi'] = midiJ
+    xml_a_midiport = trkX_insttr.findall('midiport')
+    if len(xml_a_midiport) != 0:
+        midiJ = {}
+        midi_outJ = {}
+        midi_inJ = {}
+        midiportX = trkX_insttr.findall('midiport')[0]
+        midi_inJ['enabled'] = int(midiportX.get('readable'))
+        if midiportX.get('inputchannel') != '0' and midiportX.get('inputchannel') != None: 
+            midi_inJ['channel'] = int(midiportX.get('inputchannel'))
+        if midiportX.get('fixedinputvelocity') != '-1' and midiportX.get('fixedinputvelocity') != None: 
+            midi_inJ['fixedvelocity'] = int(midiportX.get('fixedinputvelocity'))+1
+        midi_outJ['enabled'] = int(midiportX.get('writable'))
+        midi_outJ['channel'] = int(midiportX.get('outputchannel'))
+        if midiportX.get('outputprogram') != None: 
+            midi_outJ['program'] = int(midiportX.get('outputprogram'))
+        if midiportX.get('fixedoutputvelocity') != '-1' and midiportX.get('fixedoutputvelocity') != None: 
+            midi_outJ['fixedvelocity'] = int(midiportX.get('fixedoutputvelocity'))+1
+        if midiportX.get('fixedoutputnote') != '-1' and midiportX.get('fixedoutputnote') != None: 
+            midi_outJ['fixednote'] = int(midiportX.get('fixedoutputnote'))+1
+        midiJ['basevelocity'] = int(midiportX.get('basevelocity'))
+        midiJ['out'] = midi_outJ
+        midiJ['in'] = midi_inJ
+        cvpj_l_inst['midi'] = midiJ
 
     xml_a_fxchain = trkX_insttr.findall('fxchain')
     if len(xml_a_fxchain) != 0: cvpj_l_inst['fxchain'] = lmms_decode_fxchain(xml_a_fxchain[0])
@@ -528,6 +538,15 @@ class input_lmms(plugin_input.base):
         except ET.ParseError: output = False
         return output
     def parse(self, input_file, extra_param):
+        print('[output-lmms] Input Start')
+        global lmms_vstpath
+        homepath = os.path.expanduser('~')
+        lmmsconfigpath = homepath+'\\.lmmsrc.xml'
+        if os.path.exists(lmmsconfigpath):
+            lmmsconfX = ET.parse(lmmsconfigpath).getroot()
+            lmmsconf_pathsX = lmmsconfX.findall('paths')[0]
+            lmms_vstpath = lmmsconf_pathsX.get('vstdir')
+        else: lmms_vstpath = ''
 
         global autolist
         autolist = {}

@@ -1,25 +1,23 @@
 # SPDX-FileCopyrightText: 2022 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 import json
-import configparser
 import base64
 import xml.etree.ElementTree as ET
 import pathlib
-from os.path import exists
+import os
 from functions import audio_wav
 from functions import data_bytes
-
-global vst2paths
-global vst3paths
-
-global vst2path_loaded
-global vst3path_loaded
-
-vst2path_loaded = False
-vst3path_loaded = False
+from functions import plug_vst
 
 # -------------------- VST --------------------
+def vst_add_param(paramlist, num, name, value):
+	paramlist[str(num)] = {}
+	paramlist[str(num)]['name'] = name
+	paramlist[str(num)]['value'] = str(value)
 
+
+# -------------------- Func Instruments --------------------
+# magical8bitplug
 def magical8bitplug_addvalue(xmltag, name, value):
 	temp_xml = ET.SubElement(xmltag, 'PARAM')
 	temp_xml.set('id', str(name))
@@ -74,7 +72,7 @@ def shape_magical8bitplug(pluginname, plugindata):
 	magical8bitplug_addvalue(m8p_params, "vibratoIgnoresWheel_raw", 1.0)
 	magical8bitplug_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
 	return m8p_root
-
+# grace
 def grace_addvalue(xmltag, name, value):
 	temp_xml = ET.SubElement(xmltag, name)
 	if value != None:
@@ -219,7 +217,7 @@ def grace_create_region(gx_root, regionparams):
 	grace_addvalue(gx_RegionProp, 'SampleBeats', str(SampleBeats))
 
 	return gx_root
-
+# juicysfplugin
 def juicysfplugin_create(bank, patch, filename):
 	jsfp_xml = ET.Element("MYPLUGINSETTINGS")
 	jsfp_params = ET.SubElement(jsfp_xml, "params")
@@ -241,78 +239,8 @@ def juicysfplugin_create(bank, patch, filename):
 	else: jsfp_soundFont.set('path', '')
 	return jsfp_xml
 
-# -------------------- VST List --------------------
-def find_vstpath(name, instdata):
-	path_found = 0
-	vst_path = None
-	if 'plugindata' in instdata and 'plugin' in instdata:
-		if vst2path_loaded == True:
-			if name in vst2paths:
-				if 'path64' in vst2paths[name]: 
-					vst_path = vst2paths[name]['path64']
-					print('[plugin-convert] Plugin: ' + instdata['plugin'] +' > ' + name + ' (VST2 64-bit)')
-					path_found = 1
-				elif 'path32' in vst2paths[name]: 
-					vst_path = vst2paths[name]['path32']
-					print('[plugin-convert] Plugin: ' + instdata['plugin'] +' > ' + name + ' (VST2 32-bit)')
-					path_found = 1
-				else:
-					print('[plugin-convert] Unchanged,', 'Plugin path of ' + name + ' not Found')
-			else: 
-				instdata['plugindata']['plugin']['path'] = ''
-				print('[plugin-convert] Unchanged,', 'Plugin ' + name + ' not Found')
-		else: 
-			print('[plugin-convert] Unchanged,', "VST2 list not found")
-	else: 
-		print('[plugin-convert] Unchanged,', "No Plugin and PluginData defined")
-	return vst_path
-
-def replace_vst_data(instdata, name, data):
-	vst_path = find_vstpath(name, instdata)
-	if vst_path != None:
-		instdata['plugin'] = 'vst2'
-		instdata['plugindata'] = {}
-		instdata['plugindata']['plugin'] = {}
-		instdata['plugindata']['plugin']['name'] = name
-		instdata['plugindata']['plugin']['path'] = vst_path
-		instdata['plugindata']['datatype'] = 'raw'
-		instdata['plugindata']['data'] = base64.b64encode(data).decode('ascii')
-
-def replace_vst_params(instdata, name, numparams, params):
-	vst_path = find_vstpath(name, instdata)
-	if vst_path != None:
-		instdata['plugin'] = 'vst2'
-		instdata['plugindata'] = {}
-		instdata['plugindata']['plugin'] = {}
-		instdata['plugindata']['plugin']['name'] = name
-		instdata['plugindata']['plugin']['path'] = vst_path
-		instdata['plugindata']['datatype'] = 'param'
-		instdata['plugindata']['numparams'] = numparams
-		instdata['plugindata']['params'] = params
-
-def vst_add_param(paramlist, num, name, value):
-	paramlist[str(num)] = {}
-	paramlist[str(num)]['name'] = name
-	paramlist[str(num)]['value'] = str(value)
-
-def vstlist_init(osplatform):
-	global vst2paths
-	global vst3paths
-	global vst2path_loaded
-	global vst3path_loaded
-	if osplatform == 'windows':
-		if exists('vst2_win.ini'):
-			vst2paths = configparser.ConfigParser()
-			vst2paths.read('vst2_win.ini')
-			vst2path_loaded = True
-			print('[plugin-convert] # of VST2 Plugins:', len(vst2paths))
-		if exists('vst3_win.ini'):
-			vst3paths = configparser.ConfigParser()
-			vst3paths.read('vst3_win.ini')
-			vst2path_loaded = True
-			print('[plugin-convert] # of VST3 Plugins:', len(vst3paths))
-
-def convplug(instdata, dawname, extra_json):
+# -------------------- Instruments --------------------
+def convplug_inst(instdata, dawname, extra_json, nameid):
 	m8bp_shapesupported = ['shape-square', 'shape-triangle', 'retro-noise', 'shape-pulse']
 	global supportedplugins
 	if 'plugin' in instdata:
@@ -400,7 +328,7 @@ def convplug(instdata, dawname, extra_json):
 					vstdxparams[13] = {"name": "Waveform","value": fldx_waveform}
 					vstdxparams[14] = {"name": "Mod Thru","value": fldx_mod_thru}
 					vstdxparams[15] = {"name": "LFO Rate","value": fldx_lforate}
-					replace_vst_params(instdata, 'DX10', 16, vstdxparams)
+					plug_vst.replace_params(instdata, 'DX10', 16, vstdxparams)
 
 			# ---------- from general-midi
 			elif pluginname == 'general-midi':
@@ -412,9 +340,9 @@ def convplug(instdata, dawname, extra_json):
 					instdata['plugindata']['bank'] = gmdata['bank']
 					instdata['plugindata']['patch'] = gmdata['inst']
 					instdata['plugindata']['file'] = sffile
-					print('[plugin-convert] GM MIDI > soundfont2')
+					print('[plug-conv] GM MIDI > soundfont2')
 				else:
-					print('[plugin-convert] Soundfont argument not defiened.')
+					print('[plug-conv] Soundfont argument not defined.')
 
 			# ---------------------------------------- 2 ----------------------------------------
 			pluginname = instdata['plugin']
@@ -425,8 +353,8 @@ def convplug(instdata, dawname, extra_json):
 				sampler_data = instdata
 				sampler_file_data = instdata['plugindata']
 				wireturn = audio_wav.complete_wav_info(sampler_file_data)
-				if vst2path_loaded == True:
-					if 'Grace' in vst2paths:
+				if plug_vst.vst2path_loaded == True:
+					if plug_vst.ifexists_vst2('Grace') == True:
 						if 'file' in sampler_file_data and wireturn != None and wireturn == 1:
 							file_extension = pathlib.Path(sampler_file_data['file']).suffix
 							if file_extension == '.wav':
@@ -440,13 +368,13 @@ def convplug(instdata, dawname, extra_json):
 										regionparams['loop'] = sampler_file_data['loop']['points']
 								grace_create_region(gx_root, regionparams)
 								xmlout = ET.tostring(gx_root, encoding='utf-8')
-								replace_vst_data(instdata, 'Grace', xmlout)
+								plug_vst.replace_data(instdata, 'Grace', xmlout)
 						else:
-							print("[plugin-convert] Unchanged, Grace (VST2) only supports Format 1 .WAV")
+							print("[plug-conv] Unchanged, Grace (VST2) only supports Format 1 .WAV")
 					else:
-						print('[plugin-convert] Unchanged, Plugin Grace not Found')
+						print('[plug-conv] Unchanged, Plugin Grace not Found')
 				else:
-					print('[plugin-convert] Unchanged, VST2 list not found')
+					print('[plug-conv] Unchanged, VST2 list not found')
 
 			# -------------------- vst2 (juicysfplugin) --------------------
 
@@ -462,7 +390,7 @@ def convplug(instdata, dawname, extra_json):
 				jsfp_xml = juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
 				xmlout = ET.tostring(jsfp_xml, encoding='utf-8')
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
-				replace_vst_data(instdata, 'juicysfplugin', vst2data)
+				plug_vst.replace_data(instdata, 'juicysfplugin', vst2data)
 
 			# -------------------- vst2 (magical8bitplug) --------------------
 
@@ -510,32 +438,81 @@ def convplug(instdata, dawname, extra_json):
 				magical8bitplug_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
 				xmlout = ET.tostring(m8p_root, encoding='utf-8')
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
-				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
+				plug_vst.replace_data(instdata, 'Magical 8bit Plug 2', vst2data)
 
 			# ---------- retro shapes
 			elif pluginname in m8bp_shapesupported :
 				m8p_root = shape_magical8bitplug(pluginname, plugindata)
 				xmlout = ET.tostring(m8p_root, encoding='utf-8')
 				vst2data = b'VC2!' + len(xmlout).to_bytes(4, "little") + xmlout
-				replace_vst_data(instdata, 'Magical 8bit Plug 2', vst2data)
+				plug_vst.replace_data(instdata, 'Magical 8bit Plug 2', vst2data)
 
 			# -------------------- zynaddsubfx > vst2 (Zyn-Fusion) - from lmms --------------------
 			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
 				zasfxdata = instdata['plugindata']['data']
 				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
 				zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
-				replace_vst_data(instdata, 'ZynAddSubFX', zasfxdatafixed)
+				plug_vst.replace_data(instdata, 'ZynAddSubFX', zasfxdatafixed)
 			else:
-				print('[plugin-convert] Unchanged')
+				print('[plug-conv] Unchanged')
+
+# -------------------- Func FX  --------------------
+def wolfshaper_init():
+	global wolfshaperparams
+	wolfshaperparams = {}
+	wolfshaperparams['graph'] = 'test'
+	wolfshaperparams['pregain'] = 2.000000
+	wolfshaperparams['wet'] = 1.000000
+	wolfshaperparams['postgain'] = 1.000000
+	wolfshaperparams['removedc'] = 1.000000
+	wolfshaperparams['oversample'] = 0.000000
+	wolfshaperparams['bipolarmode'] = 0.000000
+	wolfshaperparams['warptype'] = 0.000000
+	wolfshaperparams['warpamount'] = 0.000000
+	wolfshaperparams['vwarptype'] = 0.000000
+	wolfshaperparams['vwarpamount'] = 0.000000
+def wolfshaper_setvalue(name, value):
+	global wolfshaperparams
+	wolfshaperparams[name] = value
+def wolfshaper_getdata(fxdata):
+	global wolfshaperparams
+	vstbytes = bytes()
+	for wolfshaperparam in wolfshaperparams:
+		if wolfshaperparam == 'graph': vstbytes += b'graph\x00'+wolfshaperparams['graph'].encode('utf-8')+b'\x00\x00'
+		else: vstbytes += str(wolfshaperparam).encode('utf-8')+b'\x00'+str(wolfshaperparams[wolfshaperparam]).encode('utf-8')+b'\x00'
+	vstbytes += b'\x00'
+	plug_vst.replace_data(fxdata, 'Wolf Shaper', vstbytes)
+
+# -------------------- FX --------------------
+def convplug_fx(fxdata, dawname, extra_json, nameid):
+	global supportedplugins
+	if 'plugin' in fxdata:
+		if 'plugindata' in fxdata:
+			pluginname = fxdata['plugin']
+			plugindata = fxdata['plugindata']
+			if pluginname == 'native-lmms':
+				mmp_plugname = plugindata['name']
+				mmp_plugdata = plugindata['data']
+				# -------------------- waveshaper > vst2 (Wolf Shaper) - from lmms --------------------
+				if mmp_plugname == 'waveshaper':
+					wolfshaper_init()
+					wolfshaper_getdata(fxdata)
+			else:
+				print('[plug-conv] Unchanged')
+
+# -------------------- convproj --------------------
+def do_fxchain(fxchain, dawname, extra_json, nameid):
+	for fxslot in fxchain:
+		convplug_fx(fxslot, dawname, extra_json, nameid)
 
 def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 	global supportedplugins
-	vstlist_init('windows')
+	plug_vst.listinit('windows')
 	supportedplugins = {}
 	supportedplugins['sf2'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
 	supportedplugins['sampler'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
+	cvpj_l = json.loads(cvpjdata)
 	if out_type != 'debug':
-		cvpj_l = json.loads(cvpjdata)
 		if in_type == 'r':
 			if 'trackdata' in cvpj_l:
 				for track in cvpj_l['trackdata']:
@@ -544,13 +521,21 @@ def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 						if trackdata['type'] == 'instrument':
 							if 'instdata' in trackdata:
 								instdata = trackdata['instdata']
-								convplug(instdata, dawname, extra_json)
+								print('[plug-conv] --- Inst: '+track)
+								convplug_inst(instdata, dawname, extra_json, track)
 		if in_type == 'm' or in_type == 'mi':
 			if 'instruments' in cvpj_l:
 				for track in cvpj_l['instruments']:
 					trackdata = cvpj_l['instruments'][track]
 					if 'instdata' in trackdata:
 						instdata = trackdata['instdata']
-						convplug(instdata, dawname, extra_json)
+						print('[plug-conv] --- Inst: '+track)
+						convplug_inst(instdata, dawname, extra_json, track)
+		if 'fxrack' in cvpj_l:
+			for fxid in cvpj_l['fxrack']:
+				fxiddata = cvpj_l['fxrack'][fxid]
+				if 'fxchain' in fxiddata:
+					fxchain = fxiddata['fxchain']
+					print('[plug-conv] --- FX: '+fxid)
+					do_fxchain(fxchain, dawname, extra_json, fxid)
 		return json.dumps(cvpj_l, indent=2)
-	return None

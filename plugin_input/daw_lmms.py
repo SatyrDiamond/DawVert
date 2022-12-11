@@ -538,7 +538,7 @@ class input_lmms(plugin_input.base):
         except ET.ParseError: output = False
         return output
     def parse(self, input_file, extra_param):
-        print('[output-lmms] Input Start')
+        print('[input-lmms] Input Start')
         global lmms_vstpath
         homepath = os.path.expanduser('~')
         lmmsconfigpath = homepath+'\\.lmmsrc.xml'

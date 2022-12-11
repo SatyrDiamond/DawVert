@@ -7,7 +7,7 @@ import argparse
 from plugin_input import base as base_input
 from plugin_output import base as base_output
 from functions import song_convert
-from functions import plugin_convert
+from functions import plug_conv
 
 print('DawVert: Daw Conversion Tool')
 
@@ -138,7 +138,7 @@ if CVPJ_j == '{}' or CVPJ_j == None:
 
 # --------- Plugins
 
-CVPJ_C = plugin_convert.convproj(CVPJ_j, in_type, out_type, out_format, extra_json)
+CVPJ_C = plug_conv.convproj(CVPJ_j, in_type, out_type, out_format, extra_json)
 if CVPJ_C != None: CVPJ_j = CVPJ_C
 
 

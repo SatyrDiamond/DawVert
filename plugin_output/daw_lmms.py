@@ -348,8 +348,8 @@ def lmms_encode_inst_track(xmltag, trkJ):
 
     print('[output-lmms] Instrument Track')
     print('[output-lmms]       Name: ' + trkJ['name'])
-    if 'fxchain' in instJ:
-        lmms_encode_fxchain(trkX_insttr, instJ)
+    if 'fxchain' in trkJ:
+        lmms_encode_fxchain(trkX_insttr, trkJ)
     lmms_encode_plugin(trkX_insttr, trkJ)
 
     #placements
@@ -422,7 +422,7 @@ def lmms_encode_fxchain(xmltag, json_fxchannel):
     print('[output-lmms]       FX Chain: ',end='')
     fxcX = ET.SubElement(xmltag, "fxchain")
     json_fxchain = json_fxchannel['fxchain']
-    if 'enabled' in json_fxchannel: fxcX.set('enabled', str(json_fxchannel['enabled']))
+    if 'fxenabled' in json_fxchannel: fxcX.set('enabled', str(json_fxchannel['fxenabled']))
     else: fxcX.set('enabled', str('1'))
     fxcX.set('numofeffects', str(len(json_fxchannel['fxchain'])))
     for json_fxslot in json_fxchain:

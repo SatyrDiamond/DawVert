@@ -521,8 +521,8 @@ def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 	global supportedplugins
 	plug_vst.listinit('windows')
 	supportedplugins = {}
-	supportedplugins['sf2'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
-	supportedplugins['sampler'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
+	supportedplugins['sf2'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'cvpj_a', 'lmms', 'flp']
+	supportedplugins['sampler'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'cvpj_a', 'lmms', 'flp']
 	cvpj_l = json.loads(cvpjdata)
 	if out_type != 'debug':
 		if in_type == 'r':

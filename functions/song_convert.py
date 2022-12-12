@@ -13,42 +13,93 @@
 
 import json
 
-def m2mi_checkdup(cvpj_notelistindex, nledata):
-    for pattern in cvpj_notelistindex:
-        patterndat = cvpj_notelistindex[pattern]
-        if patterndat == nledata:
-            return pattern
-    else:
-        return None
+def overlap(start1, end1, start2, end2):
+    return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
 
-def m2mi(song):
-    print('[song-convert] Converting from Multiple > MultipleIndexed')
-    global cvpj_proj
+# ---------------------------------- Regular to Any ----------------------------------
+
+
+def r2a(song):
+    print('[song-convert] Converting from Regular > Any')
     cvpj_proj = json.loads(song)
-    cvpj_playlist = cvpj_proj['playlist']
-    cvpj_notelistindex = {}
-    pattern_number = 1
-    for cvpj_playlistentry in cvpj_playlist:
-        cvpj_playlistentry_data = cvpj_playlist[cvpj_playlistentry]
-        if 'placements' not in cvpj_playlistentry_data:
-            cvpj_placements = []
-        else:
-            cvpj_placements = cvpj_playlistentry_data['placements']
-        for cvpj_placement in cvpj_placements:
-            if cvpj_placement['type'] == 'instruments':
-                cvpj_notelist = cvpj_placement['notelist']
-                temp_nle = {}
-                temp_nle['notelist'] = cvpj_notelist.copy()
-                checksamenl = m2mi_checkdup(cvpj_notelistindex, temp_nle)
-                if checksamenl != None:
-                    cvpj_placement['fromindex'] = checksamenl
-                else:
-                    cvpj_notelistindex['m2mi_' + str(pattern_number)] = temp_nle
-                    cvpj_placement['fromindex'] = 'm2mi_' + str(pattern_number)
-                    del cvpj_placement['notelist']
-                pattern_number += 1
-    cvpj_proj['notelistindex'] = cvpj_notelistindex
+    cvpj_proj['mastertrack'] = {}
+    cvpj_mastertrack = cvpj_proj['mastertrack']
+    if 'mastervol' in cvpj_proj:
+        cvpj_mastertrack['vol'] = cvpj_proj['mastervol']
+        del cvpj_proj['mastervol']
+    else:
+        cvpj_mastertrack['vol'] = 1.0
+    if 'fxrack' in cvpj_proj:
+        cvpj_fxrack = cvpj_proj['fxrack']
+        cvpj_trackdata = cvpj_proj['trackdata']
+        cvpj_trackordering = cvpj_proj['trackordering']
+
+        if '0' in cvpj_fxrack:
+            masterfx = cvpj_fxrack['0']
+            if 'name' in masterfx: cvpj_mastertrack['name'] = masterfx['name']
+            if 'muted' in masterfx: cvpj_mastertrack['muted'] = masterfx['muted']
+            if 'vol' in masterfx: cvpj_mastertrack['vol'] = masterfx['vol'] * cvpj_mastertrack['vol']
+            if 'fxenabled' in masterfx: cvpj_mastertrack['fxenabled'] = masterfx['fxenabled']
+            if 'color' in masterfx: cvpj_mastertrack['color'] = masterfx['color']
+            if 'fxchain' in masterfx: cvpj_mastertrack['fxchain'] = masterfx['fxchain']
+        track_fxslot = {}
+
+        for s_track in cvpj_trackdata:
+            sd_track = cvpj_trackdata[s_track]
+            sd_track['sends_audio'] = []
+            if 'fxrack_channel' in sd_track:
+                fxrack_channel = sd_track['fxrack_channel']
+                if fxrack_channel not in track_fxslot:
+                    track_fxslot[fxrack_channel] = []
+                track_fxslot[fxrack_channel].append(s_track)
+
+        fxtrknum = 1
+        for fxnum in track_fxslot:
+            trkfxdata = track_fxslot[fxnum]
+            if fxnum != 0:
+
+                if len(trkfxdata) == 1:
+                    trackid = trkfxdata[0]
+                    print('[song-convert] r2a: FX '+str(fxnum)+' effects moved to '+trackid)
+                    if str(fxnum) in cvpj_fxrack:
+                        if trackid in cvpj_trackdata:
+                            fxi_data = cvpj_fxrack[str(fxnum)]
+                            track_data = cvpj_trackdata[trackid]
+                            track_data['sends_audio'] = []
+                            track_data['sends_audio'].append({'type':'master', 'amount':1.0})
+                            if 'fxchain' not in track_data: track_data['fxchain'] = []
+                            fxc_fx = fxi_data['fxchain']
+                            fxc_track = track_data['fxchain']
+                            for slot in fxc_fx:
+                                fxc_track.append(slot)
+
+                if len(trkfxdata) > 1:
+                    effecttrackid = 'R2A_FX_'+str(fxtrknum)
+                    print('[song-convert] r2a: FX '+str(fxnum)+' to effect track, '+effecttrackid)
+                    cvpj_trackdata[effecttrackid] = {}
+                    cvpj_trackordering.append(effecttrackid)
+                    s_fxtrackdata = cvpj_trackdata[effecttrackid]
+                    if str(fxnum) in cvpj_fxrack:
+                        fxchanneldata = cvpj_fxrack[str(fxnum)]
+                        if 'vol' in fxchanneldata: s_fxtrackdata['vol'] = fxchanneldata['vol']
+                        if 'muted' in fxchanneldata: s_fxtrackdata['muted'] = fxchanneldata['muted']
+                        if 'name' in fxchanneldata: s_fxtrackdata['name'] = fxchanneldata['name']
+                        if 'fxchain' in fxchanneldata: s_fxtrackdata['fxchain'] = fxchanneldata['fxchain']
+                        if 'fxenabled' in fxchanneldata: s_fxtrackdata['fxenabled'] = fxchanneldata['fxenabled']
+                    s_fxtrackdata['sends_audio'] = []
+                    s_fxtrackdata['sends_audio'].append({'type':'master', 'amount':1.0})
+                    for part in trkfxdata:
+                        if part in cvpj_trackdata:
+                            cvpj_trackdata[part]['sends_audio'] = []
+                            cvpj_trackdata[part]['sends_audio'].append({'type':'track', 'name':effecttrackid, 'amount':1.0})
+                    fxtrknum += 1
+
+
+        del cvpj_proj['fxrack']
+
     return json.dumps(cvpj_proj)
+
+# ---------------------------------- Regular to Multiple ----------------------------------
 
 def r2m_pl_addinst(placements, trackid):
     t_placements = placements.copy()
@@ -122,31 +173,7 @@ def r2m(song):
                 if singletrack_laned == 0: plnum += 1
     return json.dumps(cvpj_proj)
 
-def mi2m(song):
-    print('[song-convert] Converting from MultipleIndexed > Multiple')
-    cvpj_proj = json.loads(song)
-    t_s_notelistindex = cvpj_proj['notelistindex']
-    t_s_playlist = cvpj_proj['playlist']
-    for pl_row in t_s_playlist:
-        pl_row_data = t_s_playlist[pl_row]
-        if 'placements' in pl_row_data:
-            pl_row_placements = pl_row_data['placements']
-            for pldata in pl_row_placements:
-                if 'type' in pldata:
-                    if pldata['type'] == 'instruments' and 'fromindex' in pldata:
-                        fromindex = pldata['fromindex']
-                        if fromindex in t_s_notelistindex:
-                            index_pl_data = t_s_notelistindex[fromindex]
-                            del pldata['fromindex']
-                            if 'notelist' in index_pl_data:
-                                pldata['notelist'] = index_pl_data['notelist']
-                                if 'name' in index_pl_data: pldata['name'] = index_pl_data['name']
-                                if 'color' in index_pl_data: pldata['color'] = index_pl_data['color']
-    del cvpj_proj['notelistindex']
-    return json.dumps(cvpj_proj)
-
-def overlap(start1, end1, start2, end2):
-    return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
+# ---------------------------------- Multiple to Regular ----------------------------------
 
 def m2r_split_insts(placement):
     del placement['type']
@@ -220,6 +247,9 @@ def m2r(song):
         plrow = playlist[playlistentry]
         if 'placements' in plrow:
             placements = plrow['placements']
+            if 'name' in playlist[playlistentry]:
+                print('[song-convert] m2r: Track ' + playlistentry+' ['+playlist[playlistentry]['name']+']')
+            else: print('[song-convert] m2r: Track ' + playlistentry)
             for placement in placements:
                 if placement['type'] == 'instruments':
                     splitted_insts = m2r_split_insts(placement)
@@ -239,4 +269,68 @@ def m2r(song):
     cvpj_proj['trackdata'] = cvpj_trackdata
     cvpj_proj['trackordering'] = cvpj_trackorder
 
+    return json.dumps(cvpj_proj)
+
+# ---------------------------------- Multiple to MultipleIndexed ----------------------------------
+
+def m2mi_checkdup(cvpj_notelistindex, nledata):
+    for pattern in cvpj_notelistindex:
+        patterndat = cvpj_notelistindex[pattern]
+        if patterndat == nledata:
+            return pattern
+    else:
+        return None
+
+def m2mi(song):
+    print('[song-convert] Converting from Multiple > MultipleIndexed')
+    global cvpj_proj
+    cvpj_proj = json.loads(song)
+    cvpj_playlist = cvpj_proj['playlist']
+    cvpj_notelistindex = {}
+    pattern_number = 1
+    for cvpj_playlistentry in cvpj_playlist:
+        cvpj_playlistentry_data = cvpj_playlist[cvpj_playlistentry]
+        if 'placements' not in cvpj_playlistentry_data:
+            cvpj_placements = []
+        else:
+            cvpj_placements = cvpj_playlistentry_data['placements']
+        for cvpj_placement in cvpj_placements:
+            if cvpj_placement['type'] == 'instruments':
+                cvpj_notelist = cvpj_placement['notelist']
+                temp_nle = {}
+                temp_nle['notelist'] = cvpj_notelist.copy()
+                checksamenl = m2mi_checkdup(cvpj_notelistindex, temp_nle)
+                if checksamenl != None:
+                    cvpj_placement['fromindex'] = checksamenl
+                else:
+                    cvpj_notelistindex['m2mi_' + str(pattern_number)] = temp_nle
+                    cvpj_placement['fromindex'] = 'm2mi_' + str(pattern_number)
+                    del cvpj_placement['notelist']
+                pattern_number += 1
+    cvpj_proj['notelistindex'] = cvpj_notelistindex
+    return json.dumps(cvpj_proj)
+
+# ---------------------------------- MultipleIndexed to Multiple ----------------------------------
+
+def mi2m(song):
+    print('[song-convert] Converting from MultipleIndexed > Multiple')
+    cvpj_proj = json.loads(song)
+    t_s_notelistindex = cvpj_proj['notelistindex']
+    t_s_playlist = cvpj_proj['playlist']
+    for pl_row in t_s_playlist:
+        pl_row_data = t_s_playlist[pl_row]
+        if 'placements' in pl_row_data:
+            pl_row_placements = pl_row_data['placements']
+            for pldata in pl_row_placements:
+                if 'type' in pldata:
+                    if pldata['type'] == 'instruments' and 'fromindex' in pldata:
+                        fromindex = pldata['fromindex']
+                        if fromindex in t_s_notelistindex:
+                            index_pl_data = t_s_notelistindex[fromindex]
+                            del pldata['fromindex']
+                            if 'notelist' in index_pl_data:
+                                pldata['notelist'] = index_pl_data['notelist']
+                                if 'name' in index_pl_data: pldata['name'] = index_pl_data['name']
+                                if 'color' in index_pl_data: pldata['color'] = index_pl_data['color']
+    del cvpj_proj['notelistindex']
     return json.dumps(cvpj_proj)

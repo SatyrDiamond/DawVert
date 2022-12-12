@@ -343,7 +343,7 @@ def lmms_decode_inst_track(trkX, name):
         cvpj_l_inst['midi'] = midiJ
 
     xml_a_fxchain = trkX_insttr.findall('fxchain')
-    if len(xml_a_fxchain) != 0: cvpj_l_inst['fxchain'] = lmms_decode_fxchain(xml_a_fxchain[0])
+    if len(xml_a_fxchain) != 0: cvpj_l_track['fxchain'] = lmms_decode_fxchain(xml_a_fxchain[0])
 
     cvpj_l_track_inst['usemasterpitch'] = int(trkX_insttr.get('usemasterpitch'))
 
@@ -491,7 +491,7 @@ def lmms_decode_fxmixer(fxX):
         if fxcX.get('muted') != None: fxcJ['muted'] = int(fxcX.get('muted'))
         fxcJ['vol'] = float(fxcX.get('volume'))
         fxchainX = fxcX.find('fxchain')
-        fxcJ['enabled'] = int(fxchainX.get('enabled'))
+        fxcJ['fxenabled'] = int(fxchainX.get('enabled'))
         fxcJ['fxchain'] = lmms_decode_fxchain(fxchainX)
         sendlist = []
         sendsxml = fxcX.findall('send')

@@ -36,6 +36,7 @@ def pmddecodenotes(pmdfile, recordspertrack, pitch):
         if splitnotes == splitcurrent:
             patJ = {}
             patJ['position'] = placementpos
+            patJ['duration'] = splitnotes
             patJ['notelist'] = notelist
             if notelist != []:
                 placements.append(patJ)

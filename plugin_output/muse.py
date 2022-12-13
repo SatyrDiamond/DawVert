@@ -106,7 +106,6 @@ class output_cvpj(plugin_output.base):
 
 
         for cvpj_trackentry in cvpj_trackordering:
-            print(cvpj_trackentry)
             if cvpj_trackentry in cvpj_trackdata:
                 s_trkdata = cvpj_trackdata[cvpj_trackentry]
                 if s_trkdata['type'] == 'instrument':
@@ -114,5 +113,5 @@ class output_cvpj(plugin_output.base):
 
         outfile = ET.ElementTree(x_muse)
         ET.indent(outfile)
-        outfile.write('test.med', encoding='utf-8', xml_declaration = True)
+        outfile.write(output_file, encoding='utf-8', xml_declaration = True)
         

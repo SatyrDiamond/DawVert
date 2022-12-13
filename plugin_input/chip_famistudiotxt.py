@@ -315,14 +315,17 @@ class input_famistudio(plugin_input.base):
                             cvpj_note['key'] = NoteToMidi(notedata['Value']) + 24
                             patternnotelist.append(cvpj_note)
             Channel_Instances = FST_Channels[Channel]['Instances']
+            durationnum = 0
             for FST_Placement in Channel_Instances:
                 FST_PData = Channel_Instances[FST_Placement]
                 FST_time = int(FST_PData['Time'])
                 cvpj_l_placement = {}
                 cvpj_l_placement['type'] = "instruments"
                 cvpj_l_placement['position'] = PointsPos[int(FST_time)]
+                cvpj_l_placement['duration'] = PatternLengthList[durationnum]
                 cvpj_l_placement['fromindex'] = Channel+'-'+FST_PData['Pattern']
                 cvpj_l_playlist[str(playlistnum)]['placements'].append(cvpj_l_placement)
+                durationnum += 1
             playlistnum += 1
 
         timesig = placements.get_timesig(PatternLength, FST_BeatLength)

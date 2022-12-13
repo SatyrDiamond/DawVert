@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2022 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# [a]
+# [s]
 #  /\
 #   ⎸
 #  \/
@@ -18,7 +18,7 @@ def overlap(start1, end1, start2, end2):
 
 # ---------------------------------- Regular to Any ----------------------------------
 
-def a2r(song):
+def s2r(song):
     cvpj_proj = json.loads(song)
 
     cvpj_proj['fxrack'] = {}
@@ -35,7 +35,9 @@ def a2r(song):
 
     for trackid in cvpj_trackordering:
         cvpj_proj['fxrack'][str(fxracknum)] = {}
+
         s_fx = cvpj_proj['fxrack'][str(fxracknum)]
+
         if trackid in cvpj_trackdata:
             s_trk = cvpj_trackdata[trackid]
             if 'name' in s_trk: s_fx['name'] = s_trk['name']
@@ -52,11 +54,20 @@ def a2r(song):
             if 'vol' in s_trk: 
                 s_fx['vol'] = s_trk['vol']
                 del s_trk['vol']
+
+            if 'audio_tomaster' in s_trk:
+                if s_trk['audio_tomaster'] == 1:
+                    s_trk['fxrack_channel'] = fxracknum
+                else: 
+                    s_trk['fxrack_channel'] = 0
+                del s_trk['audio_tomaster']
+            else: s_trk['fxrack_channel'] = fxracknum
+
         fxracknum += 1
 
     return json.dumps(cvpj_proj)
 
-def r2a(song):
+def r2s(song):
     print('[song-convert] Converting from Regular > Any')
     cvpj_proj = json.loads(song)
     cvpj_proj['track_master'] = {}
@@ -106,7 +117,7 @@ def r2a(song):
                             fxi_data = cvpj_fxrack[str(fxnum)]
                             track_data = cvpj_trackdata[trackid]
                             track_data['audio_tomaster'] = 1
-                            track_data['audio_fx_sends'] = []
+                            track_data['audio_fx_routes'] = {}
                             if 'fxchain' not in track_data: track_data['fxchain'] = []
                             fxc_fx = fxi_data['fxchain']
                             fxc_track = track_data['fxchain']

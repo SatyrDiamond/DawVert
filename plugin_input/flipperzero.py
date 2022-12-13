@@ -26,6 +26,8 @@ class input_fmf(plugin_input.base):
         fmf_Octave = 5
         Notes = []
 
+        totalDuration = 0
+
         f_fmf = open(input_file, 'r')
         lines_fmf = f_fmf.readlines()
         for line in lines_fmf:
@@ -84,6 +86,7 @@ class input_fmf(plugin_input.base):
         for Note in Notes:
             n_d = Note[1]*fmf_Duration
             n_k = Note[0]
+            totalDuration += n_d
             if n_k != None:
                 notedata = {}
                 notedata["duration"] = n_d
@@ -101,6 +104,7 @@ class input_fmf(plugin_input.base):
         trackdata["instdata"]['plugindata'] = {'duty': 0.125}
         trackdata['placements'] = [{}]
         trackdata['placements'][0]['position'] = 0
+        trackdata['placements'][0]['duration'] = totalDuration
         trackdata['placements'][0]['notelist'] = notelist
 
         tracklist['flipperzero'] = trackdata

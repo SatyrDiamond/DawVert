@@ -375,7 +375,11 @@ def deconstruct(inputfile):
             if event_id == 143: FL_Channels[str(T_FL_CurrentChannel)]['sampleflags'] = event_data
             if event_id == 20: FL_Channels[str(T_FL_CurrentChannel)]['looptype'] = event_data
             if event_id == 135: FL_Channels[str(T_FL_CurrentChannel)]['middlenote'] = event_data
-            if event_id == 196: FL_Channels[str(T_FL_CurrentChannel)]['samplefilename'] = event_data.decode('utf-16le').rstrip('\x00\x00')
+            if event_id == 196: 
+                samplefilename = event_data.decode('utf-16le').rstrip('\x00\x00')
+                if samplefilename[:21] == '%FLStudioFactoryData%':
+                    samplefilename = "C:\\Program Files\\Image-Line\\FL Studio 20" + samplefilename[21:]
+                FL_Channels[str(T_FL_CurrentChannel)]['samplefilename'] = samplefilename
         else:
             if event_id == 149: 
                 T_FL_FXColor = event_data

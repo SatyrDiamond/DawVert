@@ -5,6 +5,7 @@ import varint
 import argparse
 import struct
 from io import BytesIO
+from functions import data_bytes
 
 # ------------- Functions -------------
 def create_bytesio(data):
@@ -14,19 +15,6 @@ def create_bytesio(data):
     bytesio_filesize = bytesio.tell()
     bytesio.seek(0)
     return [bytesio, bytesio_filesize]
-def readriffdata(riffbytebuffer, offset):
-    if isinstance(riffbytebuffer, (bytes, bytearray)) == True:
-        riffbytebuffer = bytearray2BytesIO(riffbytebuffer)
-    riffobjects = []
-    riffbytebuffer.seek(0,2)
-    filesize = riffbytebuffer.tell()
-    riffbytebuffer.seek(offset)
-    while filesize > riffbytebuffer.tell():
-        chunkname = riffbytebuffer.read(4)
-        chunksize = int.from_bytes(riffbytebuffer.read(4), "little")
-        chunkdata = riffbytebuffer.read(chunksize)
-        riffobjects.append([chunkname, chunkdata])
-    return riffobjects
 def clamp(n, minn, maxn):
     return max(min(maxn, n), minn)
 
@@ -150,7 +138,7 @@ def deconstruct_flevent(datastream):
 def deconstruct(inputfile):
     fileobject = open(inputfile, 'rb')
     headername = fileobject.read(4)
-    rifftable = readriffdata(fileobject, 0)
+    rifftable = data_bytes.riff_read(fileobject, 0)
     for riffobj in rifftable:
         ##print(str(riffobj[0]) + str(len(riffobj[1])))
         if riffobj[0] == b'FLhd':

@@ -116,6 +116,8 @@ typeconvsupported = False
 if in_type == out_type: typeconvsupported = True
 if out_type == 'debug': typeconvsupported = True
 
+if in_type == 'a' and out_type == 'r': typeconvsupported = True
+
 if in_type == 'm' and out_type == 'mi': typeconvsupported = True
 if in_type == 'm' and out_type == 'r': typeconvsupported = True
 if in_type == 'm' and out_type == 'a': typeconvsupported = True
@@ -146,6 +148,10 @@ if CVPJ_C != None: CVPJ_j = CVPJ_C
 # --------- Convert Type -- mi <> m <> r
 
 print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
+
+if in_type == 'a' and out_type == 'r': 
+	CVPJ_j = song_convert.a2r(CVPJ_j)
+
 if in_type == 'm' and out_type == 'mi': 
 	CVPJ_j = song_convert.m2mi(CVPJ_j)
 if in_type == 'm' and out_type == 'r': 

@@ -146,7 +146,6 @@ class input_flp(plugin_input.base):
         for fxchannel in FL_Mixer:
             fl_fxhan = FL_Mixer[str(fxchannel)]
             fxrackJ[fxchannel] = {}
-
             fxdata = fxrackJ[fxchannel]
             fxdata["enabled"] = 0
             fxdata["fxchain"] = []
@@ -157,7 +156,11 @@ class input_flp(plugin_input.base):
             if 'routing' in fl_fxhan:
                 for route in fl_fxhan['routing']:
                     fxdata["sends"].append({"amount": 1.0, "channel": route})
-            fxdata["vol"]: 1.0
+            if fxchannel == '100': fxdata["vol"] = 0.0
+            elif fxchannel == '101': fxdata["vol"] = 0.0
+            elif fxchannel == '102': fxdata["vol"] = 0.0
+            elif fxchannel == '103': fxdata["vol"] = 0.0
+            else: fxdata["vol"] = 1.0
 
 
         for timemarker in FL_TimeMarkers:

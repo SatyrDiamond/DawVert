@@ -86,6 +86,7 @@ def r2a(song):
                         if 'name' in fxchanneldata: s_fxtrackdata['name'] = fxchanneldata['name']
                         if 'fxchain' in fxchanneldata: s_fxtrackdata['fxchain'] = fxchanneldata['fxchain']
                         if 'fxenabled' in fxchanneldata: s_fxtrackdata['fxenabled'] = fxchanneldata['fxenabled']
+                    s_fxtrackdata['type'] = 'effect'
                     s_fxtrackdata['sends_audio'] = []
                     s_fxtrackdata['sends_audio'].append({'type':'master', 'amount':1.0})
                     for part in trkfxdata:

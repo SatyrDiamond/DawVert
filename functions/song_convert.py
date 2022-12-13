@@ -18,12 +18,48 @@ def overlap(start1, end1, start2, end2):
 
 # ---------------------------------- Regular to Any ----------------------------------
 
+def a2r(song):
+    cvpj_proj = json.loads(song)
+
+    cvpj_proj['fxrack'] = {}
+    cvpj_trackdata = cvpj_proj['trackdata']
+    cvpj_trackordering = cvpj_proj['trackordering']
+
+    cvpj_proj['fxrack']['0'] = cvpj_proj['track_master']
+    del cvpj_proj['track_master']
+
+    fxracknum = 1
+
+    for trackid in cvpj_trackordering:
+        cvpj_proj['fxrack'][str(fxracknum)] = {}
+        s_fx = cvpj_proj['fxrack'][str(fxracknum)]
+        if trackid in cvpj_trackdata:
+            s_trk = cvpj_trackdata[trackid]
+            if 'name' in s_trk: s_fx['name'] = s_trk['name']
+            if 'sends_audio' in s_trk:
+                print(s_trk['sends_audio'])
+            if 'color' in s_trk: 
+                s_fx['color'] = s_trk['color']
+            if 'fxchain' in s_trk: 
+                s_fx['fxchain'] = s_trk['fxchain']
+                del s_trk['fxchain']
+            if 'pan' in s_trk: 
+                s_fx['pan'] = s_trk['pan']
+                del s_trk['pan']
+            if 'vol' in s_trk: 
+                s_fx['vol'] = s_trk['vol']
+                del s_trk['vol']
+        fxracknum += 1
+
+    return json.dumps(cvpj_proj)
 
 def r2a(song):
     print('[song-convert] Converting from Regular > Any')
     cvpj_proj = json.loads(song)
-    cvpj_proj['mastertrack'] = {}
-    cvpj_mastertrack = cvpj_proj['mastertrack']
+    cvpj_proj['track_master'] = {}
+    cvpj_proj['track_fx'] = {}
+    cvpj_mastertrack = cvpj_proj['track_master']
+    cvpj_fxtrack = cvpj_proj['track_fx']
     if 'mastervol' in cvpj_proj:
         cvpj_mastertrack['vol'] = cvpj_proj['mastervol']
         del cvpj_proj['mastervol']
@@ -46,12 +82,13 @@ def r2a(song):
 
         for s_track in cvpj_trackdata:
             sd_track = cvpj_trackdata[s_track]
-            sd_track['sends_audio'] = []
             if 'fxrack_channel' in sd_track:
                 fxrack_channel = sd_track['fxrack_channel']
                 if fxrack_channel not in track_fxslot:
                     track_fxslot[fxrack_channel] = []
                 track_fxslot[fxrack_channel].append(s_track)
+                del sd_track['fxrack_channel']
+
 
         fxtrknum = 1
         for fxnum in track_fxslot:
@@ -76,9 +113,8 @@ def r2a(song):
                 if len(trkfxdata) > 1:
                     effecttrackid = 'R2A_FX_'+str(fxtrknum)
                     print('[song-convert] r2a: FX '+str(fxnum)+' to effect track, '+effecttrackid)
-                    cvpj_trackdata[effecttrackid] = {}
-                    cvpj_trackordering.append(effecttrackid)
-                    s_fxtrackdata = cvpj_trackdata[effecttrackid]
+                    cvpj_fxtrack[effecttrackid] = {}
+                    s_fxtrackdata = cvpj_fxtrack[effecttrackid]
                     if str(fxnum) in cvpj_fxrack:
                         fxchanneldata = cvpj_fxrack[str(fxnum)]
                         if 'vol' in fxchanneldata: s_fxtrackdata['vol'] = fxchanneldata['vol']
@@ -92,7 +128,7 @@ def r2a(song):
                     for part in trkfxdata:
                         if part in cvpj_trackdata:
                             cvpj_trackdata[part]['sends_audio'] = []
-                            cvpj_trackdata[part]['sends_audio'].append({'type':'track', 'name':effecttrackid, 'amount':1.0})
+                            cvpj_trackdata[part]['sends_audio'].append({'type':'fx', 'name':effecttrackid, 'amount':1.0})
                     fxtrknum += 1
 
 

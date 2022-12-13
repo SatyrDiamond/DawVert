@@ -217,6 +217,7 @@ class input_gt_mnbs(plugin_input.base):
                 cvpj_pl_data = {}
                 cvpj_pl_data['type'] = 'instruments'
                 cvpj_pl_data['position'] = placenum
+                cvpj_pl_data['duration'] = split_duration
                 cvpj_pl_data['notelist'] = layer_placements[placenum]
                 cvpj_l_playlist[nbs_layer]['placements'].append(cvpj_pl_data)
             print('[input-mnbs] Layer '+str(nbs_layer)+' Placements: '+str(len(cvpj_l_playlist[nbs_layer]['placements'])))

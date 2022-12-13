@@ -547,6 +547,7 @@ class input_ceol(plugin_input.base):
                     cvpj_l_placement = {}
                     cvpj_l_placement['type'] = "instruments"
                     cvpj_l_placement['position'] = plpos*ceol_basic_patternlength
+                    cvpj_l_placement['duration'] = ceol_basic_patternlength
                     cvpj_l_placement['fromindex'] = 'ceol_'+str(plpatnum).zfill(3)
                     cvpj_l_playlist[str(plnum+1)]['placements'].append(cvpj_l_placement)
 

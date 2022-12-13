@@ -24,9 +24,12 @@ def a2r(song):
     cvpj_proj['fxrack'] = {}
     cvpj_trackdata = cvpj_proj['trackdata']
     cvpj_trackordering = cvpj_proj['trackordering']
+    cvpj_track_fx = cvpj_proj['track_fx']
 
     cvpj_proj['fxrack']['0'] = cvpj_proj['track_master']
     del cvpj_proj['track_master']
+
+    print(len(cvpj_trackordering))
 
     fxracknum = 1
 
@@ -102,35 +105,13 @@ def r2a(song):
                         if trackid in cvpj_trackdata:
                             fxi_data = cvpj_fxrack[str(fxnum)]
                             track_data = cvpj_trackdata[trackid]
-                            track_data['sends_audio'] = []
-                            track_data['sends_audio'].append({'type':'master', 'amount':1.0})
+                            track_data['audio_tomaster'] = 1
+                            track_data['audio_fx_sends'] = []
                             if 'fxchain' not in track_data: track_data['fxchain'] = []
                             fxc_fx = fxi_data['fxchain']
                             fxc_track = track_data['fxchain']
                             for slot in fxc_fx:
                                 fxc_track.append(slot)
-
-                if len(trkfxdata) > 1:
-                    effecttrackid = 'R2A_FX_'+str(fxtrknum)
-                    print('[song-convert] r2a: FX '+str(fxnum)+' to effect track, '+effecttrackid)
-                    cvpj_fxtrack[effecttrackid] = {}
-                    s_fxtrackdata = cvpj_fxtrack[effecttrackid]
-                    if str(fxnum) in cvpj_fxrack:
-                        fxchanneldata = cvpj_fxrack[str(fxnum)]
-                        if 'vol' in fxchanneldata: s_fxtrackdata['vol'] = fxchanneldata['vol']
-                        if 'muted' in fxchanneldata: s_fxtrackdata['muted'] = fxchanneldata['muted']
-                        if 'name' in fxchanneldata: s_fxtrackdata['name'] = fxchanneldata['name']
-                        if 'fxchain' in fxchanneldata: s_fxtrackdata['fxchain'] = fxchanneldata['fxchain']
-                        if 'fxenabled' in fxchanneldata: s_fxtrackdata['fxenabled'] = fxchanneldata['fxenabled']
-                    s_fxtrackdata['type'] = 'effect'
-                    s_fxtrackdata['sends_audio'] = []
-                    s_fxtrackdata['sends_audio'].append({'type':'master', 'amount':1.0})
-                    for part in trkfxdata:
-                        if part in cvpj_trackdata:
-                            cvpj_trackdata[part]['sends_audio'] = []
-                            cvpj_trackdata[part]['sends_audio'].append({'type':'fx', 'name':effecttrackid, 'amount':1.0})
-                    fxtrknum += 1
-
 
         del cvpj_proj['fxrack']
 

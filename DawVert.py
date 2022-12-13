@@ -33,7 +33,7 @@ if args.soundfont != None: extra_json['soundfont'] = args.soundfont
 typelist = {}
 typelist['r'] = 'Regular'
 typelist['ri'] = 'RegularIndexed'
-typelist['s'] = 'Seperate'
+typelist['s'] = 'Separate'
 typelist['m'] = 'Multiple'
 typelist['mi'] = 'MultipleIndexed'
 typelist['debug'] = 'debug'
@@ -150,7 +150,7 @@ if CVPJ_C != None: CVPJ_j = CVPJ_C
 print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 
 if in_type == 's' and out_type == 'r': 
-	CVPJ_j = song_convert.a2r(CVPJ_j)
+	CVPJ_j = song_convert.s2r(CVPJ_j)
 
 if in_type == 'm' and out_type == 'mi': 
 	CVPJ_j = song_convert.m2mi(CVPJ_j)
@@ -158,7 +158,7 @@ if in_type == 'm' and out_type == 'r':
 	CVPJ_j = song_convert.m2r(CVPJ_j)
 if in_type == 'm' and out_type == 's': 
 	CVPJ_j = song_convert.m2r(CVPJ_j)
-	CVPJ_j = song_convert.r2a(CVPJ_j)
+	CVPJ_j = song_convert.r2s(CVPJ_j)
 
 if in_type == 'r' and out_type == 'm': 
 	CVPJ_j = song_convert.r2m(CVPJ_j)
@@ -166,7 +166,7 @@ if in_type == 'r' and out_type == 'mi':
 	CVPJ_j = song_convert.r2m(CVPJ_j)
 	CVPJ_j = song_convert.m2mi(CVPJ_j)
 if in_type == 'r' and out_type == 's': 
-	CVPJ_j = song_convert.r2a(CVPJ_j)
+	CVPJ_j = song_convert.r2s(CVPJ_j)
 
 if in_type == 'mi' and out_type == 'm': 
 	CVPJ_j = song_convert.mi2m(CVPJ_j)
@@ -176,7 +176,7 @@ if in_type == 'mi' and out_type == 'r':
 if in_type == 'mi' and out_type == 's': 
 	CVPJ_j = song_convert.mi2m(CVPJ_j)
 	CVPJ_j = song_convert.m2r(CVPJ_j)
-	CVPJ_j = song_convert.r2a(CVPJ_j)
+	CVPJ_j = song_convert.r2s(CVPJ_j)
 
 # --------- Output
 

@@ -16,7 +16,7 @@ import json
 def overlap(start1, end1, start2, end2):
     return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
 
-# ---------------------------------- Regular to Any ----------------------------------
+# ---------------------------------- Regular to Separate ----------------------------------
 
 def s2r(song):
     cvpj_proj = json.loads(song)
@@ -68,7 +68,7 @@ def s2r(song):
     return json.dumps(cvpj_proj)
 
 def r2s(song):
-    print('[song-convert] Converting from Regular > Any')
+    print('[song-convert] Converting from Regular > Separate')
     cvpj_proj = json.loads(song)
     cvpj_proj['track_master'] = {}
     cvpj_proj['track_fx'] = {}

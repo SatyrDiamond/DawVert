@@ -64,7 +64,8 @@ class input_flp(plugin_input.base):
                 singleinstdata['instdata']['notefx']['pitch']['semitones'] = middlenote
                 singleinstdata['instdata']['pitch'] = channeldata['pitch']
                 singleinstdata['instdata']['usemasterpitch'] = channeldata['main_pitch']
-                singleinstdata['name'] = channeldata['name']
+                if 'name' in channeldata: singleinstdata['name'] = channeldata['name']
+                else: singleinstdata['name'] = ''
                 singleinstdata['pan'] = channeldata['pan']
                 singleinstdata['vol'] = channeldata['volume']
                 color = channeldata['color'].to_bytes(4, "little")

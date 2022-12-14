@@ -308,27 +308,23 @@ class input_it(plugin_input.base):
                 temp_allsample = None
                 temp_firstsamplefound = None
 
-                for it_notesample_entry in it_singleinst['notesampletable']:
-                    temp_sampnum = it_notesample_entry[1]
-                    if temp_firstsamplefound == None and temp_sampnum != 0:
-                        temp_firstsamplefound = temp_sampnum
-                    elif temp_firstsamplefound != temp_sampnum and temp_sampnum != 0:
-                        temp_inst_is_single_sample = False
+                n_s_t = it_singleinst['notesampletable']
+                bn_s_t = []
 
-                temp_nst_currentnote = -60
+                basenoteadd = 60
+                for n_s_te in n_s_t:
+                    bn_s_t.append([n_s_te[0]+basenoteadd, n_s_te[1]])
+                    basenoteadd -= 1
 
-                for it_notesample_entry in it_singleinst['notesampletable']:
-                    if it_notesample_entry[0] != temp_nst_currentnote:
-                        temp_inst_is_single_sample = False
-                        break
-                    temp_nst_currentnote += 1
+                bn_s_t_f = bn_s_t[0]
 
-                if temp_firstsamplefound != None and temp_inst_is_single_sample == True:
-                    temp_allsample = temp_firstsamplefound
+                bn_s_t_ifsame = all(item == bn_s_t_f for item in bn_s_t)
+
+                if bn_s_t_ifsame == True:
                     cvpj_l_single_inst['instdata'] = {}
                     cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
                     cvpj_l_single_inst['instdata']['plugindata'] = {}
-                    cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(temp_allsample) + '.wav'
+                    cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(bn_s_t_f[1]) + '.wav'
                 else:
                     cvpj_l_single_inst['instdata'] = {}
                     cvpj_l_single_inst['instdata']['plugin'] = 'none'

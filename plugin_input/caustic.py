@@ -51,10 +51,13 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l_instrumentsorder = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
+        cvpj_l_fxrack = {}
 
         machnum = 0
+        plnum = 0
         for machine in machines:
             machnum += 1
+            plnum += 1
             cvpj_inst = {}
             cvpj_inst["enabled"] = 1
             cvpj_inst["instdata"] = {}
@@ -67,8 +70,14 @@ class input_cvpj_r(plugin_input.base):
             cvpj_inst["vol"] = 1.0
             cvpj_l_instruments['Mach'+str(machnum)] = cvpj_inst
             cvpj_l_instrumentsorder.append('Mach'+str(machnum))
+            cvpj_l_fxrack[str(machnum)] = {}
+            cvpj_l_fxrack[str(machnum)]["name"] = caustic_instnames[machine['id']]
+            cvpj_l_playlist[str(plnum)] = {}
+            cvpj_l_playlist[str(plnum)]["name"] = caustic_instnames[machine['id']]
+            cvpj_l_playlist[str(plnum)]["color"] = caustic_instcolors[machine['id']]
 
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
+        cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist

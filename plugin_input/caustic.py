@@ -112,7 +112,6 @@ class input_cvpj_r(plugin_input.base):
             cvpj_l_playlist[str(plnum)]["placements"] = []
 
         for SEQNe in SEQN:
-            print(SEQNe)
             SEQNe_mach = SEQNe[0]+1
             SEQNe_type = SEQNe[1]
             SEQNe_pos = SEQNe[2]*4

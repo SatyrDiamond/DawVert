@@ -112,7 +112,7 @@ class input_cvpj_r(plugin_input.base):
             cvpj_l_playlist[str(plnum)]["placements"] = []
 
         for SEQNe in SEQN:
-            #print(SEQNe)
+            print(SEQNe)
             SEQNe_mach = SEQNe[0]+1
             SEQNe_type = SEQNe[1]
             SEQNe_pos = SEQNe[2]*4
@@ -121,9 +121,9 @@ class input_cvpj_r(plugin_input.base):
 
             hundreds = int(SEQNe_patnum/100)
             SEQNe_patnum -= hundreds*100
-            SEQNe_patlet = patletters[hundreds]
 
             if SEQNe_type == 2:
+                SEQNe_patlet = patletters[hundreds]
                 pl_placement = {}
                 pl_placement['position'] = SEQNe_pos
                 pl_placement['duration'] = SEQNe_len

@@ -462,5 +462,5 @@ def deconstruct_main(filepath):
         elif chunk_datatype == b'MSTR': deconstruct_MSTR(bi_rack, Caustic_Main)
         elif chunk_datatype == b'SEQN': deconstruct_SEQN(bi_rack, Caustic_Main)
         else: break
-        
+
     return Caustic_Main

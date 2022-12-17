@@ -49,6 +49,7 @@ def parse_notelist(causticpattern, machid):
             if key > 65535: key -= 65535
             notedata['key'] = key-60
             notedata['duration'] = causticnote[3]*4
+            notedata['vol'] = causticnote[13]
             notedata['instrument'] = machid
             if key != 0: notelist.append(notedata)
     return notelist

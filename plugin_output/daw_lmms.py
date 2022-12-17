@@ -425,16 +425,17 @@ def lmms_encode_effectslot(fxcX, json_fxslot):
     lmms_encode_effectplugin(fxslotX, json_fxslot)
     return fxslotX
 def lmms_encode_fxchain(xmltag, json_fxchannel):
-    print('[output-lmms]       FX Chain: ',end='')
-    fxcX = ET.SubElement(xmltag, "fxchain")
-    json_fxchain = json_fxchannel['fxchain']
-    if 'fxenabled' in json_fxchannel: fxcX.set('enabled', str(json_fxchannel['fxenabled']))
-    else: fxcX.set('enabled', str('1'))
-    fxcX.set('numofeffects', str(len(json_fxchannel['fxchain'])))
-    for json_fxslot in json_fxchain:
-        if json_fxslot['plugin'] == 'native-lmms' or 'vst2':
-            fxslotX = lmms_encode_effectslot(fxcX, json_fxslot)
-    print('')
+    if 'fxchain' in json_fxchannel:
+        print('[output-lmms]       FX Chain: ',end='')
+        fxcX = ET.SubElement(xmltag, "fxchain")
+        json_fxchain = json_fxchannel['fxchain']
+        if 'fxenabled' in json_fxchannel: fxcX.set('enabled', str(json_fxchannel['fxenabled']))
+        else: fxcX.set('enabled', str('1'))
+        fxcX.set('numofeffects', str(len(json_fxchannel['fxchain'])))
+        for json_fxslot in json_fxchain:
+            if json_fxslot['plugin'] == 'native-lmms' or 'vst2':
+                fxslotX = lmms_encode_effectslot(fxcX, json_fxslot)
+        print('')
 def lmms_encode_fxmixer(xmltag, json_fxrack):
     for json_fxchannel in json_fxrack:
         fxchannelJ = json_fxrack[json_fxchannel]

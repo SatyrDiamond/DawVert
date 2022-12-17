@@ -31,6 +31,8 @@ caustic_instcolors['FMSN'] = [0.29, 0.78, 0.76]
 caustic_instcolors['KSSN'] = [0.55, 0.57, 0.44]
 caustic_instcolors['SAWS'] = [0.99, 0.60, 0.25]
 
+patletters = ['A','B','C','D']
+
 from functions import format_caustic
 from functions import data_bytes
 import plugin_input
@@ -43,10 +45,12 @@ def parse_notelist(causticpattern, machid):
         if causticnote[1] != 4294967295:
             notedata = {}
             notedata['position'] = causticnote[2]*4
-            notedata['key'] = causticnote[6]
+            key = causticnote[6]
+            if key > 65535: key -= 65535
+            notedata['key'] = key-60
             notedata['duration'] = causticnote[3]*4
             notedata['instrument'] = machid
-            notelist.append(notedata)
+            if key != 0: notelist.append(notedata)
     return notelist
 
 class input_cvpj_r(plugin_input.base):
@@ -58,6 +62,7 @@ class input_cvpj_r(plugin_input.base):
     def parse(self, input_file, extra_param):
         CausticData = format_caustic.deconstruct_main(input_file)
         machines = CausticData['Machines']
+        SEQN = CausticData['SEQN']
 
         cvpj_l = {}
         cvpj_l_instruments = {}
@@ -104,6 +109,28 @@ class input_cvpj_r(plugin_input.base):
             cvpj_l_playlist[str(plnum)]["name"] = caustic_instnames[machine['id']]
             cvpj_l_playlist[str(plnum)]["color"] = caustic_instcolors[machine['id']]
             cvpj_l_playlist[str(plnum)]["placements"] = []
+
+        for SEQNe in SEQN:
+            #print(SEQNe)
+            SEQNe_mach = SEQNe[0]+1
+            SEQNe_type = SEQNe[1]
+            SEQNe_pos = SEQNe[2]*4
+            SEQNe_len = SEQNe[3]*4
+            SEQNe_patnum = SEQNe[6]
+
+            hundreds = int(SEQNe_patnum/100)
+            SEQNe_patnum -= hundreds*100
+            SEQNe_patlet = patletters[hundreds]
+
+            if SEQNe_type == 2:
+                pl_placement = {}
+                pl_placement['position'] = SEQNe_pos
+                pl_placement['duration'] = SEQNe_len
+                pl_placement['type'] = 'instruments'
+                pl_placement['fromindex'] = 'Caustic_Mach'+str(SEQNe_mach)+'_'+SEQNe_patlet+str(SEQNe_patnum+1)
+                cvpj_l_playlist[str(SEQNe_mach)]["placements"].append(pl_placement)
+
+
 
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['fxrack'] = cvpj_l_fxrack

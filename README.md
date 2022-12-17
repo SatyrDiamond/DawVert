@@ -45,6 +45,7 @@ e.g:
 | M | ```trk_it``` | Impulse Tracker | Tracker | 
 | M-I | ```famistudio_txt``` | FamiStudio Text | Chiptune/Retro | 
 | M-I | ```ceol``` | Bosca Ceoil | Chiptune/Retro | 
+| M-I | ```caustic``` | Caustic 3 | | 
 | M | ```lovelycomposer``` | Lovely Composer | Chiptune/Retro | 
 | R | ```piyopiyo``` | PiyoPiyo | Chiptune/Retro | 
 | M | ```mnbs``` | Minecraft Note Block Studio |  | 

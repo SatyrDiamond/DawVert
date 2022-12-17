@@ -17,7 +17,7 @@ caustic_instnames['KSSN'] = 'KSSynth'
 caustic_instnames['SAWS'] = 'SawSynth'
 
 caustic_instcolors = {}
-caustic_instcolors['NULL'] = [0, 0, 0]
+caustic_instcolors['NULL'] = [0.10, 0.10, 0.10]
 caustic_instcolors['SSYN'] = [0.79, 0.82, 0.91]
 caustic_instcolors['PCMS'] = [0.78, 0.84, 0.65]
 caustic_instcolors['BLNE'] = [0.99, 0.99, 0.99]
@@ -35,6 +35,19 @@ from functions import format_caustic
 from functions import data_bytes
 import plugin_input
 import json
+
+def parse_notelist(causticpattern, machid): 
+    notelist = []
+    causticnotes = causticpattern['notes']
+    for causticnote in causticnotes:
+        if causticnote[1] != 4294967295:
+            notedata = {}
+            notedata['position'] = causticnote[2]*4
+            notedata['key'] = causticnote[6]
+            notedata['duration'] = causticnote[3]*4
+            notedata['instrument'] = machid
+            notelist.append(notedata)
+    return notelist
 
 class input_cvpj_r(plugin_input.base):
     def __init__(self): pass
@@ -58,6 +71,21 @@ class input_cvpj_r(plugin_input.base):
         for machine in machines:
             machnum += 1
             plnum += 1
+
+            machid = 'Mach'+str(machnum)
+
+            if machine['id'] != 'NULL' and machine['id'] != 'MDLR':
+                patterns = machine['patterns']
+                for pattern in patterns:
+                    patid = 'Caustic_'+machid+'_'+pattern
+                    causticpattern = patterns[pattern]
+                    notelist = parse_notelist(causticpattern, machid)
+                    if notelist != []: 
+                        cvpj_l_notelistindex[patid] = {}
+                        cvpj_l_notelistindex[patid]['name'] = machid+' '+pattern
+                        cvpj_l_notelistindex[patid]['color'] = caustic_instcolors[machine['id']]
+                        cvpj_l_notelistindex[patid]['notelist'] = notelist
+
             cvpj_inst = {}
             cvpj_inst["enabled"] = 1
             cvpj_inst["instdata"] = {}
@@ -68,13 +96,14 @@ class input_cvpj_r(plugin_input.base):
             cvpj_inst["color"] = caustic_instcolors[machine['id']]
             cvpj_inst["pan"] = 0.0
             cvpj_inst["vol"] = 1.0
-            cvpj_l_instruments['Mach'+str(machnum)] = cvpj_inst
-            cvpj_l_instrumentsorder.append('Mach'+str(machnum))
+            cvpj_l_instruments[machid] = cvpj_inst
+            cvpj_l_instrumentsorder.append(machid)
             cvpj_l_fxrack[str(machnum)] = {}
             cvpj_l_fxrack[str(machnum)]["name"] = caustic_instnames[machine['id']]
             cvpj_l_playlist[str(plnum)] = {}
             cvpj_l_playlist[str(plnum)]["name"] = caustic_instnames[machine['id']]
             cvpj_l_playlist[str(plnum)]["color"] = caustic_instcolors[machine['id']]
+            cvpj_l_playlist[str(plnum)]["placements"] = []
 
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['fxrack'] = cvpj_l_fxrack

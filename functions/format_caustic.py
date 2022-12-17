@@ -69,7 +69,10 @@ def deconstruct_SPAT(bio_in):
     for patletter in range(4): 
         for patnum in range(16): 
             numnote = l_patterns[patletters[patletter]+str(patnum+1)]['numnote']
-            parse_note(SPAT_str, numnote)
+            l_patterns[patletters[patletter]+str(patnum+1)]['notes'] = parse_note(SPAT_str, numnote)
+
+    return l_patterns
+
 
 def deconstruct_SEQN(bi_rack, Caustic_Main):
     SEQN_size = int.from_bytes(bi_rack.read(4), "little")
@@ -458,7 +461,6 @@ def deconstruct_main(filepath):
         elif chunk_datatype == b'MIXR': deconstruct_MIXR(bi_rack, Caustic_Main)
         elif chunk_datatype == b'MSTR': deconstruct_MSTR(bi_rack, Caustic_Main)
         elif chunk_datatype == b'SEQN': deconstruct_SEQN(bi_rack, Caustic_Main)
-        else: 
-            break
-
+        else: break
+        
     return Caustic_Main

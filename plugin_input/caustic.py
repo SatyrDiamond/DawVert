@@ -35,7 +35,10 @@ patletters = ['A','B','C','D']
 
 from functions import format_caustic
 from functions import data_bytes
+from functions import folder_samples
+from functions import audio_wav
 import plugin_input
+import os.path
 import json
 
 def parse_notelist(causticpattern, machid): 
@@ -72,6 +75,9 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l_playlist = {}
         cvpj_l_fxrack = {}
 
+        file_name = os.path.splitext(os.path.basename(input_file))[0]
+        samplefolder = folder_samples.samplefolder(extra_param, file_name)
+
         machnum = 0
         plnum = 0
         for machine in machines:
@@ -88,7 +94,7 @@ class input_cvpj_r(plugin_input.base):
                     notelist = parse_notelist(causticpattern, machid)
                     if notelist != []: 
                         cvpj_l_notelistindex[patid] = {}
-                        cvpj_l_notelistindex[patid]['name'] = machid+' '+pattern
+                        cvpj_l_notelistindex[patid]['name'] = pattern+' ('+machid+')'
                         cvpj_l_notelistindex[patid]['color'] = caustic_instcolors[machine['id']]
                         cvpj_l_notelistindex[patid]['notelist'] = notelist
 
@@ -96,12 +102,33 @@ class input_cvpj_r(plugin_input.base):
             cvpj_inst["enabled"] = 1
             cvpj_inst["instdata"] = {}
             cvpj_instdata = cvpj_inst["instdata"]
-            cvpj_instdata['plugin'] = 'none'
-            cvpj_instdata['usemasterpitch'] = 1
             cvpj_inst["name"] = caustic_instnames[machine['id']]
             cvpj_inst["color"] = caustic_instcolors[machine['id']]
             cvpj_inst["pan"] = 0.0
             cvpj_inst["vol"] = 1.0
+            cvpj_inst['fxrack_channel'] = machnum
+
+            if machine['id'] == 'PCMS':
+                if len(machine['regions']) == 1:
+                    singlewav = machine['regions'][0]
+                    if singlewav['key_lo'] == 24 and singlewav['key_hi'] == 108:
+                        cvpj_instdata['plugin'] = 'sampler'
+                        wave_path = samplefolder + machid + '.wav'
+                        audio_wav.generate(wave_path, singlewav['samp_data'], singlewav['samp_ch'], singlewav['samp_hz'], 16, {'loop':[singlewav['start'], singlewav['end']]})
+                        cvpj_instdata['plugindata'] = {}
+                        cvpj_instdata['plugindata']['file'] = wave_path
+                        cvpj_inst["instdata"]['notefx'] = {}
+                        cvpj_inst["instdata"]['notefx']['pitch'] = {}
+                        cvpj_inst["instdata"]['notefx']['pitch']['semitones'] = singlewav['key_root']-60
+                    else:
+                        cvpj_instdata['plugin'] = 'none'
+                else:
+                    cvpj_instdata['plugin'] = 'none'
+                cvpj_instdata['usemasterpitch'] = 1
+            else:
+                cvpj_instdata['plugin'] = 'none'
+                cvpj_instdata['usemasterpitch'] = 1
+
             cvpj_l_instruments[machid] = cvpj_inst
             cvpj_l_instrumentsorder.append(machid)
             cvpj_l_fxrack[str(machnum)] = {}

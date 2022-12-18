@@ -387,7 +387,7 @@ def deconstruct_machine(datain, l_machine):
             region['key_hi'] = int.from_bytes(data_str.read(4), "little")
             region['mode'] = int.from_bytes(data_str.read(4), "little")
             region['start'] = int.from_bytes(data_str.read(4), "little")
-            region['end'] = int.from_bytes(data_str.read(4), "little")
+            region['end'] = int.from_bytes(data_str.read(4), "little")-1
             region['path'] = data_str.read(256).split(b'\x00')[0].decode('ascii')
             data_str.read(4)
             sample_len = int.from_bytes(data_str.read(4), "little")

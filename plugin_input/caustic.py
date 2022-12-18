@@ -124,7 +124,11 @@ class input_cvpj_r(plugin_input.base):
             cvpj_inst["vol"] = 1.0
             cvpj_inst['fxrack_channel'] = machnum
 
+            cvpj_instdata['plugindata'] = {}
+            plugindata = cvpj_instdata['plugindata']
+
             if machine['id'] == 'PCMS':
+                # -------------------------------- PCMSynth --------------------------------
                 if len(machine['regions']) == 1:
                     singlewav = machine['regions'][0]
                     if singlewav['key_lo'] == 24 and singlewav['key_hi'] == 108: isMultiSampler = False
@@ -143,14 +147,12 @@ class input_cvpj_r(plugin_input.base):
                     cvpj_inst["instdata"]['notefx']['pitch'] = {}
                     cvpj_inst["instdata"]['notefx']['pitch']['semitones'] = singlewav['key_root']-60
 
-                    cvpj_instdata['plugindata'] = {}
                     cvpj_instdata['plugindata']['file'] = wave_path
                     cvpj_instdata['plugindata']['length'] = singlewav['samp_len']
                     cvpj_instdata['plugindata']['loop'] = {}
                     loopmode_cvpj(cvpj_instdata['plugindata'], singlewav)
                 else:
                     cvpj_instdata['plugin'] = 'sampler-multi'
-                    cvpj_instdata['plugindata'] = {}
                     cvpj_instdata['plugindata']['regions'] = []
                     samplecount = 0
                     for singlewav in machine['regions']:
@@ -169,10 +171,19 @@ class input_cvpj_r(plugin_input.base):
                         cvpj_instdata['plugindata']['regions'].append(regionparams)
                         samplecount += 1
 
-                cvpj_instdata['usemasterpitch'] = 1
+                print(machine['controls'])
+                plugindata['asdrlfo'] = {}
+                plugindata['asdrlfo']['volume'] = {}
+                plugindata['asdrlfo']['volume']['envelope'] = {}
+                plugindata['asdrlfo']['volume']['envelope']['attack'] = machine['controls'][5]/0.583
+                plugindata['asdrlfo']['volume']['envelope']['hold'] = 0
+                plugindata['asdrlfo']['volume']['envelope']['decay'] = machine['controls'][6]/0.583
+                plugindata['asdrlfo']['volume']['envelope']['sustain'] = machine['controls'][7]
+                plugindata['asdrlfo']['volume']['envelope']['release'] = machine['controls'][8]/0.583
+                plugindata['asdrlfo']['volume']['envelope']['amount'] = 1
+
             else:
                 cvpj_instdata['plugin'] = 'none'
-                cvpj_instdata['usemasterpitch'] = 1
 
             cvpj_l_instruments[machid] = cvpj_inst
             cvpj_l_instrumentsorder.append(machid)

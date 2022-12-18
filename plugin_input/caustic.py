@@ -132,9 +132,12 @@ class input_cvpj_r(plugin_input.base):
                 else: isMultiSampler = True
 
                 if isMultiSampler == False:
+                    singlewav = machine['regions'][0]
                     cvpj_instdata['plugin'] = 'sampler'
                     wave_path = samplefolder + machid + '_PCMSynth_0.wav'
-                    audio_wav.generate(wave_path, singlewav['samp_data'], singlewav['samp_ch'], singlewav['samp_hz'], 16, {'loop':[singlewav['start'], singlewav['end']]})
+                    loopdata = None
+                    if singlewav['mode'] != 0 and singlewav['mode'] != 1: loopdata = {'loop':[singlewav['start'], singlewav['end']]}
+                    audio_wav.generate(wave_path, singlewav['samp_data'], singlewav['samp_ch'], singlewav['samp_hz'], 16, loopdata)
 
                     cvpj_inst["instdata"]['notefx'] = {}
                     cvpj_inst["instdata"]['notefx']['pitch'] = {}
@@ -145,9 +148,26 @@ class input_cvpj_r(plugin_input.base):
                     cvpj_instdata['plugindata']['length'] = singlewav['samp_len']
                     cvpj_instdata['plugindata']['loop'] = {}
                     loopmode_cvpj(cvpj_instdata['plugindata'], singlewav)
-
                 else:
                     cvpj_instdata['plugin'] = 'sampler-multi'
+                    cvpj_instdata['plugindata'] = {}
+                    cvpj_instdata['plugindata']['regions'] = []
+                    samplecount = 0
+                    for singlewav in machine['regions']:
+                        loopdata = None
+                        if singlewav['mode'] != 0 and singlewav['mode'] != 1: loopdata = {'loop':[singlewav['start'], singlewav['end']]}
+                        wave_path = samplefolder + machid + '_PCMSynth_'+str(samplecount)+'.wav'
+                        audio_wav.generate(wave_path, singlewav['samp_data'], singlewav['samp_ch'], singlewav['samp_hz'], 16, loopdata)
+                        regionparams = {}
+                        regionparams['r_key'] = [singlewav['key_lo']-60, singlewav['key_hi']-60]
+                        regionparams['middlenote'] = singlewav['key_root']-60
+                        regionparams['volume'] = singlewav['volume']
+                        regionparams['pan'] = (singlewav['pan']-0.5)*2
+                        regionparams['file'] = wave_path
+                        regionparams['loop'] = {}
+                        loopmode_cvpj(regionparams, singlewav)
+                        cvpj_instdata['plugindata']['regions'].append(regionparams)
+                        samplecount += 1
 
                 cvpj_instdata['usemasterpitch'] = 1
             else:

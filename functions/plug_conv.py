@@ -163,7 +163,7 @@ def grace_create_region(gx_root, regionparams):
 
 	FileName = ''
 
-	if 'filename' in regionparams: FileName = regionparams['filename']
+	if 'file' in regionparams: FileName = regionparams['file']
 	grace_addvalue(gx_SampleProp, 'SampleFileName', str(FileName))
 
 	LowNote = 0
@@ -176,21 +176,22 @@ def grace_create_region(gx_root, regionparams):
 	LoopStart = -1
 	LoopEnd = -1
 	
-	if 'note' in regionparams:
-		LowNote = regionparams['note'][0] + 60
-		HighNote = regionparams['note'][1] + 60
+	if 'r_key' in regionparams:
+		LowNote = regionparams['r_key'][0] + 60
+		HighNote = regionparams['r_key'][1] + 60
 
-	if 'velocity' in regionparams:
-		LowVelocity = int(regionparams['velocity'][0]*127)
-		HighVelocity = int(regionparams['velocity'][1]*127)
+	if 'r_vol' in regionparams:
+		LowVelocity = int(regionparams['vol'][0]*127)
+		HighVelocity = int(regionparams['vol'][1]*127)
 
 	if 'loop' in regionparams:
-		LoopStart = regionparams['loop'][0]
-		LoopEnd = regionparams['loop'][1]
+		if regionparams['loop']['enabled'] == 1:
+			LoopStart = regionparams['loop']['points'][0]
+			LoopEnd = regionparams['loop']['points'][1]
 
 	if 'middlenote' in regionparams: RootNote = regionparams['middlenote'] + 60
 	if 'start' in regionparams: SampleStart = regionparams['start']
-	if 'length' in regionparams: SampleEnd = regionparams['length'] - 1
+	if 'end' in regionparams: SampleEnd = regionparams['end'] - 1
 
 	grace_addvalue(gx_RegionProp, 'LowNote', str(LowNote))
 	grace_addvalue(gx_RegionProp, 'HighNote', str(HighNote))
@@ -361,17 +362,34 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 							if file_extension == '.wav':
 								gx_root = grace_create_main()
 								regionparams = {}
-								regionparams['filename'] = sampler_file_data['file']
+								regionparams['file'] = sampler_file_data['file']
 								regionparams['length'] = sampler_file_data['length']
 								regionparams['start'] = 0
-								if 'loop' in sampler_file_data:
-									if 'points' in sampler_file_data['loop']:
-										regionparams['loop'] = sampler_file_data['loop']['points']
+								regionparams['loop'] = sampler_file_data['loop']
+								regionparams['end'] = sampler_file_data['length']
 								grace_create_region(gx_root, regionparams)
 								xmlout = ET.tostring(gx_root, encoding='utf-8')
 								plug_vst.replace_data(instdata, 'Grace', xmlout)
 						else:
 							print("[plug-conv] Unchanged, Grace (VST2) only supports Format 1 .WAV")
+					else:
+						print('[plug-conv] Unchanged, Plugin Grace not Found')
+				else:
+					print('[plug-conv] Unchanged, VST2 list not found')
+
+			# -------------------- sampler-multi > vst2 (Grace) --------------------
+
+			elif pluginname == 'sampler-multi' and dawname not in supportedplugins['sampler-multi']:
+				msmpl_data = instdata
+				msmpl_p_data = instdata['plugindata']
+				if plug_vst.vst2path_loaded == True:
+					if plug_vst.ifexists_vst2('Grace') == True:
+						regions = msmpl_p_data['regions']
+						gx_root = grace_create_main()
+						for regionparams in regions:
+							grace_create_region(gx_root, regionparams)
+						xmlout = ET.tostring(gx_root, encoding='utf-8')
+						plug_vst.replace_data(instdata, 'Grace', xmlout)
 					else:
 						print('[plug-conv] Unchanged, Plugin Grace not Found')
 				else:
@@ -523,6 +541,7 @@ def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 	supportedplugins = {}
 	supportedplugins['sf2'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
 	supportedplugins['sampler'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
+	supportedplugins['sampler-multi'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'ableton']
 	cvpj_l = json.loads(cvpjdata)
 	if out_type != 'debug':
 		if in_type == 'r':

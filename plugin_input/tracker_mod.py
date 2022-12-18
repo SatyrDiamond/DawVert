@@ -148,8 +148,8 @@ class input_mod(plugin_input.base):
             mod_inst_finetune = int.from_bytes(file_stream.read(1), "big")
             if mod_inst_finetune > 7: mod_inst_finetune -= 16
             mod_inst_defaultvol = int.from_bytes(file_stream.read(1), "big")
-            mod_inst_loopstart = int.from_bytes(file_stream.read(2), "big")
-            mod_inst_looplength = int.from_bytes(file_stream.read(2), "big")
+            mod_inst_loopstart = int.from_bytes(file_stream.read(2), "big")*2
+            mod_inst_looplength = int.from_bytes(file_stream.read(2), "big")*2
             print('[input-mod] Instrument ' + str(mod_numinst) + ': ' + mod_inst_mod_name)
             table_samples.append([mod_inst_mod_name, mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength])
             cvpj_l_instruments[text_inst_start + str(mod_numinst)] = {}
@@ -164,8 +164,16 @@ class input_mod(plugin_input.base):
                 cvpj_l_single_inst['color'] = [0.53, 0.53, 0.53]
                 cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
                 cvpj_l_single_inst['instdata']['plugindata'] = {}
+                cvpj_l_single_inst['instdata']['plugindata']['trigger'] = 'normal'
                 cvpj_l_single_inst['instdata']['plugindata']['length'] = mod_inst_length
                 cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(mod_numinst).zfill(2) + '.wav'
+                cvpj_l_single_inst['instdata']['plugindata']['loop'] = {}
+                if mod_inst_loopstart != 0 and mod_inst_looplength != 1:
+                    cvpj_l_single_inst['instdata']['plugindata']['loop']['enabled'] = 1
+                    cvpj_l_single_inst['instdata']['plugindata']['loop']['mode'] = "normal"
+                    cvpj_l_single_inst['instdata']['plugindata']['loop']['points'] = [mod_inst_loopstart, mod_inst_loopstart+mod_inst_looplength]
+                else:
+                    cvpj_l_single_inst['instdata']['plugindata']['loop']['enabled'] = 0
             else: 
                 cvpj_l_single_inst['color'] = [0.33, 0.33, 0.33]
                 cvpj_l_single_inst['instdata']['plugin'] = 'none'

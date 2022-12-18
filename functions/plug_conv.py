@@ -172,7 +172,7 @@ def grace_create_region(gx_root, regionparams):
 	HighVelocity = 127
 	RootNote = 60
 	SampleStart = 0
-	SampleEnd = 173181
+	SampleEnd = 0
 	LoopStart = -1
 	LoopEnd = -1
 	

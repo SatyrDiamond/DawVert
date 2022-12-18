@@ -166,6 +166,7 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
             cvpj_l_plugindata['amp'] = hundredto1(float(xml_plugin.get('amp')))
             cvpj_l_plugindata['continueacrossnotes'] = int(xml_plugin.get('stutter'))
             cvpj_l_plugindata['file'] = xml_plugin.get('src')
+            cvpj_l_plugindata['trigger'] = 'normal'
             cvpj_l_plugindata['loop'] = {}
             cvpj_l_plugindata['loop']['custompoints'] = {}
             cvpj_l_plugindata['loop']['custompoints']['end'] = float(xml_plugin.get('eframe'))

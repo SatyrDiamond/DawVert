@@ -57,6 +57,22 @@ def parse_notelist(causticpattern, machid):
             if key != 0: notelist.append(notedata)
     return notelist
 
+def loopmode_cvpj(cvpjdata, wavdata): 
+    lm = wavdata['mode']
+    cvpjdata['end'] = wavdata['end']
+    if lm == 0 or lm == 1 or lm == 2 or lm == 3: cvpjdata['start'] = wavdata['start']
+    if lm == 4 or lm == 5: cvpjdata['start'] = 0
+
+    if lm == 0: cvpjdata['trigger'] = 'normal'
+    else: cvpjdata['trigger'] = 'oneshot'
+
+    if lm == 2 or lm == 3 or lm == 4 or lm == 5:
+        cvpjdata['loop']['enabled'] = 1
+        cvpjdata['loop']['points'] = [wavdata['start'], wavdata['end']]
+    if lm == 0 or lm == 1: cvpjdata['loop']['enabled'] = 0
+    if lm == 2 or lm == 4: cvpjdata['loop']['mode'] = "normal"
+    if lm == 3 or lm == 5: cvpjdata['loop']['mode'] = "pingpong"
+
 class input_cvpj_r(plugin_input.base):
     def __init__(self): pass
     def getshortname(self): return 'caustic'
@@ -111,19 +127,28 @@ class input_cvpj_r(plugin_input.base):
             if machine['id'] == 'PCMS':
                 if len(machine['regions']) == 1:
                     singlewav = machine['regions'][0]
-                    if singlewav['key_lo'] == 24 and singlewav['key_hi'] == 108:
-                        cvpj_instdata['plugin'] = 'sampler'
-                        wave_path = samplefolder + machid + '.wav'
-                        audio_wav.generate(wave_path, singlewav['samp_data'], singlewav['samp_ch'], singlewav['samp_hz'], 16, {'loop':[singlewav['start'], singlewav['end']]})
-                        cvpj_instdata['plugindata'] = {}
-                        cvpj_instdata['plugindata']['file'] = wave_path
-                        cvpj_inst["instdata"]['notefx'] = {}
-                        cvpj_inst["instdata"]['notefx']['pitch'] = {}
-                        cvpj_inst["instdata"]['notefx']['pitch']['semitones'] = singlewav['key_root']-60
-                    else:
-                        cvpj_instdata['plugin'] = 'none'
+                    if singlewav['key_lo'] == 24 and singlewav['key_hi'] == 108: isMultiSampler = False
+                    else: isMultiSampler = True
+                else: isMultiSampler = True
+
+                if isMultiSampler == False:
+                    cvpj_instdata['plugin'] = 'sampler'
+                    wave_path = samplefolder + machid + '_PCMSynth_0.wav'
+                    audio_wav.generate(wave_path, singlewav['samp_data'], singlewav['samp_ch'], singlewav['samp_hz'], 16, {'loop':[singlewav['start'], singlewav['end']]})
+
+                    cvpj_inst["instdata"]['notefx'] = {}
+                    cvpj_inst["instdata"]['notefx']['pitch'] = {}
+                    cvpj_inst["instdata"]['notefx']['pitch']['semitones'] = singlewav['key_root']-60
+
+                    cvpj_instdata['plugindata'] = {}
+                    cvpj_instdata['plugindata']['file'] = wave_path
+                    cvpj_instdata['plugindata']['length'] = singlewav['samp_len']
+                    cvpj_instdata['plugindata']['loop'] = {}
+                    loopmode_cvpj(cvpj_instdata['plugindata'], singlewav)
+
                 else:
-                    cvpj_instdata['plugin'] = 'none'
+                    cvpj_instdata['plugin'] = 'sampler-multi'
+
                 cvpj_instdata['usemasterpitch'] = 1
             else:
                 cvpj_instdata['plugin'] = 'none'

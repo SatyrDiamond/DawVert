@@ -127,8 +127,8 @@ class input_cvpj_r(plugin_input.base):
             cvpj_instdata['plugindata'] = {}
             plugindata = cvpj_instdata['plugindata']
 
+            # -------------------------------- PCMSynth --------------------------------
             if machine['id'] == 'PCMS':
-                # -------------------------------- PCMSynth --------------------------------
                 if len(machine['regions']) == 1:
                     singlewav = machine['regions'][0]
                     if singlewav['key_lo'] == 24 and singlewav['key_hi'] == 108: isMultiSampler = False
@@ -175,12 +175,36 @@ class input_cvpj_r(plugin_input.base):
                 plugindata['asdrlfo'] = {}
                 plugindata['asdrlfo']['volume'] = {}
                 plugindata['asdrlfo']['volume']['envelope'] = {}
-                plugindata['asdrlfo']['volume']['envelope']['attack'] = machine['controls'][5]/0.583
+                plugindata['asdrlfo']['volume']['envelope']['attack'] = machine['controls'][5]
                 plugindata['asdrlfo']['volume']['envelope']['hold'] = 0
-                plugindata['asdrlfo']['volume']['envelope']['decay'] = machine['controls'][6]/0.583
+                plugindata['asdrlfo']['volume']['envelope']['decay'] = machine['controls'][6]
                 plugindata['asdrlfo']['volume']['envelope']['sustain'] = machine['controls'][7]
-                plugindata['asdrlfo']['volume']['envelope']['release'] = machine['controls'][8]/0.583
+                plugindata['asdrlfo']['volume']['envelope']['release'] = machine['controls'][8]
                 plugindata['asdrlfo']['volume']['envelope']['amount'] = 1
+
+            # -------------------------------- BeatBox --------------------------------
+            elif machine['id'] == 'BBOX':
+                cvpj_instdata['plugin'] = 'sampler-multi'
+                plugindata['regions'] = []
+                bbox_samples = machine['samples']
+                samplecount = 0
+                bbox_key = -12
+                for bbox_sample in bbox_samples:
+                    #print(bbox_sample)
+                    wave_path = samplefolder + machid + '_BeatBox_'+str(samplecount)+'.wav'
+                    audio_wav.generate(wave_path, bbox_sample['data'], bbox_sample['chan'], bbox_sample['hz'], 16, None)
+                    regionparams = {}
+                    regionparams['r_key'] = [bbox_key, bbox_key]
+                    regionparams['middlenote'] = bbox_key
+                    regionparams['file'] = wave_path
+                    regionparams['start'] = 0
+                    regionparams['end'] = bbox_sample['len']
+                    regionparams['trigger'] = 'oneshot'
+                    regionparams['loop'] = {}
+                    regionparams['loop']['enabled'] = 0
+                    plugindata['regions'].append(regionparams)
+                    samplecount += 1
+                    bbox_key += 1
 
             else:
                 cvpj_instdata['plugin'] = 'none'

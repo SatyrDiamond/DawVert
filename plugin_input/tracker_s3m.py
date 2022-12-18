@@ -129,6 +129,7 @@ class input_s3m(plugin_input.base):
             cvpj_l_inst = cvpj_l_single_inst['instdata']
             cvpj_l_inst['plugindata'] = {}
             cvpj_l_plugin = cvpj_l_inst['plugindata']
+            cvpj_l_plugin['trigger'] = 'normal'
 
             if s3m_inst_type == 1:
                 cvpj_l_single_inst['color'] = [0.65, 0.57, 0.33]

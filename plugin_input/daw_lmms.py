@@ -93,7 +93,9 @@ def lmms_getvalue(xmltag, xmlname, autoname):
 
 # ------- Instruments and Plugins -------
 
-def exp2sec(value): return math.sqrt(value/5)
+def exp2sec(value): 
+    #print(value, (value*value)*5)
+    return (value*value)*5
 def asdflfo_get(trkX_insttr, cvpj_l_plugindata):
     elcX = trkX_insttr.findall('eldata')
     if len(elcX) != 0:
@@ -108,7 +110,7 @@ def asdflfo_get(trkX_insttr, cvpj_l_plugindata):
         if eldataX.findall('elres'):
             realvalue = eldataX.findall('elres')[0]
             asdflfo(cvpj_l_plugindata_asdrlfo, realvalue, 'reso')
-        cvpj_l_plugindata['asdflfo'] = cvpj_l_plugindata_asdrlfo
+        cvpj_l_plugindata['asdrlfo'] = cvpj_l_plugindata_asdrlfo
         cvpj_l_plugindata['filter'] = {}
         cvpj_l_plugindata['filter']['cutoff'] = float(eldataX.get('fcut'))
         cvpj_l_plugindata['filter']['wet'] = float(eldataX.get('fwet'))

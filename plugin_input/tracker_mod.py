@@ -225,6 +225,8 @@ class input_mod(plugin_input.base):
             wave_data = t_sampledata.tobytes('C')
             if mod_inst_entry[4] == 0 and mod_inst_entry[5] == 1:
                 audio_wav.generate(wave_path, wave_data, 1, 8272, 8, None)
+            elif mod_inst_entry[4] == 0 and mod_inst_entry[5] == 2:
+                audio_wav.generate(wave_path, wave_data, 1, 8272, 8, None)
             else:
                 audio_wav.generate(wave_path, wave_data, 1, 8272, 8, {'loop':[mod_inst_entry[4]*2, (mod_inst_entry[4]*2)+(mod_inst_entry[5]*2)]})
 

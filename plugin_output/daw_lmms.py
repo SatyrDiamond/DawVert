@@ -60,7 +60,7 @@ def oneto100(input): return round(float(input) * 100)
 # ------- Instruments and Plugins -------
 
 def sec2exp(value): 
-    print(value, math.sqrt(value/5))
+    #print(value, math.sqrt(value/5))
     return math.sqrt(value/5)
 def asdrlfo_set(jsonpath, trkX_insttr):
     eldataX = ET.SubElement(trkX_insttr, "eldata")

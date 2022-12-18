@@ -59,8 +59,10 @@ def oneto100(input): return round(float(input) * 100)
 
 # ------- Instruments and Plugins -------
 
-def sec2exp(value): return (value * value)*5
-def asdflfo_set(jsonpath, trkX_insttr):
+def sec2exp(value): 
+    print(value, math.sqrt(value/5))
+    return math.sqrt(value/5)
+def asdrlfo_set(jsonpath, trkX_insttr):
     eldataX = ET.SubElement(trkX_insttr, "eldata")
     if 'filter' in jsonpath:
         json_filter = jsonpath['filter']
@@ -70,36 +72,38 @@ def asdflfo_set(jsonpath, trkX_insttr):
             eldataX.set('ftype', str(filtertype[json_filter['type']]))
             eldataX.set('fres', str(json_filter['reso']))
 
-    asdflfo(jsonpath, eldataX, 'volume', 'vol')
-    asdflfo(jsonpath, eldataX, 'cutoff', 'cut')
-    asdflfo(jsonpath, eldataX, 'reso', 'res')
-def asdflfo(jsonin, xmlobj, asdrtype, xmltype):
-    if 'asdflfo' in jsonin:
-        jsondata = jsonin['asdflfo']
+    asdrlfo(jsonpath, eldataX, 'volume', 'vol')
+    asdrlfo(jsonpath, eldataX, 'cutoff', 'cut')
+    asdrlfo(jsonpath, eldataX, 'reso', 'res')
+def asdrlfo(jsonin, xmlobj, asdrtype, xmltype):
+    if 'asdrlfo' in jsonin:
+        jsondata = jsonin['asdrlfo']
         if asdrtype in jsondata:
             elmodX = ET.SubElement(xmlobj, 'el' + xmltype)
             elmodJ = jsondata[asdrtype]
             if 'envelope' in elmodJ:
                 elmodJenv = elmodJ['envelope']
-                elmodX.set('amt', str(elmodJenv['amount']))
-                elmodX.set('pdel', str(sec2exp(elmodJenv['predelay'])))
-                elmodX.set('att', str(sec2exp(elmodJenv['attack'])))
-                elmodX.set('hold', str(sec2exp(elmodJenv['hold'])))
-                elmodX.set('dec', str(sec2exp(elmodJenv['decay'])))
-                elmodX.set('sustain', str(sec2exp(elmodJenv['sustain'])))
-                elmodX.set('rel', str(sec2exp(elmodJenv['release'])))
+                if 'amount' in elmodJenv: elmodX.set('amt', str(elmodJenv['amount']))
+                if 'predelay' in elmodJenv: elmodX.set('pdel', str(sec2exp(elmodJenv['predelay'])))
+                if 'attack' in elmodJenv: elmodX.set('att', str(sec2exp(elmodJenv['attack'])))
+                if 'hold' in elmodJenv: elmodX.set('hold', str(sec2exp(elmodJenv['hold'])))
+                if 'decay' in elmodJenv: elmodX.set('dec', str(sec2exp(elmodJenv['decay'])))
+                if 'sustain' in elmodJenv: elmodX.set('sustain', str(elmodJenv['sustain']))
+                if 'release' in elmodJenv: elmodX.set('rel', str(sec2exp(elmodJenv['release'])))
             if 'lfo' in elmodJ:
                 elmodJlfo = elmodJ['lfo']
-                elmodX.set('lpdel', str(elmodJlfo['predelay']))
-                elmodX.set('latt', str(elmodJlfo['attack']))
-                elmodX.set('lshp', str(lfoshape[elmodJlfo['shape']]))
+                if 'predelay' in elmodJenv:elmodX.set('lpdel', str(elmodJlfo['predelay']))
+                if 'attack' in elmodJenv:elmodX.set('latt', str(elmodJlfo['attack']))
+                if 'shape' in elmodJenv:elmodX.set('lshp', str(lfoshape[elmodJlfo['shape']]))
                 elmodX.set('x100', '0')
-                lfospeed = float(elmodJlfo['speed']) / 20000
-                if lfospeed > 1:
-                    elmodX.set('x100', '1')
-                    lfospeed = lfospeed / 100
-                elmodX.set('lspd', str(lfospeed))
-                elmodX.set('lamt', str(elmodJlfo['amount']))
+                if 'speed' in elmodJenv:
+                    lfospeed = float(elmodJlfo['speed']) / 20000
+                    if lfospeed > 1:
+                        elmodX.set('x100', '1')
+                        lfospeed = lfospeed / 100
+                    elmodX.set('lspd', str(lfospeed))
+                if 'shape' in elmodJenv: elmodX.set('lshp', str(lfoshape[elmodJlfo['shape']]))
+
 def lmms_encode_plugin(xmltag, trkJ):
     instJ = trkJ['instdata']
     pluginname = instJ['plugin']
@@ -109,7 +113,7 @@ def lmms_encode_plugin(xmltag, trkJ):
 
     if pluginname == 'sampler':
         print('[output-lmms]       Plugin: sampler > AudioFileProcessor')
-        asdflfo_set(plugJ, xmltag)
+        asdrlfo_set(plugJ, xmltag)
         xml_instrumentpreplugin.set('name', "audiofileprocessor")
         xml_sampler = ET.SubElement(xml_instrumentpreplugin, "audiofileprocessor")
         if 'reversed' in plugJ: xml_sampler.set('reversed', str(plugJ['reverse']))
@@ -215,7 +219,7 @@ def lmms_encode_plugin(xmltag, trkJ):
         lmmsplugname = plugJ['name']
         xml_instrumentpreplugin.set('name', lmmsplugname)
         xml_lmmsnat = ET.SubElement(xml_instrumentpreplugin, lmmsplugname)
-        asdflfo_set(plugJ, xmltag)
+        asdrlfo_set(plugJ, xmltag)
         for lplugname in lmmsplugdata: xml_lmmsnat.set(lplugname, str(lmmsplugdata[lplugname]))
     else:
         print('[output-lmms]       Plugin: '+pluginname+' > None')

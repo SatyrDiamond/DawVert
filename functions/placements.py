@@ -9,40 +9,44 @@ def removelanes(projJ):
         if trackid in old_trackdata:
             lr_t_trdata = old_trackdata[trackid]
             if 'laned' in lr_t_trdata:
-                trackbase = lr_t_trdata.copy()
-                del trackbase['laned']
-                del trackbase['lanedata']
-                del trackbase['laneordering']
                 lr_t_lanedata = lr_t_trdata['lanedata']
                 lr_t_laneordering = lr_t_trdata['laneordering']
-                for laneid in lr_t_laneordering:
-                    lr_t_l_data = lr_t_lanedata[laneid]
-                    splitnameid = trackid+'_Lane'+laneid
-                    if 'placements' in lr_t_l_data: lr_t_l_placements = lr_t_l_data['placements']
-                    else: lr_t_l_placements = []
+                if len(lr_t_laneordering) != 0:
+                    trackbase = lr_t_trdata.copy()
+                    del trackbase['laned']
+                    del trackbase['lanedata']
+                    del trackbase['laneordering']
+                    for laneid in lr_t_laneordering:
+                        lr_t_l_data = lr_t_lanedata[laneid]
+                        splitnameid = trackid+'_Lane'+laneid
+                        if 'placements' in lr_t_l_data: lr_t_l_placements = lr_t_l_data['placements']
+                        else: lr_t_l_placements = []
 
-                    if 'name' in lr_t_l_data: lr_t_l_name = lr_t_l_data['name']
-                    else: lr_t_l_name = None
+                        if 'name' in lr_t_l_data: lr_t_l_name = lr_t_l_data['name']
+                        else: lr_t_l_name = None
 
-                    if 'name' in lr_t_trdata and lr_t_l_name != None: 
-                        ntp_name = lr_t_trdata['name']+' ['+lr_t_l_name+']'
-                    if 'name' in lr_t_trdata and lr_t_l_name == None: 
-                        ntp_name = lr_t_trdata['name']
+                        if 'name' in lr_t_trdata and lr_t_l_name != None: 
+                            ntp_name = lr_t_trdata['name']+' ['+lr_t_l_name+']'
+                        if 'name' in lr_t_trdata and lr_t_l_name == None: 
+                            ntp_name = lr_t_trdata['name']
 
-                    if 'name' not in lr_t_trdata and lr_t_l_name != None: 
-                        ntp_name = 'none'+' ['+lr_t_l_name+']'
-                    if 'name' not in lr_t_trdata and lr_t_l_name == None: 
-                        ntp_name = 'none'
+                        if 'name' not in lr_t_trdata and lr_t_l_name != None: 
+                            ntp_name = 'none'+' ['+lr_t_l_name+']'
+                        if 'name' not in lr_t_trdata and lr_t_l_name == None: 
+                            ntp_name = 'none'
 
-                    part_track_data = trackbase.copy()
-                    part_track_data['name'] = ntp_name
-                    part_track_data['placements'] = lr_t_l_placements
+                        part_track_data = trackbase.copy()
+                        part_track_data['name'] = ntp_name
+                        part_track_data['placements'] = lr_t_l_placements
 
-                    if 'color' not in part_track_data and 'color' in lr_t_l_data:
-                        part_track_data['color'] = lr_t_l_data['color']
+                        if 'color' not in part_track_data and 'color' in lr_t_l_data:
+                            part_track_data['color'] = lr_t_l_data['color']
 
-                    new_trackdata[splitnameid] = part_track_data
-                    new_trackordering.append(splitnameid)
+                        new_trackdata[splitnameid] = part_track_data
+                        new_trackordering.append(splitnameid)
+                else:
+                    new_trackdata[trackid] = lr_t_trdata
+                    new_trackordering.append(trackid)
             else:
                 new_trackdata[trackid] = lr_t_trdata
                 new_trackordering.append(trackid)

@@ -275,15 +275,16 @@ class input_midi(plugin_input.base):
                     if midi_channum != 9:
                         cvpj_instdata['plugindata'] = {'bank':0, 'inst':inst}
                         cvpj_trackdata["name"] = MIDIInstNames[inst]+' [Trk'+str(t_tracknum)+' Ch'+str(midi_channum+1)+']'
-                        #cvpj_trackdata["color"] = MIDIInstColors[inst]
+                        cvpj_trackdata["color"] = MIDIInstColors[inst]
                     else:
                         cvpj_instdata['plugindata'] = {'bank':128, 'inst':inst}
                         if inst in MIDIDrumNames:
                             cvpj_trackdata["name"] = MIDIDrumNames[inst]+' [Trk'+str(t_tracknum)+']'
                         else:
                             cvpj_trackdata["name"] = 'Drums [Trk'+str(t_tracknum)+']'
-                    cvpj_l_instruments[cvpj_trackid] = cvpj_trackdata
-                    cvpj_l_instrumentsorder.append(cvpj_trackid)
+                    if cvpj_trackid not in cvpj_l_instrumentsorder:
+                        cvpj_l_instruments[cvpj_trackid] = cvpj_trackdata
+                        cvpj_l_instrumentsorder.append(cvpj_trackid)
 
         cvpj_l_fxrack["0"] = {}
         cvpj_l_fxrack["0"]["name"] = "Master"

@@ -9,7 +9,7 @@ from mido import MidiFile
 from functions import note_convert
 
 MIDIInstNames = ["Acoustic Grand Piano", "Bright Acoustic Piano", "Electric Grand Piano", "Honky-tonk Piano", "Electric Piano 1", "Electric Piano 2", "Harpsichord", "Clavi", "Celesta", "Glockenspiel", "Music Box", "Vibraphone", "Marimba", "Xylophone", "Tubular Bells", "Dulcimer", "Drawbar Organ", "Percussive Organ", "Rock Organ", "Church Organ", "Reed Organ", "Accordion", "Harmonica", "Tango Accordion", "Acoustic Guitar (nylon)", "Acoustic Guitar (steel)", "Electric Guitar (jazz)", "Electric Guitar (clean)", "Electric Guitar (muted)", "Overdriven Guitar", "Distortion Guitar", "Guitar harmonics", "Acoustic Bass", "Electric Bass (finger)", "Electric Bass (pick)", "Fretless Bass", "Slap Bass 1", "Slap Bass 2", "Synth Bass 1", "Synth Bass 2", "Violin", "Viola", "Cello", "Contrabass", "Tremolo Strings", "Pizzicato Strings", "Orchestral Harp", "Timpani", "String Ensemble 1", "String Ensemble 2", "SynthStrings 1", "SynthStrings 2", "Choir Aahs", "Voice Oohs", "Synth Voice", "Orchestra Hit", "Trumpet", "Trombone", "Tuba", "Muted Trumpet", "French Horn", "Brass Section", "SynthBrass 1", "SynthBrass 2", "Soprano Sax", "Alto Sax", "Tenor Sax", "Baritone Sax", "Oboe", "English Horn", "Bassoon", "Clarinet", "Piccolo", "Flute", "Recorder", "Pan Flute", "Blown Bottle", "Shakuhachi", "Whistle", "Ocarina", "Lead 1 (square)", "Lead 2 (sawtooth)", "Lead 3 (calliope)", "Lead 4 (chiff)", "Lead 5 (charang)", "Lead 6 (voice)", "Lead 7 (fifths)", "Lead 8 (bass + lead)", "Pad 1 (new age)", "Pad 2 (warm)", "Pad 3 (polysynth)", "Pad 4 (choir)", "Pad 5 (bowed)", "Pad 6 (metallic)", "Pad 7 (halo)", "Pad 8 (sweep)", "FX 1 (rain)", "FX 2 (soundtrack)", "FX 3 (crystal)", "FX 4 (atmosphere)", "FX 5 (brightness)", "FX 6 (goblins)", "FX 7 (echoes)", "FX 8 (sci-fi)", "Sitar", "Banjo", "Shamisen", "Koto", "Kalimba", "Bag pipe", "Fiddle", "Shanai", "Tinkle Bell", "Agogo", "Steel Drums", "Woodblock", "Taiko Drum", "Melodic Tom", "Synth Drum", "Reverse Cymbal", "Guitar Fret Noise", "Breath Noise", "Seashore", "Bird Tweet", "Telephone Ring", "Helicopter", "Applause", "Gunshot"]
-MIDIDrumNames = {1:'Drums', 9:'Room Drums', 17:'Power Drums', 25:'Elec Drums', 26:'TR808 Drums', 33:'Jazz Drums', 41:'Brush Drums', 49:'Orchestra Drums', 57:'Sound FX', 128:'MT-32 Drums'}
+MIDIDrumNames = {0:'Drums', 8:'Room Drums', 16:'Power Drums', 24:'Elec Drums', 25:'TR808 Drums', 32:'Jazz Drums', 40:'Brush Drums', 48:'Orchestra Drums', 56:'Sound FX', 127:'MT-32 Drums'}
 
 MIDIInstColors = [[0.10, 0.11, 0.11], #Acoustic Grand Piano
  [0.10, 0.11, 0.11], #Bright Acoustic Piano
@@ -205,6 +205,9 @@ class input_midi(plugin_input.base):
             t_ch_auto = []
             for _ in range(16): t_ch_auto.append([])
 
+            for midi_channum in range(16):
+                t_tn_ch[midi_channum].append('instrument;' + str(0))
+
             for msg in track:
                 if msg.type == 'track_name' and cmd_before_note == 1:
                     if num_tracks != 1: midi_trackname = msg.name.rstrip().rstrip('\x00')
@@ -228,19 +231,14 @@ class input_midi(plugin_input.base):
                     t_def_ch[msg.channel] = 1
                     if msg.velocity == 0: t_tn_ch[msg.channel].append('note_off;' + str(msg.note-60))
                     else: t_tn_ch[msg.channel].append('note_on;' + str(msg.note-60) + ',' + str(msg.velocity/127))
-                    if msg.channel == 9 and 128 not in t_ch_inst[9]: 
-                        t_ch_inst[9].append(128)
 
                 if msg.type == 'note_off':
                     t_def_ch[msg.channel] = 1
                     t_tn_ch[msg.channel].append('note_off;' + str(msg.note-60))
 
                 if msg.type == 'program_change':
-                    if msg.channel == 9:
-                        t_tn_ch[msg.channel].append('instrument;' + str(128))
-                    else:
-                        if msg.program+1 not in t_ch_inst[msg.channel]: t_ch_inst[msg.channel].append(msg.program)
-                        t_tn_ch[msg.channel].append('instrument;' + str(msg.program))
+                    if msg.program+1 not in t_ch_inst[msg.channel]: t_ch_inst[msg.channel].append(msg.program)
+                    t_tn_ch[msg.channel].append('instrument;' + str(msg.program))
 
             for midi_channum in range(16):
                 t_instlist = t_ch_inst[midi_channum]
@@ -250,7 +248,7 @@ class input_midi(plugin_input.base):
 
                     t_playlistnum += 1
                     playlistrowdata = {}
-                    placements = note_convert.timednotes2notelistplacement_parse_timednotes(t_tn_ch[midi_channum])
+                    placements = note_convert.timednotes2notelistplacement_parse_timednotes(t_tn_ch[midi_channum], 't'+str(t_tracknum)+'_c'+str(midi_channum+1)+'_i')
 
                     if midi_trackname != None:
                         playlistrowdata['name'] = str(midi_trackname)+' [Ch'+str(midi_channum+1)+']'
@@ -259,10 +257,6 @@ class input_midi(plugin_input.base):
                     playlistrowdata['color'] = [0.3, 0.3, 0.3]
                     playlistrowdata['placements'] = placements
                     cvpj_l_playlist[str(t_playlistnum)] = playlistrowdata
-
-                    for placement in cvpj_l_playlist[str(t_playlistnum)]['placements']:
-                        for note in placement['notelist']:
-                            note['instrument'] = 't'+str(t_tracknum)+'_c'+str(midi_channum+1)+'_i'+note['instrument']
 
                 for inst in t_instlist:
                     cvpj_trackid = 't'+str(t_tracknum)+'_c'+str(midi_channum+1)+'_i'+str(inst)
@@ -278,8 +272,11 @@ class input_midi(plugin_input.base):
                         cvpj_trackdata["name"] = MIDIInstNames[inst]+' [Trk'+str(t_tracknum)+' Ch'+str(midi_channum+1)+']'
                         #cvpj_trackdata["color"] = MIDIInstColors[inst]
                     else:
-                        cvpj_instdata['plugindata'] = {'bank':128, 'inst':inst-128}
-                        cvpj_trackdata["name"] = MIDIDrumNames[inst-127]+' [Trk'+str(t_tracknum)+']'
+                        cvpj_instdata['plugindata'] = {'bank':128, 'inst':inst}
+                        if inst in MIDIDrumNames:
+                            cvpj_trackdata["name"] = MIDIDrumNames[inst]+' [Trk'+str(t_tracknum)+']'
+                        else:
+                            cvpj_trackdata["name"] = 'Drums [Trk'+str(t_tracknum)+']'
                     cvpj_l_instruments[cvpj_trackid] = cvpj_trackdata
                     cvpj_l_instrumentsorder.append(cvpj_trackid)
 

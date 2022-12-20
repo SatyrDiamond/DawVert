@@ -129,6 +129,8 @@ class input_cvpj_r(plugin_input.base):
 
             # -------------------------------- PCMSynth --------------------------------
             if machine['id'] == 'PCMS':
+                middlenote = 0
+
                 if len(machine['regions']) == 1:
                     singlewav = machine['regions'][0]
                     if singlewav['key_lo'] == 24 and singlewav['key_hi'] == 108: isMultiSampler = False
@@ -143,9 +145,7 @@ class input_cvpj_r(plugin_input.base):
                     if singlewav['mode'] != 0 and singlewav['mode'] != 1: loopdata = {'loop':[singlewav['start'], singlewav['end']]}
                     audio_wav.generate(wave_path, singlewav['samp_data'], singlewav['samp_ch'], singlewav['samp_hz'], 16, loopdata)
 
-                    cvpj_inst["instdata"]['notefx'] = {}
-                    cvpj_inst["instdata"]['notefx']['pitch'] = {}
-                    cvpj_inst["instdata"]['notefx']['pitch']['semitones'] = singlewav['key_root']-60
+                    middlenote += singlewav['key_root']-60
 
                     cvpj_instdata['plugindata']['file'] = wave_path
                     cvpj_instdata['plugindata']['length'] = singlewav['samp_len']
@@ -171,15 +171,29 @@ class input_cvpj_r(plugin_input.base):
                         cvpj_instdata['plugindata']['regions'].append(regionparams)
                         samplecount += 1
 
-                print(machine['controls'])
+                pcms_c = machine['controls']
+
+                for printpart in pcms_c:
+                    print(pcms_c[printpart])
+
+                middlenote += int(pcms_c[1]*12)
+                middlenote += int(pcms_c[2])
+
+                #print(middlenote)
+
+                cvpj_inst["instdata"]['notefx'] = {}
+                cvpj_inst["instdata"]['notefx']['pitch'] = {}
+                cvpj_inst["instdata"]['notefx']['pitch']['semitones'] = middlenote
+                cvpj_inst['instdata']['pitch'] = pcms_c[3]
+
                 plugindata['asdrlfo'] = {}
                 plugindata['asdrlfo']['volume'] = {}
                 plugindata['asdrlfo']['volume']['envelope'] = {}
-                plugindata['asdrlfo']['volume']['envelope']['attack'] = machine['controls'][5]
+                plugindata['asdrlfo']['volume']['envelope']['attack'] = pcms_c[5]
                 plugindata['asdrlfo']['volume']['envelope']['hold'] = 0
-                plugindata['asdrlfo']['volume']['envelope']['decay'] = machine['controls'][6]
-                plugindata['asdrlfo']['volume']['envelope']['sustain'] = machine['controls'][7]
-                plugindata['asdrlfo']['volume']['envelope']['release'] = machine['controls'][8]
+                plugindata['asdrlfo']['volume']['envelope']['decay'] = pcms_c[6]
+                plugindata['asdrlfo']['volume']['envelope']['sustain'] = pcms_c[7]
+                plugindata['asdrlfo']['volume']['envelope']['release'] = pcms_c[8]
                 plugindata['asdrlfo']['volume']['envelope']['amount'] = 1
 
             # -------------------------------- BeatBox --------------------------------
@@ -213,6 +227,7 @@ class input_cvpj_r(plugin_input.base):
             cvpj_l_instrumentsorder.append(machid)
             cvpj_l_fxrack[str(machnum)] = {}
             cvpj_l_fxrack[str(machnum)]["name"] = caustic_instnames[machine['id']]
+            cvpj_l_fxrack[str(machnum)]["color"] = caustic_instcolors[machine['id']]
             cvpj_l_playlist[str(plnum)] = {}
             cvpj_l_playlist[str(plnum)]["name"] = caustic_instnames[machine['id']]
             cvpj_l_playlist[str(plnum)]["color"] = caustic_instcolors[machine['id']]

@@ -273,7 +273,7 @@ class input_midi(plugin_input.base):
                     if midi_channum != 9:
                         cvpj_instdata['plugindata'] = {'bank':0, 'inst':inst}
                         cvpj_trackdata["name"] = MIDIInstNames[inst]+' [Trk'+str(t_tracknum)+' Ch'+str(midi_channum+1)+']'
-                        cvpj_trackdata["color"] = MIDIInstColors[inst]
+                        #cvpj_trackdata["color"] = MIDIInstColors[inst]
                     else:
                         cvpj_instdata['plugindata'] = {'bank':128, 'inst':inst-128}
                         cvpj_trackdata["name"] = MIDIDrumNames[inst-127]+' [Trk'+str(t_tracknum)+']'

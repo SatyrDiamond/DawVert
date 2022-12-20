@@ -69,7 +69,7 @@ def song2playlist(patterntable_all, number_of_channels, order_list, startinststr
         note_convert.timednotes2notelistplacement_track_start()
         channelsong = entire_song_channel(patterntable_all,current_channelnum,order_list)
         timednotes = convertchannel2timednotes(channelsong, startinststr)
-        placements = note_convert.timednotes2notelistplacement_parse_timednotes(timednotes)
+        placements = note_convert.timednotes2notelistplacement_parse_timednotes(timednotes, '')
         projL_playlist[str(current_channelnum+1)] = {}
         projL_playlist[str(current_channelnum+1)]['color'] = color
         projL_playlist[str(current_channelnum+1)]['name'] = 'Channel ' + str(current_channelnum+1)

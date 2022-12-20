@@ -51,7 +51,7 @@ def timednotes2notelist_note_off(key):
             output_noteslist.append(notejson)
         ActiveNoteTablePos += 1
 
-def timednotes2notelistplacement_parse_timednotes(TimedNotesTable):
+def timednotes2notelistplacement_parse_timednotes(TimedNotesTable, startstr):
     print("[note-conv] tn2np: " + str(len(TimedNotesTable)) + ' cmds', end='')
     global ActiveNotes
     currentprogram = 0
@@ -86,7 +86,7 @@ def timednotes2notelistplacement_parse_timednotes(TimedNotesTable):
             timednotes2notelistplacement_placement_start()
         if TimedNoteCommand == 'instrument':
             numnotecmds += 1
-            currentprogram = TimedNoteValuesFirst
+            currentprogram = startstr + TimedNoteValuesFirst
             if currentprogram not in usedinstruments: usedinstruments.append(currentprogram)
         if TimedNoteCommand == 'pan':
             numnotecmds += 1

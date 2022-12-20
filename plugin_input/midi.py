@@ -453,6 +453,9 @@ class input_midi(plugin_input.base):
             if 7 in s_chan_initial: fxdata["vol"] = s_chan_initial[7]/127
             else: fxdata["vol"] = 1.0
 
+            if 10 in s_chan_initial: fxdata["pan"] = ((s_chan_initial[10]/127)-0.5)*2
+            else: fxdata["pan"] = 1.0
+
             fxdata['color'] = [0.3, 0.3, 0.3]
             fxdata["name"] = "Channel "+str(midi_channum+1)
 

@@ -192,6 +192,7 @@ class input_midi(plugin_input.base):
 
             t_tracknum += 1
             cmd_before_note = True
+            cmd_before_program = True
 
             t_tn_ch = []
             for _ in range(16): t_tn_ch.append([])
@@ -229,6 +230,9 @@ class input_midi(plugin_input.base):
                 if msg.type == 'note_on':
                     cmd_before_note = 0
                     t_def_ch[msg.channel] = 1
+                    if cmd_before_program == True: 
+                        t_ch_inst[msg.channel].append(0)
+                        cmd_before_program = False
                     if msg.velocity == 0: t_tn_ch[msg.channel].append('note_off;' + str(msg.note-60))
                     else: t_tn_ch[msg.channel].append('note_on;' + str(msg.note-60) + ',' + str(msg.velocity/127))
 
@@ -237,6 +241,7 @@ class input_midi(plugin_input.base):
                     t_tn_ch[msg.channel].append('note_off;' + str(msg.note-60))
 
                 if msg.type == 'program_change':
+                    cmd_before_program = False
                     if msg.program+1 not in t_ch_inst[msg.channel]: t_ch_inst[msg.channel].append(msg.program)
                     t_tn_ch[msg.channel].append('instrument;' + str(msg.program))
 

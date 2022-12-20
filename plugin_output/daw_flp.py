@@ -246,6 +246,8 @@ class output_cvpjs(plugin_output.base):
                 FL_Mixer[cvpj_fx] = {}
                 if 'name' in cvpj_fxdata:
                     FL_Mixer[cvpj_fx]['name'] = cvpj_fxdata['name']
+                if 'color' in cvpj_fxdata:
+                    FL_Mixer[cvpj_fx]['color'] = decode_color(cvpj_fxdata['color'])
 
         FL_Arrangements['0'] = {}
         FL_Arrangements['0']['items'] = FL_Playlist

@@ -352,44 +352,44 @@ class input_midi(plugin_input.base):
                     if num_tracks != 1: midi_trackname = msg.name.rstrip().rstrip('\x00')
                     else: cvpj_songname = msg.name.rstrip().rstrip('\x00')
 
-                elif msg.type == 'copyright' and cmd_before_note == 1:
+                if msg.type == 'copyright' and cmd_before_note == 1:
                     cvpj_copyright = msg.text.rstrip()
 
-                elif msg.type == 'set_tempo' and cmd_before_note == 1:
+                if msg.type == 'set_tempo' and cmd_before_note == 1:
                     midi_bpm = mido.tempo2bpm(msg.tempo)
 
-                elif msg.type == 'time_signature' and cmd_before_note == 1:
+                if msg.type == 'time_signature' and cmd_before_note == 1:
                     midi_numerator = msg.numerator
                     midi_denominator = msg.denominator
 
-                elif msg.time != 0:
+                if msg.time != 0:
                     addtoalltables('break;' + str((msg.time/ppq)*4))
 
-                elif msg.type == 'note_on':
+                if msg.type == 'note_on':
                     cmd_before_note = 0
                     t_chan_used[msg.channel] = 1
                     if cmd_before_program == True: 
                         t_chan_usedinst[msg.channel].append(0)
                         cmd_before_program = False
-                    if msg.velocity == 0: t_chan_timednote[msg.channel].append('note_off;' + str(msg.note-60))
-                    else: t_chan_timednote[msg.channel].append('note_on;' + str(msg.note-60) + ',' + str(msg.velocity/127))
+                    if msg.velocity == 0: 
+                        t_chan_timednote[msg.channel].append('note_off;' + str(msg.note-60))
+                    else: 
+                        t_chan_timednote[msg.channel].append('note_on;' + str(msg.note-60) + ',' + str(msg.velocity/127))
 
-                elif msg.type == 'note_off':
+                if msg.type == 'note_off':
                     t_chan_used[msg.channel] = 1
                     t_chan_timednote[msg.channel].append('note_off;' + str(msg.note-60))
 
-                elif msg.type == 'program_change':
+                if msg.type == 'program_change':
                     cmd_before_program = False
                     if msg.program+1 not in t_chan_usedinst[msg.channel]: t_chan_usedinst[msg.channel].append(msg.program)
                     t_chan_timednote[msg.channel].append('instrument;' + str(msg.program))
 
-                elif msg.type == 'control_change':
+                if msg.type == 'control_change':
                     #print('used:', t_chan_used[msg.channel], ' ctrl:', msg.channel, msg.control, msg.value)
                     if t_chan_used[msg.channel] == 0:
                         t_chan_initial[msg.channel][msg.control] = msg.value
 
-                else:
-                    print("MIDI CMD not yet supported:", msg)
 
 
             for midi_channum in range(16):

@@ -48,7 +48,7 @@ class output_cvpjs(plugin_output.base):
         FLP_Data['FL_Mixer'] = {}
         FL_Mixer = FLP_Data['FL_Mixer']
 
-        ppq = 96
+        ppq = 960
         FL_Main['ppq'] = ppq
         FL_Main['Shuffle'] = 0
         FL_Main['ShowInfo'] = 0

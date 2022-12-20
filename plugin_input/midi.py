@@ -10,6 +10,135 @@ from functions import note_convert
 
 MIDIInstNames = ["Acoustic Grand Piano", "Bright Acoustic Piano", "Electric Grand Piano", "Honky-tonk Piano", "Electric Piano 1", "Electric Piano 2", "Harpsichord", "Clavi", "Celesta", "Glockenspiel", "Music Box", "Vibraphone", "Marimba", "Xylophone", "Tubular Bells", "Dulcimer", "Drawbar Organ", "Percussive Organ", "Rock Organ", "Church Organ", "Reed Organ", "Accordion", "Harmonica", "Tango Accordion", "Acoustic Guitar (nylon)", "Acoustic Guitar (steel)", "Electric Guitar (jazz)", "Electric Guitar (clean)", "Electric Guitar (muted)", "Overdriven Guitar", "Distortion Guitar", "Guitar harmonics", "Acoustic Bass", "Electric Bass (finger)", "Electric Bass (pick)", "Fretless Bass", "Slap Bass 1", "Slap Bass 2", "Synth Bass 1", "Synth Bass 2", "Violin", "Viola", "Cello", "Contrabass", "Tremolo Strings", "Pizzicato Strings", "Orchestral Harp", "Timpani", "String Ensemble 1", "String Ensemble 2", "SynthStrings 1", "SynthStrings 2", "Choir Aahs", "Voice Oohs", "Synth Voice", "Orchestra Hit", "Trumpet", "Trombone", "Tuba", "Muted Trumpet", "French Horn", "Brass Section", "SynthBrass 1", "SynthBrass 2", "Soprano Sax", "Alto Sax", "Tenor Sax", "Baritone Sax", "Oboe", "English Horn", "Bassoon", "Clarinet", "Piccolo", "Flute", "Recorder", "Pan Flute", "Blown Bottle", "Shakuhachi", "Whistle", "Ocarina", "Lead 1 (square)", "Lead 2 (sawtooth)", "Lead 3 (calliope)", "Lead 4 (chiff)", "Lead 5 (charang)", "Lead 6 (voice)", "Lead 7 (fifths)", "Lead 8 (bass + lead)", "Pad 1 (new age)", "Pad 2 (warm)", "Pad 3 (polysynth)", "Pad 4 (choir)", "Pad 5 (bowed)", "Pad 6 (metallic)", "Pad 7 (halo)", "Pad 8 (sweep)", "FX 1 (rain)", "FX 2 (soundtrack)", "FX 3 (crystal)", "FX 4 (atmosphere)", "FX 5 (brightness)", "FX 6 (goblins)", "FX 7 (echoes)", "FX 8 (sci-fi)", "Sitar", "Banjo", "Shamisen", "Koto", "Kalimba", "Bag pipe", "Fiddle", "Shanai", "Tinkle Bell", "Agogo", "Steel Drums", "Woodblock", "Taiko Drum", "Melodic Tom", "Synth Drum", "Reverse Cymbal", "Guitar Fret Noise", "Breath Noise", "Seashore", "Bird Tweet", "Telephone Ring", "Helicopter", "Applause", "Gunshot"]
 MIDIDrumNames = {0:'Drums', 8:'Room Drums', 16:'Power Drums', 24:'Elec Drums', 25:'TR808 Drums', 32:'Jazz Drums', 40:'Brush Drums', 48:'Orchestra Drums', 56:'Sound FX', 127:'MT-32 Drums'}
+MIDIControllerName = {}
+MIDIControllerName[0] = "Bank Select"
+MIDIControllerName[1] = "Modulation Wheel"
+MIDIControllerName[2] = "Breath Controller"
+MIDIControllerName[3] = "_undefined"
+MIDIControllerName[4] = "Foot Pedal"
+MIDIControllerName[5] = "Portamento/Glide Time"
+MIDIControllerName[6] = "Data Entry (MSB)"
+MIDIControllerName[7] = "MIDI Volume"
+MIDIControllerName[8] = "Stereo Balance"
+MIDIControllerName[9] = "_undefined"
+MIDIControllerName[10] = "Pan"
+MIDIControllerName[11] = "Expression Pedal"
+MIDIControllerName[12] = "Effect Controller 1"
+MIDIControllerName[13] = "Effect Controller 2"
+MIDIControllerName[14] = "_undefined"
+MIDIControllerName[15] = "_undefined"
+MIDIControllerName[16] = "General Purpose Controller 1"
+MIDIControllerName[17] = "General Purpose Controller 2"
+MIDIControllerName[18] = "General Purpose Controller 3"
+MIDIControllerName[19] = "General Purpose Controller 4"
+MIDIControllerName[20] = "_undefined"
+MIDIControllerName[21] = "_undefined"
+MIDIControllerName[22] = "_undefined"
+MIDIControllerName[23] = "_undefined"
+MIDIControllerName[24] = "_undefined"
+MIDIControllerName[25] = "_undefined"
+MIDIControllerName[26] = "_undefined"
+MIDIControllerName[27] = "_undefined"
+MIDIControllerName[28] = "_undefined"
+MIDIControllerName[29] = "_undefined"
+MIDIControllerName[30] = "_undefined"
+MIDIControllerName[31] = "_undefined"
+MIDIControllerName[32] = "Bank Select"
+MIDIControllerName[33] = "Modulation Wheel"
+MIDIControllerName[34] = "Breath Controller"
+MIDIControllerName[35] = "_undefined"
+MIDIControllerName[36] = "Foot Pedal"
+MIDIControllerName[37] = "Portamento/Glide Time"
+MIDIControllerName[38] = "Data Entry"
+MIDIControllerName[39] = "Volume"
+MIDIControllerName[40] = "Balance"
+MIDIControllerName[41] = "_undefined"
+MIDIControllerName[42] = "Pan Position"
+MIDIControllerName[43] = "Expression"
+MIDIControllerName[44] = "Effect Control 1"
+MIDIControllerName[45] = "Effect Control 2"
+MIDIControllerName[46] = "_undefined"
+MIDIControllerName[47] = "_undefined"
+MIDIControllerName[48] = "_undefined"
+MIDIControllerName[49] = "_undefined"
+MIDIControllerName[50] = "_undefined"
+MIDIControllerName[51] = "_undefined"
+MIDIControllerName[52] = "_undefined"
+MIDIControllerName[53] = "_undefined"
+MIDIControllerName[54] = "_undefined"
+MIDIControllerName[55] = "_undefined"
+MIDIControllerName[56] = "_undefined"
+MIDIControllerName[57] = "_undefined"
+MIDIControllerName[58] = "_undefined"
+MIDIControllerName[59] = "_undefined"
+MIDIControllerName[60] = "_undefined"
+MIDIControllerName[61] = "_undefined"
+MIDIControllerName[62] = "_undefined"
+MIDIControllerName[63] = "_undefined"
+MIDIControllerName[64] = "Sustain Pedal On/Off"
+MIDIControllerName[65] = "Portamento/Glide On/Off Switch"
+MIDIControllerName[66] = "Sostenuto On/Off Switch"
+MIDIControllerName[67] = "Soft Pedal On/Off Switch"
+MIDIControllerName[68] = "Legato On/Off Switch"
+MIDIControllerName[69] = "Hold Pedal 2"
+MIDIControllerName[70] = "Sound Controller 1"
+MIDIControllerName[71] = "Sound Controller 2 - Filter Resonance"
+MIDIControllerName[72] = "Sound Controller 3 - Amp Envelope Decay"
+MIDIControllerName[73] = "Sound Controller 4 - Amp Envelope Attack"
+MIDIControllerName[74] = "Sound Controller 5 - Filter Cutoff"
+MIDIControllerName[75] = "Sound Controller 6"
+MIDIControllerName[76] = "Sound Controller 7"
+MIDIControllerName[77] = "Sound Controller 8"
+MIDIControllerName[78] = "Sound Controller 9"
+MIDIControllerName[79] = "Sound Controller 10"
+MIDIControllerName[80] = "General Purpose"
+MIDIControllerName[81] = "General Purpose"
+MIDIControllerName[82] = "General Purpose"
+MIDIControllerName[83] = "General Purpose"
+MIDIControllerName[84] = "_undefined"
+MIDIControllerName[85] = "_undefined"
+MIDIControllerName[86] = "_undefined"
+MIDIControllerName[87] = "_undefined"
+MIDIControllerName[88] = "_undefined"
+MIDIControllerName[89] = "_undefined"
+MIDIControllerName[90] = "_undefined"
+MIDIControllerName[91] = "Effect 1 Amount (Reverb)"
+MIDIControllerName[92] = "Effect 2 Amount (Tremelo)"
+MIDIControllerName[93] = "Effect 3 Amount (Chorus)"
+MIDIControllerName[94] = "Effect 4 Amount (Detuning)"
+MIDIControllerName[95] = "Effect 5 Amount (Phaser)"
+MIDIControllerName[96] = "Data Bound Increment (+1)"
+MIDIControllerName[97] = "Data Bound Decrement (-1)"
+MIDIControllerName[98] = "NRPN LSB"
+MIDIControllerName[99] = "NRPN MSB"
+MIDIControllerName[100] = "RPN LSB"
+MIDIControllerName[101] = "RPN MSB"
+MIDIControllerName[102] = "_undefined"
+MIDIControllerName[103] = "_undefined"
+MIDIControllerName[104] = "_undefined"
+MIDIControllerName[105] = "_undefined"
+MIDIControllerName[106] = "_undefined"
+MIDIControllerName[107] = "_undefined"
+MIDIControllerName[108] = "_undefined"
+MIDIControllerName[109] = "_undefined"
+MIDIControllerName[110] = "_undefined"
+MIDIControllerName[111] = "_undefined"
+MIDIControllerName[112] = "_undefined"
+MIDIControllerName[113] = "_undefined"
+MIDIControllerName[114] = "_undefined"
+MIDIControllerName[115] = "_undefined"
+MIDIControllerName[116] = "_undefined"
+MIDIControllerName[117] = "_undefined"
+MIDIControllerName[118] = "_undefined"
+MIDIControllerName[119] = "_undefined"
+MIDIControllerName[120] = "Channel Mute / Sound Off"
+MIDIControllerName[121] = "Reset All Controllers"
+MIDIControllerName[122] = "Local Keyboard On/Off Switch"
+MIDIControllerName[123] = "All MIDI Notes OFF"
+MIDIControllerName[124] = "OMNI Mode OFF"
+MIDIControllerName[125] = "OMNI Mode ON"
+MIDIControllerName[126] = "Mono Mode"
+MIDIControllerName[127] = "Poly Mode"
 
 MIDIInstColors = [[0.10, 0.11, 0.11], #Acoustic Grand Piano
  [0.10, 0.11, 0.11], #Bright Acoustic Piano
@@ -146,8 +275,8 @@ MIDIInstColors = [[0.10, 0.11, 0.11], #Acoustic Grand Piano
 
 
 def addtoalltables(contents):
-    global t_tn_ch
-    for TimedNoteChannel in t_tn_ch:
+    global t_chan_timednote
+    for TimedNoteChannel in t_chan_timednote:
         TimedNoteChannel.append(contents)
 
 class input_midi(plugin_input.base):
@@ -185,7 +314,7 @@ class input_midi(plugin_input.base):
         cvpj_l_instrumentsorder = []
         cvpj_l_fxrack = {}
 
-        global t_tn_ch
+        global t_chan_timednote
 
         for track in midifile.tracks:
             midi_trackname = None
@@ -194,66 +323,90 @@ class input_midi(plugin_input.base):
             cmd_before_note = True
             cmd_before_program = True
 
-            t_tn_ch = []
-            for _ in range(16): t_tn_ch.append([])
 
-            t_ch_inst = []
-            for _ in range(16): t_ch_inst.append([])
+            t_chan_used = []
+            for _ in range(16): t_chan_used.append(0)
 
-            t_def_ch = []
-            for _ in range(16): t_def_ch.append(0)
+            t_chan_timednote = []
+            for _ in range(16): t_chan_timednote.append([])
 
-            t_ch_auto = []
-            for _ in range(16): t_ch_auto.append([])
+            t_chan_usedinst = []
+            for _ in range(16): t_chan_usedinst.append([])
+
+            t_chan_auto = []
+            for _ in range(16): t_chan_auto.append([])
+
+
+            t_chan_initial = []
+            for _ in range(16): t_chan_initial.append({})
+
+
 
             for midi_channum in range(16):
-                t_tn_ch[midi_channum].append('instrument;' + str(0))
+                t_chan_timednote[midi_channum].append('instrument;' + str(0))
+
+
 
             for msg in track:
                 if msg.type == 'track_name' and cmd_before_note == 1:
                     if num_tracks != 1: midi_trackname = msg.name.rstrip().rstrip('\x00')
                     else: cvpj_songname = msg.name.rstrip().rstrip('\x00')
 
-                if msg.type == 'copyright' and cmd_before_note == 1:
+                elif msg.type == 'copyright' and cmd_before_note == 1:
                     cvpj_copyright = msg.text.rstrip()
 
-                if msg.type == 'set_tempo' and cmd_before_note == 1:
+                elif msg.type == 'set_tempo' and cmd_before_note == 1:
                     midi_bpm = mido.tempo2bpm(msg.tempo)
 
-                if msg.type == 'time_signature' and cmd_before_note == 1:
+                elif msg.type == 'time_signature' and cmd_before_note == 1:
                     midi_numerator = msg.numerator
                     midi_denominator = msg.denominator
 
-                if msg.time != 0:
+                elif msg.time != 0:
                     addtoalltables('break;' + str((msg.time/ppq)*4))
 
-                if msg.type == 'note_on':
+                elif msg.type == 'note_on':
                     cmd_before_note = 0
-                    t_def_ch[msg.channel] = 1
+                    t_chan_used[msg.channel] = 1
                     if cmd_before_program == True: 
-                        t_ch_inst[msg.channel].append(0)
+                        t_chan_usedinst[msg.channel].append(0)
                         cmd_before_program = False
-                    if msg.velocity == 0: t_tn_ch[msg.channel].append('note_off;' + str(msg.note-60))
-                    else: t_tn_ch[msg.channel].append('note_on;' + str(msg.note-60) + ',' + str(msg.velocity/127))
+                    if msg.velocity == 0: t_chan_timednote[msg.channel].append('note_off;' + str(msg.note-60))
+                    else: t_chan_timednote[msg.channel].append('note_on;' + str(msg.note-60) + ',' + str(msg.velocity/127))
 
-                if msg.type == 'note_off':
-                    t_def_ch[msg.channel] = 1
-                    t_tn_ch[msg.channel].append('note_off;' + str(msg.note-60))
+                elif msg.type == 'note_off':
+                    t_chan_used[msg.channel] = 1
+                    t_chan_timednote[msg.channel].append('note_off;' + str(msg.note-60))
 
-                if msg.type == 'program_change':
+                elif msg.type == 'program_change':
                     cmd_before_program = False
-                    if msg.program+1 not in t_ch_inst[msg.channel]: t_ch_inst[msg.channel].append(msg.program)
-                    t_tn_ch[msg.channel].append('instrument;' + str(msg.program))
+                    if msg.program+1 not in t_chan_usedinst[msg.channel]: t_chan_usedinst[msg.channel].append(msg.program)
+                    t_chan_timednote[msg.channel].append('instrument;' + str(msg.program))
+
+                elif msg.type == 'control_change':
+                    #print('used:', t_chan_used[msg.channel], ' ctrl:', msg.channel, msg.control, msg.value)
+                    if t_chan_used[msg.channel] == 0:
+                        t_chan_initial[msg.channel][msg.control] = msg.value
+
+                else:
+                    print("MIDI CMD not yet supported:", msg)
+
 
             for midi_channum in range(16):
-                t_instlist = t_ch_inst[midi_channum]
-                if t_def_ch[midi_channum] == 1:
+                s_chan_initial = t_chan_initial[midi_channum]
+                for controllerid in s_chan_initial:
+                    print('[input-midi] Initial Controller Value, Ch:', midi_channum, ',Controller:', str(controllerid)+'/'+MIDIControllerName[controllerid])
+
+
+            for midi_channum in range(16):
+                t_instlist = t_chan_usedinst[midi_channum]
+                if t_chan_used[midi_channum] == 1:
                     print("[input-midi] Track " + str(t_tracknum) + ", Channel " + str(midi_channum+1))
                     note_convert.timednotes2notelistplacement_track_start()
 
                     t_playlistnum += 1
                     playlistrowdata = {}
-                    placements = note_convert.timednotes2notelistplacement_parse_timednotes(t_tn_ch[midi_channum], 't'+str(t_tracknum)+'_c'+str(midi_channum+1)+'_i')
+                    placements = note_convert.timednotes2notelistplacement_parse_timednotes(t_chan_timednote[midi_channum], 't'+str(t_tracknum)+'_c'+str(midi_channum+1)+'_i')
 
                     if midi_trackname != None:
                         playlistrowdata['name'] = str(midi_trackname)+' [Ch'+str(midi_channum+1)+']'
@@ -268,7 +421,7 @@ class input_midi(plugin_input.base):
                     cvpj_l_instruments[cvpj_trackid] = {}
                     cvpj_trackdata = cvpj_l_instruments[cvpj_trackid]
                     cvpj_trackdata["instdata"] = {}
-                    cvpj_trackdata["vol"] = 1.0
+
                     cvpj_trackdata['fxrack_channel'] = midi_channum+1
                     cvpj_instdata = cvpj_trackdata["instdata"]
                     cvpj_instdata['plugin'] = 'general-midi'
@@ -291,8 +444,15 @@ class input_midi(plugin_input.base):
 
         for midi_channum in range(16):
             cvpj_l_fxrack[str(midi_channum+1)] = {}
+
+            s_chan_initial = t_chan_initial[midi_channum]
+
             fxdata = cvpj_l_fxrack[str(midi_channum+1)]
             fxdata["fxenabled"] = 1
+
+            if 7 in s_chan_initial: fxdata["vol"] = s_chan_initial[7]/127
+            else: fxdata["vol"] = 1.0
+
             fxdata['color'] = [0.3, 0.3, 0.3]
             fxdata["name"] = "Channel "+str(midi_channum+1)
 

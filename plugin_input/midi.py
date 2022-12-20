@@ -312,6 +312,7 @@ class input_midi(plugin_input.base):
         cvpj_l_playlist = {}
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
+        cvpj_l_timemarkers = []
         cvpj_l_fxrack = {}
 
         global t_chan_timednote
@@ -345,7 +346,7 @@ class input_midi(plugin_input.base):
             for midi_channum in range(16):
                 t_chan_timednote[midi_channum].append('instrument;' + str(0))
 
-
+            time_signature_pos = 0
 
             for msg in track:
                 if msg.type == 'track_name' and cmd_before_note == 1:
@@ -358,9 +359,15 @@ class input_midi(plugin_input.base):
                 if msg.type == 'set_tempo' and cmd_before_note == 1:
                     midi_bpm = mido.tempo2bpm(msg.tempo)
 
-                if msg.type == 'time_signature' and cmd_before_note == 1:
-                    midi_numerator = msg.numerator
-                    midi_denominator = msg.denominator
+                if msg.type == 'time_signature':
+                    time_signature_pos += msg.time
+                    timemarker = {}
+                    timemarker['position'] = (time_signature_pos/ppq)*4
+                    timemarker['name'] = str(msg.numerator)+'/'+str(msg.denominator)
+                    timemarker['type'] = 'timesig'
+                    timemarker['numerator'] = msg.numerator
+                    timemarker['denominator'] = msg.denominator
+                    cvpj_l_timemarkers.append(timemarker)
 
                 if msg.time != 0:
                     addtoalltables('break;' + str((msg.time/ppq)*4))
@@ -389,6 +396,9 @@ class input_midi(plugin_input.base):
                     #print('used:', t_chan_used[msg.channel], ' ctrl:', msg.channel, msg.control, msg.value)
                     if t_chan_used[msg.channel] == 0:
                         t_chan_initial[msg.channel][msg.control] = msg.value
+
+                #print(msg)
+                #if msg.type == 'control_change':
 
 
 
@@ -459,6 +469,9 @@ class input_midi(plugin_input.base):
             fxdata['color'] = [0.3, 0.3, 0.3]
             fxdata["name"] = "Channel "+str(midi_channum+1)
 
+        cvpj_l['timemarkers'] = cvpj_l_timemarkers
+        cvpj_l['timesig_numerator'] = midi_numerator
+        cvpj_l['timesig_denominator'] = midi_denominator
         cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

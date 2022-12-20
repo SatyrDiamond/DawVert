@@ -205,8 +205,6 @@ class input_midi(plugin_input.base):
             t_ch_auto = []
             for _ in range(16): t_ch_auto.append([])
 
-            t_ch_inst[9].append(128)
-
             for msg in track:
                 if msg.type == 'track_name' and cmd_before_note == 1:
                     if num_tracks != 1: midi_trackname = msg.name.rstrip().rstrip('\x00')
@@ -230,6 +228,8 @@ class input_midi(plugin_input.base):
                     t_def_ch[msg.channel] = 1
                     if msg.velocity == 0: t_tn_ch[msg.channel].append('note_off;' + str(msg.note-60))
                     else: t_tn_ch[msg.channel].append('note_on;' + str(msg.note-60) + ',' + str(msg.velocity/127))
+                    if msg.channel == 9 and 128 not in t_ch_inst[9]: 
+                        t_ch_inst[9].append(128)
 
                 if msg.type == 'note_off':
                     t_def_ch[msg.channel] = 1
@@ -249,13 +249,16 @@ class input_midi(plugin_input.base):
                     note_convert.timednotes2notelistplacement_track_start()
 
                     t_playlistnum += 1
-                    cvpj_l_playlist[str(t_playlistnum)] = {}
+                    playlistrowdata = {}
+                    placements = note_convert.timednotes2notelistplacement_parse_timednotes(t_tn_ch[midi_channum])
+
                     if midi_trackname != None:
-                        cvpj_l_playlist[str(t_playlistnum)]['name'] = str(t_tracknum)+' [Ch'+str(midi_channum+1)+']'
+                        playlistrowdata['name'] = str(midi_trackname)+' [Ch'+str(midi_channum+1)+']'
                     else:
-                        cvpj_l_playlist[str(t_playlistnum)]['name'] = '[Ch'+str(midi_channum+1)+']'
-                    cvpj_l_playlist[str(t_playlistnum)]['color'] = [0.3, 0.3, 0.3]
-                    cvpj_l_playlist[str(t_playlistnum)]['placements'] = note_convert.timednotes2notelistplacement_parse_timednotes(t_tn_ch[midi_channum])
+                        playlistrowdata['name'] = '[Ch'+str(midi_channum+1)+']'
+                    playlistrowdata['color'] = [0.3, 0.3, 0.3]
+                    playlistrowdata['placements'] = placements
+                    cvpj_l_playlist[str(t_playlistnum)] = playlistrowdata
 
                     for placement in cvpj_l_playlist[str(t_playlistnum)]['placements']:
                         for note in placement['notelist']:

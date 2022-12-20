@@ -879,7 +879,9 @@ def reconstruct_mixer(data_FLdt, mixer):
         else: fltrki_data = b'\x00\x00\x00\x00L\x00\x00\x00\x00\x00\x00\x00'
         if str(i) in mixer:
             fxparams = mixer[str(i)]
-            if 'color' in fxparams: fltrki_color = fxparams['color']
+            if 'color' in fxparams: 
+                if fxparams['color'] != None: 
+                    reconstruct_flevent(data_FLdt, 149, fxparams['color'])
             if 'icon' in fxparams: fltrki_icon = fxparams['icon']
             if 'slots' in fxparams: fltrki_slots = fxparams['slots']
             if 'data' in fxparams: fltrki_data = fxparams['data']

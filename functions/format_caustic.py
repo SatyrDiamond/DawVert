@@ -408,6 +408,9 @@ def deconstruct_OUTP(bi_rack, Caustic_Main):
     OUTP_size = int.from_bytes(bi_rack.read(4), "little")
     OUTP_data = bi_rack.read(OUTP_size)
 
+    Caustic_Main['Tempo'] = struct.unpack("f", OUTP_data[82:86])[0]
+    Caustic_Main['Numerator'] = OUTP_data[86]
+
     caustic_machines = []
 
     for _ in range(14):
@@ -449,7 +452,6 @@ def deconstruct_main(filepath):
     bi_rack.seek(0)
 
     header = bi_rack.read(264)
-
     Caustic_Main = {}
     Caustic_Main['EFFX'] = {}
 

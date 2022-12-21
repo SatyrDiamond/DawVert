@@ -38,6 +38,7 @@ e.g:
 
 | DataType | Short Name | Name | Info | 
 | --- | --- | :--- | :--- |
+| M | ```midi``` | MIDI |  | 
 | M-I | ```flp``` | FL Studio |  | 
 | R | ```lmms``` | LMMS |  | 
 | M | ```trk_mod``` | ProTracker | Tracker | 

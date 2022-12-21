@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
+from functions import note_mod
 
 global ActiveNotes
 global position_global
@@ -133,7 +134,7 @@ def timednotes2notelistplacement_placement_end():
     currentplacement['type'] = "instruments"
     currentplacement['duration'] = position_notelist
     if output_noteslist != []:
-        currentplacement['notelist'] = output_noteslist
+        currentplacement['notelist'] = note_mod.sortnotes(output_noteslist)
         placements.append(currentplacement)
     ActiveNotes = []
     output_noteslist = []

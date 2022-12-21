@@ -130,7 +130,7 @@ class input_cvpj_r(plugin_input.base):
             # -------------------------------- PCMSynth --------------------------------
             if machine['id'] == 'PCMS':
                 middlenote = 0
-
+                cvpj_instdata['usemasterpitch'] = 1
                 if len(machine['regions']) == 1:
                     singlewav = machine['regions'][0]
                     if singlewav['key_lo'] == 24 and singlewav['key_hi'] == 108: isMultiSampler = False
@@ -199,6 +199,7 @@ class input_cvpj_r(plugin_input.base):
             # -------------------------------- BeatBox --------------------------------
             elif machine['id'] == 'BBOX':
                 cvpj_instdata['plugin'] = 'sampler-multi'
+                cvpj_instdata['usemasterpitch'] = 0
                 plugindata['regions'] = []
                 bbox_samples = machine['samples']
                 samplecount = 0
@@ -259,6 +260,8 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['bpm'] = 140
+        cvpj_l['bpm'] = CausticData['Tempo']
+        cvpj_l['timesig_numerator'] = CausticData['Numerator']
+        cvpj_l['timesig_denominator'] = 4
         return json.dumps(cvpj_l)
 

@@ -27,3 +27,17 @@ def trimmove(notelist, startat, endat):
 	if endat != None: newnotelist = trim(newnotelist, endat)
 	if startat != None: newnotelist = move(newnotelist, -startat)
 	return newnotelist
+
+def sortnotes(notelist):
+	t_notelist_bsort = {}
+	t_notelist_sorted = {}
+	new_notelist = []
+	for note in notelist:
+		if note['position'] not in t_notelist_bsort:
+			t_notelist_bsort[note['position']] = []
+		t_notelist_bsort[note['position']].append(note)
+	t_notelist_sorted = dict(sorted(t_notelist_bsort.items(), key=lambda item: item[0]))
+	for t_notepos in t_notelist_sorted:
+		for note in t_notelist_sorted[t_notepos]:
+			new_notelist.append(note)
+	return new_notelist

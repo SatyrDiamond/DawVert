@@ -173,8 +173,8 @@ class input_cvpj_r(plugin_input.base):
 
                 pcms_c = machine['controls']
 
-                for printpart in pcms_c:
-                    print(pcms_c[printpart])
+                #for printpart in pcms_c:
+                #    print(pcms_c[printpart])
 
                 middlenote += int(pcms_c[1]*12)
                 middlenote += int(pcms_c[2])

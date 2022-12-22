@@ -103,16 +103,17 @@ class input_cvpj_r(plugin_input.base):
             machid = 'Mach'+str(machnum)
 
             if machine['id'] != 'NULL' and machine['id'] != 'MDLR':
-                patterns = machine['patterns']
-                for pattern in patterns:
-                    patid = 'Caustic_'+machid+'_'+pattern
-                    causticpattern = patterns[pattern]
-                    notelist = parse_notelist(causticpattern, machid)
-                    if notelist != []: 
-                        cvpj_l_notelistindex[patid] = {}
-                        cvpj_l_notelistindex[patid]['name'] = pattern+' ('+machid+')'
-                        cvpj_l_notelistindex[patid]['color'] = caustic_instcolors[machine['id']]
-                        cvpj_l_notelistindex[patid]['notelist'] = notelist
+                if 'patterns' in machine:
+                    patterns = machine['patterns']
+                    for pattern in patterns:
+                        patid = 'Caustic_'+machid+'_'+pattern
+                        causticpattern = patterns[pattern]
+                        notelist = parse_notelist(causticpattern, machid)
+                        if notelist != []: 
+                            cvpj_l_notelistindex[patid] = {}
+                            cvpj_l_notelistindex[patid]['name'] = pattern+' ('+machid+')'
+                            cvpj_l_notelistindex[patid]['color'] = caustic_instcolors[machine['id']]
+                            cvpj_l_notelistindex[patid]['notelist'] = notelist
 
             cvpj_inst = {}
             cvpj_inst["enabled"] = 1

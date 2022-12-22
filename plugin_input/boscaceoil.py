@@ -391,8 +391,6 @@ def ceol_read():
     datapos += 1
     return output
 
-
-
 class input_ceol(plugin_input.base):
     def __init__(self): pass
     def getshortname(self): return 'ceol'
@@ -406,6 +404,7 @@ class input_ceol(plugin_input.base):
         cvpj_l_instrumentsorder = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
+        cvpj_l_fxrack = {}
 
         global datapos
         global ceol_data
@@ -452,14 +451,28 @@ class input_ceol(plugin_input.base):
             print('[input-boscaceoil]    Cutoff/Reso: '+str(ceol_inst_cutoff)+'/'+str(ceol_inst_resonance))
             print('[input-boscaceoil] ')
 
+            cvpj_l_fxrack['0'] = {'name': 'Master'}
+
             cvpj_inst = {}
+            cvpj_l_fxrack[str(instnum+1)] = {}
             cvpj_inst["instdata"] = {}
+
             cvpj_inst["name"] = ceol_instinfo[1]
+            cvpj_l_fxrack[str(instnum+1)]["name"] = ceol_instinfo[1]
+
             cvpj_inst["vol"] = ceol_inst_volume/256
-            if ceol_inst_palette in ceol_colors: cvpj_inst["color"] = ceol_colors[ceol_inst_palette]
-            else: cvpj_inst["color"] = [0.55, 0.55, 0.55]
+
+            if ceol_inst_palette in ceol_colors: 
+            	cvpj_inst["color"] = ceol_colors[ceol_inst_palette]
+            	cvpj_l_fxrack[str(instnum+1)]["color"] = ceol_colors[ceol_inst_palette]
+            else: 
+            	cvpj_inst["color"] = [0.55, 0.55, 0.55]
+            	cvpj_l_fxrack[str(instnum+1)]["color"] = [0.55, 0.55, 0.55]
+            cvpj_inst['fxrack_channel'] = instnum+1
+
             cvpj_instdata = cvpj_inst["instdata"]
             cvpj_instdata['plugindata'] = {}
+
             if ceol_instinfo[0] == 'MIDI':
                 cvpj_instdata['plugin'] = 'general-midi'
                 cvpj_instdata['plugindata'] = {'bank':0, 'inst':ceol_inst_number}
@@ -472,6 +485,8 @@ class input_ceol(plugin_input.base):
                 cvpj_instdata['plugin'] = 'general-midi'
                 cvpj_instdata['plugindata'] = {'bank':128, 'inst':0}
             else: cvpj_instdata['plugin'] = 'none'
+
+            
 
             if ceol_inst_number == 365: t_key_offset.append(24)
             else: t_key_offset.append(0)
@@ -558,6 +573,7 @@ class input_ceol(plugin_input.base):
 
         timesig = placements.get_timesig(ceol_basic_patternlength, ceol_basic_barlength)
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
+        cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist

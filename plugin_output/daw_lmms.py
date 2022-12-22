@@ -453,6 +453,10 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
         else: name = 'FX ' + str(num)
         print('[output-lmms]       Name: ' + name)
 
+        if 'color' in fxchannelJ:
+            color = fxchannelJ['color']
+            fxcX.set('color', '#' + rgb_to_hex((int(color[0]*255),int(color[1]*255),int(color[2]*255))))
+
         if 'vol' in fxchannelJ: volume = fxchannelJ['vol']
         else: volume = 1
 

@@ -207,7 +207,8 @@ class input_cvpj_r(plugin_input.base):
                 for bbox_sample in bbox_samples:
                     #print(bbox_sample)
                     wave_path = samplefolder + machid + '_BeatBox_'+str(samplecount)+'.wav'
-                    audio_wav.generate(wave_path, bbox_sample['data'], bbox_sample['chan'], bbox_sample['hz'], 16, None)
+                    if bbox_sample['chan'] != 0 and bbox_sample['hz'] != 0: 
+                        audio_wav.generate(wave_path, bbox_sample['data'], bbox_sample['chan'], bbox_sample['hz'], 16, None)
                     regionparams = {}
                     regionparams['r_key'] = [bbox_key, bbox_key]
                     regionparams['middlenote'] = bbox_key

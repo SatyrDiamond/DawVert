@@ -5,6 +5,7 @@ import plugin_output
 import json
 import math
 import base64
+import struct
 from functions import format_flp
 from functions import note_mod
 from bs4 import BeautifulSoup
@@ -79,6 +80,7 @@ class output_cvpjs(plugin_output.base):
         if 'timesig_numerator' in projJ: FL_Main['Numerator'] = projJ['timesig_numerator']
         if 'timesig_denominator' in projJ: FL_Main['Denominator'] = projJ['timesig_denominator']
         if 'bpm' in projJ: FL_Main['Tempo'] = projJ['bpm']
+        if 'masterpitch' in projJ: FL_Main['MainPitch'] = struct.unpack('H', struct.pack('h', projJ['masterpitch']))[0]
 
         instrumentsorder = projJ['instrumentsorder']
 

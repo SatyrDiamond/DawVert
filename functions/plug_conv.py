@@ -168,27 +168,6 @@ def grace_create_region(gx_root, regionparams):
 	grace_addvalue(gx_RegionProp, 'SampleBeats', str(SampleBeats))
 
 	return gx_root
-# juicysfplugin
-def juicysfplugin_create(bank, patch, filename):
-	jsfp_xml = ET.Element("MYPLUGINSETTINGS")
-	jsfp_params = ET.SubElement(jsfp_xml, "params")
-	jsfp_uiState = ET.SubElement(jsfp_xml, "uiState")
-	jsfp_soundFont = ET.SubElement(jsfp_xml, "soundFont")
-	if 'bank' != None: jsfp_params.set('bank', str(bank/128))
-	else:jsfp_params.set('bank', "0")
-	if 'patch' != None: jsfp_params.set('preset', str(patch/128))
-	else:jsfp_params.set('preset', "0")
-	jsfp_params.set('attack', "0.0")
-	jsfp_params.set('decay', "0.0")
-	jsfp_params.set('sustain', "0.0")
-	jsfp_params.set('release', "0.0")
-	jsfp_params.set('filterCutOff', "0.0")
-	jsfp_params.set('filterResonance', "0.0")
-	jsfp_uiState.set('width', "500.0")
-	jsfp_uiState.set('height', "300.0")
-	if 'file' != None: jsfp_soundFont.set('path', filename)
-	else: jsfp_soundFont.set('path', '')
-	return jsfp_xml
 
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, dawname, extra_json, nameid):
@@ -355,7 +334,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				else: sf2_params = 0
 				if 'file' in sf2data: sf2_filename = sf2data['file']
 				else: sf2_filename = 0
-				jsfp_xml = juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
+				jsfp_xml = vst_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
 				vst_list.replace_data(instdata, 'juicysfplugin', vst_params.make_vc2_xml(jsfp_xml))
 
 			# -------------------- vst2 (magical8bitplug) --------------------

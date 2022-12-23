@@ -143,7 +143,8 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 								regionparams['file'] = sampler_file_data['file']
 								regionparams['length'] = sampler_file_data['length']
 								regionparams['start'] = 0
-								regionparams['loop'] = sampler_file_data['loop']
+								if 'loop' in sampler_file_data:
+									regionparams['loop'] = sampler_file_data['loop']
 								regionparams['end'] = sampler_file_data['length']
 								vst_inst.grace_create_region(gx_root, regionparams)
 								xmlout = ET.tostring(gx_root, encoding='utf-8')

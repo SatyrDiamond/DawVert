@@ -19,156 +19,6 @@ def vst_add_param(paramlist, num, name, value):
 	paramlist[str(num)]['name'] = name
 	paramlist[str(num)]['value'] = str(value)
 
-# -------------------- Func Instruments --------------------
-# magical8bitplug
-
-# grace
-def grace_addvalue(xmltag, name, value):
-	temp_xml = ET.SubElement(xmltag, name)
-	if value != None:
-		temp_xml.text = value
-def grace_create_main():
-	gx_root = ET.Element("root")
-
-	gx_GlobalParameters = ET.SubElement(gx_root, "GlobalParameters")
-	grace_addvalue(gx_GlobalParameters, 'VoiceMode', 'Poly')
-	grace_addvalue(gx_GlobalParameters, 'VoiceGlide', '0')
-
-	gx_SampleGroup = ET.SubElement(gx_root, "SampleGroup")
-	grace_addvalue(gx_SampleGroup, 'Name', 'Group 1')
-	gx_VoiceParameters = ET.SubElement(gx_SampleGroup, "VoiceParameters")
-	grace_addvalue(gx_VoiceParameters, 'AmpAttack', '0')
-	grace_addvalue(gx_VoiceParameters, 'AmpDecay', '0')
-	grace_addvalue(gx_VoiceParameters, 'AmpEnvSnap', 'SnapOff')
-	grace_addvalue(gx_VoiceParameters, 'AmpHold', '0')
-	grace_addvalue(gx_VoiceParameters, 'AmpRelease', '0')
-	grace_addvalue(gx_VoiceParameters, 'AmpSustain', '1')
-	grace_addvalue(gx_VoiceParameters, 'AmpVelocityDepth', 'Vel80')
-	grace_addvalue(gx_VoiceParameters, 'Filter1KeyFollow', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Filter1Par1', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Filter1Par2', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Filter1Par3', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Filter1Par4', '1')
-	grace_addvalue(gx_VoiceParameters, 'Filter1Type', 'ftNone')
-	grace_addvalue(gx_VoiceParameters, 'Filter2KeyFollow', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Filter2Par1', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Filter2Par2', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Filter2Par3', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Filter2Par4', '1')
-	grace_addvalue(gx_VoiceParameters, 'Filter2Type', 'ftNone')
-	grace_addvalue(gx_VoiceParameters, 'FilterOutputBlend', '1')
-	grace_addvalue(gx_VoiceParameters, 'FilterRouting', 'Serial')
-	grace_addvalue(gx_VoiceParameters, 'Lfo1Par1', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Lfo1Par2', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Lfo1Par3', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Lfo2Par1', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Lfo2Par2', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'Lfo2Par3', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'LfoFreqMode1', 'Fixed100Millisecond')
-	grace_addvalue(gx_VoiceParameters, 'LfoFreqMode2', 'Fixed100Millisecond')
-	grace_addvalue(gx_VoiceParameters, 'LfoShape1', 'Triangle')
-	grace_addvalue(gx_VoiceParameters, 'LfoShape2', 'Triangle')
-	grace_addvalue(gx_VoiceParameters, 'LoopEnd', '1')
-	grace_addvalue(gx_VoiceParameters, 'LoopStart', '0')
-	grace_addvalue(gx_VoiceParameters, 'ModAttack', '0')
-	grace_addvalue(gx_VoiceParameters, 'ModDecay', '0.300000011920929')
-	grace_addvalue(gx_VoiceParameters, 'ModEnvSnap', 'SnapOff')
-	grace_addvalue(gx_VoiceParameters, 'ModHold', '0')
-	grace_addvalue(gx_VoiceParameters, 'ModRelease', '0.300000011920929')
-	grace_addvalue(gx_VoiceParameters, 'ModSustain', '0.300000011920929')
-	grace_addvalue(gx_VoiceParameters, 'ModVelocityDepth', 'Vel80')
-	grace_addvalue(gx_VoiceParameters, 'OutputGain', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'OutputPan', '0.504999995231628')
-	grace_addvalue(gx_VoiceParameters, 'PitchTracking', 'Note')
-	grace_addvalue(gx_VoiceParameters, 'SampleEnd', '1')
-	grace_addvalue(gx_VoiceParameters, 'SampleReset', 'None')
-	grace_addvalue(gx_VoiceParameters, 'SamplerLoopBounds', 'LoopPoints')
-	grace_addvalue(gx_VoiceParameters, 'SamplerTriggerMode', 'LoopOff')
-	grace_addvalue(gx_VoiceParameters, 'SampleStart', '0')
-	grace_addvalue(gx_VoiceParameters, 'Seq1Clock', 'Div_4')
-	grace_addvalue(gx_VoiceParameters, 'Seq1Direction', 'Forwards')
-	grace_addvalue(gx_VoiceParameters, 'Seq2Clock', 'Div_4')
-	grace_addvalue(gx_VoiceParameters, 'Seq2Direction', 'Forwards')
-	grace_addvalue(gx_VoiceParameters, 'StepSeq1Length', 'Eight')
-	grace_addvalue(gx_VoiceParameters, 'StepSeq2Length', 'Eight')
-	grace_addvalue(gx_VoiceParameters, 'VoicePitchOne', '0.5')
-	grace_addvalue(gx_VoiceParameters, 'VoicePitchTwo', '0.5')
-
-	grace_addvalue(gx_root, 'PatchFileFormatVersion', '4')
-	grace_addvalue(gx_root, 'PatchFileType', 'LucidityPatchFile')
-
-	gx_PresetInfo = ET.SubElement(gx_root, "PresetInfo")
-	grace_addvalue(gx_PresetInfo, 'PresetName', 'Defualt')
-	grace_addvalue(gx_PresetInfo, 'PresetFileName', None)
-
-	gx_MidiMap = ET.SubElement(gx_root, "MidiMap")
-
-	return gx_root
-def grace_create_region(gx_root, regionparams):
-	gx_SampleGroup = gx_root.findall('SampleGroup')[0]
-	gx_Region = ET.SubElement(gx_SampleGroup, "Region")
-	gx_RegionProp = ET.SubElement(gx_Region, "RegionProperties")
-	gx_SampleProp = ET.SubElement(gx_Region, "SampleProperties")
-
-	FileName = ''
-
-	if 'file' in regionparams: FileName = regionparams['file']
-	grace_addvalue(gx_SampleProp, 'SampleFileName', str(FileName))
-
-	LowNote = 0
-	HighNote = 127
-	LowVelocity = 0
-	HighVelocity = 127
-	RootNote = 60
-	SampleStart = 0
-	SampleEnd = 0
-	LoopStart = -1
-	LoopEnd = -1
-	
-	if 'r_key' in regionparams:
-		LowNote = regionparams['r_key'][0] + 60
-		HighNote = regionparams['r_key'][1] + 60
-
-	if 'r_vol' in regionparams:
-		LowVelocity = int(regionparams['vol'][0]*127)
-		HighVelocity = int(regionparams['vol'][1]*127)
-
-	if 'loop' in regionparams:
-		if regionparams['loop']['enabled'] == 1:
-			LoopStart = regionparams['loop']['points'][0]
-			LoopEnd = regionparams['loop']['points'][1]
-
-	if 'middlenote' in regionparams: RootNote = regionparams['middlenote'] + 60
-	if 'start' in regionparams: SampleStart = regionparams['start']
-	if 'end' in regionparams: SampleEnd = regionparams['end'] - 1
-
-	grace_addvalue(gx_RegionProp, 'LowNote', str(LowNote))
-	grace_addvalue(gx_RegionProp, 'HighNote', str(HighNote))
-	grace_addvalue(gx_RegionProp, 'LowVelocity', str(LowVelocity))
-	grace_addvalue(gx_RegionProp, 'HighVelocity', str(HighVelocity))
-	grace_addvalue(gx_RegionProp, 'RootNote', str(RootNote))
-	grace_addvalue(gx_RegionProp, 'SampleStart', str(SampleStart))
-	grace_addvalue(gx_RegionProp, 'SampleEnd', str(SampleEnd))
-	grace_addvalue(gx_SampleProp, 'SampleFrames', str(SampleEnd))
-	grace_addvalue(gx_RegionProp, 'LoopStart', str(LoopStart))
-	grace_addvalue(gx_RegionProp, 'LoopEnd', str(LoopEnd))
-
-	SampleVolume = 0
-	SamplePan = 0
-	SampleTune = 0
-	SampleFine = 0
-
-	grace_addvalue(gx_RegionProp, 'SampleVolume', str(SampleVolume))
-	grace_addvalue(gx_RegionProp, 'SamplePan', str(SamplePan))
-	grace_addvalue(gx_RegionProp, 'SampleTune', str(SampleTune))
-	grace_addvalue(gx_RegionProp, 'SampleFine', str(SampleFine))
-
-	SampleBeats = 4
-
-	grace_addvalue(gx_RegionProp, 'SampleBeats', str(SampleBeats))
-
-	return gx_root
-
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, dawname, extra_json, nameid):
 	m8bp_shapesupported = ['shape-square', 'shape-triangle', 'retro-noise', 'shape-pulse']
@@ -288,14 +138,14 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 						if 'file' in sampler_file_data and wireturn != None and wireturn == 1:
 							file_extension = pathlib.Path(sampler_file_data['file']).suffix
 							if file_extension == '.wav':
-								gx_root = grace_create_main()
+								gx_root = vst_inst.grace_create_main()
 								regionparams = {}
 								regionparams['file'] = sampler_file_data['file']
 								regionparams['length'] = sampler_file_data['length']
 								regionparams['start'] = 0
 								regionparams['loop'] = sampler_file_data['loop']
 								regionparams['end'] = sampler_file_data['length']
-								grace_create_region(gx_root, regionparams)
+								vst_inst.grace_create_region(gx_root, regionparams)
 								xmlout = ET.tostring(gx_root, encoding='utf-8')
 								vst_list.replace_data(instdata, 'Grace', xmlout)
 						else:
@@ -313,9 +163,9 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				if vst_list.vst2path_loaded == True:
 					if vst_list.ifexists_vst2('Grace') == True:
 						regions = msmpl_p_data['regions']
-						gx_root = grace_create_main()
+						gx_root = vst_inst.grace_create_main()
 						for regionparams in regions:
-							grace_create_region(gx_root, regionparams)
+							vst_inst.grace_create_region(gx_root, regionparams)
 						xmlout = ET.tostring(gx_root, encoding='utf-8')
 						vst_list.replace_data(instdata, 'Grace', xmlout)
 					else:

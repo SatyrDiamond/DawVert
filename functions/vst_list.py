@@ -28,21 +28,21 @@ def find_vst2path(name, instdata):
 			if name in vst2paths:
 				if 'path64' in vst2paths[name]: 
 					vst_path = vst2paths[name]['path64']
-					print('[plug-vst2] ' + instdata['plugin'] +' > ' + name + ' (VST2 64-bit)')
+					print('[vst2-list] ' + instdata['plugin'] +' > ' + name + ' (VST2 64-bit)')
 					path_found = 1
 				elif 'path32' in vst2paths[name]: 
 					vst_path = vst2paths[name]['path32']
-					print('[plug-vst2] ' + instdata['plugin'] +' > ' + name + ' (VST2 32-bit)')
+					print('[vst2-list] ' + instdata['plugin'] +' > ' + name + ' (VST2 32-bit)')
 					path_found = 1
 				else:
-					print('[plug-vst2] Unchanged,', 'Plugin path of ' + name + ' not Found')
+					print('[vst2-list] Unchanged,', 'Plugin path of ' + name + ' not Found')
 			else: 
 				instdata['plugindata']['plugin']['path'] = ''
-				print('[plug-vst2] Unchanged,', 'Plugin ' + name + ' not Found')
+				print('[vst2-list] Unchanged,', 'Plugin ' + name + ' not Found')
 		else: 
-			print('[plug-vst2] Unchanged,', "VST2 list not found")
+			print('[vst2-list] Unchanged,', "VST2 list not found")
 	else: 
-		print('[plug-vst2] Unchanged,', "No Plugin and PluginData defined")
+		print('[vst2-list] Unchanged,', "No Plugin and PluginData defined")
 	return vst_path
 def replace_data(instdata, name, data):
 	vst_path = find_vst2path(name, instdata)
@@ -75,9 +75,9 @@ def listinit(osplatform):
 			vst2paths = configparser.ConfigParser()
 			vst2paths.read('vst2_win.ini')
 			vst2path_loaded = True
-			print('[plug-vst2] # of VST2 Plugins:', len(vst2paths))
+			print('[vst2-list] # of VST2 Plugins:', len(vst2paths))
 		if exists('vst3_win.ini'):
 			vst3paths = configparser.ConfigParser()
 			vst3paths.read('vst3_win.ini')
-			vst2path_loaded = True
-			print('[plug-vst ] # of VST3 Plugins:', len(vst3paths))
+			vst3path_loaded = True
+			print('[vst3-list] # of VST3 Plugins:', len(vst3paths))

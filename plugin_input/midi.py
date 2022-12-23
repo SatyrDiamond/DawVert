@@ -316,6 +316,8 @@ class input_midi(plugin_input.base):
 
         global t_chan_timednote
 
+        midichanneltype = [0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0]
+
         for track in midifile.tracks:
             midi_trackname = None
 
@@ -430,6 +432,9 @@ class input_midi(plugin_input.base):
                     cvpj_l_instruments[cvpj_trackid] = {}
                     cvpj_trackdata = cvpj_l_instruments[cvpj_trackid]
                     cvpj_trackdata["instdata"] = {}
+
+                    if midichanneltype[midi_channum] == 1: cvpj_trackdata["instdata"]['usemasterpitch'] = 0
+                    else: cvpj_trackdata["instdata"]['usemasterpitch'] = 1
 
                     cvpj_trackdata['fxrack_channel'] = midi_channum+1
                     cvpj_instdata = cvpj_trackdata["instdata"]

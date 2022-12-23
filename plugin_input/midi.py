@@ -439,7 +439,7 @@ class input_midi(plugin_input.base):
                     cvpj_trackdata['fxrack_channel'] = midi_channum+1
                     cvpj_instdata = cvpj_trackdata["instdata"]
                     cvpj_instdata['plugin'] = 'general-midi'
-                    if midi_channum != 9:
+                    if midichanneltype[midi_channum] != 1:
                         cvpj_instdata['plugindata'] = {'bank':0, 'inst':inst}
                         if midi_trackname != None:
                             cvpj_trackdata["name"] = midi_trackname+' ('+MIDIInstNames[inst]+')'+' [Trk'+str(t_tracknum)+' Ch'+str(midi_channum+1)+']'
@@ -448,10 +448,16 @@ class input_midi(plugin_input.base):
                         cvpj_trackdata["color"] = MIDIInstColors[inst]
                     else:
                         cvpj_instdata['plugindata'] = {'bank':128, 'inst':inst}
-                        if inst in MIDIDrumNames:
+
+                        if inst in MIDIDrumNames and midi_trackname == None:
                             cvpj_trackdata["name"] = MIDIDrumNames[inst]+' [Trk'+str(t_tracknum)+']'
-                        else:
+                        if inst not in MIDIDrumNames and midi_trackname == None:
                             cvpj_trackdata["name"] = 'Drums [Trk'+str(t_tracknum)+']'
+
+                        if inst in MIDIDrumNames and midi_trackname != None:
+                            cvpj_trackdata["name"] = midi_trackname+' ('+MIDIDrumNames[inst]+') [Trk'+str(t_tracknum)+']'
+                        if inst not in MIDIDrumNames and midi_trackname != None:
+                            cvpj_trackdata["name"] = midi_trackname+'(Drums) [Trk'+str(t_tracknum)+']'
                     if cvpj_trackid not in cvpj_l_instrumentsorder:
                         cvpj_l_instruments[cvpj_trackid] = cvpj_trackdata
                         cvpj_l_instrumentsorder.append(cvpj_trackid)

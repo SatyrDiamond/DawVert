@@ -5,6 +5,7 @@ import plugin_input
 import json
 import math
 import base64
+import struct
 from functions import format_flp
 
 class input_flp(plugin_input.base):
@@ -34,6 +35,8 @@ class input_flp(plugin_input.base):
 
         rootJ = {}
         rootJ['mastervol'] = 1
+        if 'MainPitch' in FL_Main:
+            rootJ['masterpitch'] = struct.unpack('h', struct.pack('H', FL_Main['MainPitch']))[0]
         rootJ['timesig_numerator'] = FL_Main['Numerator']
         rootJ['timesig_denominator'] = FL_Main['Denominator']
         rootJ['bpm'] = FL_Main['Tempo']

@@ -119,6 +119,7 @@ def r2s(song):
                             track_data['audio_tomaster'] = 1
                             track_data['audio_fx_routes'] = {}
                             if 'fxchain' not in track_data: track_data['fxchain'] = []
+                            if 'fxchain' not in fxi_data: fxi_data['fxchain'] = []
                             fxc_fx = fxi_data['fxchain']
                             fxc_track = track_data['fxchain']
                             for slot in fxc_fx:

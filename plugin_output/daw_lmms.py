@@ -139,7 +139,7 @@ def lmms_encode_plugin(xmltag, trkJ):
         if interpolation == "none": xml_sampler.set('interp', '0')
         if interpolation == "linear": xml_sampler.set('interp', '1')
         if interpolation == "sinc": xml_sampler.set('interp', '2')
-        else: xml_sampler.set('interp', '0')
+        else: xml_sampler.set('interp', '2')
     elif pluginname == 'soundfont2':
         print('[output-lmms]       Plugin: soundfont2 > sf2player')
         xml_instrumentpreplugin.set('name', "sf2player")

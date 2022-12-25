@@ -6,12 +6,36 @@ import xml.etree.ElementTree as ET
 import pathlib
 import os
 import struct
+import math
 from functions import audio_wav
 from functions import data_bytes
 from functions import vst_list
 from functions import vst_fx
 from functions import vst_inst
 from functions import vst_params
+from functions import vst_inst_vital
+
+simsynth_shapes = {0.4: 'noise', 0.3: 'sine', 0.2: 'square', 0.1: 'saw', 0.0: 'triangle'}
+
+def ss_asdr(x): 
+	print((x+(x*x)*4))
+	return (x+(x*x)*4)
+
+# -------------------- Shapes --------------------
+def wave_sine(x): return math.sin((x-0.5)*(math.pi*2))
+def wave_saw(x): return x-math.floor(x)
+def wave_tri(x): return abs((x*2)%(2)-1)
+def wave_squ(x, pw):
+    if wave_tri(x) > pw: return 1
+    else: return -1
+
+def tripleoct(x, shape, pw, one, two):
+    if shape == 'sine': samplepoint = wave_sine(x) + wave_sine(x*2)*one + wave_sine(x*4)*two
+    elif shape == 'saw': samplepoint = wave_saw(x) + wave_saw(x*2)*one + wave_saw(x*4)*two
+    elif shape == 'triangle': samplepoint = wave_tri(x) + wave_tri(x*2)*one + wave_tri(x*4)*two
+    elif shape == 'square': samplepoint = wave_squ(x, pw) + wave_squ(x*2, pw)*one + wave_squ(x*4, pw)*two
+    else: samplepoint = x
+    return samplepoint
 
 # -------------------- VST --------------------
 def vst_add_param(paramlist, num, name, value):
@@ -109,6 +133,70 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 					vstdxparams[14] = {"name": "Mod Thru","value": fldx_mod_thru}
 					vstdxparams[15] = {"name": "LFO Rate","value": fldx_lforate}
 					vst_list.replace_params(instdata, 'DX10', 16, vstdxparams)
+				elif plugindata['name'].lower() == 'simsynth':
+					#osc1_pw, osc1_crs, osc1_fine, osc1_lvl, osc1_lfo, osc1_env, osc1_shape
+					osc1_pw, osc1_crs, osc1_fine, osc1_lvl, osc1_lfo, osc1_env, osc1_shape = struct.unpack('ddddddd', fl_plugstr.read(56))
+					osc2_pw, osc2_crs, osc2_fine, osc2_lvl, osc2_lfo, osc2_env, osc2_shape = struct.unpack('ddddddd', fl_plugstr.read(56))
+					osc3_pw, osc3_crs, osc3_fine, osc3_lvl, osc3_lfo, osc3_env, osc3_shape = struct.unpack('ddddddd', fl_plugstr.read(56))
+
+					lfo_del, lfo_rate, unused, lfo_shape = struct.unpack('dddd', fl_plugstr.read(32))
+					UNK, svf_cut, svf_emph, svf_env = struct.unpack('dddd', fl_plugstr.read(32))
+					svf_lfo, svf_kb, UNK, svf_high = struct.unpack('dddd', fl_plugstr.read(32))
+					svf_band, UNK, amp_att, amp_dec = struct.unpack('dddd', fl_plugstr.read(32))
+					amp_sus, amp_rel, amp_lvl, UNK = struct.unpack('dddd', fl_plugstr.read(32))
+					svf_att, svf_dec, svf_sus, svf_rel = struct.unpack('dddd', fl_plugstr.read(32))
+
+					fl_plugstr.read(64)
+					fl_plugstr.read(12)
+
+					osc1_on, osc1_o1, osc1_o2, osc1_warm = struct.unpack('IIII', fl_plugstr.read(16))
+					osc2_on, osc2_o1, osc2_o2, osc2_warm = struct.unpack('IIII', fl_plugstr.read(16))
+					osc3_on, osc3_o1, osc3_o2, osc3_warm = struct.unpack('IIII', fl_plugstr.read(16))
+					lfo_on, lfo_retrugger, svf_on, UNK = struct.unpack('IIII', fl_plugstr.read(16))
+					lfo_trackamp, UNK, chorus_on, UNK = struct.unpack('IIII', fl_plugstr.read(16))
+
+					#vst_inst_vital.create()
+
+					#vital_osc1_shape = []
+					#for num in range(2048): vital_osc1_shape.append(tripleoct(num/2048, simsynth_shapes[osc1_shape], osc1_pw, osc1_o1, osc1_o2))
+					#vst_inst_vital.replacewave(0, vital_osc1_shape)
+					#vst_inst_vital.setvalue('osc_1_on', osc1_on)
+					#vst_inst_vital.setvalue('osc_1_transpose', (osc1_crs-0.5)*48)
+					#vst_inst_vital.setvalue('osc_1_tune', (osc1_fine-0.5)*2)
+					#vst_inst_vital.setvalue('osc_1_level', osc1_lvl/2)
+					#if osc1_warm == 1:
+						#vst_inst_vital.setvalue('osc_1_unison_detune', 2.2)
+						#vst_inst_vital.setvalue('osc_1_unison_voices', 6)
+
+					#vital_osc2_shape = []
+					#for num in range(2048): vital_osc2_shape.append(tripleoct(num/2048, simsynth_shapes[osc2_shape], osc2_pw, osc2_o1, osc2_o2))
+					#vst_inst_vital.replacewave(1, vital_osc2_shape)
+					#vst_inst_vital.setvalue('osc_2_on', osc2_on)
+					#vst_inst_vital.setvalue('osc_2_transpose', (osc2_crs-0.5)*48)
+					#vst_inst_vital.setvalue('osc_2_tune', (osc2_fine-0.5)*2)
+					#vst_inst_vital.setvalue('osc_2_level', osc2_lvl/2)
+					#if osc2_warm == 1:
+						#vst_inst_vital.setvalue('osc_2_unison_detune', 2.2)
+						#vst_inst_vital.setvalue('osc_2_unison_voices', 6)
+
+					#vital_osc3_shape = []
+					#for num in range(2048): vital_osc3_shape.append(tripleoct(num/2048, simsynth_shapes[osc3_shape], osc3_pw, osc3_o1, osc3_o2))
+					#vst_inst_vital.replacewave(2, vital_osc3_shape)
+					#vst_inst_vital.setvalue('osc_3_on', osc3_on)
+					#vst_inst_vital.setvalue('osc_3_transpose', (osc3_crs-0.5)*48)
+					#vst_inst_vital.setvalue('osc_3_tune', (osc3_fine-0.5)*2)
+					#vst_inst_vital.setvalue('osc_3_level', osc3_lvl/2)
+					#if osc3_warm == 1:
+						#vst_inst_vital.setvalue('osc_3_unison_detune', 2.2)
+						#vst_inst_vital.setvalue('osc_3_unison_voices', 6)
+
+					#vst_inst_vital.setvalue('env_1_attack', ss_asdr(amp_att)*4)
+					#vst_inst_vital.setvalue('env_1_decay', ss_asdr(amp_dec)*4)
+					#vst_inst_vital.setvalue('env_1_sustain', amp_sus)
+					#vst_inst_vital.setvalue('env_1_release', ss_asdr(amp_rel)*4)
+
+					#vitaldata = vst_inst_vital.getdata()
+					#vst_list.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))
 
 			# ---------- from general-midi
 			elif pluginname == 'general-midi':

@@ -280,7 +280,8 @@ class input_cvpj_r(plugin_input.base):
                     output_extra = {}
 
                     if r_vol != -1:
-                        output_param['vol'] = r_vol/127
+                        if s_chantype != 'fm': output_param['vol'] = r_vol/16
+                        else: output_param['vol'] = r_vol/127
 
                     for r_fxp in r_fx:
                         fxget(r_fxp[0], r_fxp[1], output_param, output_extra)

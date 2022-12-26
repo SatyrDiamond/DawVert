@@ -935,7 +935,8 @@ def reconstruct(FLP_Data, outputfile):
     reconstruct_flevent(data_FLdt, 67, 1) #CurrentPatNum
     reconstruct_flevent(data_FLdt, 9, 1) #LoopActive
     reconstruct_flevent(data_FLdt, 11, int(FLP_Data['FL_Main']['Shuffle'])) #Shuffle 
-    reconstruct_flevent(data_FLdt, 80, int(FLP_Data['FL_Main']['MainPitch'])) #MainPitch
+    if 'MainPitch' in FLP_Data['FL_Main']:
+        reconstruct_flevent(data_FLdt, 80, int(FLP_Data['FL_Main']['MainPitch'])) #MainPitch
     if 'Numerator' not in FLP_Data['FL_Main']:
         FLP_Data['FL_Main']['Numerator'] = 4
     if 'Denominator' not in FLP_Data['FL_Main']:

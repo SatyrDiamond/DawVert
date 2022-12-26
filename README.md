@@ -48,6 +48,7 @@ e.g:
 | M-I | ```ceol``` | Bosca Ceoil | Chiptune/Retro | 
 | M | ```lovelycomposer``` | Lovely Composer | Chiptune/Retro | 
 | R | ```piyopiyo``` | PiyoPiyo | Chiptune/Retro | 
+| M-I | ```deflemask``` | DefleMask | Chiptune/Retro | 
 | M-I | ```caustic``` | Caustic 3 | Mobile | 
 | M | ```mnbs``` | Minecraft Note Block Studio |  | 
 | R | ```flipper``` | Flipper Music Format | | 

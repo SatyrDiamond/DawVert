@@ -316,7 +316,6 @@ class input_cvpj_r(plugin_input.base):
         chnum = 0
         curpos = 0
         for t_ch_pat_order in t_ch_pat_orders:
-            print(t_ch_pat_order)
             curpos = 0
             cvpj_l_playlist[plnum] = {}
             cvpj_l_playlist[plnum]['name'] = t_channames[chnum]
@@ -338,7 +337,7 @@ class input_cvpj_r(plugin_input.base):
             dmf_instid = total_used_instrument[1]
             cvpj_instid = insttype+'_'+dmf_instid
             cvpj_inst = {}
-            print(dmf_instnames)
+            #print(dmf_instnames)
             cvpj_inst["name"] = dmf_instnames[int(dmf_instid)]+' ('+chipname[insttype]+')'
             cvpj_inst["pan"] = 0.0
             cvpj_inst["vol"] = 1.0

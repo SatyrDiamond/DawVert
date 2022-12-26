@@ -87,8 +87,8 @@ def dmfenv(bio_dmf):
 
 class input_cvpj_r(plugin_input.base):
     def __init__(self): pass
-    def getshortname(self): return 'delfemask'
-    def getname(self): return 'DelfeMask'
+    def getshortname(self): return 'deflemask'
+    def getname(self): return 'DefleMask'
     def gettype(self): return 'mi'
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
@@ -97,7 +97,7 @@ class input_cvpj_r(plugin_input.base):
 
         dmf_header = bio_dmf.read(16)
         if dmf_header != b'.DelekDefleMask.':
-            print('File is not DelfeMask.')
+            print('File is not DefleMask.')
             exit()
 
         cvpj_l = {}

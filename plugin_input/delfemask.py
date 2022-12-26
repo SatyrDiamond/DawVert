@@ -18,6 +18,7 @@ chiptypecolors['fmop'] = [0.20, 0.40, 1.00]
 chiptypecolors['wavetable'] = [1.00, 0.50, 0.20]
 chiptypecolors['pce'] = [1.00, 0.50, 0.20]
 chiptypecolors['pcm'] = [1.00, 0.90, 0.20]
+chiptypecolors['sample'] = [1.00, 0.90, 0.20]
 chiptypecolors['adpcma'] = [1.00, 0.90, 0.20]
 chiptypecolors['c64'] = [0.80, 0.80, 0.80]
 

@@ -32,6 +32,7 @@ chipname['wavetable'] = 'Wavetable'
 chipname['pce'] = 'PC Engine'
 chipname['pcm'] = 'PCM'
 chipname['adpcma'] = 'ADPCM-A'
+chipname['sample'] = 'Sample'
 chipname['c64'] = 'C64'
 
 def splitbyte(value):
@@ -337,6 +338,7 @@ class input_cvpj_r(plugin_input.base):
             dmf_instid = total_used_instrument[1]
             cvpj_instid = insttype+'_'+dmf_instid
             cvpj_inst = {}
+            print(dmf_instnames)
             cvpj_inst["name"] = dmf_instnames[int(dmf_instid)]+' ('+chipname[insttype]+')'
             cvpj_inst["pan"] = 0.0
             cvpj_inst["vol"] = 1.0

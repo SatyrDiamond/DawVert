@@ -276,6 +276,7 @@ class input_it(plugin_input.base):
                             if cell_instrument != None: pattern_row[1][cell_channel][1] = cell_instrument
                                 
                             if cell_commandtype == 1: pattern_row[0]['tracker_speed'] = cell_commandnum
+                            if cell_commandtype == 20: pattern_row[0]['tracker_tempo'] = cell_commandnum
                             if cell_commandtype == 3: pattern_row[0]['tracker_break_to_row'] = cell_commandnum
                             if cell_commandtype == 24: pattern_row[1][cell_channel][2]['pan'] = ((cell_commandnum/255)-0.5)*2
                             if firstrow == 1: pattern_row[0]['firstrow'] = 1
@@ -373,6 +374,10 @@ class input_it(plugin_input.base):
         cvpj_l['message']['type'] = 'text'
         cvpj_l['message']['text'] = it_songmessage
 
+        placements_auto = {}
+        placements_auto['bpm'] = song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo)
+
+        cvpj_l['placements_auto'] = placements_auto
         cvpj_l['timemarkers'] = placements.make_timemarkers([4,16], patlentable, None)
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

@@ -36,7 +36,7 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
                 if placement_data != None:
                     placement_data['points'] = placement_points
                     placement_data['duration'] = placement_duration
-                    tempo_placements.append(placement_data)
+                    if placement_points != []: tempo_placements.append(placement_data)
                     placement_data = None
                 skip_rows = 0
                 placement_data = {}
@@ -53,7 +53,7 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
             if 'tracker_tempo' in patternrow[0]:
                 current_tempo = patternrow[0]['tracker_tempo']
                 speed_changed = True
-                
+
             if speed_changed == True:
                 placement_points.append({"position": placement_currentpos-0.01, "value": tempovalue})
                 tempovalue = current_tempo/(current_speed/6)
@@ -72,7 +72,7 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
     if placement_data != None:
         placement_data['points'] = placement_points
         placement_data['duration'] = placement_duration
-        tempo_placements.append(placement_data)
+        if placement_points != []: tempo_placements.append(placement_data)
     return tempo_placements
 
 def convertchannel2timednotes(patterntable_channel, startinststr):

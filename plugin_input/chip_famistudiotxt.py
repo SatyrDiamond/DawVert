@@ -138,7 +138,8 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
         cvpj_instdata['plugin'] = 'retro'
         cvpj_instdata['plugindata'] = {}
         plugdata = cvpj_instdata['plugindata']
-        if wavetype == 'Square1' or wavetype == 'Square2': plugdata['wave'] = 'square'
+        if wavetype == 'Square1' or wavetype == 'Square2': 
+            plugdata['wave'] = 'square'
         if wavetype == 'Triangle': plugdata['wave'] = 'triangle'
         if wavetype == 'Noise': plugdata['wave'] = 'noise'
         if 'Envelopes' in FST_Instrument:

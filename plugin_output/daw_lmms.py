@@ -479,6 +479,71 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
             sendX.set('amount', '1')
         print('[output-lmms]')
 
+# ------- Automation -------
+
+def auto_multiply(s_autopl_data, addval, mulval):
+    for autopl in s_autopl_data:
+        if 'points' in autopl:
+            for point in autopl['points']:
+                if 'value' in point:
+                    point['value'] = (point['value']+addval)*mulval
+    return s_autopl_data
+
+def setvalue(tagJ, nameJ, xmltagX, nameX, fallbackval, addval, mulval, autodata):
+    if nameJ in tagJ:
+        if tagJ[nameJ] is not None:
+            if nameX in autodata:
+                t_ad = autodata[nameX]
+                autovarX = ET.SubElement(xmltagX, nameX)
+                if mulval != None and addval != None: autovarX.set('value', str((tagJ[nameJ]+addval)*mulval))
+                else: autovarX.set('value', str(tagJ[nameJ]))
+                autovarX.set('scale_type', 'linear')
+                autovarX.set('id', str(t_ad))
+            else:
+                if mulval != None and addval != None: xmltagX.set('value', str((tagJ[nameJ]+addval)*mulval))
+                else: xmltagX.set(nameX, str(tagJ[nameJ]))
+
+def lmms_make_main_auto_track(xmltag, autodata, nameid, autoid):
+    if nameid in nameid_cvpj_lmms['main']:
+        out_name = nameid_cvpj_lmms['main'][nameid][1]
+    else:
+        out_name = 'unknown: '+nameid
+
+    print('[output-lmms] Automation Track: '+out_name)
+
+    if nameid == 'mastervol': autodata = auto_multiply(autodata, 0, 100)
+    if nameid == 'masterpitch': autodata = auto_multiply(autodata, 0, 0.01)
+
+    xml_autotrack = ET.SubElement(xmltag, "track")
+    xml_autotrack.set('type', '5')
+    xml_autotrack.set('solo', '0')
+    xml_autotrack.set('muted', '0')
+    xml_autotrack.set('name', out_name)
+    for autoplacement in autodata:
+        xml_automationpattern = ET.SubElement(xml_autotrack, "automationpattern")
+        xml_automationpattern.set('pos', str(int(autoplacement['position']*12)))
+        xml_automationpattern.set('len', str(int(autoplacement['duration']*12)))
+        xml_automationpattern.set('tens', "1")
+        xml_automationpattern.set('name', "")
+        xml_automationpattern.set('mute', "0")
+        xml_automationpattern.set('prog', "1")
+        if 'points' in autoplacement:
+            for point in autoplacement['points']:
+                xml_time = ET.SubElement(xml_automationpattern, "time")
+                xml_time.set('value', str(point['value']))
+                xml_time.set('pos', str(int(point['position']*12)))
+        if autoid != None:
+            xml_object = ET.SubElement(xml_automationpattern, "object")
+            xml_object.set('id', str(autoid))
+
+global nameid_cvpj_lmms
+nameid_cvpj_lmms = {}
+nameid_cvpj_lmms['main'] = {}
+nameid_cvpj_lmms['main']['bpm'] = ['bpm', "Tempo"]
+nameid_cvpj_lmms['main']['mastervol'] = ['mastervol', "Master Volume"]
+nameid_cvpj_lmms['main']['masterpitch'] = ['masterpitch', "Master Pitch"]
+nameid_cvpj_lmms['track'] = {}
+
 # ------- Main -------
 
 def lmms_encode_tracks(xmltag, trksJ, trkorderJ):
@@ -507,33 +572,32 @@ class output_lmms(plugin_output.base):
         projX.set('creatorversion', "1.2.2")
         projX.set('version', "1.0")
         headX = ET.SubElement(projX, "head")
-        if 'masterpitch' in projJ: headX.set('masterpitch', str(int(projJ['masterpitch']/100)))
-        else: headX.set('masterpitch', "0")
 
-        if 'mastervol' in projJ: 
-            if projJ['mastervol'] is not None:
-                headX.set('mastervol', str(oneto100(projJ['mastervol'])))
-        else: headX.set('mastervol', '100')
+        global auto_curnum
 
-        if 'timesig_numerator' in projJ: 
-            if projJ['timesig_numerator'] is not None:
-                headX.set('timesig_numerator', str(projJ['timesig_numerator']))
-        else: headX.set('timesig_numerator', '4')
+        main_auto_data = None
+        main_auto_idnumdata = {}
 
-        if 'timesig_denominator' in projJ: 
-            if projJ['timesig_denominator'] is not None:
-                headX.set('timesig_denominator', str(projJ['timesig_denominator']))
-        else: headX.set('timesig_denominator', '4')
+        if 'placements_auto' in projJ: main_auto_data = projJ['placements_auto']
 
-        global bpm
-        if 'bpm' in projJ: 
-            if projJ['bpm'] is not None:
-                headX.set('bpm', str(projJ['bpm']))
-                bpm = projJ['bpm']
-        else: bpm = 140
-        
         songX = ET.SubElement(projX, "song")
         trkcX = ET.SubElement(songX, "trackcontainer")
+
+        auto_curnum = 70000
+        if main_auto_data != None:
+            for autoname in main_auto_data:
+                out_curnum = None
+                if autoname in nameid_cvpj_lmms['main']:
+                    main_auto_idnumdata[nameid_cvpj_lmms['main'][autoname][0]] = auto_curnum
+                    out_curnum = auto_curnum
+                lmms_make_main_auto_track(trkcX, main_auto_data[autoname], autoname, out_curnum)
+                auto_curnum += 1
+
+        setvalue(projJ, 'masterpitch', headX, 'masterpitch', 100, 0, 0.01, main_auto_idnumdata)
+        setvalue(projJ, 'mastervol', headX, 'mastervol', 100, 0, 100, main_auto_idnumdata)
+        setvalue(projJ, 'timesig_numerator', headX, 'timesig_numerator', 4, None, None, main_auto_idnumdata)
+        setvalue(projJ, 'timesig_denominator', headX, 'timesig_denominator', 4, None, None, main_auto_idnumdata)
+        setvalue(projJ, 'bpm', headX, 'bpm', 140, None, None, main_auto_idnumdata)
         
         lmms_encode_tracks(trkcX, trksJ, trkorderJ)
         

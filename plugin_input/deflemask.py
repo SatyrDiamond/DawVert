@@ -82,7 +82,7 @@ def dmfenv(bio_dmf):
     ENVELOPE_SIZE = int.from_bytes(bio_dmf.read(1), "little")
     envdata = {}
     envdata['values'] = struct.unpack('I'*ENVELOPE_SIZE, bio_dmf.read(ENVELOPE_SIZE*4))
-    if ENVELOPE_SIZE != 0: envdata['looppos'] = int.from_bytes(bio_dmf.read(1), "little")
+    if ENVELOPE_SIZE != 0: envdata['looppos'] = int.from_bytes(bio_dmf.read(1), "little", signed=True)
     return envdata
 
 class input_cvpj_r(plugin_input.base):
@@ -290,6 +290,10 @@ class input_cvpj_r(plugin_input.base):
                     elif r_note == 100: output_note = 'Off'
                     else: output_note = (r_note + r_oct*12)-60
 
+                    if output_note != None and output_note != 'Off':
+                        if s_chantype == 'square': 
+                            output_note += 36
+
                     if r_inst != -1 and output_note != None: output_inst = r_inst
 
                     table_rows.append([[],[output_note, output_inst, output_param, output_extra]])
@@ -336,6 +340,8 @@ class input_cvpj_r(plugin_input.base):
         for total_used_instrument in total_used_instruments:
             insttype = total_used_instrument[0]
             dmf_instid = total_used_instrument[1]
+            dmf_instdata = dmf_insts[int(dmf_instid)]
+
             cvpj_instid = insttype+'_'+dmf_instid
             cvpj_inst = {}
             #print(dmf_instnames)
@@ -345,9 +351,26 @@ class input_cvpj_r(plugin_input.base):
             if insttype in chiptypecolors:
                 cvpj_inst["color"] = chiptypecolors[insttype]
             cvpj_inst["instdata"] = {}
-            cvpj_inst["instdata"]["plugin"] = 'none'
+            cvpj_inst["instdata"]["plugindata"] = {}
+            plugdata = cvpj_inst["instdata"]["plugindata"]
+            if insttype == 'square' or insttype == 'noise':
+                cvpj_inst["instdata"]["plugin"] = 'retro'
+                plugdata['wave'] = insttype
+                if 'env_volume' in dmf_instdata:
+                    plugdata['env_vol'] = {}
+                    valuet = []
+                    for item in dmf_instdata['env_volume']['values']: valuet.append(item)
+                    plugdata['env_vol']['values'] = valuet
+                    if dmf_instdata['env_volume']['looppos'] != -1:
+                        plugdata['env_vol']['loop'] = dmf_instdata['env_volume']['looppos']
+            else: 
+                cvpj_inst["instdata"]["plugin"] = 'none'
+                cvpj_inst["instdata"]["plugindata"] = {}
+            
             cvpj_l_instruments[cvpj_instid] = cvpj_inst
             cvpj_l_instrumentsorder.append(cvpj_instid)
+
+        #dmf_insts
 
         cvpj_l['title'] = dmf_song_name
         cvpj_l['author'] = dmf_song_author

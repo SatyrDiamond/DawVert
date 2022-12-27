@@ -8,7 +8,6 @@ import base64
 import struct
 from functions import format_flp
 from functions import note_mod
-from bs4 import BeautifulSoup
 
 def clamp(n, minn, maxn):
     return max(min(maxn, n), minn)

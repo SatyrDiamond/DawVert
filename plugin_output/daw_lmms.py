@@ -504,8 +504,8 @@ def setvalue(tagJ, nameJ, xmltagX, nameX, fallbackval, addval, mulval, autodata)
                 else: xmltagX.set(nameX, str(tagJ[nameJ]))
 
 def lmms_make_main_auto_track(xmltag, autodata, nameid, autoid):
-    if nameid in nameid_cvpj_lmms['main']:
-        out_name = nameid_cvpj_lmms['main'][nameid][1]
+    if nameid in nameid_cvpj_lmms_main:
+        out_name = nameid_cvpj_lmms_main[nameid][1]
     else:
         out_name = 'unknown: '+nameid
 
@@ -538,11 +538,10 @@ def lmms_make_main_auto_track(xmltag, autodata, nameid, autoid):
 
 global nameid_cvpj_lmms
 nameid_cvpj_lmms = {}
-nameid_cvpj_lmms['main'] = {}
-nameid_cvpj_lmms['main']['bpm'] = ['bpm', "Tempo"]
-nameid_cvpj_lmms['main']['mastervol'] = ['mastervol', "Master Volume"]
-nameid_cvpj_lmms['main']['masterpitch'] = ['masterpitch', "Master Pitch"]
-nameid_cvpj_lmms['track'] = {}
+nameid_cvpj_lmms_main = {}
+nameid_cvpj_lmms_main['bpm'] = ['bpm', "Tempo"]
+nameid_cvpj_lmms_main['mastervol'] = ['mastervol', "Master Volume"]
+nameid_cvpj_lmms_main['masterpitch'] = ['masterpitch', "Master Pitch"]
 
 # ------- Main -------
 
@@ -587,8 +586,8 @@ class output_lmms(plugin_output.base):
         if main_auto_data != None:
             for autoname in main_auto_data:
                 out_curnum = None
-                if autoname in nameid_cvpj_lmms['main']:
-                    main_auto_idnumdata[nameid_cvpj_lmms['main'][autoname][0]] = auto_curnum
+                if autoname in nameid_cvpj_lmms_main:
+                    main_auto_idnumdata[nameid_cvpj_lmms_main[autoname][0]] = auto_curnum
                     out_curnum = auto_curnum
                 lmms_make_main_auto_track(trkcX, main_auto_data[autoname], autoname, out_curnum)
                 auto_curnum += 1

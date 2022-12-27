@@ -87,7 +87,7 @@ def lmms_getvalue(xmltag, xmlname, autoname):
         value = realvaluetag.get('value')
         if value != None:
             if autoname != None:
-                autolist[str(realvaluetag.get('id'))] = autoname
+                l_autoid[str(realvaluetag.get('id'))] = autoname
             return realvaluetag.get('value')
         else: return None
 
@@ -401,6 +401,14 @@ def lmms_decode_inst_track(trkX, name):
 
 # ------- Track: Automation -------
 
+def auto_multiply(s_autopl_data, addval, mulval):
+    for autopl in s_autopl_data:
+        if 'points' in autopl:
+            for point in autopl['points']:
+                if 'value' in point:
+                    point['value'] = (point['value']*mulval)+addval
+    return s_autopl_data
+
 def lmms_decode_autopattern(pointsX):
     autopoints = []
     printcountpat = 0
@@ -412,6 +420,7 @@ def lmms_decode_autopattern(pointsX):
         autopoints.append(pointJ)
     print('['+str(printcountpat), end='] ')
     return autopoints
+
 def lmms_decode_autoplacements(trkX):
     autoplacements = []
     autopatsX = trkX.findall('automationpattern')
@@ -423,21 +432,16 @@ def lmms_decode_autoplacements(trkX):
         placeJ["duration"] = float(autopatX.get('len')) / 12
         pointsX = autopatX.findall('time')
         pointsJ = lmms_decode_autopattern(pointsX)
-        autoobjectX = autopatX.findall('object')
-        if len(autoobjectX) != 0: placeJ["internal_id"] = autoobjectX[0].get('id')
         placeJ["points"] = pointsJ
-        autoplacements.append(placeJ)
+        autoobjectX = autopatX.findall('object')
+        if len(autoobjectX) != 0:
+            internal_id = autoobjectX[0].get('id')
+            if internal_id not in l_autodata: l_autodata[internal_id] = []
+            l_autodata[internal_id].append(placeJ)
     print(' ')
-    return autoplacements
+
 def lmms_decode_auto_track(trkX):
-    cvpj_l_track = {}
-    cvpj_l_track['type'] = "auto"
-    cvpj_l_track['name'] = trkX.get('name')
-    print('[input-lmms] Automation Track')
-    print('[input-lmms]       Name: ' + cvpj_l_track['name'])
-    cvpj_l_track['placements'] = lmms_decode_autoplacements(trkX)
-    cvpj_l_track['enabled'] = int(not int(trkX.get('muted')))
-    return cvpj_l_track
+    lmms_decode_autoplacements(trkX)
 
 # ------- Effects -------
 
@@ -522,8 +526,7 @@ def lmms_decode_tracks(trksX):
             tracklist['LMMS_Inst_'+str(idtracknum)] = lmms_decode_inst_track(trkX, 'LMMS_Inst_'+str(idtracknum))
             trackordering.append('LMMS_Inst_'+str(idtracknum))
         if tracktype == "5":
-            tracklist['LMMS_Auto_'+str(idtracknum)] = lmms_decode_auto_track(trkX)
-            trackordering.append('LMMS_Auto_'+str(idtracknum))
+            lmms_decode_auto_track(trkX)
     return [tracklist, trackordering]
 
 class input_lmms(plugin_input.base):
@@ -551,8 +554,11 @@ class input_lmms(plugin_input.base):
             lmms_vstpath = lmmsconf_pathsX.get('vstdir')
         else: lmms_vstpath = ''
 
-        global autolist
-        autolist = {}
+        global l_autoid
+        global l_autodata
+        l_autoid = {}
+        l_autodata = {}
+        main_autoplacements = {}
 
         tree = ET.parse(input_file).getroot()
         headX = tree.findall('head')[0]
@@ -576,34 +582,32 @@ class input_lmms(plugin_input.base):
             rootJ['message']['type'] = 'html'
             rootJ['message']['text'] = projnotesX.text
 
-        tracksout = lmms_decode_tracks(trksX)
-        rootJ['trackdata'] = tracksout[0]
-        rootJ['trackordering'] = tracksout[1]
-        rootJ['fxrack'] = lmms_decode_fxmixer(fxX)
+        trackdata, trackordering = lmms_decode_tracks(trksX)
 
-        for track in rootJ['trackdata']:
-            autotrackdata = rootJ['trackdata'][track]
-            autotrackdata_type = autotrackdata['type']
-            if autotrackdata_type == 'auto':
-                autotrackdata_placesJ = autotrackdata['placements']
-                for autotrackdata_placeJ in autotrackdata_placesJ:
-                    autoid = autotrackdata_placeJ['internal_id']
-                    del autotrackdata_placeJ['internal_id']
-                    if str(autoid) in autolist:
-                        autotrackdata_placeJ['control'] = autolist[str(autoid)]
-                        autocontrol = autotrackdata_placeJ['control']
-                        autovaluemul = None
-                        if autocontrol == ['main', 'mastervol']:
-                            autovaluemul = 0.01
-                        if autocontrol[0] == 'track':
-                            if autocontrol[2] == 'vol': autovaluemul = 0.01
-                            if autocontrol[2] == 'pan': autovaluemul = 0.01
-                            if autocontrol[2] == 'enabled': autovaluemul = 'n'
-                        if autovaluemul == 'n':
-                            for pointJ in autotrackdata_placeJ['points']:
-                                pointJ['value'] = int(not int(pointJ['value']))
-                        elif autovaluemul != None:
-                            for pointJ in autotrackdata_placeJ['points']:
-                                pointJ['value'] = pointJ['value']*autovaluemul
+        for part in l_autodata:
+            s_autopl_id = l_autoid[part]
+            s_autopl_data = l_autodata[part]
+            #print()
+            #print(s_autopl_id)
+            #print(s_autopl_data)
+            if s_autopl_id[0] == 'track':
+                if s_autopl_id[1] in trackdata:
+                    s_trkdata = trackdata[s_autopl_id[1]]
+                    if 'placements_auto' not in s_trkdata: s_trkdata['placements_auto'] = {}
+                    temp_pla = s_trkdata['placements_auto']
+                    if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = auto_multiply(s_autopl_data, 0, 0.01)
+                    elif s_autopl_id[2] == 'pan': temp_pla[s_autopl_id[2]] = auto_multiply(s_autopl_data, 0, 0.01)
+                    elif s_autopl_id[2] == 'enabled': temp_pla[s_autopl_id[2]] = auto_multiply(s_autopl_data, 1, -1)
+                    else: temp_pla[s_autopl_id[2]] = auto_multiply(s_autopl_data, 0, 1)
+            else:
+                if s_autopl_id[1] == 'mastervol': main_autoplacements[s_autopl_id[1]] = auto_multiply(s_autopl_data, 0, 0.01)
+                elif s_autopl_id[1] == 'masterpitch': main_autoplacements[s_autopl_id[1]] = auto_multiply(s_autopl_data, 0, 100)
+                else: main_autoplacements[s_autopl_id[1]] = auto_multiply(s_autopl_data, 0, 1)
+
+
+        rootJ['trackdata'] = trackdata
+        rootJ['trackordering'] = trackordering
+        rootJ['placements_auto'] = main_autoplacements
+        rootJ['fxrack'] = lmms_decode_fxmixer(fxX)
 
         return json.dumps(rootJ, indent=2)

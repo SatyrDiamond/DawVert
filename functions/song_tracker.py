@@ -19,6 +19,49 @@ def entire_song_channel(patterntable_all, channel, orders):
             entire_song_channel_out.append([patternrow[0], patternrow[1]])
     return entire_song_channel_out
 
+def tempo_auto(patterntable_all, orders, speed, tempo):
+    skip_rows = 0
+    tempo_pos = 0
+
+    current_speed = speed
+    current_tempo = tempo
+    tempovalue = current_tempo/(current_speed/6)
+
+    tempo_placements = []
+    placement_data = None
+    for pattern_num in orders:
+        for patternrow in patterntable_all[pattern_num]:
+            if 'firstrow' in patternrow[0]:
+                if placement_data != None:
+                    placement_data['points'] = placement_points
+                    placement_data['duration'] = placement_duration
+                    tempo_placements.append(placement_data)
+                    placement_data = None
+                skip_rows = 0
+                placement_data = {}
+                placement_currentpos = 0
+                placement_position = tempo_pos
+                placement_duration = 0
+                placement_points = []
+                placement_data['position'] = placement_position
+
+            if 'tracker_break_to_row' in patternrow[0]:
+                if patternrow[0]['tracker_break_to_row'] == 0:
+                    skip_rows = 1
+
+            if 'tracker_speed' in patternrow[0]:
+                current_speed = patternrow[0]['tracker_speed']
+
+                placement_points.append({"position": placement_currentpos-0.01, "value": tempovalue})
+                tempovalue = current_tempo/(current_speed/6)
+                placement_points.append({"position": placement_currentpos, "value": tempovalue})
+
+            if skip_rows == 0:
+                tempo_pos += 1
+                placement_duration += 1
+                placement_currentpos += 1
+    return tempo_placements
+
 def convertchannel2timednotes(patterntable_channel, startinststr):
     output_channel = []
     note_held = 0

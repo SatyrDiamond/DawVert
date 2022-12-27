@@ -399,9 +399,8 @@ class input_midi(plugin_input.base):
                     if t_chan_used[msg.channel] == 0:
                         t_chan_initial[msg.channel][msg.control] = msg.value
 
-                #if msg.type == 'sysex':
-                #    sysex_pos += msg.time
-                #    midi_sysex.parse_sysex(msg, sysex_pos)
+                if msg.type == 'sysex':
+                    midi_sysex.parse_sysex(msg)
 
             for midi_channum in range(16):
                 s_chan_initial = t_chan_initial[midi_channum]

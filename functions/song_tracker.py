@@ -29,6 +29,7 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
 
     tempo_placements = []
     placement_data = None
+    speed_changed = False
     for pattern_num in orders:
         for patternrow in patterntable_all[pattern_num]:
             if 'firstrow' in patternrow[0]:
@@ -47,10 +48,17 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
 
             if 'tracker_speed' in patternrow[0]:
                 current_speed = patternrow[0]['tracker_speed']
+                speed_changed = True
 
+            if 'tracker_tempo' in patternrow[0]:
+                current_tempo = patternrow[0]['tracker_tempo']
+                speed_changed = True
+                
+            if speed_changed == True:
                 placement_points.append({"position": placement_currentpos-0.01, "value": tempovalue})
                 tempovalue = current_tempo/(current_speed/6)
                 placement_points.append({"position": placement_currentpos, "value": tempovalue})
+                speed_changed = False
 
             if skip_rows == 0:
                 tempo_pos += 1

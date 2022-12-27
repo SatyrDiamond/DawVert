@@ -135,28 +135,46 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
     cvpj_instdata = cvpj_inst["instdata"]
     cvpj_instdata['pitch'] = 0
     if wavetype == 'Square1' or wavetype == 'Square2' or wavetype == 'Triangle' or wavetype == 'Noise':
-        cvpj_instdata['plugin'] = 'famistudio'
-        cvpj_instdata['plugindata'] = FST_Instrument
-        if wavetype == 'Square1' or wavetype == 'Square2':
-            cvpj_instdata['plugindata']['wave'] = 'Square'
-        else:
-            cvpj_instdata['plugindata']['wave'] = wavetype
+        cvpj_instdata['plugin'] = 'retro'
+        cvpj_instdata['plugindata'] = {}
+        plugdata = cvpj_instdata['plugindata']
+        if wavetype == 'Square1' or wavetype == 'Square2': plugdata['wave'] = 'square'
+        if wavetype == 'Triangle': plugdata['wave'] = 'triangle'
+        if wavetype == 'Noise': plugdata['wave'] = 'noise'
+        if 'Envelopes' in FST_Instrument:
+            if 'Volume' in FST_Instrument['Envelopes']:
+                plugdata['env_vol'] = {}
+                if 'Values' in FST_Instrument['Envelopes']['Volume']:
+                    plugdata['env_vol']['values'] = FST_Instrument['Envelopes']['Volume']['Values'].split(',')
+                if 'Loop' in FST_Instrument['Envelopes']['Volume']:
+                    plugdata['env_vol']['loop'] = FST_Instrument['Envelopes']['Volume']['Loop']
+                if 'Release' in FST_Instrument['Envelopes']['Volume']:
+                    plugdata['env_vol']['release'] = FST_Instrument['Envelopes']['Volume']['Release']
+            if 'DutyCycle' in FST_Instrument['Envelopes']:
+                plugdata['env_duty'] = {}
+                if 'Values' in FST_Instrument['Envelopes']['DutyCycle']:
+                    plugdata['env_duty']['values'] = FST_Instrument['Envelopes']['DutyCycle']['Values'].split(',')
+                if 'Loop' in FST_Instrument['Envelopes']['DutyCycle']:
+                    plugdata['env_duty']['loop'] = FST_Instrument['Envelopes']['DutyCycle']['Loop']
+                if 'Release' in FST_Instrument['Envelopes']['DutyCycle']:
+                    plugdata['env_duty']['release'] = FST_Instrument['Envelopes']['DutyCycle']['Release']
+
     if wavetype == 'VRC7FM':
-        cvpj_instdata['plugin'] = 'famistudio-vrc7fm'
+        cvpj_instdata['plugin'] = 'fm_vrc7'
         cvpj_instdata['plugindata'] = FST_Instrument
     if wavetype == 'VRC6Square' or wavetype == 'VRC6Saw':
-        cvpj_instdata['plugin'] = 'famistudio-vrc6'
+        cvpj_instdata['plugin'] = 'vrc6'
         cvpj_instdata['plugindata'] = FST_Instrument
         if wavetype == 'VRC6Saw': cvpj_instdata['plugindata']['wave'] = 'Saw'
         if wavetype == 'VRC6Square': cvpj_instdata['plugindata']['wave'] = 'Square'
     if wavetype == 'FDS':
-        cvpj_instdata['plugin'] = 'famistudio-fds'
+        cvpj_instdata['plugin'] = 'fds'
         cvpj_instdata['plugindata'] = FST_Instrument
     if wavetype == 'N163':
-        cvpj_instdata['plugin'] = 'famistudio-n163'
+        cvpj_instdata['plugin'] = 'namco_163'
         cvpj_instdata['plugindata'] = FST_Instrument
     if wavetype == 'S5B':
-        cvpj_instdata['plugin'] = 'famistudio-s5b'
+        cvpj_instdata['plugin'] = 'sunsoft_5b'
         cvpj_instdata['plugindata'] = FST_Instrument
     cvpj_instdata['usemasterpitch'] = 1
     if wavetype == 'Square1': cvpj_inst['color'] = [0.97, 0.56, 0.36]

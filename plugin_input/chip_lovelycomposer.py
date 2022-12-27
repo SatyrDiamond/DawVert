@@ -164,33 +164,47 @@ class input_lc(plugin_input.base):
         for used_instrument in used_instruments:
             cvpj_inst = {}
             cvpj_inst["instdata"] = {}
+            cvpj_inst["instdata"]['plugindata'] = {}
+            plugdata = cvpj_inst["instdata"]['plugindata']
             if used_instrument == 'Sine':
-                cvpj_inst["instdata"]['plugin'] = 'shape-sine'
-                cvpj_inst["instdata"]['plugindata'] = {}
+                plugname = 'shape-sine'
+
             elif used_instrument == 'Square':
-                cvpj_inst["instdata"]['plugin'] = 'shape-square'
-                cvpj_inst["instdata"]['plugindata'] = {}
+                cvpj_inst["instdata"]['plugin'] = 'retro'
+                plugdata['wave'] = 'square'
+                plugdata['duty'] = 0
+
             elif used_instrument == 'Triangle':
-                cvpj_inst["instdata"]['plugin'] = 'shape-triangle'
-                cvpj_inst["instdata"]['plugindata'] = {}
+                cvpj_inst["instdata"]['plugin'] = 'retro'
+                plugdata['wave'] = 'triangle'
+
             elif used_instrument == 'Saw':
                 cvpj_inst["instdata"]['plugin'] = 'shape-saw'
-                cvpj_inst["instdata"]['plugindata'] = {}
+
             elif used_instrument == 'Noise':
-                cvpj_inst["instdata"]['plugin'] = 'retro-noise'
-                cvpj_inst["instdata"]['plugindata'] = {'type': '4bit'}
+                cvpj_inst["instdata"]['plugin'] = 'retro'
+                plugdata['wave'] = 'noise'
+                plugdata['type'] = '4bit'
+
             elif used_instrument == 'FreqNoise':
-                cvpj_inst["instdata"]['plugin'] = 'retro-noise'
-                cvpj_inst["instdata"]['plugindata'] = {'type': '1bit_short'}
+                cvpj_inst["instdata"]['plugin'] = 'retro'
+                plugdata['wave'] = 'noise'
+                plugdata['type'] = '1bit_short'
+
             elif used_instrument == 'Pulse25':
-                cvpj_inst["instdata"]['plugin'] = 'shape-pulse'
-                cvpj_inst["instdata"]['plugindata'] = {'duty': 0.25}
+                cvpj_inst["instdata"]['plugin'] = 'retro'
+                plugdata['wave'] = 'square'
+                plugdata['duty'] = 1
+
             elif used_instrument == 'Pulse125':
-                cvpj_inst["instdata"]['plugin'] = 'shape-pulse'
-                cvpj_inst["instdata"]['plugindata'] = {'duty': 0.125}
+                cvpj_inst["instdata"]['plugin'] = 'retro'
+                plugdata['wave'] = 'square'
+                plugdata['duty'] = 2
+
             else:
                 cvpj_inst["instdata"]['plugin'] = 'lovelycomposer'
-                cvpj_inst["instdata"]['plugindata'] = {'inst': used_instrument}
+                plugdata['inst'] = used_instrument
+
             cvpj_inst["name"] = used_instrument
             cvpj_l_instruments[used_instrument] = cvpj_inst
             cvpj_l_instrumentsorder.append(used_instrument)

@@ -278,8 +278,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 
 			# -------------------- vst2 (magical8bitplug) --------------------
 
-			# ---------- famistudio
-			elif pluginname == 'famistudio':
+			elif pluginname == 'retro':
 				fsd_data = instdata['plugindata']
 				m8p_root = ET.Element("root")
 				m8p_params = ET.SubElement(m8p_root, "Params")
@@ -289,27 +288,38 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				vst_inst.m8bp_addvalue(m8p_params, "bendRange", 12.0)
 				vst_inst.m8bp_addvalue(m8p_params, "colorScheme", 1.0)
 				vst_inst.m8bp_addvalue(m8p_params, "decay", 0.0)
-				vst_inst.m8bp_addvalue(m8p_params, "duty", 0.0)
+				
+				duty = 2
+				if fsd_data['wave'] == 'square': duty = 2
+				if 'duty' in fsd_data: duty = fsd_data['duty']
+				if 'type' in fsd_data:
+					if fsd_data['type'] == '1bit_short': duty = 0
+					if fsd_data['type'] == '4bit': duty = 1
+
+				vst_inst.m8bp_addvalue(m8p_params, "duty", float(duty))
 				vst_inst.m8bp_addvalue(m8p_params, "gain", 0.5)
 				vst_inst.m8bp_addvalue(m8p_params, "isAdvancedPanelOpen_raw", 1.0)
 				vst_inst.m8bp_addvalue(m8p_params, "isArpeggioEnabled_raw", 0.0)
+
 				m8p_dutyEnv = ET.SubElement(m8p_root, "dutyEnv")
 				m8p_pitchEnv = ET.SubElement(m8p_root, "pitchEnv")
 				m8p_volumeEnv = ET.SubElement(m8p_root, "volumeEnv")
-				for Envelope in fsd_data['Envelopes']:
-					if Envelope == "DutyCycle":
-						vst_inst.m8bp_addvalue(m8p_params, "isDutySequenceEnabled_raw", 1.0)
-						m8p_dutyEnv.text = fsd_data['Envelopes'][Envelope]['Values']
-					else: vst_inst.m8bp_addvalue(m8p_params, "isDutySequenceEnabled_raw", 0.0)
-					if Envelope == "Volume":
-						vst_inst.m8bp_addvalue(m8p_params, "isVolumeSequenceEnabled_raw", 1.0)
-						m8p_volumeEnv.text = fsd_data['Envelopes'][Envelope]['Values']
-					else: vst_inst.m8bp_addvalue(m8p_params, "isVolumeSequenceEnabled_raw", 0.0)
+
+				if 'env_duty' in fsd_data:
+					vst_inst.m8bp_addvalue(m8p_params, "isDutySequenceEnabled_raw", 1.0)
+					m8p_dutyEnv.text = ','.join(str(item) for item in fsd_data['env_duty']['values'])
+				else: vst_inst.m8bp_addvalue(m8p_params, "isDutySequenceEnabled_raw", 0.0)
+
+				if 'env_vol' in fsd_data:
+					vst_inst.m8bp_addvalue(m8p_params, "isVolumeSequenceEnabled_raw", 1.0)
+					m8p_volumeEnv.text = ','.join(str(item) for item in fsd_data['env_vol']['values'])
+				else: vst_inst.m8bp_addvalue(m8p_params, "isVolumeSequenceEnabled_raw", 0.0)
+
 				vst_inst.m8bp_addvalue(m8p_params, "maxPoly", 8.0)
 				vst_inst.m8bp_addvalue(m8p_params, "noiseAlgorithm_raw", 0.0)
-				if fsd_data['wave'] == 'Square': vst_inst.m8bp_addvalue(m8p_params, "osc", 0.0)
-				if fsd_data['wave'] == 'Triangle': vst_inst.m8bp_addvalue(m8p_params, "osc", 1.0)
-				if fsd_data['wave'] == 'Noise': vst_inst.m8bp_addvalue(m8p_params, "osc", 2.0)
+				if fsd_data['wave'] == 'square': vst_inst.m8bp_addvalue(m8p_params, "osc", 0.0)
+				if fsd_data['wave'] == 'triangle': vst_inst.m8bp_addvalue(m8p_params, "osc", 1.0)
+				if fsd_data['wave'] == 'noise': vst_inst.m8bp_addvalue(m8p_params, "osc", 2.0)
 				vst_inst.m8bp_addvalue(m8p_params, "pitchSequenceMode_raw", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "release", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "restrictsToNESFrequency_raw", 0.0)
@@ -320,11 +330,6 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoDepth", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoIgnoresWheel_raw", 1.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
-				vst_list.replace_data(instdata, 'Magical 8bit Plug 2', vst_params.make_vc2_xml(m8p_root))
-
-			# ---------- retro shapes
-			elif pluginname in m8bp_shapesupported :
-				m8p_root = vst_inst.shape_m8bp(pluginname, plugindata)
 				vst_list.replace_data(instdata, 'Magical 8bit Plug 2', vst_params.make_vc2_xml(m8p_root))
 
 			# -------------------- zynaddsubfx > vst2 (Zyn-Fusion) - from lmms --------------------

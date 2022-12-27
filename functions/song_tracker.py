@@ -45,10 +45,6 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
                 placement_points = []
                 placement_data['position'] = placement_position
 
-            if 'tracker_break_to_row' in patternrow[0]:
-                if patternrow[0]['tracker_break_to_row'] == 0:
-                    skip_rows = 1
-
             if 'tracker_speed' in patternrow[0]:
                 current_speed = patternrow[0]['tracker_speed']
 
@@ -60,6 +56,15 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
                 tempo_pos += 1
                 placement_duration += 1
                 placement_currentpos += 1
+
+            if 'tracker_break_to_row' in patternrow[0]:
+                if patternrow[0]['tracker_break_to_row'] == 0:
+                    skip_rows = 1
+
+    if placement_data != None:
+        placement_data['points'] = placement_points
+        placement_data['duration'] = placement_duration
+        tempo_placements.append(placement_data)
     return tempo_placements
 
 def convertchannel2timednotes(patterntable_channel, startinststr):

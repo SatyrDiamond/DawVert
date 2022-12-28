@@ -372,7 +372,7 @@ class input_it(plugin_input.base):
 
         cvpj_l['message'] = {}
         cvpj_l['message']['type'] = 'text'
-        cvpj_l['message']['text'] = it_songmessage
+        cvpj_l['message']['text'] = it_songmessage.replace('\r', '\n')
 
         placements_auto = {}
         placements_auto['bpm'] = song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo)

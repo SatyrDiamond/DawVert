@@ -85,6 +85,12 @@ def deconstruct_SEQN(bi_rack, Caustic_Main):
         plndata = struct.unpack("IIffIfIfffffff", SEQN_str.read(56))
         pln.append(plndata)
     Caustic_Main['SEQN'] = pln
+    tempoauto = []
+    SEQN_str.read(124)
+    tempoauto_num, tempoauto_size = struct.unpack("II", SEQN_str.read(8))
+    for _ in range(tempoauto_num): 
+        tempoauto.append(struct.unpack("ff", SEQN_str.read(8)))
+    Caustic_Main['SEQN_tempo'] = tempoauto
 
 # --------------------------------------------- Controls ---------------------------------------------
 

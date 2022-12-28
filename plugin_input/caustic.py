@@ -83,6 +83,7 @@ class input_cvpj_r(plugin_input.base):
         CausticData = format_caustic.deconstruct_main(input_file)
         machines = CausticData['Machines']
         SEQN = CausticData['SEQN']
+        SEQN_tempo = CausticData['SEQN_tempo']
 
         cvpj_l = {}
         cvpj_l_instruments = {}
@@ -255,8 +256,21 @@ class input_cvpj_r(plugin_input.base):
                 pl_placement['fromindex'] = 'Caustic_Mach'+str(SEQNe_mach)+'_'+SEQNe_patlet+str(SEQNe_patnum+1)
                 cvpj_l_playlist[str(SEQNe_mach)]["placements"].append(pl_placement)
 
+        tempo_placement = {"position": 0}
+
+        tempo_placement_dur = 0
+        tempo_points = []
+        for point in SEQN_tempo:
+            if tempo_placement_dur > point[0]*4: tempo_placement_dur = point[0]*4
+            tempo_points.append({"position": point[0]*4, "value": point[1]})
+        tempo_placement['duration'] = tempo_placement_dur
+        tempo_placement['points'] = tempo_points
 
 
+        placements_auto = {}
+        placements_auto['bpm'] = [tempo_placement]
+
+        cvpj_l['placements_auto'] = placements_auto
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['instruments'] = cvpj_l_instruments

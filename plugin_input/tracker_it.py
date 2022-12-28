@@ -382,6 +382,6 @@ class input_it(plugin_input.base):
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['bpm'] = it_header_tempo
+        cvpj_l['bpm'] = it_header_tempo/(it_header_speed/6)
         return json.dumps(cvpj_l)
 

@@ -169,6 +169,10 @@ class output_cvpjs(plugin_output.base):
             print('[error] FLP patterns over 999 is unsupported.')
             exit()
 
+        if len(FL_Channels) > 256:
+            print('[error] FLP channels over 256 is unsupported.')
+            exit()
+
         FL_Playlist_BeforeSort = {}
         FL_Playlist_Sorted = {}
         FL_Playlist = []

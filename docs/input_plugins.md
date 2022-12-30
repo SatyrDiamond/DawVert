@@ -23,6 +23,8 @@
 | M-I | ```deflemask``` | DefleMask |  | 
 
 ## Other
+| DataType | Short Name | Name | Info | 
+| --- | --- | :--- | :--- |
 | M | ```midi``` | MIDI |  | 
 | M-I | ```caustic``` | Caustic 3 | Mobile | 
 | M | ```mnbs``` | Minecraft Note Block Studio |  | 

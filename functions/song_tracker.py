@@ -56,7 +56,8 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
 
             if speed_changed == True:
                 placement_points.append({"position": placement_currentpos-0.01, "value": tempovalue})
-                tempovalue = current_tempo/(current_speed/6)
+                if current_speed/6 != 0:
+                    tempovalue = current_tempo/(current_speed/6)
                 placement_points.append({"position": placement_currentpos, "value": tempovalue})
                 speed_changed = False
 

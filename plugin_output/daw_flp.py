@@ -227,23 +227,24 @@ class output_cvpjs(plugin_output.base):
             CVPJ_TimeMarkers = projJ['timemarkers']
             markernum = 0
             for timemarker in CVPJ_TimeMarkers:
+                markernum += 1
+                FL_TimeMarker = {}
+                FL_TimeMarker['name'] = timemarker['name']
+                FL_TimeMarker['pos'] = int((timemarker['position']*ppq)/4)
                 if 'type' in timemarker:
-                    markernum += 1
-                    FL_TimeMarker = {}
-                    FL_TimeMarker['name'] = timemarker['name']
-                    FL_TimeMarker['pos'] = int((timemarker['position']*ppq)/4)
                     if timemarker['type'] == 'start': FL_TimeMarker['type'] = 5
-                    if timemarker['type'] == 'loop': FL_TimeMarker['type'] = 4
-                    if timemarker['type'] == 'markerloop': FL_TimeMarker['type'] = 1
-                    if timemarker['type'] == 'markerskip': FL_TimeMarker['type'] = 2
-                    if timemarker['type'] == 'pause': FL_TimeMarker['type'] = 3
-                    if timemarker['type'] == 'timesig': 
+                    elif timemarker['type'] == 'loop': FL_TimeMarker['type'] = 4
+                    elif timemarker['type'] == 'markerloop': FL_TimeMarker['type'] = 1
+                    elif timemarker['type'] == 'markerskip': FL_TimeMarker['type'] = 2
+                    elif timemarker['type'] == 'pause': FL_TimeMarker['type'] = 3
+                    elif timemarker['type'] == 'timesig': 
                         FL_TimeMarker['type'] = 8
                         FL_TimeMarker['numerator'] = timemarker['numerator']
                         FL_TimeMarker['denominator'] = timemarker['denominator']
-                    if timemarker['type'] == 'punchin': FL_TimeMarker['type'] = 9
-                    if timemarker['type'] == 'punchout': FL_TimeMarker['type'] = 10
-                    FL_TimeMarkers[str(markernum)] = FL_TimeMarker
+                    elif timemarker['type'] == 'punchin': FL_TimeMarker['type'] = 9
+                    elif timemarker['type'] == 'punchout': FL_TimeMarker['type'] = 10
+                else: FL_TimeMarker['type'] = 0
+                FL_TimeMarkers[str(markernum)] = FL_TimeMarker
 
         if 'fxrack' in projJ:
             for cvpj_fx in projJ['fxrack']:

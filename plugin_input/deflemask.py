@@ -90,7 +90,19 @@ class input_cvpj_r(plugin_input.base):
     def getshortname(self): return 'deflemask'
     def getname(self): return 'DefleMask'
     def gettype(self): return 'mi'
-    def supported_autodetect(self): return False
+    def supported_autodetect(self): return True
+    def detect(self, input_file):
+        output = False
+        bytestream = open(input_file, 'rb')
+        filedata = bytestream.read()
+        try:
+            zlibdata = zlib.decompress(filedata)
+            dmfdata = data_bytes.bytearray2BytesIO(zlibdata)
+            dmf_header = dmfdata.read(16)
+            if dmf_header == b'.DelekDefleMask.': output = True
+            else: output = False
+        except: output = False
+        return output
     def parse(self, input_file, extra_param):
         bytestream = open(input_file, 'rb')
         bio_dmf = data_bytes.bytearray2BytesIO(zlib.decompress(bytestream.read()))

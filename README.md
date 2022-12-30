@@ -50,6 +50,6 @@ e.g:
 | R | ```piyopiyo``` | PiyoPiyo | Chiptune/Retro | 
 | M-I | ```deflemask``` | DefleMask | Chiptune/Retro | 
 | M-I | ```caustic``` | Caustic 3 | Mobile | 
-| M | ```notessimo_v3``` | Notessimo V3 |  | 
+| M-I | ```notessimo_v3``` | Notessimo V3 |  | 
 | M | ```mnbs``` | Minecraft Note Block Studio |  | 
 | R | ```flipper``` | Flipper Music Format | | 

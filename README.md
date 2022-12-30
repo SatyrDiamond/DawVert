@@ -29,23 +29,23 @@ e.g:
 
 ## Supported Outputs
 
-| DataType | Short Name | Name | Info | 
-| --- | --- | :--- | :--- |
-| M-I | ```flp``` | FL Studio |  | 
-| R | ```lmms``` | LMMS | | 
+| DataType | Short Name | Name |
+| --- | --- | :--- |
+| M-I | ```flp``` | FL Studio |
+| R | ```lmms``` | LMMS |
 
 ## (Some) Supported Inputs
 [Full List...](docs/input_plugins.md)
 
-| DataType | Short Name | Name | Info | 
+| DataType | Short Name | Name | Autodetect | 
 | --- | --- | :--- | :--- |
-| M | ```midi``` | MIDI |  | 
-| M-I | ```flp``` | FL Studio |  | 
-| R | ```lmms``` | LMMS |  | 
-| M | ```mod``` | ProTracker | Tracker | 
-| M | ```s3m``` | Scream Tracker 3 | Tracker | 
-| M | ```it``` | Impulse Tracker | Tracker | 
-| M-I | ```famistudio_txt``` | FamiStudio Text | Chiptune/Retro | 
-| M-I | ```ceol``` | Bosca Ceoil | Chiptune/Retro | 
-| M-I | ```deflemask``` | DefleMask | Chiptune/Retro | 
-| M-I | ```caustic``` | Caustic 3 | Mobile |
+| M | ```midi``` | MIDI | Yes | 
+| M-I | ```flp``` | FL Studio | Yes | 
+| R | ```lmms``` | LMMS | Yes | 
+| M | ```mod``` | ProTracker | Yes | 
+| M | ```s3m``` | Scream Tracker 3 | Yes | 
+| M | ```it``` | Impulse Tracker | Yes | 
+| M-I | ```famistudio_txt``` | FamiStudio Text | No | 
+| M-I | ```ceol``` | Bosca Ceoil | No | 
+| M-I | ```deflemask``` | DefleMask | No | 
+| M-I | ```caustic``` | Caustic 3 | No |

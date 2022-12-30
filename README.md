@@ -34,22 +34,18 @@ e.g:
 | M-I | ```flp``` | FL Studio |  | 
 | R | ```lmms``` | LMMS | | 
 
-## Supported Inputs
+## (Some) Supported Inputs
+[Full List...](docs/input_plugins.md)
 
 | DataType | Short Name | Name | Info | 
 | --- | --- | :--- | :--- |
 | M | ```midi``` | MIDI |  | 
 | M-I | ```flp``` | FL Studio |  | 
 | R | ```lmms``` | LMMS |  | 
-| M | ```trk_mod``` | ProTracker | Tracker | 
-| M | ```trk_s3m``` | Scream Tracker 3 | Tracker | 
-| M | ```trk_it``` | Impulse Tracker | Tracker | 
+| M | ```mod``` | ProTracker | Tracker | 
+| M | ```s3m``` | Scream Tracker 3 | Tracker | 
+| M | ```it``` | Impulse Tracker | Tracker | 
 | M-I | ```famistudio_txt``` | FamiStudio Text | Chiptune/Retro | 
 | M-I | ```ceol``` | Bosca Ceoil | Chiptune/Retro | 
-| M | ```lovelycomposer``` | Lovely Composer | Chiptune/Retro | 
-| R | ```piyopiyo``` | PiyoPiyo | Chiptune/Retro | 
 | M-I | ```deflemask``` | DefleMask | Chiptune/Retro | 
-| M-I | ```caustic``` | Caustic 3 | Mobile | 
-| M-I | ```notessimo_v3``` | Notessimo V3 |  | 
-| M | ```mnbs``` | Minecraft Note Block Studio |  | 
-| R | ```flipper``` | Flipper Music Format | | 
+| M-I | ```caustic``` | Caustic 3 | Mobile |

@@ -47,5 +47,5 @@ e.g:
 | M | ```it``` | Impulse Tracker | ✔️ | 
 | M-I | ```famistudio_txt``` | FamiStudio Text | ❌ | 
 | M-I | ```ceol``` | Bosca Ceoil | ❌ | 
-| M-I | ```deflemask``` | DefleMask | ❌ | 
+| M-I | ```deflemask``` | DefleMask | ✔️ | 
 | M-I | ```caustic``` | Caustic 3 | ❌ |

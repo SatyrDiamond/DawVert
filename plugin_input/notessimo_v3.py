@@ -112,8 +112,8 @@ def roundseven(x):
     return int(math.ceil(x / 7)) * 7
 
 def timeline_addsplit(placements,forsplitdata):
-    timestart = forsplitdata[0]
-    timeend = forsplitdata[0]+forsplitdata[1]
+    timestart = round(forsplitdata[0], 9)
+    timeend = round(forsplitdata[0]+forsplitdata[1], 9)
     tempo = forsplitdata[2]
     sheetid = forsplitdata[3]
 
@@ -264,11 +264,8 @@ def parse_song(songid):
     # ---------------- items ----------------
     for s_item in items:
         item_name = s_item.get('name')
-        item_order = str(int(s_item.get('order'))+1)
-
-        cvpj_l_playlist[item_order] = {}
+        item_order = int(s_item.get('order'))+1
         cvpj_l_playlist[item_order]['name'] = item_name
-        cvpj_l_playlist[item_order]['placements'] = []
 
     # ---------------- vars ----------------
     bpm = None
@@ -283,44 +280,51 @@ def parse_song(songid):
 
     # ---------------- objects ----------------
 
+    timeline_sheets_all = []
+    for tlsnum in range(20):
+        timeline_sheets_all.append([[0, song_length, 0, 120, None]])
+
     for s_object in objects:
         plnum = int(s_object.get('id'))
         objs = s_object.findall('obj')
-
-        timeline_sheets = [[0, song_length, 0, 120, None]]
         for s_obj in objs:
             notess_s_pos = float(s_obj.get('x'))*15
+            notess_s_row = int(s_obj.get('y'))
             notess_s_len = float(s_obj.get('l2'))*15
             notess_s_id = s_obj.get('id')
-            notess_s_tempo = sheets_tempo[notess_s_id]
-            timeline_sheets = timeline_addsplit(timeline_sheets,[notess_s_pos, notess_s_len, notess_s_tempo, notess_s_id])
+            #print(notess_s_pos, notess_s_len+notess_s_pos, sheetnames[notess_s_id])
 
+            notess_s_tempo = sheets_tempo[notess_s_id]
+            #print([notess_s_pos, notess_s_len, notess_s_tempo, notess_s_id])
+            timeline_sheets_all[notess_s_row] = timeline_addsplit(timeline_sheets_all[notess_s_row],[notess_s_pos, notess_s_len, notess_s_tempo, notess_s_id])
+
+    for tlsnum in range(20):
+        timeline_sheets = timeline_sheets_all[tlsnum]
+        #print(tlsnum, timeline_sheets)
         cvpj_p_totalpos = 0
         for tls in timeline_sheets:
+            
             tlslen = tls[1]-tls[0]
 
             if tls[2] == 1:
+                #print('   pl', tls)
                 placement = {}
                 placement['type'] = "instruments"
                 placement['position'] = cvpj_p_totalpos*8
                 placement['duration'] = tlslen/(120/tls[3])
                 placement['fromindex'] = tls[4]
-                plnum = str(int(s_obj.get('y'))+1)
+                cvpj_l_playlist[tlsnum+1]['placements'].append(placement)
 
-                if plnum not in cvpj_l_playlist: 
-                    cvpj_l_playlist[plnum] = {}
-                    cvpj_l_playlist[plnum]['placements'] = []
-                cvpj_l_playlist[plnum]['placements'].append(placement)
-
-            if plnum == "1":
-                autoplacement = {}
-                autoplacement['position'] = cvpj_p_totalpos*8
-                autoplacement['duration'] = tlslen/(120/tls[3])*8
-                autoplacement['points'] = [{"position": 0, "value": tls[3]}]
-                cvpj_auto_tempo.append(autoplacement)
+                if tlsnum == 0:
+                    autoplacement = {}
+                    autoplacement['position'] = cvpj_p_totalpos*8
+                    autoplacement['duration'] = tlslen/(120/tls[3])*8
+                    autoplacement['points'] = [{"position": 0, "value": tls[3]}]
+                    cvpj_auto_tempo.append(autoplacement)
 
             if tls[2] == 1: cvpj_p_totalpos += tlslen/(120/tls[3])
             else: cvpj_p_totalpos += tlslen
+
 
 def parse_songs(notess_songs):
     songlist = []
@@ -352,6 +356,9 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l_notelistindex = {}
         global cvpj_l_playlist
         cvpj_l_playlist = {}
+        for plnum in range(20):
+            cvpj_l_playlist[plnum] = {}
+            cvpj_l_playlist[plnum]['placements'] = []
 
         instlist['1'] = 'Default'
         instlist['14309063b51e20e'] = 'Piano'
@@ -378,7 +385,7 @@ class input_cvpj_r(plugin_input.base):
 
         for inst in used_inst:
             if inst in instlist: instname = instlist[inst]
-            else: instname = 'unknown ('+inst+')'
+            else: instname = 'noname ('+inst+')'
             cvpj_inst = {}
             cvpj_inst["pan"] = 0.0
             cvpj_inst['name'] = instname

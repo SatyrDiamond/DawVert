@@ -27,10 +27,10 @@
 | --- | --- | :--- | :--- |
 | M | ```midi``` | MIDI | ✔️ | 
 | M-I | ```caustic``` | Caustic 3 | ❌ | 
-| M | ```mnbs``` | Minecraft ❌te Block Studio | ✔️ | 
+| M | ```mnbs``` | Minecraft Note Block Studio | ✔️ | 
 | R | ```flipper``` | Flipper Music Format | ❌ | 
 
 ## Mario Paint
 | DataType | Short Name | Name | Autodetect | 
 | --- | --- | :--- | :--- |
-| M-I | ```❌tessimo_v3``` | ❌tessimo V3 | ❌ | 
+| M-I | ```notessimo_v3``` | Notessimo V3 | ❌ | 

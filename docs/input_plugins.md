@@ -27,7 +27,7 @@
 | --- | --- | :--- | :--- |
 | M | ```midi``` | MIDI | ✔️ | 
 | M-I | ```caustic``` | Caustic 3 | ❌ | 
-| M | ```mnbs``` | Minecraft Note Block Studio | ✔️ | 
+| M | ```mnbs``` | Minecraft Note Block Studio | ❌ | 
 | R | ```flipper``` | Flipper Music Format | ❌ | 
 
 ## Mario Paint

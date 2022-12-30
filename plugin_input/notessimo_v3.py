@@ -205,7 +205,7 @@ def parse_sheets(notess_sheets):
                     color = int(varvalue[2:], 16).to_bytes(4, "little")
                 else:
                     color = int(varvalue).to_bytes(4, "little")
-                cvpj_l_notelistindex[sheet]['color'] = [((color[0]/255)/2)+0.25,((color[1]/255)/2)+0.25,((color[2]/255)/2)+0.25]
+                cvpj_l_notelistindex[sheet]['color'] = [((color[2]/255)/2)+0.25,((color[1]/255)/2)+0.25,((color[0]/255)/2)+0.25]
             if varname == 'signature' and varvalue in t_noteoffset: 
                 sheet_note_signature = t_noteoffset[varvalue]
             if varname == 'width': sheets_width[sheet] = int(varvalue)

@@ -39,13 +39,13 @@ e.g:
 
 | DataType | Short Name | Name | Autodetect | 
 | --- | --- | :--- | :--- |
-| M | ```midi``` | MIDI | Yes | 
-| M-I | ```flp``` | FL Studio | Yes | 
-| R | ```lmms``` | LMMS | Yes | 
-| M | ```mod``` | ProTracker | Yes | 
-| M | ```s3m``` | Scream Tracker 3 | Yes | 
-| M | ```it``` | Impulse Tracker | Yes | 
-| M-I | ```famistudio_txt``` | FamiStudio Text | No | 
-| M-I | ```ceol``` | Bosca Ceoil | No | 
-| M-I | ```deflemask``` | DefleMask | No | 
-| M-I | ```caustic``` | Caustic 3 | No |
+| M | ```midi``` | MIDI | ✔️ | 
+| M-I | ```flp``` | FL Studio | ✔️ | 
+| R | ```lmms``` | LMMS | ✔️ | 
+| M | ```mod``` | ProTracker | ✔️ | 
+| M | ```s3m``` | Scream Tracker 3 | ✔️ | 
+| M | ```it``` | Impulse Tracker | ✔️ | 
+| M-I | ```famistudio_txt``` | FamiStudio Text | ❌ | 
+| M-I | ```ceol``` | Bosca Ceoil | ❌ | 
+| M-I | ```deflemask``` | DefleMask | ❌ | 
+| M-I | ```caustic``` | Caustic 3 | ❌ |

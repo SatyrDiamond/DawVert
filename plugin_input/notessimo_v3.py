@@ -339,7 +339,7 @@ def parse_songs(notess_songs):
 
 # ----------------------------------- Main -----------------------------------
  
-class input_cvpj_r(plugin_input.base):
+class input_notessimo_v3(plugin_input.base):
     def __init__(self): pass
     def getshortname(self): return 'notessimo_v3'
     def getname(self): return 'Notessimo V3'

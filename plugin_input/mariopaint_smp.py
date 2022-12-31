@@ -105,7 +105,7 @@ def makenote(n_pos, notes, end, notesize):
         notedata['instrument'] = out_inst
         notelist.append(notedata)
 
-class input_cvpj_r(plugin_input.base):
+class input_mariopaint_smp(plugin_input.base):
     def __init__(self): pass
     def getshortname(self): return 'mariopaint_smp'
     def getname(self): return 'Super Mario Paint'

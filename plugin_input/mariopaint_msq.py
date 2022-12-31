@@ -96,7 +96,7 @@ def readpart(msq_score_str, n_pos, n_len):
 
 
 
-class input_cvpj_r(plugin_input.base):
+class input_mariopaint_msq(plugin_input.base):
     def __init__(self): pass
     def getshortname(self): return 'mariopaint_msq'
     def getname(self): return 'MarioSequencer'

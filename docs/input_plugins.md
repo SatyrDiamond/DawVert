@@ -34,3 +34,6 @@
 | DataType | Short Name | Name | Autodetect | 
 | --- | --- | :--- | :--- |
 | M-I | ```notessimo_v3``` | Notessimo V3 | ❌ | 
+| M-I | ```mariopaint_smp``` | Super Mario Paint | ❌ | 
+| M-I | ```mariopaint_mss``` | Advanced Mario Sequencer | ✔️ | 
+| M-I | ```mariopaint_msq``` | MarioSequencer | ❌ | 

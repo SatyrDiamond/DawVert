@@ -152,6 +152,8 @@ def parsenotes(bio_data, notelen):
         #print(struct.unpack('>Ibbhbffh', notedata[:19]))
         n_pos,n_note,n_layer,n_inst,n_sharp,n_vol,n_pan,n_len = struct.unpack('>Ibbhbffh', notedata[:19])
 
+        n_note = n_note-1
+
         n_key = (n_note-40)*-1
         out_oct = int(n_key/7)
         out_key = n_key - out_oct*7
@@ -167,7 +169,7 @@ def parsenotes(bio_data, notelen):
         note = {}
         note['position'] = (n_pos)*notelen
         note['duration'] = (n_len/4)*notelen
-        note['key'] = keytable[out_key] + (out_oct-3)*12 + n_sharp
+        note['key'] = keytable[out_key] + (out_oct-3)*12 + out_offset
         note['instrument'] = str(n_inst)
         notesout[n_layer].append(note)
 

@@ -27,6 +27,20 @@ e.g:
 
 [Magical 8bit Plug 2](https://github.com/yokemura/Magical8bitPlug2)
 
+## Required Libraries
+```
+varint
+numpy
+mido
+lxml
+chardet
+```
+
+## Optional Libraries
+```
+xmodits_py - for extracting Impulse Tracker Samples
+```
+
 ## Supported Outputs
 
 | DataType | Short Name | Name |

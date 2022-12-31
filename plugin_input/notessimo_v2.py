@@ -280,5 +280,5 @@ class input_notessimo_v2(plugin_input.base):
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['bpm'] = 120
+        cvpj_l['bpm'] = tempo_table[0]*notess_sheets[arr_order[0]][1]
         return json.dumps(cvpj_l)

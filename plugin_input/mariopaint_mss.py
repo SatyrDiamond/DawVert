@@ -79,7 +79,7 @@ def addnotes(n_pos, n_len, inst, txt, chordvolume):
     noteoffset = 0
 
 
-class input_cvpj_r(plugin_input.base):
+class input_mariopaint_mss(plugin_input.base):
     def __init__(self): pass
     def getshortname(self): return 'mariopaint_mss'
     def getname(self): return 'Advanced Mario Sequencer'

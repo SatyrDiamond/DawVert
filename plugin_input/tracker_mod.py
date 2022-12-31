@@ -256,7 +256,7 @@ class input_mod(plugin_input.base):
         placements_auto = {}
         placements_auto['bpm'] = song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, cvpj_bpm)
 
-        cvpj_l['placements_auto'] = placements_auto
+        cvpj_l['placements_auto_main'] = placements_auto
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist

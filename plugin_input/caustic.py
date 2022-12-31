@@ -270,7 +270,7 @@ class input_cvpj_r(plugin_input.base):
         placements_auto = {}
         placements_auto['bpm'] = [tempo_placement]
 
-        cvpj_l['placements_auto'] = placements_auto
+        cvpj_l['placements_auto_main'] = placements_auto
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['instruments'] = cvpj_l_instruments

@@ -577,7 +577,7 @@ class output_lmms(plugin_output.base):
         main_auto_data = None
         main_auto_idnumdata = {}
 
-        if 'placements_auto' in projJ: main_auto_data = projJ['placements_auto']
+        if 'placements_auto_main' in projJ: main_auto_data = projJ['placements_auto_main']
 
         songX = ET.SubElement(projX, "song")
         trkcX = ET.SubElement(songX, "trackcontainer")

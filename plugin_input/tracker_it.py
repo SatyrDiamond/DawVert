@@ -377,7 +377,7 @@ class input_it(plugin_input.base):
         placements_auto = {}
         placements_auto['bpm'] = song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo)
 
-        cvpj_l['placements_auto'] = placements_auto
+        cvpj_l['placements_auto_main'] = placements_auto
         cvpj_l['timemarkers'] = placements.make_timemarkers([4,16], patlentable, None)
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

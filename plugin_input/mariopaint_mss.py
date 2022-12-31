@@ -97,6 +97,14 @@ class input_cvpj_r(plugin_input.base):
         global notelist
         tree = ET.parse(input_file)
         root = tree.getroot()
+
+        cvpj_l = {}
+        cvpj_l_instruments = {}
+        cvpj_l_instrumentsorder = []
+        cvpj_l_timemarkers = []
+        cvpj_l_playlist = {}
+        notelist = []
+
         mss_tempo = int(root.get('tempo'))
         mss_measure = int(root.get('measure'))
 
@@ -107,13 +115,12 @@ class input_cvpj_r(plugin_input.base):
             mss_tempo = mss_tempo/2
             notelen = notelen/2
 
-        cvpj_l = {}
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
-        cvpj_l_timemarkers = []
-        cvpj_l_playlist = {}
-        
-        notelist = []
+        auto_tempo = []
+
+        tempo_placement = {"position": 0}
+        tempo_placement['duration'] = notelen
+        tempo_placement['points'] = [{"position": 0, "value": mss_tempo}]
+        auto_tempo.append(tempo_placement)
 
         curpos = 0
         for chord in chords:
@@ -121,9 +128,20 @@ class input_cvpj_r(plugin_input.base):
             for instname in instnames:
                 x_chord = chord.find(instname)
                 if x_chord != None: addnotes(curpos, notelen, instname, x_chord.text, chordvolume)
-            x_bm = chord.find('bookmark')
-            if x_bm != None: cvpj_l_timemarkers.append({'position':curpos, 'name': 'Bookmark'})
+            t_bm = chord.find('bookmark')
+            if t_bm != None: cvpj_l_timemarkers.append({'position':curpos, 'name': 'Bookmark'})
+            t_sm = chord.find('speedmark')
+            if t_sm != None: 
+                t_sm_tempo = int(t_sm.get('tempo'))
+
+                tempo_placement = {"position": curpos}
+                tempo_placement['duration'] = notelen
+                tempo_placement['points'] = [{"position": 0, "value": t_sm_tempo*(notelen/4)}]
+                auto_tempo.append(tempo_placement)
+
             curpos += notelen
+
+
 
         l_placement = {}
         l_placement['type'] = "instruments"
@@ -143,6 +161,9 @@ class input_cvpj_r(plugin_input.base):
             cvpj_l_instruments[instname] = cvpj_inst
             cvpj_l_instrumentsorder.append(instname)
 
+        placements_auto = {}
+        placements_auto['bpm'] = auto_tempo
+        cvpj_l['placements_auto_main'] = placements_auto
         cvpj_l['timesig_numerator'] = mss_measure
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['timemarkers'] = cvpj_l_timemarkers

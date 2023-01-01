@@ -1,6 +1,11 @@
 
 import xml.etree.ElementTree as ET
 
+def add_param(paramlist, num, name, value):
+	paramlist[str(num)] = {}
+	paramlist[str(num)]['name'] = name
+	paramlist[str(num)]['value'] = str(value)
+
 def make_nullbytegroup(larr):
 	nbp = bytes()
 	for grouplist in larr:

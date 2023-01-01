@@ -1,5 +1,4 @@
 
-from functions import vst_params
 import xml.etree.ElementTree as ET
 
 def make_nullbytegroup(larr):

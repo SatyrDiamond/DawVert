@@ -281,14 +281,13 @@ def ninjas2_slicerdata(slicerdata):
 	global ninjas2_data_progs
 	global ninjas2_data_main
 	ninjas2_data_progs['filepathFromUI'] = slicerdata['file']
-	print(slicerdata)
 	if 'slices' in slicerdata:
 		slices = slicerdata['slices']
 		progtable = []
 		for _ in range(127): progtable.append('0 0 0 0.001000 0.001000 1.000000 0.001000')
 		
 		progout = ''
-		progout += str(len(slices))+' 3 '
+		progout += str(len(slices))+' 128 '
 		ninjas2_data_main['number_of_slices'] = str(len(slices))
 		for slicenum in range(len(slices)):
 			slicedata = slices[slicenum]
@@ -302,7 +301,6 @@ def ninjas2_slicerdata(slicerdata):
 			if s_reverse == True: ninjas2_loopout += 1
 			if s_looped == True: ninjas2_loopout += 2
 			progtable[slicenum] = str(slicedata['pos']*2)+' '+str(slicedata['end']*2)+' '+str(ninjas2_loopout)+' 0.001000 0.001000 1.000000 0.001000'
-			print(slicedata)
 
 		for prognums in progtable: progout += prognums+' '
 		ninjas2_data_progs['program00'] = progout

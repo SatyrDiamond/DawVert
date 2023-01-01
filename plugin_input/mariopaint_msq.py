@@ -157,7 +157,8 @@ class input_mariopaint_msq(plugin_input.base):
             cvpj_inst["color"] = colors.moregray(out_colors[instname])
             cvpj_inst["instdata"] = {}
             cvpj_instdata = cvpj_inst["instdata"]
-            cvpj_instdata['plugin'] = 'none'
+            cvpj_instdata['plugin'] = 'general-midi'
+            cvpj_instdata['plugindata'] = {'bank':0, 'inst':instnames.index(instname)}
             cvpj_l_instruments[instname] = cvpj_inst
             cvpj_l_instrumentsorder.append(instname)
 

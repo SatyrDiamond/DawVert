@@ -12,6 +12,15 @@ def bytearray2BytesIO(input):
 	data.seek(0)
 	return data
 
+def readstring(data):
+	output = b''
+	terminated = 0
+	while terminated == 0:
+		char = data.read(1)
+		if char != b'\x00' and char != b'': output += char
+		else: terminated = 1
+	return output.decode('ascii')
+
 # ----- audio -----
 
 def unsign_8(sampledata):

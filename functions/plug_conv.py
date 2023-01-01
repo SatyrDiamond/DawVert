@@ -12,8 +12,8 @@ from functions import data_bytes
 from functions import list_vst
 from functions import vst_fx
 from functions import vst_inst
-from functions import vst_params
-from functions import vst_inst_vital
+from functions import params_vst
+from functions import params_vital
 
 simsynth_shapes = {0.4: 'noise', 0.3: 'sine', 0.2: 'square', 0.1: 'saw', 0.0: 'triangle'}
 
@@ -154,47 +154,47 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 					lfo_on, lfo_retrugger, svf_on, UNK = struct.unpack('IIII', fl_plugstr.read(16))
 					lfo_trackamp, UNK, chorus_on, UNK = struct.unpack('IIII', fl_plugstr.read(16))
 
-					#vst_inst_vital.create()
+					#params_vital.create()
 
 					#vital_osc1_shape = []
 					#for num in range(2048): vital_osc1_shape.append(tripleoct(num/2048, simsynth_shapes[osc1_shape], osc1_pw, osc1_o1, osc1_o2))
-					#vst_inst_vital.replacewave(0, vital_osc1_shape)
-					#vst_inst_vital.setvalue('osc_1_on', osc1_on)
-					#vst_inst_vital.setvalue('osc_1_transpose', (osc1_crs-0.5)*48)
-					#vst_inst_vital.setvalue('osc_1_tune', (osc1_fine-0.5)*2)
-					#vst_inst_vital.setvalue('osc_1_level', osc1_lvl/2)
+					#params_vital.replacewave(0, vital_osc1_shape)
+					#params_vital.setvalue('osc_1_on', osc1_on)
+					#params_vital.setvalue('osc_1_transpose', (osc1_crs-0.5)*48)
+					#params_vital.setvalue('osc_1_tune', (osc1_fine-0.5)*2)
+					#params_vital.setvalue('osc_1_level', osc1_lvl/2)
 					#if osc1_warm == 1:
-						#vst_inst_vital.setvalue('osc_1_unison_detune', 2.2)
-						#vst_inst_vital.setvalue('osc_1_unison_voices', 6)
+						#params_vital.setvalue('osc_1_unison_detune', 2.2)
+						#params_vital.setvalue('osc_1_unison_voices', 6)
 
 					#vital_osc2_shape = []
 					#for num in range(2048): vital_osc2_shape.append(tripleoct(num/2048, simsynth_shapes[osc2_shape], osc2_pw, osc2_o1, osc2_o2))
-					#vst_inst_vital.replacewave(1, vital_osc2_shape)
-					#vst_inst_vital.setvalue('osc_2_on', osc2_on)
-					#vst_inst_vital.setvalue('osc_2_transpose', (osc2_crs-0.5)*48)
-					#vst_inst_vital.setvalue('osc_2_tune', (osc2_fine-0.5)*2)
-					#vst_inst_vital.setvalue('osc_2_level', osc2_lvl/2)
+					#params_vital.replacewave(1, vital_osc2_shape)
+					#params_vital.setvalue('osc_2_on', osc2_on)
+					#params_vital.setvalue('osc_2_transpose', (osc2_crs-0.5)*48)
+					#params_vital.setvalue('osc_2_tune', (osc2_fine-0.5)*2)
+					#params_vital.setvalue('osc_2_level', osc2_lvl/2)
 					#if osc2_warm == 1:
-						#vst_inst_vital.setvalue('osc_2_unison_detune', 2.2)
-						#vst_inst_vital.setvalue('osc_2_unison_voices', 6)
+						#params_vital.setvalue('osc_2_unison_detune', 2.2)
+						#params_vital.setvalue('osc_2_unison_voices', 6)
 
 					#vital_osc3_shape = []
 					#for num in range(2048): vital_osc3_shape.append(tripleoct(num/2048, simsynth_shapes[osc3_shape], osc3_pw, osc3_o1, osc3_o2))
-					#vst_inst_vital.replacewave(2, vital_osc3_shape)
-					#vst_inst_vital.setvalue('osc_3_on', osc3_on)
-					#vst_inst_vital.setvalue('osc_3_transpose', (osc3_crs-0.5)*48)
-					#vst_inst_vital.setvalue('osc_3_tune', (osc3_fine-0.5)*2)
-					#vst_inst_vital.setvalue('osc_3_level', osc3_lvl/2)
+					#params_vital.replacewave(2, vital_osc3_shape)
+					#params_vital.setvalue('osc_3_on', osc3_on)
+					#params_vital.setvalue('osc_3_transpose', (osc3_crs-0.5)*48)
+					#params_vital.setvalue('osc_3_tune', (osc3_fine-0.5)*2)
+					#params_vital.setvalue('osc_3_level', osc3_lvl/2)
 					#if osc3_warm == 1:
-						#vst_inst_vital.setvalue('osc_3_unison_detune', 2.2)
-						#vst_inst_vital.setvalue('osc_3_unison_voices', 6)
+						#params_vital.setvalue('osc_3_unison_detune', 2.2)
+						#params_vital.setvalue('osc_3_unison_voices', 6)
 
-					#vst_inst_vital.setvalue('env_1_attack', ss_asdr(amp_att)*4)
-					#vst_inst_vital.setvalue('env_1_decay', ss_asdr(amp_dec)*4)
-					#vst_inst_vital.setvalue('env_1_sustain', amp_sus)
-					#vst_inst_vital.setvalue('env_1_release', ss_asdr(amp_rel)*4)
+					#params_vital.setvalue('env_1_attack', ss_asdr(amp_att)*4)
+					#params_vital.setvalue('env_1_decay', ss_asdr(amp_dec)*4)
+					#params_vital.setvalue('env_1_sustain', amp_sus)
+					#params_vital.setvalue('env_1_release', ss_asdr(amp_rel)*4)
 
-					#vitaldata = vst_inst_vital.getdata()
+					#vitaldata = params_vital.getdata()
 					#list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))
 
 			# ---------- from general-midi
@@ -273,7 +273,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				if 'file' in sf2data: sf2_filename = sf2data['file']
 				else: sf2_filename = 0
 				jsfp_xml = vst_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
-				list_vst.replace_data(instdata, 'juicysfplugin', vst_params.make_vc2_xml(jsfp_xml))
+				list_vst.replace_data(instdata, 'juicysfplugin', params_vst.make_vc2_xml(jsfp_xml))
 
 			# -------------------- vst2 (magical8bitplug) --------------------
 
@@ -329,7 +329,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoDepth", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoIgnoresWheel_raw", 1.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
-				list_vst.replace_data(instdata, 'Magical 8bit Plug 2', vst_params.make_vc2_xml(m8p_root))
+				list_vst.replace_data(instdata, 'Magical 8bit Plug 2', params_vst.make_vc2_xml(m8p_root))
 
 			# -------------------- zynaddsubfx > vst2 (Zyn-Fusion) - from lmms --------------------
 			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
@@ -359,7 +359,7 @@ def convplug_fx(fxdata, dawname, extra_json, nameid):
 						pointdata = waveshapepoints[pointnum*4][0]
 						vst_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
 					vst_fx.wolfshaper_get()
-					list_vst.replace_data(fxdata, 'Wolf Shaper', vst_params.make_nullbytegroup(vst_fx.wolfshaper_get()))
+					list_vst.replace_data(fxdata, 'Wolf Shaper', params_vst.make_nullbytegroup(vst_fx.wolfshaper_get()))
 			else:
 				print('[plug-conv] Unchanged')
 

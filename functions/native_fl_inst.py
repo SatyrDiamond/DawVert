@@ -1,5 +1,7 @@
 import base64
+import struct
 from functions import data_bytes
+from functions import list_vst
 
 def convert(instdata):
 	pluginname = instdata['plugin']

@@ -159,7 +159,6 @@ class input_flp(plugin_input.base):
                 fxdata["name"] = fl_fxhan['name']
             if 'color' in fl_fxhan:
                 if fl_fxhan['color'] != None:
-                    print(fl_fxhan['color'])
                     color = fl_fxhan['color'].to_bytes(4, "little")
                     fxdata['color'] = [color[0]/255,color[1]/255,color[2]/255]
             if 'routing' in fl_fxhan:

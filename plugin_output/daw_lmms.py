@@ -67,10 +67,10 @@ def asdrlfo_set(jsonpath, trkX_insttr):
     if 'filter' in jsonpath:
         json_filter = jsonpath['filter']
         if json_filter['type'] in filtertype:
-            eldataX.set('fcut', str(json_filter['cutoff']))
-            eldataX.set('fwet', str(json_filter['wet']))
-            eldataX.set('ftype', str(filtertype[json_filter['type']]))
-            eldataX.set('fres', str(json_filter['reso']))
+            if 'cutoff' in json_filter: eldataX.set('fcut', str(json_filter['cutoff']))
+            if 'wet' in json_filter: eldataX.set('fwet', str(json_filter['wet']))
+            if 'type' in json_filter: eldataX.set('ftype', str(filtertype[json_filter['type']]))
+            if 'reso' in json_filter: eldataX.set('fres', str(json_filter['reso']))
 
     asdrlfo(jsonpath, eldataX, 'volume', 'vol')
     asdrlfo(jsonpath, eldataX, 'cutoff', 'cut')
@@ -125,9 +125,12 @@ def lmms_encode_plugin(xmltag, trkJ):
         if 'loop' in plugJ:
             trkJ_loop = plugJ['loop']
             if 'custompoints' in trkJ_loop:
-                xml_sampler.set('eframe', str(trkJ_loop['custompoints']['end']))
-                xml_sampler.set('lframe', str(trkJ_loop['custompoints']['loop']))
-                xml_sampler.set('sframe', str(trkJ_loop['custompoints']['start']))
+                if 'end' in trkJ_loop['custompoints']:
+                    xml_sampler.set('eframe', str(trkJ_loop['custompoints']['end']))
+                if 'loop' in trkJ_loop['custompoints']:
+                    xml_sampler.set('lframe', str(trkJ_loop['custompoints']['loop']))
+                if 'start' in trkJ_loop['custompoints']:
+                    xml_sampler.set('sframe', str(trkJ_loop['custompoints']['start']))
             if 'enabled' in trkJ_loop: loopenabled = trkJ_loop['enabled']
             if 'mode' in trkJ_loop: mode = trkJ_loop['mode']
         if loopenabled == 0: xml_sampler.set('looped', '0')
@@ -555,7 +558,7 @@ class output_lmms(plugin_output.base):
     def __init__(self): pass
     def getname(self): return 'LMMS'
     def getshortname(self): return 'lmms'
-    def gettype(self): return 'r'
+    def gettype(self): return 'f'
     def parse(self, convproj_json, output_file):
         print('[output-lmms] Output Start')
 

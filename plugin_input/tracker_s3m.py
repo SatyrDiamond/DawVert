@@ -69,17 +69,12 @@ class input_s3m(plugin_input.base):
         s3m_pointer_insts = []
         for _ in range(s3m_numinst): s3m_pointer_insts.append(int.from_bytes(file_stream.read(2), "little")*16)
         print("[input-st3] # of Instruments: " + str(len(s3m_pointer_insts)))
-        if s3m_numinst > 255:
-            print('[error] Not a S3M File')
-            exit()
+        if s3m_numinst > 255: print('[error] Not a S3M File'); exit()
         
         s3m_pointer_patterns = []
-        for _ in range(s3m_numpat):
-            s3m_pointer_patterns.append(int.from_bytes(file_stream.read(2), "little")*16)
+        for _ in range(s3m_numpat): s3m_pointer_patterns.append(int.from_bytes(file_stream.read(2), "little")*16)
         print("[input-st3] # of Samples: " + str(len(s3m_pointer_patterns)))
-        if s3m_numpat > 255:
-            print('[error] Not a S3M File')
-            exit()
+        if s3m_numpat > 255: print('[error] Not a S3M File'); exit()
         
         table_defualtvol = []
         

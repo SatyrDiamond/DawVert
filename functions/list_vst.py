@@ -37,6 +37,7 @@ def find_vst2path(name, instdata):
 				else:
 					print('[list-vst2] Unchanged,', 'Plugin path of ' + name + ' not Found')
 			else: 
+				instdata['plugindata']['plugin'] = {}
 				instdata['plugindata']['plugin']['path'] = ''
 				print('[list-vst2] Unchanged,', 'Plugin ' + name + ' not Found')
 		else: 

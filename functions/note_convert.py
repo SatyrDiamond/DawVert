@@ -29,8 +29,7 @@ def timednotes2notelist_rest(duration):
     position_global += float(duration)
     global position_notelist
     position_notelist += float(duration)
-    for ActiveNote in ActiveNotes:
-        ActiveNote[1] = ActiveNote[1] + float(duration)
+    for ActiveNote in ActiveNotes: ActiveNote[1] = ActiveNote[1] + float(duration)
 
 def timednotes2notelist_note_off(key):
     global ActiveNotes

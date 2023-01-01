@@ -104,6 +104,14 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				jsfp_xml = vst_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
 				list_vst.replace_data(instdata, 'juicysfplugin', params_vst.make_vc2_xml(jsfp_xml))
 
+			# -------------------- vst2 (ninjas2) --------------------
+			elif pluginname == 'slicer':
+				slicerdata = instdata['plugindata']
+				vst_inst.ninjas2_init()
+				vst_inst.ninjas2_slicerdata(slicerdata)
+				ninjas2out = vst_inst.ninjas2_get()
+				list_vst.replace_data(instdata, 'Ninjas 2', params_vst.make_nullbytegroup(ninjas2out))
+
 			# -------------------- vst2 (magical8bitplug) --------------------
 
 			elif pluginname == 'retro':

@@ -6,6 +6,7 @@ import json
 import math
 import base64
 import struct
+from bs4 import BeautifulSoup
 from functions import format_flp
 from functions import note_mod
 

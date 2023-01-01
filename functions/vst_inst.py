@@ -305,10 +305,8 @@ def ninjas2_slicerdata(slicerdata):
 			print(slicedata)
 
 		for prognums in progtable: progout += prognums+' '
-		print(progout)
 		ninjas2_data_progs['program00'] = progout
 
-	#exit()
 
 def ninjas2_get():
 	global ninjas2_data_progs

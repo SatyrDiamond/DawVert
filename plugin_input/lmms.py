@@ -8,6 +8,7 @@ import plugin_input
 import os
 import xml.etree.ElementTree as ET
 
+
 lfoshape = ['sine', 'tri', 'saw', 'square', 'custom', 'random']
 arpdirection = ['up', 'down', 'updown', 'downup', 'random']
 filtertype = ['lowpass', 'hipass', 'bandpass_csg', 'bandpass_czpg', 'notch', 'allpass', 'moog', 'lowpass_double', 'lowpass_rc12', 'bandpass_rc12', 'Highpass_rc12', 'lowpass_rc24', 'bandpass_rc24', 'Highpass_rc24', 'formant', 'moog_double', 'lowpass_sv', 'bandpass_sv', 'Highpass_sv', 'notch_sv', 'formant_fast', 'tripole']
@@ -80,7 +81,7 @@ def hex_to_rgb(hexcodeinput):
     colorbytes = tuple(int(hexcode[i:i+2], 16) for i in (0, 2, 4))
     return [colorbytes[0]/255, colorbytes[1]/255, colorbytes[2]/255]
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
-def lmms_getvalue(xmltag, xmlname, autoname):
+def lmms_auto_getvalue(xmltag, xmlname, autoname):
     if xmltag.get(xmlname) != None: return float(xmltag.get(xmlname))
     else:
         realvaluetag = xmltag.findall(xmlname)[0]
@@ -90,6 +91,15 @@ def lmms_getvalue(xmltag, xmlname, autoname):
                 l_autoid[str(realvaluetag.get('id'))] = autoname
             return realvaluetag.get('value')
         else: return None
+
+def lmms_getvalue_int(json_in, json_name, xml_in): 
+    if xml_in != None: json_in['json_name'] = int(xml_in)
+def lmms_getvalue_float(json_in, json_name, xml_in): 
+    if xml_in != None: json_in['json_name'] = float(xml_in)
+def lmms_getvalue_100(json_in, json_name, xml_in): 
+    if xml_in != None: json_in['json_name'] = hundredto1(float(xml_in))
+def lmms_getvalue_exp(json_in, json_name, xml_in): 
+    if xml_in != None: json_in['json_name'] = exp2sec(float(xml_in))
 
 # ------- Instruments and Plugins -------
 
@@ -111,29 +121,52 @@ def asdflfo_get(trkX_insttr, cvpj_l_plugindata):
             realvalue = eldataX.findall('elres')[0]
             asdflfo(cvpj_l_plugindata_asdrlfo, realvalue, 'reso')
         cvpj_l_plugindata['asdrlfo'] = cvpj_l_plugindata_asdrlfo
-        cvpj_l_plugindata['filter'] = {}
-        cvpj_l_plugindata['filter']['cutoff'] = float(eldataX.get('fcut'))
-        cvpj_l_plugindata['filter']['wet'] = float(eldataX.get('fwet'))
-        cvpj_l_plugindata['filter']['type'] = filtertype[int(eldataX.get('ftype'))]
-        cvpj_l_plugindata['filter']['reso'] = float(eldataX.get('fres'))
+        filterparams = {}
+        lmms_getvalue_float(filterparams, 'cutoff', eldataX.get('fcut'))
+        lmms_getvalue_float(filterparams, 'wet', eldataX.get('fwet'))
+        if eldataX.get('ftype') != None: filterparams['type'] = filtertype[int(eldataX.get('ftype'))]
+        lmms_getvalue_float(filterparams, 'reso', eldataX.get('fres'))
+
+        if filterparams != {}:
+            cvpj_l_plugindata['filter'] = {}
+            if 'cutoff' in filterparams: cvpj_l_plugindata['filter']['cutoff'] = filterparams['cutoff']
+            if 'wet' in filterparams: cvpj_l_plugindata['filter']['wet'] = filterparams['wet']
+            if 'type' in filterparams: cvpj_l_plugindata['filter']['type'] = filterparams['type']
+            if 'reso' in filterparams: cvpj_l_plugindata['filter']['reso'] = filterparams['reso']
+
 def asdflfo(cvpj_l_track, xmlO, asdrtype):
+    envelopeparams = {}
+    lmms_getvalue_exp(envelopeparams, 'predelay', xmlO.get('pdel'))
+    lmms_getvalue_exp(envelopeparams, 'attack', xmlO.get('att'))
+    lmms_getvalue_exp(envelopeparams, 'hold', xmlO.get('hold'))
+    lmms_getvalue_exp(envelopeparams, 'decay', xmlO.get('dec'))
+    lmms_getvalue_float(envelopeparams, 'sustain', xmlO.get('sustain'))
+    lmms_getvalue_exp(envelopeparams, 'release', xmlO.get('rel'))
+    lmms_getvalue_float(envelopeparams, 'amount', xmlO.get('amt'))
+
     cvpj_l_track[asdrtype] = {}
-    cvpj_l_track[asdrtype]['envelope'] = {}
-    cvpj_l_track[asdrtype]['envelope']['predelay'] = exp2sec(float(xmlO.get('pdel')))
-    cvpj_l_track[asdrtype]['envelope']['attack'] = exp2sec(float(xmlO.get('att')))
-    cvpj_l_track[asdrtype]['envelope']['hold'] = exp2sec(float(xmlO.get('hold')))
-    cvpj_l_track[asdrtype]['envelope']['decay'] = exp2sec(float(xmlO.get('dec')))
-    cvpj_l_track[asdrtype]['envelope']['sustain'] = exp2sec(float(xmlO.get('sustain')))
-    cvpj_l_track[asdrtype]['envelope']['release'] = exp2sec(float(xmlO.get('rel')))
-    cvpj_l_track[asdrtype]['envelope']['amount'] = float(xmlO.get('amt'))
-    speedx100 = int(xmlO.get('x100'))
-    cvpj_l_track[asdrtype]['lfo'] = {}
-    cvpj_l_track[asdrtype]['lfo']['predelay'] = float(xmlO.get('lpdel'))
-    cvpj_l_track[asdrtype]['lfo']['attack'] = float(xmlO.get('latt'))
-    cvpj_l_track[asdrtype]['lfo']['shape'] = lfoshape[int(xmlO.get('lshp'))]
-    if speedx100 == 0: cvpj_l_track[asdrtype]['lfo']['speed'] = float(xmlO.get('lspd')) * 20000
-    else: cvpj_l_track[asdrtype]['lfo']['speed'] = float(xmlO.get('lspd')) * 2000000
-    cvpj_l_track[asdrtype]['lfo']['amount'] = float(xmlO.get('lamt'))
+    if envelopeparams != {}:
+        cvpj_l_track[asdrtype]['envelope'] = envelopeparams
+
+
+    lfoparams = {}
+
+    speedx100 = xmlO.get('x100')
+    if speedx100 != None: speedx100 == int(speedx100)
+    else: speedx100 == 0
+
+    lmms_getvalue_float(lfoparams, 'predelay', xmlO.get('pdel'))
+    lmms_getvalue_float(lfoparams, 'attack', xmlO.get('latt'))
+    if xmlO.get('lshp') != None: lfoparams['shape'] = lfoshape[int(xmlO.get('lshp'))]
+    lmms_getvalue_float(lfoparams, 'amount', xmlO.get('lamt'))
+
+    if xmlO.get('lspd') != None: 
+        if speedx100 == 0: cvpj_l_track[asdrtype]['lfo']['speed'] = float(xmlO.get('lspd')) * 20000
+        else: cvpj_l_track[asdrtype]['lfo']['speed'] = float(xmlO.get('lspd')) * 2000000
+
+    if lfoparams != {}:
+        cvpj_l_track[asdrtype]['lfo'] = lfoparams
+
 def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track):
     cvpj_l_inst['plugin'] = "none"
     trkX_instrument = trkX_insttr.findall('instrument')[0]
@@ -164,16 +197,16 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
             cvpj_l_plugindata['reverb']['width'] = float(xml_plugin.get('reverbWidth'))
         elif pluginname == "audiofileprocessor":
             cvpj_l_inst['plugin'] = "sampler"
-            cvpj_l_plugindata['reverse'] = int(xml_plugin.get('reversed'))
-            cvpj_l_plugindata['amp'] = hundredto1(float(xml_plugin.get('amp')))
-            cvpj_l_plugindata['continueacrossnotes'] = int(xml_plugin.get('stutter'))
+            lmms_getvalue_int(cvpj_l_plugindata, 'reverse', xml_plugin.get('reversed'))
+            lmms_getvalue_100(cvpj_l_plugindata, 'amp', xml_plugin.get('amp'))
+            lmms_getvalue_int(cvpj_l_plugindata, 'continueacrossnotes', xml_plugin.get('stutter'))
             cvpj_l_plugindata['file'] = xml_plugin.get('src')
             cvpj_l_plugindata['trigger'] = 'normal'
             cvpj_l_plugindata['loop'] = {}
             cvpj_l_plugindata['loop']['custompoints'] = {}
-            cvpj_l_plugindata['loop']['custompoints']['end'] = float(xml_plugin.get('eframe'))
-            cvpj_l_plugindata['loop']['custompoints']['loop'] = float(xml_plugin.get('lframe'))
-            cvpj_l_plugindata['loop']['custompoints']['start'] = float(xml_plugin.get('sframe'))
+            lmms_getvalue_float(cvpj_l_plugindata['loop']['custompoints'], 'end', xml_plugin.get('eframe'))
+            lmms_getvalue_float(cvpj_l_plugindata['loop']['custompoints'], 'loop', xml_plugin.get('lframe'))
+            lmms_getvalue_float(cvpj_l_plugindata['loop']['custompoints'], 'start', xml_plugin.get('sframe'))
             looped = int(xml_plugin.get('looped'))
             if looped == 0:
                 cvpj_l_plugindata['loop']['enabled'] = 0
@@ -305,7 +338,7 @@ def lmms_decode_inst_track(trkX, name):
     print('[input-lmms] Instrument Track')
     print('[input-lmms]       Name: ' + cvpj_l_track['name'])
 
-    mutedval = int(lmms_getvalue(trkX, 'muted', ['track', name, 'enabled']))
+    mutedval = int(lmms_auto_getvalue(trkX, 'muted', ['track', name, 'enabled']))
     cvpj_l_track['enabled'] = int(not int(mutedval))
     cvpj_l_track['solo'] = int(trkX.get('solo'))
 
@@ -314,8 +347,8 @@ def lmms_decode_inst_track(trkX, name):
     #trkX_insttr
     trkX_insttr = trkX.findall('instrumenttrack')[0]
     cvpj_l_track['fxrack_channel'] = int(trkX_insttr.get('fxch'))
-    cvpj_l_track['pan'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'pan', ['track', name, 'pan'])))
-    cvpj_l_track['vol'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'vol', ['track', name, 'vol'])))
+    cvpj_l_track['pan'] = hundredto1(float(lmms_auto_getvalue(trkX_insttr, 'pan', ['track', name, 'pan'])))
+    cvpj_l_track['vol'] = hundredto1(float(lmms_auto_getvalue(trkX_insttr, 'vol', ['track', name, 'vol'])))
     
     if trkX.get('color') != None:
         cvpj_l_track['color'] = hex_to_rgb(trkX.get('color'))
@@ -353,7 +386,7 @@ def lmms_decode_inst_track(trkX, name):
     # notefx
     cvpj_l_track_inst['pitch'] = 0
     if trkX_insttr.get('pitch') != None: cvpj_l_track_inst['pitch'] = float(trkX_insttr.get('pitch'))
-    cvpj_l_track_inst['pitch'] = float(lmms_getvalue(trkX_insttr, 'pitch', ['track', name, 'pitch']))
+    cvpj_l_track_inst['pitch'] = float(lmms_auto_getvalue(trkX_insttr, 'pitch', ['track', name, 'pitch']))
 
     xml_a_chordcreator = trkX_insttr.findall('chordcreator')
     if len(xml_a_chordcreator) != 0:
@@ -498,8 +531,9 @@ def lmms_decode_fxmixer(fxX):
         if fxcX.get('muted') != None: fxcJ['muted'] = int(fxcX.get('muted'))
         fxcJ['vol'] = float(fxcX.get('volume'))
         fxchainX = fxcX.find('fxchain')
-        fxcJ['fxenabled'] = int(fxchainX.get('enabled'))
-        fxcJ['fxchain'] = lmms_decode_fxchain(fxchainX)
+        if fxchainX != None:
+            fxcJ['fxenabled'] = int(fxchainX.get('enabled'))
+            fxcJ['fxchain'] = lmms_decode_fxchain(fxchainX)
         sendlist = []
         sendsxml = fxcX.findall('send')
         for sendxml in sendsxml:
@@ -571,11 +605,11 @@ class input_lmms(plugin_input.base):
         if headX.get('bpm') != None: bpm = float(headX.get('bpm'))
 
         rootJ = {}
-        rootJ['mastervol'] = hundredto1(float(lmms_getvalue(headX, 'mastervol', ['main', 'mastervol'])))
-        rootJ['masterpitch'] = float(lmms_getvalue(headX, 'masterpitch', ['main', 'masterpitch']))*100
-        rootJ['timesig_numerator'] = lmms_getvalue(headX, 'timesig_numerator', None)
-        rootJ['timesig_denominator'] = lmms_getvalue(headX, 'timesig_denominator', None)
-        rootJ['bpm'] = lmms_getvalue(headX, 'bpm', ['main', 'bpm'])
+        if headX.get('mastervol') != None: rootJ['mastervol'] = hundredto1(float(lmms_auto_getvalue(headX, 'mastervol', ['main', 'mastervol'])))
+        if headX.get('masterpitch') != None: rootJ['masterpitch'] = float(lmms_auto_getvalue(headX, 'masterpitch', ['main', 'masterpitch']))*100
+        if headX.get('timesig_numerator') != None: rootJ['timesig_numerator'] = lmms_auto_getvalue(headX, 'timesig_numerator', None)
+        if headX.get('timesig_denominator') != None: rootJ['timesig_denominator'] = lmms_auto_getvalue(headX, 'timesig_denominator', None)
+        rootJ['bpm'] = lmms_auto_getvalue(headX, 'bpm', ['main', 'bpm'])
 
         if projnotesX.text != None:
             rootJ['message'] = {}

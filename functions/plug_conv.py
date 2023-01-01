@@ -36,12 +36,6 @@ def tripleoct(x, shape, pw, one, two):
     else: samplepoint = x
     return samplepoint
 
-# -------------------- VST --------------------
-def vst_add_param(paramlist, num, name, value):
-	paramlist[str(num)] = {}
-	paramlist[str(num)]['name'] = name
-	paramlist[str(num)]['value'] = str(value)
-
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, dawname, extra_json, nameid):
 	global supportedplugins

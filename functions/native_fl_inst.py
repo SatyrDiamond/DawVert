@@ -2,6 +2,7 @@ import base64
 import struct
 from functions import data_bytes
 from functions import list_vst
+from functions import params_vst
 
 def convert(instdata):
 	pluginname = instdata['plugin']
@@ -44,47 +45,34 @@ def convert(instdata):
 			instdata['plugindata']['patch'] = flsf_patch
 	elif plugindata['name'].lower() == 'fruity dx10':
 		int.from_bytes(fl_plugstr.read(4), "little")
-		fldx_amp_att = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_amp_dec = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_amp_rel = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod_course = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod_fine = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod_init = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod_time = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod_sus = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod_rel = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod_velsen = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_vibrato = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_waveform = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod_thru = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_lforate = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod2_course = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod2_fine = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod2_init = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod2_time = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod2_sus = int.from_bytes(fl_plugstr.read(4), "little")/65536
-		fldx_mod2_rel = int.from_bytes(fl_plugstr.read(4), "little")/65536
+		fldx_amp_att, fldx_amp_dec, fldx_amp_rel, fldx_mod_course = struct.unpack('iiii', fl_plugstr.read(16))
+		fldx_mod_fine, fldx_mod_init, fldx_mod_time, fldx_mod_sus = struct.unpack('iiii', fl_plugstr.read(16))
+		fldx_mod_rel, fldx_mod_velsen, fldx_vibrato, fldx_waveform = struct.unpack('iiii', fl_plugstr.read(16))
+		fldx_mod_thru, fldx_lforate, fldx_mod2_course, fldx_mod2_fine = struct.unpack('iiii', fl_plugstr.read(16))
+		fldx_mod2_init, fldx_mod2_time, fldx_mod2_sus, fldx_mod2_rel = struct.unpack('iiii', fl_plugstr.read(16))
 		fldx_mod2_velsen = int.from_bytes(fl_plugstr.read(4), "little")/65536
 		fldx_octave = (int.from_bytes(fl_plugstr.read(4), "little", signed="True")/6)+0.5
 
 		vstdxparams = {}
-		vstdxparams[0] = {"name": "Attack  ","value": fldx_amp_att}
-		vstdxparams[1] = {"name": "Decay   ","value": fldx_amp_dec}
-		vstdxparams[2] = {"name": "Release ","value": fldx_amp_rel}
-		vstdxparams[3] = {"name": "Coarse  ","value": fldx_mod_course}
-		vstdxparams[4] = {"name": "Fine    ","value": fldx_mod_fine}
-		vstdxparams[5] = {"name": "Mod Init","value": fldx_mod_init}
-		vstdxparams[6] = {"name": "Mod Dec ","value": fldx_mod_time}
-		vstdxparams[7] = {"name": "Mod Sus ","value": fldx_mod_sus}
-		vstdxparams[8] = {"name": "Mod Rel ","value": fldx_mod_rel}
-		vstdxparams[9] = { "name": "Mod Vel ","value": fldx_mod_velsen}
-		vstdxparams[10] = {"name": "Vibrato ","value": fldx_vibrato}
-		vstdxparams[11] = {"name": "Octave  ","value": fldx_octave}
-		vstdxparams[12] = {"name": "FineTune","value": 0.5}
-		vstdxparams[13] = {"name": "Waveform","value": fldx_waveform}
-		vstdxparams[14] = {"name": "Mod Thru","value": fldx_mod_thru}
-		vstdxparams[15] = {"name": "LFO Rate","value": fldx_lforate}
+		params_vst.add_param(vstdxparams, 0, "Attack  ", fldx_amp_att/65536)
+		params_vst.add_param(vstdxparams, 1, "Decay   ", fldx_amp_dec/65536)
+		params_vst.add_param(vstdxparams, 2, "Release ", fldx_amp_rel/65536)
+		params_vst.add_param(vstdxparams, 3, "Coarse  ", fldx_mod_course/65536)
+		params_vst.add_param(vstdxparams, 4, "Fine    ", fldx_mod_fine/65536)
+		params_vst.add_param(vstdxparams, 5, "Mod Init", fldx_mod_init/65536)
+		params_vst.add_param(vstdxparams, 6, "Mod Dec ", fldx_mod_time/65536)
+		params_vst.add_param(vstdxparams, 7, "Mod Sus ", fldx_mod_sus/65536)
+		params_vst.add_param(vstdxparams, 8, "Mod Rel ", fldx_mod_rel/65536)
+		params_vst.add_param(vstdxparams, 9, "Mod Vel ", fldx_mod_velsen/65536)
+		params_vst.add_param(vstdxparams, 10, "Vibrato ", fldx_vibrato/65536)
+		params_vst.add_param(vstdxparams, 11, "Octave  ", fldx_octave)
+		params_vst.add_param(vstdxparams, 12, "FineTune", 0.5)
+		params_vst.add_param(vstdxparams, 13, "Waveform", fldx_waveform/65536)
+		params_vst.add_param(vstdxparams, 14, "Mod Thru", fldx_mod_thru/65536)
+		params_vst.add_param(vstdxparams, 15, "LFO Rate", fldx_lforate/65536)
+
 		list_vst.replace_params(instdata, 'DX10', 16, vstdxparams)
+		
 	elif plugindata['name'].lower() == 'simsynth':
 		#osc1_pw, osc1_crs, osc1_fine, osc1_lvl, osc1_lfo, osc1_env, osc1_shape
 		osc1_pw, osc1_crs, osc1_fine, osc1_lvl, osc1_lfo, osc1_env, osc1_shape = struct.unpack('ddddddd', fl_plugstr.read(56))

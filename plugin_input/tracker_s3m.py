@@ -34,7 +34,7 @@ class input_s3m(plugin_input.base):
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
 
-        startinststr = 'S3M_s3m_inst_'
+        startinststr = 'S3M_Inst_'
 
         s3m_name = file_stream.read(28).split(b'\x00' * 1)[0].decode("utf-8")
         print("[input-st3] Song Name: " + str(s3m_name))

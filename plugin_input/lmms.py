@@ -627,7 +627,7 @@ class input_lmms(plugin_input.base):
             if s_autopl_id[0] == 'track':
                 if s_autopl_id[1] in trackdata:
                     s_trkdata = trackdata[s_autopl_id[1]]
-                    if 'placements_auto_main' not in s_trkdata: s_trkdata['placements_auto'] = {}
+                    if 'placements_auto_main' not in s_trkdata: s_trkdata['placements_auto_main'] = {}
                     temp_pla = s_trkdata['placements_auto_main']
                     if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = auto_multiply(s_autopl_data, 0, 0.01)
                     elif s_autopl_id[2] == 'pan': temp_pla[s_autopl_id[2]] = auto_multiply(s_autopl_data, 0, 0.01)

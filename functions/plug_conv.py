@@ -14,28 +14,6 @@ from functions import params_vst
 from functions import params_vital
 from functions import native_fl_inst
 
-simsynth_shapes = {0.4: 'noise', 0.3: 'sine', 0.2: 'square', 0.1: 'saw', 0.0: 'triangle'}
-
-def ss_asdr(x): 
-	print((x+(x*x)*4))
-	return (x+(x*x)*4)
-
-# -------------------- Shapes --------------------
-def wave_sine(x): return math.sin((x-0.5)*(math.pi*2))
-def wave_saw(x): return x-math.floor(x)
-def wave_tri(x): return abs((x*2)%(2)-1)
-def wave_squ(x, pw):
-    if wave_tri(x) > pw: return 1
-    else: return -1
-
-def tripleoct(x, shape, pw, one, two):
-    if shape == 'sine': samplepoint = wave_sine(x) + wave_sine(x*2)*one + wave_sine(x*4)*two
-    elif shape == 'saw': samplepoint = wave_saw(x) + wave_saw(x*2)*one + wave_saw(x*4)*two
-    elif shape == 'triangle': samplepoint = wave_tri(x) + wave_tri(x*2)*one + wave_tri(x*4)*two
-    elif shape == 'square': samplepoint = wave_squ(x, pw) + wave_squ(x*2, pw)*one + wave_squ(x*4, pw)*two
-    else: samplepoint = x
-    return samplepoint
-
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, dawname, extra_json, nameid):
 	global supportedplugins

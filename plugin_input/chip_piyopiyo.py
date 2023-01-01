@@ -73,7 +73,7 @@ class input_pms(plugin_input.base):
     def __init__(self): pass
     def getshortname(self): return 'piyopiyo'
     def getname(self): return 'PiyoPiyo'
-    def gettype(self): return 'r'
+    def gettype(self): return 'f'
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')

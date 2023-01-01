@@ -161,8 +161,8 @@ def asdflfo(cvpj_l_track, xmlO, asdrtype):
     lmms_getvalue_float(lfoparams, 'amount', xmlO.get('lamt'))
 
     if xmlO.get('lspd') != None: 
-        if speedx100 == 0: cvpj_l_track[asdrtype]['lfo']['speed'] = float(xmlO.get('lspd')) * 20000
-        else: cvpj_l_track[asdrtype]['lfo']['speed'] = float(xmlO.get('lspd')) * 2000000
+        if speedx100 == 0: lfoparams['speed'] = float(xmlO.get('lspd')) * 20000
+        else: lfoparams['speed'] = float(xmlO.get('lspd')) * 2000000
 
     if lfoparams != {}:
         cvpj_l_track[asdrtype]['lfo'] = lfoparams

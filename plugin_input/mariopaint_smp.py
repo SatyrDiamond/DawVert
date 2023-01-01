@@ -79,7 +79,7 @@ out_colors = {'MARIO': [0.92, 0.77, 0.56],
 'EGG': [0.00, 0.97, 0.00],
 'GNOME': [0.00, 0.50, 0.25]}
 
-def makenote(n_pos, notes, end, notesize):
+def makenote(n_pos, notes, vol, notesize):
     for note in notes:
         notesplit = note.split(' ')
         notetxt = notesplit[1]
@@ -96,14 +96,18 @@ def makenote(n_pos, notes, end, notesize):
             t_txtp = smpnote_str.read(1)
             if t_txtp == '#': out_offset = 1
             if t_txtp == 'b': out_offset = -1
+            if t_txtp == 'm': 
+                out_mode = smpnote_str.read(1)
 
-        out_note = out_key + out_oct*12 + out_offset
-        notedata = {}
-        notedata['position'] = n_pos*notesize
-        notedata['key'] = out_note
-        notedata['duration'] = notesize
-        notedata['instrument'] = out_inst
-        notelist.append(notedata)
+        if out_mode == 0:
+            out_note = out_key + out_oct*12 + out_offset
+            notedata = {}
+            notedata['position'] = n_pos*notesize
+            notedata['key'] = out_note
+            notedata['vol'] = vol/100
+            notedata['duration'] = notesize
+            notedata['instrument'] = out_inst
+            notelist.append(notedata)
 
 class input_mariopaint_smp(plugin_input.base):
     def __init__(self): pass
@@ -150,7 +154,8 @@ class input_mariopaint_smp(plugin_input.base):
                 s_pos_out = ((s_pos_beat-1)*4) + s_pos_pos
 
                 s_notes = s_data[:-1]
-                s_vol = s_data[-1:][0]
+                s_vol = int(s_data[-1:][0].split(':')[1])
+
                 makenote(s_pos_out, s_notes, s_vol, notelen)
 
             linecount += 1

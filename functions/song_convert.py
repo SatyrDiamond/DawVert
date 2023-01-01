@@ -1,24 +1,21 @@
 # SPDX-FileCopyrightText: 2022 Colby Ray
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# [s]
+# [r]
 #  /\
 #   ⎸
 #  \/
-# [r] <--> [m] <--> [mi]
-#  /\
-#   ⎸
-#   ⎸
-# [ri]
+# [f] <--> [m] <--> [mi]
+
 
 import json
 
 def overlap(start1, end1, start2, end2):
     return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
 
-# ---------------------------------- Regular to Separate ----------------------------------
+# ---------------------------------- Regular+FXMixer to Separate ----------------------------------
 
-def s2r(song):
+def s2f(song):
     cvpj_proj = json.loads(song)
 
     cvpj_proj['fxrack'] = {}
@@ -67,8 +64,8 @@ def s2r(song):
 
     return json.dumps(cvpj_proj)
 
-def r2s(song):
-    print('[song-convert] Converting from Regular > Separate')
+def f2s(song):
+    print('[song-convert] Converting from Regular+FXMixer > Separate')
     cvpj_proj = json.loads(song)
     cvpj_proj['track_master'] = {}
     cvpj_proj['track_fx'] = {}
@@ -129,9 +126,9 @@ def r2s(song):
 
     return json.dumps(cvpj_proj)
 
-# ---------------------------------- Regular to Multiple ----------------------------------
+# ---------------------------------- Regular+FXMixer to Multiple ----------------------------------
 
-def r2m_pl_addinst(placements, trackid):
+def f2m_pl_addinst(placements, trackid):
     t_placements = placements.copy()
     for placement in placements:
         placement['type'] = 'instruments'
@@ -140,17 +137,17 @@ def r2m_pl_addinst(placements, trackid):
                 t_note['instrument'] = trackid
     return placements
 
-def r2m_makeplaylistrow(cvpjJ, plnum, trackid, placements, m_name, m_color, l_name, l_color):
+def f2m_makeplaylistrow(cvpjJ, plnum, trackid, placements, m_name, m_color, l_name, l_color):
     cvpjJ['playlist'][str(plnum)] = {}
     playlistrow = cvpjJ['playlist'][str(plnum)]
-    playlistrow['placements'] = r2m_pl_addinst(placements, trackid)
+    playlistrow['placements'] = f2m_pl_addinst(placements, trackid)
     if m_name != None and l_name == None: playlistrow['name'] = m_name
     elif m_name != None and l_name != None: playlistrow['name'] = m_name+' ['+l_name+']'
     if m_color != None: playlistrow['color'] = m_color
     elif l_color != None: playlistrow['color'] = l_color
 
-def r2m(song):
-    print('[song-convert] Converting from Regular > Multiple')
+def f2m(song):
+    print('[song-convert] Converting from Regular+FXMixer > Multiple')
     cvpj_proj = json.loads(song)
     if 'trackordering' not in cvpj_proj:
         print('[error] trackordering not found')
@@ -183,12 +180,12 @@ def r2m(song):
                         singletrack_laned = 1
 
                 if singletrack_laned == 0: 
-                    print('[song-convert] r2m: inst non-laned:', trackid)
+                    print('[song-convert] f2m: inst non-laned:', trackid)
                     singletrack_pl = singletrack_data['placements']
                     del singletrack_data['placements']
-                    r2m_makeplaylistrow(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color, None, None)
+                    f2m_makeplaylistrow(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color, None, None)
                 else:
-                    print('[song-convert] r2m: inst laned:', trackid)
+                    print('[song-convert] f2m: inst laned:', trackid)
                     t_laneordering = singletrack_data['laneordering']
                     t_lanedata = singletrack_data['lanedata']
                     for laneid in t_laneordering:
@@ -198,14 +195,14 @@ def r2m(song):
                         if 'name' in lane_data: l_name = lane_data['name']
                         if 'color' in lane_data: l_color = lane_data['color']
                         if 'placements' in lane_data:
-                            r2m_makeplaylistrow(cvpj_proj, plnum, trackid, lane_data['placements'], m_name, m_color, l_name, l_color)
+                            f2m_makeplaylistrow(cvpj_proj, plnum, trackid, lane_data['placements'], m_name, m_color, l_name, l_color)
                             plnum += 1
                 if singletrack_laned == 0: plnum += 1
     return json.dumps(cvpj_proj)
 
-# ---------------------------------- Multiple to Regular ----------------------------------
+# ---------------------------------- Multiple to Regular+FXMixer ----------------------------------
 
-def m2r_split_insts(placement):
+def m2f_split_insts(placement):
     del placement['type']
     out_inst_pl = {}
     if 'notelist' in placement:
@@ -225,7 +222,7 @@ def m2r_split_insts(placement):
             if inst not in out_inst_pl: out_inst_pl[inst] = pl_base | out_pl
     return out_inst_pl
 
-def m2r_addplacements(placements):
+def m2f_addplacements(placements):
     for placement in placements:
         mpl_num = 0
         success = 0
@@ -247,8 +244,8 @@ def m2r_addplacements(placements):
                 mpl_num += 1
     return multiplacements
 
-def m2r(song):
-    print('[song-convert] Converting from Multiple > Regular')
+def m2f(song):
+    print('[song-convert] Converting from Multiple > Regular+FXMixer')
     cvpj_proj = json.loads(song)
 
     playlist = cvpj_proj['playlist']
@@ -278,11 +275,11 @@ def m2r(song):
         if 'placements' in plrow:
             placements = plrow['placements']
             if 'name' in playlist[playlistentry]:
-                print('[song-convert] m2r: Track ' + playlistentry+' ['+playlist[playlistentry]['name']+']')
-            else: print('[song-convert] m2r: Track ' + playlistentry)
+                print('[song-convert] m2f: Track ' + playlistentry+' ['+playlist[playlistentry]['name']+']')
+            else: print('[song-convert] m2f: Track ' + playlistentry)
             for placement in placements:
                 if placement['type'] == 'instruments':
-                    splitted_insts = m2r_split_insts(placement)
+                    splitted_insts = m2f_split_insts(placement)
                     for instrument in splitted_insts:
                         if instrument in cvpj_trackdata:
                             lanedata = cvpj_trackdata[instrument]['lanedata']

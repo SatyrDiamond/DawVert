@@ -567,7 +567,7 @@ class input_lmms(plugin_input.base):
     def __init__(self): pass
     def getshortname(self): return 'lmms'
     def getname(self): return 'LMMS'
-    def gettype(self): return 'r'
+    def gettype(self): return 'f'
     def supported_autodetect(self): return True
     def detect(self, input_file):
         output = False

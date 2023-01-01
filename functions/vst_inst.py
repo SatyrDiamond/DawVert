@@ -23,22 +23,22 @@ def shape_m8bp(pluginname, plugindata):
 	m8bp_addvalue(m8p_params, "isVolumeSequenceEnabled_raw", 0.0)
 	m8bp_addvalue(m8p_params, "maxPoly", 8.0)
 	m8bp_addvalue(m8p_params, "noiseAlgorithm_raw", 0.0)
-	if pluginname == 'shape-square': 
+	if pluginname == 'shape-square':
 		m8bp_addvalue(m8p_params, "osc", 0.0)
 		m8bp_addvalue(m8p_params, "duty", 2.0)
-	elif pluginname == 'shape-pulse': 
+	elif pluginname == 'shape-pulse':
 		m8bp_addvalue(m8p_params, "osc", 0.0)
-		if 'duty' in plugindata: 
+		if 'duty' in plugindata:
 			if plugindata['duty'] == 0.25: m8bp_addvalue(m8p_params, "duty", 1.0)
 			elif plugindata['duty'] == 0.125: m8bp_addvalue(m8p_params, "duty", 0.0)
 			else: m8bp_addvalue(m8p_params, "duty", 0.0)
 		else: m8bp_addvalue(m8p_params, "duty", 1.0)
-	elif pluginname == 'shape-triangle': 
+	elif pluginname == 'shape-triangle':
 		m8bp_addvalue(m8p_params, "osc", 1.0)
 		m8bp_addvalue(m8p_params, "duty", 0.0)
-	elif pluginname == 'retro-noise': 
+	elif pluginname == 'retro-noise':
 		m8bp_addvalue(m8p_params, "osc", 2.0)
-		if 'type' in plugindata: 
+		if 'type' in plugindata:
 			if plugindata['type'] == '4bit': m8bp_addvalue(m8p_params, "duty", 0.0)
 			elif plugindata['type'] == '1bit_long': m8bp_addvalue(m8p_params, "duty", 1.0)
 			elif plugindata['type'] == '1bit_short': m8bp_addvalue(m8p_params, "duty", 2.0)
@@ -226,3 +226,91 @@ def grace_create_region(gx_root, regionparams):
 	grace_addvalue(gx_RegionProp, 'SampleBeats', str(SampleBeats))
 
 	return gx_root
+
+# -------------------- ninjas2 --------------------
+
+def ninjas2_create_blank_prog():
+	progout = ''
+	progtext = '0 0 0 0.001000 0.001000 1.000000 0.001000 '
+	progout += '1 '
+	for _ in range(128): progout += progtext
+	return progout
+
+def ninjas2_init():
+	global ninjas2_data_progs
+	global ninjas2_data_main
+	ninjas2_data_main = {}
+	ninjas2_data_progs = {}
+
+	ninjas2_data_main['number_of_slices'] = '0.000000'
+	ninjas2_data_main['sliceSensitivity'] = '0.500000'
+	ninjas2_data_main['attack'] = '0.001000'
+	ninjas2_data_main['decay'] = '0.001000'
+	ninjas2_data_main['sustain'] = '1.000000'
+	ninjas2_data_main['release'] = '0.001000'
+	ninjas2_data_main['load'] = '0.000000'
+	ninjas2_data_main['slicemode'] = '1.000000'
+	ninjas2_data_main['programGrid'] = '1.000000'
+	ninjas2_data_main['playmode'] = '0.000000'
+	ninjas2_data_main['pitchbendDepth'] = '12.000000'
+	ninjas2_data_main['OneShotForward'] = '0.000000'
+	ninjas2_data_main['OneShotReverse'] = '0.000000'
+	ninjas2_data_main['LoopForward'] = '0.000000'
+	ninjas2_data_main['LoopReverse'] = '0.000000'
+
+	ninjas2_data_progs['slices'] = 'empty'
+	ninjas2_data_progs['filepathFromUI'] = ''
+	ninjas2_data_progs['program00'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program01'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program02'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program03'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program04'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program05'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program06'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program07'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program08'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program09'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program10'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program11'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program12'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program13'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program14'] = ninjas2_create_blank_prog()
+	ninjas2_data_progs['program15'] = ninjas2_create_blank_prog()
+
+def ninjas2_slicerdata(slicerdata):
+	global ninjas2_data_progs
+	global ninjas2_data_main
+	ninjas2_data_progs['filepathFromUI'] = slicerdata['file']
+	print(slicerdata)
+	if 'slices' in slicerdata:
+		slices = slicerdata['slices']
+		progtable = []
+		for _ in range(127): progtable.append('0 0 0 0.001000 0.001000 1.000000 0.001000')
+		
+		progout = ''
+		progout += str(len(slices))+' 3 '
+		ninjas2_data_main['number_of_slices'] = str(len(slices))
+		for slicenum in range(len(slices)):
+			slicedata = slices[slicenum]
+			s_reverse = False
+			s_looped = False
+			if 'reverse' in slicedata:
+				if slicedata['reverse'] == 1: s_reverse = True
+			if 'looped' in slicedata:
+				if slicedata['looped'] == 1: s_looped = True
+			ninjas2_loopout = 0
+			if s_reverse == True: ninjas2_loopout += 1
+			if s_looped == True: ninjas2_loopout += 2
+			progtable[slicenum] = str(slicedata['pos']*2)+' '+str(slicedata['end']*2)+' '+str(ninjas2_loopout)+' 0.001000 0.001000 1.000000 0.001000'
+			print(slicedata)
+
+		for prognums in progtable: progout += prognums+' '
+		print(progout)
+		ninjas2_data_progs['program00'] = progout
+
+	#exit()
+
+def ninjas2_get():
+	global ninjas2_data_progs
+	global ninjas2_data_main
+	return [ninjas2_data_progs, ninjas2_data_main]

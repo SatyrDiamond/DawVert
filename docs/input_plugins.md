@@ -1,10 +1,10 @@
 
 # Supported Inputs
 ## DAWs
-| DataType | Short Name | Name | Autodetect | 
+| DataType | Short Name | Name | Autodetect |
 | --- | --- | :--- | :--- |
-| M-I | ```flp``` | FL Studio | ✔️ | 
-| R | ```lmms``` | LMMS | ✔️ | 
+| M-I | ```flp``` | FL Studio | ✔️ |
+| R | ```lmms``` | LMMS | ✔️ |
 
 ## Tracker
 | DataType | Short Name | Name | Autodetect | 
@@ -33,8 +33,8 @@
 ## Mario Paint
 | DataType | Short Name | Name | Autodetect | 
 | --- | --- | :--- | :--- |
-| M-I | ```notessimo_v3``` | Notessimo V3 | ❌ | 
 | M-I | ```notessimo_v2``` | Notessimo V2 | ❌ | 
-| M-I | ```mariopaint_smp``` | Super Mario Paint | ❌ | 
-| M-I | ```mariopaint_mss``` | Advanced Mario Sequencer | ✔️ | 
-| M-I | ```mariopaint_msq``` | MarioSequencer | ❌ | 
+| M-I | ```notessimo_v3``` | Notessimo V3 | ❌ | 
+| M | ```mariopaint_smp``` | Super Mario Paint | ❌ | 
+| M | ```mariopaint_mss``` | Advanced Mario Sequencer | ✔️ | 
+| M | ```mariopaint_msq``` | MarioSequencer | ❌ | 

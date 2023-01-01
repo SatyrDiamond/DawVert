@@ -17,6 +17,18 @@ e.g:
 
 ```
 
+## Options
+```
+python3 DawVert.py -i <input> -ot <output type> -o <output>
+
+GM Soundfont File Path (for GM MIDI instruments): 
+--soundfont 
+
+Sample Folder Path (for extracting samples): 
+--samplesfolder 
+
+```
+
 ## VST Plugins
 
 [Grace](https://github.com/s-oram/Grace) (Sampler)

@@ -9,7 +9,7 @@ import struct
 import math
 from functions import audio_wav
 from functions import data_bytes
-from functions import vst_list
+from functions import list_vst
 from functions import vst_fx
 from functions import vst_inst
 from functions import vst_params
@@ -45,7 +45,6 @@ def vst_add_param(paramlist, num, name, value):
 
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, dawname, extra_json, nameid):
-	m8bp_shapesupported = ['shape-square', 'shape-triangle', 'retro-noise', 'shape-pulse']
 	global supportedplugins
 	if 'plugin' in instdata:
 		if 'plugindata' in instdata:
@@ -132,7 +131,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 					vstdxparams[13] = {"name": "Waveform","value": fldx_waveform}
 					vstdxparams[14] = {"name": "Mod Thru","value": fldx_mod_thru}
 					vstdxparams[15] = {"name": "LFO Rate","value": fldx_lforate}
-					vst_list.replace_params(instdata, 'DX10', 16, vstdxparams)
+					list_vst.replace_params(instdata, 'DX10', 16, vstdxparams)
 				elif plugindata['name'].lower() == 'simsynth':
 					#osc1_pw, osc1_crs, osc1_fine, osc1_lvl, osc1_lfo, osc1_env, osc1_shape
 					osc1_pw, osc1_crs, osc1_fine, osc1_lvl, osc1_lfo, osc1_env, osc1_shape = struct.unpack('ddddddd', fl_plugstr.read(56))
@@ -196,7 +195,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 					#vst_inst_vital.setvalue('env_1_release', ss_asdr(amp_rel)*4)
 
 					#vitaldata = vst_inst_vital.getdata()
-					#vst_list.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))
+					#list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))
 
 			# ---------- from general-midi
 			elif pluginname == 'general-midi':
@@ -221,8 +220,8 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				sampler_data = instdata
 				sampler_file_data = instdata['plugindata']
 				wireturn = audio_wav.complete_wav_info(sampler_file_data)
-				if vst_list.vst2path_loaded == True:
-					if vst_list.ifexists_vst2('Grace') == True:
+				if list_vst.vst2path_loaded == True:
+					if list_vst.ifexists_vst2('Grace') == True:
 						if 'file' in sampler_file_data and wireturn != None and wireturn == 1:
 							file_extension = pathlib.Path(sampler_file_data['file']).suffix
 							if file_extension == '.wav':
@@ -236,7 +235,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 								regionparams['end'] = sampler_file_data['length']
 								vst_inst.grace_create_region(gx_root, regionparams)
 								xmlout = ET.tostring(gx_root, encoding='utf-8')
-								vst_list.replace_data(instdata, 'Grace', xmlout)
+								list_vst.replace_data(instdata, 'Grace', xmlout)
 						else:
 							print("[plug-conv] Unchanged, Grace (VST2) only supports Format 1 .WAV")
 					else:
@@ -249,14 +248,14 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 			elif pluginname == 'sampler-multi' and dawname not in supportedplugins['sampler-multi']:
 				msmpl_data = instdata
 				msmpl_p_data = instdata['plugindata']
-				if vst_list.vst2path_loaded == True:
-					if vst_list.ifexists_vst2('Grace') == True:
+				if list_vst.vst2path_loaded == True:
+					if list_vst.ifexists_vst2('Grace') == True:
 						regions = msmpl_p_data['regions']
 						gx_root = vst_inst.grace_create_main()
 						for regionparams in regions:
 							vst_inst.grace_create_region(gx_root, regionparams)
 						xmlout = ET.tostring(gx_root, encoding='utf-8')
-						vst_list.replace_data(instdata, 'Grace', xmlout)
+						list_vst.replace_data(instdata, 'Grace', xmlout)
 					else:
 						print('[plug-conv] Unchanged, Plugin Grace not Found')
 				else:
@@ -274,7 +273,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				if 'file' in sf2data: sf2_filename = sf2data['file']
 				else: sf2_filename = 0
 				jsfp_xml = vst_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
-				vst_list.replace_data(instdata, 'juicysfplugin', vst_params.make_vc2_xml(jsfp_xml))
+				list_vst.replace_data(instdata, 'juicysfplugin', vst_params.make_vc2_xml(jsfp_xml))
 
 			# -------------------- vst2 (magical8bitplug) --------------------
 
@@ -330,14 +329,14 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoDepth", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoIgnoresWheel_raw", 1.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
-				vst_list.replace_data(instdata, 'Magical 8bit Plug 2', vst_params.make_vc2_xml(m8p_root))
+				list_vst.replace_data(instdata, 'Magical 8bit Plug 2', vst_params.make_vc2_xml(m8p_root))
 
 			# -------------------- zynaddsubfx > vst2 (Zyn-Fusion) - from lmms --------------------
 			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
 				zasfxdata = instdata['plugindata']['data']
 				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
 				zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
-				vst_list.replace_data(instdata, 'ZynAddSubFX', zasfxdatafixed)
+				list_vst.replace_data(instdata, 'ZynAddSubFX', zasfxdatafixed)
 			else:
 				print('[plug-conv] Unchanged')
 
@@ -360,7 +359,7 @@ def convplug_fx(fxdata, dawname, extra_json, nameid):
 						pointdata = waveshapepoints[pointnum*4][0]
 						vst_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
 					vst_fx.wolfshaper_get()
-					vst_list.replace_data(fxdata, 'Wolf Shaper', vst_params.make_nullbytegroup(vst_fx.wolfshaper_get()))
+					list_vst.replace_data(fxdata, 'Wolf Shaper', vst_params.make_nullbytegroup(vst_fx.wolfshaper_get()))
 			else:
 				print('[plug-conv] Unchanged')
 
@@ -371,7 +370,7 @@ def do_fxchain(fxchain, dawname, extra_json, nameid):
 
 def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 	global supportedplugins
-	vst_list.listinit('windows')
+	list_vst.listinit('windows')
 	supportedplugins = {}
 	supportedplugins['sf2'] = ['cvpj', 'cvpj_f', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
 	supportedplugins['sampler'] = ['cvpj', 'cvpj_f', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']

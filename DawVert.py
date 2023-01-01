@@ -16,7 +16,7 @@ parser.add_argument("-i", default=None)
 parser.add_argument("-it", default=None)
 parser.add_argument("-o", default=None)
 parser.add_argument("-ot", default=None)
-#parser.add_argument("--samplefolder", default=None)
+parser.add_argument("--samplefolder", default=None)
 parser.add_argument("--soundfont", default=None)
 args = parser.parse_args()
 
@@ -28,7 +28,7 @@ out_format = args.ot
 extra_json = {}
 
 if args.soundfont != None: extra_json['soundfont'] = args.soundfont
-#if args.samplefolder != None: extra_json['samplefolder'] = args.samplefolder
+if args.samplefolder != None: extra_json['samplefolder'] = args.samplefolder
 
 typelist = {}
 typelist['f'] = 'Regular+FXMixer'

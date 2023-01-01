@@ -4,11 +4,15 @@ from functions import data_bytes
 from functions import list_vst
 from functions import params_vst
 
+simsynth_shapes = {0.4: 'noise', 0.3: 'sine', 0.2: 'square', 0.1: 'saw', 0.0: 'triangle'}
+
 def convert(instdata):
 	pluginname = instdata['plugin']
 	plugindata = instdata['plugindata']
 	fl_plugdata = base64.b64decode(plugindata['data'])
 	fl_plugstr = data_bytes.bytearray2BytesIO(base64.b64decode(plugindata['data']))
+
+	# ---------------------------------------- Soundfont Player ----------------------------------------
 	if plugindata['name'].lower() == 'fruity soundfont player':
 		flsf_unk = int.from_bytes(fl_plugstr.read(4), "little")
 		flsf_patch = int.from_bytes(fl_plugstr.read(4), "little")-1
@@ -43,6 +47,8 @@ def convert(instdata):
 		else:
 			instdata['plugindata']['bank'] = flsf_bank
 			instdata['plugindata']['patch'] = flsf_patch
+
+	# ---------------------------------------- DX10 ----------------------------------------
 	elif plugindata['name'].lower() == 'fruity dx10':
 		int.from_bytes(fl_plugstr.read(4), "little")
 		fldx_amp_att, fldx_amp_dec, fldx_amp_rel, fldx_mod_course = struct.unpack('iiii', fl_plugstr.read(16))
@@ -70,25 +76,22 @@ def convert(instdata):
 		params_vst.add_param(vstdxparams, 13, "Waveform", fldx_waveform/65536)
 		params_vst.add_param(vstdxparams, 14, "Mod Thru", fldx_mod_thru/65536)
 		params_vst.add_param(vstdxparams, 15, "LFO Rate", fldx_lforate/65536)
-
 		list_vst.replace_params(instdata, 'DX10', 16, vstdxparams)
-		
+
+	# ---------------------------------------- SimSynth ----------------------------------------
 	elif plugindata['name'].lower() == 'simsynth':
 		#osc1_pw, osc1_crs, osc1_fine, osc1_lvl, osc1_lfo, osc1_env, osc1_shape
 		osc1_pw, osc1_crs, osc1_fine, osc1_lvl, osc1_lfo, osc1_env, osc1_shape = struct.unpack('ddddddd', fl_plugstr.read(56))
 		osc2_pw, osc2_crs, osc2_fine, osc2_lvl, osc2_lfo, osc2_env, osc2_shape = struct.unpack('ddddddd', fl_plugstr.read(56))
 		osc3_pw, osc3_crs, osc3_fine, osc3_lvl, osc3_lfo, osc3_env, osc3_shape = struct.unpack('ddddddd', fl_plugstr.read(56))
-
 		lfo_del, lfo_rate, unused, lfo_shape = struct.unpack('dddd', fl_plugstr.read(32))
 		UNK, svf_cut, svf_emph, svf_env = struct.unpack('dddd', fl_plugstr.read(32))
 		svf_lfo, svf_kb, UNK, svf_high = struct.unpack('dddd', fl_plugstr.read(32))
 		svf_band, UNK, amp_att, amp_dec = struct.unpack('dddd', fl_plugstr.read(32))
 		amp_sus, amp_rel, amp_lvl, UNK = struct.unpack('dddd', fl_plugstr.read(32))
 		svf_att, svf_dec, svf_sus, svf_rel = struct.unpack('dddd', fl_plugstr.read(32))
-
 		fl_plugstr.read(64)
 		fl_plugstr.read(12)
-
 		osc1_on, osc1_o1, osc1_o2, osc1_warm = struct.unpack('IIII', fl_plugstr.read(16))
 		osc2_on, osc2_o1, osc2_o2, osc2_warm = struct.unpack('IIII', fl_plugstr.read(16))
 		osc3_on, osc3_o1, osc3_o2, osc3_warm = struct.unpack('IIII', fl_plugstr.read(16))

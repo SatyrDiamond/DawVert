@@ -19,14 +19,16 @@ e.g:
 
 ## Options
 ```
-python3 DawVert.py -i <input> -ot <output type> -o <output>
-
 GM Soundfont File Path (for GM MIDI instruments): 
---soundfont 
+--soundfont <sf2 file>
 
-Sample Folder Path (for extracting samples): 
---samplesfolder 
+Sample Folder Path (path for sample extraction): 
+--samplesfolder <sample folder>
 
+e.g: 
+    python3 DawVert.py --soundfont "MuseScore_General.sf2" -it notessimo_v2 -i song.note -ot flp -o out.flp
+
+    python3 DawVert.py --samplefolder "a diffrent folder" -i "song.s3m" -ot lmms -o out.mmp
 ```
 
 ## VST Plugins

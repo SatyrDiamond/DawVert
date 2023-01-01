@@ -931,7 +931,7 @@ def reconstruct(FLP_Data, outputfile):
     reconstruct_flevent(data_FLdt, 28, 1)
     reconstruct_flevent(data_FLdt, 37, 1)
     reconstruct_flevent(data_FLdt, 200, b'\x00\x00')
-    reconstruct_flevent(data_FLdt, 156, int(FLP_Data['FL_Main']['Tempo'])*1000)
+    reconstruct_flevent(data_FLdt, 156, int(float(FLP_Data['FL_Main']['Tempo'])*1000))
     reconstruct_flevent(data_FLdt, 67, 1) #CurrentPatNum
     reconstruct_flevent(data_FLdt, 9, 1) #LoopActive
     reconstruct_flevent(data_FLdt, 11, int(FLP_Data['FL_Main']['Shuffle'])) #Shuffle 

@@ -363,6 +363,19 @@ def setvalue(name, value):
     global vitaldata
     vitaldata["settings"][name] = value
 
+def setvalue_timed(name, value):
+    global vitaldata
+    vitaldata["settings"][name] = math.sqrt(pow(value, 0.5))
+
+def set_modulation(num, src, dest, amt, power, bipol, byp, ster):
+    global vitaldata
+    vitaldata["settings"]["modulations"][num-1] = {"destination": dest, "source": src}
+    vitaldata["settings"]["modulation_"+str(num)+"_amount"] = amt
+    vitaldata["settings"]["modulation_"+str(num)+"_bipolar"] = bipol
+    vitaldata["settings"]["modulation_"+str(num)+"_bypass"] = byp
+    vitaldata["settings"]["modulation_"+str(num)+"_power"] = power
+    vitaldata["settings"]["modulation_"+str(num)+"_stereo"] = ster
+
 def getdata():
     global vitaldata
     return json.dumps(vitaldata)

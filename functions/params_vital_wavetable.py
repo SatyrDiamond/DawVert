@@ -1,3 +1,4 @@
+import math
 
 # -------------------- Shapes --------------------
 def wave_sine(x): return math.sin((x-0.5)*(math.pi*2))

@@ -183,13 +183,13 @@ def parse_instruments(notess_instruments):
     parse_items(items, 1)
     for inst in lists_data[1]:
         if 'instruments/'+inst+'.xml' in zip_data.namelist():
-            print("[input-notessimo_v3] Instrument: " + inst + " Custom ("+lists_data[1][inst]['name']+")")
+            print("[input-notessimo_v3] Instrument: " + inst + " XML ("+lists_data[1][inst]['name']+")")
 
             notess_s_inst = ET.fromstring(zip_data.read('instruments/'+inst+'.xml'))
             inst_vars = get_vars(notess_s_inst)
             if 'color' in inst_vars: lists_data[1][inst]['color'] = colors.moregray(inst_vars['color'])
         else:
-            print("[input-notessimo_v3] Instrument: " + inst + " Built-in")
+            print("[input-notessimo_v3] Instrument: " + inst)
 
 # ----------------------------------- Sheets -----------------------------------
 

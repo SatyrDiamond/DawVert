@@ -220,6 +220,7 @@ def parse_sheets(notess_sheets):
                 notess_n_isSharp = s_obj.get('isSharp')
                 notess_n_isFlat = s_obj.get('isFlat')
                 notess_n_id = s_obj.get('id')
+                notess_n_dur = s_obj.get('l')
 
                 notess_nt_oct = int(roundseven(notess_n_note)/7)*-1
                 notess_nt_rnote = notess_n_note*-1 - notess_nt_oct*7
@@ -238,7 +239,10 @@ def parse_sheets(notess_sheets):
 
                 cvpj_notedata = {}
                 cvpj_notedata['position'] = notess_n_pos*2
-                cvpj_notedata['duration'] = 1
+                if notess_n_dur != None:
+                    cvpj_notedata['duration'] = float(notess_n_dur)*4
+                else:
+                    cvpj_notedata['duration'] = 1
                 cvpj_notedata['key'] = notess_no_note
                 cvpj_notedata['instrument'] = notess_n_id
                 notelist.append(cvpj_notedata)

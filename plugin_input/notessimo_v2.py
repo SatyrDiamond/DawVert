@@ -149,7 +149,6 @@ def parsenotes(bio_data, notelen):
     notesout = {}
     for _ in range(numnotes):
         notedata = bio_data.read(20)
-        #print(struct.unpack('>Ibbhbffh', notedata[:19]))
         n_pos,n_note,n_layer,n_inst,n_sharp,n_vol,n_pan,n_len = struct.unpack('>Ibbhbffh', notedata[:19])
 
         n_note = n_note-1
@@ -164,7 +163,6 @@ def parsenotes(bio_data, notelen):
 
         if n_sharp == 2: out_offset = 1
         if n_sharp == 1: out_offset = -1
-
 
         note = {}
         note['position'] = (n_pos)*notelen

@@ -620,7 +620,7 @@ class output_lmms(plugin_output.base):
                 if projJ['message']['type'] == 'html':
                     notesX.text = ET.CDATA(projJ['message']['text'])
                 if projJ['message']['type'] == 'text':
-                    notesX.text = ET.CDATA(projJ['message']['text'].replace('\n', '<br/>'))
+                    notesX.text = ET.CDATA(projJ['message']['text'].replace('\n', '<br/>').replace('\r', '<br/>'))
         else:
             notesX = ET.SubElement(songX, "projectnotes")
             notesX.text = ET.CDATA("")

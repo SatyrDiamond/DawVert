@@ -253,7 +253,7 @@ def ninjas2_init():
 	ninjas2_data_main['programGrid'] = '1.000000'
 	ninjas2_data_main['playmode'] = '0.000000'
 	ninjas2_data_main['pitchbendDepth'] = '12.000000'
-	ninjas2_data_main['OneShotForward'] = '0.000000'
+	ninjas2_data_main['OneShotForward'] = '1.000000'
 	ninjas2_data_main['OneShotReverse'] = '0.000000'
 	ninjas2_data_main['LoopForward'] = '0.000000'
 	ninjas2_data_main['LoopReverse'] = '0.000000'
@@ -284,15 +284,26 @@ def ninjas2_slicerdata(slicerdata):
 	if 'slices' in slicerdata:
 		slices = slicerdata['slices']
 		progtable = []
-		for _ in range(127): progtable.append('0 0 0 0.001000 0.001000 1.000000 0.001000')
 		
+		releasevalue = '0.001000'
+		if 'trigger' in slicerdata:
+			print(slicerdata['trigger'])
+			if slicerdata['trigger'] == 'normal': releasevalue = '0.001000'
+			if slicerdata['trigger'] == 'oneshot': releasevalue = '1.000000'
+
+		for _ in range(127): progtable.append('0 0 0 0.001000 0.001000 1.000000 '+releasevalue+' ')
+
+		ninjas2_data_main['release'] = releasevalue
+
 		progout = ''
 		progout += str(len(slices))+' 128 '
 		ninjas2_data_main['number_of_slices'] = str(len(slices))
+
 		for slicenum in range(len(slices)):
 			slicedata = slices[slicenum]
 			s_reverse = False
 			s_looped = False
+
 			if 'reverse' in slicedata:
 				if slicedata['reverse'] == 1: s_reverse = True
 			if 'looped' in slicedata:
@@ -300,7 +311,7 @@ def ninjas2_slicerdata(slicerdata):
 			ninjas2_loopout = 0
 			if s_reverse == True: ninjas2_loopout += 1
 			if s_looped == True: ninjas2_loopout += 2
-			progtable[slicenum] = str(slicedata['pos']*2)+' '+str(slicedata['end']*2)+' '+str(ninjas2_loopout)+' 0.001000 0.001000 1.000000 0.001000'
+			progtable[slicenum] = str(slicedata['pos']*2)+' '+str(slicedata['end']*2)+' '+str(ninjas2_loopout)+' 0.001000 0.001000 1.000000 '+releasevalue
 
 		for prognums in progtable: progout += prognums+' '
 		ninjas2_data_progs['program00'] = progout

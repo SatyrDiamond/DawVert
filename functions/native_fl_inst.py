@@ -53,6 +53,7 @@ def convert(instdata):
 			if slicenum-1 >= 0 and slicenum != len(cvpj_slices): cvpj_slices[slicenum-1]['end'] = cvpj_slices[slicenum]['pos']-1
 			if slicenum == len(cvpj_slices)-1: cvpj_slices[slicenum]['end'] = cvpj_slices[slicenum]['pos']+100000000
 
+		instdata['plugindata']['trigger'] = 'oneshot'
 		instdata['plugindata']['bpm'] = slicer_bpm
 		instdata['plugindata']['beats'] = slicer_beats
 		instdata['plugindata']['slices'] = cvpj_slices

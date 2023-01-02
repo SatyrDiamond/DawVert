@@ -153,11 +153,7 @@ class input_gt_mnbs(plugin_input.base):
         nbs_file.read(2)
         timesig_numerator = int.from_bytes(nbs_file.read(1), "little")
         print('[input-mnbs] Time Signature: '+str(timesig_numerator)+'/4')
-        nbs_file.read(4)
-        nbs_file.read(4)
-        nbs_file.read(4)
-        nbs_file.read(4)
-        nbs_file.read(4)
+        nbs_file.read(20)
         nbs_song_sourcefilename = getstring(nbs_file)
         if nbs_newformat == 1:
             nbs_loopon = int.from_bytes(nbs_file.read(1), "little")

@@ -11,6 +11,19 @@ import xml.etree.ElementTree as ET
 
 keytable = [0,2,4,5,7,9,11,12]
 
+global lists_data
+global used_inst
+global sheets_width
+global sheets_tempo
+global cvpj_auto_tempo
+
+lists_data = [{},{},{}]
+used_inst = []
+sheets_width = {}
+sheets_tempo = {}
+cvpj_auto_tempo = []
+
+# ----------------------------------- Sharp and Flats -----------------------------------
 notess_noteoffset = {}
 notess_noteoffset["(#) A / F#"] = []
 notess_noteoffset["(#) B / G#"] = []
@@ -28,7 +41,6 @@ notess_noteoffset["(b) F / D"] = []
 notess_noteoffset["(b) Gb / Eb"] = []
 notess_noteoffset["C / A"] = []
 
-# ------------- Normal -------------
 notess_noteoffset["C / A"].append(        [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
 notess_noteoffset["C / A"].append(        [[ 1, 1, 0, 1, 1, 1, 0],[ 1, 1, 1, 1, 1, 1, 1]])
 notess_noteoffset["C / A"].append(        [[-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1, 0,-1,-1,-1]])
@@ -89,19 +101,8 @@ notess_noteoffset["(b) Cb / Ab"].append(  [[-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1, 0,-
 notess_noteoffset["(b) Cb / Ab"].append(  [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
 notess_noteoffset["(b) Cb / Ab"].append(  [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
 
-
-
-global lists_data
-global used_inst
-global sheets_width
-global sheets_tempo
-global cvpj_auto_tempo
-
-lists_data = [{},{},{}]
-used_inst = []
-sheets_width = {}
-sheets_tempo = {}
-cvpj_auto_tempo = []
+# ----------------------------------- Built-In Instruments -----------------------------------
+notess_bi_inst = {}
 
 # ----------------------------------- functions -----------------------------------
 
@@ -197,6 +198,7 @@ def parse_sheets(notess_sheets):
     for sheet in lists_data[0]:
         cvpj_l_notelistindex[sheet] = {}
         cvpj_l_notelistindex[sheet]['name'] = lists_data[0][sheet]['name']
+        print("[input-notessimo_v3] Sheet: Name: " + lists_data[0][sheet]['name'])
         notelist = []
 
         notess_s_sheet = ET.fromstring(zip_data.read('sheets/'+sheet+'.xml'))
@@ -205,11 +207,18 @@ def parse_sheets(notess_sheets):
         sheet_note_signature = [0,[[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]]]
 
         sheet_vars = get_vars(notess_s_sheet)
-        if 'color' in sheet_vars: cvpj_l_notelistindex[sheet]['color'] = colors.moregray(sheet_vars['color'])
+        if 'color' in sheet_vars: 
+            cvpj_l_notelistindex[sheet]['color'] = colors.moregray(sheet_vars['color'])
         if 'signature' in sheet_vars:
-            if sheet_vars['signature'] in notess_noteoffset: sheet_note_signature = notess_noteoffset[sheet_vars['signature']]
-        if 'width' in sheet_vars: sheets_width[sheet] = sheet_vars['width']
-        if 'tempo' in sheet_vars: sheets_tempo[sheet] = sheet_vars['tempo']
+            if sheet_vars['signature'] in notess_noteoffset: 
+                sheet_note_signature = notess_noteoffset[sheet_vars['signature']]
+                print("[input-notessimo_v3]    Signature: " + sheet_vars['signature'])
+        if 'width' in sheet_vars: 
+            sheets_width[sheet] = sheet_vars['width']
+            print("[input-notessimo_v3]    Length: " + str(sheet_vars['width']))
+        if 'tempo' in sheet_vars: 
+            sheets_tempo[sheet] = sheet_vars['tempo']
+            print("[input-notessimo_v3]    Tempo: " + str(sheet_vars['tempo']))
 
         objects = layers.findall('objects')[0]
         for s_object in objects:
@@ -239,15 +248,14 @@ def parse_sheets(notess_sheets):
 
                 cvpj_notedata = {}
                 cvpj_notedata['position'] = notess_n_pos*2
-                if notess_n_dur != None:
-                    cvpj_notedata['duration'] = float(notess_n_dur)*4
-                else:
-                    cvpj_notedata['duration'] = 1
+                if notess_n_dur != None: cvpj_notedata['duration'] = float(notess_n_dur)*4
+                else: cvpj_notedata['duration'] = 1
                 cvpj_notedata['key'] = notess_no_note
                 cvpj_notedata['instrument'] = notess_n_id
                 notelist.append(cvpj_notedata)
                 if notess_n_id not in used_inst: used_inst.append(notess_n_id)
 
+        print("[input-notessimo_v3]")
         cvpj_l_notelistindex[sheet]['notelist'] = note_mod.sortnotes(notelist)
 
 # ----------------------------------- Song -----------------------------------
@@ -272,10 +280,18 @@ def parse_song(songid):
     bpm = None
     song_vars = get_vars(notess_x_song)
 
-    if 'author' in song_vars: cvpj_l['author'] = song_vars['author']
-    if 'width' in song_vars: song_length = song_vars['width']*60
-    if 'video_time' in song_vars: cvpj_l['timesig_numerator'] = song_vars['video_time']
-    if 'video_beat' in song_vars: cvpj_l['timesig_denominator'] = song_vars['video_beat']
+    if 'author' in song_vars: 
+        cvpj_l['author'] = song_vars['author']
+        print("[input-notessimo_v3] Song Author: " + song_vars['author'])
+    if 'width' in song_vars: 
+        song_length = song_vars['width']*60
+        print("[input-notessimo_v3] Song Length: " + str(song_vars['width']*60) + ' Seconds')
+    if 'video_time' in song_vars: 
+        cvpj_l['timesig_numerator'] = song_vars['video_time']
+        print("[input-notessimo_v3] Song Numerator: " + str(song_vars['video_time']))
+    if 'video_beat' in song_vars: 
+        cvpj_l['timesig_denominator'] = song_vars['video_beat']
+        print("[input-notessimo_v3] Song Denominator: " + str(song_vars['video_beat']))
 
     # ---------------- objects ----------------
 

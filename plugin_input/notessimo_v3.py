@@ -11,83 +11,83 @@ import xml.etree.ElementTree as ET
 
 keytable = [0,2,4,5,7,9,11,12]
 
-t_noteoffset = {}
-t_noteoffset["(#) A / F#"] = []
-t_noteoffset["(#) B / G#"] = []
-t_noteoffset["(#) C# / A#"] = []
-t_noteoffset["(#) D / B"] = [] 
-t_noteoffset["(#) E / C#"] = []
-t_noteoffset["(#) F# / D#"] = []
-t_noteoffset["(#) G / E"] = [] 
-t_noteoffset["(b) Ab / F"] = []
-t_noteoffset["(b) Bb / G"] = []
-t_noteoffset["(b) Cb / Ab"] = []
-t_noteoffset["(b) Db / Bb"] = []
-t_noteoffset["(b) Eb / C"] = []
-t_noteoffset["(b) F / D"] = [] 
-t_noteoffset["(b) Gb / Eb"] = []
-t_noteoffset["C / A"] = []
+notess_noteoffset = {}
+notess_noteoffset["(#) A / F#"] = []
+notess_noteoffset["(#) B / G#"] = []
+notess_noteoffset["(#) C# / A#"] = []
+notess_noteoffset["(#) D / B"] = [] 
+notess_noteoffset["(#) E / C#"] = []
+notess_noteoffset["(#) F# / D#"] = []
+notess_noteoffset["(#) G / E"] = [] 
+notess_noteoffset["(b) Ab / F"] = []
+notess_noteoffset["(b) Bb / G"] = []
+notess_noteoffset["(b) Cb / Ab"] = []
+notess_noteoffset["(b) Db / Bb"] = []
+notess_noteoffset["(b) Eb / C"] = []
+notess_noteoffset["(b) F / D"] = [] 
+notess_noteoffset["(b) Gb / Eb"] = []
+notess_noteoffset["C / A"] = []
 
 # ------------- Normal -------------
-t_noteoffset["C / A"].append(        [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
-t_noteoffset["C / A"].append(        [[ 1, 1, 0, 1, 1, 1, 0],[ 1, 1, 1, 1, 1, 1, 1]])
-t_noteoffset["C / A"].append(        [[-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1, 0,-1,-1,-1]])
+notess_noteoffset["C / A"].append(        [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
+notess_noteoffset["C / A"].append(        [[ 1, 1, 0, 1, 1, 1, 0],[ 1, 1, 1, 1, 1, 1, 1]])
+notess_noteoffset["C / A"].append(        [[-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1, 0,-1,-1,-1]])
 
-t_noteoffset["(#) G / E"].append(    [[ 0, 0, 0, 0, 1, 0, 0],[ 0, 0, 0, 1, 0, 0, 0]])
-t_noteoffset["(#) G / E"].append(    [[ 1, 1, 0, 1, 0, 1, 0],[ 1, 1, 1, 0, 1, 1, 1]])
-t_noteoffset["(#) G / E"].append(    [[-1,-1,-1,-1, 0,-1,-1],[-1,-1,-1, 0,-1,-1,-1]])
+notess_noteoffset["(#) G / E"].append(    [[ 0, 0, 0, 0, 1, 0, 0],[ 0, 0, 0, 1, 0, 0, 0]])
+notess_noteoffset["(#) G / E"].append(    [[ 1, 1, 0, 1, 0, 1, 0],[ 1, 1, 1, 0, 1, 1, 1]])
+notess_noteoffset["(#) G / E"].append(    [[-1,-1,-1,-1, 0,-1,-1],[-1,-1,-1, 0,-1,-1,-1]])
 
-t_noteoffset["(#) D / B"].append(    [[ 1, 0, 1, 0, 1, 0, 0],[ 1, 0, 0, 1, 0, 0, 1]])
-t_noteoffset["(#) D / B"].append(    [[ 0, 1, 1, 1, 0, 1, 0],[ 0, 1, 1, 0, 1, 1, 0]])
-t_noteoffset["(#) D / B"].append(    [[ 0,-1, 0,-1, 0,-1,-1],[ 0,-1,-1, 0,-1,-1, 0]])
+notess_noteoffset["(#) D / B"].append(    [[ 1, 0, 1, 0, 1, 0, 0],[ 1, 0, 0, 1, 0, 0, 1]])
+notess_noteoffset["(#) D / B"].append(    [[ 0, 1, 1, 1, 0, 1, 0],[ 0, 1, 1, 0, 1, 1, 0]])
+notess_noteoffset["(#) D / B"].append(    [[ 0,-1, 0,-1, 0,-1,-1],[ 0,-1,-1, 0,-1,-1, 0]])
 
-t_noteoffset["(#) A / F#"].append(   [[ 1, 0, 0, 1, 1, 0, 0],[ 1, 0, 1, 1, 0, 0, 1]])
-t_noteoffset["(#) A / F#"].append(   [[ 0, 1, 0, 0, 0, 1, 0],[ 0, 1, 0, 0, 1, 1, 0]])
-t_noteoffset["(#) A / F#"].append(   [[ 0,-1,-1, 0, 0,-1,-1],[ 0,-1, 0, 0,-1,-1, 0]])
+notess_noteoffset["(#) A / F#"].append(   [[ 1, 0, 0, 1, 1, 0, 0],[ 1, 0, 1, 1, 0, 0, 1]])
+notess_noteoffset["(#) A / F#"].append(   [[ 0, 1, 0, 0, 0, 1, 0],[ 0, 1, 0, 0, 1, 1, 0]])
+notess_noteoffset["(#) A / F#"].append(   [[ 0,-1,-1, 0, 0,-1,-1],[ 0,-1, 0, 0,-1,-1, 0]])
 
-t_noteoffset["(#) E / C#"].append(   [[ 1, 0, 1, 1, 1, 0, 0],[ 1, 0, 1, 1, 0, 1, 1]])
-t_noteoffset["(#) E / C#"].append(   [[ 0, 1, 1, 0, 0, 1, 0],[ 0, 1, 0, 0, 1, 0, 0]])
-t_noteoffset["(#) E / C#"].append(   [[ 0,-1, 0, 0, 0,-1, 0],[ 0,-1, 0, 0,-1, 0, 0]])
+notess_noteoffset["(#) E / C#"].append(   [[ 1, 0, 1, 1, 1, 0, 0],[ 1, 0, 1, 1, 0, 1, 1]])
+notess_noteoffset["(#) E / C#"].append(   [[ 0, 1, 1, 0, 0, 1, 0],[ 0, 1, 0, 0, 1, 0, 0]])
+notess_noteoffset["(#) E / C#"].append(   [[ 0,-1, 0, 0, 0,-1, 0],[ 0,-1, 0, 0,-1, 0, 0]])
 
-t_noteoffset["(#) B / G#"].append(   [[ 1, 0, 0, 1, 1, 0, 0],[ 1, 1, 1, 1, 0, 1, 1]])
-t_noteoffset["(#) B / G#"].append(   [[ 0, 1, 0, 0, 0, 1, 0],[ 0, 0, 0, 0, 1, 0, 0]])
-t_noteoffset["(#) B / G#"].append(   [[ 0,-1, 0, 0, 0,-1, 0],[ 0, 0, 0, 0,-1, 0, 0]])
+notess_noteoffset["(#) B / G#"].append(   [[ 1, 0, 0, 1, 1, 0, 0],[ 1, 1, 1, 1, 0, 1, 1]])
+notess_noteoffset["(#) B / G#"].append(   [[ 0, 1, 0, 0, 0, 1, 0],[ 0, 0, 0, 0, 1, 0, 0]])
+notess_noteoffset["(#) B / G#"].append(   [[ 0,-1, 0, 0, 0,-1, 0],[ 0, 0, 0, 0,-1, 0, 0]])
 
-t_noteoffset["(#) F# / D#"].append(  [[ 1, 0, 0, 1, 1, 1, 0],[ 1, 1, 1, 1, 1, 1, 1]])
-t_noteoffset["(#) F# / D#"].append(  [[ 0, 1, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
-t_noteoffset["(#) F# / D#"].append(  [[ 0,-1, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
+notess_noteoffset["(#) F# / D#"].append(  [[ 1, 0, 0, 1, 1, 1, 0],[ 1, 1, 1, 1, 1, 1, 1]])
+notess_noteoffset["(#) F# / D#"].append(  [[ 0, 1, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
+notess_noteoffset["(#) F# / D#"].append(  [[ 0,-1, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
 
-t_noteoffset["(#) C# / A#"].append(  [[ 1, 1, 0, 1, 1, 1, 0],[ 1, 1, 1, 1, 1, 1, 1]])
-t_noteoffset["(#) C# / A#"].append(  [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
-t_noteoffset["(#) C# / A#"].append(  [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
+notess_noteoffset["(#) C# / A#"].append(  [[ 1, 1, 0, 1, 1, 1, 0],[ 1, 1, 1, 1, 1, 1, 1]])
+notess_noteoffset["(#) C# / A#"].append(  [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
+notess_noteoffset["(#) C# / A#"].append(  [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
 
-t_noteoffset["(b) F / D"].append(    [[ 0,-1, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
-t_noteoffset["(b) F / D"].append(    [[ 1, 0, 0, 1, 1, 1, 0],[ 1, 1, 1, 1, 1, 1, 0]])
-t_noteoffset["(b) F / D"].append(    [[-1, 0,-1,-1,-1,-1,-1],[-1,-1,-1, 0,-1,-1,-1]])
+notess_noteoffset["(b) F / D"].append(    [[ 0,-1, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
+notess_noteoffset["(b) F / D"].append(    [[ 1, 0, 0, 1, 1, 1, 0],[ 1, 1, 1, 1, 1, 1, 0]])
+notess_noteoffset["(b) F / D"].append(    [[-1, 0,-1,-1,-1,-1,-1],[-1,-1,-1, 0,-1,-1,-1]])
 
-t_noteoffset["(b) Bb / G"].append(   [[ 0,-1, 0, 0, 0,-1, 0],[ 0, 0, 0, 0,-1, 0, 0]])
-t_noteoffset["(b) Bb / G"].append(   [[ 1, 0, 0, 1, 1, 0, 0],[ 1, 1, 1, 1, 0, 1, 1]])
-t_noteoffset["(b) Bb / G"].append(   [[-1, 0,-1,-1,-1, 0,-1],[-1,-1,-1,-1, 0,-1,-1]])
+notess_noteoffset["(b) Bb / G"].append(   [[ 0,-1, 0, 0, 0,-1, 0],[ 0, 0, 0, 0,-1, 0, 0]])
+notess_noteoffset["(b) Bb / G"].append(   [[ 1, 0, 0, 1, 1, 0, 0],[ 1, 1, 1, 1, 0, 1, 1]])
+notess_noteoffset["(b) Bb / G"].append(   [[-1, 0,-1,-1,-1, 0,-1],[-1,-1,-1,-1, 0,-1,-1]])
 
-t_noteoffset["(b) Eb / C"].append(   [[ 0,-1,-1, 0, 0,-1, 0],[ 0,-1, 0, 0,-1, 0, 0]])
-t_noteoffset["(b) Eb / C"].append(   [[ 1, 0, 0, 1, 1, 0, 0],[ 1, 0, 1, 1, 0, 1, 1]])
-t_noteoffset["(b) Eb / C"].append(   [[-1, 0, 0,-1,-1, 0,-1],[-1, 0,-1, 0, 0,-1,-1]])
+notess_noteoffset["(b) Eb / C"].append(   [[ 0,-1,-1, 0, 0,-1, 0],[ 0,-1, 0, 0,-1, 0, 0]])
+notess_noteoffset["(b) Eb / C"].append(   [[ 1, 0, 0, 1, 1, 0, 0],[ 1, 0, 1, 1, 0, 1, 1]])
+notess_noteoffset["(b) Eb / C"].append(   [[-1, 0, 0,-1,-1, 0,-1],[-1, 0,-1, 0, 0,-1,-1]])
 
-t_noteoffset["(b) Ab / F"].append(   [[ 0,-1,-1, 0, 0,-1,-1],[ 0,-1, 0, 0,-1,-1, 0]])
-t_noteoffset["(b) Ab / F"].append(   [[ 1, 0, 0, 1, 1, 0, 0],[ 1, 0, 1, 1, 0, 0, 1]])
-t_noteoffset["(b) Ab / F"].append(   [[-1, 0, 0,-1,-1, 0, 0],[-1, 0,-1, 0, 0, 0,-1]])
+notess_noteoffset["(b) Ab / F"].append(   [[ 0,-1,-1, 0, 0,-1,-1],[ 0,-1, 0, 0,-1,-1, 0]])
+notess_noteoffset["(b) Ab / F"].append(   [[ 1, 0, 0, 1, 1, 0, 0],[ 1, 0, 1, 1, 0, 0, 1]])
+notess_noteoffset["(b) Ab / F"].append(   [[-1, 0, 0,-1,-1, 0, 0],[-1, 0,-1, 0, 0, 0,-1]])
 
-t_noteoffset["(b) Db / Bb"].append(  [[ 0,-1,-1,-1, 0,-1,-1],[ 0,-1,-1, 0,-1,-1, 0]])
-t_noteoffset["(b) Db / Bb"].append(  [[ 1, 0, 0, 0, 1, 0, 0],[ 1, 0, 0, 1, 0, 0, 1]])
-t_noteoffset["(b) Db / Bb"].append(  [[-1, 0, 0, 0,-1, 0, 0],[-1, 0, 0, 0, 0, 0,-1]])
+notess_noteoffset["(b) Db / Bb"].append(  [[ 0,-1,-1,-1, 0,-1,-1],[ 0,-1,-1, 0,-1,-1, 0]])
+notess_noteoffset["(b) Db / Bb"].append(  [[ 1, 0, 0, 0, 1, 0, 0],[ 1, 0, 0, 1, 0, 0, 1]])
+notess_noteoffset["(b) Db / Bb"].append(  [[-1, 0, 0, 0,-1, 0, 0],[-1, 0, 0, 0, 0, 0,-1]])
 
-t_noteoffset["(b) Gb / Eb"].append(  [[-1,-1,-1,-1, 0,-1,-1],[-1,-1,-1, 0,-1,-1,-1]])
-t_noteoffset["(b) Gb / Eb"].append(  [[ 0, 0, 0, 0, 1, 0, 0],[ 0, 0, 0, 1, 0, 0, 0]])
-t_noteoffset["(b) Gb / Eb"].append(  [[ 0, 0, 0, 0,-1, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
+notess_noteoffset["(b) Gb / Eb"].append(  [[-1,-1,-1,-1, 0,-1,-1],[-1,-1,-1, 0,-1,-1,-1]])
+notess_noteoffset["(b) Gb / Eb"].append(  [[ 0, 0, 0, 0, 1, 0, 0],[ 0, 0, 0, 1, 0, 0, 0]])
+notess_noteoffset["(b) Gb / Eb"].append(  [[ 0, 0, 0, 0,-1, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
 
-t_noteoffset["(b) Cb / Ab"].append(  [[-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1, 0,-1,-1,-1]])
-t_noteoffset["(b) Cb / Ab"].append(  [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
-t_noteoffset["(b) Cb / Ab"].append(  [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
+notess_noteoffset["(b) Cb / Ab"].append(  [[-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1, 0,-1,-1,-1]])
+notess_noteoffset["(b) Cb / Ab"].append(  [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
+notess_noteoffset["(b) Cb / Ab"].append(  [[ 0, 0, 0, 0, 0, 0, 0],[ 0, 0, 0, 0, 0, 0, 0]])
 
 
 
@@ -167,12 +167,27 @@ def get_vars(xmlvars):
         else: output[s_name] = s_value
     return output
 
-# ----------------------------------- Instruments and Plugins -----------------------------------
+# ----------------------------------- Samples -----------------------------------
+
+def parse_samples(notess_instruments): 
+    institems = {}
+    items = notess_instruments.findall('items')[0]
+    parse_items(items, 2)
+
+# ----------------------------------- Instruments -----------------------------------
 
 def parse_instruments(notess_instruments): 
     institems = {}
     items = notess_instruments.findall('items')[0]
     parse_items(items, 1)
+    for inst in lists_data[1]:
+        if 'instruments/'+inst+'.xml' in zip_data.namelist():
+            notess_s_inst = ET.fromstring(zip_data.read('instruments/'+inst+'.xml'))
+
+            sheet_vars = get_vars(notess_s_inst)
+            if 'color' in sheet_vars: lists_data[1][inst]['color'] = colors.moregray(sheet_vars['color'])
+
+    print(lists_data[1])
 
 # ----------------------------------- Sheets -----------------------------------
 
@@ -194,7 +209,7 @@ def parse_sheets(notess_sheets):
         sheet_vars = get_vars(notess_s_sheet)
         if 'color' in sheet_vars: cvpj_l_notelistindex[sheet]['color'] = colors.moregray(sheet_vars['color'])
         if 'signature' in sheet_vars:
-            if sheet_vars['signature'] in t_noteoffset: sheet_note_signature = t_noteoffset[sheet_vars['signature']]
+            if sheet_vars['signature'] in notess_noteoffset: sheet_note_signature = notess_noteoffset[sheet_vars['signature']]
         if 'width' in sheet_vars: sheets_width[sheet] = sheet_vars['width']
         if 'tempo' in sheet_vars: sheets_tempo[sheet] = sheet_vars['tempo']
 
@@ -208,27 +223,27 @@ def parse_sheets(notess_sheets):
                 notess_n_isFlat = s_obj.get('isFlat')
                 notess_n_id = s_obj.get('id')
 
-                notess_t_oct = int(roundseven(notess_n_note)/7)*-1
-                notess_t_r_note = notess_n_note*-1 - notess_t_oct*7
-                notess_t_note = keytable[notess_t_r_note]
+                notess_nt_oct = int(roundseven(notess_n_note)/7)*-1
+                notess_nt_rnote = notess_n_note*-1 - notess_nt_oct*7
+                notess_nt_note = keytable[notess_nt_rnote]
 
-                notess_o_note = notess_t_note + (notess_t_oct*12)
+                notess_no_note = notess_nt_note + (notess_nt_oct*12)
 
                 notetype = 0
                 if notess_n_isSharp == 'true': notetype = 1
                 if notess_n_isFlat == 'true': notetype = 2
 
-                if notess_t_oct >= 0: sharpkey = sheet_note_signature[notetype][1][notess_t_r_note]
-                else: sharpkey = sheet_note_signature[notetype][0][notess_t_r_note]
+                if notess_nt_oct >= 0: sharpkey = sheet_note_signature[notetype][1][notess_nt_rnote]
+                else: sharpkey = sheet_note_signature[notetype][0][notess_nt_rnote]
 
-                notess_o_note += sharpkey
+                notess_no_note += sharpkey
 
-                note = {}
-                note['position'] = notess_n_pos*2
-                note['duration'] = 1
-                note['key'] = notess_o_note
-                note['instrument'] = notess_n_id
-                notelist.append(note)
+                cvpj_notedata = {}
+                cvpj_notedata['position'] = notess_n_pos*2
+                cvpj_notedata['duration'] = 1
+                cvpj_notedata['key'] = notess_no_note
+                cvpj_notedata['instrument'] = notess_n_id
+                notelist.append(cvpj_notedata)
                 if notess_n_id not in used_inst: used_inst.append(notess_n_id)
 
         cvpj_l_notelistindex[sheet]['notelist'] = note_mod.sortnotes(notelist)
@@ -239,11 +254,11 @@ def parse_song(songid):
     global bpm
     global song_length
 
-    notess_s_song = ET.fromstring(zip_data.read('songs/'+songid+'.xml'))
-    song_layers = notess_s_song.findall('layers')[0]
+    notess_x_song = ET.fromstring(zip_data.read('songs/'+songid+'.xml'))
+    notess_l_songlayers = notess_x_song.findall('layers')[0]
 
-    objects = song_layers.findall('objects')[0]
-    items = song_layers.findall('items')[0]
+    objects = notess_l_songlayers.findall('objects')[0]
+    items = notess_l_songlayers.findall('items')[0]
 
     # ---------------- items ----------------
     for s_item in items:
@@ -253,7 +268,7 @@ def parse_song(songid):
 
     # ---------------- vars ----------------
     bpm = None
-    song_vars = get_vars(notess_s_song)
+    song_vars = get_vars(notess_x_song)
 
     if 'author' in song_vars: cvpj_l['author'] = song_vars['author']
     if 'width' in song_vars: song_length = song_vars['width']*60
@@ -339,6 +354,10 @@ class input_notessimo_v3(plugin_input.base):
             notess_instruments = ET.fromstring(zip_data.read('instruments.xml'))
             parse_instruments(notess_instruments)
 
+        #if 'samples.xml' in zip_data.namelist():
+        #    notess_samples = ET.fromstring(zip_data.read('instruments.xml'))
+        #    parse_samples(notess_samples)
+
         notess_sheets = ET.fromstring(zip_data.read('sheets.xml'))
         parse_sheets(notess_sheets)
 
@@ -346,15 +365,16 @@ class input_notessimo_v3(plugin_input.base):
         parse_songs(notess_songs)
 
         for inst in used_inst:
-            if inst in lists_data[1]: 
-                if 'name' in lists_data[1][inst]: 
-                    instname = lists_data[1][inst]['name']
-                else: instname = 'noname ('+inst+')'
-            else: instname = 'noname ('+inst+')'
             cvpj_inst = {}
             cvpj_inst["pan"] = 0.0
-            cvpj_inst['name'] = instname
+            cvpj_inst['name'] = 'noname ('+inst+')'
             cvpj_inst["vol"] = 1.0
+
+            if inst in lists_data[1]: 
+                t_instdata = lists_data[1][inst]
+                if 'name' in t_instdata: cvpj_inst['name'] = t_instdata['name']
+                if 'color' in t_instdata: cvpj_inst['color'] = colors.moregray(t_instdata['color'])
+
             cvpj_inst['instdata'] = {}
             cvpj_inst['instdata']['plugin'] = 'none'
 
@@ -362,10 +382,10 @@ class input_notessimo_v3(plugin_input.base):
             cvpj_l_instrumentsorder.append(inst)
 
 
-        placements_auto = {}
-        placements_auto['bpm'] = cvpj_auto_tempo
+        cvpj_placements_auto_main = {}
+        cvpj_placements_auto_main['bpm'] = cvpj_auto_tempo
 
-        cvpj_l['placements_auto'] = placements_auto
+        cvpj_l['cvpj_placements_auto_main'] = cvpj_placements_auto_main
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

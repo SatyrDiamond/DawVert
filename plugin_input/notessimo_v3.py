@@ -187,8 +187,6 @@ def parse_instruments(notess_instruments):
             sheet_vars = get_vars(notess_s_inst)
             if 'color' in sheet_vars: lists_data[1][inst]['color'] = colors.moregray(sheet_vars['color'])
 
-    print(lists_data[1])
-
 # ----------------------------------- Sheets -----------------------------------
 
 def parse_sheets(notess_sheets): 

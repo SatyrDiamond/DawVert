@@ -190,21 +190,21 @@ class input_notessimo_v2(plugin_input.base):
         nv2_data = data_bytes.bytearray2BytesIO(zlib.decompress(bytestream.read()))
         len_songname = int.from_bytes(nv2_data.read(2), "big")
         text_songname = nv2_data.read(len_songname).decode('ascii')
+        print("[input-notessimo_v2] Song Name: " + str(text_songname))
 
         len_songauthor = int.from_bytes(nv2_data.read(2), "big")
         text_songauthor = nv2_data.read(len_songauthor).decode('ascii')
+        print("[input-notessimo_v2] Song Author: " + str(text_songauthor))
 
         len_date1 = int.from_bytes(nv2_data.read(2), "big")
         text_date1 = nv2_data.read(len_date1).decode('ascii')
-        #print(text_songname, '-', text_songauthor)
 
         len_date2 = int.from_bytes(nv2_data.read(2), "big")
         text_date2 = nv2_data.read(len_date2).decode('ascii')
-        #print(text_date1, '-', text_date2)
 
         len_order = int.from_bytes(nv2_data.read(2), "big")
         arr_order = struct.unpack('b'*len_order, nv2_data.read(len_order))
-        #print(arr_order)
+        print("[input-notessimo_v2] Order List: " + str(arr_order))
 
         tempo_table = struct.unpack('>'+'H'*100, nv2_data.read(200))
 
@@ -229,16 +229,19 @@ class input_notessimo_v2(plugin_input.base):
 
         for sheetnum in range(100):
             sheetdata = notess_sheets[sheetnum][2]
-            for layer in sheetdata:
-                patid = str(sheetnum)+'_'+str(layer)
-                cvpj_l_notelistindex[patid] = {}
-                cvpj_l_notelistindex[patid]['notelist'] = sheetdata[layer]
-                cvpj_l_notelistindex[patid]['name'] = '#'+str(sheetnum+1)+' Layer '+str(layer+1)
-
-        #print(used_instruments)
+            if len(sheetdata) != 0: 
+                print("[input-notessimo_v2] Sheet "+str(sheetnum)+", Layers:",end=' ')
+                for layer in sheetdata:
+                    print(layer,end=' ')
+                    patid = str(sheetnum)+'_'+str(layer)
+                    cvpj_l_notelistindex[patid] = {}
+                    cvpj_l_notelistindex[patid]['notelist'] = sheetdata[layer]
+                    cvpj_l_notelistindex[patid]['name'] = '#'+str(sheetnum+1)+' Layer '+str(layer+1)
+                print()
 
         for used_instrument in used_instruments:
             notess_instdata = notess_instruments[used_instrument]
+            print("[input-notessimo_v2] Instrument: " + str(notess_instdata[2]))
             midiinst = notess_instdata[0]
 
             cvpj_inst = {}

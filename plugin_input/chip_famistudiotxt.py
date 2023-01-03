@@ -231,9 +231,7 @@ class input_famistudio(plugin_input.base):
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         FST_Main = decode_fst(input_file)
-        with open('fst.json', "w") as fileout:
-            json.dump(FST_Main, fileout, indent=4, sort_keys=True)
-        
+
         InstShapes = {'Square1': 'Square1', 
         'Square2': 'Square2', 
         'Triangle': 'Triangle', 

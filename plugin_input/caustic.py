@@ -75,6 +75,7 @@ def loopmode_cvpj(cvpjdata, wavdata):
 
 class input_cvpj_r(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'caustic'
     def getname(self): return 'Caustic 3'
     def gettype(self): return 'mi'

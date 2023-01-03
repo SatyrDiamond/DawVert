@@ -17,6 +17,7 @@ else: xmodits_exists = True
 
 class input_it(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'it'
     def getname(self): return 'Impulse Tracker'
     def gettype(self): return 'm'

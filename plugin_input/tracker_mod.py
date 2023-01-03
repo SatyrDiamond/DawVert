@@ -102,6 +102,7 @@ def parse_song(file_stream):
 
 class input_mod(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mod'
     def getname(self): return 'Protracker Module'
     def gettype(self): return 'm'

@@ -6,6 +6,7 @@ import json
 
 class output_cvpj(plugin_output.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'output'
     def getname(self): return 'DEBUG'
     def getshortname(self): return 'cvpj_m'
     def gettype(self): return 'm'

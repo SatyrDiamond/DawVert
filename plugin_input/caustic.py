@@ -121,7 +121,8 @@ class input_cvpj_r(plugin_input.base):
             cvpj_inst["enabled"] = 1
             cvpj_inst["instdata"] = {}
             cvpj_instdata = cvpj_inst["instdata"]
-            cvpj_inst["name"] = machine['name']
+            if 'name' in machine: cvpj_inst["name"] = machine['name']
+            else: cvpj_inst["name"] = machine['name']
             cvpj_inst["color"] = caustic_instcolors[machine['id']]
             cvpj_inst["pan"] = 0.0
             cvpj_inst["vol"] = 1.0

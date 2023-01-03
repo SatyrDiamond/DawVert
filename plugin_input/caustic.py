@@ -147,7 +147,8 @@ class input_cvpj_r(plugin_input.base):
                     wave_path = samplefolder + machid + '_PCMSynth_0.wav'
                     loopdata = None
                     if singlewav['mode'] != 0 and singlewav['mode'] != 1: loopdata = {'loop':[singlewav['start'], singlewav['end']]}
-                    audio_wav.generate(wave_path, singlewav['samp_data'], singlewav['samp_ch'], singlewav['samp_hz'], 16, loopdata)
+                    if singlewav['samp_ch'] != 0:
+                        audio_wav.generate(wave_path, singlewav['samp_data'], singlewav['samp_ch'], singlewav['samp_hz'], 16, loopdata)
 
                     middlenote += singlewav['key_root']-60
 

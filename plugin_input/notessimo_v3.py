@@ -351,6 +351,7 @@ def parse_songs(notess_songs):
  
 class input_notessimo_v3(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'notessimo_v3'
     def getname(self): return 'Notessimo V3'
     def gettype(self): return 'mi'

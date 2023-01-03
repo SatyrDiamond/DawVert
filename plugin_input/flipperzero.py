@@ -7,6 +7,7 @@ import os.path
 
 class input_fmf(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'flipper'
     def getname(self): return 'Flipper Music Format'
     def gettype(self): return 'f'

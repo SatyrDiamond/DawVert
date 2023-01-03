@@ -12,6 +12,7 @@ from functions import placements
 
 class input_s3m(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 's3m'
     def getname(self): return 'Scream Tracker 3 Module'
     def gettype(self): return 'm'

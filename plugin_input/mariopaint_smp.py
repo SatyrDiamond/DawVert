@@ -111,6 +111,7 @@ def makenote(n_pos, notes, vol, notesize):
 
 class input_mariopaint_smp(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mariopaint_smp'
     def getname(self): return 'Super Mario Paint'
     def gettype(self): return 'm'

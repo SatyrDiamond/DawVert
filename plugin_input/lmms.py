@@ -565,6 +565,7 @@ def lmms_decode_tracks(trksX):
 
 class input_lmms(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'lmms'
     def getname(self): return 'LMMS'
     def gettype(self): return 'f'

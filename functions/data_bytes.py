@@ -45,6 +45,40 @@ def mono2stereo(leftdata, rightdata, samplebytes):
 
 # ----- RIFF -----
 
+def riff_read_debug_big(riffbytebuffer, offset):
+	if isinstance(riffbytebuffer, (bytes, bytearray)) == True:
+		riffbytebuffer = bytearray2BytesIO(riffbytebuffer)
+	riffobjects = []
+	riffbytebuffer.seek(0,2)
+	filesize = riffbytebuffer.tell()
+	riffbytebuffer.seek(offset)
+	while filesize > riffbytebuffer.tell():
+		chunkname = riffbytebuffer.read(4)
+		chunksize = int.from_bytes(riffbytebuffer.read(4), "big")
+		chunkdata = riffbytebuffer.read(chunksize)
+		riffobjects.append([chunkname, chunkdata])
+	print('--------')
+	count = 0
+	for riffobject in riffobjects:
+		print(str(count) + " " + str(riffobject[0])+ " " + str(len(riffobject[1])))
+		count = count + 1
+	print('--------')
+	return riffobjects
+
+def riff_read_big(riffbytebuffer, offset):
+	if isinstance(riffbytebuffer, (bytes, bytearray)) == True:
+		riffbytebuffer = bytearray2BytesIO(riffbytebuffer)
+	riffobjects = []
+	riffbytebuffer.seek(0,2)
+	filesize = riffbytebuffer.tell()
+	riffbytebuffer.seek(offset)
+	while filesize > riffbytebuffer.tell():
+		chunkname = riffbytebuffer.read(4)
+		chunksize = int.from_bytes(riffbytebuffer.read(4), "big")
+		chunkdata = riffbytebuffer.read(chunksize)
+		riffobjects.append([chunkname, chunkdata])
+	return riffobjects
+
 def riff_read_debug(riffbytebuffer, offset):
 	if isinstance(riffbytebuffer, (bytes, bytearray)) == True:
 		riffbytebuffer = bytearray2BytesIO(riffbytebuffer)

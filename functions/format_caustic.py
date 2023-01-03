@@ -429,7 +429,7 @@ def deconstruct_OUTP(bi_rack, Caustic_Main):
         print('[format-caustic] OUTP |', end=' ')
         print(caustic_instnames[machpart['id']], end='')
         if machpart['id'] != 'NULL':
-            bi_rack.read(10)
+            caustic_machines[te_num]['name'] = bi_rack.read(10).decode().rstrip('\x00')
             te_name = bi_rack.read(4)
             te_size = int.from_bytes(bi_rack.read(4), "little")
             print(', '+str(te_size))

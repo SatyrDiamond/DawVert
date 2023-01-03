@@ -393,6 +393,7 @@ def ceol_read():
 
 class input_ceol(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'ceol'
     def getname(self): return 'Bosca Ceoil'
     def gettype(self): return 'mi'

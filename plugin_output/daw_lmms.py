@@ -556,6 +556,7 @@ def lmms_encode_tracks(xmltag, trksJ, trkorderJ):
 
 class output_lmms(plugin_output.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'output'
     def getname(self): return 'LMMS'
     def getshortname(self): return 'lmms'
     def gettype(self): return 'f'

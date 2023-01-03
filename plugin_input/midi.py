@@ -280,6 +280,7 @@ def addtoalltables(contents):
 
 class input_midi(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'midi'
     def getname(self): return 'MIDI'
     def gettype(self): return 'm'

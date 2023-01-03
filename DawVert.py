@@ -43,13 +43,20 @@ pluglist_input_auto = {}
 print('[info] Plugins (Input): ',end='')
 for inputplugin in base_input.plugins:
 	in_class_list = inputplugin()
-	shortname = in_class_list.getshortname()
-	pluglist_input[shortname] = in_class_list
-	if in_class_list.supported_autodetect() == True:
-		pluglist_input_auto[shortname] = in_class_list
-		print(shortname,end='[a] ')
-	else:
-		print(shortname,end=' ')
+	in_validplugin = False
+	try:
+		plugtype = in_class_list.is_dawvert_plugin()
+		if plugtype == 'input':
+			in_validplugin = True
+	except: pass
+	if in_validplugin == True:
+		shortname = in_class_list.getshortname()
+		pluglist_input[shortname] = in_class_list
+		if in_class_list.supported_autodetect() == True:
+			pluglist_input_auto[shortname] = in_class_list
+			print(shortname,end='[a] ')
+		else:
+			print(shortname,end=' ')
 print('')
 
 # --------- Output Plugin: Get List
@@ -57,9 +64,16 @@ pluglist_output = {}
 print('[info] Plugins (Output): ',end='')
 for outputplugin in base_output.plugins:
 	out_class_list = outputplugin()
-	shortname = out_class_list.getshortname()
-	pluglist_output[shortname] = out_class_list
-	print(shortname,end=' ')
+	out_validplugin = False
+	try:
+		plugtype = out_class_list.is_dawvert_plugin()
+		if plugtype == 'output':
+			out_validplugin = True
+	except: pass
+	if out_validplugin == True:
+		shortname = out_class_list.getshortname()
+		pluglist_output[shortname] = out_class_list
+		print(shortname,end=' ')
 print('')
 
 if in_file == None: print('[error] An input file must be specified'); exit()

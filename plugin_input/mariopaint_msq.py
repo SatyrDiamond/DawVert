@@ -98,6 +98,7 @@ def readpart(msq_score_str, n_pos, n_len):
 
 class input_mariopaint_msq(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mariopaint_msq'
     def getname(self): return 'MarioSequencer'
     def gettype(self): return 'm'

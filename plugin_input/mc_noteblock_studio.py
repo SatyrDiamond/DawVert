@@ -30,6 +30,7 @@ def nbs_parsekey(nbs_file, nbs_newformat):
 
 class input_gt_mnbs(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mnbs'
     def getname(self): return 'Minecraft Note Block Studio'
     def gettype(self): return 'm'

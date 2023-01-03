@@ -177,6 +177,7 @@ def parsenotes(bio_data, notelen):
 
 class input_notessimo_v2(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'notessimo_v2'
     def getname(self): return 'Notessimo V2'
     def gettype(self): return 'mi'

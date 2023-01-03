@@ -503,7 +503,7 @@ def setvalue(tagJ, nameJ, xmltagX, nameX, fallbackval, addval, mulval, autodata)
                 autovarX.set('scale_type', 'linear')
                 autovarX.set('id', str(t_ad))
             else:
-                if mulval != None and addval != None: xmltagX.set('value', str((tagJ[nameJ]+addval)*mulval))
+                if mulval != None and addval != None: xmltagX.set(nameX, str((tagJ[nameJ]+addval)*mulval))
                 else: xmltagX.set(nameX, str(tagJ[nameJ]))
 
 def lmms_make_main_auto_track(xmltag, autodata, nameid, autoid):
@@ -604,11 +604,19 @@ class output_lmms(plugin_output.base):
                 lmms_make_main_auto_track(trkcX, main_auto_data[autoname], autoname, out_curnum)
                 auto_curnum += 1
 
-        setvalue(projJ, 'masterpitch', headX, 'masterpitch', 100, 0, 0.01, main_auto_idnumdata)
-        setvalue(projJ, 'mastervol', headX, 'mastervol', 100, 0, 100, main_auto_idnumdata)
+        i_masterpitch = 0
+        i_mastervol = 100
+        i_bpm = 120
+
+        if 'bpm' in projJ: i_bpm = projJ['bpm']
+        if 'masterpitch' in projJ: i_masterpitch = int(projJ['masterpitch']/100)
+        if 'mastervol' in projJ: i_mastervol = projJ['mastervol']
+
+        setvalue(projJ, 'masterpitch', headX, 'masterpitch', i_masterpitch, 0, 0.01, main_auto_idnumdata)
+        setvalue(projJ, 'mastervol', headX, 'mastervol', i_mastervol, 0, 100, main_auto_idnumdata)
         setvalue(projJ, 'timesig_numerator', headX, 'timesig_numerator', 4, None, None, main_auto_idnumdata)
         setvalue(projJ, 'timesig_denominator', headX, 'timesig_denominator', 4, None, None, main_auto_idnumdata)
-        setvalue(projJ, 'bpm', headX, 'bpm', 140, None, None, main_auto_idnumdata)
+        setvalue(projJ, 'bpm', headX, 'bpm', i_bpm, None, None, main_auto_idnumdata)
         
         lmms_encode_tracks(trkcX, trksJ, trkorderJ)
         

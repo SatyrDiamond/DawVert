@@ -18,6 +18,7 @@ def decode_color(color):
 
 class output_cvpjs(plugin_output.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'output'
     def getshortname(self): return 'flp'
     def getname(self): return 'FL Studio'
     def gettype(self): return 'mi'

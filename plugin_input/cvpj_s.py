@@ -7,6 +7,7 @@ import json
 
 class input_cvpj_r(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'cvpj_s'
     def getname(self): return 'cvpj_s'
     def gettype(self): return 's'

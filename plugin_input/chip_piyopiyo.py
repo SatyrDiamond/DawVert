@@ -71,6 +71,7 @@ def parsetrack(placements, trackid, trackname, vol, samplefolder, wavid):
 
 class input_pms(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'piyopiyo'
     def getname(self): return 'PiyoPiyo'
     def gettype(self): return 'f'

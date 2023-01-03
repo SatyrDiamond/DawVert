@@ -113,6 +113,7 @@ def lc_parse_placements(sl_json):
 
 class input_lc(plugin_input.base):
     def __init__(self): pass
+    def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'lovelycomposer'
     def getname(self): return 'Lovely Composer'
     def gettype(self): return 'm'

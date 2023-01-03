@@ -530,11 +530,19 @@ def lmms_make_main_auto_track(xmltag, autodata, nameid, autoid):
         xml_automationpattern.set('name', "")
         xml_automationpattern.set('mute', "0")
         xml_automationpattern.set('prog', "1")
+        prevvalue = 0
         if 'points' in autoplacement:
+            curpoint = 0
             for point in autoplacement['points']:
+                if 'type' in point and curpoint != 0:
+                    xml_time = ET.SubElement(xml_automationpattern, "time")
+                    xml_time.set('value', str(prevvalue))
+                    xml_time.set('pos', str(int(point['position']*12)-1))
                 xml_time = ET.SubElement(xml_automationpattern, "time")
                 xml_time.set('value', str(point['value']))
                 xml_time.set('pos', str(int(point['position']*12)))
+                prevvalue = point['value']
+                curpoint += 1
         if autoid != None:
             xml_object = ET.SubElement(xml_automationpattern, "object")
             xml_object.set('id', str(autoid))

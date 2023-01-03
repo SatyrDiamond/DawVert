@@ -126,8 +126,11 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				vst_inst.m8bp_addvalue(m8p_params, "decay", 0.0)
 				
 				duty = 2
-				if fsd_data['wave'] == 'square': duty = 2
-				if 'duty' in fsd_data: duty = fsd_data['duty']
+				if 'duty' in fsd_data: 
+					if fsd_data['duty'] == 0: duty = 2
+					if fsd_data['duty'] == 1: duty = 1
+					if fsd_data['duty'] == 2: duty = 0
+				else: duty = 2
 				if 'type' in fsd_data:
 					if fsd_data['type'] == '1bit_short': duty = 0
 					if fsd_data['type'] == '4bit': duty = 1

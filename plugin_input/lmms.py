@@ -224,11 +224,10 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
         elif pluginname == "OPL2":
             cvpj_l_inst['plugin'] = "opl2"
             cvpj_l_plugindata['op1'] = {}
-            cvpj_l_plugindata['op1']['envelope'] = {}
-            cvpj_l_plugindata['op1']['envelope']['attack'] = int(xml_plugin.get('op1_a'))
-            cvpj_l_plugindata['op1']['envelope']['decay'] = int(xml_plugin.get('op1_d'))
-            cvpj_l_plugindata['op1']['envelope']['release'] = int(xml_plugin.get('op1_r'))
-            cvpj_l_plugindata['op1']['envelope']['sustain'] = int(xml_plugin.get('op1_s'))
+            cvpj_l_plugindata['op1']['env_attack'] = int(xml_plugin.get('op1_a'))
+            cvpj_l_plugindata['op1']['env_decay'] = int(xml_plugin.get('op1_d'))
+            cvpj_l_plugindata['op1']['env_release'] = int(xml_plugin.get('op1_r'))
+            cvpj_l_plugindata['op1']['env_sustain'] = int(xml_plugin.get('op1_s'))
             cvpj_l_plugindata['op1']['freqmul'] = int(xml_plugin.get('op1_mul'))
             cvpj_l_plugindata['op1']['ksr'] = int(xml_plugin.get('op1_ksr'))
             cvpj_l_plugindata['op1']['level'] = int(xml_plugin.get('op1_lvl'))
@@ -239,11 +238,10 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
             cvpj_l_plugindata['op1']['waveform'] = int(xml_plugin.get('op1_waveform'))
 
             cvpj_l_plugindata['op2'] = {}
-            cvpj_l_plugindata['op2']['envelope'] = {}
-            cvpj_l_plugindata['op2']['envelope']['attack'] = int(xml_plugin.get('op2_a'))
-            cvpj_l_plugindata['op2']['envelope']['decay'] = int(xml_plugin.get('op2_d'))
-            cvpj_l_plugindata['op2']['envelope']['release'] = int(xml_plugin.get('op2_r'))
-            cvpj_l_plugindata['op2']['envelope']['sustain'] = int(xml_plugin.get('op2_s'))
+            cvpj_l_plugindata['op2']['env_attack'] = int(xml_plugin.get('op2_a'))
+            cvpj_l_plugindata['op2']['env_decay'] = int(xml_plugin.get('op2_d'))
+            cvpj_l_plugindata['op2']['env_release'] = int(xml_plugin.get('op2_r'))
+            cvpj_l_plugindata['op2']['env_sustain'] = int(xml_plugin.get('op2_s'))
             cvpj_l_plugindata['op2']['freqmul'] = int(xml_plugin.get('op2_mul'))
             cvpj_l_plugindata['op2']['ksr'] = int(xml_plugin.get('op2_ksr'))
             cvpj_l_plugindata['op2']['level'] = int(xml_plugin.get('op2_lvl'))

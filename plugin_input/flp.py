@@ -77,15 +77,17 @@ class input_flp(plugin_input.base):
                 if channeldata['type'] == 0:
                     singleinstdata['instdata']['plugin'] = "sampler"
                     singleinstdata['instdata']['plugindata'] = {}
-                    if 'samplefilename' in channeldata:
-                        singleinstdata['instdata']['plugindata']['file'] = channeldata['samplefilename']
-                    else:
-                        singleinstdata['instdata']['plugindata']['file'] = ''
+                    if 'samplefilename' in channeldata: singleinstdata['instdata']['plugindata']['file'] = channeldata['samplefilename']
+                    else: singleinstdata['instdata']['plugindata']['file'] = ''
                 if channeldata['type'] == 2:
                     singleinstdata['instdata']['plugin'] = "native-fl"
                     singleinstdata['instdata']['plugindata'] = {}
                     if 'plugin' in channeldata: singleinstdata['instdata']['plugindata']['name'] = channeldata['plugin']
                     if 'pluginparams' in channeldata: singleinstdata['instdata']['plugindata']['data'] = base64.b64encode(channeldata['pluginparams']).decode('ascii')
+
+                singleinstdata['poly'] = {}
+                singleinstdata['poly']['max'] = channeldata['polymax']
+
                 instrumentsJ['FLInst' + str(instrument)] = singleinstdata
                 instrumentsorder.append('FLInst' + str(instrument))
                 id_inst[str(instrument)] = 'FLInst' + str(instrument)

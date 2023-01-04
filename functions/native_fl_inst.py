@@ -227,9 +227,11 @@ def convert(instdata):
 		params_vital.setvalue('filter_fx_on', 1)
 		params_vital.set_modulation(1, 'env_2', 'filter_fx_cutoff', svf_env*0.6, 0, 0, 0, 0)
 
-		vitaldata = params_vital.getdata()
-		list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))
-
 		# ------------ Chorus ------------
+		params_vital.setvalue('chorus_mod_depth', 0.35)
+		params_vital.setvalue('chorus_delay_1', -9.5)
+		params_vital.setvalue('chorus_delay_2', -9.0)
 		if chorus_on == 1: params_vital.setvalue('chorus_on', 1.0)
 		
+		vitaldata = params_vital.getdata()
+		list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))

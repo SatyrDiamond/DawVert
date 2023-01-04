@@ -171,6 +171,11 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
 				list_vst.replace_data(instdata, 'Magical 8bit Plug 2', params_vst.make_vc2_xml(m8p_root))
 
+			# -------------------- opn2 > OPNplug --------------------
+			elif pluginname == 'opn2':
+				xmlout = vst_inst.opnplug_convert(instdata['plugindata'])
+				list_vst.replace_data(instdata, 'OPNplug', params_vst.make_vc2_xml(xmlout))
+
 			# -------------------- zynaddsubfx > vst2 (Zyn-Fusion) - from lmms --------------------
 			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
 				zasfxdata = instdata['plugindata']['data']

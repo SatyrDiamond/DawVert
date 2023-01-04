@@ -197,26 +197,25 @@ class input_cvpj_r(plugin_input.base):
             if dmfi_mode == 1:
                 dmf_inst['fm'] = True
                 fmdata = {}
-                fmdata['ALG'] = int.from_bytes(bio_dmf.read(1), "little")
-                fmdata['FB'] = int.from_bytes(bio_dmf.read(1), "little")
-                fmdata['LFO'] = int.from_bytes(bio_dmf.read(1), "little")
-                fmdata['LFO2'] = int.from_bytes(bio_dmf.read(1), "little")
-                fmdata['ops'] = []
-                for _ in range(4):
+                fmdata['algorithm'] = int.from_bytes(bio_dmf.read(1), "little")
+                fmdata['feedback'] = int.from_bytes(bio_dmf.read(1), "little")
+                fmdata['lfo'] = int.from_bytes(bio_dmf.read(1), "little") #(FMS on YM2612, PMS on YM2151)
+                fmdata['lfo2'] = int.from_bytes(bio_dmf.read(1), "little") #(AMS on YM2612, AMS on YM2151)
+                for opnum in range(4):
                     operator_param = {}
-                    operator_param['AM'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['AR'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['DR'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['MULT'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['RR'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['SL'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['TL'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['DT2'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['RS'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['DT'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['D2R'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['SSGMODE'] = int.from_bytes(bio_dmf.read(1), "little")
-                    fmdata['ops'].append(operator_param)
+                    operator_param['am'] = int.from_bytes(bio_dmf.read(1), "little")
+                    operator_param['env_attack'] = int.from_bytes(bio_dmf.read(1), "little")
+                    operator_param['env_decay'] = int.from_bytes(bio_dmf.read(1), "little")
+                    operator_param['freqmul'] = int.from_bytes(bio_dmf.read(1), "little")
+                    operator_param['env_release'] = int.from_bytes(bio_dmf.read(1), "little")
+                    operator_param['env_sustain'] = int.from_bytes(bio_dmf.read(1), "little")
+                    operator_param['level'] = int.from_bytes(bio_dmf.read(1), "little")
+                    operator_param['detune2'] = int.from_bytes(bio_dmf.read(1), "little")
+                    operator_param['ratescale'] = int.from_bytes(bio_dmf.read(1), "little")
+                    operator_param['detune'] = int.from_bytes(bio_dmf.read(1), "little")
+                    operator_param['env_decay2'] = int.from_bytes(bio_dmf.read(1), "little")
+                    operator_param['ssgmode'] = int.from_bytes(bio_dmf.read(1), "little")
+                    fmdata['op'+str(opnum+1)] = operator_param
                 dmf_inst['fmdata'] = fmdata
             else:
                 dmf_inst['fm'] = False
@@ -238,9 +237,9 @@ class input_cvpj_r(plugin_input.base):
                     c64data['pulse width'] = int.from_bytes(bio_dmf.read(1), "little")
                     c64data['ringmod'] = int.from_bytes(bio_dmf.read(1), "little")
                     c64data['syncmod'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['tofilter'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['volumemacrotofiltercutoff'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['usefiltervaluesfrominstrument'] = int.from_bytes(bio_dmf.read(1), "little")
+                    c64data['to_filter'] = int.from_bytes(bio_dmf.read(1), "little")
+                    c64data['volume_macro_to_filter_cutoff'] = int.from_bytes(bio_dmf.read(1), "little")
+                    c64data['use_filter_values_from_instrument'] = int.from_bytes(bio_dmf.read(1), "little")
                     c64data['filter_resonance'] = int.from_bytes(bio_dmf.read(1), "little")
                     c64data['filter_cutoff'] = int.from_bytes(bio_dmf.read(1), "little")
                     c64data['filter_highpass'] = int.from_bytes(bio_dmf.read(1), "little")
@@ -304,8 +303,8 @@ class input_cvpj_r(plugin_input.base):
                     else: output_note = (r_note + r_oct*12)-60
 
                     if output_note != None and output_note != 'Off':
-                        if s_chantype == 'square': 
-                            output_note += 36
+                        if s_chantype == 'square':  output_note += 36
+                        if s_chantype == 'fm': output_note += 12
 
                     if r_inst != -1 and output_note != None: output_inst = r_inst
 
@@ -365,20 +364,21 @@ class input_cvpj_r(plugin_input.base):
                 cvpj_inst["color"] = chiptypecolors[insttype]
             cvpj_inst["instdata"] = {}
             cvpj_inst["instdata"]["plugindata"] = {}
-            plugdata = cvpj_inst["instdata"]["plugindata"]
             if insttype == 'square' or insttype == 'noise':
                 cvpj_inst["instdata"]["plugin"] = 'retro'
-                plugdata['wave'] = insttype
+                cvpj_inst["instdata"]["plugindata"]['wave'] = insttype
                 if 'env_volume' in dmf_instdata:
-                    plugdata['env_vol'] = {}
+                    cvpj_inst["instdata"]["plugindata"]['env_vol'] = {}
                     valuet = []
                     for item in dmf_instdata['env_volume']['values']: valuet.append(item)
-                    plugdata['env_vol']['values'] = valuet
+                    cvpj_inst["instdata"]["plugindata"]['env_vol']['values'] = valuet
                     if dmf_instdata['env_volume']['looppos'] != -1:
-                        plugdata['env_vol']['loop'] = dmf_instdata['env_volume']['looppos']
+                        cvpj_inst["instdata"]["plugindata"]['env_vol']['loop'] = dmf_instdata['env_volume']['looppos']
+            elif insttype == 'fm':
+                cvpj_inst["instdata"]["plugin"] = 'opn2'
+                cvpj_inst["instdata"]["plugindata"] = dmf_instdata['fmdata']
             else: 
                 cvpj_inst["instdata"]["plugin"] = 'none'
-                cvpj_inst["instdata"]["plugindata"] = {}
             
             cvpj_l_instruments[cvpj_instid] = cvpj_inst
             cvpj_l_instrumentsorder.append(cvpj_instid)

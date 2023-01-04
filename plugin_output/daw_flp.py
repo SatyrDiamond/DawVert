@@ -109,6 +109,9 @@ class output_cvpjs(plugin_output.base):
                             T_Main['middlenote'] = CVPJ_Inst['notefx']['pitch']['semitones']+60
                 if 'pitch' in CVPJ_Inst: T_Main['pitch'] = CVPJ_Inst['pitch']
                 if 'usemasterpitch' in CVPJ_Inst: T_Main['main_pitch'] = CVPJ_Inst['usemasterpitch']
+            if 'poly' in CVPJ_Data: 
+                if 'max' in CVPJ_Data['poly']: 
+                    T_Main['polymax'] = decode_color(CVPJ_Data['poly']['max'])
             if 'color' in CVPJ_Data: 
                 T_Main['color'] = decode_color(CVPJ_Data['color'])
 

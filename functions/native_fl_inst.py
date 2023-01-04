@@ -218,14 +218,14 @@ def convert(instdata):
 		params_vital.setvalue('env_2_sustain', svf_sus)
 		params_vital.setvalue_timed('env_2_release', simsynth_2time(svf_rel)*7)
 
-		outfilter = 80
-		outfilter += (svf_cut-0.5)*10
+		outfilter = 100
+		outfilter += (svf_cut-0.5)*40
 		outfilter += (svf_kb-0.5)*10
 
 		params_vital.setvalue('filter_fx_resonance', svf_emph*0.8)
 		params_vital.setvalue('filter_fx_cutoff', outfilter)
 		params_vital.setvalue('filter_fx_on', 1)
-		params_vital.set_modulation(1, 'env_2', 'filter_fx_cutoff', svf_env*0.34, 0, 0, 0, 0)
+		params_vital.set_modulation(1, 'env_2', 'filter_fx_cutoff', svf_env*0.6, 0, 0, 0, 0)
 
 		vitaldata = params_vital.getdata()
 		list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))

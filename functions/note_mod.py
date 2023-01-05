@@ -42,27 +42,29 @@ def sortnotes(notelist):
 			new_notelist.append(note)
 	return new_notelist
 
-def notemod_conv(notemod):
-	#print(notemod)
-	noteautopitch_exists = False
-	noteslide_exists = False
-	if 'auto' in notemod:
-		if 'pitch' in notemod['auto']:
-			noteautopitch_exists = True
-	if 'slide' in notemod: noteslide_exists = True
+def notemod_conv(noteJ):
+	print(noteJ)
+	if 'notemod' in noteJ:
+		notemod = noteJ['notemod']
 
-	if noteautopitch_exists == False and noteslide_exists == True:
-		slidenumlist = {}
-		slidenumlist[0] = {'value': 0, 'type':'normal'}
-		curval = 0
-		for slidepoint in notemod['slide']:
-			print(slidepoint)
-			slidenumlist[slidepoint['position']] = {'value': curval, 'type':'normal'}
-			if slidepoint['duration'] == 0: slidenumlist[slidepoint['position']] = {'value': slidepoint['key'], 'type':'instant'}
-			else: slidenumlist[slidepoint['position']+slidepoint['duration']] = {'value': slidepoint['key'], 'type':'normal'}
-			curval = slidepoint['key']
-		autolist = []
-		for slidepart in slidenumlist: autolist.append({"position": slidepart, "value": slidenumlist[slidepart]['value'], "type": slidenumlist[slidepart]['type']})
-		notemod['auto'] = {}
-		notemod['auto']['pitch'] = autolist
+		noteautopitch_exists = False
+		noteslide_exists = False
+		if 'auto' in notemod:
+			if 'pitch' in notemod['auto']:
+				noteautopitch_exists = True
+		if 'slide' in notemod: noteslide_exists = True
 
+		if noteautopitch_exists == False and noteslide_exists == True:
+			slidenumlist = {}
+			slidenumlist[0] = {'value': 0, 'type':'normal'}
+			curval = 0
+			for slidepoint in notemod['slide']:
+				print(slidepoint)
+				slidenumlist[slidepoint['position']] = {'value': curval, 'type':'normal'}
+				if slidepoint['duration'] == 0: slidenumlist[slidepoint['position']] = {'value': slidepoint['key'], 'type':'instant'}
+				else: slidenumlist[slidepoint['position']+slidepoint['duration']] = {'value': slidepoint['key'], 'type':'normal'}
+				curval = slidepoint['key']
+			autolist = []
+			for slidepart in slidenumlist: autolist.append({"position": slidepart, "value": slidenumlist[slidepart]['value'], "type": slidenumlist[slidepart]['type']})
+			notemod['auto'] = {}
+			notemod['auto']['pitch'] = autolist

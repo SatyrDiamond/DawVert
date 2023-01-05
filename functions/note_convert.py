@@ -75,9 +75,6 @@ def timednotes2notelistplacement_parse_timednotes(TimedNotesTable, startstr):
     #ActiveNotes: Position,Duration,Note,ExtraVars
     timednotes2notelistplacement_placement_start()
     for TimedNote in TimedNotesTable:
-        print(TimedNote)
-        for ActiveNote in ActiveNotes:
-            print(ActiveNote)
         TimedNoteLineSplit = TimedNote.split(';')
         TimedNoteCommand = TimedNoteLineSplit[0]
         TimedNoteValues = TimedNoteLineSplit[1].split(',')

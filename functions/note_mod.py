@@ -49,6 +49,7 @@ def notemod_conv(notemod):
 	if 'auto' in notemod:
 		if 'pitch' in notemod['auto']:
 			noteautopitch_exists = True
+	if 'slide' in notemod: noteslide_exists = True
 
 	if noteautopitch_exists == False and noteslide_exists == True:
 		slidenumlist = {}

@@ -111,7 +111,7 @@ class output_cvpjs(plugin_output.base):
                 if 'usemasterpitch' in CVPJ_Inst: T_Main['main_pitch'] = CVPJ_Inst['usemasterpitch']
             if 'poly' in CVPJ_Data: 
                 if 'max' in CVPJ_Data['poly']: 
-                    T_Main['polymax'] = decode_color(CVPJ_Data['poly']['max'])
+                    T_Main['polymax'] = CVPJ_Data['poly']['max']
             if 'color' in CVPJ_Data: 
                 T_Main['color'] = decode_color(CVPJ_Data['color'])
 
@@ -154,22 +154,41 @@ class output_cvpjs(plugin_output.base):
             if 'notelist' in T_Pattern:
                 T_Notelist = T_Pattern['notelist']
                 FL_Pattern['notes'] = []
+                slidenotes = []
                 for note in T_Notelist:
                     if note['instrument'] in inst_id:
                         #print(note)
                         FL_Note = {}
                         FL_Note['rack'] = int(inst_id[note['instrument']])
-                        FL_Note['key'] = int(note['key'])+60
-                        FL_Note['pos'] = int((note['position']*ppq)/4)
-                        FL_Note['dur'] = int((note['duration']*ppq)/4)
+                        M_FL_Note_Key = int(note['key'])+60
+                        M_FL_Note_Pos = int((note['position']*ppq)/4)
+                        M_FL_Note_Dur = int((note['duration']*ppq)/4)
                         if 'finepitch' in note: FL_Note['finep'] = int((note['finepitch']/10)+120)
                         if 'release' in note: FL_Note['rel'] = int(clamp(note['release'],0,1)*128)
                         if 'vol' in note: FL_Note['velocity'] = int(clamp(note['vol'],0,1)*100)
                         if 'cutoff' in note: FL_Note['mod_x'] = int(clamp(note['cutoff'],0,1)*255)
                         if 'reso' in note: FL_Note['mod_y'] = int(clamp(note['reso'],0,1)*255)
                         if 'pan' in note: FL_Note['pan'] = int((clamp(float(note['pan']),-1,1)*64)+64)
-
+                        FL_Note['pos'] = M_FL_Note_Pos
+                        FL_Note['dur'] = M_FL_Note_Dur
+                        FL_Note['key'] = M_FL_Note_Key
                         FL_Pattern['notes'].append(FL_Note)
+                        if 'notemod' in note: 
+                            if 'slide' in note['notemod']: 
+                                for slidenote in note['notemod']['slide']:
+                                    FL_Note = {}
+                                    FL_Note['rack'] = int(inst_id[note['instrument']])
+                                    FL_Note['key'] = int(slidenote['key'] - note['key'])+60
+                                    FL_Note['pos'] = M_FL_Note_Pos + int((slidenote['position']*ppq)/4)
+                                    FL_Note['dur'] = int((slidenote['duration']*ppq)/4)
+                                    FL_Note['flags'] = 16392
+                                    if 'finepitch' in slidenote: FL_Note['finep'] = int((slidenote['finepitch']/10)+120)
+                                    if 'release' in slidenote: FL_Note['rel'] = int(clamp(slidenote['release'],0,1)*128)
+                                    if 'vol' in slidenote: FL_Note['velocity'] = int(clamp(slidenote['vol'],0,1)*100)
+                                    if 'cutoff' in slidenote: FL_Note['mod_x'] = int(clamp(slidenote['cutoff'],0,1)*255)
+                                    if 'reso' in slidenote: FL_Note['mod_y'] = int(clamp(slidenote['reso'],0,1)*255)
+                                    if 'pan' in slidenote: FL_Note['pan'] = int((clamp(float(slidenote['pan']),-1,1)*64)+64)
+                                    FL_Pattern['notes'].append(FL_Note)
 
         if len(FL_Patterns) > 999:
             print('[error] FLP patterns over 999 is unsupported.')

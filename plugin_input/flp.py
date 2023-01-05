@@ -7,6 +7,7 @@ import math
 import base64
 import struct
 from functions import format_flp
+from functions import note_mod
 
 class input_flp(plugin_input.base):
     def __init__(self): pass
@@ -112,12 +113,12 @@ class input_flp(plugin_input.base):
                     noteJ['vol'] = flnote['velocity']/100
                     noteJ['cutoff'] = flnote['mod_x']/255
                     noteJ['reso'] = flnote['mod_y']/255
+                    noteJ['notemod'] = {}
                     is_slide = bool(flnote['flags'] & 0b000000000001000)
 
                     if is_slide == True: 
                         slidenotes.append(noteJ)
                     else: 
-                        noteJ['notemod'] = {}
                         noteJ['notemod']['slide'] = []
                         notesJ.append(noteJ)
                 for slidenote in slidenotes:
@@ -133,6 +134,8 @@ class input_flp(plugin_input.base):
                             slidenote['position'] = sn_pos - nn_pos 
                             slidenote['key'] -= noteJ['key'] 
                             noteJ['notemod']['slide'].append(slidenote)
+                note_mod.notemod_conv(noteJ['notemod'])
+
 
                 notelistindexJ['FLPat' + str(pattern)]['notelist'] = notesJ
                 id_pat[str(pattern)] = 'FLPat' + str(pattern)

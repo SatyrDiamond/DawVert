@@ -189,6 +189,7 @@ class output_cvpjs(plugin_output.base):
                                     if 'reso' in slidenote: FL_Note['mod_y'] = int(clamp(slidenote['reso'],0,1)*255)
                                     if 'pan' in slidenote: FL_Note['pan'] = int((clamp(float(slidenote['pan']),-1,1)*64)+64)
                                     FL_Pattern['notes'].append(FL_Note)
+                            note_mod.notemod_conv(note['notemod'])
 
         if len(FL_Patterns) > 999:
             print('[error] FLP patterns over 999 is unsupported.')

@@ -178,7 +178,7 @@ class output_cvpjs(plugin_output.base):
                                 for slidenote in note['notemod']['slide']:
                                     FL_Note = {}
                                     FL_Note['rack'] = int(inst_id[note['instrument']])
-                                    FL_Note['key'] = int(slidenote['key'] - note['key'])+60
+                                    FL_Note['key'] = int(slidenote['key'] + note['key'])+60
                                     FL_Note['pos'] = M_FL_Note_Pos + int((slidenote['position']*ppq)/4)
                                     FL_Note['dur'] = int((slidenote['duration']*ppq)/4)
                                     FL_Note['flags'] = 16392

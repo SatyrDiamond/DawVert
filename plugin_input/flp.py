@@ -98,6 +98,7 @@ class input_flp(plugin_input.base):
             if 'FLPat' + str(pattern) not in notelistindexJ:
                 notelistindexJ['FLPat' + str(pattern)] = {}
             if 'notes' in patterndata:
+                slidenotes = []
                 for flnote in patterndata['notes']:
                     noteJ = {}
                     noteJ['position'] = (flnote['pos']/ppq)*4
@@ -111,7 +112,29 @@ class input_flp(plugin_input.base):
                     noteJ['vol'] = flnote['velocity']/100
                     noteJ['cutoff'] = flnote['mod_x']/255
                     noteJ['reso'] = flnote['mod_y']/255
-                    notesJ.append(noteJ)
+                    is_slide = bool(flnote['flags'] & 0b000000000001000)
+
+                    print(flnote['flags'])
+                    if is_slide == True: 
+                        slidenotes.append(noteJ)
+                    else: 
+                        noteJ['notemod'] = {}
+                        noteJ['notemod']['slide'] = []
+                        notesJ.append(noteJ)
+                for slidenote in slidenotes:
+                    sn_pos = slidenote['position']
+                    sn_dur = slidenote['duration']
+                    sn_inst = slidenote['instrument']
+                    for noteJ in notesJ:
+                        nn_pos = noteJ['position']
+                        nn_dur = noteJ['duration']
+                        nn_inst = noteJ['instrument']
+                        if nn_pos <= sn_pos <= nn_pos+nn_dur and sn_inst == nn_inst:
+                            del slidenote['instrument']
+                            slidenote['position'] = sn_pos - nn_pos 
+                            slidenote['key'] += noteJ['key'] 
+                            noteJ['notemod']['slide'].append(slidenote)
+
                 notelistindexJ['FLPat' + str(pattern)]['notelist'] = notesJ
                 id_pat[str(pattern)] = 'FLPat' + str(pattern)
             if 'color' in patterndata:

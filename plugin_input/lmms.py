@@ -307,10 +307,13 @@ def lmms_decode_nlpattern(notesX):
             if len(noteX_auto.findall('detuning')) != 0: 
                 noteX_detuning = noteX_auto.findall('detuning')[0]
                 if len(noteX_detuning.findall('time')) != 0: 
+                    prognum = int(noteX_detuning.get('prog'))
                     for pointX in noteX_detuning.findall('time'):
                         pointJ = {}
                         pointJ['position'] = float(pointX.get('pos')) / 12
                         pointJ['value'] = float(pointX.get('value'))
+                        if prognum == 0: pointJ['type'] = 'instant'
+                        else: pointJ['type'] = 'normal'
                         noteJ['notemod']['auto']['pitch'].append(pointJ)
         printcountpat += 1
         notelist.append(noteJ)

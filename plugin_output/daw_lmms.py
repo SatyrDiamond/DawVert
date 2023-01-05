@@ -260,6 +260,7 @@ def lmms_encode_notelist(xmltag, json_notelist):
                     xml_detuning.set('mute', "0")
                     xml_detuning.set('prog', "1")
                     parse_auto(xml_detuning, json_note['notemod']['auto']['pitch'])
+                    note_mod.notemod_conv(json_note['notemod'])
 
         printcountpat += 1
     print('['+str(printcountpat), end='] ')

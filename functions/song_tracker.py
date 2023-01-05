@@ -89,6 +89,8 @@ def convertchannel2timednotes(patterntable_channel, startinststr):
                 if 'firstrow' in notecommand[0]:
                     if first_seperate == 1: output_channel.append('seperate;')
                     if first_seperate == 0: first_seperate = 1
+                if 'vol' in notecommand[1][2]:
+                    output_channel.append('change_vol;' + str(notecommand[1][2]['vol']))
             elif notecommand[1][0] == 'Fade' or notecommand[1][0] == 'Cut' or notecommand[1][0] == 'Off':
                 if note_held == 1:
                     output_channel.append('note_off;' + str(current_key))

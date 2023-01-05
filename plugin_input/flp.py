@@ -114,7 +114,6 @@ class input_flp(plugin_input.base):
                     noteJ['reso'] = flnote['mod_y']/255
                     is_slide = bool(flnote['flags'] & 0b000000000001000)
 
-                    print(flnote['flags'])
                     if is_slide == True: 
                         slidenotes.append(noteJ)
                     else: 
@@ -132,7 +131,7 @@ class input_flp(plugin_input.base):
                         if nn_pos <= sn_pos <= nn_pos+nn_dur and sn_inst == nn_inst:
                             del slidenote['instrument']
                             slidenote['position'] = sn_pos - nn_pos 
-                            slidenote['key'] += noteJ['key'] 
+                            slidenote['key'] -= noteJ['key'] 
                             noteJ['notemod']['slide'].append(slidenote)
 
                 notelistindexJ['FLPat' + str(pattern)]['notelist'] = notesJ

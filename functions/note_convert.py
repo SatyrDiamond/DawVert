@@ -24,11 +24,9 @@ def timednotes2notelist_note_on(key, velocity, program, extra):
     ActiveNotes.insert(1, [position_notelist,0,int(key),velocity, program, extra.copy()])
 
 def timednotes2notelist_change_vol(volume):
-    print()
     global ActiveNotes
     LenActiveNotes = len(ActiveNotes)
     for notenum in range(LenActiveNotes):
-        print('V', notenum, ActiveNotes[notenum])
         if 'slide' not in ActiveNotes[notenum][5]: ActiveNotes[notenum][5]['slide'] = []
         ActiveNotes[notenum][5]['slide'].append({'position':ActiveNotes[notenum][1], 'duration':0.25, 'key':0, 'vol':volume})
         #NewActiveNotes.append(ActiveNote)

@@ -130,7 +130,6 @@ class input_flp(plugin_input.base):
                         nn_dur = noteJ['duration']
                         nn_inst = noteJ['instrument']
                         if nn_pos <= sn_pos <= nn_pos+nn_dur and sn_inst == nn_inst:
-                            del slidenote['instrument']
                             slidenote['position'] = sn_pos - nn_pos 
                             slidenote['key'] -= noteJ['key'] 
                             noteJ['notemod']['slide'].append(slidenote)

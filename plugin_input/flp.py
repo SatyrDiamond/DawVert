@@ -134,8 +134,8 @@ class input_flp(plugin_input.base):
                             slidenote['position'] = sn_pos - nn_pos 
                             slidenote['key'] -= noteJ['key'] 
                             noteJ['notemod']['slide'].append(slidenote)
-                note_mod.notemod_conv(noteJ['notemod'])
-
+                for noteJ in notesJ:
+                    note_mod.notemod_conv(noteJ)
 
                 notelistindexJ['FLPat' + str(pattern)]['notelist'] = notesJ
                 id_pat[str(pattern)] = 'FLPat' + str(pattern)

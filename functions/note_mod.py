@@ -43,7 +43,6 @@ def sortnotes(notelist):
 	return new_notelist
 
 def notemod_conv(noteJ):
-	print(noteJ)
 	if 'notemod' in noteJ:
 		notemod = noteJ['notemod']
 
@@ -59,7 +58,6 @@ def notemod_conv(noteJ):
 			slidenumlist[0] = {'value': 0, 'type':'normal'}
 			curval = 0
 			for slidepoint in notemod['slide']:
-				print(slidepoint)
 				slidenumlist[slidepoint['position']] = {'value': curval, 'type':'normal'}
 				if slidepoint['duration'] == 0: slidenumlist[slidepoint['position']] = {'value': slidepoint['key'], 'type':'instant'}
 				else: slidenumlist[slidepoint['position']+slidepoint['duration']] = {'value': slidepoint['key'], 'type':'normal'}

@@ -298,6 +298,20 @@ def lmms_decode_nlpattern(notesX):
         noteJ['pan'] = hundredto1(noteX.get('pan'))
         noteJ['duration'] = float(noteX.get('len')) / 12
         noteJ['vol'] = hundredto1(noteX.get('vol'))
+        noteX_auto = noteX.findall('automationpattern')
+        if len(noteX_auto) != 0: 
+            noteJ['notemod'] = {}
+            noteJ['notemod']['auto'] = {}
+            noteJ['notemod']['auto']['pitch'] = []
+            noteX_auto = noteX.findall('automationpattern')[0]
+            if len(noteX_auto.findall('detuning')) != 0: 
+                noteX_detuning = noteX_auto.findall('detuning')[0]
+                if len(noteX_detuning.findall('time')) != 0: 
+                    for pointX in noteX_detuning.findall('time'):
+                        pointJ = {}
+                        pointJ['position'] = float(pointX.get('pos')) / 12
+                        pointJ['value'] = float(pointX.get('value'))
+                        noteJ['notemod']['auto']['pitch'].append(pointJ)
         printcountpat += 1
         notelist.append(noteJ)
     print('['+str(printcountpat), end='] ')

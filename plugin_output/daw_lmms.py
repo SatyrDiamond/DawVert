@@ -248,6 +248,19 @@ def lmms_encode_notelist(xmltag, json_notelist):
         patX.set('pan', str(pan))
         patX.set('len', str(int(round(duration))))
         patX.set('vol', str(vol))
+        if 'notemod' in json_note:
+            if 'auto' in json_note['notemod']:
+                if 'pitch' in json_note['notemod']['auto']:
+                    xml_automationpattern = ET.SubElement(patX, "automationpattern")
+                    xml_detuning = ET.SubElement(xml_automationpattern, "detuning")
+                    xml_detuning.set('pos', "0")
+                    xml_detuning.set('len', str(int(round(duration))))
+                    xml_detuning.set('tens', "1")
+                    xml_detuning.set('name', "")
+                    xml_detuning.set('mute', "0")
+                    xml_detuning.set('prog', "1")
+                    parse_auto(xml_detuning, json_note['notemod']['auto']['pitch'])
+
         printcountpat += 1
     print('['+str(printcountpat), end='] ')
 def lmms_encode_inst_track(xmltag, trkJ):
@@ -506,6 +519,20 @@ def setvalue(tagJ, nameJ, xmltagX, nameX, fallbackval, addval, mulval, autodata)
                 if mulval != None and addval != None: xmltagX.set(nameX, str((tagJ[nameJ]+addval)*mulval))
                 else: xmltagX.set(nameX, str(tagJ[nameJ]))
 
+def parse_auto(xml_automationpattern, l_points):
+    curpoint = 0
+    for point in l_points:
+        if 'type' in point and curpoint != 0:
+            if point['type'] == 'instant':
+                xml_time = ET.SubElement(xml_automationpattern, "time")
+                xml_time.set('value', str(prevvalue))
+                xml_time.set('pos', str(int(point['position']*12)-1))
+        xml_time = ET.SubElement(xml_automationpattern, "time")
+        xml_time.set('value', str(point['value']))
+        xml_time.set('pos', str(int(point['position']*12)))
+        prevvalue = point['value']
+        curpoint += 1
+
 def lmms_make_main_auto_track(xmltag, autodata, nameid, autoid):
     if nameid in nameid_cvpj_lmms_main:
         out_name = nameid_cvpj_lmms_main[nameid][1]
@@ -532,17 +559,7 @@ def lmms_make_main_auto_track(xmltag, autodata, nameid, autoid):
         xml_automationpattern.set('prog', "1")
         prevvalue = 0
         if 'points' in autoplacement:
-            curpoint = 0
-            for point in autoplacement['points']:
-                if 'type' in point and curpoint != 0:
-                    xml_time = ET.SubElement(xml_automationpattern, "time")
-                    xml_time.set('value', str(prevvalue))
-                    xml_time.set('pos', str(int(point['position']*12)-1))
-                xml_time = ET.SubElement(xml_automationpattern, "time")
-                xml_time.set('value', str(point['value']))
-                xml_time.set('pos', str(int(point['position']*12)))
-                prevvalue = point['value']
-                curpoint += 1
+            parse_auto(xml_automationpattern, autoplacement['points'])
         if autoid != None:
             xml_object = ET.SubElement(xml_automationpattern, "object")
             xml_object.set('id', str(autoid))

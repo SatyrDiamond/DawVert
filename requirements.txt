@@ -3,3 +3,4 @@ numpy
 mido
 lxml
 chardet
+beautifulsoup4

@@ -16,6 +16,14 @@ def tripleoct(x, shape, pw, one, two):
     else: samplepoint = x
     return samplepoint
 
+def resizewave(imputwave):
+    dur_input = len(imputwave)
+    vital_osc_shape = []
+    for num in range(2048): 
+        s_pos = num/2048
+        vital_osc_shape.append(imputwave[math.floor(s_pos*dur_input)])
+    return vital_osc_shape
+
 def create_wave(shape, mul, pw):
     vital_osc_shape = []
     if shape == 'sine': 

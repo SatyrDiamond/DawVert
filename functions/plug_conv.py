@@ -13,6 +13,7 @@ from functions import vst_inst
 from functions import params_vst
 from functions import params_vital
 from functions import native_fl_inst
+from functions import native_jummbox
 
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, dawname, extra_json, nameid):
@@ -25,6 +26,10 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 			# ---------------------------------------- 1 ----------------------------------------
 			if pluginname == 'native-fl':
 				native_fl_inst.convert(instdata)
+
+			# ---------- from jummbox
+			elif pluginname == 'jummbox-single':
+				native_jummbox.convert(instdata)
 
 			# ---------- from general-midi
 			elif pluginname == 'general-midi':

@@ -95,20 +95,18 @@ def f2s(song):
             sd_track = cvpj_trackdata[s_track]
             if 'fxrack_channel' in sd_track:
                 fxrack_channel = sd_track['fxrack_channel']
-                if fxrack_channel not in track_fxslot:
-                    track_fxslot[fxrack_channel] = []
+                if fxrack_channel not in track_fxslot: track_fxslot[fxrack_channel] = []
                 track_fxslot[fxrack_channel].append(s_track)
                 del sd_track['fxrack_channel']
-
 
         fxtrknum = 1
         for fxnum in track_fxslot:
             trkfxdata = track_fxslot[fxnum]
             if fxnum != 0:
-
+                print(trkfxdata)
                 if len(trkfxdata) == 1:
                     trackid = trkfxdata[0]
-                    print('[song-convert] r2a: FX '+str(fxnum)+' effects moved to '+trackid)
+                    print('[song-convert] r2s: FX '+str(fxnum)+' effects moved to '+trackid)
                     if str(fxnum) in cvpj_fxrack:
                         if trackid in cvpj_trackdata:
                             fxi_data = cvpj_fxrack[str(fxnum)]
@@ -121,6 +119,7 @@ def f2s(song):
                             fxc_track = track_data['fxchain']
                             for slot in fxc_fx:
                                 fxc_track.append(slot)
+                                
 
         del cvpj_proj['fxrack']
 

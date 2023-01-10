@@ -553,16 +553,19 @@ def setvalue(tagJ, nameJ, xmltagX, nameX, fallbackval, get_auto_ids, vartype):
     global l_addmul
     addmulvalues = None
     if nameJ in l_addmul[vartype]: addmulvalues = l_addmul[vartype][nameJ]
+    if addmulvalues != None: fallbackval = (fallbackval+addmulvalues[0])*addmulvalues[1]
+
     if nameJ in tagJ:
+        if addmulvalues != None: outvalue = (tagJ[nameJ]+addmulvalues[0])*addmulvalues[1]
+        else: outvalue = tagJ[nameJ]
+
         if nameJ in get_auto_ids:
             t_ad = get_auto_ids[nameJ]
             autovarX = ET.SubElement(xmltagX, nameX)
-            if addmulvalues != None: autovarX.set('value', str((tagJ[nameJ]+addmulvalues[0])*addmulvalues[1]))
-            else: autovarX.set('value', str(tagJ[nameJ]))
+            autovarX.set('value', str(outvalue))
             autovarX.set('scale_type', 'linear')
             autovarX.set('id', str(t_ad))
-        else:
-            xmltagX.set(nameX, str(tagJ[nameJ]))
+        else: xmltagX.set(nameX, str(outvalue))
     else:
         xmltagX.set(nameX, str(fallbackval))
 

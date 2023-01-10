@@ -7,7 +7,8 @@ import math
 import plugin_input
 import os
 import xml.etree.ElementTree as ET
-
+from functions import colors
+from functions import auto
 
 lfoshape = ['sine', 'tri', 'saw', 'square', 'custom', 'random']
 arpdirection = ['up', 'down', 'updown', 'downup', 'random']
@@ -76,12 +77,8 @@ def getvstparams(plugindata, xmldata):
             plugindata['params'][str(param)] = {}
             plugindata['params'][str(param)]['name'] = paramdata[1]
             plugindata['params'][str(param)]['value'] = float(paramdata[-1])
-def hex_to_rgb(hexcodeinput):
-    hexcode = hexcodeinput.lstrip('#')
-    colorbytes = tuple(int(hexcode[i:i+2], 16) for i in (0, 2, 4))
-    return [colorbytes[0]/255, colorbytes[1]/255, colorbytes[2]/255]
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
-def lmms_auto_getvalue(xmltag, xmlname, autoname):
+def lmms_getvalue(xmltag, xmlname, fallbackval, autoname):
     if xmltag.get(xmlname) != None: return float(xmltag.get(xmlname))
     else:
         realvaluetag = xmltag.findall(xmlname)[0]
@@ -90,7 +87,7 @@ def lmms_auto_getvalue(xmltag, xmlname, autoname):
             if autoname != None:
                 l_autoid[str(realvaluetag.get('id'))] = autoname
             return realvaluetag.get('value')
-        else: return None
+        else: return fallbackval
 
 def lmms_getvalue_int(json_in, json_name, xml_in): 
     if xml_in != None: json_in['json_name'] = int(xml_in)
@@ -353,8 +350,7 @@ def lmms_decode_inst_track(trkX, name):
     print('[input-lmms] Instrument Track')
     print('[input-lmms]       Name: ' + cvpj_l_track['name'])
 
-    mutedval = int(lmms_auto_getvalue(trkX, 'muted', ['track', name, 'enabled']))
-    cvpj_l_track['enabled'] = int(not int(mutedval))
+    cvpj_l_track['enabled'] = int(not int(trkX.get('muted')))
     cvpj_l_track['solo'] = int(trkX.get('solo'))
 
     cvpj_l_inst_notefx = cvpj_l_inst['notefx']
@@ -362,11 +358,10 @@ def lmms_decode_inst_track(trkX, name):
     #trkX_insttr
     trkX_insttr = trkX.findall('instrumenttrack')[0]
     cvpj_l_track['fxrack_channel'] = int(trkX_insttr.get('fxch'))
-    cvpj_l_track['pan'] = hundredto1(float(lmms_auto_getvalue(trkX_insttr, 'pan', ['track', name, 'pan'])))
-    cvpj_l_track['vol'] = hundredto1(float(lmms_auto_getvalue(trkX_insttr, 'vol', ['track', name, 'vol'])))
+    cvpj_l_track['pan'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'pan', 0, ['track', name, 'pan'])))
+    cvpj_l_track['vol'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'vol', 1, ['track', name, 'vol'])))
     
-    if trkX.get('color') != None:
-        cvpj_l_track['color'] = hex_to_rgb(trkX.get('color'))
+    if trkX.get('color') != None: cvpj_l_track['color'] = colors.hex_to_rgb_float(trkX.get('color'))
 
     #midi
     xml_a_midiport = trkX_insttr.findall('midiport')
@@ -399,9 +394,7 @@ def lmms_decode_inst_track(trkX, name):
     cvpj_l_track_inst['usemasterpitch'] = int(trkX_insttr.get('usemasterpitch'))
 
     # notefx
-    cvpj_l_track_inst['pitch'] = 0
-    if trkX_insttr.get('pitch') != None: cvpj_l_track_inst['pitch'] = float(trkX_insttr.get('pitch'))
-    cvpj_l_track_inst['pitch'] = float(lmms_auto_getvalue(trkX_insttr, 'pitch', ['track', name, 'pitch']))
+    cvpj_l_track_inst['pitch'] = float(lmms_getvalue(trkX_insttr, 'pitch', 0, ['track', name, 'pitch']))
 
     xml_a_chordcreator = trkX_insttr.findall('chordcreator')
     if len(xml_a_chordcreator) != 0:
@@ -448,14 +441,6 @@ def lmms_decode_inst_track(trkX, name):
     return cvpj_l_track
 
 # ------- Track: Automation -------
-
-def auto_multiply(s_autopl_data, addval, mulval):
-    for autopl in s_autopl_data:
-        if 'points' in autopl:
-            for point in autopl['points']:
-                if 'value' in point:
-                    point['value'] = (point['value']*mulval)+addval
-    return s_autopl_data
 
 def lmms_decode_autopattern(pointsX):
     autopoints = []
@@ -617,15 +602,12 @@ class input_lmms(plugin_input.base):
         tlX = tree.find('song/timeline')
         projnotesX = tree.find('song/projectnotes')
 
-        bpm = 140
-        if headX.get('bpm') != None: bpm = float(headX.get('bpm'))
-
         rootJ = {}
-        if headX.get('mastervol') != None: rootJ['mastervol'] = hundredto1(float(lmms_auto_getvalue(headX, 'mastervol', ['main', 'mastervol'])))
-        if headX.get('masterpitch') != None: rootJ['masterpitch'] = float(lmms_auto_getvalue(headX, 'masterpitch', ['main', 'masterpitch']))*100
-        if headX.get('timesig_numerator') != None: rootJ['timesig_numerator'] = lmms_auto_getvalue(headX, 'timesig_numerator', None)
-        if headX.get('timesig_denominator') != None: rootJ['timesig_denominator'] = lmms_auto_getvalue(headX, 'timesig_denominator', None)
-        rootJ['bpm'] = lmms_auto_getvalue(headX, 'bpm', ['main', 'bpm'])
+        rootJ['bpm'] = lmms_getvalue(headX, 'bpm', 140, ['main', 'bpm'])
+        rootJ['vol'] = hundredto1(float(lmms_getvalue(headX, 'mastervol', 1, ['main', 'vol'])))
+        rootJ['pitch'] = float(lmms_getvalue(headX, 'masterpitch', 0, ['main', 'pitch']))*100
+        rootJ['timesig_numerator'] = lmms_getvalue(headX, 'timesig_numerator', 4, None)
+        rootJ['timesig_denominator'] = lmms_getvalue(headX, 'timesig_denominator', 4, None)
 
         if projnotesX.text != None:
             rootJ['message'] = {}
@@ -635,24 +617,21 @@ class input_lmms(plugin_input.base):
         trackdata, trackordering = lmms_decode_tracks(trksX)
 
         for part in l_autodata:
-            s_autopl_id = l_autoid[part]
-            s_autopl_data = l_autodata[part]
-            #print()
-            #print(s_autopl_id)
-            #print(s_autopl_data)
-            if s_autopl_id[0] == 'track':
-                if s_autopl_id[1] in trackdata:
-                    s_trkdata = trackdata[s_autopl_id[1]]
-                    if 'placements_auto_main' not in s_trkdata: s_trkdata['placements_auto_main'] = {}
-                    temp_pla = s_trkdata['placements_auto_main']
-                    if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = auto_multiply(s_autopl_data, 0, 0.01)
-                    elif s_autopl_id[2] == 'pan': temp_pla[s_autopl_id[2]] = auto_multiply(s_autopl_data, 0, 0.01)
-                    elif s_autopl_id[2] == 'enabled': temp_pla[s_autopl_id[2]] = auto_multiply(s_autopl_data, 1, -1)
-                    else: temp_pla[s_autopl_id[2]] = auto_multiply(s_autopl_data, 0, 1)
-            else:
-                if s_autopl_id[1] == 'mastervol': main_autoplacements[s_autopl_id[1]] = auto_multiply(s_autopl_data, 0, 0.01)
-                elif s_autopl_id[1] == 'masterpitch': main_autoplacements[s_autopl_id[1]] = auto_multiply(s_autopl_data, 0, 100)
-                else: main_autoplacements[s_autopl_id[1]] = auto_multiply(s_autopl_data, 0, 1)
+            if part in l_autoid:
+                s_autopl_id = l_autoid[part]
+                s_autopl_data = l_autodata[part]
+                if s_autopl_id[0] == 'track':
+                    if s_autopl_id[1] in trackdata:
+                        s_trkdata = trackdata[s_autopl_id[1]]
+                        if 'placements_auto_main' not in s_trkdata: s_trkdata['placements_auto_main'] = {}
+                        temp_pla = s_trkdata['placements_auto_main']
+                        if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
+                        elif s_autopl_id[2] == 'pan': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
+                        else: temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 1)
+                else:
+                    if s_autopl_id[1] == 'vol': main_autoplacements[s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 0.01)
+                    elif s_autopl_id[1] == 'pitch': main_autoplacements[s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 100)
+                    else: main_autoplacements[s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 1)
 
 
         rootJ['trackdata'] = trackdata

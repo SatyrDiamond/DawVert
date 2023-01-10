@@ -199,7 +199,8 @@ class input_gt_mnbs(plugin_input.base):
         # PART 3: LAYERS
         if nbs_file.tell() <= nbs_len:
             for layernum in range(nbs_layercount):
-                cvpj_l_playlist[layernum+1]['name'] = getstring(nbs_file)
+                layername = getstring(nbs_file)
+                if layername != None: cvpj_l_playlist[layernum+1]['name'] = layername
                 if nbs_newformat == 1: nbs_file.read(3)
 
         # OUTPUT

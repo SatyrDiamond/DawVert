@@ -81,8 +81,8 @@ class output_cvpjs(plugin_output.base):
         if 'timesig_numerator' in projJ: FL_Main['Numerator'] = projJ['timesig_numerator']
         if 'timesig_denominator' in projJ: FL_Main['Denominator'] = projJ['timesig_denominator']
         if 'bpm' in projJ: FL_Main['Tempo'] = projJ['bpm']
-        if 'masterpitch' in projJ: 
-            FL_Main['MainPitch'] = struct.unpack('H', struct.pack('h', int(projJ['masterpitch'])))[0]
+        if 'pitch' in projJ: 
+            FL_Main['MainPitch'] = struct.unpack('H', struct.pack('h', int(projJ['pitch'])))[0]
 
         instrumentsorder = projJ['instrumentsorder']
 

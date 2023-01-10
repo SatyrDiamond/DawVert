@@ -36,9 +36,9 @@ class input_flp(plugin_input.base):
         ppq = FL_Main['ppq']
 
         rootJ = {}
-        rootJ['mastervol'] = 1
+        rootJ['vol'] = 1
         if 'MainPitch' in FL_Main:
-            rootJ['masterpitch'] = struct.unpack('h', struct.pack('H', FL_Main['MainPitch']))[0]
+            rootJ['pitch'] = struct.unpack('h', struct.pack('H', FL_Main['MainPitch']))[0]
         rootJ['timesig_numerator'] = FL_Main['Numerator']
         rootJ['timesig_denominator'] = FL_Main['Denominator']
         rootJ['bpm'] = FL_Main['Tempo']

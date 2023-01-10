@@ -642,7 +642,7 @@ class output_lmms(plugin_output.base):
 
         setvalue(projJ, 'bpm', headX, 'bpm', 0, auto_nameid, 'main')
         setvalue(projJ, 'pitch', headX, 'masterpitch', 0, auto_nameid, 'main')
-        setvalue(projJ, 'vol', headX, 'mastervol', 120, auto_nameid, 'main')
+        setvalue(projJ, 'vol', headX, 'mastervol', 1, auto_nameid, 'main')
         setvalue(projJ, 'timesig_numerator', headX, 'timesig_numerator', 4, auto_nameid, 'main')
         setvalue(projJ, 'timesig_denominator', headX, 'timesig_denominator', 4, auto_nameid, 'main')
 

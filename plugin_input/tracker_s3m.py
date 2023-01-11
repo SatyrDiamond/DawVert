@@ -143,7 +143,6 @@ class input_s3m(plugin_input.base):
                     cvpj_l_plugin['loop']['enabled'] = 1
                     cvpj_l_plugin['loop']['mode'] = "normal"
                     cvpj_l_plugin['loop']['points'] = [s3m_inst_loopStart, s3m_inst_loopEnd-1]
-                    #print(s3m_inst_loopStart, s3m_inst_loopEnd)
                     loopdata = {'loop':[s3m_inst_loopStart, s3m_inst_loopEnd-1]}
                 else:
                     cvpj_l_plugin['loop']['enabled'] = 0
@@ -153,10 +152,8 @@ class input_s3m(plugin_input.base):
                 os.makedirs(samplefolder, exist_ok=True)
                 wave_path = samplefolder + str(s3m_numinst).zfill(2) + '.wav'
 
-                t_samplelen = s3m_inst_length
-
-                if s3m_inst_16bit == 0: t_samplelen = t_samplelen
-                if s3m_inst_16bit == 1: t_samplelen = t_samplelen*2
+                if s3m_inst_16bit == 0: t_samplelen = s3m_inst_length
+                if s3m_inst_16bit == 1: t_samplelen = s3m_inst_length*2
                 wave_sampledata = file_stream.read(t_samplelen)
                 wave_bits = 8
                 wave_channels = 1

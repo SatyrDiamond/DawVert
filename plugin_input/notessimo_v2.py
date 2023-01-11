@@ -142,6 +142,10 @@ notess_instruments[38]  = [None, [0.75, 0.67, 0.62], 'Fade In']
 notess_instruments[41]  = [None, [0.99, 0.84, 0.32], 'Space']
 notess_instruments[55]  = [None, [0.93, 0.93, 0.93], 'Nice']
 
+def getstring(bytesdata):
+    stringlen = int.from_bytes(bytesdata.read(2), "big")
+    if stringlen != 0: return bytesdata.read(stringlen).decode("utf-8")
+    else: return ''
 
 def parsenotes(bio_data, notelen): 
     patsize, numnotes = struct.unpack('>II', bio_data.read(8))
@@ -151,9 +155,7 @@ def parsenotes(bio_data, notelen):
         notedata = bio_data.read(20)
         n_pos,n_note,n_layer,n_inst,n_sharp,n_vol,n_pan,n_len = struct.unpack('>Ibbhbffh', notedata[:19])
 
-        n_note = n_note-1
-
-        n_key = (n_note-40)*-1
+        n_key = (n_note-41)*-1
         out_oct = int(n_key/7)
         out_key = n_key - out_oct*7
         out_offset = 0
@@ -187,19 +189,12 @@ class input_notessimo_v2(plugin_input.base):
 
         bytestream = open(input_file, 'rb')
         nv2_data = data_bytes.bytearray2BytesIO(zlib.decompress(bytestream.read()))
-        len_songname = int.from_bytes(nv2_data.read(2), "big")
-        text_songname = nv2_data.read(len_songname).decode('ascii')
+        text_songname = getstring(nv2_data)
+        text_songauthor = getstring(nv2_data)
+        text_date1 = getstring(nv2_data)
+        text_date2 = getstring(nv2_data)
         print("[input-notessimo_v2] Song Name: " + str(text_songname))
-
-        len_songauthor = int.from_bytes(nv2_data.read(2), "big")
-        text_songauthor = nv2_data.read(len_songauthor).decode('ascii')
         print("[input-notessimo_v2] Song Author: " + str(text_songauthor))
-
-        len_date1 = int.from_bytes(nv2_data.read(2), "big")
-        text_date1 = nv2_data.read(len_date1).decode('ascii')
-
-        len_date2 = int.from_bytes(nv2_data.read(2), "big")
-        text_date2 = nv2_data.read(len_date2).decode('ascii')
 
         len_order = int.from_bytes(nv2_data.read(2), "big")
         arr_order = struct.unpack('b'*len_order, nv2_data.read(len_order))

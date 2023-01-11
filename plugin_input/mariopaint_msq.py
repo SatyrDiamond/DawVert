@@ -9,25 +9,21 @@ import io
 instnames = ['mario','toad','yoshi','star','flower','gameboy','dog','cat','pig','swan','face','plane','boat','car','heart','coin','plant','shyguy','ghost']
 keytable =  [19, 17, 16, 14, 12, 11, 9, 7, 5, 4, 2, 0, -1]
 
-out_names = {'mario': 'Mario',
-'toad': 'Toad',
-'yoshi': 'Yoshi',
-'star': 'Star',
-'flower': 'Flower',
-'gameboy': 'Game Boy',
-'dog': 'Dog',
-'cat': 'Cat',
-'pig': 'Pig',
-'swan': 'Swan',
+out_names = {'mario': 'Piano (Mario)',
+'toad': 'Tom (Mushroom)',
+'yoshi': 'SMW Yoshi',
+'star': 'Xylophone (Star)',
+'flower': 'Trumpet (Flower)',
+'gameboy': 'Square Wave (GameBoy)',
+'dog': 'Bark (Dog)',
+'cat': 'Meow (Cat)',
+'pig': 'Oink (Pig)',
+'swan': 'String Hit (Swan)',
 'face': 'Face',
-'plane': 'Plane',
-'boat': 'Boat',
-'car': 'Car',
-'heart': 'Heart',
-'coin': 'Coin',
-'plant': 'Plant',
-'shyguy': 'Shy Guy',
-'ghost': 'Ghost'}
+'plane': 'Acoustic Guitar (Plane)',
+'boat': 'Hat (Boat)',
+'car': 'Organ (Car)',
+'heart': 'Bass Guitar (Heart)'}
 
 out_colors = {'mario': [0.92, 0.77, 0.56],
 'toad': [0.98, 0.00, 0.00],
@@ -83,18 +79,13 @@ def readpart(msq_score_str, n_pos, n_len):
     for msq_note in msq_notes:
         k_inst = instnames[msq_notes[msq_note]-1]
         k_key = keytable[msq_note-1]
-
         notedata = {}
         notedata['position'] = n_pos
-        
         notedata['key'] = k_key
         notedata['vol'] = 1.0
         notedata['duration'] = n_len
         notedata['instrument'] = k_inst
         notelist.append(notedata)
-
-
-
 
 class input_mariopaint_msq(plugin_input.base):
     def __init__(self): pass

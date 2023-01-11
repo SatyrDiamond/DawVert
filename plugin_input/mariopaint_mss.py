@@ -11,25 +11,25 @@ instnames = ['mario','toad','yoshi','star','flower','gameboy','dog','cat','pig',
 notekeys = ['A','B','C','D','E','F','G','H','a','b','c','d','e','f','g','h','i']
 keytable = [-3 ,-1 ,0  ,2  ,4  ,5  ,7  ,9  ,11 ,12 ,14 ,16 ,17 ,19 ,21 ,23 ,24 ]
 
-out_names = {'mario': 'Mario',
-'toad': 'Toad',
-'yoshi': 'Yoshi',
-'star': 'Star',
-'flower': 'Flower',
-'gameboy': 'Game Boy',
-'dog': 'Dog',
-'cat': 'Cat',
-'pig': 'Pig',
-'swan': 'Swan',
+out_names = {'mario': 'Piano (Mario)',
+'toad': 'Tom (Mushroom)',
+'yoshi': 'SMW Yoshi',
+'star': 'Xylophone (Star)',
+'flower': 'Trumpet (Flower)',
+'gameboy': 'Square Wave (GameBoy)',
+'dog': 'Bark (Dog)',
+'cat': 'Meow (Cat)',
+'pig': 'Oink (Pig)',
+'swan': 'String Hit (Swan)',
 'face': 'Face',
-'plane': 'Plane',
-'boat': 'Boat',
-'car': 'Car',
-'heart': 'Heart',
-'coin': 'Coin',
-'plant': 'Plant',
-'shyguy': 'Shy Guy',
-'ghost': 'Ghost'}
+'plane': 'Acoustic Guitar (Plane)',
+'boat': 'Hat (Boat)',
+'car': 'Organ (Car)',
+'heart': 'Bass Guitar (Heart)',
+'coin': 'Piano (Coin)',
+'plant': 'Distorted Guitar (Plant)',
+'shyguy': 'String (Shy Guy)',
+'ghost': 'Harp (Ghost)'}
 
 out_colors = {'mario': [0.92, 0.77, 0.56],
 'toad': [0.98, 0.00, 0.00],
@@ -134,15 +134,11 @@ class input_mariopaint_mss(plugin_input.base):
             t_sm = chord.find('speedmark')
             if t_sm != None: 
                 t_sm_tempo = int(t_sm.get('tempo'))
-
                 tempo_placement = {"position": curpos}
                 tempo_placement['duration'] = notelen
                 tempo_placement['points'] = [{"position": 0, "value": t_sm_tempo*(notelen/4)}]
                 auto_tempo.append(tempo_placement)
-
             curpos += notelen
-
-
 
         l_placement = {}
         l_placement['type'] = "instruments"

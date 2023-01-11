@@ -19,6 +19,7 @@
 | M-I | ```famistudio_txt``` | FamiStudio Text | ❌ | 
 | M-I | ```deflemask``` | DefleMask | ✔️ |
 | M-I | ```ceol``` | Bosca Ceoil | ❌ | 
+| M-I | ```jummbox``` | Beepbox/Jummbox | ❌ | 
 | M | ```lovelycomposer``` | Lovely Composer | ❌ | 
 | R | ```piyopiyo``` | PiyoPiyo | ✔️ |  
 

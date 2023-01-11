@@ -34,7 +34,7 @@ def convert(instdata):
 	plugindata = instdata['plugindata']
 	bb_type = plugindata['type']
 	bb_data = plugindata['data']
-	print(bb_data)
+	#print(bb_data)
 
 	if bb_data['type'] == 'chip':
 

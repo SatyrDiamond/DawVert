@@ -23,7 +23,11 @@ out_names = {'mario': 'Piano (Mario)',
 'plane': 'Acoustic Guitar (Plane)',
 'boat': 'Hat (Boat)',
 'car': 'Organ (Car)',
-'heart': 'Bass Guitar (Heart)'}
+'heart': 'Bass Guitar (Heart)',
+'coin': 'Piano (Coin)',
+'plant': 'Distorted Guitar (Plant)',
+'shyguy': 'String (Shy Guy)',
+'ghost': 'Harp (Ghost)'}
 
 out_colors = {'mario': [0.92, 0.77, 0.56],
 'toad': [0.98, 0.00, 0.00],

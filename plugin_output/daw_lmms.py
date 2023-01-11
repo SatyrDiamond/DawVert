@@ -558,7 +558,6 @@ def setvalue(tagJ, nameJ, xmltagX, nameX, fallbackval, get_auto_ids, vartype):
     if nameJ in tagJ:
         if addmulvalues != None: outvalue = (tagJ[nameJ]+addmulvalues[0])*addmulvalues[1]
         else: outvalue = tagJ[nameJ]
-
         if nameJ in get_auto_ids:
             t_ad = get_auto_ids[nameJ]
             autovarX = ET.SubElement(xmltagX, nameX)
@@ -567,7 +566,13 @@ def setvalue(tagJ, nameJ, xmltagX, nameX, fallbackval, get_auto_ids, vartype):
             autovarX.set('id', str(t_ad))
         else: xmltagX.set(nameX, str(outvalue))
     else:
-        xmltagX.set(nameX, str(fallbackval))
+        if nameJ in get_auto_ids:
+            t_ad = get_auto_ids[nameJ]
+            autovarX = ET.SubElement(xmltagX, nameX)
+            autovarX.set('value', str(fallbackval))
+            autovarX.set('scale_type', 'linear')
+            autovarX.set('id', str(t_ad))
+        else: xmltagX.set(nameX, str(fallbackval))
 
 def lmms_make_autotracks(projJ, auto_nameid, ADS_name, ADS_type, visualname):
     for auto_part in auto_nameid:

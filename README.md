@@ -41,6 +41,12 @@ e.g:
 
 [Magical 8bit Plug 2](https://github.com/yokemura/Magical8bitPlug2)
 
+[Vital](https://vital.audio/) (SimSynth, Beepbox)
+
+[Ninjas2](https://github.com/clearly-broken-software/ninjas2) (Fruity Slicer)
+
+[OPNplug](https://github.com/clearly-broken-software/ninjas2) (OPN2)
+
 ## Required Libraries
 ```
 varint

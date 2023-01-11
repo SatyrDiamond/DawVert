@@ -230,9 +230,9 @@ class input_jummbox(plugin_input.base):
         for bbauto_group in bbcvpj_modplacements:
             for bbauto_target in bbcvpj_modplacements[bbauto_group]:
                 #print(bbauto_group, bbauto_target, bbcvpj_modplacements[bbauto_group][bbauto_target])
+                outautoname = bbauto_target
+                outautodata = bbcvpj_modplacements[bbauto_group][bbauto_target]
                 if bbauto_group == -1:
-                    outautoname = bbauto_target
-                    outautodata = bbcvpj_modplacements[bbauto_group][bbauto_target]
                     if outautoname == "0_1": 
                         outautoname = 'bpm'
                         outautodata = auto.multiply(outautodata, 0, (jummbox_beatsPerBar/jummbox_ticksPerBeat)*1.2)
@@ -241,6 +241,8 @@ class input_jummbox(plugin_input.base):
                         outautodata = auto.multiply(outautodata, 0, 0.01)
                     cvpj_l_placements_auto_main[outautoname] = outautodata
                     print(outautoname, bbcvpj_modplacements[bbauto_group][bbauto_target])
+                elif bbauto_group > 0:
+                    cvpj_l_instruments[str(bbauto_group)]['placements_auto_main'][bbauto_target] = outautodata
         #exit()
 
         cvpj_l['notelistindex'] = cvpj_l_notelistindex

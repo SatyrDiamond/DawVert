@@ -15,37 +15,37 @@ keytable = {'C': 0,
 'A': 9,
 'B': 11}
 
-out_names = {'MARIO': 'Mario',
-'MUSHROOM': 'Toad',
-'YOSHI': 'Yoshi',
-'STAR': 'Star',
-'FLOWER': 'Flower',
-'GAMEBOY': 'Game Boy',
-'DOG': 'Dog',
-'CAT': 'Cat',
-'PIG': 'Pig',
-'SWAN': 'Swan',
+out_names = {'MARIO': 'Piano (Mario)',
+'MUSHROOM': 'Tom (Mushroom)',
+'YOSHI': 'SMW Yoshi',
+'STAR': 'Xylophone (Star)',
+'FLOWER': 'Trumpet (Flower)',
+'GAMEBOY': 'Square Wave (GameBoy)',
+'DOG': 'Bark (Dog)',
+'CAT': 'Meow (Cat)',
+'PIG': 'Oink (Pig)',
+'SWAN': 'String Hit (Swan)',
 'FACE': 'Face',
-'PLANE': 'Plane',
-'BOAT': 'Boat',
-'CAR': 'Car',
-'HEART': 'Heart',
-'PIRANHA': 'Plant',
-'COIN': 'Coin',
-'SHYGUY': 'Shy Guy',
-'BOO': 'Ghost',
-'LUIGI': 'Luigi',
-'PEACH': 'Peach',
-'FEATHER': 'Feather',
-'BULLETBILL': 'Bullet Bill',
-'GOOMBA': 'Goomba',
-'BOBOMB': 'Bob-omb',
-'SPINY': 'Spiny',
-'FRUIT': 'Fruit',
-'ONEUP': '1-Up',
-'MOON': 'Moon',
-'EGG': 'Egg',
-'GNOME': 'Gnome'}
+'PLANE': 'Acoustic Guitar (Plane)',
+'BOAT': 'Hat (Boat)',
+'CAR': 'Organ (Car)',
+'HEART': 'Bass Guitar (Heart)',
+'PIRANHA': 'Distorted Guitar (Plant)',
+'COIN': 'Piano (Coin)',
+'SHYGUY': 'String (Shy Guy)',
+'BOO': 'Harp (Ghost)',
+'LUIGI': 'Steel Drum (Luigi)',
+'PEACH': 'Violin (Peach)',
+'FEATHER': 'Flute (Feather)',
+'BULLETBILL': 'Timpani (Bullet Bill)',
+'GOOMBA': 'Bassoon (Goomba)',
+'BOBOMB': 'Bell (Bob-omb)',
+'SPINY': 'Accordion (Spiny)',
+'FRUIT': 'Marimba (Fruit)',
+'ONEUP': 'Hi-Hat (1-Up)',
+'MOON': 'Sawtooth Wave (Moon)',
+'EGG': 'Pizzicato strings (Egg)',
+'GNOME': 'Clown Horn (Gnome)'}
 
 out_colors = {'MARIO': [0.92, 0.77, 0.56],
 'MUSHROOM': [0.98, 0.00, 0.00],
@@ -96,8 +96,7 @@ def makenote(n_pos, notes, vol, notesize):
             t_txtp = smpnote_str.read(1)
             if t_txtp == '#': out_offset = 1
             if t_txtp == 'b': out_offset = -1
-            if t_txtp == 'm': 
-                out_mode = smpnote_str.read(1)
+            if t_txtp == 'm': out_mode = smpnote_str.read(1)
 
         if out_mode == 0:
             out_note = out_key + out_oct*12 + out_offset
@@ -147,16 +146,12 @@ class input_mariopaint_smp(plugin_input.base):
             else: 
                 s_point = line.rstrip().split(',')
                 s_data = s_point[1:]
-
                 s_pos = s_point[:1][0].split(':')
                 s_pos_beat = int(s_pos[0])
                 s_pos_pos = int(s_pos[1])
-
                 s_pos_out = ((s_pos_beat-1)*4) + s_pos_pos
-
                 s_notes = s_data[:-1]
                 s_vol = int(s_data[-1:][0].split(':')[1])
-
                 makenote(s_pos_out, s_notes, s_vol, notelen)
 
             linecount += 1

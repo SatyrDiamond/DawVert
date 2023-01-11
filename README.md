@@ -45,7 +45,7 @@ e.g:
 
 [Ninjas2](https://github.com/clearly-broken-software/ninjas2) (Fruity Slicer)
 
-[OPNplug](https://github.com/clearly-broken-software/ninjas2) (OPN2)
+[OPNplug](https://github.com/jpcima/ADLplug) (OPN2)
 
 ## Required Libraries
 ```

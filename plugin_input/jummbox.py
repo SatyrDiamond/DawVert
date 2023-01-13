@@ -240,7 +240,7 @@ class input_jummbox(plugin_input.base):
                         outautoname = 'vol'
                         outautodata = auto.multiply(outautodata, 0, 0.01)
                     cvpj_l_placements_auto_main[outautoname] = outautodata
-                    print(outautoname, bbcvpj_modplacements[bbauto_group][bbauto_target])
+                    #print(outautoname, bbcvpj_modplacements[bbauto_group][bbauto_target])
                 #elif bbauto_group > 0:
                 #    cvpj_l_instruments[str(bbauto_group)]['placements_auto_main'][bbauto_target] = outautodata
         #exit()

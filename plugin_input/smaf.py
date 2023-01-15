@@ -68,7 +68,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             if note_program not in t_usedprograms[firstbyte[1]]:
                 t_usedprograms[firstbyte[1]].append(note_program)
             cvpj_note = {}
-            cvpj_note["duration"] = noteresize(note_durgate*tb_ms)
+            cvpj_note["duration"] = noteresize((note_durgate+1)*tb_ms)
             cvpj_note["key"] = note_note-60
             cvpj_note["position"] = noteresize(basepos*tb_ms)
             cvpj_note["instrument"] = 'ch'+str(firstbyte[1])+'_inst'+str(note_program)
@@ -82,7 +82,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             if note_program not in t_usedprograms[firstbyte[1]]:
                 t_usedprograms[firstbyte[1]].append(note_program)
             cvpj_note = {}
-            cvpj_note["duration"] = noteresize(note_durgate*tb_ms)
+            cvpj_note["duration"] = noteresize((note_durgate+1)*tb_ms)
             cvpj_note["key"] = note_note-60
             cvpj_note["position"] = noteresize(basepos*tb_ms)
             cvpj_note["vol"] = note_vol/128
@@ -158,7 +158,6 @@ class input_mmf(plugin_input.base):
         cvpj_l_playlist = {}
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
-        cvpj_l_timemarkers = []
         cvpj_l_fxrack = {}
 
         mmf_chunks_ins = data_bytes.riff_read(mmf_chunks_main[0][1], 0)
@@ -179,6 +178,9 @@ class input_mmf(plugin_input.base):
                             print('[input-smaf] Format: MA3')
                             t_cvpj_notelist, t_usedprograms = parse_ma3_track(mmf_cnti_chunk[1], 3)
 
+        cvpj_l_fxrack["0"] = {}
+        cvpj_l_fxrack["0"]["name"] = "Master"
+
         for channel in range(16):
             c_notelist = t_cvpj_notelist[channel]
             c_usedprograms = t_usedprograms[channel]
@@ -189,11 +191,14 @@ class input_mmf(plugin_input.base):
                 cvpj_inst["pan"] = 0.0
                 cvpj_inst["vol"] = 1.0
                 cvpj_inst["color"] = [0.69, 0.63, 0.54]
+                cvpj_inst['fxrack_channel'] = channel+1
                 cvpj_inst["instdata"] = {}
                 cvpj_inst["instdata"]['plugin'] = 'general-midi'
                 if channel != 9:
+                    cvpj_inst["instdata"]['usemasterpitch'] = 1
                     cvpj_inst["instdata"]['plugindata'] = {'bank':0, 'inst':c_usedprogram}
                 else:
+                    cvpj_inst["instdata"]['usemasterpitch'] = 0
                     cvpj_inst["instdata"]['plugindata'] = {'bank':128, 'inst':0}
 
                 cvpj_l_instruments[instid] = cvpj_inst
@@ -209,7 +214,16 @@ class input_mmf(plugin_input.base):
                 playlistrowdata['placements'][0]['notelist'] = c_notelist
             cvpj_l_playlist[str(channel+1)] = playlistrowdata
 
+            cvpj_l_fxrack[str(channel+1)] = {}
+            fxdata = cvpj_l_fxrack[str(channel+1)]
+            fxdata["fxenabled"] = 1
+            fxdata['color'] = [0.69, 0.63, 0.54]
+            fxdata["name"] = "Channel "+str(channel+1)
 
+
+
+
+        cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist

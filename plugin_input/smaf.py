@@ -5,6 +5,10 @@ import plugin_input
 import json
 import struct
 from functions import data_bytes
+from functions import values
+
+gm_colors = values.getlist_gm_colors()
+gm_names = values.getlist_gm_names()
 
 def calc_gatetime(bio_mmf_Mtsq):
     out_duration = 0
@@ -46,6 +50,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
     basepos = 0
 
     t_currentprogram = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    t_currentbank = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     t_cvpj_notelist = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
     t_usedprograms = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
     t_chanvol = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
@@ -55,41 +60,43 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
     while bio_mmf_Mtsq.tell() < bio_mmf_Mtsq_size:
         basepos += calc_gatetime(bio_mmf_Mtsq)
 
-        #print(str(basepos).ljust(5), end=' ')
+        print(str(basepos).ljust(5), end=' ')
 
         firstbyte = splitbyte(int.from_bytes(bio_mmf_Mtsq.read(1), "big"))
-        #print(str(firstbyte[0]).ljust(3), str(firstbyte[1]).ljust(3), end=' ')
+        print(str(firstbyte[0]).ljust(3), str(firstbyte[1]).ljust(3), end=' ')
         if firstbyte[0] == 0:
             null_durgate = calc_gatetime(bio_mmf_Mtsq)
-            #print('|      NULL    ', null_durgate)
+            print('|      NULL    ', null_durgate)
         elif firstbyte[0] == 8:
             note_note = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             note_durgate = calc_gatetime(bio_mmf_Mtsq)
-            #print('| '+str(firstbyte[1]).ljust(4), 'NOTE    ', str(note_note).ljust(4), '     dur ', note_durgate)
+            print('| '+str(firstbyte[1]).ljust(4), 'NOTE    ', str(note_note).ljust(4), '     dur ', note_durgate)
             note_program = t_currentprogram[firstbyte[1]]
-            if note_program not in t_usedprograms[firstbyte[1]]:
-                t_usedprograms[firstbyte[1]].append(note_program)
+            note_bankprogram = [t_currentbank[firstbyte[1]], t_currentprogram[firstbyte[1]]]
+            if note_bankprogram not in t_usedprograms[firstbyte[1]]:
+                t_usedprograms[firstbyte[1]].append(note_bankprogram)
             cvpj_note = {}
             cvpj_note["duration"] = noteresize(note_durgate*tb_ms)
             cvpj_note["key"] = note_note-60
             cvpj_note["position"] = noteresize(basepos*tb_ms)
-            cvpj_note["instrument"] = 'ch'+str(firstbyte[1])+'_inst'+str(note_program)
+            cvpj_note["instrument"] = 'c'+str(firstbyte[1])+'b'+str(t_currentbank[firstbyte[1]])+'i'+str(note_program)
             t_cvpj_notelist[firstbyte[1]].append(cvpj_note)
             beforenote = False
         elif firstbyte[0] == 9:
             note_note = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             note_vol = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             note_durgate = calc_gatetime(bio_mmf_Mtsq)
-            #print('| '+str(firstbyte[1]).ljust(4), 'NOTE+V  ', str(note_note).ljust(4), str(note_vol).ljust(4), 'dur ', note_durgate)
+            print('| '+str(firstbyte[1]).ljust(4), 'NOTE+V  ', str(note_note).ljust(4), str(note_vol).ljust(4), 'dur ', note_durgate)
             note_program = t_currentprogram[firstbyte[1]]
-            if note_program not in t_usedprograms[firstbyte[1]]:
-                t_usedprograms[firstbyte[1]].append(note_program)
+            note_bankprogram = [t_currentbank[firstbyte[1]], t_currentprogram[firstbyte[1]]]
+            if note_bankprogram not in t_usedprograms[firstbyte[1]]:
+                t_usedprograms[firstbyte[1]].append(note_bankprogram)
             cvpj_note = {}
             cvpj_note["duration"] = noteresize(note_durgate*tb_ms)
             cvpj_note["key"] = note_note-60
             cvpj_note["position"] = noteresize(basepos*tb_ms)
             cvpj_note["vol"] = note_vol/128
-            cvpj_note["instrument"] = 'ch'+str(firstbyte[1])+'_inst'+str(note_program)
+            cvpj_note["instrument"] = 'c'+str(firstbyte[1])+'b'+str(t_currentbank[firstbyte[1]])+'i'+str(note_program)
             t_cvpj_notelist[firstbyte[1]].append(cvpj_note)
             beforenote = False
 
@@ -99,21 +106,23 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             print('| '+str(firstbyte[1]).ljust(4), 'CONTROL ', str(cntltype).ljust(4), str(cntldata).ljust(4))
             if cntltype == 7:
                 t_chanvol[firstbyte[1]] = cntldata/127
+            if cntltype == 0:
+                t_currentbank[firstbyte[1]] = cntldata
         elif firstbyte[0] == 12:
             prognumber = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
-            #print('| '+str(firstbyte[1]).ljust(4), 'PROGRAM ', prognumber)
+            print('| '+str(firstbyte[1]).ljust(4), 'PROGRAM ', prognumber)
             t_currentprogram[firstbyte[1]] = prognumber
         elif firstbyte[0] == 14:
             lsbpitch = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             msbpitch = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
-            #print('| '+str(firstbyte[1]).ljust(4), 'PITCH   ', str(lsbpitch).ljust(4), str(msbpitch).ljust(4))
+            print('| '+str(firstbyte[1]).ljust(4), 'PITCH   ', str(lsbpitch).ljust(4), str(msbpitch).ljust(4))
         elif firstbyte[0] == 15 and firstbyte[1] == 0:
             sysexsize = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             sysexdata = bio_mmf_Mtsq.read(sysexsize)
-            #print('| '+str(firstbyte[1]).ljust(4), 'SYSEX   ', sysexdata.hex())
+            print('| '+str(firstbyte[1]).ljust(4), 'SYSEX   ', sysexdata.hex())
         elif firstbyte[0] == 15 and firstbyte[1] == 15:
             pass
-            #print('| '+str(firstbyte[1]).ljust(4), 'NOP     ')
+            print('| '+str(firstbyte[1]).ljust(4), 'NOP     ')
         else:
             print('Unknown Command', firstbyte[0], "0x%X" % firstbyte[0])
             exit()
@@ -123,7 +132,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
         print('[input-smaf]       Notes: '+str(len(t_cvpj_notelist[channel])))
         print('[input-smaf]       Used Insts: '+str(', '.join(str(x) for x in t_usedprograms[channel])   ))
         print('[input-smaf]')
-    return (t_cvpj_notelist, t_usedprograms, t_chanvol)
+    return (3, 16, t_cvpj_notelist, t_usedprograms, t_chanvol)
 
 def parse_ma3_track(datain, tracknum):
     bio_mmf_track = data_bytes.bytearray2BytesIO(datain)
@@ -138,9 +147,16 @@ def parse_ma3_track(datain, tracknum):
     trk_chanstat = struct.unpack("IIII", bio_mmf_track.read(16))
     #print(trk_type_format, trk_type_seq, trk_tb_d, trk_tb_g, trk_chanstat)
     trk_chunks = data_bytes.riff_read_big(bio_mmf_track.read(), 0)
+    outputdata = None
     for trk_chunk in trk_chunks:
+        print('[input-smaf] MTR CHUNK:',trk_chunk[0])
         if trk_chunk[0] == b'Mtsq':
-            return parse_ma3_Mtsq(trk_chunk[1], tb_ms)
+            outputdata = parse_ma3_Mtsq(trk_chunk[1], tb_ms)
+    if outputdata == None:
+        print('[input-smaf] No Mtsq found.')
+        exit()
+    else:
+        return outputdata
 
 
 class input_mmf(plugin_input.base):
@@ -177,7 +193,10 @@ class input_mmf(plugin_input.base):
                 mmf_cnti_class, mmf_cnti_type, mmf_cnti_codetype, mmf_cnti_status, mmf_cnti_counts = struct.unpack("BBBBB", bio_mmf_cnti.read(5))
                 mmf_cnti_chunks = data_bytes.riff_read_big(bio_mmf_cnti, 5)
                 for mmf_cnti_chunk in mmf_cnti_chunks:
-                   if mmf_cnti_chunk[0][:3] == b'MTR':
+                    print('[input-smaf] CNTI CHUNK:', mmf_cnti_chunk[0])
+                    #if mmf_cnti_chunk[0] == b'OPDA':
+                    #    print(mmf_cnti_chunk[1])
+                    if mmf_cnti_chunk[0][:3] == b'MTR':
                         mmf_tracknum = int.from_bytes(mmf_cnti_chunk[0][3:], "big")
                         #print('track num', mmf_tracknum)
                         if mmf_tracknum in range(1, 4):
@@ -185,33 +204,53 @@ class input_mmf(plugin_input.base):
                             exit()
                         if mmf_tracknum in range(5, 8):
                             print('[input-smaf] Format: MA3')
-                            t_cvpj_notelist, t_usedprograms, t_chanvol = parse_ma3_track(mmf_cnti_chunk[1], 3)
+                            matype, number_of_channels, t_cvpj_notelist, t_usedprograms, t_chanvol = parse_ma3_track(mmf_cnti_chunk[1], 3)
 
         cvpj_l_fxrack["0"] = {}
         cvpj_l_fxrack["0"]["name"] = "Master"
 
-        for channel in range(16):
+        for channel in range(number_of_channels):
             c_notelist = t_cvpj_notelist[channel]
-            c_usedprograms = t_usedprograms[channel]
-            for c_usedprogram in c_usedprograms:
-                instid = 'ch'+str(channel)+'_inst'+str(c_usedprogram)
-                cvpj_inst = {}
-                cvpj_inst["name"] = 'Ch '+str(channel+1)+', Inst '+str(c_usedprogram+1)
-                cvpj_inst["pan"] = 0.0
-                cvpj_inst["vol"] = 1.0
-                cvpj_inst["color"] = [0.69, 0.63, 0.54]
-                cvpj_inst['fxrack_channel'] = channel+1
-                cvpj_inst["instdata"] = {}
-                cvpj_inst["instdata"]['plugin'] = 'general-midi'
-                if channel != 9:
-                    cvpj_inst["instdata"]['usemasterpitch'] = 1
-                    cvpj_inst["instdata"]['plugindata'] = {'bank':0, 'inst':c_usedprogram}
-                else:
-                    cvpj_inst["instdata"]['usemasterpitch'] = 0
-                    cvpj_inst["instdata"]['plugindata'] = {'bank':128, 'inst':0}
+            c_usedinsts = t_usedprograms[channel]
+            if matype == 3:
+                for c_usedinst in c_usedinsts:
+                    c_usedprogram = c_usedinst[1]
+                    c_usedbank = c_usedinst[0]
 
-                cvpj_l_instruments[instid] = cvpj_inst
-                cvpj_l_instrumentsorder.append(instid)
+                    instid = 'c'+str(channel)+'b'+str(c_usedbank)+'i'+str(c_usedprogram)
+                    cvpj_inst = {}
+                    if c_usedbank == 0:
+                        cvpj_inst["name"] = gm_names[c_usedprogram]
+                        cvpj_inst["color"] = gm_colors[c_usedprogram]
+                        cvpj_inst["instdata"] = {}
+                        cvpj_inst["instdata"]['plugin'] = 'general-midi'
+                        if channel != 9:
+                            cvpj_inst["instdata"]['usemasterpitch'] = 1
+                            cvpj_inst["instdata"]['plugindata'] = {'bank':0, 'inst':c_usedprogram}
+                        else:
+                            cvpj_inst["instdata"]['usemasterpitch'] = 0
+                            cvpj_inst["instdata"]['plugindata'] = {'bank':128, 'inst':0}
+                    elif c_usedbank == 124:
+                        cvpj_inst["name"] = 'MA-3 User #' + str(c_usedprogram)
+                        cvpj_inst["color"] = [0.3,0.3,0.3]
+                        cvpj_inst["instdata"] = {}
+                        cvpj_inst["instdata"]['plugin'] = 'none'
+                    elif c_usedbank == 125:
+                        cvpj_inst["name"] = 'MA-3 PCM #' + str(c_usedprogram)
+                        cvpj_inst["color"] = [0.2,0.2,0.2]
+                        cvpj_inst["instdata"] = {}
+                        cvpj_inst["instdata"]['plugin'] = 'none'
+                    else:
+                        cvpj_inst["name"] = 'Bank #'+str(c_usedbank+1)+', Inst #'+str(c_usedprogram+1)
+                        cvpj_inst["color"] = [0.6, 0.6, 0.6]
+                        cvpj_inst["instdata"] = {}
+                        cvpj_inst["instdata"]['plugin'] = 'none'
+                    cvpj_inst["pan"] = 0.0
+                    cvpj_inst["vol"] = 1.0
+                    cvpj_inst['fxrack_channel'] = channel+1
+
+                    cvpj_l_instruments[instid] = cvpj_inst
+                    cvpj_l_instrumentsorder.append(instid)
 
             playlistrowdata = {}
             playlistrowdata['name'] = 'Channel '+str(channel+1)

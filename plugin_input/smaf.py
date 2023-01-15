@@ -205,7 +205,7 @@ class input_mmf(plugin_input.base):
                             exit()
                         if mmf_tracknum in range(5, 8):
                             print('[input-smaf] Format: MA3')
-                            trackparsed == True
+                            trackparsed = True
                             matype, number_of_channels, t_cvpj_notelist, t_usedprograms, t_chanvol = parse_ma3_track(mmf_cnti_chunk[1], 3)
 
         cvpj_l_fxrack["0"] = {}

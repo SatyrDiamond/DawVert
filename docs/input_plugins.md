@@ -4,7 +4,7 @@
 | DataType | Short Name | Name | Autodetect |
 | --- | --- | :--- | :--- |
 | M-I | ```flp``` | FL Studio | ✔️ |
-| R | ```lmms``` | LMMS | ✔️ |
+| F | ```lmms``` | LMMS | ✔️ |
 
 ## Tracker
 | DataType | Short Name | Name | Autodetect | 
@@ -21,7 +21,7 @@
 | M-I | ```ceol``` | Bosca Ceoil | ❌ | 
 | M-I | ```jummbox``` | Beepbox/Jummbox | ❌ | 
 | M | ```lovelycomposer``` | Lovely Composer | ❌ | 
-| R | ```piyopiyo``` | PiyoPiyo | ✔️ |  
+| F | ```piyopiyo``` | PiyoPiyo | ✔️ |  
 
 ## Other
 | DataType | Short Name | Name | Autodetect | 
@@ -29,7 +29,8 @@
 | M | ```midi``` | MIDI | ✔️ | 
 | M-I | ```caustic``` | Caustic 3 | ❌ | 
 | M | ```mnbs``` | Minecraft Note Block Studio | ❌ | 
-| R | ```flipper``` | Flipper Music Format | ❌ | 
+| F | ```flipper``` | Flipper Music Format | ❌ | 
+| M | ```mmf``` | Mobile Music File | ✔️ | 
 
 ## Mario Paint
 | DataType | Short Name | Name | Autodetect | 

@@ -69,7 +69,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
                 t_usedprograms[firstbyte[1]].append(note_program)
             cvpj_note = {}
             cvpj_note["duration"] = noteresize(note_durgate*tb_ms)
-            cvpj_note["key"] = note_note-48
+            cvpj_note["key"] = note_note-60
             cvpj_note["position"] = noteresize(basepos*tb_ms)
             cvpj_note["instrument"] = 'ch'+str(firstbyte[1])+'_inst'+str(note_program)
             t_cvpj_notelist[firstbyte[1]].append(cvpj_note)
@@ -83,7 +83,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
                 t_usedprograms[firstbyte[1]].append(note_program)
             cvpj_note = {}
             cvpj_note["duration"] = noteresize(note_durgate*tb_ms)
-            cvpj_note["key"] = note_note-48
+            cvpj_note["key"] = note_note-60
             cvpj_note["position"] = noteresize(basepos*tb_ms)
             cvpj_note["vol"] = note_vol/128
             cvpj_note["instrument"] = 'ch'+str(firstbyte[1])+'_inst'+str(note_program)
@@ -191,7 +191,11 @@ class input_mmf(plugin_input.base):
                 cvpj_inst["color"] = [0.69, 0.63, 0.54]
                 cvpj_inst["instdata"] = {}
                 cvpj_inst["instdata"]['plugin'] = 'general-midi'
-                cvpj_inst["instdata"]['plugindata'] = {'bank':0, 'inst':c_usedprogram}
+                if channel != 9:
+                    cvpj_inst["instdata"]['plugindata'] = {'bank':0, 'inst':c_usedprogram}
+                else:
+                    cvpj_inst["instdata"]['plugindata'] = {'bank':128, 'inst':0}
+
                 cvpj_l_instruments[instid] = cvpj_inst
                 cvpj_l_instrumentsorder.append(instid)
 

@@ -48,7 +48,9 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
     t_currentprogram = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     t_cvpj_notelist = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
     t_usedprograms = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
+    t_chanvol = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 
+    beforenote = True
     position = 0
     while bio_mmf_Mtsq.tell() < bio_mmf_Mtsq_size:
         basepos += calc_gatetime(bio_mmf_Mtsq)
@@ -73,6 +75,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             cvpj_note["position"] = noteresize(basepos*tb_ms)
             cvpj_note["instrument"] = 'ch'+str(firstbyte[1])+'_inst'+str(note_program)
             t_cvpj_notelist[firstbyte[1]].append(cvpj_note)
+            beforenote = False
         elif firstbyte[0] == 9:
             note_note = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             note_vol = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
@@ -88,11 +91,14 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             cvpj_note["vol"] = note_vol/128
             cvpj_note["instrument"] = 'ch'+str(firstbyte[1])+'_inst'+str(note_program)
             t_cvpj_notelist[firstbyte[1]].append(cvpj_note)
+            beforenote = False
 
         elif firstbyte[0] == 11:
-            banktype = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
-            bankdata = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
-            #print('| '+str(firstbyte[1]).ljust(4), 'CONTROL ', str(banktype).ljust(4), str(bankdata).ljust(4))
+            cntltype = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
+            cntldata = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
+            print('| '+str(firstbyte[1]).ljust(4), 'CONTROL ', str(cntltype).ljust(4), str(cntldata).ljust(4))
+            if cntltype == 7:
+                t_chanvol[firstbyte[1]] = cntldata/127
         elif firstbyte[0] == 12:
             prognumber = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             #print('| '+str(firstbyte[1]).ljust(4), 'PROGRAM ', prognumber)
@@ -117,7 +123,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
         print('[input-smaf]       Notes: '+str(len(t_cvpj_notelist[channel])))
         print('[input-smaf]       Used Insts: '+str(', '.join(str(x) for x in t_usedprograms[channel])   ))
         print('[input-smaf]')
-    return (t_cvpj_notelist, t_usedprograms)
+    return (t_cvpj_notelist, t_usedprograms, t_chanvol)
 
 def parse_ma3_track(datain, tracknum):
     bio_mmf_track = data_bytes.bytearray2BytesIO(datain)
@@ -179,7 +185,7 @@ class input_mmf(plugin_input.base):
                             exit()
                         if mmf_tracknum in range(5, 8):
                             print('[input-smaf] Format: MA3')
-                            t_cvpj_notelist, t_usedprograms = parse_ma3_track(mmf_cnti_chunk[1], 3)
+                            t_cvpj_notelist, t_usedprograms, t_chanvol = parse_ma3_track(mmf_cnti_chunk[1], 3)
 
         cvpj_l_fxrack["0"] = {}
         cvpj_l_fxrack["0"]["name"] = "Master"
@@ -221,6 +227,7 @@ class input_mmf(plugin_input.base):
             fxdata = cvpj_l_fxrack[str(channel+1)]
             fxdata["fxenabled"] = 1
             fxdata['color'] = [0.69, 0.63, 0.54]
+            fxdata['vol'] = t_chanvol[channel]
             fxdata["name"] = "Channel "+str(channel+1)
 
 

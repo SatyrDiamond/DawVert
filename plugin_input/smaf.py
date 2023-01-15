@@ -187,6 +187,7 @@ class input_mmf(plugin_input.base):
 
         mmf_chunks_ins = data_bytes.riff_read(mmf_chunks_main[0][1], 0)
 
+        trackparsed = False
         for mmf_chunk in mmf_chunks_ins:
             if mmf_chunk[0] == b'CNTI':
                 bio_mmf_cnti = data_bytes.bytearray2BytesIO(mmf_chunk[1])
@@ -204,11 +205,15 @@ class input_mmf(plugin_input.base):
                             exit()
                         if mmf_tracknum in range(5, 8):
                             print('[input-smaf] Format: MA3')
+                            trackparsed == True
                             matype, number_of_channels, t_cvpj_notelist, t_usedprograms, t_chanvol = parse_ma3_track(mmf_cnti_chunk[1], 3)
 
         cvpj_l_fxrack["0"] = {}
         cvpj_l_fxrack["0"]["name"] = "Master"
 
+        if trackparsed == False:
+            print('[input-smaf] No track data found.')
+            exit()
         for channel in range(number_of_channels):
             c_notelist = t_cvpj_notelist[channel]
             c_usedinsts = t_usedprograms[channel]

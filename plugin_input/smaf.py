@@ -68,7 +68,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             if note_program not in t_usedprograms[firstbyte[1]]:
                 t_usedprograms[firstbyte[1]].append(note_program)
             cvpj_note = {}
-            cvpj_note["duration"] = noteresize((note_durgate+1)*tb_ms)
+            cvpj_note["duration"] = noteresize(note_durgate*tb_ms)
             cvpj_note["key"] = note_note-60
             cvpj_note["position"] = noteresize(basepos*tb_ms)
             cvpj_note["instrument"] = 'ch'+str(firstbyte[1])+'_inst'+str(note_program)
@@ -82,7 +82,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             if note_program not in t_usedprograms[firstbyte[1]]:
                 t_usedprograms[firstbyte[1]].append(note_program)
             cvpj_note = {}
-            cvpj_note["duration"] = noteresize((note_durgate+1)*tb_ms)
+            cvpj_note["duration"] = noteresize(note_durgate*tb_ms)
             cvpj_note["key"] = note_note-60
             cvpj_note["position"] = noteresize(basepos*tb_ms)
             cvpj_note["vol"] = note_vol/128
@@ -112,8 +112,11 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             print('Unknown Command', firstbyte[0], "0x%X" % firstbyte[0])
             exit()
 
-    #print(t_cvpj_notelist)
-    #print(t_usedprograms)
+    for channel in range(16):
+        print('[input-smaf] MA3, Channel '+str(channel))
+        print('[input-smaf]       Notes: '+str(len(t_cvpj_notelist[channel])))
+        print('[input-smaf]       Used Insts: '+str(', '.join(str(x) for x in t_usedprograms[channel])   ))
+        print('[input-smaf]')
     return (t_cvpj_notelist, t_usedprograms)
 
 def parse_ma3_track(datain, tracknum):
@@ -137,8 +140,8 @@ def parse_ma3_track(datain, tracknum):
 class input_mmf(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
-    def getshortname(self): return 'MMF'
-    def getname(self): return 'MMF'
+    def getshortname(self): return 'mmf'
+    def getname(self): return 'Mobile Music File'
     def gettype(self): return 'm'
     def supported_autodetect(self): return True
     def detect(self, input_file):

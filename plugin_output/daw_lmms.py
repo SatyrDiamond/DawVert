@@ -630,7 +630,7 @@ class output_lmms(plugin_output.base):
 
         projJ = json.loads(convproj_json)
 
-        song_convert.trackfx2fxrack(projJ)
+        song_convert.trackfx2fxrack(projJ,'s')
 
         placements.removelanes(projJ)
 

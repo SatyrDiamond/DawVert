@@ -197,7 +197,6 @@ class input_cvpj_f(plugin_input.base):
         placements = []
         placements_pos = 0
         for patnum in pixi_patternorder:
-            print(patnum, pixi_data_patterns[pixi_data_pattern]['len'])
             pl_placement = {}
             pl_placement['position'] = placements_pos
             pl_placement['duration'] = pixi_data_patterns[pixi_data_pattern]['len']

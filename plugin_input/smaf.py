@@ -60,17 +60,17 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
     while bio_mmf_Mtsq.tell() < bio_mmf_Mtsq_size:
         basepos += calc_gatetime(bio_mmf_Mtsq)
 
-        print(str(basepos).ljust(5), end=' ')
+        #print(str(basepos).ljust(5), end=' ')
 
         firstbyte = splitbyte(int.from_bytes(bio_mmf_Mtsq.read(1), "big"))
-        print(str(firstbyte[0]).ljust(3), str(firstbyte[1]).ljust(3), end=' ')
+        #print(str(firstbyte[0]).ljust(3), str(firstbyte[1]).ljust(3), end=' ')
         if firstbyte[0] == 0:
             null_durgate = calc_gatetime(bio_mmf_Mtsq)
-            print('|      NULL    ', null_durgate)
+            #print('|      NULL    ', null_durgate)
         elif firstbyte[0] == 8:
             note_note = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             note_durgate = calc_gatetime(bio_mmf_Mtsq)
-            print('| '+str(firstbyte[1]).ljust(4), 'NOTE    ', str(note_note).ljust(4), '     dur ', note_durgate)
+            #print('| '+str(firstbyte[1]).ljust(4), 'NOTE    ', str(note_note).ljust(4), '     dur ', note_durgate)
             note_program = t_currentprogram[firstbyte[1]]
             note_bankprogram = [t_currentbank[firstbyte[1]], t_currentprogram[firstbyte[1]]]
             if note_bankprogram not in t_usedprograms[firstbyte[1]]:
@@ -86,7 +86,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             note_note = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             note_vol = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             note_durgate = calc_gatetime(bio_mmf_Mtsq)
-            print('| '+str(firstbyte[1]).ljust(4), 'NOTE+V  ', str(note_note).ljust(4), str(note_vol).ljust(4), 'dur ', note_durgate)
+            #print('| '+str(firstbyte[1]).ljust(4), 'NOTE+V  ', str(note_note).ljust(4), str(note_vol).ljust(4), 'dur ', note_durgate)
             note_program = t_currentprogram[firstbyte[1]]
             note_bankprogram = [t_currentbank[firstbyte[1]], t_currentprogram[firstbyte[1]]]
             if note_bankprogram not in t_usedprograms[firstbyte[1]]:
@@ -103,26 +103,26 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
         elif firstbyte[0] == 11:
             cntltype = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             cntldata = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
-            print('| '+str(firstbyte[1]).ljust(4), 'CONTROL ', str(cntltype).ljust(4), str(cntldata).ljust(4))
+            #print('| '+str(firstbyte[1]).ljust(4), 'CONTROL ', str(cntltype).ljust(4), str(cntldata).ljust(4))
             if cntltype == 7:
                 t_chanvol[firstbyte[1]] = cntldata/127
             if cntltype == 0:
                 t_currentbank[firstbyte[1]] = cntldata
         elif firstbyte[0] == 12:
             prognumber = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
-            print('| '+str(firstbyte[1]).ljust(4), 'PROGRAM ', prognumber)
+            #print('| '+str(firstbyte[1]).ljust(4), 'PROGRAM ', prognumber)
             t_currentprogram[firstbyte[1]] = prognumber
         elif firstbyte[0] == 14:
             lsbpitch = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             msbpitch = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
-            print('| '+str(firstbyte[1]).ljust(4), 'PITCH   ', str(lsbpitch).ljust(4), str(msbpitch).ljust(4))
+            #print('| '+str(firstbyte[1]).ljust(4), 'PITCH   ', str(lsbpitch).ljust(4), str(msbpitch).ljust(4))
         elif firstbyte[0] == 15 and firstbyte[1] == 0:
             sysexsize = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             sysexdata = bio_mmf_Mtsq.read(sysexsize)
-            print('| '+str(firstbyte[1]).ljust(4), 'SYSEX   ', sysexdata.hex())
+            #print('| '+str(firstbyte[1]).ljust(4), 'SYSEX   ', sysexdata.hex())
         elif firstbyte[0] == 15 and firstbyte[1] == 15:
             pass
-            print('| '+str(firstbyte[1]).ljust(4), 'NOP     ')
+            #print('| '+str(firstbyte[1]).ljust(4), 'NOP     ')
         else:
             print('Unknown Command', firstbyte[0], "0x%X" % firstbyte[0])
             exit()
@@ -179,7 +179,6 @@ class input_mmf(plugin_input.base):
         if mmf_chunks_main[0][0] != b'MMMD':
             print('[input-smaf] Not a SMAF File.'); exit()
 
-        cvpj_l = {}
         cvpj_l_playlist = {}
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
@@ -274,9 +273,8 @@ class input_mmf(plugin_input.base):
             fxdata['vol'] = t_chanvol[channel]
             fxdata["name"] = "Channel "+str(channel+1)
 
-
-
-
+        cvpj_l = {}
+        cvpj_l['use_fxrack'] = True
         cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

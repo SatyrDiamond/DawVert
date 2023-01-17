@@ -4,7 +4,7 @@
 | DataType | Short Name | Name | Autodetect |
 | --- | --- | :--- | :--- |
 | M-I | ```flp``` | FL Studio | ✔️ |
-| F | ```lmms``` | LMMS | ✔️ |
+| R | ```lmms``` | LMMS | ✔️ |
 
 ## Tracker
 | DataType | Short Name | Name | Autodetect | 
@@ -21,9 +21,9 @@
 | M-I | ```ceol``` | Bosca Ceoil | ❌ | 
 | M-I | ```jummbox``` | Beepbox/Jummbox | ❌ | 
 | M-I | ```pixitracker``` | PixiTracker | ❌ | 
-| F | ```mekimekichip``` | メキメキチップ (MekiMeki Chip)  | ❌ | 
+| R | ```mekimekichip``` | メキメキチップ (MekiMeki Chip)  | ❌ | 
 | M | ```lovelycomposer``` | Lovely Composer | ❌ | 
-| F | ```piyopiyo``` | PiyoPiyo | ✔️ |  
+| R | ```piyopiyo``` | PiyoPiyo | ✔️ |  
 
 ## Other
 | DataType | Short Name | Name | Autodetect | 
@@ -31,7 +31,7 @@
 | M | ```midi``` | MIDI | ✔️ | 
 | M-I | ```caustic``` | Caustic 3 | ❌ | 
 | M | ```mnbs``` | Minecraft Note Block Studio | ❌ | 
-| F | ```flipper``` | Flipper Music Format | ❌ | 
+| R | ```flipper``` | Flipper Music Format | ❌ | 
 | M | ```mmf``` | Mobile Music File | ✔️ | 
 
 ## Mario Paint

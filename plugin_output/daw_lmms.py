@@ -9,6 +9,7 @@ import plugin_output
 from functions import auto
 from functions import placements
 from functions import note_mod
+from functions import song_convert
 from functions import colors
 
 lfoshape = {'sine': 0,'tri': 1,'saw': 2,'square': 3,'custom': 4,'random': 5}
@@ -619,7 +620,7 @@ class output_lmms(plugin_output.base):
     def is_dawvert_plugin(self): return 'output'
     def getname(self): return 'LMMS'
     def getshortname(self): return 'lmms'
-    def gettype(self): return 'f'
+    def gettype(self): return 'r'
     def parse(self, convproj_json, output_file):
         global autoidnum
         global trkcX
@@ -653,13 +654,13 @@ class output_lmms(plugin_output.base):
         setvalue(projJ, 'timesig_numerator', headX, 'timesig_numerator', 4, auto_nameid, 'main')
         setvalue(projJ, 'timesig_denominator', headX, 'timesig_denominator', 4, auto_nameid, 'main')
 
-        lmms_encode_tracks(trkcX, trksJ, trkorderJ)
-        
-        if 'fxrack' in projJ:
-            xml_fxmixer = ET.SubElement(songX, "fxmixer")
-            json_fxrack = projJ['fxrack']
-            lmms_encode_fxmixer(xml_fxmixer, json_fxrack)
+        song_convert.trackfx2fxrack(projJ)
 
+        lmms_encode_tracks(trkcX, trksJ, trkorderJ)
+
+        xml_fxmixer = ET.SubElement(songX, "fxmixer")
+        json_fxrack = projJ['fxrack']
+        lmms_encode_fxmixer(xml_fxmixer, json_fxrack)
 
         if 'message' in projJ:
             notesX = ET.SubElement(songX, "projectnotes")

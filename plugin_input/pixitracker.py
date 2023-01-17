@@ -46,7 +46,6 @@ class input_cvpj_f(plugin_input.base):
         pixi_data_patterns = {}
         pixi_data_sounds = []
 
-        cvpj_l = {}
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
         cvpj_l_notelistindex = {}
@@ -208,6 +207,8 @@ class input_cvpj_f(plugin_input.base):
         cvpj_l_playlist['1'] = {}
         cvpj_l_playlist['1']["placements"] = placements
 
+        cvpj_l = {}
+        cvpj_l['use_fxrack'] = False
         cvpj_l['vol'] = pixi_vol/100
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments

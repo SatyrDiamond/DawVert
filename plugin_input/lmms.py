@@ -361,7 +361,7 @@ def lmms_decode_inst_track(trkX, name):
     cvpj_l_track['pan'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'pan', 0, ['track', name, 'pan'])))
     cvpj_l_track['vol'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'vol', 1, ['track', name, 'vol'])))
     
-    if trkX.get('color') != None: cvpj_l_track['color'] = colors.hex_to_rgb_float(trkX.get('color'))
+    #if trkX.get('color') != None: cvpj_l_track['color'] = colors.hex_to_rgb_float(trkX.get('color'))
 
     #midi
     xml_a_midiport = trkX_insttr.findall('midiport')
@@ -568,7 +568,7 @@ class input_lmms(plugin_input.base):
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'lmms'
     def getname(self): return 'LMMS'
-    def gettype(self): return 'f'
+    def gettype(self): return 'r'
     def supported_autodetect(self): return True
     def detect(self, input_file):
         output = False
@@ -633,7 +633,7 @@ class input_lmms(plugin_input.base):
                     elif s_autopl_id[1] == 'pitch': main_autoplacements[s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 100)
                     else: main_autoplacements[s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 1)
 
-
+        rootJ['use_fxrack'] = True
         rootJ['trackdata'] = trackdata
         rootJ['trackordering'] = trackordering
         rootJ['placements_auto_main'] = main_autoplacements

@@ -385,6 +385,7 @@ class input_cvpj_r(plugin_input.base):
 
         #dmf_insts
 
+        cvpj_l['use_fxrack'] = False
         cvpj_l['title'] = dmf_song_name
         cvpj_l['author'] = dmf_song_author
         cvpj_l['notelistindex'] = cvpj_l_notelistindex

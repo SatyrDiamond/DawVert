@@ -180,6 +180,7 @@ class input_cvpj_f(plugin_input.base):
                 cvpj_inst['instdata']['plugindata']['file'] = wave_path
                 cvpj_inst['instdata']['plugindata']['start'] = t_sounddata[5]
                 cvpj_inst['instdata']['plugindata']['end'] = t_sounddata[6]
+                cvpj_inst['instdata']['plugindata']['trigger'] = 'normal'
 
             cvpj_l_instruments['pixi_'+str(instnum)] = cvpj_inst
             cvpj_l_instrumentsorder.append('pixi_'+str(instnum))

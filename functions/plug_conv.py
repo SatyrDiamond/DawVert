@@ -228,7 +228,7 @@ def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 	supportedplugins['sampler-multi'] = ['cvpj', 'cvpj_f', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'ableton']
 	cvpj_l = json.loads(cvpjdata)
 	if out_type != 'debug':
-		if in_type == 'f':
+		if in_type == 'r':
 			if 'trackdata' in cvpj_l:
 				for track in cvpj_l['trackdata']:
 					trackdata = cvpj_l['trackdata'][track]

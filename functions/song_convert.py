@@ -22,6 +22,9 @@ def trackfx2fxrack(cvpj_l, cvpjtype):
         if cvpjtype == 'm':
             c_orderingdata = cvpj_l['instrumentsorder']
             c_trackdata = cvpj_l['instruments']
+        if 'track_master' in cvpj_l:
+            cvpj_l['fxrack']['0'] = cvpj_l['track_master']
+
         for trackid in c_orderingdata:
             trackdata = c_trackdata[trackid]
             trackdata['fxrack_channel'] = fxnum

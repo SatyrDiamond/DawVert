@@ -17,7 +17,7 @@ class input_cvpj_f(plugin_input.base):
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mekimekichip'
     def getname(self): return 'メキメキチップ (MekiMeki Chip)'
-    def gettype(self): return 'f'
+    def gettype(self): return 'r'
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         bytestream = open(input_file, 'r')
@@ -26,13 +26,13 @@ class input_cvpj_f(plugin_input.base):
 
         cvpj_l_trackdata = {}
         cvpj_l_trackordering = []
-        cvpj_l_fxrack = {}
-        cvpj_l_fxrack['0'] = {'name': 'MAS'}
+        cvpj_l_track_master = {}
 
         mmc_bpm = getvalue(mmc_main, 'Bpm')
         mmc_mastervolume = getvalue(mmc_main, 'MasterVolume')
-        cvpj_l_fxrack['0']['vol'] = mmc_mastervolume*1.5
-        cvpj_l_fxrack['0']['color'] = maincolor
+        cvpj_l_track_master['name'] = 'MAS'
+        cvpj_l_track_master['vol'] = mmc_mastervolume*1.5
+        cvpj_l_track_master['color'] = maincolor
 
         mmc_tracks = mmc_main["Tracks"]
 
@@ -42,11 +42,8 @@ class input_cvpj_f(plugin_input.base):
             trackdata['color'] = maincolor
             trackdata['name'] = 'CH'+str(tracknum)
             trackdata['type'] = 'instrument'
-            trackdata['fxrack_channel'] = tracknum+1
             trackdata["instdata"] = {}
             trackdata["instdata"]['plugin'] = 'none'
-            cvpj_l_fxrack[str(tracknum+1)] = {'name': 'CH'+str(tracknum)}
-            cvpj_l_fxrack[str(tracknum+1)]['color'] = maincolor
             cvpj_l_trackdata[str('CH'+str(tracknum))] = trackdata
             cvpj_l_trackordering.append('CH'+str(tracknum))
 
@@ -78,10 +75,11 @@ class input_cvpj_f(plugin_input.base):
 
             tracknum += 1
 
-        rootJ = {}
-        rootJ['bpm'] = mmc_bpm
-        rootJ['trackdata'] = cvpj_l_trackdata
-        rootJ['trackordering'] = cvpj_l_trackordering
-        rootJ['fxrack'] = cvpj_l_fxrack
-        return json.dumps(rootJ)
+        cvpj_l = {}
+        cvpj_l['use_fxrack'] = False
+        cvpj_l['bpm'] = mmc_bpm
+        cvpj_l['trackdata'] = cvpj_l_trackdata
+        cvpj_l['trackordering'] = cvpj_l_trackordering
+        cvpj_l['track_master'] = cvpj_l_track_master
+        return json.dumps(cvpj_l)
 

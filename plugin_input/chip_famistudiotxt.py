@@ -127,21 +127,22 @@ def decode_fst(infile):
     fst_Main['DPCMSamples'] = fst_DPCMSamples
     fst_Main['DPCMMappings'] = fst_DPCMMappings
     return fst_Main
-def create_inst(wavetype, fst_Instrument, cvpj_l_instruments, cvpj_l_instrumentsorder):
+def create_inst(WaveType, fst_Instrument, cvpj_l_instruments, cvpj_l_instrumentsorder, fxrack_channel):
     instname = fst_Instrument['Name']
     cvpj_inst = {}
     cvpj_inst["enabled"] = 1
+    cvpj_inst['fxrack_channel'] = fxrack_channel
     cvpj_inst["instdata"] = {}
     cvpj_instdata = cvpj_inst["instdata"]
     cvpj_instdata['pitch'] = 0
-    if wavetype == 'Square1' or wavetype == 'Square2' or wavetype == 'Triangle' or wavetype == 'Noise':
+    if WaveType == 'Square1' or WaveType == 'Square2' or WaveType == 'Triangle' or WaveType == 'Noise':
         cvpj_instdata['plugin'] = 'retro'
         cvpj_instdata['plugindata'] = {}
         plugdata = cvpj_instdata['plugindata']
-        if wavetype == 'Square1' or wavetype == 'Square2': 
+        if WaveType == 'Square1' or WaveType == 'Square2': 
             plugdata['wave'] = 'square'
-        if wavetype == 'Triangle': plugdata['wave'] = 'triangle'
-        if wavetype == 'Noise': plugdata['wave'] = 'noise'
+        if WaveType == 'Triangle': plugdata['wave'] = 'triangle'
+        if WaveType == 'Noise': plugdata['wave'] = 'noise'
         if 'Envelopes' in fst_Instrument:
             if 'Volume' in fst_Instrument['Envelopes']:
                 plugdata['env_vol'] = {}
@@ -160,44 +161,45 @@ def create_inst(wavetype, fst_Instrument, cvpj_l_instruments, cvpj_l_instruments
                 if 'Release' in fst_Instrument['Envelopes']['DutyCycle']:
                     plugdata['env_duty']['release'] = fst_Instrument['Envelopes']['DutyCycle']['Release']
 
-    if wavetype == 'VRC7FM':
+    if WaveType == 'VRC7FM':
         cvpj_instdata['plugin'] = 'fm_vrc7'
         cvpj_instdata['plugindata'] = fst_Instrument
-    if wavetype == 'VRC6Square' or wavetype == 'VRC6Saw':
+    if WaveType == 'VRC6Square' or WaveType == 'VRC6Saw':
         cvpj_instdata['plugin'] = 'vrc6'
         cvpj_instdata['plugindata'] = fst_Instrument
-        if wavetype == 'VRC6Saw': cvpj_instdata['plugindata']['wave'] = 'Saw'
-        if wavetype == 'VRC6Square': cvpj_instdata['plugindata']['wave'] = 'Square'
-    if wavetype == 'FDS':
+        if WaveType == 'VRC6Saw': cvpj_instdata['plugindata']['wave'] = 'Saw'
+        if WaveType == 'VRC6Square': cvpj_instdata['plugindata']['wave'] = 'Square'
+    if WaveType == 'FDS':
         cvpj_instdata['plugin'] = 'fds'
         cvpj_instdata['plugindata'] = fst_Instrument
-    if wavetype == 'N163':
+    if WaveType == 'N163':
         cvpj_instdata['plugin'] = 'namco_163'
         cvpj_instdata['plugindata'] = fst_Instrument
-    if wavetype == 'S5B':
+    if WaveType == 'S5B':
         cvpj_instdata['plugin'] = 'sunsoft_5b'
         cvpj_instdata['plugindata'] = fst_Instrument
     cvpj_instdata['usemasterpitch'] = 1
-    if wavetype == 'Square1': cvpj_inst['color'] = [0.97, 0.56, 0.36]
-    if wavetype == 'Square2': cvpj_inst['color'] = [0.97, 0.56, 0.36]
-    if wavetype == 'Triangle': cvpj_inst['color'] = [0.94, 0.33, 0.58]
-    if wavetype == 'Noise': cvpj_inst['color'] = [0.33, 0.74, 0.90]
-    if wavetype == 'FDS': cvpj_inst['color'] = [0.94, 0.94, 0.65]
-    if wavetype == 'VRC7FM': cvpj_inst['color'] = [1.00, 0.46, 0.44]
-    if wavetype == 'VRC6Square': cvpj_inst['color'] = [0.60, 0.44, 0.93]
-    if wavetype == 'VRC6Saw': cvpj_inst['color'] = [0.46, 0.52, 0.91]
-    if wavetype == 'S5B': cvpj_inst['color'] = [0.58, 0.94, 0.33]
-    if wavetype == 'N163': cvpj_inst['color'] = [0.97, 0.97, 0.36]
-    cvpj_inst["name"] = wavetype+'-'+instname
+    if WaveType == 'Square1': cvpj_inst['color'] = [0.97, 0.56, 0.36]
+    if WaveType == 'Square2': cvpj_inst['color'] = [0.97, 0.56, 0.36]
+    if WaveType == 'Triangle': cvpj_inst['color'] = [0.94, 0.33, 0.58]
+    if WaveType == 'Noise': cvpj_inst['color'] = [0.33, 0.74, 0.90]
+    if WaveType == 'FDS': cvpj_inst['color'] = [0.94, 0.94, 0.65]
+    if WaveType == 'VRC7FM': cvpj_inst['color'] = [1.00, 0.46, 0.44]
+    if WaveType == 'VRC6Square': cvpj_inst['color'] = [0.60, 0.44, 0.93]
+    if WaveType == 'VRC6Saw': cvpj_inst['color'] = [0.46, 0.52, 0.91]
+    if WaveType == 'S5B': cvpj_inst['color'] = [0.58, 0.94, 0.33]
+    if WaveType == 'N163': cvpj_inst['color'] = [0.97, 0.97, 0.36]
+    cvpj_inst["name"] = WaveType+'-'+instname
     cvpj_inst["pan"] = 0.0
     cvpj_inst["vol"] = 0.6
-    cvpj_l_instruments[wavetype+'-'+instname] = cvpj_inst
-    if wavetype+'-'+instname not in cvpj_l_instrumentsorder:
-        cvpj_l_instrumentsorder.append(wavetype+'-'+instname)
-def create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instruments, cvpj_l_instrumentsorder):
+    cvpj_l_instruments[WaveType+'-'+instname] = cvpj_inst
+    if WaveType+'-'+instname not in cvpj_l_instrumentsorder:
+        cvpj_l_instrumentsorder.append(WaveType+'-'+instname)
+def create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instruments, cvpj_l_instrumentsorder, fxrack_channel):
     instname = 'DPCM'
     cvpj_inst = {}
     cvpj_inst["enabled"] = 1
+    cvpj_inst['fxrack_channel'] = fxrack_channel
     cvpj_inst["instdata"] = {}
     cvpj_instdata = cvpj_inst["instdata"]
     cvpj_instdata['pitch'] = 0
@@ -257,6 +259,7 @@ class input_famistudio(plugin_input.base):
         cvpj_l_instrumentsorder = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
+        cvpj_l_fxrack = {}
         
         fst_Instruments = fst_Main['Instruments']
         fst_currentsong = next(iter(fst_Main['Songs'].values()))
@@ -287,15 +290,30 @@ class input_famistudio(plugin_input.base):
             PointsPos.append(PointsAdd)
             PointsAdd += PatternLengthList[number]
 
+        channum = 1
         for Channel in fst_channels:
             WaveType = None
             used_insts = get_used_insts(fst_channels[Channel])
             if Channel in InstShapes: WaveType = InstShapes[Channel]
             elif Channel == 'DPCM': 
-                create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instruments, cvpj_l_instrumentsorder)
+                create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instruments, cvpj_l_instrumentsorder, channum)
+                cvpj_l_fxrack[str(channum)] = {'name': 'DPCM'}
+                cvpj_l_fxrack[str(channum)]['color'] = [0.48, 0.83, 0.49]
             if WaveType != None:
+                cvpj_l_fxrack[str(channum)] = {'name': WaveType}
+                if WaveType == 'Square1': cvpj_l_fxrack[str(channum)]['color'] = [0.97, 0.56, 0.36]
+                if WaveType == 'Square2': cvpj_l_fxrack[str(channum)]['color'] = [0.97, 0.56, 0.36]
+                if WaveType == 'Triangle': cvpj_l_fxrack[str(channum)]['color'] = [0.94, 0.33, 0.58]
+                if WaveType == 'Noise': cvpj_l_fxrack[str(channum)]['color'] = [0.33, 0.74, 0.90]
+                if WaveType == 'FDS': cvpj_l_fxrack[str(channum)]['color'] = [0.94, 0.94, 0.65]
+                if WaveType == 'VRC7FM': cvpj_l_fxrack[str(channum)]['color'] = [1.00, 0.46, 0.44]
+                if WaveType == 'VRC6Square': cvpj_l_fxrack[str(channum)]['color'] = [0.60, 0.44, 0.93]
+                if WaveType == 'VRC6Saw': cvpj_l_fxrack[str(channum)]['color'] = [0.46, 0.52, 0.91]
+                if WaveType == 'S5B': cvpj_l_fxrack[str(channum)]['color'] = [0.58, 0.94, 0.33]
+                if WaveType == 'N163': cvpj_l_fxrack[str(channum)]['color'] = [0.97, 0.97, 0.36]
                 for inst in used_insts:
-                    create_inst(WaveType, fst_Instruments[inst], cvpj_l_instruments, cvpj_l_instrumentsorder)
+                    create_inst(WaveType, fst_Instruments[inst], cvpj_l_instruments, cvpj_l_instrumentsorder, channum)
+            channum += 1
 
         playlistnum = 1
         for Channel in fst_channels:
@@ -349,6 +367,7 @@ class input_famistudio(plugin_input.base):
         if 'Name' in fst_Main: cvpj_l['title'] = fst_Main['Name']
         if 'Author' in fst_Main: cvpj_l['author'] = fst_Main['Author']
 
+        cvpj_l['use_fxrack'] = True
         cvpj_l['timesig_numerator'] = timesig[0]
         cvpj_l['timesig_denominator'] = timesig[1]
         cvpj_l['timemarkers'] = placements.make_timemarkers(timesig, PatternLengthList, LoopPoint)
@@ -356,5 +375,6 @@ class input_famistudio(plugin_input.base):
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
+        cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['bpm'] = bpm
         return json.dumps(cvpj_l)

@@ -91,7 +91,6 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l_instrumentsorder = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
-        cvpj_l_fxrack = {}
 
         file_name = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
@@ -126,7 +125,6 @@ class input_cvpj_r(plugin_input.base):
             cvpj_inst["color"] = caustic_instcolors[machine['id']]
             cvpj_inst["pan"] = 0.0
             cvpj_inst["vol"] = 1.0
-            cvpj_inst['fxrack_channel'] = machnum
 
             cvpj_instdata['plugindata'] = {}
             plugindata = cvpj_instdata['plugindata']
@@ -232,9 +230,6 @@ class input_cvpj_r(plugin_input.base):
 
             cvpj_l_instruments[machid] = cvpj_inst
             cvpj_l_instrumentsorder.append(machid)
-            cvpj_l_fxrack[str(machnum)] = {}
-            cvpj_l_fxrack[str(machnum)]["name"] = caustic_instnames[machine['id']]
-            cvpj_l_fxrack[str(machnum)]["color"] = caustic_instcolors[machine['id']]
             cvpj_l_playlist[str(plnum)] = {}
             cvpj_l_playlist[str(plnum)]["name"] = caustic_instnames[machine['id']]
             cvpj_l_playlist[str(plnum)]["color"] = caustic_instcolors[machine['id']]
@@ -273,9 +268,9 @@ class input_cvpj_r(plugin_input.base):
         placements_auto = {}
         placements_auto['bpm'] = [tempo_placement]
 
+        cvpj_l['use_fxrack'] = False
         cvpj_l['placements_auto_main'] = placements_auto
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist

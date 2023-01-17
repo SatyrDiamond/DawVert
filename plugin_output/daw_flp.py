@@ -8,6 +8,7 @@ import base64
 import struct
 from bs4 import BeautifulSoup
 from functions import format_flp
+from functions import song_convert
 from functions import note_mod
 
 def clamp(n, minn, maxn):
@@ -24,6 +25,9 @@ class output_cvpjs(plugin_output.base):
     def gettype(self): return 'mi'
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
+
+        song_convert.trackfx2fxrack(projJ, 'm')
+
         FLP_Data = {}
 
         FLP_Data['FL_Main'] = {}

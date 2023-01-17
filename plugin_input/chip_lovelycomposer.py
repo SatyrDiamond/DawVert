@@ -212,6 +212,7 @@ class input_lc(plugin_input.base):
 
         startinststr = 'lc_instlist_'
 
+        cvpj_l['use_fxrack'] = False
         cvpj_l['timemarkers'] = placements.make_timemarkers([4, 4], patternlen, lc_loop_start_bar)
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

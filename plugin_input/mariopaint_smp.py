@@ -175,6 +175,7 @@ class input_mariopaint_smp(plugin_input.base):
             cvpj_l_instruments[instname] = cvpj_inst
             cvpj_l_instrumentsorder.append(instname)
 
+        cvpj_l['use_fxrack'] = False
         cvpj_l['timesig_numerator'] = 4
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['instruments'] = cvpj_l_instruments

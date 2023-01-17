@@ -31,7 +31,6 @@ class input_s3m(plugin_input.base):
         s3m_modulename = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, s3m_modulename)
 
-        cvpj_l = {}
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
 
@@ -245,11 +244,12 @@ class input_s3m(plugin_input.base):
 
         patlentable = song_tracker.get_len_table(patterntable_all, t_orderlist)
 
-        cvpj_l['title'] = s3m_name
-
         placements_auto = {}
         placements_auto['bpm'] = song_tracker.tempo_auto(patterntable_all, t_orderlist, s3m_speed, s3m_tempo)
 
+        cvpj_l = {}
+        cvpj_l['title'] = s3m_name
+        cvpj_l['use_fxrack'] = False
         cvpj_l['placements_auto_main'] = placements_auto
         cvpj_l['timemarkers'] = placements.make_timemarkers([4,16], patlentable, None)
         cvpj_l['instruments'] = cvpj_l_instruments

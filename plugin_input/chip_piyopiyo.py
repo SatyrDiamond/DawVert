@@ -74,7 +74,7 @@ class input_pms(plugin_input.base):
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'piyopiyo'
     def getname(self): return 'PiyoPiyo'
-    def gettype(self): return 'f'
+    def gettype(self): return 'r'
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -137,6 +137,7 @@ class input_pms(plugin_input.base):
         parsetrack(notes3, 'piyopiyo_note3', 'Note #3', pmdtrackdata[2][3]/250, samplefolder, 3)
         parsetrack(notesP, 'piyopiyo_perc', 'Drums', TrackPVol/250, samplefolder, None)
         rootJ = {}
+        rootJ['use_fxrack'] = False
         rootJ['bpm'] = bpm
         rootJ['trackdata'] = tracklist
         rootJ['trackordering'] = trackordering

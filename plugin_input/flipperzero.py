@@ -10,7 +10,7 @@ class input_fmf(plugin_input.base):
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'flipper'
     def getname(self): return 'Flipper Music Format'
-    def gettype(self): return 'f'
+    def gettype(self): return 'r'
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -75,11 +75,9 @@ class input_fmf(plugin_input.base):
 
         global tracklist
         global trackordering
-        global instruments
 
         tracklist = {}
         trackordering = ['flipperzero']
-        instruments = {}
 
         notelist = []
 
@@ -114,6 +112,5 @@ class input_fmf(plugin_input.base):
         rootJ['bpm'] = fmf_BPM
         rootJ['trackdata'] = tracklist
         rootJ['trackordering'] = trackordering
-        rootJ['instruments'] = instruments
         return json.dumps(rootJ)
 

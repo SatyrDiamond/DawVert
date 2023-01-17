@@ -400,12 +400,10 @@ class input_ceol(plugin_input.base):
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
 
-        cvpj_l = {}
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
-        cvpj_l_fxrack = {}
 
         global datapos
         global ceol_data
@@ -452,24 +450,17 @@ class input_ceol(plugin_input.base):
             print('[input-boscaceoil]    Cutoff/Reso: '+str(ceol_inst_cutoff)+'/'+str(ceol_inst_resonance))
             print('[input-boscaceoil] ')
 
-            cvpj_l_fxrack['0'] = {'name': 'Master'}
-
             cvpj_inst = {}
-            cvpj_l_fxrack[str(instnum+1)] = {}
             cvpj_inst["instdata"] = {}
 
             cvpj_inst["name"] = ceol_instinfo[1]
-            cvpj_l_fxrack[str(instnum+1)]["name"] = ceol_instinfo[1]
 
             cvpj_inst["vol"] = ceol_inst_volume/256
 
             if ceol_inst_palette in ceol_colors: 
             	cvpj_inst["color"] = ceol_colors[ceol_inst_palette]
-            	cvpj_l_fxrack[str(instnum+1)]["color"] = ceol_colors[ceol_inst_palette]
             else: 
             	cvpj_inst["color"] = [0.55, 0.55, 0.55]
-            	cvpj_l_fxrack[str(instnum+1)]["color"] = [0.55, 0.55, 0.55]
-            cvpj_inst['fxrack_channel'] = instnum+1
 
             cvpj_instdata = cvpj_inst["instdata"]
             cvpj_instdata['plugindata'] = {}
@@ -573,8 +564,10 @@ class input_ceol(plugin_input.base):
         	print('[input-boscaceoil] Channel '+str(channelnum)+': ' + str(len(cvpj_l_playlist[channelnum]['placements'])) + ' Placements')
 
         timesig = placements.get_timesig(ceol_basic_patternlength, ceol_basic_barlength)
+
+        cvpj_l = {}
+        cvpj_l['use_fxrack'] = False
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist

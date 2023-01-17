@@ -133,7 +133,6 @@ class input_mod(plugin_input.base):
         file_name = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
 
-        cvpj_l = {}
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
 
@@ -252,11 +251,13 @@ class input_mod(plugin_input.base):
         if 'tempo' in veryfirstrow: cvpj_bpm = veryfirstrow['tempo']
         print("[input-mod] Tempo: " + str(cvpj_bpm))
 
-        cvpj_l['title'] = mod_name
 
         placements_auto = {}
         placements_auto['bpm'] = song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, cvpj_bpm)
 
+        cvpj_l = {}
+        cvpj_l['title'] = mod_name
+        cvpj_l['use_fxrack'] = False
         cvpj_l['placements_auto_main'] = placements_auto
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

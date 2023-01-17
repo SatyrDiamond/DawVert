@@ -220,6 +220,7 @@ class input_gt_mnbs(plugin_input.base):
         cvpj_l['message']['type'] = 'text'
         cvpj_l['message']['text'] = song_message
 
+        cvpj_l['use_fxrack'] = False
         cvpj_l['timesig_numerator'] = timesig_numerator
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['bpm'] = tempo

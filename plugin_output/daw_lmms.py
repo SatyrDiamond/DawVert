@@ -228,6 +228,8 @@ def lmms_encode_plugin(xmltag, trkJ):
 
 def lmms_encode_notelist(xmltag, json_notelist):
     printcountpat = 0
+    json_notelist = note_mod.sortnotes(json_notelist)
+
     for json_note in json_notelist:
         global notescount_forprinting
         notescount_forprinting += 1

@@ -26,13 +26,13 @@ def decode_fst(infile):
     f_fst = open(infile, 'r')
     famistudiotxt_lines = f_fst.readlines()
       
-    FST_Main = {}
+    fst_Main = {}
     
-    FST_Instruments = {}
-    FST_Arpeggios = {}
-    FST_Songs = {}
-    FST_DPCMSamples = {}
-    FST_DPCMMappings = {}
+    fst_Instruments = {}
+    fst_Arpeggios = {}
+    fst_Songs = {}
+    fst_DPCMSamples = {}
+    fst_DPCMMappings = {}
     
     for line in famistudiotxt_lines:
         t_cmd = line.split(" ", 1)
@@ -45,90 +45,90 @@ def decode_fst(infile):
         #print(tabs_num, cmd_name, cmd_params)
 
         if cmd_name == 'Project' and tabs_num == 0:
-            FST_Main = cmd_params
+            fst_Main = cmd_params
     
         elif cmd_name == 'DPCMSample' and tabs_num == 1:
-            FST_DPCMSamples[cmd_params['Name']] = cmd_params['Data']
+            fst_DPCMSamples[cmd_params['Name']] = cmd_params['Data']
         elif cmd_name == 'DPCMMapping' and tabs_num == 1:
             mapnote = cmd_params['Note']
-            FST_DPCMMappings[mapnote] = {}
-            FST_DPCMMappings[mapnote]['Sample'] = cmd_params['Sample']
-            FST_DPCMMappings[mapnote]['Pitch'] = cmd_params['Pitch']
-            FST_DPCMMappings[mapnote]['Loop'] = cmd_params['Loop']
+            fst_DPCMMappings[mapnote] = {}
+            fst_DPCMMappings[mapnote]['Sample'] = cmd_params['Sample']
+            fst_DPCMMappings[mapnote]['Pitch'] = cmd_params['Pitch']
+            fst_DPCMMappings[mapnote]['Loop'] = cmd_params['Loop']
     
         elif cmd_name == 'Instrument' and tabs_num == 1:
             instname = cmd_params['Name']
-            FST_Instruments[instname] = {}
-            FST_Instrument = FST_Instruments[instname]
-            FST_Instrument['Name'] = cmd_params['Name']
-            FST_Instrument['Envelopes'] = {}
-            if 'N163WavePreset' in cmd_params: FST_Instrument['N163WavePreset'] = cmd_params['N163WavePreset']
-            if 'N163WaveSize' in cmd_params: FST_Instrument['N163WaveSize'] = cmd_params['N163WaveSize']
-            if 'N163WavePos' in cmd_params: FST_Instrument['N163WavePos'] = cmd_params['N163WavePos']
-            if 'N163WaveCount' in cmd_params: FST_Instrument['N163WaveCount'] = cmd_params['N163WaveCount']
+            fst_Instruments[instname] = {}
+            fst_Instrument = fst_Instruments[instname]
+            fst_Instrument['Name'] = cmd_params['Name']
+            fst_Instrument['Envelopes'] = {}
+            if 'N163WavePreset' in cmd_params: fst_Instrument['N163WavePreset'] = cmd_params['N163WavePreset']
+            if 'N163WaveSize' in cmd_params: fst_Instrument['N163WaveSize'] = cmd_params['N163WaveSize']
+            if 'N163WavePos' in cmd_params: fst_Instrument['N163WavePos'] = cmd_params['N163WavePos']
+            if 'N163WaveCount' in cmd_params: fst_Instrument['N163WaveCount'] = cmd_params['N163WaveCount']
 
-            if 'Vrc7Patch' in cmd_params: FST_Instrument['Vrc7Patch'] = cmd_params['Vrc7Patch']
-            if 'Vrc7Reg0' in cmd_params: FST_Instrument['Vrc7Reg0'] = cmd_params['Vrc7Reg0']
-            if 'Vrc7Reg1' in cmd_params: FST_Instrument['Vrc7Reg1'] = cmd_params['Vrc7Reg1']
-            if 'Vrc7Reg2' in cmd_params: FST_Instrument['Vrc7Reg2'] = cmd_params['Vrc7Reg2']
-            if 'Vrc7Reg3' in cmd_params: FST_Instrument['Vrc7Reg3'] = cmd_params['Vrc7Reg3']
-            if 'Vrc7Reg4' in cmd_params: FST_Instrument['Vrc7Reg4'] = cmd_params['Vrc7Reg4']
-            if 'Vrc7Reg5' in cmd_params: FST_Instrument['Vrc7Reg5'] = cmd_params['Vrc7Reg5']
-            if 'Vrc7Reg6' in cmd_params: FST_Instrument['Vrc7Reg6'] = cmd_params['Vrc7Reg6']
-            if 'Vrc7Reg7' in cmd_params: FST_Instrument['Vrc7Reg7'] = cmd_params['Vrc7Reg7']
+            if 'Vrc7Patch' in cmd_params: fst_Instrument['Vrc7Patch'] = cmd_params['Vrc7Patch']
+            if 'Vrc7Reg0' in cmd_params: fst_Instrument['Vrc7Reg0'] = cmd_params['Vrc7Reg0']
+            if 'Vrc7Reg1' in cmd_params: fst_Instrument['Vrc7Reg1'] = cmd_params['Vrc7Reg1']
+            if 'Vrc7Reg2' in cmd_params: fst_Instrument['Vrc7Reg2'] = cmd_params['Vrc7Reg2']
+            if 'Vrc7Reg3' in cmd_params: fst_Instrument['Vrc7Reg3'] = cmd_params['Vrc7Reg3']
+            if 'Vrc7Reg4' in cmd_params: fst_Instrument['Vrc7Reg4'] = cmd_params['Vrc7Reg4']
+            if 'Vrc7Reg5' in cmd_params: fst_Instrument['Vrc7Reg5'] = cmd_params['Vrc7Reg5']
+            if 'Vrc7Reg6' in cmd_params: fst_Instrument['Vrc7Reg6'] = cmd_params['Vrc7Reg6']
+            if 'Vrc7Reg7' in cmd_params: fst_Instrument['Vrc7Reg7'] = cmd_params['Vrc7Reg7']
 
         elif cmd_name == 'Arpeggio' and tabs_num == 1:
             arpname = cmd_params['Name']
-            FST_Arpeggios[arpname] = cmd_params
+            fst_Arpeggios[arpname] = cmd_params
 
         elif cmd_name == 'Envelope' and tabs_num == 2:
             envtype = cmd_params['Type']
-            FST_Instrument['Envelopes'][envtype] = {}
-            FST_Instrument['Envelopes'][envtype] = cmd_params
+            fst_Instrument['Envelopes'][envtype] = {}
+            fst_Instrument['Envelopes'][envtype] = cmd_params
 
         elif cmd_name == 'Song' and tabs_num == 1:
             songname = cmd_params['Name']
-            FST_Songs[songname] = cmd_params
-            FST_Song = FST_Songs[songname]
-            FST_Song['PatternCustomSettings'] = {}
-            FST_Song['Channels'] = {}
+            fst_Songs[songname] = cmd_params
+            fst_Song = fst_Songs[songname]
+            fst_Song['PatternCustomSettings'] = {}
+            fst_Song['Channels'] = {}
     
         elif cmd_name == 'PatternCustomSettings' and tabs_num == 2:
             pattime = cmd_params['Time']
-            FST_Song['PatternCustomSettings'][pattime] = cmd_params
+            fst_Song['PatternCustomSettings'][pattime] = cmd_params
 
         elif cmd_name == 'Channel' and tabs_num == 2:
             chantype = cmd_params['Type']
-            FST_Song['Channels'][chantype] = {}
-            FST_Channel = FST_Song['Channels'][chantype]
-            FST_Channel['Instances'] = {}
-            FST_Channel['Patterns'] = {}
+            fst_Song['Channels'][chantype] = {}
+            fst_Channel = fst_Song['Channels'][chantype]
+            fst_Channel['Instances'] = {}
+            fst_Channel['Patterns'] = {}
     
         elif cmd_name == 'Pattern' and tabs_num == 3:
             patname = cmd_params['Name']
-            FST_Channel['Patterns'][patname] = {}
-            FST_Pattern = FST_Channel['Patterns'][patname]
+            fst_Channel['Patterns'][patname] = {}
+            fst_Pattern = fst_Channel['Patterns'][patname]
     
         elif cmd_name == 'PatternInstance' and tabs_num == 3:
             pattime = cmd_params['Time']
-            FST_Channel['Instances'][pattime] = cmd_params
+            fst_Channel['Instances'][pattime] = cmd_params
     
         elif cmd_name == 'Note' and tabs_num == 4:
             notetime = cmd_params['Time']
-            FST_Pattern[notetime] = cmd_params
+            fst_Pattern[notetime] = cmd_params
     
         else:
             print('unexpected command and/or wrong tabs:', cmd_name)
             exit()
     
-    FST_Main['Instruments'] = FST_Instruments
-    FST_Main['Songs'] = FST_Songs
-    FST_Main['Arpeggios'] = FST_Arpeggios
-    FST_Main['DPCMSamples'] = FST_DPCMSamples
-    FST_Main['DPCMMappings'] = FST_DPCMMappings
-    return FST_Main
-def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instrumentsorder):
-    instname = FST_Instrument['Name']
+    fst_Main['Instruments'] = fst_Instruments
+    fst_Main['Songs'] = fst_Songs
+    fst_Main['Arpeggios'] = fst_Arpeggios
+    fst_Main['DPCMSamples'] = fst_DPCMSamples
+    fst_Main['DPCMMappings'] = fst_DPCMMappings
+    return fst_Main
+def create_inst(wavetype, fst_Instrument, cvpj_l_instruments, cvpj_l_instrumentsorder):
+    instname = fst_Instrument['Name']
     cvpj_inst = {}
     cvpj_inst["enabled"] = 1
     cvpj_inst["instdata"] = {}
@@ -142,41 +142,41 @@ def create_inst(wavetype, FST_Instrument, cvpj_l_instruments, cvpj_l_instruments
             plugdata['wave'] = 'square'
         if wavetype == 'Triangle': plugdata['wave'] = 'triangle'
         if wavetype == 'Noise': plugdata['wave'] = 'noise'
-        if 'Envelopes' in FST_Instrument:
-            if 'Volume' in FST_Instrument['Envelopes']:
+        if 'Envelopes' in fst_Instrument:
+            if 'Volume' in fst_Instrument['Envelopes']:
                 plugdata['env_vol'] = {}
-                if 'Values' in FST_Instrument['Envelopes']['Volume']:
-                    plugdata['env_vol']['values'] = FST_Instrument['Envelopes']['Volume']['Values'].split(',')
-                if 'Loop' in FST_Instrument['Envelopes']['Volume']:
-                    plugdata['env_vol']['loop'] = FST_Instrument['Envelopes']['Volume']['Loop']
-                if 'Release' in FST_Instrument['Envelopes']['Volume']:
-                    plugdata['env_vol']['release'] = FST_Instrument['Envelopes']['Volume']['Release']
-            if 'DutyCycle' in FST_Instrument['Envelopes']:
+                if 'Values' in fst_Instrument['Envelopes']['Volume']:
+                    plugdata['env_vol']['values'] = fst_Instrument['Envelopes']['Volume']['Values'].split(',')
+                if 'Loop' in fst_Instrument['Envelopes']['Volume']:
+                    plugdata['env_vol']['loop'] = fst_Instrument['Envelopes']['Volume']['Loop']
+                if 'Release' in fst_Instrument['Envelopes']['Volume']:
+                    plugdata['env_vol']['release'] = fst_Instrument['Envelopes']['Volume']['Release']
+            if 'DutyCycle' in fst_Instrument['Envelopes']:
                 plugdata['env_duty'] = {}
-                if 'Values' in FST_Instrument['Envelopes']['DutyCycle']:
-                    plugdata['env_duty']['values'] = FST_Instrument['Envelopes']['DutyCycle']['Values'].split(',')
-                if 'Loop' in FST_Instrument['Envelopes']['DutyCycle']:
-                    plugdata['env_duty']['loop'] = FST_Instrument['Envelopes']['DutyCycle']['Loop']
-                if 'Release' in FST_Instrument['Envelopes']['DutyCycle']:
-                    plugdata['env_duty']['release'] = FST_Instrument['Envelopes']['DutyCycle']['Release']
+                if 'Values' in fst_Instrument['Envelopes']['DutyCycle']:
+                    plugdata['env_duty']['values'] = fst_Instrument['Envelopes']['DutyCycle']['Values'].split(',')
+                if 'Loop' in fst_Instrument['Envelopes']['DutyCycle']:
+                    plugdata['env_duty']['loop'] = fst_Instrument['Envelopes']['DutyCycle']['Loop']
+                if 'Release' in fst_Instrument['Envelopes']['DutyCycle']:
+                    plugdata['env_duty']['release'] = fst_Instrument['Envelopes']['DutyCycle']['Release']
 
     if wavetype == 'VRC7FM':
         cvpj_instdata['plugin'] = 'fm_vrc7'
-        cvpj_instdata['plugindata'] = FST_Instrument
+        cvpj_instdata['plugindata'] = fst_Instrument
     if wavetype == 'VRC6Square' or wavetype == 'VRC6Saw':
         cvpj_instdata['plugin'] = 'vrc6'
-        cvpj_instdata['plugindata'] = FST_Instrument
+        cvpj_instdata['plugindata'] = fst_Instrument
         if wavetype == 'VRC6Saw': cvpj_instdata['plugindata']['wave'] = 'Saw'
         if wavetype == 'VRC6Square': cvpj_instdata['plugindata']['wave'] = 'Square'
     if wavetype == 'FDS':
         cvpj_instdata['plugin'] = 'fds'
-        cvpj_instdata['plugindata'] = FST_Instrument
+        cvpj_instdata['plugindata'] = fst_Instrument
     if wavetype == 'N163':
         cvpj_instdata['plugin'] = 'namco_163'
-        cvpj_instdata['plugindata'] = FST_Instrument
+        cvpj_instdata['plugindata'] = fst_Instrument
     if wavetype == 'S5B':
         cvpj_instdata['plugin'] = 'sunsoft_5b'
-        cvpj_instdata['plugindata'] = FST_Instrument
+        cvpj_instdata['plugindata'] = fst_Instrument
     cvpj_instdata['usemasterpitch'] = 1
     if wavetype == 'Square1': cvpj_inst['color'] = [0.97, 0.56, 0.36]
     if wavetype == 'Square2': cvpj_inst['color'] = [0.97, 0.56, 0.36]
@@ -214,10 +214,8 @@ def NoteToMidi(keytext):
     l_key = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
     s_octave = (int(keytext[-1])-5)*12
     lenstr = len(keytext)
-    if lenstr == 3:
-        t_key = keytext[:-1]
-    else:
-        t_key = keytext[:-1]
+    if lenstr == 3: t_key = keytext[:-1]
+    else: t_key = keytext[:-1]
     s_key = l_key.index(t_key)
 
     return s_key + s_octave
@@ -230,7 +228,7 @@ class input_famistudio(plugin_input.base):
     def gettype(self): return 'mi'
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
-        FST_Main = decode_fst(input_file)
+        fst_Main = decode_fst(input_file)
 
         InstShapes = {'Square1': 'Square1', 
         'Square2': 'Square2', 
@@ -260,28 +258,28 @@ class input_famistudio(plugin_input.base):
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
         
-        FST_Instruments = FST_Main['Instruments']
-        FST_currentsong = next(iter(FST_Main['Songs'].values()))
-        FST_Channels = FST_currentsong['Channels']
-        FST_BeatLength = int(FST_currentsong['BeatLength'])
-        FST_Groove = FST_currentsong['Groove']
-        PatternLength = int(FST_currentsong['PatternLength'])
-        SongLength = int(FST_currentsong['Length'])
-        NoteLength = int(FST_currentsong['NoteLength'])
-        LoopPoint = int(FST_currentsong['LoopPoint'])
-        DPCMMappings = FST_Main['DPCMMappings']
-        DPCMSamples = FST_Main['DPCMSamples']
+        fst_Instruments = fst_Main['Instruments']
+        fst_currentsong = next(iter(fst_Main['Songs'].values()))
+        fst_channels = fst_currentsong['Channels']
+        fst_beatlength = int(fst_currentsong['BeatLength'])
+        fst_groove = fst_currentsong['Groove']
+        PatternLength = int(fst_currentsong['PatternLength'])
+        SongLength = int(fst_currentsong['Length'])
+        NoteLength = int(fst_currentsong['NoteLength'])
+        LoopPoint = int(fst_currentsong['LoopPoint'])
+        DPCMMappings = fst_Main['DPCMMappings']
+        DPCMSamples = fst_Main['DPCMSamples']
 
         groovetable = []
-        groovesplit = FST_Groove.split('-')
+        groovesplit = fst_groove.split('-')
         for groovenumber in groovesplit:
             groovetable.append(int(groovenumber))
-        bpm = 60/(average(groovetable)/60*FST_BeatLength)
+        bpm = 60/(average(groovetable)/60*fst_beatlength)
 
         PatternLengthList = []
         for number in range(SongLength):
-            if str(number) not in FST_currentsong['PatternCustomSettings']: PatternLengthList.append(PatternLength)
-            else: PatternLengthList.append(int(FST_currentsong['PatternCustomSettings'][str(number)]['Length']))
+            if str(number) not in fst_currentsong['PatternCustomSettings']: PatternLengthList.append(PatternLength)
+            else: PatternLengthList.append(int(fst_currentsong['PatternCustomSettings'][str(number)]['Length']))
 
         PointsPos = []
         PointsAdd = 0
@@ -289,24 +287,24 @@ class input_famistudio(plugin_input.base):
             PointsPos.append(PointsAdd)
             PointsAdd += PatternLengthList[number]
 
-        for Channel in FST_Channels:
+        for Channel in fst_channels:
             WaveType = None
-            used_insts = get_used_insts(FST_Channels[Channel])
+            used_insts = get_used_insts(fst_channels[Channel])
             if Channel in InstShapes: WaveType = InstShapes[Channel]
             elif Channel == 'DPCM': 
                 create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instruments, cvpj_l_instrumentsorder)
             if WaveType != None:
                 for inst in used_insts:
-                    create_inst(WaveType, FST_Instruments[inst], cvpj_l_instruments, cvpj_l_instrumentsorder)
+                    create_inst(WaveType, fst_Instruments[inst], cvpj_l_instruments, cvpj_l_instrumentsorder)
 
         playlistnum = 1
-        for Channel in FST_Channels:
+        for Channel in fst_channels:
             ChannelName = Channel
             cvpj_l_playlist[str(playlistnum)] = {}
             cvpj_l_playlist[str(playlistnum)]['color'] = [0.13, 0.15, 0.16]
             cvpj_l_playlist[str(playlistnum)]['name'] = Channel
             cvpj_l_playlist[str(playlistnum)]['placements'] = []
-            Channel_Patterns = FST_Channels[Channel]['Patterns']
+            Channel_Patterns = fst_channels[Channel]['Patterns']
             for Pattern in Channel_Patterns:
                 cvpj_patternid = Channel+'-'+Pattern
                 cvpj_l_notelistindex[cvpj_patternid] = {}
@@ -332,24 +330,24 @@ class input_famistudio(plugin_input.base):
                             cvpj_note['position'] = int(notedata['Time'])/NoteLength
                             cvpj_note['key'] = NoteToMidi(notedata['Value']) + 24
                             patternnotelist.append(cvpj_note)
-            Channel_Instances = FST_Channels[Channel]['Instances']
+            Channel_Instances = fst_channels[Channel]['Instances']
             durationnum = 0
-            for FST_Placement in Channel_Instances:
-                FST_PData = Channel_Instances[FST_Placement]
-                FST_time = int(FST_PData['Time'])
+            for fst_Placement in Channel_Instances:
+                fst_PData = Channel_Instances[fst_Placement]
+                fst_time = int(fst_PData['Time'])
                 cvpj_l_placement = {}
                 cvpj_l_placement['type'] = "instruments"
-                cvpj_l_placement['position'] = PointsPos[int(FST_time)]
+                cvpj_l_placement['position'] = PointsPos[int(fst_time)]
                 cvpj_l_placement['duration'] = PatternLengthList[durationnum]
-                cvpj_l_placement['fromindex'] = Channel+'-'+FST_PData['Pattern']
+                cvpj_l_placement['fromindex'] = Channel+'-'+fst_PData['Pattern']
                 cvpj_l_playlist[str(playlistnum)]['placements'].append(cvpj_l_placement)
                 durationnum += 1
             playlistnum += 1
 
-        timesig = placements.get_timesig(PatternLength, FST_BeatLength)
+        timesig = placements.get_timesig(PatternLength, fst_beatlength)
 
-        if 'Name' in FST_Main: cvpj_l['title'] = FST_Main['Name']
-        if 'Author' in FST_Main: cvpj_l['author'] = FST_Main['Author']
+        if 'Name' in fst_Main: cvpj_l['title'] = fst_Main['Name']
+        if 'Author' in fst_Main: cvpj_l['author'] = fst_Main['Author']
 
         cvpj_l['timesig_numerator'] = timesig[0]
         cvpj_l['timesig_denominator'] = timesig[1]

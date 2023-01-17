@@ -12,18 +12,22 @@ def overlap(start1, end1, start2, end2):
 
 # ---------------------------------- Regular+FXMixer to Multiple ----------------------------------
 
-def trackfx2fxrack(cvpj_l):
+def trackfx2fxrack(cvpj_l, cvpjtype):
     if cvpj_l['use_fxrack'] == False:
         cvpj_l['fxrack'] = {}
         fxnum = 1
-        for trackid in cvpj_l['trackordering']:
-            print(trackid)
-            trackdata = cvpj_l['trackdata'][trackid]
+        if cvpjtype == 's':
+            c_orderingdata = cvpj_l['trackordering']
+            c_trackdata = cvpj_l['trackdata']
+        if cvpjtype == 'm':
+            c_orderingdata = cvpj_l['instrumentsorder']
+            c_trackdata = cvpj_l['instruments']
+        for trackid in c_orderingdata:
+            trackdata = c_trackdata[trackid]
             trackdata['fxrack_channel'] = fxnum
             fxtrack = {}
             fxtrack['name'] = trackdata['name']
             if 'color' in trackdata: fxtrack['color'] = trackdata['color']
-            #print(trackdata)
             cvpj_l['fxrack'][str(fxnum)] = fxtrack
             fxnum += 1
 

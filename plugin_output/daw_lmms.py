@@ -630,6 +630,8 @@ class output_lmms(plugin_output.base):
 
         projJ = json.loads(convproj_json)
 
+        song_convert.trackfx2fxrack(projJ)
+
         placements.removelanes(projJ)
 
         trksJ = projJ['trackdata']
@@ -653,8 +655,6 @@ class output_lmms(plugin_output.base):
         setvalue(projJ, 'vol', headX, 'mastervol', 1, auto_nameid, 'main')
         setvalue(projJ, 'timesig_numerator', headX, 'timesig_numerator', 4, auto_nameid, 'main')
         setvalue(projJ, 'timesig_denominator', headX, 'timesig_denominator', 4, auto_nameid, 'main')
-
-        song_convert.trackfx2fxrack(projJ)
 
         lmms_encode_tracks(trkcX, trksJ, trkorderJ)
 

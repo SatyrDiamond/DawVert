@@ -20,6 +20,7 @@
 | M-I | ```deflemask``` | DefleMask | ✔️ |
 | M-I | ```ceol``` | Bosca Ceoil | ❌ | 
 | M-I | ```jummbox``` | Beepbox/Jummbox | ❌ | 
+| M-I | ```pixitracker``` | PixiTracker | ❌ | 
 | M | ```lovelycomposer``` | Lovely Composer | ❌ | 
 | F | ```piyopiyo``` | PiyoPiyo | ✔️ |  
 

@@ -47,8 +47,8 @@ class input_it(plugin_input.base):
         
         it_header_songname = it_file.read(26).split(b'\x00' * 1)[0].decode("utf-8")
         print("[input-it] Song Name: " + str(it_header_songname))
-        it_header_hilight_minor = int.from_bytes(it_file.read(1), "little")
-        it_header_hilight_major = int.from_bytes(it_file.read(1), "little")
+        it_header_hilight_minor = it_file.read(1)[0]
+        it_header_hilight_major = it_file.read(1)[0]
         it_header_ordnum = int.from_bytes(it_file.read(2), "little")
         print("[input-it] # of Orders: " + str(it_header_ordnum))
         it_header_insnum = int.from_bytes(it_file.read(2), "little")
@@ -65,24 +65,24 @@ class input_it(plugin_input.base):
         it_header_flags = bin(int.from_bytes(it_file.read(2), "little"))[2:].zfill(16)
         it_header_flag_useinst = it_header_flags[13]
         it_header_special = it_file.read(2)
-        it_header_globalvol = int.from_bytes(it_file.read(1), "little")
-        it_header_mv = int.from_bytes(it_file.read(1), "little")
-        it_header_speed = int.from_bytes(it_file.read(1), "little")
+        it_header_globalvol = it_file.read(1)[0]
+        it_header_mv = it_file.read(1)[0]
+        it_header_speed = it_file.read(1)[0]
         print("[input-it] Speed: " + str(it_header_speed))
-        it_header_tempo = int.from_bytes(it_file.read(1), "little")
+        it_header_tempo = it_file.read(1)[0]
         print("[input-it] Tempo: " + str(it_header_tempo))
-        it_header_sep = int.from_bytes(it_file.read(1), "little")
-        it_header_pwd = int.from_bytes(it_file.read(1), "little")
+        it_header_sep = it_file.read(1)[0]
+        it_header_pwd = it_file.read(1)[0]
         it_header_msglength = int.from_bytes(it_file.read(2), "little")
         it_header_msgoffset = int.from_bytes(it_file.read(4), "little")
         it_header_reserved = int.from_bytes(it_file.read(4), "little")
         
         table_chnpan = []
-        for _ in range(64): table_chnpan.append(int.from_bytes(it_file.read(1), "little"))
+        for _ in range(64): table_chnpan.append(it_file.read(1)[0])
         table_chnvol = []
-        for _ in range(64): table_chnvol.append(int.from_bytes(it_file.read(1), "little"))
+        for _ in range(64): table_chnvol.append(it_file.read(1)[0])
         table_orders = []
-        for _ in range(it_header_ordnum): table_orders.append(int.from_bytes(it_file.read(1), "little"))
+        for _ in range(it_header_ordnum): table_orders.append(it_file.read(1)[0])
         table_offset_insts = []
         for _ in range(it_header_insnum): table_offset_insts.append(int.from_bytes(it_file.read(4), "little"))
         table_offset_samples = []
@@ -109,29 +109,29 @@ class input_it(plugin_input.base):
             print("[input-it] Instrument " + str(instrumentcount) + ': at offset ' + str(table_offset_inst))
             it_singleinst['dosfilename'] = it_file.read(12).split(b'\x00' * 1)[0].decode("latin_1")
             it_file.read(1)
-            it_singleinst['newnoteaction'] = int.from_bytes(it_file.read(1), "little") # New Note Action
-            it_singleinst['duplicatechecktype'] = int.from_bytes(it_file.read(1), "little") # Duplicate Check Type
-            it_singleinst['duplicatecheckaction'] = int.from_bytes(it_file.read(1), "little") # Duplicate Check Action
+            it_singleinst['newnoteaction'] = it_file.read(1)[0] # New Note Action
+            it_singleinst['duplicatechecktype'] = it_file.read(1)[0] # Duplicate Check Type
+            it_singleinst['duplicatecheckaction'] = it_file.read(1)[0] # Duplicate Check Action
             it_singleinst['fadeout'] = int.from_bytes(it_file.read(2), "little") # FadeOut
             it_singleinst['pitchpanseparation'] = int.from_bytes(it_file.read(1), "little", signed=True) # Pitch-Pan separation
-            it_singleinst['pitchpancenter'] = int.from_bytes(it_file.read(1), "little")-60 # Pitch-Pan center
-            it_singleinst['globalvol'] = int.from_bytes(it_file.read(1), "little")/128 # Global Volume
-            inst_defaultpan = int.from_bytes(it_file.read(1), "little") # Default Pan
+            it_singleinst['pitchpancenter'] = it_file.read(1)[0]-60 # Pitch-Pan center
+            it_singleinst['globalvol'] = it_file.read(1)[0]/128 # Global Volume
+            inst_defaultpan = it_file.read(1)[0] # Default Pan
             if inst_defaultpan < 128: it_singleinst['defaultpan'] = (inst_defaultpan/32-1)
-            it_singleinst['randomvariation_volume'] = int.from_bytes(it_file.read(1), "little")/100 # Random volume variation (percentage)
-            it_singleinst['randomvariation_pan'] = int.from_bytes(it_file.read(1), "little")/64 # Random pan variation (percentage)
+            it_singleinst['randomvariation_volume'] = it_file.read(1)[0]/100 # Random volume variation (percentage)
+            it_singleinst['randomvariation_pan'] = it_file.read(1)[0]/64 # Random pan variation (percentage)
             it_singleinst['cwtv'] = int.from_bytes(it_file.read(2), "little") # TrkVers
-            it_singleinst['smpnum'] = int.from_bytes(it_file.read(1), "little") # Number of samples associated with instrument. 
+            it_singleinst['smpnum'] = it_file.read(1)[0] # Number of samples associated with instrument. 
             it_file.read(1)
             it_singleinst['name'] = it_file.read(26).split(b'\x00' * 1)[0].decode("latin_1")
-            inst_filtercutoff = int.from_bytes(it_file.read(1), "little")
+            inst_filtercutoff = it_file.read(1)[0]
             if inst_filtercutoff >= 128: it_singleinst['filtercutoff'] = inst_filtercutoff-128
             else: it_singleinst['filtercutoff'] = None
-            inst_filterresonance = int.from_bytes(it_file.read(1), "little")
+            inst_filterresonance = it_file.read(1)[0]
             if inst_filterresonance >= 128: it_singleinst['filterresonance'] =  inst_filterresonance-128
             else: it_singleinst['filterresonance'] = None
-            it_inst_midi_chan = int.from_bytes(it_file.read(1), "little") # MIDI Channel
-            it_inst_midi_inst = int.from_bytes(it_file.read(1), "little") # MIDI Program
+            it_inst_midi_chan = it_file.read(1)[0] # MIDI Channel
+            it_inst_midi_inst = it_file.read(1)[0] # MIDI Program
             it_inst_midi_bank = int.from_bytes(it_file.read(2), "little") # MIDI Bank
             if it_inst_midi_chan != 0: it_singleinst['midi_chan'] = it_inst_midi_chan
             if it_inst_midi_inst != 255: it_singleinst['midi_inst'] = it_inst_midi_inst
@@ -139,26 +139,26 @@ class input_it(plugin_input.base):
             #print(it_inst_midi_chan,it_inst_midi_inst,it_inst_midi_bank)
             table_notesample = []
             for _ in range(120):
-                t_note = int.from_bytes(it_file.read(1), "little")-60
-                t_sample = int.from_bytes(it_file.read(1), "little")
+                t_note = it_file.read(1)[0]-60
+                t_sample = it_file.read(1)[0]
                 table_notesample.append([t_note,t_sample])
             it_singleinst['notesampletable'] = table_notesample
             for env_type in range(3):
                 env_out = {}
-                env_flags = bin(int.from_bytes(it_file.read(1), "little"))[2:].zfill(8)
+                env_flags = bin(it_file.read(1)[0])[2:].zfill(8)
                 env_out['enabled'] = env_flags[7]
                 env_out['loop_enabled'] = env_flags[6]
                 env_out['susloop_enabled'] = env_flags[5]
                 env_out['usepitch'] = env_flags[0]
-                env_numpoints = int.from_bytes(it_file.read(1), "little")
-                env_out['loop_start'] = int.from_bytes(it_file.read(1), "little")
-                env_out['loop_end'] = int.from_bytes(it_file.read(1), "little")
-                env_out['susloop_start'] = int.from_bytes(it_file.read(1), "little")
-                env_out['susloop_end'] = int.from_bytes(it_file.read(1), "little")
+                env_numpoints = it_file.read(1)[0]
+                env_out['loop_start'] = it_file.read(1)[0]
+                env_out['loop_end'] = it_file.read(1)[0]
+                env_out['susloop_start'] = it_file.read(1)[0]
+                env_out['susloop_end'] = it_file.read(1)[0]
                 env_points = []
                 for _ in range(env_numpoints):
                     env_point = {}
-                    env_point['value'] = int.from_bytes(it_file.read(1), "little")
+                    env_point['value'] = it_file.read(1)[0]
                     env_point['pos'] = int.from_bytes(it_file.read(2), "little")
                     env_points.append(env_point)
                 if env_type == 0: it_singleinst['env_volume'] = env_points
@@ -218,14 +218,14 @@ class input_it(plugin_input.base):
                     for _ in range(64): pattern_row_local.append([None, None, {}, {}])
                     pattern_row = [{}, pattern_row_local]
                     while pattern_done == 0:
-                        channelvariable = bin(int.from_bytes(it_file.read(1), "little"))[2:].zfill(8)
+                        channelvariable = bin(it_file.read(1)[0])[2:].zfill(8)
                         cell_previous_maskvariable = int(channelvariable[0:1], 2)
                         cell_channel = int(channelvariable[1:8], 2) - 1
                         if int(channelvariable, 2) == 0: pattern_done = 1
                         else:
                             #print('ch:' + str(cell_channel) + '|', end=' ')
                             if cell_previous_maskvariable == 1:
-                                maskvariable = bin(int.from_bytes(it_file.read(1), "little"))[2:].zfill(8)
+                                maskvariable = bin(it_file.read(1)[0])[2:].zfill(8)
                                 table_previousmaskvariable[cell_channel] = maskvariable
                             else: maskvariable = table_previousmaskvariable[cell_channel]
                             maskvariable_note = int(maskvariable[7], 2) 
@@ -244,17 +244,17 @@ class input_it(plugin_input.base):
                             cell_commandnum = None
         
                             if maskvariable_note == 1:
-                                cell_note = int.from_bytes(it_file.read(1), "little")
+                                cell_note = it_file.read(1)[0]
                                 table_lastnote[cell_channel] = cell_note
                             if maskvariable_instrument == 1:
-                                cell_instrument = int.from_bytes(it_file.read(1), "little")
+                                cell_instrument = it_file.read(1)[0]
                                 table_lastinstrument[cell_channel] = cell_instrument
                             if maskvariable_volpan == 1:
-                                cell_volpan = int.from_bytes(it_file.read(1), "little")
+                                cell_volpan = it_file.read(1)[0]
                                 table_lastvolpan[cell_channel] = cell_volpan
                             if maskvariable_command == 1:
-                                cell_commandtype = int.from_bytes(it_file.read(1), "little")
-                                cell_commandnum = int.from_bytes(it_file.read(1), "little")
+                                cell_commandtype = it_file.read(1)[0]
+                                cell_commandnum = it_file.read(1)[0]
                                 table_lastcommand[cell_channel] = [cell_commandtype, cell_commandnum]
         
                             if maskvariable_last_note == 1: cell_note = table_lastnote[cell_channel]

@@ -12,11 +12,11 @@ def getstring(nbs_file):
     else: return None
 
 def nbs_parsekey(nbs_file, nbs_newformat):
-    nbs_inst = int.from_bytes(nbs_file.read(1), "little")
-    nbs_key = int.from_bytes(nbs_file.read(1), "little")-51
+    nbs_inst = nbs_file.read(1)[0]
+    nbs_key = nbs_file.read(1)[0]-51
     if nbs_newformat == 1:
-        nbs_velocity = int.from_bytes(nbs_file.read(1), "little")
-        nbs_pan = int.from_bytes(nbs_file.read(1), "little")
+        nbs_velocity = nbs_file.read(1)[0]
+        nbs_pan = nbs_file.read(1)[0]
         nbs_pitch = int.from_bytes(nbs_file.read(2), "little", signed="True")
         return [nbs_key, nbs_inst, [nbs_velocity, nbs_pan, nbs_pitch]]
     else: return [nbs_key, nbs_inst, None]
@@ -97,11 +97,11 @@ class input_gt_mnbs(plugin_input.base):
             nbs_newformat = 0
 
         if nbs_newformat == 1:
-            nbs_new_version = int.from_bytes(nbs_file.read(1), "little")
+            nbs_new_version = nbs_file.read(1)[0]
             if nbs_new_version != 5:
                 print('[input-mnbs] only version 5 new-NBS or old format is supported.')
                 exit()
-            nbs_vanilla_inst_count = int.from_bytes(nbs_file.read(1), "little")
+            nbs_vanilla_inst_count = nbs_file.read(1)[0]
             nbs_songlength = int.from_bytes(nbs_file.read(2), "little")
             nbs_layercount = int.from_bytes(nbs_file.read(2), "little")
 
@@ -134,14 +134,14 @@ class input_gt_mnbs(plugin_input.base):
         tempo = (nbs_tempo/800)*120
         print('[input-mnbs] Tempo: '+str(tempo))
         nbs_file.read(2)
-        timesig_numerator = int.from_bytes(nbs_file.read(1), "little")
+        timesig_numerator = nbs_file.read(1)[0]
         print('[input-mnbs] Time Signature: '+str(timesig_numerator)+'/4')
         nbs_file.read(20)
         nbs_song_sourcefilename = getstring(nbs_file)
         if nbs_newformat == 1:
-            nbs_loopon = int.from_bytes(nbs_file.read(1), "little")
+            nbs_loopon = nbs_file.read(1)[0]
             print('[input-mnbs] Loop Enabled: '+str(nbs_loopon))
-            nbs_maxloopcount = int.from_bytes(nbs_file.read(1), "little")
+            nbs_maxloopcount = nbs_file.read(1)[0]
             print('[input-mnbs] Loop Max Count: '+str(nbs_maxloopcount))
             nbs_loopstarttick = int.from_bytes(nbs_file.read(2), "little")
             print('[input-mnbs] Loop Start Tick: '+str(nbs_loopstarttick))

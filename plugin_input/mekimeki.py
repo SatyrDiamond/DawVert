@@ -68,10 +68,14 @@ class input_cvpj_f(plugin_input.base):
                 notedata["pan"] = getvalue(mmc_wv, 'Pan')*-1
                 cvpj_notelist.append(notedata)
 
-            trackdata['placements'] = [{}]
-            trackdata['placements'][0]['position'] = 0
-            trackdata['placements'][0]['duration'] = note_mod.getduration(cvpj_notelist)
-            trackdata['placements'][0]['notelist'] = cvpj_notelist
+            trackdata['placements'] = []
+
+            if cvpj_notelist != []:
+                placement_pl = {}
+                placement_pl['position'] = 0
+                placement_pl['duration'] = note_mod.getduration(cvpj_notelist)
+                placement_pl['notelist'] = cvpj_notelist
+                trackdata['placements'].append(placement_pl)
 
             tracknum += 1
 

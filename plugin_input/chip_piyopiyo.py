@@ -19,7 +19,7 @@ def pmddecodenotes(pmdfile, recordspertrack, pitch):
         splitcurrent += 1
 
         bitnotes = bin(int.from_bytes(pmdfile.read(3), "little"))[2:].zfill(24)
-        pan = int.from_bytes(pmdfile.read(1), "little")
+        pan = pmdfile.read(1)[0]
         if pan != 0: currentpan = (pan-4)/3
 
         notenum = 11
@@ -106,9 +106,9 @@ class input_pms(plugin_input.base):
         pmdtrackdata = []
         for tracknum in range(3):
             print("[input-piyopiyo] Track " + str(tracknum+1), end=",")
-            trk_octave = int.from_bytes(pmdfile.read(1), "little")
+            trk_octave = pmdfile.read(1)[0]
             print(" Oct:" + str(trk_octave), end=",")
-            trk_icon = int.from_bytes(pmdfile.read(1), "little")
+            trk_icon = pmdfile.read(1)[0]
             print(" Icon:" + str(trk_icon), end=",")
             trk_unk = pmdfile.read(2)
             trk_length = int.from_bytes(pmdfile.read(4), "little")

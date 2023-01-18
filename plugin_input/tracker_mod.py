@@ -114,9 +114,9 @@ class input_mod(plugin_input.base):
         IsMod = 1
         for _ in range(31):
             bytestream.read(24)
-            mod_inst_finetune = int.from_bytes(bytestream.read(1), "big")
+            mod_inst_finetune = bytestream.read(1)[0]
             if 15 < mod_inst_finetune: IsMod = 0
-            mod_inst_defaultvol = int.from_bytes(bytestream.read(1), "big")
+            mod_inst_defaultvol = bytestream.read(1)[0]
             if 64 < mod_inst_defaultvol: IsMod = 0
             bytestream.read(4)
         if IsMod == 1: return True

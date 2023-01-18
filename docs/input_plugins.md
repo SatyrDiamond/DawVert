@@ -31,8 +31,9 @@
 | M | ```midi``` | MIDI | ✔️ | 
 | M-I | ```caustic``` | Caustic 3 | ❌ | 
 | M | ```mnbs``` | Minecraft Note Block Studio | ❌ | 
-| R | ```flipper``` | Flipper Music Format | ❌ | 
+| M | ```onlineseq``` | Online Sequencer .sequence | ❌ | 
 | M | ```mmf``` | Mobile Music File | ✔️ | 
+| R | ```flipper``` | Flipper Music Format | ❌ | 
 
 ## Mario Paint
 | DataType | Short Name | Name | Autodetect | 

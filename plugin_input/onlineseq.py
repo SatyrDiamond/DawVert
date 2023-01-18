@@ -161,7 +161,7 @@ def parse_note(data):
 class input_onlinesequencer(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
-    def getshortname(self): return 'onlinesequencer'
+    def getshortname(self): return 'onlineseq'
     def getname(self): return 'Online Sequencer'
     def gettype(self): return 'r'
     def supported_autodetect(self): return False

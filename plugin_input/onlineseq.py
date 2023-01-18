@@ -68,6 +68,71 @@ onlseq_instlist[37] = [0, None,[0.00, 0.00, 0.00],"808 Bass"]
 def print_value(name, data):
     print(str(' '+name+': '+str(data)).ljust(11), end=' ')
 
+
+def parse_inst_params(data):
+    outputlist = {}
+    instparams_bio = data_bytes.bytearray2BytesIO(data)
+    instparams_len = len(data)
+    while instparams_bio.tell() < instparams_len:
+        firstbyte = int.from_bytes(instparams_bio.read(1))
+        if firstbyte == 13: outputlist['volume'] = struct.unpack('f', instparams_bio.read(4))[0]
+        elif firstbyte == 80: outputlist['unk'] = int.from_bytes(instparams_bio.read(1))
+        elif firstbyte == 37: outputlist['pan'] = struct.unpack('f', instparams_bio.read(4))[0]
+        elif firstbyte == 77: outputlist['detune'] = struct.unpack('f', instparams_bio.read(4))[0]
+        elif firstbyte == 16: outputlist['delay_on'] = int.from_bytes(instparams_bio.read(1))
+        elif firstbyte == 24: outputlist['reverb_type'] = int.from_bytes(instparams_bio.read(1))
+        elif firstbyte == 93: outputlist['reverb_dry'] = struct.unpack('f', instparams_bio.read(4))[0]
+        elif firstbyte == 96: outputlist['limit_type'] = int.from_bytes(instparams_bio.read(1))
+        elif firstbyte == 109: outputlist['limit_lvl'] = struct.unpack('f', instparams_bio.read(4))[0]
+        elif firstbyte == 40: outputlist['eq_on'] = int.from_bytes(instparams_bio.read(1))
+        elif firstbyte == 53: outputlist['eq_low'] = struct.unpack('f', instparams_bio.read(4))[0]
+        elif firstbyte == 61: outputlist['eq_mid'] = struct.unpack('f', instparams_bio.read(4))[0]
+        elif firstbyte == 69: outputlist['eq_high'] = struct.unpack('f', instparams_bio.read(4))[0]
+        else: 
+            print('[input-onlinesequencer] InstParams: Unknown Byte:',firstbyte)
+            break
+    return outputlist
+
+def parse_inst_data(data, inst_params):
+    instdata_bio = data_bytes.bytearray2BytesIO(data)
+    instdata_len = len(data)
+    while instdata_bio.tell() < instdata_len:
+        firstbyte = int.from_bytes(instdata_bio.read(1))
+        if firstbyte == 8: 
+            instid = int.from_bytes(instdata_bio.read(1))
+            #print('[input-onlinesequencer] InstParams: ID:',onlseq_instlist[instid][3])
+        elif firstbyte == 18: 
+            sizebyte = varint.decode_stream(instdata_bio)
+            instdatabytes = instdata_bio.read(sizebyte)
+            #print('[input-onlinesequencer] InstParams: Data:',instdatabytes.hex())
+            inst_params[instid] = parse_inst_params(instdatabytes)
+        else: 
+            print('[input-onlinesequencer] InstParams: Unknown Byte:',firstbyte)
+            break
+
+def parse_main(data):
+    outputlist = {}
+    inst_params = {}
+    maindata_bio = data_bytes.bytearray2BytesIO(data)
+    maindata_len = len(data)
+    while maindata_bio.tell() < maindata_len:
+        firstbyte = int.from_bytes(maindata_bio.read(1))
+        if firstbyte == 8: 
+            outputlist['bpm'] = varint.decode_stream(maindata_bio)
+            print('[input-onlinesequencer] Main: BPM:',outputlist['bpm'])
+        elif firstbyte == 16: 
+            outputlist['timesig'] = varint.decode_stream(maindata_bio)
+            print('[input-onlinesequencer] Main: TimeSig:',outputlist['timesig'])
+        elif firstbyte == 26:
+            sizebyte = varint.decode_stream(maindata_bio)
+            databytes = maindata_bio.read(sizebyte)
+            parse_inst_data(databytes, inst_params)
+        else: 
+            print('[input-onlinesequencer] Main: Unknown Byte:',firstbyte)
+            break
+    outputlist['instparam'] = inst_params
+    return outputlist
+
 def parse_note(data):
     global t_notelist
     #print(data.hex())
@@ -75,18 +140,20 @@ def parse_note(data):
     notedata_len = len(data)
     onlseq_pos = 0
     onlseq_inst = 0
+    onlseq_vol = 1
     while notedata_bio.tell() < notedata_len:
         firstbyte = int.from_bytes(notedata_bio.read(1))
         if firstbyte == 8: onlseq_note = int.from_bytes(notedata_bio.read(1))-60
         elif firstbyte == 21: onlseq_pos = struct.unpack('f', notedata_bio.read(4))[0]
         elif firstbyte == 29: onlseq_dur = struct.unpack('f', notedata_bio.read(4))[0]
         elif firstbyte == 32: onlseq_inst = int.from_bytes(notedata_bio.read(1))
-        elif firstbyte == 45: secondbyte = struct.unpack('f', notedata_bio.read(4))[0]
-        else: print('[input-onlinesequencer] Sequence/Notes: Unknown Byte: ',firstbyte)
+        elif firstbyte == 45: onlseq_vol = struct.unpack('f', notedata_bio.read(4))[0]
+        else: print('[input-onlinesequencer] Note: Unknown Byte: ',firstbyte)
     cvpj_note = {}
     cvpj_note['position'] = onlseq_pos
     cvpj_note['key'] = onlseq_note
     cvpj_note['duration'] = onlseq_dur
+    cvpj_note['vol'] = onlseq_vol
     if onlseq_inst not in t_notelist: t_notelist[onlseq_inst] = []
     t_notelist[onlseq_inst].append(cvpj_note)
 
@@ -120,7 +187,6 @@ class input_onlinesequencer(plugin_input.base):
             #print('--------- '+str(firstbyte).ljust(3), '0x'+firstbyte_bin.hex(), end=' ')
             if firstbyte == 10:
                 secondbyte = varint.decode_stream(onlseq_f_stream)
-                print('[input-onlinesequencer] Sequence/Main')
                 onlseq_data_main = onlseq_f_stream.read(secondbyte)
             elif firstbyte == 18:
                 secondbyte = int.from_bytes(onlseq_f_stream.read(1))
@@ -132,6 +198,9 @@ class input_onlinesequencer(plugin_input.base):
                 print('[input-onlinesequencer] Sequence: Unknown Byte: ',firstbyte)
                 print(firstbyte, firstbyte_bin, onlseq_f_stream.read(20).hex())
                 exit()
+
+        onlseq_list_main = parse_main(onlseq_data_main)
+
         print('[input-onlinesequencer] Sequence/Notes:', len(onlseq_data_notes))
 
         t_notelist = {}
@@ -156,6 +225,10 @@ class input_onlinesequencer(plugin_input.base):
                     cvpj_instdata['plugindata'] = {'bank':0, 'inst':onlseq_instlist[instid][1]-1}
             else:
                 cvpj_instdata['plugin'] = 'none'
+            if 'volume' in onlseq_list_main['instparam'][instid]:
+                cvpj_inst["vol"] = onlseq_list_main['instparam'][instid]['volume']
+            if 'pan' in onlseq_list_main['instparam'][instid]:
+                cvpj_inst["pan"] = onlseq_list_main['instparam'][instid]['pan']
             cvpj_inst['placements'] = [{}]
             cvpj_inst['placements'][0]['position'] = 0
             cvpj_inst['placements'][0]['duration'] = note_mod.getduration(cvpj_notelist)
@@ -167,6 +240,12 @@ class input_onlinesequencer(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         cvpj_l['trackdata'] = cvpj_l_trackdata
         cvpj_l['trackordering'] = cvpj_l_trackordering
-        cvpj_l['bpm'] = 120
+        cvpj_l['timesig_denominator'] = 4
+        
+        if 'bpm' in onlseq_list_main: cvpj_l['bpm'] = onlseq_list_main['bpm']
+        else: cvpj_l['bpm'] = 120
+
+        if 'timesig' in onlseq_list_main: cvpj_l['timesig_numerator'] = onlseq_list_main['timesig']
+        else: cvpj_l['timesig_numerator'] = 4
 
         return json.dumps(cvpj_l)

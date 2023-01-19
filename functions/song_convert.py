@@ -31,6 +31,9 @@ def trackfx2fxrack(cvpj_l, cvpjtype):
             fxtrack = {}
             fxtrack['name'] = trackdata['name']
             if 'color' in trackdata: fxtrack['color'] = trackdata['color']
+            if 'fxchain' in trackdata: 
+                fxtrack['fxchain'] = trackdata['fxchain']
+                del trackdata['fxchain']
             cvpj_l['fxrack'][str(fxnum)] = fxtrack
             fxnum += 1
 

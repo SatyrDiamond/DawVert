@@ -23,10 +23,10 @@ onlseq_instlist[19] = [0,   14,[0.96, 0.26, 0.21],"Xylophone"]
 onlseq_instlist[34] = [0,   12,[0.33, 0.79, 0.79],"Vibraphone"]
 onlseq_instlist[21] = [0,  115,[0.46, 0.46, 0.46],"Steel Drums"]
 
-onlseq_instlist[39] = [0, None,[0.62, 0.06, 0.13],"8-Bit Drum Kit"]
-onlseq_instlist[40] = [0, None,[0.51, 0.02, 0.08],"2013 Drum Kit"]
-onlseq_instlist[36] = [0,   26,[0.50, 0.06, 0.28],"808 Drum Kit"]
-onlseq_instlist[42] = [0, None,[0.60, 0.00, 1.00],"909 Drum Kit"]
+onlseq_instlist[39] = [1, None,[0.62, 0.06, 0.13],"8-Bit Drum Kit"]
+onlseq_instlist[40] = [1, None,[0.51, 0.02, 0.08],"2013 Drum Kit"]
+onlseq_instlist[36] = [1,   26,[0.50, 0.06, 0.28],"808 Drum Kit"]
+onlseq_instlist[42] = [1, None,[0.60, 0.00, 1.00],"909 Drum Kit"]
 
 onlseq_instlist[ 1] = [0,   25,[1.00, 0.60, 0.00],"Acoustic Guitar"]
 onlseq_instlist[ 4] = [0,   27,[0.30, 0.69, 0.31],"Electric Guitar"]
@@ -162,8 +162,10 @@ class input_onlinesequencer(plugin_input.base):
             if onlseq_instlist[instid][1] != None:
                 cvpj_instdata['plugin'] = 'general-midi'
                 if onlseq_instlist[instid][0] == 1:
+                    cvpj_instdata['usemasterpitch'] = 0
                     cvpj_instdata['plugindata'] = {'bank':128, 'inst':onlseq_instlist[instid][1]-1}
                 else:
+                    cvpj_instdata['usemasterpitch'] = 1
                     cvpj_instdata['plugindata'] = {'bank':0, 'inst':onlseq_instlist[instid][1]-1}
             else:
                 cvpj_instdata['plugin'] = 'none'

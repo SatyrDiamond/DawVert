@@ -4,3 +4,4 @@ mido
 lxml
 chardet
 beautifulsoup4
+blackboxprotobuf

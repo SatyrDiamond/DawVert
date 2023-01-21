@@ -123,7 +123,6 @@ class input_onlinesequencer(plugin_input.base):
     def parse(self, input_file, extra_param):
         global t_notelist
 
-        cvpj_l_playlist = {}
         cvpj_l_trackdata = {}
         cvpj_l_trackordering = []
         cvpj_l_timemarkers = []

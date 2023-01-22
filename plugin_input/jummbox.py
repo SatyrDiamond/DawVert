@@ -143,7 +143,7 @@ def parse_channel(channeldata, channum):
             cvpj_l_placement = {}
             cvpj_l_placement['type'] = "instruments"
             cvpj_l_placement['position'] = calcval(sequencecount*jummbox_notesize)
-            cvpj_l_placement['duration'] = calcval(1)
+            cvpj_l_placement['duration'] = calcval(jummbox_ticksPerBeat*jummbox_beatsPerBar)
             cvpj_l_placement['fromindex'] = patid
             cvpj_l_playlist[str(channum)]['placements'].append(cvpj_l_placement)
             sequencecount += 1

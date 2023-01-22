@@ -142,6 +142,7 @@ class input_mariopaint_msq(plugin_input.base):
         l_placement = {}
         l_placement['type'] = "instruments"
         l_placement['position'] = 0
+        l_placement['duration'] = curpos+1
         l_placement['notelist'] = notelist
 
         cvpj_l_playlist[str(1)] = {}

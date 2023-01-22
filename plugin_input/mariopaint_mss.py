@@ -123,11 +123,13 @@ class input_mariopaint_mss(plugin_input.base):
         tempo_placement['points'] = [{"position": 0, "value": mss_tempo}]
         auto_tempo.append(tempo_placement)
 
+        duration = 0
         curpos = 0
         for chord in chords:
             chordvolume = int(chord.get('volume'))/8
             for instname in instnames:
                 x_chord = chord.find(instname)
+                duration = curpos
                 if x_chord != None: addnotes(curpos, notelen, instname, x_chord.text, chordvolume)
             t_bm = chord.find('bookmark')
             if t_bm != None: cvpj_l_timemarkers.append({'position':curpos, 'name': 'Bookmark'})
@@ -143,6 +145,7 @@ class input_mariopaint_mss(plugin_input.base):
         l_placement = {}
         l_placement['type'] = "instruments"
         l_placement['position'] = 0
+        l_placement['duration'] = duration
         l_placement['notelist'] = notelist
 
         cvpj_l_playlist[str(1)] = {}

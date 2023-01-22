@@ -67,7 +67,7 @@ class output_cvpj(plugin_output.base):
         addvalue(x_song, 'showinfo', 1)
         addvalue(x_song, 'cpos', 0) #start
         addvalue(x_song, 'rpos', 0) #end
-        addvalue(x_song, 'lpos', 10000)
+        addvalue(x_song, 'lpos', 0)
         addvalue(x_song, 'master', 1)
         addvalue(x_song, 'loop', 0)
         addvalue(x_song, 'punchin', 0)

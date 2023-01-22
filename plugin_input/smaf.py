@@ -6,6 +6,7 @@ import json
 import struct
 from functions import data_bytes
 from functions import values
+from functions import note_mod
 
 gm_colors = values.getlist_gm_colors()
 gm_names = values.getlist_gm_names()
@@ -263,6 +264,7 @@ class input_mmf(plugin_input.base):
                 playlistrowdata['placements'] = [{}]
                 playlistrowdata['placements'][0]['type'] = 'instruments'
                 playlistrowdata['placements'][0]['position'] = 0
+                playlistrowdata['placements'][0]['duration'] = note_mod.getduration(c_notelist)
                 playlistrowdata['placements'][0]['notelist'] = c_notelist
             cvpj_l_playlist[str(channel+1)] = playlistrowdata
 

@@ -263,7 +263,7 @@ def parse_song(songid):
                 placement = {}
                 placement['type'] = "instruments"
                 placement['position'] = cvpj_p_totalpos*8
-                placement['duration'] = tlslen/(120/tls[3])
+                placement['duration'] = tlslen/(120/tls[3])*8
                 placement['fromindex'] = tls[4]
                 cvpj_l_playlist[tlsnum+1]['placements'].append(placement)
                 if tlsnum == 0:

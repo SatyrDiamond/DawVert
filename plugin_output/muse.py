@@ -105,12 +105,27 @@ class output_cvpj(plugin_output.base):
                 if s_trkdata['type'] == 'instrument':
                     insttrack(x_song, s_trkdata)
 
+        if 'bpm' in projJ: muse_bpm = projJ['bpm']
+        else: muse_bpm = 120
+
         x_tempolist = ET.SubElement(x_song, "tempolist")
         x_tempolist.set('fix', "500000")
         x_tempo = ET.SubElement(x_tempolist, "tempo")
         x_tempo.set('at', "21474837")
         addvalue(x_tempo, 'tick', 0)
-        addvalue(x_tempo, 'val', mido.bpm2tempo(projJ['bpm']))
+        addvalue(x_tempo, 'val', mido.bpm2tempo(muse_bpm))
+
+        if 'timesig_numerator' in projJ: muse_numerator = projJ['timesig_numerator']
+        else: muse_numerator = 4
+        if 'timesig_denominator' in projJ: muse_denominator = projJ['timesig_denominator']
+        else: muse_denominator = 4
+
+        x_siglist = ET.SubElement(x_song, "siglist")
+        x_sig = ET.SubElement(x_tempolist, "sig")
+        x_sig.set('at', "21474836")
+        addvalue(x_sig, 'tick', 0)
+        addvalue(x_sig, 'nom', muse_numerator)
+        addvalue(x_sig, 'denom', muse_denominator)
 
         outfile = ET.ElementTree(x_muse)
         ET.indent(outfile)

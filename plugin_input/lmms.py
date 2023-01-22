@@ -7,6 +7,7 @@ import math
 import plugin_input
 import os
 import xml.etree.ElementTree as ET
+from functions import note_mod
 from functions import colors
 from functions import auto
 
@@ -278,13 +279,6 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
 
 # ------- Notelist -------
 
-def note_list_getduration(notelistjsontable):
-    notelistdurationfinal = 0
-    for x in notelistjsontable:
-        notelistduration = x['position'] + x['duration']
-        if notelistduration > notelistdurationfinal:
-            notelistdurationfinal = notelistduration
-    return notelistdurationfinal
 def lmms_decode_nlpattern(notesX):
     notelist = []
     printcountpat = 0
@@ -329,7 +323,7 @@ def lmms_decode_nlplacements(trkX):
         notesX = patX.findall('note')
         notesJ = lmms_decode_nlpattern(notesX)
         placeJ["notelist"] = notesJ
-        placeJ["duration"] = note_list_getduration(notesJ)
+        placeJ["duration"] = note_mod.getduration(notesJ)
         nlplacements.append(placeJ)
     print(' ')
     return nlplacements

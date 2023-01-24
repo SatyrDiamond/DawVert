@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2022 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 from functions import note_convert
+#import time
 
 def get_channeldata_inside_pattern(patterntable_single, channel):
     output_table = []
@@ -74,50 +75,89 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
         if placement_points != []: tempo_placements.append(placement_data)
     return tempo_placements
 
-def convertchannel2timednotes(patterntable_channel, startinststr):
-    output_channel = []
+def make_placement_data(pos, nl):
+    single_placement = {}
+    single_placement['position'] = pos
+    single_placement['type'] = 'instruments'
+    single_placement['notelist'] = nl
+    return single_placement
+
+def convertchannel2notelist_experement(patterntable_channel, startinststr):
+    output_placements = []
+    pos_global = 0
+    pos_pl = 0
+    pos_note = 0
+    changeposition = 0
+
+    cvpj_notelist = []
+
+    pos_note = None
+
+    plactive = False
     note_held = 0
-    current_inst = None
-    current_key = None
-    first_seperate = 0
     skip_rows = 0
+    plpos = 0
     for notecommand in patterntable_channel:
+
         if 'firstrow' in notecommand[0]:
+            if plactive == True:
+                output_placements.append(make_placement_data(plpos, cvpj_notelist))
+                cvpj_notelist = []
+                plactive = False
+            pos_pl = 0
             skip_rows = 0
+            note_held = 0
+            plpos = pos_global
+            plactive = True
+
         if skip_rows == 0:
             if notecommand[1][0] == None:
-                if 'firstrow' in notecommand[0]:
-                    if first_seperate == 1: output_channel.append('seperate;')
-                    if first_seperate == 0: first_seperate = 1
-                #if 'vol' in notecommand[1][2]:
-                #    output_channel.append('change_vol;' + str(notecommand[1][2]['vol']))
+                pass
             elif notecommand[1][0] == 'Fade' or notecommand[1][0] == 'Cut' or notecommand[1][0] == 'Off':
-                if note_held == 1:
-                    output_channel.append('note_off;' + str(current_key))
                 note_held = 0
-                if 'firstrow' in notecommand[0]:
-                    if first_seperate == 1: output_channel.append('seperate;')
-                    if first_seperate == 0: first_seperate = 1
+                pos_note = None
             else:
-                if note_held == 1:
-                    output_channel.append('note_off;' + str(current_key))
-                if 'firstrow' in notecommand[0]:
-                    if first_seperate == 1: output_channel.append('seperate;')
-                    if first_seperate == 0: first_seperate = 1
-                if current_inst != notecommand[1][1] and isinstance(notecommand[1][1], int):
-                    output_channel.append('instrument;' + startinststr + str(notecommand[1][1]))
-                    current_inst = notecommand[1][1]
                 note_held = 1
-                current_key = notecommand[1][0]
-                vol = 1.0
-                if "vol" in notecommand[1][2]: vol = notecommand[1][2]['vol']
-                if "pan" in notecommand[1][2]: output_channel.append('pan;' + str(notecommand[1][2]['pan']))
-                output_channel.append('note_on;' + str(notecommand[1][0])+','+str(vol))
-            output_channel.append('break;' + str(1))
+                pos_note = -1
+                cvpj_note = {}
+                cvpj_note['position'] = pos_pl
+                cvpj_note['duration'] = 0
+                cvpj_note['key'] = notecommand[1][0]
+                #if notecommand[1][2] != {}: print(notecommand[1][2])
+                if 'vol' in notecommand[1][2]: cvpj_note['vol'] = notecommand[1][2]['vol']
+                if 'pan' in notecommand[1][2]: cvpj_note['pan'] = notecommand[1][2]['pan']
+                cvpj_note['instrument'] = startinststr+str(notecommand[1][1])
+                cvpj_notelist.append(cvpj_note)
+
+            if pos_note != None: pos_note += 1
+
+            pos_global += 1
+
+            if note_held == 1:
+                cvpj_notelist[-1]['duration'] += 1
+
+            #print(str(pos_global).ljust(5), end='')
+            #print(str(pos_pl).ljust(5), end='')
+            #print(str(pos_note).ljust(5), end='')
+            #print(str(len(cvpj_notelist)).ljust(5), end='')
+            #print(str(len(output_placements)).ljust(5), end='')
+            #print(str(note_held).ljust(2), end='')
+            #print(str(skip_rows).ljust(2), end='')
+            #print(str(notecommand).ljust(40), end='')
+            #print(cvpj_notelist)
+            #time.sleep(0.1)
+
         if 'tracker_break_to_row' in notecommand[0]:
-            if notecommand[0]['tracker_break_to_row'] == 0:
-                skip_rows = 1
-    return output_channel
+            skip_rows = 1
+            note_held = 0
+
+
+        pos_pl += 1
+
+
+
+    output_placements.append(make_placement_data(plpos, cvpj_notelist))
+    return output_placements
 
 def song2playlist(patterntable_all, number_of_channels, order_list, startinststr, color):
     projL_playlist = {}
@@ -125,8 +165,7 @@ def song2playlist(patterntable_all, number_of_channels, order_list, startinststr
         print('[song-tracker] Converting Channel ' + str(current_channelnum+1))
         note_convert.timednotes2notelistplacement_track_start()
         channelsong = entire_song_channel(patterntable_all,current_channelnum,order_list)
-        timednotes = convertchannel2timednotes(channelsong, startinststr)
-        placements = note_convert.timednotes2notelistplacement_parse_timednotes(timednotes, '')
+        placements = convertchannel2notelist_experement(channelsong, startinststr)
         projL_playlist[str(current_channelnum+1)] = {}
         projL_playlist[str(current_channelnum+1)]['color'] = color
         projL_playlist[str(current_channelnum+1)]['name'] = 'Channel ' + str(current_channelnum+1)

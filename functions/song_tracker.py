@@ -75,9 +75,10 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
         if placement_points != []: tempo_placements.append(placement_data)
     return tempo_placements
 
-def make_placement_data(pos, nl):
+def make_placement_data(pos, dur, nl):
     single_placement = {}
     single_placement['position'] = pos
+    single_placement['duration'] = dur
     single_placement['type'] = 'instruments'
     single_placement['notelist'] = nl
     return single_placement
@@ -101,7 +102,7 @@ def convertchannel2notelist_experement(patterntable_channel, startinststr):
 
         if 'firstrow' in notecommand[0]:
             if plactive == True:
-                output_placements.append(make_placement_data(plpos, cvpj_notelist))
+                output_placements.append(make_placement_data(plpos, pos_pl, cvpj_notelist))
                 cvpj_notelist = []
                 plactive = False
             pos_pl = 0
@@ -131,6 +132,7 @@ def convertchannel2notelist_experement(patterntable_channel, startinststr):
 
             if pos_note != None: pos_note += 1
 
+            pos_pl += 1
             pos_global += 1
 
             if note_held == 1:
@@ -152,11 +154,7 @@ def convertchannel2notelist_experement(patterntable_channel, startinststr):
             note_held = 0
 
 
-        pos_pl += 1
-
-
-
-    output_placements.append(make_placement_data(plpos, cvpj_notelist))
+    output_placements.append(make_placement_data(plpos, pos_pl, cvpj_notelist))
     return output_placements
 
 def song2playlist(patterntable_all, number_of_channels, order_list, startinststr, color):

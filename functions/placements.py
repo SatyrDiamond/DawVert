@@ -78,23 +78,22 @@ def resize_nl(placementdata):
     in_dur = placementdata['duration']
 
     if 'notelist' in placementdata:
-        in_nl = placementdata['notelist']
-        duration_final = None
-        for note in in_nl:
-            notepos = note['position']
-            if duration_final != None:
-                if duration_final > notepos: duration_final = notepos
-            else: duration_final = notepos
+        if placementdata['notelist'] != []:
+            in_nl = placementdata['notelist']
+            duration_final = None
+            for note in in_nl:
+                notepos = note['position']
+                if duration_final != None:
+                    if duration_final > notepos: duration_final = notepos
+                else: duration_final = notepos
 
-        duration_final = math.floor(duration_final/16)*16
+            if duration_final != 0:
+                placementdata['cut'] = {}
+                placementdata['cut']['type'] = 'cut'
+                placementdata['cut']['start'] = duration_final
+                placementdata['cut']['end'] = in_dur
 
-        if duration_final != 0:
-            placementdata['cut'] = {}
-            placementdata['cut']['type'] = 'cut'
-            placementdata['cut']['start'] = duration_final
-            placementdata['cut']['end'] = in_dur
-
-        placementdata['position'] = in_pos+duration_final
+            placementdata['position'] = in_pos+duration_final
     return placementdata
 
 

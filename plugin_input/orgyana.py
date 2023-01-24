@@ -3,6 +3,7 @@
 
 from functions import data_bytes
 from functions import note_mod
+from functions import placements
 import plugin_input
 import json
 
@@ -159,6 +160,14 @@ class input_orgyana(plugin_input.base):
             if len(t_cvpj_nl[tracknum]) != 0:
                 if tracknum < 8: trackname = "Melody "+str(tracknum+1)
                 else: trackname = l_drum_name[org_insttable[tracknum]]
+
+                cvpj_placement = {}
+                cvpj_placement['position'] = 0
+                cvpj_placement['duration'] = note_mod.getduration(s_cvpj_nl)
+                cvpj_placement['notelist'] = s_cvpj_nl
+
+                placements.resize_nl(cvpj_placement)
+
                 cvpj_inst = {}
                 cvpj_inst['type'] = 'instrument'
                 cvpj_inst['name'] = trackname
@@ -166,10 +175,7 @@ class input_orgyana(plugin_input.base):
                 cvpj_inst["vol"] = 1.0
                 cvpj_inst['instdata'] = {}
                 cvpj_inst['instdata']['plugin'] = 'none'
-                cvpj_inst['placements'] = [{}]
-                cvpj_inst['placements'][0]['position'] = 0
-                cvpj_inst['placements'][0]['duration'] = note_mod.getduration(s_cvpj_nl)
-                cvpj_inst['placements'][0]['notelist'] = s_cvpj_nl
+                cvpj_inst['placements'] = [cvpj_placement]
                 cvpj_l_trackdata['org_'+str(tracknum)] = cvpj_inst
                 cvpj_l_trackordering.append('org_'+str(tracknum))
 

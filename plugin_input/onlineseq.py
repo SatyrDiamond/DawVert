@@ -180,7 +180,7 @@ class input_onlinesequencer(plugin_input.base):
             cvpj_placement['duration'] = note_mod.getduration(cvpj_notelist)
             cvpj_placement['notelist'] = cvpj_notelist
 
-            placements.resize_nl(cvpj_placement)
+            #placements.resize_nl(cvpj_placement)
 
             cvpj_inst['placements'] = [cvpj_placement]
             cvpj_l_trackdata['os_'+str(instid)] = cvpj_inst

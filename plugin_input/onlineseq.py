@@ -3,6 +3,7 @@
 
 from functions import data_bytes
 from functions import note_mod
+from functions import placements
 import plugin_input
 import json
 import struct
@@ -173,10 +174,15 @@ class input_onlinesequencer(plugin_input.base):
                     cvpj_inst["vol"] = onlseq_data_instparams[instid]['volume']
                 if 'pan' in onlseq_data_instparams[instid]:
                     cvpj_inst["pan"] = onlseq_data_instparams[instid]['pan']
-            cvpj_inst['placements'] = [{}]
-            cvpj_inst['placements'][0]['position'] = 0
-            cvpj_inst['placements'][0]['duration'] = note_mod.getduration(cvpj_notelist)
-            cvpj_inst['placements'][0]['notelist'] = cvpj_notelist
+
+            cvpj_placement = {}
+            cvpj_placement['position'] = 0
+            cvpj_placement['duration'] = note_mod.getduration(cvpj_notelist)
+            cvpj_placement['notelist'] = cvpj_notelist
+
+            cvpj_placement = placements.resize_nl(cvpj_placement)
+
+            cvpj_inst['placements'] = [cvpj_placement]
             cvpj_l_trackdata['os_'+str(instid)] = cvpj_inst
             cvpj_l_trackordering.append('os_'+str(instid))
 

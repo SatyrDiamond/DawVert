@@ -166,7 +166,7 @@ class input_orgyana(plugin_input.base):
                 cvpj_placement['duration'] = note_mod.getduration(s_cvpj_nl)
                 cvpj_placement['notelist'] = s_cvpj_nl
 
-                placements.resize_nl(cvpj_placement)
+                #placements.resize_nl(cvpj_placement)
 
                 cvpj_inst = {}
                 cvpj_inst['type'] = 'instrument'

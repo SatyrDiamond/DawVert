@@ -73,6 +73,10 @@ def get_timesig(patternLength, notesPerBeat):
     return [int(numer), denom]
 
 
+def resize_nl_multi(placementsdata):
+    for placement in placementsdata:
+        resize_nl(placement)
+
 def resize_nl(placementdata):
     in_pos = placementdata['position']
     in_dur = placementdata['duration']
@@ -94,7 +98,6 @@ def resize_nl(placementdata):
                 placementdata['cut']['end'] = in_dur
 
             placementdata['position'] = in_pos+duration_final
-    return placementdata
 
 
 def make_timemarkers(timesig, PatternLengthList, LoopPos):

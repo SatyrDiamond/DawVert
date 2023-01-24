@@ -11,8 +11,9 @@ def addvalue(xmltag, name, value):
     x_temp = ET.SubElement(xmltag, name)
     x_temp.text = str(value)
 
-def insttrack(xmltag, insttrackdata):
+def maketrack_midi(xmltag, insttrackdata):
     global NoteStep
+    global tracknum
     x_miditrack = ET.SubElement(xmltag, "miditrack")
     if 'name' in insttrackdata: addvalue(x_miditrack, 'name', insttrackdata['name'])
     else: addvalue(x_miditrack, 'name', 'Out')
@@ -40,7 +41,25 @@ def insttrack(xmltag, insttrackdata):
                     x_event.set('a', str(note['key']+84))
                     if 'vol' in note: x_event.set('b', str(int(note['vol']*100)))
                     else: x_event.set('b', '100')
+    tracknum =+ 1
 
+def maketrack_master(x_song):
+    global tracknum
+    x_AudioOutput = ET.SubElement(x_song, "AudioOutput")
+    addvalue(x_AudioOutput, 'name', 'Out')
+    addvalue(x_AudioOutput, 'record', 0)
+    addvalue(x_AudioOutput, 'mute', 0)
+    addvalue(x_AudioOutput, 'solo', 0)
+    addvalue(x_AudioOutput, 'off', 0)
+    addvalue(x_AudioOutput, 'channels', 2)
+    addvalue(x_AudioOutput, 'height', 24)
+    addvalue(x_AudioOutput, 'locked', 0)
+    addvalue(x_AudioOutput, 'recMonitor', 0)
+    addvalue(x_AudioOutput, 'prefader', 0)
+    addvalue(x_AudioOutput, 'sendMetronome', 1)
+    addvalue(x_AudioOutput, 'automation', 0)
+    addvalue(x_AudioOutput, 'gain', 1)
+    tracknum =+ 1
 
 class output_cvpj(plugin_output.base):
     def __init__(self): pass
@@ -49,11 +68,14 @@ class output_cvpj(plugin_output.base):
     def getshortname(self): return 'muse'
     def gettype(self): return 'r'
     def parse(self, convproj_json, output_file):
+        global NoteStep
+        global tracknum
+
+        tracknum = 0
+
         projJ = json.loads(convproj_json)
         
         placements.removelanes(projJ)
-
-        global NoteStep
         midiDivision = 384
         NoteStep = midiDivision/4
         
@@ -84,26 +106,14 @@ class output_cvpj(plugin_output.base):
         addvalue(x_song, 'sampleRate', 44100)
         
         # ---------------------------------- master track ----------------------------------
-        x_AudioOutput = ET.SubElement(x_song, "AudioOutput")
-        addvalue(x_AudioOutput, 'name', 'Out')
-        addvalue(x_AudioOutput, 'record', 0)
-        addvalue(x_AudioOutput, 'mute', 0)
-        addvalue(x_AudioOutput, 'solo', 0)
-        addvalue(x_AudioOutput, 'off', 0)
-        addvalue(x_AudioOutput, 'channels', 2)
-        addvalue(x_AudioOutput, 'height', 24)
-        addvalue(x_AudioOutput, 'locked', 0)
-        addvalue(x_AudioOutput, 'recMonitor', 0)
-        addvalue(x_AudioOutput, 'prefader', 0)
-        addvalue(x_AudioOutput, 'sendMetronome', 1)
-        addvalue(x_AudioOutput, 'automation', 0)
-        addvalue(x_AudioOutput, 'gain', 1)
+
+        maketrack_master(x_song)
 
         for cvpj_trackentry in cvpj_trackordering:
             if cvpj_trackentry in cvpj_trackdata:
                 s_trkdata = cvpj_trackdata[cvpj_trackentry]
                 if s_trkdata['type'] == 'instrument':
-                    insttrack(x_song, s_trkdata)
+                    maketrack_midi(x_song, s_trkdata)
 
         if 'bpm' in projJ: muse_bpm = projJ['bpm']
         else: muse_bpm = 120

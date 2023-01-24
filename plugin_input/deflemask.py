@@ -279,7 +279,7 @@ class input_cvpj_r(plugin_input.base):
             for patnum in t_ch_pat_orders[channum]:
 
                 table_rows = []
-                for _ in range(dmf_TOTAL_ROWS_PER_PATTERN):
+                for rownum in range(dmf_TOTAL_ROWS_PER_PATTERN):
                     r_note, r_oct, r_vol = struct.unpack('hhh', bio_dmf.read(6))
                     r_fx = []
                     for _ in range(dmf_CHANNEL_EFFECTS_COLUMNS_COUNT):
@@ -308,13 +308,14 @@ class input_cvpj_r(plugin_input.base):
 
                     if r_inst != -1 and output_note != None: output_inst = r_inst
 
-                    table_rows.append([[],[output_note, output_inst, output_param, output_extra]])
+                    if rownum == 0:
+                        table_rows.append([{'firstrow': 1},[output_note, output_inst, output_param, output_extra]])
+                    else:
+                        table_rows.append([{},[output_note, output_inst, output_param, output_extra]])
 
-                TNT = song_tracker.convertchannel2timednotes(table_rows, '')
-                note_convert.timednotes2notelistplacement_track_start()
-                NLP = note_convert.timednotes2notelistplacement_parse_timednotes(TNT, s_chantype+'_')
+                NLP = song_tracker.convertchannel2notelist(table_rows, s_chantype+'_')
 
-                used_instruments = note_convert.timednotes2notelist_get_used_instruments()
+                used_instruments = song_tracker.get_used_instruments()
 
                 for used_instrument in used_instruments:
                     ui_split = used_instrument.split('_')

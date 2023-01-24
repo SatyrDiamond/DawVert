@@ -3,6 +3,18 @@
 from functions import note_convert
 #import time
 
+global used_instruments_num
+used_instruments_num = []
+
+global used_instruments
+used_instruments = []
+
+def get_used_instruments():
+    return used_instruments
+
+def get_used_instruments_num():
+    return used_instruments_num
+
 def get_channeldata_inside_pattern(patterntable_single, channel):
     output_table = []
     position = 0
@@ -83,7 +95,7 @@ def make_placement_data(pos, dur, nl):
     single_placement['notelist'] = nl
     return single_placement
 
-def convertchannel2notelist_experement(patterntable_channel, startinststr):
+def convertchannel2notelist(patterntable_channel, startinststr):
     output_placements = []
     pos_global = 0
     pos_pl = 0
@@ -128,6 +140,14 @@ def convertchannel2notelist_experement(patterntable_channel, startinststr):
                 if 'vol' in notecommand[1][2]: cvpj_note['vol'] = notecommand[1][2]['vol']
                 if 'pan' in notecommand[1][2]: cvpj_note['pan'] = notecommand[1][2]['pan']
                 cvpj_note['instrument'] = startinststr+str(notecommand[1][1])
+                instnumid = notecommand[1][1]
+                instid = startinststr+str(notecommand[1][1])
+                if instnumid != None:
+                    if instnumid not in used_instruments_num:
+                        used_instruments_num.append(instnumid)
+                    if instid not in used_instruments:
+                        used_instruments.append(instid)
+
                 cvpj_notelist.append(cvpj_note)
 
             if pos_note != None: pos_note += 1
@@ -163,7 +183,7 @@ def song2playlist(patterntable_all, number_of_channels, order_list, startinststr
         print('[song-tracker] Converting Channel ' + str(current_channelnum+1))
         note_convert.timednotes2notelistplacement_track_start()
         channelsong = entire_song_channel(patterntable_all,current_channelnum,order_list)
-        placements = convertchannel2notelist_experement(channelsong, startinststr)
+        placements = convertchannel2notelist(channelsong, startinststr)
         projL_playlist[str(current_channelnum+1)] = {}
         projL_playlist[str(current_channelnum+1)]['color'] = color
         projL_playlist[str(current_channelnum+1)]['name'] = 'Channel ' + str(current_channelnum+1)

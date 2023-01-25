@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 # from hex
 def hex_to_rgb_int(hexcode):

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import json
 import base64
 import struct

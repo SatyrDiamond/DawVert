@@ -1,5 +1,6 @@
-# SPDX-FileCopyrightText: 2022 SatyrDiamond
+# SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
+
 
 
 # [r] <--> [m] <--> [mi]

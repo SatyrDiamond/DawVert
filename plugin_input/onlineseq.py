@@ -4,6 +4,7 @@
 from functions import data_bytes
 from functions import note_mod
 from functions import placements
+from functions import auto
 import plugin_input
 import json
 import struct
@@ -66,32 +67,49 @@ onlseq_instlist[28] = [0,   20,[0.08, 0.13, 0.31],"Church Organ"]
 onlseq_instlist[30] = [0,   91,[0.42, 0.95, 0.72],"Pop Synth"]
 onlseq_instlist[37] = [0, None,[0.00, 0.00, 0.00],"808 Bass"]
 
+onlseq_auto = {}
+onlseq_auto['1'] = ['vol',1]
+onlseq_auto['2'] = ['delay',0]
+onlseq_auto['3'] = ['reverb',0]
+onlseq_auto['4'] = ['pan',1]
+onlseq_auto['5'] = ['enable_eq',0]
+onlseq_auto['6'] = ['eq_low',1]
+onlseq_auto['7'] = ['eq_mid',1]
+onlseq_auto['8'] = ['eq_high',1]
+onlseq_auto['9'] = ['detune',1]
+onlseq_auto['10'] = ['reverb_type',0]
+onlseq_auto['11'] = ['one_minus_reverb_volume',1]
+onlseq_auto['12'] = ['distort_type',0]
+onlseq_auto['13'] = ['distort_volume',1]
+
 def print_value(name, data):
     print(str(' '+name+': '+str(data)).ljust(11), end=' ')
-
 
 def parse_inst_params(data):
     outputlist = {}
     for part in data:
-        if '1' in part: instid = int(part['1'])
+        if '1' in part: 
+            instid = int(part['1'])
         if '2' in part: 
             params = part['2']
             instparams = {}
-            if '1' in params: instparams['volume'] = int2float(int(params['1']))
-            if '2' in params: instparams['delay'] = int(params['2'])
-            if '3' in params: instparams['reverb'] = int(params['3'])
-            if '10' in params: instparams['reverb_type'] = int(params['10'])
-            if '11' in params: instparams['one_minus_reverb_volume'] = int2float(int(params['11']))
-            if '4' in params: instparams['pan'] = int2float(int(params['4']))
-            if '5' in params: instparams['enable_eq'] = int(params['5'])
-            if '6' in params: instparams['eq_low'] = int2float(int(params['6']))
-            if '7' in params: instparams['eq_mid'] = int2float(int(params['7']))
-            if '8' in params: instparams['eq_high'] = int2float(int(params['8']))
-            if '9' in params: instparams['detune'] = int2float(int(params['9']))
-            if '12' in params: instparams['distort_type'] = int(params['12'])
-            if '13' in params: instparams['distort_volume'] = int2float(int(params['13']))
+            for param in params:
+                param_name = onlseq_auto[param][0]
+                param_isfloat = onlseq_auto[param][1]
+                if param_isfloat == 1: instparams[param_name] = int2float(int(params[param]))
+                if param_isfloat == 0: instparams[param_name] = int(params[param])
+
             outputlist[instid] = instparams
     return outputlist
+
+def parse_marker(markerdata):
+    data = {}
+    inst = {}
+    if '1' in markerdata: data['position'] = int2float(int(markerdata['1']))
+    if '2' in markerdata: inst['param'] = onlseq_auto[markerdata['2']][0]
+    if '3' in markerdata: inst['id'] = markerdata['3']
+    if '4' in markerdata: data['value'] = int2float(int(markerdata['4']))
+    return (inst, data)
 
 def parse_note(notedata):
     global t_notelist
@@ -128,6 +146,7 @@ class input_onlinesequencer(plugin_input.base):
         cvpj_l_trackordering = []
         cvpj_l_timemarkers = []
         cvpj_l_fxrack = {}
+        cvpj_l_placements_auto_main = {}
 
         os_data_song_stream = open(input_file, 'rb')
         os_data_song_data = os_data_song_stream.read()
@@ -137,18 +156,50 @@ class input_onlinesequencer(plugin_input.base):
 
         onlseq_data_main = os_data["1"]
         onlseq_data_notes = os_data["2"]
+        if '3' in os_data: onlseq_data_markers = os_data["3"]
+        else: onlseq_data_markers = []
 
-        if "3" in onlseq_data_main: 
-            onlseq_data_instparams = parse_inst_params(os_data["1"]["3"])
+        t_auto_tempo = []
+        t_auto_inst = {}
+
+        for onlseq_data_marker in onlseq_data_markers:
+            t_markerdata = parse_marker(onlseq_data_marker)
+
+            position = 0
+            value = 0
+            if 'position' in t_markerdata[1]: position = t_markerdata[1]['position']
+            if 'value' in t_markerdata[1]: value = t_markerdata[1]['value']
+
+            if t_markerdata[0] == {}:
+                #print('Tempo:'.ljust(60), end='')
+                #print(str(t_markerdata[1]['position']).ljust(10), end='')
+                #print(t_markerdata[1]['value'])
+                t_auto_tempo.append({"position": t_markerdata[1]['position'], 'type': 'instant', "value": t_markerdata[1]['value']})
+                #print(t_markerdata)
+
+            else:
+                if 'id' in t_markerdata[0]:
+                    inst_id = int(t_markerdata[0]['id'])
+                    inst_param = str(t_markerdata[0]['param'])
+
+                    if 'value' in t_markerdata[1]:
+                        #print(str('Inst: '+onlseq_instlist[inst_id][3]).ljust(35), end='')
+                        #print(str('Param: '+inst_param).ljust(25), end='')
+                        #print(str(t_markerdata[1]['position']).ljust(10), end='')
+                        #print(t_markerdata[1]['value'])
+                        if inst_id not in t_auto_inst: t_auto_inst[inst_id] = {}
+                        if inst_param not in t_auto_inst[inst_id]: t_auto_inst[inst_id][inst_param] = []
+                        t_auto_inst[inst_id][inst_param].append({"position": position, 'type': 'instant', "value": value})
+
+        if "3" in onlseq_data_main:  onlseq_data_instparams = parse_inst_params(os_data["1"]["3"])
         else: onlseq_data_instparams = {}
-
-        #for partt in onlseq_data_extra:
-        #    print(partt)
 
         t_notelist = {}
 
         for os_note in onlseq_data_notes:
             parse_note(os_note)
+
+        songduration = 0
 
         for instid in t_notelist:
             cvpj_notelist = t_notelist[instid]
@@ -170,32 +221,61 @@ class input_onlinesequencer(plugin_input.base):
             else:
                 cvpj_instdata['plugin'] = 'none'
             if instid in onlseq_data_instparams:
-                if 'volume' in onlseq_data_instparams[instid]:
-                    cvpj_inst["vol"] = onlseq_data_instparams[instid]['volume']
+                if 'vol' in onlseq_data_instparams[instid]:
+                    cvpj_inst["vol"] = onlseq_data_instparams[instid]['vol']
                 if 'pan' in onlseq_data_instparams[instid]:
                     cvpj_inst["pan"] = onlseq_data_instparams[instid]['pan']
 
+            trackduration = note_mod.getduration(cvpj_notelist)
+
+            if trackduration > songduration: songduration = trackduration
+
             cvpj_placement = {}
             cvpj_placement['position'] = 0
-            cvpj_placement['duration'] = note_mod.getduration(cvpj_notelist)
+            cvpj_placement['duration'] = trackduration
             cvpj_placement['notelist'] = cvpj_notelist
 
-            #placements.resize_nl(cvpj_placement)
-
             cvpj_inst['placements'] = [cvpj_placement]
+
+            if instid in t_auto_inst:
+                cvpj_inst['placements_auto_main'] = {}
+                for param in t_auto_inst[instid]:
+                    cvpj_autodata = {}
+                    cvpj_autodata["position"] = 0
+                    cvpj_autodata["duration"] = trackduration
+                    cvpj_autodata["points"] = t_auto_inst[instid][param]
+
+                    auto.resize(cvpj_autodata)
+                    cvpj_inst['placements_auto_main'][param] = [cvpj_autodata]
+
+
             cvpj_l_trackdata['os_'+str(instid)] = cvpj_inst
             cvpj_l_trackordering.append('os_'+str(instid))
+
+        bpm = 120
+        if '1' in onlseq_data_main: bpm = int(onlseq_data_main['1'])
+
+        if t_auto_tempo != []:
+            cvpj_autodata = {}
+            cvpj_autodata["position"] = 0
+            cvpj_autodata["duration"] = songduration
+            cvpj_autodata["points"] = []
+            cvpj_autodata["points"].append({'position': 0, 'value': bpm})
+            for point in t_auto_tempo:
+                cvpj_autodata["points"].append(point)
+
+            cvpj_l_placements_auto_main['bpm'] = [cvpj_autodata]
+
+        timesig_numerator = 4
+        if '2' in onlseq_data_main: timesig_numerator = int(onlseq_data_main['2'])
 
         cvpj_l = {}
         cvpj_l['use_fxrack'] = False
         cvpj_l['trackdata'] = cvpj_l_trackdata
         cvpj_l['trackordering'] = cvpj_l_trackordering
+        cvpj_l['bpm'] = bpm
         cvpj_l['timesig_denominator'] = 4
-        
-        if '1' in onlseq_data_main: cvpj_l['bpm'] = int(onlseq_data_main['1'])
-        else: cvpj_l['bpm'] = 120
-
-        if '2' in onlseq_data_main: cvpj_l['timesig_numerator'] = int(onlseq_data_main['2'])
-        else: cvpj_l['timesig_numerator'] = 4
+        cvpj_l['timesig_numerator'] = timesig_numerator
+        cvpj_l['placements_auto_main'] = cvpj_l_placements_auto_main
 
         return json.dumps(cvpj_l)

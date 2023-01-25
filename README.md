@@ -1,6 +1,8 @@
+<div align="center">
+<img alt="DawVert Logo" src="docs/dawvert.svg" width=23% height=23%>
 
-# DawVert
-
+# DawVert - The DAW ConVERTer
+</div>
 ## How to Use
 ```
 python3 DawVert.py -i <input> -ot <output type> -o <output>
@@ -13,11 +15,11 @@ output file: -o
 e.g: 
     python3 DawVert.py -i song.txt -ot flp -o out.flp
 
-    python3 DawVert.py -it fs_txt -i song.txt -ot flp -o out.flp
+    python3 DawVert.py -it jummbox -i song.txt -ot flp -o out.flp
 
 ```
 
-## Options
+## Command Line Options
 ```
 GM Soundfont File Path (for GM MIDI instruments): 
 --soundfont <sf2 file>

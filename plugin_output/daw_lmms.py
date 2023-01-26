@@ -263,15 +263,19 @@ def lmms_encode_notelist(xmltag, json_notelist):
 
         printcountpat += 1
     print('['+str(printcountpat), end='] ')
-def lmms_encode_inst_track(xmltag, trkJ):
+def lmms_encode_inst_track(xmltag, trkJ, trackid):
     global trkcX
     global trackscount_forprinting
     trackscount_forprinting += 1
-    xmltag.set('type', "0")
 
     auto_nameid = {}
-    if 'placements_auto_main' in trkJ:
-        auto_nameid = get_auto_ids(trkJ['placements_auto_main'])
+
+    if 'automation' in projJ:
+        if 'track' in projJ['automation']:
+            if trackid in projJ['automation']['track']:
+                auto_nameid = get_auto_ids(projJ['automation']['track'][trackid])
+
+    xmltag.set('type', "0")
 
     if 'solo' in trkJ: xmltag.set('solo', str(trkJ['solo']))
     else: xmltag.set('solo', '0')
@@ -406,7 +410,10 @@ def lmms_encode_inst_track(xmltag, trkJ):
             tracksnum += 1
         print(' ')
 
-    lmms_make_autotracks(trkJ, auto_nameid, 'placements_auto_main', 'track', trackname)
+    if 'automation' in projJ:
+        if 'track' in projJ['automation']:
+            if trackid in projJ['automation']['track']:
+                lmms_make_autotracks(projJ['automation']['track'][trackid], auto_nameid, 'track', trackname)
 
     print('[output-lmms]')
 
@@ -516,10 +523,10 @@ def parse_auto(xml_automationpattern, l_points):
 # ------- Main -------
 
 def lmms_encode_tracks(xmltag, trksJ, trkorderJ):
-    for trkeJ in trkorderJ:
-        trkJ = trksJ[trkeJ]
+    for trackid in trkorderJ:
+        trkJ = trksJ[trackid]
         xml_track = ET.SubElement(xmltag, "track")
-        if trkJ['type'] == "instrument": lmms_encode_inst_track(xml_track, trkJ)
+        if trkJ['type'] == "instrument": lmms_encode_inst_track(xml_track, trkJ, trackid)
 
 def get_auto_ids(placements_auto):
     global autoidnum
@@ -552,7 +559,7 @@ def lmms_make_main_auto_track(autoidnum, autodata, visualname):
             xml_object = ET.SubElement(xml_automationpattern, "object")
             xml_object.set('id', str(autoidnum))
 
-def setvalue(tagJ, nameJ, xmltagX, nameX, fallbackval, get_auto_ids, vartype):
+def setvalue(tagJ, nameJ, xmltagX, nameX, fallbackval, auto_ids, vartype):
     global l_addmul
     addmulvalues = None
     if nameJ in l_addmul[vartype]: addmulvalues = l_addmul[vartype][nameJ]
@@ -561,32 +568,33 @@ def setvalue(tagJ, nameJ, xmltagX, nameX, fallbackval, get_auto_ids, vartype):
     if nameJ in tagJ:
         if addmulvalues != None: outvalue = (tagJ[nameJ]+addmulvalues[0])*addmulvalues[1]
         else: outvalue = tagJ[nameJ]
-        if nameJ in get_auto_ids:
-            t_ad = get_auto_ids[nameJ]
+        if nameJ in auto_ids:
+            t_ad = auto_ids[nameJ]
             autovarX = ET.SubElement(xmltagX, nameX)
             autovarX.set('value', str(outvalue))
             autovarX.set('scale_type', 'linear')
             autovarX.set('id', str(t_ad))
         else: xmltagX.set(nameX, str(outvalue))
     else:
-        if nameJ in get_auto_ids:
-            t_ad = get_auto_ids[nameJ]
+        if nameJ in auto_ids:
+            t_ad = auto_ids[nameJ]
             autovarX = ET.SubElement(xmltagX, nameX)
             autovarX.set('value', str(fallbackval))
             autovarX.set('scale_type', 'linear')
             autovarX.set('id', str(t_ad))
         else: xmltagX.set(nameX, str(fallbackval))
 
-def lmms_make_autotracks(projJ, auto_nameid, ADS_name, ADS_type, visualname):
+def lmms_make_autotracks(l_auto, auto_nameid, ADS_type, visualname):
+    global projJ
     for auto_part in auto_nameid:
         s_auto_name = auto_part
         s_auto_idnum = auto_nameid[auto_part]
 
         if s_auto_name in l_auto_names[ADS_type]: s_auto_visualname = l_auto_names[ADS_type][s_auto_name]
-        else: s_auto_visualname = 'Unknown: '+auto_part
+        else: s_auto_visualname = '[?] '+auto_part
         s_auto_visualname = visualname+': '+s_auto_visualname
 
-        s_auto_data = projJ['placements_auto_main'][s_auto_name]
+        s_auto_data = l_auto[s_auto_name]
 
         s_auto_addmul = None
         if s_auto_name in l_addmul[ADS_type]: s_auto_addmul = l_addmul[ADS_type][s_auto_name]
@@ -624,6 +632,7 @@ class output_lmms(plugin_output.base):
     def parse(self, convproj_json, output_file):
         global autoidnum
         global trkcX
+        global projJ
 
         autoidnum = 70000
         print('[output-lmms] Output Start')
@@ -641,20 +650,25 @@ class output_lmms(plugin_output.base):
         projX.set('creator', "DawVert")
         projX.set('creatorversion', "1.2.2")
         projX.set('version', "1.0")
-        headX = ET.SubElement(projX, "head")
+        headX = ET.SubElement(projX, "head") 
         songX = ET.SubElement(projX, "song")
         trkcX = ET.SubElement(songX, "trackcontainer")
 
-        auto_nameid = {}
-        if 'placements_auto_main' in projJ: auto_nameid = get_auto_ids(projJ['placements_auto_main'])
+        auto_nameid_main = {}
 
-        lmms_make_autotracks(projJ, auto_nameid, 'placements_auto_main', 'main', 'Song')
+        if 'automation' in projJ:
+            if 'main' in projJ['automation']:
+                auto_nameid_main = get_auto_ids(projJ['automation']['main'])
+        
+        setvalue(projJ, 'bpm', headX, 'bpm', 0, auto_nameid_main, 'main')
+        setvalue(projJ, 'pitch', headX, 'masterpitch', 0, auto_nameid_main, 'main')
+        setvalue(projJ, 'vol', headX, 'mastervol', 1, auto_nameid_main, 'main')
+        setvalue(projJ, 'timesig_numerator', headX, 'timesig_numerator', 4, auto_nameid_main, 'main')
+        setvalue(projJ, 'timesig_denominator', headX, 'timesig_denominator', 4, auto_nameid_main, 'main')
 
-        setvalue(projJ, 'bpm', headX, 'bpm', 0, auto_nameid, 'main')
-        setvalue(projJ, 'pitch', headX, 'masterpitch', 0, auto_nameid, 'main')
-        setvalue(projJ, 'vol', headX, 'mastervol', 1, auto_nameid, 'main')
-        setvalue(projJ, 'timesig_numerator', headX, 'timesig_numerator', 4, auto_nameid, 'main')
-        setvalue(projJ, 'timesig_denominator', headX, 'timesig_denominator', 4, auto_nameid, 'main')
+        if 'automation' in projJ:
+            if 'main' in projJ['automation']:
+                lmms_make_autotracks(projJ['automation']['main'], auto_nameid_main, 'main', 'Song')
 
         lmms_encode_tracks(trkcX, trksJ, trkorderJ)
 

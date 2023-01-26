@@ -549,7 +549,7 @@ def lmms_make_main_auto_track(autoidnum, autodata, visualname):
         xml_automationpattern.set('pos', str(int(autoplacement['position']*12)))
         xml_automationpattern.set('len', str(int(autoplacement['duration']*12)))
         xml_automationpattern.set('tens', "1")
-        xml_automationpattern.set('name', "")
+        xml_automationpattern.set('name', visualname)
         xml_automationpattern.set('mute', "0")
         xml_automationpattern.set('prog', "1")
         prevvalue = 0

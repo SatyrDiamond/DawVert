@@ -589,7 +589,7 @@ class input_lmms(plugin_input.base):
         global l_autodata
         l_autoid = {}
         l_autodata = {}
-        main_autoplacements = {}
+        l_automation = {}
 
         tree = ET.parse(input_file).getroot()
         headX = tree.findall('head')[0]
@@ -612,27 +612,30 @@ class input_lmms(plugin_input.base):
 
         trackdata, trackordering = lmms_decode_tracks(trksX)
 
+        l_automation['main'] = {}
+        l_automation['track'] = {}
         for part in l_autodata:
             if part in l_autoid:
                 s_autopl_id = l_autoid[part]
                 s_autopl_data = l_autodata[part]
                 if s_autopl_id[0] == 'track':
                     if s_autopl_id[1] in trackdata:
+                        if s_autopl_id[1] not in l_automation['track']: l_automation['track'][s_autopl_id[1]] = {}
                         s_trkdata = trackdata[s_autopl_id[1]]
-                        if 'placements_auto_main' not in s_trkdata: s_trkdata['placements_auto_main'] = {}
-                        temp_pla = s_trkdata['placements_auto_main']
+                        temp_pla = l_automation['track'][s_autopl_id[1]]
                         if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
                         elif s_autopl_id[2] == 'pan': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
                         else: temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 1)
                 else:
-                    if s_autopl_id[1] == 'vol': main_autoplacements[s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 0.01)
-                    elif s_autopl_id[1] == 'pitch': main_autoplacements[s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 100)
-                    else: main_autoplacements[s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 1)
+                    if s_autopl_id[1] == 'vol': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 0.01)
+                    elif s_autopl_id[1] == 'pitch': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 100)
+                    else: l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 1)
+
+        rootJ['automation'] = l_automation
 
         rootJ['use_fxrack'] = True
         rootJ['trackdata'] = trackdata
         rootJ['trackordering'] = trackordering
-        rootJ['placements_auto_main'] = main_autoplacements
         rootJ['fxrack'] = lmms_decode_fxmixer(fxX)
 
         return json.dumps(rootJ, indent=2)

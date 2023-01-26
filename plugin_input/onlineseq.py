@@ -87,7 +87,11 @@ def print_value(name, data):
 
 def parse_inst_params(data):
     outputlist = {}
-    for part in data:
+    
+    if type(data) == dict: in_data = [data]
+    else: in_data = data
+
+    for part in in_data:
         if '1' in part: 
             instid = int(part['1'])
         if '2' in part: 
@@ -146,7 +150,9 @@ class input_onlinesequencer(plugin_input.base):
         cvpj_l_trackordering = []
         cvpj_l_timemarkers = []
         cvpj_l_fxrack = {}
-        cvpj_l_placements_auto_main = {}
+        cvpj_automation = {}
+        cvpj_automation['main'] = {}
+        cvpj_automation['track'] = {}
 
         os_data_song_stream = open(input_file, 'rb')
         os_data_song_data = os_data_song_stream.read()
@@ -238,7 +244,7 @@ class input_onlinesequencer(plugin_input.base):
             cvpj_inst['placements'] = [cvpj_placement]
 
             if instid in t_auto_inst:
-                cvpj_inst['placements_auto_main'] = {}
+                cvpj_automation['track']['os_'+str(instid)] = {}
                 for param in t_auto_inst[instid]:
                     cvpj_autodata = {}
                     cvpj_autodata["position"] = 0
@@ -246,7 +252,7 @@ class input_onlinesequencer(plugin_input.base):
                     cvpj_autodata["points"] = t_auto_inst[instid][param]
 
                     auto.resize(cvpj_autodata)
-                    cvpj_inst['placements_auto_main'][param] = [cvpj_autodata]
+                    cvpj_automation['track']['os_'+str(instid)][param] = [cvpj_autodata]
 
 
             cvpj_l_trackdata['os_'+str(instid)] = cvpj_inst
@@ -264,7 +270,7 @@ class input_onlinesequencer(plugin_input.base):
             for point in t_auto_tempo:
                 cvpj_autodata["points"].append(point)
 
-            cvpj_l_placements_auto_main['bpm'] = [cvpj_autodata]
+            cvpj_automation['main']['bpm'] = [cvpj_autodata]
 
         timesig_numerator = 4
         if '2' in onlseq_data_main: timesig_numerator = int(onlseq_data_main['2'])
@@ -276,6 +282,6 @@ class input_onlinesequencer(plugin_input.base):
         cvpj_l['bpm'] = bpm
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['timesig_numerator'] = timesig_numerator
-        cvpj_l['placements_auto_main'] = cvpj_l_placements_auto_main
+        cvpj_l['automation'] = cvpj_automation
 
         return json.dumps(cvpj_l)

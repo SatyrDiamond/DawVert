@@ -292,12 +292,13 @@ class input_notessimo_v2(plugin_input.base):
 
             curpos += cursheet_data[0]*cursheet_data[1]
         
-        placements_auto = {}
-        placements_auto['bpm'] = cvpj_auto_tempo
+        automation = {}
+        automation['main'] = {}
+        automation['main']['bpm'] = cvpj_auto_tempo
+        cvpj_l['automation'] = automation
 
         cvpj_l['use_fxrack'] = True
         cvpj_l['fxrack'] = cvpj_l_fxrack
-        cvpj_l['placements_auto_main'] = placements_auto
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

@@ -344,11 +344,12 @@ class input_notessimo_v3(plugin_input.base):
             cvpj_l_instrumentsorder.append(inst)
 
 
-        cvpj_placements_auto_main = {}
-        cvpj_placements_auto_main['bpm'] = cvpj_auto_tempo
+        automation = {}
+        automation['main'] = {}
+        automation['main']['bpm'] = cvpj_auto_tempo
 
         cvpj_l['use_fxrack'] = False
-        cvpj_l['placements_auto_main'] = cvpj_placements_auto_main
+        cvpj_l['automation'] = automation
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

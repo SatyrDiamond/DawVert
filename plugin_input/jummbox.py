@@ -67,7 +67,6 @@ def parse_instrument(cvpj_inst, bb_instrument, bb_type):
     cvpj_inst['instdata']['plugindata'] = {}
     cvpj_inst['instdata']['plugindata']['type'] = bb_type
     cvpj_inst['instdata']['plugindata']['data'] = bb_instrument
-    cvpj_inst['placements_auto_main'] = {}
 
     bb_type = bb_instrument['type']
     bb_volume = bb_instrument['volume']
@@ -81,7 +80,6 @@ def parse_channel(channeldata, channum):
     global cvpj_l_instrumentsorder
     global cvpj_l_notelistindex
     global cvpj_l_playlist
-    global cvpj_l_placements_auto_main
     global jummbox_notesize
     global jummbox_beatsPerBar
     global jummbox_ticksPerBeat
@@ -196,7 +194,7 @@ class input_jummbox(plugin_input.base):
         global cvpj_l_instrumentsorder
         global cvpj_l_notelistindex
         global cvpj_l_playlist
-        global cvpj_l_placements_auto_main
+        global cvpj_l_automation
         global jummbox_beatsPerBar
         global jummbox_ticksPerBeat
         global bbcvpj_modplacements
@@ -211,7 +209,7 @@ class input_jummbox(plugin_input.base):
         cvpj_l_instrumentsorder = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
-        cvpj_l_placements_auto_main = {}
+        cvpj_l_automation = {}
 
         jummbox_channels = jummbox_json['channels']
         jummbox_beatsPerBar = jummbox_json['beatsPerBar']
@@ -233,13 +231,14 @@ class input_jummbox(plugin_input.base):
                 outautoname = bbauto_target
                 outautodata = bbcvpj_modplacements[bbauto_group][bbauto_target]
                 if bbauto_group == -1:
+                    if 'main' not in cvpj_l_automation: cvpj_l_automation['main'] = {}
                     if outautoname == "0_1": 
                         outautoname = 'bpm'
                         outautodata = auto.multiply(outautodata, 0, (jummbox_beatsPerBar/jummbox_ticksPerBeat)*1.2)
                     if outautoname == "0_2": 
                         outautoname = 'vol'
                         outautodata = auto.multiply(outautodata, 0, 0.01)
-                    cvpj_l_placements_auto_main[outautoname] = outautodata
+                    cvpj_l_automation['main'][outautoname] = outautodata
                     #print(outautoname, bbcvpj_modplacements[bbauto_group][bbauto_target])
                 #elif bbauto_group > 0:
                 #    cvpj_l_instruments[str(bbauto_group)]['placements_auto_main'][bbauto_target] = outautodata
@@ -249,7 +248,7 @@ class input_jummbox(plugin_input.base):
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
-        cvpj_l['placements_auto_main'] = cvpj_l_placements_auto_main
+        cvpj_l['automation'] = cvpj_l_automation
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = jummbox_beatsPerMinute
 

@@ -259,7 +259,7 @@ class input_pxtone(plugin_input.base):
                 if unit_event[2] == 1: 
                     cvpj_note = {}
                     cvpj_note['position'] = position_global/120
-                    cvpj_note['key'] = cur_note+24
+                    cvpj_note['key'] = cur_note
                     cvpj_note['duration'] = unit_event[3]/120
                     cvpj_note['instrument'] = 'ptcop_'+str(cur_voice)
                     t_notelist[unit_eventnum].append(cvpj_note)

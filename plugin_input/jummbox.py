@@ -30,6 +30,20 @@ colors_drums = [
 [0.48, 0.31, 0.60],
 [0.38, 0.47, 0.22]]
 
+noteoffset = {}
+noteoffset['B'] = 11
+noteoffset['A♯'] = 10
+noteoffset['A'] = 9
+noteoffset['G♯'] = 8
+noteoffset['G'] = 7
+noteoffset['F♯'] = 6
+noteoffset['F'] = 5
+noteoffset['E'] = 4
+noteoffset['D♯'] = 3
+noteoffset['D'] = 2
+noteoffset['C♯'] = 1
+noteoffset['C'] = 0
+
 inst_names = {
 "chip": "Chip Wave",
 "PWM": "Pulse Width",
@@ -70,10 +84,11 @@ def parse_instrument(cvpj_inst, bb_instrument, bb_type):
 
     bb_type = bb_instrument['type']
     bb_volume = bb_instrument['volume']
-    bb_pan = bb_instrument['pan']
+    if 'pan' in bb_instrument: 
+        bb_pan = bb_instrument['pan']
+        cvpj_inst["pan"] = bb_pan/100
     cvpj_inst['name'] = inst_names[bb_type]
     cvpj_inst["vol"] = (bb_volume/50)+0.5
-    cvpj_inst["pan"] = bb_pan/100
 
 def parse_channel(channeldata, channum):
     global cvpj_l_instruments
@@ -83,6 +98,7 @@ def parse_channel(channeldata, channum):
     global jummbox_notesize
     global jummbox_beatsPerBar
     global jummbox_ticksPerBeat
+    global jummbox_key
     global bbcvpj_modplacements
 
     bb_color = None
@@ -119,7 +135,7 @@ def parse_channel(channeldata, channum):
                         cvpj_note = {}
                         cvpj_note['position'] = calcval(points[0]['tick'])
                         cvpj_note['duration'] = calcval(cvpj_note_pos)
-                        cvpj_note['key'] = pitch-48
+                        cvpj_note['key'] = pitch-48 + jummbox_key
                         cvpj_note['vol'] = points[0]['volume']/100
                         cvpj_note['instrument'] = str(channum)
                         cvpj_notelist.append(cvpj_note)
@@ -198,6 +214,7 @@ class input_jummbox(plugin_input.base):
         global jummbox_beatsPerBar
         global jummbox_ticksPerBeat
         global bbcvpj_modplacements
+        global jummbox_key
 
         bbcvpj_modplacements = {}
 
@@ -211,6 +228,8 @@ class input_jummbox(plugin_input.base):
         cvpj_l_playlist = {}
         cvpj_l_automation = {}
 
+        jummbox_name = jummbox_json['name']
+        jummbox_key = noteoffset[jummbox_json['key']]
         jummbox_channels = jummbox_json['channels']
         jummbox_beatsPerBar = jummbox_json['beatsPerBar']
         jummbox_ticksPerBeat = jummbox_json['ticksPerBeat']
@@ -244,6 +263,7 @@ class input_jummbox(plugin_input.base):
                 #    cvpj_l_instruments[str(bbauto_group)]['placements_auto_main'][bbauto_target] = outautodata
         #exit()
 
+        cvpj_l['title'] = jummbox_name
         cvpj_l['use_fxrack'] = False
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments

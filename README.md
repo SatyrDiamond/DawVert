@@ -84,7 +84,7 @@ xmodits_py - for extracting Impulse Tracker Samples
 | M | ```mod``` | ProTracker | ✔️ | 
 | M | ```s3m``` | Scream Tracker 3 | ✔️ | 
 | M | ```it``` | Impulse Tracker | ✔️ | 
-| M-I | ```famistudio_txt``` | FamiStudio Text | ❌ | 
-| M-I | ```ceol``` | Bosca Ceoil | ❌ | 
-| M-I | ```deflemask``` | DefleMask | ✔️ | 
-| M-I | ```caustic``` | Caustic 3 | ❌ |
+| R | ```orgyana``` | Orgyana/OrgMaker | ✔️ |
+| M | ```ptcop``` | PxTone | ✔️ | 
+| M-I | ```jummbox``` | Beepbox/Jummbox | ❌ | 
+| M-I | ```pixitracker``` | PixiTracker | ✔️ | 

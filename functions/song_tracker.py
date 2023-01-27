@@ -106,12 +106,16 @@ def convertchannel2notelist(patterntable_channel, startinststr):
     cvpj_notelist = []
 
     pos_note = None
-
+    lastinst = None
     plactive = False
     note_held = 0
     skip_rows = 0
     plpos = 0
     for notecommand in patterntable_channel:
+
+        if notecommand[1][1] != None: 
+            lastinst = notecommand[1][1]
+        notecommand[1][1] = lastinst
 
         if 'firstrow' in notecommand[0]:
             if plactive == True:
@@ -125,8 +129,10 @@ def convertchannel2notelist(patterntable_channel, startinststr):
             plactive = True
 
         if skip_rows == 0:
+
+
             if notecommand[1][0] == None:
-                pass
+                pass 
             elif notecommand[1][0] == 'Fade' or notecommand[1][0] == 'Cut' or notecommand[1][0] == 'Off':
                 note_held = 0
                 pos_note = None
@@ -137,17 +143,16 @@ def convertchannel2notelist(patterntable_channel, startinststr):
                 cvpj_note['position'] = pos_pl
                 cvpj_note['duration'] = 0
                 cvpj_note['key'] = notecommand[1][0]
-                #if notecommand[1][2] != {}: print(notecommand[1][2])
+
                 if 'vol' in notecommand[1][2]: cvpj_note['vol'] = notecommand[1][2]['vol']
                 if 'pan' in notecommand[1][2]: cvpj_note['pan'] = notecommand[1][2]['pan']
                 cvpj_note['instrument'] = startinststr+str(notecommand[1][1])
+
                 instnumid = notecommand[1][1]
                 instid = startinststr+str(notecommand[1][1])
                 if instnumid != None:
-                    if instnumid not in used_instruments_num:
-                        used_instruments_num.append(instnumid)
-                    if instid not in used_instruments:
-                        used_instruments.append(instid)
+                    if instnumid not in used_instruments_num: used_instruments_num.append(instnumid)
+                    if instid not in used_instruments: used_instruments.append(instid)
 
                 cvpj_notelist.append(cvpj_note)
 
@@ -157,7 +162,22 @@ def convertchannel2notelist(patterntable_channel, startinststr):
             pos_global += 1
 
             if note_held == 1:
+                #if notecommand[1][0] == None:
+                #    instparam = notecommand[1][2]
+                #    if 'vol' in instparam or 'pan' in instparam: 
+                #        if 'notemod' not in cvpj_notelist[-1]:
+                #            cvpj_notelist[-1]['notemod'] = {}
+                #            cvpj_notelist[-1]['notemod']['slide'] = []
+                #        slidenote = {}
+                #        slidenote['position'] = cvpj_notelist[-1]['duration']
+                #        slidenote['duration'] = 0.2
+                #        slidenote['key'] = 0
+                #        if 'vol' in notecommand[1][2]: slidenote['vol'] = notecommand[1][2]['vol']
+                #        if 'pan' in notecommand[1][2]: slidenote['pan'] = notecommand[1][2]['pan']
+                #        cvpj_notelist[-1]['notemod']['slide'].append(slidenote)
+
                 cvpj_notelist[-1]['duration'] += 1
+
 
             #print(str(pos_global).ljust(5), end='')
             #print(str(pos_pl).ljust(5), end='')

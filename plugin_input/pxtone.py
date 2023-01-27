@@ -24,6 +24,27 @@ ptcop_events[13] = 'Group # '
 ptcop_events[14] = 'Key Corr'
 ptcop_events[15] = 'Pan Time'
 
+colors_inst = [
+[0.94, 0.50, 0.00],
+[0.41, 0.47, 1.00],
+[0.79, 0.72, 0.72],
+[0.68, 0.25, 1.00],
+[0.57, 0.78, 0.00],
+[0.99, 0.20, 0.80],
+[0.00, 0.75, 0.38],
+[1.00, 0.47, 0.36],
+[0.00, 0.74, 1.00]]
+
+global colornum
+colornum = 0
+
+def getcolor():
+    global colornum
+    out_color = colors_inst[colornum]
+    colornum += 1
+    if colornum == 9: colornum = 0
+    return out_color
+
 def parse_event(bio_stream):
     position = varint.decode_stream(bio_stream)
     unitnum = int.from_bytes(bio_stream.read(1), "little")
@@ -288,7 +309,7 @@ class input_pxtone(plugin_input.base):
             else: cvpj_inst['name'] = ''
             cvpj_inst["pan"] = 0.0
             cvpj_inst["vol"] = 1.0
-            cvpj_inst['color'] = [0.94, 0.50, 0.00]
+            cvpj_inst['color'] = getcolor()
             cvpj_inst["instdata"] = {}
             cvpj_inst['instdata']['plugin'] = t_voice_data[voicenum][0]
             cvpj_inst['instdata']['plugindata'] = t_voice_data[voicenum][1]

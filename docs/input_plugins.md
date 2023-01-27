@@ -20,7 +20,7 @@
 | M-I | ```deflemask``` | DefleMask | ✔️ |
 | M-I | ```ceol``` | Bosca Ceoil | ❌ | 
 | M-I | ```jummbox``` | Beepbox/Jummbox | ❌ | 
-| M-I | ```pixitracker``` | PixiTracker | ❌ | 
+| M-I | ```pixitracker``` | PixiTracker | ✔️ | 
 | M | ```ptcop``` | PxTone | ✔️ |
 | M | ```lovelycomposer``` | Lovely Composer | ❌ |
 | R | ```orgyana``` | Orgyana/OrgMaker | ✔️ |

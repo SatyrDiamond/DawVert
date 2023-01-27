@@ -21,6 +21,7 @@
 | M-I | ```ceol``` | Bosca Ceoil | ❌ | 
 | M-I | ```jummbox``` | Beepbox/Jummbox | ❌ | 
 | M-I | ```pixitracker``` | PixiTracker | ❌ | 
+| R | ```orgyana``` | Orgyana/OrgMaker | ✔️ |
 | R | ```mekimekichip``` | メキメキチップ (MekiMeki Chip)  | ❌ | 
 | M | ```lovelycomposer``` | Lovely Composer | ❌ | 
 | R | ```piyopiyo``` | PiyoPiyo | ✔️ |  

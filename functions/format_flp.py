@@ -781,20 +781,21 @@ def reconstruct_patterns(data_FLdt, patterns):
                 if 'mod_x' in singlenote: temp_mod_x = singlenote['mod_x']
                 if 'mod_y' in singlenote: temp_mod_y = singlenote['mod_y']
 
-                BytesIO_notedata.write(temp_pos.to_bytes(4, 'little'))
-                BytesIO_notedata.write(temp_flags.to_bytes(2, 'little'))
-                BytesIO_notedata.write(temp_rack.to_bytes(2, 'little'))
-                BytesIO_notedata.write(temp_dur.to_bytes(4, 'little'))
-                BytesIO_notedata.write(singlenote['key'].to_bytes(2, 'little'))
-                BytesIO_notedata.write(temp_group.to_bytes(2, 'little'))
-                BytesIO_notedata.write(temp_finep.to_bytes(1, 'little'))
-                BytesIO_notedata.write(temp_u1.to_bytes(1, 'little'))
-                BytesIO_notedata.write(temp_rel.to_bytes(1, 'little'))
-                BytesIO_notedata.write(temp_midich.to_bytes(1, 'little'))
-                BytesIO_notedata.write(temp_pan.to_bytes(1, 'little'))
-                BytesIO_notedata.write(temp_velocity.to_bytes(1, 'little'))
-                BytesIO_notedata.write(temp_mod_x.to_bytes(1, 'little'))
-                BytesIO_notedata.write(temp_mod_y.to_bytes(1, 'little'))
+                if 0 < singlenote['key'] < 127:
+                    BytesIO_notedata.write(temp_pos.to_bytes(4, 'little'))
+                    BytesIO_notedata.write(temp_flags.to_bytes(2, 'little'))
+                    BytesIO_notedata.write(temp_rack.to_bytes(2, 'little'))
+                    BytesIO_notedata.write(temp_dur.to_bytes(4, 'little'))
+                    BytesIO_notedata.write(singlenote['key'].to_bytes(2, 'little'))
+                    BytesIO_notedata.write(temp_group.to_bytes(2, 'little'))
+                    BytesIO_notedata.write(temp_finep.to_bytes(1, 'little'))
+                    BytesIO_notedata.write(temp_u1.to_bytes(1, 'little'))
+                    BytesIO_notedata.write(temp_rel.to_bytes(1, 'little'))
+                    BytesIO_notedata.write(temp_midich.to_bytes(1, 'little'))
+                    BytesIO_notedata.write(temp_pan.to_bytes(1, 'little'))
+                    BytesIO_notedata.write(temp_velocity.to_bytes(1, 'little'))
+                    BytesIO_notedata.write(temp_mod_x.to_bytes(1, 'little'))
+                    BytesIO_notedata.write(temp_mod_y.to_bytes(1, 'little'))
             BytesIO_notedata.seek(0)
             reconstruct_flevent(data_FLdt, 224, BytesIO_notedata.read()) #PatternNotes
         if 'color' in patternlistdata:

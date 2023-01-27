@@ -3,7 +3,7 @@
 
 # from hex
 def hex_to_rgb_int(hexcode):
-    nonumsign = hex.lstrip('#')
+    nonumsign = hexcode.lstrip('#')
     return tuple(int(nonumsign[i:i+2], 16) for i in (0, 2, 4))
 
 def rgb_int_to_rgb_float(rgb_int):

@@ -216,8 +216,8 @@ def convplug_fx(fxdata, dawname, extra_json, nameid):
 				print('[plug-conv] Unchanged')
 
 # -------------------- convproj --------------------
-def do_fxchain(fxchain, dawname, extra_json, nameid):
-	for fxslot in fxchain:
+def do_fxchain_audio(fxchain_audio, dawname, extra_json, nameid):
+	for fxslot in fxchain_audio:
 		convplug_fx(fxslot, dawname, extra_json, nameid)
 
 def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
@@ -250,8 +250,8 @@ def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 		if 'fxrack' in cvpj_l:
 			for fxid in cvpj_l['fxrack']:
 				fxiddata = cvpj_l['fxrack'][fxid]
-				if 'fxchain' in fxiddata:
-					fxchain = fxiddata['fxchain']
+				if 'fxchain_audio' in fxiddata:
+					fxchain_audio = fxiddata['fxchain_audio']
 					print('[plug-conv] --- FX: '+fxid)
-					do_fxchain(fxchain, dawname, extra_json, fxid)
+					do_fxchain_audio(fxchain_audio, dawname, extra_json, fxid)
 		return json.dumps(cvpj_l, indent=2)

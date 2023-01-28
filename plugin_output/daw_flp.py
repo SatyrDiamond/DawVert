@@ -7,7 +7,7 @@ import math
 import base64
 import struct
 from bs4 import BeautifulSoup
-from functions import format_flp
+from functions import format_flp_enc
 from functions import song_convert
 from functions import note_mod
 
@@ -293,4 +293,4 @@ class output_cvpjs(plugin_output.base):
 
             
 
-        format_flp.reconstruct(FLP_Data, output_file)
+        format_flp_enc.make(FLP_Data, output_file)

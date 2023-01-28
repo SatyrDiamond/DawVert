@@ -6,7 +6,7 @@ import json
 import math
 import base64
 import struct
-from functions import format_flp
+from functions import format_flp_dec
 from functions import note_mod
 
 class input_flp(plugin_input.base):
@@ -23,7 +23,7 @@ class input_flp(plugin_input.base):
         if bytesdata == b'FLhd': return True
         else: return False
     def parse(self, input_file, extra_param):
-        FLP_Data = format_flp.deconstruct(input_file)
+        FLP_Data = format_flp_dec.parse(input_file)
         #print(FLP_Data['FL_Main'])
 
         FL_Main = FLP_Data['FL_Main']

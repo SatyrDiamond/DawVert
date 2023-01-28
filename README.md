@@ -76,15 +76,15 @@ xmodits_py - for extracting Impulse Tracker Samples
 ## (Some) Supported Inputs
 [Full List...](docs/input_plugins.md)
 
-| DataType | Short Name | Name | Autodetect | 
+| DataType | Short Name | Name | Ext | Autodetect | 
 | --- | --- | :--- | :--- |
-| M | ```midi``` | MIDI | ✔️ | 
-| M-I | ```flp``` | FL Studio | ✔️ | 
-| R | ```lmms``` | LMMS | ✔️ | 
-| M | ```mod``` | ProTracker | ✔️ | 
-| M | ```s3m``` | Scream Tracker 3 | ✔️ | 
-| M | ```it``` | Impulse Tracker | ✔️ | 
-| R | ```orgyana``` | Orgyana/OrgMaker | ✔️ |
-| M | ```ptcop``` | PxTone | ✔️ | 
-| M-I | ```jummbox``` | Beepbox/Jummbox | ❌ | 
-| M-I | ```pixitracker``` | PixiTracker | ✔️ | 
+| M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
+| M-I | ```flp``` | FL Studio | ```.flp``` | ✔️ |
+| R | ```lmms``` | LMMS | ```.mmp``` | ✔️ |
+| M | ```mod``` | ProTracker | ```.mod``` | ✔️ | 
+| M | ```s3m``` | Scream Tracker 3 | ```.s3m``` | ✔️ | 
+| M | ```it``` | Impulse Tracker | ```.it``` | ✔️ | 
+| R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ |
+| M | ```ptcop``` | PxTone | ```.piximod``` | ✔️ |
+| M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
+| M-I | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | 

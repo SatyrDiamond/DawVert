@@ -85,6 +85,6 @@ xmodits_py - for extracting Impulse Tracker Samples
 | M | ```s3m``` | Scream Tracker 3 | ```.s3m``` | ✔️ | 
 | M | ```it``` | Impulse Tracker | ```.it``` | ✔️ | 
 | R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ |
-| M | ```ptcop``` | PxTone | ```.piximod``` | ✔️ |
+| M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ |
 | M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
 | M-I | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | 

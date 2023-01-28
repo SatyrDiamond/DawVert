@@ -20,8 +20,8 @@
 | M-I | ```deflemask``` | DefleMask | ```.dmf``` | ✔️ |
 | M-I | ```ceol``` | Bosca Ceoil | ```.txt``` | ❌ | 
 | M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
-| M-I | ```pixitracker``` | PixiTracker | ```.it``` | ✔️ | 
-| M | ```ptcop``` | PxTone | ```.piximod``` | ✔️ |
+| M-I | ```pixitracker``` | PixiTracker | ```.piximod``` | ✔️ | 
+| M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ |
 | M | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ❌ |
 | R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ |
 | R | ```mekimekichip``` | メキメキチップ (MekiMeki Chip) | ```.json``` | ❌ | 

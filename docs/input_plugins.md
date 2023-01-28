@@ -18,7 +18,7 @@
 | --- | --- | :--- | :--- | :--- |
 | M-I | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | 
 | M-I | ```deflemask``` | DefleMask | ```.dmf``` | ✔️ |
-| M-I | ```ceol``` | Bosca Ceoil | ```.txt``` | | ❌ | 
+| M-I | ```ceol``` | Bosca Ceoil | ```.txt``` | ❌ | 
 | M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
 | M-I | ```pixitracker``` | PixiTracker | ```.it``` | ✔️ | 
 | M | ```ptcop``` | PxTone | ```.piximod``` | ✔️ |

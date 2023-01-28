@@ -2,20 +2,20 @@
 # Supported Inputs
 ## DAWs
 | DataType | Short Name | Name | Ext | Autodetect |
-| --- | --- | :--- | :--- |
+| --- | --- | :--- | :--- | :--- |
 | M-I | ```flp``` | FL Studio | ```.flp``` | ✔️ |
 | R | ```lmms``` | LMMS | ```.mmp``` | ✔️ |
 
 ## Tracker
 | DataType | Short Name | Name | Ext | Autodetect | 
-| --- | --- | :--- | :--- |
+| --- | --- | :--- | :--- | :--- |
 | M | ```mod``` | ProTracker | ```.mod``` | ✔️ | 
 | M | ```s3m``` | Scream Tracker 3 | ```.s3m``` | ✔️ | 
 | M | ```it``` | Impulse Tracker | ```.it``` | ✔️ | 
 
 ## Chiptune/Retro
 | DataType | Short Name | Name | Ext | Autodetect | 
-| --- | --- | :--- | :--- |
+| --- | --- | :--- | :--- | :--- |
 | M-I | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | 
 | M-I | ```deflemask``` | DefleMask | ```.dmf``` | ✔️ |
 | M-I | ```ceol``` Bosca Ceoil | ```.txt``` | | ❌ | 
@@ -29,7 +29,7 @@
 
 ## Other
 | DataType | Short Name | Name | Ext | Autodetect | 
-| --- | --- | :--- | :--- |
+| --- | --- | :--- | :--- | :--- |
 | M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | M-I | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
 | M | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ❌ | 
@@ -39,7 +39,7 @@
 
 ## Mario Paint
 | DataType | Short Name | Name | Ext | Autodetect | 
-| --- | --- | :--- | :--- |
+| --- | --- | :--- | :--- | :--- |
 | M-I | ```notessimo_v2``` | Notessimo V2 | ```.note``` | ❌ | 
 | M-I | ```notessimo_v3``` | Notessimo V3 | ```.note``` | ❌ | 
 | M | ```mariopaint_smp``` | Super Mario Paint | ```.txt``` | ❌ | 

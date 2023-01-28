@@ -77,7 +77,7 @@ xmodits_py - for extracting Impulse Tracker Samples
 [Full List...](docs/input_plugins.md)
 
 | DataType | Short Name | Name | Ext | Autodetect | 
-| --- | --- | :--- | :--- |
+| --- | --- | :--- | :--- | :--- |
 | M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | M-I | ```flp``` | FL Studio | ```.flp``` | ✔️ |
 | R | ```lmms``` | LMMS | ```.mmp``` | ✔️ |

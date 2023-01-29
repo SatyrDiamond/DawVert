@@ -65,14 +65,18 @@ def parse_ptvoice_unit(bio_ptvoice, unitnum):
 
     bio_ptvoice.read(2)
     l_unit['vol'] = bio_ptvoice.read(1)[0]/64
+    print('[input-ptcop]     Volume: '+str(l_unit['vol']))
     l_unit['pan'] = ((varint.decode_stream(bio_ptvoice)/128) - 0.5) *2
+    print('[input-ptcop]     Pan: '+str(l_unit['pan']))
     l_unit['detune'] = ((struct.unpack("<f", struct.pack("I", varint.decode_stream(bio_ptvoice)))[0]-1)/0.0127)*26
+    print('[input-ptcop]     Detune: '+str(l_unit['detune']))
 
     bio_ptvoice.read(2)
 
     env_wave_type = bio_ptvoice.read(1)
     if env_wave_type == b'\x00': # ------------------------------ points
         l_unit['wave_type'] = 'points'
+        print('[input-ptcop]     Wave Type: '+str(l_unit['wave_type']))
         l_unit['wave_points'] = []
         env_wave_points = bio_ptvoice.read(1)[0]
         bio_ptvoice.read(2)
@@ -80,6 +84,7 @@ def parse_ptvoice_unit(bio_ptvoice, unitnum):
             point_loc = bio_ptvoice.read(1)[0]
             point_val = int.from_bytes(bio_ptvoice.read(1), "little", signed=True)
             l_unit['wave_points'].append([point_loc, point_val/128])
+        print('[input-ptcop]     Wave Points: '+str(l_unit['wave_points']))
 
     if env_wave_type == b'\x01': # ------------------------------ harm
         env_wave_harm = bio_ptvoice.read(1)[0]
@@ -89,6 +94,7 @@ def parse_ptvoice_unit(bio_ptvoice, unitnum):
             harm_num = bio_ptvoice.read(1)[0]
             point_val = struct.unpack("i", struct.pack("I", varint.decode_stream(bio_ptvoice)))[0]/128
             l_unit['wave_harm'][harm_num-1] = point_val
+        print('[input-ptcop]     Wave Harmonics: '+str(l_unit['wave_harm']))
 
     bio_ptvoice.read(2)
 
@@ -116,6 +122,7 @@ def parse_matePTV(bio_stream):
     ptvoice_size = int.from_bytes(bio_ptvoice.read(4), "little")
     ptvoice_d_num_units = int.from_bytes(bio_ptvoice.read(4), "big")
     for unitnum in range(ptvoice_d_num_units):
+        print('[input-ptcop]   Unit '+str(unitnum))
         l_ptvoice['units'].append(parse_ptvoice_unit(bio_ptvoice, unitnum))
 
     return l_ptvoice
@@ -219,10 +226,13 @@ class input_pxtone(plugin_input.base):
             elif chunkname == b'matePTV ':
                 print('[input-ptcop] Chunk: PTVoice', chunksize)
 
-                plugindata = {}
-                plugindata['name'] = 'ptvoice'
-                plugindata['data'] = parse_matePTV(song_file)
-                t_voice_data.append(['native-pxtone', plugindata])
+                try:
+                    plugindata = {}
+                    plugindata['name'] = 'ptvoice'
+                    plugindata['data'] = parse_matePTV(song_file)
+                    t_voice_data.append(['native-pxtone', plugindata])
+                except:
+                    t_voice_data.append(['none', {}])
                 ptcop_voice_num += 1
 
             elif chunkname == b'matePTN ':
@@ -340,7 +350,7 @@ class input_pxtone(plugin_input.base):
                 if unit_event[2] == 1: 
                     cvpj_note = {}
                     cvpj_note['position'] = position_global/120
-                    cvpj_note['key'] = cur_note
+                    cvpj_note['key'] = cur_note+12
                     cvpj_note['duration'] = unit_event[3]/120
                     cvpj_note['instrument'] = 'ptcop_'+str(cur_voice)
                     t_notelist[unit_eventnum].append(cvpj_note)

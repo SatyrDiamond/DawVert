@@ -1,11 +1,12 @@
-from functions import format_flp
+from functions import format_flp_dec
+from functions import format_flp_enc
 import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("input")
 args = parser.parse_args()
 
-FLP_Data = format_flp.deconstruct(args.input)
+FLP_Data = format_flp_dec.parse(args.input)
 
 FL_Main = FLP_Data['FL_Main']
 FL_Patterns = FLP_Data['FL_Patterns']
@@ -41,4 +42,4 @@ FL_TimeMarkers = FLP_Data['FL_TimeMarkers']
 #for FL_TimeMarker in FL_TimeMarkers:
     #print(FL_TimeMarker, FL_TimeMarkers[FL_TimeMarker])
 
-format_flp.reconstruct(FLP_Data, 'out.flp')
+format_flp_enc.make(FLP_Data, 'out.flp')

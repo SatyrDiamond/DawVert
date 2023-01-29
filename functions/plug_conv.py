@@ -15,6 +15,7 @@ from functions import vst_inst
 from functions import params_vst
 from functions import params_vital
 from functions import native_fl_inst
+from functions import native_pxtone
 from functions import native_jummbox
 
 # -------------------- Instruments --------------------
@@ -28,6 +29,10 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 			# ---------------------------------------- 1 ----------------------------------------
 			if pluginname == 'native-fl':
 				native_fl_inst.convert(instdata)
+
+			# ---------- from pxtone
+			elif pluginname == 'native-pxtone':
+				native_pxtone.convert(instdata)
 
 			# ---------- from jummbox
 			elif pluginname == 'jummbox-single':
@@ -189,8 +194,6 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
 				zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
 				list_vst.replace_data(instdata, 'ZynAddSubFX', zasfxdatafixed)
-			else:
-				print('[plug-conv] Unchanged')
 
 # -------------------- FX --------------------
 def convplug_fx(fxdata, dawname, extra_json, nameid):

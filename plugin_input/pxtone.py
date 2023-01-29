@@ -113,12 +113,16 @@ def parse_ptvoice_unit(bio_ptvoice, unitnum):
 def parse_matePTV(bio_stream):
     size, voice_number, tuning, sz = struct.unpack("hhfi", bio_stream.read(12))
     ptvoice_data = bio_stream.read(sz)
+
+    print(ptvoice_data)
+
     l_ptvoice = {}
     l_ptvoice['units'] = []
 
-    bio_ptvoice = data_bytes.bytearray2BytesIO(ptvoice_data)
     ptvoice_header = bio_ptvoice.read(8)
+    print('[input-ptcop]   Header '+str(ptvoice_header))
     ptvoice_unk = bio_ptvoice.read(4)
+    print('[input-ptcop]   Unknown '+str(ptvoice_unk))
     ptvoice_size = int.from_bytes(bio_ptvoice.read(4), "little")
     ptvoice_d_num_units = int.from_bytes(bio_ptvoice.read(4), "big")
     for unitnum in range(ptvoice_d_num_units):

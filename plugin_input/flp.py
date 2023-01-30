@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
-# SPDX-License-Identifier: GPL-3.0-or-later 
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugin_input
 import json
@@ -42,6 +42,7 @@ class input_flp(plugin_input.base):
         rootJ['timesig_numerator'] = FL_Main['Numerator']
         rootJ['timesig_denominator'] = FL_Main['Denominator']
         rootJ['bpm'] = FL_Main['Tempo']
+        rootJ['shuffle'] = FL_Main['Shuffle']/128
 
         instrumentsJ = {}
         instrumentsorder = []
@@ -197,7 +198,6 @@ class input_flp(plugin_input.base):
             elif fxchannel == '103': fxdata["vol"] = 0.0
             else: fxdata["vol"] = 1.0
 
-
         for timemarker in FL_TimeMarkers:
             tm_pos = FL_TimeMarkers[timemarker]['pos']/ppq*4
             tm_type = FL_TimeMarkers[timemarker]['type']
@@ -228,8 +228,11 @@ class input_flp(plugin_input.base):
         rootJ['info'] = {}
         rootJ['info']['title'] = FL_Main['Title']
         rootJ['info']['author'] = FL_Main['Author']
-        rootJ['message'] = {}
-        rootJ['message']['type'] = 'text'
-        rootJ['message']['text'] = FL_Main['Comment']
+        rootJ['info']['genre'] = FL_Main['Genre']
+        if 'URL' in FL_Main: rootJ['info']['url'] = FL_Main['URL']
+        
+        rootJ['info']['message'] = {}
+        rootJ['info']['message']['type'] = 'text'
+        rootJ['info']['message']['text'] = FL_Main['Comment']
 
         return json.dumps(rootJ, indent=2)

@@ -56,25 +56,29 @@ class output_cvpjs(plugin_output.base):
 
         ppq = 960
         FL_Main['ppq'] = ppq
-        FL_Main['Shuffle'] = 0
+        
         FL_Main['ShowInfo'] = 0
 
         if 'info' in projJ: 
             infoJ = projJ['info']
+            FL_Main['ShowInfo'] = 1
             if 'title' in infoJ: 
-                if 'title' != '': 
-                    FL_Main['Title'] = infoJ['title']
-                    FL_Main['ShowInfo'] = 1
+                if 'title' != '': FL_Main['Title'] = infoJ['title']
             else: FL_Main['Title'] = ''
 
             if 'author' in infoJ: 
-                if 'author' != '': 
-                    FL_Main['Author'] = infoJ['author']
-                    FL_Main['ShowInfo'] = 1
+                if 'author' != '':  FL_Main['Author'] = infoJ['author']
             else: FL_Main['Author'] = ''
 
+            if 'url' in infoJ: 
+                if 'url' != '':  FL_Main['URL'] = infoJ['url']
+            else: FL_Main['URL'] = ''
+
+            if 'genre' in infoJ: 
+                if 'genre' != '':  FL_Main['Genre'] = infoJ['genre']
+            else: FL_Main['Genre'] = ''
+
             if 'message' in infoJ: 
-                FL_Main['ShowInfo'] = 1
                 if infoJ['message']['type'] == 'html':
                     bst = BeautifulSoup(infoJ['message']['text'], "html.parser")
                     FL_Main['Comment'] = bst.get_text().replace("\n", "\r")
@@ -87,13 +91,13 @@ class output_cvpjs(plugin_output.base):
             FL_Main['Author'] = ''
             FL_Main['Comment'] = ''
 
-        FL_Main['Genre'] = ''
         FL_Main['ProjectDataPath'] = ''
+
+        if 'shuffle' in projJ: FL_Main['Shuffle'] = int(projJ['shuffle']*128)
         if 'timesig_numerator' in projJ: FL_Main['Numerator'] = projJ['timesig_numerator']
         if 'timesig_denominator' in projJ: FL_Main['Denominator'] = projJ['timesig_denominator']
         if 'bpm' in projJ: FL_Main['Tempo'] = projJ['bpm']
-        if 'pitch' in projJ: 
-            FL_Main['MainPitch'] = struct.unpack('H', struct.pack('h', int(projJ['pitch'])))[0]
+        if 'pitch' in projJ: FL_Main['MainPitch'] = struct.unpack('H', struct.pack('h', int(projJ['pitch'])))[0]
 
         instrumentsorder = projJ['instrumentsorder']
 

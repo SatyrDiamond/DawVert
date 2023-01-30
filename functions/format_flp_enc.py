@@ -278,7 +278,7 @@ def make_channels(data_FLdt, channels):
         make_flevent(data_FLdt, 138, temp_delayreso) #DelayReso
         make_flevent(data_FLdt, 139, temp_reverb) #Reverb
         make_flevent(data_FLdt, 89, temp_shiftdelay) #ShiftDelay
-        make_flevent(data_FLdt, 97, 128) #FX
+        make_flevent(data_FLdt, 97, 128)
         make_flevent(data_FLdt, 69, temp_fx) #FX
         make_flevent(data_FLdt, 86, temp_fx3) #FX3
         make_flevent(data_FLdt, 71, temp_cutoff) #CutOff
@@ -533,6 +533,7 @@ def make(FLP_Data, outputfile):
     make_flevent(data_FLdt, 207, FLP_Data['FL_Main']['Author'].encode('utf-16le') + b'\x00\x00')
     make_flevent(data_FLdt, 202, FLP_Data['FL_Main']['ProjectDataPath'].encode('utf-16le') + b'\x00\x00')
     make_flevent(data_FLdt, 195, FLP_Data['FL_Main']['Comment'].encode('utf-16le') + b'\x00\x00')
+    if 'URL' in FLP_Data['FL_Main']: make_flevent(data_FLdt, 197, FLP_Data['FL_Main']['URL'].encode('utf-16le') + b'\x00\x00')
     make_flevent(data_FLdt, 231, ChanGroupName.encode('utf-16le') + b'\x00\x00')
     make_flevent(data_FLdt, 146, 4294967295)
     make_flevent(data_FLdt, 216, b'')

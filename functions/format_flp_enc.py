@@ -232,7 +232,6 @@ def make_channels(data_FLdt, channels):
         temp_ofslevels = b'\x00\x00\x00\x00\x002\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
         temp_cutcutby = 0
         temp_layerflags = 0
-        temp_filternum = 0
         temp_sampleflags = 10
         temp_looptype = 0
         temp_middlenote = 60
@@ -262,7 +261,7 @@ def make_channels(data_FLdt, channels):
         if 'ofslevels' in channels[channel]: temp_ofslevels = channels[channel]['ofslevels']
         if 'cutcutby' in channels[channel]: temp_cutcutby = channels[channel]['cutcutby']
         if 'layerflags' in channels[channel]: temp_layerflags = channels[channel]['layerflags']
-        if 'filternum' in channels[channel]: temp_filternum = channels[channel]['filternum']
+        if 'filtergroup' in channels[channel]: temp_filternum = channels[channel]['filtergroup']
 
         if 'envlfo_pan' in channels[channel]: temp_envlfo_pan = channels[channel]['envlfo_pan']
         if 'envlfo_vol ' in channels[channel]: temp_envlfo_vol = channels[channel]['envlfo_vol']
@@ -498,7 +497,6 @@ def make_mixer(data_FLdt, mixer):
 def make(FLP_Data, outputfile):
     flpout = open(outputfile, 'wb')
     numofchannels = len(FLP_Data['FL_Channels'])
-    ChanGroupName = 'Unsorted'
     #FLhd
     data_FLhd = BytesIO()
     data_FLhd.write(numofchannels.to_bytes(3, 'big'))
@@ -534,7 +532,9 @@ def make(FLP_Data, outputfile):
     make_flevent(data_FLdt, 202, FLP_Data['FL_Main']['ProjectDataPath'].encode('utf-16le') + b'\x00\x00')
     make_flevent(data_FLdt, 195, FLP_Data['FL_Main']['Comment'].encode('utf-16le') + b'\x00\x00')
     if 'URL' in FLP_Data['FL_Main']: make_flevent(data_FLdt, 197, FLP_Data['FL_Main']['URL'].encode('utf-16le') + b'\x00\x00')
-    make_flevent(data_FLdt, 231, ChanGroupName.encode('utf-16le') + b'\x00\x00')
+
+    for name in FLP_Data['FL_FilterGroups']:
+        make_flevent(data_FLdt, 231, name.encode('utf-16le') + b'\x00\x00')
     make_flevent(data_FLdt, 146, 4294967295)
     make_flevent(data_FLdt, 216, b'')
     #make_flevent(data_FLdt, 197, FLP_Data['FL_Main']['URL'].encode('utf-16le') + b'\x00\x00')

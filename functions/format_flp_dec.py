@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
-# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: GPL-3.0-or-later 
 
 import varint
 import argparse
@@ -37,6 +37,7 @@ def parse_arrangement(arrdata):
         if endoffset != 4294967295: placement['endoffset'] = endoffset
         output.append(placement)
     return output
+
 def parse_chanparams(chanparams, chanl):
     bio_chanparams = create_bytesio(chanparams)[0]
     bio_chanparams.read(9) # ffffffff 00000000 00 
@@ -77,16 +78,19 @@ def parse_chanparams(chanparams, chanl):
     chanl['start_offset'] = bio_chanparams.read(4)
     bio_chanparams.read(5) # b'\xff\xff\xff\xff\x00'
     chanl['fix_trim'] = int.from_bytes(bio_chanparams.read(1), "little")
+
 def parse_basicparams(basicparamsdata, chanl):
     bio_basicparams = create_bytesio(basicparamsdata)[0]
     chanl['pan'] = ((int.from_bytes(bio_basicparams.read(4), "little")/12800)-0.5)*2
     chanl['volume'] = (int.from_bytes(bio_basicparams.read(4), "little")/12800)
     chanl['pitch'] = int.from_bytes(bio_basicparams.read(4), "little", signed="True")
+
 def parse_poly(polydata, chanl):
     bio_poly = create_bytesio(polydata)[0]
     chanl['polymax'] = int.from_bytes(bio_poly.read(4), "little")
     chanl['polyslide'] = int.from_bytes(bio_poly.read(4), "little")
     chanl['polyflags'] = int.from_bytes(bio_poly.read(1), "little")
+
 def parse_trackinfo(trackdata):
     bio_fltrack = create_bytesio(trackdata)[0]
     params = {}
@@ -108,6 +112,7 @@ def parse_trackinfo(trackdata):
         return [trackid, None]
     else:
         return [trackid, params]
+
 def parse_fxrouting(fxroutingbytes):
     fxroutingdata = create_bytesio(fxroutingbytes)
     fxcount = 0
@@ -118,6 +123,7 @@ def parse_fxrouting(fxroutingbytes):
             routes.append(fxcount)
         fxcount += 1
     return routes
+
 def parse_flevent(datastream):
     event_id = int.from_bytes(datastream.read(1), "little")
     if event_id <= 63 and event_id >= 0: # int8
@@ -133,6 +139,7 @@ def parse_flevent(datastream):
         eventpartdatasize = varint.decode_stream(datastream)
         event_data = datastream.read(eventpartdatasize)
     return [event_id, event_data]
+
 def parse(inputfile):
     fileobject = open(inputfile, 'rb')
     headername = fileobject.read(4)

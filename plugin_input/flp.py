@@ -32,6 +32,7 @@ class input_flp(plugin_input.base):
         FL_Mixer = FLP_Data['FL_Mixer']
         FL_Arrangements = FLP_Data['FL_Arrangements']
         FL_TimeMarkers = FLP_Data['FL_TimeMarkers']
+        FL_FilterGroups = FLP_Data['FL_FilterGroups']
 
         ppq = FL_Main['ppq']
 
@@ -63,6 +64,7 @@ class input_flp(plugin_input.base):
                 singleinstdata['instdata'] = {}
                 singleinstdata['enabled'] = channeldata['enabled']
                 singleinstdata['fxrack_channel'] = channeldata['fxchannel']
+                singleinstdata['filtergroup'] = 'FLFilterGroup_'+str(channeldata['filtergroup'])
                 middlenote = 0
                 if 'middlenote' in channeldata: middlenote = channeldata['middlenote'] - 60
                 singleinstdata['instdata']['notefx'] = {}
@@ -224,13 +226,17 @@ class input_flp(plugin_input.base):
         rootJ['playlist'] = playlistJ
         rootJ['fxrack'] = fxrackJ
         rootJ['timemarkers'] = timemarkersJ
+        rootJ['filtergroups'] = {}
+        for filtergroupnum in range(len(FL_FilterGroups)):
+            rootJ['filtergroups']['FLFilterGroup_'+str(filtergroupnum)] = {}
+            rootJ['filtergroups']['FLFilterGroup_'+str(filtergroupnum)]['name'] = FL_FilterGroups[filtergroupnum]
 
         rootJ['info'] = {}
         rootJ['info']['title'] = FL_Main['Title']
         rootJ['info']['author'] = FL_Main['Author']
         rootJ['info']['genre'] = FL_Main['Genre']
         if 'URL' in FL_Main: rootJ['info']['url'] = FL_Main['URL']
-        
+
         rootJ['info']['message'] = {}
         rootJ['info']['message']['type'] = 'text'
         rootJ['info']['message']['text'] = FL_Main['Comment']

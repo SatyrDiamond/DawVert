@@ -186,6 +186,7 @@ def parse(inputfile):
     FL_Arrangements = {}
     FL_FXCreationMode = 0
     FL_TimeMarkers = {}
+    FL_ChanGroupName = []
     T_FL_FXNum = -1
 
     for event in eventtable:
@@ -212,8 +213,8 @@ def parse(inputfile):
         if event_id == 197: FL_Main['URL'] = event_data.decode('utf-16le').rstrip('\x00\x00')
         if event_id == 237: FL_Main['ProjectTime'] = event_data
         if event_id == 10: FL_Main['ShowInfo'] = event_data
-        #if event_id == 225: print(event_data)
-    
+        if event_id == 231: FL_ChanGroupName.append(event_data.decode('utf-16le').rstrip('\x00\x00'))
+
         if event_id == 65: 
             T_FL_CurrentPattern = event_data
             if str(T_FL_CurrentPattern) not in FL_Patterns:
@@ -376,7 +377,7 @@ def parse(inputfile):
             if event_id == 229: FL_Channels[str(T_FL_CurrentChannel)]['ofslevels'] = event_data
             if event_id == 132: FL_Channels[str(T_FL_CurrentChannel)]['cutcutby'] = event_data
             if event_id == 144: FL_Channels[str(T_FL_CurrentChannel)]['layerflags'] = event_data
-            if event_id == 145: FL_Channels[str(T_FL_CurrentChannel)]['filternum'] = event_data
+            if event_id == 145: FL_Channels[str(T_FL_CurrentChannel)]['filtergroup'] = event_data
             if event_id == 143: FL_Channels[str(T_FL_CurrentChannel)]['sampleflags'] = event_data
             if event_id == 20: FL_Channels[str(T_FL_CurrentChannel)]['looptype'] = event_data
             if event_id == 135: FL_Channels[str(T_FL_CurrentChannel)]['middlenote'] = event_data
@@ -432,6 +433,7 @@ def parse(inputfile):
     output['FL_Patterns'] = FL_Patterns
     output['FL_Channels'] = FL_Channels
     output['FL_Mixer'] = FL_Mixer
+    output['FL_FilterGroups'] = FL_ChanGroupName
     output['FL_Arrangements'] = FL_Arrangements
     output['FL_TimeMarkers'] = FL_TimeMarkers
     return output

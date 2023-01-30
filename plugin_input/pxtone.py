@@ -317,11 +317,12 @@ class input_pxtone(plugin_input.base):
             cvpj_l_instruments[instid] = cvpj_inst
             cvpj_l_instrumentsorder.append(instid)
 
-        if ptcop_song_name != None: cvpj_l['title'] = ptcop_song_name
+        cvpj_l['info'] = {}
+        if ptcop_song_name != None: cvpj_l['info']['title'] = ptcop_song_name
         if ptcop_song_comment != None: 
-            cvpj_l['message'] = {}
-            cvpj_l['message']['type'] = 'text'
-            cvpj_l['message']['text'] = ptcop_song_comment
+            cvpj_l['info']['message'] = {}
+            cvpj_l['info']['message']['type'] = 'text'
+            cvpj_l['info']['message']['text'] = ptcop_song_comment
         cvpj_l['use_fxrack'] = False
         cvpj_l['timesig_numerator'] = ptcop_mas_beat
         cvpj_l['timesig_denominator'] = 4

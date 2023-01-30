@@ -606,9 +606,10 @@ class input_lmms(plugin_input.base):
         rootJ['timesig_denominator'] = lmms_getvalue(headX, 'timesig_denominator', 4, None)
 
         if projnotesX.text != None:
-            rootJ['message'] = {}
-            rootJ['message']['type'] = 'html'
-            rootJ['message']['text'] = projnotesX.text
+            rootJ['info'] = {}
+            rootJ['info']['message'] = {}
+            rootJ['info']['message']['type'] = 'html'
+            rootJ['info']['message']['text'] = projnotesX.text
 
         trackdata, trackordering = lmms_decode_tracks(trksX)
 

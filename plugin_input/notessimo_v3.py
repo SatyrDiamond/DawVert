@@ -780,6 +780,7 @@ class input_notessimo_v3(plugin_input.base):
         automation['main'] = {}
         automation['main']['bpm'] = cvpj_auto_tempo
 
+        cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
         cvpj_l['filtergroups'] = cvpj_l_filtergroups
         cvpj_l['fxrack'] = cvpj_l_fxrack

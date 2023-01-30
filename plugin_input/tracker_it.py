@@ -375,13 +375,13 @@ class input_it(plugin_input.base):
         automation['main']['bpm'] = song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo)
         cvpj_l['automation'] = automation
 
-        cvpj_l['use_fxrack'] = False
-
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = it_header_songname
         cvpj_l['info']['message'] = {}
         cvpj_l['info']['message']['type'] = 'text'
         cvpj_l['info']['message']['text'] = it_songmessage.replace('\r', '\n')
+        cvpj_l['use_instrack'] = False
+        cvpj_l['use_fxrack'] = False
         cvpj_l['timemarkers'] = placements.make_timemarkers([4,16], patlentable, None)
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

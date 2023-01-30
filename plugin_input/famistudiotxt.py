@@ -368,6 +368,7 @@ class input_famistudio(plugin_input.base):
         if 'Name' in fst_Main: cvpj_l['info']['title'] = fst_Main['Name']
         if 'Author' in fst_Main: cvpj_l['info']['author'] = fst_Main['Author']
 
+        cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
         cvpj_l['timesig_numerator'] = timesig[0]
         cvpj_l['timesig_denominator'] = timesig[1]

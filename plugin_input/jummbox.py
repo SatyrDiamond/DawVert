@@ -265,6 +265,7 @@ class input_jummbox(plugin_input.base):
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = jummbox_name
+        cvpj_l['use_instrack'] = True
         cvpj_l['use_fxrack'] = False
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments

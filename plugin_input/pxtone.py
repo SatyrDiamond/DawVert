@@ -35,7 +35,6 @@ colors_inst = [
 [1.00, 0.47, 0.36],
 [0.00, 0.74, 1.00]]
 
-
 global colornum
 colornum = 0
 
@@ -60,75 +59,9 @@ def parse_event(bio_stream):
 
     return [position, unitnum, eventnum, value]
 
-def parse_ptvoice_unit(bio_ptvoice, unitnum):
-    l_unit = {}
-
-    bio_ptvoice.read(2)
-    l_unit['vol'] = bio_ptvoice.read(1)[0]/64
-    print('[input-ptcop]     Volume: '+str(l_unit['vol']))
-    l_unit['pan'] = ((varint.decode_stream(bio_ptvoice)/128) - 0.5) *2
-    print('[input-ptcop]     Pan: '+str(l_unit['pan']))
-    l_unit['detune'] = ((struct.unpack("<f", struct.pack("I", varint.decode_stream(bio_ptvoice)))[0]-1)/0.0127)*26
-    print('[input-ptcop]     Detune: '+str(l_unit['detune']))
-
-    bio_ptvoice.read(2)
-
-    env_wave_type = bio_ptvoice.read(1)
-    if env_wave_type == b'\x00': # ------------------------------ points
-        l_unit['wave_type'] = 'points'
-        print('[input-ptcop]     Wave Type: '+str(l_unit['wave_type']))
-        l_unit['wave_points'] = []
-        env_wave_points = bio_ptvoice.read(1)[0]
-        bio_ptvoice.read(2)
-        for _ in range(env_wave_points):
-            point_loc = bio_ptvoice.read(1)[0]
-            point_val = int.from_bytes(bio_ptvoice.read(1), "little", signed=True)
-            l_unit['wave_points'].append([point_loc, point_val/128])
-        print('[input-ptcop]     Wave Points: '+str(l_unit['wave_points']))
-
-    if env_wave_type == b'\x01': # ------------------------------ harm
-        env_wave_harm = bio_ptvoice.read(1)[0]
-        l_unit['wave_type'] = 'harm'
-        l_unit['wave_harm'] = [0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0]
-        for _ in range(env_wave_harm):
-            harm_num = bio_ptvoice.read(1)[0]
-            point_val = struct.unpack("i", struct.pack("I", varint.decode_stream(bio_ptvoice)))[0]/128
-            l_unit['wave_harm'][harm_num-1] = point_val
-        print('[input-ptcop]     Wave Harmonics: '+str(l_unit['wave_harm']))
-
-    bio_ptvoice.read(2)
-
-    l_unit['vol_points'] = []
-
-    env_vol_points = bio_ptvoice.read(1)[0]+1
-    for _ in range(env_vol_points):
-        point_loc = varint.decode_stream(bio_ptvoice)
-        point_val = varint.decode_stream(bio_ptvoice)
-        l_unit['vol_points'].append([point_loc, point_val])
-
-    l_unit['release'] = varint.decode_stream(bio_ptvoice)
-    bio_ptvoice.read(1)
-    return l_unit
-
 def parse_matePTV(bio_stream):
     size, voice_number, tuning, sz = struct.unpack("hhfi", bio_stream.read(12))
     ptvoice_data = bio_stream.read(sz)
-
-    l_ptvoice = {}
-    l_ptvoice['units'] = []
-
-    bio_ptvoice = data_bytes.bytearray2BytesIO(ptvoice_data)
-    ptvoice_header = bio_ptvoice.read(8)
-    print('[input-ptcop]   Header '+str(ptvoice_header))
-    ptvoice_unk = bio_ptvoice.read(4)
-    print('[input-ptcop]   Unknown '+str(ptvoice_unk))
-    ptvoice_size = int.from_bytes(bio_ptvoice.read(4), "little")
-    ptvoice_d_num_units = int.from_bytes(bio_ptvoice.read(4), "big")
-    for unitnum in range(ptvoice_d_num_units):
-        print('[input-ptcop]   Unit '+str(unitnum))
-        l_ptvoice['units'].append(parse_ptvoice_unit(bio_ptvoice, unitnum))
-
-    return l_ptvoice
 
 def parse_assiWOIC(bio_stream, chunksize):
     voice_number = int.from_bytes(bio_stream.read(4), "little")
@@ -228,14 +161,8 @@ class input_pxtone(plugin_input.base):
 
             elif chunkname == b'matePTV ':
                 print('[input-ptcop] Chunk: PTVoice', chunksize)
-
-                try:
-                    plugindata = {}
-                    plugindata['name'] = 'ptvoice'
-                    plugindata['data'] = parse_matePTV(song_file)
-                    t_voice_data.append(['native-pxtone', plugindata])
-                except:
-                    t_voice_data.append(['none', {}])
+                parse_matePTV(song_file)
+                t_voice_data.append(['none', {}])
                 ptcop_voice_num += 1
 
             elif chunkname == b'matePTN ':
@@ -345,7 +272,7 @@ class input_pxtone(plugin_input.base):
                 #print(str(position_global).ljust(9),end='')
                 #print(str(unit_event[3]).ljust(4))
 
-                if unit_event[2] == 2: cur_note = unit_event[3][0]
+                if unit_event[2] == 2: cur_note = unit_event[3][0]+12
                 if unit_event[2] == 12: cur_voice = unit_event[3]
                 if unit_event[2] == 4: t_notelist[unit_eventnum][-1]['vol'] = unit_event[3]
                 position_global = unit_event[0]
@@ -353,7 +280,7 @@ class input_pxtone(plugin_input.base):
                 if unit_event[2] == 1: 
                     cvpj_note = {}
                     cvpj_note['position'] = position_global/120
-                    cvpj_note['key'] = cur_note+12
+                    cvpj_note['key'] = cur_note
                     cvpj_note['duration'] = unit_event[3]/120
                     cvpj_note['instrument'] = 'ptcop_'+str(cur_voice)
                     t_notelist[unit_eventnum].append(cvpj_note)
@@ -403,4 +330,3 @@ class input_pxtone(plugin_input.base):
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = ptcop_mas_beattempo
         return json.dumps(cvpj_l)
-

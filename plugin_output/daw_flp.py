@@ -58,26 +58,33 @@ class output_cvpjs(plugin_output.base):
         FL_Main['ppq'] = ppq
         FL_Main['Shuffle'] = 0
         FL_Main['ShowInfo'] = 0
-        if 'title' in projJ: 
-            if 'title' != '': 
-                FL_Main['Title'] = projJ['title']
-                FL_Main['ShowInfo'] = 1
-        else: FL_Main['Title'] = ''
 
-        if 'author' in projJ: 
-            if 'author' != '': 
-                FL_Main['Author'] = projJ['author']
-                FL_Main['ShowInfo'] = 1
-        else: FL_Main['Author'] = ''
+        if 'info' in projJ: 
+            infoJ = projJ['info']
+            if 'title' in infoJ: 
+                if 'title' != '': 
+                    FL_Main['Title'] = infoJ['title']
+                    FL_Main['ShowInfo'] = 1
+            else: FL_Main['Title'] = ''
 
-        if 'message' in projJ: 
-            FL_Main['ShowInfo'] = 1
-            if projJ['message']['type'] == 'html':
-                bst = BeautifulSoup(projJ['message']['text'], "html.parser")
-                FL_Main['Comment'] = bst.get_text().replace("\n", "\r")
-            if projJ['message']['type'] == 'text':
-                FL_Main['Comment'] = projJ['message']['text'].replace("\n", "\r")
+            if 'author' in infoJ: 
+                if 'author' != '': 
+                    FL_Main['Author'] = infoJ['author']
+                    FL_Main['ShowInfo'] = 1
+            else: FL_Main['Author'] = ''
+
+            if 'message' in infoJ: 
+                FL_Main['ShowInfo'] = 1
+                if infoJ['message']['type'] == 'html':
+                    bst = BeautifulSoup(infoJ['message']['text'], "html.parser")
+                    FL_Main['Comment'] = bst.get_text().replace("\n", "\r")
+                if infoJ['message']['type'] == 'text':
+                    FL_Main['Comment'] = infoJ['message']['text'].replace("\n", "\r")
+            else: 
+                FL_Main['Comment'] = ''
         else: 
+            FL_Main['Title'] = ''
+            FL_Main['Author'] = ''
             FL_Main['Comment'] = ''
 
         FL_Main['Genre'] = ''

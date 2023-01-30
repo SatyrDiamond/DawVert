@@ -259,7 +259,8 @@ class input_mod(plugin_input.base):
         automation['main']['bpm'] = song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, cvpj_bpm)
         cvpj_l['automation'] = automation
 
-        cvpj_l['title'] = mod_name
+        cvpj_l['info'] = {}
+        cvpj_l['info']['title'] = mod_name
         cvpj_l['use_fxrack'] = False
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

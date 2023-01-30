@@ -394,6 +394,7 @@ notess_bu_inst["1407851abd2169c"] = [ 0, None, "Vibes", [0.4392156862745098, 0.0
 notess_bu_inst["1406de371a08b5c"] = [ 0, None, "Kefka's Laugh", [0.3333333333333333, 0.03529411764705882, 0.7843137254901961]]
 notess_bu_inst["1425966ba957afa"] = [ 0, None, "Zigzagoon", [0.7215686274509804, 0.19607843137254902, 0.21568627450980393]]
 notess_bu_inst["13ea64d959b7961"] = [ 0, None, "Mushroom", [0.9803921568627451, 0.8470588235294118, 0.3686274509803922]]
+
 notess_bu_inst["13ea650023451cd"] = [ 0, None, "Boat", [0.611764705882353, 0.6392156862745098, 0.48627450980392156]]
 notess_bu_inst["13ea650ef8016c4"] = [ 0, None, "Star", [0.5333333333333333, 0.08235294117647059, 0.03529411764705882]]
 notess_bu_inst["13ea651e6a184c1"] = [ 0, None, "Mario", [0.6392156862745098, 0.22745098039215686, 0.40784313725490196]]
@@ -589,7 +590,8 @@ def parse_song(songid):
     song_vars = get_vars(notess_x_song)
 
     if 'author' in song_vars: 
-        cvpj_l['author'] = song_vars['author']
+        cvpj_l['info'] = {}
+        cvpj_l['info']['author'] = song_vars['author']
         print("[input-notessimo_v3] Song Author: " + song_vars['author'])
     if 'width' in song_vars: 
         song_length = song_vars['width']*60
@@ -669,6 +671,7 @@ class input_notessimo_v3(plugin_input.base):
         global cvpj_l_notelistindex
         global cvpj_l_playlist
         cvpj_l = {}
+
         cvpj_l_fxrack = {}
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []

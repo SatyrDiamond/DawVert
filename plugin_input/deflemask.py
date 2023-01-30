@@ -386,9 +386,10 @@ class input_cvpj_r(plugin_input.base):
 
         #dmf_insts
 
+        cvpj_l['info'] = {}
+        cvpj_l['info']['title'] = dmf_song_name
+        cvpj_l['info']['author'] = dmf_song_author
         cvpj_l['use_fxrack'] = False
-        cvpj_l['title'] = dmf_song_name
-        cvpj_l['author'] = dmf_song_author
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

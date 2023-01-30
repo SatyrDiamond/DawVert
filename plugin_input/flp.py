@@ -64,7 +64,7 @@ class input_flp(plugin_input.base):
                 singleinstdata['instdata'] = {}
                 singleinstdata['enabled'] = channeldata['enabled']
                 singleinstdata['fxrack_channel'] = channeldata['fxchannel']
-                singleinstdata['filtergroup'] = 'FLFilterGroup_'+str(channeldata['filtergroup'])
+                #singleinstdata['filtergroup'] = 'FLFilterGroup_'+str(channeldata['filtergroup'])
                 middlenote = 0
                 if 'middlenote' in channeldata: middlenote = channeldata['middlenote'] - 60
                 singleinstdata['instdata']['notefx'] = {}
@@ -229,7 +229,6 @@ class input_flp(plugin_input.base):
         rootJ['filtergroups'] = {}
 
         for filtergroupnum in range(len(FL_FilterGroups)):
-            print(filtergroupnum)
             rootJ['filtergroups']['FLFilterGroup_'+str(filtergroupnum)] = {}
             rootJ['filtergroups']['FLFilterGroup_'+str(filtergroupnum)]['name'] = FL_FilterGroups[filtergroupnum]
 

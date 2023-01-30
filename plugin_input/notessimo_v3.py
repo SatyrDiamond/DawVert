@@ -703,11 +703,14 @@ class input_notessimo_v3(plugin_input.base):
             cvpj_inst["vol"] = 1.0
 
             isbuiltindrum = 0
+            midiinst = None
 
             if inst in notess_bu_inst:
                 inst_name = notess_bu_inst[inst][2]
                 inst_color = notess_bu_inst[inst][3]
                 isbuiltindrum = notess_bu_inst[inst][0]
+                midiinst = notess_bu_inst[inst][1]
+
             elif inst in lists_data[1]: 
                 t_instdata = lists_data[1][inst]
                 if 'name' in t_instdata: inst_name = t_instdata['name']
@@ -729,7 +732,11 @@ class input_notessimo_v3(plugin_input.base):
                 fxnum += 1
 
             cvpj_inst['instdata'] = {}
-            cvpj_inst['instdata']['plugin'] = 'none'
+            if midiinst == None:
+                cvpj_inst['instdata']['plugin'] = 'none'
+            else:
+                cvpj_inst['instdata']['plugin'] = 'general-midi'
+                cvpj_inst['instdata']['plugindata'] = {'bank':0, 'inst':midiinst-1}
 
             cvpj_l_instruments[inst] = cvpj_inst
             cvpj_l_instrumentsorder.append(inst)

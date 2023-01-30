@@ -227,7 +227,9 @@ class input_flp(plugin_input.base):
         rootJ['fxrack'] = fxrackJ
         rootJ['timemarkers'] = timemarkersJ
         rootJ['filtergroups'] = {}
+
         for filtergroupnum in range(len(FL_FilterGroups)):
+            print(filtergroupnum)
             rootJ['filtergroups']['FLFilterGroup_'+str(filtergroupnum)] = {}
             rootJ['filtergroups']['FLFilterGroup_'+str(filtergroupnum)]['name'] = FL_FilterGroups[filtergroupnum]
 

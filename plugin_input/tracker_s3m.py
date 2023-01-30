@@ -254,6 +254,7 @@ class input_s3m(plugin_input.base):
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = s3m_name
         cvpj_l['use_fxrack'] = False
+        cvpj_l['use_instrack'] = False
         cvpj_l['timemarkers'] = placements.make_timemarkers([4,16], patlentable, None)
         cvpj_l['instruments'] = cvpj_l_instruments
         cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder

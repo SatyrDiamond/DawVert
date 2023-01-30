@@ -65,9 +65,9 @@ def parsetrack(placements, trackid, trackname, vol, samplefolder, wavid):
     trkJ['name'] = trackname
     trkJ['vol'] = vol
     trkJ['placements'] = placements
-    trackordering.append(trackid)
+    cvpj_l_trackordering.append(trackid)
     trkJ['instdata'] = instJ
-    tracklist[trackid] = trkJ
+    cvpj_l_trackdata[trackid] = trkJ
 
 class input_pms(plugin_input.base):
     def __init__(self): pass
@@ -84,9 +84,8 @@ class input_pms(plugin_input.base):
         else: return False
         bytestream.seek(0)
     def parse(self, input_file, extra_param):
-        global tracklist
-        global trackordering
-        global instruments
+        global cvpj_l_trackdata
+        global cvpj_l_trackordering
         pmdfile = open(input_file, 'rb')
         header = pmdfile.read(4)
         trackdatapos = int.from_bytes(pmdfile.read(4), "little")
@@ -129,20 +128,19 @@ class input_pms(plugin_input.base):
         notes2 = pmddecodenotes(pmdfile, recordspertrack, pmdtrackdata[1][0])
         notes3 = pmddecodenotes(pmdfile, recordspertrack, pmdtrackdata[2][0])
         notesP = pmddecodenotes(pmdfile, recordspertrack, 0)
-        tracklist = {}
-        trackordering = []
-        instruments = {}
+        cvpj_l_trackdata = {}
+        cvpj_l_trackordering = []
         parsetrack(notes1, 'piyopiyo_note1', 'Note #1', pmdtrackdata[0][3]/250, samplefolder, 1)
         parsetrack(notes2, 'piyopiyo_note2', 'Note #2', pmdtrackdata[1][3]/250, samplefolder, 2)
         parsetrack(notes3, 'piyopiyo_note3', 'Note #3', pmdtrackdata[2][3]/250, samplefolder, 3)
         parsetrack(notesP, 'piyopiyo_perc', 'Drums', TrackPVol/250, samplefolder, None)
-        rootJ = {}
-        rootJ['use_fxrack'] = False
-        rootJ['bpm'] = bpm
-        rootJ['trackdata'] = tracklist
-        rootJ['trackordering'] = trackordering
-        rootJ['instruments'] = instruments
-        rootJ['timemarkers'] = []
-        rootJ['timemarkers'].append({'name': 'Loop', 'position': loopstart, 'end': loopend, 'type': 'loop'})
-        return json.dumps(rootJ)
+        cvpj_l = {}
+        cvpj_l['use_instrack'] = False
+        cvpj_l['use_fxrack'] = False
+        cvpj_l['bpm'] = bpm
+        cvpj_l['trackdata'] = cvpj_l_trackdata
+        cvpj_l['trackordering'] = cvpj_l_trackordering
+        cvpj_l['timemarkers'] = []
+        cvpj_l['timemarkers'].append({'name': 'Loop', 'position': loopstart, 'end': loopend, 'type': 'loop'})
+        return json.dumps(cvpj_l)
 

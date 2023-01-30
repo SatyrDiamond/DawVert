@@ -128,7 +128,6 @@ class input_gt_mnbs(plugin_input.base):
         nbs_description = getstring(nbs_file)
 
         if nbs_description != None: song_message += nbs_description
-        if nbs_song_orgauthor != None: song_message += '\n\n' + 'Original Author: ' + nbs_song_orgauthor
 
         nbs_tempo = int.from_bytes(nbs_file.read(2), "little")
         tempo = (nbs_tempo/800)*120
@@ -216,10 +215,13 @@ class input_gt_mnbs(plugin_input.base):
             else: cvpj_l_instruments[instid]['instdata']['plugin'] = 'none'
             cvpj_l_instrumentsorder.append(instid)
 
-        cvpj_l['message'] = {}
-        cvpj_l['message']['type'] = 'text'
-        cvpj_l['message']['text'] = song_message
-
+        cvpj_l['info'] = {}
+        cvpj_l['info']['title'] = nbs_song_name
+        cvpj_l['info']['author'] = nbs_song_author
+        cvpj_l['info']['original_author'] = nbs_song_orgauthor
+        cvpj_l['info']['message'] = {}
+        cvpj_l['info']['message']['type'] = 'text'
+        cvpj_l['info']['message']['text'] = song_message
         cvpj_l['use_fxrack'] = False
         cvpj_l['timesig_numerator'] = timesig_numerator
         cvpj_l['timesig_denominator'] = 4

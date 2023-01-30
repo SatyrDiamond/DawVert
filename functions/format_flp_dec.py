@@ -377,7 +377,7 @@ def parse(inputfile):
             if event_id == 229: FL_Channels[str(T_FL_CurrentChannel)]['ofslevels'] = event_data
             if event_id == 132: FL_Channels[str(T_FL_CurrentChannel)]['cutcutby'] = event_data
             if event_id == 144: FL_Channels[str(T_FL_CurrentChannel)]['layerflags'] = event_data
-            if event_id == 145: FL_Channels[str(T_FL_CurrentChannel)]['filtergroup'] = event_data
+            #if event_id == 145: FL_Channels[str(T_FL_CurrentChannel)]['filtergroup'] = event_data
             if event_id == 143: FL_Channels[str(T_FL_CurrentChannel)]['sampleflags'] = event_data
             if event_id == 20: FL_Channels[str(T_FL_CurrentChannel)]['looptype'] = event_data
             if event_id == 135: FL_Channels[str(T_FL_CurrentChannel)]['middlenote'] = event_data

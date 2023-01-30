@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
-# SPDX-License-Identifier: GPL-3.0-or-later 
+# SPDX-License-Identifier: GPL-3.0-or-later  
 
 import plugin_output
 import json
@@ -93,22 +93,27 @@ class output_cvpjs(plugin_output.base):
         else: 
             FL_Main['Title'] = ''
             FL_Main['Author'] = ''
+            FL_Main['Genre'] = ''
             FL_Main['Comment'] = ''
 
         filtergroups_id_count = 0
         filtergroups_id = {}
-        if 'filtergroups' in projJ:
-            for filtergroup in projJ['filtergroups']:
-                filtergroups_id[filtergroup] = filtergroups_id_count
-                if 'name' in projJ['filtergroups'][filtergroup]:
-                    FL_FilterGroups.append(projJ['filtergroups'][filtergroup]['name'])
-                else:
-                    FL_FilterGroups.append('Unsorted')
-                filtergroups_id_count += 1
 
+        #print(FL_FilterGroups)
+
+        #if 'filtergroups' in projJ:
+        #    for filtergroup in projJ['filtergroups']:
+        #        filtergroups_id[filtergroup] = filtergroups_id_count
+        #        if 'name' in projJ['filtergroups'][filtergroup]:
+        #            FL_FilterGroups.append(projJ['filtergroups'][filtergroup]['name'])
+        #        else:
+        #            FL_FilterGroups.append('noname')
+        #        filtergroups_id_count += 1
+        
         FL_Main['ProjectDataPath'] = ''
 
         if 'shuffle' in projJ: FL_Main['Shuffle'] = int(projJ['shuffle']*128)
+        else: FL_Main['Shuffle'] = 0
         if 'timesig_numerator' in projJ: FL_Main['Numerator'] = projJ['timesig_numerator']
         if 'timesig_denominator' in projJ: FL_Main['Denominator'] = projJ['timesig_denominator']
         if 'bpm' in projJ: FL_Main['Tempo'] = projJ['bpm']
@@ -133,6 +138,7 @@ class output_cvpjs(plugin_output.base):
             if 'filtergroup' in CVPJ_Data:
                 if CVPJ_Data['filtergroup'] in filtergroups_id:
                     T_Main['filtergroup'] = filtergroups_id[CVPJ_Data['filtergroup']]
+
             if 'instdata' in CVPJ_Data:
                 CVPJ_Inst = CVPJ_Data['instdata']
                 if 'notefx' in CVPJ_Inst:

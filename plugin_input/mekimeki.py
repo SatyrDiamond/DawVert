@@ -23,18 +23,17 @@ class input_cvpj_f(plugin_input.base):
         bytestream = open(input_file, 'r')
         file_data = bytestream.read()
         mmc_main = json.loads(file_data)
+        mmc_tracks = mmc_main["Tracks"]
+        mmc_bpm = getvalue(mmc_main, 'Bpm')
+        mmc_mastervolume = getvalue(mmc_main, 'MasterVolume')
 
         cvpj_l_trackdata = {}
         cvpj_l_trackordering = []
         cvpj_l_track_master = {}
 
-        mmc_bpm = getvalue(mmc_main, 'Bpm')
-        mmc_mastervolume = getvalue(mmc_main, 'MasterVolume')
         cvpj_l_track_master['name'] = 'MAS'
         cvpj_l_track_master['vol'] = mmc_mastervolume*1.5
         cvpj_l_track_master['color'] = maincolor
-
-        mmc_tracks = mmc_main["Tracks"]
 
         tracknum = 0
         for mmc_track in mmc_tracks:

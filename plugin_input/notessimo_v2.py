@@ -297,6 +297,9 @@ class input_notessimo_v2(plugin_input.base):
         automation['main']['bpm'] = cvpj_auto_tempo
         cvpj_l['automation'] = automation
 
+        cvpj_l['info'] = {}
+        cvpj_l['info']['title'] = text_songname
+        cvpj_l['info']['author'] = text_songauthor
         cvpj_l['use_fxrack'] = True
         cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['notelistindex'] = cvpj_l_notelistindex

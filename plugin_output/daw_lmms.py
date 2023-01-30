@@ -676,16 +676,21 @@ class output_lmms(plugin_output.base):
         json_fxrack = projJ['fxrack']
         lmms_encode_fxmixer(xml_fxmixer, json_fxrack)
 
-        if 'message' in projJ:
-            notesX = ET.SubElement(songX, "projectnotes")
-            notesX.set("visible", "1")
-            notesX.set("x", "728" )
-            notesX.set("height", "300")
-            notesX.set("y", "5" )
-            notesX.set("width", "389")
-            if 'type' in projJ['message']:
-                if projJ['message']['type'] == 'html': notesX.text = ET.CDATA(projJ['message']['text'])
-                if projJ['message']['type'] == 'text': notesX.text = ET.CDATA(projJ['message']['text'].replace('\n', '<br/>').replace('\r', '<br/>'))
+        if 'info' in projJ:
+            infoJ = projJ['info']
+            if 'message' in infoJ:
+                notesX = ET.SubElement(songX, "projectnotes")
+                notesX.set("visible", "1")
+                notesX.set("x", "728" )
+                notesX.set("height", "300")
+                notesX.set("y", "5" )
+                notesX.set("width", "389")
+                if 'type' in infoJ:
+                    if infoJ['message']['type'] == 'html': notesX.text = ET.CDATA(infoJ['message']['text'])
+                    if infoJ['message']['type'] == 'text': notesX.text = ET.CDATA(infoJ['message']['text'].replace('\n', '<br/>').replace('\r', '<br/>'))
+            else:
+                notesX = ET.SubElement(songX, "projectnotes")
+                notesX.text = ET.CDATA("")
         else:
             notesX = ET.SubElement(songX, "projectnotes")
             notesX.text = ET.CDATA("")

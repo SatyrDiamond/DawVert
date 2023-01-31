@@ -31,6 +31,28 @@ caustic_instcolors['FMSN'] = [0.29, 0.78, 0.76]
 caustic_instcolors['KSSN'] = [0.55, 0.57, 0.44]
 caustic_instcolors['SAWS'] = [0.99, 0.60, 0.25]
 
+caustic_fxtype = {}
+caustic_fxtype[0] = 'Delay'
+caustic_fxtype[1] = 'Reverb'
+caustic_fxtype[2] = 'Distortion'
+caustic_fxtype[3] = 'Compresser'
+caustic_fxtype[4] = 'Bitcrush'
+caustic_fxtype[5] = 'Flanger'
+caustic_fxtype[6] = 'Phaser'
+caustic_fxtype[7] = 'Chorus'
+caustic_fxtype[8] = 'AutoWah'
+caustic_fxtype[9] = 'Param EQ'
+caustic_fxtype[10] = 'Limiter'
+caustic_fxtype[11] = 'VInylSim'
+caustic_fxtype[12] = 'Comb'
+caustic_fxtype[14] = 'Cab Sim'
+caustic_fxtype[16] = 'StaticFlanger'
+caustic_fxtype[17] = 'Filter'
+caustic_fxtype[18] = 'Octaver'
+caustic_fxtype[19] = 'Vibrato'
+caustic_fxtype[20] = 'Tremolo'
+caustic_fxtype[21] = 'AutoPan'
+
 patletters = ['A','B','C','D']
 
 from functions import format_caustic
@@ -85,6 +107,7 @@ class input_cvpj_r(plugin_input.base):
         machines = CausticData['Machines']
         SEQN = CausticData['SEQN']
         SEQN_tempo = CausticData['SEQN_tempo']
+        EFFX = CausticData['EFFX']
 
         cvpj_l = {}
         cvpj_l_instruments = {}

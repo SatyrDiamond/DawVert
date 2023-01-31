@@ -182,7 +182,7 @@ class input_flp(plugin_input.base):
             fxrackJ[fxchannel] = {}
             fxdata = fxrackJ[fxchannel]
             fxdata["fxenabled"] = 1
-            fxdata["fxchain_audio"] = []
+            fxdata["chain_fx_audio"] = []
             fxdata["muted"] = 0
             fxdata["sends"] = []
             if 'name' in fl_fxhan:

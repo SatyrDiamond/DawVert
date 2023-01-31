@@ -35,7 +35,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				native_pxtone.convert(instdata)
 
 			# ---------- from jummbox
-			elif pluginname == 'jummbox-single':
+			elif pluginname == 'native-jummbox':
 				native_jummbox.convert(instdata)
 
 			# ---------- from general-midi
@@ -223,6 +223,16 @@ def do_fxchain_audio(fxchain_audio, dawname, extra_json, nameid):
 	for fxslot in fxchain_audio:
 		convplug_fx(fxslot, dawname, extra_json, nameid)
 
+def do_inst(trackdata, dawname, extra_json, nameid):
+	if 'instdata' in trackdata:
+		instdata = trackdata['instdata']
+		print('[plug-conv] --- Inst: '+nameid)
+		convplug_inst(instdata, dawname, extra_json, nameid)
+	if 'chain_inst' in trackdata:
+		print('[plug-conv] --- InstChain: '+nameid)
+		for trackid in trackdata['chain_inst']:
+			convplug_inst(trackid, dawname, extra_json, nameid)
+
 def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 	global supportedplugins
 	list_vst.listinit('windows')
@@ -238,18 +248,13 @@ def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 					trackdata = cvpj_l['trackdata'][track]
 					if 'type' in trackdata:
 						if trackdata['type'] == 'instrument':
-							if 'instdata' in trackdata:
-								instdata = trackdata['instdata']
-								print('[plug-conv] --- Inst: '+track)
-								convplug_inst(instdata, dawname, extra_json, track)
+							do_inst(trackdata, dawname, extra_json, track)
+
 		if in_type == 'm' or in_type == 'mi':
 			if 'instruments' in cvpj_l:
 				for track in cvpj_l['instruments']:
 					trackdata = cvpj_l['instruments'][track]
-					if 'instdata' in trackdata:
-						instdata = trackdata['instdata']
-						print('[plug-conv] --- Inst: '+track)
-						convplug_inst(instdata, dawname, extra_json, track)
+					do_inst(trackdata, dawname, extra_json, track)
 		if 'fxrack' in cvpj_l:
 			for fxid in cvpj_l['fxrack']:
 				fxiddata = cvpj_l['fxrack'][fxid]

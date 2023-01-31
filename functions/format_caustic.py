@@ -98,9 +98,11 @@ def deconstruct_SEQN(bi_rack, Caustic_Main):
 
 def deconstruct_CCOL(bio_in):
     print('[format-caustic] CCOL |', end=' ')
-    if bio_in.read(4) != b'CCOL':
+    coolcheck = bio_in.read(4)
+    if coolcheck != b'CCOL':
         print('data is not CCOL')
         exit()
+
     CCOL_size = int.from_bytes(bio_in.read(4), "little")
     CCOL_data = bio_in.read(CCOL_size)
     CCOL_chunks = data_bytes.riff_read(CCOL_data, 0)
@@ -117,73 +119,53 @@ def deconstruct_CCOL(bio_in):
 def deconstruct_fx(EFFX_str, l_fxparams):
     fxtype = int.from_bytes(EFFX_str.read(4), "little")
     params = l_fxparams
-    if fxtype == 0: 
-        params['type'] = 'Delay'
+    if fxtype != 4294967295: params['type'] = fxtype
+    if fxtype == 0: #Delay
         params['controls'] = deconstruct_CCOL(EFFX_str)
         EFFX_str.read(4)
-    if fxtype == 1: 
-        params['type'] = 'Reverb'
+    if fxtype == 1: #Reverb
         params['controls'] = deconstruct_CCOL(EFFX_str)
-    if fxtype == 2: 
-        params['type'] = 'Distortion'
+    if fxtype == 2: #Distortion
         params['controls'] = deconstruct_CCOL(EFFX_str)
-    if fxtype == 3: 
-        params['type'] = 'Compresser'
+    if fxtype == 3: #Compresser
         params['controls'] = deconstruct_CCOL(EFFX_str)
         EFFX_str.read(4)
-    if fxtype == 4: 
-        params['type'] = 'Bitcrush'
+    if fxtype == 4: #Bitcrush
         params['controls'] = deconstruct_CCOL(EFFX_str)
-    if fxtype == 5: 
-        params['type'] = 'Flanger'
+    if fxtype == 5: #Flanger
         params['controls'] = deconstruct_CCOL(EFFX_str)
         EFFX_str.read(4)
-    if fxtype == 6: 
-        params['type'] = 'Phaser'
+    if fxtype == 6: #Phaser
         params['controls'] = deconstruct_CCOL(EFFX_str)
-    if fxtype == 7: 
-        params['type'] = 'Chorus'
+    if fxtype == 7: #Chorus
         params['controls'] = deconstruct_CCOL(EFFX_str)
         EFFX_str.read(4)
-    if fxtype == 8: 
-        params['type'] = 'AutoWah'
+    if fxtype == 8: #AutoWah
         params['controls'] = deconstruct_CCOL(EFFX_str)
-    if fxtype == 9: 
-        params['type'] = 'Param EQ'
+    if fxtype == 9: #Param EQ
         params['controls'] = deconstruct_CCOL(EFFX_str)
-    if fxtype == 10: 
-        params['type'] = 'Limiter'
+    if fxtype == 10: #Limiter
         params['controls'] = deconstruct_CCOL(EFFX_str)
-    if fxtype == 11: 
-        params['type'] = 'VInylSim'
+    if fxtype == 11: #VInylSim
         params['controls'] = deconstruct_CCOL(EFFX_str)
-    if fxtype == 12: 
-        params['type'] = 'Comb'
+    if fxtype == 12: #Comb
         params['controls'] = deconstruct_CCOL(EFFX_str)
-    if fxtype == 14: 
-        params['type'] = 'Cab Sim'
+    if fxtype == 14: #Cab Sim
         params['controls'] = deconstruct_CCOL(EFFX_str)
-    if fxtype == 16: 
-        params['type'] = 'StaticFlanger'
+    if fxtype == 16: #StaticFlanger
         params['controls'] = deconstruct_CCOL(EFFX_str)
         EFFX_str.read(4)
-    if fxtype == 17: 
-        params['type'] = 'Filter'
+    if fxtype == 17: #Filter
         params['controls'] = deconstruct_CCOL(EFFX_str)
         EFFX_str.read(4)
-    if fxtype == 18: 
-        params['type'] = 'Octaver'
+    if fxtype == 18: #Octaver
+        params['controls'] = deconstruct_CCOL(EFFX_str)
+    if fxtype == 19: #Vibrato
         params['controls'] = deconstruct_CCOL(EFFX_str)
         EFFX_str.read(4)
-    if fxtype == 19: 
-        params['type'] = 'Vibrato'
+    if fxtype == 20: #Tremolo
         params['controls'] = deconstruct_CCOL(EFFX_str)
-        EFFX_str.read(4)
-    if fxtype == 20: 
-        params['type'] = 'Tremolo'
-        params['controls'] = deconstruct_CCOL(EFFX_str)
-    if fxtype == 21: 
-        params['type'] = 'AutoPan'
+    if fxtype == 21: #AutoPan
         params['controls'] = deconstruct_CCOL(EFFX_str)
 
 def deconstruct_EFFX(bi_rack, Caustic_Main):

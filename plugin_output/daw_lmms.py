@@ -377,7 +377,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid):
 
     print('[output-lmms] Instrument Track')
     print('[output-lmms]       Name: ' + trkJ['name'])
-    if 'fxchain_audio' in trkJ:
+    if 'chain_fx_audio' in trkJ:
         lmms_encode_fxchain(trkX_insttr, trkJ)
     lmms_encode_plugin(trkX_insttr, trkJ)
 
@@ -456,13 +456,13 @@ def lmms_encode_effectslot(fxcX, json_fxslot):
     lmms_encode_effectplugin(fxslotX, json_fxslot)
     return fxslotX
 def lmms_encode_fxchain(xmltag, json_fxchannel):
-    if 'fxchain_audio' in json_fxchannel:
+    if 'chain_fx_audio' in json_fxchannel:
         print('[output-lmms]       Audio FX Chain: ',end='')
         fxcX = ET.SubElement(xmltag, "fxchain")
-        json_fxchain = json_fxchannel['fxchain_audio']
+        json_fxchain = json_fxchannel['chain_fx_audio']
         if 'fxenabled' in json_fxchannel: fxcX.set('enabled', str(json_fxchannel['fxenabled']))
         else: fxcX.set('enabled', str('1'))
-        fxcX.set('numofeffects', str(len(json_fxchannel['fxchain_audio'])))
+        fxcX.set('numofeffects', str(len(json_fxchannel['chain_fx_audio'])))
         for json_fxslot in json_fxchain:
             if json_fxslot['plugin'] == 'native-lmms' or 'vst2':
                 fxslotX = lmms_encode_effectslot(fxcX, json_fxslot)

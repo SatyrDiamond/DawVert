@@ -11,6 +11,9 @@ from functions import data_bytes
 def clamp(n, minn, maxn):
     return max(min(maxn, n), minn)
 
+def utf16encode(text):
+    return text.encode('utf-16le') + b'\x00\x00'
+
 # ------------- make -------------
 def make_flevent(FLdt_bytes, value, data):
     if value <= 63 and value >= 0: # int8
@@ -34,7 +37,7 @@ def make_arrangement(data_FLdt, arrangements):
     for arrangement in arrangements:
         make_flevent(data_FLdt, 99, int(arrangement)) #NewArrangement
         if 'name' in arrangements[arrangement]:
-            make_flevent(data_FLdt, 241, arrangements[arrangement]['name'].encode('utf-16le') + b'\x00\x00') #ArrangementName
+            make_flevent(data_FLdt, 241, utf16encode(arrangements[arrangement]['name'])) #ArrangementName
         placements = arrangements[arrangement]['items']
         BytesIO_arrangement = BytesIO()
         for item in placements:
@@ -69,7 +72,7 @@ def make_timemarkers(data_FLdt, timemarkers):
         else: make_flevent(data_FLdt, 33, 4)
         if 'denominator' in timemarker_item: make_flevent(data_FLdt, 34, timemarker_item['denominator'])
         else: make_flevent(data_FLdt, 34, 4)
-        if 'name' in timemarker_item: make_flevent(data_FLdt, 205, timemarker_item['name'].encode('utf-16le') + b'\x00\x00')
+        if 'name' in timemarker_item: make_flevent(data_FLdt, 205, utf16encode(timemarker_item['name']))
         else: make_flevent(data_FLdt, 205, b'\x20\x00\x00\x00')
 def make_basicparams(data_FLdt, channel):
     basicp_pan = 0
@@ -206,9 +209,9 @@ def make_channels(data_FLdt, channels):
     for channel in channels:
         make_flevent(data_FLdt, 64, int(channel)) #NewChan
         make_flevent(data_FLdt, 21, channels[channel]['type']) #ChanType
-        make_flevent(data_FLdt, 201, channels[channel]['plugin'].encode('utf-16le') + b'\x00\x00') #DefPluginName
+        make_flevent(data_FLdt, 201, utf16encode(channels[channel]['plugin'])) #DefPluginName
         if 'plugindata' in channels[channel]: make_flevent(data_FLdt, 212, channels[channel]['plugindata']) #NewPlugin
-        if 'name' in channels[channel]: make_flevent(data_FLdt, 203, channels[channel]['name'].encode('utf-16le') + b'\x00\x00') #PluginName
+        if 'name' in channels[channel]: make_flevent(data_FLdt, 203, utf16encode(channels[channel]['name'])) #PluginName
         if 'icon' in channels[channel]: make_flevent(data_FLdt, 155, channels[channel]['icon']) #PluginIcon
         if 'color' in channels[channel]: make_flevent(data_FLdt, 128, channels[channel]['color']) #Color
         if 'pluginparams' in channels[channel]: make_flevent(data_FLdt, 213, channels[channel]['pluginparams']) #PluginParams
@@ -310,7 +313,7 @@ def make_channels(data_FLdt, channels):
         make_flevent(data_FLdt, 20, temp_looptype) #LoopType
         if temp_middlenote != 60:
             make_flevent(data_FLdt, 135, temp_middlenote) #MiddleNote
-        if 'samplefilename' in channels[channel]: make_flevent(data_FLdt, 196, channels[channel]['samplefilename'].encode('utf-16le') + b'\x00\x00') #SampleFileName
+        if 'samplefilename' in channels[channel]: make_flevent(data_FLdt, 196, utf16encode(channels[channel]['samplefilename'])) #SampleFileName
         #print(channel)
 def make_patterns(data_FLdt, patterns):
     zero = 0
@@ -380,7 +383,7 @@ def make_patterns(data_FLdt, patterns):
         if 'color' in patternlistdata:
             make_flevent(data_FLdt, 150, patternlistdata['color']) #PatColor
         if 'name' in patternlistdata:
-            make_flevent(data_FLdt, 193, patternlistdata['name'].encode('utf-16le') + b'\x00\x00') #PatName
+            make_flevent(data_FLdt, 193, utf16encode(patternlistdata['name'])) #PatName
 def make_trackinfo(data_FLdt, trackinfo):
     trackinfo_count = 1
     while trackinfo_count < 501:
@@ -438,7 +441,7 @@ def make_trackinfo(data_FLdt, trackinfo):
         BytesIO_trackinfo.seek(0)
         make_flevent(data_FLdt, 238, BytesIO_trackinfo.read())
         if trkname != None: 
-            make_flevent(data_FLdt, 239, trkname.encode('utf-16le') + b'\x00\x00')
+            make_flevent(data_FLdt, 239, utf16encode(trkname))
         trackinfo_count += 1
 def make_mixer(data_FLdt, mixer):
     for i in range(0,127):
@@ -469,15 +472,15 @@ def make_mixer(data_FLdt, mixer):
             if 'inchannum' in fxparams: fltrki_inchannum = fxparams['inchannum']
             if 'outchannum' in fxparams: fltrki_outchannum = fxparams['outchannum']
             if 'name' in fxparams: 
-                make_flevent(data_FLdt, 204, fxparams['name'].encode('utf-16le') + b'\x00\x00')
+                make_flevent(data_FLdt, 204, utf16encode(fxparams['name']))
         make_flevent(data_FLdt, 236, fltrki_data)
         for fltrki_slot in fltrki_slots:
             fxslotL = fltrki_slots[fltrki_slot]
             if fxslotL != None:
                 #print(fxslotL)
-                make_flevent(data_FLdt, 201, fxslotL['plugin'].encode('utf-16le') + b'\x00\x00')
+                make_flevent(data_FLdt, 201, utf16encode(fxslotL['plugin']))
                 make_flevent(data_FLdt, 212, fxslotL['data'])
-                if 'name' in fxslotL: make_flevent(data_FLdt, 203, fxslotL['name'].encode('utf-16le') + b'\x00\x00')
+                if 'name' in fxslotL: make_flevent(data_FLdt, 203, utf16encode(fxslotL['name']))
                 if 'icon' in fxslotL: make_flevent(data_FLdt, 155, fxslotL['icon'])
                 if 'color' in fxslotL: make_flevent(data_FLdt, 128, fxslotL['color'])
                 make_flevent(data_FLdt, 213, fxslotL['pluginparams'])
@@ -526,12 +529,12 @@ def make(FLP_Data, outputfile):
     make_flevent(data_FLdt, 23, 1) #PanVolumeTab
     make_flevent(data_FLdt, 30, 1) #TruncateClipNotes
     make_flevent(data_FLdt, 10, int(FLP_Data['FL_Main']['ShowInfo'])) #ShowInfo
-    make_flevent(data_FLdt, 194, FLP_Data['FL_Main']['Title'].encode('utf-16le') + b'\x00\x00')
-    make_flevent(data_FLdt, 206, FLP_Data['FL_Main']['Genre'].encode('utf-16le') + b'\x00\x00')
-    make_flevent(data_FLdt, 207, FLP_Data['FL_Main']['Author'].encode('utf-16le') + b'\x00\x00')
-    make_flevent(data_FLdt, 202, FLP_Data['FL_Main']['ProjectDataPath'].encode('utf-16le') + b'\x00\x00')
-    make_flevent(data_FLdt, 195, FLP_Data['FL_Main']['Comment'].encode('utf-16le') + b'\x00\x00')
-    if 'URL' in FLP_Data['FL_Main']: make_flevent(data_FLdt, 197, FLP_Data['FL_Main']['URL'].encode('utf-16le') + b'\x00\x00')
+    make_flevent(data_FLdt, 194, utf16encode(FLP_Data['FL_Main']['Title']))
+    make_flevent(data_FLdt, 206, utf16encode(FLP_Data['FL_Main']['Genre']))
+    make_flevent(data_FLdt, 207, utf16encode(FLP_Data['FL_Main']['Author']))
+    make_flevent(data_FLdt, 202, utf16encode(FLP_Data['FL_Main']['ProjectDataPath']))
+    make_flevent(data_FLdt, 195, utf16encode(FLP_Data['FL_Main']['Comment']))
+    if 'URL' in FLP_Data['FL_Main']: make_flevent(data_FLdt, 197, utf16encode((FLP_Data['FL_Main']['URL'])))
 
     #for name in FLP_Data['FL_FilterGroups']:
     #    make_flevent(data_FLdt, 231, name.encode('utf-16le') + b'\x00\x00')

@@ -79,6 +79,7 @@ class input_cvpj_f(plugin_input.base):
             tracknum += 1
 
         cvpj_l = {}
+        cvpj_l['indexed'] = False
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['bpm'] = mmc_bpm

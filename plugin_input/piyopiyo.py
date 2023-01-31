@@ -135,6 +135,7 @@ class input_pms(plugin_input.base):
         parsetrack(notes3, 'piyopiyo_note3', 'Note #3', pmdtrackdata[2][3]/250, samplefolder, 3)
         parsetrack(notesP, 'piyopiyo_perc', 'Drums', TrackPVol/250, samplefolder, None)
         cvpj_l = {}
+        cvpj_l['indexed'] = False
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['bpm'] = bpm

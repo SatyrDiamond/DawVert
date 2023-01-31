@@ -219,6 +219,7 @@ class input_flp(plugin_input.base):
             if tm_type == 10: timemarkerJ['type'] = 'punchout'
             timemarkersJ.append(timemarkerJ)
 
+        rootJ['indexed'] = True
         rootJ['use_instrack'] = False
         rootJ['use_fxrack'] = True
         rootJ['instrumentsorder'] = instrumentsorder

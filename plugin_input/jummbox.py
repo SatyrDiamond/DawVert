@@ -75,20 +75,22 @@ def calcval(value):
     global jummbox_ticksPerBeat
     return (value*(jummbox_beatsPerBar/jummbox_ticksPerBeat))/2
 
-def parse_instrument(cvpj_inst, bb_instrument, bb_type):
-    cvpj_inst['instdata'] = {}
-    cvpj_inst['instdata']['plugin'] = 'jummbox-single'
-    cvpj_inst['instdata']['plugindata'] = {}
-    cvpj_inst['instdata']['plugindata']['type'] = bb_type
-    cvpj_inst['instdata']['plugindata']['data'] = bb_instrument
-
+def parse_instrument(cvpj_chain, bb_instrument, bb_type):
     bb_type = bb_instrument['type']
     bb_volume = bb_instrument['volume']
+
+    instslot = {}
+    instslot['plugin'] = 'native-jummbox'
+    instslot['plugindata'] = {}
+    instslot['plugindata']['type'] = bb_type
+    instslot['plugindata']['data'] = bb_instrument
+    instslot['name'] = inst_names[bb_type]
+    instslot["vol"] = (bb_volume/50)+0.5
     if 'pan' in bb_instrument: 
         bb_pan = bb_instrument['pan']
-        cvpj_inst["pan"] = bb_pan/100
-    cvpj_inst['name'] = inst_names[bb_type]
-    cvpj_inst["vol"] = (bb_volume/50)+0.5
+        instslot["pan"] = bb_pan/100
+
+    cvpj_chain.append(instslot)
 
 def parse_channel(channeldata, channum):
     global cvpj_l_instruments
@@ -117,7 +119,9 @@ def parse_channel(channeldata, channum):
         cvpj_inst["pan"] = 0.0
         cvpj_inst['name'] = 'Channel '+str(channum)
         cvpj_inst["vol"] = 1.0
-        parse_instrument(cvpj_inst, bb_instruments[0], bb_type)
+        cvpj_inst["chain_inst"] = []
+        for bb_instrument in bb_instruments:
+            parse_instrument(cvpj_inst["chain_inst"], bb_instrument, bb_type)
         if bb_color != None: cvpj_inst['color'] = bb_color
         cvpj_l_instruments[str(channum)] = cvpj_inst
         cvpj_l_instrumentsorder.append(str(channum))

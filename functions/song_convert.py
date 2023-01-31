@@ -11,7 +11,7 @@ import json
 def overlap(start1, end1, start2, end2):
     return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
 
-# ---------------------------------- Regular+FXMixer to Multiple ----------------------------------
+# --------------------------------------------------------------------
 
 def trackfx2fxrack(cvpj_l, cvpjtype):
     if cvpj_l['use_fxrack'] == False:
@@ -38,6 +38,33 @@ def trackfx2fxrack(cvpj_l, cvpjtype):
             cvpj_l['fxrack'][str(fxnum)] = fxtrack
             fxnum += 1
 
+def instrack2singleinst(cvpj_l, cvpjtype):
+    if cvpj_l['use_instrack'] == True:
+        fxnum = 1
+        if cvpjtype == 's':
+            c_orderingdata = cvpj_l['trackordering']
+            c_trackdata = cvpj_l['trackdata']
+        if cvpjtype == 'm':
+            c_orderingdata = cvpj_l['instrumentsorder']
+            c_trackdata = cvpj_l['instruments']
+
+        for trackid in c_trackdata:
+            chain_inst = c_trackdata[trackid]['chain_inst']
+            c_trackdata[trackid]["instdata"] = {}
+            if len(chain_inst) == 0:
+                c_trackdata[trackid]["instdata"]["plugin"] = "none"
+                c_trackdata[trackid]["instdata"]["plugindata"] = {}
+            elif len(chain_inst) == 1:
+                c_trackdata[trackid]["instdata"] = chain_inst[0]
+                if 'vol' in chain_inst[0]: 
+                    if 'vol' in c_trackdata[trackid]:
+                        c_trackdata[trackid]['vol'] = c_trackdata[trackid]['vol'] * chain_inst[0]['vol']
+                    else:
+                        c_trackdata[trackid]['vol'] = chain_inst[0]['vol']
+            else:
+                c_trackdata[trackid]["instdata"]["plugin"] = "none"
+                c_trackdata[trackid]["instdata"]["plugindata"] = {}
+        cvpj_l['use_instrack'] == False
 
 # ---------------------------------- Regular+FXMixer to Multiple ----------------------------------
 

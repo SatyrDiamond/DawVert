@@ -57,6 +57,7 @@ class output_cvpjs(plugin_output.base):
         FLP_Data['FL_FilterGroups'] = []
         FL_FilterGroups = FLP_Data['FL_FilterGroups']
 
+        song_convert.instrack2singleinst(projJ, 'm')
 
         ppq = 960
         FL_Main['ppq'] = ppq
@@ -134,7 +135,7 @@ class output_cvpjs(plugin_output.base):
             if 'pan' in CVPJ_Data: T_Main['pan'] = CVPJ_Data['pan']
             if 'name' in CVPJ_Data: T_Main['name'] = CVPJ_Data['name']
             if 'enabled' in CVPJ_Data: T_Main['enabled'] = CVPJ_Data['enabled']
-            if 'chain_fx_audio' in CVPJ_Data: T_Main['fxchannel'] = CVPJ_Data['chain_fx_audio']
+            if 'fxrack_channel' in CVPJ_Data: T_Main['fxchannel'] = CVPJ_Data['fxrack_channel']
             if 'filtergroup' in CVPJ_Data:
                 if CVPJ_Data['filtergroup'] in filtergroups_id:
                     T_Main['filtergroup'] = filtergroups_id[CVPJ_Data['filtergroup']]

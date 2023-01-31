@@ -290,6 +290,7 @@ class input_cvpj_r(plugin_input.base):
         automation_main = {}
         automation_main['bpm'] = [tempo_placement]
 
+        cvpj_l['indexed'] = True
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['automation'] = {}

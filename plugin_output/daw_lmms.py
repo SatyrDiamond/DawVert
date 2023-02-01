@@ -307,47 +307,44 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid):
     trkX_insttr.set('vol', "100")
     setvalue(trkJ, 'vol', trkX_insttr, 'vol', 1, auto_nameid, 'track')
     setvalue(trkJ, 'pan', trkX_insttr, 'pan', 0, auto_nameid, 'track')
-    if 'notefx' in instJ:
-        instJ_notefx = instJ['notefx']
-        if 'arpeggiator' in instJ_notefx:
-            trkX_arpeggiator = ET.SubElement(trkX_insttr, "arpeggiator")
-            json_arpeggiator = instJ_notefx['arpeggiator']
-            trkX_arpeggiator.set('arpgate', str(json_arpeggiator['gate']))
-            trkX_arpeggiator.set('arprange', str(json_arpeggiator['arprange']))
-            trkX_arpeggiator.set('arp-enabled', str(json_arpeggiator['enabled']))
-            trkX_arpeggiator.set('arpmode', str(json_arpeggiator['mode']))
-            trkX_arpeggiator.set('arpdir', str(arpdirection[json_arpeggiator['direction']]))
-            trkX_arpeggiator.set('arpskip', str(oneto100(json_arpeggiator['skiprate'])))
-            arpvalue = json_arpeggiator['time']['value']
-            arptype = json_arpeggiator['time']['type']
-            if arptype == 'ms': trkX_arpeggiator.set('arptime', str(arpvalue))
-            if arptype == 'step': trkX_arpeggiator.set('arptime', str((arpvalue*(1000*60/bpm))/4))
-            trkX_arpeggiator.set('arpmiss', str(json_arpeggiator['miss']))
-            trkX_arpeggiator.set('arpcycle', str(json_arpeggiator['cyclenotes']))
-            if json_arpeggiator['chord'] in chord: trkX_arpeggiator.set('arp', str(chord[json_arpeggiator['chord']]))
-            else: trkX_arpeggiator.set('arp', '0')
-        if 'chordcreator' in instJ_notefx:
-            trkX_chordcreator = ET.SubElement(trkX_insttr, "chordcreator")
-            trkJ_chordcreator = instJ_notefx['chordcreator']
-            trkX_chordcreator.set('chord-enabled', str(trkJ_chordcreator['enabled']))
-            trkX_chordcreator.set('chordrange', str(trkJ_chordcreator['chordrange']))
-            if trkJ_chordcreator['chord'] in chord: trkX_chordcreator.set('chord', str(chord[trkJ_chordcreator['chord']]))
-            else: trkX_chordcreator.set('chord', '0')
-        if 'pitch' in instJ_notefx:
-            if 'semitones' in instJ_notefx['pitch']:
-                middlenote = instJ_notefx['pitch']['semitones']
-                if instplugin == 'sampler': middlenote += 3
-                if instplugin == 'soundfont2': middlenote += 12
-                trkX_insttr.set('basenote', str(middlenote+57))
-            else: trkX_insttr.set('basenote', str(57))
-        else: 
-            if instplugin == 'sampler': trkX_insttr.set('basenote', str(60))
-            elif instplugin == 'soundfont2': trkX_insttr.set('basenote', str(69))
-            else: trkX_insttr.set('basenote', str(57))
-    else: 
-        if instplugin == 'sampler': trkX_insttr.set('basenote', str(60))
-        elif instplugin == 'soundfont2': trkX_insttr.set('basenote', str(69))
-        else: trkX_insttr.set('basenote', str(57))
+
+    middlenote = 0
+
+    if 'chain_fx_note' in trkJ:
+        trkJ_notefx = trkJ['chain_fx_note']
+        for trkJ_notefxslot in trkJ_notefx:
+            trkJ_plugindata = trkJ_notefxslot['plugindata']
+            if trkJ_notefxslot['plugin'] == 'native-lmms':
+                trkJ_nativelmms_name = trkJ_plugindata['name']
+                trkJ_nativelmms_data = trkJ_plugindata['data']
+                if trkJ_nativelmms_name == 'arpeggiator':
+                    trkX_arpeggiator = ET.SubElement(trkX_insttr, "arpeggiator")
+                    trkX_arpeggiator.set('arp-enabled', str(trkJ_notefxslot['enabled']))
+                    trkX_arpeggiator.set('arpgate', str(trkJ_nativelmms_data['gate']))
+                    trkX_arpeggiator.set('arprange', str(trkJ_nativelmms_data['arprange']))
+                    trkX_arpeggiator.set('arpmode', str(trkJ_nativelmms_data['mode']))
+                    trkX_arpeggiator.set('arpdir', str(arpdirection[trkJ_nativelmms_data['direction']]))
+                    trkX_arpeggiator.set('arpskip', str(oneto100(trkJ_nativelmms_data['skiprate'])))
+                    trkX_arpeggiator.set('arptime', str(trkJ_nativelmms_data['time']))
+                    trkX_arpeggiator.set('arpmiss', str(trkJ_nativelmms_data['miss']))
+                    trkX_arpeggiator.set('arpcycle', str(trkJ_nativelmms_data['cyclenotes']))
+                    if trkJ_nativelmms_data['chord'] in chord: trkX_arpeggiator.set('arp', str(chord[trkJ_nativelmms_data['chord']]))
+                    else: trkX_arpeggiator.set('arp', '0')
+                if trkJ_nativelmms_name == 'chordcreator':
+                    trkX_chordcreator = ET.SubElement(trkX_insttr, "chordcreator")
+                    trkX_chordcreator.set('chord-enabled', str(trkJ_notefxslot['enabled']))
+                    trkX_chordcreator.set('chordrange', str(trkJ_nativelmms_data['chordrange']))
+                    if trkJ_nativelmms_data['chord'] in chord: trkX_chordcreator.set('chord', str(chord[trkJ_nativelmms_data['chord']]))
+                    else: trkX_chordcreator.set('chord', '0')
+
+            if trkJ_notefxslot['plugin'] == 'pitch':
+                if trkJ_notefxslot['enabled'] == 1:
+                    if 'semitones' in trkJ_plugindata:
+                        middlenote += trkJ_plugindata['semitones']
+
+    if instplugin == 'sampler': middlenote += 3
+    if instplugin == 'soundfont2': middlenote += 12
+    trkX_insttr.set('basenote', str(middlenote+57))
 
     trkX_midiport = ET.SubElement(trkX_insttr, "midiport")
     if 'midi' in instJ:

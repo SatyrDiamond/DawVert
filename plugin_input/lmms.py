@@ -392,43 +392,47 @@ def lmms_decode_inst_track(trkX, name):
     # notefx
     cvpj_l_track_inst['pitch'] = float(lmms_getvalue(trkX_insttr, 'pitch', 0, ['track', name, 'pitch']))
 
-    xml_a_chordcreator = trkX_insttr.findall('chordcreator')
-    if len(xml_a_chordcreator) != 0:
-        trkX_chordcreator = xml_a_chordcreator[0]
-        cvpj_l_inst_notefx['chordcreator'] = {}
-        cvpj_l_inst_notefx['chordcreator']['enabled'] = int(trkX_chordcreator.get('chord-enabled'))
-        cvpj_l_inst_notefx['chordcreator']['chordrange'] = int(trkX_chordcreator.get('chordrange'))
-        cvpj_l_inst_notefx['chordcreator']['chord'] = ','.join(str(item) for item in chord[int(trkX_chordcreator.get('chord'))])
-
-    xml_a_chordcreator = trkX_insttr.findall('arpeggiator')
-    if len(xml_a_chordcreator) != 0:
-        trkX_arpeggiator = xml_a_chordcreator[0]
-        cvpj_l_inst_notefx['arpeggiator'] = {}
-        cvpj_l_inst_notefx['arpeggiator']['gate'] = int(trkX_arpeggiator.get('arpgate'))
-        cvpj_l_inst_notefx['arpeggiator']['arprange'] = int(trkX_arpeggiator.get('arprange'))
-        cvpj_l_inst_notefx['arpeggiator']['enabled'] = int(trkX_arpeggiator.get('arp-enabled'))
-        cvpj_l_inst_notefx['arpeggiator']['mode'] = int(trkX_arpeggiator.get('arpmode'))
-        cvpj_l_inst_notefx['arpeggiator']['direction'] = arpdirection[int(trkX_arpeggiator.get('arpdir'))]
-        cvpj_l_inst_notefx['arpeggiator']['miss'] = int(trkX_arpeggiator.get('arpmiss'))
-        cvpj_l_inst_notefx['arpeggiator']['skiprate'] = hundredto1(int(trkX_arpeggiator.get('arpskip')))
-        cvpj_l_inst_notefx['arpeggiator']['time'] = {'value': float(trkX_arpeggiator.get('arptime')), 'type': 'ms'}
-        cvpj_l_inst_notefx['arpeggiator']['missrate'] = hundredto1(int(trkX_arpeggiator.get('arpmiss')))
-        cvpj_l_inst_notefx['arpeggiator']['cyclenotes'] = int(trkX_arpeggiator.get('arpcycle'))
-        cvpj_l_inst_notefx['arpeggiator']['chord'] = ','.join(str(item) for item in chord[int(trkX_arpeggiator.get('arp'))])
+    cvpj_l_track['chain_fx_note'] = []
 
     cvpj_l_track_plugindata = cvpj_l_track_inst['plugindata']
     lmms_decodeplugin(trkX_insttr, cvpj_l_track_plugindata, cvpj_l_inst, cvpj_l_track)
-
-    xml_a_chordcreator = trkX_insttr.findall('arpeggiator')
 
     if 'basenote' in trkX_insttr.attrib:
         basenote = int(trkX_insttr.get('basenote'))-57
         noteoffset = 0
         if cvpj_l_track_inst['plugin'] == 'sampler': noteoffset = 3
         if cvpj_l_track_inst['plugin'] == 'soundfont2': noteoffset = 12
+        middlenote = basenote - noteoffset
+        if middlenote != 0:
+            cvpj_l_track['chain_fx_note'].append({"enabled": 1, "plugin": "pitch", "plugindata": {"semitones": middlenote}})
 
-        cvpj_l_inst_notefx['pitch'] = {}
-        cvpj_l_inst_notefx['pitch']['semitones'] = basenote - noteoffset
+    xml_a_arpeggiator = trkX_insttr.findall('arpeggiator')
+    if len(xml_a_arpeggiator) != 0:
+        trkX_arpeggiator = xml_a_arpeggiator[0]
+        cvpj_l_arpeggiator_enabled = int(trkX_arpeggiator.get('arp-enabled'))
+        cvpj_l_arpeggiator = {}
+        cvpj_l_arpeggiator['gate'] = int(trkX_arpeggiator.get('arpgate'))
+        cvpj_l_arpeggiator['arprange'] = int(trkX_arpeggiator.get('arprange'))
+        cvpj_l_arpeggiator['mode'] = int(trkX_arpeggiator.get('arpmode'))
+        cvpj_l_arpeggiator['direction'] = arpdirection[int(trkX_arpeggiator.get('arpdir'))]
+        cvpj_l_arpeggiator['miss'] = int(trkX_arpeggiator.get('arpmiss'))
+        cvpj_l_arpeggiator['skiprate'] = hundredto1(int(trkX_arpeggiator.get('arpskip')))
+        cvpj_l_arpeggiator['time'] = float(trkX_arpeggiator.get('arptime'))
+        cvpj_l_arpeggiator['missrate'] = hundredto1(int(trkX_arpeggiator.get('arpmiss')))
+        cvpj_l_arpeggiator['cyclenotes'] = int(trkX_arpeggiator.get('arpcycle'))
+        cvpj_l_arpeggiator['chord'] = ','.join(str(item) for item in chord[int(trkX_arpeggiator.get('arp'))])
+        cvpj_l_arpeggiator_plugindata = {"name": "arpeggiator", "data": cvpj_l_arpeggiator}
+        cvpj_l_track['chain_fx_note'].append({"enabled": cvpj_l_arpeggiator_enabled, "plugin": "native-lmms", "plugindata": cvpj_l_arpeggiator_plugindata})
+
+    xml_a_chordcreator = trkX_insttr.findall('chordcreator')
+    if len(xml_a_chordcreator) != 0:
+        trkX_chordcreator = xml_a_chordcreator[0]
+        cvpj_l_chordcreator_enabled = int(trkX_chordcreator.get('chord-enabled'))
+        cvpj_l_chordcreator = {}
+        cvpj_l_chordcreator['chordrange'] = int(trkX_chordcreator.get('chordrange'))
+        cvpj_l_chordcreator['chord'] = ','.join(str(item) for item in chord[int(trkX_chordcreator.get('chord'))])
+        cvpj_l_chordcreator_plugindata = {"name": "chordcreator", "data": cvpj_l_chordcreator}
+        cvpj_l_track['chain_fx_note'].append({"enabled": cvpj_l_chordcreator_enabled, "plugin": "native-lmms", "plugindata": cvpj_l_chordcreator_plugindata})
 
     cvpj_l_track['placements'] = lmms_decode_nlplacements(trkX)
 

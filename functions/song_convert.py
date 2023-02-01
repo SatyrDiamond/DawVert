@@ -86,7 +86,7 @@ def r2m_makeplaylistrow(cvpjJ, plnum, trackid, placements, m_name, m_color, l_na
     if m_color != None: playlistrow['color'] = m_color
     elif l_color != None: playlistrow['color'] = l_color
 
-def r2m(song, indexed):
+def r2m(song):
     print('[song-convert] Converting from Regular+FXMixer > Multiple')
     cvpj_proj = json.loads(song)
     if 'trackordering' not in cvpj_proj:
@@ -216,6 +216,37 @@ def ri2mi(song):
                 if singletrack_laned == 0: plnum += 1
     return json.dumps(cvpj_proj)
 
+# ---------------------------------- RegularIndexed to Regular ----------------------------------
+def ri2r_fromindex2notelist(placement, notelistindex):
+    fromindex = placement['fromindex']
+    if fromindex in notelistindex:
+        nle_data = notelistindex[fromindex]
+        placement['notelist'] = nle_data['notelist']
+        if 'name' in nle_data: placement['name'] = nle_data['name']
+        if 'color' in nle_data: placement['color'] = nle_data['color']
+        del placement['fromindex']
+    else:
+        placement['notelist'] = []
+
+
+def ri2r(song):
+    print('[song-convert] Converting from RegularIndexed > MultipleIndexed')
+    cvpj_proj = json.loads(song)
+    if 'trackordering' not in cvpj_proj: print('[error] trackordering not found')
+    t_s_trackordering = cvpj_proj['trackordering']
+    t_s_trackdata = cvpj_proj['trackdata']
+
+    for trackid in t_s_trackordering:
+        if trackid in t_s_trackdata:
+            singletrack_data = t_s_trackdata[trackid]
+            notelistindex = singletrack_data['notelistindex']
+            placements = singletrack_data['placements']
+            if 'placements' in singletrack_data:
+                for s_pl in singletrack_data['placements']:
+                    ri2r_fromindex2notelist(s_pl, notelistindex)
+            del singletrack_data['notelistindex']
+
+    return json.dumps(cvpj_proj)
 
 # ---------------------------------- Multiple to Regular ----------------------------------
 

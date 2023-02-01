@@ -300,7 +300,6 @@ class input_notessimo_v2(plugin_input.base):
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = text_songname
         cvpj_l['info']['author'] = text_songauthor
-        cvpj_l['indexed'] = True
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
         cvpj_l['fxrack'] = cvpj_l_fxrack

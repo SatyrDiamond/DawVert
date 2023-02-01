@@ -230,7 +230,6 @@ class input_midi(plugin_input.base):
             fxdata['color'] = [0.3, 0.3, 0.3]
             fxdata["name"] = "Channel "+str(midi_channum+1)
 
-        cvpj_l['indexed'] = False
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
         cvpj_l['timemarkers'] = cvpj_l_timemarkers

@@ -19,7 +19,7 @@
 | M-I | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | 
 | M-I | ```deflemask``` | DefleMask | ```.dmf``` | ✔️ |
 | M-I | ```ceol``` | Bosca Ceoil | ```.txt``` | ❌ | 
-| M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
+| R-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
 | M-I | ```pixitracker``` | PixiTracker | ```.piximod``` | ✔️ | 
 | M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ |
 | M | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ❌ |
@@ -31,7 +31,7 @@
 | DataType | Short Name | Name | Ext | Autodetect | 
 | --- | --- | :--- | :--- | :--- |
 | M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
-| M-I | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
+| R-I | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
 | M | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ❌ | 
 | M | ```onlineseq``` | Online Sequencer | ```.sequence``` | ❌ | 
 | M | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 

@@ -133,6 +133,7 @@ if in_type == 'r' and out_type == 'm': typeconvsupported = True
 if in_type == 'r' and out_type == 'mi': typeconvsupported = True
 
 if in_type == 'ri' and out_type == 'mi': typeconvsupported = True
+if in_type == 'ri' and out_type == 'r': typeconvsupported = True
 
 if in_type == 'm' and out_type == 'mi': typeconvsupported = True
 if in_type == 'm' and out_type == 'r': typeconvsupported = True
@@ -142,6 +143,7 @@ if in_type == 'mi' and out_type == 'r': typeconvsupported = True
 
 if typeconvsupported == False:
 	print('[info] type Conversion from ' + typelist[in_type] + ' to ' + typelist[out_type] + ' not supported.')
+	raise Exception('type Conversion from ' + typelist[in_type] + ' to ' + typelist[out_type] + ' not supported.')
 	exit()
 
 # --------- Parse to List
@@ -161,6 +163,9 @@ print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 
 if in_type == 'ri' and out_type == 'mi':
 	CVPJ_j = song_convert.ri2mi(CVPJ_j)
+
+if in_type == 'ri' and out_type == 'r':
+	CVPJ_j = song_convert.ri2r(CVPJ_j)
 
 if in_type == 'm' and out_type == 'mi': 
 	CVPJ_j = song_convert.m2mi(CVPJ_j)

@@ -32,6 +32,7 @@ if args.samplefolder != None: extra_json['samplefolder'] = args.samplefolder
 
 typelist = {}
 typelist['r'] = 'Regular'
+typelist['ri'] = 'RegularIndexed'
 typelist['m'] = 'Multiple'
 typelist['mi'] = 'MultipleIndexed'
 typelist['debug'] = 'debug'
@@ -128,19 +129,16 @@ typeconvsupported = False
 if in_type == out_type: typeconvsupported = True
 if out_type == 'debug': typeconvsupported = True
 
-if in_type == 's' and out_type == 'r': typeconvsupported = True
-
-if in_type == 'm' and out_type == 'mi': typeconvsupported = True
-if in_type == 'm' and out_type == 'r': typeconvsupported = True
-if in_type == 'm' and out_type == 's': typeconvsupported = True
-
-if in_type == 'r' and out_type == 's': typeconvsupported = True
 if in_type == 'r' and out_type == 'm': typeconvsupported = True
 if in_type == 'r' and out_type == 'mi': typeconvsupported = True
 
+if in_type == 'ri' and out_type == 'mi': typeconvsupported = True
+
+if in_type == 'm' and out_type == 'mi': typeconvsupported = True
+if in_type == 'm' and out_type == 'r': typeconvsupported = True
+
 if in_type == 'mi' and out_type == 'm': typeconvsupported = True
 if in_type == 'mi' and out_type == 'r': typeconvsupported = True
-if in_type == 'mi' and out_type == 's': typeconvsupported = True
 
 if typeconvsupported == False:
 	print('[info] type Conversion from ' + typelist[in_type] + ' to ' + typelist[out_type] + ' not supported.')
@@ -160,6 +158,9 @@ if CVPJ_C != None: CVPJ_j = CVPJ_C
 # --------- Convert Type -- mi <> m <> r
 
 print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
+
+if in_type == 'ri' and out_type == 'mi':
+	CVPJ_j = song_convert.ri2mi(CVPJ_j)
 
 if in_type == 'm' and out_type == 'mi': 
 	CVPJ_j = song_convert.m2mi(CVPJ_j)

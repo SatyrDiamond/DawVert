@@ -191,6 +191,7 @@ class input_mod(plugin_input.base):
         print("[input-mod] Patterns: " + str(mod_num_patterns))
         mod_num_channels = 4
 
+        if mod_inst_tag == '1CHN': mod_num_channels = 1
         if mod_inst_tag == '6CHN': mod_num_channels = 6
         if mod_inst_tag == '8CHN': mod_num_channels = 8
         if mod_inst_tag == 'CD81': mod_num_channels = 8

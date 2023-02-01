@@ -100,7 +100,7 @@ class input_cvpj_r(plugin_input.base):
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'caustic'
     def getname(self): return 'Caustic 3'
-    def gettype(self): return 'mi'
+    def gettype(self): return 'ri'
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         CausticData = format_caustic.deconstruct_main(input_file)
@@ -110,8 +110,8 @@ class input_cvpj_r(plugin_input.base):
         EFFX = CausticData['EFFX']
 
         cvpj_l = {}
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
+        cvpj_l_trackdata = {}
+        cvpj_l_trackordering = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
 
@@ -124,30 +124,33 @@ class input_cvpj_r(plugin_input.base):
             machnum += 1
             plnum += 1
 
-            machid = 'Mach'+str(machnum)
-
-            if machine['id'] != 'NULL' and machine['id'] != 'MDLR':
-                if 'patterns' in machine:
-                    patterns = machine['patterns']
-                    for pattern in patterns:
-                        patid = 'Caustic_'+machid+'_'+pattern
-                        causticpattern = patterns[pattern]
-                        notelist = parse_notelist(causticpattern, machid)
-                        if notelist != []: 
-                            cvpj_l_notelistindex[patid] = {}
-                            cvpj_l_notelistindex[patid]['name'] = pattern+' ('+machid+')'
-                            cvpj_l_notelistindex[patid]['color'] = caustic_instcolors[machine['id']]
-                            cvpj_l_notelistindex[patid]['notelist'] = notelist
+            machid = str(machnum)
 
             cvpj_inst = {}
             cvpj_inst["enabled"] = 1
             cvpj_inst["instdata"] = {}
+            cvpj_inst["notelistindex"] = {}
+            cvpj_inst["placements"] = []
+            cvpj_inst["type"] = 'instrument'
             cvpj_instdata = cvpj_inst["instdata"]
             if 'name' in machine: cvpj_inst["name"] = machine['name']
             else: cvpj_inst["name"] = caustic_instnames[machine['id']]
             cvpj_inst["color"] = caustic_instcolors[machine['id']]
             cvpj_inst["pan"] = 0.0
             cvpj_inst["vol"] = 1.0
+
+            if machine['id'] != 'NULL' and machine['id'] != 'MDLR':
+                if 'patterns' in machine:
+                    patterns = machine['patterns']
+                    for pattern in patterns:
+                        patid = pattern
+                        causticpattern = patterns[pattern]
+                        notelist = parse_notelist(causticpattern, machid)
+                        if notelist != []: 
+                            cvpj_inst["notelistindex"][patid] = {}
+                            cvpj_inst["notelistindex"][patid]['name'] = pattern
+                            cvpj_inst["notelistindex"][patid]['notelist'] = notelist
+
 
             cvpj_instdata['plugindata'] = {}
             plugindata = cvpj_instdata['plugindata']
@@ -251,12 +254,8 @@ class input_cvpj_r(plugin_input.base):
             else:
                 cvpj_instdata['plugin'] = 'none'
 
-            cvpj_l_instruments[machid] = cvpj_inst
-            cvpj_l_instrumentsorder.append(machid)
-            cvpj_l_playlist[str(plnum)] = {}
-            cvpj_l_playlist[str(plnum)]["name"] = caustic_instnames[machine['id']]
-            cvpj_l_playlist[str(plnum)]["color"] = caustic_instcolors[machine['id']]
-            cvpj_l_playlist[str(plnum)]["placements"] = []
+            cvpj_l_trackdata[machid] = cvpj_inst
+            cvpj_l_trackordering.append(machid)
 
         for SEQNe in SEQN:
             SEQNe_mach = SEQNe[0]+1
@@ -273,9 +272,8 @@ class input_cvpj_r(plugin_input.base):
                 pl_placement = {}
                 pl_placement['position'] = SEQNe_pos
                 pl_placement['duration'] = SEQNe_len
-                pl_placement['type'] = 'instruments'
-                pl_placement['fromindex'] = 'Caustic_Mach'+str(SEQNe_mach)+'_'+SEQNe_patlet+str(SEQNe_patnum+1)
-                cvpj_l_playlist[str(SEQNe_mach)]["placements"].append(pl_placement)
+                pl_placement['fromindex'] = SEQNe_patlet+str(SEQNe_patnum+1)
+                cvpj_l_trackdata[str(SEQNe_mach)]["placements"].append(pl_placement)
 
         tempo_placement = {"position": 0}
 
@@ -290,15 +288,12 @@ class input_cvpj_r(plugin_input.base):
         automation_main = {}
         automation_main['bpm'] = [tempo_placement]
 
-        cvpj_l['indexed'] = True
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['automation'] = {}
         cvpj_l['automation']['main'] = automation_main
-        cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['instruments'] = cvpj_l_instruments
-        cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
-        cvpj_l['playlist'] = cvpj_l_playlist
+        cvpj_l['trackdata'] = cvpj_l_trackdata
+        cvpj_l['trackordering'] = cvpj_l_trackordering
         cvpj_l['bpm'] = CausticData['Tempo']
         cvpj_l['timesig_numerator'] = CausticData['Numerator']
         cvpj_l['timesig_denominator'] = 4

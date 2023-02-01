@@ -163,7 +163,6 @@ print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 
 if in_type == 'ri' and out_type == 'mi':
 	CVPJ_j = song_convert.ri2mi(CVPJ_j)
-
 if in_type == 'ri' and out_type == 'r':
 	CVPJ_j = song_convert.ri2r(CVPJ_j)
 

@@ -65,11 +65,11 @@ class input_flp(plugin_input.base):
                 singleinstdata['enabled'] = channeldata['enabled']
                 singleinstdata['fxrack_channel'] = channeldata['fxchannel']
                 #singleinstdata['filtergroup'] = 'FLFilterGroup_'+str(channeldata['filtergroup'])
-                middlenote = 0
-                if 'middlenote' in channeldata: middlenote = channeldata['middlenote'] - 60
-                singleinstdata['instdata']['notefx'] = {}
-                singleinstdata['instdata']['notefx']['pitch'] = {}
-                singleinstdata['instdata']['notefx']['pitch']['semitones'] = middlenote
+                singleinstdata['chain_fx_note'] = []
+                if 'middlenote' in channeldata: 
+                    middlenote = channeldata['middlenote'] - 60
+                    singleinstdata['chain_fx_note'].append({"enabled": 1, "plugin": "pitch", "plugindata": {"semitones": middlenote}})
+                
                 singleinstdata['instdata']['pitch'] = channeldata['pitch']
                 singleinstdata['instdata']['usemasterpitch'] = channeldata['main_pitch']
                 if 'name' in channeldata: singleinstdata['name'] = channeldata['name']

@@ -66,7 +66,7 @@ def instrack2singleinst(cvpj_l, cvpjtype):
                 c_trackdata[trackid]["instdata"]["plugindata"] = {}
         cvpj_l['use_instrack'] == False
 
-# ---------------------------------- Regular+FXMixer to Multiple ----------------------------------
+# ---------------------------------- Regular to Multiple ----------------------------------
 
 def r2m_pl_addinst(placements, trackid):
     t_placements = placements.copy()
@@ -86,7 +86,7 @@ def r2m_makeplaylistrow(cvpjJ, plnum, trackid, placements, m_name, m_color, l_na
     if m_color != None: playlistrow['color'] = m_color
     elif l_color != None: playlistrow['color'] = l_color
 
-def r2m(song):
+def r2m(song, indexed):
     print('[song-convert] Converting from Regular+FXMixer > Multiple')
     cvpj_proj = json.loads(song)
     if 'trackordering' not in cvpj_proj:
@@ -140,7 +140,84 @@ def r2m(song):
                 if singletrack_laned == 0: plnum += 1
     return json.dumps(cvpj_proj)
 
-# ---------------------------------- Multiple to Regular+FXMixer ----------------------------------
+# ---------------------------------- RegularIndexed to MultipleIndexed ----------------------------------
+
+def ri2mi_index_nliid(singletrack_pl, trackid):
+    for placement in singletrack_pl:
+        placement['fromindex'] = trackid+'_'+placement['fromindex']
+
+def ri2mi(song):
+    print('[song-convert] Converting from RegularIndexed > MultipleIndexed')
+    cvpj_proj = json.loads(song)
+    if 'trackordering' not in cvpj_proj: print('[error] trackordering not found')
+
+    t_s_trackordering = cvpj_proj['trackordering']
+    t_s_trackdata = cvpj_proj['trackdata']
+    del cvpj_proj['trackdata']
+    del cvpj_proj['trackordering']
+
+    cvpj_proj['instruments'] = {}
+    cvpj_proj['instrumentsorder'] = []
+    cvpj_proj['playlist'] = {}
+    cvpj_proj['notelistindex'] = {}
+
+    plnum = 1
+    for trackid in t_s_trackordering:
+        if trackid in t_s_trackdata:
+            singletrack_data = t_s_trackdata[trackid]
+            m_name = None
+            m_color = None
+            if 'name' in singletrack_data: m_name = singletrack_data['name']
+            if 'color' in singletrack_data: m_color = singletrack_data['color']
+  
+            if singletrack_data['type'] == 'instrument':
+                singletrack_laned = 0
+                cvpj_proj['instrumentsorder'].append(trackid)
+                cvpj_proj['instruments'][trackid] = singletrack_data
+
+                for nle_id in singletrack_data['notelistindex']:
+                    nle_data = singletrack_data['notelistindex'][nle_id]
+                    if 'name' not in nle_data: nle_data['name'] = nle_id
+
+                    if m_name != None: nle_data['name'] += ' ('+m_name+')' 
+                    nle_data['name'] += ' ['+trackid+']'
+
+                    cvpj_proj['notelistindex'][trackid+'_'+nle_id] = nle_data
+                    if m_color != None: cvpj_proj['notelistindex'][trackid+'_'+nle_id]['color'] = m_color
+                del singletrack_data['notelistindex']
+
+                if 'laned' in singletrack_data: 
+                    if singletrack_data['laned'] == 1: 
+                        singletrack_laned = 1
+
+                if singletrack_laned == 0: 
+                    print('[song-convert] ri2mi: inst non-laned:', trackid)
+                    singletrack_pl = singletrack_data['placements']
+                    ri2mi_index_nliid(singletrack_pl, trackid)
+                    del singletrack_data['placements']
+                    r2m_makeplaylistrow(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color, None, None)
+                else:
+                    print('[song-convert] ri2mi: inst laned:', trackid)
+                    t_laneordering = singletrack_data['laneordering']
+                    t_lanedata = singletrack_data['lanedata']
+                    for laneid in t_laneordering:
+                        lane_data = t_lanedata[laneid]
+                        l_name = None
+                        l_color = None
+                        if 'name' in lane_data: l_name = lane_data['name']
+                        if 'color' in lane_data: l_color = lane_data['color']
+                        if 'placements' in lane_data:
+                            if t_s_indexed == True: ri2mi_index_nliid(lane_data['placements'], trackid)
+                            r2m_makeplaylistrow(cvpj_proj, plnum, trackid, lane_data['placements'], m_name, m_color, l_name, l_color)
+                            plnum += 1
+                    del singletrack_data['laneordering']
+                    del singletrack_data['lanedata']
+                    
+                if singletrack_laned == 0: plnum += 1
+    return json.dumps(cvpj_proj)
+
+
+# ---------------------------------- Multiple to Regular ----------------------------------
 
 def m2r_split_insts(placement):
     del placement['type']

@@ -634,7 +634,7 @@ class output_lmms(plugin_output.base):
         global trkcX
         global projJ
 
-        autoidnum = 70000
+        autoidnum = 340000
         print('[output-lmms] Output Start')
 
         projJ = json.loads(convproj_json)

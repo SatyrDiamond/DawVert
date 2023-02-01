@@ -109,7 +109,6 @@ class input_fmf(plugin_input.base):
         tracklist['flipperzero'] = trackdata
 
         rootJ = {}
-        rootJ['indexed'] = False
         rootJ['use_instrack'] = False
         rootJ['use_fxrack'] = True
         rootJ['bpm'] = fmf_BPM

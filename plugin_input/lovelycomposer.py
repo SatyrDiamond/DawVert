@@ -212,7 +212,6 @@ class input_lc(plugin_input.base):
 
         startinststr = 'lc_instlist_'
 
-        cvpj_l['indexed'] = False
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['timemarkers'] = placements.make_timemarkers([4, 4], patternlen, lc_loop_start_bar)

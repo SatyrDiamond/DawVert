@@ -159,7 +159,6 @@ class input_mariopaint_msq(plugin_input.base):
             cvpj_l_instruments[instname] = cvpj_inst
             cvpj_l_instrumentsorder.append(instname)
 
-        cvpj_l['indexed'] = False
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['timesig_numerator'] = msq_measure

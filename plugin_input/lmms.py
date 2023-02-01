@@ -634,7 +634,6 @@ class input_lmms(plugin_input.base):
 
         rootJ['automation'] = l_automation
 
-        rootJ['indexed'] = False
         rootJ['use_instrack'] = False
         rootJ['use_fxrack'] = True
         rootJ['trackdata'] = trackdata

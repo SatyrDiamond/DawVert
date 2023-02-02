@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import note_convert
+from functions import auto
 
 global used_instruments_num
 used_instruments_num = []
@@ -82,7 +83,12 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
     if placement_data != None:
         placement_data['points'] = placement_points
         placement_data['duration'] = placement_duration
+
         if placement_points != []: tempo_placements.append(placement_data)
+
+    for tempo_placement in tempo_placements:
+        auto.resize(tempo_placement)
+
     return tempo_placements
 
 def make_placement_data(pos, dur, nl):

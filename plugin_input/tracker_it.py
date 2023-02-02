@@ -312,14 +312,21 @@ class input_it(plugin_input.base):
                 n_s_t = it_singleinst['notesampletable']
                 bn_s_t = []
 
+
                 basenoteadd = 60
                 for n_s_te in n_s_t:
                     bn_s_t.append([n_s_te[0]+basenoteadd, n_s_te[1]])
                     basenoteadd -= 1
 
-                bn_s_t_f = bn_s_t[0]
+                bn_s_t_ifsame = False
 
-                bn_s_t_ifsame = all(item == bn_s_t_f for item in bn_s_t)
+                if all(item == bn_s_t[0] for item in bn_s_t) == True:
+                    bn_s_t_ifsame = True
+                    bn_s_t_f = bn_s_t[0]
+
+                if all(item == bn_s_t[12] for item in bn_s_t[12:108]) == True:
+                    bn_s_t_ifsame = True
+                    bn_s_t_f = bn_s_t[12]
 
                 if bn_s_t_ifsame == True:
                     cvpj_l_single_inst['instdata'] = {}
@@ -327,8 +334,42 @@ class input_it(plugin_input.base):
                     cvpj_l_single_inst['instdata']['plugindata'] = {}
                     cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(bn_s_t_f[1]) + '.wav'
                 else:
+                    mscount = 0
+                    ms_r = []
+                    ms_r_c = None
+                    for bn_s_t_e in bn_s_t:
+                        if bn_s_t_e != ms_r_c: 
+                            ms_r_c = bn_s_t_e
+                            ms_r.append([ms_r_c[0], ms_r_c[1], 0])
+                        ms_r[-1][2] += 1
+                        #print(mscount, bn_s_t_e, ms_r)
+                        mscount += 1
+
                     cvpj_l_single_inst['instdata'] = {}
-                    cvpj_l_single_inst['instdata']['plugin'] = 'none'
+                    cvpj_l_single_inst['instdata']['plugin'] = 'sampler-multi'
+                    cvpj_l_single_inst['instdata']['plugindata'] = {}
+                    cvpj_l_single_inst['instdata']['plugindata']['regions'] = []
+
+                    startpos = -60
+                    for ms_r_e in ms_r:
+                        region_note = ms_r_e[0]
+                        region_inst = ms_r_e[1]
+                        region_end = ms_r_e[2]+startpos-1
+
+                        #print(startpos, region_end, region_note, region_inst)
+
+                        regionparams = {}
+                        regionparams['r_key'] = [startpos, region_end]
+                        regionparams['middlenote'] = region_note
+                        regionparams['file'] = samplefolder + str(region_inst) + '.wav'
+                        regionparams['start'] = 0
+                        regionparams['end'] = 100000
+                        regionparams['trigger'] = 'oneshot'
+                        regionparams['loop'] = {}
+                        regionparams['loop']['enabled'] = 0
+                        cvpj_l_single_inst['instdata']['plugindata']['regions'].append(regionparams)
+
+                        startpos += ms_r_e[2]
 
                 if it_singleinst['filtercutoff'] != None and 'plugindata' in cvpj_l_single_inst['instdata']:
                     if it_singleinst['filtercutoff'] != 127:

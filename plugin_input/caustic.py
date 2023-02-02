@@ -210,11 +210,10 @@ class input_cvpj_r(plugin_input.base):
 
                 #print(middlenote)
 
-                cvpj_inst["instdata"]['notefx'] = {}
-                cvpj_inst["instdata"]['notefx']['pitch'] = {}
-                cvpj_inst["instdata"]['notefx']['pitch']['semitones'] = middlenote
-                cvpj_inst['instdata']['pitch'] = pcms_c[3]
+                cvpj_inst['chain_fx_note'] = []
+                cvpj_inst['chain_fx_note'].append({"enabled": 1, "plugin": "pitch", "plugindata": {"semitones": middlenote}})
 
+                cvpj_inst['instdata']['pitch'] = pcms_c[3]
                 plugindata['asdrlfo'] = {}
                 plugindata['asdrlfo']['volume'] = {}
                 plugindata['asdrlfo']['volume']['envelope'] = {}

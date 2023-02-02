@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import note_convert
-#import time
 
 global used_instruments_num
 used_instruments_num = []
@@ -10,11 +9,9 @@ used_instruments_num = []
 global used_instruments
 used_instruments = []
 
-def get_used_instruments():
-    return used_instruments
+def get_used_instruments(): return used_instruments
 
-def get_used_instruments_num():
-    return used_instruments_num
+def get_used_instruments_num(): return used_instruments_num
 
 def get_channeldata_inside_pattern(patterntable_single, channel):
     output_table = []

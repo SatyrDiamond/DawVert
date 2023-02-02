@@ -58,7 +58,7 @@ gm_colors = [[0.10, 0.11, 0.11], #Acoustic Grand Piano
  [0.94, 0.87, 0.47], #Trombone
  [0.85, 0.68, 0.35], #Tuba
  [0.75, 0.59, 0.27], #Muted Trumpet
- [0.85, 0.65, 0.29],  #French Horn
+ [0.85, 0.65, 0.29], #French Horn
  [0.38, 0.22, 0.06], #Brass Section
  [0.42, 0.23, 0.11], #SynthBrass 1
  [0.42, 0.23, 0.11], #SynthBrass 2
@@ -125,7 +125,7 @@ gm_colors = [[0.10, 0.11, 0.11], #Acoustic Grand Piano
  [0.21, 0.19, 0.15], #Telephone Ring
  [0.18, 0.26, 0.67], #Helicopter
  [0.94, 0.76, 0.70], #Applause
- [0.32, 0.30, 0.27] #Gunshot
+ [0.32, 0.30, 0.27]  #Gunshot
  ]
 
 gm_names = ["Acoustic Grand Piano", 

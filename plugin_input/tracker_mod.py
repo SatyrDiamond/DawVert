@@ -143,7 +143,7 @@ class input_mod(plugin_input.base):
         cvpj_bpm = 125
         for mod_numinst in range(31):
             mod_numinst += 1
-            mod_inst_mod_name = file_stream.read(22).decode().rstrip('\x00')
+            mod_inst_mod_name = file_stream.read(22).decode().rstrip('\x00').translate(dict.fromkeys(range(32)))
             mod_inst_length = int.from_bytes(file_stream.read(2), "big")
             mod_inst_finetune = int.from_bytes(file_stream.read(1), "big")
             if mod_inst_finetune > 7: mod_inst_finetune -= 16

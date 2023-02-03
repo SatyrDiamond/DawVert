@@ -76,13 +76,7 @@ def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
             if endnote-org_l_n == notedur: isinsidenote = False
             else: isinsidenote = True
         else: isinsidenote = False
-
-        #print(str(notedata).ljust(19),end='')
-        #print(str(org_l_n).ljust(6),end='')
-        #print(str(endnote).ljust(6),end='')
-        #print(str(isinsidenote).ljust(6),end='')
-        #print()
-
+        
         if isinsidenote == False:
             cvpj_note = {}
             cvpj_note['position'] = org_l_n
@@ -165,8 +159,6 @@ class input_orgyana(plugin_input.base):
                 cvpj_placement['position'] = 0
                 cvpj_placement['duration'] = note_mod.getduration(s_cvpj_nl)
                 cvpj_placement['notelist'] = s_cvpj_nl
-
-                #placements.resize_nl(cvpj_placement)
 
                 cvpj_inst = {}
                 cvpj_inst['type'] = 'instrument'

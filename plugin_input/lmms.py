@@ -354,8 +354,8 @@ def lmms_decode_inst_track(trkX, name):
     #trkX_insttr
     trkX_insttr = trkX.findall('instrumenttrack')[0]
     cvpj_l_track['fxrack_channel'] = int(trkX_insttr.get('fxch'))
-    cvpj_l_track['pan'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'pan', 0, ['track', name, 'pan'])))
-    cvpj_l_track['vol'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'vol', 1, ['track', name, 'vol'])))
+    cvpj_l_track['pan'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'pan', 0, ['track_main', name, 'pan'])))
+    cvpj_l_track['vol'] = hundredto1(float(lmms_getvalue(trkX_insttr, 'vol', 1, ['track_main', name, 'vol'])))
     
     #if trkX.get('color') != None: cvpj_l_track['color'] = colors.hex_to_rgb_float(trkX.get('color'))
 
@@ -390,7 +390,7 @@ def lmms_decode_inst_track(trkX, name):
     cvpj_l_track_inst['usemasterpitch'] = int(trkX_insttr.get('usemasterpitch'))
 
     # notefx
-    cvpj_l_track_inst['pitch'] = float(lmms_getvalue(trkX_insttr, 'pitch', 0, ['track', name, 'pitch']))
+    cvpj_l_track_inst['pitch'] = float(lmms_getvalue(trkX_insttr, 'pitch', 0, ['track_main', name, 'pitch']))
 
     cvpj_l_track['chain_fx_note'] = []
 
@@ -618,16 +618,16 @@ class input_lmms(plugin_input.base):
         trackdata, trackordering = lmms_decode_tracks(trksX)
 
         l_automation['main'] = {}
-        l_automation['track'] = {}
+        l_automation['track_main'] = {}
         for part in l_autodata:
             if part in l_autoid:
                 s_autopl_id = l_autoid[part]
                 s_autopl_data = l_autodata[part]
-                if s_autopl_id[0] == 'track':
+                if s_autopl_id[0] == 'track_main':
                     if s_autopl_id[1] in trackdata:
-                        if s_autopl_id[1] not in l_automation['track']: l_automation['track'][s_autopl_id[1]] = {}
+                        if s_autopl_id[1] not in l_automation['track_main']: l_automation['track_main'][s_autopl_id[1]] = {}
                         s_trkdata = trackdata[s_autopl_id[1]]
-                        temp_pla = l_automation['track'][s_autopl_id[1]]
+                        temp_pla = l_automation['track_main'][s_autopl_id[1]]
                         if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
                         elif s_autopl_id[2] == 'pan': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
                         else: temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 1)

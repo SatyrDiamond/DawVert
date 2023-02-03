@@ -36,21 +36,20 @@ class input_flp(plugin_input.base):
 
         ppq = FL_Main['ppq']
 
-        rootJ = {}
-        rootJ['vol'] = 1
-        if 'MainPitch' in FL_Main:
-            rootJ['pitch'] = struct.unpack('h', struct.pack('H', FL_Main['MainPitch']))[0]
-        rootJ['timesig_numerator'] = FL_Main['Numerator']
-        rootJ['timesig_denominator'] = FL_Main['Denominator']
-        rootJ['bpm'] = FL_Main['Tempo']
-        rootJ['shuffle'] = FL_Main['Shuffle']/128
+        cvpj_l = {}
+        cvpj_l['vol'] = 1
+        if 'MainPitch' in FL_Main: cvpj_l['pitch'] = struct.unpack('h', struct.pack('H', FL_Main['MainPitch']))[0]
+        cvpj_l['timesig_numerator'] = FL_Main['Numerator']
+        cvpj_l['timesig_denominator'] = FL_Main['Denominator']
+        cvpj_l['bpm'] = FL_Main['Tempo']
+        cvpj_l['shuffle'] = FL_Main['Shuffle']/128
 
-        instrumentsJ = {}
-        instrumentsorder = []
-        notelistindexJ = {}
-        fxrackJ = {}
-        playlistJ = {}
-        timemarkersJ = []
+        cvpj_l_instrument_data = {}
+        cvpj_l_instrument_order = []
+        cvpj_l_notelistindex = {}
+        cvpj_l_fxrack = {}
+        cvpj_l_playlist = {}
+        cvpj_l_timemarkers = []
 
         id_inst = {}
         id_pat = {}
@@ -60,92 +59,92 @@ class input_flp(plugin_input.base):
             #print(channeldata)
             instdata = {}
             if channeldata['type'] == 0 or channeldata['type'] == 2:
-                singleinstdata = {}
-                singleinstdata['instdata'] = {}
-                singleinstdata['enabled'] = channeldata['enabled']
-                singleinstdata['fxrack_channel'] = channeldata['fxchannel']
-                #singleinstdata['filtergroup'] = 'FLFilterGroup_'+str(channeldata['filtergroup'])
-                singleinstdata['chain_fx_note'] = []
+                cvpj_inst = {}
+                cvpj_inst['instdata'] = {}
+                cvpj_inst['enabled'] = channeldata['enabled']
+                cvpj_inst['fxrack_channel'] = channeldata['fxchannel']
+                #cvpj_inst['filtergroup'] = 'FLFilterGroup_'+str(channeldata['filtergroup'])
+                cvpj_inst['chain_fx_note'] = []
                 if 'middlenote' in channeldata: 
                     middlenote = channeldata['middlenote'] - 60
-                    singleinstdata['chain_fx_note'].append({"enabled": 1, "plugin": "pitch", "plugindata": {"semitones": middlenote}})
+                    cvpj_inst['chain_fx_note'].append({"enabled": 1, "plugin": "pitch", "plugindata": {"semitones": middlenote}})
                 
-                singleinstdata['instdata']['pitch'] = channeldata['pitch']
-                singleinstdata['instdata']['usemasterpitch'] = channeldata['main_pitch']
-                if 'name' in channeldata: singleinstdata['name'] = channeldata['name']
-                else: singleinstdata['name'] = ''
-                singleinstdata['pan'] = channeldata['pan']
-                singleinstdata['vol'] = channeldata['volume']
+                cvpj_inst['instdata']['pitch'] = channeldata['pitch']
+                cvpj_inst['instdata']['usemasterpitch'] = channeldata['main_pitch']
+                if 'name' in channeldata: cvpj_inst['name'] = channeldata['name']
+                else: cvpj_inst['name'] = ''
+                cvpj_inst['pan'] = channeldata['pan']
+                cvpj_inst['vol'] = channeldata['volume']
                 color = channeldata['color'].to_bytes(4, "little")
-                singleinstdata['color'] = [color[0]/255,color[1]/255,color[2]/255]
+                cvpj_inst['color'] = [color[0]/255,color[1]/255,color[2]/255]
                 if channeldata['type'] == 0:
-                    singleinstdata['instdata']['plugin'] = "sampler"
-                    singleinstdata['instdata']['plugindata'] = {}
-                    if 'samplefilename' in channeldata: singleinstdata['instdata']['plugindata']['file'] = channeldata['samplefilename']
-                    else: singleinstdata['instdata']['plugindata']['file'] = ''
+                    cvpj_inst['instdata']['plugin'] = "sampler"
+                    cvpj_inst['instdata']['plugindata'] = {}
+                    if 'samplefilename' in channeldata: cvpj_inst['instdata']['plugindata']['file'] = channeldata['samplefilename']
+                    else: cvpj_inst['instdata']['plugindata']['file'] = ''
                 if channeldata['type'] == 2:
-                    singleinstdata['instdata']['plugin'] = "native-fl"
-                    singleinstdata['instdata']['plugindata'] = {}
-                    if 'plugin' in channeldata: singleinstdata['instdata']['plugindata']['name'] = channeldata['plugin']
-                    if 'pluginparams' in channeldata: singleinstdata['instdata']['plugindata']['data'] = base64.b64encode(channeldata['pluginparams']).decode('ascii')
+                    cvpj_inst['instdata']['plugin'] = "native-fl"
+                    cvpj_inst['instdata']['plugindata'] = {}
+                    if 'plugin' in channeldata: cvpj_inst['instdata']['plugindata']['name'] = channeldata['plugin']
+                    if 'pluginparams' in channeldata: cvpj_inst['instdata']['plugindata']['data'] = base64.b64encode(channeldata['pluginparams']).decode('ascii')
 
-                singleinstdata['poly'] = {}
-                singleinstdata['poly']['max'] = channeldata['polymax']
+                cvpj_inst['poly'] = {}
+                cvpj_inst['poly']['max'] = channeldata['polymax']
 
-                instrumentsJ['FLInst' + str(instrument)] = singleinstdata
-                instrumentsorder.append('FLInst' + str(instrument))
+                cvpj_l_instrument_data['FLInst' + str(instrument)] = cvpj_inst
+                cvpj_l_instrument_order.append('FLInst' + str(instrument))
                 id_inst[str(instrument)] = 'FLInst' + str(instrument)
 
         for pattern in FL_Patterns:
             patterndata = FL_Patterns[pattern]
             notesJ = []
-            if 'FLPat' + str(pattern) not in notelistindexJ:
-                notelistindexJ['FLPat' + str(pattern)] = {}
+            if 'FLPat' + str(pattern) not in cvpj_l_notelistindex:
+                cvpj_l_notelistindex['FLPat' + str(pattern)] = {}
             if 'notes' in patterndata:
                 slidenotes = []
                 for flnote in patterndata['notes']:
-                    noteJ = {}
-                    noteJ['position'] = (flnote['pos']/ppq)*4
-                    if str(flnote['rack']) in id_inst: noteJ['instrument'] = id_inst[str(flnote['rack'])]
-                    else: noteJ['instrument'] = ''
-                    noteJ['duration'] = (flnote['dur']/ppq)*4
-                    noteJ['key'] = flnote['key']-60
-                    noteJ['finepitch'] = (flnote['finep']-120)*10
-                    noteJ['release'] = flnote['rel']/128
-                    noteJ['pan'] = (flnote['pan']-64)/64
-                    noteJ['vol'] = flnote['velocity']/100
-                    noteJ['cutoff'] = flnote['mod_x']/255
-                    noteJ['reso'] = flnote['mod_y']/255
-                    noteJ['notemod'] = {}
+                    cvpj_note = {}
+                    cvpj_note['position'] = (flnote['pos']/ppq)*4
+                    if str(flnote['rack']) in id_inst: cvpj_note['instrument'] = id_inst[str(flnote['rack'])]
+                    else: cvpj_note['instrument'] = ''
+                    cvpj_note['duration'] = (flnote['dur']/ppq)*4
+                    cvpj_note['key'] = flnote['key']-60
+                    cvpj_note['finepitch'] = (flnote['finep']-120)*10
+                    cvpj_note['release'] = flnote['rel']/128
+                    cvpj_note['pan'] = (flnote['pan']-64)/64
+                    cvpj_note['vol'] = flnote['velocity']/100
+                    cvpj_note['cutoff'] = flnote['mod_x']/255
+                    cvpj_note['reso'] = flnote['mod_y']/255
+                    cvpj_note['notemod'] = {}
                     is_slide = bool(flnote['flags'] & 0b000000000001000)
 
                     if is_slide == True: 
-                        slidenotes.append(noteJ)
+                        slidenotes.append(cvpj_note)
                     else: 
-                        noteJ['notemod']['slide'] = []
-                        notesJ.append(noteJ)
+                        cvpj_note['notemod']['slide'] = []
+                        notesJ.append(cvpj_note)
                 for slidenote in slidenotes:
                     sn_pos = slidenote['position']
                     sn_dur = slidenote['duration']
                     sn_inst = slidenote['instrument']
-                    for noteJ in notesJ:
-                        nn_pos = noteJ['position']
-                        nn_dur = noteJ['duration']
-                        nn_inst = noteJ['instrument']
+                    for cvpj_note in notesJ:
+                        nn_pos = cvpj_note['position']
+                        nn_dur = cvpj_note['duration']
+                        nn_inst = cvpj_note['instrument']
                         if nn_pos <= sn_pos <= nn_pos+nn_dur and sn_inst == nn_inst:
                             slidenote['position'] = sn_pos - nn_pos 
-                            slidenote['key'] -= noteJ['key'] 
-                            noteJ['notemod']['slide'].append(slidenote)
-                for noteJ in notesJ:
-                    note_mod.notemod_conv(noteJ)
+                            slidenote['key'] -= cvpj_note['key'] 
+                            cvpj_note['notemod']['slide'].append(slidenote)
+                for cvpj_note in notesJ:
+                    note_mod.notemod_conv(cvpj_note)
 
-                notelistindexJ['FLPat' + str(pattern)]['notelist'] = notesJ
+                cvpj_l_notelistindex['FLPat' + str(pattern)]['notelist'] = notesJ
                 id_pat[str(pattern)] = 'FLPat' + str(pattern)
             if 'color' in patterndata:
                 color = patterndata['color'].to_bytes(4, "little")
                 if color != b'HQV\x00':
-                    notelistindexJ['FLPat' + str(pattern)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
-            if 'name' in patterndata: notelistindexJ['FLPat' + str(pattern)]['name'] = patterndata['name']
+                    cvpj_l_notelistindex['FLPat' + str(pattern)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
+            if 'name' in patterndata: cvpj_l_notelistindex['FLPat' + str(pattern)]['name'] = patterndata['name']
 
         FL_Arrangement = FL_Arrangements['0']
         for item in FL_Arrangement['items']:
@@ -161,26 +160,26 @@ class input_flp(plugin_input.base):
                 if 'endoffset' in item: arrangementitemJ['cut']['end'] = item['endoffset']/ppq*4
             playlistline = (item['trackindex']*-1)+500
             length = item['length']
-            if str(playlistline) not in playlistJ:
-                playlistJ[str(playlistline)] = {}
-                playlistJ[str(playlistline)]['placements'] = []
-            playlistJ[str(playlistline)]['placements'].append(arrangementitemJ)
+            if str(playlistline) not in cvpj_l_playlist:
+                cvpj_l_playlist[str(playlistline)] = {}
+                cvpj_l_playlist[str(playlistline)]['placements'] = []
+            cvpj_l_playlist[str(playlistline)]['placements'].append(arrangementitemJ)
 
         FL_Tracks = FL_Arrangement['tracks']
 
         for track in FL_Tracks:
-            if str(track) not in playlistJ:
-                playlistJ[str(track)] = {}
+            if str(track) not in cvpj_l_playlist:
+                cvpj_l_playlist[str(track)] = {}
             if 'color' in FL_Tracks[track]:
                 color = FL_Tracks[track]['color'].to_bytes(4, "little")
-            playlistJ[str(track)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
+            cvpj_l_playlist[str(track)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
             if 'name' in FL_Tracks[track]:
-                playlistJ[str(track)]['name'] = FL_Tracks[track]['name']
+                cvpj_l_playlist[str(track)]['name'] = FL_Tracks[track]['name']
 
         for fxchannel in FL_Mixer:
             fl_fxhan = FL_Mixer[str(fxchannel)]
-            fxrackJ[fxchannel] = {}
-            fxdata = fxrackJ[fxchannel]
+            cvpj_l_fxrack[fxchannel] = {}
+            fxdata = cvpj_l_fxrack[fxchannel]
             fxdata["fxenabled"] = 1
             fxdata["chain_fx_audio"] = []
             fxdata["muted"] = 0
@@ -217,30 +216,30 @@ class input_flp(plugin_input.base):
                 timemarkerJ['denominator'] = FL_TimeMarkers[timemarker]['denominator']
             if tm_type == 9: timemarkerJ['type'] = 'punchin'
             if tm_type == 10: timemarkerJ['type'] = 'punchout'
-            timemarkersJ.append(timemarkerJ)
+            cvpj_l_timemarkers.append(timemarkerJ)
 
-        rootJ['use_instrack'] = False
-        rootJ['use_fxrack'] = True
-        rootJ['instrumentsorder'] = instrumentsorder
-        rootJ['instruments'] = instrumentsJ
-        rootJ['notelistindex'] = notelistindexJ
-        rootJ['playlist'] = playlistJ
-        rootJ['fxrack'] = fxrackJ
-        rootJ['timemarkers'] = timemarkersJ
-        rootJ['filtergroups'] = {}
+        cvpj_l['use_instrack'] = False
+        cvpj_l['use_fxrack'] = True
+        cvpj_l['instruments_order'] = cvpj_l_instrument_order
+        cvpj_l['instruments_data'] = cvpj_l_instrument_data
+        cvpj_l['notelistindex'] = cvpj_l_notelistindex
+        cvpj_l['playlist'] = cvpj_l_playlist
+        cvpj_l['fxrack'] = cvpj_l_fxrack
+        cvpj_l['timemarkers'] = cvpj_l_timemarkers
+        cvpj_l['filtergroups'] = {}
 
         for filtergroupnum in range(len(FL_FilterGroups)):
-            rootJ['filtergroups']['FLFilterGroup_'+str(filtergroupnum)] = {}
-            rootJ['filtergroups']['FLFilterGroup_'+str(filtergroupnum)]['name'] = FL_FilterGroups[filtergroupnum]
+            cvpj_l['filtergroups']['FLFilterGroup_'+str(filtergroupnum)] = {}
+            cvpj_l['filtergroups']['FLFilterGroup_'+str(filtergroupnum)]['name'] = FL_FilterGroups[filtergroupnum]
 
-        rootJ['info'] = {}
-        rootJ['info']['title'] = FL_Main['Title']
-        rootJ['info']['author'] = FL_Main['Author']
-        rootJ['info']['genre'] = FL_Main['Genre']
-        if 'URL' in FL_Main: rootJ['info']['url'] = FL_Main['URL']
+        cvpj_l['info'] = {}
+        cvpj_l['info']['title'] = FL_Main['Title']
+        cvpj_l['info']['author'] = FL_Main['Author']
+        cvpj_l['info']['genre'] = FL_Main['Genre']
+        if 'URL' in FL_Main: cvpj_l['info']['url'] = FL_Main['URL']
 
-        rootJ['info']['message'] = {}
-        rootJ['info']['message']['type'] = 'text'
-        rootJ['info']['message']['text'] = FL_Main['Comment']
+        cvpj_l['info']['message'] = {}
+        cvpj_l['info']['message']['type'] = 'text'
+        cvpj_l['info']['message']['text'] = FL_Main['Comment']
 
-        return json.dumps(rootJ, indent=2)
+        return json.dumps(cvpj_l, indent=2)

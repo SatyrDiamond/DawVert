@@ -640,8 +640,8 @@ class input_lmms(plugin_input.base):
 
         rootJ['use_instrack'] = False
         rootJ['use_fxrack'] = True
-        rootJ['trackdata'] = trackdata
-        rootJ['trackordering'] = trackordering
+        rootJ['track_data'] = trackdata
+        rootJ['track_order'] = trackordering
         rootJ['fxrack'] = lmms_decode_fxmixer(fxX)
 
         return json.dumps(rootJ, indent=2)

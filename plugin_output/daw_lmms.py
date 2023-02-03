@@ -641,8 +641,8 @@ class output_lmms(plugin_output.base):
 
         placements.removelanes(projJ)
 
-        trksJ = projJ['trackdata']
-        trkorderJ = projJ['trackordering']
+        trksJ = projJ['track_data']
+        trkorderJ = projJ['track_order']
         projX = ET.Element("lmms-project")
         projX.set('type', "song")
         projX.set('creator', "DawVert")
@@ -697,7 +697,7 @@ class output_lmms(plugin_output.base):
         print("[output-lmms] Number of Patterns: " + str(patternscount_forprinting))
         print("[output-lmms] Number of Tracks: " + str(trackscount_forprinting))      
 
-        trksJ = projJ['trackdata']
+        trksJ = projJ['track_data']
         
         
         outfile = ET.ElementTree(projX)

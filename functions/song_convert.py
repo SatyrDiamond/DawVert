@@ -20,11 +20,11 @@ def trackfx2fxrack(cvpj_l, cvpjtype):
         cvpj_l['fxrack'] = {}
         fxnum = 1
         if cvpjtype == 's':
-            c_orderingdata = cvpj_l['trackordering']
-            c_trackdata = cvpj_l['trackdata']
+            c_orderingdata = cvpj_l['track_order']
+            c_trackdata = cvpj_l['track_data']
         if cvpjtype == 'm':
-            c_orderingdata = cvpj_l['instrumentsorder']
-            c_trackdata = cvpj_l['instruments']
+            c_orderingdata = cvpj_l['instruments_order']
+            c_trackdata = cvpj_l['instruments_data']
         if 'track_master' in cvpj_l:
             cvpj_l['fxrack']['0'] = cvpj_l['track_master']
 
@@ -44,11 +44,11 @@ def instrack2singleinst(cvpj_l, cvpjtype):
     if cvpj_l['use_instrack'] == True:
         fxnum = 1
         if cvpjtype == 's':
-            c_orderingdata = cvpj_l['trackordering']
-            c_trackdata = cvpj_l['trackdata']
+            c_orderingdata = cvpj_l['track_order']
+            c_trackdata = cvpj_l['track_data']
         if cvpjtype == 'm':
-            c_orderingdata = cvpj_l['instrumentsorder']
-            c_trackdata = cvpj_l['instruments']
+            c_orderingdata = cvpj_l['instruments_order']
+            c_trackdata = cvpj_l['instruments_data']
 
         for trackid in c_trackdata:
             chain_inst = c_trackdata[trackid]['chain_inst']
@@ -91,20 +91,20 @@ def r2m_makeplaylistrow(cvpjJ, plnum, trackid, placements, m_name, m_color, l_na
 def r2m(song):
     print('[song-convert] Converting from Regular+FXMixer > Multiple')
     cvpj_proj = json.loads(song)
-    if 'trackordering' not in cvpj_proj:
-        print('[error] trackordering not found')
+    if 'track_order' not in cvpj_proj:
+        print('[error] track_order not found')
 
-    t_s_trackordering = cvpj_proj['trackordering']
-    t_s_trackdata = cvpj_proj['trackdata']
-    del cvpj_proj['trackdata']
-    del cvpj_proj['trackordering']
+    t_s_track_order = cvpj_proj['track_order']
+    t_s_trackdata = cvpj_proj['track_data']
+    del cvpj_proj['track_data']
+    del cvpj_proj['track_order']
 
-    cvpj_proj['instruments'] = {}
-    cvpj_proj['instrumentsorder'] = []
+    cvpj_proj['instruments_data'] = {}
+    cvpj_proj['instruments_order'] = []
     cvpj_proj['playlist'] = {}
 
     plnum = 1
-    for trackid in t_s_trackordering:
+    for trackid in t_s_track_order:
         if trackid in t_s_trackdata:
             singletrack_data = t_s_trackdata[trackid]
             m_name = None
@@ -114,8 +114,8 @@ def r2m(song):
   
             if singletrack_data['type'] == 'instrument':
                 singletrack_laned = 0
-                cvpj_proj['instrumentsorder'].append(trackid)
-                cvpj_proj['instruments'][trackid] = singletrack_data
+                cvpj_proj['instruments_order'].append(trackid)
+                cvpj_proj['instruments_data'][trackid] = singletrack_data
 
                 if 'laned' in singletrack_data: 
                     if singletrack_data['laned'] == 1: 
@@ -151,20 +151,20 @@ def ri2mi_index_nliid(singletrack_pl, trackid):
 def ri2mi(song):
     print('[song-convert] Converting from RegularIndexed > MultipleIndexed')
     cvpj_proj = json.loads(song)
-    if 'trackordering' not in cvpj_proj: print('[error] trackordering not found')
+    if 'track_order' not in cvpj_proj: print('[error] track_order not found')
 
-    t_s_trackordering = cvpj_proj['trackordering']
-    t_s_trackdata = cvpj_proj['trackdata']
-    del cvpj_proj['trackdata']
-    del cvpj_proj['trackordering']
+    t_s_track_order = cvpj_proj['track_order']
+    t_s_trackdata = cvpj_proj['track_data']
+    del cvpj_proj['track_data']
+    del cvpj_proj['track_order']
 
-    cvpj_proj['instruments'] = {}
-    cvpj_proj['instrumentsorder'] = []
+    cvpj_proj['instruments_data'] = {}
+    cvpj_proj['instruments_order'] = []
     cvpj_proj['playlist'] = {}
     cvpj_proj['notelistindex'] = {}
 
     plnum = 1
-    for trackid in t_s_trackordering:
+    for trackid in t_s_track_order:
         if trackid in t_s_trackdata:
             singletrack_data = t_s_trackdata[trackid]
             m_name = None
@@ -174,8 +174,8 @@ def ri2mi(song):
   
             if singletrack_data['type'] == 'instrument':
                 singletrack_laned = 0
-                cvpj_proj['instrumentsorder'].append(trackid)
-                cvpj_proj['instruments'][trackid] = singletrack_data
+                cvpj_proj['instruments_order'].append(trackid)
+                cvpj_proj['instruments_data'][trackid] = singletrack_data
 
                 for nle_id in singletrack_data['notelistindex']:
                     nle_data = singletrack_data['notelistindex'][nle_id]
@@ -234,11 +234,11 @@ def ri2r_fromindex2notelist(placement, notelistindex):
 def ri2r(song):
     print('[song-convert] Converting from RegularIndexed > MultipleIndexed')
     cvpj_proj = json.loads(song)
-    if 'trackordering' not in cvpj_proj: print('[error] trackordering not found')
-    t_s_trackordering = cvpj_proj['trackordering']
-    t_s_trackdata = cvpj_proj['trackdata']
+    if 'track_order' not in cvpj_proj: print('[error] track_order not found')
+    t_s_track_order = cvpj_proj['track_order']
+    t_s_trackdata = cvpj_proj['track_data']
 
-    for trackid in t_s_trackordering:
+    for trackid in t_s_track_order:
         if trackid in t_s_trackdata:
             singletrack_data = t_s_trackdata[trackid]
             notelistindex = singletrack_data['notelistindex']
@@ -299,17 +299,17 @@ def m2r(song):
     cvpj_proj = json.loads(song)
 
     playlist = cvpj_proj['playlist']
-    cvpjm_instruments = cvpj_proj['instruments']
-    cvpjm_instrumentsorder = cvpj_proj['instrumentsorder']
+    cvpjm_instruments = cvpj_proj['instruments_data']
+    cvpjm_instruments_order = cvpj_proj['instruments_order']
 
     del cvpj_proj['playlist']
-    del cvpj_proj['instruments']
-    del cvpj_proj['instrumentsorder']
+    del cvpj_proj['instruments_data']
+    del cvpj_proj['instruments_order']
 
     cvpj_trackdata = {}
     cvpj_trackorder = []
 
-    for instrument in cvpjm_instrumentsorder:
+    for instrument in cvpjm_instruments_order:
         if instrument in cvpjm_instruments:
             trackdata = cvpjm_instruments[instrument]
             cvpj_trackdata[instrument] = trackdata
@@ -343,8 +343,8 @@ def m2r(song):
                                 lanedata[playlistentry]['placements'] = []
                             cvpj_trackdata[instrument]['lanedata'][playlistentry]['placements'].append(splitted_insts[instrument])
 
-    cvpj_proj['trackdata'] = cvpj_trackdata
-    cvpj_proj['trackordering'] = cvpj_trackorder
+    cvpj_proj['track_data'] = cvpj_trackdata
+    cvpj_proj['track_order'] = cvpj_trackorder
 
     return json.dumps(cvpj_proj)
 

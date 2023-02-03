@@ -424,8 +424,8 @@ class input_it(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['timemarkers'] = placements.make_timemarkers([4,16], patlentable, None)
-        cvpj_l['instruments'] = cvpj_l_instruments
-        cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
+        cvpj_l['instruments_data'] = cvpj_l_instruments
+        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = it_header_tempo/(it_header_speed/6)
         return json.dumps(cvpj_l)

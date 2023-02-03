@@ -127,7 +127,7 @@ def decode_fst(infile):
     fst_Main['DPCMSamples'] = fst_DPCMSamples
     fst_Main['DPCMMappings'] = fst_DPCMMappings
     return fst_Main
-def create_inst(WaveType, fst_Instrument, cvpj_l_instruments, cvpj_l_instrumentsorder, fxrack_channel):
+def create_inst(WaveType, fst_Instrument, cvpj_l_instrument_data, cvpj_l_instrument_order, fxrack_channel):
     instname = fst_Instrument['Name']
     cvpj_inst = {}
     cvpj_inst["enabled"] = 1
@@ -192,10 +192,10 @@ def create_inst(WaveType, fst_Instrument, cvpj_l_instruments, cvpj_l_instruments
     cvpj_inst["name"] = WaveType+'-'+instname
     cvpj_inst["pan"] = 0.0
     cvpj_inst["vol"] = 0.6
-    cvpj_l_instruments[WaveType+'-'+instname] = cvpj_inst
-    if WaveType+'-'+instname not in cvpj_l_instrumentsorder:
-        cvpj_l_instrumentsorder.append(WaveType+'-'+instname)
-def create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instruments, cvpj_l_instrumentsorder, fxrack_channel):
+    cvpj_l_instrument_data[WaveType+'-'+instname] = cvpj_inst
+    if WaveType+'-'+instname not in cvpj_l_instrument_order:
+        cvpj_l_instrument_order.append(WaveType+'-'+instname)
+def create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instrument_data, cvpj_l_instrument_order, fxrack_channel):
     instname = 'DPCM'
     cvpj_inst = {}
     cvpj_inst["enabled"] = 1
@@ -209,8 +209,8 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instruments, cvpj_l_instr
     cvpj_inst["name"] = 'DPCM'
     cvpj_inst["pan"] = 0.0
     cvpj_inst["vol"] = 0.6
-    cvpj_l_instruments['DPCM'] = cvpj_inst
-    cvpj_l_instrumentsorder.append('DPCM')
+    cvpj_l_instrument_data['DPCM'] = cvpj_inst
+    cvpj_l_instrument_order.append('DPCM')
 
 def NoteToMidi(keytext):
     l_key = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
@@ -255,8 +255,8 @@ class input_famistudio(plugin_input.base):
         'S5BSquare3': 'S5B'}
 
         cvpj_l = {}
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
+        cvpj_l_instrument_data = {}
+        cvpj_l_instrument_order = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
         cvpj_l_fxrack = {}
@@ -296,7 +296,7 @@ class input_famistudio(plugin_input.base):
             used_insts = get_used_insts(fst_channels[Channel])
             if Channel in InstShapes: WaveType = InstShapes[Channel]
             elif Channel == 'DPCM': 
-                create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instruments, cvpj_l_instrumentsorder, channum)
+                create_dpcm_inst(DPCMMappings, DPCMSamples, cvpj_l_instrument_data, cvpj_l_instrument_order, channum)
                 cvpj_l_fxrack[str(channum)] = {'name': 'DPCM'}
                 cvpj_l_fxrack[str(channum)]['color'] = [0.48, 0.83, 0.49]
             if WaveType != None:
@@ -312,7 +312,7 @@ class input_famistudio(plugin_input.base):
                 if WaveType == 'S5B': cvpj_l_fxrack[str(channum)]['color'] = [0.58, 0.94, 0.33]
                 if WaveType == 'N163': cvpj_l_fxrack[str(channum)]['color'] = [0.97, 0.97, 0.36]
                 for inst in used_insts:
-                    create_inst(WaveType, fst_Instruments[inst], cvpj_l_instruments, cvpj_l_instrumentsorder, channum)
+                    create_inst(WaveType, fst_Instruments[inst], cvpj_l_instrument_data, cvpj_l_instrument_order, channum)
             channum += 1
 
         playlistnum = 1
@@ -374,8 +374,8 @@ class input_famistudio(plugin_input.base):
         cvpj_l['timesig_denominator'] = timesig[1]
         cvpj_l['timemarkers'] = placements.make_timemarkers(timesig, PatternLengthList, LoopPoint)
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['instruments'] = cvpj_l_instruments
-        cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
+        cvpj_l['instruments_data'] = cvpj_l_instrument_data
+        cvpj_l['instruments_order'] = cvpj_l_instrument_order
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['bpm'] = bpm

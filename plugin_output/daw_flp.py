@@ -35,7 +35,7 @@ class output_cvpjs(plugin_output.base):
 
         FLP_Data['FL_Channels'] = {}
         FL_Channels = FLP_Data['FL_Channels']
-        CVPJ_Instruments = projJ['instruments']
+        CVPJ_Instruments = projJ['instruments_data']
 
         FLP_Data['FL_Patterns'] = {}
         FL_Patterns = FLP_Data['FL_Patterns']
@@ -120,7 +120,7 @@ class output_cvpjs(plugin_output.base):
         if 'bpm' in projJ: FL_Main['Tempo'] = projJ['bpm']
         if 'pitch' in projJ: FL_Main['MainPitch'] = struct.unpack('H', struct.pack('h', int(projJ['pitch'])))[0]
 
-        instrumentsorder = projJ['instrumentsorder']
+        instrumentsorder = projJ['instruments_order']
 
         inst_id = {}
         inst_id_count = 0

@@ -114,8 +114,8 @@ class input_cvpj_r(plugin_input.base):
             exit()
 
         cvpj_l = {}
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
+        cvpj_l_instrument_data = {}
+        cvpj_l_instrument_order = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
 
@@ -381,8 +381,8 @@ class input_cvpj_r(plugin_input.base):
             else: 
                 cvpj_inst["instdata"]["plugin"] = 'none'
             
-            cvpj_l_instruments[cvpj_instid] = cvpj_inst
-            cvpj_l_instrumentsorder.append(cvpj_instid)
+            cvpj_l_instrument_data[cvpj_instid] = cvpj_inst
+            cvpj_l_instrument_order.append(cvpj_instid)
 
         #dmf_insts
 
@@ -392,8 +392,8 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['instruments'] = cvpj_l_instruments
-        cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
+        cvpj_l['instruments_data'] = cvpj_l_instrument_data
+        cvpj_l['instruments_order'] = cvpj_l_instrument_order
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = 140
         return json.dumps(cvpj_l)

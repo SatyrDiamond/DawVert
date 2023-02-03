@@ -172,8 +172,8 @@ class input_mariopaint_mss(plugin_input.base):
         cvpj_l['timesig_numerator'] = mss_measure
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['timemarkers'] = cvpj_l_timemarkers
-        cvpj_l['instruments'] = cvpj_l_instruments
-        cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
+        cvpj_l['instruments_data'] = cvpj_l_instruments
+        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = mss_tempo
         return json.dumps(cvpj_l)

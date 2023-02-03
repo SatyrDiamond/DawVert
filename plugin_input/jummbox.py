@@ -93,8 +93,8 @@ def parse_instrument(cvpj_chain, bb_instrument, bb_type):
     cvpj_chain.append(instslot)
 
 def parse_channel(channeldata, channum):
-    global cvpj_l_trackdata
-    global cvpj_l_trackordering
+    global cvpj_l_track_data
+    global cvpj_l_track_order
     global cvpj_l_notelistindex
     global cvpj_l_playlist
     global jummbox_notesize
@@ -126,8 +126,8 @@ def parse_channel(channeldata, channum):
         for bb_instrument in bb_instruments:
             parse_instrument(cvpj_inst["chain_inst"], bb_instrument, bb_type)
         if bb_color != None: cvpj_inst['color'] = bb_color
-        cvpj_l_trackdata[str(channum)] = cvpj_inst
-        cvpj_l_trackordering.append(str(channum))
+        cvpj_l_track_data[str(channum)] = cvpj_inst
+        cvpj_l_track_order.append(str(channum))
 
         for pattern in bb_patterns:
             nid_name = str(patterncount+1)
@@ -207,8 +207,8 @@ class input_jummbox(plugin_input.base):
     def gettype(self): return 'ri'
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
-        global cvpj_l_trackdata
-        global cvpj_l_trackordering
+        global cvpj_l_track_data
+        global cvpj_l_track_order
         global cvpj_l_notelistindex
         global cvpj_l_automation
         global jummbox_beatsPerBar
@@ -222,8 +222,8 @@ class input_jummbox(plugin_input.base):
         jummbox_json = json.load(bytestream)
 
         cvpj_l = {}
-        cvpj_l_trackdata = {}
-        cvpj_l_trackordering = []
+        cvpj_l_track_data = {}
+        cvpj_l_track_order = []
         cvpj_l_notelistindex = {}
         cvpj_l_automation = {}
 
@@ -259,7 +259,7 @@ class input_jummbox(plugin_input.base):
                     cvpj_l_automation['main'][outautoname] = outautodata
                     #print(outautoname, bbcvpj_modplacements[bbauto_group][bbauto_target])
                 #elif bbauto_group > 0:
-                #    cvpj_l_trackdata[str(bbauto_group)]['placements_auto_main'][bbauto_target] = outautodata
+                #    cvpj_l_track_data[str(bbauto_group)]['placements_auto_main'][bbauto_target] = outautodata
         #exit()
 
         cvpj_l['info'] = {}
@@ -267,8 +267,8 @@ class input_jummbox(plugin_input.base):
         cvpj_l['use_instrack'] = True
         cvpj_l['use_fxrack'] = False
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['trackdata'] = cvpj_l_trackdata
-        cvpj_l['trackordering'] = cvpj_l_trackordering
+        cvpj_l['track_data'] = cvpj_l_track_data
+        cvpj_l['track_order'] = cvpj_l_track_order
         cvpj_l['automation'] = cvpj_l_automation
         cvpj_l['bpm'] = jummbox_beatsPerMinute
 

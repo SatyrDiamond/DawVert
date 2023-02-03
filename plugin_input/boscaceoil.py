@@ -400,15 +400,15 @@ class input_ceol(plugin_input.base):
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
 
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
+        cvpj_l_instrument_data = {}
+        cvpj_l_instrument_order = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
 
         global datapos
         global ceol_data
-        fs_ceol = open(input_file, 'r')
-        ceol_data = fs_ceol.readline().split(',')
+        bio_mainfile = open(input_file, 'r')
+        ceol_data = bio_mainfile.readline().split(',')
 
         ceol_basic_versionnum = ceol_read()
         print('[input-boscaceoil] Version Number: '+str(ceol_basic_versionnum))
@@ -483,8 +483,8 @@ class input_ceol(plugin_input.base):
             if ceol_inst_number == 365: t_key_offset.append(24)
             else: t_key_offset.append(0)
 
-            cvpj_l_instruments[cvpj_instid] = cvpj_inst
-            cvpj_l_instrumentsorder.append(cvpj_instid)
+            cvpj_l_instrument_data[cvpj_instid] = cvpj_inst
+            cvpj_l_instrument_order.append(cvpj_instid)
 
         ceol_numpattern = ceol_read()
         for patnum in range(ceol_numpattern):
@@ -569,8 +569,8 @@ class input_ceol(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['instruments'] = cvpj_l_instruments
-        cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
+        cvpj_l['instruments_data'] = cvpj_l_instrument_data
+        cvpj_l['instruments_order'] = cvpj_l_instrument_order
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = ceol_basic_bpm
         return json.dumps(cvpj_l)

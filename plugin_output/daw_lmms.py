@@ -271,9 +271,9 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid):
     auto_nameid = {}
 
     if 'automation' in projJ:
-        if 'track' in projJ['automation']:
-            if trackid in projJ['automation']['track']:
-                auto_nameid = get_auto_ids(projJ['automation']['track'][trackid])
+        if 'track_main' in projJ['automation']:
+            if trackid in projJ['automation']['track_main']:
+                auto_nameid = get_auto_ids(projJ['automation']['track_main'][trackid])
 
     xmltag.set('type', "0")
 
@@ -296,7 +296,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid):
     trkX_insttr.set('usemasterpitch', "1")
     if 'usemasterpitch' in instJ: trkX_insttr.set('usemasterpitch', str(instJ['usemasterpitch']))
     trkX_insttr.set('pitch', "0")
-    setvalue(instJ, 'pitch', trkX_insttr, 'pitch', 0, auto_nameid, 'track')
+    setvalue(instJ, 'pitch', trkX_insttr, 'pitch', 0, auto_nameid, 'track_main')
     if 'plugin' in instJ: instplugin = instJ['plugin']
     else: instplugin = None
 
@@ -305,8 +305,8 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid):
     trkX_insttr.set('pan', "0")
     trkX_insttr.set('pitchrange', "12")
     trkX_insttr.set('vol', "100")
-    setvalue(trkJ, 'vol', trkX_insttr, 'vol', 1, auto_nameid, 'track')
-    setvalue(trkJ, 'pan', trkX_insttr, 'pan', 0, auto_nameid, 'track')
+    setvalue(trkJ, 'vol', trkX_insttr, 'vol', 1, auto_nameid, 'track_main')
+    setvalue(trkJ, 'pan', trkX_insttr, 'pan', 0, auto_nameid, 'track_main')
 
     middlenote = 0
 
@@ -408,9 +408,9 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid):
         print(' ')
 
     if 'automation' in projJ:
-        if 'track' in projJ['automation']:
-            if trackid in projJ['automation']['track']:
-                lmms_make_autotracks(projJ['automation']['track'][trackid], auto_nameid, 'track', trackname)
+        if 'track_main' in projJ['automation']:
+            if trackid in projJ['automation']['track_main']:
+                lmms_make_autotracks(projJ['automation']['track_main'][trackid], auto_nameid, 'track_main', trackname)
 
     print('[output-lmms]')
 
@@ -607,18 +607,18 @@ l_auto_names['main'] = {}
 l_auto_names['main']['bpm'] = "Tempo"
 l_auto_names['main']['vol'] = "Volume"
 l_auto_names['main']['pitch'] = "Song Pitch"
-l_auto_names['track'] = {}
-l_auto_names['track']['vol'] = "Volume"
-l_auto_names['track']['pan'] = "Pan"
-l_auto_names['track']['pitch'] = "Pitch"
+l_auto_names['track_main'] = {}
+l_auto_names['track_main']['vol'] = "Volume"
+l_auto_names['track_main']['pan'] = "Pan"
+l_auto_names['track_main']['pitch'] = "Pitch"
 
 l_addmul = {}
 l_addmul['main'] = {}
 l_addmul['main']['vol'] = [0, 100]
 l_addmul['main']['pitch'] = [0, 0.01]
-l_addmul['track'] = {}
-l_addmul['track']['vol'] = [0, 100]
-l_addmul['track']['pan'] = [0, 100]
+l_addmul['track_main'] = {}
+l_addmul['track_main']['vol'] = [0, 100]
+l_addmul['track_main']['pan'] = [0, 100]
 
 class output_lmms(plugin_output.base):
     def __init__(self): pass

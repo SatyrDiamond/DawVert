@@ -5,6 +5,7 @@ import plugin_input
 import os.path
 import math
 import json
+import struct
 import numpy as np
 from functions import song_tracker
 from functions import audio_wav
@@ -14,6 +15,8 @@ from functions import placements
 try: import xmodits
 except: xmodits_exists = False
 else: xmodits_exists = True
+
+startinststr = 'IT_Inst_'
 
 class input_it(plugin_input.base):
     def __init__(self): pass
@@ -35,8 +38,6 @@ class input_it(plugin_input.base):
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
 
-        startinststr = 'IT_Inst_'
-
         modulename = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, modulename)
 
@@ -47,15 +48,10 @@ class input_it(plugin_input.base):
         
         it_header_songname = it_file.read(26).split(b'\x00' * 1)[0].decode("utf-8")
         print("[input-it] Song Name: " + str(it_header_songname))
-        it_header_hilight_minor = it_file.read(1)[0]
-        it_header_hilight_major = it_file.read(1)[0]
-        it_header_ordnum = int.from_bytes(it_file.read(2), "little")
+        it_header_hilight_minor, it_header_hilight_major, it_header_ordnum, it_header_insnum, it_header_smpnum, it_header_patnum = struct.unpack('BBHHHH', it_file.read(10))
         print("[input-it] # of Orders: " + str(it_header_ordnum))
-        it_header_insnum = int.from_bytes(it_file.read(2), "little")
         print("[input-it] # of Instruments: " + str(it_header_insnum))
-        it_header_smpnum = int.from_bytes(it_file.read(2), "little")
         print("[input-it] # of Samples: " + str(it_header_smpnum))
-        it_header_patnum = int.from_bytes(it_file.read(2), "little")
         print("[input-it] # of Patterns: " + str(it_header_patnum))
         
         it_header_cwtv = int.from_bytes(it_file.read(2), "little")
@@ -77,19 +73,14 @@ class input_it(plugin_input.base):
         it_header_msgoffset = int.from_bytes(it_file.read(4), "little")
         it_header_reserved = int.from_bytes(it_file.read(4), "little")
         
-        table_chnpan = []
-        for _ in range(64): table_chnpan.append(it_file.read(1)[0])
-        table_chnvol = []
-        for _ in range(64): table_chnvol.append(it_file.read(1)[0])
-        table_orders = []
-        for _ in range(it_header_ordnum): table_orders.append(it_file.read(1)[0])
-        table_offset_insts = []
-        for _ in range(it_header_insnum): table_offset_insts.append(int.from_bytes(it_file.read(4), "little"))
-        table_offset_samples = []
-        for _ in range(it_header_smpnum): table_offset_samples.append(int.from_bytes(it_file.read(4), "little"))
-        table_offset_patterns = []
-        for _ in range(it_header_patnum): table_offset_patterns.append(int.from_bytes(it_file.read(4), "little"))
-        
+        table_chnpan = struct.unpack('B'*64, it_file.read(64))
+        table_chnvol = struct.unpack('B'*64, it_file.read(64))
+
+        table_orders = list(struct.unpack('B'*it_header_ordnum, it_file.read(it_header_ordnum)))
+        table_offset_insts = struct.unpack('I'*it_header_insnum, it_file.read(it_header_insnum*4))
+        table_offset_samples = struct.unpack('I'*it_header_smpnum, it_file.read(it_header_smpnum*4))
+        table_offset_patterns = struct.unpack('I'*it_header_patnum, it_file.read(it_header_patnum*4))
+
         # ------------- Orders -------------
         while 254 in table_orders: table_orders.remove(254)
         while 255 in table_orders: table_orders.remove(255)
@@ -136,7 +127,6 @@ class input_it(plugin_input.base):
             if it_inst_midi_chan != 0: it_singleinst['midi_chan'] = it_inst_midi_chan
             if it_inst_midi_inst != 255: it_singleinst['midi_inst'] = it_inst_midi_inst
             if it_inst_midi_bank != 65535: it_singleinst['midi_bank'] = it_inst_midi_bank
-            #print(it_inst_midi_chan,it_inst_midi_inst,it_inst_midi_bank)
             table_notesample = []
             for _ in range(120):
                 t_note = it_file.read(1)[0]-60
@@ -355,8 +345,6 @@ class input_it(plugin_input.base):
                         region_note = ms_r_e[0]
                         region_inst = ms_r_e[1]
                         region_end = ms_r_e[2]+startpos-1
-
-                        #print(startpos, region_end, region_note, region_inst)
 
                         regionparams = {}
                         regionparams['r_key'] = [startpos, region_end]

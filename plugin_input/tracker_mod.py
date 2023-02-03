@@ -5,6 +5,7 @@ import plugin_input
 import os.path
 import math
 import json
+import struct
 import numpy as np
 from functions import song_tracker
 from functions import audio_wav
@@ -100,6 +101,8 @@ def parse_song(file_stream):
     print(' ')
     return table_patterns
 
+text_inst_start = 'MOD_Inst_'
+
 class input_mod(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -128,8 +131,6 @@ class input_mod(plugin_input.base):
         global mod_num_channels
         global table_samples
 
-        text_inst_start = 'MOD_Inst_'
-
         file_name = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
 
@@ -144,14 +145,12 @@ class input_mod(plugin_input.base):
         for mod_numinst in range(31):
             mod_numinst += 1
             mod_inst_mod_name = file_stream.read(22).decode().rstrip('\x00').translate(dict.fromkeys(range(32)))
-            mod_inst_length = int.from_bytes(file_stream.read(2), "big")
-            mod_inst_finetune = int.from_bytes(file_stream.read(1), "big")
-            if mod_inst_finetune > 7: mod_inst_finetune -= 16
-            mod_inst_defaultvol = int.from_bytes(file_stream.read(1), "big")
-            mod_inst_loopstart = int.from_bytes(file_stream.read(2), "big")*2
-            mod_inst_looplength = int.from_bytes(file_stream.read(2), "big")*2
+
+            mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength = struct.unpack('<HBBHH', file_stream.read(8))
+
             print('[input-mod] Instrument ' + str(mod_numinst) + ': ' + mod_inst_mod_name)
-            table_samples.append([mod_inst_mod_name, mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength])
+            if mod_inst_finetune > 7: mod_inst_finetune -= 16
+            table_samples.append([mod_inst_mod_name, mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart*2, mod_inst_looplength*2])
             cvpj_l_instruments[text_inst_start + str(mod_numinst)] = {}
             cvpj_l_single_inst = cvpj_l_instruments[text_inst_start + str(mod_numinst)]
             if mod_inst_mod_name != "": cvpj_l_single_inst['name'] = mod_inst_mod_name

@@ -127,6 +127,7 @@ def decode_fst(infile):
     fst_Main['DPCMSamples'] = fst_DPCMSamples
     fst_Main['DPCMMappings'] = fst_DPCMMappings
     return fst_Main
+
 def create_inst(WaveType, fst_Instrument, cvpj_l_instrument_data, cvpj_l_instrument_order, fxrack_channel):
     instname = fst_Instrument['Name']
     cvpj_inst = {}

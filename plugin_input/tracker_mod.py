@@ -153,7 +153,6 @@ class input_mod(plugin_input.base):
             print('[input-mod] Instrument ' + str(mod_numinst) + ': ' + mod_inst_mod_name)
             table_samples.append([mod_inst_mod_name, mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength])
             cvpj_l_instruments[text_inst_start + str(mod_numinst)] = {}
-            #print([mod_inst_mod_name, mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength])
             cvpj_l_single_inst = cvpj_l_instruments[text_inst_start + str(mod_numinst)]
             if mod_inst_mod_name != "": cvpj_l_single_inst['name'] = mod_inst_mod_name
             else: cvpj_l_single_inst['name'] = ' '

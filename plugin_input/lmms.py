@@ -91,13 +91,13 @@ def lmms_getvalue(xmltag, xmlname, fallbackval, autoname):
         else: return fallbackval
 
 def lmms_getvalue_int(json_in, json_name, xml_in): 
-    if xml_in != None: json_in['json_name'] = int(xml_in)
+    if xml_in != None: json_in[json_name] = int(xml_in)
 def lmms_getvalue_float(json_in, json_name, xml_in): 
-    if xml_in != None: json_in['json_name'] = float(xml_in)
+    if xml_in != None: json_in[json_name] = float(xml_in)
 def lmms_getvalue_100(json_in, json_name, xml_in): 
-    if xml_in != None: json_in['json_name'] = hundredto1(float(xml_in))
+    if xml_in != None: json_in[json_name] = hundredto1(float(xml_in))
 def lmms_getvalue_exp(json_in, json_name, xml_in): 
-    if xml_in != None: json_in['json_name'] = exp2sec(float(xml_in))
+    if xml_in != None: json_in[json_name] = exp2sec(float(xml_in))
 
 # ------- Instruments and Plugins -------
 

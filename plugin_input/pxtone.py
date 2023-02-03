@@ -197,26 +197,17 @@ class input_pxtone(plugin_input.base):
                 os.makedirs(samplefolder, exist_ok=True)
                 wave_path = samplefolder + str(ptcop_voice_num+1).zfill(2) + '.wav'
 
-                plugindata = {}
-                plugindata['file'] = wave_path
-                plugindata['start'] = 0
-                plugindata['end'] = ptcop_pcm_samples
-                plugindata['trigger'] = 'normal'
-                plugindata['loop'] = {}
+                plugindata = {'file': wave_path, 'start': 0, 'end': ptcop_pcm_samples, 'trigger': 'normal'}
 
-                if ptcop_pcm_smooth == True:
-                    plugindata['interpolation'] = "linear"
-                else:
-                    plugindata['interpolation'] = "none"
+                if ptcop_pcm_smooth == True: plugindata['interpolation'] = "linear"
+                else: plugindata['interpolation'] = "none"
 
                 if ptcop_pcm_loop == 1: 
                     loopdata = {'loop':[0, ptcop_pcm_samples]}
-                    plugindata['loop']['enabled'] = 1
-                    plugindata['loop']['mode'] = "normal"
-                    plugindata['loop']['points'] = [0, ptcop_pcm_samples]
+                    plugindata['loop'] = {'enabled':1, 'mode':"normal", 'points':[0, ptcop_pcm_samples]}
                 else: 
-                    plugindata['loop']['enabled'] = 0
                     loopdata = None
+                    plugindata['loop'] = {'enabled':0, 'mode':"normal", 'points':[0, ptcop_pcm_samples]}
 
                 audio_wav.generate(wave_path, ptcop_pcm_data, ptcop_pcm_ch, ptcop_pcm_hz, ptcop_pcm_bits, loopdata)
 

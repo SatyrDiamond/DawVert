@@ -177,9 +177,11 @@ class input_pxtone(plugin_input.base):
                 ptcop_pcm_basic_key_field = song_file.read(1)[0]
                 print('[input-ptcop]   Basic Key field: '+str(ptcop_pcm_basic_key_field))
                 ptcop_pcm_flags = int.from_bytes(song_file.read(4), "little")
-                ptcop_pcm_loop = bool(ptcop_pcm_flags & 0b000000000000001)
-                ptcop_pcm_smooth = bool(ptcop_pcm_flags & 0b000000000000010)
                 print('[input-ptcop]   Voice flags: '+str(ptcop_pcm_flags))
+                ptcop_pcm_loop = bool(ptcop_pcm_flags & 0b000000000000001)
+                print('[input-ptcop]   Loop: '+str(ptcop_pcm_loop))
+                ptcop_pcm_smooth = bool(ptcop_pcm_flags & 0b000000000000010)
+                print('[input-ptcop]   Smooth: '+str(ptcop_pcm_smooth))
                 ptcop_pcm_ch = int.from_bytes(song_file.read(2), "little")
                 print('[input-ptcop]   Channels: '+str(ptcop_pcm_ch))
                 ptcop_pcm_bits = int.from_bytes(song_file.read(2), "little")
@@ -201,6 +203,11 @@ class input_pxtone(plugin_input.base):
                 plugindata['end'] = ptcop_pcm_samples
                 plugindata['trigger'] = 'normal'
                 plugindata['loop'] = {}
+
+                if ptcop_pcm_smooth == True:
+                    plugindata['interpolation'] = "linear"
+                else:
+                    plugindata['interpolation'] = "none"
 
                 if ptcop_pcm_loop == 1: 
                     loopdata = {'loop':[0, ptcop_pcm_samples]}
@@ -266,12 +273,6 @@ class input_pxtone(plugin_input.base):
             cur_note = -3
             cur_voice = 0
             for unit_event in ptcop_unit_events[unit_eventnum]:
-                #print(str(unit_event[2]).rjust(2),end=' ')
-                #print(ptcop_events[unit_event[2]],'| ',end='')
-                #print(str(unit_event[0]).ljust(9),end='')
-                #print(str(position_global).ljust(9),end='')
-                #print(str(unit_event[3]).ljust(4))
-
                 if unit_event[2] == 2: cur_note = unit_event[3][0]+12
                 if unit_event[2] == 12: cur_voice = unit_event[3]
                 if unit_event[2] == 4: t_notelist[unit_eventnum][-1]['vol'] = unit_event[3]

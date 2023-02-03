@@ -112,7 +112,7 @@ class input_fmf(plugin_input.base):
         rootJ['use_instrack'] = False
         rootJ['use_fxrack'] = True
         rootJ['bpm'] = fmf_BPM
-        rootJ['trackdata'] = tracklist
-        rootJ['trackordering'] = trackordering
+        rootJ['track_data'] = tracklist
+        rootJ['track_order'] = trackordering
         return json.dumps(rootJ)
 

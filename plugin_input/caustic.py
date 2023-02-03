@@ -110,8 +110,8 @@ class input_cvpj_r(plugin_input.base):
         EFFX = CausticData['EFFX']
 
         cvpj_l = {}
-        cvpj_l_trackdata = {}
-        cvpj_l_trackordering = []
+        cvpj_l_track_data = {}
+        cvpj_l_track_order = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
 
@@ -253,8 +253,8 @@ class input_cvpj_r(plugin_input.base):
             else:
                 cvpj_instdata['plugin'] = 'none'
 
-            cvpj_l_trackdata[machid] = cvpj_inst
-            cvpj_l_trackordering.append(machid)
+            cvpj_l_track_data[machid] = cvpj_inst
+            cvpj_l_track_order.append(machid)
 
         for SEQNe in SEQN:
             SEQNe_mach = SEQNe[0]+1
@@ -272,7 +272,7 @@ class input_cvpj_r(plugin_input.base):
                 pl_placement['position'] = SEQNe_pos
                 pl_placement['duration'] = SEQNe_len
                 pl_placement['fromindex'] = SEQNe_patlet+str(SEQNe_patnum+1)
-                cvpj_l_trackdata[str(SEQNe_mach)]["placements"].append(pl_placement)
+                cvpj_l_track_data[str(SEQNe_mach)]["placements"].append(pl_placement)
 
         tempo_placement = {"position": 0}
 
@@ -291,8 +291,8 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         cvpj_l['automation'] = {}
         cvpj_l['automation']['main'] = automation_main
-        cvpj_l['trackdata'] = cvpj_l_trackdata
-        cvpj_l['trackordering'] = cvpj_l_trackordering
+        cvpj_l['track_data'] = cvpj_l_track_data
+        cvpj_l['track_order'] = cvpj_l_track_order
         cvpj_l['bpm'] = CausticData['Tempo']
         cvpj_l['timesig_numerator'] = CausticData['Numerator']
         cvpj_l['timesig_denominator'] = 4

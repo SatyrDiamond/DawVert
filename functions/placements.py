@@ -4,8 +4,8 @@
 import math
 
 def removelanes(projJ):
-    old_trackdata = projJ['trackdata']
-    old_trackordering = projJ['trackordering']
+    old_trackdata = projJ['track_data']
+    old_trackordering = projJ['track_order']
     new_trackdata = {}
     new_trackordering = []
 
@@ -54,8 +54,8 @@ def removelanes(projJ):
             else:
                 new_trackdata[trackid] = lr_t_trdata
                 new_trackordering.append(trackid)
-    projJ['trackdata'] = new_trackdata
-    projJ['trackordering'] = new_trackordering
+    projJ['track_data'] = new_trackdata
+    projJ['track_order'] = new_trackordering
 
 def get_timesig(patternLength, notesPerBeat):
     MaxFactor = 1024

@@ -79,8 +79,8 @@ class output_cvpj(plugin_output.base):
         midiDivision = 384
         NoteStep = midiDivision/4
         
-        cvpj_trackdata = projJ['trackdata']
-        cvpj_trackordering = projJ['trackordering']
+        cvpj_trackdata = projJ['track_data']
+        cvpj_trackordering = projJ['track_order']
 
         x_muse = ET.Element("muse")
         x_muse.set('version', "3.3")

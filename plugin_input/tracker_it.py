@@ -175,7 +175,8 @@ class input_it(plugin_input.base):
             samplecount += 1
         
         if xmodits_exists == True:
-            xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
+            try: xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
+            except: pass
 
         # ------------- Pattern -------------
         patterncount = 1

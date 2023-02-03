@@ -180,8 +180,8 @@ class input_mariopaint_smp(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         cvpj_l['timesig_numerator'] = 4
         cvpj_l['timesig_denominator'] = 4
-        cvpj_l['instruments'] = cvpj_l_instruments
-        cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
+        cvpj_l['instruments_data'] = cvpj_l_instruments
+        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = smp_tempo
         return json.dumps(cvpj_l)

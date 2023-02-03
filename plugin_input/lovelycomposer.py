@@ -138,8 +138,8 @@ class input_lc(plugin_input.base):
 
         cvpj_l = {}
         cvpj_l_playlist = {}
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
+        cvpj_l_instrument_data = {}
+        cvpj_l_instrument_order = []
 
         cvpj_l_playlist['1'] = {}
         cvpj_l_playlist['1']['name'] = "Part 1"
@@ -207,16 +207,16 @@ class input_lc(plugin_input.base):
                 plugdata['inst'] = used_instrument
 
             cvpj_inst["name"] = used_instrument
-            cvpj_l_instruments[used_instrument] = cvpj_inst
-            cvpj_l_instrumentsorder.append(used_instrument)
+            cvpj_l_instrument_data[used_instrument] = cvpj_inst
+            cvpj_l_instrument_order.append(used_instrument)
 
         startinststr = 'lc_instlist_'
 
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['timemarkers'] = placements.make_timemarkers([4, 4], patternlen, lc_loop_start_bar)
-        cvpj_l['instruments'] = cvpj_l_instruments
-        cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
+        cvpj_l['instruments_data'] = cvpj_l_instrument_data
+        cvpj_l['instruments_order'] = cvpj_l_instrument_order
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = (3614.75409836/lc_speed)/2
 

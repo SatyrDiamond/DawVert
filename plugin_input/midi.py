@@ -236,8 +236,8 @@ class input_midi(plugin_input.base):
         cvpj_l['timesig_numerator'] = midi_numerator
         cvpj_l['timesig_denominator'] = midi_denominator
         cvpj_l['fxrack'] = cvpj_l_fxrack
-        cvpj_l['instruments'] = cvpj_l_instruments
-        cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
+        cvpj_l['instruments_data'] = cvpj_l_instruments
+        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = midi_bpm
 

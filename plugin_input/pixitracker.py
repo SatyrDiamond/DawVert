@@ -213,8 +213,8 @@ class input_cvpj_f(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         cvpj_l['vol'] = pixi_vol/100
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['instruments'] = cvpj_l_instruments
-        cvpj_l['instrumentsorder'] = cvpj_l_instrumentsorder
+        cvpj_l['instruments_data'] = cvpj_l_instruments
+        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = pixi_bpm
         return json.dumps(cvpj_l)

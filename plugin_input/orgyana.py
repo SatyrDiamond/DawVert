@@ -182,8 +182,8 @@ class input_orgyana(plugin_input.base):
         cvpj_l = {}
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        cvpj_l['trackdata'] = cvpj_l_trackdata
-        cvpj_l['trackordering'] = cvpj_l_trackordering
+        cvpj_l['track_data'] = cvpj_l_trackdata
+        cvpj_l['track_order'] = cvpj_l_trackordering
         cvpj_l['bpm'] = (1/(org_tempo/120))*120
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['timesig_numerator'] = 4

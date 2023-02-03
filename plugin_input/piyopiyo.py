@@ -138,8 +138,8 @@ class input_pms(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['bpm'] = bpm
-        cvpj_l['trackdata'] = cvpj_l_trackdata
-        cvpj_l['trackordering'] = cvpj_l_trackordering
+        cvpj_l['track_data'] = cvpj_l_trackdata
+        cvpj_l['track_order'] = cvpj_l_trackordering
         cvpj_l['timemarkers'] = []
         cvpj_l['timemarkers'].append({'name': 'Loop', 'position': loopstart, 'end': loopend, 'type': 'loop'})
         return json.dumps(cvpj_l)

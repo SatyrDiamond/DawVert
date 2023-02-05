@@ -28,11 +28,8 @@ def song_start(channels, ppq):
     global s_timemarkers
 
     s_ppq = ppq
-
     t_tracknum = 0
-
     s_tempo = {}
-
     s_timemarkers = []
 
     t_chan_auto = []
@@ -112,13 +109,17 @@ def marker(time, name):
     ppqstep = s_ppq/4
     s_timemarkers.append({'position':time/ppqstep, 'name': name})
 
+def time_signature(time, numerator, denominator):
+    global s_timemarkers
+    global s_ppq
+    ppqstep = s_ppq/4
+    s_timemarkers.append({'position':time/ppqstep, 'name': str(numerator)+'/'+str(denominator), 'type': 'timesig', 'numerator': numerator, 'denominator': denominator})
+
 def track_end(channels):
     global midichanneltype
     global s_ppq
-
     global t_tracknum
     global t_trackname
-
     global t_chan_cmds
     global t_chan_usedinst
     global t_chan_used
@@ -159,12 +160,9 @@ def track_end(channels):
 
 
         for s_chan_usedinst in t_chan_usedinst[channelnum]:
-            #print(t_chan_curinst[channelnum])
             cvpj_midibank = t_chan_curinst[channelnum][0]
             cvpj_midiinst = t_chan_curinst[channelnum][1]
             cvpj_instid = 't'+str(t_tracknum)+'_c'+str(channelnum)+'_b'+str(t_chan_curinst[channelnum][0])+'_i'+str(cvpj_midiinst)
-
-            #print(channelnum, s_chan_usedinst, cvpj_instid)
 
             cvpj_l_instruments[cvpj_instid] = {}
             cvpj_trackdata = cvpj_l_instruments[cvpj_instid]
@@ -186,18 +184,18 @@ def track_end(channels):
             cvpj_l_instruments[cvpj_instid] = cvpj_trackdata
             cvpj_l_instrumentsorder.append(cvpj_instid)
 
-
-
-    cvpj_placement = {}
-    cvpj_placement['position'] = 0
-    cvpj_placement['duration'] = note_mod.getduration(t_cvpj_notelist)
-    cvpj_placement['type'] = 'instruments'
-    cvpj_placement['notelist'] = t_cvpj_notelist
-
     playlistrowdata = {}
     if t_trackname != None: playlistrowdata['name'] = str(t_trackname)
     playlistrowdata['color'] = [0.3, 0.3, 0.3]
-    playlistrowdata['placements'] = [cvpj_placement]
+
+    if t_cvpj_notelist != []:
+        cvpj_placement = {}
+        cvpj_placement['position'] = 0
+        cvpj_placement['duration'] = note_mod.getduration(t_cvpj_notelist)
+        cvpj_placement['type'] = 'instruments'
+        cvpj_placement['notelist'] = t_cvpj_notelist
+        playlistrowdata['placements'] = [cvpj_placement]
+
     cvpj_l_playlist[str(t_tracknum)] = playlistrowdata
 
 

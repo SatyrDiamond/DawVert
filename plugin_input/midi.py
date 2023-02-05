@@ -28,27 +28,10 @@ class input_midi(plugin_input.base):
         midifile = MidiFile(input_file, clip=True)
         ppq = midifile.ticks_per_beat
         print("[input-midi] PPQ: " + str(ppq))
-        midi_bpm = 120
-        midi_numerator = 4
-        midi_denominator = 4
-        num_tracks = len(midifile.tracks)
 
+        num_tracks = len(midifile.tracks)
         cvpj_songname = None
         cvpj_copyright = None
-
-        t_tracknum = 0
-        t_playlistnum = 0
-
-        cvpj_l = {}
-        cvpj_l_playlist = {}
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
-        cvpj_l_timemarkers = []
-        cvpj_l_fxrack = {}
-
-        global t_chan_timednote
-
-        midichanneltype = [0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0]
 
         format_midi_out.song_start(16, ppq)
 
@@ -68,9 +51,8 @@ class input_midi(plugin_input.base):
                 if msg.type == 'control_change': format_midi_out.control_change(timepos, msg.channel, msg.control, msg.value)
                 if msg.type == 'set_tempo': format_midi_out.tempo(timepos, msg.tempo)
                 if msg.type == 'track_name': format_midi_out.track_name(timepos, msg.name)
+                if msg.type == 'time_signature': format_midi_out.time_signature(timepos, msg.numerator, msg.denominator)
                 if msg.type == 'marker': format_midi_out.marker(timepos, msg.text)
-
-
 
             format_midi_out.track_end(16)
 

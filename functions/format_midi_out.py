@@ -38,13 +38,15 @@ def song_start(channels, ppq):
     t_chan_initial = []
     for _ in range(channels): t_chan_initial.append({})
 
-def track_start(channels):
+def track_start(channels, startpos):
     global t_tracknum
     global t_trackname
     global t_chan_cmds
     global activenotes
     global midichanneltype
+    global t_startpos
 
+    t_startpos = startpos
     t_trackname = None
 
     midichanneltype = []
@@ -86,6 +88,10 @@ def note_on(time, key, channel, vel):
     activenotes[channel].append([time, key, vel])
     #print(str(time).ljust(8), 'NOTE ON    ', str(key).ljust(4), str(channel).ljust(3), str(vel).ljust(3))
 
+def note(time, key, dur, channel, vel):
+    global t_chan_cmds
+    addpoint(t_chan_cmds[channel], time, ['NOTE', [dur, key, vel]])
+
 
 def program_change(time, channel, program): 
     global t_chan_cmds
@@ -99,7 +105,7 @@ def tempo(time, tempo):
     global s_tempo
     s_tempo[time] = 60000000/tempo
 
-def track_name(time, name): 
+def track_name(name): 
     global t_trackname
     t_trackname = name
 
@@ -123,7 +129,9 @@ def track_end(channels):
     global t_chan_cmds
     global t_chan_usedinst
     global t_chan_used
+    global t_startpos
     global s_tempo
+    global hasnotes
 
     ppqstep = s_ppq/4
 
@@ -140,6 +148,7 @@ def track_end(channels):
 
     for channelnum in range(channels):
         s_chan_cmds = t_chan_cmds[channelnum]
+        s_chan_cmds = dict(sorted(s_chan_cmds.items(), key=lambda item: item[0]))
         for position in s_chan_cmds:
             for s_cmd in s_chan_cmds[position]:
                 
@@ -189,15 +198,21 @@ def track_end(channels):
     playlistrowdata['color'] = [0.3, 0.3, 0.3]
 
     if t_cvpj_notelist != []:
+        hasnotes = True
         cvpj_placement = {}
-        cvpj_placement['position'] = 0
+        cvpj_placement['position'] = t_startpos/ppqstep
         cvpj_placement['duration'] = note_mod.getduration(t_cvpj_notelist)
         cvpj_placement['type'] = 'instruments'
         cvpj_placement['notelist'] = t_cvpj_notelist
         playlistrowdata['placements'] = [cvpj_placement]
+    else:
+        hasnotes = False
 
     cvpj_l_playlist[str(t_tracknum)] = playlistrowdata
 
+def track_hasnotes():
+    global hasnotes
+    return hasnotes
 
 def song_end():
     global s_tempo

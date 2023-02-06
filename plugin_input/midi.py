@@ -35,6 +35,9 @@ class input_midi(plugin_input.base):
 
         format_midi_out.song_start(16, ppq)
 
+        s_tempo = 120
+        s_timesig = [4,4]
+
         for track in midifile.tracks:
             format_midi_out.track_start(16, 0)
             midi_trackname = None
@@ -42,17 +45,22 @@ class input_midi(plugin_input.base):
 
             for msg in track:
                 timepos += msg.time
+                print(timepos, msg)
                 if msg.type == 'note_on':
                     if msg.velocity != 0: format_midi_out.note_on(timepos, msg.note-60, msg.channel, msg.velocity)
                     else: format_midi_out.note_off(timepos, msg.note-60, msg.channel)
                 if msg.type == 'note_off': format_midi_out.note_off(timepos, msg.note-60, msg.channel)
                 if msg.type == 'program_change': format_midi_out.program_change(timepos, msg.channel, msg.program)
                 if msg.type == 'control_change': format_midi_out.control_change(timepos, msg.channel, msg.control, msg.value)
-                if msg.type == 'set_tempo': format_midi_out.tempo(timepos, msg.tempo)
+                if msg.type == 'set_tempo': 
+                    if timepos == 0: s_tempo = 60000000/msg.tempo
+                    format_midi_out.tempo(timepos, 60000000/msg.tempo)
                 if msg.type == 'track_name': 
                     format_midi_out.track_name(msg.name)
                     midi_trackname = msg.name
-                if msg.type == 'time_signature': format_midi_out.time_signature(timepos, msg.numerator, msg.denominator)
+                if msg.type == 'time_signature': 
+                    if timepos == 0: s_timesig = [msg.numerator, msg.denominator]
+                    format_midi_out.time_signature(timepos, msg.numerator, msg.denominator)
                 if msg.type == 'marker': format_midi_out.marker(timepos, msg.text)
 
             format_midi_out.track_end(16)
@@ -67,7 +75,11 @@ class input_midi(plugin_input.base):
         for songdesc in songdescline:
             song_message = song_message+songdesc+'\n'
 
-        cvpj_l = format_midi_out.song_end()
+        cvpj_l = format_midi_out.song_end(16)
+
+        cvpj_l['timesig_numerator'] = s_timesig[0]
+        cvpj_l['timesig_denominator'] = s_timesig[1]
+        cvpj_l['bpm'] = s_tempo
 
         if num_tracks != 1:
             cvpj_l['info'] = {}

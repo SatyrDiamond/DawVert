@@ -134,12 +134,12 @@ def track_end(channels):
                 cvpj_trackdata["instdata"]['plugin'] = 'general-midi'
                 if midichanneltype[channelnum] == 0: 
                     cvpj_trackdata["instdata"]['plugindata'] = {'bank':cvpj_midibank, 'inst':cvpj_midiinst}
-                    cvpj_trackdata["instdata"]['usemasterpitch'] = 0
+                    cvpj_trackdata["instdata"]['usemasterpitch'] = 1
                     cvpj_trackdata["name"] = MIDIInstNames[cvpj_midiinst] + ' [Ch' + str(channelnum+1) + ']'
                     cvpj_trackdata["color"] = MIDIInstColors[cvpj_midiinst]
                 else: 
                     cvpj_trackdata["instdata"]['plugindata'] = {'bank':128, 'inst':cvpj_midiinst}
-                    cvpj_trackdata["instdata"]['usemasterpitch'] = 1
+                    cvpj_trackdata["instdata"]['usemasterpitch'] = 0
                     cvpj_trackdata["name"] = 'Drums'
 
             cvpj_l_instruments[cvpj_instid] = cvpj_trackdata

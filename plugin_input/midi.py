@@ -9,6 +9,69 @@ from mido import MidiFile
 from functions import note_convert
 from functions import format_midi_out
 
+def setinfo(cvpj_l, textin):
+    global author
+    global titlefound
+    # ------------------------ copyright + year ------------------------
+    copyrightdatefound = False
+    if '(c)' in textin:
+        copyrightpart = textin.split('(c)', 1)
+        copyrightdatefound = True
+    elif '(C)' in textin:
+        copyrightpart = textin.split('(C)', 1)
+        copyrightdatefound = True
+    elif '©' in textin:
+        copyrightpart = textin.split('©', 1)
+        copyrightdatefound = True
+    elif 'copyright' in textin:
+        copyrightpart = textin.split('copyright', 1)
+        copyrightdatefound = True
+    elif 'Copyright' in textin:
+        copyrightpart = textin.split('Copyright', 1)
+        copyrightdatefound = True
+    elif 'Copyright (c)' in textin:
+        copyrightpart = textin.split('Copyright (c)', 1)
+        copyrightdatefound = True
+
+    if 'Composed by' in textin:
+        authorpart = textin.split('Composed by', 1)
+        if len(authorpart) != 1: author = authorpart[1]
+    if 'by ' in textin:
+        authorpart = textin.split('by ', 1)
+        if len(authorpart) != 1: author = authorpart[1]
+    if 'By ' in textin:
+        authorpart = textin.split('By ', 1)
+        if len(authorpart) != 1: author = authorpart[1]
+
+    if copyrightdatefound == True:
+        copyrightmsg_len = len(copyrightpart)
+        if copyrightmsg_len >= 2:
+            copyrightisyear = copyrightpart[1].lstrip().split(' ', 1)
+            if copyrightisyear[0].isnumeric() == True:
+                cvpj_l['info']['year'] = int(copyrightisyear[0])
+                if len(copyrightisyear) == 2:
+                    cvpj_l['info']['author'] = copyrightisyear[1]
+            else:
+                cvpj_l['info']['author'] = copyrightisyear
+
+    # ------------------------ URL ------------------------
+    if 'http://' in textin:
+        urlparts = textin.split('"')
+        for urlpart in urlparts:
+            if 'http://' in urlpart: cvpj_l['info']['url'] = urlpart
+
+    # ------------------------ title ------------------------
+    if textin.count('"') == 2 and titlefound == False:
+        titlefound = True
+        cvpj_l['info']['title'] = textin.split('"')[1::2][0]
+
+    # ------------------------ email ------------------------
+    if '.' in textin and '@' in textin:
+        emailparts = textin.split('"')
+        for emailpart in emailparts:
+            if '.' in emailpart and '@' in emailpart: cvpj_l['info']['email'] = emailpart
+
+
 class input_midi(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -31,12 +94,14 @@ class input_midi(plugin_input.base):
 
         num_tracks = len(midifile.tracks)
         songdescline = []
-        cvpj_copyright = None
+        midi_copyright = None
 
         format_midi_out.song_start(16, ppq)
 
         s_tempo = 120
         s_timesig = [4,4]
+
+        t_tracknames = []
 
         for track in midifile.tracks:
             format_midi_out.track_start(16, 0)
@@ -45,6 +110,7 @@ class input_midi(plugin_input.base):
             timepos = 0
 
             for msg in track:
+                print(msg)
                 timepos += msg.time
                 format_midi_out.resttime(msg.time)
                 if msg.type == 'note_on':
@@ -56,23 +122,22 @@ class input_midi(plugin_input.base):
                 if msg.type == 'set_tempo': 
                     if timepos == 0: s_tempo = 60000000/msg.tempo
                     format_midi_out.tempo(timepos, 60000000/msg.tempo)
-                if msg.type == 'track_name': 
-                    format_midi_out.track_name(msg.name)
-                    midi_trackname = msg.name
                 if msg.type == 'time_signature': 
                     if timepos == 0: s_timesig = [msg.numerator, msg.denominator]
                     format_midi_out.time_signature(timepos, msg.numerator, msg.denominator)
                 if msg.type == 'marker': format_midi_out.marker(timepos, msg.text)
-
+                if msg.type == 'track_name': 
+                    format_midi_out.track_name(msg.name)
+                    midi_trackname = msg.name
+                if msg.type == 'copyright': 
+                    midi_copyright = msg.text
             format_midi_out.track_end(16)
 
-            if midi_trackname != None and format_midi_out.get_hasnotes() == False:
-                songdescline.append(midi_trackname)
+            if midi_trackname != None:
+                if format_midi_out.get_hasnotes() == False: songdescline.append(midi_trackname)
+                t_tracknames.append(midi_trackname)
 
         song_message = ""
-
-        for songdesc in songdescline:
-            song_message = song_message+songdesc+'\n'
 
         cvpj_l = format_midi_out.song_end(16)
 
@@ -80,13 +145,30 @@ class input_midi(plugin_input.base):
         cvpj_l['timesig_denominator'] = s_timesig[1]
         cvpj_l['bpm'] = s_tempo
 
+        global author
+        global titlefound
+
+        author = None
+        titlefound = False
+
+        cvpj_l['info'] = {}
+
+        cvpj_l['info']['author'] = midi_copyright
+        setinfo(cvpj_l, midi_copyright)
+
+        for t_trackname in t_tracknames:
+            setinfo(cvpj_l, t_trackname)
+
+        for songdesc in songdescline:
+            song_message = song_message+songdesc+'\n'
+
         if num_tracks != 1:
-            cvpj_l['info'] = {}
             cvpj_l['info']['message'] = {}
             cvpj_l['info']['message']['type'] = 'text'
             cvpj_l['info']['message']['text'] = song_message
         elif midi_trackname != None:
-            cvpj_l['info'] = {}
             cvpj_l['info']['title'] = midi_trackname
+
+        print(cvpj_l['info'])
 
         return json.dumps(cvpj_l)

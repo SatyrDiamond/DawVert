@@ -41,17 +41,18 @@ class input_midi(plugin_input.base):
         for track in midifile.tracks:
             format_midi_out.track_start(16, 0)
             midi_trackname = None
+
             timepos = 0
 
             for msg in track:
                 timepos += msg.time
-                print(timepos, msg)
+                format_midi_out.resttime(msg.time)
                 if msg.type == 'note_on':
-                    if msg.velocity != 0: format_midi_out.note_on(timepos, msg.note-60, msg.channel, msg.velocity)
-                    else: format_midi_out.note_off(timepos, msg.note-60, msg.channel)
-                if msg.type == 'note_off': format_midi_out.note_off(timepos, msg.note-60, msg.channel)
-                if msg.type == 'program_change': format_midi_out.program_change(timepos, msg.channel, msg.program)
-                if msg.type == 'control_change': format_midi_out.control_change(timepos, msg.channel, msg.control, msg.value)
+                    if msg.velocity != 0: format_midi_out.note_on(msg.note, msg.channel, msg.velocity)
+                    else: format_midi_out.note_off(msg.note, msg.channel)
+                if msg.type == 'note_off': format_midi_out.note_off(msg.note, msg.channel)
+                if msg.type == 'program_change': format_midi_out.program_change(msg.channel, msg.program)
+                if msg.type == 'control_change': format_midi_out.control_change(msg.channel, msg.control, msg.value)
                 if msg.type == 'set_tempo': 
                     if timepos == 0: s_tempo = 60000000/msg.tempo
                     format_midi_out.tempo(timepos, 60000000/msg.tempo)
@@ -63,12 +64,10 @@ class input_midi(plugin_input.base):
                     format_midi_out.time_signature(timepos, msg.numerator, msg.denominator)
                 if msg.type == 'marker': format_midi_out.marker(timepos, msg.text)
 
-            format_midi_out.track_end(16)
-
-            notesused = format_midi_out.track_hasnotes()
-
-            if notesused == False and midi_trackname != None:
+            if midi_trackname != None and format_midi_out.get_hasnotes() == False:
                 songdescline.append(midi_trackname)
+
+            format_midi_out.track_end(16)
 
         song_message = ""
 

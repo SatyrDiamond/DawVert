@@ -30,19 +30,18 @@ class input_midi(plugin_input.base):
         print("[input-midi] PPQ: " + str(ppq))
 
         num_tracks = len(midifile.tracks)
-        cvpj_songname = None
+        songdescline = []
         cvpj_copyright = None
 
         format_midi_out.song_start(16, ppq)
 
         for track in midifile.tracks:
-            format_midi_out.track_start(16)
+            format_midi_out.track_start(16, 0)
             midi_trackname = None
             timepos = 0
 
             for msg in track:
                 timepos += msg.time
-                print(msg)
                 if msg.type == 'note_on':
                     if msg.velocity != 0: format_midi_out.note_on(timepos, msg.note-60, msg.channel, msg.velocity)
                     else: format_midi_out.note_off(timepos, msg.note-60, msg.channel)
@@ -50,12 +49,33 @@ class input_midi(plugin_input.base):
                 if msg.type == 'program_change': format_midi_out.program_change(timepos, msg.channel, msg.program)
                 if msg.type == 'control_change': format_midi_out.control_change(timepos, msg.channel, msg.control, msg.value)
                 if msg.type == 'set_tempo': format_midi_out.tempo(timepos, msg.tempo)
-                if msg.type == 'track_name': format_midi_out.track_name(timepos, msg.name)
+                if msg.type == 'track_name': 
+                    format_midi_out.track_name(msg.name)
+                    midi_trackname = msg.name
                 if msg.type == 'time_signature': format_midi_out.time_signature(timepos, msg.numerator, msg.denominator)
                 if msg.type == 'marker': format_midi_out.marker(timepos, msg.text)
 
             format_midi_out.track_end(16)
 
+            notesused = format_midi_out.track_hasnotes()
+
+            if notesused == False and midi_trackname != None:
+                songdescline.append(midi_trackname)
+
+        song_message = ""
+
+        for songdesc in songdescline:
+            song_message = song_message+songdesc+'\n'
+
         cvpj_l = format_midi_out.song_end()
+
+        if num_tracks != 1:
+            cvpj_l['info'] = {}
+            cvpj_l['info']['message'] = {}
+            cvpj_l['info']['message']['type'] = 'text'
+            cvpj_l['info']['message']['text'] = song_message
+        else:
+            cvpj_l['info'] = {}
+            cvpj_l['info']['title'] = midi_trackname
 
         return json.dumps(cvpj_l)

@@ -85,7 +85,7 @@ class input_midi(plugin_input.base):
             cvpj_l['info']['message'] = {}
             cvpj_l['info']['message']['type'] = 'text'
             cvpj_l['info']['message']['text'] = song_message
-        else:
+        elif midi_trackname != None:
             cvpj_l['info'] = {}
             cvpj_l['info']['title'] = midi_trackname
 

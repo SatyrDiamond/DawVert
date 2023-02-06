@@ -103,7 +103,7 @@ def control_change(time, channel, control, value):
 
 def tempo(time, tempo): 
     global s_tempo
-    s_tempo[time] = 60000000/tempo
+    s_tempo[time] = tempo
 
 def track_name(name): 
     global t_trackname
@@ -214,7 +214,7 @@ def track_hasnotes():
     global hasnotes
     return hasnotes
 
-def song_end():
+def song_end(channels):
     global s_tempo
     global s_ppq
     global s_timemarkers
@@ -238,14 +238,33 @@ def song_end():
         cvpj_autodata["points"] = t_auto_tempo
         cvpj_l_automation['main']['bpm'] = [cvpj_autodata]
 
+    cvpj_l_fxrack["0"] = {}
+    cvpj_l_fxrack["0"]["name"] = "Master"
+
+    for midi_channum in range(channels):
+        cvpj_l_fxrack[str(midi_channum+1)] = {}
+
+        s_chan_initial = t_chan_initial[midi_channum]
+
+        fxdata = cvpj_l_fxrack[str(midi_channum+1)]
+        fxdata["fxenabled"] = 1
+
+        if 7 in s_chan_initial: fxdata["vol"] = s_chan_initial[7]/127
+        else: fxdata["vol"] = 1.0
+
+        if 10 in s_chan_initial: fxdata["pan"] = ((s_chan_initial[10]/127)-0.5)*2
+        else: fxdata["pan"] = 1.0
+
+        fxdata['color'] = [0.3, 0.3, 0.3]
+        fxdata["name"] = "Channel "+str(midi_channum+1)
+
     cvpj_l['use_instrack'] = False
-    cvpj_l['use_fxrack'] = False
-    cvpj_l['timesig_numerator'] = 4
-    cvpj_l['timesig_denominator'] = 4
+    cvpj_l['use_fxrack'] = True
     cvpj_l['automation'] = cvpj_l_automation
     cvpj_l['timemarkers'] = s_timemarkers
     cvpj_l['instruments_data'] = cvpj_l_instruments
     cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
     cvpj_l['playlist'] = cvpj_l_playlist
+    cvpj_l['fxrack'] = cvpj_l_fxrack
     cvpj_l['bpm'] = 140
     return cvpj_l

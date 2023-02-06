@@ -110,7 +110,6 @@ class input_midi(plugin_input.base):
             timepos = 0
 
             for msg in track:
-                print(msg)
                 timepos += msg.time
                 format_midi_out.resttime(msg.time)
                 if msg.type == 'note_on':

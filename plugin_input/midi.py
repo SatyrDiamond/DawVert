@@ -64,10 +64,10 @@ class input_midi(plugin_input.base):
                     format_midi_out.time_signature(timepos, msg.numerator, msg.denominator)
                 if msg.type == 'marker': format_midi_out.marker(timepos, msg.text)
 
+            format_midi_out.track_end(16)
+
             if midi_trackname != None and format_midi_out.get_hasnotes() == False:
                 songdescline.append(midi_trackname)
-
-            format_midi_out.track_end(16)
 
         song_message = ""
 

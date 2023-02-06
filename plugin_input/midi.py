@@ -52,7 +52,7 @@ def setinfo(cvpj_l, textin):
                 if len(copyrightisyear) == 2:
                     cvpj_l['info']['author'] = copyrightisyear[1]
             else:
-                cvpj_l['info']['author'] = copyrightisyear
+                cvpj_l['info']['author'] = copyrightisyear[1]
 
     # ------------------------ URL ------------------------
     if 'http://' in textin:
@@ -71,7 +71,6 @@ def setinfo(cvpj_l, textin):
         for emailpart in emailparts:
             if '.' in emailpart and '@' in emailpart: cvpj_l['info']['email'] = emailpart
 
-
 class input_midi(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -88,6 +87,9 @@ class input_midi(plugin_input.base):
         bytestream.seek(0)
 
     def parse(self, input_file, extra_param):
+        global author
+        global titlefound
+
         midifile = MidiFile(input_file, clip=True)
         ppq = midifile.ticks_per_beat
         print("[input-midi] PPQ: " + str(ppq))
@@ -144,16 +146,14 @@ class input_midi(plugin_input.base):
         cvpj_l['timesig_denominator'] = s_timesig[1]
         cvpj_l['bpm'] = s_tempo
 
-        global author
-        global titlefound
-
         author = None
         titlefound = False
 
         cvpj_l['info'] = {}
 
-        cvpj_l['info']['author'] = midi_copyright
-        setinfo(cvpj_l, midi_copyright)
+        if midi_copyright != None:
+            cvpj_l['info']['author'] = midi_copyright
+            setinfo(cvpj_l, midi_copyright)
 
         for t_trackname in t_tracknames:
             setinfo(cvpj_l, t_trackname)
@@ -167,7 +167,5 @@ class input_midi(plugin_input.base):
             cvpj_l['info']['message']['text'] = song_message
         elif midi_trackname != None:
             cvpj_l['info']['title'] = midi_trackname
-
-        print(cvpj_l['info'])
 
         return json.dumps(cvpj_l)

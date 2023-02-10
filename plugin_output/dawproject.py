@@ -235,7 +235,7 @@ class output_cvpj(plugin_output.base):
                         bpm_auto_pl_pos = bpm_auto_pl['position']
                         startpoint = True
                         for bpm_auto_poi in bpm_auto_pl['points']:
-                            bpm_auto_poi['position'] = bpm_auto_pl_pos
+                            bpm_auto_poi['position'] += bpm_auto_pl_pos
                             #print(bpm_auto_poi)
                             instanttype = False
                             if 'type' in bpm_auto_poi:

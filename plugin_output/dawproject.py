@@ -101,7 +101,6 @@ class output_cvpj(plugin_output.base):
             if cvpj_trackentry in cvpj_trackdata:
                 s_trkdata = cvpj_trackdata[cvpj_trackentry]
                 x_str_track = ET.SubElement(x_str, "Track")
-                x_str_track.set('contentType', 'notes')
                 x_str_track.set('loaded', 'true')
                 x_str_track.set('id', 'track_'+cvpj_trackentry)
                 if 'color' in s_trkdata:
@@ -117,49 +116,51 @@ class output_cvpj(plugin_output.base):
                 if 'pan' in s_trkdata: addvalue(x_str_track_ch, 'Pan', 1, -1, 'linear', s_trkdata['pan'], cvpj_trackentry+'_pan', 'Pan')
                 if 'vol' in s_trkdata: addvalue(x_str_track_ch, 'Volume', 2, 0, 'linear', s_trkdata['vol'], cvpj_trackentry+'_vol', 'Volume')
 
-                if 'placements' in s_trkdata:
-                    s_trkplacements = s_trkdata['placements']
-                    x_arr_lanes_pl = ET.SubElement(x_arr_lanes, "Lanes")
-                    x_arr_lanes_pl.set('track', 'track_'+cvpj_trackentry)
-                    x_arr_lanes_pl.set('id', 'lanes_'+cvpj_trackentry)
-                    x_arr_lanes_clips = ET.SubElement(x_arr_lanes_pl, "Clips")
-                    x_arr_lanes_clips.set('id', 'clips_'+cvpj_trackentry)
-                    for s_trkplacement in s_trkplacements:
-                        x_arr_lanes_clip = ET.SubElement(x_arr_lanes_clips, "Clip")
+                if s_trkdata['type'] == 'instruments':
+                    x_str_track.set('contentType', 'notes')
+                    if 'placements' in s_trkdata:
+                        s_trkplacements = s_trkdata['placements']
+                        x_arr_lanes_pl = ET.SubElement(x_arr_lanes, "Lanes")
+                        x_arr_lanes_pl.set('track', 'track_'+cvpj_trackentry)
+                        x_arr_lanes_pl.set('id', 'lanes_'+cvpj_trackentry)
+                        x_arr_lanes_clips = ET.SubElement(x_arr_lanes_pl, "Clips")
+                        x_arr_lanes_clips.set('id', 'clips_'+cvpj_trackentry)
+                        for s_trkplacement in s_trkplacements:
+                            x_arr_lanes_clip = ET.SubElement(x_arr_lanes_clips, "Clip")
 
-                        if 'color' in s_trkplacement:
-                            x_arr_lanes_clip.set('color', '#'+colors.rgb_float_2_hex(s_trkplacement['color']))
+                            if 'color' in s_trkplacement:
+                                x_arr_lanes_clip.set('color', '#'+colors.rgb_float_2_hex(s_trkplacement['color']))
 
-                        if 'name' in s_trkplacement:
-                            x_arr_lanes_clip.set('name', s_trkplacement['name'])
-                            
-                        x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
-
-                        if 'cut' in s_trkplacement:
-                            if s_trkplacement['cut']['type'] == 'cut':
-                                x_arr_lanes_clip.set('duration', str((s_trkplacement['cut']['end'] - s_trkplacement['cut']['start'])/4))
-                                x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
-                            if s_trkplacement['cut']['type'] == 'warp':
-                                x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
-                                x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
-                                x_arr_lanes_clip.set('loopStart', str(s_trkplacement['cut']['loopstart']/4))
-                                x_arr_lanes_clip.set('loopEnd', str(s_trkplacement['cut']['loopend']/4))
-                        else:
+                            if 'name' in s_trkplacement:
+                                x_arr_lanes_clip.set('name', s_trkplacement['name'])
+                                
                             x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
-                            x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
-                            x_arr_lanes_clip.set('playStart', '0.0')
-                        if 'notelist' in s_trkplacement:
-                            s_trknotelist = s_trkplacement['notelist']
-                            nlidcount = 1
-                            x_arr_lanes_clip_notes = ET.SubElement(x_arr_lanes_clip, "Notes")
-                            x_arr_lanes_clip_notes.set('id', 'notes'+str(nlidcount)+'_'+cvpj_trackentry)
-                            for s_trknote in s_trknotelist:
-                                x_arr_lanes_clip_note = ET.SubElement(x_arr_lanes_clip_notes, "Note")
-                                x_arr_lanes_clip_note.set('time', str(s_trknote['position']/4))
-                                x_arr_lanes_clip_note.set('duration', str(s_trknote['duration']/4))
-                                x_arr_lanes_clip_note.set('key', str(s_trknote['key']+60))
-                                if 'vol' in s_trknote: x_arr_lanes_clip_note.set('vel', str(s_trknote['vol']))
-                            nlidcount += 1
+
+                            if 'cut' in s_trkplacement:
+                                if s_trkplacement['cut']['type'] == 'cut':
+                                    x_arr_lanes_clip.set('duration', str((s_trkplacement['cut']['end'] - s_trkplacement['cut']['start'])/4))
+                                    x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
+                                if s_trkplacement['cut']['type'] == 'warp':
+                                    x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
+                                    x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
+                                    x_arr_lanes_clip.set('loopStart', str(s_trkplacement['cut']['loopstart']/4))
+                                    x_arr_lanes_clip.set('loopEnd', str(s_trkplacement['cut']['loopend']/4))
+                            else:
+                                x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
+                                x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
+                                x_arr_lanes_clip.set('playStart', '0.0')
+                            if 'notelist' in s_trkplacement:
+                                s_trknotelist = s_trkplacement['notelist']
+                                nlidcount = 1
+                                x_arr_lanes_clip_notes = ET.SubElement(x_arr_lanes_clip, "Notes")
+                                x_arr_lanes_clip_notes.set('id', 'notes'+str(nlidcount)+'_'+cvpj_trackentry)
+                                for s_trknote in s_trknotelist:
+                                    x_arr_lanes_clip_note = ET.SubElement(x_arr_lanes_clip_notes, "Note")
+                                    x_arr_lanes_clip_note.set('time', str(s_trknote['position']/4))
+                                    x_arr_lanes_clip_note.set('duration', str(s_trknote['duration']/4))
+                                    x_arr_lanes_clip_note.set('key', str(s_trknote['key']+60))
+                                    if 'vol' in s_trknote: x_arr_lanes_clip_note.set('vel', str(s_trknote['vol']))
+                                nlidcount += 1
 
         # ----------------------------------------- Master -----------------------------------------
         x_str_master = ET.SubElement(x_str, "Track")

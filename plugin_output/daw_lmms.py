@@ -104,7 +104,7 @@ def asdrlfo(jsonin, xmlobj, asdrtype, xmltype):
                     elmodX.set('lspd', str(lfospeed))
                 if 'shape' in elmodJenv: elmodX.set('lshp', str(lfoshape[elmodJlfo['shape']]))
 
-def lmms_encode_plugin(xmltag, trkJ):
+def lmms_encode_plugin(xmltag, trkJ, trackid):
     instJ = trkJ['instdata']
     pluginname = instJ['plugin']
     xml_instrumentpreplugin = ET.SubElement(xmltag, "instrument")
@@ -376,7 +376,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid):
     print('[output-lmms]       Name: ' + trkJ['name'])
     if 'chain_fx_audio' in trkJ:
         lmms_encode_fxchain(trkX_insttr, trkJ)
-    lmms_encode_plugin(trkX_insttr, trkJ)
+    lmms_encode_plugin(trkX_insttr, trkJ, trackid)
 
     #placements
     if 'placements' in trkJ:
@@ -639,6 +639,7 @@ class output_lmms(plugin_output.base):
         song_convert.instrack2singleinst(projJ,'s')
         song_convert.trackfx2fxrack(projJ,'s')
 
+        placements.lanefit(projJ)
         placements.removelanes(projJ)
 
         trksJ = projJ['track_data']

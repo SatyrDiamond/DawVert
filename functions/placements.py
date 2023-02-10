@@ -3,6 +3,9 @@
 
 import math
 
+def overlap(start1, end1, start2, end2):
+    return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
+
 def removelanes(projJ):
     old_trackdata = projJ['track_data']
     old_trackordering = projJ['track_order']
@@ -56,6 +59,68 @@ def removelanes(projJ):
                 new_trackordering.append(trackid)
     projJ['track_data'] = new_trackdata
     projJ['track_order'] = new_trackordering
+
+
+def lanefit_checkoverlap(new_placementdata, placements_table, num):
+    not_overlapped = True
+    p_pl_pos = new_placementdata['position']
+    p_pl_dur = new_placementdata['duration']
+    p_pl_end = p_pl_pos+p_pl_dur
+    #print('----------------------------')
+    for lanepl in placements_table[num]:
+        e_pl_pos = lanepl['position']
+        e_pl_dur = lanepl['duration']
+        e_pl_end = e_pl_pos+e_pl_dur
+        if bool(overlap(p_pl_pos, p_pl_end, e_pl_pos, e_pl_end)) == True: not_overlapped = False
+    return not_overlapped
+
+def lanefit_addpl(new_placementdata, placements_table):
+    lanenum = 0
+    placement_placed = False
+    while placement_placed == False:
+        not_overlapped = lanefit_checkoverlap(new_placementdata, placements_table, lanenum)
+        #print(lanenum, not_overlapped)
+        if not_overlapped == True:
+            placement_placed = True
+            placements_table[lanenum].append(new_placementdata)
+        if not_overlapped == False:
+            placements_table.append([])
+            lanenum += 1
+
+
+def lanefit(projJ):
+    if 'use_lanefit' in projJ:
+        if projJ['use_lanefit'] == True:
+            trackdata = projJ['track_data']
+            trackordering = projJ['track_order']
+            for trackid in trackordering:
+                if trackid in trackdata:
+                    lr_t_trdata = trackdata[trackid]
+                    if 'laned' in lr_t_trdata:
+                        new_lanedata = {}
+                        new_laneordering = []
+                        old_lanedata = lr_t_trdata['lanedata']
+                        old_laneordering = lr_t_trdata['laneordering']
+
+                        new_pltable = [[]]
+
+                        for laneid in old_laneordering:
+                            old_lanedata_data = old_lanedata[laneid]
+                            old_lanedata_pl = old_lanedata_data['placements']
+                            for old_lanedata_pl_s in old_lanedata_pl:
+                                lanefit_addpl(old_lanedata_pl_s, new_pltable)
+
+                        for plnum in range(len(new_pltable)):
+                            if new_pltable[plnum] != []:
+                                newlaneid = 'lanefit_'+str(plnum)
+                                new_lanedata[newlaneid] = {}
+                                new_lanedata[newlaneid]['placements'] = new_pltable[plnum]
+                                new_laneordering.append(newlaneid)
+
+                        lr_t_trdata['lanedata'] = new_lanedata
+                        lr_t_trdata['laneordering'] = new_laneordering
+
+
 
 def addwarps(projJ):
     trackdata = projJ['track_data']

@@ -116,7 +116,7 @@ class output_cvpj(plugin_output.base):
                 if 'pan' in s_trkdata: addvalue(x_str_track_ch, 'Pan', 1, -1, 'linear', s_trkdata['pan'], cvpj_trackentry+'_pan', 'Pan')
                 if 'vol' in s_trkdata: addvalue(x_str_track_ch, 'Volume', 2, 0, 'linear', s_trkdata['vol'], cvpj_trackentry+'_vol', 'Volume')
 
-                if s_trkdata['type'] == 'instruments':
+                if s_trkdata['type'] == 'instrument':
                     x_str_track.set('contentType', 'notes')
                     if 'placements' in s_trkdata:
                         s_trkplacements = s_trkdata['placements']

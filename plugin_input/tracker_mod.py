@@ -148,7 +148,7 @@ class input_mod(plugin_input.base):
             mod_numinst += 1
             mod_inst_mod_name = file_stream.read(22).decode().rstrip('\x00').translate(dict.fromkeys(range(32)))
 
-            mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength = struct.unpack('<HBBHH', file_stream.read(8))
+            mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength = struct.unpack('>HBBHH', file_stream.read(8))
 
             print('[input-mod] Instrument ' + str(mod_numinst) + ': ' + mod_inst_mod_name)
             table_samples.append([mod_inst_mod_name, mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart*2, mod_inst_looplength*2])

@@ -175,6 +175,8 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
         xml_plugin = xml_a_plugin[0]
         if 'color' not in cvpj_l_track:
             cvpj_l_track['color'] = plugincolors[pluginname]
+
+
         if pluginname == "sf2player":
             cvpj_l_inst['plugin'] = "soundfont2"
             cvpj_l_plugindata['bank'] = int(xml_plugin.get('bank'))
@@ -193,6 +195,8 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
             cvpj_l_plugindata['reverb']['enabled'] = float(xml_plugin.get('reverbOn'))
             cvpj_l_plugindata['reverb']['roomsize'] = float(xml_plugin.get('reverbRoomSize'))
             cvpj_l_plugindata['reverb']['width'] = float(xml_plugin.get('reverbWidth'))
+
+
         elif pluginname == "audiofileprocessor":
             cvpj_l_inst['plugin'] = "sampler"
             lmms_getvalue_int(cvpj_l_plugindata, 'reverse', xml_plugin.get('reversed'))
@@ -219,6 +223,8 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
             if interpolation == 1: cvpj_l_plugindata['interpolation'] = "linear"
             if interpolation == 2: cvpj_l_plugindata['interpolation'] = "sinc"
             asdflfo_get(trkX_insttr, cvpj_l_plugindata)
+
+
         elif pluginname == "OPL2":
             cvpj_l_inst['plugin'] = "opl2"
             cvpj_l_plugindata['op1'] = {}
@@ -253,6 +259,8 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
             cvpj_l_plugindata['fm'] = int(xml_plugin.get('fm'))
             cvpj_l_plugindata['tremolo_depth'] = int(xml_plugin.get('trem_depth'))
             cvpj_l_plugindata['vibrato_depth'] = int(xml_plugin.get('vib_depth'))
+
+
         elif pluginname == "zynaddsubfx":
             cvpj_l_inst['plugin'] = "zynaddsubfx-lmms"
             cvpj_l_plugindata['bandwidth'] = xml_plugin.get('bandwidth')
@@ -266,9 +274,13 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
             cvpj_l_plugindata['rescenterfreq'] = xml_plugin.get('rescenterfreq')
             zdata = xml_plugin.findall('ZynAddSubFX-data')[0]
             cvpj_l_plugindata['data'] = base64.b64encode(ET.tostring(zdata, encoding='utf-8')).decode('ascii')
+
+
         elif pluginname == "vestige":
             cvpj_l_inst['plugin'] = "vst2"
             getvstparams(cvpj_l_plugindata, xml_plugin)
+
+
         else:
             cvpj_l_inst['plugin'] = "native-lmms"
             cvpj_l_plugindata['name'] = pluginname
@@ -631,7 +643,7 @@ class input_lmms(plugin_input.base):
                         if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
                         elif s_autopl_id[2] == 'pan': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
                         else: temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 1)
-                else:
+                if s_autopl_id[0] == 'main':
                     if s_autopl_id[1] == 'vol': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 0.01)
                     elif s_autopl_id[1] == 'pitch': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 100)
                     else: l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 1)

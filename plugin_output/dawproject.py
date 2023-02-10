@@ -199,7 +199,7 @@ class output_cvpj(plugin_output.base):
                 if infoJ['message']['type'] == 'text':
                     addmeta(x_metadata, 'Comment', infoJ['message']['text'].replace("\n", "\r"))
 
-        # ----------------------------------------- info -----------------------------------------
+        # ----------------------------------------- timemarkers -----------------------------------------
 
         if 'timemarkers' in projJ:
             for timemarker in projJ['timemarkers']:
@@ -219,6 +219,44 @@ class output_cvpj(plugin_output.base):
                     x_arr_marker.set('name', str(timemarker['name']))
                     x_arr_marker.set('time', str(timemarker['position']/4))
                     x_arr_marker.set('color', '#444444')
+
+        # ----------------------------------------- auto -----------------------------------------
+
+        if 'automation' in projJ:
+            if 'main' in projJ['automation']:
+                if 'bpm' in projJ['automation']['main']:
+                    prevvalue = None
+                    bpm_auto = projJ['automation']['main']['bpm']
+                    x_project_arr_tempo = ET.SubElement(x_project_arr, "TempoAutomation")
+                    x_project_arr_tempo.set('unit', 'bpm')
+                    x_project_arr_target = ET.SubElement(x_project_arr_tempo, "Target")
+                    x_project_arr_target.set('parameter', 'dawvert_bpm')
+                    for bpm_auto_pl in bpm_auto:
+                        bpm_auto_pl_pos = bpm_auto_pl['position']
+                        startpoint = True
+                        for bpm_auto_poi in bpm_auto_pl['points']:
+                            bpm_auto_poi['position'] = bpm_auto_pl_pos
+                            print(bpm_auto_poi)
+                            instanttype = False
+                            if 'type' in bpm_auto_poi:
+                                if bpm_auto_poi['type'] == 'instant':
+                                    instanttype = True
+
+                            if (instanttype == True and prevvalue != None) or (startpoint == True and prevvalue != None):
+                                x_project_arr_tpoint = ET.SubElement(x_project_arr_tempo, "RealPoint")
+                                x_project_arr_tpoint.set('value', str(prevvalue))
+                                x_project_arr_tpoint.set('interpolation', 'linear')
+                                x_project_arr_tpoint.set('time', str(bpm_auto_poi['position']/4))
+
+                            x_project_arr_tpoint = ET.SubElement(x_project_arr_tempo, "RealPoint")
+                            x_project_arr_tpoint.set('value', str(bpm_auto_poi['value']))
+                            x_project_arr_tpoint.set('interpolation', 'linear')
+                            x_project_arr_tpoint.set('time', str(bpm_auto_poi['position']/4))
+
+                            prevvalue = bpm_auto_poi['value']
+
+                            startpoint = False
+
 
         # ----------------------------------------- zip -----------------------------------------
 

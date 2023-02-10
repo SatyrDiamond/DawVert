@@ -7,6 +7,7 @@ import lxml.etree as ET
 import mido
 import io
 import zipfile
+from bs4 import BeautifulSoup
 from functions import placements
 from functions import colors
 
@@ -25,7 +26,9 @@ def addvalue(xmltag, xmlname, i_max, i_min, i_unit, i_value, i_id, i_name):
     x_temp.set('id', str(i_id))
     x_temp.set('name', str(i_name))
 
-unusedvalue = 0
+def addmeta(xmltag, name, value):
+    x_temp = ET.SubElement(xmltag, name)
+    x_temp.text = str(value)
 
 def getunusedvalue():
     global unusedvalue
@@ -84,7 +87,11 @@ class output_cvpj(plugin_output.base):
         x_arr_lanes.set('timeUnit', 'beats')
         x_arr_lanes.set('id', 'x_arr_lanes')
         x_arr_markers = ET.SubElement(x_project_arr, "Markers")
+        x_arr_markers.set('id', 'x_arr_markers')
         x_arr_tsa = ET.SubElement(x_project_arr, "TimeSignatureAutomation")
+        x_arr_tsa.set('id', 'x_arr_tsa')
+        x_arr_tsa_target = ET.SubElement(x_project_arr, "Target")
+        x_arr_tsa.set('parameter', 'dawvert_timesig')
 
         # ----------------------------------------- Tracks -----------------------------------------
 
@@ -117,9 +124,22 @@ class output_cvpj(plugin_output.base):
                     x_arr_lanes_clips.set('id', 'clips_'+cvpj_trackentry)
                     for s_trkplacement in s_trkplacements:
                         x_arr_lanes_clip = ET.SubElement(x_arr_lanes_clips, "Clip")
-                        x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
-                        x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
-                        x_arr_lanes_clip.set('playStart', '0.0')
+
+                        if 'color' in s_trkplacement:
+                            x_arr_lanes_clip.set('color', '#'+colors.rgb_float_2_hex(s_trkplacement['color']))
+
+                        if 'name' in s_trkplacement:
+                            x_arr_lanes_clip.set('name', s_trkplacement['name'])
+
+                        if 'cut' in s_trkplacement:
+                            if s_trkplacement['cut']['type'] == 'cut':
+                                x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
+                                x_arr_lanes_clip.set('duration', str((s_trkplacement['cut']['end'] - s_trkplacement['cut']['start'])/4))
+                                x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
+                        else:
+                            x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
+                            x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
+                            x_arr_lanes_clip.set('playStart', '0.0')
                         if 'notelist' in s_trkplacement:
                             s_trknotelist = s_trkplacement['notelist']
                             nlidcount = 1
@@ -150,14 +170,63 @@ class output_cvpj(plugin_output.base):
         addvalue(x_str_mas_ch, 'Pan', 1, -1, 'linear', 0, 'dawvert_master_pan', 'Pan')
         addvalue(x_str_mas_ch, 'Volume', 2, 0, 'linear', 1, 'dawvert_master_vol', 'Volume')
 
+        # ----------------------------------------- info -----------------------------------------
+
+        if 'info' in projJ:
+            infoJ = projJ['info']
+            if 'title' in infoJ: addmeta(x_metadata, 'Title', infoJ['title'])
+            if 'author' in infoJ: addmeta(x_metadata, 'Artist', infoJ['author'])
+            if 'original_author' in infoJ: addmeta(x_metadata, 'OriginalArtist', infoJ['original_author'])
+            if 'songwriter' in infoJ: addmeta(x_metadata, 'Songwriter', infoJ['songwriter'])
+            if 'producer' in infoJ: addmeta(x_metadata, 'Producer', infoJ['producer'])
+            if 'year' in infoJ: addmeta(x_metadata, 'Year', str(infoJ['year']))
+            if 'genre' in infoJ: addmeta(x_metadata, 'Genre', infoJ['genre'])
+            if 'copyright' in infoJ: addmeta(x_metadata, 'Copyright', infoJ['copyright'])
+            if 'Comment' in infoJ: addmeta(x_metadata, 'Comment', infoJ['genre'])
+            if 'email' in infoJ: addmeta(x_metadata, 'Email', infoJ['email'])
+            if 'message' in infoJ: 
+                if infoJ['message']['type'] == 'html':
+                    bst = BeautifulSoup(infoJ['message']['text'], "html.parser")
+                    addmeta(x_metadata, 'Comment', bst.get_text().replace("\n", "\r"))
+                if infoJ['message']['type'] == 'text':
+                    addmeta(x_metadata, 'Comment', infoJ['message']['text'].replace("\n", "\r"))
+
+        # ----------------------------------------- info -----------------------------------------
+
+        if 'timemarkers' in projJ:
+            for timemarker in projJ['timemarkers']:
+                print(timemarker)
+                if 'type' in timemarker:
+                    if timemarker['type'] == 'timesig':
+                        x_arr_tsa_tsp = ET.SubElement(x_arr_tsa, "TimeSignaturePoint")
+                        x_arr_tsa_tsp.set('numerator', str(timemarker['numerator']))
+                        x_arr_tsa_tsp.set('denominator', str(timemarker['denominator']))
+                        x_arr_tsa_tsp.set('time', str(timemarker['position']/4))
+                    else:
+                        x_arr_marker = ET.SubElement(x_arr_markers, "Marker")
+                        x_arr_marker.set('name', str(timemarker['name']))
+                        x_arr_marker.set('time', str(timemarker['position']/4))
+                        x_arr_marker.set('color', '#444444')
+                else:
+                    x_arr_marker = ET.SubElement(x_arr_markers, "Marker")
+                    x_arr_marker.set('name', str(timemarker['name']))
+                    x_arr_marker.set('time', str(timemarker['position']/4))
+                    x_arr_marker.set('color', '#444444')
+
+        # ----------------------------------------- zip -----------------------------------------
 
         zip_bio = io.BytesIO()
         zip_dp = zipfile.ZipFile(zip_bio, mode='w')
         zip_dp.writestr('project.xml', ET.tostring(x_project, encoding='unicode', method='xml'))
+        zip_dp.writestr('metadata.xml', ET.tostring(x_metadata, encoding='unicode', method='xml'))
         zip_dp.close()
         open(output_file, 'wb').write(zip_bio.getbuffer())
 
-        #outfile = ET.ElementTree(x_project)
+        outfile = ET.ElementTree(x_project)
+        ET.indent(outfile)
+        outfile.write('_test.xml', encoding='utf-8', xml_declaration = True)
+        
+        #outfile = ET.ElementTree(x_metadata)
         #ET.indent(outfile)
         #outfile.write('_test.xml', encoding='utf-8', xml_declaration = True)
         

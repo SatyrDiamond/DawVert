@@ -63,7 +63,7 @@ def addwarps(projJ):
     for trackid in trackordering:
         if trackid in trackdata:
             prevpp = None
-            print(trackid)
+            #print(trackid)
             new_placements = []
             if 'placements' in trackdata[trackid]:
                 for placement in trackdata[trackid]['placements']:
@@ -79,7 +79,7 @@ def addwarps(projJ):
                         issamenotelist = prevpp[2]==p_nl
                         isplacecut = 'cut' in placement
 
-                        print(prevpp[0], p_pos-p_dur, isfromprevpos, issamenotelist)
+                        #print(prevpp[0], p_pos-p_dur, isfromprevpos, issamenotelist)
 
                         prevpp[0]==p_pos-p_dur
                         if isfromprevpos == True:
@@ -102,7 +102,7 @@ def addwarps(projJ):
 
                     #print(p_pos, p_dur)
                     prevpp = [p_pos, p_dur, p_nl]
-                    
+
                 trackdata[trackid]['placements'] = new_placements
 
 def get_timesig(patternLength, notesPerBeat):

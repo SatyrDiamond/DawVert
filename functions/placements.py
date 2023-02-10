@@ -57,6 +57,54 @@ def removelanes(projJ):
     projJ['track_data'] = new_trackdata
     projJ['track_order'] = new_trackordering
 
+def addwarps(projJ):
+    trackdata = projJ['track_data']
+    trackordering = projJ['track_order']
+    for trackid in trackordering:
+        if trackid in trackdata:
+            prevpp = None
+            print(trackid)
+            new_placements = []
+            if 'placements' in trackdata[trackid]:
+                for placement in trackdata[trackid]['placements']:
+                    p_pos = placement['position']
+                    p_dur = placement['duration']
+                    p_nl = placement['notelist']
+
+                    ipnl = False
+
+                    if prevpp != None:
+                        isfromprevpos = prevpp[0]==p_pos-p_dur
+                        isdursame = prevpp[1]==p_dur
+                        issamenotelist = prevpp[2]==p_nl
+                        isplacecut = 'cut' in placement
+
+                        print(prevpp[0], p_pos-p_dur, isfromprevpos, issamenotelist)
+
+                        prevpp[0]==p_pos-p_dur
+                        if isfromprevpos == True:
+                            if issamenotelist == True:
+                                if isdursame == True:
+                                    if isplacecut == False:
+                                        ipnl = True
+                                        if 'cut' not in new_placements[-1]:
+                                            new_placements[-1]['cut'] = {}
+                                            new_placements[-1]['cut']['type'] = 'warp'
+                                            new_placements[-1]['cut']['start'] = 0
+                                            new_placements[-1]['cut']['loopstart'] = 0
+                                            new_placements[-1]['cut']['loopend'] = p_dur
+                                            new_placements[-1]['duration'] += p_dur
+                                        else:
+                                            new_placements[-1]['duration'] += p_dur
+
+                    if ipnl == False:
+                        new_placements.append(placement)
+
+                    #print(p_pos, p_dur)
+                    prevpp = [p_pos, p_dur, p_nl]
+                    
+                trackdata[trackid]['placements'] = new_placements
+
 def get_timesig(patternLength, notesPerBeat):
     MaxFactor = 1024
     factor = 1

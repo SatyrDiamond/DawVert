@@ -50,6 +50,7 @@ class output_cvpj(plugin_output.base):
         projJ = json.loads(convproj_json)
         
         placements.removelanes(projJ)
+        placements.addwarps(projJ)
         
         cvpj_trackdata = projJ['track_data']
         cvpj_trackordering = projJ['track_order']
@@ -81,6 +82,7 @@ class output_cvpj(plugin_output.base):
         # ----------------------------------------- Structure -----------------------------------------
         x_str = ET.SubElement(x_project, "Structure")
         # ----------------------------------------- Arrangement -----------------------------------------
+
         x_project_arr = ET.SubElement(x_project, "Arrangement")
         x_project_arr.set('id', 'dawvert_arrangement')
         x_arr_lanes = ET.SubElement(x_project_arr, "Lanes")
@@ -112,8 +114,8 @@ class output_cvpj(plugin_output.base):
                 x_str_track_ch.set('solo', 'false')
                 x_str_track_ch.set('id', 'trackch_'+cvpj_trackentry)
                 addvalue_bool(x_str_track_ch, 'Mute', 'false', cvpj_trackentry+'_mute', 'Mute')
-                addvalue(x_str_track_ch, 'Pan', 1, -1, 'linear', 0, cvpj_trackentry+'_pan', 'Pan')
-                addvalue(x_str_track_ch, 'Volume', 2, 0, 'linear', 1, cvpj_trackentry+'_vol', 'Volume')
+                if 'pan' in s_trkdata: addvalue(x_str_track_ch, 'Pan', 1, -1, 'linear', s_trkdata['pan'], cvpj_trackentry+'_pan', 'Pan')
+                if 'vol' in s_trkdata: addvalue(x_str_track_ch, 'Volume', 2, 0, 'linear', s_trkdata['vol'], cvpj_trackentry+'_vol', 'Volume')
 
                 if 'placements' in s_trkdata:
                     s_trkplacements = s_trkdata['placements']
@@ -130,12 +132,18 @@ class output_cvpj(plugin_output.base):
 
                         if 'name' in s_trkplacement:
                             x_arr_lanes_clip.set('name', s_trkplacement['name'])
+                            
+                        x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
 
                         if 'cut' in s_trkplacement:
                             if s_trkplacement['cut']['type'] == 'cut':
-                                x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
                                 x_arr_lanes_clip.set('duration', str((s_trkplacement['cut']['end'] - s_trkplacement['cut']['start'])/4))
                                 x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
+                            if s_trkplacement['cut']['type'] == 'warp':
+                                x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
+                                x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
+                                x_arr_lanes_clip.set('loopStart', str(s_trkplacement['cut']['loopstart']/4))
+                                x_arr_lanes_clip.set('loopEnd', str(s_trkplacement['cut']['loopend']/4))
                         else:
                             x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
                             x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
@@ -149,7 +157,6 @@ class output_cvpj(plugin_output.base):
                                 x_arr_lanes_clip_note = ET.SubElement(x_arr_lanes_clip_notes, "Note")
                                 x_arr_lanes_clip_note.set('time', str(s_trknote['position']/4))
                                 x_arr_lanes_clip_note.set('duration', str(s_trknote['duration']/4))
-                                x_arr_lanes_clip_note.set('key', str(s_trknote['key']+60))
                                 x_arr_lanes_clip_note.set('key', str(s_trknote['key']+60))
                                 if 'vol' in s_trknote: x_arr_lanes_clip_note.set('vel', str(s_trknote['vol']))
                             nlidcount += 1
@@ -195,7 +202,6 @@ class output_cvpj(plugin_output.base):
 
         if 'timemarkers' in projJ:
             for timemarker in projJ['timemarkers']:
-                print(timemarker)
                 if 'type' in timemarker:
                     if timemarker['type'] == 'timesig':
                         x_arr_tsa_tsp = ET.SubElement(x_arr_tsa, "TimeSignaturePoint")

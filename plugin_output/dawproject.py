@@ -49,6 +49,7 @@ class output_cvpj(plugin_output.base):
 
         projJ = json.loads(convproj_json)
         
+        placements.lanefit(projJ)
         placements.removelanes(projJ)
         placements.addwarps(projJ)
         

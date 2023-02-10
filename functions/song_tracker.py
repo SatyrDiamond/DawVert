@@ -102,7 +102,7 @@ def make_placement_data(pos, dur, nl):
     else:
         return None
 
-def convertchannel2notelist(patterntable_channel, startinststr):
+def convertchannel2notelist(patterntable_channel, startinststr, current_channelnum):
     output_placements = []
     pos_global = 0
     pos_pl = 0
@@ -126,6 +126,7 @@ def convertchannel2notelist(patterntable_channel, startinststr):
         if 'firstrow' in notecommand[0]:
             if plactive == True:
                 placedata = make_placement_data(plpos, pos_pl, cvpj_notelist)
+                placedata['name'] = 'Chan #' + str(current_channelnum+1)
                 if placedata != None:
                     output_placements.append(placedata)
                 cvpj_notelist = []
@@ -213,7 +214,7 @@ def song2playlist(patterntable_all, number_of_channels, order_list, startinststr
         print('[song-tracker] Converting Channel ' + str(current_channelnum+1))
         note_convert.timednotes2notelistplacement_track_start()
         channelsong = entire_song_channel(patterntable_all,current_channelnum,order_list)
-        placements = convertchannel2notelist(channelsong, startinststr)
+        placements = convertchannel2notelist(channelsong, startinststr, current_channelnum)
         projL_playlist[str(current_channelnum+1)] = {}
         projL_playlist[str(current_channelnum+1)]['color'] = color
         projL_playlist[str(current_channelnum+1)]['name'] = 'Channel ' + str(current_channelnum+1)

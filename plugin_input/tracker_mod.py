@@ -11,6 +11,8 @@ from functions import song_tracker
 from functions import audio_wav
 from functions import folder_samples
 
+modfinetune = [8363, 8413, 8463, 8529, 8581, 8651, 8723, 8757, 7895, 7941, 7985, 8046, 8107, 8169, 8232, 8280]
+
 def splitbyte(value):
     first = value >> 4
     second = value & 0x0F
@@ -149,7 +151,6 @@ class input_mod(plugin_input.base):
             mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength = struct.unpack('<HBBHH', file_stream.read(8))
 
             print('[input-mod] Instrument ' + str(mod_numinst) + ': ' + mod_inst_mod_name)
-            if mod_inst_finetune > 7: mod_inst_finetune -= 16
             table_samples.append([mod_inst_mod_name, mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart*2, mod_inst_looplength*2])
             cvpj_l_instruments[text_inst_start + str(mod_numinst)] = {}
             cvpj_l_single_inst = cvpj_l_instruments[text_inst_start + str(mod_numinst)]
@@ -157,7 +158,6 @@ class input_mod(plugin_input.base):
             else: cvpj_l_single_inst['name'] = ' '
             cvpj_l_single_inst['vol'] = 0.3
             cvpj_l_single_inst['instdata'] = {}
-            cvpj_l_single_inst['instdata']['pitch'] = int((mod_inst_finetune/7)*100)
             if mod_inst_length != 0 and mod_inst_length != 1:
                 cvpj_l_single_inst['color'] = [0.53, 0.53, 0.53]
                 cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
@@ -222,12 +222,13 @@ class input_mod(plugin_input.base):
             t_sampledata = np.frombuffer(mod_sampledata, dtype='uint8')
             t_sampledata = np.array(t_sampledata) + 128
             wave_data = t_sampledata.tobytes('C')
+            finetune = modfinetune[table_samples[sample][2]]
             if mod_inst_entry[4] == 0 and mod_inst_entry[5] == 1:
-                audio_wav.generate(wave_path, wave_data, 1, 8272, 8, None)
+                audio_wav.generate(wave_path, wave_data, 1, finetune, 8, None)
             elif mod_inst_entry[4] == 0 and mod_inst_entry[5] == 2:
-                audio_wav.generate(wave_path, wave_data, 1, 8272, 8, None)
+                audio_wav.generate(wave_path, wave_data, 1, finetune, 8, None)
             else:
-                audio_wav.generate(wave_path, wave_data, 1, 8272, 8, {'loop':[mod_inst_entry[4]*2, (mod_inst_entry[4]*2)+(mod_inst_entry[5]*2)]})
+                audio_wav.generate(wave_path, wave_data, 1, finetune, 8, {'loop':[mod_inst_entry[4]*2, (mod_inst_entry[4]*2)+(mod_inst_entry[5]*2)]})
 
         
         for sample in range(31):

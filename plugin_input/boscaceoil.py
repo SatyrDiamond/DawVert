@@ -566,6 +566,7 @@ class input_ceol(plugin_input.base):
         timesig = placements.get_timesig(ceol_basic_patternlength, ceol_basic_barlength)
 
         cvpj_l = {}
+        cvpj_l['use_addwrap'] = True
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['notelistindex'] = cvpj_l_notelistindex

@@ -222,6 +222,7 @@ class input_gt_mnbs(plugin_input.base):
         cvpj_l['info']['message'] = {}
         cvpj_l['info']['message']['type'] = 'text'
         cvpj_l['info']['message']['text'] = song_message
+        cvpj_l['use_addwrap'] = True
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['timesig_numerator'] = timesig_numerator

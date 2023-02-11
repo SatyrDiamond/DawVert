@@ -218,6 +218,7 @@ class input_flp(plugin_input.base):
             if tm_type == 10: timemarkerJ['type'] = 'punchout'
             cvpj_l_timemarkers.append(timemarkerJ)
 
+        cvpj_l['use_addwrap'] = True
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
         cvpj_l['instruments_order'] = cvpj_l_instrument_order

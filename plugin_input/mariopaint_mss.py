@@ -167,6 +167,9 @@ class input_mariopaint_mss(plugin_input.base):
         automation['main']['bpm'] = auto_tempo
         cvpj_l['automation'] = automation
 
+        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_singlenotelistcut'] = True
+
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['timesig_numerator'] = mss_measure

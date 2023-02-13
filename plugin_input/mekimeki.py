@@ -79,8 +79,8 @@ class input_cvpj_f(plugin_input.base):
             tracknum += 1
 
         cvpj_l = {}
-        cvpj_l['use_addwrap'] = True
-        cvpj_l['use_singlenotelistcut'] = True
+        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_singlenotelistcut'] = True
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False

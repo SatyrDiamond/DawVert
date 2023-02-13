@@ -276,8 +276,9 @@ class input_onlinesequencer(plugin_input.base):
         if '2' in onlseq_data_main: timesig_numerator = int(onlseq_data_main['2'])
 
         cvpj_l = {}
-        cvpj_l['use_addwrap'] = True
-        cvpj_l['use_singlenotelistcut'] = True
+        
+        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_singlenotelistcut'] = True
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False

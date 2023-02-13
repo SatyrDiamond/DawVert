@@ -11,13 +11,8 @@ from functions import folder_samples
 def pmddecodenotes(pmdfile, recordspertrack, pitch):
     notelist = []
     placements = []
-    splitnotes = 16
-    splitcurrent = 0
-    placementpos = 0
     currentpan = 0
     for pmdpos in range(recordspertrack):
-        splitcurrent += 1
-
         bitnotes = bin(int.from_bytes(pmdfile.read(3), "little"))[2:].zfill(24)
         pan = pmdfile.read(1)[0]
         if pan != 0: currentpan = (pan-4)/3
@@ -26,23 +21,19 @@ def pmddecodenotes(pmdfile, recordspertrack, pitch):
         for bitnote in bitnotes:
             if bitnote == '1':
                 noteJ = {}
-                noteJ['position'] = pmdpos - placementpos
+                noteJ['position'] = pmdpos
                 noteJ['key'] = notenum + pitch
                 noteJ['duration'] = 1
                 noteJ['pan'] = currentpan
                 noteJ['vol'] = 1.0
                 notelist.append(noteJ)
             notenum -= 1
-        if splitnotes == splitcurrent:
-            patJ = {}
-            patJ['position'] = placementpos
-            patJ['duration'] = splitnotes
-            patJ['notelist'] = notelist
-            if notelist != []:
-                placements.append(patJ)
-            notelist = []
-            splitcurrent = 0
-            placementpos += splitnotes
+    patJ = {}
+    patJ['position'] = 0
+    patJ['duration'] = pmdpos
+    patJ['notelist'] = notelist
+    if notelist != []: placements = [patJ]
+    splitcurrent = 0
     return placements
 
 def parsetrack(placements, trackid, trackname, vol, samplefolder, wavid):
@@ -136,6 +127,7 @@ class input_pms(plugin_input.base):
         parsetrack(notesP, 'piyopiyo_perc', 'Drums', TrackPVol/250, samplefolder, None)
         cvpj_l = {}
         cvpj_l['use_addwrap'] = True
+        cvpj_l['use_singlenotelistcut'] = True
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['bpm'] = bpm

@@ -276,7 +276,7 @@ class input_mmf(plugin_input.base):
             fxdata["name"] = "Channel "+str(channel+1)
 
         cvpj_l = {}
-        cvpj_l['use_addwrap'] = True
+
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
         cvpj_l['fxrack'] = cvpj_l_fxrack

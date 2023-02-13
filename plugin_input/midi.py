@@ -142,8 +142,9 @@ class input_midi(plugin_input.base):
 
         cvpj_l = format_midi_in.song_end(16)
 
-        cvpj_l['use_addwrap'] = True
-        cvpj_l['use_singlenotelistcut'] = True
+        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_singlenotelistcut'] = True
+        
         cvpj_l['timesig_numerator'] = s_timesig[0]
         cvpj_l['timesig_denominator'] = s_timesig[1]
         cvpj_l['bpm'] = s_tempo

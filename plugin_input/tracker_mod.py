@@ -261,8 +261,10 @@ class input_mod(plugin_input.base):
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = mod_name
-        cvpj_l['use_addwrap'] = True
-        cvpj_l['use_lanefit'] = True
+        
+        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_lanefit'] = True
+
         cvpj_l['use_fxrack'] = False
         cvpj_l['use_instrack'] = False
         cvpj_l['instruments_data'] = cvpj_l_instruments

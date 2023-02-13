@@ -389,8 +389,10 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = dmf_song_name
         cvpj_l['info']['author'] = dmf_song_author
-        cvpj_l['use_addwrap'] = True
-        cvpj_l['use_lanefit'] = True
+
+        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_lanefit'] = True
+        
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['notelistindex'] = cvpj_l_notelistindex

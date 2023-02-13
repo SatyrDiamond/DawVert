@@ -7,7 +7,7 @@ import json
 import mido
 from mido import MidiFile
 from functions import note_convert
-from functions import format_midi_out
+from functions import format_midi_in
 
 def setinfo(cvpj_l, textin):
     global author
@@ -52,7 +52,7 @@ def setinfo(cvpj_l, textin):
                 if len(copyrightisyear) == 2:
                     cvpj_l['info']['author'] = copyrightisyear[1]
             else:
-                cvpj_l['info']['author'] = copyrightisyear[1]
+                cvpj_l['info']['author'] = copyrightisyear[0]
 
     # ------------------------ URL ------------------------
     if 'http://' in textin:

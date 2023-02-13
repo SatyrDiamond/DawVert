@@ -172,6 +172,8 @@ class input_orgyana(plugin_input.base):
                 cvpj_l_trackordering.append('org_'+str(tracknum))
 
         cvpj_l = {}
+        cvpj_l['use_addwrap'] = True
+        cvpj_l['use_singlenotelistcut'] = True
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['track_data'] = cvpj_l_trackdata

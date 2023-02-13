@@ -22,7 +22,7 @@ def getsongduration(projJ):
                 p_dur = placement['duration']
                 if songduration < p_pos+p_dur:
                     songduration = p_pos+p_dur
-    return songduration
+    return songduration + 64
 
 points_items = None
 
@@ -50,6 +50,10 @@ def single_notelists2placements(placementsdata):
                 note_overlap = bool(overlap(position, position_end, note_start, note_end))
                 if timepoint[2] == False: timepoint[2] = note_overlap
                 if timepoint[3] == False: timepoint[3] = note_overlap and position_end<note_end
+                #print(note_start, note_end, end=' ')
+                #print(position, position_end, end=' ')
+                #print(note_overlap, end=' ')
+                #print(note_overlap and position_end<note_end)
 
         cutranges = []
 

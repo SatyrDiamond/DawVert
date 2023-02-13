@@ -98,7 +98,7 @@ class input_midi(plugin_input.base):
         songdescline = []
         midi_copyright = None
 
-        format_midi_out.song_start(16, ppq)
+        format_midi_in.song_start(16, ppq)
 
         s_tempo = 120
         s_timesig = [4,4]
@@ -106,41 +106,41 @@ class input_midi(plugin_input.base):
         t_tracknames = []
 
         for track in midifile.tracks:
-            format_midi_out.track_start(16, 0)
+            format_midi_in.track_start(16, 0)
             midi_trackname = None
 
             timepos = 0
 
             for msg in track:
                 timepos += msg.time
-                format_midi_out.resttime(msg.time)
+                format_midi_in.resttime(msg.time)
                 if msg.type == 'note_on':
-                    if msg.velocity != 0: format_midi_out.note_on(msg.note, msg.channel, msg.velocity)
-                    else: format_midi_out.note_off(msg.note, msg.channel)
-                if msg.type == 'note_off': format_midi_out.note_off(msg.note, msg.channel)
-                if msg.type == 'program_change': format_midi_out.program_change(msg.channel, msg.program)
-                if msg.type == 'control_change': format_midi_out.control_change(msg.channel, msg.control, msg.value)
+                    if msg.velocity != 0: format_midi_in.note_on(msg.note, msg.channel, msg.velocity)
+                    else: format_midi_in.note_off(msg.note, msg.channel)
+                if msg.type == 'note_off': format_midi_in.note_off(msg.note, msg.channel)
+                if msg.type == 'program_change': format_midi_in.program_change(msg.channel, msg.program)
+                if msg.type == 'control_change': format_midi_in.control_change(msg.channel, msg.control, msg.value)
                 if msg.type == 'set_tempo': 
                     if timepos == 0: s_tempo = 60000000/msg.tempo
-                    format_midi_out.tempo(timepos, 60000000/msg.tempo)
+                    format_midi_in.tempo(timepos, 60000000/msg.tempo)
                 if msg.type == 'time_signature': 
                     if timepos == 0: s_timesig = [msg.numerator, msg.denominator]
-                    format_midi_out.time_signature(timepos, msg.numerator, msg.denominator)
-                if msg.type == 'marker': format_midi_out.marker(timepos, msg.text)
+                    format_midi_in.time_signature(timepos, msg.numerator, msg.denominator)
+                if msg.type == 'marker': format_midi_in.marker(timepos, msg.text)
                 if msg.type == 'track_name': 
-                    format_midi_out.track_name(msg.name)
+                    format_midi_in.track_name(msg.name)
                     midi_trackname = msg.name
                 if msg.type == 'copyright': 
                     midi_copyright = msg.text
-            format_midi_out.track_end(16)
+            format_midi_in.track_end(16)
 
             if midi_trackname != None:
-                if format_midi_out.get_hasnotes() == False: songdescline.append(midi_trackname)
+                if format_midi_in.get_hasnotes() == False: songdescline.append(midi_trackname)
                 t_tracknames.append(midi_trackname)
 
         song_message = ""
 
-        cvpj_l = format_midi_out.song_end(16)
+        cvpj_l = format_midi_in.song_end(16)
 
         cvpj_l['use_addwrap'] = True
         cvpj_l['use_singlenotelistcut'] = True

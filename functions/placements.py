@@ -2,9 +2,109 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import math
+from functions import note_mod
+
+def float_range(start,stop,step):
+    istop = int((stop-start) // step)
+    for i in range(int(istop)):
+        yield start + i * step
 
 def overlap(start1, end1, start2, end2):
     return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
+
+def getsongduration(projJ):
+    trackdata = projJ['track_data']
+    songduration = 0
+    for trackid in trackdata:
+        if 'placements' in trackdata[trackid]:
+            for placement in trackdata[trackid]['placements']:
+                p_pos = placement['position']
+                p_dur = placement['duration']
+                if songduration < p_pos+p_dur:
+                    songduration = p_pos+p_dur
+    return songduration
+
+points_items = None
+
+
+def single_notelists2placements(placementsdata):
+    global points_items
+    timepoints = []
+    numarea = len(points_items)-1
+    if numarea >= 1:
+        for num in range(numarea):
+            timepoints_part = float_range(points_items[num][0],points_items[num+1][0],points_items[num][1]*4)
+            for timepoints_pp in timepoints_part:
+                if timepoints_pp < points_items[num+1][0]:
+                    timepoints.append([timepoints_pp, timepoints_pp+points_items[num][1]*4, False, False])
+
+    if 'notelist' in placementsdata[0]:
+        notelist = placementsdata[0]['notelist']
+
+        for note in notelist:
+            note_start = note['position']
+            note_end = note['duration'] + note_start
+            for timepoint in timepoints:
+                position = timepoint[0]
+                position_end = timepoint[1]
+                note_overlap = bool(overlap(position, position_end, note_start, note_end))
+                if timepoint[2] == False: timepoint[2] = note_overlap
+                if timepoint[3] == False: timepoint[3] = note_overlap and position_end<note_end
+
+        cutranges = []
+
+        appendnext = False
+        for timepoint in timepoints:
+            #print(timepoint)
+            if timepoint[2] == True:
+                if appendnext == False: cutranges.append([timepoint[0], timepoint[1]])
+                else: cutranges[-1][1] = timepoint[1]
+            appendnext = timepoint[3]
+
+        new_placements = []
+
+        for cutrange in cutranges:
+            new_placement = {}
+            new_placement['notelist'] = note_mod.trimmove(notelist, cutrange[0], cutrange[1])
+            new_placement['position'] = cutrange[0]
+            new_placement['duration'] = cutrange[1]-cutrange[0]
+            new_placements.append(new_placement)
+
+    return new_placements
+
+def split_single_notelist(projJ):
+    global points_items
+
+    if points_items == None:
+        songduration = getsongduration(projJ)
+        if 'timesig_numerator' in projJ:
+            timesig_numerator = projJ['timesig_numerator']
+        else: timesig_numerator = 4
+
+        points = {}
+        points[0] = timesig_numerator
+
+        if 'timemarkers' in projJ:
+            for timemarker in projJ['timemarkers']:
+                if 'type' in timemarker:
+                    if timemarker['type'] == 'timesig':
+                        points[timemarker['position']] = timemarker['numerator']
+
+        points[songduration] = None
+        points = dict(sorted(points.items(), key=lambda item: item[0]))
+        points_items = [(k,v) for k,v in points.items()]
+
+    if 'use_singlenotelistcut' in projJ:
+        if projJ['use_singlenotelistcut'] == True:
+            trackdata = projJ['track_data']
+            trackordering = projJ['track_order']
+            for trackid in trackordering:
+                if trackid in trackdata:
+                    if 'placements' in trackdata[trackid]:
+                        placementdata = trackdata[trackid]['placements']
+                        if len(placementdata) == 1:
+                            trackdata[trackid]['placements'] = single_notelists2placements(placementdata)
+                            print('[placements] split_single_notelist: splitted '+trackid+' to '+str(len(trackdata[trackid]['placements'])) + ' placements.')
 
 def removelanes(projJ):
     old_trackdata = projJ['track_data']
@@ -59,7 +159,6 @@ def removelanes(projJ):
                 new_trackordering.append(trackid)
     projJ['track_data'] = new_trackdata
     projJ['track_order'] = new_trackordering
-
 
 def lanefit_checkoverlap(new_placementdata, placements_table, num):
     not_overlapped = True

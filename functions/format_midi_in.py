@@ -90,10 +90,10 @@ def track_end(channels):
 
         if midi_cmd[0] == 'program': 
             t_cur_inst[midi_cmd[1]][1] = midi_cmd[2]
-            if t_cur_inst[midi_cmd[1]] not in t_chan_usedinst[midi_cmd[1]]:
-                t_chan_usedinst[midi_cmd[1]].append(t_cur_inst[midi_cmd[1]])
 
         if midi_cmd[0] == 'note_on': 
+            if t_cur_inst[midi_cmd[1]] not in t_chan_usedinst[midi_cmd[1]]:
+                t_chan_usedinst[midi_cmd[1]].append(t_cur_inst[midi_cmd[1]])
 
             curinst = t_cur_inst[midi_cmd[1]]
 
@@ -124,7 +124,7 @@ def track_end(channels):
                     notedata = {}
                     notedata['position'] = t_actnote[0]/s_ppqstep
                     notedata['key'] = notekey
-                    notedata['vol'] = t_actnote[2]
+                    notedata['vol'] = t_actnote[2]/127
                     notedata['duration'] = (t_actnote[1]-t_actnote[0])/s_ppqstep
                     notedata['instrument'] = 't'+str(t_actnote[3])+'_c'+str(channelnum)+'_b'+str(t_actnote[4])+'_i'+str(t_actnote[5])
                     t_cvpj_notelist.append(notedata)

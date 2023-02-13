@@ -51,6 +51,7 @@ class output_cvpj(plugin_output.base):
         
         placements.lanefit(projJ)
         placements.removelanes(projJ)
+        placements.split_single_notelist(projJ)
         placements.addwarps(projJ)
         
         cvpj_trackdata = projJ['track_data']

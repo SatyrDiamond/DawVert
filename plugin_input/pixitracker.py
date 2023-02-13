@@ -208,7 +208,9 @@ class input_cvpj_f(plugin_input.base):
         cvpj_l_playlist['1']["placements"] = placements
 
         cvpj_l = {}
-        cvpj_l['use_addwrap'] = True
+        
+        cvpj_l['do_addwrap'] = True
+
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['vol'] = pixi_vol/100

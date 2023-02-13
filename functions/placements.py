@@ -98,8 +98,8 @@ def split_single_notelist(projJ):
         points = dict(sorted(points.items(), key=lambda item: item[0]))
         points_items = [(k,v) for k,v in points.items()]
 
-    if 'use_singlenotelistcut' in projJ:
-        if projJ['use_singlenotelistcut'] == True:
+    if 'do_singlenotelistcut' in projJ:
+        if projJ['do_singlenotelistcut'] == True:
             trackdata = projJ['track_data']
             trackordering = projJ['track_order']
             for trackid in trackordering:
@@ -192,8 +192,8 @@ def lanefit_addpl(new_placementdata, placements_table):
 
 
 def lanefit(projJ):
-    if 'use_lanefit' in projJ:
-        if projJ['use_lanefit'] == True:
+    if 'do_lanefit' in projJ:
+        if projJ['do_lanefit'] == True:
             trackdata = projJ['track_data']
             trackordering = projJ['track_order']
             for trackid in trackordering:
@@ -226,8 +226,8 @@ def lanefit(projJ):
 
 
 def addwarps(projJ):
-    if 'use_addwrap' in projJ:
-        if projJ['use_addwrap'] == True:
+    if 'do_addwrap' in projJ:
+        if projJ['do_addwrap'] == True:
             trackdata = projJ['track_data']
             trackordering = projJ['track_order']
             for trackid in trackordering:

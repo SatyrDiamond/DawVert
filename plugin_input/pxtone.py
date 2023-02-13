@@ -315,6 +315,10 @@ class input_pxtone(plugin_input.base):
             cvpj_l['info']['message'] = {}
             cvpj_l['info']['message']['type'] = 'text'
             cvpj_l['info']['message']['text'] = ptcop_song_comment
+
+        cvpj_l['use_addwrap'] = True
+        cvpj_l['use_singlenotelistcut'] = True
+        
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['timesig_numerator'] = ptcop_mas_beat

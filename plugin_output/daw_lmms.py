@@ -381,6 +381,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid):
     #placements
     if 'placements' in trkJ:
         json_placementlist = trkJ['placements']
+        
         tracksnum = 0
         printcountplace = 0
         print('[output-lmms]       Placements: ', end='')
@@ -641,6 +642,7 @@ class output_lmms(plugin_output.base):
 
         placements.lanefit(projJ)
         placements.removelanes(projJ)
+        placements.split_single_notelist(projJ)
 
         trksJ = projJ['track_data']
         trkorderJ = projJ['track_order']

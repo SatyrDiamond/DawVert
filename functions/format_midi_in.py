@@ -43,7 +43,7 @@ def track_start(channels, startpos):
     global t_tracknum
     global t_trackname
     global t_startpos
-    global t_chan_cmds
+    global midi_cmds
     global t_curpos
 
     global cvpj_notes
@@ -65,11 +65,10 @@ def track_start(channels, startpos):
     cvpj_notes = []
     for _ in range(channels): cvpj_notes.append([])
 
-    t_chan_cmds = []
-    for _ in range(channels): t_chan_cmds.append([])
+    midi_cmds = []
 
 def track_end(channels):
-    global t_chan_cmds
+    global midi_cmds
     global t_tracknum
     global t_trackname
     global s_ppqstep
@@ -78,46 +77,62 @@ def track_end(channels):
     t_cvpj_notelist = []
     cvpj_inst_start = 't'+str(t_tracknum)
 
+    t_cur_inst = [[0, -1] for x in range(channels)]
+    t_chan_usedinst = [[] for x in range(channels)]
+    t_active_notes = [[[] for x in range(128)] for x in range(channels)]
+
+    #for t_active_note_t in t_active_notes:
+    #    print(t_active_note_t)
+
+    curpos = 0
+    for midi_cmd in midi_cmds:
+        if midi_cmd[0] == 'break': curpos += midi_cmd[1]
+
+        if midi_cmd[0] == 'program': 
+            t_cur_inst[midi_cmd[1]][1] = midi_cmd[2]
+            if t_cur_inst[midi_cmd[1]] not in t_chan_usedinst[midi_cmd[1]]:
+                t_chan_usedinst[midi_cmd[1]].append(t_cur_inst[midi_cmd[1]])
+
+        if midi_cmd[0] == 'note_on': 
+
+            curinst = t_cur_inst[midi_cmd[1]]
+
+            t_active_notes[midi_cmd[1]][midi_cmd[2]].append(
+                [
+                curpos, 
+                None, 
+                midi_cmd[3], 
+                t_tracknum,
+                curinst[0],
+                curinst[1]
+                ]
+            )
+
+        if midi_cmd[0] == 'note_off': 
+            for note in t_active_notes[midi_cmd[1]][midi_cmd[2]]:
+                if note[1] == None:
+                    note[1] = curpos
+                    break
+
     for channelnum in range(channels):
-        s_chan_cmds = t_chan_cmds[channelnum]
+        #print(channelnum)
+        notekey = -60
+        for c_active_notes in t_active_notes[channelnum]:
+            for t_actnote in c_active_notes:
+                #print(notekey, '-------------', t_actnote)
+                if t_actnote[1] != None:
+                    notedata = {}
+                    notedata['position'] = t_actnote[0]/s_ppqstep
+                    notedata['key'] = notekey
+                    notedata['vol'] = t_actnote[2]
+                    notedata['duration'] = (t_actnote[1]-t_actnote[0])/s_ppqstep
+                    notedata['instrument'] = 't'+str(t_actnote[3])+'_c'+str(channelnum)+'_b'+str(t_actnote[4])+'_i'+str(t_actnote[5])
+                    t_cvpj_notelist.append(notedata)
+            notekey += 1
 
-        s_chan_usedinsts = []
-        c_cur_inst = [0, -1]
 
-        t_pos = 0
-
-        activenotes = []
-        for s_chan_cmd in s_chan_cmds:
-
-            if s_chan_cmd[0] == 'program': c_cur_inst[1] = s_chan_cmd[1]
-
-            if s_chan_cmd[0] == 'note_on': 
-                if c_cur_inst not in s_chan_usedinsts: s_chan_usedinsts.append(c_cur_inst)
-                activenotes.append(
-                    [0, 
-                    t_pos, 
-                    s_chan_cmd[1], 
-                    s_chan_cmd[2]])
-
-            if s_chan_cmd[0] == 'note_off': 
-                for activenote in activenotes:
-                    if activenote[2] == s_chan_cmd[1]:
-                        notedata = {}
-                        notedata['position'] = activenote[1]/s_ppqstep
-                        notedata['key'] = activenote[2]
-                        notedata['vol'] = activenote[3]/127
-                        notedata['duration'] = activenote[0]/s_ppqstep
-                        notedata['instrument'] = cvpj_inst_start+'_c'+str(channelnum)+'_b'+str(c_cur_inst[0])+'_i'+str(c_cur_inst[1])
-                        t_cvpj_notelist.append(notedata)
-                        activenotes.remove(activenote)
-                        break
-
-            if s_chan_cmd[0] == 'break':
-                for activenote in activenotes:
-                    activenote[0] += s_chan_cmd[1]
-                t_pos += s_chan_cmd[1]
-
-        for s_chan_usedinst in s_chan_usedinsts:
+    for channelnum in range(channels):
+        for s_chan_usedinst in t_chan_usedinst[channelnum]:
             cvpj_midibank = s_chan_usedinst[0]
             cvpj_midiinst = s_chan_usedinst[1]
             cvpj_instid = 't'+str(t_tracknum)+'_c'+str(channelnum)+'_b'+str(cvpj_midibank)+'_i'+str(cvpj_midiinst)
@@ -144,6 +159,7 @@ def track_end(channels):
 
             cvpj_l_instruments[cvpj_instid] = cvpj_trackdata
             cvpj_l_instrumentsorder.append(cvpj_instid)
+
 
 
     playlistrowdata = {}
@@ -173,40 +189,39 @@ def get_hasnotes():
 
 def resttime(addtime):
     global t_curpos
-    global t_chan_cmds
+    global midi_cmds
     if addtime != 0:
-        for t_chan_cmd in t_chan_cmds:
-            t_chan_cmd.append(['break', addtime])
+        midi_cmds.append(['break', addtime])
     t_curpos += addtime
 
 def note_on(key, channel, vel):
     global t_curpos
-    global t_chan_cmds
-    t_chan_cmds[channel].append(['note_on', key-60, vel])
+    global midi_cmds
+    midi_cmds.append(['note_on', channel, key, vel])
     #print(str(t_curpos).ljust(8), 'NOTE ON    ', str(channel).ljust(3), str(key).ljust(4), str(vel).ljust(3))
 
 def note_off(key, channel):
     global t_curpos
-    global t_chan_cmds
-    t_chan_cmds[channel].append(['note_off', key-60])
+    global midi_cmds
+    midi_cmds.append(['note_off', channel, key])
     #print(str(t_curpos).ljust(8), 'NOTE OFF   ', str(channel).ljust(3), str(key).ljust(7))
 
-def note(key, dur, channel, vel):
-    global t_curpos
-    global t_chan_cmds
-    t_chan_cmds[channel].append(['note', key-60, vel, dur])
-    #print(str(t_curpos).ljust(8), 'NOTE       ', str(channel).ljust(3), str(key).ljust(4), str(vel).ljust(3), str(dur).ljust(3))
+#def note(key, dur, channel, vel):
+#    global t_curpos
+#    global midi_cmds
+#    midi_cmds.append(['note', channel, key, vel, dur])
+#    print(str(t_curpos).ljust(8), 'NOTE       ', str(channel).ljust(3), str(key).ljust(4), str(vel).ljust(3), str(dur).ljust(3))
 
 def program_change(channel, program): 
     global t_curpos
-    global t_chan_cmds
-    t_chan_cmds[channel].append(['program', program])
+    global midi_cmds
+    midi_cmds.append(['program', channel, program])
     #print(str(t_curpos).ljust(8), 'PROGRAM    ', str(channel).ljust(3), str(program).ljust(4))
 
 def control_change(channel, control, value): 
     global t_curpos
-    global t_chan_cmds
-    t_chan_cmds[channel].append(['control', control, value])
+    global midi_cmds
+    midi_cmds.append(['control', channel, control, value])
     #print(str(t_curpos).ljust(8), 'CONTROL    ', str(channel).ljust(3), str(control).ljust(4), str(value).ljust(3))
 
 def tempo(time, tempo): 
@@ -230,7 +245,7 @@ def time_signature(time, numerator, denominator):
 # -------------------------------------- COMMANDS --------------------------------------
 
 def song_end(channels):
-    global t_chan_cmds
+    global midi_cmds
     global s_ppqstep
 
     songduration = 0

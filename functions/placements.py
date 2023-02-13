@@ -94,7 +94,7 @@ def split_single_notelist(projJ):
                     if timemarker['type'] == 'timesig':
                         points[timemarker['position']] = timemarker['numerator']
 
-        points[songduration] = None
+        points[songduration] = 4
         points = dict(sorted(points.items(), key=lambda item: item[0]))
         points_items = [(k,v) for k,v in points.items()]
 

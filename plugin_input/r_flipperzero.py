@@ -75,9 +75,11 @@ class input_fmf(plugin_input.base):
 
         global tracklist
         global trackordering
+        global trackplacements
 
         tracklist = {}
         trackordering = ['flipperzero']
+        trackplacements = {}
 
         notelist = []
 
@@ -101,12 +103,15 @@ class input_fmf(plugin_input.base):
         trackdata["instdata"] = {}
         trackdata["instdata"]['plugin'] = 'shape-pulse'
         trackdata["instdata"]['plugindata'] = {'duty': 0.125}
-        trackdata['placements'] = [{}]
-        trackdata['placements'][0]['position'] = 0
-        trackdata['placements'][0]['duration'] = totalDuration
-        trackdata['placements'][0]['notelist'] = notelist
+        pl_data = {}
+        pl_data['position'] = 0
+        pl_data['duration'] = totalDuration
+        pl_data['notelist'] = notelist
 
         tracklist['flipperzero'] = trackdata
+
+        trackplacements['flipperzero'] = {}
+        trackplacements['flipperzero']['notes'] = [pl_data]
 
         rootJ = {}
         rootJ['use_instrack'] = False
@@ -114,5 +119,6 @@ class input_fmf(plugin_input.base):
         rootJ['bpm'] = fmf_BPM
         rootJ['track_data'] = tracklist
         rootJ['track_order'] = trackordering
+        rootJ['track_placements'] = trackplacements
         return json.dumps(rootJ)
 

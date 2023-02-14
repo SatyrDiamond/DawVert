@@ -244,9 +244,9 @@ class output_cvpjs(plugin_output.base):
         for CVPJ_playlistrow in CVPJ_playlist:
             CVPJ_playlistitem = CVPJ_playlist[CVPJ_playlistrow]
             #print(CVPJ_playlistrow, CVPJ_playlist[CVPJ_playlistrow])
-            if 'placements' in CVPJ_playlistitem:
+            if 'placements_notes' in CVPJ_playlistitem:
                 #print(CVPJ_playlist[CVPJ_playlistrow])
-                for CVPJ_Placement in CVPJ_playlistitem['placements']:
+                for CVPJ_Placement in CVPJ_playlistitem['placements_notes']:
                     if CVPJ_Placement['fromindex'] in pat_id:
                         FL_playlistitem = {}
                         FL_playlistitem['position'] = int((CVPJ_Placement['position']*ppq)/4)

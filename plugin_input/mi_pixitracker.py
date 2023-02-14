@@ -205,7 +205,7 @@ class input_cvpj_f(plugin_input.base):
             placements_pos += pixi_data_patterns[pixi_data_pattern]['len']
 
         cvpj_l_playlist['1'] = {}
-        cvpj_l_playlist['1']["placements"] = placements
+        cvpj_l_playlist['1']["placements_notes"] = placements
 
         cvpj_l = {}
         

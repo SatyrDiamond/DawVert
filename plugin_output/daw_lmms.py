@@ -263,7 +263,7 @@ def lmms_encode_notelist(xmltag, json_notelist):
 
         printcountpat += 1
     print('['+str(printcountpat), end='] ')
-def lmms_encode_inst_track(xmltag, trkJ, trackid):
+def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     global trkcX
     global trackscount_forprinting
     trackscount_forprinting += 1
@@ -379,8 +379,8 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid):
     lmms_encode_plugin(trkX_insttr, trkJ, trackid)
 
     #placements
-    if 'placements' in trkJ:
-        json_placementlist = trkJ['placements']
+    if 'notes' in trkplacementsJ[trackid]:
+        json_placementlist = trkplacementsJ[trackid]['notes']
         
         tracksnum = 0
         printcountplace = 0
@@ -520,11 +520,11 @@ def parse_auto(xml_automationpattern, l_points):
 
 # ------- Main -------
 
-def lmms_encode_tracks(xmltag, trksJ, trkorderJ):
+def lmms_encode_tracks(xmltag, trksJ, trkorderJ, trkplacementsJ):
     for trackid in trkorderJ:
         trkJ = trksJ[trackid]
         xml_track = ET.SubElement(xmltag, "track")
-        if trkJ['type'] == "instrument": lmms_encode_inst_track(xml_track, trkJ, trackid)
+        if trkJ['type'] == "instrument": lmms_encode_inst_track(xml_track, trkJ, trackid, trkplacementsJ)
 
 def get_auto_ids(placements_auto):
     global autoidnum
@@ -640,12 +640,14 @@ class output_lmms(plugin_output.base):
         song_convert.instrack2singleinst(projJ,'s')
         song_convert.trackfx2fxrack(projJ,'s')
 
-        placements.lanefit(projJ)
-        placements.removelanes(projJ)
-        placements.split_single_notelist(projJ)
+        placements.r_lanefit(projJ)
+        placements.r_removelanes(projJ)
+        placements.r_split_single_notelist(projJ)
 
         trksJ = projJ['track_data']
         trkorderJ = projJ['track_order']
+        trkplacementsJ = projJ['track_placements']
+
         projX = ET.Element("lmms-project")
         projX.set('type', "song")
         projX.set('creator', "DawVert")
@@ -671,7 +673,7 @@ class output_lmms(plugin_output.base):
             if 'main' in projJ['automation']:
                 lmms_make_autotracks(projJ['automation']['main'], auto_nameid_main, 'main', 'Song')
 
-        lmms_encode_tracks(trkcX, trksJ, trkorderJ)
+        lmms_encode_tracks(trkcX, trksJ, trkorderJ, trkplacementsJ)
 
         xml_fxmixer = ET.SubElement(songX, "fxmixer")
         json_fxrack = projJ['fxrack']

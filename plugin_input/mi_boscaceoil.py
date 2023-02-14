@@ -534,14 +534,14 @@ class input_ceol(plugin_input.base):
             cvpj_pat["name"] = str(patnum)
             cvpj_l_notelistindex[cvpj_pat_id] = cvpj_pat
 
-        cvpj_l_playlist['1'] = {'color': [0.43, 0.52, 0.55], 'placements':[]}
-        cvpj_l_playlist['2'] = {'color': [0.31, 0.40, 0.42], 'placements':[]}
-        cvpj_l_playlist['3'] = {'color': [0.43, 0.52, 0.55], 'placements':[]}
-        cvpj_l_playlist['4'] = {'color': [0.31, 0.40, 0.42], 'placements':[]}
-        cvpj_l_playlist['5'] = {'color': [0.43, 0.52, 0.55], 'placements':[]}
-        cvpj_l_playlist['6'] = {'color': [0.31, 0.40, 0.42], 'placements':[]}
-        cvpj_l_playlist['7'] = {'color': [0.43, 0.52, 0.55], 'placements':[]}
-        cvpj_l_playlist['8'] = {'color': [0.31, 0.40, 0.42], 'placements':[]}
+        cvpj_l_playlist['1'] = {'color': [0.43, 0.52, 0.55], 'placements_notes':[]}
+        cvpj_l_playlist['2'] = {'color': [0.31, 0.40, 0.42], 'placements_notes':[]}
+        cvpj_l_playlist['3'] = {'color': [0.43, 0.52, 0.55], 'placements_notes':[]}
+        cvpj_l_playlist['4'] = {'color': [0.31, 0.40, 0.42], 'placements_notes':[]}
+        cvpj_l_playlist['5'] = {'color': [0.43, 0.52, 0.55], 'placements_notes':[]}
+        cvpj_l_playlist['6'] = {'color': [0.31, 0.40, 0.42], 'placements_notes':[]}
+        cvpj_l_playlist['7'] = {'color': [0.43, 0.52, 0.55], 'placements_notes':[]}
+        cvpj_l_playlist['8'] = {'color': [0.31, 0.40, 0.42], 'placements_notes':[]}
 
         ceol_arr_length = ceol_read()
         ceol_arr_loopstart = ceol_read()
@@ -556,12 +556,12 @@ class input_ceol(plugin_input.base):
                     cvpj_l_placement['position'] = plpos*ceol_basic_patternlength
                     cvpj_l_placement['duration'] = ceol_basic_patternlength
                     cvpj_l_placement['fromindex'] = 'ceol_'+str(plpatnum).zfill(3)
-                    cvpj_l_playlist[str(plnum+1)]['placements'].append(cvpj_l_placement)
+                    cvpj_l_playlist[str(plnum+1)]['placements_notes'].append(cvpj_l_placement)
 
         print('[input-boscaceoil] ')
 
         for channelnum in cvpj_l_playlist:
-        	print('[input-boscaceoil] Channel '+str(channelnum)+': ' + str(len(cvpj_l_playlist[channelnum]['placements'])) + ' Placements')
+        	print('[input-boscaceoil] Channel '+str(channelnum)+': ' + str(len(cvpj_l_playlist[channelnum]['placements_notes'])) + ' Placements')
 
         timesig = placements.get_timesig(ceol_basic_patternlength, ceol_basic_barlength)
 

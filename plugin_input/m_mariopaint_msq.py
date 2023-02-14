@@ -146,7 +146,7 @@ class input_mariopaint_msq(plugin_input.base):
         l_placement['notelist'] = notelist
 
         cvpj_l_playlist[str(1)] = {}
-        cvpj_l_playlist[str(1)]['placements'] = [l_placement]
+        cvpj_l_playlist[str(1)]['placements_notes'] = [l_placement]
 
         for instname in instnames:
             cvpj_inst = {}

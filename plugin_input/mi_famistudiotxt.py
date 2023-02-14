@@ -322,7 +322,7 @@ class input_famistudio(plugin_input.base):
             cvpj_l_playlist[str(playlistnum)] = {}
             cvpj_l_playlist[str(playlistnum)]['color'] = [0.13, 0.15, 0.16]
             cvpj_l_playlist[str(playlistnum)]['name'] = Channel
-            cvpj_l_playlist[str(playlistnum)]['placements'] = []
+            cvpj_l_playlist[str(playlistnum)]['placements_notes'] = []
             Channel_Patterns = fst_channels[Channel]['Patterns']
             for Pattern in Channel_Patterns:
                 cvpj_patternid = Channel+'-'+Pattern
@@ -359,7 +359,7 @@ class input_famistudio(plugin_input.base):
                 cvpj_l_placement['position'] = PointsPos[int(fst_time)]
                 cvpj_l_placement['duration'] = PatternLengthList[durationnum]
                 cvpj_l_placement['fromindex'] = Channel+'-'+fst_PData['Pattern']
-                cvpj_l_playlist[str(playlistnum)]['placements'].append(cvpj_l_placement)
+                cvpj_l_playlist[str(playlistnum)]['placements_notes'].append(cvpj_l_placement)
                 durationnum += 1
             playlistnum += 1
 

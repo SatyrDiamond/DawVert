@@ -657,7 +657,7 @@ def parse_song(songid):
                 placement['position'] = cvpj_p_totalpos*8
                 placement['duration'] = tlslen/(120/tls[3])*8
                 placement['fromindex'] = tls[4]
-                cvpj_l_playlist[tlsnum+1]['placements'].append(placement)
+                cvpj_l_playlist[tlsnum+1]['placements_notes'].append(placement)
                 if tlsnum == 0:
                     autoplacement = {}
                     autoplacement['position'] = cvpj_p_totalpos*8
@@ -709,7 +709,7 @@ class input_notessimo_v3(plugin_input.base):
 
         for plnum in range(20):
             cvpj_l_playlist[plnum] = {}
-            cvpj_l_playlist[plnum]['placements'] = []
+            cvpj_l_playlist[plnum]['placements_notes'] = []
 
         if 'instruments.xml' in zip_data.namelist():
             notess_instruments = ET.fromstring(zip_data.read('instruments.xml'))

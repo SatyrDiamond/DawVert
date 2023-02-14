@@ -144,23 +144,23 @@ class input_lc(plugin_input.base):
         cvpj_l_playlist['1'] = {}
         cvpj_l_playlist['1']['name'] = "Part 1"
         cvpj_l_playlist['1']['color'] = [0.83, 0.09, 0.42]
-        cvpj_l_playlist['1']['placements'] = lc_parse_placements(lc_ch_p1)
+        cvpj_l_playlist['1']['placements_notes'] = lc_parse_placements(lc_ch_p1)
         cvpj_l_playlist['2'] = {}
         cvpj_l_playlist['2']['name'] = "Part 2"
         cvpj_l_playlist['2']['color'] = [0.91, 0.76, 0.36]
-        cvpj_l_playlist['2']['placements'] = lc_parse_placements(lc_ch_p2)
+        cvpj_l_playlist['2']['placements_notes'] = lc_parse_placements(lc_ch_p2)
         cvpj_l_playlist['3'] = {}
         cvpj_l_playlist['3']['name'] = "Part 3"
         cvpj_l_playlist['3']['color'] = [0.22, 0.36, 0.60]
-        cvpj_l_playlist['3']['placements'] = lc_parse_placements(lc_ch_p3)
+        cvpj_l_playlist['3']['placements_notes'] = lc_parse_placements(lc_ch_p3)
         cvpj_l_playlist['4'] = {}
         cvpj_l_playlist['4']['name'] = "Part 4"
         cvpj_l_playlist['4']['color'] = [0.44, 0.78, 0.66]
-        cvpj_l_playlist['4']['placements'] = lc_parse_placements(lc_ch_p4)
+        cvpj_l_playlist['4']['placements_notes'] = lc_parse_placements(lc_ch_p4)
         cvpj_l_playlist['5'] = {}
         cvpj_l_playlist['5']['name'] = "Chord"
         cvpj_l_playlist['5']['color'] = [0.64, 0.64, 0.64]
-        cvpj_l_playlist['5']['placements'] = []
+        cvpj_l_playlist['5']['placements_notes'] = []
 
         for used_instrument in used_instruments:
             cvpj_inst = {}

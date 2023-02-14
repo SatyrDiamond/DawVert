@@ -35,6 +35,39 @@ def getunusedvalue():
     unusedvalue += 1
     return 'unused'+str(unusedvalue)
 
+
+def make_automation(x_project_arr, xmlname, cvpj_auto, unit, cvpj_id):
+    prevvalue = None
+    x_project_arr_tempo = ET.SubElement(x_project_arr, xmlname)
+    x_project_arr_tempo.set('unit', unit)
+    x_project_arr_target = ET.SubElement(x_project_arr_tempo, "Target")
+    x_project_arr_target.set('parameter', cvpj_id)
+    for cvpj_auto_pl in cvpj_auto:
+        cvpj_auto_pl_pos = cvpj_auto_pl['position']
+        startpoint = True
+        for cvpj_auto_poi in cvpj_auto_pl['points']:
+            cvpj_auto_poi['position'] += cvpj_auto_pl_pos
+            instanttype = False
+            if 'type' in cvpj_auto_poi:
+                if cvpj_auto_poi['type'] == 'instant':
+                    instanttype = True
+
+            if (instanttype == True and prevvalue != None) or (startpoint == True and prevvalue != None):
+                x_project_arr_tpoint = ET.SubElement(x_project_arr_tempo, "RealPoint")
+                x_project_arr_tpoint.set('value', str(prevvalue))
+                x_project_arr_tpoint.set('interpolation', 'linear')
+                x_project_arr_tpoint.set('time', str(cvpj_auto_poi['position']/4))
+
+            x_project_arr_tpoint = ET.SubElement(x_project_arr_tempo, "RealPoint")
+            x_project_arr_tpoint.set('value', str(cvpj_auto_poi['value']))
+            x_project_arr_tpoint.set('interpolation', 'linear')
+            x_project_arr_tpoint.set('time', str(cvpj_auto_poi['position']/4))
+
+            prevvalue = cvpj_auto_poi['value']
+
+            startpoint = False
+
+
 class output_cvpj(plugin_output.base):
     def __init__(self): pass
     def getname(self): return 'DawProject'
@@ -49,13 +82,14 @@ class output_cvpj(plugin_output.base):
 
         projJ = json.loads(convproj_json)
         
-        placements.lanefit(projJ)
-        placements.removelanes(projJ)
-        placements.split_single_notelist(projJ)
-        placements.addwarps(projJ)
+        placements.r_lanefit(projJ)
+        placements.r_removelanes(projJ)
+        placements.r_split_single_notelist(projJ)
+        placements.r_addwarps(projJ)
         
         cvpj_trackdata = projJ['track_data']
         cvpj_trackordering = projJ['track_order']
+        cvpj_trackplacements = projJ['track_placements']
 
         x_project = ET.Element("Project")
         x_project.set('version', '0.1')
@@ -94,7 +128,6 @@ class output_cvpj(plugin_output.base):
         x_arr_markers.set('id', 'x_arr_markers')
         x_arr_tsa = ET.SubElement(x_project_arr, "TimeSignatureAutomation")
         x_arr_tsa.set('id', 'x_arr_tsa')
-        x_arr_tsa_target = ET.SubElement(x_project_arr, "Target")
         x_arr_tsa.set('parameter', 'dawvert_timesig')
 
         # ----------------------------------------- Tracks -----------------------------------------
@@ -116,53 +149,62 @@ class output_cvpj(plugin_output.base):
                 x_str_track_ch.set('id', 'trackch_'+cvpj_trackentry)
                 addvalue_bool(x_str_track_ch, 'Mute', 'false', cvpj_trackentry+'_mute', 'Mute')
                 if 'pan' in s_trkdata: addvalue(x_str_track_ch, 'Pan', 1, -1, 'linear', s_trkdata['pan'], cvpj_trackentry+'_pan', 'Pan')
+                else: addvalue(x_str_track_ch, 'Pan', 1, -1, 'linear', 0, cvpj_trackentry+'_pan', 'Pan')
                 if 'vol' in s_trkdata: addvalue(x_str_track_ch, 'Volume', 2, 0, 'linear', s_trkdata['vol'], cvpj_trackentry+'_vol', 'Volume')
+                else: addvalue(x_str_track_ch, 'Volume', 2, 0, 'linear', 1, cvpj_trackentry+'_vol', 'Volume')
 
                 if s_trkdata['type'] == 'instrument':
                     x_str_track.set('contentType', 'notes')
-                    if 'placements' in s_trkdata:
-                        s_trkplacements = s_trkdata['placements']
-                        x_arr_lanes_pl = ET.SubElement(x_arr_lanes, "Lanes")
-                        x_arr_lanes_pl.set('track', 'track_'+cvpj_trackentry)
-                        x_arr_lanes_pl.set('id', 'lanes_'+cvpj_trackentry)
-                        x_arr_lanes_clips = ET.SubElement(x_arr_lanes_pl, "Clips")
-                        x_arr_lanes_clips.set('id', 'clips_'+cvpj_trackentry)
-                        for s_trkplacement in s_trkplacements:
-                            x_arr_lanes_clip = ET.SubElement(x_arr_lanes_clips, "Clip")
 
-                            if 'color' in s_trkplacement:
-                                x_arr_lanes_clip.set('color', '#'+colors.rgb_float_2_hex(s_trkplacement['color']))
+        # ----------------------------------------- Tracks -----------------------------------------
 
-                            if 'name' in s_trkplacement:
-                                x_arr_lanes_clip.set('name', s_trkplacement['name'])
-                                
-                            x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
+        for trackid in cvpj_trackplacements:
+            pldata = cvpj_trackplacements[trackid]
 
-                            if 'cut' in s_trkplacement:
-                                if s_trkplacement['cut']['type'] == 'cut':
-                                    x_arr_lanes_clip.set('duration', str((s_trkplacement['cut']['end'] - s_trkplacement['cut']['start'])/4))
-                                    x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
-                                if s_trkplacement['cut']['type'] == 'warp':
-                                    x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
-                                    x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
-                                    x_arr_lanes_clip.set('loopStart', str(s_trkplacement['cut']['loopstart']/4))
-                                    x_arr_lanes_clip.set('loopEnd', str(s_trkplacement['cut']['loopend']/4))
-                            else:
-                                x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
-                                x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
-                                x_arr_lanes_clip.set('playStart', '0.0')
-                            if 'notelist' in s_trkplacement:
-                                s_trknotelist = s_trkplacement['notelist']
-                                nlidcount = 1
-                                x_arr_lanes_clip_notes = ET.SubElement(x_arr_lanes_clip, "Notes")
-                                x_arr_lanes_clip_notes.set('id', 'notes'+str(nlidcount)+'_'+cvpj_trackentry)
-                                for s_trknote in s_trknotelist:
-                                    x_arr_lanes_clip_note = ET.SubElement(x_arr_lanes_clip_notes, "Note")
-                                    x_arr_lanes_clip_note.set('time', str(s_trknote['position']/4))
-                                    x_arr_lanes_clip_note.set('duration', str(s_trknote['duration']/4))
-                                    x_arr_lanes_clip_note.set('key', str(s_trknote['key']+60))
-                                    if 'vol' in s_trknote: x_arr_lanes_clip_note.set('vel', str(s_trknote['vol']))
-                                nlidcount += 1
+            if 'notes' in pldata:
+                s_pl_nl = pldata['notes']
+                x_arr_lanes_pl = ET.SubElement(x_arr_lanes, "Lanes")
+                x_arr_lanes_pl.set('track', 'track_'+trackid)
+                x_arr_lanes_pl.set('id', 'lanes_'+trackid)
+                x_arr_lanes_clips = ET.SubElement(x_arr_lanes_pl, "Clips")
+                x_arr_lanes_clips.set('id', 'clips_'+trackid)
+
+                for s_trkplacement in s_pl_nl:
+                    x_arr_lanes_clip = ET.SubElement(x_arr_lanes_clips, "Clip")
+
+                    if 'color' in s_trkplacement:
+                        x_arr_lanes_clip.set('color', '#'+colors.rgb_float_2_hex(s_trkplacement['color']))
+
+                    if 'name' in s_trkplacement:
+                        x_arr_lanes_clip.set('name', s_trkplacement['name'])
+                        
+                    x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
+
+                    if 'cut' in s_trkplacement:
+                        if s_trkplacement['cut']['type'] == 'cut':
+                            x_arr_lanes_clip.set('duration', str((s_trkplacement['cut']['end'] - s_trkplacement['cut']['start'])/4))
+                            x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
+                        if s_trkplacement['cut']['type'] == 'warp':
+                            x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
+                            x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
+                            x_arr_lanes_clip.set('loopStart', str(s_trkplacement['cut']['loopstart']/4))
+                            x_arr_lanes_clip.set('loopEnd', str(s_trkplacement['cut']['loopend']/4))
+                    else:
+                        x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
+                        x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
+                        x_arr_lanes_clip.set('playStart', '0.0')
+                    if 'notelist' in s_trkplacement:
+                        s_trknotelist = s_trkplacement['notelist']
+                        nlidcount = 1
+                        x_arr_lanes_clip_notes = ET.SubElement(x_arr_lanes_clip, "Notes")
+                        x_arr_lanes_clip_notes.set('id', 'notes'+str(nlidcount)+'_'+cvpj_trackentry)
+                        for s_trknote in s_trknotelist:
+                            x_arr_lanes_clip_note = ET.SubElement(x_arr_lanes_clip_notes, "Note")
+                            x_arr_lanes_clip_note.set('time', str(s_trknote['position']/4))
+                            x_arr_lanes_clip_note.set('duration', str(s_trknote['duration']/4))
+                            x_arr_lanes_clip_note.set('key', str(s_trknote['key']+60))
+                            if 'vol' in s_trknote: x_arr_lanes_clip_note.set('vel', str(s_trknote['vol']))
+                        nlidcount += 1
 
         # ----------------------------------------- Master -----------------------------------------
         x_str_master = ET.SubElement(x_str, "Track")
@@ -227,37 +269,7 @@ class output_cvpj(plugin_output.base):
         if 'automation' in projJ:
             if 'main' in projJ['automation']:
                 if 'bpm' in projJ['automation']['main']:
-                    prevvalue = None
-                    bpm_auto = projJ['automation']['main']['bpm']
-                    x_project_arr_tempo = ET.SubElement(x_project_arr, "TempoAutomation")
-                    x_project_arr_tempo.set('unit', 'bpm')
-                    x_project_arr_target = ET.SubElement(x_project_arr_tempo, "Target")
-                    x_project_arr_target.set('parameter', 'dawvert_bpm')
-                    for bpm_auto_pl in bpm_auto:
-                        bpm_auto_pl_pos = bpm_auto_pl['position']
-                        startpoint = True
-                        for bpm_auto_poi in bpm_auto_pl['points']:
-                            bpm_auto_poi['position'] += bpm_auto_pl_pos
-                            #print(bpm_auto_poi)
-                            instanttype = False
-                            if 'type' in bpm_auto_poi:
-                                if bpm_auto_poi['type'] == 'instant':
-                                    instanttype = True
-
-                            if (instanttype == True and prevvalue != None) or (startpoint == True and prevvalue != None):
-                                x_project_arr_tpoint = ET.SubElement(x_project_arr_tempo, "RealPoint")
-                                x_project_arr_tpoint.set('value', str(prevvalue))
-                                x_project_arr_tpoint.set('interpolation', 'linear')
-                                x_project_arr_tpoint.set('time', str(bpm_auto_poi['position']/4))
-
-                            x_project_arr_tpoint = ET.SubElement(x_project_arr_tempo, "RealPoint")
-                            x_project_arr_tpoint.set('value', str(bpm_auto_poi['value']))
-                            x_project_arr_tpoint.set('interpolation', 'linear')
-                            x_project_arr_tpoint.set('time', str(bpm_auto_poi['position']/4))
-
-                            prevvalue = bpm_auto_poi['value']
-
-                            startpoint = False
+                    make_automation(x_project_arr, "TempoAutomation", projJ['automation']['main']['bpm'], 'bpm', 'dawvert_bpm')
 
 
         # ----------------------------------------- zip -----------------------------------------

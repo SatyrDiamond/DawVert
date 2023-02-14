@@ -281,8 +281,8 @@ class input_notessimo_v2(plugin_input.base):
                 cvpj_l_placement['fromindex'] = patid
                 if str(layer+1) not in cvpj_l_playlist: 
                     cvpj_l_playlist[str(layer+1)] = {}
-                    cvpj_l_playlist[str(layer+1)]['placements'] = []
-                cvpj_l_playlist[str(layer+1)]['placements'].append(cvpj_l_placement)
+                    cvpj_l_playlist[str(layer+1)]['placements_notes'] = []
+                cvpj_l_playlist[str(layer+1)]['placements_notes'].append(cvpj_l_placement)
 
             autoplacement = {}
             autoplacement['position'] = curpos

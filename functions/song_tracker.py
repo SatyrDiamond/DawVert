@@ -218,7 +218,7 @@ def song2playlist(patterntable_all, number_of_channels, order_list, startinststr
         projL_playlist[str(current_channelnum+1)] = {}
         projL_playlist[str(current_channelnum+1)]['color'] = color
         projL_playlist[str(current_channelnum+1)]['name'] = 'Channel ' + str(current_channelnum+1)
-        projL_playlist[str(current_channelnum+1)]['placements'] = placements
+        projL_playlist[str(current_channelnum+1)]['placements_notes'] = placements
     return projL_playlist
 
 def get_len_table(patterntable_all, orders):

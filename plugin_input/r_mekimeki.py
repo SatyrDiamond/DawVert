@@ -29,6 +29,8 @@ class input_cvpj_f(plugin_input.base):
 
         cvpj_l_trackdata = {}
         cvpj_l_trackordering = []
+        cvpj_l_trackplacements = {}
+
         cvpj_l_track_master = {}
 
         cvpj_l_track_master['name'] = 'MAS'
@@ -37,14 +39,16 @@ class input_cvpj_f(plugin_input.base):
 
         tracknum = 0
         for mmc_track in mmc_tracks:
+            trackid = 'CH'+str(tracknum)
+
             trackdata = {}
             trackdata['color'] = maincolor
             trackdata['name'] = 'CH'+str(tracknum)
             trackdata['type'] = 'instrument'
             trackdata["instdata"] = {}
             trackdata["instdata"]['plugin'] = 'none'
-            cvpj_l_trackdata[str('CH'+str(tracknum))] = trackdata
-            cvpj_l_trackordering.append('CH'+str(tracknum))
+            cvpj_l_trackdata[trackid] = trackdata
+            cvpj_l_trackordering.append(trackid)
 
             cvpj_notelist = []
 
@@ -74,7 +78,8 @@ class input_cvpj_f(plugin_input.base):
                 placement_pl['position'] = 0
                 placement_pl['duration'] = note_mod.getduration(cvpj_notelist)
                 placement_pl['notelist'] = cvpj_notelist
-                trackdata['placements'].append(placement_pl)
+                cvpj_l_trackplacements[trackid] = {}
+                cvpj_l_trackplacements[trackid]['notes'] = [placement_pl]
 
             tracknum += 1
 
@@ -87,6 +92,7 @@ class input_cvpj_f(plugin_input.base):
         cvpj_l['bpm'] = mmc_bpm
         cvpj_l['track_data'] = cvpj_l_trackdata
         cvpj_l['track_order'] = cvpj_l_trackordering
+        cvpj_l['track_placements'] = cvpj_l_trackplacements
         cvpj_l['track_master'] = cvpj_l_track_master
         return json.dumps(cvpj_l)
 

@@ -249,7 +249,7 @@ class input_s3m(plugin_input.base):
         t_automation = {}
         t_automation['main'] = {}
         t_automation['main']['bpm'] = song_tracker.tempo_auto(patterntable_all, t_orderlist, s3m_speed, s3m_tempo)
-        cvpj_l['t_automation'] = t_automation
+        cvpj_l['automation'] = t_automation
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = s3m_name

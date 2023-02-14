@@ -228,37 +228,39 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
         elif pluginname == "OPL2":
             cvpj_l_inst['plugin'] = "opl2"
             cvpj_l_plugindata['op1'] = {}
-            cvpj_l_plugindata['op1']['env_attack'] = int(xml_plugin.get('op1_a'))
-            cvpj_l_plugindata['op1']['env_decay'] = int(xml_plugin.get('op1_d'))
-            cvpj_l_plugindata['op1']['env_release'] = int(xml_plugin.get('op1_r'))
-            cvpj_l_plugindata['op1']['env_sustain'] = int(xml_plugin.get('op1_s'))
-            cvpj_l_plugindata['op1']['freqmul'] = int(xml_plugin.get('op1_mul'))
-            cvpj_l_plugindata['op1']['ksr'] = int(xml_plugin.get('op1_ksr'))
-            cvpj_l_plugindata['op1']['level'] = int(xml_plugin.get('op1_lvl'))
-            cvpj_l_plugindata['op1']['perc_env'] = int(xml_plugin.get('op1_perc'))
-            cvpj_l_plugindata['op1']['scale'] = int(xml_plugin.get('op1_scale'))
-            cvpj_l_plugindata['op1']['tremolo'] = int(xml_plugin.get('op1_trem'))
-            cvpj_l_plugindata['op1']['vibrato'] = int(xml_plugin.get('op1_vib'))
-            cvpj_l_plugindata['op1']['waveform'] = int(xml_plugin.get('op1_waveform'))
-
             cvpj_l_plugindata['op2'] = {}
-            cvpj_l_plugindata['op2']['env_attack'] = int(xml_plugin.get('op2_a'))
-            cvpj_l_plugindata['op2']['env_decay'] = int(xml_plugin.get('op2_d'))
-            cvpj_l_plugindata['op2']['env_release'] = int(xml_plugin.get('op2_r'))
-            cvpj_l_plugindata['op2']['env_sustain'] = int(xml_plugin.get('op2_s'))
-            cvpj_l_plugindata['op2']['freqmul'] = int(xml_plugin.get('op2_mul'))
-            cvpj_l_plugindata['op2']['ksr'] = int(xml_plugin.get('op2_ksr'))
-            cvpj_l_plugindata['op2']['level'] = int(xml_plugin.get('op2_lvl'))
-            cvpj_l_plugindata['op2']['perc_env'] = int(xml_plugin.get('op2_perc'))
-            cvpj_l_plugindata['op2']['scale'] = int(xml_plugin.get('op2_scale'))
-            cvpj_l_plugindata['op2']['tremolo'] = int(xml_plugin.get('op2_trem'))
-            cvpj_l_plugindata['op2']['vibrato'] = int(xml_plugin.get('op2_vib'))
-            cvpj_l_plugindata['op2']['waveform'] = int(xml_plugin.get('op2_waveform'))
-
-            cvpj_l_plugindata['feedback'] = int(xml_plugin.get('feedback'))
-            cvpj_l_plugindata['fm'] = int(xml_plugin.get('fm'))
-            cvpj_l_plugindata['tremolo_depth'] = int(xml_plugin.get('trem_depth'))
-            cvpj_l_plugindata['vibrato_depth'] = int(xml_plugin.get('vib_depth'))
+            
+            cvpj_l_plugindata['op1']['env_attack'] = lmms_getvalue(xml_plugin, 'op1_a', 0, None)
+            cvpj_l_plugindata['op1']['env_decay'] = lmms_getvalue(xml_plugin, 'op1_d', 0, None)
+            cvpj_l_plugindata['op1']['env_release'] = lmms_getvalue(xml_plugin, 'op1_r', 0, None)
+            cvpj_l_plugindata['op1']['env_sustain'] = lmms_getvalue(xml_plugin, 'op1_s', 0, None)
+            cvpj_l_plugindata['op1']['freqmul'] = lmms_getvalue(xml_plugin, 'op1_mul', 0, None)
+            cvpj_l_plugindata['op1']['ksr'] = lmms_getvalue(xml_plugin, 'op1_ksr', 0, None)
+            cvpj_l_plugindata['op1']['level'] = lmms_getvalue(xml_plugin, 'op1_lvl', 0, None)
+            cvpj_l_plugindata['op1']['perc_env'] = lmms_getvalue(xml_plugin, 'op1_perc', 0, None)
+            cvpj_l_plugindata['op1']['scale'] = lmms_getvalue(xml_plugin, 'op1_scale', 0, None)
+            cvpj_l_plugindata['op1']['tremolo'] = lmms_getvalue(xml_plugin, 'op1_trem', 0, None)
+            cvpj_l_plugindata['op1']['vibrato'] = lmms_getvalue(xml_plugin, 'op1_vib', 0, None)
+            cvpj_l_plugindata['op1']['waveform'] = lmms_getvalue(xml_plugin, 'op1_waveform', 0, None)
+            
+            cvpj_l_plugindata['op2']['env_attack'] = lmms_getvalue(xml_plugin, 'op2_a', 0, None)
+            cvpj_l_plugindata['op2']['env_decay'] = lmms_getvalue(xml_plugin, 'op2_d', 0, None)
+            cvpj_l_plugindata['op2']['env_release'] = lmms_getvalue(xml_plugin, 'op2_r', 0, None)
+            cvpj_l_plugindata['op2']['env_sustain'] = lmms_getvalue(xml_plugin, 'op2_s', 0, None)
+            cvpj_l_plugindata['op2']['freqmul'] = lmms_getvalue(xml_plugin, 'op2_mul', 0, None)
+            cvpj_l_plugindata['op2']['ksr'] = lmms_getvalue(xml_plugin, 'op2_ksr', 0, None)
+            cvpj_l_plugindata['op2']['level'] = lmms_getvalue(xml_plugin, 'op2_lvl', 0, None)
+            cvpj_l_plugindata['op2']['perc_env'] = lmms_getvalue(xml_plugin, 'op2_perc', 0, None)
+            cvpj_l_plugindata['op2']['scale'] = lmms_getvalue(xml_plugin, 'op2_scale', 0, None)
+            cvpj_l_plugindata['op2']['tremolo'] = lmms_getvalue(xml_plugin, 'op2_trem', 0, None)
+            cvpj_l_plugindata['op2']['vibrato'] = lmms_getvalue(xml_plugin, 'op2_vib', 0, None)
+            cvpj_l_plugindata['op2']['waveform'] = lmms_getvalue(xml_plugin, 'op2_waveform', 0, None)
+            
+            cvpj_l_plugindata['feedback'] = lmms_getvalue(xml_plugin, 'feedback', 0, None)
+            cvpj_l_plugindata['fm'] = lmms_getvalue(xml_plugin, 'fm', 0, None)
+            cvpj_l_plugindata['tremolo_depth'] = lmms_getvalue(xml_plugin, 'trem_depth', 0, None)
+            cvpj_l_plugindata['vibrato_depth'] = lmms_getvalue(xml_plugin, 'vib_depth', 0, None)
+            
 
 
         elif pluginname == "zynaddsubfx":
@@ -469,7 +471,7 @@ def lmms_decode_autoplacements(trkX):
     autoplacements = []
     autopatsX = trkX.findall('automationpattern')
     printcountplace = 0
-    print('[input-lmms]       Placements: ', end='')
+    print('[input-lmms]       Auto Placements: ', end='')
     for autopatX in autopatsX:
         placeJ = {}
         placeJ["position"] = float(autopatX.get('pos')) / 12
@@ -540,7 +542,7 @@ def lmms_decode_fxmixer(fxX):
         fxcJ = {}
         fxcJ['name'] = fx_name
         if fxcX.get('muted') != None: fxcJ['muted'] = int(fxcX.get('muted'))
-        fxcJ['vol'] = float(fxcX.get('volume'))
+        if fxcX.get('volume') != None: fxcJ['vol'] = float(fxcX.get('volume'))
         fxchainX = fxcX.find('fxchain')
         if fxchainX != None:
             fxcJ['fxenabled'] = int(fxchainX.get('enabled'))

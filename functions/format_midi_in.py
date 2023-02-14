@@ -199,11 +199,13 @@ def make_inst(channelnum, cvpj_midibank, cvpj_midiinst):
         if midichanneltype[channelnum] == 0: 
             cvpj_trackdata["instdata"] = {}
             cvpj_trackdata["instdata"]['plugin'] = 'none'
+            cvpj_trackdata["color"] = [0,0,0]
         else: 
             cvpj_trackdata["instdata"]['plugin'] = 'general-midi'
             cvpj_trackdata["instdata"]['plugindata'] = {'bank':128, 'inst':cvpj_midiinst}
             cvpj_trackdata["instdata"]['usemasterpitch'] = 0
             cvpj_trackdata["name"] = 'Drums'
+            cvpj_trackdata["color"] = [0.81, 0.80, 0.82]
     else:
         cvpj_trackdata["instdata"]['plugin'] = 'general-midi'
         if midichanneltype[channelnum] == 0: 
@@ -215,6 +217,8 @@ def make_inst(channelnum, cvpj_midibank, cvpj_midiinst):
             cvpj_trackdata["instdata"]['plugindata'] = {'bank':128, 'inst':cvpj_midiinst}
             cvpj_trackdata["instdata"]['usemasterpitch'] = 0
             cvpj_trackdata["name"] = 'Drums'
+            cvpj_trackdata["color"] = [0.81, 0.80, 0.82]
+
 
     cvpj_l_instruments[cvpj_instid] = cvpj_trackdata
     cvpj_l_instrumentsorder.append(cvpj_instid)

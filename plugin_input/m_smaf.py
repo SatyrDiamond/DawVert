@@ -118,7 +118,6 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
     usedinsts = format_midi_in.getusedinsts(16)
 
     for usedinst in usedinsts:
-        print(usedinst)
         if usedinst[1] == 124: 
             cvpj_trackdata = {}
             cvpj_trackdata["instdata"] = {}
@@ -130,7 +129,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             cvpj_trackdata = {}
             cvpj_trackdata["instdata"] = {}
             cvpj_trackdata["instdata"]['plugin'] = 'none'
-            cvpj_trackdata["color"] = [0.3,0.3,0.3]
+            cvpj_trackdata["color"] = [0.2,0.2,0.2]
             cvpj_trackdata["name"] = 'MA-3 PCM #' + str(usedinst[2])
             format_midi_in.make_custominst(usedinst[0], usedinst[1], usedinst[2], cvpj_trackdata)
         else: 

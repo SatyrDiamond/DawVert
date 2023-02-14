@@ -338,14 +338,14 @@ class input_cvpj_r(plugin_input.base):
             cvpj_l_playlist[plnum] = {}
             cvpj_l_playlist[plnum]['name'] = t_channames[chnum]
             cvpj_l_playlist[plnum]['color'] = chiptypecolors[t_chantype[chnum]]
-            cvpj_l_playlist[plnum]['placements'] = []
+            cvpj_l_playlist[plnum]['placements_notes'] = []
             for t_ch_patnum in t_ch_pat_order:
                 cvpj_l_placement = {}
                 cvpj_l_placement['type'] = "instruments"
                 cvpj_l_placement['position'] = curpos
                 cvpj_l_placement['duration'] = dmf_TOTAL_ROWS_PER_PATTERN
                 cvpj_l_placement['fromindex'] = str(chnum)+'_'+str(t_ch_patnum)
-                cvpj_l_playlist[plnum]['placements'].append(cvpj_l_placement)
+                cvpj_l_playlist[plnum]['placements_notes'].append(cvpj_l_placement)
                 curpos += dmf_TOTAL_ROWS_PER_PATTERN
             plnum += 1
             chnum += 1

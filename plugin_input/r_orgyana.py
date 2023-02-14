@@ -103,6 +103,8 @@ class input_orgyana(plugin_input.base):
     def parse(self, input_file, extra_param):
         cvpj_l_trackdata = {}
         cvpj_l_trackordering = []
+        cvpj_l_trackplacements = {}
+
         cvpj_l_timemarkers = []
         cvpj_l_fxrack = {}
 
@@ -160,6 +162,9 @@ class input_orgyana(plugin_input.base):
                 cvpj_placement['duration'] = note_mod.getduration(s_cvpj_nl)
                 cvpj_placement['notelist'] = s_cvpj_nl
 
+                cvpj_l_trackplacements['org_'+str(tracknum)] = {}
+                cvpj_l_trackplacements['org_'+str(tracknum)]['notes'] = [cvpj_placement]
+
                 cvpj_inst = {}
                 cvpj_inst['type'] = 'instrument'
                 cvpj_inst['name'] = trackname
@@ -167,7 +172,6 @@ class input_orgyana(plugin_input.base):
                 cvpj_inst["vol"] = 1.0
                 cvpj_inst['instdata'] = {}
                 cvpj_inst['instdata']['plugin'] = 'none'
-                cvpj_inst['placements'] = [cvpj_placement]
                 cvpj_l_trackdata['org_'+str(tracknum)] = cvpj_inst
                 cvpj_l_trackordering.append('org_'+str(tracknum))
 
@@ -180,6 +184,7 @@ class input_orgyana(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         cvpj_l['track_data'] = cvpj_l_trackdata
         cvpj_l['track_order'] = cvpj_l_trackordering
+        cvpj_l['track_placements'] = cvpj_l_trackplacements
         cvpj_l['bpm'] = (1/(org_tempo/120))*120
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['timesig_numerator'] = 4

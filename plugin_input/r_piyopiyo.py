@@ -55,9 +55,12 @@ def parsetrack(placements, trackid, trackname, vol, samplefolder, wavid):
     trkJ['plugindata'] = trkJp
     trkJ['name'] = trackname
     trkJ['vol'] = vol
-    trkJ['placements'] = placements
-    cvpj_l_trackordering.append(trackid)
     trkJ['instdata'] = instJ
+
+    cvpj_l_trackplacements[trackid] = {}
+    cvpj_l_trackplacements[trackid]['notes'] = placements
+
+    cvpj_l_trackordering.append(trackid)
     cvpj_l_trackdata[trackid] = trkJ
 
 class input_pms(plugin_input.base):
@@ -77,6 +80,8 @@ class input_pms(plugin_input.base):
     def parse(self, input_file, extra_param):
         global cvpj_l_trackdata
         global cvpj_l_trackordering
+        global cvpj_l_trackplacements
+
         pmdfile = open(input_file, 'rb')
         header = pmdfile.read(4)
         trackdatapos = int.from_bytes(pmdfile.read(4), "little")
@@ -121,6 +126,7 @@ class input_pms(plugin_input.base):
         notesP = pmddecodenotes(pmdfile, recordspertrack, 0)
         cvpj_l_trackdata = {}
         cvpj_l_trackordering = []
+        cvpj_l_trackplacements = {}
         parsetrack(notes1, 'piyopiyo_note1', 'Note #1', pmdtrackdata[0][3]/250, samplefolder, 1)
         parsetrack(notes2, 'piyopiyo_note2', 'Note #2', pmdtrackdata[1][3]/250, samplefolder, 2)
         parsetrack(notes3, 'piyopiyo_note3', 'Note #3', pmdtrackdata[2][3]/250, samplefolder, 3)
@@ -135,6 +141,7 @@ class input_pms(plugin_input.base):
         cvpj_l['bpm'] = bpm
         cvpj_l['track_data'] = cvpj_l_trackdata
         cvpj_l['track_order'] = cvpj_l_trackordering
+        cvpj_l['track_placements'] = cvpj_l_trackplacements
         cvpj_l['timemarkers'] = []
         cvpj_l['timemarkers'].append({'name': 'Loop', 'position': loopstart, 'end': loopend, 'type': 'loop'})
         return json.dumps(cvpj_l)

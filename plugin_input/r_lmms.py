@@ -352,7 +352,6 @@ def lmms_decode_inst_track(trkX, name):
     cvpj_l_track_inst = cvpj_l_inst
     cvpj_l_track_inst['plugindata'] = cvpj_l_inst_plugin
     cvpj_l_track['type'] = "instrument"
-    cvpj_l_track['placements'] = {}
 
     cvpj_l_track['name'] = trkX.get('name')
     print('[input-lmms] Instrument Track')
@@ -446,11 +445,11 @@ def lmms_decode_inst_track(trkX, name):
         cvpj_l_chordcreator_plugindata = {"name": "chordcreator", "data": cvpj_l_chordcreator}
         cvpj_l_track['chain_fx_note'].append({"enabled": cvpj_l_chordcreator_enabled, "plugin": "native-lmms", "plugindata": cvpj_l_chordcreator_plugindata})
 
-    cvpj_l_track['placements'] = lmms_decode_nlplacements(trkX)
+    track_placements = lmms_decode_nlplacements(trkX)
 
     cvpj_l_track['instdata'] = cvpj_l_inst
     print('[input-lmms]')
-    return cvpj_l_track
+    return cvpj_l_track, track_placements
 
 # ------- Track: Automation -------
 
@@ -564,16 +563,19 @@ def lmms_decode_tracks(trksX):
     tracklist = {}
     instdata = {}
     trackordering = []
+    trackplacements = {}
     idtracknum = 0
     for trkX in trksX:
         idtracknum += 1
         tracktype = trkX.get('type')
         if tracktype == "0":
-            tracklist['LMMS_Inst_'+str(idtracknum)] = lmms_decode_inst_track(trkX, 'LMMS_Inst_'+str(idtracknum))
+            trackid = 'LMMS_Inst_'+str(idtracknum)
+            trackplacements[trackid] = {}
+            tracklist[trackid], trackplacements[trackid]['notes'] = lmms_decode_inst_track(trkX, 'LMMS_Inst_'+str(idtracknum))
             trackordering.append('LMMS_Inst_'+str(idtracknum))
         if tracktype == "5":
             lmms_decode_auto_track(trkX)
-    return [tracklist, trackordering]
+    return [tracklist, trackordering, trackplacements]
 
 class input_lmms(plugin_input.base):
     def __init__(self): pass
@@ -627,7 +629,7 @@ class input_lmms(plugin_input.base):
             rootJ['info']['message']['type'] = 'html'
             rootJ['info']['message']['text'] = projnotesX.text
 
-        trackdata, trackordering = lmms_decode_tracks(trksX)
+        trackdata, trackordering, trackplacements = lmms_decode_tracks(trksX)
 
         l_automation['main'] = {}
         l_automation['track_main'] = {}
@@ -654,6 +656,7 @@ class input_lmms(plugin_input.base):
         rootJ['use_fxrack'] = True
         rootJ['track_data'] = trackdata
         rootJ['track_order'] = trackordering
+        rootJ['track_placements'] = trackplacements
         rootJ['fxrack'] = lmms_decode_fxmixer(fxX)
 
         return json.dumps(rootJ, indent=2)

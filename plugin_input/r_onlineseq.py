@@ -148,8 +148,11 @@ class input_onlinesequencer(plugin_input.base):
 
         cvpj_l_trackdata = {}
         cvpj_l_trackordering = []
+        cvpj_l_trackplacements = {}
+
         cvpj_l_timemarkers = []
         cvpj_l_fxrack = {}
+
         cvpj_automation = {}
         cvpj_automation['main'] = {}
         cvpj_automation['track'] = {}
@@ -241,7 +244,8 @@ class input_onlinesequencer(plugin_input.base):
             cvpj_placement['duration'] = trackduration
             cvpj_placement['notelist'] = cvpj_notelist
 
-            cvpj_inst['placements'] = [cvpj_placement]
+            cvpj_l_trackplacements['os_'+str(instid)] = {}
+            cvpj_l_trackplacements['os_'+str(instid)]['notes'] = [cvpj_placement]
 
             if instid in t_auto_inst:
                 cvpj_automation['track']['os_'+str(instid)] = {}
@@ -284,6 +288,7 @@ class input_onlinesequencer(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         cvpj_l['track_data'] = cvpj_l_trackdata
         cvpj_l['track_order'] = cvpj_l_trackordering
+        cvpj_l['track_placements'] = cvpj_l_trackplacements
         cvpj_l['bpm'] = bpm
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['timesig_numerator'] = timesig_numerator

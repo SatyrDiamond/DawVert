@@ -109,7 +109,7 @@ class input_gt_mnbs(plugin_input.base):
         for playlistid in range(nbs_layercount):
             cvpj_l_playlist[playlistid+1] = {}
             cvpj_l_playlist[playlistid+1]['color'] = [0.23, 0.23, 0.23]
-            cvpj_l_playlist[playlistid+1]['placements'] = []
+            cvpj_l_playlist[playlistid+1]['placements_notes'] = []
             nbs_notes[playlistid+1] = {}
 
         nbs_song_name = getstring(nbs_file)
@@ -192,8 +192,8 @@ class input_gt_mnbs(plugin_input.base):
                 cvpj_pl_data['position'] = placenum
                 cvpj_pl_data['duration'] = split_duration
                 cvpj_pl_data['notelist'] = layer_placements[placenum]
-                cvpj_l_playlist[nbs_layer]['placements'].append(cvpj_pl_data)
-            print('[input-mnbs] Layer '+str(nbs_layer)+' Placements: '+str(len(cvpj_l_playlist[nbs_layer]['placements'])))
+                cvpj_l_playlist[nbs_layer]['placements_notes'].append(cvpj_pl_data)
+            print('[input-mnbs] Layer '+str(nbs_layer)+' Placements: '+str(len(cvpj_l_playlist[nbs_layer]['placements_notes'])))
 
         # PART 3: LAYERS
         if nbs_file.tell() <= nbs_len:

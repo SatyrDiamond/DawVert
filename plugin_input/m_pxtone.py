@@ -291,7 +291,7 @@ class input_pxtone(plugin_input.base):
             playlistrowdata = {}
             if unitnum in ptcop_name_unit: playlistrowdata['name'] = ptcop_name_unit[unitnum]
             playlistrowdata['color'] = [0.14, 0.00, 0.29]
-            playlistrowdata['placements'] = [cvpj_placement]
+            playlistrowdata['placements_notes'] = [cvpj_placement]
 
             cvpj_l_playlist[str(unitnum+1)] = playlistrowdata
 

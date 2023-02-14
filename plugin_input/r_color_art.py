@@ -18,6 +18,8 @@ class input_color_art(plugin_input.base):
 
         cvpj_l_trackdata = {}
         cvpj_l_trackordering = []
+        cvpj_l_trackplacements = {}
+
         cvpj_l_track_master = {}
 
         print(pixels)
@@ -28,12 +30,18 @@ class input_color_art(plugin_input.base):
             print('39 max')
 
         for height in range(h):
+            trackid = str('track'+str(height))
+
             trackdata = {}
             trackdata['name'] = '.'
             trackdata['type'] = 'instrument'
             trackdata['placements'] = []
             trackdata["instdata"] = {}
             trackdata["instdata"]['plugin'] = 'none'
+
+            cvpj_l_trackplacements[trackid] = {}
+            cvpj_l_trackplacements[trackid]['notes'] = []
+
             for width in range(w):
                 placement_pl = {}
                 placement_pl['color'] = [pixels[pcnt]/255,pixels[pcnt+1]/255,pixels[pcnt+2]/255]
@@ -43,11 +51,13 @@ class input_color_art(plugin_input.base):
                 placement_pl['notelist'][0]["key"] = 0
                 placement_pl['notelist'][0]["position"] = 0
                 placement_pl['notelist'][0]["duration"] = 0.2
-                trackdata['placements'].append(placement_pl)
+
+                cvpj_l_trackplacements[trackid]['notes'].append(placement_pl)
+
                 pcnt += 4
 
-            cvpj_l_trackdata[str('track'+str(height))] = trackdata
-            cvpj_l_trackordering.append('track'+str(height))
+            cvpj_l_trackdata[trackid] = trackdata
+            cvpj_l_trackordering.append(trackid)
 
         print(w, h)
 
@@ -57,6 +67,7 @@ class input_color_art(plugin_input.base):
         cvpj_l['bpm'] = 140
         cvpj_l['track_data'] = cvpj_l_trackdata
         cvpj_l['track_order'] = cvpj_l_trackordering
+        cvpj_l['track_placements'] = cvpj_l_trackplacements
         cvpj_l['track_master'] = cvpj_l_track_master
         return json.dumps(cvpj_l)
 

@@ -162,8 +162,8 @@ class input_flp(plugin_input.base):
             length = item['length']
             if str(playlistline) not in cvpj_l_playlist:
                 cvpj_l_playlist[str(playlistline)] = {}
-                cvpj_l_playlist[str(playlistline)]['placements'] = []
-            cvpj_l_playlist[str(playlistline)]['placements'].append(arrangementitemJ)
+                cvpj_l_playlist[str(playlistline)]['placements_notes'] = []
+            cvpj_l_playlist[str(playlistline)]['placements_notes'].append(arrangementitemJ)
 
         FL_Tracks = FL_Arrangement['tracks']
 

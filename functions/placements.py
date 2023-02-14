@@ -13,11 +13,11 @@ def overlap(start1, end1, start2, end2):
     return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
 
 def getsongduration(projJ):
-    trackdata = projJ['track_data']
+    trackplacements = projJ['track_placements']
     songduration = 0
-    for trackid in trackdata:
-        if 'placements' in trackdata[trackid]:
-            for placement in trackdata[trackid]['placements']:
+    for trackid in trackplacements:
+        if 'notes' in trackplacements[trackid]:
+            for placement in trackplacements[trackid]['notes']:
                 p_pos = placement['position']
                 p_dur = placement['duration']
                 if songduration < p_pos+p_dur:
@@ -76,7 +76,7 @@ def single_notelists2placements(placementsdata):
 
     return new_placements
 
-def split_single_notelist(projJ):
+def r_split_single_notelist(projJ):
     global points_items
 
     if points_items == None:
@@ -100,69 +100,93 @@ def split_single_notelist(projJ):
 
     if 'do_singlenotelistcut' in projJ:
         if projJ['do_singlenotelistcut'] == True:
-            trackdata = projJ['track_data']
-            trackordering = projJ['track_order']
-            for trackid in trackordering:
-                if trackid in trackdata:
-                    if 'placements' in trackdata[trackid]:
-                        placementdata = trackdata[trackid]['placements']
-                        if len(placementdata) == 1:
-                            trackdata[trackid]['placements'] = single_notelists2placements(placementdata)
-                            print('[placements] split_single_notelist: splitted '+trackid+' to '+str(len(trackdata[trackid]['placements'])) + ' placements.')
+            track_placements = projJ['track_placements']
+            for trackid in track_placements:
+                if 'notes' in track_placements[trackid]:
+                    placementdata = track_placements[trackid]['notes']
+                    if len(placementdata) == 1:
+                        track_placements[trackid]['notes'] = single_notelists2placements(placementdata)
+                        print('[placements] split_single_notelist: splitted '+trackid+' to '+str(len(track_placements[trackid]['notes'])) + ' placements.')
 
-def removelanes(projJ):
+
+def tracklanename(trackname, lanename, fallback):
+    if trackname != None:
+        if lanename != None: ntp_name = trackname+' ['+lanename+']'
+        if lanename == None: ntp_name = trackname
+
+    if trackname == None:
+        if lanename != None: ntp_name = 'none'+' ['+lanename+']'
+        if lanename == None: ntp_name = 'none'
+
+    return ntp_name
+
+def r_removelanes(projJ):
     old_trackdata = projJ['track_data']
     old_trackordering = projJ['track_order']
+    old_trackplacements = projJ['track_placements']
     new_trackdata = {}
     new_trackordering = []
+    new_trackplacements = {}
 
     for trackid in old_trackordering:
         if trackid in old_trackdata:
-            lr_t_trdata = old_trackdata[trackid]
-            if 'laned' in lr_t_trdata:
-                lr_t_lanedata = lr_t_trdata['lanedata']
-                lr_t_laneordering = lr_t_trdata['laneordering']
-                if len(lr_t_laneordering) != 0:
-                    trackbase = lr_t_trdata.copy()
-                    del trackbase['laned']
-                    del trackbase['lanedata']
-                    del trackbase['laneordering']
-                    for laneid in lr_t_laneordering:
-                        lr_t_l_data = lr_t_lanedata[laneid]
-                        splitnameid = trackid+'_Lane'+laneid
-                        if 'placements' in lr_t_l_data: lr_t_l_placements = lr_t_l_data['placements']
-                        else: lr_t_l_placements = []
+            print('[placements] removelanes: '+ trackid)
+            if trackid in old_trackplacements:
 
-                        if 'name' in lr_t_l_data: lr_t_l_name = lr_t_l_data['name']
-                        else: lr_t_l_name = None
+                s_trackdata = old_trackdata[trackid]
+                s_pldata = old_trackplacements[trackid]
 
-                        if 'name' in lr_t_trdata and lr_t_l_name != None: 
-                            ntp_name = lr_t_trdata['name']+' ['+lr_t_l_name+']'
-                        if 'name' in lr_t_trdata and lr_t_l_name == None: 
-                            ntp_name = lr_t_trdata['name']
+                if 'name' in s_trackdata: s_trackname = s_trackdata['name']
+                else: s_trackname = None
 
-                        if 'name' not in lr_t_trdata and lr_t_l_name != None: 
-                            ntp_name = 'none'+' ['+lr_t_l_name+']'
-                        if 'name' not in lr_t_trdata and lr_t_l_name == None: 
-                            ntp_name = 'none'
+                not_laned = True
 
-                        part_track_data = trackbase.copy()
-                        part_track_data['name'] = ntp_name
-                        part_track_data['placements'] = lr_t_l_placements
+                if 'notes_laned' in s_pldata:
+                    if s_pldata['notes_laned'] == 1:
+                        not_laned = False
 
-                        if 'color' not in part_track_data and 'color' in lr_t_l_data:
-                            part_track_data['color'] = lr_t_l_data['color']
+                        s_lanedata = s_pldata['notes_lanedata']
+                        s_laneordering = s_pldata['notes_laneorder']
 
-                        new_trackdata[splitnameid] = part_track_data
-                        new_trackordering.append(splitnameid)
-                else:
-                    new_trackdata[trackid] = lr_t_trdata
+                        if len(s_laneordering) == 0:
+                            new_trackdata[trackid] = s_trackdata
+                            new_trackplacements[trackid] = {}
+                            new_trackplacements[trackid]['notes'] = []
+                            new_trackordering.append(trackid)
+
+                        if len(s_laneordering) == 1:
+                            new_trackdata[trackid] = s_trackdata
+                            new_trackplacements[trackid] = {}
+                            new_trackplacements[trackid]['notes'] = s_lanedata[s_laneordering[0]]['placements']
+                            new_trackordering.append(trackid)
+
+                        if len(s_laneordering) > 1:
+                            for laneid in s_laneordering:
+
+                                splitnameid = trackid+'_Lane'+laneid
+
+                                s_d_lanedata = s_lanedata[laneid]
+                                if 'name' in s_d_lanedata: s_lanename = s_d_lanedata['name']
+                                else: s_lanename = None
+
+                                septrackname = tracklanename(s_trackname, s_lanename, 'noname')
+
+                                new_trackdata[splitnameid] = s_trackdata.copy()
+                                new_trackdata[splitnameid]['name'] = septrackname
+                                new_trackplacements[splitnameid] = {}
+                                new_trackplacements[splitnameid]['notes'] = s_lanedata[laneid]['placements']
+                                new_trackordering.append(splitnameid)
+
+                if not_laned == True:
+                    new_trackdata[trackid] = s_trackdata
+                    new_trackplacements[trackid] = s_pldata
                     new_trackordering.append(trackid)
-            else:
-                new_trackdata[trackid] = lr_t_trdata
-                new_trackordering.append(trackid)
+
+
+
     projJ['track_data'] = new_trackdata
     projJ['track_order'] = new_trackordering
+    projJ['track_placements'] = new_trackplacements
 
 def lanefit_checkoverlap(new_placementdata, placements_table, num):
     not_overlapped = True
@@ -191,22 +215,19 @@ def lanefit_addpl(new_placementdata, placements_table):
             lanenum += 1
 
 
-def lanefit(projJ):
+def r_lanefit(projJ):
     if 'do_lanefit' in projJ:
         if projJ['do_lanefit'] == True:
-            trackdata = projJ['track_data']
-            trackordering = projJ['track_order']
-            for trackid in trackordering:
-                if trackid in trackdata:
-                    lr_t_trdata = trackdata[trackid]
-                    if 'laned' in lr_t_trdata:
+            trackplacements = projJ['track_placements']
+            for trackid in trackplacements:
+                if 'notes_laned' in trackplacements[trackid]:
+                    if trackplacements[trackid]['notes_laned'] == True:
+                        old_lanedata = trackplacements[trackid]['notes_lanedata']
+                        old_laneordering = trackplacements[trackid]['notes_laneorder']
                         new_lanedata = {}
                         new_laneordering = []
-                        old_lanedata = lr_t_trdata['lanedata']
-                        old_laneordering = lr_t_trdata['laneordering']
 
                         new_pltable = [[]]
-
                         for laneid in old_laneordering:
                             old_lanedata_data = old_lanedata[laneid]
                             old_lanedata_pl = old_lanedata_data['placements']
@@ -215,56 +236,57 @@ def lanefit(projJ):
 
                         for plnum in range(len(new_pltable)):
                             if new_pltable[plnum] != []:
-                                newlaneid = 'lanefit_'+str(plnum)
+                                newlaneid = '_lanefit_'+str(plnum)
                                 new_lanedata[newlaneid] = {}
                                 new_lanedata[newlaneid]['placements'] = new_pltable[plnum]
                                 new_laneordering.append(newlaneid)
 
-                        lr_t_trdata['lanedata'] = new_lanedata
-                        lr_t_trdata['laneordering'] = new_laneordering
+                        trackplacements[trackid]['notes_lanedata'] = new_lanedata
+                        trackplacements[trackid]['notes_laneorder'] = new_laneordering
 
 
+def addwarps_pl(placementsdata):
+    prevpp = None
+    new_placements = []
+    for placement in placementsdata:
+        p_pos = placement['position']
+        p_dur = placement['duration']
+        p_nl = placement['notelist']
+        ipnl = False
+        if prevpp != None:
+            isfromprevpos = prevpp[0]==p_pos-p_dur
+            isdursame = prevpp[1]==p_dur
+            issamenotelist = prevpp[2]==p_nl
+            isplacecut = 'cut' in placement
+            prevpp[0]==p_pos-p_dur
+            if isfromprevpos == True:
+                if issamenotelist == True:
+                    if isdursame == True:
+                        if isplacecut == False:
+                            ipnl = True
+                            if 'cut' not in new_placements[-1]:
+                                new_placements[-1]['cut'] = {}
+                                new_placements[-1]['cut']['type'] = 'warp'
+                                new_placements[-1]['cut']['start'] = 0
+                                new_placements[-1]['cut']['loopstart'] = 0
+                                new_placements[-1]['cut']['loopend'] = p_dur
+                                new_placements[-1]['duration'] += p_dur
+                            else:
+                                new_placements[-1]['duration'] += p_dur
+        if ipnl == False:
+            new_placements.append(placement)
+        prevpp = [p_pos, p_dur, p_nl]
+    return new_placements
 
-def addwarps(projJ):
+def r_addwarps(projJ):
     if 'do_addwrap' in projJ:
         if projJ['do_addwrap'] == True:
-            trackdata = projJ['track_data']
-            trackordering = projJ['track_order']
-            for trackid in trackordering:
-                if trackid in trackdata:
-                    prevpp = None
-                    #print(trackid)
-                    new_placements = []
-                    if 'placements' in trackdata[trackid]:
-                        for placement in trackdata[trackid]['placements']:
-                            p_pos = placement['position']
-                            p_dur = placement['duration']
-                            p_nl = placement['notelist']
-                            ipnl = False
-                            if prevpp != None:
-                                isfromprevpos = prevpp[0]==p_pos-p_dur
-                                isdursame = prevpp[1]==p_dur
-                                issamenotelist = prevpp[2]==p_nl
-                                isplacecut = 'cut' in placement
-                                prevpp[0]==p_pos-p_dur
-                                if isfromprevpos == True:
-                                    if issamenotelist == True:
-                                        if isdursame == True:
-                                            if isplacecut == False:
-                                                ipnl = True
-                                                if 'cut' not in new_placements[-1]:
-                                                    new_placements[-1]['cut'] = {}
-                                                    new_placements[-1]['cut']['type'] = 'warp'
-                                                    new_placements[-1]['cut']['start'] = 0
-                                                    new_placements[-1]['cut']['loopstart'] = 0
-                                                    new_placements[-1]['cut']['loopend'] = p_dur
-                                                    new_placements[-1]['duration'] += p_dur
-                                                else:
-                                                    new_placements[-1]['duration'] += p_dur
-                            if ipnl == False:
-                                new_placements.append(placement)
-                            prevpp = [p_pos, p_dur, p_nl]
-                        trackdata[trackid]['placements'] = new_placements
+            track_placements = projJ['track_placements']
+            for track_placement in track_placements:
+                if 'notes' in track_placements[track_placement]:
+                    track_placement_s = track_placements[track_placement]
+                    print('[placements] addwarps: '+ track_placement)
+                    track_placements[track_placement]['notes'] = addwarps_pl(track_placement_s['notes'])
 
 def get_timesig(patternLength, notesPerBeat):
     MaxFactor = 1024

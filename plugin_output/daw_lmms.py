@@ -373,7 +373,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
         trkX_midiport.set('fixedoutputnote',"-1")
 
     print('[output-lmms] Instrument Track')
-    print('[output-lmms]       Name: ' + trkJ['name'])
+    if 'name' in trkJ: print('[output-lmms]       Name: ' + trkJ['name'])
     if 'chain_fx_audio' in trkJ:
         lmms_encode_fxchain(trkX_insttr, trkJ)
     lmms_encode_plugin(trkX_insttr, trkJ, trackid)

@@ -261,11 +261,11 @@ class input_mmf(plugin_input.base):
             playlistrowdata['name'] = 'Channel '+str(channel+1)
             playlistrowdata["color"] = [0.69, 0.63, 0.54]
             if len(c_notelist) != 0:
-                playlistrowdata['placements'] = [{}]
-                playlistrowdata['placements'][0]['type'] = 'instruments'
-                playlistrowdata['placements'][0]['position'] = 0
-                playlistrowdata['placements'][0]['duration'] = note_mod.getduration(c_notelist)
-                playlistrowdata['placements'][0]['notelist'] = c_notelist
+                playlistrowdata['placements_notes'] = [{}]
+                playlistrowdata['placements_notes'][0]['type'] = 'instruments'
+                playlistrowdata['placements_notes'][0]['position'] = 0
+                playlistrowdata['placements_notes'][0]['duration'] = note_mod.getduration(c_notelist)
+                playlistrowdata['placements_notes'][0]['notelist'] = c_notelist
             cvpj_l_playlist[str(channel+1)] = playlistrowdata
 
             cvpj_l_fxrack[str(channel+1)] = {}

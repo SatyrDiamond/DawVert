@@ -75,6 +75,7 @@ def track_end(channels):
     global midi_cmds
     global s_ppqstep
     global t_chan_auto
+    global t_chan_usedinst
     global t_trackname
     global t_tracknum
     global t_trk_ch
@@ -92,20 +93,40 @@ def track_end(channels):
 
     curpos = 0
     for midi_cmd in midi_cmds:
+
         if midi_cmd[0] == 'break': curpos += midi_cmd[1]
 
         if midi_cmd[0] == 'program': 
             t_cur_inst[midi_cmd[1]][1] = midi_cmd[2]
 
         if midi_cmd[0] == 'control': 
-            if midi_cmd[2] not in t_chan_auto[midi_cmd[1]]:
-                t_chan_auto[midi_cmd[1]][midi_cmd[2]] = {}
-            t_chan_auto[midi_cmd[1]][midi_cmd[2]][curpos] = midi_cmd[3]
+
+            if midi_cmd[2] == 0:
+                t_cur_inst[midi_cmd[1]][0] = midi_cmd[3]
+            else:
+                if midi_cmd[2] not in t_chan_auto[midi_cmd[1]]:
+                    t_chan_auto[midi_cmd[1]][midi_cmd[2]] = {}
+                t_chan_auto[midi_cmd[1]][midi_cmd[2]][curpos] = midi_cmd[3]
+
+        if midi_cmd[0] == 'note': 
+            if t_cur_inst[midi_cmd[1]] not in t_chan_usedinst[midi_cmd[1]]:
+                t_chan_usedinst[midi_cmd[1]].append(t_cur_inst[midi_cmd[1]])
+            curinst = t_cur_inst[midi_cmd[1]]
+
+            t_active_notes[midi_cmd[1]][midi_cmd[2]].append(
+                [
+                curpos, 
+                midi_cmd[4], 
+                midi_cmd[3], 
+                t_tracknum,
+                curinst[0],
+                curinst[1]
+                ]
+            )
 
         if midi_cmd[0] == 'note_on': 
             if t_cur_inst[midi_cmd[1]] not in t_chan_usedinst[midi_cmd[1]]:
                 t_chan_usedinst[midi_cmd[1]].append(t_cur_inst[midi_cmd[1]])
-
             curinst = t_cur_inst[midi_cmd[1]]
 
             t_active_notes[midi_cmd[1]][midi_cmd[2]].append(
@@ -141,45 +162,6 @@ def track_end(channels):
                     t_cvpj_notelist.append(notedata)
             notekey += 1
 
-
-    for channelnum in range(channels):
-        for s_chan_usedinst in t_chan_usedinst[channelnum]:
-            cvpj_midibank = s_chan_usedinst[0]
-            cvpj_midiinst = s_chan_usedinst[1]
-            cvpj_instid = 't'+str(t_tracknum)+'_c'+str(channelnum)+'_b'+str(cvpj_midibank)+'_i'+str(cvpj_midiinst)
-            if cvpj_instid not in t_trk_ch[channelnum]:
-                t_trk_ch[channelnum].append(cvpj_instid)
-
-            cvpj_l_instruments[cvpj_instid] = {}
-            cvpj_trackdata = cvpj_l_instruments[cvpj_instid]
-            cvpj_trackdata['fxrack_channel'] = channelnum+1
-
-            cvpj_trackdata["instdata"] = {}
-
-            if cvpj_midiinst == -1:
-                if midichanneltype[channelnum] == 0: 
-                    cvpj_trackdata["instdata"] = {}
-                    cvpj_trackdata["instdata"]['plugin'] = 'none'
-                else: 
-                    cvpj_trackdata["instdata"]['plugin'] = 'general-midi'
-                    cvpj_trackdata["instdata"]['plugindata'] = {'bank':128, 'inst':cvpj_midiinst}
-                    cvpj_trackdata["instdata"]['usemasterpitch'] = 0
-                    cvpj_trackdata["name"] = 'Drums'
-            else:
-                cvpj_trackdata["instdata"]['plugin'] = 'general-midi'
-                if midichanneltype[channelnum] == 0: 
-                    cvpj_trackdata["instdata"]['plugindata'] = {'bank':cvpj_midibank, 'inst':cvpj_midiinst}
-                    cvpj_trackdata["instdata"]['usemasterpitch'] = 1
-                    cvpj_trackdata["name"] = MIDIInstNames[cvpj_midiinst] + ' [Ch' + str(channelnum+1) + ']'
-                    cvpj_trackdata["color"] = MIDIInstColors[cvpj_midiinst]
-                else: 
-                    cvpj_trackdata["instdata"]['plugindata'] = {'bank':128, 'inst':cvpj_midiinst}
-                    cvpj_trackdata["instdata"]['usemasterpitch'] = 0
-                    cvpj_trackdata["name"] = 'Drums'
-
-            cvpj_l_instruments[cvpj_instid] = cvpj_trackdata
-            cvpj_l_instrumentsorder.append(cvpj_instid)
-
     playlistrowdata = {}
     if t_trackname != None: playlistrowdata['name'] = str(t_trackname)
     playlistrowdata['color'] = [0.3, 0.3, 0.3]
@@ -190,12 +172,63 @@ def track_end(channels):
         cvpj_placement['position'] = t_startpos/s_ppqstep
         cvpj_placement['duration'] = note_mod.getduration(t_cvpj_notelist)
         cvpj_placement['type'] = 'instruments'
-        cvpj_placement['notelist'] = t_cvpj_notelist
+        cvpj_placement['notelist'] = note_mod.sortnotes(t_cvpj_notelist)
         playlistrowdata['placements_notes'] = [cvpj_placement]
     else:
         hasnotes = False
 
     cvpj_l_playlist[str(t_tracknum)] = playlistrowdata
+
+def make_custominst(channelnum, cvpj_midibank, cvpj_midiinst, instdata):
+    cvpj_instid = 't'+str(t_tracknum)+'_c'+str(channelnum)+'_b'+str(cvpj_midibank)+'_i'+str(cvpj_midiinst)
+    cvpj_l_instruments[cvpj_instid] = instdata
+    cvpj_l_instrumentsorder.append(cvpj_instid)
+
+def make_inst(channelnum, cvpj_midibank, cvpj_midiinst):
+    cvpj_instid = 't'+str(t_tracknum)+'_c'+str(channelnum)+'_b'+str(cvpj_midibank)+'_i'+str(cvpj_midiinst)
+    if cvpj_instid not in t_trk_ch[channelnum]:
+        t_trk_ch[channelnum].append(cvpj_instid)
+
+    cvpj_l_instruments[cvpj_instid] = {}
+    cvpj_trackdata = cvpj_l_instruments[cvpj_instid]
+    cvpj_trackdata['fxrack_channel'] = channelnum+1
+
+    cvpj_trackdata["instdata"] = {}
+
+    if cvpj_midiinst == -1:
+        if midichanneltype[channelnum] == 0: 
+            cvpj_trackdata["instdata"] = {}
+            cvpj_trackdata["instdata"]['plugin'] = 'none'
+        else: 
+            cvpj_trackdata["instdata"]['plugin'] = 'general-midi'
+            cvpj_trackdata["instdata"]['plugindata'] = {'bank':128, 'inst':cvpj_midiinst}
+            cvpj_trackdata["instdata"]['usemasterpitch'] = 0
+            cvpj_trackdata["name"] = 'Drums'
+    else:
+        cvpj_trackdata["instdata"]['plugin'] = 'general-midi'
+        if midichanneltype[channelnum] == 0: 
+            cvpj_trackdata["instdata"]['plugindata'] = {'bank':cvpj_midibank, 'inst':cvpj_midiinst}
+            cvpj_trackdata["instdata"]['usemasterpitch'] = 1
+            cvpj_trackdata["name"] = MIDIInstNames[cvpj_midiinst] + ' [Ch' + str(channelnum+1) + ']'
+            cvpj_trackdata["color"] = MIDIInstColors[cvpj_midiinst]
+        else: 
+            cvpj_trackdata["instdata"]['plugindata'] = {'bank':128, 'inst':cvpj_midiinst}
+            cvpj_trackdata["instdata"]['usemasterpitch'] = 0
+            cvpj_trackdata["name"] = 'Drums'
+
+    cvpj_l_instruments[cvpj_instid] = cvpj_trackdata
+    cvpj_l_instrumentsorder.append(cvpj_instid)
+
+def getusedinsts(channels):
+    global t_chan_usedinst
+
+    usedinst_output = []
+
+    for channelnum in range(channels):
+        for s_chan_usedinst in t_chan_usedinst[channelnum]:
+            usedinst_output.append([channelnum, s_chan_usedinst[0], s_chan_usedinst[1]])
+
+    return usedinst_output
 
 # -------------------------------------- FUNCTIONS --------------------------------------
 
@@ -224,11 +257,11 @@ def note_off(key, channel):
     midi_cmds.append(['note_off', channel, key])
     #print(str(t_curpos).ljust(8), 'NOTE OFF   ', str(channel).ljust(3), str(key).ljust(7))
 
-#def note(key, dur, channel, vel):
-#    global t_curpos
-#    global midi_cmds
-#    midi_cmds.append(['note', channel, key, vel, dur])
-#    print(str(t_curpos).ljust(8), 'NOTE       ', str(channel).ljust(3), str(key).ljust(4), str(vel).ljust(3), str(dur).ljust(3))
+def note(key, dur, channel, vel):
+    global t_curpos
+    global midi_cmds
+    midi_cmds.append(['note', channel, key, vel, t_curpos+dur])
+    #print(str(t_curpos).ljust(8), 'NOTE       ', str(channel).ljust(3), str(key).ljust(4), str(vel).ljust(3), str(dur).ljust(3))
 
 def program_change(channel, program): 
     global t_curpos
@@ -309,17 +342,17 @@ def song_end(channels):
         fxdata['color'] = [0.3, 0.3, 0.3]
         fxdata["name"] = "Channel "+str(midi_channum+1)
 
-    print(t_trk_ch)
+    #print(t_trk_ch)
 
-    autochannum = 0
-    for t_chan_auto_s in t_chan_auto:
-        for t_chan_auto_s_t in t_chan_auto_s:
-            print(autochannum, len(t_chan_auto_s[t_chan_auto_s_t]), t_chan_auto_s_t, MIDIControllerName[t_chan_auto_s_t])
-            if t_chan_auto_s_t == 7: #volume
-                print(t_chan_auto_s[t_chan_auto_s_t])
-            if t_chan_auto_s_t == 10: #pan
-                print(t_chan_auto_s[t_chan_auto_s_t])
-        autochannum += 1
+    #autochannum = 0
+    #for t_chan_auto_s in t_chan_auto:
+    #    for t_chan_auto_s_t in t_chan_auto_s:
+    #        print(autochannum, len(t_chan_auto_s[t_chan_auto_s_t]), t_chan_auto_s_t, MIDIControllerName[t_chan_auto_s_t])
+    #        if t_chan_auto_s_t == 7: #volume
+    #            print(t_chan_auto_s[t_chan_auto_s_t])
+    #        if t_chan_auto_s_t == 10: #pan
+    #            print(t_chan_auto_s[t_chan_auto_s_t])
+    #    autochannum += 1
 
     cvpj_l['use_instrack'] = False
     cvpj_l['use_fxrack'] = True

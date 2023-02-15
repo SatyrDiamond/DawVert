@@ -16,12 +16,30 @@ def getsongduration(projJ):
     trackplacements = projJ['track_placements']
     songduration = 0
     for trackid in trackplacements:
-        if 'notes' in trackplacements[trackid]:
-            for placement in trackplacements[trackid]['notes']:
-                p_pos = placement['position']
-                p_dur = placement['duration']
-                if songduration < p_pos+p_dur:
-                    songduration = p_pos+p_dur
+
+        islaned = False
+        if 'notes_laned' in trackplacements[trackid]:
+            if trackplacements[trackid]['notes_laned'] == 1:
+                islaned = True
+
+
+        if islaned == False:
+            if 'notes' in trackplacements[trackid]:
+                for placement in trackplacements[trackid]['notes']:
+                    p_pos = placement['position']
+                    p_dur = placement['duration']
+                    if songduration < p_pos+p_dur:
+                        songduration = p_pos+p_dur
+        else:
+            if 'notes_lanedata' in trackplacements[trackid]:
+                for s_lanedata in trackplacements[trackid]['notes_lanedata']:
+                    placementdata = trackplacements[trackid]['notes_lanedata'][s_lanedata]['placements']
+                    for placement in placementdata:
+                        p_pos = placement['position']
+                        p_dur = placement['duration']
+                        if songduration < p_pos+p_dur:
+                            songduration = p_pos+p_dur
+
     return songduration + 64
 
 points_items = None
@@ -102,11 +120,25 @@ def r_split_single_notelist(projJ):
         if projJ['do_singlenotelistcut'] == True:
             track_placements = projJ['track_placements']
             for trackid in track_placements:
-                if 'notes' in track_placements[trackid]:
-                    placementdata = track_placements[trackid]['notes']
-                    if len(placementdata) == 1:
-                        track_placements[trackid]['notes'] = single_notelists2placements(placementdata)
-                        print('[placements] SplitSingleNoteList: splitted '+trackid+' to '+str(len(track_placements[trackid]['notes'])) + ' placements.')
+
+                islaned = False
+
+                if 'notes_laned' in track_placements[trackid]:
+                    if track_placements[trackid]['notes_laned'] == 1:
+                        islaned = True
+
+                if islaned == False:
+                    if 'notes' in track_placements[trackid]:
+                        placementdata = track_placements[trackid]['notes']
+                        if len(placementdata) == 1:
+                            track_placements[trackid]['notes'] = single_notelists2placements(placementdata)
+                            print('[placements] SplitSingleNoteList: splitted '+trackid+' to '+str(len(track_placements[trackid]['notes'])) + ' placements.')
+                else:
+                    for s_lanedata in track_placements[trackid]['notes_lanedata']:
+                        placementdata = track_placements[trackid]['notes_lanedata'][s_lanedata]['placements']
+                        if len(placementdata) == 1:
+                            track_placements[trackid]['notes_lanedata'][s_lanedata]['placements'] = single_notelists2placements(placementdata)
+
 
 
 def tracklanename(trackname, lanename, fallback):

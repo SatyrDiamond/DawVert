@@ -142,10 +142,8 @@ class output_cvpjs(plugin_output.base):
 
             if 'instdata' in CVPJ_Data:
                 CVPJ_Inst = CVPJ_Data['instdata']
-                if 'notefx' in CVPJ_Inst:
-                    if 'pitch' in CVPJ_Inst['notefx']:
-                        if 'semitones' in CVPJ_Inst['notefx']['pitch']: 
-                            T_Main['middlenote'] = CVPJ_Inst['notefx']['pitch']['semitones']+60
+                if 'middlenote' in CVPJ_Inst: 
+                    T_Main['middlenote'] = CVPJ_Inst['middlenote']+60
                 if 'pitch' in CVPJ_Inst: T_Main['pitch'] = CVPJ_Inst['pitch']
                 if 'usemasterpitch' in CVPJ_Inst: T_Main['main_pitch'] = CVPJ_Inst['usemasterpitch']
             if 'poly' in CVPJ_Data: 
@@ -294,7 +292,8 @@ class output_cvpjs(plugin_output.base):
             for timemarker in CVPJ_TimeMarkers:
                 markernum += 1
                 FL_TimeMarker = {}
-                FL_TimeMarker['name'] = timemarker['name']
+                if 'name' in timemarker: FL_TimeMarker['name'] = timemarker['name']
+                else: FL_TimeMarker['name'] = ""
                 FL_TimeMarker['pos'] = int((timemarker['position']*ppq)/4)
                 if 'type' in timemarker:
                     if timemarker['type'] == 'start': FL_TimeMarker['type'] = 5

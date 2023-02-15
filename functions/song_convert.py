@@ -131,8 +131,8 @@ def r2m(song):
                         r2m_makeplaylistrow(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color, None, None)
                     else:
                         print('[song-convert] r2m: inst laned:', trackid)
-                        t_laneorder = singletrack_data['notes_laneorder']
-                        t_lanedata = singletrack_data['notes_lanedata']
+                        t_laneorder = pltrack['notes_laneorder']
+                        t_lanedata = pltrack['notes_lanedata']
                         for laneid in t_laneorder:
                             lane_data = t_lanedata[laneid]
                             l_name = None

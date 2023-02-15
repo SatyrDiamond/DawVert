@@ -132,12 +132,13 @@ def r_split_single_notelist(projJ):
                         placementdata = track_placements[trackid]['notes']
                         if len(placementdata) == 1:
                             track_placements[trackid]['notes'] = single_notelists2placements(placementdata)
-                            print('[placements] SplitSingleNoteList: splitted '+trackid+' to '+str(len(track_placements[trackid]['notes'])) + ' placements.')
+                            print('[placements] SplitSingleNoteList: non-laned: splitted "'+trackid+'" to '+str(len(track_placements[trackid]['notes'])) + ' placements.')
                 else:
                     for s_lanedata in track_placements[trackid]['notes_lanedata']:
                         placementdata = track_placements[trackid]['notes_lanedata'][s_lanedata]['placements']
                         if len(placementdata) == 1:
                             track_placements[trackid]['notes_lanedata'][s_lanedata]['placements'] = single_notelists2placements(placementdata)
+                            print('[placements] SplitSingleNoteList: laned: splitted "'+trackid+'" from lane "'+str(s_lanedata)+'" to '+str(len(track_placements[trackid]['notes'])) + ' placements.')
 
 
 

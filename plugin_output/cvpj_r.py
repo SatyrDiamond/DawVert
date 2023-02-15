@@ -14,8 +14,6 @@ class output_cvpj_f(plugin_output.base):
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
 
-        placements.r_lanefit(projJ)
-        placements.r_removelanes(projJ)
         placements.r_split_single_notelist(projJ)
 
         with open(output_file, "w") as fileout:

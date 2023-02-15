@@ -139,7 +139,7 @@ class input_midi(plugin_input.base):
             for usedinst in usedinsts:
                 format_midi_in.make_inst(usedinst[0], usedinst[1], usedinst[2])
 
-            print(usedinsts)
+            #print(usedinsts)
 
             #exit()
 

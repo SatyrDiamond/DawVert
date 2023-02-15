@@ -140,7 +140,7 @@ class output_cvpj(plugin_output.base):
                 x_str_track.set('id', 'track_'+cvpj_trackentry)
                 if 'color' in s_trkdata:
                     x_str_track.set('color', '#'+colors.rgb_float_2_hex(s_trkdata['color']))
-                x_str_track.set('name', s_trkdata['name'])
+                if 'name' in s_trkdata: x_str_track.set('name', s_trkdata['name'])
                 x_str_track_ch = ET.SubElement(x_str_track, "Channel")
                 x_str_track_ch.set('audioChannels', '2')
                 x_str_track_ch.set('destination', 'mastertrack_ch')

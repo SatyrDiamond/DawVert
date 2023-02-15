@@ -206,10 +206,13 @@ class input_notessimo_v2(plugin_input.base):
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
         cvpj_l_notelistindex = {}
+        cvpj_l_timemarkers = []
         cvpj_l_playlist = {}
         cvpj_l_fxrack = {}
         cvpj_auto_tempo = []
         used_instruments = []
+
+        cvpj_l_timemarkers = []
 
         cvpj_l_fxrack["1"] = {}
         cvpj_l_fxrack["1"]["name"] = "Drums"
@@ -284,6 +287,13 @@ class input_notessimo_v2(plugin_input.base):
                     cvpj_l_playlist[str(layer+1)]['placements_notes'] = []
                 cvpj_l_playlist[str(layer+1)]['placements_notes'].append(cvpj_l_placement)
 
+            timemarker = {}
+            timemarker['position'] = curpos
+            timemarker['type'] = 'timesig'
+            timemarker['numerator'] = 4
+            timemarker['denominator'] = 4
+            cvpj_l_timemarkers.append(timemarker)
+
             autoplacement = {}
             autoplacement['position'] = curpos
             autoplacement['duration'] = cursheet_data[0]*cursheet_data[1]
@@ -307,6 +317,7 @@ class input_notessimo_v2(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
         cvpj_l['fxrack'] = cvpj_l_fxrack
+        cvpj_l['timemarkers'] = cvpj_l_timemarkers
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments_data'] = cvpj_l_instruments
         cvpj_l['instruments_order'] = cvpj_l_instrumentsorder

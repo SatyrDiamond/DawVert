@@ -308,8 +308,6 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     setvalue(trkJ, 'vol', trkX_insttr, 'vol', 1, auto_nameid, 'track_main')
     setvalue(trkJ, 'pan', trkX_insttr, 'pan', 0, auto_nameid, 'track_main')
 
-    middlenote = 0
-
     if 'chain_fx_note' in trkJ:
         trkJ_notefx = trkJ['chain_fx_note']
         for trkJ_notefxslot in trkJ_notefx:
@@ -337,10 +335,9 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
                     if trkJ_nativelmms_data['chord'] in chord: trkX_chordcreator.set('chord', str(chord[trkJ_nativelmms_data['chord']]))
                     else: trkX_chordcreator.set('chord', '0')
 
-            if trkJ_notefxslot['plugin'] == 'pitch':
-                if trkJ_notefxslot['enabled'] == 1:
-                    if 'semitones' in trkJ_plugindata:
-                        middlenote += trkJ_plugindata['semitones']
+    middlenote = 0
+
+    if 'middlenote' in instJ: middlenote = instJ['middlenote']
 
     if instplugin == 'sampler': middlenote += 3
     if instplugin == 'soundfont2': middlenote += 12

@@ -106,7 +106,7 @@ def r_split_single_notelist(projJ):
                     placementdata = track_placements[trackid]['notes']
                     if len(placementdata) == 1:
                         track_placements[trackid]['notes'] = single_notelists2placements(placementdata)
-                        print('[placements] split_single_notelist: splitted '+trackid+' to '+str(len(track_placements[trackid]['notes'])) + ' placements.')
+                        print('[placements] SplitSingleNoteList: splitted '+trackid+' to '+str(len(track_placements[trackid]['notes'])) + ' placements.')
 
 
 def tracklanename(trackname, lanename, fallback):
@@ -130,7 +130,7 @@ def r_removelanes(projJ):
 
     for trackid in old_trackordering:
         if trackid in old_trackdata:
-            print('[placements] removelanes: '+ trackid)
+            print('[placements] RemoveLanes: '+ trackid)
             if trackid in old_trackplacements:
 
                 s_trackdata = old_trackdata[trackid]
@@ -224,6 +224,7 @@ def r_lanefit(projJ):
                     if trackplacements[trackid]['notes_laned'] == True:
                         old_lanedata = trackplacements[trackid]['notes_lanedata']
                         old_laneordering = trackplacements[trackid]['notes_laneorder']
+                        print('[placements] LaneFit: '+ trackid+': '+str(len(old_laneordering))+' > ', end='')
                         new_lanedata = {}
                         new_laneordering = []
 
@@ -241,6 +242,7 @@ def r_lanefit(projJ):
                                 new_lanedata[newlaneid]['placements'] = new_pltable[plnum]
                                 new_laneordering.append(newlaneid)
 
+                        print(str(len(new_laneordering)))
                         trackplacements[trackid]['notes_lanedata'] = new_lanedata
                         trackplacements[trackid]['notes_laneorder'] = new_laneordering
 
@@ -284,9 +286,17 @@ def r_addwarps(projJ):
             track_placements = projJ['track_placements']
             for track_placement in track_placements:
                 if 'notes' in track_placements[track_placement]:
+                    plcount_before = len(track_placements[track_placement]['notes'])
+                    print('[placements] AddWraps: '+ track_placement +': ', end='')
                     track_placement_s = track_placements[track_placement]
-                    print('[placements] addwarps: '+ track_placement)
                     track_placements[track_placement]['notes'] = addwarps_pl(track_placement_s['notes'])
+
+                    plcount_after = len(track_placements[track_placement]['notes'])
+
+                    if plcount_before != plcount_after:
+                        print(str(plcount_before-plcount_after)+' loops found')
+                    else:
+                        print('unchanged')
 
 def get_timesig(patternLength, notesPerBeat):
     MaxFactor = 1024

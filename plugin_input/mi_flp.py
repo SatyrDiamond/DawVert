@@ -66,9 +66,8 @@ class input_flp(plugin_input.base):
                 #cvpj_inst['filtergroup'] = 'FLFilterGroup_'+str(channeldata['filtergroup'])
                 cvpj_inst['chain_fx_note'] = []
                 if 'middlenote' in channeldata: 
-                    middlenote = channeldata['middlenote'] - 60
-                    cvpj_inst['chain_fx_note'].append({"enabled": 1, "plugin": "pitch", "plugindata": {"semitones": middlenote}})
-                
+                    cvpj_inst['instdata']['middlenote'] = channeldata['middlenote'] - 60
+                    
                 cvpj_inst['instdata']['pitch'] = channeldata['pitch']
                 cvpj_inst['instdata']['usemasterpitch'] = channeldata['main_pitch']
                 if 'name' in channeldata: cvpj_inst['name'] = channeldata['name']

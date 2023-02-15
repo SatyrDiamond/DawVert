@@ -417,7 +417,7 @@ def lmms_decode_inst_track(trkX, name):
         if cvpj_l_track_inst['plugin'] == 'soundfont2': noteoffset = 12
         middlenote = basenote - noteoffset
         if middlenote != 0:
-            cvpj_l_track['chain_fx_note'].append({"enabled": 1, "plugin": "pitch", "plugindata": {"semitones": middlenote}})
+            cvpj_l_track_inst['middlenote'] = middlenote
 
     xml_a_arpeggiator = trkX_insttr.findall('arpeggiator')
     if len(xml_a_arpeggiator) != 0:

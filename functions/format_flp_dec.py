@@ -33,7 +33,6 @@ def parse_arrangement(arrdata):
         placement['unknown3'] = int.from_bytes(bio_fldata[0].read(2), "little")
         startoffset = int.from_bytes(bio_fldata[0].read(4), "little")
         endoffset = int.from_bytes(bio_fldata[0].read(4), "little")
-        print(startoffset, endoffset)
         if startoffset != 4294967295 and startoffset != 3212836864: placement['startoffset'] = startoffset
         if endoffset != 4294967295 and endoffset != 3212836864: placement['endoffset'] = endoffset
         output.append(placement)

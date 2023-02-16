@@ -57,11 +57,13 @@ def setvstparams(plugindata, xmldata):
             xmldata.set('param'+str(param), str(param)+':'+pname+':'+str(pval))
 
 def onetime2lmmstime(input): return int(round(float(input * 12)))
+
 def oneto100(input): return round(float(input) * 100)
+
+def sec2exp(value): return math.sqrt(value/5)
 
 # ------- Instruments and Plugins -------
 
-def sec2exp(value): return math.sqrt(value/5)
 def asdrlfo_set(jsonpath, trkX_insttr):
     eldataX = ET.SubElement(trkX_insttr, "eldata")
     if 'filter' in jsonpath:
@@ -75,6 +77,7 @@ def asdrlfo_set(jsonpath, trkX_insttr):
     asdrlfo(jsonpath, eldataX, 'volume', 'vol')
     asdrlfo(jsonpath, eldataX, 'cutoff', 'cut')
     asdrlfo(jsonpath, eldataX, 'reso', 'res')
+
 def asdrlfo(jsonin, xmlobj, asdrtype, xmltype):
     if 'asdrlfo' in jsonin:
         jsondata = jsonin['asdrlfo']
@@ -225,7 +228,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         print('[output-lmms]       Plugin: '+pluginname+' > None')
         xml_instrumentpreplugin.set('name', "audiofileprocessor")
 
-# ------- Notelist -------
+# ------- Inst and Notelist -------
 
 def lmms_encode_notelist(xmltag, json_notelist):
     printcountpat = 0
@@ -263,6 +266,7 @@ def lmms_encode_notelist(xmltag, json_notelist):
 
         printcountpat += 1
     print('['+str(printcountpat), end='] ')
+
 def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     global trkcX
     global trackscount_forprinting
@@ -412,6 +416,62 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
 
     print('[output-lmms]')
 
+# ------- Audio -------
+
+def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
+    print('[output-lmms] Audio Track')
+
+    global trkcX
+    global trackscount_forprinting
+    trackscount_forprinting += 1
+
+    auto_nameid = {}
+
+    if 'automation' in projJ:
+        if 'track_main' in projJ['automation']:
+            if trackid in projJ['automation']['track_main']:
+                auto_nameid = get_auto_ids(projJ['automation']['track_main'][trackid])
+
+    xmltag.set('type', "2")
+
+    if 'solo' in trkJ: xmltag.set('solo', str(trkJ['solo']))
+    else: xmltag.set('solo', '0')
+
+    if 'enabled' in trkJ: xmltag.set('muted', str(int(not trkJ['enabled'])))
+    else: xmltag.set('muted', '0')
+
+    if 'name' in trkJ: trackname = trkJ['name']
+    else: trackname = 'untitled'
+    xmltag.set('name', trackname)
+
+    if 'color' in trkJ: xmltag.set('color', '#' + colors.rgb_float_2_hex(trkJ['color']))
+    
+    trkX_samptr = ET.SubElement(xmltag, "sampletrack")
+    trkX_samptr.set('pan', "0")
+    trkX_samptr.set('vol', "100")
+
+    if 'chain_fx_audio' in trkJ:
+        lmms_encode_fxchain(trkX_samptr, trkJ)
+
+    if 'name' in trkJ: print('[output-lmms]       Name: ' + trkJ['name'])
+
+
+    printcountplace = 0
+    print('[output-lmms]       Placements: ', end='')
+
+    if 'audio' in trkplacementsJ[trackid]:
+        for json_placement in trkplacementsJ[trackid]['audio']:
+            xml_sampletco = ET.SubElement(xmltag, 'sampletco')
+            xml_sampletco.set('pos', str(int(json_placement['position'] * 12)))
+            xml_sampletco.set('len', str(int(json_placement['duration'] * 12)))
+            xml_sampletco.set('src', json_placement['file'])
+            if 'enabled' in json_placement: xml_sampletco.set('muted', str(int(not json_placement['enabled'])))
+            if 'sample_rate' in json_placement: xml_sampletco.set('sample_rate', str(json_placement['sample_rate']))
+            printcountplace += 1
+    print('['+str(printcountplace)+']')
+
+    print('[output-lmms]')
+
 # ------- Effects -------
 
 def lmms_encode_effectplugin(fxslotX, json_fxslot):
@@ -450,6 +510,7 @@ def lmms_encode_effectslot(fxcX, json_fxslot):
 
     lmms_encode_effectplugin(fxslotX, json_fxslot)
     return fxslotX
+
 def lmms_encode_fxchain(xmltag, json_fxchannel):
     if 'chain_fx_audio' in json_fxchannel:
         print('[output-lmms]       Audio FX Chain: ',end='')
@@ -462,6 +523,7 @@ def lmms_encode_fxchain(xmltag, json_fxchannel):
             if json_fxslot['plugin'] == 'native-lmms' or 'vst2':
                 fxslotX = lmms_encode_effectslot(fxcX, json_fxslot)
         print('')
+
 def lmms_encode_fxmixer(xmltag, json_fxrack):
     for json_fxchannel in json_fxrack:
         fxchannelJ = json_fxrack[json_fxchannel]
@@ -522,6 +584,7 @@ def lmms_encode_tracks(xmltag, trksJ, trkorderJ, trkplacementsJ):
         trkJ = trksJ[trackid]
         xml_track = ET.SubElement(xmltag, "track")
         if trkJ['type'] == "instrument": lmms_encode_inst_track(xml_track, trkJ, trackid, trkplacementsJ)
+        if trkJ['type'] == "audio": lmms_encode_audio_track(xml_track, trkJ, trackid, trkplacementsJ)
 
 def get_auto_ids(placements_auto):
     global autoidnum

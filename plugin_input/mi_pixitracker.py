@@ -172,8 +172,7 @@ class input_cvpj_f(plugin_input.base):
                 #print(pixi_data_sounds[instnum])
                 cvpj_inst["vol"] = t_sounddata[4]/100
                 cvpj_inst['instdata']['pitch'] = t_sounddata[2]
-                cvpj_inst['chain_fx_note'] = []
-                cvpj_inst['chain_fx_note'].append({"enabled": 1, "plugin": "pitch", "plugindata": {"semitones": t_sounddata[3]*-1}})
+                cvpj_inst['instdata']['middlenote'] = t_sounddata[3]*-1
                 cvpj_inst['instdata']['plugin'] = 'sampler'
                 cvpj_inst['instdata']['plugindata'] = {}
                 cvpj_inst['instdata']['plugindata']['file'] = wave_path

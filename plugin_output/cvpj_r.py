@@ -16,6 +16,7 @@ class output_cvpj_f(plugin_output.base):
 
         placements.r_lanefit(projJ)
         placements.r_removelanes(projJ)
+        placements.r_split_single_notelist(projJ)
 
         with open(output_file, "w") as fileout:
             fileout.write("CONVPROJ___R\n")

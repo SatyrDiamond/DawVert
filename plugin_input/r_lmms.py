@@ -341,6 +341,7 @@ def lmms_decode_nlplacements(trkX):
         if out_duration == 0: out_duration = 16
         placeJ["duration"] = math.ceil(out_duration/16)*16
         nlplacements.append(placeJ)
+    print('['+str(printcountplace), end='] ')
     print(' ')
     return nlplacements
 
@@ -451,6 +452,59 @@ def lmms_decode_inst_track(trkX, name):
 
     cvpj_l_track['instdata'] = cvpj_l_inst
     print('[input-lmms]')
+    return cvpj_l_track, track_placements
+
+# ------- Audio Placements -------
+
+def lmms_decode_audioplacements(trkX):
+    audioplacements = []
+    sampletcoX = trkX.findall('sampletco')
+
+    printcountplace = 0
+    print('[input-lmms]       Placements: ', end='')
+    for samplecX in sampletcoX:
+        printcountplace += 1
+        placeJ = {}
+        placeJ["position"] = float(samplecX.get('pos')) / 12
+        placeJ["file"] = samplecX.get('src')
+        placeJ["duration"] = float(samplecX.get('len')) / 12
+        placeJ['enabled'] = int(not int(samplecX.get('muted')))
+        placeJ['sample_rate'] = int(samplecX.get('sample_rate'))
+        audioplacements.append(placeJ)
+    print('['+str(printcountplace)+'] ')
+
+    return audioplacements
+
+# ------- Track: audio -------
+
+def lmms_decode_audio_track(trkX, name):
+    cvpj_l_track = {}
+    cvpj_l_inst = {}
+    cvpj_l_inst['notefx'] = {}
+    cvpj_l_inst_plugin = {}
+    cvpj_l_track_inst = cvpj_l_inst
+    cvpj_l_track_inst['plugindata'] = cvpj_l_inst_plugin
+    cvpj_l_track['type'] = "audio"
+
+    cvpj_l_track['name'] = trkX.get('name')
+    print('[input-lmms] Audio Track')
+    print('[input-lmms]       Name: ' + cvpj_l_track['name'])
+
+    cvpj_l_track['enabled'] = int(not int(trkX.get('muted')))
+    cvpj_l_track['solo'] = int(trkX.get('solo'))
+
+    #trkX_audiotr
+    trkX_audiotr = trkX.findall('sampletrack')[0]
+    cvpj_l_track['pan'] = hundredto1(float(lmms_getvalue(trkX_audiotr, 'pan', 0, ['track_main', name, 'pan'])))
+    cvpj_l_track['vol'] = hundredto1(float(lmms_getvalue(trkX_audiotr, 'vol', 1, ['track_main', name, 'vol'])))
+    
+    xml_a_fxchain = trkX_audiotr.findall('fxchain')
+    if len(xml_a_fxchain) != 0: cvpj_l_track['chain_fx_audio'] = lmms_decode_fxchain(xml_a_fxchain[0])
+
+    track_placements = lmms_decode_audioplacements(trkX)
+
+    print('[input-lmms]')
+
     return cvpj_l_track, track_placements
 
 # ------- Track: Automation -------
@@ -575,6 +629,11 @@ def lmms_decode_tracks(trksX):
             trackplacements[trackid] = {}
             tracklist[trackid], trackplacements[trackid]['notes'] = lmms_decode_inst_track(trkX, 'LMMS_Inst_'+str(idtracknum))
             trackordering.append('LMMS_Inst_'+str(idtracknum))
+        if tracktype == "2":
+            trackid = 'LMMS_Audio_'+str(idtracknum)
+            trackplacements[trackid] = {}
+            tracklist[trackid], trackplacements[trackid]['audio'] = lmms_decode_audio_track(trkX, 'LMMS_Audio_'+str(idtracknum))
+            trackordering.append('LMMS_Audio_'+str(idtracknum))
         if tracktype == "5":
             lmms_decode_auto_track(trkX)
     return [tracklist, trackordering, trackplacements]
@@ -618,18 +677,18 @@ class input_lmms(plugin_input.base):
         tlX = tree.find('song/timeline')
         projnotesX = tree.find('song/projectnotes')
 
-        rootJ = {}
-        rootJ['bpm'] = lmms_getvalue(headX, 'bpm', 140, ['main', 'bpm'])
-        rootJ['vol'] = hundredto1(float(lmms_getvalue(headX, 'mastervol', 1, ['main', 'vol'])))
-        rootJ['pitch'] = float(lmms_getvalue(headX, 'masterpitch', 0, ['main', 'pitch']))*100
-        rootJ['timesig_numerator'] = lmms_getvalue(headX, 'timesig_numerator', 4, None)
-        rootJ['timesig_denominator'] = lmms_getvalue(headX, 'timesig_denominator', 4, None)
+        cvpj_l = {}
+        cvpj_l['bpm'] = lmms_getvalue(headX, 'bpm', 140, ['main', 'bpm'])
+        cvpj_l['vol'] = hundredto1(float(lmms_getvalue(headX, 'mastervol', 1, ['main', 'vol'])))
+        cvpj_l['pitch'] = float(lmms_getvalue(headX, 'masterpitch', 0, ['main', 'pitch']))*100
+        cvpj_l['timesig_numerator'] = lmms_getvalue(headX, 'timesig_numerator', 4, None)
+        cvpj_l['timesig_denominator'] = lmms_getvalue(headX, 'timesig_denominator', 4, None)
 
         if projnotesX.text != None:
-            rootJ['info'] = {}
-            rootJ['info']['message'] = {}
-            rootJ['info']['message']['type'] = 'html'
-            rootJ['info']['message']['text'] = projnotesX.text
+            cvpj_l['info'] = {}
+            cvpj_l['info']['message'] = {}
+            cvpj_l['info']['message']['type'] = 'html'
+            cvpj_l['info']['message']['text'] = projnotesX.text
 
         trackdata, trackordering, trackplacements = lmms_decode_tracks(trksX)
 
@@ -652,13 +711,13 @@ class input_lmms(plugin_input.base):
                     elif s_autopl_id[1] == 'pitch': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 100)
                     else: l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 1)
 
-        rootJ['automation'] = l_automation
+        cvpj_l['automation'] = l_automation
 
-        rootJ['use_instrack'] = False
-        rootJ['use_fxrack'] = True
-        rootJ['track_data'] = trackdata
-        rootJ['track_order'] = trackordering
-        rootJ['track_placements'] = trackplacements
-        rootJ['fxrack'] = lmms_decode_fxmixer(fxX)
+        cvpj_l['use_instrack'] = False
+        cvpj_l['use_fxrack'] = True
+        cvpj_l['track_data'] = trackdata
+        cvpj_l['track_order'] = trackordering
+        cvpj_l['track_placements'] = trackplacements
+        cvpj_l['fxrack'] = lmms_decode_fxmixer(fxX)
 
-        return json.dumps(rootJ, indent=2)
+        return json.dumps(cvpj_l, indent=2)

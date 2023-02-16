@@ -85,7 +85,7 @@ def track_end(channels):
 
     t_cur_inst = [[0, -1] for x in range(channels)]
 
-    t_chan_usedinst = [[] for x in range(channels)]
+    t_chan_usedinst = [{} for x in range(channels)]
     t_active_notes = [[[] for x in range(128)] for x in range(channels)]
 
     #for t_active_note_t in t_active_notes:
@@ -100,7 +100,6 @@ def track_end(channels):
             t_cur_inst[midi_cmd[1]][1] = midi_cmd[2]
 
         if midi_cmd[0] == 'control': 
-
             if midi_cmd[2] == 0:
                 t_cur_inst[midi_cmd[1]][0] = midi_cmd[3]
             else:
@@ -109,9 +108,10 @@ def track_end(channels):
                 t_chan_auto[midi_cmd[1]][midi_cmd[2]][curpos] = midi_cmd[3]
 
         if midi_cmd[0] == 'note': 
-            if t_cur_inst[midi_cmd[1]] not in t_chan_usedinst[midi_cmd[1]]:
-                t_chan_usedinst[midi_cmd[1]].append(t_cur_inst[midi_cmd[1]])
-            curinst = t_cur_inst[midi_cmd[1]]
+            if curinst[0] not in t_chan_usedinst[midi_cmd[1]]:
+                t_chan_usedinst[midi_cmd[1]][curinst[0]] = []
+            if curinst[1] not in t_chan_usedinst[midi_cmd[1]][curinst[0]]:
+                t_chan_usedinst[midi_cmd[1]][curinst[0]].append(curinst[1])
 
             t_active_notes[midi_cmd[1]][midi_cmd[2]].append(
                 [
@@ -125,9 +125,11 @@ def track_end(channels):
             )
 
         if midi_cmd[0] == 'note_on': 
-            if t_cur_inst[midi_cmd[1]] not in t_chan_usedinst[midi_cmd[1]]:
-                t_chan_usedinst[midi_cmd[1]].append(t_cur_inst[midi_cmd[1]])
             curinst = t_cur_inst[midi_cmd[1]]
+            if curinst[0] not in t_chan_usedinst[midi_cmd[1]]:
+                t_chan_usedinst[midi_cmd[1]][curinst[0]] = []
+            if curinst[1] not in t_chan_usedinst[midi_cmd[1]][curinst[0]]:
+                t_chan_usedinst[midi_cmd[1]][curinst[0]].append(curinst[1])
 
             t_active_notes[midi_cmd[1]][midi_cmd[2]].append(
                 [
@@ -229,8 +231,9 @@ def getusedinsts(channels):
     usedinst_output = []
 
     for channelnum in range(channels):
-        for s_chan_usedinst in t_chan_usedinst[channelnum]:
-            usedinst_output.append([channelnum, s_chan_usedinst[0], s_chan_usedinst[1]])
+        for s_chan_usedbank in t_chan_usedinst[channelnum]:
+            for s_chan_usedinst in t_chan_usedinst[channelnum][s_chan_usedbank]:
+                usedinst_output.append([channelnum, s_chan_usedbank, s_chan_usedinst])
 
     return usedinst_output
 

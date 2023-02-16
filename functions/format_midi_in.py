@@ -108,6 +108,7 @@ def track_end(channels):
                 t_chan_auto[midi_cmd[1]][midi_cmd[2]][curpos] = midi_cmd[3]
 
         if midi_cmd[0] == 'note': 
+            curinst = t_cur_inst[midi_cmd[1]]
             if curinst[0] not in t_chan_usedinst[midi_cmd[1]]:
                 t_chan_usedinst[midi_cmd[1]][curinst[0]] = []
             if curinst[1] not in t_chan_usedinst[midi_cmd[1]][curinst[0]]:

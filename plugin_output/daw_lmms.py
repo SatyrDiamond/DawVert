@@ -419,7 +419,9 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
 # ------- Audio -------
 
 def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
+
     print('[output-lmms] Audio Track')
+    if 'name' in trkJ: print('[output-lmms]       Name: ' + trkJ['name'])
 
     global trkcX
     global trackscount_forprinting
@@ -452,9 +454,6 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
 
     if 'chain_fx_audio' in trkJ:
         lmms_encode_fxchain(trkX_samptr, trkJ)
-
-    if 'name' in trkJ: print('[output-lmms]       Name: ' + trkJ['name'])
-
 
     printcountplace = 0
     print('[output-lmms]       Placements: ', end='')

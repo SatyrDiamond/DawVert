@@ -159,6 +159,7 @@ class input_flp(plugin_input.base):
                 if 'endoffset' in item: arrangementitemJ['cut']['end'] = item['endoffset']/ppq*4
             playlistline = (item['trackindex']*-1)+500
             length = item['length']
+            arrangementitemJ['muted'] = bool(item['flags'] & 0b0001000000000000)
             if str(playlistline) not in cvpj_l_playlist:
                 cvpj_l_playlist[str(playlistline)] = {}
                 cvpj_l_playlist[str(playlistline)]['placements_notes'] = []

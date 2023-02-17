@@ -114,7 +114,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				if 'file' in sf2data: sf2_filename = sf2data['file']
 				else: sf2_filename = 0
 				jsfp_xml = vst_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
-				list_vst.replace_data(instdata, 'juicysfplugin', params_vst.make_vc2_xml(jsfp_xml))
+				list_vst.replace_data(instdata, 'juicysfplugin', params_vst.vc2xml_make(jsfp_xml))
 
 			# -------------------- vst2 (ninjas2) --------------------
 			elif pluginname == 'slicer':
@@ -122,7 +122,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				vst_inst.ninjas2_init()
 				vst_inst.ninjas2_slicerdata(slicerdata)
 				ninjas2out = vst_inst.ninjas2_get()
-				list_vst.replace_data(instdata, 'Ninjas 2', params_vst.make_nullbytegroup(ninjas2out))
+				list_vst.replace_data(instdata, 'Ninjas 2', params_vst.nullbytegroup_make(ninjas2out))
 
 			# -------------------- vst2 (magical8bitplug) --------------------
 
@@ -181,12 +181,12 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoDepth", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoIgnoresWheel_raw", 1.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
-				list_vst.replace_data(instdata, 'Magical 8bit Plug 2', params_vst.make_vc2_xml(m8p_root))
+				list_vst.replace_data(instdata, 'Magical 8bit Plug 2', params_vst.vc2xml_make(m8p_root))
 
 			# -------------------- opn2 > OPNplug --------------------
 			elif pluginname == 'opn2':
 				xmlout = vst_inst.opnplug_convert(instdata['plugindata'])
-				list_vst.replace_data(instdata, 'OPNplug', params_vst.make_vc2_xml(xmlout))
+				list_vst.replace_data(instdata, 'OPNplug', params_vst.vc2xml_make(xmlout))
 
 			# -------------------- zynaddsubfx > vst2 (Zyn-Fusion) - from lmms --------------------
 			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
@@ -214,7 +214,7 @@ def convplug_fx(fxdata, dawname, extra_json, nameid):
 						pointdata = waveshapepoints[pointnum*4][0]
 						vst_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
 					vst_fx.wolfshaper_get()
-					list_vst.replace_data(fxdata, 'Wolf Shaper', params_vst.make_nullbytegroup(vst_fx.wolfshaper_get()))
+					list_vst.replace_data(fxdata, 'Wolf Shaper', params_vst.nullbytegroup_make(vst_fx.wolfshaper_get()))
 			else:
 				print('[plug-conv] Unchanged')
 

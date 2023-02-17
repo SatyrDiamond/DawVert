@@ -6,6 +6,7 @@ import json
 import math
 import plugin_input
 import os
+import sys
 import xml.etree.ElementTree as ET
 from functions import note_mod
 from functions import colors
@@ -549,6 +550,29 @@ def lmms_decode_auto_track(trkX):
 
 # ------- Effects -------
 
+def get_ladspa_path(ladname):
+    temppath = lmms_ladspapath+ladname
+
+    if sys.platform == 'win32': 
+        unixsys = False
+        temppath += '.dll'
+    else: 
+        unixsys = True
+        temppath += '.so'
+
+    if os.path.exists(temppath) == True:
+        return temppath
+    elif unixsys == True:
+        pathlist = []
+        pathlist.append('/usr/lib/ladspa/'+ladname+'.so')
+        pathlist.append('/usr/lib/x86_64-linux-gnu/lmms/ladspa/'+ladname+'.so')
+        for path in pathlist:
+            if os.path.exists(path) == True:
+                print(path)
+                return path
+    else:
+        return ladname
+
 def lmms_decode_effectslot(fxslotX):
     fxslotJ = {}
     fxpluginname = fxslotX.get('name')
@@ -569,7 +593,64 @@ def lmms_decode_effectslot(fxslotX):
         getvstparams(fxcvpj_l_plugindata, fxxml_plugin)
         fxslotJ['plugindata'] = fxcvpj_l_plugindata
         return fxslotJ
-    elif fxpluginname != 'ladspaeffect':
+
+    elif fxpluginname == 'ladspaeffect':
+        fxxml_plugin = fxslotX.findall('ladspacontrols')[0]
+        print('[ladspa',end='] ')
+        fxxml_plugin_key = fxslotX.findall('key')[0]
+        fxxml_plugin_ladspacontrols = fxslotX.findall('ladspacontrols')[0]
+
+        fxslotJ['plugin'] = 'ladspa'
+        fxcvpj_l_plugindata = {}
+
+        for attribute in fxxml_plugin_key.findall('attribute'):
+            attval = attribute.get('value')
+            attname = attribute.get('name')
+            if attname == 'file':
+                if os.path.exists(attval):
+                    fxcvpj_l_plugindata['path'] = attval
+                else:
+                    fxcvpj_l_plugindata['path'] = get_ladspa_path(attval)
+            if attname == 'plugin':
+                fxcvpj_l_plugindata['plugin'] = attval
+
+        ladspa_ports = int(fxxml_plugin_ladspacontrols.get('ports'))
+        ladspa_linked = fxxml_plugin_ladspacontrols.get('link')
+        seperated_channels = False
+
+        if ladspa_linked != None: 
+            ladspa_ports //= 2
+            if ladspa_linked == "0": 
+                seperated_channels = True
+
+        t_params = {}
+        t_params["0"] = {}
+
+        for node in fxxml_plugin_ladspacontrols.iter():
+            notetagtxt = node.tag
+
+            if notetagtxt.startswith('port'):
+                l_ch = notetagtxt[4]
+                l_val = notetagtxt[5:]
+                t_data = node.get('data')
+                if l_ch not in t_params: t_params[l_ch] = {}
+                if t_data != None: t_params[l_ch][l_val] = float(node.get('data'))
+                else:
+                    ladautodata = node.findall('data')[0]
+                    t_params[l_ch][l_val] = float(ladautodata.get('value'))
+
+        if seperated_channels == False: 
+            fxcvpj_l_plugindata['seperated_channels'] = False
+            fxcvpj_l_plugindata['params'] = t_params["0"]
+        if seperated_channels == True: 
+            fxcvpj_l_plugindata['seperated_channels'] = True
+            fxcvpj_l_plugindata['params'] = t_params
+
+        fxslotJ['plugindata'] = fxcvpj_l_plugindata
+        return fxslotJ
+
+
+    else:
         fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
         print('['+fxpluginname,end='] ')
         fxslotJ['plugin'] = 'native-lmms'
@@ -579,8 +660,7 @@ def lmms_decode_effectslot(fxslotX):
         for name in fxxml_plugin: fxcvpj_l_plugindata['data'][name.tag] = name.get('value')
         fxslotJ['plugindata'] = fxcvpj_l_plugindata
         return fxslotJ
-    else:
-        return None
+
 def lmms_decode_fxchain(fxchainX):
     print('[input-lmms]       Audio FX Chain: ',end='')
     fxchain = []
@@ -660,13 +740,28 @@ class input_lmms(plugin_input.base):
     def parse(self, input_file, extra_param):
         print('[input-lmms] Input Start')
         global lmms_vstpath
+        global lmms_ladspapath
         homepath = os.path.expanduser('~')
-        lmmsconfigpath = homepath+'\\.lmmsrc.xml'
-        if os.path.exists(lmmsconfigpath):
+        lmmsconfigpath_win = homepath+'\\.lmmsrc.xml'
+        lmmsconfigpath_unx = homepath+'/.lmmsrc.xml'
+
+        lmmsconfigpath_found = False
+
+        if os.path.exists(lmmsconfigpath_win):
+            lmmsconfigpath = lmmsconfigpath_win
+            lmmsconfigpath_found = True
+        if os.path.exists(lmmsconfigpath_unx):
+            lmmsconfigpath = lmmsconfigpath_unx
+            lmmsconfigpath_found = True
+
+        if lmmsconfigpath_found == True:
             lmmsconfX = ET.parse(lmmsconfigpath).getroot()
             lmmsconf_pathsX = lmmsconfX.findall('paths')[0]
             lmms_vstpath = lmmsconf_pathsX.get('vstdir')
-        else: lmms_vstpath = ''
+            lmms_ladspapath = lmmsconf_pathsX.get('ladspadir')
+        else: 
+            lmms_vstpath = ''
+            lmms_ladspapath = ''
 
         global l_autoid
         global l_autodata

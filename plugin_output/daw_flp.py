@@ -257,8 +257,11 @@ class output_cvpjs(plugin_output.base):
                         FL_playlistitem['unknown1'] = 120
                         FL_playlistitem['unknown2'] = 25664
                         FL_playlistitem['unknown3'] = 32896
-                        FL_playlistitem['flags'] = 4
+                        FL_playlistitem['flags'] = 64
                         FL_playlistitem['trackindex'] = (-500 + int(CVPJ_playlistrow))*-1
+                        if 'muted' in CVPJ_Placement:
+                            if CVPJ_Placement['muted'] == True:
+                                FL_playlistitem['flags'] = 12352
                         if 'cut' in CVPJ_Placement:
                             if 'type' in CVPJ_Placement['cut']:
                                 if CVPJ_Placement['cut']['type'] == 'cut':
@@ -266,7 +269,6 @@ class output_cvpjs(plugin_output.base):
                                         FL_playlistitem['startoffset'] = int((CVPJ_Placement['cut']['start']*ppq)/4)
                                     if 'end' in CVPJ_Placement['cut']:
                                         FL_playlistitem['endoffset'] = int((CVPJ_Placement['cut']['end']*ppq)/4)
-                            FL_playlistitem['flags'] = 64
                         if FL_playlistitem['position'] not in FL_Playlist_BeforeSort:
                             FL_Playlist_BeforeSort[FL_playlistitem['position']] = []
                         FL_Playlist_BeforeSort[FL_playlistitem['position']].append(FL_playlistitem)

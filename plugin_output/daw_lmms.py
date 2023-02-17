@@ -395,7 +395,11 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
             json_notelist = json_placement['notelist']
             patX = ET.SubElement(xmltag, "pattern")
             patX.set('pos', str(int(json_placement['position'] * 12)))
-            patX.set('muted', "0")
+            if 'muted' in json_placement: 
+                if json_placement['muted'] == True: patX.set('muted', "1")
+                if json_placement['muted'] == False: patX.set('muted', "0")
+            else: patX.set('muted', "0")
+
             patX.set('steps', "16")
             patX.set('name', "")
             if 'cut' in json_placement: 

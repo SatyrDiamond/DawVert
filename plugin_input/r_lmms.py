@@ -335,6 +335,7 @@ def lmms_decode_nlplacements(trkX):
         placeJ = {}
         placeJ["position"] = float(patX.get('pos')) / 12
         placeJ["name"] = patX.get('name')
+        placeJ["muted"] = bool(int(patX.get('muted')))
         notesX = patX.findall('note')
         notesJ = lmms_decode_nlpattern(notesX)
         placeJ["notelist"] = notesJ
@@ -566,6 +567,12 @@ def get_ladspa_path(ladname):
         pathlist = []
         pathlist.append('/usr/lib/ladspa/'+ladname+'.so')
         pathlist.append('/usr/lib/x86_64-linux-gnu/lmms/ladspa/'+ladname+'.so')
+        for path in pathlist:
+            if os.path.exists(path) == True:
+                return path
+    elif unixsys == False:
+        pathlist = []
+        pathlist.append('C:\\Program Files\\LMMS\\plugins\\ladspa\\'+ladname+'.dll')
         for path in pathlist:
             if os.path.exists(path) == True:
                 return path

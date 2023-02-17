@@ -470,6 +470,10 @@ def lmms_decode_audioplacements(trkX):
         placeJ["duration"] = float(samplecX.get('len')) / 12
         placeJ['enabled'] = int(not int(samplecX.get('muted')))
         placeJ['sample_rate'] = int(samplecX.get('sample_rate'))
+
+        if samplecX.get('off') != None:
+            placeJ['start'] = (float(samplecX.get('off'))/12)*-1
+
         audioplacements.append(placeJ)
     print('['+str(printcountplace)+'] ')
 

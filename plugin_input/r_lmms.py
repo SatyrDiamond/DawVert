@@ -568,7 +568,6 @@ def get_ladspa_path(ladname):
         pathlist.append('/usr/lib/x86_64-linux-gnu/lmms/ladspa/'+ladname+'.so')
         for path in pathlist:
             if os.path.exists(path) == True:
-                print(path)
                 return path
     else:
         return ladname

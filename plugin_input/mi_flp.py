@@ -8,6 +8,7 @@ import base64
 import struct
 from functions import format_flp_dec
 from functions import note_mod
+from functions import colors
 
 class input_flp(plugin_input.base):
     def __init__(self): pass
@@ -196,6 +197,21 @@ class input_flp(plugin_input.base):
             if 'routing' in fl_fxhan:
                 for route in fl_fxhan['routing']:
                     fxdata["sends"].append({"amount": 1.0, "channel": route})
+
+            for fl_fxslot in fl_fxhan['slots']:
+                fl_fxslotdata = fl_fxhan['slots'][fl_fxslot]
+                if fl_fxslotdata != None:
+                    fxslotdata = {}
+                    fxslotdata['enabled'] = 1
+                    fxslotdata['plugin'] = 'native-fl'
+                    if 'color' in fl_fxslotdata:
+                        color = fl_fxslotdata['color'].to_bytes(4, "little")
+                        fxslotdata['color'] = [color[0]/255,color[1]/255,color[2]/255]
+                    fxslotdata['plugindata'] = {}
+                    fxslotdata['plugindata']['plugin'] = fl_fxslotdata['plugin']
+                    fxslotdata['plugindata']['data'] = base64.b64encode(fl_fxslotdata['pluginparams']).decode('ascii')
+                    fxdata["chain_fx_audio"].append(fxslotdata)
+
             if fxchannel == '100': fxdata["vol"] = 0.0
             elif fxchannel == '101': fxdata["vol"] = 0.0
             elif fxchannel == '102': fxdata["vol"] = 0.0

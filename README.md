@@ -4,6 +4,7 @@
 # DawVert - The DAW ConVERTer
 </div>
 
+DawVert is a Project File Converter
 
 ## How to Use
 

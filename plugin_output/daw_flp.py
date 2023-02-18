@@ -272,15 +272,16 @@ class output_cvpjs(plugin_output.base):
                         if FL_playlistitem['position'] not in FL_Playlist_BeforeSort:
                             FL_Playlist_BeforeSort[FL_playlistitem['position']] = []
                         FL_Playlist_BeforeSort[FL_playlistitem['position']].append(FL_playlistitem)
+            if str(CVPJ_playlistrow) not in FL_Tracks:
+                FL_Tracks[str(CVPJ_playlistrow)] = {}
             if 'color' in CVPJ_playlistitem:
-                if str(CVPJ_playlistrow) not in FL_Tracks:
-                    FL_Tracks[str(CVPJ_playlistrow)] = {}
                 FL_Tracks[str(CVPJ_playlistrow)]['color'] = decode_color(CVPJ_playlistitem['color'])
             if 'name' in CVPJ_playlistitem:
-                if str(CVPJ_playlistrow) not in FL_Tracks:
-                    FL_Tracks[str(CVPJ_playlistrow)] = {}
                 FL_Tracks[str(CVPJ_playlistrow)]['name'] = CVPJ_playlistitem['name']
-
+            if 'size' in CVPJ_playlistitem:
+                FL_Tracks[str(CVPJ_playlistrow)]['height'] = CVPJ_playlistitem['size']
+            if 'enabled' in CVPJ_playlistitem:
+                FL_Tracks[str(CVPJ_playlistrow)]['enabled'] = CVPJ_playlistitem['enabled']
         FL_Playlist_Sorted = dict(sorted(FL_Playlist_BeforeSort.items(), key=lambda item: item[0]))
 
         for itemposition in FL_Playlist_Sorted:

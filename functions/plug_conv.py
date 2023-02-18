@@ -14,9 +14,9 @@ from functions import vst_fx
 from functions import vst_inst
 from functions import params_vst
 from functions import params_vital
-from functions import native_fl_inst
-from functions import native_pxtone
-from functions import native_jummbox
+from functions import plug_in_fl
+from functions import plug_in_pxtone
+from functions import plug_in_jummbox
 
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, dawname, extra_json, nameid):
@@ -28,15 +28,15 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 
 			# ---------------------------------------- 1 ----------------------------------------
 			if pluginname == 'native-fl':
-				native_fl_inst.convert(instdata)
+				plug_in_fl.convert(instdata)
 
 			# ---------- from pxtone
 			elif pluginname == 'native-pxtone':
-				native_pxtone.convert(instdata)
+				plug_in_pxtone.convert(instdata)
 
 			# ---------- from jummbox
 			elif pluginname == 'native-jummbox':
-				native_jummbox.convert(instdata)
+				plug_in_jummbox.convert(instdata)
 
 			# ---------- from general-midi
 			elif pluginname == 'general-midi':

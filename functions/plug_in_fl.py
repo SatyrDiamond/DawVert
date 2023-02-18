@@ -8,17 +8,22 @@ from functions import list_vst
 from functions import params_vst
 from functions import params_vital
 from functions import params_vital_wavetable
+from functions import plug_in_fl_wrapper
 
 simsynth_shapes = {0.4: 'noise', 0.3: 'sine', 0.2: 'square', 0.1: 'saw', 0.0: 'triangle'}
 
 def simsynth_time(value): return pow(value*2, 3)
 def simsynth_2time(value): return pow(value*2, 3)
 
+temp_count = 0
+
 def convert(instdata):
+	global temp_count
 	pluginname = instdata['plugin']
 	plugindata = instdata['plugindata']
 	fl_plugdata = base64.b64decode(plugindata['data'])
 	fl_plugstr = data_bytes.bytearray2BytesIO(base64.b64decode(plugindata['data']))
+
 
 	# ---------------------------------------- 3xOsc ----------------------------------------
 	if plugindata['name'].lower() == '3x osc':
@@ -30,7 +35,7 @@ def convert(instdata):
 		osc1_invert, osc2_invert, osc3_invert, osc3_am = struct.unpack('bbbb', fl_plugstr.read(4))
 
 	# ---------------------------------------- Fruity Slicer ----------------------------------------
-	if plugindata['name'].lower() == 'fruity slicer':
+	elif plugindata['name'].lower() == 'fruity slicer':
 		fl_plugstr.read(4)
 		slicer_beats = struct.unpack('f', fl_plugstr.read(4))[0]
 		slicer_bpm = struct.unpack('f', fl_plugstr.read(4))[0]
@@ -67,7 +72,7 @@ def convert(instdata):
 		instdata['plugindata']['slices'] = cvpj_slices
 
 	# ---------------------------------------- Wasp ----------------------------------------
-	if plugindata['name'].lower() == 'wasp':
+	elif plugindata['name'].lower() == 'wasp':
 		wasp_unk = int.from_bytes(fl_plugstr.read(4), "little")
 		wasp_1_shape, wasp_1_crs, wasp_1_fine, wasp_2_shape, wasp_2_crs, wasp_2_fine = struct.unpack('iiiiii', fl_plugstr.read(24))
 		wasp_3_shape, wasp_3_amt, wasp_12_fade, wasp_pw, wasp_fm, wasp_ringmod = struct.unpack('iiiiii', fl_plugstr.read(24))
@@ -78,7 +83,7 @@ def convert(instdata):
 		wasp_dist_on, wasp_dist_drv, wasp_dist_tone, wasp_dualvoice = struct.unpack('iiii', fl_plugstr.read(16))
 
 	# ---------------------------------------- Wasp XT ----------------------------------------
-	if plugindata['name'].lower() == 'wasp xt':
+	elif plugindata['name'].lower() == 'wasp xt':
 		wasp_unk = int.from_bytes(fl_plugstr.read(4), "little")
 		wasp_1_shape, wasp_1_crs, wasp_1_fine, wasp_2_shape, wasp_2_crs, wasp_2_fine = struct.unpack('iiiiii', fl_plugstr.read(24))
 		wasp_3_shape, wasp_3_amt, wasp_12_fade, wasp_pw, wasp_fm, wasp_ringmod = struct.unpack('iiiiii', fl_plugstr.read(24))
@@ -94,7 +99,7 @@ def convert(instdata):
 		waspxt_me_filter, waspxt_wnoise = struct.unpack('i'*2, fl_plugstr.read(8))
 
 	# ---------------------------------------- Soundfont Player ----------------------------------------
-	if plugindata['name'].lower() == 'fruity soundfont player':
+	elif plugindata['name'].lower() == 'fruity soundfont player':
 		# flsf_asdf_A max 5940 - flsf_asdf_D max 5940 - flsf_asdf_S max 127 - flsf_asdf_R max 5940
 		# flsf_lfo_predelay max 5900 - flsf_lfo_amount max 127 - flsf_lfo_speed max 127 - flsf_cutoff max 127
 		flsf_unk, flsf_patch, flsf_bank, flsf_reverb_sendlvl, flsf_chorus_sendlvl, flsf_mod = struct.unpack('IIIIII', fl_plugstr.read(24))
@@ -238,3 +243,17 @@ def convert(instdata):
 		
 		vitaldata = params_vital.getdata()
 		list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))
+
+	# ---------------------------------------- Wrapper ----------------------------------------
+	#elif plugindata['name'].lower() == 'fruity wrapper':
+
+		#plug_in_fl_wrapper.decode_wrapper(fl_plugstr)
+
+		#fl_plugstr.seek(0)
+
+		#wrapperdata = fl_plugstr.read()
+
+		#temp_count += 1
+		#f=open("dataout"+str(temp_count)+".bin", "wb")
+		#f.write(wrapperdata)
+		#exit()

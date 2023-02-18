@@ -168,6 +168,7 @@ class input_flp(plugin_input.base):
         FL_Tracks = FL_Arrangement['tracks']
 
         for track in FL_Tracks:
+            #print(track, FL_Tracks[track])
             if str(track) not in cvpj_l_playlist:
                 cvpj_l_playlist[str(track)] = {}
             if 'color' in FL_Tracks[track]:
@@ -175,6 +176,8 @@ class input_flp(plugin_input.base):
             cvpj_l_playlist[str(track)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
             if 'name' in FL_Tracks[track]:
                 cvpj_l_playlist[str(track)]['name'] = FL_Tracks[track]['name']
+            cvpj_l_playlist[str(track)]['size'] = FL_Tracks[track]['height']
+            cvpj_l_playlist[str(track)]['enabled'] = FL_Tracks[track]['enabled']
 
         for fxchannel in FL_Mixer:
             fl_fxhan = FL_Mixer[str(fxchannel)]

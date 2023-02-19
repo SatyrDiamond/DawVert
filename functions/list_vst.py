@@ -47,6 +47,34 @@ def find_vst2path(name, instdata):
 	else: 
 		print('[list-vst2] Unchanged,', "No Plugin and PluginData defined")
 	return vst_path
+
+def find_vst3path(name, instdata):
+	path_found = 0
+	vst_path = None
+	if 'plugindata' in instdata and 'plugin' in instdata:
+		if vst3path_loaded == True:
+			if name in vst3paths:
+				if 'path64' in vst3paths[name]: 
+					vst_path = vst3paths[name]['path64']
+					print('[list-vst3] ' + instdata['plugin'] +' > ' + name + ' (VST3 64-bit)')
+					path_found = 1
+				elif 'path32' in vst3paths[name]: 
+					vst_path = vst3paths[name]['path32']
+					print('[list-vst3] ' + instdata['plugin'] +' > ' + name + ' (VST3 32-bit)')
+					path_found = 1
+				else:
+					print('[list-vst3] Unchanged,', 'Plugin path of ' + name + ' not Found')
+			else: 
+				instdata['plugindata']['plugin'] = {}
+				instdata['plugindata']['plugin']['path'] = ''
+				print('[list-vst3] Unchanged,', 'Plugin ' + name + ' not Found')
+		else: 
+			print('[list-vst3] Unchanged,', "VST3 list not found")
+	else: 
+		print('[list-vst3] Unchanged,', "No Plugin and PluginData defined")
+	return vst_path
+
+
 def replace_data(instdata, name, data):
 	vst_path = find_vst2path(name, instdata)
 	if vst_path != None:
@@ -57,6 +85,18 @@ def replace_data(instdata, name, data):
 		instdata['plugindata']['plugin']['path'] = vst_path
 		instdata['plugindata']['datatype'] = 'raw'
 		instdata['plugindata']['data'] = base64.b64encode(data).decode('ascii')
+
+def replace_data_3(instdata, name, data):
+	vst_path = find_vst3path(name, instdata)
+	if vst_path != None:
+		instdata['plugin'] = 'vst3'
+		instdata['plugindata'] = {}
+		instdata['plugindata']['plugin'] = {}
+		instdata['plugindata']['plugin']['name'] = name
+		instdata['plugindata']['plugin']['path'] = vst_path
+		instdata['plugindata']['datatype'] = 'raw'
+		instdata['plugindata']['data'] = base64.b64encode(data).decode('ascii')
+
 def replace_params(instdata, name, numparams, params):
 	vst_path = find_vst2path(name, instdata)
 	if vst_path != None:

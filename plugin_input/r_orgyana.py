@@ -80,7 +80,7 @@ def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
         if isinsidenote == False:
             cvpj_note = {}
             cvpj_note['position'] = org_l_n
-            cvpj_note['key'] = notedata[0] - 60
+            cvpj_note['key'] = notedata[0] - 48
             cvpj_note['duration'] = notedata[1]
             cvpj_note['vol'] = notedata[2] / 254
             cvpj_note['pan'] = (notedata[3] - 6) / 6
@@ -188,4 +188,6 @@ class input_orgyana(plugin_input.base):
         cvpj_l['bpm'] = (1/(org_tempo/120))*120
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['timesig_numerator'] = 4
+        if org_loop_beginning != 0:
+            cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': org_loop_beginning, 'end': org_loop_end, 'type': 'loop'}]
         return json.dumps(cvpj_l)

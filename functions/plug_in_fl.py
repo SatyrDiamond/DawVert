@@ -245,9 +245,33 @@ def convert(instdata):
 		list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))
 
 	# ---------------------------------------- Wrapper ----------------------------------------
-	#elif plugindata['name'].lower() == 'fruity wrapper':
+	elif plugindata['name'].lower() == 'fruity wrapper':
 
-		#plug_in_fl_wrapper.decode_wrapper(fl_plugstr)
+		wrapperdata = plug_in_fl_wrapper.decode_wrapper(fl_plugstr)
+
+		if 'plugin_info' in wrapperdata:
+			wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
+
+			pluginstate = wrapperdata['state']
+
+			if wrapper_vsttype == 4:
+				wrapper_vststate = pluginstate[0:9]
+				#wrapper_vstsize = pluginstate[9:13]
+				#wrapper_vstpad = pluginstate[13:21]
+				wrapper_vstdata = pluginstate[21:]
+				#print(wrapper_vststate, wrapper_vstpad)
+				list_vst.replace_data(instdata, wrapperdata['name'], wrapper_vstdata)
+
+			if wrapper_vsttype == 8:
+				#wrapper_vststate = pluginstate[0:9]
+				#wrapper_vstpad = pluginstate[9:84]
+				#wrapper_vstsize = pluginstate[84:92]
+				wrapper_vstdata = pluginstate[92:]
+				#print(wrapper_vststate)
+				#print(wrapper_vstpad)
+				#print(wrapper_vstsize)
+				#print(wrapper_vstdata)
+				list_vst.replace_data_3(instdata, wrapperdata['name'], wrapper_vstdata)
 
 		#fl_plugstr.seek(0)
 

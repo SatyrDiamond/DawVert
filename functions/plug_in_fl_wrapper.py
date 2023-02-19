@@ -32,35 +32,42 @@ def decode_wrapper(bio_data):
 		chunkdata = bio_data.read(chunksize)
 		#print(chunktype, ChunkType[chunktype], chunksize)
 		if chunktype == 1:
-			print('[native-fl-wrapper] MIDI')
+			#print('[native-fl-wrapper] MIDI', chunkdata)
 			out_wrapper['midi'] = chunkdata
 		if chunktype == 2:
-			print('[native-fl-wrapper] Flags:', chunkdata)
+			#print('[native-fl-wrapper] Flags:', chunkdata)
 			out_wrapper['flags'] = chunkdata
+			#print(chunkdata[0:9].hex())
+			#print(chunkdata[9:13].hex())
+			#print(chunkdata[13:17].hex())
+			#print(chunkdata[17:22].hex())
+			#print(chunkdata[22])
 		if chunktype == 30:
-			print('[native-fl-wrapper] IO', chunkdata)
+			#print('[native-fl-wrapper] IO', chunkdata)
 			out_wrapper['io'] = chunkdata
 		if chunktype == 32:
-			print('[native-fl-wrapper] Outputs', chunkdata)
+			#print('[native-fl-wrapper] Outputs', chunkdata)
 			out_wrapper['outputs'] = chunkdata
 		if chunktype == 50:
-			print('[native-fl-wrapper] PluginInfo', chunkdata)
+			#print('[native-fl-wrapper] PluginInfo', chunkdata)
 			out_wrapper['plugin_info'] = chunkdata
 		if chunktype == 51:
-			print('[native-fl-wrapper] FourID:', int.from_bytes(chunkdata, "little"))
+			#print('[native-fl-wrapper] FourID:', int.from_bytes(chunkdata, "little"))
 			out_wrapper['fourid'] = int.from_bytes(chunkdata, "little")
 		if chunktype == 53:
-			print('[native-fl-wrapper] State')
+			#print('[native-fl-wrapper] State')
 			out_wrapper['state'] = chunkdata
 		if chunktype == 54:
-			print('[native-fl-wrapper] Name:', chunkdata.decode())
+			#print('[native-fl-wrapper] Name:', chunkdata.decode())
 			out_wrapper['name'] = chunkdata.decode()
 		if chunktype == 55:
-			print('[native-fl-wrapper] Plugin Path:', chunkdata.decode())
+			#print('[native-fl-wrapper] Plugin Path:', chunkdata.decode())
 			out_wrapper['file'] = chunkdata.decode()
 		if chunktype == 56:
-			print('[native-fl-wrapper] Vendor:', chunkdata.decode())
+			#print('[native-fl-wrapper] Vendor:', chunkdata.decode())
 			out_wrapper['vendor'] = chunkdata.decode()
 		if chunktype == 57:
-			print('[native-fl-wrapper] 57:', chunkdata)
+			#print('[native-fl-wrapper] 57:', chunkdata)
 			out_wrapper['57'] = chunkdata
+
+	return out_wrapper

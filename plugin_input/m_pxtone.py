@@ -156,19 +156,19 @@ class input_pxtone(plugin_input.base):
             elif chunkname == b'mateOGGV':
                 print('[input-ptcop] Chunk: mateOGGV', chunksize)
                 song_file.read(chunksize)
-                t_voice_data.append(['none', {}])
+                t_voice_data.append(['none', {}, 0])
                 ptcop_voice_num += 1
 
             elif chunkname == b'matePTV ':
                 print('[input-ptcop] Chunk: PTVoice', chunksize)
                 parse_matePTV(song_file)
-                t_voice_data.append(['none', {}])
+                t_voice_data.append(['none', {}, 0])
                 ptcop_voice_num += 1
 
             elif chunkname == b'matePTN ':
                 print('[input-ptcop] Chunk: PTNoise', chunksize)
                 song_file.read(chunksize)
-                t_voice_data.append(['none', {}])
+                t_voice_data.append(['none', {}, 0])
                 ptcop_voice_num += 1
 
             elif chunkname == b'matePCM ':
@@ -211,7 +211,7 @@ class input_pxtone(plugin_input.base):
 
                 audio_wav.generate(wave_path, ptcop_pcm_data, ptcop_pcm_ch, ptcop_pcm_hz, ptcop_pcm_bits, loopdata)
 
-                t_voice_data.append(['sampler', plugindata])
+                t_voice_data.append(['sampler', plugindata, ptcop_pcm_basic_key_field-60])
                 ptcop_voice_num += 1
 
 
@@ -305,6 +305,7 @@ class input_pxtone(plugin_input.base):
             cvpj_inst["instdata"] = {}
             cvpj_inst['instdata']['plugin'] = t_voice_data[voicenum][0]
             cvpj_inst['instdata']['plugindata'] = t_voice_data[voicenum][1]
+            cvpj_inst['instdata']['middlenote'] = t_voice_data[voicenum][2]
             instid = 'ptcop_'+str(voicenum)
             cvpj_l_instruments[instid] = cvpj_inst
             cvpj_l_instrumentsorder.append(instid)
@@ -326,5 +327,7 @@ class input_pxtone(plugin_input.base):
         cvpj_l['instruments_data'] = cvpj_l_instruments
         cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
+        if ptcop_mas_repeat != 0:
+            cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': ptcop_mas_repeat, 'end': ptcop_mas_last, 'type': 'loop'}]
         cvpj_l['bpm'] = ptcop_mas_beattempo
         return json.dumps(cvpj_l)

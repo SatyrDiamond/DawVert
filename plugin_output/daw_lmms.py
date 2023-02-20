@@ -562,7 +562,7 @@ def lmms_encode_fxchain(xmltag, json_fxchannel):
         else: fxcX.set('enabled', str('1'))
         fxcX.set('numofeffects', str(len(json_fxchannel['chain_fx_audio'])))
         for json_fxslot in json_fxchain:
-            if json_fxslot['plugin'] == 'native-lmms' or json_fxslot['plugin'] == 'vst2':
+            if json_fxslot['plugin'] == 'native-lmms' or json_fxslot['plugin'] == 'vst2' or json_fxslot['plugin'] == 'ladspa':
                 fxslotX = lmms_encode_effectslot(fxcX, json_fxslot)
         print('')
 

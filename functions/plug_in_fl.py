@@ -3,6 +3,7 @@
 
 import base64
 import struct
+import os
 from functions import data_bytes
 from functions import list_vst
 from functions import params_vst
@@ -256,11 +257,23 @@ def convert(instdata):
 
 			if wrapper_vsttype == 4:
 				wrapper_vststate = pluginstate[0:9]
-				#wrapper_vstsize = pluginstate[9:13]
+				wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
 				#wrapper_vstpad = pluginstate[13:21]
 				wrapper_vstdata = pluginstate[21:]
 				#print(wrapper_vststate, wrapper_vstpad)
-				list_vst.replace_data(instdata, wrapperdata['name'], wrapper_vstdata)
+
+				#print(wrapperdata)
+
+				if os.path.exists(wrapperdata['file']):
+					instdata['plugin'] = 'vst2'
+					instdata['plugindata'] = {}
+					instdata['plugindata']['plugin'] = {}
+					instdata['plugindata']['plugin']['name'] = wrapperdata['name']
+					instdata['plugindata']['plugin']['path'] = wrapperdata['file']
+					instdata['plugindata']['datatype'] = 'raw'
+					instdata['plugindata']['data'] = base64.b64encode(wrapper_vstdata).decode('ascii')
+				else:
+					list_vst.replace_data(instdata, wrapperdata['name'], wrapper_vstdata)
 
 			if wrapper_vsttype == 8:
 				#wrapper_vststate = pluginstate[0:9]

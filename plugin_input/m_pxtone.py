@@ -59,9 +59,93 @@ def parse_event(bio_stream):
 
     return [position, unitnum, eventnum, value]
 
+
+def readextra(data):
+    output = b''
+    terminated = 0
+    while terminated == 0:
+        char = data.read(1)
+        if char != b'\x00' and char != b'': output += char
+        else: terminated = 1
+    return output
+
+# == unfinished
+def parse_ptvoice_unit(bio_ptvoice, unitnum):
+    l_unit = {}
+    print('[input-ptcop]   --- Unit '+str(unitnum))
+
+    bio_ptvoice.read(2)
+    l_unit['vol'] = bio_ptvoice.read(1)[0]/64
+    print('[input-ptcop]   Vol: '+str(l_unit['vol']))
+    l_unit['pan'] = ((varint.decode_stream(bio_ptvoice)/128) - 0.5) *2
+    print('[input-ptcop]   Pan: '+str(l_unit['pan']))
+    l_unit['detune'] = ((struct.unpack("<f", struct.pack("I", varint.decode_stream(bio_ptvoice)))[0]-1)/0.0127)*26
+    print('[input-ptcop]   Detune: '+str(l_unit['detune']))
+
+    bio_ptvoice.read(2)
+
+    env_wave_type = bio_ptvoice.read(1)
+    if env_wave_type == b'\x00': # ------------------------------ points
+        l_unit['wave_type'] = 'points'
+        l_unit['wave_points'] = []
+        env_wave_points = bio_ptvoice.read(1)[0]
+        bio_ptvoice.read(2)
+        for _ in range(env_wave_points):
+            point_loc = bio_ptvoice.read(1)[0]
+            point_val = int.from_bytes(bio_ptvoice.read(1), "little", signed=True)
+            l_unit['wave_points'].append([point_loc, point_val/128])
+        print('[input-ptcop]   Wave Points: '+str(l_unit['wave_points']))
+
+    if env_wave_type == b'\x01': # ------------------------------ harm
+        env_wave_harm = bio_ptvoice.read(1)[0]
+        l_unit['wave_type'] = 'harm'
+        l_unit['wave_harm'] = [0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0]
+        for _ in range(env_wave_harm):
+            harm_num = bio_ptvoice.read(1)[0]
+            point_val = struct.unpack("i", struct.pack("I", varint.decode_stream(bio_ptvoice)))[0]/128
+            l_unit['wave_harm'][harm_num-1] = point_val
+        print('[input-ptcop]   Wave Harm: '+str(l_unit['wave_harm']))
+
+    bio_ptvoice.read(2)
+
+    l_unit['vol_points'] = []
+
+    firstvolpoint = bio_ptvoice.read(1)
+    env_vol_points = firstvolpoint[0]+1
+    for _ in range(env_vol_points):
+        point_loc = varint.decode_stream(bio_ptvoice)
+        point_val = varint.decode_stream(bio_ptvoice)
+        l_unit['vol_points'].append([point_loc, point_val])
+
+    print('[input-ptcop]   Vol Points: '+str(len(l_unit['vol_points'])))
+
+    l_unit['release'] = varint.decode_stream(bio_ptvoice)
+
+    print('[input-ptcop]   Release: '+str(l_unit['release']))
+
+    readextra(bio_ptvoice)
+    
+    return l_unit
+
+
+
 def parse_matePTV(bio_stream):
     size, voice_number, tuning, sz = struct.unpack("hhfi", bio_stream.read(12))
+
     ptvoice_data = bio_stream.read(sz)
+    l_ptvoice = {}
+    l_ptvoice['units'] = []
+
+    bio_ptvoice = data_bytes.bytearray2BytesIO(ptvoice_data)
+    ptvoice_header = bio_ptvoice.read(8)
+    ptvoice_unk = int.from_bytes(bio_ptvoice.read(4), "little")
+
+    ptvoice_size = int.from_bytes(bio_ptvoice.read(4), "little")
+    ptvoice_d_num_units = int.from_bytes(bio_ptvoice.read(4), "big")
+    for unitnum in range(ptvoice_d_num_units):
+        l_ptvoice['units'].append(parse_ptvoice_unit(bio_ptvoice, unitnum))
+
+    return l_ptvoice
 
 def parse_assiWOIC(bio_stream, chunksize):
     voice_number = int.from_bytes(bio_stream.read(4), "little")
@@ -161,7 +245,7 @@ class input_pxtone(plugin_input.base):
 
             elif chunkname == b'matePTV ':
                 print('[input-ptcop] Chunk: PTVoice', chunksize)
-                parse_matePTV(song_file)
+                song_file.read(chunksize)
                 t_voice_data.append(['none', {}, 0])
                 ptcop_voice_num += 1
 

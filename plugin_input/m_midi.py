@@ -114,15 +114,19 @@ class input_midi(plugin_input.base):
             for msg in track:
                 timepos += msg.time
                 format_midi_in.resttime(msg.time)
+
                 if msg.type == 'note_on':
                     if msg.velocity != 0: format_midi_in.note_on(msg.note, msg.channel, msg.velocity)
                     else: format_midi_in.note_off(msg.note, msg.channel)
                 if msg.type == 'note_off': format_midi_in.note_off(msg.note, msg.channel)
+
+                if msg.type == 'pitchwheel': format_midi_in.pitchwheel(msg.channel, (msg.pitch/8192)*24)
                 if msg.type == 'program_change': format_midi_in.program_change(msg.channel, msg.program)
                 if msg.type == 'control_change': format_midi_in.control_change(msg.channel, msg.control, msg.value)
                 if msg.type == 'set_tempo': 
                     if timepos == 0: s_tempo = 60000000/msg.tempo
                     format_midi_in.tempo(timepos, 60000000/msg.tempo)
+
                 if msg.type == 'time_signature': 
                     if timepos == 0: s_timesig = [msg.numerator, msg.denominator]
                     format_midi_in.time_signature(timepos, msg.numerator, msg.denominator)

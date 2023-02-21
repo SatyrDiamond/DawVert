@@ -250,7 +250,7 @@ def getusedinsts(channels):
 
     usedinst_output = []
 
-    print(t_chan_usedinst)
+    #print(t_chan_usedinst)
 
     for channelnum in range(channels):
         for s_chan_usedbank in t_chan_usedinst[channelnum]:
@@ -408,8 +408,8 @@ def song_end(channels):
     for channum in range(channels):
         s_chan_trackids = t_chan_usedinst_all[channum]
         s_chan_auto = t_chan_auto[channum]
-        print(s_chan_trackids)
-        print(s_chan_auto)
+        #print(s_chan_trackids)
+        #print(s_chan_auto)
         if len(s_chan_trackids) == 1:
             if 'track_main' not in cvpj_l_automation: 
                 cvpj_l_automation['track_main'] = {}

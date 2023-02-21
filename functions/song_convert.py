@@ -70,7 +70,6 @@ def instrack2singleinst(cvpj_l, cvpjtype):
 def r2m_pl_addinst(placements, trackid):
     t_placements = placements.copy()
     for placement in placements:
-        placement['type'] = 'instruments'
         if 'notelist' in placement:
             for t_note in placement['notelist']:
                 t_note['instrument'] = trackid

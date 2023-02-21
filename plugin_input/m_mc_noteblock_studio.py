@@ -188,7 +188,6 @@ class input_gt_mnbs(plugin_input.base):
                 layer_placements[placementnum].append(cvpj_notedata)
             for placenum in layer_placements:
                 cvpj_pl_data = {}
-                cvpj_pl_data['type'] = 'instruments'
                 cvpj_pl_data['position'] = placenum
                 cvpj_pl_data['duration'] = split_duration
                 cvpj_pl_data['notelist'] = layer_placements[placenum]

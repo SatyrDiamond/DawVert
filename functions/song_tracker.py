@@ -42,6 +42,10 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
     tempo_placements = []
     placement_data = None
     speed_changed = False
+
+    placement_duration = 0
+    placement_currentpos = 0
+    
     for pattern_num in orders:
         for patternrow in patterntable_all[pattern_num]:
             if 'firstrow' in patternrow[0]:

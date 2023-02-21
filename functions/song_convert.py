@@ -261,7 +261,6 @@ def ri2r(song):
 # ---------------------------------- Multiple to Regular ----------------------------------
 
 def m2r_split_insts(placement):
-    del placement['type']
     out_inst_pl = {}
     if 'notelist' in placement:
         pl_nl = placement['notelist']
@@ -383,18 +382,17 @@ def m2mi(song):
         else:
             cvpj_placements = cvpj_playlistentry_data['placements_notes']
         for cvpj_placement in cvpj_placements:
-            if cvpj_placement['type'] == 'instruments':
-                cvpj_notelist = cvpj_placement['notelist']
-                temp_nle = {}
-                temp_nle['notelist'] = cvpj_notelist.copy()
-                checksamenl = m2mi_checkdup(cvpj_notelistindex, temp_nle)
-                if checksamenl != None:
-                    cvpj_placement['fromindex'] = checksamenl
-                else:
-                    cvpj_notelistindex['m2mi_' + str(pattern_number)] = temp_nle
-                    cvpj_placement['fromindex'] = 'm2mi_' + str(pattern_number)
-                    del cvpj_placement['notelist']
-                pattern_number += 1
+            cvpj_notelist = cvpj_placement['notelist']
+            temp_nle = {}
+            temp_nle['notelist'] = cvpj_notelist.copy()
+            checksamenl = m2mi_checkdup(cvpj_notelistindex, temp_nle)
+            if checksamenl != None:
+                cvpj_placement['fromindex'] = checksamenl
+            else:
+                cvpj_notelistindex['m2mi_' + str(pattern_number)] = temp_nle
+                cvpj_placement['fromindex'] = 'm2mi_' + str(pattern_number)
+                del cvpj_placement['notelist']
+            pattern_number += 1
     cvpj_proj['notelistindex'] = cvpj_notelistindex
     return json.dumps(cvpj_proj)
 

@@ -396,7 +396,7 @@ class input_it(plugin_input.base):
 
         # ------------- Song Message -------------
         it_file.seek(it_header_msgoffset)
-        it_songmessage = it_file.read(it_header_msglength).split(b'\x00' * 1)[0].decode("utf-8")
+        it_songmessage = it_file.read(it_header_msglength).split(b'\x00' * 1)[0].decode("windows-1252")
 
         cvpj_l = {}
 

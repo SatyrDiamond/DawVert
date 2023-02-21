@@ -552,7 +552,6 @@ class input_ceol(plugin_input.base):
                 plpatnum = ceol_read()
                 if plpatnum != -1:
                     cvpj_l_placement = {}
-                    cvpj_l_placement['type'] = "instruments"
                     cvpj_l_placement['position'] = plpos*ceol_basic_patternlength
                     cvpj_l_placement['duration'] = ceol_basic_patternlength
                     cvpj_l_placement['fromindex'] = 'ceol_'+str(plpatnum).zfill(3)

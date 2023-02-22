@@ -141,13 +141,29 @@ def parse_channel(channeldata, channum):
                     points = note['points']
                     pitches = note['pitches']
                     cvpj_note_pos = (points[-1]['tick'] - points[0]['tick'])
+
+                    t_instrument = str(channum)
+                    t_duration = calcval(cvpj_note_pos)
+                    t_position = calcval(points[0]['tick'])
+                    t_vol = points[0]['volume']/100
+                    t_auto_pitch = []
+
+                    for point in points:
+                        t_auto_pitch.append({'position': calcval(point['tick']-points[0]['tick']), 'value': int(point['pitchBend'])})
+
+                    cvpj_notemod = {}
+                    cvpj_notemod['auto'] = {}
+                    cvpj_notemod['auto']['pitch'] = t_auto_pitch
+
                     for pitch in pitches:
+                        t_key = pitch-48 + jummbox_key
                         cvpj_note = {}
-                        cvpj_note['position'] = calcval(points[0]['tick'])
-                        cvpj_note['duration'] = calcval(cvpj_note_pos)
-                        cvpj_note['key'] = pitch-48 + jummbox_key
-                        cvpj_note['vol'] = points[0]['volume']/100
-                        cvpj_note['instrument'] = str(channum)
+                        cvpj_note['position'] = t_position
+                        cvpj_note['duration'] = t_duration
+                        cvpj_note['key'] = t_key
+                        cvpj_note['vol'] = t_vol
+                        cvpj_note['instrument'] = t_instrument
+                        cvpj_note['notemod'] = cvpj_notemod
                         cvpj_notelist.append(cvpj_note)
 
                 cvpj_inst["notelistindex"][nid_name] = {}

@@ -28,7 +28,7 @@ def decode_fst(infile):
       
     fst_Main = {}
     
-    fst_Instruments = {}
+    fst_instruments = {}
     fst_Arpeggios = {}
     fst_Songs = {}
     fst_DPCMSamples = {}
@@ -58,8 +58,8 @@ def decode_fst(infile):
     
         elif cmd_name == 'Instrument' and tabs_num == 1:
             instname = cmd_params['Name']
-            fst_Instruments[instname] = {}
-            fst_Instrument = fst_Instruments[instname]
+            fst_instruments[instname] = {}
+            fst_Instrument = fst_instruments[instname]
             fst_Instrument['Name'] = cmd_params['Name']
             fst_Instrument['Envelopes'] = {}
             if 'N163WavePreset' in cmd_params: fst_Instrument['N163WavePreset'] = cmd_params['N163WavePreset']
@@ -121,7 +121,7 @@ def decode_fst(infile):
             print('unexpected command and/or wrong tabs:', cmd_name)
             exit()
     
-    fst_Main['Instruments'] = fst_Instruments
+    fst_Main['Instruments'] = fst_instruments
     fst_Main['Songs'] = fst_Songs
     fst_Main['Arpeggios'] = fst_Arpeggios
     fst_Main['DPCMSamples'] = fst_DPCMSamples
@@ -262,11 +262,13 @@ class input_famistudio(plugin_input.base):
         cvpj_l_playlist = {}
         cvpj_l_fxrack = {}
         
-        fst_Instruments = fst_Main['Instruments']
+        fst_instruments = fst_Main['Instruments']
+        fst_arpeggios = fst_Main['Arpeggios']
         fst_currentsong = next(iter(fst_Main['Songs'].values()))
         fst_channels = fst_currentsong['Channels']
         fst_beatlength = int(fst_currentsong['BeatLength'])
         fst_groove = fst_currentsong['Groove']
+
         PatternLength = int(fst_currentsong['PatternLength'])
         SongLength = int(fst_currentsong['Length'])
         NoteLength = int(fst_currentsong['NoteLength'])
@@ -313,7 +315,7 @@ class input_famistudio(plugin_input.base):
                 if WaveType == 'S5B': cvpj_l_fxrack[str(channum)]['color'] = [0.58, 0.94, 0.33]
                 if WaveType == 'N163': cvpj_l_fxrack[str(channum)]['color'] = [0.97, 0.97, 0.36]
                 for inst in used_insts:
-                    create_inst(WaveType, fst_Instruments[inst], cvpj_l_instrument_data, cvpj_l_instrument_order, channum)
+                    create_inst(WaveType, fst_instruments[inst], cvpj_l_instrument_data, cvpj_l_instrument_order, channum)
             channum += 1
 
         playlistnum = 1
@@ -336,22 +338,33 @@ class input_famistudio(plugin_input.base):
                     if ChannelName != 'DPCM':
                         if 'Duration' in notedata and 'Instrument' in notedata:
 
+                            t_instrument = InstShapes[Channel]+'-'+notedata['Instrument']
                             t_duration = int(notedata['Duration'])/NoteLength
+                            t_position = int(notedata['Time'])/NoteLength
                             t_key = NoteToMidi(notedata['Value']) + 24
 
-                            cvpj_note = {}
-                            cvpj_note['instrument'] = InstShapes[Channel]+'-'+notedata['Instrument']
-                            cvpj_note['duration'] = t_duration
-                            cvpj_note['position'] = int(notedata['Time'])/NoteLength
-                            cvpj_note['key'] = t_key
+                            cvpj_multikeys = []
+                            if 'Arpeggio' in notedata:
+                                if notedata['Arpeggio'] in fst_arpeggios:
+                                    cvpj_multikeys = fst_arpeggios[notedata['Arpeggio']]['Values'].split(',')
+                                    cvpj_multikeys = [*set(cvpj_multikeys)]
 
+                            cvpj_notemod = {}
                             if 'SlideTarget' in notedata:
                                 t_slidenote = NoteToMidi(notedata['SlideTarget']) + 24
-                                cvpj_note['notemod'] = {}
-                                cvpj_note['notemod']['slide'] = [{'position': 0, 'duration': t_duration, 'key': t_slidenote-t_key}]
-                                cvpj_note['notemod']['auto'] = {}
-                                cvpj_note['notemod']['auto']['pitch'] = [{'position': 0, 'value': 0}, {'position': t_duration, 'value': t_slidenote-t_key}]
-                            patternnotelist.append(cvpj_note)
+                                cvpj_notemod['slide'] = [{'position': 0, 'duration': t_duration, 'key': t_slidenote-t_key}]
+                                cvpj_notemod['auto'] = {}
+                                cvpj_notemod['auto']['pitch'] = [{'position': 0, 'value': 0}, {'position': t_duration, 'value': t_slidenote-t_key}]
+
+                            if cvpj_multikeys == []:
+                                cvpj_note = {'instrument': t_instrument, 'duration': t_duration, 'position': t_position, 'key': t_key, 'notemod': cvpj_notemod}
+                                patternnotelist.append(cvpj_note)
+                            else:
+                                for cvpj_multikey in cvpj_multikeys:
+                                    addkey = int(cvpj_multikey)
+                                    cvpj_note = {'instrument': t_instrument, 'duration': t_duration, 'position': t_position, 'key': t_key+addkey, 'notemod': cvpj_notemod}
+                                    patternnotelist.append(cvpj_note)
+
                     else:
                         if 'Duration' in notedata:
                             cvpj_note = {}

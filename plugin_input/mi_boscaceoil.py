@@ -3,8 +3,11 @@
 
 from functions import data_bytes
 from functions import placements
+from functions import values
 import plugin_input
 import json
+
+MIDIInstNames = values.getlist_gm_names()
 
 ceol_instlist = {}
 ceol_instlist[0] = ["MIDI", "Grand Piano", "midi.piano1"]
@@ -399,7 +402,6 @@ class input_ceol(plugin_input.base):
     def gettype(self): return 'mi'
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
-
         cvpj_l_instrument_data = {}
         cvpj_l_instrument_order = []
         cvpj_l_notelistindex = {}
@@ -451,34 +453,26 @@ class input_ceol(plugin_input.base):
             print('[input-boscaceoil] ')
 
             cvpj_inst = {}
-            cvpj_inst["instdata"] = {}
-
-            cvpj_inst["name"] = ceol_instinfo[1]
-
             cvpj_inst["vol"] = ceol_inst_volume/256
 
-            if ceol_inst_palette in ceol_colors: 
-            	cvpj_inst["color"] = ceol_colors[ceol_inst_palette]
-            else: 
-            	cvpj_inst["color"] = [0.55, 0.55, 0.55]
+            if ceol_inst_palette in ceol_colors:  cvpj_inst["color"] = ceol_colors[ceol_inst_palette]
+            else: cvpj_inst["color"] = [0.55, 0.55, 0.55]
 
+            cvpj_inst["instdata"] = {}
             cvpj_instdata = cvpj_inst["instdata"]
             cvpj_instdata['plugindata'] = {}
 
             if ceol_instinfo[0] == 'MIDI':
+                cvpj_inst["name"] = MIDIInstNames[ceol_inst_number]
                 cvpj_instdata['plugin'] = 'general-midi'
                 cvpj_instdata['plugindata'] = {'bank':0, 'inst':ceol_inst_number}
-            elif ceol_inst_number == 128: cvpj_instdata['plugin'] = 'shape-square'
-            elif ceol_inst_number == 129: cvpj_instdata['plugin'] = 'shape-saw'
-            elif ceol_inst_number == 130: cvpj_instdata['plugin'] = 'shape-triangle'
-            elif ceol_inst_number == 131: cvpj_instdata['plugin'] = 'shape-sine'
-            elif ceol_inst_number == 132: cvpj_instdata['plugin'] = 'retro-noise'
             elif ceol_inst_number == 365: 
+                cvpj_inst["name"] = 'MIDI Drums'
                 cvpj_instdata['plugin'] = 'general-midi'
                 cvpj_instdata['plugindata'] = {'bank':128, 'inst':0}
-            else: cvpj_instdata['plugin'] = 'none'
-
-            
+            else: 
+                cvpj_inst["name"] = ceol_instinfo[1]
+                cvpj_instdata['plugin'] = 'none'
 
             if ceol_inst_number == 365: t_key_offset.append(24)
             else: t_key_offset.append(0)
@@ -497,7 +491,6 @@ class input_ceol(plugin_input.base):
                 t_notepos_table[t_notepos] = []
 
             cvpj_pat_id = 'ceol_'+str(patnum).zfill(3)
-
             ceol_pat_key = ceol_read()
             ceol_pat_scale = ceol_read()
             ceol_pat_instrument = ceol_read()

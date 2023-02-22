@@ -335,11 +335,22 @@ class input_famistudio(plugin_input.base):
                     notedata = Channel_Patterns[Pattern][fst_note]
                     if ChannelName != 'DPCM':
                         if 'Duration' in notedata and 'Instrument' in notedata:
+
+                            t_duration = int(notedata['Duration'])/NoteLength
+                            t_key = NoteToMidi(notedata['Value']) + 24
+
                             cvpj_note = {}
                             cvpj_note['instrument'] = InstShapes[Channel]+'-'+notedata['Instrument']
-                            cvpj_note['duration'] = int(notedata['Duration'])/NoteLength
+                            cvpj_note['duration'] = t_duration
                             cvpj_note['position'] = int(notedata['Time'])/NoteLength
-                            cvpj_note['key'] = NoteToMidi(notedata['Value']) + 24
+                            cvpj_note['key'] = t_key
+
+                            if 'SlideTarget' in notedata:
+                                t_slidenote = NoteToMidi(notedata['SlideTarget']) + 24
+                                cvpj_note['notemod'] = {}
+                                cvpj_note['notemod']['slide'] = [{'position': 0, 'duration': t_duration, 'key': t_slidenote-t_key}]
+                                cvpj_note['notemod']['auto'] = {}
+                                cvpj_note['notemod']['auto']['pitch'] = [{'position': 0, 'value': 0}, {'position': t_duration, 'value': t_slidenote-t_key}]
                             patternnotelist.append(cvpj_note)
                     else:
                         if 'Duration' in notedata:

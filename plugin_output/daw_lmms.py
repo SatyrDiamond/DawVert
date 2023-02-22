@@ -111,10 +111,10 @@ def asdrlfo(jsonin, xmlobj, asdrtype, xmltype):
 
 def lmms_encode_plugin(xmltag, trkJ, trackid):
     instJ = trkJ['instdata']
-    pluginname = instJ['plugin']
     xml_instrumentpreplugin = ET.SubElement(xmltag, "instrument")
-    if 'plugindata' in instJ:
-        plugJ = instJ['plugindata']
+    if 'plugin' in instJ: pluginname = instJ['plugin']
+    else: pluginname = 'none'
+    if 'plugindata' in instJ: plugJ = instJ['plugindata']
 
     if pluginname == 'sampler':
         print('[output-lmms]       Plugin: sampler > AudioFileProcessor')

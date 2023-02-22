@@ -7,7 +7,10 @@ import plugin_input
 import json
 
 def getvalue(tag, name):
-    return tag[name]['Value']
+    if name in tag:
+        return tag[name]['Value']
+    else:
+        return None
 
 keytable = [0,2,4,5,7,9,11,12]
 maincolor = [0.42, 0.59, 0.24]
@@ -26,6 +29,7 @@ class input_cvpj_f(plugin_input.base):
         mmc_tracks = mmc_main["Tracks"]
         mmc_bpm = getvalue(mmc_main, 'Bpm')
         mmc_mastervolume = getvalue(mmc_main, 'MasterVolume')
+        if mmc_mastervolume == None: mmc_mastervolume = 1
 
         cvpj_l_trackdata = {}
         cvpj_l_trackordering = []
@@ -68,7 +72,9 @@ class input_cvpj_f(plugin_input.base):
                 notedata["key"] = keytable[out_key] + (out_oct-3)*12 + out_offset
                 notedata["position"] = getvalue(mmc_note, 'BeatOffset')
                 notedata["vol"] = getvalue(mmc_wv, 'Volume')*1.5
-                notedata["pan"] = getvalue(mmc_wv, 'Pan')*-1
+                notepan = getvalue(mmc_wv, 'Pan')
+                if notepan == None: notepan = 0
+                notedata["pan"] = notepan*-1
                 cvpj_notelist.append(notedata)
 
             trackdata['placements'] = []

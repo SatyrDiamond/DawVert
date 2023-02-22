@@ -148,12 +148,17 @@ def parse_channel(channeldata, channum):
                     t_vol = points[0]['volume']/100
                     t_auto_pitch = []
 
+                    arr_bendvals = []
+                    arr_volvals = []
                     for point in points:
-                        t_auto_pitch.append({'position': calcval(point['tick']-points[0]['tick']), 'value': int(point['pitchBend'])})
+                        t_auto_pitch.append({'position': calcval(point['tick']-points[0]['tick']), 'value': point['pitchBend']})
+                        arr_bendvals.append(point['pitchBend'])
+                        arr_volvals.append(point['volume'])
 
                     cvpj_notemod = {}
                     cvpj_notemod['auto'] = {}
-                    cvpj_notemod['auto']['pitch'] = t_auto_pitch
+                    if all(element == arr_bendvals[0] for element in arr_bendvals) == False:
+                        cvpj_notemod['auto']['pitch'] = t_auto_pitch
 
                     for pitch in pitches:
                         t_key = pitch-48 + jummbox_key

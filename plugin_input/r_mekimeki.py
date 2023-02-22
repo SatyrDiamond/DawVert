@@ -31,6 +31,12 @@ class input_cvpj_f(plugin_input.base):
         mmc_mastervolume = getvalue(mmc_main, 'MasterVolume')
         if mmc_mastervolume == None: mmc_mastervolume = 1
 
+        notelen = 1
+
+        while mmc_bpm > 200:
+            mmc_bpm = mmc_bpm/2
+            notelen = notelen/2
+
         cvpj_l_trackdata = {}
         cvpj_l_trackordering = []
         cvpj_l_trackplacements = {}
@@ -62,7 +68,7 @@ class input_cvpj_f(plugin_input.base):
                 mmc_wv = mmc_note['WaveVolume']
 
                 notedata = {}
-                notedata["duration"] = getvalue(mmc_note, 'Length')
+                notedata["duration"] = getvalue(mmc_note, 'Length')*notelen
 
                 n_key = getvalue(mmc_note, 'Melody')
                 out_offset = getvalue(mmc_note, 'Add')
@@ -70,7 +76,7 @@ class input_cvpj_f(plugin_input.base):
                 out_key = n_key - out_oct*7
 
                 notedata["key"] = keytable[out_key] + (out_oct-3)*12 + out_offset
-                notedata["position"] = getvalue(mmc_note, 'BeatOffset')
+                notedata["position"] = getvalue(mmc_note, 'BeatOffset')*notelen
                 notedata["vol"] = getvalue(mmc_wv, 'Volume')*1.5
                 notepan = getvalue(mmc_wv, 'Pan')
                 if notepan == None: notepan = 0

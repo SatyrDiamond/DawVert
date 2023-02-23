@@ -154,6 +154,8 @@ class input_orgyana(plugin_input.base):
         for tracknum in range(16):
             s_cvpj_nl = t_cvpj_nl[tracknum]
             if len(t_cvpj_nl[tracknum]) != 0:
+                org_pitch = org_instrumentinfotable[tracknum][0]
+
                 if tracknum < 8: trackname = "Melody "+str(tracknum+1)
                 else: trackname = l_drum_name[org_insttable[tracknum]]
 
@@ -171,6 +173,7 @@ class input_orgyana(plugin_input.base):
                 cvpj_inst['color'] = l_org_colors[tracknum]
                 cvpj_inst["vol"] = 1.0
                 cvpj_inst['instdata'] = {}
+                cvpj_inst['instdata']['pitch'] = (org_pitch-1000)/18
                 cvpj_inst['instdata']['plugin'] = 'none'
                 cvpj_l_trackdata['org_'+str(tracknum)] = cvpj_inst
                 cvpj_l_trackordering.append('org_'+str(tracknum))

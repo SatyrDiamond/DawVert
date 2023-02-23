@@ -35,7 +35,6 @@ def getunusedvalue():
     unusedvalue += 1
     return 'unused'+str(unusedvalue)
 
-
 def make_automation(x_project_arr, xmlname, cvpj_auto, unit, cvpj_id):
     prevvalue = None
     x_project_arr_tempo = ET.SubElement(x_project_arr, xmlname)
@@ -47,6 +46,7 @@ def make_automation(x_project_arr, xmlname, cvpj_auto, unit, cvpj_id):
         startpoint = True
         for cvpj_auto_poi in cvpj_auto_pl['points']:
             cvpj_auto_poi['position'] += cvpj_auto_pl_pos
+
             instanttype = False
             if 'type' in cvpj_auto_poi:
                 if cvpj_auto_poi['type'] == 'instant':
@@ -67,6 +67,42 @@ def make_automation(x_project_arr, xmlname, cvpj_auto, unit, cvpj_id):
 
             startpoint = False
 
+def make_auto_note(xmltag, cvpj_points, unit, expression):
+
+    xml_points = ET.SubElement(xmltag, "Points")
+    xml_points.set('unit', unit)
+    xml_points.set('id', get_unused_id())
+
+    xml_target = ET.SubElement(xml_points, "Target")
+    xml_target.set('expression', expression)
+
+    prevvalue = None
+    startpoint = True
+    for cvpj_auto_poi in cvpj_points:
+        instanttype = False
+        if 'type' in cvpj_auto_poi:
+            if cvpj_auto_poi['type'] == 'instant':
+                instanttype = True
+        if (instanttype == True and prevvalue != None) or (startpoint == True and prevvalue != None):
+            xml_point = ET.SubElement(xml_points, "RealPoint")
+            xml_point.set('value', str(prevvalue))
+            xml_point.set('interpolation', 'linear')
+            xml_point.set('time', str(cvpj_auto_poi['position']))
+        xml_point = ET.SubElement(xml_points, "RealPoint")
+        xml_point.set('value', str(cvpj_auto_poi['value']))
+        xml_point.set('interpolation', 'linear')
+        xml_point.set('time', str(cvpj_auto_poi['position']))
+
+        prevvalue = cvpj_auto_poi['value']
+
+        startpoint = False
+
+unuseditnum = 0
+
+def get_unused_id():
+    global unuseditnum
+    unuseditnum += 1
+    return 'unused_'+str(unuseditnum)
 
 class output_cvpj(plugin_output.base):
     def __init__(self): pass
@@ -165,9 +201,9 @@ class output_cvpj(plugin_output.base):
                 s_pl_nl = pldata['notes']
                 x_arr_lanes_pl = ET.SubElement(x_arr_lanes, "Lanes")
                 x_arr_lanes_pl.set('track', 'track_'+trackid)
-                x_arr_lanes_pl.set('id', 'lanes_'+trackid)
+                x_arr_lanes_pl.set('id', get_unused_id())
                 x_arr_lanes_clips = ET.SubElement(x_arr_lanes_pl, "Clips")
-                x_arr_lanes_clips.set('id', 'clips_'+trackid)
+                x_arr_lanes_clips.set('id', get_unused_id())
 
                 for s_trkplacement in s_pl_nl:
                     x_arr_lanes_clip = ET.SubElement(x_arr_lanes_clips, "Clip")
@@ -197,12 +233,30 @@ class output_cvpj(plugin_output.base):
                         s_trknotelist = s_trkplacement['notelist']
                         nlidcount = 1
                         x_arr_lanes_clip_notes = ET.SubElement(x_arr_lanes_clip, "Notes")
-                        x_arr_lanes_clip_notes.set('id', 'notes'+str(nlidcount)+'_'+cvpj_trackentry)
+                        x_arr_lanes_clip_notes.set('id', get_unused_id())
                         for s_trknote in s_trknotelist:
                             x_arr_lanes_clip_note = ET.SubElement(x_arr_lanes_clip_notes, "Note")
                             x_arr_lanes_clip_note.set('time', str(s_trknote['position']/4))
                             x_arr_lanes_clip_note.set('duration', str(s_trknote['duration']/4))
                             x_arr_lanes_clip_note.set('key', str(s_trknote['key']+60))
+                            if 'notemod' in s_trknote:
+                                x_arr_lanes_clip_note_lanes = ET.SubElement(x_arr_lanes_clip_note, "Lanes")
+                                x_arr_lanes_clip_note_lanes.set('id', get_unused_id())
+                                if 'auto' in s_trknote['notemod']:
+                                    notemodauto = s_trknote['notemod']['auto']
+                                    for expresstype in s_trknote['notemod']['auto']:
+                                        print(expresstype, s_trknote['notemod']['auto'][expresstype])
+                                        if expresstype == 'pan': 
+                                            make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['pan'], 'linear', 'pan')
+                                        if expresstype == 'gain': 
+                                            make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['gain'], 'linear', 'gain')
+                                        if expresstype == 'timbre': 
+                                            make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['timbre'], 'linear', 'timbre')
+                                        if expresstype == 'pitch': 
+                                            make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['pitch'], 'semitones', 'transpose')
+                                        if expresstype == 'pressure': 
+                                            make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['pressure'], 'linear', 'pressure')
+
                             if 'vol' in s_trknote: x_arr_lanes_clip_note.set('vel', str(s_trknote['vol']))
                         nlidcount += 1
 

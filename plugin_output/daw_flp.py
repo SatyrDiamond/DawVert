@@ -222,6 +222,7 @@ class output_cvpjs(plugin_output.base):
                                     if 'finepitch' in slidenote: FL_Note['finep'] = int((slidenote['finepitch']/10)+120)
                                     if 'release' in slidenote: FL_Note['rel'] = int(clamp(slidenote['release'],0,1)*128)
                                     if 'vol' in slidenote: FL_Note['velocity'] = int(clamp(slidenote['vol'],0,1)*100)
+                                    elif 'vol' in note: FL_Note['velocity'] = int(clamp(note['vol'],0,1)*100)
                                     if 'cutoff' in slidenote: FL_Note['mod_x'] = int(clamp(slidenote['cutoff'],0,1)*255)
                                     if 'reso' in slidenote: FL_Note['mod_y'] = int(clamp(slidenote['reso'],0,1)*255)
                                     if 'pan' in slidenote: FL_Note['pan'] = int((clamp(float(slidenote['pan']),-1,1)*64)+64)

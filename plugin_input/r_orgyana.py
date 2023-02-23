@@ -110,9 +110,9 @@ class input_orgyana(plugin_input.base):
 
         bio_org = open(input_file, 'rb')
         org_type = bio_org.read(6)
-        org_tempo = (int.from_bytes(bio_org.read(2), "little"))
+        org_wait = int.from_bytes(bio_org.read(2), "little")
         print("[input-orgmaker] Organya Type: " + str(org_type))
-        print("[input-orgmaker] Tempo: " + str(org_tempo))
+        print("[input-orgmaker] NoteWait: " + str(org_wait))
         org_stepsperbar = int.from_bytes(bio_org.read(1), "little")
         print("[input-orgmaker] Steps Per Bar: " + str(org_stepsperbar))
         org_beatsperstep = int.from_bytes(bio_org.read(1), "little")
@@ -129,7 +129,7 @@ class input_orgyana(plugin_input.base):
             org_insttable[x-1] = Instrument
             disable_sustaining_notes = int.from_bytes(bio_org.read(1), "little")
             number_of_notes = int.from_bytes(bio_org.read(2), "little")
-            print("[input-orgmaker] pitch = " + str(pitch), end=" ")
+            print("[input-orgmaker] Pitch = " + str(pitch), end=" ")
             print("| Inst = " + str(Instrument), end=" ")
             print("| NoSustainingNotes = " + str(disable_sustaining_notes), end=" ")
             print("| #notes = " + str(number_of_notes))
@@ -188,7 +188,7 @@ class input_orgyana(plugin_input.base):
         cvpj_l['track_data'] = cvpj_l_trackdata
         cvpj_l['track_order'] = cvpj_l_trackordering
         cvpj_l['track_placements'] = cvpj_l_trackplacements
-        cvpj_l['bpm'] = (1/(org_tempo/122))*122
+        cvpj_l['bpm'] = (1/(org_wait/122))*122
         cvpj_l['timesig_denominator'] = org_stepsperbar
         cvpj_l['timesig_numerator'] = org_beatsperstep
         if org_loop_beginning != 0:

@@ -87,11 +87,11 @@ def make_auto_note(xmltag, cvpj_points, unit, expression):
             xml_point = ET.SubElement(xml_points, "RealPoint")
             xml_point.set('value', str(prevvalue))
             xml_point.set('interpolation', 'linear')
-            xml_point.set('time', str(cvpj_auto_poi['position']))
+            xml_point.set('time', str(cvpj_auto_poi['position']/4))
         xml_point = ET.SubElement(xml_points, "RealPoint")
         xml_point.set('value', str(cvpj_auto_poi['value']))
         xml_point.set('interpolation', 'linear')
-        xml_point.set('time', str(cvpj_auto_poi['position']))
+        xml_point.set('time', str(cvpj_auto_poi['position']/4))
 
         prevvalue = cvpj_auto_poi['value']
 

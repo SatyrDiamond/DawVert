@@ -245,7 +245,6 @@ class output_cvpj(plugin_output.base):
                                 if 'auto' in s_trknote['notemod']:
                                     notemodauto = s_trknote['notemod']['auto']
                                     for expresstype in s_trknote['notemod']['auto']:
-                                        print(expresstype, s_trknote['notemod']['auto'][expresstype])
                                         if expresstype == 'pan': 
                                             make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['pan'], 'linear', 'pan')
                                         if expresstype == 'gain': 

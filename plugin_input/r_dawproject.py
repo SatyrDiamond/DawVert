@@ -61,6 +61,23 @@ def dp_parse_trackinfo(dpx_track):
         track_data[dpt_cid] = cvpj_l_track
         track_order.append(dpt_cid)
 
+def parse_auto(pointsxml):
+    cvpj_auto_out = []
+    for xmlpoint in pointsxml.findall('RealPoint'):
+        cvpj_auto_point = {}
+        cvpj_auto_point['position'] = float(xmlpoint.get('time'))
+        cvpj_auto_point['value'] = float(xmlpoint.get('value'))
+        cvpj_auto_out.append(cvpj_auto_point)
+    return cvpj_auto_out
+
+def parse_note_points(cvpj_notemod, note_points_xml):
+    if note_points_xml.findall('Target') != []:
+        xml_target = note_points_xml.findall('Target')[0]
+        expression = xml_target.get('expression')
+        if expression == 'transpose': expression = 'pitch'
+        if 'auto' not in cvpj_notemod: cvpj_notemod['auto'] = {}
+        cvpj_notemod['auto'][expression] = parse_auto(note_points_xml)
+
 class input_dawproject(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -171,7 +188,24 @@ class input_dawproject(plugin_input.base):
                                 cvpj_note["key"] = int(dpx_note.get('key'))-60
                                 cvpj_note["vol"] = float(dpx_note.get('vel'))
                                 cvpj_note["release"] = float(dpx_note.get('rel'))
+                                if dpx_note.get('channel') != None: cvpj_note["channel"] = int(dpx_note.get('channel'))
+
+                                cvpj_notemod = {}
+
+                                cvpj_auto_points = None
+                                if dpx_note.findall('Points') != []:
+                                    parse_note_points(cvpj_notemod, dpx_note.findall('Points')[0])
+
+                                if dpx_note.findall('Lanes') != []:
+                                    xml_lanes = dpx_note.findall('Lanes')[0]
+                                    if xml_lanes.findall('Points') != []:
+                                        for pointxml in xml_lanes.findall('Points'):
+                                            parse_note_points(cvpj_notemod, pointxml)
+
+                                if cvpj_notemod != {}: cvpj_note["notemod"] = cvpj_notemod
+
                                 cvpj_pldata["notelist"].append(cvpj_note)
+
 
                             cvpj_l['track_placements'][trackidchan]['notes'].append(cvpj_pldata)
 

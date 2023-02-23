@@ -111,23 +111,7 @@ class input_mod(plugin_input.base):
     def getshortname(self): return 'mod'
     def getname(self): return 'Protracker Module'
     def gettype(self): return 'm'
-    def supported_autodetect(self): return True
-
-    def detect(self, input_file):
-        bytestream = open(input_file, 'rb')
-        bytestream.seek(20)
-        IsMod = 1
-        for _ in range(31):
-            bytestream.read(24)
-            mod_inst_finetune = bytestream.read(1)[0]
-            if 15 < mod_inst_finetune: IsMod = 0
-            mod_inst_defaultvol = bytestream.read(1)[0]
-            if 64 < mod_inst_defaultvol: IsMod = 0
-            bytestream.read(4)
-        if IsMod == 1: return True
-        else: return False
-        bytestream.seek(0)
-
+    def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global mod_num_patterns
         global mod_num_channels

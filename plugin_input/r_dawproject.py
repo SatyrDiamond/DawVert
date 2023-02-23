@@ -65,7 +65,7 @@ def parse_auto(pointsxml):
     cvpj_auto_out = []
     for xmlpoint in pointsxml.findall('RealPoint'):
         cvpj_auto_point = {}
-        cvpj_auto_point['position'] = float(xmlpoint.get('time'))
+        cvpj_auto_point['position'] = float(xmlpoint.get('time')*4)
         cvpj_auto_point['value'] = float(xmlpoint.get('value'))
         cvpj_auto_out.append(cvpj_auto_point)
     return cvpj_auto_out

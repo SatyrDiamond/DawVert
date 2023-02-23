@@ -185,9 +185,9 @@ class input_orgyana(plugin_input.base):
         cvpj_l['track_data'] = cvpj_l_trackdata
         cvpj_l['track_order'] = cvpj_l_trackordering
         cvpj_l['track_placements'] = cvpj_l_trackplacements
-        cvpj_l['bpm'] = (1/(org_tempo/120))*120
-        cvpj_l['timesig_denominator'] = 4
-        cvpj_l['timesig_numerator'] = 4
+        cvpj_l['bpm'] = (1/(org_tempo/122))*122
+        cvpj_l['timesig_denominator'] = org_stepsperbar
+        cvpj_l['timesig_numerator'] = org_beatsperstep
         if org_loop_beginning != 0:
             cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': org_loop_beginning, 'end': org_loop_end, 'type': 'loop'}]
         return json.dumps(cvpj_l)

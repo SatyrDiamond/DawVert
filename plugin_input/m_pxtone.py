@@ -345,23 +345,55 @@ class input_pxtone(plugin_input.base):
             t_notelist[unit_eventnum] = []
             prevpos = 0
             position_global = 0
-            cur_note = -3
+            noteend = 0
+            notedur = 0
+            curpitch = -3
             cur_voice = 0
             for unit_event in ptcop_unit_events[unit_eventnum]:
-                if unit_event[2] == 2: cur_note = unit_event[3][0]+12
+
+                #print(
+                #    str(unit_event[0]).ljust(6),
+                #    str(unit_event[1]).ljust(2),
+                #    str(unit_event[2]).ljust(2),
+                #    ptcop_events[unit_event[2]],
+                #    str(unit_event[3]).ljust(12),
+                #    str(noteend).ljust(7),
+                #    end=""
+                #    )
+
+                if unit_event[2] == 2: curpitch = unit_event[3][0]+12
                 if unit_event[2] == 12: cur_voice = unit_event[3]
                 if unit_event[2] == 4: t_notelist[unit_eventnum][-1]['vol'] = unit_event[3]
                 position_global = unit_event[0]
 
                 if unit_event[2] == 1: 
+                    notedur = unit_event[3]
+                    noteend = position_global+notedur
+                    noteon_note = curpitch
                     cvpj_note = {}
                     cvpj_note['position'] = position_global/120
-                    cvpj_note['key'] = cur_note
-                    cvpj_note['duration'] = unit_event[3]/120
+                    cvpj_note['key'] = noteon_note
+                    cvpj_note['duration'] = notedur/120
                     cvpj_note['instrument'] = 'ptcop_'+str(cur_voice)
                     t_notelist[unit_eventnum].append(cvpj_note)
 
                 prevpos = unit_event[0]
+                
+                if t_notelist[unit_eventnum] != []:
+                    lastnotedata = t_notelist[unit_eventnum][-1]
+
+                if unit_event[2] == 2:
+                    #print( unit_event[0]/120,  noteend/120,  end=' | ' )
+                    if 0 <= (unit_event[0]-noteend)+notedur < notedur:
+                        #print( ((unit_event[0]-noteend)+notedur)/120, notedur/120, end=' ' )
+                        if 'notemod' not in lastnotedata:
+                            lastnotedata['notemod'] = {}
+                            lastnotedata['notemod']['auto'] = {}
+                            lastnotedata['notemod']['auto']['pitch'] = [{'position': 0, 'value': 0}]
+                        lastnotedata['notemod']['auto']['pitch'].append({'position': ((unit_event[0]-noteend)+notedur)/120, 'value': curpitch-noteon_note, 'type': 'instant'})
+
+                #print()
+                #print(t_notelist[unit_eventnum][-1:])
 
         for unitnum in t_notelist:
             cvpj_notelist = t_notelist[unitnum]

@@ -347,7 +347,8 @@ class input_pxtone(plugin_input.base):
             position_global = 0
             noteend = 0
             notedur = 0
-            curpitch = -3
+            cur_pitch = -3
+            cur_porta = 0
             cur_voice = 0
             for unit_event in ptcop_unit_events[unit_eventnum]:
 
@@ -361,15 +362,17 @@ class input_pxtone(plugin_input.base):
                 #    end=""
                 #    )
 
-                if unit_event[2] == 2: curpitch = unit_event[3][0]+12
-                if unit_event[2] == 12: cur_voice = unit_event[3]
+                if unit_event[2] == 2: cur_pitch = unit_event[3][0]+12
                 if unit_event[2] == 4: t_notelist[unit_eventnum][-1]['vol'] = unit_event[3]
+                if unit_event[2] == 6: 
+                    cur_porta = unit_event[3]/120
+                if unit_event[2] == 12: cur_voice = unit_event[3]
                 position_global = unit_event[0]
 
                 if unit_event[2] == 1: 
                     notedur = unit_event[3]
                     noteend = position_global+notedur
-                    noteon_note = curpitch
+                    noteon_note = cur_pitch
                     cvpj_note = {}
                     cvpj_note['position'] = position_global/120
                     cvpj_note['key'] = noteon_note
@@ -388,9 +391,11 @@ class input_pxtone(plugin_input.base):
                         #print( ((unit_event[0]-noteend)+notedur)/120, notedur/120, end=' ' )
                         if 'notemod' not in lastnotedata:
                             lastnotedata['notemod'] = {}
+                            lastnotedata['notemod']['slide'] = []
                             lastnotedata['notemod']['auto'] = {}
                             lastnotedata['notemod']['auto']['pitch'] = [{'position': 0, 'value': 0}]
-                        lastnotedata['notemod']['auto']['pitch'].append({'position': ((unit_event[0]-noteend)+notedur)/120, 'value': curpitch-noteon_note, 'type': 'instant'})
+                        lastnotedata['notemod']['auto']['pitch'].append({'position': ((unit_event[0]-noteend)+notedur)/120, 'value': cur_pitch-noteon_note, 'type': 'instant'})
+                        lastnotedata['notemod']['slide'].append({'position': ((unit_event[0]-noteend)+notedur)/120, 'duration': cur_porta, 'key': cur_pitch-noteon_note})
 
                 #print()
                 #print(t_notelist[unit_eventnum][-1:])

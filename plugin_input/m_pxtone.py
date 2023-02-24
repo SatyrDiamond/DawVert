@@ -370,8 +370,8 @@ class input_pxtone(plugin_input.base):
 
                 if unit_event[2] == 2: cur_pitch = unit_event[3][0]+12
                 if unit_event[2] == 4: t_notelist[unit_eventnum][-1]['vol'] = unit_event[3]
-                if unit_event[2] == 6: 
-                    cur_porta = unit_event[3]/timebase
+                if unit_event[2] == 3: t_notelist[unit_eventnum][-1]['pan'] = ((unit_event[3]/128)-0.5)*2
+                if unit_event[2] == 6: cur_porta = unit_event[3]/timebase
                 if unit_event[2] == 12: cur_voice = unit_event[3]
                 position_global = unit_event[0]
 
@@ -390,15 +390,22 @@ class input_pxtone(plugin_input.base):
                 
                 if t_notelist[unit_eventnum] != []:
                     lastnotedata = t_notelist[unit_eventnum][-1]
+                    if 'notemod' not in lastnotedata:
+                        lastnotedata['notemod'] = {}
+                        lastnotedata['notemod']['slide'] = []
+                        lastnotedata['notemod']['auto'] = {}
+
+                if unit_event[2] == 15:
+                    if 0 <= (unit_event[0]-noteend)+notedur < notedur:
+                        if 'pan' not in lastnotedata['notemod']['auto']:
+                            lastnotedata['notemod']['auto']['pan'] = [{'position': 0, 'value': 0}]
+                        lastnotedata['notemod']['auto']['pan'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'value': ((unit_event[3]/128)-0.5)*2, 'type': 'instant'})
 
                 if unit_event[2] == 2:
                     #print( unit_event[0]/timebase,  noteend/timebase,  end=' | ' )
                     if 0 <= (unit_event[0]-noteend)+notedur < notedur:
                         #print( ((unit_event[0]-noteend)+notedur)/timebase, notedur/timebase, end=' ' )
-                        if 'notemod' not in lastnotedata:
-                            lastnotedata['notemod'] = {}
-                            lastnotedata['notemod']['slide'] = []
-                            lastnotedata['notemod']['auto'] = {}
+                        if 'pitch' not in lastnotedata['notemod']['auto']:
                             lastnotedata['notemod']['auto']['pitch'] = [{'position': 0, 'value': 0}]
                         lastnotedata['notemod']['auto']['pitch'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'value': cur_pitch-noteon_note, 'type': 'instant'})
                         lastnotedata['notemod']['slide'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'duration': cur_porta, 'key': cur_pitch-noteon_note})

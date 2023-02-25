@@ -38,11 +38,12 @@ def convert(instdata):
 	bb_type = plugindata['type']
 	bb_data = plugindata['data']
 	if bb_data['type'] == 'chip':
-		bb_sample = rawChipWaves[bb_data['wave']]['samples']
-		dur_bb = len(bb_sample)
-		params_vital.create()
-		params_vital.setvalue('osc_1_on', 1)
-		bb_sample = rawChipWaves[bb_data['wave']]['samples']
-		params_vital.replacewave(0, params_vital_wavetable.resizewave(bb_sample))
-		vitaldata = params_vital.getdata()
-		list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))
+		if bb_data['wave'] in rawChipWaves:
+			bb_sample = rawChipWaves[bb_data['wave']]['samples']
+			dur_bb = len(bb_sample)
+			params_vital.create()
+			params_vital.setvalue('osc_1_on', 1)
+			bb_sample = rawChipWaves[bb_data['wave']]['samples']
+			params_vital.replacewave(0, params_vital_wavetable.resizewave(bb_sample))
+			vitaldata = params_vital.getdata()
+			list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))

@@ -189,7 +189,7 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
             if note_held == 1:
                 instparam = notecommand[1][2]
                 if notecommand[1][0] == None:
-                    print(instparam)
+                    #print(instparam)
                     if 'slide_down' in instparam: 
                         note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, (instparam['slide_down']*-1)/(20/current_speed))
                     if 'slide_up' in instparam: 

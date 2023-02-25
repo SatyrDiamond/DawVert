@@ -285,7 +285,7 @@ class input_pxtone(plugin_input.base):
                 ptcop_pcm_data = song_file.read((ptcop_pcm_bits//8) * ptcop_pcm_samples)
 
                 os.makedirs(samplefolder, exist_ok=True)
-                wave_path = samplefolder + str(ptcop_voice_num+1).zfill(2) + '.wav'
+                wave_path = samplefolder + 'ptcop_' + str(ptcop_voice_num+1).zfill(2) + '.wav'
 
                 plugindata = {'file': wave_path, 'start': 0, 'end': ptcop_pcm_samples, 'trigger': 'normal'}
 

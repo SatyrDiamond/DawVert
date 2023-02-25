@@ -266,9 +266,9 @@ class input_it(plugin_input.base):
         
                             if cell_instrument != None: pattern_row[1][cell_channel][1] = cell_instrument
                                 
-                            if cell_commandtype == 1: pattern_row[0]['tracker_speed'] = cell_commandnum
-                            if cell_commandtype == 20: pattern_row[0]['tracker_tempo'] = cell_commandnum
-                            if cell_commandtype == 3: pattern_row[0]['tracker_break_to_row'] = cell_commandnum
+                            if cell_commandtype == 1: pattern_row[0]['speed'] = cell_commandnum
+                            if cell_commandtype == 20: pattern_row[0]['tempo'] = cell_commandnum
+                            if cell_commandtype == 3: pattern_row[0]['break_to_row'] = cell_commandnum
                             if cell_commandtype == 24: pattern_row[1][cell_channel][2]['pan'] = ((cell_commandnum/255)-0.5)*2
                             if firstrow == 1: pattern_row[0]['firstrow'] = 1
                             rowcount += 1

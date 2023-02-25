@@ -67,56 +67,66 @@ def notemod_conv(noteJ):
 			notemod['auto'] = {}
 			notemod['auto']['pitch'] = autolist
 
-def pitchmodtable2points(pitchmodtable): #position, ptype, maindur, slidedur, input_pitch
-    #print('pitchmodtable2points')
+def pitchmod2point_init():
+    global pitchpoints
+    global pitch_cur
+    global pitch_prev
+
     pitchpoints = []
     pitch_cur = 0
     pitch_prev = 0
 
-    for porta_part in pitchmodtable:
-        position, ptype, maindur, slidedur, input_pitch = porta_part
-        #print( str(slidedur).ljust(4),  str(maindur).ljust(4),  str(maindur/slidedur).ljust(19), end='  ')
 
-        mainslidedur_mul = slidedur*maindur
-        mainslidedur_div = maindur/slidedur
-        pitch_exact = False
+def pitchmod2point(cvpj_note, position, ptype, maindur, slidedur, input_pitch):
+    global pitchpoints
+    global pitch_cur
+    global pitch_prev
 
-        if ptype == 0:
-            if slidedur <= maindur:
-                pitch_cur += input_pitch
-                pitchpoints.append({'position': position, 'value': pitch_prev})
-                pitchpoints.append({'position': position+slidedur, 'value': pitch_cur})
-            elif slidedur > maindur:
-                pitch_cur = betweenvalues(pitch_prev, pitch_prev+input_pitch, mainslidedur_div)
-                pitchpoints.append({'position': position, 'value': pitch_prev})
-                pitchpoints.append({'position': position+maindur, 'value': pitch_cur})
+    #print( str(slidedur).ljust(4),  str(maindur).ljust(4),  str(maindur/slidedur).ljust(19), end='  ')
 
-        elif ptype == 1:
-            outdur = maindur
-            if pitch_cur < input_pitch:
-                #print('PLUS ',  str(input_pitch).ljust(4),  str(mainslidedur_mul).ljust(4), str(pitch_cur).ljust(4), end='-' )
-                pitch_cur += (mainslidedur_mul)
-                #print( str(pitch_cur).ljust(4), input_pitch < pitch_cur, end='' )
-                pitch_exact = input_pitch < pitch_cur
-                if pitch_exact == True:
-                    tempoutdur = (mainslidedur_mul-(pitch_cur-input_pitch))/slidedur
-                    outdur = tempoutdur
+    mainslidedur_mul = slidedur*maindur
+    mainslidedur_div = maindur/slidedur
+    pitch_exact = False
 
-            elif pitch_cur > input_pitch:
-                #print('MINUS',  str(input_pitch).ljust(4),  str(mainslidedur_mul).ljust(4), str(pitch_cur).ljust(4), end='-' )
-                pitch_cur -= (mainslidedur_mul)
-                #print( str(pitch_cur).ljust(4), input_pitch < pitch_cur, end='' )
-                pitch_exact = input_pitch > pitch_cur
-                if pitch_exact == True:
-                    tempoutdur = (mainslidedur_mul+(pitch_cur-input_pitch))/slidedur
-                    outdur = tempoutdur
+    if 'notemod' not in cvpj_note: cvpj_note['notemod'] = {}
+    if 'auto' not in cvpj_note['notemod']: cvpj_note['notemod']['auto'] = {}
+    if 'pitch' not in cvpj_note['notemod']['auto']: cvpj_note['notemod']['auto']['pitch'] = []
+    pitchpoints = cvpj_note['notemod']['auto']['pitch']
 
-            if pitch_exact == True:
-                pitch_cur = input_pitch
-
+    if ptype == 0:
+        if slidedur <= maindur:
+            pitch_cur += input_pitch
             pitchpoints.append({'position': position, 'value': pitch_prev})
-            pitchpoints.append({'position': position+outdur, 'value': pitch_cur})
+            pitchpoints.append({'position': position+slidedur, 'value': pitch_cur})
+        elif slidedur > maindur:
+            pitch_cur = betweenvalues(pitch_prev, pitch_prev+input_pitch, mainslidedur_div)
+            pitchpoints.append({'position': position, 'value': pitch_prev})
+            pitchpoints.append({'position': position+maindur, 'value': pitch_cur})
 
-        pitch_prev = pitch_cur
+    elif ptype == 1:
+        outdur = maindur
+        if pitch_cur < input_pitch:
+            #print('PLUS ',  str(input_pitch).ljust(4),  str(mainslidedur_mul).ljust(4), str(pitch_cur).ljust(4), end='-' )
+            pitch_cur += (mainslidedur_mul)
+            #print( str(pitch_cur).ljust(4), input_pitch < pitch_cur, end='' )
+            pitch_exact = input_pitch < pitch_cur
+            if pitch_exact == True:
+                tempoutdur = (mainslidedur_mul-(pitch_cur-input_pitch))/slidedur
+                outdur = tempoutdur
 
-    return pitchpoints
+        elif pitch_cur > input_pitch:
+            #print('MINUS',  str(input_pitch).ljust(4),  str(mainslidedur_mul).ljust(4), str(pitch_cur).ljust(4), end='-' )
+            pitch_cur -= (mainslidedur_mul)
+            #print( str(pitch_cur).ljust(4), input_pitch < pitch_cur, end='' )
+            pitch_exact = input_pitch > pitch_cur
+            if pitch_exact == True:
+                tempoutdur = (mainslidedur_mul+(pitch_cur-input_pitch))/slidedur
+                outdur = tempoutdur
+
+        if pitch_exact == True:
+            pitch_cur = input_pitch
+
+        pitchpoints.append({'position': position, 'value': pitch_prev})
+        pitchpoints.append({'position': position+outdur, 'value': pitch_cur})
+
+    pitch_prev = pitch_cur

@@ -82,7 +82,7 @@ xmodits_py - for extracting Impulse Tracker Samples
 | M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | M-I | ```flp``` | FL Studio | ```.flp``` | ✔️ |
 | R | ```lmms``` | LMMS | ```.mmp``` | ✔️ |
-| M | ```mod``` | ProTracker | ```.mod``` | ✔️ | 
+| M | ```mod``` | ProTracker | ```.mod``` | ❌ | 
 | M | ```s3m``` | Scream Tracker 3 | ```.s3m``` | ✔️ | 
 | M | ```it``` | Impulse Tracker | ```.it``` | ✔️ | 
 | R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ |

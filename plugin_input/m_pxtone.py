@@ -405,9 +405,6 @@ class input_pxtone(plugin_input.base):
                     #print( unit_event[0]/timebase,  noteend/timebase,  end=' | ' )
                     if 0 <= (unit_event[0]-noteend)+notedur < notedur:
                         #print( ((unit_event[0]-noteend)+notedur)/timebase, notedur/timebase, end=' ' )
-                        if 'pitch' not in lastnotedata['notemod']['auto']:
-                            lastnotedata['notemod']['auto']['pitch'] = [{'position': 0, 'value': 0}]
-                        lastnotedata['notemod']['auto']['pitch'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'value': cur_pitch-noteon_note, 'type': 'instant'})
                         lastnotedata['notemod']['slide'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'duration': cur_porta, 'key': cur_pitch-noteon_note})
 
                 #print()
@@ -415,6 +412,9 @@ class input_pxtone(plugin_input.base):
 
         for unitnum in t_notelist:
             cvpj_notelist = t_notelist[unitnum]
+
+            for cvpj_note in cvpj_notelist:
+                note_mod.notemod_conv(cvpj_note)
 
             cvpj_placement = {}
             cvpj_placement['position'] = 0

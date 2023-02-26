@@ -347,6 +347,7 @@ class input_pxtone(plugin_input.base):
 
         t_notelist = {}
 
+        velpanpos = None
         for unit_eventnum in ptcop_unit_events:
             t_notelist[unit_eventnum] = []
             prevpos = 0
@@ -369,14 +370,13 @@ class input_pxtone(plugin_input.base):
                 #    )
 
                 if unit_event[2] == 2: cur_pitch = unit_event[3][0]+12
-                if len(t_notelist[unit_eventnum]) != 0:
-                    if unit_event[2] == 4: t_notelist[unit_eventnum][-1]['vol'] = unit_event[3]
-                    if unit_event[2] == 3: t_notelist[unit_eventnum][-1]['pan'] = ((unit_event[3]/128)-0.5)*2
+
                 if unit_event[2] == 6: cur_porta = unit_event[3]/timebase
                 if unit_event[2] == 12: cur_voice = unit_event[3]
                 position_global = unit_event[0]
 
                 if unit_event[2] == 1: 
+                    velpanpos = unit_event[0]
                     notedur = unit_event[3]
                     noteend = position_global+notedur
                     noteon_note = cur_pitch
@@ -407,6 +407,10 @@ class input_pxtone(plugin_input.base):
                     if 0 <= (unit_event[0]-noteend)+notedur < notedur:
                         #print( ((unit_event[0]-noteend)+notedur)/timebase, notedur/timebase, end=' ' )
                         lastnotedata['notemod']['slide'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'duration': cur_porta, 'key': cur_pitch-noteon_note})
+
+                if velpanpos == unit_event[0]:
+                    if unit_event[2] == 3: t_notelist[unit_eventnum][-1]['pan'] = ((unit_event[3]/128)-0.5)*2
+                    if unit_event[2] == 4: t_notelist[unit_eventnum][-1]['vol'] = unit_event[3]
 
                 #print()
                 #print(t_notelist[unit_eventnum][-1:])

@@ -1,6 +1,9 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+def betweenvalues(minval, maxval, value): 
+    return (minval*(1-value))+(maxval*value)
+
 def move(notelist, pos):
 	newnotelist = []
 	for note in notelist:
@@ -54,18 +57,19 @@ def notemod_conv(noteJ):
 		if 'slide' in notemod: noteslide_exists = True
 
 		if noteautopitch_exists == False and noteslide_exists == True:
-			slidenumlist = {}
-			slidenumlist[0] = {'value': 0, 'type':'normal'}
-			curval = 0
-			for slidepoint in notemod['slide']:
-				slidenumlist[slidepoint['position']] = {'value': curval, 'type':'normal'}
-				if slidepoint['duration'] == 0: slidenumlist[slidepoint['position']] = {'value': slidepoint['key'], 'type':'instant'}
-				else: slidenumlist[slidepoint['position']+slidepoint['duration']] = {'value': slidepoint['key'], 'type':'normal'}
-				curval = slidepoint['key']
-			autolist = []
-			for slidepart in slidenumlist: autolist.append({"position": slidepart, "value": slidenumlist[slidepart]['value'], "type": slidenumlist[slidepart]['type']})
-			notemod['auto'] = {}
-			notemod['auto']['pitch'] = autolist
+			t_slidepoints = []
+			for l_sp in notemod['slide']:
+				t_slidepoints.append([l_sp['position'], l_sp['duration'], l_sp['duration'], l_sp['key']])
+
+			if t_slidepoints != []:
+				for pointnum in range(len(t_slidepoints)):
+					if pointnum < len(t_slidepoints)-1:
+						t_slidepoints[pointnum][1] = min(t_slidepoints[pointnum+1][0]-t_slidepoints[pointnum][0], t_slidepoints[pointnum][1])
+
+			pitchmod2point_init()
+			cvpj_noteauto_pitch = []
+			for t_sp in t_slidepoints:
+				pitchmod2point(noteJ, t_sp[0], 1, t_sp[1], 1/t_sp[2], t_sp[3])
 
 def pitchmod2point_init():
     global pitchpoints
@@ -111,8 +115,7 @@ def pitchmod2point(cvpj_note, position, ptype, maindur, slidedur, input_pitch):
             #print( str(pitch_cur).ljust(4), input_pitch < pitch_cur, end='' )
             pitch_exact = input_pitch < pitch_cur
             if pitch_exact == True:
-                tempoutdur = (mainslidedur_mul-(pitch_cur-input_pitch))/slidedur
-                outdur = tempoutdur
+                outdur = (mainslidedur_mul-(pitch_cur-input_pitch))/slidedur
 
         elif pitch_cur > input_pitch:
             #print('MINUS',  str(input_pitch).ljust(4),  str(mainslidedur_mul).ljust(4), str(pitch_cur).ljust(4), end='-' )
@@ -120,8 +123,7 @@ def pitchmod2point(cvpj_note, position, ptype, maindur, slidedur, input_pitch):
             #print( str(pitch_cur).ljust(4), input_pitch < pitch_cur, end='' )
             pitch_exact = input_pitch > pitch_cur
             if pitch_exact == True:
-                tempoutdur = (mainslidedur_mul+(pitch_cur-input_pitch))/slidedur
-                outdur = tempoutdur
+                outdur = (mainslidedur_mul+(pitch_cur-input_pitch))/slidedur
 
         if pitch_exact == True:
             pitch_cur = input_pitch

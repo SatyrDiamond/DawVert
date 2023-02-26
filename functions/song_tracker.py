@@ -117,7 +117,7 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
 
     cvpj_notelist = []
 
-    pos_note = None
+    pos_note = 0
     lastinst = None
     plactive = False
     note_held = 0
@@ -154,7 +154,7 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
                 pass 
             elif notecommand[1][0] == 'Fade' or notecommand[1][0] == 'Cut' or notecommand[1][0] == 'Off':
                 note_held = 0
-                pos_note = None
+                pos_note = 0
             else:
                 note_mod.pitchmod2point_init()
 
@@ -205,12 +205,13 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
 
                 cvpj_notelist[-1]['duration'] += 1
 
-            if 'slide_down_c' in instparam: 
-                if instparam['slide_down_c'] != 0: slidecontval = (instparam['slide_down_c']*-1)/(slidediv/current_speed)
-                note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, slidecontval)
-            if 'slide_up_c' in instparam: 
-                if instparam['slide_up_c'] != 0: slidecontval = instparam['slide_up_c']/(slidediv/current_speed)
-                note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, slidecontval)
+            if len(cvpj_notelist) != 0:
+                if 'slide_down_c' in instparam: 
+                    if instparam['slide_down_c'] != 0: slidecontval = (instparam['slide_down_c']*-1)/(slidediv/current_speed)
+                    note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, slidecontval)
+                if 'slide_up_c' in instparam: 
+                    if instparam['slide_up_c'] != 0: slidecontval = instparam['slide_up_c']/(slidediv/current_speed)
+                    note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, slidecontval)
 
             #print(str(pos_global).ljust(5), end='')
             #print(str(pos_pl).ljust(5), end='')

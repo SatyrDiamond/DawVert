@@ -67,7 +67,7 @@ def parse_mod_cell(file_stream, firstrow):
         if output_inst != None:
             if output_inst < 32:
                 output_param['vol'] = table_samples[output_inst-1][3]/64
-    if cell_fx_type == 13: output_extra['tracker_break_to_row'] = cell_fx_param
+    if cell_fx_type == 13: output_extra['break_to_row'] = cell_fx_param
     if cell_fx_type == 15:
         if cell_fx_param < 32: output_extra['speed'] = cell_fx_param
         else: output_extra['tempo'] = cell_fx_param

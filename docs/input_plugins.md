@@ -9,7 +9,7 @@
 ## Tracker
 | DataType | Short Name | Name | Ext | Autodetect | 
 | --- | --- | :--- | :--- | :--- |
-| M | ```mod``` | ProTracker | ```.mod``` | ✔️ | 
+| M | ```mod``` | ProTracker | ```.mod``` | ❌ | 
 | M | ```s3m``` | Scream Tracker 3 | ```.s3m``` | ✔️ | 
 | M | ```it``` | Impulse Tracker | ```.it``` | ✔️ | 
 

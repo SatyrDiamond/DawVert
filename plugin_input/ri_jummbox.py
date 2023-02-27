@@ -252,7 +252,10 @@ class input_jummbox(plugin_input.base):
         cvpj_l_track_placements = {}
         cvpj_l_automation = {}
 
-        jummbox_name = jummbox_json['name']
+        if 'name' in jummbox_json:
+            cvpj_l['info'] = {}
+            cvpj_l['info']['title'] = jummbox_json['name']
+        
         jummbox_key = noteoffset[jummbox_json['key']]
         jummbox_channels = jummbox_json['channels']
         jummbox_beatsPerBar = jummbox_json['beatsPerBar']
@@ -283,9 +286,6 @@ class input_jummbox(plugin_input.base):
                         outautodata = auto.multiply(outautodata, 0, 0.01)
                     cvpj_l_automation['main'][outautoname] = outautodata
 
-        cvpj_l['info'] = {}
-        cvpj_l['info']['title'] = jummbox_name
-        
         cvpj_l['do_addwrap'] = True
 
         cvpj_l['use_instrack'] = True

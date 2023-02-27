@@ -281,7 +281,7 @@ class input_pxtone(plugin_input.base):
                 ptcop_pcm_key_correct = struct.unpack("f", song_file.read(4))[0]
                 print('[input-ptcop]   Key Correct: '+str(ptcop_pcm_key_correct))
                 ptcop_pcm_samples = int.from_bytes(song_file.read(4), "little")//(ptcop_pcm_bits//8)
-                print('[input-ptcop]   Samples: '+str(ptcop_pcm_samples))
+                print('[input-ptcop]   Samples: '+str(ptcop_pcm_samples)) 
                 ptcop_pcm_data = song_file.read((ptcop_pcm_bits//8) * ptcop_pcm_samples)
 
                 os.makedirs(samplefolder, exist_ok=True)
@@ -354,7 +354,7 @@ class input_pxtone(plugin_input.base):
             position_global = 0
             noteend = 0
             notedur = 0
-            cur_pitch = -3
+            cur_pitch = 9
             cur_porta = 0
             cur_voice = 0
             for unit_event in ptcop_unit_events[unit_eventnum]:

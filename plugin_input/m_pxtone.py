@@ -251,8 +251,12 @@ class input_pxtone(plugin_input.base):
                 song_file.read(3)
                 ptcop_ogg_basic_key_field = song_file.read(1)[0]
                 print('[input-ptcop]   Basic Key field: '+str(ptcop_ogg_basic_key_field))
-                ptcop_ogg_ch = int.from_bytes(song_file.read(4), "little")
-                print('[input-ptcop]   SPS2: '+str(ptcop_ogg_ch))
+                ptcop_ogg_sps2 = int.from_bytes(song_file.read(4), "little")
+                print('[input-ptcop]   Voice flags: '+str(ptcop_ogg_sps2))
+                ptcop_ogg_loop = bool(ptcop_ogg_sps2 & 0b000000000000001)
+                print('[input-ptcop]   Loop: '+str(ptcop_ogg_loop))
+                ptcop_ogg_smooth = bool(ptcop_ogg_sps2 & 0b000000000000010)
+                print('[input-ptcop]   Smooth: '+str(ptcop_ogg_smooth))
                 ptcop_ogg_key_correct = struct.unpack("f", song_file.read(4))[0]
                 print('[input-ptcop]   Key Correct: '+str(ptcop_ogg_key_correct))
                 ptcop_ogg_samples = int.from_bytes(song_file.read(4), "little")
@@ -268,6 +272,9 @@ class input_pxtone(plugin_input.base):
                 ogg_fileobj.write(song_file.read(ptcop_ogg_datasize))
 
                 plugindata = {'file': ogg_path, 'trigger': 'normal'}
+
+                if ptcop_ogg_smooth == True: plugindata['interpolation'] = "linear"
+                else: plugindata['interpolation'] = "none"
 
                 t_voice_data.append(['sampler', plugindata, ptcop_ogg_basic_key_field-60])
                 ptcop_voice_num += 1

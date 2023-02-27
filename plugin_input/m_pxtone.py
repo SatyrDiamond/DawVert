@@ -469,7 +469,10 @@ class input_pxtone(plugin_input.base):
             if voicenum in ptcop_name_voice: cvpj_inst['name'] = ptcop_name_voice[voicenum]
             else: cvpj_inst['name'] = ''
             cvpj_inst["pan"] = 0.0
-            cvpj_inst["vol"] = 1.0
+            if t_voice_data[voicenum][0] == 'sampler':
+                cvpj_inst["vol"] = 0.3
+            else:
+                cvpj_inst["vol"] = 1.0
             cvpj_inst['color'] = getcolor()
             cvpj_inst["instdata"] = {}
             cvpj_inst['instdata']['plugin'] = t_voice_data[voicenum][0]

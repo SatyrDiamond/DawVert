@@ -245,8 +245,31 @@ class input_pxtone(plugin_input.base):
         
             elif chunkname == b'mateOGGV':
                 print('[input-ptcop] Chunk: mateOGGV', chunksize)
-                song_file.read(chunksize)
-                t_voice_data.append(['none', {}, 0])
+                #oggdata = song_file.read(chunksize)
+                #print(oggdata)
+
+                song_file.read(3)
+                ptcop_ogg_basic_key_field = song_file.read(1)[0]
+                print('[input-ptcop]   Basic Key field: '+str(ptcop_ogg_basic_key_field))
+                ptcop_ogg_ch = int.from_bytes(song_file.read(4), "little")
+                print('[input-ptcop]   SPS2: '+str(ptcop_ogg_ch))
+                ptcop_ogg_key_correct = struct.unpack("f", song_file.read(4))[0]
+                print('[input-ptcop]   Key Correct: '+str(ptcop_ogg_key_correct))
+                ptcop_ogg_samples = int.from_bytes(song_file.read(4), "little")
+                print('[input-ptcop]   Channels: '+str(ptcop_ogg_samples))
+                ptcop_ogg_hz = int.from_bytes(song_file.read(4), "little")
+                print('[input-ptcop]   Hz: '+str(ptcop_ogg_hz))
+                song_file.read(4)
+                ptcop_ogg_datasize = int.from_bytes(song_file.read(4), "little")
+
+                os.makedirs(samplefolder, exist_ok=True)
+                ogg_path = samplefolder + 'ptcop_' + str(ptcop_voice_num+1).zfill(2) + '.ogg'
+                ogg_fileobj = open(ogg_path, 'wb')
+                ogg_fileobj.write(song_file.read(ptcop_ogg_datasize))
+
+                plugindata = {'file': ogg_path, 'trigger': 'normal'}
+
+                t_voice_data.append(['sampler', plugindata, ptcop_ogg_basic_key_field-60])
                 ptcop_voice_num += 1
 
             elif chunkname == b'matePTV ':

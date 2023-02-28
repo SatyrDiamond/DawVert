@@ -139,7 +139,7 @@ def parse_channel(channeldata, channum):
 
             if notes != []:
                 for note in notes:
-                    print('note')
+                    #print('note')
                     points = note['points']
                     pitches = note['pitches']
 

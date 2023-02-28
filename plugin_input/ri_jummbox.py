@@ -163,19 +163,17 @@ def parse_channel(channeldata, channum):
                     if all(element == arr_bendvals[0] for element in arr_bendvals) == False:
                         cvpj_notemod['auto']['pitch'] = t_auto_pitch
 
-                    if len(pitches) == 1:
-                        cvpj_notemod['slide'] = []
-                        for ponu in range(len(points)-1):
-                            #print('|POS:',t_position,
-                            #    '|TICK:',points[ponu]['tick']-t_position, points[ponu+1]['tick']-t_position,
-                            #    '|PITCH:',points[ponu]['pitchBend'], points[ponu+1]['pitchBend'], 
-                            #    '|DUR:',points[ponu+1]['tick'] - points[ponu]['tick'],
-                            #    '|TEST:',points[ponu]['pitchBend'] != points[ponu+1]['pitchBend'],
-                            #    )
-                            if points[ponu]['pitchBend'] != points[ponu+1]['pitchBend']:
-                                cvpj_notemod['slide'].append({'position': points[ponu]['tick']-t_position, 'duration': points[ponu+1]['tick']-points[ponu]['tick'], 'key': points[ponu+1]['pitchBend']})
-
-                    #{'position': 0, 'duration': t_duration, 'key': t_slidenote-t_key}
+                    #if len(pitches) == 1:
+                    #    cvpj_notemod['slide'] = []
+                    #    for ponu in range(len(points)-1):
+                    #        #print('|POS:',t_position,
+                    #        #    '|TICK:',points[ponu]['tick']-t_position, points[ponu+1]['tick']-t_position,
+                    #        #    '|PITCH:',points[ponu]['pitchBend'], points[ponu+1]['pitchBend'], 
+                    #        #    '|DUR:',points[ponu+1]['tick'] - points[ponu]['tick'],
+                    #        #    '|TEST:',points[ponu]['pitchBend'] != points[ponu+1]['pitchBend'],
+                    #        #    )
+                    #        if points[ponu]['pitchBend'] != points[ponu+1]['pitchBend']:
+                    #            cvpj_notemod['slide'].append({'position': points[ponu]['tick']-t_position, 'duration': points[ponu+1]['tick']-points[ponu]['tick'], 'key': points[ponu+1]['pitchBend']})
 
                     for pitch in pitches:
                         t_key = pitch-48 + jummbox_key

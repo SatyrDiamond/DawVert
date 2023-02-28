@@ -72,6 +72,36 @@ def notemod_conv(noteJ):
 			for cvpj_snp in cvpj_snps:
 				pitchmod2point(noteJ, cvpj_snp[0], 2, cvpj_snp[1], cvpj_snp[2], cvpj_snp[3])
 
+
+		if noteautopitch_exists == True and noteslide_exists == False:
+			cvpj_auto_pitch = notemod['auto']['pitch'] 
+			t_posval = []
+			prevvalue = 0
+
+			for part in cvpj_auto_pitch:
+				isinstant = False
+				if 'type' in part:
+					if part['type'] == 'instant':
+						isinstant = True
+
+				if isinstant == True: t_posval.append([part['position'], prevvalue])
+				t_posval.append([part['position'], part['value']])
+				prevvalue = part['value']
+
+			notemod['slide'] = []
+			for pinu in range(len(t_posval)-1):
+				slide_dur = t_posval[pinu+1][0] - t_posval[pinu][0]
+				
+				if t_posval[pinu+1][1] != t_posval[pinu][1]:
+					notemod['slide'].append({
+						'position': t_posval[pinu][0], 
+						'duration': slide_dur, 
+						'key': t_posval[pinu+1][1],
+						'finepitch': (t_posval[pinu+1][1]-round(t_posval[pinu+1][1]))*100
+						})
+
+
+
 def pitchmod2point_init():
 	global pitchpoints
 	global pitch_cur

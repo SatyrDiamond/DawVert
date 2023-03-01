@@ -135,7 +135,7 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
     slidediv = 16
 
     slidekey = 0
-    slidespeed = 1
+    slidepower = 1
 
     for notecommand in patterntable_channel:
 
@@ -204,15 +204,6 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
                         note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, (instparam['slide_down']*-1)/(slidediv/current_speed))
                     if 'slide_up' in instparam: 
                         note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, (instparam['slide_up'])/(slidediv/current_speed))
-                #    if 'slide_to_note' in instparam: 
-                #        note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 1, 1, calcslidepower(slidepower, current_speed), slidekey)
-                #else:
-                #    if 'slide_to_note' in instparam: 
-                #        if notecommand[1][0] != None:
-                #            slidekey = notecommand[1][0]
-                #        if instparam['slide_to_note'] != 0:
-                #            slidepower = instparam['slide_to_note']
-                #            note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 1, 1, calcslidepower(slidepower, current_speed), slidekey)
 
                 cvpj_notelist[-1]['duration'] += 1
 
@@ -223,6 +214,13 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
                 if 'slide_up_c' in instparam: 
                     if instparam['slide_up_c'] != 0: slidecontval = instparam['slide_up_c']/(slidediv/current_speed)
                     note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, slidecontval)
+                if 'slide_to_note' in instparam: 
+                    if notecommand[1][0] != None: 
+                        slidekey = notecommand[1][0]
+                    if instparam['slide_to_note'] != 0:
+                        slidepower = instparam['slide_to_note']
+                    note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 1, 1, calcslidepower(slidepower, current_speed), slidekey)
+                    #print(str(notecommand[1][0])+'|'+str(slidekey).ljust(5), str(instparam['slide_to_note'])+'|'+str(slidepower))
 
             #print(str(pos_global).ljust(5), end='')
             #print(str(pos_pl).ljust(5), end='')

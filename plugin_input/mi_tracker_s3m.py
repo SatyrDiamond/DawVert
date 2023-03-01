@@ -237,6 +237,8 @@ class input_s3m(plugin_input.base):
                                     pattern_row[1][packed_what_channel][2]['slide_down_c'] = packed_info
                                 if packed_command == 6:
                                     pattern_row[1][packed_what_channel][2]['slide_up_c'] = packed_info
+                                if packed_command == 7:
+                                    pattern_row[1][packed_what_channel][2]['slide_to_note'] = packed_info
                     firstrow = 0
                     patterntable_single.append(pattern_row)
                     rowcount += 1

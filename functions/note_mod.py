@@ -163,8 +163,13 @@ def pitchmod2point(cvpj_note, position, ptype, maindur, slideparam, input_pitch)
 		if pitch_exact == True:
 			pitch_cur = input_pitch
 
-		pitchpoints.append({'position': position, 'value': pitch_prev})
-		pitchpoints.append({'position': position+(outdur/maindur), 'value': pitch_cur})
+		totalslidedur = outdur/maindur
+
+		if totalslidedur > 0.1:
+			pitchpoints.append({'position': position, 'value': pitch_prev})
+			pitchpoints.append({'position': position+(totalslidedur), 'value': pitch_cur})
+		else:
+			pitchpoints.append({'position': position, 'value': pitch_cur, 'type': 'instant'})
 
 	elif ptype == 2:
 		if slide_zeropospointexist == False:

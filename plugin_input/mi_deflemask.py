@@ -114,10 +114,9 @@ class input_cvpj_r(plugin_input.base):
             exit()
 
         cvpj_l = {}
+
         cvpj_l_instrument_data = {}
         cvpj_l_instrument_order = []
-        cvpj_l_notelistindex = {}
-        cvpj_l_playlist = {}
 
         # FORMAT FLAGS
         dmf_version = int.from_bytes(bio_dmf.read(1), "little")
@@ -269,15 +268,18 @@ class input_cvpj_r(plugin_input.base):
 
         # PATTERNS DATA
 
-        total_used_instruments = []
-        dmf_patterns = []
+        dmf_patterns = {}
+
+        t_orders = {}
+
         for channum in range(dmf_SYSTEM_TOTAL_CHANNELS):
+            dmf_patterns[channum] = {}
             s_chantype = t_chantype[channum]
 
+            t_orders[channum] = t_ch_pat_orders[channum]
             dmf_pat_channel = []
             dmf_CHANNEL_EFFECTS_COLUMNS_COUNT = int.from_bytes(bio_dmf.read(1), "little")
             for patnum in t_ch_pat_orders[channum]:
-
                 table_rows = []
                 for rownum in range(dmf_TOTAL_ROWS_PER_PATTERN):
                     r_note, r_oct, r_vol = struct.unpack('hhh', bio_dmf.read(6))
@@ -313,42 +315,19 @@ class input_cvpj_r(plugin_input.base):
                     else:
                         table_rows.append([{},[output_note, output_inst, output_param, output_extra]])
 
-                NLP = song_tracker.convertchannel2notelist(table_rows, s_chantype+'_', channum)
+                dmf_patterns[channum][patnum] = table_rows
 
-                used_instruments = song_tracker.get_used_instruments()
 
-                for used_instrument in used_instruments:
-                    ui_split = used_instrument.split('_')
-                    if ui_split not in total_used_instruments:
-                        total_used_instruments.append(ui_split)
+        mt_pat = dmf_patterns
+        mt_ord = t_orders
+        mt_ch_insttype = t_chantype
+        mt_ch_names = t_channames
+        mt_type_colors = chiptypecolors
 
-                if NLP != []:
-                    nli_data = {}
-                    nli_data['type'] = 'instruments'
-                    nli_data['name'] = str(t_channames[channum])+' ('+str(patnum)+')'
-                    nli_data['color'] = chiptypecolors[t_chantype[channum]]
-                    nli_data['notelist'] = NLP[0]['notelist']
-                    cvpj_l_notelistindex[str(channum)+'_'+str(patnum)] = nli_data
 
-        plnum = 1
-        chnum = 0
-        curpos = 0
-        for t_ch_pat_order in t_ch_pat_orders:
-            curpos = 0
-            cvpj_l_playlist[plnum] = {}
-            cvpj_l_playlist[plnum]['name'] = t_channames[chnum]
-            cvpj_l_playlist[plnum]['color'] = chiptypecolors[t_chantype[chnum]]
-            cvpj_l_playlist[plnum]['placements_notes'] = []
-            for t_ch_patnum in t_ch_pat_order:
-                cvpj_l_placement = {}
-                cvpj_l_placement['type'] = "instruments"
-                cvpj_l_placement['position'] = curpos
-                cvpj_l_placement['duration'] = dmf_TOTAL_ROWS_PER_PATTERN
-                cvpj_l_placement['fromindex'] = str(chnum)+'_'+str(t_ch_patnum)
-                cvpj_l_playlist[plnum]['placements_notes'].append(cvpj_l_placement)
-                curpos += dmf_TOTAL_ROWS_PER_PATTERN
-            plnum += 1
-            chnum += 1
+        song_tracker.multi_convert(cvpj_l, dmf_TOTAL_ROWS_PER_PATTERN, mt_pat, mt_ord, mt_ch_insttype, mt_ch_names, mt_type_colors)
+
+        total_used_instruments = song_tracker.get_multi_used_instruments()
 
         for total_used_instrument in total_used_instruments:
             insttype = total_used_instrument[0]
@@ -395,10 +374,10 @@ class input_cvpj_r(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        cvpj_l['notelistindex'] = cvpj_l_notelistindex
+
         cvpj_l['instruments_data'] = cvpj_l_instrument_data
         cvpj_l['instruments_order'] = cvpj_l_instrument_order
-        cvpj_l['playlist'] = cvpj_l_playlist
+        
         cvpj_l['bpm'] = 140
         return json.dumps(cvpj_l)
 

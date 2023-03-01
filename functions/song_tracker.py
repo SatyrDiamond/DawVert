@@ -219,7 +219,8 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
                         slidekey = notecommand[1][0]
                     if instparam['slide_to_note'] != 0:
                         slidepower = instparam['slide_to_note']
-                    note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 1, 1, calcslidepower(slidepower, current_speed), slidekey)
+                    if type(notecommand[1][0]) == int:
+                        note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 1, 1, calcslidepower(slidepower, current_speed), slidekey)
                     #print(str(notecommand[1][0])+'|'+str(slidekey).ljust(5), str(instparam['slide_to_note'])+'|'+str(slidepower))
 
             #print(str(pos_global).ljust(5), end='')

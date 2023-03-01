@@ -105,6 +105,11 @@ def make_placement_data(pos, dur, nl, current_channelnum):
     else:
         return None
 
+def calcslidepower(slidepower, current_speed):
+    divfirst = slidepower
+    divsec = ((17/current_speed)*1.1)
+    return (divfirst/divsec)-(slidepower/17)
+
 def convertchannel2notelist(patterntable_channel, startinststr, current_channelnum):
 
     patterntable_channel[0][0]['firstrow'] = 1
@@ -129,6 +134,9 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
 
     slidediv = 16
 
+    slidekey = 0
+    slidespeed = 1
+
     for notecommand in patterntable_channel:
 
         if notecommand[1][1] != None: 
@@ -150,12 +158,14 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
 
         if skip_rows == 0:
 
+            instparam = notecommand[1][2]
+
             if notecommand[1][0] == None:
                 pass 
             elif notecommand[1][0] == 'Fade' or notecommand[1][0] == 'Cut' or notecommand[1][0] == 'Off':
                 note_held = 0
                 pos_note = 0
-            else:
+            elif 'slide_to_note' not in instparam:
                 note_mod.pitchmod2point_init()
 
                 tone_porta_speed = 0
@@ -188,20 +198,21 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
             if 'speed' in notecommand[0]: 
                 current_speed = notecommand[0]['speed']
 
-            instparam = notecommand[1][2]
-
             if note_held == 1:
                 if notecommand[1][0] == None:
-                    #print(instparam)
                     if 'slide_down' in instparam: 
                         note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, (instparam['slide_down']*-1)/(slidediv/current_speed))
                     if 'slide_up' in instparam: 
                         note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, (instparam['slide_up'])/(slidediv/current_speed))
-                 #else:
-                #    if 'slide_to_note' in instparam: 
-                #        tone_porta_speed = instparam['slide_to_note']
-                #        tone_porta_key = notecommand[1][0]
-                #        note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, instparam['slide_to_note'])
+                    if 'slide_to_note' in instparam: 
+                        note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 1, 1, calcslidepower(slidepower, current_speed), slidekey)
+                else:
+                    if 'slide_to_note' in instparam: 
+                        if notecommand[1][0] != None:
+                            slidekey = notecommand[1][0]
+                        if instparam['slide_to_note'] != 0:
+                            slidepower = instparam['slide_to_note']
+                            note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 1, 1, calcslidepower(slidepower, current_speed), slidekey)
 
                 cvpj_notelist[-1]['duration'] += 1
 
@@ -217,10 +228,9 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
             #print(str(pos_pl).ljust(5), end='')
             #print(str(pos_note).ljust(5), end='')
             #print(str(len(cvpj_notelist)).ljust(5), end='')
-            #print(str(len(output_placements)).ljust(5), end='')
             #print(str(note_held).ljust(2), end='')
             #print(str(skip_rows).ljust(2), end='')
-            #print(str(notecommand).ljust(40), end='')
+            #print(str(notecommand).ljust(40))
             #print(cvpj_notelist)
             #time.sleep(0.1)
 

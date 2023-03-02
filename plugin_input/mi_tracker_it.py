@@ -17,6 +17,32 @@ except: xmodits_exists = False
 else: xmodits_exists = True
 
 startinststr = 'IT_Inst_'
+t_retg_alg = [['mul', 1], ['minus', 1], ['minus', 2], ['minus', 4], ['minus', 8], ['minus', 16], ['mul', 2/3], ['mul', 1/2], ['mul', 1], ['plus', 1], ['plus', 2], ['plus', 4], ['plus', 8], ['plus', 16], ['mul', 3/2], ['mul', 2]]
+
+def splitbyte(value):
+    first = value >> 4
+    second = value & 0x0F
+    return (first, second)
+
+def getfineval(value):
+    volslidesplit = splitbyte(value)
+    if volslidesplit[0] == 0 and volslidesplit[1] == 0:
+        volslideout = 0
+    elif volslidesplit[0] == 15 and volslidesplit[1] == 15:
+        volslideout = volslidesplit[0]/16
+    elif volslidesplit[0] == 0 and volslidesplit[1] == 15:
+        volslideout = -15
+
+    elif volslidesplit[0] == 0 and volslidesplit[1] != 0:
+        volslideout = volslidesplit[1]*-1
+    elif volslidesplit[0] != 0 and volslidesplit[1] == 0:
+        volslideout = volslidesplit[0]
+
+    elif volslidesplit[0] == 15 and volslidesplit[1] != 15:
+        volslideout = (volslidesplit[0]*-1)/16
+    elif volslidesplit[0] != 15 and volslidesplit[1] == 15:
+        volslideout = volslidesplit[0]/16
+    return volslideout
 
 class input_it(plugin_input.base):
     def __init__(self): pass
@@ -232,7 +258,7 @@ class input_it(plugin_input.base):
                             cell_instrument = None
                             cell_volpan = None
                             cell_commandtype = None
-                            cell_commandnum = None
+                            cell_commandval = None
         
                             if maskvariable_note == 1:
                                 cell_note = it_file.read(1)[0]
@@ -245,15 +271,15 @@ class input_it(plugin_input.base):
                                 table_lastvolpan[cell_channel] = cell_volpan
                             if maskvariable_command == 1:
                                 cell_commandtype = it_file.read(1)[0]
-                                cell_commandnum = it_file.read(1)[0]
-                                table_lastcommand[cell_channel] = [cell_commandtype, cell_commandnum]
+                                cell_commandval = it_file.read(1)[0]
+                                table_lastcommand[cell_channel] = [cell_commandtype, cell_commandval]
         
                             if maskvariable_last_note == 1: cell_note = table_lastnote[cell_channel]
                             if maskvariable_last_instrument == 1: cell_instrument = table_lastinstrument[cell_channel]
                             if maskvariable_last_volpan == 1: cell_volpan = table_lastvolpan[cell_channel]
                             if maskvariable_last_command == 1:
                                 cell_commandtype = table_lastcommand[cell_channel][0]
-                                cell_commandnum = table_lastcommand[cell_channel][1]
+                                cell_commandval = table_lastcommand[cell_channel][1]
         
                             if cell_volpan != None:
                                 if cell_volpan <= 64: pattern_row[1][cell_channel][2]['vol'] = cell_volpan/64
@@ -265,14 +291,120 @@ class input_it(plugin_input.base):
                             if cell_note == 246: pattern_row[1][cell_channel][0] = 'Fade'
         
                             if cell_instrument != None: pattern_row[1][cell_channel][1] = cell_instrument
-                                
-                            if cell_commandtype == 1: pattern_row[0]['speed'] = cell_commandnum
-                            if cell_commandtype == 3: pattern_row[0]['break_to_row'] = cell_commandnum
-                            if cell_commandtype == 5: pattern_row[1][cell_channel][2]['slide_down_c'] = cell_commandnum
-                            if cell_commandtype == 6: pattern_row[1][cell_channel][2]['slide_up_c'] = cell_commandnum
-                            if cell_commandtype == 7: pattern_row[1][cell_channel][2]['slide_to_note'] = cell_commandnum
-                            if cell_commandtype == 20: pattern_row[0]['tempo'] = cell_commandnum
-                            if cell_commandtype == 24: pattern_row[1][cell_channel][2]['pan'] = ((cell_commandnum/255)-0.5)*2
+                            
+                            j_note_cmdval = pattern_row[1][cell_channel][2]
+
+                            if cell_commandtype == 1: 
+                                pattern_row[0]['speed'] = cell_commandval
+                            
+                            if cell_commandtype == 2: 
+                                pattern_row[0]['pattern_jump'] = cell_commandval
+                            
+                            if cell_commandtype == 3: 
+                                pattern_row[0]['break_to_row'] = cell_commandval
+                            
+                            if cell_commandtype == 4: 
+                                j_note_cmdval['vol_slide'] = getfineval(cell_commandval)
+
+                            if cell_commandtype == 5: 
+                                j_note_cmdval['slide_down_c'] = cell_commandval
+                            
+                            if cell_commandtype == 6: 
+                                j_note_cmdval['slide_up_c'] = cell_commandval
+                            
+                            if cell_commandtype == 7: 
+                                j_note_cmdval['slide_to_note'] = cell_commandval
+                            
+                            if cell_commandtype == 8: 
+                                vibrato_params = {}
+                                vibrato_params['speed'], vibrato_params['depth'] = splitbyte(cell_commandval)
+                                j_note_cmdval['vibrato'] = vibrato_params
+                            
+                            if cell_commandtype == 9: 
+                                tremor_params = {}
+                                tremor_params['ontime'], tremor_params['offtime'] = splitbyte(cell_commandval)
+                                j_note_cmdval['tremor'] = tremor_params
+                            
+                            if cell_commandtype == 10: 
+                                arp_params = {}
+                                arp_params['1'], arp_params['2'] = splitbyte(cell_commandval)
+                                j_note_cmdval['arp'] = arp_params
+                            
+                            if cell_commandtype == 11: 
+                                j_note_cmdval['vol_slide'] = getfineval(cell_commandval)
+                                j_note_cmdval['vibrato'] = {'speed': 0, 'depth': 0}
+                            
+                            if cell_commandtype == 12: 
+                                j_note_cmdval['vol_slide'] = getfineval(cell_commandval)
+                                j_note_cmdval['slide_to_note'] = getfineval(cell_commandval)
+
+                            if cell_commandtype == 13: 
+                                j_note_cmdval['channel_vol'] = cell_commandval/64
+
+                            if cell_commandtype == 14: 
+                                j_note_cmdval['channel_vol_slide'] = getfineval(cell_commandval)
+
+                            if cell_commandtype == 15: 
+                                j_note_cmdval['sample_offset'] = cell_commandval*256
+
+                            if cell_commandtype == 16: 
+                                j_note_cmdval['pan_slide'] = getfineval(cell_commandval)*-1
+
+                            if cell_commandtype == 17: 
+                                retrigger_params = {}
+                                retrigger_alg, retrigger_params['speed'] = splitbyte(cell_commandval)
+                                retrigger_params['alg'], retrigger_params['val'] = t_retg_alg[retrigger_alg]
+                                j_note_cmdval['retrigger'] = retrigger_params
+                            
+                            if cell_commandtype == 18: 
+                                tremolo_params = {}
+                                tremolo_params['speed'], tremolo_params['depth'] = splitbyte(cell_commandval)
+                                j_note_cmdval['tremolo'] = tremolo_params
+
+                            if cell_commandtype == 19: 
+                                ext_type, ext_value = splitbyte(cell_commandval)
+                                if ext_type == 1: j_note_cmdval['glissando_control'] = ext_value
+                                if ext_type == 3: j_note_cmdval['vibrato_waveform'] = ext_value
+                                if ext_type == 4: j_note_cmdval['tremolo_waveform'] = ext_value
+                                if ext_type == 5: j_note_cmdval['panbrello_waveform'] = ext_value
+                                if ext_type == 6: j_note_cmdval['fine_pattern_delay'] = ext_value
+                                if ext_type == 7: j_note_cmdval['it_inst_control'] = ext_value
+                                if ext_type == 8: j_note_cmdval['set_pan'] = ext_value/16
+                                if ext_type == 9: j_note_cmdval['it_sound_control'] = ext_value
+                                if ext_type == 10: j_note_cmdval['sample_offset_high'] = ext_value*65536
+                                if ext_type == 11: j_note_cmdval['loop_start'] = ext_value
+                                if ext_type == 12: j_note_cmdval['note_cut'] = ext_value
+                                if ext_type == 13: j_note_cmdval['note_delay'] = ext_value
+                                if ext_type == 14: j_note_cmdval['pattern_delay'] = ext_value
+                                if ext_type == 15: j_note_cmdval['it_active_macro'] = ext_value
+
+                            if cell_commandtype == 20: 
+                                pattern_row[0]['tempo'] = cell_commandval
+                            
+                            if cell_commandtype == 21: 
+                                fine_vib_sp, fine_vib_de = splitbyte(cell_commandval)
+                                vibrato_params = {}
+                                vibrato_params['speed'] = fine_vib_sp/16
+                                vibrato_params['depth'] = fine_vib_sp/16
+                                j_note_cmdval['vibrato'] = vibrato_params
+                            
+                            if cell_commandtype == 22: 
+                                pattern_row[0]['global_volume'] = cell_commandval/128
+                            
+                            if cell_commandtype == 23: 
+                                pattern_row[0]['global_volume_slide'] = getfineval(cell_commandval)
+
+                            if cell_commandtype == 24: 
+                                j_note_cmdval['set_pan'] = cell_commandval/255
+
+                            if cell_commandtype == 25: 
+                                panbrello_params = {}
+                                panbrello_params['speed'], panbrello_params['depth'] = splitbyte(cell_commandval)
+                                j_note_cmdval['panbrello'] = panbrello_params
+
+                            if cell_commandtype == 26: 
+                                j_note_cmdval['pan'] = ((cell_commandval/255)-0.5)*2
+                            
                             if firstrow == 1: pattern_row[0]['firstrow'] = 1
                             rowcount += 1
                     firstrow = 0

@@ -17,13 +17,61 @@ chipname['pulse'] = 'Pulse'
 chipname['noise'] = 'Noise'
 chipname['wavetable'] = 'Wavetable'
 
+def splitbyte(value):
+    first = value >> 4
+    second = value & 0x0F
+    return (first, second)
+
 def readstring(bio_data):
     tb_namelen = int.from_bytes(bio_data.read(2), "little")
     tb_name = bio_data.read(tb_namelen).decode("utf-8")
     return tb_name
 
-def speed_to_tempo(framerate, speed, rowsPerBeat):
-    return (framerate * 60.0) / (speed * rowsPerBeat)
+def speed_to_tempo(framerate, speed):
+    return (framerate * 60.0) / (speed * 5)
+
+def parse_fx_event(l_celldata, fx_p, fx_v):
+    if fx_p == 1:
+        l_celldata[0]['pattern_jump'] = fx_v
+    if fx_p == 2:
+        l_celldata[0]['stop'] = fx_v
+    if fx_p == 3:
+        l_celldata[0]['skip_pattern'] = fx_v
+    if fx_p == 4:
+        l_celldata[0]['tempo'] = speed_to_tempo(60, fx_v)*20
+
+    if fx_p == 13:
+        arp_params = [0,0]
+        arp_params[0], arp_params[1] = splitbyte(fx_v)
+        l_celldata[1][2]['arp'] = arp_params
+    if fx_p == 14:
+        l_celldata[1][2]['slide_up_persist'] = fx_v
+    if fx_p == 15:
+        l_celldata[1][2]['slide_down_persist'] = fx_v
+    if fx_p == 16:
+        l_celldata[1][2]['slide_to_note_persist'] = fx_v
+    if fx_p == 17:
+        fine_vib_sp, fine_vib_de = splitbyte(fx_v)
+        vibrato_params = {}
+        vibrato_params['speed'] = fine_vib_sp/16
+        vibrato_params['depth'] = fine_vib_sp/16
+        l_celldata[1][2]['vibrato'] = vibrato_params
+    if fx_p == 18:
+        l_celldata[1][2]['vibrato_delay'] = fx_v
+
+    if fx_p == 22: 
+        vol_left, vol_right = splitbyte(fx_v)
+        if vol_left < 0: vol_left += 16
+        if vol_right < 0: vol_right += 16
+        vol_left = vol_left/15
+        vol_right = vol_right/15
+        val_vol = max(vol_left, vol_right)
+        if val_vol != 0: 
+            vol_left = vol_left/val_vol
+            vol_right = vol_right/val_vol
+        pan_val = (vol_left*-1)+vol_right
+        l_celldata[0]['global_volume'] = val_vol
+        l_celldata[0]['global_pan'] = pan_val
 
 class input_trackerboy(plugin_input.base):
     def __init__(self): pass
@@ -109,6 +157,7 @@ class input_trackerboy(plugin_input.base):
                     tb_speed = tb_songdata.read(1)[0]
                     tb_len = tb_songdata.read(1)[0]+1
                     tb_rows = tb_songdata.read(1)[0]+1
+
                     print("[input-trackerboy] Song:")
                     print("[input-trackerboy]     Name: " + str(tb_name))
                     print("[input-trackerboy]     Beats: " + str(tb_beat))
@@ -163,8 +212,21 @@ class input_trackerboy(plugin_input.base):
 
                         for _ in range(tb_pate_rows+1):
                             n_pos, n_key, n_inst, fx1p, fx1v, fx2p, fx2v, fx3p, fx3v = struct.unpack('bbbbbbbbb', tb_songdata.read(9))
-                            mt_pat[tb_pate_ch][tb_pate_trkid][n_pos][1][0] = n_key-37
-                            mt_pat[tb_pate_ch][tb_pate_trkid][n_pos][1][1] = n_inst
+                            trkr_cell = mt_pat[tb_pate_ch][tb_pate_trkid][n_pos]
+
+                            trkr_cell_g = trkr_cell[0]
+                            trkr_cell_d = trkr_cell[1]
+
+                            if n_key != 0:
+                                if n_key == 85: trkr_cell_d[0] = 'Off'
+                                else: trkr_cell_d[0] = n_key-37
+                            trkr_cell_d[1] = n_inst
+
+                            parse_fx_event(trkr_cell, fx1p, fx1v)
+                            parse_fx_event(trkr_cell, fx2p, fx2v)
+                            parse_fx_event(trkr_cell, fx3p, fx3v)
+
+                            print(mt_pat[tb_pate_ch][tb_pate_trkid][n_pos])
 
                 songnum += 1
 
@@ -207,5 +269,5 @@ class input_trackerboy(plugin_input.base):
         cvpj_l['instruments_data'] = cvpj_l_instrument_data
         cvpj_l['instruments_order'] = cvpj_l_instrument_order
         
-        cvpj_l['bpm'] = speed_to_tempo(60, tb_speed, tb_rows)*256
+        cvpj_l['bpm'] = speed_to_tempo(60, tb_speed)*20
         return json.dumps(cvpj_l)

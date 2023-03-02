@@ -75,8 +75,10 @@ class input_trackerboy(plugin_input.base):
         mt_pat[2] = {}
         mt_pat[3] = {}
 
-        selectedsong = 0
-        songnum = 0
+        if 'songnum' in extra_param: selectedsong = int(extra_param['songnum'])
+        else: selectedsong = 1
+
+        songnum = 1
 
         t_instruments = {}
 
@@ -149,7 +151,7 @@ class input_trackerboy(plugin_input.base):
                         mt_pat[ch_num] = {}
                         for pat_num in range(tb_pat_num):
                             pattern_row = []
-                            for _ in range(64): pattern_row.append([{},[None, None, {}, {}]])
+                            for _ in range(tb_rows): pattern_row.append([{},[None, None, {}, {}]])
                             mt_pat[ch_num][pat_num] = pattern_row
 
                     for _ in range(tb_pat_num):

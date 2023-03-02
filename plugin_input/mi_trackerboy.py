@@ -37,7 +37,6 @@ class input_trackerboy(plugin_input.base):
         if bytesdata == b'\x00TRACKERBOY\x00': return True
         else: return False
     def parse(self, input_file, extra_param):
-        print('test')
         song_file = open(input_file, 'rb')
 
         cvpj_l = {}

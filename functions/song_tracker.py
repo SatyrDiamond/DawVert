@@ -14,6 +14,9 @@ used_instruments = []
 global multi_used_instruments
 multi_used_instruments = []
 
+global slidediv
+slidediv = 16
+
 def get_used_instruments(): return used_instruments
 
 def get_used_instruments_num(): return used_instruments_num
@@ -39,8 +42,16 @@ def entire_song_channel(patterntable_all, channel, orders):
 
 def calcslidepower(slidepower, current_speed):
     divfirst = slidepower
-    divsec = ((17/current_speed)*1.1)
-    return (divfirst/divsec)-(slidepower/17)
+    divsec = ((8/current_speed))
+    return (divfirst/divsec)-(slidepower/8)
+
+def calcbendpower_up(inval, current_speed):
+    global slidediv
+    return inval/(slidediv/current_speed)
+
+def calcbendpower_down(inval, current_speed):
+    global slidediv
+    return (inval*-1)/(slidediv/current_speed)
 
 def make_placement_data(pos, dur, nl, current_channelnum):
     if nl != []:
@@ -136,21 +147,23 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
 
             if note_held == 1:
                 if notecommand[1][0] == None:
-                    if 'slide_down' in instparam: note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, (instparam['slide_down']*-1)/(slidediv/current_speed))
-                    if 'slide_up' in instparam: note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, (instparam['slide_up'])/(slidediv/current_speed))
+                    if 'slide_down' in instparam: 
+                        note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, instparam['slide_down'])
+                    if 'slide_up' in instparam: 
+                        note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, instparam['slide_up'])
                 cvpj_notelist[-1]['duration'] += 1
 
             if len(cvpj_notelist) != 0:
                 if 'slide_down_c' in instparam: 
-                    if instparam['slide_down_c'] != 0: slidecontval = (instparam['slide_down_c']*-1)/(slidediv/current_speed)
+                    if instparam['slide_down_c'] != 0: slidecontval = instparam['slide_down_c']
                     note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, slidecontval)
-                if 'slide_up_c' in instparam: 
-                    if instparam['slide_up_c'] != 0: slidecontval = instparam['slide_up_c']/(slidediv/current_speed)
+                if 'slide_up_c' in instparam:  
+                    if instparam['slide_up_c'] != 0: slidecontval = instparam['slide_up_c']
                     note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, slidecontval)
                 if 'slide_to_note' in instparam: 
                     if notecommand[1][0] != None:  slidekey = notecommand[1][0]
                     if instparam['slide_to_note'] != 0: slidepower = instparam['slide_to_note']
-                    if type(notecommand[1][0]) == int: note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 1, 1, calcslidepower(slidepower, current_speed), slidekey)
+                    if type(notecommand[1][0]) == int: note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 1, 1, slidepower, slidekey)
 
             #print(str(pos_global).ljust(5), end='')
             #print(str(pos_pl).ljust(5), end='')

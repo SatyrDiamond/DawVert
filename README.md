@@ -31,10 +31,15 @@ GM Soundfont File Path (for GM MIDI instruments):
 Sample Folder Path (path for sample extraction): 
 --samplesfolder <sample folder>
 
+Song Number (used for Multi-Song inputs): 
+--songnum <number>
+
 e.g: 
     python3 DawVert.py --soundfont "MuseScore_General.sf2" -it notessimo_v2 -i song.note -ot flp -o out.flp
 
     python3 DawVert.py --samplefolder "a diffrent folder" -i "song.s3m" -ot lmms -o out.mmp
+
+    python3 DawVert.py --songnum 3 -it famistudio_txt -i "song.txt" -ot lmms -o out.mmp
 ```
 
 ## VST Plugins

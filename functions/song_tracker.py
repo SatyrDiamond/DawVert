@@ -154,16 +154,17 @@ def convertchannel2notelist(patterntable_channel, startinststr, current_channeln
                 cvpj_notelist[-1]['duration'] += 1
 
             if len(cvpj_notelist) != 0:
-                if 'slide_down_c' in instparam: 
-                    if instparam['slide_down_c'] != 0: slidecontval = instparam['slide_down_c']
+                print(instparam)
+                if 'slide_down_cont' in instparam: 
+                    if instparam['slide_down_cont'] != 0: slidecontval = instparam['slide_down_cont']
                     note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, slidecontval)
-                if 'slide_up_c' in instparam:  
-                    if instparam['slide_up_c'] != 0: slidecontval = instparam['slide_up_c']
+                if 'slide_up_cont' in instparam:  
+                    if instparam['slide_up_cont'] != 0: slidecontval = instparam['slide_up_cont']
                     note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 0, 1, 1, slidecontval)
                 if 'slide_to_note' in instparam: 
-                    if notecommand[1][0] != None:  slidekey = notecommand[1][0]
-                    if instparam['slide_to_note'] != 0: slidepower = instparam['slide_to_note']
-                    if type(notecommand[1][0]) == int: note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 1, 1, slidepower, slidekey)
+                    if notecommand[1][0] != None: slidekey = notecommand[1][0]
+                    if instparam['slide_to_note'] != 0: slidepower = instparam['slide_to_note'] 
+                    note_mod.pitchmod2point(cvpj_notelist[-1], pos_note, 1, 1, slidepower, slidekey)
 
             #print(str(pos_global).ljust(5), end='')
             #print(str(pos_pl).ljust(5), end='')

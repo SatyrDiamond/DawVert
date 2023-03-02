@@ -276,10 +276,10 @@ class input_s3m(plugin_input.base):
                                     j_note_cmdval['vol_slide'] = getfineval(packed_info)
 
                                 if packed_command == 5:
-                                    j_note_cmdval['slide_down_c'] = song_tracker.calcbendpower_down(packed_info, current_speed)
+                                    j_note_cmdval['slide_down_cont'] = song_tracker.calcbendpower_down(packed_info, current_speed)
 
                                 if packed_command == 6:
-                                    j_note_cmdval['slide_up_c'] = song_tracker.calcbendpower_up(packed_info, current_speed)
+                                    j_note_cmdval['slide_up_cont'] = song_tracker.calcbendpower_up(packed_info, current_speed)
 
                                 if packed_command == 7:
                                     j_note_cmdval['slide_to_note'] = song_tracker.calcslidepower(packed_info, current_speed)

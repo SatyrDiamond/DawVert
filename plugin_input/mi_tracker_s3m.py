@@ -379,7 +379,7 @@ class input_s3m(plugin_input.base):
                                     j_note_cmdval['panbrello'] = panbrello_params
 
                                 if packed_command == 26: 
-                                    j_note_cmdval['pan'] = ((packed_info/255)-0.5)*2
+                                    j_note_cmdval['pan'] = ((packed_info/128)-0.5)*2
                             
                     firstrow = 0
                     patterntable_single.append(pattern_row)

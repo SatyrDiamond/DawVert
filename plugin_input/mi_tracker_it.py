@@ -326,8 +326,8 @@ class input_it(plugin_input.base):
                                 j_note_cmdval['tremor'] = tremor_params
                             
                             if cell_commandtype == 10: 
-                                arp_params = {}
-                                arp_params['1'], arp_params['2'] = splitbyte(cell_commandval)
+                                arp_params = []
+                                arp_params[1], arp_params[2] = splitbyte(cell_commandval)
                                 j_note_cmdval['arp'] = arp_params
                             
                             if cell_commandtype == 11: 

@@ -293,8 +293,8 @@ class input_s3m(plugin_input.base):
                                     j_note_cmdval['tremor'] = tremor_params
                             
                                 if packed_command == 10: 
-                                    arp_params = {}
-                                    arp_params['1'], arp_params['2'] = splitbyte(packed_info)
+                                    arp_params = []
+                                    arp_params[1], arp_params[2] = splitbyte(packed_info)
                                     j_note_cmdval['arp'] = arp_params
                             
                                 if packed_command == 11: 

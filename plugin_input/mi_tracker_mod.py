@@ -21,6 +21,7 @@ def splitbyte(value):
 def parse_mod_cell(file_stream, firstrow):
     output_note = None
     output_inst = None
+    vibrato_depth = 0
     global table_samples
     output_param = {}
     output_extra = {}
@@ -35,42 +36,87 @@ def parse_mod_cell(file_stream, firstrow):
     cell_fx_param = (cell_p2 & 0xFF) 
     cell_inst_num = mod_inst_high << 4 | mod_inst_low
     if cell_inst_num != 0: output_inst = cell_inst_num
-    if cell_fx_type == 0 and cell_fx_param != 0:
+
+    if cell_fx_type == 0:
         arpeggio_first = cell_fx_param >> 4
         arpeggio_second = cell_fx_param & 0x0F
         output_param['arpeggio'] = [arpeggio_first, arpeggio_second]
-    if cell_fx_type == 1: output_param['slide_up'] = cell_fx_param
-    if cell_fx_type == 2: output_param['slide_down'] = cell_fx_param
-    if cell_fx_type == 3: output_param['slide_to_note'] = cell_fx_param
+
+    if cell_fx_type == 1: 
+        output_param['slide_up'] = cell_fx_param
+
+    if cell_fx_type == 2: 
+        output_param['slide_down'] = cell_fx_param
+
+    if cell_fx_type == 3: 
+        output_param['slide_to_note'] = cell_fx_param
+
     if cell_fx_type == 4: 
         vibrato_params = {}
         vibrato_params['speed'], vibrato_params['depth'] = splitbyte(cell_fx_param)
         output_param['vibrato'] = vibrato_params
+
     if cell_fx_type == 5:
         pos, neg = splitbyte(cell_fx_param)
-        output_param['vol_slide_plus_slide_to_note'] = (neg*-1) + pos
+        output_param['vol_slide'] = (neg*-1) + pos
+        output_param['slide_to_note'] = (neg*-1) + pos
+
     if cell_fx_type == 6:
         pos, neg = splitbyte(cell_fx_param)
-        output_param['vol_slide_plus_vibrato'] = (neg*-1) + pos
+        output_param['vibrato'] = {'speed': 0, 'depth': 0}
+        output_param['vol_slide'] = (neg*-1) + pos
+
     if cell_fx_type == 7:
         tremolo_params = {}
-        tremolo_params['speed'], tremolo_params['depth'] = splitbyte(cell_fx_param)
+        tremolo_params['speed'], tremolo_params['depth'] = ()
         output_param['tremolo'] = tremolo_params
-    if cell_fx_type == 8: output_param['pan'] = (cell_fx_param-128)/128
-    if cell_fx_type == 9: output_param['sample_offset'] = cell_fx_param*256
+
+    if cell_fx_type == 8: 
+        output_param['pan'] = (cell_fx_param-128)/128
+
+    if cell_fx_type == 9: 
+        output_param['sample_offset'] = cell_fx_param*256
+
     if cell_fx_type == 10:
         pos, neg = splitbyte(cell_fx_param)
         output_param['vol_slide'] = (neg*-1) + pos
-    if cell_fx_type == 11: output_extra['jump_to_offset'] = cell_fx_param
-    if cell_fx_type == 12: output_param['vol'] = cell_fx_param/64
+
+    if cell_fx_type == 11: 
+        output_extra['jump_to_offset'] = cell_fx_param
+
+    if cell_fx_type == 12: 
+        output_param['vol'] = cell_fx_param/64
     else: 
         if output_inst != None:
             if output_inst < 32:
                 output_param['vol'] = table_samples[output_inst-1][3]/64
-    if cell_fx_type == 13: output_extra['break_to_row'] = cell_fx_param
+
+    if cell_fx_type == 13: 
+        output_extra['break_to_row'] = cell_fx_param
+
+    if cell_fx_type == 14: 
+        ext_type, ext_value = splitbyte(cell_fx_param)
+        if ext_type == 0: output_param['filter_amiga_led'] = ext_value
+        if ext_type == 1: output_param['fine_slide_up'] = ext_value
+        if ext_type == 2: output_param['fine_slide_down'] = ext_value
+        if ext_type == 3: output_param['glissando_control'] = ext_value
+        if ext_type == 4: output_param['vibrato_waveform'] = ext_value
+        if ext_type == 5: output_param['set_finetune'] = ext_value
+        if ext_type == 6: output_param['pattern_loop'] = ext_value
+        if ext_type == 7: output_param['tremolo_waveform'] = ext_value
+        if ext_type == 8: output_param['set_pan'] = ext_value
+        if ext_type == 9: output_param['retrigger_note'] = ext_value
+        if ext_type == 10: output_param['fine_vol_slide_up'] = ext_value
+        if ext_type == 11: output_param['fine_vol_slide_down'] = ext_value
+        if ext_type == 12: output_param['note_cut'] = ext_value
+        if ext_type == 13: output_param['note_delay'] = ext_value
+        if ext_type == 14: output_param['pattern_delay'] = ext_value
+        if ext_type == 15: output_param['invert_loop'] = ext_value
+
     if cell_fx_type == 15:
         if cell_fx_param < 32: output_extra['speed'] = cell_fx_param
         else: output_extra['tempo'] = cell_fx_param
+
     return [output_note, output_inst, output_param, output_extra]
 
 def parse_mod_row(file_stream, firstrow):

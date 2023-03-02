@@ -40,7 +40,7 @@ def parse_mod_cell(file_stream, firstrow):
     if cell_fx_type == 0:
         arpeggio_first = cell_fx_param >> 4
         arpeggio_second = cell_fx_param & 0x0F
-        output_param['arpeggio'] = [arpeggio_first, arpeggio_second]
+        output_param['arp'] = [arpeggio_first, arpeggio_second]
 
     if cell_fx_type == 1: 
         output_param['slide_up'] = cell_fx_param
@@ -82,7 +82,7 @@ def parse_mod_cell(file_stream, firstrow):
         output_param['vol_slide'] = (neg*-1) + pos
 
     if cell_fx_type == 11: 
-        output_extra['jump_to_offset'] = cell_fx_param
+        output_extra['pattern_jump'] = cell_fx_param
 
     if cell_fx_type == 12: 
         output_param['vol'] = cell_fx_param/64

@@ -87,6 +87,7 @@ class input_s3m(plugin_input.base):
         s3m_numspecial = int.from_bytes(bio_mainfile.read(2), "little")
         s3m_chnlsettings = bio_mainfile.read(32)
         
+        current_speed = s3m_speed
         tempo_slide = 0
 
         s3m_orderlist = bio_mainfile.read(s3m_numorder)
@@ -257,12 +258,13 @@ class input_s3m(plugin_input.base):
                                 pattern_row[1][packed_what_channel][3]['firstrow'] = 1
                                 pattern_row[0]['firstrow'] = 1
 
-                            j_note_cmdval = pattern_row[1][packed_what_channel][3]
+                            j_note_cmdval = pattern_row[1][packed_what_channel][2]
 
                             if packed_what_command_info == 1:
 
                                 if packed_command == 1:
                                     pattern_row[0]['speed'] = packed_info
+                                    current_speed = packed_info
 
                                 if packed_command == 2: 
                                     pattern_row[0]['pattern_jump'] = packed_info
@@ -274,13 +276,13 @@ class input_s3m(plugin_input.base):
                                     j_note_cmdval['vol_slide'] = getfineval(packed_info)
 
                                 if packed_command == 5:
-                                    j_note_cmdval['slide_down_c'] = packed_info
+                                    j_note_cmdval['slide_down_c'] = song_tracker.calcbendpower_down(packed_info, current_speed)
 
                                 if packed_command == 6:
-                                    j_note_cmdval['slide_up_c'] = packed_info
+                                    j_note_cmdval['slide_up_c'] = song_tracker.calcbendpower_up(packed_info, current_speed)
 
                                 if packed_command == 7:
-                                    j_note_cmdval['slide_to_note'] = packed_info
+                                    j_note_cmdval['slide_to_note'] = song_tracker.calcslidepower(packed_info, current_speed)
                             
                                 if packed_command == 8: 
                                     vibrato_params = {}
@@ -293,8 +295,8 @@ class input_s3m(plugin_input.base):
                                     j_note_cmdval['tremor'] = tremor_params
                             
                                 if packed_command == 10: 
-                                    arp_params = []
-                                    arp_params[1], arp_params[2] = splitbyte(packed_info)
+                                    arp_params = [0,0]
+                                    arp_params[0], arp_params[1] = splitbyte(packed_info)
                                     j_note_cmdval['arp'] = arp_params
                             
                                 if packed_command == 11: 

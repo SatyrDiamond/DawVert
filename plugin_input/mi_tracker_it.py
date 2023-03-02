@@ -91,6 +91,7 @@ class input_it(plugin_input.base):
         it_header_mv = it_file.read(1)[0]
         it_header_speed = it_file.read(1)[0]
         print("[input-it] Speed: " + str(it_header_speed))
+        current_speed = it_header_speed
         it_header_tempo = it_file.read(1)[0]
         print("[input-it] Tempo: " + str(it_header_tempo))
         it_header_sep = it_file.read(1)[0]
@@ -296,6 +297,7 @@ class input_it(plugin_input.base):
 
                             if cell_commandtype == 1: 
                                 pattern_row[0]['speed'] = cell_commandval
+                                current_speed = cell_commandval
                             
                             if cell_commandtype == 2: 
                                 pattern_row[0]['pattern_jump'] = cell_commandval
@@ -307,13 +309,13 @@ class input_it(plugin_input.base):
                                 j_note_cmdval['vol_slide'] = getfineval(cell_commandval)
 
                             if cell_commandtype == 5: 
-                                j_note_cmdval['slide_down_c'] = cell_commandval
+                                j_note_cmdval['slide_down_c'] = song_tracker.calcbendpower_down(cell_commandval, current_speed)
                             
                             if cell_commandtype == 6: 
-                                j_note_cmdval['slide_up_c'] = cell_commandval
+                                j_note_cmdval['slide_up_c'] = song_tracker.calcbendpower_up(cell_commandval, current_speed)
                             
                             if cell_commandtype == 7: 
-                                j_note_cmdval['slide_to_note'] = cell_commandval
+                                j_note_cmdval['slide_to_note'] = song_tracker.calcslidepower(cell_commandval, current_speed)
                             
                             if cell_commandtype == 8: 
                                 vibrato_params = {}
@@ -326,8 +328,8 @@ class input_it(plugin_input.base):
                                 j_note_cmdval['tremor'] = tremor_params
                             
                             if cell_commandtype == 10: 
-                                arp_params = []
-                                arp_params[1], arp_params[2] = splitbyte(cell_commandval)
+                                arp_params = [0,0]
+                                arp_params[0], arp_params[1] = splitbyte(cell_commandval)
                                 j_note_cmdval['arp'] = arp_params
                             
                             if cell_commandtype == 11: 

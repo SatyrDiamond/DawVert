@@ -309,10 +309,10 @@ class input_it(plugin_input.base):
                                 j_note_cmdval['vol_slide'] = getfineval(cell_commandval)
 
                             if cell_commandtype == 5: 
-                                j_note_cmdval['slide_down_c'] = song_tracker.calcbendpower_down(cell_commandval, current_speed)
+                                j_note_cmdval['slide_down_cont'] = song_tracker.calcbendpower_down(cell_commandval, current_speed)
                             
                             if cell_commandtype == 6: 
-                                j_note_cmdval['slide_up_c'] = song_tracker.calcbendpower_up(cell_commandval, current_speed)
+                                j_note_cmdval['slide_up_cont'] = song_tracker.calcbendpower_up(cell_commandval, current_speed)
                             
                             if cell_commandtype == 7: 
                                 j_note_cmdval['slide_to_note'] = song_tracker.calcslidepower(cell_commandval, current_speed)

@@ -19,6 +19,7 @@ def splitbyte(value):
     return (first, second)
 
 def parse_mod_cell(file_stream, firstrow):
+    global current_speed
     output_note = None
     output_inst = None
     vibrato_depth = 0
@@ -43,13 +44,13 @@ def parse_mod_cell(file_stream, firstrow):
         output_param['arp'] = [arpeggio_first, arpeggio_second]
 
     if cell_fx_type == 1: 
-        output_param['slide_up'] = cell_fx_param
+        output_param['slide_up'] = song_tracker.calcbendpower_up(cell_fx_param, current_speed)
 
     if cell_fx_type == 2: 
-        output_param['slide_down'] = cell_fx_param
+        output_param['slide_down'] = song_tracker.calcbendpower_down(cell_fx_param, current_speed)
 
     if cell_fx_type == 3: 
-        output_param['slide_to_note'] = cell_fx_param
+        output_param['slide_to_note'] = song_tracker.calcslidepower(cell_fx_param, current_speed)
 
     if cell_fx_type == 4: 
         vibrato_params = {}
@@ -114,8 +115,11 @@ def parse_mod_cell(file_stream, firstrow):
         if ext_type == 15: output_param['invert_loop'] = ext_value
 
     if cell_fx_type == 15:
-        if cell_fx_param < 32: output_extra['speed'] = cell_fx_param
+        if cell_fx_param < 32: 
+            output_extra['speed'] = cell_fx_param
+            current_speed = cell_fx_param
         else: output_extra['tempo'] = cell_fx_param
+
 
     return [output_note, output_inst, output_param, output_extra]
 
@@ -162,6 +166,7 @@ class input_mod(plugin_input.base):
         global mod_num_patterns
         global mod_num_channels
         global table_samples
+        global current_speed
 
         file_name = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
@@ -174,6 +179,7 @@ class input_mod(plugin_input.base):
         print("[input-mod] Song Name: " + str(mod_name))
         table_samples = []
         cvpj_bpm = 125
+        current_speed = 6
         for mod_numinst in range(31):
             mod_numinst += 1
             mod_inst_mod_name = file_stream.read(22).decode().rstrip('\x00').translate(dict.fromkeys(range(32)))
@@ -275,12 +281,10 @@ class input_mod(plugin_input.base):
                     cvpj_l_plugin['loop']['mode'] = "normal"
                     cvpj_l_plugin['loop']['points'] = loopdata
 
-
         cvpj_l_playlist = song_tracker.song2playlist(patterntable_all, mod_num_channels, t_orderlist, text_inst_start, [0.47, 0.47, 0.47])
 
         if 'tempo' in veryfirstrow: cvpj_bpm = veryfirstrow['tempo']
         print("[input-mod] Tempo: " + str(cvpj_bpm))
-
 
         cvpj_l = {}
         

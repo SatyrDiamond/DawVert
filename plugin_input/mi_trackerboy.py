@@ -22,6 +22,9 @@ def readstring(bio_data):
     tb_name = bio_data.read(tb_namelen).decode("utf-8")
     return tb_name
 
+def speed_to_tempo(framerate, speed, rowsPerBeat):
+    return (framerate * 60.0) / (speed * rowsPerBeat)
+
 class input_trackerboy(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -204,5 +207,5 @@ class input_trackerboy(plugin_input.base):
         cvpj_l['instruments_data'] = cvpj_l_instrument_data
         cvpj_l['instruments_order'] = cvpj_l_instrument_order
         
-        cvpj_l['bpm'] = 140
+        cvpj_l['bpm'] = speed_to_tempo(60, tb_speed, tb_rows)*256
         return json.dumps(cvpj_l)

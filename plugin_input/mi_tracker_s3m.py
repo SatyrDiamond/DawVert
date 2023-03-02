@@ -10,6 +10,33 @@ from functions import data_bytes
 from functions import folder_samples
 from functions import placements
 
+t_retg_alg = [['mul', 1], ['minus', 1], ['minus', 2], ['minus', 4], ['minus', 8], ['minus', 16], ['mul', 2/3], ['mul', 1/2], ['mul', 1], ['plus', 1], ['plus', 2], ['plus', 4], ['plus', 8], ['plus', 16], ['mul', 3/2], ['mul', 2]]
+
+def splitbyte(value):
+    first = value >> 4
+    second = value & 0x0F
+    return (first, second)
+
+def getfineval(value):
+    volslidesplit = splitbyte(value)
+    if volslidesplit[0] == 0 and volslidesplit[1] == 0:
+        volslideout = 0
+    elif volslidesplit[0] == 15 and volslidesplit[1] == 15:
+        volslideout = volslidesplit[0]/16
+    elif volslidesplit[0] == 0 and volslidesplit[1] == 15:
+        volslideout = -15
+
+    elif volslidesplit[0] == 0 and volslidesplit[1] != 0:
+        volslideout = volslidesplit[1]*-1
+    elif volslidesplit[0] != 0 and volslidesplit[1] == 0:
+        volslideout = volslidesplit[0]
+
+    elif volslidesplit[0] == 15 and volslidesplit[1] != 15:
+        volslideout = (volslidesplit[0]*-1)/16
+    elif volslidesplit[0] != 15 and volslidesplit[1] == 15:
+        volslideout = volslidesplit[0]/16
+    return volslideout
+
 class input_s3m(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -51,6 +78,7 @@ class input_s3m(plugin_input.base):
         s3m_globalvol = int.from_bytes(bio_mainfile.read(1), "little")
         s3m_speed = int.from_bytes(bio_mainfile.read(1), "little")
         s3m_tempo = int.from_bytes(bio_mainfile.read(1), "little")
+        current_tempo = s3m_tempo
         print("[input-st3] Tempo: " + str(s3m_tempo))
         s3m_mastervol = bio_mainfile.read(1)
         s3m_ultraclickremoval = int.from_bytes(bio_mainfile.read(1), "little")
@@ -59,6 +87,8 @@ class input_s3m(plugin_input.base):
         s3m_numspecial = int.from_bytes(bio_mainfile.read(2), "little")
         s3m_chnlsettings = bio_mainfile.read(32)
         
+        tempo_slide = 0
+
         s3m_orderlist = bio_mainfile.read(s3m_numorder)
         t_orderlist = []
         for s3m_orderlistentry in s3m_orderlist: t_orderlist.append(s3m_orderlistentry)
@@ -226,19 +256,131 @@ class input_s3m(plugin_input.base):
                             if firstrow == 1:
                                 pattern_row[1][packed_what_channel][3]['firstrow'] = 1
                                 pattern_row[0]['firstrow'] = 1
+
+                            j_note_cmdval = pattern_row[1][packed_what_channel][3]
+
                             if packed_what_command_info == 1:
+
                                 if packed_command == 1:
-                                    pattern_row[1][packed_what_channel][3]['speed'] = packed_info
                                     pattern_row[0]['speed'] = packed_info
+
+                                if packed_command == 2: 
+                                    pattern_row[0]['pattern_jump'] = packed_info
+
                                 if packed_command == 3:
-                                    pattern_row[1][packed_what_channel][3]['break_to_row'] = packed_info
                                     pattern_row[0]['break_to_row'] = packed_info
+
+                                if packed_command == 4: 
+                                    j_note_cmdval['vol_slide'] = getfineval(packed_info)
+
                                 if packed_command == 5:
-                                    pattern_row[1][packed_what_channel][2]['slide_down_c'] = packed_info
+                                    j_note_cmdval['slide_down_c'] = packed_info
+
                                 if packed_command == 6:
-                                    pattern_row[1][packed_what_channel][2]['slide_up_c'] = packed_info
+                                    j_note_cmdval['slide_up_c'] = packed_info
+
                                 if packed_command == 7:
-                                    pattern_row[1][packed_what_channel][2]['slide_to_note'] = packed_info
+                                    j_note_cmdval['slide_to_note'] = packed_info
+                            
+                                if packed_command == 8: 
+                                    vibrato_params = {}
+                                    vibrato_params['speed'], vibrato_params['depth'] = splitbyte(packed_info)
+                                    j_note_cmdval['vibrato'] = vibrato_params
+                                
+                                if packed_command == 9: 
+                                    tremor_params = {}
+                                    tremor_params['ontime'], tremor_params['offtime'] = splitbyte(packed_info)
+                                    j_note_cmdval['tremor'] = tremor_params
+                            
+                                if packed_command == 10: 
+                                    arp_params = {}
+                                    arp_params['1'], arp_params['2'] = splitbyte(packed_info)
+                                    j_note_cmdval['arp'] = arp_params
+                            
+                                if packed_command == 11: 
+                                    j_note_cmdval['vol_slide'] = getfineval(packed_info)
+                                    j_note_cmdval['vibrato'] = {'speed': 0, 'depth': 0}
+                            
+                                if packed_command == 12: 
+                                    j_note_cmdval['vol_slide'] = getfineval(packed_info)
+                                    j_note_cmdval['slide_to_note'] = getfineval(packed_info)
+
+                                if packed_command == 13: 
+                                    j_note_cmdval['channel_vol'] = packed_info/64
+
+                                if packed_command == 14: 
+                                    j_note_cmdval['channel_vol_slide'] = getfineval(packed_info)
+
+                                if packed_command == 15: 
+                                    j_note_cmdval['sample_offset'] = packed_info*256
+
+                                if packed_command == 16: 
+                                    j_note_cmdval['pan_slide'] = getfineval(packed_info)*-1
+
+                                if packed_command == 17: 
+                                    retrigger_params = {}
+                                    retrigger_alg, retrigger_params['speed'] = splitbyte(packed_info)
+                                    retrigger_params['alg'], retrigger_params['val'] = t_retg_alg[retrigger_alg]
+                                    j_note_cmdval['retrigger'] = retrigger_params
+                            
+                                if packed_command == 18: 
+                                    tremolo_params = {}
+                                    tremolo_params['speed'], tremolo_params['depth'] = splitbyte(packed_info)
+                                    j_note_cmdval['tremolo'] = tremolo_params
+
+                                if packed_command == 19: 
+                                    ext_type, ext_value = splitbyte(packed_info)
+                                    if ext_type == 1: j_note_cmdval['glissando_control'] = ext_value
+                                    if ext_type == 2: j_note_cmdval['set_finetune'] = ext_value
+                                    if ext_type == 3: j_note_cmdval['vibrato_waveform'] = ext_value
+                                    if ext_type == 4: j_note_cmdval['tremolo_waveform'] = ext_value
+                                    if ext_type == 5: j_note_cmdval['panbrello_waveform'] = ext_value
+                                    if ext_type == 6: j_note_cmdval['fine_pattern_delay'] = ext_value
+                                    if ext_type == 7: j_note_cmdval['it_inst_control'] = ext_value
+                                    if ext_type == 8: j_note_cmdval['set_pan'] = ext_value/16
+                                    if ext_type == 9: j_note_cmdval['it_sound_control'] = ext_value
+                                    if ext_type == 10: j_note_cmdval['sample_offset_high'] = ext_value*65536
+                                    if ext_type == 11: j_note_cmdval['loop_start'] = ext_value
+                                    if ext_type == 12: j_note_cmdval['note_cut'] = ext_value
+                                    if ext_type == 13: j_note_cmdval['note_delay'] = ext_value
+                                    if ext_type == 14: j_note_cmdval['pattern_delay'] = ext_value
+                                    if ext_type == 15: j_note_cmdval['it_active_macro'] = ext_value
+
+                                if packed_command == 20: 
+                                    tempoval = packed_info
+                                    if packed_info == 0:
+                                        current_tempo += tempo_slide
+                                    if 0 < packed_info < 32:
+                                        tempo_slide = packed_info-16
+                                        current_tempo += tempo_slide
+                                    if packed_info > 32:
+                                        current_tempo = packed_info
+                                    pattern_row[0]['tempo'] = current_tempo
+
+                                if packed_command == 21: 
+                                    fine_vib_sp, fine_vib_de = splitbyte(packed_info)
+                                    vibrato_params = {}
+                                    vibrato_params['speed'] = fine_vib_sp/15
+                                    vibrato_params['depth'] = fine_vib_sp/15
+                                    j_note_cmdval['vibrato'] = vibrato_params
+
+                                if packed_command == 22: 
+                                    pattern_row[0]['global_volume'] = packed_info/64
+                            
+                                if packed_command == 23: 
+                                    pattern_row[0]['global_volume_slide'] = getfineval(packed_info)
+
+                                if packed_command == 24: 
+                                    j_note_cmdval['set_pan'] = packed_info/255
+
+                                if packed_command == 25: 
+                                    panbrello_params = {}
+                                    panbrello_params['speed'], panbrello_params['depth'] = splitbyte(packed_info)
+                                    j_note_cmdval['panbrello'] = panbrello_params
+
+                                if packed_command == 26: 
+                                    j_note_cmdval['pan'] = ((packed_info/255)-0.5)*2
+                            
                     firstrow = 0
                     patterntable_single.append(pattern_row)
                     rowcount += 1

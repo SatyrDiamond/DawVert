@@ -18,6 +18,7 @@ parser.add_argument("-o", default=None)
 parser.add_argument("-ot", default=None)
 parser.add_argument("--samplefolder", default=None)
 parser.add_argument("--soundfont", default=None)
+parser.add_argument("--songnum", default=1)
 args = parser.parse_args()
 
 in_file = args.i
@@ -29,6 +30,7 @@ extra_json = {}
 
 if args.soundfont != None: extra_json['soundfont'] = args.soundfont
 if args.samplefolder != None: extra_json['samplefolder'] = args.samplefolder
+if args.songnum != None: extra_json['songnum'] = args.songnum
 
 typelist = {}
 typelist['r'] = 'Regular'

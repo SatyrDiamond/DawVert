@@ -1,16 +1,21 @@
-import csv
 import os
+import chardet
 
 def parse_idvalscsv(filename):
 	if os.path.exists(filename) == True:
-		with open(filename) as csvfile:
-			spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
+		with open(filename, 'rb') as csvfile:
+			csvdata = csvfile.read()
+			csvcharset = chardet.detect(csvdata)['encoding']
+			csvtext = csvdata.decode(csvcharset).splitlines()
+
 			count = 0
 			typecount = 0
 			l_params = {}
 			tid_id = None
 			tid_params = {}
-			for row in spamreader:
+			for row_unsep in csvtext:
+				row = row_unsep.split(';')
+
 				if count == 0:
 					for valtype in row:
 						if valtype == 'id': tid_id = typecount

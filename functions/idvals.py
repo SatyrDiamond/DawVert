@@ -3,7 +3,7 @@ import os
 
 def parse_idvalscsv(filename):
 	if os.path.exists(filename) == True:
-		with open('G:\\git\\DawVert\\idvals\\notessimo_v2_inst.csv') as csvfile:
+		with open(filename) as csvfile:
 			spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
 			count = 0
 			typecount = 0

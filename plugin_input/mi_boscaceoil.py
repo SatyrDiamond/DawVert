@@ -8,9 +8,6 @@ from functions import idvals
 import plugin_input
 import json
 
-idvals_inst_midi = idvals.parse_idvalscsv('idvals/midi_inst.csv')
-idvals_inst_bosca = idvals.parse_idvalscsv('idvals/boscaceoil_inst.csv')
-
 ceol_colors = {}
 ceol_colors[0] = [0.23, 0.15, 0.93]
 ceol_colors[1] = [0.61, 0.04, 0.94]
@@ -40,6 +37,9 @@ class input_ceol(plugin_input.base):
         cvpj_l_instrument_order = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
+
+        idvals_inst_midi = idvals.parse_idvalscsv('idvals/midi_inst.csv')
+        idvals_inst_bosca = idvals.parse_idvalscsv('idvals/boscaceoil_inst.csv')
 
         global datapos
         global ceol_data

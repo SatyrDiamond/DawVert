@@ -6,7 +6,6 @@ import json
 import struct
 import math
 from functions import data_bytes
-from functions import values
 from functions import note_mod
 from functions import format_midi_in
 

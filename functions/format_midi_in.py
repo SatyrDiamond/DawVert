@@ -1,15 +1,10 @@
 
-from functions import values
 from functions import note_mod
 from functions import idvals
 
-#MIDIControllerName = values.getlist_gm_ctrl_names()
-#MIDIInstColors = values.getlist_gm_colors()
-#MIDIInstNames = values.getlist_gm_names()
-MIDIDrumSetNames = values.getlist_gm_drumset_names()
-
 idvals_midi_ctrl = idvals.parse_idvalscsv('idvals/midi_ctrl.csv')
 idvals_midi_inst = idvals.parse_idvalscsv('idvals/midi_inst.csv')
+idvals_midi_inst_drums = idvals.parse_idvalscsv('idvals/midi_inst_drums.csv')
 
 cvpj_l = {}
 cvpj_l_playlist = {}

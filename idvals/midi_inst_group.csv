@@ -1,0 +1,17 @@
+id;name
+piano;Piano
+chromaticperc;Chromatic Percussion
+organ;Organ
+guitar;Guitar
+bass;Bass
+strings;Strings
+ensemble;Ensemble
+brass;Brass
+reed;Reed
+pipe;Pipe
+synthlead;Synth Lead
+synthpad;Synth Pad
+synthfx;Synth Effects
+Ethnic;Ethnic
+perc;Percussive
+sfx;Sound Effects

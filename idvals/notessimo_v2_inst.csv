@@ -1,0 +1,125 @@
+id;name;color_r;color_g;color_b;isdrum;gm_inst
+12;Acoustic Guitar;0.81;0.59;0.35;0;25
+82;Damant Spectrum Muted;0.87;0.66;0.07;0;29
+79;Fender Strat Guitar;0.51;0.8;0.76;0;26
+78;Strat Guitar;0.33;0.42;0.68;0;26
+47;Metal Guitar;0.05;0.05;0.05;0;30
+64;Guitar Electric;0.71;0.38;0.13;0;27
+77;Clean Electric Guitar;0.23;0.21;0.21;0;28
+81;Damant Spectrum Harm;0.72;0.09;0.15;0;null
+49;Bass Guitar;0.64;0.24;0.04;0;null
+1;Bass;0.64;0.24;0.04;0;33
+39;Bass #2;0.7;0.29;0.24;0;34
+52;Bass #3;0.7;0.36;0.12;0;35
+59;Bass #4;0.49;0.11;0.13;0;36
+0;Synth Bass;0.18;0.2;0.21;0;39
+21;Synth Bass #2;0.18;0.2;0.21;0;40
+135;Sitar;0.43;0.13;0.04;0;105
+136;Pizzicato;0.91;0.38;0.16;0;46
+9;Strings;0.89;0.36;0.16;0;49
+36;Strings #2;0.91;0.38;0.16;0;50
+37;Strings #3;0.71;0.24;0.09;0;49
+31;Synth Strings;0.4;0.53;0.42;0;51
+80;Fret Noise;0.33;0.33;0.33;0;null
+28;Grand Piano;0;0;0;0;1
+114;Rhodes;0.18;0.18;0.16;0;5
+121;Orchestra Hit;0.37;0.18;0.14;0;56
+13;Low Piano;0;0;0;0;null
+115;Rhodes #2;0.68;0.68;0.68;0;6
+11;Synth;0.56;0.67;0.25;0;null
+116;Electric Piano;0.79;0.04;0.09;0;3
+117;Rock Organ;0.67;0.49;0.39;0;19
+17;Synth #2;0.11;0.11;0.11;0;84
+111;Clavinet;0.76;0.76;0.76;0;8
+118;Church Organ;0.37;0.18;0.14;0;20
+23;Synthesizer;0.33;0.34;0.39;0;81
+112;Electric Clavinet;0.56;0.37;0.31;0;null
+119;Percussive Organ;0.34;0.31;0.35;0;18
+34;Synthesizer #2;0.33;0.34;0.39;0;82
+113;Harpsichord;0.48;0.31;0.31;0;7
+120;Organ;0.11;0.11;0.11;0;17
+50;Synthesizer #3;0.33;0.34;0.39;0;83
+110;Accordian;0.45;0.17;0.2;0;22
+22;Triangle Wave;0.33;0.34;0.39;0;null
+133;Techno Bass;0.07;0.18;0.26;0;null
+2;Bass Drum;0.06;0.07;0.08;1;null
+18;Bass Drum #2;0.11;0.39;0.29;1;null
+24;Bass Drum #3;0.06;0.07;0.08;1;null
+43;Bass Drum #4;0.11;0.39;0.29;1;null
+60;Bass Drum #5;0.06;0.07;0.08;1;null
+15;Snare Drum;0.85;0.66;0.37;1;null
+42;Snare Drum #2;0.72;0.73;0.76;1;null
+44;Snare Drum #3;0.88;0.78;0.67;1;null
+56;Snare Drum #4;0.7;0.6;0.51;1;null
+67;Snare Drum #5;0.72;0.73;0.76;1;null
+14;Tom Drums;0.67;0.61;0.58;1;null
+27;High Tom;0.45;0.45;0.43;1;null
+53;DX Tom;0.63;0.45;0.29;1;null
+62;Dry Tom;0.35;0.36;0.53;1;null
+57;Drum Reverb;0.39;0.27;0.16;1;null
+3;Closed Hi Hat;0.82;0.56;0.25;1;null
+26;Closed Hi Hat #2;0.82;0.56;0.25;1;null
+61;Closed Hi Hat #3;0.82;0.56;0.25;1;null
+5;Open Hi Hat;0.8;0.71;0.41;1;null
+19;Open Hi Hat #2;0.89;0.72;0.34;1;null
+30;Open Hi Hat #3;0.8;0.71;0.41;1;null
+65;Open Hi Hat #4;0.89;0.72;0.34;1;null
+25;Cymbal;0.86;0.7;0.44;1;null
+45;Cymbal #2;0.72;0.71;0.74;1;null
+46;Cymbal #3;0.1;0.11;0.14;1;null
+66;Reverse Cymbal;0.86;0.7;0.44;1;null
+40;Drum Loop;0.88;0.78;0.67;1;null
+123;Glockenspiel;0.73;0.65;0.54;0;10
+126;Xylophone;0.69;0.58;0.25;0;14
+125;Vibraphone;0.6;0.61;0.63;0;12
+124;Marimba;0.89;0.53;0.02;0;13
+127;Kalimba;0.69;0.36;0.11;0;109
+4;Woodblock;0.76;0.59;0.43;0;116
+129;Clave;0.78;0.75;0.75;0;null
+6;Tambourine;0.76;0.76;0.75;0;null
+134;Steel Drum;0.74;0.22;0.19;0;115
+130;Conga;0.71;0.46;0.24;0;null
+131;Conga #2;0.98;0.42;0.15;0;null
+132;Conga #3;0.83;0.65;0.43;0;null
+7;Taiko Drum;0.82;0.27;0.11;0;117
+10;Timpani;0.84;0.7;0.54;0;48
+128;Cowbell;0.27;0.29;0.27;0;null
+122;Tubular Bell;0.22;0.2;0.2;0;15
+51;Blast;0.56;0.59;0.57;0;null
+20;Hand Clap;1;0.82;0.58;0;null
+8;Trumpet;0.77;0.63;0.39;0;57
+100;Trumpet #2;0.58;0.51;0.33;0;57
+103;Piccolo Trumpet;0.74;0.67;0.47;0;73
+99;Trumpet Muted;0.75;0.65;0.47;0;null
+101;Trumpet Hit;0.6;0.56;0.45;0;null
+102;Trumpet Section;0.69;0.64;0.53;0;null
+97;Trombone;0.75;0.65;0.46;0;58
+95;Tuba;0.78;0.65;0.32;0;59
+98;French Horn;0.83;0.68;0.38;0;61
+58;Synth Brass;0.74;0.62;0.49;0;63
+83;Soprano Sax;0.81;0.73;0.56;0;65
+84;Alto Sax;0.95;0.88;0.63;0;66
+87;Tenor Sax;0.67;0.52;0.31;0;67
+88;Baritone Sax;0.73;0.59;0.37;0;68
+85;Sax Hit;0.85;0.72;0.36;0;null
+86;Sax Sing;0.79;0.79;0.57;0;null
+96;Flute;0.79;0.76;0.73;0;74
+89;Bass Clarinet;0.62;0.61;0.63;0;null
+90;Clarinet;0.47;0.47;0.45;0;72
+91;English Horn;0.55;0.54;0.54;0;70
+92;Oboe;0.49;0.43;0.42;0;69
+93;Ocarina;0.76;0.36;0.07;0;80
+94;Wateki;0.62;0.5;0.27;0;null
+104;Oohh;0.98;0.81;0.86;0;54
+105;Aahh;1;0.67;0;0;53
+106;Choir;0.46;0.46;0.46;0;null
+107;Male Vox;0.8;0.82;0.85;0;null
+108;Female Vox;0.8;0.82;0.85;0;null
+109;Synth Vox;0.33;0.67;0.7;0;55
+16;Grinding;0.35;0.36;0.4;0;null
+29;Cheers;0.33;0.67;0.7;0;null
+33;Energy;0.44;0.66;0.85;0;null
+35;Crystal;0.22;0.79;0.98;0;null
+38;Fade In;0.75;0.67;0.62;0;null
+41;Space;0.99;0.84;0.32;0;null
+55;Nice;0.93;0.93;0.93;0;null

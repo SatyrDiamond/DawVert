@@ -10,9 +10,6 @@ from functions import values
 from functions import note_mod
 from functions import format_midi_in
 
-gm_colors = values.getlist_gm_colors()
-gm_names = values.getlist_gm_names()
-
 def calc_gatetime(bio_mmf_Mtsq):
     out_duration = 0
     t_durgate = []

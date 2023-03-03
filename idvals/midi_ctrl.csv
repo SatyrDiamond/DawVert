@@ -1,0 +1,129 @@
+id;name
+0;Bank Select
+1;Modulation Wheel
+2;Breath Controller
+3;_unknown
+4;Foot Pedal
+5;Portamento/Glide Time
+6;Data Entry (MSB)
+7;MIDI Volume
+8;Stereo Balance
+9;_unknown
+10;Pan
+11;Expression Pedal
+12;Effect Controller 1
+13;Effect Controller 2
+14;_unknown
+15;_unknown
+16;General Purpose Controller 1
+17;General Purpose Controller 2
+18;General Purpose Controller 3
+19;General Purpose Controller 4
+20;_unknown
+21;_unknown
+22;_unknown
+23;_unknown
+24;_unknown
+25;_unknown
+26;_unknown
+27;_unknown
+28;_unknown
+29;_unknown
+30;_unknown
+31;_unknown
+32;Bank Select
+33;Modulation Wheel
+34;Breath Controller
+35;_unknown
+36;Foot Pedal
+37;Portamento/Glide Time
+38;Data Entry
+39;Volume
+40;Balance
+41;_unknown
+42;Pan Position
+43;Expression
+44;Effect Control 1
+45;Effect Control 2
+46;_unknown
+47;_unknown
+48;_unknown
+49;_unknown
+50;_unknown
+51;_unknown
+52;_unknown
+53;_unknown
+54;_unknown
+55;_unknown
+56;_unknown
+57;_unknown
+58;_unknown
+59;_unknown
+60;_unknown
+61;_unknown
+62;_unknown
+63;_unknown
+64;Sustain Pedal On/Off
+65;Portamento/Glide On/Off Switch
+66;Sostenuto On/Off Switch
+67;Soft Pedal On/Off Switch
+68;Legato On/Off Switch
+69;Hold Pedal 2
+70;Sound Controller 1
+71;Sound Controller 2 - Filter Resonance
+72;Sound Controller 3 - Amp Envelope Decay
+73;Sound Controller 4 - Amp Envelope Attack
+74;Sound Controller 5 - Filter Cutoff
+75;Sound Controller 6
+76;Sound Controller 7
+77;Sound Controller 8
+78;Sound Controller 9
+79;Sound Controller 10
+80;General Purpose
+81;General Purpose
+82;General Purpose
+83;General Purpose
+84;_unknown
+85;_unknown
+86;_unknown
+87;_unknown
+88;_unknown
+89;_unknown
+90;_unknown
+91;Effect 1 Amount (Reverb)
+92;Effect 2 Amount (Tremelo)
+93;Effect 3 Amount (Chorus)
+94;Effect 4 Amount (Detuning)
+95;Effect 5 Amount (Phaser)
+96;Data Bound Increment (+1)
+97;Data Bound Decrement (-1)
+98;NRPN LSB
+99;NRPN MSB
+100;RPN LSB
+101;RPN MSB
+102;_unknown
+103;_unknown
+104;_unknown
+105;_unknown
+106;_unknown
+107;_unknown
+108;_unknown
+109;_unknown
+110;_unknown
+111;_unknown
+112;_unknown
+113;_unknown
+114;_unknown
+115;_unknown
+116;_unknown
+117;_unknown
+118;_unknown
+119;_unknown
+120;Channel Mute / Sound Off
+121;Reset All Controllers
+122;Local Keyboard On/Off Switch
+123;All MIDI Notes OFF
+124;OMNI Mode OFF
+125;OMNI Mode ON
+126;Mono Mode
+127;Poly Mode

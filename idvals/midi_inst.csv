@@ -1,0 +1,129 @@
+id;name;color_r;color_g;color_b;group
+0;Acoustic Grand Piano;0.1;0.11;0.11;piano
+1;Bright Acoustic Piano;0.1;0.11;0.11;piano
+2;Electric Grand Piano;0.1;0.11;0.11;piano
+3;Honky-tonk Piano;0.6;0.19;0.07;piano
+4;Electric Piano 1;0.29;0.28;0.28;piano
+5;Electric Piano 2;0.29;0.28;0.28;piano
+6;Harpsichord;0.57;0.31;0.17;piano
+7;Clavi;0.59;0.44;0.35;piano
+8;Celesta;0.84;0.68;0.48;chromaticperc
+9;Glockenspiel;0.84;0.85;0.87;chromaticperc
+10;Music Box;0.6;0.58;0.55;chromaticperc
+11;Vibraphone;0.76;0.78;0.82;chromaticperc
+12;Marimba;0.82;0.32;0.18;chromaticperc
+13;Xylophone;0.42;0.19;0.13;chromaticperc
+14;Tubular Bells;0.53;0.58;0.64;chromaticperc
+15;Dulcimer;0.69;0.34;0.08;chromaticperc
+16;Drawbar Organ;0.76;0.44;0.15;organ
+17;Percussive Organ;0.76;0.44;0.15;organ
+18;Rock Organ;0.76;0.44;0.15;organ
+19;Church Organ;0.55;0.24;0.08;organ
+20;Reed Organ;0.44;0.15;0.04;organ
+21;Accordion;0.27;0.25;0.23;organ
+22;Harmonica;0.7;0.7;0.66;organ
+23;Tango Accordion;0.27;0.25;0.23;organ
+24;Acoustic Guitar (nylon);0.84;0.35;0;guitar
+25;Acoustic Guitar (steel);0.9;0.62;0.35;guitar
+26;Electric Guitar (jazz);0;0.11;0.33;guitar
+27;Electric Guitar (clean);0;0.11;0.33;guitar
+28;Electric Guitar (muted);0;0.11;0.33;guitar
+29;Overdriven Guitar;0.9;0.62;0.35;guitar
+30;Distortion Guitar;0.9;0.62;0.35;guitar
+31;Guitar harmonics;0.9;0.62;0.35;guitar
+32;Acoustic Bass;0.15;0.15;0.15;bass
+33;Electric Bass (finger);0.09;0.09;0.09;bass
+34;Electric Bass (pick);0.09;0.09;0.09;bass
+35;Fretless Bass;0.89;0.71;0.53;bass
+36;Slap Bass 1;0.89;0.71;0.53;bass
+37;Slap Bass 2;0.89;0.71;0.53;bass
+38;Synth Bass 1;0.17;0.16;0.19;bass
+39;Synth Bass 2;0.17;0.16;0.19;bass
+40;Violin;0.58;0.32;0.14;strings
+41;Viola;0.75;0.29;0;strings
+42;Cello;0.69;0.24;0.01;strings
+43;Contrabass;0.63;0.2;0.08;strings
+44;Tremolo Strings;0.41;0.06;0.02;strings
+45;Pizzicato Strings;0.41;0.06;0.02;strings
+46;Orchestral Harp;0.58;0.2;0.12;strings
+47;Timpani;0.81;0.78;0.71;strings
+48;String Ensemble 1;0.41;0.06;0.02;ensemble
+49;String Ensemble 2;0.41;0.06;0.02;ensemble
+50;SynthStrings 1;0.42;0.23;0.11;ensemble
+51;SynthStrings 2;0.42;0.23;0.11;ensemble
+52;Choir Aahs;0.94;0.76;0.7;ensemble
+53;Voice Oohs;0.94;0.76;0.7;ensemble
+54;Synth Voice;0.23;0.23;0.24;ensemble
+55;Orchestra Hit;0.6;0.18;0.07;ensemble
+56;Trumpet;0.75;0.59;0.27;brass
+57;Trombone;0.94;0.87;0.47;brass
+58;Tuba;0.85;0.68;0.35;brass
+59;Muted Trumpet;0.75;0.59;0.27;brass
+60;French Horn;0.85;0.65;0.29;brass
+61;Brass Section;0.38;0.22;0.06;brass
+62;SynthBrass 1;0.42;0.23;0.11;brass
+63;SynthBrass 2;0.42;0.23;0.11;brass
+64;Soprano Sax;0.84;0.69;0.41;reed
+65;Alto Sax;0.71;0.55;0.22;reed
+66;Tenor Sax;0.74;0.55;0.2;reed
+67;Baritone Sax;0.88;0.68;0.36;reed
+68;Oboe;0.19;0.19;0.2;reed
+69;English Horn;0.1;0.09;0.11;reed
+70;Bassoon;0.76;0.15;0.04;pipe
+71;Clarinet;0.27;0.27;0.27;pipe
+72;Piccolo;0.07;0.07;0.1;pipe
+73;Flute;0.73;0.72;0.72;pipe
+74;Recorder;0.87;0.71;0.6;pipe
+75;Pan Flute;0.68;0.54;0.3;pipe
+76;Blown Bottle;0.45;0.41;0.01;pipe
+77;Shakuhachi;0.61;0.5;0.35;pipe
+78;Whistle;0.84;0.25;0.07;pipe
+79;Ocarina;0.1;0.32;0.74;pipe
+80;Square Lead;0.7;0.7;0.7;synthlead
+81;Sawtooth Lead;0.7;0.7;0.7;synthlead
+82;Calliope Lead;0.7;0.7;0.7;synthlead
+83;Chiff Lead;0.7;0.7;0.7;synthlead
+84;Charang Lead;0.7;0.7;0.7;synthlead
+85;Voice Lead;0.7;0.7;0.7;synthlead
+86;Fifths Lead;0.7;0.7;0.7;synthlead
+87;Bass + Lead;0.7;0.7;0.7;synthlead
+88;New Age Pad;0.7;0.7;0.7;synthpad
+89;Warm Pad;0.7;0.7;0.7;synthpad
+90;Polysynth Pad;0.7;0.7;0.7;synthpad
+91;Choir Pad;0.7;0.7;0.7;synthpad
+92;Bowed Pad;0.7;0.7;0.7;synthpad
+93;Metallic Pad;0.7;0.7;0.7;synthpad
+94;Halo Pad;0.7;0.7;0.7;synthpad
+95;Sweep Pad;0.7;0.7;0.7;synthpad
+96;Ice Rain;0.7;0.7;0.7;synthfx
+97;Soundtrack;0.7;0.7;0.7;synthfx
+98;Crystal;0.7;0.7;0.7;synthfx
+99;Atmosphere;0.7;0.7;0.7;synthfx
+100;Brightness;0.7;0.7;0.7;synthfx
+101;Goblin;0.7;0.7;0.7;synthfx
+102;Echo Drops;0.7;0.7;0.7;synthfx
+103;Star Theme;0.7;0.7;0.7;synthfx
+104;Sitar;0.4;0.2;0.12;Ethnic
+105;Banjo;0.5;0.32;0.2;Ethnic
+106;Shamisen;0.45;0.18;0.15;Ethnic
+107;Koto;0.45;0.16;0.11;Ethnic
+108;Kalimba;0.69;0.27;0.16;Ethnic
+109;Bag pipe;0.71;0.15;0.15;Ethnic
+110;Fiddle;0.76;0.3;0.01;Ethnic
+111;Shanai;0.66;0.16;0.12;Ethnic
+112;Tinkle Bell;0.67;0.45;0.15;perc
+113;Agogo;0.1;0.1;0.05;perc
+114;Steel Drums;0.56;0.57;0.57;perc
+115;Woodblock;0.88;0.68;0.44;perc
+116;Taiko Drum;0.36;0.07;0;perc
+117;Melodic Tom;0.84;0.77;0.71;perc
+118;Synth Drum;0.77;0.04;0.03;perc
+119;Reverse Cymbal;0.71;0.61;0.36;perc
+120;Guitar Fret Noise;0.9;0.62;0.35;perc
+121;Breath Noise;0.94;0.76;0.7;sfx
+122;Seashore;0.23;0.55;0.53;sfx
+123;Bird Tweet;0.89;0.81;0.18;sfx
+124;Telephone Ring;0.21;0.19;0.15;sfx
+125;Helicopter;0.18;0.26;0.67;sfx
+126;Applause;0.94;0.76;0.7;sfx
+127;Gunshot;0.32;0.3;0.27;sfx

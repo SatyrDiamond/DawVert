@@ -3,7 +3,6 @@
 
 from functions import data_bytes
 from functions import placements
-from functions import values
 from functions import idvals
 import plugin_input
 import json

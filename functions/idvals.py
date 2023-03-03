@@ -57,9 +57,6 @@ def get_idval(valdata, i_id, i_param):
 
 	return outval
 
-#parse_idvalscsv('notessimo_v2_inst.csv')
-#get_idval(valsdata, id_fine, 'name')
-
 
 
 

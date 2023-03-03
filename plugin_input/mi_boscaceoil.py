@@ -4,10 +4,12 @@
 from functions import data_bytes
 from functions import placements
 from functions import values
+from functions import idvals
 import plugin_input
 import json
 
-MIDIInstNames = values.getlist_gm_names()
+idvals_inst_midi = idvals.parse_idvalscsv('idvals/midi_inst.csv')
+idvals_inst_bosca = idvals.parse_idvalscsv('idvals/boscaceoil_inst.csv')
 
 ceol_instlist = {}
 ceol_instlist[0] = ["MIDI", "Grand Piano", "midi.piano1"]
@@ -462,8 +464,8 @@ class input_ceol(plugin_input.base):
             cvpj_instdata = cvpj_inst["instdata"]
             cvpj_instdata['plugindata'] = {}
 
-            if ceol_instinfo[0] == 'MIDI':
-                cvpj_inst["name"] = MIDIInstNames[ceol_inst_number]
+            if ceol_inst_number <= 127:
+                cvpj_inst["name"] = idvals.get_idval(idvals_inst_midi, str(ceol_inst_number), 'name')
                 cvpj_instdata['plugin'] = 'general-midi'
                 cvpj_instdata['plugindata'] = {'bank':0, 'inst':ceol_inst_number}
             elif ceol_inst_number == 365: 
@@ -471,7 +473,7 @@ class input_ceol(plugin_input.base):
                 cvpj_instdata['plugin'] = 'general-midi'
                 cvpj_instdata['plugindata'] = {'bank':128, 'inst':0}
             else: 
-                cvpj_inst["name"] = ceol_instinfo[1]
+                cvpj_inst["name"] = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'name')
                 cvpj_instdata['plugin'] = 'none'
 
             if ceol_inst_number == 365: t_key_offset.append(24)

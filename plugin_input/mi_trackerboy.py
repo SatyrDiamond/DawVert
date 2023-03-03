@@ -84,7 +84,6 @@ class input_trackerboy(plugin_input.base):
         bytestream = open(input_file, 'rb')
         bytestream.seek(0)
         bytesdata = bytestream.read(12)
-        print(bytesdata)
         if bytesdata == b'\x00TRACKERBOY\x00': return True
         else: return False
     def parse(self, input_file, extra_param):
@@ -226,7 +225,7 @@ class input_trackerboy(plugin_input.base):
                             parse_fx_event(trkr_cell, fx2p, fx2v)
                             parse_fx_event(trkr_cell, fx3p, fx3v)
 
-                            print(mt_pat[tb_pate_ch][tb_pate_trkid][n_pos])
+                            #print(mt_pat[tb_pate_ch][tb_pate_trkid][n_pos])
 
                 songnum += 1
 

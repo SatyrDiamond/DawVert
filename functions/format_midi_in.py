@@ -1,11 +1,15 @@
 
 from functions import values
 from functions import note_mod
+from functions import idvals
 
-MIDIControllerName = values.getlist_gm_ctrl_names()
-MIDIInstColors = values.getlist_gm_colors()
-MIDIInstNames = values.getlist_gm_names()
+#MIDIControllerName = values.getlist_gm_ctrl_names()
+#MIDIInstColors = values.getlist_gm_colors()
+#MIDIInstNames = values.getlist_gm_names()
 MIDIDrumSetNames = values.getlist_gm_drumset_names()
+
+idvals_midi_ctrl = idvals.parse_idvalscsv('idvals/midi_ctrl.csv')
+idvals_midi_inst = idvals.parse_idvalscsv('idvals/midi_inst.csv')
 
 cvpj_l = {}
 cvpj_l_playlist = {}
@@ -233,8 +237,10 @@ def make_inst(channelnum, cvpj_midibank, cvpj_midiinst):
         if midichanneltype[channelnum] == 0: 
             cvpj_trackdata["instdata"]['plugindata'] = {'bank':cvpj_midibank, 'inst':cvpj_midiinst}
             cvpj_trackdata["instdata"]['usemasterpitch'] = 1
-            cvpj_trackdata["name"] = MIDIInstNames[cvpj_midiinst] + ' [Ch' + str(channelnum+1) + ']'
-            cvpj_trackdata["color"] = MIDIInstColors[cvpj_midiinst]
+            cvpj_trackdata["name"] = idvals.get_idval(idvals_midi_inst, str(cvpj_midiinst), 'name') + ' [Ch' + str(channelnum+1) + ']'
+            miditrkcolor = idvals.get_idval(idvals_midi_inst, str(cvpj_midiinst), 'color')
+            if miditrkcolor != None:
+                cvpj_trackdata["color"] = miditrkcolor
         else: 
             cvpj_trackdata["instdata"]['plugindata'] = {'bank':128, 'inst':cvpj_midiinst}
             cvpj_trackdata["instdata"]['usemasterpitch'] = 0
@@ -402,7 +408,8 @@ def song_end(channels):
     #        elif t_chan_auto_s_t == 10: #pan
     #            print(autochannum, 'Pan', t_chan_auto_s[t_chan_auto_s_t])
     #        else:
-    #            print(autochannum, MIDIControllerName[t_chan_auto_s_t], t_chan_auto_s[t_chan_auto_s_t])
+    #            midictname = idvals.get_idval(idvals_midi_ctrl, str(cvpj_midiinst), 'name')
+    #            print(autochannum, midictname, t_chan_auto_s[t_chan_auto_s_t])
     #    autochannum += 1
 
     for channum in range(channels):

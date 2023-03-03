@@ -8,8 +8,6 @@ import zlib
 import struct
 from functions import idvals
 
-idvals_inst_notetess = idvals.parse_idvalscsv('idvals/notessimo_v2_inst.csv')
-
 keytable = [0,2,4,5,7,9,11,12]
 
 def getstring(bytesdata):
@@ -69,6 +67,8 @@ class input_notessimo_v2(plugin_input.base):
         len_order = int.from_bytes(nv2_data.read(2), "big")
         arr_order = struct.unpack('b'*len_order, nv2_data.read(len_order))
         print("[input-notessimo_v2] Order List: " + str(arr_order))
+
+        idvals_inst_notetess = idvals.parse_idvalscsv('idvals/notessimo_v2_inst.csv')
 
         tempo_table = struct.unpack('>'+'H'*100, nv2_data.read(200))
 

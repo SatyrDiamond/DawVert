@@ -19,8 +19,9 @@
 | M-I | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | 
 | M-I | ```deflemask``` | DefleMask | ```.dmf``` | ✔️ |
 | M-I | ```ceol``` | Bosca Ceoil | ```.txt``` | ❌ | 
-| R-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
 | M-I | ```pixitracker``` | PixiTracker | ```.piximod``` | ✔️ | 
+| M-I | ```trackerboy``` | TrackerBoy | ```.tbm``` | ✔️ | 
+| R-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
 | M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ |
 | M | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ❌ |
 | R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ |

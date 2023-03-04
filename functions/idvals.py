@@ -62,9 +62,12 @@ def get_idval(valdata, i_id, i_param):
 
 	return outval
 
-
-
-
+def idval2drumkeynames(idvals):
+	l_out = {}
+	for idval in idvals:
+		l_out[idval] = {}
+		l_out[idval]['name'] = get_idval(idvals, idval, 'name')
+	return l_out
 
 
 

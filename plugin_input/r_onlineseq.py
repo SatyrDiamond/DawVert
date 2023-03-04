@@ -5,67 +5,11 @@ from functions import data_bytes
 from functions import note_mod
 from functions import placements
 from functions import auto
+from functions import idvals
 import plugin_input
 import json
 import struct
 import blackboxprotobuf
-
-onlseq_instlist = {}
-onlseq_instlist[43] = [0,    5,[0.01, 0.66, 0.96],"Electric Piano"]
-onlseq_instlist[41] = [0,    1,[0.08, 0.40, 0.75],"Grand Piano"]
-onlseq_instlist[17] = [0,    7,[1.00, 0.34, 0.13],"Harpsichord"]
-onlseq_instlist[25] = [0,    4,[0.05, 0.28, 0.63],"Ragtime Piano"]
-onlseq_instlist[26] = [0,   11,[0.11, 0.62, 0.62],"Music Box"]
-onlseq_instlist[ 0] = [0,    5,[0.01, 0.66, 0.96],"Elec. Piano (Classic)"]
-onlseq_instlist[ 8] = [0,    1,[0.08, 0.40, 0.75],"Grand Piano (Classic)"]
-
-onlseq_instlist[ 2] = [1,    1,[0.72, 0.11, 0.11],"Drum Kit"]
-onlseq_instlist[31] = [1,   25,[1.00, 0.44, 0.44],"Electric Drum Kit"]
-onlseq_instlist[19] = [0,   14,[0.96, 0.26, 0.21],"Xylophone"]
-onlseq_instlist[34] = [0,   12,[0.33, 0.79, 0.79],"Vibraphone"]
-onlseq_instlist[21] = [0,  115,[0.46, 0.46, 0.46],"Steel Drums"]
-
-onlseq_instlist[39] = [1, None,[0.62, 0.06, 0.13],"8-Bit Drum Kit"]
-onlseq_instlist[40] = [1, None,[0.51, 0.02, 0.08],"2013 Drum Kit"]
-onlseq_instlist[36] = [1,   26,[0.50, 0.06, 0.28],"808 Drum Kit"]
-onlseq_instlist[42] = [1, None,[0.60, 0.00, 1.00],"909 Drum Kit"]
-
-onlseq_instlist[ 1] = [0,   25,[1.00, 0.60, 0.00],"Acoustic Guitar"]
-onlseq_instlist[ 4] = [0,   27,[0.30, 0.69, 0.31],"Electric Guitar"]
-onlseq_instlist[48] = [0,   33,[0.13, 0.13, 0.13],"Bass"]
-onlseq_instlist[ 5] = [0,   33,[0.13, 0.13, 0.13],"Bass (Classic)"]
-onlseq_instlist[29] = [0,   37,[0.02, 0.06, 0.18],"Slap Bass"]
-onlseq_instlist[32] = [0,   27,[0.63, 0.65, 0.21],"Jazz Guitar"]
-onlseq_instlist[35] = [0,   29,[0.00, 0.50, 0.25],"Muted E-Guitar"]
-onlseq_instlist[38] = [0,   31,[0.00, 0.27, 0.12],"Distortion Guitar"]
-onlseq_instlist[49] = [0,   28,[0.88, 0.83, 0.09],"Clean Guitar"]
-onlseq_instlist[22] = [0,  105,[0.88, 0.68, 0.00],"Sitar"]
-onlseq_instlist[33] = [0,  108,[0.92, 0.47, 0.00],"Koto"]
-
-onlseq_instlist[ 3] = [0, None,[0.91, 0.12, 0.39],"Smooth Synth"]
-onlseq_instlist[ 6] = [0, None,[0.25, 0.32, 0.71],"Synth Pluck"]
-onlseq_instlist[ 7] = [0, None,[0.80, 0.86, 0.22],"Scifi"]
-onlseq_instlist[13] = [0, None,[1.00, 0.39, 0.39],"8-Bit Sine"]
-onlseq_instlist[14] = [0, None,[0.46, 1.00, 0.39],"8-Bit Square"]
-onlseq_instlist[15] = [0, None,[0.39, 0.88, 1.00],"8-Bit Sawtooth"]
-onlseq_instlist[16] = [0, None,[0.99, 0.39, 1.00],"8-Bit Triangle"]
-
-onlseq_instlist[ 9] = [0,   61,[0.51, 0.47, 0.09],"French Horn"]
-onlseq_instlist[10] = [0,   58,[1.00, 0.92, 0.00],"Trombone"]
-onlseq_instlist[11] = [0,   41,[0.55, 0.43, 0.39],"Violin"]
-onlseq_instlist[46] = [0,   41,[0.55, 0.43, 0.39],"Violin (Sustain)"]
-onlseq_instlist[12] = [0,   43,[0.31, 0.20, 0.18],"Cello"]
-onlseq_instlist[45] = [0,   43,[0.31, 0.20, 0.18],"Cello (Sustain)"]
-onlseq_instlist[18] = [0,   47,[0.11, 0.37, 0.13],"Concert Harp"]
-onlseq_instlist[20] = [0,   46,[1.00, 0.88, 0.70],"Pizzicato"]
-onlseq_instlist[23] = [0,   74,[0.91, 0.98, 0.74],"Flute"]
-onlseq_instlist[47] = [0,   49,[0.56, 0.46, 1.00],"Strings (Sustain)"]
-
-onlseq_instlist[24] = [0,   65,[0.66, 0.78, 0.33],"Saxophone"]
-onlseq_instlist[27] = [0,   39,[0.12, 0.77, 0.48],"Synth Bass"]
-onlseq_instlist[28] = [0,   20,[0.08, 0.13, 0.31],"Church Organ"]
-onlseq_instlist[30] = [0,   91,[0.42, 0.95, 0.72],"Pop Synth"]
-onlseq_instlist[37] = [0, None,[0.00, 0.00, 0.00],"808 Bass"]
 
 onlseq_auto = {}
 onlseq_auto['1'] = ['vol',1]
@@ -156,11 +100,12 @@ class input_onlinesequencer(plugin_input.base):
         cvpj_automation = {}
         cvpj_automation['main'] = {}
         cvpj_automation['track'] = {}
-
         os_data_song_stream = open(input_file, 'rb')
         os_data_song_data = os_data_song_stream.read()
         message, typedef = blackboxprotobuf.protobuf_to_json(os_data_song_data)
 
+        idvals_inst_onlineseq = idvals.parse_idvalscsv('idvals/onlineseq_inst.csv')
+        
         os_data = json.loads(message)
 
         onlseq_data_main = os_data["1"]
@@ -215,18 +160,21 @@ class input_onlinesequencer(plugin_input.base):
 
             cvpj_inst = {}
             cvpj_inst["type"] = 'instrument'
-            cvpj_inst["name"] = onlseq_instlist[instid][3]
-            cvpj_inst["color"] = onlseq_instlist[instid][2]
+            cvpj_inst["name"] = idvals.get_idval(idvals_inst_onlineseq, str(instid), 'name')
+            inst_color = idvals.get_idval(idvals_inst_onlineseq, str(instid), 'color')
+            inst_gminst = idvals.get_idval(idvals_inst_onlineseq, str(instid), 'gm_inst')
+            inst_isdrum = idvals.get_idval(idvals_inst_onlineseq, str(instid), 'isdrum')
+            if inst_color != None: cvpj_inst["color"] = inst_color
             cvpj_inst["instdata"] = {}
             cvpj_instdata = cvpj_inst["instdata"]
-            if onlseq_instlist[instid][1] != None:
+            if inst_gminst != None:
                 cvpj_instdata['plugin'] = 'general-midi'
-                if onlseq_instlist[instid][0] == 1:
+                if inst_isdrum == True:
                     cvpj_instdata['usemasterpitch'] = 0
-                    cvpj_instdata['plugindata'] = {'bank':128, 'inst':onlseq_instlist[instid][1]-1}
+                    cvpj_instdata['plugindata'] = {'bank':128, 'inst':inst_gminst-1}
                 else:
                     cvpj_instdata['usemasterpitch'] = 1
-                    cvpj_instdata['plugindata'] = {'bank':0, 'inst':onlseq_instlist[instid][1]-1}
+                    cvpj_instdata['plugindata'] = {'bank':0, 'inst':inst_gminst-1}
             else:
                 cvpj_instdata['plugin'] = 'none'
             if instid in onlseq_data_instparams:

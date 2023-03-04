@@ -1,0 +1,50 @@
+id;name;color_r;color_g;color_b;isdrum;gm_inst;group
+0;Elec. Piano (Classic);0.01;0.66;0.96;0;5;piano
+1;Acoustic Guitar;1;0.6;0;0;25;guitar
+2;Drum Kit;0.72;0.11;0.11;1;1;drumkit
+3;Smooth Synth;0.91;0.12;0.39;0;null;electronic
+4;Electric Guitar;0.3;0.69;0.31;0;27;guitar
+5;Bass (Classic);0.13;0.13;0.13;0;33;guitar
+6;Synth Pluck;0.25;0.32;0.71;0;null;electronic
+7;Scifi;0.8;0.86;0.22;0;null;electronic
+8;Grand Piano (Classic);0.08;0.4;0.75;0;1;piano
+9;French Horn;0.51;0.47;0.09;0;61;orchestra
+10;Trombone;1;0.92;0;0;58;orchestra
+11;Violin;0.55;0.43;0.39;0;41;orchestra
+12;Cello;0.31;0.2;0.18;0;43;orchestra
+13;8-Bit Sine;1;0.39;0.39;0;null;electronic
+14;8-Bit Square;0.46;1;0.39;0;null;electronic
+15;8-Bit Sawtooth;0.39;0.88;1;0;null;electronic
+16;8-Bit Triangle;0.99;0.39;1;0;null;electronic
+17;Harpsichord;1;0.34;0.13;0;7;piano
+18;Concert Harp;0.11;0.37;0.13;0;47;orchestra
+19;Xylophone;0.96;0.26;0.21;0;14;perc
+20;Pizzicato;1;0.88;0.7;0;46;orchestra
+21;Steel Drums;0.46;0.46;0.46;0;115;perc
+22;Sitar;0.88;0.68;0;0;105;guitar
+23;Flute;0.91;0.98;0.74;0;74;orchestra
+24;Saxophone;0.66;0.78;0.33;0;65;testing
+25;Ragtime Piano;0.05;0.28;0.63;0;4;piano
+26;Music Box;0.11;0.62;0.62;0;11;piano
+27;Synth Bass;0.12;0.77;0.48;0;39;testing
+28;Church Organ;0.08;0.13;0.31;0;20;testing
+29;Slap Bass;0.02;0.06;0.18;0;37;guitar
+30;Pop Synth;0.42;0.95;0.72;0;91;testing
+31;Electric Drum Kit;1;0.44;0.44;1;25;drumkit
+32;Jazz Guitar;0.63;0.65;0.21;0;27;guitar
+33;Koto;0.92;0.47;0;0;108;guitar
+34;Vibraphone;0.33;0.79;0.79;0;12;perc
+35;Muted E-Guitar;0;0.5;0.25;0;29;guitar
+36;808 Drum Kit;0.5;0.06;0.28;1;26;drumkit_classic
+37;808 Bass;0;0;0;0;null;testing
+38;Distortion Guitar;0;0.27;0.12;0;31;guitar
+39;8-Bit Drum Kit;0.62;0.06;0.13;1;null;drumkit_classic
+40;2013 Drum Kit;0.51;0.02;0.08;1;null;drumkit_classic
+41;Grand Piano;0.08;0.4;0.75;0;1;piano
+42;909 Drum Kit;0.6;0;1;1;null;drumkit_classic
+43;Electric Piano;0.01;0.66;0.96;0;5;piano
+45;Cello (Sustain);0.31;0.2;0.18;0;43;orchestra
+46;Violin (Sustain);0.55;0.43;0.39;0;41;orchestra
+47;Strings (Sustain);0.56;0.46;1;0;49;orchestra
+48;Bass;0.13;0.13;0.13;0;33;guitar
+49;Clean Guitar;0.88;0.83;0.09;0;28;guitar

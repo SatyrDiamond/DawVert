@@ -125,22 +125,13 @@ class input_onlinesequencer(plugin_input.base):
             if 'value' in t_markerdata[1]: value = t_markerdata[1]['value']
 
             if t_markerdata[0] == {}:
-                #print('Tempo:'.ljust(60), end='')
-                #print(str(t_markerdata[1]['position']).ljust(10), end='')
-                #print(t_markerdata[1]['value'])
                 t_auto_tempo.append({"position": t_markerdata[1]['position'], 'type': 'instant', "value": t_markerdata[1]['value']})
-                #print(t_markerdata)
 
             else:
                 if 'id' in t_markerdata[0]:
                     inst_id = int(t_markerdata[0]['id'])
                     inst_param = str(t_markerdata[0]['param'])
-
                     if 'value' in t_markerdata[1]:
-                        #print(str('Inst: '+onlseq_instlist[inst_id][3]).ljust(35), end='')
-                        #print(str('Param: '+inst_param).ljust(25), end='')
-                        #print(str(t_markerdata[1]['position']).ljust(10), end='')
-                        #print(t_markerdata[1]['value'])
                         if inst_id not in t_auto_inst: t_auto_inst[inst_id] = {}
                         if inst_param not in t_auto_inst[inst_id]: t_auto_inst[inst_id][inst_param] = []
                         t_auto_inst[inst_id][inst_param].append({"position": position, 'type': 'instant', "value": value})
@@ -150,8 +141,7 @@ class input_onlinesequencer(plugin_input.base):
 
         t_notelist = {}
 
-        for os_note in onlseq_data_notes:
-            parse_note(os_note)
+        for os_note in onlseq_data_notes: parse_note(os_note)
 
         songduration = 0
 
@@ -178,10 +168,8 @@ class input_onlinesequencer(plugin_input.base):
             else:
                 cvpj_instdata['plugin'] = 'none'
             if instid in onlseq_data_instparams:
-                if 'vol' in onlseq_data_instparams[instid]:
-                    cvpj_inst["vol"] = onlseq_data_instparams[instid]['vol']
-                if 'pan' in onlseq_data_instparams[instid]:
-                    cvpj_inst["pan"] = onlseq_data_instparams[instid]['pan']
+                if 'vol' in onlseq_data_instparams[instid]: cvpj_inst["vol"] = onlseq_data_instparams[instid]['vol']
+                if 'pan' in onlseq_data_instparams[instid]: cvpj_inst["pan"] = onlseq_data_instparams[instid]['pan']
 
             trackduration = note_mod.getduration(cvpj_notelist)
 
@@ -202,10 +190,8 @@ class input_onlinesequencer(plugin_input.base):
                     cvpj_autodata["position"] = 0
                     cvpj_autodata["duration"] = trackduration
                     cvpj_autodata["points"] = t_auto_inst[instid][param]
-
                     auto.resize(cvpj_autodata)
                     cvpj_automation['track']['os_'+str(instid)][param] = [cvpj_autodata]
-
 
             cvpj_l_trackdata['os_'+str(instid)] = cvpj_inst
             cvpj_l_trackordering.append('os_'+str(instid))
@@ -219,9 +205,7 @@ class input_onlinesequencer(plugin_input.base):
             cvpj_autodata["duration"] = songduration
             cvpj_autodata["points"] = []
             cvpj_autodata["points"].append({'position': 0, 'value': bpm})
-            for point in t_auto_tempo:
-                cvpj_autodata["points"].append(point)
-
+            for point in t_auto_tempo: cvpj_autodata["points"].append(point)
             cvpj_automation['main']['bpm'] = [cvpj_autodata]
 
         timesig_numerator = 4
@@ -234,6 +218,7 @@ class input_onlinesequencer(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
+        
         cvpj_l['track_data'] = cvpj_l_trackdata
         cvpj_l['track_order'] = cvpj_l_trackordering
         cvpj_l['track_placements'] = cvpj_l_trackplacements

@@ -104,6 +104,8 @@ class input_ceol(plugin_input.base):
                 cvpj_inst["name"] = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'name')
                 cvpj_instdata['plugin'] = 'none'
 
+            if ceol_inst_number == 363: t_key_offset.append(60)
+            if ceol_inst_number == 364: t_key_offset.append(48)
             if ceol_inst_number == 365: t_key_offset.append(24)
             else: t_key_offset.append(0)
 

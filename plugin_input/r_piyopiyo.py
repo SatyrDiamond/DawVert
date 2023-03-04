@@ -16,16 +16,10 @@ def pmddecodenotes(pmdfile, recordspertrack, pitch):
         bitnotes = bin(int.from_bytes(pmdfile.read(3), "little"))[2:].zfill(24)
         pan = pmdfile.read(1)[0]
         if pan != 0: currentpan = (pan-4)/3
-
         notenum = 11
         for bitnote in bitnotes:
             if bitnote == '1':
-                noteJ = {}
-                noteJ['position'] = pmdpos
-                noteJ['key'] = notenum + pitch
-                noteJ['duration'] = 1
-                noteJ['pan'] = currentpan
-                noteJ['vol'] = 1.0
+                noteJ = {'position': pmdpos, 'key': notenum+pitch, 'duration': 1, 'pan': currentpan, 'vol': 1.0}
                 notelist.append(noteJ)
             notenum -= 1
     patJ = {}
@@ -41,8 +35,7 @@ def parsetrack(placements, trackid, trackname, vol, samplefolder, wavid):
     instJ = {}
     if wavid != None:
         instJ['plugin'] = "sampler"
-        instJ['plugindata'] = {}
-        instJ['plugindata']['file'] = samplefolder + '/' + str(wavid) + '.wav'
+        instJ['plugindata'] = {'file': samplefolder+'/'+str(wavid)+'.wav'}
     else :
         instJ['plugin'] = "none"
     trkJp = {}

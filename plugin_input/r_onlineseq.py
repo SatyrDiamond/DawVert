@@ -215,10 +215,8 @@ class input_onlinesequencer(plugin_input.base):
         
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True
-        
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        
         cvpj_l['track_data'] = cvpj_l_trackdata
         cvpj_l['track_order'] = cvpj_l_trackordering
         cvpj_l['track_placements'] = cvpj_l_trackplacements

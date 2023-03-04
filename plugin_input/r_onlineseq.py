@@ -96,6 +96,7 @@ class input_onlinesequencer(plugin_input.base):
 
         cvpj_l_timemarkers = []
         cvpj_l_fxrack = {}
+        cvpj_l_drumkeysdata = {}
 
         cvpj_automation = {}
         cvpj_automation['main'] = {}
@@ -104,8 +105,19 @@ class input_onlinesequencer(plugin_input.base):
         os_data_song_data = os_data_song_stream.read()
         message, typedef = blackboxprotobuf.protobuf_to_json(os_data_song_data)
 
-        idvals_inst_onlineseq = idvals.parse_idvalscsv('idvals/onlineseq_inst.csv')
+        idvals_onlineseq_inst = idvals.parse_idvalscsv('idvals/onlineseq_inst.csv')
+        idvals_onlineseq_drumkit = idvals.parse_idvalscsv('idvals/onlineseq_drumkit.csv')
+        idvals_onlineseq_drumkit_808 = idvals.parse_idvalscsv('idvals/onlineseq_drumkit_808.csv')
+        idvals_onlineseq_drumkit_909 = idvals.parse_idvalscsv('idvals/onlineseq_drumkit_909.csv')
+        idvals_onlineseq_drumkit_2013 = idvals.parse_idvalscsv('idvals/onlineseq_drumkit_2013.csv')
+        idvals_onlineseq_drumkit_retro = idvals.parse_idvalscsv('idvals/onlineseq_drumkit_retro.csv')
         
+        cvpj_l_drumkeysdata['drumkit_midi'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit)
+        cvpj_l_drumkeysdata['drumkit_808'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_808)
+        cvpj_l_drumkeysdata['drumkit_909'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_909)
+        cvpj_l_drumkeysdata['drumkit_2013'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_2013)
+        cvpj_l_drumkeysdata['drumkit_retro'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_retro)
+
         os_data = json.loads(message)
 
         onlseq_data_main = os_data["1"]
@@ -150,10 +162,10 @@ class input_onlinesequencer(plugin_input.base):
 
             cvpj_inst = {}
             cvpj_inst["type"] = 'instrument'
-            cvpj_inst["name"] = idvals.get_idval(idvals_inst_onlineseq, str(instid), 'name')
-            inst_color = idvals.get_idval(idvals_inst_onlineseq, str(instid), 'color')
-            inst_gminst = idvals.get_idval(idvals_inst_onlineseq, str(instid), 'gm_inst')
-            inst_isdrum = idvals.get_idval(idvals_inst_onlineseq, str(instid), 'isdrum')
+            cvpj_inst["name"] = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'name')
+            inst_color = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'color')
+            inst_gminst = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'gm_inst')
+            inst_isdrum = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'isdrum')
             if inst_color != None: cvpj_inst["color"] = inst_color
             cvpj_inst["instdata"] = {}
             cvpj_instdata = cvpj_inst["instdata"]
@@ -220,6 +232,7 @@ class input_onlinesequencer(plugin_input.base):
         cvpj_l['track_data'] = cvpj_l_trackdata
         cvpj_l['track_order'] = cvpj_l_trackordering
         cvpj_l['track_placements'] = cvpj_l_trackplacements
+        cvpj_l['drumkeysdata'] = cvpj_l_drumkeysdata
         cvpj_l['bpm'] = bpm
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['timesig_numerator'] = timesig_numerator

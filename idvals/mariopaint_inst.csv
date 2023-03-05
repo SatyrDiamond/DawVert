@@ -1,0 +1,32 @@
+id;name;color_r;color_g;color_b;isdrum;gm_inst
+mario;Piano;0.92;0.77;0.56;0;0
+toad;Tom;0.98;0;0;0;null
+yoshi;SMW Yoshi;0;0.98;0.02;0;null
+star;Xylophone;0.97;0.98;0;0;13
+flower;Trumpet;0.96;0.5;0;0;56
+gameboy;Square Wave;0.76;0.76;0.76;0;80
+dog;Bark;1;1;1;0;null
+cat;Meow;0.98;0.75;0.51;0;null
+pig;Oink;0.96;0.75;0.52;0;null
+swan;String Hit;0.75;0.75;0.76;0;45
+face;Face;0.98;0.76;0.51;0;null
+plane;Acoustic Guitar;1;1;1;0;24
+boat;Hat;0.96;0;0.01;0;null
+car;Organ;0.88;0.53;0.17;0;16
+heart;Bass Guitar;0.96;0;0;0;32
+coin;Piano 2;0.93;0.75;0.2;0;1
+plant;Distorted Guitar;0.73;0;0.01;0;30
+shyguy;String;0.64;0;0.01;0;48
+ghost;Harp;0.57;0.96;0.99;0;46
+luigi;Steel Drum;0;0.97;0.48;0;114
+peach;Violin;0.97;0.31;0.56;0;40
+feather;Flute;0.97;0.47;0;0;73
+bulletbill;Timpani;0;0;0;0;47
+goomba;Bassoon;0.75;0.25;0.13;0;70
+bobomb;Bell;0;0;0;0;112
+spiny;Accordion;0.97;0.5;0;0;21
+fruit;Marimba;0.97;0;0;0;12
+oneup;Hi-Hat;0;0.97;0;0;null
+moon;Sawtooth Wave;0.97;0.97;0;0;81
+egg;Pizzicato strings;0;0.97;0;0;45
+gnome;Clown Horn;0;0.5;0.25;0;null

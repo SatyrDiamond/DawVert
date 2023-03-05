@@ -2,11 +2,13 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import colors
+from functions import idvals
 import plugin_input
 import json
 import io
 
 instnames = ['MARIO','MUSHROOM','YOSHI','STAR','FLOWER','GAMEBOY','DOG','CAT','PIG','SWAN','FACE','PLANE','BOAT','CAR','HEART','PIRANHA','COIN','SHYGUY','BOO','LUIGI','PEACH','FEATHER','BULLETBILL','GOOMBA','BOBOMB','SPINY','FRUIT','ONEUP','MOON','EGG','GNOME']
+smpnames = {'MARIO': "mario", 'MUSHROOM': "toad", 'YOSHI': "yoshi", 'STAR': "star", 'FLOWER': "flower", 'GAMEBOY': "gameboy", 'DOG': "dog", 'CAT': "cat", 'PIG': "pig", 'SWAN': "swan", 'FACE': "face", 'PLANE': "plane", 'BOAT': "boat", 'CAR': "car", 'HEART': "heart", 'PIRANHA': "plant", 'COIN': "coin", 'SHYGUY': "shyguy", 'BOO': "ghost", 'LUIGI': "luigi", 'PEACH': "peach", 'FEATHER': "feather", 'BULLETBILL': "bulletbill", 'GOOMBA': "goomba", 'BOBOMB': "bobomb", 'SPINY': "spiny", 'FRUIT': "fruit", 'ONEUP': "oneup", 'MOON': "moon", 'EGG': "egg", 'GNOME': "gnome"}
 keytable = {'C': 0,
 'D': 2,
 'E': 4,
@@ -14,70 +16,6 @@ keytable = {'C': 0,
 'G': 7,
 'A': 9,
 'B': 11}
-
-out_names = {'MARIO': 'Piano (Mario)',
-'MUSHROOM': 'Tom (Mushroom)',
-'YOSHI': 'SMW Yoshi',
-'STAR': 'Xylophone (Star)',
-'FLOWER': 'Trumpet (Flower)',
-'GAMEBOY': 'Square Wave (GameBoy)',
-'DOG': 'Bark (Dog)',
-'CAT': 'Meow (Cat)',
-'PIG': 'Oink (Pig)',
-'SWAN': 'String Hit (Swan)',
-'FACE': 'Face',
-'PLANE': 'Acoustic Guitar (Plane)',
-'BOAT': 'Hat (Boat)',
-'CAR': 'Organ (Car)',
-'HEART': 'Bass Guitar (Heart)',
-'PIRANHA': 'Distorted Guitar (Plant)',
-'COIN': 'Piano (Coin)',
-'SHYGUY': 'String (Shy Guy)',
-'BOO': 'Harp (Ghost)',
-'LUIGI': 'Steel Drum (Luigi)',
-'PEACH': 'Violin (Peach)',
-'FEATHER': 'Flute (Feather)',
-'BULLETBILL': 'Timpani (Bullet Bill)',
-'GOOMBA': 'Bassoon (Goomba)',
-'BOBOMB': 'Bell (Bob-omb)',
-'SPINY': 'Accordion (Spiny)',
-'FRUIT': 'Marimba (Fruit)',
-'ONEUP': 'Hi-Hat (1-Up)',
-'MOON': 'Sawtooth Wave (Moon)',
-'EGG': 'Pizzicato strings (Egg)',
-'GNOME': 'Clown Horn (Gnome)'}
-
-out_colors = {'MARIO': [0.92, 0.77, 0.56],
-'MUSHROOM': [0.98, 0.00, 0.00],
-'YOSHI': [0.00, 0.98, 0.02],
-'STAR': [0.97, 0.98, 0.00],
-'FLOWER': [0.96, 0.50, 0.00],
-'GAMEBOY': [0.76, 0.76, 0.76],
-'DOG': [1.00, 1.00, 1.00],
-'CAT': [0.98, 0.75, 0.51],
-'PIG': [0.96, 0.75, 0.52],
-'SWAN': [0.75, 0.75, 0.76],
-'FACE': [0.98, 0.76, 0.51],
-'PLANE': [1.00, 1.00, 1.00],
-'BOAT': [0.96, 0.00, 0.01],
-'CAR': [0.88, 0.53, 0.17],
-'HEART': [0.96, 0.00, 0.00],
-'PIRANHA': [0.73, 0.00, 0.01],
-'COIN': [0.93, 0.75, 0.20],
-'SHYGUY': [0.64, 0.00, 0.01],
-'BOO': [0.57, 0.96, 0.99],
-'LUIGI': [0.00, 0.97, 0.48],
-'PEACH': [0.97, 0.31, 0.56],
-'FEATHER': [0.97, 0.47, 0.00],
-'BULLETBILL': [0.00, 0.00, 0.00],
-'GOOMBA': [0.75, 0.25, 0.13],
-'BOBOMB': [0.00, 0.00, 0.00],
-'SPINY': [0.97, 0.50, 0.00],
-'FRUIT': [0.97, 0.00, 0.00],
-'ONEUP': [0.00, 0.97, 0.00],
-'MOON': [0.97, 0.97, 0.00],
-'EGG': [0.00, 0.97, 0.00],
-'GNOME': [0.00, 0.50, 0.25]}
 
 def makenote(n_pos, notes, vol, notesize):
     for note in notes:
@@ -117,6 +55,8 @@ class input_mariopaint_smp(plugin_input.base):
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global notelist
+
+        idvals_mariopaint_inst = idvals.parse_idvalscsv('idvals/mariopaint_inst.csv')
 
         cvpj_l = {}
         cvpj_l_instruments = {}
@@ -167,8 +107,9 @@ class input_mariopaint_smp(plugin_input.base):
 
         for instname in instnames:
             cvpj_inst = {}
-            cvpj_inst["name"] = out_names[instname]
-            cvpj_inst["color"] = colors.moregray(out_colors[instname])
+            cvpj_inst["name"] = idvals.get_idval(idvals_mariopaint_inst, smpnames[instname], 'name')
+            inst_color = idvals.get_idval(idvals_mariopaint_inst, smpnames[instname], 'color')
+            if inst_color != None: cvpj_inst["color"] = colors.moregray(inst_color)
             cvpj_inst["instdata"] = {}
             cvpj_instdata = cvpj_inst["instdata"]
             cvpj_instdata['plugin'] = 'general-midi'

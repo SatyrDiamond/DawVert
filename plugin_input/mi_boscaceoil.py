@@ -36,9 +36,17 @@ class input_ceol(plugin_input.base):
         cvpj_l_instrument_order = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
+        cvpj_l_keynames_data = {}
 
         idvals_inst_midi = idvals.parse_idvalscsv('idvals/midi_inst.csv')
         idvals_inst_bosca = idvals.parse_idvalscsv('idvals/boscaceoil_inst.csv')
+        idvals_drumkit_midi = idvals.parse_idvalscsv('idvals/boscaceoil_drumkit_midi.csv')
+        idvals_drumkit_simple = idvals.parse_idvalscsv('idvals/boscaceoil_drumkit_simple.csv')
+        idvals_drumkit_sion = idvals.parse_idvalscsv('idvals/boscaceoil_drumkit_sion.csv')
+
+        cvpj_l_keynames_data['drumkit_midi'] = idvals.idval2drumkeynames(idvals_drumkit_midi)
+        cvpj_l_keynames_data['drumkit_simple'] = idvals.idval2drumkeynames(idvals_drumkit_simple)
+        cvpj_l_keynames_data['drumkit_sion'] = idvals.idval2drumkeynames(idvals_drumkit_sion)
 
         global datapos
         global ceol_data
@@ -198,5 +206,6 @@ class input_ceol(plugin_input.base):
         cvpj_l['instruments_data'] = cvpj_l_instrument_data
         cvpj_l['instruments_order'] = cvpj_l_instrument_order
         cvpj_l['playlist'] = cvpj_l_playlist
+        cvpj_l['keynames_data'] = cvpj_l_keynames_data
         cvpj_l['bpm'] = ceol_basic_bpm
         return json.dumps(cvpj_l)

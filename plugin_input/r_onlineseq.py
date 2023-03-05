@@ -96,7 +96,7 @@ class input_onlinesequencer(plugin_input.base):
 
         cvpj_l_timemarkers = []
         cvpj_l_fxrack = {}
-        cvpj_l_drumkeys_data = {}
+        cvpj_l_keynames_data = {}
 
         cvpj_automation = {}
         cvpj_automation['main'] = {}
@@ -112,11 +112,11 @@ class input_onlinesequencer(plugin_input.base):
         idvals_onlineseq_drumkit_2013 = idvals.parse_idvalscsv('idvals/onlineseq_drumkit_2013.csv')
         idvals_onlineseq_drumkit_retro = idvals.parse_idvalscsv('idvals/onlineseq_drumkit_retro.csv')
         
-        cvpj_l_drumkeys_data['drumkit_midi'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit)
-        cvpj_l_drumkeys_data['drumkit_808'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_808)
-        cvpj_l_drumkeys_data['drumkit_909'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_909)
-        cvpj_l_drumkeys_data['drumkit_2013'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_2013)
-        cvpj_l_drumkeys_data['drumkit_retro'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_retro)
+        cvpj_l_keynames_data['drumkit_midi'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit)
+        cvpj_l_keynames_data['drumkit_808'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_808)
+        cvpj_l_keynames_data['drumkit_909'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_909)
+        cvpj_l_keynames_data['drumkit_2013'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_2013)
+        cvpj_l_keynames_data['drumkit_retro'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_retro)
 
         os_data = json.loads(message)
 
@@ -232,7 +232,7 @@ class input_onlinesequencer(plugin_input.base):
         cvpj_l['track_data'] = cvpj_l_trackdata
         cvpj_l['track_order'] = cvpj_l_trackordering
         cvpj_l['track_placements'] = cvpj_l_trackplacements
-        cvpj_l['drumkeys_data'] = cvpj_l_drumkeys_data
+        cvpj_l['keynames_data'] = cvpj_l_keynames_data
         cvpj_l['bpm'] = bpm
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['timesig_numerator'] = timesig_numerator

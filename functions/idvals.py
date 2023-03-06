@@ -28,7 +28,7 @@ def parse_idvalscsv(filename):
 						if tid_param == 'color_r': l_params[row[tid_id]][tid_param] = float(out_value)
 						elif tid_param == 'color_g': l_params[row[tid_id]][tid_param] = float(out_value)
 						elif tid_param == 'color_b': l_params[row[tid_id]][tid_param] = float(out_value)
-						elif tid_param == 'isdrum': l_params[row[tid_id]][tid_param] = bool(out_value)
+						elif tid_param == 'isdrum': l_params[row[tid_id]][tid_param] = bool(int(out_value))
 						elif tid_param == 'gm_inst':
 							if out_value == 'null': l_params[row[tid_id]][tid_param] = None
 							else: l_params[row[tid_id]][tid_param] = int(out_value)

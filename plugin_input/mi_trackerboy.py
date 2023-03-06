@@ -17,6 +17,12 @@ chipname['pulse'] = 'Pulse'
 chipname['noise'] = 'Noise'
 chipname['wavetable'] = 'Wavetable'
 
+replace_duty = {0:0, 1:1, 2:2, 3:1}
+replace_vol = {0:0, 1:15, 2:15, 3:15}
+replace_duty_get = replace_duty.get
+replace_vol_get = replace_vol.get
+
+
 def splitbyte(value):
     first = value >> 4
     second = value & 0x0F
@@ -141,10 +147,30 @@ class input_trackerboy(plugin_input.base):
             if trackerboy_chunk[0] == b'INST':
                 tb_instdata = data_bytes.bytearray2BytesIO(trackerboy_chunk[1])
                 tb_id = tb_instdata.read(1)[0]+1
-                tb_name = readstring(tb_instdata)
-                t_instruments[tb_id] = [tb_name]
                 print("[input-trackerboy] Inst " + str(tb_id) + ':')
+                tb_name = readstring(tb_instdata)
                 print("[input-trackerboy]     Name: " + str(tb_name))
+                tb_channel = tb_instdata.read(1)[0]
+                print("[input-trackerboy]     Channel: " + str(tb_channel))
+                tb_envelopeEnabled = tb_instdata.read(1)[0]
+                print("[input-trackerboy]     Envelope Enabled: " + str(tb_envelopeEnabled))
+                tb_envelope = tb_instdata.read(1)[0]
+
+                tb_volinit, tb_volper = splitbyte(tb_envelope)
+                print("[input-trackerboy]     Vol Env S: " + str(tb_volinit))
+                print("[input-trackerboy]     Vol Env P: " + str(tb_volper))
+
+                t_instruments[tb_id] = [tb_name]
+                for _ in range(4):
+                    envlength = int.from_bytes(tb_instdata.read(2), "little")
+                    loopEnabled = tb_instdata.read(1)[0]
+                    loopIndex = tb_instdata.read(1)[0]
+                    envdata = struct.unpack('b'*envlength, tb_instdata.read(envlength))
+                    t_instruments[tb_id].append([envdata, loopEnabled, loopIndex])
+
+                t_instruments[tb_id].append(tb_volinit)
+                t_instruments[tb_id].append(tb_volper)
+
         
             if trackerboy_chunk[0] == b'SONG':
                 if songnum == selectedsong:
@@ -218,7 +244,7 @@ class input_trackerboy(plugin_input.base):
 
                             if n_key != 0:
                                 if n_key == 85: trkr_cell_d[0] = 'Off'
-                                else: trkr_cell_d[0] = n_key-37
+                                else: trkr_cell_d[0] = n_key-25
                             trkr_cell_d[1] = n_inst
 
                             parse_fx_event(trkr_cell, fx1p, fx1v)
@@ -244,13 +270,48 @@ class input_trackerboy(plugin_input.base):
                 cvpj_inst = {}
                 cvpj_inst["name"] = trackerboy_instdata[0]+' ('+chipname[insttype]+')'
                 cvpj_inst["pan"] = 0.0
-                cvpj_inst["vol"] = 1.0
+                cvpj_inst["vol"] = 0.4
                 if insttype in chiptypecolors:
                     cvpj_inst["color"] = chiptypecolors[insttype]
                 cvpj_inst["instdata"] = {}
-                cvpj_inst["instdata"]["plugindata"] = {}
-                cvpj_inst["instdata"]["plugin"] = 'none'
+                cvpj_inst["instdata"]["plugin"] = 'retro'
+                plugindata = {}
 
+                if insttype == 'pulse': plugindata['wave'] = 'square'
+                if insttype == 'noise': plugindata['wave'] = 'noise'
+                if insttype == 'wavetable': plugindata['wave'] = 'square'
+
+                if trackerboy_instdata[1][0] != ():
+                    plugindata['env_pitch'] = {}
+                    plugindata['env_pitch']['values'] = trackerboy_instdata[1][0]
+
+                if trackerboy_instdata[2][0] != ():
+                    voldata = trackerboy_instdata[2][0]
+                    plugindata['env_vol'] = {}
+                    plugindata['env_vol']['values'] = [replace_vol_get(n, n) for n in voldata]
+ 
+                if trackerboy_instdata[4][0] != ():
+                    dutydata = trackerboy_instdata[4][0]
+                    plugindata['env_duty'] = {}
+                    plugindata['env_duty']['values'] = [replace_duty_get(n, n) for n in dutydata]
+
+                if trackerboy_instdata[6] == 0:
+                    plugindata['attack'] = 0
+                    plugindata['decay'] = 0
+                    plugindata['sustain'] = 1
+                    plugindata['release'] = 0
+                elif trackerboy_instdata[6] < 8:
+                    plugindata['attack'] = 0
+                    plugindata['decay'] = trackerboy_instdata[6]/5
+                    plugindata['sustain'] = 0
+                    plugindata['release'] = 0
+                elif trackerboy_instdata[6] >= 8:
+                    plugindata['attack'] = (trackerboy_instdata[6]-8)/5
+                    plugindata['decay'] = 0
+                    plugindata['sustain'] = 1
+                    plugindata['release'] = 0
+
+                cvpj_inst["instdata"]["plugindata"] = plugindata
                 cvpj_l_instrument_data[cvpj_instid] = cvpj_inst
                 cvpj_l_instrument_order.append(cvpj_instid)
 

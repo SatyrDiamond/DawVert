@@ -304,6 +304,10 @@ class output_cvpjs(plugin_output.base):
                 if 'type' in timemarker:
                     if timemarker['type'] == 'start': FL_TimeMarker['type'] = 5
                     elif timemarker['type'] == 'loop': FL_TimeMarker['type'] = 4
+                    elif timemarker['type'] == 'loop_area': 
+                        FL_TimeMarkers[str(markernum)] = {'name': "", 'type':2, 'pos':int((timemarker['end']*ppq)/4)}
+                        FL_TimeMarker['type'] = 1
+                        markernum += 1
                     elif timemarker['type'] == 'markerloop': FL_TimeMarker['type'] = 1
                     elif timemarker['type'] == 'markerskip': FL_TimeMarker['type'] = 2
                     elif timemarker['type'] == 'pause': FL_TimeMarker['type'] = 3
@@ -313,6 +317,7 @@ class output_cvpjs(plugin_output.base):
                         FL_TimeMarker['denominator'] = timemarker['denominator']
                     elif timemarker['type'] == 'punchin': FL_TimeMarker['type'] = 9
                     elif timemarker['type'] == 'punchout': FL_TimeMarker['type'] = 10
+                    else: FL_TimeMarker['type'] = 0
                 else: FL_TimeMarker['type'] = 0
                 FL_TimeMarkers[str(markernum)] = FL_TimeMarker
 

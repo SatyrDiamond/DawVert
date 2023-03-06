@@ -132,10 +132,12 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				m8p_params = ET.SubElement(m8p_root, "Params")
 				vst_inst.m8bp_addvalue(m8p_params, "arpeggioDirection", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "arpeggioTime", 0.02999999932944775)
-				vst_inst.m8bp_addvalue(m8p_params, "attack", 0.0)
+				if 'attack' in fsd_data: vst_inst.m8bp_addvalue(m8p_params, "attack", fsd_data['attack'])
+				else: vst_inst.m8bp_addvalue(m8p_params, "attack", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "bendRange", 12.0)
 				vst_inst.m8bp_addvalue(m8p_params, "colorScheme", 1.0)
-				vst_inst.m8bp_addvalue(m8p_params, "decay", 0.0)
+				if 'decay' in fsd_data: vst_inst.m8bp_addvalue(m8p_params, "decay", fsd_data['decay'])
+				else: vst_inst.m8bp_addvalue(m8p_params, "decay", 0.0)
 				
 				duty = 2
 				if 'duty' in fsd_data: 
@@ -156,6 +158,11 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				m8p_pitchEnv = ET.SubElement(m8p_root, "pitchEnv")
 				m8p_volumeEnv = ET.SubElement(m8p_root, "volumeEnv")
 
+				if 'env_pitch' in fsd_data:
+					vst_inst.m8bp_addvalue(m8p_params, "isPitchSequenceEnabled_raw", 1.0)
+					m8p_pitchEnv.text = ','.join(str(item) for item in fsd_data['env_pitch']['values'])
+				else: vst_inst.m8bp_addvalue(m8p_params, "isPitchSequenceEnabled_raw", 0.0)
+
 				if 'env_duty' in fsd_data:
 					vst_inst.m8bp_addvalue(m8p_params, "isDutySequenceEnabled_raw", 1.0)
 					m8p_dutyEnv.text = ','.join(str(item) for item in fsd_data['env_duty']['values'])
@@ -171,10 +178,11 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				if fsd_data['wave'] == 'square': vst_inst.m8bp_addvalue(m8p_params, "osc", 0.0)
 				if fsd_data['wave'] == 'triangle': vst_inst.m8bp_addvalue(m8p_params, "osc", 1.0)
 				if fsd_data['wave'] == 'noise': vst_inst.m8bp_addvalue(m8p_params, "osc", 2.0)
-				vst_inst.m8bp_addvalue(m8p_params, "pitchSequenceMode_raw", 0.0)
-				vst_inst.m8bp_addvalue(m8p_params, "release", 0.0)
+				if 'release' in fsd_data: vst_inst.m8bp_addvalue(m8p_params, "release", fsd_data['release'])
+				else: vst_inst.m8bp_addvalue(m8p_params, "release", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "restrictsToNESFrequency_raw", 0.0)
-				vst_inst.m8bp_addvalue(m8p_params, "suslevel", 1.0)
+				if 'sustain' in fsd_data: vst_inst.m8bp_addvalue(m8p_params, "suslevel", fsd_data['sustain'])
+				else: vst_inst.m8bp_addvalue(m8p_params, "suslevel", 1.0)
 				vst_inst.m8bp_addvalue(m8p_params, "sweepInitialPitch", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "sweepTime", 0.1000000014901161)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoDelay", 0.2999999821186066)

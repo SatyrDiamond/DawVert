@@ -192,5 +192,5 @@ class input_orgyana(plugin_input.base):
         cvpj_l['timesig_denominator'] = org_stepsperbar
         cvpj_l['timesig_numerator'] = org_beatsperstep
         if org_loop_beginning != 0:
-            cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': org_loop_beginning, 'end': org_loop_end, 'type': 'loop'}]
+            cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': org_loop_beginning, 'end': org_loop_end, 'type': 'loop_area'}]
         return json.dumps(cvpj_l)

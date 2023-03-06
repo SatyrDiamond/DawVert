@@ -500,6 +500,6 @@ class input_pxtone(plugin_input.base):
         cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
         if ptcop_mas_repeat != 0:
-            cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': ptcop_mas_repeat/timebase, 'end': ptcop_mas_last/timebase, 'type': 'loop'}]
+            cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': ptcop_mas_repeat/timebase, 'end': ptcop_mas_last/timebase, 'type': 'loop_area'}]
         cvpj_l['bpm'] = ptcop_mas_beattempo
         return json.dumps(cvpj_l)

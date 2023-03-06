@@ -8,55 +8,9 @@ from functions import audio_wav
 from functions import data_bytes
 from functions import folder_samples
 
-def pmddecodenotes(pmdfile, recordspertrack, pitch):
-    notelist = []
-    placements = []
-    currentpan = 0
-    for pmdpos in range(recordspertrack):
-        bitnotes = bin(int.from_bytes(pmdfile.read(3), "little"))[2:].zfill(24)
-        pan = pmdfile.read(1)[0]
-        if pan != 0: currentpan = (pan-4)/3
-        notenum = 11
-        for bitnote in bitnotes:
-            if bitnote == '1':
-                noteJ = {'position': pmdpos, 'key': notenum+pitch, 'duration': 1, 'pan': currentpan, 'vol': 1.0}
-                notelist.append(noteJ)
-            notenum -= 1
-    patJ = {}
-    patJ['position'] = 0
-    patJ['duration'] = pmdpos
-    patJ['notelist'] = notelist
-    if notelist != []: placements = [patJ]
-    splitcurrent = 0
-    return placements
+track_colors = [[0.25, 0.38, 0.49], [0.36, 0.43, 0.46], [0.51, 0.57, 0.47], [0.58, 0.64, 0.40]]
 
-def parsetrack(placements, trackid, trackname, vol, samplefolder, wavid):
-    trkJ = {}
-    instJ = {}
-    if wavid != None:
-        instJ['plugin'] = "sampler"
-        instJ['plugindata'] = {'file': samplefolder+'/'+str(wavid)+'.wav'}
-    else :
-        instJ['plugin'] = "none"
-    trkJp = {}
-    if wavid == 1: trkJ['color'] = [0.25, 0.38, 0.49]
-    if wavid == 2: trkJ['color'] = [0.36, 0.43, 0.46]
-    if wavid == 3: trkJ['color'] = [0.51, 0.57, 0.47]
-    if wavid == None: trkJ['color'] = [0.58, 0.64, 0.40]
-    trkJ['type'] = "instrument"
-    trkJ['instrument'] = trackname
-    trkJ['plugindata'] = trkJp
-    trkJ['name'] = trackname
-    trkJ['vol'] = vol
-    trkJ['instdata'] = instJ
-
-    cvpj_l_trackplacements[trackid] = {}
-    cvpj_l_trackplacements[trackid]['notes'] = placements
-
-    cvpj_l_trackordering.append(trackid)
-    cvpj_l_trackdata[trackid] = trkJ
-
-class input_pms(plugin_input.base):
+class input_piyopiyo(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'piyopiyo'
@@ -75,6 +29,10 @@ class input_pms(plugin_input.base):
         global cvpj_l_trackordering
         global cvpj_l_trackplacements
 
+        cvpj_l_trackdata = {}
+        cvpj_l_trackordering = []
+        cvpj_l_trackplacements = {}
+
         pmdfile = open(input_file, 'rb')
         header = pmdfile.read(4)
         trackdatapos = int.from_bytes(pmdfile.read(4), "little")
@@ -92,6 +50,8 @@ class input_pms(plugin_input.base):
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
 
         pmdtrackdata = []
+        keyoffset = [0,0,0,0]
+
         for tracknum in range(3):
             print("[input-piyopiyo] Track " + str(tracknum+1), end=",")
             trk_octave = pmdfile.read(1)[0]
@@ -106,24 +66,51 @@ class input_pms(plugin_input.base):
             trk_unk2 = pmdfile.read(8)
             trk_waveform = pmdfile.read(256)
             trk_envelope = pmdfile.read(64)
+            keyoffset[tracknum] = (trk_octave-2)*12
+
+            trkJ = {}
+            trkJ['color'] = track_colors[tracknum]
+            trkJ['type'] = "instrument"
+            trkJ['name'] = 'note'+str(tracknum)
+            trkJ['vol'] = trk_volume/250
+            trkJ['instdata'] = {'plugin': "sampler", 'plugindata': {'file': samplefolder+'/'+str(tracknum+1)+'.wav'}}
+            cvpj_l_trackplacements[str(tracknum)] = {}
+            cvpj_l_trackordering.append(str(tracknum))
+            cvpj_l_trackdata[str(tracknum)] = trkJ
+
             wave_path = samplefolder + str(tracknum+1) + '.wav'
             audio_wav.generate(wave_path, data_bytes.unsign_8(trk_waveform), 1, 67000, 8, {'loop':[0, 256]})
-            pmdtrackdata.append([(trk_octave-2)*12, trk_icon, trk_length, trk_volume, trk_waveform, trk_envelope])
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
+        trkJ = {}
+        trkJ['color'] = track_colors[3]
+        trkJ['type'] = "instrument"
+        trkJ['name'] = 'perc'
+        trkJ['vol'] = TrackPVol
+        trkJ['instdata'] = {'plugin': "none", 'plugindata': {}}
+        cvpj_l_trackplacements["3"] = {}
+        cvpj_l_trackordering.append("3")
+        cvpj_l_trackdata["3"] = trkJ
 
         pmdfile.seek(trackdatapos)
-        notes1 = pmddecodenotes(pmdfile, recordspertrack, pmdtrackdata[0][0])
-        notes2 = pmddecodenotes(pmdfile, recordspertrack, pmdtrackdata[1][0])
-        notes3 = pmddecodenotes(pmdfile, recordspertrack, pmdtrackdata[2][0])
-        notesP = pmddecodenotes(pmdfile, recordspertrack, 0)
-        cvpj_l_trackdata = {}
-        cvpj_l_trackordering = []
-        cvpj_l_trackplacements = {}
-        parsetrack(notes1, 'piyopiyo_note1', 'Note #1', pmdtrackdata[0][3]/250, samplefolder, 1)
-        parsetrack(notes2, 'piyopiyo_note2', 'Note #2', pmdtrackdata[1][3]/250, samplefolder, 2)
-        parsetrack(notes3, 'piyopiyo_note3', 'Note #3', pmdtrackdata[2][3]/250, samplefolder, 3)
-        parsetrack(notesP, 'piyopiyo_perc', 'Drums', TrackPVol/250, samplefolder, None)
+
+        for tracknum in range(4):
+            notelist = []
+            t_placements = []
+            currentpan = 0
+            for pmdpos in range(recordspertrack):
+                bitnotes = bin(int.from_bytes(pmdfile.read(3), "little"))[2:].zfill(24)
+                pan = pmdfile.read(1)[0]
+                if pan != 0: currentpan = (pan-4)/3
+                notenum = 11
+                for bitnote in bitnotes:
+                    if bitnote == '1':
+                        notelist.append({'position': pmdpos, 'key': notenum+keyoffset[tracknum], 'duration': 1, 'pan': currentpan, 'vol': 1.0})
+                    notenum -= 1
+            if notelist != []: t_placements = [{'position': 0, 'duration': pmdpos, 'notelist': notelist}]
+            else: t_placements = []
+            cvpj_l_trackplacements[str(tracknum)]['notes'] = t_placements
+
         cvpj_l = {}
 
         cvpj_l['do_addwrap'] = True
@@ -131,11 +118,12 @@ class input_pms(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
+
         cvpj_l['bpm'] = bpm
         cvpj_l['track_data'] = cvpj_l_trackdata
         cvpj_l['track_order'] = cvpj_l_trackordering
         cvpj_l['track_placements'] = cvpj_l_trackplacements
         cvpj_l['timemarkers'] = []
-        cvpj_l['timemarkers'].append({'name': 'Loop', 'position': loopstart, 'end': loopend, 'type': 'loop'})
+        cvpj_l['timemarkers'].append({'name': 'Loop', 'position': loopstart, 'end': loopend, 'type': 'loop_area'})
         return json.dumps(cvpj_l)
 

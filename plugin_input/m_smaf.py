@@ -207,5 +207,7 @@ class input_mmf(plugin_input.base):
 
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
+        cvpj_l['use_placements_notes'] = False
+        
         cvpj_l['bpm'] = 120
         return json.dumps(cvpj_l)

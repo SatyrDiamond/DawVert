@@ -7,7 +7,7 @@
 #  \/                \/
 # [r] <--> [m] <--> [mi]
 
-
+from functions import placements
 import json
 
 # --------------------------------------------------------------------
@@ -89,6 +89,8 @@ def r2m(song):
     cvpj_proj = json.loads(song)
     if 'track_order' not in cvpj_proj:
         print('[error] track_order not found')
+
+    placements.r_split_single_notelist(cvpj_proj)
 
     t_s_track_order = cvpj_proj['track_order']
     t_s_trackdata = cvpj_proj['track_data']
@@ -234,7 +236,6 @@ def ri2r_fromindex2notelist(placement, notelistindex):
         del placement['fromindex']
     else:
         placement['notelist'] = []
-
 
 def ri2r(song):
     print('[song-convert] Converting from RegularIndexed > MultipleIndexed')

@@ -285,6 +285,11 @@ class input_jummbox(plugin_input.base):
         jummbox_beatsPerMinute = jummbox_json['beatsPerMinute']
         jummbox_channels = jummbox_json['channels']
 
+        if 'introBars' in jummbox_json and 'loopBars' in jummbox_json:
+            introbars = jummbox_json['introBars']*32
+            loopbars = jummbox_json['loopBars']*32 + introbars
+            cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': introbars, 'end': loopbars, 'type': 'loop_area'}]
+
         global jummbox_notesize
         jummbox_notesize = jummbox_beatsPerBar*jummbox_ticksPerBeat
 

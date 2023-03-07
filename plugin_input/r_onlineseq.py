@@ -53,10 +53,14 @@ def parse_inst_params(data):
 def parse_marker(markerdata):
     data = {}
     inst = {}
+    markertype = 'instant'
+
     if '1' in markerdata: data['position'] = int2float(int(markerdata['1']))
     if '2' in markerdata: inst['param'] = onlseq_auto[markerdata['2']][0]
     if '3' in markerdata: inst['id'] = markerdata['3']
     if '4' in markerdata: data['value'] = int2float(int(markerdata['4']))
+    if '5' in markerdata: markertype = 'normal'
+    data['type'] = markertype
     return (inst, data)
 
 def parse_note(notedata):
@@ -65,7 +69,7 @@ def parse_note(notedata):
     ols_inst = 0
     ols_vol = 1
     ols_note = int(notedata['1'])
-    ols_dur = int2float(int(notedata['3']))
+    ols_dur = 1
     if '4' in notedata: ols_inst = int(notedata['4'])
     if '2' in notedata: ols_pos = int2float(int(notedata['2']))
     if '3' in notedata: ols_dur = int2float(int(notedata['3']))
@@ -126,6 +130,7 @@ class input_onlinesequencer(plugin_input.base):
         else: onlseq_data_markers = []
 
         t_auto_tempo = []
+        t_auto_vol = []
         t_auto_inst = {}
 
         for onlseq_data_marker in onlseq_data_markers:
@@ -135,18 +140,20 @@ class input_onlinesequencer(plugin_input.base):
             value = 0
             if 'position' in t_markerdata[1]: position = t_markerdata[1]['position']
             if 'value' in t_markerdata[1]: value = t_markerdata[1]['value']
+            marker_type = t_markerdata[1]['type']
 
             if t_markerdata[0] == {}:
-                t_auto_tempo.append({"position": t_markerdata[1]['position'], 'type': 'instant', "value": t_markerdata[1]['value']})
-
-            else:
-                if 'id' in t_markerdata[0]:
-                    inst_id = int(t_markerdata[0]['id'])
-                    inst_param = str(t_markerdata[0]['param'])
-                    if 'value' in t_markerdata[1]:
-                        if inst_id not in t_auto_inst: t_auto_inst[inst_id] = {}
-                        if inst_param not in t_auto_inst[inst_id]: t_auto_inst[inst_id][inst_param] = []
-                        t_auto_inst[inst_id][inst_param].append({"position": position, 'type': 'instant', "value": value})
+                t_auto_tempo.append({"position": position, 'type': marker_type, "value": value})
+            elif 'param' in t_markerdata[0]:
+                if t_markerdata[0]['param'] == 'eq_high':
+                    t_auto_vol.append({"position": position, 'type': marker_type, "value": value})
+            elif 'id' in t_markerdata[0]:
+                inst_id = int(t_markerdata[0]['id'])
+                inst_param = str(t_markerdata[0]['param'])
+                if 'value' in t_markerdata[1]:
+                    if inst_id not in t_auto_inst: t_auto_inst[inst_id] = {}
+                    if inst_param not in t_auto_inst[inst_id]: t_auto_inst[inst_id][inst_param] = []
+                    t_auto_inst[inst_id][inst_param].append({"position": position, 'type': marker_type, "value": value})
 
         if "3" in onlseq_data_main:  onlseq_data_instparams = parse_inst_params(os_data["1"]["3"])
         else: onlseq_data_instparams = {}
@@ -211,12 +218,19 @@ class input_onlinesequencer(plugin_input.base):
         bpm = 120
         if '1' in onlseq_data_main: bpm = int(onlseq_data_main['1'])
 
+        if t_auto_vol != []:
+            cvpj_autodata = {}
+            cvpj_autodata["position"] = 0
+            cvpj_autodata["duration"] = songduration
+            cvpj_autodata["points"] = [{'position': 0, 'value': 1}]
+            for point in t_auto_vol: cvpj_autodata["points"].append(point)
+            cvpj_automation['main']['vol'] = [cvpj_autodata]
+
         if t_auto_tempo != []:
             cvpj_autodata = {}
             cvpj_autodata["position"] = 0
             cvpj_autodata["duration"] = songduration
-            cvpj_autodata["points"] = []
-            cvpj_autodata["points"].append({'position': 0, 'value': bpm})
+            cvpj_autodata["points"] = [{'position': 0, 'value': bpm}]
             for point in t_auto_tempo: cvpj_autodata["points"].append(point)
             cvpj_automation['main']['bpm'] = [cvpj_autodata]
 

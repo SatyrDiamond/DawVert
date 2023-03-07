@@ -113,12 +113,14 @@ class input_fmf(plugin_input.base):
         trackplacements['flipperzero'] = {}
         trackplacements['flipperzero']['notes'] = [pl_data]
 
-        rootJ = {}
-        rootJ['use_instrack'] = False
-        rootJ['use_fxrack'] = True
-        rootJ['bpm'] = fmf_BPM
-        rootJ['track_data'] = tracklist
-        rootJ['track_order'] = trackordering
-        rootJ['track_placements'] = trackplacements
-        return json.dumps(rootJ)
+        cvpj_l = {}
+        cvpj_l['use_instrack'] = False
+        cvpj_l['use_fxrack'] = True
+        cvpj_l['use_placements_notes'] = False
+        
+        cvpj_l['bpm'] = fmf_BPM
+        cvpj_l['track_data'] = tracklist
+        cvpj_l['track_order'] = trackordering
+        cvpj_l['track_placements'] = trackplacements
+        return json.dumps(cvpj_l)
 

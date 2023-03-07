@@ -78,6 +78,7 @@ def calcval(value):
 
 def parse_instrument(cvpj_chain, bb_instrument, bb_type):
     global idvals_inst_beepbox
+    bb_effects = bb_instrument['effects']
     bb_type = bb_instrument['type']
     bb_volume = bb_instrument['volume']
     if 'preset' in bb_instrument: bb_preset = str(bb_instrument['preset'])
@@ -347,6 +348,8 @@ class input_jummbox(plugin_input.base):
 
         cvpj_l['use_instrack'] = True
         cvpj_l['use_fxrack'] = False
+        cvpj_l['use_placements_notes'] = True
+
         cvpj_l['track_data'] = cvpj_l_track_data
         cvpj_l['track_order'] = cvpj_l_track_order
         cvpj_l['track_placements'] = cvpj_l_track_placements

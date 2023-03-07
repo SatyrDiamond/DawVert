@@ -3,6 +3,7 @@
 
 from functions import data_bytes
 from functions import auto
+from functions import idvals
 import plugin_input
 import json
 
@@ -76,19 +77,32 @@ def calcval(value):
     return (value*(jummbox_beatsPerBar/jummbox_ticksPerBeat))/2
 
 def parse_instrument(cvpj_chain, bb_instrument, bb_type):
+    global idvals_inst_beepbox
     bb_type = bb_instrument['type']
     bb_volume = bb_instrument['volume']
+    if 'preset' in bb_instrument: bb_preset = str(bb_instrument['preset'])
+    else: bb_preset = None
 
     instslot = {}
-    instslot['plugin'] = 'native-jummbox'
-    instslot['plugindata'] = {}
-    instslot['plugindata']['type'] = bb_type
-    instslot['plugindata']['data'] = bb_instrument
-    instslot['name'] = inst_names[bb_type]
     instslot["vol"] = (bb_volume/50)+0.5
     if 'pan' in bb_instrument: 
         bb_pan = bb_instrument['pan']
         instslot["pan"] = bb_pan/100
+
+    gm_inst = None
+    if bb_preset in idvals_inst_beepbox:
+        gm_inst = idvals.get_idval(idvals_inst_beepbox, bb_preset, 'gm_inst')
+
+    if gm_inst == None:
+        instslot['plugin'] = 'native-jummbox'
+        instslot['plugindata'] = {}
+        instslot['plugindata']['type'] = bb_type
+        instslot['plugindata']['data'] = bb_instrument
+        instslot['name'] = inst_names[bb_type]
+    else:
+        instslot['plugin'] = 'general-midi'
+        instslot['plugindata'] = {'bank':0, 'inst':gm_inst}
+        instslot['name'] = idvals.get_idval(idvals_inst_beepbox, bb_preset, 'name')
 
     cvpj_chain.append(instslot)
 
@@ -118,7 +132,6 @@ def parse_channel(channeldata, channum):
         cvpj_inst = {}
         cvpj_inst["type"] = "instrument"
         cvpj_inst["pan"] = 0.0
-        cvpj_inst["name"] = 'Channel '+str(channum)
         cvpj_inst["vol"] = 1.0
         cvpj_inst["notelistindex"] = {}
         cvpj_inst["chain_inst"] = []
@@ -128,6 +141,13 @@ def parse_channel(channeldata, channum):
 
         for bb_instrument in bb_instruments:
             parse_instrument(cvpj_inst["chain_inst"], bb_instrument, bb_type)
+
+        outname = ''
+        for instrumentdata in cvpj_inst["chain_inst"]:
+            outname += instrumentdata['name'] + ' '
+
+        cvpj_inst["name"] = outname
+
         if bb_color != None: cvpj_inst['color'] = bb_color
         cvpj_l_track_data[str(channum)] = cvpj_inst
         cvpj_l_track_order.append(str(channum))
@@ -258,10 +278,14 @@ class input_jummbox(plugin_input.base):
         global cvpj_l_track_placements
         global cvpj_l_automation
 
+        global idvals_inst_beepbox
+
         global jummbox_beatsPerBar
         global jummbox_ticksPerBeat
         global bbcvpj_modplacements
         global jummbox_key
+
+        idvals_inst_beepbox = idvals.parse_idvalscsv('idvals/beepbox_inst.csv')
 
         bbcvpj_modplacements = {}
 
@@ -300,7 +324,7 @@ class input_jummbox(plugin_input.base):
 
         for bbauto_group in bbcvpj_modplacements:
             for bbauto_target in bbcvpj_modplacements[bbauto_group]:
-                #print(bbauto_group, bbauto_target, bbcvpj_modplacements[bbauto_group][bbauto_target])
+                print(bbauto_group, bbauto_target, len(bbcvpj_modplacements[bbauto_group][bbauto_target]))
                 outautoname = bbauto_target
                 outautodata = bbcvpj_modplacements[bbauto_group][bbauto_target]
                 if bbauto_group == -1:
@@ -312,6 +336,11 @@ class input_jummbox(plugin_input.base):
                         outautoname = 'vol'
                         outautodata = auto.multiply(outautodata, 0, 0.01)
                     cvpj_l_automation['main'][outautoname] = outautodata
+                #else:
+                #    if 'track_main' not in cvpj_l_automation: cvpj_l_automation['track_main'] = {}
+                #    if outautoname == "0_36": 
+                #        if str(bbauto_group) not in cvpj_l_automation: cvpj_l_automation['track_main'][str(bbauto_group)] = {}
+                #        cvpj_l_automation['track_main'][str(bbauto_group)]['vol'] = auto.multiply(outautodata, 0, 0.04)
 
         cvpj_l['do_addwrap'] = True
 

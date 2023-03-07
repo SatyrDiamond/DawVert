@@ -144,7 +144,8 @@ def parse_channel(channeldata, channum):
 
         outname = ''
         for instrumentdata in cvpj_inst["chain_inst"]:
-            outname += instrumentdata['name'] + ' '
+            if outname != '': outname += ' + '
+            outname += instrumentdata['name']
 
         cvpj_inst["name"] = outname
 

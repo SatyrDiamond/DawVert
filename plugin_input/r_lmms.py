@@ -820,6 +820,8 @@ class input_lmms(plugin_input.base):
 
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
+        cvpj_l['use_placements_notes'] = True
+        
         cvpj_l['track_data'] = trackdata
         cvpj_l['track_order'] = trackordering
         cvpj_l['track_placements'] = trackplacements

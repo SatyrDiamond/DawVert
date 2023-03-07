@@ -128,6 +128,8 @@ class input_mariopaint_msq(plugin_input.base):
 
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
+        cvpj_l['use_placements_notes'] = False
+        
         cvpj_l['timesig_numerator'] = msq_measure
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['instruments_data'] = cvpj_l_instruments

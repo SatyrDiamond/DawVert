@@ -1,0 +1,168 @@
+id;name;group;gm_inst
+64;square wave;retro;null
+65;triangle wave;retro;null
+66;square lead;retro;80
+67;sawtooth lead 1;retro;81
+68;sawtooth lead 2;retro;81
+70;FM twang;retro;null
+71;FM bass;retro;null
+72;FM flute;retro;null
+73;FM organ;retro;null
+74;NES Pulse;retro;null
+75;Gameboy Pulse;retro;null
+76;VRC6 Sawtooth;retro;null
+77;Atari Square;retro;null
+78;Atari Bass;retro;null
+79;Sunsoft Bass;retro;null
+128;grand piano 1;keyboard;0
+137;grand piano 2;keyboard;0
+129;bright piano;keyboard;1
+130;electric grand;keyboard;2
+131;honky-tonk piano;keyboard;3
+132;electric piano 1;keyboard;4
+133;electric piano 2;keyboard;5
+134;harpsichord;keyboard;6
+135;clavinet;keyboard;7
+136;dulcimer;keyboard;15
+192;celesta;idiophone;8
+193;glockenspiel;idiophone;9
+194;music box 1;idiophone;10
+195;music box 2;idiophone;10
+196;vibraphone;idiophone;11
+197;marimba;idiophone;12
+198;kalimba;idiophone;108
+199;xylophone;idiophone;13
+200;tubular bell;idiophone;14
+201;bell synth;idiophone;null
+202;rain drop;idiophone;96
+203;crystal;idiophone;98
+204;tinkle bell;idiophone;112
+205;agogo;idiophone;113
+256;nylon guitar;guitar;24
+257;steel guitar;guitar;25
+258;jazz guitar;guitar;26
+259;clean guitar;guitar;27
+260;muted guitar;guitar;28
+320;acoustic bass;bass;32
+321;fingered bass;bass;33
+322;picked bass;bass;34
+323;fretless bass;bass;35
+324;slap bass 1;bass;36
+325;slap bass 2;bass;37
+326;bass synth 1;bass;38
+327;bass synth 2;bass;39
+328;Bass & lead;bass;87
+329;dubstep yoi yoi;bass;null
+384;pizzicato strings;plucked_string;45
+385;harp;plucked_string;46
+386;sitar;plucked_string;104
+387;banjo;plucked_string;105
+388;ukulele;plucked_string;null
+389;shamisen;plucked_string;106
+390;koto;plucked_string;107
+448;overdrive guitar;distortion;29
+449;distortion guitar;distortion;30
+450;charango synth;distortion;null
+451;guitar harmonics;distortion;31
+452;PWM overdrive;distortion;null
+453;PWM distortion;distortion;null
+454;FM overdrive;distortion;null
+455;FM distortion;distortion;null
+512;drawbar organ 1;bellows;16
+513;drawbar organ 2;bellows;16
+514;percussive organ;bellows;17
+515;rock organ;bellows;18
+516;pipe organ;bellows;19
+517;reed organ;bellows;20
+518;accordion;bellows;21
+519;bandoneon;bellows;null
+520;bagpipe;bellows;109
+576;violin 1;string;40
+587;violin 2;string;40
+577;viola;string;41
+578;cello;string;42
+579;contrabass;string;43
+580;fiddle;string;null
+581;tremolo strings;string;44
+582;strings;string;null
+583;slow strings;string;null
+584;strings synth 1;string;50
+585;strings synth 2;string;51
+586;orchestra hit 1;string;55
+588;orchestra hit 2;string;55
+640;choir soprano;vocal;null
+641;choir tenor;vocal;null
+642;choir bass;vocal;null
+643;solo soprano;vocal;null
+644;solo tenor;vocal;null
+645;solo bass;vocal;null
+646;voice ooh;vocal;53
+647;voice synth;vocal;54
+648;vox synth lead;vocal;85
+649;tiny robot;vocal;null
+650;yowie;vocal;null
+651;mouse;vocal;null
+652;gumdrop;vocal;null
+653;echo drop;vocal;102
+654;dark choir;vocal;null
+704;trumpet;brass;56
+705;trombone;brass;57
+706;tuba;brass;58
+707;muted trumpet;brass;59
+708;french horn;brass;60
+709;brass section;brass;61
+710;brass synth 1;brass;62
+711;brass synth 2;brass;63
+712;pulse brass;brass;null
+768;soprano sax;reed;64
+769;alto sax;reed;65
+770;tenor sax;reed;66
+771;baritone sax;reed;67
+772;sax synth;reed;null
+773;shehnai;reed;null
+774;oboe;reed;68
+775;english horn;reed;69
+776;bassoon;reed;70
+777;clarinet;reed;71
+778;harmonica;reed;22
+832;flute 1;flute;73
+843;flute 2;flute;73
+833;recorder;flute;74
+834;whistle;flute;78
+835;ocarina;flute;79
+836;piccolo;flute;72
+837;shakuhachi;flute;77
+838;pan flute;flute;75
+839;blown bottle;flute;76
+840;calliope;flute;82
+841;chiffer;flute;83
+842;breath noise;flute;null
+896;new age pad;pad;88
+897;warm pad;pad;89
+898;polysynth pad;pad;90
+899;space voice pad;pad;null
+900;bowed glass pad;pad;92
+901;metallic pad;pad;93
+902;sweep pad;pad;95
+903;atmosphere;pad;99
+904;brightness;pad;100
+905;goblins;pad;101
+906;sci-fi;pad;103
+907;flutter pad;pad;null
+908;feedback pad;pad;null
+961;steel pan;drum;114
+962;steel pan synth;drum;null
+963;timpani;drum;47
+964;dark strike;drum;null
+971;synth kick;drum;null
+1024;guitar fret noise;novelty;120
+1025;fifth saw lead;novelty;86
+1026;fifth swell;novelty;null
+1027;soundtrack;novelty;97
+1030;bird tweet;novelty;123
+1031;telephone ring;novelty;124
+1035;scoot;novelty;null
+1036;buzz saw;novelty;null
+1037;mosquito;novelty;null
+1040;theremin;novelty;null
+1041;sonar ping;novelty;null

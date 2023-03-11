@@ -270,7 +270,7 @@ def parse_instrument(file_stream, samplecount):
 
     for _ in range(xm_inst_num_samples):
         sampheader = struct.unpack('IIIBBBBBB', file_stream.read(18))
-        sampname = file_stream.read(22).decode().rstrip('\x00')
+        sampname = file_stream.read(22).split(b'\x00' * 1)[0].decode("latin_1")
         t_sampleheaders.append([sampheader, sampname])
 
     for t_sampleheader in t_sampleheaders:

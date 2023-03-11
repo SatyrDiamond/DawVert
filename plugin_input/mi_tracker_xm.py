@@ -225,28 +225,23 @@ def parse_pattern(file_stream, num_channels):
 
     return patterntable_single
 
-def parse_sample(file_stream):
-    print("[input-xm]     SAMPLE")
-    xm_sample_len = int.from_bytes(file_stream.read(4), "little")
-    print("[input-xm]     I: Length: " + str(xm_sample_len))
-
 def parse_instrument(file_stream, samplecount):
     global cvpj_l_instruments
     global cvpj_l_instrumentsorder 
     basepos = file_stream.tell()
     xm_inst_header_length = int.from_bytes(file_stream.read(4), "little")
-    print("[input-xm]     I: Header Length: " + str(xm_inst_header_length))
+    print("[input-xm]     Header Length: " + str(xm_inst_header_length))
 
     xm_inst_name = file_stream.read(22).decode().rstrip('\x00')
-    print("[input-xm]     I: Name: " + str(xm_inst_name))
+    print("[input-xm]     Name: " + str(xm_inst_name))
     xm_inst_type = file_stream.read(1)[0]
-    print("[input-xm]     I: Type: " + str(xm_inst_type))
+    print("[input-xm]     Type: " + str(xm_inst_type))
     xm_inst_num_samples = file_stream.read(1)[0]
-    print("[input-xm]     I: # of samples: " + str(xm_inst_num_samples))
+    print("[input-xm]     # of samples: " + str(xm_inst_num_samples))
 
     if xm_inst_num_samples != 0:
         xm_inst_e_head_size = int.from_bytes(file_stream.read(4), "little")
-        print("[input-xm]     I: Sample header size: " + str(xm_inst_e_head_size))
+        print("[input-xm]     Sample header size: " + str(xm_inst_e_head_size))
         xm_inst_e_table = struct.unpack('B'*96, file_stream.read(96))
         xm_inst_e_env_v = struct.unpack('B'*48, file_stream.read(48))
         xm_inst_e_env_p = struct.unpack('B'*48, file_stream.read(48))

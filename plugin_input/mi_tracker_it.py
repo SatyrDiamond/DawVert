@@ -26,6 +26,7 @@ def splitbyte(value):
 
 def getfineval(value):
     volslidesplit = splitbyte(value)
+    volslideout = 0
     if volslidesplit[0] == 0 and volslidesplit[1] == 0:
         volslideout = 0
     elif volslidesplit[0] == 15 and volslidesplit[1] == 15:

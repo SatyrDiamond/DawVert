@@ -116,7 +116,6 @@ class input_fmf(plugin_input.base):
         cvpj_l = {}
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
-        cvpj_l['use_placements_notes'] = False
         
         cvpj_l['bpm'] = fmf_BPM
         cvpj_l['track_data'] = tracklist

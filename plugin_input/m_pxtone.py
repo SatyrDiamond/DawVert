@@ -494,7 +494,6 @@ class input_pxtone(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        cvpj_l['use_placements_notes'] = False
         
         cvpj_l['timesig_numerator'] = ptcop_mas_beat
         cvpj_l['timesig_denominator'] = 4

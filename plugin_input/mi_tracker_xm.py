@@ -298,7 +298,6 @@ def parse_instrument(file_stream, samplecount):
         cvpj_l_single_inst['instdata']['plugindata'] = {}
     cvpj_l_instrumentsorder.append(it_samplename)
     if xm_inst_num_samples != 0: xm_cursamplenum += xm_inst_num_samples
-    else: xm_cursamplenum += 1
 
 class input_xm(plugin_input.base):
     def __init__(self): pass

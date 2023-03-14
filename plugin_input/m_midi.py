@@ -157,7 +157,6 @@ class input_midi(plugin_input.base):
 
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True
-        cvpj_l['use_placements_notes'] = False
         
         cvpj_l['timesig_numerator'] = s_timesig[0]
         cvpj_l['timesig_denominator'] = s_timesig[1]

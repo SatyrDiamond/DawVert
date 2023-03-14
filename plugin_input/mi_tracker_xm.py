@@ -333,10 +333,10 @@ class input_xm(plugin_input.base):
         file_stream = open(input_file, 'rb')
 
         xm_header = file_stream.read(17)
-        xm_name = file_stream.read(20).decode().rstrip('\x00')
+        xm_name = file_stream.read(20).split(b'\x00' * 1)[0].decode("windows-1252")
         print("[input-xm] Song Name: " + xm_name)
         xm_1a = file_stream.read(1)
-        xm_trkr_name = file_stream.read(20).decode().rstrip('\x00')
+        xm_trkr_name = file_stream.read(20).split(b'\x00' * 1)[0].decode("windows-1252")
         print("[input-xm] Tracker Name: " + xm_trkr_name)
         xm_version = file_stream.read(2)
         print("[input-xm] Version: " + str(xm_version[1]), str(xm_version[0]))

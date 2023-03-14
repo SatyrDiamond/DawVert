@@ -101,7 +101,6 @@ class input_cvpj_f(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        cvpj_l['use_placements_notes'] = False
 
         cvpj_l['bpm'] = mmc_bpm
         cvpj_l['track_data'] = cvpj_l_trackdata

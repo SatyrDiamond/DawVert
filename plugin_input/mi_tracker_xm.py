@@ -43,8 +43,11 @@ def getfineval(value):
         volslideout = volslidesplit[0]/16
     return volslideout
 
-def parse_xm_cell(databytes):
+def parse_xm_cell(databytes, firstrow):
     global current_speed
+    globaljson = {}
+
+    if firstrow == 1: globaljson['firstrow'] = 1
 
     cell_note = None
     cell_instrument = None
@@ -158,6 +161,7 @@ def parse_xm_cell(databytes):
 
     if cell_effect == 15:
         output_extra['speed'] = cell_param
+        globaljson['speed'] = cell_param
         current_speed = cell_param
 
     if cell_effect == 16: 
@@ -174,16 +178,15 @@ def parse_xm_cell(databytes):
     if cell_vol != None:
         if 80 >= cell_vol >= 16: output_param['vol'] = (cell_vol-16)/64
 
-    return [output_note, output_inst, output_param, output_extra]
+    return globaljson, [output_note, output_inst, output_param, output_extra]
 
 def parse_xm_row(xmdata, numchannels, firstrow):
     table_row = []
     globaljson = {}
     for channel in range(numchannels):
-        if firstrow == 1: globaljson['firstrow'] = 1
-        celldata = parse_xm_cell(xmdata)
-        rowdata_global = celldata[3]
-        globaljson = rowdata_global | globaljson
+        if firstrow == 1: globaljson, celldata = parse_xm_cell(xmdata, 1)
+        else: t_globaljson, celldata = parse_xm_cell(xmdata, 0)
+        globaljson = globaljson | t_globaljson
         table_row.append(celldata)
     return [globaljson, table_row]
 
@@ -199,13 +202,13 @@ def parse_xm_row_none(numchannels, firstrow):
 def parse_pattern(file_stream, num_channels): 
     basepos = file_stream.tell()
     xm_pat_header_length = int.from_bytes(file_stream.read(4), "little")
-    print("[input-xm]     Header Length: " + str(xm_pat_header_length))
+    print("Len: " + str(xm_pat_header_length), end=' | ')
     xm_pat_pak_type = file_stream.read(1)[0]
-    print("[input-xm]     Packing type: " + str(xm_pat_pak_type))
+    print("PakType: " + str(xm_pat_pak_type), end=' | ')
     xm_pat_num_rows = int.from_bytes(file_stream.read(2), "little")
-    print("[input-xm]     Number of rows: " + str(xm_pat_num_rows))
+    print("#rows: " + str(xm_pat_num_rows), end=' | ')
     xm_pat_patterndata_size = int.from_bytes(file_stream.read(2), "little")
-    print("[input-xm]     Packed patterndata size: " + str(xm_pat_patterndata_size))
+    print("DataSize: " + str(xm_pat_patterndata_size))
 
     patterntable_single = []
 
@@ -228,6 +231,8 @@ def parse_pattern(file_stream, num_channels):
 def parse_instrument(file_stream, samplecount):
     global cvpj_l_instruments
     global cvpj_l_instrumentsorder 
+    global xm_cursamplenum
+
     basepos = file_stream.tell()
     xm_inst_header_length = int.from_bytes(file_stream.read(4), "little")
     print("[input-xm]     Header Length: " + str(xm_inst_header_length))
@@ -275,7 +280,7 @@ def parse_instrument(file_stream, samplecount):
 
     for t_sampleheader in t_sampleheaders:
         file_stream.read(t_sampleheader[0][0])
-    
+
     it_samplename = startinststr + str(samplecount+1)
     cvpj_l_instruments[it_samplename] = {}
     cvpj_l_single_inst = cvpj_l_instruments[it_samplename]
@@ -286,12 +291,14 @@ def parse_instrument(file_stream, samplecount):
     if xm_inst_num_samples == 1:
         cvpj_l_single_inst['vol'] = 0.3*(t_sampleheaders[0][0][3]/64)
         cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
-        cvpj_l_single_inst['instdata']['plugindata'] = {'file': samplefolder + str(samplecount+1) + '.wav'}
+        cvpj_l_single_inst['instdata']['plugindata'] = {'file': samplefolder + str(xm_cursamplenum) + '.wav'}
     else:
         cvpj_l_single_inst['vol'] = 0.3
         cvpj_l_single_inst['instdata']['plugin'] = 'none'
         cvpj_l_single_inst['instdata']['plugindata'] = {}
     cvpj_l_instrumentsorder.append(it_samplename)
+    if xm_inst_num_samples != 0: xm_cursamplenum += xm_inst_num_samples
+    else: xm_cursamplenum += 1
 
 class input_xm(plugin_input.base):
     def __init__(self): pass
@@ -313,6 +320,9 @@ class input_xm(plugin_input.base):
         global cvpj_l_instrumentsorder
         global samplefolder
         global current_speed
+        global xm_cursamplenum
+
+        xm_cursamplenum = 1
 
         file_name = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
@@ -369,7 +379,7 @@ class input_xm(plugin_input.base):
         extra_data = file_stream.read(calc_pos-findpat)
         patterntable_all = []
         for patnum in range(xm_song_num_patterns):
-            print("[input-xm] Pattern: "+str(patnum+1))
+            print("[input-xm] Pattern "+str(patnum+1), end=': ')
             patterntable_single = parse_pattern(file_stream, xm_song_num_channels)
             patterntable_all.append(patterntable_single)
 

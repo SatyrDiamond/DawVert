@@ -69,7 +69,7 @@ chardet
 
 ## Optional Libraries
 ```
-xmodits_py - for extracting Impulse Tracker Samples
+xmodits_py - for extracting Impulse Tracker and FastTracker2 Samples
 ```
 
 ## Supported Outputs

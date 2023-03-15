@@ -189,7 +189,6 @@ class input_notessimo_v2(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
-        cvpj_l['use_placements_notes'] = True
         
         cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['timemarkers'] = cvpj_l_timemarkers

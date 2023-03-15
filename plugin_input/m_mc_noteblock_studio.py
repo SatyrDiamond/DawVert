@@ -227,7 +227,6 @@ class input_gt_mnbs(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        cvpj_l['use_placements_notes'] = True
         
         cvpj_l['timesig_numerator'] = timesig_numerator
         cvpj_l['timesig_denominator'] = 4

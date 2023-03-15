@@ -255,6 +255,8 @@ class output_cvpjs(plugin_output.base):
                         FL_playlistitem['itemindex'] = int(pat_id[CVPJ_Placement['fromindex']] + FL_playlistitem['patternbase'])
                         if 'duration' in CVPJ_Placement:
                             FL_playlistitem['length'] = int((CVPJ_Placement['duration']*ppq)/4)
+                            FL_playlistitem['startoffset'] = 0
+                            FL_playlistitem['endoffset'] = int((CVPJ_Placement['duration']*ppq)/4)
                         else:
                             FL_playlistitem['length'] = note_mod.getduration(CVPJ_NotelistIndex[CVPJ_Placement['fromindex']]['notelist'])
                         FL_playlistitem['unknown1'] = 120

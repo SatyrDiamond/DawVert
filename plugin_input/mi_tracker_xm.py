@@ -409,7 +409,6 @@ class input_xm(plugin_input.base):
 
         cvpj_l['use_fxrack'] = False
         cvpj_l['use_instrack'] = False
-        cvpj_l['use_placements_notes'] = True
         
         cvpj_l['instruments_data'] = cvpj_l_instruments
         cvpj_l['instruments_order'] = cvpj_l_instrumentsorder

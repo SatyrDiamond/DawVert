@@ -64,7 +64,6 @@ class input_color_art(plugin_input.base):
         cvpj_l = {}
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        cvpj_l['use_placements_notes'] = True
         
         cvpj_l['bpm'] = 140
         cvpj_l['track_data'] = cvpj_l_trackdata

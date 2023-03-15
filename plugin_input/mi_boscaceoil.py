@@ -202,7 +202,6 @@ class input_ceol(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        cvpj_l['use_placements_notes'] = True
         
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments_data'] = cvpj_l_instrument_data

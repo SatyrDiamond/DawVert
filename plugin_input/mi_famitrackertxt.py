@@ -24,6 +24,7 @@ mt_type_colors['VRC6Square'] = [0.60, 0.44, 0.93]
 mt_type_colors['VRC6Saw'] = [0.46, 0.52, 0.91]
 mt_type_colors['S5B'] = [0.58, 0.94, 0.33]
 mt_type_colors['N163'] = [0.97, 0.97, 0.36]
+mt_type_colors['MMC5Square'] = [0.97, 0.56, 0.36]
 
 chipname = {}
 chipname['pulse'] = 'Pulse'
@@ -118,6 +119,9 @@ class input_famitrkr_txt(plugin_input.base):
 
         inst_name = {}
 
+        mt_ch_insttype = ['Square1','Square2','Triangle','Noise','DPCM']
+        mt_ch_names = ['Square1','Square2','Triangle','Noise','DPCM']
+
         for line in lines_smp:
             ft_cmd_data = line.strip().split(' ', 1)
 
@@ -161,28 +165,40 @@ class input_famitrkr_txt(plugin_input.base):
             if ft_cmd_data[0] == 'EXPANSION':
                 ft_info_expansion = int(ft_cmd_data[1].split()[0])
                 print('[input-famitracker_txt] Expansion: ' + str(ft_info_expansion))
-                if ft_info_expansion == 0:
-                    mt_ch_insttype = ['Square1','Square2','Triangle','Noise','DPCM']
-                    mt_ch_names = ['Square1','Square2','Triangle','Noise','DPCM']
-                if ft_info_expansion == 1:
-                    mt_ch_insttype = ['Square1','Square2','Triangle','Noise','DPCM','VRC6Square','VRC6Square','VRC6Saw']
-                    mt_ch_names = ['Square1','Square2','Triangle','Noise','DPCM','VRC6Square','VRC6Square','VRC6Saw']
-                if ft_info_expansion == 2:
-                    mt_ch_insttype = ['Square1','Square2','Triangle','Noise','DPCM','VRC7FM','VRC7FM','VRC7FM','VRC7FM','VRC7FM','VRC7FM']
-                    mt_ch_names = ['Square1','Square2','Triangle','Noise','DPCM','VRC7FM','VRC7FM','VRC7FM','VRC7FM','VRC7FM','VRC7FM']
-                if ft_info_expansion == 4:
-                    mt_ch_insttype = ['Square1','Square2','Triangle','Noise','DPCM','FDS']
-                    mt_ch_names = ['Square1','Square2','Triangle','Noise','DPCM','FDS']
-                if ft_info_expansion == 8:
-                    mt_ch_insttype = ['Square1','Square2','Triangle','Noise','DPCM','VRC6Square','VRC6Square']
-                    mt_ch_names = ['Square1','Square2','Triangle','Noise','DPCM','VRC6Square','VRC6Square']
-                if ft_info_expansion == 16:
-                    mt_ch_insttype = ['Square1','Square2','Triangle','Noise','DPCM','N163']
-                    mt_ch_names = ['Square1','Square2','Triangle','Noise','DPCM','N163']
+
+                #1=VRC6, 2=VRC7, 4=FDS, 8=MMC5, 16=N163, 32=S5B 
+
+                if bool(ft_info_expansion & 0b1):
+                    for _ in range(2):
+                        mt_ch_insttype.append('VRC6Square')
+                        mt_ch_names.append('VRC6Square')
+                    mt_ch_insttype.append('VRC6Saw')
+                    mt_ch_names.append('VRC6Saw')
+                if bool(ft_info_expansion & 0b10):
+                    for _ in range(6):
+                        mt_ch_insttype.append('VRC7FM')
+                        mt_ch_names.append('VRC7FM')
+                if bool(ft_info_expansion & 0b100):
+                    mt_ch_insttype.append('FDS')
+                    mt_ch_names.append('FDS')
+                if bool(ft_info_expansion & 0b1000):
+                    for _ in range(2):
+                        mt_ch_insttype.append('MMC5Square')
+                        mt_ch_names.append('MMC5Square')
+                if bool(ft_info_expansion & 0b10000):
+                    for _ in range(8):
+                        mt_ch_insttype.append('N163')
+                        mt_ch_names.append('N163')
+                if bool(ft_info_expansion & 0b100000):
+                    for _ in range(3):
+                        mt_ch_insttype.append('S5B')
+                        mt_ch_names.append('S5B')
 
                 for chnum in range(len(mt_ch_insttype)):
                     mt_ord[chnum] = []
                     mt_pat[chnum] = {}
+
+                print(mt_ch_names, len(mt_ch_names))
 
             if ft_cmd_data[0] == 'INST2A03':
                 t_instdata = ft_cmd_data[1].split('"')[:2]

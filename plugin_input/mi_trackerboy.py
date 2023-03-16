@@ -282,8 +282,8 @@ class input_trackerboy(plugin_input.base):
                 if insttype == 'wavetable': plugindata['wave'] = 'square'
 
                 if trackerboy_instdata[1][0] != ():
-                    plugindata['env_pitch'] = {}
-                    plugindata['env_pitch']['values'] = trackerboy_instdata[1][0]
+                    plugindata['env_arp'] = {}
+                    plugindata['env_arp']['values'] = trackerboy_instdata[1][0]
 
                 if trackerboy_instdata[2][0] != ():
                     voldata = trackerboy_instdata[2][0]

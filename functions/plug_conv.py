@@ -158,9 +158,9 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				m8p_pitchEnv = ET.SubElement(m8p_root, "pitchEnv")
 				m8p_volumeEnv = ET.SubElement(m8p_root, "volumeEnv")
 
-				if 'env_pitch' in fsd_data:
+				if 'env_arp' in fsd_data:
 					vst_inst.m8bp_addvalue(m8p_params, "isPitchSequenceEnabled_raw", 1.0)
-					m8p_pitchEnv.text = ','.join(str(item) for item in fsd_data['env_pitch']['values'])
+					m8p_pitchEnv.text = ','.join(str(item) for item in fsd_data['env_arp']['values'])
 				else: vst_inst.m8bp_addvalue(m8p_params, "isPitchSequenceEnabled_raw", 0.0)
 
 				if 'env_duty' in fsd_data:

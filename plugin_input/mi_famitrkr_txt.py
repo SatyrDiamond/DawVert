@@ -35,9 +35,9 @@ chipname['fds'] = 'FDS'
 chipname['VRC7FM'] = 'VRC7FM'
 chipname['namco'] = 'N163'
 
-def setmacro(cvpj_plugdata, listname, macro_list, famitrkr_instdata_macro_id):
-    if famitrkr_instdata_macro_id in macro_list:
-        cvpj_plugdata[listname] = macro_list[famitrkr_instdata_macro_id]
+def setmacro(cvpj_plugdata, macro_list, listname, macronum, famitrkr_instdata_macro_id):
+    if famitrkr_instdata_macro_id in macro_list[macronum]:
+        cvpj_plugdata[listname] = macro_list[macronum][famitrkr_instdata_macro_id]
 
 def parsecell(celldata):
     cellsplit = celldata.split(' ')
@@ -72,7 +72,9 @@ def parsecell(celldata):
 
     return(out_cell)
 
-retroinst_names = ['Square1','Square2','Triangle','Noise']
+retroinst_names = ['Square1','Square2','Triangle','Noise','VRC6Square']
+
+retroinst_names_vrc6 = ['VRC6Square']
 
 class input_famitrkr_txt(plugin_input.base):
     def __init__(self): pass
@@ -102,18 +104,17 @@ class input_famitrkr_txt(plugin_input.base):
         ft_info_title = ''
         ft_info_author = ''
         ft_info_copyright = ''
-        famitrkr_instdata = {}
         t_patterndata = {}
 
         song_tempo = 150
         song_speed = 3
         song_rows = 64
 
-        macro_vol = {}
-        macro_arp = {}
-        macro_pitch = {}
-        macro_hipitch = {}
-        macro_duty = {}
+        macro_nes = [{},{},{},{},{}]
+        macro_nes_vrc6 = [{},{},{},{},{}]
+
+        famitrkr_instdata = {}
+        famitrkr_instdata_vrc6 = {}
 
         inst_name = {}
 
@@ -131,19 +132,23 @@ class input_famitrkr_txt(plugin_input.base):
                     macrotxt, macroseq = macrodata
                     macroseq = [int(i) for i in macroseq.split()]
                     macrovals = macrotxt.strip().split()
-                    microtype = int(macrovals[0])
-                    macroid = int(macrovals[1])
-                    macroloop = int(macrovals[2])
-                    macrorelease = int(macrovals[3])
-                    env_data = {}
-                    env_data['values'] = macroseq
+                    microtype, macroid, macroloop, macrorelease, macrounk = [int(i) for i in macrovals]
+                    env_data = {'values': macroseq}
                     if macrorelease != -1: env_data['release'] = macrorelease
                     if macroloop != -1: env_data['loop'] = macroloop
-                    if microtype == 0: macro_vol[macroid] = env_data
-                    if microtype == 1: macro_arp[macroid] = env_data
-                    if microtype == 2: macro_pitch[macroid] = env_data
-                    if microtype == 3: macro_hipitch[macroid] = env_data
-                    if microtype == 4: macro_duty[macroid] = env_data
+                    macro_nes[microtype][macroid] = env_data
+
+            if ft_cmd_data[0] == 'MACROVRC6':
+                macrodata = ft_cmd_data[1].split(' : ')
+                if len(macrodata) > 1:
+                    macrotxt, macroseq = macrodata
+                    macroseq = [int(i) for i in macroseq.split()]
+                    macrovals = macrotxt.strip().split()
+                    microtype, macroid, macroloop, macrorelease, macrounk = [int(i) for i in macrovals]
+                    env_data = {'values': macroseq}
+                    if macrorelease != -1: env_data['release'] = macrorelease
+                    if macroloop != -1: env_data['loop'] = macroloop
+                    macro_nes_vrc6[microtype][macroid] = env_data
 
             if ft_cmd_data[0] == 'AUTHOR':
                 ft_info_author = ft_cmd_data[1].split('"')[1::2][0]
@@ -183,16 +188,16 @@ class input_famitrkr_txt(plugin_input.base):
                 t_instdata = ft_cmd_data[1].split('"')[:2]
                 t_instdata_nums = t_instdata[0].split()
                 t_instdata_name = t_instdata[1]
-
-                inst_id = int(t_instdata_nums[0])
-                inst_macro_vol = int(t_instdata_nums[1])
-                inst_macro_arp = int(t_instdata_nums[2])
-                inst_macro_pitch = int(t_instdata_nums[3])
-                inst_macro_hipitch = int(t_instdata_nums[4])
-                inst_macro_duty = int(t_instdata_nums[5])
-
+                inst_id,inst_macro_vol,inst_macro_arp,inst_macro_pitch,inst_macro_hipitch,inst_macro_duty = [int(i) for i in t_instdata_nums]
                 famitrkr_instdata[inst_id] = [t_instdata_name, inst_macro_vol, inst_macro_arp, inst_macro_pitch, inst_macro_hipitch, inst_macro_duty]
+                print('[input-famitracker_txt] Inst #' + str(inst_id) + ' (' + t_instdata_name + ')')
 
+            if ft_cmd_data[0] == 'INSTVRC6':
+                t_instdata = ft_cmd_data[1].split('"')[:2]
+                t_instdata_nums = t_instdata[0].split()
+                t_instdata_name = t_instdata[1]
+                inst_id,inst_macro_vol,inst_macro_arp,inst_macro_pitch,inst_macro_hipitch,inst_macro_duty = [int(i) for i in t_instdata_nums]
+                famitrkr_instdata_vrc6[inst_id] = [t_instdata_name, inst_macro_vol, inst_macro_arp, inst_macro_pitch, inst_macro_hipitch, inst_macro_duty]
                 print('[input-famitracker_txt] Inst #' + str(inst_id) + ' (' + t_instdata_name + ')')
 
             if ft_cmd_data[0] == 'TRACK':
@@ -264,24 +269,36 @@ class input_famitrkr_txt(plugin_input.base):
             cvpj_inst["instdata"] = {}
             if insttype in mt_type_colors:
                 cvpj_inst["color"] = mt_type_colors[insttype]
+
+
             if int(instid) in famitrkr_instdata:
                 cvpj_inst["name"] = insttype+'-'+famitrkr_instdata[int(instid)][0]
                 if insttype in retroinst_names:
                     cvpj_inst["instdata"]["plugin"] = 'retro'
                     cvpj_inst["instdata"]["plugindata"] = {}
                     cvpj_plugdata = cvpj_inst["instdata"]["plugindata"]
-                    if insttype == 'Square1' or insttype == 'Square2':
-                        cvpj_plugdata["wave"] = "square"
-                    if insttype == 'Triangle':
-                        cvpj_plugdata["wave"] = "triangle"
-                    if insttype == 'Noise':
-                        cvpj_plugdata["wave"] = "noise"
-                    setmacro(cvpj_plugdata, "env_vol", macro_vol, famitrkr_instdata[int(instid)][1]) 
-                    setmacro(cvpj_plugdata, "env_arp", macro_arp, famitrkr_instdata[int(instid)][2]) 
-                    setmacro(cvpj_plugdata, "env_pitch", macro_pitch, famitrkr_instdata[int(instid)][3]) 
-                    setmacro(cvpj_plugdata, "env_hipitch", macro_hipitch, famitrkr_instdata[int(instid)][4])
-                    setmacro(cvpj_plugdata, "env_duty", macro_duty, famitrkr_instdata[int(instid)][5]) 
-                    print(famitrkr_instdata[int(instid)])
+                    if insttype == 'Square1' or insttype == 'Square2': cvpj_plugdata["wave"] = "square"
+                    if insttype == 'Triangle': cvpj_plugdata["wave"] = "triangle"
+                    if insttype == 'Noise': cvpj_plugdata["wave"] = "noise"
+                    setmacro(cvpj_plugdata, macro_nes, "env_vol", 0, famitrkr_instdata[int(instid)][1]) 
+                    setmacro(cvpj_plugdata, macro_nes, "env_arp", 1, famitrkr_instdata[int(instid)][2]) 
+                    setmacro(cvpj_plugdata, macro_nes, "env_pitch", 2, famitrkr_instdata[int(instid)][3]) 
+                    setmacro(cvpj_plugdata, macro_nes, "env_hipitch", 3, famitrkr_instdata[int(instid)][4])
+                    setmacro(cvpj_plugdata, macro_nes, "env_duty", 4, famitrkr_instdata[int(instid)][5]) 
+
+            elif int(instid) in famitrkr_instdata_vrc6:
+                cvpj_inst["name"] = insttype+'-'+famitrkr_instdata_vrc6[int(instid)][0]
+                if insttype in retroinst_names:
+                    cvpj_inst["instdata"]["plugin"] = 'retro'
+                    cvpj_inst["instdata"]["plugindata"] = {}
+                    cvpj_plugdata = cvpj_inst["instdata"]["plugindata"]
+                    if insttype == 'VRC6Square': cvpj_plugdata["wave"] = "square"
+                    setmacro(cvpj_plugdata, macro_nes_vrc6, "env_vol", 0, famitrkr_instdata_vrc6[int(instid)][1]) 
+                    setmacro(cvpj_plugdata, macro_nes_vrc6, "env_arp", 1, famitrkr_instdata_vrc6[int(instid)][2]) 
+                    setmacro(cvpj_plugdata, macro_nes_vrc6, "env_pitch", 2, famitrkr_instdata_vrc6[int(instid)][3]) 
+                    setmacro(cvpj_plugdata, macro_nes_vrc6, "env_hipitch", 3, famitrkr_instdata_vrc6[int(instid)][4])
+                    setmacro(cvpj_plugdata, macro_nes_vrc6, "env_duty", 4, famitrkr_instdata_vrc6[int(instid)][5]) 
+
             else:
                 cvpj_inst["name"] = insttype+'_'+instid
                 cvpj_inst["instdata"]["plugin"] = 'none'

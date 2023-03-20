@@ -62,7 +62,6 @@ def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
 
     endnote = None
     notedur = 0
-    #print('DATA              |POS  |END  |INSID|')
     for org_l_n in org_l_nl:
         notedata = org_l_nl[org_l_n]
 
@@ -158,9 +157,9 @@ class input_orgyana(plugin_input.base):
                 cvpj_instdata = {'pitch': (org_pitch-1000)/18}
 
                 idval = 'org_'+str(tracknum)
-                tracks.rx_addtrack_inst(cvpj_l, idval, cvpj_instdata)
-                tracks.rx_addtrack_data(cvpj_l, idval, trackname, l_org_colors[tracknum], 1.0, None)
-                tracks.rx_addtrackpl(cvpj_l, idval, placements.nl2pl(s_cvpj_nl))
+                tracks.r_addtrack_inst(cvpj_l, idval, cvpj_instdata)
+                tracks.r_addtrack_data(cvpj_l, idval, trackname, l_org_colors[tracknum], 1.0, None)
+                tracks.r_addtrackpl(cvpj_l, idval, placements.nl2pl(s_cvpj_nl))
 
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True

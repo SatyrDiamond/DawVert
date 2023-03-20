@@ -3,9 +3,9 @@
 
 from functions import data_bytes
 from functions import note_mod
-from functions import placements
 from functions import auto
 from functions import idvals
+from functions import placements
 from functions import tracks
 import plugin_input
 import json
@@ -205,9 +205,9 @@ class input_onlinesequencer(plugin_input.base):
                     auto.resize(cvpj_autodata)
                     cvpj_automation['track'][instid][param] = [cvpj_autodata]
 
-            tracks.rx_addtrack_inst(cvpj_l, instid, cvpj_instdata)
-            tracks.rx_addtrack_data(cvpj_l, instid, inst_name, inst_color, trk_vol, trk_pan)
-            tracks.rx_addtrackpl(cvpj_l, instid, placements.nl2pl(cvpj_notelist))
+            tracks.r_addtrack_inst(cvpj_l, instid, cvpj_instdata)
+            tracks.r_addtrack_data(cvpj_l, instid, inst_name, inst_color, trk_vol, trk_pan)
+            tracks.r_addtrackpl(cvpj_l, instid, placements.nl2pl(cvpj_notelist))
 
         bpm = 120
         if '1' in onlseq_data_main: bpm = int(onlseq_data_main['1'])

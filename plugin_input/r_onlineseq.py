@@ -6,6 +6,7 @@ from functions import note_mod
 from functions import placements
 from functions import auto
 from functions import idvals
+from functions import tracks
 import plugin_input
 import json
 import struct
@@ -94,10 +95,8 @@ class input_onlinesequencer(plugin_input.base):
     def parse(self, input_file, extra_param):
         global t_notelist
 
-        cvpj_l_trackdata = {}
-        cvpj_l_trackordering = []
-        cvpj_l_trackplacements = {}
-
+        cvpj_l = {}
+        
         cvpj_l_timemarkers = []
         cvpj_l_fxrack = {}
         cvpj_l_keynames_data = {}
@@ -167,15 +166,11 @@ class input_onlinesequencer(plugin_input.base):
         for instid in t_notelist:
             cvpj_notelist = t_notelist[instid]
 
-            cvpj_inst = {}
-            cvpj_inst["type"] = 'instrument'
-            cvpj_inst["name"] = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'name')
+            inst_name = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'name')
             inst_color = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'color')
             inst_gminst = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'gm_inst')
             inst_isdrum = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'isdrum')
-            if inst_color != None: cvpj_inst["color"] = inst_color
-            cvpj_inst["instdata"] = {}
-            cvpj_instdata = cvpj_inst["instdata"]
+            cvpj_instdata = {}
             if inst_gminst != None:
                 cvpj_instdata['plugin'] = 'general-midi'
                 if inst_isdrum == True:
@@ -186,34 +181,33 @@ class input_onlinesequencer(plugin_input.base):
                     cvpj_instdata['plugindata'] = {'bank':0, 'inst':inst_gminst-1}
             else:
                 cvpj_instdata['plugin'] = 'none'
+
+            trk_vol = 1
+            trk_pan = 0
+
             if instid in onlseq_data_instparams:
-                if 'vol' in onlseq_data_instparams[instid]: cvpj_inst["vol"] = onlseq_data_instparams[instid]['vol']
-                if 'pan' in onlseq_data_instparams[instid]: cvpj_inst["pan"] = onlseq_data_instparams[instid]['pan']
+                if 'vol' in onlseq_data_instparams[instid]: trk_vol = onlseq_data_instparams[instid]['vol']
+                if 'pan' in onlseq_data_instparams[instid]: trk_pan = onlseq_data_instparams[instid]['pan']
 
             trackduration = note_mod.getduration(cvpj_notelist)
 
             if trackduration > songduration: songduration = trackduration
 
-            cvpj_placement = {}
-            cvpj_placement['position'] = 0
-            cvpj_placement['duration'] = trackduration
-            cvpj_placement['notelist'] = cvpj_notelist
-
-            cvpj_l_trackplacements['os_'+str(instid)] = {}
-            cvpj_l_trackplacements['os_'+str(instid)]['notes'] = [cvpj_placement]
+            instid = 'os_'+str(instid)
 
             if instid in t_auto_inst:
-                cvpj_automation['track']['os_'+str(instid)] = {}
+                cvpj_automation['track'][instid] = {}
                 for param in t_auto_inst[instid]:
                     cvpj_autodata = {}
                     cvpj_autodata["position"] = 0
                     cvpj_autodata["duration"] = trackduration
                     cvpj_autodata["points"] = t_auto_inst[instid][param]
                     auto.resize(cvpj_autodata)
-                    cvpj_automation['track']['os_'+str(instid)][param] = [cvpj_autodata]
+                    cvpj_automation['track'][instid][param] = [cvpj_autodata]
 
-            cvpj_l_trackdata['os_'+str(instid)] = cvpj_inst
-            cvpj_l_trackordering.append('os_'+str(instid))
+            tracks.rx_addtrack_inst(cvpj_l, instid, cvpj_instdata)
+            tracks.rx_addtrack_data(cvpj_l, instid, inst_name, inst_color, trk_vol, trk_pan)
+            tracks.rx_addtrackpl(cvpj_l, instid, placements.nl2pl(cvpj_notelist))
 
         bpm = 120
         if '1' in onlseq_data_main: bpm = int(onlseq_data_main['1'])
@@ -237,17 +231,12 @@ class input_onlinesequencer(plugin_input.base):
         timesig_numerator = 4
         if '2' in onlseq_data_main: timesig_numerator = int(onlseq_data_main['2'])
 
-        cvpj_l = {}
-        
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         
-        cvpj_l['track_data'] = cvpj_l_trackdata
-        cvpj_l['track_order'] = cvpj_l_trackordering
-        cvpj_l['track_placements'] = cvpj_l_trackplacements
         cvpj_l['keynames_data'] = cvpj_l_keynames_data
         cvpj_l['bpm'] = bpm
         cvpj_l['timesig_denominator'] = 4

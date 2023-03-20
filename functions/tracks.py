@@ -38,7 +38,28 @@ def ri_addtrack_inst(cvpj_l, idval, notelistindex, instdata):
     cvpj_l['track_data'][idval] = cvpj_inst
     cvpj_l['track_order'].append(idval)
 
-
-
 # ------------------------ Multiple ------------------------
 
+def m_addinst(cvpj_l, idval, instdata):
+    if 'instruments_data' not in cvpj_l: cvpj_l['instruments_data'] = {}
+    if 'instruments_order' not in cvpj_l: cvpj_l['instruments_order'] = []
+    cvpj_inst = {}
+    cvpj_inst['instdata'] = instdata
+    cvpj_l['instruments_data'][idval] = cvpj_inst
+    cvpj_l['instruments_order'].append(idval)
+
+def m_addinst_data(cvpj_l, idval, trk_name, trk_color, trk_vol, trk_pan):
+    if 'instruments_data' in cvpj_l:
+        if idval in cvpj_l['instruments_data']:
+            cvpj_inst = cvpj_l['instruments_data'][idval]
+            cvpj_inst['name'] = trk_name
+            if trk_color != None: cvpj_inst['color'] = trk_color
+            if trk_vol != None: cvpj_inst['vol'] = trk_vol
+            if trk_pan != None: cvpj_inst['pan'] = trk_pan
+
+def m_playlist_pl(cvpj_l, idnum, trk_name, trk_color, placements_notes):
+    if 'playlist' not in cvpj_l: cvpj_l['playlist'] = {}
+    if str(idnum) not in cvpj_l: cvpj_l['playlist'][str(idnum)] = {}
+    cvpj_l['playlist'][str(idnum)]['placements_notes'] = placements_notes
+    if trk_name != None: cvpj_l['playlist'][str(idnum)]['name'] = trk_name
+    if trk_color != None: cvpj_l['playlist'][str(idnum)]['color'] = trk_color

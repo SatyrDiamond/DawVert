@@ -405,3 +405,7 @@ def make_timemarkers(timesig, PatternLengthList, LoopPos):
         currentpos += PatternLengthPart
         blockcount += 1
     return timemarkers
+
+
+def nl2pl(cvpj_notelist):
+    return [{'position': 0, 'duration': note_mod.getduration(cvpj_notelist), 'notelist': cvpj_notelist}]

@@ -5,6 +5,7 @@ import plugin_input
 import json
 import os.path
 from functions import placements
+from functions import tracks
 
 #               Name,              Type, FadeIn, FadeOut, PitchMod, Slide, Vib, Color
 lc_instlist = {}
@@ -137,78 +138,28 @@ class input_lc(plugin_input.base):
         lc_speed = lc_l_song['speed']
 
         cvpj_l = {}
-        cvpj_l_playlist = {}
-        cvpj_l_instrument_data = {}
-        cvpj_l_instrument_order = []
 
-        cvpj_l_playlist['1'] = {}
-        cvpj_l_playlist['1']['name'] = "Part 1"
-        cvpj_l_playlist['1']['color'] = [0.83, 0.09, 0.42]
-        cvpj_l_playlist['1']['placements_notes'] = lc_parse_placements(lc_ch_p1)
-        cvpj_l_playlist['2'] = {}
-        cvpj_l_playlist['2']['name'] = "Part 2"
-        cvpj_l_playlist['2']['color'] = [0.91, 0.76, 0.36]
-        cvpj_l_playlist['2']['placements_notes'] = lc_parse_placements(lc_ch_p2)
-        cvpj_l_playlist['3'] = {}
-        cvpj_l_playlist['3']['name'] = "Part 3"
-        cvpj_l_playlist['3']['color'] = [0.22, 0.36, 0.60]
-        cvpj_l_playlist['3']['placements_notes'] = lc_parse_placements(lc_ch_p3)
-        cvpj_l_playlist['4'] = {}
-        cvpj_l_playlist['4']['name'] = "Part 4"
-        cvpj_l_playlist['4']['color'] = [0.44, 0.78, 0.66]
-        cvpj_l_playlist['4']['placements_notes'] = lc_parse_placements(lc_ch_p4)
-        cvpj_l_playlist['5'] = {}
-        cvpj_l_playlist['5']['name'] = "Chord"
-        cvpj_l_playlist['5']['color'] = [0.64, 0.64, 0.64]
-        cvpj_l_playlist['5']['placements_notes'] = []
+        tracks.m_playlist_pl(cvpj_l, 1, "Part 1", [0.83, 0.09, 0.42], lc_parse_placements(lc_ch_p1))
+        tracks.m_playlist_pl(cvpj_l, 2, "Part 2", [0.91, 0.76, 0.36], lc_parse_placements(lc_ch_p2))
+        tracks.m_playlist_pl(cvpj_l, 3, "Part 3", [0.22, 0.36, 0.60], lc_parse_placements(lc_ch_p3))
+        tracks.m_playlist_pl(cvpj_l, 4, "Part 4", [0.44, 0.78, 0.66], lc_parse_placements(lc_ch_p4))
+        tracks.m_playlist_pl(cvpj_l, 5, "Chord", [0.64, 0.64, 0.64], [])
 
         for used_instrument in used_instruments:
-            cvpj_inst = {}
-            cvpj_inst["instdata"] = {}
-            cvpj_inst["instdata"]['plugindata'] = {}
-            plugdata = cvpj_inst["instdata"]['plugindata']
-            if used_instrument == 'Sine':
-                plugname = 'shape-sine'
 
-            elif used_instrument == 'Square':
-                cvpj_inst["instdata"]['plugin'] = 'retro'
-                plugdata['wave'] = 'square'
-                plugdata['duty'] = 0
+            cvpj_instdata = {}
+            if used_instrument == 'Sine': cvpj_instdata = {'plugin': 'shape-sine'}
+            elif used_instrument == 'Square': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'square', 'duty': 0}}
+            elif used_instrument == 'Triangle': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'triangle'}}
+            elif used_instrument == 'Saw': cvpj_instdata = {'plugin': 'shape-saw'}
+            elif used_instrument == 'Noise': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'noise', 'type': '4bit'}}
+            elif used_instrument == 'FreqNoise': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'noise', 'type': '1bit_short'}}
+            elif used_instrument == 'Pulse25': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'square', 'duty': 1}}
+            elif used_instrument == 'Pulse125': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'square', 'duty': 2}}
+            else: cvpj_instdata = {'plugin': 'lovelycomposer', 'plugindata': {'inst': used_instrument}}
 
-            elif used_instrument == 'Triangle':
-                cvpj_inst["instdata"]['plugin'] = 'retro'
-                plugdata['wave'] = 'triangle'
-
-            elif used_instrument == 'Saw':
-                cvpj_inst["instdata"]['plugin'] = 'shape-saw'
-
-            elif used_instrument == 'Noise':
-                cvpj_inst["instdata"]['plugin'] = 'retro'
-                plugdata['wave'] = 'noise'
-                plugdata['type'] = '4bit'
-
-            elif used_instrument == 'FreqNoise':
-                cvpj_inst["instdata"]['plugin'] = 'retro'
-                plugdata['wave'] = 'noise'
-                plugdata['type'] = '1bit_short'
-
-            elif used_instrument == 'Pulse25':
-                cvpj_inst["instdata"]['plugin'] = 'retro'
-                plugdata['wave'] = 'square'
-                plugdata['duty'] = 1
-
-            elif used_instrument == 'Pulse125':
-                cvpj_inst["instdata"]['plugin'] = 'retro'
-                plugdata['wave'] = 'square'
-                plugdata['duty'] = 2
-
-            else:
-                cvpj_inst["instdata"]['plugin'] = 'lovelycomposer'
-                plugdata['inst'] = used_instrument
-
-            cvpj_inst["name"] = used_instrument
-            cvpj_l_instrument_data[used_instrument] = cvpj_inst
-            cvpj_l_instrument_order.append(used_instrument)
+            tracks.m_addinst(cvpj_l, used_instrument, cvpj_instdata)
+            tracks.m_addinst_data(cvpj_l, used_instrument, used_instrument, None, None, None)
 
         startinststr = 'lc_instlist_'
 
@@ -218,13 +169,8 @@ class input_lc(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         
         cvpj_l['timemarkers'] = placements.make_timemarkers([4, 4], patternlen, lc_loop_start_bar)
-        cvpj_l['instruments_data'] = cvpj_l_instrument_data
-        cvpj_l['instruments_order'] = cvpj_l_instrument_order
-        cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = (3614.75409836/lc_speed)/2
 
-        #with open('testout.json', "w") as fileout:
-        #    json.dump(lc_l_song, fileout, indent=4, sort_keys=True)
         return json.dumps(cvpj_l)
 
 

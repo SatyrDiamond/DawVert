@@ -1,6 +1,16 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from functions import format_caustic
+from functions import data_bytes
+from functions import folder_samples
+from functions import audio_wav
+from functions import placements
+from functions import tracks
+import plugin_input
+import os.path
+import json
+
 caustic_instnames = {}
 caustic_instnames['NULL'] = 'None'
 caustic_instnames['SSYN'] = 'SubSynth'
@@ -55,14 +65,6 @@ caustic_fxtype[21] = 'AutoPan'
 
 patletters = ['A','B','C','D']
 
-from functions import format_caustic
-from functions import data_bytes
-from functions import folder_samples
-from functions import audio_wav
-import plugin_input
-import os.path
-import json
-
 def parse_notelist(causticpattern, machid): 
     notelist = []
     causticnotes = causticpattern['notes']
@@ -110,11 +112,7 @@ class input_cvpj_r(plugin_input.base):
         EFFX = CausticData['EFFX']
 
         cvpj_l = {}
-        cvpj_l_track_data = {}
-        cvpj_l_track_order = []
-        cvpj_l_track_placements = {}
-        cvpj_l_playlist = {}
-
+        
         file_name = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
 
@@ -126,18 +124,10 @@ class input_cvpj_r(plugin_input.base):
 
             machid = str(machnum)
 
-            cvpj_inst = {}
-            cvpj_inst["enabled"] = 1
-            cvpj_inst["instdata"] = {}
-            cvpj_inst["notelistindex"] = {}
-            cvpj_inst["placements"] = []
-            cvpj_inst["type"] = 'instrument'
-            cvpj_instdata = cvpj_inst["instdata"]
-            if 'name' in machine: cvpj_inst["name"] = machine['name']
-            else: cvpj_inst["name"] = caustic_instnames[machine['id']]
-            cvpj_inst["color"] = caustic_instcolors[machine['id']]
-            cvpj_inst["pan"] = 0.0
-            cvpj_inst["vol"] = 1.0
+            if 'name' in machine: cvpj_trackname = machine['name']
+            else: cvpj_trackname = caustic_instnames[machine['id']]
+
+            cvpj_notelistindex = {}
 
             if machine['id'] != 'NULL' and machine['id'] != 'MDLR':
                 if 'patterns' in machine:
@@ -147,11 +137,11 @@ class input_cvpj_r(plugin_input.base):
                         causticpattern = patterns[pattern]
                         notelist = parse_notelist(causticpattern, machid)
                         if notelist != []: 
-                            cvpj_inst["notelistindex"][patid] = {}
-                            cvpj_inst["notelistindex"][patid]['name'] = pattern
-                            cvpj_inst["notelistindex"][patid]['notelist'] = notelist
+                            cvpj_notelistindex[patid] = {}
+                            cvpj_notelistindex[patid]['name'] = pattern
+                            cvpj_notelistindex[patid]['notelist'] = notelist
 
-
+            cvpj_instdata = {}
             cvpj_instdata['plugindata'] = {}
             plugindata = cvpj_instdata['plugindata']
 
@@ -208,12 +198,7 @@ class input_cvpj_r(plugin_input.base):
                 middlenote += int(pcms_c[1]*12)
                 middlenote += int(pcms_c[2])
 
-                #print(middlenote)
-
-                cvpj_inst['chain_fx_note'] = []
-                cvpj_inst['chain_fx_note'].append({"enabled": 1, "plugin": "pitch", "plugindata": {"semitones": middlenote}})
-
-                cvpj_inst['instdata']['pitch'] = pcms_c[3]
+                cvpj_instdata['pitch'] = pcms_c[3]
                 plugindata['asdrlfo'] = {}
                 plugindata['asdrlfo']['volume'] = {}
                 plugindata['asdrlfo']['volume']['envelope'] = {}
@@ -253,10 +238,10 @@ class input_cvpj_r(plugin_input.base):
             else:
                 cvpj_instdata['plugin'] = 'none'
 
-            cvpj_l_track_placements[machid] = {}
-            cvpj_l_track_placements[machid]['notes'] = []
-            cvpj_l_track_data[machid] = cvpj_inst
-            cvpj_l_track_order.append(machid)
+            tracks.ri_addtrack_inst(cvpj_l, machid, cvpj_notelistindex, cvpj_instdata)
+            tracks.r_addtrack_data(cvpj_l, machid, cvpj_trackname, caustic_instcolors[machine['id']], None, None)
+
+        t_track_placements = {}
 
         for SEQNe in SEQN:
             SEQNe_mach = SEQNe[0]+1
@@ -274,9 +259,11 @@ class input_cvpj_r(plugin_input.base):
                 pl_placement['position'] = SEQNe_pos
                 pl_placement['duration'] = SEQNe_len
                 pl_placement['fromindex'] = SEQNe_patlet+str(SEQNe_patnum+1)
-                cvpj_l_track_placements[str(SEQNe_mach)]['notes'].append(pl_placement)
+                if str(SEQNe_mach) not in t_track_placements: t_track_placements[str(SEQNe_mach)] = []
+                t_track_placements[str(SEQNe_mach)].append(pl_placement)
 
-
+        for t_track_placement in t_track_placements:
+            tracks.r_addtrackpl(cvpj_l, t_track_placement, t_track_placements[t_track_placement])
 
         tempo_placement = {"position": 0}
 
@@ -299,9 +286,6 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l['automation'] = {}
         cvpj_l['automation']['main'] = automation_main
 
-        cvpj_l['track_data'] = cvpj_l_track_data
-        cvpj_l['track_order'] = cvpj_l_track_order
-        cvpj_l['track_placements'] = cvpj_l_track_placements
         cvpj_l['bpm'] = CausticData['Tempo']
         cvpj_l['timesig_numerator'] = CausticData['Numerator']
         cvpj_l['timesig_denominator'] = 4

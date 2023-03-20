@@ -161,12 +161,16 @@ class output_cvpjs(plugin_output.base):
             #    pdataxs = base64.b64decode(pdata)
             #    T_Main['pluginparams'] = pdataxs
             #    T_Main['plugindata'] = b'\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00P\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00&\x00\x00\x00z\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-            if CVPJ_Inst['plugin'] == 'sampler':
-                T_Main['type'] = 0
-                T_Main['plugin'] = ''
-                if 'plugindata' in CVPJ_Inst:
-                    samplerdata = CVPJ_Inst['plugindata'] 
-                    if 'file' in samplerdata: T_Main['samplefilename'] = samplerdata['file'] 
+            if 'plugin' in CVPJ_Inst:
+                if CVPJ_Inst['plugin'] == 'sampler':
+                    T_Main['type'] = 0
+                    T_Main['plugin'] = ''
+                    if 'plugindata' in CVPJ_Inst:
+                        samplerdata = CVPJ_Inst['plugindata'] 
+                        if 'file' in samplerdata: T_Main['samplefilename'] = samplerdata['file'] 
+                else:
+                    T_Main['type'] = 0
+                    T_Main['plugin'] = ''
             else:
                 T_Main['type'] = 0
                 T_Main['plugin'] = ''

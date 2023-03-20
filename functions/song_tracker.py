@@ -41,15 +41,18 @@ def entire_song_channel(patterntable_all, channel, orders):
     return entire_song_channel_out
 
 def calcslidepower(slidepower, current_speed):
+    if current_speed == 0: current_speed = 6
     divfirst = slidepower
     divsec = ((8/current_speed))
     return (divfirst/divsec)-(slidepower/8)
 
 def calcbendpower_up(inval, current_speed):
+    if current_speed == 0: current_speed = 6
     global slidediv
     return inval/(slidediv/current_speed)
 
 def calcbendpower_down(inval, current_speed):
+    if current_speed == 0: current_speed = 6
     global slidediv
     return (inval*-1)/(slidediv/current_speed)
 

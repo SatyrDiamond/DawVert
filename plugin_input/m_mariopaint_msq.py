@@ -3,6 +3,7 @@
 
 from functions import colors
 from functions import idvals
+from functions import tracks
 import plugin_input
 import json
 import io
@@ -102,26 +103,15 @@ class input_mariopaint_msq(plugin_input.base):
             readpart(msq_score_str, curpos, notelen)
             curpos += notelen
 
-        l_placement = {}
-        l_placement['type'] = "instruments"
-        l_placement['position'] = 0
-        l_placement['duration'] = curpos+1
-        l_placement['notelist'] = notelist
-
-        cvpj_l_playlist[str(1)] = {}
-        cvpj_l_playlist[str(1)]['placements_notes'] = [l_placement]
+        tracks.m_playlist_pl(cvpj_l, 1, None, None, [{'type': "instruments", 'position': 0, 'duration': curpos+1, 'notelist': notelist}])
 
         for instname in instnames:
-            cvpj_inst = {}
-            cvpj_inst["name"] = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'name')
-            inst_color = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'color')
-            if inst_color != None: cvpj_inst["color"] = colors.moregray(inst_color)
-            cvpj_inst["instdata"] = {}
-            cvpj_instdata = cvpj_inst["instdata"]
-            cvpj_instdata['plugin'] = 'general-midi'
-            cvpj_instdata['plugindata'] = {'bank':0, 'inst':instnames.index(instname)}
-            cvpj_l_instruments[instname] = cvpj_inst
-            cvpj_l_instrumentsorder.append(instname)
+            s_inst_name = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'name')
+            s_inst_color = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'color')
+            if s_inst_color != None: s_inst_color = colors.moregray(s_inst_color)
+
+            tracks.m_addinst(cvpj_l, instname, {'plugin': 'general-midi', 'plugindata': {'bank':0, 'inst':instnames.index(instname)}})
+            tracks.m_addinst_data(cvpj_l, instname, s_inst_name, s_inst_color, None, None)
 
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True
@@ -132,9 +122,7 @@ class input_mariopaint_msq(plugin_input.base):
         
         cvpj_l['timesig_numerator'] = msq_measure
         cvpj_l['timesig_denominator'] = 4
-        cvpj_l['instruments_data'] = cvpj_l_instruments
-        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
-        cvpj_l['playlist'] = cvpj_l_playlist
+        
         cvpj_l['bpm'] = msq_tempo
         return json.dumps(cvpj_l)
 

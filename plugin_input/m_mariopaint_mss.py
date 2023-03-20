@@ -4,6 +4,7 @@
 from functions import data_bytes
 from functions import colors
 from functions import idvals
+from functions import tracks
 import plugin_input
 import json
 import xml.etree.ElementTree as ET
@@ -63,10 +64,8 @@ class input_mariopaint_mss(plugin_input.base):
         idvals_mariopaint_inst = idvals.parse_idvalscsv('idvals/mariopaint_inst.csv')
 
         cvpj_l = {}
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
         cvpj_l_timemarkers = []
-        cvpj_l_playlist = {}
+
         notelist = []
 
         mss_tempo = int(root.get('tempo'))
@@ -105,26 +104,15 @@ class input_mariopaint_mss(plugin_input.base):
                 auto_tempo.append(tempo_placement)
             curpos += notelen
 
-        l_placement = {}
-        l_placement['type'] = "instruments"
-        l_placement['position'] = 0
-        l_placement['duration'] = duration
-        l_placement['notelist'] = notelist
-
-        cvpj_l_playlist[str(1)] = {}
-        cvpj_l_playlist[str(1)]['placements_notes'] = [l_placement]
+        tracks.m_playlist_pl(cvpj_l, 1, None, None, [{'type': "instruments", 'position': 0, 'duration': duration, 'notelist': notelist}])
 
         for instname in instnames:
-            cvpj_inst = {}
-            cvpj_inst["name"] = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'name')
-            inst_color = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'color')
-            if inst_color != None: cvpj_inst["color"] = colors.moregray(inst_color)
-            cvpj_inst["instdata"] = {}
-            cvpj_instdata = cvpj_inst["instdata"]
-            cvpj_instdata['plugin'] = 'general-midi'
-            cvpj_instdata['plugindata'] = {'bank':0, 'inst':instnames.index(instname)}
-            cvpj_l_instruments[instname] = cvpj_inst
-            cvpj_l_instrumentsorder.append(instname)
+            s_inst_name = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'name')
+            s_inst_color = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'color')
+            if s_inst_color != None: s_inst_color = colors.moregray(s_inst_color)
+
+            tracks.m_addinst(cvpj_l, instname, {'plugin': 'general-midi', 'plugindata': {'bank':0, 'inst':instnames.index(instname)}})
+            tracks.m_addinst_data(cvpj_l, instname, s_inst_name, s_inst_color, None, None)
 
         automation = {}
         automation['main'] = {}
@@ -141,9 +129,6 @@ class input_mariopaint_mss(plugin_input.base):
         cvpj_l['timesig_numerator'] = mss_measure
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['timemarkers'] = cvpj_l_timemarkers
-        cvpj_l['instruments_data'] = cvpj_l_instruments
-        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
-        cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = mss_tempo
         return json.dumps(cvpj_l)
 

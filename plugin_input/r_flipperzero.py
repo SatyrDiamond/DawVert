@@ -4,6 +4,8 @@
 import plugin_input
 import json
 import os.path
+from functions import placements
+from functions import tracks
 
 class input_fmf(plugin_input.base):
     def __init__(self): pass
@@ -56,8 +58,7 @@ class input_fmf(plugin_input.base):
                                     part_Note += notepart
                                     number_parsemode = 'O'
                             if number_parsemode == 'O':
-                                if notepart == "#":
-                                    part_Note += notepart
+                                if notepart == "#": part_Note += notepart
                                 if notepart.isnumeric() == True: part_Oct += notepart
                                 if notepart == '.': part_Period += 1
                         
@@ -77,10 +78,6 @@ class input_fmf(plugin_input.base):
         global trackordering
         global trackplacements
 
-        tracklist = {}
-        trackordering = ['flipperzero']
-        trackplacements = {}
-
         notelist = []
 
         position = 0
@@ -96,30 +93,18 @@ class input_fmf(plugin_input.base):
                 notelist.append(notedata)
             position += n_d
 
-        trackdata = {}
-        trackdata['color'] = [0.94, 0.58, 0.23]
-        trackdata['name'] = 'Flipper Zero'
-        trackdata['type'] = 'instrument'
-        trackdata["instdata"] = {}
-        trackdata["instdata"]['plugin'] = 'shape-pulse'
-        trackdata["instdata"]['plugindata'] = {'duty': 0.125}
-        pl_data = {}
-        pl_data['position'] = 0
-        pl_data['duration'] = totalDuration
-        pl_data['notelist'] = notelist
-
-        tracklist['flipperzero'] = trackdata
-
-        trackplacements['flipperzero'] = {}
-        trackplacements['flipperzero']['notes'] = [pl_data]
-
         cvpj_l = {}
+
+        tracks.rx_addtrack_inst(cvpj_l, 'flipperzero', {})
+        tracks.rx_addtrack_data(cvpj_l, 'flipperzero', 'Flipper Zero', [0.94, 0.58, 0.23], None, None)
+        tracks.rx_addtrackpl(cvpj_l, 'flipperzero', placements.nl2pl(notelist))
+
+        cvpj_l['do_singlenotelistcut'] = True
+
         cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = True
+        cvpj_l['use_fxrack'] = False
         
         cvpj_l['bpm'] = fmf_BPM
-        cvpj_l['track_data'] = tracklist
-        cvpj_l['track_order'] = trackordering
-        cvpj_l['track_placements'] = trackplacements
+
         return json.dumps(cvpj_l)
 

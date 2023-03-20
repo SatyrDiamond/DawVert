@@ -67,15 +67,15 @@ class input_piyopiyo(plugin_input.base):
             cvpj_instdata = {'plugin': "sampler", 'plugindata': {'file': samplefolder+'/'+str(tracknum+1)+'.wav'}}
             idval = str(tracknum)
 
-            tracks.rx_addtrack_inst(cvpj_l, idval, cvpj_instdata)
-            tracks.rx_addtrack_data(cvpj_l, idval, 'note'+str(tracknum), track_colors[tracknum], trk_volume/250, None)
+            tracks.r_addtrack_inst(cvpj_l, idval, cvpj_instdata)
+            tracks.r_addtrack_data(cvpj_l, idval, 'note'+str(tracknum), track_colors[tracknum], trk_volume/250, None)
 
             wave_path = samplefolder + str(tracknum+1) + '.wav'
             audio_wav.generate(wave_path, data_bytes.unsign_8(trk_waveform), 1, 67000, 8, {'loop':[0, 256]})
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
-        tracks.rx_addtrack_inst(cvpj_l, "3", {'plugin': "none", 'plugindata': {}})
-        tracks.rx_addtrack_data(cvpj_l, "3", 'perc', track_colors[tracknum], TrackPVol/250, None)
+        tracks.r_addtrack_inst(cvpj_l, "3", {'plugin': "none", 'plugindata': {}})
+        tracks.r_addtrack_data(cvpj_l, "3", 'perc', track_colors[tracknum], TrackPVol/250, None)
 
         pmdfile.seek(trackdatapos)
 
@@ -94,7 +94,7 @@ class input_piyopiyo(plugin_input.base):
                     notenum -= 1
             if notelist != []: t_placements = placements.nl2pl(notelist)
             else: t_placements = []
-            tracks.rx_addtrackpl(cvpj_l, str(tracknum), t_placements)
+            tracks.r_addtrackpl(cvpj_l, str(tracknum), t_placements)
 
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True

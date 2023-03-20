@@ -4,6 +4,7 @@
 from functions import data_bytes
 from functions import note_mod
 from functions import placements
+from functions import tracks
 import plugin_input
 import json
 
@@ -101,12 +102,7 @@ class input_orgyana(plugin_input.base):
         if bytesdata == b'Org-02' or bytesdata == b'Org-03': return True
         else: return False
     def parse(self, input_file, extra_param):
-        cvpj_l_trackdata = {}
-        cvpj_l_trackordering = []
-        cvpj_l_trackplacements = {}
-
-        cvpj_l_timemarkers = []
-        cvpj_l_fxrack = {}
+        cvpj_l = {}
 
         bio_org = open(input_file, 'rb')
         org_type = bio_org.read(6)
@@ -159,36 +155,19 @@ class input_orgyana(plugin_input.base):
                 if tracknum < 8: trackname = "Melody "+str(tracknum+1)
                 else: trackname = l_drum_name[org_insttable[tracknum]]
 
-                cvpj_placement = {}
-                cvpj_placement['position'] = 0
-                cvpj_placement['duration'] = note_mod.getduration(s_cvpj_nl)
-                cvpj_placement['notelist'] = s_cvpj_nl
+                cvpj_instdata = {'pitch': (org_pitch-1000)/18}
 
-                cvpj_l_trackplacements['org_'+str(tracknum)] = {}
-                cvpj_l_trackplacements['org_'+str(tracknum)]['notes'] = [cvpj_placement]
+                idval = 'org_'+str(tracknum)
+                tracks.rx_addtrack_inst(cvpj_l, idval, cvpj_instdata)
+                tracks.rx_addtrack_data(cvpj_l, idval, trackname, l_org_colors[tracknum], 1.0, None)
+                tracks.rx_addtrackpl(cvpj_l, idval, placements.nl2pl(s_cvpj_nl))
 
-                cvpj_inst = {}
-                cvpj_inst['type'] = 'instrument'
-                cvpj_inst['name'] = trackname
-                cvpj_inst['color'] = l_org_colors[tracknum]
-                cvpj_inst["vol"] = 1.0
-                cvpj_inst['instdata'] = {}
-                cvpj_inst['instdata']['pitch'] = (org_pitch-1000)/18
-                cvpj_inst['instdata']['plugin'] = 'none'
-                cvpj_l_trackdata['org_'+str(tracknum)] = cvpj_inst
-                cvpj_l_trackordering.append('org_'+str(tracknum))
-
-        cvpj_l = {}
-        
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         
-        cvpj_l['track_data'] = cvpj_l_trackdata
-        cvpj_l['track_order'] = cvpj_l_trackordering
-        cvpj_l['track_placements'] = cvpj_l_trackplacements
         cvpj_l['bpm'] = (1/(org_wait/122))*122
         cvpj_l['timesig_denominator'] = org_stepsperbar
         cvpj_l['timesig_numerator'] = org_beatsperstep

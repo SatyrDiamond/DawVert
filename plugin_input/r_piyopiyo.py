@@ -7,6 +7,8 @@ import os.path
 from functions import audio_wav
 from functions import data_bytes
 from functions import folder_samples
+from functions import placements
+from functions import tracks
 
 track_colors = [[0.25, 0.38, 0.49], [0.36, 0.43, 0.46], [0.51, 0.57, 0.47], [0.58, 0.64, 0.40]]
 
@@ -25,14 +27,6 @@ class input_piyopiyo(plugin_input.base):
         else: return False
         bytestream.seek(0)
     def parse(self, input_file, extra_param):
-        global cvpj_l_trackdata
-        global cvpj_l_trackordering
-        global cvpj_l_trackplacements
-
-        cvpj_l_trackdata = {}
-        cvpj_l_trackordering = []
-        cvpj_l_trackplacements = {}
-
         pmdfile = open(input_file, 'rb')
         header = pmdfile.read(4)
         trackdatapos = int.from_bytes(pmdfile.read(4), "little")
@@ -52,6 +46,8 @@ class input_piyopiyo(plugin_input.base):
         pmdtrackdata = []
         keyoffset = [0,0,0,0]
 
+        cvpj_l = {}
+
         for tracknum in range(3):
             print("[input-piyopiyo] Track " + str(tracknum+1), end=",")
             trk_octave = pmdfile.read(1)[0]
@@ -68,29 +64,18 @@ class input_piyopiyo(plugin_input.base):
             trk_envelope = pmdfile.read(64)
             keyoffset[tracknum] = (trk_octave-2)*12
 
-            trkJ = {}
-            trkJ['color'] = track_colors[tracknum]
-            trkJ['type'] = "instrument"
-            trkJ['name'] = 'note'+str(tracknum)
-            trkJ['vol'] = trk_volume/250
-            trkJ['instdata'] = {'plugin': "sampler", 'plugindata': {'file': samplefolder+'/'+str(tracknum+1)+'.wav'}}
-            cvpj_l_trackplacements[str(tracknum)] = {}
-            cvpj_l_trackordering.append(str(tracknum))
-            cvpj_l_trackdata[str(tracknum)] = trkJ
+            cvpj_instdata = {'plugin': "sampler", 'plugindata': {'file': samplefolder+'/'+str(tracknum+1)+'.wav'}}
+            idval = str(tracknum)
+
+            tracks.rx_addtrack_inst(cvpj_l, idval, cvpj_instdata)
+            tracks.rx_addtrack_data(cvpj_l, idval, 'note'+str(tracknum), track_colors[tracknum], trk_volume/250, None)
 
             wave_path = samplefolder + str(tracknum+1) + '.wav'
             audio_wav.generate(wave_path, data_bytes.unsign_8(trk_waveform), 1, 67000, 8, {'loop':[0, 256]})
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
-        trkJ = {}
-        trkJ['color'] = track_colors[3]
-        trkJ['type'] = "instrument"
-        trkJ['name'] = 'perc'
-        trkJ['vol'] = TrackPVol
-        trkJ['instdata'] = {'plugin': "none", 'plugindata': {}}
-        cvpj_l_trackplacements["3"] = {}
-        cvpj_l_trackordering.append("3")
-        cvpj_l_trackdata["3"] = trkJ
+        tracks.rx_addtrack_inst(cvpj_l, "3", {'plugin': "none", 'plugindata': {}})
+        tracks.rx_addtrack_data(cvpj_l, "3", 'perc', track_colors[tracknum], TrackPVol/250, None)
 
         pmdfile.seek(trackdatapos)
 
@@ -107,11 +92,9 @@ class input_piyopiyo(plugin_input.base):
                     if bitnote == '1':
                         notelist.append({'position': pmdpos, 'key': notenum+keyoffset[tracknum], 'duration': 1, 'pan': currentpan, 'vol': 1.0})
                     notenum -= 1
-            if notelist != []: t_placements = [{'position': 0, 'duration': pmdpos, 'notelist': notelist}]
+            if notelist != []: t_placements = placements.nl2pl(notelist)
             else: t_placements = []
-            cvpj_l_trackplacements[str(tracknum)]['notes'] = t_placements
-
-        cvpj_l = {}
+            tracks.rx_addtrackpl(cvpj_l, str(tracknum), t_placements)
 
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True
@@ -120,9 +103,7 @@ class input_piyopiyo(plugin_input.base):
         cvpj_l['use_fxrack'] = False
 
         cvpj_l['bpm'] = bpm
-        cvpj_l['track_data'] = cvpj_l_trackdata
-        cvpj_l['track_order'] = cvpj_l_trackordering
-        cvpj_l['track_placements'] = cvpj_l_trackplacements
+
         cvpj_l['timemarkers'] = []
         cvpj_l['timemarkers'].append({'name': 'Loop', 'position': loopstart, 'end': loopend, 'type': 'loop_area'})
         return json.dumps(cvpj_l)

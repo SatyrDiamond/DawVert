@@ -3,6 +3,8 @@
 
 from functions import data_bytes
 from functions import note_mod
+from functions import placements
+from functions import tracks
 import plugin_input
 import json
 
@@ -37,28 +39,19 @@ class input_cvpj_f(plugin_input.base):
             mmc_bpm = mmc_bpm/2
             notelen = notelen/2
 
-        cvpj_l_trackdata = {}
-        cvpj_l_trackordering = []
-        cvpj_l_trackplacements = {}
-
         cvpj_l_track_master = {}
-
         cvpj_l_track_master['name'] = 'MAS'
         cvpj_l_track_master['vol'] = mmc_mastervolume*1.5
         cvpj_l_track_master['color'] = maincolor
+
+        cvpj_l = {}
 
         tracknum = 0
         for mmc_track in mmc_tracks:
             trackid = 'CH'+str(tracknum)
 
-            trackdata = {}
-            trackdata['color'] = maincolor
-            trackdata['name'] = 'CH'+str(tracknum)
-            trackdata['type'] = 'instrument'
-            trackdata["instdata"] = {}
-            trackdata["instdata"]['plugin'] = 'none'
-            cvpj_l_trackdata[trackid] = trackdata
-            cvpj_l_trackordering.append(trackid)
+            tracks.rx_addtrack_inst(cvpj_l, trackid, {})
+            tracks.rx_addtrack_data(cvpj_l, trackid, trackid, maincolor, None, None)
 
             cvpj_notelist = []
 
@@ -83,19 +76,11 @@ class input_cvpj_f(plugin_input.base):
                 notedata["pan"] = notepan*-1
                 cvpj_notelist.append(notedata)
 
-            trackdata['placements'] = []
-
             if cvpj_notelist != []:
-                placement_pl = {}
-                placement_pl['position'] = 0
-                placement_pl['duration'] = note_mod.getduration(cvpj_notelist)
-                placement_pl['notelist'] = cvpj_notelist
-                cvpj_l_trackplacements[trackid] = {}
-                cvpj_l_trackplacements[trackid]['notes'] = [placement_pl]
+                tracks.rx_addtrackpl(cvpj_l, trackid, placements.nl2pl(cvpj_notelist))
 
             tracknum += 1
 
-        cvpj_l = {}
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
@@ -103,9 +88,6 @@ class input_cvpj_f(plugin_input.base):
         cvpj_l['use_fxrack'] = False
 
         cvpj_l['bpm'] = mmc_bpm
-        cvpj_l['track_data'] = cvpj_l_trackdata
-        cvpj_l['track_order'] = cvpj_l_trackordering
-        cvpj_l['track_placements'] = cvpj_l_trackplacements
         cvpj_l['track_master'] = cvpj_l_track_master
         return json.dumps(cvpj_l)
 

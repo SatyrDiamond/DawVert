@@ -105,6 +105,6 @@ class input_piyopiyo(plugin_input.base):
 
         cvpj_l['bpm'] = bpm
 
-        song.add_timemarker_looparea(cvpj_l, 'Loop', loopstart, loopend)
+        song.add_timemarker_looparea(cvpj_l, None, loopstart, loopend)
         return json.dumps(cvpj_l)
 

@@ -203,10 +203,7 @@ class input_pxtone(plugin_input.base):
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
 
         cvpj_l = {}
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
         cvpj_l_timemarkers = []
-        cvpj_l_playlist = {}
 
         while song_filesize > song_file.tell():
             chunkname = song_file.read(8)

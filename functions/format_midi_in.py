@@ -1,5 +1,5 @@
 
-from functions import note_mod
+from functions import notelist_data
 from functions import idvals
 
 idvals_midi_ctrl = idvals.parse_idvalscsv('idvals/midi_ctrl.csv')
@@ -191,9 +191,9 @@ def track_end(channels):
         hasnotes = True
         cvpj_placement = {}
         cvpj_placement['position'] = t_startpos/s_ppqstep
-        cvpj_placement['duration'] = note_mod.getduration(t_cvpj_notelist)
+        cvpj_placement['duration'] = notelist_data.getduration(t_cvpj_notelist)
         cvpj_placement['type'] = 'instruments'
-        cvpj_placement['notelist'] = note_mod.sortnotes(t_cvpj_notelist)
+        cvpj_placement['notelist'] = notelist_data.sort(t_cvpj_notelist)
         playlistrowdata['placements_notes'] = [cvpj_placement]
     else:
         hasnotes = False

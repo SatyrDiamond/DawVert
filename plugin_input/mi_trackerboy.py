@@ -3,6 +3,7 @@
 
 from functions import data_bytes
 from functions import song_tracker
+from functions import tracks
 import plugin_input
 import json
 import struct
@@ -37,33 +38,25 @@ def speed_to_tempo(framerate, speed):
     return (framerate * 60.0) / (speed * 5)
 
 def parse_fx_event(l_celldata, fx_p, fx_v):
-    if fx_p == 1:
-        l_celldata[0]['pattern_jump'] = fx_v
-    if fx_p == 2:
-        l_celldata[0]['stop'] = fx_v
-    if fx_p == 3:
-        l_celldata[0]['skip_pattern'] = fx_v
-    if fx_p == 4:
-        l_celldata[0]['tempo'] = speed_to_tempo(60, fx_v)*20
+    if fx_p == 1: l_celldata[0]['pattern_jump'] = fx_v
+    if fx_p == 2: l_celldata[0]['stop'] = fx_v
+    if fx_p == 3: l_celldata[0]['skip_pattern'] = fx_v
+    if fx_p == 4: l_celldata[0]['tempo'] = speed_to_tempo(60, fx_v)*20
 
     if fx_p == 13:
         arp_params = [0,0]
         arp_params[0], arp_params[1] = splitbyte(fx_v)
         l_celldata[1][2]['arp'] = arp_params
-    if fx_p == 14:
-        l_celldata[1][2]['slide_up_persist'] = fx_v
-    if fx_p == 15:
-        l_celldata[1][2]['slide_down_persist'] = fx_v
-    if fx_p == 16:
-        l_celldata[1][2]['slide_to_note_persist'] = fx_v
+    if fx_p == 14: l_celldata[1][2]['slide_up_persist'] = fx_v
+    if fx_p == 15: l_celldata[1][2]['slide_down_persist'] = fx_v
+    if fx_p == 16: l_celldata[1][2]['slide_to_note_persist'] = fx_v
     if fx_p == 17:
         fine_vib_sp, fine_vib_de = splitbyte(fx_v)
         vibrato_params = {}
         vibrato_params['speed'] = fine_vib_sp/16
         vibrato_params['depth'] = fine_vib_sp/16
         l_celldata[1][2]['vibrato'] = vibrato_params
-    if fx_p == 18:
-        l_celldata[1][2]['vibrato_delay'] = fx_v
+    if fx_p == 18: l_celldata[1][2]['vibrato_delay'] = fx_v
 
     if fx_p == 22: 
         vol_left, vol_right = splitbyte(fx_v)
@@ -267,15 +260,14 @@ class input_trackerboy(plugin_input.base):
                 trackerboy_instdata = t_instruments[int(instid)]
 
                 cvpj_instid = insttype+'_'+instid
-                cvpj_inst = {}
-                cvpj_inst["name"] = trackerboy_instdata[0]+' ('+chipname[insttype]+')'
-                cvpj_inst["pan"] = 0.0
-                cvpj_inst["vol"] = 0.4
-                if insttype in chiptypecolors:
-                    cvpj_inst["color"] = chiptypecolors[insttype]
-                cvpj_inst["instdata"] = {}
-                cvpj_inst["instdata"]["plugin"] = 'retro'
-                plugindata = {}
+                cvpj_instname = trackerboy_instdata[0]+' ('+chipname[insttype]+')'
+                if insttype in chiptypecolors: cvpj_instcolor = chiptypecolors[insttype]
+                else: cvpj_instcolor = None
+
+                cvpj_instdata = {}
+                cvpj_instdata["plugin"] = 'gameboy'
+
+                plugindata =  {}
 
                 if insttype == 'pulse': plugindata['wave'] = 'square'
                 if insttype == 'noise': plugindata['wave'] = 'noise'
@@ -300,20 +292,23 @@ class input_trackerboy(plugin_input.base):
                     plugindata['decay'] = 0
                     plugindata['sustain'] = 1
                     plugindata['release'] = 0
+                    
                 elif trackerboy_instdata[6] < 8:
                     plugindata['attack'] = 0
                     plugindata['decay'] = trackerboy_instdata[6]/5
                     plugindata['sustain'] = 0
                     plugindata['release'] = 0
+
                 elif trackerboy_instdata[6] >= 8:
                     plugindata['attack'] = (trackerboy_instdata[6]-8)/5
                     plugindata['decay'] = 0
                     plugindata['sustain'] = 1
                     plugindata['release'] = 0
 
-                cvpj_inst["instdata"]["plugindata"] = plugindata
-                cvpj_l_instrument_data[cvpj_instid] = cvpj_inst
-                cvpj_l_instrument_order.append(cvpj_instid)
+                cvpj_instdata["plugindata"] = plugindata
+
+                tracks.m_addinst(cvpj_l, cvpj_instid, cvpj_instdata)
+                tracks.m_addinst_data(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, 0.4, 0.0)
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = trackerboy_title
@@ -326,8 +321,5 @@ class input_trackerboy(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
 
-        cvpj_l['instruments_data'] = cvpj_l_instrument_data
-        cvpj_l['instruments_order'] = cvpj_l_instrument_order
-        
         cvpj_l['bpm'] = speed_to_tempo(60, tb_speed)*20
         return json.dumps(cvpj_l)

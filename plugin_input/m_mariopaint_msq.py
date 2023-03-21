@@ -5,6 +5,7 @@ from functions import colors
 from functions import idvals
 from functions import tracks
 from functions import song
+from functions import note_data
 import plugin_input
 import json
 import io
@@ -42,7 +43,8 @@ def readpart(msq_score_str, n_pos, n_len):
         msq_notes[t_note] = int(msq_score_str.read(1), 16)
 
     for msq_note in msq_notes:
-        cvpj_notelist.append({'position': n_pos, 'key': keytable[msq_note-1], 'duration': n_len, 'instrument': instnames[msq_notes[msq_note]-1]})
+        cvpj_note = note_data.mx_makenote(instnames[msq_notes[msq_note]-1], n_pos, n_len, keytable[msq_note-1], None, None)
+        cvpj_notelist.append(cvpj_note)
 
 class input_mariopaint_msq(plugin_input.base):
     def __init__(self): pass

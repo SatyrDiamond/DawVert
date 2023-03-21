@@ -5,6 +5,7 @@ from functions import colors
 from functions import idvals
 from functions import tracks
 from functions import song
+from functions import note_data
 import plugin_input
 import json
 import io
@@ -32,7 +33,7 @@ def makenote(n_pos, notes, vol, notesize):
             if t_txtp == 'b': out_offset = -1
             if t_txtp == 'm': out_mode = smpnote_str.read(1)
 
-        if out_mode == 0: cvpj_notelist.append({'position': n_pos*notesize, 'key': out_key+out_oct*12+out_offset, 'vol': vol/100, 'duration': notesize, 'instrument': out_inst})
+        if out_mode == 0: cvpj_notelist.append(note_data.mx_makenote(out_inst, n_pos*notesize, notesize, out_key+out_oct*12+out_offset, vol/100, None))
 
 class input_mariopaint_smp(plugin_input.base):
     def __init__(self): pass

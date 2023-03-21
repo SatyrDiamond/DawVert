@@ -5,6 +5,7 @@ from functions import data_bytes
 from functions import note_mod
 from functions import placements
 from functions import tracks
+from functions import note_data
 import plugin_input
 import json
 
@@ -49,7 +50,6 @@ class input_cvpj_f(plugin_input.base):
         tracknum = 0
         for mmc_track in mmc_tracks:
             trackid = 'CH'+str(tracknum)
-
             tracks.r_addtrack_inst(cvpj_l, trackid, {})
             tracks.r_addtrack_data(cvpj_l, trackid, trackid, maincolor, None, None)
 
@@ -57,24 +57,25 @@ class input_cvpj_f(plugin_input.base):
 
             mmc_notes = mmc_track["Notes"]
             for mmc_note in mmc_notes:
-                #print(mmc_note)
                 mmc_wv = mmc_note['WaveVolume']
 
-                notedata = {}
-                notedata["duration"] = getvalue(mmc_note, 'Length')*notelen
+                cvpj_notedata = {}
 
                 n_key = getvalue(mmc_note, 'Melody')
                 out_offset = getvalue(mmc_note, 'Add')
                 out_oct = int(n_key/7)
                 out_key = n_key - out_oct*7
 
-                notedata["key"] = keytable[out_key] + (out_oct-3)*12 + out_offset
-                notedata["position"] = getvalue(mmc_note, 'BeatOffset')*notelen
-                notedata["vol"] = getvalue(mmc_wv, 'Volume')*1.5
+                notedur = getvalue(mmc_note, 'Length')*notelen
+                notekey = keytable[out_key] + (out_oct-3)*12 + out_offset
+                notepos = getvalue(mmc_note, 'BeatOffset')*notelen
+                notevol = getvalue(mmc_wv, 'Volume')*1.5
                 notepan = getvalue(mmc_wv, 'Pan')
                 if notepan == None: notepan = 0
-                notedata["pan"] = notepan*-1
-                cvpj_notelist.append(notedata)
+                notepan = notepan*-1
+
+                cvpj_notedata = note_data.rx_makenote(notepos, notedur, notekey, notevol, notepan)
+                cvpj_notelist.append(cvpj_notedata)
 
             if cvpj_notelist != []:
                 tracks.r_addtrackpl(cvpj_l, trackid, placements.nl2pl(cvpj_notelist))

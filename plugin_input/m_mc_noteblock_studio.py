@@ -1,10 +1,12 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
 import plugin_input
 import json
 import math
+from functions import data_bytes
+from functions import tracks
+from functions import idvals
 
 def getstring(nbs_file):
     stringlen = int.from_bytes(nbs_file.read(4), "little")
@@ -31,8 +33,6 @@ class input_gt_mnbs(plugin_input.base):
     def parse(self, input_file, extra_param):
 
         cvpj_l = {}
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
         cvpj_l_playlist = {}
         song_message = ""
 
@@ -40,42 +40,6 @@ class input_gt_mnbs(plugin_input.base):
         nbs_file.seek(0,2)
         nbs_len = nbs_file.tell()
         nbs_file.seek(0)
-
-        noteblockinst = {}
-        noteblockinst[0] = "Piano (Air)"
-        noteblockinst[1] = "Double Bass (Wood)"
-        noteblockinst[2] = "Bass Drum (Stone)"
-        noteblockinst[3] = "Snare Drum (Sand)"
-        noteblockinst[4] = "Click (Glass)"
-        noteblockinst[5] = "Guitar (Wool)"
-        noteblockinst[6] = "Flute (Clay)"
-        noteblockinst[7] = "Bell (Block of Gold)"
-        noteblockinst[8] = "Chime (Packed Ice)"
-        noteblockinst[9] = "Xylophone (Bone Block)"
-        noteblockinst[10] = "Iron Xylophone (Iron Block)"
-        noteblockinst[11] = "Cow Bell (Soul Sand)"
-        noteblockinst[12] = "Didgeridoo (Pumpkin)"
-        noteblockinst[13] = "Bit (Block of Emerald)"
-        noteblockinst[14] = "Banjo (Hay)"
-        noteblockinst[15] = "Pling (Glowstone)"
-
-        colors = {}
-        colors[0] = [0.00, 0.27, 0.55]
-        colors[1] = [0.13, 0.43, 0.18]
-        colors[2] = [0.61, 0.30, 0.31]
-        colors[3] = [0.61, 0.61, 0.00]
-        colors[4] = [0.49, 0.24, 0.48]
-        colors[5] = [0.40, 0.18, 0.12]
-        colors[6] = [0.61, 0.58, 0.25]
-        colors[7] = [0.61, 0.00, 0.61]
-        colors[8] = [0.21, 0.44, 0.49]
-        colors[9] = [0.61, 0.61, 0.61]
-        colors[10] = [0.00, 0.44, 0.61]
-        colors[11] = [0.61, 0.04, 0.05]
-        colors[12] = [0.61, 0.23, 0.06]
-        colors[13] = [0.00, 0.61, 0.00]
-        colors[14] = [0.61, 0.00, 0.23]
-        colors[15] = [0.24, 0.24, 0.24]
 
         gmmidi = {}
         gmmidi[0] = 1
@@ -87,6 +51,8 @@ class input_gt_mnbs(plugin_input.base):
         gmmidi[9] = 14
         gmmidi[10] = 12
         gmmidi[14] = 106
+
+        idvals_inst_mnbs = idvals.parse_idvalscsv('idvals/noteblockstudio_inst.csv')
 
         # PART 1: HEADER
         nbs_startbyte = int.from_bytes(nbs_file.read(2), "little")
@@ -204,15 +170,14 @@ class input_gt_mnbs(plugin_input.base):
         # OUTPUT
         for instnum in range(16):
             instid = 'NoteBlock'+str(instnum)
-            cvpj_l_instruments[instid] = {}
-            cvpj_l_instruments[instid]['name'] = noteblockinst[instnum]
-            cvpj_l_instruments[instid]['color'] = colors[instnum]
-            cvpj_l_instruments[instid]['instdata'] = {}
-            if instnum in gmmidi:
-                cvpj_l_instruments[instid]['instdata']['plugin'] = 'general-midi'
-                cvpj_l_instruments[instid]['instdata']['plugindata'] = {'bank':0, 'inst':gmmidi[instnum]-1}
-            else: cvpj_l_instruments[instid]['instdata']['plugin'] = 'none'
-            cvpj_l_instrumentsorder.append(instid)
+            cvpj_instname = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'name')
+            cvpj_instcolor = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'color')
+            cvpj_instgm = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'gm_inst')
+            cvpj_instdata = {}
+            if cvpj_instgm != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': gmmidi[instnum]-1}}
+
+            tracks.m_addinst(cvpj_l, instid, cvpj_instdata)
+            tracks.m_addinst_data(cvpj_l, instid, cvpj_instname, cvpj_instcolor, 1.0, 0.0)
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = nbs_song_name
@@ -231,8 +196,6 @@ class input_gt_mnbs(plugin_input.base):
         cvpj_l['timesig_numerator'] = timesig_numerator
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['bpm'] = tempo
-        cvpj_l['instruments_data'] = cvpj_l_instruments
-        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
         return json.dumps(cvpj_l)
 

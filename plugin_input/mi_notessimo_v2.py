@@ -73,7 +73,7 @@ class input_notessimo_v2(plugin_input.base):
 
         notess_sheets = {}
         for sheetnum in range(100):
-            tempo, notelen = song.get_lower_tempo(tempo_table[sheetnum], 1, 180)
+            tempo, notelen = song.get_lower_tempo(tempo_table[sheetnum], 1, 200)
             notess_sheets[sheetnum] = parsenotes(nv2_data, notelen)
             sheetdata = notess_sheets[sheetnum][2]
             if len(sheetdata) != 0: 

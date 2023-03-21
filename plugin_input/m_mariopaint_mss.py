@@ -86,7 +86,6 @@ class input_mariopaint_mss(plugin_input.base):
             if t_sm != None: 
                 t_sm_tempo = int(t_sm.get('tempo'))
                 tempo_placement = {'position': curpos, 'duration': notelen}
-                tempo_placement['duration'] = notelen
                 tempo_placement['points'] = [{"position": 0, "value": t_sm_tempo*(notelen/4)}]
                 auto_tempo.append(tempo_placement)
             curpos += notelen

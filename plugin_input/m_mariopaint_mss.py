@@ -5,6 +5,7 @@ from functions import data_bytes
 from functions import colors
 from functions import idvals
 from functions import tracks
+from functions import song
 import plugin_input
 import json
 import xml.etree.ElementTree as ET
@@ -30,13 +31,7 @@ def addnotes(n_pos, n_len, inst, txt, chordvolume):
         outnote = keytable[notekeys.index(s_note[1])]
         if symbol == '-': outnote -= 1
         if symbol == '+': outnote += 1
-        notedata = {}
-        notedata['position'] = n_pos
-        notedata['key'] = outnote
-        notedata['vol'] = chordvolume
-        notedata['duration'] = n_len
-        notedata['instrument'] = inst
-        notelist.append(notedata)
+        cvpj_notelist.append({'position': n_pos, 'key': outnote, 'vol': chordvolume, 'duration': n_len, 'instrument': inst})
 
     noteoffset = 0
 
@@ -57,31 +52,23 @@ class input_mariopaint_mss(plugin_input.base):
         except ET.ParseError: output = False
         return output
     def parse(self, input_file, extra_param):
-        global notelist
+        global cvpj_notelist
         tree = ET.parse(input_file)
         root = tree.getroot()
 
         idvals_mariopaint_inst = idvals.parse_idvalscsv('idvals/mariopaint_inst.csv')
 
         cvpj_l = {}
-        cvpj_l_timemarkers = []
 
-        notelist = []
+        cvpj_notelist = []
 
-        mss_tempo = int(root.get('tempo'))
         mss_measure = int(root.get('measure'))
-
         chords = tree.findall('chord')
-        notelen = 4
 
-        if mss_tempo > 200:
-            mss_tempo = mss_tempo/2
-            notelen = notelen/2
+        mss_tempo, notelen = song.get_lower_tempo(int(root.get('tempo')), 4, 180)
 
         auto_tempo = []
-
-        tempo_placement = {"position": 0}
-        tempo_placement['duration'] = notelen
+        tempo_placement = {"position": 0, 'duration': notelen}
         tempo_placement['points'] = [{"position": 0, "value": mss_tempo}]
         auto_tempo.append(tempo_placement)
 
@@ -94,23 +81,22 @@ class input_mariopaint_mss(plugin_input.base):
                 duration = curpos
                 if x_chord != None: addnotes(curpos, notelen, instname, x_chord.text, chordvolume)
             t_bm = chord.find('bookmark')
-            if t_bm != None: cvpj_l_timemarkers.append({'position':curpos, 'name': 'Bookmark'})
+            if t_bm != None: song.add_timemarker_text(cvpj_l, curpos, 'Bookmark')
             t_sm = chord.find('speedmark')
             if t_sm != None: 
                 t_sm_tempo = int(t_sm.get('tempo'))
-                tempo_placement = {"position": curpos}
+                tempo_placement = {'position': curpos, 'duration': notelen}
                 tempo_placement['duration'] = notelen
                 tempo_placement['points'] = [{"position": 0, "value": t_sm_tempo*(notelen/4)}]
                 auto_tempo.append(tempo_placement)
             curpos += notelen
 
-        tracks.m_playlist_pl(cvpj_l, 1, None, None, [{'type': "instruments", 'position': 0, 'duration': duration, 'notelist': notelist}])
+        tracks.m_playlist_pl(cvpj_l, 1, None, None, [{'type': "instruments", 'position': 0, 'duration': duration, 'notelist': cvpj_notelist}])
 
         for instname in instnames:
             s_inst_name = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'name')
             s_inst_color = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'color')
             if s_inst_color != None: s_inst_color = colors.moregray(s_inst_color)
-
             tracks.m_addinst(cvpj_l, instname, {'plugin': 'general-midi', 'plugindata': {'bank':0, 'inst':instnames.index(instname)}})
             tracks.m_addinst_data(cvpj_l, instname, s_inst_name, s_inst_color, None, None)
 
@@ -124,11 +110,9 @@ class input_mariopaint_mss(plugin_input.base):
 
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        cvpj_l['use_placements_notes'] = False
         
         cvpj_l['timesig_numerator'] = mss_measure
         cvpj_l['timesig_denominator'] = 4
-        cvpj_l['timemarkers'] = cvpj_l_timemarkers
         cvpj_l['bpm'] = mss_tempo
         return json.dumps(cvpj_l)
 

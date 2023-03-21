@@ -4,6 +4,7 @@
 from functions import colors
 from functions import idvals
 from functions import tracks
+from functions import song
 import plugin_input
 import json
 import io
@@ -19,11 +20,12 @@ def readpart(msq_score_str, n_pos, n_len):
     char1 = int(msq_score_str.read(1), 16)
     char2 = int(msq_score_str.read(1), 16)
     char3 = int(msq_score_str.read(1), 16)
-    #print(char1, char2, char3)
-    if char1 == 0 and char2 == 0 and char3 == 0: numnotes = 0
-    if char1 == 0 and char2 == 0 and char3 != 0: numnotes = 1
-    if char1 == 0 and char2 != 0 and char3 != 0: numnotes = 2
-    if char1 != 0 and char2 != 0 and char3 != 0: numnotes = 3
+    if char1 == 0:
+        if char2 == 0:
+            if char3 == 0: numnotes = 0
+            else: numnotes = 1
+        else: numnotes = 2
+    else: numnotes = 3
 
     if numnotes == 1:
         msq_notes[char3] = int(msq_score_str.read(1), 16)
@@ -31,27 +33,16 @@ def readpart(msq_score_str, n_pos, n_len):
     if numnotes == 2:
         msq_notes[char2] = char3
         t_note = int(msq_score_str.read(1), 16)
-        t_inst = int(msq_score_str.read(1), 16)
-        msq_notes[t_note] = t_inst
+        msq_notes[t_note] = int(msq_score_str.read(1), 16)
 
     if numnotes == 3:
         msq_notes[char1] = char2
-        t_inst = int(msq_score_str.read(1), 16)
-        msq_notes[char3] = t_inst
+        msq_notes[char3] = int(msq_score_str.read(1), 16)
         t_note = int(msq_score_str.read(1), 16)
-        t_inst = int(msq_score_str.read(1), 16)
-        msq_notes[t_note] = t_inst
+        msq_notes[t_note] = int(msq_score_str.read(1), 16)
 
     for msq_note in msq_notes:
-        k_inst = instnames[msq_notes[msq_note]-1]
-        k_key = keytable[msq_note-1]
-        notedata = {}
-        notedata['position'] = n_pos
-        notedata['key'] = k_key
-        notedata['vol'] = 1.0
-        notedata['duration'] = n_len
-        notedata['instrument'] = k_inst
-        notelist.append(notedata)
+        notelist.append({'position': n_pos, 'key': keytable[msq_note-1], 'duration': n_len, 'instrument': instnames[msq_notes[msq_note]-1]})
 
 class input_mariopaint_msq(plugin_input.base):
     def __init__(self): pass
@@ -62,18 +53,10 @@ class input_mariopaint_msq(plugin_input.base):
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global notelist
-
         idvals_mariopaint_inst = idvals.parse_idvalscsv('idvals/mariopaint_inst.csv')
-
         cvpj_l = {}
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
-        cvpj_l_playlist = {}
-        
         notelist = []
-
         msq_values = {}
-
         f_msq = open(input_file, 'r')
         lines_msq = f_msq.readlines()
         for line in lines_msq:
@@ -88,12 +71,7 @@ class input_mariopaint_msq(plugin_input.base):
         if 'TEMPO' in msq_values: msq_tempo = int(msq_values['TEMPO'])
         else: msq_tempo = 180
 
-        notelen = 4
-
-        while msq_tempo > 180:
-            msq_tempo = msq_tempo/2
-            notelen = notelen/2
-
+        msq_tempo, notelen = song.get_lower_tempo(msq_tempo, 4, 180)
         msq_score = msq_values['SCORE']
         msq_score_size = len(msq_score)
         msq_score_str = io.StringIO(msq_score)
@@ -118,7 +96,6 @@ class input_mariopaint_msq(plugin_input.base):
 
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        cvpj_l['use_placements_notes'] = False
         
         cvpj_l['timesig_numerator'] = msq_measure
         cvpj_l['timesig_denominator'] = 4

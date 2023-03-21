@@ -13,5 +13,5 @@ def add_timemarker_text(cvpj_l, i_position, i_name):
 
 def add_timemarker_looparea(cvpj_l, i_name, i_start, i_end):
     if 'timemarkers' not in cvpj_l: cvpj_l['timemarkers'] = []
-    if i_name != None: cvpj_l['timemarkers'].append({'name': 'Loop', 'position': i_start, 'end': i_end, 'type': 'loop_area'})
+    if i_name == None: cvpj_l['timemarkers'].append({'name': 'Loop', 'position': i_start, 'end': i_end, 'type': 'loop_area'})
     else: cvpj_l['timemarkers'].append({'name': i_name, 'position': i_start, 'end': i_end, 'type': 'loop_area'})

@@ -11,7 +11,7 @@ from functions import idvals
 def getstring(nbs_file):
     stringlen = int.from_bytes(nbs_file.read(4), "little")
     if stringlen != 0: return nbs_file.read(stringlen).decode("utf-8")
-    else: return None
+    else: return ''
 
 def nbs_parsekey(nbs_file, nbs_newformat):
     nbs_inst = nbs_file.read(1)[0]
@@ -41,17 +41,6 @@ class input_gt_mnbs(plugin_input.base):
         nbs_len = nbs_file.tell()
         nbs_file.seek(0)
 
-        gmmidi = {}
-        gmmidi[0] = 1
-        gmmidi[1] = 36
-        gmmidi[4] = 14
-        gmmidi[5] = 25
-        gmmidi[6] = 74
-        gmmidi[7] = 113
-        gmmidi[9] = 14
-        gmmidi[10] = 12
-        gmmidi[14] = 106
-
         idvals_inst_mnbs = idvals.parse_idvalscsv('idvals/noteblockstudio_inst.csv')
 
         # PART 1: HEADER
@@ -79,21 +68,16 @@ class input_gt_mnbs(plugin_input.base):
             nbs_notes[playlistid+1] = {}
 
         nbs_song_name = getstring(nbs_file)
-        if nbs_song_name != None: 
-            cvpj_l['title'] = nbs_song_name
-            print('[input-mnbs] Song Title: '+nbs_song_name)
+        print('[input-mnbs] Song Title: '+nbs_song_name)
 
         nbs_song_author = getstring(nbs_file)
-        if nbs_song_author != None: 
-            cvpj_l['author'] = nbs_song_author
-            print('[input-mnbs] Song Author: '+nbs_song_author)
+        print('[input-mnbs] Song Author: '+nbs_song_author)
 
         nbs_song_orgauthor = getstring(nbs_file)
-        if nbs_song_author != None: print('[input-mnbs] Song Original Author: '+nbs_song_orgauthor)
+        print('[input-mnbs] Song Original Author: '+nbs_song_orgauthor)
 
         nbs_description = getstring(nbs_file)
-
-        if nbs_description != None: song_message += nbs_description
+        print('[input-mnbs] Song Description: '+nbs_song_orgauthor)
 
         nbs_tempo = int.from_bytes(nbs_file.read(2), "little")
         tempo = (nbs_tempo/800)*120
@@ -185,7 +169,7 @@ class input_gt_mnbs(plugin_input.base):
         cvpj_l['info']['original_author'] = nbs_song_orgauthor
         cvpj_l['info']['message'] = {}
         cvpj_l['info']['message']['type'] = 'text'
-        cvpj_l['info']['message']['text'] = song_message
+        cvpj_l['info']['message']['text'] = nbs_description
 
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True

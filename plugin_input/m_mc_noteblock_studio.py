@@ -7,6 +7,7 @@ import math
 from functions import data_bytes
 from functions import tracks
 from functions import idvals
+from functions import note_data
 
 def getstring(nbs_file):
     stringlen = int.from_bytes(nbs_file.read(4), "little")
@@ -21,7 +22,7 @@ def nbs_parsekey(nbs_file, nbs_newformat):
         nbs_pan = nbs_file.read(1)[0]
         nbs_pitch = int.from_bytes(nbs_file.read(2), "little", signed="True")
         return [nbs_key, nbs_inst, [nbs_velocity, nbs_pan, nbs_pitch]]
-    else: return [nbs_key, nbs_inst, None]
+    else: return [nbs_key, nbs_inst, None, None, None]
 
 class input_gt_mnbs(plugin_input.base):
     def __init__(self): pass
@@ -124,14 +125,11 @@ class input_gt_mnbs(plugin_input.base):
                 placementnum = math.floor(note/split_duration)*split_duration
                 if placementnum not in layer_placements: layer_placements[placementnum] = []
                 cvpj_notedata = {}
-                cvpj_notedata['position'] = note-placementnum
-                cvpj_notedata['duration'] = 2
-                cvpj_notedata['instrument'] = 'NoteBlock'+str(nbs_notedata[1])
-                cvpj_notedata['key'] = nbs_notedata[0]
                 if nbs_notedata[2] != None:
-                    cvpj_notedata['vol'] = nbs_notedata[2][0]/100
-                    cvpj_notedata['pan'] = (nbs_notedata[2][1]/100)-1
+                    cvpj_notedata = note_data.mx_makenote('NoteBlock'+str(nbs_notedata[1]), note-placementnum, 2, nbs_notedata[0], nbs_notedata[2][0]/100, (nbs_notedata[2][1]/100)-1)
                     cvpj_notedata['finepitch'] = nbs_notedata[2][2]
+                else:
+                    cvpj_notedata = note_data.mx_makenote('NoteBlock'+str(nbs_notedata[1]), note-placementnum, 2, nbs_notedata[0], None, None)
                 layer_placements[placementnum].append(cvpj_notedata)
             for placenum in layer_placements:
                 cvpj_pl_data = {}

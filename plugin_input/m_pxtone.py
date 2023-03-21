@@ -7,6 +7,7 @@ from functions import audio_wav
 from functions import folder_samples
 from functions import tracks
 from functions import placements
+from functions import note_data
 import plugin_input
 import json
 import varint
@@ -407,11 +408,7 @@ class input_pxtone(plugin_input.base):
                     notedur = unit_event[3]
                     noteend = position_global+notedur
                     noteon_note = cur_pitch
-                    cvpj_note = {}
-                    cvpj_note['position'] = position_global/timebase
-                    cvpj_note['key'] = noteon_note
-                    cvpj_note['duration'] = notedur/timebase
-                    cvpj_note['instrument'] = 'ptcop_'+str(cur_voice)
+                    cvpj_note = note_data.mx_makenote('ptcop_'+str(cur_voice), position_global/timebase, notedur/timebase, noteon_note, None, None)
                     t_notelist[unit_eventnum].append(cvpj_note)
 
                 prevpos = unit_event[0]

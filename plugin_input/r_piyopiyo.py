@@ -9,6 +9,7 @@ from functions import data_bytes
 from functions import folder_samples
 from functions import placements
 from functions import tracks
+from functions import song
 
 track_colors = [[0.25, 0.38, 0.49], [0.36, 0.43, 0.46], [0.51, 0.57, 0.47], [0.58, 0.64, 0.40]]
 
@@ -104,7 +105,6 @@ class input_piyopiyo(plugin_input.base):
 
         cvpj_l['bpm'] = bpm
 
-        cvpj_l['timemarkers'] = []
-        cvpj_l['timemarkers'].append({'name': 'Loop', 'position': loopstart, 'end': loopend, 'type': 'loop_area'})
+        song.add_timemarker_looparea(cvpj_l, 'Loop', loopstart, loopend)
         return json.dumps(cvpj_l)
 

@@ -3,6 +3,7 @@
 
 from functions import data_bytes
 from functions import note_mod
+from functions import notelist_data
 from functions import auto
 from functions import idvals
 from functions import placements
@@ -189,7 +190,7 @@ class input_onlinesequencer(plugin_input.base):
                 if 'vol' in onlseq_data_instparams[instid]: trk_vol = onlseq_data_instparams[instid]['vol']
                 if 'pan' in onlseq_data_instparams[instid]: trk_pan = onlseq_data_instparams[instid]['pan']
 
-            trackduration = note_mod.getduration(cvpj_notelist)
+            trackduration = notelist_data.getduration(cvpj_notelist)
 
             if trackduration > songduration: songduration = trackduration
 

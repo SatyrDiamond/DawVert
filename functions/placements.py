@@ -3,6 +3,7 @@
 
 import math
 from functions import note_mod
+from functions import notelist_data
 
 def float_range(start,stop,step):
     istop = int((stop-start) // step)
@@ -87,7 +88,7 @@ def single_notelists2placements(placementsdata):
 
         for cutrange in cutranges:
             new_placement = {}
-            new_placement['notelist'] = note_mod.trimmove(notelist, cutrange[0], cutrange[1])
+            new_placement['notelist'] = notelist_data.trimmove(notelist, cutrange[0], cutrange[1])
             new_placement['position'] = cutrange[0]
             new_placement['duration'] = cutrange[1]-cutrange[0]
             new_placements.append(new_placement)
@@ -408,4 +409,4 @@ def make_timemarkers(timesig, PatternLengthList, LoopPos):
 
 
 def nl2pl(cvpj_notelist):
-    return [{'position': 0, 'duration': note_mod.getduration(cvpj_notelist), 'notelist': cvpj_notelist}]
+    return [{'position': 0, 'duration': notelist_data.getduration(cvpj_notelist), 'notelist': cvpj_notelist}]

@@ -8,6 +8,7 @@ from functions import auto
 from functions import idvals
 from functions import placements
 from functions import tracks
+from functions import note_data
 import plugin_input
 import json
 import struct
@@ -81,8 +82,9 @@ def parse_note(notedata):
     note['key'] = ols_note-60
     note['duration'] = ols_dur
     note['volume'] = ols_vol
+    cvpj_notedata = note_data.rx_makenote(ols_pos, ols_dur, ols_note-60, ols_vol, None)
     if ols_inst not in t_notelist: t_notelist[ols_inst] = []
-    t_notelist[ols_inst].append(note)
+    t_notelist[ols_inst].append(cvpj_notedata)
 
 def int2float(value): return struct.unpack("<f", struct.pack("<I", value))[0]
 
@@ -155,7 +157,7 @@ class input_onlinesequencer(plugin_input.base):
                     if inst_param not in t_auto_inst[inst_id]: t_auto_inst[inst_id][inst_param] = []
                     t_auto_inst[inst_id][inst_param].append({"position": position, 'type': marker_type, "value": value})
 
-        if "3" in onlseq_data_main:  onlseq_data_instparams = parse_inst_params(os_data["1"]["3"])
+        if "3" in onlseq_data_main: onlseq_data_instparams = parse_inst_params(os_data["1"]["3"])
         else: onlseq_data_instparams = {}
 
         t_notelist = {}

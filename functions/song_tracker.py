@@ -17,6 +17,37 @@ multi_used_instruments = []
 global slidediv
 slidediv = 16
 
+
+# ----------------------------------------------------------------------------------------------------
+
+def splitbyte(value):
+    first = value >> 4
+    second = value & 0x0F
+    return (first, second)
+
+def getfineval(value):
+    volslidesplit = splitbyte(value)
+    volslideout = 0
+    if volslidesplit[0] == 0 and volslidesplit[1] == 0:
+        volslideout = 0
+    elif volslidesplit[0] == 15 and volslidesplit[1] == 15:
+        volslideout = volslidesplit[0]/16
+    elif volslidesplit[0] == 0 and volslidesplit[1] == 15:
+        volslideout = -15
+
+    elif volslidesplit[0] == 0 and volslidesplit[1] != 0:
+        volslideout = volslidesplit[1]*-1
+    elif volslidesplit[0] != 0 and volslidesplit[1] == 0:
+        volslideout = volslidesplit[0]
+
+    elif volslidesplit[0] == 15 and volslidesplit[1] != 15:
+        volslideout = (volslidesplit[0]*-1)/16
+    elif volslidesplit[0] != 15 and volslidesplit[1] == 15:
+        volslideout = volslidesplit[0]/16
+    return volslideout
+
+# ----------------------------------------------------------------------------------------------------
+
 def get_used_instruments(): return used_instruments
 
 def get_used_instruments_num(): return used_instruments_num

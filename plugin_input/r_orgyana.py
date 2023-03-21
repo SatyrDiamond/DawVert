@@ -80,10 +80,10 @@ def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
         if isinsidenote == False:
             cvpj_note = {}
             cvpj_note['position'] = org_l_n
-            cvpj_note['key'] = notedata[0] - 48
+            cvpj_note['key'] = notedata[0]-48
             cvpj_note['duration'] = notedata[1]
-            cvpj_note['vol'] = notedata[2] / 254
-            cvpj_note['pan'] = (notedata[3] - 6) / 6
+            cvpj_note['vol'] = notedata[2]/254
+            cvpj_note['pan'] = (notedata[3]-6)/6
             cvpj_nl.append(cvpj_note)
     return cvpj_nl
 
@@ -124,40 +124,22 @@ class input_orgyana(plugin_input.base):
             org_insttable[x-1] = Instrument
             disable_sustaining_notes = int.from_bytes(bio_org.read(1), "little")
             number_of_notes = int.from_bytes(bio_org.read(2), "little")
-            print("[input-orgmaker] Pitch = " + str(pitch), end=" ")
-            print("| Inst = " + str(Instrument), end=" ")
-            print("| NoSustainingNotes = " + str(disable_sustaining_notes), end=" ")
-            print("| #notes = " + str(number_of_notes))
+            print("[input-orgmaker] Pitch: " + str(pitch), end=", ")
+            print("Inst: " + str(Instrument), end=", ")
+            print("NoSustain: " + str(disable_sustaining_notes), end=", ")
+            print("#Notes: " + str(number_of_notes))
             org_instrumentinfotable.append([pitch,Instrument,disable_sustaining_notes,number_of_notes])
-        t_cvpj_nl = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
-        t_cvpj_nl[0] = read_orgtrack(bio_org, org_instrumentinfotable, 0)
-        t_cvpj_nl[1] = read_orgtrack(bio_org, org_instrumentinfotable, 1)
-        t_cvpj_nl[2] = read_orgtrack(bio_org, org_instrumentinfotable, 2)
-        t_cvpj_nl[3] = read_orgtrack(bio_org, org_instrumentinfotable, 3)
-        t_cvpj_nl[4] = read_orgtrack(bio_org, org_instrumentinfotable, 4)
-        t_cvpj_nl[5] = read_orgtrack(bio_org, org_instrumentinfotable, 5)
-        t_cvpj_nl[6] = read_orgtrack(bio_org, org_instrumentinfotable, 6)
-        t_cvpj_nl[7] = read_orgtrack(bio_org, org_instrumentinfotable, 7)
-        t_cvpj_nl[8] = read_orgtrack(bio_org, org_instrumentinfotable, 8)
-        t_cvpj_nl[9] = read_orgtrack(bio_org, org_instrumentinfotable, 9)
-        t_cvpj_nl[10] = read_orgtrack(bio_org, org_instrumentinfotable, 10)
-        t_cvpj_nl[11] = read_orgtrack(bio_org, org_instrumentinfotable, 11)
-        t_cvpj_nl[12] = read_orgtrack(bio_org, org_instrumentinfotable, 12)
-        t_cvpj_nl[13] = read_orgtrack(bio_org, org_instrumentinfotable, 13)
-        t_cvpj_nl[14] = read_orgtrack(bio_org, org_instrumentinfotable, 14)
-        t_cvpj_nl[15] = read_orgtrack(bio_org, org_instrumentinfotable, 15)
+
         for tracknum in range(16):
-            s_cvpj_nl = t_cvpj_nl[tracknum]
-            if len(t_cvpj_nl[tracknum]) != 0:
+            s_cvpj_nl = read_orgtrack(bio_org, org_instrumentinfotable, tracknum)
+            if len(s_cvpj_nl) != 0:
                 org_pitch = org_instrumentinfotable[tracknum][0]
 
                 if tracknum < 8: trackname = "Melody "+str(tracknum+1)
                 else: trackname = l_drum_name[org_insttable[tracknum]]
 
-                cvpj_instdata = {'pitch': (org_pitch-1000)/18}
-
                 idval = 'org_'+str(tracknum)
-                tracks.r_addtrack_inst(cvpj_l, idval, cvpj_instdata)
+                tracks.r_addtrack_inst(cvpj_l, idval, {'pitch': (org_pitch-1000)/18})
                 tracks.r_addtrack_data(cvpj_l, idval, trackname, l_org_colors[tracknum], 1.0, None)
                 tracks.r_addtrackpl(cvpj_l, idval, placements.nl2pl(s_cvpj_nl))
 
@@ -170,6 +152,5 @@ class input_orgyana(plugin_input.base):
         cvpj_l['bpm'] = (1/(org_wait/122))*122
         cvpj_l['timesig_denominator'] = org_stepsperbar
         cvpj_l['timesig_numerator'] = org_beatsperstep
-        if org_loop_beginning != 0:
-            cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': org_loop_beginning, 'end': org_loop_end, 'type': 'loop_area'}]
+        if org_loop_beginning != 0: cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': org_loop_beginning, 'end': org_loop_end, 'type': 'loop_area'}]
         return json.dumps(cvpj_l)

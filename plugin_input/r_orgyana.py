@@ -5,6 +5,7 @@ from functions import data_bytes
 from functions import note_mod
 from functions import placements
 from functions import tracks
+from functions import song
 import plugin_input
 import json
 
@@ -152,5 +153,6 @@ class input_orgyana(plugin_input.base):
         cvpj_l['bpm'] = (1/(org_wait/122))*122
         cvpj_l['timesig_denominator'] = org_stepsperbar
         cvpj_l['timesig_numerator'] = org_beatsperstep
-        if org_loop_beginning != 0: cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': org_loop_beginning, 'end': org_loop_end, 'type': 'loop_area'}]
+        
+        if org_loop_beginning != 0: song.add_timemarker_looparea(cvpj_l, None, org_loop_beginning, org_loop_end)
         return json.dumps(cvpj_l)

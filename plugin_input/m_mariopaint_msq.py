@@ -13,7 +13,7 @@ instnames = ['mario','toad','yoshi','star','flower','gameboy','dog','cat','pig',
 keytable =  [19, 17, 16, 14, 12, 11, 9, 7, 5, 4, 2, 0, -1]
 
 def readpart(msq_score_str, n_pos, n_len):
-    global notelist
+    global cvpj_notelist
     numnotes = 3
 
     msq_notes = {}
@@ -42,7 +42,7 @@ def readpart(msq_score_str, n_pos, n_len):
         msq_notes[t_note] = int(msq_score_str.read(1), 16)
 
     for msq_note in msq_notes:
-        notelist.append({'position': n_pos, 'key': keytable[msq_note-1], 'duration': n_len, 'instrument': instnames[msq_notes[msq_note]-1]})
+        cvpj_notelist.append({'position': n_pos, 'key': keytable[msq_note-1], 'duration': n_len, 'instrument': instnames[msq_notes[msq_note]-1]})
 
 class input_mariopaint_msq(plugin_input.base):
     def __init__(self): pass
@@ -52,10 +52,10 @@ class input_mariopaint_msq(plugin_input.base):
     def gettype(self): return 'm'
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
-        global notelist
+        global cvpj_notelist
         idvals_mariopaint_inst = idvals.parse_idvalscsv('idvals/mariopaint_inst.csv')
         cvpj_l = {}
-        notelist = []
+        cvpj_notelist = []
         msq_values = {}
         f_msq = open(input_file, 'r')
         lines_msq = f_msq.readlines()
@@ -81,7 +81,7 @@ class input_mariopaint_msq(plugin_input.base):
             readpart(msq_score_str, curpos, notelen)
             curpos += notelen
 
-        tracks.m_playlist_pl(cvpj_l, 1, None, None, [{'type': "instruments", 'position': 0, 'duration': curpos+1, 'notelist': notelist}])
+        tracks.m_playlist_pl(cvpj_l, 1, None, None, [{'type': "instruments", 'position': 0, 'duration': curpos+1, 'notelist': cvpj_notelist}])
 
         for instname in instnames:
             s_inst_name = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'name')

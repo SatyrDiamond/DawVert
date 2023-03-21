@@ -5,6 +5,7 @@ from functions import data_bytes
 from functions import audio_wav
 from functions import folder_samples
 from functions import tracks
+from functions import note_data
 import plugin_input
 import json
 import struct
@@ -101,22 +102,15 @@ class input_cvpj_f(plugin_input.base):
                 cvpj_notelist = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 
                 for t_pattrack in t_patdata:
-                    #print('TRACK')
                     t_pos = 0
                     t_notes = []
                     for t_patnote in t_pattrack:
                         if t_patnote != (0, 0, 0, 0): t_notes.append([0, t_pos, t_patnote[0], t_patnote[1], t_patnote[2]])
                         if t_notes != []: t_notes[-1][0] += 1
-                        #print(str(t_patnote).ljust(20), t_notes)
                         t_pos += 1
                     for t_note in t_notes:
                         if t_note[4] != 0:
-                            cvpj_note = {}
-                            cvpj_note['position'] = t_note[1]
-                            cvpj_note['duration'] = t_note[0]
-                            cvpj_note['key'] = t_note[2]-78
-                            cvpj_note['vol'] = t_note[4]/100
-                            cvpj_note['instrument'] = 'pixi_'+str(t_note[3])
+                            cvpj_note = note_data.mx_makenote('pixi_'+str(t_note[3]), t_note[1], t_note[0], t_note[2]-78, t_note[4]/100, None)
                             cvpj_notelist[t_note[3]].append(cvpj_note)
 
                 pixi_data_patterns[pixi_pattern_num] = {}

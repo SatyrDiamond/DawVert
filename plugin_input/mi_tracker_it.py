@@ -11,6 +11,7 @@ from functions import song_tracker
 from functions import audio_wav
 from functions import folder_samples
 from functions import placements
+from functions import tracks
 
 try: import xmodits
 except: xmodits_exists = False
@@ -36,11 +37,10 @@ class input_it(plugin_input.base):
     def parse(self, input_file, extra_param):
         it_file = open(input_file, 'rb')
 
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
-
         modulename = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, modulename)
+
+        cvpj_l = {}
 
         it_header_magic = it_file.read(4)
         if it_header_magic != b'IMPM':
@@ -400,21 +400,13 @@ class input_it(plugin_input.base):
             for IT_Inst in IT_Insts:
                 it_instname = startinststr + str(instrumentcount+1)
                 it_singleinst = IT_Insts[IT_Inst]
-                cvpj_l_instruments[it_instname] = {}
-                cvpj_l_single_inst = cvpj_l_instruments[it_instname]
-                cvpj_l_single_inst['color'] = [0.71, 0.58, 0.47]
-                if it_singleinst['name'] != '': cvpj_l_single_inst['name'] = it_singleinst['name']
-                elif it_singleinst['dosfilename'] != '': cvpj_l_single_inst['name'] = it_singleinst['dosfilename']
-                else: cvpj_l_single_inst['name'] = " "
-                cvpj_l_single_inst['vol'] = 0.3
 
-                temp_inst_is_single_sample = True
-                temp_allsample = None
-                temp_firstsamplefound = None
+                if it_singleinst['name'] != '': cvpj_instname = it_singleinst['name']
+                elif it_singleinst['dosfilename'] != '': cvpj_instname = it_singleinst['dosfilename']
+                else: cvpj_instname = " "
 
                 n_s_t = it_singleinst['notesampletable']
                 bn_s_t = []
-
 
                 basenoteadd = 60
                 for n_s_te in n_s_t:
@@ -432,10 +424,10 @@ class input_it(plugin_input.base):
                     bn_s_t_f = bn_s_t[12]
 
                 if bn_s_t_ifsame == True:
-                    cvpj_l_single_inst['instdata'] = {}
-                    cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
-                    cvpj_l_single_inst['instdata']['plugindata'] = {}
-                    cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(bn_s_t_f[1]) + '.wav'
+                    cvpj_instdata = {}
+                    cvpj_instdata['plugin'] = 'sampler'
+                    cvpj_instdata['plugindata'] = {}
+                    cvpj_instdata['plugindata']['file'] = samplefolder + str(bn_s_t_f[1]) + '.wav'
                 else:
                     mscount = 0
                     ms_r = []
@@ -445,13 +437,12 @@ class input_it(plugin_input.base):
                             ms_r_c = bn_s_t_e
                             ms_r.append([ms_r_c[0], ms_r_c[1], 0])
                         ms_r[-1][2] += 1
-                        #print(mscount, bn_s_t_e, ms_r)
                         mscount += 1
 
-                    cvpj_l_single_inst['instdata'] = {}
-                    cvpj_l_single_inst['instdata']['plugin'] = 'sampler-multi'
-                    cvpj_l_single_inst['instdata']['plugindata'] = {}
-                    cvpj_l_single_inst['instdata']['plugindata']['regions'] = []
+                    cvpj_instdata = {}
+                    cvpj_instdata['plugin'] = 'sampler-multi'
+                    cvpj_instdata['plugindata'] = {}
+                    cvpj_instdata['plugindata']['regions'] = []
 
                     startpos = -60
                     for ms_r_e in ms_r:
@@ -468,13 +459,13 @@ class input_it(plugin_input.base):
                         regionparams['trigger'] = 'oneshot'
                         regionparams['loop'] = {}
                         regionparams['loop']['enabled'] = 0
-                        cvpj_l_single_inst['instdata']['plugindata']['regions'].append(regionparams)
+                        cvpj_instdata['plugindata']['regions'].append(regionparams)
 
                         startpos += ms_r_e[2]
 
-                if it_singleinst['filtercutoff'] != None and 'plugindata' in cvpj_l_single_inst['instdata']:
+                if it_singleinst['filtercutoff'] != None and 'plugindata' in cvpj_instdata:
                     if it_singleinst['filtercutoff'] != 127:
-                        plugdata = cvpj_l_single_inst['instdata']['plugindata']
+                        plugdata = cvpj_instdata['plugindata']
                         plugdata['filter'] = {}
                         computedCutoff = (it_singleinst['filtercutoff'] * 512)
                         outputcutoff = 131.0 * pow(2.0, computedCutoff * (5.29 / (127.0 * 512.0)))
@@ -484,24 +475,25 @@ class input_it(plugin_input.base):
                         plugdata['filter']['type'] = "lowpass"
                         plugdata['filter']['wet'] = 1
 
-                cvpj_l_instrumentsorder.append(it_instname)
+                tracks.m_addinst(cvpj_l, it_instname, cvpj_instdata)
+                tracks.m_addinst_data(cvpj_l, it_instname, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)
+
                 instrumentcount += 1
         if it_header_flag_useinst == 0:
             for IT_Sample in IT_Samples:
                 it_samplename = startinststr + str(samplecount+1)
                 it_singlesample = IT_Samples[IT_Sample]
-                cvpj_l_instruments[it_samplename] = {}
-                cvpj_l_single_inst = cvpj_l_instruments[it_samplename]
-                cvpj_l_single_inst['color'] = [0.71, 0.58, 0.47]
-                if it_singlesample['name'] != '': cvpj_l_single_inst['name'] = it_singlesample['name']
-                elif it_singlesample['dosfilename'] != '': cvpj_l_single_inst['name'] = it_singlesample['dosfilename']
-                else: cvpj_l_single_inst['name'] = " "
-                cvpj_l_single_inst['vol'] = 0.3
-                cvpj_l_single_inst['instdata'] = {}
-                cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
-                cvpj_l_single_inst['instdata']['plugindata'] = {}
-                cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(samplecount+1) + '.wav'
-                cvpj_l_instrumentsorder.append(it_samplename)
+                if it_singlesample['name'] != '': cvpj_instname = it_singlesample['name']
+                elif it_singlesample['dosfilename'] != '': cvpj_instname = it_singlesample['dosfilename']
+                else: cvpj_instname = " "
+                cvpj_instdata = {}
+                cvpj_instdata['plugin'] = 'sampler'
+                cvpj_instdata['plugindata'] = {}
+                cvpj_instdata['plugindata']['file'] = samplefolder + str(samplecount+1) + '.wav'
+
+                tracks.m_addinst(cvpj_l, it_samplename, cvpj_instdata)
+                tracks.m_addinst_data(cvpj_l, it_samplename, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)
+
                 samplecount += 1
 
         patlentable = song_tracker.get_len_table(patterntable_all, table_orders)
@@ -509,8 +501,6 @@ class input_it(plugin_input.base):
         # ------------- Song Message -------------
         it_file.seek(it_header_msgoffset)
         it_songmessage = it_file.read(it_header_msglength).split(b'\x00' * 1)[0].decode("windows-1252")
-
-        cvpj_l = {}
 
         automation = {}
         automation['main'] = {}
@@ -529,8 +519,7 @@ class input_it(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         cvpj_l['timemarkers'] = placements.make_timemarkers([4,16], patlentable, None)
-        cvpj_l['instruments_data'] = cvpj_l_instruments
-        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
+
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = it_header_tempo/(it_header_speed/6)
         return json.dumps(cvpj_l)

@@ -5,6 +5,8 @@ from functions import data_bytes
 from functions import note_mod
 from functions import audio_wav
 from functions import folder_samples
+from functions import tracks
+from functions import placements
 import plugin_input
 import json
 import varint
@@ -192,10 +194,8 @@ class input_pxtone(plugin_input.base):
         ptcop_song_comment = None
         ptcop_voice_num = 0
 
-        if ptcop_header == b'PTCOLLAGE-071119': 
-            timebase = 120
-        if ptcop_header == b'PTTUNE--20071119': 
-            timebase = 12
+        if ptcop_header == b'PTCOLLAGE-071119': timebase = 120
+        if ptcop_header == b'PTTUNE--20071119': timebase = 12
 
         t_voice_data = []
 
@@ -447,40 +447,23 @@ class input_pxtone(plugin_input.base):
 
         for unitnum in t_notelist:
             cvpj_notelist = t_notelist[unitnum]
-
-            for cvpj_note in cvpj_notelist:
-                note_mod.notemod_conv(cvpj_note)
-
-            cvpj_placement = {}
-            cvpj_placement['position'] = 0
-            cvpj_placement['duration'] = note_mod.getduration(cvpj_notelist)
-            cvpj_placement['type'] = 'instruments'
-            cvpj_placement['notelist'] = cvpj_notelist
-
-            playlistrowdata = {}
-            if unitnum in ptcop_name_unit: playlistrowdata['name'] = ptcop_name_unit[unitnum]
-            playlistrowdata['color'] = [0.14, 0.00, 0.29]
-            playlistrowdata['placements_notes'] = [cvpj_placement]
-
-            cvpj_l_playlist[str(unitnum+1)] = playlistrowdata
+            for cvpj_note in cvpj_notelist: note_mod.notemod_conv(cvpj_note)
+            if unitnum in ptcop_name_unit: plt_name = ptcop_name_unit[unitnum]
+            else: plt_name = None
+            tracks.m_playlist_pl(cvpj_l, unitnum+1, plt_name, [0.14, 0.00, 0.29], placements.nl2pl(cvpj_notelist))
 
         for voicenum in range(ptcop_voice_num):
-            cvpj_inst = {}
-            if voicenum in ptcop_name_voice: cvpj_inst['name'] = ptcop_name_voice[voicenum]
-            else: cvpj_inst['name'] = ''
-            cvpj_inst["pan"] = 0.0
-            if t_voice_data[voicenum][0] == 'sampler':
-                cvpj_inst["vol"] = 0.3
-            else:
-                cvpj_inst["vol"] = 1.0
-            cvpj_inst['color'] = getcolor()
-            cvpj_inst["instdata"] = {}
-            cvpj_inst['instdata']['plugin'] = t_voice_data[voicenum][0]
-            cvpj_inst['instdata']['plugindata'] = t_voice_data[voicenum][1]
-            cvpj_inst['instdata']['middlenote'] = t_voice_data[voicenum][2]
+            if voicenum in ptcop_name_voice: cvpj_instname = ptcop_name_voice[voicenum]
+            else: cvpj_instname = ''
+            if t_voice_data[voicenum][0] == 'sampler': cvpj_instvol = 0.3
+            else: cvpj_instvol = 1.0
+            cvpj_instdata = {}
+            cvpj_instdata['plugin'] = t_voice_data[voicenum][0]
+            cvpj_instdata['plugindata'] = t_voice_data[voicenum][1]
+            cvpj_instdata['middlenote'] = t_voice_data[voicenum][2]
             instid = 'ptcop_'+str(voicenum)
-            cvpj_l_instruments[instid] = cvpj_inst
-            cvpj_l_instrumentsorder.append(instid)
+            tracks.m_addinst(cvpj_l, instid, cvpj_instdata)
+            tracks.m_addinst_data(cvpj_l, instid, cvpj_instname, getcolor(), cvpj_instvol, 0.0)
 
         cvpj_l['info'] = {}
         if ptcop_song_name != None: cvpj_l['info']['title'] = ptcop_song_name
@@ -497,10 +480,7 @@ class input_pxtone(plugin_input.base):
         
         cvpj_l['timesig_numerator'] = ptcop_mas_beat
         cvpj_l['timesig_denominator'] = 4
-        cvpj_l['instruments_data'] = cvpj_l_instruments
-        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
-        cvpj_l['playlist'] = cvpj_l_playlist
-        if ptcop_mas_repeat != 0:
-            cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': ptcop_mas_repeat/timebase, 'end': ptcop_mas_last/timebase, 'type': 'loop_area'}]
+
+        if ptcop_mas_repeat != 0: cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': ptcop_mas_repeat/timebase, 'end': ptcop_mas_last/timebase, 'type': 'loop_area'}]
         cvpj_l['bpm'] = ptcop_mas_beattempo
         return json.dumps(cvpj_l)

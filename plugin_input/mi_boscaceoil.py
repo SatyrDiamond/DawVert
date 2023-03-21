@@ -4,6 +4,7 @@
 from functions import data_bytes
 from functions import placements
 from functions import idvals
+from functions import tracks
 import plugin_input
 import json
 
@@ -32,10 +33,9 @@ class input_ceol(plugin_input.base):
     def gettype(self): return 'mi'
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
-        cvpj_l_instrument_data = {}
-        cvpj_l_instrument_order = []
+        cvpj_l = {}
+
         cvpj_l_notelistindex = {}
-        cvpj_l_playlist = {}
         cvpj_l_keynames_data = {}
 
         idvals_inst_midi = idvals.parse_idvalscsv('idvals/midi_inst.csv')
@@ -67,7 +67,6 @@ class input_ceol(plugin_input.base):
         print('[input-boscaceoil] Pattern Length: '+str(ceol_basic_patternlength))
         ceol_basic_barlength = ceol_read()
         print('[input-boscaceoil] Bar Length: '+str(ceol_basic_barlength))
-        print('[input-boscaceoil] ')
 
         ceol_numinstrument = ceol_read()
 
@@ -75,7 +74,7 @@ class input_ceol(plugin_input.base):
 
         for instnum in range(ceol_numinstrument):
             cvpj_instid = 'ceol_'+str(instnum).zfill(2)
-            print('[input-boscaceoil] Instrument:', end=' ')
+            print('[input-boscaceoil] Inst '+ str(instnum), end=', ')
 
             ceol_inst_number = ceol_read()
             ceol_inst_type = ceol_read()
@@ -84,41 +83,34 @@ class input_ceol(plugin_input.base):
             ceol_inst_resonance = ceol_read()
             ceol_inst_volume = ceol_read()
 
-            print('[input-boscaceoil]    Volume: '+str(ceol_inst_volume/256))
-            print('[input-boscaceoil]    Type: '+str(ceol_inst_type))
-            print('[input-boscaceoil]    Palette: '+str(ceol_inst_palette))
-            print('[input-boscaceoil]    Cutoff/Reso: '+str(ceol_inst_cutoff)+'/'+str(ceol_inst_resonance))
-            print('[input-boscaceoil] ')
+            print('Volume: '+str(ceol_inst_volume/256), end=', ')
+            print('Type: '+str(ceol_inst_type), end=', ')
+            print('Pal: '+str(ceol_inst_palette), end=', ')
+            print('CutRes: '+str(ceol_inst_cutoff)+'/'+str(ceol_inst_resonance))
 
-            cvpj_inst = {}
-            cvpj_inst["vol"] = ceol_inst_volume/256
+            cvpj_instvol = ceol_inst_volume/256
 
-            if ceol_inst_palette in ceol_colors:  cvpj_inst["color"] = ceol_colors[ceol_inst_palette]
-            else: cvpj_inst["color"] = [0.55, 0.55, 0.55]
+            if ceol_inst_palette in ceol_colors:  cvpj_instcolor = ceol_colors[ceol_inst_palette]
+            else: cvpj_instcolor = [0.55, 0.55, 0.55]
 
-            cvpj_inst["instdata"] = {}
-            cvpj_instdata = cvpj_inst["instdata"]
-            cvpj_instdata['plugindata'] = {}
+            cvpj_instdata = {}
 
             if ceol_inst_number <= 127:
-                cvpj_inst["name"] = idvals.get_idval(idvals_inst_midi, str(ceol_inst_number), 'name')
-                cvpj_instdata['plugin'] = 'general-midi'
-                cvpj_instdata['plugindata'] = {'bank':0, 'inst':ceol_inst_number}
+                cvpj_instname = idvals.get_idval(idvals_inst_midi, str(ceol_inst_number), 'name')
+                cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank':0, 'inst':ceol_inst_number}}
             elif ceol_inst_number == 365: 
-                cvpj_inst["name"] = 'MIDI Drums'
-                cvpj_instdata['plugin'] = 'general-midi'
-                cvpj_instdata['plugindata'] = {'bank':128, 'inst':0}
+                cvpj_instname = 'MIDI Drums'
+                cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank':128, 'inst':0}}
             else: 
-                cvpj_inst["name"] = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'name')
-                cvpj_instdata['plugin'] = 'none'
+                cvpj_instname = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'name')
 
             if ceol_inst_number == 363: t_key_offset.append(60)
             if ceol_inst_number == 364: t_key_offset.append(48)
             if ceol_inst_number == 365: t_key_offset.append(24)
             else: t_key_offset.append(0)
 
-            cvpj_l_instrument_data[cvpj_instid] = cvpj_inst
-            cvpj_l_instrument_order.append(cvpj_instid)
+            tracks.m_addinst(cvpj_l, cvpj_instid, cvpj_instdata)
+            tracks.m_addinst_data(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, cvpj_instvol, 0.0)
 
         ceol_numpattern = ceol_read()
         for patnum in range(ceol_numpattern):
@@ -167,14 +159,14 @@ class input_ceol(plugin_input.base):
             cvpj_pat["name"] = str(patnum)
             cvpj_l_notelistindex[cvpj_pat_id] = cvpj_pat
 
-        cvpj_l_playlist['1'] = {'color': [0.43, 0.52, 0.55], 'placements_notes':[]}
-        cvpj_l_playlist['2'] = {'color': [0.31, 0.40, 0.42], 'placements_notes':[]}
-        cvpj_l_playlist['3'] = {'color': [0.43, 0.52, 0.55], 'placements_notes':[]}
-        cvpj_l_playlist['4'] = {'color': [0.31, 0.40, 0.42], 'placements_notes':[]}
-        cvpj_l_playlist['5'] = {'color': [0.43, 0.52, 0.55], 'placements_notes':[]}
-        cvpj_l_playlist['6'] = {'color': [0.31, 0.40, 0.42], 'placements_notes':[]}
-        cvpj_l_playlist['7'] = {'color': [0.43, 0.52, 0.55], 'placements_notes':[]}
-        cvpj_l_playlist['8'] = {'color': [0.31, 0.40, 0.42], 'placements_notes':[]}
+        tracks.m_playlist_pl(cvpj_l, 1, None, [0.43, 0.52, 0.55], None)
+        tracks.m_playlist_pl(cvpj_l, 2, None, [0.31, 0.40, 0.42], None)
+        tracks.m_playlist_pl(cvpj_l, 3, None, [0.43, 0.52, 0.55], None)
+        tracks.m_playlist_pl(cvpj_l, 4, None, [0.31, 0.40, 0.42], None)
+        tracks.m_playlist_pl(cvpj_l, 5, None, [0.43, 0.52, 0.55], None)
+        tracks.m_playlist_pl(cvpj_l, 6, None, [0.31, 0.40, 0.42], None)
+        tracks.m_playlist_pl(cvpj_l, 7, None, [0.43, 0.52, 0.55], None)
+        tracks.m_playlist_pl(cvpj_l, 8, None, [0.31, 0.40, 0.42], None)
 
         ceol_arr_length = ceol_read()
         ceol_arr_loopstart = ceol_read()
@@ -188,25 +180,16 @@ class input_ceol(plugin_input.base):
                     cvpj_l_placement['position'] = plpos*ceol_basic_patternlength
                     cvpj_l_placement['duration'] = ceol_basic_patternlength
                     cvpj_l_placement['fromindex'] = 'ceol_'+str(plpatnum).zfill(3)
-                    cvpj_l_playlist[str(plnum+1)]['placements_notes'].append(cvpj_l_placement)
-
-        print('[input-boscaceoil] ')
-
-        for channelnum in cvpj_l_playlist:
-        	print('[input-boscaceoil] Channel '+str(channelnum)+': ' + str(len(cvpj_l_playlist[channelnum]['placements_notes'])) + ' Placements')
+                    tracks.m_playlist_pl_add(cvpj_l, plnum+1, cvpj_l_placement)
 
         timesig = placements.get_timesig(ceol_basic_patternlength, ceol_basic_barlength)
 
-        cvpj_l = {}
         cvpj_l['do_addwrap'] = True
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['instruments_data'] = cvpj_l_instrument_data
-        cvpj_l['instruments_order'] = cvpj_l_instrument_order
-        cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['keynames_data'] = cvpj_l_keynames_data
         cvpj_l['bpm'] = ceol_basic_bpm
         return json.dumps(cvpj_l)

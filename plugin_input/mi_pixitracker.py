@@ -4,6 +4,7 @@
 from functions import data_bytes
 from functions import audio_wav
 from functions import folder_samples
+from functions import tracks
 import plugin_input
 import json
 import struct
@@ -46,11 +47,11 @@ class input_cvpj_f(plugin_input.base):
         pixi_data_patterns = {}
         pixi_data_sounds = []
 
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
 
+        cvpj_l = {}
+        
         file_name = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
 
@@ -159,29 +160,27 @@ class input_cvpj_f(plugin_input.base):
 
         for instnum in range(16):
             cvpj_inst = {}
-            cvpj_inst['name'] = 'Inst #'+str(instnum+1)
-            cvpj_inst['color'] = pixi_colors[instnum]
-            cvpj_inst["vol"] = 1.0
-            cvpj_inst['instdata'] = {}
-            cvpj_inst['instdata']['plugin'] = 'none'
+            cvpj_instid = 'pixi_'+str(instnum)
+            cvpj_instvol = 1.0
+            cvpj_instdata = {}
 
             if pixi_data_sounds[instnum] != [None,None,None,None,None,None,None,None]:
                 t_sounddata = pixi_data_sounds[instnum]
                 wave_path = samplefolder + str(instnum) + '.wav'
                 audio_wav.generate(wave_path, t_sounddata[7], t_sounddata[0], t_sounddata[1], 16, None)
                 #print(pixi_data_sounds[instnum])
-                cvpj_inst["vol"] = t_sounddata[4]/100
-                cvpj_inst['instdata']['pitch'] = t_sounddata[2]
-                cvpj_inst['instdata']['middlenote'] = t_sounddata[3]*-1
-                cvpj_inst['instdata']['plugin'] = 'sampler'
-                cvpj_inst['instdata']['plugindata'] = {}
-                cvpj_inst['instdata']['plugindata']['file'] = wave_path
-                cvpj_inst['instdata']['plugindata']['start'] = t_sounddata[5]
-                cvpj_inst['instdata']['plugindata']['end'] = t_sounddata[6]
-                cvpj_inst['instdata']['plugindata']['trigger'] = 'normal'
+                cvpj_instvol = t_sounddata[4]/100
+                cvpj_instdata['pitch'] = t_sounddata[2]
+                cvpj_instdata['middlenote'] = t_sounddata[3]*-1
+                cvpj_instdata['plugin'] = 'sampler'
+                cvpj_instdata['plugindata'] = {}
+                cvpj_instdata['plugindata']['file'] = wave_path
+                cvpj_instdata['plugindata']['start'] = t_sounddata[5]
+                cvpj_instdata['plugindata']['end'] = t_sounddata[6]
+                cvpj_instdata['plugindata']['trigger'] = 'normal'
 
-            cvpj_l_instruments['pixi_'+str(instnum)] = cvpj_inst
-            cvpj_l_instrumentsorder.append('pixi_'+str(instnum))
+            tracks.m_addinst(cvpj_l, cvpj_instid, cvpj_instdata)
+            tracks.m_addinst_data(cvpj_l, cvpj_instid, 'Inst #'+str(instnum+1), pixi_colors[instnum], cvpj_instvol, None)
 
         for pixi_data_pattern in pixi_data_patterns:
             nli_notes = []
@@ -203,11 +202,8 @@ class input_cvpj_f(plugin_input.base):
             placements.append(pl_placement)
             placements_pos += pixi_data_patterns[pixi_data_pattern]['len']
 
-        cvpj_l_playlist['1'] = {}
-        cvpj_l_playlist['1']["placements_notes"] = placements
+        tracks.m_playlist_pl(cvpj_l, '1', None, None, placements)
 
-        cvpj_l = {}
-        
         cvpj_l['do_addwrap'] = True
 
         cvpj_l['use_instrack'] = False
@@ -215,8 +211,5 @@ class input_cvpj_f(plugin_input.base):
         
         cvpj_l['vol'] = pixi_vol/100
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['instruments_data'] = cvpj_l_instruments
-        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
-        cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = pixi_bpm
         return json.dumps(cvpj_l)

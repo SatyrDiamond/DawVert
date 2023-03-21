@@ -1,12 +1,13 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
 import plugin_input
 import json
 import zlib
 import struct
+from functions import data_bytes
 from functions import idvals
+from functions import tracks
 
 keytable = [0,2,4,5,7,9,11,12]
 
@@ -73,11 +74,8 @@ class input_notessimo_v2(plugin_input.base):
         tempo_table = struct.unpack('>'+'H'*100, nv2_data.read(200))
 
         cvpj_l = {}
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
         cvpj_l_notelistindex = {}
         cvpj_l_timemarkers = []
-        cvpj_l_playlist = {}
         cvpj_l_fxrack = {}
         cvpj_auto_tempo = []
         used_instruments = []
@@ -119,31 +117,24 @@ class input_notessimo_v2(plugin_input.base):
 
             print("[input-notessimo_v2] Instrument: " + str(notetess_instname))
 
-            cvpj_inst = {}
-            cvpj_inst["pan"] = 0.0
-            cvpj_inst['name'] = notetess_instname
-            if notetess_instcolor != None: cvpj_inst['color'] = notetess_instcolor
+            cvpj_instdata = {}
+            if notetess_gminst != None:
+                cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': notetess_gminst}}
+
+            tracks.m_addinst(cvpj_l, str(used_instrument), cvpj_instdata)
+            tracks.m_addinst_data(cvpj_l, str(used_instrument), notetess_instname, notetess_instcolor, 1.0, 0.0)
 
             if notetess_isdrum == True:
-                cvpj_inst['fxrack_channel'] = 1
+                tracks.m_addinst_param(cvpj_l, str(used_instrument), 'fxrack_channel', 1)
             else:
-                cvpj_inst['fxrack_channel'] = fxnum
+                tracks.m_addinst_param(cvpj_l, str(used_instrument), 'fxrack_channel', fxnum)
                 cvpj_l_fxrack[str(fxnum)] = {}
                 cvpj_l_fxrack[str(fxnum)]["name"] = notetess_instname
                 if notetess_instcolor != None: cvpj_l_fxrack[str(fxnum)]["color"] = notetess_instcolor
                 fxnum += 1
                 
-            cvpj_inst["vol"] = 1.0
-            cvpj_inst['instdata'] = {}
-            if notetess_gminst == None:
-                cvpj_inst['instdata']['plugin'] = 'none'
-            else:
-                cvpj_inst['instdata']['plugin'] = 'general-midi'
-                cvpj_inst['instdata']['plugindata'] = {'bank':0, 'inst':notetess_gminst}
-
-            cvpj_l_instruments[str(used_instrument)] = cvpj_inst
-            cvpj_l_instrumentsorder.append(str(used_instrument))
-
+        for idnum in range(9):
+            tracks.m_playlist_pl(cvpj_l, idnum, 'Layer ' + str(idnum), None, [])
 
         curpos = 0
         for sheetnum in arr_order:
@@ -155,10 +146,7 @@ class input_notessimo_v2(plugin_input.base):
                 cvpj_l_placement['position'] = curpos
                 cvpj_l_placement['duration'] = cursheet_data[0]*cursheet_data[1]
                 cvpj_l_placement['fromindex'] = patid
-                if str(layer+1) not in cvpj_l_playlist: 
-                    cvpj_l_playlist[str(layer+1)] = {}
-                    cvpj_l_playlist[str(layer+1)]['placements_notes'] = []
-                cvpj_l_playlist[str(layer+1)]['placements_notes'].append(cvpj_l_placement)
+                tracks.m_playlist_pl_add(cvpj_l, layer+1, cvpj_l_placement)
 
             timemarker = {}
             timemarker['position'] = curpos
@@ -193,8 +181,5 @@ class input_notessimo_v2(plugin_input.base):
         cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['timemarkers'] = cvpj_l_timemarkers
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['instruments_data'] = cvpj_l_instruments
-        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
-        cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = tempo_table[0]*notess_sheets[arr_order[0]][1]
         return json.dumps(cvpj_l)

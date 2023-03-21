@@ -4,6 +4,7 @@ from functions import data_bytes
 from functions import note_mod
 from functions import colors
 from functions import idvals
+from functions import tracks
 import plugin_input
 import json
 import zipfile
@@ -309,11 +310,8 @@ class input_notessimo_v3(plugin_input.base):
         cvpj_l = {}
 
         cvpj_l_fxrack = {}
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
         cvpj_l_notelistindex = {}
         cvpj_l_playlist = {}
-        cvpj_l_filtergroups = {}
 
         cvpj_l_fxrack["1"] = {}
         cvpj_l_fxrack["1"]["name"] = "Drums"
@@ -338,17 +336,12 @@ class input_notessimo_v3(plugin_input.base):
 
         fxnum = 2
         for inst in used_inst:
-            cvpj_inst = {}
-            cvpj_inst["pan"] = 0.0
-            cvpj_inst["vol"] = 1.0
-
             isbuiltindrum = 0
             midiinst = None
 
             if inst in idvals_inst_notetess:
                 isbuiltindrum = idvals.get_idval(idvals_inst_notetess, str(inst), 'isdrum')
                 midiinst = idvals.get_idval(idvals_inst_notetess, str(inst), 'gm_inst')
-                #inst_cat = idvals.get_idval(idvals_inst_notetess, str(inst), 'group')
                 inst_name = idvals.get_idval(idvals_inst_notetess, str(inst), 'name')
                 inst_color = idvals.get_idval(idvals_inst_notetess, str(inst), 'color')
             elif inst in lists_data[1]: 
@@ -360,32 +353,23 @@ class input_notessimo_v3(plugin_input.base):
                 inst_name = 'noname ('+inst+')'
                 inst_color = [0.3,0.3,0.3]
 
-            #if inst_cat not in cvpj_l_filtergroups:
-            #	cvpj_l_filtergroups[inst_cat] = {'name': notess_bu_cat[inst_cat]}
+            inst_color = colors.moregray(inst_color)
 
-            cvpj_inst['name'] = inst_name
-            cvpj_inst['color'] = colors.moregray(inst_color)
-            #cvpj_inst['filtergroup'] = inst_cat
+            cvpj_instdata = {}
+            if midiinst != None:
+                cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': midiinst}}
+
+            tracks.m_addinst(cvpj_l, str(inst), cvpj_instdata)
+            tracks.m_addinst_data(cvpj_l, str(inst), inst_name, inst_color, 1.0, 0.0)
 
             if isbuiltindrum == 1:
-                cvpj_inst['fxrack_channel'] = 1
+                tracks.m_addinst_param(cvpj_l, str(inst), 'fxrack_channel', 1)
             else:
-                cvpj_inst['fxrack_channel'] = fxnum
+                tracks.m_addinst_param(cvpj_l, str(inst), 'fxrack_channel', fxnum)
                 cvpj_l_fxrack[str(fxnum)] = {}
                 cvpj_l_fxrack[str(fxnum)]["name"] = inst_name
-                cvpj_l_fxrack[str(fxnum)]["color"] = colors.moregray(inst_color)
+                cvpj_l_fxrack[str(fxnum)]["color"] = inst_color
                 fxnum += 1
-
-            cvpj_inst['instdata'] = {}
-            if midiinst == None:
-                cvpj_inst['instdata']['plugin'] = 'none'
-            else:
-                cvpj_inst['instdata']['plugin'] = 'general-midi'
-                cvpj_inst['instdata']['plugindata'] = {'bank':0, 'inst':midiinst-1}
-
-            cvpj_l_instruments[inst] = cvpj_inst
-            cvpj_l_instrumentsorder.append(inst)
-
 
         automation = {}
         automation['main'] = {}
@@ -394,12 +378,9 @@ class input_notessimo_v3(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
         
-        cvpj_l['filtergroups'] = cvpj_l_filtergroups
         cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['automation'] = automation
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['instruments_data'] = cvpj_l_instruments
-        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = 120
 

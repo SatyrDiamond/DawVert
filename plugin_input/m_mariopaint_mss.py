@@ -6,6 +6,7 @@ from functions import colors
 from functions import idvals
 from functions import tracks
 from functions import song
+from functions import note_data
 import plugin_input
 import json
 import xml.etree.ElementTree as ET
@@ -31,7 +32,7 @@ def addnotes(n_pos, n_len, inst, txt, chordvolume):
         outnote = keytable[notekeys.index(s_note[1])]
         if symbol == '-': outnote -= 1
         if symbol == '+': outnote += 1
-        cvpj_notelist.append({'position': n_pos, 'key': outnote, 'vol': chordvolume, 'duration': n_len, 'instrument': inst})
+        cvpj_notelist.append(note_data.mx_makenote(inst, n_pos, n_len, outnote, chordvolume, None))
 
     noteoffset = 0
 

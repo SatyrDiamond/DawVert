@@ -5,6 +5,7 @@ from functions import note_mod
 from functions import colors
 from functions import idvals
 from functions import tracks
+from functions import notelist_data
 import plugin_input
 import json
 import zipfile
@@ -202,7 +203,7 @@ def parse_sheets(notess_sheets):
                 if notess_n_id not in used_inst: used_inst.append(notess_n_id)
 
         print("[input-notessimo_v3]")
-        cvpj_l_notelistindex[sheet]['notelist'] = note_mod.sortnotes(notelist)
+        cvpj_l_notelistindex[sheet]['notelist'] = notelist_data.sort(notelist)
 
 # ----------------------------------- Song -----------------------------------
 

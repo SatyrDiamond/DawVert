@@ -9,6 +9,7 @@ import os
 import sys
 import xml.etree.ElementTree as ET
 from functions import note_mod
+from functions import notelist_data
 from functions import colors
 from functions import auto
 
@@ -339,7 +340,7 @@ def lmms_decode_nlplacements(trkX):
         notesX = patX.findall('note')
         notesJ = lmms_decode_nlpattern(notesX)
         placeJ["notelist"] = notesJ
-        out_duration = note_mod.getduration(notesJ)
+        out_duration = notelist_data.getduration(notesJ)
         if out_duration == 0: out_duration = 16
         placeJ["duration"] = math.ceil(out_duration/16)*16
         nlplacements.append(placeJ)

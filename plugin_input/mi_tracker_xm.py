@@ -18,31 +18,6 @@ else: xmodits_exists = True
 
 startinststr = 'XM_Inst_'
 
-def splitbyte(value):
-    first = value >> 4
-    second = value & 0x0F
-    return (first, second)
-
-def getfineval(value):
-    volslidesplit = splitbyte(value)
-    if volslidesplit[0] == 0 and volslidesplit[1] == 0:
-        volslideout = 0
-    elif volslidesplit[0] == 15 and volslidesplit[1] == 15:
-        volslideout = volslidesplit[0]/16
-    elif volslidesplit[0] == 0 and volslidesplit[1] == 15:
-        volslideout = -15
-
-    elif volslidesplit[0] == 0 and volslidesplit[1] != 0:
-        volslideout = volslidesplit[1]*-1
-    elif volslidesplit[0] != 0 and volslidesplit[1] == 0:
-        volslideout = volslidesplit[0]
-
-    elif volslidesplit[0] == 15 and volslidesplit[1] != 15:
-        volslideout = (volslidesplit[0]*-1)/16
-    elif volslidesplit[0] != 15 and volslidesplit[1] == 15:
-        volslideout = volslidesplit[0]/16
-    return volslideout
-
 def parse_xm_cell(databytes, firstrow):
     global current_speed
     globaljson = {}
@@ -103,22 +78,22 @@ def parse_xm_cell(databytes, firstrow):
 
     if cell_effect == 4: 
         vibrato_params = {}
-        vibrato_params['speed'], vibrato_params['depth'] = splitbyte(cell_param)
+        vibrato_params['speed'], vibrato_params['depth'] = song_tracker.splitbyte(cell_param)
         output_param['vibrato'] = vibrato_params
 
     if cell_effect == 5:
-        pos, neg = splitbyte(cell_param)
+        pos, neg = song_tracker.splitbyte(cell_param)
         output_param['vol_slide'] = (neg*-1) + pos
         output_param['slide_to_note'] = (neg*-1) + pos
 
     if cell_effect == 6:
-        pos, neg = splitbyte(cell_param)
+        pos, neg = song_tracker.splitbyte(cell_param)
         output_param['vibrato'] = {'speed': 0, 'depth': 0}
         output_param['vol_slide'] = (neg*-1) + pos
 
     if cell_effect == 7:
         tremolo_params = {}
-        tremolo_params['speed'], tremolo_params['depth'] = splitbyte(cell_param)
+        tremolo_params['speed'], tremolo_params['depth'] = song_tracker.splitbyte(cell_param)
         output_param['tremolo'] = tremolo_params
 
     if cell_effect == 8: 
@@ -128,7 +103,7 @@ def parse_xm_cell(databytes, firstrow):
         output_param['sample_offset'] = cell_param*256
 
     if cell_effect == 10:
-        pos, neg = splitbyte(cell_param)
+        pos, neg = song_tracker.splitbyte(cell_param)
         output_param['vol_slide'] = (neg*-1) + pos
 
     if cell_effect == 11: 
@@ -141,7 +116,7 @@ def parse_xm_cell(databytes, firstrow):
         output_extra['break_to_row'] = cell_param
 
     if cell_effect == 14: 
-        ext_type, ext_value = splitbyte(cell_param)
+        ext_type, ext_value = song_tracker.splitbyte(cell_param)
         if ext_type == 0: output_param['filter_amiga_led'] = ext_value
         if ext_type == 1: output_param['fine_slide_up'] = ext_value
         if ext_type == 2: output_param['fine_slide_down'] = ext_value
@@ -168,11 +143,11 @@ def parse_xm_cell(databytes, firstrow):
         output_extra['global_volume'] = cell_param/64
 
     if cell_effect == 17: 
-        output_extra['global_volume_slide'] = getfineval(cell_param)
+        output_extra['global_volume_slide'] = song_tracker.getfineval(cell_param)
 
     if cell_effect == 34: 
         panbrello_params = {}
-        panbrello_params['speed'], panbrello_params['depth'] = splitbyte(cell_param)
+        panbrello_params['speed'], panbrello_params['depth'] = song_tracker.splitbyte(cell_param)
         output_param['panbrello'] = panbrello_params
 
     if cell_vol != None:

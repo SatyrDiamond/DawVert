@@ -13,11 +13,6 @@ from functions import folder_samples
 
 modfinetune = [8363, 8413, 8463, 8529, 8581, 8651, 8723, 8757, 7895, 7941, 7985, 8046, 8107, 8169, 8232, 8280]
 
-def splitbyte(value):
-    first = value >> 4
-    second = value & 0x0F
-    return (first, second)
-
 def parse_mod_cell(file_stream, firstrow):
     global current_speed
     output_note = None
@@ -54,16 +49,16 @@ def parse_mod_cell(file_stream, firstrow):
 
     if cell_fx_type == 4: 
         vibrato_params = {}
-        vibrato_params['speed'], vibrato_params['depth'] = splitbyte(cell_fx_param)
+        vibrato_params['speed'], vibrato_params['depth'] = song_tracker.splitbyte(cell_fx_param)
         output_param['vibrato'] = vibrato_params
 
     if cell_fx_type == 5:
-        pos, neg = splitbyte(cell_fx_param)
+        pos, neg = song_tracker.splitbyte(cell_fx_param)
         output_param['vol_slide'] = (neg*-1) + pos
         output_param['slide_to_note'] = (neg*-1) + pos
 
     if cell_fx_type == 6:
-        pos, neg = splitbyte(cell_fx_param)
+        pos, neg = song_tracker.splitbyte(cell_fx_param)
         output_param['vibrato'] = {'speed': 0, 'depth': 0}
         output_param['vol_slide'] = (neg*-1) + pos
 
@@ -79,7 +74,7 @@ def parse_mod_cell(file_stream, firstrow):
         output_param['sample_offset'] = cell_fx_param*256
 
     if cell_fx_type == 10:
-        pos, neg = splitbyte(cell_fx_param)
+        pos, neg = song_tracker.splitbyte(cell_fx_param)
         output_param['vol_slide'] = (neg*-1) + pos
 
     if cell_fx_type == 11: 
@@ -96,7 +91,7 @@ def parse_mod_cell(file_stream, firstrow):
         output_extra['break_to_row'] = cell_fx_param
 
     if cell_fx_type == 14: 
-        ext_type, ext_value = splitbyte(cell_fx_param)
+        ext_type, ext_value = song_tracker.splitbyte(cell_fx_param)
         if ext_type == 0: output_param['filter_amiga_led'] = ext_value
         if ext_type == 1: output_param['fine_slide_up'] = ext_value
         if ext_type == 2: output_param['fine_slide_down'] = ext_value

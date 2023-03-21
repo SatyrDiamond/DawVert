@@ -199,23 +199,20 @@ class input_trackerboy(plugin_input.base):
                     CH2_order = []
                     CH3_order = []
                     CH4_order = []
-        
+                    
+                    mt_ord = {0: [], 1: [], 2: [], 3: []}
+
                     for _ in range(tb_len):
                         CH1_onum, CH2_onum, CH3_onum, CH4_onum = struct.unpack('bbbb', tb_songdata.read(4))
-                        CH1_order.append(CH1_onum)
-                        CH2_order.append(CH2_onum)
-                        CH3_order.append(CH3_onum)
-                        CH4_order.append(CH4_onum)
-        
-                    mt_ord[0] = CH1_order
-                    mt_ord[1] = CH2_order
-                    mt_ord[2] = CH3_order
-                    mt_ord[3] = CH4_order
+                        mt_ord[0].append(CH1_onum)
+                        mt_ord[1].append(CH2_onum)
+                        mt_ord[2].append(CH3_onum)
+                        mt_ord[3].append(CH4_onum)
 
-                    print("[input-trackerboy]     Order Square1:",CH1_order)
-                    print("[input-trackerboy]     Order Square2:",CH2_order)
-                    print("[input-trackerboy]     Order Wave:",CH3_order)
-                    print("[input-trackerboy]     Order Noise:",CH4_order)
+                    print("[input-trackerboy]     Order Square1:",mt_ord[0])
+                    print("[input-trackerboy]     Order Square2:",mt_ord[1])
+                    print("[input-trackerboy]     Order Wave:",mt_ord[2])
+                    print("[input-trackerboy]     Order Noise:",mt_ord[3])
 
                     for ch_num in range(4):
                         mt_pat[ch_num] = {}
@@ -226,25 +223,18 @@ class input_trackerboy(plugin_input.base):
 
                     for _ in range(tb_pat_num):
                         tb_pate_ch, tb_pate_trkid, tb_pate_rows = struct.unpack('bbb', tb_songdata.read(3))
-                        #print(tb_pate_ch, tb_pate_trkid, tb_pate_rows)
 
                         for _ in range(tb_pate_rows+1):
                             n_pos, n_key, n_inst, fx1p, fx1v, fx2p, fx2v, fx3p, fx3v = struct.unpack('bbbbbbbbb', tb_songdata.read(9))
                             trkr_cell = mt_pat[tb_pate_ch][tb_pate_trkid][n_pos]
-
-                            trkr_cell_g = trkr_cell[0]
                             trkr_cell_d = trkr_cell[1]
-
                             if n_key != 0:
                                 if n_key == 85: trkr_cell_d[0] = 'Off'
                                 else: trkr_cell_d[0] = n_key-25
                             trkr_cell_d[1] = n_inst
-
                             parse_fx_event(trkr_cell, fx1p, fx1v)
                             parse_fx_event(trkr_cell, fx2p, fx2v)
                             parse_fx_event(trkr_cell, fx3p, fx3v)
-
-                            #print(mt_pat[tb_pate_ch][tb_pate_trkid][n_pos])
 
                 songnum += 1
 
@@ -274,36 +264,23 @@ class input_trackerboy(plugin_input.base):
                 if insttype == 'wavetable': plugindata['wave'] = 'square'
 
                 if trackerboy_instdata[1][0] != ():
-                    plugindata['env_arp'] = {}
-                    plugindata['env_arp']['values'] = trackerboy_instdata[1][0]
+                    plugindata['env_arp'] = {'values': trackerboy_instdata[1][0]}
 
                 if trackerboy_instdata[2][0] != ():
-                    voldata = trackerboy_instdata[2][0]
-                    plugindata['env_vol'] = {}
-                    plugindata['env_vol']['values'] = [replace_vol_get(n, n) for n in voldata]
+                    plugindata['env_vol'] = {'values': [replace_vol_get(n, n) for n in trackerboy_instdata[2][0]]}
  
                 if trackerboy_instdata[4][0] != ():
-                    dutydata = trackerboy_instdata[4][0]
-                    plugindata['env_duty'] = {}
-                    plugindata['env_duty']['values'] = [replace_duty_get(n, n) for n in dutydata]
+                    plugindata['env_duty'] = {'values': [replace_vol_get(n, n) for n in trackerboy_instdata[4][0]]}
 
                 if trackerboy_instdata[6] == 0:
-                    plugindata['attack'] = 0
-                    plugindata['decay'] = 0
                     plugindata['sustain'] = 1
-                    plugindata['release'] = 0
                     
                 elif trackerboy_instdata[6] < 8:
-                    plugindata['attack'] = 0
                     plugindata['decay'] = trackerboy_instdata[6]/5
-                    plugindata['sustain'] = 0
-                    plugindata['release'] = 0
 
                 elif trackerboy_instdata[6] >= 8:
                     plugindata['attack'] = (trackerboy_instdata[6]-8)/5
-                    plugindata['decay'] = 0
                     plugindata['sustain'] = 1
-                    plugindata['release'] = 0
 
                 cvpj_instdata["plugindata"] = plugindata
 

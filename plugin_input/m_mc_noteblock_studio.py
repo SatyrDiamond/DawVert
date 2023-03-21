@@ -33,7 +33,6 @@ class input_gt_mnbs(plugin_input.base):
     def parse(self, input_file, extra_param):
 
         cvpj_l = {}
-        cvpj_l_playlist = {}
         song_message = ""
 
         nbs_file = open(input_file, 'rb')
@@ -62,9 +61,7 @@ class input_gt_mnbs(plugin_input.base):
 
         nbs_notes = {}
         for playlistid in range(nbs_layercount):
-            cvpj_l_playlist[playlistid+1] = {}
-            cvpj_l_playlist[playlistid+1]['color'] = [0.23, 0.23, 0.23]
-            cvpj_l_playlist[playlistid+1]['placements_notes'] = []
+            tracks.m_playlist_pl(cvpj_l, playlistid+1, None, [0.23, 0.23, 0.23], [])
             nbs_notes[playlistid+1] = {}
 
         nbs_song_name = getstring(nbs_file)
@@ -141,14 +138,13 @@ class input_gt_mnbs(plugin_input.base):
                 cvpj_pl_data['position'] = placenum
                 cvpj_pl_data['duration'] = split_duration
                 cvpj_pl_data['notelist'] = layer_placements[placenum]
-                cvpj_l_playlist[nbs_layer]['placements_notes'].append(cvpj_pl_data)
-            print('[input-mnbs] Layer '+str(nbs_layer)+' Placements: '+str(len(cvpj_l_playlist[nbs_layer]['placements_notes'])))
+                tracks.m_playlist_pl_add(cvpj_l, nbs_layer, cvpj_pl_data)
 
         # PART 3: LAYERS
         if nbs_file.tell() <= nbs_len:
             for layernum in range(nbs_layercount):
                 layername = getstring(nbs_file)
-                if layername != None: cvpj_l_playlist[layernum+1]['name'] = layername
+                if layername != None: tracks.m_playlist_pl(cvpj_l, playlistid+1, layername, None, None)
                 if nbs_newformat == 1: nbs_file.read(3)
 
         # OUTPUT
@@ -158,7 +154,7 @@ class input_gt_mnbs(plugin_input.base):
             cvpj_instcolor = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'color')
             cvpj_instgm = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'gm_inst')
             cvpj_instdata = {}
-            if cvpj_instgm != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': gmmidi[instnum]-1}}
+            if cvpj_instgm != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': cvpj_instgm-1}}
 
             tracks.m_addinst(cvpj_l, instid, cvpj_instdata)
             tracks.m_addinst_data(cvpj_l, instid, cvpj_instname, cvpj_instcolor, 1.0, 0.0)
@@ -180,6 +176,5 @@ class input_gt_mnbs(plugin_input.base):
         cvpj_l['timesig_numerator'] = timesig_numerator
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['bpm'] = tempo
-        cvpj_l['playlist'] = cvpj_l_playlist
         return json.dumps(cvpj_l)
 

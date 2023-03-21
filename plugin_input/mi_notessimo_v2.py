@@ -8,6 +8,8 @@ import struct
 from functions import data_bytes
 from functions import idvals
 from functions import tracks
+from functions import note_data
+from functions import song
 
 keytable = [0,2,4,5,7,9,11,12]
 
@@ -18,33 +20,20 @@ def getstring(bytesdata):
 
 def parsenotes(bio_data, notelen): 
     patsize, numnotes = struct.unpack('>II', bio_data.read(8))
-
     notesout = {}
     for _ in range(numnotes):
         notedata = bio_data.read(20)
         n_pos,n_note,n_layer,n_inst,n_sharp,n_vol,n_pan,n_len = struct.unpack('>Ibbhbffh', notedata[:19])
-
         n_key = (n_note-41)*-1
         out_oct = int(n_key/7)
         out_key = n_key - out_oct*7
         out_offset = 0
-
         if n_layer not in notesout: notesout[n_layer] = []
         if n_inst not in used_instruments: used_instruments.append(n_inst)
-
         if n_sharp == 2: out_offset = 1
         if n_sharp == 1: out_offset = -1
-
-        note = {}
-        note['position'] = (n_pos)*notelen
-        note['duration'] = (n_len/4)*notelen
-        note['key'] = keytable[out_key] + (out_oct-3)*12 + out_offset
-        note['instrument'] = str(n_inst)
-        notesout[n_layer].append(note)
-
+        notesout[n_layer].append(note_data.mx_makenote(str(n_inst), (n_pos)*notelen, (n_len/4)*notelen, keytable[out_key]+((out_oct-3)*12)+out_offset, None, None))
     return patsize-32, notelen, notesout
-
-
 
 class input_notessimo_v2(plugin_input.base):
     def __init__(self): pass
@@ -75,12 +64,9 @@ class input_notessimo_v2(plugin_input.base):
 
         cvpj_l = {}
         cvpj_l_notelistindex = {}
-        cvpj_l_timemarkers = []
         cvpj_l_fxrack = {}
         cvpj_auto_tempo = []
         used_instruments = []
-
-        cvpj_l_timemarkers = []
 
         cvpj_l_fxrack["1"] = {}
         cvpj_l_fxrack["1"]["name"] = "Drums"
@@ -148,12 +134,7 @@ class input_notessimo_v2(plugin_input.base):
                 cvpj_l_placement['fromindex'] = patid
                 tracks.m_playlist_pl_add(cvpj_l, layer+1, cvpj_l_placement)
 
-            timemarker = {}
-            timemarker['position'] = curpos
-            timemarker['type'] = 'timesig'
-            timemarker['numerator'] = 4
-            timemarker['denominator'] = 4
-            cvpj_l_timemarkers.append(timemarker)
+            song.add_timemarker_timesig(cvpj_l, None, curpos, 4, 4)
 
             autoplacement = {}
             autoplacement['position'] = curpos
@@ -179,7 +160,6 @@ class input_notessimo_v2(plugin_input.base):
         cvpj_l['use_fxrack'] = True
         
         cvpj_l['fxrack'] = cvpj_l_fxrack
-        cvpj_l['timemarkers'] = cvpj_l_timemarkers
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['bpm'] = tempo_table[0]*notess_sheets[arr_order[0]][1]
         return json.dumps(cvpj_l)

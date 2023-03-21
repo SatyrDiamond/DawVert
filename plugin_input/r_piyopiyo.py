@@ -76,7 +76,7 @@ class input_piyopiyo(plugin_input.base):
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
         tracks.r_addtrack_inst(cvpj_l, "3", {'plugin': "none", 'plugindata': {}})
-        tracks.r_addtrack_data(cvpj_l, "3", 'perc', track_colors[tracknum], TrackPVol/250, None)
+        tracks.r_addtrack_data(cvpj_l, "3", 'perc', track_colors[3], TrackPVol/250, None)
 
         pmdfile.seek(trackdatapos)
 

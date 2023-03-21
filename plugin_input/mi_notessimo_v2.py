@@ -73,10 +73,8 @@ class input_notessimo_v2(plugin_input.base):
 
         notess_sheets = {}
         for sheetnum in range(100):
-            tempo, notelen = song.get_lower_tempo(tempo_table[sheetnum], 1, 200)
+            tempo, notelen = song.get_lower_tempo(tempo_table[sheetnum], 1, 180)
             notess_sheets[sheetnum] = parsenotes(nv2_data, notelen)
-
-        for sheetnum in range(100):
             sheetdata = notess_sheets[sheetnum][2]
             if len(sheetdata) != 0: 
                 print("[input-notessimo_v2] Sheet "+str(sheetnum)+", Layers:",end=' ')
@@ -98,8 +96,7 @@ class input_notessimo_v2(plugin_input.base):
             print("[input-notessimo_v2] Instrument: " + str(notetess_instname))
 
             cvpj_instdata = {}
-            if notetess_gminst != None:
-                cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': notetess_gminst}}
+            if notetess_gminst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': notetess_gminst}}
 
             tracks.m_addinst(cvpj_l, str(used_instrument), cvpj_instdata)
             tracks.m_addinst_data(cvpj_l, str(used_instrument), notetess_instname, notetess_instcolor, 1.0, 0.0)

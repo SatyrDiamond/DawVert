@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 from functions import format_flp_enc
 from functions import song_convert
 from functions import note_mod
+from functions import notelist_data
 
 def clamp(n, minn, maxn):
     return max(min(maxn, n), minn)
@@ -193,7 +194,7 @@ class output_cvpjs(plugin_output.base):
             if 'color' in T_Pattern: FL_Pattern['color'] = decode_color(T_Pattern['color'])
             if 'name' in T_Pattern: FL_Pattern['name'] = T_Pattern['name']
             if 'notelist' in T_Pattern:
-                T_Notelist = note_mod.sortnotes(T_Pattern['notelist'])
+                T_Notelist = notelist_data.sort(T_Pattern['notelist'])
                 FL_Pattern['notes'] = []
                 slidenotes = []
                 for note in T_Notelist:

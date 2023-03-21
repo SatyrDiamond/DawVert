@@ -10,6 +10,7 @@ from pathlib import Path
 from functions import auto
 from functions import placements
 from functions import note_mod
+from functions import notelist_data
 from functions import song_convert
 from functions import colors
 
@@ -234,7 +235,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
 
 def lmms_encode_notelist(xmltag, json_notelist):
     printcountpat = 0
-    json_notelist = note_mod.sortnotes(json_notelist)
+    json_notelist = notelist_data.sort(json_notelist)
 
     for json_note in json_notelist:
         global notescount_forprinting
@@ -407,7 +408,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
                 if json_placement['cut']['type'] == 'cut': 
                     if 'start' in json_placement['cut']: cut_start = json_placement['cut']['start']
                     if 'end' in json_placement['cut']: cut_end = json_placement['cut']['end']
-                    json_notelist = note_mod.trimmove(json_notelist, cut_start, cut_end)
+                    json_notelist = notelist_data.trimmove(json_notelist, cut_start, cut_end)
             if 'name' in json_placement: patX.set('name', json_placement['name'])
             patX.set('type', "1")
             if 'color' in json_placement: patX.set('color', '#' + colors.rgb_float_2_hex(json_placement['color']))

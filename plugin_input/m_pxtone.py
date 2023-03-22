@@ -8,6 +8,7 @@ from functions import folder_samples
 from functions import tracks
 from functions import placements
 from functions import note_data
+from functions import song
 import plugin_input
 import json
 import varint
@@ -135,16 +136,13 @@ def parse_ptvoice_unit(bio_ptvoice, unitnum):
 def parse_matePTV(bio_stream):
     size, voice_number, tuning, sz = struct.unpack("hhfi", bio_stream.read(12))
     ptvoice_data = bio_stream.read(sz)
-    l_ptvoice = {}
-    l_ptvoice['units'] = []
+    l_ptvoice = {'units': []}
     bio_ptvoice = data_bytes.bytearray2BytesIO(ptvoice_data)
     ptvoice_header = bio_ptvoice.read(8)
     ptvoice_unk = int.from_bytes(bio_ptvoice.read(4), "little")
     ptvoice_size = int.from_bytes(bio_ptvoice.read(4), "little")
     ptvoice_d_num_units = int.from_bytes(bio_ptvoice.read(4), "big")
-    for unitnum in range(ptvoice_d_num_units):
-        l_ptvoice['units'].append(parse_ptvoice_unit(bio_ptvoice, unitnum))
-
+    for unitnum in range(ptvoice_d_num_units): l_ptvoice['units'].append(parse_ptvoice_unit(bio_ptvoice, unitnum))
     return l_ptvoice
 
 def parse_assiWOIC(bio_stream, chunksize):
@@ -201,7 +199,6 @@ class input_pxtone(plugin_input.base):
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
 
         cvpj_l = {}
-        cvpj_l_timemarkers = []
 
         while song_filesize > song_file.tell():
             chunkname = song_file.read(8)
@@ -240,9 +237,6 @@ class input_pxtone(plugin_input.base):
         
             elif chunkname == b'mateOGGV':
                 print('[input-ptcop] Chunk: mateOGGV', chunksize)
-                #oggdata = song_file.read(chunksize)
-                #print(oggdata)
-
                 song_file.read(3)
                 ptcop_ogg_basic_key_field = song_file.read(1)[0]
                 print('[input-ptcop]   Basic Key field: '+str(ptcop_ogg_basic_key_field))
@@ -383,7 +377,6 @@ class input_pxtone(plugin_input.base):
             cur_porta = 0
             cur_voice = 0
             for unit_event in ptcop_unit_events[unit_eventnum]:
-
                 #print(
                 #    str(unit_event[0]).ljust(6),
                 #    str(unit_event[1]).ljust(2),
@@ -419,22 +412,15 @@ class input_pxtone(plugin_input.base):
 
                 if unit_event[2] == 15:
                     if 0 <= (unit_event[0]-noteend)+notedur < notedur:
-                        if 'pan' not in lastnotedata['notemod']['auto']:
-                            lastnotedata['notemod']['auto']['pan'] = [{'position': 0, 'value': 0}]
+                        if 'pan' not in lastnotedata['notemod']['auto']: lastnotedata['notemod']['auto']['pan'] = [{'position': 0, 'value': 0}]
                         lastnotedata['notemod']['auto']['pan'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'value': ((unit_event[3]/128)-0.5)*2, 'type': 'instant'})
 
                 if unit_event[2] == 2:
-                    #print( unit_event[0]/timebase,  noteend/timebase,  end=' | ' )
-                    if 0 <= (unit_event[0]-noteend)+notedur < notedur:
-                        #print( ((unit_event[0]-noteend)+notedur)/timebase, notedur/timebase, end=' ' )
-                        lastnotedata['notemod']['slide'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'duration': cur_porta, 'key': cur_pitch-noteon_note})
+                    if 0 <= (unit_event[0]-noteend)+notedur < notedur: lastnotedata['notemod']['slide'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'duration': cur_porta, 'key': cur_pitch-noteon_note})
 
                 if velpanpos == unit_event[0]:
                     if unit_event[2] == 3: t_notelist[unit_eventnum][-1]['pan'] = ((unit_event[3]/128)-0.5)*2
                     if unit_event[2] == 4: t_notelist[unit_eventnum][-1]['vol'] = unit_event[3]
-
-                #print()
-                #print(t_notelist[unit_eventnum][-1:])
 
         for unitnum in t_notelist:
             cvpj_notelist = t_notelist[unitnum]
@@ -472,6 +458,6 @@ class input_pxtone(plugin_input.base):
         cvpj_l['timesig_numerator'] = ptcop_mas_beat
         cvpj_l['timesig_denominator'] = 4
 
-        if ptcop_mas_repeat != 0: cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': ptcop_mas_repeat/timebase, 'end': ptcop_mas_last/timebase, 'type': 'loop_area'}]
+        if ptcop_mas_repeat != 0: song.add_timemarker_looparea(cvpj_l, None, ptcop_mas_repeat/timebase, ptcop_mas_last/timebase)
         cvpj_l['bpm'] = ptcop_mas_beattempo
         return json.dumps(cvpj_l)

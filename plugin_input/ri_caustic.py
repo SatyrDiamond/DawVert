@@ -192,9 +192,6 @@ class input_cvpj_r(plugin_input.base):
 
                 pcms_c = machine['controls']
 
-                #for printpart in pcms_c:
-                #    print(pcms_c[printpart])
-
                 middlenote += int(pcms_c[1]*12)
                 middlenote += int(pcms_c[2])
 
@@ -234,9 +231,6 @@ class input_cvpj_r(plugin_input.base):
                     plugindata['regions'].append(regionparams)
                     samplecount += 1
                     bbox_key += 1
-
-            else:
-                cvpj_instdata['plugin'] = 'none'
 
             tracks.ri_addtrack_inst(cvpj_l, machid, cvpj_notelistindex, cvpj_instdata)
             tracks.r_addtrack_data(cvpj_l, machid, cvpj_trackname, caustic_instcolors[machine['id']], None, None)

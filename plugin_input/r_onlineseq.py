@@ -29,27 +29,22 @@ onlseq_auto['11'] = ['one_minus_reverb_volume',1]
 onlseq_auto['12'] = ['distort_type',0]
 onlseq_auto['13'] = ['distort_volume',1]
 
-def print_value(name, data):
-    print(str(' '+name+': '+str(data)).ljust(11), end=' ')
+def int2float(value): return struct.unpack("<f", struct.pack("<I", value))[0]
 
 def parse_inst_params(data):
     outputlist = {}
-    
     if type(data) == dict: in_data = [data]
     else: in_data = data
 
     for part in in_data:
-        if '1' in part: 
-            instid = int(part['1'])
+        if '1' in part:  instid = int(part['1'])
         if '2' in part: 
             params = part['2']
             instparams = {}
             for param in params:
-                param_name = onlseq_auto[param][0]
-                param_isfloat = onlseq_auto[param][1]
+                param_name, param_isfloat = onlseq_auto[param]
                 if param_isfloat == 1: instparams[param_name] = int2float(int(params[param]))
                 if param_isfloat == 0: instparams[param_name] = int(params[param])
-
             outputlist[instid] = instparams
     return outputlist
 
@@ -67,7 +62,7 @@ def parse_marker(markerdata):
     return (inst, data)
 
 def parse_note(notedata):
-    global t_notelist
+    global onlseq_notelist
     ols_pos = 0
     ols_inst = 0
     ols_vol = 1
@@ -77,16 +72,9 @@ def parse_note(notedata):
     if '2' in notedata: ols_pos = int2float(int(notedata['2']))
     if '3' in notedata: ols_dur = int2float(int(notedata['3']))
     if '5' in notedata: ols_vol = int2float(int(notedata['5']))
-    note = {}
-    note['position'] = ols_pos
-    note['key'] = ols_note-60
-    note['duration'] = ols_dur
-    note['volume'] = ols_vol
     cvpj_notedata = note_data.rx_makenote(ols_pos, ols_dur, ols_note-60, ols_vol, None)
-    if ols_inst not in t_notelist: t_notelist[ols_inst] = []
-    t_notelist[ols_inst].append(cvpj_notedata)
-
-def int2float(value): return struct.unpack("<f", struct.pack("<I", value))[0]
+    if ols_inst not in onlseq_notelist: onlseq_notelist[ols_inst] = []
+    onlseq_notelist[ols_inst].append(cvpj_notedata)
 
 class input_onlinesequencer(plugin_input.base):
     def __init__(self): pass
@@ -96,12 +84,10 @@ class input_onlinesequencer(plugin_input.base):
     def gettype(self): return 'r'
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
-        global t_notelist
+        global onlseq_notelist
 
         cvpj_l = {}
         
-        cvpj_l_timemarkers = []
-        cvpj_l_fxrack = {}
         cvpj_l_keynames_data = {}
 
         cvpj_automation = {}
@@ -160,14 +146,14 @@ class input_onlinesequencer(plugin_input.base):
         if "3" in onlseq_data_main: onlseq_data_instparams = parse_inst_params(os_data["1"]["3"])
         else: onlseq_data_instparams = {}
 
-        t_notelist = {}
+        onlseq_notelist = {}
 
         for os_note in onlseq_data_notes: parse_note(os_note)
 
         songduration = 0
 
-        for instid in t_notelist:
-            cvpj_notelist = t_notelist[instid]
+        for instid in onlseq_notelist:
+            cvpj_notelist = onlseq_notelist[instid]
 
             inst_name = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'name')
             inst_color = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'color')
@@ -176,14 +162,8 @@ class input_onlinesequencer(plugin_input.base):
             cvpj_instdata = {}
             if inst_gminst != None:
                 cvpj_instdata['plugin'] = 'general-midi'
-                if inst_isdrum == True:
-                    cvpj_instdata['usemasterpitch'] = 0
-                    cvpj_instdata['plugindata'] = {'bank':128, 'inst':inst_gminst-1}
-                else:
-                    cvpj_instdata['usemasterpitch'] = 1
-                    cvpj_instdata['plugindata'] = {'bank':0, 'inst':inst_gminst-1}
-            else:
-                cvpj_instdata['plugin'] = 'none'
+                if inst_isdrum == True: cvpj_instdata = {'plugin': 'general-midi', 'usemasterpitch': 0, 'plugindata': {'bank':128, 'inst':inst_gminst-1}}
+                else: cvpj_instdata = {'plugin': 'general-midi', 'usemasterpitch': 1, 'plugindata': {'bank':0, 'inst':inst_gminst-1}}
 
             trk_vol = 1
             trk_pan = 0
@@ -193,11 +173,9 @@ class input_onlinesequencer(plugin_input.base):
                 if 'pan' in onlseq_data_instparams[instid]: trk_pan = onlseq_data_instparams[instid]['pan']
 
             trackduration = notelist_data.getduration(cvpj_notelist)
-
             if trackduration > songduration: songduration = trackduration
 
             instid = 'os_'+str(instid)
-
             if instid in t_auto_inst:
                 cvpj_automation['track'][instid] = {}
                 for param in t_auto_inst[instid]:

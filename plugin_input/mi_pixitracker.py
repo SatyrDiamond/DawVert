@@ -11,23 +11,7 @@ import json
 import struct
 import os
 
-pixi_colors = [[1.00, 1.00, 1.00],
-[0.31, 0.31, 1.00],
-[0.31, 1.00, 0.31],
-[0.31, 1.00, 1.00],
-[1.00, 0.31, 0.31],
-[1.00, 0.31, 1.00],
-[1.00, 1.00, 0.31],
-[1.00, 0.65, 0.48],
-[0.48, 0.65, 1.00],
-[0.65, 1.00, 0.48],
-[0.48, 1.00, 0.65],
-[1.00, 0.48, 0.65],
-[0.65, 0.48, 1.00],
-[0.40, 1.00, 0.70],
-[0.70, 1.00, 0.40],
-[1.00, 0.35, 0.74]
-]
+pixi_colors = [[1, 1, 1],[0.31, 0.31, 1],[0.31, 1, 0.31],[0.31, 1, 1],[1, 0.31, 0.31],[1, 0.31, 1],[1, 1, 0.31],[1, 0.65, 0.48],[0.48, 0.65, 1],[0.65, 1, 0.48],[0.48, 1, 0.65],[1, 0.48, 0.65],[0.65, 0.48, 1],[0.40, 1, 0.7],[0.70, 1, 0.4],[1, 0.35, 0.74]]
 
 class input_cvpj_f(plugin_input.base):
     def __init__(self): pass
@@ -49,7 +33,6 @@ class input_cvpj_f(plugin_input.base):
         pixi_data_sounds = []
 
         cvpj_l_notelistindex = {}
-        cvpj_l_playlist = {}
 
         cvpj_l = {}
         
@@ -76,8 +59,6 @@ class input_cvpj_f(plugin_input.base):
                 pixi_vol = int.from_bytes(pixi_chunk[1], "little")
                 print('[input-pixitracker] Volume: ' + str(pixi_vol))
             elif pixi_chunk[0] == b'PATT':
-                #print('UNK',int.from_bytes(pixi_chunk[1][0:4], "little"))
-                #print('UNK',int.from_bytes(pixi_chunk[1][9:12], "little"))
                 pixi_patternorder_bytes = pixi_chunk[1][12:]
                 pixi_patternorder_size = int.from_bytes(pixi_chunk[1][4:8], "little")
                 pixi_patternorder = struct.unpack('h'*pixi_patternorder_size, pixi_patternorder_bytes)
@@ -162,7 +143,6 @@ class input_cvpj_f(plugin_input.base):
                 t_sounddata = pixi_data_sounds[instnum]
                 wave_path = samplefolder + str(instnum) + '.wav'
                 audio_wav.generate(wave_path, t_sounddata[7], t_sounddata[0], t_sounddata[1], 16, None)
-                #print(pixi_data_sounds[instnum])
                 cvpj_instvol = t_sounddata[4]/100
                 cvpj_instdata['pitch'] = t_sounddata[2]
                 cvpj_instdata['middlenote'] = t_sounddata[3]*-1

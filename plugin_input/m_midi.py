@@ -143,10 +143,6 @@ class input_midi(plugin_input.base):
             for usedinst in usedinsts:
                 format_midi_in.make_inst(usedinst[0], usedinst[1], usedinst[2])
 
-            #print(usedinsts)
-
-            #exit()
-
             if midi_trackname != None:
                 if format_midi_in.get_hasnotes() == False: songdescline.append(midi_trackname)
                 t_tracknames.append(midi_trackname)

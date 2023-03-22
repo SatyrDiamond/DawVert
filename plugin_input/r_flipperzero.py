@@ -72,12 +72,6 @@ class input_fmf(plugin_input.base):
 
                         Notes.append([output_Note, output_Duration])
 
-
-
-        global tracklist
-        global trackordering
-        global trackplacements
-
         notelist = []
 
         position = 0

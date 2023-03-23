@@ -124,10 +124,16 @@ class input_cvpj_f(plugin_input.base):
                             if n_type == 19: #off
                                 if t_active_notes[n_note] != None:
                                     t_notedata = t_active_notes[n_note]
-                                    cvpj_notedata = note_data.rx_makenote(t_notedata[1], curpos-t_notedata[1], t_notedata[0]-36, None, None)
+                                    cvpj_notedata = note_data.rx_makenote(t_notedata[1], curpos-t_notedata[1], t_notedata[0]-36, n_curvol/31, (n_curpan-15)/15)
                                     note_mod.pitchmod2point_init()
                                     for autopoint in t_notedata[4]: note_mod.pitchmod2point(cvpj_notedata, autopoint[0], 2, curpos-t_notedata[1], autopoint[1], autopoint[2])
                                     cvpj_notelist.append(cvpj_notedata)
+                            if n_type == 20: #vol
+                                n_curvol = n_note
+
+                            if n_type == 21: #pan
+                                n_curpan = n_note
+
                             if n_type == 54: #porta
                                 n_p_k = bio_sc2_notedata.read(1)[0]
                                 n_p_l = bio_sc2_notedata.read(1)[0]

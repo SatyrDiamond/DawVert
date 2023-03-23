@@ -1,0 +1,146 @@
+id;name;gm_inst
+ACCORDN;Accordion;22
+BAGPIPE1;Bagpipe;110
+BAGPIPE2;Bagpipe 2;110
+BANJO1;Banjo;106
+BASS1;Bass;35
+BASS2;Bass 2;36
+BASSHARP;Bass Harp;null
+BASSOON1;Bassoon;71
+BASSTRLG;Basstrlg;null
+BDRUM1;Bass Drum;null
+BELLONG;Bell Long;null
+BELLS;Bells;null
+BELSHORT;Bell Short;null
+BNCEBASS;BnceBass;null
+BRASS1;Brass;63
+CBASSOON;C Bassoon;null
+CELESTA;Celesta;9
+CLAR1;Clarinet #1;72
+CLAR2;Clarinet #2;72
+CLARINET;Clarinet;null
+CLAVECIN;Clavecin;null
+CROMORNE;Cromorne;null
+CYMBAL1;Cymbal;null
+ELCLAV1;Elec Clav 1;null
+ELCLAV2;Elec Clav 2;null
+ELECFL;Elec Flute;null
+ELECVIBE;Elec Vibe;null
+ELGUIT1;Electric Guitar;27
+ELGUIT2;Electric Guitar 2;28
+ELGUIT3;Electric Guitar 3;27
+ELGUIT4;Electric Guitar 4;28
+ELORGAN1;Electric Organ;17
+ELPIANO1;Electric Piano 1;5
+ELPIANO2;Electric Piano 2;6
+EPIANO1A;Electric Piano 1a;5
+EPIANO1B;Electric Piano 1b;6
+FLUTE;Flute;74
+FLUTE1;Flute 1;74
+FLUTE2;Flute 2;76
+FRHORN1;French Horn 1;null
+FRHORN2;French Horn 2;null
+FSTRP1;fstrp1;null
+FSTRP2;fstrp2;null
+FUZGUIT1;Fuzz Guitar 1;null
+FUZGUIT2;Fuzz Guitar 2;null
+GUITAR1;Guitar;25
+HARP1;Harp 1;47
+HARP2;Harp 2;47
+HARP3;Harp 3;47
+HARPE1;Harpe;null
+HARPSI1;Harpsichord 1;7
+HARPSI2;Harpsichord 2;7
+HARPSI3;Harpsichord 3;7
+HARPSI4;Harpsichord 4;7
+HARPSI5;Harpsichord 5;7
+HELICPTR;Helicopter;null
+HIHAT1;Hi-Hat;null
+HIHAT2;Hi-Hat 2;null
+JAVAICAN;Javaican;null
+JAZZGUIT;Jazz Guitar;27
+JEWSHARP;Jew's harp;null
+KEYBRD1;Keyboard;4
+KEYBRD2;Keyboard 2;6
+KEYBRD3;Keyboard 3;3
+LASER;Laser;null
+LOGDRUM1;Log Drum;null
+MARIMBA1;Marimba;13
+MARIMBA2;Marimba 2;13
+MDRNPHON;Mdrnphon;null
+MLTRDRUM;Mltrdrum;null
+MOOGSYNT;Moog Synth;null
+NOISE1;Noise;null
+OBOE1;Oboe;69
+ORGAN1;Organ;17
+ORGAN2;Organ 2;18
+ORGAN3;Organ 3;19
+ORGAN3A;Organ 3a;20
+ORGAN3B;Organ 3b;21
+ORGNPERC;Percussive Organ;18
+PHONE1;Phone;null
+PHONE2;Phone 2;null
+PIAN1A;Piano 1a;1
+PIAN1B;Piano 1b;1
+PIAN1C;Piano 1c;1
+PIANO;Piano;1
+PIANO1;Piano 1;1
+PIANO2;Piano 2;2
+PIANO3;Piano 3;3
+PIANO4;Piano 4;4
+PIANOBEL;Piano Bell;99
+PIANOF;Piano F;null
+POPBASS1;Pop Bass;null
+RKSNARE1;RK Snare;null
+SAX1;Sax;65
+SCRATCH;Scratch;null
+SCRATCH4;Scratch 4;null
+SDRUM2;Snare Drum 2;null
+SHRTVIBE;Short Vibe;null
+SITAR1;Sitar;105
+SITAR2;Sitar #2;105
+SNAKEFL;Snakefl;null
+SNARE1;Snare 1;null
+SNRSUST;Snare Sustain;null
+SOLOVLN;Solo Violin;41
+STEELGT1;Acoustic Guitar #1;25
+STEELGT2;Acoustic Guitar #2;26
+STRINGS1;Strings ;null
+STRNLONG;strnlong;null
+SYN1;Synth #1;null
+SYN2;Synth #2;null
+SYN3;Synth #3;null
+SYN4;Synth #4;null
+SYN5;Synth #5;null
+SYN6;Synth #6;null
+SYN9;Synth #9;null
+SYNBAL1;Synbal;null
+SYNBAL2;Synbal #2;null
+SYNBASS1;Synth Bass;39
+SYNBASS2;Synth Bass #2;40
+SYNBASS4;Synth Bass #4;40
+SYNSNR1;Synth Snare;null
+SYNSNR2;Synth Snare #2;null
+TINCAN1;Tin Can;null
+TOM1;Tom #1;null
+TOM2;Tom #2;null
+TRAINBEL;Train Bell;null
+TRIANGLE;Triangle;null
+TROMB1;Trombone;58
+TROMB2;Trombone #2;58
+TRUMPET1;Trumpet;57
+TRUMPET2;Trumpet #2;57
+TRUMPET3;Trumpet #3;57
+TRUMPET4;Trumpet #4;57
+TUBA1;Tuba;59
+VIBRA1;Vibraphone;12
+VIBRA2;Vibraphone #2;12
+VIBRA3;Vibraphone #3;12
+VIOLIN1;Violin;41
+VIOLIN2;Violin #2;41
+VIOLIN3;Violin #3;41
+VLNPIZZ1;Violin Pizzicato;46
+WAVE;Wave;null
+XYLO1;Xylophone;14
+XYLO2;Xylophone #2;14
+XYLO3;Xylophone #3;14

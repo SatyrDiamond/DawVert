@@ -175,8 +175,6 @@ class input_adlib_rol(plugin_input.base):
         
         t_tempo_data = parsetrack_tempo(song_file, rol_header_tickBeat/rol_header_beatMeasure)
         
-        print(t_tempo_data)
-
         cvpj_l['fxrack'] = {}
 
         for tracknum in range(10):

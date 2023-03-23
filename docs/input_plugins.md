@@ -33,10 +33,12 @@
 | DataType | Short Name | Name | Ext | Autodetect | 
 | --- | --- | :--- | :--- | :--- |
 | M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
-| R-I | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
 | M | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ❌ | 
 | M | ```onlineseq``` | Online Sequencer | ```.sequence``` | ❌ | 
 | M | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
+| M | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
+| R-I | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
+| R-I | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | 
 | R | ```flipper``` | Flipper Music Format | ```.fmf``` | ❌ | 
 
 ## Mario Paint

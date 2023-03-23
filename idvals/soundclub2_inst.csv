@@ -1,0 +1,525 @@
+id;name;gm_inst
+Acid Bass;Acid Bass;null
+Acid Bass Drum;Acid Bass Drum;null
+Acoustic Bass 1;Acoustic Bass 1;33
+Acoustic Bass 2;Acoustic Bass 2;33
+Acoustic Bass 3;Acoustic Bass 3;33
+Acoustic Guitar1;Acoustic Guitar 1;25
+Acoustic Guitar2;Acoustic Guitar 2;26
+Acoustic Guitar3;Acoustic Guitar 3;25
+Acoustic Piano 1;Acoustic Piano 1;1
+Acoustic Piano 2;Acoustic Piano 2;2
+Acoustic Piano 3;Acoustic Piano 3;3
+Acoustic Piano 4;Acoustic Piano 4;4
+Acoustic Snare 1;Acoustic Snare 1;null
+Acoustic Snare 2;Acoustic Snare 2;null
+Acoustic Snare 3;Acoustic Snare 3;null
+Afterthought;Afterthought;null
+Alien Swell 1;Alien Swell 1;null
+Alien Swell 2;Alien Swell 2;null
+Asia;Asia;null
+Atmosphere 1;Atmosphere 1;100
+Atmosphere 2;Atmosphere 2;100
+Banjo 1;Banjo 1;106
+Banjo 2;Banjo 2;106
+Banjo 3;Banjo 3;106
+Banjo 4;Banjo 4;106
+Banjo 5;Banjo 5;106
+Bass Drum 1;Bass Drum 1;null
+Bass Drum 2;Bass Drum 2;null
+Bass Drum 3;Bass Drum 3;null
+Bass Drum 4;Bass Drum 4;null
+Bass Grand 1;Bass Grand 1;null
+Bass Grand 2;Bass Grand 2;null
+Bass Grand 3;Bass Grand 3;null
+Bass Grand 4;Bass Grand 4;null
+Bass Perc Mix 1;Bass Perc Mix 1;null
+Bass Perc Mix 2;Bass Perc Mix 2;null
+Bass Scratch;Bass Scratch;null
+Bass Synth 1;Bass Synth 1;39
+Bass Synth 2;Bass Synth 2;40
+Bass Synth 3;Bass Synth 3;39
+Bass Synth 4;Bass Synth 4;40
+Bass Synth 5;Bass Synth 5;39
+Bass Vibes 1;Bass Vibes 1;null
+Bass Vibes 2;Bass Vibes 2;null
+Bassoon;Bassoon;71
+Bell Synth;Bell Synth;null
+Bells 1;Bells 1;null
+Bells 2;Bells 2;null
+Big Organ;Big Organ;null
+Blurb;Blurb;null
+Boing 1;Boing 1;null
+Boing 2;Boing 2;null
+Bones;Bones;null
+Bongo;Bongo;null
+Bottle Blower;Bottle Blower;null
+Brass Hit;Brass Hit;null
+Brass Slide;Brass Slide;null
+Brassy Lead 1;Brassy Lead 1;null
+Brassy Lead 2;Brassy Lead 2;null
+Brassy Lead 3;Brassy Lead 3;null
+Brassy Lead 4;Brassy Lead 4;null
+Brassy Short;Brassy Short;null
+Breath 1;Breath 1;null
+Breath 2;Breath 2;null
+Bright Chirp;Bright Chirp;null
+Bright Grand;Bright Grand;null
+Bubble Lead;Bubble Lead;null
+Bubbling;Bubbling;null
+Cabasa;Cabasa;null
+Calliope;Calliope;83
+Cameo 1;Cameo 1;null
+Cameo 2;Cameo 2;null
+Carhorn;Carhorn;null
+Castanets;Castanets;null
+Celesta 1;Celesta 1;9
+Celesta 2;Celesta 2;9
+Cello 1;Cello 1;43
+Cello 2;Cello 2;43
+Chiff Mallet;Chiff Mallet;null
+Chiff Pad;Chiff Pad;null
+Choir Aahs;Choir Aahs;53
+Choir Lead;Choir Lead;86
+Chord 1;Chord 1;null
+Chord 2;Chord 2;null
+Chord 3;Chord 3;null
+Chord 4;Chord 4;null
+Chord 5;Chord 5;null
+Chord 6;Chord 6;null
+Chord 7;Chord 7;null
+Chord 8;Chord 8;null
+Chorused Pulse;Chorused Pulse;null
+Claps 1;Claps 1;null
+Claps 2;Claps 2;null
+Clarinet 1;Clarinet 1;72
+Clarinet 2;Clarinet 2;72
+Clarinet 3;Clarinet 3;72
+Claves 1;Claves 1;null
+Claves 2;Claves 2;null
+Claves 3;Claves 3;null
+Clavinet;Clavinet;8
+Clink 1;Clink 1;null
+Clink 2;Clink 2;null
+Closed HiHat 1;Closed HiHat 1;null
+Closed HiHat 2;Closed HiHat 2;null
+Closed HiHat 3;Closed HiHat 3;null
+Closed HiHat 4;Closed HiHat 4;null
+Closed HiHat 5;Closed HiHat 5;null
+Closed HiHat 6;Closed HiHat 6;null
+Closed HiHat 7;Closed HiHat 7;null
+Closed HiHat 8;Closed HiHat 8;null
+Closed HiHat 9;Closed HiHat 9;null
+Cow;Cow;null
+Cowbell 1;Cowbell 1;null
+Cowbell 2;Cowbell 2;null
+Cowbell 3;Cowbell 3;null
+Cowbell 4;Cowbell 4;null
+Distortion 1;Distortion 1;null
+Distortion 2;Distortion 2;null
+Dog;Dog;null
+Dream Bells;Dream Bells;null
+Dream Pad;Dream Pad;null
+Drum+Hum 1;Drum+Hum 1;null
+Drum+Hum 2;Drum+Hum 2;null
+Dry 1;Dry 1;null
+Dry 2;Dry 2;null
+Dry 3;Dry 3;null
+Dry 4;Dry 4;null
+Echo Brass 1;Echo Brass 1;null
+Echo Brass 2;Echo Brass 2;null
+Echo Claps;Echo Claps;null
+Elec Organ 1;Elec Organ 1;17
+Elec Organ 2;Elec Organ 2;17
+Elec Organ 3;Elec Organ 3;17
+Elec Organ 4;Elec Organ 4;17
+Elec Organ 5;Elec Organ 5;17
+Elec Organ 6;Elec Organ 6;17
+Electric Bass 1;Electric Bass 1;34
+Electric Bass 2;Electric Bass 2;35
+Electric Bass 3;Electric Bass 3;34
+Electric Bass 4;Electric Bass 4;35
+Electric Bass 5;Electric Bass 5;34
+Electric Bongo;Electric Bongo;null
+Electric Piano 1;Electric Piano 1;5
+Electric Piano 2;Electric Piano 2;6
+Electric Piano 3;Electric Piano 3;3
+Electric Piano 4;Electric Piano 4;5
+Electric Snare 1;Electric Snare 1;null
+Electric Snare 2;Electric Snare 2;null
+Electric Snare 3;Electric Snare 3;null
+Electric Tom 1;Electric Tom 1;null
+Electric Tom 2;Electric Tom 2;null
+Electric Tom 3;Electric Tom 3;null
+English Horn;English Horn;70
+EPiano Chord;EPiano Chord;null
+EPiano Lead;EPiano Lead;null
+Ethnic Guitar 1;Ethnic Guitar 1;null
+Ethnic Guitar 2;Ethnic Guitar 2;null
+Ethnic Guitar 3;Ethnic Guitar 3;null
+Explosion;Explosion;null
+Fantasia Bell 1;Fantasia Bell 1;89
+Fantasia Bell 2;Fantasia Bell 2;89
+Fifths;Fifths;null
+Fingered El Bass;Fingered El Bass;null
+Flexatone;Flexatone;null
+Flute 1;Flute 1;74
+Flute 2;Flute 2;74
+Flute 3;Flute 3;74
+FM HiHat;FM HiHat;null
+Fretless Bass;Fretless Bass;null
+Full Organ;Full Organ;null
+Funk Guitar;Funk Guitar;null
+Glass Lead;Glass Lead;null
+Glockenspiel;Glockenspiel;null
+Gong 1;Gong 1;null
+Gong 2;Gong 2;null
+Gong Drum;Gong Drum;null
+Gong Synth;Gong Synth;null
+Grand Piano;Grand Piano;null
+Guitar Harmonics;Guitar Harmonics;null
+Guitar Pad;Guitar Pad;null
+Hammond Organ 1;Hammond Organ 1;17
+Hammond Organ 2;Hammond Organ 2;17
+Hard Block;Hard Block;null
+Hard Cymbal 1;Hard Cymbal 1;null
+Hard Cymbal 2;Hard Cymbal 2;null
+Harp Chord;Harp Chord;null
+Harpsichord 1;Harpsichord 1;7
+Harpsichord 2;Harpsichord 2;7
+Heartbeat;Heartbeat;null
+HellsBell;HellsBell;null
+High Agogo;High Agogo;null
+High Cuica;High Cuica;null
+High Jazz Snare;High Jazz Snare;null
+High Solo Scream;High Solo Scream;null
+High Timbale;High Timbale;null
+High Timpani;High Timpani;null
+High Tom;High Tom;null
+Hollow Wha;Hollow Wha;null
+Hollow Whaw;Hollow Whaw;null
+House Bass;House Bass;null
+House Drum;House Drum;null
+Hum 1;Hum 1;null
+Hum 2;Hum 2;null
+Hum 3;Hum 3;null
+Hum 4;Hum 4;null
+Hum 5;Hum 5;null
+Ice Rain;Ice Rain;null
+Jazz Guitar;Jazz Guitar;null
+Jazz Organ;Jazz Organ;null
+Jazz Snare;Jazz Snare;null
+Kick 1;Kick 1;null
+Kick 2;Kick 2;null
+Koto 1;Koto 1;null
+Koto 2;Koto 2;null
+Laser War;Laser War;null
+Log Drum;Log Drum;null
+Long Mallet;Long Mallet;null
+Long Snare 1;Long Snare 1;null
+Long Snare 2;Long Snare 2;null
+Low Agogo;Low Agogo;null
+Low Cuica;Low Cuica;null
+Low ElTom 1;Low ElTom 1;null
+Low ElTom 2;Low ElTom 2;null
+Low ElTom 3;Low ElTom 3;null
+Low Guitar;Low Guitar;null
+Low Timbale;Low Timbale;null
+Low Timpani;Low Timpani;null
+Low Tom 1;Low Tom 1;null
+Low Tom 2;Low Tom 2;null
+Machine Gun;Machine Gun;null
+Mallet Snare;Mallet Snare;null
+Mallet Synth;Mallet Synth;null
+Maracas;Maracas;null
+Marimba 1;Marimba 1;13
+Marimba 2;Marimba 2;13
+Marimba 3;Marimba 3;13
+Marimba 4;Marimba 4;13
+Marimba 5;Marimba 5;13
+Melodic Cymbal;Melodic Cymbal;null
+Melodic Tom;Melodic Tom;null
+Metal Scratch 1;Metal Scratch 1;null
+Metal Scratch 2;Metal Scratch 2;null
+Metal Synth;Metal Synth;null
+Metal Synth Bass;Metal Synth Bass;null
+Mid Tom;Mid Tom;null
+Mono Tone Lead;Mono Tone Lead;null
+Monster Pad;Monster Pad;null
+Monster Snare 1;Monster Snare 1;null
+Monster Snare 2;Monster Snare 2;null
+Mood Music;Mood Music;null
+Moog;Moog;null
+Moog Bass;Moog Bass;null
+Muted 1;Muted 1;null
+Muted 2;Muted 2;null
+Muted 3;Muted 3;null
+Muted Guitar 1;Muted Guitar 1;29
+Muted Guitar 2;Muted Guitar 2;29
+Muted Guitar 3;Muted Guitar 3;29
+Nice;Nice;null
+Nightmare;Nightmare;null
+Nitesong;Nitesong;null
+Noise HiHat 1;Noise HiHat 1;null
+Noise HiHat 2;Noise HiHat 2;null
+Noise HiHat 3;Noise HiHat 3;null
+Noise HiHat 4;Noise HiHat 4;null
+Noise Percussion;Noise Percussion;null
+Noise Scratch;Noise Scratch;null
+Noise Snare 1;Noise Snare 1;null
+Noise Snare 2;Noise Snare 2;null
+Noise Snare 3;Noise Snare 3;null
+Noise Snare 4;Noise Snare 4;null
+Noisy Escape;Noisy Escape;null
+Nylon Guitar;Nylon Guitar;25
+Oboe 1;Oboe 1;null
+Oboe 2;Oboe 2;null
+One Bubble 1;One Bubble 1;null
+One Bubble 2;One Bubble 2;null
+Open HiHat 1;Open HiHat 1;null
+Open HiHat 2;Open HiHat 2;null
+Open HiHat 3;Open HiHat 3;null
+Open HiHat 4;Open HiHat 4;null
+Open HiHat 5;Open HiHat 5;null
+Open Noise HiHat;Open Noise HiHat;null
+Orch Hit 1;Orch Hit 1;56
+Orch Hit 2;Orch Hit 2;56
+Orch Hit 3;Orch Hit 3;56
+Orch Hit 4;Orch Hit 4;56
+Organ Mallet 1;Organ Mallet 1;null
+Organ Mallet 2;Organ Mallet 2;null
+Organ Mallet 3;Organ Mallet 3;null
+Organ Mallet 4;Organ Mallet 4;null
+Organ Slide;Organ Slide;null
+Oriental Bells;Oriental Bells;null
+Oscar;Oscar;null
+Ouch;Ouch;null
+Outer Space;Outer Space;null
+Pan Flute;Pan Flute;null
+Peck;Peck;null
+Perc Agogo;Perc Agogo;null
+Perc Escape;Perc Escape;null
+Perc Synth Mix;Perc Synth Mix;null
+Perc Trombone;Perc Trombone;null
+Percussive Organ;Percussive Organ;18
+Piano Bell 1;Piano Bell 1;null
+Piano Bell 2;Piano Bell 2;null
+Piano Synth Lead;Piano Synth Lead;null
+Piano+Organ;Piano+Organ;null
+Piccolo;Piccolo;null
+Pipe Organ 1;Pipe Organ 1;20
+Pipe Organ 2;Pipe Organ 2;20
+Pipe Organ 3;Pipe Organ 3;20
+Pipe Organ 4;Pipe Organ 4;20
+Pipe Organ Pedal;Pipe Organ Pedal;null
+Pizzagogo 1;Pizzagogo 1;null
+Pizzagogo 2;Pizzagogo 2;null
+Pizzagogo 3;Pizzagogo 3;null
+Pizzicato 1;Pizzicato 1;46
+Pizzicato 2;Pizzicato 2;46
+Pizzicato 3;Pizzicato 3;46
+Polysynth;Polysynth;null
+Polysynth Pad;Polysynth Pad;null
+Power Chord 1;Power Chord 1;null
+Power Chord 2;Power Chord 2;null
+Power Ensemble;Power Ensemble;null
+Power Synth Bass;Power Synth Bass;null
+Pure Blipp;Pure Blipp;null
+Quiet Scratch;Quiet Scratch;null
+Raster Drive;Raster Drive;null
+Recorder 1;Recorder 1;75
+Recorder 2;Recorder 2;75
+Recorder 3;Recorder 3;75
+Reverb Tom;Reverb Tom;null
+Ride 1;Ride 1;null
+Ride 2;Ride 2;null
+Rim Shot 1;Rim Shot 1;null
+Rim Shot 2;Rim Shot 2;null
+Rim Shot 3;Rim Shot 3;null
+Rim Shot 4;Rim Shot 4;null
+Ringstrings;Ringstrings;null
+Rock Bass Drum;Rock Bass Drum;null
+Rock Organ 1;Rock Organ 1;null
+Rock Organ 2;Rock Organ 2;null
+Roto-Tom;Roto-Tom;null
+Saw Piano;Saw Piano;null
+Saw Piano Vib;Saw Piano Vib;null
+Saw Swell;Saw Swell;null
+Sax 1;Sax 1;65
+Sax 2;Sax 2;66
+Sax 3;Sax 3;67
+Sax 4;Sax 4;68
+Sax 5;Sax 5;65
+Sax 6;Sax 6;66
+Scratch Echo;Scratch Echo;null
+Scratch Tom;Scratch Tom;null
+Scream;Scream;null
+Shaker;Shaker;null
+Shimmer;Shimmer;null
+Short Bass;Short Bass;null
+Short Bass Piano;Short Bass Piano;null
+Short Brass Beep;Short Brass Beep;null
+Short Drum;Short Drum;null
+Short Elec Bass;Short Elec Bass;null
+Short ElTom;Short ElTom;null
+Short Guitar;Short Guitar;null
+Short Horns;Short Horns;null
+Short Kettle;Short Kettle;null
+Short Low Tom;Short Low Tom;null
+Short Nightmare;Short Nightmare;null
+Short Pan Flute1;Short Pan Flute1;null
+Short Pan Flute2;Short Pan Flute2;null
+Short Rich Brass;Short Rich Brass;null
+Short Scratch;Short Scratch;null
+Short Snare;Short Snare;null
+Short SynthBass1;Short SynthBass1;null
+Short SynthBass2;Short SynthBass2;null
+Short SynthBass3;Short SynthBass3;null
+Short SynthBass4;Short SynthBass4;null
+Short SynthPiano;Short SynthPiano;null
+Short Whistle;Short Whistle;null
+Simm;Simm;null
+Simple EPiano 1;Simple EPiano 1;null
+Simple EPiano 2;Simple EPiano 2;null
+Simple EPiano 3;Simple EPiano 3;null
+Simple EPiano 4;Simple EPiano 4;null
+Simple EPiano 5;Simple EPiano 5;null
+Simple EPiano 6;Simple EPiano 6;null
+Sine Chime;Sine Chime;null
+Sine Gong;Sine Gong;null
+Sine Wave;Sine Wave;null
+Sixtease;Sixtease;null
+Slap Bass 1;Slap Bass 1;null
+Slap Bass 2;Slap Bass 2;null
+Slap Bass 3;Slap Bass 3;null
+Slap Bass 4;Slap Bass 4;null
+Slap Bass 5;Slap Bass 5;null
+Smashing Glass 1;Smashing Glass 1;null
+Smashing Glass 2;Smashing Glass 2;null
+Smashing Glass 3;Smashing Glass 3;null
+Snare 1;Snare 1;null
+Snare 2;Snare 2;null
+Snare 3;Snare 3;null
+Snare+Block;Snare+Block;null
+Snip;Snip;null
+Soft Bass;Soft Bass;null
+Soft Cymbal 1;Soft Cymbal 1;null
+Soft Cymbal 2;Soft Cymbal 2;null
+Soft Cymbal 3;Soft Cymbal 3;null
+Soft Flute;Soft Flute;null
+Soft Organ;Soft Organ;null
+Solo Guitar;Solo Guitar;null
+Soundtrack 1;Soundtrack 1;null
+Soundtrack 2;Soundtrack 2;null
+Space Bells;Space Bells;null
+Space Escape Pad;Space Escape Pad;null
+Space Halo;Space Halo;null
+Space Pad;Space Pad;null
+Steel Drums;Steel Drums;null
+Strange Mallet;Strange Mallet;null
+String Chord;String Chord;null
+String Ensemble;String Ensemble;null
+String Hit;String Hit;null
+String Lead;String Lead;null
+String Swell;String Swell;null
+Super Pluck;Super Pluck;null
+Super SynStrings;Super SynStrings;null
+Synth Banjo 1;Synth Banjo 1;null
+Synth Banjo 2;Synth Banjo 2;null
+Synth Bass 1;Synth Bass 1;null
+Synth Bass 2;Synth Bass 2;null
+Synth Bass 3;Synth Bass 3;null
+Synth Bass 4;Synth Bass 4;null
+Synth Bass 5;Synth Bass 5;null
+Synth Bass Slide;Synth Bass Slide;null
+Synth Bells;Synth Bells;null
+Synth Birds;Synth Birds;null
+Synth Brass 1;Synth Brass 1;null
+Synth Brass 2;Synth Brass 2;null
+Synth Bubbles;Synth Bubbles;null
+Synth Chimes 1;Synth Chimes 1;null
+Synth Chimes 2;Synth Chimes 2;null
+Synth Clarinet;Synth Clarinet;null
+Synth Flute;Synth Flute;null
+Synth Growl;Synth Growl;null
+Synth Laughter;Synth Laughter;null
+Synth Lead;Synth Lead;null
+Synth Marimba 1;Synth Marimba 1;null
+Synth Marimba 2;Synth Marimba 2;null
+Synth Noise;Synth Noise;null
+Synth Oohs;Synth Oohs;null
+Synth Perc 1;Synth Perc 1;null
+Synth Perc 2;Synth Perc 2;null
+Synth Piano 1;Synth Piano 1;null
+Synth Piano 2;Synth Piano 2;null
+Synth Piano 3;Synth Piano 3;null
+Synth Reed 1;Synth Reed 1;null
+Synth Reed 2;Synth Reed 2;null
+Synth Reed 3;Synth Reed 3;null
+Synth Reed 4;Synth Reed 4;null
+Synth Reed 5;Synth Reed 5;null
+Synth Reed 6;Synth Reed 6;null
+Synth Reed 7;Synth Reed 7;null
+Synth Reed 8;Synth Reed 8;null
+Synth Scratch;Synth Scratch;null
+Synth Scratch 1;Synth Scratch 1;null
+Synth Scratch 2;Synth Scratch 2;null
+Synth Scratch 3;Synth Scratch 3;null
+Synth Scratch 4;Synth Scratch 4;null
+Synth Snare;Synth Snare;null
+Synth Strings 1;Synth Strings 1;null
+Synth Strings 2;Synth Strings 2;null
+Synth Violin 1;Synth Violin 1;null
+Synth Violin 2;Synth Violin 2;null
+Synth Voices 1;Synth Voices 1;null
+Synth Voices 2;Synth Voices 2;null
+Synthy Bass 1;Synthy Bass 1;null
+Synthy Bass 2;Synthy Bass 2;null
+Tech Snare;Tech Snare;null
+Telephone Ring 1;Telephone Ring 1;null
+Telephone Ring 2;Telephone Ring 2;null
+Thin Trombone;Thin Trombone;null
+Thin Trumpet;Thin Trumpet;null
+Tine Wave;Tine Wave;null
+Trombone;Trombone;null
+Tropical Mallet;Tropical Mallet;null
+Trumpet 1;Trumpet 1;null
+Trumpet 2;Trumpet 2;null
+Trumpet Fall;Trumpet Fall;null
+Tuba 1;Tuba 1;null
+Tuba 2;Tuba 2;null
+Tubular Bells;Tubular Bells;null
+Tune 1;Tune 1;null
+Tune 2;Tune 2;null
+Vibes 1;Vibes 1;null
+Vibes 2;Vibes 2;null
+Vibes 3;Vibes 3;null
+Vibes 4;Vibes 4;null
+Vibes 5;Vibes 5;null
+Vibrato Solo;Vibrato Solo;null
+Violin;Violin;null
+Violin Bow;Violin Bow;null
+Voice Oohs;Voice Oohs;null
+Voice Synth;Voice Synth;null
+Warm Bells;Warm Bells;null
+Warm Clarinet;Warm Clarinet;null
+Warm Oboe;Warm Oboe;null
+Weird Organ 1;Weird Organ 1;null
+Weird Organ 2;Weird Organ 2;null
+Weird Snare;Weird Snare;null
+Whee! 1;Whee! 1;null
+Whee! 2;Whee! 2;null
+Whip;Whip;null
+Whisper Piano;Whisper Piano;null
+Wind;Wind;null
+Woodblock 1;Woodblock 1;116
+Woodblock 2;Woodblock 2;116
+Woodblock 3;Woodblock 3;116
+Woodblock 4;Woodblock 4;116
+Woodblock 5;Woodblock 5;116
+Woodblock 6;Woodblock 6;116
+Woofy Whee;Woofy Whee;null
+Woofy Wow;Woofy Wow;null
+Xeno;Xeno;null
+Xylophone 1;Xylophone 1;14
+Xylophone 2;Xylophone 2;14

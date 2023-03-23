@@ -28,14 +28,7 @@ def sc2_read(sc2bytebuffer, offset):
         sc2objects.append([chunkname, chunkdata])
     return sc2objects
 
-notetypes = {}
-notetypes[17] = 'on '
-notetypes[19] = 'off'
-notetypes[20] = 'vol'
-notetypes[21] = 'pan'
-notetypes[54] = 'prt'
-
-class input_cvpj_f(plugin_input.base):
+class input_soundclub2(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'soundclub2'
@@ -184,6 +177,9 @@ class input_cvpj_f(plugin_input.base):
                         cvpj_unk3 = bio_sc2_insdata.read(4)
                         cvpj_unk4 = bio_sc2_insdata.read(4)
                         cvpj_wavdata = bio_sc2_insdata.read()
+
+                        #print(cvpj_unk1, cvpj_unk2, cvpj_unk3, cvpj_unk4)
+
                         wave_path = samplefolder + 'sc2_'+file_name+'_'+str(cur_instnum)+'.wav'
                         audio_wav.generate(wave_path, cvpj_wavdata, 1, 8363, 8, None)
 

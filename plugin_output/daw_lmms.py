@@ -297,6 +297,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
 
     if 'color' in trkJ: xmltag.set('color', '#' + colors.rgb_float_2_hex(trkJ['color']))
 
+    if 'instdata' not in trkJ: trkJ['instdata'] = {}
     instJ = trkJ['instdata']
 
     #instrumenttrack

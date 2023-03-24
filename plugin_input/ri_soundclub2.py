@@ -155,11 +155,12 @@ class input_soundclub2(plugin_input.base):
 
             elif sc2_datatype == b'INS': 
                 sc2_insdata = sc2object[1]
-                print('[input-soundclub2] Instrument')
+                print('[input-soundclub2] Instrument: ', end='')
                 cvpj_instid = 'sc2_'+str(cur_instnum)
                 t_laneddata[cur_instnum] = {}
                 if sc2_insdata[0] == 1:
                     t_instname = sc2_insdata[1:].decode('ascii')
+                    print(t_instname)
                     sc2idvinst_instname = idvals.get_idval(idvals_inst_soundclub2, t_instname, 'name')
                     sc2idvinst_gminst = idvals.get_idval(idvals_inst_soundclub2, t_instname, 'gm_inst')
                     cvpj_instdata = {}
@@ -172,6 +173,7 @@ class input_soundclub2(plugin_input.base):
                     insextype = bio_sc2_insdata.read(3)
                     if insextype == b'SMP':
                         cvpj_instname = data_bytes.readstring(bio_sc2_insdata)
+                        print(cvpj_instname)
                         sc2_i_unk1 = bio_sc2_insdata.read(2)
                         cvpj_datasize = int.from_bytes(bio_sc2_insdata.read(4), "little")
                         sc2_i_loopstart, sc2_i_unk3 = struct.unpack("II", bio_sc2_insdata.read(8))

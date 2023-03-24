@@ -9,6 +9,7 @@ from functions import folder_samples
 from functions import note_mod
 from functions import notelist_data
 from functions import idvals
+from functions import song
 import plugin_input
 import struct
 import json
@@ -46,14 +47,11 @@ class input_soundclub2(plugin_input.base):
         bytestream.seek(7)
     
         sc2_headerdata = struct.unpack("iiiiii", bytestream.read(24))
-        print('[input-soundclub2] Header', sc2_headerdata)
+        #print('[input-soundclub2] Header', sc2_headerdata)
 
-        print('[input-soundclub2] Tempo', sc2_headerdata[3])
+        sc2_globaltempo = (1/((sc2_headerdata[3]/40)/2+0.5))*120
 
-        #               VAL   BPM
-        #TEMPO            0 = 240
-        #TEMPO           40 = 120
-        #TEMPO          120 = 60
+        print('[input-soundclub2] Tempo', sc2_globaltempo)
 
         file_name = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
@@ -100,7 +98,7 @@ class input_soundclub2(plugin_input.base):
                             tp_chunk = struct.unpack("IBBBB", sc2_patobj[1][muldatapos:muldatapos+8])
                             tp_pos = tp_chunk[0]
                             tp_sc2temp = tp_chunk[1]
-                            tp_sc2temp_out = ((tp_sc2temp-30)*-6)+60
+                            tp_sc2temp_out = ((((tp_sc2temp-30)*-6)+60)/120)*sc2_globaltempo
                             pat_tempopoints[cur_patnum].append({"type": 'instant', "position": tp_pos, "value": tp_sc2temp_out})
                     elif sc2_patobj[0] == b'voi': 
                         cvpj_notelist = []
@@ -231,6 +229,7 @@ class input_soundclub2(plugin_input.base):
                     pl_placement['duration'] = songpartdur
                     pl_placement['fromindex'] = str(instnum)+'_'+str(patnum)+'_'+str(dupeinst[instnum])
                     t_laneddata[instnum][dupeinst[instnum]].append(pl_placement)
+            song.add_timemarker_timesig(cvpj_l, t_patnames[patnum], song_curpos, sc2_headerdata[4], sc2_headerdata[5])
             cvpj_l['automation']['main']['bpm'].append({'position': song_curpos, 'duration': songpartdur, 'points': pat_tempopoints[patnum]})
 
             song_curpos += songpartdur
@@ -262,5 +261,5 @@ class input_soundclub2(plugin_input.base):
         cvpj_l['info']['message']['type'] = 'text'
         cvpj_l['info']['message']['text'] = sc2_songdisc
 
-        cvpj_l['bpm'] = 120
+        cvpj_l['bpm'] = sc2_globaltempo
         return json.dumps(cvpj_l)

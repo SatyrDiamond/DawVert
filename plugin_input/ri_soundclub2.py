@@ -118,17 +118,11 @@ class input_soundclub2(plugin_input.base):
                                 n_len = int.from_bytes(bio_sc2_notedata.read(4), 'little')
                                 bio_sc2_notedata.read(4)
 
-                            n_type, n_note = struct.unpack("BB", bio_sc2_notedata.read(2))
-                            n_p_k = None
-                            n_p_l = None 
+                            n_type, n_note = struct.unpack("BB", bio_sc2_notedata.read(2)) 
                             curpos += n_len
 
-                            #print(n_len, n_type, n_note)
-
-                            if n_type == 0: #on
-                                t_active_notes[n_note] = [n_note,curpos,n_curvol,n_curpan,[]]
-                            if n_type == 17: #on
-                                t_active_notes[n_note] = [n_note,curpos,n_curvol,n_curpan,[]]
+                            if n_type == 0: t_active_notes[n_note] = [n_note,curpos,n_curvol,n_curpan,[]]
+                            if n_type == 17: t_active_notes[n_note] = [n_note,curpos,n_curvol,n_curpan,[]]
                             if n_type == 19: #off
                                 if t_active_notes[n_note] != None:
                                     t_notedata = t_active_notes[n_note]
@@ -136,12 +130,8 @@ class input_soundclub2(plugin_input.base):
                                     note_mod.pitchmod2point_init()
                                     for autopoint in t_notedata[4]: note_mod.pitchmod2point(cvpj_notedata, autopoint[0], 2, curpos-t_notedata[1], autopoint[1], autopoint[2])
                                     cvpj_notelist.append(cvpj_notedata)
-                            if n_type == 20: #vol
-                                n_curvol = n_note
-
-                            if n_type == 21: #pan
-                                n_curpan = n_note
-
+                            if n_type == 20: n_curvol = n_note
+                            if n_type == 21: n_curpan = n_note
                             if n_type == 54: #porta
                                 n_p_k = bio_sc2_notedata.read(1)[0]
                                 n_p_l = bio_sc2_notedata.read(1)[0]
@@ -152,10 +142,8 @@ class input_soundclub2(plugin_input.base):
 
                         detectlen = notelist_data.getduration(cvpj_notelist)
                         if pat_duration < detectlen: pat_duration = detectlen
-
                         if t_instid not in pat_cvpj_notelist[cur_patnum][1]: pat_cvpj_notelist[cur_patnum][1][t_instid] = []
-                        if cvpj_notelist != []:
-                            pat_cvpj_notelist[cur_patnum][1][t_instid].append(cvpj_notelist)
+                        if cvpj_notelist != []: pat_cvpj_notelist[cur_patnum][1][t_instid].append(cvpj_notelist)
 
                 pat_cvpj_notelist[cur_patnum][0] = pat_duration
 

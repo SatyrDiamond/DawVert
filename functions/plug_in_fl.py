@@ -103,9 +103,9 @@ def convert(instdata):
 	elif plugindata['name'].lower() == 'fruity soundfont player':
 		# flsf_asdf_A max 5940 - flsf_asdf_D max 5940 - flsf_asdf_S max 127 - flsf_asdf_R max 5940
 		# flsf_lfo_predelay max 5900 - flsf_lfo_amount max 127 - flsf_lfo_speed max 127 - flsf_cutoff max 127
-		flsf_unk, flsf_patch, flsf_bank, flsf_reverb_sendlvl, flsf_chorus_sendlvl, flsf_mod = struct.unpack('IIIIII', fl_plugstr.read(24))
-		flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R = struct.unpack('IIII', fl_plugstr.read(16))
-		flsf_lfo_predelay, flsf_lfo_amount, flsf_lfo_speed, flsf_cutoff = struct.unpack('IIII', fl_plugstr.read(16))
+		flsf_unk, flsf_patch, flsf_bank, flsf_reverb_sendlvl, flsf_chorus_sendlvl, flsf_mod = struct.unpack('iiiiii', fl_plugstr.read(24))
+		flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R = struct.unpack('iiii', fl_plugstr.read(16))
+		flsf_lfo_predelay, flsf_lfo_amount, flsf_lfo_speed, flsf_cutoff = struct.unpack('iiii', fl_plugstr.read(16))
 
 		flsf_filelen = int.from_bytes(fl_plugstr.read(1), "little")
 		flsf_filename = fl_plugstr.read(flsf_filelen).decode('utf-8')
@@ -119,6 +119,10 @@ def convert(instdata):
 
 		instdata['plugin'] = "soundfont2"
 		instdata['plugindata'] = {}
+		if flsf_asdf_A != -1: instdata['plugindata']['attack'] = flsf_asdf_A/1024
+		if flsf_asdf_D != -1: instdata['plugindata']['decay'] = flsf_asdf_D/1024
+		if flsf_asdf_S != -1: instdata['plugindata']['sustain'] = flsf_asdf_S/127
+		if flsf_asdf_R != -1: instdata['plugindata']['release'] = flsf_asdf_R/1024
 		instdata['plugindata']['file'] = flsf_filename
 		if flsf_patch > 127:
 			instdata['plugindata']['bank'] = 128
@@ -126,6 +130,15 @@ def convert(instdata):
 		else:
 			instdata['plugindata']['bank'] = flsf_bank
 			instdata['plugindata']['patch'] = flsf_patch
+		
+		instdata['plugindata']['asdrlfo'] = {}
+		instdata['plugindata']['asdrlfo']['pitch'] = {}
+		if flsf_lfo_amount != -128: 
+			instdata['plugindata']['asdrlfo']['pitch']['amount'] = flsf_lfo_amount/128
+		if flsf_lfo_predelay != -1: 
+			instdata['plugindata']['asdrlfo']['pitch']['predelay'] = flsf_lfo_predelay/256
+		if flsf_lfo_speed != -1: 
+			instdata['plugindata']['asdrlfo']['pitch']['speed'] = 1/(flsf_lfo_speed/6)
 
 	# ---------------------------------------- DX10 ----------------------------------------
 	elif plugindata['name'].lower() == 'fruity dx10':

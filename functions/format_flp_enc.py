@@ -208,8 +208,11 @@ def make_chanparams(data_FLdt, channel):
 def make_channels(data_FLdt, channels):
     for channel in channels:
         make_flevent(data_FLdt, 64, int(channel)) #NewChan
-        make_flevent(data_FLdt, 21, channels[channel]['type']) #ChanType
-        make_flevent(data_FLdt, 201, utf16encode(channels[channel]['plugin'])) #DefPluginName
+        if 'type' in channels[channel]:
+            make_flevent(data_FLdt, 21, channels[channel]['type']) #ChanType
+        else:
+            make_flevent(data_FLdt, 21, 0) #ChanType
+        if 'plugin' in channels[channel]: make_flevent(data_FLdt, 201, utf16encode(channels[channel]['plugin'])) #DefPluginName
         if 'plugindata' in channels[channel]: make_flevent(data_FLdt, 212, channels[channel]['plugindata']) #NewPlugin
         if 'name' in channels[channel]: make_flevent(data_FLdt, 203, utf16encode(channels[channel]['name'])) #PluginName
         if 'icon' in channels[channel]: make_flevent(data_FLdt, 155, channels[channel]['icon']) #PluginIcon

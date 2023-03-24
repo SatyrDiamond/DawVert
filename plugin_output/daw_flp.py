@@ -89,7 +89,7 @@ class output_cvpjs(plugin_output.base):
                     bst = BeautifulSoup(infoJ['message']['text'], "html.parser")
                     FL_Main['Comment'] = bst.get_text().replace("\n", "\r")
                 if infoJ['message']['type'] == 'text':
-                    FL_Main['Comment'] = infoJ['message']['text'].replace("\n", "\r")
+                    FL_Main['Comment'] = infoJ['message']['text'].replace("\r\n", "\r").replace("\n", "\r")
             else: 
                 FL_Main['Comment'] = ''
         else: 

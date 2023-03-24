@@ -242,7 +242,7 @@ def ri2r_fromindex2notelist(placement, notelistindex):
         placement['notelist'] = []
 
 def ri2r(song):
-    print('[song-convert] Converting from RegularIndexed > MultipleIndexed')
+    print('[song-convert] Converting from RegularIndexed > Regular')
     cvpj_proj = json.loads(song)
     if 'track_order' not in cvpj_proj: print('[error] track_order not found')
     t_s_track_order = cvpj_proj['track_order']
@@ -255,6 +255,9 @@ def ri2r(song):
             notelistindex = singletrack_data['notelistindex']
             if trackid in t_s_trackplacements:
                 trkpldata = t_s_trackplacements[trackid]
+
+                singletrack_laned = 0
+
                 if 'notes_laned' in trkpldata: 
                     if trkpldata['notes_laned'] == 1: 
                         singletrack_laned = 1

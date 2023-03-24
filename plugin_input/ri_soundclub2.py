@@ -171,23 +171,21 @@ class input_soundclub2(plugin_input.base):
                     insextype = bio_sc2_insdata.read(3)
                     if insextype == b'SMP':
                         cvpj_instname = data_bytes.readstring(bio_sc2_insdata)
-                        cvpj_unk1 = bio_sc2_insdata.read(2)
+                        sc2_i_unk1 = bio_sc2_insdata.read(2)
                         cvpj_datasize = int.from_bytes(bio_sc2_insdata.read(4), "little")
-                        cvpj_unk2 = bio_sc2_insdata.read(4)
-                        cvpj_unk3 = bio_sc2_insdata.read(4)
-                        cvpj_unk4 = bio_sc2_insdata.read(4)
+                        sc2_i_unk2 = bio_sc2_insdata.read(4)
+                        sc2_i_unk3 = bio_sc2_insdata.read(4)
+                        sc2_i_unk4, sc2_i_freq = struct.unpack("hh", bio_sc2_insdata.read(4))
                         cvpj_wavdata = bio_sc2_insdata.read()
 
-                        #print(cvpj_unk1, cvpj_unk2, cvpj_unk3, cvpj_unk4)
-
                         wave_path = samplefolder + 'sc2_'+file_name+'_'+str(cur_instnum)+'.wav'
-                        audio_wav.generate(wave_path, cvpj_wavdata, 1, 8363, 8, None)
+                        audio_wav.generate(wave_path, cvpj_wavdata, 1, sc2_i_freq, 8, None)
 
                         cvpj_instdata = {}
                         cvpj_instdata['plugin'] = 'sampler'
                         cvpj_instdata['plugindata'] = {'file': wave_path}
                         tracks.ri_addtrack_inst(cvpj_l, cvpj_instid, None, cvpj_instdata)
-                        tracks.r_addtrack_data(cvpj_l, cvpj_instid, cvpj_instname, None, None, None)
+                        tracks.r_addtrack_data(cvpj_l, cvpj_instid, cvpj_instname, None, 0.3, None)
                 tracks.r_addtrackpl(cvpj_l, cvpj_instid, [])
                 cur_instnum += 1
             else:  print('UNK', sc2object[0])

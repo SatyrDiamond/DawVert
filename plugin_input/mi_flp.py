@@ -259,8 +259,8 @@ class input_flp(plugin_input.base):
             for channum in range(16):
                 cvpj_inst = {}
                 cvpj_inst['name'] = 'Channel '+str(channum+1)
-                cvpj_l_instrument_data['FST' + str(channum)] = cvpj_inst
-                cvpj_l_instrument_order.append('FST' + str(channum))
+                cvpj_l_instrument_data['FST' + str(channum+1)] = cvpj_inst
+                cvpj_l_instrument_order.append('FST' + str(channum+1))
 
                 arrangementitemJ = {}
                 arrangementitemJ['position'] = 0

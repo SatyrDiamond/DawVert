@@ -147,6 +147,21 @@ class output_cvpjs(plugin_output.base):
                     T_Main['middlenote'] = CVPJ_Inst['middlenote']+60
                 if 'pitch' in CVPJ_Inst: T_Main['pitch'] = CVPJ_Inst['pitch']
                 if 'usemasterpitch' in CVPJ_Inst: T_Main['main_pitch'] = CVPJ_Inst['usemasterpitch']
+
+                if 'plugin' in CVPJ_Inst:
+                    if CVPJ_Inst['plugin'] == 'sampler':
+                        T_Main['type'] = 0
+                        T_Main['plugin'] = ''
+                        if 'plugindata' in CVPJ_Inst:
+                            samplerdata = CVPJ_Inst['plugindata'] 
+                            if 'file' in samplerdata: T_Main['samplefilename'] = samplerdata['file'] 
+                    else:
+                        T_Main['type'] = 0
+                        T_Main['plugin'] = ''
+                else:
+                    T_Main['type'] = 0
+                    T_Main['plugin'] = ''
+
             if 'poly' in CVPJ_Data: 
                 if 'max' in CVPJ_Data['poly']: 
                     T_Main['polymax'] = CVPJ_Data['poly']['max']
@@ -162,19 +177,6 @@ class output_cvpjs(plugin_output.base):
             #    pdataxs = base64.b64decode(pdata)
             #    T_Main['pluginparams'] = pdataxs
             #    T_Main['plugindata'] = b'\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00P\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00&\x00\x00\x00z\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-            if 'plugin' in CVPJ_Inst:
-                if CVPJ_Inst['plugin'] == 'sampler':
-                    T_Main['type'] = 0
-                    T_Main['plugin'] = ''
-                    if 'plugindata' in CVPJ_Inst:
-                        samplerdata = CVPJ_Inst['plugindata'] 
-                        if 'file' in samplerdata: T_Main['samplefilename'] = samplerdata['file'] 
-                else:
-                    T_Main['type'] = 0
-                    T_Main['plugin'] = ''
-            else:
-                T_Main['type'] = 0
-                T_Main['plugin'] = ''
 
             FL_Channels[inst_id[CVPJ_Entry]] = T_Main
 
@@ -264,7 +266,7 @@ class output_cvpjs(plugin_output.base):
                                 FL_playlistitem['startoffset'] = 0
                                 FL_playlistitem['endoffset'] = int((CVPJ_Placement['duration']*ppq)/4)
                         else:
-                            FL_playlistitem['length'] = note_mod.getduration(CVPJ_NotelistIndex[CVPJ_Placement['fromindex']]['notelist'])
+                            FL_playlistitem['length'] = notelist_data.getduration(CVPJ_NotelistIndex[CVPJ_Placement['fromindex']]['notelist'])
                         FL_playlistitem['unknown1'] = 120
                         FL_playlistitem['unknown2'] = 25664
                         FL_playlistitem['unknown3'] = 32896

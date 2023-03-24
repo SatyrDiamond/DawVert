@@ -10,6 +10,11 @@ from functions import format_flp_dec
 from functions import note_mod
 from functions import colors
 
+def splitbyte(value):
+    first = value >> 4
+    second = value & 0x0F
+    return (first, second)
+
 class input_flp(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -40,10 +45,13 @@ class input_flp(plugin_input.base):
         cvpj_l = {}
         cvpj_l['vol'] = 1
         if 'MainPitch' in FL_Main: cvpj_l['pitch'] = struct.unpack('h', struct.pack('H', FL_Main['MainPitch']))[0]
-        cvpj_l['timesig_numerator'] = FL_Main['Numerator']
-        cvpj_l['timesig_denominator'] = FL_Main['Denominator']
-        cvpj_l['bpm'] = FL_Main['Tempo']
-        cvpj_l['shuffle'] = FL_Main['Shuffle']/128
+        if 'Numerator' in FL_Main: cvpj_l['timesig_numerator'] = FL_Main['Numerator']
+        else: cvpj_l['timesig_numerator'] = 4
+        if 'Numerator' in FL_Main: cvpj_l['timesig_denominator'] = FL_Main['Numerator']
+        else: cvpj_l['timesig_denominator'] = 4
+        if 'Tempo' in FL_Main: cvpj_l['bpm'] = FL_Main['Tempo']
+        else: cvpj_l['bpm'] = 120
+        if 'Shuffle' in FL_Main: cvpj_l['shuffle'] = FL_Main['Shuffle']/128
 
         cvpj_l_instrument_data = {}
         cvpj_l_instrument_order = []
@@ -115,6 +123,7 @@ class input_flp(plugin_input.base):
                     cvpj_note['vol'] = flnote['velocity']/100
                     cvpj_note['cutoff'] = flnote['mod_x']/255
                     cvpj_note['reso'] = flnote['mod_y']/255
+                    cvpj_note['channel'] = splitbyte(flnote['midich'])[1]+1
                     cvpj_note['notemod'] = {}
                     is_slide = bool(flnote['flags'] & 0b000000000001000)
 
@@ -146,39 +155,41 @@ class input_flp(plugin_input.base):
                     cvpj_l_notelistindex['FLPat' + str(pattern)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
             if 'name' in patterndata: cvpj_l_notelistindex['FLPat' + str(pattern)]['name'] = patterndata['name']
 
-        FL_Arrangement = FL_Arrangements['0']
-        for item in FL_Arrangement['items']:
-            arrangementitemJ = {}
-            arrangementitemJ['position'] = item['position']/ppq*4
-            arrangementitemJ['duration'] = item['length']/ppq*4
-            arrangementitemJ['type'] = 'instruments'
-            arrangementitemJ['fromindex'] = 'FLPat' + str(item['itemindex'] - item['patternbase'])
-            if 'startoffset' in item or 'endoffset' in item:
-                arrangementitemJ['cut'] = {}
-                arrangementitemJ['cut']['type'] = 'cut'
-                if 'startoffset' in item: arrangementitemJ['cut']['start'] = item['startoffset']/ppq*4
-                if 'endoffset' in item: arrangementitemJ['cut']['end'] = item['endoffset']/ppq*4
-            playlistline = (item['trackindex']*-1)+500
-            length = item['length']
-            arrangementitemJ['muted'] = bool(item['flags'] & 0b0001000000000000)
-            if str(playlistline) not in cvpj_l_playlist:
-                cvpj_l_playlist[str(playlistline)] = {}
-                cvpj_l_playlist[str(playlistline)]['placements_notes'] = []
-            cvpj_l_playlist[str(playlistline)]['placements_notes'].append(arrangementitemJ)
+        if len(FL_Arrangements) != 0:
+            FL_Arrangement = FL_Arrangements['0']
+            for item in FL_Arrangement['items']:
+                arrangementitemJ = {}
+                arrangementitemJ['position'] = item['position']/ppq*4
+                arrangementitemJ['duration'] = item['length']/ppq*4
+                arrangementitemJ['type'] = 'instruments'
+                arrangementitemJ['fromindex'] = 'FLPat' + str(item['itemindex'] - item['patternbase'])
+                if 'startoffset' in item or 'endoffset' in item:
+                    arrangementitemJ['cut'] = {}
+                    arrangementitemJ['cut']['type'] = 'cut'
+                    if 'startoffset' in item: arrangementitemJ['cut']['start'] = item['startoffset']/ppq*4
+                    if 'endoffset' in item: arrangementitemJ['cut']['end'] = item['endoffset']/ppq*4
+                playlistline = (item['trackindex']*-1)+500
+                length = item['length']
+                arrangementitemJ['muted'] = bool(item['flags'] & 0b0001000000000000)
+                if str(playlistline) not in cvpj_l_playlist:
+                    cvpj_l_playlist[str(playlistline)] = {}
+                    cvpj_l_playlist[str(playlistline)]['placements_notes'] = []
+                cvpj_l_playlist[str(playlistline)]['placements_notes'].append(arrangementitemJ)
 
-        FL_Tracks = FL_Arrangement['tracks']
+            FL_Tracks = FL_Arrangement['tracks']
 
-        for track in FL_Tracks:
-            #print(track, FL_Tracks[track])
-            if str(track) not in cvpj_l_playlist:
-                cvpj_l_playlist[str(track)] = {}
-            if 'color' in FL_Tracks[track]:
-                color = FL_Tracks[track]['color'].to_bytes(4, "little")
-            cvpj_l_playlist[str(track)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
-            if 'name' in FL_Tracks[track]:
-                cvpj_l_playlist[str(track)]['name'] = FL_Tracks[track]['name']
-            cvpj_l_playlist[str(track)]['size'] = FL_Tracks[track]['height']
-            cvpj_l_playlist[str(track)]['enabled'] = FL_Tracks[track]['enabled']
+            if len(FL_Tracks) != 0:
+                for track in FL_Tracks:
+                    #print(track, FL_Tracks[track])
+                    if str(track) not in cvpj_l_playlist:
+                        cvpj_l_playlist[str(track)] = {}
+                    if 'color' in FL_Tracks[track]:
+                        color = FL_Tracks[track]['color'].to_bytes(4, "little")
+                    cvpj_l_playlist[str(track)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
+                    if 'name' in FL_Tracks[track]:
+                        cvpj_l_playlist[str(track)]['name'] = FL_Tracks[track]['name']
+                    cvpj_l_playlist[str(track)]['size'] = FL_Tracks[track]['height']
+                    cvpj_l_playlist[str(track)]['enabled'] = FL_Tracks[track]['enabled']
 
         for fxchannel in FL_Mixer:
             fl_fxhan = FL_Mixer[str(fxchannel)]
@@ -198,19 +209,20 @@ class input_flp(plugin_input.base):
                 for route in fl_fxhan['routing']:
                     fxdata["sends"].append({"amount": 1.0, "channel": route})
 
-            for fl_fxslot in fl_fxhan['slots']:
-                fl_fxslotdata = fl_fxhan['slots'][fl_fxslot]
-                if fl_fxslotdata != None:
-                    fxslotdata = {}
-                    fxslotdata['enabled'] = 1
-                    fxslotdata['plugin'] = 'native-fl'
-                    if 'color' in fl_fxslotdata:
-                        color = fl_fxslotdata['color'].to_bytes(4, "little")
-                        fxslotdata['color'] = [color[0]/255,color[1]/255,color[2]/255]
-                    fxslotdata['plugindata'] = {}
-                    fxslotdata['plugindata']['plugin'] = fl_fxslotdata['plugin']
-                    fxslotdata['plugindata']['data'] = base64.b64encode(fl_fxslotdata['pluginparams']).decode('ascii')
-                    fxdata["chain_fx_audio"].append(fxslotdata)
+            if 'slots' in fl_fxhan:
+                for fl_fxslot in fl_fxhan['slots']:
+                    fl_fxslotdata = fl_fxhan['slots'][fl_fxslot]
+                    if fl_fxslotdata != None:
+                        fxslotdata = {}
+                        fxslotdata['enabled'] = 1
+                        fxslotdata['plugin'] = 'native-fl'
+                        if 'color' in fl_fxslotdata:
+                            color = fl_fxslotdata['color'].to_bytes(4, "little")
+                            fxslotdata['color'] = [color[0]/255,color[1]/255,color[2]/255]
+                        fxslotdata['plugindata'] = {}
+                        fxslotdata['plugindata']['plugin'] = fl_fxslotdata['plugin']
+                        fxslotdata['plugindata']['data'] = base64.b64encode(fl_fxslotdata['pluginparams']).decode('ascii')
+                        fxdata["chain_fx_audio"].append(fxslotdata)
 
             if fxchannel == '100': fxdata["vol"] = 0.0
             elif fxchannel == '101': fxdata["vol"] = 0.0
@@ -237,6 +249,27 @@ class input_flp(plugin_input.base):
             if tm_type == 10: timemarkerJ['type'] = 'punchout'
             cvpj_l_timemarkers.append(timemarkerJ)
 
+        if len(FL_Arrangements) == 0 and len(FL_Patterns) == 1 and len(FL_Channels) == 0:
+            fst_chan_notelist = [[] for x in range(16)]
+            for cvpj_notedata in cvpj_l_notelistindex['FLPat0']['notelist']:
+                cvpj_notedata['instrument'] = 'FST' + str(cvpj_notedata['channel'])
+                fst_chan_notelist[cvpj_notedata['channel']-1].append(cvpj_notedata)
+
+            for channum in range(16):
+                cvpj_inst = {}
+                cvpj_inst['name'] = 'Channel '+str(channum+1)
+                cvpj_l_instrument_data['FST' + str(channum)] = cvpj_inst
+                cvpj_l_instrument_order.append('FST' + str(channum))
+
+                arrangementitemJ = {}
+                arrangementitemJ['position'] = 0
+                arrangementitemJ['type'] = 'instruments'
+                arrangementitemJ['fromindex'] = 'FLPat0'
+
+                cvpj_l_playlist["1"] = {}
+                cvpj_l_playlist["1"]['placements_notes'] = []
+                cvpj_l_playlist["1"]['placements_notes'].append(arrangementitemJ)
+
         cvpj_l['do_addwrap'] = True
 
         cvpj_l['use_instrack'] = False
@@ -255,13 +288,14 @@ class input_flp(plugin_input.base):
             cvpj_l['filtergroups']['FLFilterGroup_'+str(filtergroupnum)]['name'] = FL_FilterGroups[filtergroupnum]
 
         cvpj_l['info'] = {}
-        cvpj_l['info']['title'] = FL_Main['Title']
-        cvpj_l['info']['author'] = FL_Main['Author']
-        cvpj_l['info']['genre'] = FL_Main['Genre']
+        if 'Title' in FL_Main: cvpj_l['info']['title'] = FL_Main['Title']
+        if 'Author' in FL_Main: cvpj_l['info']['author'] = FL_Main['Author']
+        if 'Genre' in FL_Main: cvpj_l['info']['genre'] = FL_Main['Genre']
         if 'URL' in FL_Main: cvpj_l['info']['url'] = FL_Main['URL']
 
-        cvpj_l['info']['message'] = {}
-        cvpj_l['info']['message']['type'] = 'text'
-        cvpj_l['info']['message']['text'] = FL_Main['Comment']
+        if 'Comment' in FL_Main:
+            cvpj_l['info']['message'] = {}
+            cvpj_l['info']['message']['type'] = 'text'
+            cvpj_l['info']['message']['text'] = FL_Main['Comment']
 
         return json.dumps(cvpj_l, indent=2)

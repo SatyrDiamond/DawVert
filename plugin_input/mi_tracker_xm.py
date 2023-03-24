@@ -284,7 +284,6 @@ class input_xm(plugin_input.base):
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
         bytesdata = bytestream.read(17)
-        print(bytesdata)
         if bytesdata == b'Extended Module: ': return True
         else: return False
         bytestream.seek(0)

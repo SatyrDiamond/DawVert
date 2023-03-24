@@ -46,9 +46,9 @@ class input_soundclub2(plugin_input.base):
         bytestream.seek(7)
     
         sc2_headerdata = struct.unpack("iiiiii", bytestream.read(24))
-        print('[input-soundclub2] HEADER', sc2_headerdata)
+        print('[input-soundclub2] Header', sc2_headerdata)
 
-        print('[input-soundclub2] TEMPO', sc2_headerdata[3])
+        print('[input-soundclub2] Tempo', sc2_headerdata[3])
 
         #               VAL   BPM
         #TEMPO            0 = 240
@@ -153,11 +153,11 @@ class input_soundclub2(plugin_input.base):
             elif sc2_datatype == b'SEQ': 
                 sc2_seqdata = sc2object[1]
                 sc2_seqdata = struct.unpack("I"*(len(sc2_seqdata)//4), sc2_seqdata)
-                print('[input-soundclub2] SEQ', sc2_seqdata)
+                print('[input-soundclub2] Sequence', sc2_seqdata)
 
             elif sc2_datatype == b'INS': 
                 sc2_insdata = sc2object[1]
-                print('[input-soundclub2] INS')
+                print('[input-soundclub2] Instrument')
                 cvpj_instid = 'sc2_'+str(cur_instnum)
                 t_laneddata[cur_instnum] = {}
                 if sc2_insdata[0] == 1:

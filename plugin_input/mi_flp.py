@@ -9,6 +9,7 @@ import struct
 from functions import format_flp_dec
 from functions import note_mod
 from functions import colors
+from functions import notelist_data
 
 def splitbyte(value):
     first = value >> 4
@@ -263,6 +264,7 @@ class input_flp(plugin_input.base):
 
                 arrangementitemJ = {}
                 arrangementitemJ['position'] = 0
+                arrangementitemJ['duration'] = notelist_data.getduration(cvpj_l_notelistindex['FLPat0']['notelist'])
                 arrangementitemJ['type'] = 'instruments'
                 arrangementitemJ['fromindex'] = 'FLPat0'
 

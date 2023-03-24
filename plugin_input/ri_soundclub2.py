@@ -113,13 +113,15 @@ class input_soundclub2(plugin_input.base):
                         n_curvol = 31
                         n_curpan = 15
                         while bio_sc2_notedata.tell() < len(sc2_notedata) :
-                            n_len, n_type, n_note = struct.unpack("BBB", bio_sc2_notedata.read(3))
+                            n_len = bio_sc2_notedata.read(1)[0]
+                            if n_len == 255:
+                                n_len == int.from_bytes(bio_sc2_notedata.read(4), 'little')
+                                bio_sc2_notedata.read(4)
+
+                            n_type, n_note = struct.unpack("BB", bio_sc2_notedata.read(2))
                             n_p_k = None
                             n_p_l = None 
                             curpos += n_len
-
-                            if n_len == 255: 
-                                bio_sc2_notedata.read(2)
 
                             if n_type == 17: #on
                                 t_active_notes[n_note] = [n_note,curpos,n_curvol,n_curpan,[]]

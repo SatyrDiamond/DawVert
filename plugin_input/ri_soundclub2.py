@@ -115,7 +115,7 @@ class input_soundclub2(plugin_input.base):
                         while bio_sc2_notedata.tell() < len(sc2_notedata) :
                             n_len = bio_sc2_notedata.read(1)[0]
                             if n_len == 255:
-                                n_len == int.from_bytes(bio_sc2_notedata.read(4), 'little')
+                                n_len = int.from_bytes(bio_sc2_notedata.read(4), 'little')
                                 bio_sc2_notedata.read(4)
 
                             n_type, n_note = struct.unpack("BB", bio_sc2_notedata.read(2))

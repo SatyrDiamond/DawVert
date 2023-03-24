@@ -123,6 +123,10 @@ class input_soundclub2(plugin_input.base):
                             n_p_l = None 
                             curpos += n_len
 
+                            #print(n_len, n_type, n_note)
+
+                            if n_type == 0: #on
+                                t_active_notes[n_note] = [n_note,curpos,n_curvol,n_curpan,[]]
                             if n_type == 17: #on
                                 t_active_notes[n_note] = [n_note,curpos,n_curvol,n_curpan,[]]
                             if n_type == 19: #off

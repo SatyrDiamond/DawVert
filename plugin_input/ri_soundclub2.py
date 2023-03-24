@@ -117,7 +117,7 @@ class input_soundclub2(plugin_input.base):
                             if n_type == 19: #off
                                 if t_active_notes[n_note] != None:
                                     t_notedata = t_active_notes[n_note]
-                                    cvpj_notedata = note_data.rx_makenote(t_notedata[1], curpos-t_notedata[1], t_notedata[0]-36, n_curvol/31, (n_curpan-15)/15)
+                                    cvpj_notedata = note_data.rx_makenote(t_notedata[1], curpos-t_notedata[1], t_notedata[0]-36, n_curvol/31, (n_curpan-15)/-15)
                                     note_mod.pitchmod2point_init()
                                     for autopoint in t_notedata[4]: note_mod.pitchmod2point(cvpj_notedata, autopoint[0], 2, curpos-t_notedata[1], autopoint[1], autopoint[2])
                                     cvpj_notelist.append(cvpj_notedata)
@@ -173,17 +173,28 @@ class input_soundclub2(plugin_input.base):
                         cvpj_instname = data_bytes.readstring(bio_sc2_insdata)
                         sc2_i_unk1 = bio_sc2_insdata.read(2)
                         cvpj_datasize = int.from_bytes(bio_sc2_insdata.read(4), "little")
-                        sc2_i_unk2 = bio_sc2_insdata.read(4)
-                        sc2_i_unk3 = bio_sc2_insdata.read(4)
-                        sc2_i_unk4, sc2_i_freq = struct.unpack("hh", bio_sc2_insdata.read(4))
+                        sc2_i_loopstart, sc2_i_unk3 = struct.unpack("II", bio_sc2_insdata.read(8))
+                        sc2_i_unk4, sc2_i_freq = struct.unpack("HH", bio_sc2_insdata.read(4))
                         cvpj_wavdata = bio_sc2_insdata.read()
 
+                        print(cvpj_instname, cvpj_datasize, sc2_i_loopstart)
+
+                        loopdata = None
+                        if sc2_i_loopstart != 4294967295: loopdata = {'loop':[sc2_i_loopstart, cvpj_datasize]}
+
                         wave_path = samplefolder + 'sc2_'+file_name+'_'+str(cur_instnum)+'.wav'
-                        audio_wav.generate(wave_path, cvpj_wavdata, 1, sc2_i_freq, 8, None)
+                        audio_wav.generate(wave_path, cvpj_wavdata, 1, sc2_i_freq, 8, loopdata)
 
                         cvpj_instdata = {}
                         cvpj_instdata['plugin'] = 'sampler'
                         cvpj_instdata['plugindata'] = {'file': wave_path}
+                        cvpj_instdata['plugindata']['loop'] = {}
+                        if sc2_i_loopstart != 4294967295:
+                            cvpj_instdata['plugindata']['loop']['enabled'] = 1
+                            cvpj_instdata['plugindata']['loop']['mode'] = "normal"
+                            cvpj_instdata['plugindata']['loop']['points'] = [sc2_i_loopstart, cvpj_datasize]
+                        else:
+                            cvpj_instdata['plugindata']['loop']['enabled'] = 0
                         tracks.ri_addtrack_inst(cvpj_l, cvpj_instid, None, cvpj_instdata)
                         tracks.r_addtrack_data(cvpj_l, cvpj_instid, cvpj_instname, None, 0.3, None)
                 tracks.r_addtrackpl(cvpj_l, cvpj_instid, [])

@@ -68,6 +68,7 @@ class input_soundclub2(plugin_input.base):
         cur_instnum = 1
 
         pat_cvpj_notelist = {}
+        pat_tempopoints = {}
 
         t_patnames = {}
         t_laneddata = {}
@@ -89,10 +90,18 @@ class input_soundclub2(plugin_input.base):
                 pat_duration = 0
                 for sc2_patobj in sc2_patobjs:
                     if sc2_patobj[0] == b'pna': 
-                        print('[input-soundclub2]      Name '+str(sc2_patobj[1]))
+                        print('[input-soundclub2]      Name: '+sc2_patobj[1].decode('ascii'))
                         t_patnames[cur_patnum] = sc2_patobj[1].decode('ascii')
                     elif sc2_patobj[0] == b'tem':
-                        print('[input-soundclub2]      TEM '+str(sc2_patobj[1]))
+                        print('[input-soundclub2]      Tempo Points: '+str(len(sc2_patobj[1])//8))
+                        pat_tempopoints[cur_patnum] = []
+                        for datapos in range(len(sc2_patobj[1])//8):
+                            muldatapos = datapos*8
+                            tp_chunk = struct.unpack("IBBBB", sc2_patobj[1][muldatapos:muldatapos+8])
+                            tp_pos = tp_chunk[0]
+                            tp_sc2temp = tp_chunk[1]
+                            tp_sc2temp_out = ((tp_sc2temp-30)*-6)+60
+                            pat_tempopoints[cur_patnum].append({"type": 'instant', "position": tp_pos, "value": tp_sc2temp_out})
                     elif sc2_patobj[0] == b'voi': 
                         cvpj_notelist = []
                         t_instid = int.from_bytes(sc2_patobj[1][:4], "little")+1
@@ -177,8 +186,6 @@ class input_soundclub2(plugin_input.base):
                         sc2_i_unk4, sc2_i_freq = struct.unpack("HH", bio_sc2_insdata.read(4))
                         cvpj_wavdata = bio_sc2_insdata.read()
 
-                        print(cvpj_instname, cvpj_datasize, sc2_i_loopstart)
-
                         loopdata = None
                         if sc2_i_loopstart != 4294967295: loopdata = {'loop':[sc2_i_loopstart, cvpj_datasize]}
 
@@ -212,6 +219,10 @@ class input_soundclub2(plugin_input.base):
 
         song_curpos = 0
 
+        cvpj_l['automation'] = {}
+        cvpj_l['automation']['main'] = {}
+        cvpj_l['automation']['main']['bpm'] = []
+
         for patnum in sc2_seqdata:
             nlpd = pat_cvpj_notelist[patnum]
             songpartdur = nlpd[0]
@@ -226,6 +237,7 @@ class input_soundclub2(plugin_input.base):
                     pl_placement['duration'] = songpartdur
                     pl_placement['fromindex'] = str(instnum)+'_'+str(patnum)+'_'+str(dupeinst[instnum])
                     t_laneddata[instnum][dupeinst[instnum]].append(pl_placement)
+            cvpj_l['automation']['main']['bpm'].append({'position': song_curpos, 'duration': songpartdur, 'points': pat_tempopoints[patnum]})
 
             song_curpos += songpartdur
 

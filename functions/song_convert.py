@@ -458,7 +458,6 @@ def mi2m(song, extra_json):
                 else: unusedplrowfound = str(plrow)
                 plrow += 1
                 if plrow == 1000: break
-            print(unusedplrowfound)
             if unusedplrowfound != None:
                 tracks.m_playlist_pl(cvpj_proj, unusedplrowfound, '__UNUSED__', None, None)
 
@@ -466,7 +465,6 @@ def mi2m(song, extra_json):
                 for unused_notelistindex_e in unused_notelistindex:
                     unused_placement_data = {}
                     unused_placement_data = unused_placement_data | t_s_notelistindex[unused_notelistindex_e]
-                    print(unused_placement_data)
                     unused_placement_data['position'] = unused_placement_data_pos
                     unused_placement_data_dur = notelist_data.getduration(unused_placement_data['notelist'])
                     unused_placement_data['duration'] = unused_placement_data_dur

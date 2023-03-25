@@ -22,7 +22,7 @@
 | M-I | ```ceol``` | Bosca Ceoil | ```.txt``` | ❌ | 
 | M-I | ```pixitracker``` | PixiTracker | ```.piximod``` | ✔️ | 
 | M-I | ```trackerboy``` | TrackerBoy | ```.tbm``` | ✔️ | 
-| R-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
+| M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
 | M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ |
 | M | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ❌ |
 | R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ |

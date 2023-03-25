@@ -421,21 +421,23 @@ def m2mi(song):
 def mi2m(song):
     print('[song-convert] Converting from MultipleIndexed > Multiple')
     cvpj_proj = json.loads(song)
-    t_s_notelistindex = cvpj_proj['notelistindex']
     t_s_playlist = cvpj_proj['playlist']
-    for pl_row in t_s_playlist:
-        pl_row_data = t_s_playlist[pl_row]
-        if 'placements_notes' in pl_row_data:
-            pl_row_placements = pl_row_data['placements_notes']
-            for pldata in pl_row_placements:
-                if 'fromindex' in pldata:
-                    fromindex = pldata['fromindex']
-                    if fromindex in t_s_notelistindex:
-                        index_pl_data = t_s_notelistindex[fromindex]
-                        del pldata['fromindex']
-                        if 'notelist' in index_pl_data:
-                            pldata['notelist'] = index_pl_data['notelist']
-                            if 'name' in index_pl_data: pldata['name'] = index_pl_data['name']
-                            if 'color' in index_pl_data: pldata['color'] = index_pl_data['color']
-    del cvpj_proj['notelistindex']
+    if 'notelistindex' in cvpj_proj:
+        t_s_notelistindex = cvpj_proj['notelistindex']
+        for pl_row in t_s_playlist:
+            pl_row_data = t_s_playlist[pl_row]
+            if 'placements_notes' in pl_row_data:
+                pl_row_placements = pl_row_data['placements_notes']
+                for pldata in pl_row_placements:
+                    if 'fromindex' in pldata:
+                        fromindex = pldata['fromindex']
+                        if fromindex in t_s_notelistindex:
+                            index_pl_data = t_s_notelistindex[fromindex]
+                            del pldata['fromindex']
+                            if 'notelist' in index_pl_data:
+                                pldata['notelist'] = index_pl_data['notelist']
+                                if 'name' in index_pl_data: pldata['name'] = index_pl_data['name']
+                                if 'color' in index_pl_data: pldata['color'] = index_pl_data['color']
+        del cvpj_proj['notelistindex']
+    print('[song-convert] notelistindex not found.')
     return json.dumps(cvpj_proj)

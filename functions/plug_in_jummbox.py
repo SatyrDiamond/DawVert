@@ -38,7 +38,6 @@ def convert(instdata):
 	bb_type = plugindata['type']
 	bb_data = plugindata['data']
 	bb_data_fx = bb_data['effects']
-	print(bb_data['effects'])
 
 	if bb_type == 'chip' or bb_type == 'custom chip':
 		if bb_data['wave'] in rawChipWaves:

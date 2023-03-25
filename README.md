@@ -34,6 +34,9 @@ Sample Folder Path (path for sample extraction):
 Song Number (used for Multi-Song inputs): 
 --songnum <number>
 
+MultipleIndexed2Multiple:  
+--mi2m--output-unused-nle           (Output Unused Patterns)
+
 e.g: 
     python3 DawVert.py --soundfont "MuseScore_General.sf2" -it notessimo_v2 -i song.note -ot flp -o out.flp
 

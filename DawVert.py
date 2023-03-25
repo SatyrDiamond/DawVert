@@ -19,6 +19,7 @@ parser.add_argument("-ot", default=None)
 parser.add_argument("--samplefolder", default=None)
 parser.add_argument("--soundfont", default=None)
 parser.add_argument("--songnum", default=1)
+parser.add_argument("--mi2m--output-unused-nle", action='store_true')
 args = parser.parse_args()
 
 in_file = args.i
@@ -31,6 +32,7 @@ extra_json = {}
 if args.soundfont != None: extra_json['soundfont'] = args.soundfont
 if args.samplefolder != None: extra_json['samplefolder'] = args.samplefolder
 if args.songnum != None: extra_json['songnum'] = args.songnum
+if args.mi2m__output_unused_nle == True: extra_json['mi2m-output-unused-nle'] = True
 
 typelist = {}
 typelist['r'] = 'Regular'
@@ -159,7 +161,7 @@ if CVPJ_j == '{}' or CVPJ_j == None:
 CVPJ_C = plug_conv.convproj(CVPJ_j, in_type, out_type, out_format, extra_json)
 if CVPJ_C != None: CVPJ_j = CVPJ_C
 
-# --------- Convert Type -- mi <> m <> r
+# --------- Convert Type
 
 print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 
@@ -180,9 +182,9 @@ if in_type == 'r' and out_type == 'mi':
 	CVPJ_j = song_convert.m2mi(CVPJ_j)
 
 if in_type == 'mi' and out_type == 'm': 
-	CVPJ_j = song_convert.mi2m(CVPJ_j)
+	CVPJ_j = song_convert.mi2m(CVPJ_j, extra_json)
 if in_type == 'mi' and out_type == 'r': 
-	CVPJ_j = song_convert.mi2m(CVPJ_j)
+	CVPJ_j = song_convert.mi2m(CVPJ_j, extra_json)
 	CVPJ_j = song_convert.m2r(CVPJ_j)
 
 # --------- Output

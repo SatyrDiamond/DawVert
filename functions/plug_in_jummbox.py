@@ -49,13 +49,128 @@ def convert(instdata):
 				for samplenum in range(64):
 					t_sample.append(bb_data['customChipWave'][str(samplenum)])
 
+			t_sample_invert = [i*-1 for i in t_sample]
+
 			params_vital.create()
 			params_vital.setvalue('osc_1_on', 1)
 			params_vital.setvalue('effect_chain_order', 357202)
+
+			bb_pitch = 0
+
+			start_level = 0.4
+
 			if 'panning' in bb_data_fx:
 				params_vital.setvalue('osc_1_pan', bb_data['pan']/100)
+				params_vital.setvalue('osc_2_pan', bb_data['pan']/100)
+				params_vital.setvalue('osc_3_pan', bb_data['pan']/100)
 
+
+			if 'pitch shift' in bb_data_fx:
+				bb_pitch += bb_data['pitchShiftSemitones']-12
+
+
+			if 'detune' in bb_data_fx:
+				bb_pitch += bb_data['detuneCents']/100
+
+
+			if 'vibrato' in bb_data_fx:
+				if 'vibratoDepth' in bb_data:
+					if bb_data['vibratoDepth'] != 0:
+						params_vital.set_modulation(1, 'lfo_1', 'osc_1_tune', bb_data['vibratoDepth']/2, 0, 0, 0, 0)
+						params_vital.set_modulation(1, 'lfo_1', 'osc_2_tune', bb_data['vibratoDepth']/2, 0, 0, 0, 0)
+						params_vital.set_modulation(1, 'lfo_1', 'osc_3_tune', bb_data['vibratoDepth']/2, 0, 0, 0, 0)
+				if 'vibratoSpeed' in bb_data:
+					if bb_data['vibratoSpeed'] != 0:
+						t_vibvalue = (bb_data['vibratoSpeed']/31)
+						params_vital.setvalue('lfo_1_frequency', (t_vibvalue*t_vibvalue)*8  ) 
+						params_vital.setvalue('lfo_1_sync', 0)
+					#if bb_data['vibratoType'] == 0:
+				params_vital.set_lfo(1, 3, [0,1,0.5,0,1,1], [0,0,0], True, 'Sin')
+				if 'vibratoDelay' in bb_data:
+					if bb_data['vibratoDelay'] != 0:
+						params_vital.setvalue('lfo_1_delay_time', 0.5*(bb_data['vibratoDelay']/50))
+
+
+			if 'distortion' in bb_data_fx:
+				params_vital.setvalue('distortion_on', 1)
+				params_vital.setvalue('distortion_drive', (bb_data['distortion']/100)*30)
+				start_level = start_level/2
+
+
+			if 'chorus' in bb_data_fx:
+				params_vital.setvalue('chorus_on', 1)
+				params_vital.setvalue('chorus_dry_wet', bb_data['chorus']/100)
+
+
+			if 'echo' in bb_data_fx:
+				params_vital.setvalue('delay_on', 1)
+				params_vital.setvalue('delay_sync', 0)
+				t_echovalue = ((47-bb_data['echoSustain'])/58)
+				params_vital.setvalue('delay_frequency', (t_echovalue*t_echovalue)*8 + 30 )
+
+
+			if 'reverb' in bb_data_fx:
+				params_vital.setvalue('reverb_on', 1)
+				params_vital.setvalue('reverb_decay_time', 1.74)
+				params_vital.setvalue('reverb_dry_wet', (bb_data['reverb']/100)*0.74)
+
+			out_cents = int(bb_pitch)
+			out_semi = bb_pitch - out_cents
+			params_vital.setvalue('osc_1_transpose', out_cents)
+			params_vital.setvalue('osc_1_tune', out_semi)
+
+			params_vital.setvalue('osc_1_random_phase', 0)
+			params_vital.setvalue('osc_2_random_phase', 0)
+			params_vital.setvalue('osc_3_random_phase', 0)
 
 			params_vital.replacewave(0, params_vital_wavetable.resizewave(t_sample))
+
+			if bb_data['unison'] == 'shimmer':
+				params_vital.setvalue('osc_1_unison_detune', 1.01)
+				params_vital.setvalue('osc_1_unison_voices', 3)
+			if bb_data['unison'] == 'hum':
+				params_vital.setvalue('osc_1_unison_detune', 1.6)
+				params_vital.setvalue('osc_1_unison_voices', 6)
+			if bb_data['unison'] == 'honky tonk':
+				params_vital.setvalue('osc_1_unison_detune', 2.3)
+				params_vital.setvalue('osc_1_unison_voices', 6)
+			if bb_data['unison'] == 'dissonant':
+				params_vital.setvalue('osc_1_unison_detune', 3.5)
+				params_vital.setvalue('osc_1_unison_voices', 3)
+			if bb_data['unison'] == 'fifth':
+				params_vital.setvalue('osc_2_on', 2)
+				bb_pitch_fifth = 7 + bb_pitch
+				out_cents_fifth = int(bb_pitch_fifth)
+				out_semi_fifth = bb_pitch_fifth - out_cents_fifth
+				params_vital.setvalue('osc_2_transpose', out_cents_fifth)
+				params_vital.setvalue('osc_2_tune', out_semi_fifth)
+				params_vital.replacewave(1, params_vital_wavetable.resizewave(t_sample))
+				start_level = start_level/2
+			if bb_data['unison'] == 'octave':
+				params_vital.setvalue('osc_2_on', 2)
+				params_vital.setvalue('osc_2_transpose', out_cents+12)
+				params_vital.setvalue('osc_2_tune', out_semi)
+				params_vital.replacewave(1, params_vital_wavetable.resizewave(t_sample))
+				start_level = start_level/2
+			if bb_data['unison'] == 'bowed':
+				params_vital.replacewave(1, params_vital_wavetable.resizewave(t_sample_invert))
+				params_vital.setvalue('osc_2_on', 2)
+				params_vital.setvalue('osc_2_transpose', out_cents)
+				params_vital.setvalue('osc_2_tune', out_semi+0.05)
+				start_level = start_level/2
+			if bb_data['unison'] == 'piano':
+				params_vital.replacewave(1, params_vital_wavetable.resizewave(t_sample))
+				params_vital.setvalue('osc_2_on', 2)
+				params_vital.setvalue('osc_2_transpose', out_cents)
+				params_vital.setvalue('osc_2_tune', out_semi+0.02)
+				start_level = start_level/2
+			if bb_data['unison'] == 'warbled':
+				params_vital.setvalue('osc_1_unison_detune', 4)
+				params_vital.setvalue('osc_1_unison_voices', 4)
+
+			params_vital.setvalue('osc_1_level', start_level)
+			params_vital.setvalue('osc_2_level', start_level)
+			params_vital.setvalue('osc_3_level', start_level)
+
 			vitaldata = params_vital.getdata()
 			list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))

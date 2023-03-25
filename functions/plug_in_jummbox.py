@@ -37,13 +37,25 @@ def convert(instdata):
 	plugindata = instdata['plugindata']
 	bb_type = plugindata['type']
 	bb_data = plugindata['data']
-	if bb_data['type'] == 'chip':
+	bb_data_fx = bb_data['effects']
+	print(bb_data['effects'])
+
+	if bb_type == 'chip' or bb_type == 'custom chip':
 		if bb_data['wave'] in rawChipWaves:
-			bb_sample = rawChipWaves[bb_data['wave']]['samples']
-			dur_bb = len(bb_sample)
+			if bb_type == 'chip': 
+				t_sample = rawChipWaves[bb_data['wave']]['samples']
+			if bb_type == 'custom chip': 
+				t_sample = []
+				for samplenum in range(64):
+					t_sample.append(bb_data['customChipWave'][str(samplenum)])
+
 			params_vital.create()
 			params_vital.setvalue('osc_1_on', 1)
-			bb_sample = rawChipWaves[bb_data['wave']]['samples']
-			params_vital.replacewave(0, params_vital_wavetable.resizewave(bb_sample))
+			params_vital.setvalue('effect_chain_order', 357202)
+			if 'panning' in bb_data_fx:
+				params_vital.setvalue('osc_1_pan', bb_data['pan']/100)
+
+
+			params_vital.replacewave(0, params_vital_wavetable.resizewave(t_sample))
 			vitaldata = params_vital.getdata()
 			list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))

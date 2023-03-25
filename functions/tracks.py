@@ -100,3 +100,9 @@ def m_playlist_pl_add(cvpj_l, idnum, placement_data):
     if 'playlist' in cvpj_l:
         if str(idnum) in cvpj_l['playlist']:
             cvpj_l['playlist'][str(idnum)]['placements_notes'].append(placement_data)
+
+def m_add_nle(cvpj_l, patid, nle_notelist, nle_name):
+    if 'notelistindex' not in cvpj_l: cvpj_l['notelistindex'] = {}
+    cvpj_l['notelistindex'][patid] = {}
+    if nle_name != None: cvpj_l['notelistindex'][patid]['name'] = nle_name
+    cvpj_l['notelistindex'][patid]['notelist'] = nle_notelist

@@ -39,91 +39,116 @@ def convert(instdata):
 	bb_data = plugindata['data']
 	bb_data_fx = bb_data['effects']
 
-	if bb_type == 'chip' or bb_type == 'custom chip':
-		if bb_data['wave'] in rawChipWaves:
-			if bb_type == 'chip': 
+	if bb_type == 'chip' or bb_type == 'custom chip' or bb_type == 'harmonics' or bb_type == 'PWM':
+
+		if bb_type == 'chip': 
+			if bb_data['wave'] in rawChipWaves:
 				t_sample = rawChipWaves[bb_data['wave']]['samples']
-			if bb_type == 'custom chip': 
-				t_sample = []
-				for samplenum in range(64):
-					t_sample.append(bb_data['customChipWave'][str(samplenum)])
 
-			t_sample_invert = [i*-1 for i in t_sample]
+		if bb_type == 'custom chip': 
+			t_sample = []
+			for samplenum in range(64):
+				t_sample.append(bb_data['customChipWave'][str(samplenum)])
 
-			params_vital.create()
-			params_vital.setvalue('osc_1_on', 1)
-			params_vital.setvalue('effect_chain_order', 357202)
+		if bb_type == 'harmonics': 
+			bb_harmonics = bb_data['harmonics']
+			t_sample = []
+			for num in range(2048):
+				s_pos = num/2048
+				sample = 0
+				for harm_num in range(28):
+					sine_add = 0
+					sine_pitch = s_pos*(harm_num+1)
+					sine_vol = (bb_harmonics[harm_num]/100)/(harm_num+1)
+					sample += params_vital_wavetable.wave_sine(sine_pitch+sine_add)*sine_vol
+				t_sample.append(sample)
 
-			bb_pitch = 0
+		if bb_type == 'PWM': 
+			t_sample = []
+			for _ in range(bb_data['pulseWidth']):
+				t_sample.append(1)
+			for _ in range(100-bb_data['pulseWidth']):
+				t_sample.append(-1)
 
-			start_level = 0.4
+		t_sample_invert = [i*-1 for i in t_sample]
 
-			if 'panning' in bb_data_fx:
-				params_vital.setvalue('osc_1_pan', bb_data['pan']/100)
-				params_vital.setvalue('osc_2_pan', bb_data['pan']/100)
-				params_vital.setvalue('osc_3_pan', bb_data['pan']/100)
+		params_vital.create()
+		params_vital.setvalue('osc_1_on', 1)
+		params_vital.setvalue('effect_chain_order', 357202)
 
+		bb_pitch = 0
 
-			if 'pitch shift' in bb_data_fx:
-				bb_pitch += bb_data['pitchShiftSemitones']-12
+		start_level = 0.4
 
-
-			if 'detune' in bb_data_fx:
-				bb_pitch += bb_data['detuneCents']/100
-
-
-			if 'vibrato' in bb_data_fx:
-				if 'vibratoDepth' in bb_data:
-					if bb_data['vibratoDepth'] != 0:
-						params_vital.set_modulation(1, 'lfo_1', 'osc_1_tune', bb_data['vibratoDepth']/2, 0, 0, 0, 0)
-						params_vital.set_modulation(1, 'lfo_1', 'osc_2_tune', bb_data['vibratoDepth']/2, 0, 0, 0, 0)
-						params_vital.set_modulation(1, 'lfo_1', 'osc_3_tune', bb_data['vibratoDepth']/2, 0, 0, 0, 0)
-				if 'vibratoSpeed' in bb_data:
-					if bb_data['vibratoSpeed'] != 0:
-						t_vibvalue = (bb_data['vibratoSpeed']/31)
-						params_vital.setvalue('lfo_1_frequency', (t_vibvalue*t_vibvalue)*8  ) 
-						params_vital.setvalue('lfo_1_sync', 0)
-					#if bb_data['vibratoType'] == 0:
-				params_vital.set_lfo(1, 3, [0,1,0.5,0,1,1], [0,0,0], True, 'Sin')
-				if 'vibratoDelay' in bb_data:
-					if bb_data['vibratoDelay'] != 0:
-						params_vital.setvalue('lfo_1_delay_time', 0.5*(bb_data['vibratoDelay']/50))
+		if 'panning' in bb_data_fx:
+			params_vital.setvalue('osc_1_pan', bb_data['pan']/100)
+			params_vital.setvalue('osc_2_pan', bb_data['pan']/100)
+			params_vital.setvalue('osc_3_pan', bb_data['pan']/100)
 
 
-			if 'distortion' in bb_data_fx:
-				params_vital.setvalue('distortion_on', 1)
-				params_vital.setvalue('distortion_drive', (bb_data['distortion']/100)*30)
-				start_level = start_level/2
+		if 'pitch shift' in bb_data_fx:
+			bb_pitch += bb_data['pitchShiftSemitones']-12
 
 
-			if 'chorus' in bb_data_fx:
-				params_vital.setvalue('chorus_on', 1)
-				params_vital.setvalue('chorus_dry_wet', bb_data['chorus']/100)
+		if 'detune' in bb_data_fx:
+			bb_pitch += bb_data['detuneCents']/100
 
 
-			if 'echo' in bb_data_fx:
-				params_vital.setvalue('delay_on', 1)
-				params_vital.setvalue('delay_sync', 0)
-				t_echovalue = ((47-bb_data['echoSustain'])/58)
-				params_vital.setvalue('delay_frequency', (t_echovalue*t_echovalue)*8 + 30 )
+		if 'vibrato' in bb_data_fx:
+			if 'vibratoDepth' in bb_data:
+				if bb_data['vibratoDepth'] != 0:
+					params_vital.set_modulation(1, 'lfo_1', 'osc_1_tune', bb_data['vibratoDepth']/2, 0, 0, 0, 0)
+					params_vital.set_modulation(1, 'lfo_1', 'osc_2_tune', bb_data['vibratoDepth']/2, 0, 0, 0, 0)
+					params_vital.set_modulation(1, 'lfo_1', 'osc_3_tune', bb_data['vibratoDepth']/2, 0, 0, 0, 0)
+			if 'vibratoSpeed' in bb_data:
+				if bb_data['vibratoSpeed'] != 0:
+					t_vibvalue = (bb_data['vibratoSpeed']/31)
+					params_vital.setvalue('lfo_1_frequency', (t_vibvalue*t_vibvalue)*8  ) 
+					params_vital.setvalue('lfo_1_sync', 0)
+				#if bb_data['vibratoType'] == 0:
+			params_vital.set_lfo(1, 3, [0,1,0.5,0,1,1], [0,0,0], True, 'Sin')
+			if 'vibratoDelay' in bb_data:
+				if bb_data['vibratoDelay'] != 0:
+					params_vital.setvalue('lfo_1_delay_time', 0.5*(bb_data['vibratoDelay']/50))
 
 
-			if 'reverb' in bb_data_fx:
-				params_vital.setvalue('reverb_on', 1)
-				params_vital.setvalue('reverb_decay_time', 1.74)
-				params_vital.setvalue('reverb_dry_wet', (bb_data['reverb']/100)*0.74)
+		if 'distortion' in bb_data_fx:
+			params_vital.setvalue('distortion_on', 1)
+			params_vital.setvalue('distortion_drive', (bb_data['distortion']/100)*30)
+			start_level = start_level/2
 
-			out_cents = int(bb_pitch)
-			out_semi = bb_pitch - out_cents
-			params_vital.setvalue('osc_1_transpose', out_cents)
-			params_vital.setvalue('osc_1_tune', out_semi)
 
-			params_vital.setvalue('osc_1_random_phase', 0)
-			params_vital.setvalue('osc_2_random_phase', 0)
-			params_vital.setvalue('osc_3_random_phase', 0)
+		if 'chorus' in bb_data_fx:
+			params_vital.setvalue('chorus_on', 1)
+			params_vital.setvalue('chorus_dry_wet', bb_data['chorus']/100)
 
-			params_vital.replacewave(0, params_vital_wavetable.resizewave(t_sample))
 
+		if 'echo' in bb_data_fx:
+			params_vital.setvalue('delay_on', 1)
+			params_vital.setvalue('delay_sync', 0)
+			t_echovalue = ((47-bb_data['echoSustain'])/58)
+			params_vital.setvalue('delay_frequency', (t_echovalue*t_echovalue)*8 + 30 )
+
+
+		if 'reverb' in bb_data_fx:
+			params_vital.setvalue('reverb_on', 1)
+			params_vital.setvalue('reverb_decay_time', 1.74)
+			params_vital.setvalue('reverb_dry_wet', (bb_data['reverb']/100)*0.74)
+
+		out_cents = int(bb_pitch)
+		out_semi = bb_pitch - out_cents
+		params_vital.setvalue('osc_1_transpose', out_cents)
+		params_vital.setvalue('osc_1_tune', out_semi)
+
+		params_vital.setvalue('osc_1_random_phase', 0)
+		params_vital.setvalue('osc_2_random_phase', 0)
+		params_vital.setvalue('osc_3_random_phase', 0)
+
+		params_vital.replacewave(0, params_vital_wavetable.resizewave(t_sample))
+		params_vital.replacewave(1, params_vital_wavetable.resizewave(t_sample))
+		params_vital.replacewave(2, params_vital_wavetable.resizewave(t_sample))
+
+		if 'unison' in bb_data:
 			if bb_data['unison'] == 'shimmer':
 				params_vital.setvalue('osc_1_unison_detune', 1.01)
 				params_vital.setvalue('osc_1_unison_voices', 3)
@@ -143,33 +168,33 @@ def convert(instdata):
 				out_semi_fifth = bb_pitch_fifth - out_cents_fifth
 				params_vital.setvalue('osc_2_transpose', out_cents_fifth)
 				params_vital.setvalue('osc_2_tune', out_semi_fifth)
-				params_vital.replacewave(1, params_vital_wavetable.resizewave(t_sample))
-				start_level = start_level/2
+				start_level = start_level/1.3
 			if bb_data['unison'] == 'octave':
 				params_vital.setvalue('osc_2_on', 2)
 				params_vital.setvalue('osc_2_transpose', out_cents+12)
 				params_vital.setvalue('osc_2_tune', out_semi)
-				params_vital.replacewave(1, params_vital_wavetable.resizewave(t_sample))
-				start_level = start_level/2
+				start_level = start_level/1.3
 			if bb_data['unison'] == 'bowed':
 				params_vital.replacewave(1, params_vital_wavetable.resizewave(t_sample_invert))
 				params_vital.setvalue('osc_2_on', 2)
 				params_vital.setvalue('osc_2_transpose', out_cents)
 				params_vital.setvalue('osc_2_tune', out_semi+0.05)
-				start_level = start_level/2
+				start_level = start_level/1.3
 			if bb_data['unison'] == 'piano':
-				params_vital.replacewave(1, params_vital_wavetable.resizewave(t_sample))
 				params_vital.setvalue('osc_2_on', 2)
 				params_vital.setvalue('osc_2_transpose', out_cents)
 				params_vital.setvalue('osc_2_tune', out_semi+0.02)
-				start_level = start_level/2
+				start_level = start_level/1.3
 			if bb_data['unison'] == 'warbled':
 				params_vital.setvalue('osc_1_unison_detune', 4)
 				params_vital.setvalue('osc_1_unison_voices', 4)
 
-			params_vital.setvalue('osc_1_level', start_level)
-			params_vital.setvalue('osc_2_level', start_level)
-			params_vital.setvalue('osc_3_level', start_level)
+		params_vital.setvalue('osc_1_level', start_level)
+		params_vital.setvalue('osc_2_level', start_level)
+		params_vital.setvalue('osc_3_level', start_level)
 
-			vitaldata = params_vital.getdata()
-			list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))
+		params_vital.setvalue_timed('env_1_attack', bb_data['fadeInSeconds'])
+		params_vital.setvalue_timed('env_1_release', abs((bb_data['fadeOutTicks']/96)*1.2))
+
+		vitaldata = params_vital.getdata()
+		list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))

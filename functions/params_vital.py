@@ -148,6 +148,7 @@ def create():
     l_settings["flanger_tempo"] = 4.0
     l_settings["legato"] = 0.0
     
+    l_settings["lfos"] = []
     for num in range(8):
         num = num+1
         l_settings["lfo_"+str(num)+"_delay_time"] = 0.0
@@ -162,17 +163,7 @@ def create():
         l_settings["lfo_"+str(num)+"_sync"] = 1.0
         l_settings["lfo_"+str(num)+"_sync_type"] = 0.0
         l_settings["lfo_"+str(num)+"_tempo"] = 7.0
-    
-    l_settings["lfos"] = []
-    
-    for _ in range(8):
-        lfos = {}
-        lfos["name"] = "Triangle"
-        lfos["num_points"] = 3
-        lfos["points"] = [0.0,1.0,0.5,0.0,1.0,1.0]
-        lfos["powers"] = [0.0,0.0,0.0]
-        lfos["smooth"] = False
-        l_settings["lfos"].append(lfos)
+        l_settings["lfos"].append({"name":"Triangle", "num_points":3, "points":[0.0,1.0,0.5,0.0,1.0,1.0],"powers":[0.0,0.0,0.0],"smooth":False})
     
     l_settings["macro_control_1"] = 0.0
     l_settings["macro_control_2"] = 0.0
@@ -378,6 +369,9 @@ def set_modulation(num, src, dest, amt, power, bipol, byp, ster):
     vitaldata["settings"]["modulation_"+str(num)+"_bypass"] = byp
     vitaldata["settings"]["modulation_"+str(num)+"_power"] = power
     vitaldata["settings"]["modulation_"+str(num)+"_stereo"] = ster
+
+def set_lfo(num, num_points, points, powers, smooth, name):
+    vitaldata["settings"]["lfos"][num-1] = {"name":name, "num_points":num_points, "points":points,"powers":powers,"smooth":smooth}
 
 def getdata():
     global vitaldata

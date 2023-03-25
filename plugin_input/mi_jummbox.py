@@ -92,7 +92,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
         cvpj_instname = idvals.get_idval(idvals_inst_beepbox, bb_preset, 'name')
 
     tracks.m_addinst(cvpj_l, trackid, cvpj_instdata)
-    tracks.m_addinst_data(cvpj_l, trackid, cvpj_instname, bb_color, cvpj_volume, None)
+    tracks.m_addinst_data(cvpj_l, trackid, cvpj_instname, bb_color, None, None)
 
 def parse_notes(channum, bb_notes, bb_instruments):
     cvpj_notelist = []

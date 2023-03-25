@@ -64,8 +64,8 @@ class output_cvpj_f(plugin_output.base):
             midi_numerator = 4
             midi_denominator = 4
 
-            if 'timesig_numerator' in projJ: midi_numerator = projJ['timesig_numerator']
-            if 'timesig_denominator' in projJ: midi_denominator = projJ['timesig_denominator']
+            if 'timesig_numerator' in projJ: midi_numerator = int(projJ['timesig_numerator'])
+            if 'timesig_denominator' in projJ: midi_denominator = int(projJ['timesig_denominator'])
             if 'bpm' in projJ: midi_tempo = mido.bpm2tempo(projJ['bpm'])
 
             multi_miditrack[0].append(mido.MetaMessage('time_signature', numerator=midi_numerator, denominator=midi_denominator, clocks_per_click=24, notated_32nd_notes_per_beat=8, time=0))
@@ -106,7 +106,8 @@ class output_cvpj_f(plugin_output.base):
                                         midi_bank = trackinstdata['plugindata']['bank']-128
 
                     if 'fxrack_channel' in trackdata:
-                        midi_channel = trackdata['fxrack_channel']
+                        if 16 > trackdata['fxrack_channel'] > 1:
+                            midi_channel = trackdata['fxrack_channel']-1
 
                     #print(trackdata)
 
@@ -133,8 +134,8 @@ class output_cvpj_f(plugin_output.base):
 
                     if midi_trackname != '': multi_miditrack[0].append(mido.MetaMessage('track_name', name=midi_trackname, time=0))
 
-                    if midi_program != None: miditrack.append(mido.Message('program_change', channel=midi_channel-1, program=midi_program, time=0))
-                    else: miditrack.append(mido.Message('program_change', channel=midi_channel-1, program=0, time=0))
+                    if midi_program != None: miditrack.append(mido.Message('program_change', channel=midi_channel, program=midi_program, time=0))
+                    else: miditrack.append(mido.Message('program_change', channel=midi_channel, program=0, time=0))
 
                     i_list = {}
 
@@ -143,16 +144,19 @@ class output_cvpj_f(plugin_output.base):
                             for cvpj_tr_pl in projJ['track_placements'][trackid]['notes']:
                                 cvpj_tr_pl_pos = cvpj_tr_pl['position']
                                 cvpj_tr_pl_nl = cvpj_tr_pl['notelist']
-                                for cvpj_tr_pl_n in cvpj_tr_pl_nl:
-                                    #print(cvpj_tr_pl_n)
-                                    cvmi_n_pos = int(cvpj_tr_pl_pos*4 + cvpj_tr_pl_n['position']*4)*30
-                                    cvmi_n_dur = int(cvpj_tr_pl_n['duration']*4)*30
-                                    cvmi_n_key = int(cvpj_tr_pl_n['key'])+60
-                                    cvmi_n_vol = 127
-                                    if 'vol' in cvpj_tr_pl_n: cvmi_n_vol = clamp(int(cvpj_tr_pl_n['vol']*127), 0, 127)
-                                    add_cmd(i_list, cvmi_n_pos, ['note_on', cvmi_n_key, cvmi_n_vol])
-                                    add_cmd(i_list, cvmi_n_pos+cvmi_n_dur, ['note_off', cvmi_n_key])
-                                    #print(cvmi_n_pos, cvmi_n_dur, cvmi_n_key)
+                                cvpj_tr_pl_muted = False
+                                cvpj_tr_pl_muted = cvpj_tr_pl['muted']
+                                if cvpj_tr_pl_muted == False:
+                                    for cvpj_tr_pl_n in cvpj_tr_pl_nl:
+                                        #print(cvpj_tr_pl_n)
+                                        cvmi_n_pos = int(cvpj_tr_pl_pos*4 + cvpj_tr_pl_n['position']*4)*30
+                                        cvmi_n_dur = int(cvpj_tr_pl_n['duration']*4)*30
+                                        cvmi_n_key = int(cvpj_tr_pl_n['key'])+60
+                                        cvmi_n_vol = 127
+                                        if 'vol' in cvpj_tr_pl_n: cvmi_n_vol = clamp(int(cvpj_tr_pl_n['vol']*127), 0, 127)
+                                        add_cmd(i_list, cvmi_n_pos, ['note_on', cvmi_n_key, cvmi_n_vol])
+                                        add_cmd(i_list, cvmi_n_pos+cvmi_n_dur, ['note_off', cvmi_n_key])
+                                        #print(cvmi_n_pos, cvmi_n_dur, cvmi_n_key)
 
                     i_list = dict(sorted(i_list.items(), key=lambda item: item[0]))
 

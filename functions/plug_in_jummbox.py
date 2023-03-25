@@ -57,10 +57,13 @@ def convert(instdata):
 				s_pos = num/2048
 				sample = 0
 				for harm_num in range(28):
-					sine_add = 0
 					sine_pitch = s_pos*(harm_num+1)
 					sine_vol = (bb_harmonics[harm_num]/100)/(harm_num+1)
-					sample += params_vital_wavetable.wave_sine(sine_pitch+sine_add)*sine_vol
+					sample += params_vital_wavetable.wave_sine(sine_pitch)*sine_vol
+				for harm_num in range(3):
+					sine_pitch = s_pos*(harm_num+29)
+					sine_vol = (bb_harmonics[27]/100)/(harm_num+29)
+					sample += params_vital_wavetable.wave_sine(sine_pitch)*sine_vol
 				t_sample.append(sample)
 
 		if bb_type == 'PWM': 

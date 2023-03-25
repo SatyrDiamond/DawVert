@@ -145,7 +145,7 @@ class output_cvpj_f(plugin_output.base):
                                 cvpj_tr_pl_pos = cvpj_tr_pl['position']
                                 cvpj_tr_pl_nl = cvpj_tr_pl['notelist']
                                 cvpj_tr_pl_muted = False
-                                cvpj_tr_pl_muted = cvpj_tr_pl['muted']
+                                if 'muted' in cvpj_tr_pl: cvpj_tr_pl_muted = cvpj_tr_pl['muted']
                                 if cvpj_tr_pl_muted == False:
                                     for cvpj_tr_pl_n in cvpj_tr_pl_nl:
                                         #print(cvpj_tr_pl_n)

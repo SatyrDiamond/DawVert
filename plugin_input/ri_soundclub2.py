@@ -199,10 +199,7 @@ class input_soundclub2(plugin_input.base):
                     if instnum not in dupeinst: dupeinst[instnum] = 1
                     else: dupeinst[instnum] = 1 + dupeinst[instnum]
                     if dupeinst[instnum] not in t_laneddata[instnum]: t_laneddata[instnum][dupeinst[instnum]] = []
-                    pl_placement = {}
-                    pl_placement['position'] = song_curpos
-                    pl_placement['duration'] = songpartdur
-                    pl_placement['fromindex'] = str(instnum)+'_'+str(patnum)+'_'+str(dupeinst[instnum])
+                    pl_placement = {'position': song_curpos, 'duration': songpartdur, 'fromindex': str(instnum) + '_' + str(patnum) + '_' + str(dupeinst[instnum])}
                     t_laneddata[instnum][dupeinst[instnum]].append(pl_placement)
             song.add_timemarker_timesig(cvpj_l, t_patnames[patnum], song_curpos, sc2_headerdata[4], sc2_headerdata[5])
             cvpj_l['automation']['main']['bpm'].append({'position': song_curpos, 'duration': songpartdur, 'points': pat_tempopoints[patnum]})
@@ -220,7 +217,6 @@ class input_soundclub2(plugin_input.base):
                 cvpj_s_tp['notes_laneorder'].append(str(s_laned))
                 cvpj_s_tp['notes_lanedata'][str(s_laned)] = {}
                 cvpj_s_tp['notes_lanedata'][str(s_laned)]['placements'] = t_laneddata[s_laneddata][s_laned]
-
 
         cvpj_l['do_addwrap'] = True
 

@@ -26,7 +26,6 @@ class input_piyopiyo(plugin_input.base):
         bytesdata = bytestream.read(3)
         if bytesdata == b'PMD': return True
         else: return False
-        bytestream.seek(0)
     def parse(self, input_file, extra_param):
         pmdfile = open(input_file, 'rb')
         header = pmdfile.read(4)
@@ -107,4 +106,3 @@ class input_piyopiyo(plugin_input.base):
 
         song.add_timemarker_looparea(cvpj_l, None, loopstart, loopend)
         return json.dumps(cvpj_l)
-

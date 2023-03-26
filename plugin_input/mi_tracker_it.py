@@ -435,10 +435,11 @@ class input_it(plugin_input.base):
                     cvpj_instdata['plugin'] = 'sampler'
                     cvpj_instdata['plugindata'] = {}
                     cvpj_instdata['plugindata']['file'] = samplefolder + str(bn_s_t_f[1]) + '.wav'
-                    cvpj_instdata['plugindata']['length'] = it_singlesample['length']
-                    cvpj_instdata['plugindata']['loop'] = {}
-                    cvpj_instdata['plugindata']['loop']['enabled'] = int(it_singlesample['flags'][3])
-                    cvpj_instdata['plugindata']['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
+                    if it_singlesample['length'] != 0:
+                        cvpj_instdata['plugindata']['length'] = it_singlesample['length']
+                        cvpj_instdata['plugindata']['loop'] = {}
+                        cvpj_instdata['plugindata']['loop']['enabled'] = int(it_singlesample['flags'][3])
+                        cvpj_instdata['plugindata']['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
 
                 else:
                     mscount = 0
@@ -503,10 +504,11 @@ class input_it(plugin_input.base):
                 cvpj_instdata['plugin'] = 'sampler'
                 cvpj_instdata['plugindata'] = {}
                 cvpj_instdata['plugindata']['file'] = samplefolder + str(samplecount+1) + '.wav'
-                cvpj_instdata['plugindata']['length'] = it_singlesample['length']
-                cvpj_instdata['plugindata']['loop'] = {}
-                cvpj_instdata['plugindata']['loop']['enabled'] = int(it_singlesample['flags'][3])
-                cvpj_instdata['plugindata']['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
+                if it_singlesample['length'] != 0:
+                    cvpj_instdata['plugindata']['length'] = it_singlesample['length']
+                    cvpj_instdata['plugindata']['loop'] = {}
+                    cvpj_instdata['plugindata']['loop']['enabled'] = int(it_singlesample['flags'][3])
+                    cvpj_instdata['plugindata']['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
 
                 tracks.m_addinst(cvpj_l, it_samplename, cvpj_instdata)
                 tracks.m_addinst_data(cvpj_l, it_samplename, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)

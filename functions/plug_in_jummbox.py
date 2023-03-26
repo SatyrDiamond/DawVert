@@ -118,7 +118,7 @@ def convert(instdata):
 		if 'distortion' in bb_data_fx:
 			params_vital.setvalue('distortion_on', 1)
 			params_vital.setvalue('distortion_drive', (bb_data['distortion']/100)*30)
-			start_level = start_level/2
+			start_level = start_level/(1+(bb_data['distortion']/150))
 
 
 		if 'chorus' in bb_data_fx:
@@ -200,4 +200,4 @@ def convert(instdata):
 		params_vital.setvalue_timed('env_1_release', abs((bb_data['fadeOutTicks']/96)*1.2))
 
 		vitaldata = params_vital.getdata()
-		list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))
+		list_vst.replace_data(instdata, 2, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)

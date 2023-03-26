@@ -67,6 +67,6 @@ def convert(instdata):
 				unit_num += 1
 
 			vitaldata = params_vital.getdata()
-			list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))
+			list_vst.replace_data(instdata, 2, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
 	except:
 		pass

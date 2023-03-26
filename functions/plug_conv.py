@@ -61,8 +61,9 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				sampler_data = instdata
 				sampler_file_data = instdata['plugindata']
 				wireturn = audio_wav.complete_wav_info(sampler_file_data)
-				if list_vst.vst2path_loaded == True:
-					if list_vst.ifexists_vst2('Grace') == True:
+				vst2_dll_vstpaths = list_vst.vstpaths()
+				if vst2_dll_vstpaths['2-dll']:
+					if 'Grace' in vst2_dll_vstpaths['2-dll']:
 						if 'file' in sampler_file_data and wireturn != None and wireturn == 1:
 							file_extension = pathlib.Path(sampler_file_data['file']).suffix
 							if file_extension == '.wav':
@@ -76,7 +77,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 								regionparams['end'] = sampler_file_data['length']
 								vst_inst.grace_create_region(gx_root, regionparams)
 								xmlout = ET.tostring(gx_root, encoding='utf-8')
-								list_vst.replace_data(instdata, 'Grace', xmlout)
+								list_vst.replace_data(instdata, 2, 'any', 'Grace', 'raw', xmlout, None)
 						else:
 							print("[plug-conv] Unchanged, Grace (VST2) only supports Format 1 .WAV")
 					else:
@@ -89,14 +90,15 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 			elif pluginname == 'sampler-multi' and dawname not in supportedplugins['sampler-multi']:
 				msmpl_data = instdata
 				msmpl_p_data = instdata['plugindata']
-				if list_vst.vst2path_loaded == True:
-					if list_vst.ifexists_vst2('Grace') == True:
+				vst2_dll_vstpaths = list_vst.vstpaths()
+				if vst2_dll_vstpaths['2-dll']:
+					if 'Grace' in vst2_dll_vstpaths['2-dll']:
 						regions = msmpl_p_data['regions']
 						gx_root = vst_inst.grace_create_main()
 						for regionparams in regions:
 							vst_inst.grace_create_region(gx_root, regionparams)
 						xmlout = ET.tostring(gx_root, encoding='utf-8')
-						list_vst.replace_data(instdata, 'Grace', xmlout)
+						list_vst.replace_data(instdata, 2, 'any', 'Grace', 'raw', xmlout, None)
 					else:
 						print('[plug-conv] Unchanged, Plugin Grace not Found')
 				else:
@@ -114,7 +116,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				if 'file' in sf2data: sf2_filename = sf2data['file']
 				else: sf2_filename = 0
 				jsfp_xml = vst_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
-				list_vst.replace_data(instdata, 'juicysfplugin', params_vst.vc2xml_make(jsfp_xml))
+				list_vst.replace_data(instdata, 2, 'any', 'juicysfplugin', 'raw', params_vst.vc2xml_make(jsfp_xml), None)
 
 			# -------------------- vst2 (ninjas2) --------------------
 			elif pluginname == 'slicer':
@@ -122,7 +124,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				vst_inst.ninjas2_init()
 				vst_inst.ninjas2_slicerdata(slicerdata)
 				ninjas2out = vst_inst.ninjas2_get()
-				list_vst.replace_data(instdata, 'Ninjas 2', params_vst.nullbytegroup_make(ninjas2out))
+				list_vst.replace_data(instdata, 2, 'any', 'Ninjas 2', 'raw', params_vst.nullbytegroup_make(ninjas2out), None)
 
 			# -------------------- vst2 (magical8bitplug) --------------------
 
@@ -189,19 +191,19 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoDepth", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoIgnoresWheel_raw", 1.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
-				list_vst.replace_data(instdata, 'Magical 8bit Plug 2', params_vst.vc2xml_make(m8p_root))
+				list_vst.replace_data(instdata, 2, 'any', 'Magical 8bit Plug 2', 'raw', params_vst.vc2xml_make(m8p_root), None)
 
 			# -------------------- opn2 > OPNplug --------------------
 			elif pluginname == 'opn2':
 				xmlout = vst_inst.opnplug_convert(instdata['plugindata'])
-				list_vst.replace_data(instdata, 'OPNplug', params_vst.vc2xml_make(xmlout))
+				list_vst.replace_data(instdata, 2, 'any', 'OPNplug', 'raw', params_vst.vc2xml_make(xmlout), None)
 
 			# -------------------- zynaddsubfx > vst2 (Zyn-Fusion) - from lmms --------------------
 			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
 				zasfxdata = instdata['plugindata']['data']
 				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
 				zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
-				list_vst.replace_data(instdata, 'ZynAddSubFX', zasfxdatafixed)
+				list_vst.replace_data(instdata, 2, 'any', 'ZynAddSubFX', 'raw', zasfxdatafixed, None)
 
 # -------------------- FX --------------------
 def convplug_fx(fxdata, dawname, extra_json, nameid):
@@ -222,7 +224,7 @@ def convplug_fx(fxdata, dawname, extra_json, nameid):
 						pointdata = waveshapepoints[pointnum*4][0]
 						vst_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
 					vst_fx.wolfshaper_get()
-					list_vst.replace_data(fxdata, 'Wolf Shaper', params_vst.nullbytegroup_make(vst_fx.wolfshaper_get()))
+					list_vst.replace_data(fxdata, 2, 'any', 'Wolf Shaper', 'raw', params_vst.nullbytegroup_make(vst_fx.wolfshaper_get()), None)
 			else:
 				print('[plug-conv] Unchanged')
 
@@ -243,7 +245,7 @@ def do_inst(track_data, dawname, extra_json, nameid):
 
 def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 	global supportedplugins
-	list_vst.listinit('windows')
+	list_vst.listinit()
 	supportedplugins = {}
 	supportedplugins['sf2'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
 	supportedplugins['sampler'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp', 'ableton']

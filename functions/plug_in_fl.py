@@ -72,6 +72,12 @@ def convert(instdata):
 		instdata['plugindata']['beats'] = slicer_beats
 		instdata['plugindata']['slices'] = cvpj_slices
 
+	# ---------------------------------------- slicex ----------------------------------------
+	elif plugindata['name'].lower() == 'slicex':
+		f = open("slicex"+str(temp_count)+".bin", "wb")
+		f.write(fl_plugstr.read())
+		temp_count += 1
+
 	# ---------------------------------------- Wasp ----------------------------------------
 	elif plugindata['name'].lower() == 'wasp':
 		wasp_unk = int.from_bytes(fl_plugstr.read(4), "little")
@@ -168,7 +174,7 @@ def convert(instdata):
 		params_vst.add_param(vstdxparams, 13, "Waveform", fldx_waveform/65536)
 		params_vst.add_param(vstdxparams, 14, "Mod Thru", fldx_mod_thru/65536)
 		params_vst.add_param(vstdxparams, 15, "LFO Rate", fldx_lforate/65536)
-		list_vst.replace_params(instdata, 'DX10', 16, vstdxparams)
+		list_vst.replace_data(instdata, 2, 'any', 'DX10', 'params', vstdxparams, 16)
 
 	# ---------------------------------------- SimSynth ----------------------------------------
 	elif plugindata['name'].lower() == 'simsynth':
@@ -256,7 +262,7 @@ def convert(instdata):
 		if chorus_on == 1: params_vital.setvalue('chorus_on', 1.0)
 		
 		vitaldata = params_vital.getdata()
-		list_vst.replace_data(instdata, 'Vital', vitaldata.encode('utf-8'))
+		list_vst.replace_data(instdata, 2, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
 
 	# ---------------------------------------- Wrapper ----------------------------------------
 	elif plugindata['name'].lower() == 'fruity wrapper':
@@ -278,7 +284,7 @@ def convert(instdata):
 				#print(wrapperdata)
 
 				if os.path.exists(wrapperdata['file']):
-					instdata['plugin'] = 'vst2'
+					instdata['plugin'] = 'vst2-dll'
 					instdata['plugindata'] = {}
 					instdata['plugindata']['plugin'] = {}
 					instdata['plugindata']['plugin']['name'] = wrapperdata['name']
@@ -286,7 +292,7 @@ def convert(instdata):
 					instdata['plugindata']['datatype'] = 'raw'
 					instdata['plugindata']['data'] = base64.b64encode(wrapper_vstdata).decode('ascii')
 				else:
-					list_vst.replace_data(instdata, wrapperdata['name'], wrapper_vstdata)
+					list_vst.replace_data(instdata, 2, 'any', wrapperdata['name'], 'raw', wrapper_vstdata, None)
 
 			if wrapper_vsttype == 8:
 				#wrapper_vststate = pluginstate[0:9]
@@ -297,7 +303,7 @@ def convert(instdata):
 				#print(wrapper_vstpad)
 				#print(wrapper_vstsize)
 				#print(wrapper_vstdata)
-				list_vst.replace_data_3(instdata, wrapperdata['name'], wrapper_vstdata)
+				list_vst.replace_data(instdata, 3, 'any', wrapperdata['name'], 'raw', wrapper_vstdata, None)
 
 		#fl_plugstr.seek(0)
 

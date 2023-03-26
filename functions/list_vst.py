@@ -4,123 +4,89 @@
 from os.path import exists
 import configparser
 import base64
+import platform
 
-global vst2paths
-global vst3paths
+glo_vstpaths = {}
+glo_vstpaths_loaded = {}
 
-global vst2path_loaded
-global vst3path_loaded
+cpu_arch_list = ['amd64', 'i386']
+vst_version_list = [2, 3]
 
-vst2path_loaded = False
-vst3path_loaded = False
+def set_cpu_arch_list(cpu_arch_list_in):
+	global cpu_arch_list
+	cpu_arch_list = cpu_arch_list_in
+
+def set_vst_version_list(vst_version_list_in):
+	global vst_version_list
+	vst_version_list = vst_version_list_in
+
+def getplatformtxt(in_platform):
+	if in_platform == 'win': platform_txt = 'dll'
+	if in_platform == 'lin': platform_txt = 'so'
+	if in_platform == 'any': 
+		platform_architecture = platform.architecture()
+		print(platform_architecture)
+		if platform_architecture[1] == 'WindowsPE': platform_txt = 'dll'
+		else: platform_txt = 'so'
+	return platform_txt
+
+def getverplat(vstvers, platform):
+	platform_txt = getplatformtxt(platform)
+	if platform_txt != '': platform_txt = '-'+platform_txt
+	return str(vstvers)+platform_txt
 
 # -------------------- VST List --------------------
-def vst2path_loaded(): return vst2path_loaded
-def vst3path_loaded(): return vst3path_loaded
+def vstpaths(): return glo_vstpaths
+def vstpaths_loaded(): return glo_vstpaths_loaded
 
-def ifexists_vst2(name):
-	if name in vst2paths: return True
-	else: False
+def find_path_by_name(in_name, vstvers, platform, pefer_cpu_arch):
+	output = [None, None]
+	verplat = getverplat(vstvers, platform)
+	if verplat in glo_vstpaths:
+		for vstname in glo_vstpaths[verplat]:
+			if pefer_cpu_arch != None:
+				if 'path_'+pefer_cpu_arch in glo_vstpaths[verplat][vstname] and vstname == in_name:
+					output = [pefer_cpu_arch, glo_vstpaths[verplat][vstname]['path_'+pefer_cpu_arch]]
+					if output != [None, None]: break
+			for cpu_arch_part in cpu_arch_list:
+				if 'path_'+cpu_arch_part in glo_vstpaths[verplat][vstname] and vstname == in_name:
+					output = [cpu_arch_part, glo_vstpaths[verplat][vstname]['path_'+cpu_arch_part]]
+					if output != [None, None]: break
+	return output
 
-def find_vst2path(name, instdata):
-	path_found = 0
-	vst_path = None
-	if 'plugindata' in instdata and 'plugin' in instdata:
-		if vst2path_loaded == True:
-			if name in vst2paths:
-				if 'path64' in vst2paths[name]: 
-					vst_path = vst2paths[name]['path64']
-					print('[list-vst2] ' + instdata['plugin'] +' > ' + name + ' (VST2 64-bit)')
-					path_found = 1
-				elif 'path32' in vst2paths[name]: 
-					vst_path = vst2paths[name]['path32']
-					print('[list-vst2] ' + instdata['plugin'] +' > ' + name + ' (VST2 32-bit)')
-					path_found = 1
-				else:
-					print('[list-vst2] Unchanged,', 'Plugin path of ' + name + ' not Found')
-			else: 
-				instdata['plugindata']['plugin'] = {}
-				instdata['plugindata']['plugin']['path'] = ''
-				print('[list-vst2] Unchanged,', 'Plugin ' + name + ' not Found')
-		else: 
-			print('[list-vst2] Unchanged,', "VST2 list not found")
-	else: 
-		print('[list-vst2] Unchanged,', "No Plugin and PluginData defined")
-	return vst_path
-
-def find_vst3path(name, instdata):
-	path_found = 0
-	vst_path = None
-	if 'plugindata' in instdata and 'plugin' in instdata:
-		if vst3path_loaded == True:
-			if name in vst3paths:
-				if 'path64' in vst3paths[name]: 
-					vst_path = vst3paths[name]['path64']
-					print('[list-vst3] ' + instdata['plugin'] +' > ' + name + ' (VST3 64-bit)')
-					path_found = 1
-				elif 'path32' in vst3paths[name]: 
-					vst_path = vst3paths[name]['path32']
-					print('[list-vst3] ' + instdata['plugin'] +' > ' + name + ' (VST3 32-bit)')
-					path_found = 1
-				else:
-					print('[list-vst3] Unchanged,', 'Plugin path of ' + name + ' not Found')
-			else: 
-				instdata['plugindata']['plugin'] = {}
-				instdata['plugindata']['plugin']['path'] = ''
-				print('[list-vst3] Unchanged,', 'Plugin ' + name + ' not Found')
-		else: 
-			print('[list-vst3] Unchanged,', "VST3 list not found")
-	else: 
-		print('[list-vst3] Unchanged,', "No Plugin and PluginData defined")
-	return vst_path
-
-
-def replace_data(instdata, name, data):
-	vst_path = find_vst2path(name, instdata)
+def replace_data(instdata, vstvers, platform, in_name, datatype, data, numparams):
+	vst_cpuarch, vst_path = find_path_by_name(in_name, vstvers, platform, cpu_arch_list[0])
+	verplat = getverplat(vstvers, platform)
 	if vst_path != None:
-		instdata['plugin'] = 'vst2'
+		if 'plugin' not in instdata: instdata['plugin'] = 'none'
+		print('[list-vst'+verplat+'] ' + instdata['plugin'] +' > ' + in_name + ' (VST'+str(vstvers)+' '+vst_cpuarch+')')
+		instdata['plugin'] = 'vst'+verplat
 		instdata['plugindata'] = {}
 		instdata['plugindata']['plugin'] = {}
-		instdata['plugindata']['plugin']['name'] = name
+		instdata['plugindata']['plugin']['name'] = in_name
 		instdata['plugindata']['plugin']['path'] = vst_path
-		instdata['plugindata']['datatype'] = 'raw'
-		instdata['plugindata']['data'] = base64.b64encode(data).decode('ascii')
+		instdata['plugindata']['plugin']['cpu_arch'] = vst_cpuarch
+		if datatype == 'raw':
+			instdata['plugindata']['datatype'] = 'raw'
+			instdata['plugindata']['data'] = base64.b64encode(data).decode('ascii')
+		if datatype == 'param':
+			instdata['plugindata']['datatype'] = 'param'
+			instdata['plugindata']['numparams'] = numparams
+			instdata['plugindata']['params'] = data
 
-def replace_data_3(instdata, name, data):
-	vst_path = find_vst3path(name, instdata)
-	if vst_path != None:
-		instdata['plugin'] = 'vst3'
-		instdata['plugindata'] = {}
-		instdata['plugindata']['plugin'] = {}
-		instdata['plugindata']['plugin']['name'] = name
-		instdata['plugindata']['plugin']['path'] = vst_path
-		instdata['plugindata']['datatype'] = 'raw'
-		instdata['plugindata']['data'] = base64.b64encode(data).decode('ascii')
+def loadlist(filepath, vstvers, platform):
+	vstpaths = None
+	verplat = getverplat(vstvers, platform)
+	if exists(filepath):
+		vstpaths = configparser.ConfigParser()
+		vstpaths.read(filepath)
+		list_loaded = True
+		print('[list-vst'+verplat+'] # of VST2 Plugins:', len(vstpaths))
+	else: list_loaded = False
+	glo_vstpaths[verplat] = vstpaths
 
-def replace_params(instdata, name, numparams, params):
-	vst_path = find_vst2path(name, instdata)
-	if vst_path != None:
-		instdata['plugin'] = 'vst2'
-		instdata['plugindata'] = {}
-		instdata['plugindata']['plugin'] = {}
-		instdata['plugindata']['plugin']['name'] = name
-		instdata['plugindata']['plugin']['path'] = vst_path
-		instdata['plugindata']['datatype'] = 'param'
-		instdata['plugindata']['numparams'] = numparams
-		instdata['plugindata']['params'] = params
-def listinit(osplatform):
-	global vst2paths
-	global vst3paths
-	global vst2path_loaded
-	global vst3path_loaded
-	if osplatform == 'windows':
-		if exists('vst2_win.ini'):
-			vst2paths = configparser.ConfigParser()
-			vst2paths.read('vst2_win.ini')
-			vst2path_loaded = True
-			print('[list-vst2] # of VST2 Plugins:', len(vst2paths))
-		if exists('vst3_win.ini'):
-			vst3paths = configparser.ConfigParser()
-			vst3paths.read('vst3_win.ini')
-			vst3path_loaded = True
-			print('[list-vst3] # of VST3 Plugins:', len(vst3paths))
+def listinit():
+	loadlist('vst2_win.ini', '2', 'win')
+	loadlist('vst3_win.ini', '3', 'win')
+	loadlist('vst2_lin.ini', '2', 'lin')
+	loadlist('vst3_lin.ini', '3', 'lin')

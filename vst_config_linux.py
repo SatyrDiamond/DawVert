@@ -49,7 +49,7 @@ if selecteddaw == 'ardour':
 			vst_category = VST2Info.get('category')
 			if vst_arch == 'x86_64':
 				if vst2ini.has_section(vst_name) == False: vst2ini.add_section(vst_name)
-				vst2ini.set(vst_name, 'path64', vst_path)
+				vst2ini.set(vst_name, 'path_amd64', vst_path)
 				if vst_category == 'Instrument': vst2ini.set(vst_name, 'type', 'synth')
 				if vst_category == 'Effect': vst2ini.set(vst_name, 'type', 'effect')
 		if vstxmlext == '.v3i':

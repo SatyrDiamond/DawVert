@@ -1,5 +1,6 @@
 import winreg
 import configparser
+import os
 config = configparser.ConfigParser()
 
 def reg_get(name, regpath):
@@ -35,8 +36,8 @@ w_regkey_cakewalk = 'SOFTWARE\\Cakewalk Music Software\\Cakewalk\\Cakewalk VST X
 
 vst2ini = configparser.ConfigParser()
 vst3ini = configparser.ConfigParser()
-# CakeWalk
 if reg_checkexist(w_regkey_cakewalk) == True: dawlist.append('cakewalk')
+#if os.path.exists(os.path.expanduser('~\Documents\Image-Line\FL Studio\Presets\Plugin database\Installed')) == True: dawlist.append('flstudio')
 
 if len(dawlist) >= 1:
 	print('[dawvert-vst] Plugin List from DAWs Found:', end=' ')
@@ -50,6 +51,7 @@ elif len(dawlist) == 0:
 	print('[dawvert-vst] No DAWs Found. exit', end=' ')
 	exit()
 
+#  ------------------------------------- CakeWalk -------------------------------------
 if selecteddaw == 'cakewalk':
 	vstlist = reg_list(w_regkey_cakewalk)
 	for vstplugin in vstlist:
@@ -66,19 +68,16 @@ if selecteddaw == 'cakewalk':
 			if vst_is_v2 == 1:
 				if vst2ini.has_section(vst_name) == False:
 					vst2ini.add_section(vst_name)
-				if vst_is64 == 1: vst2ini.set(vst_name, 'path64', vst_path)
-				else: vst2ini.set(vst_name, 'path32', vst_path)
+				if vst_is64 == 1: vst2ini.set(vst_name, 'path_amd64', vst_path)
+				else: vst2ini.set(vst_name, 'path_i386', vst_path)
 				if vst_isSynth == 1: vst2ini.set(vst_name, 'type', 'synth')
 				else: vst2ini.set(vst_name, 'type', 'effect')
 			if vst_is_v3 == 1:
 				if vst3ini.has_section(vst_name) == False:
 					vst3ini.add_section(vst_name)
-				if vst_is64 == 1: vst3ini.set(vst_name, 'path64', vst_path)
-				else: vst3ini.set(vst_name, 'path32', vst_path)
+				if vst_is64 == 1: vst3ini.set(vst_name, 'path_amd64', vst_path)
+				else: vst3ini.set(vst_name, 'path_i386', vst_path)
 				if vst_isSynth == 1: vst3ini.set(vst_name, 'type', 'synth')
 				else: vst3ini.set(vst_name, 'type', 'effect')
 	print('[dawvert-vst] # of VST2 Plugins:', len(vst2ini))
 	print('[dawvert-vst] # of VST3 Plugins:', len(vst3ini))
-
-with open('vst2_win.ini', 'w') as configfile: vst2ini.write(configfile)
-with open('vst3_win.ini', 'w') as configfile: vst3ini.write(configfile)

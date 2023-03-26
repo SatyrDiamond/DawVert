@@ -172,8 +172,14 @@ class input_it(plugin_input.base):
                 exit()
             print("[input-it] Sample " + str(samplecount) + ': at offset ' + str(table_offset_sample))
             it_singlesample['dosfilename'] = it_file.read(12).split(b'\x00' * 1)[0].decode("latin_1")
-            it_file.read(4)
+            it_file.read(2)
+            it_singlesample['flags'] = bin(it_file.read(1)[0])[2:].zfill(8)
+            it_file.read(1)
             it_singlesample['name'] = it_file.read(26).split(b'\x00' * 1)[0].decode("latin_1")
+            it_file.read(2)
+            it_singlesample['length'] = int.from_bytes(it_file.read(4), "little")
+            it_singlesample['loop_start'] = int.from_bytes(it_file.read(4), "little")
+            it_singlesample['loop_end'] = int.from_bytes(it_file.read(4), "little")
             samplecount += 1
         
         if xmodits_exists == True:
@@ -424,10 +430,16 @@ class input_it(plugin_input.base):
                     bn_s_t_f = bn_s_t[12]
 
                 if bn_s_t_ifsame == True:
+                    it_singlesample = IT_Samples[str(bn_s_t_f[1]-1)]
                     cvpj_instdata = {}
                     cvpj_instdata['plugin'] = 'sampler'
                     cvpj_instdata['plugindata'] = {}
                     cvpj_instdata['plugindata']['file'] = samplefolder + str(bn_s_t_f[1]) + '.wav'
+                    cvpj_instdata['plugindata']['length'] = it_singlesample['length']
+                    cvpj_instdata['plugindata']['loop'] = {}
+                    cvpj_instdata['plugindata']['loop']['enabled'] = int(it_singlesample['flags'][3])
+                    cvpj_instdata['plugindata']['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
+
                 else:
                     mscount = 0
                     ms_r = []
@@ -483,6 +495,7 @@ class input_it(plugin_input.base):
             for IT_Sample in IT_Samples:
                 it_samplename = startinststr + str(samplecount+1)
                 it_singlesample = IT_Samples[IT_Sample]
+                print(IT_Samples[IT_Sample])
                 if it_singlesample['name'] != '': cvpj_instname = it_singlesample['name']
                 elif it_singlesample['dosfilename'] != '': cvpj_instname = it_singlesample['dosfilename']
                 else: cvpj_instname = " "
@@ -490,6 +503,10 @@ class input_it(plugin_input.base):
                 cvpj_instdata['plugin'] = 'sampler'
                 cvpj_instdata['plugindata'] = {}
                 cvpj_instdata['plugindata']['file'] = samplefolder + str(samplecount+1) + '.wav'
+                cvpj_instdata['plugindata']['length'] = it_singlesample['length']
+                cvpj_instdata['plugindata']['loop'] = {}
+                cvpj_instdata['plugindata']['loop']['enabled'] = int(it_singlesample['flags'][3])
+                cvpj_instdata['plugindata']['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
 
                 tracks.m_addinst(cvpj_l, it_samplename, cvpj_instdata)
                 tracks.m_addinst_data(cvpj_l, it_samplename, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)

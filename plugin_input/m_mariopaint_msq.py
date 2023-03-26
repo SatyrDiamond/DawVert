@@ -14,9 +14,6 @@ instnames = ['mario','toad','yoshi','star','flower','gameboy','dog','cat','pig',
 keytable =  [19, 17, 16, 14, 12, 11, 9, 7, 5, 4, 2, 0, -1]
 
 def readpart(msq_score_str, n_pos, n_len):
-    global cvpj_notelist
-    numnotes = 3
-
     msq_notes = {}
     char1 = int(msq_score_str.read(1), 16)
     char2 = int(msq_score_str.read(1), 16)

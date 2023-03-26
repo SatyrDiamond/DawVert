@@ -20,7 +20,6 @@ def addpoint(dict_val, pos_val, value):
 def song_start(channels, ppq):
     global t_tracknum
     global t_chan_auto
-    global t_chan_initial
     global t_chan_usedinst_all
     global s_tempo
     global s_ppqstep
@@ -38,9 +37,6 @@ def song_start(channels, ppq):
 
     t_chan_auto = []
     for _ in range(channels): t_chan_auto.append({})
-
-    t_chan_initial = []
-    for _ in range(channels): t_chan_initial.append({})
 
 # -------------------------------------- TRACK --------------------------------------
 def gettrackname(t_tracknum, channelnum, cvpj_midibank, cvpj_midiinst):
@@ -364,6 +360,7 @@ def song_end(channels):
 
     cvpj_l_automation = {}
     cvpj_l_automation['main'] = {}
+    cvpj_l_automation['fxmixer'] = {}
 
     if t_auto_tempo != []:
         cvpj_autodata = {}
@@ -378,16 +375,8 @@ def song_end(channels):
     for midi_channum in range(channels):
         cvpj_l_fxrack[str(midi_channum+1)] = {}
 
-        s_chan_initial = t_chan_initial[midi_channum]
-
         fxdata = cvpj_l_fxrack[str(midi_channum+1)]
         fxdata["fxenabled"] = 1
-
-        if 7 in s_chan_initial: fxdata["vol"] = s_chan_initial[7]/127
-        else: fxdata["vol"] = 1.0
-
-        if 10 in s_chan_initial: fxdata["pan"] = ((s_chan_initial[10]/127)-0.5)*2
-        else: fxdata["pan"] = 1.0
 
         fxdata['color'] = [0.3, 0.3, 0.3]
         fxdata["name"] = "Channel "+str(midi_channum+1)
@@ -413,6 +402,14 @@ def song_end(channels):
         s_chan_auto = t_chan_auto[channum]
         #print(s_chan_trackids)
         #print(s_chan_auto)
+
+        cvpj_l_automation['fxmixer'][str(channum+1)] = {}
+        if 7 in s_chan_auto: 
+            if len(s_chan_auto[7]) == 1 and 0 in s_chan_auto[7]: 
+                cvpj_l_fxrack[str(channum+1)]["vol"] = s_chan_auto[7][0]/127
+            else: 
+                cvpj_l_automation['fxmixer'][str(channum+1)]['vol'] = midiauto2cvpjauto(s_chan_auto[7], 127, 0)
+
         if len(s_chan_trackids) == 1:
             if 'track_main' not in cvpj_l_automation: 
                 cvpj_l_automation['track_main'] = {}
@@ -420,8 +417,6 @@ def song_end(channels):
                 cvpj_l_automation['track_main'][s_chan_trackids[0]] = {}
 
             s_chan_cvpj_auto = cvpj_l_automation['track_main'][s_chan_trackids[0]]
-
-            if 7 in s_chan_auto: s_chan_cvpj_auto['vol'] = midiauto2cvpjauto(s_chan_auto[7], 127, 0)
             if 'pitch' in s_chan_auto: s_chan_cvpj_auto['pitch'] = midiauto2cvpjauto(s_chan_auto['pitch'], 1/8, 0)
 
         if len(s_chan_trackids) > 1:

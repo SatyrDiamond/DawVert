@@ -267,6 +267,13 @@ def parse_instrument(file_stream, samplecount):
         cvpj_l_single_inst['vol'] = 0.3*(t_sampleheaders[0][0][3]/64)
         cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
         cvpj_l_single_inst['instdata']['plugindata'] = {'file': samplefolder + str(xm_cursamplenum) + '.wav'}
+        cvpj_l_single_inst['instdata']['plugindata']['length'] = t_sampleheaders[0][0][0]
+        if t_sampleheaders[0][0][1:3] == (0, 0):
+            cvpj_l_single_inst['instdata']['plugindata']['loop'] = {"enabled": 0}
+        else:
+            xm_loop_start = t_sampleheaders[0][0][1]
+            xm_loop_len = t_sampleheaders[0][0][2]
+            cvpj_l_single_inst['instdata']['plugindata']['loop'] = {"enabled": 1, "mode": "normal", "points": [xm_loop_start,xm_loop_start+xm_loop_len]}
     else:
         cvpj_l_single_inst['vol'] = 0.3
         cvpj_l_single_inst['instdata']['plugin'] = 'none'

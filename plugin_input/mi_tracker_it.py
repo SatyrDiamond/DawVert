@@ -429,7 +429,7 @@ class input_it(plugin_input.base):
                     bn_s_t_ifsame = True
                     bn_s_t_f = bn_s_t[12]
 
-                if bn_s_t_ifsame == True:
+                if bn_s_t_ifsame == True and str(bn_s_t_f[1]-1) in IT_Samples:
                     it_singlesample = IT_Samples[str(bn_s_t_f[1]-1)]
                     cvpj_instdata = {}
                     cvpj_instdata['plugin'] = 'sampler'

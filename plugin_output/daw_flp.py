@@ -24,6 +24,7 @@ class output_cvpjs(plugin_output.base):
     def getshortname(self): return 'flp'
     def getname(self): return 'FL Studio'
     def gettype(self): return 'mi'
+    def plugin_archs(self): return ['amd64', 'i386']
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
 

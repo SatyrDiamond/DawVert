@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
 from functions import tracks
 from functions import note_data
 from functions import placements
@@ -21,7 +20,7 @@ def parsetrack_tempo(file_stream, tickBeat):
         tempo_data_part.append(struct.unpack("<f", file_stream.read(4))[0])
         tempo_data.append(tempo_data_part)
 
-    return (track_name, track_tempo, tempo_data)
+    return track_name, track_tempo, tempo_data
 
 def parsetrack_voice(file_stream):
     track_name = file_stream.read(15).split(b'\x00')[0].decode('ascii')
@@ -33,7 +32,7 @@ def parsetrack_voice(file_stream):
         curtickpos += rol_note_data[1]
         rol_notelist.append(rol_note_data)
     #print('VOICE', track_name, len(rol_notelist))
-    return (track_name, rol_notelist)
+    return track_name, rol_notelist
 
 def parsetrack_timbre(file_stream):
     track_name = file_stream.read(15).split(b'\x00')[0].decode('ascii')
@@ -47,7 +46,7 @@ def parsetrack_timbre(file_stream):
         rol_timbre_events[timbre_pos] = timbre_name
         file_stream.read(3)
     #print('TIMBRE', track_name, rol_timbre_events)
-    return (track_name, rol_timbre_events, used_instruments)
+    return track_name, rol_timbre_events, used_instruments
 
 def parsetrack_volume(file_stream):
     track_name = file_stream.read(15).split(b'\x00')[0].decode('ascii')
@@ -56,7 +55,7 @@ def parsetrack_volume(file_stream):
     for _ in range(track_num_events): 
         rol_vol_events.append(struct.unpack("<hf", file_stream.read(6)))
     #print('VOLUME', track_name, rol_vol_events)
-    return (track_name, rol_vol_events)
+    return track_name, rol_vol_events
 
 def parsetrack_pitch(file_stream):
     track_name = file_stream.read(15).split(b'\x00')[0].decode('ascii')
@@ -65,7 +64,7 @@ def parsetrack_pitch(file_stream):
     for _ in range(track_num_events): 
         rol_pitch_events.append(struct.unpack("<hf", file_stream.read(6)))
     #print('PITCH', track_name, rol_pitch_events)
-    return (track_name, rol_pitch_events)
+    return track_name, rol_pitch_events
   
 def closest(myList, in_value):
     outval = 0

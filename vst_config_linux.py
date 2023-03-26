@@ -1,13 +1,15 @@
 import configparser
 import os
 import xml.etree.ElementTree as ET
+from os.path import expanduser
 from pathlib import Path
 
 config = configparser.ConfigParser()
+homepath = expanduser("~")
 
 dawlist = []
 
-l_path_aurdor = '/home/colby/.cache/ardour6/vst'
+l_path_aurdor = homepath+'/.cache/ardour6/vst'
 
 vst2ini = configparser.ConfigParser()
 vst3ini = configparser.ConfigParser()

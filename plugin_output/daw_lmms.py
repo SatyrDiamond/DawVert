@@ -595,7 +595,7 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
 
         if 'vol' in fxchannelJ: volume = fxchannelJ['vol']
         else: volume = 1
-        setvalue(fxchannelJ, 'vol', fxcX, 'volume', 1, auto_nameid, 'track_main')
+        setvalue(fxchannelJ, 'vol', fxcX, 'volume', 1, auto_nameid, 'fxmixer')
 
         if 'muted' in fxchannelJ: muted = fxchannelJ['muted']
         else: muted = 0
@@ -744,6 +744,8 @@ l_addmul['main']['pitch'] = [0, 0.01]
 l_addmul['track_main'] = {}
 l_addmul['track_main']['vol'] = [0, 100]
 l_addmul['track_main']['pan'] = [0, 100]
+l_addmul['fxmixer'] = {}
+l_addmul['fxmixer']['vol'] = [0, 1]
 
 class output_lmms(plugin_output.base):
     def __init__(self): pass

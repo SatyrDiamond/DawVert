@@ -25,7 +25,6 @@ def getplatformtxt(in_platform):
 	if in_platform == 'lin': platform_txt = 'so'
 	if in_platform == 'any': 
 		platform_architecture = platform.architecture()
-		print(platform_architecture)
 		if platform_architecture[1] == 'WindowsPE': platform_txt = 'dll'
 		else: platform_txt = 'so'
 	return platform_txt
@@ -37,7 +36,6 @@ def getverplat(vstvers, platform):
 
 # -------------------- VST List --------------------
 def vstpaths(): return glo_vstpaths
-def vstpaths_loaded(): return glo_vstpaths_loaded
 
 def find_path_by_name(in_name, vstvers, platform, pefer_cpu_arch):
 	output = [None, None]

@@ -129,12 +129,14 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         if 'file' in plugJ: xml_sampler.set('src', str(plugJ['file']))
         loopenabled = 0
         loopmode = "normal"
-        if 'loop' in plugJ:
+        if 'loop' in plugJ and 'length' in plugJ:
+            trkJ_length = plugJ['length']
             trkJ_loop = plugJ['loop']
-            if 'custompoints' in trkJ_loop:
-                if 'end' in trkJ_loop['custompoints']: xml_sampler.set('eframe', str(trkJ_loop['custompoints']['end']))
-                if 'loop' in trkJ_loop['custompoints']: xml_sampler.set('lframe', str(trkJ_loop['custompoints']['loop']))
-                if 'start' in trkJ_loop['custompoints']: xml_sampler.set('sframe', str(trkJ_loop['custompoints']['start']))
+            if 'points' in trkJ_loop:
+                trkJ_loop_points = trkJ_loop['points']
+                xml_sampler.set('sframe', '0')
+                xml_sampler.set('lframe', str(trkJ_loop_points[0]/trkJ_length))
+                xml_sampler.set('eframe', str(trkJ_loop_points[1]/trkJ_length))
             if 'enabled' in trkJ_loop: loopenabled = trkJ_loop['enabled']
             if 'mode' in trkJ_loop: mode = trkJ_loop['mode']
         if loopenabled == 0: xml_sampler.set('looped', '0')

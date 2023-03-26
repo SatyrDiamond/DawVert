@@ -177,6 +177,7 @@ def track_end(channels):
                     notedata = {}
                     notedata['position'] = t_actnote[0]/s_ppqstep
                     notedata['key'] = notekey
+                    notedata['channel'] = channelnum+1
                     notedata['vol'] = t_actnote[2]/127
                     notedata['duration'] = (t_actnote[1]-t_actnote[0])/s_ppqstep
                     notedata['instrument'] = gettrackname(t_actnote[3], channelnum, t_actnote[4], t_actnote[5])

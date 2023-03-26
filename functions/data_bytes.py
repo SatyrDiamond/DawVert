@@ -46,71 +46,35 @@ def mono2stereo(leftdata, rightdata, samplebytes):
 # ----- RIFF -----
 
 def riff_read_debug_big(riffbytebuffer, offset):
-	if isinstance(riffbytebuffer, (bytes, bytearray)) == True:
-		riffbytebuffer = bytearray2BytesIO(riffbytebuffer)
-	riffobjects = []
-	riffbytebuffer.seek(0,2)
-	filesize = riffbytebuffer.tell()
-	riffbytebuffer.seek(offset)
-	while filesize > riffbytebuffer.tell():
-		chunkname = riffbytebuffer.read(4)
-		chunksize = int.from_bytes(riffbytebuffer.read(4), "big")
-		chunkdata = riffbytebuffer.read(chunksize)
-		riffobjects.append([chunkname, chunkdata])
-	print('--------')
-	count = 0
-	for riffobject in riffobjects:
-		print(str(count) + " " + str(riffobject[0])+ " " + str(len(riffobject[1])))
-		count = count + 1
-	print('--------')
-	return riffobjects
+	return riff_read_main(riffbytebuffer, offset, 4, 4, "big", True)
 
 def riff_read_big(riffbytebuffer, offset):
-	if isinstance(riffbytebuffer, (bytes, bytearray)) == True:
-		riffbytebuffer = bytearray2BytesIO(riffbytebuffer)
-	riffobjects = []
-	riffbytebuffer.seek(0,2)
-	filesize = riffbytebuffer.tell()
-	riffbytebuffer.seek(offset)
-	while filesize > riffbytebuffer.tell():
-		chunkname = riffbytebuffer.read(4)
-		chunksize = int.from_bytes(riffbytebuffer.read(4), "big")
-		chunkdata = riffbytebuffer.read(chunksize)
-		riffobjects.append([chunkname, chunkdata])
-	return riffobjects
+	return riff_read_main(riffbytebuffer, offset, 4, 4, "big", False)
 
 def riff_read_debug(riffbytebuffer, offset):
-	if isinstance(riffbytebuffer, (bytes, bytearray)) == True:
-		riffbytebuffer = bytearray2BytesIO(riffbytebuffer)
-	riffobjects = []
-	riffbytebuffer.seek(0,2)
-	filesize = riffbytebuffer.tell()
-	riffbytebuffer.seek(offset)
-	while filesize > riffbytebuffer.tell():
-		chunkname = riffbytebuffer.read(4)
-		chunksize = int.from_bytes(riffbytebuffer.read(4), "little")
-		chunkdata = riffbytebuffer.read(chunksize)
-		riffobjects.append([chunkname, chunkdata])
-	print('--------')
-	count = 0
-	for riffobject in riffobjects:
-		print(str(count) + " " + str(riffobject[0])+ " " + str(len(riffobject[1])))
-		count = count + 1
-	print('--------')
-	return riffobjects
+	return riff_read_main(riffbytebuffer, offset, 4, 4, "little", True)
 
 def riff_read(riffbytebuffer, offset):
-	if isinstance(riffbytebuffer, (bytes, bytearray)) == True:
-		riffbytebuffer = bytearray2BytesIO(riffbytebuffer)
+	return riff_read_main(riffbytebuffer, offset, 4, 4, "little", False)
+
+def riff_read_main(riffbytebuffer, offset, in_namesize, in_chunksize, endian, debugtxt):
+	if isinstance(riffbytebuffer, (bytes, bytearray)) == True: riffbytebuffer = bytearray2BytesIO(riffbytebuffer)
 	riffobjects = []
 	riffbytebuffer.seek(0,2)
 	filesize = riffbytebuffer.tell()
 	riffbytebuffer.seek(offset)
 	while filesize > riffbytebuffer.tell():
-		chunkname = riffbytebuffer.read(4)
-		chunksize = int.from_bytes(riffbytebuffer.read(4), "little")
+		chunkname = riffbytebuffer.read(in_namesize)
+		chunksize = int.from_bytes(riffbytebuffer.read(in_chunksize), endian)
 		chunkdata = riffbytebuffer.read(chunksize)
 		riffobjects.append([chunkname, chunkdata])
+	if debugtxt == True:
+		print('--------')
+		count = 0
+		for riffobject in riffobjects:
+			print(str(count) + " " + str(riffobject[0])+ " " + str(len(riffobject[1])))
+			count = count + 1
+		print('--------')
 	return riffobjects
 
 def riff_make(riffobjects):

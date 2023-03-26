@@ -110,6 +110,7 @@ class output_cvpj(plugin_output.base):
     def is_dawvert_plugin(self): return 'output'
     def getshortname(self): return 'dawproject'
     def gettype(self): return 'r'
+    def plugin_archs(self): return None
     def parse(self, convproj_json, output_file):
         global NoteStep
         global tracknum

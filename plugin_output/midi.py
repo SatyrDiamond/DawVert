@@ -31,6 +31,7 @@ class output_cvpj_f(plugin_output.base):
     def getname(self): return 'MIDI'
     def getshortname(self): return 'midi'
     def gettype(self): return 'r'
+    def plugin_archs(self): return None
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
 

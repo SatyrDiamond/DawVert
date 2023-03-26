@@ -199,7 +199,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         xml_opl2.set('fm', str(plugJ['fm']))
         xml_opl2.set('trem_depth', str(plugJ['tremolo_depth']))
         xml_opl2.set('vib_depth', str(plugJ['vibrato_depth']))
-    elif pluginname == 'vst2':
+    elif pluginname == 'vst2-dll':
         print('[output-lmms]       Plugin: vst2 > vestige')
         plugJ = instJ['plugindata']
         xml_instrumentpreplugin.set('name', "vestige")
@@ -494,7 +494,7 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
         xml_name = fxlist[lmmsplugname]
         xml_lmmsnat = ET.SubElement(fxslotX, xml_name)
         for lplugname in lmmsplugdata: xml_lmmsnat.set(lplugname, str(lmmsplugdata[lplugname]))
-    if fxplugname == 'vst2':
+    if fxplugname == 'vst2-dll':
         fxslotX.set('name', 'vsteffect')
         print('[vst2',end='] ')
         xml_vst2 = ET.SubElement(fxslotX, 'vsteffectcontrols')
@@ -566,7 +566,7 @@ def lmms_encode_fxchain(xmltag, json_fxchannel):
         else: fxcX.set('enabled', str('1'))
         fxcX.set('numofeffects', str(len(json_fxchannel['chain_fx_audio'])))
         for json_fxslot in json_fxchain:
-            if json_fxslot['plugin'] == 'native-lmms' or json_fxslot['plugin'] == 'vst2' or json_fxslot['plugin'] == 'ladspa':
+            if json_fxslot['plugin'] == 'native-lmms' or json_fxslot['plugin'] == 'vst2-dll' or json_fxslot['plugin'] == 'ladspa':
                 fxslotX = lmms_encode_effectslot(fxcX, json_fxslot)
         print('')
 
@@ -733,6 +733,7 @@ class output_lmms(plugin_output.base):
     def getname(self): return 'LMMS'
     def getshortname(self): return 'lmms'
     def gettype(self): return 'r'
+    def plugin_archs(self): return ['amd64', 'i386']
     def parse(self, convproj_json, output_file):
         global autoidnum
         global trkcX

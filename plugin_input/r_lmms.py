@@ -281,7 +281,7 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
 
 
         elif pluginname == "vestige":
-            cvpj_l_inst['plugin'] = "vst2"
+            cvpj_l_inst['plugin'] = "vst2-dll"
             getvstparams(cvpj_l_plugindata, xml_plugin)
 
 
@@ -595,8 +595,8 @@ def lmms_decode_effectslot(fxslotX):
 
     if fxpluginname == 'vsteffect':
         fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
-        print('[vst2',end='] ')
-        fxslotJ['plugin'] = "vst2"
+        print('[vst2-dll',end='] ')
+        fxslotJ['plugin'] = "vst2-dll"
         getvstparams(fxcvpj_l_plugindata, fxxml_plugin)
         fxslotJ['plugindata'] = fxcvpj_l_plugindata
         return fxslotJ
@@ -677,6 +677,7 @@ def lmms_decode_fxchain(fxchainX):
         if fxslotJ != None: fxchain.append(fxslotJ)
     print('')
     return fxchain
+
 def lmms_decode_fxmixer(fxX):
     fxlist = {}
     for fxcX in fxX:
@@ -687,7 +688,7 @@ def lmms_decode_fxmixer(fxX):
         fxcJ = {}
         fxcJ['name'] = fx_name
         if fxcX.get('muted') != None: fxcJ['muted'] = int(fxcX.get('muted'))
-        if fxcX.get('volume') != None: fxcJ['vol'] = float(fxcX.get('volume'))
+        if fxcX.get('volume') != None: fxcJ['vol'] = float(lmms_getvalue(fxcX, 'volume', 1, ['fxmixer', fx_num, 'vol']))
         fxchainX = fxcX.find('fxchain')
         if fxchainX != None:
             fxcJ['fxenabled'] = int(fxchainX.get('enabled'))
@@ -797,9 +798,11 @@ class input_lmms(plugin_input.base):
             cvpj_l['info']['message']['text'] = projnotesX.text
 
         trackdata, trackordering, trackplacements = lmms_decode_tracks(trksX)
+        #fxrackdata = lmms_decode_fxmixer(fxX)
 
         l_automation['main'] = {}
         l_automation['track_main'] = {}
+        l_automation['fxrack'] = {}
         for part in l_autodata:
             if part in l_autoid:
                 s_autopl_id = l_autoid[part]
@@ -816,7 +819,11 @@ class input_lmms(plugin_input.base):
                     if s_autopl_id[1] == 'vol': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 0.01)
                     elif s_autopl_id[1] == 'pitch': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 100)
                     else: l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 1)
-
+                #if s_autopl_id[0] == 'fxmixer':
+                #    if str(s_autopl_id[1]) in fxrackdata:
+                #        if s_autopl_id[1] not in l_automation['fxmixer']: l_automation['fxmixer'][s_autopl_id[1]] = {}
+                #        s_trkdata = trackdata[s_autopl_id[1]]
+                        
         cvpj_l['automation'] = l_automation
 
         cvpj_l['use_instrack'] = False
@@ -825,6 +832,6 @@ class input_lmms(plugin_input.base):
         cvpj_l['track_data'] = trackdata
         cvpj_l['track_order'] = trackordering
         cvpj_l['track_placements'] = trackplacements
-        cvpj_l['fxrack'] = lmms_decode_fxmixer(fxX)
+        #cvpj_l['fxrack'] = fxrackdata
 
         return json.dumps(cvpj_l, indent=2)

@@ -572,6 +572,14 @@ def lmms_encode_fxchain(xmltag, json_fxchannel):
 
 def lmms_encode_fxmixer(xmltag, json_fxrack):
     for json_fxchannel in json_fxrack:
+
+        auto_nameid = {}
+
+        if 'automation' in projJ:
+            if 'fxmixer' in projJ['automation']:
+                if json_fxchannel in projJ['automation']['fxmixer']:
+                    auto_nameid = get_auto_ids(projJ['automation']['fxmixer'][json_fxchannel])
+
         fxchannelJ = json_fxrack[json_fxchannel]
         fxcX = ET.SubElement(xmltag, "fxchannel")
         fxcX.set('soloed', "0")
@@ -587,6 +595,7 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
 
         if 'vol' in fxchannelJ: volume = fxchannelJ['vol']
         else: volume = 1
+        setvalue(fxchannelJ, 'vol', fxcX, 'volume', 1, auto_nameid, 'track_main')
 
         if 'muted' in fxchannelJ: muted = fxchannelJ['muted']
         else: muted = 0
@@ -605,6 +614,12 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
             sendX = ET.SubElement(fxcX, "send")
             sendX.set('channel', '0')
             sendX.set('amount', '1')
+
+        if 'automation' in projJ:
+            if 'fxmixer' in projJ['automation']:
+                if json_fxchannel in projJ['automation']['fxmixer']:
+                    lmms_make_autotracks(projJ['automation']['fxmixer'][json_fxchannel], auto_nameid, 'fxmixer', 'FX '+str(json_fxchannel))
+
         print('[output-lmms]')
 
 # ------- Automation -------
@@ -701,7 +716,8 @@ def lmms_make_autotracks(l_auto, auto_nameid, ADS_type, visualname):
         s_auto_data = l_auto[s_auto_name]
 
         s_auto_addmul = None
-        if s_auto_name in l_addmul[ADS_type]: s_auto_addmul = l_addmul[ADS_type][s_auto_name]
+        if ADS_type in l_addmul:
+            if s_auto_name in l_addmul[ADS_type]: s_auto_addmul = l_addmul[ADS_type][s_auto_name]
         if s_auto_addmul != None: s_auto_data = auto.multiply(s_auto_data, s_auto_addmul[0], s_auto_addmul[1])
 
         lmms_make_main_auto_track(s_auto_idnum, s_auto_data, s_auto_visualname)
@@ -718,6 +734,8 @@ l_auto_names['track_main'] = {}
 l_auto_names['track_main']['vol'] = "Volume"
 l_auto_names['track_main']['pan'] = "Pan"
 l_auto_names['track_main']['pitch'] = "Pitch"
+l_auto_names['fxmixer'] = {}
+l_auto_names['fxmixer']['vol'] = "Volume"
 
 l_addmul = {}
 l_addmul['main'] = {}

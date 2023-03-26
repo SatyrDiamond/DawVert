@@ -45,17 +45,13 @@ class input_soundclub2(plugin_input.base):
     def parse(self, input_file, extra_param):
         bytestream = open(input_file, 'rb')
         bytestream.seek(7)
-    
         sc2_headerdata = struct.unpack("iiiiii", bytestream.read(24))
-        #print('[input-soundclub2] Header', sc2_headerdata)
-
         sc2_globaltempo = (1/((sc2_headerdata[3]/40)/2+0.5))*120
 
         print('[input-soundclub2] Tempo', sc2_globaltempo)
 
         file_name = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
-
         idvals_inst_soundclub2 = idvals.parse_idvalscsv('idvals/soundclub2_inst.csv')
 
         cvpj_l = {}
@@ -74,8 +70,7 @@ class input_soundclub2(plugin_input.base):
         for sc2object in sc2objects:
             sc2_datatype = sc2object[0]
 
-            if sc2_datatype == b'NAM': 
-                sc2_songdisc = sc2object[1].decode('ascii')
+            if sc2_datatype == b'NAM':  sc2_songdisc = sc2object[1].decode('ascii')
 
             elif sc2_datatype == b'PAT': 
                 sc2_patdata = sc2object[1]
@@ -130,11 +125,9 @@ class input_soundclub2(plugin_input.base):
                             if n_type == 20: n_curvol = n_note
                             if n_type == 21: n_curpan = n_note
                             if n_type == 54: #porta
-                                n_p_k = bio_sc2_notedata.read(1)[0]
-                                n_p_l = bio_sc2_notedata.read(1)[0]
+                                n_p_k, n_p_l = bio_sc2_notedata.read(2)
                                 t_active_notes[n_p_k] = t_active_notes[n_note]
-                                autoappend = [curpos-t_active_notes[n_note][1], n_p_l, n_p_k-t_active_notes[n_note][0]]
-                                t_active_notes[n_p_k][4].append(autoappend)
+                                t_active_notes[n_p_k][4].append([curpos-t_active_notes[n_note][1], n_p_l, n_p_k-t_active_notes[n_note][0]])
                                 t_active_notes[n_note] = None
 
                         detectlen = notelist_data.getduration(cvpj_notelist)
@@ -143,9 +136,7 @@ class input_soundclub2(plugin_input.base):
                         if cvpj_notelist != []: pat_cvpj_notelist[cur_patnum][1][t_instid].append(cvpj_notelist)
 
                 pat_cvpj_notelist[cur_patnum][0] = pat_duration
-
                 cur_patnum += 1
-
 
             elif sc2_datatype == b'SEQ': 
                 sc2_seqdata = sc2object[1]

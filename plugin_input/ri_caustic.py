@@ -155,7 +155,7 @@ class input_cvpj_r(plugin_input.base):
                     else: isMultiSampler = True
                 else: isMultiSampler = True
 
-                if isMultiSampler == False:
+                if not isMultiSampler:
                     singlewav = machine['regions'][0]
                     cvpj_instdata['plugin'] = 'sampler'
                     wave_path = samplefolder + machid + '_PCMSynth_0.wav'

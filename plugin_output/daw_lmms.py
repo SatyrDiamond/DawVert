@@ -128,7 +128,6 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         if 'continueacrossnotes' in plugJ: xml_sampler.set('stutter', str(plugJ['continueacrossnotes']))
         if 'file' in plugJ: xml_sampler.set('src', str(plugJ['file']))
         loopenabled = 0
-        loopmode = "normal"
         if 'loop' in plugJ and 'length' in plugJ:
             trkJ_length = plugJ['length']
             trkJ_loop = plugJ['loop']
@@ -143,6 +142,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         if loopenabled == 1:
             if loopmode == "normal": xml_sampler.set('looped', '1')
             if loopmode == "pingpong": xml_sampler.set('looped', '2')
+            else: xml_sampler.set('looped', '1')
         interpolation = "none"
         if 'interpolation' in plugJ: interpolation = plugJ['interpolation']
         if interpolation == "none": xml_sampler.set('interp', '0')

@@ -46,18 +46,18 @@ def mono2stereo(leftdata, rightdata, samplebytes):
 # ----- RIFF -----
 
 def riff_read_debug_big(riffbytebuffer, offset):
-	return riff_read_main(riffbytebuffer, offset, 4, 4, "big", True)
+	return customchunk_read(riffbytebuffer, offset, 4, 4, "big", True)
 
 def riff_read_big(riffbytebuffer, offset):
-	return riff_read_main(riffbytebuffer, offset, 4, 4, "big", False)
+	return customchunk_read(riffbytebuffer, offset, 4, 4, "big", False)
 
 def riff_read_debug(riffbytebuffer, offset):
-	return riff_read_main(riffbytebuffer, offset, 4, 4, "little", True)
+	return customchunk_read(riffbytebuffer, offset, 4, 4, "little", True)
 
 def riff_read(riffbytebuffer, offset):
-	return riff_read_main(riffbytebuffer, offset, 4, 4, "little", False)
+	return customchunk_read(riffbytebuffer, offset, 4, 4, "little", False)
 
-def riff_read_main(riffbytebuffer, offset, in_namesize, in_chunksize, endian, debugtxt):
+def customchunk_read(riffbytebuffer, offset, in_namesize, in_chunksize, endian, debugtxt):
 	if isinstance(riffbytebuffer, (bytes, bytearray)) == True: riffbytebuffer = bytearray2BytesIO(riffbytebuffer)
 	riffobjects = []
 	riffbytebuffer.seek(0,2)

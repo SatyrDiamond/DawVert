@@ -16,18 +16,7 @@ import json
 import os
 
 def sc2_read(sc2bytebuffer, offset):
-    if isinstance(sc2bytebuffer, (bytes, bytearray)) == True:
-        sc2bytebuffer = data_bytes.bytearray2BytesIO(sc2bytebuffer)
-    sc2objects = []
-    sc2bytebuffer.seek(0,2)
-    filesize = sc2bytebuffer.tell()
-    sc2bytebuffer.seek(offset)
-    while filesize > sc2bytebuffer.tell():
-        chunkname = sc2bytebuffer.read(3)
-        chunksize = int.from_bytes(sc2bytebuffer.read(4), "little")
-        chunkdata = sc2bytebuffer.read(chunksize)
-        sc2objects.append([chunkname, chunkdata])
-    return sc2objects
+    return data_bytes.customchunk_read(sc2bytebuffer, offset, 3, 4, "little", False)
 
 class input_soundclub2(plugin_input.base):
     def __init__(self): pass

@@ -687,8 +687,8 @@ def lmms_decode_fxmixer(fxX):
         print('[input-lmms]       Name: ' + fx_name)
         fxcJ = {}
         fxcJ['name'] = fx_name
-        if fxcX.get('muted') != None: fxcJ['muted'] = int(fxcX.get('muted'))
-        if fxcX.get('volume') != None: fxcJ['vol'] = float(lmms_getvalue(fxcX, 'volume', 1, ['fxmixer', fx_num, 'vol']))
+        if fxcX.get('muted') == None: fxcJ['muted'] = int(fxcX.get('muted'))
+        if fxcX.get('volume') == None: fxcJ['vol'] = float(lmms_getvalue(fxcX, 'volume', 1, ['fxmixer', fx_num, 'vol']))
         fxchainX = fxcX.find('fxchain')
         if fxchainX != None:
             fxcJ['fxenabled'] = int(fxchainX.get('enabled'))
@@ -798,15 +798,17 @@ class input_lmms(plugin_input.base):
             cvpj_l['info']['message']['text'] = projnotesX.text
 
         trackdata, trackordering, trackplacements = lmms_decode_tracks(trksX)
-        #fxrackdata = lmms_decode_fxmixer(fxX)
+        fxrackdata = lmms_decode_fxmixer(fxX)
 
         l_automation['main'] = {}
         l_automation['track_main'] = {}
-        l_automation['fxrack'] = {}
+        l_automation['fxmixer'] = {}
+
         for part in l_autodata:
             if part in l_autoid:
                 s_autopl_id = l_autoid[part]
                 s_autopl_data = l_autodata[part]
+                print(s_autopl_id)
                 if s_autopl_id[0] == 'track_main':
                     if s_autopl_id[1] in trackdata:
                         if s_autopl_id[1] not in l_automation['track_main']: l_automation['track_main'][s_autopl_id[1]] = {}
@@ -819,10 +821,12 @@ class input_lmms(plugin_input.base):
                     if s_autopl_id[1] == 'vol': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 0.01)
                     elif s_autopl_id[1] == 'pitch': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 100)
                     else: l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 1)
-                #if s_autopl_id[0] == 'fxmixer':
-                #    if str(s_autopl_id[1]) in fxrackdata:
-                #        if s_autopl_id[1] not in l_automation['fxmixer']: l_automation['fxmixer'][s_autopl_id[1]] = {}
-                #        s_trkdata = trackdata[s_autopl_id[1]]
+                if s_autopl_id[0] == 'fxmixer':
+                    if str(s_autopl_id[1]) in fxrackdata:
+                        if s_autopl_id[1] not in l_automation['fxmixer']: l_automation['fxmixer'][s_autopl_id[1]] = {}
+                        temp_pla = l_automation['fxmixer'][s_autopl_id[1]]
+                        if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = s_autopl_data
+
                         
         cvpj_l['automation'] = l_automation
 

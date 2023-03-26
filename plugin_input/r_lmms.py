@@ -832,6 +832,6 @@ class input_lmms(plugin_input.base):
         cvpj_l['track_data'] = trackdata
         cvpj_l['track_order'] = trackordering
         cvpj_l['track_placements'] = trackplacements
-        #cvpj_l['fxrack'] = fxrackdata
+        cvpj_l['fxrack'] = fxrackdata
 
         return json.dumps(cvpj_l, indent=2)

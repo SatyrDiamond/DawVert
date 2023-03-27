@@ -240,11 +240,8 @@ class input_trackerboy(plugin_input.base):
                 if insttype in chiptypecolors: cvpj_instcolor = chiptypecolors[insttype]
                 else: cvpj_instcolor = None
 
-                cvpj_instdata = {}
-                cvpj_instdata["plugin"] = 'gameboy'
-
-                plugindata =  {}
-                plugindata['type'] = insttype
+                cvpj_instdata = {'plugin': 'gameboy'}
+                plugindata = {'type': insttype}
 
                 if trackerboy_instdata[1][0] != (): plugindata['env_arp'] = {'values': trackerboy_instdata[1][0]}
                 if trackerboy_instdata[2][0] != (): plugindata['env_vol'] = {'values': trackerboy_instdata[2][0]}

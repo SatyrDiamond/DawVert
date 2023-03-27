@@ -2,7 +2,7 @@ import os
 import chardet
 
 def parse_idvalscsv(filename):
-	if os.path.exists(filename) == True:
+	if os.path.exists(filename):
 		with open(filename, 'rb') as csvfile:
 			csvdata = csvfile.read()
 			csvcharset = chardet.detect(csvdata)['encoding']
@@ -47,10 +47,8 @@ def get_idval(valdata, i_id, i_param):
 		outval = None
 		if i_id in valdata:
 			valdata_f = valdata[i_id]
-			if 'color_r' in valdata_f: 
-				if 'color_g' in valdata_f: 
-					if 'color_b' in valdata_f: 
-						outval = [valdata_f['color_r'], valdata_f['color_g'], valdata_f['color_b']]
+			if 'color_r' in valdata_f and 'color_g' in valdata_f and 'color_b' in valdata_f:
+				outval = [valdata_f['color_r'], valdata_f['color_g'], valdata_f['color_b']]
 	if i_param == 'isdrum':
 		outval = False
 		if i_id in valdata:

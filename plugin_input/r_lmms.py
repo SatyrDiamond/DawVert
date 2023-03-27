@@ -687,8 +687,8 @@ def lmms_decode_fxmixer(fxX):
         print('[input-lmms]       Name: ' + fx_name)
         fxcJ = {}
         fxcJ['name'] = fx_name
-        if fxcX.get('muted') == None: fxcJ['muted'] = int(fxcX.get('muted'))
-        if fxcX.get('volume') == None: fxcJ['vol'] = float(lmms_getvalue(fxcX, 'volume', 1, ['fxmixer', fx_num, 'vol']))
+        if fxcX.get('muted') != None: fxcJ['muted'] = int(fxcX.get('muted'))
+        if fxcX.get('volume') != None: fxcJ['vol'] = float(lmms_getvalue(fxcX, 'volume', 1, ['fxmixer', fx_num, 'vol']))
         fxchainX = fxcX.find('fxchain')
         if fxchainX != None:
             fxcJ['fxenabled'] = int(fxchainX.get('enabled'))

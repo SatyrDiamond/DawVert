@@ -347,7 +347,6 @@ class input_notessimo_v3(plugin_input.base):
                 inst_color = idvals.get_idval(idvals_inst_notetess, str(inst), 'color')
             elif inst in lists_data[1]: 
                 t_instdata = lists_data[1][inst]
-                inst_cat = '0'
                 if 'name' in t_instdata: inst_name = t_instdata['name']
                 if 'color' in t_instdata: inst_color = t_instdata['color']
             else:
@@ -357,19 +356,15 @@ class input_notessimo_v3(plugin_input.base):
             inst_color = colors.moregray(inst_color)
 
             cvpj_instdata = {}
-            if midiinst != None:
-                cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': midiinst}}
+            if midiinst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': midiinst}}
 
             tracks.m_addinst(cvpj_l, str(inst), cvpj_instdata)
             tracks.m_addinst_data(cvpj_l, str(inst), inst_name, inst_color, 1.0, 0.0)
 
-            if isbuiltindrum == 1:
-                tracks.m_addinst_param(cvpj_l, str(inst), 'fxrack_channel', 1)
+            if isbuiltindrum == 1: tracks.m_addinst_param(cvpj_l, str(inst), 'fxrack_channel', 1)
             else:
                 tracks.m_addinst_param(cvpj_l, str(inst), 'fxrack_channel', fxnum)
-                cvpj_l_fxrack[str(fxnum)] = {}
-                cvpj_l_fxrack[str(fxnum)]["name"] = inst_name
-                cvpj_l_fxrack[str(fxnum)]["color"] = inst_color
+                cvpj_l_fxrack[str(fxnum)] = {"name": inst_name, "color": inst_color}
                 fxnum += 1
 
         automation = {}

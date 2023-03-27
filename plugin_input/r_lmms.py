@@ -13,6 +13,7 @@ from functions import notelist_data
 from functions import colors
 from functions import auto
 
+plugin_auto_id = 1000
 lfoshape = ['sine', 'tri', 'saw', 'square', 'custom', 'random']
 arpdirection = ['up', 'down', 'updown', 'downup', 'random']
 filtertype = ['lowpass', 'hipass', 'bandpass_csg', 'bandpass_czpg', 'notch', 'allpass', 'moog', 'lowpass_double', 'lowpass_rc12', 'bandpass_rc12', 'Highpass_rc12', 'lowpass_rc24', 'bandpass_rc24', 'Highpass_rc24', 'formant', 'moog_double', 'lowpass_sv', 'bandpass_sv', 'Highpass_sv', 'notch_sv', 'formant_fast', 'tripole']
@@ -60,6 +61,13 @@ plugincolors['zynaddsubfx'] = [0.75, 0.75, 0.75]
 
 # ------- functions -------
 
+
+def get_plugin_auto_id():
+    global plugin_auto_id
+    plugin_auto_id += 1
+    return 'plugin'+str(plugin_auto_id)
+
+
 def getvstparams(plugindata, xmldata):
     plugindata['plugin'] = {}
     if os.path.exists( xmldata.get('plugin')):
@@ -87,8 +95,7 @@ def lmms_getvalue(xmltag, xmlname, fallbackval, autoname):
         realvaluetag = xmltag.findall(xmlname)[0]
         value = realvaluetag.get('value')
         if value != None:
-            if autoname != None:
-                l_autoid[str(realvaluetag.get('id'))] = autoname
+            if autoname != None: l_autoid[str(realvaluetag.get('id'))] = autoname
             return realvaluetag.get('value')
         else: return fallbackval
 
@@ -111,15 +118,9 @@ def asdflfo_get(trkX_insttr, cvpj_l_plugindata):
     if len(elcX) != 0:
         cvpj_l_plugindata_asdrlfo = {}
         eldataX = elcX[0]
-        if eldataX.findall('elvol'):
-            realvalue = eldataX.findall('elvol')[0]
-            asdflfo(cvpj_l_plugindata_asdrlfo, realvalue, 'volume')
-        if eldataX.findall('elcut'):
-            realvalue = eldataX.findall('elcut')[0]
-            asdflfo(cvpj_l_plugindata_asdrlfo, realvalue, 'cutoff')
-        if eldataX.findall('elres'):
-            realvalue = eldataX.findall('elres')[0]
-            asdflfo(cvpj_l_plugindata_asdrlfo, realvalue, 'reso')
+        if eldataX.findall('elvol'): asdflfo(cvpj_l_plugindata_asdrlfo, eldataX.findall('elvol')[0], 'volume')
+        if eldataX.findall('elcut'): asdflfo(cvpj_l_plugindata_asdrlfo, eldataX.findall('elcut')[0], 'cutoff')
+        if eldataX.findall('elres'): asdflfo(cvpj_l_plugindata_asdrlfo, eldataX.findall('elres')[0], 'reso')
         cvpj_l_plugindata['asdrlfo'] = cvpj_l_plugindata_asdrlfo
         filterparams = {}
         lmms_getvalue_float(filterparams, 'cutoff', eldataX.get('fcut'))
@@ -148,7 +149,6 @@ def asdflfo(cvpj_l_track, xmlO, asdrtype):
     if envelopeparams != {}:
         cvpj_l_track[asdrtype]['envelope'] = envelopeparams
 
-
     lfoparams = {}
 
     speedx100 = xmlO.get('x100')
@@ -175,9 +175,13 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
     xml_a_plugin = trkX_instrument.findall(pluginname)
     if len(xml_a_plugin) != 0: 
         xml_plugin = xml_a_plugin[0]
+
+        auto_id_plugin = get_plugin_auto_id()
+
+        cvpj_l_inst['pluginautoid'] = auto_id_plugin
+
         if 'color' not in cvpj_l_track:
             cvpj_l_track['color'] = plugincolors[pluginname]
-
 
         if pluginname == "sf2player":
             cvpj_l_inst['plugin'] = "soundfont2"
@@ -229,53 +233,38 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst, cvpj_l_track)
 
         elif pluginname == "OPL2":
             cvpj_l_inst['plugin'] = "opl2"
-            cvpj_l_plugindata['op1'] = {}
-            cvpj_l_plugindata['op2'] = {}
+            for opnum in range(2):
+                opl2_optxt = 'op'+str(opnum+1)
+                cvpj_l_plugindata[opl2_optxt] = {}
+                cvpj_l_plugindata[opl2_optxt]['env_attack'] = lmms_getvalue(xml_plugin, opl2_optxt+'_a', 0, ['plugin', auto_id_plugin, opl2_optxt+'_env_attack'])
+                cvpj_l_plugindata[opl2_optxt]['env_decay'] = lmms_getvalue(xml_plugin, opl2_optxt+'_d', 0, ['plugin', auto_id_plugin, opl2_optxt+'_env_decay'])
+                cvpj_l_plugindata[opl2_optxt]['env_release'] = lmms_getvalue(xml_plugin, opl2_optxt+'_r', 0, ['plugin', auto_id_plugin, opl2_optxt+'_env_release'])
+                cvpj_l_plugindata[opl2_optxt]['env_sustain'] = lmms_getvalue(xml_plugin, opl2_optxt+'_s', 0, ['plugin', auto_id_plugin, opl2_optxt+'_env_sustain'])
+                cvpj_l_plugindata[opl2_optxt]['freqmul'] = lmms_getvalue(xml_plugin, opl2_optxt+'_mul', 0, ['plugin', auto_id_plugin, opl2_optxt+'_freqmul'])
+                cvpj_l_plugindata[opl2_optxt]['ksr'] = lmms_getvalue(xml_plugin, opl2_optxt+'_ksr', 0, ['plugin', auto_id_plugin, opl2_optxt+'_ksr'])
+                cvpj_l_plugindata[opl2_optxt]['level'] = lmms_getvalue(xml_plugin, opl2_optxt+'_lvl', 0, ['plugin', auto_id_plugin, opl2_optxt+'_level'])
+                cvpj_l_plugindata[opl2_optxt]['perc_env'] = lmms_getvalue(xml_plugin, opl2_optxt+'_perc', 0, ['plugin', auto_id_plugin, opl2_optxt+'_perc_env'])
+                cvpj_l_plugindata[opl2_optxt]['scale'] = lmms_getvalue(xml_plugin, opl2_optxt+'_scale', 0, ['plugin', auto_id_plugin, opl2_optxt+'_scale'])
+                cvpj_l_plugindata[opl2_optxt]['tremolo'] = lmms_getvalue(xml_plugin, opl2_optxt+'_trem', 0, ['plugin', auto_id_plugin, opl2_optxt+'_tremolo'])
+                cvpj_l_plugindata[opl2_optxt]['vibrato'] = lmms_getvalue(xml_plugin, opl2_optxt+'_vib', 0, ['plugin', auto_id_plugin, opl2_optxt+'_vibrato'])
+                cvpj_l_plugindata[opl2_optxt]['waveform'] = lmms_getvalue(xml_plugin, opl2_optxt+'_waveform', 0, ['plugin', auto_id_plugin, opl2_optxt+'_env_attack'])
+            cvpj_l_plugindata['feedback'] = lmms_getvalue(xml_plugin, 'feedback', 0, ['plugin', auto_id_plugin, 'feedback'])
+            cvpj_l_plugindata['fm'] = lmms_getvalue(xml_plugin, 'fm', 0, ['plugin', auto_id_plugin, 'fm'])
+            cvpj_l_plugindata['tremolo_depth'] = lmms_getvalue(xml_plugin, 'trem_depth', 0, ['plugin', auto_id_plugin, 'tremolo_depth'])
+            cvpj_l_plugindata['vibrato_depth'] = lmms_getvalue(xml_plugin, 'vib_depth', 0, ['plugin', auto_id_plugin, 'vibrato_depth'])
             
-            cvpj_l_plugindata['op1']['env_attack'] = lmms_getvalue(xml_plugin, 'op1_a', 0, None)
-            cvpj_l_plugindata['op1']['env_decay'] = lmms_getvalue(xml_plugin, 'op1_d', 0, None)
-            cvpj_l_plugindata['op1']['env_release'] = lmms_getvalue(xml_plugin, 'op1_r', 0, None)
-            cvpj_l_plugindata['op1']['env_sustain'] = lmms_getvalue(xml_plugin, 'op1_s', 0, None)
-            cvpj_l_plugindata['op1']['freqmul'] = lmms_getvalue(xml_plugin, 'op1_mul', 0, None)
-            cvpj_l_plugindata['op1']['ksr'] = lmms_getvalue(xml_plugin, 'op1_ksr', 0, None)
-            cvpj_l_plugindata['op1']['level'] = lmms_getvalue(xml_plugin, 'op1_lvl', 0, None)
-            cvpj_l_plugindata['op1']['perc_env'] = lmms_getvalue(xml_plugin, 'op1_perc', 0, None)
-            cvpj_l_plugindata['op1']['scale'] = lmms_getvalue(xml_plugin, 'op1_scale', 0, None)
-            cvpj_l_plugindata['op1']['tremolo'] = lmms_getvalue(xml_plugin, 'op1_trem', 0, None)
-            cvpj_l_plugindata['op1']['vibrato'] = lmms_getvalue(xml_plugin, 'op1_vib', 0, None)
-            cvpj_l_plugindata['op1']['waveform'] = lmms_getvalue(xml_plugin, 'op1_waveform', 0, None)
-            
-            cvpj_l_plugindata['op2']['env_attack'] = lmms_getvalue(xml_plugin, 'op2_a', 0, None)
-            cvpj_l_plugindata['op2']['env_decay'] = lmms_getvalue(xml_plugin, 'op2_d', 0, None)
-            cvpj_l_plugindata['op2']['env_release'] = lmms_getvalue(xml_plugin, 'op2_r', 0, None)
-            cvpj_l_plugindata['op2']['env_sustain'] = lmms_getvalue(xml_plugin, 'op2_s', 0, None)
-            cvpj_l_plugindata['op2']['freqmul'] = lmms_getvalue(xml_plugin, 'op2_mul', 0, None)
-            cvpj_l_plugindata['op2']['ksr'] = lmms_getvalue(xml_plugin, 'op2_ksr', 0, None)
-            cvpj_l_plugindata['op2']['level'] = lmms_getvalue(xml_plugin, 'op2_lvl', 0, None)
-            cvpj_l_plugindata['op2']['perc_env'] = lmms_getvalue(xml_plugin, 'op2_perc', 0, None)
-            cvpj_l_plugindata['op2']['scale'] = lmms_getvalue(xml_plugin, 'op2_scale', 0, None)
-            cvpj_l_plugindata['op2']['tremolo'] = lmms_getvalue(xml_plugin, 'op2_trem', 0, None)
-            cvpj_l_plugindata['op2']['vibrato'] = lmms_getvalue(xml_plugin, 'op2_vib', 0, None)
-            cvpj_l_plugindata['op2']['waveform'] = lmms_getvalue(xml_plugin, 'op2_waveform', 0, None)
-            
-            cvpj_l_plugindata['feedback'] = lmms_getvalue(xml_plugin, 'feedback', 0, None)
-            cvpj_l_plugindata['fm'] = lmms_getvalue(xml_plugin, 'fm', 0, None)
-            cvpj_l_plugindata['tremolo_depth'] = lmms_getvalue(xml_plugin, 'trem_depth', 0, None)
-            cvpj_l_plugindata['vibrato_depth'] = lmms_getvalue(xml_plugin, 'vib_depth', 0, None)
-            
-
 
         elif pluginname == "zynaddsubfx":
             cvpj_l_inst['plugin'] = "zynaddsubfx-lmms"
-            cvpj_l_plugindata['bandwidth'] = xml_plugin.get('bandwidth')
-            cvpj_l_plugindata['filterfreq'] = xml_plugin.get('filterfreq')
-            cvpj_l_plugindata['filterq'] = xml_plugin.get('filterq')
-            cvpj_l_plugindata['fmgain'] = xml_plugin.get('fmgain')
-            cvpj_l_plugindata['forwardmidicc'] = xml_plugin.get('forwardmidicc')
+            cvpj_l_plugindata['bandwidth'] = lmms_getvalue(xml_plugin, 'bandwidth', 0, ['plugin', auto_id_plugin, 'bandwidth'])
+            cvpj_l_plugindata['filterfreq'] = lmms_getvalue(xml_plugin, 'filterfreq', 0, ['plugin', auto_id_plugin, 'filterfreq'])
+            cvpj_l_plugindata['filterq'] = lmms_getvalue(xml_plugin, 'filterq', 0, ['plugin', auto_id_plugin, 'filterq'])
+            cvpj_l_plugindata['fmgain'] = lmms_getvalue(xml_plugin, 'fmgain', 0, ['plugin', auto_id_plugin, 'fmgain'])
+            cvpj_l_plugindata['forwardmidicc'] = lmms_getvalue(xml_plugin, 'forwardmidicc', 0, ['plugin', auto_id_plugin, 'forwardmidicc'])
             cvpj_l_plugindata['modifiedcontrollers'] = xml_plugin.get('modifiedcontrollers')
-            cvpj_l_plugindata['portamento'] = xml_plugin.get('portamento')
-            cvpj_l_plugindata['resbandwidth'] = xml_plugin.get('resbandwidth')
-            cvpj_l_plugindata['rescenterfreq'] = xml_plugin.get('rescenterfreq')
+            cvpj_l_plugindata['portamento'] = lmms_getvalue(xml_plugin, 'portamento', 0, ['plugin', auto_id_plugin, 'portamento'])
+            cvpj_l_plugindata['resbandwidth'] = lmms_getvalue(xml_plugin, 'resbandwidth', 0, ['plugin', auto_id_plugin, 'resbandwidth'])
+            cvpj_l_plugindata['rescenterfreq'] = lmms_getvalue(xml_plugin, 'rescenterfreq', 0, ['plugin', auto_id_plugin, 'rescenterfreq'])
             zdata = xml_plugin.findall('ZynAddSubFX-data')[0]
             cvpj_l_plugindata['data'] = base64.b64encode(ET.tostring(zdata, encoding='utf-8')).decode('ascii')
 
@@ -803,12 +792,13 @@ class input_lmms(plugin_input.base):
         l_automation['main'] = {}
         l_automation['track_main'] = {}
         l_automation['fxmixer'] = {}
+        l_automation['plugin'] = {}
 
         for part in l_autodata:
             if part in l_autoid:
                 s_autopl_id = l_autoid[part]
                 s_autopl_data = l_autodata[part]
-                print(s_autopl_id)
+                #print(s_autopl_id)
                 if s_autopl_id[0] == 'track_main':
                     if s_autopl_id[1] in trackdata:
                         if s_autopl_id[1] not in l_automation['track_main']: l_automation['track_main'][s_autopl_id[1]] = {}
@@ -826,6 +816,10 @@ class input_lmms(plugin_input.base):
                         if s_autopl_id[1] not in l_automation['fxmixer']: l_automation['fxmixer'][s_autopl_id[1]] = {}
                         temp_pla = l_automation['fxmixer'][s_autopl_id[1]]
                         if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = s_autopl_data
+                if s_autopl_id[0] == 'plugin':
+                    if s_autopl_id[1] not in l_automation['plugin']: l_automation['plugin'][s_autopl_id[1]] = {}
+                    temp_pla = l_automation['plugin'][s_autopl_id[1]]
+                    temp_pla[s_autopl_id[2]] = s_autopl_data
 
                         
         cvpj_l['automation'] = l_automation

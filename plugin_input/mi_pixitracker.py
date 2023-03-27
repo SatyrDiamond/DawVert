@@ -94,11 +94,8 @@ class input_cvpj_f(plugin_input.base):
                             cvpj_note = note_data.mx_makenote('pixi_'+str(t_note[3]), t_note[1], t_note[0], t_note[2]-78, t_note[4]/100, None)
                             cvpj_notelist[t_note[3]].append(cvpj_note)
 
-                pixi_data_patterns[pixi_pattern_num] = {}
-                pixi_data_patterns[pixi_pattern_num]['len'] = pixi_c_pat_len
-                pixi_data_patterns[pixi_pattern_num]['notes'] = cvpj_notelist
+                pixi_data_patterns[pixi_pattern_num] = {'len': pixi_c_pat_len, 'notes': cvpj_notelist}
 
-                #exit()
             elif pixi_chunk[0] == b'SNDN':
                 pixi_sound_num = int.from_bytes(pixi_chunk[1], "little")
                 print('[input-pixitracker] Sound #' + str(pixi_sound_num+1))

@@ -6,6 +6,7 @@ import json
 import lxml.etree as ET
 import mido
 from functions import placements
+from functions import colors
 
 def addvalue(xmltag, name, value):
     x_temp = ET.SubElement(xmltag, name)
@@ -56,6 +57,7 @@ def maketrack_synth(xmltag, insttrackdata, portnum):
     addvalue(x_miditrack, 'record', 0)
     if 'muted' in insttrackdata: addvalue(x_miditrack, 'mute', insttrackdata['muted'])
     else: addvalue(x_miditrack, 'mute', 0)
+    if 'color' in insttrackdata: addvalue(x_miditrack, 'color', '#'+colors.rgb_float_2_hex(insttrackdata['color']))
     addvalue(x_miditrack, 'solo', 0)
     addvalue(x_miditrack, 'channels', 2)
     addvalue(x_miditrack, 'height', 24)
@@ -83,13 +85,13 @@ def maketrack_synth(xmltag, insttrackdata, portnum):
     tracknum += 1
     synthidnum += 1
 
-def maketrack_midi(xmltag, cvpj_trackplacements, trackname, portnum):
+def maketrack_midi(xmltag, cvpj_trackplacements, trackname, portnum, insttrackdata):
     global NoteStep
     global tracknum
     global synthidnum
     x_miditrack = ET.SubElement(xmltag, "miditrack")
-    if trackname != None: addvalue(x_miditrack, 'name', trackname)
-    else: addvalue(x_miditrack, 'name', 'Track')
+    if 'color' in insttrackdata: addvalue(x_miditrack, 'color', '#'+colors.rgb_float_2_hex(insttrackdata['color']))
+    if 'name' in insttrackdata: addvalue(x_miditrack, 'name', insttrackdata['name'])
     addvalue(x_miditrack, 'record', 0)
     addvalue(x_miditrack, 'mute', 0)
     addvalue(x_miditrack, 'solo', 0)
@@ -139,6 +141,7 @@ class output_cvpj(plugin_output.base):
         projJ = json.loads(convproj_json)
         
         placements.r_lanefit(projJ)
+        placements.r_split_single_notelist(projJ)
 
         midiDivision = 384
         NoteStep = midiDivision/4
@@ -191,13 +194,13 @@ class output_cvpj(plugin_output.base):
                                 cvpj_tr_islaned = True
                         if cvpj_tr_islaned == False:
                             if 'notes' in cvpj_tr: 
-                                maketrack_midi(x_song, cvpj_tr['notes'], s_trkdata['name'], synthidnum)
+                                maketrack_midi(x_song, cvpj_tr['notes'], s_trkdata['name'], synthidnum, s_trkdata)
                         else:
                             for laneid in cvpj_tr['laneorder']:
                                 lanedata = cvpj_tr['lanedata'][laneid]
                                 lanename = ''
                                 if 'name' in lanedata: lanename = lanedata['name']
-                                maketrack_midi(x_song, lanedata['notes'], lanename, synthidnum)
+                                maketrack_midi(x_song, lanedata['notes'], lanename, synthidnum, s_trkdata)
     
                         print(tracknum, cvpj_tr_islaned)
                     maketrack_synth(x_song, s_trkdata, synthidnum)

@@ -19,8 +19,8 @@ def getsongduration(projJ):
     for trackid in trackplacements:
 
         islaned = False
-        if 'notes_laned' in trackplacements[trackid]:
-            if trackplacements[trackid]['notes_laned'] == 1:
+        if 'laned' in trackplacements[trackid]:
+            if trackplacements[trackid]['laned'] == 1:
                 islaned = True
 
 
@@ -32,9 +32,9 @@ def getsongduration(projJ):
                     if songduration < p_pos+p_dur:
                         songduration = p_pos+p_dur
         else:
-            if 'notes_lanedata' in trackplacements[trackid]:
-                for s_lanedata in trackplacements[trackid]['notes_lanedata']:
-                    placementdata = trackplacements[trackid]['notes_lanedata'][s_lanedata]['placements']
+            if 'lanedata' in trackplacements[trackid]:
+                for s_lanedata in trackplacements[trackid]['lanedata']:
+                    placementdata = trackplacements[trackid]['lanedata'][s_lanedata]['notes']
                     for placement in placementdata:
                         p_pos = placement['position']
                         p_dur = placement['duration']
@@ -124,8 +124,8 @@ def r_split_single_notelist(projJ):
 
                 islaned = False
 
-                if 'notes_laned' in track_placements[trackid]:
-                    if track_placements[trackid]['notes_laned'] == 1:
+                if 'laned' in track_placements[trackid]:
+                    if track_placements[trackid]['laned'] == 1:
                         islaned = True
 
                 if islaned == False:
@@ -135,11 +135,11 @@ def r_split_single_notelist(projJ):
                             track_placements[trackid]['notes'] = single_notelists2placements(placementdata)
                             print('[placements] SplitSingleNoteList: non-laned: splitted "'+trackid+'" to '+str(len(track_placements[trackid]['notes'])) + ' placements.')
                 else:
-                    for s_lanedata in track_placements[trackid]['notes_lanedata']:
-                        placementdata = track_placements[trackid]['notes_lanedata'][s_lanedata]['placements']
+                    for s_lanedata in track_placements[trackid]['lanedata']:
+                        placementdata = track_placements[trackid]['lanedata'][s_lanedata]['notes']
                         if len(placementdata) == 1:
-                            track_placements[trackid]['notes_lanedata'][s_lanedata]['placements'] = single_notelists2placements(placementdata)
-                            print('[placements] SplitSingleNoteList: laned: splitted "'+trackid+'" from lane "'+str(s_lanedata)+'" to '+str(len(track_placements[trackid]['notes_lanedata'][s_lanedata]['placements'])) + ' placements.')
+                            track_placements[trackid]['lanedata'][s_lanedata]['notes'] = single_notelists2placements(placementdata)
+                            print('[placements] SplitSingleNoteList: laned: splitted "'+trackid+'" from lane "'+str(s_lanedata)+'" to '+str(len(track_placements[trackid]['lanedata'][s_lanedata]['notes'])) + ' placements.')
     projJ['do_singlenotelistcut'] = False
 
 
@@ -176,12 +176,12 @@ def r_removelanes(projJ):
 
                 not_laned = True
 
-                if 'notes_laned' in s_pldata:
-                    if s_pldata['notes_laned'] == 1:
+                if 'laned' in s_pldata:
+                    if s_pldata['laned'] == 1:
                         not_laned = False
 
-                        s_lanedata = s_pldata['notes_lanedata']
-                        s_laneordering = s_pldata['notes_laneorder']
+                        s_lanedata = s_pldata['lanedata']
+                        s_laneordering = s_pldata['laneorder']
 
                         if len(s_laneordering) == 0:
                             new_trackdata[trackid] = s_trackdata
@@ -192,7 +192,7 @@ def r_removelanes(projJ):
                         if len(s_laneordering) == 1:
                             new_trackdata[trackid] = s_trackdata
                             new_trackplacements[trackid] = {}
-                            new_trackplacements[trackid]['notes'] = s_lanedata[s_laneordering[0]]['placements']
+                            new_trackplacements[trackid]['notes'] = s_lanedata[s_laneordering[0]]['notes']
                             new_trackordering.append(trackid)
 
                         if len(s_laneordering) > 1:
@@ -209,7 +209,7 @@ def r_removelanes(projJ):
                                 new_trackdata[splitnameid] = s_trackdata.copy()
                                 new_trackdata[splitnameid]['name'] = septrackname
                                 new_trackplacements[splitnameid] = {}
-                                new_trackplacements[splitnameid]['notes'] = s_lanedata[laneid]['placements']
+                                new_trackplacements[splitnameid]['notes'] = s_lanedata[laneid]['notes']
                                 new_trackordering.append(splitnameid)
 
                 if not_laned == True:
@@ -255,10 +255,10 @@ def r_lanefit(projJ):
         if projJ['do_lanefit'] == True:
             trackplacements = projJ['track_placements']
             for trackid in trackplacements:
-                if 'notes_laned' in trackplacements[trackid]:
-                    if trackplacements[trackid]['notes_laned'] == True:
-                        old_lanedata = trackplacements[trackid]['notes_lanedata']
-                        old_laneordering = trackplacements[trackid]['notes_laneorder']
+                if 'laned' in trackplacements[trackid]:
+                    if trackplacements[trackid]['laned'] == True:
+                        old_lanedata = trackplacements[trackid]['lanedata']
+                        old_laneordering = trackplacements[trackid]['laneorder']
                         print('[placements] LaneFit: '+ trackid+': '+str(len(old_laneordering))+' > ', end='')
                         new_lanedata = {}
                         new_laneordering = []
@@ -266,7 +266,7 @@ def r_lanefit(projJ):
                         new_pltable = [[]]
                         for laneid in old_laneordering:
                             old_lanedata_data = old_lanedata[laneid]
-                            old_lanedata_pl = old_lanedata_data['placements']
+                            old_lanedata_pl = old_lanedata_data['notes']
                             for old_lanedata_pl_s in old_lanedata_pl:
                                 lanefit_addpl(old_lanedata_pl_s, new_pltable)
 
@@ -274,12 +274,12 @@ def r_lanefit(projJ):
                             if new_pltable[plnum] != []:
                                 newlaneid = '_lanefit_'+str(plnum)
                                 new_lanedata[newlaneid] = {}
-                                new_lanedata[newlaneid]['placements'] = new_pltable[plnum]
+                                new_lanedata[newlaneid]['notes'] = new_pltable[plnum]
                                 new_laneordering.append(newlaneid)
 
                         print(str(len(new_laneordering)))
-                        trackplacements[trackid]['notes_lanedata'] = new_lanedata
-                        trackplacements[trackid]['notes_laneorder'] = new_laneordering
+                        trackplacements[trackid]['lanedata'] = new_lanedata
+                        trackplacements[trackid]['laneorder'] = new_laneordering
 
 
 def addwarps_pl(placementsdata):

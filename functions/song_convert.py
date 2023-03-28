@@ -124,8 +124,8 @@ def r2m(song):
                 if trackid in t_s_trackplacements:
                     pltrack = t_s_trackplacements[trackid]
 
-                    if 'notes_laned' in pltrack: 
-                        if pltrack['notes_laned'] == 1: 
+                    if 'laned' in pltrack: 
+                        if pltrack['laned'] == 1: 
                             singletrack_laned = 1
 
                     if singletrack_laned == 0: 
@@ -134,16 +134,16 @@ def r2m(song):
                         r2m_makeplaylistrow(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color, None, None)
                     else:
                         print('[song-convert] r2m: inst laned:', trackid)
-                        t_laneorder = pltrack['notes_laneorder']
-                        t_lanedata = pltrack['notes_lanedata']
+                        t_laneorder = pltrack['laneorder']
+                        t_lanedata = pltrack['lanedata']
                         for laneid in t_laneorder:
                             lane_data = t_lanedata[laneid]
                             l_name = None
                             l_color = None
                             if 'name' in lane_data: l_name = lane_data['name']
                             if 'color' in lane_data: l_color = lane_data['color']
-                            if 'placements' in lane_data:
-                                r2m_makeplaylistrow(cvpj_proj, plnum, trackid, lane_data['placements'], m_name, m_color, l_name, l_color)
+                            if 'notes' in lane_data:
+                                r2m_makeplaylistrow(cvpj_proj, plnum, trackid, lane_data['notes'], m_name, m_color, l_name, l_color)
                                 plnum += 1
                     if singletrack_laned == 0: plnum += 1
 
@@ -204,8 +204,8 @@ def ri2mi(song):
                 if trackid in t_s_trackplacements:
                     pldata = t_s_trackplacements[trackid]
 
-                    if 'notes_laned' in pldata: 
-                        if pldata['notes_laned'] == 1: 
+                    if 'laned' in pldata: 
+                        if pldata['laned'] == 1: 
                             singletrack_laned = 1
     
                     if singletrack_laned == 0: 
@@ -215,17 +215,17 @@ def ri2mi(song):
                         r2m_makeplaylistrow(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color, None, None)
                     else:
                         print('[song-convert] ri2mi: inst laned:', trackid)
-                        t_laneorder = pldata['notes_laneorder']
-                        t_lanedata = pldata['notes_lanedata']
+                        t_laneorder = pldata['laneorder']
+                        t_lanedata = pldata['lanedata']
                         for laneid in t_laneorder:
                             lane_data = t_lanedata[laneid]
                             l_name = None
                             l_color = None
                             if 'name' in lane_data: l_name = lane_data['name']
                             if 'color' in lane_data: l_color = lane_data['color']
-                            if 'placements' in lane_data:
-                                ri2mi_index_nliid(lane_data['placements'], trackid)
-                                r2m_makeplaylistrow(cvpj_proj, plnum, trackid, lane_data['placements'], m_name, m_color, l_name, l_color)
+                            if 'notes' in lane_data:
+                                ri2mi_index_nliid(lane_data['notes'], trackid)
+                                r2m_makeplaylistrow(cvpj_proj, plnum, trackid, lane_data['notes'], m_name, m_color, l_name, l_color)
                                 plnum += 1
                     if singletrack_laned == 0: plnum += 1
 
@@ -260,8 +260,8 @@ def ri2r(song):
 
                 singletrack_laned = 0
 
-                if 'notes_laned' in trkpldata: 
-                    if trkpldata['notes_laned'] == 1: 
+                if 'laned' in trkpldata: 
+                    if trkpldata['laned'] == 1: 
                         singletrack_laned = 1
     
                 if singletrack_laned == 0: 
@@ -269,10 +269,10 @@ def ri2r(song):
                     for s_pl in placements:
                         ri2r_fromindex2notelist(s_pl, notelistindex)
                 else:
-                    t_laneorder = trkpldata['notes_laneorder']
-                    t_lanedata = trkpldata['notes_lanedata']
+                    t_laneorder = trkpldata['laneorder']
+                    t_lanedata = trkpldata['lanedata']
                     for laneid in t_laneorder:
-                        placements = trkpldata['notes_lanedata'][laneid]['placements']
+                        placements = trkpldata['lanedata'][laneid]['notes']
                         for s_pl in placements:
                             ri2r_fromindex2notelist(s_pl, notelistindex)
 
@@ -342,13 +342,12 @@ def m2r(song):
     for instrument in cvpjm_instruments_order:
         if instrument in cvpjm_instruments:
             cvpj_trackplacements[instrument] = {}
-            cvpj_trackplacements[instrument]['notes'] = {}
             trackdata = cvpjm_instruments[instrument]
             cvpj_trackdata[instrument] = trackdata
             trackdata['type'] = 'instrument'
-            cvpj_trackplacements[instrument]['notes_laned'] = 1
-            cvpj_trackplacements[instrument]['notes_lanedata'] = {}
-            cvpj_trackplacements[instrument]['notes_laneorder'] = []
+            cvpj_trackplacements[instrument]['laned'] = 1
+            cvpj_trackplacements[instrument]['lanedata'] = {}
+            cvpj_trackplacements[instrument]['laneorder'] = []
             
             cvpj_trackorder.append(instrument)
 
@@ -363,16 +362,16 @@ def m2r(song):
                 splitted_insts = m2r_split_insts(placement)
                 for instrument in splitted_insts:
                     if instrument in cvpj_trackdata:
-                        lanedata = cvpj_trackplacements[instrument]['notes_lanedata']
+                        lanedata = cvpj_trackplacements[instrument]['lanedata']
                         if playlistentry not in lanedata:
                             lanedata[playlistentry] = {}
                             if 'name' in playlist[playlistentry]:
                                 lanedata[playlistentry]['name'] = playlist[playlistentry]['name']
                             if 'color' in playlist[playlistentry]:
                                 lanedata[playlistentry]['color'] = playlist[playlistentry]['color']
-                            cvpj_trackplacements[instrument]['notes_laneorder'].append(playlistentry)
-                            lanedata[playlistentry]['placements'] = []
-                        cvpj_trackplacements[instrument]['notes_lanedata'][playlistentry]['placements'].append(splitted_insts[instrument])
+                            cvpj_trackplacements[instrument]['laneorder'].append(playlistentry)
+                            lanedata[playlistentry]['notes'] = []
+                        cvpj_trackplacements[instrument]['lanedata'][playlistentry]['notes'].append(splitted_insts[instrument])
 
     cvpj_proj['track_data'] = cvpj_trackdata
     cvpj_proj['track_order'] = cvpj_trackorder

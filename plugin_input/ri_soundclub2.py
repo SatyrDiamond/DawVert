@@ -67,7 +67,6 @@ class input_soundclub2(plugin_input.base):
                 print('[input-soundclub2] Pattern')
                 sc2_patobjs = sc2_read(sc2_patdata, 4)
                 pat_cvpj_notelist[cur_patnum] = [0, {}]
-                t_notelist = []
                 pat_duration = 0
                 for sc2_patobj in sc2_patobjs:
                     if sc2_patobj[0] == b'pna': 
@@ -210,13 +209,12 @@ class input_soundclub2(plugin_input.base):
         for s_laneddata in t_laneddata:
             cvpj_l['track_placements']['sc2_'+str(s_laneddata)] = {}
             cvpj_s_tp = cvpj_l['track_placements']['sc2_'+str(s_laneddata)] 
-            cvpj_s_tp['notes_laned'] = 1
-            cvpj_s_tp['notes_laneorder'] = []
-            cvpj_s_tp['notes_lanedata'] = {}
+            cvpj_s_tp['laned'] = 1
+            cvpj_s_tp['laneorder'] = []
+            cvpj_s_tp['lanedata'] = {}
             for s_laned in t_laneddata[s_laneddata]:
-                cvpj_s_tp['notes_laneorder'].append(str(s_laned))
-                cvpj_s_tp['notes_lanedata'][str(s_laned)] = {}
-                cvpj_s_tp['notes_lanedata'][str(s_laned)]['placements'] = t_laneddata[s_laneddata][s_laned]
+                cvpj_s_tp['laneorder'].append(str(s_laned))
+                cvpj_s_tp['lanedata'][str(s_laned)] = {'notes': t_laneddata[s_laneddata][s_laned]}
 
         cvpj_l['do_addwrap'] = True
 

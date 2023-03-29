@@ -10,6 +10,7 @@ from functions import folder_samples
 from functions import placements
 from functions import tracks
 from functions import song
+from functions import note_data
 
 track_colors = [[0.25, 0.38, 0.49], [0.36, 0.43, 0.46], [0.51, 0.57, 0.47], [0.58, 0.64, 0.40]]
 
@@ -64,13 +65,11 @@ class input_piyopiyo(plugin_input.base):
             trk_envelope = pmdfile.read(64)
             keyoffset[tracknum] = (trk_octave-2)*12
 
-            cvpj_instdata = {'plugin': "sampler", 'plugindata': {'file': samplefolder+'/'+str(tracknum+1)+'.wav'}}
+            wave_path = samplefolder+'/'+str(tracknum+1)+'.wav'
+            cvpj_instdata = {'plugin': "sampler", 'plugindata': {'file': wave_path}}
             idval = str(tracknum)
-
             tracks.r_addtrack_inst(cvpj_l, idval, cvpj_instdata)
             tracks.r_addtrack_data(cvpj_l, idval, 'note'+str(tracknum), track_colors[tracknum], trk_volume/250, None)
-
-            wave_path = samplefolder + str(tracknum+1) + '.wav'
             audio_wav.generate(wave_path, data_bytes.unsign_8(trk_waveform), 1, 67000, 8, {'loop':[0, 256]})
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
@@ -89,8 +88,7 @@ class input_piyopiyo(plugin_input.base):
                 if pan != 0: currentpan = (pan-4)/3
                 notenum = 11
                 for bitnote in bitnotes:
-                    if bitnote == '1':
-                        notelist.append({'position': pmdpos, 'key': notenum+keyoffset[tracknum], 'duration': 1, 'pan': currentpan, 'vol': 1.0})
+                    if bitnote == '1': notelist.append(note_data.rx_makenote(pmdpos, 1, notenum+keyoffset[tracknum], 1.0, currentpan))
                     notenum -= 1
             if notelist != []: t_placements = placements.nl2pl(notelist)
             else: t_placements = []

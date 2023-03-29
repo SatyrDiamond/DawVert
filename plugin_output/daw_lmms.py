@@ -542,7 +542,6 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
                 xml_param = ET.SubElement(xml_ladspa, 'port1'+param)
                 xml_param.set('data', str(cvpj_params['1'][param]))
 
-
 def lmms_encode_effectslot(fxcX, json_fxslot):
     fxslotX = ET.SubElement(fxcX, "effect")
     if 'wet' in json_fxslot:
@@ -766,7 +765,6 @@ class output_lmms(plugin_output.base):
 
         projJ = json.loads(convproj_json)
 
-        song_convert.instrack2singleinst(projJ,'s')
         song_convert.trackfx2fxrack(projJ,'s')
 
         placements.r_lanefit(projJ)

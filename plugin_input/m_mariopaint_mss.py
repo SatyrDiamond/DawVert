@@ -81,8 +81,7 @@ class input_mariopaint_mss(plugin_input.base):
                 x_chord = chord.find(instname)
                 duration = curpos
                 if x_chord != None: addnotes(curpos, notelen, instname, x_chord.text, chordvolume)
-            t_bm = chord.find('bookmark')
-            if t_bm != None: song.add_timemarker_text(cvpj_l, curpos, 'Bookmark')
+            if chord.find('bookmark') != None: song.add_timemarker_text(cvpj_l, curpos, 'Bookmark')
             t_sm = chord.find('speedmark')
             if t_sm != None: 
                 t_sm_tempo = int(t_sm.get('tempo'))
@@ -100,10 +99,7 @@ class input_mariopaint_mss(plugin_input.base):
             tracks.m_addinst(cvpj_l, instname, {'plugin': 'general-midi', 'plugindata': {'bank':0, 'inst':instnames.index(instname)}})
             tracks.m_addinst_data(cvpj_l, instname, s_inst_name, s_inst_color, None, None)
 
-        automation = {}
-        automation['main'] = {}
-        automation['main']['bpm'] = auto_tempo
-        cvpj_l['automation'] = automation
+        cvpj_l['automation'] = {'main': {'bpm': auto_tempo}}
 
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True

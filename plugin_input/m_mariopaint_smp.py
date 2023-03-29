@@ -21,7 +21,6 @@ def makenote(n_pos, notes, vol, notesize):
         smpnote_size = len(notetxt)
         smpnote_str = io.StringIO(notetxt)
 
-        out_inst = notesplit[0]
         out_key = keytable[smpnote_str.read(1)]
         out_oct = int(smpnote_str.read(1))-4
         out_mode = 0
@@ -33,7 +32,7 @@ def makenote(n_pos, notes, vol, notesize):
             if t_txtp == 'b': out_offset = -1
             if t_txtp == 'm': out_mode = smpnote_str.read(1)
 
-        if out_mode == 0: cvpj_notelist.append(note_data.mx_makenote(out_inst, n_pos*notesize, notesize, out_key+out_oct*12+out_offset, vol/100, None))
+        if out_mode == 0: cvpj_notelist.append(note_data.mx_makenote(notesplit[0], n_pos*notesize, notesize, out_key+out_oct*12+out_offset, vol/100, None))
 
 class input_mariopaint_smp(plugin_input.base):
     def __init__(self): pass
@@ -60,14 +59,11 @@ class input_mariopaint_smp(plugin_input.base):
                     if smp_nameval[0] == "TEMPO": smp_tempo = float(smp_nameval[1])
                     else: smp_tempo = 200
                 smp_tempo, notelen = song.get_lower_tempo(smp_tempo, 2, 180)
-
             else: 
                 s_point = line.rstrip().split(',')
                 s_data = s_point[1:]
                 s_pos = s_point[:1][0].split(':')
-                s_pos_beat = int(s_pos[0])
-                s_pos_pos = int(s_pos[1])
-                s_pos_out = ((s_pos_beat-1)*4) + s_pos_pos
+                s_pos_out = ((int(s_pos[0])-1)*4) + int(s_pos[1])
                 s_notes = s_data[:-1]
                 s_vol = int(s_data[-1:][0].split(':')[1])
                 makenote(s_pos_out, s_notes, s_vol, notelen)

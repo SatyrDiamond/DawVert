@@ -6,6 +6,7 @@ from functions import note_mod
 from functions import placements
 from functions import tracks
 from functions import song
+from functions import note_data
 import plugin_input
 import json
 
@@ -33,59 +34,42 @@ def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
     global cur_note
     global cur_vol
     global cur_pan
-
     org_numofnotes = instrumentinfotable_input[trackid][3]
-
     org_notelist = []
     for x in range(org_numofnotes): org_notelist.append([0,0,0,0,0])
-    for x in range(org_numofnotes): 
-        org_notelist[x][0] = int.from_bytes(bio_org.read(4), "little") #position
-    for x in range(org_numofnotes): 
-        pre_note = bio_org.read(1)[0] #note
+    for x in range(org_numofnotes): #position
+        org_notelist[x][0] = int.from_bytes(bio_org.read(4), "little")
+    for x in range(org_numofnotes): #note
+        pre_note = bio_org.read(1)[0]
         if 0 <= pre_note <= 95: cur_note = pre_note
         org_notelist[x][1] = cur_note
-    for x in range(org_numofnotes): 
-        org_notelist[x][2] = bio_org.read(1)[0] #duration
-    for x in range(org_numofnotes): 
-        pre_vol = bio_org.read(1)[0] #vol
+    for x in range(org_numofnotes): #duration
+        org_notelist[x][2] = bio_org.read(1)[0]
+    for x in range(org_numofnotes): #vol
+        pre_vol = bio_org.read(1)[0]
         if 0 <= pre_vol <= 254: cur_vol = pre_vol
         org_notelist[x][3] = cur_vol
-    for x in range(org_numofnotes): 
-        pre_pan = bio_org.read(1)[0] #pan
+    for x in range(org_numofnotes): #pan
+        pre_pan = bio_org.read(1)[0]
         if 0 <= pre_pan <= 12: cur_pan = pre_pan
         org_notelist[x][4] = cur_pan
-
     org_l_nl = {}
     for org_note in org_notelist: org_l_nl[org_note[0]] = org_note[1:5]
     org_l_nl = dict(sorted(org_l_nl.items(), key=lambda item: item[0]))
-
     cvpj_nl = []
-
     endnote = None
     notedur = 0
     for org_l_n in org_l_nl:
         notedata = org_l_nl[org_l_n]
-
-        if endnote != None: 
-            if org_l_n >= endnote: endnote = None
-
-        if notedata[1] != 1: 
+        if endnote != None: if org_l_n >= endnote: endnote = None
+        if notedata[1] != 1:
             notedur = notedata[1]
             endnote = org_l_n+notedur
-
-        if endnote != None: 
+        if endnote != None:
             if endnote-org_l_n == notedur: isinsidenote = False
             else: isinsidenote = True
         else: isinsidenote = False
-        
-        if isinsidenote == False:
-            cvpj_note = {}
-            cvpj_note['position'] = org_l_n
-            cvpj_note['key'] = notedata[0]-48
-            cvpj_note['duration'] = notedata[1]
-            cvpj_note['vol'] = notedata[2]/254
-            cvpj_note['pan'] = (notedata[3]-6)/6
-            cvpj_nl.append(cvpj_note)
+        if isinsidenote == False: cvpj_nl.append(note_data.rx_makenote(org_l_n, notedata[1], notedata[0]-48, notedata[2]/254, (notedata[3]-6)/6))
     return cvpj_nl
 
 class input_orgyana(plugin_input.base):
@@ -135,10 +119,8 @@ class input_orgyana(plugin_input.base):
             s_cvpj_nl = read_orgtrack(bio_org, org_instrumentinfotable, tracknum)
             if len(s_cvpj_nl) != 0:
                 org_pitch = org_instrumentinfotable[tracknum][0]
-
                 if tracknum < 8: trackname = "Melody "+str(tracknum+1)
                 else: trackname = l_drum_name[org_insttable[tracknum]]
-
                 idval = 'org_'+str(tracknum)
                 tracks.r_addtrack_inst(cvpj_l, idval, {'pitch': (org_pitch-1000)/18})
                 tracks.r_addtrack_data(cvpj_l, idval, trackname, l_org_colors[tracknum], 1.0, None)
@@ -149,10 +131,10 @@ class input_orgyana(plugin_input.base):
 
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        
+       
         cvpj_l['bpm'] = (1/(org_wait/122))*122
         cvpj_l['timesig_denominator'] = org_stepsperbar
         cvpj_l['timesig_numerator'] = org_beatsperstep
-        
+       
         if org_loop_beginning != 0: song.add_timemarker_looparea(cvpj_l, None, org_loop_beginning, org_loop_end)
         return json.dumps(cvpj_l)

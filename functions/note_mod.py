@@ -31,7 +31,6 @@ def notemod_conv(noteJ):
 			for cvpj_snp in cvpj_snps:
 				pitchmod2point(noteJ, cvpj_snp[0], 2, cvpj_snp[1], cvpj_snp[2], cvpj_snp[3])
 
-
 		if noteautopitch_exists == True and noteslide_exists == False:
 			cvpj_auto_pitch = notemod['auto']['pitch'] 
 			t_posval = []
@@ -80,14 +79,13 @@ def pitchmod2point(cvpj_note, position, ptype, maindur, slideparam, input_pitch)
 	global pitch_prev
 	global slide_zeropospointexist
 
-	#print( str(slideparam).ljust(4),  str(maindur).ljust(4),  str(maindur/slideparam).ljust(19), end='  ')
-
 	mainslideparam_mul = slideparam*maindur
 	pitch_exact = False
 
 	if 'notemod' not in cvpj_note: cvpj_note['notemod'] = {}
 	if 'auto' not in cvpj_note['notemod']: cvpj_note['notemod']['auto'] = {}
-	if 'pitch' not in cvpj_note['notemod']['auto']: cvpj_note['notemod']['auto']['pitch'] = []
+	if 'pitch' not in cvpj_note['notemod']['auto']: 
+		cvpj_note['notemod']['auto']['pitch'] = []
 	
 	pitchpoints = cvpj_note['notemod']['auto']['pitch']
 
@@ -129,13 +127,26 @@ def pitchmod2point(cvpj_note, position, ptype, maindur, slideparam, input_pitch)
 			pitchpoints.append({'position': position, 'value': pitch_cur, 'type': 'instant'})
 
 	elif ptype == 2:
+		#print( 
+		#	str(position).ljust(4),  
+		#	str(maindur).ljust(4),  
+		#	str(slideparam).ljust(4),  
+		#	str(input_pitch).ljust(4),  
+		#	str(position).rjust(4)+'-'+str(position+slideparam).ljust(4),
+		#	str(slideparam/maindur).ljust(4),  
+		#	)
+
 		if slide_zeropospointexist == False:
 			pitchpoints.append({'position': 0, 'value': 0})
 			slide_zeropospointexist = True
 		if slideparam != 0:
-			pitchpoints.append({'position': position, 'value': pitch_prev})
-			pitchpoints.append({'position': position+min(maindur, slideparam), 'value': input_pitch})
-			pitch_cur = input_pitch*min(1, maindur/slideparam)
+			pitchpoints.append({'position': position, 'value': pitch_cur})
+			if slideparam > maindur:
+				pitchpoints.append({'position': position+maindur, 'value': input_pitch*(maindur/slideparam)})
+				pitch_cur = input_pitch*(maindur/slideparam)
+			else:
+				pitchpoints.append({'position': position+slideparam, 'value': input_pitch})
+				pitch_cur = input_pitch
 		else:
 			pitchpoints.append({'position': position, 'value': input_pitch, 'type': 'instant'})
 			pitch_cur = input_pitch

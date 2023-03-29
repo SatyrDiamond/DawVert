@@ -61,7 +61,8 @@ def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
     notedur = 0
     for org_l_n in org_l_nl:
         notedata = org_l_nl[org_l_n]
-        if endnote != None: if org_l_n >= endnote: endnote = None
+        if endnote != None: 
+            if org_l_n >= endnote: endnote = None
         if notedata[1] != 1:
             notedur = notedata[1]
             endnote = org_l_n+notedur

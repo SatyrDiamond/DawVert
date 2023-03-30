@@ -43,6 +43,14 @@ class input_mariopaint_mss(plugin_input.base):
     def getshortname(self): return 'mariopaint_mss'
     def getname(self): return 'Advanced Mario Sequencer'
     def gettype(self): return 'm'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': True,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': True
+        }
     def supported_autodetect(self): return True
     def detect(self, input_file):
         output = False

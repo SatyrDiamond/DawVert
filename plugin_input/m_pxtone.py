@@ -167,6 +167,14 @@ class input_pxtone(plugin_input.base):
     def getshortname(self): return 'ptcop'
     def getname(self): return 'PxTone'
     def gettype(self): return 'm'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': True,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': True
+        }
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')

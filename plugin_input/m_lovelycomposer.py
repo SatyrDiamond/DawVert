@@ -118,6 +118,14 @@ class input_lc(plugin_input.base):
     def getshortname(self): return 'lovelycomposer'
     def getname(self): return 'Lovely Composer'
     def gettype(self): return 'm'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': True,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': False
+        }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         lc_f_stream = open(input_file, 'r')

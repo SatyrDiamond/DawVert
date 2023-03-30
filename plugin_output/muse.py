@@ -130,6 +130,14 @@ class output_cvpj(plugin_output.base):
     def getshortname(self): return 'muse'
     def gettype(self): return 'r'
     def plugin_archs(self): return None
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': True,
+        'placement_cut': True,
+        'placement_warp': False,
+        'no_placements': False
+        }
     def parse(self, convproj_json, output_file):
         global NoteStep
         global tracknum

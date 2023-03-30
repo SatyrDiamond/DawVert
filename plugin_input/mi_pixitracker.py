@@ -20,6 +20,14 @@ class input_cvpj_f(plugin_input.base):
     def getname(self): return 'pixitracker'
     def gettype(self): return 'mi'
     def supported_autodetect(self): return True
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': True,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': False
+        }
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
         bytestream.seek(0)
@@ -177,7 +185,6 @@ class input_cvpj_f(plugin_input.base):
 
         cvpj_l['do_addwrap'] = True
 
-        cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         
         cvpj_l['vol'] = pixi_vol/100

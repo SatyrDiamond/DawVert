@@ -11,6 +11,14 @@ class input_color_art(plugin_input.base):
     def getshortname(self): return 'color_art'
     def getname(self): return 'Color Art'
     def gettype(self): return 'r'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': False,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': False
+        }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         reader = png.Reader(filename=input_file)

@@ -12,30 +12,6 @@ def hextoint(value):
 keytable_vals = [0,2,4,5,7,9,11]
 keytable = ['C','D','E','F','G','A','B']
 
-mt_type_colors = {}
-mt_type_colors['Square1'] = [0.97, 0.56, 0.36]
-mt_type_colors['Square2'] = [0.97, 0.56, 0.36]
-mt_type_colors['Triangle'] = [0.94, 0.33, 0.58]
-mt_type_colors['Noise'] = [0.33, 0.74, 0.90]
-mt_type_colors['FDS'] = [0.94, 0.94, 0.65]
-mt_type_colors['DPCM'] = [0.48, 0.83, 0.49]
-mt_type_colors['VRC7FM'] = [1.00, 0.46, 0.44]
-mt_type_colors['VRC6Square'] = [0.60, 0.44, 0.93]
-mt_type_colors['VRC6Saw'] = [0.46, 0.52, 0.91]
-mt_type_colors['S5B'] = [0.58, 0.94, 0.33]
-mt_type_colors['N163'] = [0.97, 0.97, 0.36]
-mt_type_colors['MMC5Square'] = [0.97, 0.56, 0.36]
-
-chipname = {}
-chipname['pulse'] = 'Pulse'
-chipname['noise'] = 'Noise'
-chipname['triangle'] = 'Triangle'
-chipname['pcm'] = 'DPCM'
-chipname['saw'] = 'Saw'
-chipname['fds'] = 'FDS'
-chipname['VRC7FM'] = 'VRC7FM'
-chipname['namco'] = 'N163'
-
 def setmacro(cvpj_plugdata, macro_list, listname, macronum, famitrkr_instdata_macro_id):
     if famitrkr_instdata_macro_id in macro_list[macronum]:
         cvpj_plugdata[listname] = macro_list[macronum][famitrkr_instdata_macro_id]
@@ -73,9 +49,9 @@ def parsecell(celldata):
 
     return(out_cell)
 
-retroinst_names = ['Square1','Square2','Triangle','Noise','VRC6Square']
+retroinst_names = ['Square1','Square2','Triangle','Noise','VRC6Square','VRC6Saw']
 
-retroinst_names_vrc6 = ['VRC6Square']
+retroinst_names_vrc6 = ['VRC6Square','VRC6Saw']
 
 class input_famitrkr_txt(plugin_input.base):
     def __init__(self): pass
@@ -83,6 +59,14 @@ class input_famitrkr_txt(plugin_input.base):
     def getshortname(self): return 'famitrkr_txt'
     def getname(self): return 'famitrkr_txt'
     def gettype(self): return 'mi'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': True,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': False
+        }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         f_smp = open(input_file, 'r')
@@ -169,9 +153,10 @@ class input_famitrkr_txt(plugin_input.base):
                 #1=VRC6, 2=VRC7, 4=FDS, 8=MMC5, 16=N163, 32=S5B 
 
                 if bool(ft_info_expansion & 0b1):
-                    for _ in range(2):
-                        mt_ch_insttype.append('VRC6Square')
-                        mt_ch_names.append('VRC6Square')
+                    mt_ch_insttype.append('VRC6Square1')
+                    mt_ch_names.append('VRC6Square1')
+                    mt_ch_insttype.append('VRC6Square2')
+                    mt_ch_names.append('VRC6Square2')
                     mt_ch_insttype.append('VRC6Saw')
                     mt_ch_names.append('VRC6Saw')
                 if bool(ft_info_expansion & 0b10):
@@ -270,7 +255,7 @@ class input_famitrkr_txt(plugin_input.base):
         cvpj_l_instrument_data = {}
         cvpj_l_instrument_order = []
 
-        song_tracker.multi_convert(cvpj_l, song_rows, mt_pat, mt_ord, mt_ch_insttype, mt_ch_names, mt_type_colors)
+        song_tracker.multi_convert(cvpj_l, song_rows, mt_pat, mt_ord, mt_ch_insttype)
 
         total_used_instruments = song_tracker.get_multi_used_instruments()
 
@@ -283,14 +268,13 @@ class input_famitrkr_txt(plugin_input.base):
             cvpj_inst["pan"] = 0.0
             cvpj_inst["vol"] = 1.0
             cvpj_inst["instdata"] = {}
-            if insttype in mt_type_colors:
-                cvpj_inst["color"] = mt_type_colors[insttype]
-
+            #if insttype in mt_type_colors:
+            #    cvpj_inst["color"] = mt_type_colors[insttype]
 
             if int(instid) in famitrkr_instdata:
                 cvpj_inst["name"] = insttype+'-'+famitrkr_instdata[int(instid)][0]
                 if insttype in retroinst_names:
-                    cvpj_inst["instdata"] = {"plugin": 'retro', "plugindata": {}}
+                    cvpj_inst["instdata"] = {"plugin": '2a03', "plugindata": {}}
                     cvpj_plugdata = cvpj_inst["instdata"]["plugindata"]
                     if insttype == 'Square1' or insttype == 'Square2': cvpj_plugdata["wave"] = "square"
                     if insttype == 'Triangle': cvpj_plugdata["wave"] = "triangle"
@@ -305,10 +289,11 @@ class input_famitrkr_txt(plugin_input.base):
 
             elif int(instid) in famitrkr_instdata_vrc6:
                 cvpj_inst["name"] = insttype+'-'+famitrkr_instdata_vrc6[int(instid)][0]
-                if insttype in retroinst_names:
+                if insttype in retroinst_names_vrc6:
                     cvpj_inst["instdata"] = {"plugin": 'retro', "plugindata": {}}
                     cvpj_plugdata = cvpj_inst["instdata"]["plugindata"]
                     if insttype == 'VRC6Square': cvpj_plugdata["wave"] = "square"
+                    if insttype == 'VRC6Saw': cvpj_plugdata["wave"] = "square"
                     setmacro(cvpj_plugdata, macro_nes_vrc6, "env_vol", 0, famitrkr_instdata_vrc6[int(instid)][1]) 
                     setmacro(cvpj_plugdata, macro_nes_vrc6, "env_arp", 1, famitrkr_instdata_vrc6[int(instid)][2]) 
                     setmacro(cvpj_plugdata, macro_nes_vrc6, "env_pitch", 2, famitrkr_instdata_vrc6[int(instid)][3]*-1) 

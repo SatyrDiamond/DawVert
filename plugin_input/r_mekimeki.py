@@ -24,6 +24,14 @@ class input_cvpj_f(plugin_input.base):
     def getshortname(self): return 'mekimekichip'
     def getname(self): return 'メキメキチップ (MekiMeki Chip)'
     def gettype(self): return 'r'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': False,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': True
+        }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         bytestream = open(input_file, 'r')
@@ -77,8 +85,7 @@ class input_cvpj_f(plugin_input.base):
                 cvpj_notedata = note_data.rx_makenote(notepos, notedur, notekey, notevol, notepan)
                 cvpj_notelist.append(cvpj_notedata)
 
-            if cvpj_notelist != []:
-                tracks.r_addtrackpl(cvpj_l, trackid, placements.nl2pl(cvpj_notelist))
+            tracks.r_addtrackpl(cvpj_l, trackid, placements.nl2pl(cvpj_notelist))
 
             tracknum += 1
 

@@ -118,6 +118,13 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
     else: pluginname = 'none'
     if 'plugindata' in instJ: plugJ = instJ['plugindata']
 
+    auto_nameid = {}
+    if 'automation' in projJ and 'pluginautoid' in instJ:
+        if 'plugin' in projJ['automation']:
+            if instJ['pluginautoid'] in projJ['automation']['plugin']:
+                auto_nameid = get_auto_ids_data(projJ['automation']['plugin'][instJ['pluginautoid']])
+
+
     if pluginname == 'sampler':
         print('[output-lmms]       Plugin: sampler > AudioFileProcessor')
         asdrlfo_set(plugJ, xmltag)
@@ -278,12 +285,12 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     global trackscount_forprinting
     trackscount_forprinting += 1
 
-    auto_nameid = {}
+    auto_nameiddata = {}
 
     if 'automation' in projJ:
         if 'track_main' in projJ['automation']:
             if trackid in projJ['automation']['track_main']:
-                auto_nameid = get_auto_ids(projJ['automation']['track_main'][trackid])
+                auto_nameiddata = get_auto_ids_data(projJ['automation']['track_main'][trackid])
 
     xmltag.set('type', "0")
 
@@ -307,17 +314,16 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     trkX_insttr.set('usemasterpitch', "1")
     if 'usemasterpitch' in instJ: trkX_insttr.set('usemasterpitch', str(instJ['usemasterpitch']))
     trkX_insttr.set('pitch', "0")
-    setvalue(instJ, 'pitch', trkX_insttr, 'pitch', 0, auto_nameid, 'track_main')
     if 'plugin' in instJ: instplugin = instJ['plugin']
     else: instplugin = None
 
     if 'fxrack_channel' in trkJ: trkX_insttr.set('fxch', str(trkJ['fxrack_channel']))
     else: trkX_insttr.set('fxch', '0')
-    trkX_insttr.set('pan', "0")
     trkX_insttr.set('pitchrange', "12")
-    trkX_insttr.set('vol', "100")
-    setvalue(trkJ, 'vol', trkX_insttr, 'vol', 1, auto_nameid, 'track_main')
-    setvalue(trkJ, 'pan', trkX_insttr, 'pan', 0, auto_nameid, 'track_main')
+
+    add_auto_val(auto_nameiddata, [0, 100], 1, trkJ, 'vol', trkX_insttr, 'vol', trackname, 'Volume')
+    add_auto_val(auto_nameiddata, [0, 100], 0, trkJ, 'pan', trkX_insttr, 'pan', trackname, 'Pan')
+    add_auto_val(auto_nameiddata, None, 0, trkJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
 
     if 'chain_fx_note' in trkJ:
         trkJ_notefx = trkJ['chain_fx_note']
@@ -408,11 +414,11 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
 
             patX.set('steps', "16")
             patX.set('name', "")
-            if 'cut' in json_placement: 
-                if json_placement['cut']['type'] == 'cut': 
-                    if 'start' in json_placement['cut']: cut_start = json_placement['cut']['start']
-                    if 'end' in json_placement['cut']: cut_end = json_placement['cut']['end']
-                    json_notelist = notelist_data.trimmove(json_notelist, cut_start, cut_end)
+            #if 'cut' in json_placement: 
+            #    if json_placement['cut']['type'] == 'cut': 
+            #        if 'start' in json_placement['cut']: cut_start = json_placement['cut']['start']
+            #        if 'end' in json_placement['cut']: cut_end = json_placement['cut']['end']
+            #        json_notelist = notelist_data.trimmove(json_notelist, cut_start, cut_end)
             if 'name' in json_placement: patX.set('name', json_placement['name'])
             patX.set('type', "1")
             if 'color' in json_placement: patX.set('color', '#' + colors.rgb_float_2_hex(json_placement['color']))
@@ -420,10 +426,10 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
             tracksnum += 1
         print(' ')
 
-    if 'automation' in projJ:
-        if 'track_main' in projJ['automation']:
-            if trackid in projJ['automation']['track_main']:
-                lmms_make_autotracks(projJ['automation']['track_main'][trackid], auto_nameid, 'track_main', trackname)
+    #if 'automation' in projJ:
+    #    if 'track_main' in projJ['automation']:
+    #        if trackid in projJ['automation']['track_main']:
+    #            lmms_make_autotracks(projJ['automation']['track_main'][trackid], auto_nameid, 'track_main', trackname)
 
     print('[output-lmms]')
 
@@ -443,7 +449,7 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
     if 'automation' in projJ:
         if 'track_main' in projJ['automation']:
             if trackid in projJ['automation']['track_main']:
-                auto_nameid = get_auto_ids(projJ['automation']['track_main'][trackid])
+                auto_nameid = get_auto_ids_data(projJ['automation']['track_main'][trackid])
 
     xmltag.set('type', "2")
 
@@ -574,12 +580,12 @@ def lmms_encode_fxchain(xmltag, json_fxchannel):
 def lmms_encode_fxmixer(xmltag, json_fxrack):
     for json_fxchannel in json_fxrack:
 
-        auto_nameid = {}
+        auto_nameiddata = {}
 
         if 'automation' in projJ:
             if 'fxmixer' in projJ['automation']:
                 if json_fxchannel in projJ['automation']['fxmixer']:
-                    auto_nameid = get_auto_ids(projJ['automation']['fxmixer'][json_fxchannel])
+                    auto_nameiddata = get_auto_ids_data(projJ['automation']['fxmixer'][json_fxchannel])
 
         fxchannelJ = json_fxrack[json_fxchannel]
         fxcX = ET.SubElement(xmltag, "fxchannel")
@@ -594,15 +600,12 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
 
         if 'color' in fxchannelJ: fxcX.set('color', '#' + colors.rgb_float_2_hex(fxchannelJ['color']))
 
-        if 'vol' in fxchannelJ: volume = fxchannelJ['vol']
-        else: volume = 1
-        setvalue(fxchannelJ, 'vol', fxcX, 'volume', 1, auto_nameid, 'fxmixer')
+        add_auto_val(auto_nameiddata, None, 1, fxchannelJ, 'vol', fxcX, 'volume', 'FX '+str(num), 'Volume')
 
         if 'muted' in fxchannelJ: muted = fxchannelJ['muted']
         else: muted = 0
 
         fxcX.set('name', name)
-        fxcX.set('volume', str(volume))
         fxcX.set('muted', str(muted))
         lmms_encode_fxchain(fxcX, fxchannelJ)
         if 'sends' in fxchannelJ:
@@ -616,10 +619,10 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
             sendX.set('channel', '0')
             sendX.set('amount', '1')
 
-        if 'automation' in projJ:
-            if 'fxmixer' in projJ['automation']:
-                if json_fxchannel in projJ['automation']['fxmixer']:
-                    lmms_make_autotracks(projJ['automation']['fxmixer'][json_fxchannel], auto_nameid, 'fxmixer', 'FX '+str(json_fxchannel))
+        #if 'automation' in projJ:
+        #    if 'fxmixer' in projJ['automation']:
+        #        if json_fxchannel in projJ['automation']['fxmixer']:
+        #            lmms_make_autotracks(projJ['automation']['fxmixer'][json_fxchannel], auto_nameid, 'fxmixer', 'FX '+str(json_fxchannel))
 
         print('[output-lmms]')
 
@@ -648,14 +651,6 @@ def lmms_encode_tracks(xmltag, trksJ, trkorderJ, trkplacementsJ):
         if trkJ['type'] == "instrument": lmms_encode_inst_track(xml_track, trkJ, trackid, trkplacementsJ)
         if trkJ['type'] == "audio": lmms_encode_audio_track(xml_track, trkJ, trackid, trkplacementsJ)
 
-def get_auto_ids(placements_auto):
-    global autoidnum
-    nameid = {}
-    for placementname in placements_auto:
-        nameid[placementname] = autoidnum
-        autoidnum += 1
-    return nameid
-
 def lmms_make_main_auto_track(autoidnum, autodata, visualname):
     global trkcX
     print('[output-lmms] Automation Track: '+visualname)
@@ -679,49 +674,30 @@ def lmms_make_main_auto_track(autoidnum, autodata, visualname):
             xml_object = ET.SubElement(xml_automationpattern, "object")
             xml_object.set('id', str(autoidnum))
 
-def setvalue(tagJ, nameJ, xmltagX, nameX, fallbackval, auto_ids, vartype):
-    global l_addmul
-    addmulvalues = None
-    if nameJ in l_addmul[vartype]: addmulvalues = l_addmul[vartype][nameJ]
-    if addmulvalues != None: fallbackval = (fallbackval+addmulvalues[0])*addmulvalues[1]
+def get_auto_ids_data(placements_auto):
+    global autoidnum
+    nameid = {}
+    for placementname in placements_auto:
+        nameid[placementname] = [autoidnum, placements_auto[placementname]]
+        autoidnum += 1
+    return nameid
 
-    if nameJ in tagJ:
-        if addmulvalues != None: outvalue = (tagJ[nameJ]+addmulvalues[0])*addmulvalues[1]
-        else: outvalue = tagJ[nameJ]
-        if nameJ in auto_ids:
-            t_ad = auto_ids[nameJ]
-            autovarX = ET.SubElement(xmltagX, nameX)
-            autovarX.set('value', str(outvalue))
-            autovarX.set('scale_type', 'linear')
-            autovarX.set('id', str(t_ad))
-        else: xmltagX.set(nameX, str(outvalue))
+def add_auto_val(auto_nameiddata, Vaddmul, Vfalbak, Jtag, Jname, Xtag, Xname, Vtype, Vname):
+    if Jname in Jtag: outvalue = Jtag[Jname]
+    else: outvalue = Vfalbak
+    if Vaddmul != None: outvalue = (outvalue+Vaddmul[0])*Vaddmul[1]
+
+    if Jname in auto_nameiddata:
+        lmms_autoid, cvpj_autodata = auto_nameiddata[Jname]
+        if Vaddmul != None: cvpj_autodata = auto.multiply(cvpj_autodata, Vaddmul[0], Vaddmul[1])
+        lmms_make_main_auto_track(lmms_autoid, cvpj_autodata, Vtype+': '+Vname)
+        autovarX = ET.SubElement(Xtag, Xname)
+        autovarX.set('value', str(outvalue))
+        autovarX.set('scale_type', 'linear')
+        autovarX.set('id', str(lmms_autoid))
     else:
-        if nameJ in auto_ids:
-            t_ad = auto_ids[nameJ]
-            autovarX = ET.SubElement(xmltagX, nameX)
-            autovarX.set('value', str(fallbackval))
-            autovarX.set('scale_type', 'linear')
-            autovarX.set('id', str(t_ad))
-        else: xmltagX.set(nameX, str(fallbackval))
+        Xtag.set(Xname, str(outvalue))
 
-def lmms_make_autotracks(l_auto, auto_nameid, ADS_type, visualname):
-    global projJ
-    for auto_part in auto_nameid:
-        s_auto_name = auto_part
-        s_auto_idnum = auto_nameid[auto_part]
-
-        if s_auto_name in l_auto_names[ADS_type]: s_auto_visualname = l_auto_names[ADS_type][s_auto_name]
-        else: s_auto_visualname = '[?] '+auto_part
-        s_auto_visualname = visualname+': '+s_auto_visualname
-
-        s_auto_data = l_auto[s_auto_name]
-
-        s_auto_addmul = None
-        if ADS_type in l_addmul:
-            if s_auto_name in l_addmul[ADS_type]: s_auto_addmul = l_addmul[ADS_type][s_auto_name]
-        if s_auto_addmul != None: s_auto_data = auto.multiply(s_auto_data, s_auto_addmul[0], s_auto_addmul[1])
-
-        lmms_make_main_auto_track(s_auto_idnum, s_auto_data, s_auto_visualname)
 
 global l_auto_names
 global l_addmul
@@ -755,6 +731,14 @@ class output_lmms(plugin_output.base):
     def getshortname(self): return 'lmms'
     def gettype(self): return 'r'
     def plugin_archs(self): return ['amd64', 'i386']
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': True,
+        'r_track_lanes': False,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': False
+        }
     def parse(self, convproj_json, output_file):
         global autoidnum
         global trkcX
@@ -764,12 +748,6 @@ class output_lmms(plugin_output.base):
         print('[output-lmms] Output Start')
 
         projJ = json.loads(convproj_json)
-
-        song_convert.trackfx2fxrack(projJ,'s')
-
-        placements.r_lanefit(projJ)
-        placements.r_removelanes(projJ)
-        placements.r_split_single_notelist(projJ)
 
         trksJ = projJ['track_data']
         trkorderJ = projJ['track_order']
@@ -784,27 +762,21 @@ class output_lmms(plugin_output.base):
         songX = ET.SubElement(projX, "song")
         trkcX = ET.SubElement(songX, "trackcontainer")
 
-        auto_nameid_main = {}
+        auto_nameiddata_main = {}
 
         if 'automation' in projJ:
             if 'main' in projJ['automation']:
-                auto_nameid_main = get_auto_ids(projJ['automation']['main'])
+                auto_nameiddata_main = get_auto_ids_data(projJ['automation']['main'])
         
-        setvalue(projJ, 'bpm', headX, 'bpm', 0, auto_nameid_main, 'main')
-        setvalue(projJ, 'pitch', headX, 'masterpitch', 0, auto_nameid_main, 'main')
-        setvalue(projJ, 'vol', headX, 'mastervol', 1, auto_nameid_main, 'main')
-        setvalue(projJ, 'timesig_numerator', headX, 'timesig_numerator', 4, auto_nameid_main, 'main')
-        setvalue(projJ, 'timesig_denominator', headX, 'timesig_denominator', 4, auto_nameid_main, 'main')
-
-        if 'automation' in projJ:
-            if 'main' in projJ['automation']:
-                lmms_make_autotracks(projJ['automation']['main'], auto_nameid_main, 'main', 'Song')
+        add_auto_val(auto_nameiddata_main, None, 120, projJ, 'bpm', headX, 'bpm', 'Song', 'Tempo')
+        add_auto_val(auto_nameiddata_main, [0, 0.01], 0, projJ, 'pitch', headX, 'masterpitch', 'Song', 'Pitch')
+        add_auto_val(auto_nameiddata_main, [0, 100], 1, projJ, 'vol', headX, 'mastervol', 'Song', 'Volume')
 
         lmms_encode_tracks(trkcX, trksJ, trkorderJ, trkplacementsJ)
 
         xml_fxmixer = ET.SubElement(songX, "fxmixer")
-        json_fxrack = projJ['fxrack']
-        lmms_encode_fxmixer(xml_fxmixer, json_fxrack)
+        if 'fxrack' in projJ:
+            lmms_encode_fxmixer(xml_fxmixer, projJ['fxrack'])
 
         if 'info' in projJ:
             infoJ = projJ['info']

@@ -103,6 +103,14 @@ class input_cvpj_r(plugin_input.base):
     def getshortname(self): return 'caustic'
     def getname(self): return 'Caustic 3'
     def gettype(self): return 'ri'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': False,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': False
+        }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         CausticData = format_caustic.deconstruct_main(input_file)

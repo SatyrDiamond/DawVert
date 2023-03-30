@@ -126,6 +126,14 @@ class input_adlib_rol(plugin_input.base):
     def getshortname(self): return 'adlib_rol'
     def getname(self): return 'AdLib Visual Composer'
     def gettype(self): return 'm'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': True,
+        'r_track_lanes': True,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': True
+        }
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')

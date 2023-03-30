@@ -25,10 +25,16 @@ class output_cvpjs(plugin_output.base):
     def getname(self): return 'FL Studio'
     def gettype(self): return 'mi'
     def plugin_archs(self): return ['amd64', 'i386']
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': True,
+        'r_track_lanes': True,
+        'placement_cut': True,
+        'placement_warp': False,
+        'no_placements': False
+        }
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
-
-        song_convert.trackfx2fxrack(projJ, 'm')
 
         FLP_Data = {}
 

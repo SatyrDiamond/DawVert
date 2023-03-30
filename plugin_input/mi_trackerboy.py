@@ -72,6 +72,14 @@ class input_trackerboy(plugin_input.base):
     def getshortname(self): return 'trackerboy'
     def getname(self): return 'TrackerBoy'
     def gettype(self): return 'mi'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': True,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': False
+        }
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -225,7 +233,7 @@ class input_trackerboy(plugin_input.base):
                 t_waves[tb_id] = [tb_name, tb_wave]
 
 
-        song_tracker.multi_convert(cvpj_l, tb_rows, mt_pat, mt_ord, mt_ch_insttype, mt_ch_names, mt_type_colors)
+        song_tracker.multi_convert(cvpj_l, tb_rows, mt_pat, mt_ord, mt_ch_insttype)
 
         total_used_instruments = song_tracker.get_multi_used_instruments()
 

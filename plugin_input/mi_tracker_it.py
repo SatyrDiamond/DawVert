@@ -26,6 +26,14 @@ class input_it(plugin_input.base):
     def getshortname(self): return 'it'
     def getname(self): return 'Impulse Tracker'
     def gettype(self): return 'm'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': True,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': False
+        }
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')

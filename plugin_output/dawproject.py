@@ -107,6 +107,14 @@ class output_cvpj(plugin_output.base):
     def getshortname(self): return 'dawproject'
     def gettype(self): return 'r'
     def plugin_archs(self): return None
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': False,
+        'placement_cut': True,
+        'placement_warp': True,
+        'no_placements': False
+        }
     def parse(self, convproj_json, output_file):
         global NoteStep
         global tracknum
@@ -114,11 +122,6 @@ class output_cvpj(plugin_output.base):
         tracknum = 0
 
         projJ = json.loads(convproj_json)
-        
-        placements.r_lanefit(projJ)
-        placements.r_removelanes(projJ)
-        placements.r_split_single_notelist(projJ)
-        placements.r_addwarps(projJ)
         
         cvpj_trackdata = projJ['track_data']
         cvpj_trackordering = projJ['track_order']

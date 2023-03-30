@@ -14,31 +14,6 @@ import json
 
 # --------------------------------------------------------------------
 
-def trackfx2fxrack(cvpj_l, cvpjtype):
-    if cvpj_l['use_fxrack'] == False:
-        cvpj_l['fxrack'] = {}
-        fxnum = 1
-        if cvpjtype == 's':
-            c_orderingdata = cvpj_l['track_order']
-            c_trackdata = cvpj_l['track_data']
-        if cvpjtype == 'm':
-            c_orderingdata = cvpj_l['instruments_order']
-            c_trackdata = cvpj_l['instruments_data']
-        if 'track_master' in cvpj_l:
-            cvpj_l['fxrack']['0'] = cvpj_l['track_master']
-
-        for trackid in c_orderingdata:
-            trackdata = c_trackdata[trackid]
-            trackdata['fxrack_channel'] = fxnum
-            fxtrack = {}
-            fxtrack['name'] = trackdata['name']
-            if 'color' in trackdata: fxtrack['color'] = trackdata['color']
-            if 'fxchain_audio' in trackdata: 
-                fxtrack['fxchain_audio'] = trackdata['fxchain_audio']
-                del trackdata['fxchain_audio']
-            cvpj_l['fxrack'][str(fxnum)] = fxtrack
-            fxnum += 1
-
 def instrack2singleinst(cvpj_l, cvpjtype):
     if cvpj_l['use_instrack'] == True:
         fxnum = 1
@@ -91,8 +66,6 @@ def r2m(song):
     cvpj_proj = json.loads(song)
     if 'track_order' not in cvpj_proj:
         print('[error] track_order not found')
-
-    placements.r_split_single_notelist(cvpj_proj)
 
     t_s_track_order = cvpj_proj['track_order']
     t_s_trackdata = cvpj_proj['track_data']
@@ -282,6 +255,68 @@ def ri2r(song):
 
 # ---------------------------------- Multiple to Regular ----------------------------------
 
+def overlap(start1, end1, start2, end2):
+    return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
+
+def lanefit_checkoverlap(new_placementdata, placements_table, num):
+    not_overlapped = True
+    p_pl_pos = new_placementdata['position']
+    p_pl_dur = new_placementdata['duration']
+    p_pl_end = p_pl_pos+p_pl_dur
+    #print('----------------------------')
+    for lanepl in placements_table[num]:
+        e_pl_pos = lanepl['position']
+        e_pl_dur = lanepl['duration']
+        e_pl_end = e_pl_pos+e_pl_dur
+        if bool(overlap(p_pl_pos, p_pl_end, e_pl_pos, e_pl_end)) == True: not_overlapped = False
+    return not_overlapped
+
+def lanefit_addpl(new_placementdata, placements_table):
+    lanenum = 0
+    placement_placed = False
+    while placement_placed == False:
+        not_overlapped = lanefit_checkoverlap(new_placementdata, placements_table, lanenum)
+        #print(lanenum, not_overlapped)
+        if not_overlapped == True:
+            placement_placed = True
+            placements_table[lanenum].append(new_placementdata)
+        if not_overlapped == False:
+            placements_table.append([])
+            lanenum += 1
+
+
+def r_lanefit(projJ):
+    if 'do_lanefit' in projJ:
+        if projJ['do_lanefit'] == True:
+            trackplacements = projJ['track_placements']
+            for trackid in trackplacements:
+                if 'laned' in trackplacements[trackid]:
+                    if trackplacements[trackid]['laned'] == True:
+                        old_lanedata = trackplacements[trackid]['lanedata']
+                        old_laneordering = trackplacements[trackid]['laneorder']
+                        print('[song-convert] LaneFit: '+ trackid+': '+str(len(old_laneordering))+' > ', end='')
+                        new_lanedata = {}
+                        new_laneordering = []
+
+                        new_pltable = [[]]
+                        for laneid in old_laneordering:
+                            old_lanedata_data = old_lanedata[laneid]
+                            old_lanedata_pl = old_lanedata_data['notes']
+                            for old_lanedata_pl_s in old_lanedata_pl:
+                                lanefit_addpl(old_lanedata_pl_s, new_pltable)
+
+                        for plnum in range(len(new_pltable)):
+                            if new_pltable[plnum] != []:
+                                newlaneid = '_lanefit_'+str(plnum)
+                                new_lanedata[newlaneid] = {}
+                                new_lanedata[newlaneid]['notes'] = new_pltable[plnum]
+                                new_laneordering.append(newlaneid)
+
+                        print(str(len(new_laneordering)))
+                        trackplacements[trackid]['lanedata'] = new_lanedata
+                        trackplacements[trackid]['laneorder'] = new_laneordering
+
+
 def m2r_split_insts(placement):
     out_inst_pl = {}
     if 'notelist' in placement:
@@ -377,6 +412,8 @@ def m2r(song):
     cvpj_proj['track_order'] = cvpj_trackorder
     cvpj_proj['track_placements'] = cvpj_trackplacements
 
+    r_lanefit(cvpj_proj)
+    
     return json.dumps(cvpj_proj)
 
 # ---------------------------------- Multiple to MultipleIndexed ----------------------------------

@@ -7,6 +7,7 @@ import argparse
 from plugin_input import base as base_input
 from plugin_output import base as base_output
 from functions import song_convert
+from functions import song_compat
 from functions import plug_conv
 
 print('DawVert: Daw Conversion Tool')
@@ -123,6 +124,9 @@ else:
 in_type = in_class.gettype()
 out_type = out_class.gettype()
 
+in_dawcapabilities = in_class.getdawcapabilities()
+out_dawcapabilities = out_class.getdawcapabilities()
+
 # --------- Info
 print('[info] Input Format:',in_format)
 print('[info] Input DataType:',typelist[in_type])
@@ -165,6 +169,12 @@ if CVPJ_C != None: CVPJ_j = CVPJ_C
 
 print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 
+regular_processed = False
+
+if in_type == 'r':
+	CVPJ_j = song_compat.makecompat(CVPJ_j, in_type, in_dawcapabilities, out_dawcapabilities)
+	regular_processed = True
+
 if in_type == 'ri' and out_type == 'mi':
 	CVPJ_j = song_convert.ri2mi(CVPJ_j)
 if in_type == 'ri' and out_type == 'r':
@@ -186,6 +196,11 @@ if in_type == 'mi' and out_type == 'm':
 if in_type == 'mi' and out_type == 'r': 
 	CVPJ_j = song_convert.mi2m(CVPJ_j, extra_json)
 	CVPJ_j = song_convert.m2r(CVPJ_j)
+
+if out_type == 'r' and regular_processed == False:
+	CVPJ_j = song_compat.makecompat(CVPJ_j, out_type, in_dawcapabilities, out_dawcapabilities)
+
+CVPJ_j = song_compat.makecompat_any(CVPJ_j, out_type, in_dawcapabilities, out_dawcapabilities)
 
 # --------- Output
 

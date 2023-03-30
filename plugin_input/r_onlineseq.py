@@ -82,6 +82,14 @@ class input_onlinesequencer(plugin_input.base):
     def getshortname(self): return 'onlineseq'
     def getname(self): return 'Online Sequencer'
     def gettype(self): return 'r'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': False,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': True
+        }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global onlseq_notelist

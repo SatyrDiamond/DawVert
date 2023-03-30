@@ -239,6 +239,14 @@ class input_jummbox(plugin_input.base):
     def getshortname(self): return 'jummbox'
     def getname(self): return 'jummbox'
     def gettype(self): return 'mi'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': True,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': False
+        }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global cvpj_l_automation

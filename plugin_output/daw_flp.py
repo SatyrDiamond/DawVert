@@ -59,8 +59,6 @@ class output_cvpjs(plugin_output.base):
         FLP_Data['FL_FilterGroups'] = []
         FL_FilterGroups = FLP_Data['FL_FilterGroups']
 
-        song_convert.instrack2singleinst(projJ, 'm')
-
         ppq = 960
         FL_Main['ppq'] = ppq
         

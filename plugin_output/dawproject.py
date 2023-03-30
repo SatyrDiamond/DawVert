@@ -156,11 +156,8 @@ class output_cvpj(plugin_output.base):
         x_project_arr.set('id', 'dawvert_arrangement')
         x_arr_lanes = ET.SubElement(x_project_arr, "Lanes")
         x_arr_lanes.set('timeUnit', 'beats')
-        #x_arr_lanes.set('id', 'x_arr_lanes')
         x_arr_markers = ET.SubElement(x_project_arr, "Markers")
-        #x_arr_markers.set('id', 'x_arr_markers')
         x_arr_tsa = ET.SubElement(x_project_arr, "TimeSignatureAutomation")
-        #x_arr_tsa.set('id', 'x_arr_tsa')
         x_arr_tsa.set('parameter', '__param__song__timesig')
 
         # ----------------------------------------- Tracks -----------------------------------------
@@ -222,16 +219,11 @@ class output_cvpj(plugin_output.base):
                                 if 'auto' in s_trknote['notemod']:
                                     notemodauto = s_trknote['notemod']['auto']
                                     for expresstype in s_trknote['notemod']['auto']:
-                                        if expresstype == 'pan': 
-                                            make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['pan'], 'linear', 'pan')
-                                        if expresstype == 'gain': 
-                                            make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['gain'], 'linear', 'gain')
-                                        if expresstype == 'timbre': 
-                                            make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['timbre'], 'linear', 'timbre')
-                                        if expresstype == 'pitch': 
-                                            make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['pitch'], 'semitones', 'transpose')
-                                        if expresstype == 'pressure': 
-                                            make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['pressure'], 'linear', 'pressure')
+                                        if expresstype == 'pan': make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['pan'], 'linear', 'pan')
+                                        if expresstype == 'gain': make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['gain'], 'linear', 'gain')
+                                        if expresstype == 'timbre': make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['timbre'], 'linear', 'timbre')
+                                        if expresstype == 'pitch': make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['pitch'], 'semitones', 'transpose')
+                                        if expresstype == 'pressure': make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['pressure'], 'linear', 'pressure')
 
                             if 'vol' in s_trknote: x_arr_lanes_clip_note.set('vel', str(s_trknote['vol']))
                         nlidcount += 1

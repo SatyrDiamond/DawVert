@@ -4,6 +4,7 @@
 from functions import note_convert
 from functions import auto
 from functions import note_mod
+from functions import tracks
 
 global used_instruments_num
 used_instruments_num = []
@@ -40,7 +41,6 @@ def getfineval(value):
 
 def get_used_instruments(): return used_instruments
 def get_used_instruments_num(): return used_instruments_num
-def get_multi_used_instruments(): return multi_used_instruments
 
 def get_channeldata_inside_pattern(patterntable_single, channel):
     output_table = []
@@ -296,8 +296,9 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
 
     return tempo_placements
 
+def get_multi_used_instruments(): return multi_used_instruments
 
-def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype, i_channames, i_typecolors):
+def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype):
     plnum = 1
 
     cvpj_l['playlist'] = {}
@@ -306,46 +307,42 @@ def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype, i_channames,
     cvpj_l['notelistindex'] = {}
     cvpj_l_notelistindex = cvpj_l['notelistindex']
 
+    #for i_pattern in i_patterns:
+    #    for patnum in i_patterns[i_pattern]:
+    #        for rownum in range(len(i_patterns[i_pattern][patnum])):
+    #            print(i_chantype[i_pattern], patnum, rownum, i_patterns[i_pattern][patnum][rownum])
+
     for channum in range(len(i_chantype)):
         s_chantype = i_chantype[channum]
         s_patterns = i_patterns[channum]
         s_orders = i_orders[channum]
 
-        # --------------- playlist ---------------
-        cvpj_l_playlist[plnum] = {}
-        cvpj_l_playlist[plnum]['name'] = i_channames[channum]
-        if s_chantype in i_typecolors: cvpj_l_playlist[plnum]['color'] = i_typecolors[s_chantype]
-        cvpj_l_playlist[plnum]['placements_notes'] = []
+        tracks.m_playlist_pl(cvpj_l, channum+1, s_chantype, None, None)
 
-        # --------------- notelistindex and placements ---------------
+        for patnum in s_patterns:
+            s_pattern = s_patterns[patnum]
+            #for rownum in range(len(s_patterns[patnum])):
+            #    print(s_chantype, patnum, rownum, s_patterns[patnum][rownum])
 
-        if channum in s_patterns:
-            for s_pattern in s_patterns:
+            NLP = convertchannel2notelist(s_pattern, s_chantype+'_', channum)
+            used_instruments = get_used_instruments()
+            #print(NLP)
+            #print(used_instruments)
+            for used_instrument in used_instruments:
+                ui_split = used_instrument.split('_')
+                if ui_split not in multi_used_instruments: multi_used_instruments.append(ui_split)
 
-                NLP = convertchannel2notelist(s_patterns[s_pattern], s_chantype+'_', channum)
-                used_instruments = get_used_instruments()
-                for used_instrument in used_instruments:
-                    ui_split = used_instrument.split('_')
-                    if ui_split not in multi_used_instruments: multi_used_instruments.append(ui_split)
+            if NLP != []:
+                tracks.m_add_nle(cvpj_l, str(channum)+'_'+str(patnum), NLP[0]['notelist'], s_chantype+' ('+str(patnum)+')')
 
-                if NLP != []:
-                    nli_data = {}
-                    nli_data['name'] = str(i_channames[channum])+' ('+str(s_pattern)+')'
-                    nli_data['color'] = i_typecolors[s_chantype]
-                    nli_data['notelist'] = NLP[0]['notelist']
-                    cvpj_l_notelistindex[str(channum)+'_'+str(s_pattern)] = nli_data
+        curpos = 0
+        for s_order in s_orders:
+            if s_order in s_patterns:
+                cvpj_l_placement = {}
+                cvpj_l_placement['position'] = curpos
+                cvpj_l_placement['duration'] = i_rows
+                cvpj_l_placement['fromindex'] = str(channum)+'_'+str(s_order)
+                cvpj_l_playlist[str(channum+1)]['placements_notes'].append(cvpj_l_placement)
+            curpos += i_rows
 
-            curpos = 0
-            for s_order in s_orders:
-                if s_order in s_patterns:
-                    cvpj_l_placement = {}
-                    cvpj_l_placement['position'] = curpos
-                    cvpj_l_placement['duration'] = i_rows
-                    cvpj_l_placement['fromindex'] = str(channum)+'_'+str(s_order)
-                    cvpj_l_playlist[plnum]['placements_notes'].append(cvpj_l_placement)
-                curpos += i_rows
-
-        # ---------------  ---------------
-        plnum += 1
-
-
+    #print(multi_used_instruments)

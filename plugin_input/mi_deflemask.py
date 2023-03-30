@@ -115,6 +115,14 @@ class input_cvpj_r(plugin_input.base):
     def getshortname(self): return 'deflemask'
     def getname(self): return 'DefleMask'
     def gettype(self): return 'mi'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': True,
+        'placement_cut': False,
+        'placement_warp': False,
+        'no_placements': False
+        }
     def supported_autodetect(self): return True
     def detect(self, input_file):
         output = False
@@ -148,16 +156,16 @@ class input_cvpj_r(plugin_input.base):
 
         # SYSTEM SET
         if dmf_system == int("02",16): #GENESIS
-            t_chantype = ['fm','fm','fm','fm','fm','fm','square','square','square','noise']
+            t_chantype = ['opn2','opn2','opn2','opn2','opn2','opn2','square','square','square','noise']
             t_channames = ['FM 1','FM 2','FM 3','FM 4','FM 5','FM 6','Square 1','Square 2','Square 3','Noise']
         if dmf_system == int("42",16): #SYSTEM_GENESIS (mode EXT. CH3) 
-            t_chantype = ['fm','fm','fmop','fmop','fmop','fmop','fm','fm','fm','square','square','square','noise']
+            t_chantype = ['opn2','opn2','opn2-op','opn2-op','opn2-op','opn2-op','opn2','opn2','opn2','square','square','square','noise']
             t_channames = ['FM 1','FM 2','FM 3 OP 1','FM 3 OP 2','FM 3 OP 3','FM 3 OP 4','FM 4','FM 5','FM 6','Square 1','Square 2','Square 3','Noise']
         if dmf_system == int("03",16): #SMS
             t_chantype = ['square','square','square','noise']
             t_channames = ['Square 1','Square 2','Square 3','Noise']
         if dmf_system == int("04",16): #GAMEBOY
-            t_chantype = ['pulse','pulse','wavetable','noise']
+            t_chantype = ['gameboy_pulse','gameboy_pulse','gameboy_wavetable','gameboy_noise']
             t_channames = ['Pulse 1','Pulse 2','Wavetable','Noise']
         if dmf_system == int("05",16): #PCENGINE
             t_chantype = ['pce','pce','pce','pce','pce','pce']
@@ -349,7 +357,7 @@ class input_cvpj_r(plugin_input.base):
         mt_type_colors = chiptypecolors
 
 
-        song_tracker.multi_convert(cvpj_l, dmf_TOTAL_ROWS_PER_PATTERN, mt_pat, mt_ord, mt_ch_insttype, mt_ch_names, mt_type_colors)
+        song_tracker.multi_convert(cvpj_l, dmf_TOTAL_ROWS_PER_PATTERN, mt_pat, mt_ord, mt_ch_insttype)
 
         total_used_instruments = song_tracker.get_multi_used_instruments()
 
@@ -378,7 +386,7 @@ class input_cvpj_r(plugin_input.base):
                     cvpj_inst["instdata"]["plugindata"]['env_vol']['values'] = valuet
                     if dmf_instdata['env_volume']['looppos'] != -1:
                         cvpj_inst["instdata"]["plugindata"]['env_vol']['loop'] = dmf_instdata['env_volume']['looppos']
-            elif insttype == 'fm':
+            elif insttype == 'opn2':
                 cvpj_inst["instdata"]["plugin"] = 'opn2'
                 cvpj_inst["instdata"]["plugindata"] = dmf_instdata['fmdata']
             else: 

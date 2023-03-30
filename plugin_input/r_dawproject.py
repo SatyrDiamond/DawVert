@@ -84,6 +84,14 @@ class input_dawproject(plugin_input.base):
     def getshortname(self): return 'dawproject'
     def getname(self): return 'dawproject'
     def gettype(self): return 'r'
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': False,
+        'r_track_lanes': False,
+        'placement_cut': True,
+        'placement_warp': True,
+        'no_placements': False
+        }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global cvpj_l

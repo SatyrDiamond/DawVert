@@ -758,7 +758,8 @@ class output_lmms(plugin_output.base):
 
         trksJ = projJ['track_data']
         trkorderJ = projJ['track_order']
-        trkplacementsJ = projJ['track_placements']
+        if 'track_placements' in projJ: trkplacementsJ = projJ['track_placements']
+        else: trkplacementsJ = {}
 
         projX = ET.Element("lmms-project")
         projX.set('type', "song")

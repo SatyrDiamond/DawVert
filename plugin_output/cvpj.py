@@ -11,6 +11,8 @@ class output_cvpj(plugin_output.base):
     def getshortname(self): return 'cvpj'
     def gettype(self): return 'debug'
     def plugin_archs(self): return None
+    def getdawcapabilities(self): 
+        return {}
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
         with open(output_file, "w") as fileout:

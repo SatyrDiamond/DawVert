@@ -474,19 +474,20 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
         lmms_encode_fxchain(trkX_samptr, trkJ)
 
     printcountplace = 0
-    print('[output-lmms]       Placements: ', end='')
 
-    if 'audio' in trkplacementsJ[trackid]:
-        for json_placement in trkplacementsJ[trackid]['audio']:
-            xml_sampletco = ET.SubElement(xmltag, 'sampletco')
-            xml_sampletco.set('pos', str(int(json_placement['position'] * 12)))
-            xml_sampletco.set('len', str(int(json_placement['duration'] * 12)))
-            xml_sampletco.set('src', json_placement['file'])
-            if 'enabled' in json_placement: xml_sampletco.set('muted', str(int(not json_placement['enabled'])))
-            if 'start' in json_placement: xml_sampletco.set('off', str(int(json_placement['start'] * 12)*-1))
-            if 'sample_rate' in json_placement: xml_sampletco.set('sample_rate', str(json_placement['sample_rate']))
-            printcountplace += 1
-    print('['+str(printcountplace)+']')
+    if trackid in trkplacementsJ:
+        if 'audio' in trkplacementsJ[trackid]:
+            print('[output-lmms]       Placements: ', end='')
+            for json_placement in trkplacementsJ[trackid]['audio']:
+                xml_sampletco = ET.SubElement(xmltag, 'sampletco')
+                xml_sampletco.set('pos', str(int(json_placement['position'] * 12)))
+                xml_sampletco.set('len', str(int(json_placement['duration'] * 12)))
+                xml_sampletco.set('src', json_placement['file'])
+                if 'enabled' in json_placement: xml_sampletco.set('muted', str(int(not json_placement['enabled'])))
+                if 'start' in json_placement: xml_sampletco.set('off', str(int(json_placement['start'] * 12)*-1))
+                if 'sample_rate' in json_placement: xml_sampletco.set('sample_rate', str(json_placement['sample_rate']))
+                printcountplace += 1
+            print('['+str(printcountplace)+']')
 
     print('[output-lmms]')
 

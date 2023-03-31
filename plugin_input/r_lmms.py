@@ -90,14 +90,15 @@ def getvstparams(plugindata, xmldata):
             plugindata['params'][str(param)]['value'] = float(paramdata[-1])
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
 def lmms_getvalue(xmltag, xmlname, fallbackval, autoname):
+    #print(xmltag, xmlname, fallbackval, autoname, xmltag.get(xmlname))
     if xmltag.get(xmlname) != None: return float(xmltag.get(xmlname))
-    else:
+    elif xmltag.findall(xmlname) != []: 
         realvaluetag = xmltag.findall(xmlname)[0]
         value = realvaluetag.get('value')
         if value != None:
             if autoname != None: l_autoid[str(realvaluetag.get('id'))] = autoname
             return realvaluetag.get('value')
-        else: return fallbackval
+    else: return fallbackval
 
 def lmms_getvalue_int(json_in, json_name, xml_in): 
     if xml_in != None: json_in[json_name] = int(xml_in)

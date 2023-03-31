@@ -12,6 +12,15 @@ def r_addtrack_inst(cvpj_l, trackid, instdata):
     cvpj_l['track_data'][trackid] = cvpj_inst
     cvpj_l['track_order'].append(trackid)
 
+def r_addtrack_audio(cvpj_l, trackid, audiodata):
+    if 'track_data' not in cvpj_l: cvpj_l['track_data'] = {}
+    if 'track_order' not in cvpj_l: cvpj_l['track_order'] = []
+    cvpj_inst = {}
+    cvpj_inst['type'] = 'audio'
+    cvpj_inst['audiodata'] = audiodata
+    cvpj_l['track_data'][trackid] = cvpj_inst
+    cvpj_l['track_order'].append(trackid)
+
 def r_addtrack_data(cvpj_l, trackid, trk_name, trk_color, trk_vol, trk_pan):
     if 'track_data' in cvpj_l:
         if trackid in cvpj_l['track_data']:

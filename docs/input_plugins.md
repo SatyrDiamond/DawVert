@@ -22,12 +22,14 @@
 | M-I | ```ceol``` | Bosca Ceoil | ```.txt``` | ❌ | 
 | M-I | ```pixitracker``` | PixiTracker | ```.piximod``` | ✔️ | 
 | M-I | ```trackerboy``` | TrackerBoy | ```.tbm``` | ✔️ | 
-| M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
-| M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ |
 | M | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ❌ |
-| R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ |
 | R | ```mekimekichip``` | メキメキチップ (MekiMeki Chip) | ```.json``` | ❌ | 
-| R | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ |  
+
+## Web
+| DataType | Short Name | Name | Ext | Autodetect | 
+| --- | --- | :--- | :--- | :--- |
+| M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
+| R | ```wavtool``` | WavTool | ```.zip``` | ❌ | 
 
 ## Other
 | DataType | Short Name | Name | Ext | Autodetect | 
@@ -38,7 +40,6 @@
 | M | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
 | M | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
 | R-I | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
-| R-I | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | 
 | R | ```flipper``` | Flipper Music Format | ```.fmf``` | ❌ | 
 
 ## Mario Paint
@@ -49,3 +50,11 @@
 | M | ```mariopaint_smp``` | Super Mario Paint | ```.txt``` | ❌ | 
 | M | ```mariopaint_mss``` | Advanced Mario Sequencer | ```.mss``` | ✔️ | 
 | M | ```mariopaint_msq``` | MarioSequencer | ```.msq``` | ❌ | 
+
+## Old
+| DataType | Short Name | Name | Ext | Autodetect | 
+| --- | --- | :--- | :--- | :--- |
+| M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ |
+| R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ |
+| R | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ |  
+| R-I | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | 

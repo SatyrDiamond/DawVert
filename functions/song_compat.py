@@ -4,6 +4,7 @@
 from functions import song
 from functions import notelist_data
 import json
+import math
 
 # -------------------------------------------- fxrack --------------------------------------------
 
@@ -116,6 +117,108 @@ def r_addwarps(projJ):
                     plcount_after = len(track_placements[track_placement]['notes'])
                     if plcount_before != plcount_after: print(str(plcount_before-plcount_after)+' loops found')
                     else: print('unchanged')
+
+
+
+def r_removewarps_cutpoint(pl_pos, pl_dur, cut_start, cut_end):
+    #print('OUT', pl_pos, pl_dur, 'CUT', cut_start, cut_end)
+    #note_placement['cut'] = {'type': 'cut', 'start': cut_start, 'end': cut_end}
+    #note_placement['position'] = pl_pos
+    #note_placement['duration'] = pl_dur
+    return [pl_pos, pl_dur, cut_start, cut_end]
+
+def r_removewarps_before_loop(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_end):
+    #print('BEFORE')
+    cutpoints = []
+    temppos = min(bl_l_end, bl_p_dur)
+    cutpoints.append( r_removewarps_cutpoint((bl_p_pos+bl_p_start)-bl_p_start, temppos-bl_p_start, bl_p_start, min(bl_l_end, bl_p_dur)) )
+    bl_p_dur += bl_p_start
+    placement_loop_size = bl_l_end-bl_l_start
+    if bl_l_end < bl_p_dur and bl_l_end > bl_l_start:
+        remainingcuts = (bl_p_dur-bl_l_end)/placement_loop_size
+        while remainingcuts > 0:
+            outdur = min(remainingcuts, 1)
+            cutpoints.append( r_removewarps_cutpoint((bl_p_pos+temppos)-bl_p_start, placement_loop_size*outdur, bl_l_start, bl_l_end*outdur) )
+            temppos += placement_loop_size
+            remainingcuts -= 1
+    return cutpoints
+
+def r_removewarps_after_loop(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_end):
+    #print('AFTER')
+    cutpoints = []
+    placement_loop_size = bl_l_end-bl_l_start
+    #print(bl_p_pos, bl_p_dur, '|', bl_p_start, '|', bl_l_start, bl_l_end, '|', placement_loop_size)
+    bl_p_dur_mo = bl_p_dur-bl_l_start
+    bl_p_start_mo = bl_p_start-bl_l_start
+    bl_l_start_mo = bl_l_start-bl_l_start
+    bl_l_end_mo = bl_l_end-bl_l_start
+    remainingcuts = (bl_p_dur_mo+bl_p_start_mo)/placement_loop_size
+    #print(bl_p_pos, bl_p_dur, '|', bl_p_start_mo, '|', bl_l_start_mo, bl_l_end_mo, '|', placement_loop_size)
+    temppos = bl_p_pos
+    temppos -= bl_p_start_mo
+    flag_first_pl = True
+    while remainingcuts > 0:
+        outdur = min(remainingcuts, 1)
+        if flag_first_pl == True:
+            cutpoints.append( r_removewarps_cutpoint(temppos+bl_p_start_mo, (outdur*placement_loop_size)-bl_p_start_mo, bl_l_start+bl_p_start_mo, outdur*bl_l_end) )
+        if flag_first_pl == False:
+            cutpoints.append( r_removewarps_cutpoint(temppos, outdur*placement_loop_size, bl_l_start, outdur*bl_l_end) )
+        temppos += placement_loop_size
+        remainingcuts -= 1
+        flag_first_pl = False
+    return cutpoints
+
+
+def r_removewarps_placements(note_placements):
+    new_placements = []
+    for note_placement in note_placements:
+        if 'cut' in note_placement: 
+            if note_placement['cut']['type'] == 'warp': 
+                note_placement_base = note_placement.copy()
+                del note_placement_base['cut']
+                del note_placement_base['position']
+                del note_placement_base['duration']
+                warp_base_position = note_placement['position']
+                warp_base_duration = note_placement['duration']
+                warp_start = note_placement['cut']['start']
+                warp_loopstart = note_placement['cut']['loopstart']
+                warp_loopend = note_placement['cut']['loopend']
+
+                if warp_loopstart > warp_start: cutpoints = r_removewarps_before_loop(warp_base_position, warp_base_duration, warp_start, warp_loopstart, warp_loopend)
+                else: cutpoints = r_removewarps_after_loop(warp_base_position, warp_base_duration, warp_start, warp_loopstart, warp_loopend)
+
+                print(cutpoints)
+                for cutpoint in cutpoints:
+                    note_placement_cutted = note_placement_base.copy()
+                    note_placement_cutted['position'] = cutpoint[0]
+                    note_placement_cutted['duration'] = cutpoint[1]
+                    note_placement_cutted['cut'] = {'type': 'cut', 'start': cutpoint[2], 'end': cutpoint[3]}
+                    new_placements.append(note_placement_cutted)
+            else: new_placements.append(note_placement)
+        else: new_placements.append(note_placement)
+    return new_placements
+
+def r_removewarps(projJ):
+    for track_placements_id in projJ['track_placements']:
+        track_placements_data = projJ['track_placements'][track_placements_id]
+
+        not_laned = True
+
+        if 'laned' in track_placements_data:
+            print('[compat] RemoveWarps: laned: '+track_placements_id)
+            if s_pldata['laned'] == 1:
+                not_laned = False
+                s_lanedata = s_pldata['lanedata']
+                s_laneordering = s_pldata['laneorder']
+                for t_lanedata in s_lanedata:
+                    tj_lanedata = s_lanedata[t_lanedata]
+                    if 'notes' in tj_lanedata:
+                        track_placements_data['notes'] = r_removewarps_placements(tj_lanedata['notes'])
+
+        if not_laned == True:
+            if 'notes' in track_placements_data:
+                print('[compat] RemoveWarps: non-laned: '+track_placements_id)
+                track_placements_data['notes'] = r_removewarps_placements(track_placements_data['notes'])
 
 # -------------------------------------------- r_track_lanes --------------------------------------------
 
@@ -335,9 +438,9 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     if cvpj_type == 'r':
         if in__no_placements == True and out__no_placements == False: r_split_single_notelist(cvpj_proj)
         if in__r_track_lanes == True and out__r_track_lanes == False: r_removelanes(cvpj_proj)
+        if in__placement_warp == True and out__placement_warp == False: r_removewarps(cvpj_proj)
         if in__placement_cut == True and out__placement_cut == False: r_removecut(cvpj_proj)
         if in__placement_warp == False and out__placement_warp == True: r_addwarps(cvpj_proj)
-        if in__placement_warp == True and out__placement_warp == False: r_removewarps(cvpj_proj)
 
 
     return json.dumps(cvpj_proj)

@@ -121,10 +121,6 @@ def r_addwarps(projJ):
 
 
 def r_removewarps_cutpoint(pl_pos, pl_dur, cut_start, cut_end):
-    #print('OUT', pl_pos, pl_dur, 'CUT', cut_start, cut_end)
-    #note_placement['cut'] = {'type': 'cut', 'start': cut_start, 'end': cut_end}
-    #note_placement['position'] = pl_pos
-    #note_placement['duration'] = pl_dur
     return [pl_pos, pl_dur, cut_start, cut_end]
 
 def r_removewarps_before_loop(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_end):
@@ -169,7 +165,7 @@ def r_removewarps_after_loop(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_en
     return cutpoints
 
 
-def r_removewarps_placements_notes(note_placements):
+def r_removewarps_placements(note_placements):
     new_placements = []
     for note_placement in note_placements:
         if 'cut' in note_placement: 
@@ -213,12 +209,14 @@ def r_removewarps(projJ):
                 for t_lanedata in s_lanedata:
                     tj_lanedata = s_lanedata[t_lanedata]
                     if 'notes' in tj_lanedata:
-                        track_placements_data['notes'] = r_removewarps_placements_notes(tj_lanedata['notes'])
+                        track_placements_data['notes'] = r_removewarps_placements(tj_lanedata['notes'])
 
         if not_laned == True:
+            print('[compat] RemoveWarps: non-laned: '+track_placements_id)
             if 'notes' in track_placements_data:
-                print('[compat] RemoveWarps: non-laned: '+track_placements_id)
-                track_placements_data['notes'] = r_removewarps_placements_notes(track_placements_data['notes'])
+                track_placements_data['notes'] = r_removewarps_placements(track_placements_data['notes'])
+            if 'audio' in track_placements_data:
+                track_placements_data['audio'] = r_removewarps_placements(track_placements_data['audio'])
 
 # -------------------------------------------- r_track_lanes --------------------------------------------
 

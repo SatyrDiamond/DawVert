@@ -47,26 +47,27 @@ def r_removecut_placements(note_placements):
                 del note_placement['cut']
 
 def r_removecut(projJ):
-    for track_placements_id in projJ['track_placements']:
-        track_placements_data = projJ['track_placements'][track_placements_id]
+    if 'track_placements' in projJ:
+        for track_placements_id in projJ['track_placements']:
+            track_placements_data = projJ['track_placements'][track_placements_id]
 
-        not_laned = True
+            not_laned = True
 
-        if 'laned' in track_placements_data:
-            print('[compat] RemoveCut: laned: '+track_placements_id)
-            if s_pldata['laned'] == 1:
-                not_laned = False
-                s_lanedata = s_pldata['lanedata']
-                s_laneordering = s_pldata['laneorder']
-                for t_lanedata in s_lanedata:
-                    tj_lanedata = s_lanedata[t_lanedata]
-                    if 'notes' in tj_lanedata:
-                        r_removecut_placements(tj_lanedata['notes'])
+            if 'laned' in track_placements_data:
+                print('[compat] RemoveCut: laned: '+track_placements_id)
+                if s_pldata['laned'] == 1:
+                    not_laned = False
+                    s_lanedata = s_pldata['lanedata']
+                    s_laneordering = s_pldata['laneorder']
+                    for t_lanedata in s_lanedata:
+                        tj_lanedata = s_lanedata[t_lanedata]
+                        if 'notes' in tj_lanedata:
+                            r_removecut_placements(tj_lanedata['notes'])
 
-        if not_laned == True:
-            if 'notes' in track_placements_data:
-                print('[compat] RemoveCut: non-laned: '+track_placements_id)
-                r_removecut_placements(track_placements_data['notes'])
+            if not_laned == True:
+                if 'notes' in track_placements_data:
+                    print('[compat] RemoveCut: non-laned: '+track_placements_id)
+                    r_removecut_placements(track_placements_data['notes'])
 
 
 # -------------------------------------------- placement_warp --------------------------------------------
@@ -409,20 +410,25 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     in__placement_cut = False
     in__placement_warp = False
     in__no_placements = False
+    in__audio_events = False
 
     out__r_track_lanes = False
     out__placement_cut = False
     out__placement_warp = False
     out__no_placements = False
+    out__audio_events = False
+
     if 'r_track_lanes' in in_dawcapabilities: in__r_track_lanes = in_dawcapabilities['r_track_lanes']
     if 'placement_cut' in in_dawcapabilities: in__placement_cut = in_dawcapabilities['placement_cut']
     if 'placement_warp' in in_dawcapabilities: in__placement_warp = in_dawcapabilities['placement_warp']
     if 'no_placements' in in_dawcapabilities: in__no_placements = in_dawcapabilities['no_placements']
+    if 'audio_events' in in_dawcapabilities: in__audio_events = in_dawcapabilities['audio_events']
 
     if 'r_track_lanes' in out_dawcapabilities: out__r_track_lanes = out_dawcapabilities['r_track_lanes']
     if 'placement_cut' in out_dawcapabilities: out__placement_cut = out_dawcapabilities['placement_cut']
     if 'placement_warp' in out_dawcapabilities: out__placement_warp = out_dawcapabilities['placement_warp']
     if 'no_placements' in out_dawcapabilities: out__no_placements = out_dawcapabilities['no_placements']
+    if 'audio_events' in out_dawcapabilities: out__audio_events = out_dawcapabilities['audio_events']
 
     print('[compat] ----------------+-------+-------+')
     print('[compat] Name            | In    | Out   |')
@@ -431,6 +437,7 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     print('[compat] placement_cut   | '+str(in__placement_cut).ljust(5)+' | '+str(out__placement_cut).ljust(5)+' |')
     print('[compat] placement_warp  | '+str(in__placement_warp).ljust(5)+' | '+str(out__placement_warp).ljust(5)+' |')
     print('[compat] no_placements   | '+str(in__no_placements).ljust(5)+' | '+str(out__no_placements).ljust(5)+' |')
+    print('[compat] pl_audio_events | '+str(in__audio_events).ljust(5)+' | '+str(out__audio_events).ljust(5)+' |')
     print('[compat] ----------------+-------+-------+')
 
     if cvpj_type == 'r':

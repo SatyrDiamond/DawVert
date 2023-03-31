@@ -30,6 +30,7 @@
 | --- | --- | :--- | :--- | :--- |
 | M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
 | R | ```wavtool``` | WavTool | ```.zip``` | ❌ | 
+| R | ```audiosauna``` | AudioSauna | ```.song``` | ❌ | 
 
 ## Other
 | DataType | Short Name | Name | Ext | Autodetect | 

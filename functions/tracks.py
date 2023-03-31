@@ -65,6 +65,11 @@ def r_addtrackpl(cvpj_l, trackid, placements_data):
     cvpj_l['track_placements'][trackid] = {}
     if placements_data != None: cvpj_l['track_placements'][trackid]['notes'] = placements_data
 
+def r_addtrackpl_audio(cvpj_l, trackid, placements_data):
+    if 'track_placements' not in cvpj_l: cvpj_l['track_placements'] = {}
+    cvpj_l['track_placements'][trackid] = {}
+    if placements_data != None: cvpj_l['track_placements'][trackid]['audio'] = placements_data
+
 def r_addtrackpl_laneddata(cvpj_l, trackid, laneddata):
     if 'track_placements' not in cvpj_l: cvpj_l['track_placements'] = {}
     cvpj_l['track_placements'][trackid] = {}

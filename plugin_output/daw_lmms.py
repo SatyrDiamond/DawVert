@@ -393,38 +393,39 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     lmms_encode_plugin(trkX_insttr, trkJ, trackid)
 
     #placements
-    if 'notes' in trkplacementsJ[trackid]:
-        json_placementlist = trkplacementsJ[trackid]['notes']
+    if trackid in trkplacementsJ:
+        if 'notes' in trkplacementsJ[trackid]:
+            json_placementlist = trkplacementsJ[trackid]['notes']
         
-        tracksnum = 0
-        printcountplace = 0
-        print('[output-lmms]       Placements: ', end='')
-        while tracksnum <= len(json_placementlist)-1:
-            global patternscount_forprinting
-            patternscount_forprinting += 1
-            printcountplace += 1
-            json_placement = json_placementlist[tracksnum-1]
-            json_notelist = json_placement['notelist']
-            patX = ET.SubElement(xmltag, "pattern")
-            patX.set('pos', str(int(json_placement['position'] * 12)))
-            if 'muted' in json_placement: 
-                if json_placement['muted'] == True: patX.set('muted', "1")
-                if json_placement['muted'] == False: patX.set('muted', "0")
-            else: patX.set('muted', "0")
+            tracksnum = 0
+            printcountplace = 0
+            print('[output-lmms]       Placements: ', end='')
+            while tracksnum <= len(json_placementlist)-1:
+                global patternscount_forprinting
+                patternscount_forprinting += 1
+                printcountplace += 1
+                json_placement = json_placementlist[tracksnum-1]
+                json_notelist = json_placement['notelist']
+                patX = ET.SubElement(xmltag, "pattern")
+                patX.set('pos', str(int(json_placement['position'] * 12)))
+                if 'muted' in json_placement: 
+                    if json_placement['muted'] == True: patX.set('muted', "1")
+                    if json_placement['muted'] == False: patX.set('muted', "0")
+                else: patX.set('muted', "0")
 
-            patX.set('steps', "16")
-            patX.set('name', "")
-            #if 'cut' in json_placement: 
-            #    if json_placement['cut']['type'] == 'cut': 
-            #        if 'start' in json_placement['cut']: cut_start = json_placement['cut']['start']
-            #        if 'end' in json_placement['cut']: cut_end = json_placement['cut']['end']
-            #        json_notelist = notelist_data.trimmove(json_notelist, cut_start, cut_end)
-            if 'name' in json_placement: patX.set('name', json_placement['name'])
-            patX.set('type', "1")
-            if 'color' in json_placement: patX.set('color', '#' + colors.rgb_float_2_hex(json_placement['color']))
-            lmms_encode_notelist(patX, json_notelist)
-            tracksnum += 1
-        print(' ')
+                patX.set('steps', "16")
+                patX.set('name', "")
+                #if 'cut' in json_placement: 
+                #    if json_placement['cut']['type'] == 'cut': 
+                #        if 'start' in json_placement['cut']: cut_start = json_placement['cut']['start']
+                #        if 'end' in json_placement['cut']: cut_end = json_placement['cut']['end']
+                #        json_notelist = notelist_data.trimmove(json_notelist, cut_start, cut_end)
+                if 'name' in json_placement: patX.set('name', json_placement['name'])
+                patX.set('type', "1")
+                if 'color' in json_placement: patX.set('color', '#' + colors.rgb_float_2_hex(json_placement['color']))
+                lmms_encode_notelist(patX, json_notelist)
+                tracksnum += 1
+            print(' ')
 
     #if 'automation' in projJ:
     #    if 'track_main' in projJ['automation']:

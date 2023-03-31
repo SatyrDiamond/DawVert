@@ -187,7 +187,7 @@ def r_removewarps_placements(note_placements):
                 if warp_loopstart > warp_start: cutpoints = r_removewarps_before_loop(warp_base_position, warp_base_duration, warp_start, warp_loopstart, warp_loopend)
                 else: cutpoints = r_removewarps_after_loop(warp_base_position, warp_base_duration, warp_start, warp_loopstart, warp_loopend)
 
-                print(cutpoints)
+                #print(cutpoints)
                 for cutpoint in cutpoints:
                     note_placement_cutted = note_placement_base.copy()
                     note_placement_cutted['position'] = cutpoint[0]

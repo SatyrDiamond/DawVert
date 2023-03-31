@@ -466,7 +466,7 @@ def lmms_decode_audioplacements(trkX):
 
         if samplecX.get('off') != None:
             cut_start = (float(samplecX.get('off'))/12)*-1
-            print(cut_start)
+            #print(cut_start)
             if cut_start != 0:
                 placeJ['cut'] = {'type': 'cut', 'start': cut_start, 'end': cut_start+placeJ["duration"]}
 

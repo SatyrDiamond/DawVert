@@ -465,7 +465,10 @@ def lmms_decode_audioplacements(trkX):
         placeJ['sample_rate'] = int(samplecX.get('sample_rate'))
 
         if samplecX.get('off') != None:
-            placeJ['start'] = (float(samplecX.get('off'))/12)*-1
+            cut_start = (float(samplecX.get('off'))/12)*-1
+            print(cut_start)
+            if cut_start != 0:
+                placeJ['cut'] = {'type': 'cut', 'start': cut_start, 'end': cut_start+placeJ["duration"]}
 
         audioplacements.append(placeJ)
     print('['+str(printcountplace)+'] ')
@@ -476,11 +479,6 @@ def lmms_decode_audioplacements(trkX):
 
 def lmms_decode_audio_track(trkX, name):
     cvpj_l_track = {}
-    cvpj_l_inst = {}
-    cvpj_l_inst['notefx'] = {}
-    cvpj_l_inst_plugin = {}
-    cvpj_l_track_inst = cvpj_l_inst
-    cvpj_l_track_inst['plugindata'] = cvpj_l_inst_plugin
     cvpj_l_track['type'] = "audio"
 
     cvpj_l_track['name'] = trkX.get('name')

@@ -65,7 +65,7 @@ def parse_auto(pointsxml):
     cvpj_auto_out = []
     for xmlpoint in pointsxml.findall('RealPoint'):
         cvpj_auto_point = {}
-        cvpj_auto_point['position'] = float(xmlpoint.get('time')*4)
+        cvpj_auto_point['position'] = float(xmlpoint.get('time'))*4
         cvpj_auto_point['value'] = float(xmlpoint.get('value'))
         cvpj_auto_out.append(cvpj_auto_point)
     return cvpj_auto_out
@@ -155,6 +155,7 @@ class input_dawproject(plugin_input.base):
                 trackid = dpx_trklane.get('track')
                 trackidchan = trackchanid[trackid]
                 cvpj_l['track_placements'][trackidchan] = {}
+                cvpj_l['track_placements'][trackidchan]['notes'] = []
                 if dpx_trklane.findall('Clips') != []:
                     dpx_clips = dpx_trklane.findall('Clips')[0]
                     for dpx_clip in dpx_clips.findall('Clip'):
@@ -186,7 +187,6 @@ class input_dawproject(plugin_input.base):
                             cvpj_pldata["cut"]['loopend'] = float(dpx_p_loopEnd)*4
 
                         if dpx_clip.findall('Notes') != []:
-                            cvpj_l['track_placements'][trackidchan]['notes'] = []
                             dpx_notes = dpx_clip.findall('Notes')[0]
                             dpx_notelist = dpx_notes.findall('Note')
                             for dpx_note in dpx_notelist:

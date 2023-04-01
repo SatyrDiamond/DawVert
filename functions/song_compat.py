@@ -106,18 +106,19 @@ def addwarps_pl(placementsdata):
     return new_placements
 
 def r_addwarps(projJ):
-    if 'do_addwrap' in projJ:
-        if projJ['do_addwrap'] == True:
-            track_placements = projJ['track_placements']
-            for track_placement in track_placements:
-                if 'notes' in track_placements[track_placement]:
-                    plcount_before = len(track_placements[track_placement]['notes'])
-                    print('[compat] AddWarps: '+ track_placement +': ', end='')
-                    track_placement_s = track_placements[track_placement]
-                    track_placements[track_placement]['notes'] = addwarps_pl(track_placement_s['notes'])
-                    plcount_after = len(track_placements[track_placement]['notes'])
-                    if plcount_before != plcount_after: print(str(plcount_before-plcount_after)+' loops found')
-                    else: print('unchanged')
+    do_addwrap = True
+    if 'do_addwrap' in projJ: do_addwrap = projJ['do_addwrap']
+    if do_addwrap == True: 
+        track_placements = projJ['track_placements']
+        for track_placement in track_placements:
+            if 'notes' in track_placements[track_placement]:
+                plcount_before = len(track_placements[track_placement]['notes'])
+                print('[compat] AddWarps: '+ track_placement +': ', end='')
+                track_placement_s = track_placements[track_placement]
+                track_placements[track_placement]['notes'] = addwarps_pl(track_placement_s['notes'])
+                plcount_after = len(track_placements[track_placement]['notes'])
+                if plcount_before != plcount_after: print(str(plcount_before-plcount_after)+' loops found')
+                else: print('unchanged')
 
 
 

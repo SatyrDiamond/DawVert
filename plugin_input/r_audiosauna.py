@@ -110,7 +110,7 @@ class input_audiosanua(plugin_input.base):
                 t_notelist = as_patt_notes[as_pattern_patternId]
                 for t_note in t_notelist:
                     # as_note_startTick, as_note_endTick, as_note_noteLength, as_note_pitch, as_note_noteVolume, as_note_noteCutoff]
-                    cvpj_note = note_data.rx_makenote((t_note[0]-as_pattern_startTick)/32, t_note[2]/32, t_note[3]-60, t_note[4]/100, None)
+                    cvpj_note = note_data.rx_makenote((max(0,t_note[0]-as_pattern_startTick)/32), t_note[2]/32, t_note[3]-60, t_note[4]/100, None)
                     cvpj_note['cutoff'] = t_note[5]
                     cvpj_pldata['notelist'].append(cvpj_note)
 

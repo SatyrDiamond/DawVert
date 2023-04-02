@@ -81,6 +81,7 @@ xmodits_py - for extracting Impulse Tracker and FastTracker2 Samples
 | --- | --- | :--- |
 | M-I | ```flp``` | FL Studio |
 | R | ```lmms``` | LMMS |
+| R | ```ableton``` | Ableton Live 11 |
 
 ## (Some) Supported Inputs
 [Full List...](docs/input_plugins.md)

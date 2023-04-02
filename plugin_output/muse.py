@@ -148,9 +148,6 @@ class output_cvpj(plugin_output.base):
 
         projJ = json.loads(convproj_json)
         
-        placements.r_lanefit(projJ)
-        placements.r_split_single_notelist(projJ)
-
         midiDivision = 384
         NoteStep = midiDivision/4
         

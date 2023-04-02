@@ -1,5 +1,13 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
+import numpy as np
+
+def closest_color_index(colors, color):
+    colors = np.array(colors)
+    color = np.array(color)
+    distances = np.sqrt(np.sum((colors-color)**2,axis=1))
+    index_of_smallest = np.where(distances==np.amin(distances))
+    return index_of_smallest[0][0]
 
 # from hex
 def hex_to_rgb_int(hexcode):

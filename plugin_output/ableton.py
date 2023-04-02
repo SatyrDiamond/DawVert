@@ -207,7 +207,7 @@ def create_songmastervalues(xmltag):
 def create_sequencernavigator(xmltag):
     x_SequencerNavigator = ET.SubElement(xmltag, 'SequencerNavigator')
     x_BeatTimeHelper = ET.SubElement(x_SequencerNavigator, 'BeatTimeHelper')
-    addvalue(x_BeatTimeHelper, 'CurrentZoom', '0.508103372755146707')
+    addvalue(x_BeatTimeHelper, 'CurrentZoom', '0.08')
     add_xyval(x_SequencerNavigator, 'ScrollerPos', 0, -20)
     add_xyval(x_SequencerNavigator, 'ClientSize', 888, 587)
 
@@ -344,7 +344,11 @@ def create_midiclip(xmltag, cvpj_placement, trackcolor):
     if 'cut' in cvpj_placement:
         cvpj_placement_cut = cvpj_placement['cut']
         if 'type' in cvpj_placement_cut:
-            print('----- CUT' ,  cvpj_placement_cut['type'])
+            #print('----- CUT' ,  cvpj_placement_cut['type'])
+            if cvpj_placement_cut['type'] == 'cut':
+                t_StartRelative = 0
+                t_LoopStart = cvpj_placement_cut['start']/4
+                t_LoopEnd = (t_LoopStart/4)+(cvpj_placement_cut['end']/4)
             if cvpj_placement_cut['type'] == 'warp':
                 t_LoopOn = 'true'
                 t_StartRelative = cvpj_placement_cut['start']/4
@@ -506,6 +510,7 @@ def set_add_audio_track_freezesequencer(xmltag, track_placements):
 # ---------------- Track Base / Device Chain ----------------
 
 def create_devicechain(xmltag, tracktype, track_placements, trackcolor):
+    global LaneHeight
     # ------- AutomationLanes
     x_AutomationLanes = ET.SubElement(xmltag, 'AutomationLanes')
     x_AutomationLanes_i = ET.SubElement(x_AutomationLanes, 'AutomationLanes')
@@ -513,7 +518,7 @@ def create_devicechain(xmltag, tracktype, track_placements, trackcolor):
     addvalue(x_AutomationTarget, 'SelectedDevice', '0')
     addvalue(x_AutomationTarget, 'SelectedEnvelope', '0')
     addvalue(x_AutomationTarget, 'IsContentSelectedInDocument', 'false')
-    addvalue(x_AutomationTarget, 'LaneHeight', '17')
+    addvalue(x_AutomationTarget, 'LaneHeight', str(LaneHeight))
     addvalue(x_AutomationLanes, 'AreAdditionalAutomationLanesFolded', 'false')
     # ------------------------------------------
 
@@ -627,9 +632,11 @@ class output_cvpj(plugin_output.base):
     def parse(self, convproj_json, output_file):
         global cvpj_l
         global x_Tracks
+        global LaneHeight
 
         cvpj_l = json.loads(convproj_json)
-        
+        LaneHeight = 68
+
         # XML Ableton
         x_root = ET.Element("Ableton")
         x_root.set('MajorVersion', "5")
@@ -646,13 +653,18 @@ class output_cvpj(plugin_output.base):
 
         x_Tracks = ET.SubElement(x_LiveSet, "Tracks")
         if 'track_order' in cvpj_l:
+
+            cvpj_numtracks = len(cvpj_l['track_order'])
+
+            if cvpj_numtracks > 35: LaneHeight = 17
+
             for cvpj_trackid in cvpj_l['track_order']:
                 if cvpj_trackid in cvpj_l['track_data']:
                     cvpj_s_track_data = cvpj_l['track_data'][cvpj_trackid]
                     if 'type' in cvpj_s_track_data:
                         if cvpj_s_track_data['type'] == 'instrument':
                             ableton_make_midi_track(cvpj_trackid)
-                    print(cvpj_trackid)
+                    #print(cvpj_trackid)
 
         x_MasterTrack = ET.SubElement(x_LiveSet, "MasterTrack")
         set_add_trackbase(x_MasterTrack, None, 'master', 'Master', -1, 'false', None)

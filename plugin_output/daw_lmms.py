@@ -7,6 +7,7 @@ import lxml.etree as ET
 import math
 import plugin_output
 from pathlib import Path
+from functions_plugin import lmms_auto
 from functions import auto
 from functions import placements
 from functions import note_mod
@@ -118,12 +119,11 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
     else: pluginname = 'none'
     if 'plugindata' in instJ: plugJ = instJ['plugindata']
 
-    auto_nameid = {}
+    auto_nameiddata_plugin = {}
     if 'automation' in projJ and 'pluginautoid' in instJ:
         if 'plugin' in projJ['automation']:
             if instJ['pluginautoid'] in projJ['automation']['plugin']:
-                auto_nameid = get_auto_ids_data(projJ['automation']['plugin'][instJ['pluginautoid']])
-
+                auto_nameiddata_plugin = get_auto_ids_data(projJ['automation']['plugin'][instJ['pluginautoid']])
 
     if pluginname == 'sampler':
         print('[output-lmms]       Plugin: sampler > AudioFileProcessor')
@@ -218,29 +218,35 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         print('[output-lmms]       Plugin: zynaddsubfx > zynaddsubfx')
         xml_instrumentpreplugin.set('name', "zynaddsubfx")
         xml_zynaddsubfx = ET.SubElement(xml_instrumentpreplugin, "zynaddsubfx")
-        xml_zynaddsubfx.set('bandwidth', str(plugJ['bandwidth']))
-        xml_zynaddsubfx.set('filterfreq', str(plugJ['filterfreq']))
-        xml_zynaddsubfx.set('filterq', str(plugJ['filterq']))
-        xml_zynaddsubfx.set('fmgain', str(plugJ['fmgain']))
-        xml_zynaddsubfx.set('forwardmidicc', str(plugJ['forwardmidicc']))
-        xml_zynaddsubfx.set('modifiedcontrollers', str(plugJ['modifiedcontrollers']))
-        xml_zynaddsubfx.set('portamento', str(plugJ['portamento']))
-        xml_zynaddsubfx.set('resbandwidth', str(plugJ['resbandwidth']))
-        xml_zynaddsubfx.set('rescenterfreq', str(plugJ['rescenterfreq']))
+        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'bandwidth', xml_zynaddsubfx, 'bandwidth', 'Plugin', 'Bandwidth')
+        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'filterfreq', xml_zynaddsubfx, 'filterfreq', 'Plugin', 'Filter Freq')
+        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'filterq', xml_zynaddsubfx, 'filterq', 'Plugin', 'Filter Q')
+        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'fmgain', xml_zynaddsubfx, 'fmgain', 'Plugin', 'FM Gain')
+        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'forwardmidicc', xml_zynaddsubfx, 'forwardmidicc', 'Plugin', 'Forward MIDI CC')
+        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'modifiedcontrollers', xml_zynaddsubfx, 'modifiedcontrollers', 'Plugin', 'Modified Cont.')
+        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'portamento', xml_zynaddsubfx, 'portamento', 'Plugin', 'Portamento')
+        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'resbandwidth', xml_zynaddsubfx, 'resbandwidth', 'Plugin', 'Res BandWidth')
+        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'rescenterfreq', xml_zynaddsubfx, 'rescenterfreq', 'Plugin', 'Res Center Freq')
         zdata = plugJ['data'].encode('ascii')
         zdataxs = ET.fromstring(base64.b64decode(zdata).decode('ascii'))
         xml_zynaddsubfx.append(zdataxs)
     elif pluginname == 'native-lmms':
         lmmsplugdata = plugJ['data']
         lmmsplugname = plugJ['name']
+        lmms_autovals = lmms_auto.get_params_inst(lmmsplugname)
         xml_instrumentpreplugin.set('name', lmmsplugname)
         xml_lmmsnat = ET.SubElement(xml_instrumentpreplugin, lmmsplugname)
         asdrlfo_set(plugJ, xmltag)
-        for lplugname in lmmsplugdata: xml_lmmsnat.set(lplugname, str(lmmsplugdata[lplugname]))
+        for pluginparam in lmms_autovals[0]: 
+            add_auto_val(auto_nameiddata_plugin, None, 0, lmmsplugdata, pluginparam, xml_lmmsnat, pluginparam, 'Plugin', pluginparam)
+        for pluginparam in lmms_autovals[1]: 
+            if pluginparam in lmmsplugdata: xml_lmmsnat.set(pluginparam, str(lmmsplugdata[pluginparam]))
+
     else:
         print('[output-lmms]       Plugin: '+pluginname+' > None')
         xml_instrumentpreplugin.set('name', "audiofileprocessor")
 
+#auto_nameid
 # ------- Inst and Notelist -------
 
 def lmms_encode_notelist(xmltag, json_notelist):
@@ -388,8 +394,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
 
     print('[output-lmms] Instrument Track')
     if 'name' in trkJ: print('[output-lmms]       Name: ' + trkJ['name'])
-    if 'chain_fx_audio' in trkJ:
-        lmms_encode_fxchain(trkX_insttr, trkJ)
+    if 'chain_fx_audio' in trkJ: lmms_encode_fxchain(trkX_insttr, trkJ)
     lmms_encode_plugin(trkX_insttr, trkJ, trackid)
 
     #placements
@@ -412,14 +417,8 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
                     if json_placement['muted'] == True: patX.set('muted', "1")
                     if json_placement['muted'] == False: patX.set('muted', "0")
                 else: patX.set('muted', "0")
-
                 patX.set('steps', "16")
                 patX.set('name', "")
-                #if 'cut' in json_placement: 
-                #    if json_placement['cut']['type'] == 'cut': 
-                #        if 'start' in json_placement['cut']: cut_start = json_placement['cut']['start']
-                #        if 'end' in json_placement['cut']: cut_end = json_placement['cut']['end']
-                #        json_notelist = notelist_data.trimmove(json_notelist, cut_start, cut_end)
                 if 'name' in json_placement: patX.set('name', json_placement['name'])
                 patX.set('type', "1")
                 if 'color' in json_placement: patX.set('color', '#' + colors.rgb_float_2_hex(json_placement['color']))
@@ -470,8 +469,7 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
     trkX_samptr.set('pan', "0")
     trkX_samptr.set('vol', "100")
 
-    if 'chain_fx_audio' in trkJ:
-        lmms_encode_fxchain(trkX_samptr, trkJ)
+    if 'chain_fx_audio' in trkJ: lmms_encode_fxchain(trkX_samptr, trkJ)
 
     printcountplace = 0
 
@@ -489,8 +487,7 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
                 if 'cut' in json_placement: 
                     if 'type' in json_placement['cut']:
                         json_placement_cut = json_placement['cut']
-                        if json_placement_cut['type'] == 'cut':
-                            xml_sampletco.set('off', str(int(json_placement_cut['start'] * 12)*-1))
+                        if json_placement_cut['type'] == 'cut': xml_sampletco.set('off', str(int(json_placement_cut['start'] * 12)*-1))
                 printcountplace += 1
             print('['+str(printcountplace)+']')
 
@@ -588,7 +585,6 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
     for json_fxchannel in json_fxrack:
 
         auto_nameiddata = {}
-
         if 'automation' in projJ:
             if 'fxmixer' in projJ['automation']:
                 if json_fxchannel in projJ['automation']['fxmixer']:
@@ -625,11 +621,6 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
             sendX = ET.SubElement(fxcX, "send")
             sendX.set('channel', '0')
             sendX.set('amount', '1')
-
-        #if 'automation' in projJ:
-        #    if 'fxmixer' in projJ['automation']:
-        #        if json_fxchannel in projJ['automation']['fxmixer']:
-        #            lmms_make_autotracks(projJ['automation']['fxmixer'][json_fxchannel], auto_nameid, 'fxmixer', 'FX '+str(json_fxchannel))
 
         print('[output-lmms]')
 

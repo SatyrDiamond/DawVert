@@ -5,6 +5,8 @@ import plugin_output
 import json
 import lxml.etree as ET
 import mido
+import zlib
+import base64
 from functions import placements
 from functions import colors
 
@@ -51,12 +53,14 @@ def maketrack_synth(xmltag, insttrackdata, portnum):
     global NoteStep
     global tracknum
     global synthidnum
+    routelist.append([tracknum, 0])
     x_miditrack = ET.SubElement(xmltag, "SynthI")
     if 'name' in insttrackdata: addvalue(x_miditrack, 'name', insttrackdata['name'])
     else: addvalue(x_miditrack, 'name', 'Out')
     addvalue(x_miditrack, 'record', 0)
-    if 'muted' in insttrackdata: addvalue(x_miditrack, 'mute', insttrackdata['muted'])
-    else: addvalue(x_miditrack, 'mute', 0)
+    track_mute = 0
+    if 'muted' in insttrackdata: track_mute = insttrackdata['muted']
+    else: track_mute = 0
     if 'color' in insttrackdata: addvalue(x_miditrack, 'color', '#'+colors.rgb_float_2_hex(insttrackdata['color']))
     addvalue(x_miditrack, 'solo', 0)
     addvalue(x_miditrack, 'channels', 2)
@@ -73,15 +77,33 @@ def maketrack_synth(xmltag, insttrackdata, portnum):
     if 'instdata' in insttrackdata: 
         insttrackdata_instdata = insttrackdata['instdata']
         if 'plugin' in insttrackdata_instdata and 'plugindata' in insttrackdata_instdata: 
-            if insttrackdata_instdata['plugin'] != 'vst2-so':
+            if insttrackdata_instdata['plugin'] == 'vst2-so':
+                addvalue(x_miditrack, 'synthType', 'VST (synths)')
+                if 'name' in insttrackdata_instdata['plugindata']['plugin']:
+                    vstname = insttrackdata_instdata['plugindata']['plugin']['name']
+                    addvalue(x_miditrack, 'class', vstname)
+                vstdata = insttrackdata_instdata['plugindata']['data'].encode('ascii')
+                vstdata_bytes = base64.b64decode(vstdata)
+                musevst = b''
+                musevst += len(vstdata_bytes).to_bytes(4, 'big')
+                musevst += zlib.compress(vstdata_bytes)
+                addvalue(x_miditrack, 'customData', base64.b64encode(musevst).decode('ascii'))
+
+            else:
                 addvalue(x_miditrack, 'synthType', 'MESS')
                 addvalue(x_miditrack, 'class', 'vam')
-        else:
+                track_mute = 1
+        else: 
             addvalue(x_miditrack, 'synthType', 'MESS')
             addvalue(x_miditrack, 'class', 'vam')
+            track_mute = 1
     else:
         addvalue(x_miditrack, 'synthType', 'MESS')
         addvalue(x_miditrack, 'class', 'vam')
+        track_mute = 1
+
+    addvalue(x_miditrack, 'mute', track_mute)
+
     tracknum += 1
     synthidnum += 1
 
@@ -111,7 +133,7 @@ def maketrack_midi(xmltag, cvpj_trackplacements, trackname, portnum, insttrackda
                 x_event = ET.SubElement(x_part, "event")
                 x_event.set('tick', str(int(note['position']*NoteStep)+p_pos))
                 x_event.set('len', str(int(note['duration']*NoteStep)))
-                x_event.set('a', str(note['key']+84))
+                x_event.set('a', str(note['key']+60))
                 if 'vol' in note: x_event.set('b', str(int(note['vol']*100)))
                 else: x_event.set('b', '100')
     tracknum += 1
@@ -120,8 +142,8 @@ def add_timesig(x_siglist, pos, numerator, denominator):
     x_sig = ET.SubElement(x_siglist, "sig")
     x_sig.set('at', str(int(pos*NoteStep)))
     addvalue(x_sig, 'tick', 0)
-    addvalue(x_sig, 'nom', str(numerator))
-    addvalue(x_sig, 'denom', str(denominator))
+    addvalue(x_sig, 'nom', str(int(numerator)))
+    addvalue(x_sig, 'denom', str(int(denominator)))
 
 class output_cvpj(plugin_output.base):
     def __init__(self): pass
@@ -142,6 +164,7 @@ class output_cvpj(plugin_output.base):
         global NoteStep
         global tracknum
         global synthidnum
+        global routelist
 
         tracknum = 0
         synthidnum = 5
@@ -189,8 +212,6 @@ class output_cvpj(plugin_output.base):
                 s_trkdata = cvpj_trackdata[cvpj_trackentry]
                 print('TRACK', s_trkdata['name'])
                 if s_trkdata['type'] == 'instrument':
-                    synthport = tracknum
-                    routelist.append([tracknum, 0])
                     if cvpj_trackentry in cvpj_trackplacements:
                         cvpj_tr = cvpj_trackplacements[cvpj_trackentry]
                         cvpj_tr_islaned = False
@@ -213,8 +234,8 @@ class output_cvpj(plugin_output.base):
         addroute_audioout(x_song, 0, 0, 1, "system:playback_1")
         addroute_audioout(x_song, 1, 0, 1, "system:playback_2")
 
-        #for routeid in routelist:
-        #    addroute_audio(x_song, routeid[0], routeid[1])
+        for routeid in routelist:
+            addroute_audio(x_song, routeid[0], routeid[1])
 
         if 'bpm' in projJ: muse_bpm = projJ['bpm']
         else: muse_bpm = 120
@@ -236,8 +257,8 @@ class output_cvpj(plugin_output.base):
         x_sig = ET.SubElement(x_siglist, "sig")
         x_sig.set('at', "21474836")
         addvalue(x_sig, 'tick', 0)
-        addvalue(x_sig, 'nom', str(muse_numerator))
-        addvalue(x_sig, 'denom', str(muse_denominator))
+        addvalue(x_sig, 'nom', str(int(muse_numerator)))
+        addvalue(x_sig, 'denom', str(int(muse_denominator)))
 
         #if 'timemarkers' in projJ: 
         #    for cvpj_timemarker in projJ['timemarkers']:

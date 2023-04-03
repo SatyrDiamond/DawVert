@@ -29,8 +29,8 @@ def getvalue(xmltag, xmlname, fallbackval):
 class input_audiosanua(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
-    def getshortname(self): return 'audiosanua'
-    def getname(self): return 'AudioSanua'
+    def getshortname(self): return 'audiosauna'
+    def getname(self): return 'AudioSauna'
     def gettype(self): return 'r'
     def getdawcapabilities(self): 
         return {

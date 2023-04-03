@@ -498,26 +498,39 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
 def lmms_encode_effectplugin(fxslotX, json_fxslot):
     fxplugname = json_fxslot['plugin']
     fxplugJ = json_fxslot['plugindata']
+
+    auto_nameiddata_plugin = {}
+    if 'automation' in projJ and 'pluginautoid' in json_fxslot:
+        if 'plugin' in projJ['automation']:
+            if json_fxslot['pluginautoid'] in projJ['automation']['plugin']:
+                auto_nameiddata_plugin = get_auto_ids_data(projJ['automation']['plugin'][json_fxslot['pluginautoid']])
+
     if fxplugname == 'native-lmms':
         fxslotX.set('name', str(json_fxslot['plugindata']['name']))
         lmmsplugdata = fxplugJ['data']
         lmmsplugname = fxplugJ['name']
-        print('['+lmmsplugname,end='] ')
+        print('[output-lmms]       Audio FX: ['+lmmsplugname+'] ')
+        lmms_autovals = lmms_auto.get_params_fx(lmmsplugname)
         xml_name = fxlist[lmmsplugname]
         xml_lmmsnat = ET.SubElement(fxslotX, xml_name)
-        for lplugname in lmmsplugdata: xml_lmmsnat.set(lplugname, str(lmmsplugdata[lplugname]))
+        for pluginparam in lmms_autovals[0]: 
+            add_auto_val(auto_nameiddata_plugin, None, 0, lmmsplugdata, pluginparam, xml_lmmsnat, pluginparam, 'FX Slot: '+lmmsplugname, pluginparam)
+        for pluginparam in lmms_autovals[1]: 
+            if pluginparam in lmmsplugdata: xml_lmmsnat.set(pluginparam, str(lmmsplugdata[pluginparam]))
+
     if fxplugname == 'vst2-dll':
         fxslotX.set('name', 'vsteffect')
-        print('[vst2',end='] ')
+        print('[output-lmms]       Audio FX: [vst2] ')
         xml_vst2 = ET.SubElement(fxslotX, 'vsteffectcontrols')
         setvstparams(fxplugJ, xml_vst2)
         xml_vst2key = ET.SubElement(fxslotX, 'key')
         xml_vst2keyatt = ET.SubElement(xml_vst2key, 'attribute')
         xml_vst2keyatt.set('value', xml_vst2.get('plugin'))
         xml_vst2keyatt.set('name', 'file')
+
     if fxplugname == 'ladspa':
         fxslotX.set('name', 'ladspaeffect')
-        print('[ladspa',end='] ')
+        print('[output-lmms]       Audio FX: [ladspa] ')
         cvpj_plugindata = json_fxslot['plugindata']
         xml_ladspa = ET.SubElement(fxslotX, 'ladspacontrols')
         xml_ladspa_key = ET.SubElement(fxslotX, 'key')
@@ -570,7 +583,6 @@ def lmms_encode_effectslot(fxcX, json_fxslot):
 
 def lmms_encode_fxchain(xmltag, json_fxchannel):
     if 'chain_fx_audio' in json_fxchannel:
-        print('[output-lmms]       Audio FX Chain: ',end='')
         fxcX = ET.SubElement(xmltag, "fxchain")
         json_fxchain = json_fxchannel['chain_fx_audio']
         if 'fxenabled' in json_fxchannel: fxcX.set('enabled', str(json_fxchannel['fxenabled']))
@@ -579,7 +591,6 @@ def lmms_encode_fxchain(xmltag, json_fxchannel):
         for json_fxslot in json_fxchain:
             if json_fxslot['plugin'] == 'native-lmms' or json_fxslot['plugin'] == 'vst2-dll' or json_fxslot['plugin'] == 'ladspa':
                 fxslotX = lmms_encode_effectslot(fxcX, json_fxslot)
-        print('')
 
 def lmms_encode_fxmixer(xmltag, json_fxrack):
     for json_fxchannel in json_fxrack:

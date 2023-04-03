@@ -34,3 +34,58 @@ autoval_inst['tripleoscillator'] = [ ['coarse0','coarse1','coarse2','finel0','fi
 autoval_inst['vibedstrings'] = [ ['active0','active1','active2','active3','active4','active5','active6','active7','active8','detune0','detune1','detune2','detune3','detune4','detune5','detune6','detune7','detune8','impulse0','impulse1','impulse2','impulse3','impulse4','impulse5','impulse6','impulse7','impulse8','length0','length1','length2','length3','length4','length5','length6','length7','length8','octave0','octave1','octave2','octave3','octave4','octave5','octave6','octave7','octave8','pan0','pan1','pan2','pan3','pan4','pan5','pan6','pan7','pan8','pick0','pick1','pick2','pick3','pick4','pick5','pick6','pick7','pick8','pickup0','pickup1','pickup2','pickup3','pickup4','pickup5','pickup6','pickup7','pickup8','slap0','slap1','slap2','slap3','slap4','slap5','slap6','slap7','slap8','stiffness0','stiffness1','stiffness2','stiffness3','stiffness4','stiffness5','stiffness6','stiffness7','stiffness8','volume0','volume1','volume2','volume3','volume4','volume5','volume6','volume7','volume8'], ['graph0','graph1','graph2','graph3','graph4','graph5','graph6','graph7','graph8','version'] ]
 
 autoval_inst['watsyn'] = [ ['a1_ltune','a1_mult','a1_pan','a1_rtune','a1_vol','a2_ltune','a2_mult','a2_pan','a2_rtune','a2_vol','abmix','amod','b1_ltune','b1_mult','b1_pan','b1_rtune','b1_vol','b2_ltune','b2_mult','b2_pan','b2_rtune','b2_vol','bmod','envAmt','envAtt','envAtt_denominator','envAtt_numerator','envAtt_syncmode','envDec','envDec_denominator','envDec_numerator','envDec_syncmode','envHold','envHold_denominator','envHold_numerator','envHold_syncmode','xtalk'], ['a1_wave','a2_wave','b1_wave','b2_wave'] ]
+
+# ---------------------------------------------- FX ----------------------------------------------
+
+def get_params_fx(pluginname): return autoval_fx[pluginname] 
+
+autoval_fx = {}
+
+autoval_fx['amplifier'] = [ ['pan','right','volume','left'], [] ]
+
+autoval_fx['bassbooster'] = [ ['freq','gain','ratio'], [] ]
+
+autoval_fx['bitcrush'] = [ ['depthon', 'outclip', 'innoise','stereodiff','outgain','ingain','levels','rateon'], ['rate'] ]
+
+autoval_fx['crossovereq'] = [ ['gain1','gain2','gain3','gain4','mute1','mute2','mute3','mute4','xover12','xover23','xover34'], [] ]
+
+autoval_fx['delay'] = [ ['DelayTimeSamples_numerator','LfoAmount','LfoFrequency_syncmode','DelayTimeSamples_denominator','LfoFrequency_denominator','LfoAmount_denominator','LfoFrequency_numerator','LfoAmount_numerator','LfoFrequency','DelayTimeSamples','OutGain','DelayTimeSamples_syncmode','FeebackAmount','LfoAmount_syncmode'], [] ]
+
+autoval_fx['dualfilter'] = [ ['res2','enabled','filter','cut2','mix','res1','enabled1','filter1','cut1','gain1','gain2'], [] ]
+
+autoval_fx['dynamicsprocessor'] = [ ['release', 'stereoMode', 'outputGain', 'attack', 'inputGain'], ['waveShape'] ]
+
+autoval_fx['eq'] = [ ['AnalyseIn','AnalyseOut','Highshelfactive','HighShelfgain','HighShelfres','HP','HP12','HP24','HP48','HPactive','HPres','Lowshelfactive','Lowshelfgain','LowShelfres','LP','LP12','LP24','LP48','LPactive','LPres','Outputgain','Peak1active','Peak1bw','Peak2active','Peak2bw','Peak2gain','Peak3active','Peak3bw','Peak3gain','Peak4active','Peak4bw','Peak4gain','Inputgain','Peak1gain','HPfreq','LowShelffreq','Peak1freq','Peak2freq','Peak3freq','Peak4freq','Highshelffreq','LPfreq'], [] ]
+
+autoval_fx['flanger'] = [ ['LfoAmount','LfoFrequency_syncmode','LfoFrequency_denominator','WhiteNoise','LfoFrequency_numerator','Feedback','Invert','LfoFrequency','DelayTimeSamples'], [] ]
+
+autoval_fx['multitapecho'] = [ ['steplength','steplength_denominator','steps','drygain','steplength_numerator','steplength_syncmode','swapinputs','stages'], ['ampsteps','lpsteps'] ]
+
+autoval_fx['peakcontrollereffect'] = [ ['amountmult','mute','decay','effectId','base','attack','amount','treshold','abs'], [] ]
+
+autoval_fx['reverbsc'] = [ ['input_gain', 'size', 'output_gain', 'color'], [] ]
+
+autoval_fx['spectrumanalyzer'] = [ [], [] ]
+
+autoval_fx['stereomatrix'] = [ ['l-r', 'r-l', 'r-r', 'l-l'], [] ]
+
+autoval_fx['stereoenhancer'] = [ ['width'], [] ]
+
+autoval_fx['waveshaper'] = [ ['outputGain', 'clipInput', 'inputGain'], ['waveShape'] ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

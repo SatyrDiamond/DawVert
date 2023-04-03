@@ -608,11 +608,21 @@ def lmms_decode_effectslot(fxslotX):
     else:
         fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
         print('['+fxpluginname,end='] ')
+
+        auto_id_plugin = get_plugin_auto_id()
+        fxslotJ['pluginautoid'] = auto_id_plugin
+
         fxslotJ['plugin'] = 'native-lmms'
         fxcvpj_l_plugindata['name'] = fxpluginname
         fxcvpj_l_plugindata['data'] = {}
-        for name, value in fxxml_plugin.attrib.items(): fxcvpj_l_plugindata['data'][name] = value
-        for name in fxxml_plugin: fxcvpj_l_plugindata['data'][name.tag] = name.get('value')
+
+        lmms_autovals = lmms_auto.get_params_fx(fxpluginname)
+        for pluginparam in lmms_autovals[0]:
+            fxcvpj_l_plugindata['data'][pluginparam] = lmms_getvalue(fxxml_plugin, pluginparam, 0, ['plugin', auto_id_plugin, pluginparam])
+        for pluginparam in lmms_autovals[1]:
+            xml_pluginparam = fxxml_plugin.get(pluginparam)
+            if xml_pluginparam: fxcvpj_l_plugindata['data'][pluginparam] = xml_pluginparam
+
         fxslotJ['plugindata'] = fxcvpj_l_plugindata
         return fxslotJ
 
@@ -741,6 +751,8 @@ class input_lmms(plugin_input.base):
         l_automation['track_main'] = {}
         l_automation['fxmixer'] = {}
         l_automation['plugin'] = {}
+
+        trackdata = cvpj_l['track_data']
 
         for part in l_autodata:
             if part in l_autoid:

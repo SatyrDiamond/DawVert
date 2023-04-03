@@ -8,6 +8,7 @@ import plugin_input
 import os
 import sys
 import xml.etree.ElementTree as ET
+from functions_plugin import lmms_auto
 from functions import note_mod
 from functions import note_data
 from functions import notelist_data
@@ -274,8 +275,13 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst):
             cvpj_l_inst['plugin'] = "native-lmms"
             cvpj_l_plugindata['name'] = pluginname
             cvpj_l_plugindata['data'] = {}
-            for name, value in xml_plugin.attrib.items(): cvpj_l_plugindata['data'][name] = value
-            for name in xml_plugin: cvpj_l_plugindata['data'][name.tag] = name.get('value')
+            lmms_autovals = lmms_auto.get_params_inst(pluginname)
+            for pluginparam in lmms_autovals[0]:
+                cvpj_l_plugindata['data'][pluginparam] = lmms_getvalue(xml_plugin, pluginparam, 0, ['plugin', auto_id_plugin, pluginparam])
+            for pluginparam in lmms_autovals[1]:
+                xml_pluginparam = xml_plugin.get(pluginparam)
+                if xml_pluginparam: cvpj_l_plugindata['data'][pluginparam] = xml_pluginparam
+
             asdflfo_get(trkX_insttr, cvpj_l_plugindata)
 
 # ------- Notelist -------
@@ -740,7 +746,6 @@ class input_lmms(plugin_input.base):
             if part in l_autoid:
                 s_autopl_id = l_autoid[part]
                 s_autopl_data = l_autodata[part]
-                #print(s_autopl_id)
                 if s_autopl_id[0] == 'track_main':
                     if s_autopl_id[1] in trackdata:
                         if s_autopl_id[1] not in l_automation['track_main']: l_automation['track_main'][s_autopl_id[1]] = {}
@@ -766,7 +771,6 @@ class input_lmms(plugin_input.base):
                         
         cvpj_l['automation'] = l_automation
 
-        cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
         
         cvpj_l['fxrack'] = fxrackdata

@@ -35,7 +35,7 @@ class output_cvpj_f(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': True,
-        'r_track_lanes': True,
+        'r_track_lanes': False,
         'placement_cut': False,
         'placement_warp': False,
         'no_placements': False
@@ -43,9 +43,6 @@ class output_cvpj_f(plugin_output.base):
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
 
-        placements.r_lanefit(projJ)
-        placements.r_removelanes(projJ)
-        
         idvals_names_gmmidi = idvals.parse_idvalscsv('idvals/names_gmmidi.csv')
         idvals_names_gmmidi_drums = idvals.parse_idvalscsv('idvals/names_gmmidi_drums.csv')
  

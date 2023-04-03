@@ -167,8 +167,7 @@ def asdflfo(cvpj_l_track, xmlO, asdrtype):
         if speedx100 == 1: lfoparams['speed'] = float(xmlO.get('lspd')) * 0.2
         else: lfoparams['speed'] = float(xmlO.get('lspd')) * 20
 
-    if lfoparams != {}:
-        cvpj_l_track[asdrtype]['lfo'] = lfoparams
+    if lfoparams != {}: cvpj_l_track[asdrtype]['lfo'] = lfoparams
 
 def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst):
     cvpj_l_inst['plugin'] = "none"
@@ -213,19 +212,14 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst):
             cvpj_l_plugindata['file'] = xml_plugin.get('src')
             cvpj_l_plugindata['trigger'] = 'normal'
             cvpj_l_plugindata['loop'] = {}
+            looped = int(xml_plugin.get('looped'))
+            if looped == 0: cvpj_l_plugindata['loop'] = {'enabled': 0}
+            if looped == 1: cvpj_l_plugindata['loop'] = {'enabled': 1, 'mode': "normal"}
+            if looped == 2: cvpj_l_plugindata['loop'] = {'enabled': 1, 'mode': "pingpong"}
             cvpj_l_plugindata['loop']['custompoints'] = {}
             lmms_getvalue_float(cvpj_l_plugindata['loop']['custompoints'], 'end', xml_plugin.get('eframe'))
             lmms_getvalue_float(cvpj_l_plugindata['loop']['custompoints'], 'loop', xml_plugin.get('lframe'))
             lmms_getvalue_float(cvpj_l_plugindata['loop']['custompoints'], 'start', xml_plugin.get('sframe'))
-            looped = int(xml_plugin.get('looped'))
-            if looped == 0:
-                cvpj_l_plugindata['loop']['enabled'] = 0
-            if looped == 1:
-                cvpj_l_plugindata['loop']['enabled'] = 1
-                cvpj_l_plugindata['loop']['mode'] = "normal"
-            if looped == 2:
-                cvpj_l_plugindata['loop']['enabled'] = 1
-                cvpj_l_plugindata['loop']['mode'] = "pingpong"
             interpolation = int(xml_plugin.get('interp'))
             if interpolation == 0: cvpj_l_plugindata['interpolation'] = "none"
             if interpolation == 1: cvpj_l_plugindata['interpolation'] = "linear"
@@ -579,15 +573,13 @@ def lmms_decode_effectslot(fxslotX):
 
         if ladspa_linked != None: 
             ladspa_ports //= 2
-            if ladspa_linked == "0": 
-                seperated_channels = True
+            if ladspa_linked == "0": seperated_channels = True
 
         t_params = {}
         t_params["0"] = {}
 
         for node in fxxml_plugin_ladspacontrols.iter():
             notetagtxt = node.tag
-
             if notetagtxt.startswith('port'):
                 l_ch = notetagtxt[4]
                 l_val = notetagtxt[5:]
@@ -604,10 +596,8 @@ def lmms_decode_effectslot(fxslotX):
         if seperated_channels == True: 
             fxcvpj_l_plugindata['seperated_channels'] = True
             fxcvpj_l_plugindata['params'] = t_params
-
         fxslotJ['plugindata'] = fxcvpj_l_plugindata
         return fxslotJ
-
 
     else:
         fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
@@ -660,10 +650,6 @@ def lmms_decode_fxmixer(fxX):
 # ------- Main -------
 
 def lmms_decode_tracks(trksX):
-    tracklist = {}
-    instdata = {}
-    trackordering = []
-    trackplacements = {}
     idtracknum = 0
     for trkX in trksX:
         idtracknum += 1
@@ -678,14 +664,7 @@ class input_lmms(plugin_input.base):
     def getshortname(self): return 'lmms'
     def getname(self): return 'LMMS'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): 
-        return {
-        'fxrack': True,
-        'r_track_lanes': False,
-        'placement_cut': False,
-        'placement_warp': False,
-        'no_placements': False
-        }
+    def getdawcapabilities(self): return {'fxrack': True}
     def supported_autodetect(self): return True
     def detect(self, input_file):
         output = False

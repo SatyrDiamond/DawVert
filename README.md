@@ -45,22 +45,6 @@ e.g:
     python3 DawVert.py --songnum 3 -it famistudio_txt -i "song.txt" -ot lmms -o out.mmp
 ```
 
-## VST Plugins
-
-[Grace](https://github.com/s-oram/Grace) (Sampler)
-
-[juicysfplugin](https://github.com/Birch-san/juicysfplugin) (Soundfont 2)
-
-[Zyn-Fusion](https://zynaddsubfx.sourceforge.io/zyn-fusion.html) (ZynAddSubFX)
-
-[Magical 8bit Plug 2](https://github.com/yokemura/Magical8bitPlug2)
-
-[Vital](https://vital.audio/) (SimSynth, Beepbox)
-
-[Ninjas2](https://github.com/clearly-broken-software/ninjas2) (Fruity Slicer)
-
-[OPNplug](https://github.com/jpcima/ADLplug) (OPN2)
-
 ## Required Libraries
 ```
 varint
@@ -99,3 +83,19 @@ xmodits_py - for extracting Impulse Tracker and FastTracker2 Samples
 | M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ |
 | M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
 | M-I | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | 
+
+## VST Plugins
+
+[Grace](https://github.com/s-oram/Grace) (Sampler)
+
+[juicysfplugin](https://github.com/Birch-san/juicysfplugin) (Soundfont 2)
+
+[Zyn-Fusion](https://zynaddsubfx.sourceforge.io/zyn-fusion.html) (ZynAddSubFX)
+
+[Magical 8bit Plug 2](https://github.com/yokemura/Magical8bitPlug2)
+
+[Vital](https://vital.audio/) (SimSynth, Beepbox)
+
+[Ninjas2](https://github.com/clearly-broken-software/ninjas2) (Fruity Slicer)
+
+[OPNplug](https://github.com/jpcima/ADLplug) (OPN2)

@@ -19,7 +19,7 @@ from functions import plug_in_pxtone
 from functions import plug_in_jummbox
 
 # -------------------- Instruments --------------------
-def convplug_inst(instdata, dawname, extra_json, nameid):
+def convplug_inst(instdata, dawname, extra_json, nameid, platform_id):
 	global supportedplugins
 	if 'plugin' in instdata:
 		if 'plugindata' in instdata:
@@ -87,7 +87,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid):
 
 			# -------------------- sampler-multi > vst2 (Grace) --------------------
 
-			elif pluginname == 'sampler-multi' and dawname not in supportedplugins['sampler-multi']:
+			elif pluginname == 'sampler-multi' and dawname not in supportedplugins['sampler-multi'] and platform_id == 'win':
 				msmpl_data = instdata
 				msmpl_p_data = instdata['plugindata']
 				vst2_dll_vstpaths = list_vst.vstpaths()
@@ -233,17 +233,17 @@ def do_fxchain_audio(fxchain_audio, dawname, extra_json, nameid):
 	for fxslot in fxchain_audio:
 		convplug_fx(fxslot, dawname, extra_json, nameid)
 
-def do_inst(track_data, dawname, extra_json, nameid):
+def do_inst(track_data, dawname, extra_json, nameid, platform_id):
 	if 'instdata' in track_data:
 		instdata = track_data['instdata']
 		print('[plug-conv] --- Inst: '+nameid)
-		convplug_inst(instdata, dawname, extra_json, nameid)
+		convplug_inst(instdata, dawname, extra_json, nameid, platform_id)
 	if 'chain_inst' in track_data:
 		print('[plug-conv] --- InstChain: '+nameid)
 		for trackid in track_data['chain_inst']:
-			convplug_inst(trackid, dawname, extra_json, nameid)
+			convplug_inst(trackid, dawname, extra_json, nameid, platform_id)
 
-def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
+def convproj(cvpjdata, platform_id, in_type, out_type, dawname, extra_json):
 	global supportedplugins
 	list_vst.listinit()
 	supportedplugins = {}
@@ -258,12 +258,12 @@ def convproj(cvpjdata, in_type, out_type, dawname, extra_json):
 					track_data = cvpj_l['track_data'][track]
 					if 'type' in track_data:
 						if track_data['type'] == 'instrument':
-							do_inst(track_data, dawname, extra_json, track)
+							do_inst(track_data, dawname, extra_json, track, platform_id)
 		if in_type == 'm' or in_type == 'mi':
 			if 'instruments_data' in cvpj_l:
 				for track in cvpj_l['instruments_data']:
 					track_data = cvpj_l['instruments_data'][track]
-					do_inst(track_data, dawname, extra_json, track)
+					do_inst(track_data, dawname, extra_json, track, platform_id)
 		if 'fxrack' in cvpj_l:
 			for fxid in cvpj_l['fxrack']:
 				fxiddata = cvpj_l['fxrack'][fxid]

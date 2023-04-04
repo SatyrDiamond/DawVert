@@ -829,6 +829,9 @@ class output_lmms(plugin_output.base):
         add_auto_val(auto_nameiddata_main, [0, 0.01], 0, projJ, 'pitch', headX, 'masterpitch', 'Song', 'Pitch')
         add_auto_val(auto_nameiddata_main, [0, 100], 1, projJ, 'vol', headX, 'mastervol', 'Song', 'Volume')
 
+        add_auto_val(auto_nameiddata_main, None, 4, projJ, 'timesig_numerator', headX, 'timesig_numerator', 'Song', 'Numerator')
+        add_auto_val(auto_nameiddata_main, None, 4, projJ, 'timesig_numerator', headX, 'timesig_numerator', 'Song', 'Denominator')
+
         lmms_encode_tracks(trkcX, trksJ, trkorderJ, trkplacementsJ)
 
         xml_fxmixer = ET.SubElement(songX, "fxmixer")

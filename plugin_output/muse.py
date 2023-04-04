@@ -15,6 +15,13 @@ def addvalue(xmltag, name, value):
     x_temp.text = str(value)
 
 
+def addcontroller(xmltag, i_id, i_value, i_color):
+    x_temp = ET.SubElement(xmltag, 'controller')
+    x_temp.set('id', str(i_id))
+    x_temp.set('cur', str(i_value))
+    x_temp.set('color', i_color)
+    x_temp.set('visible', '0')
+
 def addroute_audioout(xmltag, in_channel, in_track, in_type, in_name):
     x_Route = ET.SubElement(xmltag, "Route")
     x_Route.set('channel', str(in_channel))
@@ -50,13 +57,15 @@ def maketrack_master(x_song):
     tracknum += 1
 
 def maketrack_synth(xmltag, insttrackdata, portnum):
-    global NoteStep
     global tracknum
+    print('[output-muse] Synth Track '+str(tracknum)+':', insttrackdata['name'])
+    global NoteStep
     global synthidnum
     routelist.append([tracknum, 0])
     x_miditrack = ET.SubElement(xmltag, "SynthI")
     if 'name' in insttrackdata: addvalue(x_miditrack, 'name', insttrackdata['name'])
     else: addvalue(x_miditrack, 'name', 'Out')
+    if 'vol' in insttrackdata: addcontroller(x_miditrack, 0, insttrackdata['vol'], '#ff0000')
     addvalue(x_miditrack, 'record', 0)
     track_mute = 0
     if 'muted' in insttrackdata: track_mute = insttrackdata['muted']
@@ -108,17 +117,25 @@ def maketrack_synth(xmltag, insttrackdata, portnum):
     synthidnum += 1
 
 def maketrack_midi(xmltag, cvpj_trackplacements, trackname, portnum, insttrackdata):
-    global NoteStep
     global tracknum
+    print('[output-muse]  Midi Track '+str(tracknum)+':', insttrackdata['name'])
+    global NoteStep
     global synthidnum
+    track_transposition = 0
     x_miditrack = ET.SubElement(xmltag, "miditrack")
     if 'color' in insttrackdata: addvalue(x_miditrack, 'color', '#'+colors.rgb_float_2_hex(insttrackdata['color']))
     if 'name' in insttrackdata: addvalue(x_miditrack, 'name', insttrackdata['name'])
+    if 'instdata' in insttrackdata:
+        if 'middlenote' in insttrackdata['instdata']: 
+            track_transposition = -insttrackdata['instdata']['middlenote']
+
+    addvalue(x_miditrack, 'height', 70)
     addvalue(x_miditrack, 'record', 0)
     addvalue(x_miditrack, 'mute', 0)
     addvalue(x_miditrack, 'solo', 0)
     addvalue(x_miditrack, 'device', portnum)
     addvalue(x_miditrack, 'off', 0)
+    addvalue(x_miditrack, 'transposition', track_transposition)
     for placement in cvpj_trackplacements:
         x_part = ET.SubElement(x_miditrack, "part")
         if 'name' in placement: addvalue(x_part, 'name', placement['name'])
@@ -179,7 +196,7 @@ class output_cvpj(plugin_output.base):
         cvpj_trackplacements = projJ['track_placements']
 
         x_muse = ET.Element("muse")
-        x_muse.set('version', "3.3")
+        x_muse.set('version', "3.4")
         x_song = ET.SubElement(x_muse, "song")
         addvalue(x_song, 'info', '')
         addvalue(x_song, 'showinfo', 1)
@@ -210,7 +227,6 @@ class output_cvpj(plugin_output.base):
         for cvpj_trackentry in cvpj_trackordering:
             if cvpj_trackentry in cvpj_trackdata:
                 s_trkdata = cvpj_trackdata[cvpj_trackentry]
-                print('TRACK', s_trkdata['name'])
                 if s_trkdata['type'] == 'instrument':
                     if cvpj_trackentry in cvpj_trackplacements:
                         cvpj_tr = cvpj_trackplacements[cvpj_trackentry]
@@ -228,7 +244,6 @@ class output_cvpj(plugin_output.base):
                                 if 'name' in lanedata: lanename = lanedata['name']
                                 maketrack_midi(x_song, lanedata['notes'], lanename, synthidnum, s_trkdata)
     
-                        print(tracknum, cvpj_tr_islaned)
                     maketrack_synth(x_song, s_trkdata, synthidnum)
 
         addroute_audioout(x_song, 0, 0, 1, "system:playback_1")
@@ -241,7 +256,7 @@ class output_cvpj(plugin_output.base):
         else: muse_bpm = 120
 
         x_tempolist = ET.SubElement(x_song, "tempolist")
-        x_tempolist.set('fix', "500000")
+        x_tempolist.set('fix', "0")
         x_tempo = ET.SubElement(x_tempolist, "tempo")
         x_tempo.set('at', "21474837")
         addvalue(x_tempo, 'tick', 0)

@@ -130,7 +130,9 @@ def asdrlfo(jsonin, xmlobj, asdrtype, xmltype):
             elmodJ = jsondata[asdrtype]
             if 'envelope' in elmodJ:
                 elmodJenv = elmodJ['envelope']
-                if 'amount' in elmodJenv: elmodX.set('amt', str(elmodJenv['amount']))
+                if 'amount' in elmodJenv: 
+                    if asdrtype == 'cutoff': elmodX.set('amt', str(elmodJenv['amount']/6000))
+                    else: elmodX.set('amt', str(elmodJenv['amount']))
                 if 'predelay' in elmodJenv: elmodX.set('pdel', str(sec2exp(elmodJenv['predelay'])))
                 if 'attack' in elmodJenv: elmodX.set('att', str(sec2exp(elmodJenv['attack'])))
                 if 'hold' in elmodJenv: elmodX.set('hold', str(sec2exp(elmodJenv['hold'])))
@@ -140,16 +142,19 @@ def asdrlfo(jsonin, xmlobj, asdrtype, xmltype):
             if 'lfo' in elmodJ:
                 elmodJlfo = elmodJ['lfo']
                 if 'amount' in elmodJlfo: elmodX.set('lamt', str(elmodJlfo['amount']))
-                if 'predelay' in elmodJlfo:elmodX.set('lpdel', str(elmodJlfo['predelay']))
-                if 'attack' in elmodJlfo:elmodX.set('latt', str(elmodJlfo['attack']))
-                if 'shape' in elmodJlfo:elmodX.set('lshp', str(lfoshape[elmodJlfo['shape']]))
+                if 'predelay' in elmodJlfo: elmodX.set('lpdel', str(elmodJlfo['predelay']))
+                if 'attack' in elmodJlfo: elmodX.set('latt', str(sec2exp(elmodJlfo['attack'])))
+                if 'shape' in elmodJlfo: elmodX.set('lshp', str(lfoshape[elmodJlfo['shape']]))
                 elmodX.set('x100', '0')
                 if 'speed' in elmodJlfo:
-                    lfospeed = float(elmodJlfo['speed']) / 20
-                    if lfospeed > 1:
-                        elmodX.set('x100', '1')
-                        lfospeed = lfospeed
-                    elmodX.set('lspd', str(lfospeed))
+                    if 'type' in elmodJlfo['speed']:
+                        lfospeed = 1
+                        if elmodJlfo['speed']['type'] == 'seconds':
+                            lfospeed = float(elmodJlfo['speed']['time']) / 20
+                        if lfospeed > 1:
+                            elmodX.set('x100', '1')
+                            lfospeed = lfospeed/100
+                        elmodX.set('lspd', str(lfospeed))
                 if 'shape' in elmodJlfo: elmodX.set('lshp', str(lfoshape[elmodJlfo['shape']]))
 
 def lmms_encode_plugin(xmltag, trkJ, trackid):

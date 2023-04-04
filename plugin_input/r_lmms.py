@@ -182,6 +182,10 @@ def asdflfo(cvpj_l_track, xmlO, asdrtype):
     if xmlO.get('lshp') != None: lfoparams['shape'] = lfoshape[int(xmlO.get('lshp'))]
     lmms_getvalue_float(lfoparams, 'amount', xmlO.get('lamt'))
 
+    if asdrtype == 'cutoff':
+        if 'amount' in lfoparams: 
+            lfoparams['amount'] = lfoparams['amount']*1500
+
     if xmlO.get('lspd') != None: 
         lfoparams['speed'] = {'type': 'seconds'}
         if speedx100 == 1: lfoparams['speed']['time'] = float(xmlO.get('lspd')) * 0.2

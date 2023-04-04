@@ -14,9 +14,9 @@ from functions import vst_fx
 from functions import vst_inst
 from functions import params_vst
 from functions import params_vital
-from functions import plug_in_fl
-from functions import plug_in_pxtone
-from functions import plug_in_jummbox
+from functions_plugconv import input_flstudio
+from functions_plugconv import input_pxtone
+from functions_plugconv import input_jummbox
 
 def clamp(n, minn, maxn):
 	return max(min(maxn, n), minn)
@@ -31,15 +31,15 @@ def convplug_inst(instdata, dawname, extra_json, nameid, platform_id):
 
 			# ---------------------------------------- 1 ----------------------------------------
 			if pluginname == 'native-fl':
-				plug_in_fl.convert(instdata)
+				input_fl.convert_inst(instdata)
 
 			# ---------- from pxtone
 			elif pluginname == 'native-pxtone':
-				plug_in_pxtone.convert(instdata)
+				input_pxtone.convert_inst(instdata)
 
 			# ---------- from jummbox
 			elif pluginname == 'native-jummbox':
-				plug_in_jummbox.convert(instdata)
+				input_jummbox.convert_inst(instdata)
 
 			# ---------- from general-midi
 			elif pluginname == 'general-midi':

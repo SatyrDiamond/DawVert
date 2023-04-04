@@ -14,32 +14,26 @@ from functions import vst_fx
 from functions import vst_inst
 from functions import params_vst
 from functions import params_vital
-from functions_plugconv import input_flstudio
-from functions_plugconv import input_pxtone
-from functions_plugconv import input_jummbox
 
 def clamp(n, minn, maxn):
 	return max(min(maxn, n), minn)
 
+from functions_plugconv import input_flstudio
+from functions_plugconv import input_pxtone
+from functions_plugconv import input_jummbox
+
 # -------------------- Instruments --------------------
-def convplug_inst(instdata, dawname, extra_json, nameid, platform_id):
-	global supportedplugins
+def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 	if 'plugin' in instdata:
 		if 'plugindata' in instdata:
 			pluginname = instdata['plugin']
 			plugindata = instdata['plugindata']
 
-			# ---------------------------------------- 1 ----------------------------------------
-			if pluginname == 'native-fl':
-				input_flstudio.convert_inst(instdata)
-
-			# ---------- from pxtone
-			elif pluginname == 'native-pxtone':
-				input_pxtone.convert_inst(instdata)
-
-			# ---------- from jummbox
-			elif pluginname == 'native-jummbox':
-				input_jummbox.convert_inst(instdata)
+			# ---------------------------------------- input ----------------------------------------
+			# ---------- from fl studio
+			if in_daw == 'flp' and pluginname == 'native-fl': input_flstudio.convert_inst(instdata)
+			if in_daw == 'ptcop' and pluginname == 'native-pxtone': input_pxtone.convert_inst(instdata)
+			if in_daw == 'jummbox' and pluginname == 'native-jummbox': input_jummbox.convert_inst(instdata)
 
 			# ---------- from general-midi
 			elif pluginname == 'general-midi':
@@ -55,12 +49,13 @@ def convplug_inst(instdata, dawname, extra_json, nameid, platform_id):
 				else:
 					print('[plug-conv] Soundfont argument not defined.')
 
-			# ---------------------------------------- 2 ----------------------------------------
+			# ---------------------------------------- output ----------------------------------------
 			pluginname = instdata['plugin']
 			plugindata = instdata['plugindata']
 
 			# -------------------- sampler > vst2 (Grace) --------------------
-			if pluginname == 'sampler' and dawname not in supportedplugins['sampler'] and platform_id == 'win':
+
+			if pluginname == 'sampler' and out_daw not in supportedplugins['sampler'] and platform_id == 'win':
 				sampler_data = instdata
 				sampler_file_data = instdata['plugindata']
 				wireturn = audio_wav.complete_wav_info(sampler_file_data)
@@ -90,7 +85,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid, platform_id):
 
 			# -------------------- sampler > vst2 (drops) --------------------
 
-			elif pluginname == 'sampler' and dawname not in supportedplugins['sampler'] and platform_id == 'lin':
+			elif pluginname == 'sampler' and out_daw not in supportedplugins['sampler'] and platform_id == 'lin':
 				sampler_data = instdata
 				sampler_file_data = instdata['plugindata']
 				wireturn = audio_wav.complete_wav_info(sampler_file_data)
@@ -151,7 +146,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid, platform_id):
 
 			# -------------------- sampler-multi > vst2 (Grace) --------------------
 
-			elif pluginname == 'sampler-multi' and dawname not in supportedplugins['sampler-multi'] and platform_id == 'win':
+			elif pluginname == 'sampler-multi' and out_daw not in supportedplugins['sampler-multi'] and platform_id == 'win':
 				msmpl_data = instdata
 				msmpl_p_data = instdata['plugindata']
 				vst2_dll_vstpaths = list_vst.vstpaths()
@@ -171,7 +166,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid, platform_id):
 			# -------------------- vst2 (juicysfplugin) --------------------
 
 			# ---------- from native soundfont2
-			elif pluginname == 'soundfont2' and dawname not in supportedplugins['sf2']:
+			elif pluginname == 'soundfont2' and out_daw not in supportedplugins['sf2']:
 				sf2data = instdata['plugindata']
 				if 'bank' in sf2data: sf2_bank = sf2data['bank']
 				else: sf2_bank = 0
@@ -263,14 +258,14 @@ def convplug_inst(instdata, dawname, extra_json, nameid, platform_id):
 				list_vst.replace_data(instdata, 2, 'any', 'OPNplug', 'raw', params_vst.vc2xml_make(xmlout), None)
 
 			# -------------------- zynaddsubfx > vst2 (Zyn-Fusion) - from lmms --------------------
-			elif pluginname == 'zynaddsubfx-lmms' and dawname != 'lmms':
+			elif pluginname == 'zynaddsubfx-lmms' and out_daw != 'lmms':
 				zasfxdata = instdata['plugindata']['data']
 				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
 				zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
 				list_vst.replace_data(instdata, 2, 'any', 'ZynAddSubFX', 'raw', zasfxdatafixed, None)
 
 # -------------------- FX --------------------
-def convplug_fx(fxdata, dawname, extra_json, nameid):
+def convplug_fx(fxdata, in_daw, out_daw, extra_json, nameid):
 	global supportedplugins
 	if 'plugin' in fxdata:
 		if 'plugindata' in fxdata:
@@ -292,27 +287,27 @@ def convplug_fx(fxdata, dawname, extra_json, nameid):
 				print('[plug-conv] Unchanged')
 
 # -------------------- convproj --------------------
-def do_fxchain_audio(fxchain_audio, dawname, extra_json, nameid):
+def do_fxchain_audio(fxchain_audio, in_daw, out_daw, extra_json, nameid):
 	for fxslot in fxchain_audio:
-		convplug_fx(fxslot, dawname, extra_json, nameid)
+		convplug_fx(fxslot, in_daw, out_daw, extra_json, nameid)
 
-def do_inst(track_data, dawname, extra_json, nameid, platform_id):
+def do_inst(track_data, in_daw, out_daw, extra_json, nameid, platform_id):
 	if 'instdata' in track_data:
 		instdata = track_data['instdata']
 		print('[plug-conv] --- Inst: '+nameid)
-		convplug_inst(instdata, dawname, extra_json, nameid, platform_id)
-	if 'chain_inst' in track_data:
-		print('[plug-conv] --- InstChain: '+nameid)
-		for trackid in track_data['chain_inst']:
-			convplug_inst(trackid, dawname, extra_json, nameid, platform_id)
+		convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id)
 
-def convproj(cvpjdata, platform_id, in_type, out_type, dawname, extra_json):
+def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, extra_json):
 	global supportedplugins
 	list_vst.listinit()
 	supportedplugins = {}
-	supportedplugins['sf2'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp']
-	supportedplugins['sampler'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'lmms', 'flp', 'ableton']
-	supportedplugins['sampler-multi'] = ['cvpj', 'cvpj_r', 'cvpj_s', 'cvpj_m', 'cvpj_mi', 'ableton']
+	supportedplugins['sf2'] =           ['lmms', 'flp',                      'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['sampler'] =       ['lmms', 'flp', 'ableton',           'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['sampler-multi'] = ['ableton',                          'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['vst2'] =          ['lmms','ableton', 'flp'             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['vst3'] =          ['lmms','ableton', 'flp'             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['clap'] =          [                                    'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['ladspa'] =        ['lmms',                             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
 	cvpj_l = json.loads(cvpjdata)
 	if out_type != 'debug':
 		if in_type == 'r' or in_type == 'ri':
@@ -321,17 +316,17 @@ def convproj(cvpjdata, platform_id, in_type, out_type, dawname, extra_json):
 					track_data = cvpj_l['track_data'][track]
 					if 'type' in track_data:
 						if track_data['type'] == 'instrument':
-							do_inst(track_data, dawname, extra_json, track, platform_id)
+							do_inst(track_data, in_daw, out_daw, extra_json, track, platform_id)
 		if in_type == 'm' or in_type == 'mi':
 			if 'instruments_data' in cvpj_l:
 				for track in cvpj_l['instruments_data']:
 					track_data = cvpj_l['instruments_data'][track]
-					do_inst(track_data, dawname, extra_json, track, platform_id)
+					do_inst(track_data, in_daw, out_daw, extra_json, track, platform_id)
 		if 'fxrack' in cvpj_l:
 			for fxid in cvpj_l['fxrack']:
 				fxiddata = cvpj_l['fxrack'][fxid]
 				if 'fxchain_audio' in fxiddata:
 					fxchain_audio = fxiddata['fxchain_audio']
 					print('[plug-conv] --- FX: '+fxid)
-					do_fxchain_audio(fxchain_audio, dawname, extra_json, fxid)
+					do_fxchain_audio(fxchain_audio, in_daw, out_daw, extra_json, fxid)
 		return json.dumps(cvpj_l, indent=2)

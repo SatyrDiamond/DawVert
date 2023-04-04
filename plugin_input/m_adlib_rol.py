@@ -43,7 +43,6 @@ def parsetrack_timbre(file_stream):
         if timbre_name not in used_instruments: used_instruments.append(timbre_name)
         rol_timbre_events[timbre_pos] = timbre_name
         file_stream.read(3)
-    #print('TIMBRE', track_name, rol_timbre_events)
     return track_name, rol_timbre_events, used_instruments
 
 def parsetrack_volume(file_stream):
@@ -52,7 +51,6 @@ def parsetrack_volume(file_stream):
     rol_vol_events = []
     for _ in range(track_num_events): 
         rol_vol_events.append(struct.unpack("<hf", file_stream.read(6)))
-    #print('VOLUME', track_name, rol_vol_events)
     return track_name, rol_vol_events
 
 def parsetrack_pitch(file_stream):
@@ -61,7 +59,6 @@ def parsetrack_pitch(file_stream):
     rol_pitch_events = []
     for _ in range(track_num_events): 
         rol_pitch_events.append(struct.unpack("<hf", file_stream.read(6)))
-    #print('PITCH', track_name, rol_pitch_events)
     return track_name, rol_pitch_events
   
 def closest(myList, in_value):
@@ -117,7 +114,6 @@ def parsetrack(file_stream, tracknum, notelen):
         cvpj_l['automation']['fxmixer'][tracknum+1]["vol"] = [{'position': 0, 'duration': (rol_tr_volume[1][-1][0]*notelen)+16, 'points': cvpj_volpoints}]
 
     placementdata = placements.nl2pl(cvpj_notelist)
-    placementdata[0]['name'] = rol_tr_voice[2]
     tracks.m_playlist_pl(cvpj_l, tracknum+1, rol_tr_voice[0], None, placementdata)
 
 class input_adlib_rol(plugin_input.base):

@@ -18,7 +18,6 @@ from functions import colors
 lfoshape = {'sine': 0,'tri': 1,'saw': 2,'square': 3,'custom': 4,'random': 5}
 chord = {'0': 0, '0,4,7': 1, '0,4,6': 2, '0,3,7': 3, '0,3,6': 4, '0,2,7': 5, '0,5,7': 6, '0,4,8': 7, '0,5,8': 8, '0,3,6,9': 9, '0,4,7,9': 10, '0,5,7,9': 11, '0,4,7,9,14': 12, '0,3,7,9': 13, '0,3,7,9,14': 14, '0,4,7,10': 15, '0,5,7,10': 16, '0,4,8,10': 17, '0,4,6,10': 18, '0,4,7,10,15': 19, '0,4,7,10,13': 20, '0,4,8,10,15': 21, '0,4,8,10,13': 22, '0,4,6,10,13': 23, '0,4,7,10,17': 24, '0,4,7,10,21': 25, '0,4,7,10,18': 26, '0,4,7,11': 27, '0,4,6,11': 28, '0,4,8,11': 29, '0,4,7,11,18': 30, '0,4,7,11,21': 31, '0,3,7,10': 32, '0,3,6,10': 33, '0,3,7,10,13': 34, '0,3,7,10,17': 35, '0,3,7,10,21': 36, '0,3,7,11': 37, '0,3,7,11,17': 38, '0,3,7,11,21': 39, '0,4,7,10,14': 40, '0,5,7,10,14': 41, '0,4,7,14': 42, '0,4,8,10,14': 43, '0,4,6,10,14': 44, '0,4,7,10,14,18': 45, '0,4,7,10,14,20': 46, '0,4,7,11,14': 47, '0,5,7,11,15': 48, '0,4,8,11,14': 49, '0,4,7,11,14,18': 50, '0,3,7,10,14': 51, '0,3,7,14': 52, '0,3,6,10,14': 53, '0,3,7,11,14': 54, '0,4,7,10,14,17': 55, '0,4,7,10,13,17': 56, '0,4,7,11,14,17': 57, '0,3,7,10,14,17': 58, '0,3,7,11,14,17': 59, '0,4,7,10,14,21': 60, '0,4,7,10,15,21': 61, '0,4,7,10,13,21': 62, '0,4,6,10,13,21': 63, '0,4,7,11,14,21': 64, '0,3,7,10,14,21': 65, '0,3,7,11,14,21': 66, '0,2,4,5,7,9,11': 67, '0,2,3,5,7,8,11': 68, '0,2,3,5,7,9,11': 69, '0,2,4,6,8,10': 70, '0,2,3,5,6,8,9,11': 71, '0,2,4,7,9': 72, '0,3,5,7,10': 73, '0,1,5,7,10': 74, '0,2,4,5,7,8,9,11': 75, '0,2,4,5,7,9,10,11': 76, '0,3,5,6,7,10': 77, '0,1,4,5,7,8,11': 78, '0,1,4,6,8,10,11': 79, '0,1,3,5,7,9,11': 80, '0,1,3,5,7,8,11': 81, '0,2,3,6,7,8,11': 82, '0,2,3,5,7,9,10': 83, '0,1,3,5,7,8,10': 84, '0,2,4,6,7,9,11': 85, '0,2,4,5,7,9,10': 86, '0,2,3,5,7,8,10': 87, '0,1,3,5,6,8,10': 88, '0,1,2,3,4,5,6,7,8,9,10,11': 90, '0,1,3,4,6,7,9,10': 91, '0,7': 92, '0,1,4,5,7,8,10': 93, '0,1,4,5,6,8,11': 94}
 arpdirection = {'up': 0,'down': 1,'updown': 2,'downup': 3,'random': 4}
-filtertype = {'lowpass': 0 ,'hipass': 1 ,'bandpass_csg': 2 ,'bandpass_czpg': 3 ,'notch': 4 ,'allpass': 5 ,'moog': 6 ,'lowpass_double': 7 ,'lowpass_rc12': 8 ,'bandpass_rc12': 9 ,'Highpass_rc12': 10 ,'lowpass_rc24': 11 ,'bandpass_rc24': 12 ,'Highpass_rc24': 13 ,'formant': 14 ,'moog_double': 15 ,'lowpass_sv': 16 ,'bandpass_sv': 17 ,'Highpass_sv': 18 ,'notch_sv': 19 ,'formant_fast': 20 ,'tripole': 21}
 fxlist = {}
 fxlist['amplifier'] = 'AmplifierControls'
 fxlist['bassbooster'] = 'bassboostercontrols'
@@ -72,11 +71,52 @@ def asdrlfo_set(jsonpath, trkX_insttr):
     eldataX = ET.SubElement(trkX_insttr, "eldata")
     if 'filter' in jsonpath:
         json_filter = jsonpath['filter']
-        if json_filter['type'] in filtertype:
-            if 'cutoff' in json_filter: eldataX.set('fcut', str(json_filter['cutoff']))
-            if 'wet' in json_filter: eldataX.set('fwet', str(json_filter['wet']))
-            if 'type' in json_filter: eldataX.set('ftype', str(filtertype[json_filter['type']]))
-            if 'reso' in json_filter: eldataX.set('fres', str(json_filter['reso']))
+        if 'cutoff' in json_filter: eldataX.set('fcut', str(json_filter['cutoff']))
+        filtertable_e = [None, None]
+        lmms_filternum = None
+        if 'type' in json_filter: filtertable_e[0] = json_filter['type']
+        if 'subtype' in json_filter: filtertable_e[1] = json_filter['subtype']
+
+        if filtertable_e[0] == 'allpass': lmms_filternum = 5
+
+        if filtertable_e[0] == 'bandpass':
+            if filtertable_e[1] == 'csg': lmms_filternum = 2
+            if filtertable_e[1] == 'czpg': lmms_filternum = 3
+            if filtertable_e[1] == 'rc12': lmms_filternum = 9
+            if filtertable_e[1] == 'rc24': lmms_filternum = 12
+            if filtertable_e[1] == 'sv': lmms_filternum = 17
+
+        if filtertable_e[0] == 'formant':
+            lmms_filternum = 14
+            if filtertable_e[1] == 'fast': lmms_filternum = 20
+
+        if filtertable_e[0] == 'highpass':
+            lmms_filternum = 1
+            if filtertable_e[1] == 'rc12': lmms_filternum = 10
+            if filtertable_e[1] == 'rc24': lmms_filternum = 13
+            if filtertable_e[1] == 'sv': lmms_filternum = 18
+
+        if filtertable_e[0] == 'lowpass':
+            lmms_filternum = 0
+            if filtertable_e[1] == 'double': lmms_filternum = 7
+            if filtertable_e[1] == 'rc12': lmms_filternum = 8
+            if filtertable_e[1] == 'rc24': lmms_filternum = 11
+            if filtertable_e[1] == 'sv': lmms_filternum = 16
+
+        if filtertable_e[0] == 'moog':
+            lmms_filternum = 6
+            if filtertable_e[1] == 'double': lmms_filternum = 15
+
+        if filtertable_e[0] == 'notch':
+            lmms_filternum = 4
+            if filtertable_e[1] == 'sv': lmms_filternum = 19
+
+        if filtertable_e[0] == 'tripole':
+            lmms_filternum = 21
+
+        if lmms_filternum != None: eldataX.set('ftype', str(lmms_filternum))
+        if 'wet' in json_filter: eldataX.set('fwet', str(json_filter['wet']))
+        if 'reso' in json_filter: eldataX.set('fres', str(json_filter['reso']))
 
     asdrlfo(jsonpath, eldataX, 'volume', 'vol')
     asdrlfo(jsonpath, eldataX, 'cutoff', 'cut')

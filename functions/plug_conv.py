@@ -138,6 +138,15 @@ def convplug_inst(instdata, dawname, extra_json, nameid, platform_id):
 							vst_inst.drops_setvalue('filter_sustain', clamp(asdr_env['sustain'], 0, 1))
 							if 'release' in asdr_env: vst_inst.drops_setvalue('filter_release', clamp((asdr_env['release']/10)*amountmul, 0, 1))
 
+						if 'lfo' in sampler_file_data['asdrlfo']['cutoff']: 
+							asdr_lfo = sampler_file_data['asdrlfo']['cutoff']['lfo']
+							vst_inst.drops_setvalue('filter_lfo_depth', clamp(asdr_lfo['amount']/7300, 0, 1))
+							if 'speed' in asdr_lfo:
+								if asdr_lfo['speed']['type'] == 'seconds' and asdr_lfo['speed']['time'] != 0:
+									vst_inst.drops_setvalue('filter_lfo_freq', clamp(((1/asdr_lfo['speed']['time'])*0.05), 0, 1))
+							if 'shape' in asdr_lfo: vst_inst.drops_setvalue('filter_lfo_type', vst_inst.drops_shape(asdr_lfo['shape']))
+							if 'attack' in asdr_lfo: vst_inst.drops_setvalue('filter_lfo_fade', clamp(asdr_lfo['attack']/10, 0, 1))
+
 				list_vst.replace_data(instdata, 2, 'lin', 'Drops', 'raw', params_vst.nullbytegroup_make(vst_inst.drops_get()), None)
 
 			# -------------------- sampler-multi > vst2 (Grace) --------------------

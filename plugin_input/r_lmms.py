@@ -19,7 +19,17 @@ from functions import tracks
 plugin_auto_id = 1000
 lfoshape = ['sine', 'tri', 'saw', 'square', 'custom', 'random']
 arpdirection = ['up', 'down', 'updown', 'downup', 'random']
-filtertype = ['lowpass', 'hipass', 'bandpass_csg', 'bandpass_czpg', 'notch', 'allpass', 'moog', 'lowpass_double', 'lowpass_rc12', 'bandpass_rc12', 'Highpass_rc12', 'lowpass_rc24', 'bandpass_rc24', 'Highpass_rc24', 'formant', 'moog_double', 'lowpass_sv', 'bandpass_sv', 'Highpass_sv', 'notch_sv', 'formant_fast', 'tripole']
+
+filtertype = [
+['lowpass', None], ['highpass', None], ['bandpass','csg'], 
+['bandpass','czpg'], ['notch', None], ['allpass', None], 
+['moog', None], ['lowpass','double'], ['lowpass','rc12'], 
+['bandpass','rc12'], ['highpass','rc12'], ['lowpass','rc24'], 
+['bandpass','rc24'], ['highpass','rc24'], ['formant', None], 
+['moog','double'], ['lowpass','sv'], ['bandpass','sv'], 
+['highpass','sv'], ['notch','sv'], ['formant','fast'], ['tripole', None]
+]
+
 chord = [[0], [0, 4, 7], [0, 4, 6], [0, 3, 7], [0, 3, 6], [0, 2, 7], [0, 5, 7], [0, 4, 8], [0, 5, 8], [0, 3, 6, 9], [0, 4, 7, 9], [0, 5, 7, 9], [0, 4, 7, 9, 14], [0, 3, 7, 9], [0, 3, 7, 9, 14], [0, 4, 7, 10], [0, 5, 7, 10], [0, 4, 8, 10], [0, 4, 6, 10], [0, 4, 7, 10, 15], [0, 4, 7, 10, 13], [0, 4, 8, 10, 15], [0, 4, 8, 10, 13], [0, 4, 6, 10, 13], [0, 4, 7, 10, 17], [0, 4, 7, 10, 21], [0, 4, 7, 10, 18], [0, 4, 7, 11], [0, 4, 6, 11], [0, 4, 8, 11], [0, 4, 7, 11, 18], [0, 4, 7, 11, 21], [0, 3, 7, 10], [0, 3, 6, 10], [0, 3, 7, 10, 13], [0, 3, 7, 10, 17], [0, 3, 7, 10, 21], [0, 3, 7, 11], [0, 3, 7, 11, 17], [0, 3, 7, 11, 21], [0, 4, 7, 10, 14], [0, 5, 7, 10, 14], [0, 4, 7, 14], [0, 4, 8, 10, 14], [0, 4, 6, 10, 14], [0, 4, 7, 10, 14, 18], [0, 4, 7, 10, 14, 20], [0, 4, 7, 11, 14], [0, 5, 7, 11, 15], [0, 4, 8, 11, 14], [0, 4, 7, 11, 14, 18], [0, 3, 7, 10, 14], [0, 3, 7, 14], [0, 3, 6, 10, 14], [0, 3, 7, 11, 14], [0, 4, 7, 10, 14, 17], [0, 4, 7, 10, 13, 17], [0, 4, 7, 11, 14, 17], [0, 3, 7, 10, 14, 17], [0, 3, 7, 11, 14, 17], [0, 4, 7, 10, 14, 21], [0, 4, 7, 10, 15, 21], [0, 4, 7, 10, 13, 21], [0, 4, 6, 10, 13, 21], [0, 4, 7, 11, 14, 21], [0, 3, 7, 10, 14, 21], [0, 3, 7, 11, 14, 21], [0, 2, 4, 5, 7, 9, 11], [0, 2, 3, 5, 7, 8, 11], [0, 2, 3, 5, 7, 9, 11], [0, 2, 4, 6, 8, 10], [0, 2, 3, 5, 6, 8, 9, 11], [0, 2, 4, 7, 9], [0, 3, 5, 7, 10], [0, 1, 5, 7, 10], [0, 2, 4, 5, 7, 8, 9, 11], [0, 2, 4, 5, 7, 9, 10, 11], [0, 3, 5, 6, 7, 10], [0, 1, 4, 5, 7, 8, 11], [0, 1, 4, 6, 8, 10, 11], [0, 1, 3, 5, 7, 9, 11], [0, 1, 3, 5, 7, 8, 11], [0, 2, 3, 6, 7, 8, 11], [0, 2, 3, 5, 7, 9, 10], [0, 1, 3, 5, 7, 8, 10], [0, 2, 4, 6, 7, 9, 11], [0, 2, 4, 5, 7, 9, 10], [0, 2, 3, 5, 7, 8, 10], [0, 1, 3, 5, 6, 8, 10], [0, 2, 3, 5, 7, 8, 10], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [0, 1, 3, 4, 6, 7, 9, 10], [0, 7], [0, 1, 4, 5, 7, 8, 10], [0, 1, 4, 5, 6, 8, 11]]
 fxlist = {}
 fxlist['amplifier'] = 'AmplifierControls'
@@ -129,7 +139,10 @@ def asdflfo_get(trkX_insttr, cvpj_l_plugindata):
         filterparams = {}
         lmms_getvalue_float(filterparams, 'cutoff', eldataX.get('fcut'))
         lmms_getvalue_float(filterparams, 'wet', eldataX.get('fwet'))
-        if eldataX.get('ftype') != None: filterparams['type'] = filtertype[int(eldataX.get('ftype'))]
+        if eldataX.get('ftype') != None: 
+            filtertype_out = filtertype[int(eldataX.get('ftype'))]
+            filterparams['type'] = filtertype_out[0]
+            if filtertype_out[1] != None: filterparams['subtype'] = filtertype_out[1]
         lmms_getvalue_float(filterparams, 'reso', eldataX.get('fres'))
 
         if filterparams != {}:
@@ -137,6 +150,7 @@ def asdflfo_get(trkX_insttr, cvpj_l_plugindata):
             if 'cutoff' in filterparams: cvpj_l_plugindata['filter']['cutoff'] = filterparams['cutoff']
             if 'wet' in filterparams: cvpj_l_plugindata['filter']['wet'] = filterparams['wet']
             if 'type' in filterparams: cvpj_l_plugindata['filter']['type'] = filterparams['type']
+            if 'subtype' in filterparams: cvpj_l_plugindata['filter']['subtype'] = filterparams['subtype']
             if 'reso' in filterparams: cvpj_l_plugindata['filter']['reso'] = filterparams['reso']
 
 def asdflfo(cvpj_l_track, xmlO, asdrtype):

@@ -352,7 +352,7 @@ def single_notelists2placements(placementsdata):
             new_placements.append(new_placement)
     return new_placements
 
-def r_split_single_notelist(projJ):
+def create_points_cut(projJ):
     global points_items
     if points_items == None:
         songduration = song.r_getduration(projJ)
@@ -370,6 +370,9 @@ def r_split_single_notelist(projJ):
         points = dict(sorted(points.items(), key=lambda item: item[0]))
         points_items = [(k,v) for k,v in points.items()]
 
+def r_split_single_notelist(projJ):
+    global points_items
+    create_points_cut(projJ)
     if 'do_singlenotelistcut' in projJ:
         if projJ['do_singlenotelistcut'] == True:
             track_placements = projJ['track_placements']

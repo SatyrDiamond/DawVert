@@ -206,7 +206,7 @@ class input_adlib_rol(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
         
-        cvpj_l['timesig_numerator'] = 4
+        cvpj_l['timesig_numerator'] = rol_header_beatMeasure
         cvpj_l['timesig_denominator'] = 4
         
         cvpj_l['bpm'] = t_tempo_data[1]

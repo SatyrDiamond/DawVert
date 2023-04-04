@@ -141,7 +141,9 @@ def asdrlfo(jsonin, xmlobj, asdrtype, xmltype):
                 if 'release' in elmodJenv: elmodX.set('rel', str(sec2exp(elmodJenv['release'])))
             if 'lfo' in elmodJ:
                 elmodJlfo = elmodJ['lfo']
-                if 'amount' in elmodJlfo: elmodX.set('lamt', str(elmodJlfo['amount']))
+                if 'amount' in elmodJlfo: 
+                    if asdrtype == 'cutoff': elmodX.set('lamt', str(elmodJlfo['amount']/1500))
+                    else: elmodX.set('lamt', str(elmodJlfo['amount']))
                 if 'predelay' in elmodJlfo: elmodX.set('lpdel', str(elmodJlfo['predelay']))
                 if 'attack' in elmodJlfo: elmodX.set('latt', str(sec2exp(elmodJlfo['attack'])))
                 if 'shape' in elmodJlfo: elmodX.set('lshp', str(lfoshape[elmodJlfo['shape']]))

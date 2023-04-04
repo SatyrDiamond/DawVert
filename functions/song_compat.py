@@ -313,6 +313,10 @@ def single_notelists2placements(placementsdata):
     global points_items
     timepoints = []
     numarea = len(points_items)-1
+
+    nlname = None
+    if 'name' in placementsdata[0]: nlname = placementsdata[0]['name']
+
     if numarea >= 1:
         for num in range(numarea):
             timepoints_part = float_range(points_items[num][0],points_items[num+1][0],points_items[num][1]*4)
@@ -342,6 +346,7 @@ def single_notelists2placements(placementsdata):
         for cutrange in cutranges:
             new_placement = {}
             new_placement['notelist'] = notelist_data.trimmove(notelist, cutrange[0], cutrange[1])
+            if nlname != None: new_placement['name'] = nlname
             new_placement['position'] = cutrange[0]
             new_placement['duration'] = cutrange[1]-cutrange[0]
             new_placements.append(new_placement)

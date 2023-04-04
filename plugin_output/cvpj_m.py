@@ -11,6 +11,15 @@ class output_cvpj(plugin_output.base):
     def getshortname(self): return 'cvpj_m'
     def gettype(self): return 'm'
     def plugin_archs(self): return None
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': 'debug',
+        'r_track_lanes': 'debug',
+        'placement_cut': 'debug',
+        'placement_warp': 'debug',
+        'no_placements': 'debug',
+        'pl_audio_events': 'debug',
+        }
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
         with open(output_file, "w") as fileout:

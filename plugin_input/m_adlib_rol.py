@@ -30,8 +30,7 @@ def parsetrack_voice(file_stream):
         rol_note_data = struct.unpack("HH", file_stream.read(4))
         curtickpos += rol_note_data[1]
         rol_notelist.append(rol_note_data)
-    #print('VOICE', track_name, len(rol_notelist))
-    return track_name, rol_notelist
+    return track_name, rol_notelist, track_name
 
 def parsetrack_timbre(file_stream):
     track_name = file_stream.read(15).split(b'\x00')[0].decode('ascii')
@@ -118,6 +117,7 @@ def parsetrack(file_stream, tracknum, notelen):
         cvpj_l['automation']['fxmixer'][tracknum+1]["vol"] = [{'position': 0, 'duration': (rol_tr_volume[1][-1][0]*notelen)+16, 'points': cvpj_volpoints}]
 
     placementdata = placements.nl2pl(cvpj_notelist)
+    placementdata[0]['name'] = rol_tr_voice[2]
     tracks.m_playlist_pl(cvpj_l, tracknum+1, rol_tr_voice[0], None, placementdata)
 
 class input_adlib_rol(plugin_input.base):

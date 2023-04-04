@@ -31,7 +31,7 @@ def convplug_inst(instdata, dawname, extra_json, nameid, platform_id):
 
 			# ---------------------------------------- 1 ----------------------------------------
 			if pluginname == 'native-fl':
-				input_fl.convert_inst(instdata)
+				input_flstudio.convert_inst(instdata)
 
 			# ---------- from pxtone
 			elif pluginname == 'native-pxtone':

@@ -17,7 +17,7 @@ def parsetrack_tempo(file_stream, tickBeat):
     for _ in range(track_num_events): 
         tempo_data_part = []
         tempo_data_part.append(int.from_bytes(file_stream.read(2), 'little'))
-        tempo_data_part.append(struct.unpack("<f", file_stream.read(4))[0])
+        tempo_data_part.append((struct.unpack("<f", file_stream.read(4))[0])*track_tempo)
         tempo_data.append(tempo_data_part)
     return track_name, track_tempo, tempo_data
 
@@ -90,7 +90,7 @@ def parsetrack(file_stream, tracknum, notelen):
 
         adlibrol_gminst = idvals.get_idval(idvals_inst_adlib_rol, used_instrument.upper(), 'gm_inst')
         cvpj_instdata = {}
-        if adlibrol_gminst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': adlibrol_gminst}}
+        if adlibrol_gminst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': adlibrol_gminst-1}}
 
         tracks.m_addinst(cvpj_l, instid,cvpj_instdata)
         tracks.m_addinst_data(cvpj_l, instid, adlibrol_instname+' (Trk'+str(tracknum+1)+')', None, None, None)
@@ -104,7 +104,7 @@ def parsetrack(file_stream, tracknum, notelen):
             cvpj_notelist.append(note_data.mx_makenote(cvpj_noteinst, curtrackpos*notelen, rol_notedata[1]*notelen, rol_notedata[0]-48, None, None))
         curtrackpos += rol_notedata[1]
 
-    print('[input-adlib_rol] Track: "'+rol_tr_voice[0]+'" Instruments: '+str(rol_tr_timbre[2]))
+    print('[input-adlib_rol] Track: "'+rol_tr_voice[0]+'", Instruments: '+str(rol_tr_timbre[2]))
 
     cvpj_l['fxrack'][tracknum+1] = {}
     cvpj_l['fxrack'][tracknum+1]["name"] = rol_tr_voice[0]
@@ -187,12 +187,20 @@ class input_adlib_rol(plugin_input.base):
         
         song_file.read(38) #Padding
         
-        t_tempo_data = parsetrack_tempo(song_file, rol_header_tickBeat/rol_header_beatMeasure)
+        notelen = (2/rol_header_tickBeat)*2
+
+        t_tempo_data = parsetrack_tempo(song_file, notelen)
         
         cvpj_l['fxrack'] = {}
         cvpj_l['automation'] = {}
-        cvpj_l['automation']['fxmixer'] = {}
 
+        cvpj_l['automation']['main'] = {}
+        cvpj_bpmpoints = []
+        for rol_pan_point in t_tempo_data[2]:
+            cvpj_bpmpoints.append({"type": 'instant', "position": rol_pan_point[0]*notelen, "value": rol_pan_point[1]})
+        cvpj_l['automation']['main']['bpm'] = [{'position': 0, 'duration': (t_tempo_data[2][-1][0]*notelen)+16, 'points': cvpj_bpmpoints}]
+
+        cvpj_l['automation']['fxmixer'] = {}
         for tracknum in range(10):
             parsetrack(song_file, tracknum, (2/rol_header_tickBeat)*2)
 

@@ -156,6 +156,7 @@ class input_cvpj_f(plugin_input.base):
                 cvpj_instdata['plugindata']['file'] = wave_path
                 cvpj_instdata['plugindata']['start'] = t_sounddata[5]
                 cvpj_instdata['plugindata']['end'] = t_sounddata[6]
+                cvpj_instdata['plugindata']['length'] = len(t_sounddata[7])//t_sounddata[0]
                 cvpj_instdata['plugindata']['trigger'] = 'normal'
 
             tracks.m_addinst(cvpj_l, cvpj_instid, cvpj_instdata)

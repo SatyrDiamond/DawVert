@@ -12,10 +12,17 @@ class output_cvpj_f(plugin_output.base):
     def getshortname(self): return 'cvpj_r'
     def gettype(self): return 'r'
     def plugin_archs(self): return None
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': 'debug',
+        'r_track_lanes': 'debug',
+        'placement_cut': 'debug',
+        'placement_warp': 'debug',
+        'no_placements': 'debug',
+        'pl_audio_events': 'debug',
+        }
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
-
-        placements.r_split_single_notelist(projJ)
 
         with open(output_file, "w") as fileout:
             fileout.write("CONVPROJ___R\n")

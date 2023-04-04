@@ -90,7 +90,8 @@ def maketrack_synth(xmltag, insttrackdata, portnum):
                 addvalue(x_miditrack, 'synthType', 'VST (synths)')
                 if 'name' in insttrackdata_instdata['plugindata']['plugin']:
                     vstname = insttrackdata_instdata['plugindata']['plugin']['name']
-                    addvalue(x_miditrack, 'class', vstname)
+                    if vstname == 'Drops': addvalue(x_miditrack, 'class', 'drops-vst')
+                    else: addvalue(x_miditrack, 'class', vstname)
                 vstdata = insttrackdata_instdata['plugindata']['data'].encode('ascii')
                 vstdata_bytes = base64.b64decode(vstdata)
                 musevst = b''
@@ -252,7 +253,7 @@ class output_cvpj(plugin_output.base):
         for routeid in routelist:
             addroute_audio(x_song, routeid[0], routeid[1])
 
-        if 'bpm' in projJ: muse_bpm = projJ['bpm']
+        if 'bpm' in projJ: muse_bpm = int(projJ['bpm'])
         else: muse_bpm = 120
 
         x_tempolist = ET.SubElement(x_song, "tempolist")

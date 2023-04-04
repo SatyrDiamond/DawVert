@@ -163,6 +163,10 @@ def asdflfo(cvpj_l_track, xmlO, asdrtype):
     lmms_getvalue_exp(envelopeparams, 'release', xmlO.get('rel'))
     lmms_getvalue_float(envelopeparams, 'amount', xmlO.get('amt'))
 
+    if asdrtype == 'cutoff':
+        if 'amount' in envelopeparams: 
+            envelopeparams['amount'] = envelopeparams['amount']*6000
+
     cvpj_l_track[asdrtype] = {}
     if envelopeparams != {}:
         cvpj_l_track[asdrtype]['envelope'] = envelopeparams
@@ -174,13 +178,14 @@ def asdflfo(cvpj_l_track, xmlO, asdrtype):
     else: speedx100 = 0
 
     lmms_getvalue_float(lfoparams, 'predelay', xmlO.get('pdel'))
-    lmms_getvalue_float(lfoparams, 'attack', xmlO.get('latt'))
+    lmms_getvalue_exp(lfoparams, 'attack', xmlO.get('latt'))
     if xmlO.get('lshp') != None: lfoparams['shape'] = lfoshape[int(xmlO.get('lshp'))]
     lmms_getvalue_float(lfoparams, 'amount', xmlO.get('lamt'))
 
     if xmlO.get('lspd') != None: 
-        if speedx100 == 1: lfoparams['speed'] = float(xmlO.get('lspd')) * 0.2
-        else: lfoparams['speed'] = float(xmlO.get('lspd')) * 20
+        lfoparams['speed'] = {'type': 'seconds'}
+        if speedx100 == 1: lfoparams['speed']['time'] = float(xmlO.get('lspd')) * 0.2
+        else: lfoparams['speed']['time'] = float(xmlO.get('lspd')) * 20
 
     if lfoparams != {}: cvpj_l_track[asdrtype]['lfo'] = lfoparams
 

@@ -14,40 +14,26 @@ colorlist_one = [colors.hex_to_rgb_float(color) for color in colorlist]
 
 # ---------------------------------------------- Functions Main ----------------------------------------------
 # ---------  Main  ---------
-def addvalue(xmltag, name, value):
-    x_temp = ET.SubElement(xmltag, name)
-    x_temp.set('Value', value)
-    return x_temp
 
-def addLomId(xmltag, name, value):
-    x_temp = ET.SubElement(xmltag, name)
-    x_temp.set('LomId', value)
-    return x_temp
-      
-def addId(xmltag, name, value):
-    x_temp = ET.SubElement(xmltag, name)
-    x_temp.set('Id', value)
-    return x_temp
-      
-autoidnum = 300000
-def get_auto_id():
-    global autoidnum
-    autoidnum += 1
-    return autoidnum
+unusednum = 500000
+def get_unused_id():
+    global unusednum
+    unusednum += 1
+    return unusednum
 
-autopointeenum = 200000
+autopointeenum = 400000
 def get_pointee():
     global autopointeenum
     autopointeenum += 1
     return autopointeenum
 
-autocontnum = 100000
+autocontnum = 300000
 def get_contid():
     global autocontnum
     autocontnum += 1
     return autocontnum
 
-clipid = 100
+clipid = 0
 def get_clipid():
     global clipid
     clipid += 1
@@ -69,8 +55,31 @@ def get_noteid_next():
     global noteid
     return noteid
 
-# ---------------------------------------------------------------- Functions Param ----------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
 
+def addvalue(xmltag, name, value):
+    x_temp = ET.SubElement(xmltag, name)
+    x_temp.set('Value', str(value))
+    return x_temp
+
+def addLomId(xmltag, name, value):
+    x_temp = ET.SubElement(xmltag, name)
+    x_temp.set('LomId', value)
+    return x_temp
+      
+def addId(xmltag, name, value):
+    x_temp = ET.SubElement(xmltag, name)
+    x_temp.set('Id', value)
+    return x_temp
+      
 def add_up_lower(xmltag, name, target, upper, lower):
     x_temp = ET.SubElement(xmltag, name)
     addvalue(x_temp, 'Target', target)
@@ -95,10 +104,6 @@ def add_xyval(xmltag, x_name, x_x, x_y):
     x_SessionScrollerPos = ET.SubElement(xmltag, x_name)
     x_SessionScrollerPos.set('X', str(x_x))
     x_SessionScrollerPos.set('Y', str(x_y))
-
-
-# ---------------------------------------------------------------- Others --------------------------------------------------------------
-
 #
 def create_FollowAction(xmltag, FTime, Linked, LoopIter, FollowAct, FollowCha, JumpIndex, FollowEnabled):
     x_FollowAction = ET.SubElement(xmltag, 'FollowAction')
@@ -116,13 +121,13 @@ def create_FollowAction(xmltag, FTime, Linked, LoopIter, FollowAct, FollowCha, J
 def create_Locators(xmltag):
     x_temp = ET.SubElement(xmltag, 'Locators')
     x_Locators = ET.SubElement(x_temp, 'Locators')
+    return x_Locators
     
 def create_Scenes(xmltag):
     x_Scenes = ET.SubElement(xmltag, 'Scenes')
     for scenenum in range(8):
         x_Scene = addId(x_Scenes, 'Scene', str(scenenum))
         create_FollowAction(x_Scene, 4, 'true', 1, [4,0], [100,0], [0,0], 'false')
-
         addvalue(x_Scene, 'Name', "")
         addvalue(x_Scene, 'Annotation', "")
         addvalue(x_Scene, 'Color', "-1")
@@ -182,11 +187,6 @@ def create_GroovePool(xmltag):
     addvalue(x_temp, 'LomId', '0')
     ET.SubElement(x_temp, 'Grooves')
     
-def create_GroovePool(xmltag):
-    x_temp = ET.SubElement(xmltag, 'GroovePool')
-    addvalue(x_temp, 'LomId', '0')
-    ET.SubElement(x_temp, 'Grooves')
-    
 def create_AutoColorPickerForPlayerAndGroupTracks(xmltag):
     x_temp = ET.SubElement(xmltag, 'AutoColorPickerForPlayerAndGroupTracks')
     addvalue(x_temp, 'NextColorIndex', '15')
@@ -231,6 +231,16 @@ def create_timeselection(xmltag, AnchorTime, OtherTime):
     addvalue(x_Transport, 'AnchorTime', str(AnchorTime))
     addvalue(x_Transport, 'OtherTime', str(OtherTime))
 
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+
 # ---------------------------------------------------------------- Track Base Data --------------------------------------------------------------
 
 # ---------------- Device Chain / Mixer ----------------
@@ -248,10 +258,11 @@ def set_add_param(xmltag, param_name, param_value, auto_id, modu_id, midi_cc_thr
     if midi_cont_range != None: add_min_max(x_temp, 'MidiControllerRange', midi_cont_range[0], midi_cont_range[1])
       
 def create_devicechain_mixer(xmltag, tracktype):
+    xmltag = ET.SubElement(xmltag, 'Mixer')
     addvalue(xmltag, 'LomId', '0')
     addvalue(xmltag, 'LomIdView', '0')
     addvalue(xmltag, 'IsExpanded', 'true')
-    set_add_param(xmltag, 'On', 'true', str(get_auto_id()), None, [64,127], None)
+    set_add_param(xmltag, 'On', 'true', str(get_unused_id()), None, [64,127], None)
     addvalue(xmltag, 'ModulationSourceCount', '0')
     addLomId(xmltag, 'ParametersListWrapper', '0')
     addId(xmltag, 'Pointee', str(get_pointee()))
@@ -267,23 +278,23 @@ def create_devicechain_mixer(xmltag, tracktype):
     x_SourceContext = ET.SubElement(xmltag, 'SourceContext')
     x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
     x_Sends = ET.SubElement(xmltag, 'Sends')
-    set_add_param(xmltag, 'Speaker', 'true', str(get_auto_id()), None, [64,127], None)
+    set_add_param(xmltag, 'Speaker', 'true', str(get_unused_id()), None, [64,127], None)
     addvalue(xmltag, 'SoloSink', 'false')
     addvalue(xmltag, 'PanMode', '0')
-    set_add_param(xmltag, 'Pan', '0', str(get_auto_id()), str(get_auto_id()), None, [-1,1])
-    set_add_param(xmltag, 'SplitStereoPanL', '-1', str(get_auto_id()), str(get_auto_id()), None, [-1,1])
-    set_add_param(xmltag, 'SplitStereoPanR', '1', str(get_auto_id()), str(get_auto_id()), None, [-1,1])
-    set_add_param(xmltag, 'Volume', '1', str(get_auto_id()), str(get_auto_id()), None, [0.0003162277571,1.99526238])
+    set_add_param(xmltag, 'Pan', '0', str(get_unused_id()), str(get_unused_id()), None, [-1,1])
+    set_add_param(xmltag, 'SplitStereoPanL', '-1', str(get_unused_id()), str(get_unused_id()), None, [-1,1])
+    set_add_param(xmltag, 'SplitStereoPanR', '1', str(get_unused_id()), str(get_unused_id()), None, [-1,1])
+    set_add_param(xmltag, 'Volume', '1', str(get_unused_id()), str(get_unused_id()), None, [0.0003162277571,1.99526238])
     addvalue(xmltag, 'ViewStateSesstionTrackWidth', '93')
-    set_add_param(xmltag, 'CrossFadeState', '1', str(get_auto_id()), None, None, None)
+    set_add_param(xmltag, 'CrossFadeState', '1', str(get_unused_id()), None, None, None)
     addLomId(xmltag, 'SendsListWrapper', '0')
     if tracktype == 'master':
         cvpj_bpm = 120
         if 'bpm' in cvpj_l: cvpj_bpm = cvpj_l['bpm']
-        set_add_param(xmltag, 'Tempo', str(cvpj_bpm), str(get_auto_id()), str(get_auto_id()), None, [60,200])
-        set_add_param(xmltag, 'TimeSignature', '201', str(get_auto_id()), None, None, None)
-        set_add_param(xmltag, 'GlobalGrooveAmount', '100', str(get_auto_id()), str(get_auto_id()), None, [0,131.25])
-        set_add_param(xmltag, 'CrossFade', '0', str(get_auto_id()), str(get_auto_id()), None, [-1,1])
+        set_add_param(xmltag, 'Tempo', str(cvpj_bpm), str(get_unused_id()), str(get_unused_id()), None, [60,200])
+        set_add_param(xmltag, 'TimeSignature', '201', str(get_unused_id()), None, None, None)
+        set_add_param(xmltag, 'GlobalGrooveAmount', '100', str(get_unused_id()), str(get_unused_id()), None, [0,131.25])
+        set_add_param(xmltag, 'CrossFade', '0', str(get_unused_id()), str(get_unused_id()), None, [-1,1])
         addvalue(xmltag, 'TempoAutomationViewBottom', '60')
         addvalue(xmltag, 'TempoAutomationViewTop', '200')
 
@@ -298,6 +309,8 @@ def create_notelist(xmltag, cvpj_notelist):
 
     t_keydata = dict(sorted(t_keydata.items(), key=lambda item: item[0]))
 
+    t_notemod = {}
+
     for keynum in t_keydata:
         x_KeyTrack = addId(x_KeyTracks, 'KeyTrack', str(get_keytrackid()))
         x_KeyTrack_notes = ET.SubElement(x_KeyTrack, 'Notes')
@@ -305,11 +318,19 @@ def create_notelist(xmltag, cvpj_notelist):
             x_MidiNoteEvent = ET.SubElement(x_KeyTrack_notes, 'MidiNoteEvent')
             x_MidiNoteEvent.set('Time', str(t_note['position']/4))
             x_MidiNoteEvent.set('Duration', str(t_note['duration']/4))
-            x_MidiNoteEvent.set('Velocity', "100")
+            if 'vol' in t_note: x_MidiNoteEvent.set('Velocity', str(t_note['duration']*100))
+            else: x_MidiNoteEvent.set('Velocity', "100")
             x_MidiNoteEvent.set('VelocityDeviation', "0")
-            x_MidiNoteEvent.set('OffVelocity', "64")
-            x_MidiNoteEvent.set('Probability', "1")
-            x_MidiNoteEvent.set('IsEnabled', "true")
+            if 'off_vol' in t_note: x_MidiNoteEvent.set('OffVelocity', str(t_note['off_vol']*100))
+            else: x_MidiNoteEvent.set('OffVelocity', "64")
+            if 'probability' in t_note: x_MidiNoteEvent.set('Probability', str(t_note['probability']))
+            else: x_MidiNoteEvent.set('Probability', "1")
+            if 'enabled' in t_note:
+                if t_note['enabled'] == 1: x_MidiNoteEvent.set('IsEnabled', "true")
+                if t_note['enabled'] == 0: x_MidiNoteEvent.set('IsEnabled', "false")
+            else: x_MidiNoteEvent.set('IsEnabled', "true")
+            if 'notemod' in t_note:
+                t_notemod[t_note['id']] = t_note['notemod']
             x_MidiNoteEvent.set('NoteId', str(t_note['id']))
         addvalue(x_KeyTrack, 'MidiKey', str(keynum+60))
 
@@ -329,9 +350,13 @@ def create_midiclip(xmltag, cvpj_placement, trackcolor):
     t_name = ''
     t_color = trackcolor
     t_notelist = []
+    t_disabled = 'false'
     if 'name' in cvpj_placement: t_name = cvpj_placement['name']
     if 'color' in cvpj_placement: t_color = colors.closest_color_index(colorlist_one, cvpj_placement['color'])
     if 'notelist' in cvpj_placement: t_notelist = notelist_data.sort(cvpj_placement['notelist'])
+    if 'muted' in cvpj_placement: 
+        if cvpj_placement['muted'] == 1: 
+            t_disabled = 'true'
 
     #print('----- POS' ,  cvpj_position)
 
@@ -390,7 +415,7 @@ def create_midiclip(xmltag, cvpj_placement, trackcolor):
     addvalue(x_MidiClip, 'Ram', 'false')
     x_MidiClip_GrooveSettings = ET.SubElement(x_MidiClip, 'GrooveSettings')
     addvalue(x_MidiClip_GrooveSettings, 'GrooveId', '-1')
-    addvalue(x_MidiClip, 'Disabled', 'false')
+    addvalue(x_MidiClip, 'Disabled', t_disabled)
     addvalue(x_MidiClip, 'VelocityAmount', '0')
     create_FollowAction(x_MidiClip, 4, 'true', 1, [4,0], [100,0], [1,1], 'false')
     create_grid(x_MidiClip, 'Grid', 1, 16, 20, 2, 'true', 'true')
@@ -433,7 +458,7 @@ def set_add_sequencer_base(x_BaseSequencer):
     addvalue(x_BaseSequencer, 'LomId', '0')
     addvalue(x_BaseSequencer, 'LomIdView', '0')
     addvalue(x_BaseSequencer, 'IsExpanded', 'true')
-    set_add_param(x_BaseSequencer, 'On', 'true', str(get_auto_id()), None, [64,127], None)
+    set_add_param(x_BaseSequencer, 'On', 'true', str(get_unused_id()), None, [64,127], None)
     addvalue(x_BaseSequencer, 'ModulationSourceCount', '0')
     addLomId(x_BaseSequencer, 'ParametersListWrapper', '0')
     addId(x_BaseSequencer, 'Pointee', str(get_pointee()))
@@ -485,15 +510,15 @@ def set_add_sequencer_end(x_FreezeSequencer, track_placements):
     x_ArrangerAutomation_AutomationTransformViewState = ET.SubElement(x_ArrangerAutomation, 'AutomationTransformViewState')
     addvalue(x_ArrangerAutomation_AutomationTransformViewState, 'IsTransformPending', 'false')
     ET.SubElement(x_ArrangerAutomation_AutomationTransformViewState, 'TimeAndValueTransforms')
-    x_VolumeModulationTarget = addId(x_FreezeSequencer, 'VolumeModulationTarget', str(get_auto_id()))
+    x_VolumeModulationTarget = addId(x_FreezeSequencer, 'VolumeModulationTarget', str(get_unused_id()))
     addvalue(x_VolumeModulationTarget, 'LockEnvelope', '0')
-    x_TranspositionModulationTarget = addId(x_FreezeSequencer, 'TranspositionModulationTarget', str(get_auto_id()))
+    x_TranspositionModulationTarget = addId(x_FreezeSequencer, 'TranspositionModulationTarget', str(get_unused_id()))
     addvalue(x_TranspositionModulationTarget, 'LockEnvelope', '0')
-    x_GrainSizeModulationTarget = addId(x_FreezeSequencer, 'GrainSizeModulationTarget', str(get_auto_id()))
+    x_GrainSizeModulationTarget = addId(x_FreezeSequencer, 'GrainSizeModulationTarget', str(get_unused_id()))
     addvalue(x_GrainSizeModulationTarget, 'LockEnvelope', '0')
-    x_FluxModulationTarget = addId(x_FreezeSequencer, 'FluxModulationTarget', str(get_auto_id()))
+    x_FluxModulationTarget = addId(x_FreezeSequencer, 'FluxModulationTarget', str(get_unused_id()))
     addvalue(x_FluxModulationTarget, 'LockEnvelope', '0')
-    x_SampleOffsetModulationTarget = addId(x_FreezeSequencer, 'SampleOffsetModulationTarget', str(get_auto_id()))
+    x_SampleOffsetModulationTarget = addId(x_FreezeSequencer, 'SampleOffsetModulationTarget', str(get_unused_id()))
     addvalue(x_SampleOffsetModulationTarget, 'LockEnvelope', '0')
     addvalue(x_FreezeSequencer, 'PitchViewScrollPosition', '-1073741824')
     addvalue(x_FreezeSequencer, 'SampleOffsetModulationScrollPosition', '-1073741824')
@@ -520,14 +545,11 @@ def create_devicechain(xmltag, tracktype, track_placements, trackcolor):
     addvalue(x_AutomationTarget, 'IsContentSelectedInDocument', 'false')
     addvalue(x_AutomationTarget, 'LaneHeight', str(LaneHeight))
     addvalue(x_AutomationLanes, 'AreAdditionalAutomationLanesFolded', 'false')
-    # ------------------------------------------
 
-    # ------- ClipEnvelopeChooserViewState
     x_ClipEnvelopeChooserViewState = ET.SubElement(xmltag, 'ClipEnvelopeChooserViewState')
     addvalue(x_ClipEnvelopeChooserViewState, 'SelectedDevice', '0')
     addvalue(x_ClipEnvelopeChooserViewState, 'SelectedEnvelope', '0')
     addvalue(x_ClipEnvelopeChooserViewState, 'PreferModulationVisible', 'false')
-    # ------------------------------------------
 
     add_up_lower(xmltag, 'AudioInputRouting', 'AudioIn/External/S0', 'Ext. In', '1/2')
     add_up_lower(xmltag, 'MidiInputRouting', 'MidiIn/External.All/-1', 'Ext: All Ins', '')
@@ -535,8 +557,7 @@ def create_devicechain(xmltag, tracktype, track_placements, trackcolor):
     elif tracktype == 'master': add_up_lower(xmltag, 'AudioOutputRouting', 'AudioOut/External/S0', 'Ext. Out', '1/2')
     elif tracktype == 'prehear': add_up_lower(xmltag, 'AudioOutputRouting', 'AudioOut/External/S0', 'Ext. Out', '')
     add_up_lower(xmltag, 'MidiOutputRouting', 'MidiOut/None', 'None', '')
-    x_Mixer = ET.SubElement(xmltag, 'Mixer')
-    create_devicechain_mixer(x_Mixer, tracktype)
+    create_devicechain_mixer(xmltag, tracktype)
     if tracktype == 'miditrack':
         set_add_midi_track_mainsequencer(xmltag, track_placements, trackcolor)
         set_add_midi_track_freezesequencer(xmltag, track_placements)
@@ -549,6 +570,7 @@ def create_devicechain(xmltag, tracktype, track_placements, trackcolor):
 # ---------------- Track Base ----------------
 
 def set_add_trackbase(xmltag, trackid, tracktype, trackname, colorval, TrackUnfolded, track_placements):
+    global t_mrkr_timesig
     addvalue(xmltag, 'LomId', '0')
     addvalue(xmltag, 'LomIdView', '0')
     addvalue(xmltag, 'IsContentSelectedInDocument', 'false')
@@ -564,6 +586,8 @@ def set_add_trackbase(xmltag, trackid, tracktype, trackname, colorval, TrackUnfo
     addvalue(x_name, 'MemorizedFirstClipName', '')
     addvalue(xmltag, 'Color', str(colorval))
     x_AutomationEnvelopes = ET.SubElement(xmltag, 'AutomationEnvelopes')
+    #if tracktype == 'master':
+
     x_Envelopes = ET.SubElement(x_AutomationEnvelopes, 'Envelopes')
     addvalue(xmltag, 'TrackGroupId', '-1')
     addvalue(xmltag, 'TrackUnfolded', TrackUnfolded)
@@ -633,9 +657,35 @@ class output_cvpj(plugin_output.base):
         global cvpj_l
         global x_Tracks
         global LaneHeight
+        global t_mrkr_timesig
 
         cvpj_l = json.loads(convproj_json)
         LaneHeight = 68
+
+        t_mrkr_timesig = {}
+        t_mrkr_locater = {}
+
+        if 'timemarkers' in cvpj_l: 
+            cvpj_timemarkers = cvpj_l['timemarkers']
+            for cvpj_timemarker in cvpj_timemarkers:
+                istimemarker = False
+                if 'type' in cvpj_timemarker:
+                    if cvpj_timemarker['type'] == 'timesig':
+                        istimemarker = True
+                if istimemarker == True:
+                    if cvpj_timemarker['denominator'] in [1,2,4,8,16]:
+                        cvpj_denominator = cvpj_timemarker['denominator']
+                        if cvpj_denominator == 1: out_denominator = 0
+                        if cvpj_denominator == 2: out_denominator = 1
+                        if cvpj_denominator == 4: out_denominator = 2
+                        if cvpj_denominator == 8: out_denominator = 3
+                        if cvpj_denominator == 16: out_denominator = 4
+                        t_mrkr_timesig[cvpj_timemarker['position']/4] = (out_denominator*99)+(cvpj_timemarker['numerator']-1)
+                    else:
+                        t_mrkr_timesig[cvpj_timemarker['position']/4] = 201
+                    if 'name' in cvpj_timemarker: t_mrkr_locater[cvpj_timemarker['position']/4] = cvpj_timemarker['name']
+                else:
+                    t_mrkr_locater[cvpj_timemarker['position']/4] = cvpj_timemarker['name']
 
         # XML Ableton
         x_root = ET.Element("Ableton")
@@ -693,7 +743,18 @@ class output_cvpj(plugin_output.base):
         create_ContentLanes(x_LiveSet)
         addvalue(x_LiveSet, 'ViewStateFxSlotCount', '4')
         addvalue(x_LiveSet, 'ViewStateSessionMixerHeight', '120')
-        create_Locators(x_LiveSet)
+
+        LocaterID = 0
+        x_Locaters = create_Locators(x_LiveSet)
+        for s_mrkr_locater in t_mrkr_locater:
+            x_Locator = addId(x_Locaters, 'Locator', str(LocaterID))
+            addvalue(x_Locator, 'LomId', 0)
+            addvalue(x_Locator, 'Time', s_mrkr_locater)
+            addvalue(x_Locator, 'Name', t_mrkr_locater[s_mrkr_locater])
+            addvalue(x_Locator, 'Annotation', '')
+            addvalue(x_Locator, 'IsSongStart', 'false')
+            LocaterID += 1
+
         x_DetailClipKeyMidis = ET.SubElement(x_LiveSet, "DetailClipKeyMidis")
         addLomId(x_LiveSet, 'TracksListWrapper', '0')
         addLomId(x_LiveSet, 'VisibleTracksListWrapper', '0')

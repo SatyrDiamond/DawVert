@@ -13,9 +13,7 @@
 
 # Synths
 
-[Zyn-Fusion](https://zynaddsubfx.sourceforge.io/zyn-fusion.html) - ZynAddSubFX
-
-[Vital](https://vital.audio/) - SimSynth, Beepbox, Bitinvader
+[Vital](https://vital.audio/) - SimSynth, Beepbox
 
 # Retro
 
@@ -24,3 +22,11 @@
 [OPNplug](https://github.com/jpcima/ADLplug) - OPN2
 
 [SID](https://socalabs.com/synths/commodore-64-sid/) - C64
+
+# from LMMS
+
+[Vital](https://vital.audio/) - Bitinvader
+
+[SID](https://socalabs.com/synths/commodore-64-sid/) - SID
+
+[Zyn-Fusion](https://zynaddsubfx.sourceforge.io/zyn-fusion.html) - ZynAddSubFX

@@ -2,12 +2,17 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import base64
+import io
 import struct
+import math
 import lxml.etree as ET
 from functions import list_vst
 from functions import params_vst
 from functions import params_vital
 from functions import params_vital_wavetable
+
+def clamp(n, minn, maxn):
+	return max(min(maxn, n), minn)
 
 def sid_addparam(x_sid, name, value):
     x_temp = ET.SubElement(x_sid, 'param')
@@ -19,6 +24,10 @@ def sid_shape(lmms_sid_shape):
 	if lmms_sid_shape == 1: return 1 #tri
 	if lmms_sid_shape == 2: return 2 #saw
 	if lmms_sid_shape == 3: return 4 #noise
+
+def kickmess_add(bio_data, i_cat, i_name, i_value):
+	kickmess_text = i_cat+' : '+i_name+'='+str(i_value)+';\n'
+	bio_data.write(str.encode(kickmess_text))
 
 def convert_inst(instdata):
 	pluginname = instdata['plugin']
@@ -86,5 +95,40 @@ def convert_inst(instdata):
 		sid_addparam(x_sid, "w2", sid_shape(lmmsnat_data['waveform1']))
 		sid_addparam(x_sid, "w3", sid_shape(lmmsnat_data['waveform2']))
 		list_vst.replace_data(instdata, 2, 'any', 'SID', 'raw', ET.tostring(x_sid, encoding='utf-8'), None)
+		if 'middlenote' in instdata: instdata['middlenote'] -= 12
+		else: instdata['middlenote'] = -12
+
+	if lmmsnat_name == 'kicker':
+		kickmess_out = io.BytesIO()
+		kickmess_out.write(b'!PARAMS;\n')
+		kickmess_add(kickmess_out, 'pub', 'freq_start', math.sqrt((lmmsnat_data['startfreq']-2.51)/3000))
+		kickmess_add(kickmess_out, 'pub', 'freq_end', math.sqrt((lmmsnat_data['endfreq']-2.51)/2000))
+		kickmess_add(kickmess_out, 'pub', 'f_env_release', math.sqrt((lmmsnat_data['decay']-2.51)/5000))
+		kickmess_add(kickmess_out, 'pub', 'dist_start', lmmsnat_data['dist']/100)
+		kickmess_add(kickmess_out, 'pub', 'dist_end', lmmsnat_data['distend']/100)
+		kickmess_add(kickmess_out, 'pub', 'gain', clamp(lmmsnat_data['gain'], 0, 2)/2)
+		kickmess_add(kickmess_out, 'pub', 'env_slope', lmmsnat_data['env'])
+		kickmess_add(kickmess_out, 'pub', 'freq_slope', lmmsnat_data['slope'])
+		kickmess_add(kickmess_out, 'pub', 'noise', lmmsnat_data['noise'])
+		if lmmsnat_data['startnote'] == 1: kickmess_add(kickmess_out, 'pub', 'freq_note_start', 0.5)
+		else: kickmess_add(kickmess_out, 'pub', 'freq_note_start', 0.25)
+		if lmmsnat_data['endnote'] == 1: kickmess_add(kickmess_out, 'pub', 'freq_note_end', 0.5)
+		else: kickmess_add(kickmess_out, 'pub', 'freq_note_end', 0.25)
+		kickmess_add(kickmess_out, 'pub', 'env_release', 0)
+		kickmess_add(kickmess_out, 'pub', 'phase_offs', lmmsnat_data['click'])
+		kickmess_add(kickmess_out, 'pub', 'dist_on', 1)
+		kickmess_add(kickmess_out, 'pub', 'f1_cutoff', 1)
+		kickmess_add(kickmess_out, 'pub', 'f1_res', 0)
+		kickmess_add(kickmess_out, 'pub', 'f1_drive', 0.2)
+		kickmess_add(kickmess_out, 'pub', 'main_gain', 0.70710677)
+		kickmess_add(kickmess_out, 'pub', 'e1_attack', 0.1)
+		kickmess_add(kickmess_out, 'pub', 'e1_decay', 0.14142135)
+		kickmess_add(kickmess_out, 'pub', 'e1_sustain', 0.75)
+		kickmess_add(kickmess_out, 'pub', 'e1_release', 0.1)
+		kickmess_add(kickmess_out, 'priv', 'f1_type', 0.5)
+		kickmess_add(kickmess_out, 'priv', 'f1_on', 0.25)
+		kickmess_add(kickmess_out, 'priv', 'midi_chan', 0)
+		kickmess_out.seek(0)
+		list_vst.replace_data(instdata, 2, 'any', 'Kickmess (VST)', 'raw', kickmess_out.read(), None)
 		if 'middlenote' in instdata: instdata['middlenote'] -= 12
 		else: instdata['middlenote'] = -12

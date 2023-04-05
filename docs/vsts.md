@@ -27,6 +27,8 @@
 
 [Vital](https://vital.audio/) - Bitinvader
 
+[Kickmess](https://github.com/WeirdConstructor/Kickmess) - Kicker
+
 [SID](https://socalabs.com/synths/commodore-64-sid/) - SID
 
 [Zyn-Fusion](https://zynaddsubfx.sourceforge.io/zyn-fusion.html) - ZynAddSubFX

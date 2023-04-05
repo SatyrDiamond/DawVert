@@ -299,6 +299,31 @@ def create_devicechain_mixer(xmltag, tracktype):
         addvalue(xmltag, 'TempoAutomationViewTop', '200')
 
 # ---------------- Track Base / MainSequencer / MIDI Clips ----------------
+
+def make_auto_point(xmltag, value, position):
+    x_autopoint = ET.SubElement(xmltag, "PerNoteEvent")
+    x_autopoint.set('TimeOffset', str(position/4))
+    x_autopoint.set('Value', str(value*175))
+    x_autopoint.set('CurveControl1X', '0.5')
+    x_autopoint.set('CurveControl1Y', '0.5')
+    x_autopoint.set('CurveControl2X', '0.5')
+    x_autopoint.set('CurveControl2Y', '0.5')
+
+def parse_automation(xmltag, cvpj_points, startposition):
+    startpoint = True
+    prevvalue = None
+    for cvpj_auto_poi in cvpj_points:
+        cvpj_auto_poi['position'] += startposition
+        instanttype = False
+        if 'type' in cvpj_auto_poi:
+            if cvpj_auto_poi['type'] == 'instant':
+                instanttype = True
+        if (instanttype == True and prevvalue != None) or (startpoint == True and prevvalue != None):
+            make_auto_point(xmltag, prevvalue, cvpj_auto_poi['position'])
+        make_auto_point(xmltag, cvpj_auto_poi['value'], cvpj_auto_poi['position'])
+        prevvalue = cvpj_auto_poi['value']
+        startpoint = False
+
 def create_notelist(xmltag, cvpj_notelist):
     t_keydata = {}
     x_KeyTracks = ET.SubElement(xmltag, 'KeyTracks')
@@ -330,12 +355,25 @@ def create_notelist(xmltag, cvpj_notelist):
                 if t_note['enabled'] == 0: x_MidiNoteEvent.set('IsEnabled', "false")
             else: x_MidiNoteEvent.set('IsEnabled', "true")
             if 'notemod' in t_note:
-                t_notemod[t_note['id']] = t_note['notemod']
+                if 'auto' in t_note['notemod']:
+                    t_notemod[t_note['id']] = t_note['notemod']['auto']
             x_MidiNoteEvent.set('NoteId', str(t_note['id']))
         addvalue(x_KeyTrack, 'MidiKey', str(keynum+60))
 
     x_PerNoteEventStore = ET.SubElement(xmltag, 'PerNoteEventStore')
-    ET.SubElement(x_PerNoteEventStore, 'EventLists')
+    x_EventLists = ET.SubElement(x_PerNoteEventStore, 'EventLists')
+
+    PerNoteEventListID = 0
+    for notemodnum in t_notemod:
+        x_PerNoteEventList = ET.SubElement(x_EventLists, "PerNoteEventList")
+        x_PerNoteEventList.set('Id', str(PerNoteEventListID))
+        x_PerNoteEventList.set('NoteId', str(notemodnum))
+        x_PerNoteEventList.set('CC', "-2")
+        x_PerNoteEvents = ET.SubElement(x_PerNoteEventList, "Events")
+        if 'pitch' in t_notemod[notemodnum]:
+            parse_automation(x_PerNoteEvents, t_notemod[notemodnum]['pitch'], 0)
+        PerNoteEventListID += 1
+
     x_NoteIdGenerator = ET.SubElement(xmltag, 'NoteIdGenerator')
     addvalue(x_NoteIdGenerator, 'NextId', str(get_noteid_next()+1))
 

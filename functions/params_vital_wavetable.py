@@ -30,12 +30,22 @@ def resizewave(imputwave):
 def create_wave(shape, mul, pw):
     vital_osc_shape = []
     if shape == 'sine': 
-        for num in range(2048): vital_osc_shape.append(wave_sine(num))
+        for num in range(2048): vital_osc_shape.append(wave_sine(num/2048))
     if shape == 'saw':
-        for num in range(2048): vital_osc_shape.append(wave_saw(num))
+        for num in range(2048): vital_osc_shape.append(wave_saw(num/2048))
     if shape == 'triangle':
-        for num in range(2048): vital_osc_shape.append(wave_tri(num))
+        for num in range(2048): vital_osc_shape.append(wave_tri(num/2048))
     if shape == 'square':
-        for num in range(2048): vital_osc_shape.append(wave_squ(num, pw))
+        for num in range(2048): vital_osc_shape.append(wave_squ(num/2048, pw))
+    if shape == 'square_roundend':
+        for num in range(2048): 
+            if num <= 1024: vital_osc_shape.append((wave_sine(num/4096)*-1))
+            else: vital_osc_shape.append(0)
+    if shape == 'mooglike':
+        for num in range(2048): 
+            if num <= 1024: vital_osc_shape.append(num/1024)
+            else: vital_osc_shape.append(wave_tri((num+1024)/2048)**3)
+    if shape == 'exp':
+        for num in range(2048): vital_osc_shape.append(wave_tri((num+1024)/2048)**3)
     return vital_osc_shape
 

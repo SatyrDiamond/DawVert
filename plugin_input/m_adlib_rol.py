@@ -45,35 +45,38 @@ def parsetrack_timbre(file_stream):
         file_stream.read(3)
     return track_name, rol_timbre_events, used_instruments
 
-def parsetrack_volume(file_stream):
+def parsetrack_float(file_stream, i_mul, i_add):
     track_name = file_stream.read(15).split(b'\x00')[0].decode('ascii')
     track_num_events = int.from_bytes(file_stream.read(2), 'little')
-    rol_vol_events = []
+    track_rol_events = []
     for _ in range(track_num_events): 
-        rol_vol_events.append(struct.unpack("<hf", file_stream.read(6)))
-    return track_name, rol_vol_events
+        track_rol_part = []
+        track_rol_part.append(int.from_bytes(file_stream.read(2), 'little'))
+        track_rol_part.append(((struct.unpack("<f", file_stream.read(4))[0])*i_mul)+i_add)
+        track_rol_events.append(track_rol_part)
+    return track_name, track_rol_events
 
-def parsetrack_pitch(file_stream):
-    track_name = file_stream.read(15).split(b'\x00')[0].decode('ascii')
-    track_num_events = int.from_bytes(file_stream.read(2), 'little')
-    rol_pitch_events = []
-    for _ in range(track_num_events): 
-        rol_pitch_events.append(struct.unpack("<hf", file_stream.read(6)))
-    return track_name, rol_pitch_events
-  
 def closest(myList, in_value):
     outval = 0
     for num in myList:
         if num <= in_value: outval = num
     return outval
 
+def rolpoints2cvpjpoints(rolpoints, notelen):
+    cvpj_points = []
+    for rolpoint in rolpoints:
+        cvpj_points.append({"type": 'instant', "position": rolpoint[0]*notelen, "value": rolpoint[1]})
+    return [{'position': 0, 'duration': (rolpoints[-1][0]*notelen)+16, 'points': cvpj_points}]
+
 def parsetrack(file_stream, tracknum, notelen):
     rol_tr_voice = parsetrack_voice(file_stream)
     rol_tr_timbre = parsetrack_timbre(file_stream)
-    rol_tr_volume = parsetrack_volume(file_stream)
-    rol_tr_pitch = parsetrack_pitch(file_stream)
+    rol_tr_volume = parsetrack_float(file_stream, 1, 0)
+    rol_tr_pitch = parsetrack_float(file_stream, 100, -100)
 
     trackinstpart = 'track_'+str(tracknum+1)+'_'
+
+    cvpj_auto_pitch = rolpoints2cvpjpoints(rol_tr_pitch[1], notelen)
 
     timbrepoints = []
     for timbrepos in rol_tr_timbre[1]:
@@ -92,6 +95,10 @@ def parsetrack(file_stream, tracknum, notelen):
         tracks.m_addinst_data(cvpj_l, instid, adlibrol_instname+' (Trk'+str(tracknum+1)+')', None, None, None)
         tracks.m_addinst_param(cvpj_l, instid, 'fxrack_channel', tracknum+1)
 
+        if len(rol_tr_pitch[1]) > 1:
+            cvpj_l['automation']['track_main'][instid] = {}
+            cvpj_l['automation']['track_main'][instid]['pitch'] = cvpj_auto_pitch
+
     cvpj_notelist = []
     curtrackpos = 0
     for rol_notedata in rol_tr_voice[1]:
@@ -101,17 +108,10 @@ def parsetrack(file_stream, tracknum, notelen):
         curtrackpos += rol_notedata[1]
 
     print('[input-adlib_rol] Track: "'+rol_tr_voice[0]+'", Instruments: '+str(rol_tr_timbre[2]))
-
-    cvpj_l['fxrack'][tracknum+1] = {}
-    cvpj_l['fxrack'][tracknum+1]["name"] = rol_tr_voice[0]
+    cvpj_l['fxrack'][tracknum+1] = {"name": rol_tr_voice[0]}
 
     if len(rol_tr_volume) > 1:
-        cvpj_l['automation']['fxmixer'][tracknum+1] = {}
-        cvpj_l['automation']['fxmixer'][tracknum+1]["vol"] = {}
-        cvpj_volpoints = []
-        for rol_tr_volume_point in rol_tr_volume[1]:
-            cvpj_volpoints.append({"type": 'instant', "position": rol_tr_volume_point[0], "value": rol_tr_volume_point[1]*notelen})
-        cvpj_l['automation']['fxmixer'][tracknum+1]["vol"] = [{'position': 0, 'duration': (rol_tr_volume[1][-1][0]*notelen)+16, 'points': cvpj_volpoints}]
+        cvpj_l['automation']['fxmixer'][tracknum+1] = {"vol": rolpoints2cvpjpoints(rol_tr_volume[1], notelen)}
 
     placementdata = placements.nl2pl(cvpj_notelist)
     tracks.m_playlist_pl(cvpj_l, tracknum+1, rol_tr_voice[0], None, placementdata)
@@ -191,12 +191,10 @@ class input_adlib_rol(plugin_input.base):
         cvpj_l['automation'] = {}
 
         cvpj_l['automation']['main'] = {}
-        cvpj_bpmpoints = []
-        for rol_pan_point in t_tempo_data[2]:
-            cvpj_bpmpoints.append({"type": 'instant', "position": rol_pan_point[0]*notelen, "value": rol_pan_point[1]})
-        cvpj_l['automation']['main']['bpm'] = [{'position': 0, 'duration': (t_tempo_data[2][-1][0]*notelen)+16, 'points': cvpj_bpmpoints}]
+        cvpj_l['automation']['main']['bpm'] = rolpoints2cvpjpoints(t_tempo_data[2], notelen)
 
         cvpj_l['automation']['fxmixer'] = {}
+        cvpj_l['automation']['track_main'] = {}
         for tracknum in range(10):
             parsetrack(song_file, tracknum, (2/rol_header_tickBeat)*2)
 

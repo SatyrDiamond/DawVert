@@ -21,6 +21,7 @@ def clamp(n, minn, maxn):
 from functions_plugconv import input_flstudio
 from functions_plugconv import input_pxtone
 from functions_plugconv import input_jummbox
+from functions_plugconv import input_lmms
 
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
@@ -34,6 +35,7 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 			if in_daw == 'flp' and pluginname == 'native-fl': input_flstudio.convert_inst(instdata)
 			if in_daw == 'ptcop' and pluginname == 'native-pxtone': input_pxtone.convert_inst(instdata)
 			if in_daw == 'jummbox' and pluginname == 'native-jummbox': input_jummbox.convert_inst(instdata)
+			if in_daw == 'lmms' and pluginname == 'native-lmms': input_lmms.convert_inst(instdata)
 
 			# ---------- from general-midi
 			elif pluginname == 'general-midi':

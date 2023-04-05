@@ -79,5 +79,9 @@ if selecteddaw == 'cakewalk':
 				else: vst3ini.set(vst_name, 'path_i386', vst_path)
 				if vst_isSynth == 1: vst3ini.set(vst_name, 'type', 'synth')
 				else: vst3ini.set(vst_name, 'type', 'effect')
+	with open('vst2_win.ini', 'w') as configfile:
+  		vst2ini.write(configfile)
+	with open('vst3_win.ini', 'w') as configfile:
+  		vst3ini.write(configfile)
 	print('[dawvert-vst] # of VST2 Plugins:', len(vst2ini))
 	print('[dawvert-vst] # of VST3 Plugins:', len(vst3ini))

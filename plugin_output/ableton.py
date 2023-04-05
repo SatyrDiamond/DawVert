@@ -303,7 +303,7 @@ def create_devicechain_mixer(xmltag, tracktype):
 def make_auto_point(xmltag, value, position):
     x_autopoint = ET.SubElement(xmltag, "PerNoteEvent")
     x_autopoint.set('TimeOffset', str(position/4))
-    x_autopoint.set('Value', str(value*175))
+    x_autopoint.set('Value', str(value*170))
     x_autopoint.set('CurveControl1X', '0.5')
     x_autopoint.set('CurveControl1Y', '0.5')
     x_autopoint.set('CurveControl2X', '0.5')
@@ -312,6 +312,7 @@ def make_auto_point(xmltag, value, position):
 def parse_automation(xmltag, cvpj_points, startposition):
     startpoint = True
     prevvalue = None
+    make_auto_point(xmltag, 0, 0)
     for cvpj_auto_poi in cvpj_points:
         cvpj_auto_poi['position'] += startposition
         instanttype = False
@@ -320,6 +321,8 @@ def parse_automation(xmltag, cvpj_points, startposition):
                 instanttype = True
         if (instanttype == True and prevvalue != None) or (startpoint == True and prevvalue != None):
             make_auto_point(xmltag, prevvalue, cvpj_auto_poi['position'])
+        elif (instanttype == True and prevvalue == None) or (startpoint == True and prevvalue == None):
+            make_auto_point(xmltag, 0, cvpj_auto_poi['position'])
         make_auto_point(xmltag, cvpj_auto_poi['value'], cvpj_auto_poi['position'])
         prevvalue = cvpj_auto_poi['value']
         startpoint = False

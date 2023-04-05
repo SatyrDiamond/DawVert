@@ -373,6 +373,19 @@ def set_modulation(num, src, dest, amt, power, bipol, byp, ster):
 def set_lfo(num, num_points, points, powers, smooth, name):
     vitaldata["settings"]["lfos"][num-1] = {"name":name, "num_points":num_points, "points":points,"powers":powers,"smooth":smooth}
 
+def cvpj_asdrlfo2vitalparams(plugindata):
+    if 'asdrlfo' in plugindata:
+        if 'volume' in plugindata['asdrlfo']:
+            if 'envelope' in plugindata['asdrlfo']['volume']:
+                asdrdata = plugindata['asdrlfo']['volume']['envelope']
+                if 'predelay' in asdrdata: setvalue_timed('env_1_delay', asdrdata['predelay'])
+                if 'attack' in asdrdata: setvalue_timed('env_1_attack', asdrdata['attack'])
+                if 'hold' in asdrdata: setvalue_timed('env_1_hold', asdrdata['hold'])
+                if 'decay' in asdrdata: setvalue_timed('env_1_decay', asdrdata['decay'])
+                if 'sustain' in asdrdata: setvalue('env_1_sustain', asdrdata['sustain'])
+                if 'release' in asdrdata: setvalue_timed('env_1_release', asdrdata['release'])
+    del plugindata['asdrlfo']
+
 def getdata():
     global vitaldata
     return json.dumps(vitaldata)

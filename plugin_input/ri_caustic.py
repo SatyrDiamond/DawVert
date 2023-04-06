@@ -177,9 +177,11 @@ class input_cvpj_r(plugin_input.base):
                     cvpj_instdata['plugindata']['file'] = wave_path
                     cvpj_instdata['plugindata']['length'] = singlewav['samp_len']
                     cvpj_instdata['plugindata']['loop'] = {}
+                    cvpj_instdata['plugindata']['point_value_type'] = "samples"
                     loopmode_cvpj(cvpj_instdata['plugindata'], singlewav)
                 else:
                     cvpj_instdata['plugin'] = 'sampler-multi'
+                    cvpj_instdata['plugindata']['point_value_type'] = "samples"
                     cvpj_instdata['plugindata']['regions'] = []
                     samplecount = 0
                     for singlewav in machine['regions']:

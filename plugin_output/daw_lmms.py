@@ -341,9 +341,9 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     auto_nameiddata = {}
 
     if 'automation' in projJ:
-        if 'track_main' in projJ['automation']:
-            if trackid in projJ['automation']['track_main']:
-                auto_nameiddata = get_auto_ids_data(projJ['automation']['track_main'][trackid])
+        if 'track' in projJ['automation']:
+            if trackid in projJ['automation']['track']:
+                auto_nameiddata = get_auto_ids_data(projJ['automation']['track'][trackid])
 
     xmltag.set('type', "0")
 
@@ -377,6 +377,8 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     add_auto_val(auto_nameiddata, [0, 100], 1, trkJ, 'vol', trkX_insttr, 'vol', trackname, 'Volume')
     add_auto_val(auto_nameiddata, [0, 100], 0, trkJ, 'pan', trkX_insttr, 'pan', trackname, 'Pan')
     add_auto_val(auto_nameiddata, None, 0, trkJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
+
+    add_unused_auto_val(auto_nameiddata, trackname)
 
     if 'chain_fx_note' in trkJ:
         trkJ_notefx = trkJ['chain_fx_note']
@@ -473,11 +475,6 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
                 tracksnum += 1
             print(' ')
 
-    #if 'automation' in projJ:
-    #    if 'track_main' in projJ['automation']:
-    #        if trackid in projJ['automation']['track_main']:
-    #            lmms_make_autotracks(projJ['automation']['track_main'][trackid], auto_nameid, 'track_main', trackname)
-
     print('[output-lmms]')
 
 # ------- Audio -------
@@ -494,9 +491,9 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
     auto_nameid = {}
 
     if 'automation' in projJ:
-        if 'track_main' in projJ['automation']:
-            if trackid in projJ['automation']['track_main']:
-                auto_nameid = get_auto_ids_data(projJ['automation']['track_main'][trackid])
+        if 'track' in projJ['automation']:
+            if trackid in projJ['automation']['track']:
+                auto_nameid = get_auto_ids_data(projJ['automation']['track'][trackid])
 
     xmltag.set('type', "2")
 
@@ -738,6 +735,11 @@ def get_auto_ids_data(placements_auto):
         autoidnum += 1
     return nameid
 
+def add_unused_auto_val(auto_nameiddata, Vtype):
+    for autoname in auto_nameiddata:
+        lmms_autoid, cvpj_autodata = auto_nameiddata[autoname]
+        lmms_make_main_auto_track(lmms_autoid, cvpj_autodata, Vtype+': UNUSED '+autoname)
+
 def add_auto_val(auto_nameiddata, Vaddmul, Vfalbak, Jtag, Jname, Xtag, Xname, Vtype, Vname):
     if Jname in Jtag: outvalue = Jtag[Jname]
     else: outvalue = Vfalbak
@@ -751,34 +753,9 @@ def add_auto_val(auto_nameiddata, Vaddmul, Vfalbak, Jtag, Jname, Xtag, Xname, Vt
         autovarX.set('value', str(outvalue))
         autovarX.set('scale_type', 'linear')
         autovarX.set('id', str(lmms_autoid))
+        del auto_nameiddata[Jname]
     else:
         Xtag.set(Xname, str(outvalue))
-
-
-global l_auto_names
-global l_addmul
-
-l_auto_names = {}
-l_auto_names['main'] = {}
-l_auto_names['main']['bpm'] = "Tempo"
-l_auto_names['main']['vol'] = "Volume"
-l_auto_names['main']['pitch'] = "Song Pitch"
-l_auto_names['track_main'] = {}
-l_auto_names['track_main']['vol'] = "Volume"
-l_auto_names['track_main']['pan'] = "Pan"
-l_auto_names['track_main']['pitch'] = "Pitch"
-l_auto_names['fxmixer'] = {}
-l_auto_names['fxmixer']['vol'] = "Volume"
-
-l_addmul = {}
-l_addmul['main'] = {}
-l_addmul['main']['vol'] = [0, 100]
-l_addmul['main']['pitch'] = [0, 0.01]
-l_addmul['track_main'] = {}
-l_addmul['track_main']['vol'] = [0, 100]
-l_addmul['track_main']['pan'] = [0, 100]
-l_addmul['fxmixer'] = {}
-l_addmul['fxmixer']['vol'] = [0, 1]
 
 class output_lmms(plugin_output.base):
     def __init__(self): pass
@@ -830,7 +807,7 @@ class output_lmms(plugin_output.base):
         add_auto_val(auto_nameiddata_main, [0, 100], 1, projJ, 'vol', headX, 'mastervol', 'Song', 'Volume')
 
         add_auto_val(auto_nameiddata_main, None, 4, projJ, 'timesig_numerator', headX, 'timesig_numerator', 'Song', 'Numerator')
-        add_auto_val(auto_nameiddata_main, None, 4, projJ, 'timesig_numerator', headX, 'timesig_numerator', 'Song', 'Denominator')
+        add_auto_val(auto_nameiddata_main, None, 4, projJ, 'timesig_denominator', headX, 'timesig_denominator', 'Song', 'Denominator')
 
         lmms_encode_tracks(trkcX, trksJ, trkorderJ, trkplacementsJ)
 

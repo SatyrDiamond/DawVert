@@ -40,7 +40,7 @@ def convert_inst(instdata):
 		slicer_bpm = struct.unpack('f', fl_plugstr.read(4))[0]
 		slicer_pitch, slicer_fitlen, slicer_unk1, slicer_att, slicer_dec = struct.unpack('iiiii', fl_plugstr.read(20))
 
-		instdata['plugin'] = "slicer"
+		instdata['plugin'] = "sampler-slicer"
 		instdata['plugindata'] = {}
 
 		slicer_filelen = int.from_bytes(fl_plugstr.read(1), "little")

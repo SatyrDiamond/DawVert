@@ -79,10 +79,10 @@ def r_audiofx_chain(cvpj_l, trackid, chain_fx_audio):
     if chain_fx_audio != None: cvpj_l['track_data'][trackid]['chain_fx_audio'] = chain_fx_audio
 
 def r_notefx_chain(cvpj_l, trackid, chain_fx_note):
-    if chain_fx_note != None: cvpj_l['track_data'][trackid]['instdata']['chain_fx_audio'] = chain_fx_note
+    if chain_fx_note != None: cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'] = chain_fx_note
 
 def r_notefx_chain_append(cvpj_l, trackid, enabled, pluginname, plugindata):
-    cvpj_l['track_data'][trackid]['instdata']['chain_fx_audio'].append(
+    cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'].append(
             {"enabled": enabled, "plugin": pluginname, "plugindata": plugindata}
             )
 # ------------------------ Multiple ------------------------

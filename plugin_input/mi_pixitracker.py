@@ -153,6 +153,7 @@ class input_cvpj_f(plugin_input.base):
                 cvpj_instdata['middlenote'] = t_sounddata[3]*-1
                 cvpj_instdata['plugin'] = 'sampler'
                 cvpj_instdata['plugindata'] = {}
+                cvpj_instdata['plugindata']['point_value_type'] = "samples"
                 cvpj_instdata['plugindata']['file'] = wave_path
                 cvpj_instdata['plugindata']['start'] = t_sounddata[5]
                 cvpj_instdata['plugindata']['end'] = t_sounddata[6]

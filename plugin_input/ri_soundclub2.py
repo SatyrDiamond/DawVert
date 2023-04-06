@@ -170,6 +170,7 @@ class input_soundclub2(plugin_input.base):
                         cvpj_instdata = {}
                         cvpj_instdata['plugin'] = 'sampler'
                         cvpj_instdata['plugindata'] = {'file': wave_path}
+                        cvpj_instdata['plugindata']['point_value_type'] = "samples"
                         if sc2_i_loopstart != 4294967295:
                             loopdata = {'loop':[sc2_i_loopstart, sc2_i_samplesize]}
                             cvpj_instdata['plugindata']['loop'] = {'enabled': 1, 'mode': "normal", 'points': [sc2_i_loopstart, sc2_i_samplesize]}

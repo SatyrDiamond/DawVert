@@ -442,6 +442,7 @@ class input_it(plugin_input.base):
                     cvpj_instdata = {}
                     cvpj_instdata['plugin'] = 'sampler'
                     cvpj_instdata['plugindata'] = {}
+                    cvpj_instdata['plugindata']['point_value_type'] = "samples"
                     cvpj_instdata['plugindata']['file'] = samplefolder + str(bn_s_t_f[1]) + '.wav'
                     if it_singlesample['length'] != 0:
                         cvpj_instdata['plugindata']['length'] = it_singlesample['length']
@@ -463,6 +464,7 @@ class input_it(plugin_input.base):
                     cvpj_instdata = {}
                     cvpj_instdata['plugin'] = 'sampler-multi'
                     cvpj_instdata['plugindata'] = {}
+                    cvpj_instdata['plugindata']['point_value_type'] = "samples"
                     cvpj_instdata['plugindata']['regions'] = []
 
                     startpos = -60

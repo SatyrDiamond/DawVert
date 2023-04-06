@@ -3,7 +3,9 @@
 
 # ---------------------------------------------- Instruments ----------------------------------------------
 
-def get_params_inst(pluginname): return autoval_inst[pluginname] 
+def get_params_inst(pluginname): 
+	if pluginname in autoval_inst: return autoval_inst[pluginname] 
+	else: return [ [], [] ]
 
 autoval_inst = {}
 
@@ -37,7 +39,9 @@ autoval_inst['watsyn'] = [ ['a1_ltune','a1_mult','a1_pan','a1_rtune','a1_vol','a
 
 # ---------------------------------------------- FX ----------------------------------------------
 
-def get_params_fx(pluginname): return autoval_fx[pluginname] 
+def get_params_fx(pluginname):
+	if pluginname in autoval_inst: return autoval_inst[pluginname] 
+	else: return [ [], [] ]
 
 autoval_fx = {}
 

@@ -75,6 +75,17 @@ def deconstruct_SPAT(bio_in):
 
     return l_patterns
 
+def deconstruct_autoctrl(SEQN_str, Caustic_Main, auto_cat_id):
+    numofautoctrl = int.from_bytes(SEQN_str.read(4), "little")
+    print('NUMAUTOCTRL', numofautoctrl, '---------------------------------------', auto_cat_id)
+    Caustic_Main['AUTO'][auto_cat_id] = {}
+    for ctrlauto_num in range(numofautoctrl):
+        ctrlid = int.from_bytes(SEQN_str.read(4), "little")
+        Caustic_Main['AUTO'][auto_cat_id][ctrlid] = []
+        numofpoints = int.from_bytes(SEQN_str.read(4), "little")
+        for pointdatanum in range(numofpoints):
+            c_ap_data = struct.unpack("IIIff", SEQN_str.read(20))
+            Caustic_Main['AUTO'][auto_cat_id][ctrlid].append([c_ap_data[3], c_ap_data[4]])
 
 def deconstruct_SEQN(bi_rack, Caustic_Main):
     SEQN_size = int.from_bytes(bi_rack.read(4), "little")
@@ -87,9 +98,33 @@ def deconstruct_SEQN(bi_rack, Caustic_Main):
         plndata = struct.unpack("IIffIfIfffffff", SEQN_str.read(56))
         pln.append(plndata)
     Caustic_Main['SEQN'] = pln
+    SEQN_str.read(46)
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_1')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_2')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_3')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_4')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_5')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_6')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_7')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_8')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_9')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_10')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_11')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_12')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_13')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MACH_14')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'FX_1')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'FX_2')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MIXER_1')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MIXER_2')
+    deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MASTER')
+
+
+    SEQN_str.read(2)
+
     tempoauto = []
-    SEQN_str.read(124)
     tempoauto_num, tempoauto_size = struct.unpack("II", SEQN_str.read(8))
+    print(tempoauto_num, tempoauto_size)
     for _ in range(tempoauto_num): 
         tempoauto.append(struct.unpack("ff", SEQN_str.read(8)))
     Caustic_Main['SEQN_tempo'] = tempoauto
@@ -444,6 +479,7 @@ def deconstruct_main(filepath):
     header = bi_rack.read(264)
     Caustic_Main = {}
     Caustic_Main['EFFX'] = {}
+    Caustic_Main['AUTO'] = {}
 
     while racksize > bi_rack.tell():
         chunk_datatype = bi_rack.read(4)

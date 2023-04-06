@@ -7,9 +7,11 @@ from functions import folder_samples
 from functions import audio_wav
 from functions import placements
 from functions import tracks
+from functions import auto
 import plugin_input
 import os.path
 import json
+import struct
 
 caustic_instnames = {}
 caustic_instnames['NULL'] = 'None'
@@ -97,6 +99,12 @@ def loopmode_cvpj(cvpjdata, wavdata):
     if lm == 2 or lm == 4: cvpjdata['loop']['mode'] = "normal"
     if lm == 3 or lm == 5: cvpjdata['loop']['mode'] = "pingpong"
 
+def twopoints2cvpjpoints(twopoints):
+    cvpj_points = []
+    for twopoint in twopoints:
+        cvpj_points.append({"position": twopoint[0]*4, "value": twopoint[1]})
+    return [{'position': 0, 'duration': (twopoints[-1][0]*4), 'points': cvpj_points}]
+
 class input_cvpj_r(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -118,6 +126,7 @@ class input_cvpj_r(plugin_input.base):
         SEQN = CausticData['SEQN']
         SEQN_tempo = CausticData['SEQN_tempo']
         EFFX = CausticData['EFFX']
+        AUTO_data = CausticData['AUTO']
 
         cvpj_l = {}
         
@@ -152,6 +161,8 @@ class input_cvpj_r(plugin_input.base):
             cvpj_instdata = {}
             cvpj_instdata['plugindata'] = {}
             plugindata = cvpj_instdata['plugindata']
+
+            cvpj_instdata['pluginautoid'] = 'machine'+machid
 
             # -------------------------------- PCMSynth --------------------------------
             if machine['id'] == 'PCMS':
@@ -242,8 +253,20 @@ class input_cvpj_r(plugin_input.base):
                     samplecount += 1
                     bbox_key += 1
 
-            tracks.ri_addtrack_inst(cvpj_l, machid, cvpj_notelistindex, cvpj_instdata)
-            tracks.r_addtrack_data(cvpj_l, machid, cvpj_trackname, caustic_instcolors[machine['id']], None, None)
+            else:
+                cvpj_instdata['plugin'] = 'native-caustic'
+                cvpj_instdata['plugindata'] = {}
+                cvpj_instdata['plugindata']['type'] = machine['id']
+                cvpj_instdata['plugindata']['data'] = {}
+                if 'controls' in machine: 
+                    cvpj_instdata['plugindata']['data'] = machine['controls']
+                if 'customwaveform1' in machine: 
+                    cvpj_instdata['plugindata']['data']['customwaveform1'] = struct.unpack("<"+("i"*330), machine['customwaveform1'])
+                if 'customwaveform2' in machine: 
+                    cvpj_instdata['plugindata']['data']['customwaveform2'] = struct.unpack("<"+("i"*330), machine['customwaveform2'])
+
+            tracks.ri_addtrack_inst(cvpj_l, 'MACH'+machid, cvpj_notelistindex, cvpj_instdata)
+            tracks.r_addtrack_data(cvpj_l, 'MACH'+machid, cvpj_trackname, caustic_instcolors[machine['id']], None, None)
 
         t_track_placements = {}
 
@@ -281,6 +304,35 @@ class input_cvpj_r(plugin_input.base):
 
         automation_main = {}
         automation_main['bpm'] = [tempo_placement]
+        automation_plugin = {}
+        automation_track = {}
+
+        #'machine'+machid
+
+        for machnum in range(14):
+            automation_plugin['machine'+str(machnum+1)] = {}
+            automation_track['MACH'+str(machnum+1)] = {}
+            machautodata = automation_plugin['machine'+str(machnum+1)]
+            for autoname in AUTO_data['MACH_'+str(machnum+1)]:
+                machautodata[str(autoname)] = twopoints2cvpjpoints(AUTO_data['MACH_'+str(machnum+1)][autoname])
+            
+        print(AUTO_data['MIXER_2'])
+
+        for machnum in range(7):
+            if machnum in AUTO_data['MIXER_1']: 
+                automation_track['MACH'+str(machnum+1)]['vol'] = twopoints2cvpjpoints(AUTO_data['MIXER_1'][machnum])
+            if machnum+64 in AUTO_data['MIXER_1']: 
+                automation_track['MACH'+str(machnum+1)]['pan'] = auto.multiply( twopoints2cvpjpoints(AUTO_data['MIXER_1'][machnum+64]), -0.5, 2)
+            if machnum in AUTO_data['MIXER_2']: 
+                automation_track['MACH'+str(machnum+8)]['vol'] = twopoints2cvpjpoints(AUTO_data['MIXER_2'][machnum])
+            if machnum+64 in AUTO_data['MIXER_2']: 
+                automation_track['MACH'+str(machnum+8)]['pan'] = auto.multiply( twopoints2cvpjpoints(AUTO_data['MIXER_2'][machnum+64]), -0.5, 2)
+
+        #for fxnum in EFFX:
+        #    for slotnum in EFFX[fxnum]:
+        #        print(fxnum, slotnum, EFFX[fxnum][slotnum])
+
+        'machine'+machid
 
         cvpj_l['do_addwrap'] = True
         
@@ -289,6 +341,8 @@ class input_cvpj_r(plugin_input.base):
 
         cvpj_l['automation'] = {}
         cvpj_l['automation']['main'] = automation_main
+        cvpj_l['automation']['plugin'] = automation_plugin
+        cvpj_l['automation']['track'] = automation_track
 
         cvpj_l['bpm'] = CausticData['Tempo']
         cvpj_l['timesig_numerator'] = CausticData['Numerator']

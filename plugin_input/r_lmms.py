@@ -372,8 +372,8 @@ def lmms_decode_inst_track(trkX, trackid):
 
     #trkX_insttr
     trkX_insttr = trkX.findall('instrumenttrack')[0]
-    cvpj_pan = hundredto1(float(lmms_getvalue(trkX_insttr, 'pan', 0, ['track_main', trackid, 'pan'])))
-    cvpj_vol = hundredto1(float(lmms_getvalue(trkX_insttr, 'vol', 1, ['track_main', trackid, 'vol'])))
+    cvpj_pan = hundredto1(float(lmms_getvalue(trkX_insttr, 'pan', 0, ['track', trackid, 'pan'])))
+    cvpj_vol = hundredto1(float(lmms_getvalue(trkX_insttr, 'vol', 1, ['track', trackid, 'vol'])))
     
     #midi
     xml_a_midiport = trkX_insttr.findall('midiport')
@@ -409,7 +409,7 @@ def lmms_decode_inst_track(trkX, trackid):
 
     tracks.r_addinst_param(cvpj_l, trackid, 'fxrack_channel', int(trkX_insttr.get('fxch')))
     tracks.r_addinst_param(cvpj_l, trackid, 'usemasterpitch', int(trkX_insttr.get('usemasterpitch')))
-    tracks.r_addinst_param(cvpj_l, trackid, 'pitch', float(lmms_getvalue(trkX_insttr, 'pitch', 0, ['track_main', trackid, 'pitch'])))
+    tracks.r_addinst_param(cvpj_l, trackid, 'pitch', float(lmms_getvalue(trkX_insttr, 'pitch', 0, ['track', trackid, 'pitch'])))
     tracks.r_addtrack_data(cvpj_l, trackid, cvpj_name, track_color, cvpj_vol, cvpj_pan)
 
     if 'basenote' in trkX_insttr.attrib:
@@ -482,8 +482,8 @@ def lmms_decode_audio_track(trkX, trackid):
     print('[input-lmms] Audio Track')
     print('[input-lmms]       Name: ' + cvpj_name)
     trkX_audiotr = trkX.findall('sampletrack')[0]
-    cvpj_pan = hundredto1(float(lmms_getvalue(trkX_audiotr, 'pan', 0, ['track_main', trackid, 'pan'])))
-    cvpj_vol = hundredto1(float(lmms_getvalue(trkX_audiotr, 'vol', 1, ['track_main', trackid, 'vol'])))
+    cvpj_pan = hundredto1(float(lmms_getvalue(trkX_audiotr, 'pan', 0, ['track', trackid, 'pan'])))
+    cvpj_vol = hundredto1(float(lmms_getvalue(trkX_audiotr, 'vol', 1, ['track', trackid, 'vol'])))
     tracks.r_addtrack_data(cvpj_l, trackid, cvpj_name, None, cvpj_vol, cvpj_pan)
     xml_a_fxchain = trkX_audiotr.findall('fxchain')
     if len(xml_a_fxchain) != 0: tracks.r_audiofx_chain(cvpj_l, trackid, lmms_decode_fxchain(xml_a_fxchain[0]))
@@ -771,7 +771,7 @@ class input_lmms(plugin_input.base):
         fxrackdata = lmms_decode_fxmixer(fxX)
 
         l_automation['main'] = {}
-        l_automation['track_main'] = {}
+        l_automation['track'] = {}
         l_automation['fxmixer'] = {}
         l_automation['plugin'] = {}
 
@@ -781,11 +781,11 @@ class input_lmms(plugin_input.base):
             if part in l_autoid:
                 s_autopl_id = l_autoid[part]
                 s_autopl_data = l_autodata[part]
-                if s_autopl_id[0] == 'track_main':
+                if s_autopl_id[0] == 'track':
                     if s_autopl_id[1] in trackdata:
-                        if s_autopl_id[1] not in l_automation['track_main']: l_automation['track_main'][s_autopl_id[1]] = {}
+                        if s_autopl_id[1] not in l_automation['track']: l_automation['track'][s_autopl_id[1]] = {}
                         s_trkdata = trackdata[s_autopl_id[1]]
-                        temp_pla = l_automation['track_main'][s_autopl_id[1]]
+                        temp_pla = l_automation['track'][s_autopl_id[1]]
                         if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
                         elif s_autopl_id[2] == 'pan': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
                         else: temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 1)

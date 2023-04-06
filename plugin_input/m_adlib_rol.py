@@ -96,8 +96,8 @@ def parsetrack(file_stream, tracknum, notelen):
         tracks.m_addinst_param(cvpj_l, instid, 'fxrack_channel', tracknum+1)
 
         if len(rol_tr_pitch[1]) > 1:
-            cvpj_l['automation']['track_main'][instid] = {}
-            cvpj_l['automation']['track_main'][instid]['pitch'] = cvpj_auto_pitch
+            cvpj_l['automation']['track'][instid] = {}
+            cvpj_l['automation']['track'][instid]['pitch'] = cvpj_auto_pitch
 
     cvpj_notelist = []
     curtrackpos = 0
@@ -194,7 +194,7 @@ class input_adlib_rol(plugin_input.base):
         cvpj_l['automation']['main']['bpm'] = rolpoints2cvpjpoints(t_tempo_data[2], notelen)
 
         cvpj_l['automation']['fxmixer'] = {}
-        cvpj_l['automation']['track_main'] = {}
+        cvpj_l['automation']['track'] = {}
         for tracknum in range(10):
             parsetrack(song_file, tracknum, (2/rol_header_tickBeat)*2)
 

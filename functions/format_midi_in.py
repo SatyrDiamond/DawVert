@@ -413,19 +413,19 @@ def song_end(channels):
                 cvpj_l_automation['fxmixer'][str(channum+1)]['vol'] = midiauto2cvpjauto(s_chan_auto[7], 127, 0)
 
         if len(s_chan_trackids) == 1:
-            if 'track_main' not in cvpj_l_automation: 
-                cvpj_l_automation['track_main'] = {}
-            if s_chan_trackids[0] not in cvpj_l_automation['track_main']: 
-                cvpj_l_automation['track_main'][s_chan_trackids[0]] = {}
+            if 'track' not in cvpj_l_automation: 
+                cvpj_l_automation['track'] = {}
+            if s_chan_trackids[0] not in cvpj_l_automation['track']: 
+                cvpj_l_automation['track'][s_chan_trackids[0]] = {}
 
-            s_chan_cvpj_auto = cvpj_l_automation['track_main'][s_chan_trackids[0]]
+            s_chan_cvpj_auto = cvpj_l_automation['track'][s_chan_trackids[0]]
             if 'pitch' in s_chan_auto: s_chan_cvpj_auto['pitch'] = midiauto2cvpjauto(s_chan_auto['pitch'], 1/8, 0)
 
         if len(s_chan_trackids) > 1:
             if 'fxrack' not in cvpj_l_automation: 
                 cvpj_l_automation['fxrack'] = {}
-            if 'track_main' not in cvpj_l_automation: 
-                cvpj_l_automation['track_main'] = {}
+            if 'track' not in cvpj_l_automation: 
+                cvpj_l_automation['track'] = {}
 
             if str(channum+1) not in cvpj_l_automation['fxrack']: 
                 cvpj_l_automation['fxrack'][str(channum+1)] = {}
@@ -434,10 +434,10 @@ def song_end(channels):
             if 7 in s_chan_auto: s_fx_cvpj_auto['vol'] = midiauto2cvpjauto(s_chan_auto[7], 127, 0)
 
             for s_chan_trackid in s_chan_trackids:
-                if s_chan_trackid not in cvpj_l_automation['track_main']: 
-                    cvpj_l_automation['track_main'][s_chan_trackid] = {}
+                if s_chan_trackid not in cvpj_l_automation['track']: 
+                    cvpj_l_automation['track'][s_chan_trackid] = {}
 
-                s_chan_cvpj_auto = cvpj_l_automation['track_main'][s_chan_trackid]
+                s_chan_cvpj_auto = cvpj_l_automation['track'][s_chan_trackid]
 
                 if 'pitch' in s_chan_auto: s_chan_cvpj_auto['pitch'] = midiauto2cvpjauto(s_chan_auto['pitch'], 1/8, 0)
 

@@ -24,6 +24,7 @@ from functions_plugconv import output_sampler_vst2
 from functions_plugconv import output_multisampler_vst2
 from functions_plugconv import output_slicer_vst2
 from functions_plugconv import output_lmms_vst2
+from functions_plugconv import output_soundchip_vst2
 
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
@@ -55,13 +56,15 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 			pluginname = instdata['plugin']
 			plugindata = instdata['plugindata']
 
+			output_soundchip_vst2.convert_inst(instdata, out_daw)
+
 			if pluginname == 'sampler' and out_daw not in supportedplugins['sampler']: 
 				output_sampler_vst2.convert_inst(instdata, platform_id)
 
-			if pluginname == 'sampler-multi' and out_daw not in supportedplugins['sampler-multi']: 
+			elif pluginname == 'sampler-multi' and out_daw not in supportedplugins['sampler-multi']: 
 				output_multisampler_vst2.convert_inst(instdata, platform_id)
 
-			if pluginname == 'sampler-slicer' and out_daw not in supportedplugins['sampler-slicer']: 
+			elif pluginname == 'sampler-slicer' and out_daw not in supportedplugins['sampler-slicer']: 
 				output_slicer_vst2.convert_inst(instdata)
 
 			elif (pluginname == 'native-lmms' or pluginname == 'zynaddsubfx-lmms') and out_daw != 'lmms':
@@ -162,19 +165,7 @@ def convplug_fx(fxdata, in_daw, out_daw, extra_json, nameid):
 			pluginname = fxdata['plugin']
 			plugindata = fxdata['plugindata']
 			if pluginname == 'native-lmms':
-				mmp_plugname = plugindata['name']
-				mmp_plugdata = plugindata['data']
-				# -------------------- waveshaper > vst2 (Wolf Shaper) - from lmms --------------------
-				if mmp_plugname == 'waveshaper':
-					waveshapebytes = base64.b64decode(plugindata['data']['waveShape'])
-					waveshapepoints = [struct.unpack('f', waveshapebytes[i:i+4]) for i in range(0, len(waveshapebytes), 4)]
-					vst_fx.wolfshaper_init()
-					for pointnum in range(50):
-						pointdata = waveshapepoints[pointnum*4][0]
-						vst_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
-					list_vst.replace_data(fxdata, 2, 'any', 'Wolf Shaper', 'raw', params_vst.nullbytegroup_make(vst_fx.wolfshaper_get()), None)
-			else:
-				print('[plug-conv] Unchanged')
+				output_lmms_vst2.convert_fx(fxdata)
 
 # -------------------- convproj --------------------
 def do_fxchain_audio(fxchain_audio, in_daw, out_daw, extra_json, nameid):
@@ -216,8 +207,8 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, extra_js
 		if 'fxrack' in cvpj_l:
 			for fxid in cvpj_l['fxrack']:
 				fxiddata = cvpj_l['fxrack'][fxid]
-				if 'fxchain_audio' in fxiddata:
-					fxchain_audio = fxiddata['fxchain_audio']
+				if 'chain_fx_audio' in fxiddata:
+					fxchain_audio = fxiddata['chain_fx_audio']
 					print('[plug-conv] --- FX: '+fxid)
 					do_fxchain_audio(fxchain_audio, in_daw, out_daw, extra_json, fxid)
 		return json.dumps(cvpj_l, indent=2)

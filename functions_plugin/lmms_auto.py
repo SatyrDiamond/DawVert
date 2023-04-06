@@ -3,10 +3,6 @@
 
 # ---------------------------------------------- Instruments ----------------------------------------------
 
-def get_params_inst(pluginname): 
-	if pluginname in autoval_inst: return autoval_inst[pluginname] 
-	else: return [ [], [] ]
-
 autoval_inst = {}
 
 autoval_inst['bitinvader'] = [ ['interpolation','normalize','sampleLength'], ['sampleShape','version'] ]
@@ -37,11 +33,11 @@ autoval_inst['vibedstrings'] = [ ['active0','active1','active2','active3','activ
 
 autoval_inst['watsyn'] = [ ['a1_ltune','a1_mult','a1_pan','a1_rtune','a1_vol','a2_ltune','a2_mult','a2_pan','a2_rtune','a2_vol','abmix','amod','b1_ltune','b1_mult','b1_pan','b1_rtune','b1_vol','b2_ltune','b2_mult','b2_pan','b2_rtune','b2_vol','bmod','envAmt','envAtt','envAtt_denominator','envAtt_numerator','envAtt_syncmode','envDec','envDec_denominator','envDec_numerator','envDec_syncmode','envHold','envHold_denominator','envHold_numerator','envHold_syncmode','xtalk'], ['a1_wave','a2_wave','b1_wave','b2_wave'] ]
 
-# ---------------------------------------------- FX ----------------------------------------------
-
-def get_params_fx(pluginname):
+def get_params_inst(pluginname): 
 	if pluginname in autoval_inst: return autoval_inst[pluginname] 
 	else: return [ [], [] ]
+
+# ---------------------------------------------- FX ----------------------------------------------
 
 autoval_fx = {}
 
@@ -77,6 +73,10 @@ autoval_fx['stereoenhancer'] = [ ['width'], [] ]
 
 autoval_fx['waveshaper'] = [ ['outputGain', 'clipInput', 'inputGain'], ['waveShape'] ]
 
+
+def get_params_fx(pluginname):
+	if pluginname in autoval_fx: return autoval_fx[pluginname] 
+	else: return [ [], [] ]
 
 
 

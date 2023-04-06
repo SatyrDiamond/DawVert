@@ -288,10 +288,11 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
             add_auto_val(auto_nameiddata_plugin, None, 0, lmmsplugdata, pluginparam, xml_lmmsnat, pluginparam, 'Plugin', pluginparam)
         for pluginparam in lmms_autovals[1]: 
             if pluginparam in lmmsplugdata: xml_lmmsnat.set(pluginparam, str(lmmsplugdata[pluginparam]))
-
     else:
         print('[output-lmms]       Plugin: '+pluginname+' > None')
         xml_instrumentpreplugin.set('name', "audiofileprocessor")
+
+    add_unused_auto_val(auto_nameiddata_plugin, 'Plugin')
 
 #auto_nameid
 # ------- Inst and Notelist -------

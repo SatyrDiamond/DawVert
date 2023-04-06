@@ -201,6 +201,7 @@ class input_mod(plugin_input.base):
                 cvpj_l_single_inst['color'] = [0.53, 0.53, 0.53]
                 cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
                 cvpj_l_single_inst['instdata']['plugindata'] = {}
+                cvpj_l_single_inst['instdata']['plugindata']['point_value_type'] = "samples"
                 cvpj_l_single_inst['instdata']['plugindata']['trigger'] = 'normal'
                 cvpj_l_single_inst['instdata']['plugindata']['length'] = mod_inst_length
                 cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(mod_numinst).zfill(2) + '.wav'

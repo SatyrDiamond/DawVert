@@ -13,9 +13,6 @@ from functions import vst_inst
 from functions import params_vst
 from functions import params_vital
 
-def clamp(n, minn, maxn):
-	return max(min(maxn, n), minn)
-
 from functions_plugconv import input_flstudio
 from functions_plugconv import input_pxtone
 from functions_plugconv import input_jummbox

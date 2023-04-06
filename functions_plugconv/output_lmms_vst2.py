@@ -6,6 +6,7 @@ import io
 import struct
 import math
 import lxml.etree as ET
+from functions import vst_fx
 from functions import list_vst
 from functions import params_vst
 from functions import params_vital
@@ -185,3 +186,20 @@ def convert_inst(instdata):
 		zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
 		zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
 		list_vst.replace_data(instdata, 2, 'any', 'ZynAddSubFX', 'raw', zasfxdatafixed, None)
+
+def convert_fx(fxdata):
+	pluginname = fxdata['plugin']
+	plugindata = fxdata['plugindata']
+
+	if pluginname == 'native-lmms':
+		lmmsnat_data = plugindata['data']
+		lmmsnat_name = plugindata['name']
+
+		if lmmsnat_name == 'waveshaper':
+			waveshapebytes = base64.b64decode(plugindata['data']['waveShape'])
+			waveshapepoints = [struct.unpack('f', waveshapebytes[i:i+4]) for i in range(0, len(waveshapebytes), 4)]
+			vst_fx.wolfshaper_init()
+			for pointnum in range(50):
+				pointdata = waveshapepoints[pointnum*4][0]
+				vst_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
+			list_vst.replace_data(fxdata, 2, 'any', 'Wolf Shaper', 'raw', params_vst.nullbytegroup_make(vst_fx.wolfshaper_get()), None)

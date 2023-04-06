@@ -1,8 +1,12 @@
 from functions import audio_wav
 from functions import list_vst
 from functions import vst_inst
+from functions import params_vst
 import xml.etree.ElementTree as ET
 import pathlib
+
+def clamp(n, minn, maxn):
+	return max(min(maxn, n), minn)
 
 def convert_inst(instdata, platform_id):
 	if platform_id == 'win':

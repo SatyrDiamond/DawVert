@@ -19,11 +19,11 @@ def clamp(n, minn, maxn):
 from functions_plugconv import input_flstudio
 from functions_plugconv import input_pxtone
 from functions_plugconv import input_jummbox
-from functions_plugconv import input_lmms
 
 from functions_plugconv import output_sampler_vst2
 from functions_plugconv import output_multisampler_vst2
 from functions_plugconv import output_slicer_vst2
+from functions_plugconv import output_lmms_vst2
 
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
@@ -33,11 +33,9 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 			plugindata = instdata['plugindata']
 
 			# ---------------------------------------- input ----------------------------------------
-			# ---------- from fl studio
 			if in_daw == 'flp' and pluginname == 'native-fl': input_flstudio.convert_inst(instdata)
 			if in_daw == 'ptcop' and pluginname == 'native-pxtone': input_pxtone.convert_inst(instdata)
 			if in_daw == 'jummbox' and pluginname == 'native-jummbox': input_jummbox.convert_inst(instdata)
-			if in_daw == 'lmms' and pluginname == 'native-lmms': input_lmms.convert_inst(instdata)
 
 			# ---------- from general-midi
 			elif pluginname == 'general-midi':
@@ -57,9 +55,17 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 			pluginname = instdata['plugin']
 			plugindata = instdata['plugindata']
 
-			if pluginname == 'sampler' and out_daw not in supportedplugins['sampler']: output_sampler_vst2.convert_inst(instdata, platform_id)
-			if pluginname == 'sampler-multi' and out_daw not in supportedplugins['sampler-multi']: output_multisampler_vst2.convert_inst(instdata, platform_id)
-			if pluginname == 'sampler-slicer' and out_daw not in supportedplugins['sampler-slicer']: output_slicer_vst2.convert_inst(instdata)
+			if pluginname == 'sampler' and out_daw not in supportedplugins['sampler']: 
+				output_sampler_vst2.convert_inst(instdata, platform_id)
+
+			if pluginname == 'sampler-multi' and out_daw not in supportedplugins['sampler-multi']: 
+				output_multisampler_vst2.convert_inst(instdata, platform_id)
+
+			if pluginname == 'sampler-slicer' and out_daw not in supportedplugins['sampler-slicer']: 
+				output_slicer_vst2.convert_inst(instdata)
+
+			elif (pluginname == 'native-lmms' or pluginname == 'zynaddsubfx-lmms') and out_daw != 'lmms':
+				output_lmms_vst2.convert_inst(instdata)
 
 			# -------------------- vst2 (juicysfplugin) --------------------
 
@@ -147,12 +153,6 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 				xmlout = vst_inst.opnplug_convert(instdata['plugindata'])
 				list_vst.replace_data(instdata, 2, 'any', 'OPNplug', 'raw', params_vst.vc2xml_make(xmlout), None)
 
-			# -------------------- zynaddsubfx > vst2 (Zyn-Fusion) - from lmms --------------------
-			elif pluginname == 'zynaddsubfx-lmms' and out_daw != 'lmms':
-				zasfxdata = instdata['plugindata']['data']
-				zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
-				zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
-				list_vst.replace_data(instdata, 2, 'any', 'ZynAddSubFX', 'raw', zasfxdatafixed, None)
 
 # -------------------- FX --------------------
 def convplug_fx(fxdata, in_daw, out_daw, extra_json, nameid):

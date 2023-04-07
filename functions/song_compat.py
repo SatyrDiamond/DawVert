@@ -78,7 +78,8 @@ def addwarps_pl(placementsdata):
     for placement in placementsdata:
         p_pos = placement['position']
         p_dur = placement['duration']
-        p_nl = placement['notelist']
+        if 'notelist' in placement: p_nl = placement['notelist']
+        else: p_nl = []
         ipnl = False
         if prevpp != None:
             isfromprevpos = prevpp[0]==p_pos-p_dur

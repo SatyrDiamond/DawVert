@@ -315,9 +315,7 @@ class input_cvpj_r(plugin_input.base):
             machautodata = automation_plugin['machine'+str(machnum+1)]
             for autoname in AUTO_data['MACH_'+str(machnum+1)]:
                 machautodata[str(autoname)] = twopoints2cvpjpoints(AUTO_data['MACH_'+str(machnum+1)][autoname])
-            
-        print(AUTO_data['MIXER_2'])
-
+        
         for machnum in range(7):
             if machnum in AUTO_data['MIXER_1']: 
                 automation_track['MACH'+str(machnum+1)]['vol'] = twopoints2cvpjpoints(AUTO_data['MIXER_1'][machnum])

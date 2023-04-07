@@ -351,9 +351,6 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     if 'solo' in trkJ: xmltag.set('solo', str(trkJ['solo']))
     else: xmltag.set('solo', '0')
 
-    if 'enabled' in trkJ: xmltag.set('muted', str(int(not trkJ['enabled'])))
-    else: xmltag.set('muted', '0')
-
     if 'name' in trkJ: trackname = trkJ['name']
     else: trackname = 'untitled'
     xmltag.set('name', trackname)
@@ -377,6 +374,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
 
     add_auto_val(auto_nameiddata, [0, 100], 1, trkJ, 'vol', trkX_insttr, 'vol', trackname, 'Volume')
     add_auto_val(auto_nameiddata, [0, 100], 0, trkJ, 'pan', trkX_insttr, 'pan', trackname, 'Pan')
+    add_auto_val(auto_nameiddata, [-1, -1], 1, trkJ, 'enabled', xmltag, 'muted', trackname, 'Muted')
     add_auto_val(auto_nameiddata, None, 0, trkJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
 
     add_unused_auto_val(auto_nameiddata, trackname)

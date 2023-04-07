@@ -367,7 +367,8 @@ def lmms_decode_inst_track(trkX, trackid):
     print('[input-lmms]       Name: ' + cvpj_name)
 
     tracks.r_addtrack_inst(cvpj_l, trackid, cvpj_l_track_inst)
-    tracks.r_addinst_param(cvpj_l, trackid, 'enabled', int(not int(trkX.get('muted'))))
+
+    tracks.r_addinst_param(cvpj_l, trackid, 'enabled', int(not int( lmms_getvalue(trkX, 'muted', 0, ['track', trackid, 'enabled']) )))
     tracks.r_addinst_param(cvpj_l, trackid, 'solo', int(trkX.get('solo')))
 
     #trkX_insttr
@@ -489,7 +490,7 @@ def lmms_decode_audio_track(trkX, trackid):
     if len(xml_a_fxchain) != 0: tracks.r_audiofx_chain(cvpj_l, trackid, lmms_decode_fxchain(xml_a_fxchain[0]))
     print('[input-lmms]')
     tracks.r_addtrackpl_audio(cvpj_l, trackid, lmms_decode_audioplacements(trkX))
-    tracks.r_addinst_param(cvpj_l, trackid, 'enabled', int(not int(trkX.get('muted'))))
+    tracks.r_addinst_param(cvpj_l, trackid, 'enabled', int(not int(lmms_getvalue(trkX, 'muted', 1, ['track', trackid, 'enabled']))))
     tracks.r_addinst_param(cvpj_l, trackid, 'solo', int(trkX.get('solo')))
 
 # ------- Track: Automation -------
@@ -788,6 +789,7 @@ class input_lmms(plugin_input.base):
                         temp_pla = l_automation['track'][s_autopl_id[1]]
                         if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
                         elif s_autopl_id[2] == 'pan': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
+                        elif s_autopl_id[2] == 'enabled': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, -1, -1)
                         else: temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 1)
                 if s_autopl_id[0] == 'main':
                     if s_autopl_id[1] == 'vol': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 0.01)

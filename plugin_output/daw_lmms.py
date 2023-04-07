@@ -181,18 +181,39 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         if 'amp' in plugJ: xml_sampler.set('amp', str(oneto100(plugJ['amp'])))
         if 'continueacrossnotes' in plugJ: xml_sampler.set('stutter', str(plugJ['continueacrossnotes']))
         if 'file' in plugJ: xml_sampler.set('src', str(plugJ['file']))
+
+        point_value_type = 'samples'
+        if 'point_value_type' in plugJ: point_value_type = plugJ['point_value_type']
+
+        if point_value_type == 'samples' and 'length' in plugJ:
+            trkJ_length = plugJ['length']
+            if 'start' in plugJ: xml_sampler.set('sframe', str(plugJ['start']/trkJ_length))
+            else: xml_sampler.set('sframe', '0')
+            if 'loop' in plugJ:
+                trkJ_loop = plugJ['loop']
+                if 'points' in trkJ_loop:
+                    trkJ_loop_points = trkJ_loop['points']
+                    xml_sampler.set('lframe', str(trkJ_loop_points[0]/trkJ_length))
+                    xml_sampler.set('eframe', str(trkJ_loop_points[1]/trkJ_length))
+
+        if point_value_type == 'percent':
+            if 'start' in plugJ: xml_sampler.set('sframe', str(plugJ['start']))
+            else: xml_sampler.set('sframe', '0')
+            if 'loop' in plugJ:
+                trkJ_loop = plugJ['loop']
+                if 'points' in trkJ_loop:
+                    trkJ_loop_points = trkJ_loop['points']
+                    xml_sampler.set('lframe', str(trkJ_loop_points[0]))
+                    xml_sampler.set('eframe', str(trkJ_loop_points[1]))
+
         loopenabled = 0
         loopmode = "normal"
-        if 'loop' in plugJ and 'length' in plugJ:
-            trkJ_length = plugJ['length']
+
+        if 'loop' in plugJ:
             trkJ_loop = plugJ['loop']
-            if 'points' in trkJ_loop:
-                trkJ_loop_points = trkJ_loop['points']
-                xml_sampler.set('sframe', '0')
-                xml_sampler.set('lframe', str(trkJ_loop_points[0]/trkJ_length))
-                xml_sampler.set('eframe', str(trkJ_loop_points[1]/trkJ_length))
             if 'enabled' in trkJ_loop: loopenabled = trkJ_loop['enabled']
             if 'mode' in trkJ_loop: mode = trkJ_loop['mode']
+
         if loopenabled == 0: xml_sampler.set('looped', '0')
         if loopenabled == 1:
             if loopmode == "normal": xml_sampler.set('looped', '1')
@@ -227,30 +248,20 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         print('[output-lmms]       Plugin: OPL2 > OPL2')
         xml_instrumentpreplugin.set('name', "OPL2")
         xml_opl2 = ET.SubElement(xml_instrumentpreplugin, "OPL2")
-        xml_opl2.set('op1_a', str(plugJ['op1']['env_attack']))
-        xml_opl2.set('op1_d', str(plugJ['op1']['env_decay']))
-        xml_opl2.set('op1_r', str(plugJ['op1']['env_release']))
-        xml_opl2.set('op1_s', str(plugJ['op1']['env_sustain']))
-        xml_opl2.set('op1_mul', str(plugJ['op1']['freqmul']))
-        xml_opl2.set('op1_ksr', str(plugJ['op1']['ksr']))
-        xml_opl2.set('op1_lvl', str(plugJ['op1']['level']))
-        xml_opl2.set('op1_perc', str(plugJ['op1']['perc_env']))
-        xml_opl2.set('op1_scale', str(plugJ['op1']['scale']))
-        xml_opl2.set('op1_trem', str(plugJ['op1']['tremolo']))
-        xml_opl2.set('op1_vib', str(plugJ['op1']['vibrato']))
-        xml_opl2.set('op1_waveform', str(plugJ['op1']['waveform']))
-        xml_opl2.set('op2_a', str(plugJ['op2']['env_attack']))
-        xml_opl2.set('op2_d', str(plugJ['op2']['env_decay']))
-        xml_opl2.set('op2_r', str(plugJ['op2']['env_release']))
-        xml_opl2.set('op2_s', str(plugJ['op2']['env_sustain']))
-        xml_opl2.set('op2_mul', str(plugJ['op2']['freqmul']))
-        xml_opl2.set('op2_ksr', str(plugJ['op2']['ksr']))
-        xml_opl2.set('op2_lvl', str(plugJ['op2']['level']))
-        xml_opl2.set('op2_perc', str(plugJ['op2']['perc_env']))
-        xml_opl2.set('op2_scale', str(plugJ['op2']['scale']))
-        xml_opl2.set('op2_trem', str(plugJ['op2']['tremolo']))
-        xml_opl2.set('op2_vib', str(plugJ['op2']['vibrato']))
-        xml_opl2.set('op2_waveform', str(plugJ['op2']['waveform']))
+        for opnum in range(2):
+            opl2_optxt = 'op'+str(opnum+1)
+            xml_opl2.set(opl2_optxt+'_a', str(plugJ[opl2_optxt]['env_attack']))
+            xml_opl2.set(opl2_optxt+'_d', str(plugJ[opl2_optxt]['env_decay']))
+            xml_opl2.set(opl2_optxt+'_r', str(plugJ[opl2_optxt]['env_release']))
+            xml_opl2.set(opl2_optxt+'_s', str(plugJ[opl2_optxt]['env_sustain']))
+            xml_opl2.set(opl2_optxt+'_mul', str(plugJ[opl2_optxt]['freqmul']))
+            xml_opl2.set(opl2_optxt+'_ksr', str(plugJ[opl2_optxt]['ksr']))
+            xml_opl2.set(opl2_optxt+'_lvl', str(plugJ[opl2_optxt]['level']))
+            xml_opl2.set(opl2_optxt+'_perc', str(plugJ[opl2_optxt]['perc_env']))
+            xml_opl2.set(opl2_optxt+'_scale', str(plugJ[opl2_optxt]['scale']))
+            xml_opl2.set(opl2_optxt+'_trem', str(plugJ[opl2_optxt]['tremolo']))
+            xml_opl2.set(opl2_optxt+'_vib', str(plugJ[opl2_optxt]['vibrato']))
+            xml_opl2.set(opl2_optxt+'_waveform', str(plugJ[opl2_optxt]['waveform']))
         xml_opl2.set('feedback', str(plugJ['feedback']))
         xml_opl2.set('fm', str(plugJ['fm']))
         xml_opl2.set('trem_depth', str(plugJ['tremolo_depth']))
@@ -352,13 +363,13 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     else: xmltag.set('solo', '0')
 
     if 'name' in trkJ: trackname = trkJ['name']
-    else: trackname = 'untitled'
+    else: trackname = 'noname'
     xmltag.set('name', trackname)
 
     if 'color' in trkJ: xmltag.set('color', '#' + colors.rgb_float_2_hex(trkJ['color']))
 
-    if 'instdata' not in trkJ: trkJ['instdata'] = {}
-    instJ = trkJ['instdata']
+    if 'instdata' not in trkJ: instJ = {}
+    else: instJ = trkJ['instdata']
 
     #instrumenttrack
     trkX_insttr = ET.SubElement(xmltag, "instrumenttrack")

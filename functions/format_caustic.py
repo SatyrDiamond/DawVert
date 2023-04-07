@@ -77,7 +77,7 @@ def deconstruct_SPAT(bio_in):
 
 def deconstruct_autoctrl(SEQN_str, Caustic_Main, auto_cat_id):
     numofautoctrl = int.from_bytes(SEQN_str.read(4), "little")
-    print('NUMAUTOCTRL', numofautoctrl, '---------------------------------------', auto_cat_id)
+    #print('NUMAUTOCTRL', numofautoctrl, '---------------------------------------', auto_cat_id)
     Caustic_Main['AUTO'][auto_cat_id] = {}
     for ctrlauto_num in range(numofautoctrl):
         ctrlid = int.from_bytes(SEQN_str.read(4), "little")

@@ -221,6 +221,12 @@ def r_removewarps(projJ):
             if 'audio' in track_placements_data:
                 track_placements_data['audio'] = r_removewarps_placements(track_placements_data['audio'])
 
+def m_removewarps(projJ):
+    for playlist_id in projJ['playlist']:
+        playlist_id_data = projJ['playlist'][playlist_id]
+        if 'placements_notes' in playlist_id_data:
+            playlist_id_data['placements_notes'] = r_removewarps_placements(playlist_id_data['placements_notes'])
+
 # -------------------------------------------- r_track_lanes --------------------------------------------
 
 def tracklanename(trackname, lanename, fallback):
@@ -413,7 +419,17 @@ def makecompat_any(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     if in__fxrack == False and out__fxrack == True:  trackfx2fxrack(cvpj_proj, cvpj_type)
     return json.dumps(cvpj_proj)
 
+r_processed = False
+ri_processed = False
+m_processed = False
+mi_processed = False
+
 def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
+    global r_processed
+    global ri_processed
+    global m_processed
+    global mi_processed
+
     cvpj_proj = json.loads(cvpj_l)
 
     in__r_track_lanes = False
@@ -450,12 +466,25 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     print('[compat] pl_audio_events | '+str(in__audio_events).ljust(5)+' | '+str(out__audio_events).ljust(5)+' |')
     print('[compat] ----------------+-------+-------+')
 
-    if cvpj_type == 'r':
+    if cvpj_type == 'm' and m_processed == False:
+        if in__placement_warp == True and out__placement_warp == False: m_removewarps(cvpj_proj)
+        m_processed = True
+
+    if cvpj_type == 'mi' and mi_processed == False:
+        if in__placement_warp == True and out__placement_warp == False: m_removewarps(cvpj_proj)
+        mi_processed = True
+
+    if cvpj_type == 'r' and r_processed == False:
         if in__no_placements == True and out__no_placements == False: r_split_single_notelist(cvpj_proj)
         if in__r_track_lanes == True and out__r_track_lanes == False: r_removelanes(cvpj_proj)
         if in__placement_warp == True and out__placement_warp == False: r_removewarps(cvpj_proj)
         if in__placement_cut == True and out__placement_cut == False: r_removecut(cvpj_proj)
         if in__placement_warp == False and out__placement_warp == True: r_addwarps(cvpj_proj)
+        r_processed = True
 
+    if cvpj_type == 'ri' and ri_processed == False:
+        if in__placement_warp == True and out__placement_warp == False: r_removewarps(cvpj_proj)
+        ri_processed = True
 
     return json.dumps(cvpj_proj)
+

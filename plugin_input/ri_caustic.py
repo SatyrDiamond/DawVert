@@ -115,8 +115,8 @@ class input_cvpj_r(plugin_input.base):
         return {
         'fxrack': False,
         'r_track_lanes': False,
-        'placement_cut': False,
-        'placement_warp': False,
+        'placement_cut': True,
+        'placement_warp': True,
         'no_placements': False
         }
     def supported_autodetect(self): return False
@@ -280,17 +280,26 @@ class input_cvpj_r(plugin_input.base):
             hundreds = int(SEQNe_patnum/100)
             SEQNe_patnum -= hundreds*100
 
+            SEQNe_patlet = patletters[hundreds]
+            t_patid = SEQNe_patlet+str(SEQNe_patnum+1)
+
+            if 'patterns' in machines[SEQNe[0]]:
+                patmeasures = machines[SEQNe[0]]['patterns'][t_patid]['measures']*16
+            else:
+                patmeasures = 16
+
             if SEQNe_type == 2:
-                SEQNe_patlet = patletters[hundreds]
                 pl_placement = {}
                 pl_placement['position'] = SEQNe_pos
                 pl_placement['duration'] = SEQNe_len
-                pl_placement['fromindex'] = SEQNe_patlet+str(SEQNe_patnum+1)
+                if patmeasures != 0:
+                    pl_placement['cut'] = {'type': 'warp', 'start': 0, 'loopstart': 0, 'loopend': patmeasures}
+                pl_placement['fromindex'] = t_patid
                 if str(SEQNe_mach) not in t_track_placements: t_track_placements[str(SEQNe_mach)] = []
                 t_track_placements[str(SEQNe_mach)].append(pl_placement)
 
         for t_track_placement in t_track_placements:
-            tracks.r_addtrackpl(cvpj_l, t_track_placement, t_track_placements[t_track_placement])
+            tracks.r_addtrackpl(cvpj_l, 'MACH'+str(t_track_placement), t_track_placements[t_track_placement])
 
         tempo_placement = {"position": 0}
 

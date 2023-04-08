@@ -618,19 +618,19 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
             xml_ladspa.set('link', '1')
             for param in cvpj_params:
                 xml_param = ET.SubElement(xml_ladspa, 'port0'+param)
-                add_auto_val(auto_nameiddata_plugin, None, 0, cvpj_params, 'ladspa_param_0_'+param, xml_param, 'data', 'LADSPA', '#'+param)
+                add_auto_val_plugin(auto_nameiddata_plugin, None, 0, cvpj_params, 'ladspa_param_0_'+param, param, xml_param, 'data', 'LADSPA', '#'+param)
                 xml_param.set('link', '1')
                 xml_param = ET.SubElement(xml_ladspa, 'port1'+param)
-                add_auto_val(auto_nameiddata_plugin, None, 0, cvpj_params, 'ladspa_param_1_'+param, xml_param, 'data', 'LADSPA', '#'+param)
+                add_auto_val_plugin(auto_nameiddata_plugin, None, 0, cvpj_params, 'ladspa_param_1_'+param, param, xml_param, 'data', 'LADSPA', '#'+param)
         else:
             xml_ladspa.set('link', '0')
             for param in cvpj_params['0']:
                 xml_param = ET.SubElement(xml_ladspa, 'port0'+param)
-                add_auto_val(auto_nameiddata_plugin, None, 0, cvpj_params['0'], 'ladspa_param_0_'+param, xml_param, 'data', 'LADSPA', 'L #'+param)
+                add_auto_val_plugin(auto_nameiddata_plugin, None, 0, cvpj_params['0'], 'ladspa_param_0_'+param, param, xml_param, 'data', 'LADSPA', 'L #'+param)
                 xml_param.set('link', '0')
             for param in cvpj_params['1']:
                 xml_param = ET.SubElement(xml_ladspa, 'port1'+param)
-                add_auto_val(auto_nameiddata_plugin, None, 0, cvpj_params['1'], 'ladspa_param_1_'+param, xml_param, 'data', 'LADSPA', 'R #'+param)
+                add_auto_val_plugin(auto_nameiddata_plugin, None, 0, cvpj_params['1'], 'ladspa_param_1_'+param, param, xml_param, 'data', 'LADSPA', 'R #'+param)
 
 def lmms_encode_effectslot(fxcX, json_fxslot):
     fxslotX = ET.SubElement(fxcX, "effect")
@@ -769,6 +769,23 @@ def add_auto_val_noset(auto_nameiddata, Jname, Xtag, Xname, Vtype, Vname):
     autovarX = ET.SubElement(Xtag, Xname)
     autovarX.set('scale_type', 'linear')
     autovarX.set('id', str(lmms_autoid))
+
+def add_auto_val_plugin(auto_nameiddata, Vaddmul, Vfalbak, Jtag, Jname, pluginparam, Xtag, Xname, Vtype, Vname):
+    if pluginparam in Jtag: outvalue = Jtag[pluginparam]
+    else: outvalue = Vfalbak
+    if Vaddmul != None: outvalue = (outvalue+Vaddmul[0])*Vaddmul[1]
+
+    if Jname in auto_nameiddata:
+        lmms_autoid, cvpj_autodata = auto_nameiddata[Jname]
+        if Vaddmul != None: cvpj_autodata = auto.multiply(cvpj_autodata, Vaddmul[0], Vaddmul[1])
+        lmms_make_main_auto_track(lmms_autoid, cvpj_autodata, Vtype+': '+Vname)
+        autovarX = ET.SubElement(Xtag, Xname)
+        autovarX.set('value', str(outvalue))
+        autovarX.set('scale_type', 'linear')
+        autovarX.set('id', str(lmms_autoid))
+        del auto_nameiddata[Jname]
+    else:
+        Xtag.set(Xname, str(outvalue))
 
 def add_auto_val(auto_nameiddata, Vaddmul, Vfalbak, Jtag, Jname, Xtag, Xname, Vtype, Vname):
     if Jname in Jtag: outvalue = Jtag[Jname]

@@ -613,23 +613,24 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
                 seperated_channels = True
 
         cvpj_params = cvpj_plugindata['params']
+
         if seperated_channels == False:
             xml_ladspa.set('link', '1')
             for param in cvpj_params:
                 xml_param = ET.SubElement(xml_ladspa, 'port0'+param)
-                xml_param.set('data', str(cvpj_params[param]))
+                add_auto_val(auto_nameiddata_plugin, None, 0, cvpj_params, 'ladspa_param_0_'+param, xml_param, 'data', 'LADSPA', '#'+param)
                 xml_param.set('link', '1')
                 xml_param = ET.SubElement(xml_ladspa, 'port1'+param)
-                xml_param.set('data', str(cvpj_params[param]))
+                add_auto_val(auto_nameiddata_plugin, None, 0, cvpj_params, 'ladspa_param_1_'+param, xml_param, 'data', 'LADSPA', '#'+param)
         else:
             xml_ladspa.set('link', '0')
             for param in cvpj_params['0']:
                 xml_param = ET.SubElement(xml_ladspa, 'port0'+param)
-                xml_param.set('data', str(cvpj_params['0'][param]))
+                add_auto_val(auto_nameiddata_plugin, None, 0, cvpj_params['0'], 'ladspa_param_0_'+param, xml_param, 'data', 'LADSPA', 'L #'+param)
                 xml_param.set('link', '0')
             for param in cvpj_params['1']:
                 xml_param = ET.SubElement(xml_ladspa, 'port1'+param)
-                xml_param.set('data', str(cvpj_params['1'][param]))
+                add_auto_val(auto_nameiddata_plugin, None, 0, cvpj_params['1'], 'ladspa_param_1_'+param, xml_param, 'data', 'LADSPA', 'R #'+param)
 
 def lmms_encode_effectslot(fxcX, json_fxslot):
     fxslotX = ET.SubElement(fxcX, "effect")

@@ -107,7 +107,7 @@ def getvstparams(plugindata, xmldata, cvpj_data):
             if notetagtxt.startswith('param'):
                 value = node.get('value')
                 if value != None:
-                    l_autoid[str(node.get('id'))] = ['plugin', cvpj_data['pluginautoid'], 'param_'+notetagtxt[5:]]
+                    l_autoid[str(node.get('id'))] = ['plugin', cvpj_data['pluginautoid'], 'vst_param_'+notetagtxt[5:]]
 
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
 

@@ -626,10 +626,7 @@ def lmms_decode_effectslot(fxslotX):
                 l_val = notetagtxt[5:]
                 t_data = node.get('data')
                 if l_ch not in t_params: t_params[l_ch] = {}
-                if t_data != None: t_params[l_ch][l_val] = float(node.get('data'))
-                else:
-                    ladautodata = node.findall('data')[0]
-                    t_params[l_ch][l_val] = float(ladautodata.get('value'))
+                t_params[l_ch][l_val] = float(lmms_auto_getvalue(node, 'data', '0', ['plugin', auto_id_plugin, 'ladspa_param_'+l_ch+'_'+l_val]))
 
         if seperated_channels == False: 
             fxcvpj_l_plugindata['seperated_channels'] = False

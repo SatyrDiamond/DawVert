@@ -580,11 +580,14 @@ def lmms_decode_effectslot(fxslotX):
         fxslotJ['add_dry_minus_wet'] = 0
         fxslotJ['wet'] = wet
 
+    auto_id_plugin = get_plugin_auto_id()
+    fxslotJ['pluginautoid'] = auto_id_plugin
+
     if fxpluginname == 'vsteffect':
         fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
         print('[vst2-dll',end='] ')
         fxslotJ['plugin'] = "vst2-dll"
-        getvstparams(fxcvpj_l_plugindata, fxxml_plugin)
+        getvstparams(fxcvpj_l_plugindata, fxxml_plugin, fxslotJ)
         fxslotJ['plugindata'] = fxcvpj_l_plugindata
         return fxslotJ
 

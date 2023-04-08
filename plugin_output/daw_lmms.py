@@ -589,6 +589,11 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
         xml_vst2keyatt.set('value', xml_vst2.get('plugin'))
         xml_vst2keyatt.set('name', 'file')
 
+        for vstparam in auto_nameiddata_plugin:
+            if vstparam.startswith('vst_param_'):
+                xmlparamname = 'param'+vstparam[10:]
+                add_auto_val_noset(auto_nameiddata_plugin, vstparam, xml_vst2, xmlparamname, 'VST', '#'+vstparam[10:])
+
     if fxplugname == 'ladspa':
         fxslotX.set('name', 'ladspaeffect')
         print('[output-lmms]       Audio FX: [ladspa] ')

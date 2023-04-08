@@ -272,6 +272,12 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         xml_instrumentpreplugin.set('name', "vestige")
         xml_vst = ET.SubElement(xml_instrumentpreplugin, "vestige")
         setvstparams(plugJ, xml_vst)
+
+        for vstparam in auto_nameiddata_plugin:
+            if vstparam.startswith('param_'):
+                xmlparamname = 'param'+vstparam[6:]
+                add_auto_val_noset(auto_nameiddata_plugin, vstparam, xml_vst, xmlparamname, 'VST', '#'+vstparam[6:])
+
     elif pluginname == 'zynaddsubfx-lmms':
         print('[output-lmms]       Plugin: zynaddsubfx > zynaddsubfx')
         xml_instrumentpreplugin.set('name', "zynaddsubfx")
@@ -303,7 +309,8 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         print('[output-lmms]       Plugin: '+pluginname+' > None')
         xml_instrumentpreplugin.set('name', "audiofileprocessor")
 
-    add_unused_auto_val(auto_nameiddata_plugin, 'Plugin')
+    if pluginname != 'vst2-dll':
+        add_unused_auto_val(auto_nameiddata_plugin, 'Plugin')
 
 #auto_nameid
 # ------- Inst and Notelist -------
@@ -749,6 +756,13 @@ def add_unused_auto_val(auto_nameiddata, Vtype):
     for autoname in auto_nameiddata:
         lmms_autoid, cvpj_autodata = auto_nameiddata[autoname]
         lmms_make_main_auto_track(lmms_autoid, cvpj_autodata, Vtype+': UNUSED '+autoname)
+
+def add_auto_val_noset(auto_nameiddata, Jname, Xtag, Xname, Vtype, Vname):
+    lmms_autoid, cvpj_autodata = auto_nameiddata[Jname]
+    lmms_make_main_auto_track(lmms_autoid, cvpj_autodata, Vtype+': '+Vname)
+    autovarX = ET.SubElement(Xtag, Xname)
+    autovarX.set('scale_type', 'linear')
+    autovarX.set('id', str(lmms_autoid))
 
 def add_auto_val(auto_nameiddata, Vaddmul, Vfalbak, Jtag, Jname, Xtag, Xname, Vtype, Vname):
     if Jname in Jtag: outvalue = Jtag[Jname]

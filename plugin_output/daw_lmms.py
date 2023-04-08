@@ -274,9 +274,9 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         setvstparams(plugJ, xml_vst)
 
         for vstparam in auto_nameiddata_plugin:
-            if vstparam.startswith('param_'):
-                xmlparamname = 'param'+vstparam[6:]
-                add_auto_val_noset(auto_nameiddata_plugin, vstparam, xml_vst, xmlparamname, 'VST', '#'+vstparam[6:])
+            if vstparam.startswith('vst_param_'):
+                xmlparamname = 'param'+vstparam[10:]
+                add_auto_val_noset(auto_nameiddata_plugin, vstparam, xml_vst, xmlparamname, 'VST', '#'+vstparam[10:])
 
     elif pluginname == 'zynaddsubfx-lmms':
         print('[output-lmms]       Plugin: zynaddsubfx > zynaddsubfx')

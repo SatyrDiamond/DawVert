@@ -25,7 +25,7 @@ def r_addtrack_data(cvpj_l, trackid, trk_name, trk_color, trk_vol, trk_pan):
     if 'track_data' in cvpj_l:
         if trackid in cvpj_l['track_data']:
             cvpj_inst = cvpj_l['track_data'][trackid]
-            cvpj_inst['name'] = trk_name
+            if trk_name != None: cvpj_inst['name'] = trk_name
             if trk_color != None: cvpj_inst['color'] = trk_color
             if trk_vol != None: cvpj_inst['vol'] = trk_vol
             if trk_pan != None: cvpj_inst['pan'] = trk_pan
@@ -85,6 +85,7 @@ def r_notefx_chain_append(cvpj_l, trackid, enabled, pluginname, plugindata):
     cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'].append(
             {"enabled": enabled, "plugin": pluginname, "plugindata": plugindata}
             )
+
 # ------------------------ Multiple ------------------------
 
 def m_addinst(cvpj_l, trackid, instdata):
@@ -130,3 +131,11 @@ def m_add_nle(cvpj_l, patid, nle_notelist, nle_name):
     cvpj_l['notelistindex'][patid] = {}
     if nle_name != None: cvpj_l['notelistindex'][patid]['name'] = nle_name
     cvpj_l['notelistindex'][patid]['notelist'] = nle_notelist
+    
+# ------------------------ All ------------------------
+
+def a_addtrack_master(cvpj_l, i_name, i_vol, i_color):
+    if 'track_master' not in cvpj_l: cvpj_l['track_master'] = {}
+    if i_name != None: cvpj_l['track_master']['name'] = i_name
+    if i_vol != None: cvpj_l['track_master']['vol'] = i_vol
+    if i_color != None: cvpj_l['track_master']['color'] = i_color

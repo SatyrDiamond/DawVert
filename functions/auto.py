@@ -25,3 +25,9 @@ def resize(autopl):
             in_point['position'] -= firstpos
         autopl['duration'] -= firstpos
         autopl['position'] += firstpos
+
+def twopoints2cvpjpoints(twopoints, notelen, pointtype, endlen):
+    cvpj_points = []
+    for twopoint in twopoints:
+        cvpj_points.append({"type": pointtype, "position": twopoint[0]*notelen, "value": twopoint[1]})
+    return [{'position': 0, 'duration': (twopoints[-1][0]*notelen)+endlen, 'points': cvpj_points}]

@@ -9,6 +9,7 @@ import io
 import zipfile
 from bs4 import BeautifulSoup
 from functions import placements
+from functions import auto
 from functions import colors
 
 def addvalue_bool(xmltag, xmlname, i_value, i_id, i_name):
@@ -41,21 +42,6 @@ def make_auto_point(xmltag, value, position):
     x_autopoint.set('interpolation', 'linear')
     x_autopoint.set('time', str(position/4))
 
-def parse_automation(xmltag, cvpj_points, startposition):
-    startpoint = True
-    prevvalue = None
-    for cvpj_auto_poi in cvpj_points:
-        cvpj_auto_poi['position'] += startposition
-        instanttype = False
-        if 'type' in cvpj_auto_poi:
-            if cvpj_auto_poi['type'] == 'instant':
-                instanttype = True
-        if (instanttype == True and prevvalue != None) or (startpoint == True and prevvalue != None):
-            make_auto_point(xmltag, prevvalue, cvpj_auto_poi['position'])
-        make_auto_point(xmltag, cvpj_auto_poi['value'], cvpj_auto_poi['position'])
-        prevvalue = cvpj_auto_poi['value']
-        startpoint = False
-
 def make_automation(x_project_arr, xmlname, cvpj_auto, unit, cvpj_id):
     x_project_arr_tempo = ET.SubElement(x_project_arr, xmlname)
     x_project_arr_tempo.set('unit', unit)
@@ -63,7 +49,9 @@ def make_automation(x_project_arr, xmlname, cvpj_auto, unit, cvpj_id):
     x_project_arr_target.set('parameter', cvpj_id)
     for cvpj_auto_pl in cvpj_auto:
         cvpj_auto_pl_pos = cvpj_auto_pl['position']
-        parse_automation(x_project_arr_tempo, cvpj_auto_pl['points'], cvpj_auto_pl['position'])
+        t_points = auto.remove_instant(cvpj_auto_pl['points'], cvpj_auto_pl['position'], False)
+        for t_point in t_points:
+            make_auto_point(x_project_arr_tempo, t_point['value'], t_point['position'])
 
 def make_auto_note(xmltag, cvpj_points, unit, expression):
     xml_points = ET.SubElement(xmltag, "Points")
@@ -71,7 +59,9 @@ def make_auto_note(xmltag, cvpj_points, unit, expression):
     xml_points.set('id', get_unused_id())
     xml_target = ET.SubElement(xml_points, "Target")
     xml_target.set('expression', expression)
-    parse_automation(xml_points, cvpj_points, 0)
+    t_points = auto.remove_instant(cvpj_points, 0, True)
+    for t_point in t_points:
+        make_auto_point(xml_points, t_point['value'], t_point['position'])
 
 def maketrack(xmltag, cvpj_trackdata, cvpj_trackname):
     x_str_track = ET.SubElement(xmltag, "Track")
@@ -113,7 +103,8 @@ class output_cvpj(plugin_output.base):
         'r_track_lanes': False,
         'placement_cut': True,
         'placement_warp': True,
-        'no_placements': False
+        'no_placements': False,
+        'audio_events': True
         }
     def parse(self, convproj_json, output_file):
         global NoteStep
@@ -184,13 +175,8 @@ class output_cvpj(plugin_output.base):
 
                 for s_trkplacement in s_pl_nl:
                     x_arr_lanes_clip = ET.SubElement(x_arr_lanes_clips, "Clip")
-
-                    if 'color' in s_trkplacement:
-                        x_arr_lanes_clip.set('color', '#'+colors.rgb_float_2_hex(s_trkplacement['color']))
-
-                    if 'name' in s_trkplacement:
-                        x_arr_lanes_clip.set('name', s_trkplacement['name'])
-                        
+                    if 'color' in s_trkplacement: x_arr_lanes_clip.set('color', '#'+colors.rgb_float_2_hex(s_trkplacement['color']))
+                    if 'name' in s_trkplacement: x_arr_lanes_clip.set('name', s_trkplacement['name'])
                     x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
 
                     if 'cut' in s_trkplacement:
@@ -227,7 +213,6 @@ class output_cvpj(plugin_output.base):
                                         if expresstype == 'timbre': make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['timbre'], 'linear', 'timbre')
                                         if expresstype == 'pitch': make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['pitch'], 'semitones', 'transpose')
                                         if expresstype == 'pressure': make_auto_note(x_arr_lanes_clip_note_lanes, notemodauto['pressure'], 'linear', 'pressure')
-
                             if 'vol' in s_trknote: x_arr_lanes_clip_note.set('vel', str(s_trknote['vol']))
                         nlidcount += 1
 

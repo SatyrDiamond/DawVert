@@ -3,9 +3,7 @@
 
 import mido
 from functions import notelist_data
-
-def clamp(n, minn, maxn):
-	return max(min(maxn, n), minn)
+from functions import xtramath
 
 def add_cmd(i_list, i_pos, i_cmd):
 	if i_pos not in i_list: i_list[i_pos] = []
@@ -23,7 +21,7 @@ def notelist2midi(notelist, midi_file_path):
 		cvmi_n_dur = int(cvpj_tr_pl_n['duration']*4)*30
 		cvmi_n_key = int(cvpj_tr_pl_n['key'])+60
 		cvmi_n_vol = 127
-		if 'vol' in cvpj_tr_pl_n: cvmi_n_vol = clamp(int(cvpj_tr_pl_n['vol']*127), 0, 127)
+		if 'vol' in cvpj_tr_pl_n: cvmi_n_vol = xtramath.clamp(int(cvpj_tr_pl_n['vol']*127), 0, 127)
 		add_cmd(i_list, cvmi_n_pos, ['note_on', cvmi_n_key, cvmi_n_vol])
 		add_cmd(i_list, cvmi_n_pos+cvmi_n_dur, ['note_off', cvmi_n_key])
 

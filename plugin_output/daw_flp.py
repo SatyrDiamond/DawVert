@@ -11,9 +11,7 @@ from functions import format_flp_enc
 from functions import song_convert
 from functions import note_mod
 from functions import notelist_data
-
-def clamp(n, minn, maxn):
-    return max(min(maxn, n), minn)
+from functions import xtramath
 
 def decode_color(color):
     return int.from_bytes(bytes([int(color[0]*255), int(color[1]*255), int(color[2]*255)]), "little")
@@ -213,11 +211,11 @@ class output_cvpjs(plugin_output.base):
                         M_FL_Note_Pos = int((note['position']*ppq)/4)
                         M_FL_Note_Dur = int((note['duration']*ppq)/4)
                         if 'finepitch' in note: FL_Note['finep'] = int((note['finepitch']/10)+120)
-                        if 'release' in note: FL_Note['rel'] = int(clamp(note['release'],0,1)*128)
-                        if 'vol' in note: FL_Note['velocity'] = int(clamp(note['vol'],0,1)*100)
-                        if 'cutoff' in note: FL_Note['mod_x'] = int(clamp(note['cutoff'],0,1)*255)
-                        if 'reso' in note: FL_Note['mod_y'] = int(clamp(note['reso'],0,1)*255)
-                        if 'pan' in note: FL_Note['pan'] = int((clamp(float(note['pan']),-1,1)*64)+64)
+                        if 'release' in note: FL_Note['rel'] = int(xtramath.clamp(note['release'],0,1)*128)
+                        if 'vol' in note: FL_Note['velocity'] = int(xtramath.clamp(note['vol'],0,1)*100)
+                        if 'cutoff' in note: FL_Note['mod_x'] = int(xtramath.clamp(note['cutoff'],0,1)*255)
+                        if 'reso' in note: FL_Note['mod_y'] = int(xtramath.clamp(note['reso'],0,1)*255)
+                        if 'pan' in note: FL_Note['pan'] = int((xtramath.clamp(float(note['pan']),-1,1)*64)+64)
                         FL_Note['pos'] = M_FL_Note_Pos
                         FL_Note['dur'] = M_FL_Note_Dur
                         FL_Note['key'] = M_FL_Note_Key
@@ -234,12 +232,12 @@ class output_cvpjs(plugin_output.base):
                                     FL_Note['dur'] = int((slidenote['duration']*ppq)/4)
                                     FL_Note['flags'] = 16392
                                     if 'finepitch' in slidenote: FL_Note['finep'] = int((slidenote['finepitch']/10)+120)
-                                    if 'release' in slidenote: FL_Note['rel'] = int(clamp(slidenote['release'],0,1)*128)
-                                    if 'vol' in slidenote: FL_Note['velocity'] = int(clamp(slidenote['vol'],0,1)*100)
-                                    elif 'vol' in note: FL_Note['velocity'] = int(clamp(note['vol'],0,1)*100)
-                                    if 'cutoff' in slidenote: FL_Note['mod_x'] = int(clamp(slidenote['cutoff'],0,1)*255)
-                                    if 'reso' in slidenote: FL_Note['mod_y'] = int(clamp(slidenote['reso'],0,1)*255)
-                                    if 'pan' in slidenote: FL_Note['pan'] = int((clamp(float(slidenote['pan']),-1,1)*64)+64)
+                                    if 'release' in slidenote: FL_Note['rel'] = int(xtramath.clamp(slidenote['release'],0,1)*128)
+                                    if 'vol' in slidenote: FL_Note['velocity'] = int(xtramath.clamp(slidenote['vol'],0,1)*100)
+                                    elif 'vol' in note: FL_Note['velocity'] = int(xtramath.clamp(note['vol'],0,1)*100)
+                                    if 'cutoff' in slidenote: FL_Note['mod_x'] = int(xtramath.clamp(slidenote['cutoff'],0,1)*255)
+                                    if 'reso' in slidenote: FL_Note['mod_y'] = int(xtramath.clamp(slidenote['reso'],0,1)*255)
+                                    if 'pan' in slidenote: FL_Note['pan'] = int((xtramath.clamp(float(slidenote['pan']),-1,1)*64)+64)
                                     FL_Pattern['notes'].append(FL_Note)
                             
 

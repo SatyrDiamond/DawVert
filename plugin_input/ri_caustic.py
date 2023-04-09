@@ -99,11 +99,8 @@ def loopmode_cvpj(cvpjdata, wavdata):
     if lm == 2 or lm == 4: cvpjdata['loop']['mode'] = "normal"
     if lm == 3 or lm == 5: cvpjdata['loop']['mode'] = "pingpong"
 
-def twopoints2cvpjpoints(twopoints):
-    cvpj_points = []
-    for twopoint in twopoints:
-        cvpj_points.append({"position": twopoint[0]*4, "value": twopoint[1]})
-    return [{'position': 0, 'duration': (twopoints[-1][0]*4), 'points': cvpj_points}]
+def tp2cvpjp(twopoints):
+    return auto.twopoints2cvpjpoints(twopoints, 4, 'normal', 0)
 
 class input_cvpj_r(plugin_input.base):
     def __init__(self): pass
@@ -323,17 +320,17 @@ class input_cvpj_r(plugin_input.base):
             automation_track['MACH'+str(machnum+1)] = {}
             machautodata = automation_plugin['machine'+str(machnum+1)]
             for autoname in AUTO_data['MACH_'+str(machnum+1)]:
-                machautodata[str(autoname)] = twopoints2cvpjpoints(AUTO_data['MACH_'+str(machnum+1)][autoname])
+                machautodata[str(autoname)] = tp2cvpjp(AUTO_data['MACH_'+str(machnum+1)][autoname])
         
         for machnum in range(7):
             if machnum in AUTO_data['MIXER_1']: 
-                automation_track['MACH'+str(machnum+1)]['vol'] = twopoints2cvpjpoints(AUTO_data['MIXER_1'][machnum])
+                automation_track['MACH'+str(machnum+1)]['vol'] = tp2cvpjp(AUTO_data['MIXER_1'][machnum])
             if machnum+64 in AUTO_data['MIXER_1']: 
-                automation_track['MACH'+str(machnum+1)]['pan'] = auto.multiply( twopoints2cvpjpoints(AUTO_data['MIXER_1'][machnum+64]), -0.5, 2)
+                automation_track['MACH'+str(machnum+1)]['pan'] = auto.multiply( tp2cvpjp(AUTO_data['MIXER_1'][machnum+64]), -0.5, 2)
             if machnum in AUTO_data['MIXER_2']: 
-                automation_track['MACH'+str(machnum+8)]['vol'] = twopoints2cvpjpoints(AUTO_data['MIXER_2'][machnum])
+                automation_track['MACH'+str(machnum+8)]['vol'] = tp2cvpjp(AUTO_data['MIXER_2'][machnum])
             if machnum+64 in AUTO_data['MIXER_2']: 
-                automation_track['MACH'+str(machnum+8)]['pan'] = auto.multiply( twopoints2cvpjpoints(AUTO_data['MIXER_2'][machnum+64]), -0.5, 2)
+                automation_track['MACH'+str(machnum+8)]['pan'] = auto.multiply( tp2cvpjp(AUTO_data['MIXER_2'][machnum+64]), -0.5, 2)
 
         #for fxnum in EFFX:
         #    for slotnum in EFFX[fxnum]:

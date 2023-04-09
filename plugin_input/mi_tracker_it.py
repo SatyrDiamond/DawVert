@@ -532,10 +532,7 @@ class input_it(plugin_input.base):
         it_file.seek(it_header_msgoffset)
         it_songmessage = it_file.read(it_header_msglength).split(b'\x00' * 1)[0].decode("windows-1252")
 
-        automation = {}
-        automation['main'] = {}
-        automation['main']['bpm'] = song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo)
-        cvpj_l['automation'] = automation
+        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo))
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = it_header_songname

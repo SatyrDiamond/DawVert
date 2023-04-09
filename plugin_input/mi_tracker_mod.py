@@ -10,6 +10,7 @@ import numpy as np
 from functions import data_bytes
 from functions import song_tracker
 from functions import audio_wav
+from functions import tracks
 from functions import folder_samples
 
 modfinetune = [8363, 8413, 8463, 8529, 8581, 8651, 8723, 8757, 7895, 7941, 7985, 8046, 8107, 8169, 8232, 8280]
@@ -293,10 +294,7 @@ class input_mod(plugin_input.base):
 
         cvpj_l = {}
         
-        automation = {}
-        automation['main'] = {}
-        automation['main']['bpm'] = song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, cvpj_bpm)
-        cvpj_l['automation'] = automation
+        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, cvpj_bpm))
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = mod_name

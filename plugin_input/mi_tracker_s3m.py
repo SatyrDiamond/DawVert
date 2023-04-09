@@ -9,6 +9,7 @@ from functions import audio_wav
 from functions import data_bytes
 from functions import folder_samples
 from functions import placements
+from functions import tracks
 
 t_retg_alg = [['mul', 1], ['minus', 1], ['minus', 2], ['minus', 4], ['minus', 8], ['minus', 16], ['mul', 2/3], ['mul', 1/2], ['mul', 1], ['plus', 1], ['plus', 2], ['plus', 4], ['plus', 8], ['plus', 16], ['mul', 3/2], ['mul', 2]]
 
@@ -380,10 +381,7 @@ class input_s3m(plugin_input.base):
 
         cvpj_l = {}
 
-        t_automation = {}
-        t_automation['main'] = {}
-        t_automation['main']['bpm'] = song_tracker.tempo_auto(patterntable_all, t_orderlist, s3m_speed, s3m_tempo)
-        cvpj_l['automation'] = t_automation
+        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', song_tracker.tempo_auto(patterntable_all, t_orderlist, s3m_speed, s3m_tempo))
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = s3m_name

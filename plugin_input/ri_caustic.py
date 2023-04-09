@@ -336,6 +336,8 @@ class input_cvpj_r(plugin_input.base):
         #    for slotnum in EFFX[fxnum]:
         #        print(fxnum, slotnum, EFFX[fxnum][slotnum])
 
+        tracks.a_addtrack_master(cvpj_l, 'Master', 1, [0.52, 0.52, 0.52])
+
         'machine'+machid
 
         cvpj_l['do_addwrap'] = True

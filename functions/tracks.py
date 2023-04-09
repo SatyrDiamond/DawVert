@@ -164,3 +164,14 @@ def a_addtrack_master(cvpj_l, i_name, i_vol, i_color):
 
 def a_addtrack_master_param(cvpj_l, v_name, v_value):
     cvpj_l['track_master'][v_name] = v_value
+
+def a_add_auto_pl(cvpj_l, in_type, in_id, in_name, in_autopoints):
+    if 'automation' not in cvpj_l: cvpj_l['automation'] = {}
+
+    if in_type not in cvpj_l['automation']: cvpj_l['automation'][in_type] = {}
+
+    if in_type in ['track', 'plugin', 'fxmixer']:
+        if in_id not in cvpj_l['automation'][in_type]: cvpj_l['automation'][in_type][in_id] = {}
+        cvpj_l['automation'][in_type][in_id][in_name] = in_autopoints
+    else:
+        cvpj_l['automation'][in_type][in_name] = in_autopoints

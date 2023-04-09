@@ -11,6 +11,7 @@ from functions import song_tracker
 from functions import audio_wav
 from functions import folder_samples
 from functions import data_bytes
+from functions import tracks
 
 try: import xmodits
 except: xmodits_exists = False
@@ -386,10 +387,7 @@ class input_xm(plugin_input.base):
         
         cvpj_l_playlist = song_tracker.song2playlist(patterntable_all, xm_song_num_channels, t_orderlist, startinststr, [0.16, 0.33, 0.53])
 
-        automation = {}
-        automation['main'] = {}
-        automation['main']['bpm'] = song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, xm_song_bpm)
-        cvpj_l['automation'] = automation
+        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, xm_song_bpm))
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = xm_name

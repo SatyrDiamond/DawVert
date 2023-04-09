@@ -71,8 +71,6 @@ def parsetrack(file_stream, tracknum, notelen):
 
     trackinstpart = 'track_'+str(tracknum+1)+'_'
 
-    cvpj_auto_pitch = auto.twopoints2cvpjpoints(rol_tr_pitch[1], notelen, 'instant', 16)
-
     timbrepoints = []
     for timbrepos in rol_tr_timbre[1]:
         timbrepoints.append(timbrepos)
@@ -90,9 +88,7 @@ def parsetrack(file_stream, tracknum, notelen):
         tracks.m_basicdata_inst(cvpj_l, instid, adlibrol_instname+' (Trk'+str(tracknum+1)+')', None, None, None)
         tracks.m_param_inst(cvpj_l, instid, 'fxrack_channel', tracknum+1)
 
-        if len(rol_tr_pitch[1]) > 1:
-            cvpj_l['automation']['track'][instid] = {}
-            cvpj_l['automation']['track'][instid]['pitch'] = cvpj_auto_pitch
+        if len(rol_tr_pitch[1]) > 1: tracks.a_add_auto_pl(cvpj_l, 'track', instid, 'pitch', auto.twopoints2cvpjpoints(rol_tr_pitch[1], notelen, 'instant', 16))
 
     cvpj_notelist = []
     curtrackpos = 0
@@ -105,8 +101,7 @@ def parsetrack(file_stream, tracknum, notelen):
     print('[input-adlib_rol] Track: "'+rol_tr_voice[0]+'", Instruments: '+str(rol_tr_timbre[2]))
     cvpj_l['fxrack'][tracknum+1] = {"name": rol_tr_voice[0]}
 
-    if len(rol_tr_volume) > 1:
-        cvpj_l['automation']['fxmixer'][tracknum+1] = {"vol": auto.twopoints2cvpjpoints(rol_tr_volume[1], notelen, 'instant', 16)}
+    if len(rol_tr_volume) > 1: tracks.a_add_auto_pl(cvpj_l, 'fxmixer', tracknum+1, 'vol', auto.twopoints2cvpjpoints(rol_tr_volume[1], notelen, 'instant', 16))
 
     placementdata = placements.nl2pl(cvpj_notelist)
     tracks.m_playlist_pl(cvpj_l, tracknum+1, rol_tr_voice[0], None, placementdata)
@@ -183,13 +178,9 @@ class input_adlib_rol(plugin_input.base):
         t_tempo_data = parsetrack_tempo(song_file, notelen)
         
         cvpj_l['fxrack'] = {}
-        cvpj_l['automation'] = {}
 
-        cvpj_l['automation']['main'] = {}
-        cvpj_l['automation']['main']['bpm'] = auto.twopoints2cvpjpoints(t_tempo_data[2], notelen, 'instant', 16)
+        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', auto.twopoints2cvpjpoints(t_tempo_data[2], notelen, 'instant', 16))
 
-        cvpj_l['automation']['fxmixer'] = {}
-        cvpj_l['automation']['track'] = {}
         for tracknum in range(10):
             parsetrack(song_file, tracknum, (2/rol_header_tickBeat)*2)
 

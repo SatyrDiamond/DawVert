@@ -376,8 +376,8 @@ def lmms_decode_inst_track(trkX, trackid):
 
     tracks.r_addtrack_inst(cvpj_l, trackid, cvpj_l_track_inst)
 
-    tracks.r_addinst_param(cvpj_l, trackid, 'enabled', int(not int( lmms_auto_getvalue(trkX, 'muted', 0, ['track', trackid, 'enabled']) )))
-    tracks.r_addinst_param(cvpj_l, trackid, 'solo', int(trkX.get('solo')))
+    tracks.r_addtrack_param(cvpj_l, trackid, 'enabled', int(not int( lmms_auto_getvalue(trkX, 'muted', 0, ['track', trackid, 'enabled']) )))
+    tracks.r_addtrack_param(cvpj_l, trackid, 'solo', int(trkX.get('solo')))
 
     #trkX_insttr
     trkX_insttr = trkX.findall('instrumenttrack')[0]
@@ -416,7 +416,7 @@ def lmms_decode_inst_track(trkX, trackid):
 
     track_color = lmms_decodeplugin(trkX_insttr, cvpj_l_track_inst['plugindata'], cvpj_l_track_inst)
 
-    tracks.r_addinst_param(cvpj_l, trackid, 'fxrack_channel', int(trkX_insttr.get('fxch')))
+    tracks.r_addtrack_param(cvpj_l, trackid, 'fxrack_channel', int(trkX_insttr.get('fxch')))
     tracks.r_addinst_param(cvpj_l, trackid, 'usemasterpitch', int(trkX_insttr.get('usemasterpitch')))
     tracks.r_addinst_param(cvpj_l, trackid, 'pitch', float(lmms_auto_getvalue(trkX_insttr, 'pitch', 0, ['track', trackid, 'pitch'])))
     tracks.r_addtrack_data(cvpj_l, trackid, cvpj_name, track_color, cvpj_vol, cvpj_pan)
@@ -809,7 +809,6 @@ class input_lmms(plugin_input.base):
                     temp_pla = l_automation['plugin'][s_autopl_id[1]]
                     temp_pla[s_autopl_id[2]] = s_autopl_data
 
-                        
         cvpj_l['automation'] = l_automation
 
         cvpj_l['use_fxrack'] = True

@@ -151,8 +151,8 @@ class input_soundclub2(plugin_input.base):
                     sc2idvinst_gminst = idvals.get_idval(idvals_inst_soundclub2, t_instname, 'gm_inst')
                     cvpj_instdata = {}
                     if sc2idvinst_gminst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': sc2idvinst_gminst}}
-                    tracks.r_addtrack_inst(cvpj_l, cvpj_instid, cvpj_instdata)
-                    tracks.r_addtrack_data(cvpj_l, cvpj_instid, sc2_insdata[1:].decode('ascii'), None, None, None)
+                    tracks.r_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
+                    tracks.r_basicdata(cvpj_l, cvpj_instid, sc2_insdata[1:].decode('ascii'), None, None, None)
                 elif sc2_insdata[0] == 0:
                     bio_sc2_insdata = data_bytes.bytearray2BytesIO(sc2_insdata)
                     bio_sc2_insdata.seek(1)
@@ -177,9 +177,9 @@ class input_soundclub2(plugin_input.base):
                         else: cvpj_instdata['plugindata']['loop'] = {'enabled': 0}
                         audio_wav.generate(wave_path, cvpj_wavdata, 1, sc2_i_freq, 8, loopdata)
 
-                        tracks.ri_addtrack_inst(cvpj_l, cvpj_instid, None, cvpj_instdata)
-                        tracks.r_addtrack_data(cvpj_l, cvpj_instid, cvpj_instname, None, 0.3, None)
-                tracks.r_addtrackpl(cvpj_l, cvpj_instid, [])
+                        tracks.ri_create_inst(cvpj_l, cvpj_instid, None, cvpj_instdata)
+                        tracks.r_basicdata(cvpj_l, cvpj_instid, cvpj_instname, None, 0.3, None)
+                tracks.r_pl_notes(cvpj_l, cvpj_instid, [])
                 cur_instnum += 1
             else:  print('UNK', sc2object[0])
 
@@ -190,7 +190,7 @@ class input_soundclub2(plugin_input.base):
                 for nldata in nlpd[1][instnum]:
                     if instnum not in dupeinst: dupeinst[instnum] = 1
                     else: dupeinst[instnum] = 1 + dupeinst[instnum]
-                    tracks.ri_addinst_nle(cvpj_l, 'sc2_'+str(instnum), str(instnum)+'_'+str(patnum)+'_'+str(dupeinst[instnum]), nldata, t_patnames[patnum])
+                    tracks.ri_nle_add(cvpj_l, 'sc2_'+str(instnum), str(instnum)+'_'+str(patnum)+'_'+str(dupeinst[instnum]), nldata, t_patnames[patnum])
 
         song_curpos = 0
 

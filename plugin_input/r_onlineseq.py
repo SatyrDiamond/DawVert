@@ -194,9 +194,9 @@ class input_onlinesequencer(plugin_input.base):
                     auto.resize(cvpj_autodata)
                     cvpj_automation['track'][instid][param] = [cvpj_autodata]
 
-            tracks.r_addtrack_inst(cvpj_l, instid, cvpj_instdata)
-            tracks.r_addtrack_data(cvpj_l, instid, inst_name, inst_color, trk_vol, trk_pan)
-            tracks.r_addtrackpl(cvpj_l, instid, placements.nl2pl(cvpj_notelist))
+            tracks.r_create_inst(cvpj_l, instid, cvpj_instdata)
+            tracks.r_basicdata(cvpj_l, instid, inst_name, inst_color, trk_vol, trk_pan)
+            tracks.r_pl_notes(cvpj_l, instid, placements.nl2pl(cvpj_notelist))
 
         bpm = 120
         if '1' in onlseq_data_main: bpm = int(onlseq_data_main['1'])

@@ -21,6 +21,11 @@ def readstring(data):
 		else: terminated = 1
 	return output.decode('ascii')
 
+def splitbyte(value):
+    first = value >> 4
+    second = value & 0x0F
+    return (first, second)
+
 # ----- audio -----
 
 def unsign_8(sampledata):

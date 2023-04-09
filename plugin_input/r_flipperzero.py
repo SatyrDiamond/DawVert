@@ -97,9 +97,9 @@ class input_fmf(plugin_input.base):
 
         cvpj_l = {}
 
-        tracks.r_addtrack_inst(cvpj_l, 'flipperzero', {})
-        tracks.r_addtrack_data(cvpj_l, 'flipperzero', 'Flipper Zero', [0.94, 0.58, 0.23], None, None)
-        tracks.r_addtrackpl(cvpj_l, 'flipperzero', placements.nl2pl(notelist))
+        tracks.r_create_inst(cvpj_l, 'flipperzero', {})
+        tracks.r_basicdata(cvpj_l, 'flipperzero', 'Flipper Zero', [0.94, 0.58, 0.23], None, None)
+        tracks.r_pl_notes(cvpj_l, 'flipperzero', placements.nl2pl(notelist))
 
         cvpj_l['do_singlenotelistcut'] = True
 

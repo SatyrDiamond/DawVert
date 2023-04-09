@@ -131,9 +131,9 @@ class input_orgyana(plugin_input.base):
                 if tracknum < 8: trackname = "Melody "+str(tracknum+1)
                 else: trackname = l_drum_name[org_insttable[tracknum]]
                 idval = 'org_'+str(tracknum)
-                tracks.r_addtrack_inst(cvpj_l, idval, {'pitch': (org_pitch-1000)/18})
-                tracks.r_addtrack_data(cvpj_l, idval, trackname, l_org_colors[tracknum], 1.0, None)
-                tracks.r_addtrackpl(cvpj_l, idval, placements.nl2pl(s_cvpj_nl))
+                tracks.r_create_inst(cvpj_l, idval, {'pitch': (org_pitch-1000)/18})
+                tracks.r_basicdata(cvpj_l, idval, trackname, l_org_colors[tracknum], 1.0, None)
+                tracks.r_pl_notes(cvpj_l, idval, placements.nl2pl(s_cvpj_nl))
 
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True

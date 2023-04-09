@@ -3,7 +3,7 @@
 
 # ------------------------ Regular ------------------------
 
-def r_addtrack_inst(cvpj_l, trackid, instdata):
+def r_create_inst(cvpj_l, trackid, instdata):
     if 'track_data' not in cvpj_l: cvpj_l['track_data'] = {}
     if 'track_order' not in cvpj_l: cvpj_l['track_order'] = []
     cvpj_inst = {}
@@ -12,7 +12,7 @@ def r_addtrack_inst(cvpj_l, trackid, instdata):
     cvpj_l['track_data'][trackid] = cvpj_inst
     cvpj_l['track_order'].append(trackid)
 
-def r_addtrack_audio(cvpj_l, trackid, audiodata):
+def r_create_audio(cvpj_l, trackid, audiodata):
     if 'track_data' not in cvpj_l: cvpj_l['track_data'] = {}
     if 'track_order' not in cvpj_l: cvpj_l['track_order'] = []
     cvpj_inst = {}
@@ -21,7 +21,7 @@ def r_addtrack_audio(cvpj_l, trackid, audiodata):
     cvpj_l['track_data'][trackid] = cvpj_inst
     cvpj_l['track_order'].append(trackid)
 
-def r_addtrack_data(cvpj_l, trackid, trk_name, trk_color, trk_vol, trk_pan):
+def r_basicdata(cvpj_l, trackid, trk_name, trk_color, trk_vol, trk_pan):
     if 'track_data' in cvpj_l:
         if trackid in cvpj_l['track_data']:
             cvpj_inst = cvpj_l['track_data'][trackid]
@@ -30,13 +30,14 @@ def r_addtrack_data(cvpj_l, trackid, trk_name, trk_color, trk_vol, trk_pan):
             if trk_vol != None: cvpj_inst['vol'] = trk_vol
             if trk_pan != None: cvpj_inst['pan'] = trk_pan
 
-def r_addinst_param(cvpj_l, trackid, v_name, v_value):
+def r_param_inst(cvpj_l, trackid, v_name, v_value):
     if 'track_data' in cvpj_l:
         if trackid in cvpj_l['track_data']:
+            if 'instdata' not in cvpj_l['track_data'][trackid]: cvpj_l['track_data'][trackid]['instdata'] = {}
             cvpj_inst = cvpj_l['track_data'][trackid]['instdata']
             cvpj_inst[v_name] = v_value
 
-def r_addtrack_param(cvpj_l, trackid, v_name, v_value):
+def r_param(cvpj_l, trackid, v_name, v_value):
     if 'track_data' in cvpj_l:
         if trackid in cvpj_l['track_data']:
             cvpj_inst = cvpj_l['track_data'][trackid]
@@ -44,7 +45,7 @@ def r_addtrack_param(cvpj_l, trackid, v_name, v_value):
 
 # ------------------------ RegularIndexed ------------------------
 
-def ri_addtrack_inst(cvpj_l, trackid, notelistindex, instdata):
+def ri_create_inst(cvpj_l, trackid, notelistindex, instdata):
     if 'track_data' not in cvpj_l: cvpj_l['track_data'] = {}
     if 'track_order' not in cvpj_l: cvpj_l['track_order'] = []
     cvpj_inst = {}
@@ -55,7 +56,7 @@ def ri_addtrack_inst(cvpj_l, trackid, notelistindex, instdata):
     cvpj_l['track_data'][trackid] = cvpj_inst
     cvpj_l['track_order'].append(trackid)
 
-def ri_addinst_nle(cvpj_l, trackid, patid, nle_notelist, nle_name):
+def ri_nle_add(cvpj_l, trackid, patid, nle_notelist, nle_name):
     if 'track_data' in cvpj_l:
         if trackid in cvpj_l['track_data']:
             if 'notelistindex' not in cvpj_l['track_data'][trackid]: cvpj_l['track_data'][trackid]['notelistindex'] = {}
@@ -66,29 +67,29 @@ def ri_addinst_nle(cvpj_l, trackid, patid, nle_notelist, nle_name):
 
 # ------------------------ Regular******** ------------------------
 
-def r_addtrackpl(cvpj_l, trackid, placements_data):
+def r_pl_notes(cvpj_l, trackid, placements_data):
     if 'track_placements' not in cvpj_l: cvpj_l['track_placements'] = {}
     cvpj_l['track_placements'][trackid] = {}
     if placements_data != None: cvpj_l['track_placements'][trackid]['notes'] = placements_data
 
-def r_addtrackpl_audio(cvpj_l, trackid, placements_data):
+def r_pl_audio(cvpj_l, trackid, placements_data):
     if 'track_placements' not in cvpj_l: cvpj_l['track_placements'] = {}
     cvpj_l['track_placements'][trackid] = {}
     if placements_data != None: cvpj_l['track_placements'][trackid]['audio'] = placements_data
 
-def r_addtrackpl_laneddata(cvpj_l, trackid, laneddata):
+def r_pl_laned(cvpj_l, trackid, laneddata):
     if 'track_placements' not in cvpj_l: cvpj_l['track_placements'] = {}
     cvpj_l['track_placements'][trackid] = {}
     if laneddata != None: cvpj_l['track_placements'][trackid] = laneddata
 
-def r_audiofx_chain(cvpj_l, trackid, chain_fx_audio):
+def r_fx_audio(cvpj_l, trackid, chain_fx_audio):
     if chain_fx_audio != None: cvpj_l['track_data'][trackid]['chain_fx_audio'] = chain_fx_audio
 
-def r_notefx_chain(cvpj_l, trackid, chain_fx_note):
+def r_fx_notes(cvpj_l, trackid, chain_fx_note):
     if chain_fx_note != None: cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'] = chain_fx_note
 
-def r_notefx_chain_append(cvpj_l, trackid, enabled, pluginname, plugindata):
-    if chain_fx_note != None: cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'] = []
+def r_fx_notes_append(cvpj_l, trackid, enabled, pluginname, plugindata):
+    if 'chain_fx_note' not in cvpj_l['track_data'][trackid]['instdata']: cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'] = []
     cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'].append(
             {"enabled": enabled, "plugin": pluginname, "plugindata": plugindata}
             )

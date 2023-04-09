@@ -33,6 +33,12 @@ def r_addtrack_data(cvpj_l, trackid, trk_name, trk_color, trk_vol, trk_pan):
 def r_addinst_param(cvpj_l, trackid, v_name, v_value):
     if 'track_data' in cvpj_l:
         if trackid in cvpj_l['track_data']:
+            cvpj_inst = cvpj_l['track_data'][trackid]['instdata']
+            cvpj_inst[v_name] = v_value
+
+def r_addtrack_param(cvpj_l, trackid, v_name, v_value):
+    if 'track_data' in cvpj_l:
+        if trackid in cvpj_l['track_data']:
             cvpj_inst = cvpj_l['track_data'][trackid]
             cvpj_inst[v_name] = v_value
 
@@ -139,3 +145,6 @@ def a_addtrack_master(cvpj_l, i_name, i_vol, i_color):
     if i_name != None: cvpj_l['track_master']['name'] = i_name
     if i_vol != None: cvpj_l['track_master']['vol'] = i_vol
     if i_color != None: cvpj_l['track_master']['color'] = i_color
+
+def a_addtrack_master_param(cvpj_l, v_name, v_value):
+    cvpj_l['track_master'][v_name] = v_value

@@ -229,11 +229,11 @@ class input_audiosanua(plugin_input.base):
             trackid = 'audiosanua'+str(testval)
 
             #[vol,pan,name,mute,solo,instdata,trackplacements,chain_fx_audio]
-            tracks.r_addtrack_inst(cvpj_l, trackid, cvpj_trd[5])
-            tracks.r_addtrack_data(cvpj_l, trackid, cvpj_trd[2], None, cvpj_trd[0], cvpj_trd[1])
-            tracks.r_addtrack_param(cvpj_l, trackid, 'enabled', cvpj_trd[3])
-            tracks.r_addtrack_param(cvpj_l, trackid, 'solo', cvpj_trd[4])
-            tracks.r_addtrackpl(cvpj_l, trackid, cvpj_trd[6])
+            tracks.r_create_inst(cvpj_l, trackid, cvpj_trd[5])
+            tracks.r_basicdata(cvpj_l, trackid, cvpj_trd[2], None, cvpj_trd[0], cvpj_trd[1])
+            tracks.r_param(cvpj_l, trackid, 'enabled', cvpj_trd[3])
+            tracks.r_param(cvpj_l, trackid, 'solo', cvpj_trd[4])
+            tracks.r_pl_notes(cvpj_l, trackid, cvpj_trd[6])
 
         cvpj_l['bpm'] = float(getvalue(x_proj, 'appTempo', 170))
         return json.dumps(cvpj_l)

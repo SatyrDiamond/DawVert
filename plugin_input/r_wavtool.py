@@ -97,20 +97,20 @@ def parse_track(j_wvtl_track):
     print('[input-wavtool] '+j_wvtl_tracktype+' Track: '+j_wvtl_trackname)
 
     if j_wvtl_tracktype == 'MIDI':
-        tracks.r_addtrack_inst(cvpj_l, j_wvtl_trackid, {})
-        tracks.r_addtrack_data(cvpj_l, j_wvtl_trackid, j_wvtl_trackname, j_wvtl_trackcolor, None, None)
+        tracks.r_create_inst(cvpj_l, j_wvtl_trackid, {})
+        tracks.r_basicdata(cvpj_l, j_wvtl_trackid, j_wvtl_trackname, j_wvtl_trackcolor, None, None)
         cvpj_placements = []
         for j_wvtl_trackclip in j_wvtl_trackclips:
             cvpj_placements.append(parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype))
-        tracks.r_addtrackpl(cvpj_l, j_wvtl_trackid, cvpj_placements)
+        tracks.r_pl_notes(cvpj_l, j_wvtl_trackid, cvpj_placements)
 
     if j_wvtl_tracktype == 'Audio':
-        tracks.r_addtrack_audio(cvpj_l, j_wvtl_trackid, {})
-        tracks.r_addtrack_data(cvpj_l, j_wvtl_trackid, j_wvtl_trackname, j_wvtl_trackcolor, None, None)
+        tracks.r_create_audio(cvpj_l, j_wvtl_trackid, {})
+        tracks.r_basicdata(cvpj_l, j_wvtl_trackid, j_wvtl_trackname, j_wvtl_trackcolor, None, None)
         cvpj_placements = []
         for j_wvtl_trackclip in j_wvtl_trackclips:
             cvpj_placements.append(parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype))
-        tracks.r_addtrackpl_audio(cvpj_l, j_wvtl_trackid, cvpj_placements)
+        tracks.r_pl_audio(cvpj_l, j_wvtl_trackid, cvpj_placements)
 
 # -------------------------------------------- main --------------------------------------------
 

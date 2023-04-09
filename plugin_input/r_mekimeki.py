@@ -51,8 +51,8 @@ class input_cvpj_f(plugin_input.base):
         tracknum = 0
         for mmc_track in mmc_tracks:
             trackid = 'CH'+str(tracknum)
-            tracks.r_addtrack_inst(cvpj_l, trackid, {})
-            tracks.r_addtrack_data(cvpj_l, trackid, trackid, maincolor, None, None)
+            tracks.r_create_inst(cvpj_l, trackid, {})
+            tracks.r_basicdata(cvpj_l, trackid, trackid, maincolor, None, None)
 
             cvpj_notelist = []
 
@@ -78,7 +78,7 @@ class input_cvpj_f(plugin_input.base):
                 cvpj_notedata = note_data.rx_makenote(notepos, notedur, notekey, notevol, notepan)
                 cvpj_notelist.append(cvpj_notedata)
 
-            tracks.r_addtrackpl(cvpj_l, trackid, placements.nl2pl(cvpj_notelist))
+            tracks.r_pl_notes(cvpj_l, trackid, placements.nl2pl(cvpj_notelist))
 
             tracknum += 1
 

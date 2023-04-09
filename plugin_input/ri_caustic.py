@@ -262,8 +262,8 @@ class input_cvpj_r(plugin_input.base):
                 if 'customwaveform2' in machine: 
                     cvpj_instdata['plugindata']['data']['customwaveform2'] = struct.unpack("<"+("i"*330), machine['customwaveform2'])
 
-            tracks.ri_addtrack_inst(cvpj_l, 'MACH'+machid, cvpj_notelistindex, cvpj_instdata)
-            tracks.r_addtrack_data(cvpj_l, 'MACH'+machid, cvpj_trackname, caustic_instcolors[machine['id']], None, None)
+            tracks.ri_create_inst(cvpj_l, 'MACH'+machid, cvpj_notelistindex, cvpj_instdata)
+            tracks.r_basicdata(cvpj_l, 'MACH'+machid, cvpj_trackname, caustic_instcolors[machine['id']], None, None)
 
         t_track_placements = {}
 
@@ -296,7 +296,7 @@ class input_cvpj_r(plugin_input.base):
                 t_track_placements[str(SEQNe_mach)].append(pl_placement)
 
         for t_track_placement in t_track_placements:
-            tracks.r_addtrackpl(cvpj_l, 'MACH'+str(t_track_placement), t_track_placements[t_track_placement])
+            tracks.r_pl_notes(cvpj_l, 'MACH'+str(t_track_placement), t_track_placements[t_track_placement])
 
         tempo_placement = {"position": 0}
 

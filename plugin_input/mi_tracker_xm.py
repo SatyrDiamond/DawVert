@@ -78,22 +78,22 @@ def parse_xm_cell(databytes, firstrow):
 
     if cell_effect == 4: 
         vibrato_params = {}
-        vibrato_params['speed'], vibrato_params['depth'] = song_tracker.splitbyte(cell_param)
+        vibrato_params['speed'], vibrato_params['depth'] = data_bytes.splitbyte(cell_param)
         output_param['vibrato'] = vibrato_params
 
     if cell_effect == 5:
-        pos, neg = song_tracker.splitbyte(cell_param)
+        pos, neg = data_bytes.splitbyte(cell_param)
         output_param['vol_slide'] = (neg*-1) + pos
         output_param['slide_to_note'] = (neg*-1) + pos
 
     if cell_effect == 6:
-        pos, neg = song_tracker.splitbyte(cell_param)
+        pos, neg = data_bytes.splitbyte(cell_param)
         output_param['vibrato'] = {'speed': 0, 'depth': 0}
         output_param['vol_slide'] = (neg*-1) + pos
 
     if cell_effect == 7:
         tremolo_params = {}
-        tremolo_params['speed'], tremolo_params['depth'] = song_tracker.splitbyte(cell_param)
+        tremolo_params['speed'], tremolo_params['depth'] = data_bytes.splitbyte(cell_param)
         output_param['tremolo'] = tremolo_params
 
     if cell_effect == 8: 
@@ -103,7 +103,7 @@ def parse_xm_cell(databytes, firstrow):
         output_param['sample_offset'] = cell_param*256
 
     if cell_effect == 10:
-        pos, neg = song_tracker.splitbyte(cell_param)
+        pos, neg = data_bytes.splitbyte(cell_param)
         output_param['vol_slide'] = (neg*-1) + pos
 
     if cell_effect == 11: 
@@ -116,7 +116,7 @@ def parse_xm_cell(databytes, firstrow):
         output_extra['break_to_row'] = cell_param
 
     if cell_effect == 14: 
-        ext_type, ext_value = song_tracker.splitbyte(cell_param)
+        ext_type, ext_value = data_bytes.splitbyte(cell_param)
         if ext_type == 0: output_param['filter_amiga_led'] = ext_value
         if ext_type == 1: output_param['fine_slide_up'] = ext_value
         if ext_type == 2: output_param['fine_slide_down'] = ext_value
@@ -147,7 +147,7 @@ def parse_xm_cell(databytes, firstrow):
 
     if cell_effect == 34: 
         panbrello_params = {}
-        panbrello_params['speed'], panbrello_params['depth'] = song_tracker.splitbyte(cell_param)
+        panbrello_params['speed'], panbrello_params['depth'] = data_bytes.splitbyte(cell_param)
         output_param['panbrello'] = panbrello_params
 
     if cell_vol != None:

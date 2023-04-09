@@ -29,6 +29,7 @@
 | DataType | Short Name | Name | Ext | Autodetect | 
 | --- | --- | :--- | :--- | :--- |
 | M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
+| R | ```onlineseq``` | Online Sequencer | ```.sequence``` | ❌ | 
 | R | ```wavtool``` | WavTool | ```.zip``` | ❌ | 
 | R | ```audiosauna``` | AudioSauna | ```.song``` | ❌ | 
 
@@ -37,7 +38,6 @@
 | --- | --- | :--- | :--- | :--- |
 | M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | M | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ❌ | 
-| M | ```onlineseq``` | Online Sequencer | ```.sequence``` | ❌ | 
 | M | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
 | M | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
 | R-I | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 

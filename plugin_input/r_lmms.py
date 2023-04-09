@@ -315,6 +315,8 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst):
 
             asdflfo_get(trkX_insttr, cvpj_l_plugindata)
 
+    if pluginname in plugincolors: return plugincolors[pluginname]
+
 # ------- Notelist -------
 
 def lmms_decode_nlpattern(notesX):

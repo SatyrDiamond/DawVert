@@ -3,6 +3,7 @@
 
 from functions import colors
 from functions import notelist_data
+from functions import auto
 import plugin_output
 import json
 import lxml.etree as ET
@@ -300,32 +301,19 @@ def create_devicechain_mixer(xmltag, tracktype):
 
 # ---------------- Track Base / MainSequencer / MIDI Clips ----------------
 
-def make_auto_point(xmltag, value, position):
-    x_autopoint = ET.SubElement(xmltag, "PerNoteEvent")
+def make_auto_point(xmltag, value, position, SubElementname):
+    x_autopoint = ET.SubElement(xmltag, SubElementname)
     x_autopoint.set('TimeOffset', str(position/4))
-    x_autopoint.set('Value', str(value*170))
+    x_autopoint.set('Value', str(value))
     x_autopoint.set('CurveControl1X', '0.5')
     x_autopoint.set('CurveControl1Y', '0.5')
     x_autopoint.set('CurveControl2X', '0.5')
     x_autopoint.set('CurveControl2Y', '0.5')
 
-def parse_automation(xmltag, cvpj_points, startposition):
-    startpoint = True
-    prevvalue = None
-    make_auto_point(xmltag, 0, 0)
-    for cvpj_auto_poi in cvpj_points:
-        cvpj_auto_poi['position'] += startposition
-        instanttype = False
-        if 'type' in cvpj_auto_poi:
-            if cvpj_auto_poi['type'] == 'instant':
-                instanttype = True
-        if (instanttype == True and prevvalue != None) or (startpoint == True and prevvalue != None):
-            make_auto_point(xmltag, prevvalue, cvpj_auto_poi['position'])
-        elif (instanttype == True and prevvalue == None) or (startpoint == True and prevvalue == None):
-            make_auto_point(xmltag, 0, cvpj_auto_poi['position'])
-        make_auto_point(xmltag, cvpj_auto_poi['value'], cvpj_auto_poi['position'])
-        prevvalue = cvpj_auto_poi['value']
-        startpoint = False
+def t_parse_automation(xmltag, cvpj_points):
+    cvpj_points_no_instant = auto.remove_instant(cvpj_points, 0, True)
+    for cvpj_point in cvpj_points_no_instant:
+        make_auto_point(xmltag, cvpj_point['value']*170, cvpj_point['position'], "PerNoteEvent")
 
 def create_notelist(xmltag, cvpj_notelist):
     t_keydata = {}
@@ -374,7 +362,7 @@ def create_notelist(xmltag, cvpj_notelist):
         x_PerNoteEventList.set('CC', "-2")
         x_PerNoteEvents = ET.SubElement(x_PerNoteEventList, "Events")
         if 'pitch' in t_notemod[notemodnum]:
-            parse_automation(x_PerNoteEvents, t_notemod[notemodnum]['pitch'], 0)
+            t_parse_automation(x_PerNoteEvents, t_notemod[notemodnum]['pitch'])
         PerNoteEventListID += 1
 
     x_NoteIdGenerator = ET.SubElement(xmltag, 'NoteIdGenerator')

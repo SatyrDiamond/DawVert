@@ -86,9 +86,9 @@ def parsetrack(file_stream, tracknum, notelen):
         cvpj_instdata = {}
         if adlibrol_gminst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': adlibrol_gminst-1}}
 
-        tracks.m_addinst(cvpj_l, instid,cvpj_instdata)
-        tracks.m_addinst_data(cvpj_l, instid, adlibrol_instname+' (Trk'+str(tracknum+1)+')', None, None, None)
-        tracks.m_addinst_param(cvpj_l, instid, 'fxrack_channel', tracknum+1)
+        tracks.m_create_inst(cvpj_l, instid,cvpj_instdata)
+        tracks.m_basicdata_inst(cvpj_l, instid, adlibrol_instname+' (Trk'+str(tracknum+1)+')', None, None, None)
+        tracks.m_param_inst(cvpj_l, instid, 'fxrack_channel', tracknum+1)
 
         if len(rol_tr_pitch[1]) > 1:
             cvpj_l['automation']['track'][instid] = {}

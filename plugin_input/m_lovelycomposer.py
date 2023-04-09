@@ -166,8 +166,8 @@ class input_lc(plugin_input.base):
             elif used_instrument == 'Pulse125': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'square', 'duty': 2}}
             else: cvpj_instdata = {'plugin': 'lovelycomposer', 'plugindata': {'inst': used_instrument}}
 
-            tracks.m_addinst(cvpj_l, used_instrument, cvpj_instdata)
-            tracks.m_addinst_data(cvpj_l, used_instrument, used_instrument, None, None, None)
+            tracks.m_create_inst(cvpj_l, used_instrument, cvpj_instdata)
+            tracks.m_basicdata_inst(cvpj_l, used_instrument, used_instrument, None, None, None)
 
         startinststr = 'lc_instlist_'
 

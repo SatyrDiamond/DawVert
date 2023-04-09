@@ -447,8 +447,8 @@ class input_pxtone(plugin_input.base):
             cvpj_instdata['plugindata'] = t_voice_data[voicenum][1]
             cvpj_instdata['middlenote'] = t_voice_data[voicenum][2]
             instid = 'ptcop_'+str(voicenum)
-            tracks.m_addinst(cvpj_l, instid, cvpj_instdata)
-            tracks.m_addinst_data(cvpj_l, instid, cvpj_instname, getcolor(), cvpj_instvol, 0.0)
+            tracks.m_create_inst(cvpj_l, instid, cvpj_instdata)
+            tracks.m_basicdata_inst(cvpj_l, instid, cvpj_instname, getcolor(), cvpj_instvol, 0.0)
 
         cvpj_l['info'] = {}
         if ptcop_song_name != None: cvpj_l['info']['title'] = ptcop_song_name

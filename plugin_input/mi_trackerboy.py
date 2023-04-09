@@ -271,8 +271,8 @@ class input_trackerboy(plugin_input.base):
 
                 cvpj_instdata["plugindata"] = plugindata
 
-                tracks.m_addinst(cvpj_l, cvpj_instid, cvpj_instdata)
-                tracks.m_addinst_data(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, 0.4, 0.0)
+                tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
+                tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, 0.4, 0.0)
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = trackerboy_title

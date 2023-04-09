@@ -114,7 +114,7 @@ def parse_track(j_wvtl_track):
 
 # -------------------------------------------- main --------------------------------------------
 
-class input_cvpj_f(plugin_input.base):
+class input_wavtool(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'wavtool'
@@ -129,12 +129,6 @@ class input_cvpj_f(plugin_input.base):
         'no_placements': False
         }
     def supported_autodetect(self): return False
-    def detect(self, input_file):
-        bytestream = open(input_file, 'rb')
-        bytestream.seek(0)
-        bytesdata = bytestream.read(12)
-        if bytesdata == b'CONVPROJ___M': return True
-        else: return False
     def parse(self, input_file, extra_param):
         global cvpj_l
         global samplefolder
@@ -155,7 +149,6 @@ class input_cvpj_f(plugin_input.base):
 
         t_wavtool_project = zip_data.read(json_filename)
         j_wvtl_project = json.loads(t_wavtool_project)
-        #print(j_wvtl_project)
 
         with open('testout.json', "w") as fileout:
             json.dump(j_wvtl_project, fileout, indent=4, sort_keys=True)
@@ -166,6 +159,8 @@ class input_cvpj_f(plugin_input.base):
         j_wvtl_tracks = j_wvtl_project['tracks']
         for j_wvtl_track in j_wvtl_tracks:
             parse_track(j_wvtl_track)
+
+        tracks.a_addtrack_master(cvpj_l, 'Master', 1, [0.14, 0.14, 0.14])
 
         cvpj_l['use_fxrack'] = False
 

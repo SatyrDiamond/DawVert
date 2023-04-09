@@ -91,8 +91,8 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
         cvpj_instdata['plugindata'] = {'bank':0, 'inst':gm_inst}
         cvpj_instname = idvals.get_idval(idvals_inst_beepbox, bb_preset, 'name')
 
-    tracks.m_addinst(cvpj_l, trackid, cvpj_instdata)
-    tracks.m_addinst_data(cvpj_l, trackid, cvpj_instname, bb_color, None, None)
+    tracks.m_create_inst(cvpj_l, trackid, cvpj_instdata)
+    tracks.m_basicdata_inst(cvpj_l, trackid, cvpj_instname, bb_color, None, None)
 
 def parse_notes(channum, bb_notes, bb_instruments):
     cvpj_notelist = []

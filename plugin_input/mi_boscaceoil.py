@@ -117,8 +117,8 @@ class input_ceol(plugin_input.base):
             if ceol_inst_number == 365: t_key_offset.append(24)
             else: t_key_offset.append(0)
 
-            tracks.m_addinst(cvpj_l, cvpj_instid, cvpj_instdata)
-            tracks.m_addinst_data(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, cvpj_instvol, 0.0)
+            tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
+            tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, cvpj_instvol, 0.0)
 
         ceol_numpattern = ceol_read()
         for patnum in range(ceol_numpattern):

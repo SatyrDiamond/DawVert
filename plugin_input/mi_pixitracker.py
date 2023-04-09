@@ -160,8 +160,8 @@ class input_cvpj_f(plugin_input.base):
                 cvpj_instdata['plugindata']['length'] = len(t_sounddata[7])//t_sounddata[0]
                 cvpj_instdata['plugindata']['trigger'] = 'normal'
 
-            tracks.m_addinst(cvpj_l, cvpj_instid, cvpj_instdata)
-            tracks.m_addinst_data(cvpj_l, cvpj_instid, 'Inst #'+str(instnum+1), pixi_colors[instnum], cvpj_instvol, None)
+            tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
+            tracks.m_basicdata_inst(cvpj_l, cvpj_instid, 'Inst #'+str(instnum+1), pixi_colors[instnum], cvpj_instvol, None)
 
         for pixi_data_pattern in pixi_data_patterns:
             nli_notes = []

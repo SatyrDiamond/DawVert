@@ -6,10 +6,9 @@ import argparse
 import struct
 from io import BytesIO
 from functions import data_bytes
+from functions import xtramath
 
 # ------------- Functions -------------
-def clamp(n, minn, maxn):
-    return max(min(maxn, n), minn)
 
 def utf16encode(text):
     return text.encode('utf-16le') + b'\x00\x00'
@@ -81,8 +80,8 @@ def make_basicparams(data_FLdt, channel):
     if 'pan' in channel: basicp_pan = channel['pan']
     if 'volume' in channel: basicp_volume = channel['volume']
     if 'pitch' in channel: basicp_pitch = channel['pitch']
-    basicp_pan = int(clamp((basicp_pan/2)+0.5, 0, 1)*12800)
-    basicp_volume = int(clamp(basicp_volume, 0, 1)*12800)
+    basicp_pan = int(xtramath.clamp((basicp_pan/2)+0.5, 0, 1)*12800)
+    basicp_volume = int(xtramath.clamp(basicp_volume, 0, 1)*12800)
     
     bio_basicparams = BytesIO()
     bio_basicparams.write(basicp_pan.to_bytes(4, "little"))

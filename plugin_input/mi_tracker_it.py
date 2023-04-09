@@ -12,6 +12,7 @@ from functions import audio_wav
 from functions import folder_samples
 from functions import placements
 from functions import tracks
+from functions import data_bytes
 
 try: import xmodits
 except: xmodits_exists = False
@@ -308,17 +309,17 @@ class input_it(plugin_input.base):
                             
                             if cell_commandtype == 8: 
                                 vibrato_params = {}
-                                vibrato_params['speed'], vibrato_params['depth'] = song_tracker.splitbyte(cell_commandval)
+                                vibrato_params['speed'], vibrato_params['depth'] = data_bytes.splitbyte(cell_commandval)
                                 j_note_cmdval['vibrato'] = vibrato_params
                             
                             if cell_commandtype == 9: 
                                 tremor_params = {}
-                                tremor_params['ontime'], tremor_params['offtime'] = song_tracker.splitbyte(cell_commandval)
+                                tremor_params['ontime'], tremor_params['offtime'] = data_bytes.splitbyte(cell_commandval)
                                 j_note_cmdval['tremor'] = tremor_params
                             
                             if cell_commandtype == 10: 
                                 arp_params = [0,0]
-                                arp_params[0], arp_params[1] = song_tracker.splitbyte(cell_commandval)
+                                arp_params[0], arp_params[1] = data_bytes.splitbyte(cell_commandval)
                                 j_note_cmdval['arp'] = arp_params
                             
                             if cell_commandtype == 11: 
@@ -343,17 +344,17 @@ class input_it(plugin_input.base):
 
                             if cell_commandtype == 17: 
                                 retrigger_params = {}
-                                retrigger_alg, retrigger_params['speed'] = song_tracker.splitbyte(cell_commandval)
+                                retrigger_alg, retrigger_params['speed'] = data_bytes.splitbyte(cell_commandval)
                                 retrigger_params['alg'], retrigger_params['val'] = t_retg_alg[retrigger_alg]
                                 j_note_cmdval['retrigger'] = retrigger_params
                             
                             if cell_commandtype == 18: 
                                 tremolo_params = {}
-                                tremolo_params['speed'], tremolo_params['depth'] = song_tracker.splitbyte(cell_commandval)
+                                tremolo_params['speed'], tremolo_params['depth'] = data_bytes.splitbyte(cell_commandval)
                                 j_note_cmdval['tremolo'] = tremolo_params
 
                             if cell_commandtype == 19: 
-                                ext_type, ext_value = song_tracker.splitbyte(cell_commandval)
+                                ext_type, ext_value = data_bytes.splitbyte(cell_commandval)
                                 if ext_type == 1: j_note_cmdval['glissando_control'] = ext_value
                                 if ext_type == 3: j_note_cmdval['vibrato_waveform'] = ext_value
                                 if ext_type == 4: j_note_cmdval['tremolo_waveform'] = ext_value
@@ -373,7 +374,7 @@ class input_it(plugin_input.base):
                                 pattern_row[0]['tempo'] = cell_commandval
                             
                             if cell_commandtype == 21: 
-                                fine_vib_sp, fine_vib_de = song_tracker.splitbyte(cell_commandval)
+                                fine_vib_sp, fine_vib_de = data_bytes.splitbyte(cell_commandval)
                                 vibrato_params = {}
                                 vibrato_params['speed'] = fine_vib_sp/16
                                 vibrato_params['depth'] = fine_vib_sp/16
@@ -390,7 +391,7 @@ class input_it(plugin_input.base):
 
                             if cell_commandtype == 25: 
                                 panbrello_params = {}
-                                panbrello_params['speed'], panbrello_params['depth'] = song_tracker.splitbyte(cell_commandval)
+                                panbrello_params['speed'], panbrello_params['depth'] = data_bytes.splitbyte(cell_commandval)
                                 j_note_cmdval['panbrello'] = panbrello_params
 
                             if cell_commandtype == 26: 

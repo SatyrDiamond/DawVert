@@ -5,6 +5,7 @@ from functions import tracks
 from functions import note_data
 from functions import placements
 from functions import idvals
+from functions import auto
 import plugin_input
 import json
 import struct
@@ -62,12 +63,6 @@ def closest(myList, in_value):
         if num <= in_value: outval = num
     return outval
 
-def rolpoints2cvpjpoints(rolpoints, notelen):
-    cvpj_points = []
-    for rolpoint in rolpoints:
-        cvpj_points.append({"type": 'instant', "position": rolpoint[0]*notelen, "value": rolpoint[1]})
-    return [{'position': 0, 'duration': (rolpoints[-1][0]*notelen)+16, 'points': cvpj_points}]
-
 def parsetrack(file_stream, tracknum, notelen):
     rol_tr_voice = parsetrack_voice(file_stream)
     rol_tr_timbre = parsetrack_timbre(file_stream)
@@ -76,7 +71,7 @@ def parsetrack(file_stream, tracknum, notelen):
 
     trackinstpart = 'track_'+str(tracknum+1)+'_'
 
-    cvpj_auto_pitch = rolpoints2cvpjpoints(rol_tr_pitch[1], notelen)
+    cvpj_auto_pitch = auto.twopoints2cvpjpoints(rol_tr_pitch[1], notelen, 'instant', 16)
 
     timbrepoints = []
     for timbrepos in rol_tr_timbre[1]:
@@ -111,7 +106,7 @@ def parsetrack(file_stream, tracknum, notelen):
     cvpj_l['fxrack'][tracknum+1] = {"name": rol_tr_voice[0]}
 
     if len(rol_tr_volume) > 1:
-        cvpj_l['automation']['fxmixer'][tracknum+1] = {"vol": rolpoints2cvpjpoints(rol_tr_volume[1], notelen)}
+        cvpj_l['automation']['fxmixer'][tracknum+1] = {"vol": auto.twopoints2cvpjpoints(rol_tr_volume[1], notelen, 'instant', 16)}
 
     placementdata = placements.nl2pl(cvpj_notelist)
     tracks.m_playlist_pl(cvpj_l, tracknum+1, rol_tr_voice[0], None, placementdata)
@@ -191,7 +186,7 @@ class input_adlib_rol(plugin_input.base):
         cvpj_l['automation'] = {}
 
         cvpj_l['automation']['main'] = {}
-        cvpj_l['automation']['main']['bpm'] = rolpoints2cvpjpoints(t_tempo_data[2], notelen)
+        cvpj_l['automation']['main']['bpm'] = auto.twopoints2cvpjpoints(t_tempo_data[2], notelen, 'instant', 16)
 
         cvpj_l['automation']['fxmixer'] = {}
         cvpj_l['automation']['track'] = {}

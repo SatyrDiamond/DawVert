@@ -143,10 +143,7 @@ class input_notessimo_v2(plugin_input.base):
 
             curpos += cursheet_data[0]*cursheet_data[1]
         
-        automation = {}
-        automation['main'] = {}
-        automation['main']['bpm'] = cvpj_auto_tempo
-        cvpj_l['automation'] = automation
+        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', cvpj_auto_tempo)
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = text_songname

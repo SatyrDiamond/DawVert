@@ -375,15 +375,12 @@ class input_notessimo_v3(plugin_input.base):
                 cvpj_l_fxrack[str(fxnum)] = {"name": inst_name, "color": inst_color}
                 fxnum += 1
 
-        automation = {}
-        automation['main'] = {}
-        automation['main']['bpm'] = cvpj_auto_tempo
+        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', cvpj_auto_tempo)
 
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
         
         cvpj_l['fxrack'] = cvpj_l_fxrack
-        cvpj_l['automation'] = automation
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = 120

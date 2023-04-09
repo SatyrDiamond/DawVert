@@ -305,12 +305,10 @@ class input_jummbox(plugin_input.base):
                 if bbauto_group == -1:
                     if 'main' not in cvpj_l_automation: cvpj_l_automation['main'] = {}
                     if outautoname == "0_1": 
-                        outautoname = 'bpm'
-                        outautodata = auto.multiply(outautodata, 0, (jummbox_beatsPerBar/jummbox_ticksPerBeat)*1.2)
+                        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', auto.multiply(outautodata, 0, (jummbox_beatsPerBar/jummbox_ticksPerBeat)*1.2))
+
                     if outautoname == "0_2": 
-                        outautoname = 'vol'
-                        outautodata = auto.multiply(outautodata, 0, 0.01)
-                    cvpj_l_automation['main'][outautoname] = outautodata
+                        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'vol', auto.multiply(outautodata, 0, 0.01))
                 #else:
                 #    if 'track_main' not in cvpj_l_automation: cvpj_l_automation['track_main'] = {}
                 #    if outautoname == "0_36": 

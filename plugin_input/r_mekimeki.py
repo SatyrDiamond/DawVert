@@ -6,6 +6,7 @@ from functions import note_mod
 from functions import placements
 from functions import tracks
 from functions import note_data
+from functions import song
 import plugin_input
 import json
 
@@ -42,18 +43,10 @@ class input_cvpj_f(plugin_input.base):
         mmc_mastervolume = getvalue(mmc_main, 'MasterVolume')
         if mmc_mastervolume == None: mmc_mastervolume = 1
 
-        notelen = 1
-
-        while mmc_bpm > 200:
-            mmc_bpm = mmc_bpm/2
-            notelen = notelen/2
-
-        cvpj_l_track_master = {}
-        cvpj_l_track_master['name'] = 'MAS'
-        cvpj_l_track_master['vol'] = mmc_mastervolume*1.5
-        cvpj_l_track_master['color'] = maincolor
-
         cvpj_l = {}
+
+        mmc_bpm, notelen = song.get_lower_tempo(mmc_bpm, 1, 200)
+        tracks.a_addtrack_master(cvpj_l, 'MAS', mmc_mastervolume*1.5, maincolor)
 
         tracknum = 0
         for mmc_track in mmc_tracks:
@@ -96,6 +89,5 @@ class input_cvpj_f(plugin_input.base):
         cvpj_l['use_fxrack'] = False
 
         cvpj_l['bpm'] = mmc_bpm
-        cvpj_l['track_master'] = cvpj_l_track_master
         return json.dumps(cvpj_l)
 

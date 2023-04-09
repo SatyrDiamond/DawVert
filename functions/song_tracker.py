@@ -5,6 +5,7 @@ from functions import note_convert
 from functions import auto
 from functions import note_mod
 from functions import tracks
+from functions import data_bytes
 
 global used_instruments_num
 used_instruments_num = []
@@ -20,13 +21,8 @@ slidediv = 16
 
 # ----------------------------------------------------------------------------------------------------
 
-def splitbyte(value):
-    first = value >> 4
-    second = value & 0x0F
-    return (first, second)
-
 def getfineval(value):
-    volslidesplit = splitbyte(value)
+    volslidesplit = data_bytes.splitbyte(value)
     volslideout = 0
     if volslidesplit[0] == 0 and volslidesplit[1] == 0: volslideout = 0
     elif volslidesplit[0] == 15 and volslidesplit[1] == 15: volslideout = volslidesplit[0]/16

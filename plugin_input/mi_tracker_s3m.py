@@ -270,17 +270,17 @@ class input_s3m(plugin_input.base):
                             
                                 if packed_command == 8: 
                                     vibrato_params = {}
-                                    vibrato_params['speed'], vibrato_params['depth'] = song_tracker.splitbyte(packed_info)
+                                    vibrato_params['speed'], vibrato_params['depth'] = data_bytes.splitbyte(packed_info)
                                     j_note_cmdval['vibrato'] = vibrato_params
                                 
                                 if packed_command == 9: 
                                     tremor_params = {}
-                                    tremor_params['ontime'], tremor_params['offtime'] = song_tracker.splitbyte(packed_info)
+                                    tremor_params['ontime'], tremor_params['offtime'] = data_bytes.splitbyte(packed_info)
                                     j_note_cmdval['tremor'] = tremor_params
                             
                                 if packed_command == 10: 
                                     arp_params = [0,0]
-                                    arp_params[0], arp_params[1] = song_tracker.splitbyte(packed_info)
+                                    arp_params[0], arp_params[1] = data_bytes.splitbyte(packed_info)
                                     j_note_cmdval['arp'] = arp_params
                             
                                 if packed_command == 11: 
@@ -305,17 +305,17 @@ class input_s3m(plugin_input.base):
 
                                 if packed_command == 17: 
                                     retrigger_params = {}
-                                    retrigger_alg, retrigger_params['speed'] = song_tracker.splitbyte(packed_info)
+                                    retrigger_alg, retrigger_params['speed'] = data_bytes.splitbyte(packed_info)
                                     retrigger_params['alg'], retrigger_params['val'] = t_retg_alg[retrigger_alg]
                                     j_note_cmdval['retrigger'] = retrigger_params
                             
                                 if packed_command == 18: 
                                     tremolo_params = {}
-                                    tremolo_params['speed'], tremolo_params['depth'] = song_tracker.splitbyte(packed_info)
+                                    tremolo_params['speed'], tremolo_params['depth'] = data_bytes.splitbyte(packed_info)
                                     j_note_cmdval['tremolo'] = tremolo_params
 
                                 if packed_command == 19: 
-                                    ext_type, ext_value = song_tracker.splitbyte(packed_info)
+                                    ext_type, ext_value = data_bytes.splitbyte(packed_info)
                                     if ext_type == 1: j_note_cmdval['glissando_control'] = ext_value
                                     if ext_type == 2: j_note_cmdval['set_finetune'] = ext_value
                                     if ext_type == 3: j_note_cmdval['vibrato_waveform'] = ext_value
@@ -344,7 +344,7 @@ class input_s3m(plugin_input.base):
                                     pattern_row[0]['tempo'] = current_tempo
 
                                 if packed_command == 21: 
-                                    fine_vib_sp, fine_vib_de = song_tracker.splitbyte(packed_info)
+                                    fine_vib_sp, fine_vib_de = data_bytes.splitbyte(packed_info)
                                     vibrato_params = {}
                                     vibrato_params['speed'] = fine_vib_sp/15
                                     vibrato_params['depth'] = fine_vib_sp/15
@@ -361,7 +361,7 @@ class input_s3m(plugin_input.base):
 
                                 if packed_command == 25: 
                                     panbrello_params = {}
-                                    panbrello_params['speed'], panbrello_params['depth'] = song_tracker.splitbyte(packed_info)
+                                    panbrello_params['speed'], panbrello_params['depth'] = data_bytes.splitbyte(packed_info)
                                     j_note_cmdval['panbrello'] = panbrello_params
 
                                 if packed_command == 26: 

@@ -7,6 +7,7 @@ import math
 import json
 import struct
 import numpy as np
+from functions import data_bytes
 from functions import song_tracker
 from functions import audio_wav
 from functions import folder_samples
@@ -49,16 +50,16 @@ def parse_mod_cell(file_stream, firstrow):
 
     if cell_fx_type == 4: 
         vibrato_params = {}
-        vibrato_params['speed'], vibrato_params['depth'] = song_tracker.splitbyte(cell_fx_param)
+        vibrato_params['speed'], vibrato_params['depth'] = data_bytes.splitbyte(cell_fx_param)
         output_param['vibrato'] = vibrato_params
 
     if cell_fx_type == 5:
-        pos, neg = song_tracker.splitbyte(cell_fx_param)
+        pos, neg = data_bytes.splitbyte(cell_fx_param)
         output_param['vol_slide'] = (neg*-1) + pos
         output_param['slide_to_note'] = (neg*-1) + pos
 
     if cell_fx_type == 6:
-        pos, neg = song_tracker.splitbyte(cell_fx_param)
+        pos, neg = data_bytes.splitbyte(cell_fx_param)
         output_param['vibrato'] = {'speed': 0, 'depth': 0}
         output_param['vol_slide'] = (neg*-1) + pos
 
@@ -74,7 +75,7 @@ def parse_mod_cell(file_stream, firstrow):
         output_param['sample_offset'] = cell_fx_param*256
 
     if cell_fx_type == 10:
-        pos, neg = song_tracker.splitbyte(cell_fx_param)
+        pos, neg = data_bytes.splitbyte(cell_fx_param)
         output_param['vol_slide'] = (neg*-1) + pos
 
     if cell_fx_type == 11: 
@@ -91,7 +92,7 @@ def parse_mod_cell(file_stream, firstrow):
         output_extra['break_to_row'] = cell_fx_param
 
     if cell_fx_type == 14: 
-        ext_type, ext_value = song_tracker.splitbyte(cell_fx_param)
+        ext_type, ext_value = data_bytes.splitbyte(cell_fx_param)
         if ext_type == 0: output_param['filter_amiga_led'] = ext_value
         if ext_type == 1: output_param['fine_slide_up'] = ext_value
         if ext_type == 2: output_param['fine_slide_down'] = ext_value

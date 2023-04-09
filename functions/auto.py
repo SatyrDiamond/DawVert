@@ -9,7 +9,6 @@ def multiply(auto_data, addval, mulval):
                     point['value'] = (point['value']+addval)*mulval
     return auto_data
 
-
 def resize(autopl):
     in_points = autopl['points']
 
@@ -31,3 +30,24 @@ def twopoints2cvpjpoints(twopoints, notelen, pointtype, endlen):
     for twopoint in twopoints:
         cvpj_points.append({"type": pointtype, "position": twopoint[0]*notelen, "value": twopoint[1]})
     return [{'position': 0, 'duration': (twopoints[-1][0]*notelen)+endlen, 'points': cvpj_points}]
+
+def remove_instant(cvpj_points, startposition, isnote):
+    cvpj_output = []
+    startpoint = True
+    prevvalue = None
+    cvpj_output.append({'position': 0, 'value': 0})
+    for cvpj_auto_poi in cvpj_points:
+        cvpj_auto_poi['position'] += startposition
+        instanttype = False
+        if 'type' in cvpj_auto_poi:
+            if cvpj_auto_poi['type'] == 'instant':
+                instanttype = True
+        if (instanttype == True and prevvalue != None) or (startpoint == True and prevvalue != None):
+            cvpj_output.append({'position': cvpj_auto_poi['position'], 'value': prevvalue})
+        if isnote == True:
+            if (instanttype == True and prevvalue == None) or (startpoint == True and prevvalue == None):
+                cvpj_output.append({'position': cvpj_auto_poi['position'], 'value': 0})
+        cvpj_output.append({'position': cvpj_auto_poi['position'], 'value': cvpj_auto_poi['value']})
+        prevvalue = cvpj_auto_poi['value']
+        startpoint = False
+    return cvpj_output

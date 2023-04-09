@@ -110,7 +110,7 @@ def r_fx_notes_append(cvpj_l, trackid, enabled, pluginname, plugindata):
 
 # ------------------------ Multiple ------------------------
 
-def m_addinst(cvpj_l, trackid, instdata):
+def m_create_inst(cvpj_l, trackid, instdata):
     if 'instruments_data' not in cvpj_l: cvpj_l['instruments_data'] = {}
     if 'instruments_order' not in cvpj_l: cvpj_l['instruments_order'] = []
     cvpj_inst = {}
@@ -118,7 +118,7 @@ def m_addinst(cvpj_l, trackid, instdata):
     cvpj_l['instruments_data'][trackid] = cvpj_inst
     cvpj_l['instruments_order'].append(trackid)
 
-def m_addinst_data(cvpj_l, trackid, trk_name, trk_color, trk_vol, trk_pan):
+def m_basicdata_inst(cvpj_l, trackid, trk_name, trk_color, trk_vol, trk_pan):
     if 'instruments_data' in cvpj_l:
         if trackid in cvpj_l['instruments_data']:
             cvpj_inst = cvpj_l['instruments_data'][trackid]
@@ -127,7 +127,7 @@ def m_addinst_data(cvpj_l, trackid, trk_name, trk_color, trk_vol, trk_pan):
             if trk_vol != None: cvpj_inst['vol'] = trk_vol
             if trk_pan != None: cvpj_inst['pan'] = trk_pan
 
-def m_addinst_param(cvpj_l, trackid, v_name, v_value):
+def m_param_inst(cvpj_l, trackid, v_name, v_value):
     if 'instruments_data' in cvpj_l:
         if trackid in cvpj_l['instruments_data']:
             cvpj_inst = cvpj_l['instruments_data'][trackid]

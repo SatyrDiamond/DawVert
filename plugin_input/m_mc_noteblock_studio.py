@@ -162,8 +162,8 @@ class input_gt_mnbs(plugin_input.base):
             cvpj_instdata = {}
             if cvpj_instgm != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': cvpj_instgm-1}}
 
-            tracks.m_addinst(cvpj_l, instid, cvpj_instdata)
-            tracks.m_addinst_data(cvpj_l, instid, cvpj_instname, cvpj_instcolor, 1.0, 0.0)
+            tracks.m_create_inst(cvpj_l, instid, cvpj_instdata)
+            tracks.m_basicdata_inst(cvpj_l, instid, cvpj_instname, cvpj_instcolor, 1.0, 0.0)
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = nbs_song_name

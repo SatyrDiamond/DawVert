@@ -366,12 +366,12 @@ class input_notessimo_v3(plugin_input.base):
             cvpj_instdata = {}
             if midiinst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': midiinst}}
 
-            tracks.m_addinst(cvpj_l, str(inst), cvpj_instdata)
-            tracks.m_addinst_data(cvpj_l, str(inst), inst_name, inst_color, 1.0, 0.0)
+            tracks.m_create_inst(cvpj_l, str(inst), cvpj_instdata)
+            tracks.m_basicdata_inst(cvpj_l, str(inst), inst_name, inst_color, 1.0, 0.0)
 
-            if isbuiltindrum == 1: tracks.m_addinst_param(cvpj_l, str(inst), 'fxrack_channel', 1)
+            if isbuiltindrum == 1: tracks.m_param_inst(cvpj_l, str(inst), 'fxrack_channel', 1)
             else:
-                tracks.m_addinst_param(cvpj_l, str(inst), 'fxrack_channel', fxnum)
+                tracks.m_param_inst(cvpj_l, str(inst), 'fxrack_channel', fxnum)
                 cvpj_l_fxrack[str(fxnum)] = {"name": inst_name, "color": inst_color}
                 fxnum += 1
 

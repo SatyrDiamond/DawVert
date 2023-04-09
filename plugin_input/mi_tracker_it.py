@@ -499,8 +499,8 @@ class input_it(plugin_input.base):
                         plugdata['filter']['type'] = "lowpass"
                         plugdata['filter']['wet'] = 1
 
-                tracks.m_addinst(cvpj_l, it_instname, cvpj_instdata)
-                tracks.m_addinst_data(cvpj_l, it_instname, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)
+                tracks.m_create_inst(cvpj_l, it_instname, cvpj_instdata)
+                tracks.m_basicdata_inst(cvpj_l, it_instname, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)
 
                 instrumentcount += 1
         if it_header_flag_useinst == 0:
@@ -521,8 +521,8 @@ class input_it(plugin_input.base):
                     cvpj_instdata['plugindata']['loop']['enabled'] = int(it_singlesample['flags'][3])
                     cvpj_instdata['plugindata']['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
 
-                tracks.m_addinst(cvpj_l, it_samplename, cvpj_instdata)
-                tracks.m_addinst_data(cvpj_l, it_samplename, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)
+                tracks.m_create_inst(cvpj_l, it_samplename, cvpj_instdata)
+                tracks.m_basicdata_inst(cvpj_l, it_samplename, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)
 
                 samplecount += 1
 

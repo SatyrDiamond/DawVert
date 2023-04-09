@@ -106,13 +106,13 @@ class input_notessimo_v2(plugin_input.base):
             cvpj_instdata = {}
             if notetess_gminst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': notetess_gminst}}
 
-            tracks.m_addinst(cvpj_l, str(used_instrument), cvpj_instdata)
-            tracks.m_addinst_data(cvpj_l, str(used_instrument), notetess_instname, notetess_instcolor, 1.0, 0.0)
+            tracks.m_create_inst(cvpj_l, str(used_instrument), cvpj_instdata)
+            tracks.m_basicdata_inst(cvpj_l, str(used_instrument), notetess_instname, notetess_instcolor, 1.0, 0.0)
 
             if notetess_isdrum == True:
-                tracks.m_addinst_param(cvpj_l, str(used_instrument), 'fxrack_channel', 1)
+                tracks.m_param_inst(cvpj_l, str(used_instrument), 'fxrack_channel', 1)
             else:
-                tracks.m_addinst_param(cvpj_l, str(used_instrument), 'fxrack_channel', fxnum)
+                tracks.m_param_inst(cvpj_l, str(used_instrument), 'fxrack_channel', fxnum)
                 cvpj_l_fxrack[str(fxnum)] = {}
                 cvpj_l_fxrack[str(fxnum)]["name"] = notetess_instname
                 if notetess_instcolor != None: cvpj_l_fxrack[str(fxnum)]["color"] = notetess_instcolor

@@ -88,9 +88,24 @@ def r_notefx_chain(cvpj_l, trackid, chain_fx_note):
     if chain_fx_note != None: cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'] = chain_fx_note
 
 def r_notefx_chain_append(cvpj_l, trackid, enabled, pluginname, plugindata):
+    if chain_fx_note != None: cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'] = []
     cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'].append(
             {"enabled": enabled, "plugin": pluginname, "plugindata": plugindata}
             )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # ------------------------ Multiple ------------------------
 

@@ -11,9 +11,7 @@ from functions import list_vst
 from functions import params_vst
 from functions import params_vital
 from functions import params_vital_wavetable
-
-def clamp(n, minn, maxn):
-	return max(min(maxn, n), minn)
+from functions import xtramath
 
 def socalabs_addparam(x_sid, name, value):
     x_temp = ET.SubElement(x_sid, 'param')
@@ -110,7 +108,7 @@ def convert_inst(instdata):
 			kickmess_add(kickmess_out, 'pub', 'f_env_release', math.sqrt((lmmsnat_data['decay']-2.51)/5000))
 			kickmess_add(kickmess_out, 'pub', 'dist_start', lmmsnat_data['dist']/100)
 			kickmess_add(kickmess_out, 'pub', 'dist_end', lmmsnat_data['distend']/100)
-			kickmess_add(kickmess_out, 'pub', 'gain', clamp(lmmsnat_data['gain'], 0, 2)/2)
+			kickmess_add(kickmess_out, 'pub', 'gain', xtramath.clamp(lmmsnat_data['gain'], 0, 2)/2)
 			kickmess_add(kickmess_out, 'pub', 'env_slope', lmmsnat_data['env'])
 			kickmess_add(kickmess_out, 'pub', 'freq_slope', lmmsnat_data['slope'])
 			kickmess_add(kickmess_out, 'pub', 'noise', lmmsnat_data['noise'])

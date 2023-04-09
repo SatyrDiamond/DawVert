@@ -8,11 +8,9 @@ import mido
 from functions import placements
 from functions import idvals
 from functions import notelist_data
+from functions import xtramath
 
 unusedchannel = 0
-
-def clamp(n, minn, maxn):
-    return max(min(maxn, n), minn)
 
 def getunusedchannel():
     global unusedchannel
@@ -159,7 +157,7 @@ class output_cvpj_f(plugin_output.base):
                                         cvmi_n_dur = int(cvpj_tr_pl_n['duration']*4)*30
                                         cvmi_n_key = int(cvpj_tr_pl_n['key'])+60
                                         cvmi_n_vol = 127
-                                        if 'vol' in cvpj_tr_pl_n: cvmi_n_vol = clamp(int(cvpj_tr_pl_n['vol']*127), 0, 127)
+                                        if 'vol' in cvpj_tr_pl_n: cvmi_n_vol = xtramath.clamp(int(cvpj_tr_pl_n['vol']*127), 0, 127)
                                         add_cmd(i_list, cvmi_n_pos, ['note_on', cvmi_n_key, cvmi_n_vol])
                                         add_cmd(i_list, cvmi_n_pos+cvmi_n_dur, ['note_off', cvmi_n_key])
                                         #print(cvmi_n_pos, cvmi_n_dur, cvmi_n_key)

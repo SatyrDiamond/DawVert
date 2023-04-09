@@ -2,11 +2,9 @@ from functions import audio_wav
 from functions import list_vst
 from functions import vst_inst
 from functions import params_vst
+from functions import xtramath
 import xml.etree.ElementTree as ET
 import pathlib
-
-def clamp(n, minn, maxn):
-	return max(min(maxn, n), minn)
 
 def convert_inst(instdata, platform_id):
 	if platform_id == 'win':
@@ -46,8 +44,8 @@ def convert_inst(instdata, platform_id):
 			if 'wet' in sampler_file_data['filter']: 
 				if sampler_file_data['filter']['wet'] != 0:
 					filterdata = sampler_file_data['filter']
-					if 'cutoff' in filterdata: vst_inst.drops_setvalue('cutoff', clamp((filterdata['cutoff']/12000), 0, 1))
-					if 'reso' in filterdata: vst_inst.drops_setvalue('resonance', clamp((filterdata['reso']/10), 0, 1))
+					if 'cutoff' in filterdata: vst_inst.drops_setvalue('cutoff', xtramath.clamp((filterdata['cutoff']/12000), 0, 1))
+					if 'reso' in filterdata: vst_inst.drops_setvalue('resonance', xtramath.clamp((filterdata['reso']/10), 0, 1))
 					if 'type' in filterdata: 
 						cvpj_filtertype = filterdata['type']
 						if cvpj_filtertype == 'lowpass': vst_inst.drops_setvalue('filter_type', 0)
@@ -59,37 +57,37 @@ def convert_inst(instdata, platform_id):
 				if 'envelope' in sampler_file_data['asdrlfo']['volume']: 
 					asdr_env = sampler_file_data['asdrlfo']['volume']['envelope']
 					amountmul = 1
-					if 'amount' in asdr_env: amountmul = clamp(asdr_env['amount'], 0, 1)
-					if 'attack' in asdr_env: vst_inst.drops_setvalue('amp_attack', clamp((asdr_env['attack']/10)*amountmul, 0, 1))
-					if 'decay' in asdr_env: vst_inst.drops_setvalue('amp_decay', clamp((asdr_env['decay']/10)*amountmul, 0, 1))
-					vst_inst.drops_setvalue('amp_sustain', clamp(asdr_env['sustain'], 0, 1))
-					if 'release' in asdr_env: vst_inst.drops_setvalue('amp_release', clamp((asdr_env['release']/10)*amountmul, 0, 1))
+					if 'amount' in asdr_env: amountmul = xtramath.clamp(asdr_env['amount'], 0, 1)
+					if 'attack' in asdr_env: vst_inst.drops_setvalue('amp_attack', xtramath.clamp((asdr_env['attack']/10)*amountmul, 0, 1))
+					if 'decay' in asdr_env: vst_inst.drops_setvalue('amp_decay', xtramath.clamp((asdr_env['decay']/10)*amountmul, 0, 1))
+					vst_inst.drops_setvalue('amp_sustain', xtramath.clamp(asdr_env['sustain'], 0, 1))
+					if 'release' in asdr_env: vst_inst.drops_setvalue('amp_release', xtramath.clamp((asdr_env['release']/10)*amountmul, 0, 1))
 
 				if 'lfo' in sampler_file_data['asdrlfo']['volume']: 
 					asdr_lfo = sampler_file_data['asdrlfo']['volume']['lfo']
-					vst_inst.drops_setvalue('amp_lfo_depth', clamp(asdr_lfo['amount'], 0, 1))
+					vst_inst.drops_setvalue('amp_lfo_depth', xtramath.clamp(asdr_lfo['amount'], 0, 1))
 					if 'speed' in asdr_lfo:
 						if asdr_lfo['speed']['type'] == 'seconds' and asdr_lfo['speed']['time'] != 0:
-							vst_inst.drops_setvalue('amp_lfo_freq', clamp(((1/asdr_lfo['speed']['time'])*0.05), 0, 1))
+							vst_inst.drops_setvalue('amp_lfo_freq', xtramath.clamp(((1/asdr_lfo['speed']['time'])*0.05), 0, 1))
 					if 'shape' in asdr_lfo: vst_inst.drops_setvalue('amp_lfo_type', vst_inst.drops_shape(asdr_lfo['shape']))
-					if 'attack' in asdr_lfo: vst_inst.drops_setvalue('amp_lfo_fade', clamp(asdr_lfo['attack']/10, 0, 1))
+					if 'attack' in asdr_lfo: vst_inst.drops_setvalue('amp_lfo_fade', xtramath.clamp(asdr_lfo['attack']/10, 0, 1))
 
 			if 'cutoff' in sampler_file_data['asdrlfo']: 
 				if 'envelope' in sampler_file_data['asdrlfo']['cutoff']: 
 					asdr_env = sampler_file_data['asdrlfo']['cutoff']['envelope']
-					if 'amount' in asdr_env: vst_inst.drops_setvalue('filter_eg_depth', clamp((asdr_env['amount']/7300), 0, 1))
-					if 'attack' in asdr_env: vst_inst.drops_setvalue('filter_attack', clamp((asdr_env['attack']/10), 0, 1))
-					if 'decay' in asdr_env: vst_inst.drops_setvalue('filter_decay', clamp((asdr_env['decay']/10), 0, 1))
-					vst_inst.drops_setvalue('filter_sustain', clamp(asdr_env['sustain'], 0, 1))
-					if 'release' in asdr_env: vst_inst.drops_setvalue('filter_release', clamp((asdr_env['release']/10)*amountmul, 0, 1))
+					if 'amount' in asdr_env: vst_inst.drops_setvalue('filter_eg_depth', xtramath.clamp((asdr_env['amount']/7300), 0, 1))
+					if 'attack' in asdr_env: vst_inst.drops_setvalue('filter_attack', xtramath.clamp((asdr_env['attack']/10), 0, 1))
+					if 'decay' in asdr_env: vst_inst.drops_setvalue('filter_decay', xtramath.clamp((asdr_env['decay']/10), 0, 1))
+					vst_inst.drops_setvalue('filter_sustain', xtramath.clamp(asdr_env['sustain'], 0, 1))
+					if 'release' in asdr_env: vst_inst.drops_setvalue('filter_release', xtramath.clamp((asdr_env['release']/10)*amountmul, 0, 1))
 
 				if 'lfo' in sampler_file_data['asdrlfo']['cutoff']: 
 					asdr_lfo = sampler_file_data['asdrlfo']['cutoff']['lfo']
-					vst_inst.drops_setvalue('filter_lfo_depth', clamp(asdr_lfo['amount']/7300, 0, 1))
+					vst_inst.drops_setvalue('filter_lfo_depth', xtramath.clamp(asdr_lfo['amount']/7300, 0, 1))
 					if 'speed' in asdr_lfo:
 						if asdr_lfo['speed']['type'] == 'seconds' and asdr_lfo['speed']['time'] != 0:
-							vst_inst.drops_setvalue('filter_lfo_freq', clamp(((1/asdr_lfo['speed']['time'])*0.05), 0, 1))
+							vst_inst.drops_setvalue('filter_lfo_freq', xtramath.clamp(((1/asdr_lfo['speed']['time'])*0.05), 0, 1))
 					if 'shape' in asdr_lfo: vst_inst.drops_setvalue('filter_lfo_type', vst_inst.drops_shape(asdr_lfo['shape']))
-					if 'attack' in asdr_lfo: vst_inst.drops_setvalue('filter_lfo_fade', clamp(asdr_lfo['attack']/10, 0, 1))
+					if 'attack' in asdr_lfo: vst_inst.drops_setvalue('filter_lfo_fade', xtramath.clamp(asdr_lfo['attack']/10, 0, 1))
 
 		list_vst.replace_data(instdata, 2, 'lin', 'Drops', 'raw', params_vst.nullbytegroup_make(vst_inst.drops_get()), None)

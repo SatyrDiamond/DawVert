@@ -26,8 +26,12 @@ def trackfx2fxrack(cvpj_l, cvpjtype):
         trackdata = c_trackdata[trackid]
         trackdata['fxrack_channel'] = fxnum
         fxtrack = {}
-        fxtrack['name'] = trackdata['name']
-        print('[compat] trackfx2fxrack: Track to FX '+str(fxnum)+' ('+str(trackdata['name'])+')')
+        if 'name' in trackdata: 
+            fxtrack['name'] = trackdata['name']
+            print('[compat] trackfx2fxrack: Track to FX '+str(fxnum)+' ('+str(trackdata['name'])+')')
+        else:
+            print('[compat] trackfx2fxrack: Track to FX '+str(fxnum))
+
         if 'color' in trackdata: fxtrack['color'] = trackdata['color']
         if 'fxchain_audio' in trackdata: 
             fxtrack['fxchain_audio'] = trackdata['fxchain_audio']

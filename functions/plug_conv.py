@@ -10,7 +10,6 @@ import base64
 from functions import list_vst
 from functions import vst_fx
 from functions import vst_inst
-from functions import params_vst
 from functions import params_vital
 
 from functions_plugparams import data_vc2xml

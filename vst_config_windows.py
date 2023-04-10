@@ -63,6 +63,8 @@ if selecteddaw == 'cakewalk':
 		if vst_is_v2 == 1 or vst_is_v3 == 1:
 			vst_name = winreg.QueryValueEx(registry_key, 'FullName')[0]
 			vst_path = winreg.QueryValueEx(registry_key, 'FullPath')[0]
+			vst_uniqueId = winreg.QueryValueEx(registry_key, 'uniqueId')[0]
+			vst_Vendor = winreg.QueryValueEx(registry_key, 'Vendor')[0]
 			vst_is64 = winreg.QueryValueEx(registry_key, 'isX64')[0]
 			vst_isSynth = winreg.QueryValueEx(registry_key, 'isSynth')[0]
 			if vst_is_v2 == 1:
@@ -72,6 +74,8 @@ if selecteddaw == 'cakewalk':
 				else: vst2ini.set(vst_name, 'path_i386', vst_path)
 				if vst_isSynth == 1: vst2ini.set(vst_name, 'type', 'synth')
 				else: vst2ini.set(vst_name, 'type', 'effect')
+				if vst_uniqueId != None: vst2ini.set(vst_name, 'fourid', str(vst_uniqueId))
+				if vst_Vendor != None: vst2ini.set(vst_name, 'creator', str(vst_Vendor))
 			if vst_is_v3 == 1:
 				if vst3ini.has_section(vst_name) == False:
 					vst3ini.add_section(vst_name)

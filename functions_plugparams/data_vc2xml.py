@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import xml.etree.ElementTree as ET
+
 def get(vstdata):
 	vc2magic = vstdata[0:4]
 	if vc2magic == b'VC2!':

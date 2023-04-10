@@ -7,9 +7,11 @@ import os
 from functions import data_bytes
 from functions import list_vst
 from functions import params_vst
-from functions import params_vital
-from functions import params_vital_wavetable
+
 from functions_plugconv import input_flstudio_wrapper
+
+from functions_plugparams import params_vital
+from functions_plugparams import params_vital_wavetable
 
 simsynth_shapes = {0.4: 'noise', 0.3: 'sine', 0.2: 'square', 0.1: 'saw', 0.0: 'triangle'}
 

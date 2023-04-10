@@ -8,9 +8,10 @@ import math
 import lxml.etree as ET
 from functions import vst_fx
 from functions import list_vst
-from functions import params_vital
-from functions import params_vital_wavetable
 from functions import xtramath
+
+from functions_plugparams import params_vital
+from functions_plugparams import params_vital_wavetable
 
 from functions_plugparams import data_nullbytegroup
 

@@ -5,7 +5,7 @@ import json
 import base64
 import struct
 import math
-from functions import params_vital_wavetable
+from functions_plugparams import params_vital_wavetable
 
 def create():
     global vitaldata

@@ -6,8 +6,9 @@ import struct
 from functions import data_bytes
 from functions import list_vst
 from functions import params_vst
-from functions import params_vital
-from functions import params_vital_wavetable
+
+from functions_plugparams import params_vital
+from functions_plugparams import params_vital_wavetable
 
 rawChipWaves = {}
 rawChipWaves["rounded"] = {"expression": 0.94, "samples": [0,0.2,0.4,0.5,0.6,0.7,0.8,0.85,0.9,0.95,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0.95,0.9,0.85,0.8,0.7,0.6,0.5,0.4,0.2,0,-0.2,-0.4,-0.5,-0.6,-0.7,-0.8,-0.85,-0.9,-0.95,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-0.95,-0.9,-0.85,-0.8,-0.7,-0.6,-0.5,-0.4,-0.2]}

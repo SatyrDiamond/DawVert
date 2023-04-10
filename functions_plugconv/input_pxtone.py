@@ -6,8 +6,9 @@ import struct
 from functions import data_bytes
 from functions import list_vst
 from functions import params_vst
-from functions import params_vital
-from functions import params_vital_wavetable
+
+from functions_plugparams import params_vital
+from functions_plugparams import params_vital_wavetable
 
 def convert_inst(instdata):
 	pluginname = instdata['plugin']

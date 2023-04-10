@@ -8,10 +8,11 @@ import math
 import lxml.etree as ET
 from functions import vst_fx
 from functions import list_vst
-from functions import params_vst
 from functions import params_vital
 from functions import params_vital_wavetable
 from functions import xtramath
+
+from functions_plugparams import data_nullbytegroup
 
 def socalabs_addparam(x_sid, name, value):
     x_temp = ET.SubElement(x_sid, 'param')
@@ -200,4 +201,4 @@ def convert_fx(fxdata):
 			for pointnum in range(50):
 				pointdata = waveshapepoints[pointnum*4][0]
 				vst_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
-			list_vst.replace_data(fxdata, 2, 'any', 'Wolf Shaper', 'raw', params_vst.nullbytegroup_make(vst_fx.wolfshaper_get()), None)
+			list_vst.replace_data(fxdata, 2, 'any', 'Wolf Shaper', 'raw', data_nullbytegroup.make(vst_fx.wolfshaper_get()), None)

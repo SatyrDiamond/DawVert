@@ -1,10 +1,11 @@
-import xml.etree.ElementTree as ET
+# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import pathlib
 
 from functions import audio_wav
 from functions import list_vst
 from functions import vst_inst
-from functions import params_vst
 
 from functions_plugparams import data_vc2xml
 

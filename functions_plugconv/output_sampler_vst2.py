@@ -1,10 +1,11 @@
 from functions import audio_wav
 from functions import list_vst
 from functions import vst_inst
-from functions import params_vst
 from functions import xtramath
 import xml.etree.ElementTree as ET
 import pathlib
+
+from functions_plugparams import data_nullbytegroup
 
 def convert_inst(instdata, platform_id):
 	if platform_id == 'win':
@@ -90,4 +91,4 @@ def convert_inst(instdata, platform_id):
 					if 'shape' in asdr_lfo: vst_inst.drops_setvalue('filter_lfo_type', vst_inst.drops_shape(asdr_lfo['shape']))
 					if 'attack' in asdr_lfo: vst_inst.drops_setvalue('filter_lfo_fade', xtramath.clamp(asdr_lfo['attack']/10, 0, 1))
 
-		list_vst.replace_data(instdata, 2, 'lin', 'Drops', 'raw', params_vst.nullbytegroup_make(vst_inst.drops_get()), None)
+		list_vst.replace_data(instdata, 2, 'lin', 'Drops', 'raw', data_nullbytegroup.make(vst_inst.drops_get()), None)

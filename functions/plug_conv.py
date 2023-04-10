@@ -13,6 +13,8 @@ from functions import vst_inst
 from functions import params_vst
 from functions import params_vital
 
+from functions_plugparams import data_vc2xml
+
 from functions_plugconv import input_flstudio
 from functions_plugconv import input_pxtone
 from functions_plugconv import input_jummbox
@@ -79,7 +81,7 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 				if 'file' in sf2data: sf2_filename = sf2data['file']
 				else: sf2_filename = 0
 				jsfp_xml = vst_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
-				list_vst.replace_data(instdata, 2, 'any', 'juicysfplugin', 'raw', params_vst.vc2xml_make(jsfp_xml), None)
+				list_vst.replace_data(instdata, 2, 'any', 'juicysfplugin', 'raw', data_vc2xml.make(jsfp_xml), None)
 
 			# -------------------- vst2 (magical8bitplug) --------------------
 
@@ -146,12 +148,12 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoDepth", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoIgnoresWheel_raw", 1.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
-				list_vst.replace_data(instdata, 2, 'any', 'Magical 8bit Plug 2', 'raw', params_vst.vc2xml_make(m8p_root), None)
+				list_vst.replace_data(instdata, 2, 'any', 'Magical 8bit Plug 2', 'raw', data_vc2xml.make(m8p_root), None)
 
 			# -------------------- opn2 > OPNplug --------------------
 			elif pluginname == 'opn2':
 				xmlout = vst_inst.opnplug_convert(instdata['plugindata'])
-				list_vst.replace_data(instdata, 2, 'any', 'OPNplug', 'raw', params_vst.vc2xml_make(xmlout), None)
+				list_vst.replace_data(instdata, 2, 'any', 'OPNplug', 'raw', data_vc2xml.make(xmlout), None)
 
 
 # -------------------- FX --------------------

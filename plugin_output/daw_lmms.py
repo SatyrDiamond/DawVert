@@ -47,17 +47,18 @@ def setvstparams(plugindata, xmldata):
         if 'path' in plugindata['plugin']:
             xmldata.set('plugin', str(plugindata['plugin']['path']))
     xmldata.set('program', '0')
-    if plugindata['datatype'] == 'raw':
-        xmldata.set('chunk', str(plugindata['data']))
-    elif plugindata['datatype'] == 'param':
-        numparams = plugindata['numparams']
-        params = plugindata['params']
-        xmldata.set('numparams', str(numparams))
-        for param in range(numparams):
-            paramdata = params[str(param)]
-            pname = paramdata['name']
-            pval = paramdata['value']
-            xmldata.set('param'+str(param), str(param)+':'+pname+':'+str(pval))
+    if 'datatype' in plugindata:
+        if plugindata['datatype'] == 'raw':
+            xmldata.set('chunk', str(plugindata['data']))
+        elif plugindata['datatype'] == 'param':
+            numparams = plugindata['numparams']
+            params = plugindata['params']
+            xmldata.set('numparams', str(numparams))
+            for param in range(numparams):
+                paramdata = params[str(param)]
+                pname = paramdata['name']
+                pval = paramdata['value']
+                xmldata.set('param'+str(param), str(param)+':'+pname+':'+str(pval))
 
 def onetime2lmmstime(input): return int(round(float(input * 12)))
 

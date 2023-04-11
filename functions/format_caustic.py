@@ -420,7 +420,7 @@ def deconstruct_machine(datain, l_machine):
         modular_main['params'] = deconstruct_MCOM(data_str)
 
         l_machine['controls'] = deconstruct_CCOL(data_str)
-        l_machine['unknown1'] = data_str.read(5)
+        data_str.read(5)
         l_machine['unknown1'] = int.from_bytes(data_str.read(4), "little")
         modular_numlinks = int.from_bytes(data_str.read(4), "little")
 

@@ -232,7 +232,8 @@ def deconstruct_MIXR(bi_rack, Caustic_Main):
     MIXR_data = bi_rack.read(MIXR_size)
     MIXR_str = data_bytes.bytearray2BytesIO(MIXR_data)
     MIXR_str.read(4)
-    Caustic_Main['MIXR'] = deconstruct_CCOL(MIXR_str)
+    Caustic_Main['MIXR'][MSTR_num] = deconstruct_CCOL(MIXR_str)
+    Caustic_Main['MIXR'][MSTR_num]['solomute'] = struct.unpack("bbbbbbbbbbbbbb", MIXR_str.read(14))
     if MSTR_num == 0: bi_rack.read(4)
     MSTR_num += 1
 
@@ -480,6 +481,7 @@ def deconstruct_main(filepath):
     Caustic_Main = {}
     Caustic_Main['EFFX'] = {}
     Caustic_Main['AUTO'] = {}
+    Caustic_Main['MIXR'] = {}
 
     while racksize > bi_rack.tell():
         chunk_datatype = bi_rack.read(4)

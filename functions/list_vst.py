@@ -37,20 +37,29 @@ def getverplat(vstvers, platform):
 # -------------------- VST List --------------------
 def vstpaths(): return glo_vstpaths
 
-def find_path_by_name(in_name, vstvers, platform, pefer_cpu_arch):
+
+def get_path(verplat, vstname, pefer_cpu_arch):
+	global cpu_arch_list
 	output = [None, None]
+	if pefer_cpu_arch != None:
+		if 'path_'+pefer_cpu_arch in glo_vstpaths[verplat][vstname] and vstname == in_name:
+			output = [pefer_cpu_arch, glo_vstpaths[verplat][vstname]['path_'+pefer_cpu_arch]]
+	for cpu_arch_part in cpu_arch_list:
+		if 'path_'+cpu_arch_part in glo_vstpaths[verplat][vstname] and vstname == in_name:
+			output = [cpu_arch_part, glo_vstpaths[verplat][vstname]['path_'+cpu_arch_part]]
+
+def find_path_by_name(in_name, vstvers, platform, pefer_cpu_arch):
 	verplat = getverplat(vstvers, platform)
+	output = [None, None]
 	if verplat in glo_vstpaths:
 		for vstname in glo_vstpaths[verplat]:
-			if pefer_cpu_arch != None:
-				if 'path_'+pefer_cpu_arch in glo_vstpaths[verplat][vstname] and vstname == in_name:
-					output = [pefer_cpu_arch, glo_vstpaths[verplat][vstname]['path_'+pefer_cpu_arch]]
-					if output != [None, None]: break
-			for cpu_arch_part in cpu_arch_list:
-				if 'path_'+cpu_arch_part in glo_vstpaths[verplat][vstname] and vstname == in_name:
-					output = [cpu_arch_part, glo_vstpaths[verplat][vstname]['path_'+cpu_arch_part]]
-					if output != [None, None]: break
+			output = get_path(verplat, vstname, pefer_cpu_arch)
+			if output != [None, None]: break
 	return output
+
+def find_path_by_vst2_fourid(cvpj_plugindata, platform, pefer_cpu_arch):
+	verplat = getverplat(2, platform)
+	fourid = cvpj_plugindata['plugin']['fourid']
 
 def replace_data(instdata, vstvers, platform, in_name, datatype, data, numparams):
 	vst_cpuarch, vst_path = find_path_by_name(in_name, vstvers, platform, cpu_arch_list[0])

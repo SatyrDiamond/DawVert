@@ -44,26 +44,26 @@ caustic_instcolors['KSSN'] = [0.55, 0.57, 0.44]
 caustic_instcolors['SAWS'] = [0.99, 0.60, 0.25]
 
 caustic_fxtype = {}
-caustic_fxtype[0] = 'Delay'
-caustic_fxtype[1] = 'Reverb'
-caustic_fxtype[2] = 'Distortion'
-caustic_fxtype[3] = 'Compresser'
-caustic_fxtype[4] = 'Bitcrush'
-caustic_fxtype[5] = 'Flanger'
-caustic_fxtype[6] = 'Phaser'
-caustic_fxtype[7] = 'Chorus'
-caustic_fxtype[8] = 'AutoWah'
-caustic_fxtype[9] = 'Param EQ'
-caustic_fxtype[10] = 'Limiter'
-caustic_fxtype[11] = 'VInylSim'
-caustic_fxtype[12] = 'Comb'
-caustic_fxtype[14] = 'Cab Sim'
-caustic_fxtype[16] = 'StaticFlanger'
-caustic_fxtype[17] = 'Filter'
-caustic_fxtype[18] = 'Octaver'
-caustic_fxtype[19] = 'Vibrato'
-caustic_fxtype[20] = 'Tremolo'
-caustic_fxtype[21] = 'AutoPan'
+caustic_fxtype[0] = 'delay'
+caustic_fxtype[1] = 'reverb'
+caustic_fxtype[2] = 'distortion'
+caustic_fxtype[3] = 'compresser'
+caustic_fxtype[4] = 'bitcrush'
+caustic_fxtype[5] = 'flanger'
+caustic_fxtype[6] = 'phaser'
+caustic_fxtype[7] = 'chorus'
+caustic_fxtype[8] = 'auto_wah'
+caustic_fxtype[9] = 'param_eq'
+caustic_fxtype[10] = 'limiter'
+caustic_fxtype[11] = 'vinyl_sim'
+caustic_fxtype[12] = 'comb'
+caustic_fxtype[14] = 'cabsim'
+caustic_fxtype[16] = 'static_flanger'
+caustic_fxtype[17] = 'filter'
+caustic_fxtype[18] = 'octaver'
+caustic_fxtype[19] = 'vibrato'
+caustic_fxtype[20] = 'tremolo'
+caustic_fxtype[21] = 'auto_pan'
 
 patletters = ['A','B','C','D']
 
@@ -102,6 +102,15 @@ def loopmode_cvpj(cvpjdata, wavdata):
 def tp2cvpjp(twopoints):
     return auto.twopoints2cvpjpoints(twopoints, 4, 'normal', 0)
 
+def make_fxslot(fx_type, fx_data, auto_id):
+    fxslotdata = {}
+    fxslotdata['pluginautoid'] = auto_id
+    fxslotdata['plugin'] = 'native-caustic'
+    fxslotdata['plugindata'] = {}
+    fxslotdata['plugindata']['name'] = fx_type
+    fxslotdata['plugindata']['data'] = fx_data
+    return fxslotdata
+
 class input_cvpj_r(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -129,6 +138,35 @@ class input_cvpj_r(plugin_input.base):
         
         file_name = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
+
+        mach_mixer_vol = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+        mach_mixer_pan = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        mach_mixer_send_reverb = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        mach_mixer_send_delay = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        mach_mixer_eq_low = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+        mach_mixer_eq_mid = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+        mach_mixer_eq_high = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+        mach_mixer_width = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+        mach_mixer_mute = [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        mach_mixer_solo = [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+        for mixerpartnum in range(2):
+            if mixerpartnum in CausticData['MIXR']:
+                CausticMixerDataPart = CausticData['MIXR'][mixerpartnum]
+
+                for paramnum in range(7): 
+                    paramnumid = paramnum+(mixerpartnum*7)
+                    mach_mixer_vol[paramnumid] = CausticMixerDataPart[paramnum]
+                    mach_mixer_pan[paramnumid] = (CausticMixerDataPart[paramnum+64]-0.5)*2
+                    mach_mixer_width[paramnumid] = CausticMixerDataPart[paramnum+72]
+                    mach_mixer_send_delay[paramnumid] = CausticMixerDataPart[(paramnum*2)+8]
+                    mach_mixer_send_reverb[paramnumid] = CausticMixerDataPart[(paramnum*2)+9]
+                    mach_mixer_eq_low[paramnumid] = CausticMixerDataPart[paramnum+24]
+                    mach_mixer_eq_mid[paramnumid] = CausticMixerDataPart[paramnum+32]
+                    mach_mixer_eq_high[paramnumid] = CausticMixerDataPart[paramnum+40]
+                    mach_mixer_mute[paramnumid] = CausticMixerDataPart['solomute'][paramnum*2]
+                    mach_mixer_solo[paramnumid] = CausticMixerDataPart['solomute'][(paramnum*2)+1]
 
         machnum = 0
         plnum = 0
@@ -255,15 +293,39 @@ class input_cvpj_r(plugin_input.base):
                 cvpj_instdata['plugindata'] = {}
                 cvpj_instdata['plugindata']['type'] = machine['id']
                 cvpj_instdata['plugindata']['data'] = {}
-                if 'controls' in machine: 
-                    cvpj_instdata['plugindata']['data'] = machine['controls']
-                if 'customwaveform1' in machine: 
-                    cvpj_instdata['plugindata']['data']['customwaveform1'] = struct.unpack("<"+("i"*330), machine['customwaveform1'])
-                if 'customwaveform2' in machine: 
-                    cvpj_instdata['plugindata']['data']['customwaveform2'] = struct.unpack("<"+("i"*330), machine['customwaveform2'])
+                if 'controls' in machine: cvpj_instdata['plugindata']['data'] = machine['controls']
+                if 'customwaveform1' in machine: cvpj_instdata['plugindata']['data']['customwaveform1'] = struct.unpack("<"+("i"*330), machine['customwaveform1'])
+                if 'customwaveform2' in machine: cvpj_instdata['plugindata']['data']['customwaveform2'] = struct.unpack("<"+("i"*330), machine['customwaveform2'])
 
             tracks.ri_create_inst(cvpj_l, 'MACH'+machid, cvpj_notelistindex, cvpj_instdata)
-            tracks.r_basicdata(cvpj_l, 'MACH'+machid, cvpj_trackname, caustic_instcolors[machine['id']], None, None)
+            tracks.r_basicdata(cvpj_l, 'MACH'+machid, cvpj_trackname, caustic_instcolors[machine['id']], mach_mixer_vol[machnum-1], mach_mixer_pan[machnum-1])
+            tracks.r_param(cvpj_l, 'MACH'+machid, 'enabled', int(not bool(mach_mixer_mute[machnum-1])))
+            tracks.r_param(cvpj_l, 'MACH'+machid, 'solo', mach_mixer_solo[machnum-1])
+
+            cvpj_fxchaindata = []
+
+            if machnum in CausticData['EFFX']:
+                CausticFXData = CausticData['EFFX'][machnum]
+                for slotnum in CausticFXData:
+                    if CausticFXData[slotnum] != {}: 
+                        slot_fxslotdata = CausticFXData[slotnum]['controls']
+                        cvpj_fxchaindata.append(
+                            make_fxslot(
+                                caustic_fxtype[CausticFXData[slotnum]['type']], 
+                                slot_fxslotdata, 
+                                'machine'+str(machnum)+'_slot'+str(slotnum))
+                            )
+
+            slot_fxslotdata = {}
+            slot_fxslotdata['bass'] = mach_mixer_eq_low[machnum-1]
+            slot_fxslotdata['mid'] = mach_mixer_eq_mid[machnum-1]
+            slot_fxslotdata['high'] = mach_mixer_eq_high[machnum-1]
+
+            cvpj_fxchaindata.append(make_fxslot('mixer_eq', slot_fxslotdata, 'machine'+machid+'_eq'))
+            cvpj_fxchaindata.append(make_fxslot('width', {'width': mach_mixer_width[machnum-1]}, 'machine'+machid+'_width'))
+
+            tracks.r_fx_audio(cvpj_l, 'MACH'+machid, cvpj_fxchaindata)
+
 
         t_track_placements = {}
 
@@ -308,33 +370,33 @@ class input_cvpj_r(plugin_input.base):
         tempo_placement['duration'] = tempo_placement_dur
         tempo_placement['points'] = tempo_points
 
-        automation_main = {}
-        automation_main['bpm'] = [tempo_placement]
-        automation_plugin = {}
-        automation_track = {}
+        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', [tempo_placement])
 
         #'machine'+machid
 
         for machnum in range(14):
-            automation_plugin['machine'+str(machnum+1)] = {}
-            automation_track['MACH'+str(machnum+1)] = {}
-            machautodata = automation_plugin['machine'+str(machnum+1)]
             for autoname in AUTO_data['MACH_'+str(machnum+1)]:
-                machautodata[str(autoname)] = tp2cvpjp(AUTO_data['MACH_'+str(machnum+1)][autoname])
-        
-        for machnum in range(7):
-            if machnum in AUTO_data['MIXER_1']: 
-                automation_track['MACH'+str(machnum+1)]['vol'] = tp2cvpjp(AUTO_data['MIXER_1'][machnum])
-            if machnum+64 in AUTO_data['MIXER_1']: 
-                automation_track['MACH'+str(machnum+1)]['pan'] = auto.multiply( tp2cvpjp(AUTO_data['MIXER_1'][machnum+64]), -0.5, 2)
-            if machnum in AUTO_data['MIXER_2']: 
-                automation_track['MACH'+str(machnum+8)]['vol'] = tp2cvpjp(AUTO_data['MIXER_2'][machnum])
-            if machnum+64 in AUTO_data['MIXER_2']: 
-                automation_track['MACH'+str(machnum+8)]['pan'] = auto.multiply( tp2cvpjp(AUTO_data['MIXER_2'][machnum+64]), -0.5, 2)
+                tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(machnum+1), str(autoname), tp2cvpjp(AUTO_data['MACH_'+str(machnum+1)][autoname]))
 
-        #for fxnum in EFFX:
-        #    for slotnum in EFFX[fxnum]:
-        #        print(fxnum, slotnum, EFFX[fxnum][slotnum])
+        for mixernum in range(2):
+            mixerid = 'MIXER_'+str(mixernum+1)
+            for machnum in range(7):
+                auto_machid = machnum+1+(mixernum*7)
+                if machnum in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'track', 'MACH'+str(auto_machid), 'vol', tp2cvpjp(AUTO_data[mixerid][machnum]))
+                if machnum+24 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(auto_machid)+'_eq', 'bass', tp2cvpjp(AUTO_data[mixerid][machnum+24]))
+                if machnum+32 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(auto_machid)+'_eq', 'mid', tp2cvpjp(AUTO_data[mixerid][machnum+32]))
+                if machnum+40 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(auto_machid)+'_eq', 'high', tp2cvpjp(AUTO_data[mixerid][machnum+40]))
+                if machnum+64 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'track', 'MACH'+str(auto_machid), 'pan', auto.multiply(tp2cvpjp(AUTO_data[mixerid][machnum+64]),-0.5,2))
+                if machnum+72 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(auto_machid)+'_width', 'width', tp2cvpjp(AUTO_data[mixerid][machnum+72]))
+
+            #r_fx_audio
+
+        for autonum in AUTO_data['FX_1']:
+            autofx_num = (autonum//16)
+            autofx_slot = (autonum//8)-(autofx_num*2)
+            autofx_ctrl = autonum-(autofx_slot*8)-(autofx_num*16)
+            cvpj_fx_autoid = 'machine'+str(autofx_num+1)+'_slot'+str(autofx_slot+1)
+            tracks.a_add_auto_pl(cvpj_l, 'plugin', cvpj_fx_autoid, str(autofx_ctrl), tp2cvpjp(AUTO_data['FX_1'][autonum]))
 
         tracks.a_addtrack_master(cvpj_l, 'Master', 1, [0.52, 0.52, 0.52])
 
@@ -344,11 +406,6 @@ class input_cvpj_r(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-
-        cvpj_l['automation'] = {}
-        cvpj_l['automation']['main'] = automation_main
-        cvpj_l['automation']['plugin'] = automation_plugin
-        cvpj_l['automation']['track'] = automation_track
 
         cvpj_l['bpm'] = CausticData['Tempo']
         cvpj_l['timesig_numerator'] = CausticData['Numerator']

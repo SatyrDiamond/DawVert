@@ -129,6 +129,17 @@ def deconstruct_SEQN(bi_rack, Caustic_Main):
         tempoauto.append(struct.unpack("ff", SEQN_str.read(8)))
     Caustic_Main['SEQN_tempo'] = tempoauto
 
+def deconstruct_MCOM(bio_in):
+    print('[format-caustic] MCOM |', end=' ')
+    MCOM_check = bio_in.read(4)
+    if MCOM_check != b'MCOM':
+        print('data is not MCOM')
+        exit()
+    MCOM_size = int.from_bytes(bio_in.read(4), "little")
+    print(MCOM_size)
+    MCOM_data = bio_in.read(MCOM_size)
+    return struct.unpack("f"*(MCOM_size//4), MCOM_data )
+
 # --------------------------------------------- Controls ---------------------------------------------
 
 def deconstruct_CCOL(bio_in):
@@ -240,9 +251,15 @@ def deconstruct_MIXR(bi_rack, Caustic_Main):
 def deconstruct_MSTR(bi_rack, Caustic_Main):
     MSTR_size = int.from_bytes(bi_rack.read(4), "little")
     MSTR_data = bi_rack.read(MSTR_size)
-    #MSTR_str = data_bytes.bytearray2BytesIO(MSTR_data)
-    #MSTR_str.read(8)
-    #Caustic_Main['MSTR'] = deconstruct_CCOL(MSTR_str)
+    MSTR_str = data_bytes.bytearray2BytesIO(MSTR_data)
+
+    master_fx = {}
+    for fxslot in range(2): 
+        master_fx[(fxslot+1)] = {}
+        print('[format-caustic] EFFX | MSTR Slot', fxslot+1)
+        deconstruct_fx(MSTR_str, master_fx[(fxslot+1)])
+    Caustic_Main['MSTR']['EFFX'] = master_fx
+    Caustic_Main['MSTR']['CCOL'] = deconstruct_CCOL(MSTR_str)
 
 # --------------------------------------------- Inst ---------------------------------------------
 
@@ -389,7 +406,32 @@ def deconstruct_machine(datain, l_machine):
         l_machine['unknown4'] = int.from_bytes(data_str.read(4), "little")
         l_machine['patterns'] = deconstruct_SPAT(data_str)
     # -------------------------------- Modular --------------------------------
-    elif l_machine['id'] == 'MDLR': pass
+    elif l_machine['id'] == 'MDLR': 
+        modular_modtype = struct.unpack("iiiiiiiiiiiiiiii", data_str.read(64))
+        modular_output = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
+        modular_main = {}
+
+        for modularnum in range(16):
+            module_type = modular_modtype[modularnum]
+            modular_output[modularnum]['type'] = module_type
+            if module_type != 0:
+                modular_output[modularnum]['params'] = deconstruct_MCOM(data_str)
+
+        modular_main['params'] = deconstruct_MCOM(data_str)
+
+        l_machine['controls'] = deconstruct_CCOL(data_str)
+        l_machine['unknown1'] = data_str.read(5)
+        l_machine['unknown1'] = int.from_bytes(data_str.read(4), "little")
+        modular_numlinks = int.from_bytes(data_str.read(4), "little")
+
+        l_machine['connections'] = []
+        for linknum in range(modular_numlinks):
+            l_machine['connections'].append(struct.unpack("i"*9, data_str.read(4*9)))
+
+        l_machine['main'] = modular_main
+        l_machine['modules'] = modular_output
+        l_machine['patterns'] = deconstruct_SPAT(data_str)
+
     # -------------------------------- PCMSynth --------------------------------
     elif l_machine['id'] == 'PCMS': 
         l_machine['unknown1'] = int.from_bytes(data_str.read(2), "little")
@@ -482,6 +524,7 @@ def deconstruct_main(filepath):
     Caustic_Main['EFFX'] = {}
     Caustic_Main['AUTO'] = {}
     Caustic_Main['MIXR'] = {}
+    Caustic_Main['MSTR'] = {}
 
     while racksize > bi_rack.tell():
         chunk_datatype = bi_rack.read(4)

@@ -65,6 +65,45 @@ caustic_fxtype[19] = 'vibrato'
 caustic_fxtype[20] = 'tremolo'
 caustic_fxtype[21] = 'auto_pan'
 
+master_idnames = {}
+
+master_idnames[1] = ['delay', 'time']
+master_idnames[2] = ['delay', 'feedback']
+master_idnames[3] = ['delay', 'damping']
+master_idnames[4] = ['delay', 'wet']
+master_idnames[5] = ['delay', 'pan1']
+master_idnames[6] = ['delay', 'pan2']
+master_idnames[7] = ['delay', 'pan3']
+master_idnames[8] = ['delay', 'pan4']
+master_idnames[9] = ['delay', 'pan5']
+
+master_idnames[16] = ['reverb', 'predelay']
+master_idnames[17] = ['reverb', 'room_size']
+master_idnames[18] = ['reverb', 'hf_damping']
+master_idnames[19] = ['reverb', 'diffuse']
+master_idnames[20] = ['reverb', 'dither_echoes']
+master_idnames[21] = ['reverb', 'early_reflect']
+master_idnames[22] = ['reverb', 'er_decay']
+master_idnames[23] = ['reverb', 'stereo_delay']
+master_idnames[24] = ['reverb', 'stereo_spread']
+master_idnames[25] = ['reverb', 'wet']
+
+master_idnames[30] = ['eq', 'low']
+master_idnames[31] = ['eq', 'freq_lowmid']
+master_idnames[32] = ['eq', 'mid']
+master_idnames[33] = ['eq', 'freq_midhigh']
+master_idnames[34] = ['eq', 'high']
+
+master_idnames[35] = ['limiter', 'pre']
+master_idnames[36] = ['limiter', 'attack']
+master_idnames[37] = ['limiter', 'release']
+master_idnames[38] = ['limiter', 'post']
+master_idnames[39] = ['main', 'master']
+master_idnames[40] = ['delay', 'muted']
+master_idnames[41] = ['reverb', 'muted']
+master_idnames[42] = ['eq', 'muted']
+master_idnames[43] = ['limiter', 'muted']
+
 patletters = ['A','B','C','D']
 
 def parse_notelist(causticpattern, machid): 
@@ -132,6 +171,7 @@ class input_cvpj_r(plugin_input.base):
         SEQN = CausticData['SEQN']
         SEQN_tempo = CausticData['SEQN_tempo']
         EFFX = CausticData['EFFX']
+        MSTR = CausticData['MSTR']
         AUTO_data = CausticData['AUTO']
 
         cvpj_l = {}
@@ -181,7 +221,7 @@ class input_cvpj_r(plugin_input.base):
 
             cvpj_notelistindex = {}
 
-            if machine['id'] != 'NULL' and machine['id'] != 'MDLR':
+            if machine['id'] != 'NULL':
                 if 'patterns' in machine:
                     patterns = machine['patterns']
                     for pattern in patterns:
@@ -398,9 +438,34 @@ class input_cvpj_r(plugin_input.base):
             cvpj_fx_autoid = 'machine'+str(autofx_num+1)+'_slot'+str(autofx_slot+1)
             tracks.a_add_auto_pl(cvpj_l, 'plugin', cvpj_fx_autoid, str(autofx_ctrl), tp2cvpjp(AUTO_data['FX_1'][autonum]))
 
-        tracks.a_addtrack_master(cvpj_l, 'Master', 1, [0.52, 0.52, 0.52])
+        master_params = {}
 
-        'machine'+machid
+        for test in MSTR['CCOL']:
+            if test in master_idnames:
+                t_fxtypeparam = master_idnames[test]
+                if t_fxtypeparam[0] not in master_params: master_params[t_fxtypeparam[0]] = {}
+                master_params[t_fxtypeparam[0]][t_fxtypeparam[1]] = MSTR['CCOL'][test]
+
+        master_fxchaindata = []
+
+        if 'EFFX' in MSTR:
+            CausticFXData = MSTR['EFFX']
+            for slotnum in CausticFXData:
+                if CausticFXData[slotnum] != {}: 
+                    slot_fxslotdata = CausticFXData[slotnum]['controls']
+                    master_fxchaindata.append(
+                        make_fxslot(
+                            caustic_fxtype[CausticFXData[slotnum]['type']], 
+                            slot_fxslotdata, 
+                            'master_slot'+str(slotnum))
+                        )
+
+        master_fxchaindata.append( make_fxslot('master_eq', master_params['eq'], 'master_eq') )
+        master_fxchaindata.append( make_fxslot('master_limiter', master_params['limiter'], 'master_limiter') )
+
+        tracks.a_addtrack_master(cvpj_l, 'Master', master_params['main']['master'], [0.52, 0.52, 0.52])
+
+        tracks.a_fx_audio_master(cvpj_l, master_fxchaindata)
 
         cvpj_l['do_addwrap'] = True
         

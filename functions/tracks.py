@@ -162,6 +162,10 @@ def a_addtrack_master(cvpj_l, i_name, i_vol, i_color):
     if i_vol != None: cvpj_l['track_master']['vol'] = i_vol
     if i_color != None: cvpj_l['track_master']['color'] = i_color
 
+def a_fx_audio_master(cvpj_l, chain_fx_audio):
+    if 'track_master' not in cvpj_l: cvpj_l['track_master'] = {}
+    if chain_fx_audio != None: cvpj_l['track_master']['chain_fx_audio'] = chain_fx_audio
+
 def a_addtrack_master_param(cvpj_l, v_name, v_value):
     cvpj_l['track_master'][v_name] = v_value
 

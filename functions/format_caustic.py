@@ -34,7 +34,7 @@ MSTR_num = 0
 def parse_note(SPAT_str, numnotes):
     notelist = []
     for _ in range(numnotes): 
-        notedata = struct.unpack("IIffffIIIfffff", SPAT_str.read(56))
+        notedata = struct.unpack("IIffffHHIIfffff", SPAT_str.read(56))
         #print(notedata)
         notelist.append(notedata)
     return notelist
@@ -264,7 +264,6 @@ def deconstruct_MSTR(bi_rack, Caustic_Main):
 # --------------------------------------------- Inst ---------------------------------------------
 
 def deconstruct_machine(datain, l_machine):
-    #print(datain[:100])
     data_str = data_bytes.bytearray2BytesIO(datain)
     # -------------------------------- SubSynth --------------------------------
     if l_machine['id'] == 'SSYN':

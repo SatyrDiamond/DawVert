@@ -18,6 +18,7 @@ class output_cvpj(plugin_output.base):
         'placement_cut': 'debug',
         'placement_warp': 'debug',
         'no_placements': 'debug',
+        'no_pl_auto': 'debug',
         'pl_audio_events': 'debug',
         }
     def parse(self, convproj_json, output_file):

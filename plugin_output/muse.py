@@ -176,6 +176,7 @@ class output_cvpj(plugin_output.base):
         'r_track_lanes': True,
         'placement_cut': True,
         'placement_warp': False,
+        'no_pl_auto': True,
         'no_placements': False
         }
     def parse(self, convproj_json, output_file):

@@ -26,6 +26,7 @@ class input_cvpj_f(plugin_input.base):
         'r_track_lanes': True,
         'placement_cut': False,
         'placement_warp': False,
+        'no_pl_auto': False,
         'no_placements': False
         }
     def detect(self, input_file):

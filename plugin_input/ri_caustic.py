@@ -164,6 +164,7 @@ class input_cvpj_r(plugin_input.base):
         'r_track_lanes': False,
         'placement_cut': True,
         'placement_warp': True,
+        'no_pl_auto': False,
         'no_placements': False
         }
     def supported_autodetect(self): return False
@@ -359,12 +360,12 @@ class input_cvpj_r(plugin_input.base):
                                 'machine'+str(machnum)+'_slot'+str(slotnum))
                             )
 
-            slot_fxslotdata = {}
-            slot_fxslotdata['bass'] = mach_mixer_eq_low[machnum-1]
-            slot_fxslotdata['mid'] = mach_mixer_eq_mid[machnum-1]
-            slot_fxslotdata['high'] = mach_mixer_eq_high[machnum-1]
+            slot_mixereqfxslotdata = {}
+            slot_mixereqfxslotdata['bass'] = mach_mixer_eq_low[machnum-1]
+            slot_mixereqfxslotdata['mid'] = mach_mixer_eq_mid[machnum-1]
+            slot_mixereqfxslotdata['high'] = mach_mixer_eq_high[machnum-1]
 
-            cvpj_fxchaindata.append(make_fxslot('mixer_eq', slot_fxslotdata, 'machine'+machid+'_eq'))
+            cvpj_fxchaindata.append(make_fxslot('mixer_eq', slot_mixereqfxslotdata, 'machine'+machid+'_eq'))
             cvpj_fxchaindata.append(make_fxslot('width', {'width': mach_mixer_width[machnum-1]}, 'machine'+machid+'_width'))
 
             tracks.r_fx_audio(cvpj_l, 'MACH'+machid, cvpj_fxchaindata)

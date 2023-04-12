@@ -680,6 +680,7 @@ class output_cvpj(plugin_output.base):
         'placement_cut': True,
         'placement_warp': True,
         'no_placements': False,
+        'no_pl_auto': True,
         'audio_events': False
         }
     def parse(self, convproj_json, output_file):

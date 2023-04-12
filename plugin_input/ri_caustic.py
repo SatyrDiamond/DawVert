@@ -440,6 +440,13 @@ class input_cvpj_r(plugin_input.base):
             cvpj_fx_autoid = 'machine'+str(autofx_num+1)+'_slot'+str(autofx_slot+1)
             tracks.a_add_auto_pl(cvpj_l, 'plugin', cvpj_fx_autoid, str(autofx_ctrl), tp2cvpjp(AUTO_data['FX_1'][autonum]))
 
+        for autonum in AUTO_data['FX_2']:
+            autofx_num = (autonum//16)
+            autofx_slot = (autonum//8)-(autofx_num*2)
+            autofx_ctrl = autonum-(autofx_slot*8)-(autofx_num*16)
+            cvpj_fx_autoid = 'machine'+str(autofx_num+8)+'_slot'+str(autofx_slot+1)
+            tracks.a_add_auto_pl(cvpj_l, 'plugin', cvpj_fx_autoid, str(autofx_ctrl), tp2cvpjp(AUTO_data['FX_2'][autonum]))
+
         master_params = {}
 
         for test in MSTR['CCOL']:

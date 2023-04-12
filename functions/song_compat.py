@@ -406,21 +406,60 @@ def r_split_single_notelist(projJ):
                             print('[compat] singlenotelist2placements: laned: splitted "'+trackid+'" from lane "'+str(s_lanedata)+'" to '+str(len(track_placements[trackid]['lanedata'][s_lanedata]['notes'])) + ' placements.')
     projJ['do_singlenotelistcut'] = False
 
+# -------------------------------------------- no_pl_auto --------------------------------------------
+
+
+def remove_auto_placements_single(autodata):
+    new_points = []
+    for autopart in autodata:
+        #print(autopart)
+        base_pos = autopart['position']
+        for oldpoint in autopart['points']:
+            oldpoint['position'] += base_pos
+            new_points.append(oldpoint)
+    return [{'position': 0, 'points': new_points, 'duration': new_points[-1]['position']+8}]
+
+def remove_auto_placements(cvpj_l):
+    if 'automation' in cvpj_l:
+        cvpj_auto = cvpj_l['automation']
+        for autotype in cvpj_auto:
+            #print('CAT', autotype)
+            if autotype in ['main']:
+                for autoid in cvpj_auto[autotype]:
+                    #print('PARAM', autoid)
+                    cvpj_auto[autotype][autoid] = remove_auto_placements_single(cvpj_auto[autotype][autoid])
+            else:
+                for packid in cvpj_auto[autotype]:
+                    #print('PACK', packid)
+                    for autoid in cvpj_auto[autotype][packid]:
+                        #print('PARAM', autoid)
+                        cvpj_auto[autotype][packid][autoid] = remove_auto_placements_single(cvpj_auto[autotype][packid][autoid])
+                    
+
 # -------------------------------------------- Main --------------------------------------------
 
 def makecompat_any(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     cvpj_proj = json.loads(cvpj_l)
+
     in__fxrack = False
     out__fxrack = False
     if 'fxrack' in in_dawcapabilities: in__fxrack = in_dawcapabilities['fxrack']
     if 'fxrack' in out_dawcapabilities: out__fxrack = out_dawcapabilities['fxrack']
+
+    in__no_pl_auto = False
+    out__no_pl_auto = False
+    if 'no_pl_auto' in in_dawcapabilities: in__no_pl_auto = in_dawcapabilities['no_pl_auto']
+    if 'no_pl_auto' in out_dawcapabilities: out__no_pl_auto = out_dawcapabilities['no_pl_auto']
+
     print('[compat] ----------------+-------+-------+')
     print('[compat] Name            | In    | Out   |')
     print('[compat] ----------------+-------+-------+')
     print('[compat] fxrack          | '+str(in__fxrack).ljust(5)+' | '+str(out__fxrack).ljust(5)+' |')
+    print('[compat] no_pl_auto      | '+str(in__no_pl_auto).ljust(5)+' | '+str(out__no_pl_auto).ljust(5)+' |')
     print('[compat] ----------------+-------+-------+')
 
-    if in__fxrack == False and out__fxrack == True:  trackfx2fxrack(cvpj_proj, cvpj_type)
+    if in__fxrack == False and out__fxrack == True: trackfx2fxrack(cvpj_proj, cvpj_type)
+    if in__no_pl_auto == False and out__no_pl_auto == True: remove_auto_placements(cvpj_proj)
     return json.dumps(cvpj_proj)
 
 r_processed = False

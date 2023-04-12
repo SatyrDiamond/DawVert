@@ -810,6 +810,7 @@ class output_lmms(plugin_output.base):
         'r_track_lanes': False,
         'placement_cut': False,
         'placement_warp': False,
+        'no_pl_auto': False,
         'no_placements': False
         }
     def parse(self, convproj_json, output_file):

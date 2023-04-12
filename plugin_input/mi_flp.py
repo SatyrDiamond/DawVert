@@ -28,6 +28,7 @@ class input_flp(plugin_input.base):
         'r_track_lanes': True,
         'placement_cut': True,
         'placement_warp': False,
+        'no_pl_auto': False,
         'no_placements': False
         }
     def supported_autodetect(self): return True

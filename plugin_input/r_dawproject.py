@@ -90,6 +90,7 @@ class input_dawproject(plugin_input.base):
         'r_track_lanes': False,
         'placement_cut': True,
         'placement_warp': True,
+        'no_pl_auto': True,
         'no_placements': False
         }
     def supported_autodetect(self): return False

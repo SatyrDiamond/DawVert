@@ -417,7 +417,8 @@ def remove_auto_placements_single(autodata):
         for oldpoint in autopart['points']:
             oldpoint['position'] += base_pos
             new_points.append(oldpoint)
-    return [{'position': 0, 'points': new_points, 'duration': new_points[-1]['position']+8}]
+    if len(new_points) != 0: return [{'position': 0, 'points': new_points, 'duration': new_points[-1]['position']+8}]
+    else: return []
 
 def remove_auto_placements(cvpj_l):
     if 'automation' in cvpj_l:

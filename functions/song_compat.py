@@ -428,11 +428,14 @@ ri_processed = False
 m_processed = False
 mi_processed = False
 
+isprinted = False
+
 def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     global r_processed
     global ri_processed
     global m_processed
     global mi_processed
+    global isprinted
 
     cvpj_proj = json.loads(cvpj_l)
 
@@ -460,15 +463,17 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     if 'no_placements' in out_dawcapabilities: out__no_placements = out_dawcapabilities['no_placements']
     if 'audio_events' in out_dawcapabilities: out__audio_events = out_dawcapabilities['audio_events']
 
-    print('[compat] ----------------+-------+-------+')
-    print('[compat] Name            | In    | Out   |')
-    print('[compat] ----------------+-------+-------+')
-    print('[compat] r_track_lanes   | '+str(in__r_track_lanes).ljust(5)+' | '+str(out__r_track_lanes).ljust(5)+' |')
-    print('[compat] placement_cut   | '+str(in__placement_cut).ljust(5)+' | '+str(out__placement_cut).ljust(5)+' |')
-    print('[compat] placement_warp  | '+str(in__placement_warp).ljust(5)+' | '+str(out__placement_warp).ljust(5)+' |')
-    print('[compat] no_placements   | '+str(in__no_placements).ljust(5)+' | '+str(out__no_placements).ljust(5)+' |')
-    print('[compat] pl_audio_events | '+str(in__audio_events).ljust(5)+' | '+str(out__audio_events).ljust(5)+' |')
-    print('[compat] ----------------+-------+-------+')
+    if isprinted == False:
+        print('[compat] ----------------+-------+-------+')
+        print('[compat] Name            | In    | Out   |')
+        print('[compat] ----------------+-------+-------+')
+        print('[compat] r_track_lanes   | '+str(in__r_track_lanes).ljust(5)+' | '+str(out__r_track_lanes).ljust(5)+' |')
+        print('[compat] placement_cut   | '+str(in__placement_cut).ljust(5)+' | '+str(out__placement_cut).ljust(5)+' |')
+        print('[compat] placement_warp  | '+str(in__placement_warp).ljust(5)+' | '+str(out__placement_warp).ljust(5)+' |')
+        print('[compat] no_placements   | '+str(in__no_placements).ljust(5)+' | '+str(out__no_placements).ljust(5)+' |')
+        print('[compat] pl_audio_events | '+str(in__audio_events).ljust(5)+' | '+str(out__audio_events).ljust(5)+' |')
+        print('[compat] ----------------+-------+-------+')
+    isprinted = True
 
     if cvpj_type == 'm' and m_processed == False:
         if in__placement_warp == True and out__placement_warp == False: m_removewarps(cvpj_proj)

@@ -313,7 +313,6 @@ class input_cvpj_r(plugin_input.base):
                 samplecount = 0
                 bbox_key = -12
                 for bbox_sample in bbox_samples:
-                    #print(bbox_sample)
                     wave_path = samplefolder + machid + '_BeatBox_'+str(samplecount)+'.wav'
                     if bbox_sample['chan'] != 0 and bbox_sample['hz'] != 0: 
                         audio_wav.generate(wave_path, bbox_sample['data'], bbox_sample['chan'], bbox_sample['hz'], 16, None)
@@ -329,7 +328,9 @@ class input_cvpj_r(plugin_input.base):
                     plugindata['regions'].append(regionparams)
                     samplecount += 1
                     bbox_key += 1
-
+            elif machine['id'] == 'NULL':
+                cvpj_instdata['plugin'] = 'none'
+                cvpj_instdata['plugindata'] = {}
             else:
                 cvpj_instdata['plugin'] = 'native-caustic'
                 cvpj_instdata['plugindata'] = {}

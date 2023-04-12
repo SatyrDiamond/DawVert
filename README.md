@@ -52,6 +52,7 @@ numpy
 mido
 lxml
 chardet
+git+https://github.com/Perlence/rpp
 ```
 
 ## Optional Libraries

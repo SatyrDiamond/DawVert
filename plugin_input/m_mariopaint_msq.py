@@ -55,6 +55,7 @@ class input_mariopaint_msq(plugin_input.base):
         'r_track_lanes': True,
         'placement_cut': False,
         'placement_warp': False,
+        'no_pl_auto': False,
         'no_placements': True
         }
     def supported_autodetect(self): return False

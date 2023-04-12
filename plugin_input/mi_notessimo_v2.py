@@ -47,6 +47,7 @@ class input_notessimo_v2(plugin_input.base):
         'r_track_lanes': True,
         'placement_cut': False,
         'placement_warp': False,
+        'no_pl_auto': False,
         'no_placements': False
         }
     def supported_autodetect(self): return False

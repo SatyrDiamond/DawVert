@@ -72,6 +72,7 @@ class input_audiosanua(plugin_input.base):
         'r_track_lanes': False,
         'placement_cut': True,
         'placement_warp': False,
+        'no_pl_auto': False,
         'no_placements': False
         }
     def supported_autodetect(self): return False

@@ -6,3 +6,4 @@ chardet
 beautifulsoup4
 blackboxprotobuf
 pypng
+git+https://github.com/Perlence/rpp

@@ -17,6 +17,10 @@ def cvpj_color_to_reaper_color(i_color):
     cvpj_trackcolor = bytes(colors.rgb_float_2_rgb_int(i_color))+b'\x01'
     return int.from_bytes(cvpj_trackcolor, 'little')
 
+def cvpj_color_to_reaper_color_clip(i_color): 
+    cvpj_trackcolor = bytes(colors.rgb_float_2_rgb_int([i_color[2],i_color[1],i_color[0]]))+b'\x01'
+    return int.from_bytes(cvpj_trackcolor, 'little')
+
 def calc_pos(i_value, i_bpm):
     return (i_value/8)*(120/i_bpm)
 
@@ -219,6 +223,8 @@ class output_reaper(plugin_output.base):
                                 clip_duration = trackplacement_notes['duration']
                                 clip_loop = 0
                                 clip_startat = 0
+                                clip_color = None
+                                if 'color' in trackplacement_notes: clip_color = trackplacement_notes['color']
 
                                 if 'cut' in trackplacement_notes:
                                     clip_cutdata = trackplacement_notes['cut']
@@ -234,6 +240,8 @@ class output_reaper(plugin_output.base):
                                 rpp_midiclipdata.children.append(['FADEIN','1','0','0','1','0','0','0'])
                                 rpp_midiclipdata.children.append(['FADEOUT','1','0','0','1','0','0','0'])
                                 rpp_midiclipdata.children.append(['MUTE','0','0'])
+                                if clip_color != None:
+                                    rpp_midiclipdata.children.append(['COLOR',cvpj_color_to_reaper_color_clip(clip_color),'B'])
                                 rpp_midiclipdata.children.append(['SEL','0'])
                                 rpp_midiclipdata.children.append(['IGUID',clip_IGUID])
                                 rpp_midiclipdata.children.append(['IID','1'])

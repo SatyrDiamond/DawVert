@@ -42,19 +42,20 @@ def get_path(verplat, vstname, pefer_cpu_arch):
 	global cpu_arch_list
 	output = [None, None]
 	if pefer_cpu_arch != None:
-		if 'path_'+pefer_cpu_arch in glo_vstpaths[verplat][vstname] and vstname == in_name:
+		if 'path_'+pefer_cpu_arch in glo_vstpaths[verplat][vstname]:
 			output = [pefer_cpu_arch, glo_vstpaths[verplat][vstname]['path_'+pefer_cpu_arch]]
 	for cpu_arch_part in cpu_arch_list:
-		if 'path_'+cpu_arch_part in glo_vstpaths[verplat][vstname] and vstname == in_name:
+		if 'path_'+cpu_arch_part in glo_vstpaths[verplat][vstname]:
 			output = [cpu_arch_part, glo_vstpaths[verplat][vstname]['path_'+cpu_arch_part]]
+	return output
 
 def find_path_by_name(in_name, vstvers, platform, pefer_cpu_arch):
 	verplat = getverplat(vstvers, platform)
 	output = [None, None]
 	if verplat in glo_vstpaths:
 		for vstname in glo_vstpaths[verplat]:
-			output = get_path(verplat, vstname, pefer_cpu_arch)
-			if output != [None, None]: break
+			if in_name == vstname:
+				output = get_path(verplat, vstname, pefer_cpu_arch)
 	return output
 
 def find_path_by_vst2_fourid(cvpj_plugindata, platform, pefer_cpu_arch):

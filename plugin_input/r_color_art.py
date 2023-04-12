@@ -30,14 +30,13 @@ class input_color_art(plugin_input.base):
 
         cvpj_l_track_master = {}
 
-        print(pixels)
-
         pcnt = 0
 
-        if w >= 40:
+        if h >= 40:
             print('39 max')
+            exit()
 
-        for height in range(h):
+        for height in range(h-1):
             trackid = str('track'+str(height))
 
             trackdata = {}
@@ -62,7 +61,7 @@ class input_color_art(plugin_input.base):
 
                 cvpj_l_trackplacements[trackid]['notes'].append(placement_pl)
 
-                pcnt += 4
+                pcnt += 3
 
             cvpj_l_trackdata[trackid] = trackdata
             cvpj_l_trackordering.append(trackid)

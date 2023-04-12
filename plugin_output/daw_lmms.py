@@ -188,14 +188,15 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
 
         if point_value_type == 'samples' and 'length' in plugJ:
             trkJ_length = plugJ['length']
-            if 'start' in plugJ: xml_sampler.set('sframe', str(plugJ['start']/trkJ_length))
-            else: xml_sampler.set('sframe', '0')
-            if 'loop' in plugJ:
-                trkJ_loop = plugJ['loop']
-                if 'points' in trkJ_loop:
-                    trkJ_loop_points = trkJ_loop['points']
-                    xml_sampler.set('lframe', str(trkJ_loop_points[0]/trkJ_length))
-                    xml_sampler.set('eframe', str(trkJ_loop_points[1]/trkJ_length))
+            if trkJ_length != 0:
+                if 'start' in plugJ: xml_sampler.set('sframe', str(plugJ['start']/trkJ_length))
+                else: xml_sampler.set('sframe', '0')
+                if 'loop' in plugJ:
+                    trkJ_loop = plugJ['loop']
+                    if 'points' in trkJ_loop:
+                        trkJ_loop_points = trkJ_loop['points']
+                        xml_sampler.set('lframe', str(trkJ_loop_points[0]/trkJ_length))
+                        xml_sampler.set('eframe', str(trkJ_loop_points[1]/trkJ_length))
 
         if point_value_type == 'percent':
             if 'start' in plugJ: xml_sampler.set('sframe', str(plugJ['start']))
@@ -774,25 +775,15 @@ def add_auto_val_noset(auto_nameiddata, Jname, Xtag, Xname, Vtype, Vname):
 def add_auto_val_plugin(auto_nameiddata, Vaddmul, Vfalbak, Jtag, Jname, pluginparam, Xtag, Xname, Vtype, Vname):
     if pluginparam in Jtag: outvalue = Jtag[pluginparam]
     else: outvalue = Vfalbak
-    if Vaddmul != None: outvalue = (outvalue+Vaddmul[0])*Vaddmul[1]
-
-    if Jname in auto_nameiddata:
-        lmms_autoid, cvpj_autodata = auto_nameiddata[Jname]
-        if Vaddmul != None: cvpj_autodata = auto.multiply(cvpj_autodata, Vaddmul[0], Vaddmul[1])
-        lmms_make_main_auto_track(lmms_autoid, cvpj_autodata, Vtype+': '+Vname)
-        autovarX = ET.SubElement(Xtag, Xname)
-        autovarX.set('value', str(outvalue))
-        autovarX.set('scale_type', 'linear')
-        autovarX.set('id', str(lmms_autoid))
-        del auto_nameiddata[Jname]
-    else:
-        Xtag.set(Xname, str(outvalue))
+    add_auto_rest(auto_nameiddata, Vaddmul, outvalue, Jtag, Jname, Xtag, Xname, Vtype, Vname)
 
 def add_auto_val(auto_nameiddata, Vaddmul, Vfalbak, Jtag, Jname, Xtag, Xname, Vtype, Vname):
     if Jname in Jtag: outvalue = Jtag[Jname]
     else: outvalue = Vfalbak
-    if Vaddmul != None: outvalue = (outvalue+Vaddmul[0])*Vaddmul[1]
+    add_auto_rest(auto_nameiddata, Vaddmul, outvalue, Jtag, Jname, Xtag, Xname, Vtype, Vname)
 
+def add_auto_rest(auto_nameiddata, Vaddmul, outvalue, Jtag, Jname, Xtag, Xname, Vtype, Vname):
+    if Vaddmul != None: outvalue = (outvalue+Vaddmul[0])*Vaddmul[1]
     if Jname in auto_nameiddata:
         lmms_autoid, cvpj_autodata = auto_nameiddata[Jname]
         if Vaddmul != None: cvpj_autodata = auto.multiply(cvpj_autodata, Vaddmul[0], Vaddmul[1])
@@ -804,6 +795,7 @@ def add_auto_val(auto_nameiddata, Vaddmul, Vfalbak, Jtag, Jname, Xtag, Xname, Vt
         del auto_nameiddata[Jname]
     else:
         Xtag.set(Xname, str(outvalue))
+
 
 class output_lmms(plugin_output.base):
     def __init__(self): pass

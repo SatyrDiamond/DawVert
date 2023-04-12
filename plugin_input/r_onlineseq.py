@@ -88,6 +88,7 @@ class input_onlinesequencer(plugin_input.base):
         'r_track_lanes': False,
         'placement_cut': False,
         'placement_warp': False,
+        'no_pl_auto': True,
         'no_placements': True
         }
     def supported_autodetect(self): return False

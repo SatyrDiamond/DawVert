@@ -714,7 +714,11 @@ class input_lmms(plugin_input.base):
     def getshortname(self): return 'lmms'
     def getname(self): return 'LMMS'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): return {'fxrack': True}
+    def getdawcapabilities(self): 
+        return {
+        'fxrack': True,
+        'no_pl_auto': False,
+        }
     def supported_autodetect(self): return True
     def detect(self, input_file):
         output = False

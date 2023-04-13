@@ -69,6 +69,7 @@ xmodits_py - for extracting Impulse Tracker and FastTracker2 Samples
 | R | ```ableton``` | Ableton Live 11 |
 | R | ```midi``` | MIDI |
 | R | ```muse``` | MusE Sequencer |
+| R | ```reaper``` | Reaper |
 
 ## (Some) Supported Inputs
 [Full List...](docs/input_plugins.md)

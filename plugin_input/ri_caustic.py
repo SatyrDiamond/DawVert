@@ -12,6 +12,7 @@ import plugin_input
 import os.path
 import json
 import struct
+import itertools
 
 caustic_instnames = {}
 caustic_instnames['NULL'] = 'None'
@@ -111,8 +112,6 @@ def parse_notelist(causticpattern, machid):
     causticnotes = causticpattern['notes']
     for causticnote in causticnotes:
 
-        #print(causticnote)
-
         if causticnote[1] != 4294967295:
             notedata = {}
             notedata['position'] = causticnote[2]*4
@@ -151,6 +150,39 @@ def make_fxslot(fx_type, fx_data, auto_id):
     fxslotdata['plugindata']['name'] = fx_type
     fxslotdata['plugindata']['data'] = fx_data
     return fxslotdata
+
+def pat_auto_place(pl_position, pl_duration, autodata):
+    auto_smooth = autodata['smooth']
+    auto_points = autodata['data']
+
+    auto_duration = int(len(auto_points))
+
+    #print('------------- POINT START ----------------', pl_duration,'/',auto_duration)
+
+    auto_curpoint = 0
+    pl_pointpos = 0
+
+    t_autopoints = []
+
+    for _ in range(int(pl_duration*2)):
+        point_pos = pl_pointpos/2
+        point_value = auto_points[auto_curpoint]
+        if auto_smooth == 0.0: t_autopoints.append([point_pos, point_value, 'instant'])
+        else:
+            t_autopoints.append([point_pos, point_value, 'normal'])
+            if auto_smooth != 1.0: t_autopoints.append([point_pos+(auto_smooth/2), point_value, 'normal'])
+        pl_pointpos += 1
+        auto_curpoint += 1
+        if auto_curpoint == auto_duration: auto_curpoint = 0
+
+    out_autopl = {}
+    out_autopl['position'] = pl_position
+    out_autopl['duration'] = pl_duration
+    out_autopl['points'] = []
+
+    for t_ap in t_autopoints:
+        out_autopl['points'].append({"position": t_ap[0], "value": t_ap[1], "type": t_ap[2]})
+    return out_autopl
 
 class input_cvpj_r(plugin_input.base):
     def __init__(self): pass
@@ -400,6 +432,15 @@ class input_cvpj_r(plugin_input.base):
                 pl_placement['fromindex'] = t_patid
                 if str(SEQNe_mach) not in t_track_placements: t_track_placements[str(SEQNe_mach)] = []
                 t_track_placements[str(SEQNe_mach)].append(pl_placement)
+
+                if 'patterns' in machines[SEQNe[0]]:
+                    autodata = machines[SEQNe[0]]['patterns'][t_patid]['auto']
+
+                    for test in autodata:
+                        single_patautodata = autodata[test]
+                        ctrlpatautopl = pat_auto_place(SEQNe_pos, SEQNe_len, single_patautodata)
+                        tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(SEQNe_mach), str(test), ctrlpatautopl)
+
 
         for t_track_placement in t_track_placements:
             tracks.r_pl_notes(cvpj_l, 'MACH'+str(t_track_placement), t_track_placements[t_track_placement])

@@ -284,15 +284,15 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         print('[output-lmms]       Plugin: zynaddsubfx > zynaddsubfx')
         xml_instrumentpreplugin.set('name', "zynaddsubfx")
         xml_zynaddsubfx = ET.SubElement(xml_instrumentpreplugin, "zynaddsubfx")
-        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'bandwidth', xml_zynaddsubfx, 'bandwidth', 'Plugin', 'Bandwidth')
-        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'filterfreq', xml_zynaddsubfx, 'filterfreq', 'Plugin', 'Filter Freq')
-        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'filterq', xml_zynaddsubfx, 'filterq', 'Plugin', 'Filter Q')
-        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'fmgain', xml_zynaddsubfx, 'fmgain', 'Plugin', 'FM Gain')
-        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'forwardmidicc', xml_zynaddsubfx, 'forwardmidicc', 'Plugin', 'Forward MIDI CC')
-        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'modifiedcontrollers', xml_zynaddsubfx, 'modifiedcontrollers', 'Plugin', 'Modified Cont.')
-        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'portamento', xml_zynaddsubfx, 'portamento', 'Plugin', 'Portamento')
-        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'resbandwidth', xml_zynaddsubfx, 'resbandwidth', 'Plugin', 'Res BandWidth')
-        add_auto_val(auto_nameiddata_plugin, None, 1, plugJ, 'rescenterfreq', xml_zynaddsubfx, 'rescenterfreq', 'Plugin', 'Res Center Freq')
+        add_auto_val(auto_nameiddata_plugin, False, None, 1, plugJ, 'bandwidth', xml_zynaddsubfx, 'bandwidth', 'Plugin', 'Bandwidth')
+        add_auto_val(auto_nameiddata_plugin, False, None, 1, plugJ, 'filterfreq', xml_zynaddsubfx, 'filterfreq', 'Plugin', 'Filter Freq')
+        add_auto_val(auto_nameiddata_plugin, False, None, 1, plugJ, 'filterq', xml_zynaddsubfx, 'filterq', 'Plugin', 'Filter Q')
+        add_auto_val(auto_nameiddata_plugin, False, None, 1, plugJ, 'fmgain', xml_zynaddsubfx, 'fmgain', 'Plugin', 'FM Gain')
+        add_auto_val(auto_nameiddata_plugin, False, None, 1, plugJ, 'forwardmidicc', xml_zynaddsubfx, 'forwardmidicc', 'Plugin', 'Forward MIDI CC')
+        add_auto_val(auto_nameiddata_plugin, False, None, 1, plugJ, 'modifiedcontrollers', xml_zynaddsubfx, 'modifiedcontrollers', 'Plugin', 'Modified Cont.')
+        add_auto_val(auto_nameiddata_plugin, False, None, 1, plugJ, 'portamento', xml_zynaddsubfx, 'portamento', 'Plugin', 'Portamento')
+        add_auto_val(auto_nameiddata_plugin, False, None, 1, plugJ, 'resbandwidth', xml_zynaddsubfx, 'resbandwidth', 'Plugin', 'Res BandWidth')
+        add_auto_val(auto_nameiddata_plugin, False, None, 1, plugJ, 'rescenterfreq', xml_zynaddsubfx, 'rescenterfreq', 'Plugin', 'Res Center Freq')
         zdata = plugJ['data'].encode('ascii')
         zdataxs = ET.fromstring(base64.b64decode(zdata).decode('ascii'))
         xml_zynaddsubfx.append(zdataxs)
@@ -304,7 +304,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid):
         xml_lmmsnat = ET.SubElement(xml_instrumentpreplugin, lmmsplugname)
         asdrlfo_set(plugJ, xmltag)
         for pluginparam in lmms_autovals[0]: 
-            add_auto_val(auto_nameiddata_plugin, None, 0, lmmsplugdata, pluginparam, xml_lmmsnat, pluginparam, 'Plugin', pluginparam)
+            add_auto_val(auto_nameiddata_plugin, False, None, 0, lmmsplugdata, pluginparam, xml_lmmsnat, pluginparam, 'Plugin', pluginparam)
         for pluginparam in lmms_autovals[1]: 
             if pluginparam in lmmsplugdata: xml_lmmsnat.set(pluginparam, str(lmmsplugdata[pluginparam]))
     else:
@@ -348,7 +348,7 @@ def lmms_encode_notelist(xmltag, json_notelist):
                     xml_detuning.set('name', "")
                     xml_detuning.set('mute', "0")
                     xml_detuning.set('prog', "1")
-                    parse_auto(xml_detuning, json_note['notemod']['auto']['pitch'])
+                    parse_auto(xml_detuning, json_note['notemod']['auto']['pitch'], False)
                     note_mod.notemod_conv(json_note['notemod'])
 
         printcountpat += 1
@@ -392,10 +392,10 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     else: trkX_insttr.set('fxch', '0')
     trkX_insttr.set('pitchrange', "12")
 
-    add_auto_val(auto_nameiddata, [0, 100], 1, trkJ, 'vol', trkX_insttr, 'vol', trackname, 'Volume')
-    add_auto_val(auto_nameiddata, [0, 100], 0, trkJ, 'pan', trkX_insttr, 'pan', trackname, 'Pan')
-    add_auto_val(auto_nameiddata, [-1, -1], 1, trkJ, 'enabled', xmltag, 'muted', trackname, 'Muted')
-    add_auto_val(auto_nameiddata, None, 0, instJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
+    add_auto_val(auto_nameiddata, False, [0, 100], 1, trkJ, 'vol', trkX_insttr, 'vol', trackname, 'Volume')
+    add_auto_val(auto_nameiddata, False, [0, 100], 0, trkJ, 'pan', trkX_insttr, 'pan', trackname, 'Pan')
+    add_auto_val(auto_nameiddata, True, [-1, -1], 1, trkJ, 'enabled', xmltag, 'muted', trackname, 'Muted')
+    add_auto_val(auto_nameiddata, False, None, 0, instJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
 
     add_unused_auto_val(auto_nameiddata, trackname)
 
@@ -577,7 +577,7 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
         xml_name = fxlist[lmmsplugname]
         xml_lmmsnat = ET.SubElement(fxslotX, xml_name)
         for pluginparam in lmms_autovals[0]: 
-            add_auto_val(auto_nameiddata_plugin, None, 0, lmmsplugdata, pluginparam, xml_lmmsnat, pluginparam, 'FX Slot: '+lmmsplugname, pluginparam)
+            add_auto_val(auto_nameiddata_plugin, False, None, 0, lmmsplugdata, pluginparam, xml_lmmsnat, pluginparam, 'FX Slot: '+lmmsplugname, pluginparam)
         for pluginparam in lmms_autovals[1]: 
             if pluginparam in lmmsplugdata: xml_lmmsnat.set(pluginparam, str(lmmsplugdata[pluginparam]))
 
@@ -635,17 +635,17 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
                 add_auto_val_plugin(auto_nameiddata_plugin, None, 0, cvpj_params['1'], 'ladspa_param_1_'+param, param, xml_param, 'data', 'LADSPA', 'R #'+param)
 
 def lmms_encode_effectslot(fxcX, json_fxslot):
+
+    auto_nameiddata_slot = {}
+    if 'automation' in projJ and 'slotautoid' in json_fxslot:
+        if 'slot' in projJ['automation']:
+            if json_fxslot['slotautoid'] in projJ['automation']['slot']:
+                auto_nameiddata_slot = get_auto_ids_data(projJ['automation']['slot'][json_fxslot['slotautoid']])
+
     fxslotX = ET.SubElement(fxcX, "effect")
-    if 'wet' in json_fxslot:
-        wetvalue = json_fxslot['wet']
-        if 'add_dry_minus_wet' in json_fxslot:
-            if json_fxslot['add_dry_minus_wet'] == 1:
-                wetvalue = -wetvalue
-        fxslotX.set('wet', str(wetvalue))
-    else: 
-        fxslotX.set('wet', str(1))
-    if 'enabled' in json_fxslot: fxslotX.set('on', str(json_fxslot['enabled']))
-    else: fxslotX.set('on', str('1'))
+
+    add_auto_val(auto_nameiddata_slot, False, None, 1, json_fxslot, 'wet', fxslotX, 'wet', 'Slot', 'Wet')
+    add_auto_val(auto_nameiddata_slot, True, None, 1, json_fxslot, 'enabled', fxslotX, 'on', 'Slot', 'On')
 
     lmms_encode_effectplugin(fxslotX, json_fxslot)
     return fxslotX
@@ -683,7 +683,7 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
 
         if 'color' in fxchannelJ: fxcX.set('color', '#' + colors.rgb_float_2_hex(fxchannelJ['color']))
 
-        add_auto_val(auto_nameiddata, None, 1, fxchannelJ, 'vol', fxcX, 'volume', 'FX '+str(num), 'Volume')
+        add_auto_val(auto_nameiddata, False, None, 1, fxchannelJ, 'vol', fxcX, 'volume', 'FX '+str(num), 'Volume')
 
         if 'muted' in fxchannelJ: muted = fxchannelJ['muted']
         else: muted = 0
@@ -706,16 +706,17 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
 
 # ------- Automation -------
 
-def parse_auto(xml_automationpattern, l_points):
+def parse_auto(xml_automationpattern, l_points, isbool):
     curpoint = 0
     for point in l_points:
-        if 'type' in point and curpoint != 0:
+        if 'type' in point and curpoint != 0 and isbool == False:
             if point['type'] == 'instant':
                 xml_time = ET.SubElement(xml_automationpattern, "time")
                 xml_time.set('value', str(prevvalue))
                 xml_time.set('pos', str(int(point['position']*12)-1))
         xml_time = ET.SubElement(xml_automationpattern, "time")
-        xml_time.set('value', str(point['value']))
+        if isbool == False: xml_time.set('value', str(point['value']))
+        else: xml_time.set('value', str(int(point['value'])))
         xml_time.set('pos', str(int(point['position']*12)))
         prevvalue = point['value']
         curpoint += 1
@@ -729,7 +730,7 @@ def lmms_encode_tracks(xmltag, trksJ, trkorderJ, trkplacementsJ):
         if trkJ['type'] == "instrument": lmms_encode_inst_track(xml_track, trkJ, trackid, trkplacementsJ)
         if trkJ['type'] == "audio": lmms_encode_audio_track(xml_track, trkJ, trackid, trkplacementsJ)
 
-def lmms_make_main_auto_track(autoidnum, autodata, visualname):
+def lmms_make_main_auto_track(autoidnum, autodata, isbool, visualname):
     global trkcX
     print('[output-lmms] Automation Track: '+visualname)
     xml_autotrack = ET.SubElement(trkcX, "track")
@@ -741,13 +742,14 @@ def lmms_make_main_auto_track(autoidnum, autodata, visualname):
         xml_automationpattern = ET.SubElement(xml_autotrack, "automationpattern")
         xml_automationpattern.set('pos', str(int(autoplacement['position']*12)))
         xml_automationpattern.set('len', str(int(autoplacement['duration']*12)))
-        xml_automationpattern.set('tens', "1")
+        xml_automationpattern.set('tens', "0")
         xml_automationpattern.set('name', visualname)
         xml_automationpattern.set('mute', "0")
-        xml_automationpattern.set('prog', "1")
+        if isbool == False: xml_automationpattern.set('prog', "1")
+        else: xml_automationpattern.set('prog', "0")
         prevvalue = 0
         if 'points' in autoplacement:
-            parse_auto(xml_automationpattern, autoplacement['points'])
+            parse_auto(xml_automationpattern, autoplacement['points'], isbool)
         if autoidnum != None:
             xml_object = ET.SubElement(xml_automationpattern, "object")
             xml_object.set('id', str(autoidnum))
@@ -763,11 +765,11 @@ def get_auto_ids_data(placements_auto):
 def add_unused_auto_val(auto_nameiddata, Vtype):
     for autoname in auto_nameiddata:
         lmms_autoid, cvpj_autodata = auto_nameiddata[autoname]
-        lmms_make_main_auto_track(lmms_autoid, cvpj_autodata, Vtype+': UNUSED '+autoname)
+        lmms_make_main_auto_track(lmms_autoid, cvpj_autodata, False, Vtype+': UNUSED '+autoname)
 
 def add_auto_val_noset(auto_nameiddata, Jname, Xtag, Xname, Vtype, Vname):
     lmms_autoid, cvpj_autodata = auto_nameiddata[Jname]
-    lmms_make_main_auto_track(lmms_autoid, cvpj_autodata, Vtype+': '+Vname)
+    lmms_make_main_auto_track(lmms_autoid, cvpj_autodata, False, Vtype+': '+Vname)
     autovarX = ET.SubElement(Xtag, Xname)
     autovarX.set('scale_type', 'linear')
     autovarX.set('id', str(lmms_autoid))
@@ -775,19 +777,19 @@ def add_auto_val_noset(auto_nameiddata, Jname, Xtag, Xname, Vtype, Vname):
 def add_auto_val_plugin(auto_nameiddata, Vaddmul, Vfalbak, Jtag, Jname, pluginparam, Xtag, Xname, Vtype, Vname):
     if pluginparam in Jtag: outvalue = Jtag[pluginparam]
     else: outvalue = Vfalbak
-    add_auto_rest(auto_nameiddata, Vaddmul, outvalue, Jtag, Jname, Xtag, Xname, Vtype, Vname)
+    add_auto_rest(auto_nameiddata, False, Vaddmul, outvalue, Jtag, Jname, Xtag, Xname, Vtype, Vname)
 
-def add_auto_val(auto_nameiddata, Vaddmul, Vfalbak, Jtag, Jname, Xtag, Xname, Vtype, Vname):
+def add_auto_val(auto_nameiddata, isbool, Vaddmul, Vfalbak, Jtag, Jname, Xtag, Xname, Vtype, Vname):
     if Jname in Jtag: outvalue = Jtag[Jname]
     else: outvalue = Vfalbak
-    add_auto_rest(auto_nameiddata, Vaddmul, outvalue, Jtag, Jname, Xtag, Xname, Vtype, Vname)
+    add_auto_rest(auto_nameiddata, isbool, Vaddmul, outvalue, Jtag, Jname, Xtag, Xname, Vtype, Vname)
 
-def add_auto_rest(auto_nameiddata, Vaddmul, outvalue, Jtag, Jname, Xtag, Xname, Vtype, Vname):
+def add_auto_rest(auto_nameiddata, isbool, Vaddmul, outvalue, Jtag, Jname, Xtag, Xname, Vtype, Vname):
     if Vaddmul != None: outvalue = (outvalue+Vaddmul[0])*Vaddmul[1]
     if Jname in auto_nameiddata:
         lmms_autoid, cvpj_autodata = auto_nameiddata[Jname]
         if Vaddmul != None: cvpj_autodata = auto.multiply(cvpj_autodata, Vaddmul[0], Vaddmul[1])
-        lmms_make_main_auto_track(lmms_autoid, cvpj_autodata, Vtype+': '+Vname)
+        lmms_make_main_auto_track(lmms_autoid, cvpj_autodata, isbool, Vtype+': '+Vname)
         autovarX = ET.SubElement(Xtag, Xname)
         autovarX.set('value', str(outvalue))
         autovarX.set('scale_type', 'linear')
@@ -843,12 +845,12 @@ class output_lmms(plugin_output.base):
             if 'main' in projJ['automation']:
                 auto_nameiddata_main = get_auto_ids_data(projJ['automation']['main'])
         
-        add_auto_val(auto_nameiddata_main, None, 120, projJ, 'bpm', headX, 'bpm', 'Song', 'Tempo')
-        add_auto_val(auto_nameiddata_main, [0, 0.01], 0, projJ, 'pitch', headX, 'masterpitch', 'Song', 'Pitch')
-        add_auto_val(auto_nameiddata_main, [0, 100], 1, projJ, 'vol', headX, 'mastervol', 'Song', 'Volume')
+        add_auto_val(auto_nameiddata_main, False, None, 120, projJ, 'bpm', headX, 'bpm', 'Song', 'Tempo')
+        add_auto_val(auto_nameiddata_main, False, [0, 0.01], 0, projJ, 'pitch', headX, 'masterpitch', 'Song', 'Pitch')
+        add_auto_val(auto_nameiddata_main, False, [0, 100], 1, projJ, 'vol', headX, 'mastervol', 'Song', 'Volume')
 
-        add_auto_val(auto_nameiddata_main, None, 4, projJ, 'timesig_numerator', headX, 'timesig_numerator', 'Song', 'Numerator')
-        add_auto_val(auto_nameiddata_main, None, 4, projJ, 'timesig_denominator', headX, 'timesig_denominator', 'Song', 'Denominator')
+        add_auto_val(auto_nameiddata_main, False, None, 4, projJ, 'timesig_numerator', headX, 'timesig_numerator', 'Song', 'Numerator')
+        add_auto_val(auto_nameiddata_main, False, None, 4, projJ, 'timesig_denominator', headX, 'timesig_denominator', 'Song', 'Denominator')
 
         lmms_encode_tracks(trkcX, trksJ, trkorderJ, trkplacementsJ)
 

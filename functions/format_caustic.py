@@ -52,6 +52,7 @@ def deconstruct_SPAT(bio_in):
     for patletter in range(4): 
         for patnum in range(16): 
             l_patterns[patletters[patletter]+str(patnum+1)] = {}
+            l_patterns[patletters[patletter]+str(patnum+1)]['auto'] = {}
 
     SPAT_size = int.from_bytes(bio_in.read(4), "little")
     SPAT_data = bio_in.read(SPAT_size)
@@ -72,6 +73,35 @@ def deconstruct_SPAT(bio_in):
         for patnum in range(16): 
             numnote = l_patterns[patletters[patletter]+str(patnum+1)]['numnote']
             l_patterns[patletters[patletter]+str(patnum+1)]['notes'] = parse_note(SPAT_str, numnote)
+
+    SPAT_str.read(512)
+    autotrpack = struct.unpack("f", SPAT_str.read(4))
+    autopatid = struct.unpack("I"*64, SPAT_str.read(4*64))
+
+    usedpatauto = []
+
+    for patletter in range(4): 
+        for patnum in range(16): 
+            patid = patletters[patletter]+str(patnum+1)
+            patusedcount = autopatid[patnum+(patletter*16)]
+            for _ in range(patusedcount):
+                usedpatauto.append(patid)
+
+    SPAT_str.read(256) #print(struct.unpack("I"*64, SPAT_str.read(4*64)))
+    SPAT_str.read(512)
+
+    for usedpatid in usedpatauto:
+        patauto_header = struct.unpack("I xxxx xxxx xxxx f xxxx", SPAT_str.read(24))
+        patauto_measure = l_patterns[usedpatid]['measures']*32
+        patauto_data = struct.unpack("f"*patauto_measure, SPAT_str.read(4*patauto_measure))
+
+        patautodata = {}
+        patautodata['smooth'] = patauto_header[1]
+        patautodata['data'] = patauto_data
+
+        #print(usedpatid, patauto_header)
+
+        l_patterns[usedpatid]['auto'][patauto_header[0]] = patautodata
 
     return l_patterns
 
@@ -338,6 +368,17 @@ def deconstruct_machine(datain, l_machine):
         presetpath_size = int.from_bytes(data_str.read(4), "little")
         l_machine['presetpath'] = data_str.read(presetpath_size).split(b'\x00')[0].decode('ascii')
         data_str.read(4)
+        l_machine['patterns'] = deconstruct_SPAT(data_str)
+    # -------------------------------- SawSynth --------------------------------
+    elif l_machine['id'] == 'SAWS':
+        l_machine['unknown1'] = int.from_bytes(data_str.read(2), "little")
+        l_machine['unknown2'] = int.from_bytes(data_str.read(1), "little")
+        l_machine['unknown3'] = int.from_bytes(data_str.read(1), "little")
+        l_machine['controls'] = deconstruct_CCOL(data_str)
+        l_machine['presetname'] = data_str.read(32).split(b'\x00')[0].decode('ascii')
+        presetpath_size = int.from_bytes(data_str.read(4), "little")
+        l_machine['presetpath'] = data_str.read(presetpath_size).split(b'\x00')[0].decode('ascii')
+        data_str.read(8)
         l_machine['patterns'] = deconstruct_SPAT(data_str)
     # -------------------------------- 8BitSynth --------------------------------
     elif l_machine['id'] == '8SYN':

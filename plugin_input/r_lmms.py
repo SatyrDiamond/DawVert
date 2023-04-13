@@ -16,7 +16,6 @@ from functions import colors
 from functions import auto
 from functions import tracks
 
-plugin_auto_id = 1000
 lfoshape = ['sine', 'tri', 'saw', 'square', 'custom', 'random']
 arpdirection = ['up', 'down', 'updown', 'downup', 'random']
 
@@ -75,10 +74,18 @@ plugincolors['zynaddsubfx'] = [0.75, 0.75, 0.75]
 # ------- functions -------
 
 
+plugin_auto_id = 1000
 def get_plugin_auto_id():
     global plugin_auto_id
     plugin_auto_id += 1
     return 'plugin'+str(plugin_auto_id)
+
+slot_auto_id = 1000
+def get_slot_auto_id():
+    global slot_auto_id
+    slot_auto_id += 1
+    return 'slot'+str(slot_auto_id)
+
 
 
 def getvstparams(plugindata, xmldata, cvpj_data):
@@ -573,14 +580,12 @@ def lmms_decode_effectslot(fxslotX):
     fxslotJ = {}
     fxpluginname = fxslotX.get('name')
     fxcvpj_l_plugindata = {}
-    fxslotJ['enabled'] = int(fxslotX.get('on'))
-    wet = float(fxslotX.get('wet'))
-    if wet < 0:
-        fxslotJ['add_dry_minus_wet'] = 1
-        fxslotJ['wet'] = -wet
-    else:
-        fxslotJ['add_dry_minus_wet'] = 0
-        fxslotJ['wet'] = wet
+
+    auto_id_slot = get_slot_auto_id()
+    fxslotJ['slotautoid'] = auto_id_slot
+
+    fxslotJ['enabled'] = lmms_auto_getvalue(fxslotX, 'on', 0, ['slot', auto_id_slot, 'enabled'])
+    fxslotJ['wet'] = lmms_auto_getvalue(fxslotX, 'wet', 0, ['slot', auto_id_slot, 'wet'])
 
     auto_id_plugin = get_plugin_auto_id()
     fxslotJ['pluginautoid'] = auto_id_plugin
@@ -785,6 +790,7 @@ class input_lmms(plugin_input.base):
         l_automation['track'] = {}
         l_automation['fxmixer'] = {}
         l_automation['plugin'] = {}
+        l_automation['slot'] = {}
 
         trackdata = cvpj_l['track_data']
 
@@ -801,15 +807,23 @@ class input_lmms(plugin_input.base):
                         elif s_autopl_id[2] == 'pan': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
                         elif s_autopl_id[2] == 'enabled': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, -1, -1)
                         else: temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 1)
+
                 if s_autopl_id[0] == 'main':
                     if s_autopl_id[1] == 'vol': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 0.01)
                     elif s_autopl_id[1] == 'pitch': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 100)
                     else: l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 1)
+
                 if s_autopl_id[0] == 'fxmixer':
                     if str(s_autopl_id[1]) in fxrackdata:
                         if s_autopl_id[1] not in l_automation['fxmixer']: l_automation['fxmixer'][s_autopl_id[1]] = {}
                         temp_pla = l_automation['fxmixer'][s_autopl_id[1]]
                         if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = s_autopl_data
+
+                if s_autopl_id[0] == 'slot':
+                    if s_autopl_id[1] not in l_automation['slot']: l_automation['slot'][s_autopl_id[1]] = {}
+                    temp_pla = l_automation['slot'][s_autopl_id[1]]
+                    temp_pla[s_autopl_id[2]] = s_autopl_data
+
                 if s_autopl_id[0] == 'plugin':
                     if s_autopl_id[1] not in l_automation['plugin']: l_automation['plugin'][s_autopl_id[1]] = {}
                     temp_pla = l_automation['plugin'][s_autopl_id[1]]

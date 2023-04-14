@@ -158,21 +158,14 @@ def pat_auto_place_part(pl_position, pl_duration, auto_smooth, auto_points):
     auto_duration = int(len(auto_points))
     for _ in range((int(pl_duration)*2)-1):
         point_value = auto_points[auto_curpoint]
-        if auto_smooth == 0.0: 
-            cvpj_placement_points.append([auto_curpoint/2, point_value, 'instant'])
-            #print(auto_curpoint/2, point_value, 'instant')
+        if auto_smooth == 0.0: cvpj_placement_points.append([auto_curpoint/2, point_value, 'instant'])
         else:
             cvpj_placement_points.append([auto_curpoint/2, point_value, 'normal'])
-            #print(auto_curpoint/2, point_value, 'normal', end=' | ')
-            if auto_smooth != 1.0: 
-                cvpj_placement_points.append([(auto_curpoint/2)+(auto_smooth/2), point_value, 'normal'])
-                #print((auto_curpoint/2)+(auto_smooth/2), point_value, 'normal')
-            #else: print()
+            if auto_smooth != 1.0: cvpj_placement_points.append([(auto_curpoint/2)+(auto_smooth/2), point_value, 'normal'])
         auto_curpoint += 1
         if auto_curpoint == auto_duration: 
             auto_curpoint = 0
             cvpj_placements.append(cvpj_placement_points)
-            #print(cvpj_placement_points)
 
     out_autopl = {}
     out_autopl['position'] = pl_position
@@ -187,26 +180,15 @@ def pat_auto_place_part(pl_position, pl_duration, auto_smooth, auto_points):
 def pat_auto_place(pl_position, pl_duration, autodata):
     auto_smooth = autodata['smooth']
     auto_points = autodata['data']
-
-
-    #print('------------- POINT START ----------------', pl_duration,'/',auto_duration)
-
     auto_duration = int(len(auto_points))
-
-    print('LEN', pl_duration/(auto_duration/2), pl_duration, auto_duration/2)
-
     remainingloops = pl_duration
-
     out_autopls = []
-
     looppos = 0
     while remainingloops > 0:
         loopsize = min(1, remainingloops/(auto_duration/2))
-        print(looppos, loopsize)
         remainingloops -= auto_duration/2
         out_autopls.append(pat_auto_place_part(pl_position+looppos, (auto_duration/2)*loopsize, auto_smooth, auto_points))
         looppos += auto_duration/2
-
     return out_autopls
 
 class input_cvpj_r(plugin_input.base):

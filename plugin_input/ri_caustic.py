@@ -385,12 +385,12 @@ class input_cvpj_r(plugin_input.base):
                 for slotnum in CausticFXData:
                     if CausticFXData[slotnum] != {}: 
                         slot_fxslotdata = CausticFXData[slotnum]['controls']
-                        cvpj_fxchaindata.append(
-                            make_fxslot(
+                        cvpj_fxslot = make_fxslot(
                                 caustic_fxtype[CausticFXData[slotnum]['type']], 
                                 slot_fxslotdata, 
                                 'machine'+str(machnum)+'_slot'+str(slotnum))
-                            )
+                        cvpj_fxslot['enabled'] = int(not int(slot_fxslotdata[5]))
+                        cvpj_fxchaindata.append(cvpj_fxslot)
 
             slot_mixereqfxslotdata = {}
             slot_mixereqfxslotdata['bass'] = mach_mixer_eq_low[machnum-1]
@@ -474,8 +474,6 @@ class input_cvpj_r(plugin_input.base):
                 if machnum+64 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'track', 'MACH'+str(auto_machid), 'pan', auto.multiply(tp2cvpjp(AUTO_data[mixerid][machnum+64]),-0.5,2))
                 if machnum+72 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(auto_machid)+'_width', 'width', tp2cvpjp(AUTO_data[mixerid][machnum+72]))
 
-            #r_fx_audio
-
         for mixernum in range(2):
             mixerid = 'FX_'+str(mixernum+1)
             for autonum in AUTO_data[mixerid]:
@@ -483,15 +481,26 @@ class input_cvpj_r(plugin_input.base):
                 autofx_slot = (autonum//8)-(autofx_num*2)
                 autofx_ctrl = autonum-(autofx_slot*8)-(autofx_num*16)
                 cvpj_fx_autoid = 'machine'+str(autofx_num+1+(mixernum*7))+'_slot'+str(autofx_slot+1)
-                tracks.a_add_auto_pl(cvpj_l, 'plugin', cvpj_fx_autoid, str(autofx_ctrl), tp2cvpjp(AUTO_data[mixerid][autonum]))
+
+                cvpj_auto_pl = tp2cvpjp(AUTO_data[mixerid][autonum])
+
+                if autofx_ctrl == 5: 
+                    cvpj_auto_type = 'slot'
+                    cvpj_auto_ctrl = 'enabled'
+                    cvpj_auto_pl = auto.multiply(cvpj_auto_pl, -1, -1)
+                else: 
+                    cvpj_auto_type = 'plugin'
+                    cvpj_auto_ctrl = str(autofx_ctrl)
+
+                tracks.a_add_auto_pl(cvpj_l, cvpj_auto_type, cvpj_fx_autoid, cvpj_auto_ctrl, cvpj_auto_pl)
 
         master_params = {}
 
-        for test in MSTR['CCOL']:
-            if test in master_idnames:
-                t_fxtypeparam = master_idnames[test]
+        for causticidnum in MSTR['CCOL']:
+            if causticidnum in master_idnames:
+                t_fxtypeparam = master_idnames[causticidnum]
                 if t_fxtypeparam[0] not in master_params: master_params[t_fxtypeparam[0]] = {}
-                master_params[t_fxtypeparam[0]][t_fxtypeparam[1]] = MSTR['CCOL'][test]
+                master_params[t_fxtypeparam[0]][t_fxtypeparam[1]] = MSTR['CCOL'][causticidnum]
 
         master_fxchaindata = []
 
@@ -500,15 +509,51 @@ class input_cvpj_r(plugin_input.base):
             for slotnum in CausticFXData:
                 if CausticFXData[slotnum] != {}: 
                     slot_fxslotdata = CausticFXData[slotnum]['controls']
-                    master_fxchaindata.append(
-                        make_fxslot(
-                            caustic_fxtype[CausticFXData[slotnum]['type']], 
-                            slot_fxslotdata, 
-                            'master_slot'+str(slotnum))
-                        )
 
-        master_fxchaindata.append( make_fxslot('master_eq', master_params['eq'], 'master_eq') )
-        master_fxchaindata.append( make_fxslot('master_limiter', master_params['limiter'], 'master_limiter') )
+                    cvpj_fxslot = make_fxslot(
+                        caustic_fxtype[CausticFXData[slotnum]['type']], 
+                        slot_fxslotdata, 
+                        'master_slot'+str(slotnum))
+                    cvpj_fxslot['enabled'] = int(not int(slot_fxslotdata[5]))
+                    master_fxchaindata.append(cvpj_fxslot)
+
+        cvpj_fxslot_eq = make_fxslot('master_eq', master_params['eq'], 'master_eq')
+        cvpj_fxslot_eq['enabled'] = int(not int(master_params['eq']['muted']))
+        cvpj_fxslot_limiter = make_fxslot('master_limiter', master_params['limiter'], 'master_limiter')
+        cvpj_fxslot_limiter['enabled'] = int(not int(master_params['limiter']['muted']))
+
+        master_fxchaindata.append(cvpj_fxslot_eq)
+        master_fxchaindata.append(cvpj_fxslot_limiter)
+
+        #print(AUTO_data)
+
+        for autonum in AUTO_data['MASTER']:
+            if autonum in master_idnames:
+                t_fxtypeparam = master_idnames[autonum]
+                if t_fxtypeparam[0] in ['eq', 'limiter']:
+                    print(t_fxtypeparam)
+                    tracks.a_add_auto_pl(cvpj_l, 'plugin', 'master_'+t_fxtypeparam[0], t_fxtypeparam[1], tp2cvpjp(AUTO_data['MASTER'][autonum]))
+                if t_fxtypeparam == ['main', 'master']:
+                    print(t_fxtypeparam)
+                    tracks.a_add_auto_pl(cvpj_l, 'main', None, 'vol', tp2cvpjp(AUTO_data['MASTER'][autonum]))
+            elif autonum >= 64:
+                autonum_calc = autonum - 64
+                autofx_slot = (autonum_calc//8)
+                autofx_ctrl = autonum-(autofx_slot*8)
+                print(autofx_slot, autofx_ctrl-64)
+
+                cvpj_auto_pl = tp2cvpjp(AUTO_data['MASTER'][autonum])
+
+                if autofx_ctrl-64 == 5: 
+                    cvpj_auto_type = 'slot'
+                    cvpj_auto_ctrl = 'enabled'
+                    cvpj_auto_pl = auto.multiply(cvpj_auto_pl, -1, -1)
+                else: 
+                    cvpj_auto_type = 'plugin'
+                    cvpj_auto_ctrl = str(autofx_ctrl-64)
+
+                cvpj_fx_autoid = 'master_slot'+str(autofx_slot+1)
+                tracks.a_add_auto_pl(cvpj_l, cvpj_auto_type, cvpj_fx_autoid, cvpj_auto_ctrl, cvpj_auto_pl)
 
         tracks.a_addtrack_master(cvpj_l, 'Master', master_params['main']['master'], [0.52, 0.52, 0.52])
 

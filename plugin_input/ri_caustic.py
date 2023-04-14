@@ -152,38 +152,62 @@ def make_fxslot(fx_type, fx_data, auto_id):
     fxslotdata['plugindata']['data'] = fx_data
     return fxslotdata
 
-def pat_auto_place(pl_position, pl_duration, autodata):
-    auto_smooth = autodata['smooth']
-    auto_points = autodata['data']
-
-    auto_duration = int(len(auto_points))
-
-    #print('------------- POINT START ----------------', pl_duration,'/',auto_duration)
-
+def pat_auto_place_part(pl_position, pl_duration, auto_smooth, auto_points):
     auto_curpoint = 0
-    pl_pointpos = 0
-
-    t_autopoints = []
-
-    for _ in range(int(pl_duration*2)):
-        point_pos = pl_pointpos/2
+    cvpj_placement_points = []
+    auto_duration = int(len(auto_points))
+    for _ in range((int(pl_duration)*2)-1):
         point_value = auto_points[auto_curpoint]
-        if auto_smooth == 0.0: t_autopoints.append([point_pos, point_value, 'instant'])
+        if auto_smooth == 0.0: 
+            cvpj_placement_points.append([auto_curpoint/2, point_value, 'instant'])
+            #print(auto_curpoint/2, point_value, 'instant')
         else:
-            t_autopoints.append([point_pos, point_value, 'normal'])
-            if auto_smooth != 1.0: t_autopoints.append([point_pos+(auto_smooth/2), point_value, 'normal'])
-        pl_pointpos += 1
+            cvpj_placement_points.append([auto_curpoint/2, point_value, 'normal'])
+            #print(auto_curpoint/2, point_value, 'normal', end=' | ')
+            if auto_smooth != 1.0: 
+                cvpj_placement_points.append([(auto_curpoint/2)+(auto_smooth/2), point_value, 'normal'])
+                #print((auto_curpoint/2)+(auto_smooth/2), point_value, 'normal')
+            #else: print()
         auto_curpoint += 1
-        if auto_curpoint == auto_duration: auto_curpoint = 0
+        if auto_curpoint == auto_duration: 
+            auto_curpoint = 0
+            cvpj_placements.append(cvpj_placement_points)
+            #print(cvpj_placement_points)
 
     out_autopl = {}
     out_autopl['position'] = pl_position
     out_autopl['duration'] = pl_duration
     out_autopl['points'] = []
 
-    for t_ap in t_autopoints:
+    for t_ap in cvpj_placement_points:
         out_autopl['points'].append({"position": t_ap[0], "value": t_ap[1], "type": t_ap[2]})
+
     return out_autopl
+
+def pat_auto_place(pl_position, pl_duration, autodata):
+    auto_smooth = autodata['smooth']
+    auto_points = autodata['data']
+
+
+    #print('------------- POINT START ----------------', pl_duration,'/',auto_duration)
+
+    auto_duration = int(len(auto_points))
+
+    print('LEN', pl_duration/(auto_duration/2), pl_duration, auto_duration/2)
+
+    remainingloops = pl_duration
+
+    out_autopls = []
+
+    looppos = 0
+    while remainingloops > 0:
+        loopsize = min(1, remainingloops/(auto_duration/2))
+        print(looppos, loopsize)
+        remainingloops -= auto_duration/2
+        out_autopls.append(pat_auto_place_part(pl_position+looppos, (auto_duration/2)*loopsize, auto_smooth, auto_points))
+        looppos += auto_duration/2
+
+    return out_autopls
 
 class input_cvpj_r(plugin_input.base):
     def __init__(self): pass
@@ -437,10 +461,11 @@ class input_cvpj_r(plugin_input.base):
                 if 'patterns' in machines[SEQNe[0]]:
                     autodata = machines[SEQNe[0]]['patterns'][t_patid]['auto']
 
-                    for test in autodata:
-                        single_patautodata = autodata[test]
+                    for autoid in autodata:
+                        single_patautodata = autodata[autoid]
                         ctrlpatautopl = pat_auto_place(SEQNe_pos, SEQNe_len, single_patautodata)
-                        tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(SEQNe_mach), str(test), ctrlpatautopl)
+                        for s_apl in ctrlpatautopl:
+                            tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(SEQNe_mach), str(autoid), s_apl)
 
 
         for t_track_placement in t_track_placements:

@@ -6,6 +6,7 @@ from functions import placements
 from functions import idvals
 from functions import tracks
 import plugin_input
+import math
 import json
 
 ceol_colors = {}
@@ -18,12 +19,22 @@ ceol_colors[5] = [0.07, 0.56, 0.91]
 
 datapos = 0
 
+globalfxname = ['delay','chorus','reverb','distortion','low_boost','compresser','high_pass']
+
 def ceol_read():
     global datapos
     global ceol_data
     output = int(ceol_data[datapos])
     datapos += 1
     return output
+
+def make_fxslot(fx_type, fx_data):
+    fxslotdata = {}
+    fxslotdata['plugin'] = 'native-boscaceoil'
+    fxslotdata['plugindata'] = {}
+    fxslotdata['plugindata']['name'] = fx_type
+    fxslotdata['plugindata']['data'] = fx_data
+    return fxslotdata
 
 class input_ceol(plugin_input.base):
     def __init__(self): pass
@@ -77,6 +88,12 @@ class input_ceol(plugin_input.base):
         ceol_basic_barlength = ceol_read()
         print('[input-boscaceoil] Bar Length: '+str(ceol_basic_barlength))
 
+        cvpj_master_fxchain = []
+        cvpj_master_fxchain.append(make_fxslot(globalfxname[ceol_basic_effect], {'power': ceol_basic_effectvalue}))
+
+        tracks.a_addtrack_master(cvpj_l, 'Master', {}, [0.31373, 0.39608, 0.41569])
+        tracks.a_fx_audio_master(cvpj_l, cvpj_master_fxchain)
+
         ceol_numinstrument = ceol_read()
 
         t_key_offset = []
@@ -97,6 +114,9 @@ class input_ceol(plugin_input.base):
             print('Pal: '+str(ceol_inst_palette), end=', ')
             print('CutRes: '+str(ceol_inst_cutoff)+'/'+str(ceol_inst_resonance))
 
+            initcutoffval = ceol_inst_cutoff
+            calc_initcutoffval = pow(initcutoffval, 2)*(925/2048)
+
             cvpj_instvol = ceol_inst_volume/256
 
             if ceol_inst_palette in ceol_colors:  cvpj_instcolor = ceol_colors[ceol_inst_palette]
@@ -112,6 +132,14 @@ class input_ceol(plugin_input.base):
                 cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank':128, 'inst':0}}
             else: 
                 cvpj_instname = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'name')
+                cvpj_instdata = {'plugin': 'native-boscaceoil', 'plugindata': {'name':'instrument', 'instnum': ceol_inst_number}}
+
+            cvpj_plugindata = cvpj_instdata['plugindata']
+            cvpj_plugindata['filter'] = {}
+            cvpj_plugindata['filter']['cutoff'] = calc_initcutoffval
+            cvpj_plugindata['filter']['reso'] = ceol_inst_resonance
+            cvpj_plugindata['filter']['type'] = "lowpass"
+
 
             if ceol_inst_number == 363: t_key_offset.append(60)
             if ceol_inst_number == 364: t_key_offset.append(48)

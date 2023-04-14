@@ -145,6 +145,7 @@ def tp2cvpjp(twopoints):
 def make_fxslot(fx_type, fx_data, auto_id):
     fxslotdata = {}
     fxslotdata['pluginautoid'] = auto_id
+    fxslotdata['slotautoid'] = auto_id
     fxslotdata['plugin'] = 'native-caustic'
     fxslotdata['plugindata'] = {}
     fxslotdata['plugindata']['name'] = fx_type
@@ -540,7 +541,6 @@ class input_cvpj_r(plugin_input.base):
                 autonum_calc = autonum - 64
                 autofx_slot = (autonum_calc//8)
                 autofx_ctrl = autonum-(autofx_slot*8)
-                print(autofx_slot, autofx_ctrl-64)
 
                 cvpj_auto_pl = tp2cvpjp(AUTO_data['MASTER'][autonum])
 

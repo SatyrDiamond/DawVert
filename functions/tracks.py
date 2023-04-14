@@ -148,6 +148,9 @@ def m_playlist_pl_add(cvpj_l, idnum, placement_data):
         if str(idnum) in cvpj_l['playlist']:
             cvpj_l['playlist'][str(idnum)]['placements_notes'].append(placement_data)
 
+def m_fx_audio_inst(cvpj_l, idnum, chain_fx_audio):
+    if chain_fx_audio != None: cvpj_l['instruments_data'][idnum]['chain_fx_audio'] = chain_fx_audio
+
 def m_add_nle(cvpj_l, patid, nle_notelist, nle_name):
     if 'notelistindex' not in cvpj_l: cvpj_l['notelistindex'] = {}
     cvpj_l['notelistindex'][patid] = {}

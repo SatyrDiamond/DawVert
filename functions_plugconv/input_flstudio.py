@@ -25,7 +25,7 @@ def convert_inst(instdata):
 	pluginname = instdata['plugin']
 	plugindata = instdata['plugindata']
 	fl_plugdata = base64.b64decode(plugindata['data'])
-	fl_plugstr = data_bytes.bytearray2BytesIO(base64.b64decode(plugindata['data']))
+	fl_plugstr = data_bytes.to_bytesio(base64.b64decode(plugindata['data']))
 
 	# ---------------------------------------- 3xOsc ----------------------------------------
 	if plugindata['name'].lower() == '3x osc':

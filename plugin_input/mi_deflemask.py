@@ -131,7 +131,7 @@ class input_cvpj_r(plugin_input.base):
         filedata = bytestream.read()
         try:
             zlibdata = zlib.decompress(filedata)
-            dmfdata = data_bytes.bytearray2BytesIO(zlibdata)
+            dmfdata = data_bytes.to_bytesio(zlibdata)
             dmf_header = dmfdata.read(16)
             if dmf_header == b'.DelekDefleMask.': output = True
             else: output = False
@@ -139,7 +139,7 @@ class input_cvpj_r(plugin_input.base):
         return output
     def parse(self, input_file, extra_param):
         bytestream = open(input_file, 'rb')
-        bio_dmf = data_bytes.bytearray2BytesIO(zlib.decompress(bytestream.read()))
+        bio_dmf = data_bytes.to_bytesio(zlib.decompress(bytestream.read()))
 
         dmf_header = bio_dmf.read(16)
         if dmf_header != b'.DelekDefleMask.':

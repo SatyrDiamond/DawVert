@@ -6,7 +6,7 @@ import numpy as np
 
 # ----- Bytes -----
 
-def bytearray2BytesIO(input):
+def to_bytesio(input):
 	data = BytesIO()
 	data.write(input)
 	data.seek(0)
@@ -39,8 +39,8 @@ def unsign_16(sampledata):
     return sampledatabytes.tobytes('C')
 
 def mono2stereo(leftdata, rightdata, samplebytes):
-	leftdata_stream = bytearray2BytesIO(leftdata)
-	rightdata_stream = bytearray2BytesIO(rightdata)
+	leftdata_stream = to_bytesio(leftdata)
+	rightdata_stream = to_bytesio(rightdata)
 	output_stream = BytesIO()
 	for _ in range(int(len(leftdata)/samplebytes)):
 		output_stream.write(leftdata_stream.read(samplebytes))
@@ -63,7 +63,7 @@ def riff_read(riffbytebuffer, offset):
 	return customchunk_read(riffbytebuffer, offset, 4, 4, "little", False)
 
 def customchunk_read(riffbytebuffer, offset, in_namesize, in_chunksize, endian, debugtxt):
-	if isinstance(riffbytebuffer, (bytes, bytearray)) == True: riffbytebuffer = bytearray2BytesIO(riffbytebuffer)
+	if isinstance(riffbytebuffer, (bytes, bytearray)) == True: riffbytebuffer = to_bytesio(riffbytebuffer)
 	riffobjects = []
 	riffbytebuffer.seek(0,2)
 	filesize = riffbytebuffer.tell()

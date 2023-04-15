@@ -192,7 +192,7 @@ def parse_pattern(file_stream, num_channels):
     xm_pat_extra_data = file_stream.read(xm_pat_header_length - (basepos_end-basepos))
     xm_pat_data = file_stream.read(xm_pat_patterndata_size)
 
-    bio_patdata = data_bytes.bytearray2BytesIO(xm_pat_data)
+    bio_patdata = data_bytes.to_bytesio(xm_pat_data)
 
     for rownum in range(xm_pat_num_rows):
         if xm_pat_patterndata_size != 0: rowsdata = parse_xm_row(bio_patdata, num_channels, 0)

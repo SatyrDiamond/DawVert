@@ -40,7 +40,7 @@ def splitbyte(value):
     return (first, second)
 
 def parse_ma3_Mtsq(Mtsqdata, tb_ms):
-    bio_mmf_Mtsq = data_bytes.bytearray2BytesIO(Mtsqdata)
+    bio_mmf_Mtsq = data_bytes.to_bytesio(Mtsqdata)
     bio_mmf_Mtsq_size = len(Mtsqdata)
     notecount = 0
     #print('size', bio_mmf_Mtsq_size)
@@ -136,7 +136,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
     return cvpj_l
 
 def parse_ma3_track(datain, tracknum):
-    bio_mmf_track = data_bytes.bytearray2BytesIO(datain)
+    bio_mmf_track = data_bytes.to_bytesio(datain)
     trk_type_format, trk_type_seq, trk_tb_d, trk_tb_g = struct.unpack("BBBB", bio_mmf_track.read(4))
     if trk_tb_d == 2: tb_ms = 0.004
     if trk_tb_d == 3: tb_ms = 0.005
@@ -196,7 +196,7 @@ class input_mmf(plugin_input.base):
         trackparsed = False
         for mmf_chunk in mmf_chunks_ins:
             if mmf_chunk[0] == b'CNTI':
-                bio_mmf_cnti = data_bytes.bytearray2BytesIO(mmf_chunk[1])
+                bio_mmf_cnti = data_bytes.to_bytesio(mmf_chunk[1])
                 mmf_cnti_class, mmf_cnti_type, mmf_cnti_codetype, mmf_cnti_status, mmf_cnti_counts = struct.unpack("BBBBB", bio_mmf_cnti.read(5))
                 mmf_cnti_chunks = data_bytes.riff_read_big(bio_mmf_cnti, 5)
                 for mmf_cnti_chunk in mmf_cnti_chunks:

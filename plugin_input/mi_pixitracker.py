@@ -84,7 +84,7 @@ class input_cvpj_f(plugin_input.base):
                 for _ in range(pixi_c_pat_tracks): t_patdata.append(t_pattrack.copy())
                 print('[input-pixitracker]    Tracks:',pixi_c_pat_tracks)
                 print('[input-pixitracker]    Length:',pixi_c_pat_len)
-                pixi_c_pat_data = data_bytes.bytearray2BytesIO(pixi_chunk[1][12:])
+                pixi_c_pat_data = data_bytes.to_bytesio(pixi_chunk[1][12:])
                 for c_len_num in range(pixi_c_pat_len):
                     for c_trk_num in range(pixi_c_pat_tracks):
                         t_patdata[c_trk_num][c_len_num] = struct.unpack('bbbb', pixi_c_pat_data.read(4))

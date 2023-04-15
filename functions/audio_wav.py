@@ -77,7 +77,7 @@ def decode(wavfile):
 				out_wavinfo['datablocksize'] = int.from_bytes(bytevalues_fmt_chunk[4], "little")
 				out_wavinfo['bits'] = int.from_bytes(bytevalues_fmt_chunk[5], "little")
 			if chunk_wavdata[0] == b'smpl':
-				bytevalues_smpl_chunk = data_bytes.bytearray2BytesIO(chunk_wavdata[1])
+				bytevalues_smpl_chunk = data_bytes.to_bytesio(chunk_wavdata[1])
 				out_instdata['manufacturer'] = int.from_bytes(bytevalues_smpl_chunk.read(4), "little")
 				out_instdata['product'] = int.from_bytes(bytevalues_smpl_chunk.read(4), "little")
 				out_instdata['sampleperiod'] = int.from_bytes(bytevalues_smpl_chunk.read(4), "little")

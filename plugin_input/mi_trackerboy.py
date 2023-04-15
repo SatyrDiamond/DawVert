@@ -139,7 +139,7 @@ class input_trackerboy(plugin_input.base):
         t_instruments = {}
         for trackerboy_chunk in trackerboy_chunks:
             if trackerboy_chunk[0] == b'INST':
-                tb_instdata = data_bytes.bytearray2BytesIO(trackerboy_chunk[1])
+                tb_instdata = data_bytes.to_bytesio(trackerboy_chunk[1])
                 tb_id = tb_instdata.read(1)[0]+1
                 print("[input-trackerboy] Inst " + str(tb_id) + ':')
                 tb_name = readstring(tb_instdata)
@@ -171,7 +171,7 @@ class input_trackerboy(plugin_input.base):
             if trackerboy_chunk[0] == b'SONG':
                 if songnum == selectedsong:
                     #print(trackerboy_chunk[1])
-                    tb_songdata = data_bytes.bytearray2BytesIO(trackerboy_chunk[1])
+                    tb_songdata = data_bytes.to_bytesio(trackerboy_chunk[1])
                     print("[input-trackerboy] Song:")
                     tb_name = readstring(tb_songdata)
                     print("[input-trackerboy]     Name: " + str(tb_name))
@@ -224,7 +224,7 @@ class input_trackerboy(plugin_input.base):
                 songnum += 1
 
             if trackerboy_chunk[0] == b'WAVE':
-                tb_instdata = data_bytes.bytearray2BytesIO(trackerboy_chunk[1])
+                tb_instdata = data_bytes.to_bytesio(trackerboy_chunk[1])
                 tb_id = tb_instdata.read(1)[0]+1
                 print("[input-trackerboy] Wave " + str(tb_id) + ':')
                 tb_name = readstring(tb_instdata)

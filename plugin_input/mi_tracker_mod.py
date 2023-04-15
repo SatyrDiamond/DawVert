@@ -181,14 +181,14 @@ class input_mod(plugin_input.base):
         cvpj_l_instrumentsorder = []
 
         file_stream = open(input_file, 'rb')
-        mod_name = file_stream.read(20).decode().rstrip('\x00')
+        mod_name = data_bytes.readstring_fixedlen(file_stream, 20)
         print("[input-mod] Song Name: " + str(mod_name))
         table_samples = []
         cvpj_bpm = 125
         current_speed = 6
         for mod_numinst in range(31):
             mod_numinst += 1
-            mod_inst_mod_name = file_stream.read(22).decode().rstrip('\x00').translate(dict.fromkeys(range(32)))
+            mod_inst_mod_name = data_bytes.readstring_fixedlen(file_stream, 22)
 
             mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength = struct.unpack('>HBBHH', file_stream.read(8))
 

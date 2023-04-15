@@ -4,14 +4,7 @@
 import math
 from functions import note_mod
 from functions import notelist_data
-
-def float_range(start,stop,step):
-    istop = int((stop-start) // step)
-    for i in range(int(istop)):
-        yield start + i * step
-
-def overlap(start1, end1, start2, end2):
-    return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
+from functions import xtramath
 
 def getsongduration(projJ):
     trackplacements = projJ['track_placements']

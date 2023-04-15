@@ -535,6 +535,8 @@ class input_it(plugin_input.base):
 
         tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo))
 
+        placements.make_timemarkers(cvpj_l, [4,16], patlentable, None)
+
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = it_header_songname
         cvpj_l['info']['message'] = {}
@@ -546,7 +548,6 @@ class input_it(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        cvpj_l['timemarkers'] = placements.make_timemarkers([4,16], patlentable, None)
 
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = it_header_tempo/(it_header_speed/6)

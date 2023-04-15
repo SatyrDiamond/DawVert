@@ -434,6 +434,7 @@ class input_famistudio(plugin_input.base):
             playlistnum += 1
 
         timesig = placements.get_timesig(PatternLength, fst_beatlength)
+        placements.make_timemarkers(cvpj_l, timesig, PatternLengthList, LoopPoint)
 
         cvpj_l['info'] = {}
         if 'Name' in fst_Main: cvpj_l['info']['title'] = fst_Main['Name']
@@ -446,7 +447,6 @@ class input_famistudio(plugin_input.base):
         
         cvpj_l['timesig_numerator'] = timesig[0]
         cvpj_l['timesig_denominator'] = timesig[1]
-        cvpj_l['timemarkers'] = placements.make_timemarkers(timesig, PatternLengthList, LoopPoint)
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['instruments_data'] = cvpj_l_instrument_data
         cvpj_l['instruments_order'] = cvpj_l_instrument_order

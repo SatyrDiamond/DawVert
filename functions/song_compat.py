@@ -3,6 +3,7 @@
 
 from functions import song
 from functions import notelist_data
+from functions import xtramath
 import json
 import math
 
@@ -312,14 +313,6 @@ def r_removelanes(projJ):
 
 points_items = None
 
-def float_range(start,stop,step):
-    istop = int((stop-start) // step)
-    for i in range(int(istop)):
-        yield start + i * step
-
-def overlap(start1, end1, start2, end2):
-    return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
-
 def single_notelists2placements(placementsdata):
     global points_items
     timepoints = []
@@ -330,7 +323,7 @@ def single_notelists2placements(placementsdata):
 
     if numarea >= 1:
         for num in range(numarea):
-            timepoints_part = float_range(points_items[num][0],points_items[num+1][0],points_items[num][1]*4)
+            timepoints_part = xtramath.float_range(points_items[num][0],points_items[num+1][0],points_items[num][1]*4)
             for timepoints_pp in timepoints_part:
                 if timepoints_pp < points_items[num+1][0]:
                     timepoints.append([timepoints_pp, timepoints_pp+points_items[num][1]*4, False, False])
@@ -342,7 +335,7 @@ def single_notelists2placements(placementsdata):
             for timepoint in timepoints:
                 position = timepoint[0]
                 position_end = timepoint[1]
-                note_overlap = bool(overlap(position, position_end, note_start, note_end))
+                note_overlap = bool(xtramath.overlap(position, position_end, note_start, note_end))
                 if timepoint[2] == False: timepoint[2] = note_overlap
                 if timepoint[3] == False: timepoint[3] = note_overlap and position_end<note_end
         cutranges = []

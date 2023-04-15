@@ -10,6 +10,7 @@
 from functions import placements
 from functions import tracks
 from functions import notelist_data
+from functions import xtramath
 import json
 
 # --------------------------------------------------------------------
@@ -255,9 +256,6 @@ def ri2r(song):
 
 # ---------------------------------- Multiple to Regular ----------------------------------
 
-def overlap(start1, end1, start2, end2):
-    return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
-
 def lanefit_checkoverlap(new_placementdata, placements_table, num):
     not_overlapped = True
     p_pl_pos = new_placementdata['position']
@@ -268,7 +266,7 @@ def lanefit_checkoverlap(new_placementdata, placements_table, num):
         e_pl_pos = lanepl['position']
         e_pl_dur = lanepl['duration']
         e_pl_end = e_pl_pos+e_pl_dur
-        if bool(overlap(p_pl_pos, p_pl_end, e_pl_pos, e_pl_end)) == True: not_overlapped = False
+        if bool(xtramath.overlap(p_pl_pos, p_pl_end, e_pl_pos, e_pl_end)) == True: not_overlapped = False
     return not_overlapped
 
 def lanefit_addpl(new_placementdata, placements_table):
@@ -348,7 +346,7 @@ def m2r_addplacements(placements):
             for e_pla in multiplacements[mpl_num]:
                 e_pla_s = e_pla['position']
                 e_pla_e = e_pla_s + e_pla['duration']
-                total_overlap += overlap(e_pla_s, e_pla_e, pla_s, pla_e)
+                total_overlap += xtramath.overlap(e_pla_s, e_pla_e, pla_s, pla_e)
             if total_overlap == 0:
                 multiplacements[mpl_num].append(placement)
                 success = 1

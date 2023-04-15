@@ -35,11 +35,6 @@ chipname['adpcma'] = 'ADPCM-A'
 chipname['sample'] = 'Sample'
 chipname['c64'] = 'C64'
 
-def splitbyte(value):
-    first = value >> 4
-    second = value & 0x0F
-    return (first, second)
-
 def fxget(fxtype, fxparam, output_param, output_extra): 
     if fxtype == 0 and fxparam != 0:
         arpeggio_first = fxparam >> 4
@@ -57,22 +52,22 @@ def fxget(fxtype, fxparam, output_param, output_extra):
 
     if fxtype == 4: 
         vibrato_params = {}
-        vibrato_params['speed'], vibrato_params['depth'] = splitbyte(fxparam)
+        vibrato_params['speed'], vibrato_params['depth'] = data_bytes.splitbyte(fxparam)
         output_param['vibrato'] = vibrato_params
 
     if fxtype == 5:
-        pos, neg = splitbyte(fxparam)
+        pos, neg = data_bytes.splitbyte(fxparam)
         output_param['vol_slide'] = (neg*-1) + pos
         output_param['slide_to_note'] = (neg*-1) + pos
 
     if fxtype == 6:
-        pos, neg = splitbyte(fxparam)
+        pos, neg = data_bytes.splitbyte(fxparam)
         output_param['vibrato'] = {'speed': 0, 'depth': 0}
         output_param['vol_slide'] = (neg*-1) + pos
 
     if fxtype == 7:
         tremolo_params = {}
-        tremolo_params['speed'], tremolo_params['depth'] = splitbyte(fxparam)
+        tremolo_params['speed'], tremolo_params['depth'] = data_bytes.splitbyte(fxparam)
         output_param['tremolo'] = tremolo_params
 
     if fxtype == 8: 
@@ -82,7 +77,7 @@ def fxget(fxtype, fxparam, output_param, output_extra):
         output_param['sample_offset'] = fxparam*256
 
     if fxtype == 10:
-        pos, neg = splitbyte(fxparam)
+        pos, neg = data_bytes.splitbyte(fxparam)
         output_param['vol_slide'] = (neg*-1) + pos
 
     if fxtype == 11: 

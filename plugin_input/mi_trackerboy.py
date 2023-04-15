@@ -18,11 +18,6 @@ chipname['pulse'] = 'Pulse'
 chipname['noise'] = 'Noise'
 chipname['wavetable'] = 'Wavetable'
 
-def splitbyte(value):
-    first = value >> 4
-    second = value & 0x0F
-    return (first, second)
-
 def readstring(bio_data):
     tb_namelen = int.from_bytes(bio_data.read(2), "little")
     tb_name = bio_data.read(tb_namelen).decode("utf-8")
@@ -39,13 +34,13 @@ def parse_fx_event(l_celldata, fx_p, fx_v):
 
     if fx_p == 13:
         arp_params = [0,0]
-        arp_params[0], arp_params[1] = splitbyte(fx_v)
+        arp_params[0], arp_params[1] = data_bytes.splitbyte(fx_v)
         l_celldata[1][2]['arp'] = arp_params
     if fx_p == 14: l_celldata[1][2]['slide_up_persist'] = fx_v
     if fx_p == 15: l_celldata[1][2]['slide_down_persist'] = fx_v
     if fx_p == 16: l_celldata[1][2]['slide_to_note_persist'] = fx_v
     if fx_p == 17:
-        fine_vib_sp, fine_vib_de = splitbyte(fx_v)
+        fine_vib_sp, fine_vib_de = data_bytes.splitbyte(fx_v)
         vibrato_params = {}
         vibrato_params['speed'] = fine_vib_sp/16
         vibrato_params['depth'] = fine_vib_sp/16
@@ -53,7 +48,7 @@ def parse_fx_event(l_celldata, fx_p, fx_v):
     if fx_p == 18: l_celldata[1][2]['vibrato_delay'] = fx_v
 
     if fx_p == 22: 
-        vol_left, vol_right = splitbyte(fx_v)
+        vol_left, vol_right = data_bytes.splitbyte(fx_v)
         if vol_left < 0: vol_left += 16
         if vol_right < 0: vol_right += 16
         vol_left = vol_left/15
@@ -149,7 +144,7 @@ class input_trackerboy(plugin_input.base):
                 tb_envelopeEnabled = tb_instdata.read(1)[0]
                 tb_envelope = tb_instdata.read(1)[0]
                 if tb_channel != 2:
-                    tb_param1, tb_param2 = splitbyte(tb_envelope)
+                    tb_param1, tb_param2 = data_bytes.splitbyte(tb_envelope)
                     print("[input-trackerboy]     Envelope Enabled: " + str(tb_envelopeEnabled))
                     print("[input-trackerboy]     Vol Env S: " + str(tb_param1))
                     print("[input-trackerboy]     Vol Env P: " + str(tb_param2))

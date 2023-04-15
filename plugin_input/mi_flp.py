@@ -8,13 +8,9 @@ import base64
 import struct
 from functions import format_flp_dec
 from functions import note_mod
+from functions import data_bytes
 from functions import colors
 from functions import notelist_data
-
-def splitbyte(value):
-    first = value >> 4
-    second = value & 0x0F
-    return (first, second)
 
 class input_flp(plugin_input.base):
     def __init__(self): pass
@@ -133,7 +129,7 @@ class input_flp(plugin_input.base):
                     cvpj_note['vol'] = flnote['velocity']/100
                     cvpj_note['cutoff'] = flnote['mod_x']/255
                     cvpj_note['reso'] = flnote['mod_y']/255
-                    cvpj_note['channel'] = splitbyte(flnote['midich'])[1]+1
+                    cvpj_note['channel'] = data_bytes.splitbyte(flnote['midich'])[1]+1
                     cvpj_note['notemod'] = {}
                     is_slide = bool(flnote['flags'] & 0b000000000001000)
 

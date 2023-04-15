@@ -34,11 +34,6 @@ def calc_gatetime(bio_mmf_Mtsq):
 def noteresize(value):
     return value*8
 
-def splitbyte(value):
-    first = value >> 4
-    second = value & 0x0F
-    return (first, second)
-
 def parse_ma3_Mtsq(Mtsqdata, tb_ms):
     bio_mmf_Mtsq = data_bytes.to_bytesio(Mtsqdata)
     bio_mmf_Mtsq_size = len(Mtsqdata)
@@ -60,7 +55,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
 
         #print(str(basepos).ljust(5), end=' ')
 
-        firstbyte = splitbyte(int.from_bytes(bio_mmf_Mtsq.read(1), "big"))
+        firstbyte = data_bytes.splitbyte(int.from_bytes(bio_mmf_Mtsq.read(1), "big"))
         #print(str(firstbyte[0]).ljust(3), end=' ')
 
         if firstbyte[0] == 0:

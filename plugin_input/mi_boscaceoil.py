@@ -91,7 +91,7 @@ class input_ceol(plugin_input.base):
         cvpj_master_fxchain = []
         cvpj_master_fxchain.append(make_fxslot(globalfxname[ceol_basic_effect], {'power': ceol_basic_effectvalue}))
 
-        tracks.a_addtrack_master(cvpj_l, 'Master', {}, [0.31373, 0.39608, 0.41569])
+        tracks.a_addtrack_master(cvpj_l, 'Master', 1, [0.31373, 0.39608, 0.41569])
         tracks.a_fx_audio_master(cvpj_l, cvpj_master_fxchain)
 
         ceol_numinstrument = ceol_read()
@@ -139,7 +139,6 @@ class input_ceol(plugin_input.base):
             cvpj_plugindata['filter']['cutoff'] = calc_initcutoffval
             cvpj_plugindata['filter']['reso'] = ceol_inst_resonance
             cvpj_plugindata['filter']['type'] = "lowpass"
-
 
             if ceol_inst_number == 363: t_key_offset.append(60)
             if ceol_inst_number == 364: t_key_offset.append(48)

@@ -170,18 +170,18 @@ def create_inst(WaveType, fst_Instrument, cvpj_l_instrument_data, cvpj_l_instrum
     cvpj_inst['fxrack_channel'] = fxrack_channel
     cvpj_inst["instdata"] = {}
     cvpj_instdata = cvpj_inst["instdata"]
-    plugname = cvpj_instdata['plugin'] = 'none'
+    cvpj_instdata['plugin'] = 'none'
     plugdata = cvpj_instdata['plugindata'] = {}
     cvpj_instdata['pitch'] = 0
     if WaveType == 'Square1' or WaveType == 'Square2' or WaveType == 'Triangle' or WaveType == 'Noise':
-        plugname = '2a03'
+        cvpj_instdata['plugin'] = '2a03'
         if WaveType == 'Square1' or WaveType == 'Square2': plugdata['wave'] = 'square'
         if WaveType == 'Triangle': plugdata['wave'] = 'triangle'
         if WaveType == 'Noise': plugdata['wave'] = 'noise'
         add_envelopes(plugdata, fst_Instrument)
 
     if WaveType == 'VRC7FM':
-        plugname = 'vrc7'
+        cvpj_instdata['plugin'] = 'vrc7'
         add_envelopes(plugdata, fst_Instrument)
         if 'Vrc7Patch' in fst_Instrument:
             plugdata['use_patch'] = True
@@ -191,24 +191,24 @@ def create_inst(WaveType, fst_Instrument, cvpj_l_instrument_data, cvpj_l_instrum
             plugdata['regs'] = fst_Instrument['Vrc7Reg']
 
     if WaveType == 'VRC6Square' or WaveType == 'VRC6Saw':
-        plugname = 'vrc6'
+        cvpj_instdata['plugin'] = 'vrc6'
         if WaveType == 'VRC6Saw': plugdata['wave'] = 'saw'
         if WaveType == 'VRC6Square': plugdata['wave'] = 'square'
         add_envelopes(plugdata, fst_Instrument)
 
     if WaveType == 'FDS':
-        plugname = 'fds'
+        cvpj_instdata['plugin'] = 'fds'
         add_envelopes(plugdata, fst_Instrument)
         add_envelope(plugdata, fst_Instrument, 'wave', 'FDSWave')
 
     if WaveType == 'N163':
-        plugname = 'namco_163_famistudio'
+        cvpj_instdata['plugin'] = 'namco_163_famistudio'
         add_envelopes(plugdata, fst_Instrument)
         add_envelope(plugdata, fst_Instrument, 'wave', 'N163Wave')
 
     if WaveType == 'S5B':
         plugdata['wave'] = 'square'
-        plugname = 'sunsoft_5b'
+        cvpj_instdata['plugin'] = 'sunsoft_5b'
         add_envelopes(plugdata, fst_Instrument)
 
 

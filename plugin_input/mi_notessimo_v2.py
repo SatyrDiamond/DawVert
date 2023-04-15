@@ -55,7 +55,7 @@ class input_notessimo_v2(plugin_input.base):
         global used_instruments
 
         bytestream = open(input_file, 'rb')
-        nv2_data = data_bytes.bytearray2BytesIO(zlib.decompress(bytestream.read()))
+        nv2_data = data_bytes.to_bytesio(zlib.decompress(bytestream.read()))
         text_songname = getstring(nv2_data)
         text_songauthor = getstring(nv2_data)
         text_date1 = getstring(nv2_data)

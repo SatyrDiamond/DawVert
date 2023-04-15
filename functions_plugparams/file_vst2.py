@@ -54,7 +54,7 @@ def read_vst2_fxSet(in_stream):
 		vst2_header = in_stream.read(4)
 		if vst2_header == b'CcnK':
 			vst2_datasize = int.from_bytes(in_stream.read(4), "big")
-			vst2_data = data_bytes.bytearray2BytesIO(in_stream.read(vst2_datasize))
+			vst2_data = data_bytes.to_bytesio(in_stream.read(vst2_datasize))
 			vst2_ccnk_chunktype = vst2_data.read(4)
 			vst2_ccnk_chunksize = int.from_bytes(vst2_data.read(4), "big")
 			print(vst2_header, vst2_ccnk_chunktype)
@@ -76,7 +76,7 @@ def read_vst2_data(in_stream, platform, pefer_cpu_arch):
 	vst2_header = in_stream.read(4)
 	if vst2_header == b'CcnK':
 		vst2_datasize = int.from_bytes(in_stream.read(4), "big")
-		vst2_data = data_bytes.bytearray2BytesIO(in_stream.read(vst2_datasize))
+		vst2_data = data_bytes.to_bytesio(in_stream.read(vst2_datasize))
 		cvpj_plugindata = read_vst2_chunk(vst2_data, platform, pefer_cpu_arch)
 	return cvpj_plugindata
 

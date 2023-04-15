@@ -56,7 +56,7 @@ def deconstruct_SPAT(bio_in):
 
     SPAT_size = int.from_bytes(bio_in.read(4), "little")
     SPAT_data = bio_in.read(SPAT_size)
-    SPAT_str = data_bytes.bytearray2BytesIO(SPAT_data)
+    SPAT_str = data_bytes.to_bytesio(SPAT_data)
 
     # --------------- measures ---------------
     for patletter in range(4): 
@@ -120,7 +120,7 @@ def deconstruct_autoctrl(SEQN_str, Caustic_Main, auto_cat_id):
 def deconstruct_SEQN(bi_rack, Caustic_Main):
     SEQN_size = int.from_bytes(bi_rack.read(4), "little")
     SEQN_data = bi_rack.read(SEQN_size)
-    SEQN_str = data_bytes.bytearray2BytesIO(SEQN_data)
+    SEQN_str = data_bytes.to_bytesio(SEQN_data)
     SEQN_header = struct.unpack("II", SEQN_str.read(8))
     placementcount = SEQN_header[1]
     pln = []
@@ -248,7 +248,7 @@ def deconstruct_EFFX(bi_rack, Caustic_Main):
     global EFFX_num
     EFFX_size = int.from_bytes(bi_rack.read(4), "little")
     EFFX_data = bi_rack.read(EFFX_size)
-    EFFX_str = data_bytes.bytearray2BytesIO(EFFX_data)
+    EFFX_str = data_bytes.to_bytesio(EFFX_data)
 
     for fxtrk in range(7): 
         Caustic_Main['EFFX'][(fxtrk+1)+(EFFX_num*7)] = {}
@@ -271,7 +271,7 @@ def deconstruct_MIXR(bi_rack, Caustic_Main):
     global MSTR_num
     MIXR_size = int.from_bytes(bi_rack.read(4), "little")
     MIXR_data = bi_rack.read(MIXR_size)
-    MIXR_str = data_bytes.bytearray2BytesIO(MIXR_data)
+    MIXR_str = data_bytes.to_bytesio(MIXR_data)
     MIXR_str.read(4)
     Caustic_Main['MIXR'][MSTR_num] = deconstruct_CCOL(MIXR_str)
     Caustic_Main['MIXR'][MSTR_num]['solomute'] = struct.unpack("bbbbbbbbbbbbbb", MIXR_str.read(14))
@@ -281,7 +281,7 @@ def deconstruct_MIXR(bi_rack, Caustic_Main):
 def deconstruct_MSTR(bi_rack, Caustic_Main):
     MSTR_size = int.from_bytes(bi_rack.read(4), "little")
     MSTR_data = bi_rack.read(MSTR_size)
-    MSTR_str = data_bytes.bytearray2BytesIO(MSTR_data)
+    MSTR_str = data_bytes.to_bytesio(MSTR_data)
 
     master_fx = {}
     for fxslot in range(2): 
@@ -294,7 +294,7 @@ def deconstruct_MSTR(bi_rack, Caustic_Main):
 # --------------------------------------------- Inst ---------------------------------------------
 
 def deconstruct_machine(datain, l_machine):
-    data_str = data_bytes.bytearray2BytesIO(datain)
+    data_str = data_bytes.to_bytesio(datain)
     # -------------------------------- SubSynth --------------------------------
     if l_machine['id'] == 'SSYN':
         l_machine['unknown1'] = int.from_bytes(data_str.read(2), "little")
@@ -553,7 +553,7 @@ def deconstruct_main(filepath):
     for rod_rack in ro_rack:
         if rod_rack[0] == b'RACK':
             rackdata = rod_rack[1]
-            bi_rack = data_bytes.bytearray2BytesIO(rackdata)
+            bi_rack = data_bytes.to_bytesio(rackdata)
 
     bi_rack.seek(0,2)
     racksize = bi_rack.tell()

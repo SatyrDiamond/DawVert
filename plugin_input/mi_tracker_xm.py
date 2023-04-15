@@ -213,7 +213,7 @@ def parse_instrument(file_stream, samplecount):
     xm_inst_header_length = int.from_bytes(file_stream.read(4), "little")
     print("[input-xm]     Header Length: " + str(xm_inst_header_length))
 
-    xm_inst_name = file_stream.read(22).decode('latin_1').rstrip('\x00')
+    xm_inst_name = data_bytes.readstring_fixedlen(file_stream, 22, "windows-1252")
     print("[input-xm]     Name: " + str(xm_inst_name))
     xm_inst_type = file_stream.read(1)[0]
     print("[input-xm]     Type: " + str(xm_inst_type))
@@ -251,7 +251,7 @@ def parse_instrument(file_stream, samplecount):
 
     for _ in range(xm_inst_num_samples):
         sampheader = struct.unpack('IIIBBBBBB', file_stream.read(18))
-        sampname = file_stream.read(22).split(b'\x00' * 1)[0].decode("latin_1")
+        sampname = data_bytes.readstring_fixedlen(file_stream, 22, "windows-1252")
         t_sampleheaders.append([sampheader, sampname])
 
     for t_sampleheader in t_sampleheaders:
@@ -325,10 +325,10 @@ class input_xm(plugin_input.base):
         file_stream = open(input_file, 'rb')
 
         xm_header = file_stream.read(17)
-        xm_name = file_stream.read(20).split(b'\x00' * 1)[0].decode("windows-1252")
+        xm_name = data_bytes.readstring_fixedlen(file_stream, 20, "windows-1252")
         print("[input-xm] Song Name: " + xm_name)
         xm_1a = file_stream.read(1)
-        xm_trkr_name = file_stream.read(20).split(b'\x00' * 1)[0].decode("windows-1252")
+        xm_trkr_name = data_bytes.readstring_fixedlen(file_stream, 20, "windows-1252")
         print("[input-xm] Tracker Name: " + xm_trkr_name)
         xm_version = file_stream.read(2)
         print("[input-xm] Version: " + str(xm_version[1]), str(xm_version[0]))

@@ -32,8 +32,11 @@ class input_color_art(plugin_input.base):
 
         pcnt = 0
 
+        if metadata['alpha'] == False: pcnt_add = 3
+        if metadata['alpha'] == True: pcnt_add = 4
+
         if h >= 40:
-            print('39 max')
+            print('Height is over 40.')
             exit()
 
         for height in range(h-1):
@@ -61,7 +64,7 @@ class input_color_art(plugin_input.base):
 
                 cvpj_l_trackplacements[trackid]['notes'].append(placement_pl)
 
-                pcnt += 3
+                pcnt += pcnt_add
 
             cvpj_l_trackdata[trackid] = trackdata
             cvpj_l_trackordering.append(trackid)

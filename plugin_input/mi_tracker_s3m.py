@@ -48,7 +48,7 @@ class input_s3m(plugin_input.base):
 
         startinststr = 'S3M_Inst_'
 
-        s3m_name = bio_mainfile.read(28).split(b'\x00' * 1)[0].decode("utf-8")
+        s3m_name = data_bytes.readstring_fixedlen(bio_mainfile, 28, "windows-1252")
         print("[input-st3] Song Name: " + str(s3m_name))
         s3m_sig1 = bio_mainfile.read(1)
         s3m_type = bio_mainfile.read(1)
@@ -99,7 +99,7 @@ class input_s3m(plugin_input.base):
         for s3m_pointer_inst in s3m_pointer_insts:
             bio_mainfile.seek(s3m_pointer_inst)
             s3m_inst_type = int.from_bytes(bio_mainfile.read(1), "little")
-            s3m_inst_filename = bio_mainfile.read(12)
+            s3m_inst_filename = data_bytes.readstring_fixedlen(bio_mainfile, 12, "windows-1252")
             if s3m_inst_type == 0 or s3m_inst_type == 1:
                 s3m_inst_s3m_pointer_DataH = bio_mainfile.read(1)
                 s3m_inst_s3m_pointer_DataL = bio_mainfile.read(2)
@@ -116,23 +116,21 @@ class input_s3m(plugin_input.base):
                 s3m_inst_loopon = int(s3m_inst_flags[7], 2)
                 s3m_inst_c2spd = int.from_bytes(bio_mainfile.read(4), "little")
                 s3m_inst_internal = bio_mainfile.read(12)
-                s3m_inst_namebytes = bio_mainfile.read(28)
+                s3m_inst_name = data_bytes.readstring_fixedlen(bio_mainfile, 28, "windows-1252")
                 s3m_inst_sig = bio_mainfile.read(4)
-            t_inst_filename = s3m_inst_filename.split(b'\x00' * 1)[0].decode("latin_1")
-            t_inst_name = s3m_inst_namebytes.split(b'\x00' * 1)[0].decode("latin_1")
 
-            s3m_t_inst_name = startinststr + str(s3m_numinst+1)
+            cvpj_instid = startinststr + str(s3m_numinst+1)
 
-            cvpj_l_instruments[s3m_t_inst_name] = {}
-            cvpj_l_single_inst = cvpj_l_instruments[s3m_t_inst_name]
-            cvpj_l_instrumentsorder.append(s3m_t_inst_name)
+            cvpj_l_instruments[cvpj_instid] = {}
+            cvpj_l_single_inst = cvpj_l_instruments[cvpj_instid]
+            cvpj_l_instrumentsorder.append(cvpj_instid)
 
-            if s3m_inst_type == 0: print("[input-st3] Message #" + str(s3m_numinst) + ': "' + t_inst_name + '", Filename:"' + t_inst_filename+ '"')
-            else: print("[input-st3] Instrument #" + str(s3m_numinst) + ': "' + t_inst_name + '", Filename:"' + t_inst_filename+ '"')
+            if s3m_inst_type == 0: print("[input-st3] Message #" + str(s3m_numinst) + ': "' + s3m_inst_name + '", Filename:"' + s3m_inst_filename+ '"')
+            else: print("[input-st3] Instrument #" + str(s3m_numinst) + ': "' + s3m_inst_name + '", Filename:"' + s3m_inst_filename+ '"')
             table_defualtvol.append(s3m_inst_vol)
 
-            if t_inst_filename != '': cvpj_l_single_inst['name'] = t_inst_filename
-            elif t_inst_name != '': cvpj_l_single_inst['name'] = t_inst_name
+            if s3m_inst_filename != '': cvpj_l_single_inst['name'] = s3m_inst_filename
+            elif s3m_inst_name != '': cvpj_l_single_inst['name'] = s3m_inst_name
             else: cvpj_l_single_inst['name'] = ' '
 
             cvpj_l_single_inst['vol'] = 0.3

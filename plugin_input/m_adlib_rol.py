@@ -6,12 +6,13 @@ from functions import note_data
 from functions import placements
 from functions import idvals
 from functions import auto
+from functions import data_bytes
 import plugin_input
 import json
 import struct
 
 def parsetrack_tempo(file_stream, tickBeat):
-    track_name = file_stream.read(15).split(b'\x00')[0].decode('ascii')
+    track_name = data_bytes.readstring_fixedlen(file_stream, 15, 'ascii')
     track_tempo = struct.unpack("f", file_stream.read(4))[0]
     track_num_events = int.from_bytes(file_stream.read(2), 'little')
     tempo_data = []
@@ -23,7 +24,7 @@ def parsetrack_tempo(file_stream, tickBeat):
     return track_name, track_tempo, tempo_data
 
 def parsetrack_voice(file_stream):
-    track_name = file_stream.read(15).split(b'\x00')[0].decode('ascii')
+    track_name = data_bytes.readstring_fixedlen(file_stream, 15, 'ascii')
     track_nTicks = int.from_bytes(file_stream.read(2), 'little')
     rol_notelist = []
     curtickpos = 0
@@ -34,7 +35,7 @@ def parsetrack_voice(file_stream):
     return track_name, rol_notelist, track_name
 
 def parsetrack_timbre(file_stream):
-    track_name = file_stream.read(15).split(b'\x00')[0].decode('ascii')
+    track_name = data_bytes.readstring_fixedlen(file_stream, 15, 'ascii')
     track_num_events = int.from_bytes(file_stream.read(2), 'little')
     rol_timbre_events = {}
     used_instruments = []
@@ -47,7 +48,7 @@ def parsetrack_timbre(file_stream):
     return track_name, rol_timbre_events, used_instruments
 
 def parsetrack_float(file_stream, i_mul, i_add):
-    track_name = file_stream.read(15).split(b'\x00')[0].decode('ascii')
+    track_name = data_bytes.readstring_fixedlen(file_stream, 15, 'ascii')
     track_num_events = int.from_bytes(file_stream.read(2), 'little')
     track_rol_events = []
     for _ in range(track_num_events): 

@@ -172,12 +172,13 @@ class input_lc(plugin_input.base):
 
         startinststr = 'lc_instlist_'
 
+        placements.make_timemarkers(cvpj_l, [4, 4], patternlen, lc_loop_start_bar)
+
         cvpj_l['do_addwrap'] = True
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         
-        cvpj_l['timemarkers'] = placements.make_timemarkers([4, 4], patternlen, lc_loop_start_bar)
         cvpj_l['bpm'] = (3614.75409836/lc_speed)/2
 
         return json.dumps(cvpj_l)

@@ -4,6 +4,7 @@
 import math
 from functions import note_mod
 from functions import notelist_data
+from functions import song
 from functions import xtramath
 
 def getsongduration(projJ):
@@ -56,7 +57,7 @@ def get_timesig(patternLength, notesPerBeat):
 
     return [int(numer), denom]
 
-def make_timemarkers(timesig, PatternLengthList, LoopPos):
+def make_timemarkers(cvpj_l, timesig, PatternLengthList, LoopPos):
     prevtimesig = timesig
     timemarkers = []
     currentpos = 0
@@ -64,26 +65,14 @@ def make_timemarkers(timesig, PatternLengthList, LoopPos):
     for PatternLengthPart in PatternLengthList:
         temptimesig = get_timesig(PatternLengthPart, timesig[1])
         if prevtimesig != temptimesig:
-            timemarker = {}
-            timemarker['position'] = currentpos
-            timemarker['name'] = str(temptimesig[0])+'/'+str(temptimesig[1])
-            timemarker['type'] = 'timesig'
-            timemarker['numerator'] = temptimesig[0]
-            timemarker['denominator'] = temptimesig[1]
-            timemarkers.append(timemarker)
+            song.add_timemarker_timesig(cvpj_l, str(temptimesig[0])+'/'+str(temptimesig[1]), currentpos, temptimesig[0], temptimesig[1])
         if LoopPos == blockcount:
-            timemarker = {}
-            if prevtimesig != temptimesig:
-                timemarker['name'] = str(temptimesig[0])+'/'+str(temptimesig[1]) + " & Loop"
-            else:
-                timemarker['name'] = "Loop"
-            timemarker['position'] = currentpos
-            timemarker['type'] = 'loop'
-            timemarkers.append(timemarker)
+            if prevtimesig != temptimesig: timemarkerloopname = str(temptimesig[0])+'/'+str(temptimesig[1]) + " & Loop"
+            else: timemarkerloopname = "Loop"
+            song.add_timemarker_loop(cvpj_l, currentpos, timemarkerloopname)
         prevtimesig = temptimesig
         currentpos += PatternLengthPart
         blockcount += 1
-    return timemarkers
 
 
 def nl2pl(cvpj_notelist):

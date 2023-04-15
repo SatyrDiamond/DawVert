@@ -96,7 +96,7 @@ sysexvals = {}
 def parse_sysex(msg, time):
     sysexdata = msg.data
 
-    contents = data_bytes.bytearray2BytesIO(struct.pack("b"*len(sysexdata),*sysexdata))
+    contents = data_bytes.to_bytesio(struct.pack("b"*len(sysexdata),*sysexdata))
 
     print('[debug] -------------- sysex, T:', time)
     manufac = int.from_bytes(contents.read(1), "little")

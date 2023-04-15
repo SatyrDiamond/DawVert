@@ -96,7 +96,7 @@ class input_soundclub2(plugin_input.base):
                         t_instid = int.from_bytes(sc2_patobj[1][:4], "little")+1
                         print('[input-soundclub2]      Events for Inst '+str(t_instid)+': '+str(len(sc2_patobj[1][5:])//3))
                         sc2_notedata = sc2_patobj[1][4:]
-                        bio_sc2_notedata = data_bytes.bytearray2BytesIO(sc2_patobj[1][4:])
+                        bio_sc2_notedata = data_bytes.to_bytesio(sc2_patobj[1][4:])
                         t_active_notes = [None for x in range(84)]
                         curpos = 0
                         n_curvol = 31
@@ -155,7 +155,7 @@ class input_soundclub2(plugin_input.base):
                     tracks.r_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
                     tracks.r_basicdata(cvpj_l, cvpj_instid, sc2_insdata[1:].decode('ascii'), None, None, None)
                 elif sc2_insdata[0] == 0:
-                    bio_sc2_insdata = data_bytes.bytearray2BytesIO(sc2_insdata)
+                    bio_sc2_insdata = data_bytes.to_bytesio(sc2_insdata)
                     bio_sc2_insdata.seek(1)
                     insextype = bio_sc2_insdata.read(3)
                     if insextype == b'SMP':

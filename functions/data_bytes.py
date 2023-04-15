@@ -21,8 +21,9 @@ def readstring(data):
 		else: terminated = 1
 	return output.decode('ascii')
 
-def readstring_fixedlen(file_stream, length):
-	return file_stream.read(length).decode().rstrip('\x00').translate(dict.fromkeys(range(32)))
+def readstring_fixedlen(file_stream, length, codec):
+	if codec != None: return file_stream.read(length).decode().rstrip('\x00').translate(dict.fromkeys(range(32)))
+	else: return file_stream.read(length).decode().rstrip('\x00').translate(dict.fromkeys(range(32)))
 
 def splitbyte(value):
     first = value >> 4

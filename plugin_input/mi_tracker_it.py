@@ -57,7 +57,7 @@ class input_it(plugin_input.base):
             print('[error] Not an IT File')
             exit()
         
-        it_header_songname = it_file.read(26).split(b'\x00' * 1)[0].decode("utf-8")
+        it_header_songname = data_bytes.readstring_fixedlen(it_file, 26, "windows-1252")
         print("[input-it] Song Name: " + str(it_header_songname))
         it_header_hilight_minor, it_header_hilight_major, it_header_ordnum, it_header_insnum, it_header_smpnum, it_header_patnum = struct.unpack('BBHHHH', it_file.read(10))
         print("[input-it] # of Orders: " + str(it_header_ordnum))
@@ -110,7 +110,7 @@ class input_it(plugin_input.base):
                 print('[input-it] Instrument not Valid')
                 exit()
             print("[input-it] Instrument " + str(instrumentcount) + ': at offset ' + str(table_offset_inst))
-            it_singleinst['dosfilename'] = it_file.read(12).split(b'\x00' * 1)[0].decode("latin_1")
+            it_singleinst['dosfilename'] = data_bytes.readstring_fixedlen(it_file, 12, "windows-1252")
             it_file.read(1)
             it_singleinst['newnoteaction'] = it_file.read(1)[0] # New Note Action
             it_singleinst['duplicatechecktype'] = it_file.read(1)[0] # Duplicate Check Type
@@ -126,7 +126,7 @@ class input_it(plugin_input.base):
             it_singleinst['cwtv'] = int.from_bytes(it_file.read(2), "little") # TrkVers
             it_singleinst['smpnum'] = it_file.read(1)[0] # Number of samples associated with instrument. 
             it_file.read(1)
-            it_singleinst['name'] = it_file.read(26).split(b'\x00' * 1)[0].decode("latin_1")
+            it_singleinst['name'] = data_bytes.readstring_fixedlen(it_file, 26, "windows-1252")
             inst_filtercutoff = it_file.read(1)[0]
             if inst_filtercutoff >= 128: it_singleinst['filtercutoff'] = inst_filtercutoff-128
             else: it_singleinst['filtercutoff'] = None
@@ -181,11 +181,11 @@ class input_it(plugin_input.base):
                 print('[input-it] Sample not Valid')
                 exit()
             print("[input-it] Sample " + str(samplecount) + ': at offset ' + str(table_offset_sample))
-            it_singlesample['dosfilename'] = it_file.read(12).split(b'\x00' * 1)[0].decode("latin_1")
+            it_singlesample['dosfilename'] = data_bytes.readstring_fixedlen(it_file, 12, "windows-1252")
             it_file.read(2)
             it_singlesample['flags'] = bin(it_file.read(1)[0])[2:].zfill(8)
             it_file.read(1)
-            it_singlesample['name'] = it_file.read(26).split(b'\x00' * 1)[0].decode("latin_1")
+            it_singlesample['name'] = data_bytes.readstring_fixedlen(it_file, 26, "windows-1252")
             it_file.read(2)
             it_singlesample['length'] = int.from_bytes(it_file.read(4), "little")
             it_singlesample['loop_start'] = int.from_bytes(it_file.read(4), "little")
@@ -531,7 +531,7 @@ class input_it(plugin_input.base):
 
         # ------------- Song Message -------------
         it_file.seek(it_header_msgoffset)
-        it_songmessage = it_file.read(it_header_msglength).split(b'\x00' * 1)[0].decode("windows-1252")
+        it_songmessage = data_bytes.readstring_fixedlen(it_file, it_header_msglength, "windows-1252")
 
         tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo))
 

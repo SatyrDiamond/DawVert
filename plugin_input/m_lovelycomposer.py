@@ -164,7 +164,8 @@ def lc_parse_voice(sl_json, length):
                 #print( extend_cont_pos and extend_cont_key and extend_cont_end, end=' ')
                 if (extend_cont_pos and extend_cont_key and extend_cont_end) == True:
                     useappend = False
-            if useappend == True: t_notelist.append(out_notetable)
+            if useappend == True and out_notetable[2] != None: 
+                t_notelist.append(out_notetable)
             if len(t_notelist) != 0 and useappend == False: t_notelist[-1][5] += 1 
 
         prev_notetable = out_notetable
@@ -174,6 +175,7 @@ def lc_parse_voice(sl_json, length):
     cvpj_notelist = []
 
     for t_note in t_notelist:
+        print(t_note)
         cvpj_notelist.append(note_data.mx_makenote(t_note[1], t_note[0], t_note[5], t_note[2], None, None))
 
         if t_note[1] not in used_instruments:

@@ -775,7 +775,7 @@ class input_lmms(plugin_input.base):
         projnotesX = tree.find('song/projectnotes')
 
         cvpj_l = {}
-        cvpj_l['bpm'] = lmms_auto_getvalue(headX, 'bpm', 140, ['main', 'bpm'])
+        cvpj_l['bpm'] = float(lmms_auto_getvalue(headX, 'bpm', 140, ['main', 'bpm']))
         cvpj_l['vol'] = hundredto1(float(lmms_auto_getvalue(headX, 'mastervol', 1, ['main', 'vol'])))
         cvpj_l['pitch'] = float(lmms_auto_getvalue(headX, 'masterpitch', 0, ['main', 'pitch']))*100
         cvpj_l['timesig_numerator'] = lmms_auto_getvalue(headX, 'timesig_numerator', 4, None)

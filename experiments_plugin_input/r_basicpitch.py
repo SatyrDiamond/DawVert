@@ -37,7 +37,6 @@ class input_ex_basic_pitch(experiments_plugin_input.base):
         cvpj_notelist = []
         linenum = 0
         for note_event in note_events:
-
             cvpj_note = note_data.rx_makenote(
                 float(note_event[0])*8, 
                 float(note_event[1]-note_event[0])*8, 

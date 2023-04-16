@@ -28,6 +28,6 @@ basic-pitch (for basic-pitch)
 ```
 
 ## Supported Inputs
-| DataType | Short Name | Name | Ext |
-| --- | --- | :--- | :--- |
-| R | ```basic_pitch``` | Basic Pitch | Audio File |
+| DataType | Short Name | Name | Ext | Info |
+| --- | --- | :--- | :--- | :--- |
+| R | ```basic_pitch``` | Basic Pitch | Audio File | audio-to-MIDI converter with pitch bend detection

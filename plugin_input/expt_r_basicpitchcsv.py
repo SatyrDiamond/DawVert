@@ -11,7 +11,7 @@ import json
 class input_ex_basic_pitch(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
-    def getshortname(self): return 'ex_basic_pitch'
+    def getshortname(self): return 'expt_basicpitchcsv'
     def getname(self): return 'Basic Pitch CSV'
     def gettype(self): return 'r'
     def supported_autodetect(self): return False
@@ -47,7 +47,7 @@ class input_ex_basic_pitch(plugin_input.base):
                 cvpj_notemod['auto']['pitch'] = []
                 autonum = 0
                 for point in t_autodata:
-                    cvpj_notemod['auto']['pitch'].append({'position': autonum, 'value': point/4})
+                    cvpj_notemod['auto']['pitch'].append({'position': autonum, 'value': (point-1)/4})
                     autonum += 0.1
                 cvpj_notelist.append(cvpj_note)
             linenum += 1

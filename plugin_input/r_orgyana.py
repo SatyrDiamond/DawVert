@@ -3,7 +3,7 @@
 
 from functions import data_bytes
 from functions import note_mod
-from functions import placements
+from functions import placement_data
 from functions import tracks
 from functions import song
 from functions import note_data
@@ -134,7 +134,7 @@ class input_orgyana(plugin_input.base):
                 idval = 'org_'+str(tracknum)
                 tracks.r_create_inst(cvpj_l, idval, {'pitch': (org_pitch-1000)/18})
                 tracks.r_basicdata(cvpj_l, idval, trackname, l_org_colors[tracknum], 1.0, None)
-                tracks.r_pl_notes(cvpj_l, idval, placements.nl2pl(s_cvpj_nl))
+                tracks.r_pl_notes(cvpj_l, idval, placement_data.nl2pl(s_cvpj_nl))
 
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True

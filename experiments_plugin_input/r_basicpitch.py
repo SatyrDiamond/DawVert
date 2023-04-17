@@ -4,7 +4,7 @@
 from functions import data_bytes
 from functions import note_data
 from functions import tracks
-from functions import placements
+from functions import placement_data
 import experiments_plugin_input
 import json
 
@@ -54,7 +54,7 @@ class input_ex_basic_pitch(experiments_plugin_input.base):
             cvpj_notelist.append(cvpj_note)
 
         tracks.r_create_inst(cvpj_l, 'basicpitch', {})
-        tracks.r_pl_notes(cvpj_l, 'basicpitch', placements.nl2pl(cvpj_notelist))
+        tracks.r_pl_notes(cvpj_l, 'basicpitch', placement_data.nl2pl(cvpj_notelist))
 
         cvpj_l['bpm'] = 120
         return json.dumps(cvpj_l)

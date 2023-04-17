@@ -4,7 +4,7 @@
 import plugin_input
 import json
 import os.path
-from functions import placements
+from functions import placement_data
 from functions import tracks
 
 class input_fmf(plugin_input.base):
@@ -99,7 +99,7 @@ class input_fmf(plugin_input.base):
 
         tracks.r_create_inst(cvpj_l, 'flipperzero', {})
         tracks.r_basicdata(cvpj_l, 'flipperzero', 'Flipper Zero', [0.94, 0.58, 0.23], None, None)
-        tracks.r_pl_notes(cvpj_l, 'flipperzero', placements.nl2pl(notelist))
+        tracks.r_pl_notes(cvpj_l, 'flipperzero', placement_data.nl2pl(notelist))
 
         cvpj_l['do_singlenotelistcut'] = True
 

@@ -8,7 +8,7 @@ DawVert Experiments
 ## How to Use
 
 ```
-python3 DawVert.py --use-experiments -i <input> -ot <output type> -o <output>
+python3 DawVert.py --use-experiments-input -i <input> -ot <output type> -o <output>
 
 input type: -it 
 input file: -i 

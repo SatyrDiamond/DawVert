@@ -5,7 +5,7 @@ import experiments_plugin_input
 import png
 import json
 
-class input_color_art(plugin_input.base):
+class input_color_art(experiments_plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'color_art'
@@ -35,7 +35,7 @@ class input_color_art(plugin_input.base):
         if metadata['alpha'] == False: pcnt_add = 3
         if metadata['alpha'] == True: pcnt_add = 4
 
-        if h >= 40:
+        if h > 40:
             print('Height is over 40.')
             exit()
 

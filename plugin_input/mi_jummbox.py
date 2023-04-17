@@ -153,8 +153,8 @@ def parse_channel(channeldata, channum):
     global jummbox_notesize
     global jummbox_beatsPerBar
     global jummbox_ticksPerBeat
-    global bbcvpj_modplacements
 
+    bbcvpj_placementnames[channum] = []
     bb_color = None
     bb_type = channeldata['type']
     bb_instruments = channeldata['instruments']
@@ -195,18 +195,19 @@ def parse_channel(channeldata, channum):
                 cvpj_l_placement['duration'] = calcval(jummbox_ticksPerBeat*jummbox_beatsPerBar)
                 cvpj_l_placement['fromindex'] = 'bb_ch'+str(channum)+'_pat'+str(bb_part-1)
                 tracks.m_playlist_pl_add(cvpj_l, str(channum), cvpj_l_placement)
+                bbcvpj_placementnames[channum].append('bb_ch'+str(channum)+'_pat'+str(bb_part-1))
+            else:
+                bbcvpj_placementnames[channum].append(None)
             sequencecount += 1
 
     if bb_type == 'mod':
         modChannels = bb_instruments[0]['modChannels']
         modInstruments = bb_instruments[0]['modInstruments']
         modSettings = bb_instruments[0]['modSettings']
+
         bb_def = []
         for num in range(6):
-            endstring = str(modInstruments[num])+'_'+str(modSettings[num])
-            bb_def.append([modChannels[num],endstring])
-            if modChannels[num] not in bbcvpj_modplacements: bbcvpj_modplacements[modChannels[num]] = {}
-            if endstring not in bbcvpj_modplacements[modChannels[num]]: bbcvpj_modplacements[modChannels[num]][endstring] = []
+            bb_def.append([modChannels[num],modSettings[num]])
 
         sequencecount = 0
         for bb_part in bb_sequence:
@@ -219,7 +220,7 @@ def parse_channel(channeldata, channum):
                         bb_mod_pos = basepos+bb_mod_points[0]['tick']
                         bb_mod_dur = bb_mod_points[-1]['tick'] - bb_mod_points[0]['tick']
                         bb_mod_target = bb_def[note['pitches'][0]]
-                        #print(bb_mod_pos, bb_mod_dur, bb_mod_target)
+                        print(bb_mod_pos, bb_mod_dur, bb_mod_target)
                         cvpj_autodata = {}
                         cvpj_autodata["position"] = calcval(bb_mod_pos)
                         cvpj_autodata["duration"] = calcval(bb_mod_dur)
@@ -229,7 +230,16 @@ def parse_channel(channeldata, channum):
                             cvpj_pointdata["position"] = calcval(bb_mod_point['tick'])-calcval(bb_mod_pos)+calcval(basepos)
                             cvpj_pointdata["value"] = bb_mod_point['volume']
                             cvpj_autodata["points"].append(cvpj_pointdata)
-                        bbcvpj_modplacements[bb_mod_target[0]][bb_mod_target[1]].append(cvpj_autodata)
+
+                        if bb_mod_target[0] == -2:
+                            if bb_mod_target[1] == 0: 
+                                cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.01)
+                                tracks.a_add_auto_pl(cvpj_l, 'main', None, 'vol', cvpj_autopl[0])
+                        if bb_mod_target[0] == -1:
+                            if bb_mod_target[1] == 17: 
+                                cvpj_autopl = auto.multiply([cvpj_autodata], 30, 1)
+                                tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', cvpj_autopl)
+                        #bbcvpj_modplacements[bb_mod_target[0]][bb_mod_target[1]].append(cvpj_autodata)
             sequencecount += 1
 
 
@@ -260,10 +270,15 @@ class input_jummbox(plugin_input.base):
         global bbcvpj_modplacements
         global jummbox_key
 
+        global bbcvpj_placementsize
+        global bbcvpj_placementnames
+
         cvpj_l = {}
 
         idvals_inst_beepbox = idvals.parse_idvalscsv('idvals/beepbox_inst.csv')
 
+        bbcvpj_placementsize = []
+        bbcvpj_placementnames = {}
         bbcvpj_modplacements = {}
 
         bytestream = open(input_file, 'r', encoding='utf8')
@@ -303,13 +318,18 @@ class input_jummbox(plugin_input.base):
                 #print(bbauto_group, bbauto_target, len(bbcvpj_modplacements[bbauto_group][bbauto_target]))
                 outautoname = bbauto_target
                 outautodata = bbcvpj_modplacements[bbauto_group][bbauto_target]
-                if bbauto_group == -1:
-                    if 'main' not in cvpj_l_automation: cvpj_l_automation['main'] = {}
-                    if outautoname == "0_1": 
-                        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', auto.multiply(outautodata, 0, (jummbox_beatsPerBar/jummbox_ticksPerBeat)*1.2))
+                #print(bbauto_group, outautoname, outautodata)
+                #if bbauto_group == -1:
+                #    if outautoname == "0_1": 
+                #        cvpj_autopl = auto.multiply(outautodata, 0, 0.01)
+                #        print(cvpj_autopl)
+                #        for auto_part in cvpj_autopl:
+                #            tracks.a_add_auto_pl(cvpj_l, 'main', None, 'vol', auto_part)
 
-                    if outautoname == "0_2": 
-                        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'vol', auto.multiply(outautodata, 0, 0.01))
+                #    if outautoname == "0_2": 
+                #        cvpj_autopl = auto.multiply(outautodata, 0, (jummbox_beatsPerBar/jummbox_ticksPerBeat)*1.2)
+                #        for auto_part in cvpj_autopl:
+                #            tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', auto_part)
                 #else:
                 #    if 'track_main' not in cvpj_l_automation: cvpj_l_automation['track_main'] = {}
                 #    if outautoname == "0_36": 
@@ -322,7 +342,6 @@ class input_jummbox(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         cvpj_l['use_placements_notes'] = True
 
-        cvpj_l['automation'] = cvpj_l_automation
         cvpj_l['bpm'] = jummbox_beatsPerMinute
 
         return json.dumps(cvpj_l)

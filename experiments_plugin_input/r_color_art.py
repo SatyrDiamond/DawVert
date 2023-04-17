@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import plugin_input
+import experiments_plugin_input
 import png
 import json
 

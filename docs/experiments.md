@@ -24,11 +24,12 @@ e.g:
 ```
 same as main
 
-basic-pitch (for basic-pitch)
+basic-pitch (for basic_pitch)
+png (for color_art)
 ```
 
 ## Supported Inputs
 | DataType | Short Name | Name | Info |
 | --- | --- | :--- | :--- |
 | R | ```basic_pitch``` | [Basic Pitch](https://github.com/spotify/basic-pitch) | Audio File | audio-to-MIDI converter with pitch bend detection
-| R | ```color_art``` | Color Art | Image to Clips
+| R | ```color_art``` | Color Art | Image to Clip Colors

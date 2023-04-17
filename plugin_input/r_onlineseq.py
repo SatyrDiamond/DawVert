@@ -6,7 +6,7 @@ from functions import note_mod
 from functions import notelist_data
 from functions import auto
 from functions import idvals
-from functions import placements
+from functions import placement_data
 from functions import tracks
 from functions import note_data
 import plugin_input
@@ -197,7 +197,7 @@ class input_onlinesequencer(plugin_input.base):
 
             tracks.r_create_inst(cvpj_l, instid, cvpj_instdata)
             tracks.r_basicdata(cvpj_l, instid, inst_name, inst_color, trk_vol, trk_pan)
-            tracks.r_pl_notes(cvpj_l, instid, placements.nl2pl(cvpj_notelist))
+            tracks.r_pl_notes(cvpj_l, instid, placement_data.nl2pl(cvpj_notelist))
 
         bpm = 120
         if '1' in onlseq_data_main: bpm = int(onlseq_data_main['1'])

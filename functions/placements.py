@@ -17,7 +17,6 @@ def getsongduration(projJ):
             if trackplacements[trackid]['laned'] == 1:
                 islaned = True
 
-
         if islaned == False:
             if 'notes' in trackplacements[trackid]:
                 for placement in trackplacements[trackid]['notes']:
@@ -73,7 +72,3 @@ def make_timemarkers(cvpj_l, timesig, PatternLengthList, LoopPos):
         prevtimesig = temptimesig
         currentpos += PatternLengthPart
         blockcount += 1
-
-
-def nl2pl(cvpj_notelist):
-    return [{'position': 0, 'duration': notelist_data.getduration(cvpj_notelist), 'notelist': cvpj_notelist}]

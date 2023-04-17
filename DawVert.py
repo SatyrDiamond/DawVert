@@ -20,7 +20,7 @@ parser.add_argument("-ot", default=None)
 parser.add_argument("--samplefolder", default=None)
 parser.add_argument("--soundfont", default=None)
 parser.add_argument("--songnum", default=1)
-parser.add_argument("--use-experiments", action='store_true')
+parser.add_argument("--use-experiments-input", action='store_true')
 parser.add_argument("--mi2m--output-unused-nle", action='store_true')
 args = parser.parse_args()
 
@@ -44,7 +44,7 @@ typelist['mi'] = 'MultipleIndexed'
 typelist['debug'] = 'debug'
 
 
-if args.use_experiments == True:
+if args.use_experiments_input == True:
 	from experiments_plugin_input import base as base_input
 else:
 	from plugin_input import base as base_input

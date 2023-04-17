@@ -1,8 +1,9 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from PIL import Image
+
 import experiments_plugin_input
-import png
 import json
 
 class input_color_art(experiments_plugin_input.base):
@@ -21,8 +22,10 @@ class input_color_art(experiments_plugin_input.base):
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
-        reader = png.Reader(filename=input_file)
-        w, h, pixels, metadata = reader.read_flat()
+        im = Image.open(input_file)
+        px = im.load()
+
+        w, h = im.size
 
         cvpj_l_trackdata = {}
         cvpj_l_trackordering = []
@@ -32,12 +35,11 @@ class input_color_art(experiments_plugin_input.base):
 
         pcnt = 0
 
-        if metadata['alpha'] == False: pcnt_add = 3
-        if metadata['alpha'] == True: pcnt_add = 4
-
-        if h > 40:
-            print('Height is over 40.')
-            exit()
+        if h > 28:
+            downsize = 28/h
+            newsize = (int(im.width*downsize), int(im.height*downsize))
+            im = im.resize(newsize, Image.LANCZOS)
+            w, h = newsize
 
         for height in range(h-1):
             trackid = str('track'+str(height))
@@ -53,8 +55,12 @@ class input_color_art(experiments_plugin_input.base):
             cvpj_l_trackplacements[trackid]['notes'] = []
 
             for width in range(w):
+                coordinate = width, height
+
+                pixel_color = im.getpixel(coordinate)
+
                 placement_pl = {}
-                placement_pl['color'] = [pixels[pcnt]/255,pixels[pcnt+1]/255,pixels[pcnt+2]/255]
+                placement_pl['color'] = [pixel_color[0]/255,pixel_color[1]/255,pixel_color[2]/255]
                 placement_pl['position'] = width*16
                 placement_pl['duration'] = 16
                 placement_pl['notelist'] = [{}]
@@ -64,12 +70,8 @@ class input_color_art(experiments_plugin_input.base):
 
                 cvpj_l_trackplacements[trackid]['notes'].append(placement_pl)
 
-                pcnt += pcnt_add
-
             cvpj_l_trackdata[trackid] = trackdata
             cvpj_l_trackordering.append(trackid)
-
-        print(w, h)
 
         cvpj_l = {}
         cvpj_l['use_instrack'] = False

@@ -239,7 +239,6 @@ def parse_channel(channeldata, channum):
                             if bb_mod_target[1] == 17: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], 30, 1)
                                 tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', cvpj_autopl)
-                        #bbcvpj_modplacements[bb_mod_target[0]][bb_mod_target[1]].append(cvpj_autodata)
             sequencecount += 1
 
 
@@ -267,7 +266,6 @@ class input_jummbox(plugin_input.base):
 
         global jummbox_beatsPerBar
         global jummbox_ticksPerBeat
-        global bbcvpj_modplacements
         global jummbox_key
 
         global bbcvpj_placementsize
@@ -279,7 +277,6 @@ class input_jummbox(plugin_input.base):
 
         bbcvpj_placementsize = []
         bbcvpj_placementnames = {}
-        bbcvpj_modplacements = {}
 
         bytestream = open(input_file, 'r', encoding='utf8')
         jummbox_json = json.load(bytestream)
@@ -312,29 +309,6 @@ class input_jummbox(plugin_input.base):
         for jummbox_channel in jummbox_channels:
             parse_channel(jummbox_channel, chancount)
             chancount += 1
-
-        for bbauto_group in bbcvpj_modplacements:
-            for bbauto_target in bbcvpj_modplacements[bbauto_group]:
-                #print(bbauto_group, bbauto_target, len(bbcvpj_modplacements[bbauto_group][bbauto_target]))
-                outautoname = bbauto_target
-                outautodata = bbcvpj_modplacements[bbauto_group][bbauto_target]
-                #print(bbauto_group, outautoname, outautodata)
-                #if bbauto_group == -1:
-                #    if outautoname == "0_1": 
-                #        cvpj_autopl = auto.multiply(outautodata, 0, 0.01)
-                #        print(cvpj_autopl)
-                #        for auto_part in cvpj_autopl:
-                #            tracks.a_add_auto_pl(cvpj_l, 'main', None, 'vol', auto_part)
-
-                #    if outautoname == "0_2": 
-                #        cvpj_autopl = auto.multiply(outautodata, 0, (jummbox_beatsPerBar/jummbox_ticksPerBeat)*1.2)
-                #        for auto_part in cvpj_autopl:
-                #            tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', auto_part)
-                #else:
-                #    if 'track_main' not in cvpj_l_automation: cvpj_l_automation['track_main'] = {}
-                #    if outautoname == "0_36": 
-                #        if str(bbauto_group) not in cvpj_l_automation: cvpj_l_automation['track_main'][str(bbauto_group)] = {}
-                #        cvpj_l_automation['track_main'][str(bbauto_group)]['vol'] = auto.multiply(outautodata, 0, 0.04)
 
         cvpj_l['do_addwrap'] = True
 

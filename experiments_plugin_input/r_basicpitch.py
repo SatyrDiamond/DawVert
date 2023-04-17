@@ -46,10 +46,11 @@ class input_ex_basic_pitch(experiments_plugin_input.base):
             cvpj_notemod = cvpj_note['notemod'] = {}
             cvpj_notemod['auto'] = {}
             cvpj_notemod['auto']['pitch'] = []
-            autonum = 0
-            for point in note_event[4]:
-                cvpj_notemod['auto']['pitch'].append({'position': autonum, 'value': (point-1)/4})
-                autonum += 0.1
+            if not all(item == 0 for item in note_event[4]):
+                autonum = 0
+                for point in note_event[4]:
+                    cvpj_notemod['auto']['pitch'].append({'position': autonum, 'value': (point-1)/4})
+                    autonum += 0.1
             cvpj_notelist.append(cvpj_note)
 
         tracks.r_create_inst(cvpj_l, 'basicpitch', {})

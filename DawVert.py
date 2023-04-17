@@ -210,7 +210,7 @@ if typeconvsupported == False:
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
 if os.path.isfile(out_file):
-	user_input = input("File '"+out_file+"' already exists. Overwrite? [y/N]")
+	user_input = input("File '"+out_file+"' already exists. Overwrite? [y/n]")
 	if user_input.lower() == 'y': pass
 	elif user_input.lower() == 'n': exit()
 	else: 

@@ -3,7 +3,7 @@
 
 from functions import data_bytes
 from functions import note_mod
-from functions import placements
+from functions import placement_data
 from functions import tracks
 from functions import note_data
 from functions import song
@@ -79,7 +79,7 @@ class input_cvpj_f(plugin_input.base):
                 cvpj_notedata = note_data.rx_makenote(notepos, notedur, notekey, notevol, notepan)
                 cvpj_notelist.append(cvpj_notedata)
 
-            tracks.r_pl_notes(cvpj_l, trackid, placements.nl2pl(cvpj_notelist))
+            tracks.r_pl_notes(cvpj_l, trackid, placement_data.nl2pl(cvpj_notelist))
 
             tracknum += 1
 

@@ -6,7 +6,7 @@ from functions import note_mod
 from functions import audio_wav
 from functions import folder_samples
 from functions import tracks
-from functions import placements
+from functions import placement_data
 from functions import note_data
 from functions import song
 import plugin_input
@@ -436,7 +436,7 @@ class input_pxtone(plugin_input.base):
             for cvpj_note in cvpj_notelist: note_mod.notemod_conv(cvpj_note)
             if unitnum in ptcop_name_unit: plt_name = ptcop_name_unit[unitnum]
             else: plt_name = None
-            tracks.m_playlist_pl(cvpj_l, unitnum+1, plt_name, [0.14, 0.00, 0.29], placements.nl2pl(cvpj_notelist))
+            tracks.m_playlist_pl(cvpj_l, unitnum+1, plt_name, [0.14, 0.00, 0.29], placement_data.nl2pl(cvpj_notelist))
 
         for voicenum in range(ptcop_voice_num):
             if voicenum in ptcop_name_voice: cvpj_instname = ptcop_name_voice[voicenum]

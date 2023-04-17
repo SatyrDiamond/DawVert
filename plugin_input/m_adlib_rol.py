@@ -3,7 +3,7 @@
 
 from functions import tracks
 from functions import note_data
-from functions import placements
+from functions import placement_data
 from functions import idvals
 from functions import auto
 from functions import data_bytes
@@ -104,7 +104,7 @@ def parsetrack(file_stream, tracknum, notelen):
 
     if len(rol_tr_volume) > 1: tracks.a_add_auto_pl(cvpj_l, 'fxmixer', tracknum+1, 'vol', auto.twopoints2cvpjpoints(rol_tr_volume[1], notelen, 'instant', 16))
 
-    placementdata = placements.nl2pl(cvpj_notelist)
+    placementdata = placement_data.nl2pl(cvpj_notelist)
     tracks.m_playlist_pl(cvpj_l, tracknum+1, rol_tr_voice[0], None, placementdata)
 
 class input_adlib_rol(plugin_input.base):

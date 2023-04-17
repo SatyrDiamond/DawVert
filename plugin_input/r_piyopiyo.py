@@ -7,7 +7,7 @@ import os.path
 from functions import audio_wav
 from functions import data_bytes
 from functions import folder_samples
-from functions import placements
+from functions import placement_data
 from functions import tracks
 from functions import song
 from functions import note_data
@@ -99,7 +99,7 @@ class input_piyopiyo(plugin_input.base):
                 for bitnote in bitnotes:
                     if bitnote == '1': notelist.append(note_data.rx_makenote(pmdpos, 1, notenum+keyoffset[tracknum], 1.0, currentpan))
                     notenum -= 1
-            if notelist != []: t_placements = placements.nl2pl(notelist)
+            if notelist != []: t_placements = placement_data.nl2pl(notelist)
             else: t_placements = []
             tracks.r_pl_notes(cvpj_l, str(tracknum), t_placements)
 

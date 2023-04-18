@@ -264,7 +264,7 @@ def convert_inst(instdata):
 	# ---------------------------------------- Wrapper ----------------------------------------
 	elif plugindata['name'].lower() == 'fruity wrapper':
 
-		wrapperdata = plug_in_fl_wrapper.decode_wrapper(fl_plugstr)
+		wrapperdata = input_flstudio_wrapper.decode_wrapper(fl_plugstr)
 
 		if 'plugin_info' in wrapperdata:
 			wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")

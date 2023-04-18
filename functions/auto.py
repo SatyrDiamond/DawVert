@@ -1,6 +1,13 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+def makepl(t_pos, t_dur, t_points):
+    pl_data = {}
+    pl_data['position'] = t_pos
+    pl_data['duration'] = t_dur
+    pl_data['points'] = t_points
+    return pl_data
+
 def multiply(auto_data, addval, mulval):
     for autopl in auto_data:
         if 'points' in autopl:

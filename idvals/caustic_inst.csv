@@ -1,0 +1,14 @@
+id;name;color_r;color_g;color_b
+8SYN;8BitSynth;0.82;0.78;0.63
+BBOX;BeatBox;0.66;0.51;0.36
+BLNE;BassLine;0.99;0.99;0.99
+FMSN;FMSynth;0.29;0.78;0.76
+KSSN;KSSynth;0.55;0.57;0.44
+MDLR;Modular;0.45;0.45;0.45
+NULL;None;0.1;0.1;0.1
+ORGN;Organ;0.68;0.3;0.03
+PADS;PadSynth;0.99;0.99;0.69
+PCMS;PCMSynth;0.78;0.84;0.65
+SAWS;SawSynth;0.99;0.6;0.25
+SSYN;SubSynth;0.79;0.82;0.91
+VCDR;Vocoder;0.74;0.35;0.35

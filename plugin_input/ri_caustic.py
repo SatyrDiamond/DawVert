@@ -6,6 +6,7 @@ from functions import data_bytes
 from functions import folder_samples
 from functions import audio_wav
 from functions import placements
+from functions import idvals
 from functions import tracks
 from functions import auto
 import plugin_input
@@ -13,36 +14,6 @@ import os.path
 import json
 import struct
 import itertools
-
-caustic_instnames = {}
-caustic_instnames['NULL'] = 'None'
-caustic_instnames['SSYN'] = 'SubSynth'
-caustic_instnames['PCMS'] = 'PCMSynth'
-caustic_instnames['BLNE'] = 'BassLine'
-caustic_instnames['BBOX'] = 'BeatBox'
-caustic_instnames['PADS'] = 'PadSynth'
-caustic_instnames['8SYN'] = '8BitSynth'
-caustic_instnames['MDLR'] = 'Modular'
-caustic_instnames['ORGN'] = 'Organ'
-caustic_instnames['VCDR'] = 'Vocoder'
-caustic_instnames['FMSN'] = 'FMSynth'
-caustic_instnames['KSSN'] = 'KSSynth'
-caustic_instnames['SAWS'] = 'SawSynth'
-
-caustic_instcolors = {}
-caustic_instcolors['NULL'] = [0.10, 0.10, 0.10]
-caustic_instcolors['SSYN'] = [0.79, 0.82, 0.91]
-caustic_instcolors['PCMS'] = [0.78, 0.84, 0.65]
-caustic_instcolors['BLNE'] = [0.99, 0.99, 0.99]
-caustic_instcolors['BBOX'] = [0.66, 0.51, 0.36]
-caustic_instcolors['PADS'] = [0.99, 0.99, 0.69]
-caustic_instcolors['8SYN'] = [0.82, 0.78, 0.63]
-caustic_instcolors['MDLR'] = [0.45, 0.45, 0.45]
-caustic_instcolors['ORGN'] = [0.68, 0.30, 0.03]
-caustic_instcolors['VCDR'] = [0.74, 0.35, 0.35]
-caustic_instcolors['FMSN'] = [0.29, 0.78, 0.76]
-caustic_instcolors['KSSN'] = [0.55, 0.57, 0.44]
-caustic_instcolors['SAWS'] = [0.99, 0.60, 0.25]
 
 caustic_fxtype = {}
 caustic_fxtype[0] = 'delay'
@@ -216,6 +187,8 @@ class input_cvpj_r(plugin_input.base):
         MSTR = CausticData['MSTR']
         AUTO_data = CausticData['AUTO']
 
+        idvals_inst_caustic = idvals.parse_idvalscsv('idvals/caustic_inst.csv')
+
         cvpj_l = {}
         
         file_name = os.path.splitext(os.path.basename(input_file))[0]
@@ -259,7 +232,7 @@ class input_cvpj_r(plugin_input.base):
             machid = str(machnum)
 
             if 'name' in machine: cvpj_trackname = machine['name']
-            else: cvpj_trackname = caustic_instnames[machine['id']]
+            else: cvpj_trackname = idvals.get_idval(idvals_inst_caustic, machine['id'], 'name')
 
             cvpj_notelistindex = {}
 
@@ -381,7 +354,7 @@ class input_cvpj_r(plugin_input.base):
                 if 'customwaveform2' in machine: cvpj_instdata['plugindata']['data']['customwaveform2'] = struct.unpack("<"+("i"*330), machine['customwaveform2'])
 
             tracks.ri_create_inst(cvpj_l, 'MACH'+machid, cvpj_notelistindex, cvpj_instdata)
-            tracks.r_basicdata(cvpj_l, 'MACH'+machid, cvpj_trackname, caustic_instcolors[machine['id']], mach_mixer_vol[machnum-1], mach_mixer_pan[machnum-1])
+            tracks.r_basicdata(cvpj_l, 'MACH'+machid, cvpj_trackname, idvals.get_idval(idvals_inst_caustic, machine['id'], 'color'), mach_mixer_vol[machnum-1], mach_mixer_pan[machnum-1])
             tracks.r_param(cvpj_l, 'MACH'+machid, 'enabled', int(not bool(mach_mixer_mute[machnum-1])))
             tracks.r_param(cvpj_l, 'MACH'+machid, 'solo', mach_mixer_solo[machnum-1])
 

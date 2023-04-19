@@ -1,19 +1,19 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import format_caustic
+from functions import audio_wav
+from functions import auto
 from functions import data_bytes
 from functions import folder_samples
-from functions import audio_wav
-from functions import placements
+from functions import format_caustic
 from functions import idvals
+from functions import note_data
+from functions import placements
 from functions import tracks
-from functions import auto
 import plugin_input
 import os.path
 import json
 import struct
-import itertools
 
 caustic_fxtype = {}
 caustic_fxtype[0] = 'delay'
@@ -82,16 +82,11 @@ def parse_notelist(causticpattern, machid):
     notelist = []
     causticnotes = causticpattern['notes']
     for causticnote in causticnotes:
-
         if causticnote[1] != 4294967295:
-            notedata = {}
-            notedata['position'] = causticnote[2]*4
             key = causticnote[6]
-            notedata['key'] = key-60
-            notedata['duration'] = causticnote[3]*4
-            notedata['vol'] = causticnote[14]
-            notedata['instrument'] = machid
-            if key != 0: notelist.append(notedata)
+            if key != 0: 
+                notedata = rx_makenote(causticnote[2]*4, causticnote[3]*4, key-60, causticnote[14], None)
+                notelist.append(notedata)
     return notelist
 
 def loopmode_cvpj(cvpjdata, wavdata): 

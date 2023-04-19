@@ -23,6 +23,7 @@ parser.add_argument("--soundfont", default=None)
 parser.add_argument("--songnum", default=1)
 parser.add_argument("--use-experiments-input", action='store_true')
 parser.add_argument("--mi2m--output-unused-nle", action='store_true')
+parser.add_argument("-y", action='store_true')
 args = parser.parse_args()
 
 in_file = args.i
@@ -32,6 +33,9 @@ out_format = args.ot
 
 extra_json = {}
 
+do_overwrite = False
+
+if args.y == True: do_overwrite = True
 if args.soundfont != None: extra_json['soundfont'] = args.soundfont
 if args.samplefolder != None: extra_json['samplefolder'] = args.samplefolder
 if args.songnum != None: extra_json['songnum'] = args.songnum
@@ -209,7 +213,7 @@ if typeconvsupported == False:
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
-if os.path.isfile(out_file):
+if os.path.isfile(out_file) and do_overwrite == False:
 	user_input = input("File '"+out_file+"' already exists. Overwrite? [y/n]")
 	if user_input.lower() == 'y': pass
 	elif user_input.lower() == 'n': exit()

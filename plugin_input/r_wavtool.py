@@ -1,11 +1,12 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
 from functions import colors
-from functions import tracks
-from functions import note_data
+from functions import data_bytes
+from functions import data_values
 from functions import folder_samples
+from functions import note_data
+from functions import tracks
 
 import plugin_input
 import json
@@ -28,8 +29,8 @@ def parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype):
     cvpj_pldata = {}
     if 'color' in j_wvtl_trackclip: cvpj_pldata["color"] = colors.hex_to_rgb_float(j_wvtl_trackclip['color'])
     if 'name' in j_wvtl_trackclip: cvpj_pldata["name"] = j_wvtl_trackclip['name']
-    if 'fadeIn' in j_wvtl_trackclip: cvpj_pldata["fade_in"] = j_wvtl_trackclip['fadeIn']*4
-    if 'fadeOut' in j_wvtl_trackclip: cvpj_pldata["fade_out"] = j_wvtl_trackclip['fadeOut']*4
+    if 'fadeIn' in j_wvtl_trackclip: data_values.nested_dict_add_value(cvpj_pldata, ['fade', 'in', 'duration'], j_wvtl_trackclip['fadeIn']*4)
+    if 'fadeOut' in j_wvtl_trackclip: data_values.nested_dict_add_value(cvpj_pldata, ['fade', 'out', 'duration'], j_wvtl_trackclip['fadeOut']*4)
     cvpj_pldata["position"] = j_wvtl_trc_timelineStart*4
     cvpj_pldata["duration"] = j_wvtl_trc_timelineEnd*4 - j_wvtl_trc_timelineStart*4
     cvpj_pldata['cut'] = {'type': 'warp', 'start': j_wvtl_trc_readStart*4, 'loopstart': j_wvtl_trc_loopStart*4, 'loopend': j_wvtl_trc_loopEnd*4}
@@ -61,7 +62,6 @@ def extract_audio(audioname):
     return audio_filename
 
 def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
-    #print(j_wvtl_trackclip)
     j_wvtl_trc_type = j_wvtl_trackclip['type']
     j_wvtl_trc_loopStart = j_wvtl_trackclip['loopStart']
     j_wvtl_trc_loopEnd = j_wvtl_trackclip['loopEnd']
@@ -86,7 +86,6 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
 
 # -------------------------------------------- track --------------------------------------------
 
-
 def parse_track(j_wvtl_track):
     j_wvtl_tracktype = j_wvtl_track['type']
     j_wvtl_trackname = j_wvtl_track['name']
@@ -99,18 +98,14 @@ def parse_track(j_wvtl_track):
     if j_wvtl_tracktype == 'MIDI':
         tracks.r_create_inst(cvpj_l, j_wvtl_trackid, {})
         tracks.r_basicdata(cvpj_l, j_wvtl_trackid, j_wvtl_trackname, j_wvtl_trackcolor, None, None)
-        cvpj_placements = []
         for j_wvtl_trackclip in j_wvtl_trackclips:
-            cvpj_placements.append(parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype))
-        tracks.r_pl_notes(cvpj_l, j_wvtl_trackid, cvpj_placements)
+            tracks.r_pl_notes(cvpj_l, j_wvtl_trackid, parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype))
 
     if j_wvtl_tracktype == 'Audio':
         tracks.r_create_audio(cvpj_l, j_wvtl_trackid, {})
         tracks.r_basicdata(cvpj_l, j_wvtl_trackid, j_wvtl_trackname, j_wvtl_trackcolor, None, None)
-        cvpj_placements = []
         for j_wvtl_trackclip in j_wvtl_trackclips:
-            cvpj_placements.append(parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype))
-        tracks.r_pl_audio(cvpj_l, j_wvtl_trackid, cvpj_placements)
+            tracks.r_pl_audio(cvpj_l, j_wvtl_trackid, parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype))
 
 # -------------------------------------------- main --------------------------------------------
 
@@ -162,8 +157,6 @@ class input_wavtool(plugin_input.base):
             parse_track(j_wvtl_track)
 
         tracks.a_addtrack_master(cvpj_l, 'Master', 1, [0.14, 0.14, 0.14])
-
-        cvpj_l['use_fxrack'] = False
 
         cvpj_l['timesig_numerator'] = j_wvtl_beatNumerator
         cvpj_l['timesig_denominator'] = j_wvtl_beatDenominator

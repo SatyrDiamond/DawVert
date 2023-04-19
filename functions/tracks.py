@@ -148,9 +148,7 @@ def m_playlist_pl(cvpj_l, idnum, trk_name, trk_color, placements_notes):
     if trk_color != None: cvpj_l['playlist'][str(idnum)]['color'] = trk_color
 
 def m_playlist_pl_add(cvpj_l, idnum, placement_data):
-    if 'playlist' in cvpj_l:
-        if str(idnum) in cvpj_l['playlist']:
-            cvpj_l['playlist'][str(idnum)]['placements_notes'].append(placement_data)
+    data_values.nested_dict_add_to_list(cvpj_l, ['playlist', str(idnum), 'placements_notes'], placement_data)
 
 def m_fx_audio_inst(cvpj_l, idnum, chain_fx_audio):
     if chain_fx_audio != None: cvpj_l['instruments_data'][idnum]['chain_fx_audio'] = chain_fx_audio
@@ -170,23 +168,15 @@ def a_addtrack_master(cvpj_l, i_name, i_vol, i_color):
     if i_color != None: cvpj_l['track_master']['color'] = i_color
 
 def a_fx_audio_master(cvpj_l, chain_fx_audio):
-    if 'track_master' not in cvpj_l: cvpj_l['track_master'] = {}
-    if chain_fx_audio != None: cvpj_l['track_master']['chain_fx_audio'] = chain_fx_audio
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_master', 'chain_fx_audio'], chain_fx_audio)
 
 def a_addtrack_master_param(cvpj_l, v_name, v_value):
     cvpj_l['track_master'][v_name] = v_value
 
+# ------------------------ Auto ------------------------
+
 def a_add_auto_pl(cvpj_l, in_type, in_id, in_name, in_autopoints):
-    if 'automation' not in cvpj_l: cvpj_l['automation'] = {}
-    if in_type not in cvpj_l['automation']: cvpj_l['automation'][in_type] = {}
     if in_type in ['track', 'plugin', 'fxmixer', 'slot']:
-        if in_id not in cvpj_l['automation'][in_type]: cvpj_l['automation'][in_type][in_id] = {}
-        if in_name not in cvpj_l['automation'][in_type][in_id]: cvpj_l['automation'][in_type][in_id][in_name] = []
-        pltoadd = cvpj_l['automation'][in_type][in_id]
+        data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_id, in_name], in_autopoints)
     else: 
-        if in_name not in cvpj_l['automation'][in_type]: cvpj_l['automation'][in_type][in_name] = []
-        pltoadd = cvpj_l['automation'][in_type]
-
-    if isinstance(in_autopoints, list) == True: pltoadd[in_name] = in_autopoints
-    else: pltoadd[in_name].append(in_autopoints)
-
+        data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_name], in_autopoints)

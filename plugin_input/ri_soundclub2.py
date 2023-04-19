@@ -196,10 +196,6 @@ class input_soundclub2(plugin_input.base):
 
         song_curpos = 0
 
-        cvpj_l['automation'] = {}
-        cvpj_l['automation']['main'] = {}
-        cvpj_l['automation']['main']['bpm'] = []
-
         for patnum in sc2_seqdata:
             nlpd = pat_cvpj_notelist[patnum]
             songpartdur = nlpd[0]
@@ -212,8 +208,7 @@ class input_soundclub2(plugin_input.base):
                     pl_placement = placement_data.makepl_n_mi(song_curpos, songpartdur, str(instnum)+'_'+str(patnum)+'_'+str(dupeinst[instnum]))
                     t_laneddata[instnum][dupeinst[instnum]].append(pl_placement)
             song.add_timemarker_timesig(cvpj_l, t_patnames[patnum], song_curpos, sc2_headerdata[4], sc2_headerdata[5])
-            cvpj_l['automation']['main']['bpm'].append({'position': song_curpos, 'duration': songpartdur, 'points': pat_tempopoints[patnum]})
-
+            tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', {'position': song_curpos, 'duration': songpartdur, 'points': pat_tempopoints[patnum]})
             song_curpos += songpartdur
 
         cvpj_l['track_placements'] = {}
@@ -223,9 +218,6 @@ class input_soundclub2(plugin_input.base):
 
         cvpj_l['do_addwrap'] = True
 
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = False
-        
         cvpj_l['timesig_denominator'] = sc2_headerdata[4]
         cvpj_l['timesig_numerator'] = sc2_headerdata[5]
 

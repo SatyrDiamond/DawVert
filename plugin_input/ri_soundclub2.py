@@ -217,14 +217,8 @@ class input_soundclub2(plugin_input.base):
 
         cvpj_l['track_placements'] = {}
         for s_laneddata in t_laneddata:
-            cvpj_l['track_placements']['sc2_'+str(s_laneddata)] = {}
-            cvpj_s_tp = cvpj_l['track_placements']['sc2_'+str(s_laneddata)] 
-            cvpj_s_tp['laned'] = 1
-            cvpj_s_tp['laneorder'] = []
-            cvpj_s_tp['lanedata'] = {}
             for s_laned in t_laneddata[s_laneddata]:
-                cvpj_s_tp['laneorder'].append(str(s_laned))
-                cvpj_s_tp['lanedata'][str(s_laned)] = {'notes': t_laneddata[s_laneddata][s_laned]}
+                tracks.r_pl_notes_laned(cvpj_l, 'sc2_'+str(s_laneddata), str(s_laned), t_laneddata[s_laneddata][s_laned])
 
         cvpj_l['do_addwrap'] = True
 

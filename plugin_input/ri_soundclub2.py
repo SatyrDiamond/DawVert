@@ -54,7 +54,6 @@ class input_soundclub2(plugin_input.base):
         idvals_inst_soundclub2 = idvals.parse_idvalscsv('idvals/soundclub2_inst.csv')
 
         cvpj_l = {}
-        cvpj_l['playlist'] = {}
 
         cur_patnum = 0
         cur_instnum = 1

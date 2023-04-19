@@ -8,6 +8,7 @@ from functions import audio_wav
 from functions import folder_samples
 from functions import note_mod
 from functions import notelist_data
+from functions import placement_data
 from functions import idvals
 from functions import song
 import plugin_input
@@ -208,7 +209,7 @@ class input_soundclub2(plugin_input.base):
                     if instnum not in dupeinst: dupeinst[instnum] = 1
                     else: dupeinst[instnum] = 1 + dupeinst[instnum]
                     if dupeinst[instnum] not in t_laneddata[instnum]: t_laneddata[instnum][dupeinst[instnum]] = []
-                    pl_placement = {'position': song_curpos, 'duration': songpartdur, 'fromindex': str(instnum) + '_' + str(patnum) + '_' + str(dupeinst[instnum])}
+                    pl_placement = placement_data.makepl_n_mi(song_curpos, songpartdur, str(instnum)+'_'+str(patnum)+'_'+str(dupeinst[instnum]))
                     t_laneddata[instnum][dupeinst[instnum]].append(pl_placement)
             song.add_timemarker_timesig(cvpj_l, t_patnames[patnum], song_curpos, sc2_headerdata[4], sc2_headerdata[5])
             cvpj_l['automation']['main']['bpm'].append({'position': song_curpos, 'duration': songpartdur, 'points': pat_tempopoints[patnum]})

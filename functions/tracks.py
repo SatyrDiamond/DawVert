@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from functions import data_values
+
 # ------------------------ Regular ------------------------
 
 def r_create_inst(cvpj_l, trackid, instdata):
@@ -57,25 +59,28 @@ def ri_create_inst(cvpj_l, trackid, notelistindex, instdata):
     cvpj_l['track_order'].append(trackid)
 
 def ri_nle_add(cvpj_l, trackid, patid, nle_notelist, nle_name):
-    if 'track_data' in cvpj_l:
-        if trackid in cvpj_l['track_data']:
-            if 'notelistindex' not in cvpj_l['track_data'][trackid]: cvpj_l['track_data'][trackid]['notelistindex'] = {}
-            cvpj_l['track_data'][trackid]['notelistindex'][patid] = {}
-            cvpj_inst_nle = cvpj_l['track_data'][trackid]['notelistindex'][patid]
-            if nle_name != None: cvpj_inst_nle['name'] = nle_name
-            cvpj_inst_nle['notelist'] = nle_notelist
+    data_values.nested_dict_add_value(cvpj_l, ['track_data', trackid, 'notelistindex', patid], {})
+    cvpj_inst_nle = cvpj_l['track_data'][trackid]['notelistindex'][patid]
+    if nle_name != None: cvpj_inst_nle['name'] = nle_name
+    cvpj_inst_nle['notelist'] = nle_notelist
 
 # ------------------------ Regular******** ------------------------
 
 def r_pl_notes(cvpj_l, trackid, placements_data):
-    if 'track_placements' not in cvpj_l: cvpj_l['track_placements'] = {}
-    cvpj_l['track_placements'][trackid] = {}
-    if placements_data != None: cvpj_l['track_placements'][trackid]['notes'] = placements_data
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_placements', trackid, 'notes'], placements_data)
 
 def r_pl_audio(cvpj_l, trackid, placements_data):
-    if 'track_placements' not in cvpj_l: cvpj_l['track_placements'] = {}
-    cvpj_l['track_placements'][trackid] = {}
-    if placements_data != None: cvpj_l['track_placements'][trackid]['audio'] = placements_data
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_placements', trackid, 'audio'], placements_data)
+
+def r_pl_notes_laned(cvpj_l, trackid, lanename, placements_data):
+    data_values.nested_dict_add_value(cvpj_l, ['track_placements', trackid, 'laned'], 1)
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_placements', trackid, 'lanedata', lanename, 'notes'], placements_data)
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_placements', trackid, 'laneorder'], lanename)
+
+def r_pl_audio_laned(cvpj_l, trackid, lanename, placements_data):
+    data_values.nested_dict_add_value(cvpj_l, ['track_placements', trackid, 'laned'], 1)
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_placements', trackid, 'lanedata', lanename, 'audio'], placements_data)
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_placements', trackid, 'laneorder'], lanename)
 
 def r_pl_laned(cvpj_l, trackid, laneddata):
     if 'track_placements' not in cvpj_l: cvpj_l['track_placements'] = {}
@@ -83,16 +88,15 @@ def r_pl_laned(cvpj_l, trackid, laneddata):
     if laneddata != None: cvpj_l['track_placements'][trackid] = laneddata
 
 def r_fx_audio(cvpj_l, trackid, chain_fx_audio):
-    if chain_fx_audio != None: cvpj_l['track_data'][trackid]['chain_fx_audio'] = chain_fx_audio
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'chain_fx_audio'], chain_fx_audio)
 
 def r_fx_notes(cvpj_l, trackid, chain_fx_note):
-    if chain_fx_note != None: cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'] = chain_fx_note
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'instdata', 'chain_fx_notes'], chain_fx_note)
 
 def r_fx_notes_append(cvpj_l, trackid, enabled, pluginname, plugindata):
-    if 'chain_fx_note' not in cvpj_l['track_data'][trackid]['instdata']: cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'] = []
-    cvpj_l['track_data'][trackid]['instdata']['chain_fx_notes'].append(
-            {"enabled": enabled, "plugin": pluginname, "plugindata": plugindata}
-            )
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'instdata', 'chain_fx_notes'], 
+        {"enabled": enabled, "plugin": pluginname, "plugindata": plugindata}
+        )
 
 
 

@@ -581,7 +581,7 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
         for pluginparam in lmms_autovals[1]: 
             if pluginparam in lmmsplugdata: xml_lmmsnat.set(pluginparam, str(lmmsplugdata[pluginparam]))
 
-    if fxplugname == 'vst2-dll':
+    elif fxplugname == 'vst2-dll':
         fxslotX.set('name', 'vsteffect')
         print('[output-lmms]       Audio FX: [vst2] ')
         xml_vst2 = ET.SubElement(fxslotX, 'vsteffectcontrols')
@@ -596,7 +596,7 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
                 xmlparamname = 'param'+vstparam[10:]
                 add_auto_val_noset(auto_nameiddata_plugin, vstparam, xml_vst2, xmlparamname, 'VST', '#'+vstparam[10:])
 
-    if fxplugname == 'ladspa':
+    elif fxplugname == 'ladspa':
         fxslotX.set('name', 'ladspaeffect')
         print('[output-lmms]       Audio FX: [ladspa] ')
         cvpj_plugindata = json_fxslot['plugindata']
@@ -634,6 +634,11 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
                 xml_param = ET.SubElement(xml_ladspa, 'port1'+param)
                 add_auto_val_plugin(auto_nameiddata_plugin, None, 0, cvpj_params['1'], 'ladspa_param_1_'+param, param, xml_param, 'data', 'LADSPA', 'R #'+param)
 
+    else:
+        fxslotX.set('name', 'stereomatrix')
+        xml_lmmsnat = ET.SubElement(fxslotX, 'stereomatrixcontrols')
+        add_unused_auto_val(auto_nameiddata_plugin, 'Plugin')
+
 def lmms_encode_effectslot(fxcX, json_fxslot):
 
     auto_nameiddata_slot = {}
@@ -658,8 +663,7 @@ def lmms_encode_fxchain(xmltag, json_fxchannel):
         else: fxcX.set('enabled', str('1'))
         fxcX.set('numofeffects', str(len(json_fxchannel['chain_fx_audio'])))
         for json_fxslot in json_fxchain:
-            if json_fxslot['plugin'] == 'native-lmms' or json_fxslot['plugin'] == 'vst2-dll' or json_fxslot['plugin'] == 'ladspa':
-                fxslotX = lmms_encode_effectslot(fxcX, json_fxslot)
+            fxslotX = lmms_encode_effectslot(fxcX, json_fxslot)
 
 def lmms_encode_fxmixer(xmltag, json_fxrack):
     for json_fxchannel in json_fxrack:

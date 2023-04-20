@@ -18,7 +18,7 @@ def nested_dict_add_to_list(i_dict, i_keys, i_value):
         if key not in i_dict: i_dict[key] = {}
         nested_dict_add_to_list(i_dict[key], i_keys[1:], i_value)
 
-def add_value(i_dict, i_tag, i_value, i_fallback):
+def get_value(i_dict, i_tag, i_fallback):
     if i_tag in i_dict: outvalue = i_dict[i_tag]
     else: outvalue = i_fallback
     return outvalue

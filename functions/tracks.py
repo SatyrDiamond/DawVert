@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_values
+from functions import auto
 
 # ------------------------ Regular ------------------------
 
@@ -87,8 +88,18 @@ def r_pl_laned(cvpj_l, trackid, laneddata):
     cvpj_l['track_placements'][trackid] = {}
     if laneddata != None: cvpj_l['track_placements'][trackid] = laneddata
 
+
+
 def r_fx_audio(cvpj_l, trackid, chain_fx_audio):
     data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'chain_fx_audio'], chain_fx_audio)
+
+def r_fx_audio_append(cvpj_l, trackid, enabled, wet, auto_plug, auto_slot, pluginname, plugindata):
+    fxslot_data = {"plugin": pluginname, "plugindata": plugindata}
+    if auto_plug != None: fxslot_data['pluginautoid'] = auto_plug
+    if auto_slot != None: fxslot_data['slotautoid'] = auto_slot
+    if enabled != None: fxslot_data['enabled'] = enabled
+    if wet != None: fxslot_data['wet'] = wet
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'chain_fx_audio'], fxslot_data)
 
 def r_fx_notes(cvpj_l, trackid, chain_fx_note):
     data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'instdata', 'chain_fx_notes'], chain_fx_note)
@@ -97,18 +108,6 @@ def r_fx_notes_append(cvpj_l, trackid, enabled, pluginname, plugindata):
     data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'instdata', 'chain_fx_notes'], 
         {"enabled": enabled, "plugin": pluginname, "plugindata": plugindata}
         )
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -161,17 +160,34 @@ def m_add_nle(cvpj_l, patid, nle_notelist, nle_name):
     
 # ------------------------ All ------------------------
 
+def make_fxslot_simple(cvpj_l, nativedawname, location, trackid, enabled, wet, auto_id, fx_type, fx_data):
+    plugindata = {}
+    plugindata['name'] = fx_type
+    plugindata['data'] = fx_data
+    if location == 'master':
+        a_fx_audio_master_append(cvpj_l, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
+    if location == 'r_track':
+        r_fx_audio_append(cvpj_l, trackid, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
+
 def a_addtrack_master(cvpj_l, i_name, i_vol, i_color):
     if 'track_master' not in cvpj_l: cvpj_l['track_master'] = {}
     if i_name != None: cvpj_l['track_master']['name'] = i_name
     if i_vol != None: cvpj_l['track_master']['vol'] = i_vol
     if i_color != None: cvpj_l['track_master']['color'] = i_color
 
+def a_addtrack_master_param(cvpj_l, v_name, v_value):
+    cvpj_l['track_master'][v_name] = v_value
+
 def a_fx_audio_master(cvpj_l, chain_fx_audio):
     data_values.nested_dict_add_to_list(cvpj_l, ['track_master', 'chain_fx_audio'], chain_fx_audio)
 
-def a_addtrack_master_param(cvpj_l, v_name, v_value):
-    cvpj_l['track_master'][v_name] = v_value
+def a_fx_audio_master_append(cvpj_l, enabled, wet, auto_plug, auto_slot, pluginname, plugindata):
+    fxslot_data = {"plugin": pluginname, "plugindata": plugindata}
+    if auto_plug != None: fxslot_data['pluginautoid'] = auto_plug
+    if auto_slot != None: fxslot_data['slotautoid'] = auto_slot
+    if enabled != None: fxslot_data['enabled'] = enabled
+    if wet != None: fxslot_data['wet'] = wet
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_master', 'chain_fx_audio'], fxslot_data)
 
 # ------------------------ Auto ------------------------
 
@@ -180,3 +196,36 @@ def a_add_auto_pl(cvpj_l, in_type, in_id, in_name, in_autopoints):
         data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_id, in_name], in_autopoints)
     else: 
         data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_name], in_autopoints)
+
+# ------------------------ NoPl Auto ------------------------
+
+nopl_autopoints = {}
+
+def a_auto_nopl_addpoint(in_type, in_id, in_name, point_pos, point_val, point_type):
+    global nopl_autopoints
+    pointdata = {"position": point_pos, "value": point_val, "type": point_type}
+    if in_type in ['track', 'plugin', 'fxmixer', 'slot']:
+        data_values.nested_dict_add_to_list(nopl_autopoints, [in_type, in_id, in_name], pointdata)
+    else: 
+        data_values.nested_dict_add_to_list(nopl_autopoints, [in_type, in_name], pointdata)
+
+def a_auto_nopl_to_pl(pointsdata):
+    autopl = {}
+    durpos = auto.getdurpos(pointsdata, 0)
+    autopl['position'] = durpos[0]
+    autopl['duration'] = durpos[1]-durpos[0]+4
+    autopl['points'] = auto.trimmove(pointsdata, durpos[0], durpos[0]+durpos[1])
+    return autopl
+
+def a_auto_nopl_to_cvpj(cvpj_l):
+    global nopl_autopoints
+    for in_type in nopl_autopoints:
+        if in_type in ['track', 'plugin', 'fxmixer', 'slot']:
+            for in_id in nopl_autopoints[in_type]:
+                for in_name in nopl_autopoints[in_type][in_id]:
+                    #print(in_type, in_id, in_name, nopl_autopoints[in_type][in_id][in_name])
+                    data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_id, in_name], a_auto_nopl_to_pl(nopl_autopoints[in_type][in_id][in_name]))
+        else:
+            for in_name in nopl_autopoints[in_type]:
+                #print(in_type, in_name, nopl_autopoints[in_type][in_name])
+                data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_name], a_auto_nopl_to_pl(nopl_autopoints[in_type][in_name]))

@@ -125,14 +125,6 @@ def parse_notes(channum, bb_notes, bb_instruments):
                 for pinu in range(len(t_auto_pitch)-1):
                     slide_dur = t_auto_pitch[pinu+1]['position'] - t_auto_pitch[pinu]['position']
 
-                    #print(
-                    #    t_auto_pitch[pinu], 
-                    #    t_auto_pitch[pinu+1],
-                    #    '|',
-                    #    slide_dur,
-                    #    t_auto_pitch[pinu+1]['value'] == t_auto_pitch[pinu]['value'],
-                    #    )
-
                     if t_auto_pitch[pinu+1]['value'] != t_auto_pitch[pinu]['value']:
                         cvpj_notemod['slide'].append({
                             'position': t_auto_pitch[pinu]['position'], 

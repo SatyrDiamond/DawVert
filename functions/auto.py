@@ -1,6 +1,45 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+
+def move(points, pos):
+    newautopoints = []
+    for point in points:
+        newpoint = point.copy()
+        newpoint['position'] = newpoint['position'] + pos
+        if newpoint['position'] >= 0: newautopoints.append(newpoint)
+    return newautopoints
+
+def trim(points, pos):
+    newautopoints = []
+    for point in points:
+        if point['position'] < pos: newautopoints.append(point)
+    return newautopoints
+
+def trimmove(points, startat, endat):
+    newpoints = points
+    if endat != None: newpoints = trim(points, endat)
+    if startat != None: newpoints = move(points, -startat)
+    return newpoints
+
+def getduration(listdata):
+    duration_final = 0
+    for listpoint in listdata:
+        endpos = listpoint['position']
+        if duration_final < endpos: duration_final = endpos
+    return duration_final
+
+def getdurpos(listdata, startpos):
+    duration_final = 0
+    pos_final = 100000000
+    for listpoint in listdata:
+        pointpos = listpoint['position']
+        if duration_final < pointpos: duration_final = pointpos
+        if pos_final > pointpos: pos_final = pointpos
+    return pos_final, duration_final
+
+
+
 def makepl(t_pos, t_dur, t_points):
     pl_data = {}
     pl_data['position'] = t_pos

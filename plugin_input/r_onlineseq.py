@@ -107,9 +107,10 @@ def parse_note(notedata):
     if '2' in notedata: ols_pos = int2float(int(notedata['2']))
     if '3' in notedata: ols_dur = int2float(int(notedata['3']))
     if '5' in notedata: ols_vol = int2float(int(notedata['5']))
-    cvpj_notedata = note_data.rx_makenote(ols_pos, ols_dur, ols_note-60, ols_vol, None)
-    if ols_inst not in onlseq_notelist: onlseq_notelist[ols_inst] = []
-    onlseq_notelist[ols_inst].append(cvpj_notedata)
+    if ols_dur > 0.00001:
+        cvpj_notedata = note_data.rx_makenote(ols_pos, ols_dur, ols_note-60, ols_vol, None)
+        if ols_inst not in onlseq_notelist: onlseq_notelist[ols_inst] = []
+        onlseq_notelist[ols_inst].append(cvpj_notedata)
 
 class input_onlinesequencer(plugin_input.base):
     def __init__(self): pass

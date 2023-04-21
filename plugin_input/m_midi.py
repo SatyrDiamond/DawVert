@@ -8,6 +8,8 @@ import mido
 from mido import MidiFile
 from functions import note_convert
 from functions import format_midi_in
+from functions import midi_exdata
+from functions import colors
 
 def setinfo(cvpj_l, textin):
     global author
@@ -124,6 +126,7 @@ class input_midi(plugin_input.base):
                 timepos += msg.time
                 format_midi_in.resttime(msg.time)
 
+
                 if msg.type == 'note_on':
                     if msg.velocity != 0: format_midi_in.note_on(msg.note, msg.channel, msg.velocity)
                     else: format_midi_in.note_off(msg.note, msg.channel)
@@ -141,8 +144,17 @@ class input_midi(plugin_input.base):
                     format_midi_in.time_signature(timepos, msg.numerator, msg.denominator)
                 if msg.type == 'marker': format_midi_in.marker(timepos, msg.text)
                 if msg.type == 'track_name': 
+                    print("[input-midi] Track Name:", msg.name)
                     format_midi_in.track_name(msg.name)
                     midi_trackname = msg.name
+                if msg.type == 'sequencer_specific': 
+                    exdata = midi_exdata.decode_exdata(msg.data, True)
+                    if exdata[0] == [83]:
+                        if exdata[1][0:5] == b'ign\x01\xff':
+                            print("[input-midi] Track Color (from Signal)")
+                            format_midi_in.track_color(colors.rgb_int_to_rgb_float(exdata[1][5:8]))
+
+
                 if msg.type == 'copyright': 
                     midi_copyright = msg.text
             format_midi_in.track_end(16)

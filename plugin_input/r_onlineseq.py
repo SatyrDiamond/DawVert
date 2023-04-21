@@ -17,10 +17,16 @@ import blackboxprotobuf
 
 onlseq_param_song = {}
 onlseq_param_song['1'] = ['bpm',1]
+onlseq_param_song['2'] = ['unknown2',1]
+onlseq_param_song['3'] = ['unknown3',1]
+onlseq_param_song['4'] = ['unknown4',1]
+onlseq_param_song['5'] = ['unknown5',1]
+onlseq_param_song['6'] = ['unknown6',1]
 onlseq_param_song['7'] = ['unknown7',1]
 onlseq_param_song['8'] = ['vol',1]
 onlseq_param_song['9'] = ['fast_gfx',1]
 onlseq_param_song['10'] = ['autoscroll',1]
+onlseq_param_song['11'] = ['unknown11',1]
 
 onlseq_param_inst = {}
 onlseq_param_inst['1'] = ['vol',1]

@@ -91,9 +91,6 @@ class input_mariopaint_smp(plugin_input.base):
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = False
-        
         cvpj_l['timesig_numerator'] = 4
         cvpj_l['timesig_denominator'] = 4
         cvpj_l['bpm'] = smp_tempo

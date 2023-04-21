@@ -168,6 +168,8 @@ def make_fxslot_simple(cvpj_l, nativedawname, location, trackid, enabled, wet, a
         a_fx_audio_master_append(cvpj_l, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
     if location == 'r_track':
         r_fx_audio_append(cvpj_l, trackid, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
+    if location == 'fxrack':
+        fxrack_fx_audio_append(cvpj_l, trackid, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
 
 def a_addtrack_master(cvpj_l, i_name, i_vol, i_color):
     if 'track_master' not in cvpj_l: cvpj_l['track_master'] = {}
@@ -188,6 +190,29 @@ def a_fx_audio_master_append(cvpj_l, enabled, wet, auto_plug, auto_slot, pluginn
     if enabled != None: fxslot_data['enabled'] = enabled
     if wet != None: fxslot_data['wet'] = wet
     data_values.nested_dict_add_to_list(cvpj_l, ['track_master', 'chain_fx_audio'], fxslot_data)
+
+# ------------------------ FXRack ------------------------
+
+def fxrack_add(cvpj_l, fx_num, fx_name, fx_color, fx_vol, fx_pan):
+    data_values.nested_dict_add_value(cvpj_l, ['fxrack', str(fx_num)], {})
+    fxdata = cvpj_l['fxrack'][str(fx_num)]
+    fxdata['color'] = fx_color
+    fxdata["name"] = fx_name
+
+def fxrack_param(cvpj_l, fx_num, v_name, v_value):
+    data_values.nested_dict_add_value(cvpj_l, ['fxrack', str(fx_num)], {})
+    cvpj_l['fxrack'][str(fx_num)][v_name] = v_value
+
+def fxrack_fx_audio(cvpj_l, fx_num, chain_fx_audio):
+    data_values.nested_dict_add_to_list(cvpj_l, ['fxrack', str(fx_num)], chain_fx_audio)
+
+def fxrack_fx_audio_append(cvpj_l, trackid, enabled, wet, auto_plug, auto_slot, pluginname, plugindata):
+    fxslot_data = {"plugin": pluginname, "plugindata": plugindata}
+    if auto_plug != None: fxslot_data['pluginautoid'] = auto_plug
+    if auto_slot != None: fxslot_data['slotautoid'] = auto_slot
+    if enabled != None: fxslot_data['enabled'] = enabled
+    if wet != None: fxslot_data['wet'] = wet
+    data_values.nested_dict_add_to_list(cvpj_l, ['fxrack', str(trackid), 'chain_fx_audio'], fxslot_data)
 
 # ------------------------ Auto ------------------------
 

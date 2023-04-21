@@ -93,12 +93,28 @@ global sysexvals
 
 sysexvals = {}
 
-def parse_sysex(msg, time):
-    sysexdata = msg.data
 
+def decode_exdata(sysexdata, isseqspec):
+    exdata = data_bytes.to_bytesio(struct.pack("B"*len(sysexdata),*sysexdata))
+
+    manufac = [exdata.read(1)[0]]
+
+    if manufac == [0]:
+        for _ in range(2):
+            manufac.append(exdata.read(1)[0])
+
+    if len(manufac) == 1:
+        if manufac[0] in sysex_brand: print('[midi-exdata] Brand: ', sysex_brand[manufac[0]])
+        else: print('[midi-exdata] Brand: Unknown', manufac[0])
+
+    if isseqspec == True:
+        return manufac, exdata.read()
+
+
+def parse_sysex(sysexdata):
     contents = data_bytes.to_bytesio(struct.pack("b"*len(sysexdata),*sysexdata))
 
-    print('[debug] -------------- sysex, T:', time)
+    print('[debug] -------------- sysex', time)
     manufac = int.from_bytes(contents.read(1), "little")
 
     if manufac != 0:

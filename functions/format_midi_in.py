@@ -338,8 +338,17 @@ def midiauto2cvpjauto(points, divi, add):
     auto_output = []
     for point in points:
         auto_output.append([point/s_ppqstep, (points[point]/divi)+add])
-
     return auto_output
+
+def add_auto_to_song(twopoints, autoname, channum, s_chan_trackids):
+    if len(s_chan_trackids) == 1: tracks.a_auto_nopl_twopoints('track', s_chan_trackids[0], autoname, twopoints, 1, 'instant')
+    elif len(s_chan_trackids) > 1: tracks.a_auto_nopl_twopoints('fxmixer', str(channum+1), autoname, twopoints, 1, 'instant')
+
+def add_auto_to_song_fxmixer(twopoints, autoname, channum, s_chan_trackids):
+    if len(s_chan_trackids) == 1: tracks.a_auto_nopl_twopoints('track', s_chan_trackids[0], autoname, twopoints, 1, 'instant')
+    if len(s_chan_trackids) > 1:
+        for s_chan_trackid in s_chan_trackids:
+            tracks.a_auto_nopl_twopoints('track', s_chan_trackid, autoname, twopoints, 1, 'instant')
 
 def song_end(channels):
     global midi_cmds
@@ -348,6 +357,11 @@ def song_end(channels):
     global t_chan_auto
 
     songduration = 0
+
+    cvpj_l['bpm'] = 140
+    if 0 in s_tempo:
+        cvpj_l['bpm'] = s_tempo[0]
+        del s_tempo[0]
 
     for s_tempo_point in s_tempo:
         tracks.a_auto_nopl_addpoint('main', None, 'bpm', s_tempo_point/s_ppqstep, s_tempo[s_tempo_point], 'instant')
@@ -388,19 +402,17 @@ def song_end(channels):
         s_chan_trackids = t_chan_usedinst_all[channum]
         s_chan_auto = t_chan_auto[channum]
 
-        if 7 in s_chan_auto: 
-            if len(s_chan_auto[7]) == 1 and 0 in s_chan_auto[7]: cvpj_l_fxrack[str(channum+1)]["vol"] = s_chan_auto[7][0]/127
-            else: tracks.a_auto_nopl_twopoints('fxmixer', str(channum+1), 'vol', midiauto2cvpjauto(s_chan_auto[7],127,0), 1, 'instant')
+        for s_chan_auto_num in s_chan_auto:
+            if s_chan_auto_num == 7: 
+                if len(s_chan_auto[7]) == 1 and 0 in s_chan_auto[7]: cvpj_l_fxrack[str(channum+1)]["vol"] = s_chan_auto[7][0]/127
+                else: add_auto_to_song(midiauto2cvpjauto(s_chan_auto[7],127,0), 'vol', channum, s_chan_trackids)
 
-        if len(s_chan_trackids) == 1:
-            if 'pitch' in s_chan_auto: 
-                tracks.a_auto_nopl_twopoints('track', s_chan_trackids[0], 'pitch', midiauto2cvpjauto(s_chan_auto['pitch'],1/8,0), 1, 'instant')
+            elif s_chan_auto_num == 'pitch':
+                add_auto_to_song_fxmixer(midiauto2cvpjauto(s_chan_auto['pitch'],1/8,0), 'pitch', channum, s_chan_trackids)
 
-        if len(s_chan_trackids) > 1:
-            for s_chan_trackid in s_chan_trackids:
-                if 'pitch' in s_chan_auto: 
-                    twopoints = midiauto2cvpjauto(s_chan_auto['pitch'], 1/8, 0)
-                    tracks.a_auto_nopl_twopoints('track', s_chan_trackid, 'pitch', twopoints, 1, 'instant')
+            else:
+                midictname = idvals.get_idval(idvals_midi_ctrl, str(s_chan_auto_num), 'name')
+                print('unknown controller', s_chan_auto_num, midictname)
 
     tracks.a_auto_nopl_to_cvpj(cvpj_l)
     cvpj_l['timemarkers'] = s_timemarkers
@@ -408,5 +420,4 @@ def song_end(channels):
     cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
     cvpj_l['playlist'] = cvpj_l_playlist
     cvpj_l['fxrack'] = cvpj_l_fxrack
-    cvpj_l['bpm'] = 140
     return cvpj_l

@@ -209,6 +209,11 @@ def a_auto_nopl_addpoint(in_type, in_id, in_name, point_pos, point_val, point_ty
     else: 
         data_values.nested_dict_add_to_list(nopl_autopoints, [in_type, in_name], pointdata)
 
+def a_auto_nopl_twopoints(in_type, in_id, in_name, twopoints, notelen, pointtype):
+    cvpj_points = []
+    for twopoint in twopoints:
+        a_auto_nopl_addpoint(in_type, in_id, in_name, twopoint[0]*notelen, twopoint[1], pointtype)
+
 def a_auto_nopl_to_pl(pointsdata):
     autopl = {}
     durpos = auto.getdurpos(pointsdata, 0)

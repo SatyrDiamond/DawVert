@@ -276,9 +276,6 @@ class input_lc(plugin_input.base):
 
         cvpj_l['do_addwrap'] = True
         
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = False
-        
         cvpj_l['bpm'] = (3614.75409836/lc_speed)/2
 
         return json.dumps(cvpj_l)

@@ -389,22 +389,14 @@ def song_end(channels):
         s_chan_auto = t_chan_auto[channum]
 
         if 7 in s_chan_auto: 
-            if len(s_chan_auto[7]) == 1 and 0 in s_chan_auto[7]: 
-                cvpj_l_fxrack[str(channum+1)]["vol"] = s_chan_auto[7][0]/127
-            else: 
-                twopoints = midiauto2cvpjauto(s_chan_auto[7], 127, 0)
-                tracks.a_auto_nopl_twopoints('fxmixer', str(channum+1), 'vol', twopoints, 1, 'instant')
+            if len(s_chan_auto[7]) == 1 and 0 in s_chan_auto[7]: cvpj_l_fxrack[str(channum+1)]["vol"] = s_chan_auto[7][0]/127
+            else: tracks.a_auto_nopl_twopoints('fxmixer', str(channum+1), 'vol', midiauto2cvpjauto(s_chan_auto[7],127,0), 1, 'instant')
 
         if len(s_chan_trackids) == 1:
             if 'pitch' in s_chan_auto: 
-                twopoints = midiauto2cvpjauto(s_chan_auto['pitch'], 1/8, 0)
-                tracks.a_auto_nopl_twopoints('track', s_chan_trackids[0], 'pitch', twopoints, 1, 'instant')
+                tracks.a_auto_nopl_twopoints('track', s_chan_trackids[0], 'pitch', midiauto2cvpjauto(s_chan_auto['pitch'],1/8,0), 1, 'instant')
 
         if len(s_chan_trackids) > 1:
-            if 7 in s_chan_auto: 
-                twopoints = midiauto2cvpjauto(s_chan_auto[7], 127, 0)
-                tracks.a_auto_nopl_twopoints('fxrack', str(channum+1), 'vol', twopoints, 1, 'instant')
-
             for s_chan_trackid in s_chan_trackids:
                 if 'pitch' in s_chan_auto: 
                     twopoints = midiauto2cvpjauto(s_chan_auto['pitch'], 1/8, 0)

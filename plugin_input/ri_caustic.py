@@ -85,7 +85,7 @@ def parse_notelist(causticpattern, machid):
         if causticnote[1] != 4294967295:
             key = causticnote[6]
             if key != 0: 
-                notedata = rx_makenote(causticnote[2]*4, causticnote[3]*4, key-60, causticnote[14], None)
+                notedata = note_data.rx_makenote(causticnote[2]*4, causticnote[3]*4, key-60, causticnote[14], None)
                 notelist.append(notedata)
     return notelist
 
@@ -249,6 +249,8 @@ class input_cvpj_r(plugin_input.base):
 
             cvpj_instdata['pluginautoid'] = 'machine'+machid
 
+            cvpj_trackid = 'MACH'+machid
+
             # -------------------------------- PCMSynth --------------------------------
             if machine['id'] == 'PCMS':
                 middlenote = 0
@@ -348,10 +350,10 @@ class input_cvpj_r(plugin_input.base):
                 if 'customwaveform1' in machine: cvpj_instdata['plugindata']['data']['customwaveform1'] = struct.unpack("<"+("i"*330), machine['customwaveform1'])
                 if 'customwaveform2' in machine: cvpj_instdata['plugindata']['data']['customwaveform2'] = struct.unpack("<"+("i"*330), machine['customwaveform2'])
 
-            tracks.ri_create_inst(cvpj_l, 'MACH'+machid, cvpj_notelistindex, cvpj_instdata)
-            tracks.r_basicdata(cvpj_l, 'MACH'+machid, cvpj_trackname, idvals.get_idval(idvals_inst_caustic, machine['id'], 'color'), mach_mixer_vol[machnum-1], mach_mixer_pan[machnum-1])
-            tracks.r_param(cvpj_l, 'MACH'+machid, 'enabled', int(not bool(mach_mixer_mute[machnum-1])))
-            tracks.r_param(cvpj_l, 'MACH'+machid, 'solo', mach_mixer_solo[machnum-1])
+            tracks.ri_create_inst(cvpj_l, cvpj_trackid, cvpj_notelistindex, cvpj_instdata)
+            tracks.r_basicdata(cvpj_l, cvpj_trackid, cvpj_trackname, idvals.get_idval(idvals_inst_caustic, machine['id'], 'color'), mach_mixer_vol[machnum-1], mach_mixer_pan[machnum-1])
+            tracks.r_param(cvpj_l, cvpj_trackid, 'enabled', int(not bool(mach_mixer_mute[machnum-1])))
+            tracks.r_param(cvpj_l, cvpj_trackid, 'solo', mach_mixer_solo[machnum-1])
 
             cvpj_fxchaindata = []
 
@@ -360,23 +362,19 @@ class input_cvpj_r(plugin_input.base):
                 for slotnum in CausticFXData:
                     if CausticFXData[slotnum] != {}: 
                         slot_fxslotdata = CausticFXData[slotnum]['controls']
-                        cvpj_fxslot = make_fxslot(
-                                caustic_fxtype[CausticFXData[slotnum]['type']], 
-                                slot_fxslotdata, 
-                                'machine'+str(machnum)+'_slot'+str(slotnum))
-                        cvpj_fxslot['enabled'] = int(not int(slot_fxslotdata[5]))
-                        cvpj_fxchaindata.append(cvpj_fxslot)
+                        tracks.make_fxslot_simple(cvpj_l, 'caustic', 'r_track', cvpj_trackid, int(not int(slot_fxslotdata[5])), None, 
+                            'machine'+str(machnum)+'_slot'+str(slotnum), caustic_fxtype[CausticFXData[slotnum]['type']], slot_fxslotdata)
 
             slot_mixereqfxslotdata = {}
             slot_mixereqfxslotdata['bass'] = mach_mixer_eq_low[machnum-1]
             slot_mixereqfxslotdata['mid'] = mach_mixer_eq_mid[machnum-1]
             slot_mixereqfxslotdata['high'] = mach_mixer_eq_high[machnum-1]
 
-            cvpj_fxchaindata.append(make_fxslot('mixer_eq', slot_mixereqfxslotdata, 'machine'+machid+'_eq'))
-            cvpj_fxchaindata.append(make_fxslot('width', {'width': mach_mixer_width[machnum-1]}, 'machine'+machid+'_width'))
+            tracks.make_fxslot_simple(cvpj_l, 'caustic', 'r_track', cvpj_trackid, None, None, 
+            'machine'+str(machnum)+'_eq', 'mixer_eq', slot_mixereqfxslotdata)
 
-            tracks.r_fx_audio(cvpj_l, 'MACH'+machid, cvpj_fxchaindata)
-
+            tracks.make_fxslot_simple(cvpj_l, 'caustic', 'r_track', cvpj_trackid, None, None, 
+            'machine'+str(machnum)+'_width', 'width', {'width': mach_mixer_width[machnum-1]})
 
         t_track_placements = {}
 
@@ -485,21 +483,14 @@ class input_cvpj_r(plugin_input.base):
             for slotnum in CausticFXData:
                 if CausticFXData[slotnum] != {}: 
                     slot_fxslotdata = CausticFXData[slotnum]['controls']
+                    tracks.make_fxslot_simple(cvpj_l, 'caustic', 'master', None, int(not int(slot_fxslotdata[5])), None, 
+                        'master_slot'+str(slotnum), caustic_fxtype[CausticFXData[slotnum]['type']], slot_fxslotdata)
 
-                    cvpj_fxslot = make_fxslot(
-                        caustic_fxtype[CausticFXData[slotnum]['type']], 
-                        slot_fxslotdata, 
-                        'master_slot'+str(slotnum))
-                    cvpj_fxslot['enabled'] = int(not int(slot_fxslotdata[5]))
-                    master_fxchaindata.append(cvpj_fxslot)
+        tracks.make_fxslot_simple(cvpj_l, 'caustic', 'master', None, int(not int(master_params['eq']['muted'])), None, 
+        'master_eq', 'master_eq', master_params['eq'])
 
-        cvpj_fxslot_eq = make_fxslot('master_eq', master_params['eq'], 'master_eq')
-        cvpj_fxslot_eq['enabled'] = int(not int(master_params['eq']['muted']))
-        cvpj_fxslot_limiter = make_fxslot('master_limiter', master_params['limiter'], 'master_limiter')
-        cvpj_fxslot_limiter['enabled'] = int(not int(master_params['limiter']['muted']))
-
-        master_fxchaindata.append(cvpj_fxslot_eq)
-        master_fxchaindata.append(cvpj_fxslot_limiter)
+        tracks.make_fxslot_simple(cvpj_l, 'caustic', 'master', None, int(not int(master_params['limiter']['muted'])), None, 
+        'master_limiter', 'master_limiter', master_params['limiter'])
 
         #print(AUTO_data)
 
@@ -507,10 +498,8 @@ class input_cvpj_r(plugin_input.base):
             if autonum in master_idnames:
                 t_fxtypeparam = master_idnames[autonum]
                 if t_fxtypeparam[0] in ['eq', 'limiter']:
-                    print(t_fxtypeparam)
                     tracks.a_add_auto_pl(cvpj_l, 'plugin', 'master_'+t_fxtypeparam[0], t_fxtypeparam[1], tp2cvpjp(AUTO_data['MASTER'][autonum]))
                 if t_fxtypeparam == ['main', 'master']:
-                    print(t_fxtypeparam)
                     tracks.a_add_auto_pl(cvpj_l, 'main', None, 'vol', tp2cvpjp(AUTO_data['MASTER'][autonum]))
             elif autonum >= 64:
                 autonum_calc = autonum - 64
@@ -531,7 +520,6 @@ class input_cvpj_r(plugin_input.base):
                 tracks.a_add_auto_pl(cvpj_l, cvpj_auto_type, cvpj_fx_autoid, cvpj_auto_ctrl, cvpj_auto_pl)
 
         tracks.a_addtrack_master(cvpj_l, 'Master', master_params['main']['master'], [0.52, 0.52, 0.52])
-
         tracks.a_fx_audio_master(cvpj_l, master_fxchaindata)
 
         cvpj_l['do_addwrap'] = True

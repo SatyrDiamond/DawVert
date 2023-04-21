@@ -103,7 +103,7 @@ def parsetrack(file_stream, tracknum, notelen):
     cvpj_l['fxrack'][tracknum+1] = {"name": rol_tr_voice[0]}
 
     if len(rol_tr_volume) > 1: tracks.a_auto_nopl_twopoints('fxmixer', tracknum+1, 'vol', rol_tr_volume[1], notelen, 'instant')
-
+    
     placementdata = placement_data.nl2pl(cvpj_notelist)
     tracks.m_playlist_pl(cvpj_l, tracknum+1, rol_tr_voice[0], None, placementdata)
 

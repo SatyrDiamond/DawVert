@@ -8,6 +8,7 @@ from functions import data_bytes
 from functions import tracks
 from functions import idvals
 from functions import note_data
+from functions import placement_data
 
 def getstring(nbs_file):
     stringlen = int.from_bytes(nbs_file.read(4), "little")
@@ -141,11 +142,7 @@ class input_gt_mnbs(plugin_input.base):
                     cvpj_notedata = note_data.mx_makenote('NoteBlock'+str(nbs_notedata[1]), note-placementnum, 2, nbs_notedata[0], None, None)
                 layer_placements[placementnum].append(cvpj_notedata)
             for placenum in layer_placements:
-                cvpj_pl_data = {}
-                cvpj_pl_data['position'] = placenum
-                cvpj_pl_data['duration'] = split_duration
-                cvpj_pl_data['notelist'] = layer_placements[placenum]
-                tracks.m_playlist_pl_add(cvpj_l, nbs_layer, cvpj_pl_data)
+                tracks.m_playlist_pl_add(cvpj_l, nbs_layer, placement_data.makepl_n(placenum, split_duration, layer_placements[placenum]))
 
         # PART 3: LAYERS
         if nbs_file.tell() <= nbs_len:
@@ -176,9 +173,6 @@ class input_gt_mnbs(plugin_input.base):
 
         cvpj_l['do_addwrap'] = True
         cvpj_l['do_singlenotelistcut'] = True
-        
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = False
         
         cvpj_l['timesig_numerator'] = timesig_numerator
         cvpj_l['timesig_denominator'] = 4

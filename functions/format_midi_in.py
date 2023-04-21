@@ -2,9 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later 
 
 from functions import notelist_data
+from functions import note_data
+from functions import data_values
 from functions import idvals
 from functions import tracks
-
 
 idvals_midi_ctrl = idvals.parse_idvalscsv('idvals/midi_ctrl.csv')
 idvals_midi_inst = idvals.parse_idvalscsv('idvals/midi_inst.csv')
@@ -29,26 +30,23 @@ def song_start(channels, ppq):
     global s_ppqstep
     global s_timemarkers
     global t_trk_ch
-
     s_ppqstep = ppq/4
     t_tracknum = 0
     s_tempo = {}
     s_timemarkers = []
-
     t_trk_ch = [[] for x in range(channels)]
-
     t_chan_usedinst_all = [[] for x in range(channels)]
-
     t_chan_auto = []
     for _ in range(channels): t_chan_auto.append({})
 
 # -------------------------------------- TRACK --------------------------------------
-def gettrackname(t_tracknum, channelnum, cvpj_midibank, cvpj_midiinst):
+def get_trackid(t_tracknum, channelnum, cvpj_midibank, cvpj_midiinst):
     return 't'+str(t_tracknum)+'_c'+str(channelnum)+'_b'+str(cvpj_midibank)+'_i'+str(cvpj_midiinst)
 
 def track_start(channels, startpos):
     global t_tracknum
     global t_trackname
+    global t_trackcolor
     global t_startpos
     global midi_cmds
     global t_curpos
@@ -59,6 +57,7 @@ def track_start(channels, startpos):
     t_curpos = 0
     t_startpos = startpos
     t_trackname = None
+    t_trackcolor = None
 
     midichanneltype = []
     for num in range(channels):
@@ -81,6 +80,7 @@ def track_end(channels):
     global t_chan_auto
     global t_chan_usedinst
     global t_trackname
+    global t_trackcolor
     global t_tracknum
     global t_trk_ch
 
@@ -91,9 +91,6 @@ def track_end(channels):
 
     t_chan_usedinst = [{} for x in range(channels)]
     t_active_notes = [[[] for x in range(128)] for x in range(channels)]
-
-    #for t_active_note_t in t_active_notes:
-    #    print(t_active_note_t)
 
     curpos = 0
     for midi_cmd in midi_cmds:
@@ -107,59 +104,21 @@ def track_end(channels):
             if midi_cmd[2] == 0:
                 t_cur_inst[midi_cmd[1]][0] = midi_cmd[3]
             else:
-                if midi_cmd[2] not in t_chan_auto[midi_cmd[1]]:
-                    t_chan_auto[midi_cmd[1]][midi_cmd[2]] = {}
+                if midi_cmd[2] not in t_chan_auto[midi_cmd[1]]: t_chan_auto[midi_cmd[1]][midi_cmd[2]] = {}
                 t_chan_auto[midi_cmd[1]][midi_cmd[2]][curpos] = midi_cmd[3]
 
         if midi_cmd[0] == 'pitch': 
-            if 'pitch' not in t_chan_auto[midi_cmd[1]]:
-                t_chan_auto[midi_cmd[1]]['pitch'] = {}
+            if 'pitch' not in t_chan_auto[midi_cmd[1]]: t_chan_auto[midi_cmd[1]]['pitch'] = {}
             t_chan_auto[midi_cmd[1]]['pitch'][curpos] = midi_cmd[2]
 
-
-        if midi_cmd[0] == 'note': 
+        if midi_cmd[0] in ['note', 'note_on']: 
             curinst = t_cur_inst[midi_cmd[1]]
-            if curinst[0] not in t_chan_usedinst[midi_cmd[1]]:
-                t_chan_usedinst[midi_cmd[1]][curinst[0]] = []
-            if curinst[1] not in t_chan_usedinst[midi_cmd[1]][curinst[0]]:
-                t_chan_usedinst[midi_cmd[1]][curinst[0]].append(curinst[1])
-
-            trkname = gettrackname(t_tracknum, midi_cmd[1], curinst[0], curinst[1])
-            if trkname not in t_chan_usedinst_all[midi_cmd[1]]:
-                t_chan_usedinst_all[midi_cmd[1]].append(trkname)
-
-            t_active_notes[midi_cmd[1]][midi_cmd[2]].append(
-                [
-                curpos, 
-                midi_cmd[4], 
-                midi_cmd[3], 
-                t_tracknum,
-                curinst[0],
-                curinst[1]
-                ]
-            )
-
-        if midi_cmd[0] == 'note_on': 
-            curinst = t_cur_inst[midi_cmd[1]]
-            if curinst[0] not in t_chan_usedinst[midi_cmd[1]]:
-                t_chan_usedinst[midi_cmd[1]][curinst[0]] = []
-            if curinst[1] not in t_chan_usedinst[midi_cmd[1]][curinst[0]]:
-                t_chan_usedinst[midi_cmd[1]][curinst[0]].append(curinst[1])
-                
-            trkname = gettrackname(t_tracknum, midi_cmd[1], curinst[0], curinst[1])
-            if trkname not in t_chan_usedinst_all[midi_cmd[1]]:
-                t_chan_usedinst_all[midi_cmd[1]].append(trkname)
-
-            t_active_notes[midi_cmd[1]][midi_cmd[2]].append(
-                [
-                curpos, 
-                None, 
-                midi_cmd[3], 
-                t_tracknum,
-                curinst[0],
-                curinst[1]
-                ]
-            )
+            if curinst[0] not in t_chan_usedinst[midi_cmd[1]]: t_chan_usedinst[midi_cmd[1]][curinst[0]] = []
+            if curinst[1] not in t_chan_usedinst[midi_cmd[1]][curinst[0]]: t_chan_usedinst[midi_cmd[1]][curinst[0]].append(curinst[1])
+            trkname = get_trackid(t_tracknum, midi_cmd[1], curinst[0], curinst[1])
+            if trkname not in t_chan_usedinst_all[midi_cmd[1]]: t_chan_usedinst_all[midi_cmd[1]].append(trkname)
+            if midi_cmd[0] == 'note': t_active_notes[midi_cmd[1]][midi_cmd[2]].append([curpos,midi_cmd[4],midi_cmd[3],t_tracknum,curinst[0],curinst[1]])
+            if midi_cmd[0] == 'note_on': t_active_notes[midi_cmd[1]][midi_cmd[2]].append([curpos,None,midi_cmd[3],t_tracknum,curinst[0],curinst[1]])
 
         if midi_cmd[0] == 'note_off': 
             for note in t_active_notes[midi_cmd[1]][midi_cmd[2]]:
@@ -174,26 +133,21 @@ def track_end(channels):
             for t_actnote in c_active_notes:
                 #print(notekey, '-------------', t_actnote)
                 if t_actnote[1] != None:
-                    notedata = {}
-                    notedata['position'] = t_actnote[0]/s_ppqstep
-                    notedata['key'] = notekey
+                    notedata = note_data.mx_makenote(get_trackid(t_actnote[3],channelnum,t_actnote[4],t_actnote[5]), t_actnote[0]/s_ppqstep, (t_actnote[1]-t_actnote[0])/s_ppqstep, notekey, t_actnote[2]/127, None)
                     notedata['channel'] = channelnum+1
-                    notedata['vol'] = t_actnote[2]/127
-                    notedata['duration'] = (t_actnote[1]-t_actnote[0])/s_ppqstep
-                    notedata['instrument'] = gettrackname(t_actnote[3], channelnum, t_actnote[4], t_actnote[5])
                     t_cvpj_notelist.append(notedata)
             notekey += 1
 
     playlistrowdata = {}
     if t_trackname != None: playlistrowdata['name'] = str(t_trackname)
-    playlistrowdata['color'] = [0.3, 0.3, 0.3]
+    if t_trackcolor != None: playlistrowdata['color'] = t_trackcolor
+    else: playlistrowdata['color'] = [0.3, 0.3, 0.3]
 
     if t_cvpj_notelist != []:
         hasnotes = True
         cvpj_placement = {}
         cvpj_placement['position'] = t_startpos/s_ppqstep
         cvpj_placement['duration'] = notelist_data.getduration(t_cvpj_notelist)
-        cvpj_placement['type'] = 'instruments'
         cvpj_placement['notelist'] = notelist_data.sort(t_cvpj_notelist)
         playlistrowdata['placements_notes'] = [cvpj_placement]
     else:
@@ -202,12 +156,12 @@ def track_end(channels):
     cvpj_l_playlist[str(t_tracknum)] = playlistrowdata
 
 def make_custominst(channelnum, cvpj_midibank, cvpj_midiinst, instdata):
-    cvpj_instid = gettrackname(t_tracknum, channelnum, cvpj_midibank, cvpj_midiinst)
+    cvpj_instid = get_trackid(t_tracknum, channelnum, cvpj_midibank, cvpj_midiinst)
     cvpj_l_instruments[cvpj_instid] = instdata
     cvpj_l_instrumentsorder.append(cvpj_instid)
 
 def make_inst(channelnum, cvpj_midibank, cvpj_midiinst):
-    cvpj_instid = gettrackname(t_tracknum, channelnum, cvpj_midibank, cvpj_midiinst)
+    cvpj_instid = get_trackid(t_tracknum, channelnum, cvpj_midibank, cvpj_midiinst)
     if cvpj_instid not in t_trk_ch[channelnum]:
         t_trk_ch[channelnum].append(cvpj_instid)
 
@@ -226,7 +180,7 @@ def make_inst(channelnum, cvpj_midibank, cvpj_midiinst):
             cvpj_trackdata["instdata"]['plugin'] = 'general-midi'
             cvpj_trackdata["instdata"]['plugindata'] = {'bank':128, 'inst':cvpj_midiinst}
             cvpj_trackdata["instdata"]['usemasterpitch'] = 0
-            cvpj_trackdata["name"] = 'Drums'
+            cvpj_trackdata["name"] = 'Drums [Ch10]'
             cvpj_trackdata["color"] = [0.81, 0.80, 0.82]
     else:
         cvpj_trackdata["instdata"]['plugin'] = 'general-midi'
@@ -240,7 +194,7 @@ def make_inst(channelnum, cvpj_midibank, cvpj_midiinst):
         else: 
             cvpj_trackdata["instdata"]['plugindata'] = {'bank':128, 'inst':cvpj_midiinst}
             cvpj_trackdata["instdata"]['usemasterpitch'] = 0
-            cvpj_trackdata["name"] = 'Drums'
+            cvpj_trackdata["name"] = 'Drums [Ch10]'
             cvpj_trackdata["color"] = [0.81, 0.80, 0.82]
 
 
@@ -320,6 +274,10 @@ def track_name(name):
     global t_trackname
     t_trackname = name
 
+def track_color(name): 
+    global t_trackcolor
+    t_trackcolor = name
+
 def marker(time, name):
     global s_timemarkers
     global s_ppqstep
@@ -344,11 +302,20 @@ def add_auto_to_song(twopoints, autoname, channum, s_chan_trackids):
     if len(s_chan_trackids) == 1: tracks.a_auto_nopl_twopoints('track', s_chan_trackids[0], autoname, twopoints, 1, 'instant')
     elif len(s_chan_trackids) > 1: tracks.a_auto_nopl_twopoints('fxmixer', str(channum+1), autoname, twopoints, 1, 'instant')
 
-def add_auto_to_song_fxmixer(twopoints, autoname, channum, s_chan_trackids):
+def add_auto_to_song_no_mixer(twopoints, autoname, channum, s_chan_trackids):
     if len(s_chan_trackids) == 1: tracks.a_auto_nopl_twopoints('track', s_chan_trackids[0], autoname, twopoints, 1, 'instant')
     if len(s_chan_trackids) > 1:
         for s_chan_trackid in s_chan_trackids:
             tracks.a_auto_nopl_twopoints('track', s_chan_trackid, autoname, twopoints, 1, 'instant')
+
+def add_auto_to_slot_gmfx(twopoints, autoname, slotname):
+    tracks.a_auto_nopl_twopoints('slot', slotname, autoname, twopoints, 1, 'instant')
+
+def do_slot_wet(schannum, slotendname, fxrack_chan):
+    wetval = 0
+    if len(schannum) == 1 and 0 in schannum: wetval = schannum[0]/127
+    else: add_auto_to_slot_gmfx(midiauto2cvpjauto(schannum,127,0), 'wet', fxrack_chan+slotendname)
+    return wetval
 
 def song_end(channels):
     global midi_cmds
@@ -368,56 +335,66 @@ def song_end(channels):
 
     cvpj_l_automation = {}
     cvpj_l_automation['main'] = {}
-    cvpj_l_automation['fxmixer'] = {}
 
-    cvpj_l_fxrack["0"] = {}
-    cvpj_l_fxrack["0"]["name"] = "Master"
+    tracks.fxrack_add(cvpj_l, 0, "Master", [0.3, 0.3, 0.3], 1.0, None)
 
     for midi_channum in range(channels):
-        cvpj_l_fxrack[str(midi_channum+1)] = {}
+        fxrack_chan = str(midi_channum+1)
+        tracks.fxrack_add(cvpj_l, fxrack_chan, "Channel "+fxrack_chan, [0.3, 0.3, 0.3], 1.0, None)
 
-        fxdata = cvpj_l_fxrack[str(midi_channum+1)]
-        fxdata["fxenabled"] = 1
+        s_chan_trackids = t_chan_usedinst_all[midi_channum]
 
-        fxdata['color'] = [0.3, 0.3, 0.3]
-        fxdata["name"] = "Channel "+str(midi_channum+1)
-
-    #print(t_trk_ch)
-
-    #autochannum = 0
-    #for t_chan_auto_s in t_chan_auto:
-    #    for t_chan_auto_s_t in t_chan_auto_s:
-    #        if t_chan_auto_s_t == 'pitch':
-    #            print(autochannum, 'Pitch', t_chan_auto_s[t_chan_auto_s_t])
-    #        elif t_chan_auto_s_t == 7: #volume
-    #            print(autochannum, 'Volume', t_chan_auto_s[t_chan_auto_s_t])
-    #        elif t_chan_auto_s_t == 10: #pan
-    #            print(autochannum, 'Pan', t_chan_auto_s[t_chan_auto_s_t])
-    #        else:
-    #            midictname = idvals.get_idval(idvals_midi_ctrl, str(cvpj_midiinst), 'name')
-    #            print(autochannum, midictname, t_chan_auto_s[t_chan_auto_s_t])
-    #    autochannum += 1
-
-    for channum in range(channels):
-        s_chan_trackids = t_chan_usedinst_all[channum]
-        s_chan_auto = t_chan_auto[channum]
+        s_chan_auto = t_chan_auto[midi_channum]
 
         for s_chan_auto_num in s_chan_auto:
-            if s_chan_auto_num == 7: 
-                if len(s_chan_auto[7]) == 1 and 0 in s_chan_auto[7]: cvpj_l_fxrack[str(channum+1)]["vol"] = s_chan_auto[7][0]/127
-                else: add_auto_to_song(midiauto2cvpjauto(s_chan_auto[7],127,0), 'vol', channum, s_chan_trackids)
+            schannum = s_chan_auto[s_chan_auto_num]
+
+            if s_chan_auto_num == 1: 
+                if len(schannum) == 1 and 0 in schannum: tracks.r_param(cvpj_l, schannum[0], 'modulation', schannum[0]/127)
+                else: add_auto_to_song_no_mixer(midiauto2cvpjauto(schannum,127,0), 'modulation', midi_channum, s_chan_trackids)
+
+            elif s_chan_auto_num == 7: 
+                if len(schannum) == 1 and 0 in schannum: tracks.fxrack_param(cvpj_l, fxrack_chan, 'vol', schannum[0]/127)
+                else: add_auto_to_song(midiauto2cvpjauto(schannum,127,0), 'vol', midi_channum, s_chan_trackids)
+
+            elif s_chan_auto_num == 10: 
+                if len(schannum) == 1 and 0 in schannum: tracks.r_param(cvpj_l, schannum[0], 'pan', (schannum[0]/64)-1)
+                else: add_auto_to_song_no_mixer(midiauto2cvpjauto(schannum,64,-1), 'pan', midi_channum, s_chan_trackids)
+
+            elif s_chan_auto_num == 11: 
+                if len(schannum) == 1 and 0 in schannum: tracks.r_param(cvpj_l, schannum[0], 'expression', schannum[0]/127)
+                else: add_auto_to_song_no_mixer(midiauto2cvpjauto(schannum,127,0), 'expression', midi_channum, s_chan_trackids)
+
+            elif s_chan_auto_num == 91: 
+                wetval = do_slot_wet(schannum, '_reverb', fxrack_chan)
+                tracks.make_fxslot_simple(cvpj_l, 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_reverb', 'reverb', {})
+
+            elif s_chan_auto_num == 92: 
+                wetval = do_slot_wet(schannum, '_tremelo', fxrack_chan)
+                tracks.make_fxslot_simple(cvpj_l, 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_tremelo', 'tremelo', {})
+
+            elif s_chan_auto_num == 93: 
+                wetval = do_slot_wet(schannum, '_chorus', fxrack_chan)
+                tracks.make_fxslot_simple(cvpj_l, 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_chorus', 'chorus', {})
+
+            elif s_chan_auto_num == 94: 
+                wetval = do_slot_wet(schannum, '_detuning', fxrack_chan)
+                tracks.make_fxslot_simple(cvpj_l, 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_detuning', 'detuning', {})
+
+            elif s_chan_auto_num == 95: 
+                wetval = do_slot_wet(schannum, '_phaser', fxrack_chan)
+                tracks.make_fxslot_simple(cvpj_l, 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_phaser', 'phaser', {})
 
             elif s_chan_auto_num == 'pitch':
-                add_auto_to_song_fxmixer(midiauto2cvpjauto(s_chan_auto['pitch'],1/8,0), 'pitch', channum, s_chan_trackids)
+                add_auto_to_song_no_mixer(midiauto2cvpjauto(s_chan_auto['pitch'],1/8,0), 'pitch', midi_channum, s_chan_trackids)
 
-            else:
-                midictname = idvals.get_idval(idvals_midi_ctrl, str(s_chan_auto_num), 'name')
-                print('unknown controller', s_chan_auto_num, midictname)
+            #else:
+            #    midictname = idvals.get_idval(idvals_midi_ctrl, str(s_chan_auto_num), 'name')
+            #    print('unknown controller', s_chan_auto_num, midictname)
 
     tracks.a_auto_nopl_to_cvpj(cvpj_l)
     cvpj_l['timemarkers'] = s_timemarkers
     cvpj_l['instruments_data'] = cvpj_l_instruments
     cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
     cvpj_l['playlist'] = cvpj_l_playlist
-    cvpj_l['fxrack'] = cvpj_l_fxrack
     return cvpj_l

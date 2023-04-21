@@ -3,6 +3,8 @@
 
 from functions import notelist_data
 from functions import idvals
+from functions import tracks
+
 
 idvals_midi_ctrl = idvals.parse_idvalscsv('idvals/midi_ctrl.csv')
 idvals_midi_inst = idvals.parse_idvalscsv('idvals/midi_inst.csv')
@@ -334,17 +336,10 @@ def time_signature(time, numerator, denominator):
 
 def midiauto2cvpjauto(points, divi, add):
     auto_output = []
-    placeduration = 0
     for point in points:
-        auto_output.append({"position": point/s_ppqstep, 'type': 'instant', "value": (points[point]/divi)+add})
-        if placeduration < point/s_ppqstep: placeduration = point/s_ppqstep
+        auto_output.append([point/s_ppqstep, (points[point]/divi)+add])
 
-    cvpj_autodata = {}
-    cvpj_autodata["position"] = 0
-    cvpj_autodata["duration"] = placeduration+16
-    cvpj_autodata["points"] = auto_output
-
-    return [cvpj_autodata]
+    return auto_output
 
 def song_end(channels):
     global midi_cmds
@@ -354,22 +349,12 @@ def song_end(channels):
 
     songduration = 0
 
-    t_auto_tempo = []
-
     for s_tempo_point in s_tempo:
-        t_auto_tempo.append({"position": s_tempo_point/s_ppqstep, 'type': 'instant', "value": s_tempo[s_tempo_point]})
-        if songduration < s_tempo_point/s_ppqstep: songduration = s_tempo_point/s_ppqstep
+        tracks.a_auto_nopl_addpoint('main', None, 'bpm', s_tempo_point/s_ppqstep, s_tempo[s_tempo_point], 'instant')
 
     cvpj_l_automation = {}
     cvpj_l_automation['main'] = {}
     cvpj_l_automation['fxmixer'] = {}
-
-    if t_auto_tempo != []:
-        cvpj_autodata = {}
-        cvpj_autodata["position"] = 0
-        cvpj_autodata["duration"] = songduration
-        cvpj_autodata["points"] = t_auto_tempo
-        cvpj_l_automation['main']['bpm'] = [cvpj_autodata]
 
     cvpj_l_fxrack["0"] = {}
     cvpj_l_fxrack["0"]["name"] = "Master"
@@ -402,48 +387,30 @@ def song_end(channels):
     for channum in range(channels):
         s_chan_trackids = t_chan_usedinst_all[channum]
         s_chan_auto = t_chan_auto[channum]
-        #print(s_chan_trackids)
-        #print(s_chan_auto)
 
-        cvpj_l_automation['fxmixer'][str(channum+1)] = {}
         if 7 in s_chan_auto: 
             if len(s_chan_auto[7]) == 1 and 0 in s_chan_auto[7]: 
                 cvpj_l_fxrack[str(channum+1)]["vol"] = s_chan_auto[7][0]/127
             else: 
-                cvpj_l_automation['fxmixer'][str(channum+1)]['vol'] = midiauto2cvpjauto(s_chan_auto[7], 127, 0)
+                twopoints = midiauto2cvpjauto(s_chan_auto[7], 127, 0)
+                tracks.a_auto_nopl_twopoints('fxmixer', str(channum+1), 'vol', twopoints, 1, 'instant')
 
         if len(s_chan_trackids) == 1:
-            if 'track' not in cvpj_l_automation: 
-                cvpj_l_automation['track'] = {}
-            if s_chan_trackids[0] not in cvpj_l_automation['track']: 
-                cvpj_l_automation['track'][s_chan_trackids[0]] = {}
-
-            s_chan_cvpj_auto = cvpj_l_automation['track'][s_chan_trackids[0]]
-            if 'pitch' in s_chan_auto: s_chan_cvpj_auto['pitch'] = midiauto2cvpjauto(s_chan_auto['pitch'], 1/8, 0)
+            if 'pitch' in s_chan_auto: 
+                twopoints = midiauto2cvpjauto(s_chan_auto['pitch'], 1/8, 0)
+                tracks.a_auto_nopl_twopoints('track', s_chan_trackids[0], 'pitch', twopoints, 1, 'instant')
 
         if len(s_chan_trackids) > 1:
-            if 'fxrack' not in cvpj_l_automation: 
-                cvpj_l_automation['fxrack'] = {}
-            if 'track' not in cvpj_l_automation: 
-                cvpj_l_automation['track'] = {}
-
-            if str(channum+1) not in cvpj_l_automation['fxrack']: 
-                cvpj_l_automation['fxrack'][str(channum+1)] = {}
-
-            s_fx_cvpj_auto = cvpj_l_automation['fxrack'][str(channum+1)]
-            if 7 in s_chan_auto: s_fx_cvpj_auto['vol'] = midiauto2cvpjauto(s_chan_auto[7], 127, 0)
+            if 7 in s_chan_auto: 
+                twopoints = midiauto2cvpjauto(s_chan_auto[7], 127, 0)
+                tracks.a_auto_nopl_twopoints('fxrack', str(channum+1), 'vol', twopoints, 1, 'instant')
 
             for s_chan_trackid in s_chan_trackids:
-                if s_chan_trackid not in cvpj_l_automation['track']: 
-                    cvpj_l_automation['track'][s_chan_trackid] = {}
+                if 'pitch' in s_chan_auto: 
+                    twopoints = midiauto2cvpjauto(s_chan_auto['pitch'], 1/8, 0)
+                    tracks.a_auto_nopl_twopoints('track', s_chan_trackid, 'pitch', twopoints, 1, 'instant')
 
-                s_chan_cvpj_auto = cvpj_l_automation['track'][s_chan_trackid]
-
-                if 'pitch' in s_chan_auto: s_chan_cvpj_auto['pitch'] = midiauto2cvpjauto(s_chan_auto['pitch'], 1/8, 0)
-
-    cvpj_l['use_instrack'] = False
-    cvpj_l['use_fxrack'] = True
-    cvpj_l['automation'] = cvpj_l_automation
+    tracks.a_auto_nopl_to_cvpj(cvpj_l)
     cvpj_l['timemarkers'] = s_timemarkers
     cvpj_l['instruments_data'] = cvpj_l_instruments
     cvpj_l['instruments_order'] = cvpj_l_instrumentsorder

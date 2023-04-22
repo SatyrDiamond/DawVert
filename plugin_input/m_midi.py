@@ -142,18 +142,20 @@ class input_midi(plugin_input.base):
                 if msg.type == 'time_signature': 
                     if timepos == 0: s_timesig = [msg.numerator, msg.denominator]
                     format_midi_in.time_signature(timepos, msg.numerator, msg.denominator)
+
                 if msg.type == 'marker': format_midi_in.marker(timepos, msg.text)
+
                 if msg.type == 'track_name': 
                     print("[input-midi] Track Name:", msg.name)
                     format_midi_in.track_name(msg.name)
                     midi_trackname = msg.name
+
                 if msg.type == 'sequencer_specific': 
                     exdata = midi_exdata.decode_exdata(msg.data, True)
                     if exdata[0] == [83]:
                         if exdata[1][0:5] == b'ign\x01\xff':
                             print("[input-midi] Track Color (from Signal)")
                             format_midi_in.track_color(colors.rgb_int_to_rgb_float(exdata[1][5:8]))
-
 
                 if msg.type == 'copyright': 
                     midi_copyright = msg.text

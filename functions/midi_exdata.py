@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import struct
 from functions import data_bytes
@@ -95,54 +97,19 @@ sysexvals = {}
 
 
 def decode_exdata(sysexdata, isseqspec):
-    exdata = data_bytes.to_bytesio(struct.pack("B"*len(sysexdata),*sysexdata))
+	exdata = data_bytes.to_bytesio(struct.pack("B"*len(sysexdata),*sysexdata))
 
-    manufac = [exdata.read(1)[0]]
+	manufac = [exdata.read(1)[0]]
 
-    if manufac == [0]:
-        for _ in range(2):
-            manufac.append(exdata.read(1)[0])
+	if manufac == [0]:
+		for _ in range(2):
+			manufac.append(exdata.read(1)[0])
 
-    if len(manufac) == 1:
-        if manufac[0] in sysex_brand: print('[midi-exdata] Brand: ', sysex_brand[manufac[0]])
-        else: print('[midi-exdata] Brand: Unknown', manufac[0])
-
-    if isseqspec == True:
-        return manufac, exdata.read()
-
-
-def parse_sysex(sysexdata):
-    contents = data_bytes.to_bytesio(struct.pack("b"*len(sysexdata),*sysexdata))
-
-    print('[debug] -------------- sysex', time)
-    manufac = int.from_bytes(contents.read(1), "little")
-
-    if manufac != 0:
-        model = int.from_bytes(contents.read(1), "little")
-        devid = int.from_bytes(contents.read(1), "little")
-        cmd = int.from_bytes(contents.read(1), "little")
-        code = contents.read()
-
-        if manufac in sysex_brand: brandname = sysex_brand[manufac]+' ('+str(manufac)+')'
-        else: brandname = 'unknonwn ('+str(hex(manufac))+')'
-
-        print('[debug] Manu:',brandname, hex(manufac))
-        print('[debug] Model:',model, hex(model))
-        print('[debug] Dev:',devid, hex(devid))
-        print('[debug] CMD:',cmd, hex(cmd))
-        print('[debug] Data:',code.hex())
-
-        if manufac == 65:
-            # Device ----------------------------- SC-88/Pro -----------------------------
-            if [model, devid] == [16, 66]:
-                if 'sc88' not in sysexvals: sysexvals['sc88'] = {}
-                if cmd == 18:
-                    sc88data = {}
-                    sc88data['address'] = code[0:3].hex()
-                    sc88data['data'] = code[3]
-                    print('test -------', code[0:3].hex(), code[3])
-                    if time not in sysexvals['sc88']: sysexvals['sc88'][time] = []
-                    sysexvals['sc88'][time].append(sc88data)
-
-def get_sysexvals():
-    return sysexvals
+	if isseqspec == True:
+		return manufac, exdata.read()
+	else:
+		model = exdata.read(1)[0]
+		devid = exdata.read(1)[0]
+		cmd = exdata.read(1)[0]
+		code = exdata.read()
+		return manufac, model, devid, cmd, code

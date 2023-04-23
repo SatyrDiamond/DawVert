@@ -84,7 +84,7 @@ class input_midi(plugin_input.base):
         'fxrack': True,
         'r_track_lanes': True,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': True,
         'no_placements': True
         }
@@ -174,7 +174,7 @@ class input_midi(plugin_input.base):
 
         cvpj_l = format_midi_in.song_end(16)
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
         cvpj_l['timesig_numerator'] = s_timesig[0]

@@ -175,7 +175,7 @@ class output_cvpj(plugin_output.base):
         'fxrack': False,
         'r_track_lanes': True,
         'placement_cut': True,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': True,
         'no_placements': False
         }

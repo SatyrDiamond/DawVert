@@ -172,7 +172,7 @@ class input_pxtone(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': True,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': True,
         'no_placements': True
         }
@@ -458,7 +458,7 @@ class input_pxtone(plugin_input.base):
             cvpj_l['info']['message']['type'] = 'text'
             cvpj_l['info']['message']['text'] = ptcop_song_comment
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
         cvpj_l['use_instrack'] = False

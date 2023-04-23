@@ -71,7 +71,7 @@ class input_audiosanua(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': True,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': False,
         'no_placements': False
         }

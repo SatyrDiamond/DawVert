@@ -118,7 +118,7 @@ class input_adlib_rol(plugin_input.base):
         'fxrack': True,
         'r_track_lanes': True,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': False,
         'no_placements': True
         }
@@ -186,7 +186,7 @@ class input_adlib_rol(plugin_input.base):
 
         tracks.a_auto_nopl_to_cvpj(cvpj_l)
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
         cvpj_l['timesig_numerator'] = rol_header_beatMeasure

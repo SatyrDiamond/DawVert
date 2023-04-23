@@ -28,7 +28,7 @@ class output_cvpjs(plugin_output.base):
         'fxrack': True,
         'r_track_lanes': True,
         'placement_cut': True,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': False,
         'no_placements': False
         }

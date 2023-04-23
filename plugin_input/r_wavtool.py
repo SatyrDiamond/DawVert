@@ -33,7 +33,7 @@ def parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype):
     if 'fadeOut' in j_wvtl_trackclip: data_values.nested_dict_add_value(cvpj_pldata, ['fade', 'out', 'duration'], j_wvtl_trackclip['fadeOut']*4)
     cvpj_pldata["position"] = j_wvtl_trc_timelineStart*4
     cvpj_pldata["duration"] = j_wvtl_trc_timelineEnd*4 - j_wvtl_trc_timelineStart*4
-    cvpj_pldata['cut'] = {'type': 'warp', 'start': j_wvtl_trc_readStart*4, 'loopstart': j_wvtl_trc_loopStart*4, 'loopend': j_wvtl_trc_loopEnd*4}
+    cvpj_pldata['cut'] = {'type': 'loop', 'start': j_wvtl_trc_readStart*4, 'loopstart': j_wvtl_trc_loopStart*4, 'loopend': j_wvtl_trc_loopEnd*4}
 
     if j_wvtl_trc_type == 'MIDI':
         if 'notes' in j_wvtl_trackclip:
@@ -76,7 +76,7 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
     if 'fadeOut' in j_wvtl_trackclip: cvpj_pldata["fade_out"] = j_wvtl_trackclip['fadeOut']*4
     cvpj_pldata["position"] = j_wvtl_trc_timelineStart*4
     cvpj_pldata["duration"] = j_wvtl_trc_timelineEnd*4 - j_wvtl_trc_timelineStart*4
-    cvpj_pldata['cut'] = {'type': 'warp', 'start': j_wvtl_trc_readStart*4, 'loopstart': j_wvtl_trc_loopStart*4, 'loopend': j_wvtl_trc_loopEnd*4}
+    cvpj_pldata['cut'] = {'type': 'loop', 'start': j_wvtl_trc_readStart*4, 'loopstart': j_wvtl_trc_loopStart*4, 'loopend': j_wvtl_trc_loopEnd*4}
 
     if 'audioBufferId' in j_wvtl_trackclip: 
         audio_filename = extract_audio(j_wvtl_trackclip['audioBufferId'])
@@ -120,7 +120,7 @@ class input_wavtool(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': True,
-        'placement_warp': True,
+        'placement_loop': True,
         'no_pl_auto': False,
         'no_placements': False
         }

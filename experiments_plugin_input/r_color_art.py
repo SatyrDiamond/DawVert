@@ -17,7 +17,7 @@ class input_color_art(experiments_plugin_input.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': True,
-        'placement_warp': True,
+        'placement_loop': True,
         'no_placements': False
         }
     def supported_autodetect(self): return False

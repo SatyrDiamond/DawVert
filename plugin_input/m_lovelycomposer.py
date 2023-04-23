@@ -6,6 +6,7 @@ import json
 import os.path
 import struct
 from functions import placements
+from functions import placement_data
 from functions import tracks
 from functions import note_data
 from functions import data_bytes
@@ -194,16 +195,13 @@ def lc_parse_placements(sl_json, pl_color, ischord):
         if 'play_notes' in sle: length = sle['play_notes']
         else: length = 32
         lc_notes = sle['vl']
-        placement = {}
-        placement['type'] = 'instruments'
-        placement['duration'] = length
+
         if ischord == False: notelist = lc_parse_voice(lc_notes, length)
         else: notelist = lc_parse_voice_chords(lc_notes, length)
-        placement['notelist'] = notelist
+
+        placement = placement_data.makepl_n(position, length, notelist)
         placement['color'] = pl_color
-        placement['position'] = position
-        if notelist != []:
-            placements.append(placement)
+        if notelist != []: placements.append(placement)
         patternpos.append(position)
         patternlen.append(length)
         position += length
@@ -222,7 +220,7 @@ class input_lc(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': True,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': False,
         'no_placements': False
         }
@@ -274,7 +272,7 @@ class input_lc(plugin_input.base):
 
         placements.make_timemarkers(cvpj_l, [4, 4], patternlen, lc_loop_start_bar)
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
         
         cvpj_l['bpm'] = (3614.75409836/lc_speed)/2
 

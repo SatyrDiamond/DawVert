@@ -166,18 +166,12 @@ def parse_channel(channeldata, channum):
 
         patterncount = 0
         for bb_pattern in bb_patterns:
-
             nid_name = str(patterncount+1)
             cvpj_patid = 'bb_ch'+str(channum)+'_pat'+str(patterncount)
-            cvpj_notelist = []
             bb_notes = bb_pattern['notes']
-
             if 'instruments' in bb_pattern: bb_instruments = bb_pattern['instruments']
             else: bb_instruments = [1]
-
-            if bb_notes != []:
-                cvpj_notelist = parse_notes(channum, bb_notes, bb_instruments)
-                tracks.m_add_nle(cvpj_l, cvpj_patid, cvpj_notelist)
+            if bb_notes != []: tracks.m_add_nle(cvpj_l, cvpj_patid, parse_notes(channum, bb_notes, bb_instruments))
             patterncount += 1
 
         sequencecount = 0

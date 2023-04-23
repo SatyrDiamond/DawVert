@@ -403,7 +403,7 @@ def create_midiclip(xmltag, cvpj_placement, trackcolor):
                 t_StartRelative = 0
                 t_LoopStart = cvpj_placement_cut['start']/4
                 t_LoopEnd = (t_LoopStart/4)+(cvpj_placement_cut['end']/4)
-            if cvpj_placement_cut['type'] == 'warp':
+            if cvpj_placement_cut['type'] == 'loop':
                 t_LoopOn = 'true'
                 t_StartRelative = cvpj_placement_cut['start']/4
                 t_LoopStart = cvpj_placement_cut['loopstart']/4
@@ -678,7 +678,7 @@ class output_cvpj(plugin_output.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': True,
-        'placement_warp': True,
+        'placement_loop': True,
         'no_placements': False,
         'no_pl_auto': True,
         'audio_events': False

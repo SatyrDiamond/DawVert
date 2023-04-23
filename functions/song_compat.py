@@ -75,9 +75,9 @@ def r_removecut(projJ):
                     r_removecut_placements(track_placements_data['notes'])
 
 
-# -------------------------------------------- placement_warp --------------------------------------------
+# -------------------------------------------- placement_loop --------------------------------------------
 
-def addwarps_pl(placementsdata):
+def addloops_pl(placementsdata):
     prevpp = None
     new_placements = []
     for placement in placementsdata:
@@ -99,7 +99,7 @@ def addwarps_pl(placementsdata):
                             ipnl = True
                             if 'cut' not in new_placements[-1]:
                                 new_placements[-1]['cut'] = {}
-                                new_placements[-1]['cut']['type'] = 'warp'
+                                new_placements[-1]['cut']['type'] = 'loop'
                                 new_placements[-1]['cut']['start'] = 0
                                 new_placements[-1]['cut']['loopstart'] = 0
                                 new_placements[-1]['cut']['loopend'] = p_dur
@@ -111,43 +111,43 @@ def addwarps_pl(placementsdata):
         prevpp = [p_pos, p_dur, p_nl]
     return new_placements
 
-def r_addwarps(projJ):
-    do_addwrap = True
-    if 'do_addwrap' in projJ: do_addwrap = projJ['do_addwrap']
-    if do_addwrap == True: 
+def r_addloops(projJ):
+    do_addloop = True
+    if 'do_addloop' in projJ: do_addloop = projJ['do_addloop']
+    if do_addloop == True: 
         track_placements = projJ['track_placements']
         for track_placement in track_placements:
             if 'notes' in track_placements[track_placement]:
                 plcount_before = len(track_placements[track_placement]['notes'])
-                print('[compat] AddWarps: '+ track_placement +': ', end='')
+                print('[compat] AddLoops: '+ track_placement +': ', end='')
                 track_placement_s = track_placements[track_placement]
-                track_placements[track_placement]['notes'] = addwarps_pl(track_placement_s['notes'])
+                track_placements[track_placement]['notes'] = addloops_pl(track_placement_s['notes'])
                 plcount_after = len(track_placements[track_placement]['notes'])
                 if plcount_before != plcount_after: print(str(plcount_before-plcount_after)+' loops found')
                 else: print('unchanged')
 
 
 
-def r_removewarps_cutpoint(pl_pos, pl_dur, cut_start, cut_end):
+def r_removeloops_cutpoint(pl_pos, pl_dur, cut_start, cut_end):
     return [pl_pos, pl_dur, cut_start, cut_end]
 
-def r_removewarps_before_loop(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_end):
+def r_removeloops_before_loop(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_end):
     #print('BEFORE')
     cutpoints = []
     temppos = min(bl_l_end, bl_p_dur)
-    cutpoints.append( r_removewarps_cutpoint((bl_p_pos+bl_p_start)-bl_p_start, temppos-bl_p_start, bl_p_start, min(bl_l_end, bl_p_dur)) )
+    cutpoints.append( r_removeloops_cutpoint((bl_p_pos+bl_p_start)-bl_p_start, temppos-bl_p_start, bl_p_start, min(bl_l_end, bl_p_dur)) )
     bl_p_dur += bl_p_start
     placement_loop_size = bl_l_end-bl_l_start
     if bl_l_end < bl_p_dur and bl_l_end > bl_l_start:
         remainingcuts = (bl_p_dur-bl_l_end)/placement_loop_size
         while remainingcuts > 0:
             outdur = min(remainingcuts, 1)
-            cutpoints.append( r_removewarps_cutpoint((bl_p_pos+temppos)-bl_p_start, placement_loop_size*outdur, bl_l_start, bl_l_end*outdur) )
+            cutpoints.append( r_removeloops_cutpoint((bl_p_pos+temppos)-bl_p_start, placement_loop_size*outdur, bl_l_start, bl_l_end*outdur) )
             temppos += placement_loop_size
             remainingcuts -= 1
     return cutpoints
 
-def r_removewarps_after_loop(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_end):
+def r_removeloops_after_loop(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_end):
     #print('AFTER')
     cutpoints = []
     placement_loop_size = bl_l_end-bl_l_start
@@ -164,32 +164,32 @@ def r_removewarps_after_loop(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_en
     while remainingcuts > 0:
         outdur = min(remainingcuts, 1)
         if flag_first_pl == True:
-            cutpoints.append( r_removewarps_cutpoint(temppos+bl_p_start_mo, (outdur*placement_loop_size)-bl_p_start_mo, bl_l_start+bl_p_start_mo, outdur*bl_l_end) )
+            cutpoints.append( r_removeloops_cutpoint(temppos+bl_p_start_mo, (outdur*placement_loop_size)-bl_p_start_mo, bl_l_start+bl_p_start_mo, outdur*bl_l_end) )
         if flag_first_pl == False:
-            cutpoints.append( r_removewarps_cutpoint(temppos, outdur*placement_loop_size, bl_l_start, outdur*bl_l_end) )
+            cutpoints.append( r_removeloops_cutpoint(temppos, outdur*placement_loop_size, bl_l_start, outdur*bl_l_end) )
         temppos += placement_loop_size
         remainingcuts -= 1
         flag_first_pl = False
     return cutpoints
 
 
-def r_removewarps_placements(note_placements):
+def r_removeloops_placements(note_placements):
     new_placements = []
     for note_placement in note_placements:
         if 'cut' in note_placement: 
-            if note_placement['cut']['type'] == 'warp': 
+            if note_placement['cut']['type'] == 'loop': 
                 note_placement_base = note_placement.copy()
                 del note_placement_base['cut']
                 del note_placement_base['position']
                 del note_placement_base['duration']
-                warp_base_position = note_placement['position']
-                warp_base_duration = note_placement['duration']
-                warp_start = note_placement['cut']['start']
-                warp_loopstart = note_placement['cut']['loopstart']
-                warp_loopend = note_placement['cut']['loopend']
+                loop_base_position = note_placement['position']
+                loop_base_duration = note_placement['duration']
+                loop_start = note_placement['cut']['start']
+                loop_loopstart = note_placement['cut']['loopstart']
+                loop_loopend = note_placement['cut']['loopend']
 
-                if warp_loopstart > warp_start: cutpoints = r_removewarps_before_loop(warp_base_position, warp_base_duration, warp_start, warp_loopstart, warp_loopend)
-                else: cutpoints = r_removewarps_after_loop(warp_base_position, warp_base_duration, warp_start, warp_loopstart, warp_loopend)
+                if loop_loopstart > loop_start: cutpoints = r_removeloops_before_loop(loop_base_position, loop_base_duration, loop_start, loop_loopstart, loop_loopend)
+                else: cutpoints = r_removeloops_after_loop(loop_base_position, loop_base_duration, loop_start, loop_loopstart, loop_loopend)
 
                 #print(cutpoints)
                 for cutpoint in cutpoints:
@@ -202,14 +202,14 @@ def r_removewarps_placements(note_placements):
         else: new_placements.append(note_placement)
     return new_placements
 
-def r_removewarps(projJ):
+def r_removeloops(projJ):
     for track_placements_id in projJ['track_placements']:
         track_placements_data = projJ['track_placements'][track_placements_id]
 
         not_laned = True
 
         if 'laned' in track_placements_data:
-            print('[compat] RemoveWarps: laned: '+track_placements_id)
+            print('[compat] RemoveLoops: laned: '+track_placements_id)
             if s_pldata['laned'] == 1:
                 not_laned = False
                 s_lanedata = s_pldata['lanedata']
@@ -217,20 +217,20 @@ def r_removewarps(projJ):
                 for t_lanedata in s_lanedata:
                     tj_lanedata = s_lanedata[t_lanedata]
                     if 'notes' in tj_lanedata:
-                        track_placements_data['notes'] = r_removewarps_placements(tj_lanedata['notes'])
+                        track_placements_data['notes'] = r_removeloops_placements(tj_lanedata['notes'])
 
         if not_laned == True:
-            print('[compat] RemoveWarps: non-laned: '+track_placements_id)
+            print('[compat] RemoveLoops: non-laned: '+track_placements_id)
             if 'notes' in track_placements_data:
-                track_placements_data['notes'] = r_removewarps_placements(track_placements_data['notes'])
+                track_placements_data['notes'] = r_removeloops_placements(track_placements_data['notes'])
             if 'audio' in track_placements_data:
-                track_placements_data['audio'] = r_removewarps_placements(track_placements_data['audio'])
+                track_placements_data['audio'] = r_removeloops_placements(track_placements_data['audio'])
 
-def m_removewarps(projJ):
+def m_removeloops(projJ):
     for playlist_id in projJ['playlist']:
         playlist_id_data = projJ['playlist'][playlist_id]
         if 'placements_notes' in playlist_id_data:
-            playlist_id_data['placements_notes'] = r_removewarps_placements(playlist_id_data['placements_notes'])
+            playlist_id_data['placements_notes'] = r_removeloops_placements(playlist_id_data['placements_notes'])
 
 # -------------------------------------------- r_track_lanes --------------------------------------------
 
@@ -474,25 +474,25 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
 
     in__r_track_lanes = False
     in__placement_cut = False
-    in__placement_warp = False
+    in__placement_loop = False
     in__no_placements = False
     in__audio_events = False
 
     out__r_track_lanes = False
     out__placement_cut = False
-    out__placement_warp = False
+    out__placement_loop = False
     out__no_placements = False
     out__audio_events = False
 
     if 'r_track_lanes' in in_dawcapabilities: in__r_track_lanes = in_dawcapabilities['r_track_lanes']
     if 'placement_cut' in in_dawcapabilities: in__placement_cut = in_dawcapabilities['placement_cut']
-    if 'placement_warp' in in_dawcapabilities: in__placement_warp = in_dawcapabilities['placement_warp']
+    if 'placement_loop' in in_dawcapabilities: in__placement_loop = in_dawcapabilities['placement_loop']
     if 'no_placements' in in_dawcapabilities: in__no_placements = in_dawcapabilities['no_placements']
     if 'audio_events' in in_dawcapabilities: in__audio_events = in_dawcapabilities['audio_events']
 
     if 'r_track_lanes' in out_dawcapabilities: out__r_track_lanes = out_dawcapabilities['r_track_lanes']
     if 'placement_cut' in out_dawcapabilities: out__placement_cut = out_dawcapabilities['placement_cut']
-    if 'placement_warp' in out_dawcapabilities: out__placement_warp = out_dawcapabilities['placement_warp']
+    if 'placement_loop' in out_dawcapabilities: out__placement_loop = out_dawcapabilities['placement_loop']
     if 'no_placements' in out_dawcapabilities: out__no_placements = out_dawcapabilities['no_placements']
     if 'audio_events' in out_dawcapabilities: out__audio_events = out_dawcapabilities['audio_events']
 
@@ -502,30 +502,30 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
         print('[compat] ----------------+-------+-------+')
         print('[compat] r_track_lanes   | '+str(in__r_track_lanes).ljust(5)+' | '+str(out__r_track_lanes).ljust(5)+' |')
         print('[compat] placement_cut   | '+str(in__placement_cut).ljust(5)+' | '+str(out__placement_cut).ljust(5)+' |')
-        print('[compat] placement_warp  | '+str(in__placement_warp).ljust(5)+' | '+str(out__placement_warp).ljust(5)+' |')
+        print('[compat] placement_loop  | '+str(in__placement_loop).ljust(5)+' | '+str(out__placement_loop).ljust(5)+' |')
         print('[compat] no_placements   | '+str(in__no_placements).ljust(5)+' | '+str(out__no_placements).ljust(5)+' |')
         print('[compat] pl_audio_events | '+str(in__audio_events).ljust(5)+' | '+str(out__audio_events).ljust(5)+' |')
         print('[compat] ----------------+-------+-------+')
     isprinted = True
 
     if cvpj_type == 'm' and m_processed == False:
-        if in__placement_warp == True and out__placement_warp == False: m_removewarps(cvpj_proj)
+        if in__placement_loop == True and out__placement_loop == False: m_removeloops(cvpj_proj)
         m_processed = True
 
     if cvpj_type == 'mi' and mi_processed == False:
-        if in__placement_warp == True and out__placement_warp == False: m_removewarps(cvpj_proj)
+        if in__placement_loop == True and out__placement_loop == False: m_removeloops(cvpj_proj)
         mi_processed = True
 
     if cvpj_type == 'r' and r_processed == False:
         if in__no_placements == True and out__no_placements == False: r_split_single_notelist(cvpj_proj)
         if in__r_track_lanes == True and out__r_track_lanes == False: r_removelanes(cvpj_proj)
-        if in__placement_warp == True and out__placement_warp == False: r_removewarps(cvpj_proj)
+        if in__placement_loop == True and out__placement_loop == False: r_removeloops(cvpj_proj)
         if in__placement_cut == True and out__placement_cut == False: r_removecut(cvpj_proj)
-        if in__placement_warp == False and out__placement_warp == True: r_addwarps(cvpj_proj)
+        if in__placement_loop == False and out__placement_loop == True: r_addloops(cvpj_proj)
         r_processed = True
 
     if cvpj_type == 'ri' and ri_processed == False:
-        if in__placement_warp == True and out__placement_warp == False: r_removewarps(cvpj_proj)
+        if in__placement_loop == True and out__placement_loop == False: r_removeloops(cvpj_proj)
         ri_processed = True
 
     return json.dumps(cvpj_proj)

@@ -17,7 +17,7 @@ class input_cvpj_m(plugin_input.base):
         'fxrack': 'debug',
         'r_track_lanes': 'debug',
         'placement_cut': 'debug',
-        'placement_warp': 'debug',
+        'placement_loop': 'debug',
         'no_placements': 'debug',
         'no_pl_auto': 'debug',
         'pl_audio_events': 'debug',

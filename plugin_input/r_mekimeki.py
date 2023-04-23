@@ -30,7 +30,7 @@ class input_cvpj_f(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': True,
         'no_placements': True
         }
@@ -83,7 +83,7 @@ class input_cvpj_f(plugin_input.base):
 
             tracknum += 1
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
         cvpj_l['use_instrack'] = False

@@ -4,7 +4,8 @@
 def rx_makenote(t_pos, t_dur, t_key, t_vol, t_pan):
     note_data = {}
     note_data['position'] = t_pos
-    note_data['duration'] = t_dur
+    if t_dur != None: note_data['duration'] = t_dur
+    else: note_data['duration'] = 1
     note_data['key'] = t_key
     if t_pan != None: note_data['pan'] = t_pan
     if t_vol != None: note_data['vol'] = t_vol

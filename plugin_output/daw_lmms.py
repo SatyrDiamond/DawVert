@@ -405,6 +405,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
         for trkJ_notefxslot in trkJ_notefx:
             trkJ_plugindata = trkJ_notefxslot['plugindata']
 
+            auto_nameiddata_plugin = {}
             if 'automation' in projJ and 'pluginautoid' in trkJ_notefxslot:
                 if 'plugin' in projJ['automation']:
                     if trkJ_notefxslot['pluginautoid'] in projJ['automation']['plugin']:

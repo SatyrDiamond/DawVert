@@ -6,6 +6,7 @@ from functions import auto
 from functions import idvals
 from functions import tracks
 from functions import note_data
+from functions import placement_data
 import plugin_input
 import json
 
@@ -182,10 +183,7 @@ def parse_channel(channeldata, channum):
         sequencecount = 0
         for bb_part in bb_sequence:
             if bb_part != 0:
-                cvpj_l_placement = {}
-                cvpj_l_placement['position'] = calcval(sequencecount*jummbox_notesize)
-                cvpj_l_placement['duration'] = calcval(jummbox_ticksPerBeat*jummbox_beatsPerBar)
-                cvpj_l_placement['fromindex'] = 'bb_ch'+str(channum)+'_pat'+str(bb_part-1)
+                cvpj_l_placement = placement_data.makepl_n_mi(calcval(sequencecount*jummbox_notesize), calcval(jummbox_ticksPerBeat*jummbox_beatsPerBar), 'bb_ch'+str(channum)+'_pat'+str(bb_part-1))
                 tracks.m_playlist_pl_add(cvpj_l, str(channum), cvpj_l_placement)
                 bbcvpj_placementnames[channum].append('bb_ch'+str(channum)+'_pat'+str(bb_part-1))
             else:
@@ -212,16 +210,15 @@ def parse_channel(channeldata, channum):
                         bb_mod_pos = basepos+bb_mod_points[0]['tick']
                         bb_mod_dur = bb_mod_points[-1]['tick'] - bb_mod_points[0]['tick']
                         bb_mod_target = bb_def[note['pitches'][0]]
-                        print(bb_mod_pos, bb_mod_dur, bb_mod_target)
-                        cvpj_autodata = {}
-                        cvpj_autodata["position"] = calcval(bb_mod_pos)
-                        cvpj_autodata["duration"] = calcval(bb_mod_dur)
-                        cvpj_autodata["points"] = []
+                        #print(bb_mod_pos, bb_mod_dur, bb_mod_target)
+                        cvpj_autodata_points = []
                         for bb_mod_point in bb_mod_points:
                             cvpj_pointdata = {}
                             cvpj_pointdata["position"] = calcval(bb_mod_point['tick'])-calcval(bb_mod_pos)+calcval(basepos)
                             cvpj_pointdata["value"] = bb_mod_point['volume']
-                            cvpj_autodata["points"].append(cvpj_pointdata)
+                            cvpj_autodata_points.append(cvpj_pointdata)
+
+                        cvpj_autodata = auto.makepl(calcval(bb_mod_pos), calcval(bb_mod_dur), cvpj_autodata_points)
 
                         if bb_mod_target[0] == -2:
                             if bb_mod_target[1] == 0: 

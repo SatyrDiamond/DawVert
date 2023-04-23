@@ -6,6 +6,9 @@ from functions import colors
 from functions import idvals
 from functions import tracks
 from functions import notelist_data
+from functions import placement_data
+from functions import note_data
+from functions import auto
 import plugin_input
 import json
 import zipfile
@@ -20,13 +23,11 @@ global lists_data
 global used_inst
 global sheets_width
 global sheets_tempo
-global cvpj_auto_tempo
 
 lists_data = [{},{},{}]
 used_inst = []
 sheets_width = {}
 sheets_tempo = {}
-cvpj_auto_tempo = []
 
 # ----------------------------------- Sharp and Flats -----------------------------------
 notess_noteoffset = {}
@@ -143,8 +144,7 @@ def parse_sheets(notess_sheets):
     parse_items(items, 0)
 
     for sheet in lists_data[0]:
-        cvpj_l_notelistindex[sheet] = {}
-        cvpj_l_notelistindex[sheet]['name'] = lists_data[0][sheet]['name']
+        sheet_name = lists_data[0][sheet]['name']
         print("[input-notessimo_v3] Sheet: " + lists_data[0][sheet]['name'])
         notelist = []
 
@@ -153,9 +153,10 @@ def parse_sheets(notess_sheets):
 
         sheet_note_signature = [0,[[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]]]
 
+        sheet_color = None
         sheet_vars = get_vars(notess_s_sheet)
         if 'color' in sheet_vars: 
-            cvpj_l_notelistindex[sheet]['color'] = colors.moregray(sheet_vars['color'])
+            sheet_color = colors.moregray(sheet_vars['color'])
         if 'signature' in sheet_vars:
             if sheet_vars['signature'] in notess_noteoffset: 
                 sheet_note_signature = notess_noteoffset[sheet_vars['signature']]
@@ -177,33 +178,27 @@ def parse_sheets(notess_sheets):
                 notess_n_isFlat = s_obj.get('isFlat')
                 notess_n_id = s_obj.get('id')
                 notess_n_dur = s_obj.get('l')
-
                 notess_nt_oct = int(roundseven(notess_n_note)/7)*-1
                 notess_nt_rnote = notess_n_note*-1 - notess_nt_oct*7
                 notess_nt_note = keytable[notess_nt_rnote]
-
                 notess_no_note = notess_nt_note + (notess_nt_oct*12)
 
                 notetype = 0
                 if notess_n_isSharp == 'true': notetype = 1
                 if notess_n_isFlat == 'true': notetype = 2
-
                 if notess_nt_oct >= 0: sharpkey = sheet_note_signature[notetype][1][notess_nt_rnote]
                 else: sharpkey = sheet_note_signature[notetype][0][notess_nt_rnote]
-
                 notess_no_note += sharpkey
+                if notess_n_dur != None: note_dur = float(notess_n_dur)*4
+                else: note_dur = 1
 
-                cvpj_notedata = {}
-                cvpj_notedata['position'] = notess_n_pos*2
-                if notess_n_dur != None: cvpj_notedata['duration'] = float(notess_n_dur)*4
-                else: cvpj_notedata['duration'] = 1
-                cvpj_notedata['key'] = notess_no_note
-                cvpj_notedata['instrument'] = notess_n_id
-                notelist.append(cvpj_notedata)
+                notelist.append( note_data.mx_makenote(notess_n_id, notess_n_pos*2, note_dur, notess_no_note, None, None) )
                 if notess_n_id not in used_inst: used_inst.append(notess_n_id)
 
         print("[input-notessimo_v3]")
-        cvpj_l_notelistindex[sheet]['notelist'] = notelist_data.sort(notelist)
+
+        tracks.m_add_nle(cvpj_l, sheet, notelist_data.sort(notelist))
+        tracks.m_add_nle_info(cvpj_l, sheet, sheet_name, sheet_color)
 
 # ----------------------------------- Song -----------------------------------
 
@@ -221,7 +216,7 @@ def parse_song(songid):
     for s_item in items:
         item_name = s_item.get('name')
         item_order = int(s_item.get('order'))+1
-        cvpj_l_playlist[item_order]['name'] = item_name
+        tracks.m_playlist_pl(cvpj_l, item_order, item_name, None, [])
 
     # ---------------- vars ----------------
     bpm = None
@@ -265,18 +260,11 @@ def parse_song(songid):
         for tls in timeline_sheets:
             tlslen = tls[1]-tls[0]
             if tls[2] == 1:
-                placement = {}
-                placement['type'] = "instruments"
-                placement['position'] = cvpj_p_totalpos*8
-                placement['duration'] = tlslen/(120/tls[3])*8
-                placement['fromindex'] = tls[4]
-                cvpj_l_playlist[tlsnum+1]['placements_notes'].append(placement)
+                cvpj_placement = placement_data.makepl_n_mi(cvpj_p_totalpos*8, tlslen/(120/tls[3])*8, tls[4])
+                tracks.m_playlist_pl_add(cvpj_l, tlsnum+1, cvpj_placement)
                 if tlsnum == 0:
-                    autoplacement = {}
-                    autoplacement['position'] = cvpj_p_totalpos*8
-                    autoplacement['duration'] = tlslen/(120/tls[3])*8
-                    autoplacement['points'] = [{"position": 0, "value": tls[3]}]
-                    cvpj_auto_tempo.append(autoplacement)
+                    autoplacement = auto.makepl(cvpj_p_totalpos*8, tlslen/(120/tls[3])*8, [{"position": 0, "value": tls[3]}])
+                    tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', autoplacement)
                 cvpj_p_totalpos += tlslen/(120/tls[3])
             else: 
                 cvpj_p_totalpos += tlslen
@@ -315,20 +303,9 @@ class input_notessimo_v3(plugin_input.base):
         zip_data = zipfile.ZipFile(input_file, 'r')
 
         global cvpj_l
-        global cvpj_l_notelistindex
-        global cvpj_l_playlist
         cvpj_l = {}
 
-        cvpj_l_fxrack = {}
-        cvpj_l_notelistindex = {}
-        cvpj_l_playlist = {}
-
-        cvpj_l_fxrack["1"] = {}
-        cvpj_l_fxrack["1"]["name"] = "Drums"
-
-        for plnum in range(20):
-            cvpj_l_playlist[plnum] = {}
-            cvpj_l_playlist[plnum]['placements_notes'] = []
+        tracks.fxrack_add(cvpj_l, 1, 'Drums', None, 1, 0)
 
         if 'instruments.xml' in zip_data.namelist():
             notess_instruments = ET.fromstring(zip_data.read('instruments.xml'))
@@ -373,17 +350,9 @@ class input_notessimo_v3(plugin_input.base):
             if isbuiltindrum == 1: tracks.m_param_inst(cvpj_l, str(inst), 'fxrack_channel', 1)
             else:
                 tracks.m_param_inst(cvpj_l, str(inst), 'fxrack_channel', fxnum)
-                cvpj_l_fxrack[str(fxnum)] = {"name": inst_name, "color": inst_color}
+                tracks.fxrack_add(cvpj_l, fxnum, inst_name, inst_color, None, None)
                 fxnum += 1
 
-        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', cvpj_auto_tempo)
-
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = True
-        
-        cvpj_l['fxrack'] = cvpj_l_fxrack
-        cvpj_l['notelistindex'] = cvpj_l_notelistindex
-        cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['bpm'] = 120
 
         return json.dumps(cvpj_l)

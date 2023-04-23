@@ -8,6 +8,8 @@ import struct
 from functions import data_bytes
 from functions import idvals
 from functions import tracks
+from functions import auto
+from functions import placement_data
 from functions import note_data
 from functions import song
 
@@ -53,6 +55,7 @@ class input_notessimo_v2(plugin_input.base):
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global used_instruments
+        used_instruments = []
 
         bytestream = open(input_file, 'rb')
         nv2_data = data_bytes.to_bytesio(zlib.decompress(bytestream.read()))
@@ -62,23 +65,15 @@ class input_notessimo_v2(plugin_input.base):
         text_date2 = getstring(nv2_data)
         print("[input-notessimo_v2] Song Name: " + str(text_songname))
         print("[input-notessimo_v2] Song Author: " + str(text_songauthor))
-
         len_order = int.from_bytes(nv2_data.read(2), "big")
         arr_order = struct.unpack('b'*len_order, nv2_data.read(len_order))
         print("[input-notessimo_v2] Order List: " + str(arr_order))
-
-        idvals_inst_notetess = idvals.parse_idvalscsv('idvals/notessimo_v2_inst.csv')
-
         tempo_table = struct.unpack('>'+'H'*100, nv2_data.read(200))
 
         cvpj_l = {}
-        cvpj_l_notelistindex = {}
-        cvpj_l_fxrack = {}
-        cvpj_auto_tempo = []
-        used_instruments = []
+        idvals_inst_notetess = idvals.parse_idvalscsv('idvals/notessimo_v2_inst.csv')
 
-        cvpj_l_fxrack["1"] = {}
-        cvpj_l_fxrack["1"]["name"] = "Drums"
+        tracks.fxrack_add(cvpj_l, 1, 'Drums', None, 1, 0)
 
         notess_sheets = {}
         for sheetnum in range(100):
@@ -90,9 +85,8 @@ class input_notessimo_v2(plugin_input.base):
                 for layer in sheetdata:
                     print(layer,end=' ')
                     patid = str(sheetnum)+'_'+str(layer)
-                    cvpj_l_notelistindex[patid] = {}
-                    cvpj_l_notelistindex[patid]['notelist'] = sheetdata[layer]
-                    cvpj_l_notelistindex[patid]['name'] = '#'+str(sheetnum+1)+' Layer '+str(layer+1)
+                    tracks.m_add_nle(cvpj_l, patid, sheetdata[layer])
+                    tracks.m_add_nle_info(cvpj_l, patid, '#'+str(sheetnum+1)+' Layer '+str(layer+1), None)
                 print()
 
         fxnum = 2
@@ -114,9 +108,7 @@ class input_notessimo_v2(plugin_input.base):
                 tracks.m_param_inst(cvpj_l, str(used_instrument), 'fxrack_channel', 1)
             else:
                 tracks.m_param_inst(cvpj_l, str(used_instrument), 'fxrack_channel', fxnum)
-                cvpj_l_fxrack[str(fxnum)] = {}
-                cvpj_l_fxrack[str(fxnum)]["name"] = notetess_instname
-                if notetess_instcolor != None: cvpj_l_fxrack[str(fxnum)]["color"] = notetess_instcolor
+                tracks.fxrack_add(cvpj_l, fxnum, notetess_instname, notetess_instcolor, None, None)
                 fxnum += 1
                 
         for idnum in range(9):
@@ -127,25 +119,13 @@ class input_notessimo_v2(plugin_input.base):
             cursheet_data = notess_sheets[sheetnum]
             for layer in cursheet_data[2]:
                 patid = str(sheetnum)+'_'+str(layer)
-                cvpj_l_placement = {}
-                cvpj_l_placement['type'] = "instruments"
-                cvpj_l_placement['position'] = curpos
-                cvpj_l_placement['duration'] = cursheet_data[0]*cursheet_data[1]
-                cvpj_l_placement['fromindex'] = patid
+                cvpj_l_placement = placement_data.makepl_n_mi(curpos, cursheet_data[0]*cursheet_data[1], patid)
                 tracks.m_playlist_pl_add(cvpj_l, layer+1, cvpj_l_placement)
-
             song.add_timemarker_timesig(cvpj_l, None, curpos, 4, 4)
-
-            autoplacement = {}
-            autoplacement['position'] = curpos
-            autoplacement['duration'] = cursheet_data[0]*cursheet_data[1]
-            autoplacement['points'] = [{"position": 0, "value": tempo_table[sheetnum]*cursheet_data[1]}]
-            cvpj_auto_tempo.append(autoplacement)
-
+            autoplacement = auto.makepl(curpos, cursheet_data[0]*cursheet_data[1], [{"position": 0, "value": tempo_table[sheetnum]*cursheet_data[1]}])
+            tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', autoplacement)
             curpos += cursheet_data[0]*cursheet_data[1]
         
-        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', cvpj_auto_tempo)
-
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = text_songname
         cvpj_l['info']['author'] = text_songauthor
@@ -153,10 +133,5 @@ class input_notessimo_v2(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True
         
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = True
-        
-        cvpj_l['fxrack'] = cvpj_l_fxrack
-        cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['bpm'] = tempo_table[0]*notess_sheets[arr_order[0]][1]
         return json.dumps(cvpj_l)

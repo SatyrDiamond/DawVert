@@ -55,7 +55,6 @@ class input_ceol(plugin_input.base):
     def parse(self, input_file, extra_param):
         cvpj_l = {}
 
-        cvpj_l_notelistindex = {}
         cvpj_l_keynames_data = {}
 
         idvals_inst_midi = idvals.parse_idvalscsv('idvals/midi_inst.csv')
@@ -188,12 +187,12 @@ class input_ceol(plugin_input.base):
             	for note in t_notepos_table[position]:
             		cvpj_notelist.append(note | {'position': position})
 
-            cvpj_pat = {}
-            if ceol_pat_palette in ceol_colors: cvpj_pat["color"] = ceol_colors[ceol_pat_palette]
-            else: cvpj_pat["color"] = [0.55, 0.55, 0.55]
-            cvpj_pat["notelist"] = cvpj_notelist
-            cvpj_pat["name"] = str(patnum)
-            cvpj_l_notelistindex[cvpj_pat_id] = cvpj_pat
+            patcolor = {}
+            if ceol_pat_palette in ceol_colors: patcolor = ceol_colors[ceol_pat_palette]
+            else: patcolor = [0.55, 0.55, 0.55]
+
+            tracks.m_add_nle(cvpj_l, cvpj_pat_id, cvpj_notelist)
+            tracks.m_add_nle_info(cvpj_l, cvpj_pat_id, str(patnum), patcolor)
 
         tracks.m_playlist_pl(cvpj_l, 1, None, [0.43, 0.52, 0.55], None)
         tracks.m_playlist_pl(cvpj_l, 2, None, [0.31, 0.40, 0.42], None)
@@ -225,7 +224,6 @@ class input_ceol(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         
-        cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['keynames_data'] = cvpj_l_keynames_data
         cvpj_l['bpm'] = ceol_basic_bpm
         return json.dumps(cvpj_l)

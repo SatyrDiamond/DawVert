@@ -418,7 +418,6 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
                     trkX_arpeggiator.set('arp-enabled', str(trkJ_notefxslot['enabled']))
 
                     lmms_autovals = lmms_auto.get_params_notefx('arpeggiator')
-                    print(lmms_autovals)
                     for pluginparam in lmms_autovals[0]: 
                         add_auto_val(auto_nameiddata_plugin, True, None, 0, trkJ_nativelmms_data, pluginparam, 
                             trkX_arpeggiator, pluginparam, 'FX Slot: arpeggiator', pluginparam)

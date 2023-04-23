@@ -25,7 +25,7 @@ class input_piyopiyo(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': True,
         'no_placements': True
         }
@@ -103,7 +103,7 @@ class input_piyopiyo(plugin_input.base):
             else: t_placements = []
             tracks.r_pl_notes(cvpj_l, str(tracknum), t_placements)
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
         cvpj_l['use_instrack'] = False

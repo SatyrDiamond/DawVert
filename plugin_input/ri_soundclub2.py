@@ -30,7 +30,7 @@ class input_soundclub2(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': True,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': True,
         'no_placements': False
         }
@@ -215,7 +215,7 @@ class input_soundclub2(plugin_input.base):
             for s_laned in t_laneddata[s_laneddata]:
                 tracks.r_pl_notes_laned(cvpj_l, 'sc2_'+str(s_laneddata), str(s_laned), t_laneddata[s_laneddata][s_laned])
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
 
         cvpj_l['timesig_denominator'] = sc2_headerdata[4]
         cvpj_l['timesig_numerator'] = sc2_headerdata[5]

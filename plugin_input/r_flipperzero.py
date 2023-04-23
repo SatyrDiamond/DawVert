@@ -18,7 +18,7 @@ class input_fmf(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_placements': True
         }
     def supported_autodetect(self): return True

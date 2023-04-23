@@ -84,7 +84,7 @@ class input_orgyana(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': True,
         'no_placements': True
         }
@@ -136,7 +136,7 @@ class input_orgyana(plugin_input.base):
                 tracks.r_basicdata(cvpj_l, idval, trackname, l_org_colors[tracknum], 1.0, None)
                 tracks.r_pl_notes(cvpj_l, idval, placement_data.nl2pl(s_cvpj_nl))
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
         cvpj_l['use_instrack'] = False

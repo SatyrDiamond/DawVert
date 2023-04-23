@@ -129,7 +129,7 @@ class input_onlinesequencer(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': True,
         'no_placements': True
         }
@@ -252,7 +252,7 @@ class input_onlinesequencer(plugin_input.base):
         timesig_numerator = 4
         if '2' in onlseq_data_main: timesig_numerator = int(onlseq_data_main['2'])
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
         cvpj_l['keynames_data'] = cvpj_l_keynames_data

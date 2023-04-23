@@ -83,7 +83,7 @@ class output_reaper(plugin_output.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': True,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_placements': False,
         'pl_audio_events': False
         }

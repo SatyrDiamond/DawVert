@@ -168,7 +168,7 @@ class input_cvpj_r(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': True,
-        'placement_warp': True,
+        'placement_loop': True,
         'no_pl_auto': False,
         'no_placements': False
         }
@@ -401,7 +401,7 @@ class input_cvpj_r(plugin_input.base):
                 pl_placement['position'] = SEQNe_pos
                 pl_placement['duration'] = SEQNe_len
                 if patmeasures != 0:
-                    pl_placement['cut'] = {'type': 'warp', 'start': 0, 'loopstart': 0, 'loopend': patmeasures}
+                    pl_placement['cut'] = {'type': 'loop', 'start': 0, 'loopstart': 0, 'loopend': patmeasures}
                 pl_placement['fromindex'] = t_patid
                 if str(SEQNe_mach) not in t_track_placements: t_track_placements[str(SEQNe_mach)] = []
                 t_track_placements[str(SEQNe_mach)].append(pl_placement)
@@ -522,7 +522,7 @@ class input_cvpj_r(plugin_input.base):
         tracks.a_addtrack_master(cvpj_l, 'Master', master_params['main']['master'], [0.52, 0.52, 0.52])
         tracks.a_fx_audio_master(cvpj_l, master_fxchaindata)
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False

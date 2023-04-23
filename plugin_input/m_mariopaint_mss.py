@@ -7,6 +7,7 @@ from functions import idvals
 from functions import tracks
 from functions import song
 from functions import note_data
+from functions import placement_data
 import plugin_input
 import json
 import xml.etree.ElementTree as ET
@@ -48,7 +49,7 @@ class input_mariopaint_mss(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': True,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': False,
         'no_placements': True
         }
@@ -99,7 +100,7 @@ class input_mariopaint_mss(plugin_input.base):
                 auto_tempo.append(tempo_placement)
             curpos += notelen
 
-        tracks.m_playlist_pl(cvpj_l, 1, None, None, [{'type': "instruments", 'position': 0, 'duration': duration, 'notelist': cvpj_notelist}])
+        tracks.m_playlist_pl(cvpj_l, 1, None, None, placement_data.nl2pl(cvpj_notelist))
 
         for instname in instnames:
             s_inst_name = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'name')
@@ -110,7 +111,7 @@ class input_mariopaint_mss(plugin_input.base):
 
         cvpj_l['automation'] = {'main': {'bpm': auto_tempo}}
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
         cvpj_l['timesig_numerator'] = mss_measure

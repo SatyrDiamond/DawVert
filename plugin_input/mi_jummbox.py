@@ -245,7 +245,7 @@ class input_jummbox(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': True,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': False,
         'no_placements': False
         }
@@ -302,7 +302,7 @@ class input_jummbox(plugin_input.base):
             parse_channel(jummbox_channel, chancount)
             chancount += 1
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
 
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False

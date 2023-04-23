@@ -815,7 +815,7 @@ class output_lmms(plugin_output.base):
         'fxrack': True,
         'r_track_lanes': False,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': False,
         'no_placements': False
         }

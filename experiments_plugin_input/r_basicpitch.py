@@ -20,7 +20,7 @@ class input_ex_basic_pitch(experiments_plugin_input.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_placements': False,
         'no_pl_auto': False,
         'pl_audio_events': False,

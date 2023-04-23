@@ -102,7 +102,7 @@ class output_cvpj(plugin_output.base):
         'fxrack': False,
         'r_track_lanes': False,
         'placement_cut': True,
-        'placement_warp': True,
+        'placement_loop': True,
         'no_placements': False,
         'no_pl_auto': True,
         'audio_events': True
@@ -184,7 +184,7 @@ class output_cvpj(plugin_output.base):
                         if s_trkplacement['cut']['type'] == 'cut':
                             x_arr_lanes_clip.set('duration', str((s_trkplacement['cut']['end'] - s_trkplacement['cut']['start'])/4))
                             x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
-                        if s_trkplacement['cut']['type'] == 'warp':
+                        if s_trkplacement['cut']['type'] == 'loop':
                             x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
                             x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
                             x_arr_lanes_clip.set('loopStart', str(s_trkplacement['cut']['loopstart']/4))

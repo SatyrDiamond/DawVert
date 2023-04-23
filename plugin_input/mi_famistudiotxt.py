@@ -271,7 +271,7 @@ class input_famistudio(plugin_input.base):
         'fxrack': False,
         'r_track_lanes': True,
         'placement_cut': False,
-        'placement_warp': False,
+        'placement_loop': False,
         'no_pl_auto': True,
         'no_placements': False
         }
@@ -440,7 +440,7 @@ class input_famistudio(plugin_input.base):
         if 'Name' in fst_Main: cvpj_l['info']['title'] = fst_Main['Name']
         if 'Author' in fst_Main: cvpj_l['info']['author'] = fst_Main['Author']
 
-        cvpj_l['do_addwrap'] = True
+        cvpj_l['do_addloop'] = True
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True

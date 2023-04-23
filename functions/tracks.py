@@ -158,12 +158,15 @@ def m_playlist_pl_add(cvpj_l, idnum, placement_data):
 def m_fx_audio_inst(cvpj_l, idnum, chain_fx_audio):
     if chain_fx_audio != None: cvpj_l['instruments_data'][idnum]['chain_fx_audio'] = chain_fx_audio
 
-def m_add_nle(cvpj_l, patid, nle_notelist, nle_name):
+def m_add_nle(cvpj_l, patid, nle_notelist):
     if 'notelistindex' not in cvpj_l: cvpj_l['notelistindex'] = {}
     cvpj_l['notelistindex'][patid] = {}
-    if nle_name != None: cvpj_l['notelistindex'][patid]['name'] = nle_name
     cvpj_l['notelistindex'][patid]['notelist'] = nle_notelist
     
+def m_add_nle_info(cvpj_l, patid, nle_name, nle_color):
+    if nle_name != None: cvpj_l['notelistindex'][patid]['name'] = nle_name
+    if nle_color != None: cvpj_l['notelistindex'][patid]['color'] = nle_color
+
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------ All -------------------------------------------------------------------
@@ -210,7 +213,7 @@ def a_fx_audio_master_append(cvpj_l, enabled, wet, auto_plug, auto_slot, pluginn
 def fxrack_add(cvpj_l, fx_num, fx_name, fx_color, fx_vol, fx_pan):
     data_values.nested_dict_add_value(cvpj_l, ['fxrack', str(fx_num)], {})
     fxdata = cvpj_l['fxrack'][str(fx_num)]
-    fxdata['color'] = fx_color
+    if fx_color != None: fxdata['color'] = fx_color
     fxdata["name"] = fx_name
 
 def fxrack_param(cvpj_l, fx_num, v_name, v_value):

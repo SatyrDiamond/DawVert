@@ -176,7 +176,7 @@ def parse_channel(channeldata, channum):
 
             if bb_notes != []:
                 cvpj_notelist = parse_notes(channum, bb_notes, bb_instruments)
-                tracks.m_add_nle(cvpj_l, cvpj_patid, cvpj_notelist, None)
+                tracks.m_add_nle(cvpj_l, cvpj_patid, cvpj_notelist)
             patterncount += 1
 
         sequencecount = 0

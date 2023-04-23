@@ -125,7 +125,7 @@ def m_create_inst(cvpj_l, trackid, instdata):
     cvpj_inst = {}
     cvpj_inst['instdata'] = instdata
     cvpj_l['instruments_data'][trackid] = cvpj_inst
-    cvpj_l['instruments_order'].append(trackid)
+    if trackid not in cvpj_l['instruments_order']: cvpj_l['instruments_order'].append(trackid)
 
 def m_basicdata_inst(cvpj_l, trackid, trk_name, trk_color, trk_vol, trk_pan):
     if 'instruments_data' in cvpj_l:

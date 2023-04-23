@@ -6,6 +6,7 @@ import json
 import os.path
 from functions import placement_data
 from functions import tracks
+from functions import note_data
 
 class input_fmf(plugin_input.base):
     def __init__(self): pass
@@ -87,12 +88,7 @@ class input_fmf(plugin_input.base):
             n_d = Note[1]*fmf_Duration
             n_k = Note[0]
             totalDuration += n_d
-            if n_k != None:
-                notedata = {}
-                notedata["duration"] = n_d
-                notedata["key"] = n_k
-                notedata["position"] = position
-                notelist.append(notedata)
+            if n_k != None: notelist.append( note_data.rx_makenote(position, n_d, n_k, None, None) )
             position += n_d
 
         cvpj_l = {}

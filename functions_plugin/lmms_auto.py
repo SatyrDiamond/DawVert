@@ -79,7 +79,17 @@ def get_params_fx(pluginname):
 	else: return [ [], [] ]
 
 
+# ---------------------------------------------- FX ----------------------------------------------
 
+autoval_notefx = {}
+
+autoval_notefx['arpeggiator'] = [ ['arpgate', 'arprange', 'arpmode', 'arpdir', 'arpmiss', 'arpskip', 'arptime', 'arpmiss', 'arpcycle', 'arp'], [] ]
+
+autoval_notefx['chordcreator'] = [ ['chordrange', 'chord'], [] ]
+
+def get_params_notefx(pluginname):
+	if pluginname in autoval_notefx: return autoval_notefx[pluginname] 
+	else: return [ [], [] ]
 
 
 

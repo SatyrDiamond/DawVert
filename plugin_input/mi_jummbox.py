@@ -98,10 +98,8 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
 def parse_notes(channum, bb_notes, bb_instruments):
     cvpj_notelist = []
     for note in bb_notes:
-        #print('note')
         points = note['points']
         pitches = note['pitches']
-
         cvpj_note_pos = (points[-1]['tick'] - points[0]['tick'])
 
         t_duration = calcval(cvpj_note_pos)
@@ -242,7 +240,6 @@ class input_jummbox(plugin_input.base):
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
-        global cvpj_l_automation
         global cvpj_l
 
         global idvals_inst_beepbox
@@ -267,7 +264,6 @@ class input_jummbox(plugin_input.base):
         cvpj_l_track_data = {}
         cvpj_l_track_order = []
         cvpj_l_track_placements = {}
-        cvpj_l_automation = {}
 
         if 'name' in jummbox_json:
             cvpj_l['info'] = {}

@@ -1,17 +1,17 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import plugin_input
-import json
-import zlib
-import struct
+from functions import auto
 from functions import data_bytes
 from functions import idvals
-from functions import tracks
-from functions import auto
-from functions import placement_data
 from functions import note_data
+from functions import placement_data
 from functions import song
+from functions import tracks
+import json
+import plugin_input
+import struct
+import zlib
 
 keytable = [0,2,4,5,7,9,11,12]
 

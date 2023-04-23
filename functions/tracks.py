@@ -106,10 +106,12 @@ def r_fx_audio_append(cvpj_l, trackid, enabled, wet, auto_plug, auto_slot, plugi
 def r_fx_notes(cvpj_l, trackid, chain_fx_note):
     data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'instdata', 'chain_fx_notes'], chain_fx_note)
 
-def r_fx_notes_append(cvpj_l, trackid, enabled, pluginname, plugindata):
-    data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'instdata', 'chain_fx_notes'], 
-        {"enabled": enabled, "plugin": pluginname, "plugindata": plugindata}
-        )
+def r_fx_notes_append(cvpj_l, trackid, enabled, auto_plug, auto_slot, pluginname, plugindata):
+    fxslot_data = {"plugin": pluginname, "plugindata": plugindata}
+    if auto_plug != None: fxslot_data['pluginautoid'] = auto_plug
+    if auto_slot != None: fxslot_data['slotautoid'] = auto_slot
+    if enabled != None: fxslot_data['enabled'] = enabled
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'chain_fx_notes'], fxslot_data)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------

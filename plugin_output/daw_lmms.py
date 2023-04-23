@@ -399,32 +399,39 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
 
     add_unused_auto_val(auto_nameiddata, trackname)
 
-    if 'chain_fx_note' in trkJ:
-        trkJ_notefx = trkJ['chain_fx_note']
+
+    if 'chain_fx_notes' in trkJ:
+        trkJ_notefx = trkJ['chain_fx_notes']
         for trkJ_notefxslot in trkJ_notefx:
             trkJ_plugindata = trkJ_notefxslot['plugindata']
+
+            if 'automation' in projJ and 'pluginautoid' in trkJ_notefxslot:
+                if 'plugin' in projJ['automation']:
+                    if trkJ_notefxslot['pluginautoid'] in projJ['automation']['plugin']:
+                        auto_nameiddata_plugin = get_auto_ids_data(projJ['automation']['plugin'][trkJ_notefxslot['pluginautoid']])
+
             if trkJ_notefxslot['plugin'] == 'native-lmms':
                 trkJ_nativelmms_name = trkJ_plugindata['name']
                 trkJ_nativelmms_data = trkJ_plugindata['data']
                 if trkJ_nativelmms_name == 'arpeggiator':
                     trkX_arpeggiator = ET.SubElement(trkX_insttr, "arpeggiator")
                     trkX_arpeggiator.set('arp-enabled', str(trkJ_notefxslot['enabled']))
-                    trkX_arpeggiator.set('arpgate', str(trkJ_nativelmms_data['gate']))
-                    trkX_arpeggiator.set('arprange', str(trkJ_nativelmms_data['arprange']))
-                    trkX_arpeggiator.set('arpmode', str(trkJ_nativelmms_data['mode']))
-                    trkX_arpeggiator.set('arpdir', str(arpdirection[trkJ_nativelmms_data['direction']]))
-                    trkX_arpeggiator.set('arpskip', str(oneto100(trkJ_nativelmms_data['skiprate'])))
-                    trkX_arpeggiator.set('arptime', str(trkJ_nativelmms_data['time']))
-                    trkX_arpeggiator.set('arpmiss', str(trkJ_nativelmms_data['miss']))
-                    trkX_arpeggiator.set('arpcycle', str(trkJ_nativelmms_data['cyclenotes']))
-                    if trkJ_nativelmms_data['chord'] in chord: trkX_arpeggiator.set('arp', str(chord[trkJ_nativelmms_data['chord']]))
-                    else: trkX_arpeggiator.set('arp', '0')
+
+                    lmms_autovals = lmms_auto.get_params_notefx('arpeggiator')
+                    print(lmms_autovals)
+                    for pluginparam in lmms_autovals[0]: 
+                        add_auto_val(auto_nameiddata_plugin, True, None, 0, trkJ_nativelmms_data, pluginparam, 
+                            trkX_arpeggiator, pluginparam, 'FX Slot: arpeggiator', pluginparam)
+
                 if trkJ_nativelmms_name == 'chordcreator':
                     trkX_chordcreator = ET.SubElement(trkX_insttr, "chordcreator")
                     trkX_chordcreator.set('chord-enabled', str(trkJ_notefxslot['enabled']))
-                    trkX_chordcreator.set('chordrange', str(trkJ_nativelmms_data['chordrange']))
-                    if trkJ_nativelmms_data['chord'] in chord: trkX_chordcreator.set('chord', str(chord[trkJ_nativelmms_data['chord']]))
-                    else: trkX_chordcreator.set('chord', '0')
+
+                    lmms_autovals = lmms_auto.get_params_notefx('chordcreator')
+                    for pluginparam in lmms_autovals[0]: 
+                        add_auto_val(auto_nameiddata_plugin, True, None, 0, trkJ_nativelmms_data, pluginparam, 
+                            trkX_chordcreator, pluginparam, 'FX Slot: chordcreator', pluginparam)
+
 
     middlenote = 0
 

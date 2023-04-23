@@ -108,16 +108,6 @@ def loopmode_cvpj(cvpjdata, wavdata):
 def tp2cvpjp(twopoints):
     return auto.twopoints2cvpjpoints(twopoints, 4, 'normal', 0)
 
-def make_fxslot(fx_type, fx_data, auto_id):
-    fxslotdata = {}
-    fxslotdata['pluginautoid'] = auto_id
-    fxslotdata['slotautoid'] = auto_id
-    fxslotdata['plugin'] = 'native-caustic'
-    fxslotdata['plugindata'] = {}
-    fxslotdata['plugindata']['name'] = fx_type
-    fxslotdata['plugindata']['data'] = fx_data
-    return fxslotdata
-
 def pat_auto_place_part(pl_position, pl_duration, auto_smooth, auto_points):
     auto_curpoint = 0
     cvpj_placement_points = []

@@ -4,6 +4,7 @@
 from functions import tracks
 from functions import note_data
 from functions import song
+from functions import placement_data
 import xml.etree.ElementTree as ET
 import plugin_input
 import json
@@ -142,12 +143,9 @@ class input_audiosanua(plugin_input.base):
             as_pattern_endTick = int(x_pattern.get('endTick'))
             as_pattern_patternLength = int(x_pattern.get('patternLength'))
 
-            cvpj_pldata = {}
-            cvpj_pldata["position"] = as_pattern_startTick/32
-            cvpj_pldata["duration"] = (as_pattern_endTick-as_pattern_startTick)/32
+            cvpj_pldata = placement_data.makepl_n(as_pattern_startTick/32, (as_pattern_endTick-as_pattern_startTick)/32, [])
             cvpj_pldata['cut'] = {'type': 'cut', 'start': 0, 'end': as_pattern_patternLength/32}
             cvpj_pldata['color'] = as_pattern_color[as_pattern_patternColor]
-            cvpj_pldata['notelist'] = []
 
             if as_pattern_patternId in as_patt_notes:
                 t_notelist = as_patt_notes[as_pattern_patternId]

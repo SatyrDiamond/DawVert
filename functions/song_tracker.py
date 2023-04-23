@@ -329,7 +329,9 @@ def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype):
                 if ui_split not in multi_used_instruments: multi_used_instruments.append(ui_split)
 
             if NLP != []:
-                tracks.m_add_nle(cvpj_l, str(channum)+'_'+str(patnum), NLP[0]['notelist'], s_chantype+' ('+str(patnum)+')')
+                patid = str(channum)+'_'+str(patnum)
+                tracks.m_add_nle(cvpj_l, patid, NLP[0]['notelist'])
+                tracks.m_add_nle_info(cvpj_l, patid, s_chantype+' ('+str(patnum)+')', None)
 
         curpos = 0
         for s_order in s_orders:

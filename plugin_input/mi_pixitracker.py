@@ -6,6 +6,7 @@ from functions import audio_wav
 from functions import folder_samples
 from functions import tracks
 from functions import note_data
+from functions import placement_data
 import plugin_input
 import json
 import struct
@@ -40,8 +41,6 @@ class input_cvpj_f(plugin_input.base):
         pixi_chunks = data_bytes.riff_read(song_file, 8)
         pixi_data_patterns = {}
         pixi_data_sounds = []
-
-        cvpj_l_notelistindex = {}
 
         cvpj_l = {}
         
@@ -160,7 +159,6 @@ class input_cvpj_f(plugin_input.base):
                 cvpj_instdata['plugindata']['end'] = t_sounddata[6]
                 cvpj_instdata['plugindata']['length'] = len(t_sounddata[7])//t_sounddata[0]
                 cvpj_instdata['plugindata']['trigger'] = 'normal'
-
             tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
             tracks.m_basicdata_inst(cvpj_l, cvpj_instid, 'Inst #'+str(instnum+1), pixi_colors[instnum], cvpj_instvol, None)
 
@@ -169,19 +167,13 @@ class input_cvpj_f(plugin_input.base):
             for pixi_data_pattern_inst in pixi_data_patterns[pixi_data_pattern]['notes']:
                 for pixi_data_pattern_note in pixi_data_pattern_inst:
                     nli_notes.append(pixi_data_pattern_note)
-            cvpj_l_notelistindex['pixi_'+str(pixi_data_pattern)] = {}
-            cvpj_l_notelistindex['pixi_'+str(pixi_data_pattern)]['notelist'] = nli_notes
-            cvpj_l_notelistindex['pixi_'+str(pixi_data_pattern)]['name'] = 'Pattern '+str(pixi_data_pattern+1)
+            tracks.m_add_nle(cvpj_l, 'pixi_'+str(pixi_data_pattern), nli_notes)
+            tracks.m_add_nle_info(cvpj_l, 'pixi_'+str(pixi_data_pattern), 'Pattern '+str(pixi_data_pattern+1), None)
 
         placements = []
         placements_pos = 0
         for patnum in pixi_patternorder:
-            pl_placement = {}
-            pl_placement['position'] = placements_pos
-            pl_placement['duration'] = pixi_data_patterns[pixi_data_pattern]['len']
-            pl_placement['type'] = 'instruments'
-            pl_placement['fromindex'] = 'pixi_'+str(patnum)
-            placements.append(pl_placement)
+            placements.append( placement_data.makepl_n_mi(placements_pos, pixi_data_patterns[pixi_data_pattern]['len'], 'pixi_'+str(patnum)) )
             placements_pos += pixi_data_patterns[pixi_data_pattern]['len']
 
         tracks.m_playlist_pl(cvpj_l, '1', None, None, placements)
@@ -191,6 +183,5 @@ class input_cvpj_f(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         
         cvpj_l['vol'] = pixi_vol/100
-        cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['bpm'] = pixi_bpm
         return json.dumps(cvpj_l)

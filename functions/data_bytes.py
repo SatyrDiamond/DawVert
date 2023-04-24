@@ -21,6 +21,11 @@ def readstring(data):
 		else: terminated = 1
 	return output.decode('ascii')
 
+def readstring_lenbyte(file_stream, length_size, length_endian, codec):
+	stringlen = int.from_bytes(file_stream.read(length_size), length_endian)
+	if stringlen != 0: return readstring_fixedlen(file_stream, stringlen, codec)
+	else: return ''
+
 def readstring_fixedlen(file_stream, length, codec):
 	if codec != None: return file_stream.read(length).split(b'\x00')[0].decode(codec).translate(dict.fromkeys(range(32)))
 	else: return file_stream.read(length).split(b'\x00')[0].decode().translate(dict.fromkeys(range(32)))

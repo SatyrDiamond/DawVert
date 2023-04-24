@@ -15,11 +15,6 @@ import zlib
 
 keytable = [0,2,4,5,7,9,11,12]
 
-def getstring(bytesdata):
-    stringlen = int.from_bytes(bytesdata.read(2), "big")
-    if stringlen != 0: return bytesdata.read(stringlen).decode("utf-8")
-    else: return ''
-
 def parsenotes(bio_data, notelen): 
     patsize, numnotes = struct.unpack('>II', bio_data.read(8))
     notesout = {}
@@ -59,10 +54,10 @@ class input_notessimo_v2(plugin_input.base):
 
         bytestream = open(input_file, 'rb')
         nv2_data = data_bytes.to_bytesio(zlib.decompress(bytestream.read()))
-        text_songname = getstring(nv2_data)
-        text_songauthor = getstring(nv2_data)
-        text_date1 = getstring(nv2_data)
-        text_date2 = getstring(nv2_data)
+        text_songname = data_bytes.readstring_lenbyte(nv2_data, 2, "big", None)
+        text_songauthor = data_bytes.readstring_lenbyte(nv2_data, 2, "big", None)
+        text_date1 = data_bytes.readstring_lenbyte(nv2_data, 2, "big", None)
+        text_date2 = data_bytes.readstring_lenbyte(nv2_data, 2, "big", None)
         print("[input-notessimo_v2] Song Name: " + str(text_songname))
         print("[input-notessimo_v2] Song Author: " + str(text_songauthor))
         len_order = int.from_bytes(nv2_data.read(2), "big")

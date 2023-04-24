@@ -18,11 +18,6 @@ chipname['pulse'] = 'Pulse'
 chipname['noise'] = 'Noise'
 chipname['wavetable'] = 'Wavetable'
 
-def readstring(bio_data):
-    tb_namelen = int.from_bytes(bio_data.read(2), "little")
-    tb_name = bio_data.read(tb_namelen).decode("utf-8")
-    return tb_name
-
 def speed_to_tempo(framerate, speed):
     return (framerate * 60.0) / (speed * 5)
 
@@ -137,7 +132,7 @@ class input_trackerboy(plugin_input.base):
                 tb_instdata = data_bytes.to_bytesio(trackerboy_chunk[1])
                 tb_id = tb_instdata.read(1)[0]+1
                 print("[input-trackerboy] Inst " + str(tb_id) + ':')
-                tb_name = readstring(tb_instdata)
+                tb_name = data_bytes.readstring_lenbyte(tb_instdata, 2, "little", None)
                 print("[input-trackerboy]     Name: " + str(tb_name))
                 tb_channel = tb_instdata.read(1)[0]
                 print("[input-trackerboy]     Channel: " + str(tb_channel))
@@ -168,7 +163,7 @@ class input_trackerboy(plugin_input.base):
                     #print(trackerboy_chunk[1])
                     tb_songdata = data_bytes.to_bytesio(trackerboy_chunk[1])
                     print("[input-trackerboy] Song:")
-                    tb_name = readstring(tb_songdata)
+                    tb_name = data_bytes.readstring_lenbyte(tb_songdata, 2, "little", None)
                     print("[input-trackerboy]     Name: " + str(tb_name))
                     tb_beat = tb_songdata.read(1)[0]
                     print("[input-trackerboy]     Beats: " + str(tb_beat))
@@ -222,7 +217,7 @@ class input_trackerboy(plugin_input.base):
                 tb_instdata = data_bytes.to_bytesio(trackerboy_chunk[1])
                 tb_id = tb_instdata.read(1)[0]+1
                 print("[input-trackerboy] Wave " + str(tb_id) + ':')
-                tb_name = readstring(tb_instdata)
+                tb_name = data_bytes.readstring_lenbyte(tb_instdata, 2, "little", None)
                 print("[input-trackerboy]     Name: " + str(tb_name))
                 tb_wave = list(tb_instdata.read(16))
                 print("[input-trackerboy]     Data: " + str(tb_wave))

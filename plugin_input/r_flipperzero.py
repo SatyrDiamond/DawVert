@@ -99,9 +99,6 @@ class input_fmf(plugin_input.base):
 
         cvpj_l['do_singlenotelistcut'] = True
 
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = False
-        
         cvpj_l['bpm'] = fmf_BPM
 
         return json.dumps(cvpj_l)

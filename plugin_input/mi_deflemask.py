@@ -93,10 +93,6 @@ def fxget(fxtype, fxparam, output_param, output_extra):
         if fxparam < 32: output_extra['speed'] = fxparam
         else: output_extra['tempo'] = fxparam
 
-def dmfstring(bio_dmf): 
-    stringlen = int.from_bytes(bio_dmf.read(1), "little")
-    return bio_dmf.read(stringlen).decode('utf-8').rstrip('\x00')
-
 def dmfenv(bio_dmf): 
     ENVELOPE_SIZE = int.from_bytes(bio_dmf.read(1), "little")
     envdata = {}
@@ -188,8 +184,8 @@ class input_cvpj_r(plugin_input.base):
         dmf_SYSTEM_TOTAL_CHANNELS = len(t_chantype)
 
         # VISUAL INFORMATION
-        dmf_song_name = dmfstring(bio_dmf)
-        dmf_song_author = dmfstring(bio_dmf)
+        dmf_song_name = data_bytes.readstring_lenbyte(bio_dmf, 1, "little", None)
+        dmf_song_author = data_bytes.readstring_lenbyte(bio_dmf, 1, "little", None)
         dmf_highlight_a_pat = int.from_bytes(bio_dmf.read(1), "little")
         dmf_highlight_b_pat = int.from_bytes(bio_dmf.read(1), "little")
 
@@ -218,7 +214,7 @@ class input_cvpj_r(plugin_input.base):
 
         for instnum in range(dmf_TOTAL_INSTRUMENTS):
             dmf_inst = {}
-            dmfi_name = dmfstring(bio_dmf)
+            dmfi_name = data_bytes.readstring_lenbyte(bio_dmf, 1, "little", None)
             dmfi_mode = int.from_bytes(bio_dmf.read(1), "little")
             dmf_instnames.append(dmfi_name)
             if dmfi_mode == 1:

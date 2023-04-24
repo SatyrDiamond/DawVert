@@ -139,9 +139,6 @@ class input_orgyana(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = False
-       
         cvpj_l['bpm'] = (1/(org_wait/122))*122
         cvpj_l['timesig_denominator'] = org_stepsperbar
         cvpj_l['timesig_numerator'] = org_beatsperstep

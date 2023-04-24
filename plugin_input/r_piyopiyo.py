@@ -106,9 +106,6 @@ class input_piyopiyo(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = False
-
         cvpj_l['bpm'] = bpm
 
         song.add_timemarker_looparea(cvpj_l, None, loopstart, loopend)

@@ -10,11 +10,6 @@ from functions import idvals
 from functions import note_data
 from functions import placement_data
 
-def getstring(nbs_file):
-    stringlen = int.from_bytes(nbs_file.read(4), "little")
-    if stringlen != 0: return nbs_file.read(stringlen).decode("utf-8")
-    else: return ''
-
 def nbs_parsekey(nbs_file, nbs_newformat):
     nbs_inst = nbs_file.read(1)[0]
     nbs_key = nbs_file.read(1)[0]-51
@@ -75,16 +70,16 @@ class input_gt_mnbs(plugin_input.base):
             tracks.m_playlist_pl(cvpj_l, playlistid+1, None, [0.23, 0.23, 0.23], [])
             nbs_notes[playlistid+1] = {}
 
-        nbs_song_name = getstring(nbs_file)
+        nbs_song_name = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
         print('[input-mnbs] Song Title: '+nbs_song_name)
 
-        nbs_song_author = getstring(nbs_file)
+        nbs_song_author = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
         print('[input-mnbs] Song Author: '+nbs_song_author)
 
-        nbs_song_orgauthor = getstring(nbs_file)
+        nbs_song_orgauthor = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
         print('[input-mnbs] Song Original Author: '+nbs_song_orgauthor)
 
-        nbs_description = getstring(nbs_file)
+        nbs_description = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
         print('[input-mnbs] Song Description: '+nbs_song_orgauthor)
 
         nbs_tempo = int.from_bytes(nbs_file.read(2), "little")
@@ -94,7 +89,7 @@ class input_gt_mnbs(plugin_input.base):
         timesig_numerator = nbs_file.read(1)[0]
         print('[input-mnbs] Time Signature: '+str(timesig_numerator)+'/4')
         nbs_file.read(20)
-        nbs_song_sourcefilename = getstring(nbs_file)
+        nbs_song_sourcefilename = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
         if nbs_newformat == 1:
             nbs_loopon = nbs_file.read(1)[0]
             print('[input-mnbs] Loop Enabled: '+str(nbs_loopon))
@@ -147,7 +142,7 @@ class input_gt_mnbs(plugin_input.base):
         # PART 3: LAYERS
         if nbs_file.tell() <= nbs_len:
             for layernum in range(nbs_layercount):
-                layername = getstring(nbs_file)
+                layername = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
                 if layername != None: tracks.m_playlist_pl(cvpj_l, playlistid+1, layername, None, None)
                 if nbs_newformat == 1: nbs_file.read(3)
 

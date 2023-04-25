@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from functions import auto
+
 def betweenvalues(minval, maxval, value): 
 	return (minval*(1-value))+(maxval*value)
 
@@ -33,30 +35,15 @@ def notemod_conv(noteJ):
 
 		if noteautopitch_exists == True and noteslide_exists == False:
 			cvpj_auto_pitch = notemod['auto']['pitch'] 
-			t_posval = []
-			prevvalue = 0
-
-			for part in cvpj_auto_pitch:
-				isinstant = False
-				if 'type' in part:
-					if part['type'] == 'instant':
-						isinstant = True
-
-				if isinstant == True: t_posval.append([part['position'], prevvalue])
-				t_posval.append([part['position'], part['value']])
-				prevvalue = part['value']
-
+			pitchblocks = auto.points2blocks(cvpj_auto_pitch)
 			notemod['slide'] = []
-			for pinu in range(len(t_posval)-1):
-				slide_dur = t_posval[pinu+1][0] - t_posval[pinu][0]
-				
-				if t_posval[pinu+1][1] != t_posval[pinu][1]:
-					notemod['slide'].append({
-						'position': t_posval[pinu][0], 
-						'duration': slide_dur, 
-						'key': t_posval[pinu+1][1],
-						'finepitch': (t_posval[pinu+1][1]-round(t_posval[pinu+1][1]))*100
-						})
+			for part in pitchblocks:
+				notemod['slide'].append({
+					'position': part[0], 
+					'duration': part[1], 
+					'key': part[2],
+					'finepitch': (part[2]-round(part[2]))*100
+					})
 
 def pitchmod2point_init():
 	global pitchpoints

@@ -18,8 +18,6 @@ import xml.etree.ElementTree as ET
 
 idvals_inst_notetess = idvals.parse_idvalscsv('idvals/notessimo_v3_inst.csv')
 
-keytable = [0,2,4,5,7,9,11,12]
-
 global lists_data
 global used_inst
 global sheets_width
@@ -181,8 +179,7 @@ def parse_sheets(notess_sheets):
                 notess_n_dur = s_obj.get('l')
                 notess_nt_oct = int(roundseven(notess_n_note)/7)*-1
                 notess_nt_rnote = notess_n_note*-1 - notess_nt_oct*7
-                notess_nt_note = keytable[notess_nt_rnote]
-                notess_no_note = notess_nt_note + (notess_nt_oct*12)
+                notess_no_note = note_data.keynum_to_note(notess_nt_rnote, notess_nt_oct)
 
                 notetype = 0
                 if notess_n_isSharp == 'true': notetype = 1

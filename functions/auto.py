@@ -38,8 +38,6 @@ def getdurpos(listdata, startpos):
         if pos_final > pointpos: pos_final = pointpos
     return pos_final, duration_final
 
-
-
 def makepl(t_pos, t_dur, t_points):
     pl_data = {}
     pl_data['position'] = t_pos
@@ -57,7 +55,6 @@ def multiply(auto_data, addval, mulval):
 
 def resize(autopl):
     in_points = autopl['points']
-
     firstpos = None
     for note in in_points:
         pointpos = note['position']
@@ -97,3 +94,25 @@ def remove_instant(cvpj_points, startposition, isnote):
         prevvalue = cvpj_auto_poi['value']
         startpoint = False
     return cvpj_output
+
+def points2blocks(cvpj_points):
+    t_posval = []
+    prevvalue = 0
+    outblocks = []
+
+    for part in cvpj_points:
+        isinstant = False
+        if 'type' in part:
+            if part['type'] == 'instant':
+                isinstant = True
+        if isinstant == True: t_posval.append([part['position'], prevvalue])
+        t_posval.append([part['position'], part['value']])
+        prevvalue = part['value']
+
+    for pinu in range(len(t_posval)-1):
+        slide_dur = t_posval[pinu+1][0] - t_posval[pinu][0]
+        if t_posval[pinu+1][1] != t_posval[pinu][1]:
+            outblocks.append(
+                [t_posval[pinu][0], slide_dur, t_posval[pinu+1][1]]
+                )
+    return outblocks

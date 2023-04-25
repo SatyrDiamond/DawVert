@@ -13,8 +13,6 @@ import plugin_input
 import struct
 import zlib
 
-keytable = [0,2,4,5,7,9,11,12]
-
 def parsenotes(bio_data, notelen): 
     patsize, numnotes = struct.unpack('>II', bio_data.read(8))
     notesout = {}
@@ -29,7 +27,8 @@ def parsenotes(bio_data, notelen):
         if n_inst not in used_instruments: used_instruments.append(n_inst)
         if n_sharp == 2: out_offset = 1
         if n_sharp == 1: out_offset = -1
-        notesout[n_layer].append(note_data.mx_makenote(str(n_inst), (n_pos)*notelen, (n_len/4)*notelen, keytable[out_key]+((out_oct-3)*12)+out_offset, None, None))
+        out_note = note_data.keynum_to_note(out_key, out_oct-3)
+        notesout[n_layer].append(note_data.mx_makenote(str(n_inst), (n_pos)*notelen, (n_len/4)*notelen, out_note+out_offset, None, None))
     return patsize-32, notelen, notesout
 
 class input_notessimo_v2(plugin_input.base):

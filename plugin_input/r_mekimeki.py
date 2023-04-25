@@ -16,7 +16,6 @@ def getvalue(tag, name):
     else:
         return None
 
-keytable = [0,2,4,5,7,9,11,12]
 maincolor = [0.42, 0.59, 0.24]
 
 class input_cvpj_f(plugin_input.base):
@@ -69,7 +68,7 @@ class input_cvpj_f(plugin_input.base):
                 out_key = n_key - out_oct*7
 
                 notedur = getvalue(mmc_note, 'Length')*notelen
-                notekey = keytable[out_key] + (out_oct-3)*12 + out_offset
+                notekey = note_data.keynum_to_note(out_key, out_oct-3) + out_offset 
                 notepos = getvalue(mmc_note, 'BeatOffset')*notelen
                 notevol = getvalue(mmc_wv, 'Volume')*1.5
                 notepan = getvalue(mmc_wv, 'Pan')

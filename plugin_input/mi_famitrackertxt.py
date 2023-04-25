@@ -3,14 +3,12 @@
 
 from functions import data_bytes
 from functions import song_tracker
+from functions import note_data
 import plugin_input
 import json
 
 def hextoint(value):
     return int(value, 16)
-
-keytable_vals = [0,2,4,5,7,9,11]
-keytable = ['C','D','E','F','G','A','B']
 
 def setmacro(cvpj_plugdata, macro_list, listname, macronum, famitrkr_instdata_macro_id):
     if famitrkr_instdata_macro_id in macro_list[macronum]:
@@ -29,23 +27,17 @@ def parsecell(celldata):
 
     out_cell = [{},[None, None, {}, {}]]
 
-    if cellsplit_key == '---':
-        out_cell[1][0] = 'Off'
-    elif cellsplit_key == '===':
-        out_cell[1][0] = 'Off'
+    if cellsplit_key in ['---', '===']: out_cell[1][0] = 'Off'
     elif cellsplit_key != '...':
         out_note = 0
         if cellsplit_key_oct != '#':
-            out_note += keytable_vals[keytable.index(cellsplit_key_note)]
-            out_note += (int(cellsplit_key_oct)-3)*12
+            out_note = note_data.keyletter_to_note(cellsplit_key_note, int(cellsplit_key_oct)-3)
             if cellsplit_key_sharp == '#': out_note += 1
             out_cell[1][0] = out_note
 
-    if cellsplit_inst != '..':
-        out_cell[1][1] = hextoint(cellsplit_inst)
+    if cellsplit_inst != '..': out_cell[1][1] = hextoint(cellsplit_inst)
 
-    if cellsplit_vol != '.':
-        out_cell[1][2]['vol'] = hextoint(cellsplit_vol)/15
+    if cellsplit_vol != '.': out_cell[1][2]['vol'] = hextoint(cellsplit_vol)/15
 
     return(out_cell)
 

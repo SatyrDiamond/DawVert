@@ -72,8 +72,8 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
     cvpj_pldata = {}
     if 'color' in j_wvtl_trackclip: cvpj_pldata["color"] = colors.hex_to_rgb_float(j_wvtl_trackclip['color'])
     if 'name' in j_wvtl_trackclip: cvpj_pldata["name"] = j_wvtl_trackclip['name']
-    if 'fadeIn' in j_wvtl_trackclip: cvpj_pldata["fade_in"] = j_wvtl_trackclip['fadeIn']*4
-    if 'fadeOut' in j_wvtl_trackclip: cvpj_pldata["fade_out"] = j_wvtl_trackclip['fadeOut']*4
+    if 'fadeIn' in j_wvtl_trackclip: data_values.nested_dict_add_value(cvpj_pldata, ['fade', 'in', 'duration'], j_wvtl_trackclip['fadeIn']*4)
+    if 'fadeOut' in j_wvtl_trackclip: data_values.nested_dict_add_value(cvpj_pldata, ['fade', 'out', 'duration'], j_wvtl_trackclip['fadeOut']*4)
     cvpj_pldata["position"] = j_wvtl_trc_timelineStart*4
     cvpj_pldata["duration"] = j_wvtl_trc_timelineEnd*4 - j_wvtl_trc_timelineStart*4
     cvpj_pldata['cut'] = {'type': 'loop', 'start': j_wvtl_trc_readStart*4, 'loopstart': j_wvtl_trc_loopStart*4, 'loopend': j_wvtl_trc_loopEnd*4}

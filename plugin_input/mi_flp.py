@@ -167,7 +167,6 @@ class input_flp(plugin_input.base):
                 arrangementitemJ = {}
                 arrangementitemJ['position'] = item['position']/ppq*4
                 arrangementitemJ['duration'] = item['length']/ppq*4
-                arrangementitemJ['type'] = 'instruments'
                 arrangementitemJ['fromindex'] = 'FLPat' + str(item['itemindex'] - item['patternbase'])
                 if 'startoffset' in item or 'endoffset' in item:
                     arrangementitemJ['cut'] = {}

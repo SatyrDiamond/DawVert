@@ -169,10 +169,7 @@ class input_pxtone(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
         'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
         'no_pl_auto': True,
         'no_placements': True
         }

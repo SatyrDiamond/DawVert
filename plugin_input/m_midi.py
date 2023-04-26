@@ -80,14 +80,7 @@ class input_midi(plugin_input.base):
     def getname(self): return 'MIDI'
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
-        return {
-        'fxrack': True,
-        'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'no_pl_auto': True,
-        'no_placements': True
-        }
+        return {'fxrack': True,'r_track_lanes': True,'no_pl_auto': True,'no_placements': True}
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -96,7 +89,6 @@ class input_midi(plugin_input.base):
         if bytesdata == b'MThd': return True
         else: return False
         bytestream.seek(0)
-
     def parse(self, input_file, extra_param):
         global author
         global titlefound

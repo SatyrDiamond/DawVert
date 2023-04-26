@@ -45,15 +45,13 @@ class input_ceol(plugin_input.base):
     def gettype(self): return 'mi'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': False
+        'r_track_lanes': True
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
+        global datapos
+        global ceol_data
+        
         cvpj_l = {}
 
         cvpj_l_keynames_data = {}
@@ -68,8 +66,6 @@ class input_ceol(plugin_input.base):
         cvpj_l_keynames_data['drumkit_simple'] = idvals.idval2drumkeynames(idvals_drumkit_simple)
         cvpj_l_keynames_data['drumkit_sion'] = idvals.idval2drumkeynames(idvals_drumkit_sion)
 
-        global datapos
-        global ceol_data
         bio_mainfile = open(input_file, 'r')
         ceol_data = bio_mainfile.readline().split(',')
 

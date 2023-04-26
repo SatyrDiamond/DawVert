@@ -2,9 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import auto
-
-def betweenvalues(minval, maxval, value): 
-	return (minval*(1-value))+(maxval*value)
+from functions import xtramath
 
 def notemod_conv(noteJ):
 	if 'notemod' in noteJ:
@@ -82,7 +80,7 @@ def pitchmod2point(cvpj_note, position, ptype, maindur, slideparam, input_pitch)
 			pitchpoints.append({'position': position, 'value': pitch_prev})
 			pitchpoints.append({'position': position+slideparam, 'value': pitch_cur})
 		elif slideparam > maindur:
-			pitch_cur = betweenvalues(pitch_prev, pitch_prev+input_pitch, maindur/slideparam)
+			pitch_cur = xtramath.betweenvalues(pitch_prev, pitch_prev+input_pitch, maindur/slideparam)
 			pitchpoints.append({'position': position, 'value': pitch_prev})
 			pitchpoints.append({'position': position+maindur, 'value': pitch_cur})
 

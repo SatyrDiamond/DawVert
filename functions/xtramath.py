@@ -11,3 +11,9 @@ def float_range(start,stop,step):
     istop = int((stop-start) // step)
     for i in range(int(istop)):
         yield start + i * step
+
+def betweenvalues(minval, maxval, value): 
+    return (minval*(1-value))+(maxval*value)
+
+def is_between(i_min, i_max, i_value): 
+    return min(i_min, i_max) <= i_value <= max(i_min, i_max)

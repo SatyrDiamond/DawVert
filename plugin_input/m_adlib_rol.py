@@ -135,7 +135,7 @@ class input_adlib_rol(plugin_input.base):
 
         song_file = open(input_file, 'rb')
 
-        idvals_inst_adlib_rol = idvals.parse_idvalscsv('idvals/adlib_rol_inst.csv')
+        idvals_inst_adlib_rol = idvals.parse_idvalscsv('data_idvals/adlib_rol_inst.csv')
 
         cvpj_l = {}
 

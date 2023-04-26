@@ -67,7 +67,7 @@ class input_mariopaint_mss(plugin_input.base):
         tree = ET.parse(input_file)
         root = tree.getroot()
 
-        idvals_mariopaint_inst = idvals.parse_idvalscsv('idvals/mariopaint_inst.csv')
+        idvals_mariopaint_inst = idvals.parse_idvalscsv('data_idvals/mariopaint_inst.csv')
 
         cvpj_l = {}
 

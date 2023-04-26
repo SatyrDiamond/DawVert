@@ -145,12 +145,12 @@ class input_onlinesequencer(plugin_input.base):
         os_data_song_data = os_data_song_stream.read()
         message, typedef = blackboxprotobuf.protobuf_to_json(os_data_song_data)
 
-        idvals_onlineseq_inst = idvals.parse_idvalscsv('idvals/onlineseq_inst.csv')
-        idvals_onlineseq_drumkit = idvals.parse_idvalscsv('idvals/onlineseq_drumkit.csv')
-        idvals_onlineseq_drumkit_808 = idvals.parse_idvalscsv('idvals/onlineseq_drumkit_808.csv')
-        idvals_onlineseq_drumkit_909 = idvals.parse_idvalscsv('idvals/onlineseq_drumkit_909.csv')
-        idvals_onlineseq_drumkit_2013 = idvals.parse_idvalscsv('idvals/onlineseq_drumkit_2013.csv')
-        idvals_onlineseq_drumkit_retro = idvals.parse_idvalscsv('idvals/onlineseq_drumkit_retro.csv')
+        idvals_onlineseq_inst = idvals.parse_idvalscsv('data_idvals/onlineseq_inst.csv')
+        idvals_onlineseq_drumkit = idvals.parse_idvalscsv('data_idvals/onlineseq_drumkit.csv')
+        idvals_onlineseq_drumkit_808 = idvals.parse_idvalscsv('data_idvals/onlineseq_drumkit_808.csv')
+        idvals_onlineseq_drumkit_909 = idvals.parse_idvalscsv('data_idvals/onlineseq_drumkit_909.csv')
+        idvals_onlineseq_drumkit_2013 = idvals.parse_idvalscsv('data_idvals/onlineseq_drumkit_2013.csv')
+        idvals_onlineseq_drumkit_retro = idvals.parse_idvalscsv('data_idvals/onlineseq_drumkit_retro.csv')
         
         cvpj_l_keynames_data['drumkit_midi'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit)
         cvpj_l_keynames_data['drumkit_808'] = idvals.idval2drumkeynames(idvals_onlineseq_drumkit_808)

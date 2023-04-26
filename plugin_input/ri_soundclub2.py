@@ -47,7 +47,7 @@ class input_soundclub2(plugin_input.base):
 
         file_name = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
-        idvals_inst_soundclub2 = idvals.parse_idvalscsv('idvals/soundclub2_inst.csv')
+        idvals_inst_soundclub2 = idvals.parse_idvalscsv('data_idvals/soundclub2_inst.csv')
 
         cvpj_l = {}
 

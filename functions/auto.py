@@ -103,8 +103,7 @@ def points2blocks(cvpj_points):
     for part in cvpj_points:
         isinstant = False
         if 'type' in part:
-            if part['type'] == 'instant':
-                isinstant = True
+            if part['type'] == 'instant': isinstant = True
         if isinstant == True: t_posval.append([part['position'], prevvalue])
         t_posval.append([part['position'], part['value']])
         prevvalue = part['value']
@@ -112,7 +111,21 @@ def points2blocks(cvpj_points):
     for pinu in range(len(t_posval)-1):
         slide_dur = t_posval[pinu+1][0] - t_posval[pinu][0]
         if t_posval[pinu+1][1] != t_posval[pinu][1]:
-            outblocks.append(
-                [t_posval[pinu][0], slide_dur, t_posval[pinu+1][1]]
-                )
+            outblocks.append( [t_posval[pinu][0], slide_dur, t_posval[pinu+1][1]] )
     return outblocks
+
+def blocks2points(auto_pl_blocks):
+    outplacements = []
+    if auto_pl_blocks != []:
+        basepos = auto_pl_blocks[0][0]
+        basedur = auto_pl_blocks[-1][0]
+        autopl = {}
+        autopl['position'] = basepos
+        autopl['duration'] = (basedur+4)-basepos
+        autopl['points'] = []
+        for point in auto_pl_blocks:
+            #print(basepos, basedur, point)
+            if point[1] == 0: outtype = 'instant'
+            else: outtype = 'normal'
+            autopl['points'].append( {"position": point[0]-basepos, "value": point[2], "type": outtype} )
+    return autopl

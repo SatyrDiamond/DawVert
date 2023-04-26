@@ -4,6 +4,7 @@
 from functions import data_bytes
 from functions import song_tracker
 from functions import note_data
+from functions import tracks
 import plugin_input
 import json
 
@@ -258,17 +259,13 @@ class input_famitrkr_txt(plugin_input.base):
 
             cvpj_instid = insttype+'_'+instid
             cvpj_inst = {}
-            cvpj_inst["pan"] = 0.0
-            cvpj_inst["vol"] = 1.0
-            cvpj_inst["instdata"] = {}
-            #if insttype in mt_type_colors:
-            #    cvpj_inst["color"] = mt_type_colors[insttype]
+            cvpj_instdata = {}
 
             if int(instid) in famitrkr_instdata:
-                cvpj_inst["name"] = insttype+'-'+famitrkr_instdata[int(instid)][0]
+                cvpj_instname = insttype+'-'+famitrkr_instdata[int(instid)][0]
                 if insttype in retroinst_names:
-                    cvpj_inst["instdata"] = {"plugin": '2a03', "plugindata": {}}
-                    cvpj_plugdata = cvpj_inst["instdata"]["plugindata"]
+                    cvpj_instdata = {"plugin": '2a03', "plugindata": {}}
+                    cvpj_plugdata = cvpj_instdata["plugindata"]
                     if insttype == 'Square1' or insttype == 'Square2': cvpj_plugdata["wave"] = "square"
                     if insttype == 'Triangle': cvpj_plugdata["wave"] = "triangle"
                     if insttype == 'Noise': cvpj_plugdata["wave"] = "noise"
@@ -278,13 +275,13 @@ class input_famitrkr_txt(plugin_input.base):
                     setmacro(cvpj_plugdata, macro_nes, "env_hipitch", 3, famitrkr_instdata[int(instid)][4]*-1)
                     setmacro(cvpj_plugdata, macro_nes, "env_duty", 4, famitrkr_instdata[int(instid)][5]) 
                 else:
-                    cvpj_inst["instdata"] = {"plugin": 'none', "plugindata": {}}
+                    cvpj_instdata = {"plugin": 'none', "plugindata": {}}
 
             elif int(instid) in famitrkr_instdata_vrc6:
-                cvpj_inst["name"] = insttype+'-'+famitrkr_instdata_vrc6[int(instid)][0]
+                cvpj_instname = insttype+'-'+famitrkr_instdata_vrc6[int(instid)][0]
                 if insttype in retroinst_names_vrc6:
-                    cvpj_inst["instdata"] = {"plugin": 'retro', "plugindata": {}}
-                    cvpj_plugdata = cvpj_inst["instdata"]["plugindata"]
+                    cvpj_instdata = {"plugin": 'retro', "plugindata": {}}
+                    cvpj_plugdata = cvpj_instdata["plugindata"]
                     if insttype == 'VRC6Square': cvpj_plugdata["wave"] = "square"
                     if insttype == 'VRC6Saw': cvpj_plugdata["wave"] = "square"
                     setmacro(cvpj_plugdata, macro_nes_vrc6, "env_vol", 0, famitrkr_instdata_vrc6[int(instid)][1]) 
@@ -293,15 +290,14 @@ class input_famitrkr_txt(plugin_input.base):
                     setmacro(cvpj_plugdata, macro_nes_vrc6, "env_hipitch", 3, famitrkr_instdata_vrc6[int(instid)][4]*-1)
                     setmacro(cvpj_plugdata, macro_nes_vrc6, "env_duty", 4, famitrkr_instdata_vrc6[int(instid)][5])
                 else:
-                    cvpj_inst["instdata"] = {"plugin": 'none', "plugindata": {}}
+                    cvpj_instdata = {"plugin": 'none', "plugindata": {}}
 
             else:
-                cvpj_inst["name"] = insttype+'_'+instid
-                cvpj_inst["instdata"] = {"plugin": 'none', "plugindata": {}}
+                cvpj_instname = insttype+'_'+instid
+                cvpj_instdata = {"plugin": 'none', "plugindata": {}}
 
-
-            cvpj_l_instrument_data[cvpj_instid] = cvpj_inst
-            cvpj_l_instrument_order.append(cvpj_instid)
+            tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
+            tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, None, 1.0, 0.0)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True
@@ -309,8 +305,5 @@ class input_famitrkr_txt(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
 
-        cvpj_l['instruments_data'] = cvpj_l_instrument_data
-        cvpj_l['instruments_order'] = cvpj_l_instrument_order
-        
         cvpj_l['bpm'] = song_tempo
         return json.dumps(cvpj_l)

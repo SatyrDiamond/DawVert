@@ -7,6 +7,7 @@ from functions import idvals
 from functions import tracks
 from functions import note_data
 from functions import placement_data
+from functions import song
 import plugin_input
 import json
 
@@ -279,7 +280,7 @@ class input_jummbox(plugin_input.base):
         if 'introBars' in jummbox_json and 'loopBars' in jummbox_json:
             introbars = jummbox_json['introBars']*32
             loopbars = jummbox_json['loopBars']*32 + introbars
-            cvpj_l['timemarkers'] = [{'name': 'Loop', 'position': introbars, 'end': loopbars, 'type': 'loop_area'}]
+            song.add_timemarker_looparea(cvpj_l, 'Loop', introbars, loopbars)
 
         global jummbox_notesize
         jummbox_notesize = jummbox_beatsPerBar*jummbox_ticksPerBeat

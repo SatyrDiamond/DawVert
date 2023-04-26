@@ -117,12 +117,8 @@ class input_wavtool(plugin_input.base):
     def gettype(self): return 'r'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'r_track_lanes': False,
         'placement_cut': True,
-        'placement_loop': True,
-        'no_pl_auto': False,
-        'no_placements': False
+        'placement_loop': True
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):

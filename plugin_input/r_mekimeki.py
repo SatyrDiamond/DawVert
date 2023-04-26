@@ -11,10 +11,8 @@ import plugin_input
 import json
 
 def getvalue(tag, name):
-    if name in tag:
-        return tag[name]['Value']
-    else:
-        return None
+    if name in tag: return tag[name]['Value']
+    else: return None
 
 maincolor = [0.42, 0.59, 0.24]
 

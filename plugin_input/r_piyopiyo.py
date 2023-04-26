@@ -22,10 +22,6 @@ class input_piyopiyo(plugin_input.base):
     def gettype(self): return 'r'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'r_track_lanes': False,
-        'placement_cut': False,
-        'placement_loop': False,
         'no_pl_auto': True,
         'no_placements': True
         }
@@ -86,7 +82,6 @@ class input_piyopiyo(plugin_input.base):
         tracks.r_basicdata(cvpj_l, "3", 'perc', track_colors[3], TrackPVol/250, None)
 
         pmdfile.seek(trackdatapos)
-
         for tracknum in range(4):
             notelist = []
             t_placements = []
@@ -105,7 +100,6 @@ class input_piyopiyo(plugin_input.base):
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
-        
         cvpj_l['bpm'] = bpm
 
         song.add_timemarker_looparea(cvpj_l, None, loopstart, loopend)

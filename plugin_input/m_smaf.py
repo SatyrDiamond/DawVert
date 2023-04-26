@@ -165,8 +165,6 @@ class input_mmf(plugin_input.base):
         return {
         'fxrack': True,
         'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
         'no_pl_auto': True,
         'no_placements': True
         }

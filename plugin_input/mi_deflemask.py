@@ -4,6 +4,7 @@
 from functions import data_bytes
 from functions import song_tracker
 from functions import note_convert
+from functions import tracks
 import plugin_input
 import zlib
 import struct
@@ -41,14 +42,11 @@ def fxget(fxtype, fxparam, output_param, output_extra):
         arpeggio_second = fxparam & 0x0F
         output_param['arpeggio'] = [arpeggio_first, arpeggio_second]
 
-    if fxtype == 1: 
-        output_param['slide_up'] = fxparam
+    if fxtype == 1: output_param['slide_up'] = fxparam
 
-    if fxtype == 2: 
-        output_param['slide_down'] = fxparam
+    if fxtype == 2: output_param['slide_down'] = fxparam
 
-    if fxtype == 3: 
-        output_param['slide_to_note'] = fxparam
+    if fxtype == 3: output_param['slide_to_note'] = fxparam
 
     if fxtype == 4: 
         vibrato_params = {}
@@ -70,24 +68,19 @@ def fxget(fxtype, fxparam, output_param, output_extra):
         tremolo_params['speed'], tremolo_params['depth'] = data_bytes.splitbyte(fxparam)
         output_param['tremolo'] = tremolo_params
 
-    if fxtype == 8: 
-        output_param['pan'] = (fxparam-128)/128
+    if fxtype == 8: output_param['pan'] = (fxparam-128)/128
 
-    if fxtype == 9: 
-        output_param['sample_offset'] = fxparam*256
+    if fxtype == 9: output_param['sample_offset'] = fxparam*256
 
     if fxtype == 10:
         pos, neg = data_bytes.splitbyte(fxparam)
         output_param['vol_slide'] = (neg*-1) + pos
 
-    if fxtype == 11: 
-        output_extra['pattern_jump'] = fxparam
+    if fxtype == 11: output_extra['pattern_jump'] = fxparam
 
-    if fxtype == 12: 
-        output_param['vol'] = fxparam/64
+    if fxtype == 12: output_param['vol'] = fxparam/64
 
-    if fxtype == 13: 
-        output_extra['break_to_row'] = fxparam
+    if fxtype == 13: output_extra['break_to_row'] = fxparam
 
     if fxtype == 15:
         if fxparam < 32: output_extra['speed'] = fxparam
@@ -138,9 +131,6 @@ class input_cvpj_r(plugin_input.base):
             exit()
 
         cvpj_l = {}
-
-        cvpj_l_instrument_data = {}
-        cvpj_l_instrument_order = []
 
         # FORMAT FLAGS
         dmf_version = int.from_bytes(bio_dmf.read(1), "little")
@@ -333,14 +323,9 @@ class input_cvpj_r(plugin_input.base):
                         if s_chantype == 'fm': output_note += 12
 
                     if r_inst != -1 and output_note != None: output_inst = r_inst
-
-                    if rownum == 0:
-                        table_rows.append([{'firstrow': 1},[output_note, output_inst, output_param, output_extra]])
-                    else:
-                        table_rows.append([{},[output_note, output_inst, output_param, output_extra]])
-
+                    if rownum == 0: table_rows.append([{'firstrow': 1},[output_note, output_inst, output_param, output_extra]])
+                    else: table_rows.append([{},[output_note, output_inst, output_param, output_extra]])
                 dmf_patterns[channum][patnum] = table_rows
-
 
         mt_pat = dmf_patterns
         mt_ord = t_orders
@@ -348,11 +333,8 @@ class input_cvpj_r(plugin_input.base):
         mt_ch_names = t_channames
         mt_type_colors = chiptypecolors
 
-
         song_tracker.multi_convert(cvpj_l, dmf_TOTAL_ROWS_PER_PATTERN, mt_pat, mt_ord, mt_ch_insttype)
-
         total_used_instruments = song_tracker.get_multi_used_instruments()
-
         for total_used_instrument in total_used_instruments:
             insttype = total_used_instrument[0]
             dmf_instid = total_used_instrument[1]
@@ -361,31 +343,29 @@ class input_cvpj_r(plugin_input.base):
             cvpj_instid = insttype+'_'+dmf_instid
             cvpj_inst = {}
             #print(dmf_instnames)
-            cvpj_inst["name"] = dmf_instnames[int(dmf_instid)]+' ('+chipname[insttype]+')'
-            cvpj_inst["pan"] = 0.0
-            cvpj_inst["vol"] = 1.0
-            if insttype in chiptypecolors:
-                cvpj_inst["color"] = chiptypecolors[insttype]
-            cvpj_inst["instdata"] = {}
-            cvpj_inst["instdata"]["plugindata"] = {}
+            cvpj_instname = dmf_instnames[int(dmf_instid)]+' ('+chipname[insttype]+')'
+            cvpj_instcolor = None
+            if insttype in chiptypecolors: cvpj_instcolor = chiptypecolors[insttype]
+            cvpj_instdata = {}
+            cvpj_instdata["plugindata"] = {}
             if insttype == 'square' or insttype == 'noise':
-                cvpj_inst["instdata"]["plugin"] = 'retro'
-                cvpj_inst["instdata"]["plugindata"]['wave'] = insttype
+                cvpj_instdata["plugin"] = 'retro'
+                cvpj_instdata["plugindata"]['wave'] = insttype
                 if 'env_volume' in dmf_instdata:
-                    cvpj_inst["instdata"]["plugindata"]['env_vol'] = {}
+                    cvpj_instdata["plugindata"]['env_vol'] = {}
                     valuet = []
                     for item in dmf_instdata['env_volume']['values']: valuet.append(item)
-                    cvpj_inst["instdata"]["plugindata"]['env_vol']['values'] = valuet
+                    cvpj_instdata["plugindata"]['env_vol']['values'] = valuet
                     if dmf_instdata['env_volume']['looppos'] != -1:
-                        cvpj_inst["instdata"]["plugindata"]['env_vol']['loop'] = dmf_instdata['env_volume']['looppos']
+                        cvpj_instdata["plugindata"]['env_vol']['loop'] = dmf_instdata['env_volume']['looppos']
             elif insttype == 'opn2':
-                cvpj_inst["instdata"]["plugin"] = 'opn2'
-                cvpj_inst["instdata"]["plugindata"] = dmf_instdata['fmdata']
+                cvpj_instdata["plugin"] = 'opn2'
+                cvpj_instdata["plugindata"] = dmf_instdata['fmdata']
             else: 
-                cvpj_inst["instdata"]["plugin"] = 'none'
+                cvpj_instdata["plugin"] = 'none'
             
-            cvpj_l_instrument_data[cvpj_instid] = cvpj_inst
-            cvpj_l_instrument_order.append(cvpj_instid)
+            tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
+            tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, 1.0, 0.0)
 
         #dmf_insts
 
@@ -398,9 +378,6 @@ class input_cvpj_r(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-
-        cvpj_l['instruments_data'] = cvpj_l_instrument_data
-        cvpj_l['instruments_order'] = cvpj_l_instrument_order
         
         cvpj_l['bpm'] = 140
         return json.dumps(cvpj_l)

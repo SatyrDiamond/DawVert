@@ -27,12 +27,8 @@ class input_soundclub2(plugin_input.base):
     def gettype(self): return 'ri'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
         'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'no_pl_auto': True,
-        'no_placements': False
+        'no_pl_auto': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):

@@ -28,7 +28,7 @@ def parsenotes(bio_data, notelen):
         if n_sharp == 2: out_offset = 1
         if n_sharp == 1: out_offset = -1
         out_note = note_data.keynum_to_note(out_key, out_oct-3)
-        notesout[n_layer].append(note_data.mx_makenote(str(n_inst), (n_pos)*notelen, (n_len/4)*notelen, out_note+out_offset, None, None))
+        notesout[n_layer].append(note_data.mx_makenote(str(n_inst), (n_pos)*notelen, (n_len/4)*notelen, out_note+out_offset, n_vol/1.5, n_pan))
     return patsize-32, notelen, notesout
 
 class input_notessimo_v2(plugin_input.base):

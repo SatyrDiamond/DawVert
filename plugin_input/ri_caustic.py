@@ -172,7 +172,7 @@ class input_cvpj_r(plugin_input.base):
         MSTR = CausticData['MSTR']
         AUTO_data = CausticData['AUTO']
 
-        idvals_inst_caustic = idvals.parse_idvalscsv('idvals/caustic_inst.csv')
+        idvals_inst_caustic = idvals.parse_idvalscsv('data_idvals/caustic_inst.csv')
 
         cvpj_l = {}
         

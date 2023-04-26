@@ -58,11 +58,11 @@ class input_ceol(plugin_input.base):
 
         cvpj_l_keynames_data = {}
 
-        idvals_inst_midi = idvals.parse_idvalscsv('idvals/midi_inst.csv')
-        idvals_inst_bosca = idvals.parse_idvalscsv('idvals/boscaceoil_inst.csv')
-        idvals_drumkit_midi = idvals.parse_idvalscsv('idvals/boscaceoil_drumkit_midi.csv')
-        idvals_drumkit_simple = idvals.parse_idvalscsv('idvals/boscaceoil_drumkit_simple.csv')
-        idvals_drumkit_sion = idvals.parse_idvalscsv('idvals/boscaceoil_drumkit_sion.csv')
+        idvals_inst_midi = idvals.parse_idvalscsv('data_idvals/midi_inst.csv')
+        idvals_inst_bosca = idvals.parse_idvalscsv('data_idvals/boscaceoil_inst.csv')
+        idvals_drumkit_midi = idvals.parse_idvalscsv('data_idvals/boscaceoil_drumkit_midi.csv')
+        idvals_drumkit_simple = idvals.parse_idvalscsv('data_idvals/boscaceoil_drumkit_simple.csv')
+        idvals_drumkit_sion = idvals.parse_idvalscsv('data_idvals/boscaceoil_drumkit_sion.csv')
 
         cvpj_l_keynames_data['drumkit_midi'] = idvals.idval2drumkeynames(idvals_drumkit_midi)
         cvpj_l_keynames_data['drumkit_simple'] = idvals.idval2drumkeynames(idvals_drumkit_simple)

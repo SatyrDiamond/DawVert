@@ -62,7 +62,7 @@ class input_mariopaint_msq(plugin_input.base):
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global cvpj_notelist
-        idvals_mariopaint_inst = idvals.parse_idvalscsv('idvals/mariopaint_inst.csv')
+        idvals_mariopaint_inst = idvals.parse_idvalscsv('data_idvals/mariopaint_inst.csv')
         cvpj_l = {}
         cvpj_notelist = []
         msq_values = {}

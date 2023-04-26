@@ -254,7 +254,7 @@ class input_jummbox(plugin_input.base):
 
         cvpj_l = {}
 
-        idvals_inst_beepbox = idvals.parse_idvalscsv('idvals/beepbox_inst.csv')
+        idvals_inst_beepbox = idvals.parse_idvalscsv('data_idvals/beepbox_inst.csv')
 
         bbcvpj_placementsize = []
         bbcvpj_placementnames = {}

@@ -42,8 +42,8 @@ class output_cvpj_f(plugin_output.base):
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
 
-        idvals_names_gmmidi = idvals.parse_idvalscsv('idvals/names_gmmidi.csv')
-        idvals_names_gmmidi_drums = idvals.parse_idvalscsv('idvals/names_gmmidi_drums.csv')
+        idvals_names_gmmidi = idvals.parse_idvalscsv('data_idvals/names_gmmidi.csv')
+        idvals_names_gmmidi_drums = idvals.parse_idvalscsv('data_idvals/names_gmmidi_drums.csv')
  
         wordlist_drums = list(idvals_names_gmmidi_drums.keys())
         wordlist = list(idvals_names_gmmidi.keys())

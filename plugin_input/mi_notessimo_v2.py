@@ -65,7 +65,7 @@ class input_notessimo_v2(plugin_input.base):
         tempo_table = struct.unpack('>'+'H'*100, nv2_data.read(200))
 
         cvpj_l = {}
-        idvals_inst_notetess = idvals.parse_idvalscsv('idvals/notessimo_v2_inst.csv')
+        idvals_inst_notetess = idvals.parse_idvalscsv('data_idvals/notessimo_v2_inst.csv')
 
         tracks.fxrack_add(cvpj_l, 1, 'Drums', None, 1, 0)
 

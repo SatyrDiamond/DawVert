@@ -11,8 +11,6 @@ from functions import idvals
 import plugin_input
 import json
 
-l_drum_name = ["Bass 1", "Bass 2", "Snare 1", "Snare 2", "Tom 1", "Hi-Hat Close", "Hi-Hat Open", "Crash", "Perc 1", "Perc 2", "Bass 3", "Tom 2"]
-
 l_org_colors = [[0.23, 0.30, 0.99],
 [0.62, 0.11, 0.12],
 [0.62, 0.16, 0.87],
@@ -99,7 +97,7 @@ class input_orgyana(plugin_input.base):
     def parse(self, input_file, extra_param):
         cvpj_l = {}
 
-        idvals_orgyana_inst_drums = idvals.parse_idvalscsv('idvals/orgyana_inst_drums.csv')
+        idvals_orgyana_inst_drums = idvals.parse_idvalscsv('data_idvals/orgyana_inst_drums.csv')
 
         bio_org = open(input_file, 'rb')
         org_type = bio_org.read(6)

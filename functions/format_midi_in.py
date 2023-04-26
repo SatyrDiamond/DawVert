@@ -7,9 +7,9 @@ from functions import data_values
 from functions import idvals
 from functions import tracks
 
-idvals_midi_ctrl = idvals.parse_idvalscsv('idvals/midi_ctrl.csv')
-idvals_midi_inst = idvals.parse_idvalscsv('idvals/midi_inst.csv')
-idvals_midi_inst_drums = idvals.parse_idvalscsv('idvals/midi_inst_drums.csv')
+idvals_midi_ctrl = idvals.parse_idvalscsv('data_idvals/midi_ctrl.csv')
+idvals_midi_inst = idvals.parse_idvalscsv('data_idvals/midi_inst.csv')
+idvals_midi_inst_drums = idvals.parse_idvalscsv('data_idvals/midi_inst_drums.csv')
 
 cvpj_l = {}
 cvpj_l_playlist = {}

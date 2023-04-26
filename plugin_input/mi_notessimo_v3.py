@@ -16,7 +16,7 @@ import zipfile
 import math
 import xml.etree.ElementTree as ET
 
-idvals_inst_notetess = idvals.parse_idvalscsv('idvals/notessimo_v3_inst.csv')
+idvals_inst_notetess = idvals.parse_idvalscsv('data_idvals/notessimo_v3_inst.csv')
 
 global lists_data
 global used_inst

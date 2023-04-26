@@ -46,7 +46,7 @@ class input_gt_mnbs(plugin_input.base):
         nbs_len = nbs_file.tell()
         nbs_file.seek(0)
 
-        idvals_inst_mnbs = idvals.parse_idvalscsv('idvals/noteblockstudio_inst.csv')
+        idvals_inst_mnbs = idvals.parse_idvalscsv('data_idvals/noteblockstudio_inst.csv')
 
         # PART 1: HEADER
         nbs_startbyte = int.from_bytes(nbs_file.read(2), "little")

@@ -19,7 +19,6 @@ keytable = [-3 ,-1 ,0  ,2  ,4  ,5  ,7  ,9  ,11 ,12 ,14 ,16 ,17 ,19 ,21 ,23 ,24 ]
 def addnotes(n_pos, n_len, inst, txt, chordvolume):
     noteoffset = 0
     notetable = []
-
     notestr = ""
     for noteletter in txt:
         notestr += noteletter
@@ -27,16 +26,18 @@ def addnotes(n_pos, n_len, inst, txt, chordvolume):
             if len(notestr) == 1: notestr = ' '+notestr
             notetable.append(notestr)
             notestr = ""
-
     for s_note in notetable:
         symbol = s_note[0]
         outnote = keytable[notekeys.index(s_note[1])]
         if symbol == '-': outnote -= 1
         if symbol == '+': outnote += 1
         cvpj_notelist.append(note_data.mx_makenote(inst, n_pos, n_len, outnote, chordvolume, None))
-
     noteoffset = 0
 
+def add_tempo_point(cvpj_l, position, value, notelen): 
+    tempo_placement = {'position': position, 'duration': notelen}
+    tempo_placement['points'] = [{"position": 0, "value": value*(notelen/4)}]
+    tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', tempo_placement)
 
 class input_mariopaint_mss(plugin_input.base):
     def __init__(self): pass
@@ -45,14 +46,7 @@ class input_mariopaint_mss(plugin_input.base):
     def getname(self): return 'Advanced Mario Sequencer'
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
-        return {
-        'fxrack': False,
-        'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': True
-        }
+        return {'r_track_lanes': True, 'no_placements': True}
     def supported_autodetect(self): return True
     def detect(self, input_file):
         output = False
@@ -66,25 +60,15 @@ class input_mariopaint_mss(plugin_input.base):
         global cvpj_notelist
         tree = ET.parse(input_file)
         root = tree.getroot()
-
         idvals_mariopaint_inst = idvals.parse_idvalscsv('data_idvals/mariopaint_inst.csv')
-
         cvpj_l = {}
-
         cvpj_notelist = []
-
         mss_measure = int(root.get('measure'))
         chords = tree.findall('chord')
-
         mss_tempo, notelen = song.get_lower_tempo(int(root.get('tempo')), 4, 180)
-
-        auto_tempo = []
-        tempo_placement = {"position": 0, 'duration': notelen}
-        tempo_placement['points'] = [{"position": 0, "value": mss_tempo}]
-        auto_tempo.append(tempo_placement)
-
         duration = 0
         curpos = 0
+        add_tempo_point(cvpj_l, 0, mss_tempo, notelen)
         for chord in chords:
             chordvolume = int(chord.get('volume'))/8
             for instname in instnames:
@@ -95,9 +79,7 @@ class input_mariopaint_mss(plugin_input.base):
             t_sm = chord.find('speedmark')
             if t_sm != None: 
                 t_sm_tempo = int(t_sm.get('tempo'))
-                tempo_placement = {'position': curpos, 'duration': notelen}
-                tempo_placement['points'] = [{"position": 0, "value": t_sm_tempo*(notelen/4)}]
-                auto_tempo.append(tempo_placement)
+                add_tempo_point(cvpj_l, curpos, t_sm_tempo, notelen)
             curpos += notelen
 
         tracks.m_playlist_pl(cvpj_l, 1, None, None, placement_data.nl2pl(cvpj_notelist))
@@ -108,8 +90,6 @@ class input_mariopaint_mss(plugin_input.base):
             if s_inst_color != None: s_inst_color = colors.moregray(s_inst_color)
             tracks.m_create_inst(cvpj_l, instname, {'plugin': 'general-midi', 'plugindata': {'bank':0, 'inst':instnames.index(instname)}})
             tracks.m_basicdata_inst(cvpj_l, instname, s_inst_name, s_inst_color, None, None)
-
-        cvpj_l['automation'] = {'main': {'bpm': auto_tempo}}
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True

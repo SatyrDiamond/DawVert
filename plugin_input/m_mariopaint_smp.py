@@ -41,15 +41,8 @@ class input_mariopaint_smp(plugin_input.base):
     def getshortname(self): return 'mariopaint_smp'
     def getname(self): return 'Super Mario Paint'
     def gettype(self): return 'm'
-    def getdawcapabilities(self): 
-        return {
-        'fxrack': False,
-        'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': True
-        }
+    def getdawcapabilities(self):
+        return {'r_track_lanes': True, 'no_placements': True}
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global cvpj_notelist
@@ -77,7 +70,6 @@ class input_mariopaint_smp(plugin_input.base):
                 s_notes = s_data[:-1]
                 s_vol = int(s_data[-1:][0].split(':')[1])
                 makenote(s_pos_out, s_notes, s_vol, notelen)
-
             linecount += 1
 
         tracks.m_playlist_pl(cvpj_l, 1, None, None, placement_data.nl2pl(cvpj_notelist))

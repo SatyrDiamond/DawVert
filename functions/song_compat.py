@@ -323,7 +323,7 @@ def single_notelists2placements(placementsdata):
 
     if numarea >= 1:
         for num in range(numarea):
-            timepoints_part = xtramath.float_range(points_items[num][0],points_items[num+1][0],points_items[num][1]*4)
+            timepoints_part = xtramath.gen_float_range(points_items[num][0],points_items[num+1][0],points_items[num][1]*4)
             for timepoints_pp in timepoints_part:
                 if timepoints_pp < points_items[num+1][0]:
                     timepoints.append([timepoints_pp, timepoints_pp+points_items[num][1]*4, False, False])

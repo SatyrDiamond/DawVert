@@ -3,6 +3,7 @@
 
 from functions import data_bytes
 from functions import placements
+from functions import placement_data
 from functions import idvals
 from functions import tracks
 import plugin_input
@@ -211,10 +212,7 @@ class input_ceol(plugin_input.base):
             for plnum in range(8):
                 plpatnum = ceol_read()
                 if plpatnum != -1:
-                    cvpj_l_placement = {}
-                    cvpj_l_placement['position'] = plpos*ceol_basic_patternlength
-                    cvpj_l_placement['duration'] = ceol_basic_patternlength
-                    cvpj_l_placement['fromindex'] = 'ceol_'+str(plpatnum).zfill(3)
+                    cvpj_l_placement = placement_data.makepl_n_mi(plpos*ceol_basic_patternlength, ceol_basic_patternlength, 'ceol_'+str(plpatnum).zfill(3))
                     tracks.m_playlist_pl_add(cvpj_l, plnum+1, cvpj_l_placement)
 
         timesig = placements.get_timesig(ceol_basic_patternlength, ceol_basic_barlength)

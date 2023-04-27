@@ -159,7 +159,7 @@ def parse_input(in_file, extra_json):
 def convert_plugins(extra_json): 
 	global platform_id
 	global convproj_j
-	CVPJ_C = plug_conv.convproj(convproj_j[0], platform_id, convproj_j[1], currentplug_output[3], convproj_j[2], currentplug_output[0], extra_json)
+	CVPJ_C = plug_conv.convproj(convproj_j[0], platform_id, convproj_j[1], currentplug_output[3], currentplug_input[1], currentplug_output[1], extra_json)
 	if CVPJ_C != None: convproj_j[0] = CVPJ_C
 
 def convert_type_output(extra_json): 

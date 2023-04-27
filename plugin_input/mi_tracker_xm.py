@@ -12,6 +12,7 @@ from functions import audio_wav
 from functions import folder_samples
 from functions import data_bytes
 from functions import tracks
+from functions import song
 
 try: import xmodits
 except: xmodits_exists = False
@@ -291,12 +292,7 @@ class input_xm(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': False
+        'r_track_lanes': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):
@@ -389,9 +385,7 @@ class input_xm(plugin_input.base):
         cvpj_l_playlist = song_tracker.song2playlist(patterntable_all, xm_song_num_channels, t_orderlist, startinststr, [0.16, 0.33, 0.53])
 
         tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, xm_song_bpm))
-
-        cvpj_l['info'] = {}
-        cvpj_l['info']['title'] = xm_name
+        song.add_info(cvpj_l, 'title', xm_name)
         
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True

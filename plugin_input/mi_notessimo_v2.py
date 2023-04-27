@@ -117,7 +117,7 @@ class input_notessimo_v2(plugin_input.base):
                 tracks.m_playlist_pl_add(cvpj_l, layer+1, cvpj_l_placement)
             song.add_timemarker_timesig(cvpj_l, None, curpos, 4, 4)
             autoplacement = auto.makepl(curpos, cursheet_data[0]*cursheet_data[1], [{"position": 0, "value": tempo_table[sheetnum]*cursheet_data[1]}])
-            tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', autoplacement)
+            tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], autoplacement)
             curpos += cursheet_data[0]*cursheet_data[1]
         
         cvpj_l['info'] = {}

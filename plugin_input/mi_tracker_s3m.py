@@ -380,7 +380,7 @@ class input_s3m(plugin_input.base):
 
         cvpj_l = {}
 
-        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', song_tracker.tempo_auto(patterntable_all, t_orderlist, s3m_speed, s3m_tempo))
+        tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, s3m_speed, s3m_tempo))
 
         placements.make_timemarkers(cvpj_l, [4,16], patlentable, None)
         

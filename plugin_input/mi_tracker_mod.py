@@ -295,7 +295,7 @@ class input_mod(plugin_input.base):
 
         cvpj_l = {}
         
-        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, cvpj_bpm))
+        tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, cvpj_bpm))
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = mod_name

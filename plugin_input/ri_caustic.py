@@ -403,7 +403,7 @@ class input_cvpj_r(plugin_input.base):
                         single_patautodata = autodata[autoid]
                         ctrlpatautopl = pat_auto_place(SEQNe_pos, SEQNe_len, single_patautodata)
                         for s_apl in ctrlpatautopl:
-                            tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(SEQNe_mach), str(autoid), s_apl)
+                            tracks.a_add_auto_pl(cvpj_l, ['plugin', 'machine'+str(SEQNe_mach), str(autoid)], s_apl)
 
 
         for t_track_placement in t_track_placements:
@@ -419,24 +419,24 @@ class input_cvpj_r(plugin_input.base):
         tempo_placement['duration'] = tempo_placement_dur
         tempo_placement['points'] = tempo_points
 
-        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', [tempo_placement])
+        tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], [tempo_placement])
 
         #'machine'+machid
 
         for machnum in range(14):
             for autoname in AUTO_data['MACH_'+str(machnum+1)]:
-                tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(machnum+1), str(autoname), tp2cvpjp(AUTO_data['MACH_'+str(machnum+1)][autoname]))
+                tracks.a_add_auto_pl(cvpj_l, ['plugin', 'machine'+str(machnum+1), str(autoname)], tp2cvpjp(AUTO_data['MACH_'+str(machnum+1)][autoname]))
 
         for mixernum in range(2):
             mixerid = 'MIXER_'+str(mixernum+1)
             for machnum in range(7):
                 auto_machid = machnum+1+(mixernum*7)
-                if machnum in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'track', 'MACH'+str(auto_machid), 'vol', tp2cvpjp(AUTO_data[mixerid][machnum]))
-                if machnum+24 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(auto_machid)+'_eq', 'bass', tp2cvpjp(AUTO_data[mixerid][machnum+24]))
-                if machnum+32 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(auto_machid)+'_eq', 'mid', tp2cvpjp(AUTO_data[mixerid][machnum+32]))
-                if machnum+40 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(auto_machid)+'_eq', 'high', tp2cvpjp(AUTO_data[mixerid][machnum+40]))
-                if machnum+64 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'track', 'MACH'+str(auto_machid), 'pan', auto.multiply(tp2cvpjp(AUTO_data[mixerid][machnum+64]),-0.5,2))
-                if machnum+72 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, 'plugin', 'machine'+str(auto_machid)+'_width', 'width', tp2cvpjp(AUTO_data[mixerid][machnum+72]))
+                if machnum in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, ['track', 'MACH'+str(auto_machid), 'vol'], tp2cvpjp(AUTO_data[mixerid][machnum]))
+                if machnum+24 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, ['plugin', 'machine'+str(auto_machid)+'_eq', 'bass'], tp2cvpjp(AUTO_data[mixerid][machnum+24]))
+                if machnum+32 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, ['plugin', 'machine'+str(auto_machid)+'_eq', 'mid'], tp2cvpjp(AUTO_data[mixerid][machnum+32]))
+                if machnum+40 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, ['plugin', 'machine'+str(auto_machid)+'_eq', 'high'], tp2cvpjp(AUTO_data[mixerid][machnum+40]))
+                if machnum+64 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, ['track', 'MACH'+str(auto_machid), 'pan'], auto.multiply(tp2cvpjp(AUTO_data[mixerid][machnum+64]),-0.5,2))
+                if machnum+72 in AUTO_data[mixerid]: tracks.a_add_auto_pl(cvpj_l, ['plugin', 'machine'+str(auto_machid)+'_width', 'width'], tp2cvpjp(AUTO_data[mixerid][machnum+72]))
 
         for mixernum in range(2):
             mixerid = 'FX_'+str(mixernum+1)
@@ -456,7 +456,7 @@ class input_cvpj_r(plugin_input.base):
                     cvpj_auto_type = 'plugin'
                     cvpj_auto_ctrl = str(autofx_ctrl)
 
-                tracks.a_add_auto_pl(cvpj_l, cvpj_auto_type, cvpj_fx_autoid, cvpj_auto_ctrl, cvpj_auto_pl)
+                tracks.a_add_auto_pl(cvpj_l, [cvpj_auto_type, cvpj_fx_autoid, cvpj_auto_ctrl], cvpj_auto_pl)
 
         master_params = {}
 
@@ -488,9 +488,9 @@ class input_cvpj_r(plugin_input.base):
             if autonum in master_idnames:
                 t_fxtypeparam = master_idnames[autonum]
                 if t_fxtypeparam[0] in ['eq', 'limiter']:
-                    tracks.a_add_auto_pl(cvpj_l, 'plugin', 'master_'+t_fxtypeparam[0], t_fxtypeparam[1], tp2cvpjp(AUTO_data['MASTER'][autonum]))
+                    tracks.a_add_auto_pl(cvpj_l, ['plugin', 'master_'+t_fxtypeparam[0], t_fxtypeparam[1]], tp2cvpjp(AUTO_data['MASTER'][autonum]))
                 if t_fxtypeparam == ['main', 'master']:
-                    tracks.a_add_auto_pl(cvpj_l, 'main', None, 'vol', tp2cvpjp(AUTO_data['MASTER'][autonum]))
+                    tracks.a_add_auto_pl(cvpj_l, ['main', 'vol'], tp2cvpjp(AUTO_data['MASTER'][autonum]))
             elif autonum >= 64:
                 autonum_calc = autonum - 64
                 autofx_slot = (autonum_calc//8)
@@ -507,7 +507,7 @@ class input_cvpj_r(plugin_input.base):
                     cvpj_auto_ctrl = str(autofx_ctrl-64)
 
                 cvpj_fx_autoid = 'master_slot'+str(autofx_slot+1)
-                tracks.a_add_auto_pl(cvpj_l, cvpj_auto_type, cvpj_fx_autoid, cvpj_auto_ctrl, cvpj_auto_pl)
+                tracks.a_add_auto_pl(cvpj_l, [cvpj_auto_type, cvpj_fx_autoid, cvpj_auto_ctrl], cvpj_auto_pl)
 
         tracks.a_addtrack_master(cvpj_l, 'Master', master_params['main']['master'], [0.52, 0.52, 0.52])
         tracks.a_fx_audio_master(cvpj_l, master_fxchaindata)

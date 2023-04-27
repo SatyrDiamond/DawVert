@@ -10,6 +10,7 @@ from functions import data_bytes
 from functions import folder_samples
 from functions import placements
 from functions import tracks
+from functions import song
 
 t_retg_alg = [['mul', 1], ['minus', 1], ['minus', 2], ['minus', 4], ['minus', 8], ['minus', 16], ['mul', 2/3], ['mul', 1/2], ['mul', 1], ['plus', 1], ['plus', 2], ['plus', 4], ['plus', 8], ['plus', 16], ['mul', 3/2], ['mul', 2]]
 
@@ -21,12 +22,7 @@ class input_s3m(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': False
+        'r_track_lanes': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):
@@ -381,12 +377,9 @@ class input_s3m(plugin_input.base):
         cvpj_l = {}
 
         tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, s3m_speed, s3m_tempo))
-
         placements.make_timemarkers(cvpj_l, [4,16], patlentable, None)
+        song.add_info(cvpj_l, 'title', s3m_name)
         
-        cvpj_l['info'] = {}
-        cvpj_l['info']['title'] = s3m_name
-
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True
 

@@ -217,12 +217,7 @@ class input_lc(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': False
+        'r_track_lanes': True
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):

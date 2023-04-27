@@ -4,6 +4,7 @@
 from functions import data_bytes
 from functions import song_tracker
 from functions import tracks
+from functions import song
 import plugin_input
 import json
 import struct
@@ -64,12 +65,7 @@ class input_trackerboy(plugin_input.base):
     def gettype(self): return 'mi'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': False
+        'r_track_lanes': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):
@@ -265,10 +261,9 @@ class input_trackerboy(plugin_input.base):
                 tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
                 tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, 0.4, 0.0)
 
-        cvpj_l['info'] = {}
-        cvpj_l['info']['title'] = trackerboy_title
-        cvpj_l['info']['author'] = trackerboy_artist
-        cvpj_l['info']['copyright'] = trackerboy_copyright
+        song.add_info(cvpj_l, 'title', trackerboy_title)
+        song.add_info(cvpj_l, 'author', trackerboy_artist)
+        song.add_info(cvpj_l, 'copyright', trackerboy_copyright)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True

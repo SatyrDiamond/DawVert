@@ -270,9 +270,7 @@ class input_jummbox(plugin_input.base):
         cvpj_l_track_order = []
         cvpj_l_track_placements = {}
 
-        if 'name' in jummbox_json:
-            cvpj_l['info'] = {}
-            cvpj_l['info']['title'] = jummbox_json['name']
+        if 'name' in jummbox_json: song.add_info(cvpj_l, 'title', jummbox_json['name'])
         
         jummbox_key = noteoffset[jummbox_json['key']]
         jummbox_channels = jummbox_json['channels']

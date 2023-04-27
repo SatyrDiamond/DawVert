@@ -14,6 +14,7 @@ from functions import note_data
 from functions import notelist_data
 from functions import colors
 from functions import auto
+from functions import song
 from functions import tracks
 
 lfoshape = ['sine', 'tri', 'saw', 'square', 'custom', 'random']
@@ -782,7 +783,7 @@ class input_lmms(plugin_input.base):
         cvpj_l['timesig_numerator'] = lmms_auto_getvalue(headX, 'timesig_numerator', 4, None)
         cvpj_l['timesig_denominator'] = lmms_auto_getvalue(headX, 'timesig_denominator', 4, None)
 
-        if projnotesX.text != None: cvpj_l['info'] = {'message': {'type': 'html', 'text': projnotesX.text}}
+        if projnotesX.text != None: song.add_info_msg(cvpj_l, 'html', projnotesX.text)
 
         lmms_decode_tracks(trksX)
         fxrackdata = lmms_decode_fxmixer(fxX)

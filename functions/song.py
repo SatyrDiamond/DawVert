@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from functions import data_values
+
 def r_getduration(projJ):
     trackplacements = projJ['track_placements']
     songduration = 0
@@ -27,12 +29,17 @@ def r_getduration(projJ):
                             songduration = p_pos+p_dur
     return songduration + 64
 
-
 def get_lower_tempo(i_tempo, i_notelen, maxtempo):
     while i_tempo > maxtempo:
         i_tempo = i_tempo/2
         i_notelen = i_notelen/2
     return (i_tempo, i_notelen)
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------ Time Markers ----------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
 
 def add_timemarker_text(cvpj_l, i_position, i_name):
     if 'timemarkers' not in cvpj_l: cvpj_l['timemarkers'] = []
@@ -54,4 +61,16 @@ def add_timemarker_timesig(cvpj_l, i_name, i_position, i_numerator, i_denominato
     timemarker_data = {'position': i_position, 'numerator': i_numerator, 'denominator': i_denominator, 'type': 'timesig'}
     if i_name != None: timemarker_data['name'] = i_name
     cvpj_l['timemarkers'].append(timemarker_data)
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------- Song Meta -----------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+def add_info(cvpj_l, i_type, i_value):
+    data_values.nested_dict_add_value(cvpj_l, ['info', i_type], i_value)
+
+def add_info_msg(cvpj_l, i_datatype, i_value):
+    data_values.nested_dict_add_value(cvpj_l, ['info', 'message'], {'type': i_datatype, 'text': i_value})
 

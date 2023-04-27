@@ -388,7 +388,7 @@ class input_xm(plugin_input.base):
         
         cvpj_l_playlist = song_tracker.song2playlist(patterntable_all, xm_song_num_channels, t_orderlist, startinststr, [0.16, 0.33, 0.53])
 
-        tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, xm_song_bpm))
+        tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, xm_song_bpm))
 
         cvpj_l['info'] = {}
         cvpj_l['info']['title'] = xm_name

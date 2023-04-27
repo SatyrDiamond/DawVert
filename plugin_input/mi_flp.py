@@ -275,7 +275,6 @@ class input_flp(plugin_input.base):
                 cvpj_l_playlist["1"]['placements_notes'].append(arrangementitemJ)
 
         cvpj_l['do_addloop'] = True
-        cvpj_l['do_lanefit'] = True
 
         cvpj_l['instruments_order'] = cvpj_l_instrument_order
         cvpj_l['instruments_data'] = cvpj_l_instrument_data

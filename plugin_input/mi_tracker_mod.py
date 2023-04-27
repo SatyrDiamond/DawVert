@@ -12,6 +12,7 @@ from functions import song_tracker
 from functions import audio_wav
 from functions import tracks
 from functions import folder_samples
+from functions import song
 
 modfinetune = [8363, 8413, 8463, 8529, 8581, 8651, 8723, 8757, 7895, 7941, 7985, 8046, 8107, 8169, 8232, 8280]
 
@@ -160,12 +161,7 @@ class input_mod(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': False
+        'r_track_lanes': True
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
@@ -297,8 +293,7 @@ class input_mod(plugin_input.base):
         
         tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, cvpj_bpm))
 
-        cvpj_l['info'] = {}
-        cvpj_l['info']['title'] = mod_name
+        song.add_info(cvpj_l, 'title', mod_name)
         
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True

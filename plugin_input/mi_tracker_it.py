@@ -13,6 +13,7 @@ from functions import folder_samples
 from functions import placements
 from functions import tracks
 from functions import data_bytes
+from functions import song
 
 try: import xmodits
 except: xmodits_exists = False
@@ -29,12 +30,7 @@ class input_it(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': False
+        'r_track_lanes': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):
@@ -534,14 +530,9 @@ class input_it(plugin_input.base):
         it_songmessage = data_bytes.readstring_fixedlen(it_file, it_header_msglength, "windows-1252")
 
         tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo))
-
         placements.make_timemarkers(cvpj_l, [4,16], patlentable, None)
-
-        cvpj_l['info'] = {}
-        cvpj_l['info']['title'] = it_header_songname
-        cvpj_l['info']['message'] = {}
-        cvpj_l['info']['message']['type'] = 'text'
-        cvpj_l['info']['message']['text'] = it_songmessage.replace('\r', '\n')
+        song.add_info(cvpj_l, 'title', it_header_songname)
+        song.add_info_msg(cvpj_l, 'text', it_songmessage.replace('\r', '\n'))
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True

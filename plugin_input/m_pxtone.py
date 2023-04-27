@@ -448,19 +448,15 @@ class input_pxtone(plugin_input.base):
             tracks.m_create_inst(cvpj_l, instid, cvpj_instdata)
             tracks.m_basicdata_inst(cvpj_l, instid, cvpj_instname, getcolor(), cvpj_instvol, 0.0)
 
-        cvpj_l['info'] = {}
-        if ptcop_song_name != None: cvpj_l['info']['title'] = ptcop_song_name
-        if ptcop_song_comment != None: 
-            cvpj_l['info']['message'] = {}
-            cvpj_l['info']['message']['type'] = 'text'
-            cvpj_l['info']['message']['text'] = ptcop_song_comment
-
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
         cvpj_l['timesig_numerator'] = ptcop_mas_beat
         cvpj_l['timesig_denominator'] = 4
 
+        if ptcop_song_name != None: song.add_info(cvpj_l, 'title', ptcop_song_name)
+        if ptcop_song_comment != None: song.add_info_msg(cvpj_l, 'text', ptcop_song_comment)
         if ptcop_mas_repeat != 0: song.add_timemarker_looparea(cvpj_l, None, ptcop_mas_repeat/timebase, ptcop_mas_last/timebase)
+
         cvpj_l['bpm'] = ptcop_mas_beattempo
         return json.dumps(cvpj_l)

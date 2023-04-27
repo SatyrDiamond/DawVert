@@ -120,9 +120,8 @@ class input_notessimo_v2(plugin_input.base):
             tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], autoplacement)
             curpos += cursheet_data[0]*cursheet_data[1]
         
-        cvpj_l['info'] = {}
-        cvpj_l['info']['title'] = text_songname
-        cvpj_l['info']['author'] = text_songauthor
+        song.add_info(cvpj_l, 'title', text_songname)
+        song.add_info(cvpj_l, 'author', text_songauthor)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True

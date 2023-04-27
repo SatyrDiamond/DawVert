@@ -5,6 +5,7 @@ from functions import data_bytes
 from functions import song_tracker
 from functions import note_convert
 from functions import tracks
+from functions import song
 import plugin_input
 import zlib
 import struct
@@ -364,9 +365,8 @@ class input_cvpj_r(plugin_input.base):
 
         #dmf_insts
 
-        cvpj_l['info'] = {}
-        cvpj_l['info']['title'] = dmf_song_name
-        cvpj_l['info']['author'] = dmf_song_author
+        song.add_info(cvpj_l, 'title', dmf_song_name)
+        song.add_info(cvpj_l, 'author', dmf_song_author)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True

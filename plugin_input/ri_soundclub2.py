@@ -207,21 +207,13 @@ class input_soundclub2(plugin_input.base):
             tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], auto.makepl(song_curpos, songpartdur, pat_tempopoints[patnum]))
             song_curpos += songpartdur
 
-        cvpj_l['track_placements'] = {}
         for s_laneddata in t_laneddata:
             for s_laned in t_laneddata[s_laneddata]:
                 tracks.r_pl_notes_laned(cvpj_l, 'sc2_'+str(s_laneddata), str(s_laned), t_laneddata[s_laneddata][s_laned])
 
         cvpj_l['do_addloop'] = True
-
+        song.add_info_msg(cvpj_l, 'text', sc2_songdisc)
         cvpj_l['timesig_denominator'] = sc2_headerdata[4]
         cvpj_l['timesig_numerator'] = sc2_headerdata[5]
-
-        cvpj_l['info'] = {}
-
-        cvpj_l['info']['message'] = {}
-        cvpj_l['info']['message']['type'] = 'text'
-        cvpj_l['info']['message']['text'] = sc2_songdisc
-
         cvpj_l['bpm'] = sc2_globaltempo
         return json.dumps(cvpj_l)

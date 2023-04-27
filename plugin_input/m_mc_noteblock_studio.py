@@ -9,6 +9,7 @@ from functions import tracks
 from functions import idvals
 from functions import note_data
 from functions import placement_data
+from functions import song
 
 def nbs_parsekey(nbs_file, nbs_newformat):
     nbs_inst = nbs_file.read(1)[0]
@@ -151,13 +152,10 @@ class input_gt_mnbs(plugin_input.base):
             tracks.m_create_inst(cvpj_l, instid, cvpj_instdata)
             tracks.m_basicdata_inst(cvpj_l, instid, cvpj_instname, cvpj_instcolor, 1.0, 0.0)
 
-        cvpj_l['info'] = {}
-        cvpj_l['info']['title'] = nbs_song_name
-        cvpj_l['info']['author'] = nbs_song_author
-        cvpj_l['info']['original_author'] = nbs_song_orgauthor
-        cvpj_l['info']['message'] = {}
-        cvpj_l['info']['message']['type'] = 'text'
-        cvpj_l['info']['message']['text'] = nbs_description
+        song.add_info(cvpj_l, 'title', nbs_song_name)
+        song.add_info(cvpj_l, 'author', nbs_song_author)
+        song.add_info(cvpj_l, 'original_author', nbs_song_orgauthor)
+        song.add_info_msg(cvpj_l, 'text', nbs_description)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True

@@ -10,6 +10,7 @@ from functions import notelist_data
 from functions import placement_data
 from functions import note_data
 from functions import auto
+from functions import song
 import plugin_input
 import json
 import zipfile
@@ -220,9 +221,8 @@ def parse_song(songid):
     bpm = None
     song_vars = get_vars(notess_x_song)
 
-    if 'author' in song_vars: 
-        cvpj_l['info'] = {}
-        cvpj_l['info']['author'] = song_vars['author']
+    if 'author' in song_vars:
+        song.add_info(cvpj_l, 'author', song_vars['author'])
         print("[input-notessimo_v3] Song Author: " + song_vars['author'])
     if 'width' in song_vars: 
         song_length = song_vars['width']*60
@@ -248,7 +248,6 @@ def parse_song(songid):
             notess_s_row = int(s_obj.get('y'))
             notess_s_len = float(s_obj.get('l2'))*15
             notess_s_id = s_obj.get('id')
-
             notess_s_tempo = sheets_tempo[notess_s_id]
             timeline_sheets_all[notess_s_row] = timeline_addsplit(timeline_sheets_all[notess_s_row],[notess_s_pos, notess_s_len, notess_s_tempo, notess_s_id])
 
@@ -289,18 +288,14 @@ class input_notessimo_v3(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': True,
-        'r_track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': False
+        'r_track_lanes': True
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global zip_data
-        zip_data = zipfile.ZipFile(input_file, 'r')
-
         global cvpj_l
+
+        zip_data = zipfile.ZipFile(input_file, 'r')
         cvpj_l = {}
 
         tracks.fxrack_add(cvpj_l, 1, 'Drums', None, 1, 0)

@@ -11,6 +11,7 @@ from functions import note_mod
 from functions import data_bytes
 from functions import colors
 from functions import notelist_data
+from functions import song
 
 class input_flp(plugin_input.base):
     def __init__(self): pass
@@ -22,10 +23,7 @@ class input_flp(plugin_input.base):
         return {
         'fxrack': True,
         'r_track_lanes': True,
-        'placement_cut': True,
-        'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': False
+        'placement_cut': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):
@@ -285,21 +283,11 @@ class input_flp(plugin_input.base):
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['timemarkers'] = cvpj_l_timemarkers
-        cvpj_l['filtergroups'] = {}
 
-        for filtergroupnum in range(len(FL_FilterGroups)):
-            cvpj_l['filtergroups']['FLFilterGroup_'+str(filtergroupnum)] = {}
-            cvpj_l['filtergroups']['FLFilterGroup_'+str(filtergroupnum)]['name'] = FL_FilterGroups[filtergroupnum]
-
-        cvpj_l['info'] = {}
-        if 'Title' in FL_Main: cvpj_l['info']['title'] = FL_Main['Title']
-        if 'Author' in FL_Main: cvpj_l['info']['author'] = FL_Main['Author']
-        if 'Genre' in FL_Main: cvpj_l['info']['genre'] = FL_Main['Genre']
-        if 'URL' in FL_Main: cvpj_l['info']['url'] = FL_Main['URL']
-
-        if 'Comment' in FL_Main:
-            cvpj_l['info']['message'] = {}
-            cvpj_l['info']['message']['type'] = 'text'
-            cvpj_l['info']['message']['text'] = FL_Main['Comment']
+        if 'Title' in FL_Main: song.add_info(cvpj_l, 'title', FL_Main['Title'])
+        if 'Author' in FL_Main: song.add_info(cvpj_l, 'author', FL_Main['Author'])
+        if 'Genre' in FL_Main: song.add_info(cvpj_l, 'genre', FL_Main['Genre'])
+        if 'URL' in FL_Main: song.add_info(cvpj_l, 'url', FL_Main['URL'])
+        if 'Comment' in FL_Main: song.add_info_msg(cvpj_l, 'text', FL_Main['Comment'])
 
         return json.dumps(cvpj_l, indent=2)

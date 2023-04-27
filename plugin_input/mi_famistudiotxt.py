@@ -9,6 +9,7 @@ from functions import placements
 from functions import note_data
 from functions import tracks
 from functions import placement_data
+from functions import song
 
 def average(lst):
     return sum(lst) / len(lst)
@@ -416,10 +417,8 @@ class input_famistudio(plugin_input.base):
 
         timesig = placements.get_timesig(PatternLength, fst_beatlength)
         placements.make_timemarkers(cvpj_l, timesig, PatternLengthList, LoopPoint)
-
-        cvpj_l['info'] = {}
-        if 'Name' in fst_Main: cvpj_l['info']['title'] = fst_Main['Name']
-        if 'Author' in fst_Main: cvpj_l['info']['author'] = fst_Main['Author']
+        if 'Name' in fst_Main: song.add_info(cvpj_l, 'title', fst_Main['Name'])
+        if 'Author' in fst_Main: song.add_info(cvpj_l, 'author', fst_Main['Author'])
 
         cvpj_l['do_addloop'] = True
         

@@ -10,6 +10,7 @@ from functions import note_convert
 from functions import format_midi_in
 from functions import midi_exdata
 from functions import colors
+from functions import song
 
 def setinfo(cvpj_l, textin):
     global author
@@ -50,28 +51,27 @@ def setinfo(cvpj_l, textin):
         if copyrightmsg_len >= 2:
             copyrightisyear = copyrightpart[1].lstrip().split(' ', 1)
             if copyrightisyear[0].isnumeric() == True:
-                cvpj_l['info']['year'] = int(copyrightisyear[0])
-                if len(copyrightisyear) == 2:
-                    cvpj_l['info']['author'] = copyrightisyear[1]
+                song.add_info(cvpj_l, 'year', int(copyrightisyear[0]))
+                if len(copyrightisyear) == 2: song.add_info(cvpj_l, 'author', copyrightisyear[1])
             else:
-                cvpj_l['info']['author'] = copyrightisyear[0]
+                song.add_info(cvpj_l, 'author', copyrightisyear[0])
 
     # ------------------------ URL ------------------------
     if 'http://' in textin:
         urlparts = textin.split('"')
         for urlpart in urlparts:
-            if 'http://' in urlpart: cvpj_l['info']['url'] = urlpart
+            if 'http://' in urlpart: song.add_info(cvpj_l, 'url', urlpart)
 
     # ------------------------ title ------------------------
     if textin.count('"') == 2 and titlefound == False:
         titlefound = True
-        cvpj_l['info']['title'] = textin.split('"')[1::2][0]
+        song.add_info(cvpj_l, 'title', textin.split('"')[1::2][0])
 
     # ------------------------ email ------------------------
     if '.' in textin and '@' in textin:
         emailparts = textin.split('"')
         for emailpart in emailparts:
-            if '.' in emailpart and '@' in emailpart: cvpj_l['info']['email'] = emailpart
+            if '.' in emailpart and '@' in emailpart: song.add_info(cvpj_l, 'email', emailpart)
 
 class input_midi(plugin_input.base):
     def __init__(self): pass
@@ -176,10 +176,8 @@ class input_midi(plugin_input.base):
         author = None
         titlefound = False
 
-        cvpj_l['info'] = {}
-
         if midi_copyright != None:
-            cvpj_l['info']['author'] = midi_copyright
+            song.add_info(cvpj_l, 'author', midi_copyright)
             setinfo(cvpj_l, midi_copyright)
 
         for t_trackname in t_tracknames:
@@ -188,11 +186,7 @@ class input_midi(plugin_input.base):
         for songdesc in songdescline:
             song_message = song_message+songdesc+'\n'
 
-        if num_tracks != 1:
-            cvpj_l['info']['message'] = {}
-            cvpj_l['info']['message']['type'] = 'text'
-            cvpj_l['info']['message']['text'] = song_message
-        elif midi_trackname != None:
-            cvpj_l['info']['title'] = midi_trackname
+        if num_tracks != 1: song.add_info_msg(cvpj_l, 'text', song_message)
+        elif midi_trackname != None: song.add_info(cvpj_l, 'title', midi_trackname)
 
         return json.dumps(cvpj_l)

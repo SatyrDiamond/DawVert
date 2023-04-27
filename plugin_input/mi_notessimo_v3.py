@@ -262,7 +262,7 @@ def parse_song(songid):
                 tracks.m_playlist_pl_add(cvpj_l, tlsnum+1, cvpj_placement)
                 if tlsnum == 0:
                     autoplacement = auto.makepl(cvpj_p_totalpos*8, tlslen/(120/tls[3])*8, [{"position": 0, "value": tls[3]}])
-                    tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', autoplacement)
+                    tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], autoplacement)
                 cvpj_p_totalpos += tlslen/(120/tls[3])
             else: 
                 cvpj_p_totalpos += tlslen

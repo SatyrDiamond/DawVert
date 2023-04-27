@@ -239,11 +239,8 @@ def fxrack_fx_audio_append(cvpj_l, trackid, enabled, wet, auto_plug, auto_slot, 
 
 # ------------------------ Auto ------------------------
 
-def a_add_auto_pl(cvpj_l, in_type, in_id, in_name, in_autopoints):
-    if in_type in ['track', 'plugin', 'fxmixer', 'slot']:
-        data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_id, in_name], in_autopoints)
-    else: 
-        data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_name], in_autopoints)
+def a_add_auto_pl(cvpj_l, autolocation, in_autopoints):
+    data_values.nested_dict_add_to_list(cvpj_l, ['automation']+autolocation, in_autopoints)
 
 # ------------------------ NoPl Auto ------------------------
 

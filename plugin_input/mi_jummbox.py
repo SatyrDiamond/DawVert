@@ -202,7 +202,7 @@ def parse_channel(channeldata, channum):
                         bb_mod_points = note['points']
                         bb_mod_pos = basepos+bb_mod_points[0]['tick']
                         bb_mod_dur = bb_mod_points[-1]['tick'] - bb_mod_points[0]['tick']
-                        bb_mod_target = bb_def[note['pitches'][0]]
+                        bb_mod_target = bb_def[(note['pitches'][0]*-1)+5]
                         #print(bb_mod_pos, bb_mod_dur, bb_mod_target)
                         cvpj_autodata_points = []
                         for bb_mod_point in bb_mod_points:
@@ -213,14 +213,18 @@ def parse_channel(channeldata, channum):
 
                         cvpj_autodata = auto.makepl(calcval(bb_mod_pos), calcval(bb_mod_dur), cvpj_autodata_points)
 
-                        if bb_mod_target[0] == -2:
-                            if bb_mod_target[1] == 0: 
-                                cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.01)
-                                tracks.a_add_auto_pl(cvpj_l, 'main', None, 'vol', cvpj_autopl[0])
+
                         if bb_mod_target[0] == -1:
-                            if bb_mod_target[1] == 17: 
+                            if bb_mod_target[1] == 1: 
+                                cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.01)
+                                tracks.a_add_auto_pl(cvpj_l, ['main', 'vol'], cvpj_autopl[0])
+                            if bb_mod_target[1] == 2: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], 30, 1)
-                                tracks.a_add_auto_pl(cvpj_l, 'main', None, 'bpm', cvpj_autopl)
+                                tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], cvpj_autopl[0])
+                            if bb_mod_target[1] == 17: 
+                                cvpj_autopl = auto.multiply([cvpj_autodata], -250, 4)
+                                print(cvpj_autopl)
+                                tracks.a_add_auto_pl(cvpj_l, ['main', 'pitch'], cvpj_autopl[0])
             sequencecount += 1
 
 

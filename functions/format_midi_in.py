@@ -367,23 +367,23 @@ def song_end(channels):
 
             elif s_chan_auto_num == 91: 
                 wetval = do_slot_wet(schannum, '_reverb', fxrack_chan)
-                tracks.make_fxslot_simple(cvpj_l, 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_reverb', 'reverb', {})
+                tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_reverb', 'reverb', {})
 
             elif s_chan_auto_num == 92: 
                 wetval = do_slot_wet(schannum, '_tremelo', fxrack_chan)
-                tracks.make_fxslot_simple(cvpj_l, 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_tremelo', 'tremelo', {})
+                tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_tremelo', 'tremelo', {})
 
             elif s_chan_auto_num == 93: 
                 wetval = do_slot_wet(schannum, '_chorus', fxrack_chan)
-                tracks.make_fxslot_simple(cvpj_l, 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_chorus', 'chorus', {})
+                tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_chorus', 'chorus', {})
 
             elif s_chan_auto_num == 94: 
                 wetval = do_slot_wet(schannum, '_detuning', fxrack_chan)
-                tracks.make_fxslot_simple(cvpj_l, 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_detuning', 'detuning', {})
+                tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_detuning', 'detuning', {})
 
             elif s_chan_auto_num == 95: 
                 wetval = do_slot_wet(schannum, '_phaser', fxrack_chan)
-                tracks.make_fxslot_simple(cvpj_l, 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_phaser', 'phaser', {})
+                tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', 'fxrack', fxrack_chan, 1, wetval, fxrack_chan+'_phaser', 'phaser', {})
 
             elif s_chan_auto_num == 'pitch':
                 add_auto_to_song_no_mixer(midiauto2cvpjauto(s_chan_auto['pitch'],1/8,0), 'pitch', midi_channum, s_chan_trackids)

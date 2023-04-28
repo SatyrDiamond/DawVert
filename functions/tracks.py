@@ -136,9 +136,6 @@ def m_playlist_pl(cvpj_l, idnum, trk_name, trk_color, placements_notes):
 def m_playlist_pl_add(cvpj_l, idnum, placement_data):
     data_values.nested_dict_add_to_list(cvpj_l, ['playlist', str(idnum), 'placements_notes'], placement_data)
 
-def m_fx_audio_inst(cvpj_l, idnum, chain_fx_audio):
-    if chain_fx_audio != None: cvpj_l['instruments_data'][idnum]['chain_fx_audio'] = chain_fx_audio
-
 def m_add_nle(cvpj_l, patid, nle_notelist):
     if 'notelistindex' not in cvpj_l: cvpj_l['notelistindex'] = {}
     cvpj_l['notelistindex'][patid] = {}
@@ -179,7 +176,6 @@ def fxrack_param(cvpj_l, fx_num, v_name, v_value):
     data_values.nested_dict_add_value(cvpj_l, ['fxrack', str(fx_num)], {})
     cvpj_l['fxrack'][str(fx_num)][v_name] = v_value
 
-
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------ FX ------------------------------------------------------------------
@@ -190,6 +186,7 @@ def fxrack_param(cvpj_l, fx_num, v_name, v_value):
 def get_fxcvpjlocation(fxlocation, trackid):
     out_location = None
     if fxlocation == 'track': out_location = ['track_data', trackid]
+    if fxlocation == 'instrument': out_location = ['instruments_data', trackid]
     if fxlocation == 'master': out_location = ['track_master']
     if fxlocation == 'fxrack': out_location = ['fxrack', str(trackid)]
     return out_location

@@ -420,7 +420,7 @@ def lmms_decode_inst_track(trkX, trackid):
         cvpj_l_track_inst['midi'] = midiJ
 
     xml_a_fxchain = trkX_insttr.findall('fxchain')
-    if len(xml_a_fxchain) != 0: tracks.r_fx_audio(cvpj_l, trackid, lmms_decode_fxchain(xml_a_fxchain[0]))
+    if len(xml_a_fxchain) != 0: tracks.add_fxslot(cvpj_l, 'track', trackid, 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
 
     cvpj_l_track_inst['plugindata'] = {}
 
@@ -450,7 +450,7 @@ def lmms_decode_inst_track(trkX, trackid):
         for pluginparam in lmms_autovals[0]:
             cvpj_l_arpeggiator_plugindata['data'][pluginparam] = lmms_auto_getvalue(trkX_arpeggiator, pluginparam, 0, ['plugin', auto_id_plugin, pluginparam])
         cvpj_l_arpeggiator_enabled = lmms_auto_getvalue(trkX_arpeggiator, 'arp-enabled', 0, ['slot', auto_id_slot, 'enabled'])
-        tracks.r_fx_notes_append(cvpj_l, trackid, cvpj_l_arpeggiator_enabled, 
+        tracks.add_fxslot_basic(cvpj_l, 'track', trackid, 'notes', cvpj_l_arpeggiator_enabled, 
                                     auto_id_plugin, auto_id_slot, "native-lmms", cvpj_l_arpeggiator_plugindata)
 
 
@@ -464,7 +464,7 @@ def lmms_decode_inst_track(trkX, trackid):
         for pluginparam in lmms_autovals[0]:
             cvpj_l_chordcreator_plugindata['data'][pluginparam] = lmms_auto_getvalue(trkX_chordcreator, pluginparam, 0, ['plugin', auto_id_plugin, pluginparam])
         cvpj_l_chordcreator_enabled = lmms_auto_getvalue(trkX_arpeggiator, 'chord-enabled', 0, ['slot', auto_id_slot, 'enabled'])
-        tracks.r_fx_notes_append(cvpj_l, trackid, cvpj_l_chordcreator_enabled, 
+        tracks.add_fxslot_basic(cvpj_l, 'track', trackid, 'notes', cvpj_l_chordcreator_enabled, 
                                     auto_id_plugin, auto_id_slot, "native-lmms", cvpj_l_chordcreator_plugindata)
 
 
@@ -506,7 +506,7 @@ def lmms_decode_audio_track(trkX, trackid):
     cvpj_vol = hundredto1(float(lmms_auto_getvalue(trkX_audiotr, 'vol', 1, ['track', trackid, 'vol'])))
     tracks.r_basicdata(cvpj_l, trackid, cvpj_name, None, cvpj_vol, cvpj_pan)
     xml_a_fxchain = trkX_audiotr.findall('fxchain')
-    if len(xml_a_fxchain) != 0: tracks.r_fx_audio(cvpj_l, trackid, lmms_decode_fxchain(xml_a_fxchain[0]))
+    if len(xml_a_fxchain) != 0: tracks.add_fxslot(cvpj_l, 'track', trackid, 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
     print('[input-lmms]')
     tracks.r_pl_audio(cvpj_l, trackid, lmms_decode_audioplacements(trkX))
     tracks.r_param_inst(cvpj_l, trackid, 'enabled', int(not int(lmms_auto_getvalue(trkX, 'muted', 1, ['track', trackid, 'enabled']))))

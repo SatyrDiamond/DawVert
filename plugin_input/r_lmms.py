@@ -450,7 +450,7 @@ def lmms_decode_inst_track(trkX, trackid):
         for pluginparam in lmms_autovals[0]:
             cvpj_l_arpeggiator_plugindata['data'][pluginparam] = lmms_auto_getvalue(trkX_arpeggiator, pluginparam, 0, ['plugin', auto_id_plugin, pluginparam])
         cvpj_l_arpeggiator_enabled = lmms_auto_getvalue(trkX_arpeggiator, 'arp-enabled', 0, ['slot', auto_id_slot, 'enabled'])
-        tracks.add_fxslot_basic(cvpj_l, 'track', trackid, 'notes', cvpj_l_arpeggiator_enabled, 
+        tracks.add_fxslot_basic(cvpj_l, 'track', trackid, 'notes', cvpj_l_arpeggiator_enabled, None,
                                     auto_id_plugin, auto_id_slot, "native-lmms", cvpj_l_arpeggiator_plugindata)
 
 
@@ -464,7 +464,7 @@ def lmms_decode_inst_track(trkX, trackid):
         for pluginparam in lmms_autovals[0]:
             cvpj_l_chordcreator_plugindata['data'][pluginparam] = lmms_auto_getvalue(trkX_chordcreator, pluginparam, 0, ['plugin', auto_id_plugin, pluginparam])
         cvpj_l_chordcreator_enabled = lmms_auto_getvalue(trkX_arpeggiator, 'chord-enabled', 0, ['slot', auto_id_slot, 'enabled'])
-        tracks.add_fxslot_basic(cvpj_l, 'track', trackid, 'notes', cvpj_l_chordcreator_enabled, 
+        tracks.add_fxslot_basic(cvpj_l, 'track', trackid, 'notes', cvpj_l_chordcreator_enabled, None,
                                     auto_id_plugin, auto_id_slot, "native-lmms", cvpj_l_chordcreator_plugindata)
 
 

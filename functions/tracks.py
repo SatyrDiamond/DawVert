@@ -92,26 +92,7 @@ def r_pl_laned(cvpj_l, trackid, laneddata):
     cvpj_l['track_placements'][trackid] = {}
     if laneddata != None: cvpj_l['track_placements'][trackid] = laneddata
 
-def r_fx_audio(cvpj_l, trackid, chain_fx_audio):
-    data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'chain_fx_audio'], chain_fx_audio)
 
-def r_fx_audio_append(cvpj_l, trackid, enabled, wet, auto_plug, auto_slot, pluginname, plugindata):
-    fxslot_data = {"plugin": pluginname, "plugindata": plugindata}
-    if auto_plug != None: fxslot_data['pluginautoid'] = auto_plug
-    if auto_slot != None: fxslot_data['slotautoid'] = auto_slot
-    if enabled != None: fxslot_data['enabled'] = enabled
-    if wet != None: fxslot_data['wet'] = wet
-    data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'chain_fx_audio'], fxslot_data)
-
-def r_fx_notes(cvpj_l, trackid, chain_fx_note):
-    data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'instdata', 'chain_fx_notes'], chain_fx_note)
-
-def r_fx_notes_append(cvpj_l, trackid, enabled, auto_plug, auto_slot, pluginname, plugindata):
-    fxslot_data = {"plugin": pluginname, "plugindata": plugindata}
-    if auto_plug != None: fxslot_data['pluginautoid'] = auto_plug
-    if auto_slot != None: fxslot_data['slotautoid'] = auto_slot
-    if enabled != None: fxslot_data['enabled'] = enabled
-    data_values.nested_dict_add_to_list(cvpj_l, ['track_data', trackid, 'chain_fx_notes'], fxslot_data)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -173,17 +154,6 @@ def m_add_nle_info(cvpj_l, patid, nle_name, nle_color):
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
-def make_fxslot_simple(cvpj_l, nativedawname, location, trackid, enabled, wet, auto_id, fx_type, fx_data):
-    plugindata = {}
-    plugindata['name'] = fx_type
-    plugindata['data'] = fx_data
-    if location == 'master':
-        a_fx_audio_master_append(cvpj_l, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
-    if location == 'r_track':
-        r_fx_audio_append(cvpj_l, trackid, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
-    if location == 'fxrack':
-        fxrack_fx_audio_append(cvpj_l, trackid, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
-
 def a_addtrack_master(cvpj_l, i_name, i_vol, i_color):
     if 'track_master' not in cvpj_l: cvpj_l['track_master'] = {}
     if i_name != None: cvpj_l['track_master']['name'] = i_name
@@ -192,17 +162,6 @@ def a_addtrack_master(cvpj_l, i_name, i_vol, i_color):
 
 def a_addtrack_master_param(cvpj_l, v_name, v_value):
     cvpj_l['track_master'][v_name] = v_value
-
-def a_fx_audio_master(cvpj_l, chain_fx_audio):
-    data_values.nested_dict_add_to_list(cvpj_l, ['track_master', 'chain_fx_audio'], chain_fx_audio)
-
-def a_fx_audio_master_append(cvpj_l, enabled, wet, auto_plug, auto_slot, pluginname, plugindata):
-    fxslot_data = {"plugin": pluginname, "plugindata": plugindata}
-    if auto_plug != None: fxslot_data['pluginautoid'] = auto_plug
-    if auto_slot != None: fxslot_data['slotautoid'] = auto_slot
-    if enabled != None: fxslot_data['enabled'] = enabled
-    if wet != None: fxslot_data['wet'] = wet
-    data_values.nested_dict_add_to_list(cvpj_l, ['track_master', 'chain_fx_audio'], fxslot_data)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -220,22 +179,47 @@ def fxrack_param(cvpj_l, fx_num, v_name, v_value):
     data_values.nested_dict_add_value(cvpj_l, ['fxrack', str(fx_num)], {})
     cvpj_l['fxrack'][str(fx_num)][v_name] = v_value
 
-def fxrack_fx_audio(cvpj_l, fx_num, chain_fx_audio):
-    data_values.nested_dict_add_to_list(cvpj_l, ['fxrack', str(fx_num)], chain_fx_audio)
 
-def fxrack_fx_audio_append(cvpj_l, trackid, enabled, wet, auto_plug, auto_slot, pluginname, plugindata):
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------ FX ------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+def get_fxcvpjlocation(fxlocation, trackid):
+    out_location = None
+    if fxlocation == 'track': out_location = ['track_data', trackid]
+    if fxlocation == 'master': out_location = ['track_master']
+    if fxlocation == 'fxrack': out_location = ['fxrack', str(trackid)]
+    return out_location
+
+def add_fxslot(cvpj_l, fxlocation, trackid, fxtype, chain_fx_data):
+    out_location = get_fxcvpjlocation(fxlocation, trackid)
+    if fxtype == 'audio': data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_audio'], chain_fx_data)
+    if fxtype == 'notes': data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_notes'], chain_fx_data)
+
+def add_fxslot_basic(cvpj_l, fxlocation, trackid, fxtype, enabled, wet, auto_plug, auto_slot, pluginname, plugindata):
     fxslot_data = {"plugin": pluginname, "plugindata": plugindata}
     if auto_plug != None: fxslot_data['pluginautoid'] = auto_plug
     if auto_slot != None: fxslot_data['slotautoid'] = auto_slot
     if enabled != None: fxslot_data['enabled'] = enabled
     if wet != None: fxslot_data['wet'] = wet
-    data_values.nested_dict_add_to_list(cvpj_l, ['fxrack', str(trackid), 'chain_fx_audio'], fxslot_data)
+    add_fxslot(cvpj_l, fxlocation, trackid, fxtype, fxslot_data)
+
+def add_fxslot_native(cvpj_l, fxtype, nativedawname, fxlocation, trackid, enabled, wet, auto_id, fx_type, fx_data):
+    plugindata = {}
+    plugindata['name'] = fx_type
+    plugindata['data'] = fx_data
+    add_fxslot_basic(cvpj_l, fxlocation, trackid, fxtype, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------ Auto ------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 # ------------------------ Auto ------------------------
 

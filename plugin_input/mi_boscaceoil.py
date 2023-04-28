@@ -84,11 +84,8 @@ class input_ceol(plugin_input.base):
         ceol_basic_barlength = ceol_read()
         print('[input-boscaceoil] Bar Length: '+str(ceol_basic_barlength))
 
-        cvpj_master_fxchain = []
-        cvpj_master_fxchain.append(make_fxslot(globalfxname[ceol_basic_effect], {'power': ceol_basic_effectvalue}))
-
         tracks.a_addtrack_master(cvpj_l, 'Master', 1, [0.31373, 0.39608, 0.41569])
-        tracks.a_fx_audio_master(cvpj_l, cvpj_master_fxchain)
+        tracks.add_fxslot(cvpj_l, 'master', None, 'audio', make_fxslot(globalfxname[ceol_basic_effect], {'power': ceol_basic_effectvalue}))
 
         ceol_numinstrument = ceol_read()
 

@@ -198,21 +198,21 @@ class input_onlinesequencer(plugin_input.base):
             tracks.r_basicdata(cvpj_l, cvpj_instid, inst_name, inst_color, trk_vol, trk_pan)
             tracks.r_pl_notes(cvpj_l, cvpj_instid, placement_data.nl2pl(cvpj_notelist))
 
-            tracks.make_fxslot_simple(cvpj_l, 'onlineseq', 'r_track', cvpj_instid, 
+            tracks.add_fxslot_native(cvpj_l, 'audio', 'onlineseq', 'track', cvpj_instid, 
                 data_values.get_value(onlseq_s_iparams, 'delay_on', 0), 
                 None, 
                 cvpj_instid+'_delay', 'delay', {})
 
             fx_distort_data = {}
             fx_distort_data['distort_type'] = data_values.get_value(onlseq_s_iparams, 'distort_type', 0)
-            tracks.make_fxslot_simple(cvpj_l, 'onlineseq', 'r_track', cvpj_instid, 
+            tracks.add_fxslot_native(cvpj_l, 'audio', 'onlineseq', 'track', cvpj_instid, 
                 None, 
                 data_values.get_value(onlseq_s_iparams, 'distort_wet', 1), 
                 cvpj_instid+'_distort', 'distort', fx_distort_data)
 
             fx_reverb_data = {}
             fx_reverb_data['reverb_type'] = data_values.get_value(onlseq_s_iparams, 'reverb_type', 0)
-            tracks.make_fxslot_simple(cvpj_l, 'onlineseq', 'r_track', cvpj_instid, 
+            tracks.add_fxslot_native(cvpj_l, 'audio', 'onlineseq', 'track', cvpj_instid, 
                 data_values.get_value(onlseq_s_iparams, 'reverb_on', 0), 
                 data_values.get_value(onlseq_s_iparams, 'reverb_wet', 1), 
                 cvpj_instid+'_reverb', 'reverb', fx_reverb_data)
@@ -221,7 +221,7 @@ class input_onlinesequencer(plugin_input.base):
             fx_eq_data['eq_high'] = data_values.get_value(onlseq_s_iparams, 'eq_high', 0)
             fx_eq_data['eq_mid'] = data_values.get_value(onlseq_s_iparams, 'eq_mid', 0)
             fx_eq_data['eq_low'] = data_values.get_value(onlseq_s_iparams, 'eq_low', 0)
-            tracks.make_fxslot_simple(cvpj_l, 'onlineseq', 'r_track', cvpj_instid, 
+            tracks.add_fxslot_native(cvpj_l, 'audio', 'onlineseq', 'track', cvpj_instid, 
                 data_values.get_value(onlseq_s_iparams, 'enable_eq', 0), None, cvpj_instid+'_eq', 'eq', fx_eq_data)
 
         bpm = 120

@@ -301,7 +301,7 @@ class input_audiosanua(plugin_input.base):
             tracks.r_param(cvpj_l, trackid, 'enabled', cvpj_trd[3])
             tracks.r_param(cvpj_l, trackid, 'solo', cvpj_trd[4])
             tracks.r_pl_notes(cvpj_l, trackid, cvpj_trd[6])
-            tracks.add_fxslot(cvpj_l, 'track', trackid, 'audio', cvpj_trd[7])
+            tracks.add_fxslot(cvpj_l, ['track', trackid], 'audio', cvpj_trd[7])
 
         cvpj_l['bpm'] = float(getvalue(x_proj, 'appTempo', 170))
         return json.dumps(cvpj_l)

@@ -539,6 +539,8 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
     trkX_samptr.set('pan', "0")
     trkX_samptr.set('vol', "100")
 
+    if 'fxrack_channel' in trkJ: trkX_samptr.set('fxch', str(trkJ['fxrack_channel']))
+    
     if 'chain_fx_audio' in trkJ: lmms_encode_fxchain(trkX_samptr, trkJ)
 
     printcountplace = 0
@@ -705,9 +707,16 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
         if 'sends' in fxchannelJ:
             sendsJ = fxchannelJ['sends']
             for json_send in sendsJ:
+
+                auto_nameiddata_send = {}
+                if 'automation' in projJ and 'sendautoid' in json_send:
+                    if 'slot' in projJ['automation']:
+                        if json_send['sendautoid'] in projJ['automation']['send']:
+                            auto_nameiddata_send = get_auto_ids_data(projJ['automation']['send'][json_send['sendautoid']])
+
                 sendX = ET.SubElement(fxcX, "send")
                 sendX.set('channel', str(json_send['channel']))
-                sendX.set('amount', str(json_send['amount']))
+                add_auto_val(auto_nameiddata_send, False, None, 1, json_send, 'amount', sendX, 'amount', 'Send '+num+' > '+str(json_send['channel']), 'Amount')
         else:
             sendX = ET.SubElement(fxcX, "send")
             sendX.set('channel', '0')

@@ -170,7 +170,7 @@ def fxrack_add(cvpj_l, fx_num, fx_name, fx_color, fx_vol, fx_pan):
     data_values.nested_dict_add_value(cvpj_l, ['fxrack', str(fx_num)], {})
     fxdata = cvpj_l['fxrack'][str(fx_num)]
     if fx_color != None: fxdata['color'] = fx_color
-    fxdata["name"] = fx_name
+    if fx_name != None: fxdata['name'] = fx_name
 
 def fxrack_param(cvpj_l, fx_num, v_name, v_value):
     data_values.nested_dict_add_value(cvpj_l, ['fxrack', str(fx_num)], {})
@@ -178,37 +178,77 @@ def fxrack_param(cvpj_l, fx_num, v_name, v_value):
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------- Groups --------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+def group_add(cvpj_l, i_id, i_inside_group):
+    data_values.nested_dict_add_value(cvpj_l, ['groups', i_id], {})
+    if i_inside_group != None: 
+        data_values.nested_dict_add_value(cvpj_l, ['groups', i_id, 'parent_group'], i_inside_group)
+        data_values.nested_dict_add_value(cvpj_l, ['groups', i_id, 'audio_destination'], {'type': 'group', 'id': i_inside_group})
+    else:
+        data_values.nested_dict_add_value(cvpj_l, ['groups', i_id, 'audio_destination'], {'type': 'master'})
+
+def group_basicdata(cvpj_l, i_id, i_name, i_vol, i_color):
+    if i_name != None: data_values.nested_dict_add_value(cvpj_l, ['groups', i_id, 'name'], i_name)
+    if i_vol != None: data_values.nested_dict_add_value(cvpj_l, ['groups', i_id, 'vol'], i_vol)
+    if i_color != None: data_values.nested_dict_add_value(cvpj_l, ['groups', i_id, 'color'], i_color)
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------- Sends --------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+def get_sendcvpjlocation(sendloc):
+    out_location = None
+    if sendloc[0] == 'master': out_location = ['track_master', 'sends']
+    if sendloc[0] == 'group': out_location = ['groups', i_location[1], 'sends']
+    return out_location
+
+def send_add(cvpj_l, i_location, i_sendname):
+    out_location = get_sendcvpjlocation(i_location)
+    data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname], {})
+
+def r_send_add(cvpj_l, i_trackid, i_sendname, i_amount, i_sendautoid):
+    send_data = {'amount': i_amount, 'sendid': i_sendname}
+    data_values.nested_dict_add_value(cvpj_l, ['track_data', i_trackid, 'sends_audio'], send_data)
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------ FX ------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
-
-def get_fxcvpjlocation(fxlocation, trackid):
+def get_fxcvpjlocation(fxloc):
     out_location = None
-    if fxlocation == 'track': out_location = ['track_data', trackid]
-    if fxlocation == 'instrument': out_location = ['instruments_data', trackid]
-    if fxlocation == 'master': out_location = ['track_master']
-    if fxlocation == 'fxrack': out_location = ['fxrack', str(trackid)]
+    if fxloc[0] == 'track': out_location = ['track_data', fxloc[1]]
+    if fxloc[0] == 'instrument': out_location = ['instruments_data', fxloc[1]]
+    if fxloc[0] == 'master': out_location = ['track_master']
+    if fxloc[0] == 'fxrack': out_location = ['fxrack', str(fxloc[1])]
+    if fxloc[0] == 'group': out_location = ['groups', fxloc[1]]
     return out_location
 
-def add_fxslot(cvpj_l, fxlocation, trackid, fxtype, chain_fx_data):
-    out_location = get_fxcvpjlocation(fxlocation, trackid)
+def add_fxslot(cvpj_l, fxloc, fxtype, chain_fx_data):
+    out_location = get_fxcvpjlocation(fxloc)
     if fxtype == 'audio': data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_audio'], chain_fx_data)
     if fxtype == 'notes': data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_notes'], chain_fx_data)
 
-def add_fxslot_basic(cvpj_l, fxlocation, trackid, fxtype, enabled, wet, auto_plug, auto_slot, pluginname, plugindata):
+def add_fxslot_basic(cvpj_l, fxloc, fxtype, enabled, wet, auto_plug, auto_slot, pluginname, plugindata):
     fxslot_data = {"plugin": pluginname, "plugindata": plugindata}
     if auto_plug != None: fxslot_data['pluginautoid'] = auto_plug
     if auto_slot != None: fxslot_data['slotautoid'] = auto_slot
     if enabled != None: fxslot_data['enabled'] = enabled
     if wet != None: fxslot_data['wet'] = wet
-    add_fxslot(cvpj_l, fxlocation, trackid, fxtype, fxslot_data)
+    add_fxslot(cvpj_l, fxloc, fxtype, fxslot_data)
 
-def add_fxslot_native(cvpj_l, fxtype, nativedawname, fxlocation, trackid, enabled, wet, auto_id, fx_type, fx_data):
+def add_fxslot_native(cvpj_l, fxtype, nativedawname, fxloc, enabled, wet, auto_id, fx_name, fx_data):
     plugindata = {}
-    plugindata['name'] = fx_type
+    plugindata['name'] = fx_name
     plugindata['data'] = fx_data
-    add_fxslot_basic(cvpj_l, fxlocation, trackid, fxtype, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
+    add_fxslot_basic(cvpj_l, fxloc, fxtype, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------

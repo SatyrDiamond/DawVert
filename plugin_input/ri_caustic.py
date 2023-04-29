@@ -352,7 +352,7 @@ class input_cvpj_r(plugin_input.base):
                 for slotnum in CausticFXData:
                     if CausticFXData[slotnum] != {}: 
                         slot_fxslotdata = CausticFXData[slotnum]['controls']
-                        tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', 'track', cvpj_trackid, int(not int(slot_fxslotdata[5])), None, 
+                        tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['track', cvpj_trackid], int(not int(slot_fxslotdata[5])), None, 
                             'machine'+str(machnum)+'_slot'+str(slotnum), caustic_fxtype[CausticFXData[slotnum]['type']], slot_fxslotdata)
 
             slot_mixereqfxslotdata = {}
@@ -360,10 +360,10 @@ class input_cvpj_r(plugin_input.base):
             slot_mixereqfxslotdata['mid'] = mach_mixer_eq_mid[machnum-1]
             slot_mixereqfxslotdata['high'] = mach_mixer_eq_high[machnum-1]
 
-            tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', 'track', cvpj_trackid, None, None, 
+            tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['track', cvpj_trackid], None, None, 
             'machine'+str(machnum)+'_eq', 'mixer_eq', slot_mixereqfxslotdata)
 
-            tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', 'track', cvpj_trackid, None, None, 
+            tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['track', cvpj_trackid], None, None, 
             'machine'+str(machnum)+'_width', 'width', {'width': mach_mixer_width[machnum-1]})
 
         t_track_placements = {}
@@ -473,13 +473,13 @@ class input_cvpj_r(plugin_input.base):
             for slotnum in CausticFXData:
                 if CausticFXData[slotnum] != {}: 
                     slot_fxslotdata = CausticFXData[slotnum]['controls']
-                    tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', 'master', None, int(not int(slot_fxslotdata[5])), None, 
+                    tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['master'], int(not int(slot_fxslotdata[5])), None, 
                         'master_slot'+str(slotnum), caustic_fxtype[CausticFXData[slotnum]['type']], slot_fxslotdata)
 
-        tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', 'master', None, int(not int(master_params['eq']['muted'])), None, 
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['master'], int(not int(master_params['eq']['muted'])), None, 
         'master_eq', 'master_eq', master_params['eq'])
 
-        tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', 'master', None, int(not int(master_params['limiter']['muted'])), None, 
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['master'], int(not int(master_params['limiter']['muted'])), None, 
         'master_limiter', 'master_limiter', master_params['limiter'])
 
         #print(AUTO_data)
@@ -510,7 +510,7 @@ class input_cvpj_r(plugin_input.base):
                 tracks.a_add_auto_pl(cvpj_l, [cvpj_auto_type, cvpj_fx_autoid, cvpj_auto_ctrl], cvpj_auto_pl)
 
         tracks.a_addtrack_master(cvpj_l, 'Master', master_params['main']['master'], [0.52, 0.52, 0.52])
-        tracks.add_fxslot(cvpj_l, 'master', None, 'audio', master_fxchaindata)
+        tracks.add_fxslot(cvpj_l, ['master'], 'audio', master_fxchaindata)
 
         cvpj_l['do_addloop'] = True
         

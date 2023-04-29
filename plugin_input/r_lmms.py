@@ -87,6 +87,12 @@ def get_slot_auto_id():
     slot_auto_id += 1
     return 'slot'+str(slot_auto_id)
 
+send_auto_id = 1000
+def get_send_auto_id():
+    global send_auto_id
+    send_auto_id += 1
+    return 'send'+str(send_auto_id)
+
 
 
 def getvstparams(plugindata, xmldata, cvpj_data):
@@ -420,7 +426,7 @@ def lmms_decode_inst_track(trkX, trackid):
         cvpj_l_track_inst['midi'] = midiJ
 
     xml_a_fxchain = trkX_insttr.findall('fxchain')
-    if len(xml_a_fxchain) != 0: tracks.add_fxslot(cvpj_l, 'track', trackid, 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
+    if len(xml_a_fxchain) != 0: tracks.add_fxslot(cvpj_l, ['track', trackid], 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
 
     cvpj_l_track_inst['plugindata'] = {}
 
@@ -450,7 +456,7 @@ def lmms_decode_inst_track(trkX, trackid):
         for pluginparam in lmms_autovals[0]:
             cvpj_l_arpeggiator_plugindata['data'][pluginparam] = lmms_auto_getvalue(trkX_arpeggiator, pluginparam, 0, ['plugin', auto_id_plugin, pluginparam])
         cvpj_l_arpeggiator_enabled = lmms_auto_getvalue(trkX_arpeggiator, 'arp-enabled', 0, ['slot', auto_id_slot, 'enabled'])
-        tracks.add_fxslot_basic(cvpj_l, 'track', trackid, 'notes', cvpj_l_arpeggiator_enabled, None,
+        tracks.add_fxslot_basic(cvpj_l, ['track', trackid], 'notes', cvpj_l_arpeggiator_enabled, None,
                                     auto_id_plugin, auto_id_slot, "native-lmms", cvpj_l_arpeggiator_plugindata)
 
 
@@ -464,7 +470,7 @@ def lmms_decode_inst_track(trkX, trackid):
         for pluginparam in lmms_autovals[0]:
             cvpj_l_chordcreator_plugindata['data'][pluginparam] = lmms_auto_getvalue(trkX_chordcreator, pluginparam, 0, ['plugin', auto_id_plugin, pluginparam])
         cvpj_l_chordcreator_enabled = lmms_auto_getvalue(trkX_arpeggiator, 'chord-enabled', 0, ['slot', auto_id_slot, 'enabled'])
-        tracks.add_fxslot_basic(cvpj_l, 'track', trackid, 'notes', cvpj_l_chordcreator_enabled, None,
+        tracks.add_fxslot_basic(cvpj_l, ['track', trackid], 'notes', cvpj_l_chordcreator_enabled, None,
                                     auto_id_plugin, auto_id_slot, "native-lmms", cvpj_l_chordcreator_plugindata)
 
 
@@ -505,12 +511,13 @@ def lmms_decode_audio_track(trkX, trackid):
     cvpj_pan = hundredto1(float(lmms_auto_getvalue(trkX_audiotr, 'pan', 0, ['track', trackid, 'pan'])))
     cvpj_vol = hundredto1(float(lmms_auto_getvalue(trkX_audiotr, 'vol', 1, ['track', trackid, 'vol'])))
     tracks.r_basicdata(cvpj_l, trackid, cvpj_name, None, cvpj_vol, cvpj_pan)
+    tracks.r_param(cvpj_l, trackid, 'fxrack_channel', int(trkX_audiotr.get('fxch')))
     xml_a_fxchain = trkX_audiotr.findall('fxchain')
-    if len(xml_a_fxchain) != 0: tracks.add_fxslot(cvpj_l, 'track', trackid, 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
+    if len(xml_a_fxchain) != 0: tracks.add_fxslot(cvpj_l, ['track', trackid], 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
     print('[input-lmms]')
     tracks.r_pl_audio(cvpj_l, trackid, lmms_decode_audioplacements(trkX))
-    tracks.r_param_inst(cvpj_l, trackid, 'enabled', int(not int(lmms_auto_getvalue(trkX, 'muted', 1, ['track', trackid, 'enabled']))))
-    tracks.r_param_inst(cvpj_l, trackid, 'solo', int(trkX.get('solo')))
+    tracks.r_param(cvpj_l, trackid, 'enabled', int(not int(lmms_auto_getvalue(trkX, 'muted', 1, ['track', trackid, 'enabled']))))
+    tracks.r_param(cvpj_l, trackid, 'solo', int(trkX.get('solo')))
 
 # ------- Track: Automation -------
 
@@ -695,9 +702,11 @@ def lmms_decode_fxmixer(fxX):
         sendlist = []
         sendsxml = fxcX.findall('send')
         for sendxml in sendsxml:
+            send_id = get_send_auto_id()
             sendentryjson = {}
             sendentryjson['channel'] = int(sendxml.get('channel'))
-            sendentryjson['amount'] = float(sendxml.get('amount'))
+            sendentryjson['amount'] = lmms_auto_getvalue(sendxml, 'amount', 1, ['send', send_id, 'amount'])
+            sendentryjson['sendautoid'] = send_id
             sendlist.append(sendentryjson)
         fxcJ['sends'] = sendlist
         fxlist[str(fx_num)] = fxcJ
@@ -793,6 +802,7 @@ class input_lmms(plugin_input.base):
         l_automation['fxmixer'] = {}
         l_automation['plugin'] = {}
         l_automation['slot'] = {}
+        l_automation['send'] = {}
 
         trackdata = cvpj_l['track_data']
 
@@ -821,14 +831,9 @@ class input_lmms(plugin_input.base):
                         temp_pla = l_automation['fxmixer'][s_autopl_id[1]]
                         if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = s_autopl_data
 
-                if s_autopl_id[0] == 'slot':
-                    if s_autopl_id[1] not in l_automation['slot']: l_automation['slot'][s_autopl_id[1]] = {}
-                    temp_pla = l_automation['slot'][s_autopl_id[1]]
-                    temp_pla[s_autopl_id[2]] = s_autopl_data
-
-                if s_autopl_id[0] == 'plugin':
-                    if s_autopl_id[1] not in l_automation['plugin']: l_automation['plugin'][s_autopl_id[1]] = {}
-                    temp_pla = l_automation['plugin'][s_autopl_id[1]]
+                if s_autopl_id[0] in ['slot', 'plugin', 'send']:
+                    if s_autopl_id[1] not in l_automation[s_autopl_id[0]]: l_automation[s_autopl_id[0]][s_autopl_id[1]] = {}
+                    temp_pla = l_automation[s_autopl_id[0]][s_autopl_id[1]]
                     temp_pla[s_autopl_id[2]] = s_autopl_data
 
         cvpj_l['automation'] = l_automation

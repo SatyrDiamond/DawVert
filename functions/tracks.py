@@ -176,6 +176,11 @@ def fxrack_param(cvpj_l, fx_num, v_name, v_value):
     data_values.nested_dict_add_value(cvpj_l, ['fxrack', str(fx_num)], {})
     cvpj_l['fxrack'][str(fx_num)][v_name] = v_value
 
+def fxrack_addsend(cvpj_l, fx_num, fx_to_num, fx_amount, fx_sendautoid):
+    senddata = {"amount": fx_amount, "channel": fx_to_num}
+    if fx_sendautoid != None: senddata['sendautoid'] = fx_sendautoid
+    data_values.nested_dict_add_to_list(cvpj_l, ['fxrack', str(fx_num), 'sends'], senddata)
+
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------- Groups --------------------------------------------------------------------
@@ -203,18 +208,24 @@ def group_basicdata(cvpj_l, i_id, i_name, i_vol, i_color):
 
 def get_sendcvpjlocation(sendloc):
     out_location = None
-    if sendloc[0] == 'master': out_location = ['track_master', 'sends']
-    if sendloc[0] == 'group': out_location = ['groups', i_location[1], 'sends']
+    if sendloc[0] == 'master': out_location = ['track_master', 'sends_audio']
+    if sendloc[0] == 'group': out_location = ['groups', sendloc[1], 'sends_audio']
     return out_location
 
-def send_add(cvpj_l, i_location, i_sendname):
+def r_add_return(cvpj_l, i_location, i_sendname):
     out_location = get_sendcvpjlocation(i_location)
     data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname], {})
 
-def r_send_add(cvpj_l, i_trackid, i_sendname, i_amount, i_sendautoid):
-    send_data = {'amount': i_amount, 'sendid': i_sendname}
-    data_values.nested_dict_add_value(cvpj_l, ['track_data', i_trackid, 'sends_audio'], send_data)
+def r_add_return_basicdata(cvpj_l, i_location, i_sendname, trk_name, trk_color, trk_vol, trk_pan):
+    out_location = get_sendcvpjlocation(i_location)
+    if trk_name != None: data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname, 'name'], trk_name)
+    if trk_color != None: data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname, 'color'], trk_color)
+    if trk_vol != None: data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname, 'vol'], trk_vol)
+    if trk_pan != None: data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname, 'pan'], trk_pan)
 
+def r_add_send(cvpj_l, i_trackid, i_sendname, i_amount, i_sendautoid):
+    send_data = {'amount': i_amount, 'sendid': i_sendname}
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_data', i_trackid, 'sends_audio'], send_data)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -229,6 +240,9 @@ def get_fxcvpjlocation(fxloc):
     if fxloc[0] == 'master': out_location = ['track_master']
     if fxloc[0] == 'fxrack': out_location = ['fxrack', str(fxloc[1])]
     if fxloc[0] == 'group': out_location = ['groups', fxloc[1]]
+    if fxloc[0] == 'send': 
+        if fxloc[1] == None: out_location = ['track_master', 'sends_audio', fxloc[2]]
+        else: out_location = ['groups', fxloc[1], 'sends_audio', fxloc[2]]
     return out_location
 
 def add_fxslot(cvpj_l, fxloc, fxtype, chain_fx_data):

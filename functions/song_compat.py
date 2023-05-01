@@ -3,13 +3,134 @@
 
 from functions import song
 from functions import notelist_data
+from functions import data_values
 from functions import xtramath
+from functions import tracks
 import json
 import math
 
 # -------------------------------------------- fxrack --------------------------------------------
 
+
+
+
+
+def list2fxrack(cvpj_l, input_list, fxnum, defualtname, starttext):
+    if 'name' in input_list: fx_name = starttext+input_list['name']
+    else: fx_name = starttext+defualtname
+    if 'color' in input_list: fx_color = input_list['color']
+    else: fx_color = None
+    tracks.fxrack_add(cvpj_l, fxnum, fx_name, fx_color, None, None)
+    if 'chain_fx_audio' in input_list: 
+        tracks.add_fxslot(cvpj_l, ['fxrack', fxnum], 'audio', input_list['chain_fx_audio'])
+        del input_list['chain_fx_audio']
+
+
 def trackfx2fxrack(cvpj_l, cvpjtype):
+    if cvpjtype == 'r' or cvpjtype == 'ri':
+        r_trackfx2fxrack(cvpj_l, cvpjtype)
+    else:
+        o_trackfx2fxrack(cvpj_l, cvpjtype)
+
+def r_trackfx2fxrack(cvpj_l, cvpjtype):
+    cvpj_l['fxrack'] = {}
+    fxnum = 1
+
+    fxdata = {}
+    fxdata[0] = [['master',None],[None,None]]
+
+    outfxnum = {}
+    returnids = {}
+
+    if 'track_master' in cvpj_l:
+        track_master_data = cvpj_l['track_master']
+
+        list2fxrack(cvpj_l, track_master_data, 0, 'Master', '')
+
+        if 'sends_audio' in track_master_data:
+            for send in track_master_data['sends_audio']:
+                send_data = track_master_data['sends_audio'][send]
+                list2fxrack(cvpj_l, send_data, fxnum, send, '[S] ')
+                fxdata[fxnum] = [['return',send],['master',None]]
+                returnids[send] = fxnum
+                fxnum += 1
+            del track_master_data['sends_audio']
+            
+        del cvpj_l['track_master']
+
+    if 'groups' in cvpj_l:
+        for groupid in cvpj_l['groups']:
+            group_data = cvpj_l['groups'][groupid]
+            group_audio_destination = group_data['audio_destination']
+            group_dest_type = None
+            group_dest_id = None
+            if 'type' in group_audio_destination: group_dest_type = group_audio_destination['type']
+            if 'id' in group_audio_destination: group_dest_id = group_audio_destination['id']
+            fxdata[fxnum] = [['group',groupid],[group_dest_type,group_dest_id]]
+            data_values.nested_dict_add_value(outfxnum, ['group', groupid], [fxnum, 1.0])
+            list2fxrack(cvpj_l, group_data, fxnum, 'FX '+str(fxnum), '[G] ')
+            fxnum += 1
+
+            if 'sends_audio' in group_data:
+                for send in group_data['sends_audio']:
+                    send_data = group_data['sends_audio'][send]
+                    list2fxrack(cvpj_l, send_data, fxnum, send, '[S] ')
+                    fxdata[fxnum] = [['return',send],['group',groupid]]
+                    returnids[send] = fxnum
+                    fxnum += 1
+
+        del cvpj_l['groups']
+
+    c_orderingdata = cvpj_l['track_order']
+    c_trackdata = cvpj_l['track_data']
+
+    for trackid in c_orderingdata:
+        s_trkdata = c_trackdata[trackid]
+
+        if 'sends_audio' in s_trkdata:
+            for send_data in s_trkdata['sends_audio']:
+                if send_data['sendid'] in returnids:
+                    tracks.fxrack_addsend(cvpj_l, fxnum, returnids[send_data['sendid']], send_data['amount'], None)
+            del s_trkdata['sends_audio']
+
+        track_dest_type = None
+        track_dest_id = None
+        if 'group' in s_trkdata:
+            track_dest_type = 'group'
+            track_dest_id = s_trkdata['group']
+        else:
+            track_dest_type = 'master'
+        fxdata[fxnum] = [['track',trackid],[track_dest_type,track_dest_id]]
+        data_values.nested_dict_add_value(outfxnum, ['track', trackid], [fxnum, 1.0])
+
+        list2fxrack(cvpj_l, s_trkdata, fxnum, trackid, '')
+        s_trkdata['fxrack_channel'] = fxnum
+
+        fxnum += 1
+
+    #print(outfxnum)
+
+    print('[r_trackfx2fxrack] Num ', 'type'.ljust(8), 'id'.ljust(12), 'dest'.ljust(8), 'dest_id'.ljust(12))
+    for fxslot in fxdata:
+        slotdata = fxdata[fxslot]
+
+        out_fx_send = [0, 1.0]
+
+        if slotdata[1][0] == 'group':
+            if 'group' in outfxnum:
+                if slotdata[1][1] in outfxnum['group']:
+                    out_fx_send = outfxnum['group'][slotdata[1][1]]
+
+        tracks.fxrack_addsend(cvpj_l, fxslot, out_fx_send[0], out_fx_send[1], None)
+
+        print('[r_trackfx2fxrack] '+str(fxslot).rjust(4), 
+              str(slotdata[0][0]).ljust(8), 
+              str(slotdata[0][1]).ljust(12), 
+              str(slotdata[1][0]).ljust(8),
+              str(slotdata[1][1]).ljust(12),
+              out_fx_send)
+
+def o_trackfx2fxrack(cvpj_l, cvpjtype):
     cvpj_l['fxrack'] = {}
     fxnum = 1
     if cvpjtype == 'r' or cvpjtype == 'ri':

@@ -156,19 +156,20 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 
 
 # -------------------- FX --------------------
-def convplug_fx(fxdata, in_daw, out_daw, extra_json, nameid):
+def convplug_fx(fxdata, in_daw, out_daw, extra_json):
 	global supportedplugins
 	if 'plugin' in fxdata:
 		if 'plugindata' in fxdata:
 			pluginname = fxdata['plugin']
 			plugindata = fxdata['plugindata']
-			if pluginname == 'native-lmms':
-				output_lmms_vst2.convert_fx(fxdata)
+
+			# ---------------------------------------- input ----------------------------------------
+			if in_daw == 'lmms' and pluginname == 'native-lmms': output_lmms_vst2.convert_fx(fxdata)
+
+
+
 
 # -------------------- convproj --------------------
-def do_fxchain_audio(fxchain_audio, in_daw, out_daw, extra_json, nameid):
-	for fxslot in fxchain_audio:
-		convplug_fx(fxslot, in_daw, out_daw, extra_json, nameid)
 
 def do_inst(track_data, in_daw, out_daw, extra_json, nameid, platform_id):
 	if 'instdata' in track_data:
@@ -176,20 +177,35 @@ def do_inst(track_data, in_daw, out_daw, extra_json, nameid, platform_id):
 		print('[plug-conv] --- Inst: '+nameid)
 		convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id)
 
+def do_fxchain_audio(fxdata, in_daw, out_daw, extra_json, textin):
+	if 'chain_fx_audio' in fxdata:
+		for fxslot in fxdata['chain_fx_audio']:
+			print('[plug-conv] --- FX ('+textin+')')
+			convplug_fx(fxslot, in_daw, out_daw, extra_json)
+
+def do_sends(master_data, in_daw, out_daw, extra_json, platform_id, intext):
+	if 'sends_audio' in master_data:
+		print(master_data['sends_audio'])
+		mastersends = master_data['sends_audio']
+		for sendid in mastersends:
+			do_fxchain_audio(mastersends[sendid], in_daw, out_daw, extra_json,intext+' Send: '+sendid)
+
 def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, extra_json):
 	global supportedplugins
 	list_vst.listinit()
 	supportedplugins = {}
-	supportedplugins['sf2'] =           ['lmms','flp',                       'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['sampler'] =       ['lmms','flp','ableton',             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['sampler-multi'] = ['ableton',                          'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['sampler-slicer']= ['ableton',                          'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['vst2'] =          ['lmms','ableton','flp','muse',      'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['vst3'] =          ['lmms','ableton','flp',             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['clap'] =          [                                    'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['ladspa'] =        ['lmms',                             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['sf2'] =             ['lmms','flp',                       'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['sampler'] =         ['lmms','flp','ableton',             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['sampler-multi'] =   ['ableton',                          'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['sampler-slicer'] =  ['ableton',                          'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['vst2'] =            ['lmms','ableton','flp','muse',      'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['vst3'] =            ['lmms','ableton','flp',             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['clap'] =            [                                    'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['ladspa'] =          ['lmms',                             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
 	cvpj_l = json.loads(cvpjdata)
 	if out_type != 'debug':
+		if 'track_master' in cvpj_l:
+			do_sends(cvpj_l['track_master'], in_daw, out_daw, extra_json, platform_id, 'Master')
 		if in_type == 'r' or in_type == 'ri':
 			if 'track_data' in cvpj_l:
 				for track in cvpj_l['track_data']:
@@ -197,6 +213,7 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, extra_js
 					if 'type' in track_data:
 						if track_data['type'] == 'instrument':
 							do_inst(track_data, in_daw, out_daw, extra_json, track, platform_id)
+					do_fxchain_audio(track_data, in_daw, out_daw, extra_json,'Track: '+track)
 		if in_type == 'm' or in_type == 'mi':
 			if 'instruments_data' in cvpj_l:
 				for track in cvpj_l['instruments_data']:
@@ -205,8 +222,5 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, extra_js
 		if 'fxrack' in cvpj_l:
 			for fxid in cvpj_l['fxrack']:
 				fxiddata = cvpj_l['fxrack'][fxid]
-				if 'chain_fx_audio' in fxiddata:
-					fxchain_audio = fxiddata['chain_fx_audio']
-					print('[plug-conv] --- FX: '+fxid)
-					do_fxchain_audio(fxchain_audio, in_daw, out_daw, extra_json, fxid)
+				do_fxchain_audio(fxiddata, in_daw, out_daw, extra_json, 'Send: '+fxid)
 		return json.dumps(cvpj_l, indent=2)

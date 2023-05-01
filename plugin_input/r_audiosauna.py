@@ -36,30 +36,36 @@ audiosanua_device_params[1] = ['aOp1', 'aOp2', 'attack', 'decay', 'dOp1', 'dOp2'
 audiosanua_device_params[0] = ['aOp1', 'aOp2', 'aOp3', 'aOp4', 'attack', 'decay', 'dOp1', 'dOp2', 'dOp3', 'dOp4','fine1', 'fine2', 'fine3', 'fine4', 'fmAlgorithm', 'fmFeedBack', 'frq1', 'frq2', 'frq3', 'frq4', 'opAmp1', 'opAmp2', 'opAmp3', 'opAmp4', 'portamento', 'release', 'sOp1', 'sOp2', 'sOp3', 'sOp4', 'sustain', 'waveform']
 
 def make_fxslot(x_device_sound, fx_type, as_device):
-    fxslotdata = {}
-    fxslotdata['plugin'] = 'native-audiosanua'
-    fxslotdata['plugindata'] = {}
-    fxslotdata['plugindata']['name'] = fx_type
-    fxslotdata['plugindata']['data'] = {}
-    plugindata = fxslotdata['plugindata']['data']
-    fxslotdata['wet'] = 1
+    fx_plugindata = {}
+    fx_wet = 1
     if fx_type == 'chorus':
-        plugindata['speed'] = int(getvalue(x_device_sound, 'chorusSpeed', 0))/100
+        fx_plugindata['speed'] = int(getvalue(x_device_sound, 'chorusSpeed', 0))/100
         if as_device in [0,1]: 
-            fxslotdata['wet'] = int(getvalue(x_device_sound, 'chorusMix', 0))/100
-            plugindata['level'] = int(getvalue(x_device_sound, 'chorusLevel', 0))/100
+            fx_wet = int(getvalue(x_device_sound, 'chorusMix', 0))/100
+            fx_plugindata['level'] = int(getvalue(x_device_sound, 'chorusLevel', 0))/100
         else: 
-            fxslotdata['wet'] = int(getvalue(x_device_sound, 'chorusDryWet', 0))/100
-            plugindata['level'] = int(getvalue(x_device_sound, 'chorusSize', 0))/100
+            fx_wet = int(getvalue(x_device_sound, 'chorusDryWet', 0))/100
+            fx_plugindata['level'] = int(getvalue(x_device_sound, 'chorusSize', 0))/100
 
     if fx_type == 'distortion':
-        plugindata['overdrive'] = int(getvalue(x_device_sound, 'overdrive', 0))/100
-        if as_device in [0,1]: plugindata['modulate'] = float(getvalue(x_device_sound, 'driveModul', 0))/100
-        else: plugindata['modulate'] = float(getvalue(x_device_sound, 'modulate', 0))/100
+        fx_plugindata['overdrive'] = int(getvalue(x_device_sound, 'overdrive', 0))/100
+        if as_device in [0,1]: fx_plugindata['modulate'] = float(getvalue(x_device_sound, 'driveModul', 0))/100
+        else: fx_plugindata['modulate'] = float(getvalue(x_device_sound, 'modulate', 0))/100
 
-    if fx_type == 'bitcrush': plugindata['frames'] = int(getvalue(x_device_sound, 'bitrate', 0))
-    if fx_type == 'amp': plugindata['level'] = int(getvalue(x_device_sound, 'masterAmp', 0))/100
-    return fxslotdata
+    if fx_type == 'bitcrush': fx_plugindata['frames'] = int(getvalue(x_device_sound, 'bitrate', 0))
+    if fx_type == 'amp': fx_plugindata['level'] = int(getvalue(x_device_sound, 'masterAmp', 0))/100
+
+    if fx_type == 'tape_delay':
+        fx_plugindata['damage'] = float(getvalue(x_device_sound, 'dlyDamage', 0))/100
+        fx_plugindata['feedback'] = int(getvalue(x_device_sound, 'dlyFeed', 0))/100
+        fx_plugindata['sync'] = getbool(getvalue(x_device_sound, 'dlySync', 0))
+
+    if fx_type == 'reverb':
+        fx_plugindata['time'] = float(getvalue(x_device_sound, 'rvbTime', 0))/100
+        fx_plugindata['feedback'] = int(getvalue(x_device_sound, 'rvbFeed', 0))/100
+        fx_plugindata['width'] = int(getvalue(x_device_sound, 'rvbWidth', 0))/100
+
+    return fx_plugindata, fx_wet
 
 class input_audiosanua(plugin_input.base):
     def __init__(self): pass
@@ -67,15 +73,7 @@ class input_audiosanua(plugin_input.base):
     def getshortname(self): return 'audiosauna'
     def getname(self): return 'AudioSauna'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): 
-        return {
-        'fxrack': False,
-        'r_track_lanes': False,
-        'placement_cut': True,
-        'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': False
-        }
+    def getdawcapabilities(self): return {'placement_cut': True}
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         zip_data = zipfile.ZipFile(input_file, 'r')
@@ -101,13 +99,23 @@ class input_audiosanua(plugin_input.base):
         cvpj_plnotes = {}
         as_patt_notes = {}
 
-        output_cvpj_inst = {} # [vol,pan,name,mute,solo,instdata,trackplacements,chain_fx_audio]
+        tracks.a_addtrack_master(cvpj_l, 'Master', int(getvalue(x_proj,'appMasterVolume',100))/100, None)
+
+        tracks.r_add_return(cvpj_l, ['master'], 'audiosauna_send_tape_delay')
+        tracks.r_add_return_basicdata(cvpj_l, ['master'], 'audiosauna_send_tape_delay', 'Tape Delay', None, int(getvalue(x_proj,'dlyLevel',100))/100, None)
+        send_reverb_data = make_fxslot(x_proj, 'tape_delay', None)
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'audiosauna', ['send', None, 'audiosauna_send_tape_delay'], None, None, None, 'tape_delay', send_reverb_data[0])
+
+        tracks.r_add_return(cvpj_l, ['master'], 'audiosauna_send_reverb')
+        tracks.r_add_return_basicdata(cvpj_l, ['master'], 'audiosauna_send_reverb', 'Reverb', None, int(getvalue(x_proj,'rvbLevel',100))/100, None)
+        send_reverb_data = make_fxslot(x_proj, 'reverb', None)
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'audiosauna', ['send', None, 'audiosauna_send_reverb'], None, None, None, 'reverb', send_reverb_data[0])
 
         # ------------------------------------------ tracks ------------------------------------------
         for x_track in xt_track:
             x_track_trackIndex = int(x_track.get('trackIndex'))
             xt_track_seqNote = x_track.findall('seqNote')
-            if x_track_trackIndex not in output_cvpj_inst: output_cvpj_inst[x_track_trackIndex] = [None,None,None,1,0,{},[],[]]
+            tracks.r_create_inst(cvpj_l, 'audiosanua'+str(x_track_trackIndex), {})
             for x_track_seqNote in xt_track_seqNote:
                 as_note_patternId = int(x_track_seqNote.get('patternId'))
                 as_note_startTick = int(x_track_seqNote.get('startTick'))
@@ -121,19 +129,23 @@ class input_audiosanua(plugin_input.base):
 
         # ------------------------------------------ channels ------------------------------------------
         for x_chan in xt_chan:
+            as_channum = int(x_chan.get('channelNro'))
+            cvpj_id = 'audiosanua'+str(as_channum)
+
             cvpj_tr_vol = int(x_chan.get('volume'))/100
             cvpj_tr_pan = int(x_chan.get('pan'))/100
             cvpj_tr_name = x_chan.get('name')
             cvpj_tr_mute = getbool(x_chan.get('mute'))
             cvpj_tr_solo = getbool(x_chan.get('solo'))
-            as_channum = int(x_chan.get('channelNro'))
-            if as_channum not in output_cvpj_inst: output_cvpj_inst[as_channum] = [None,None,None,1,0,{},[],[]]
-            output_cvpj_inst[as_channum][0] = int(x_chan.get('volume'))/100
-            output_cvpj_inst[as_channum][1] = int(x_chan.get('pan'))/100
-            output_cvpj_inst[as_channum][2] = x_chan.get('name')
-            output_cvpj_inst[as_channum][3] = int(not getbool(x_chan.get('mute')))
-            output_cvpj_inst[as_channum][4] = getbool(x_chan.get('solo'))
-            
+
+            cvpj_tr_color = as_pattern_color[as_channum]
+
+            tracks.r_basicdata(cvpj_l, cvpj_id, cvpj_tr_name, cvpj_tr_color, cvpj_tr_vol, cvpj_tr_pan)
+            tracks.r_param(cvpj_l, cvpj_id,'mute', int(not getbool(x_chan.get('mute'))))
+            tracks.r_param(cvpj_l, cvpj_id,'mute', getbool(x_chan.get('solo')))
+            tracks.r_add_send(cvpj_l, cvpj_id, 'audiosauna_send_tape_delay', int(x_chan.get('delay'))/100, None)
+            tracks.r_add_send(cvpj_l, cvpj_id, 'audiosauna_send_reverb', int(x_chan.get('reverb'))/100, None)
+
         # ------------------------------------------ patterns ------------------------------------------
         for x_pattern in xt_pattern:
             as_pattern_trackNro = int(x_pattern.get('trackNro'))
@@ -150,20 +162,21 @@ class input_audiosanua(plugin_input.base):
             if as_pattern_patternId in as_patt_notes:
                 t_notelist = as_patt_notes[as_pattern_patternId]
                 for t_note in t_notelist:
-                    # as_note_startTick, as_note_endTick, as_note_noteLength, as_note_pitch, as_note_noteVolume, as_note_noteCutoff]
                     cvpj_note = note_data.rx_makenote((max(0,t_note[0]-as_pattern_startTick)/32), t_note[2]/32, t_note[3]-60, t_note[4]/100, None)
                     cvpj_note['cutoff'] = t_note[5]
                     cvpj_pldata['notelist'].append(cvpj_note)
 
-            output_cvpj_inst[as_pattern_trackNro][6].append(cvpj_pldata)
+            tracks.r_pl_notes(cvpj_l, 'audiosanua'+str(as_pattern_trackNro), cvpj_pldata)
         # ------------------------------------------ patterns ------------------------------------------
         devicenum = 0
         for x_device in xt_devices:
             v_device_deviceType = int(x_device.get('deviceType'))
-            output_cvpj_inst_instdata = output_cvpj_inst[devicenum][5]
 
-            output_cvpj_inst_instdata['plugindata'] = {}
-            cvpj_plugindata = output_cvpj_inst_instdata['plugindata']
+            cvpj_trackid = 'audiosanua'+str(devicenum)
+
+            cvpj_instdata = {}
+            cvpj_instdata['plugindata'] = {}
+            cvpj_plugindata = cvpj_instdata['plugindata']
             cvpj_plugindata['asdrlfo'] = {}
             cvpj_plugindata['asdrlfo']['volume'] = {'envelope': {}, 'lfo': {}}
             cvpj_plugindata['asdrlfo']['cutoff'] = {'envelope': {}, 'lfo': {}}
@@ -175,7 +188,7 @@ class input_audiosanua(plugin_input.base):
 
             if v_device_deviceType == 1 or v_device_deviceType == 0:
                 x_device_sound = x_device.findall('sound')[0]
-                output_cvpj_inst_instdata['plugin'] = 'native-audiosauna'
+                cvpj_instdata['plugin'] = 'native-audiosauna'
                 cvpj_plugindata['type'] = v_device_deviceType
                 cvpj_plugindata['data'] = {}
                 for v_device_param in audiosanua_device_params[v_device_deviceType]:
@@ -183,7 +196,7 @@ class input_audiosanua(plugin_input.base):
 
             if v_device_deviceType == 2:
                 x_device_sound = x_device.findall('sampler')[0]
-                output_cvpj_inst_instdata['plugin'] = 'sampler-multi'
+                cvpj_instdata['plugin'] = 'sampler-multi'
                 cvpj_plugindata['point_value_type'] = 'percent'
                 cvpj_plugindata['regions'] = []
                 x_device_samples = x_device_sound.findall('samples')[0]
@@ -280,28 +293,17 @@ class input_audiosanua(plugin_input.base):
             cutoff_lfo['shape'] = audiosauna_lfoWaveForm
             cutoff_lfo['speed'] = {"time": audiosauna_lfoTime, "type": "seconds"}
 
-            output_cvpj_inst[devicenum][7].append( make_fxslot(x_device_sound, 'distortion', v_device_deviceType) )
-            output_cvpj_inst[devicenum][7].append( make_fxslot(x_device_sound, 'bitcrush', v_device_deviceType) )
-            output_cvpj_inst[devicenum][7].append( make_fxslot(x_device_sound, 'chorus', v_device_deviceType) )
-            output_cvpj_inst[devicenum][7].append( make_fxslot(x_device_sound, 'amp', v_device_deviceType) )
+            tracks.r_param(cvpj_l, cvpj_trackid, 'instdata', cvpj_instdata)
+
+            for fx_name in ['distortion', 'bitcrush', 'chorus', 'amp']:
+                fx_plugindata, fx_wet = make_fxslot(x_device_sound, fx_name, v_device_deviceType)
+                tracks.add_fxslot_native(cvpj_l, 'audio', 'audiosauna', ['track', cvpj_trackid], None, fx_wet, None, fx_name, fx_plugindata)
 
             devicenum += 1
 
         as_loopstart = float(getvalue(x_proj, 'appLoopStart', 0))
         as_loopend = float(getvalue(x_proj, 'appLoopEnd', 0))
         if as_loopstart != 0 and as_loopend != 0: song.add_timemarker_looparea(cvpj_l, None, as_loopstart, as_loopend)
-
-        for testval in output_cvpj_inst:
-            cvpj_trd = output_cvpj_inst[testval]
-            trackid = 'audiosanua'+str(testval)
-
-            #[vol,pan,name,mute,solo,instdata,trackplacements,chain_fx_audio]
-            tracks.r_create_inst(cvpj_l, trackid, cvpj_trd[5])
-            tracks.r_basicdata(cvpj_l, trackid, cvpj_trd[2], None, cvpj_trd[0], cvpj_trd[1])
-            tracks.r_param(cvpj_l, trackid, 'enabled', cvpj_trd[3])
-            tracks.r_param(cvpj_l, trackid, 'solo', cvpj_trd[4])
-            tracks.r_pl_notes(cvpj_l, trackid, cvpj_trd[6])
-            tracks.add_fxslot(cvpj_l, ['track', trackid], 'audio', cvpj_trd[7])
 
         cvpj_l['bpm'] = float(getvalue(x_proj, 'appTempo', 170))
         return json.dumps(cvpj_l)

@@ -129,3 +129,8 @@ def blocks2points(auto_pl_blocks):
             else: outtype = 'normal'
             autopl['points'].append( {"position": point[0]-basepos, "value": point[2], "type": outtype} )
     return autopl
+
+def twopoints_addmul(twopoints, addval, mulval):
+    for twopoint in twopoints:
+        twopoint[1] = (twopoint[1]+addval)*mulval
+    return twopoints

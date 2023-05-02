@@ -15,4 +15,4 @@ def convert_inst(instdata, out_daw):
 
 	if pluginname == 'opn2':
 		xmlout = vst_inst.opnplug_convert(plugindata)
-		plugin_vst2.replace_data(instdata, 'any', 'OPNplug', 'raw', data_vc2xml.make(xmlout), None)
+		plugin_vst2.replace_data(instdata, 'any', 'OPNplug', 'chunk', data_vc2xml.make(xmlout), None)

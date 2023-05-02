@@ -259,7 +259,7 @@ def convert_inst(instdata):
 		if chorus_on == 1: params_vital.setvalue('chorus_on', 1.0)
 		
 		vitaldata = params_vital.getdata()
-		plugin_vst2.replace_data(instdata, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
+		plugin_vst2.replace_data(instdata, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
 
 	# ---------------------------------------- Wrapper ----------------------------------------
 	elif plugindata['name'].lower() == 'fruity wrapper':
@@ -289,7 +289,7 @@ def convert_inst(instdata):
 					instdata['plugindata']['datatype'] = 'raw'
 					instdata['plugindata']['data'] = base64.b64encode(wrapper_vstdata).decode('ascii')
 				else:
-					plugin_vst2.replace_data(instdata, 'any', wrapperdata['name'], 'raw', wrapper_vstdata, None)
+					plugin_vst2.replace_data(instdata, 'any', wrapperdata['name'], 'chunk', wrapper_vstdata, None)
 
 			#if wrapper_vsttype == 8:
 				#wrapper_vststate = pluginstate[0:9]
@@ -300,7 +300,7 @@ def convert_inst(instdata):
 				#print(wrapper_vstpad)
 				#print(wrapper_vstsize)
 				#print(wrapper_vstdata)
-				#list_vst.replace_data(instdata, 3, 'any', wrapperdata['name'], 'raw', wrapper_vstdata, None)
+				#list_vst.replace_data(instdata, 3, 'any', wrapperdata['name'], 'chunk', wrapper_vstdata, None)
 
 		#fl_plugstr.seek(0)
 

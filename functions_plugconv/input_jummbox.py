@@ -201,4 +201,4 @@ def convert_inst(instdata):
 		params_vital.setvalue_timed('env_1_release', abs((bb_data['fadeOutTicks']/96)*1.2))
 
 		vitaldata = params_vital.getdata()
-		plugin_vst2.replace_data(instdata, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
+		plugin_vst2.replace_data(instdata, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)

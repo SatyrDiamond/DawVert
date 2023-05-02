@@ -16,6 +16,6 @@ def convert_inst(instdata, platform_id):
 				for regionparams in regions:
 					vst_inst.grace_create_region(gx_root, regionparams)
 				xmlout = ET.tostring(gx_root, encoding='utf-8')
-				plugin_vst2.replace_data(instdata, 'any', 'Grace', 'raw', xmlout, None)
+				plugin_vst2.replace_data(instdata, 'any', 'Grace', 'chunk', xmlout, None)
 		else:
 			print('[plug-conv] Unchanged, Plugin Grace not Found')

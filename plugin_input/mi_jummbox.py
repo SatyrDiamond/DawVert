@@ -223,7 +223,6 @@ def parse_channel(channeldata, channum):
                                 tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], cvpj_autopl[0])
                             if bb_mod_target[1] == 17: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], -250, 4)
-                                print(cvpj_autopl)
                                 tracks.a_add_auto_pl(cvpj_l, ['main', 'pitch'], cvpj_autopl[0])
             sequencecount += 1
 

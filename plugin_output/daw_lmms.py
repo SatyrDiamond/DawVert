@@ -48,7 +48,7 @@ def setvstparams(plugindata, xmldata):
             xmldata.set('plugin', str(plugindata['plugin']['path']))
     xmldata.set('program', '0')
     if 'datatype' in plugindata:
-        if plugindata['datatype'] == 'raw':
+        if plugindata['datatype'] == 'chunk':
             xmldata.set('chunk', str(plugindata['data']))
         elif plugindata['datatype'] == 'param':
             numparams = plugindata['numparams']

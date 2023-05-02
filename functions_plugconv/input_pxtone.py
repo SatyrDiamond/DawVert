@@ -68,6 +68,6 @@ def convert_inst(instdata):
 				unit_num += 1
 
 			vitaldata = params_vital.getdata()
-			plugin_vst2.replace_data(instdata, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
+			plugin_vst2.replace_data(instdata, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
 	except:
 		pass

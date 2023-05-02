@@ -198,7 +198,7 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, extra_js
 	supportedplugins['sampler-multi'] =   ['ableton',                          'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
 	supportedplugins['sampler-slicer'] =  ['ableton',                          'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
 	supportedplugins['vst2'] =            ['lmms','ableton','flp','muse',      'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['vst3'] =            ['lmms','ableton','flp',             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins['vst3'] =            ['ableton','flp',                    'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
 	supportedplugins['clap'] =            [                                    'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
 	supportedplugins['ladspa'] =          ['lmms',                             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
 	cvpj_l = json.loads(cvpjdata)

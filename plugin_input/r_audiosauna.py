@@ -31,6 +31,16 @@ def getbool(input_val):
     if input_val == 'true': return 1
     if input_val == 'false': return 0
 
+def setasdr(i_dict, i_attack, i_decay, i_release, i_sustain):
+    i_dict['amount'] = 1
+    i_dict['attack'] = i_attack
+    i_dict['decay'] = i_decay
+    i_dict['hold'] = 0
+    i_dict['predelay'] = 0
+    i_dict['release'] = i_release
+    i_dict['sustain'] = i_sustain
+    if i_dict['decay'] == 0: i_sustain = 1
+
 audiosanua_device_params = {}
 audiosanua_device_params[1] = ['aOp1', 'aOp2', 'attack', 'decay', 'dOp1', 'dOp2', 'fine1', 'fine2', 'fm', 'oct1', 'oct2', 'osc1Vol', 'osc2Vol', 'portamento', 'release', 'semi1', 'semi2', 'sOp1', 'sOp2', 'sustain', 'wave1', 'wave2', 'waveform']
 audiosanua_device_params[0] = ['aOp1', 'aOp2', 'aOp3', 'aOp4', 'attack', 'decay', 'dOp1', 'dOp2', 'dOp3', 'dOp4','fine1', 'fine2', 'fine3', 'fine4', 'fmAlgorithm', 'fmFeedBack', 'frq1', 'frq2', 'frq3', 'frq4', 'opAmp1', 'opAmp2', 'opAmp3', 'opAmp4', 'portamento', 'release', 'sOp1', 'sOp2', 'sOp3', 'sOp4', 'sustain', 'waveform']
@@ -39,31 +49,31 @@ def make_fxslot(x_device_sound, fx_type, as_device):
     fx_plugindata = {}
     fx_wet = 1
     if fx_type == 'chorus':
-        fx_plugindata['speed'] = int(getvalue(x_device_sound, 'chorusSpeed', 0))/100
+        fx_plugindata['speed'] = float(getvalue(x_device_sound, 'chorusSpeed', 0))/100
         if as_device in [0,1]: 
-            fx_wet = int(getvalue(x_device_sound, 'chorusMix', 0))/100
-            fx_plugindata['level'] = int(getvalue(x_device_sound, 'chorusLevel', 0))/100
+            fx_wet = float(getvalue(x_device_sound, 'chorusMix', 0))/100
+            fx_plugindata['level'] = float(getvalue(x_device_sound, 'chorusLevel', 0))/100
         else: 
-            fx_wet = int(getvalue(x_device_sound, 'chorusDryWet', 0))/100
-            fx_plugindata['level'] = int(getvalue(x_device_sound, 'chorusSize', 0))/100
+            fx_wet = float(getvalue(x_device_sound, 'chorusDryWet', 0))/100
+            fx_plugindata['level'] = float(getvalue(x_device_sound, 'chorusSize', 0))/100
 
     if fx_type == 'distortion':
-        fx_plugindata['overdrive'] = int(getvalue(x_device_sound, 'overdrive', 0))/100
+        fx_plugindata['overdrive'] = float(getvalue(x_device_sound, 'overdrive', 0))/100
         if as_device in [0,1]: fx_plugindata['modulate'] = float(getvalue(x_device_sound, 'driveModul', 0))/100
         else: fx_plugindata['modulate'] = float(getvalue(x_device_sound, 'modulate', 0))/100
 
-    if fx_type == 'bitcrush': fx_plugindata['frames'] = int(getvalue(x_device_sound, 'bitrate', 0))
-    if fx_type == 'amp': fx_plugindata['level'] = int(getvalue(x_device_sound, 'masterAmp', 0))/100
+    if fx_type == 'bitcrush': fx_plugindata['frames'] = float(getvalue(x_device_sound, 'bitrate', 0))
+    if fx_type == 'amp': fx_plugindata['level'] = float(getvalue(x_device_sound, 'masterAmp', 0))/100
 
     if fx_type == 'tape_delay':
         fx_plugindata['damage'] = float(getvalue(x_device_sound, 'dlyDamage', 0))/100
-        fx_plugindata['feedback'] = int(getvalue(x_device_sound, 'dlyFeed', 0))/100
+        fx_plugindata['feedback'] = float(getvalue(x_device_sound, 'dlyFeed', 0))/100
         fx_plugindata['sync'] = getbool(getvalue(x_device_sound, 'dlySync', 0))
 
     if fx_type == 'reverb':
         fx_plugindata['time'] = float(getvalue(x_device_sound, 'rvbTime', 0))/100
-        fx_plugindata['feedback'] = int(getvalue(x_device_sound, 'rvbFeed', 0))/100
-        fx_plugindata['width'] = int(getvalue(x_device_sound, 'rvbWidth', 0))/100
+        fx_plugindata['feedback'] = float(getvalue(x_device_sound, 'rvbFeed', 0))/100
+        fx_plugindata['width'] = float(getvalue(x_device_sound, 'rvbWidth', 0))/100
 
     return fx_plugindata, fx_wet
 
@@ -238,14 +248,11 @@ class input_audiosanua(plugin_input.base):
 
                     cvpj_plugindata['regions'].append(cvpj_region)
 
-                vol_asdr['amount'] = 1
-                vol_asdr['attack'] = float(getvalue(x_device_sound, 'masterAttack', 0))
-                vol_asdr['decay'] = float(getvalue(x_device_sound, 'masterDecay', 0))
-                vol_asdr['hold'] = 0
-                vol_asdr['predelay'] = 0
-                vol_asdr['release'] = float(getvalue(x_device_sound, 'masterRelease', 0))
-                vol_asdr['sustain'] = float(getvalue(x_device_sound, 'masterSustain', 0))
-                if vol_asdr['decay'] == 0: vol_asdr['sustain'] = 1
+                setasdr(vol_asdr, 
+                    float(getvalue(x_device_sound, 'masterAttack', 0)), 
+                    float(getvalue(x_device_sound, 'masterDecay', 0)), 
+                    float(getvalue(x_device_sound, 'masterRelease', 0)), 
+                    float(getvalue(x_device_sound, 'masterSustain', 0)))
 
             cvpj_plugindata['middlenote'] = int(getvalue(x_device_sound, 'masterTranspose', 0))*-1
             cvpj_plugindata['amp'] = int(getvalue(x_device_sound, 'masterAmp', 0))/100
@@ -262,14 +269,11 @@ class input_audiosanua(plugin_input.base):
                 cvpj_plugindata['filter']['type'] = "lowpass"
                 cvpj_plugindata['filter']['subtype'] = "double"
             cvpj_plugindata['filter']['wet'] = 1
-            cutoff_asdr['amount'] = 1
-            cutoff_asdr['attack'] = float(getvalue(x_device_sound, 'filterAttack', 0))
-            cutoff_asdr['decay'] = float(getvalue(x_device_sound, 'filterDecay', 0))
-            cutoff_asdr['hold'] = 0
-            cutoff_asdr['predelay'] = 0
-            cutoff_asdr['release'] = float(getvalue(x_device_sound, 'filterRelease', 0))
-            cutoff_asdr['sustain'] = float(getvalue(x_device_sound, 'filterSustain', 0))
-            if cutoff_asdr['decay'] == 0: cutoff_asdr['sustain'] = 1
+            setasdr(cutoff_asdr, 
+                float(getvalue(x_device_sound, 'filterAttack', 0)), 
+                float(getvalue(x_device_sound, 'filterDecay', 0)), 
+                float(getvalue(x_device_sound, 'filterRelease', 0)), 
+                float(getvalue(x_device_sound, 'filterSustain', 0)))
             audiosauna_lfoActive = getvalue(x_device_sound, 'lfoActive', 'false')
             audiosauna_lfoToggled = getvalue(x_device_sound, 'lfoToggled', 'false')
             audiosauna_lfoTime = float(getvalue(x_device_sound, 'lfoTime', 1))

@@ -7,7 +7,7 @@ import os
 import struct
 import math
 import base64
-from functions import list_vst
+from functions import plugin_vst2
 from functions import vst_fx
 from functions import vst_inst
 
@@ -80,7 +80,7 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 				if 'file' in sf2data: sf2_filename = sf2data['file']
 				else: sf2_filename = 0
 				jsfp_xml = vst_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
-				list_vst.replace_data(instdata, 2, 'any', 'juicysfplugin', 'raw', data_vc2xml.make(jsfp_xml), None)
+				plugin_vst2.replace_data(instdata, 'any', 'juicysfplugin', 'raw', data_vc2xml.make(jsfp_xml), None)
 
 			# -------------------- vst2 (magical8bitplug) --------------------
 
@@ -147,12 +147,12 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoDepth", 0.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoIgnoresWheel_raw", 1.0)
 				vst_inst.m8bp_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
-				list_vst.replace_data(instdata, 2, 'any', 'Magical 8bit Plug 2', 'raw', data_vc2xml.make(m8p_root), None)
+				plugin_vst2.replace_data(instdata, 'any', 'Magical 8bit Plug 2', 'raw', data_vc2xml.make(m8p_root), None)
 
 			# -------------------- opn2 > OPNplug --------------------
 			elif pluginname == 'opn2':
 				xmlout = vst_inst.opnplug_convert(instdata['plugindata'])
-				list_vst.replace_data(instdata, 2, 'any', 'OPNplug', 'raw', data_vc2xml.make(xmlout), None)
+				plugin_vst2.replace_data(instdata, 'any', 'OPNplug', 'raw', data_vc2xml.make(xmlout), None)
 
 
 # -------------------- FX --------------------
@@ -185,14 +185,13 @@ def do_fxchain_audio(fxdata, in_daw, out_daw, extra_json, textin):
 
 def do_sends(master_data, in_daw, out_daw, extra_json, platform_id, intext):
 	if 'sends_audio' in master_data:
-		print(master_data['sends_audio'])
 		mastersends = master_data['sends_audio']
 		for sendid in mastersends:
 			do_fxchain_audio(mastersends[sendid], in_daw, out_daw, extra_json,intext+' Send: '+sendid)
 
 def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, extra_json):
 	global supportedplugins
-	list_vst.listinit()
+	plugin_vst2.listinit()
 	supportedplugins = {}
 	supportedplugins['sf2'] =             ['lmms','flp',                       'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
 	supportedplugins['sampler'] =         ['lmms','flp','ableton',             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']

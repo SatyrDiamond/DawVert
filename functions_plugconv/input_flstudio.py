@@ -5,7 +5,7 @@ import base64
 import struct
 import os
 from functions import data_bytes
-from functions import list_vst
+from functions import plugin_vst2
 from functions import params_vst
 
 from functions_plugconv import input_flstudio_wrapper
@@ -171,7 +171,7 @@ def convert_inst(instdata):
 		params_vst.add_param(vstdxparams, 13, "Waveform", fldx_waveform/65536)
 		params_vst.add_param(vstdxparams, 14, "Mod Thru", fldx_mod_thru/65536)
 		params_vst.add_param(vstdxparams, 15, "LFO Rate", fldx_lforate/65536)
-		list_vst.replace_data(instdata, 2, 'any', 'DX10', 'params', vstdxparams, 16)
+		plugin_vst2.replace_data(instdata, 'any', 'DX10', 'params', vstdxparams, 16)
 
 	# ---------------------------------------- SimSynth ----------------------------------------
 	elif plugindata['name'].lower() == 'simsynth':
@@ -259,7 +259,7 @@ def convert_inst(instdata):
 		if chorus_on == 1: params_vital.setvalue('chorus_on', 1.0)
 		
 		vitaldata = params_vital.getdata()
-		list_vst.replace_data(instdata, 2, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
+		plugin_vst2.replace_data(instdata, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
 
 	# ---------------------------------------- Wrapper ----------------------------------------
 	elif plugindata['name'].lower() == 'fruity wrapper':
@@ -289,18 +289,18 @@ def convert_inst(instdata):
 					instdata['plugindata']['datatype'] = 'raw'
 					instdata['plugindata']['data'] = base64.b64encode(wrapper_vstdata).decode('ascii')
 				else:
-					list_vst.replace_data(instdata, 2, 'any', wrapperdata['name'], 'raw', wrapper_vstdata, None)
+					plugin_vst2.replace_data(instdata, 'any', wrapperdata['name'], 'raw', wrapper_vstdata, None)
 
-			if wrapper_vsttype == 8:
+			#if wrapper_vsttype == 8:
 				#wrapper_vststate = pluginstate[0:9]
 				#wrapper_vstpad = pluginstate[9:84]
 				#wrapper_vstsize = pluginstate[84:92]
-				wrapper_vstdata = pluginstate[92:]
+				#wrapper_vstdata = pluginstate[92:]
 				#print(wrapper_vststate)
 				#print(wrapper_vstpad)
 				#print(wrapper_vstsize)
 				#print(wrapper_vstdata)
-				list_vst.replace_data(instdata, 3, 'any', wrapperdata['name'], 'raw', wrapper_vstdata, None)
+				#list_vst.replace_data(instdata, 3, 'any', wrapperdata['name'], 'raw', wrapper_vstdata, None)
 
 		#fl_plugstr.seek(0)
 

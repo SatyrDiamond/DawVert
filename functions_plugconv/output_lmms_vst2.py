@@ -7,7 +7,7 @@ import struct
 import math
 import lxml.etree as ET
 from functions import vst_fx
-from functions import list_vst
+from functions import plugin_vst2
 from functions import xtramath
 
 from functions_plugparams import params_vital
@@ -48,7 +48,7 @@ def convert_inst(instdata):
 			params_vital.replacewave(0, params_vital_wavetable.resizewave(bitinvader_shape_vals))
 			params_vital.cvpj_asdrlfo2vitalparams(plugindata)
 			vitaldata = params_vital.getdata()
-			list_vst.replace_data(instdata, 2, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
+			plugin_vst2.replace_data(instdata, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
 
 		if lmmsnat_name == 'sid':
 			x_sid = ET.Element("state")
@@ -98,7 +98,7 @@ def convert_inst(instdata):
 			socalabs_addparam(x_sid, "w1", sid_shape(lmmsnat_data['waveform0']))
 			socalabs_addparam(x_sid, "w2", sid_shape(lmmsnat_data['waveform1']))
 			socalabs_addparam(x_sid, "w3", sid_shape(lmmsnat_data['waveform2']))
-			list_vst.replace_data(instdata, 2, 'any', 'SID', 'raw', ET.tostring(x_sid, encoding='utf-8'), None)
+			plugin_vst2.replace_data(instdata, 'any', 'SID', 'raw', ET.tostring(x_sid, encoding='utf-8'), None)
 			if 'middlenote' in instdata: instdata['middlenote'] -= 12
 			else: instdata['middlenote'] = -12
 
@@ -133,7 +133,7 @@ def convert_inst(instdata):
 			kickmess_add(kickmess_out, 'priv', 'f1_on', 0.25)
 			kickmess_add(kickmess_out, 'priv', 'midi_chan', 0)
 			kickmess_out.seek(0)
-			list_vst.replace_data(instdata, 2, 'any', 'Kickmess (VST)', 'raw', kickmess_out.read(), None)
+			plugin_vst2.replace_data(instdata, 'any', 'Kickmess (VST)', 'raw', kickmess_out.read(), None)
 			if 'middlenote' in instdata: instdata['middlenote'] -= 12
 			else: instdata['middlenote'] = -12
 
@@ -177,7 +177,7 @@ def convert_inst(instdata):
 			else: params_vital.setvalue_timed('env_2_decay', 0)
 			params_vital.setvalue('env_2_sustain', 0)
 			vitaldata = params_vital.getdata()
-			list_vst.replace_data(instdata, 2, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
+			plugin_vst2.replace_data(instdata, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
 			if 'middlenote' in instdata: instdata['middlenote'] -= 12
 			else: instdata['middlenote'] = -12
 
@@ -185,7 +185,7 @@ def convert_inst(instdata):
 		zasfxdata = instdata['plugindata']['data']
 		zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
 		zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
-		list_vst.replace_data(instdata, 2, 'any', 'ZynAddSubFX', 'raw', zasfxdatafixed, None)
+		plugin_vst2.replace_data(instdata, 'any', 'ZynAddSubFX', 'raw', zasfxdatafixed, None)
 
 def convert_fx(fxdata):
 	pluginname = fxdata['plugin']
@@ -202,4 +202,4 @@ def convert_fx(fxdata):
 			for pointnum in range(50):
 				pointdata = waveshapepoints[pointnum*4][0]
 				vst_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
-			list_vst.replace_data(fxdata, 2, 'any', 'Wolf Shaper', 'raw', data_nullbytegroup.make(vst_fx.wolfshaper_get()), None)
+			plugin_vst2.replace_data(fxdata, 'any', 'Wolf Shaper', 'raw', data_nullbytegroup.make(vst_fx.wolfshaper_get()), None)

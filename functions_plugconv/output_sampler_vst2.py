@@ -1,5 +1,5 @@
 from functions import audio_wav
-from functions import list_vst
+from functions import plugin_vst2
 from functions import vst_inst
 from functions import xtramath
 import xml.etree.ElementTree as ET
@@ -11,27 +11,26 @@ def convert_inst(instdata, platform_id):
 	if platform_id == 'win':
 		sampler_file_data = instdata['plugindata']
 		wireturn = audio_wav.complete_wav_info(sampler_file_data)
-		vst2_dll_vstpaths = list_vst.vstpaths()
-		if vst2_dll_vstpaths['2-dll']:
-			if 'Grace' in vst2_dll_vstpaths['2-dll']:
-				if 'file' in sampler_file_data and wireturn != None and wireturn == 1:
-					file_extension = pathlib.Path(sampler_file_data['file']).suffix
-					if file_extension == '.wav':
-						gx_root = vst_inst.grace_create_main()
-						regionparams = {}
-						regionparams['file'] = sampler_file_data['file']
-						regionparams['length'] = sampler_file_data['length']
-						regionparams['start'] = 0
-						if 'loop' in sampler_file_data:
-							regionparams['loop'] = sampler_file_data['loop']
-						regionparams['end'] = sampler_file_data['length']
-						vst_inst.grace_create_region(gx_root, regionparams)
-						xmlout = ET.tostring(gx_root, encoding='utf-8')
-						list_vst.replace_data(instdata, 2, 'any', 'Grace', 'raw', xmlout, None)
-				else:
-					print("[plug-conv] Unchanged, Grace (VST2) only supports Format 1 .WAV")
+		vst2_dll_vstpaths = plugin_vst2.vstpaths()
+		if 'Grace' in vst2_dll_vstpaths['dll']:
+			if 'file' in sampler_file_data and wireturn != None and wireturn == 1:
+				file_extension = pathlib.Path(sampler_file_data['file']).suffix
+				if file_extension == '.wav':
+					gx_root = vst_inst.grace_create_main()
+					regionparams = {}
+					regionparams['file'] = sampler_file_data['file']
+					regionparams['length'] = sampler_file_data['length']
+					regionparams['start'] = 0
+					if 'loop' in sampler_file_data:
+						regionparams['loop'] = sampler_file_data['loop']
+					regionparams['end'] = sampler_file_data['length']
+					vst_inst.grace_create_region(gx_root, regionparams)
+					xmlout = ET.tostring(gx_root, encoding='utf-8')
+					plugin_vst2.replace_data(instdata, 'any', 'Grace', 'raw', xmlout, None)
 			else:
-				print('[plug-conv] Unchanged, Plugin Grace not Found')
+				print("[plug-conv] Unchanged, Grace (VST2) only supports Format 1 .WAV")
+		else:
+			print('[plug-conv] Unchanged, Plugin Grace not Found')
 
 	# -------------------- sampler > vst2 (drops) --------------------
 
@@ -91,4 +90,4 @@ def convert_inst(instdata, platform_id):
 					if 'shape' in asdr_lfo: vst_inst.drops_setvalue('filter_lfo_type', vst_inst.drops_shape(asdr_lfo['shape']))
 					if 'attack' in asdr_lfo: vst_inst.drops_setvalue('filter_lfo_fade', xtramath.clamp(asdr_lfo['attack']/10, 0, 1))
 
-		list_vst.replace_data(instdata, 2, 'lin', 'Drops', 'raw', data_nullbytegroup.make(vst_inst.drops_get()), None)
+		plugin_vst2.replace_data(vst_instdata, 'lin', 'Drops', 'raw', data_nullbytegroup.make(vst_inst.drops_get()), None)

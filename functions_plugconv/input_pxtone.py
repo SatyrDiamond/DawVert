@@ -4,7 +4,7 @@
 import base64
 import struct
 from functions import data_bytes
-from functions import list_vst
+from functions import plugin_vst2
 from functions import params_vst
 
 from functions_plugparams import params_vital
@@ -68,6 +68,6 @@ def convert_inst(instdata):
 				unit_num += 1
 
 			vitaldata = params_vital.getdata()
-			list_vst.replace_data(instdata, 2, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
+			plugin_vst2.replace_data(instdata, 'any', 'Vital', 'raw', vitaldata.encode('utf-8'), None)
 	except:
 		pass

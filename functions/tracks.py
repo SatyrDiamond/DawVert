@@ -225,6 +225,7 @@ def r_add_return_basicdata(cvpj_l, i_location, i_sendname, trk_name, trk_color, 
 
 def r_add_send(cvpj_l, i_trackid, i_sendname, i_amount, i_sendautoid):
     send_data = {'amount': i_amount, 'sendid': i_sendname}
+    if i_sendautoid != None: send_data['sendautoid'] = i_sendautoid
     data_values.nested_dict_add_to_list(cvpj_l, ['track_data', i_trackid, 'sends_audio'], send_data)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -284,7 +285,7 @@ nopl_autopoints = {}
 def a_auto_nopl_addpoint(in_type, in_id, in_name, point_pos, point_val, point_type):
     global nopl_autopoints
     pointdata = {"position": point_pos, "value": point_val, "type": point_type}
-    if in_type in ['track', 'plugin', 'fxmixer', 'slot']:
+    if in_type in ['track', 'plugin', 'fxmixer', 'slot', 'send']:
         data_values.nested_dict_add_to_list(nopl_autopoints, [in_type, in_id, in_name], pointdata)
     else: 
         data_values.nested_dict_add_to_list(nopl_autopoints, [in_type, in_name], pointdata)
@@ -305,7 +306,7 @@ def a_auto_nopl_to_pl(pointsdata):
 def a_auto_nopl_to_cvpj(cvpj_l):
     global nopl_autopoints
     for in_type in nopl_autopoints:
-        if in_type in ['track', 'plugin', 'fxmixer', 'slot']:
+        if in_type in ['track', 'plugin', 'fxmixer', 'slot', 'send']:
             for in_id in nopl_autopoints[in_type]:
                 for in_name in nopl_autopoints[in_type][in_id]:
                     #print(in_type, in_id, in_name, nopl_autopoints[in_type][in_id][in_name])

@@ -710,7 +710,7 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
 
                 auto_nameiddata_send = {}
                 if 'automation' in projJ and 'sendautoid' in json_send:
-                    if 'slot' in projJ['automation']:
+                    if 'send' in projJ['automation']:
                         if json_send['sendautoid'] in projJ['automation']['send']:
                             auto_nameiddata_send = get_auto_ids_data(projJ['automation']['send'][json_send['sendautoid']])
 

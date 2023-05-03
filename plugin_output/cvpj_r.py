@@ -14,13 +14,10 @@ class output_cvpj_f(plugin_output.base):
     def plugin_archs(self): return None
     def getdawcapabilities(self): 
         return {
-        'fxrack': 'debug',
-        'r_track_lanes': 'debug',
-        'placement_cut': 'debug',
-        'placement_loop': 'debug',
-        'no_placements': 'debug',
-        'no_pl_auto': 'debug',
-        'pl_audio_events': 'debug',
+        'fxrack': True,
+        'r_track_lanes': False,
+        'no_pl_auto': False,
+        'pl_audio_events': False,
         }
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)

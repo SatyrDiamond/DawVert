@@ -90,7 +90,9 @@ def r_trackfx2fxrack(cvpj_l, cvpjtype):
         if 'sends_audio' in s_trkdata:
             for send_data in s_trkdata['sends_audio']:
                 if send_data['sendid'] in returnids:
-                    tracks.fxrack_addsend(cvpj_l, fxnum, returnids[send_data['sendid']], send_data['amount'], None)
+                    sendautoid = None
+                    if 'sendautoid' in send_data: sendautoid = send_data['sendautoid']
+                    tracks.fxrack_addsend(cvpj_l, fxnum, returnids[send_data['sendid']], send_data['amount'], sendautoid)
             del s_trkdata['sends_audio']
 
         track_dest_type = None

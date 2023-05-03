@@ -360,6 +360,9 @@ class input_cvpj_r(plugin_input.base):
             slot_mixereqfxslotdata['mid'] = mach_mixer_eq_mid[machnum-1]
             slot_mixereqfxslotdata['high'] = mach_mixer_eq_high[machnum-1]
 
+            tracks.r_add_send(cvpj_l, cvpj_trackid, 'master_delay', mach_mixer_send_delay[machnum-1], cvpj_trackid+'_send_delay')
+            tracks.r_add_send(cvpj_l, cvpj_trackid, 'master_reverb', mach_mixer_send_reverb[machnum-1], cvpj_trackid+'_send_reverb')
+
             tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['track', cvpj_trackid], None, None, 
             'machine'+str(machnum)+'_eq', 'mixer_eq', slot_mixereqfxslotdata)
 
@@ -431,8 +434,13 @@ class input_cvpj_r(plugin_input.base):
             mixerid = 'MIXER_'+str(mixernum+1)
             for machnum in range(7):
                 auto_machid = machnum+1+(mixernum*7)
+
                 if machnum in AUTO_data[mixerid]: 
                     tracks.a_auto_nopl_twopoints('track', 'MACH'+str(auto_machid), 'vol', AUTO_data[mixerid][machnum], 4, 'normal')
+                if (machnum*2)+8 in AUTO_data[mixerid]: 
+                    tracks.a_auto_nopl_twopoints('send', 'MACH'+str(auto_machid)+'_send_delay', 'amount', AUTO_data[mixerid][(machnum*2)+8], 4, 'normal')
+                if (machnum*2)+9 in AUTO_data[mixerid]: 
+                    tracks.a_auto_nopl_twopoints('send', 'MACH'+str(auto_machid)+'_send_reverb', 'amount', AUTO_data[mixerid][(machnum*2)+9], 4, 'normal')
                 if machnum+24 in AUTO_data[mixerid]: 
                     tracks.a_auto_nopl_twopoints('plugin', 'machine'+str(auto_machid)+'_eq', 'bass', AUTO_data[mixerid][machnum+24], 4, 'normal')
                 if machnum+32 in AUTO_data[mixerid]: 
@@ -474,6 +482,15 @@ class input_cvpj_r(plugin_input.base):
                     slot_fxslotdata = CausticFXData[slotnum]['controls']
                     tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['master'], int(not int(slot_fxslotdata[5])), None, 
                         'master_slot'+str(slotnum), caustic_fxtype[CausticFXData[slotnum]['type']], slot_fxslotdata)
+
+
+        tracks.r_add_return(cvpj_l, ['master'], 'master_delay')
+        tracks.r_add_return_basicdata(cvpj_l, ['master'], 'master_delay', 'Delay', [0.64, 0.78, 0.87], None, None)
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['send', None, 'master_delay'], None, master_params['delay']['wet'], 'master_delay', 'delay', master_params['delay'])
+
+        tracks.r_add_return(cvpj_l, ['master'], 'master_reverb')
+        tracks.r_add_return_basicdata(cvpj_l, ['master'], 'master_reverb', 'Reverb', [0.83, 0.82, 0.51], None, None)
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['send', None, 'master_reverb'], None, master_params['reverb']['wet'], 'master_reverb', 'reverb', master_params['reverb'])
 
         tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['master'], int(not int(master_params['eq']['muted'])), None, 
         'master_eq', 'master_eq', master_params['eq'])

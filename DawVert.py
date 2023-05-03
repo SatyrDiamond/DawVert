@@ -21,6 +21,7 @@ parser.add_argument("-ot", default=None)
 parser.add_argument("--samplefolder", default=None)
 parser.add_argument("--soundfont", default=None)
 parser.add_argument("--songnum", default=1)
+parser.add_argument("--extrafile", default=None)
 parser.add_argument("--use-experiments-input", action='store_true')
 parser.add_argument("--mi2m--output-unused-nle", action='store_true')
 parser.add_argument("-y", action='store_true')
@@ -39,6 +40,7 @@ if args.y == True: do_overwrite = True
 if args.soundfont != None: extra_json['soundfont'] = args.soundfont
 if args.samplefolder != None: extra_json['samplefolder'] = args.samplefolder
 if args.songnum != None: extra_json['songnum'] = args.songnum
+if args.extrafile != None: extra_json['extrafile'] = args.extrafile
 if args.mi2m__output_unused_nle == True: extra_json['mi2m-output-unused-nle'] = True
 
 typelist = {}

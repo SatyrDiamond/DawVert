@@ -11,6 +11,85 @@ import plugin_input
 import json
 import struct
 
+# --------------------------------------- Bank File ----------------------------------------
+
+def load_bank(filename):
+    bio_bankfile = open(filename, 'rb')
+
+    verMajor = bio_bankfile.read(1)
+    verMinor = bio_bankfile.read(1)
+    signature = bio_bankfile.read(6)
+    numUsed = int.from_bytes(bio_bankfile.read(2), 'little')
+    numInstruments = int.from_bytes(bio_bankfile.read(2), 'little')
+    offsetName = int.from_bytes(bio_bankfile.read(4), 'little')
+    offsetData = int.from_bytes(bio_bankfile.read(4), 'little')
+    
+    adlib_bnk_names = {}
+    bio_bankfile.seek(offsetName)
+    for _ in range(numInstruments):
+        index = int.from_bytes(bio_bankfile.read(2), 'little')
+        flags = bio_bankfile.read(1)[0]
+        instname = data_bytes.readstring_fixedlen(bio_bankfile, 9, None)
+        adlib_bnk_names[instname] = [index, flags]
+    
+    adlib_bnk_data = []
+    bio_bankfile.seek(offsetData)
+    for _ in range(numUsed):
+        PercData = struct.unpack('BB', bio_bankfile.read(2))
+        oplModulator = struct.unpack('BBBBBBBBBBBBB', bio_bankfile.read(13))
+        oplCarrier = struct.unpack('BBBBBBBBBBBBB', bio_bankfile.read(13))
+        WaveSel = struct.unpack('BB', bio_bankfile.read(2))
+        adlib_bnk_data.append([PercData, oplModulator, oplCarrier, WaveSel])
+    
+    return adlib_bnk_names, adlib_bnk_data
+
+def decode_inst(instname):
+    opl2data = adlib_bnk[1][adlib_bnk[0][instname][0]]
+
+    cvpj_instdata = {}
+    cvpj_instdata['middlenote'] = 24
+    cvpj_instdata['plugin'] = 'opl2'
+    plugindata = cvpj_instdata['plugindata'] = {}
+
+    plugindata['tremolo_depth'] = 0
+    plugindata['vibrato_depth'] = 0
+    plugindata['fm'] = 1
+
+    plugindata['op1'] = {}
+    plugindata['op2'] = {}
+
+    plugindata['op1']['scale'] = opl2data[1][0]
+    plugindata['op1']['freqmul'] = opl2data[1][1]
+    plugindata['feedback'] = opl2data[1][2]
+    plugindata['op1']['env_attack'] = (opl2data[1][3]*-1)+15
+    plugindata['op1']['env_sustain'] = (opl2data[1][4]*-1)+15
+    plugindata['op1']['perc_env'] = int(not bool(opl2data[1][5]))
+    plugindata['op1']['env_decay'] = (opl2data[1][6]*-1)+15
+    plugindata['op1']['env_release'] = (opl2data[1][7]*-1)+15
+    plugindata['op1']['level'] = (opl2data[1][8]*-1)+63
+    plugindata['op1']['tremolo'] = opl2data[1][9]
+    plugindata['op1']['vibrato'] = opl2data[1][10]
+    plugindata['op1']['ksr'] = opl2data[1][11]
+    plugindata['fm'] = opl2data[1][12]
+    plugindata['op1']['waveform'] = opl2data[3][0]
+
+    plugindata['op2']['scale'] = opl2data[2][0]
+    plugindata['op2']['freqmul'] = opl2data[2][1]
+    plugindata['op2']['env_attack'] = (opl2data[2][3]*-1)+15
+    plugindata['op2']['env_sustain'] = (opl2data[2][4]*-1)+15
+    plugindata['op2']['perc_env'] = int(not bool(opl2data[2][5]))
+    plugindata['op2']['env_decay'] = (opl2data[2][6]*-1)+15
+    plugindata['op2']['env_release'] = (opl2data[2][7]*-1)+15
+    plugindata['op2']['level'] = (opl2data[2][8]*-1)+63
+    plugindata['op2']['tremolo'] = opl2data[2][9]
+    plugindata['op2']['vibrato'] = opl2data[2][10]
+    plugindata['op2']['ksr'] = opl2data[2][11]
+    plugindata['op2']['waveform'] = opl2data[3][1]
+
+    return cvpj_instdata
+
+# --------------------------------------- Track Data ----------------------------------------
+
 def parsetrack_tempo(file_stream, tickBeat):
     track_name = data_bytes.readstring_fixedlen(file_stream, 15, 'ascii')
     track_tempo = struct.unpack("f", file_stream.read(4))[0]
@@ -78,14 +157,22 @@ def parsetrack(file_stream, tracknum, notelen):
 
     for used_instrument in rol_tr_timbre[2]:
         instid = trackinstpart+used_instrument
-        adlibrol_instname = idvals.get_idval(idvals_inst_adlib_rol, used_instrument.upper(), 'name')
+
+        used_instrument_upper = used_instrument.upper()
+
+        adlibrol_instname = idvals.get_idval(idvals_inst_adlib_rol, used_instrument_upper, 'name')
         if adlibrol_instname == 'noname': adlibrol_instname = used_instrument
 
-        adlibrol_gminst = idvals.get_idval(idvals_inst_adlib_rol, used_instrument.upper(), 'gm_inst')
         cvpj_instdata = {}
+
+        adlibrol_gminst = idvals.get_idval(idvals_inst_adlib_rol, used_instrument_upper, 'gm_inst')
         if adlibrol_gminst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': adlibrol_gminst-1}}
 
-        tracks.m_create_inst(cvpj_l, instid,cvpj_instdata)
+        if adlib_bnk != None:
+            if used_instrument_upper in adlib_bnk[0]:
+                cvpj_instdata = decode_inst(used_instrument_upper)
+
+        tracks.m_create_inst(cvpj_l, instid, cvpj_instdata)
         tracks.m_basicdata_inst(cvpj_l, instid, adlibrol_instname+' (Trk'+str(tracknum+1)+')', None, None, None)
         tracks.m_param_inst(cvpj_l, instid, 'fxrack_channel', tracknum+1)
 
@@ -106,6 +193,8 @@ def parsetrack(file_stream, tracknum, notelen):
     
     placementdata = placement_data.nl2pl(cvpj_notelist)
     tracks.m_playlist_pl(cvpj_l, tracknum+1, rol_tr_voice[0], None, placementdata)
+
+# --------------------------------------- Plugin ----------------------------------------
 
 class input_adlib_rol(plugin_input.base):
     def __init__(self): pass
@@ -132,8 +221,13 @@ class input_adlib_rol(plugin_input.base):
     def parse(self, input_file, extra_param):
         global cvpj_l
         global idvals_inst_adlib_rol
+        global adlib_bnk
 
         song_file = open(input_file, 'rb')
+
+        adlib_bnk = None
+        if 'extrafile' in extra_param:
+            adlib_bnk = load_bank(extra_param['extrafile'])
 
         idvals_inst_adlib_rol = idvals.parse_idvalscsv('data_idvals/adlib_rol_inst.csv')
 

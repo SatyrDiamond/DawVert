@@ -1,11 +1,10 @@
 import configparser
 import os
 import xml.etree.ElementTree as ET
-from os.path import expanduser
 from pathlib import Path
 
 config = configparser.ConfigParser()
-homepath = expanduser("~")
+homepath = os.path.expanduser("~")
 
 dawlist = []
 
@@ -13,7 +12,8 @@ l_path_aurdor = homepath+'/.cache/ardour6/vst'
 
 vst2ini = configparser.ConfigParser()
 vst3ini = configparser.ConfigParser()
-# CakeWalk
+
+# Ardour
 if os.path.exists(l_path_aurdor) == True: dawlist.append('ardour')
 
 if len(dawlist) >= 1:
@@ -28,8 +28,7 @@ elif len(dawlist) == 0:
 	print('[dawvert-vst] No DAWs Found. exit', end=' ')
 	exit()
 
-#if vst3ini.has_section(vst_name) == False:
-#vst2ini.add_section(vst_name)
+#  ------------------------------------- Ardour -------------------------------------
 
 if selecteddaw == 'ardour':
 	vstcachelist = os.listdir(l_path_aurdor)
@@ -63,8 +62,13 @@ if selecteddaw == 'ardour':
 			if vst3ini.has_section(vst_name) == False: vst3ini.add_section(vst_name)
 			vst3ini.set(vst_name, 'path', vst_path)
 
-	print('[dawvert-vst] # of VST2 Plugins:', len(vst2ini))
-	print('[dawvert-vst] # of VST3 Plugins:', len(vst3ini))
+#  ------------------------------------- Output -------------------------------------
 
-with open('vst2_lin.ini', 'w') as configfile: vst2ini.write(configfile)
-with open('vst3_lin.ini', 'w') as configfile: vst3ini.write(configfile)
+currentdir = os.getcwd() + '/__config/'
+os.makedirs(currentdir, exist_ok=True)
+
+with open(currentdir+'vst2_lin.ini', 'w') as configfile: vst2ini.write(configfile)
+with open(currentdir+'vst3_lin.ini', 'w') as configfile: vst3ini.write(configfile)
+
+print('[dawvert-vst] # of VST2 Plugins:', len(vst2ini))
+print('[dawvert-vst] # of VST3 Plugins:', len(vst3ini))

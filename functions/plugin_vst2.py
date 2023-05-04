@@ -5,6 +5,7 @@ from os.path import exists
 import configparser
 import base64
 import platform
+import os
 
 glo_vstpaths = {}
 
@@ -44,6 +45,7 @@ def find_path_by_name(in_name, platformtype, pefer_cpu_arch):
 	return output
 
 def replace_data(instdata, platform, in_name, datatype, data, numparams):
+	global cpu_arch_list
 	vst_cpuarch, vst_path = find_path_by_name(in_name, platform, cpu_arch_list[0])
 	platformtxt = getplatformtxt(platform)
 	if vst_path != None:
@@ -76,5 +78,7 @@ def loadlist(filepath, platform):
 	glo_vstpaths[getplatformtxt(platform)] = vstpaths
 
 def listinit():
-	loadlist('vst2_win.ini', 'win')
-	loadlist('vst2_lin.ini', 'lin')
+	currentdir = os.getcwd() + '/__config/'
+	os.makedirs(currentdir, exist_ok=True)
+	loadlist(currentdir+'plugins_vst2_win.ini', 'win')
+	loadlist(currentdir+'plugins_vst3_win.ini', 'lin')

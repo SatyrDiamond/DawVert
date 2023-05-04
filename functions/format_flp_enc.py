@@ -63,8 +63,8 @@ def make_arrangement(data_FLdt, arrangements):
                 if 'endoffset' in item: BytesIO_arrangement.write(item['endoffset'].to_bytes(4, 'little'))
                 else: BytesIO_arrangement.write(b'\xff\xff\xff\xff')
             else:
-                startoffset_out = -1
-                endoffset_out = -1
+                startoffset_out = 0
+                endoffset_out = 0
 
                 if 'startoffset' in item: startoffset_out = calctempotimed(item['startoffset'])
                 if 'endoffset' in item: endoffset_out = calctempotimed(item['endoffset'])

@@ -73,10 +73,10 @@ def convert_inst(instdata):
 		instdata['plugindata']['slices'] = cvpj_slices
 
 	# ---------------------------------------- slicex ----------------------------------------
-	elif plugindata['name'].lower() == 'slicex':
-		f = open("slicex"+str(temp_count)+".bin", "wb")
-		f.write(fl_plugstr.read())
-		temp_count += 1
+	#elif plugindata['name'].lower() == 'slicex':
+	#	f = open("slicex"+str(temp_count)+".bin", "wb")
+	#	f.write(fl_plugstr.read())
+	#	temp_count += 1
 
 	# ---------------------------------------- Wasp ----------------------------------------
 	elif plugindata['name'].lower() == 'wasp':

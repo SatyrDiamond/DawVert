@@ -44,7 +44,7 @@ class output_cvpjs(plugin_output.base):
         FL_Channels = FLP_Data['FL_Channels']
         CVPJ_Instruments = projJ['instruments_data']
         CVPJ_Samples = {}
-        if 'samples' in projJ: CVPJ_Samples = projJ['samples']
+        if 'sampleindex' in projJ: CVPJ_Samples = projJ['sampleindex']
 
         FLP_Data['FL_Patterns'] = {}
         FL_Patterns = FLP_Data['FL_Patterns']

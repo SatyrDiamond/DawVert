@@ -304,7 +304,7 @@ class input_flp(plugin_input.base):
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['timemarkers'] = cvpj_l_timemarkers
-        cvpj_l['samples'] = cvpj_l_samples
+        cvpj_l['sampleindex'] = cvpj_l_samples
 
         if 'Title' in FL_Main: song.add_info(cvpj_l, 'title', FL_Main['Title'])
         if 'Author' in FL_Main: song.add_info(cvpj_l, 'author', FL_Main['Author'])

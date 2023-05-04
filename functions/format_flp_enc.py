@@ -13,6 +13,13 @@ from functions import xtramath
 def utf16encode(text):
     return text.encode('utf-16le') + b'\x00\x00'
 
+def calctempotimed(i_value):
+    global FL_Main
+    i_tempomul = 120/FL_Main['Tempo']
+    i_out = (i_value*i_tempomul)*125
+    #print('VALUE', str(i_value).ljust(20), '| MUL', str(i_tempomul).ljust(20), '| OUT', str(i_out).ljust(20))
+    return i_out
+
 # ------------- make -------------
 def make_flevent(FLdt_bytes, value, data):
     if value <= 63 and value >= 0: # int8
@@ -40,20 +47,33 @@ def make_arrangement(data_FLdt, arrangements):
         placements = arrangements[arrangement]['items']
         BytesIO_arrangement = BytesIO()
         for item in placements:
-            #print(singlenote)
             BytesIO_arrangement.write(item['position'].to_bytes(4, 'little'))
             BytesIO_arrangement.write(item['patternbase'].to_bytes(2, 'little'))
-            BytesIO_arrangement.write(item['itemindex'].to_bytes(2, 'little'))
+            BytesIO_arrangement.write(int(item['itemindex']).to_bytes(2, 'little'))
             BytesIO_arrangement.write(int(item['length']).to_bytes(4, 'little'))
             BytesIO_arrangement.write(item['trackindex'].to_bytes(4, 'little'))
             BytesIO_arrangement.write(item['unknown1'].to_bytes(2, 'little'))
             BytesIO_arrangement.write(item['flags'].to_bytes(2, 'little'))
             BytesIO_arrangement.write(item['unknown2'].to_bytes(2, 'little'))
             BytesIO_arrangement.write(item['unknown3'].to_bytes(2, 'little'))
-            if 'startoffset' in item: BytesIO_arrangement.write(item['startoffset'].to_bytes(4, 'little'))
-            else: BytesIO_arrangement.write(b'\xff\xff\xff\xff')
-            if 'endoffset' in item: BytesIO_arrangement.write(item['endoffset'].to_bytes(4, 'little'))
-            else: BytesIO_arrangement.write(b'\xff\xff\xff\xff')
+
+            if int(item['itemindex']) > item['patternbase']:
+                if 'startoffset' in item: BytesIO_arrangement.write(item['startoffset'].to_bytes(4, 'little'))
+                else: BytesIO_arrangement.write(b'\xff\xff\xff\xff')
+                if 'endoffset' in item: BytesIO_arrangement.write(item['endoffset'].to_bytes(4, 'little'))
+                else: BytesIO_arrangement.write(b'\xff\xff\xff\xff')
+            else:
+                startoffset_out = -1
+                endoffset_out = -1
+
+                if 'startoffset' in item: startoffset_out = calctempotimed(item['startoffset'])
+                if 'endoffset' in item: endoffset_out = calctempotimed(item['endoffset'])
+
+                BytesIO_arrangement.write(struct.pack('<f', startoffset_out))
+                BytesIO_arrangement.write(struct.pack('<f', endoffset_out))
+
+
+
         BytesIO_arrangement.seek(0)
         make_flevent(data_FLdt, 36, 0)
         make_flevent(data_FLdt, 233, BytesIO_arrangement.read()) #PlayListItems
@@ -500,6 +520,9 @@ def make_mixer(data_FLdt, mixer):
         make_flevent(data_FLdt, 147, fltrki_outchannum)
 
 def make(FLP_Data, outputfile):
+    global FL_Main
+    FL_Main = FLP_Data['FL_Main']
+
     flpout = open(outputfile, 'wb')
     numofchannels = len(FLP_Data['FL_Channels'])
     #FLhd

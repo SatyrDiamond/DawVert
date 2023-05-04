@@ -16,6 +16,13 @@ def create_bytesio(data):
     bytesio.seek(0)
     return [bytesio, bytesio_filesize]
 
+def calctempotimed(i_value):
+    global FL_Main
+    i_tempomul = FL_Main['Tempo']/120
+    i_out = (i_value*i_tempomul)/125
+    #print('VALUE', str(i_value).ljust(20), '| MUL', str(i_tempomul).ljust(20), '| OUT', str(i_out).ljust(20))
+    return i_out
+
 # ------------- parse -------------
 def parse_arrangement(arrdata):
     bio_fldata = create_bytesio(arrdata)
@@ -31,10 +38,21 @@ def parse_arrangement(arrdata):
         placement['flags'] = int.from_bytes(bio_fldata[0].read(2), "little")
         placement['unknown2'] = int.from_bytes(bio_fldata[0].read(2), "little")
         placement['unknown3'] = int.from_bytes(bio_fldata[0].read(2), "little")
-        startoffset = int.from_bytes(bio_fldata[0].read(4), "little")
-        endoffset = int.from_bytes(bio_fldata[0].read(4), "little")
-        if startoffset != 4294967295 and startoffset != 3212836864: placement['startoffset'] = startoffset
-        if endoffset != 4294967295 and endoffset != 3212836864: placement['endoffset'] = endoffset
+
+        startoffset_bytes = bio_fldata[0].read(4)
+        endoffset_bytes = bio_fldata[0].read(4)
+
+        startoffset = int.from_bytes(startoffset_bytes, "little")
+        endoffset = int.from_bytes(endoffset_bytes, "little")
+        startoffset_float = struct.unpack('<f', startoffset_bytes)[0]
+        endoffset_float = struct.unpack('<f', endoffset_bytes)[0]
+
+        if placement['itemindex'] > placement['patternbase']:
+            if startoffset != 4294967295 and startoffset != 3212836864: placement['startoffset'] = startoffset
+            if endoffset != 4294967295 and endoffset != 3212836864: placement['endoffset'] = endoffset
+        else:
+            if startoffset_float > 0: placement['startoffset'] = calctempotimed(startoffset_float)
+            if endoffset_float > 0: placement['endoffset'] = calctempotimed(endoffset_float)
         output.append(placement)
     return output
 
@@ -141,6 +159,7 @@ def parse_flevent(datastream):
     return [event_id, event_data]
 
 def parse(inputfile):
+    global FL_Main
     fileobject = open(inputfile, 'rb')
     headername = fileobject.read(4)
     rifftable = data_bytes.riff_read(fileobject, 0)

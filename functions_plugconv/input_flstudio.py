@@ -171,7 +171,7 @@ def convert_inst(instdata):
 		params_vst.add_param(vstdxparams, 13, "Waveform", fldx_waveform/65536)
 		params_vst.add_param(vstdxparams, 14, "Mod Thru", fldx_mod_thru/65536)
 		params_vst.add_param(vstdxparams, 15, "LFO Rate", fldx_lforate/65536)
-		plugin_vst2.replace_data(instdata, 'any', 'DX10', 'params', vstdxparams, 16)
+		plugin_vst2.replace_data(instdata, 'any', 'DX10', 'param', vstdxparams, 16)
 
 	# ---------------------------------------- SimSynth ----------------------------------------
 	elif plugindata['name'].lower() == 'simsynth':

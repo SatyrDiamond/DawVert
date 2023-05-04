@@ -30,7 +30,8 @@ def read_vst2_fxChunkSet(in_stream, is_bank):
 	fx_version = in_stream.read(4)
 	fx_num_programs = int.from_bytes(in_stream.read(4), "big")
 	fx_prgname = in_stream.read(28).decode().split('\x00')[0]
-	fx_future = in_stream.read(100)
+	if is_bank == True:
+		fx_future = in_stream.read(100)
 	fx_chunk_size = int.from_bytes(in_stream.read(4), "big")
 	fx_chunk = in_stream.read(fx_chunk_size)
 	out_cvpj_data = {}

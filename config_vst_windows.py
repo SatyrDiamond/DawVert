@@ -1,6 +1,9 @@
 import winreg
 import configparser
 import os
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
 config = configparser.ConfigParser()
 
 def reg_get(name, regpath):
@@ -32,12 +35,17 @@ def reg_checkexist(winregpath):
 
 dawlist = []
 
+homepath = os.path.expanduser("~")
+
+l_path_aurdor = homepath+'\\AppData\\Local\\Ardour6\\cache\\vst'
 w_regkey_cakewalk = 'SOFTWARE\\Cakewalk Music Software\\Cakewalk\\Cakewalk VST X64\\Inventory'
 
 vst2ini = configparser.ConfigParser()
 vst3ini = configparser.ConfigParser()
+
 if reg_checkexist(w_regkey_cakewalk) == True: dawlist.append('cakewalk')
-#if os.path.exists(os.path.expanduser('~\Documents\Image-Line\FL Studio\Presets\Plugin database\Installed')) == True: dawlist.append('flstudio')
+if os.path.exists(l_path_aurdor) == True: dawlist.append('ardour')
+
 
 if len(dawlist) >= 1:
 	print('[dawvert-vst] Plugin List from DAWs Found:', end=' ')
@@ -83,9 +91,46 @@ if selecteddaw == 'cakewalk':
 				else: vst3ini.set(vst_name, 'path_i386', vst_path)
 				if vst_isSynth == 1: vst3ini.set(vst_name, 'type', 'synth')
 				else: vst3ini.set(vst_name, 'type', 'effect')
-	with open('vst2_win.ini', 'w') as configfile:
-  		vst2ini.write(configfile)
-	with open('vst3_win.ini', 'w') as configfile:
-  		vst3ini.write(configfile)
-	print('[dawvert-vst] # of VST2 Plugins:', len(vst2ini))
-	print('[dawvert-vst] # of VST3 Plugins:', len(vst3ini))
+
+#  ------------------------------------- Ardour -------------------------------------
+if selecteddaw == 'ardour':
+	vstcachelist = os.listdir(l_path_aurdor)
+	for vstcache in vstcachelist:
+		vstxmlfile = vstcache
+		vstxmlpath = l_path_aurdor+'\\'+vstxmlfile
+		vstxmlext = Path(vstxmlfile).suffix
+		vstxmldata = ET.parse(vstxmlpath)
+		vstxmlroot = vstxmldata.getroot()
+
+		if vstxmlext == '.v2i':
+			vst_path = vstxmlroot.get('binary')
+			VST2Info = vstxmlroot.findall('VST2Info')[0]
+			vst_name = VST2Info.get('name')
+			vst_fourid = VST2Info.get('id')
+			vst_creator = VST2Info.get('creator')
+			vst_arch = vstxmlroot.get('arch')
+			vst_category = VST2Info.get('category')
+			if vst_arch == 'x86_64':
+				if vst2ini.has_section(vst_name) == False: vst2ini.add_section(vst_name)
+				vst2ini.set(vst_name, 'path_amd64', vst_path)
+				vst2ini.set(vst_name, 'fourid', vst_fourid)
+				vst2ini.set(vst_name, 'creator', vst_creator)
+				if vst_category == 'Instrument': vst2ini.set(vst_name, 'type', 'synth')
+				if vst_category == 'Effect': vst2ini.set(vst_name, 'type', 'effect')
+		if vstxmlext == '.v3i':
+			vst_path = vstxmlroot.get('bundle')
+			VST3Info = vstxmlroot.findall('VST3Info')[0]
+			vst_name = VST3Info.get('name')
+			if vst3ini.has_section(vst_name) == False: vst3ini.add_section(vst_name)
+			vst3ini.set(vst_name, 'path', vst_path)
+
+#  ------------------------------------- Output -------------------------------------
+
+currentdir = os.getcwd() + '/__config/'
+os.makedirs(currentdir, exist_ok=True)
+
+with open(currentdir+'plugins_vst2_win.ini', 'w') as configfile: vst2ini.write(configfile)
+with open(currentdir+'plugins_vst3_win.ini', 'w') as configfile: vst3ini.write(configfile)
+
+print('[dawvert-vst] # of VST2 Plugins:', len(vst2ini))
+print('[dawvert-vst] # of VST3 Plugins:', len(vst3ini))

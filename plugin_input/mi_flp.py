@@ -215,7 +215,7 @@ class input_flp(plugin_input.base):
             if 'slots' in fl_fxhan:
                 for fl_fxslot in fl_fxhan['slots']:
                     fl_fxslotdata = fl_fxhan['slots'][fl_fxslot]
-                    if fl_fxslotdata != None:
+                    if fl_fxslotdata != None and 'plugin' in fl_fxslotdata and 'pluginparams' in fl_fxslotdata:
                         fxslotdata = {}
                         fxslotdata['enabled'] = 1
                         fxslotdata['plugin'] = 'native-fl'

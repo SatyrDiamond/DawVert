@@ -559,7 +559,9 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
                 if 'cut' in json_placement: 
                     if 'type' in json_placement['cut']:
                         json_placement_cut = json_placement['cut']
-                        if json_placement_cut['type'] == 'cut': xml_sampletco.set('off', str(int(json_placement_cut['start'] * 12)*-1))
+                        if json_placement_cut['type'] == 'cut': 
+                            if 'start' in json_placement_cut:
+                                xml_sampletco.set('off', str(int(json_placement_cut['start'] * 12)*-1))
                 printcountplace += 1
             print('['+str(printcountplace)+']')
 

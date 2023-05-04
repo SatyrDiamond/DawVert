@@ -9,6 +9,7 @@
 
 from functions import placements
 from functions import tracks
+from functions import data_values
 from functions import notelist_data
 from functions import xtramath
 import json
@@ -386,6 +387,9 @@ def m2r(song):
 
     for playlistentry in playlist:
         plrow = playlist[playlistentry]
+
+
+
         if 'placements_notes' in plrow:
             placements = plrow['placements_notes']
             if 'name' in playlist[playlistentry]:
@@ -398,13 +402,40 @@ def m2r(song):
                         lanedata = cvpj_trackplacements[instrument]['lanedata']
                         if playlistentry not in lanedata:
                             lanedata[playlistentry] = {}
-                            if 'name' in playlist[playlistentry]:
-                                lanedata[playlistentry]['name'] = playlist[playlistentry]['name']
-                            if 'color' in playlist[playlistentry]:
-                                lanedata[playlistentry]['color'] = playlist[playlistentry]['color']
+                            if 'name' in playlist[playlistentry]: lanedata[playlistentry]['name'] = playlist[playlistentry]['name']
+                            if 'color' in playlist[playlistentry]: lanedata[playlistentry]['color'] = playlist[playlistentry]['color']
                             cvpj_trackplacements[instrument]['laneorder'].append(playlistentry)
                             lanedata[playlistentry]['notes'] = []
                         cvpj_trackplacements[instrument]['lanedata'][playlistentry]['notes'].append(splitted_insts[instrument])
+
+        if 'placements_audio' in plrow:
+            placements = plrow['placements_audio']
+            fxrack_sep_placements = {}
+            for placement in placements:
+                fxrack = -1
+                if 'fxrack_channel' in placement:
+                    fxrack = placement['fxrack_channel']
+                    del placement['fxrack_channel']
+                    data_values.nested_dict_add_to_list(fxrack_sep_placements, [fxrack], placement)
+
+            for fxrack_sep_placement in fxrack_sep_placements:
+                cvpj_audiotrackid = 'm2r_audiotrack_'+str(playlistentry)+'_'+str(fxrack_sep_placement)
+                cvpj_trackdata[cvpj_audiotrackid] = {}
+                trackdata = cvpj_trackdata[cvpj_audiotrackid]
+                trackdata['type'] = 'audio'
+                cvpj_trackorder.insert(0, cvpj_audiotrackid)
+                cvpj_trackplacements[cvpj_audiotrackid] = {}
+                cvpj_trackplacements[cvpj_audiotrackid]['audio'] = []
+
+                if 'name' in playlist[playlistentry]: trackdata['name'] = playlist[playlistentry]['name']
+                if 'color' in playlist[playlistentry]: trackdata['color'] = playlist[playlistentry]['color']
+
+                if fxrack_sep_placement != -1: trackdata['fxrack_channel'] = fxrack_sep_placement
+                for placement in fxrack_sep_placements[fxrack_sep_placement]:
+                    cvpj_trackplacements[cvpj_audiotrackid]['audio'].append(placement)
+            
+
+
 
     cvpj_proj['track_data'] = cvpj_trackdata
     cvpj_proj['track_order'] = cvpj_trackorder

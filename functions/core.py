@@ -173,6 +173,9 @@ def convert_type_output(extra_json):
 	if out_type != 'debug':
 		convproj_j[0] = song_compat.makecompat(convproj_j[0], in_type, in_dawcapabilities, out_dawcapabilities)
 
+	if in_type == 'r':
+		convproj_j[0] = song_compat.makecompat_any(convproj_j[0], in_type, in_dawcapabilities, out_dawcapabilities)
+
 	if in_type == 'ri' and out_type == 'mi': convproj_j[0] = song_convert.ri2mi(convproj_j[0])
 	if in_type == 'ri' and out_type == 'r': convproj_j[0] = song_convert.ri2r(convproj_j[0])
 
@@ -192,7 +195,9 @@ def convert_type_output(extra_json):
 	if out_type != 'debug':
 		convproj_j[0] = song_compat.makecompat(convproj_j[0], out_type, in_dawcapabilities, out_dawcapabilities)
 
-	convproj_j[0] = song_compat.makecompat_any(convproj_j[0], out_type, in_dawcapabilities, out_dawcapabilities)
+	if in_type != 'r':
+		convproj_j[0] = song_compat.makecompat_any(convproj_j[0], out_type, in_dawcapabilities, out_dawcapabilities)
+		
 	convproj_j[1] = currentplug_output[3]
 	convproj_j[2] = currentplug_output[4]
 

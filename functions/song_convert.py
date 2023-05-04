@@ -424,32 +424,69 @@ def m2mi_checkdup(cvpj_notelistindex, nledata):
     else:
         return None
 
+m2mi_sample_names = ['file', 'name', 'color', 'stretch', 'vol', 'pan', 'fxrack_channel']
+
 def m2mi(song):
     print('[song-convert] Converting from Multiple > MultipleIndexed')
     global cvpj_proj
     cvpj_proj = json.loads(song)
     cvpj_playlist = cvpj_proj['playlist']
-    cvpj_notelistindex = {}
+
     pattern_number = 1
+    cvpj_notelistindex = {}
     for cvpj_playlistentry in cvpj_playlist:
         cvpj_playlistentry_data = cvpj_playlist[cvpj_playlistentry]
-        if 'placements_notes' not in cvpj_playlistentry_data:
-            cvpj_placements = []
-        else:
-            cvpj_placements = cvpj_playlistentry_data['placements_notes']
-        for cvpj_placement in cvpj_placements:
+        if 'placements_notes' not in cvpj_playlistentry_data: cvpj_placements_notes = []
+        else: cvpj_placements_notes = cvpj_playlistentry_data['placements_notes']
+        for cvpj_placement in cvpj_placements_notes:
             cvpj_notelist = cvpj_placement['notelist']
             temp_nle = {}
             temp_nle['notelist'] = cvpj_notelist.copy()
             checksamenl = m2mi_checkdup(cvpj_notelistindex, temp_nle)
-            if checksamenl != None:
-                cvpj_placement['fromindex'] = checksamenl
+            if checksamenl != None: cvpj_placement['fromindex'] = checksamenl
             else:
                 cvpj_notelistindex['m2mi_' + str(pattern_number)] = temp_nle
                 cvpj_placement['fromindex'] = 'm2mi_' + str(pattern_number)
                 del cvpj_placement['notelist']
             pattern_number += 1
     cvpj_proj['notelistindex'] = cvpj_notelistindex
+
+    sample_number = 1
+    cvpj_sampleindex = {}
+    existingsamples = []
+    for cvpj_playlistentry in cvpj_playlist:
+        cvpj_playlistentry_data = cvpj_playlist[cvpj_playlistentry]
+        if 'placements_audio' not in cvpj_playlistentry_data: cvpj_placements_audio = []
+        else: cvpj_placements_audio = cvpj_playlistentry_data['placements_audio']
+        for cvpj_placement in cvpj_placements_audio:
+            sampledata = [None, None, None, None, None, None, None, None]
+
+            for num in range(7):
+                if m2mi_sample_names[num] in cvpj_placement:
+                    sampledata[num] = cvpj_placement[m2mi_sample_names[num]]
+                    del cvpj_placement[m2mi_sample_names[num]]
+
+            if sampledata not in existingsamples:
+                existingsamples.append(sampledata)
+            
+            fromindexnum = existingsamples.index(sampledata)
+            cvpj_placement['fromindex'] = 'm2mi_audio_' + str(fromindexnum+1)
+
+    sample_number = 1
+    for existingsample in existingsamples:
+
+        cvpj_sampledata = {}
+        for num in range(7):
+            if existingsample[num] != None:
+                cvpj_sampledata[m2mi_sample_names[num]] = existingsample[num]
+
+        cvpj_sampleindex['m2mi_audio_' + str(sample_number)] = cvpj_sampledata
+        sample_number += 1
+
+
+    cvpj_proj['sampleindex'] = cvpj_sampleindex
+
+            
     return json.dumps(cvpj_proj)
 
 # ---------------------------------- MultipleIndexed to Multiple ----------------------------------
@@ -458,6 +495,8 @@ def mi2m(song, extra_json):
     print('[song-convert] Converting from MultipleIndexed > Multiple')
     cvpj_proj = json.loads(song)
     t_s_playlist = cvpj_proj['playlist']
+
+
     if 'notelistindex' in cvpj_proj:
         t_s_notelistindex = cvpj_proj['notelistindex']
         unused_notelistindex = list(t_s_notelistindex)
@@ -477,6 +516,7 @@ def mi2m(song, extra_json):
                                 pldata['notelist'] = index_pl_data['notelist']
                                 if 'name' in index_pl_data: pldata['name'] = index_pl_data['name']
                                 if 'color' in index_pl_data: pldata['color'] = index_pl_data['color']
+
         del cvpj_proj['notelistindex']
         print('[song-convert] Unused NotelistIndexes:', unused_notelistindex)
 
@@ -486,12 +526,12 @@ def mi2m(song, extra_json):
 
         if output_unused_patterns == True:
             unusedplrowfound = None
-            plrow = 1
+            plrow = 300
             while unusedplrowfound == None:
                 if str(plrow) not in t_s_playlist: unusedplrowfound = True
                 else: unusedplrowfound = str(plrow)
                 plrow += 1
-                if plrow == 1000: break
+                if plrow == 2000: break
             if unusedplrowfound != None:
                 tracks.m_playlist_pl(cvpj_proj, unusedplrowfound, '__UNUSED__', None, None)
 
@@ -508,4 +548,27 @@ def mi2m(song, extra_json):
 
     else:
         print('[song-convert] notelistindex not found.')
+
+
+    if 'sampleindex' in cvpj_proj:
+        t_s_samplesindex = cvpj_proj['sampleindex']
+        for pl_row in t_s_playlist:
+            pl_row_data = t_s_playlist[pl_row]
+            if 'placements_audio' in pl_row_data:
+                pl_row_placements = pl_row_data['placements_audio']
+                for pldata in pl_row_placements:
+                    if 'fromindex' in pldata:
+                        fromindex = pldata['fromindex']
+                        if fromindex in t_s_samplesindex:
+                            index_pl_data = t_s_samplesindex[fromindex]
+                            del pldata['fromindex']
+                            if 'name' in index_pl_data: pldata['name'] = index_pl_data['name']
+                            if 'color' in index_pl_data: pldata['color'] = index_pl_data['color']
+                            if 'pan' in index_pl_data: pldata['pan'] = index_pl_data['pan']
+                            if 'vol' in index_pl_data: pldata['vol'] = index_pl_data['vol']
+                            if 'file' in index_pl_data: pldata['file'] = index_pl_data['file']
+                            if 'fxrack_channel' in index_pl_data: pldata['fxrack_channel'] = index_pl_data['fxrack_channel']
+        del cvpj_proj['sampleindex']
+
+
     return json.dumps(cvpj_proj)

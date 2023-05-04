@@ -43,6 +43,8 @@ class output_cvpjs(plugin_output.base):
         FLP_Data['FL_Channels'] = {}
         FL_Channels = FLP_Data['FL_Channels']
         CVPJ_Instruments = projJ['instruments_data']
+        CVPJ_Samples = {}
+        if 'samples' in projJ: CVPJ_Samples = projJ['samples']
 
         FLP_Data['FL_Patterns'] = {}
         FL_Patterns = FLP_Data['FL_Patterns']
@@ -125,12 +127,19 @@ class output_cvpjs(plugin_output.base):
         if 'bpm' in projJ: FL_Main['Tempo'] = projJ['bpm']
         if 'pitch' in projJ: FL_Main['MainPitch'] = struct.unpack('H', struct.pack('h', int(projJ['pitch'])))[0]
 
-        instrumentsorder = projJ['instruments_order']
-
+        samples_id = {}
         inst_id = {}
         inst_id_count = 0
+
+        instrumentsorder = projJ['instruments_order']
+
         for instentry in instrumentsorder:
             inst_id[instentry] = str(inst_id_count)
+            inst_id_count += 1
+
+        for sampleentry in CVPJ_Samples:
+            inst_id[sampleentry] = str(inst_id_count)
+            samples_id[sampleentry] = str(inst_id_count)
             inst_id_count += 1
 
         for CVPJ_Entry in CVPJ_Instruments:
@@ -183,6 +192,23 @@ class output_cvpjs(plugin_output.base):
             #    T_Main['plugindata'] = b'\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00P\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00&\x00\x00\x00z\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
 
             FL_Channels[inst_id[CVPJ_Entry]] = T_Main
+
+
+        for CVPJ_Entry in CVPJ_Samples:
+            T_Main = {}
+            CVPJ_Data = CVPJ_Samples[CVPJ_Entry]
+            T_Main['type'] = 4
+            if 'vol' in CVPJ_Data: T_Main['volume'] = CVPJ_Data['vol']
+            if 'pan' in CVPJ_Data: T_Main['pan'] = CVPJ_Data['pan']
+            if 'name' in CVPJ_Data: T_Main['name'] = CVPJ_Data['name']
+            if 'enabled' in CVPJ_Data: T_Main['enabled'] = CVPJ_Data['enabled']
+            if 'fxrack_channel' in CVPJ_Data: T_Main['fxchannel'] = CVPJ_Data['fxrack_channel']
+            if 'file' in CVPJ_Data: T_Main['samplefilename'] = CVPJ_Data['file'] 
+            if 'color' in CVPJ_Data:  T_Main['color'] = decode_color(CVPJ_Data['color'])
+
+            FL_Channels[inst_id[CVPJ_Entry]] = T_Main
+
+
 
         pat_id = {}
         pat_id_count = 1
@@ -255,9 +281,9 @@ class output_cvpjs(plugin_output.base):
         FL_Playlist = []
         for CVPJ_playlistrow in CVPJ_playlist:
             CVPJ_playlistitem = CVPJ_playlist[CVPJ_playlistrow]
-            #print(CVPJ_playlistrow, CVPJ_playlist[CVPJ_playlistrow])
+
+
             if 'placements_notes' in CVPJ_playlistitem:
-                #print(CVPJ_playlist[CVPJ_playlistrow])
                 for CVPJ_Placement in CVPJ_playlistitem['placements_notes']:
                     if CVPJ_Placement['fromindex'] in pat_id:
                         FL_playlistitem = {}
@@ -282,13 +308,46 @@ class output_cvpjs(plugin_output.base):
                         if 'cut' in CVPJ_Placement:
                             if 'type' in CVPJ_Placement['cut']:
                                 if CVPJ_Placement['cut']['type'] == 'cut':
-                                    if 'start' in CVPJ_Placement['cut']:
-                                        FL_playlistitem['startoffset'] = int((CVPJ_Placement['cut']['start']*ppq)/4)
-                                    if 'end' in CVPJ_Placement['cut']:
-                                        FL_playlistitem['endoffset'] = int((CVPJ_Placement['cut']['end']*ppq)/4)
+                                    if 'start' in CVPJ_Placement['cut']: FL_playlistitem['startoffset'] = int((CVPJ_Placement['cut']['start']*ppq)/4)
+                                    if 'end' in CVPJ_Placement['cut']: FL_playlistitem['endoffset'] = int((CVPJ_Placement['cut']['end']*ppq)/4)
                         if FL_playlistitem['position'] not in FL_Playlist_BeforeSort:
                             FL_Playlist_BeforeSort[FL_playlistitem['position']] = []
                         FL_Playlist_BeforeSort[FL_playlistitem['position']].append(FL_playlistitem)
+
+
+            if 'placements_audio' in CVPJ_playlistitem:
+                for CVPJ_Placement in CVPJ_playlistitem['placements_audio']:
+                    if CVPJ_Placement['fromindex'] in samples_id:
+                        sampleid = samples_id[CVPJ_Placement['fromindex']]
+                        FL_playlistitem = {}
+                        FL_playlistitem['position'] = int((CVPJ_Placement['position']*ppq)/4)
+                        FL_playlistitem['patternbase'] = 20480
+                        FL_playlistitem['itemindex'] = sampleid
+                        if 'duration' in CVPJ_Placement:
+                            FL_playlistitem['length'] = int((CVPJ_Placement['duration']*ppq)/4)
+                            if CVPJ_Placement != 0:
+                                FL_playlistitem['startoffset'] = 0
+                                FL_playlistitem['endoffset'] = int((CVPJ_Placement['duration']*ppq)/4)
+                        else:
+                            FL_playlistitem['length'] = notelist_data.getduration(CVPJ_NotelistIndex[CVPJ_Placement['fromindex']]['notelist'])
+                        FL_playlistitem['unknown1'] = 120
+                        FL_playlistitem['unknown2'] = 25664
+                        FL_playlistitem['unknown3'] = 32896
+                        FL_playlistitem['flags'] = 64
+                        FL_playlistitem['trackindex'] = (-500 + int(CVPJ_playlistrow))*-1
+                        if 'muted' in CVPJ_Placement:
+                            if CVPJ_Placement['muted'] == True:
+                                FL_playlistitem['flags'] = 12352
+                        if 'cut' in CVPJ_Placement:
+                            if 'type' in CVPJ_Placement['cut']:
+                                if CVPJ_Placement['cut']['type'] == 'cut':
+                                    if 'start' in CVPJ_Placement['cut']: FL_playlistitem['startoffset'] = CVPJ_Placement['cut']['start']
+                                    if 'end' in CVPJ_Placement['cut']: FL_playlistitem['endoffset'] = CVPJ_Placement['cut']['end']
+                        if FL_playlistitem['position'] not in FL_Playlist_BeforeSort:
+                            FL_Playlist_BeforeSort[FL_playlistitem['position']] = []
+                        FL_Playlist_BeforeSort[FL_playlistitem['position']].append(FL_playlistitem)
+
+
             if str(CVPJ_playlistrow) not in FL_Tracks:
                 FL_Tracks[str(CVPJ_playlistrow)] = {}
             if 'color' in CVPJ_playlistitem:

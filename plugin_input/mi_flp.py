@@ -6,12 +6,21 @@ import json
 import math
 import base64
 import struct
+import os.path
+from pathlib import Path
+
 from functions import format_flp_dec
 from functions import note_mod
 from functions import data_bytes
 from functions import colors
 from functions import notelist_data
 from functions import song
+
+def getsamplefile(jsontag, channeldata, flppath):
+    if 'samplefilename' in channeldata: jsontag['file'] = channeldata['samplefilename']
+    else: jsontag['file'] = ''
+    samepath = os.path.dirname(flppath)+'\\'+os.path.basename(jsontag['file'])
+    if os.path.exists(samepath): jsontag['file'] = samepath
 
 class input_flp(plugin_input.base):
     def __init__(self): pass
@@ -92,8 +101,7 @@ class input_flp(plugin_input.base):
                 if channeldata['type'] == 0:
                     cvpj_inst['instdata']['plugin'] = "sampler"
                     cvpj_inst['instdata']['plugindata'] = {}
-                    if 'samplefilename' in channeldata: cvpj_inst['instdata']['plugindata']['file'] = channeldata['samplefilename']
-                    else: cvpj_inst['instdata']['plugindata']['file'] = ''
+                    getsamplefile(cvpj_inst['instdata']['plugindata'], channeldata, input_file)
                 if channeldata['type'] == 2:
                     cvpj_inst['instdata']['plugin'] = "native-fl"
                     cvpj_inst['instdata']['plugindata'] = {}
@@ -115,7 +123,7 @@ class input_flp(plugin_input.base):
                 color = channeldata['color'].to_bytes(4, "little")
                 cvpj_s_sample['color'] = [color[0]/255,color[1]/255,color[2]/255]
                 cvpj_s_sample['fxrack_channel'] = channeldata['fxchannel']
-                cvpj_s_sample['file'] = channeldata['samplefilename']
+                getsamplefile(cvpj_s_sample, channeldata, input_file)
                 cvpj_l_samples['FLSample' + str(instrument)] = cvpj_s_sample
 
 

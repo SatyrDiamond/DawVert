@@ -555,6 +555,7 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
                 xml_sampletco.set('src', json_placement['file'])
                 if 'enabled' in json_placement: xml_sampletco.set('muted', str(int(not json_placement['enabled'])))
                 if 'sample_rate' in json_placement: xml_sampletco.set('sample_rate', str(json_placement['sample_rate']))
+                if 'color' in json_placement: xml_sampletco.set('color', '#' + colors.rgb_float_2_hex(json_placement['color']))
 
                 if 'cut' in json_placement: 
                     if 'type' in json_placement['cut']:

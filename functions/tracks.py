@@ -10,6 +10,10 @@ from functions import auto
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
+def r_create_copy(cvpj_l, trackid, trackdata):
+    cvpj_l['track_data'][trackid] = trackdata
+    cvpj_l['track_order'].append(trackid)
+
 def r_create_inst(cvpj_l, trackid, instdata):
     if 'track_data' not in cvpj_l: cvpj_l['track_data'] = {}
     if 'track_order' not in cvpj_l: cvpj_l['track_order'] = []

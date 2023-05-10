@@ -25,7 +25,7 @@ def convert_inst(instdata):
 	pluginname = instdata['plugin']
 	plugindata = instdata['plugindata']
 	fl_plugdata = base64.b64decode(plugindata['data'])
-	fl_plugstr = data_bytes.to_bytesio(base64.b64decode(plugindata['data']))
+	fl_plugstr = data_bytes.to_bytesio(fl_plugdata)
 
 	# ---------------------------------------- 3xOsc ----------------------------------------
 	if plugindata['name'].lower() == '3x osc':
@@ -310,3 +310,20 @@ def convert_inst(instdata):
 		#f=open("dataout"+str(temp_count)+".bin", "wb")
 		#f.write(wrapperdata)
 		#exit()
+
+def convert_fx(instdata):
+	global temp_count
+	pluginname = instdata['plugin']
+	plugindata = instdata['plugindata']
+	fl_plugdata = base64.b64decode(plugindata['data'])
+	fl_plugstr = data_bytes.to_bytesio(fl_plugdata)
+
+	pluginname = plugindata['plugin'].lower()
+
+	print('----------------------', pluginname)
+	if pluginname == 'fruity bass boost':
+		flpbb = struct.unpack('III', fl_plugdata)
+		airwindowparams = {}
+		params_vst.add_param(airwindowparams, 0, "Freq", (flpbb[1]/1024)*0.8)
+		params_vst.add_param(airwindowparams, 1, "Weight", (flpbb[2]/1024)*0.8)
+		plugin_vst2.replace_data(instdata, 'any', 'Weight', 'param', airwindowparams, 2)

@@ -93,6 +93,7 @@ def convplug_fx(fxdata, in_daw, out_daw, extra_json):
 
 			# ---------------------------------------- input ----------------------------------------
 			if in_daw == 'lmms' and pluginname == 'native-lmms': output_lmms_vst2.convert_fx(fxdata)
+			if in_daw == 'flp' and pluginname == 'native-fl': input_flstudio.convert_fx(fxdata)
 
 
 

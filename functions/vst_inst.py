@@ -32,10 +32,6 @@ def drops_shape(input_val):
 	return output_val
 
 # -------------------- magical8bitplug --------------------
-def m8bp_addvalue(xmltag, name, value):
-	temp_xml = ET.SubElement(xmltag, 'PARAM')
-	temp_xml.set('id', str(name))
-	temp_xml.set('value', str(value))
 def shape_m8bp(pluginname, plugindata):
 	m8p_root = ET.Element("root")
 	m8p_params = ET.SubElement(m8p_root, "Params")
@@ -86,6 +82,75 @@ def shape_m8bp(pluginname, plugindata):
 	m8bp_addvalue(m8p_params, "vibratoIgnoresWheel_raw", 1.0)
 	m8bp_addvalue(m8p_params, "vibratoRate", 0.1500000059604645)
 	return m8p_root
+
+def m8bp_init():
+	global m8bp_params
+	global m8bp_params_env
+
+	m8bp_params_env = {}
+	m8bp_params_env["duty"] = None
+	m8bp_params_env["pitch"] = None
+	m8bp_params_env["volume"] = None
+
+	m8bp_params = {}
+	m8bp_params["arpeggioDirection"] = 0.0
+	m8bp_params["arpeggioTime"] = 0.02999999932944775
+	m8bp_params["attack"] = 0.0
+	m8bp_params["bendRange"] = 12.0
+	m8bp_params["colorScheme"] = 1.0
+	m8bp_params["decay"] = 0.0
+	m8bp_params["duty"] = 0.0
+	m8bp_params["gain"] = 0.5
+	m8bp_params["isAdvancedPanelOpen_raw"] = 1.0
+	m8bp_params["isArpeggioEnabled_raw"] = 0.0
+	m8bp_params["isPitchSequenceEnabled_raw"] = 0.0
+	m8bp_params["isDutySequenceEnabled_raw"] = 0.0
+	m8bp_params["isVolumeSequenceEnabled_raw"] = 0.0
+	m8bp_params["maxPoly"] = 8.0
+	m8bp_params["noiseAlgorithm_raw"] = 0.0
+	m8bp_params["osc"] = 0.0
+	m8bp_params["duty"] = 2.0
+	m8bp_params["pitchSequenceMode_raw"] = 0.0
+	m8bp_params["release"] = 0.0
+	m8bp_params["restrictsToNESFrequency_raw"] = 0.0
+	m8bp_params["suslevel"] = 1.0
+	m8bp_params["sweepInitialPitch"] = 0.0
+	m8bp_params["sweepTime"] = 0.1000000014901161
+	m8bp_params["vibratoDelay"] = 0.2999999821186066
+	m8bp_params["vibratoDepth"] = 0.0
+	m8bp_params["vibratoIgnoresWheel_raw"] = 1.0
+	m8bp_params["vibratoRate"] = 0.1500000059604645
+
+def m8bp_setvalue(name, value):
+	global m8bp_params
+	m8bp_params[name] = value
+
+def m8bp_setenv(name, value):
+	global m8bp_params_env
+	m8bp_params_env[name] = value
+
+def m8bp_addvalue(xmltag, name, value):
+	temp_xml = ET.SubElement(xmltag, 'PARAM')
+	temp_xml.set('id', str(name))
+	temp_xml.set('value', str(value))
+
+def m8bp_out():
+	global m8bp_params
+	global m8bp_params_env
+	xml_m8p_root = ET.Element("root")
+	xml_m8p_params = ET.SubElement(xml_m8p_root, "Params")
+	for m8bp_param in m8bp_params:
+		m8bp_addvalue(xml_m8p_params, m8bp_param, str(m8bp_params[m8bp_param]))
+
+	m8p_dutyEnv = ET.SubElement(xml_m8p_root, "dutyEnv")
+	m8p_pitchEnv = ET.SubElement(xml_m8p_root, "pitchEnv")
+	m8p_volumeEnv = ET.SubElement(xml_m8p_root, "volumeEnv")
+
+	if m8bp_params_env["duty"] != None: m8p_dutyEnv.text = ','.join(str(item) for item in m8bp_params_env["duty"])
+	if m8bp_params_env["pitch"] != None: m8p_pitchEnv.text = ','.join(str(item) for item in m8bp_params_env["pitch"])
+	if m8bp_params_env["volume"] != None: m8p_volumeEnv.text = ','.join(str(item) for item in m8bp_params_env["volume"])
+
+	return xml_m8p_root
 
 # -------------------- juicysfplugin --------------------
 def juicysfplugin_create(bank, patch, filename):

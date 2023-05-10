@@ -15,6 +15,10 @@
 
 [Vital](https://vital.audio/) - SimSynth, Beepbox
 
+# FX
+
+[Vital](https://www.airwindows.com/) - Various
+
 # Retro
 
 [Magical 8bit Plug 2](https://github.com/yokemura/Magical8bitPlug2) - Retro

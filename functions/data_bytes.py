@@ -35,6 +35,9 @@ def splitbyte(value):
     second = value & 0x0F
     return (first, second)
 
+def to_bin(value, length):
+	return [int(d) for d in bin(value)[2:].zfill(length)]
+
 # ----- audio -----
 
 def unsign_8(sampledata):

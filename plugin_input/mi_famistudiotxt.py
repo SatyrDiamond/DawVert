@@ -158,8 +158,12 @@ def add_envelope(plugdata, fst_Instrument, cvpj_name, fst_name):
             envdata['pos'] = fst_Instrument['N163WavePos']
             envdata['count'] = fst_Instrument['N163WaveCount']
         else:
-            plugdata[cvpj_name] = [int(i) for i in fst_Instrument['Envelopes'][fst_name]['Values'].split(',')]
-            
+            plugdata[cvpj_name]['values'] = [int(i) for i in fst_Instrument['Envelopes'][fst_name]['Values'].split(',')]
+            if 'Loop' in fst_Instrument['Envelopes'][fst_name]:
+                envdata['loop'] = fst_Instrument['Envelopes'][fst_name]['Loop']
+            if 'Release' in fst_Instrument['Envelopes'][fst_name]:
+                envdata['release'] = fst_Instrument['Envelopes'][fst_name]['Release']
+
 def add_envelopes(plugdata, fst_Instrument):
     if 'Envelopes' in fst_Instrument:
         add_envelope(plugdata, fst_Instrument, 'env_vol', 'Volume')
@@ -168,6 +172,8 @@ def add_envelopes(plugdata, fst_Instrument):
 
 def create_inst(WaveType, fst_Instrument, fxrack_channel):
     instname = fst_Instrument['Name']
+
+    instvolume = 0.6
 
     cvpj_instdata = {}
     cvpj_instdata['plugin'] = 'none'
@@ -183,9 +189,10 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
     if WaveType == 'VRC7FM':
         cvpj_instdata['plugin'] = 'vrc7'
         add_envelopes(plugdata, fst_Instrument)
+        instvolume = 1
         if 'Vrc7Patch' in fst_Instrument:
             plugdata['use_patch'] = True
-            plugdata['patch'] = fst_Instrument['Vrc7Patch']
+            plugdata['patch'] = int(fst_Instrument['Vrc7Patch'])
         else:
             plugdata['use_patch'] = False
             plugdata['regs'] = fst_Instrument['Vrc7Reg']
@@ -229,7 +236,7 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
     cvpj_instid = WaveType+'-'+instname
 
     tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
-    tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instid, inst_color, 0.6, 0.0)
+    tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instid, inst_color, instvolume, 0.0)
     tracks.m_param_inst(cvpj_l, cvpj_instid, 'fxrack_channel', fxrack_channel)
 
 def create_dpcm_inst(DPCMMappings, DPCMSamples, fxrack_channel):
@@ -299,7 +306,14 @@ class input_famistudio(plugin_input.base):
         
         fst_instruments = fst_Main['Instruments']
         fst_arpeggios = fst_Main['Arpeggios']
-        fst_currentsong = next(iter(fst_Main['Songs'].values()))
+
+        songnamelist = list(fst_Main['Songs'].keys())
+
+        print(songnamelist)
+
+        if 'songnum' in extra_param: fst_currentsong = fst_Main['Songs'][songnamelist[int(extra_param['songnum'])-1]]
+        else: fst_currentsong = fst_Main['Songs'][songnamelist[0]]
+
         fst_channels = fst_currentsong['Channels']
         fst_beatlength = int(fst_currentsong['BeatLength'])
         fst_groove = fst_currentsong['Groove']
@@ -364,6 +378,7 @@ class input_famistudio(plugin_input.base):
                 t_patternnotelist = []
                 for fst_note in Channel_Patterns[Pattern]:
                     notedata = Channel_Patterns[Pattern][fst_note]
+
                     if ChannelName != 'DPCM':
                         if 'Duration' in notedata and 'Instrument' in notedata:
 
@@ -383,7 +398,10 @@ class input_famistudio(plugin_input.base):
                                 t_slidenote = NoteToMidi(notedata['SlideTarget']) + 24
                                 cvpj_notemod['slide'] = [{'position': 0, 'duration': t_duration, 'key': t_slidenote-t_key}]
                                 cvpj_notemod['auto'] = {}
+
                                 cvpj_notemod['auto']['pitch'] = [{'position': 0, 'value': 0}, {'position': t_duration, 'value': t_slidenote-t_key}]
+
+                            if ChannelName[0:4] == 'VRC7': t_key -= 24
 
                             if cvpj_multikeys == []:
                                 cvpj_note = note_data.mx_makenote(t_instrument, t_position, t_duration, t_key, None, None)

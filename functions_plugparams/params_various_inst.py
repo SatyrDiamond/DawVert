@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import xml.etree.ElementTree as ET
+import io
+import math
 
 # -------------------- drops --------------------
 
@@ -470,10 +472,9 @@ def ninjas2_slicerdata(slicerdata):
 			slicedata = slices[slicenum]
 			s_reverse = False
 			s_looped = False
-
-			if 'reverse' in slicedata:
+			if 'reverse' in slicedata: 
 				if slicedata['reverse'] == 1: s_reverse = True
-			if 'looped' in slicedata:
+			if 'looped' in slicedata: 
 				if slicedata['looped'] == 1: s_looped = True
 			ninjas2_loopout = 0
 			if s_reverse == True: ninjas2_loopout += 1
@@ -488,3 +489,61 @@ def ninjas2_get():
 	global ninjas2_data_progs
 	global ninjas2_data_main
 	return [ninjas2_data_progs, ninjas2_data_main]
+
+# -------------------- kickmess --------------------
+
+def kickmess_init():
+	global kickmess_params
+	kickmess_params = {}
+	kickmess_params['pub'] = {}
+	kickmess_params['pub']['freq_start'] = 440
+	kickmess_params['pub']['freq_end'] = 440
+	kickmess_params['pub']['f_env_release'] = 1000
+	kickmess_params['pub']['dist_start'] = 0
+	kickmess_params['pub']['dist_end'] = 0
+	kickmess_params['pub']['gain'] = 0.5
+	kickmess_params['pub']['env_slope'] = 0.5
+	kickmess_params['pub']['freq_slope'] = 0.5
+	kickmess_params['pub']['noise'] = 0
+	kickmess_params['pub']['freq_note_start'] = 0.25
+	kickmess_params['pub']['freq_note_end'] = 0.25
+	kickmess_params['pub']['env_release'] = 0
+	kickmess_params['pub']['phase_offs'] = 0
+	kickmess_params['pub']['dist_on'] = 0
+	kickmess_params['pub']['f1_cutoff'] = 1
+	kickmess_params['pub']['f1_res'] = 0
+	kickmess_params['pub']['f1_drive'] = 0.2
+	kickmess_params['pub']['main_gain'] = 0.70710677
+	kickmess_params['pub']['e1_attack'] = 0.1
+	kickmess_params['pub']['e1_decay'] = 0.14142135
+	kickmess_params['pub']['e1_sustain'] = 0.75
+	kickmess_params['pub']['e1_release'] = 0.1
+	kickmess_params['priv'] = {}
+	kickmess_params['priv']['f1_type'] = 0.5
+	kickmess_params['priv']['f1_on'] = 0.25
+	kickmess_params['priv']['midi_chan'] = 0
+
+def kickmess_setvalue(i_cat, i_name, i_value):
+	global kickmess_params
+	kickmess_params[i_cat][i_name] = i_value
+
+def kickmess_add(bio_data, i_cat, i_name, i_value):
+	kickmess_text = i_cat+' : '+i_name+'='+str(i_value)+';\n'
+	bio_data.write(str.encode(kickmess_text))
+
+def kickmess_get():
+	global kickmess_params
+
+	kickmess_out = io.BytesIO()
+	kickmess_out.write(b'!PARAMS;\n')
+
+	for paramcat in kickmess_params:
+		for paramval in kickmess_params[paramcat]:
+			o_value = kickmess_params[paramcat][paramval]
+			if paramval in ['freq_start']: o_value = math.sqrt((o_value-2.51)/3000)
+			if paramval in ['freq_end']: o_value = math.sqrt((o_value-2.51)/2000)
+			if paramval in ['f_env_release']: o_value = math.sqrt((o_value-2.51)/5000)
+			kickmess_add(kickmess_out, paramcat, paramval, o_value)
+
+	kickmess_out.seek(0)
+	return kickmess_out.read()

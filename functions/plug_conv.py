@@ -17,6 +17,7 @@ from functions_plugconv import input_flstudio
 from functions_plugconv import input_pxtone
 from functions_plugconv import input_jummbox
 
+from functions_plugconv import output_simple_vst2
 from functions_plugconv import output_flstudio_vst2
 from functions_plugconv import output_sampler_vst2
 from functions_plugconv import output_multisampler_vst2
@@ -103,7 +104,11 @@ def convplug_fx(fxdata, in_daw, out_daw, extra_json):
 
 			# ---------------------------------------- output ----------------------------------------
 
-			if in_daw == 'lmms' and pluginname == 'native-lmms': 
+			if pluginname == 'native-simple': 
+				output_simple_vst2.convert_fx(fxdata)
+
+
+			elif in_daw == 'lmms' and pluginname == 'native-lmms': 
 				output_lmms_vst2.convert_fx(fxdata)
 
 			elif in_daw == 'flp' and pluginname == 'native-fl':

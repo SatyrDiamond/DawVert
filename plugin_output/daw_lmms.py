@@ -43,10 +43,10 @@ trackscount_forprinting = 0
 # ------- functions -------
 
 def setvstparams(plugindata, xmldata):
+    if 'current_program' in plugindata: xmldata.set('program', str(plugindata['current_program']))
     if 'plugin' in plugindata:
         if 'path' in plugindata['plugin']:
             xmldata.set('plugin', str(plugindata['plugin']['path']))
-    xmldata.set('program', '0')
     if 'datatype' in plugindata:
         if plugindata['datatype'] == 'chunk':
             xmldata.set('chunk', str(plugindata['data']))

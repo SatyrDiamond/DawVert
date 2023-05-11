@@ -32,3 +32,17 @@ def get_value(i_dict, i_tag, i_fallback):
     if i_tag in i_dict: outvalue = i_dict[i_tag]
     else: outvalue = i_fallback
     return outvalue
+
+def sort_pos(datapart):
+    t_datapart_bsort = {}
+    t_datapart_sorted = {}
+    new_datapart = []
+    for point in datapart:
+        if point['position'] not in t_datapart_bsort:
+            t_datapart_bsort[point['position']] = []
+        t_datapart_bsort[point['position']].append(point)
+    t_datapart_sorted = dict(sorted(t_datapart_bsort.items(), key=lambda item: item[0]))
+    for t_pointpos in t_datapart_sorted:
+        for point in t_datapart_sorted[t_pointpos]:
+            new_datapart.append(point)
+    return new_datapart

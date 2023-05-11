@@ -6,13 +6,13 @@ import io
 import struct
 import math
 import lxml.etree as ET
-from functions import vst_fx
+
 from functions import plugin_vst2
 from functions import xtramath
 
+from functions_plugparams import params_various_fx
 from functions_plugparams import params_vital
 from functions_plugparams import params_vital_wavetable
-
 from functions_plugparams import data_nullbytegroup
 
 def socalabs_addparam(x_sid, name, value):
@@ -198,8 +198,8 @@ def convert_fx(fxdata):
 		if lmmsnat_name == 'waveshaper':
 			waveshapebytes = base64.b64decode(plugindata['data']['waveShape'])
 			waveshapepoints = [struct.unpack('f', waveshapebytes[i:i+4]) for i in range(0, len(waveshapebytes), 4)]
-			vst_fx.wolfshaper_init()
+			params_various_fx.wolfshaper_init()
 			for pointnum in range(50):
 				pointdata = waveshapepoints[pointnum*4][0]
-				vst_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
-			plugin_vst2.replace_data(fxdata, 'any', 'Wolf Shaper', 'chunk', data_nullbytegroup.make(vst_fx.wolfshaper_get()), None)
+				params_various_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
+			plugin_vst2.replace_data(fxdata, 'any', 'Wolf Shaper', 'chunk', data_nullbytegroup.make(params_various_fx.wolfshaper_get()), None)

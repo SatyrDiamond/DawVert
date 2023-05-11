@@ -6,8 +6,8 @@ import pathlib
 from functions import audio_wav
 from functions import plugin_vst2
 from functions import data_bytes
-from functions import vst_inst
 
+from functions_plugparams import params_various_inst
 from functions_plugparams import data_vc2xml
 
 vrc7patch = {}
@@ -32,30 +32,30 @@ def convert_inst(instdata, out_daw):
 	plugindata = instdata['plugindata']
 
 	if pluginname == 'opn2':
-		xmlout = vst_inst.opnplug_convert(plugindata)
+		xmlout = params_various_inst.opnplug_convert(plugindata)
 		plugin_vst2.replace_data(instdata, 'any', 'OPNplug', 'chunk', data_vc2xml.make(xmlout), None)
 
 	if pluginname in ['2a03', 'vrc6', 'mmc5', 'sunsoft_5b']:
-		vst_inst.m8bp_init()
+		params_various_inst.m8bp_init()
 
 		if 'env_arp' in plugindata:
-			vst_inst.m8bp_setvalue("isPitchSequenceEnabled_raw", 1.0)
-			vst_inst.m8bp_setenv('pitch', plugindata['env_arp']['values'])
+			params_various_inst.m8bp_setvalue("isPitchSequenceEnabled_raw", 1.0)
+			params_various_inst.m8bp_setenv('pitch', plugindata['env_arp']['values'])
 
 		if 'env_duty' in plugindata:
-			vst_inst.m8bp_setvalue("isDutySequenceEnabled_raw", 1.0)
-			vst_inst.m8bp_setenv('duty', plugindata['env_duty']['values'])
+			params_various_inst.m8bp_setvalue("isDutySequenceEnabled_raw", 1.0)
+			params_various_inst.m8bp_setenv('duty', plugindata['env_duty']['values'])
 
 		if 'env_vol' in plugindata:
-			vst_inst.m8bp_setvalue("isVolumeSequenceEnabled_raw", 1.0)
-			vst_inst.m8bp_setenv('volume', plugindata['env_vol']['values'])
+			params_various_inst.m8bp_setvalue("isVolumeSequenceEnabled_raw", 1.0)
+			params_various_inst.m8bp_setenv('volume', plugindata['env_vol']['values'])
 
 		if 'wave' in plugindata:
-			if plugindata['wave'] == 'square': vst_inst.m8bp_setvalue("osc", 0.0)
-			if plugindata['wave'] == 'triangle': vst_inst.m8bp_setvalue("osc", 1.0)
-			if plugindata['wave'] == 'noise': vst_inst.m8bp_setvalue("osc", 2.0)
+			if plugindata['wave'] == 'square': params_various_inst.m8bp_setvalue("osc", 0.0)
+			if plugindata['wave'] == 'triangle': params_various_inst.m8bp_setvalue("osc", 1.0)
+			if plugindata['wave'] == 'noise': params_various_inst.m8bp_setvalue("osc", 2.0)
 
-		plugin_vst2.replace_data(instdata, 'any', 'Magical 8bit Plug 2', 'chunk', data_vc2xml.make(vst_inst.m8bp_out()), None)
+		plugin_vst2.replace_data(instdata, 'any', 'Magical 8bit Plug 2', 'chunk', data_vc2xml.make(params_various_inst.m8bp_out()), None)
 
 	if pluginname == 'vrc7':
 		if plugindata['use_patch'] == False: vrcregs = plugindata['regs']

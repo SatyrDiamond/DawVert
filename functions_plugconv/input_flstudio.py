@@ -5,18 +5,25 @@ import base64
 import struct
 import os
 from functions import data_bytes
+from functions import data_values
 from functions import plugin_vst2
 from functions import params_vst
 
 from functions_plugconv import input_flstudio_wrapper
 
+from functions_plugparams import params_various_fx
 from functions_plugparams import params_vital
 from functions_plugparams import params_vital_wavetable
+from functions_plugparams import data_nullbytegroup
 
 simsynth_shapes = {0.4: 'noise', 0.3: 'sine', 0.2: 'square', 0.1: 'saw', 0.0: 'triangle'}
 
 def simsynth_time(value): return pow(value*2, 3)
 def simsynth_2time(value): return pow(value*2, 3)
+
+def kickmess_add(bio_data, i_cat, i_name, i_value):
+	kickmess_text = i_cat+' : '+i_name+'='+str(i_value)+';\n'
+	bio_data.write(str.encode(kickmess_text))
 
 temp_count = 0
 
@@ -77,6 +84,12 @@ def convert_inst(instdata):
 	#	f = open("slicex"+str(temp_count)+".bin", "wb")
 	#	f.write(fl_plugstr.read())
 	#	temp_count += 1
+
+	# ---------------------------------------- Fruit Kick ----------------------------------------
+	#elif plugindata['name'].lower() == 'fruit kick':
+	#	print(fl_plugdata)
+	#	print(struct.unpack('iiiiiiii', fl_plugdata))
+	#	exit()
 
 	# ---------------------------------------- Wasp ----------------------------------------
 	elif plugindata['name'].lower() == 'wasp':
@@ -311,19 +324,105 @@ def convert_inst(instdata):
 		#f.write(wrapperdata)
 		#exit()
 
-def convert_fx(instdata):
+
+
+def decode_pointdata(fl_plugstr):
+	autoheader = struct.unpack('bii', fl_plugstr.read(12))
+	pointdata_table = []
+
+	positionlen = 0
+	for num in range(autoheader[2]):
+		chunkdata = struct.unpack('ddfbbbb', fl_plugstr.read(24))
+		positionlen += round(chunkdata[0], 6)
+		pointdata_table.append( [positionlen, chunkdata[1:], 0.0, 0] )
+		if num != 0:
+			pointdata_table[num-1][2] = chunkdata[2]
+			pointdata_table[num-1][3] = chunkdata[3]
+
+	fl_plugstr.read(20).hex()
+	return pointdata_table
+
+def convert_fx(fxdata):
 	global temp_count
-	pluginname = instdata['plugin']
-	plugindata = instdata['plugindata']
+	pluginname = fxdata['plugin']
+	plugindata = fxdata['plugindata']
 	fl_plugdata = base64.b64decode(plugindata['data'])
 	fl_plugstr = data_bytes.to_bytesio(fl_plugdata)
 
 	pluginname = plugindata['plugin'].lower()
 
 	print('----------------------', pluginname)
+
 	if pluginname == 'fruity bass boost':
 		flpbb = struct.unpack('III', fl_plugdata)
 		airwindowparams = {}
 		params_vst.add_param(airwindowparams, 0, "Freq", (flpbb[1]/1024)*0.8)
 		params_vst.add_param(airwindowparams, 1, "Weight", (flpbb[2]/1024)*0.8)
-		plugin_vst2.replace_data(instdata, 'any', 'Weight', 'param', airwindowparams, 2)
+		plugin_vst2.replace_data(fxdata, 'any', 'Weight', 'param', airwindowparams, 2)
+
+	#if pluginname == 'fruity convolver':
+	#	print(fl_plugstr.read(21))
+	#	stringlen = fl_plugstr.read(1)[0]
+	#	filename = fl_plugstr.read(stringlen)
+	#	print(fl_plugstr.read(36))
+	#	instdata['plugin'] = 'convolver'
+	#	plugindata = instdata['plugindata'] = {}
+	#	autodata = {}
+	#	for autoname in ['pan', 'vol', 'stereo', 'allpurpose', 'eq']:
+	#		autoheader = struct.unpack('bii', fl_plugstr.read(12))
+	#		for _ in range(autoheader[2]):
+	#			autodata_table = []
+	#			autodata_table.append( struct.unpack('ddfbbbb', fl_plugstr.read(24)) )
+	#		fl_plugstr.read(20).hex()
+	#		autodata[autoname] = autodata_table
+	#	print(autodata)
+	#	print(   fl_plugstr.read(20).hex()   )
+
+	#if pluginname == 'fruity delay':
+	#	flpdel = struct.unpack('bIIIIII', fl_plugdata)
+	#	print(flpdel)
+
+	if pluginname == 'fruity waveshaper':
+
+		headerdata = fl_plugstr.read(22)
+		headerdata_ints = struct.unpack('bHHIIbbbbbb', headerdata)
+
+		print(headerdata_ints)
+		pointsdata = decode_pointdata(fl_plugstr)
+
+		params_various_fx.wolfshaper_init()
+
+		t_pointdata = []
+		for pointdata in pointsdata:
+			t_pointdata.append({
+				'position': pointdata[0], 'data':pointdata[1], 
+				'tens':pointdata[2], 'shape':pointdata[3]
+				})
+		t_pointdata = data_values.sort_pos(t_pointdata)
+		for t_point in t_pointdata:
+			wpointtype = 0
+			wtens = t_point['tens']*-100
+
+			if t_point['shape'] == 0: wpointtype = 0
+			if t_point['shape'] == 1: wpointtype = 1
+			if t_point['shape'] == 3: 
+				wpointtype = 2
+				wtens *= -1
+			if t_point['shape'] == 6: 
+				wpointtype = 3
+				wtens = ((abs(wtens)*-1)+100)*0.2
+
+			params_various_fx.wolfshaper_addpoint(
+				t_point['position'],
+				t_point['data'][0],
+				wtens,
+				wpointtype
+				)
+
+		params_various_fx.wolfshaper_setvalue('pregain', ((headerdata_ints[2]/128)-0.5)*2)
+		params_various_fx.wolfshaper_setvalue('wet', headerdata_ints[3]/128)
+		params_various_fx.wolfshaper_setvalue('postgain', headerdata_ints[4]/128)
+		params_various_fx.wolfshaper_setvalue('bipolarmode', float(headerdata_ints[5]))
+		params_various_fx.wolfshaper_setvalue('removedc', float(headerdata_ints[6]))
+
+		plugin_vst2.replace_data(fxdata, 'any', 'Wolf Shaper', 'chunk', data_nullbytegroup.make(params_various_fx.wolfshaper_get()), None)

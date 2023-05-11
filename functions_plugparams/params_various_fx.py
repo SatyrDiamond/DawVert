@@ -24,7 +24,7 @@ def wolfshaper_setvalue(name, value):
 	wolfshaperparams[name] = value
 def wolfshaper_addpoint(posX,posY,tension,pointtype):
 	global wolfshapergraph
-	wolfshapergraph['graph'] += float.hex(posX)+','+float.hex(posY)+','+float.hex(tension)+','+str(pointtype)+';'
+	wolfshapergraph['graph'] += float.hex(posX)+','+float.hex(posY)+','+float.hex(tension)+','+str(int(pointtype))+';'
 def wolfshaper_get():
 	global wolfshapergraph
 	global wolfshaperparams

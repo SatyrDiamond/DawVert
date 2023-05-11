@@ -324,7 +324,7 @@ def convert_inst(instdata):
 					instdata['plugindata']['plugin'] = {}
 					instdata['plugindata']['plugin']['name'] = wrapperdata['name']
 					instdata['plugindata']['plugin']['path'] = wrapperdata['file']
-					instdata['plugindata']['datatype'] = 'raw'
+					instdata['plugindata']['datatype'] = 'chunk'
 					instdata['plugindata']['data'] = base64.b64encode(wrapper_vstdata).decode('ascii')
 				else:
 					plugin_vst2.replace_data(instdata, 'any', wrapperdata['name'], 'chunk', wrapper_vstdata, None)

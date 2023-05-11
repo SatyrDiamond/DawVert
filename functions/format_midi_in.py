@@ -308,13 +308,20 @@ def add_auto_to_song_no_mixer(twopoints, autoname, channum, s_chan_trackids):
         for s_chan_trackid in s_chan_trackids:
             tracks.a_auto_nopl_twopoints('track', s_chan_trackid, autoname, twopoints, 1, 'instant')
 
-def add_auto_to_slot_gmfx(twopoints, autoname, slotname):
-    tracks.a_auto_nopl_twopoints('slot', slotname, autoname, twopoints, 1, 'instant')
+def add_auto_to_slot_gmfx(twopoints, autoname, slotname, issend):
+    if issend == False:
+        tracks.a_auto_nopl_twopoints('slot', slotname, autoname, twopoints, 1, 'instant')
+    else:
+        tracks.a_auto_nopl_twopoints('send', slotname, autoname, twopoints, 1, 'instant')
 
-def do_slot_wet(schannum, slotendname, fxrack_chan):
+def do_slot_wet(schannum, slotendname, fxrack_chan, issend):
     wetval = 0
     if len(schannum) == 1 and 0 in schannum: wetval = schannum[0]/127
-    else: add_auto_to_slot_gmfx(midiauto2cvpjauto(schannum,127,0), 'wet', fxrack_chan+slotendname)
+    else: 
+        if issend == False:
+            add_auto_to_slot_gmfx(midiauto2cvpjauto(schannum,127,0), 'wet', fxrack_chan+slotendname, issend)
+        else:
+            add_auto_to_slot_gmfx(midiauto2cvpjauto(schannum,127,0), 'amount', fxrack_chan+slotendname, issend)
     return wetval
 
 def song_end(channels):
@@ -338,6 +345,8 @@ def song_end(channels):
 
     tracks.fxrack_add(cvpj_l, 0, "Master", [0.3, 0.3, 0.3], 1.0, None)
 
+    fx_used = False
+
     for midi_channum in range(channels):
         fxrack_chan = str(midi_channum+1)
         tracks.fxrack_add(cvpj_l, fxrack_chan, "Channel "+fxrack_chan, [0.3, 0.3, 0.3], 1.0, None)
@@ -345,6 +354,8 @@ def song_end(channels):
         s_chan_trackids = t_chan_usedinst_all[midi_channum]
 
         s_chan_auto = t_chan_auto[midi_channum]
+
+        tracks.fxrack_addsend(cvpj_l, fxrack_chan, 0, 1, None)
 
         for s_chan_auto_num in s_chan_auto:
             schannum = s_chan_auto[s_chan_auto_num]
@@ -366,23 +377,25 @@ def song_end(channels):
                 else: add_auto_to_song_no_mixer(midiauto2cvpjauto(schannum,127,0), 'expression', midi_channum, s_chan_trackids)
 
             elif s_chan_auto_num == 91: 
-                wetval = do_slot_wet(schannum, '_reverb', fxrack_chan)
-                tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_reverb', 'reverb', {})
+                wetval = do_slot_wet(schannum, '_reverb', fxrack_chan, True)
+                tracks.fxrack_addsend(cvpj_l, fxrack_chan, channels+1, wetval, fxrack_chan+'_reverb')
+                fx_used = True
 
             elif s_chan_auto_num == 92: 
-                wetval = do_slot_wet(schannum, '_tremelo', fxrack_chan)
+                wetval = do_slot_wet(schannum, '_tremelo', fxrack_chan, False)
                 tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_tremelo', 'tremelo', {})
 
             elif s_chan_auto_num == 93: 
-                wetval = do_slot_wet(schannum, '_chorus', fxrack_chan)
-                tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_chorus', 'chorus', {})
+                wetval = do_slot_wet(schannum, '_chorus', fxrack_chan, True)
+                tracks.fxrack_addsend(cvpj_l, fxrack_chan, channels+2, wetval, fxrack_chan+'_chorus')
+                fx_used = True
 
             elif s_chan_auto_num == 94: 
-                wetval = do_slot_wet(schannum, '_detuning', fxrack_chan)
+                wetval = do_slot_wet(schannum, '_detuning', fxrack_chan, False)
                 tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_detuning', 'detuning', {})
 
             elif s_chan_auto_num == 95: 
-                wetval = do_slot_wet(schannum, '_phaser', fxrack_chan)
+                wetval = do_slot_wet(schannum, '_phaser', fxrack_chan, False)
                 tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_phaser', 'phaser', {})
 
             elif s_chan_auto_num == 'pitch':
@@ -391,6 +404,13 @@ def song_end(channels):
             #else:
             #    midictname = idvals.get_idval(idvals_midi_ctrl, str(s_chan_auto_num), 'name')
             #    print('unknown controller', s_chan_auto_num, midictname)
+
+    if fx_used == True:
+        tracks.fxrack_add(cvpj_l, channels+1, "[S] Reverb", [0.4, 0.4, 0.4], 1.0, None)
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', ['fxrack', channels+1], 1, None, None, 'reverb', {})
+
+        tracks.fxrack_add(cvpj_l, channels+2, "[S] Chorus", [0.4, 0.4, 0.4], 1.0, None)
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', ['fxrack', channels+2], 1, None, None, 'chorus', {})
 
     tracks.a_auto_nopl_to_cvpj(cvpj_l)
     cvpj_l['timemarkers'] = s_timemarkers

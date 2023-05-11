@@ -312,15 +312,16 @@ def convert_inst(instdata):
 			if wrapper_vsttype == 4:
 				wrapper_vststate = pluginstate[0:9]
 				wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
-				#wrapper_vstpad = pluginstate[13:21]
+				wrapper_vstpad = pluginstate[13:17]
+				wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
 				wrapper_vstdata = pluginstate[21:]
-				#print(wrapper_vststate, wrapper_vstpad)
 
 				#print(wrapperdata)
 
 				if os.path.exists(wrapperdata['file']):
 					instdata['plugin'] = 'vst2-dll'
 					instdata['plugindata'] = {}
+					instdata['plugindata']['current_program'] = wrapper_vstprogram
 					instdata['plugindata']['plugin'] = {}
 					instdata['plugindata']['plugin']['name'] = wrapperdata['name']
 					instdata['plugindata']['plugin']['path'] = wrapperdata['file']

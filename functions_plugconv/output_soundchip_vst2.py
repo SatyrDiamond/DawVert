@@ -35,7 +35,7 @@ def convert_inst(instdata, out_daw):
 		xmlout = params_various_inst.opnplug_convert(plugindata)
 		plugin_vst2.replace_data(instdata, 'any', 'OPNplug', 'chunk', data_vc2xml.make(xmlout), None)
 
-	if pluginname in ['2a03', 'vrc6', 'mmc5', 'sunsoft_5b']:
+	if pluginname in ['retro', '2a03', 'vrc6', 'mmc5', 'sunsoft_5b']:
 		params_various_inst.m8bp_init()
 
 		if 'env_arp' in plugindata:

@@ -383,7 +383,7 @@ def song_end(channels):
 
             elif s_chan_auto_num == 92: 
                 wetval = do_slot_wet(schannum, '_tremelo', fxrack_chan, False)
-                tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_tremelo', 'tremelo', {})
+                tracks.add_fxslot_native(cvpj_l, 'audio', 'simple', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_tremelo', 'tremelo', {})
 
             elif s_chan_auto_num == 93: 
                 wetval = do_slot_wet(schannum, '_chorus', fxrack_chan, True)
@@ -396,7 +396,7 @@ def song_end(channels):
 
             elif s_chan_auto_num == 95: 
                 wetval = do_slot_wet(schannum, '_phaser', fxrack_chan, False)
-                tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_phaser', 'phaser', {})
+                tracks.add_fxslot_native(cvpj_l, 'audio', 'simple', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_phaser', 'phaser', {})
 
             elif s_chan_auto_num == 'pitch':
                 add_auto_to_song_no_mixer(midiauto2cvpjauto(s_chan_auto['pitch'],1/8,0), 'pitch', midi_channum, s_chan_trackids)
@@ -407,10 +407,10 @@ def song_end(channels):
 
     if fx_used == True:
         tracks.fxrack_add(cvpj_l, channels+1, "[S] Reverb", [0.4, 0.4, 0.4], 1.0, None)
-        tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', ['fxrack', channels+1], 1, None, None, 'reverb', {})
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'simple', ['fxrack', channels+1], 1, None, None, 'reverb-send', {})
 
         tracks.fxrack_add(cvpj_l, channels+2, "[S] Chorus", [0.4, 0.4, 0.4], 1.0, None)
-        tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', ['fxrack', channels+2], 1, None, None, 'chorus', {})
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'simple', ['fxrack', channels+2], 1, None, None, 'chorus-send', {})
 
     tracks.a_auto_nopl_to_cvpj(cvpj_l)
     cvpj_l['timemarkers'] = s_timemarkers

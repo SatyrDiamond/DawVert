@@ -103,6 +103,8 @@ def getvstparams(plugindata, xmldata, cvpj_data):
         plugindata['plugin']['path'] = lmms_vstpath+xmldata.get('plugin')
     vst_data = xmldata.get('chunk')
     vst_numparams = xmldata.get('numparams')
+    vst_program = xmldata.get('program')
+    if vst_program != None: plugindata['current_program'] = int(vst_program)
     if vst_data != None:
         plugindata['datatype'] = 'raw'
         plugindata['data'] = vst_data

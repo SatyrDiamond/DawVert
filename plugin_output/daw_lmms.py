@@ -881,6 +881,7 @@ class output_lmms(plugin_output.base):
         if 'fxrack' in projJ:
             lmms_encode_fxmixer(xml_fxmixer, projJ['fxrack'])
 
+
         if 'info' in projJ:
             infoJ = projJ['info']
             if 'message' in infoJ:
@@ -890,7 +891,7 @@ class output_lmms(plugin_output.base):
                 notesX.set("height", "300")
                 notesX.set("y", "5" )
                 notesX.set("width", "389")
-                if 'type' in infoJ:
+                if 'type' in infoJ['message']:
                     if infoJ['message']['type'] == 'html': notesX.text = ET.CDATA(infoJ['message']['text'])
                     if infoJ['message']['type'] == 'text': notesX.text = ET.CDATA(infoJ['message']['text'].replace('\n', '<br/>').replace('\r', '<br/>'))
             else:

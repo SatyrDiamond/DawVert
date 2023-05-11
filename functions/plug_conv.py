@@ -7,11 +7,11 @@ import struct
 import math
 import base64
 from functions import plugin_vst2
-from functions import vst_fx
-from functions import vst_inst
 
 from functions_plugparams import params_vital
 from functions_plugparams import data_vc2xml
+from functions_plugparams import params_various_fx
+from functions_plugparams import params_various_inst
 
 from functions_plugconv import input_flstudio
 from functions_plugconv import input_pxtone
@@ -80,7 +80,7 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 				else: sf2_params = 0
 				if 'file' in sf2data: sf2_filename = sf2data['file']
 				else: sf2_filename = 0
-				jsfp_xml = vst_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
+				jsfp_xml = params_various_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
 				plugin_vst2.replace_data(instdata, 'any', 'juicysfplugin', 'chunk', data_vc2xml.make(jsfp_xml), None)
 
 # -------------------- FX --------------------

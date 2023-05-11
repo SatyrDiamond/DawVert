@@ -3,6 +3,7 @@ import configparser
 import os
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from os.path import exists
 
 config = configparser.ConfigParser()
 
@@ -38,6 +39,7 @@ dawlist = []
 homepath = os.path.expanduser("~")
 
 l_path_aurdor = homepath+'\\AppData\\Local\\Ardour6\\cache\\vst'
+l_path_waveform = homepath+'\\AppData\\Roaming\\Tracktion\\Waveform'
 w_regkey_cakewalk = 'SOFTWARE\\Cakewalk Music Software\\Cakewalk\\Cakewalk VST X64\\Inventory'
 
 vst2ini = configparser.ConfigParser()
@@ -45,6 +47,7 @@ vst3ini = configparser.ConfigParser()
 
 if reg_checkexist(w_regkey_cakewalk) == True: dawlist.append('cakewalk')
 if os.path.exists(l_path_aurdor) == True: dawlist.append('ardour')
+if os.path.exists(l_path_waveform) == True: dawlist.append('waveform')
 
 
 if len(dawlist) >= 1:
@@ -124,6 +127,29 @@ if selecteddaw == 'ardour':
 			if vst3ini.has_section(vst_name) == False: vst3ini.add_section(vst_name)
 			vst3ini.set(vst_name, 'path', vst_path)
 
+#  ------------------------------------- Waveform -------------------------------------
+if selecteddaw == 'waveform':
+	if exists(l_path_waveform+'\\knownPluginList64.settings'):
+		vstxmldata = ET.parse(l_path_waveform+'\\knownPluginList64.settings')
+		vstxmlroot = vstxmldata.getroot()
+		vst2infos = vstxmlroot.findall('PLUGIN')
+		for vst2info in vst2infos:
+			vst_name = vst2info.get('descriptiveName')
+			vst_inst = vst2info.get('isInstrument')
+			
+			if vst_name == None: vst_name = vst2info.get('name')
+
+			if vst2ini.has_section(vst_name) == False: vst2ini.add_section(vst_name)
+			vst2ini.set(vst_name, 'path_amd64', vst2info.get('file'))
+			vst2ini.set(vst_name, 'internal_name', vst2info.get('name'))
+			vst2ini.set(vst_name, 'version', vst2info.get('version'))
+			vst2ini.set(vst_name, 'creator', vst2info.get('manufacturer'))
+			vst2ini.set(vst_name, 'fourid', str(int(vst2info.get('uniqueId'), 16)))
+			vst2ini.set(vst_name, 'num_inputs', vst2info.get('numInputs'))
+			vst2ini.set(vst_name, 'num_outputs', vst2info.get('numOutputs'))
+			if vst_inst == '1': vst2ini.set(vst_name, 'type', 'synth')
+			if vst_inst == '0': vst2ini.set(vst_name, 'type', 'effect')
+			
 #  ------------------------------------- Output -------------------------------------
 
 currentdir = os.getcwd() + '/__config/'

@@ -17,6 +17,7 @@ from functions_plugconv import input_flstudio
 from functions_plugconv import input_pxtone
 from functions_plugconv import input_jummbox
 
+from functions_plugconv import output_flstudio_vst2
 from functions_plugconv import output_sampler_vst2
 from functions_plugconv import output_multisampler_vst2
 from functions_plugconv import output_slicer_vst2
@@ -69,6 +70,9 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 			elif (pluginname == 'native-lmms' or pluginname == 'zynaddsubfx-lmms') and out_daw != 'lmms':
 				output_lmms_vst2.convert_inst(instdata)
 
+			elif pluginname == 'native-fl':
+				output_flstudio_vst2.convert_inst(instdata)
+
 			# -------------------- vst2 (juicysfplugin) --------------------
 
 			# ---------- from native soundfont2
@@ -92,8 +96,17 @@ def convplug_fx(fxdata, in_daw, out_daw, extra_json):
 			plugindata = fxdata['plugindata']
 
 			# ---------------------------------------- input ----------------------------------------
-			if in_daw == 'lmms' and pluginname == 'native-lmms': output_lmms_vst2.convert_fx(fxdata)
-			if in_daw == 'flp' and pluginname == 'native-fl': input_flstudio.convert_fx(fxdata)
+			
+			if in_daw == 'lmms' and pluginname == 'native-lmms': 
+				output_lmms_vst2.convert_fx(fxdata)
+
+			elif in_daw == 'flp' and pluginname == 'native-fl': 
+				input_flstudio.convert_fx(fxdata)
+
+			# ---------------------------------------- output ----------------------------------------
+
+			if in_daw == 'flp' and pluginname == 'native-fl':
+				output_flstudio_vst2.convert_fx(fxdata)
 
 
 

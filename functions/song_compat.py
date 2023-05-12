@@ -326,28 +326,29 @@ def r_removeloops_placements(note_placements):
     return new_placements
 
 def r_removeloops(projJ):
-    for track_placements_id in projJ['track_placements']:
-        track_placements_data = projJ['track_placements'][track_placements_id]
+    if 'track_placements' in projJ:
+        for track_placements_id in projJ['track_placements']:
+            track_placements_data = projJ['track_placements'][track_placements_id]
 
-        not_laned = True
+            not_laned = True
 
-        if 'laned' in track_placements_data:
-            print('[compat] RemoveLoops: laned: '+track_placements_id)
-            if s_pldata['laned'] == 1:
-                not_laned = False
-                s_lanedata = s_pldata['lanedata']
-                s_laneordering = s_pldata['laneorder']
-                for t_lanedata in s_lanedata:
-                    tj_lanedata = s_lanedata[t_lanedata]
-                    if 'notes' in tj_lanedata:
-                        track_placements_data['notes'] = r_removeloops_placements(tj_lanedata['notes'])
+            if 'laned' in track_placements_data:
+                print('[compat] RemoveLoops: laned: '+track_placements_id)
+                if s_pldata['laned'] == 1:
+                    not_laned = False
+                    s_lanedata = s_pldata['lanedata']
+                    s_laneordering = s_pldata['laneorder']
+                    for t_lanedata in s_lanedata:
+                        tj_lanedata = s_lanedata[t_lanedata]
+                        if 'notes' in tj_lanedata:
+                            track_placements_data['notes'] = r_removeloops_placements(tj_lanedata['notes'])
 
-        if not_laned == True:
-            print('[compat] RemoveLoops: non-laned: '+track_placements_id)
-            if 'notes' in track_placements_data:
-                track_placements_data['notes'] = r_removeloops_placements(track_placements_data['notes'])
-            if 'audio' in track_placements_data:
-                track_placements_data['audio'] = r_removeloops_placements(track_placements_data['audio'])
+            if not_laned == True:
+                print('[compat] RemoveLoops: non-laned: '+track_placements_id)
+                if 'notes' in track_placements_data:
+                    track_placements_data['notes'] = r_removeloops_placements(track_placements_data['notes'])
+                if 'audio' in track_placements_data:
+                    track_placements_data['audio'] = r_removeloops_placements(track_placements_data['audio'])
 
 def m_removeloops(projJ):
     for playlist_id in projJ['playlist']:

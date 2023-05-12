@@ -538,7 +538,9 @@ def make(FLP_Data, outputfile):
     make_flevent(data_FLdt, 28, 1)
     make_flevent(data_FLdt, 37, 1)
     make_flevent(data_FLdt, 200, b'\x00\x00')
-    make_flevent(data_FLdt, 156, int(float(FLP_Data['FL_Main']['Tempo'])*1000))
+
+    if 'Tempo' in FLP_Data['FL_Main']:
+        make_flevent(data_FLdt, 156, int(float(FLP_Data['FL_Main']['Tempo'])*1000))
     make_flevent(data_FLdt, 67, 1) #CurrentPatNum
     make_flevent(data_FLdt, 9, 1) #LoopActive
     make_flevent(data_FLdt, 11, int(FLP_Data['FL_Main']['Shuffle'])) #Shuffle 

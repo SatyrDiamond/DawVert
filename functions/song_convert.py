@@ -71,10 +71,14 @@ def r2m(song):
 
     t_s_track_order = cvpj_proj['track_order']
     t_s_trackdata = cvpj_proj['track_data']
-    t_s_trackplacements = cvpj_proj['track_placements']
+
+    if 'track_placements' in cvpj_proj: 
+        t_s_trackplacements = cvpj_proj['track_placements']
+        del cvpj_proj['track_placements']
+    else: t_s_trackplacements = {}
+
     del cvpj_proj['track_data']
     del cvpj_proj['track_order']
-    del cvpj_proj['track_placements']
 
     cvpj_proj['instruments_data'] = {}
     cvpj_proj['instruments_order'] = []

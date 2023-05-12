@@ -18,14 +18,16 @@ from functions_plugconv import input_pxtone
 from functions_plugconv import input_jummbox
 
 from functions_plugconv import output_simple_vst2
-from functions_plugconv import output_flstudio_vst2
 from functions_plugconv import output_sampler_vst2
 from functions_plugconv import output_multisampler_vst2
 from functions_plugconv import output_slicer_vst2
-from functions_plugconv import output_lmms_vst2
 from functions_plugconv import output_retro_vst2
-from functions_plugconv import output_onlineseq_vst2
 from functions_plugconv import output_soundchip_vst2
+
+from functions_plugconv import output_flstudio_vst2
+from functions_plugconv import output_lmms_vst2
+from functions_plugconv import output_onlineseq_vst2
+from functions_plugconv import output_audiosauna_vst2
 
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
@@ -116,6 +118,9 @@ def convplug_fx(fxdata, in_daw, out_daw, extra_json):
 
 			elif in_daw == 'onlineseq' and pluginname == 'native-onlineseq':
 				output_onlineseq_vst2.convert_fx(fxdata)
+
+			elif in_daw == 'audiosauna' and pluginname == 'native-audiosauna':
+				output_audiosauna_vst2.convert_fx(fxdata)
 
 
 

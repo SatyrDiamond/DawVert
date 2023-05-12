@@ -459,7 +459,7 @@ def m2mi_checkdup(cvpj_notelistindex, nledata):
     else:
         return None
 
-m2mi_sample_names = ['file', 'name', 'color', 'stretch', 'vol', 'pan', 'fxrack_channel']
+m2mi_sample_names = ['file', 'name', 'color', 'audiomod', 'vol', 'pan', 'fxrack_channel']
 
 def m2mi(song):
     print('[song-convert] Converting from Multiple > MultipleIndexed')

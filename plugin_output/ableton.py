@@ -670,7 +670,7 @@ def ableton_make_midi_track(cvpj_trackid):
 class output_cvpj(plugin_output.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'output'
-    def getname(self): return 'Ableton Live'
+    def getname(self): return 'Ableton Live 11'
     def getshortname(self): return 'ableton'
     def gettype(self): return 'r'
     def getdawcapabilities(self): 

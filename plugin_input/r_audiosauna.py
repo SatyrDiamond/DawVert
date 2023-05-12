@@ -62,13 +62,21 @@ def make_fxslot(x_device_sound, fx_type, as_device):
         if as_device in [0,1]: fx_plugindata['modulate'] = float(getvalue(x_device_sound, 'driveModul', 0))/100
         else: fx_plugindata['modulate'] = float(getvalue(x_device_sound, 'modulate', 0))/100
 
-    if fx_type == 'bitcrush': fx_plugindata['frames'] = float(getvalue(x_device_sound, 'bitrate', 0))
-    if fx_type == 'amp': fx_plugindata['level'] = float(getvalue(x_device_sound, 'masterAmp', 0))/100
+    bitrateval = float(getvalue(x_device_sound, 'bitrate', 0))
+    if bitrateval != 0.0: 
+        if fx_type == 'bitcrush': fx_plugindata['frames'] = bitrateval
+
+    ampval = float(getvalue(x_device_sound, 'masterAmp', 0))/100
+    if ampval != 1.0: 
+        if fx_type == 'amp': fx_plugindata['level'] = ampval
+
 
     if fx_type == 'tape_delay':
+        fx_plugindata['time'] = float(getvalue(x_device_sound, 'dlyTime', 0))
         fx_plugindata['damage'] = float(getvalue(x_device_sound, 'dlyDamage', 0))/100
         fx_plugindata['feedback'] = float(getvalue(x_device_sound, 'dlyFeed', 0))/100
         fx_plugindata['sync'] = getbool(getvalue(x_device_sound, 'dlySync', 0))
+        fx_plugindata['bpm'] = x_BPM
 
     if fx_type == 'reverb':
         fx_plugindata['time'] = float(getvalue(x_device_sound, 'rvbTime', 0))/100
@@ -105,6 +113,9 @@ class input_audiosanua(plugin_input.base):
         xt_track = x_proj_tracks.findall('track')
         xt_pattern = x_proj_songPatterns.findall('pattern')
         xt_devices = x_proj_devices.findall('audioDevice')
+
+        global x_BPM
+        x_BPM = float(getvalue(x_proj, 'appTempo', 170))
 
         cvpj_plnotes = {}
         as_patt_notes = {}
@@ -301,7 +312,8 @@ class input_audiosanua(plugin_input.base):
 
             for fx_name in ['distortion', 'bitcrush', 'chorus', 'amp']:
                 fx_plugindata, fx_wet = make_fxslot(x_device_sound, fx_name, v_device_deviceType)
-                tracks.add_fxslot_native(cvpj_l, 'audio', 'audiosauna', ['track', cvpj_trackid], None, fx_wet, None, fx_name, fx_plugindata)
+                if fx_plugindata != {}:
+                    tracks.add_fxslot_native(cvpj_l, 'audio', 'audiosauna', ['track', cvpj_trackid], None, fx_wet, None, fx_name, fx_plugindata)
 
             devicenum += 1
 
@@ -309,7 +321,7 @@ class input_audiosanua(plugin_input.base):
         as_loopend = float(getvalue(x_proj, 'appLoopEnd', 0))
         if as_loopstart != 0 and as_loopend != 0: song.add_timemarker_looparea(cvpj_l, None, as_loopstart, as_loopend)
 
-        cvpj_l['bpm'] = float(getvalue(x_proj, 'appTempo', 170))
+        cvpj_l['bpm'] = x_BPM
         return json.dumps(cvpj_l)
 
 

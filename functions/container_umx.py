@@ -24,13 +24,13 @@ def strip_umx(file: str, destination: str) -> Optional[UMXInfo]:
 
 def parse_umx(file: IO, destination: str) -> Optional[UMXInfo]:
     if not is_umx(file):
-        print("file is not an Unreal Package")
+        print("[error] File is not an Unreal Package")
         return None
     
     version = read_dword_le(file)
     
     if version < MINIMUM_VERSION:
-        print(f"UMX versions below {MINIMUM_VERSION} are not supported")
+        print(f"[error] UMX versions below {MINIMUM_VERSION} are not supported")
         return None
     
     skip_bytes(file, 4)
@@ -59,7 +59,7 @@ def parse_umx(file: IO, destination: str) -> Optional[UMXInfo]:
         skip_bytes(file, 4)
     
     if not contains_music:
-        print("Unreal Package does not contain music")
+        print("[error] Unreal Package does not contain music")
         return None
     
     file.seek(export_offset)
@@ -73,7 +73,7 @@ def parse_umx(file: IO, destination: str) -> Optional[UMXInfo]:
     serial_size = read_compact_index(file)
 
     if serial_size == 0:
-        print("UMX doesn't contain anything")
+        print("[error] UMX doesn't contain anything")
         return None
     
     serial_offset = read_compact_index(file)
@@ -165,8 +165,8 @@ def skip_bytes(file: IO, bytes: int):
     file.seek(bytes, 1)
 
 # Some tests
-if __name__ == "__main__":
-    print(strip_umx("test/umx/Mayhem.umx", "test/mayhem"))
-    print(strip_umx("test/umx/DeathValley.umx", "test/deathvalley"))
-    print(strip_umx("test/umx/deus ex/MJ12_Music.umx", "test/mj12"))
-    print(strip_umx("test/umx/deus ex/Lebedev_Music.umx", "test/lebedev"))
+# if __name__ == "__main__":
+#     print(strip_umx("test/umx/Mayhem.umx", "test/mayhem"))
+#     print(strip_umx("test/umx/DeathValley.umx", "test/deathvalley"))
+#     print(strip_umx("test/umx/deus ex/MJ12_Music.umx", "test/mj12"))
+#     print(strip_umx("test/umx/deus ex/Lebedev_Music.umx", "test/lebedev"))

@@ -4,7 +4,7 @@
 import os
 import plugin_input
 
-from typing import Optional
+from typing import Optional, Dict
 from functions import container_umx as umx
 
 from plugin_input.mi_tracker_s3m import input_s3m as s3m
@@ -20,7 +20,7 @@ TRACKER_FORMATS = [
 ]
 
 class imput_umx(plugin_input.base):
-    def is_dawvert_plugin(self): 
+    def is_dawvert_plugin(self) -> str: 
         return 'input'
     
     def getshortname(self) -> str: 
@@ -29,10 +29,10 @@ class imput_umx(plugin_input.base):
     def getname(self) -> str: 
         return 'Unreal Package Container'
     
-    def gettype(self): 
+    def gettype(self) -> str: 
         return 'm'
     
-    def getdawcapabilities(self): 
+    def getdawcapabilities(self) -> Dict[str, bool]: 
         return { 'r_track_lanes': True }
     
     def supported_autodetect(self) -> bool: 
@@ -57,7 +57,7 @@ class imput_umx(plugin_input.base):
                 return None
             
         except Exception as error:
-            print(f"[error] {error}")
+            print(f"[error] { error }")
             return None    
         
         # Store the parsed cvpj json, because we need to 
@@ -65,15 +65,15 @@ class imput_umx(plugin_input.base):
         result = None
 
         try:
-            # Using UMXInfo.hint() can be misleading, so 
+            # Using UMXInfo.hint() can be misleading, so iterate through a list of trackers
+            # and only parse with that tracker if it's a valid format. 
             for tracker in TRACKER_FORMATS:
                 if tracker.detect(stripped_umx):
                     print(f"[info] Detected format: { tracker.getname() }")
                     result = tracker.parse(stripped_umx, extra_param=extra_param)
             
             # An edge case where MOD files don't have the "detect" method.
-            # In this circumstance, we can assume that valid UMX files 
-            # will store a valid MOD file
+            # In this circumstance, we can assume that valid UMX files will store a valid MOD file.
             if result is None:
                 result = mod().parse(stripped_umx, extra_param=extra_param)
 

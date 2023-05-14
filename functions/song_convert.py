@@ -602,6 +602,7 @@ def mi2m(song, extra_json):
                             if 'pan' in index_pl_data: pldata['pan'] = index_pl_data['pan']
                             if 'vol' in index_pl_data: pldata['vol'] = index_pl_data['vol']
                             if 'file' in index_pl_data: pldata['file'] = index_pl_data['file']
+                            if 'audiomod' in index_pl_data: pldata['audiomod'] = index_pl_data['audiomod']
                             if 'fxrack_channel' in index_pl_data: pldata['fxrack_channel'] = index_pl_data['fxrack_channel']
         del cvpj_proj['sampleindex']
 

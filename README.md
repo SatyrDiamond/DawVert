@@ -52,6 +52,9 @@ numpy
 mido
 lxml
 chardet
+av
+beautifulsoup4
+blackboxprotobuf
 git+https://github.com/Perlence/rpp
 ```
 

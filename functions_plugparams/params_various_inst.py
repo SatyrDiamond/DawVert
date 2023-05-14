@@ -542,7 +542,8 @@ def kickmess_get():
 			o_value = kickmess_params[paramcat][paramval]
 			if paramval in ['freq_start']: o_value = math.sqrt((o_value-2.51)/3000)
 			if paramval in ['freq_end']: o_value = math.sqrt((o_value-2.51)/2000)
-			if paramval in ['f_env_release']: o_value = math.sqrt((o_value-2.51)/5000)
+			if paramval in ['f_env_release']: 
+				if o_value > 2.4: o_value = math.sqrt((o_value-2.51)/5000)
 			kickmess_add(kickmess_out, paramcat, paramval, o_value)
 
 	kickmess_out.seek(0)

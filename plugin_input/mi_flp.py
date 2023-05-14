@@ -124,6 +124,12 @@ class input_flp(plugin_input.base):
                 cvpj_s_sample['color'] = [color[0]/255,color[1]/255,color[2]/255]
                 cvpj_s_sample['fxrack_channel'] = channeldata['fxchannel']
                 getsamplefile(cvpj_s_sample, channeldata, input_file)
+
+                cvpj_s_sample['audiomod'] = {}
+                cvpj_s_sample['audiomod']['stretch'] = {}
+
+                if 'stretchingpitch' in channeldata: cvpj_s_sample['audiomod']['stretch']['pitch'] = channeldata['stretchingpitch']/100
+
                 cvpj_l_samples['FLSample' + str(instrument)] = cvpj_s_sample
 
 

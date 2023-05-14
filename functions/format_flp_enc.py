@@ -209,7 +209,7 @@ def make_chanparams(data_FLdt, channel):
     bio_chanparams.write(temp_trim.to_bytes(4, "little"))
     bio_chanparams.write(temp_arprepeat.to_bytes(4, "little"))
     bio_chanparams.write(temp_stretchingtime.to_bytes(4, "little"))
-    bio_chanparams.write(temp_stretchingpitch.to_bytes(4, "little"))
+    bio_chanparams.write(temp_stretchingpitch.to_bytes(4, "little"), signed="True")
     bio_chanparams.write(temp_stretchingmultiplier.to_bytes(4, "little", signed="True"))
     bio_chanparams.write(temp_stretchingmode.to_bytes(4, "little", signed="True"))
     bio_chanparams.write(b'\x02\x00\x00\x00\xfe\xff\xff\xff\xfe\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00')

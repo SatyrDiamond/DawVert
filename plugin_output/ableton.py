@@ -414,7 +414,8 @@ def create_midiclip(xmltag, cvpj_placement, trackcolor):
             #print('----- CUT' ,  cvpj_placement_cut['type'])
             if cvpj_placement_cut['type'] == 'cut':
                 t_StartRelative = 0
-                t_LoopStart = cvpj_placement_cut['start']/4
+                t_LoopStart = 0
+                if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start']/4
                 t_LoopEnd = (t_LoopStart/4)+(cvpj_placement_cut['end']/4)
             if cvpj_placement_cut['type'] == 'loop':
                 t_LoopOn = 'true'
@@ -563,7 +564,8 @@ def create_audioclip(xmltag, cvpj_placement, trackcolor):
             #print('----- CUT' ,  cvpj_placement_cut['type'])
             if cvpj_placement_cut['type'] == 'cut':
                 t_StartRelative = 0
-                t_LoopStart = cvpj_placement_cut['start']/4
+                t_LoopStart = 0
+                if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start']/4
                 t_LoopEnd = (t_LoopStart/4)+(cvpj_placement_cut['end']/4)
             if cvpj_placement_cut['type'] == 'loop':
                 t_LoopOn = 'true'
@@ -629,6 +631,16 @@ def create_audioclip(xmltag, cvpj_placement, trackcolor):
     stretch_t_steps = cvpj_duration
     stretch_t_pitch = 0
 
+    DefaultDuration, DefaultSampleRate = create_sampleref(x_AudioClip, t_file)
+    audio_seconds = DefaultDuration/DefaultSampleRate
+
+    normalspeed = ((audio_seconds)*(cvpj_bpm/120)*2)*4
+
+    w_timemarkers = [
+            {'pos': 0.0, 'pos_seconds': 0.0}, 
+            {'pos': normalspeed, 'pos_seconds': audio_seconds}
+                    ]
+
     if 'audiomod' in cvpj_placement:
         if 'stretch' in cvpj_placement['audiomod']:
             cvpj_stretch = cvpj_placement['audiomod']['stretch']
@@ -658,6 +670,21 @@ def create_audioclip(xmltag, cvpj_placement, trackcolor):
             if 'pitch' in cvpj_stretch: 
                 stretch_t_pitch = cvpj_stretch['pitch']
 
+
+            if 'warps' in cvpj_stretch:
+                w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': stretch_t_steps*4, 'pos_seconds': audio_seconds}]
+
+            elif 'time' in cvpj_stretch:
+                if 'type' in cvpj_stretch['time'] and 'data' in cvpj_stretch['time']:
+                    timedata = cvpj_stretch['time']['data']
+
+                    if cvpj_stretch['time']['type'] == 'step_mul':
+                        w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': timedata['steps'], 'pos_seconds': audio_seconds}]
+                
+                    if cvpj_stretch['time']['type'] == 'rate':
+                        w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': normalspeed*timedata['rate'], 'pos_seconds': audio_seconds}]
+
+
     t_pitch = stretch_t_pitch
 
     w_PitchCoarse = round(t_pitch)
@@ -665,7 +692,6 @@ def create_audioclip(xmltag, cvpj_placement, trackcolor):
 
     addvalue(x_AudioClip, 'IsWarped', w_IsWarped)
     addvalue(x_AudioClip, 'TakeId', '1')
-    DefaultDuration, DefaultSampleRate = create_sampleref(x_AudioClip, t_file)
     x_AudioClip_Onsets = ET.SubElement(x_AudioClip, 'Onsets')
     x_AudioClip_UserOnsets = ET.SubElement(x_AudioClip_Onsets, 'UserOnsets')
     addvalue(x_AudioClip_Onsets, 'HasUserOnsets', 'false')
@@ -718,28 +744,6 @@ def create_audioclip(xmltag, cvpj_placement, trackcolor):
     addvalue(x_AudioClip, 'SampleVolume', t_vol)
     addvalue(x_AudioClip, 'MarkerDensity', '2')
     addvalue(x_AudioClip, 'AutoWarpTolerance', '4')
-
-    audio_seconds = DefaultDuration/DefaultSampleRate
-    normalspeed = ((audio_seconds)*(cvpj_bpm/120)*2)*4
-
-    w_timemarkers = [
-            {'pos': 0.0, 'pos_seconds': 0.0}, 
-            {'pos': normalspeed, 'pos_seconds': audio_seconds}
-                    ]
-
-    if 'warps' in cvpj_stretch:
-        w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': stretch_t_steps*4, 'pos_seconds': audio_seconds}]
-
-    elif 'time' in cvpj_stretch:
-        if 'type' in cvpj_stretch['time'] and 'data' in cvpj_stretch['time']:
-            timedata = cvpj_stretch['time']['data']
-
-            if cvpj_stretch['time']['type'] == 'step_mul':
-                w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': timedata['steps'], 'pos_seconds': audio_seconds}]
-        
-            if cvpj_stretch['time']['type'] == 'rate':
-                w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': normalspeed*timedata['rate'], 'pos_seconds': audio_seconds}]
-
 
     x_AudioClip_WarpMarkers = ET.SubElement(x_AudioClip, 'WarpMarkers')
 

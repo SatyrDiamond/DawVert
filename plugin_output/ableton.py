@@ -507,11 +507,14 @@ def create_sampleref(xmltag, sample_filename):
     if os.path.exists(sample_filename):
         avdata = av.open(sample_filename)
         FilePath = sample_filename
-        RelativePath = os.path.relpath(sample_filename, os.path.dirname(output_file_global))
+
+        #RelativePath = os.path.relpath(sample_filename, os.path.dirname(output_file_global))
         OriginalFileSize = os.path.getsize(sample_filename)
         LastModDate = int(os.path.getmtime(sample_filename))
         DefaultDuration = avdata.streams.audio[0].duration
         DefaultSampleRate = avdata.streams.audio[0].rate
+
+    if DefaultSampleRate == None: DefaultSampleRate = 44100
 
     x_SampleRef = ET.SubElement(xmltag, 'SampleRef')
     x_FileRef = ET.SubElement(x_SampleRef, 'FileRef')
@@ -632,6 +635,7 @@ def create_audioclip(xmltag, cvpj_placement, trackcolor):
     stretch_t_pitch = 0
 
     DefaultDuration, DefaultSampleRate = create_sampleref(x_AudioClip, t_file)
+
     audio_seconds = DefaultDuration/DefaultSampleRate
 
     normalspeed = ((audio_seconds)*(cvpj_bpm/120)*2)*4

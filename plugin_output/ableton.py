@@ -685,7 +685,7 @@ def create_audioclip(xmltag, cvpj_placement, trackcolor):
                     if cvpj_stretch['time']['type'] == 'step_mul':
                         w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': timedata['steps'], 'pos_seconds': audio_seconds}]
                 
-                    if cvpj_stretch['time']['type'] == 'rate':
+                    if cvpj_stretch['time']['type'] == 'rate_timed':
                         w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': normalspeed*timedata['rate'], 'pos_seconds': audio_seconds}]
 
 

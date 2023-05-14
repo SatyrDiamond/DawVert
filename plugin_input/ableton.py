@@ -313,6 +313,7 @@ class input_ableton(plugin_input.base):
                             t_warpmarker_first = t_warpmarkers[0]
                             t_warpmarker_last = t_warpmarkers[-1]
                             cvpj_stretch['time']['type'] = 'step_mul'
+                            cvpj_stretch['time']['data'] = {}
                             cvpj_stretch['time']['data']['steps'] = t_warpmarker_last['pos']
                             cvpj_stretch['time']['data']['mul'] = t_warpmarker_last['pos']/audio_sampleref_steps
                     

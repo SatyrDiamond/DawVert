@@ -22,19 +22,20 @@ filename_len = {}
 
 
 def getsamplefile(jsontag, channeldata, flppath):
-    if 'samplefilename' in channeldata: pathout = channeldata['samplefilename']
-    samepath = os.path.join(os.path.dirname(flppath), os.path.basename(pathout))
-    if os.path.exists(samepath): pathout = samepath
+    if 'samplefilename' in channeldata: 
+        pathout = channeldata['samplefilename']
+        samepath = os.path.join(os.path.dirname(flppath), os.path.basename(pathout))
+        if os.path.exists(samepath): pathout = samepath
 
-    jsontag['file'] = ''
-    if pathout != None: 
-        jsontag['file'] = pathout
-        avdata = av.open(pathout)
-        DefaultDuration = avdata.streams.audio[0].duration
-        DefaultSampleRate = avdata.streams.audio[0].rate
-        if DefaultSampleRate == None: DefaultSampleRate = 44100
-        filename_len[pathout] = [DefaultDuration, DefaultSampleRate]
-    return pathout
+        jsontag['file'] = ''
+        if pathout != None: 
+            jsontag['file'] = pathout
+            avdata = av.open(pathout)
+            DefaultDuration = avdata.streams.audio[0].duration
+            DefaultSampleRate = avdata.streams.audio[0].rate
+            if DefaultSampleRate == None: DefaultSampleRate = 44100
+            filename_len[pathout] = [DefaultDuration, DefaultSampleRate]
+        return pathout
 
 class input_flp(plugin_input.base):
     def __init__(self): pass
@@ -139,8 +140,10 @@ class input_flp(plugin_input.base):
                 cvpj_s_sample['fxrack_channel'] = channeldata['fxchannel']
                 filename_sample = getsamplefile(cvpj_s_sample, channeldata, input_file)
 
-                ald = filename_len[filename_sample]
+                if filename_sample in filename_len: ald = filename_len[filename_sample]
+                else: ald = [100, 44100]
                 ald_sec = (ald[0]/ald[1])
+                stretchbpm = (ald_sec*(cvpj_l['bpm']/120))
 
                 cvpj_s_sample['audiomod'] = {}
                 cvpj_s_sample['audiomod']['stretch'] = {}
@@ -151,14 +154,15 @@ class input_flp(plugin_input.base):
 
                 if 'stretchingpitch' in channeldata: t_stretchingpitch += channeldata['stretchingpitch']/100
                 if 'middlenote' in channeldata: t_stretchingpitch += (channeldata['middlenote']-60)*-1
+                if 'pitch' in channeldata: t_stretchingpitch += channeldata['pitch']/100
 
                 if 'stretchingtime' in channeldata: t_stretchingtime = channeldata['stretchingtime']/384
                 
                 cvpj_s_sample['audiomod']['stretch']['pitch'] = t_stretchingpitch
 
-                if t_stretchingtime != 0:
-                    stretchbpm = (ald_sec*(cvpj_l['bpm']/120))
+                #print(t_stretchingtime, stretchbpm, t_stretchingtime/stretchbpm)
 
+                if t_stretchingtime != 0:
                     cvpj_s_stretch['enabled'] = True
                     cvpj_s_stretch['time'] = {}
                     cvpj_s_stretch['time']['type'] = 'rate_timed'
@@ -260,11 +264,13 @@ class input_flp(plugin_input.base):
                         cvpj_l_playlist[str(track)] = {}
                     if 'color' in FL_Tracks[track]:
                         color = FL_Tracks[track]['color'].to_bytes(4, "little")
-                    cvpj_l_playlist[str(track)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
+                        cvpj_l_playlist[str(track)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
                     if 'name' in FL_Tracks[track]:
                         cvpj_l_playlist[str(track)]['name'] = FL_Tracks[track]['name']
-                    cvpj_l_playlist[str(track)]['size'] = FL_Tracks[track]['height']
-                    cvpj_l_playlist[str(track)]['enabled'] = FL_Tracks[track]['enabled']
+                    if 'height' in FL_Tracks[track]:
+                        cvpj_l_playlist[str(track)]['size'] = FL_Tracks[track]['height']
+                    if 'enabled' in FL_Tracks[track]:
+                        cvpj_l_playlist[str(track)]['enabled'] = FL_Tracks[track]['enabled']
 
         for fxchannel in FL_Mixer:
             fl_fxhan = FL_Mixer[str(fxchannel)]

@@ -155,11 +155,10 @@ class input_flp(plugin_input.base):
                 if 'stretchingpitch' in channeldata: t_stretchingpitch += channeldata['stretchingpitch']/100
                 if 'middlenote' in channeldata: t_stretchingpitch += (channeldata['middlenote']-60)*-1
                 if 'pitch' in channeldata: t_stretchingpitch += channeldata['pitch']/100
+                cvpj_s_sample['audiomod']['stretch']['pitch'] = t_stretchingpitch
 
                 if 'stretchingtime' in channeldata: t_stretchingtime = channeldata['stretchingtime']/384
                 
-                cvpj_s_sample['audiomod']['stretch']['pitch'] = t_stretchingpitch
-
                 #print(t_stretchingtime, stretchbpm, t_stretchingtime/stretchbpm)
 
                 if t_stretchingtime != 0:

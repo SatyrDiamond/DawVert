@@ -33,6 +33,16 @@ def get_param(xmldata, varname, vartype, fallback):
     else:
         return fallback
 
+def get_sampleref(xmldata):
+    x_sampleref = xmldata.findall('SampleRef')[0]
+    x_fileref = x_sampleref.findall('FileRef')[0]
+    out_data = {}
+    out_data['file'] = get_value(x_fileref, 'Path', '')
+    out_data['samples'] = float(get_value(x_sampleref, 'DefaultDuration', 1))
+    out_data['rate'] = float(get_value(x_sampleref, 'DefaultSampleRate', 1))
+    out_data['seconds'] = out_data['samples'] / out_data['rate']
+    return out_data
+
 class input_ableton(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -75,6 +85,15 @@ class input_ableton(plugin_input.base):
 
         cvpj_l = {}
 
+        x_mastertrack_Name = x_MasterTrack.findall('Name')[0]
+        mastertrack_name = get_value(x_mastertrack_Name, 'EffectiveName', '')
+        mastertrack_color = colorlist_one[int(get_value(x_MasterTrack, 'Color', 'test'))]
+        track_vol = get_param(x_MasterTrack, 'Volume', 'float', 0)
+        tracks.a_addtrack_master(cvpj_l, mastertrack_name, track_vol, mastertrack_color)
+        x_mastertrack_DeviceChain = x_MasterTrack.findall('DeviceChain')[0]
+        x_mastertrack_Mixer = x_mastertrack_DeviceChain.findall('Mixer')[0]
+        cvpj_l['bpm'] = get_param(x_mastertrack_Mixer, 'Tempo', 'float', 140)
+
         for x_track_data in list(x_Tracks):
             tracktype = x_track_data.tag
 
@@ -88,10 +107,6 @@ class input_ableton(plugin_input.base):
             track_color = colorlist_one[int(get_value(x_track_data, 'Color', 'test'))]
             track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0)
             track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0)
-
-            #for string in [tracktype, track_id, track_name, track_vol, track_pan]:
-            #    print(str(string).ljust(16), end='')
-            #print()
 
             if tracktype == 'MidiTrack':
                 tracks.r_create_inst(cvpj_l, track_id, {})
@@ -179,27 +194,139 @@ class input_ableton(plugin_input.base):
                     for t_note in t_notes:
                         cvpj_placement['notelist'].append(t_notes[t_note])
 
-                    tracks.r_pl_notes(cvpj_l, track_id, cvpj_placement)
-
-
+                    tracks.r_pl_notes(cvpj_l, track_id, cvpj_placement)  
 
             if tracktype == 'AudioTrack':
                 tracks.r_create_audio(cvpj_l, track_id, {})
                 tracks.r_basicdata(cvpj_l, track_id, track_name, track_color, track_vol, track_pan)
                 tracks.r_pl_audio(cvpj_l, track_id, [])
+                x_track_MainSequencer = x_track_DeviceChain.findall('MainSequencer')[0]
+                x_track_Sample = x_track_MainSequencer.findall('Sample')[0]
+                x_track_ArrangerAutomation = x_track_Sample.findall('ArrangerAutomation')[0]
+                x_track_Events = x_track_ArrangerAutomation.findall('Events')[0]
+                x_track_AudioClips = x_track_Events.findall('AudioClip')
+
+                for x_track_AudioClip in x_track_AudioClips:
+                    audio_placement_pos = float(get_value(x_track_AudioClip, 'CurrentStart', 0))*4
+                    audio_placement_dur = float(get_value(x_track_AudioClip, 'CurrentEnd', 0))*4 - audio_placement_pos
+                    audio_placement_name = get_value(x_track_AudioClip, 'Name', '')
+                    audio_placement_color = colorlist_one[int(get_value(x_track_AudioClip, 'Color', 0))]
+                    audio_placement_muted = ['false','true'].index(get_value(x_track_AudioClip, 'Disabled', 'false'))
+                    audio_placement_vol = float(get_value(x_track_AudioClip, 'SampleVolume', 0))
+
+                    audio_placement_warp_on = ['false','true'].index(get_value(x_track_AudioClip, 'IsWarped', 'false'))
+                    audio_placement_warp_mode = int(get_value(x_track_AudioClip, 'WarpMode', 0))
+
+                    audio_sampleref = get_sampleref(x_track_AudioClip)
+                    audio_sampleref_steps = audio_sampleref['seconds']*8
+
+                    cvpj_placement = {}
+                    cvpj_placement['position'] = audio_placement_pos
+                    cvpj_placement['duration'] = audio_placement_dur
+                    cvpj_placement['name'] = audio_placement_name
+                    cvpj_placement['color'] = audio_placement_color
+                    cvpj_placement['muted'] = audio_placement_muted
+                    cvpj_placement['vol'] = audio_placement_vol
+
+                    cvpj_placement['file'] = audio_sampleref['file']
+
+                    x_track_AudioClip_loop = x_track_AudioClip.findall('Loop')[0]
+                    audio_placement_loop_l_start = float(get_value(x_track_AudioClip_loop, 'LoopStart', 0))*4
+                    audio_placement_loop_l_end = float(get_value(x_track_AudioClip_loop, 'LoopEnd', 1))*4
+                    audio_placement_loop_start = float(get_value(x_track_AudioClip_loop, 'StartRelative', 0))*4
+                    audio_placement_loop_on = ['false','true'].index(get_value(x_track_AudioClip_loop, 'LoopOn', 'test'))
+
+                    if audio_placement_loop_on == 1:
+                        cvpj_placement['cut'] = {}
+                        cvpj_placement['cut']['type'] = 'loop'
+                        cvpj_placement['cut']['start'] = audio_placement_loop_start
+                        cvpj_placement['cut']['loopstart'] = audio_placement_loop_l_start
+                        cvpj_placement['cut']['loopend'] = audio_placement_loop_l_end
+                    else:
+                        cvpj_placement['cut'] = {}
+                        cvpj_placement['cut']['type'] = 'cut'
+                        cvpj_placement['cut']['start'] = audio_placement_loop_l_start
+                        cvpj_placement['cut']['end'] = audio_placement_loop_l_end
+
+                    audio_placement_Fade = ['false','true'].index(get_value(x_track_AudioClip, 'Fade', 'false'))
+                    x_track_AudioClip_fades = x_track_AudioClip.findall('Fades')[0]
+
+                    if audio_placement_Fade == 1:
+                        cvpj_placement['fade'] = {}
+                        cvpj_placement['fade']['in'] = {}
+                        cvpj_placement['fade']['in']['duration'] = float(get_value(x_track_AudioClip_fades, 'FadeInLength', 0))*8
+                        cvpj_placement['fade']['in']['skew'] = float(get_value(x_track_AudioClip_fades, 'FadeInCurveSkew', 0))
+                        cvpj_placement['fade']['in']['slope'] = float(get_value(x_track_AudioClip_fades, 'FadeInCurveSlope', 0))
+                        cvpj_placement['fade']['out'] = {}
+                        cvpj_placement['fade']['out']['duration'] = float(get_value(x_track_AudioClip_fades, 'FadeOutLength', 0))*8
+                        cvpj_placement['fade']['out']['skew'] = float(get_value(x_track_AudioClip_fades, 'FadeOutCurveSkew', 0))
+                        cvpj_placement['fade']['out']['slope'] = float(get_value(x_track_AudioClip_fades, 'FadeOutCurveSlope', 0))
+
+
+
+                    cvpj_placement['audiomod'] = {}
+                    cvpj_placement['audiomod']['stretch'] = {}
+                    cvpj_stretch = cvpj_placement['audiomod']['stretch']
+
+                    if audio_placement_warp_on == 1:
+                        cvpj_stretch['enabled'] = True
+                        cvpj_stretch['params'] = {}
+                        if audio_placement_warp_mode == 0:
+                            cvpj_stretch['mode'] = 'ableton_beats'
+                            cvpj_stretch['params']['TransientResolution'] = int(get_value(x_track_AudioClip, 'TransientResolution', 6))
+                            cvpj_stretch['params']['TransientLoopMode'] = int(get_value(x_track_AudioClip, 'TransientLoopMode', 2))
+                            cvpj_stretch['params']['TransientEnvelope'] = int(get_value(x_track_AudioClip, 'TransientEnvelope', 100))
+                        if audio_placement_warp_mode == 1:
+                            cvpj_stretch['mode'] = 'ableton_tones'
+                            cvpj_stretch['params']['GranularityTones'] = float(get_value(x_track_AudioClip, 'GranularityTones', 30))
+                        if audio_placement_warp_mode == 2:
+                            cvpj_stretch['mode'] = 'ableton_texture'
+                            cvpj_stretch['params']['GranularityTexture'] = float(get_value(x_track_AudioClip, 'GranularityTexture', 71.328125))
+                            cvpj_stretch['params']['FluctuationTexture'] = float(get_value(x_track_AudioClip, 'FluctuationTexture', 27.34375))
+                        if audio_placement_warp_mode == 3:
+                            cvpj_stretch['mode'] = 'resample'
+                        if audio_placement_warp_mode == 4:
+                            cvpj_stretch['mode'] = 'ableton_complex'
+                        if audio_placement_warp_mode == 6:
+                            cvpj_stretch['mode'] = 'stretch_complexpro'
+                            cvpj_stretch['params']['ComplexProFormants'] = float(get_value(x_track_AudioClip, 'ComplexProFormants', 100))
+                            cvpj_stretch['params']['ComplexProEnvelope'] = int(get_value(x_track_AudioClip, 'ComplexProEnvelope', 120))
+
+
+                        x_track_AudioClip_WarpMarkers_bef = x_track_AudioClip.findall('WarpMarkers')[0]
+                        x_track_AudioClip_WarpMarkers = x_track_AudioClip_WarpMarkers_bef.findall('WarpMarker')
+                        t_warpmarkers = []
+                        for x_track_AudioClip_WarpMarker in x_track_AudioClip_WarpMarkers:
+                            t_warpmarker = {}
+                            t_warpmarker['pos'] = float(x_track_AudioClip_WarpMarker.get('BeatTime'))*4
+                            t_warpmarker['pos_seconds'] = float(x_track_AudioClip_WarpMarker.get('SecTime'))
+                            onedur = t_warpmarker['pos_seconds']/audio_sampleref['seconds']
+                            if onedur <= 1: t_warpmarkers.append(t_warpmarker)
+                        
+                        cvpj_stretch['warps'] = t_warpmarkers
+
+                        if len(t_warpmarkers) >= 2:
+                            t_warpmarker_first = t_warpmarkers[0]
+                            t_warpmarker_last = t_warpmarkers[-1]
+                            cvpj_stretch['t_timed'] = True
+                            cvpj_stretch['t_steps'] = t_warpmarker_last['pos']
+                            cvpj_stretch['t_mul'] = t_warpmarker_last['pos']/audio_sampleref_steps
+                            #print(t_warpmarker_last['pos'], audio_sampleref_steps, t_warpmarker_last['pos']/audio_sampleref_steps)
+                        else:
+                            cvpj_stretch['t_timed'] = False
+                    
+                    else:
+                        cvpj_stretch['enabled'] = False
+
+                    audio_placement_PitchCoarse = float(get_value(x_track_AudioClip, 'PitchCoarse', 0))
+                    audio_placement_PitchFine = float(get_value(x_track_AudioClip, 'PitchFine', 0))
+                    cvpj_stretch['pitch'] = audio_placement_PitchCoarse + audio_placement_PitchFine/100
+
+                    tracks.r_pl_audio(cvpj_l, track_id, cvpj_placement)  
 
             if tracktype == 'ReturnTrack':
                 tracks.r_add_return(cvpj_l, ['master'], track_id)
                 tracks.r_add_return_basicdata(cvpj_l, ['master'], track_id, track_name, track_color, track_vol, track_pan)
-
-        x_mastertrack_Name = x_MasterTrack.findall('Name')[0]
-        mastertrack_name = get_value(x_mastertrack_Name, 'EffectiveName', '')
-        mastertrack_color = colorlist_one[int(get_value(x_MasterTrack, 'Color', 'test'))]
-        track_vol = get_param(x_MasterTrack, 'Volume', 'float', 0)
-        tracks.a_addtrack_master(cvpj_l, mastertrack_name, track_vol, mastertrack_color)
-        x_mastertrack_DeviceChain = x_MasterTrack.findall('DeviceChain')[0]
-        x_mastertrack_Mixer = x_mastertrack_DeviceChain.findall('Mixer')[0]
-        cvpj_l['bpm'] = get_param(x_mastertrack_Mixer, 'Tempo', 'float', 140)
 
         return json.dumps(cvpj_l)
 

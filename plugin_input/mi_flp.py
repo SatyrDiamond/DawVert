@@ -6,6 +6,7 @@ import json
 import math
 import base64
 import struct
+import av
 import os.path
 from pathlib import Path
 
@@ -16,11 +17,24 @@ from functions import colors
 from functions import notelist_data
 from functions import song
 
+
+filename_len = {}
+
+
 def getsamplefile(jsontag, channeldata, flppath):
-    if 'samplefilename' in channeldata: jsontag['file'] = channeldata['samplefilename']
-    else: jsontag['file'] = ''
-    samepath = os.path.dirname(flppath)+'\\'+os.path.basename(jsontag['file'])
-    if os.path.exists(samepath): jsontag['file'] = samepath
+    if 'samplefilename' in channeldata: pathout = channeldata['samplefilename']
+    samepath = os.path.join(os.path.dirname(flppath), os.path.basename(pathout))
+    if os.path.exists(samepath): pathout = samepath
+
+    jsontag['file'] = ''
+    if pathout != None: 
+        jsontag['file'] = pathout
+        avdata = av.open(pathout)
+        DefaultDuration = avdata.streams.audio[0].duration
+        DefaultSampleRate = avdata.streams.audio[0].rate
+        if DefaultSampleRate == None: DefaultSampleRate = 44100
+        filename_len[pathout] = [DefaultDuration, DefaultSampleRate]
+    return pathout
 
 class input_flp(plugin_input.base):
     def __init__(self): pass
@@ -123,12 +137,33 @@ class input_flp(plugin_input.base):
                 color = channeldata['color'].to_bytes(4, "little")
                 cvpj_s_sample['color'] = [color[0]/255,color[1]/255,color[2]/255]
                 cvpj_s_sample['fxrack_channel'] = channeldata['fxchannel']
-                getsamplefile(cvpj_s_sample, channeldata, input_file)
+                filename_sample = getsamplefile(cvpj_s_sample, channeldata, input_file)
+
+                ald = filename_len[filename_sample]
+                ald_sec = (ald[0]/ald[1])
 
                 cvpj_s_sample['audiomod'] = {}
                 cvpj_s_sample['audiomod']['stretch'] = {}
+                cvpj_s_stretch = cvpj_s_sample['audiomod']['stretch']
 
-                if 'stretchingpitch' in channeldata: cvpj_s_sample['audiomod']['stretch']['pitch'] = channeldata['stretchingpitch']/100
+                t_stretchingtime = 0
+                t_stretchingpitch = 0
+
+                if 'stretchingpitch' in channeldata: t_stretchingpitch += channeldata['stretchingpitch']/100
+                if 'middlenote' in channeldata: t_stretchingpitch += (channeldata['middlenote']-60)*-1
+
+                if 'stretchingtime' in channeldata: t_stretchingtime = channeldata['stretchingtime']/384
+                
+                cvpj_s_sample['audiomod']['stretch']['pitch'] = t_stretchingpitch
+
+                if t_stretchingtime != 0:
+                    stretchbpm = (ald_sec*(cvpj_l['bpm']/120))
+
+                    cvpj_s_stretch['enabled'] = True
+                    cvpj_s_stretch['time'] = {}
+                    cvpj_s_stretch['time']['type'] = 'rate_timed'
+                    cvpj_s_stretch['time']['data'] = {}
+                    cvpj_s_stretch['time']['data']['rate'] = t_stretchingtime/stretchbpm
 
                 cvpj_l_samples['FLSample' + str(instrument)] = cvpj_s_sample
 

@@ -303,17 +303,18 @@ class input_ableton(plugin_input.base):
                             onedur = t_warpmarker['pos_seconds']/audio_sampleref['seconds']
                             if onedur <= 1: t_warpmarkers.append(t_warpmarker)
                         
-                        cvpj_stretch['warps'] = t_warpmarkers
+                        #cvpj_stretch['warps'] = t_warpmarkers
+
+                        cvpj_stretch['time'] = {}
+                        cvpj_stretch['time']['type'] = 'none'
+                        cvpj_stretch['time']['data'] = {}
 
                         if len(t_warpmarkers) >= 2:
                             t_warpmarker_first = t_warpmarkers[0]
                             t_warpmarker_last = t_warpmarkers[-1]
-                            cvpj_stretch['t_timed'] = True
-                            cvpj_stretch['t_steps'] = t_warpmarker_last['pos']
-                            cvpj_stretch['t_mul'] = t_warpmarker_last['pos']/audio_sampleref_steps
-                            #print(t_warpmarker_last['pos'], audio_sampleref_steps, t_warpmarker_last['pos']/audio_sampleref_steps)
-                        else:
-                            cvpj_stretch['t_timed'] = False
+                            cvpj_stretch['time']['type'] = 'step_mul'
+                            cvpj_stretch['time']['data']['steps'] = t_warpmarker_last['pos']
+                            cvpj_stretch['time']['data']['mul'] = t_warpmarker_last['pos']/audio_sampleref_steps
                     
                     else:
                         cvpj_stretch['enabled'] = False
@@ -321,6 +322,8 @@ class input_ableton(plugin_input.base):
                     audio_placement_PitchCoarse = float(get_value(x_track_AudioClip, 'PitchCoarse', 0))
                     audio_placement_PitchFine = float(get_value(x_track_AudioClip, 'PitchFine', 0))
                     cvpj_stretch['pitch'] = audio_placement_PitchCoarse + audio_placement_PitchFine/100
+
+                    print(cvpj_stretch)
 
                     tracks.r_pl_audio(cvpj_l, track_id, cvpj_placement)  
 

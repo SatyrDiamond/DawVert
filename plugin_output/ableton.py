@@ -627,17 +627,11 @@ def create_audioclip(xmltag, cvpj_placement, trackcolor):
     w_TransientResolution = 6
 
     stretch_t_steps = cvpj_duration
-    stretch_t_mul = 1
     stretch_t_pitch = 0
-    stretch_t_timed = False
 
     if 'audiomod' in cvpj_placement:
         if 'stretch' in cvpj_placement['audiomod']:
             cvpj_stretch = cvpj_placement['audiomod']['stretch']
-
-            if 't_timed' in cvpj_stretch: stretch_t_timed = cvpj_stretch['t_timed']
-            if 't_steps' in cvpj_stretch: stretch_t_pitch = cvpj_stretch['t_steps']
-            if 't_mul' in cvpj_stretch: stretch_t_mul = cvpj_stretch['t_mul']
 
             if 'enabled' in cvpj_stretch: 
                 if cvpj_stretch['enabled'] == True: w_IsWarped = 'true'
@@ -726,12 +720,26 @@ def create_audioclip(xmltag, cvpj_placement, trackcolor):
     addvalue(x_AudioClip, 'AutoWarpTolerance', '4')
 
     audio_seconds = DefaultDuration/DefaultSampleRate
+    normalspeed = ((audio_seconds)*(cvpj_bpm/120)*2)*4
+
+    w_timemarkers = [
+            {'pos': 0.0, 'pos_seconds': 0.0}, 
+            {'pos': normalspeed, 'pos_seconds': audio_seconds}
+                    ]
 
     if 'warps' in cvpj_stretch:
-        w_timemarkers = cvpj_stretch['warps']
-    else:
-        if stretch_t_timed == False: stretch_t_steps = ((audio_seconds)*(cvpj_bpm/120)*2)*stretch_t_mul
-        w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': stretch_t_steps, 'pos_seconds': audio_seconds}]
+        w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': stretch_t_steps*4, 'pos_seconds': audio_seconds}]
+
+    elif 'time' in cvpj_stretch:
+        if 'type' in cvpj_stretch['time'] and 'data' in cvpj_stretch['time']:
+            timedata = cvpj_stretch['time']['data']
+
+            if cvpj_stretch['time']['type'] == 'step_mul':
+                w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': timedata['steps'], 'pos_seconds': audio_seconds}]
+        
+            if cvpj_stretch['time']['type'] == 'rate':
+                w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': normalspeed*timedata['rate'], 'pos_seconds': audio_seconds}]
+
 
     x_AudioClip_WarpMarkers = ET.SubElement(x_AudioClip, 'WarpMarkers')
 
@@ -740,7 +748,7 @@ def create_audioclip(xmltag, cvpj_placement, trackcolor):
         x_AudioClip_WarpMarker = ET.SubElement(x_AudioClip_WarpMarkers, 'WarpMarker')
         x_AudioClip_WarpMarker.set('Id', str(warpid))
         x_AudioClip_WarpMarker.set('SecTime', str(w_timemarker['pos_seconds']))
-        x_AudioClip_WarpMarker.set('BeatTime', str(w_timemarker['pos']))
+        x_AudioClip_WarpMarker.set('BeatTime', str(w_timemarker['pos']/4))
         warpid += 1
 
     x_AudioClip_SavedWarpMarkersForStretched = ET.SubElement(x_AudioClip, 'SavedWarpMarkersForStretched')

@@ -3,7 +3,7 @@
 ## DAWs
 | DataType | Short Name | Name | Ext | Autodetect | Info |
 | --- | --- | :--- | :--- | :--- | :--- |
-| M-I | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ | 11 only |
+| R | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ | 11 only |
 | M-I | ```flp``` | FL Studio | ```.flp``` | ✔️ | FL 20+ or higher |
 | R | ```lmms``` | LMMS | ```.mmp``` | ✔️ | Stable and Alpha |
 

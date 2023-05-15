@@ -150,6 +150,7 @@ class input_flp(plugin_input.base):
                 cvpj_s_stretch = cvpj_s_sample['audiomod']['stretch']
 
                 t_stretchingtime = 0
+                t_stretchingmultiplier = 1
                 t_stretchingpitch = 0
 
                 if 'stretchingpitch' in channeldata: t_stretchingpitch += channeldata['stretchingpitch']/100
@@ -158,15 +159,14 @@ class input_flp(plugin_input.base):
                 cvpj_s_sample['audiomod']['stretch']['pitch'] = t_stretchingpitch
 
                 if 'stretchingtime' in channeldata: t_stretchingtime = channeldata['stretchingtime']/384
+                if 'stretchingmultiplier' in channeldata: t_stretchingmultiplier = pow(2, channeldata['stretchingmultiplier']/10000)
                 
-                #print(t_stretchingtime, stretchbpm, t_stretchingtime/stretchbpm)
-
                 if t_stretchingtime != 0:
                     cvpj_s_stretch['enabled'] = True
                     cvpj_s_stretch['time'] = {}
                     cvpj_s_stretch['time']['type'] = 'rate_timed'
                     cvpj_s_stretch['time']['data'] = {}
-                    cvpj_s_stretch['time']['data']['rate'] = t_stretchingtime/stretchbpm
+                    cvpj_s_stretch['time']['data']['rate'] = (t_stretchingtime/stretchbpm)*t_stretchingmultiplier
 
                 cvpj_l_samples['FLSample' + str(instrument)] = cvpj_s_sample
 

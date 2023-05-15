@@ -556,13 +556,13 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
         addvalue(x_ClipData, 'PreferFlatRootNote', 'false')
         create_grid(x_ClipData, 'ExpressionGrid', 1, 16, 20, 2, 'false', 'false')
 
+    speedrate = 1
+
     if cliptype == 'audio':
         AudioDuration, AudioTimeBase, AudioSampleRate = create_sampleref(x_ClipData, t_file)
 
         normalspeed = ((AudioDuration)*(cvpj_bpm/120)*2)*4
         w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0},{'pos': normalspeed, 'pos_seconds': AudioDuration}]
-
-        speedrate = 1
 
         if 'audiomod' in cvpj_placement:
             if 'stretch' in cvpj_placement['audiomod']:
@@ -602,7 +602,7 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                             rate_fixed = (timedata['rate']*AudioTimeBase)/AudioSampleRate
 
                             print(rate_fixed, timedata['rate'] ,AudioTimeBase, AudioSampleRate)
-                            
+
                             w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': normalspeed*rate_fixed, 'pos_seconds': AudioDuration}]
                             speedrate = timedata['rate']
 

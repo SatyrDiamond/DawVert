@@ -52,6 +52,9 @@ numpy
 mido
 lxml
 chardet
+av
+beautifulsoup4
+blackboxprotobuf
 git+https://github.com/Perlence/rpp
 ```
 
@@ -78,6 +81,7 @@ xmodits_py - for extracting Impulse Tracker and FastTracker2 Samples
 | --- | --- | :--- | :--- | :--- |
 | M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | M-I | ```flp``` | FL Studio | ```.flp``` | ✔️ |
+| R | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ |
 | R | ```lmms``` | LMMS | ```.mmp``` | ✔️ |
 | M | ```mod``` | ProTracker | ```.mod``` | ❌ | 
 | M | ```xm``` | FastTracker 2 | ```.xm``` | ✔️ | 

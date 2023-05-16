@@ -70,7 +70,7 @@ class imput_umx(plugin_input.base):
             # and only parse with that if it's a valid format. 
             for (extension, tracker) in TRACKER_FORMATS.items():
                 if tracker.detect(stripped_umx):
-                    stripped_umx =  rename(stripped_umx, extension)
+                    stripped_umx = rename(stripped_umx, extension)
 
                     print(f"[info] Detected inner UMX format: { tracker.getname() }")
                     result = tracker.parse(stripped_umx, extra_param=extra_param)

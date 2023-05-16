@@ -63,6 +63,11 @@ def r2m_makeplaylistrow(cvpjJ, plnum, trackid, placements_notes, m_name, m_color
     if m_color != None: playlistrow['color'] = m_color
     elif l_color != None: playlistrow['color'] = l_color
 
+def r2m_makeplaylistrow_audio(cvpjJ, plnum, trackid, placements_audio, m_name, m_color, l_name, l_color):
+    cvpjJ['playlist'][str(plnum)] = {}
+    playlistrow = cvpjJ['playlist'][str(plnum)]
+    playlistrow['placements_audio'] = placements_audio
+
 def r2m(song):
     print('[song-convert] Converting from Regular > Multiple')
     cvpj_proj = json.loads(song)
@@ -125,6 +130,13 @@ def r2m(song):
                                 r2m_makeplaylistrow(cvpj_proj, plnum, trackid, lane_data['notes'], m_name, m_color, l_name, l_color)
                                 plnum += 1
                     if singletrack_laned == 0: plnum += 1
+
+            if singletrack_data['type'] == 'audio':
+                pltrack = t_s_trackplacements[trackid]
+                print('[song-convert] r2m: audio non-laned:', trackid)
+                singletrack_pl = pltrack['audio']
+                r2m_makeplaylistrow_audio(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color, None, None)
+                plnum += 1
 
     return json.dumps(cvpj_proj)
 

@@ -3,6 +3,7 @@ numpy
 mido
 lxml
 chardet
+av
 beautifulsoup4
 blackboxprotobuf
 pypng

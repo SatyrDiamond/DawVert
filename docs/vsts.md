@@ -13,11 +13,11 @@
 
 # Synths
 
-[Vital](https://vital.audio/) - SimSynth, Beepbox
+[Vital](https://vital.audio/) - Beepbox
 
 # FX
 
-[Vital](https://www.airwindows.com/) - Various
+[Airwindows](https://www.airwindows.com/) - Various
 
 # Retro
 
@@ -36,3 +36,15 @@
 [SID](https://socalabs.com/synths/commodore-64-sid/) - SID
 
 [Zyn-Fusion](https://zynaddsubfx.sourceforge.io/zyn-fusion.html) - ZynAddSubFX
+
+# from FL Studio
+
+[Ninjas2](https://github.com/clearly-broken-software/ninjas2) - Fruity Slicer
+
+[Kickmess](https://github.com/WeirdConstructor/Kickmess) - Fruit Kick
+
+[Vital](https://vital.audio/) - SimSynth
+
+[Airwindows Weight](https://www.airwindows.com/weight/) - Fruity Bass Boost
+
+[Wolf Shaper](https://wolf-plugins.github.io/wolf-shaper/) - Fruity Waveshaper

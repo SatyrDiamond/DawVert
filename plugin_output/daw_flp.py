@@ -10,8 +10,11 @@ from bs4 import BeautifulSoup
 from functions import format_flp_enc
 from functions import song_convert
 from functions import note_mod
+from functions import audio
 from functions import notelist_data
 from functions import xtramath
+
+filename_len = {}
 
 def decode_color(color):
     return int.from_bytes(bytes([int(color[0]*255), int(color[1]*255), int(color[2]*255)]), "little")
@@ -71,6 +74,9 @@ class output_cvpjs(plugin_output.base):
         
         FL_Main['ShowInfo'] = 0
 
+        sampleinfo = {}
+        samplestretch = {}
+
         if 'info' in projJ: 
             infoJ = projJ['info']
             FL_Main['ShowInfo'] = 1
@@ -104,20 +110,6 @@ class output_cvpjs(plugin_output.base):
             FL_Main['Genre'] = ''
             FL_Main['Comment'] = ''
 
-        filtergroups_id_count = 0
-        filtergroups_id = {}
-
-        #print(FL_FilterGroups)
-
-        #if 'filtergroups' in projJ:
-        #    for filtergroup in projJ['filtergroups']:
-        #        filtergroups_id[filtergroup] = filtergroups_id_count
-        #        if 'name' in projJ['filtergroups'][filtergroup]:
-        #            FL_FilterGroups.append(projJ['filtergroups'][filtergroup]['name'])
-        #        else:
-        #            FL_FilterGroups.append('noname')
-        #        filtergroups_id_count += 1
-        
         FL_Main['ProjectDataPath'] = ''
 
         if 'shuffle' in projJ: FL_Main['Shuffle'] = int(projJ['shuffle']*128)
@@ -126,6 +118,8 @@ class output_cvpjs(plugin_output.base):
         if 'timesig_denominator' in projJ: FL_Main['Denominator'] = projJ['timesig_denominator']
         if 'bpm' in projJ: FL_Main['Tempo'] = projJ['bpm']
         if 'pitch' in projJ: FL_Main['MainPitch'] = struct.unpack('H', struct.pack('h', int(projJ['pitch'])))[0]
+
+        tempomul = projJ['bpm']/120
 
         samples_id = {}
         inst_id = {}
@@ -181,16 +175,6 @@ class output_cvpjs(plugin_output.base):
             if 'color' in CVPJ_Data: 
                 T_Main['color'] = decode_color(CVPJ_Data['color'])
 
-            #print(CVPJ_Inst['plugin'])
-            #if CVPJ_Inst['plugin'] == 'native-fl':
-            #    T_Main['type'] = 2
-            #    flnativedata = CVPJ_Inst['plugindata'] 
-            #    T_Main['plugin'] = flnativedata['name']
-            #    pdata = flnativedata['data'].encode('ascii')
-            #    pdataxs = base64.b64decode(pdata)
-            #    T_Main['pluginparams'] = pdataxs
-            #    T_Main['plugindata'] = b'\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00P\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00&\x00\x00\x00z\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-
             FL_Channels[inst_id[CVPJ_Entry]] = T_Main
 
 
@@ -198,13 +182,55 @@ class output_cvpjs(plugin_output.base):
             T_Main = {}
             CVPJ_Data = CVPJ_Samples[CVPJ_Entry]
             T_Main['type'] = 4
+
+            samplefilename = ""
+
             if 'vol' in CVPJ_Data: T_Main['volume'] = CVPJ_Data['vol']
             if 'pan' in CVPJ_Data: T_Main['pan'] = CVPJ_Data['pan']
             if 'name' in CVPJ_Data: T_Main['name'] = CVPJ_Data['name']
             if 'enabled' in CVPJ_Data: T_Main['enabled'] = CVPJ_Data['enabled']
             if 'fxrack_channel' in CVPJ_Data: T_Main['fxchannel'] = CVPJ_Data['fxrack_channel']
-            if 'file' in CVPJ_Data: T_Main['samplefilename'] = CVPJ_Data['file'] 
             if 'color' in CVPJ_Data:  T_Main['color'] = decode_color(CVPJ_Data['color'])
+            if 'file' in CVPJ_Data: 
+                T_Main['samplefilename'] = CVPJ_Data['file'] 
+                samplefilename = CVPJ_Data['file']
+                sampleinfo[CVPJ_Entry] = audio.get_audiofile_info(samplefilename)
+                audioinfo = sampleinfo[CVPJ_Entry]
+
+            audiorate = 1
+
+            if 'audiomod' in CVPJ_Data: 
+                if 'stretch' in CVPJ_Data['audiomod']:
+                    cvpj_stretchdata = CVPJ_Data['audiomod']['stretch']
+                    if 'enabled' in cvpj_stretchdata:
+                        if cvpj_stretchdata['enabled'] == True:
+                            if 'mode' in cvpj_stretchdata: 
+                                if cvpj_stretchdata['mode'] == 'resample': T_Main['stretchingmode'] = 0
+                                elif cvpj_stretchdata['mode'] == 'elastique_v3': T_Main['stretchingmode'] = 1
+                                elif cvpj_stretchdata['mode'] == 'elastique_v3_mono': T_Main['stretchingmode'] = 2
+                                elif cvpj_stretchdata['mode'] == 'slice_stretch': T_Main['stretchingmode'] = 3
+                                elif cvpj_stretchdata['mode'] == 'auto': T_Main['stretchingmode'] = 4
+                                elif cvpj_stretchdata['mode'] == 'slice_map': T_Main['stretchingmode'] = 5
+                                elif cvpj_stretchdata['mode'] == 'elastique_v2': T_Main['stretchingmode'] = 6
+                                elif cvpj_stretchdata['mode'] == 'elastique_v2_transient': T_Main['stretchingmode'] = 7
+                                elif cvpj_stretchdata['mode'] == 'elastique_v2_mono': T_Main['stretchingmode'] = 8
+                                elif cvpj_stretchdata['mode'] == 'elastique_v2_speech': T_Main['stretchingmode'] = 9
+                                else: T_Main['stretchingmode'] = -1
+                            else: T_Main['stretchingmode'] = -1
+
+                            if 'pitch' in cvpj_stretchdata: T_Main['stretchingpitch'] = int(cvpj_stretchdata['pitch']*100)
+                            if 'time' in cvpj_stretchdata:
+                                timedata = cvpj_stretchdata['time']
+                                if timedata['type'] == 'rate_timed':
+                                    audiorate = timedata['data']['rate']
+                                    T_Main['stretchingtime'] = int(  ((timedata['data']['rate']*384)*audioinfo['dur_sec'])*tempomul  )
+                                if timedata['type'] == 'rate_nontimed':
+                                    audiorate = timedata['data']['rate']
+
+                                    T_Main['stretchingmultiplier'] = int(  math.log2(timedata['data']['rate'])*10000  )
+
+
+            samplestretch[CVPJ_Entry] = audiorate
 
             FL_Channels[inst_id[CVPJ_Entry]] = T_Main
 
@@ -318,18 +344,21 @@ class output_cvpjs(plugin_output.base):
             if 'placements_audio' in CVPJ_playlistitem:
                 for CVPJ_Placement in CVPJ_playlistitem['placements_audio']:
                     if CVPJ_Placement['fromindex'] in samples_id:
+
+                        s_str = samplestretch[CVPJ_Placement['fromindex']]
+
+
                         sampleid = samples_id[CVPJ_Placement['fromindex']]
                         FL_playlistitem = {}
                         FL_playlistitem['position'] = int((CVPJ_Placement['position']*ppq)/4)
+                        #print(int((CVPJ_Placement['position']*ppq)/4))
                         FL_playlistitem['patternbase'] = 20480
                         FL_playlistitem['itemindex'] = sampleid
                         if 'duration' in CVPJ_Placement:
                             FL_playlistitem['length'] = int((CVPJ_Placement['duration']*ppq)/4)
                             if CVPJ_Placement != 0:
                                 FL_playlistitem['startoffset'] = 0
-                                FL_playlistitem['endoffset'] = CVPJ_Placement['duration']
-                        else:
-                            FL_playlistitem['length'] = notelist_data.getduration(CVPJ_NotelistIndex[CVPJ_Placement['fromindex']]['notelist'])
+                                FL_playlistitem['endoffset'] = CVPJ_Placement['duration']/s_str
                         FL_playlistitem['unknown1'] = 120
                         FL_playlistitem['unknown2'] = 25664
                         FL_playlistitem['unknown3'] = 32896
@@ -338,11 +367,20 @@ class output_cvpjs(plugin_output.base):
                         if 'muted' in CVPJ_Placement:
                             if CVPJ_Placement['muted'] == True:
                                 FL_playlistitem['flags'] = 12352
+
+
                         if 'cut' in CVPJ_Placement:
                             if 'type' in CVPJ_Placement['cut']:
                                 if CVPJ_Placement['cut']['type'] == 'cut':
-                                    if 'start' in CVPJ_Placement['cut']: FL_playlistitem['startoffset'] = CVPJ_Placement['cut']['start']
-                                    if 'end' in CVPJ_Placement['cut']: FL_playlistitem['endoffset'] = CVPJ_Placement['cut']['end']
+                                    if 'start_nonstretch' in CVPJ_Placement['cut']: 
+                                        FL_playlistitem['startoffset'] = CVPJ_Placement['cut']['start_nonstretch']
+
+                                    if 'end_nonstretch' in CVPJ_Placement['cut']: 
+                                        FL_playlistitem['endoffset'] = CVPJ_Placement['cut']['end_nonstretch']
+
+                                    FL_playlistitem['endoffset'] = CVPJ_Placement['cut']['end_nonstretch']
+
+                        
                         if FL_playlistitem['position'] not in FL_Playlist_BeforeSort:
                             FL_Playlist_BeforeSort[FL_playlistitem['position']] = []
                         FL_Playlist_BeforeSort[FL_playlistitem['position']].append(FL_playlistitem)

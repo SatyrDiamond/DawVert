@@ -85,9 +85,9 @@ def parse_chanparams(chanparams, chanl):
     chanl['trim'] = int.from_bytes(bio_chanparams.read(4), "little")
     chanl['arprepeat'] = int.from_bytes(bio_chanparams.read(4), "little")
     chanl['stretchingtime'] = int.from_bytes(bio_chanparams.read(4), "little")
-    chanl['stretchingpitch'] = int.from_bytes(bio_chanparams.read(4), "little", signed="True")
-    chanl['stretchingmultiplier'] = int.from_bytes(bio_chanparams.read(4), "little", signed="True")
-    chanl['stretchingmode'] = int.from_bytes(bio_chanparams.read(4), "little", signed="True")
+    chanl['stretchingpitch'] = int.from_bytes(bio_chanparams.read(4), "little", signed=True)
+    chanl['stretchingmultiplier'] = int.from_bytes(bio_chanparams.read(4), "little", signed=True)
+    chanl['stretchingmode'] = int.from_bytes(bio_chanparams.read(4), "little", signed=True)
     bio_chanparams.read(21) # b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\xf0?\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff'
     chanl['start'] = bio_chanparams.read(4)
     bio_chanparams.read(4) # b'\x00\x00\x00\x00'

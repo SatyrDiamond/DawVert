@@ -7,6 +7,7 @@ from functions import data_values
 from functions import folder_samples
 from functions import note_data
 from functions import tracks
+from functions import placement_data
 
 import plugin_input
 import json
@@ -76,7 +77,11 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
     if 'fadeOut' in j_wvtl_trackclip: data_values.nested_dict_add_value(cvpj_pldata, ['fade', 'out', 'duration'], j_wvtl_trackclip['fadeOut']*4)
     cvpj_pldata["position"] = j_wvtl_trc_timelineStart*4
     cvpj_pldata["duration"] = j_wvtl_trc_timelineEnd*4 - j_wvtl_trc_timelineStart*4
-    cvpj_pldata['cut'] = {'type': 'loop', 'start': j_wvtl_trc_readStart*4, 'loopstart': j_wvtl_trc_loopStart*4, 'loopend': j_wvtl_trc_loopEnd*4}
+    cvpj_pldata['cut'] = {}
+    cvpj_pldata['cut']['type'] = 'loop'
+    placement_data.time_from_steps(cvpj_pldata['cut'], 'start', True, j_wvtl_trc_readStart*4, j_wvtl_bpm, 1)
+    placement_data.time_from_steps(cvpj_pldata['cut'], 'loopstart', True, j_wvtl_trc_loopStart*4, j_wvtl_bpm, 1)
+    placement_data.time_from_steps(cvpj_pldata['cut'], 'loopend', True, j_wvtl_trc_loopEnd*4, j_wvtl_bpm, 1)
 
     if 'audioBufferId' in j_wvtl_trackclip: 
         audio_filename = extract_audio(j_wvtl_trackclip['audioBufferId'])
@@ -125,6 +130,7 @@ class input_wavtool(plugin_input.base):
         global cvpj_l
         global samplefolder
         global zip_data
+        global j_wvtl_bpm
 
         cvpj_l = {}
 

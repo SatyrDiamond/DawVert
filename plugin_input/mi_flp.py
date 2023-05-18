@@ -15,7 +15,9 @@ from functions import note_mod
 from functions import data_bytes
 from functions import colors
 from functions import notelist_data
+from functions import placement_data
 from functions import song
+from functions import audio
 
 
 filename_len = {}
@@ -30,12 +32,11 @@ def getsamplefile(jsontag, channeldata, flppath):
         jsontag['file'] = ''
         if pathout != None: 
             jsontag['file'] = pathout
-            avdata = av.open(pathout)
-            DefaultDuration = avdata.streams.audio[0].duration
-            DefaultSampleRate = avdata.streams.audio[0].rate
-            if DefaultSampleRate == None: DefaultSampleRate = 44100
-            filename_len[pathout] = [DefaultDuration, DefaultSampleRate]
+            audioinfo = audio.get_audiofile_info(pathout)
+            filename_len[pathout] = audioinfo
         return pathout
+    else:
+        return ''
 
 class input_flp(plugin_input.base):
     def __init__(self): pass
@@ -80,6 +81,7 @@ class input_flp(plugin_input.base):
         if 'Tempo' in FL_Main: cvpj_l['bpm'] = FL_Main['Tempo']
         else: cvpj_l['bpm'] = 120
         if 'Shuffle' in FL_Main: cvpj_l['shuffle'] = FL_Main['Shuffle']/128
+        tempomul = cvpj_l['bpm']/120
 
         cvpj_l_instrument_data = {}
         cvpj_l_instrument_order = []
@@ -91,6 +93,9 @@ class input_flp(plugin_input.base):
 
         id_inst = {}
         id_pat = {}
+
+        sampleinfo = {}
+        samplestretch = {}
 
         for instrument in FL_Channels:
             channeldata = FL_Channels[instrument]
@@ -140,15 +145,15 @@ class input_flp(plugin_input.base):
                 cvpj_s_sample['fxrack_channel'] = channeldata['fxchannel']
                 filename_sample = getsamplefile(cvpj_s_sample, channeldata, input_file)
 
+                sampleinfo[instrument] = audio.get_audiofile_info(filename_sample)
                 if filename_sample in filename_len: ald = filename_len[filename_sample]
-                else: ald = [100, 44100]
-                ald_sec = (ald[0]/ald[1])
-                stretchbpm = (ald_sec*(cvpj_l['bpm']/120))
+                stretchbpm = (ald['dur_sec']*(cvpj_l['bpm']/120))
 
                 cvpj_s_sample['audiomod'] = {}
                 cvpj_s_sample['audiomod']['stretch'] = {}
                 cvpj_s_stretch = cvpj_s_sample['audiomod']['stretch']
 
+                t_stretchingmode = 0
                 t_stretchingtime = 0
                 t_stretchingmultiplier = 1
                 t_stretchingpitch = 0
@@ -159,14 +164,38 @@ class input_flp(plugin_input.base):
                 cvpj_s_sample['audiomod']['stretch']['pitch'] = t_stretchingpitch
 
                 if 'stretchingtime' in channeldata: t_stretchingtime = channeldata['stretchingtime']/384
+                if 'stretchingmode' in channeldata: t_stretchingmode = channeldata['stretchingmode']
                 if 'stretchingmultiplier' in channeldata: t_stretchingmultiplier = pow(2, channeldata['stretchingmultiplier']/10000)
-                
+
+                if t_stretchingmode == -1: cvpj_s_stretch['mode'] = 'stretch'
+                if t_stretchingmode == 0: cvpj_s_stretch['mode'] = 'resample'
+                if t_stretchingmode == 1: cvpj_s_stretch['mode'] = 'elastique_v3'
+                if t_stretchingmode == 2: cvpj_s_stretch['mode'] = 'elastique_v3_mono'
+                if t_stretchingmode == 3: cvpj_s_stretch['mode'] = 'slice_stretch'
+                if t_stretchingmode == 5: cvpj_s_stretch['mode'] = 'auto'
+                if t_stretchingmode == 4: cvpj_s_stretch['mode'] = 'slice_map'
+                if t_stretchingmode == 6: cvpj_s_stretch['mode'] = 'elastique_v2'
+                if t_stretchingmode == 7: cvpj_s_stretch['mode'] = 'elastique_v2_transient'
+                if t_stretchingmode == 8: cvpj_s_stretch['mode'] = 'elastique_v2_mono'
+                if t_stretchingmode == 9: cvpj_s_stretch['mode'] = 'elastique_v2_speech'
+
                 if t_stretchingtime != 0:
                     cvpj_s_stretch['enabled'] = True
                     cvpj_s_stretch['time'] = {}
                     cvpj_s_stretch['time']['type'] = 'rate_timed'
                     cvpj_s_stretch['time']['data'] = {}
                     cvpj_s_stretch['time']['data']['rate'] = (t_stretchingtime/stretchbpm)*t_stretchingmultiplier
+                    samplestretch[instrument] = (t_stretchingtime/stretchbpm)*t_stretchingmultiplier
+                elif t_stretchingmultiplier != 1:
+                    cvpj_s_stretch['enabled'] = True
+                    cvpj_s_stretch['time'] = {}
+                    cvpj_s_stretch['time']['type'] = 'rate_nontimed'
+                    cvpj_s_stretch['time']['data'] = {}
+                    cvpj_s_stretch['time']['data']['rate'] = t_stretchingmultiplier
+                    samplestretch[instrument] = 1*t_stretchingmultiplier
+                else:
+                    samplestretch[instrument] = 1
+
 
                 cvpj_l_samples['FLSample' + str(instrument)] = cvpj_s_sample
 
@@ -245,14 +274,23 @@ class input_flp(plugin_input.base):
                         arrangementitemJ['cut']['type'] = 'cut'
                         if 'startoffset' in item: arrangementitemJ['cut']['start'] = item['startoffset']/ppq*4
                         if 'endoffset' in item: arrangementitemJ['cut']['end'] = item['endoffset']/ppq*4
+
+
                 else:
                     arrangementitemJ['fromindex'] = 'FLSample' + str(item['itemindex'])
                     cvpj_l_playlist[str(playlistline)]['placements_audio'].append(arrangementitemJ)
                     if 'startoffset' in item or 'endoffset' in item:
                         arrangementitemJ['cut'] = {}
                         arrangementitemJ['cut']['type'] = 'cut'
-                        if 'startoffset' in item: arrangementitemJ['cut']['start'] = item['startoffset']
-                        if 'endoffset' in item: arrangementitemJ['cut']['end'] = item['endoffset']
+
+                        pl_stretch = samplestretch[str(item['itemindex'])]
+
+                        if 'startoffset' in item: 
+                            placement_data.time_from_steps(arrangementitemJ['cut'], 'start', False, item['startoffset'], cvpj_l['bpm'], pl_stretch)
+
+                        if 'endoffset' in item: 
+                            placement_data.time_from_steps(arrangementitemJ['cut'], 'end', False, item['endoffset'], cvpj_l['bpm'], pl_stretch)
+
 
             FL_Tracks = FL_Arrangement['tracks']
 
@@ -356,7 +394,7 @@ class input_flp(plugin_input.base):
         cvpj_l['instruments_data'] = cvpj_l_instrument_data
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['fxrack'] = cvpj_l_fxrack
+        #cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['timemarkers'] = cvpj_l_timemarkers
         cvpj_l['sampleindex'] = cvpj_l_samples
 

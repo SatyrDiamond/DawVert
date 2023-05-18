@@ -317,7 +317,7 @@ class input_ableton(plugin_input.base):
                             cvpj_stretch['time']['data']['rate'] = audiorate
 
                         if len(t_warpmarkers) >= 3:
-                            del t_warpmarkers[-1]
+                            del t_warpmarkers[-1] 
                             t_warpmarker_last = t_warpmarkers[-1]
                             cvpj_stretch['time']['type'] = 'rate_timed'
                             audiorate = (t_warpmarker_last['pos']/audio_sampleref_steps)*(120/tempo)
@@ -333,7 +333,7 @@ class input_ableton(plugin_input.base):
                     cvpj_stretch['pitch'] = audio_placement_PitchCoarse + audio_placement_PitchFine/100
 
                     #for value in [t_CurrentStart, t_CurrentEnd, audio_placement_loop_start, audio_placement_loop_l_start, audio_placement_loop_l_end]:
-                    #    print(str(value).ljust(16), end=' ')
+                    #    print(str(value).ljust(20), end=' ')
                     #print()
 
                     if audio_placement_warp_on == False:

@@ -448,7 +448,7 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
         aud_sampledata = audio.get_audiofile_info(t_file)
         AudioDuration = aud_sampledata['dur_sec']
         normalspeed = (AudioDuration)*tempomul
-        w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0},{'pos': normalspeed, 'pos_real': AudioDuration}]
+        w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0},{'pos': normalspeed, 'pos_real': AudioDuration/8}]
         if 'vol' in cvpj_placement: t_vol = cvpj_placement['vol']
 
     w_IsWarped = 'false'
@@ -483,47 +483,15 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
     t_StartRelative = 0
     t_LoopOn = 'false'
 
-    t_LoopEnd = (t_CurrentEnd/2)/tempomul
-
     cvpj_isstretched = False
+    cvpj_islooped = False
 
     if cliptype == 'audio':
-
-        if 'cut' in cvpj_placement:
-            cvpj_placement_cut = cvpj_placement['cut']
-
-            if 'type' in cvpj_placement_cut:
-                if cvpj_isstretched == True:
-                    if cvpj_placement_cut['type'] == 'cut':
-                        if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start']/4
-                        if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end']/4
-                    if cvpj_placement_cut['type'] == 'loop':
-                        t_LoopOn = 'true'
-                        if 'start' in cvpj_placement_cut: t_StartRelative = cvpj_placement_cut['start']/4
-                        if 'loopstart' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['loopstart']/4
-                        if 'loopend' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['loopend']/4
-                else:
-                    if cvpj_placement_cut['type'] == 'cut':
-                        if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start_real']
-                        if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end_real']
-                    if cvpj_placement_cut['type'] == 'loop':
-                        t_LoopOn = 'true'
-                        w_IsWarped = 'true'
-                        cvpj_placement['audiomod'] = {}
-                        cvpj_placement['audiomod']['stretch'] = {}
-                        cvpj_placement['audiomod']['stretch']['enabled'] = True
-                        cvpj_placement['audiomod']['stretch']['time'] = {'type': 'rate_timed', 'data': {'rate': 1}}
-                        
-                        if 'start' in cvpj_placement_cut: t_StartRelative = cvpj_placement_cut['start']
-                        if 'loopstart' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['loopstart']
-                        if 'loopend' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['loopend']
-
-
+        t_LoopEnd = t_CurrentEnd
 
         if 'audiomod' in cvpj_placement:
             if 'stretch' in cvpj_placement['audiomod']:
                 cvpj_stretch = cvpj_placement['audiomod']['stretch']
-
                 if 'enabled' in cvpj_stretch: 
                     if cvpj_stretch['enabled'] == True: w_IsWarped = 'true'
 
@@ -559,8 +527,43 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                                    rate_fixed = (1/speedrate)*AudioDuration
                                    w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
 
+        #((t_CurrentEnd)*tempomul)/speedrate
 
-        #for value in [t_CurrentStart, t_CurrentEnd, t_StartRelative, t_LoopStart, t_LoopEnd]:
+        if 'cut' in cvpj_placement:
+            cvpj_placement_cut = cvpj_placement['cut']
+
+            if 'type' in cvpj_placement_cut:
+
+
+                if cvpj_isstretched == True:
+                    if cvpj_placement_cut['type'] == 'cut':
+                        if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start']/4
+                        if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end']/4
+                    if cvpj_placement_cut['type'] == 'loop':
+                        t_LoopOn = 'true'
+                        if 'start' in cvpj_placement_cut: t_StartRelative = cvpj_placement_cut['start']/4
+                        if 'loopstart' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['loopstart']/4
+                        if 'loopend' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['loopend']/4
+
+
+                else:
+                    if cvpj_placement_cut['type'] == 'cut':
+                        if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start_real']
+                        if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end_real']
+                    if cvpj_placement_cut['type'] == 'loop':
+                        t_LoopOn = 'true'
+                        w_IsWarped = 'true'
+                        cvpj_placement['audiomod'] = {}
+                        cvpj_placement['audiomod']['stretch'] = {}
+                        cvpj_placement['audiomod']['stretch']['enabled'] = True
+                        cvpj_placement['audiomod']['stretch']['time'] = {'type': 'rate_timed', 'data': {'rate': 1}}
+                        
+                        if 'start' in cvpj_placement_cut: t_StartRelative = cvpj_placement_cut['start']/4
+                        if 'loopstart' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['loopstart']/4
+                        if 'loopend' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['loopend']/4
+
+
+        #for value in [t_CurrentStart, t_CurrentEnd, t_StartRelative*4, t_LoopStart*4, t_LoopEnd*4]:
         #    print(str(value).ljust(20), end=' ')
         #print()
 

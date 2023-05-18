@@ -6,6 +6,7 @@ from functions import notelist_data
 from functions import data_values
 from functions import xtramath
 from functions import tracks
+from functions import placement_data
 import json
 import math
 
@@ -296,36 +297,52 @@ def r_removeloops_after_loop(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_en
     return cutpoints
 
 
-def r_removeloops_placements(note_placements):
+def r_removeloops_placements(cvpj_placements, tempo):
     new_placements = []
-    for note_placement in note_placements:
-        if 'cut' in note_placement: 
-            if note_placement['cut']['type'] == 'loop': 
-                note_placement_base = note_placement.copy()
-                del note_placement_base['cut']
-                del note_placement_base['position']
-                del note_placement_base['duration']
-                loop_base_position = note_placement['position']
-                loop_base_duration = note_placement['duration']
-                loop_start = note_placement['cut']['start']
-                loop_loopstart = note_placement['cut']['loopstart']
-                loop_loopend = note_placement['cut']['loopend']
+    for cvpj_placement in cvpj_placements:
+        audiorate = 1
+        if 'audiomod' in cvpj_placement:
+            if 'stretch' in cvpj_placement['audiomod']:
+                stretchdata = cvpj_placement['audiomod']['stretch']
+                if 'enabled' in stretchdata:
+                    if stretchdata['enabled'] == True:
+                        if 'time' in stretchdata:
+                            if 'data' in stretchdata['time']:
+                                if 'rate' in stretchdata['time']['data']:
+                                    audiorate = stretchdata['time']['data']['rate']
+
+        if 'cut' in cvpj_placement: 
+            if cvpj_placement['cut']['type'] == 'loop': 
+                cvpj_placement_base = cvpj_placement.copy()
+                del cvpj_placement_base['cut']
+                del cvpj_placement_base['position']
+                del cvpj_placement_base['duration']
+                loop_base_position = cvpj_placement['position']
+                loop_base_duration = cvpj_placement['duration']
+                loop_start = cvpj_placement['cut']['start']
+                loop_loopstart = cvpj_placement['cut']['loopstart']
+                loop_loopend = cvpj_placement['cut']['loopend']
 
                 if loop_loopstart > loop_start: cutpoints = r_removeloops_before_loop(loop_base_position, loop_base_duration, loop_start, loop_loopstart, loop_loopend)
                 else: cutpoints = r_removeloops_after_loop(loop_base_position, loop_base_duration, loop_start, loop_loopstart, loop_loopend)
 
                 #print(cutpoints)
                 for cutpoint in cutpoints:
-                    note_placement_cutted = note_placement_base.copy()
-                    note_placement_cutted['position'] = cutpoint[0]
-                    note_placement_cutted['duration'] = cutpoint[1]
-                    note_placement_cutted['cut'] = {'type': 'cut', 'start': cutpoint[2], 'end': cutpoint[3]}
-                    new_placements.append(note_placement_cutted)
-            else: new_placements.append(note_placement)
-        else: new_placements.append(note_placement)
+                    cvpj_placement_cutted = cvpj_placement_base.copy()
+                    cvpj_placement_cutted['position'] = cutpoint[0]
+                    cvpj_placement_cutted['duration'] = cutpoint[1]
+                    cvpj_placement_cutted['cut'] = {}
+                    cvpj_placement_cutted['cut']['type'] = 'cut'
+                    placement_data.time_from_steps(cvpj_placement_cutted['cut'], 'start', True, cutpoint[2], tempo, audiorate)
+                    placement_data.time_from_steps(cvpj_placement_cutted['cut'], 'end', True, cutpoint[3], tempo, audiorate)
+
+                    new_placements.append(cvpj_placement_cutted)
+            else: new_placements.append(cvpj_placement)
+        else: new_placements.append(cvpj_placement)
     return new_placements
 
 def r_removeloops(projJ):
+    tempo = projJ['bpm']
     if 'track_placements' in projJ:
         for track_placements_id in projJ['track_placements']:
             track_placements_data = projJ['track_placements'][track_placements_id]
@@ -341,20 +358,21 @@ def r_removeloops(projJ):
                     for t_lanedata in s_lanedata:
                         tj_lanedata = s_lanedata[t_lanedata]
                         if 'notes' in tj_lanedata:
-                            track_placements_data['notes'] = r_removeloops_placements(tj_lanedata['notes'])
+                            track_placements_data['notes'] = r_removeloops_placements(tj_lanedata['notes'], tempo)
 
             if not_laned == True:
                 print('[compat] RemoveLoops: non-laned: '+track_placements_id)
                 if 'notes' in track_placements_data:
-                    track_placements_data['notes'] = r_removeloops_placements(track_placements_data['notes'])
+                    track_placements_data['notes'] = r_removeloops_placements(track_placements_data['notes'], tempo)
                 if 'audio' in track_placements_data:
-                    track_placements_data['audio'] = r_removeloops_placements(track_placements_data['audio'])
+                    track_placements_data['audio'] = r_removeloops_placements(track_placements_data['audio'], tempo)
 
 def m_removeloops(projJ):
+    tempo = projJ['bpm']
     for playlist_id in projJ['playlist']:
         playlist_id_data = projJ['playlist'][playlist_id]
         if 'placements_notes' in playlist_id_data:
-            playlist_id_data['placements_notes'] = r_removeloops_placements(playlist_id_data['placements_notes'])
+            playlist_id_data['placements_notes'] = r_removeloops_placements(playlist_id_data['placements_notes'], tempo)
 
 # -------------------------------------------- r_track_lanes --------------------------------------------
 

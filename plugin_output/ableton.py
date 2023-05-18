@@ -5,16 +5,15 @@ from functions import colors
 from functions import notelist_data
 from functions import data_bytes
 from functions import auto
+from functions import audio
 import plugin_output
-import av
 import json
-import os
 import lxml.etree as ET
 from xml.dom import minidom
 
 colorlist = ['FF94A6','FFA529','CC9927','F7F47C','BFFB00','1AFF2F','25FFA8','5CFFE8','8BC5FF','5480E4','92A7FF','D86CE4','E553A0','FFFFFF','FF3636','F66C03','99724B','FFF034','87FF67','3DC300','00BFAF','19E9FF','10A4EE','007DC0','886CE4','B677C6','FF39D4','D0D0D0','E2675A','FFA374','D3AD71','EDFFAE','D2E498','BAD074','9BC48D','D4FDE1','CDF1F8','B9C1E3','CDBBE4','AE98E5','E5DCE1','A9A9A9','C6928B','B78256','99836A','BFBA69','A6BE00','7DB04D','88C2BA','9BB3C4','85A5C2','8393CC','A595B5','BF9FBE','BC7196','7B7B7B','AF3333','A95131','724F41','DBC300','85961F','539F31','0A9C8E','236384','1A2F96','2F52A2','624BAD','A34BAD','CC2E6E','3C3C3C']
 colorlist_one = [colors.hex_to_rgb_float(color) for color in colorlist]
-
+ 
 
 # ---------------------------------------------- Functions Main ----------------------------------------------
 # ---------  Main  ---------
@@ -212,7 +211,7 @@ def create_sequencernavigator(xmltag):
     x_SequencerNavigator = ET.SubElement(xmltag, 'SequencerNavigator')
     x_BeatTimeHelper = ET.SubElement(x_SequencerNavigator, 'BeatTimeHelper')
     addvalue(x_BeatTimeHelper, 'CurrentZoom', '0.08')
-    add_xyval(x_SequencerNavigator, 'ScrollerPos', 0, -20)
+    add_xyval(x_SequencerNavigator, 'ScrollerPos', 0, 0)
     add_xyval(x_SequencerNavigator, 'ClientSize', 888, 587)
 
 def create_viewstates(xmltag):
@@ -294,7 +293,6 @@ def create_devicechain_mixer(xmltag, tracktype):
     set_add_param(xmltag, 'CrossFadeState', '1', str(get_unused_id()), None, None, None)
     addLomId(xmltag, 'SendsListWrapper', '0')
     if tracktype == 'master':
-        if 'bpm' in cvpj_l: cvpj_bpm = cvpj_l['bpm']
         set_add_param(xmltag, 'Tempo', str(cvpj_bpm), str(get_unused_id()), str(get_unused_id()), None, [60,200])
         set_add_param(xmltag, 'TimeSignature', '201', str(get_unused_id()), None, None, None)
         set_add_param(xmltag, 'GlobalGrooveAmount', '100', str(get_unused_id()), str(get_unused_id()), None, [0,131.25])
@@ -393,43 +391,23 @@ def create_notelist(xmltag, cvpj_notelist):
 
 # ---------------- Track Base / MainSequencer / Audio Clips ----------------
 
-def create_sampleref(xmltag, sample_filename):
-    RelativePath = ''
-    FilePath = ''
-    OriginalFileSize = ''
-    OriginalCrc = 0
-    LastModDate = 0
-    DefaultDuration = 0
-    DefaultSampleRate = 44100
 
-    if os.path.exists(sample_filename):
-        avdata = av.open(sample_filename)
-        FilePath = sample_filename
-
-        #RelativePath = os.path.relpath(sample_filename, os.path.dirname(output_file_global))
-        OriginalFileSize = os.path.getsize(sample_filename)
-        LastModDate = int(os.path.getmtime(sample_filename))
-
-        DefaultDuration = avdata.streams.audio[0].duration
-        DefaultTimeBase = avdata.streams.audio[0].time_base
-        DefaultSampleRate = avdata.streams.audio[0].rate
-
+def create_sampleref(xmltag, aud_sampledata):
     x_SampleRef = ET.SubElement(xmltag, 'SampleRef')
     x_FileRef = ET.SubElement(x_SampleRef, 'FileRef')
     addvalue(x_FileRef, 'RelativePathType', '1')
-    addvalue(x_FileRef, 'RelativePath', RelativePath)
-    addvalue(x_FileRef, 'Path', FilePath)
+    addvalue(x_FileRef, 'RelativePath', '')
+    addvalue(x_FileRef, 'Path', aud_sampledata['path'])
     addvalue(x_FileRef, 'Type', '1')
     addvalue(x_FileRef, 'LivePackName', '')
     addvalue(x_FileRef, 'LivePackId', '')
-    addvalue(x_FileRef, 'OriginalFileSize', OriginalFileSize)
-    addvalue(x_FileRef, 'OriginalCrc', OriginalCrc)
-    addvalue(x_SampleRef, 'LastModDate', LastModDate)
+    addvalue(x_FileRef, 'OriginalFileSize', aud_sampledata['file_size'])
+    addvalue(x_FileRef, 'OriginalCrc', aud_sampledata['crc'])
+    addvalue(x_SampleRef, 'LastModDate', aud_sampledata['mod_date'])
     x_SourceContext = ET.SubElement(x_SampleRef, 'SourceContext')
     addvalue(x_SampleRef, 'SampleUsageHint', '0')
-    addvalue(x_SampleRef, 'DefaultDuration', DefaultDuration)
-    addvalue(x_SampleRef, 'DefaultSampleRate', DefaultSampleRate)
-    return DefaultDuration, DefaultTimeBase.denominator, DefaultSampleRate
+    addvalue(x_SampleRef, 'DefaultDuration', aud_sampledata['dur'])
+    addvalue(x_SampleRef, 'DefaultSampleRate', aud_sampledata['rate'])
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -442,8 +420,11 @@ def create_sampleref(xmltag, sample_filename):
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 
 def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
-    cvpj_position = cvpj_placement['position']/4
-    cvpj_duration = cvpj_placement['duration']/4
+    cvpj_position = cvpj_placement['position']
+    cvpj_duration = cvpj_placement['duration']
+
+    able_position = cvpj_position/4
+    able_duration = cvpj_duration/4
 
     t_name = ''
     t_color = trackcolor
@@ -459,8 +440,17 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
     # ------------------------------------------ audio ------------------------------------------
     t_file = ''
     t_vol = 1
-    if 'file' in cvpj_placement: t_file = cvpj_placement['file']
-    if 'vol' in cvpj_placement: t_vol = cvpj_placement['vol']
+
+    tempomul = (cvpj_bpm/120)
+
+    if cliptype == 'audio':
+        if 'file' in cvpj_placement: t_file = cvpj_placement['file']
+        aud_sampledata = audio.get_audiofile_info(t_file)
+        AudioDuration = aud_sampledata['dur_sec']
+        normalspeed = (AudioDuration)*tempomul
+        w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0},{'pos': normalspeed, 'pos_real': AudioDuration}]
+        if 'vol' in cvpj_placement: t_vol = cvpj_placement['vol']
+
     w_IsWarped = 'false'
     w_WarpMode = 4
     w_ComplexProEnvelope = 128
@@ -471,7 +461,7 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
     w_TransientEnvelope = 100 
     w_TransientLoopMode = 2
     w_TransientResolution = 6
-    stretch_t_steps = cvpj_duration
+    stretch_t_steps = able_duration
     stretch_t_pitch = 0
     FadeEnabled = 'false'
     FadeInCurveSkew = 0
@@ -481,21 +471,132 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
     FadeOutCurveSlope = 0
     FadeOutLength = 0
 
+    speedrate = 1
+
     # -------------------------------------------------------------------------------------------
 
-    t_CurrentStart = cvpj_position
-    t_CurrentEnd = cvpj_duration+cvpj_position
+    t_CurrentStart = able_position
+    t_CurrentEnd = able_duration+able_position
     t_LoopStart = 0
-    t_LoopEnd = cvpj_duration
+
+
     t_StartRelative = 0
     t_LoopOn = 'false'
-    
+
+    t_LoopEnd = (t_CurrentEnd/2)/tempomul
+
+    cvpj_isstretched = False
+
+    if cliptype == 'audio':
+
+        if 'cut' in cvpj_placement:
+            cvpj_placement_cut = cvpj_placement['cut']
+
+            if 'type' in cvpj_placement_cut:
+                if cvpj_isstretched == True:
+                    if cvpj_placement_cut['type'] == 'cut':
+                        if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start']/4
+                        if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end']/4
+                    if cvpj_placement_cut['type'] == 'loop':
+                        t_LoopOn = 'true'
+                        if 'start' in cvpj_placement_cut: t_StartRelative = cvpj_placement_cut['start']/4
+                        if 'loopstart' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['loopstart']/4
+                        if 'loopend' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['loopend']/4
+                else:
+                    if cvpj_placement_cut['type'] == 'cut':
+                        if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start_real']
+                        if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end_real']
+                    if cvpj_placement_cut['type'] == 'loop':
+                        t_LoopOn = 'true'
+                        w_IsWarped = 'true'
+                        cvpj_placement['audiomod'] = {}
+                        cvpj_placement['audiomod']['stretch'] = {}
+                        cvpj_placement['audiomod']['stretch']['enabled'] = True
+                        cvpj_placement['audiomod']['stretch']['time'] = {'type': 'rate_timed', 'data': {'rate': 1}}
+                        
+                        if 'start' in cvpj_placement_cut: t_StartRelative = cvpj_placement_cut['start']
+                        if 'loopstart' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['loopstart']
+                        if 'loopend' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['loopend']
+
+
+
+        if 'audiomod' in cvpj_placement:
+            if 'stretch' in cvpj_placement['audiomod']:
+                cvpj_stretch = cvpj_placement['audiomod']['stretch']
+
+                if 'enabled' in cvpj_stretch: 
+                    if cvpj_stretch['enabled'] == True: w_IsWarped = 'true'
+
+                    if w_IsWarped == 'true':
+                        cvpj_isstretched = True
+                        if 'params' in cvpj_stretch: 
+                            stretch_params = cvpj_stretch['params']
+                            if 'ComplexProEnvelope' in stretch_params: w_ComplexProEnvelope = stretch_params['ComplexProEnvelope']
+                            if 'ComplexProFormants' in stretch_params: w_ComplexProEnvelope = stretch_params['ComplexProFormants']
+                            if 'FluctuationTexture' in stretch_params: w_ComplexProEnvelope = stretch_params['FluctuationTexture']
+                            if 'GranularityTexture' in stretch_params: w_ComplexProEnvelope = stretch_params['GranularityTexture']
+                            if 'GranularityTones' in stretch_params: w_ComplexProEnvelope = stretch_params['GranularityTones']
+                            if 'TransientEnvelope' in stretch_params: w_ComplexProEnvelope = stretch_params['TransientEnvelope']
+                            if 'TransientLoopMode' in stretch_params: w_ComplexProEnvelope = stretch_params['TransientLoopMode']
+                            if 'TransientResolution' in stretch_params: w_ComplexProEnvelope = stretch_params['TransientResolution']
+
+                        if 'mode' in cvpj_stretch: 
+                            if cvpj_stretch == 'ableton_beats': w_WarpMode = 0
+                            if cvpj_stretch == 'ableton_tones': w_WarpMode = 1
+                            if cvpj_stretch == 'ableton_texture': w_WarpMode = 2
+                            if cvpj_stretch == 'resample': w_WarpMode = 3
+                            if cvpj_stretch == 'ableton_complex': w_WarpMode = 4
+                        if cvpj_stretch == 'stretch_complexpro': w_WarpMode = 6
+
+                        if 'pitch' in cvpj_stretch: stretch_t_pitch = cvpj_stretch['pitch']
+
+                        if 'time' in cvpj_stretch:
+                            if 'type' in cvpj_stretch['time'] and 'data' in cvpj_stretch['time']:
+                                timedata = cvpj_stretch['time']['data']
+
+                                if cvpj_stretch['time']['type'] == 'rate_timed': 
+                                   speedrate = timedata['rate']
+                                   rate_fixed = (1/speedrate)*AudioDuration
+                                   w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
+
+
+        #for value in [t_CurrentStart, t_CurrentEnd, t_StartRelative, t_LoopStart, t_LoopEnd]:
+        #    print(str(value).ljust(20), end=' ')
+        #print()
+
+    else:
+        t_LoopEnd = t_CurrentEnd
+        if 'cut' in cvpj_placement:
+            cvpj_placement_cut = cvpj_placement['cut']
+            if 'type' in cvpj_placement_cut:
+                if cvpj_placement_cut['type'] == 'cut':
+                    t_StartRelative = 0
+                    if 'start' in cvpj_placement_cut: t_StartRelative = (cvpj_placement_cut['start']/4)
+                if cvpj_placement_cut['type'] == 'loop':
+                    t_LoopOn = 'true'
+                    t_StartRelative = cvpj_placement_cut['start']/4
+                    t_LoopStart = cvpj_placement_cut['loopstart']/4
+                    t_LoopEnd = cvpj_placement_cut['loopend']/4
+
+
     if cliptype == 'notes': x_ClipData = addId(xmltag, 'MidiClip', str(get_clipid()))
     if cliptype == 'audio': x_ClipData = addId(xmltag, 'AudioClip', str(get_clipid()))
-    x_ClipData.set('Time', str(cvpj_position))
+    x_ClipData.set('Time', str(able_position))
 
     addvalue(x_ClipData, 'LomId', '0')
     addvalue(x_ClipData, 'LomIdView', '0')
+
+    addvalue(x_ClipData, 'CurrentStart', str(t_CurrentStart))
+    addvalue(x_ClipData, 'CurrentEnd', str(t_CurrentEnd))
+    x_ClipData_loop = ET.SubElement(x_ClipData, 'Loop')
+    addvalue(x_ClipData_loop, 'LoopStart', str(t_LoopStart))
+    addvalue(x_ClipData_loop, 'LoopEnd', str(t_LoopEnd))
+    addvalue(x_ClipData_loop, 'StartRelative', str(t_StartRelative))
+    addvalue(x_ClipData_loop, 'LoopOn', t_LoopOn)
+    addvalue(x_ClipData_loop, 'OutMarker', t_LoopEnd)
+    addvalue(x_ClipData_loop, 'HiddenLoopStart', t_LoopStart)
+    addvalue(x_ClipData_loop, 'HiddenLoopEnd', t_LoopEnd)
+
     addvalue(x_ClipData, 'Name', t_name)
     addvalue(x_ClipData, 'Annotation', '')
     addvalue(x_ClipData, 'Color', str(t_color))
@@ -504,19 +605,15 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
     x_ClipData_TimeSignature = ET.SubElement(x_ClipData, 'TimeSignature')
     x_ClipData_TimeSignature_s = ET.SubElement(x_ClipData_TimeSignature, 'TimeSignatures')
     x_ClipData_TimeSignature_s_remote = addId(x_ClipData_TimeSignature_s, 'RemoteableTimeSignature', '0')
-
-    # ------------------------------------------ notes ------------------------------------------
-    if cliptype == 'notes':
-        addvalue(x_ClipData_TimeSignature_s_remote, 'Numerator', '4')
-        addvalue(x_ClipData_TimeSignature_s_remote, 'Denominator', '4')
-        addvalue(x_ClipData_TimeSignature_s_remote, 'Time', '0')
-    # -------------------------------------------------------------------------------------------
+    addvalue(x_ClipData_TimeSignature_s_remote, 'Numerator', '4')
+    addvalue(x_ClipData_TimeSignature_s_remote, 'Denominator', '4')
+    addvalue(x_ClipData_TimeSignature_s_remote, 'Time', '0')
 
     x_ClipData_Envelopes = ET.SubElement(x_ClipData, 'Envelopes')
     ET.SubElement(x_ClipData_Envelopes, 'Envelopes')
     x_ClipData_ScrollerTimePreserver = ET.SubElement(x_ClipData, 'ScrollerTimePreserver')
-    addvalue(x_ClipData_ScrollerTimePreserver, 'LeftTime', '0')
-    addvalue(x_ClipData_ScrollerTimePreserver, 'RightTime', '4')
+    addvalue(x_ClipData_ScrollerTimePreserver, 'LeftTime', t_CurrentStart)
+    addvalue(x_ClipData_ScrollerTimePreserver, 'RightTime', t_CurrentEnd)
 
     # ------------------------------------------ audio ------------------------------------------
     if cliptype == 'audio':
@@ -556,62 +653,14 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
         addvalue(x_ClipData, 'PreferFlatRootNote', 'false')
         create_grid(x_ClipData, 'ExpressionGrid', 1, 16, 20, 2, 'false', 'false')
 
-    speedrate = 1
-
     if cliptype == 'audio':
-        AudioDuration, AudioTimeBase, AudioSampleRate = create_sampleref(x_ClipData, t_file)
-
-        normalspeed = ((AudioDuration)*(cvpj_bpm/120)*2)*4
-        w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0},{'pos': normalspeed, 'pos_seconds': AudioDuration}]
-
-        if 'audiomod' in cvpj_placement:
-            if 'stretch' in cvpj_placement['audiomod']:
-                cvpj_stretch = cvpj_placement['audiomod']['stretch']
-
-                if 'enabled' in cvpj_stretch: 
-                    if cvpj_stretch['enabled'] == True: w_IsWarped = 'true'
-
-                if 'params' in cvpj_stretch: 
-                    stretch_params = cvpj_stretch['params']
-                    if 'ComplexProEnvelope' in stretch_params: w_ComplexProEnvelope = stretch_params['ComplexProEnvelope']
-                    if 'ComplexProFormants' in stretch_params: w_ComplexProEnvelope = stretch_params['ComplexProFormants']
-                    if 'FluctuationTexture' in stretch_params: w_ComplexProEnvelope = stretch_params['FluctuationTexture']
-                    if 'GranularityTexture' in stretch_params: w_ComplexProEnvelope = stretch_params['GranularityTexture']
-                    if 'GranularityTones' in stretch_params: w_ComplexProEnvelope = stretch_params['GranularityTones']
-                    if 'TransientEnvelope' in stretch_params: w_ComplexProEnvelope = stretch_params['TransientEnvelope']
-                    if 'TransientLoopMode' in stretch_params: w_ComplexProEnvelope = stretch_params['TransientLoopMode']
-                    if 'TransientResolution' in stretch_params: w_ComplexProEnvelope = stretch_params['TransientResolution']
-
-                if 'mode' in cvpj_stretch: 
-                    if cvpj_stretch == 'ableton_beats': w_WarpMode = 0
-                    if cvpj_stretch == 'ableton_tones': w_WarpMode = 1
-                    if cvpj_stretch == 'ableton_texture': w_WarpMode = 2
-                    if cvpj_stretch == 'resample': w_WarpMode = 3
-                    if cvpj_stretch == 'ableton_complex': w_WarpMode = 4
-                    if cvpj_stretch == 'stretch_complexpro': w_WarpMode = 6
-
-                if 'pitch' in cvpj_stretch: stretch_t_pitch = cvpj_stretch['pitch']
-                if 'warps' in cvpj_stretch: w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': stretch_t_steps*4, 'pos_seconds': AudioDuration}]
-
-                elif 'time' in cvpj_stretch:
-                    if 'type' in cvpj_stretch['time'] and 'data' in cvpj_stretch['time']:
-                        timedata = cvpj_stretch['time']['data']
-
-                        if cvpj_stretch['time']['type'] == 'step_mul': w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': timedata['steps'], 'pos_seconds': AudioDuration}]
-                        if cvpj_stretch['time']['type'] == 'rate_timed': 
-                            rate_fixed = (timedata['rate']*AudioTimeBase)/AudioSampleRate
-
-                            print(rate_fixed, timedata['rate'] ,AudioTimeBase, AudioSampleRate)
-
-                            w_timemarkers = [{'pos': 0.0, 'pos_seconds': 0.0}, {'pos': normalspeed*rate_fixed, 'pos_seconds': AudioDuration}]
-                            speedrate = timedata['rate']
-
         t_pitch = stretch_t_pitch
         w_PitchCoarse = round(t_pitch)
         w_PitchFine = (t_pitch-round(t_pitch))*100
 
         addvalue(x_ClipData, 'IsWarped', w_IsWarped)
         addvalue(x_ClipData, 'TakeId', '1')
+        create_sampleref(x_ClipData, aud_sampledata)
         x_ClipData_Onsets = ET.SubElement(x_ClipData, 'Onsets')
         x_ClipData_UserOnsets = ET.SubElement(x_ClipData_Onsets, 'UserOnsets')
         addvalue(x_ClipData_Onsets, 'HasUserOnsets', 'false')
@@ -642,13 +691,14 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
 
         addvalue(x_ClipData, 'Fade', FadeEnabled)
         x_ClipData_Fades = ET.SubElement(x_ClipData, 'Fades')
+        addvalue(x_ClipData_Fades, 'FadeInLength', FadeInLength)
+        addvalue(x_ClipData_Fades, 'FadeOutLength', FadeOutLength)
+        addvalue(x_ClipData_Fades, 'ClipFadesAreInitialized', 'true')
+        addvalue(x_ClipData_Fades, 'CrossfadeInState', '0')
         addvalue(x_ClipData_Fades, 'FadeInCurveSkew', FadeInCurveSkew)
         addvalue(x_ClipData_Fades, 'FadeInCurveSlope', FadeInCurveSlope)
-        addvalue(x_ClipData_Fades, 'ClipFadesAreInitialized', 'true')    
-        addvalue(x_ClipData_Fades, 'FadeInLength', FadeInLength)
         addvalue(x_ClipData_Fades, 'FadeOutCurveSkew', FadeOutCurveSkew)
         addvalue(x_ClipData_Fades, 'FadeOutCurveSlope', FadeOutCurveSlope)
-        addvalue(x_ClipData_Fades, 'FadeOutLength', FadeOutLength)
         addvalue(x_ClipData_Fades, 'IsDefaultFadeIn', 'true') 
         addvalue(x_ClipData_Fades, 'IsDefaultFadeOut', 'true')
 
@@ -660,44 +710,22 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
 
         x_ClipData_WarpMarkers = ET.SubElement(x_ClipData, 'WarpMarkers')
 
+        #w_timemarker_last = w_timemarkers[-1].copy()
+        #w_timemarker_last['pos'] *= 1.001
+        #w_timemarker_last['pos_real'] *= 1.001
+        #w_timemarkers.append(w_timemarker_last)
+
         warpid = 0
         for w_timemarker in w_timemarkers:
             x_ClipData_WarpMarker = ET.SubElement(x_ClipData_WarpMarkers, 'WarpMarker')
             x_ClipData_WarpMarker.set('Id', str(warpid))
-            x_ClipData_WarpMarker.set('SecTime', str(w_timemarker['pos_seconds']))
+            x_ClipData_WarpMarker.set('SecTime', str(w_timemarker['pos_real']))
             x_ClipData_WarpMarker.set('BeatTime', str(w_timemarker['pos']/4))
             warpid += 1
 
         x_ClipData_SavedWarpMarkersForStretched = ET.SubElement(x_ClipData, 'SavedWarpMarkersForStretched')
         addvalue(x_ClipData, 'MarkersGenerated', 'true')
         addvalue(x_ClipData, 'IsSongTempoMaster', 'false')
-
-    if 'cut' in cvpj_placement:
-        cvpj_placement_cut = cvpj_placement['cut']
-        if 'type' in cvpj_placement_cut:
-
-            if cvpj_placement_cut['type'] == 'cut':
-                t_StartRelative = 0
-                t_LoopStart = 0
-                if 'start' in cvpj_placement_cut: t_LoopStart = (cvpj_placement_cut['start']/4)*speedrate
-                t_LoopEnd = (t_LoopStart/4)+(cvpj_placement_cut['end']/4)
-
-            if cvpj_placement_cut['type'] == 'loop':
-                t_LoopOn = 'true'
-                t_StartRelative = cvpj_placement_cut['start']/4
-                t_LoopStart = cvpj_placement_cut['loopstart']/4
-                t_LoopEnd = cvpj_placement_cut['loopend']/4
-
-    addvalue(x_ClipData, 'CurrentStart', str(t_CurrentStart))
-    addvalue(x_ClipData, 'CurrentEnd', str(t_CurrentEnd))
-    x_ClipData_loop = ET.SubElement(x_ClipData, 'Loop')
-    addvalue(x_ClipData_loop, 'LoopStart', str(t_LoopStart))
-    addvalue(x_ClipData_loop, 'LoopEnd', str(t_LoopEnd))
-    addvalue(x_ClipData_loop, 'StartRelative', str(t_StartRelative))
-    addvalue(x_ClipData_loop, 'LoopOn', t_LoopOn)
-    addvalue(x_ClipData_loop, 'OutMarker', '8')
-    addvalue(x_ClipData_loop, 'HiddenLoopStart', str(t_LoopStart))
-    addvalue(x_ClipData_loop, 'HiddenLoopEnd', str(t_LoopEnd))
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -977,6 +1005,9 @@ class output_cvpj(plugin_output.base):
         cvpj_l = json.loads(convproj_json)
         LaneHeight = 68
 
+        if 'bpm' in cvpj_l: cvpj_bpm = cvpj_l['bpm']
+        else: cvpj_bpm = 120
+
         t_mrkr_timesig = {}
         t_mrkr_locater = {}
 
@@ -1006,7 +1037,7 @@ class output_cvpj(plugin_output.base):
         x_root = ET.Element("Ableton")
         x_root.set('MajorVersion', "5")
         x_root.set('MinorVersion', "11.0_433")
-        x_root.set('Creator', "Ableton Live 10.1.3")
+        x_root.set('Creator', "Ableton Live 11.0")
         x_root.set('Revision', "9dc150af94686f816d2cf27815fcf2907d4b86f8")
         
         # XML LiveSet
@@ -1015,9 +1046,6 @@ class output_cvpj(plugin_output.base):
         addvalue(x_LiveSet, 'OverwriteProtectionNumber', '2816')
         addvalue(x_LiveSet, 'LomId', '0')
         addvalue(x_LiveSet, 'LomIdView', '0')
-
-        x_MasterTrack = ET.SubElement(x_LiveSet, "MasterTrack")
-        set_add_trackbase(x_MasterTrack, None, 'master', 'Master', -1, 'false', None)
 
         x_Tracks = ET.SubElement(x_LiveSet, "Tracks")
         if 'track_order' in cvpj_l:
@@ -1035,6 +1063,9 @@ class output_cvpj(plugin_output.base):
                         if cvpj_s_track_data['type'] == 'audio':
                             ableton_make_audio_track(cvpj_trackid)
                     #print(cvpj_trackid)
+
+        x_MasterTrack = ET.SubElement(x_LiveSet, "MasterTrack")
+        set_add_trackbase(x_MasterTrack, None, 'master', 'Master', -1, 'false', None)
 
         x_PreHearTrack = ET.SubElement(x_LiveSet, "PreHearTrack")
         set_add_trackbase(x_PreHearTrack, None, 'prehear', 'Master', -1, 'false', None)

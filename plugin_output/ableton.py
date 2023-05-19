@@ -486,6 +486,7 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
 
     cvpj_isstretched = False
     cvpj_islooped = False
+    cvpj_resample_pitch = 1
 
     if cliptype == 'audio':
         t_LoopEnd = None
@@ -534,6 +535,8 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                                     if cvpj_stretch['mode'] == 'resample': rate_fixed *= pow(2, stretch_t_pitch/12)
                                     w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
 
+                        if cvpj_stretch['mode'] == 'resample': cvpj_resample_pitch = pow(2, stretch_t_pitch/12)
+
         #((t_CurrentEnd)*tempomul)/speedrate
 
         if 'cut' in cvpj_placement:
@@ -570,7 +573,8 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                         if 'loopend' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['loopend']/4
 
         if t_LoopEnd == None:
-            t_LoopEnd = ((AudioDuration*2)*speedrate)*tempomul
+            if w_IsWarped == 'true': t_LoopEnd = ((AudioDuration*2)*speedrate)*tempomul
+            else: t_LoopEnd = AudioDuration
 
         #for value in [t_CurrentStart, t_CurrentEnd, t_StartRelative*4, t_LoopStart*4, t_LoopEnd*4]:
         #    print(str(value).ljust(20), end=' ')
@@ -582,8 +586,10 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
             cvpj_placement_cut = cvpj_placement['cut']
             if 'type' in cvpj_placement_cut:
                 if cvpj_placement_cut['type'] == 'cut':
+                    t_LoopOn = 'false'
                     t_StartRelative = 0
-                    if 'start' in cvpj_placement_cut: t_StartRelative = (cvpj_placement_cut['start']/4)
+                    if 'start' in cvpj_placement_cut: 
+                        t_LoopStart = (cvpj_placement_cut['start']/4)
                 if cvpj_placement_cut['type'] == 'loop':
                     t_LoopOn = 'true'
                     t_StartRelative = cvpj_placement_cut['start']/4

@@ -68,7 +68,7 @@ def replace_data(instdata, platform, in_name, datatype, data, numparams):
 def vstpaths(): return glo_vstpaths
 
 def loadlist(filepath, platform):
-	vstpaths = None
+	vstpaths = {}
 	if exists(filepath):
 		vstpaths = configparser.ConfigParser()
 		vstpaths.read(filepath)

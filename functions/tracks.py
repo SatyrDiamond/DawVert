@@ -127,6 +127,13 @@ def m_param_inst(cvpj_l, trackid, v_name, v_value):
             cvpj_inst = cvpj_l['instruments_data'][trackid]
             cvpj_inst[v_name] = v_value
 
+def m_param_instdata(cvpj_l, trackid, v_name, v_value):
+    if 'instruments_data' in cvpj_l:
+        if trackid in cvpj_l['instruments_data']:
+            if 'instdata' not in cvpj_l['instruments_data'][trackid]: cvpj_l['instruments_data'][trackid]['instdata'] = {}
+            cvpj_inst = cvpj_l['instruments_data'][trackid]['instdata']
+            cvpj_inst[v_name] = v_value
+    
 # ------------------------ Multiple******** ------------------------
 
 def m_playlist_pl(cvpj_l, idnum, trk_name, trk_color, placements_notes):

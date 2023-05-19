@@ -488,7 +488,7 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
     cvpj_islooped = False
 
     if cliptype == 'audio':
-        t_LoopEnd = t_CurrentEnd
+        t_LoopEnd = None
 
         if 'audiomod' in cvpj_placement:
             if 'stretch' in cvpj_placement['audiomod']:
@@ -524,15 +524,15 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                                 timedata = cvpj_stretch['time']['data']
 
                                 if cvpj_stretch['time']['type'] == 'rate_timed': 
-                                   speedrate = timedata['rate']
-                                   rate_fixed = (1/speedrate)*AudioDuration
-                                   w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
+                                    speedrate = timedata['rate']
+                                    rate_fixed = (1/speedrate)*AudioDuration
+                                    w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
 
                                 if cvpj_stretch['time']['type'] == 'rate_nontimed': 
-                                   speedrate = timedata['rate']
-                                   rate_fixed = (AudioDuration/speedrate)
-                                   if cvpj_stretch['mode'] == 'resample': rate_fixed *= pow(2, stretch_t_pitch/12)
-                                   w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
+                                    speedrate = timedata['rate']
+                                    rate_fixed = (AudioDuration/speedrate)
+                                    if cvpj_stretch['mode'] == 'resample': rate_fixed *= pow(2, stretch_t_pitch/12)
+                                    w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
 
         #((t_CurrentEnd)*tempomul)/speedrate
 
@@ -569,6 +569,8 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                         if 'loopstart' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['loopstart']/4
                         if 'loopend' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['loopend']/4
 
+        if t_LoopEnd == None:
+            t_LoopEnd = ((AudioDuration*2)*speedrate)*tempomul
 
         #for value in [t_CurrentStart, t_CurrentEnd, t_StartRelative*4, t_LoopStart*4, t_LoopEnd*4]:
         #    print(str(value).ljust(20), end=' ')

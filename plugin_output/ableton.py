@@ -7,6 +7,7 @@ from functions import data_bytes
 from functions import auto
 from functions import audio
 import plugin_output
+import math
 import json
 import lxml.etree as ET
 from xml.dom import minidom
@@ -509,12 +510,12 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                             if 'TransientResolution' in stretch_params: w_ComplexProEnvelope = stretch_params['TransientResolution']
 
                         if 'mode' in cvpj_stretch: 
-                            if cvpj_stretch == 'ableton_beats': w_WarpMode = 0
-                            if cvpj_stretch == 'ableton_tones': w_WarpMode = 1
-                            if cvpj_stretch == 'ableton_texture': w_WarpMode = 2
-                            if cvpj_stretch == 'resample': w_WarpMode = 3
-                            if cvpj_stretch == 'ableton_complex': w_WarpMode = 4
-                        if cvpj_stretch == 'stretch_complexpro': w_WarpMode = 6
+                            if cvpj_stretch['mode'] == 'ableton_beats': w_WarpMode = 0
+                            if cvpj_stretch['mode'] == 'ableton_tones': w_WarpMode = 1
+                            if cvpj_stretch['mode'] == 'ableton_texture': w_WarpMode = 2
+                            if cvpj_stretch['mode'] == 'resample': w_WarpMode = 3
+                            if cvpj_stretch['mode'] == 'ableton_complex': w_WarpMode = 4
+                        if cvpj_stretch['mode'] == 'stretch_complexpro': w_WarpMode = 6
 
                         if 'pitch' in cvpj_stretch: stretch_t_pitch = cvpj_stretch['pitch']
 
@@ -525,6 +526,12 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                                 if cvpj_stretch['time']['type'] == 'rate_timed': 
                                    speedrate = timedata['rate']
                                    rate_fixed = (1/speedrate)*AudioDuration
+                                   w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
+
+                                if cvpj_stretch['time']['type'] == 'rate_nontimed': 
+                                   speedrate = timedata['rate']
+                                   rate_fixed = (AudioDuration/speedrate)
+                                   if cvpj_stretch['mode'] == 'resample': rate_fixed *= pow(2, stretch_t_pitch/12)
                                    w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
 
         #((t_CurrentEnd)*tempomul)/speedrate

@@ -84,18 +84,18 @@ def convert_inst(instdata):
 
 		start_level = 0.4
 
-		if 'panning' in bb_data_fx:
-			params_vital.setvalue('osc_1_pan', bb_data['pan']/100)
-			params_vital.setvalue('osc_2_pan', bb_data['pan']/100)
-			params_vital.setvalue('osc_3_pan', bb_data['pan']/100)
+		#if 'panning' in bb_data_fx:
+		#	params_vital.setvalue('osc_1_pan', bb_data['pan']/100)
+		#	params_vital.setvalue('osc_2_pan', bb_data['pan']/100)
+		#	params_vital.setvalue('osc_3_pan', bb_data['pan']/100)
 
 
 		if 'pitch shift' in bb_data_fx:
 			bb_pitch += bb_data['pitchShiftSemitones']-12
 
 
-		if 'detune' in bb_data_fx:
-			bb_pitch += bb_data['detuneCents']/100
+		#if 'detune' in bb_data_fx:
+		#	bb_pitch += bb_data['detuneCents']/100
 
 
 		if 'vibrato' in bb_data_fx:

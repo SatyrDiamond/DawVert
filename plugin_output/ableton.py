@@ -576,26 +576,33 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
             if w_IsWarped == 'true': t_LoopEnd = ((AudioDuration*2)*speedrate)*tempomul
             else: t_LoopEnd = AudioDuration
 
-        #for value in [t_CurrentStart, t_CurrentEnd, t_StartRelative*4, t_LoopStart*4, t_LoopEnd*4]:
-        #    print(str(value).ljust(20), end=' ')
-        #print()
 
     else:
-        t_LoopEnd = t_CurrentEnd
+        t_CurrentStart = able_position
+        t_LoopEnd = (able_duration+able_position)
+
         if 'cut' in cvpj_placement:
             cvpj_placement_cut = cvpj_placement['cut']
             if 'type' in cvpj_placement_cut:
+
                 if cvpj_placement_cut['type'] == 'cut':
                     t_LoopOn = 'false'
                     t_StartRelative = 0
-                    if 'start' in cvpj_placement_cut: 
-                        t_LoopStart = (cvpj_placement_cut['start']/4)
+                    if 'start' in cvpj_placement_cut: t_LoopStart = (cvpj_placement_cut['start']/4)
+                    if 'start' in cvpj_placement_cut: t_LoopEnd = (cvpj_placement_cut['end']/4)
+
                 if cvpj_placement_cut['type'] == 'loop':
                     t_LoopOn = 'true'
                     t_StartRelative = cvpj_placement_cut['start']/4
                     t_LoopStart = cvpj_placement_cut['loopstart']/4
                     t_LoopEnd = cvpj_placement_cut['loopend']/4
+        else:
+            t_LoopStart = 0
+            t_LoopEnd = able_duration
 
+        #for value in [t_CurrentStart*4, t_CurrentEnd*4, t_StartRelative*4, t_LoopStart*4, t_LoopEnd*4]:
+        #    print(str(value).ljust(20), end=' ')
+        #print()
 
     if cliptype == 'notes': x_ClipData = addId(xmltag, 'MidiClip', str(get_clipid()))
     if cliptype == 'audio': x_ClipData = addId(xmltag, 'AudioClip', str(get_clipid()))

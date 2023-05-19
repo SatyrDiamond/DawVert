@@ -10,11 +10,13 @@ from functions import song
 import plugin_input
 import json
 
-def getvalue(tag, name):
+def getvalue(tag, name, fallbackval):
     if name in tag: return tag[name]['Value']
-    else: return None
+    else: return fallbackval
 
 maincolor = [0.42, 0.59, 0.24]
+
+scaletable = [[0,0,0,0,0,0,0], [0,0,-1,0,0,-1,-1], [0,1,1,1,0,1,0], [0,-1,-1,-1,-1,-1,-1]]
 
 class input_cvpj_f(plugin_input.base):
     def __init__(self): pass
@@ -36,9 +38,18 @@ class input_cvpj_f(plugin_input.base):
         bytestream = open(input_file, 'r')
         file_data = bytestream.read()
         mmc_main = json.loads(file_data)
+
+        with open(input_file+'_pritty', "w") as fileout:
+            json.dump(mmc_main, fileout, indent=4, sort_keys=True)
+
         mmc_tracks = mmc_main["Tracks"]
-        mmc_bpm = getvalue(mmc_main, 'Bpm')
-        mmc_mastervolume = getvalue(mmc_main, 'MasterVolume')
+        mmc_bpm = getvalue(mmc_main, 'Bpm', 120)
+        mmc_mastervolume = getvalue(mmc_main, 'MasterVolume', 0.5)
+        mmc_key = getvalue(mmc_main, 'Key', 0)
+        mmc_scale = scaletable[getvalue(mmc_main, 'Scale', 0)]
+        mmc_melooffset = getvalue(mmc_main, 'MelodyOffset', 0)
+
+
         if mmc_mastervolume == None: mmc_mastervolume = 1
 
         cvpj_l = {}
@@ -51,6 +62,8 @@ class input_cvpj_f(plugin_input.base):
             trackid = 'CH'+str(tracknum)
             tracks.r_create_inst(cvpj_l, trackid, {})
             tracks.r_basicdata(cvpj_l, trackid, trackid, maincolor, None, None)
+            tracks.r_param(cvpj_l, trackid, 'enabled', int(not getvalue(mmc_track, 'Mute', False)))
+            tracks.r_param(cvpj_l, trackid, 'solo', int(getvalue(mmc_track, 'Solo', False)))
 
             cvpj_notelist = []
 
@@ -60,16 +73,16 @@ class input_cvpj_f(plugin_input.base):
 
                 cvpj_notedata = {}
 
-                n_key = getvalue(mmc_note, 'Melody')
-                out_offset = getvalue(mmc_note, 'Add')
+                n_key = getvalue(mmc_note, 'Melody', 0) + mmc_melooffset
+                out_offset = getvalue(mmc_note, 'Add', 0)
                 out_oct = int(n_key/7)
                 out_key = n_key - out_oct*7
 
-                notedur = getvalue(mmc_note, 'Length')*notelen
-                notekey = note_data.keynum_to_note(out_key, out_oct-3) + out_offset 
-                notepos = getvalue(mmc_note, 'BeatOffset')*notelen
-                notevol = getvalue(mmc_wv, 'Volume')*1.5
-                notepan = getvalue(mmc_wv, 'Pan')
+                notedur = getvalue(mmc_note, 'Length', 1)*notelen
+                notekey = note_data.keynum_to_note(out_key, out_oct-3) + out_offset + mmc_key + mmc_scale[out_key]
+                notepos = getvalue(mmc_note, 'BeatOffset', 0)*notelen
+                notevol = getvalue(mmc_wv, 'Volume', 1)*1.5
+                notepan = getvalue(mmc_wv, 'Pan', 0)
                 if notepan == None: notepan = 0
                 notepan = notepan*-1
 

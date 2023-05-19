@@ -48,8 +48,6 @@ class input_cvpj_f(plugin_input.base):
         mmc_key = getvalue(mmc_main, 'Key', 0)
         mmc_scale = scaletable[getvalue(mmc_main, 'Scale', 0)]
         mmc_melooffset = getvalue(mmc_main, 'MelodyOffset', 0)
-
-
         if mmc_mastervolume == None: mmc_mastervolume = 1
 
         cvpj_l = {}

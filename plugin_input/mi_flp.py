@@ -179,23 +179,27 @@ class input_flp(plugin_input.base):
                 if t_stretchingmode == 8: cvpj_s_stretch['mode'] = 'elastique_v2_mono'
                 if t_stretchingmode == 9: cvpj_s_stretch['mode'] = 'elastique_v2_speech'
 
-                if t_stretchingtime != 0:
+                if t_stretchingtime != 0 or t_stretchingmultiplier != 1 or t_stretchingpitch != 0:
                     cvpj_s_stretch['enabled'] = True
+
+                if t_stretchingtime != 0:
                     cvpj_s_stretch['time'] = {}
                     cvpj_s_stretch['time']['type'] = 'rate_timed'
                     cvpj_s_stretch['time']['data'] = {}
                     cvpj_s_stretch['time']['data']['rate'] = (t_stretchingtime/stretchbpm)*t_stretchingmultiplier
                     samplestretch[instrument] = (t_stretchingtime/stretchbpm)*t_stretchingmultiplier
-                elif t_stretchingmultiplier != 1:
-                    cvpj_s_stretch['enabled'] = True
+
+                elif t_stretchingtime == 0:
                     cvpj_s_stretch['time'] = {}
                     cvpj_s_stretch['time']['type'] = 'rate_nontimed'
                     cvpj_s_stretch['time']['data'] = {}
                     cvpj_s_stretch['time']['data']['rate'] = t_stretchingmultiplier
                     samplestretch[instrument] = 1*t_stretchingmultiplier
+
                 else:
                     samplestretch[instrument] = 1
 
+                print(cvpj_s_stretch)
 
                 cvpj_l_samples['FLSample' + str(instrument)] = cvpj_s_sample
 

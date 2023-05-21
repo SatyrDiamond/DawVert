@@ -162,7 +162,7 @@ def parse_channel(channeldata, channum):
             parse_instrument(channum, t_instnum, bb_instrument, bb_type, bb_color)
             cvpj_instid = 'bb_ch'+str(channum)+'_inst'+str(t_instnum)
 
-            print(bb_instrument['effects'])
+            #print(bb_instrument['effects'])
 
             if 'panning' in bb_instrument['effects']: tracks.m_param_inst(cvpj_l, cvpj_instid, 'pan', bb_instrument['pan']/50)
             #if 'pitch shift' in bb_instrument['effects']: tracks.m_param_instdata(cvpj_l, cvpj_instid, 'pitch', (bb_instrument['pitchShiftSemitones']-12)*100 )
@@ -211,7 +211,7 @@ def parse_channel(channeldata, channum):
                         bb_mod_pos = basepos+bb_mod_points[0]['tick']
                         bb_mod_dur = bb_mod_points[-1]['tick'] - bb_mod_points[0]['tick']
                         bb_mod_target = bb_def[(note['pitches'][0]*-1)+5]
-                        print(bb_mod_pos, bb_mod_dur, bb_mod_target)
+                        #print(bb_mod_pos, bb_mod_dur, bb_mod_target)
                         cvpj_autodata_points = []
                         for bb_mod_point in bb_mod_points:
                             cvpj_pointdata = {}

@@ -249,7 +249,9 @@ class input_famitrkr_txt(plugin_input.base):
         cvpj_l_instrument_data = {}
         cvpj_l_instrument_order = []
 
-        song_tracker.multi_convert(cvpj_l, song_rows, mt_pat, mt_ord, mt_ch_insttype)
+        len_table = song_tracker.multi_get_len_table(song_rows, mt_pat, mt_ord, mt_ch_insttype)
+
+        song_tracker.multi_convert(cvpj_l, song_rows, mt_pat, mt_ord, mt_ch_insttype, len_table)
 
         total_used_instruments = song_tracker.get_multi_used_instruments()
 

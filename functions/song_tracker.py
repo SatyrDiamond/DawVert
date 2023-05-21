@@ -294,7 +294,35 @@ def tempo_auto(patterntable_all, orders, speed, tempo):
 
 def get_multi_used_instruments(): return multi_used_instruments
 
-def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype):
+def multi_get_len_table(i_rows, i_patterns, i_orders, i_chantype):
+    patternlengths = []
+    patternlengths_num = 0
+    for i_order in i_orders:
+        lensong = len(i_orders[i_order])
+        if lensong > patternlengths_num: patternlengths_num = lensong
+
+    for _ in range(patternlengths_num):
+        patternlengths.append(i_rows)
+
+    for channum in range(len(i_chantype)):
+        s_patterns = i_patterns[channum]
+        s_orders = i_orders[channum]
+        curpatnum = 0
+        for patnum in s_orders:
+            s_pattern = s_patterns[patnum]
+            rownum = 0
+            for row in s_pattern:
+                rownum += 1
+                if 'skip_pattern' in row[0]: 
+                    if patternlengths[curpatnum] > rownum: patternlengths[curpatnum] = rownum
+                    break
+            curpatnum += 1
+
+    return patternlengths
+
+
+
+def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype, i_len_table):
     plnum = 1
 
     cvpj_l['playlist'] = {}
@@ -302,11 +330,6 @@ def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype):
 
     cvpj_l['notelistindex'] = {}
     cvpj_l_notelistindex = cvpj_l['notelistindex']
-
-    #for i_pattern in i_patterns:
-    #    for patnum in i_patterns[i_pattern]:
-    #        for rownum in range(len(i_patterns[i_pattern][patnum])):
-    #            print(i_chantype[i_pattern], patnum, rownum, i_patterns[i_pattern][patnum][rownum])
 
     for channum in range(len(i_chantype)):
         s_chantype = i_chantype[channum]
@@ -317,13 +340,10 @@ def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype):
 
         for patnum in s_patterns:
             s_pattern = s_patterns[patnum]
-            #for rownum in range(len(s_patterns[patnum])):
-            #    print(s_chantype, patnum, rownum, s_patterns[patnum][rownum])
 
             NLP = convertchannel2notelist(s_pattern, s_chantype+'_', channum)
             used_instruments = get_used_instruments()
-            #print(NLP)
-            #print(used_instruments)
+
             for used_instrument in used_instruments:
                 ui_split = used_instrument.split('_')
                 if ui_split not in multi_used_instruments: multi_used_instruments.append(ui_split)
@@ -333,14 +353,16 @@ def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype):
                 tracks.m_add_nle(cvpj_l, patid, NLP[0]['notelist'])
                 tracks.m_add_nle_info(cvpj_l, patid, s_chantype+' ('+str(patnum)+')', None)
 
+        curpatnum = 0
         curpos = 0
         for s_order in s_orders:
             if s_order in s_patterns:
                 cvpj_l_placement = {}
                 cvpj_l_placement['position'] = curpos
-                cvpj_l_placement['duration'] = i_rows
+                cvpj_l_placement['duration'] = i_len_table[curpatnum]
                 cvpj_l_placement['fromindex'] = str(channum)+'_'+str(s_order)
                 cvpj_l_playlist[str(channum+1)]['placements_notes'].append(cvpj_l_placement)
-            curpos += i_rows
+            curpos += i_len_table[curpatnum]
+            curpatnum += 1
 
     #print(multi_used_instruments)

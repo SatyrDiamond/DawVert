@@ -97,6 +97,8 @@ class input_ableton(plugin_input.base):
         cvpj_l['bpm'] = get_param(x_mastertrack_Mixer, 'Tempo', 'float', 140)
         tempo = cvpj_l['bpm']
 
+        returnid = 0
+
         for x_track_data in list(x_Tracks):
             tracktype = x_track_data.tag
 
@@ -110,6 +112,9 @@ class input_ableton(plugin_input.base):
             track_color = colorlist_one[int(get_value(x_track_data, 'Color', 'test'))]
             track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0)
             track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0)
+
+            track_sends = x_track_Mixer.findall('Sends')[0]
+            track_sendholders = track_sends.findall('TrackSendHolder')
 
             if tracktype == 'MidiTrack':
                 tracks.r_create_inst(cvpj_l, track_id, {})
@@ -212,9 +217,7 @@ class input_ableton(plugin_input.base):
                 x_track_ArrangerAutomation = x_track_Sample.findall('ArrangerAutomation')[0]
                 x_track_Events = x_track_ArrangerAutomation.findall('Events')[0]
                 x_track_AudioClips = x_track_Events.findall('AudioClip')
-
                 audiorate = 1
-
                 for x_track_AudioClip in x_track_AudioClips:
 
                     t_CurrentStart = float(get_value(x_track_AudioClip, 'CurrentStart', 0))
@@ -268,8 +271,6 @@ class input_ableton(plugin_input.base):
                         cvpj_placement['fade']['out']['duration'] = float(get_value(x_track_AudioClip_fades, 'FadeOutLength', 0))*8
                         cvpj_placement['fade']['out']['skew'] = float(get_value(x_track_AudioClip_fades, 'FadeOutCurveSkew', 0))
                         cvpj_placement['fade']['out']['slope'] = float(get_value(x_track_AudioClip_fades, 'FadeOutCurveSlope', 0))
-
-
 
                     cvpj_placement['audiomod'] = {}
                     cvpj_placement['audiomod']['stretch'] = {}
@@ -364,9 +365,19 @@ class input_ableton(plugin_input.base):
 
                     tracks.r_pl_audio(cvpj_l, track_id, cvpj_placement)  
 
+            sendcount = 1
+            for track_sendholder in track_sendholders:
+                sendid = track_sendholder.get('Id')
+                sendlevel = get_param(track_sendholder, 'Send', 'float', 0)
+                tracks.r_add_send(cvpj_l, track_id, 'return_'+str(sendid), sendlevel, None)
+
+                sendcount += 1
+
             if tracktype == 'ReturnTrack':
-                tracks.r_add_return(cvpj_l, ['master'], track_id)
-                tracks.r_add_return_basicdata(cvpj_l, ['master'], track_id, track_name, track_color, track_vol, track_pan)
+                cvpj_returntrackid = 'return_'+str(returnid)
+                tracks.r_add_return(cvpj_l, ['master'], cvpj_returntrackid)
+                tracks.r_add_return_basicdata(cvpj_l, ['master'], cvpj_returntrackid, track_name, track_color, track_vol, track_pan)
+                returnid += 1
 
         return json.dumps(cvpj_l)
 

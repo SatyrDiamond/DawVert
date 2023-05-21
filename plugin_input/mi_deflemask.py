@@ -12,7 +12,7 @@ import struct
 import json
 
 chiptypecolors = {}
-chiptypecolors['fm'] = [0.20, 0.80, 1.00]
+chiptypecolors['opn2'] = [0.20, 0.80, 1.00]
 chiptypecolors['square'] = [0.40, 1.00, 0.20]
 chiptypecolors['pulse'] = [0.40, 1.00, 0.20]
 chiptypecolors['noise'] = [0.80, 0.80, 0.80]
@@ -25,7 +25,7 @@ chiptypecolors['adpcma'] = [1.00, 0.90, 0.20]
 chiptypecolors['c64'] = [0.80, 0.80, 0.80]
 
 chipname = {}
-chipname['fm'] = 'FM 4op'
+chipname['opn2'] = 'FM 4op'
 chipname['square'] = 'Square'
 chipname['pulse'] = 'Pulse'
 chipname['noise'] = 'Noise'
@@ -329,7 +329,10 @@ class input_cvpj_r(plugin_input.base):
         mt_ch_names = t_channames
         mt_type_colors = chiptypecolors
 
-        song_tracker.multi_convert(cvpj_l, dmf_TOTAL_ROWS_PER_PATTERN, mt_pat, mt_ord, mt_ch_insttype)
+        len_table = song_tracker.multi_get_len_table(dmf_TOTAL_ROWS_PER_PATTERN, mt_pat, mt_ord, mt_ch_insttype)
+
+        song_tracker.multi_convert(cvpj_l, dmf_TOTAL_ROWS_PER_PATTERN, mt_pat, mt_ord, mt_ch_insttype, len_table)
+
         total_used_instruments = song_tracker.get_multi_used_instruments()
         for total_used_instrument in total_used_instruments:
             insttype = total_used_instrument[0]

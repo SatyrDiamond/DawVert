@@ -235,6 +235,10 @@ def create_timeselection(xmltag, AnchorTime, OtherTime):
     addvalue(x_Transport, 'AnchorTime', str(AnchorTime))
     addvalue(x_Transport, 'OtherTime', str(OtherTime))
 
+def add_env_target(xmltag, i_name, i_id):
+    x_temp = addId(xmltag, i_name, str(i_id))
+    addvalue(x_temp, 'LockEnvelope', '0')
+
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -253,11 +257,8 @@ def set_add_param(xmltag, param_name, param_value, auto_id, modu_id, midi_cc_thr
     x_temp = ET.SubElement(xmltag, param_name)
     addvalue(x_temp, 'LomId', '0')
     addvalue(x_temp, 'Manual', param_value)
-    x_AutomationTarget = addId(x_temp, 'AutomationTarget', str(auto_id))
-    addvalue(x_AutomationTarget, 'LockEnvelope', '0')
-    if modu_id != None: 
-        x_ModulationTarget = addId(x_temp, 'ModulationTarget', str(modu_id))
-        addvalue(x_ModulationTarget, 'LockEnvelope', '0')
+    add_env_target(x_temp, 'AutomationTarget', auto_id)
+    if modu_id != None: add_env_target(x_temp, 'ModulationTarget', modu_id)
     if midi_cc_thres != None: add_min_max(x_temp, 'MidiCCOnOffThresholds', midi_cc_thres[0], midi_cc_thres[1])
     if midi_cont_range != None: add_min_max(x_temp, 'MidiControllerRange', midi_cont_range[0], midi_cont_range[1])
       
@@ -471,19 +472,13 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
     FadeOutCurveSkew = 0
     FadeOutCurveSlope = 0
     FadeOutLength = 0
-
     speedrate = 1
-
-    # -------------------------------------------------------------------------------------------
-
     t_CurrentStart = able_position
     t_CurrentEnd = able_duration+able_position
     t_LoopStart = 0
-
-
     t_StartRelative = 0
     t_LoopOn = 'false'
-
+    cvpj_stretchmode = 'none'
     cvpj_isstretched = False
     cvpj_islooped = False
     cvpj_resample_pitch = 1
@@ -494,6 +489,9 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
         if 'audiomod' in cvpj_placement:
             if 'stretch' in cvpj_placement['audiomod']:
                 cvpj_stretch = cvpj_placement['audiomod']['stretch']
+
+                if 'pitch' in cvpj_stretch: stretch_t_pitch = cvpj_stretch['pitch']
+
                 if 'enabled' in cvpj_stretch: 
                     if cvpj_stretch['enabled'] == True: w_IsWarped = 'true'
 
@@ -516,9 +514,8 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                             if cvpj_stretch['mode'] == 'ableton_texture': w_WarpMode = 2
                             if cvpj_stretch['mode'] == 'resample': w_WarpMode = 3
                             if cvpj_stretch['mode'] == 'ableton_complex': w_WarpMode = 4
-                        if cvpj_stretch['mode'] == 'stretch_complexpro': w_WarpMode = 6
-
-                        if 'pitch' in cvpj_stretch: stretch_t_pitch = cvpj_stretch['pitch']
+                            if cvpj_stretch['mode'] == 'stretch_complexpro': w_WarpMode = 6
+                            cvpj_stretchmode = cvpj_stretch['mode']
 
                         if 'time' in cvpj_stretch:
                             if 'type' in cvpj_stretch['time'] and 'data' in cvpj_stretch['time']:
@@ -573,7 +570,10 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                         if 'loopend' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['loopend']/4
 
         if t_LoopEnd == None:
-            if w_IsWarped == 'true': t_LoopEnd = ((AudioDuration*2)*speedrate)*tempomul
+            if w_IsWarped == 'true': 
+                basestretchdur = ((AudioDuration*2)*speedrate)*tempomul
+                if cvpj_stretchmode != 'resample': t_LoopEnd = basestretchdur
+                else: t_LoopEnd = basestretchdur/cvpj_resample_pitch
             else: t_LoopEnd = AudioDuration
 
 
@@ -599,10 +599,6 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
         else:
             t_LoopStart = 0
             t_LoopEnd = able_duration
-
-        #for value in [t_CurrentStart*4, t_CurrentEnd*4, t_StartRelative*4, t_LoopStart*4, t_LoopEnd*4]:
-        #    print(str(value).ljust(20), end=' ')
-        #print()
 
     if cliptype == 'notes': x_ClipData = addId(xmltag, 'MidiClip', str(get_clipid()))
     if cliptype == 'audio': x_ClipData = addId(xmltag, 'AudioClip', str(get_clipid()))
@@ -735,11 +731,6 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
 
         x_ClipData_WarpMarkers = ET.SubElement(x_ClipData, 'WarpMarkers')
 
-        #w_timemarker_last = w_timemarkers[-1].copy()
-        #w_timemarker_last['pos'] *= 1.001
-        #w_timemarker_last['pos_real'] *= 1.001
-        #w_timemarkers.append(w_timemarker_last)
-
         warpid = 0
         for w_timemarker in w_timemarkers:
             x_ClipData_WarpMarker = ET.SubElement(x_ClipData_WarpMarkers, 'WarpMarker')
@@ -796,28 +787,6 @@ def set_add_sequencer_base(x_BaseSequencer):
     ET.SubElement(x_SourceContext, 'Value')
     #addvalue(x_ClipSlotList, 'MonitoringEnum', '1')
 
-def set_add_midi_track_mainsequencer(xmltag, track_placements, trackcolor):
-    x_MainSequencer = ET.SubElement(xmltag, 'MainSequencer')
-    set_add_sequencer_base(x_MainSequencer)
-    x_ClipSlotList = set_add_clipslots(x_MainSequencer)
-    x_ClipTimeable = ET.SubElement(x_MainSequencer, 'ClipTimeable')
-    x_ArrangerAutomation = ET.SubElement(x_ClipTimeable, 'ArrangerAutomation')
-    x_ArrangerAutomation_Events = ET.SubElement(x_ArrangerAutomation, 'Events')
-    for cvpj_placement in track_placements:
-        create_clip(x_ArrangerAutomation_Events, 'notes', cvpj_placement, trackcolor)
-    create_timeselection(xmltag, 0, 4)
-    x_ArrangerAutomation_AutomationTransformViewState = ET.SubElement(x_ArrangerAutomation, 'AutomationTransformViewState')
-    addvalue(x_ArrangerAutomation_AutomationTransformViewState, 'IsTransformPending', 'false')
-    ET.SubElement(x_ArrangerAutomation_AutomationTransformViewState, 'TimeAndValueTransforms')
-    x_Recorder = ET.SubElement(x_MainSequencer, 'Recorder')
-    addvalue(x_Recorder, 'IsArmed', 'false')
-    addvalue(x_Recorder, 'TakeCounter', '0')
-    x_MidiControllers = ET.SubElement(x_MainSequencer, 'MidiControllers')
-    for clipslotnum in range(131):
-        x_ControllerTargets = addId(x_MidiControllers, 'ControllerTargets.'+str(clipslotnum), str(get_contid()))
-        addvalue(x_ControllerTargets, 'LockEnvelope', '0')
-    #addvalue(x_MainSequencer, 'MonitoringEnum', '1')
-
 def set_add_midi_track_freezesequencer(xmltag, track_placements):
     x_FreezeSequencer = ET.SubElement(xmltag, 'FreezeSequencer')
     set_add_sequencer_base(x_FreezeSequencer)
@@ -825,52 +794,16 @@ def set_add_midi_track_freezesequencer(xmltag, track_placements):
     set_add_sequencer_end(xmltag, track_placements)
 
 def set_add_sequencer_end(x_FreezeSequencer, track_placements):
-    x_VolumeModulationTarget = addId(x_FreezeSequencer, 'VolumeModulationTarget', str(get_unused_id()))
-    addvalue(x_VolumeModulationTarget, 'LockEnvelope', '0')
-    x_TranspositionModulationTarget = addId(x_FreezeSequencer, 'TranspositionModulationTarget', str(get_unused_id()))
-    addvalue(x_TranspositionModulationTarget, 'LockEnvelope', '0')
-    x_GrainSizeModulationTarget = addId(x_FreezeSequencer, 'GrainSizeModulationTarget', str(get_unused_id()))
-    addvalue(x_GrainSizeModulationTarget, 'LockEnvelope', '0')
-    x_FluxModulationTarget = addId(x_FreezeSequencer, 'FluxModulationTarget', str(get_unused_id()))
-    addvalue(x_FluxModulationTarget, 'LockEnvelope', '0')
-    x_SampleOffsetModulationTarget = addId(x_FreezeSequencer, 'SampleOffsetModulationTarget', str(get_unused_id()))
-    addvalue(x_SampleOffsetModulationTarget, 'LockEnvelope', '0')
+    add_env_target(x_FreezeSequencer, 'VolumeModulationTarget', get_unused_id())
+    add_env_target(x_FreezeSequencer, 'TranspositionModulationTarget', get_unused_id())
+    add_env_target(x_FreezeSequencer, 'GrainSizeModulationTarget', get_unused_id())
+    add_env_target(x_FreezeSequencer, 'FluxModulationTarget', get_unused_id())
+    add_env_target(x_FreezeSequencer, 'SampleOffsetModulationTarget', get_unused_id())
     addvalue(x_FreezeSequencer, 'PitchViewScrollPosition', '-1073741824')
     addvalue(x_FreezeSequencer, 'SampleOffsetModulationScrollPosition', '-1073741824')
     x_Recorder = ET.SubElement(x_FreezeSequencer, 'Recorder')
     addvalue(x_Recorder, 'IsArmed', 'false')
     addvalue(x_Recorder, 'TakeCounter', '0')
-
-def set_add_audio_track_mainsequencer(xmltag, track_placements, trackcolor):
-    x_MainSequencer = ET.SubElement(xmltag, 'MainSequencer')
-    set_add_sequencer_base(x_MainSequencer)
-    x_ClipSlotList = set_add_clipslots(x_MainSequencer)
-    addvalue(x_MainSequencer, 'MonitoringEnum', '1')
-    x_Sample = ET.SubElement(x_MainSequencer, 'Sample')
-    x_ArrangerAutomation = ET.SubElement(x_Sample, 'ArrangerAutomation')
-    x_ArrangerAutomation_Events = ET.SubElement(x_ArrangerAutomation, 'Events')
-
-    for track_placement in track_placements:
-        create_clip(x_ArrangerAutomation_Events, 'audio', track_placement, trackcolor)
-
-    x_ArrangerAutomation_AutomationTransformViewState = ET.SubElement(x_ArrangerAutomation, 'AutomationTransformViewState')
-    addvalue(x_ArrangerAutomation_AutomationTransformViewState, 'IsTransformPending', 'false')
-    ET.SubElement(x_ArrangerAutomation_AutomationTransformViewState, 'TimeAndValueTransforms')
-    
-    set_add_sequencer_end(x_MainSequencer, track_placements)
-
-def set_add_audio_track_freezesequencer(xmltag, track_placements):
-    x_FreezeSequencer = ET.SubElement(xmltag, 'FreezeSequencer')
-    set_add_sequencer_base(x_FreezeSequencer)
-    x_ClipSlotList = set_add_clipslots(x_FreezeSequencer)
-    set_add_sequencer_end(x_FreezeSequencer, track_placements)
-
-
-def set_add_master_track_freezesequencer(xmltag, track_placements):
-    x_FreezeSequencer = ET.SubElement(xmltag, 'FreezeSequencer')
-    x_AudioSequencer = addId(x_FreezeSequencer, 'AudioSequencer', '0')
-    set_add_sequencer_base(x_AudioSequencer)
-    ET.SubElement(xmltag, 'ClipSlotList')
 
 # ---------------- Track Base / Device Chain ----------------
 
@@ -899,13 +832,58 @@ def create_devicechain(xmltag, tracktype, track_placements, trackcolor):
     add_up_lower(xmltag, 'MidiOutputRouting', 'MidiOut/None', 'None', '')
     create_devicechain_mixer(xmltag, tracktype)
     if tracktype == 'miditrack':
-        set_add_midi_track_mainsequencer(xmltag, track_placements, trackcolor)
-        set_add_midi_track_freezesequencer(xmltag, track_placements)
+        #mainsequencer
+        x_MainSequencer = ET.SubElement(xmltag, 'MainSequencer')
+        set_add_sequencer_base(x_MainSequencer)
+        x_ClipSlotList = set_add_clipslots(x_MainSequencer)
+        x_ClipTimeable = ET.SubElement(x_MainSequencer, 'ClipTimeable')
+        x_ArrangerAutomation = ET.SubElement(x_ClipTimeable, 'ArrangerAutomation')
+        x_ArrangerAutomation_Events = ET.SubElement(x_ArrangerAutomation, 'Events')
+        for cvpj_placement in track_placements:
+            create_clip(x_ArrangerAutomation_Events, 'notes', cvpj_placement, trackcolor)
+        create_timeselection(xmltag, 0, 4)
+        x_ArrangerAutomation_AutomationTransformViewState = ET.SubElement(x_ArrangerAutomation, 'AutomationTransformViewState')
+        addvalue(x_ArrangerAutomation_AutomationTransformViewState, 'IsTransformPending', 'false')
+        ET.SubElement(x_ArrangerAutomation_AutomationTransformViewState, 'TimeAndValueTransforms')
+        x_Recorder = ET.SubElement(x_MainSequencer, 'Recorder')
+        addvalue(x_Recorder, 'IsArmed', 'false')
+        addvalue(x_Recorder, 'TakeCounter', '0')
+        x_MidiControllers = ET.SubElement(x_MainSequencer, 'MidiControllers')
+        for clipslotnum in range(131):
+            add_env_target(x_MidiControllers, 'ControllerTargets.'+str(clipslotnum), get_contid())
+        #freezesequencer
+        x_FreezeSequencer = ET.SubElement(xmltag, 'FreezeSequencer')
+        set_add_sequencer_base(x_FreezeSequencer)
+        x_ClipSlotList = set_add_clipslots(x_FreezeSequencer)
+        set_add_sequencer_end(xmltag, track_placements)
+
     if tracktype == 'audiotrack':
-        set_add_audio_track_mainsequencer(xmltag, track_placements, trackcolor)
-        set_add_audio_track_freezesequencer(xmltag, track_placements)
+        #mainsequencer
+        x_MainSequencer = ET.SubElement(xmltag, 'MainSequencer')
+        set_add_sequencer_base(x_MainSequencer)
+        x_ClipSlotList = set_add_clipslots(x_MainSequencer)
+        addvalue(x_MainSequencer, 'MonitoringEnum', '1')
+        x_Sample = ET.SubElement(x_MainSequencer, 'Sample')
+        x_ArrangerAutomation = ET.SubElement(x_Sample, 'ArrangerAutomation')
+        x_ArrangerAutomation_Events = ET.SubElement(x_ArrangerAutomation, 'Events')
+        for track_placement in track_placements:
+            create_clip(x_ArrangerAutomation_Events, 'audio', track_placement, trackcolor)
+        x_ArrangerAutomation_AutomationTransformViewState = ET.SubElement(x_ArrangerAutomation, 'AutomationTransformViewState')
+        addvalue(x_ArrangerAutomation_AutomationTransformViewState, 'IsTransformPending', 'false')
+        ET.SubElement(x_ArrangerAutomation_AutomationTransformViewState, 'TimeAndValueTransforms')
+        set_add_sequencer_end(x_MainSequencer, track_placements)
+        #freezesequencer
+        x_FreezeSequencer = ET.SubElement(xmltag, 'FreezeSequencer')
+        set_add_sequencer_base(x_FreezeSequencer)
+        x_ClipSlotList = set_add_clipslots(x_FreezeSequencer)
+        set_add_sequencer_end(x_FreezeSequencer, track_placements)
+
     if tracktype == 'master':
-        set_add_master_track_freezesequencer(xmltag, track_placements)
+        x_FreezeSequencer = ET.SubElement(xmltag, 'FreezeSequencer')
+        x_AudioSequencer = addId(x_FreezeSequencer, 'AudioSequencer', '0')
+        set_add_sequencer_base(x_AudioSequencer)
+        ET.SubElement(xmltag, 'ClipSlotList')
+
     x_DeviceChain_i = ET.SubElement(xmltag, 'DeviceChain')
     x_DeviceChain_i_Devices = ET.SubElement(x_DeviceChain_i, 'Devices')
     x_DeviceChain_i_SignalModulations = ET.SubElement(x_DeviceChain_i, 'SignalModulations')

@@ -219,8 +219,9 @@ class input_trackerboy(plugin_input.base):
                 print("[input-trackerboy]     Data: " + str(tb_wave))
                 t_waves[tb_id] = [tb_name, tb_wave]
 
+        len_table = song_tracker.multi_get_len_table(tb_rows, mt_pat, mt_ord, mt_ch_insttype)
 
-        song_tracker.multi_convert(cvpj_l, tb_rows, mt_pat, mt_ord, mt_ch_insttype)
+        song_tracker.multi_convert(cvpj_l, tb_rows, mt_pat, mt_ord, mt_ch_insttype, len_table)
 
         total_used_instruments = song_tracker.get_multi_used_instruments()
 

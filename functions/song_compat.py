@@ -571,6 +571,28 @@ def remove_auto_placements(cvpj_l):
                         #print('PARAM', autoid)
                         cvpj_auto[autotype][packid][autoid] = remove_auto_placements_single(cvpj_auto[autotype][packid][autoid])
                     
+# -------------------------------------------- time_seconds --------------------------------------------
+
+def step2sec(i_value, i_bpm): return (i_value/8)*(120/i_bpm)
+
+def beats_to_seconds_dopls(cvoj_placements, i_bpm):
+    for cvoj_placement in cvoj_placements:
+        if 'position' in cvoj_placement: cvoj_placement['position'] = step2sec(cvoj_placement['position'], i_bpm)
+        if 'duration' in cvoj_placement: cvoj_placement['duration'] = step2sec(cvoj_placement['duration'], i_bpm)
+
+def beats_to_seconds_all(s_track_pl, i_bpm):
+    if 'notes' in s_track_pl: beats_to_seconds_dopls(s_track_pl['notes'], i_bpm)
+    if 'audio' in s_track_pl: beats_to_seconds_dopls(s_track_pl['audio'], i_bpm)
+
+def beats_to_seconds(cvpj_l):
+    bpm = 120
+    if 'bpm' in cvpj_l: bpm = cvpj_l['bpm']
+    print('[compat] Beats2Seconds: BPM:', bpm)
+
+    if 'track_placements' in cvpj_l:
+        for id_track_pl in cvpj_l['track_placements']:
+            s_track_pl = cvpj_l['track_placements'][id_track_pl]
+            beats_to_seconds_all(s_track_pl, bpm)
 
 # -------------------------------------------- Main --------------------------------------------
 
@@ -587,15 +609,22 @@ def makecompat_any(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     if 'no_pl_auto' in in_dawcapabilities: in__no_pl_auto = in_dawcapabilities['no_pl_auto']
     if 'no_pl_auto' in out_dawcapabilities: out__no_pl_auto = out_dawcapabilities['no_pl_auto']
 
+    in__time_seconds = False
+    out__time_seconds = False
+    if 'time_seconds' in in_dawcapabilities: in__time_seconds = in_dawcapabilities['time_seconds']
+    if 'time_seconds' in out_dawcapabilities: out__time_seconds = out_dawcapabilities['time_seconds']
+
     print('[compat] ----------------+-------+-------+')
     print('[compat] Name            | In    | Out   |')
     print('[compat] ----------------+-------+-------+')
     print('[compat] fxrack          | '+str(in__fxrack).ljust(5)+' | '+str(out__fxrack).ljust(5)+' |')
     print('[compat] no_pl_auto      | '+str(in__no_pl_auto).ljust(5)+' | '+str(out__no_pl_auto).ljust(5)+' |')
+    print('[compat] time_seconds    | '+str(in__time_seconds).ljust(5)+' | '+str(out__time_seconds).ljust(5)+' |')
     print('[compat] ----------------+-------+-------+')
 
     if in__fxrack == False and out__fxrack == True: trackfx2fxrack(cvpj_proj, cvpj_type)
     if in__no_pl_auto == False and out__no_pl_auto == True: remove_auto_placements(cvpj_proj)
+    if in__time_seconds == False and out__time_seconds == True: beats_to_seconds(cvpj_proj)
     return json.dumps(cvpj_proj)
 
 r_processed = False

@@ -158,13 +158,13 @@ class input_cvpj_r(plugin_input.base):
             t_chantype = ['c64','c64','c64']
             t_channames = ['Channel 1','Channel 2','Channel 3']
         if dmf_system == int("08",16): #ARCADE
-            t_chantype = ['fm','fm','fm','fm','fm','fm','fm','fm','sample','sample','sample','sample','sample']
+            t_chantype = ['opn2','opn2','opn2','opn2','opn2','opn2','opn2','opn2','sample','sample','sample','sample','sample']
             t_channames = ['FM 1','FM 2','FM 3','FM 4','FM 5','FM 6','FM 7','FM 8','Channel 1','Channel 2','Channel 3','Channel 4','Channel 5']
         if dmf_system == int("09",16): #NEOGEO
-            t_chantype = ['fm','fm','fm','fm','psg','psg','psg','adpcma','adpcma','adpcma','adpcma','adpcma','adpcma']
+            t_chantype = ['opn2','opn2','opn2','opn2','psg','psg','psg','adpcma','adpcma','adpcma','adpcma','adpcma','adpcma']
             t_channames = ['FM 1','FM 2','FM 3','FM 4','PSG 1','PSG 2','PSG 3','ADPCM-A 1','ADPCM-A 2','ADPCM-A 3','ADPCM-A 4','ADPCM-A 5','ADPCM-A 6']
         if dmf_system == int("49",16): #NEOGEO (mode EXT. CH2)
-            t_chantype = ['fm','fm','fmop','fmop','fmop','fmop','fm','psg','psg','psg','adpcma','adpcma','adpcma','adpcma','adpcma','adpcma']
+            t_chantype = ['opn2','opn2','opn2_op','opn2_op','opn2_op','opn2_op','opn2','psg','psg','psg','adpcma','adpcma','adpcma','adpcma','adpcma','adpcma']
             t_channames = ['FM 1','FM 2 OP 1','FM 2 OP 2','FM 2 OP 3','FM 2 OP 4','FM 3','FM 4','PSG 1','PSG 2','PSG 3','ADPCM-A 1','ADPCM-A 2','ADPCM-A 3','ADPCM-A 4','ADPCM-A 5','ADPCM-A 6']
 
         dmf_SYSTEM_TOTAL_CHANNELS = len(t_chantype)

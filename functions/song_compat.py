@@ -48,14 +48,14 @@ def r_trackfx2fxrack(cvpj_l, cvpjtype):
 
         list2fxrack(cvpj_l, track_master_data, 0, 'Master', '')
 
-        if 'sends_audio' in track_master_data:
-            for send in track_master_data['sends_audio']:
-                send_data = track_master_data['sends_audio'][send]
+        if 'returns' in track_master_data:
+            for send in track_master_data['returns']:
+                send_data = track_master_data['returns'][send]
                 list2fxrack(cvpj_l, send_data, fxnum, send, '[S] ')
                 fxdata[fxnum] = [['return',send],['master',None]]
                 returnids[send] = fxnum
                 fxnum += 1
-            del track_master_data['sends_audio']
+            del track_master_data['returns']
             
         del cvpj_l['track_master']
 
@@ -542,7 +542,6 @@ def r_split_single_notelist(projJ):
     projJ['do_singlenotelistcut'] = False
 
 # -------------------------------------------- no_pl_auto --------------------------------------------
-
 
 def remove_auto_placements_single(autodata):
     new_points = []

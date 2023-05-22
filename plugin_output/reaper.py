@@ -21,9 +21,6 @@ def cvpj_color_to_reaper_color_clip(i_color):
     cvpj_trackcolor = bytes(colors.rgb_float_2_rgb_int([i_color[2],i_color[1],i_color[0]]))+b'\x01'
     return int.from_bytes(cvpj_trackcolor, 'little')
 
-def calc_pos(i_value, i_bpm):
-    return (i_value/8)*(120/i_bpm)
-
 def midi_add_cmd(i_list, i_pos, i_cmd):
     if i_pos not in i_list: i_list[i_pos] = []
     i_list[i_pos].append(i_cmd)
@@ -80,12 +77,8 @@ class output_reaper(plugin_output.base):
     def plugin_archs(self): return None
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'r_track_lanes': False,
         'placement_cut': True,
-        'placement_loop': False,
-        'no_placements': False,
-        'pl_audio_events': False
+        'time_seconds': True
         }
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
@@ -232,9 +225,9 @@ class output_reaper(plugin_output.base):
                                         clip_startat = clip_cutdata['start']
 
                                 rpp_midiclipdata = rpp_obj('ITEM',track_uuid)
-                                rpp_midiclipdata.children.append(['POSITION',calc_pos(clip_position, reaper_tempo)])
+                                rpp_midiclipdata.children.append(['POSITION',clip_position])
                                 rpp_midiclipdata.children.append(['SNAPOFFS','0'])
-                                rpp_midiclipdata.children.append(['LENGTH',calc_pos(clip_duration, reaper_tempo)])
+                                rpp_midiclipdata.children.append(['LENGTH',clip_duration])
                                 rpp_midiclipdata.children.append(['LOOP',clip_loop])
                                 rpp_midiclipdata.children.append(['ALLTAKES','0'])
                                 rpp_midiclipdata.children.append(['FADEIN','1','0','0','1','0','0','0'])
@@ -247,7 +240,7 @@ class output_reaper(plugin_output.base):
                                 rpp_midiclipdata.children.append(['IID','1'])
                                 rpp_midiclipdata.children.append(['NAME',clip_name])
                                 rpp_midiclipdata.children.append(['VOLPAN','1','0','1','-1'])
-                                rpp_midiclipdata.children.append(['SOFFS',calc_pos(clip_startat, reaper_tempo),'0'])
+                                rpp_midiclipdata.children.append(['SOFFS',clip_startat,'0'])
                                 rpp_midiclipdata.children.append(['PLAYRATE','1','1','0','-1','0','0.0025'])
                                 rpp_midiclipdata.children.append(['CHANMODE','0'])
                                 rpp_midiclipdata.children.append(['GUID',clip_GUID])

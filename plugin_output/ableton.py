@@ -262,9 +262,9 @@ def set_add_param(xmltag, param_name, param_value, auto_id, modu_id, midi_cc_thr
     if midi_cont_range != None: add_min_max(x_temp, 'MidiControllerRange', midi_cont_range[0], midi_cont_range[1])
     if midi_cc_thres != None: add_min_max(x_temp, 'MidiCCOnOffThresholds', midi_cc_thres[0], midi_cc_thres[1])
       
-def create_devicechain_mixer(xmltag, tracktype):
+def create_devicechain_mixer(xmltag, cvpj_track_data, tracktype):
     global cvpj_bpm
-    global master_sendid
+    global master_returnid
     xmltag = ET.SubElement(xmltag, 'Mixer')
     addvalue(xmltag, 'LomId', '0')
     addvalue(xmltag, 'LomIdView', '0')
@@ -286,11 +286,13 @@ def create_devicechain_mixer(xmltag, tracktype):
     x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
     x_Sends = ET.SubElement(xmltag, 'Sends')
 
+    print(cvpj_track_data)
+
     if tracktype not in ['master', 'prehear']:
-        for master_sendid_s in master_sendid:
+        for master_returnid_s in master_returnid:
             x_TrackSendHolder = ET.SubElement(x_Sends, "TrackSendHolder")
-            x_TrackSendHolder.set('Id', str(master_sendid_s))
-            set_add_param(x_TrackSendHolder, 'Send', '0.0003162277571', str(get_unused_id()), get_unused_id(), None, [0.0003162277571,1])
+            x_TrackSendHolder.set('Id', str(master_returnid_s))
+            set_add_param(x_TrackSendHolder, 'Send', '0', str(get_unused_id()), get_unused_id(), None, [0.0003162277571,1])
             if tracktype in ['miditrack', 'audiotrack']: addvalue(x_TrackSendHolder, 'Active', 'true')
             else: addvalue(x_TrackSendHolder, 'Active', 'false')
 
@@ -818,7 +820,7 @@ def set_add_sequencer_end(x_FreezeSequencer):
 
 # ---------------- Track Base / Device Chain ----------------
 
-def create_devicechain(xmltag, tracktype, track_placements, trackcolor):
+def create_devicechain(xmltag, cvpj_track_data, tracktype, track_placements, trackcolor):
     global LaneHeight
     # ------- AutomationLanes
     x_AutomationLanes = ET.SubElement(xmltag, 'AutomationLanes')
@@ -844,7 +846,7 @@ def create_devicechain(xmltag, tracktype, track_placements, trackcolor):
     elif tracktype == 'prehear': add_up_lower(xmltag, 'AudioOutputRouting', 'AudioOut/External/S0', 'Ext. Out', '')
 
     add_up_lower(xmltag, 'MidiOutputRouting', 'MidiOut/None', 'None', '')
-    create_devicechain_mixer(xmltag, tracktype)
+    create_devicechain_mixer(xmltag, cvpj_track_data, tracktype)
     if tracktype == 'miditrack':
         #mainsequencer
         x_MainSequencer = ET.SubElement(xmltag, 'MainSequencer')
@@ -981,7 +983,7 @@ def set_add_trackbase(xmltag, cvpj_track_data, tracktype, TrackUnfolded, track_p
         addvalue(xmltag, 'PostProcessFreezeClips', '0')
 
     x_DeviceChain = ET.SubElement(xmltag, 'DeviceChain')
-    create_devicechain(x_DeviceChain, tracktype, track_placements, colorval)
+    create_devicechain(x_DeviceChain, cvpj_track_data, tracktype, track_placements, colorval)
 
     if tracktype  == 'miditrack': 
         addvalue(xmltag, 'ReWireSlaveMidiTargetId', '0')
@@ -1055,7 +1057,7 @@ class output_cvpj(plugin_output.base):
         global t_mrkr_timesig
         global output_file_global
         global cvpj_bpm
-        global master_sendid
+        global master_returnid
 
         output_file_global = output_file
 
@@ -1069,17 +1071,17 @@ class output_cvpj(plugin_output.base):
         t_mrkr_locater = {}
 
         track_master_data = {}
-        master_sends = {}
-        master_sendid = {}
+        master_returns = {}
+        master_returnid = {}
 
         if 'track_master' in cvpj_l: 
             track_master_data = cvpj_l['track_master']
-            if 'sends_audio' in track_master_data: 
-                master_sends = track_master_data['sends_audio']
+            if 'returns' in track_master_data: 
+                master_returns = track_master_data['returns']
 
         sendnum = 1
-        for master_send in master_sends:
-            master_sendid[sendnum] = master_send
+        for master_return in master_returns:
+            master_returnid[sendnum] = master_return
             sendnum += 1
 
         if 'timemarkers' in cvpj_l: 
@@ -1135,8 +1137,8 @@ class output_cvpj(plugin_output.base):
                             ableton_make_audio_track(cvpj_trackid)
                     #print(cvpj_trackid)
 
-        for master_send in master_sends:
-            ableton_make_return_track(master_sends[master_send])
+        for master_return in master_returns:
+            ableton_make_return_track(master_returns[master_return])
 
 
         x_MasterTrack = ET.SubElement(x_LiveSet, "MasterTrack")
@@ -1146,9 +1148,9 @@ class output_cvpj(plugin_output.base):
         set_add_trackbase(x_PreHearTrack, track_master_data, 'prehear', 'false', None)
 
         x_SendsPre = ET.SubElement(x_LiveSet, "SendsPre")
-        for master_send in master_sendid:
+        for master_return in master_returnid:
             x_SendPreBool = ET.SubElement(x_SendsPre, "SendPreBool")
-            x_SendPreBool.set('Id', str(master_send))
+            x_SendPreBool.set('Id', str(master_return))
             x_SendPreBool.set('Value', 'false')
 
         create_Scenes(x_LiveSet)

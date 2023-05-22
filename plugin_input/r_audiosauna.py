@@ -125,12 +125,12 @@ class input_audiosanua(plugin_input.base):
         tracks.r_add_return(cvpj_l, ['master'], 'audiosauna_send_tape_delay')
         tracks.r_add_return_basicdata(cvpj_l, ['master'], 'audiosauna_send_tape_delay', 'Tape Delay', None, int(getvalue(x_proj,'dlyLevel',100))/100, None)
         send_reverb_data = make_fxslot(x_proj, 'tape_delay', None)
-        tracks.add_fxslot_native(cvpj_l, 'audio', 'audiosauna', ['send', None, 'audiosauna_send_tape_delay'], None, None, None, 'tape_delay', send_reverb_data[0])
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'audiosauna', ['return', None, 'audiosauna_send_tape_delay'], None, None, None, 'tape_delay', send_reverb_data[0])
 
         tracks.r_add_return(cvpj_l, ['master'], 'audiosauna_send_reverb')
         tracks.r_add_return_basicdata(cvpj_l, ['master'], 'audiosauna_send_reverb', 'Reverb', None, int(getvalue(x_proj,'rvbLevel',100))/100, None)
         send_reverb_data = make_fxslot(x_proj, 'reverb', None)
-        tracks.add_fxslot_native(cvpj_l, 'audio', 'audiosauna', ['send', None, 'audiosauna_send_reverb'], None, None, None, 'reverb', send_reverb_data[0])
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'audiosauna', ['return', None, 'audiosauna_send_reverb'], None, None, None, 'reverb', send_reverb_data[0])
 
         # ------------------------------------------ tracks ------------------------------------------
         for x_track in xt_track:

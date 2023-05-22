@@ -252,9 +252,9 @@ def get_fxcvpjlocation(fxloc):
     if fxloc[0] == 'master': out_location = ['track_master']
     if fxloc[0] == 'fxrack': out_location = ['fxrack', str(fxloc[1])]
     if fxloc[0] == 'group': out_location = ['groups', fxloc[1]]
-    if fxloc[0] == 'send': 
-        if fxloc[1] == None: out_location = ['track_master', 'sends_audio', fxloc[2]]
-        else: out_location = ['groups', fxloc[1], 'sends_audio', fxloc[2]]
+    if fxloc[0] == 'return': 
+        if fxloc[1] == None: out_location = ['track_master', 'returns', fxloc[2]]
+        else: out_location = ['groups', fxloc[1], 'returns', fxloc[2]]
     return out_location
 
 def add_fxslot(cvpj_l, fxloc, fxtype, chain_fx_data):

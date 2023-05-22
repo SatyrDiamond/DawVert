@@ -286,16 +286,20 @@ def create_devicechain_mixer(xmltag, cvpj_track_data, tracktype):
     x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
     x_Sends = ET.SubElement(xmltag, 'Sends')
 
-    print(cvpj_track_data)
+    cvpj_track_sends = {}
+    if 'sends_audio' in cvpj_track_data:
+        for cvpj_track_data_send in cvpj_track_data['sends_audio']:
+            cvpj_track_sends[master_returnid[cvpj_track_data_send['sendid']]] = cvpj_track_data_send['amount']
 
     if tracktype not in ['master', 'prehear']:
         for master_returnid_s in master_returnid:
+            sendamount = 0
+            if master_returnid[master_returnid_s] in cvpj_track_sends: sendamount = cvpj_track_sends[master_returnid[master_returnid_s]]
             x_TrackSendHolder = ET.SubElement(x_Sends, "TrackSendHolder")
-            x_TrackSendHolder.set('Id', str(master_returnid_s))
-            set_add_param(x_TrackSendHolder, 'Send', '0', str(get_unused_id()), get_unused_id(), None, [0.0003162277571,1])
+            x_TrackSendHolder.set('Id', str(master_returnid[master_returnid_s]))
+            set_add_param(x_TrackSendHolder, 'Send', str(sendamount), str(get_unused_id()), get_unused_id(), None, [0.0003162277571,1])
             if tracktype in ['miditrack', 'audiotrack']: addvalue(x_TrackSendHolder, 'Active', 'true')
             else: addvalue(x_TrackSendHolder, 'Active', 'false')
-
 
     set_add_param(xmltag, 'Speaker', 'true', str(get_unused_id()), None, [64,127], None)
     addvalue(xmltag, 'SoloSink', 'false')
@@ -1081,7 +1085,7 @@ class output_cvpj(plugin_output.base):
 
         sendnum = 1
         for master_return in master_returns:
-            master_returnid[sendnum] = master_return
+            master_returnid[master_return] = sendnum
             sendnum += 1
 
         if 'timemarkers' in cvpj_l: 
@@ -1150,7 +1154,7 @@ class output_cvpj(plugin_output.base):
         x_SendsPre = ET.SubElement(x_LiveSet, "SendsPre")
         for master_return in master_returnid:
             x_SendPreBool = ET.SubElement(x_SendsPre, "SendPreBool")
-            x_SendPreBool.set('Id', str(master_return))
+            x_SendPreBool.set('Id', str(master_returnid[master_return]))
             x_SendPreBool.set('Value', 'false')
 
         create_Scenes(x_LiveSet)

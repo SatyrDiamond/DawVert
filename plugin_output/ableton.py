@@ -259,11 +259,12 @@ def set_add_param(xmltag, param_name, param_value, auto_id, modu_id, midi_cc_thr
     addvalue(x_temp, 'Manual', param_value)
     add_env_target(x_temp, 'AutomationTarget', auto_id)
     if modu_id != None: add_env_target(x_temp, 'ModulationTarget', modu_id)
-    if midi_cc_thres != None: add_min_max(x_temp, 'MidiCCOnOffThresholds', midi_cc_thres[0], midi_cc_thres[1])
     if midi_cont_range != None: add_min_max(x_temp, 'MidiControllerRange', midi_cont_range[0], midi_cont_range[1])
+    if midi_cc_thres != None: add_min_max(x_temp, 'MidiCCOnOffThresholds', midi_cc_thres[0], midi_cc_thres[1])
       
 def create_devicechain_mixer(xmltag, tracktype):
     global cvpj_bpm
+    global master_sendid
     xmltag = ET.SubElement(xmltag, 'Mixer')
     addvalue(xmltag, 'LomId', '0')
     addvalue(xmltag, 'LomIdView', '0')
@@ -284,6 +285,16 @@ def create_devicechain_mixer(xmltag, tracktype):
     x_SourceContext = ET.SubElement(xmltag, 'SourceContext')
     x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
     x_Sends = ET.SubElement(xmltag, 'Sends')
+
+    if tracktype not in ['master', 'prehear']:
+        for master_sendid_s in master_sendid:
+            x_TrackSendHolder = ET.SubElement(x_Sends, "TrackSendHolder")
+            x_TrackSendHolder.set('Id', str(master_sendid_s))
+            set_add_param(x_TrackSendHolder, 'Send', '0.0003162277571', str(get_unused_id()), get_unused_id(), None, [0.0003162277571,1])
+            if tracktype in ['miditrack', 'audiotrack']: addvalue(x_TrackSendHolder, 'Active', 'true')
+            else: addvalue(x_TrackSendHolder, 'Active', 'false')
+
+
     set_add_param(xmltag, 'Speaker', 'true', str(get_unused_id()), None, [64,127], None)
     addvalue(xmltag, 'SoloSink', 'false')
     addvalue(xmltag, 'PanMode', '0')
@@ -780,7 +791,7 @@ def set_add_sequencer_base(x_BaseSequencer):
     ET.SubElement(x_LastPresetRef, 'Value')
     x_LockedScripts = ET.SubElement(x_BaseSequencer, 'LockedScripts')
     addvalue(x_BaseSequencer, 'IsFolded', 'false')
-    addvalue(x_BaseSequencer, 'ShouldShowPresetName', 'false')
+    addvalue(x_BaseSequencer, 'ShouldShowPresetName', 'true')
     addvalue(x_BaseSequencer, 'UserName', '')
     addvalue(x_BaseSequencer, 'Annotation', '')
     x_SourceContext = ET.SubElement(x_BaseSequencer, 'SourceContext')
@@ -791,9 +802,9 @@ def set_add_midi_track_freezesequencer(xmltag, track_placements):
     x_FreezeSequencer = ET.SubElement(xmltag, 'FreezeSequencer')
     set_add_sequencer_base(x_FreezeSequencer)
     x_ClipSlotList = set_add_clipslots(x_FreezeSequencer)
-    set_add_sequencer_end(xmltag, track_placements)
+    set_add_sequencer_end(xmltag)
 
-def set_add_sequencer_end(x_FreezeSequencer, track_placements):
+def set_add_sequencer_end(x_FreezeSequencer):
     add_env_target(x_FreezeSequencer, 'VolumeModulationTarget', get_unused_id())
     add_env_target(x_FreezeSequencer, 'TranspositionModulationTarget', get_unused_id())
     add_env_target(x_FreezeSequencer, 'GrainSizeModulationTarget', get_unused_id())
@@ -827,8 +838,11 @@ def create_devicechain(xmltag, tracktype, track_placements, trackcolor):
     add_up_lower(xmltag, 'AudioInputRouting', 'AudioIn/External/S0', 'Ext. In', '1/2')
     add_up_lower(xmltag, 'MidiInputRouting', 'MidiIn/External.All/-1', 'Ext: All Ins', '')
     if tracktype == 'miditrack': add_up_lower(xmltag, 'AudioOutputRouting', 'AudioOut/Master', 'Master', '')
+    elif tracktype == 'audiotrack': add_up_lower(xmltag, 'AudioOutputRouting', 'AudioOut/Master', 'Master', '')
+    elif tracktype == 'returntrack': add_up_lower(xmltag, 'AudioOutputRouting', 'AudioOut/Master', 'Master', '')
     elif tracktype == 'master': add_up_lower(xmltag, 'AudioOutputRouting', 'AudioOut/External/S0', 'Ext. Out', '1/2')
     elif tracktype == 'prehear': add_up_lower(xmltag, 'AudioOutputRouting', 'AudioOut/External/S0', 'Ext. Out', '')
+
     add_up_lower(xmltag, 'MidiOutputRouting', 'MidiOut/None', 'None', '')
     create_devicechain_mixer(xmltag, tracktype)
     if tracktype == 'miditrack':
@@ -855,14 +869,14 @@ def create_devicechain(xmltag, tracktype, track_placements, trackcolor):
         x_FreezeSequencer = ET.SubElement(xmltag, 'FreezeSequencer')
         set_add_sequencer_base(x_FreezeSequencer)
         x_ClipSlotList = set_add_clipslots(x_FreezeSequencer)
-        set_add_sequencer_end(xmltag, track_placements)
+        set_add_sequencer_end(xmltag)
 
     if tracktype == 'audiotrack':
         #mainsequencer
         x_MainSequencer = ET.SubElement(xmltag, 'MainSequencer')
         set_add_sequencer_base(x_MainSequencer)
         x_ClipSlotList = set_add_clipslots(x_MainSequencer)
-        addvalue(x_MainSequencer, 'MonitoringEnum', '1')
+        addvalue(x_MainSequencer, 'MonitoringEnum', '2')
         x_Sample = ET.SubElement(x_MainSequencer, 'Sample')
         x_ArrangerAutomation = ET.SubElement(x_Sample, 'ArrangerAutomation')
         x_ArrangerAutomation_Events = ET.SubElement(x_ArrangerAutomation, 'Events')
@@ -871,12 +885,19 @@ def create_devicechain(xmltag, tracktype, track_placements, trackcolor):
         x_ArrangerAutomation_AutomationTransformViewState = ET.SubElement(x_ArrangerAutomation, 'AutomationTransformViewState')
         addvalue(x_ArrangerAutomation_AutomationTransformViewState, 'IsTransformPending', 'false')
         ET.SubElement(x_ArrangerAutomation_AutomationTransformViewState, 'TimeAndValueTransforms')
-        set_add_sequencer_end(x_MainSequencer, track_placements)
+        set_add_sequencer_end(x_MainSequencer)
         #freezesequencer
         x_FreezeSequencer = ET.SubElement(xmltag, 'FreezeSequencer')
         set_add_sequencer_base(x_FreezeSequencer)
         x_ClipSlotList = set_add_clipslots(x_FreezeSequencer)
-        set_add_sequencer_end(x_FreezeSequencer, track_placements)
+        addvalue(x_FreezeSequencer, 'MonitoringEnum', '2')
+        x_Sample = ET.SubElement(x_FreezeSequencer, 'Sample')
+        x_ArrangerAutomation = ET.SubElement(x_Sample, 'ArrangerAutomation')
+        x_ArrangerAutomation_Events = ET.SubElement(x_ArrangerAutomation, 'Events')
+        x_ArrangerAutomation_AutomationTransformViewState = ET.SubElement(x_ArrangerAutomation, 'AutomationTransformViewState')
+        addvalue(x_ArrangerAutomation_AutomationTransformViewState, 'IsTransformPending', 'false')
+        ET.SubElement(x_ArrangerAutomation_AutomationTransformViewState, 'TimeAndValueTransforms')
+        set_add_sequencer_end(x_FreezeSequencer)
 
     if tracktype == 'master':
         x_FreezeSequencer = ET.SubElement(xmltag, 'FreezeSequencer')
@@ -884,14 +905,47 @@ def create_devicechain(xmltag, tracktype, track_placements, trackcolor):
         set_add_sequencer_base(x_AudioSequencer)
         ET.SubElement(xmltag, 'ClipSlotList')
 
+        ET.SubElement(x_AudioSequencer, 'ClipSlotList')
+        addvalue(x_AudioSequencer, 'MonitoringEnum', '1')
+        x_Sample = ET.SubElement(x_AudioSequencer, 'Sample')
+        x_ArrangerAutomation = ET.SubElement(x_Sample, 'ArrangerAutomation')
+        x_ArrangerAutomation_Events = ET.SubElement(x_ArrangerAutomation, 'Events')
+        x_ArrangerAutomation_AutomationTransformViewState = ET.SubElement(x_ArrangerAutomation, 'AutomationTransformViewState')
+        addvalue(x_ArrangerAutomation_AutomationTransformViewState, 'IsTransformPending', 'false')
+        ET.SubElement(x_ArrangerAutomation_AutomationTransformViewState, 'TimeAndValueTransforms')
+
+        set_add_sequencer_end(x_AudioSequencer)
+
     x_DeviceChain_i = ET.SubElement(xmltag, 'DeviceChain')
     x_DeviceChain_i_Devices = ET.SubElement(x_DeviceChain_i, 'Devices')
     x_DeviceChain_i_SignalModulations = ET.SubElement(x_DeviceChain_i, 'SignalModulations')
 
+    if tracktype == 'returntrack':
+        x_FreezeSequencer = ET.SubElement(xmltag, 'FreezeSequencer')
+        set_add_sequencer_base(x_FreezeSequencer)
+        ET.SubElement(x_FreezeSequencer, 'ClipSlotList')
+        addvalue(x_FreezeSequencer, 'MonitoringEnum', '1')
+
+        x_Sample = ET.SubElement(x_FreezeSequencer, 'Sample')
+        x_ArrangerAutomation = ET.SubElement(x_Sample, 'ArrangerAutomation')
+        x_ArrangerAutomation_Events = ET.SubElement(x_ArrangerAutomation, 'Events')
+        x_ArrangerAutomation_AutomationTransformViewState = ET.SubElement(x_ArrangerAutomation, 'AutomationTransformViewState')
+        addvalue(x_ArrangerAutomation_AutomationTransformViewState, 'IsTransformPending', 'false')
+        ET.SubElement(x_ArrangerAutomation_AutomationTransformViewState, 'TimeAndValueTransforms')
+
+        set_add_sequencer_end(x_FreezeSequencer)
+
+
 # ---------------- Track Base ----------------
 
-def set_add_trackbase(xmltag, trackid, tracktype, trackname, colorval, TrackUnfolded, track_placements):
+def set_add_trackbase(xmltag, cvpj_track_data, tracktype, TrackUnfolded, track_placements):
     global t_mrkr_timesig
+
+    if 'name' in cvpj_track_data: trackname = cvpj_track_data['name']
+    else: trackname = 'noname'
+    if 'color' in cvpj_track_data: colorval = colors.closest_color_index(colorlist_one, cvpj_track_data['color'])
+    else: colorval = 27
+
     addvalue(xmltag, 'LomId', '0')
     addvalue(xmltag, 'LomIdView', '0')
     addvalue(xmltag, 'IsContentSelectedInDocument', 'false')
@@ -907,7 +961,6 @@ def set_add_trackbase(xmltag, trackid, tracktype, trackname, colorval, TrackUnfo
     addvalue(x_name, 'MemorizedFirstClipName', '')
     addvalue(xmltag, 'Color', str(colorval))
     x_AutomationEnvelopes = ET.SubElement(xmltag, 'AutomationEnvelopes')
-    #if tracktype == 'master':
 
     x_Envelopes = ET.SubElement(x_AutomationEnvelopes, 'Envelopes')
     addvalue(xmltag, 'TrackGroupId', '-1')
@@ -929,8 +982,10 @@ def set_add_trackbase(xmltag, trackid, tracktype, trackname, colorval, TrackUnfo
 
     x_DeviceChain = ET.SubElement(xmltag, 'DeviceChain')
     create_devicechain(x_DeviceChain, tracktype, track_placements, colorval)
-    addvalue(xmltag, 'ReWireSlaveMidiTargetId', '0')
-    addvalue(xmltag, 'PitchbendRange', '96')
+
+    if tracktype  == 'miditrack': 
+        addvalue(xmltag, 'ReWireSlaveMidiTargetId', '0')
+        addvalue(xmltag, 'PitchbendRange', '96')
 
 # ---------------------------------------------------------------- DawVert Plugin Func -------------------------------------------------------------
 
@@ -938,42 +993,40 @@ tracknum = 1
 
 def ableton_make_midi_track(cvpj_trackid):
     global tracknum
-    cvpj_trackname = 'noname'
-    ableton_trackcolor = -1
+
+    cvpj_track_data = {}
+    if cvpj_trackid in cvpj_l['track_data']: cvpj_track_data = cvpj_l['track_data'][cvpj_trackid]
+
     cvpj_trackplacements = []
-
-    if cvpj_trackid in cvpj_l['track_data']:
-        cvpj_track_data = cvpj_l['track_data'][cvpj_trackid]
-        if 'name' in cvpj_track_data: cvpj_trackname = cvpj_track_data['name']
-        if 'color' in cvpj_track_data: 
-            ableton_trackcolor = colors.closest_color_index(colorlist_one, cvpj_track_data['color'])
-
     if cvpj_trackid in cvpj_l['track_placements']:
         if 'notes' in cvpj_l['track_placements'][cvpj_trackid]:
             cvpj_trackplacements = notelist_data.sort(cvpj_l['track_placements'][cvpj_trackid]['notes'])
 
     x_MidiTrack = addId(x_Tracks, 'MidiTrack', str(tracknum))
-    set_add_trackbase(x_MidiTrack, None, 'miditrack', cvpj_trackname, ableton_trackcolor, 'true', cvpj_trackplacements)
+    set_add_trackbase(x_MidiTrack, cvpj_track_data, 'miditrack', 'true', cvpj_trackplacements)
     tracknum += 1
 
 def ableton_make_audio_track(cvpj_trackid):
     global tracknum
-    cvpj_trackname = 'noname'
-    ableton_trackcolor = -1
+
+    cvpj_track_data = {}
+    if cvpj_trackid in cvpj_l['track_data']: cvpj_track_data = cvpj_l['track_data'][cvpj_trackid]
+
     cvpj_trackplacements = []
-
-    if cvpj_trackid in cvpj_l['track_data']:
-        cvpj_track_data = cvpj_l['track_data'][cvpj_trackid]
-        if 'name' in cvpj_track_data: cvpj_trackname = cvpj_track_data['name']
-        if 'color' in cvpj_track_data: 
-            ableton_trackcolor = colors.closest_color_index(colorlist_one, cvpj_track_data['color'])
-
     if cvpj_trackid in cvpj_l['track_placements']:
         if 'audio' in cvpj_l['track_placements'][cvpj_trackid]:
             cvpj_trackplacements = notelist_data.sort(cvpj_l['track_placements'][cvpj_trackid]['audio'])
 
     x_AudioTrack = addId(x_Tracks, 'AudioTrack', str(tracknum))
-    set_add_trackbase(x_AudioTrack, None, 'audiotrack', cvpj_trackname, ableton_trackcolor, 'true', cvpj_trackplacements)
+    set_add_trackbase(x_AudioTrack, cvpj_track_data, 'audiotrack', 'true', cvpj_trackplacements)
+    tracknum += 1
+
+def ableton_make_return_track(cvpj_returndata):
+    global tracknum
+    cvpj_trackplacements = []
+
+    x_AudioTrack = addId(x_Tracks, 'ReturnTrack', str(tracknum))
+    set_add_trackbase(x_AudioTrack, cvpj_returndata, 'returntrack', 'false', cvpj_trackplacements)
     tracknum += 1
 
 
@@ -1002,6 +1055,7 @@ class output_cvpj(plugin_output.base):
         global t_mrkr_timesig
         global output_file_global
         global cvpj_bpm
+        global master_sendid
 
         output_file_global = output_file
 
@@ -1013,6 +1067,20 @@ class output_cvpj(plugin_output.base):
 
         t_mrkr_timesig = {}
         t_mrkr_locater = {}
+
+        track_master_data = {}
+        master_sends = {}
+        master_sendid = {}
+
+        if 'track_master' in cvpj_l: 
+            track_master_data = cvpj_l['track_master']
+            if 'sends_audio' in track_master_data: 
+                master_sends = track_master_data['sends_audio']
+
+        sendnum = 1
+        for master_send in master_sends:
+            master_sendid[sendnum] = master_send
+            sendnum += 1
 
         if 'timemarkers' in cvpj_l: 
             cvpj_timemarkers = cvpj_l['timemarkers']
@@ -1067,13 +1135,21 @@ class output_cvpj(plugin_output.base):
                             ableton_make_audio_track(cvpj_trackid)
                     #print(cvpj_trackid)
 
+        for master_send in master_sends:
+            ableton_make_return_track(master_sends[master_send])
+
+
         x_MasterTrack = ET.SubElement(x_LiveSet, "MasterTrack")
-        set_add_trackbase(x_MasterTrack, None, 'master', 'Master', -1, 'false', None)
+        set_add_trackbase(x_MasterTrack, track_master_data, 'master', 'false', None)
 
         x_PreHearTrack = ET.SubElement(x_LiveSet, "PreHearTrack")
-        set_add_trackbase(x_PreHearTrack, None, 'prehear', 'Master', -1, 'false', None)
+        set_add_trackbase(x_PreHearTrack, track_master_data, 'prehear', 'false', None)
 
         x_SendsPre = ET.SubElement(x_LiveSet, "SendsPre")
+        for master_send in master_sendid:
+            x_SendPreBool = ET.SubElement(x_SendsPre, "SendPreBool")
+            x_SendPreBool.set('Id', str(master_send))
+            x_SendPreBool.set('Value', 'false')
 
         create_Scenes(x_LiveSet)
         create_transport(x_LiveSet, 8, 16, 'false')

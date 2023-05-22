@@ -219,8 +219,8 @@ def group_basicdata(cvpj_l, i_id, i_name, i_vol, i_color):
 
 def get_sendcvpjlocation(sendloc):
     out_location = None
-    if sendloc[0] == 'master': out_location = ['track_master', 'sends_audio']
-    if sendloc[0] == 'group': out_location = ['groups', sendloc[1], 'sends_audio']
+    if sendloc[0] == 'master': out_location = ['track_master', 'returns']
+    if sendloc[0] == 'group': out_location = ['groups', sendloc[1], 'returns']
     return out_location
 
 def r_add_return(cvpj_l, i_location, i_sendname):

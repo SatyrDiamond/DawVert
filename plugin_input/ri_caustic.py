@@ -486,11 +486,11 @@ class input_cvpj_r(plugin_input.base):
 
         tracks.r_add_return(cvpj_l, ['master'], 'master_delay')
         tracks.r_add_return_basicdata(cvpj_l, ['master'], 'master_delay', 'Delay', [0.64, 0.78, 0.87], None, None)
-        tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['send', None, 'master_delay'], None, master_params['delay']['wet'], 'master_delay', 'delay', master_params['delay'])
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['return', None, 'master_delay'], None, master_params['delay']['wet'], 'master_delay', 'delay', master_params['delay'])
 
         tracks.r_add_return(cvpj_l, ['master'], 'master_reverb')
         tracks.r_add_return_basicdata(cvpj_l, ['master'], 'master_reverb', 'Reverb', [0.83, 0.82, 0.51], None, None)
-        tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['send', None, 'master_reverb'], None, master_params['reverb']['wet'], 'master_reverb', 'reverb', master_params['reverb'])
+        tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['return', None, 'master_reverb'], None, master_params['reverb']['wet'], 'master_reverb', 'reverb', master_params['reverb'])
 
         tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['master'], int(not int(master_params['eq']['muted'])), None, 
         'master_eq', 'master_eq', master_params['eq'])

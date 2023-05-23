@@ -7,6 +7,7 @@ import math
 import plugin_input
 import os
 import sys
+import zlib
 import xml.etree.ElementTree as ET
 from functions_plugin import lmms_auto
 from functions import note_mod
@@ -742,8 +743,7 @@ class input_lmms(plugin_input.base):
     def detect(self, input_file):
         output = False
         try:
-            tree = ET.parse(input_file)
-            root = tree.getroot()
+            root = get_xml_tree(input_file)
             if root.tag == "lmms-project": output = True
         except ET.ParseError: output = False
         return output
@@ -781,7 +781,7 @@ class input_lmms(plugin_input.base):
         l_autodata = {}
         l_automation = {}
 
-        tree = ET.parse(input_file).getroot()
+        tree = get_xml_tree(input_file)
         headX = tree.findall('head')[0]
         trksX = tree.findall('song/trackcontainer/track')
         fxX = tree.findall('song/fxmixer/fxchannel')
@@ -846,3 +846,18 @@ class input_lmms(plugin_input.base):
         cvpj_l['fxrack'] = fxrackdata
 
         return json.dumps(cvpj_l, indent=2)
+
+def detect_zlib(path):
+    file = open(path, 'rb')
+
+    try:
+        file.seek(4)
+        data = zlib.decompress(file.read())
+        return data
+    except:
+        file.seek(0)
+        return file.read()
+
+def get_xml_tree(path):
+    data = detect_zlib(path)
+    return ET.fromstring(data)

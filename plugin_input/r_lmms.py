@@ -847,17 +847,12 @@ class input_lmms(plugin_input.base):
 
         return json.dumps(cvpj_l, indent=2)
 
-def detect_zlib(path):
-    file = open(path, 'rb')
-
-    try:
-        file.seek(4)
-        data = zlib.decompress(file.read())
-        return data
-    except:
-        file.seek(0)
-        return file.read()
-
 def get_xml_tree(path):
-    data = detect_zlib(path)
-    return ET.fromstring(data)
+    with open(path, 'rb') as file:
+        try:
+            file.seek(4)
+            data = zlib.decompress(file.read())
+            return ET.fromstring(data)
+        
+        except zlib.error:
+            return ET.parse(path).getroot()

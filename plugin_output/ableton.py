@@ -875,7 +875,7 @@ def create_devicechain(xmltag, cvpj_track_data, tracktype, track_placements, tra
         x_FreezeSequencer = ET.SubElement(xmltag, 'FreezeSequencer')
         set_add_sequencer_base(x_FreezeSequencer)
         x_ClipSlotList = set_add_clipslots(x_FreezeSequencer)
-        set_add_sequencer_end(xmltag)
+        set_add_sequencer_end(x_FreezeSequencer)
 
     if tracktype == 'audiotrack':
         #mainsequencer

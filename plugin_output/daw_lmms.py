@@ -572,7 +572,7 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
         xml_name = fxlist[lmmsplugname]
         xml_lmmsnat = ET.SubElement(fxslotX, xml_name)
         for pluginparam in lmms_autovals[0]: 
-            add_auto_placements(0, None, pluginautoid, pluginparam, lmmsplugdata, pluginparam, xml_lmmsnat, pluginparam, 'FX Plugin: '+lmmsplugname, pluginparam)
+            add_auto_placements(0, None, pluginautoid, pluginparam, lmmsplugdata, pluginparam, xml_lmmsnat, pluginparam, 'FX Plug: '+lmmsplugname, pluginparam)
         for pluginparam in lmms_autovals[1]: 
             if pluginparam in lmmsplugdata: xml_lmmsnat.set(pluginparam, str(lmmsplugdata[pluginparam]))
 

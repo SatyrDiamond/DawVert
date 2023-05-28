@@ -59,7 +59,7 @@ def make_auto_note(xmltag, cvpj_points, unit, expression):
     xml_points.set('id', get_unused_id())
     xml_target = ET.SubElement(xml_points, "Target")
     xml_target.set('expression', expression)
-    t_points = auto.remove_instant(cvpj_points, 0, True)
+    t_points = auto.remove_instant(cvpj_points, 0, False)
     for t_point in t_points:
         make_auto_point(xml_points, t_point['value'], t_point['position'])
 

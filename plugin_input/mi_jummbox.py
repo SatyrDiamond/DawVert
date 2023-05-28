@@ -101,22 +101,36 @@ def parse_notes(channum, bb_notes, bb_instruments):
     for note in bb_notes:
         points = note['points']
         pitches = note['pitches']
+
         cvpj_note_pos = (points[-1]['tick'] - points[0]['tick'])
 
         t_duration = calcval(cvpj_note_pos)
         t_position = calcval(points[0]['tick'])
-        t_vol = points[0]['volume']/100
         t_auto_pitch = []
+        t_auto_gain = []
 
         arr_bendvals = []
         arr_volvals = []
+
         for point in points:
             t_auto_pitch.append({'position': calcval(point['tick']-points[0]['tick']), 'value': point['pitchBend']})
             arr_bendvals.append(point['pitchBend'])
             arr_volvals.append(point['volume'])
 
+        maxvol = max(arr_volvals)
+
+        for point in points:
+            if maxvol != 0:
+                t_auto_gain.append({'position': calcval(point['tick']-points[0]['tick']), 'value': point['volume']/maxvol})
+
+        t_vol = maxvol/100
+
         cvpj_notemod = {}
         cvpj_notemod['auto'] = {}
+
+        if all(element == arr_volvals[0] for element in arr_volvals) == False:
+            cvpj_notemod['auto']['gain'] = t_auto_gain
+
         if all(element == arr_bendvals[0] for element in arr_bendvals) == False:
             cvpj_notemod['auto']['pitch'] = t_auto_pitch
 

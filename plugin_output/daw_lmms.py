@@ -312,10 +312,9 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname):
     else:
         print('[output-lmms]       Plugin: '+pluginname+' > None')
         xml_instrumentpreplugin.set('name', "audiofileprocessor")
-
-    if pluginname != 'vst2-dll' and pluginautoid != None:
-        autoidlist = tracks.autoid_out_getlist(pluginautoid)
-        add_auto_unused(autoidlist, pluginautoid, trackname)
+        if pluginautoid != None:
+            autoidlist = tracks.autoid_out_getlist(pluginautoid)
+            add_auto_unused(autoidlist, pluginautoid, trackname)
 
 # ------- Inst and Notelist -------
 
@@ -619,27 +618,27 @@ def lmms_encode_effectplugin(fxslotX, json_fxslot):
             xml_ladspa.set('link', '1')
             for param in cvpj_params:
                 xml_param = ET.SubElement(xml_ladspa, 'port0'+param)
-                add_auto_placements(0, None, pluginautoid, 'ladspa_param_0_'+param, param, 'ladspa_param_0_'+param, xml_param, 'data', 'LADSPA', '#'+param)
+                add_auto_placements(cvpj_params[param], None, pluginautoid, 'ladspa_param_0_'+param, param, 'ladspa_param_0_'+param, xml_param, 'data', 'LADSPA', '#'+param)
                 xml_param.set('link', '1')
                 xml_param = ET.SubElement(xml_ladspa, 'port1'+param)
-                add_auto_placements(0, None, pluginautoid, 'ladspa_param_1_'+param, param, 'ladspa_param_1_'+param, xml_param, 'data', 'LADSPA', '#'+param)
+                add_auto_placements(cvpj_params[param], None, pluginautoid, 'ladspa_param_1_'+param, param, 'ladspa_param_1_'+param, xml_param, 'data', 'LADSPA', '#'+param)
         else:
             xml_ladspa.set('link', '0')
             for param in cvpj_params['0']:
                 xml_param = ET.SubElement(xml_ladspa, 'port0'+param)
-                add_auto_placements(1, None, pluginautoid, 'ladspa_param_0_'+param, param, 'ladspa_param_0_'+param, xml_param, 'data', 'LADSPA', 'L #'+param)
+                add_auto_placements(cvpj_params['0'][param], None, pluginautoid, 'ladspa_param_0_'+param, param, 'ladspa_param_0_'+param, xml_param, 'data', 'LADSPA', 'L #'+param)
                 xml_param.set('link', '0')
             for param in cvpj_params['1']:
                 xml_param = ET.SubElement(xml_ladspa, 'port1'+param)
-                add_auto_placements(1, None, pluginautoid, 'ladspa_param_1_'+param, param, 'ladspa_param_1_'+param, xml_param, 'data', 'LADSPA', 'R #'+param)
+                add_auto_placements(cvpj_params['1'][param], None, pluginautoid, 'ladspa_param_1_'+param, param, 'ladspa_param_1_'+param, xml_param, 'data', 'LADSPA', 'R #'+param)
  
     else:
         fxslotX.set('name', 'stereomatrix')
         xml_lmmsnat = ET.SubElement(fxslotX, 'stereomatrixcontrols')
 
-        if pluginautoid != None:
-            autoidlist = tracks.autoid_out_getlist(pluginautoid)
-            add_auto_unused(autoidlist, pluginautoid, 'FX Plug')
+        #if pluginautoid != None:
+        #    autoidlist = tracks.autoid_out_getlist(pluginautoid)
+        #    add_auto_unused(autoidlist, pluginautoid, 'FX Plug')
 
 
 def lmms_encode_effectslot(fxcX, json_fxslot):
@@ -759,7 +758,7 @@ def add_auto_placements(i_fallback, i_addmul, i_id, i_autoname, j_tag, j_name, x
     if i_id != None and i_autoname != None: aid_id, aid_data = tracks.autoid_out_get(i_id+[i_autoname])
     else: aid_id, aid_data = None, None
 
-    if aid_id != None:
+    if aid_id != None and len(aid_data['placements']) != 0:
         if i_addmul != None: aid_data['placements'] = auto.multiply(aid_data['placements'], i_addmul[0], i_addmul[1])
         lmms_make_main_auto_track(aid_id, aid_data, v_type+': '+v_name)
         autovarX = ET.SubElement(x_tag, x_name)
@@ -775,7 +774,7 @@ def add_auto_placements_noset(i_value, i_addmul, i_id, i_autoname, x_tag, x_name
     if i_id != None and i_autoname != None: aid_id, aid_data = tracks.autoid_out_get(i_id+[i_autoname])
     else: aid_id, aid_data = None, None
 
-    if aid_id != None:
+    if aid_id != None and len(aid_data['placements']) != 0:
         if i_addmul != None: aid_data['placements'] = auto.multiply(aid_data['placements'], i_addmul[0], i_addmul[1])
         lmms_make_main_auto_track(aid_id, aid_data, v_type+': '+v_name)
         if x_tag != None:

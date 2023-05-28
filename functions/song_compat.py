@@ -548,8 +548,8 @@ def remove_auto_placements_single(i_autodata):
     autotype = i_autodata['type']
     autodata = i_autodata['placements']
     for autopart in autodata:
-        #print(autopart)
         base_pos = autopart['position']
+        if len(autopart['points']) != 0: autopart['points'][0]['type'] = 'instant'
         for oldpoint in autopart['points']:
             oldpoint['position'] += base_pos
             new_points.append(oldpoint)

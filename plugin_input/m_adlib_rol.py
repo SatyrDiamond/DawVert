@@ -150,7 +150,7 @@ def parsetrack(file_stream, tracknum, notelen):
     rol_tr_voice = parsetrack_voice(file_stream)
     rol_tr_timbre = parsetrack_timbre(file_stream)
     rol_tr_volume = parsetrack_float(file_stream, 1, 0)
-    rol_tr_pitch = parsetrack_float(file_stream, 100, -100)
+    rol_tr_pitch = parsetrack_float(file_stream, 1, -1)
 
     trackinstpart = 'track_'+str(tracknum+1)+'_'
 
@@ -179,7 +179,7 @@ def parsetrack(file_stream, tracknum, notelen):
         tracks.m_basicdata_inst(cvpj_l, instid, adlibrol_instname+' (Trk'+str(tracknum+1)+')', None, None, None)
         tracks.m_param_inst(cvpj_l, instid, 'fxrack_channel', tracknum+1)
 
-        if len(rol_tr_pitch[1]) > 1: tracks.a_auto_nopl_twopoints('track', instid, 'pitch', rol_tr_pitch[1], notelen, 'instant')
+        if len(rol_tr_pitch[1]) > 1: tracks.a_auto_nopl_twopoints(['track', instid, 'pitch'], 'float', rol_tr_pitch[1], notelen, 'instant')
 
     cvpj_notelist = []
     curtrackpos = 0
@@ -192,7 +192,7 @@ def parsetrack(file_stream, tracknum, notelen):
     print('[input-adlib_rol] Track: "'+rol_tr_voice[0]+'", Instruments: '+str(rol_tr_timbre[2]))
     cvpj_l['fxrack'][tracknum+1] = {"name": rol_tr_voice[0]}
 
-    if len(rol_tr_volume) > 1: tracks.a_auto_nopl_twopoints('fxmixer', tracknum+1, 'vol', rol_tr_volume[1], notelen, 'instant')
+    if len(rol_tr_volume) > 1: tracks.a_auto_nopl_twopoints(['fxmixer', tracknum+1, 'vol'], 'float', rol_tr_volume[1], notelen, 'instant')
     
     placementdata = placement_data.nl2pl(cvpj_notelist)
     tracks.m_playlist_pl(cvpj_l, tracknum+1, rol_tr_voice[0], None, placementdata)
@@ -274,7 +274,7 @@ class input_adlib_rol(plugin_input.base):
         notelen = (2/rol_header_tickBeat)*2
         t_tempo_data = parsetrack_tempo(song_file, notelen)
         
-        tracks.a_auto_nopl_twopoints('main', None, 'bpm', t_tempo_data[2], notelen, 'instant')
+        tracks.a_auto_nopl_twopoints(['main', 'bpm'], 'float', t_tempo_data[2], notelen, 'instant')
 
         cvpj_l['fxrack'] = {}
 

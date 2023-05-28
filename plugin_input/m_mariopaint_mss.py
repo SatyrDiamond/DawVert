@@ -37,7 +37,7 @@ def addnotes(n_pos, n_len, inst, txt, chordvolume):
 def add_tempo_point(cvpj_l, position, value, notelen): 
     tempo_placement = {'position': position, 'duration': notelen}
     tempo_placement['points'] = [{"position": 0, "value": value*(notelen/4)}]
-    tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], tempo_placement)
+    tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], tempo_placement)
 
 class input_mariopaint_mss(plugin_input.base):
     def __init__(self): pass

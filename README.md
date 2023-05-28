@@ -6,6 +6,12 @@
 
 DawVert is a Project File Converter
 
+<p align="center">
+  <a title="Discord Server" href="https://discord.gg/SWkR6Z9pQC">
+    <img alt="Discord Server" src="https://img.shields.io/discord/1094015153529430129?label=Discord&logo=Discord&logoColor=fff&style=for-the-badge">
+  </a>
+</p>
+
 ## How to Use
 
 ```

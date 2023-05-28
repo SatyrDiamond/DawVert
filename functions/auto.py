@@ -78,7 +78,9 @@ def remove_instant(cvpj_points, startposition, isnote):
     cvpj_output = []
     startpoint = True
     prevvalue = None
-    cvpj_output.append({'position': 0, 'value': 0})
+    if len(cvpj_points) != 0:
+        cvpj_output.append({'position': 0, 'value': cvpj_points[0]['value']})
+
     for cvpj_auto_poi in cvpj_points:
         cvpj_auto_poi['position'] += startposition
         instanttype = False

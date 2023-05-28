@@ -286,25 +286,24 @@ def add_fxslot_native(cvpj_l, fxtype, nativedawname, fxloc, enabled, wet, auto_i
 
 # ------------------------ Auto ------------------------
 
-def a_add_auto_pl(cvpj_l, autolocation, in_autopoints):
-    data_values.nested_dict_add_to_list(cvpj_l, ['automation']+autolocation, in_autopoints)
+def a_add_auto_pl(cvpj_l, val_type, autolocation, in_autopoints):
+    data_values.nested_dict_add_value(cvpj_l, ['automation']+autolocation+['type'], val_type)
+    data_values.nested_dict_add_to_list(cvpj_l, ['automation']+autolocation+['placements'], in_autopoints)
 
 # ------------------------ NoPl Auto ------------------------
 
 nopl_autopoints = {}
 
-def a_auto_nopl_addpoint(in_type, in_id, in_name, point_pos, point_val, point_type):
+def a_auto_nopl_addpoint(in_autoloc, val_type, point_pos, point_val, point_type):
     global nopl_autopoints
     pointdata = {"position": point_pos, "value": point_val, "type": point_type}
-    if in_type in ['track', 'plugin', 'fxmixer', 'slot', 'send']:
-        data_values.nested_dict_add_to_list(nopl_autopoints, [in_type, in_id, in_name], pointdata)
-    else: 
-        data_values.nested_dict_add_to_list(nopl_autopoints, [in_type, in_name], pointdata)
+    data_values.nested_dict_add_value(nopl_autopoints, in_autoloc+['type'], val_type)
+    data_values.nested_dict_add_to_list(nopl_autopoints, in_autoloc+['points'], pointdata)
 
-def a_auto_nopl_twopoints(in_type, in_id, in_name, twopoints, notelen, pointtype):
+def a_auto_nopl_twopoints(in_autoloc, val_type, twopoints, notelen, point_type):
     cvpj_points = []
     for twopoint in twopoints:
-        a_auto_nopl_addpoint(in_type, in_id, in_name, twopoint[0]*notelen, twopoint[1], pointtype)
+        a_auto_nopl_addpoint(in_autoloc, val_type, twopoint[0]*notelen, twopoint[1], point_type)
 
 def a_auto_nopl_to_pl(pointsdata):
     autopl = {}
@@ -320,9 +319,84 @@ def a_auto_nopl_to_cvpj(cvpj_l):
         if in_type in ['track', 'plugin', 'fxmixer', 'slot', 'send']:
             for in_id in nopl_autopoints[in_type]:
                 for in_name in nopl_autopoints[in_type][in_id]:
-                    #print(in_type, in_id, in_name, nopl_autopoints[in_type][in_id][in_name])
-                    data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_id, in_name], a_auto_nopl_to_pl(nopl_autopoints[in_type][in_id][in_name]))
+                    s_autodata = nopl_autopoints[in_type][in_id][in_name]
+                    data_values.nested_dict_add_value(cvpj_l, ['automation', in_type, in_id, in_name, 'type'], s_autodata['type'])
+                    data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_id, in_name, 'placements'], a_auto_nopl_to_pl(s_autodata['points']))
         else:
             for in_name in nopl_autopoints[in_type]:
-                #print(in_type, in_name, nopl_autopoints[in_type][in_name])
-                data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_name], a_auto_nopl_to_pl(nopl_autopoints[in_type][in_name]))
+                s_autodata = nopl_autopoints[in_type][in_name]
+                data_values.nested_dict_add_value(cvpj_l, ['automation', in_type, in_name, 'type'], s_autodata['type'])
+                data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_name, 'placements'], a_auto_nopl_to_pl(s_autodata['points']))
+
+# ------------------------ autoid to cvpjauto ------------------------
+
+autoid_in_data = {}
+
+def autoid_in_define(i_id, i_loc, i_type, i_addmul):
+    #print('autoid_in_define', i_id, i_loc, i_type, i_addmul)
+    if i_id not in autoid_in_data: 
+        autoid_in_data[i_id] = [i_loc, i_type, i_addmul, []]
+    else:
+        autoid_in_data[i_id][0] = i_loc
+        autoid_in_data[i_id][1] = i_type
+        autoid_in_data[i_id][2] = i_addmul
+
+def autoid_in_add_pl(i_id, i_autopl):
+    #print('autoid_in_define', i_id, len(i_autopl))
+    if i_id not in autoid_in_data: autoid_in_data[i_id] = [None, None, None, []]
+    autoid_in_data[i_id][3].append(i_autopl)
+
+def autoid_in_output(cvpj_l):
+    for i_id in autoid_in_data:
+        out_auto_loc = autoid_in_data[i_id][0]
+        out_auto_type = autoid_in_data[i_id][1]
+        out_auto_addmul = autoid_in_data[i_id][2]
+        out_auto_data = autoid_in_data[i_id][3]
+        #print(i_id, autoid_in_data[i_id][0:3])
+        if autoid_in_data[i_id][0:3] != [None, None, None]:
+            if out_auto_addmul != None: out_auto_data = auto.multiply(out_auto_data, out_auto_addmul[0], out_auto_addmul[1])
+            a_add_auto_pl(cvpj_l, out_auto_type, out_auto_loc, out_auto_data)
+
+# ------------------------ cvpjauto to autoid ------------------------
+
+autoid_out_num = 340000
+autoid_out_ids = {}
+autoid_out_data = {}
+
+def autoid_out_getlist(i_id):
+    global autoid_out_num
+    global autoid_out_data
+    dictvals = data_values.nested_dict_get_value(autoid_out_ids, i_id)
+    return dictvals
+
+def autoid_out_get(i_id):
+    global autoid_out_num
+    global autoid_out_data
+    idvalue = data_values.nested_dict_get_value(autoid_out_ids, i_id)
+
+    if idvalue != None and idvalue in autoid_out_data: 
+        output = idvalue, autoid_out_data[idvalue]
+        del autoid_out_data[idvalue]
+        return output
+    else: return None, None
+
+def autoid_out_load(cvpj_l):
+    global autoid_out_num
+    global autoid_out_data
+
+    if 'automation' in cvpj_l:
+        for autotype in cvpj_l['automation']:
+
+            if autotype in ['track', 'plugin', 'fxmixer', 'send', 'slot']:
+                for autonameid in cvpj_l['automation'][autotype]:
+                    for autovarname in cvpj_l['automation'][autotype][autonameid]:
+                        print(autoid_out_num, autotype, autonameid, autovarname)
+                        data_values.nested_dict_add_value(autoid_out_ids, [autotype, autonameid, autovarname], autoid_out_num)
+                        autoid_out_data[autoid_out_num] = cvpj_l['automation'][autotype][autonameid][autovarname]
+                        autoid_out_num += 1
+            else:
+                for autovarname in cvpj_l['automation'][autotype]:
+                    print(autoid_out_num, autotype, autovarname)
+                    data_values.nested_dict_add_value(autoid_out_ids, [autotype, autovarname], autoid_out_num)
+                    autoid_out_data[autoid_out_num] = cvpj_l['automation'][autotype][autovarname]
+                    autoid_out_num += 1

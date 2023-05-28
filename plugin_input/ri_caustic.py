@@ -406,7 +406,7 @@ class input_cvpj_r(plugin_input.base):
                         single_patautodata = autodata[autoid]
                         ctrlpatautopl = pat_auto_place(SEQNe_pos, SEQNe_len, single_patautodata)
                         for s_apl in ctrlpatautopl:
-                            tracks.a_add_auto_pl(cvpj_l, ['plugin', 'machine'+str(SEQNe_mach), str(autoid)], s_apl)
+                            tracks.a_add_auto_pl(cvpj_l, 'float', ['plugin', 'machine'+str(SEQNe_mach), str(autoid)], s_apl)
 
 
         for t_track_placement in t_track_placements:
@@ -422,13 +422,13 @@ class input_cvpj_r(plugin_input.base):
         tempo_placement['duration'] = tempo_placement_dur
         tempo_placement['points'] = tempo_points
 
-        tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], [tempo_placement])
+        tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], [tempo_placement])
 
         #'machine'+machid
 
         for machnum in range(14):
             for autoname in AUTO_data['MACH_'+str(machnum+1)]:
-                tracks.a_auto_nopl_twopoints('plugin', 'machine'+str(machnum+1), str(autoname), AUTO_data['MACH_'+str(machnum+1)][autoname], 4, 'normal')
+                tracks.a_auto_nopl_twopoints(['plugin', 'machine'+str(machnum+1), str(autoname)], 'float', AUTO_data['MACH_'+str(machnum+1)][autoname], 4, 'normal')
 
         for mixernum in range(2):
             mixerid = 'MIXER_'+str(mixernum+1)
@@ -436,21 +436,21 @@ class input_cvpj_r(plugin_input.base):
                 auto_machid = machnum+1+(mixernum*7)
 
                 if machnum in AUTO_data[mixerid]: 
-                    tracks.a_auto_nopl_twopoints('track', 'MACH'+str(auto_machid), 'vol', AUTO_data[mixerid][machnum], 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['track', 'MACH'+str(auto_machid), 'vol'], 'float', AUTO_data[mixerid][machnum], 4, 'normal')
                 if (machnum*2)+8 in AUTO_data[mixerid]: 
-                    tracks.a_auto_nopl_twopoints('send', 'MACH'+str(auto_machid)+'_send_delay', 'amount', AUTO_data[mixerid][(machnum*2)+8], 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['send', 'MACH'+str(auto_machid)+'_send_delay', 'amount'], 'float', AUTO_data[mixerid][(machnum*2)+8], 4, 'normal')
                 if (machnum*2)+9 in AUTO_data[mixerid]: 
-                    tracks.a_auto_nopl_twopoints('send', 'MACH'+str(auto_machid)+'_send_reverb', 'amount', AUTO_data[mixerid][(machnum*2)+9], 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['send', 'MACH'+str(auto_machid)+'_send_reverb', 'amount'], 'float', AUTO_data[mixerid][(machnum*2)+9], 4, 'normal')
                 if machnum+24 in AUTO_data[mixerid]: 
-                    tracks.a_auto_nopl_twopoints('plugin', 'machine'+str(auto_machid)+'_eq', 'bass', AUTO_data[mixerid][machnum+24], 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['plugin', 'machine'+str(auto_machid)+'_eq', 'bass'], 'float', AUTO_data[mixerid][machnum+24], 4, 'normal')
                 if machnum+32 in AUTO_data[mixerid]: 
-                    tracks.a_auto_nopl_twopoints('plugin', 'machine'+str(auto_machid)+'_eq', 'mid', AUTO_data[mixerid][machnum+32], 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['plugin', 'machine'+str(auto_machid)+'_eq', 'mid'], 'float', AUTO_data[mixerid][machnum+32], 4, 'normal')
                 if machnum+40 in AUTO_data[mixerid]: 
-                    tracks.a_auto_nopl_twopoints('plugin', 'machine'+str(auto_machid)+'_eq', 'high', AUTO_data[mixerid][machnum+40], 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['plugin', 'machine'+str(auto_machid)+'_eq', 'high'], 'float', AUTO_data[mixerid][machnum+40], 4, 'normal')
                 if machnum+64 in AUTO_data[mixerid]: 
-                    tracks.a_auto_nopl_twopoints('track', 'MACH'+str(auto_machid), 'pan', auto.twopoints_addmul(AUTO_data[mixerid][machnum+64],-0.5,2), 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['track', 'MACH'+str(auto_machid), 'pan'], 'float', auto.twopoints_addmul(AUTO_data[mixerid][machnum+64],-0.5,2), 4, 'normal')
                 if machnum+72 in AUTO_data[mixerid]: 
-                    tracks.a_auto_nopl_twopoints('plugin', 'machine'+str(auto_machid)+'_width', 'width', AUTO_data[mixerid][machnum+72], 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['plugin', 'machine'+str(auto_machid)+'_width', 'width'], 'float', AUTO_data[mixerid][machnum+72], 4, 'normal')
 
         for mixernum in range(2):
             mixerid = 'FX_'+str(mixernum+1)
@@ -461,9 +461,9 @@ class input_cvpj_r(plugin_input.base):
                 cvpj_fx_autoid = 'machine'+str(autofx_num+1+(mixernum*7))+'_slot'+str(autofx_slot+1)
 
                 if autofx_ctrl == 5:
-                    tracks.a_auto_nopl_twopoints('slot', cvpj_fx_autoid, 'enabled', auto.twopoints_addmul(AUTO_data[mixerid][autonum],-1,-1), 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['slot', cvpj_fx_autoid, 'enabled'], 'bool', auto.twopoints_addmul(AUTO_data[mixerid][autonum],-1,-1), 4, 'normal')
                 else: 
-                    tracks.a_auto_nopl_twopoints('plugin', cvpj_fx_autoid, str(autofx_ctrl), AUTO_data[mixerid][autonum], 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['plugin', cvpj_fx_autoid, str(autofx_ctrl)], 'float', AUTO_data[mixerid][autonum], 4, 'normal')
 
         master_params = {}
 
@@ -504,9 +504,9 @@ class input_cvpj_r(plugin_input.base):
             if autonum in master_idnames:
                 t_fxtypeparam = master_idnames[autonum]
                 if t_fxtypeparam[0] in ['eq', 'limiter']:
-                    tracks.a_auto_nopl_twopoints('plugin', 'master_'+t_fxtypeparam[0], t_fxtypeparam[1], AUTO_data['MASTER'][autonum], 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['plugin', 'master_'+t_fxtypeparam[0], t_fxtypeparam[1]], 'float', AUTO_data['MASTER'][autonum], 4, 'normal')
                 if t_fxtypeparam == ['main', 'master']:
-                    tracks.a_auto_nopl_twopoints('main', None, 'vol', AUTO_data['MASTER'][autonum], 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['main', 'vol'], 'float', AUTO_data['MASTER'][autonum], 4, 'normal')
             elif autonum >= 64:
                 autonum_calc = autonum - 64
                 autofx_slot = (autonum_calc//8)
@@ -514,9 +514,9 @@ class input_cvpj_r(plugin_input.base):
                 cvpj_fx_autoid = 'master_slot'+str(autofx_slot+1)
 
                 if autofx_ctrl-64 == 5:
-                    tracks.a_auto_nopl_twopoints('slot', cvpj_fx_autoid, 'enabled', auto.twopoints_addmul(AUTO_data['MASTER'][autonum],-1,-1), 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['slot', cvpj_fx_autoid, 'enabled'], 'bool', auto.twopoints_addmul(AUTO_data['MASTER'][autonum],-1,-1), 4, 'normal')
                 else: 
-                    tracks.a_auto_nopl_twopoints('plugin', cvpj_fx_autoid, str(autofx_ctrl-64), AUTO_data['MASTER'][autonum], 4, 'normal')
+                    tracks.a_auto_nopl_twopoints(['plugin', cvpj_fx_autoid, str(autofx_ctrl-64)], 'float', AUTO_data['MASTER'][autonum], 4, 'normal')
 
         tracks.a_addtrack_master(cvpj_l, 'Master', master_params['main']['master'], [0.52, 0.52, 0.52])
         tracks.add_fxslot(cvpj_l, ['master'], 'audio', master_fxchaindata)

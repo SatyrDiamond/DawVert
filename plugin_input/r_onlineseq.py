@@ -233,39 +233,39 @@ class input_onlinesequencer(plugin_input.base):
 
             trackid = 'os_'+str(t_markerdata[0])
             if t_markerdata[0] != -1:
-                if t_markerdata[1] == 'vol': tracks.a_auto_nopl_addpoint('track', trackid, 'vol', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                if t_markerdata[1] == 'pan': tracks.a_auto_nopl_addpoint('track', trackid, 'pan', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                if t_markerdata[1] == 'detune': tracks.a_auto_nopl_addpoint('track', trackid, 'pitch', t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                if t_markerdata[1] == 'vol': tracks.a_auto_nopl_addpoint(['track', trackid, 'vol'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                if t_markerdata[1] == 'pan': tracks.a_auto_nopl_addpoint(['track', trackid, 'pan'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                if t_markerdata[1] == 'detune': tracks.a_auto_nopl_addpoint(['track', trackid, 'pitch'], 'float', t_markerdata[2], t_markerdata[3]/100, t_markerdata[4])
 
 
                 if t_markerdata[1] in ['eq_high', 'eq_mid', 'eq_low']: 
-                    tracks.a_auto_nopl_addpoint('plugin', trackid+'_eq', t_markerdata[1], t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                    tracks.a_auto_nopl_addpoint(['plugin', trackid+'_eq', t_markerdata[1]], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
                     if 'eq' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('eq')
 
                 if t_markerdata[1] == 'delay_on': 
-                    tracks.a_auto_nopl_addpoint('slot', trackid+'_delay', 'enabled', t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                    tracks.a_auto_nopl_addpoint(['slot', trackid+'_delay', 'enabled'], 'bool', t_markerdata[2], t_markerdata[3], t_markerdata[4])
                     if 'delay' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('delay')
 
                 if t_markerdata[1] == 'reverb_type': 
-                    tracks.a_auto_nopl_addpoint('plugin', trackid+'_reverb', 'reverb_type', t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                    tracks.a_auto_nopl_addpoint(['plugin', trackid+'_reverb', 'reverb_type'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
                     if 'reverb' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('reverb')
 
                 if t_markerdata[1] == 'reverb_wet': 
-                    tracks.a_auto_nopl_addpoint('slot', trackid+'_reverb', 'wet', t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                    tracks.a_auto_nopl_addpoint(['slot', trackid+'_reverb', 'wet'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
                     if 'reverb' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('reverb')
 
                 if t_markerdata[1] == 'distort_type': 
-                    if t_markerdata[3] != 0: tracks.a_auto_nopl_addpoint('plugin', trackid+'_distort', 'distort_type', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                    tracks.a_auto_nopl_addpoint('slot', trackid+'_distort', 'enabled', t_markerdata[2], int(bool(t_markerdata[3])), t_markerdata[4])
+                    if t_markerdata[3] != 0: tracks.a_auto_nopl_addpoint(['plugin', trackid+'_distort', 'distort_type'], 'int', t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                    tracks.a_auto_nopl_addpoint(['slot', trackid+'_distort', 'enabled'], 'bool', t_markerdata[2], int(bool(t_markerdata[3])), t_markerdata[4])
                     if 'distort' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('distort')
 
                 if t_markerdata[1] == 'distort_wet': 
-                    tracks.a_auto_nopl_addpoint('slot', trackid+'_distort', 'wet', t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                    tracks.a_auto_nopl_addpoint(['slot', trackid+'_distort', 'wet'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
                     if 'distort' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('distort')
 
             else:
-                if t_markerdata[1] == 'vol': tracks.a_auto_nopl_addpoint('song', None, 'vol', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                if t_markerdata[1] == 'bpm': tracks.a_auto_nopl_addpoint('song', None, 'bpm', t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                if t_markerdata[1] == 'vol': tracks.a_auto_nopl_addpoint(['song', 'vol'], t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                if t_markerdata[1] == 'bpm': tracks.a_auto_nopl_addpoint(['song', 'bpm'], t_markerdata[2], t_markerdata[3], t_markerdata[4])
 
         for used_fx_inst_i in used_fx_inst:
 

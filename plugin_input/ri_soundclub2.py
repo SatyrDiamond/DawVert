@@ -204,7 +204,7 @@ class input_soundclub2(plugin_input.base):
                     pl_placement = placement_data.makepl_n_mi(song_curpos, songpartdur, str(instnum)+'_'+str(patnum)+'_'+str(dupeinst[instnum]))
                     t_laneddata[instnum][dupeinst[instnum]].append(pl_placement)
             song.add_timemarker_timesig(cvpj_l, t_patnames[patnum], song_curpos, sc2_headerdata[4], sc2_headerdata[5])
-            tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], auto.makepl(song_curpos, songpartdur, pat_tempopoints[patnum]))
+            tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], auto.makepl(song_curpos, songpartdur, pat_tempopoints[patnum]))
             song_curpos += songpartdur
 
         for s_laneddata in t_laneddata:

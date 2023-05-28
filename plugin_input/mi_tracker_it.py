@@ -529,7 +529,7 @@ class input_it(plugin_input.base):
         it_file.seek(it_header_msgoffset)
         it_songmessage = data_bytes.readstring_fixedlen(it_file, it_header_msglength, "windows-1252")
 
-        tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo))
+        tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo))
         placements.make_timemarkers(cvpj_l, [4,16], patlentable, None)
         song.add_info(cvpj_l, 'title', it_header_songname)
         song.add_info_msg(cvpj_l, 'text', it_songmessage.replace('\r', '\n'))

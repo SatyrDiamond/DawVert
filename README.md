@@ -4,7 +4,9 @@
 # DawVert - The DAW ConVERTer
 </div>
 
-DawVert is a Project File Converter
+<p align="center">
+    DawVert is a Project File Converter
+</p>
 
 <p align="center">
   <a title="Discord Server" href="https://discord.gg/SWkR6Z9pQC">

@@ -6,8 +6,8 @@ import json
 import math
 import plugin_input
 import os
-import sys
 import zlib
+import sys
 import xml.etree.ElementTree as ET
 from functions_plugin import lmms_auto
 from functions import note_mod
@@ -124,20 +124,20 @@ def getvstparams(plugindata, xmldata, cvpj_data):
             if notetagtxt.startswith('param'):
                 value = node.get('value')
                 if value != None:
-                    l_autoid[str(node.get('id'))] = ['plugin', cvpj_data['pluginautoid'], 'vst_param_'+notetagtxt[5:]]
+                    tracks.autoid_in_define(str(realvaluetag.get('id')), ['plugin', cvpj_data['pluginautoid'], 'vst_param_'+notetagtxt[5:]], 'float', None)
 
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
 
-def lmms_auto_getvalue(xmltag, xmlname, fallbackval, autoname):
+def lmms_auto_getvalue(x_tag, x_name, i_fbv, i_type, i_addmul, i_loc):
     #print(xmltag, xmlname, fallbackval, autoname, xmltag.get(xmlname))
-    if xmltag.get(xmlname) != None: return float(xmltag.get(xmlname))
-    elif xmltag.findall(xmlname) != []: 
-        realvaluetag = xmltag.findall(xmlname)[0]
+    if x_tag.get(x_name) != None: return float(x_tag.get(x_name))
+    elif x_tag.findall(x_name) != []: 
+        realvaluetag = x_tag.findall(x_name)[0]
         value = realvaluetag.get('value')
         if value != None:
-            if autoname != None: l_autoid[str(realvaluetag.get('id'))] = autoname
+            tracks.autoid_in_define(str(realvaluetag.get('id')), i_loc, i_type, i_addmul)
             return realvaluetag.get('value')
-    else: return fallbackval
+    else: return i_fbv
 
 def lmms_getvalue_int(json_in, json_name, xml_in): 
     if xml_in != None: json_in[json_name] = int(xml_in)
@@ -281,35 +281,35 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst):
             for opnum in range(2):
                 opl2_optxt = 'op'+str(opnum+1)
                 cvpj_l_plugindata[opl2_optxt] = {}
-                cvpj_l_plugindata[opl2_optxt]['env_attack'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_a', 0, ['plugin', auto_id_plugin, opl2_optxt+'_env_attack'])
-                cvpj_l_plugindata[opl2_optxt]['env_decay'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_d', 0, ['plugin', auto_id_plugin, opl2_optxt+'_env_decay'])
-                cvpj_l_plugindata[opl2_optxt]['env_release'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_r', 0, ['plugin', auto_id_plugin, opl2_optxt+'_env_release'])
-                cvpj_l_plugindata[opl2_optxt]['env_sustain'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_s', 0, ['plugin', auto_id_plugin, opl2_optxt+'_env_sustain'])
-                cvpj_l_plugindata[opl2_optxt]['freqmul'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_mul', 0, ['plugin', auto_id_plugin, opl2_optxt+'_freqmul'])
-                cvpj_l_plugindata[opl2_optxt]['ksr'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_ksr', 0, ['plugin', auto_id_plugin, opl2_optxt+'_ksr'])
-                cvpj_l_plugindata[opl2_optxt]['level'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_lvl', 0, ['plugin', auto_id_plugin, opl2_optxt+'_level'])
-                cvpj_l_plugindata[opl2_optxt]['perc_env'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_perc', 0, ['plugin', auto_id_plugin, opl2_optxt+'_perc_env'])
-                cvpj_l_plugindata[opl2_optxt]['scale'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_scale', 0, ['plugin', auto_id_plugin, opl2_optxt+'_scale'])
-                cvpj_l_plugindata[opl2_optxt]['tremolo'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_trem', 0, ['plugin', auto_id_plugin, opl2_optxt+'_tremolo'])
-                cvpj_l_plugindata[opl2_optxt]['vibrato'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_vib', 0, ['plugin', auto_id_plugin, opl2_optxt+'_vibrato'])
-                cvpj_l_plugindata[opl2_optxt]['waveform'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_waveform', 0, ['plugin', auto_id_plugin, opl2_optxt+'_env_attack'])
-            cvpj_l_plugindata['feedback'] = lmms_auto_getvalue(xml_plugin, 'feedback', 0, ['plugin', auto_id_plugin, 'feedback'])
-            cvpj_l_plugindata['fm'] = lmms_auto_getvalue(xml_plugin, 'fm', 0, ['plugin', auto_id_plugin, 'fm'])
-            cvpj_l_plugindata['tremolo_depth'] = lmms_auto_getvalue(xml_plugin, 'trem_depth', 0, ['plugin', auto_id_plugin, 'tremolo_depth'])
-            cvpj_l_plugindata['vibrato_depth'] = lmms_auto_getvalue(xml_plugin, 'vib_depth', 0, ['plugin', auto_id_plugin, 'vibrato_depth'])
+                cvpj_l_plugindata[opl2_optxt]['env_attack'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_a', 0, 'int', None, ['plugin', auto_id_plugin, opl2_optxt+'_env_attack'])
+                cvpj_l_plugindata[opl2_optxt]['env_decay'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_d', 0, 'int', None, ['plugin', auto_id_plugin, opl2_optxt+'_env_decay'])
+                cvpj_l_plugindata[opl2_optxt]['env_release'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_r', 0, 'int', None, ['plugin', auto_id_plugin, opl2_optxt+'_env_release'])
+                cvpj_l_plugindata[opl2_optxt]['env_sustain'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_s', 0, 'int', None, ['plugin', auto_id_plugin, opl2_optxt+'_env_sustain'])
+                cvpj_l_plugindata[opl2_optxt]['freqmul'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_mul', 0, 'int', None, ['plugin', auto_id_plugin, opl2_optxt+'_freqmul'])
+                cvpj_l_plugindata[opl2_optxt]['ksr'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_ksr', 0, 'int', None, ['plugin', auto_id_plugin, opl2_optxt+'_ksr'])
+                cvpj_l_plugindata[opl2_optxt]['level'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_lvl', 0, 'int', None, ['plugin', auto_id_plugin, opl2_optxt+'_level'])
+                cvpj_l_plugindata[opl2_optxt]['perc_env'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_perc', 0, 'int', None, ['plugin', auto_id_plugin, opl2_optxt+'_perc_env'])
+                cvpj_l_plugindata[opl2_optxt]['scale'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_scale', 0, 'int', None, ['plugin', auto_id_plugin, opl2_optxt+'_scale'])
+                cvpj_l_plugindata[opl2_optxt]['tremolo'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_trem', 0, 'int', None, ['plugin', auto_id_plugin, opl2_optxt+'_tremolo'])
+                cvpj_l_plugindata[opl2_optxt]['vibrato'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_vib', 0, 'int', None, ['plugin', auto_id_plugin, opl2_optxt+'_vibrato'])
+                cvpj_l_plugindata[opl2_optxt]['waveform'] = lmms_auto_getvalue(xml_plugin, opl2_optxt+'_waveform', 0, 'int', None, ['plugin', auto_id_plugin, opl2_optxt+'_env_attack'])
+            cvpj_l_plugindata['feedback'] = lmms_auto_getvalue(xml_plugin, 'feedback', 0, 'int', None, ['plugin', auto_id_plugin, 'feedback'])
+            cvpj_l_plugindata['fm'] = lmms_auto_getvalue(xml_plugin, 'fm', 0, 'int', None, ['plugin', auto_id_plugin, 'fm'])
+            cvpj_l_plugindata['tremolo_depth'] = lmms_auto_getvalue(xml_plugin, 'trem_depth', 0, 'int', None, ['plugin', auto_id_plugin, 'tremolo_depth'])
+            cvpj_l_plugindata['vibrato_depth'] = lmms_auto_getvalue(xml_plugin, 'vib_depth', 0, 'int', None, ['plugin', auto_id_plugin, 'vibrato_depth'])
             
 
         elif pluginname == "zynaddsubfx":
             cvpj_l_inst['plugin'] = "zynaddsubfx-lmms"
-            cvpj_l_plugindata['bandwidth'] = lmms_auto_getvalue(xml_plugin, 'bandwidth', 0, ['plugin', auto_id_plugin, 'bandwidth'])
-            cvpj_l_plugindata['filterfreq'] = lmms_auto_getvalue(xml_plugin, 'filterfreq', 0, ['plugin', auto_id_plugin, 'filterfreq'])
-            cvpj_l_plugindata['filterq'] = lmms_auto_getvalue(xml_plugin, 'filterq', 0, ['plugin', auto_id_plugin, 'filterq'])
-            cvpj_l_plugindata['fmgain'] = lmms_auto_getvalue(xml_plugin, 'fmgain', 0, ['plugin', auto_id_plugin, 'fmgain'])
-            cvpj_l_plugindata['forwardmidicc'] = lmms_auto_getvalue(xml_plugin, 'forwardmidicc', 0, ['plugin', auto_id_plugin, 'forwardmidicc'])
+            cvpj_l_plugindata['bandwidth'] = lmms_auto_getvalue(xml_plugin, 'bandwidth', 0, 'float', None, ['plugin', auto_id_plugin, 'bandwidth'])
+            cvpj_l_plugindata['filterfreq'] = lmms_auto_getvalue(xml_plugin, 'filterfreq', 0, 'float', None, ['plugin', auto_id_plugin, 'filterfreq'])
+            cvpj_l_plugindata['filterq'] = lmms_auto_getvalue(xml_plugin, 'filterq', 0, 'float', None, ['plugin', auto_id_plugin, 'filterq'])
+            cvpj_l_plugindata['fmgain'] = lmms_auto_getvalue(xml_plugin, 'fmgain', 0, 'float', None, ['plugin', auto_id_plugin, 'fmgain'])
+            cvpj_l_plugindata['forwardmidicc'] = lmms_auto_getvalue(xml_plugin, 'forwardmidicc', 0, 'float', None, ['plugin', auto_id_plugin, 'forwardmidicc'])
             cvpj_l_plugindata['modifiedcontrollers'] = xml_plugin.get('modifiedcontrollers')
-            cvpj_l_plugindata['portamento'] = lmms_auto_getvalue(xml_plugin, 'portamento', 0, ['plugin', auto_id_plugin, 'portamento'])
-            cvpj_l_plugindata['resbandwidth'] = lmms_auto_getvalue(xml_plugin, 'resbandwidth', 0, ['plugin', auto_id_plugin, 'resbandwidth'])
-            cvpj_l_plugindata['rescenterfreq'] = lmms_auto_getvalue(xml_plugin, 'rescenterfreq', 0, ['plugin', auto_id_plugin, 'rescenterfreq'])
+            cvpj_l_plugindata['portamento'] = lmms_auto_getvalue(xml_plugin, 'portamento', 0, 'float', None, ['plugin', auto_id_plugin, 'portamento'])
+            cvpj_l_plugindata['resbandwidth'] = lmms_auto_getvalue(xml_plugin, 'resbandwidth', 0, 'float', None, ['plugin', auto_id_plugin, 'resbandwidth'])
+            cvpj_l_plugindata['rescenterfreq'] = lmms_auto_getvalue(xml_plugin, 'rescenterfreq', 0, 'float', None, ['plugin', auto_id_plugin, 'rescenterfreq'])
             zdata = xml_plugin.findall('ZynAddSubFX-data')[0]
             cvpj_l_plugindata['data'] = base64.b64encode(ET.tostring(zdata, encoding='utf-8')).decode('ascii')
 
@@ -325,7 +325,7 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst):
             cvpj_l_plugindata['data'] = {}
             lmms_autovals = lmms_auto.get_params_inst(pluginname)
             for pluginparam in lmms_autovals[0]:
-                cvpj_l_plugindata['data'][pluginparam] = lmms_auto_getvalue(xml_plugin, pluginparam, 0, ['plugin', auto_id_plugin, pluginparam])
+                cvpj_l_plugindata['data'][pluginparam] = lmms_auto_getvalue(xml_plugin, pluginparam, 0, 'float', None, ['plugin', auto_id_plugin, pluginparam])
             for pluginparam in lmms_autovals[1]:
                 xml_pluginparam = xml_plugin.get(pluginparam)
                 if xml_pluginparam: cvpj_l_plugindata['data'][pluginparam] = xml_pluginparam
@@ -395,13 +395,13 @@ def lmms_decode_inst_track(trkX, trackid):
 
     tracks.r_create_inst(cvpj_l, trackid, cvpj_l_track_inst)
 
-    tracks.r_param(cvpj_l, trackid, 'enabled', int(not int( lmms_auto_getvalue(trkX, 'muted', 0, ['track', trackid, 'enabled']) )))
+    tracks.r_param(cvpj_l, trackid, 'enabled', int(not int( lmms_auto_getvalue(trkX, 'muted', 1, 'bool', [-1, -1] ,['track', trackid, 'enabled']) )))
     tracks.r_param(cvpj_l, trackid, 'solo', int(trkX.get('solo')))
 
     #trkX_insttr
     trkX_insttr = trkX.findall('instrumenttrack')[0]
-    cvpj_pan = hundredto1(float(lmms_auto_getvalue(trkX_insttr, 'pan', 0, ['track', trackid, 'pan'])))
-    cvpj_vol = hundredto1(float(lmms_auto_getvalue(trkX_insttr, 'vol', 1, ['track', trackid, 'vol'])))
+    cvpj_pan = hundredto1(float(lmms_auto_getvalue(trkX_insttr, 'pan', 0, 'float', [0, 0.01], ['track', trackid, 'pan'])))
+    cvpj_vol = hundredto1(float(lmms_auto_getvalue(trkX_insttr, 'vol', 1, 'float', [0, 0.01], ['track', trackid, 'vol'])))
     
     #midi
     xml_a_midiport = trkX_insttr.findall('midiport')
@@ -437,7 +437,7 @@ def lmms_decode_inst_track(trkX, trackid):
 
     tracks.r_param(cvpj_l, trackid, 'fxrack_channel', int(trkX_insttr.get('fxch')))
     tracks.r_param_inst(cvpj_l, trackid, 'usemasterpitch', int(trkX_insttr.get('usemasterpitch')))
-    tracks.r_param_inst(cvpj_l, trackid, 'pitch', float(lmms_auto_getvalue(trkX_insttr, 'pitch', 0, ['track', trackid, 'pitch'])))
+    tracks.r_param_inst(cvpj_l, trackid, 'pitch', float(lmms_auto_getvalue(trkX_insttr, 'pitch', 0, 'float', [0, 0.01], ['track', trackid, 'pitch'])))
     tracks.r_basicdata(cvpj_l, trackid, cvpj_name, track_color, cvpj_vol, cvpj_pan)
 
     if 'basenote' in trkX_insttr.attrib:
@@ -457,8 +457,8 @@ def lmms_decode_inst_track(trkX, trackid):
         lmms_autovals = lmms_auto.get_params_notefx('arpeggiator')
         cvpj_l_arpeggiator_plugindata = {"name": "arpeggiator", "data": {}}
         for pluginparam in lmms_autovals[0]:
-            cvpj_l_arpeggiator_plugindata['data'][pluginparam] = lmms_auto_getvalue(trkX_arpeggiator, pluginparam, 0, ['plugin', auto_id_plugin, pluginparam])
-        cvpj_l_arpeggiator_enabled = lmms_auto_getvalue(trkX_arpeggiator, 'arp-enabled', 0, ['slot', auto_id_slot, 'enabled'])
+            cvpj_l_arpeggiator_plugindata['data'][pluginparam] = lmms_auto_getvalue(trkX_arpeggiator, pluginparam, 0, 'float', None, ['plugin', auto_id_plugin, pluginparam])
+        cvpj_l_arpeggiator_enabled = lmms_auto_getvalue(trkX_arpeggiator, 'arp-enabled', 0, 'bool', None, ['slot', auto_id_slot, 'enabled'])
         tracks.add_fxslot_basic(cvpj_l, ['track', trackid], 'notes', cvpj_l_arpeggiator_enabled, None,
                                     auto_id_plugin, auto_id_slot, "native-lmms", cvpj_l_arpeggiator_plugindata)
 
@@ -471,8 +471,8 @@ def lmms_decode_inst_track(trkX, trackid):
         lmms_autovals = lmms_auto.get_params_notefx('chordcreator')
         cvpj_l_chordcreator_plugindata = {"name": "chordcreator", "data": {}}
         for pluginparam in lmms_autovals[0]:
-            cvpj_l_chordcreator_plugindata['data'][pluginparam] = lmms_auto_getvalue(trkX_chordcreator, pluginparam, 0, ['plugin', auto_id_plugin, pluginparam])
-        cvpj_l_chordcreator_enabled = lmms_auto_getvalue(trkX_arpeggiator, 'chord-enabled', 0, ['slot', auto_id_slot, 'enabled'])
+            cvpj_l_chordcreator_plugindata['data'][pluginparam] = lmms_auto_getvalue(trkX_chordcreator, pluginparam, 0, 'float', None, ['plugin', auto_id_plugin, pluginparam])
+        cvpj_l_chordcreator_enabled = lmms_auto_getvalue(trkX_arpeggiator, 'chord-enabled', 0, 'bool', None, ['slot', auto_id_slot, 'enabled'])
         tracks.add_fxslot_basic(cvpj_l, ['track', trackid], 'notes', cvpj_l_chordcreator_enabled, None,
                                     auto_id_plugin, auto_id_slot, "native-lmms", cvpj_l_chordcreator_plugindata)
 
@@ -511,8 +511,8 @@ def lmms_decode_audio_track(trkX, trackid):
     print('[input-lmms] Audio Track')
     print('[input-lmms]       Name: ' + cvpj_name)
     trkX_audiotr = trkX.findall('sampletrack')[0]
-    cvpj_pan = hundredto1(float(lmms_auto_getvalue(trkX_audiotr, 'pan', 0, ['track', trackid, 'pan'])))
-    cvpj_vol = hundredto1(float(lmms_auto_getvalue(trkX_audiotr, 'vol', 1, ['track', trackid, 'vol'])))
+    cvpj_pan = hundredto1(float(lmms_auto_getvalue(trkX_audiotr, 'pan', 0, 'float', [0, 0.01], ['track', trackid, 'pan'])))
+    cvpj_vol = hundredto1(float(lmms_auto_getvalue(trkX_audiotr, 'vol', 1, 'float', [0, 0.01], ['track', trackid, 'vol'])))
     tracks.r_basicdata(cvpj_l, trackid, cvpj_name, None, cvpj_vol, cvpj_pan)
     xml_fxch = trkX_audiotr.get('fxch')
     if xml_fxch != None: tracks.r_param(cvpj_l, trackid, 'fxrack_channel', int(xml_fxch))
@@ -520,7 +520,7 @@ def lmms_decode_audio_track(trkX, trackid):
     if len(xml_a_fxchain) != 0: tracks.add_fxslot(cvpj_l, ['track', trackid], 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
     print('[input-lmms]')
     tracks.r_pl_audio(cvpj_l, trackid, lmms_decode_audioplacements(trkX))
-    tracks.r_param(cvpj_l, trackid, 'enabled', int(not int(lmms_auto_getvalue(trkX, 'muted', 1, ['track', trackid, 'enabled']))))
+    tracks.r_param(cvpj_l, trackid, 'enabled', int(not int(lmms_auto_getvalue(trkX, 'muted', 1, 'bool', [-1, -1] ,['track', trackid, 'enabled']))))
     tracks.r_param(cvpj_l, trackid, 'solo', int(trkX.get('solo')))
 
 # ------- Track: Automation -------
@@ -552,8 +552,7 @@ def lmms_decode_autoplacements(trkX):
         autoobjectX = autopatX.findall('object')
         if len(autoobjectX) != 0:
             internal_id = autoobjectX[0].get('id')
-            if internal_id not in l_autodata: l_autodata[internal_id] = []
-            l_autodata[internal_id].append(placeJ)
+            tracks.autoid_in_add_pl(str(autoobjectX[0].get('id')), placeJ)
     print(' ')
 
 def lmms_decode_auto_track(trkX):
@@ -597,8 +596,8 @@ def lmms_decode_effectslot(fxslotX):
     auto_id_slot = get_slot_auto_id()
     fxslotJ['slotautoid'] = auto_id_slot
 
-    fxslotJ['enabled'] = lmms_auto_getvalue(fxslotX, 'on', 0, ['slot', auto_id_slot, 'enabled'])
-    fxslotJ['wet'] = lmms_auto_getvalue(fxslotX, 'wet', 0, ['slot', auto_id_slot, 'wet'])
+    fxslotJ['enabled'] = lmms_auto_getvalue(fxslotX, 'on', 0, 'bool', None, ['slot', auto_id_slot, 'enabled'])
+    fxslotJ['wet'] = lmms_auto_getvalue(fxslotX, 'wet', 0, 'float', None, ['slot', auto_id_slot, 'wet'])
 
     auto_id_plugin = get_plugin_auto_id()
     fxslotJ['pluginautoid'] = auto_id_plugin
@@ -646,7 +645,7 @@ def lmms_decode_effectslot(fxslotX):
                 l_val = notetagtxt[5:]
                 t_data = node.get('data')
                 if l_ch not in t_params: t_params[l_ch] = {}
-                t_params[l_ch][l_val] = float(lmms_auto_getvalue(node, 'data', '0', ['plugin', auto_id_plugin, 'ladspa_param_'+l_ch+'_'+l_val]))
+                t_params[l_ch][l_val] = float(lmms_auto_getvalue(node, 'data', '0', 'float', None, ['plugin', auto_id_plugin, 'ladspa_param_'+l_ch+'_'+l_val]))
 
         if seperated_channels == False: 
             fxcvpj_l_plugindata['seperated_channels'] = False
@@ -670,7 +669,7 @@ def lmms_decode_effectslot(fxslotX):
 
         lmms_autovals = lmms_auto.get_params_fx(fxpluginname)
         for pluginparam in lmms_autovals[0]:
-            fxcvpj_l_plugindata['data'][pluginparam] = lmms_auto_getvalue(fxxml_plugin, pluginparam, 0, ['plugin', auto_id_plugin, pluginparam])
+            fxcvpj_l_plugindata['data'][pluginparam] = lmms_auto_getvalue(fxxml_plugin, pluginparam, 0, 'float', None, ['plugin', auto_id_plugin, pluginparam])
         for pluginparam in lmms_autovals[1]:
             xml_pluginparam = fxxml_plugin.get(pluginparam)
             if xml_pluginparam: fxcvpj_l_plugindata['data'][pluginparam] = xml_pluginparam
@@ -698,7 +697,7 @@ def lmms_decode_fxmixer(fxX):
         fxcJ = {}
         fxcJ['name'] = fx_name
         if fxcX.get('muted') != None: fxcJ['muted'] = int(fxcX.get('muted'))
-        fxcJ['vol'] = float(lmms_auto_getvalue(fxcX, 'volume', 1, ['fxmixer', fx_num, 'vol']))
+        fxcJ['vol'] = float(lmms_auto_getvalue(fxcX, 'volume', 1, 'float', None, ['fxmixer', fx_num, 'vol']))
         fxchainX = fxcX.find('fxchain')
         if fxchainX != None:
             fxcJ['fxenabled'] = int(fxchainX.get('enabled'))
@@ -709,7 +708,7 @@ def lmms_decode_fxmixer(fxX):
             send_id = get_send_auto_id()
             sendentryjson = {}
             sendentryjson['channel'] = int(sendxml.get('channel'))
-            sendentryjson['amount'] = lmms_auto_getvalue(sendxml, 'amount', 1, ['send', send_id, 'amount'])
+            sendentryjson['amount'] = lmms_auto_getvalue(sendxml, 'amount', 1, 'float', None, ['send', send_id, 'amount'])
             sendentryjson['sendautoid'] = send_id
             sendlist.append(sendentryjson)
         fxcJ['sends'] = sendlist
@@ -741,7 +740,6 @@ class input_lmms(plugin_input.base):
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):
-        output = False
         try:
             root = get_xml_tree(input_file)
             if root.tag == "lmms-project": output = True
@@ -751,8 +749,6 @@ class input_lmms(plugin_input.base):
         print('[input-lmms] Input Start')
         global lmms_vstpath
         global lmms_ladspapath
-        global l_autoid
-        global l_autodata
         global cvpj_l
 
         homepath = os.path.expanduser('~')
@@ -777,10 +773,6 @@ class input_lmms(plugin_input.base):
             lmms_vstpath = ''
             lmms_ladspapath = ''
 
-        l_autoid = {}
-        l_autodata = {}
-        l_automation = {}
-
         tree = get_xml_tree(input_file)
         headX = tree.findall('head')[0]
         trksX = tree.findall('song/trackcontainer/track')
@@ -789,70 +781,32 @@ class input_lmms(plugin_input.base):
         projnotesX = tree.find('song/projectnotes')
 
         cvpj_l = {}
-        cvpj_l['bpm'] = float(lmms_auto_getvalue(headX, 'bpm', 140, ['main', 'bpm']))
-        cvpj_l['vol'] = hundredto1(float(lmms_auto_getvalue(headX, 'mastervol', 1, ['main', 'vol'])))
-        cvpj_l['pitch'] = float(lmms_auto_getvalue(headX, 'masterpitch', 0, ['main', 'pitch']))*100
-        cvpj_l['timesig_numerator'] = lmms_auto_getvalue(headX, 'timesig_numerator', 4, None)
-        cvpj_l['timesig_denominator'] = lmms_auto_getvalue(headX, 'timesig_denominator', 4, None)
+        cvpj_l['bpm'] = float(lmms_auto_getvalue(headX, 'bpm', 140, 'float', None, ['main', 'bpm']))
+        cvpj_l['vol'] = hundredto1(float(lmms_auto_getvalue(headX, 'mastervol', 1, 'float', [0, 0.01], ['main', 'vol'])))
+        cvpj_l['pitch'] = float(lmms_auto_getvalue(headX, 'masterpitch', 0, 'float', None, ['main', 'pitch']))
+        cvpj_l['timesig_numerator'] = lmms_auto_getvalue(headX, 'timesig_numerator', 'int', None, 4, None)
+        cvpj_l['timesig_denominator'] = lmms_auto_getvalue(headX, 'timesig_denominator', 'int', None, 4, None)
 
         if projnotesX.text != None: song.add_info_msg(cvpj_l, 'html', projnotesX.text)
 
         lmms_decode_tracks(trksX)
         fxrackdata = lmms_decode_fxmixer(fxX)
 
-        l_automation['main'] = {}
-        l_automation['track'] = {}
-        l_automation['fxmixer'] = {}
-        l_automation['plugin'] = {}
-        l_automation['slot'] = {}
-        l_automation['send'] = {}
-
         trackdata = cvpj_l['track_data']
 
-        for part in l_autodata:
-            if part in l_autoid:
-                s_autopl_id = l_autoid[part]
-                s_autopl_data = l_autodata[part]
-                if s_autopl_id[0] == 'track':
-                    if s_autopl_id[1] in trackdata:
-                        if s_autopl_id[1] not in l_automation['track']: l_automation['track'][s_autopl_id[1]] = {}
-                        s_trkdata = trackdata[s_autopl_id[1]]
-                        temp_pla = l_automation['track'][s_autopl_id[1]]
-                        if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
-                        elif s_autopl_id[2] == 'pan': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 0.01)
-                        elif s_autopl_id[2] == 'enabled': temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, -1, -1)
-                        else: temp_pla[s_autopl_id[2]] = auto.multiply(s_autopl_data, 0, 1)
-
-                if s_autopl_id[0] == 'main':
-                    if s_autopl_id[1] == 'vol': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 0.01)
-                    elif s_autopl_id[1] == 'pitch': l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 100)
-                    else: l_automation['main'][s_autopl_id[1]] = auto.multiply(s_autopl_data, 0, 1)
-
-                if s_autopl_id[0] == 'fxmixer':
-                    if str(s_autopl_id[1]) in fxrackdata:
-                        if s_autopl_id[1] not in l_automation['fxmixer']: l_automation['fxmixer'][s_autopl_id[1]] = {}
-                        temp_pla = l_automation['fxmixer'][s_autopl_id[1]]
-                        if s_autopl_id[2] == 'vol': temp_pla[s_autopl_id[2]] = s_autopl_data
-
-                if s_autopl_id[0] in ['slot', 'plugin', 'send']:
-                    if s_autopl_id[1] not in l_automation[s_autopl_id[0]]: l_automation[s_autopl_id[0]][s_autopl_id[1]] = {}
-                    temp_pla = l_automation[s_autopl_id[0]][s_autopl_id[1]]
-                    temp_pla[s_autopl_id[2]] = s_autopl_data
-
-        cvpj_l['automation'] = l_automation
-
         cvpj_l['use_fxrack'] = True
-        
         cvpj_l['fxrack'] = fxrackdata
 
-        return json.dumps(cvpj_l, indent=2)
+        tracks.autoid_in_output(cvpj_l)
 
+        return json.dumps(cvpj_l, indent=2)
+        
 def get_xml_tree(path):
     with open(path, 'rb') as file:
         try:
             file.seek(4)
             data = zlib.decompress(file.read())
             return ET.fromstring(data)
-        
+
         except zlib.error:
             return ET.parse(path).getroot()

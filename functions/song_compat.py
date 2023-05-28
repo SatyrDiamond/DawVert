@@ -543,23 +543,33 @@ def r_split_single_notelist(projJ):
 
 # -------------------------------------------- no_pl_auto --------------------------------------------
 
-def remove_auto_placements_single(autodata):
+def remove_auto_placements_single(i_autodata):
     new_points = []
+    autotype = i_autodata['type']
+    autodata = i_autodata['placements']
     for autopart in autodata:
         #print(autopart)
         base_pos = autopart['position']
         for oldpoint in autopart['points']:
             oldpoint['position'] += base_pos
             new_points.append(oldpoint)
-    if len(new_points) != 0: return [{'position': 0, 'points': new_points, 'duration': new_points[-1]['position']+8}]
-    else: return []
+    if len(new_points) != 0: 
+        o_autodata = {}
+        o_autodata['type'] = autotype
+        o_autodata['placements'] = [{'position': 0, 'points': new_points, 'duration': new_points[-1]['position']+8}]
+        return o_autodata
+    else: 
+        o_autodata = {}
+        o_autodata['type'] = autotype
+        o_autodata['placements'] = []
+        return o_autodata
 
 def remove_auto_placements(cvpj_l):
     if 'automation' in cvpj_l:
         cvpj_auto = cvpj_l['automation']
         for autotype in cvpj_auto:
             #print('CAT', autotype)
-            if autotype in ['main']:
+            if autotype == 'main':
                 for autoid in cvpj_auto[autotype]:
                     #print('PARAM', autoid)
                     cvpj_auto[autotype][autoid] = remove_auto_placements_single(cvpj_auto[autotype][autoid])

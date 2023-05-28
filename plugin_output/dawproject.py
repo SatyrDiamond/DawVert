@@ -47,7 +47,7 @@ def make_automation(x_project_arr, xmlname, cvpj_auto, unit, cvpj_id):
     x_project_arr_tempo.set('unit', unit)
     x_project_arr_target = ET.SubElement(x_project_arr_tempo, "Target")
     x_project_arr_target.set('parameter', cvpj_id)
-    for cvpj_auto_pl in cvpj_auto:
+    for cvpj_auto_pl in cvpj_auto['placements']:
         cvpj_auto_pl_pos = cvpj_auto_pl['position']
         t_points = auto.remove_instant(cvpj_auto_pl['points'], cvpj_auto_pl['position'], False)
         for t_point in t_points:

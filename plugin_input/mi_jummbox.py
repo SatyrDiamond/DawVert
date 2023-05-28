@@ -225,23 +225,23 @@ def parse_channel(channeldata, channum):
                         if bb_mod_target[0] == -1:
                             if bb_mod_target[1] == 1: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.01)
-                                tracks.a_add_auto_pl(cvpj_l, ['main', 'vol'], cvpj_autopl[0])
+                                tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'vol'], cvpj_autopl[0])
                             if bb_mod_target[1] == 2: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], 30, 1)
-                                tracks.a_add_auto_pl(cvpj_l, ['main', 'bpm'], cvpj_autopl[0])
+                                tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], cvpj_autopl[0])
                             if bb_mod_target[1] == 17: 
-                                cvpj_autopl = auto.multiply([cvpj_autodata], -250, 4)
-                                tracks.a_add_auto_pl(cvpj_l, ['main', 'pitch'], cvpj_autopl[0])
+                                cvpj_autopl = auto.multiply([cvpj_autodata], -250, 0.01)
+                                tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'pitch'], cvpj_autopl[0])
                         else:
                             auto_instnum = 1
                             auto_trackid = 'bb_ch'+str(bb_mod_target[0]+1)+'_inst'+str(auto_instnum)
 
                             if bb_mod_target[1] == 6: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], -50, 0.02)
-                                tracks.a_add_auto_pl(cvpj_l, ['track', auto_trackid, 'pan'], cvpj_autopl[0])
+                                tracks.a_add_auto_pl(cvpj_l, 'float', ['track', auto_trackid, 'pan'], cvpj_autopl[0])
                             if bb_mod_target[1] == 15: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], -200, 1)
-                                tracks.a_add_auto_pl(cvpj_l, ['track', auto_trackid, 'pitch'], cvpj_autodata)
+                                tracks.a_add_auto_pl(cvpj_l, 'float', ['track', auto_trackid, 'pitch'], cvpj_autodata)
                             #if bb_mod_target[1] == 34: 
                             #    cvpj_autopl = auto.multiply([cvpj_autodata], -12, 100)
                             #    tracks.a_add_auto_pl(cvpj_l, ['track', 'bb_ch'+str(bb_mod_target[0]+1)+'_inst1', 'pitch'], cvpj_autopl[0])

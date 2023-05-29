@@ -130,6 +130,11 @@ class input_cvpj_r(plugin_input.base):
 
         # FORMAT FLAGS
         dmf_version = bio_dmf.read(1)[0]
+
+        if dmf_version != 24:
+            print('[error] only version 24 is supported')
+            exit()
+
         dmf_system = bio_dmf.read(1)[0]
 
         # SYSTEM SET
@@ -306,7 +311,7 @@ class input_cvpj_r(plugin_input.base):
                     output_extra = {}
 
                     if r_vol != -1:
-                        if s_chantype != 'fm': output_param['vol'] = r_vol/16
+                        if s_chantype != 'opn2': output_param['vol'] = r_vol/16
                         else: output_param['vol'] = r_vol/127
 
                     for r_fxp in r_fx:

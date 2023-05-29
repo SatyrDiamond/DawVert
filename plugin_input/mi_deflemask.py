@@ -88,7 +88,7 @@ def fxget(fxtype, fxparam, output_param, output_extra):
         else: output_extra['tempo'] = fxparam
 
 def dmfenv(bio_dmf): 
-    ENVELOPE_SIZE = int.from_bytes(bio_dmf.read(1), "little")
+    ENVELOPE_SIZE = bio_dmf.read(1)[0]
     envdata = {}
     envdata['values'] = struct.unpack('I'*ENVELOPE_SIZE, bio_dmf.read(ENVELOPE_SIZE*4))
     if ENVELOPE_SIZE != 0: envdata['looppos'] = int.from_bytes(bio_dmf.read(1), "little", signed=True)
@@ -129,8 +129,8 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l = {}
 
         # FORMAT FLAGS
-        dmf_version = int.from_bytes(bio_dmf.read(1), "little")
-        dmf_system = int.from_bytes(bio_dmf.read(1), "little")
+        dmf_version = bio_dmf.read(1)[0]
+        dmf_system = bio_dmf.read(1)[0]
 
         # SYSTEM SET
         if dmf_system == int("02",16): #GENESIS
@@ -172,20 +172,20 @@ class input_cvpj_r(plugin_input.base):
         # VISUAL INFORMATION
         dmf_song_name = data_bytes.readstring_lenbyte(bio_dmf, 1, "little", None)
         dmf_song_author = data_bytes.readstring_lenbyte(bio_dmf, 1, "little", None)
-        dmf_highlight_a_pat = int.from_bytes(bio_dmf.read(1), "little")
-        dmf_highlight_b_pat = int.from_bytes(bio_dmf.read(1), "little")
+        dmf_highlight_a_pat = bio_dmf.read(1)[0]
+        dmf_highlight_b_pat = bio_dmf.read(1)[0]
 
         # MODULE INFORMATION
-        dmf_TimeBase = int.from_bytes(bio_dmf.read(1), "little")
-        dmf_TickTime1 = int.from_bytes(bio_dmf.read(1), "little")
-        dmf_TickTime2 = int.from_bytes(bio_dmf.read(1), "little")
-        dmf_FramesMode = int.from_bytes(bio_dmf.read(1), "little")
-        dmf_UsingCustomHZ = int.from_bytes(bio_dmf.read(1), "little")
-        dmf_CustomHZ1 = int.from_bytes(bio_dmf.read(1), "little")
-        dmf_CustomHZ2 = int.from_bytes(bio_dmf.read(1), "little")
-        dmf_CustomHZ3 = int.from_bytes(bio_dmf.read(1), "little")
+        dmf_TimeBase = bio_dmf.read(1)[0]
+        dmf_TickTime1 = bio_dmf.read(1)[0]
+        dmf_TickTime2 = bio_dmf.read(1)[0]
+        dmf_FramesMode = bio_dmf.read(1)[0]
+        dmf_UsingCustomHZ = bio_dmf.read(1)[0]
+        dmf_CustomHZ1 = bio_dmf.read(1)[0]
+        dmf_CustomHZ2 = bio_dmf.read(1)[0]
+        dmf_CustomHZ3 = bio_dmf.read(1)[0]
         dmf_TOTAL_ROWS_PER_PATTERN = int.from_bytes(bio_dmf.read(4), "little")
-        dmf_TOTAL_ROWS_IN_PATTERN_MATRIX = int.from_bytes(bio_dmf.read(1), "little")
+        dmf_TOTAL_ROWS_IN_PATTERN_MATRIX = bio_dmf.read(1)[0]
 
         # PATTERN MATRIX VALUES
         t_ch_pat_orders = []
@@ -193,7 +193,7 @@ class input_cvpj_r(plugin_input.base):
             t_ch_pat_orders.append(struct.unpack('b'*dmf_TOTAL_ROWS_IN_PATTERN_MATRIX, bio_dmf.read(dmf_TOTAL_ROWS_IN_PATTERN_MATRIX)))
 
         # INSTRUMENTS DATA
-        dmf_TOTAL_INSTRUMENTS = int.from_bytes(bio_dmf.read(1), "little")
+        dmf_TOTAL_INSTRUMENTS = bio_dmf.read(1)[0]
 
         dmf_insts = []
         dmf_instnames = []
@@ -201,66 +201,68 @@ class input_cvpj_r(plugin_input.base):
         for instnum in range(dmf_TOTAL_INSTRUMENTS):
             dmf_inst = {}
             dmfi_name = data_bytes.readstring_lenbyte(bio_dmf, 1, "little", None)
-            dmfi_mode = int.from_bytes(bio_dmf.read(1), "little")
+            dmfi_mode = bio_dmf.read(1)[0]
             dmf_instnames.append(dmfi_name)
             if dmfi_mode == 1:
                 dmf_inst['fm'] = True
                 fmdata = {}
-                fmdata['algorithm'] = int.from_bytes(bio_dmf.read(1), "little")
-                fmdata['feedback'] = int.from_bytes(bio_dmf.read(1), "little")
-                fmdata['lfo'] = int.from_bytes(bio_dmf.read(1), "little") #(FMS on YM2612, PMS on YM2151)
-                fmdata['lfo2'] = int.from_bytes(bio_dmf.read(1), "little") #(AMS on YM2612, AMS on YM2151)
-                for opnum in range(4):
+                fmdata['algorithm'] = bio_dmf.read(1)[0]
+                fmdata['feedback'] = bio_dmf.read(1)[0]
+                fmdata['lfo'] = bio_dmf.read(1)[0] #(FMS on YM2612, PMS on YM2151)
+                fmdata['lfo2'] = bio_dmf.read(1)[0] #(AMS on YM2612, AMS on YM2151)
+                for opnum in [0,2,1,3]:
                     operator_param = {}
-                    operator_param['am'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['env_attack'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['env_decay'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['freqmul'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['env_release'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['env_sustain'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['level'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['detune2'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['ratescale'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['detune'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['env_decay2'] = int.from_bytes(bio_dmf.read(1), "little")
-                    operator_param['ssgmode'] = int.from_bytes(bio_dmf.read(1), "little")
+                    operator_param['am'] = bio_dmf.read(1)[0]
+                    operator_param['env_attack'] = bio_dmf.read(1)[0]
+                    operator_param['env_decay'] = bio_dmf.read(1)[0]
+                    operator_param['freqmul'] = bio_dmf.read(1)[0]
+                    operator_param['env_release'] = bio_dmf.read(1)[0]
+                    operator_param['env_sustain'] = bio_dmf.read(1)[0]
+                    operator_param['level'] = (bio_dmf.read(1)[0]*-1)+127
+                    operator_param['detune2'] = bio_dmf.read(1)[0]
+                    operator_param['ratescale'] = bio_dmf.read(1)[0]
+                    operator_param['detune'] = bio_dmf.read(1)[0]
+                    operator_param['env_decay2'] = bio_dmf.read(1)[0]
+                    ssgmode = bio_dmf.read(1)[0]
+                    operator_param['ssg_enable'] = int(bool(ssgmode & 0b0001000))
+                    operator_param['ssg_mode'] = ssgmode & 0b00001111
                     fmdata['op'+str(opnum+1)] = operator_param
                 dmf_inst['fmdata'] = fmdata
             else:
                 dmf_inst['fm'] = False
                 if dmf_system != int("04",16): dmf_inst['env_volume'] = dmfenv(bio_dmf)
                 dmf_inst['env_arpeggio'] = dmfenv(bio_dmf)
-                dmf_inst['arpeggio_mode'] = int.from_bytes(bio_dmf.read(1), "little")
+                dmf_inst['arpeggio_mode'] = bio_dmf.read(1)[0]
                 dmf_inst['env_duty'] = dmfenv(bio_dmf)
                 dmf_inst['env_wavetable'] = dmfenv(bio_dmf)
                 if dmf_system == int("07",16) or dmf_system == int("47",16):
                     c64data = {}
-                    c64data['wave_triangle'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['wave_saw'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['wave_pulse'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['wave_noise'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['attack'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['decay'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['sustain'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['release'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['pulse width'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['ringmod'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['syncmod'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['to_filter'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['volume_macro_to_filter_cutoff'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['use_filter_values_from_instrument'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['filter_resonance'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['filter_cutoff'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['filter_highpass'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['filter_lowpass'] = int.from_bytes(bio_dmf.read(1), "little")
-                    c64data['filter_CH2off'] = int.from_bytes(bio_dmf.read(1), "little")
+                    c64data['wave_triangle'] = bio_dmf.read(1)[0]
+                    c64data['wave_saw'] = bio_dmf.read(1)[0]
+                    c64data['wave_pulse'] = bio_dmf.read(1)[0]
+                    c64data['wave_noise'] = bio_dmf.read(1)[0]
+                    c64data['attack'] = bio_dmf.read(1)[0]
+                    c64data['decay'] = bio_dmf.read(1)[0]
+                    c64data['sustain'] = bio_dmf.read(1)[0]
+                    c64data['release'] = bio_dmf.read(1)[0]
+                    c64data['pulse width'] = bio_dmf.read(1)[0]
+                    c64data['ringmod'] = bio_dmf.read(1)[0]
+                    c64data['syncmod'] = bio_dmf.read(1)[0]
+                    c64data['to_filter'] = bio_dmf.read(1)[0]
+                    c64data['volume_macro_to_filter_cutoff'] = bio_dmf.read(1)[0]
+                    c64data['use_filter_values_from_instrument'] = bio_dmf.read(1)[0]
+                    c64data['filter_resonance'] = bio_dmf.read(1)[0]
+                    c64data['filter_cutoff'] = bio_dmf.read(1)[0]
+                    c64data['filter_highpass'] = bio_dmf.read(1)[0]
+                    c64data['filter_lowpass'] = bio_dmf.read(1)[0]
+                    c64data['filter_CH2off'] = bio_dmf.read(1)[0]
                     dmf_inst['c64data'] = c64data
                 if dmf_system == int("04",16):
                     gameboydata = {}
-                    gameboydata['env_volume'] = int.from_bytes(bio_dmf.read(1), "little")
-                    gameboydata['env_direction'] = int.from_bytes(bio_dmf.read(1), "little")
-                    gameboydata['env_length'] = int.from_bytes(bio_dmf.read(1), "little")
-                    gameboydata['sound_length'] = int.from_bytes(bio_dmf.read(1), "little")
+                    gameboydata['env_volume'] = bio_dmf.read(1)[0]
+                    gameboydata['env_direction'] = bio_dmf.read(1)[0]
+                    gameboydata['env_length'] = bio_dmf.read(1)[0]
+                    gameboydata['sound_length'] = bio_dmf.read(1)[0]
                     dmf_inst['gameboydata'] = gameboydata
             dmf_insts.append(dmf_inst)
 
@@ -270,7 +272,7 @@ class input_cvpj_r(plugin_input.base):
         # WAVETABLES DATA
         dmf_wavetables = []
 
-        dmf_TOTAL_WAVETABLES = int.from_bytes(bio_dmf.read(1), "little")
+        dmf_TOTAL_WAVETABLES = bio_dmf.read(1)[0]
         for _ in range(dmf_TOTAL_WAVETABLES):
             dmf_WAVETABLE_SIZE = int.from_bytes(bio_dmf.read(4), "little")
             wavetable = struct.unpack('I'*dmf_WAVETABLE_SIZE , bio_dmf.read(dmf_WAVETABLE_SIZE*4))
@@ -288,7 +290,7 @@ class input_cvpj_r(plugin_input.base):
 
             t_orders[channum] = t_ch_pat_orders[channum]
             dmf_pat_channel = []
-            dmf_CHANNEL_EFFECTS_COLUMNS_COUNT = int.from_bytes(bio_dmf.read(1), "little")
+            dmf_CHANNEL_EFFECTS_COLUMNS_COUNT = bio_dmf.read(1)[0]
             for patnum in t_ch_pat_orders[channum]:
                 table_rows = []
                 for rownum in range(dmf_TOTAL_ROWS_PER_PATTERN):
@@ -316,7 +318,7 @@ class input_cvpj_r(plugin_input.base):
 
                     if output_note != None and output_note != 'Off':
                         if s_chantype == 'square':  output_note += 36
-                        if s_chantype == 'fm': output_note += 12
+                        if s_chantype == 'opn2': output_note += 12
 
                     if r_inst != -1 and output_note != None: output_inst = r_inst
                     if rownum == 0: table_rows.append([{'firstrow': 1},[output_note, output_inst, output_param, output_extra]])

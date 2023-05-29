@@ -338,9 +338,9 @@ def opnplug_addbank(xmltag, num, name):
 
 def opnplug_op_params(xmltag, opnum, plugindata):
 	opdata = plugindata["op"+str(opnum)]
-	opnplug_addvalue(xmltag, "op"+str(opnum)+"detune" ,opdata["detune"]+1)
+	opnplug_addvalue(xmltag, "op"+str(opnum)+"detune" ,opdata["detune"])
 	opnplug_addvalue(xmltag, "op"+str(opnum)+"fmul" ,opdata["freqmul"])
-	opnplug_addvalue(xmltag, "op"+str(opnum)+"level" ,(opdata["level"]*-1)+127)
+	opnplug_addvalue(xmltag, "op"+str(opnum)+"level" ,opdata["level"])
 	opnplug_addvalue(xmltag, "op"+str(opnum)+"ratescale" ,opdata["ratescale"])
 	opnplug_addvalue(xmltag, "op"+str(opnum)+"attack" ,opdata["env_attack"])
 	opnplug_addvalue(xmltag, "op"+str(opnum)+"am" ,opdata["am"])
@@ -348,8 +348,8 @@ def opnplug_op_params(xmltag, opnum, plugindata):
 	opnplug_addvalue(xmltag, "op"+str(opnum)+"decay2" ,opdata["env_decay2"])
 	opnplug_addvalue(xmltag, "op"+str(opnum)+"sustain" ,opdata["env_sustain"])
 	opnplug_addvalue(xmltag, "op"+str(opnum)+"release" ,opdata["env_release"])
-	opnplug_addvalue(xmltag, "op"+str(opnum)+"ssgenable" ,int(bool(opdata["ssgmode"] & 0b0001000)))
-	opnplug_addvalue(xmltag, "op"+str(opnum)+"ssgwave" ,opdata["ssgmode"] & 0b00001111)
+	opnplug_addvalue(xmltag, "op"+str(opnum)+"ssgenable" ,opdata["ssg_enable"])
+	opnplug_addvalue(xmltag, "op"+str(opnum)+"ssgwave" ,opdata["ssg_mode"])
 
 def opnplug_convert(plugindata):
 	opnplug_root = ET.Element("ADLMIDI-state")

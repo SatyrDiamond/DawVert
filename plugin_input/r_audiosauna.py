@@ -215,6 +215,12 @@ class input_audiosanua(plugin_input.base):
                 for v_device_param in audiosanua_device_params[v_device_deviceType]:
                     cvpj_plugindata['data'][v_device_param] = getvalue(x_device_sound, v_device_param, 0)
 
+                setasdr(vol_asdr, 
+                    float(getvalue(x_device_sound, 'attack', 0)), 
+                    float(getvalue(x_device_sound, 'decay', 0)), 
+                    float(getvalue(x_device_sound, 'release', 0)), 
+                    float(getvalue(x_device_sound, 'sustain', 0)))
+                
             if v_device_deviceType == 2:
                 x_device_sound = x_device.findall('sampler')[0]
                 cvpj_instdata['plugin'] = 'sampler-multi'

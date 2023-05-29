@@ -121,7 +121,7 @@ def parse_notes(channum, bb_notes, bb_instruments):
 
         for point in points:
             if maxvol != 0:
-                t_auto_gain.append({'position': calcval(point['tick']-points[0]['tick']), 'value': point['volume']/maxvol})
+                t_auto_gain.append({'position': calcval(point['tick']-points[0]['tick']), 'value': (point['volume']*(1/maxvol))})
 
         t_vol = maxvol/100
 

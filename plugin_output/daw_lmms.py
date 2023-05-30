@@ -193,8 +193,15 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname):
                     trkJ_loop = plugJ['loop']
                     if 'points' in trkJ_loop:
                         trkJ_loop_points = trkJ_loop['points']
-                        xml_sampler.set('lframe', str(trkJ_loop_points[0]/trkJ_length))
-                        xml_sampler.set('eframe', str(trkJ_loop_points[1]/trkJ_length))
+
+                        start = trkJ_loop_points[0] / trkJ_length
+                        end = trkJ_loop_points[1] / trkJ_length
+
+                        if end == 0 or start == end:
+                            end = 1.0
+
+                        xml_sampler.set('lframe', str(start))
+                        xml_sampler.set('eframe', str(end))
 
         if point_value_type == 'percent':
             if 'start' in plugJ: xml_sampler.set('sframe', str(plugJ['start']))

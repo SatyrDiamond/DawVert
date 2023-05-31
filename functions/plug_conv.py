@@ -16,6 +16,7 @@ from functions_plugparams import params_various_inst
 from functions_plugconv import input_flstudio
 from functions_plugconv import input_pxtone
 from functions_plugconv import input_jummbox
+from functions_plugconv import input_soundchip
 from functions_plugconv import input_audiosauna
 
 from functions_plugconv import output_simple_vst2
@@ -28,7 +29,6 @@ from functions_plugconv import output_soundchip_vst2
 from functions_plugconv import output_flstudio_vst2
 from functions_plugconv import output_lmms_vst2
 from functions_plugconv import output_onlineseq_vst2
-#from functions_plugconv import output_audiosauna_vst2
 
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
@@ -38,6 +38,7 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 			plugindata = instdata['plugindata']
 
 			# ---------------------------------------- input ----------------------------------------
+			input_soundchip.convert_inst(instdata)
 			if in_daw == 'flp' and pluginname == 'native-fl': input_flstudio.convert_inst(instdata)
 			if in_daw == 'ptcop' and pluginname == 'native-pxtone': input_pxtone.convert_inst(instdata)
 			if in_daw == 'jummbox' and pluginname == 'native-jummbox': input_jummbox.convert_inst(instdata)
@@ -61,9 +62,6 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 			pluginname = instdata['plugin']
 			plugindata = instdata['plugindata']
 
-			output_soundchip_vst2.convert_inst(instdata, out_daw)
-			output_retro_vst2.convert_inst(instdata, out_daw)
-
 			if pluginname == 'sampler' and out_daw not in supportedplugins['sampler']: 
 				output_sampler_vst2.convert_inst(instdata, platform_id)
 
@@ -78,6 +76,9 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 
 			elif pluginname == 'native-fl':
 				output_flstudio_vst2.convert_inst(instdata)
+
+			elif out_daw not in supportedplugins['vst2']:
+				output_soundchip_vst2.convert_inst(instdata, out_daw)
 
 			# -------------------- vst2 (juicysfplugin) --------------------
 

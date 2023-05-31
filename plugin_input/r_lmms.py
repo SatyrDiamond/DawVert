@@ -276,7 +276,7 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_plugindata, cvpj_l_inst):
             asdflfo_get(trkX_insttr, cvpj_l_plugindata)
 
 
-        elif pluginname == "OPL2":
+        elif pluginname == "OPL2" or pluginname == "opulenz":
             cvpj_l_inst['plugin'] = "opl2"
             for opnum in range(2):
                 opl2_optxt = 'op'+str(opnum+1)

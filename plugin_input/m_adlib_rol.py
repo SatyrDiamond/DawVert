@@ -51,8 +51,8 @@ def decode_inst(instname):
     cvpj_instdata['plugin'] = 'opl2'
     plugindata = cvpj_instdata['plugindata'] = {}
 
-    plugindata['percussive'] = opl2data[0][0]
-    plugindata['perctype'] = opl2data[0][1]
+    if opl2data[0][0] == 1: plugindata['perctype'] = opl2data[0][1]-6
+    else: plugindata['perctype'] = 0
 
     plugindata['tremolo_depth'] = 0
     plugindata['vibrato_depth'] = 0

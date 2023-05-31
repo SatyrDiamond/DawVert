@@ -148,9 +148,26 @@ class input_gt_mnbs(plugin_input.base):
             cvpj_instgm = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'gm_inst')
             cvpj_instdata = {}
             if cvpj_instgm != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': cvpj_instgm-1}}
-
             tracks.m_create_inst(cvpj_l, instid, cvpj_instdata)
             tracks.m_basicdata_inst(cvpj_l, instid, cvpj_instname, cvpj_instcolor, 1.0, 0.0)
+
+        # PART 4: CUSTOM INSTRUMENTS
+        custominstid = 16
+        if nbs_file.tell() <= nbs_len:
+            num_custominst = nbs_file.read(1)[0]
+            for custominstnum in range(num_custominst):
+                custominst_name = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
+                custominst_file = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
+                custominst_key = nbs_file.read(1)[0]
+                custominst_presskey = nbs_file.read(1)[0]
+                print(custominst_name, custominst_file, custominst_key, custominst_presskey)
+                cvpj_instdata = {}
+                cvpj_instdata['plugin'] = 'sampler'
+                cvpj_instdata['plugindata'] = {}
+                cvpj_instdata['plugindata']['file'] = custominst_file
+                tracks.m_create_inst(cvpj_l, 'NoteBlock'+str(custominstid), cvpj_instdata)
+                tracks.m_basicdata_inst(cvpj_l, 'NoteBlock'+str(custominstid), custominst_name, None, 1.0, 0.0)
+                custominstid += 1
 
         song.add_info(cvpj_l, 'title', nbs_song_name)
         song.add_info(cvpj_l, 'author', nbs_song_author)

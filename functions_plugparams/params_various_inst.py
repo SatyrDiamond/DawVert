@@ -392,7 +392,7 @@ def opnplug_convert(plugindata):
 	opnplug_common = ET.SubElement(opnplug_root, 'common')
 	opnplug_addvalue(opnplug_common, "bank_title" ,'DawVert')
 	opnplug_addvalue(opnplug_common, "part" ,0)
-	opnplug_addvalue(opnplug_common, "master_volume" ,2.0)
+	opnplug_addvalue(opnplug_common, "master_volume" ,12.0)
 
 	return opnplug_root
 

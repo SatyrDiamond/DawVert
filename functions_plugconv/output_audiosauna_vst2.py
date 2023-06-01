@@ -14,9 +14,9 @@ def convert_inst(instdata):
 		as_type = plugindata['type']
 		as_data = plugindata['data']
 		as_asdrlfo = plugindata['asdrlfo']
-		print(as_type)
-		print(as_data)
-		print(as_asdrlfo)
+		#print(as_type)
+		#print(as_data)
+		#print(as_asdrlfo)
 		
 def convert_fx(fxdata):
 	pluginname = fxdata['plugin']

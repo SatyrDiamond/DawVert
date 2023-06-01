@@ -8,17 +8,9 @@ import math
 
 from functions import note_data
 from functions import data_bytes
-from functions import data_values
 from functions import plugin_vst2
-from functions import params_vst
 
 from functions_plugconv import input_flstudio_wrapper
-
-from functions_plugparams import params_various_inst
-from functions_plugparams import params_various_fx
-from functions_plugparams import params_vital
-from functions_plugparams import params_vital_wavetable
-from functions_plugparams import data_nullbytegroup
 
 simsynth_shapes = {0.4: 'noise', 0.3: 'sine', 0.2: 'square', 0.1: 'saw', 0.0: 'triangle'}
 

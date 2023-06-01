@@ -173,11 +173,11 @@ class output_cvpj(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': False,
-        'r_track_lanes': True,
+        'track_lanes': True,
         'placement_cut': True,
         'placement_loop': False,
-        'no_pl_auto': True,
-        'no_placements': False
+        'auto_nopl': True,
+        'track_nopl': False
         }
     def parse(self, convproj_json, output_file):
         global NoteStep

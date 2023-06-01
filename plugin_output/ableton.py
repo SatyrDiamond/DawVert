@@ -1047,12 +1047,12 @@ class output_cvpj(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': False,
-        'r_track_lanes': False,
+        'track_lanes': False,
         'placement_cut': True,
         'placement_loop': True,
-        'no_placements': False,
-        'no_pl_auto': True,
-        'audio_events': False
+        'track_nopl': False,
+        'auto_nopl': True,
+        'placement_audio_events': False
         }
     def parse(self, convproj_json, output_file):
         global cvpj_l

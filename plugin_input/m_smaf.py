@@ -164,9 +164,9 @@ class input_mmf(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': True,
-        'r_track_lanes': True,
-        'no_pl_auto': True,
-        'no_placements': True
+        'track_lanes': True,
+        'auto_nopl': True,
+        'track_nopl': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):

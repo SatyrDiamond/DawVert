@@ -208,11 +208,11 @@ class input_adlib_rol(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': True,
-        'r_track_lanes': True,
+        'track_lanes': True,
         'placement_cut': False,
         'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': True
+        'auto_nopl': False,
+        'track_nopl': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):

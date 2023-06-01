@@ -37,7 +37,7 @@ class imput_umx(plugin_input.base):
         return 'm'
     
     def getdawcapabilities(self) -> Dict[str, bool]: 
-        return { 'r_track_lanes': True }
+        return { 'track_lanes': True }
     
     def supported_autodetect(self) -> bool: 
         return True

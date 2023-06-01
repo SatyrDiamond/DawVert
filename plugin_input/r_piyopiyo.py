@@ -22,8 +22,8 @@ class input_piyopiyo(plugin_input.base):
     def gettype(self): return 'r'
     def getdawcapabilities(self): 
         return {
-        'no_pl_auto': True,
-        'no_placements': True
+        'auto_nopl': True,
+        'track_nopl': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):

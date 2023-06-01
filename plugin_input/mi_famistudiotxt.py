@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import shlex
-import json
 import plugin_input
 import json
 from functions import placements

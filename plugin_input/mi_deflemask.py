@@ -3,7 +3,6 @@
 
 from functions import data_bytes
 from functions import song_tracker
-from functions import note_convert
 from functions import tracks
 from functions import song
 import plugin_input

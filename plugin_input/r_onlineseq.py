@@ -1,13 +1,9 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import auto
-from functions import data_bytes
 from functions import data_values
 from functions import idvals
 from functions import note_data
-from functions import note_mod
-from functions import notelist_data
 from functions import placement_data
 from functions import tracks
 import plugin_input

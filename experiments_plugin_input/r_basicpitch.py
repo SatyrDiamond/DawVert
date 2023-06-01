@@ -23,7 +23,7 @@ class input_ex_basic_pitch(experiments_plugin_input.base):
         'placement_loop': False,
         'no_placements': False,
         'no_pl_auto': False,
-        'pl_audio_events': False,
+        'audio_events': False,
         }
     def parse(self, input_file, extra_param):
         bytestream = open(input_file, 'r')

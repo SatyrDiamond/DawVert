@@ -684,7 +684,7 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
         print('[compat] placement_cut   | '+str(in__placement_cut).ljust(5)+' | '+str(out__placement_cut).ljust(5)+' |')
         print('[compat] placement_loop  | '+str(in__placement_loop).ljust(5)+' | '+str(out__placement_loop).ljust(5)+' |')
         print('[compat] no_placements   | '+str(in__no_placements).ljust(5)+' | '+str(out__no_placements).ljust(5)+' |')
-        print('[compat] pl_audio_events | '+str(in__audio_events).ljust(5)+' | '+str(out__audio_events).ljust(5)+' |')
+        print('[compat] audio_events | '+str(in__audio_events).ljust(5)+' | '+str(out__audio_events).ljust(5)+' |')
         print('[compat] ----------------+-------+-------+')
     isprinted = True
 

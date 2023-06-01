@@ -15,9 +15,9 @@ class output_cvpj_f(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': True,
-        'r_track_lanes': False,
-        'no_pl_auto': False,
-        'audio_events': False,
+        'track_lanes': False,
+        'auto_nopl': False,
+        'placement_audio_events': False,
         }
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)

@@ -55,12 +55,12 @@ class input_ableton(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': False,
-        'r_track_lanes': False,
+        'track_lanes': False,
         'placement_cut': True,
         'placement_loop': True,
-        'no_placements': False,
-        'no_pl_auto': False,
-        'audio_events': False,
+        'track_nopl': False,
+        'auto_nopl': False,
+        'placement_audio_events': False,
         }
     def parse(self, input_file, extra_param):
 

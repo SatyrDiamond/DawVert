@@ -80,7 +80,7 @@ class input_midi(plugin_input.base):
     def getname(self): return 'MIDI'
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
-        return {'fxrack': True,'r_track_lanes': True,'no_pl_auto': True,'no_placements': True}
+        return {'fxrack': True,'track_lanes': True,'auto_nopl': True,'track_nopl': True}
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')

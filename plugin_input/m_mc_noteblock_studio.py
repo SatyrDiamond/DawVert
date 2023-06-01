@@ -28,7 +28,7 @@ class input_gt_mnbs(plugin_input.base):
     def getname(self): return 'Minecraft Note Block Studio'
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
-        return {'r_track_lanes': True}
+        return {'track_lanes': True}
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
 

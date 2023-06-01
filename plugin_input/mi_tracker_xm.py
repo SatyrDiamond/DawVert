@@ -3,12 +3,9 @@
 
 import plugin_input
 import os.path
-import math
 import json
 import struct
-import numpy as np
 from functions import song_tracker
-from functions import audio_wav
 from functions import folder_samples
 from functions import data_bytes
 from functions import tracks

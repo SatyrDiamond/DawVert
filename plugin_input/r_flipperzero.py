@@ -3,7 +3,6 @@
 
 import plugin_input
 import json
-import os.path
 from functions import placement_data
 from functions import tracks
 from functions import note_data
@@ -29,7 +28,6 @@ class input_fmf(plugin_input.base):
         bytesdata = bytestream.read(30)
         if bytesdata == b'Filetype: Flipper Music Format': return True
         else: return False
-        bytestream.seek(0)
     def parse(self, input_file, extra_param):
 
         l_key = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']

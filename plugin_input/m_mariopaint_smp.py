@@ -52,6 +52,8 @@ class input_mariopaint_smp(plugin_input.base):
         smp_values = {}
         linecount = 0
         f_smp = open(input_file, 'r')
+        smp_tempo = 140
+        notelen = 1
         lines_smp = f_smp.readlines()
         for line in lines_smp:
             if linecount == 0: 

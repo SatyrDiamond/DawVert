@@ -2,11 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugin_input
-import os.path
 import json
-import mido
 from mido import MidiFile
-from functions import note_convert
 from functions import format_midi_in
 from functions import midi_exdata
 from functions import colors
@@ -88,7 +85,6 @@ class input_midi(plugin_input.base):
         bytesdata = bytestream.read(4)
         if bytesdata == b'MThd': return True
         else: return False
-        bytestream.seek(0)
     def parse(self, input_file, extra_param):
         global author
         global titlefound

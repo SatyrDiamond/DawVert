@@ -17,7 +17,7 @@ def nbs_parsekey(nbs_file, nbs_newformat):
     if nbs_newformat == 1:
         nbs_velocity = nbs_file.read(1)[0]
         nbs_pan = nbs_file.read(1)[0]
-        nbs_pitch = int.from_bytes(nbs_file.read(2), "little", signed="True")
+        nbs_pitch = int.from_bytes(nbs_file.read(2), "little", signed=True)
         return [nbs_key, nbs_inst, [nbs_velocity, nbs_pan, nbs_pitch]]
     else: return [nbs_key, nbs_inst, None, None, None]
 
@@ -46,11 +46,6 @@ class input_gt_mnbs(plugin_input.base):
         nbs_startbyte = int.from_bytes(nbs_file.read(2), "little")
         if nbs_startbyte == 0: 
             nbs_newformat = 1
-        else: 
-            nbs_layercount = nbs_startbyte
-            nbs_newformat = 0
-
-        if nbs_newformat == 1:
             nbs_new_version = nbs_file.read(1)[0]
             if nbs_new_version != 5:
                 print('[input-mnbs] only version 5 new-NBS or old format is supported.')
@@ -58,6 +53,9 @@ class input_gt_mnbs(plugin_input.base):
             nbs_vanilla_inst_count = nbs_file.read(1)[0]
             nbs_songlength = int.from_bytes(nbs_file.read(2), "little")
             nbs_layercount = int.from_bytes(nbs_file.read(2), "little")
+        else: 
+            nbs_layercount = nbs_startbyte
+            nbs_newformat = 0
 
         nbs_notes = {}
         for playlistid in range(nbs_layercount):
@@ -137,7 +135,7 @@ class input_gt_mnbs(plugin_input.base):
         if nbs_file.tell() <= nbs_len:
             for layernum in range(nbs_layercount):
                 layername = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
-                if layername != None: tracks.m_playlist_pl(cvpj_l, playlistid+1, layername, None, None)
+                if layername != None: tracks.m_playlist_pl(cvpj_l, layernum+1, layername, None, None)
                 if nbs_newformat == 1: nbs_file.read(3)
 
         # OUTPUT

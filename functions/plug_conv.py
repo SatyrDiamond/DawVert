@@ -112,7 +112,6 @@ def convplug_fx(fxdata, in_daw, out_daw, extra_json):
 			if pluginname == 'native-simple': 
 				output_simple_vst2.convert_fx(fxdata)
 
-
 			elif in_daw == 'lmms' and pluginname == 'native-lmms': 
 				output_lmms_vst2.convert_fx(fxdata)
 

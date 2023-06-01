@@ -20,7 +20,7 @@ class input_cvpj_r(plugin_input.base):
         'placement_loop': 'debug',
         'no_placements': 'debug',
         'no_pl_auto': 'debug',
-        'pl_audio_events': 'debug',
+        'audio_events': 'debug',
         }
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')

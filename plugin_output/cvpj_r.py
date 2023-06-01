@@ -17,7 +17,7 @@ class output_cvpj_f(plugin_output.base):
         'fxrack': True,
         'r_track_lanes': False,
         'no_pl_auto': False,
-        'pl_audio_events': False,
+        'audio_events': False,
         }
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)

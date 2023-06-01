@@ -19,7 +19,7 @@ class output_cvpj(plugin_output.base):
         'placement_loop': 'debug',
         'no_placements': 'debug',
         'no_pl_auto': 'debug',
-        'pl_audio_events': 'debug',
+        'audio_events': 'debug',
         }
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)

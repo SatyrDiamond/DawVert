@@ -374,7 +374,7 @@ def m_removeloops(projJ):
         if 'placements_notes' in playlist_id_data:
             playlist_id_data['placements_notes'] = r_removeloops_placements(playlist_id_data['placements_notes'], tempo)
 
-# -------------------------------------------- r_track_lanes --------------------------------------------
+# -------------------------------------------- track_lanes --------------------------------------------
 
 def tracklanename(trackname, lanename, fallback):
     if trackname != None:
@@ -451,7 +451,7 @@ def r_removelanes(projJ):
     projJ['track_order'] = new_trackordering
     projJ['track_placements'] = new_trackplacements
 
-# -------------------------------------------- no_placements --------------------------------------------
+# -------------------------------------------- track_nopl --------------------------------------------
 
 points_items = None
 
@@ -541,7 +541,7 @@ def r_split_single_notelist(projJ):
                             print('[compat] singlenotelist2placements: laned: splitted "'+trackid+'" from lane "'+str(s_lanedata)+'" to '+str(len(track_placements[trackid]['lanedata'][s_lanedata]['notes'])) + ' placements.')
     projJ['do_singlenotelistcut'] = False
 
-# -------------------------------------------- no_pl_auto --------------------------------------------
+# -------------------------------------------- auto_nopl --------------------------------------------
 
 def remove_auto_placements_single(i_autodata):
     new_points = []
@@ -613,26 +613,22 @@ def makecompat_any(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     if 'fxrack' in in_dawcapabilities: in__fxrack = in_dawcapabilities['fxrack']
     if 'fxrack' in out_dawcapabilities: out__fxrack = out_dawcapabilities['fxrack']
 
-    in__no_pl_auto = False
-    out__no_pl_auto = False
-    if 'no_pl_auto' in in_dawcapabilities: in__no_pl_auto = in_dawcapabilities['no_pl_auto']
-    if 'no_pl_auto' in out_dawcapabilities: out__no_pl_auto = out_dawcapabilities['no_pl_auto']
+    in__auto_nopl = False
+    out__auto_nopl = False
+    if 'auto_nopl' in in_dawcapabilities: in__auto_nopl = in_dawcapabilities['auto_nopl']
+    if 'auto_nopl' in out_dawcapabilities: out__auto_nopl = out_dawcapabilities['auto_nopl']
 
     in__time_seconds = False
     out__time_seconds = False
     if 'time_seconds' in in_dawcapabilities: in__time_seconds = in_dawcapabilities['time_seconds']
     if 'time_seconds' in out_dawcapabilities: out__time_seconds = out_dawcapabilities['time_seconds']
 
-    print('[compat] ----------------+-------+-------+')
-    print('[compat] Name            | In    | Out   |')
-    print('[compat] ----------------+-------+-------+')
-    print('[compat] fxrack          | '+str(in__fxrack).ljust(5)+' | '+str(out__fxrack).ljust(5)+' |')
-    print('[compat] no_pl_auto      | '+str(in__no_pl_auto).ljust(5)+' | '+str(out__no_pl_auto).ljust(5)+' |')
-    print('[compat] time_seconds    | '+str(in__time_seconds).ljust(5)+' | '+str(out__time_seconds).ljust(5)+' |')
-    print('[compat] ----------------+-------+-------+')
+    print('[compat] '+str(in__fxrack).ljust(5)+' | '+str(out__fxrack).ljust(5)+' | fxrack')
+    print('[compat] '+str(in__auto_nopl).ljust(5)+' | '+str(out__auto_nopl).ljust(5)+' | auto_nopl')
+    print('[compat] '+str(in__time_seconds).ljust(5)+' | '+str(out__time_seconds).ljust(5)+' | time_seconds')
 
     if in__fxrack == False and out__fxrack == True: trackfx2fxrack(cvpj_proj, cvpj_type)
-    if in__no_pl_auto == False and out__no_pl_auto == True: remove_auto_placements(cvpj_proj)
+    if in__auto_nopl == False and out__auto_nopl == True: remove_auto_placements(cvpj_proj)
     if in__time_seconds == False and out__time_seconds == True: beats_to_seconds(cvpj_proj)
     return json.dumps(cvpj_proj)
 
@@ -652,40 +648,36 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
 
     cvpj_proj = json.loads(cvpj_l)
 
-    in__r_track_lanes = False
+    in__track_lanes = False
     in__placement_cut = False
     in__placement_loop = False
-    in__no_placements = False
-    in__audio_events = False
+    in__track_nopl = False
+    in__placement_audio_events = False
 
-    out__r_track_lanes = False
+    out__track_lanes = False
     out__placement_cut = False
     out__placement_loop = False
-    out__no_placements = False
-    out__audio_events = False
+    out__track_nopl = False
+    out__placement_audio_events = False
 
-    if 'r_track_lanes' in in_dawcapabilities: in__r_track_lanes = in_dawcapabilities['r_track_lanes']
+    if 'track_lanes' in in_dawcapabilities: in__track_lanes = in_dawcapabilities['track_lanes']
+    if 'track_nopl' in in_dawcapabilities: in__track_nopl = in_dawcapabilities['track_nopl']
     if 'placement_cut' in in_dawcapabilities: in__placement_cut = in_dawcapabilities['placement_cut']
     if 'placement_loop' in in_dawcapabilities: in__placement_loop = in_dawcapabilities['placement_loop']
-    if 'no_placements' in in_dawcapabilities: in__no_placements = in_dawcapabilities['no_placements']
-    if 'audio_events' in in_dawcapabilities: in__audio_events = in_dawcapabilities['audio_events']
+    if 'placement_audio_events' in in_dawcapabilities: in__placement_audio_events = in_dawcapabilities['placement_audio_events']
 
-    if 'r_track_lanes' in out_dawcapabilities: out__r_track_lanes = out_dawcapabilities['r_track_lanes']
+    if 'track_lanes' in out_dawcapabilities: out__track_lanes = out_dawcapabilities['track_lanes']
+    if 'track_nopl' in out_dawcapabilities: out__track_nopl = out_dawcapabilities['track_nopl']
     if 'placement_cut' in out_dawcapabilities: out__placement_cut = out_dawcapabilities['placement_cut']
     if 'placement_loop' in out_dawcapabilities: out__placement_loop = out_dawcapabilities['placement_loop']
-    if 'no_placements' in out_dawcapabilities: out__no_placements = out_dawcapabilities['no_placements']
-    if 'audio_events' in out_dawcapabilities: out__audio_events = out_dawcapabilities['audio_events']
+    if 'placement_audio_events' in out_dawcapabilities: out__placement_audio_events = out_dawcapabilities['placement_audio_events']
 
     if isprinted == False:
-        print('[compat] ----------------+-------+-------+')
-        print('[compat] Name            | In    | Out   |')
-        print('[compat] ----------------+-------+-------+')
-        print('[compat] r_track_lanes   | '+str(in__r_track_lanes).ljust(5)+' | '+str(out__r_track_lanes).ljust(5)+' |')
-        print('[compat] placement_cut   | '+str(in__placement_cut).ljust(5)+' | '+str(out__placement_cut).ljust(5)+' |')
-        print('[compat] placement_loop  | '+str(in__placement_loop).ljust(5)+' | '+str(out__placement_loop).ljust(5)+' |')
-        print('[compat] no_placements   | '+str(in__no_placements).ljust(5)+' | '+str(out__no_placements).ljust(5)+' |')
-        print('[compat] audio_events | '+str(in__audio_events).ljust(5)+' | '+str(out__audio_events).ljust(5)+' |')
-        print('[compat] ----------------+-------+-------+')
+        print('[compat] '+str(in__track_lanes).ljust(5)+' | '+str(out__track_lanes).ljust(5)+' | track_lanes')
+        print('[compat] '+str(in__placement_cut).ljust(5)+' | '+str(out__placement_cut).ljust(5)+' | placement_cut')
+        print('[compat] '+str(in__placement_loop).ljust(5)+' | '+str(out__placement_loop).ljust(5)+' | placement_loop')
+        print('[compat] '+str(in__track_nopl).ljust(5)+' | '+str(out__track_nopl).ljust(5)+' | track_nopl')
+        print('[compat] '+str(in__placement_audio_events).ljust(5)+' | '+str(out__placement_audio_events).ljust(5)+' | placement_audio_events')
     isprinted = True
 
     if cvpj_type == 'm' and m_processed == False:
@@ -697,8 +689,8 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
         mi_processed = True
 
     if cvpj_type == 'r' and r_processed == False:
-        if in__no_placements == True and out__no_placements == False: r_split_single_notelist(cvpj_proj)
-        if in__r_track_lanes == True and out__r_track_lanes == False: r_removelanes(cvpj_proj)
+        if in__track_nopl == True and out__track_nopl == False: r_split_single_notelist(cvpj_proj)
+        if in__track_lanes == True and out__track_lanes == False: r_removelanes(cvpj_proj)
         if in__placement_loop == True and out__placement_loop == False: r_removeloops(cvpj_proj)
         if in__placement_cut == True and out__placement_cut == False: r_removecut(cvpj_proj)
         if in__placement_loop == False and out__placement_loop == True: r_addloops(cvpj_proj)

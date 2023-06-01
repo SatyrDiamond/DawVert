@@ -52,8 +52,8 @@ class input_mariopaint_msq(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
-        'r_track_lanes': True,
-        'no_placements': True
+        'track_lanes': True,
+        'track_nopl': True
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):

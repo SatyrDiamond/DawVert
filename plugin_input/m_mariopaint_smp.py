@@ -42,7 +42,7 @@ class input_mariopaint_smp(plugin_input.base):
     def getname(self): return 'Super Mario Paint'
     def gettype(self): return 'm'
     def getdawcapabilities(self):
-        return {'r_track_lanes': True, 'no_placements': True}
+        return {'track_lanes': True, 'track_nopl': True}
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global cvpj_notelist

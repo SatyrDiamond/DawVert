@@ -816,11 +816,11 @@ class output_lmms(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': True,
-        'r_track_lanes': False,
+        'track_lanes': False,
         'placement_cut': False,
         'placement_loop': False,
-        'no_pl_auto': False,
-        'no_placements': False
+        'auto_nopl': False,
+        'track_nopl': False
         }
     def parse(self, convproj_json, output_file):
         global autoidnum

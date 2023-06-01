@@ -22,7 +22,7 @@ class input_s3m(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
-        'r_track_lanes': True
+        'track_lanes': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):

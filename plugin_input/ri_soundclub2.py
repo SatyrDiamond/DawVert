@@ -28,8 +28,8 @@ class input_soundclub2(plugin_input.base):
     def gettype(self): return 'ri'
     def getdawcapabilities(self): 
         return {
-        'r_track_lanes': True,
-        'no_pl_auto': True
+        'track_lanes': True,
+        'auto_nopl': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):

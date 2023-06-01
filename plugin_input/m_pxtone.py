@@ -169,9 +169,9 @@ class input_pxtone(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
-        'r_track_lanes': True,
-        'no_pl_auto': True,
-        'no_placements': True
+        'track_lanes': True,
+        'auto_nopl': True,
+        'track_nopl': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):

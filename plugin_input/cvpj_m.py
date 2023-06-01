@@ -15,12 +15,12 @@ class input_cvpj_m(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': 'debug',
-        'r_track_lanes': 'debug',
+        'track_lanes': 'debug',
         'placement_cut': 'debug',
         'placement_loop': 'debug',
-        'no_placements': 'debug',
-        'no_pl_auto': 'debug',
-        'audio_events': 'debug',
+        'track_nopl': 'debug',
+        'auto_nopl': 'debug',
+        'placement_audio_events': 'debug',
         }
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')

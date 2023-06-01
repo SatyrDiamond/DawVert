@@ -47,7 +47,7 @@ class input_flp(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': True,
-        'r_track_lanes': True,
+        'track_lanes': True,
         'placement_cut': True
         }
     def supported_autodetect(self): return True

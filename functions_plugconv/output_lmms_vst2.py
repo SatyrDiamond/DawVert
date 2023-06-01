@@ -11,7 +11,7 @@ from functions import xtramath
 from functions_plugparams import params_various_fx
 from functions_plugparams import params_vital
 from functions_plugparams import params_vital_wavetable
-from functions_plugparams import params_various_inst
+from functions_plugparams import params_kickmess
 from functions_plugparams import data_nullbytegroup
 
 def socalabs_addparam(x_sid, name, value):
@@ -98,20 +98,20 @@ def convert_inst(instdata):
 			else: instdata['middlenote'] = -12
 
 		if lmmsnat_name == 'kicker':
-			params_various_inst.kickmess_init()
-			params_various_inst.kickmess_setvalue('pub', 'freq_start', lmmsnat_data['startfreq'])
-			params_various_inst.kickmess_setvalue('pub', 'freq_end', lmmsnat_data['endfreq'])
-			params_various_inst.kickmess_setvalue('pub', 'f_env_release', lmmsnat_data['decay'])
-			params_various_inst.kickmess_setvalue('pub', 'dist_start', lmmsnat_data['dist']/100)
-			params_various_inst.kickmess_setvalue('pub', 'dist_end', lmmsnat_data['distend']/100)
-			params_various_inst.kickmess_setvalue('pub', 'gain', xtramath.clamp(lmmsnat_data['gain'], 0, 2)/2)
-			params_various_inst.kickmess_setvalue('pub', 'env_slope', lmmsnat_data['env'])
-			params_various_inst.kickmess_setvalue('pub', 'freq_slope', lmmsnat_data['slope'])
-			params_various_inst.kickmess_setvalue('pub', 'noise', lmmsnat_data['noise'])
-			if lmmsnat_data['startnote'] == 1: params_various_inst.kickmess_setvalue('pub', 'freq_note_start', 0.5)
-			if lmmsnat_data['endnote'] == 1: params_various_inst.kickmess_setvalue('pub', 'freq_note_end', 0.5)
-			params_various_inst.kickmess_setvalue('pub', 'phase_offs', lmmsnat_data['click'])
-			plugin_vst2.replace_data(instdata, 'any', 'Kickmess (VST)', 'chunk', params_various_inst.kickmess_get(), None)
+			params_kickmess.initparams()
+			params_kickmess.setvalue('pub', 'freq_start', lmmsnat_data['startfreq'])
+			params_kickmess.setvalue('pub', 'freq_end', lmmsnat_data['endfreq'])
+			params_kickmess.setvalue('pub', 'f_env_release', lmmsnat_data['decay'])
+			params_kickmess.setvalue('pub', 'dist_start', lmmsnat_data['dist']/100)
+			params_kickmess.setvalue('pub', 'dist_end', lmmsnat_data['distend']/100)
+			params_kickmess.setvalue('pub', 'gain', xtramath.clamp(lmmsnat_data['gain'], 0, 2)/2)
+			params_kickmess.setvalue('pub', 'env_slope', lmmsnat_data['env'])
+			params_kickmess.setvalue('pub', 'freq_slope', lmmsnat_data['slope'])
+			params_kickmess.setvalue('pub', 'noise', lmmsnat_data['noise'])
+			if lmmsnat_data['startnote'] == 1: params_kickmess.setvalue('pub', 'freq_note_start', 0.5)
+			if lmmsnat_data['endnote'] == 1: params_kickmess.setvalue('pub', 'freq_note_end', 0.5)
+			params_kickmess.setvalue('pub', 'phase_offs', lmmsnat_data['click'])
+			plugin_vst2.replace_data(instdata, 'any', 'Kickmess (VST)', 'chunk', params_kickmess.getparams(), None)
 			if 'middlenote' in instdata: instdata['middlenote'] -= 12
 			else: instdata['middlenote'] = -12
 

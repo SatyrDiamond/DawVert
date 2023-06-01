@@ -14,7 +14,7 @@ from functions import params_vst
 
 from functions_plugconv import input_flstudio_wrapper
 
-from functions_plugparams import params_various_inst
+from functions_plugparams import params_kickmess
 from functions_plugparams import params_various_fx
 from functions_plugparams import params_vital
 from functions_plugparams import params_vital_wavetable
@@ -44,34 +44,28 @@ def convert_inst(instdata):
 
 	#---------------------------------------- Fruit Kick ----------------------------------------
 	elif plugindata['name'].lower() == 'fruit kick':
-
 		fkp = struct.unpack('iiiiiiii', fl_plugdata)
-
 		max_freq = note_data.note_to_freq((fkp[1]/100)+12) #1000
 		min_freq = note_data.note_to_freq((fkp[2]/100)-36) #130.8128
 		decay_freq = fkp[3]/256
 		decay_vol = fkp[4]/256
 		osc_click = fkp[5]/64
 		osc_dist = fkp[6]/128
-
-		print(fkp, max_freq, min_freq, decay_freq, decay_vol, osc_click, osc_dist  )
-
-		params_various_inst.kickmess_init()
-		params_various_inst.kickmess_setvalue('pub', 'freq_start', max_freq)
-		params_various_inst.kickmess_setvalue('pub', 'freq_end', min_freq)
-		params_various_inst.kickmess_setvalue('pub', 'env_slope', decay_vol)
-		params_various_inst.kickmess_setvalue('pub', 'freq_slope', 0.5)
-		params_various_inst.kickmess_setvalue('pub', 'f_env_release', decay_freq*150)
-		params_various_inst.kickmess_setvalue('pub', 'phase_offs', osc_click)
+		#print(fkp, max_freq, min_freq, decay_freq, decay_vol, osc_click, osc_dist  )
+		params_kickmess.initparams()
+		params_kickmess.setvalue('pub', 'freq_start', max_freq)
+		params_kickmess.setvalue('pub', 'freq_end', min_freq)
+		params_kickmess.setvalue('pub', 'env_slope', decay_vol)
+		params_kickmess.setvalue('pub', 'freq_slope', 0.5)
+		params_kickmess.setvalue('pub', 'f_env_release', decay_freq*150)
+		params_kickmess.setvalue('pub', 'phase_offs', osc_click)
 		if osc_dist != 0:
-			params_various_inst.kickmess_setvalue('pub', 'dist_on', 1)
-			params_various_inst.kickmess_setvalue('pub', 'dist_start', osc_dist*0.1)
-			params_various_inst.kickmess_setvalue('pub', 'dist_end', osc_dist*0.1)
-
-		plugin_vst2.replace_data(instdata, 'any', 'Kickmess (VST)', 'chunk', params_various_inst.kickmess_get(), None)
+			params_kickmess.setvalue('pub', 'dist_on', 1)
+			params_kickmess.setvalue('pub', 'dist_start', osc_dist*0.1)
+			params_kickmess.setvalue('pub', 'dist_end', osc_dist*0.1)
+		plugin_vst2.replace_data(instdata, 'any', 'Kickmess (VST)', 'chunk', params_kickmess.getparams(), None)
 		if 'middlenote' in instdata: instdata['middlenote'] -= 12
 		else: instdata['middlenote'] = -12
-		#exit()
 
 	# ---------------------------------------- Wasp ----------------------------------------
 	elif plugindata['name'].lower() == 'wasp':

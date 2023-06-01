@@ -385,7 +385,7 @@ def make_patterns(data_FLdt, patterns):
                 if 'mod_x' in singlenote: temp_mod_x = singlenote['mod_x']
                 if 'mod_y' in singlenote: temp_mod_y = singlenote['mod_y']
 
-                if 0 < singlenote['key'] < 127 and temp_pos > 0:
+                if 0 < singlenote['key'] < 127 and temp_pos >= 0:
                     BytesIO_notedata.write(temp_pos.to_bytes(4, 'little'))
                     BytesIO_notedata.write(temp_flags.to_bytes(2, 'little'))
                     BytesIO_notedata.write(temp_rack.to_bytes(2, 'little'))

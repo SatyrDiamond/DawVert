@@ -288,7 +288,7 @@ class input_notessimo_v3(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': True,
-        'r_track_lanes': True
+        'track_lanes': True
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):

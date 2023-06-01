@@ -17,10 +17,10 @@ class input_fmf(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': False,
-        'r_track_lanes': False,
+        'track_lanes': False,
         'placement_cut': False,
         'placement_loop': False,
-        'no_placements': True
+        'track_nopl': True
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):

@@ -127,11 +127,11 @@ class input_onlinesequencer(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': False,
-        'r_track_lanes': False,
+        'track_lanes': False,
         'placement_cut': False,
         'placement_loop': False,
-        'no_pl_auto': True,
-        'no_placements': True
+        'auto_nopl': True,
+        'track_nopl': True
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):

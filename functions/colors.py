@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 import numpy as np
+import math
+from functions import xtramath
 
 def closest_color_index(colors, color):
     colors = np.array(colors)
@@ -8,6 +10,24 @@ def closest_color_index(colors, color):
     distances = np.sqrt(np.sum((colors-color)**2,axis=1))
     index_of_smallest = np.where(distances==np.amin(distances))
     return index_of_smallest[0][0]
+
+def hsv_to_rgb(h, s, v) -> tuple:
+
+    h -= math.ceil(h)-1
+
+    if s:
+        if h == 1.0: h = 0.0
+        i = int(h*6.0); f = h*6.0 - i
+        w = v * (1.0 - s)
+        q = v * (1.0 - s * f)
+        t = v * (1.0 - s * (1.0 - f))
+        if i==0: return (v, t, w)
+        if i==1: return (q, v, w)
+        if i==2: return (w, v, t)
+        if i==3: return (w, q, v)
+        if i==4: return (t, w, v)
+        if i==5: return (v, w, q)
+    else: return (v, v, v)
 
 # from hex
 def hex_to_rgb_int(hexcode):
@@ -27,3 +47,5 @@ def rgb_float_2_hex(rgb_float): return rgb_int_2_hex(rgb_float_2_rgb_int(rgb_flo
 
 # fx
 def moregray(rgb_float): return [(rgb_float[0]/2)+0.25,(rgb_float[1]/2)+0.25,(rgb_float[2]/2)+0.25]
+def darker(rgb_float, minus): 
+    return [xtramath.clamp(rgb_float[0]-minus, 0, 1),xtramath.clamp(rgb_float[1]-minus, 0, 1),xtramath.clamp(rgb_float[2]-minus, 0, 1)]

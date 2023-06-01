@@ -28,8 +28,6 @@ def nested_dict_add_to_list_exists(i_dict, i_keys, i_value):
         if key not in i_dict: i_dict[key] = {}
         nested_dict_add_to_list_exists(i_dict[key], i_keys[1:], i_value)
 
-
-
 def nested_dict_get_value(i_data, i_keys):
     temp_dict = i_data
     while len(i_keys) != 0:

@@ -1,13 +1,11 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
 from functions import placements
 from functions import placement_data
 from functions import idvals
 from functions import tracks
 import plugin_input
-import math
 import json
 
 ceol_colors = {}
@@ -178,8 +176,8 @@ class input_ceol(plugin_input.base):
                     ceol_read()
 
             for position in t_notepos_table:
-            	for note in t_notepos_table[position]:
-            		cvpj_notelist.append(note | {'position': position})
+                for note in t_notepos_table[position]:
+                    cvpj_notelist.append(note | {'position': position})
 
             patcolor = {}
             if ceol_pat_palette in ceol_colors: patcolor = ceol_colors[ceol_pat_palette]

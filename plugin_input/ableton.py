@@ -60,7 +60,7 @@ class input_ableton(plugin_input.base):
         'placement_loop': True,
         'no_placements': False,
         'no_pl_auto': False,
-        'pl_audio_events': False,
+        'audio_events': False,
         }
     def parse(self, input_file, extra_param):
 

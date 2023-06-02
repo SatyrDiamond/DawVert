@@ -3,6 +3,7 @@
 
 import plugin_input
 import json
+import struct
 import os.path
 from functions import audio_wav
 from functions import data_bytes
@@ -66,16 +67,16 @@ class input_piyopiyo(plugin_input.base):
             trk_volume = int.from_bytes(pmdfile.read(4), "little")
             print(" Vol:" + str(trk_volume))
             trk_unk2 = pmdfile.read(8)
-            trk_waveform = pmdfile.read(256)
-            trk_envelope = pmdfile.read(64)
+            trk_waveform = struct.unpack('b'*256, pmdfile.read(256))
+            trk_envelope = struct.unpack('B'*64, pmdfile.read(64))
             keyoffset[tracknum] = (trk_octave-2)*12
 
             wave_path = samplefolder+'/'+str(tracknum+1)+'.wav'
-            cvpj_instdata = {'plugin': "sampler", 'plugindata': {'file': wave_path}}
+            cvpj_instdata = {'plugin': "native-piyopiyo"}
+            cvpj_instdata['plugindata'] = {'wave': trk_waveform, 'env': trk_envelope}
             idval = str(tracknum)
             tracks.r_create_inst(cvpj_l, idval, cvpj_instdata)
             tracks.r_basicdata(cvpj_l, idval, 'note'+str(tracknum), track_colors[tracknum], trk_volume/250, None)
-            audio_wav.generate(wave_path, data_bytes.unsign_8(trk_waveform), 1, 67000, 8, {'loop':[0, 256]})
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
         tracks.r_create_inst(cvpj_l, "3", {'plugin': "none", 'plugindata': {}})

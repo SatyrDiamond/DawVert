@@ -418,3 +418,4 @@ def song_end(channels):
     cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
     cvpj_l['playlist'] = cvpj_l_playlist
     return cvpj_l
+    

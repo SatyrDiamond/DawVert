@@ -265,7 +265,7 @@ class input_onlinesequencer(plugin_input.base):
 
         for used_fx_inst_i in used_fx_inst:
 
-            print(used_fx_inst[used_fx_inst_i])
+            #print(used_fx_inst[used_fx_inst_i])
 
             autoid = str(used_fx_inst_i)
             trackid = 'os_'+str(used_fx_inst_i)

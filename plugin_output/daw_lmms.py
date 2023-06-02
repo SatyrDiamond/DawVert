@@ -398,7 +398,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     add_auto_placements(1, [0, 100], ['track', trackid], 'vol', trkJ, 'vol', trkX_insttr, 'vol', trackname, 'Volume')
     add_auto_placements(0, [0, 100], ['track', trackid], 'pan', trkJ, 'pan', trkX_insttr, 'pan', trackname, 'Pan')
     add_auto_placements(1, [-1, -1], ['track', trackid], 'enabled', trkJ, 'enabled', xmltag, 'muted', trackname, 'Muted')
-    add_auto_placements(0, [0, 100], ['track', trackid], 'pitch', trkJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
+    add_auto_placements(0, None, ['track', trackid], 'pitch', instJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
 
     if 'chain_fx_notes' in trkJ:
         trkJ_notefx = trkJ['chain_fx_notes']
@@ -757,8 +757,12 @@ def lmms_make_main_auto_track(autoidnum, autodata, visualname):
             xml_object.set('id', str(autoidnum))
 
 def add_auto_placements(i_fallback, i_addmul, i_id, i_autoname, j_tag, j_name, x_tag, x_name, v_type, v_name):
-    if j_name in j_tag: i_value = j_tag[j_name]
-    else: i_value = i_fallback
+    if j_name in j_tag:
+        i_value = j_tag[j_name]
+        print(j_name,'found',i_value)
+    else: 
+        i_value = i_fallback
+        print(j_name,'notf',i_value)
 
     if i_addmul != None: i_value = (i_value+i_addmul[0])*i_addmul[1]
 

@@ -68,10 +68,9 @@ class input_soundclub2(plugin_input.base):
             if sc2_datatype == b'NAM':  sc2_songdisc = sc2object[1].decode('ascii')
 
             elif sc2_datatype == b'PAT': 
-                sc2_patdata = sc2object[1]
                 t_patid = 'sc2_'+str(cur_patnum)
                 print('[input-soundclub2] Pattern')
-                sc2_patobjs = sc2_read(sc2_patdata, 4)
+                sc2_patobjs = sc2_read(sc2object[1], 4)
                 pat_cvpj_notelist[cur_patnum] = [0, {}]
                 pat_duration = 0
                 for sc2_patobj in sc2_patobjs:

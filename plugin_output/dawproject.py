@@ -107,6 +107,7 @@ class output_cvpj(plugin_output.base):
         'auto_nopl': True,
         'placement_audio_events': True
         }
+    def getsupportedplugins(self): return ['vst2', 'vst3', 'clap']
     def parse(self, convproj_json, output_file):
         global NoteStep
         global tracknum

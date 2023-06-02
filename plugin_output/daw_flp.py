@@ -35,6 +35,7 @@ class output_cvpjs(plugin_output.base):
         'auto_nopl': False,
         'track_nopl': False
         }
+    def getsupportedplugins(self): return ['sampler', 'vst2', 'vst3']
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
 

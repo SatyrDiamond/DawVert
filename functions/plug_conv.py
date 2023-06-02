@@ -25,10 +25,10 @@ from functions_plugconv import output_multisampler_vst2
 from functions_plugconv import output_slicer_vst2
 from functions_plugconv import output_retro_vst2
 from functions_plugconv import output_soundchip_vst2
-
 from functions_plugconv import output_flstudio_vst2
 from functions_plugconv import output_lmms_vst2
 from functions_plugconv import output_onlineseq_vst2
+from functions_plugconv import output_piyopiyo_vst2
 
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
@@ -76,6 +76,9 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 
 			elif pluginname == 'native-fl':
 				output_flstudio_vst2.convert_inst(instdata)
+
+			elif pluginname == 'native-piyopiyo':
+				output_piyopiyo_vst2.convert_inst(instdata)
 
 			elif out_daw not in supportedplugins['vst2']:
 				output_soundchip_vst2.convert_inst(instdata, out_daw)

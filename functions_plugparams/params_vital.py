@@ -183,7 +183,7 @@ def create():
     for _ in range(64):
         l_settings["modulations"].append({"destination": "", "source": ""})
     
-    l_settings["mpe_enabled"] = 0.0
+    l_settings["mpe_enabled"] = 1.0
     
     for num in range(3):
         num = num+1

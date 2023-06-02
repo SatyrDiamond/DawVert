@@ -62,13 +62,13 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 			pluginname = instdata['plugin']
 			plugindata = instdata['plugindata']
 
-			if pluginname == 'sampler' and out_daw not in supportedplugins['sampler']: 
+			if pluginname == 'sampler' and 'sampler' not in supportedplugins: 
 				output_sampler_vst2.convert_inst(instdata, platform_id)
 
-			elif pluginname == 'sampler-multi' and out_daw not in supportedplugins['sampler-multi']: 
+			elif pluginname == 'sampler-multi' and 'sampler-multi' not in supportedplugins: 
 				output_multisampler_vst2.convert_inst(instdata, platform_id)
 
-			elif pluginname == 'sampler-slicer' and out_daw not in supportedplugins['sampler-slicer']: 
+			elif pluginname == 'sampler-slicer' and 'sampler-slicer' not in supportedplugins: 
 				output_slicer_vst2.convert_inst(instdata)
 
 			elif (pluginname == 'native-lmms' or pluginname == 'zynaddsubfx-lmms') and out_daw != 'lmms':
@@ -80,7 +80,7 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 			elif pluginname == 'native-piyopiyo':
 				output_piyopiyo_vst2.convert_inst(instdata)
 
-			elif out_daw not in supportedplugins['vst2']:
+			if 'vst2' in supportedplugins:
 				output_soundchip_vst2.convert_inst(instdata, out_daw)
 
 			# -------------------- vst2 (juicysfplugin) --------------------
@@ -149,18 +149,10 @@ def do_sends(master_data, in_daw, out_daw, extra_json, platform_id, intext):
 		for sendid in mastersends:
 			do_fxchain_audio(mastersends[sendid], in_daw, out_daw, extra_json,intext+' Send: '+sendid)
 
-def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, extra_json):
+def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supportedplugins, extra_json):
 	global supportedplugins
 	plugin_vst2.listinit()
-	supportedplugins = {}
-	supportedplugins['sf2'] =             ['lmms','flp',                       'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['sampler'] =         ['lmms','flp','ableton',             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['sampler-multi'] =   ['ableton',                          'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['sampler-slicer'] =  ['ableton',                          'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['vst2'] =            ['lmms','ableton','flp','muse',      'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['vst3'] =            ['ableton','flp',                    'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['clap'] =            [                                    'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
-	supportedplugins['ladspa'] =          ['lmms',                             'cvpj', 'cvpj_r', 'cvpj_m', 'cvpj_mi']
+	supportedplugins = out_supportedplugins
 	cvpj_l = json.loads(cvpjdata)
 	if out_type != 'debug':
 		if 'track_master' in cvpj_l:

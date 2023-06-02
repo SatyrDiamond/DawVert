@@ -176,6 +176,7 @@ out_type = out_class.gettype()
 in_dawcapabilities = in_class.getdawcapabilities()
 out_dawcapabilities = out_class.getdawcapabilities()
 
+out_supportedplugins = out_class.getsupportedplugins()
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -242,7 +243,7 @@ if CVPJ_j == '{}' or CVPJ_j == None:
 
 # --------- Plugins
 
-CVPJ_C = plug_conv.convproj(CVPJ_j, platform_id, in_type, out_type, in_format, out_format, extra_json)
+CVPJ_C = plug_conv.convproj(CVPJ_j, platform_id, in_type, out_type, in_format, out_format, out_supportedplugins, extra_json)
 if CVPJ_C != None: CVPJ_j = CVPJ_C
 
 # --------- Convert Type

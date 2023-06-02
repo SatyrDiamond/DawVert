@@ -757,12 +757,8 @@ def lmms_make_main_auto_track(autoidnum, autodata, visualname):
             xml_object.set('id', str(autoidnum))
 
 def add_auto_placements(i_fallback, i_addmul, i_id, i_autoname, j_tag, j_name, x_tag, x_name, v_type, v_name):
-    if j_name in j_tag:
-        i_value = j_tag[j_name]
-        print(j_name,'found',i_value)
-    else: 
-        i_value = i_fallback
-        print(j_name,'notf',i_value)
+    if j_name in j_tag: i_value = j_tag[j_name]
+    else: i_value = i_fallback
 
     if i_addmul != None: i_value = (i_value+i_addmul[0])*i_addmul[1]
 

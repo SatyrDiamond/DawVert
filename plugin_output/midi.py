@@ -39,6 +39,7 @@ class output_cvpj_f(plugin_output.base):
         'auto_nopl': True,
         'track_nopl': False
         }
+    def getsupportedplugins(self): return []
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
 

@@ -1054,6 +1054,7 @@ class output_cvpj(plugin_output.base):
         'auto_nopl': True,
         'placement_audio_events': False
         }
+    def getsupportedplugins(self): return ['sampler', 'sampler-multi', 'sampler-slicer', 'vst2', 'vst3']
     def parse(self, convproj_json, output_file):
         global cvpj_l
         global x_Tracks

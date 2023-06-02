@@ -27,8 +27,7 @@ class input_gt_mnbs(plugin_input.base):
     def getshortname(self): return 'mnbs'
     def getname(self): return 'Minecraft Note Block Studio'
     def gettype(self): return 'm'
-    def getdawcapabilities(self): 
-        return {'track_lanes': True}
+    def getdawcapabilities(self): return {'track_lanes': True}
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
 
@@ -114,23 +113,6 @@ class input_gt_mnbs(plugin_input.base):
                 notes_done = 1
                 print('[input-mnbs] Number of Notes: '+str(print_notes))
 
-        for nbs_layer in nbs_notes:
-            nbs_layerdata = nbs_notes[nbs_layer]
-            layer_placements = {}
-            for note in nbs_layerdata:
-                nbs_notedata = nbs_layerdata[note]
-                placementnum = math.floor(note/split_duration)*split_duration
-                if placementnum not in layer_placements: layer_placements[placementnum] = []
-                cvpj_notedata = {}
-                if nbs_notedata[2] != None:
-                    cvpj_notedata = note_data.mx_makenote('NoteBlock'+str(nbs_notedata[1]), note-placementnum, 2, nbs_notedata[0], nbs_notedata[2][0]/100, (nbs_notedata[2][1]/100)-1)
-                    cvpj_notedata['finepitch'] = nbs_notedata[2][2]
-                else:
-                    cvpj_notedata = note_data.mx_makenote('NoteBlock'+str(nbs_notedata[1]), note-placementnum, 2, nbs_notedata[0], None, None)
-                layer_placements[placementnum].append(cvpj_notedata)
-            for placenum in layer_placements:
-                tracks.m_playlist_pl_add(cvpj_l, nbs_layer, placement_data.makepl_n(placenum, split_duration, layer_placements[placenum]))
-
         # PART 3: LAYERS
         if nbs_file.tell() <= nbs_len:
             for layernum in range(nbs_layercount):
@@ -166,6 +148,23 @@ class input_gt_mnbs(plugin_input.base):
                 tracks.m_create_inst(cvpj_l, 'NoteBlock'+str(custominstid), cvpj_instdata)
                 tracks.m_basicdata_inst(cvpj_l, 'NoteBlock'+str(custominstid), custominst_name, None, 1.0, 0.0)
                 custominstid += 1
+
+        for nbs_layer in nbs_notes:
+            nbs_layerdata = nbs_notes[nbs_layer]
+            layer_placements = {}
+            for note in nbs_layerdata:
+                nbs_notedata = nbs_layerdata[note]
+                placementnum = math.floor(note/split_duration)*split_duration
+                if placementnum not in layer_placements: layer_placements[placementnum] = []
+                cvpj_notedata = {}
+                if nbs_notedata[2] != None:
+                    cvpj_notedata = note_data.mx_makenote('NoteBlock'+str(nbs_notedata[1]), note-placementnum, 2, nbs_notedata[0], nbs_notedata[2][0]/100, (nbs_notedata[2][1]/100)-1)
+                    cvpj_notedata['finepitch'] = nbs_notedata[2][2]
+                else:
+                    cvpj_notedata = note_data.mx_makenote('NoteBlock'+str(nbs_notedata[1]), note-placementnum, 2, nbs_notedata[0], None, None)
+                layer_placements[placementnum].append(cvpj_notedata)
+            for placenum in layer_placements:
+                tracks.m_playlist_pl_add(cvpj_l, nbs_layer, placement_data.makepl_n(placenum, split_duration, layer_placements[placenum]))
 
         song.add_info(cvpj_l, 'title', nbs_song_name)
         song.add_info(cvpj_l, 'author', nbs_song_author)

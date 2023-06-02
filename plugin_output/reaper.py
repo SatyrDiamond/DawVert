@@ -80,6 +80,7 @@ class output_reaper(plugin_output.base):
         'placement_cut': True,
         'time_seconds': True
         }
+    def getsupportedplugins(self): return []
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
 

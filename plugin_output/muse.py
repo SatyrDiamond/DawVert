@@ -179,6 +179,7 @@ class output_cvpj(plugin_output.base):
         'auto_nopl': True,
         'track_nopl': False
         }
+    def getsupportedplugins(self): return ['vst2']
     def parse(self, convproj_json, output_file):
         global NoteStep
         global tracknum

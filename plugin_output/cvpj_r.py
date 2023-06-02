@@ -19,6 +19,7 @@ class output_cvpj_f(plugin_output.base):
         'auto_nopl': False,
         'placement_audio_events': False,
         }
+    def getsupportedplugins(self): return ['sampler', 'sampler-multi', 'sampler-slicer', 'sf2', 'vst2', 'vst3', 'clap', 'ladspa']
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
 

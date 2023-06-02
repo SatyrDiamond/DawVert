@@ -117,7 +117,7 @@ def lc_parse_voice_chords(sl_json, length):
             chordbytes_nine = chordbytes_parts[3]
             chordbytes_seven, chordbytes_chord = data_bytes.splitbyte(chordbytes_parts[2])
             chordbytes = chord_parser(chordbytes_chord, chordbytes_seven, chordbytes_nine)
-        print(lc_notedata, chordbytes)
+        #print(lc_notedata, chordbytes)
 
         position += 1
 

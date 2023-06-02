@@ -102,9 +102,9 @@ class input_orgyana(plugin_input.base):
         org_wait = int.from_bytes(bio_org.read(2), "little")
         print("[input-orgmaker] Organya Type: " + str(org_type))
         print("[input-orgmaker] NoteWait: " + str(org_wait))
-        org_stepsperbar = int.from_bytes(bio_org.read(1), "little")
+        org_stepsperbar = bio_org.read(1)[0]
         print("[input-orgmaker] Steps Per Bar: " + str(org_stepsperbar))
-        org_beatsperstep = int.from_bytes(bio_org.read(1), "little")
+        org_beatsperstep = bio_org.read(1)[0]
         print("[input-orgmaker] Beats per Step: " + str(org_beatsperstep))
         org_loop_beginning = int.from_bytes(bio_org.read(4), "little")
         print("[input-orgmaker] Loop Beginning: " + str(org_loop_beginning))
@@ -114,9 +114,9 @@ class input_orgyana(plugin_input.base):
         org_insttable = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         for x in range(16):
             pitch = int.from_bytes(bio_org.read(2), "little")
-            Instrument = int.from_bytes(bio_org.read(1), "little")
+            Instrument = bio_org.read(1)[0]
             org_insttable[x-1] = Instrument
-            disable_sustaining_notes = int.from_bytes(bio_org.read(1), "little")
+            disable_sustaining_notes = bio_org.read(1)[0]
             number_of_notes = int.from_bytes(bio_org.read(2), "little")
             print("[input-orgmaker] Pitch: " + str(pitch), end=", ")
             print("Inst: " + str(Instrument), end=", ")

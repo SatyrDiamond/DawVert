@@ -168,10 +168,10 @@ def parsetrack(file_stream, tracknum, notelen):
 
         cvpj_instdata = {}
 
-        adlibrol_gminst = idvals.get_idval(idvals_inst_adlib_rol, used_instrument_upper, 'gm_inst')
-        if adlibrol_gminst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': adlibrol_gminst-1}}
-
-        if adlib_bnk != None:
+        if adlib_bnk == None:
+            adlibrol_gminst = idvals.get_idval(idvals_inst_adlib_rol, used_instrument_upper, 'gm_inst')
+            if adlibrol_gminst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': adlibrol_gminst-1}}
+        else:
             if used_instrument_upper in adlib_bnk[0]:
                 cvpj_instdata = decode_inst(used_instrument_upper)
 
@@ -207,11 +207,11 @@ class input_adlib_rol(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
+        'auto_nopl': False,
         'fxrack': True,
-        'track_lanes': True,
         'placement_cut': False,
         'placement_loop': False,
-        'auto_nopl': False,
+        'track_lanes': True,
         'track_nopl': True
         }
     def supported_autodetect(self): return True

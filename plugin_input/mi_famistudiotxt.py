@@ -199,7 +199,7 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
         add_envelope(cvpj_plugdata, fst_Instrument, 'wave', 'FDSWave')
 
     if WaveType == 'N163':
-        cvpj_instdata['plugin'] = 'namco_163_famistudio'
+        cvpj_instdata['plugin'] = 'namco163_famistudio'
         add_envelopes(cvpj_plugdata, fst_Instrument)
         add_envelope(cvpj_plugdata, fst_Instrument, 'wave', 'N163Wave')
 

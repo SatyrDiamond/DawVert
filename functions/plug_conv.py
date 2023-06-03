@@ -23,12 +23,15 @@ from functions_plugconv import output_simple_vst2
 from functions_plugconv import output_sampler_vst2
 from functions_plugconv import output_multisampler_vst2
 from functions_plugconv import output_slicer_vst2
+
 from functions_plugconv import output_retro_vst2
 from functions_plugconv import output_soundchip_vst2
+
 from functions_plugconv import output_flstudio_vst2
 from functions_plugconv import output_lmms_vst2
 from functions_plugconv import output_onlineseq_vst2
 from functions_plugconv import output_piyopiyo_vst2
+from functions_plugconv import output_namco163_famistudio_vst2
 
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
@@ -39,10 +42,10 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 
 			# ---------------------------------------- input ----------------------------------------
 			input_soundchip.convert_inst(instdata)
-			if in_daw == 'flp' and pluginname == 'native-fl': input_flstudio.convert_inst(instdata)
-			if in_daw == 'ptcop' and pluginname == 'native-pxtone': input_pxtone.convert_inst(instdata)
-			if in_daw == 'jummbox' and pluginname == 'native-jummbox': input_jummbox.convert_inst(instdata)
-			if in_daw == 'audiosauna' and pluginname == 'native-audiosauna': input_audiosauna.convert_inst(instdata)
+			if pluginname == 'native-fl': input_flstudio.convert_inst(instdata)
+			if pluginname == 'native-pxtone': input_pxtone.convert_inst(instdata)
+			if pluginname == 'native-jummbox': input_jummbox.convert_inst(instdata)
+			if pluginname == 'native-audiosauna': input_audiosauna.convert_inst(instdata)
 
 			# ---------- from general-midi
 			elif pluginname == 'general-midi':
@@ -72,13 +75,16 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 				output_slicer_vst2.convert_inst(instdata)
 
 			elif (pluginname == 'native-lmms' or pluginname == 'zynaddsubfx-lmms') and out_daw != 'lmms':
-				output_lmms_vst2.convert_inst(instdata)
+				output_lmms_vst2.convert_inst(instdata) 
 
 			elif pluginname == 'native-fl':
 				output_flstudio_vst2.convert_inst(instdata)
 
 			elif pluginname == 'native-piyopiyo':
 				output_piyopiyo_vst2.convert_inst(instdata)
+
+			elif pluginname == 'namco163_famistudio':
+				output_namco163_famistudio_vst2.convert_inst(instdata)
 
 			if 'vst2' in supportedplugins:
 				output_soundchip_vst2.convert_inst(instdata, out_daw)

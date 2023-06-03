@@ -58,3 +58,7 @@ def sort_pos(datapart):
         for point in t_datapart_sorted[t_pointpos]:
             new_datapart.append(point)
     return new_datapart
+
+
+def list_chunks(i_list, i_amount):
+    return [i_list[i:i + i_amount] for i in range(0, len(i_list), i_amount)]

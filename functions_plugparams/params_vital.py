@@ -328,15 +328,29 @@ def create():
 def replacewave(wavenum, wave_data_f):
     wave_data_bytes = struct.pack('f'*2048, *wave_data_f)
     wave_data_str = base64.b64encode(wave_data_bytes).decode('ascii')
-
     l_keyframe = {}
     l_keyframe['position'] = 0
     l_keyframe['wave_data'] = wave_data_str
-
     l_keyframes = [l_keyframe]
+    replacewavetables(wavenum, l_keyframes)
+
+def replacemultiwave(wavenum, i_frames):
+    out_keyframes = []
+    for i_frame in i_frames:
+        waveframe = i_frames[i_frame]
+        wave_data_bytes = struct.pack('f'*2048, *waveframe)
+        wave_data_str = base64.b64encode(wave_data_bytes).decode('ascii')
+        out_frame = {}
+        out_frame['position'] = i_frame
+        out_frame['wave_data'] = wave_data_str
+        out_keyframes.append(out_frame)
+    replacewavetables(wavenum, out_keyframes)
+
+def replacewavetables(wavenum, l_keyframes):
+    global vitaldata
     l_component = {}
     l_component['interpolation'] = 1
-    l_component['interpolation_style'] = 1
+    l_component['interpolation_style'] = 0
     l_component['type'] = "Wave Source"
     l_component['keyframes'] = l_keyframes
     l_components = [l_component]
@@ -350,7 +364,6 @@ def replacewave(wavenum, wave_data_f):
     l_group = {}
     l_group['components'] = l_components
     l_wavetable['groups'].append(l_group)
-
     vitaldata["settings"]["wavetables"][wavenum] = l_wavetable
 
 def setvalue(name, value):

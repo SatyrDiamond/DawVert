@@ -23,8 +23,6 @@ def convert_inst(instdata):
 		namco163_count = int(namco163_wave['count'])
 		if 'loop' in namco163_wave: namco163_loop = int(namco163_wave['loop'])
 
-		print(namco163_loop/(namco163_size*namco163_count))
-
 		params_vital.create()
 		params_vital.setvalue('osc_1_on', 1)
 		params_vital.setvalue('osc_1_level', 0.5)
@@ -37,7 +35,6 @@ def convert_inst(instdata):
 		params_vital.setvalue('lfo_1_sync', 0.0)
 		params_vital.setvalue('lfo_1_sync_type', 4.0)
 		params_vital.set_modulation(1, 'lfo_1', 'osc_1_wave_frame', 1, 0, 1, 0, 0)
-
 
 		vital_points = []
 		vital_powers = []

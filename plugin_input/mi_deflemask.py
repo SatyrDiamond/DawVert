@@ -212,8 +212,10 @@ class input_cvpj_r(plugin_input.base):
                 fmdata = {}
                 fmdata['algorithm'] = bio_dmf.read(1)[0]
                 fmdata['feedback'] = bio_dmf.read(1)[0]
-                fmdata['lfo'] = bio_dmf.read(1)[0] #(FMS on YM2612, PMS on YM2151)
-                fmdata['lfo2'] = bio_dmf.read(1)[0] #(AMS on YM2612, AMS on YM2151)
+                fmdata['fms'] = bio_dmf.read(1)[0] #(FMS on YM2612, PMS on YM2151)
+                fmdata['ams'] = bio_dmf.read(1)[0] #(AMS on YM2612, AMS on YM2151)
+                fmdata['lfo_enable'] = 0
+                fmdata['lfo_frequency'] = 0
                 for opnum in [0,2,1,3]:
                     operator_param = {}
                     operator_param['am'] = bio_dmf.read(1)[0]

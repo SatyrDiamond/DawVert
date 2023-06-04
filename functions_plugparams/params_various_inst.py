@@ -182,8 +182,8 @@ def opnplug_convert(plugindata):
 	opnplug_addvalue(opnplug_params, "note_offset" ,0)
 	opnplug_addvalue(opnplug_params, "feedback" ,plugindata["feedback"])
 	opnplug_addvalue(opnplug_params, "algorithm" ,plugindata["algorithm"])
-	opnplug_addvalue(opnplug_params, "ams" ,0)
-	opnplug_addvalue(opnplug_params, "fms" ,0)
+	opnplug_addvalue(opnplug_params, "ams" ,plugindata["ams"])
+	opnplug_addvalue(opnplug_params, "fms" ,plugindata["fms"])
 	opnplug_addvalue(opnplug_params, "midi_velocity_offset" ,0)
 	opnplug_addvalue(opnplug_params, "percussion_key_number" ,0)
 	for opnum in range(4):
@@ -207,8 +207,8 @@ def opnplug_convert(plugindata):
 
 	opnplug_global = ET.SubElement(opnplug_root, 'global')
 	opnplug_addvalue(opnplug_global, "volume_model" ,0)
-	opnplug_addvalue(opnplug_global, "lfo_enable" ,1)
-	opnplug_addvalue(opnplug_global, "lfo_frequency" ,1)
+	opnplug_addvalue(opnplug_global, "lfo_enable" ,plugindata["lfo_enable"])
+	opnplug_addvalue(opnplug_global, "lfo_frequency" ,plugindata["lfo_frequency"])
 
 	opnplug_common = ET.SubElement(opnplug_root, 'common')
 	opnplug_addvalue(opnplug_common, "bank_title" ,'DawVert')

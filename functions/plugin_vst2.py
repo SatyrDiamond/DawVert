@@ -4,6 +4,7 @@
 from os.path import exists
 import configparser
 import base64
+import struct
 import platform
 import os
 
@@ -49,6 +50,7 @@ def replace_data(instdata, platform, in_name, datatype, data, numparams):
 	vst_cpuarch, vst_path = find_path_by_name(in_name, platform, cpu_arch_list[0])
 	platformtxt = getplatformtxt(platform)
 	if vst_path != None:
+		vstinfo = glo_vstpaths[platformtxt][in_name]
 		if 'plugin' not in instdata: instdata['plugin'] = 'none'
 		print('[list-vst2] ' + instdata['plugin'] +' > ' + in_name + ' (VST2 '+vst_cpuarch+')')
 		instdata['plugin'] = 'vst2-'+platformtxt
@@ -57,6 +59,12 @@ def replace_data(instdata, platform, in_name, datatype, data, numparams):
 		instdata['plugindata']['plugin']['name'] = in_name
 		instdata['plugindata']['plugin']['path'] = vst_path
 		instdata['plugindata']['plugin']['cpu_arch'] = vst_cpuarch
+		instdata['plugindata']['plugin']['fourid'] = int(vstinfo['fourid'])
+		if 'version' in vstinfo: 
+			versionsplit = [int(i) for i in vstinfo['version'].split('.')]
+			versionbytes =  struct.pack('B'*len(versionsplit), *versionsplit)
+			instdata['plugindata']['plugin']['version'] = int.from_bytes(versionbytes, "little")
+
 		if datatype == 'chunk':
 			instdata['plugindata']['datatype'] = 'chunk'
 			instdata['plugindata']['data'] = base64.b64encode(data).decode('ascii')

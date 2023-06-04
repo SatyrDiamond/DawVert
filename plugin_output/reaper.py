@@ -5,10 +5,43 @@ import plugin_output
 import json
 import uuid
 import rpp
+import struct
+import base64
+import os.path
 from rpp import Element
+from functions import data_bytes
+from functions import data_values
 from functions import colors
 from functions import notelist_data
 from functions import xtramath
+
+
+def make_vst2(rpp_fxchain, cvpj_plugindata): 
+    vst_fx_name = cvpj_plugindata['plugin']['name']
+    vst_fx_path = cvpj_plugindata['plugin']['path']
+    vst_fx_version = cvpj_plugindata['plugin']['version']
+    vst_fx_fourid = cvpj_plugindata['plugin']['fourid']
+
+    if cvpj_plugindata['datatype'] == 'chunk': vstparams = base64.b64decode(cvpj_plugindata['data'].encode())
+    if cvpj_plugindata['datatype'] == 'param': 
+        floatdata = []
+        for num in range(cvpj_plugindata['numparams']):
+            floatdata.append(float(cvpj_plugindata['params'][str(num)]['value']))
+        vstparams = struct.pack('f'*cvpj_plugindata['numparams'], *floatdata)
+
+    vstdata = []
+
+    vstheader_ints = (vst_fx_fourid, 4276969198,0,2,1,0,2,0,len(vstparams),1,1048576)
+    vstheader = base64.b64encode( struct.pack('IIIIIIIIIII', *vstheader_ints) ).decode()
+
+    rpp_vstdata = rpp_obj('VST',[])
+    rpp_vstdata.children.append([vstheader])
+
+    for vstparampart in data_values.list_chunks(vstparams, 128):
+        rpp_vstdata.children.append([vstparampart])
+
+    rpp_fxchain.children.append(rpp_obj_data('VST', [vst_fx_name, os.path.basename(vst_fx_path), 0, "", vst_fx_fourid, ""], rpp_vstdata))
+
 
 def rpp_obj(i_name, i_vals): return Element(tag=i_name, attrib=i_vals, children=[])
 def rpp_obj_data(i_name, i_vals, i_data): return Element(tag=i_name, attrib=i_vals, children=i_data)
@@ -199,6 +232,24 @@ class output_reaper(plugin_output.base):
                     rpp_trackdata.children.append(['PERF','0'])
                     rpp_trackdata.children.append(['MIDIOUT','-1'])
                     rpp_trackdata.children.append(['MAINSEND','1','0'])
+
+                    rpp_fxchain = rpp_obj('FXCHAIN',[])
+                    rpp_fxchain.children.append(['SHOW','0'])
+                    rpp_fxchain.children.append(['LASTSEL','0'])
+                    rpp_fxchain.children.append(['DOCKED','0'])
+                    rpp_fxchain.children.append(['BYPASS','0','0','0'])
+
+                    if 'instdata' in trackdata:
+                        cvpj_instdata = trackdata['instdata']
+                        if 'plugin' in cvpj_instdata:
+                            if cvpj_instdata['plugin'] in ['vst2-dll', 'vst2-so']:
+                                cvpj_plugindata = cvpj_instdata['plugindata']
+
+                                make_vst2(rpp_fxchain, cvpj_plugindata)
+
+
+                    rpp_trackdata.children.append(rpp_obj_data('FXCHAIN', [], rpp_fxchain))
+
 
                     if trackid in projJ['track_placements']:
                         trackplacements = projJ['track_placements'][trackid]

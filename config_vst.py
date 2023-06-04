@@ -21,6 +21,7 @@ if platformtxt == 'win':
 	l_path_waveform = os.path.join(homepath, "AppData", "Roaming", "Tracktion", "Waveform")
 if platformtxt == 'lin':
 	l_path_aurdor = os.path.join(homepath, ".cache", "ardour6", "vst")
+	l_path_waveform = os.path.join(homepath, ".config", "Tracktion", "Waveform")
 
 vst2ini = configparser.ConfigParser()
 vst3ini = configparser.ConfigParser()

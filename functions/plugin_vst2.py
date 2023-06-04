@@ -89,4 +89,4 @@ def listinit():
 	currentdir = os.getcwd() + '/__config/'
 	os.makedirs(currentdir, exist_ok=True)
 	loadlist(currentdir+'plugins_vst2_win.ini', 'win')
-	loadlist(currentdir+'plugins_vst3_win.ini', 'lin')
+	loadlist(currentdir+'plugins_vst2_lin.ini', 'lin')

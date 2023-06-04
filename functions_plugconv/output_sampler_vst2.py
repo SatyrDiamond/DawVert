@@ -95,4 +95,4 @@ def convert_inst(instdata, platform_id):
 					if 'shape' in asdr_lfo: params_drops.setvalue('filter_lfo_type', params_drops.shape(asdr_lfo['shape']))
 					if 'attack' in asdr_lfo: params_drops.setvalue('filter_lfo_fade', xtramath.clamp(asdr_lfo['attack']/10, 0, 1))
 
-		plugin_vst2.replace_data(vst_instdata, 'lin', 'Drops', 'chunk', data_nullbytegroup.make(params_drops.getparams()), None)
+		plugin_vst2.replace_data(instdata, 'lin', 'Drops', 'chunk', data_nullbytegroup.make(params_drops.getparams()), None)

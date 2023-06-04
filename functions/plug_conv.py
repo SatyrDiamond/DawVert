@@ -92,7 +92,7 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 			# -------------------- vst2 (juicysfplugin) --------------------
 
 			# ---------- from native soundfont2
-			elif pluginname == 'soundfont2' and out_daw not in supportedplugins['sf2']:
+			elif pluginname == 'soundfont2' and 'sf2' not in supportedplugins:
 				sf2data = instdata['plugindata']
 				if 'bank' in sf2data: sf2_bank = sf2data['bank']
 				else: sf2_bank = 0

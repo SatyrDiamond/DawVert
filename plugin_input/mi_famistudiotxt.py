@@ -83,6 +83,8 @@ def decode_fst(infile):
             if 'EpsmPatch' in cmd_params: 
                 fst_Instrument['EpsmReg'] = read_regs(cmd_params, 'EpsmReg', 31)
 
+            #print(fst_Instrument)
+
         elif cmd_name == 'Arpeggio' and tabs_num == 1:
             arpname = cmd_params['Name']
             fst_Arpeggios[arpname] = cmd_params
@@ -163,7 +165,8 @@ def add_envelopes(cvpj_plugdata, fst_Instrument):
 def create_inst(WaveType, fst_Instrument, fxrack_channel):
     instname = fst_Instrument['Name']
 
-    instvolume = 0.6
+    instvolume = 0.2
+    instpan = 0
 
     cvpj_instdata = {}
     cvpj_instdata['plugin'] = 'none'
@@ -215,8 +218,11 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
         add_envelopes(cvpj_plugdata, fst_Instrument)
 
     if WaveType == 'EPSMFM':
+        instvolume = 0.7
         cvpj_instdata['plugin'] = 'epsm_fm'
         cvpj_plugdata['regs'] = fst_Instrument['EpsmReg']
+        instpan += int(bool(cvpj_plugdata['regs'][1] & 0x80))*-1
+        instpan += int(bool(cvpj_plugdata['regs'][1] & 0x40))
 
     if WaveType == 'EPSM_Kick':
         cvpj_instdata['plugin'] = 'epsm_rhythm'
@@ -247,12 +253,15 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
 
     cvpj_instdata['usemasterpitch'] = 1
 
+    if WaveType in ['EPSMFM', 'EPSMSquare']:
+        cvpj_instdata['middlenote'] = 12
+
     inst_color = InstColors[WaveType]
 
     cvpj_instid = WaveType+'-'+instname
 
     tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
-    tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instid, inst_color, instvolume, 0.0)
+    tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instid, inst_color, instvolume, instpan)
     tracks.m_param_inst(cvpj_l, cvpj_instid, 'fxrack_channel', fxrack_channel)
 
 def create_dpcm_inst(DPCMMappings, DPCMSamples, fxrack_channel):
@@ -378,7 +387,7 @@ class input_famistudio(plugin_input.base):
 
         songnamelist = list(fst_Main['Songs'].keys())
 
-        print(songnamelist)
+        #print(songnamelist)
 
         if 'songnum' in extra_param: fst_currentsong = fst_Main['Songs'][songnamelist[int(extra_param['songnum'])-1]]
         else: fst_currentsong = fst_Main['Songs'][songnamelist[0]]

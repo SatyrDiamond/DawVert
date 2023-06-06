@@ -25,9 +25,11 @@ def calctempotimed(i_value):
 
 # ------------- parse -------------
 def parse_arrangement(arrdata):
+
     bio_fldata = create_bytesio(arrdata)
     output = []
     while bio_fldata[0].tell() < bio_fldata[1]:
+
         placement = {}
         placement['position'] = int.from_bytes(bio_fldata[0].read(4), "little")
         placement['patternbase'] = int.from_bytes(bio_fldata[0].read(2), "little")
@@ -38,21 +40,33 @@ def parse_arrangement(arrdata):
         placement['flags'] = int.from_bytes(bio_fldata[0].read(2), "little")
         placement['unknown2'] = int.from_bytes(bio_fldata[0].read(2), "little")
         placement['unknown3'] = int.from_bytes(bio_fldata[0].read(2), "little")
+        if FLSplitted[0] == '21':
+            placement['unknown4'] = bio_fldata[0].read(28)
 
         startoffset_bytes = bio_fldata[0].read(4)
         endoffset_bytes = bio_fldata[0].read(4)
 
+        if FLSplitted[0] == '21':
+            startoffset_bytes = placement['unknown4'][0:4]
+            endoffset_bytes = placement['unknown4'][4:8]
+            
         startoffset = int.from_bytes(startoffset_bytes, "little")
         endoffset = int.from_bytes(endoffset_bytes, "little")
         startoffset_float = struct.unpack('<f', startoffset_bytes)[0]
         endoffset_float = struct.unpack('<f', endoffset_bytes)[0]
 
-        if placement['itemindex'] > placement['patternbase']:
-            if startoffset != 4294967295 and startoffset != 3212836864: placement['startoffset'] = startoffset
-            if endoffset != 4294967295 and endoffset != 3212836864: placement['endoffset'] = endoffset
+        if FLSplitted[0] == '21':
+            if placement['itemindex'] > placement['patternbase']:
+                if startoffset != 4294967295 and startoffset != 3212836864: placement['startoffset'] = startoffset
+                if endoffset != 4294967295 and endoffset != 3212836864: placement['endoffset'] = endoffset
         else:
-            if startoffset_float > 0: placement['startoffset'] = calctempotimed(startoffset_float)
-            if endoffset_float > 0: placement['endoffset'] = calctempotimed(endoffset_float)
+            if placement['itemindex'] > placement['patternbase']:
+                if startoffset != 4294967295 and startoffset != 3212836864: placement['startoffset'] = startoffset
+                if endoffset != 4294967295 and endoffset != 3212836864: placement['endoffset'] = endoffset
+            else:
+                if startoffset_float > 0: placement['startoffset'] = calctempotimed(startoffset_float)
+                if endoffset_float > 0: placement['endoffset'] = calctempotimed(endoffset_float)
+
         output.append(placement)
     return output
 
@@ -160,6 +174,7 @@ def parse_flevent(datastream):
 
 def parse(inputfile):
     global FL_Main
+    global FLSplitted
     fileobject = open(inputfile, 'rb')
     headername = fileobject.read(4)
     rifftable = data_bytes.riff_read(fileobject, 0)

@@ -147,20 +147,20 @@ def generate(file, data, channels, freq, bits, instdata):
 	file_object.write(chunks_main)
 
 def complete_wav_info(sampler_file_data):
-	if exists(sampler_file_data['file']) == True and pathlib.Path(sampler_file_data['file']).suffix == '.wav':
-		wavinfo = decode(sampler_file_data['file'])
-		sampler_file_data['length'] = wavinfo[0]['length']
-		wavformat = wavinfo[0]['format']
-		returnvalue = None
-		if wavinfo[2] != {}:
-			if 'loops' in wavinfo[2]:
-				if wavinfo[2]['loops'] != {}:
-					if 'loops' not in sampler_file_data:
-						sampler_file_data['loops'] = {}
-					wavloopdata = wavinfo[2]['loops'][next(iter(wavinfo[2]['loops']))]
-					sampler_file_data['loops']['points'] = [wavloopdata['start'], wavloopdata['end']]
-		return wavformat
-	return None
+	if 'file' in sampler_file_data:
+		if exists(sampler_file_data['file']) == True and pathlib.Path(sampler_file_data['file']).suffix == '.wav':
+			wavinfo = decode(sampler_file_data['file'])
+			sampler_file_data['length'] = wavinfo[0]['length']
+			wavformat = wavinfo[0]['format']
+			returnvalue = None
+			if wavinfo[2] != {}:
+				if 'loops' in wavinfo[2]:
+					if wavinfo[2]['loops'] != {}:
+						if 'loops' not in sampler_file_data:
+							sampler_file_data['loops'] = {}
+						wavloopdata = wavinfo[2]['loops'][next(iter(wavinfo[2]['loops']))]
+						sampler_file_data['loops']['points'] = [wavloopdata['start'], wavloopdata['end']]
+			return wavformat
 
 #def inject_smpl(instdata):
 #	print("[audio-wav] Injecting 'smpl' chunk")

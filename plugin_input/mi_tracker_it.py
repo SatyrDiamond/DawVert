@@ -470,6 +470,7 @@ class input_it(plugin_input.base):
                         regionparams['loop'] = {}
                         regionparams['loop']['enabled'] = int(it_singlesample['flags'][3])
                         regionparams['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
+
                         cvpj_instdata['plugindata']['regions'].append(regionparams)
 
                 if it_singleinst['filtercutoff'] != None and 'plugindata' in cvpj_instdata:

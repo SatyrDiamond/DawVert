@@ -474,6 +474,7 @@ def m2mi_checkdup(cvpj_notelistindex, nledata):
         return None
 
 m2mi_sample_names = ['file', 'name', 'color', 'audiomod', 'vol', 'pan', 'fxrack_channel']
+m2mi_notes_names = ['notelist', 'name', 'color']
 
 def m2mi(song):
     print('[song-convert] Converting from Multiple > MultipleIndexed')
@@ -495,9 +496,12 @@ def m2mi(song):
             if checksamenl != None: cvpj_placement['fromindex'] = checksamenl
             else:
                 cvpj_notelistindex['m2mi_' + str(pattern_number)] = temp_nle
+                if 'color' in cvpj_placement: temp_nle['color'] = cvpj_placement['color']
+                if 'name' in cvpj_placement: temp_nle['name'] = cvpj_placement['name']
                 cvpj_placement['fromindex'] = 'm2mi_' + str(pattern_number)
                 del cvpj_placement['notelist']
             pattern_number += 1
+
     cvpj_proj['notelistindex'] = cvpj_notelistindex
 
     sample_number = 1

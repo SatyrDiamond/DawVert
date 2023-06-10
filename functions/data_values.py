@@ -62,3 +62,59 @@ def sort_pos(datapart):
 
 def list_chunks(i_list, i_amount):
     return [i_list[i:i + i_amount] for i in range(0, len(i_list), i_amount)]
+
+
+
+
+
+
+def tempo_to_rate(i_in, i_mode):
+    if i_mode == True: return (120/i_in)
+    if i_mode == False: return (i_in/120)
+
+def time_from_steps(i_dict, i_name, i_stretched, i_value, i_rate):
+    in_bpm = 1
+    in_stretch = 1
+
+    if i_rate != None: in_stretch = i_rate
+
+    if i_stretched == False:
+        out_nonstretch = i_value
+        out_normal = i_value*in_stretch
+        i_dict[i_name+'_nonstretch'] = out_nonstretch
+        i_dict[i_name] = out_normal
+    else:
+        out_nonstretch = i_value/in_stretch
+        out_normal = i_value
+        i_dict[i_name+'_nonstretch'] = i_value/in_stretch
+        i_dict[i_name] = i_value
+
+    out_real_nonstretch = (out_nonstretch/8)*in_bpm
+    out_real = out_real_nonstretch/in_stretch
+
+    i_dict[i_name+'_real_nonstretch'] = out_real_nonstretch
+    i_dict[i_name+'_real'] = out_real
+
+def time_from_seconds(i_dict, i_name, i_stretched, i_value, i_rate):
+    in_bpm = 1
+    in_stretch = 1
+
+    if i_rate != None: in_stretch = i_rate
+
+    if i_stretched == False:
+        out_real_nonstretch = i_value
+        out_real = out_real_nonstretch/in_stretch
+        i_dict[i_name+'_real_nonstretch'] = out_real_nonstretch
+        i_dict[i_name+'_real'] = out_real
+
+    else:
+        out_real = i_value
+        out_real_nonstretch = out_real*in_stretch
+        i_dict[i_name+'_real_nonstretch'] = out_real_nonstretch
+        i_dict[i_name+'_real'] = out_real
+
+    out_nonstretch = (out_real_nonstretch*8)*in_bpm
+    out_normal = out_nonstretch*in_stretch
+
+    i_dict[i_name+'_nonstretch'] = out_nonstretch
+    i_dict[i_name] = out_normal

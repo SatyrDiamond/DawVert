@@ -253,6 +253,10 @@ print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 if out_type != 'debug':
 	CVPJ_j = song_compat.makecompat(CVPJ_j, in_type, in_dawcapabilities, out_dawcapabilities)
 
+if in_type in ['r', 'm']: CVPJ_j = song_compat.makecompat_audiostretch(CVPJ_j, in_type, in_dawcapabilities, out_dawcapabilities)
+
+CVPJ_j = song_compat.makecompat_any(CVPJ_j, in_type, in_dawcapabilities, out_dawcapabilities)
+
 if in_type == 'ri' and out_type == 'mi': CVPJ_j = song_convert.ri2mi(CVPJ_j)
 if in_type == 'ri' and out_type == 'r': CVPJ_j = song_convert.ri2r(CVPJ_j)
 
@@ -269,11 +273,12 @@ if in_type == 'mi' and out_type == 'r':
 	CVPJ_j = song_convert.mi2m(CVPJ_j, extra_json)
 	CVPJ_j = song_convert.m2r(CVPJ_j)
 
-
 if out_type != 'debug':
 	CVPJ_j = song_compat.makecompat(CVPJ_j, out_type, in_dawcapabilities, out_dawcapabilities)
 
-CVPJ_j = song_compat.makecompat_any(CVPJ_j, out_type, in_dawcapabilities, out_dawcapabilities)
+if out_type in ['r', 'm']: CVPJ_j = song_compat.makecompat_audiostretch(CVPJ_j, out_type, in_dawcapabilities, out_dawcapabilities)
+
+#CVPJ_j = song_compat.makecompat_any(CVPJ_j, out_type, in_dawcapabilities, out_dawcapabilities)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------

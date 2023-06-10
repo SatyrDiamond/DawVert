@@ -458,15 +458,18 @@ class input_it(plugin_input.base):
                     cvpj_instdata['plugindata']['regions'] = []
                     for sampleregion in sampleregions:
                         print(sampleregion)
+                        instrumentnum = sampleregion[0][1]
+                        it_singlesample = IT_Samples[str(instrumentnum-1)]
                         regionparams = {}
                         regionparams['r_key'] = [sampleregion[1], sampleregion[2]]
                         regionparams['middlenote'] = sampleregion[0][0]*-1
-                        regionparams['file'] = samplefolder + str(sampleregion[0][1]) + '.wav'
+                        regionparams['file'] = samplefolder + str(instrumentnum) + '.wav'
                         regionparams['start'] = 0
-                        regionparams['end'] = 100000
+                        regionparams['end'] = it_singlesample['length']
                         regionparams['trigger'] = 'oneshot'
                         regionparams['loop'] = {}
-                        regionparams['loop']['enabled'] = 0
+                        regionparams['loop']['enabled'] = int(it_singlesample['flags'][3])
+                        regionparams['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
                         cvpj_instdata['plugindata']['regions'].append(regionparams)
 
                 if it_singleinst['filtercutoff'] != None and 'plugindata' in cvpj_instdata:

@@ -10,6 +10,7 @@ import numpy as np
 from functions import song_tracker
 from functions import audio_wav
 from functions import folder_samples
+from functions import data_values
 from functions import placements
 from functions import tracks
 from functions import data_bytes
@@ -449,40 +450,24 @@ class input_it(plugin_input.base):
                         cvpj_instdata['plugindata']['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
 
                 else:
-                    mscount = 0
-                    ms_r = []
-                    ms_r_c = None
-                    for bn_s_t_e in bn_s_t:
-                        if bn_s_t_e != ms_r_c: 
-                            ms_r_c = bn_s_t_e
-                            ms_r.append([ms_r_c[0], ms_r_c[1], 0])
-                        ms_r[-1][2] += 1
-                        mscount += 1
-
+                    sampleregions = data_values.list_to_reigons(bn_s_t, 60)
                     cvpj_instdata = {}
                     cvpj_instdata['plugin'] = 'sampler-multi'
                     cvpj_instdata['plugindata'] = {}
                     cvpj_instdata['plugindata']['point_value_type'] = "samples"
                     cvpj_instdata['plugindata']['regions'] = []
-
-                    startpos = -60
-                    for ms_r_e in ms_r:
-                        region_note = ms_r_e[0]
-                        region_inst = ms_r_e[1]
-                        region_end = ms_r_e[2]+startpos-1
-
+                    for sampleregion in sampleregions:
+                        print(sampleregion)
                         regionparams = {}
-                        regionparams['r_key'] = [startpos, region_end]
-                        regionparams['middlenote'] = region_note
-                        regionparams['file'] = samplefolder + str(region_inst) + '.wav'
+                        regionparams['r_key'] = [sampleregion[1], sampleregion[2]]
+                        regionparams['middlenote'] = sampleregion[0][0]*-1
+                        regionparams['file'] = samplefolder + str(sampleregion[0][1]) + '.wav'
                         regionparams['start'] = 0
                         regionparams['end'] = 100000
                         regionparams['trigger'] = 'oneshot'
                         regionparams['loop'] = {}
                         regionparams['loop']['enabled'] = 0
                         cvpj_instdata['plugindata']['regions'].append(regionparams)
-
-                        startpos += ms_r_e[2]
 
                 if it_singleinst['filtercutoff'] != None and 'plugindata' in cvpj_instdata:
                     if it_singleinst['filtercutoff'] != 127:

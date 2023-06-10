@@ -7,6 +7,7 @@ import json
 import struct
 from functions import song_tracker
 from functions import folder_samples
+from functions import data_values
 from functions import data_bytes
 from functions import tracks
 from functions import song
@@ -276,8 +277,23 @@ def parse_instrument(file_stream, samplecount):
             cvpj_l_single_inst['instdata']['plugindata']['loop'] = {"enabled": 1, "mode": "normal", "points": [xm_loop_start,xm_loop_start+xm_loop_len]}
     else:
         cvpj_l_single_inst['vol'] = 0.3
-        cvpj_l_single_inst['instdata']['plugin'] = 'none'
+        sampleregions = data_values.list_to_reigons(xm_inst_e_table, 49)
+        cvpj_l_single_inst['instdata']['plugin'] = 'sampler-multi'
         cvpj_l_single_inst['instdata']['plugindata'] = {}
+        cvpj_l_single_inst['instdata']['plugindata']['point_value_type'] = "samples"
+        cvpj_l_single_inst['instdata']['plugindata']['regions'] = []
+        for sampleregion in sampleregions:
+            regionparams = {}
+            regionparams['r_key'] = [sampleregion[1], sampleregion[2]]
+            regionparams['middlenote'] = 0
+            regionparams['file'] = samplefolder + str(sampleregion[0]+1) + '.wav'
+            regionparams['start'] = 0
+            regionparams['end'] = 100000
+            regionparams['trigger'] = 'oneshot'
+            regionparams['loop'] = {}
+            regionparams['loop']['enabled'] = 0
+            cvpj_l_single_inst['instdata']['plugindata']['regions'].append(regionparams)
+
     cvpj_l_instrumentsorder.append(it_samplename)
     if xm_inst_num_samples != 0: xm_cursamplenum += xm_inst_num_samples
 

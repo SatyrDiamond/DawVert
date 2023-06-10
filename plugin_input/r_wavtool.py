@@ -7,7 +7,6 @@ from functions import data_values
 from functions import folder_samples
 from functions import note_data
 from functions import tracks
-from functions import placement_data
 
 import plugin_input
 import json
@@ -79,9 +78,14 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
     cvpj_pldata["duration"] = j_wvtl_trc_timelineEnd*4 - j_wvtl_trc_timelineStart*4
     cvpj_pldata['cut'] = {}
     cvpj_pldata['cut']['type'] = 'loop'
-    placement_data.time_from_steps(cvpj_pldata['cut'], 'start', True, j_wvtl_trc_readStart*4, j_wvtl_bpm, 1)
-    placement_data.time_from_steps(cvpj_pldata['cut'], 'loopstart', True, j_wvtl_trc_loopStart*4, j_wvtl_bpm, 1)
-    placement_data.time_from_steps(cvpj_pldata['cut'], 'loopend', True, j_wvtl_trc_loopEnd*4, j_wvtl_bpm, 1)
+    data_values.time_from_steps(cvpj_pldata['cut'], 'start', True, j_wvtl_trc_readStart*4, 1)
+    data_values.time_from_steps(cvpj_pldata['cut'], 'loopstart', True, j_wvtl_trc_loopStart*4, 1)
+    data_values.time_from_steps(cvpj_pldata['cut'], 'loopend', True, j_wvtl_trc_loopEnd*4, 1)
+
+    cvpj_pldata['audiomod'] = {}
+    cvpj_pldata['audiomod']['stretch_algorithm'] = 'stretch'
+    cvpj_pldata['audiomod']['stretch_method'] = 'rate_ignoretempo'
+    cvpj_pldata['audiomod']['stretch_data'] = {'rate': 1}
 
     if 'audioBufferId' in j_wvtl_trackclip: 
         audio_filename = extract_audio(j_wvtl_trackclip['audioBufferId'])

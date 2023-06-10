@@ -57,6 +57,7 @@ def make_arrangement(data_FLdt, arrangements):
             BytesIO_arrangement.write(item['unknown2'].to_bytes(2, 'little'))
             BytesIO_arrangement.write(item['unknown3'].to_bytes(2, 'little'))
 
+
             if int(item['itemindex']) > item['patternbase']:
                 if 'startoffset' in item: BytesIO_arrangement.write(item['startoffset'].to_bytes(4, 'little'))
                 else: BytesIO_arrangement.write(b'\xff\xff\xff\xff')
@@ -69,9 +70,10 @@ def make_arrangement(data_FLdt, arrangements):
                 if 'startoffset' in item: startoffset_out = calctempotimed(item['startoffset'])
                 if 'endoffset' in item: endoffset_out = calctempotimed(item['endoffset'])
 
+                #print(item['length'], startoffset_out, endoffset_out)
+
                 BytesIO_arrangement.write(struct.pack('<f', startoffset_out))
                 BytesIO_arrangement.write(struct.pack('<f', endoffset_out))
-
 
 
         BytesIO_arrangement.seek(0)

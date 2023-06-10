@@ -504,52 +504,51 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
         t_LoopEnd = None
 
         if 'audiomod' in cvpj_placement:
-            if 'stretch' in cvpj_placement['audiomod']:
-                cvpj_stretch = cvpj_placement['audiomod']['stretch']
+            cvpj_audiomod = cvpj_placement['audiomod']
 
-                if 'pitch' in cvpj_stretch: stretch_t_pitch = cvpj_stretch['pitch']
+            if 'pitch' in cvpj_audiomod: stretch_t_pitch = cvpj_audiomod['pitch']
+            if 'stretch_method' in cvpj_audiomod: 
+                if cvpj_audiomod['stretch_method'] == 'warp': w_IsWarped = 'true'
 
-                if 'enabled' in cvpj_stretch: 
-                    if cvpj_stretch['enabled'] == True: w_IsWarped = 'true'
+            if w_IsWarped == 'true':
+                if 'stretch_params' in cvpj_audiomod: 
+                    stretch_params = cvpj_audiomod['stretch_params']
+                    if 'ComplexProEnvelope' in stretch_params: w_ComplexProEnvelope = stretch_params['ComplexProEnvelope']
+                    if 'ComplexProFormants' in stretch_params: w_ComplexProFormants = stretch_params['ComplexProFormants']
+                    if 'FluctuationTexture' in stretch_params: w_FluctuationTexture = stretch_params['FluctuationTexture']
+                    if 'GranularityTexture' in stretch_params: w_GranularityTexture = stretch_params['GranularityTexture']
+                    if 'GranularityTones' in stretch_params: w_GranularityTones = stretch_params['GranularityTones']
+                    if 'TransientEnvelope' in stretch_params: w_TransientEnvelope = stretch_params['TransientEnvelope']
+                    if 'TransientLoopMode' in stretch_params: w_TransientLoopMode = stretch_params['TransientLoopMode']
+                    if 'TransientResolution' in stretch_params: w_TransientResolution = stretch_params['TransientResolution']
 
-                    if w_IsWarped == 'true':
-                        cvpj_isstretched = True
-                        if 'params' in cvpj_stretch: 
-                            stretch_params = cvpj_stretch['params']
-                            if 'ComplexProEnvelope' in stretch_params: w_ComplexProEnvelope = stretch_params['ComplexProEnvelope']
-                            if 'ComplexProFormants' in stretch_params: w_ComplexProEnvelope = stretch_params['ComplexProFormants']
-                            if 'FluctuationTexture' in stretch_params: w_ComplexProEnvelope = stretch_params['FluctuationTexture']
-                            if 'GranularityTexture' in stretch_params: w_ComplexProEnvelope = stretch_params['GranularityTexture']
-                            if 'GranularityTones' in stretch_params: w_ComplexProEnvelope = stretch_params['GranularityTones']
-                            if 'TransientEnvelope' in stretch_params: w_ComplexProEnvelope = stretch_params['TransientEnvelope']
-                            if 'TransientLoopMode' in stretch_params: w_ComplexProEnvelope = stretch_params['TransientLoopMode']
-                            if 'TransientResolution' in stretch_params: w_ComplexProEnvelope = stretch_params['TransientResolution']
+                if 'stretch_algorithm' in cvpj_audiomod: 
+                    if cvpj_audiomod['stretch_algorithm'] == 'ableton_beats': w_WarpMode = 0
+                    if cvpj_audiomod['stretch_algorithm'] == 'ableton_tones': w_WarpMode = 1
+                    if cvpj_audiomod['stretch_algorithm'] == 'ableton_texture': w_WarpMode = 2
+                    if cvpj_audiomod['stretch_algorithm'] == 'resample': w_WarpMode = 3
+                    if cvpj_audiomod['stretch_algorithm'] == 'ableton_complex': w_WarpMode = 4
+                    if cvpj_audiomod['stretch_algorithm'] == 'stretch_complexpro': w_WarpMode = 6
 
-                        if 'mode' in cvpj_stretch: 
-                            if cvpj_stretch['mode'] == 'ableton_beats': w_WarpMode = 0
-                            if cvpj_stretch['mode'] == 'ableton_tones': w_WarpMode = 1
-                            if cvpj_stretch['mode'] == 'ableton_texture': w_WarpMode = 2
-                            if cvpj_stretch['mode'] == 'resample': w_WarpMode = 3
-                            if cvpj_stretch['mode'] == 'ableton_complex': w_WarpMode = 4
-                            if cvpj_stretch['mode'] == 'stretch_complexpro': w_WarpMode = 6
-                            cvpj_stretchmode = cvpj_stretch['mode']
+                if 'stretch_data' in cvpj_audiomod: 
+                    w_timemarkers = cvpj_audiomod['stretch_data']
 
-                        if 'time' in cvpj_stretch:
-                            if 'type' in cvpj_stretch['time'] and 'data' in cvpj_stretch['time']:
-                                timedata = cvpj_stretch['time']['data']
+                    #if 'time' in cvpj_stretch:
+                    #    if 'type' in cvpj_stretch['time'] and 'data' in cvpj_stretch['time']:
+                    #        timedata = cvpj_stretch['time']['data']
 
-                                if cvpj_stretch['time']['type'] == 'rate_timed': 
-                                    speedrate = timedata['rate']
-                                    rate_fixed = (1/speedrate)*AudioDuration
-                                    w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
+                    #        if cvpj_stretch['time']['type'] == 'rate_timed': 
+                    #            speedrate = timedata['rate']
+                    #            rate_fixed = (1/speedrate)*AudioDuration
+                    #            w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
 
-                                if cvpj_stretch['time']['type'] == 'rate_nontimed': 
-                                    speedrate = timedata['rate']
-                                    rate_fixed = (AudioDuration/speedrate)
-                                    if cvpj_stretch['mode'] == 'resample': rate_fixed *= pow(2, stretch_t_pitch/12)
-                                    w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
+                    #        if cvpj_stretch['time']['type'] == 'rate_nontimed': 
+                    #            speedrate = timedata['rate']
+                    #            rate_fixed = (AudioDuration/speedrate)
+                    #            if cvpj_stretch['mode'] == 'resample': rate_fixed *= pow(2, stretch_t_pitch/12)
+                    #            w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
 
-                        if cvpj_stretch['mode'] == 'resample': cvpj_resample_pitch = pow(2, stretch_t_pitch/12)
+                    #if cvpj_stretch['mode'] == 'resample': cvpj_resample_pitch = pow(2, stretch_t_pitch/12)
 
         #((t_CurrentEnd)*tempomul)/speedrate
 
@@ -559,7 +558,7 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
             if 'type' in cvpj_placement_cut:
 
 
-                if cvpj_isstretched == True:
+                if w_IsWarped == 'true':
                     if cvpj_placement_cut['type'] == 'cut':
                         if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start']/4
                         if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end']/4
@@ -569,22 +568,10 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                         if 'loopstart' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['loopstart']/4
                         if 'loopend' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['loopend']/4
 
-
                 else:
                     if cvpj_placement_cut['type'] == 'cut':
                         if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start_real']
                         if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end_real']
-                    if cvpj_placement_cut['type'] == 'loop':
-                        t_LoopOn = 'true'
-                        w_IsWarped = 'true'
-                        cvpj_placement['audiomod'] = {}
-                        cvpj_placement['audiomod']['stretch'] = {}
-                        cvpj_placement['audiomod']['stretch']['enabled'] = True
-                        cvpj_placement['audiomod']['stretch']['time'] = {'type': 'rate_timed', 'data': {'rate': 1}}
-                        
-                        if 'start' in cvpj_placement_cut: t_StartRelative = cvpj_placement_cut['start']/4
-                        if 'loopstart' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['loopstart']/4
-                        if 'loopend' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['loopend']/4
 
         if t_LoopEnd == None:
             if w_IsWarped == 'true': 
@@ -634,6 +621,10 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
     addvalue(x_ClipData_loop, 'OutMarker', t_LoopEnd)
     addvalue(x_ClipData_loop, 'HiddenLoopStart', t_LoopStart)
     addvalue(x_ClipData_loop, 'HiddenLoopEnd', t_LoopEnd)
+
+    #for value in [t_CurrentStart, t_CurrentEnd, t_StartRelative, t_LoopStart, t_LoopEnd]:
+    #    print(str(value).ljust(20), end=' ')
+    #print()
 
     addvalue(x_ClipData, 'Name', t_name)
     addvalue(x_ClipData, 'Annotation', '')
@@ -1046,13 +1037,10 @@ class output_cvpj(plugin_output.base):
     def gettype(self): return 'r'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'track_lanes': False,
         'placement_cut': True,
         'placement_loop': True,
-        'track_nopl': False,
         'auto_nopl': True,
-        'placement_audio_events': False
+        'placement_audio_stretch': ['warp']
         }
     def getsupportedplugins(self): return ['sampler', 'sampler-multi', 'sampler-slicer', 'vst2', 'vst3']
     def parse(self, convproj_json, output_file):

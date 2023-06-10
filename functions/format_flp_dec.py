@@ -23,9 +23,14 @@ def calctempotimed(i_value):
     #print('VALUE', str(i_value).ljust(20), '| MUL', str(i_tempomul).ljust(20), '| OUT', str(i_out).ljust(20))
     return i_out
 
+def decodetext(event_data):
+    return event_data.decode('utf-16le').rstrip('\x00\x00')
+
 # ------------- parse -------------
 def parse_arrangement(arrdata):
 
+    #print(FLSplitted)
+    
     bio_fldata = create_bytesio(arrdata)
     output = []
     while bio_fldata[0].tell() < bio_fldata[1]:
@@ -38,34 +43,26 @@ def parse_arrangement(arrdata):
         placement['trackindex'] = int.from_bytes(bio_fldata[0].read(4), "little")
         placement['unknown1'] = int.from_bytes(bio_fldata[0].read(2), "little")
         placement['flags'] = int.from_bytes(bio_fldata[0].read(2), "little")
-        placement['unknown2'] = int.from_bytes(bio_fldata[0].read(2), "little")
-        placement['unknown3'] = int.from_bytes(bio_fldata[0].read(2), "little")
-        if FLSplitted[0] == '21':
-            placement['unknown4'] = bio_fldata[0].read(28)
+        placement['unknown2'] = int.from_bytes(bio_fldata[0].read(4), "little")
 
         startoffset_bytes = bio_fldata[0].read(4)
         endoffset_bytes = bio_fldata[0].read(4)
 
         if FLSplitted[0] == '21':
-            startoffset_bytes = placement['unknown4'][0:4]
-            endoffset_bytes = placement['unknown4'][4:8]
-            
+            placement['unknown3'] = bio_fldata[0].read(28)
+
         startoffset = int.from_bytes(startoffset_bytes, "little")
         endoffset = int.from_bytes(endoffset_bytes, "little")
         startoffset_float = struct.unpack('<f', startoffset_bytes)[0]
         endoffset_float = struct.unpack('<f', endoffset_bytes)[0]
 
-        if FLSplitted[0] == '21':
-            if placement['itemindex'] > placement['patternbase']:
-                if startoffset != 4294967295 and startoffset != 3212836864: placement['startoffset'] = startoffset
-                if endoffset != 4294967295 and endoffset != 3212836864: placement['endoffset'] = endoffset
+        if placement['itemindex'] > placement['patternbase']:
+            if startoffset != 4294967295 and startoffset != 3212836864: placement['startoffset'] = startoffset
+            if endoffset != 4294967295 and endoffset != 3212836864: placement['endoffset'] = endoffset
         else:
-            if placement['itemindex'] > placement['patternbase']:
-                if startoffset != 4294967295 and startoffset != 3212836864: placement['startoffset'] = startoffset
-                if endoffset != 4294967295 and endoffset != 3212836864: placement['endoffset'] = endoffset
-            else:
-                if startoffset_float > 0: placement['startoffset'] = calctempotimed(startoffset_float)
-                if endoffset_float > 0: placement['endoffset'] = calctempotimed(endoffset_float)
+            #print(placement['length'], startoffset_float, endoffset_float)
+            if startoffset_float > 0: placement['startoffset'] = calctempotimed(startoffset_float)
+            if endoffset_float > 0: placement['endoffset'] = calctempotimed(endoffset_float)
 
         output.append(placement)
     return output
@@ -175,6 +172,7 @@ def parse_flevent(datastream):
 def parse(inputfile):
     global FL_Main
     global FLSplitted
+
     fileobject = open(inputfile, 'rb')
     headername = fileobject.read(4)
     rifftable = data_bytes.riff_read(fileobject, 0)
@@ -221,6 +219,10 @@ def parse(inputfile):
     FL_FXCreationMode = 0
     FL_TimeMarkers = {}
     FL_ChanGroupName = []
+    T_FL_CurrentArrangement = '0'
+    FL_Arrangements[T_FL_CurrentArrangement] = {}
+    FL_Arrangements[T_FL_CurrentArrangement]['tracks'] = {}
+    FL_Arrangements[T_FL_CurrentArrangement]['items'] = {}
     T_FL_FXNum = -1
 
     for event in eventtable:
@@ -230,7 +232,7 @@ def parse(inputfile):
         if event_id == 199: 
             FLVersion = event_data.decode('utf-8').rstrip('\x00')
             FLSplitted = FLVersion.split('.')
-            if int(FLSplitted[0]) < 20:
+            if int(FLSplitted[0]) < 12:
                 print('[error] FL version '+FLSplitted[0]+' is not supported.') 
                 exit()
             FL_Main['Version'] = FLVersion
@@ -239,15 +241,15 @@ def parse(inputfile):
         if event_id == 17: FL_Main['Numerator'] = event_data
         if event_id == 18: FL_Main['Denominator'] = event_data
         if event_id == 11: FL_Main['Shuffle'] = event_data
-        if event_id == 194: FL_Main['Title'] = event_data.decode('utf-16le').rstrip('\x00\x00')
-        if event_id == 206: FL_Main['Genre'] = event_data.decode('utf-16le').rstrip('\x00\x00')
-        if event_id == 207: FL_Main['Author'] = event_data.decode('utf-16le').rstrip('\x00\x00')
-        if event_id == 202: FL_Main['ProjectDataPath'] = event_data.decode('utf-16le').rstrip('\x00\x00')
-        if event_id == 195: FL_Main['Comment'] = event_data.decode('utf-16le').rstrip('\x00\x00')
-        if event_id == 197: FL_Main['URL'] = event_data.decode('utf-16le').rstrip('\x00\x00')
+        if event_id == 194: FL_Main['Title'] = decodetext(event_data)
+        if event_id == 206: FL_Main['Genre'] = decodetext(event_data)
+        if event_id == 207: FL_Main['Author'] = decodetext(event_data)
+        if event_id == 202: FL_Main['ProjectDataPath'] = decodetext(event_data)
+        if event_id == 195: FL_Main['Comment'] = decodetext(event_data)
+        if event_id == 197: FL_Main['URL'] = decodetext(event_data)
         if event_id == 237: FL_Main['ProjectTime'] = event_data
         if event_id == 10: FL_Main['ShowInfo'] = event_data
-        if event_id == 231: FL_ChanGroupName.append(event_data.decode('utf-16le').rstrip('\x00\x00'))
+        if event_id == 231: FL_ChanGroupName.append(decodetext(event_data))
 
         if event_id == 65: 
             T_FL_CurrentPattern = event_data
@@ -296,7 +298,7 @@ def parse(inputfile):
             if event_data != 5328737:
                 FL_Patterns[str(T_FL_CurrentPattern)]['color'] = event_data
         if event_id == 193: 
-            FL_Patterns[str(T_FL_CurrentPattern)]['name'] = event_data.decode('utf-16le').rstrip('\x00\x00')
+            FL_Patterns[str(T_FL_CurrentPattern)]['name'] = decodetext(event_data)
 
         if event_id == 99: 
             T_FL_CurrentArrangement = event_data
@@ -308,7 +310,7 @@ def parse(inputfile):
             FL_TimeMarkers = FL_Arrangements[str(T_FL_CurrentArrangement)]['timemarkers']
             TimeMarker_id = 0
         if event_id == 241: 
-            FL_Arrangements[str(T_FL_CurrentArrangement)]['name'] = event_data.decode('utf-16le').rstrip('\x00\x00')
+            FL_Arrangements[str(T_FL_CurrentArrangement)]['name'] = decodetext(event_data)
         if event_id == 233: 
             playlistitems = parse_arrangement(event_data)
             FL_Arrangements[str(T_FL_CurrentArrangement)]['items'] = playlistitems
@@ -322,7 +324,7 @@ def parse(inputfile):
         if event_id == 239: #PLTrackName
             if str(currenttracknum) not in FL_Tracks:
                 FL_Tracks[str(currenttracknum)] = {}
-            FL_Tracks[str(currenttracknum)]['name'] = event_data.decode('utf-16le').rstrip('\x00\x00')
+            FL_Tracks[str(currenttracknum)]['name'] = decodetext(event_data)
 
     
         if event_id == 148: 
@@ -335,7 +337,7 @@ def parse(inputfile):
             FL_TimeMarkers[str(T_FL_CurrentTimeMarker)]['type'] = timemarkertype
             FL_TimeMarkers[str(T_FL_CurrentTimeMarker)]['pos'] = timemarkertime
         if event_id == 205: 
-            event_text = event_data.decode('utf-16le').rstrip('\x00\x00')
+            event_text = decodetext(event_data)
             #print('\\__TimeMarkerName:', event_text)
             FL_TimeMarkers[str(T_FL_CurrentTimeMarker)]['name'] = event_text
         if event_id == 33: 
@@ -364,7 +366,7 @@ def parse(inputfile):
             T_FL_FXIcon = None
         if FL_FXCreationMode == 0:
             if event_id == 201: 
-                event_text = event_data.decode('utf-16le').rstrip('\x00\x00')
+                event_text = decodetext(event_data)
                 #print('\\__DefPluginName:', event_text)
                 DefPluginName = event_text
             if event_id == 212:
@@ -374,7 +376,7 @@ def parse(inputfile):
                 #print(event_data)
 
             if event_id == 203: 
-                event_text = event_data.decode('utf-16le').rstrip('\x00\x00')
+                event_text = decodetext(event_data)
                 #print('\\__PluginName:', event_text)
                 FL_Channels[str(T_FL_CurrentChannel)]['name'] = event_text
             if event_id == 155: 
@@ -416,7 +418,7 @@ def parse(inputfile):
             if event_id == 20: FL_Channels[str(T_FL_CurrentChannel)]['looptype'] = event_data
             if event_id == 135: FL_Channels[str(T_FL_CurrentChannel)]['middlenote'] = event_data
             if event_id == 196: 
-                samplefilename = event_data.decode('utf-16le').rstrip('\x00\x00')
+                samplefilename = decodetext(event_data)
                 if samplefilename[:21] == '%FLStudioFactoryData%':
                     samplefilename = "C:\\Program Files\\Image-Line\\FL Studio 20" + samplefilename[21:]
                 FL_Channels[str(T_FL_CurrentChannel)]['samplefilename'] = samplefilename
@@ -439,7 +441,7 @@ def parse(inputfile):
                 T_FL_FXColor = None
                 T_FL_FXIcon = None
             if event_id == 201: 
-                event_text = event_data.decode('utf-16le').rstrip('\x00\x00')
+                event_text = decodetext(event_data)
                 #print('\\__DefPluginName:', event_text)
                 DefPluginName = event_text
             if event_id == 212: 
@@ -449,7 +451,7 @@ def parse(inputfile):
                 FXPlugin['data'] = event_data
             if event_id == 155: FXPlugin['icon'] = event_data
             if event_id == 128: FXPlugin['color'] = event_data
-            if event_id == 203: FXPlugin['name'] = event_data.decode('utf-16le').rstrip('\x00\x00')
+            if event_id == 203: FXPlugin['name'] = decodetext(event_data)
             if event_id == 98: #FXToSlotNum
                 FL_Mixer[str(T_FL_FXNum)]['slots'][event_data] = FXPlugin
                 FXPlugin = None
@@ -458,7 +460,7 @@ def parse(inputfile):
             if event_id == 154: FL_Mixer[str(T_FL_FXNum)]['inchannum'] = event_data
             if event_id == 147: FL_Mixer[str(T_FL_FXNum)]['outchannum'] = event_data
             if event_id == 204: 
-                event_text = event_data.decode('utf-16le').rstrip('\x00\x00')
+                event_text = decodetext(event_data)
                 FL_Mixer[str(T_FL_FXNum+1)]['name'] = event_text
 
     output = {}

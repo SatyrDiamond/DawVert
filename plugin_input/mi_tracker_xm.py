@@ -277,21 +277,31 @@ def parse_instrument(file_stream, samplecount):
             cvpj_l_single_inst['instdata']['plugindata']['loop'] = {"enabled": 1, "mode": "normal", "points": [xm_loop_start,xm_loop_start+xm_loop_len]}
     else:
         cvpj_l_single_inst['vol'] = 0.3
-        sampleregions = data_values.list_to_reigons(xm_inst_e_table, 49)
+        sampleregions = data_values.list_to_reigons(xm_inst_e_table, 48)
         cvpj_l_single_inst['instdata']['plugin'] = 'sampler-multi'
         cvpj_l_single_inst['instdata']['plugindata'] = {}
         cvpj_l_single_inst['instdata']['plugindata']['point_value_type'] = "samples"
         cvpj_l_single_inst['instdata']['plugindata']['regions'] = []
+
         for sampleregion in sampleregions:
+            instrumentnum = sampleregion[0]
             regionparams = {}
             regionparams['r_key'] = [sampleregion[1], sampleregion[2]]
             regionparams['middlenote'] = 0
-            regionparams['file'] = samplefolder + str(sampleregion[0]+1) + '.wav'
+            regionparams['file'] = samplefolder + str(xm_cursamplenum+instrumentnum) + '.wav'
             regionparams['start'] = 0
-            regionparams['end'] = 100000
+            regionparams['end'] = t_sampleheaders[instrumentnum][0][0]
+            regionparams['name'] = t_sampleheaders[instrumentnum][1]
             regionparams['trigger'] = 'oneshot'
             regionparams['loop'] = {}
-            regionparams['loop']['enabled'] = 0
+            if t_sampleheaders[instrumentnum][0][1:3] == (0, 0):
+                regionparams['loop']['enabled'] = 0
+            else:
+                regionparams['loop']['enabled'] = 1
+                xm_loop_start = t_sampleheaders[instrumentnum][0][1]
+                xm_loop_len = t_sampleheaders[instrumentnum][0][2]
+                regionparams['loop']['points'] = [xm_loop_start,xm_loop_start+xm_loop_len]
+
             cvpj_l_single_inst['instdata']['plugindata']['regions'].append(regionparams)
 
     cvpj_l_instrumentsorder.append(it_samplename)

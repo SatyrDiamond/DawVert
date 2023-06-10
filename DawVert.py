@@ -250,10 +250,10 @@ if CVPJ_C != None: CVPJ_j = CVPJ_C
 
 print('[info] ' + typelist[in_type] + ' > ' + typelist[out_type])
 
+if in_type in ['r', 'm']: CVPJ_j = song_compat.makecompat_audiostretch(CVPJ_j, in_type, in_dawcapabilities, out_dawcapabilities)
+
 if out_type != 'debug':
 	CVPJ_j = song_compat.makecompat(CVPJ_j, in_type, in_dawcapabilities, out_dawcapabilities)
-
-if in_type in ['r', 'm']: CVPJ_j = song_compat.makecompat_audiostretch(CVPJ_j, in_type, in_dawcapabilities, out_dawcapabilities)
 
 CVPJ_j = song_compat.makecompat_any(CVPJ_j, in_type, in_dawcapabilities, out_dawcapabilities)
 

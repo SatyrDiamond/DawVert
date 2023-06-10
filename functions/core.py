@@ -171,11 +171,11 @@ def convert_type_output(extra_json):
 
 	print('[core] ' + typelist[in_type] + ' > ' + typelist[out_type])
 
+	if in_type in ['r', 'm']: convproj_j[0] = song_compat.makecompat_audiostretch(convproj_j[0], in_type, in_dawcapabilities, out_dawcapabilities)
+	
 	if out_type != 'debug':
 		convproj_j[0] = song_compat.makecompat(convproj_j[0], in_type, in_dawcapabilities, out_dawcapabilities)
 
-	if in_type in ['r', 'm']: convproj_j[0] = song_compat.makecompat_audiostretch(convproj_j[0], in_type, in_dawcapabilities, out_dawcapabilities)
-	
 	convproj_j[0] = song_compat.makecompat_any(convproj_j[0], in_type, in_dawcapabilities, out_dawcapabilities)
 
 	if in_type == 'ri' and out_type == 'mi': convproj_j[0] = song_convert.ri2mi(convproj_j[0])

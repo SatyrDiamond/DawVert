@@ -133,7 +133,6 @@ class input_it(plugin_input.base):
             it_inst_midi_chan = it_file.read(1)[0] # MIDI Channel
             it_inst_midi_inst = it_file.read(1)[0] # MIDI Program
             it_inst_midi_bank = int.from_bytes(it_file.read(2), "little") # MIDI Bank
-            print(it_inst_midi_chan, it_inst_midi_inst, it_inst_midi_bank)
 
             if it_inst_midi_chan != 0: it_singleinst['midi_chan'] = it_inst_midi_chan
             if it_inst_midi_inst != 255: it_singleinst['midi_inst'] = it_inst_midi_inst

@@ -133,6 +133,8 @@ class input_it(plugin_input.base):
             it_inst_midi_chan = it_file.read(1)[0] # MIDI Channel
             it_inst_midi_inst = it_file.read(1)[0] # MIDI Program
             it_inst_midi_bank = int.from_bytes(it_file.read(2), "little") # MIDI Bank
+            print(it_inst_midi_chan, it_inst_midi_inst, it_inst_midi_bank)
+
             if it_inst_midi_chan != 0: it_singleinst['midi_chan'] = it_inst_midi_chan
             if it_inst_midi_inst != 255: it_singleinst['midi_inst'] = it_inst_midi_inst
             if it_inst_midi_bank != 65535: it_singleinst['midi_bank'] = it_inst_midi_bank
@@ -436,9 +438,9 @@ class input_it(plugin_input.base):
                     bn_s_t_ifsame = True
                     bn_s_t_f = bn_s_t[12]
 
+                cvpj_instdata = {}
                 if bn_s_t_ifsame == True and str(bn_s_t_f[1]-1) in IT_Samples:
                     it_singlesample = IT_Samples[str(bn_s_t_f[1]-1)]
-                    cvpj_instdata = {}
                     cvpj_instdata['plugin'] = 'sampler'
                     cvpj_instdata['plugindata'] = {}
                     cvpj_instdata['plugindata']['point_value_type'] = "samples"
@@ -448,16 +450,13 @@ class input_it(plugin_input.base):
                         cvpj_instdata['plugindata']['loop'] = {}
                         cvpj_instdata['plugindata']['loop']['enabled'] = int(it_singlesample['flags'][3])
                         cvpj_instdata['plugindata']['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
-
                 else:
                     sampleregions = data_values.list_to_reigons(bn_s_t, 60)
-                    cvpj_instdata = {}
                     cvpj_instdata['plugin'] = 'sampler-multi'
                     cvpj_instdata['plugindata'] = {}
                     cvpj_instdata['plugindata']['point_value_type'] = "samples"
                     cvpj_instdata['plugindata']['regions'] = []
                     for sampleregion in sampleregions:
-                        print(sampleregion)
                         instrumentnum = sampleregion[0][1]
                         it_singlesample = IT_Samples[str(instrumentnum-1)]
                         regionparams = {}
@@ -470,7 +469,6 @@ class input_it(plugin_input.base):
                         regionparams['loop'] = {}
                         regionparams['loop']['enabled'] = int(it_singlesample['flags'][3])
                         regionparams['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
-
                         cvpj_instdata['plugindata']['regions'].append(regionparams)
 
                 if it_singleinst['filtercutoff'] != None and 'plugindata' in cvpj_instdata:
@@ -484,6 +482,15 @@ class input_it(plugin_input.base):
                         else: plugdata['filter']['reso'] = 1
                         plugdata['filter']['type'] = "lowpass"
                         plugdata['filter']['wet'] = 1
+
+                cvpj_instdata_midi = {}
+                cvpj_instdata_midi['out'] = {}
+                if 'midi_chan' in it_singleinst: 
+                    cvpj_instdata_midi['out']['enabled'] = 1
+                    cvpj_instdata_midi['out']['channel'] = it_singleinst['midi_chan']+1
+                if 'midi_inst' in it_singleinst: cvpj_instdata_midi['out']['program'] = it_singleinst['midi_inst']+1
+                if 'midi_bank' in it_singleinst: cvpj_instdata_midi['out']['bank'] = it_singleinst['midi_bank']+1
+                cvpj_instdata['midi'] = cvpj_instdata_midi
 
                 tracks.m_create_inst(cvpj_l, it_instname, cvpj_instdata)
                 tracks.m_basicdata_inst(cvpj_l, it_instname, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)

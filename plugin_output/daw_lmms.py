@@ -442,16 +442,21 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     trkX_midiport = ET.SubElement(trkX_insttr, "midiport")
     if 'midi' in instJ:
         trkJ_midiport = instJ['midi']
-        trkJ_m_i = trkJ_midiport['in']
-        trkJ_m_o = trkJ_midiport['out']
-        if 'enabled' in trkJ_m_i: trkX_midiport.set('readable', str(trkJ_m_i['enabled']))
-        if 'fixedvelocity' in trkJ_m_i: trkX_midiport.set('fixedinputvelocity', str(trkJ_m_i['fixedvelocity']-1))
-        if 'channel' in trkJ_m_i: trkX_midiport.set('inputchannel', str(trkJ_m_i['channel']))
-        if 'enabled' in trkJ_m_o: trkX_midiport.set('writable', str(trkJ_m_o['enabled']))
-        if 'fixedvelocity' in trkJ_m_o: trkX_midiport.set('fixedoutputvelocity', str(trkJ_m_o['fixedvelocity']-1))
-        if 'channel' in trkJ_m_o: trkX_midiport.set('outputchannel', str(trkJ_m_o['channel']))
-        if 'fixednote' in trkJ_m_o: trkX_midiport.set('fixedoutputnote', str(trkJ_m_o['fixednote']-1))
-        if 'basevelocity' in trkJ_midiport: trkX_midiport.set('basevelocity', str(trkJ_midiport['basevelocity']))
+
+        if 'in' in trkJ_midiport:
+            trkJ_m_i = trkJ_midiport['in']
+            if 'enabled' in trkJ_m_i: trkX_midiport.set('readable', str(trkJ_m_i['enabled']))
+            if 'fixedvelocity' in trkJ_m_i: trkX_midiport.set('fixedinputvelocity', str(trkJ_m_i['fixedvelocity']-1))
+            if 'channel' in trkJ_m_i: trkX_midiport.set('inputchannel', str(trkJ_m_i['channel']))
+
+        if 'out' in trkJ_midiport:
+            trkJ_m_o = trkJ_midiport['out']
+            if 'enabled' in trkJ_m_o: trkX_midiport.set('writable', str(trkJ_m_o['enabled']))
+            if 'fixedvelocity' in trkJ_m_o: trkX_midiport.set('fixedoutputvelocity', str(trkJ_m_o['fixedvelocity']-1))
+            if 'channel' in trkJ_m_o: trkX_midiport.set('outputchannel', str(trkJ_m_o['channel']))
+            if 'fixednote' in trkJ_m_o: trkX_midiport.set('fixedoutputnote', str(trkJ_m_o['fixednote']-1))
+            if 'basevelocity' in trkJ_midiport: trkX_midiport.set('basevelocity', str(trkJ_midiport['basevelocity']))
+            if 'program' in trkJ_m_o: trkX_midiport.set('outputprogram', str(trkJ_m_o['program']))
     else:
         trkX_midiport.set('fixedoutputvelocity',"-1")
         trkX_midiport.set('readable',"0")

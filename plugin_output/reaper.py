@@ -128,16 +128,21 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
             if audiomoddata['stretch_method'] == 'rate_ignoretempo':
                 audiorate = audiomoddata['stretch_data']['rate']
             tempmulrate = audiorate/tempomul
-            print(audiorate, tempomul, tempmulrate)
+            #print(audiorate, tempomul, tempmulrate)
 
         if 'cut' in trackplacement_data:
                 clip_cutdata = trackplacement_data['cut']
+
+                #for value in ["end", "end_nonstretch", "end_real", "end_real_nonstretch"]:
+                #    print(str(clip_cutdata[value]).ljust(20), end=' ')
+                #print()
+
                 if clip_cutdata['type'] == 'cut':
                     if cliptype == 'notes':  
                         if 'start' in clip_cutdata: clip_startat = clip_cutdata['start']
                     if cliptype == 'audio': 
-                        if 'start_real' in clip_cutdata: 
-                            clip_startat = (clip_cutdata['start_real']/tempmulrate)
+                        if 'start_real_nonstretch' in clip_cutdata: 
+                            clip_startat = (clip_cutdata['start_real_nonstretch']*audiorate)/tempmulrate
 
         rpp_clipdata = rpp_obj('ITEM',track_uuid)
         rpp_clipdata.children.append(['POSITION',clip_position])

@@ -263,7 +263,9 @@ def parse_instrument(file_stream, samplecount):
     cvpj_l_single_inst['name'] = xm_inst_name
     cvpj_l_single_inst['vol'] = 0.3
     cvpj_l_single_inst['instdata'] = {}
-    if xm_inst_num_samples == 1:
+    if xm_inst_num_samples == 0:
+        pass
+    elif xm_inst_num_samples == 1:
         cvpj_l_single_inst['vol'] = 0.3*(t_sampleheaders[0][0][3]/64)
         cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
         cvpj_l_single_inst['instdata']['plugindata'] = {'file': samplefolder + str(xm_cursamplenum) + '.wav'}

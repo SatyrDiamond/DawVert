@@ -15,7 +15,7 @@ from functions import note_mod
 from functions import data_bytes
 from functions import colors
 from functions import notelist_data
-from functions import placement_data
+from functions import data_values
 from functions import song
 from functions import audio
 
@@ -48,7 +48,8 @@ class input_flp(plugin_input.base):
         return {
         'fxrack': True,
         'track_lanes': True,
-        'placement_cut': True
+        'placement_cut': True,
+        'placement_audio_stretch': ['rate', 'rate_ignoretempo']
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):
@@ -81,7 +82,6 @@ class input_flp(plugin_input.base):
         if 'Tempo' in FL_Main: cvpj_l['bpm'] = FL_Main['Tempo']
         else: cvpj_l['bpm'] = 120
         if 'Shuffle' in FL_Main: cvpj_l['shuffle'] = FL_Main['Shuffle']/128
-        tempomul = cvpj_l['bpm']/120
 
         cvpj_l_instrument_data = {}
         cvpj_l_instrument_order = []
@@ -149,57 +149,51 @@ class input_flp(plugin_input.base):
                 if filename_sample in filename_len: ald = filename_len[filename_sample]
                 stretchbpm = (ald['dur_sec']*(cvpj_l['bpm']/120))
 
-                cvpj_s_sample['audiomod'] = {}
-                cvpj_s_sample['audiomod']['stretch'] = {}
-                cvpj_s_stretch = cvpj_s_sample['audiomod']['stretch']
+                cvpj_audiomod = cvpj_s_sample['audiomod'] = {}
 
                 t_stretchingmode = 0
                 t_stretchingtime = 0
                 t_stretchingmultiplier = 1
                 t_stretchingpitch = 0
+                cvpj_audiomod['stretch_method'] = None
 
                 if 'stretchingpitch' in channeldata: t_stretchingpitch += channeldata['stretchingpitch']/100
                 if 'middlenote' in channeldata: t_stretchingpitch += (channeldata['middlenote']-60)*-1
                 if 'pitch' in channeldata: t_stretchingpitch += channeldata['pitch']/100
-                cvpj_s_sample['audiomod']['stretch']['pitch'] = t_stretchingpitch
+                cvpj_audiomod['pitch'] = t_stretchingpitch
 
                 if 'stretchingtime' in channeldata: t_stretchingtime = channeldata['stretchingtime']/384
                 if 'stretchingmode' in channeldata: t_stretchingmode = channeldata['stretchingmode']
                 if 'stretchingmultiplier' in channeldata: t_stretchingmultiplier = pow(2, channeldata['stretchingmultiplier']/10000)
 
-                if t_stretchingmode == -1: cvpj_s_stretch['mode'] = 'stretch'
-                if t_stretchingmode == 0: cvpj_s_stretch['mode'] = 'resample'
-                if t_stretchingmode == 1: cvpj_s_stretch['mode'] = 'elastique_v3'
-                if t_stretchingmode == 2: cvpj_s_stretch['mode'] = 'elastique_v3_mono'
-                if t_stretchingmode == 3: cvpj_s_stretch['mode'] = 'slice_stretch'
-                if t_stretchingmode == 5: cvpj_s_stretch['mode'] = 'auto'
-                if t_stretchingmode == 4: cvpj_s_stretch['mode'] = 'slice_map'
-                if t_stretchingmode == 6: cvpj_s_stretch['mode'] = 'elastique_v2'
-                if t_stretchingmode == 7: cvpj_s_stretch['mode'] = 'elastique_v2_transient'
-                if t_stretchingmode == 8: cvpj_s_stretch['mode'] = 'elastique_v2_mono'
-                if t_stretchingmode == 9: cvpj_s_stretch['mode'] = 'elastique_v2_speech'
+                if t_stretchingmode == -1: cvpj_audiomod['stretch_algorithm'] = 'stretch'
+                if t_stretchingmode == 0: cvpj_audiomod['stretch_algorithm'] = 'resample'
+                if t_stretchingmode == 1: cvpj_audiomod['stretch_algorithm'] = 'elastique_v3'
+                if t_stretchingmode == 2: cvpj_audiomod['stretch_algorithm'] = 'elastique_v3_mono'
+                if t_stretchingmode == 3: cvpj_audiomod['stretch_algorithm'] = 'slice_stretch'
+                if t_stretchingmode == 5: cvpj_audiomod['stretch_algorithm'] = 'auto'
+                if t_stretchingmode == 4: cvpj_audiomod['stretch_algorithm'] = 'slice_map'
+                if t_stretchingmode == 6: cvpj_audiomod['stretch_algorithm'] = 'elastique_v2'
+                if t_stretchingmode == 7: cvpj_audiomod['stretch_algorithm'] = 'elastique_v2_transient'
+                if t_stretchingmode == 8: cvpj_audiomod['stretch_algorithm'] = 'elastique_v2_mono'
+                if t_stretchingmode == 9: cvpj_audiomod['stretch_algorithm'] = 'elastique_v2_speech'
 
-                if t_stretchingtime != 0 or t_stretchingmultiplier != 1 or t_stretchingpitch != 0:
-                    cvpj_s_stretch['enabled'] = True
+                #if t_stretchingtime != 0 or t_stretchingmultiplier != 1 or t_stretchingpitch != 0:
 
                 if t_stretchingtime != 0:
-                    cvpj_s_stretch['time'] = {}
-                    cvpj_s_stretch['time']['type'] = 'rate_timed'
-                    cvpj_s_stretch['time']['data'] = {}
-                    cvpj_s_stretch['time']['data']['rate'] = (t_stretchingtime/stretchbpm)*t_stretchingmultiplier
-                    samplestretch[instrument] = (t_stretchingtime/stretchbpm)*t_stretchingmultiplier
+                    cvpj_audiomod['stretch_method'] = 'rate_ignoretempo'
+                    cvpj_audiomod['stretch_data'] = {}
+                    cvpj_audiomod['stretch_data']['rate'] = (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier
+                    samplestretch[instrument] = (ald['dur_sec']/t_stretchingtime)*t_stretchingmultiplier
 
                 elif t_stretchingtime == 0:
-                    cvpj_s_stretch['time'] = {}
-                    cvpj_s_stretch['time']['type'] = 'rate_nontimed'
-                    cvpj_s_stretch['time']['data'] = {}
-                    cvpj_s_stretch['time']['data']['rate'] = t_stretchingmultiplier
+                    cvpj_audiomod['stretch_method'] = 'rate'
+                    cvpj_audiomod['stretch_data'] = {}
+                    cvpj_audiomod['stretch_data']['rate'] = 1/t_stretchingmultiplier
                     samplestretch[instrument] = 1*t_stretchingmultiplier
 
                 else:
                     samplestretch[instrument] = 1
-
-                print(cvpj_s_stretch)
 
                 cvpj_l_samples['FLSample' + str(instrument)] = cvpj_s_sample
 
@@ -259,6 +253,7 @@ class input_flp(plugin_input.base):
         if len(FL_Arrangements) != 0:
             FL_Arrangement = FL_Arrangements['0']
             for item in FL_Arrangement['items']:
+
                 arrangementitemJ = {}
                 arrangementitemJ['position'] = item['position']/ppq*4
                 arrangementitemJ['duration'] = item['length']/ppq*4
@@ -271,6 +266,7 @@ class input_flp(plugin_input.base):
                     cvpj_l_playlist[str(playlistline)]['placements_audio'] = []
 
                 if item['itemindex'] > item['patternbase']:
+
                     arrangementitemJ['fromindex'] = 'FLPat' + str(item['itemindex'] - item['patternbase'])
                     cvpj_l_playlist[str(playlistline)]['placements_notes'].append(arrangementitemJ)
                     if 'startoffset' in item or 'endoffset' in item:
@@ -281,6 +277,7 @@ class input_flp(plugin_input.base):
 
 
                 else:
+
                     arrangementitemJ['fromindex'] = 'FLSample' + str(item['itemindex'])
                     cvpj_l_playlist[str(playlistline)]['placements_audio'].append(arrangementitemJ)
                     if 'startoffset' in item or 'endoffset' in item:
@@ -290,11 +287,12 @@ class input_flp(plugin_input.base):
                         pl_stretch = samplestretch[str(item['itemindex'])]
 
                         if 'startoffset' in item: 
-                            placement_data.time_from_steps(arrangementitemJ['cut'], 'start', False, item['startoffset'], cvpj_l['bpm'], pl_stretch)
+                            data_values.time_from_steps(arrangementitemJ['cut'], 'start', False, item['startoffset'], pl_stretch)
 
                         if 'endoffset' in item: 
-                            placement_data.time_from_steps(arrangementitemJ['cut'], 'end', False, item['endoffset'], cvpj_l['bpm'], pl_stretch)
+                            data_values.time_from_steps(arrangementitemJ['cut'], 'end', False, item['endoffset'], pl_stretch)
 
+                        #print(arrangementitemJ)
 
             FL_Tracks = FL_Arrangement['tracks']
 

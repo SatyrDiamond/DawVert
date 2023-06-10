@@ -5,7 +5,7 @@ from functions import data_bytes
 from functions import tracks
 from functions import colors
 from functions import audio
-from functions import placement_data
+from functions import data_values
 
 import xml.etree.ElementTree as ET
 import plugin_input
@@ -54,13 +54,9 @@ class input_ableton(plugin_input.base):
     def supported_autodetect(self): return False
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'track_lanes': False,
         'placement_cut': True,
         'placement_loop': True,
-        'track_nopl': False,
-        'auto_nopl': False,
-        'placement_audio_events': False,
+        'placement_audio_stretch': ['warp'],
         }
     def parse(self, input_file, extra_param):
 
@@ -202,8 +198,8 @@ class input_ableton(plugin_input.base):
                     for t_note in t_notes:
                         cvpj_placement['notelist'].append(t_notes[t_note])
 
-                    #for value in [note_placement_pos, note_placement_dur+note_placement_pos, note_placement_loop_start, note_placement_loop_l_start, note_placement_loop_l_end]:
-                    #    print(str(value).ljust(20), end=' ')
+                    #for value in ["CurrentStart", "CurrentEnd", "StartRelative", "LoopStart", "LoopEnd"]:
+                    #    print(get_value(x_track_MidiClip, 'CurrentEnd', 0).ljust(20), end=' ')
                     #print()
 
                     tracks.r_pl_notes(cvpj_l, track_id, cvpj_placement)  
@@ -273,33 +269,31 @@ class input_ableton(plugin_input.base):
                         cvpj_placement['fade']['out']['slope'] = float(get_value(x_track_AudioClip_fades, 'FadeOutCurveSlope', 0))
 
                     cvpj_placement['audiomod'] = {}
-                    cvpj_placement['audiomod']['stretch'] = {}
-                    cvpj_stretch = cvpj_placement['audiomod']['stretch']
+                    cvpj_audiomod = cvpj_placement['audiomod']
 
                     if audio_placement_warp_on == 1:
-                        cvpj_stretch['enabled'] = True
-                        cvpj_stretch['params'] = {}
+                        cvpj_audiomod['stretch_method'] = 'warp'
+                        cvpj_audiomod['stretch_params'] = {}
                         if audio_placement_warp_mode == 0:
-                            cvpj_stretch['mode'] = 'ableton_beats'
-                            cvpj_stretch['params']['TransientResolution'] = int(get_value(x_track_AudioClip, 'TransientResolution', 6))
-                            cvpj_stretch['params']['TransientLoopMode'] = int(get_value(x_track_AudioClip, 'TransientLoopMode', 2))
-                            cvpj_stretch['params']['TransientEnvelope'] = int(get_value(x_track_AudioClip, 'TransientEnvelope', 100))
+                            cvpj_audiomod['stretch_algorithm'] = 'ableton_beats'
+                            cvpj_audiomod['stretch_params']['TransientResolution'] = int(get_value(x_track_AudioClip, 'TransientResolution', 6))
+                            cvpj_audiomod['stretch_params']['TransientLoopMode'] = int(get_value(x_track_AudioClip, 'TransientLoopMode', 2))
+                            cvpj_audiomod['stretch_params']['TransientEnvelope'] = int(get_value(x_track_AudioClip, 'TransientEnvelope', 100))
                         if audio_placement_warp_mode == 1:
-                            cvpj_stretch['mode'] = 'ableton_tones'
-                            cvpj_stretch['params']['GranularityTones'] = float(get_value(x_track_AudioClip, 'GranularityTones', 30))
+                            cvpj_audiomod['stretch_algorithm'] = 'ableton_tones'
+                            cvpj_audiomod['stretch_params']['GranularityTones'] = float(get_value(x_track_AudioClip, 'GranularityTones', 30))
                         if audio_placement_warp_mode == 2:
-                            cvpj_stretch['mode'] = 'ableton_texture'
-                            cvpj_stretch['params']['GranularityTexture'] = float(get_value(x_track_AudioClip, 'GranularityTexture', 71.328125))
-                            cvpj_stretch['params']['FluctuationTexture'] = float(get_value(x_track_AudioClip, 'FluctuationTexture', 27.34375))
+                            cvpj_audiomod['stretch_algorithm'] = 'ableton_texture'
+                            cvpj_audiomod['stretch_params']['GranularityTexture'] = float(get_value(x_track_AudioClip, 'GranularityTexture', 71.328125))
+                            cvpj_audiomod['stretch_params']['FluctuationTexture'] = float(get_value(x_track_AudioClip, 'FluctuationTexture', 27.34375))
                         if audio_placement_warp_mode == 3:
-                            cvpj_stretch['mode'] = 'resample'
+                            cvpj_audiomod['stretch_algorithm'] = 'resample'
                         if audio_placement_warp_mode == 4:
-                            cvpj_stretch['mode'] = 'ableton_complex'
+                            cvpj_audiomod['stretch_algorithm'] = 'ableton_complex'
                         if audio_placement_warp_mode == 6:
-                            cvpj_stretch['mode'] = 'stretch_complexpro'
-                            cvpj_stretch['params']['ComplexProFormants'] = float(get_value(x_track_AudioClip, 'ComplexProFormants', 100))
-                            cvpj_stretch['params']['ComplexProEnvelope'] = int(get_value(x_track_AudioClip, 'ComplexProEnvelope', 120))
-
+                            cvpj_audiomod['stretch_algorithm'] = 'stretch_complexpro'
+                            cvpj_audiomod['stretch_params']['ComplexProFormants'] = float(get_value(x_track_AudioClip, 'ComplexProFormants', 100))
+                            cvpj_audiomod['stretch_params']['ComplexProEnvelope'] = int(get_value(x_track_AudioClip, 'ComplexProEnvelope', 120))
 
                         x_track_AudioClip_WarpMarkers_bef = x_track_AudioClip.findall('WarpMarkers')[0]
                         x_track_AudioClip_WarpMarkers = x_track_AudioClip_WarpMarkers_bef.findall('WarpMarker')
@@ -311,54 +305,58 @@ class input_ableton(plugin_input.base):
                             onedur = t_warpmarker['pos_real']/audio_sampleref['seconds']
                             t_warpmarkers.append(t_warpmarker)
                         
-                        cvpj_stretch['time'] = {}
-                        cvpj_stretch['time']['type'] = 'none'
-                        cvpj_stretch['time']['data'] = {}
+                        cvpj_audiomod['stretch_data'] = t_warpmarkers
+                        
+                        #cvpj_stretch['time'] = {}
+                        #cvpj_stretch['time']['type'] = 'none'
+                        #cvpj_stretch['time']['data'] = {}
 
-                        if len(t_warpmarkers) == 2:
-                            t_warpmarker_last = t_warpmarkers[-1]
-                            cvpj_stretch['time']['type'] = 'rate_timed'
-                            audiorate = ((t_warpmarker_last['pos']/8)/t_warpmarker_last['pos_real'])*(120/tempo)
-                            cvpj_stretch['time']['data']['rate'] = audiorate
+                        #if len(t_warpmarkers) == 2:
+                        #    t_warpmarker_last = t_warpmarkers[-1]
+                        #    cvpj_stretch['time']['type'] = 'rate_timed'
+                        #    audiorate = ((t_warpmarker_last['pos']/8)/t_warpmarker_last['pos_real'])*(120/tempo)
+                        #    cvpj_stretch['time']['data']['rate'] = audiorate
 
-                        if len(t_warpmarkers) >= 3:
-                            del t_warpmarkers[-1] 
-                            t_warpmarker_last = t_warpmarkers[-1]
-                            cvpj_stretch['time']['type'] = 'rate_timed'
-                            audiorate = (t_warpmarker_last['pos']/audio_sampleref_steps)*(120/tempo)
-                            cvpj_stretch['time']['data']['rate'] = audiorate
+                        #if len(t_warpmarkers) >= 3:
+                        #    del t_warpmarkers[-1] 
+                        #    t_warpmarker_last = t_warpmarkers[-1]
+                        #    cvpj_stretch['time']['type'] = 'rate_timed'
+                        #    audiorate = (t_warpmarker_last['pos']/audio_sampleref_steps)*(120/tempo)
+                        #    cvpj_stretch['time']['data']['rate'] = audiorate
 
                         #print(cvpj_stretch['time']['data']['rate'])
 
                     else:
-                        cvpj_stretch['enabled'] = False
+                        cvpj_audiomod['stretch_method'] = None
 
                     audio_placement_PitchCoarse = float(get_value(x_track_AudioClip, 'PitchCoarse', 0))
                     audio_placement_PitchFine = float(get_value(x_track_AudioClip, 'PitchFine', 0))
-                    cvpj_stretch['pitch'] = audio_placement_PitchCoarse + audio_placement_PitchFine/100
+                    cvpj_audiomod['pitch'] = audio_placement_PitchCoarse + audio_placement_PitchFine/100
 
-                    #for value in [t_CurrentStart, t_CurrentEnd, audio_placement_loop_start, audio_placement_loop_l_start, audio_placement_loop_l_end]:
-                    #    print(str(value).ljust(20), end=' ')
+                    #for value in ["CurrentStart", "CurrentEnd", "StartRelative", "LoopStart", "LoopEnd"]:
+                    #    print(str(get_value(x_track_AudioClip, value, 0)).ljust(20), end=' ')
                     #print()
 
                     if audio_placement_warp_on == False:
                         if audio_placement_loop_on == 0:
                             cvpj_placement['cut'] = {}
                             cvpj_placement['cut']['type'] = 'cut'
-                            placement_data.time_from_seconds(cvpj_placement['cut'], 'start', False, audio_placement_loop_l_start/4, tempo, 1)
-                            placement_data.time_from_seconds(cvpj_placement['cut'], 'end', False, audio_placement_loop_l_end/4, tempo, 1)
+                            data_values.time_from_seconds(cvpj_placement['cut'], 'start', False, audio_placement_loop_l_start/4, 1)
+                            data_values.time_from_seconds(cvpj_placement['cut'], 'end', False, audio_placement_loop_l_end/4, 1)
                     else:
                         if audio_placement_loop_on == 0:
                             cvpj_placement['cut'] = {}
                             cvpj_placement['cut']['type'] = 'cut'
-                            placement_data.time_from_steps(cvpj_placement['cut'], 'start', True, audio_placement_loop_l_start, tempo, audiorate)
-                            placement_data.time_from_steps(cvpj_placement['cut'], 'end', True, audio_placement_loop_l_end, tempo, audiorate)
+                            data_values.time_from_seconds(cvpj_placement['cut'], 'start', True, audio_placement_loop_l_start/8, 1)
+                            data_values.time_from_seconds(cvpj_placement['cut'], 'end', True, audio_placement_loop_l_end/8, 1)
                         else:
                             cvpj_placement['cut'] = {}
                             cvpj_placement['cut']['type'] = 'loop'
-                            placement_data.time_from_steps(cvpj_placement['cut'], 'start', True, audio_placement_loop_start, tempo, audiorate)
-                            placement_data.time_from_steps(cvpj_placement['cut'], 'loopstart', True, audio_placement_loop_l_start, tempo, audiorate)
-                            placement_data.time_from_steps(cvpj_placement['cut'], 'loopend', True, audio_placement_loop_l_end, tempo, audiorate)
+                            data_values.time_from_steps(cvpj_placement['cut'], 'start', False, audio_placement_loop_start, 1)
+                            data_values.time_from_steps(cvpj_placement['cut'], 'loopstart', False, audio_placement_loop_l_start, 1)
+                            data_values.time_from_steps(cvpj_placement['cut'], 'loopend', False, audio_placement_loop_l_end, 1)
+
+                    #print(cvpj_placement['cut'])
 
                     #if 'cut' in cvpj_placement:
                     #    print(cvpj_placement['cut'])
@@ -370,7 +368,6 @@ class input_ableton(plugin_input.base):
                 sendid = track_sendholder.get('Id')
                 sendlevel = get_param(track_sendholder, 'Send', 'float', 0)
                 tracks.r_add_send(cvpj_l, track_id, 'return_'+str(sendid), sendlevel, None)
-
                 sendcount += 1
 
             if tracktype == 'ReturnTrack':

@@ -39,7 +39,6 @@ def nested_dict_get_value(i_data, i_keys):
             break
     return temp_dict
 
-
 def get_value(i_dict, i_tag, i_fallback):
     if i_tag in i_dict: outvalue = i_dict[i_tag]
     else: outvalue = i_fallback
@@ -59,13 +58,20 @@ def sort_pos(datapart):
             new_datapart.append(point)
     return new_datapart
 
-
 def list_chunks(i_list, i_amount):
     return [i_list[i:i + i_amount] for i in range(0, len(i_list), i_amount)]
 
-
-
-
+def list_to_reigons(i_list, offsetval):
+    output = []
+    i_list_p = None
+    mscount = 0
+    for i_list_e in i_list:
+        if i_list_e != i_list_p: 
+            i_list_p = i_list_e
+            output.append([i_list_p, mscount-offsetval, mscount-1-offsetval])
+        output[-1][2] += 1
+        mscount += 1
+    return output
 
 
 def tempo_to_rate(i_in, i_mode):

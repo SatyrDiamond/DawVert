@@ -746,16 +746,23 @@ def beats_to_seconds_dopls(cvoj_placements, i_bpm):
 def beats_to_seconds_all(s_track_pl, i_bpm):
     if 'notes' in s_track_pl: beats_to_seconds_dopls(s_track_pl['notes'], i_bpm)
     if 'audio' in s_track_pl: beats_to_seconds_dopls(s_track_pl['audio'], i_bpm)
+    if 'placements_notes' in s_track_pl: beats_to_seconds_dopls(s_track_pl['placements_notes'], i_bpm)
+    if 'placements_audio' in s_track_pl: beats_to_seconds_dopls(s_track_pl['placements_audio'], i_bpm)
 
-def beats_to_seconds(cvpj_l):
+def beats_to_seconds(cvpj_l, cvpj_type):
     bpm = 120
     if 'bpm' in cvpj_l: bpm = cvpj_l['bpm']
     print('[compat] Beats2Seconds: BPM:', bpm)
 
-    if 'track_placements' in cvpj_l:
-        for id_track_pl in cvpj_l['track_placements']:
-            s_track_pl = cvpj_l['track_placements'][id_track_pl]
-            beats_to_seconds_all(s_track_pl, bpm)
+    if cvpj_type in ['r', 'ri']:
+        if 'track_placements' in cvpj_l:
+            for id_track_pl in cvpj_l['track_placements']:
+                s_track_pl = cvpj_l['track_placements'][id_track_pl]
+                beats_to_seconds_all(s_track_pl, bpm)
+    if cvpj_type in ['m', 'mi']:
+        for playlist_id in cvpj_l['playlist']:
+            playlist_id_data = cvpj_l['playlist'][playlist_id]
+            beats_to_seconds_all(playlist_id_data, bpm)
 
 # -------------------------------------------- Main --------------------------------------------
 
@@ -805,7 +812,7 @@ def makecompat_any(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
 
     if in__fxrack == False and out__fxrack == True: trackfx2fxrack(cvpj_proj, cvpj_type)
     if in__auto_nopl == False and out__auto_nopl == True: remove_auto_placements(cvpj_proj)
-    if in__time_seconds == False and out__time_seconds == True: beats_to_seconds(cvpj_proj)
+    if in__time_seconds == False and out__time_seconds == True: beats_to_seconds(cvpj_proj, cvpj_type)
 
     return json.dumps(cvpj_proj)
 

@@ -7,6 +7,7 @@ import configparser
 from os.path import exists
 from tinydb import TinyDB, Query
 
+os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
 audioinfo_cache_filepath = './__config/cache_audioinfo.db'
 db = TinyDB(audioinfo_cache_filepath)
 samplesdb = Query()

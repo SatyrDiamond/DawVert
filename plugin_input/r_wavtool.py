@@ -72,15 +72,16 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
     cvpj_pldata = {}
     if 'color' in j_wvtl_trackclip: cvpj_pldata["color"] = colors.hex_to_rgb_float(j_wvtl_trackclip['color'])
     if 'name' in j_wvtl_trackclip: cvpj_pldata["name"] = j_wvtl_trackclip['name']
-    if 'fadeIn' in j_wvtl_trackclip: data_values.nested_dict_add_value(cvpj_pldata, ['fade', 'in', 'duration'], j_wvtl_trackclip['fadeIn']*4)
-    if 'fadeOut' in j_wvtl_trackclip: data_values.nested_dict_add_value(cvpj_pldata, ['fade', 'out', 'duration'], j_wvtl_trackclip['fadeOut']*4)
+    if 'fadeIn' in j_wvtl_trackclip: data_values.nested_dict_add_value(cvpj_pldata, ['fade', 'in', 'duration'], j_wvtl_trackclip['fadeIn'])
+    if 'fadeOut' in j_wvtl_trackclip: data_values.nested_dict_add_value(cvpj_pldata, ['fade', 'out', 'duration'], j_wvtl_trackclip['fadeOut'])
     cvpj_pldata["position"] = j_wvtl_trc_timelineStart*4
     cvpj_pldata["duration"] = j_wvtl_trc_timelineEnd*4 - j_wvtl_trc_timelineStart*4
     cvpj_pldata['cut'] = {}
     cvpj_pldata['cut']['type'] = 'loop'
-    data_values.time_from_steps(cvpj_pldata['cut'], 'start', True, j_wvtl_trc_readStart*4, 1)
-    data_values.time_from_steps(cvpj_pldata['cut'], 'loopstart', True, j_wvtl_trc_loopStart*4, 1)
-    data_values.time_from_steps(cvpj_pldata['cut'], 'loopend', True, j_wvtl_trc_loopEnd*4, 1)
+    
+    cvpj_pldata['cut']['start'] = j_wvtl_trc_readStart*4
+    cvpj_pldata['cut']['loopstart'] = j_wvtl_trc_loopStart*4
+    cvpj_pldata['cut']['loopend'] = j_wvtl_trc_loopEnd*4
 
     cvpj_pldata['audiomod'] = {}
     cvpj_pldata['audiomod']['stretch_algorithm'] = 'stretch'
@@ -127,7 +128,8 @@ class input_wavtool(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'placement_cut': True,
-        'placement_loop': True
+        'placement_loop': True,
+        'placement_audio_stretch': ['rate']
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):

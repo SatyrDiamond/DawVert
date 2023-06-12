@@ -281,7 +281,8 @@ class input_flp(plugin_input.base):
                     arrangementitemJ['fromindex'] = 'FLSample' + str(item['itemindex'])
                     cvpj_l_playlist[str(playlistline)]['placements_audio'].append(arrangementitemJ)
 
-                    pl_stretch = samplestretch[str(item['itemindex'])]
+                    if str(item['itemindex']) in samplestretch: pl_stretch = samplestretch[str(item['itemindex'])]
+                    else: pl_stretch = ['rate_speed', 1.0]
 
                     if 'startoffset' in item or 'endoffset' in item:
                         arrangementitemJ['cut'] = {}

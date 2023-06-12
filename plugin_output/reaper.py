@@ -124,7 +124,9 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
         stretchinfo = [None, 1]
         pitch = 0
         volume = 1
+        pan = 1
         if 'vol' in trackplacement_data: volume = trackplacement_data['vol']
+        if 'pan' in trackplacement_data: pan = trackplacement_data['pan']
 
         if 'audiomod' in trackplacement_data:
             audiomoddata = trackplacement_data['audiomod']
@@ -166,7 +168,7 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
         rpp_clipdata.children.append(['IGUID',clip_IGUID])
         rpp_clipdata.children.append(['IID','1'])
         rpp_clipdata.children.append(['NAME',clip_name])
-        rpp_clipdata.children.append(['VOLPAN',str(volume),'0','1','-1'])
+        rpp_clipdata.children.append(['VOLPAN',str(volume),pan,'1','-1'])
         rpp_clipdata.children.append(['SOFFS',clip_startat,'0'])
 
         rpp_clipdata.children.append(['PLAYRATE',str(stretchinfo[1]),'1',str(pitch),'-1','0','0.0025'])

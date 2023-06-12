@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 from functions import format_flp_enc
 from functions import song_convert
 from functions import note_mod
+from functions import data_values
 from functions import audio
 from functions import notelist_data
 from functions import xtramath
@@ -116,7 +117,10 @@ class output_cvpjs(plugin_output.base):
         if 'timesig_numerator' in projJ: FL_Main['Numerator'] = projJ['timesig_numerator']
         if 'timesig_denominator' in projJ: FL_Main['Denominator'] = projJ['timesig_denominator']
         if 'bpm' in projJ: FL_Main['Tempo'] = projJ['bpm']
+        else: FL_Main['Tempo'] = 120
         if 'pitch' in projJ: FL_Main['MainPitch'] = struct.unpack('H', struct.pack('h', int(projJ['pitch'])))[0]
+
+        tempomul = (120/FL_Main['Tempo'])
 
         samples_id = {}
         inst_id = {}
@@ -219,16 +223,26 @@ class output_cvpjs(plugin_output.base):
                 if 'stretch_data' in cvpj_audiomod:
                     timedata = cvpj_audiomod['stretch_data']
 
-                    if cvpj_audiomod['stretch_method'] == 'rate_ignoretempo':
+                    if cvpj_audiomod['stretch_method'] == 'rate_tempo':
                         audiorate = timedata['rate']
+                        samplestretch[CVPJ_Entry] = ['rate_tempo', audiorate]
                         T_Main['stretchingtime'] = int(  (audioinfo['dur_sec']*384)/audiorate     )
 
-                    if cvpj_audiomod['stretch_method'] == 'rate':
+                    if cvpj_audiomod['stretch_method'] == 'rate_ignoretempo':
                         audiorate = timedata['rate']
+                        samplestretch[CVPJ_Entry] = ['rate_ignoretempo', audiorate]
+                        T_Main['stretchingtime'] = int(  ((audioinfo['dur_sec']*384)/audiorate)/tempomul     )
+
+                    if cvpj_audiomod['stretch_method'] == 'rate_speed':
+                        audiorate = timedata['rate']
+                        samplestretch[CVPJ_Entry] = ['rate_speed', audiorate]
                         T_Main['stretchingmultiplier'] = int(  math.log2(1/audiorate)*10000  )
 
+                else:
+                    samplestretch[CVPJ_Entry] = ['normal', 1]
 
-            samplestretch[CVPJ_Entry] = audiorate
+            else:
+                samplestretch[CVPJ_Entry] = ['normal', 1]
 
             FL_Channels[inst_id[CVPJ_Entry]] = T_Main
 
@@ -344,7 +358,9 @@ class output_cvpjs(plugin_output.base):
                 for CVPJ_Placement in CVPJ_playlistitem['placements_audio']:
                     if CVPJ_Placement['fromindex'] in samples_id:
 
-                        s_str = samplestretch[CVPJ_Placement['fromindex']]
+                        if CVPJ_Placement['fromindex'] in samplestretch:
+                            pl_stretch = samplestretch[CVPJ_Placement['fromindex']]
+                        else: pl_stretch = [None, 1]
 
                         sampleid = samples_id[CVPJ_Placement['fromindex']]
                         FL_playlistitem = {}
@@ -365,14 +381,25 @@ class output_cvpjs(plugin_output.base):
                         if 'cut' in CVPJ_Placement:
                             if 'type' in CVPJ_Placement['cut']:
                                 cutdata = CVPJ_Placement['cut']
-
                                 if cutdata['type'] == 'cut':
+                                    if pl_stretch[0] == 'rate_tempo':
+                                        if 'start' in cutdata: FL_playlistitem['startoffset'] = cutdata['start']*pl_stretch[1]
+                                        if 'end' in cutdata: FL_playlistitem['endoffset'] = cutdata['end']*pl_stretch[1]
+                                    elif pl_stretch[0] == 'rate_ignoretempo':
+                                        if 'start' in cutdata: FL_playlistitem['startoffset'] = cutdata['start']*tempomul
+                                        if 'end' in cutdata: FL_playlistitem['endoffset'] = cutdata['end']*tempomul
+                                    elif pl_stretch[0] == 'rate_speed':
+                                        if 'start' in cutdata: FL_playlistitem['startoffset'] = (cutdata['start']*tempomul)*pl_stretch[1]
+                                        if 'end' in cutdata: FL_playlistitem['endoffset'] = (cutdata['end']*tempomul)*pl_stretch[1]
+                                    else:
+                                        if 'start' in cutdata: FL_playlistitem['startoffset'] = cutdata['start']
+                                        if 'end' in cutdata: FL_playlistitem['endoffset'] = cutdata['end']
 
-                                    if 'start_nonstretch' in cutdata: 
-                                        FL_playlistitem['startoffset'] = cutdata['start_nonstretch']
-
-                                    if 'end_nonstretch' in cutdata: 
-                                        FL_playlistitem['endoffset'] = cutdata['end_nonstretch']
+                        #for value in ['startoffset', 'endoffset']:
+                        #    outprint = None
+                        #    if value in FL_playlistitem: outprint = round(FL_playlistitem[value], 6)
+                        #    print(str(outprint).ljust(13), end=' ')
+                        #print(pl_stretch)
 
                         if FL_playlistitem['position'] not in FL_Playlist_BeforeSort:
                             FL_Playlist_BeforeSort[FL_playlistitem['position']] = []

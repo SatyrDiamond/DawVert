@@ -14,10 +14,7 @@ def utf16encode(text):
     return text.encode('utf-16le') + b'\x00\x00'
 
 def calctempotimed(i_value):
-    global FL_Main
-    i_tempomul = 120/FL_Main['Tempo']
-    i_out = (i_value*i_tempomul)*125
-    #print('VALUE', str(i_value).ljust(20), '| MUL', str(i_tempomul).ljust(20), '| OUT', str(i_out).ljust(20))
+    i_out = i_value*125
     return i_out
 
 # ------------- make -------------
@@ -64,8 +61,8 @@ def make_arrangement(data_FLdt, arrangements):
                 if 'endoffset' in item: BytesIO_arrangement.write(item['endoffset'].to_bytes(4, 'little'))
                 else: BytesIO_arrangement.write(b'\xff\xff\xff\xff')
             else:
-                startoffset_out = 0
-                endoffset_out = 0
+                startoffset_out = -1
+                endoffset_out = -1
 
                 if 'startoffset' in item: startoffset_out = calctempotimed(item['startoffset'])
                 if 'endoffset' in item: endoffset_out = calctempotimed(item['endoffset'])

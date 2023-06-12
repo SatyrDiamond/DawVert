@@ -49,7 +49,7 @@ class input_flp(plugin_input.base):
         'fxrack': True,
         'track_lanes': True,
         'placement_cut': True,
-        'placement_audio_stretch': ['rate', 'rate_ignoretempo']
+        'placement_audio_stretch': ['rate']
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):
@@ -82,6 +82,8 @@ class input_flp(plugin_input.base):
         if 'Tempo' in FL_Main: cvpj_l['bpm'] = FL_Main['Tempo']
         else: cvpj_l['bpm'] = 120
         if 'Shuffle' in FL_Main: cvpj_l['shuffle'] = FL_Main['Shuffle']/128
+
+        tempomul = (120/cvpj_l['bpm'])
 
         cvpj_l_instrument_data = {}
         cvpj_l_instrument_order = []
@@ -181,19 +183,19 @@ class input_flp(plugin_input.base):
                 #if t_stretchingtime != 0 or t_stretchingmultiplier != 1 or t_stretchingpitch != 0:
 
                 if t_stretchingtime != 0:
-                    cvpj_audiomod['stretch_method'] = 'rate_ignoretempo'
+                    cvpj_audiomod['stretch_method'] = 'rate_tempo'
                     cvpj_audiomod['stretch_data'] = {}
                     cvpj_audiomod['stretch_data']['rate'] = (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier
-                    samplestretch[instrument] = (ald['dur_sec']/t_stretchingtime)*t_stretchingmultiplier
+                    samplestretch[instrument] = ['rate_tempo', (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier]
 
                 elif t_stretchingtime == 0:
-                    cvpj_audiomod['stretch_method'] = 'rate'
+                    cvpj_audiomod['stretch_method'] = 'rate_speed'
                     cvpj_audiomod['stretch_data'] = {}
                     cvpj_audiomod['stretch_data']['rate'] = 1/t_stretchingmultiplier
-                    samplestretch[instrument] = 1*t_stretchingmultiplier
+                    samplestretch[instrument] = ['rate_speed', 1/t_stretchingmultiplier]
 
                 else:
-                    samplestretch[instrument] = 1
+                    samplestretch[instrument] = ['rate_speed', 1]
 
                 cvpj_l_samples['FLSample' + str(instrument)] = cvpj_s_sample
 
@@ -266,7 +268,6 @@ class input_flp(plugin_input.base):
                     cvpj_l_playlist[str(playlistline)]['placements_audio'] = []
 
                 if item['itemindex'] > item['patternbase']:
-
                     arrangementitemJ['fromindex'] = 'FLPat' + str(item['itemindex'] - item['patternbase'])
                     cvpj_l_playlist[str(playlistline)]['placements_notes'].append(arrangementitemJ)
                     if 'startoffset' in item or 'endoffset' in item:
@@ -277,22 +278,30 @@ class input_flp(plugin_input.base):
 
 
                 else:
-
                     arrangementitemJ['fromindex'] = 'FLSample' + str(item['itemindex'])
                     cvpj_l_playlist[str(playlistline)]['placements_audio'].append(arrangementitemJ)
+
+                    pl_stretch = samplestretch[str(item['itemindex'])]
+
                     if 'startoffset' in item or 'endoffset' in item:
                         arrangementitemJ['cut'] = {}
                         arrangementitemJ['cut']['type'] = 'cut'
 
-                        pl_stretch = samplestretch[str(item['itemindex'])]
+                        #print(pl_stretch)
+  
+                        if pl_stretch[0] == 'rate_speed':
+                            if 'startoffset' in item: arrangementitemJ['cut']['start'] = (item['startoffset']/pl_stretch[1])/tempomul
+                            if 'endoffset' in item: arrangementitemJ['cut']['end'] = (item['endoffset']/pl_stretch[1])/tempomul
+                        if pl_stretch[0] == 'rate_tempo':
+                            if 'startoffset' in item: arrangementitemJ['cut']['start'] = (item['startoffset']/pl_stretch[1])
+                            if 'endoffset' in item: arrangementitemJ['cut']['end'] = (item['endoffset']/pl_stretch[1])
+                        if 'startoffset' not in item: arrangementitemJ['cut']['start'] = 0
 
-                        if 'startoffset' in item: 
-                            data_values.time_from_steps(arrangementitemJ['cut'], 'start', False, item['startoffset'], pl_stretch)
-
-                        if 'endoffset' in item: 
-                            data_values.time_from_steps(arrangementitemJ['cut'], 'end', False, item['endoffset'], pl_stretch)
-
-                        #print(arrangementitemJ)
+                    #for value in ['startoffset', 'endoffset']:
+                    #    outprint = None
+                    #    if value in item: outprint = round(item[value], 6)
+                    #    print(str(outprint).ljust(13), end=' ')
+                    #print(pl_stretch)
 
             FL_Tracks = FL_Arrangement['tracks']
 

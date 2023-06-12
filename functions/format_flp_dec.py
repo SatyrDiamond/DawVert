@@ -17,10 +17,7 @@ def create_bytesio(data):
     return [bytesio, bytesio_filesize]
 
 def calctempotimed(i_value):
-    global FL_Main
-    i_tempomul = FL_Main['Tempo']/120
-    i_out = (i_value*i_tempomul)/125
-    #print('VALUE', str(i_value).ljust(20), '| MUL', str(i_tempomul).ljust(20), '| OUT', str(i_out).ljust(20))
+    i_out = (i_value)/125
     return i_out
 
 def decodetext(event_data):

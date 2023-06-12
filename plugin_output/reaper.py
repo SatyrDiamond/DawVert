@@ -107,26 +107,20 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
         clip_IGUID = '{'+str(uuid.uuid4())+'}'
         clip_GUID = '{'+str(uuid.uuid4())+'}'
 
-        clip_name = ''
-        if 'name' in trackplacement_data: clip_name = trackplacement_data['name']
+        clip_name = data_values.get_value(trackplacement_data, 'name', '')
+        clip_filename = data_values.get_value(trackplacement_data, 'file', '')
+        clip_notelist = data_values.get_value(trackplacement_data, 'notelist', [])
+        cvpj_pl_volume = data_values.get_value(trackplacement_data, 'vol', 1)
+        cvpj_pl_pan = data_values.get_value(trackplacement_data, 'pan', 0)
+        clip_color = data_values.get_value(trackplacement_data, 'color', None)
+        clip_muted = data_values.get_value(trackplacement_data, 'muted', False)
 
-        clip_filename = ''
-        if 'file' in trackplacement_data: clip_filename = trackplacement_data['file']
-
-        clip_notelist = []
-        if 'notelist' in trackplacement_data: clip_notelist = trackplacement_data['notelist']
         clip_position = trackplacement_data['position']
         clip_duration = trackplacement_data['duration']
         clip_startat = 0
-        clip_color = None
-        if 'color' in trackplacement_data: clip_color = trackplacement_data['color']
 
         stretchinfo = [None, 1]
         pitch = 0
-        volume = 1
-        pan = 0
-        if 'vol' in trackplacement_data: volume = trackplacement_data['vol']
-        if 'pan' in trackplacement_data: pan = trackplacement_data['pan']
 
         if 'audiomod' in trackplacement_data:
             audiomoddata = trackplacement_data['audiomod']
@@ -162,13 +156,13 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
         rpp_clipdata.children.append(['ALLTAKES','0'])
         rpp_clipdata.children.append(['FADEIN','1','0','0','1','0','0','0'])
         rpp_clipdata.children.append(['FADEOUT','1','0','0','1','0','0','0'])
-        rpp_clipdata.children.append(['MUTE','0','0'])
+        rpp_clipdata.children.append(['MUTE',int(clip_muted),'0'])
         if clip_color != None: rpp_clipdata.children.append(['COLOR',cvpj_color_to_reaper_color_clip(clip_color),'B'])
         rpp_clipdata.children.append(['SEL','0'])
         rpp_clipdata.children.append(['IGUID',clip_IGUID])
         rpp_clipdata.children.append(['IID','1'])
         rpp_clipdata.children.append(['NAME',clip_name])
-        rpp_clipdata.children.append(['VOLPAN',str(volume),pan,'1','-1'])
+        rpp_clipdata.children.append(['VOLPAN',str(cvpj_pl_volume),cvpj_pl_pan,'1','-1'])
         rpp_clipdata.children.append(['SOFFS',clip_startat,'0'])
 
         rpp_clipdata.children.append(['PLAYRATE',str(stretchinfo[1]),'1',str(pitch),'-1','0','0.0025'])

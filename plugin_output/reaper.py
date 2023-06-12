@@ -124,7 +124,7 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
         stretchinfo = [None, 1]
         pitch = 0
         volume = 1
-        pan = 1
+        pan = 0
         if 'vol' in trackplacement_data: volume = trackplacement_data['vol']
         if 'pan' in trackplacement_data: pan = trackplacement_data['pan']
 

@@ -307,25 +307,6 @@ class input_ableton(plugin_input.base):
                         
                         cvpj_audiomod['stretch_data'] = t_warpmarkers
                         
-                        #cvpj_stretch['time'] = {}
-                        #cvpj_stretch['time']['type'] = 'none'
-                        #cvpj_stretch['time']['data'] = {}
-
-                        #if len(t_warpmarkers) == 2:
-                        #    t_warpmarker_last = t_warpmarkers[-1]
-                        #    cvpj_stretch['time']['type'] = 'rate_timed'
-                        #    audiorate = ((t_warpmarker_last['pos']/8)/t_warpmarker_last['pos_real'])*(120/tempo)
-                        #    cvpj_stretch['time']['data']['rate'] = audiorate
-
-                        #if len(t_warpmarkers) >= 3:
-                        #    del t_warpmarkers[-1] 
-                        #    t_warpmarker_last = t_warpmarkers[-1]
-                        #    cvpj_stretch['time']['type'] = 'rate_timed'
-                        #    audiorate = (t_warpmarker_last['pos']/audio_sampleref_steps)*(120/tempo)
-                        #    cvpj_stretch['time']['data']['rate'] = audiorate
-
-                        #print(cvpj_stretch['time']['data']['rate'])
-
                     else:
                         cvpj_audiomod['stretch_method'] = None
 
@@ -355,11 +336,6 @@ class input_ableton(plugin_input.base):
                             data_values.time_from_steps(cvpj_placement['cut'], 'start', False, audio_placement_loop_start, 1)
                             data_values.time_from_steps(cvpj_placement['cut'], 'loopstart', False, audio_placement_loop_l_start, 1)
                             data_values.time_from_steps(cvpj_placement['cut'], 'loopend', False, audio_placement_loop_l_end, 1)
-
-                    #print(cvpj_placement['cut'])
-
-                    #if 'cut' in cvpj_placement:
-                    #    print(cvpj_placement['cut'])
 
                     tracks.r_pl_audio(cvpj_l, track_id, cvpj_placement)  
 

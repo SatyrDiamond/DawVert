@@ -784,8 +784,8 @@ class input_lmms(plugin_input.base):
         cvpj_l['bpm'] = float(lmms_auto_getvalue(headX, 'bpm', 140, 'float', None, ['main', 'bpm']))
         cvpj_l['vol'] = hundredto1(float(lmms_auto_getvalue(headX, 'mastervol', 1, 'float', [0, 0.01], ['main', 'vol'])))
         cvpj_l['pitch'] = float(lmms_auto_getvalue(headX, 'masterpitch', 0, 'float', None, ['main', 'pitch']))
-        cvpj_l['timesig_numerator'] = lmms_auto_getvalue(headX, 'timesig_numerator', 'int', None, 4, None)
-        cvpj_l['timesig_denominator'] = lmms_auto_getvalue(headX, 'timesig_denominator', 'int', None, 4, None)
+        cvpj_l['timesig_numerator'] = lmms_auto_getvalue(headX, 'timesig_numerator', 'int', None, None, None)
+        cvpj_l['timesig_denominator'] = lmms_auto_getvalue(headX, 'timesig_denominator', 'int', None, None, None)
 
         if projnotesX.text != None: song.add_info_msg(cvpj_l, 'html', projnotesX.text)
 

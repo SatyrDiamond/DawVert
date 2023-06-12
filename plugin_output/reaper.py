@@ -121,28 +121,36 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
         clip_color = None
         if 'color' in trackplacement_data: clip_color = trackplacement_data['color']
 
-        audiorate = 1
-        tempmulrate = 1
+        stretchinfo = [None, 1]
+        pitch = 0
+        volume = 1
+        if 'vol' in trackplacement_data: volume = trackplacement_data['vol']
+
         if 'audiomod' in trackplacement_data:
             audiomoddata = trackplacement_data['audiomod']
-            if audiomoddata['stretch_method'] == 'rate_ignoretempo':
-                audiorate = audiomoddata['stretch_data']['rate']
-            tempmulrate = audiorate/tempomul
-            #print(audiorate, tempomul, tempmulrate)
+            #print(audiomoddata)
+            if 'pitch' in audiomoddata: pitch = audiomoddata['pitch']
+
+            if audiomoddata['stretch_method'] == 'rate_speed': 
+                stretchinfo = ['rate_tempo', (audiomoddata['stretch_data']['rate'])]
+            if audiomoddata['stretch_method'] == 'rate_tempo': 
+                stretchinfo = ['rate_tempo', (audiomoddata['stretch_data']['rate'])*tempomul]
+            if audiomoddata['stretch_method'] == 'rate_ignoretempo': 
+                stretchinfo = ['rate_ignoretempo', (audiomoddata['stretch_data']['rate'])]
+
+            #print(stretchinfo, tempomul)
 
         if 'cut' in trackplacement_data:
                 clip_cutdata = trackplacement_data['cut']
 
-                #for value in ["end", "end_nonstretch", "end_real", "end_real_nonstretch"]:
-                #    print(str(clip_cutdata[value]).ljust(20), end=' ')
-                #print()
-
                 if clip_cutdata['type'] == 'cut':
                     if cliptype == 'notes':  
-                        if 'start' in clip_cutdata: clip_startat = clip_cutdata['start']
+                        if 'start' in clip_cutdata: clip_startat = clip_cutdata['start']/8/tempomul
                     if cliptype == 'audio': 
-                        if 'start_real_nonstretch' in clip_cutdata: 
-                            clip_startat = (clip_cutdata['start_real_nonstretch']*audiorate)/tempmulrate
+                        if 'start' in clip_cutdata: 
+                            if stretchinfo[0] == 'rate_ignoretempo': clip_startat = (clip_cutdata['start']/8)
+                            elif stretchinfo[0] == 'rate_ignoretempo': clip_startat = (clip_cutdata['start']/8)
+                            else: clip_startat = ((clip_cutdata['start']/8)*stretchinfo[1])/tempomul
 
         rpp_clipdata = rpp_obj('ITEM',track_uuid)
         rpp_clipdata.children.append(['POSITION',clip_position])
@@ -158,18 +166,22 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
         rpp_clipdata.children.append(['IGUID',clip_IGUID])
         rpp_clipdata.children.append(['IID','1'])
         rpp_clipdata.children.append(['NAME',clip_name])
-        rpp_clipdata.children.append(['VOLPAN','1','0','1','-1'])
+        rpp_clipdata.children.append(['VOLPAN',str(volume),'0','1','-1'])
         rpp_clipdata.children.append(['SOFFS',clip_startat,'0'])
 
-        rpp_clipdata.children.append(['PLAYRATE',str(tempmulrate),'1','0','-1','0','0.0025'])
+        rpp_clipdata.children.append(['PLAYRATE',str(stretchinfo[1]),'1',str(pitch),'-1','0','0.0025'])
         rpp_clipdata.children.append(['CHANMODE','0'])
         rpp_clipdata.children.append(['GUID',clip_GUID])
         if cliptype == 'notes': 
             rpp_clipdata.children.append(rpp_obj_data('SOURCE', ['MIDI'], convert_midi(clip_notelist,reaper_tempo,'4','4', clip_duration+clip_startat)))
         if cliptype == 'audio': 
+            audiotype = clip_filename.split('.')[-1]
             wavefiledata = rpp_obj('FILE',clip_filename)
-
-            rpp_wavefiledata = rpp_obj('SOURCE',['WAVE'])
+            if audiotype == 'mp3': objaudiotype = 'MP3'
+            elif audiotype == 'flac': objaudiotype = 'FLAC'
+            elif audiotype == 'ogg': objaudiotype = 'VORBIS'
+            else: objaudiotype = 'WAVE'
+            rpp_wavefiledata = rpp_obj('SOURCE',[objaudiotype])
             rpp_wavefiledata.children.append(['FILE',clip_filename])
             rpp_clipdata.children.append(rpp_wavefiledata)
 
@@ -202,7 +214,7 @@ class output_reaper(plugin_output.base):
         if 'timesig_denominator' in projJ: reaper_denominator = int(projJ['timesig_denominator'])
         if 'bpm' in projJ: reaper_tempo = projJ['bpm']
 
-        tempomul = 120/reaper_tempo
+        tempomul = reaper_tempo/120
 
         rppdata = rpp_obj('REAPER_PROJECT', [0.1, 6.78, 1681239515])
         rppdata.children.append(['RIPPLE','0'])
@@ -338,7 +350,7 @@ class output_reaper(plugin_output.base):
                             convert_placementdata(rpp_trackdata, trackplacements['audio'], 'audio', track_uuid)
 
 
-                    rppdata.children.append(rpp_obj_data('TRACK', track_uuid, rpp_trackdata))
+                    rppdata.children.append(rpp_obj_data('TRACK', [track_uuid], rpp_trackdata))
 
 
 

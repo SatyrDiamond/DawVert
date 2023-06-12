@@ -489,7 +489,6 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
     FadeOutCurveSkew = 0
     FadeOutCurveSlope = 0
     FadeOutLength = 0
-    speedrate = 1
     t_CurrentStart = able_position
     t_CurrentEnd = able_duration+able_position
     t_LoopStart = 0
@@ -498,10 +497,12 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
     cvpj_stretchmode = 'none'
     cvpj_isstretched = False
     cvpj_islooped = False
-    cvpj_resample_pitch = 1
 
     if cliptype == 'audio':
         t_LoopEnd = None
+
+        if 'cut' in cvpj_placement:
+            cvpj_placement_cut = cvpj_placement['cut']
 
         if 'audiomod' in cvpj_placement:
             cvpj_audiomod = cvpj_placement['audiomod']
@@ -533,31 +534,9 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                 if 'stretch_data' in cvpj_audiomod: 
                     w_timemarkers = cvpj_audiomod['stretch_data']
 
-                    #if 'time' in cvpj_stretch:
-                    #    if 'type' in cvpj_stretch['time'] and 'data' in cvpj_stretch['time']:
-                    #        timedata = cvpj_stretch['time']['data']
-
-                    #        if cvpj_stretch['time']['type'] == 'rate_timed': 
-                    #            speedrate = timedata['rate']
-                    #            rate_fixed = (1/speedrate)*AudioDuration
-                    #            w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
-
-                    #        if cvpj_stretch['time']['type'] == 'rate_nontimed': 
-                    #            speedrate = timedata['rate']
-                    #            rate_fixed = (AudioDuration/speedrate)
-                    #            if cvpj_stretch['mode'] == 'resample': rate_fixed *= pow(2, stretch_t_pitch/12)
-                    #            w_timemarkers = [{'pos': 0.0, 'pos_real': 0.0}, {'pos': normalspeed*8, 'pos_real': rate_fixed}]
-
-                    #if cvpj_stretch['mode'] == 'resample': cvpj_resample_pitch = pow(2, stretch_t_pitch/12)
-
-        #((t_CurrentEnd)*tempomul)/speedrate
-
         if 'cut' in cvpj_placement:
             cvpj_placement_cut = cvpj_placement['cut']
-
             if 'type' in cvpj_placement_cut:
-
-
                 if w_IsWarped == 'true':
                     if cvpj_placement_cut['type'] == 'cut':
                         if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start']/4
@@ -570,15 +549,16 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
 
                 else:
                     if cvpj_placement_cut['type'] == 'cut':
-                        if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start_real']
-                        if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end_real']
+                        if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start']
+                        if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end']
 
-        if t_LoopEnd == None:
-            if w_IsWarped == 'true': 
-                basestretchdur = ((AudioDuration*2)*speedrate)*tempomul
-                if cvpj_stretchmode != 'resample': t_LoopEnd = basestretchdur
-                else: t_LoopEnd = basestretchdur/cvpj_resample_pitch
-            else: t_LoopEnd = AudioDuration
+        timemarkerdur = (w_timemarkers[-1]['pos_real']-w_timemarkers[0]['pos_real'])
+
+        ifnotexist = ((AudioDuration/timemarkerdur)*AudioDuration)*2
+
+        #print('---------------------------------------- ',AudioDuration, timemarkerdur, ifnotexist)
+
+        if t_LoopEnd == None: t_LoopEnd = ifnotexist
 
 
     else:

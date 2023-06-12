@@ -326,15 +326,8 @@ def r_removeloops_placements(cvpj_placements, tempo, isaudio):
                         cvpj_placement_cutted['cut']['start'] = cutpoint[2]
                         cvpj_placement_cutted['cut']['end'] = cutpoint[3]
                     else:
-                        audiorate = 1
-                        if 'audiomod' in cvpj_placement:
-                            audiomoddata = cvpj_placement['audiomod']
-                            if 'stretch_method' in audiomoddata: 
-                                if audiomoddata['stretch_method'] == 'rate_ignoretempo':
-                                    audiorate = 1/audiomoddata['stretch_data']['rate']
-
-                        data_values.time_from_steps(cvpj_placement_cutted['cut'], 'start', True, cutpoint[2]*tempomul, audiorate)
-                        data_values.time_from_steps(cvpj_placement_cutted['cut'], 'end', True, cutpoint[3]*tempomul, audiorate)
+                        cvpj_placement_cutted['cut']['start'] = cutpoint[2]
+                        cvpj_placement_cutted['cut']['end'] = cutpoint[3]
 
                     new_placements.append(cvpj_placement_cutted)
             else: new_placements.append(cvpj_placement)
@@ -414,7 +407,7 @@ def warp2rate(cvpj_placements, tempo):
 
                     if len(t_warpmarkers) >= 2:
                         t_warpmarker_last = t_warpmarkers[-1]
-                        new_audiomod['stretch_method'] = 'rate_ignoretempo'
+                        new_audiomod['stretch_method'] = 'rate_tempo'
                         audiorate = (1/((t_warpmarker_last['pos']/8)/t_warpmarkers[-1]['pos_real']))
                         new_audiomod['stretch_data']['rate'] = audiorate
 
@@ -451,8 +444,7 @@ def rate2warp(cvpj_placements, tempo):
             new_audiomod = {}
 
             if 'stretch_method' in old_audiomod: 
-                if old_audiomod['stretch_method'] == 'rate_ignoretempo':
-
+                if old_audiomod['stretch_method'] in ['rate_tempo', 'rate_speed', 'rate_ignoretempo']:
                     audio_info = audio.get_audiofile_info(cvpj_placement['file'])
                     audio_dur_sec = audio_info['dur_sec']
 
@@ -467,24 +459,35 @@ def rate2warp(cvpj_placements, tempo):
                     audiorate = t_stretch_data['rate']
                     ratetempo = 1/(audiorate/tempomul)
 
-                    #for value in [audiorate, tempomul, audiorate/tempomul]:
-                    #    print(str(value).ljust(20), end=' ')
-                    #print()
+                    if old_audiomod['stretch_method'] == 'rate_ignoretempo':
+                        new_audiomod['stretch_data'] = [
+                            {'pos': 0.0, 'pos_real': 0.0}, 
+                            {'pos': audio_dur_sec*8, 'pos_real': (audio_dur_sec*audiorate)/tempomul}
+                        ]
 
-                    new_audiomod['stretch_data'] = [
-                        {'pos': 0.0, 'pos_real': 0.0}, 
-                        {'pos': audio_dur_sec*8, 'pos_real': (audio_dur_sec*audiorate)}
-                    ]
+                    if old_audiomod['stretch_method'] == 'rate_tempo':
+                        new_audiomod['stretch_data'] = [
+                            {'pos': 0.0, 'pos_real': 0.0}, 
+                            {'pos': audio_dur_sec*8, 'pos_real': (audio_dur_sec*audiorate)}
+                        ]
+
+                    if old_audiomod['stretch_method'] == 'rate_speed':
+                        new_audiomod['stretch_data'] = [
+                            {'pos': 0.0, 'pos_real': 0.0}, 
+                            {'pos': audio_dur_sec*8, 'pos_real': (audio_dur_sec*audiorate)*tempomul}
+                        ]
 
                     cvpj_placement['audiomod'] = new_audiomod
 
 
-        if 'cut' in cvpj_placement:
-            cutdata = cvpj_placement['cut']
-            if cutdata['type'] == 'cut':
-                if 'start' not in cutdata: data_values.time_from_steps(cutdata, 'start', True, 0, audiorate)
-                data_values.time_from_seconds(cutdata, 'start', False, cutdata['start_real_nonstretch']*ratetempo, 1)
-                data_values.time_from_seconds(cutdata, 'end', False, cutdata['end_real_nonstretch']*ratetempo, 1)
+        #if 'cut' in cvpj_placement:
+        #    cutdata = cvpj_placement['cut']
+        #
+        #    if cutdata['type'] == 'cut':
+        #        if 'start' not in cutdata: data_values.time_from_steps(cutdata, 'start', True, 0, audiorate)
+        #        data_values.time_from_seconds(cutdata, 'start', False, cutdata['start'], 1)
+        #        if 'end' in cutdata:
+        #            data_values.time_from_seconds(cutdata, 'end', False, cutdata['end'], 1)
 
     return cvpj_placements
 
@@ -738,10 +741,10 @@ def remove_auto_placements(cvpj_l):
 
 def step2sec(i_value, i_bpm): return (i_value/8)*(120/i_bpm)
 
-def beats_to_seconds_dopls(cvoj_placements, i_bpm):
-    for cvoj_placement in cvoj_placements:
-        if 'position' in cvoj_placement: cvoj_placement['position'] = step2sec(cvoj_placement['position'], i_bpm)
-        if 'duration' in cvoj_placement: cvoj_placement['duration'] = step2sec(cvoj_placement['duration'], i_bpm)
+def beats_to_seconds_dopls(cvpj_placements, i_bpm):
+    for cvpj_placement in cvpj_placements:
+        if 'position' in cvpj_placement: cvpj_placement['position'] = step2sec(cvpj_placement['position'], i_bpm)
+        if 'duration' in cvpj_placement: cvpj_placement['duration'] = step2sec(cvpj_placement['duration'], i_bpm)
 
 def beats_to_seconds_all(s_track_pl, i_bpm):
     if 'notes' in s_track_pl: beats_to_seconds_dopls(s_track_pl['notes'], i_bpm)

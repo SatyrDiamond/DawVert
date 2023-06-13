@@ -9,6 +9,7 @@ import zlib
 import base64
 from functions import placements
 from functions import colors
+from functions import data_values
 
 def addvalue(xmltag, name, value):
     x_temp = ET.SubElement(xmltag, name)
@@ -255,8 +256,9 @@ class output_cvpj(plugin_output.base):
         for routeid in routelist:
             addroute_audio(x_song, routeid[0], routeid[1])
 
-        if 'bpm' in projJ: muse_bpm = int(projJ['bpm'])
-        else: muse_bpm = 120
+        muse_bpm = int(data_values.get_value(projJ, 'bpm', 120))
+        muse_numerator = int(data_values.get_value(projJ, 'timesig_numerator', 4))
+        muse_denominator = int(data_values.get_value(projJ, 'timesig_denominator', 4))
 
         x_tempolist = ET.SubElement(x_song, "tempolist")
         x_tempolist.set('fix', "0")
@@ -264,11 +266,6 @@ class output_cvpj(plugin_output.base):
         x_tempo.set('at', "21474837")
         addvalue(x_tempo, 'tick', 0)
         addvalue(x_tempo, 'val', mido.bpm2tempo(muse_bpm))
-
-        if 'timesig_numerator' in projJ: muse_numerator = projJ['timesig_numerator']
-        else: muse_numerator = 4
-        if 'timesig_denominator' in projJ: muse_denominator = projJ['timesig_denominator']
-        else: muse_denominator = 4
 
         x_siglist = ET.SubElement(x_song, "siglist")
 

@@ -8,6 +8,7 @@ from functions import audio_wav
 from functions import plugin_vst2
 from functions import data_bytes
 
+from functions_plugparams import params_adlplug
 from functions_plugparams import params_various_inst
 from functions_plugparams import data_vc2xml
 
@@ -55,7 +56,7 @@ def convert_inst(instdata, out_daw):
 		plugin_vst2.replace_data(instdata, 'any', 'Magical 8bit Plug 2', 'chunk', data_vc2xml.make(params_various_inst.m8bp_out()), None)
 
 	if pluginname == 'opn2':
-		xmlout = params_various_inst.opnplug_convert(plugindata)
+		xmlout = params_adlplug.opnplug_convert(plugindata)
 		plugin_vst2.replace_data(instdata, 'any', 'OPNplug', 'chunk', data_vc2xml.make(xmlout), None)
 
 	#if pluginname == 'opl2':

@@ -286,12 +286,11 @@ class output_reaper(plugin_output.base):
                 if trackid in projJ['track_data']:
                     trackdata = projJ['track_data'][trackid]
 
-                    cvpj_trackname = "noname"
                     cvpj_trackcolor = "0"
-                    cvpj_trackvol = 1.0
+                    cvpj_trackname = data_values.get_value(trackdata, 'name', '')
+                    cvpj_trackvol = data_values.get_value(trackdata, 'vol', 1)
+                    cvpj_trackpan = data_values.get_value(trackdata, 'pan', 0)
 
-                    if 'name' in trackdata: cvpj_trackname = trackdata['name']
-                    if 'vol' in trackdata: cvpj_trackvol = trackdata['vol']
                     if 'color' in trackdata: cvpj_trackcolor = cvpj_color_to_reaper_color(trackdata['color'])
 
                     track_uuid = '{'+str(uuid.uuid4())+'}'
@@ -301,7 +300,7 @@ class output_reaper(plugin_output.base):
                     rpp_trackdata.children.append(['PEAKCOL',cvpj_trackcolor])
                     rpp_trackdata.children.append(['BEAT','-1'])
                     rpp_trackdata.children.append(['AUTOMODE','0'])
-                    rpp_trackdata.children.append(['VOLPAN',cvpj_trackvol,'0','-1','-1','1'])
+                    rpp_trackdata.children.append(['VOLPAN',cvpj_trackvol,cvpj_trackpan,'-1','-1','1'])
                     rpp_trackdata.children.append(['MUTESOLO','0','0','0'])
                     rpp_trackdata.children.append(['IPHASE','0'])
                     rpp_trackdata.children.append(['PLAYOFFS','0','1'])

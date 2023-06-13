@@ -62,21 +62,9 @@ if platformtxt == 'lin':
 if os.path.exists(l_path_aurdor) == True: dawlist.append('ardour')
 if os.path.exists(l_path_waveform) == True: dawlist.append('waveform')
 
-#if len(dawlist) >= 1:
-#	print('[dawvert-vst] Plugin List from DAWs Found:', end=' ')
-#	for daw in dawlist: print(daw, end=' ')
-#	print()
-#	selecteddaw=input("[dawvert-vst] Select one to import: ")
-#	if selecteddaw not in dawlist:
-#		print('[dawvert-vst] exit', end=' ')
-#		exit()
 elif len(dawlist) == 0:
 	print('[dawvert-vst] No DAWs Found. exit', end=' ')
 	exit()
-
-#def xml_add_part(xmlfile, dictdata, dict_var_name, xml_var_name):
-#	var_data = xmlfile.get(xml_var_name)
-#	if var_data != None: dictdata[dict_var_name] = var_data
 
 #  ------------------------------------- Ardour -------------------------------------
 if 'ardour' in dawlist:

@@ -91,6 +91,7 @@ class output_waveform_edit(plugin_output.base):
 
                             if 'name' in cvpj_midiplacement: wf_MIDICLIP.set('name', cvpj_midiplacement['name'])
                             if 'color' in cvpj_midiplacement: wf_MIDICLIP.set('colour', 'ff'+colors.rgb_float_2_hex(cvpj_midiplacement['color']))
+                            if 'muted' in cvpj_midiplacement: wf_MIDICLIP.set('mute', str(int(cvpj_midiplacement['muted'])))
                             if 'notelist' in cvpj_midiplacement: 
                                 wf_SEQUENCE = ET.SubElement(wf_MIDICLIP, "SEQUENCE")
                                 wf_SEQUENCE.set('ver', '1')

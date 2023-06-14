@@ -53,12 +53,10 @@ def convert_inst(instdata):
 			params_vital.set_lfo(2, vol163envlen+1, vital_points+[1,1], vital_powers+[0], False, '')
 			params_vital.set_modulation(2, 'lfo_2', 'osc_1_level', 1, 0, 1, 0, 0)
 
-
 		namco163_wave_chunks = data_values.list_chunks(namco163_values, int(namco163_size))
 
 		vital_keyframes = {}
 		for chunknum in range(namco163_count):
-			#print(chunknum/namco163_count, namco163_wave_chunks[chunknum])
 			vital_keyframes[int((chunknum/namco163_count)*256)] = params_vital_wavetable.resizewave(namco163_wave_chunks[chunknum])
 
 		params_vital.replacemultiwave(0, vital_keyframes)

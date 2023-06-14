@@ -406,7 +406,7 @@ class input_flp(plugin_input.base):
         cvpj_l['instruments_data'] = cvpj_l_instrument_data
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['playlist'] = cvpj_l_playlist
-        #cvpj_l['fxrack'] = cvpj_l_fxrack
+        cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['timemarkers'] = cvpj_l_timemarkers
         cvpj_l['sampleindex'] = cvpj_l_samples
 

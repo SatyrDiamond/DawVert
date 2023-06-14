@@ -105,7 +105,7 @@ def decode(wavfile):
 				wav_length = int(wav_length/(out_wavinfo['channels']/1))
 				out_wavinfo['length'] = wav_length
 
-	return (out_wavinfo, out_wavdata, out_instdata)
+	return out_wavinfo, out_wavdata, out_instdata
 
 def generate(file, data, channels, freq, bits, instdata):
 	print("[audio-wav] Generating Sample:",end=' ')
@@ -113,7 +113,6 @@ def generate(file, data, channels, freq, bits, instdata):
 	print('Freq: ' + str(freq),end=', ')
 	print('Bits: ' + str(bits))
 	file_object = open(file, 'wb')
-	datasize = int(len(data)/channels)
 	table_chunks = []
 
 	# ----- fmt -----
@@ -152,7 +151,6 @@ def complete_wav_info(sampler_file_data):
 			wavinfo = decode(sampler_file_data['file'])
 			sampler_file_data['length'] = wavinfo[0]['length']
 			wavformat = wavinfo[0]['format']
-			returnvalue = None
 			if wavinfo[2] != {}:
 				if 'loops' in wavinfo[2]:
 					if wavinfo[2]['loops'] != {}:

@@ -12,9 +12,7 @@ def closest_color_index(colors, color):
     return index_of_smallest[0][0]
 
 def hsv_to_rgb(h, s, v) -> tuple:
-
     h -= math.ceil(h)-1
-
     if s:
         if h == 1.0: h = 0.0
         i = int(h*6.0); f = h*6.0 - i

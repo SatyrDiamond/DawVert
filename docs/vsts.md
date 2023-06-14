@@ -37,6 +37,8 @@
 
 [Zyn-Fusion](https://zynaddsubfx.sourceforge.io/zyn-fusion.html) - ZynAddSubFX
 
+[Spectrum Analyzer](https://socalabs.com/analysis/spectrumanalyzer/) - Spectrum Analyzer
+
 # from FL Studio
 
 [Ninjas2](https://github.com/clearly-broken-software/ninjas2) - Fruity Slicer
@@ -46,5 +48,7 @@
 [Vital](https://vital.audio/) - SimSynth
 
 [Airwindows Weight](https://www.airwindows.com/weight/) - Fruity Bass Boost
+
+[Spectrum Analyzer](https://socalabs.com/analysis/spectrumanalyzer/) - Fruity Spectroman
 
 [Wolf Shaper](https://wolf-plugins.github.io/wolf-shaper/) - Fruity Waveshaper

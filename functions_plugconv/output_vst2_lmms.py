@@ -173,6 +173,14 @@ def convert_fx(fxdata):
 		lmmsnat_data = plugindata['data']
 		lmmsnat_name = plugindata['name']
 
+		if lmmsnat_name == 'spectrumanalyzer':
+			x_spectrumanalyzer = ET.Element("state")
+			x_spectrumanalyzer.set('valueTree', '<?xml version="1.0" encoding="UTF-8"?>\n<state/>')
+			x_spectrumanalyzer.set('program', '0')
+			socalabs_addparam(x_spectrumanalyzer, "mode", 0.0)
+			socalabs_addparam(x_spectrumanalyzer, "log", 1.0)
+			plugin_vst2.replace_data(fxdata, 'any', 'SpectrumAnalyzer', 'chunk', ET.tostring(x_spectrumanalyzer, encoding='utf-8'), None)
+
 		if lmmsnat_name == 'waveshaper':
 			waveshapebytes = base64.b64decode(plugindata['data']['waveShape'])
 			waveshapepoints = [struct.unpack('f', waveshapebytes[i:i+4]) for i in range(0, len(waveshapebytes), 4)]

@@ -157,7 +157,6 @@ def do_sends(master_data, in_daw, out_daw, extra_json, platform_id, intext):
 
 def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supportedplugins, extra_json):
 	global supportedplugins
-	plugin_vst2.listinit()
 	supportedplugins = out_supportedplugins
 	cvpj_l = json.loads(cvpjdata)
 	if out_type != 'debug':

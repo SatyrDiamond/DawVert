@@ -51,8 +51,6 @@ typelist['m'] = 'Multiple'
 typelist['mi'] = 'MultipleIndexed'
 typelist['debug'] = 'debug'
 
-Path('__config/plugins_external.db').touch()
-
 if args.use_experiments_input == True:
 	from experiments_plugin_input import base as base_input
 else:

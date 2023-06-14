@@ -5,6 +5,7 @@ import base64
 import struct
 import os
 import math
+import lxml.etree as ET
 
 from functions import note_data
 from functions import data_bytes
@@ -14,6 +15,7 @@ from functions import params_vst
 
 from functions_plugconv import input_flstudio_wrapper
 
+from functions_plugparams import params_various_inst
 from functions_plugparams import params_kickmess
 from functions_plugparams import params_various_fx
 from functions_plugparams import params_vital
@@ -272,12 +274,21 @@ def convert_fx(fxdata):
 	#	flpdel = struct.unpack('bIIIIII', fl_plugdata)
 	#	print(flpdel)
 
-	if pluginname == 'fruity waveshaper':
 
+	if pluginname == 'fruity spectroman':
+		#print(len(fl_plugdata))
+		spectroman_data = struct.unpack('bIIIbbb', fl_plugdata)
+		x_spectrumanalyzer = ET.Element("state")
+		x_spectrumanalyzer.set('valueTree', '<?xml version="1.0" encoding="UTF-8"?>\n<state width="400" height="328"/>')
+		x_spectrumanalyzer.set('program', '0')
+		params_various_inst.socalabs_addparam(x_spectrumanalyzer, "mode", float(spectroman_data[1]))
+		params_various_inst.socalabs_addparam(x_spectrumanalyzer, "log", 1.0)
+		plugin_vst2.replace_data(fxdata, 'any', 'SpectrumAnalyzer', 'chunk', ET.tostring(x_spectrumanalyzer, encoding='utf-8'), None)
+
+	if pluginname == 'fruity waveshaper':
 		headerdata = fl_plugstr.read(22)
 		headerdata_ints = struct.unpack('bHHIIbbbbbb', headerdata)
-
-		print(headerdata_ints)
+		
 		pointsdata = decode_pointdata(fl_plugstr)
 
 		params_various_fx.wolfshaper_init()

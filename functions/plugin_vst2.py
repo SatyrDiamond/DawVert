@@ -47,7 +47,7 @@ def find_path_by_name(in_name, platformtype):
 
 	if db_exists:
 		if platformtype == 'win': out_paths = db_plugins.execute("SELECT path_32bit_win, path_64bit_win FROM vst2 WHERE name = ?", (in_name,)).fetchone()
-		if platformtype == 'lin': out_paths = db_plugins.execute("SELECT path_32bit_unix, path_64bit_unix FROM vst2 WHERE name = ?", (in_name,)).fetchone()
+		else: out_paths = db_plugins.execute("SELECT path_32bit_unix, path_64bit_unix FROM vst2 WHERE name = ?", (in_name,)).fetchone()
 	else:
 		out_paths = [None, None]
 
@@ -55,6 +55,9 @@ def find_path_by_name(in_name, platformtype):
 		vst_cpuarch = 32
 		vst_path = out_paths[0]
 	if out_paths[0] == None and out_paths[1] != None and 64 in cpu_arch_list: 
+		vst_cpuarch = 64
+		vst_path = out_paths[1]
+	if out_paths[0] != None and out_paths[1] != None and 64 in cpu_arch_list: 
 		vst_cpuarch = 64
 		vst_path = out_paths[1]
 

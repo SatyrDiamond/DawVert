@@ -70,7 +70,7 @@ def convert_inst(instdata):
 	#	temp_count += 1
 
 	# ---------------------------------------- Soundfont Player ----------------------------------------
-	elif plugindata['name'].lower() == 'fruity soundfont player':
+	elif plugindata['name'].lower() in ['fruity soundfont player', 'soundfont player']:
 		# flsf_asdf_A max 5940 - flsf_asdf_D max 5940 - flsf_asdf_S max 127 - flsf_asdf_R max 5940
 		# flsf_lfo_predelay max 5900 - flsf_lfo_amount max 127 - flsf_lfo_speed max 127 - flsf_cutoff max 127
 		flsf_unk, flsf_patch, flsf_bank, flsf_reverb_sendlvl, flsf_chorus_sendlvl, flsf_mod = struct.unpack('iiiiii', fl_plugstr.read(24))

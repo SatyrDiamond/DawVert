@@ -137,6 +137,7 @@ def convert_inst(instdata):
 					instdata['plugindata']['data'] = base64.b64encode(wrapper_vstdata).decode('ascii')
 				else:
 					plugin_vst2.replace_data(instdata, 'any', wrapperdata['name'], 'chunk', wrapper_vstdata, None)
+					instdata['plugindata']['current_program'] = wrapper_vstprogram
 
 			#if wrapper_vsttype == 8:
 				#wrapper_vststate = pluginstate[0:9]

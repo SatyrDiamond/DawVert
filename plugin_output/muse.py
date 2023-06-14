@@ -15,7 +15,6 @@ def addvalue(xmltag, name, value):
     x_temp = ET.SubElement(xmltag, name)
     x_temp.text = str(value)
 
-
 def addcontroller(xmltag, i_id, i_value, i_color):
     x_temp = ET.SubElement(xmltag, 'controller')
     x_temp.set('id', str(i_id))

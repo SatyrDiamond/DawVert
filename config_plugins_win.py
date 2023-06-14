@@ -7,7 +7,7 @@ import sqlite3
 import uuid
 
 os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
-db_plugins = sqlite3.connect('./__config/plugins_plugins.db')
+db_plugins = sqlite3.connect('./__config/plugins_external.db')
 
 db_plugins.execute('''
    CREATE TABLE IF NOT EXISTS vst2(

@@ -14,7 +14,7 @@ def convert_inst(instdata, platform_id):
 		msmpl_data = instdata
 		msmpl_p_data = instdata['plugindata']
 		vst2_dll_vstpaths = plugin_vst2.vstpaths()
-		if 'Grace' in vst2_dll_vstpaths['dll']:
+		if plugin_vst2.check_exists('Grace'):
 			if 'regions' in msmpl_p_data:
 				regions = msmpl_p_data['regions']
 				gx_root = params_grace.create_main()

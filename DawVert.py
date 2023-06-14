@@ -5,6 +5,7 @@ import json
 import argparse
 import platform
 import os
+from pathlib import Path
 
 from plugin_output import base as base_output
 from functions import song_convert
@@ -50,6 +51,7 @@ typelist['m'] = 'Multiple'
 typelist['mi'] = 'MultipleIndexed'
 typelist['debug'] = 'debug'
 
+Path('__config/plugins_external.db').touch()
 
 if args.use_experiments_input == True:
 	from experiments_plugin_input import base as base_input

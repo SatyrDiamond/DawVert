@@ -17,7 +17,7 @@ def convert_inst(instdata, platform_id):
 		sampler_file_data = instdata['plugindata']
 		wireturn = audio_wav.complete_wav_info(sampler_file_data)
 		vst2_dll_vstpaths = plugin_vst2.vstpaths()
-		if 'Grace' in vst2_dll_vstpaths['dll']:
+		if plugin_vst2.check_exists('Grace'):
 			if 'file' in sampler_file_data and wireturn != None and wireturn == 1:
 				file_extension = pathlib.Path(sampler_file_data['file']).suffix
 				if file_extension == '.wav':

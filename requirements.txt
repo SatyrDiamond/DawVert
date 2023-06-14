@@ -9,3 +9,4 @@ blackboxprotobuf
 pypng
 git+https://github.com/Perlence/rpp
 tinydb
+sqlite3

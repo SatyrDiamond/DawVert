@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from os.path import exists
+from functions import data_values
 import configparser
 import base64
 import struct
@@ -72,7 +73,6 @@ def replace_data(instdata, platform, in_name, datatype, data, numparams):
 	vst_cpuarch, vst_path = find_path_by_name(in_name, platformtxt)
 
 	if vst_path != None:
-
 		if 'plugin' not in instdata: instdata['plugin'] = 'none'
 		print('[list-vst2] ' + instdata['plugin'] +' > ' + in_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
 
@@ -88,9 +88,9 @@ def replace_data(instdata, platform, in_name, datatype, data, numparams):
 			fouridval = db_plugins.execute("SELECT id FROM vst2 WHERE name = ?", (in_name,)).fetchone()
 			versionval = db_plugins.execute("SELECT version FROM vst2 WHERE name = ?", (in_name,)).fetchone()
 
-		if fouridval != None: instdata['plugindata']['plugin']['fourid'] = int(fouridval[0])
+		if fouridval != None and fouridval != (None,): instdata['plugindata']['plugin']['fourid'] = int(fouridval[0])
 
-		if versionval != None: 
+		if versionval != None and versionval != (None,): 
 			versionsplit = [int(i) for i in versionval[0].split('.')]
 			versionbytes =  struct.pack('B'*len(versionsplit), *versionsplit)
 			instdata['plugindata']['plugin']['version'] = int.from_bytes(versionbytes, "little")

@@ -21,7 +21,8 @@ def calctempotimed(i_value):
     return i_out
 
 def decodetext(event_data):
-    return event_data.decode('utf-16le').rstrip('\x00\x00')
+    if int(FLSplitted[0]) >= 12: return event_data.decode('utf-16le').rstrip('\x00\x00')
+    else: return event_data.decode('utf-8').rstrip('\x00')
 
 # ------------- parse -------------
 def parse_arrangement(arrdata):
@@ -229,7 +230,7 @@ def parse(inputfile):
         if event_id == 199: 
             FLVersion = event_data.decode('utf-8').rstrip('\x00')
             FLSplitted = FLVersion.split('.')
-            if int(FLSplitted[0]) < 12:
+            if int(FLSplitted[0]) < 11:
                 print('[error] FL version '+FLSplitted[0]+' is not supported.') 
                 exit()
             FL_Main['Version'] = FLVersion

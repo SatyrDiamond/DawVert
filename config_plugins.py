@@ -12,7 +12,7 @@ if platform_architecture[1] == 'WindowsPE': platformtxt = 'win'
 else: platformtxt = 'lin'
 
 os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
-db_plugins = sqlite3.connect('./__config/plugins_plugins_'+platformtxt+'.db')
+db_plugins = sqlite3.connect('./__config/plugins_plugins.db')
 
 db_plugins.execute('''
    CREATE TABLE IF NOT EXISTS vst2(
@@ -26,8 +26,10 @@ db_plugins.execute('''
        audio_num_outputs integer,
        midi_num_inputs integer,
        midi_num_outputs integer,
-       path_32bit text,
-       path_64bit text,
+       path_32bit_win text,
+       path_64bit_win text,
+       path_32bit_unix text,
+       path_64bit_unix text,
        UNIQUE(id)
    )''')
 
@@ -45,9 +47,23 @@ db_plugins.execute('''
 		audio_num_outputs integer,
 		midi_num_inputs integer,
 		midi_num_outputs integer,
-        path_32bit text,
-        path_64bit text,
-       	UNIQUE(id)
+      path_32bit_win text,
+      path_64bit_win text,
+      path_32bit_unix text,
+      path_64bit_unix text,
+		UNIQUE(id)
+   )''')
+
+db_plugins.execute('''
+   CREATE TABLE IF NOT EXISTS ladspa(
+		name text,
+		creator text,
+		version text,
+		audio_num_inputs integer,
+		audio_num_outputs integer,
+      path_win text,
+      path_unix text,
+      UNIQUE(name)
    )''')
 
 homepath = os.path.expanduser("~")
@@ -78,22 +94,25 @@ if 'ardour' in dawlist:
 		vstxmlroot = vstxmldata.getroot()
 
 		if vstxmlext == '.v2i':
-			VST2Info = vstxmlroot.findall('VST2Info')[0]
+			pluginfo = vstxmlroot.findall('VST2Info')[0]
 			vst_arch = vstxmlroot.get('arch')
-			vst_category = VST2Info.get('category')
+			vst_category = pluginfo.get('category')
 			if vst_arch == 'x86_64' and os.path.exists(vstxmlroot.get('binary')):
-				vst2data_fourid = int(VST2Info.get('id'))
+				vst2data_fourid = int(pluginfo.get('id'))
 				if vst_category == 'Instrument': vst2data_type = 'synth'
 				if vst_category == 'Effect': vst2data_type = 'effect'
 				db_plugins.execute("INSERT OR IGNORE INTO vst2 (id) VALUES (?)", (vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET name = ? WHERE id = ?", (VST2Info.get('name'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET creator = ? WHERE id = ?", (VST2Info.get('creator'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET path_64bit = ? WHERE id = ?", (vstxmlroot.get('binary'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET version = ? WHERE id = ?", (VST2Info.get('version'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET audio_num_inputs = ? WHERE id = ?", (VST2Info.get('n_inputs'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET audio_num_outputs = ? WHERE id = ?", (VST2Info.get('n_outputs'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET midi_num_inputs = ? WHERE id = ?", (VST2Info.get('n_midi_inputs'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET midi_num_outputs = ? WHERE id = ?", (VST2Info.get('n_midi_outputs'), vst2data_fourid,))
+				db_plugins.execute("UPDATE vst2 SET name = ? WHERE id = ?", (pluginfo.get('name'), vst2data_fourid,))
+				db_plugins.execute("UPDATE vst2 SET creator = ? WHERE id = ?", (pluginfo.get('creator'), vst2data_fourid,))
+				if platformtxt == 'win':
+					db_plugins.execute("UPDATE vst2 SET path_64bit_win = ? WHERE id = ?", (vstxmlroot.get('binary'), vst2data_fourid,))
+				if platformtxt == 'lin':
+					db_plugins.execute("UPDATE vst2 SET path_64bit_unix = ? WHERE id = ?", (vstxmlroot.get('binary'), vst2data_fourid,))
+				db_plugins.execute("UPDATE vst2 SET version = ? WHERE id = ?", (pluginfo.get('version'), vst2data_fourid,))
+				db_plugins.execute("UPDATE vst2 SET audio_num_inputs = ? WHERE id = ?", (pluginfo.get('n_inputs'), vst2data_fourid,))
+				db_plugins.execute("UPDATE vst2 SET audio_num_outputs = ? WHERE id = ?", (pluginfo.get('n_outputs'), vst2data_fourid,))
+				db_plugins.execute("UPDATE vst2 SET midi_num_inputs = ? WHERE id = ?", (pluginfo.get('n_midi_inputs'), vst2data_fourid,))
+				db_plugins.execute("UPDATE vst2 SET midi_num_outputs = ? WHERE id = ?", (pluginfo.get('n_midi_outputs'), vst2data_fourid,))
 				db_plugins.execute("UPDATE vst2 SET type = ? WHERE id = ?", (vst2data_type, vst2data_fourid,))
 
 		if vstxmlext == '.v3i':
@@ -102,7 +121,10 @@ if 'ardour' in dawlist:
 			if os.path.exists(vstxmlroot.get('bundle')):
 				db_plugins.execute("INSERT OR IGNORE INTO vst3 (id) VALUES (?)", (vst3data_id,))
 				db_plugins.execute("UPDATE vst3 SET name = ? WHERE id = ?", (VST3Info.get('name'), vst3data_id,))
-				db_plugins.execute("UPDATE vst3 SET path_64bit = ? WHERE id = ?", (vstxmlroot.get('bundle'), vst3data_id,))
+				if platformtxt == 'win':
+					db_plugins.execute("UPDATE vst3 SET path_64bit_win = ? WHERE id = ?", (vstxmlroot.get('bundle'), vst3data_id,))
+				if platformtxt == 'lin':
+					db_plugins.execute("UPDATE vst3 SET path_64bit_unix = ? WHERE id = ?", (vstxmlroot.get('bundle'), vst3data_id,))
 				db_plugins.execute("UPDATE vst3 SET creator = ? WHERE id = ?", (VST3Info.get('vendor'), vst3data_id,))
 				db_plugins.execute("UPDATE vst3 SET category = ? WHERE id = ?", (VST3Info.get('category'), vst3data_id,))
 				db_plugins.execute("UPDATE vst3 SET version = ? WHERE id = ?", (VST3Info.get('version'), vst3data_id,))
@@ -117,30 +139,44 @@ if 'ardour' in dawlist:
 #  ------------------------------------- Waveform -------------------------------------
 if 'waveform' in dawlist:
 	print('[dawvert-vst] Importing VST List from: Waveform')
-	vst2filename = os.path.join(l_path_waveform, 'knownPluginList64.settings')
-	if exists(vst2filename):
-		vstxmldata = ET.parse(vst2filename)
+	plugfilename = os.path.join(l_path_waveform, 'knownPluginList64.settings')
+	if exists(plugfilename):
+		vstxmldata = ET.parse(plugfilename)
 		vstxmlroot = vstxmldata.getroot()
-		vst2infos = vstxmlroot.findall('PLUGIN')
-		for vst2info in vst2infos:
-			vst_file = vst2info.get('file')
+		pluginfos = vstxmlroot.findall('PLUGIN')
+		for pluginfo in pluginfos:
+			vst_file = pluginfo.get('file')
+			vst_format = pluginfo.get('format')
+			#print(vst_format)
 			if os.path.exists(vst_file):
-				vst_name = vst2info.get('descriptiveName')
-				vst_inst = vst2info.get('isInstrument')
-				if vst_inst == '1': vst2data_type = 'synth'
-				if vst_inst == '0': vst2data_type = 'effect'
-				vst2data_fourid = int(vst2info.get('uniqueId'), 16)
-				db_plugins.execute("INSERT OR IGNORE INTO vst2 (id) VALUES (?)", (vst2data_fourid,))
-				if vst_name != None: db_plugins.execute("UPDATE vst2 SET name = ? WHERE id = ?", (vst_name, vst2data_fourid,))
-				else: db_plugins.execute("UPDATE vst2 SET name = ? WHERE id = ?", (vst2info.get('name'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET internal_name = ? WHERE id = ?", (vst2info.get('name'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET path_64bit = ? WHERE id = ?", (vst2info.get('file'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET creator = ? WHERE id = ?", (vst2info.get('manufacturer'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET version = ? WHERE id = ?", (vst2info.get('version'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET audio_num_inputs = ? WHERE id = ?", (vst2info.get('numInputs'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET audio_num_outputs = ? WHERE id = ?", (vst2info.get('numOutputs'), vst2data_fourid,))
-				db_plugins.execute("UPDATE vst2 SET type = ? WHERE id = ?", (vst2data_type, vst2data_fourid,))
-			
+				if vst_format == 'VST':
+					vst_name = pluginfo.get('descriptiveName')
+					vst_inst = pluginfo.get('isInstrument')
+					if vst_inst == '1': plugdata_type = 'synth'
+					if vst_inst == '0': plugdata_type = 'effect'
+					plugdata_fourid = int(pluginfo.get('uniqueId'), 16)
+					db_plugins.execute("INSERT OR IGNORE INTO vst2 (id) VALUES (?)", (plugdata_fourid,))
+					if vst_name != None: db_plugins.execute("UPDATE vst2 SET name = ? WHERE id = ?", (vst_name, plugdata_fourid,))
+					else: db_plugins.execute("UPDATE vst2 SET name = ? WHERE id = ?", (pluginfo.get('name'), plugdata_fourid,))
+					db_plugins.execute("UPDATE vst2 SET internal_name = ? WHERE id = ?", (pluginfo.get('name'), plugdata_fourid,))
+					if platformtxt == 'win':
+						db_plugins.execute("UPDATE vst3 SET path_64bit_win = ? WHERE id = ?", (pluginfo.get('file'), plugdata_fourid,))
+					if platformtxt == 'lin':
+						db_plugins.execute("UPDATE vst3 SET path_64bit_unix = ? WHERE id = ?", (pluginfo.get('file'), plugdata_fourid,))
+					db_plugins.execute("UPDATE vst2 SET creator = ? WHERE id = ?", (pluginfo.get('manufacturer'), plugdata_fourid,))
+					db_plugins.execute("UPDATE vst2 SET version = ? WHERE id = ?", (pluginfo.get('version'), plugdata_fourid,))
+					db_plugins.execute("UPDATE vst2 SET audio_num_inputs = ? WHERE id = ?", (pluginfo.get('numInputs'), plugdata_fourid,))
+					db_plugins.execute("UPDATE vst2 SET audio_num_outputs = ? WHERE id = ?", (pluginfo.get('numOutputs'), plugdata_fourid,))
+					db_plugins.execute("UPDATE vst2 SET type = ? WHERE id = ?", (plugdata_type, plugdata_fourid,))
+				if vst_format == 'LADSPA':
+					ladspa_name = pluginfo.get('name')
+					db_plugins.execute("INSERT OR IGNORE INTO ladspa (name) VALUES (?)", (ladspa_name,))
+					db_plugins.execute("UPDATE ladspa SET path_unix = ? WHERE name = ?", (pluginfo.get('file'), ladspa_name,))
+					db_plugins.execute("UPDATE ladspa SET creator = ? WHERE name = ?", (pluginfo.get('manufacturer'), ladspa_name,))
+					db_plugins.execute("UPDATE ladspa SET version = ? WHERE name = ?", (pluginfo.get('version'), ladspa_name,))
+					db_plugins.execute("UPDATE ladspa SET audio_num_inputs = ? WHERE name = ?", (pluginfo.get('numInputs'), ladspa_name,))
+					db_plugins.execute("UPDATE ladspa SET audio_num_outputs = ? WHERE name = ?", (pluginfo.get('numOutputs'), ladspa_name,))
+
 #  ------------------------------------- Output -------------------------------------
 
 db_plugins.commit()

@@ -7,7 +7,7 @@ import sqlite3
 import uuid
 
 os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
-db_plugins = sqlite3.connect('./__config/plugins_plugins_win.db')
+db_plugins = sqlite3.connect('./__config/plugins_plugins.db')
 
 db_plugins.execute('''
    CREATE TABLE IF NOT EXISTS vst2(
@@ -21,8 +21,10 @@ db_plugins.execute('''
        audio_num_outputs integer,
        midi_num_inputs integer,
        midi_num_outputs integer,
-       path_32bit text,
-       path_64bit text,
+       path_32bit_win text,
+       path_64bit_win text,
+       path_32bit_unix text,
+       path_64bit_unix text,
        UNIQUE(id)
    )''')
 
@@ -40,9 +42,11 @@ db_plugins.execute('''
 		audio_num_outputs integer,
 		midi_num_inputs integer,
 		midi_num_outputs integer,
-        path_32bit text,
-        path_64bit text,
-       	UNIQUE(id)
+      path_32bit_win text,
+      path_64bit_win text,
+      path_32bit_unix text,
+      path_64bit_unix text,
+		UNIQUE(id)
    )''')
 
 def reg_get(name, regpath):
@@ -113,8 +117,8 @@ if 'cakewalk' in dawlist:
 			if vst_is_v2 == 1:
 				db_plugins.execute("INSERT OR IGNORE INTO vst2 (id) VALUES (?)", (vst_uniqueId,))
 				db_plugins.execute("UPDATE vst2 SET name = ? WHERE id = ?", (vst_name, vst_uniqueId,))
-				if vst_is64 == 1: db_plugins.execute("UPDATE vst2 SET path_64bit = ? WHERE id = ?", (vst_path, vst_uniqueId,))
-				else: db_plugins.execute("UPDATE vst2 SET path_32bit = ? WHERE id = ?", (vst_path, vst_uniqueId,))
+				if vst_is64 == 1: db_plugins.execute("UPDATE vst2 SET path_64bit_win = ? WHERE id = ?", (vst_path, vst_uniqueId,))
+				else: db_plugins.execute("UPDATE vst2 SET path_32bit_win = ? WHERE id = ?", (vst_path, vst_uniqueId,))
 				if vst_isSynth == 1: db_plugins.execute("UPDATE vst2 SET type = ? WHERE id = ?", ('synth', vst_uniqueId,))
 				else: db_plugins.execute("UPDATE vst2 SET type = ? WHERE id = ?", ('effect', vst_uniqueId,))
 				if vst_Vendor != None: db_plugins.execute("UPDATE vst2 SET creator = ? WHERE id = ?", (vst_Vendor, vst_uniqueId,))
@@ -126,8 +130,8 @@ if 'cakewalk' in dawlist:
 				vst_Subcategories = winreg.QueryValueEx(registry_key, 'Subcategories')[0]
 				db_plugins.execute("INSERT OR IGNORE INTO vst3 (id) VALUES (?)", (vst_clsidPlug,))
 				db_plugins.execute("UPDATE vst3 SET name = ? WHERE id = ?", (vst_name, vst_clsidPlug,))
-				if vst_is64 == 1: db_plugins.execute("UPDATE vst3 SET path_64bit = ? WHERE id = ?", (vst_path, vst_clsidPlug,))
-				else: db_plugins.execute("UPDATE vst3 SET path_32bit = ? WHERE id = ?", (vst_path, vst_clsidPlug,))
+				if vst_is64 == 1: db_plugins.execute("UPDATE vst3 SET path_64bit_win = ? WHERE id = ?", (vst_path, vst_clsidPlug,))
+				else: db_plugins.execute("UPDATE vst3 SET path_32bit_win = ? WHERE id = ?", (vst_path, vst_clsidPlug,))
 				if vst_Subcategories != None: db_plugins.execute("UPDATE vst3 SET category = ? WHERE id = ?", (vst_Subcategories, vst_clsidPlug,))
 				if vst_Vendor != None: db_plugins.execute("UPDATE vst3 SET creator = ? WHERE id = ?", (vst_Vendor, vst_clsidPlug,))
 				db_plugins.execute("UPDATE vst3 SET audio_num_inputs = ? WHERE id = ?", (vst_numInputs, vst_clsidPlug,))
@@ -156,8 +160,8 @@ if 'flstudio' in dawlist:
 								db_plugins.execute("UPDATE vst2 SET name = ? WHERE id = ?", (dict_vstinfo['ps_file_name_'+str(filenum)], vst_uniqueId,))
 								if 'ps_file_vendorname_'+str(filenum) in dict_vstinfo: db_plugins.execute("UPDATE vst2 SET creator = ? WHERE id = ?", (dict_vstinfo['ps_file_vendorname_'+str(filenum)], vst_uniqueId,))
 								if 'ps_file_category_'+str(filenum) in dict_vstinfo: db_plugins.execute("UPDATE vst2 SET type = ? WHERE id = ?", (dict_vstinfo['ps_file_category_'+str(filenum)].lower(), vst_uniqueId,))
-								if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '32': db_plugins.execute("UPDATE vst2 SET path_32bit = ? WHERE id = ?", (dict_vstinfo['ps_file_filename_'+str(filenum)], vst_uniqueId,))
-								if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '64': db_plugins.execute("UPDATE vst2 SET path_64bit = ? WHERE id = ?", (dict_vstinfo['ps_file_filename_'+str(filenum)], vst_uniqueId,))
+								if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '32': db_plugins.execute("UPDATE vst2 SET path_32bit_win = ? WHERE id = ?", (dict_vstinfo['ps_file_filename_'+str(filenum)], vst_uniqueId,))
+								if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '64': db_plugins.execute("UPDATE vst2 SET path_64bit_win = ? WHERE id = ?", (dict_vstinfo['ps_file_filename_'+str(filenum)], vst_uniqueId,))
 
 					if pathtype[0] == 'vst3':
 						if 'ps_file_guid_'+str(filenum) in dict_vstinfo:
@@ -167,8 +171,8 @@ if 'flstudio' in dawlist:
 								db_plugins.execute("UPDATE vst3 SET name = ? WHERE id = ?", (dict_vstinfo['ps_file_name_'+str(filenum)], vst_uniqueId,))
 								if 'ps_file_vendorname_'+str(filenum) in dict_vstinfo: db_plugins.execute("UPDATE vst3 SET creator = ? WHERE id = ?", (dict_vstinfo['ps_file_vendorname_'+str(filenum)], vst_uniqueId,))
 								if 'ps_file_category_'+str(filenum) in dict_vstinfo: db_plugins.execute("UPDATE vst3 SET category = ? WHERE id = ?", (dict_vstinfo['ps_file_category_'+str(filenum)], vst_uniqueId,))
-								if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '32': db_plugins.execute("UPDATE vst3 SET path_32bit = ? WHERE id = ?", (dict_vstinfo['ps_file_filename_'+str(filenum)], vst_uniqueId,))
-								if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '64': db_plugins.execute("UPDATE vst3 SET path_64bit = ? WHERE id = ?", (dict_vstinfo['ps_file_filename_'+str(filenum)], vst_uniqueId,))
+								if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '32': db_plugins.execute("UPDATE vst3 SET path_32bit_win = ? WHERE id = ?", (dict_vstinfo['ps_file_filename_'+str(filenum)], vst_uniqueId,))
+								if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '64': db_plugins.execute("UPDATE vst3 SET path_64bit_win = ? WHERE id = ?", (dict_vstinfo['ps_file_filename_'+str(filenum)], vst_uniqueId,))
 
 #  ------------------------------------- Output -------------------------------------
 

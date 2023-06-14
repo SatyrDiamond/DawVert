@@ -149,7 +149,6 @@ def deconstruct_SEQN(bi_rack, Caustic_Main):
     deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MIXER_2')
     deconstruct_autoctrl(SEQN_str, Caustic_Main, 'MASTER')
 
-
     SEQN_str.read(2)
 
     tempoauto = []

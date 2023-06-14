@@ -19,19 +19,19 @@ from functions_plugconv import input_jummbox
 from functions_plugconv import input_soundchip
 from functions_plugconv import input_audiosauna
 
-from functions_plugconv import output_simple_vst2
-from functions_plugconv import output_sampler_vst2
-from functions_plugconv import output_multisampler_vst2
-from functions_plugconv import output_slicer_vst2
+from functions_plugconv import output_vst2_simple
+from functions_plugconv import output_vst2_sampler
+from functions_plugconv import output_vst2_multisampler
+from functions_plugconv import output_vst2_slicer
 
-from functions_plugconv import output_retro_vst2
-from functions_plugconv import output_soundchip_vst2
+from functions_plugconv import output_vst2_retro
+from functions_plugconv import output_vst2_soundchip
 
-from functions_plugconv import output_flstudio_vst2
-from functions_plugconv import output_lmms_vst2
-from functions_plugconv import output_onlineseq_vst2
-from functions_plugconv import output_piyopiyo_vst2
-from functions_plugconv import output_namco163_famistudio_vst2
+from functions_plugconv import output_vst2_flstudio
+from functions_plugconv import output_vst2_lmms
+from functions_plugconv import output_vst2_onlineseq
+from functions_plugconv import output_vst2_piyopiyo
+from functions_plugconv import output_vst2_namco163_famistudio
 
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
@@ -66,28 +66,28 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 			plugindata = instdata['plugindata']
 
 			if pluginname == 'sampler' and 'sampler' not in supportedplugins: 
-				output_sampler_vst2.convert_inst(instdata, platform_id)
+				output_vst2_sampler.convert_inst(instdata, platform_id)
 
 			elif pluginname == 'sampler-multi' and 'sampler-multi' not in supportedplugins: 
-				output_multisampler_vst2.convert_inst(instdata, platform_id)
+				output_vst2_multisampler.convert_inst(instdata, platform_id)
 
 			elif pluginname == 'sampler-slicer' and 'sampler-slicer' not in supportedplugins: 
-				output_slicer_vst2.convert_inst(instdata)
+				output_vst2_slicer.convert_inst(instdata)
 
 			elif (pluginname == 'native-lmms' or pluginname == 'zynaddsubfx-lmms') and out_daw != 'lmms':
-				output_lmms_vst2.convert_inst(instdata) 
+				output_vst2_lmms.convert_inst(instdata) 
 
 			elif pluginname == 'native-fl':
-				output_flstudio_vst2.convert_inst(instdata)
+				output_vst2_flstudio.convert_inst(instdata)
 
 			elif pluginname == 'native-piyopiyo':
-				output_piyopiyo_vst2.convert_inst(instdata)
+				output_vst2_piyopiyo.convert_inst(instdata)
 
 			elif pluginname == 'namco163_famistudio':
-				output_namco163_famistudio_vst2.convert_inst(instdata)
+				output_vst2_namco163_famistudio.convert_inst(instdata)
 
 			if 'vst2' in supportedplugins:
-				output_soundchip_vst2.convert_inst(instdata, out_daw)
+				output_vst2_soundchip.convert_inst(instdata, out_daw)
 
 			# -------------------- vst2 (juicysfplugin) --------------------
 
@@ -119,16 +119,16 @@ def convplug_fx(fxdata, in_daw, out_daw, extra_json):
 			# ---------------------------------------- output ----------------------------------------
 
 			if pluginname == 'native-simple': 
-				output_simple_vst2.convert_fx(fxdata)
+				output_vst2_simple.convert_fx(fxdata)
 
 			elif in_daw == 'lmms' and pluginname == 'native-lmms': 
-				output_lmms_vst2.convert_fx(fxdata)
+				output_vst2_lmms.convert_fx(fxdata)
 
 			elif in_daw == 'flp' and pluginname == 'native-fl':
-				output_flstudio_vst2.convert_fx(fxdata)
+				output_vst2_flstudio.convert_fx(fxdata)
 
 			elif in_daw == 'onlineseq' and pluginname == 'native-onlineseq':
-				output_onlineseq_vst2.convert_fx(fxdata)
+				output_vst2_onlineseq.convert_fx(fxdata)
 
 			#elif in_daw == 'audiosauna' and pluginname == 'native-audiosauna':
 			#	output_audiosauna_vst2.convert_fx(fxdata)

@@ -1,7 +1,12 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import xml.etree.ElementTree as ET
+import lxml.etree as ET
+
+def socalabs_addparam(x_sid, name, value):
+    x_temp = ET.SubElement(x_sid, 'param')
+    x_temp.set('uid', name)
+    x_temp.set('val', str(value))
 
 # -------------------- magical8bitplug --------------------
 def shape_m8bp(pluginname, plugindata):

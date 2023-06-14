@@ -1,10 +1,8 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import av
 import os
-import configparser
-from os.path import exists
+import av
 from tinydb import TinyDB, Query
 
 os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
@@ -13,11 +11,6 @@ db = TinyDB(audioinfo_cache_filepath)
 samplesdb = Query()
 
 def get_audiofile_info(sample_filename):
-    audio_path = ''
-    audio_filesize = 0
-    audio_moddate = 0
-    audio_duration = 5
-    audio_timebase = 44100
     audio_hz = 44100
 
     db_searchfound = db.search(samplesdb.path == sample_filename)
@@ -32,7 +25,7 @@ def get_audiofile_info(sample_filename):
     out_data['rate'] = 44100
     out_data['dur_sec'] = 1
 
-    if db_searchfound != []:
+    if db_searchfound:
         out_data = db_searchfound[0]
 
     elif os.path.exists(sample_filename):
@@ -46,7 +39,7 @@ def get_audiofile_info(sample_filename):
             audio_hz_b = avdata.streams.audio[0].rate
             if audio_hz_b != None: audio_hz = audio_hz_b
 
-            if db.search(samplesdb.path == audio_path) == []:
+            if not db.search(samplesdb.path == audio_path):
                 out_db_data = {}
                 out_db_data['path'] = audio_path
                 out_db_data['file_size'] = audio_filesize

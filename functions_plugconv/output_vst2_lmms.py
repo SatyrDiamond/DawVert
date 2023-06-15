@@ -40,6 +40,7 @@ def convert_inst(instdata):
 			params_vital.cvpj_asdrlfo2vitalparams(plugindata)
 			vitaldata = params_vital.getdata()
 			plugin_vst2.replace_data(instdata, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
+			return True
 
 		if lmmsnat_name == 'sid':
 			x_sid = ET.Element("state")
@@ -92,6 +93,7 @@ def convert_inst(instdata):
 			plugin_vst2.replace_data(instdata, 'any', 'SID', 'chunk', ET.tostring(x_sid, encoding='utf-8'), None)
 			if 'middlenote' in instdata: instdata['middlenote'] -= 12
 			else: instdata['middlenote'] = -12
+			return True
 
 		if lmmsnat_name == 'kicker':
 			params_kickmess.initparams()
@@ -110,6 +112,7 @@ def convert_inst(instdata):
 			plugin_vst2.replace_data(instdata, 'any', 'Kickmess (VST)', 'chunk', params_kickmess.getparams(), None)
 			if 'middlenote' in instdata: instdata['middlenote'] -= 12
 			else: instdata['middlenote'] = -12
+			return True
 
 		if lmmsnat_name == 'lb302':
 			params_vital.create()
@@ -154,12 +157,14 @@ def convert_inst(instdata):
 			plugin_vst2.replace_data(instdata, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
 			if 'middlenote' in instdata: instdata['middlenote'] -= 12
 			else: instdata['middlenote'] = -12
+			return True
 
 	if pluginname == 'zynaddsubfx-lmms':				
 		zasfxdata = instdata['plugindata']['data']
 		zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
 		zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
 		plugin_vst2.replace_data(instdata, 'any', 'ZynAddSubFX', 'chunk', zasfxdatafixed, None)
+		return True
 
 def convert_fx(fxdata):
 	pluginname = fxdata['plugin']
@@ -176,6 +181,7 @@ def convert_fx(fxdata):
 			params_various_inst.socalabs_addparam(x_spectrumanalyzer, "mode", 0.0)
 			params_various_inst.socalabs_addparam(x_spectrumanalyzer, "log", 1.0)
 			plugin_vst2.replace_data(fxdata, 'any', 'SpectrumAnalyzer', 'chunk', ET.tostring(x_spectrumanalyzer, encoding='utf-8'), None)
+			return True
 
 		if lmmsnat_name == 'waveshaper':
 			waveshapebytes = base64.b64decode(plugindata['data']['waveShape'])
@@ -185,3 +191,4 @@ def convert_fx(fxdata):
 				pointdata = waveshapepoints[pointnum*4][0]
 				params_various_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
 			plugin_vst2.replace_data(fxdata, 'any', 'Wolf Shaper', 'chunk', data_nullbytegroup.make(params_various_fx.wolfshaper_get()), None)
+			return True

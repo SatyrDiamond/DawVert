@@ -16,7 +16,6 @@ import zipfile
 # -------------------------------------------- notes --------------------------------------------
 
 def parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype):
-    #print(j_wvtl_trackclip)
     j_wvtl_trc_type = j_wvtl_trackclip['type']
     j_wvtl_trc_loopStart = j_wvtl_trackclip['loopStart']
     j_wvtl_trc_loopEnd = j_wvtl_trackclip['loopEnd']
@@ -68,6 +67,7 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
     j_wvtl_trc_timelineStart = j_wvtl_trackclip['timelineStart']
     j_wvtl_trc_timelineEnd = j_wvtl_trackclip['timelineEnd']
     j_wvtl_trc_readStart = j_wvtl_trackclip['readStart']
+    j_wvtl_trc_transpose = data_values.get_value(j_wvtl_trackclip, 'transpose', 0)
 
     cvpj_pldata = {}
     if 'color' in j_wvtl_trackclip: cvpj_pldata["color"] = colors.hex_to_rgb_float(j_wvtl_trackclip['color'])
@@ -83,10 +83,14 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
     cvpj_pldata['cut']['loopstart'] = j_wvtl_trc_loopStart*4
     cvpj_pldata['cut']['loopend'] = j_wvtl_trc_loopEnd*4
 
+    print( j_wvtl_trc_transpose, pow(2, j_wvtl_trc_transpose/12)  )
+
     cvpj_pldata['audiomod'] = {}
+
+    cvpj_pldata['audiomod']['pitch'] = j_wvtl_trc_transpose
     cvpj_pldata['audiomod']['stretch_algorithm'] = 'stretch'
     cvpj_pldata['audiomod']['stretch_method'] = 'rate_ignoretempo'
-    cvpj_pldata['audiomod']['stretch_data'] = {'rate': 1}
+    cvpj_pldata['audiomod']['stretch_data'] = {'rate': pow(2, j_wvtl_trc_transpose/12)}
 
     if 'audioBufferId' in j_wvtl_trackclip: 
         audio_filename = extract_audio(j_wvtl_trackclip['audioBufferId'])
@@ -102,18 +106,23 @@ def parse_track(j_wvtl_track):
     j_wvtl_trackid = j_wvtl_track['id']
     j_wvtl_trackcolor = colors.hex_to_rgb_float(j_wvtl_track['color'])
     j_wvtl_trackclips = j_wvtl_track['clips']
+    j_wvtl_gain = j_wvtl_track['gain']
+    j_wvtl_balance = j_wvtl_track['balance']
+    j_wvtl_mute = j_wvtl_track['mute']
     
     print('[input-wavtool] '+j_wvtl_tracktype+' Track: '+j_wvtl_trackname)
 
     if j_wvtl_tracktype == 'MIDI':
         tracks.r_create_inst(cvpj_l, j_wvtl_trackid, {})
-        tracks.r_basicdata(cvpj_l, j_wvtl_trackid, j_wvtl_trackname, j_wvtl_trackcolor, None, None)
+        tracks.r_param(cvpj_l, j_wvtl_trackid, 'enabled', int(not j_wvtl_mute))
+        tracks.r_basicdata(cvpj_l, j_wvtl_trackid, j_wvtl_trackname, j_wvtl_trackcolor, j_wvtl_gain, j_wvtl_balance)
         for j_wvtl_trackclip in j_wvtl_trackclips:
             tracks.r_pl_notes(cvpj_l, j_wvtl_trackid, parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype))
 
     if j_wvtl_tracktype == 'Audio':
         tracks.r_create_audio(cvpj_l, j_wvtl_trackid, {})
-        tracks.r_basicdata(cvpj_l, j_wvtl_trackid, j_wvtl_trackname, j_wvtl_trackcolor, None, None)
+        tracks.r_param(cvpj_l, j_wvtl_trackid, 'enabled', int(not j_wvtl_mute))
+        tracks.r_basicdata(cvpj_l, j_wvtl_trackid, j_wvtl_trackname, j_wvtl_trackcolor, j_wvtl_gain, j_wvtl_balance)
         for j_wvtl_trackclip in j_wvtl_trackclips:
             tracks.r_pl_audio(cvpj_l, j_wvtl_trackid, parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype))
 

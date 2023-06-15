@@ -524,7 +524,7 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                     if 'TransientResolution' in stretch_params: w_TransientResolution = stretch_params['TransientResolution']
 
                 if 'stretch_algorithm' in cvpj_audiomod: 
-                    if cvpj_audiomod['stretch_algorithm'] == 'ableton_beats': w_WarpMode = 0
+                    if cvpj_audiomod['stretch_algorithm'] == 'beats': w_WarpMode = 0
                     if cvpj_audiomod['stretch_algorithm'] == 'ableton_tones': w_WarpMode = 1
                     if cvpj_audiomod['stretch_algorithm'] == 'ableton_texture': w_WarpMode = 2
                     if cvpj_audiomod['stretch_algorithm'] == 'resample': w_WarpMode = 3

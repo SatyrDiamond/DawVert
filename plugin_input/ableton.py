@@ -275,7 +275,7 @@ class input_ableton(plugin_input.base):
                         cvpj_audiomod['stretch_method'] = 'warp'
                         cvpj_audiomod['stretch_params'] = {}
                         if audio_placement_warp_mode == 0:
-                            cvpj_audiomod['stretch_algorithm'] = 'ableton_beats'
+                            cvpj_audiomod['stretch_algorithm'] = 'beats'
                             cvpj_audiomod['stretch_params']['TransientResolution'] = int(get_value(x_track_AudioClip, 'TransientResolution', 6))
                             cvpj_audiomod['stretch_params']['TransientLoopMode'] = int(get_value(x_track_AudioClip, 'TransientLoopMode', 2))
                             cvpj_audiomod['stretch_params']['TransientEnvelope'] = int(get_value(x_track_AudioClip, 'TransientEnvelope', 100))

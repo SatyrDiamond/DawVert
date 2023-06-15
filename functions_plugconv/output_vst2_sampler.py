@@ -32,6 +32,7 @@ def convert_inst(instdata, platform_id):
 					params_grace.create_region(gx_root, regionparams)
 					xmlout = ET.tostring(gx_root, encoding='utf-8')
 					plugin_vst2.replace_data(instdata, 'any', 'Grace', 'chunk', xmlout, None)
+					return True
 			else:
 				print("[plug-conv] Unchanged, Grace (VST2) only supports Format 1 .WAV")
 		else:
@@ -96,3 +97,4 @@ def convert_inst(instdata, platform_id):
 					if 'attack' in asdr_lfo: params_drops.setvalue('filter_lfo_fade', xtramath.clamp(asdr_lfo['attack']/10, 0, 1))
 
 		plugin_vst2.replace_data(instdata, 'lin', 'Drops', 'chunk', data_nullbytegroup.make(params_drops.getparams()), None)
+		return True

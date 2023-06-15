@@ -68,6 +68,21 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
     j_wvtl_trc_timelineEnd = j_wvtl_trackclip['timelineEnd']
     j_wvtl_trc_readStart = j_wvtl_trackclip['readStart']
     j_wvtl_trc_transpose = data_values.get_value(j_wvtl_trackclip, 'transpose', 0)
+    j_wvtl_trc_warp = data_values.get_value(j_wvtl_trackclip, 'warp', {})
+
+    j_wvtl_trc_warp_data = []
+
+    if j_wvtl_trc_warp != {}:
+        j_wvtl_trc_warp_enabled = j_wvtl_trc_warp['enabled']
+        sourcebpm = j_wvtl_trc_warp['sourceBPM']/120
+        for anchor in j_wvtl_trc_warp['anchors']:
+            t_warpmarker = {}
+            t_warpmarker['pos'] = ((float(anchor))*8)*sourcebpm
+            t_warpmarker['pos_real'] = (j_wvtl_trc_warp['anchors'][anchor]['destination'])
+            j_wvtl_trc_warp_data.append(t_warpmarker)
+        j_wvtl_trc_warp_data.append(lastwarp)
+    else:
+        j_wvtl_trc_warp_enabled = False
 
     cvpj_pldata = {}
     if 'color' in j_wvtl_trackclip: cvpj_pldata["color"] = colors.hex_to_rgb_float(j_wvtl_trackclip['color'])
@@ -83,14 +98,18 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
     cvpj_pldata['cut']['loopstart'] = j_wvtl_trc_loopStart*4
     cvpj_pldata['cut']['loopend'] = j_wvtl_trc_loopEnd*4
 
-    print( j_wvtl_trc_transpose, pow(2, j_wvtl_trc_transpose/12)  )
+    #print( j_wvtl_trc_transpose, pow(2, j_wvtl_trc_transpose/12)  )
 
     cvpj_pldata['audiomod'] = {}
-
-    cvpj_pldata['audiomod']['pitch'] = j_wvtl_trc_transpose
     cvpj_pldata['audiomod']['stretch_algorithm'] = 'stretch'
-    cvpj_pldata['audiomod']['stretch_method'] = 'rate_ignoretempo'
-    cvpj_pldata['audiomod']['stretch_data'] = {'rate': pow(2, j_wvtl_trc_transpose/12)}
+
+    if j_wvtl_trc_warp_enabled == False:
+        cvpj_pldata['audiomod']['pitch'] = j_wvtl_trc_transpose
+        cvpj_pldata['audiomod']['stretch_method'] = 'rate_ignoretempo'
+        cvpj_pldata['audiomod']['stretch_data'] = {'rate': pow(2, j_wvtl_trc_transpose/12)}
+    else:
+        cvpj_pldata['audiomod']['stretch_method'] = 'warp'
+        cvpj_pldata['audiomod']['stretch_data'] = j_wvtl_trc_warp_data
 
     if 'audioBufferId' in j_wvtl_trackclip: 
         audio_filename = extract_audio(j_wvtl_trackclip['audioBufferId'])

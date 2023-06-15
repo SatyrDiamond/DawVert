@@ -12,10 +12,20 @@ def convert_fx(fxdata):
 	osnat_data = plugindata['data']
 	osnat_name = plugindata['name']
 
-	if osnat_name == 'reverb': plugin_vst2.replace_data(fxdata, 'any', 'Reverb', 'chunk', struct.pack('<ff', 0.5, 0.5), None)
-	if osnat_name == 'reverb-send': plugin_vst2.replace_data(fxdata, 'any', 'Reverb', 'chunk', struct.pack('<ff', 0.5, 1), None)
+	if osnat_name == 'reverb': 
+		plugin_vst2.replace_data(fxdata, 'any', 'Reverb', 'chunk', struct.pack('<ff', 0.5, 0.5), None)
+		return True
+	if osnat_name == 'reverb-send': 
+		plugin_vst2.replace_data(fxdata, 'any', 'Reverb', 'chunk', struct.pack('<ff', 0.5, 1), None)
+		return True
 
-	if osnat_name == 'chorus': plugin_vst2.replace_data(fxdata, 'any', 'ChorusEnsemble', 'chunk', struct.pack('<fff', 0.5, 0.5, 0.5), None)
-	if osnat_name == 'chorus-send': plugin_vst2.replace_data(fxdata, 'any', 'ChorusEnsemble', 'chunk', struct.pack('<fff', 0.5, 0.5, 1), None)
+	if osnat_name == 'chorus': 
+		plugin_vst2.replace_data(fxdata, 'any', 'ChorusEnsemble', 'chunk', struct.pack('<fff', 0.5, 0.5, 0.5), None)
+		return True
+	if osnat_name == 'chorus-send': 
+		plugin_vst2.replace_data(fxdata, 'any', 'ChorusEnsemble', 'chunk', struct.pack('<fff', 0.5, 0.5, 1), None)
+		return True
 	
-	if osnat_name == 'tremelo': plugin_vst2.replace_data(fxdata, 'any', 'Tremolo', 'chunk', struct.pack('<ff', 0.5, 0.5), None)
+	if osnat_name == 'tremelo': 
+		plugin_vst2.replace_data(fxdata, 'any', 'Tremolo', 'chunk', struct.pack('<ff', 0.5, 0.5), None)
+		return True

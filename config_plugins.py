@@ -1,9 +1,10 @@
+from os.path import exists
+from pathlib import Path
 import os
 import platform
-import xml.etree.ElementTree as ET
-from pathlib import Path
-from os.path import exists
 import sqlite3
+import base64
+import xml.etree.ElementTree as ET
 
 dawlist = []
 
@@ -51,7 +52,7 @@ db_plugins.execute('''
       path_64bit_win text,
       path_32bit_unix text,
       path_64bit_unix text,
-		UNIQUE(id)
+      UNIQUE(id)
    )''')
 
 db_plugins.execute('''
@@ -66,14 +67,28 @@ db_plugins.execute('''
       UNIQUE(name)
    )''')
 
+db_plugins.execute('''
+   CREATE TABLE IF NOT EXISTS lv2(
+		name text,
+		id text,
+		creator text,
+      path_win_dir text,
+      path_win_bin text,
+      path_unix_dir text,
+      path_unix_bin text,
+      UNIQUE(id)
+   )''')
+
 homepath = os.path.expanduser("~")
 
 if platformtxt == 'win':
 	l_path_aurdor = os.path.join(homepath, "AppData", "Local", "Ardour6", "cache", "vst")
 	l_path_waveform = os.path.join(homepath, "AppData", "Roaming", "Tracktion", "Waveform")
+	l_paths_lv2 = ['C:\\Program Files\\Common Files\\LV2']
 if platformtxt == 'lin':
 	l_path_aurdor = os.path.join(homepath, ".cache", "ardour6", "vst")
 	l_path_waveform = os.path.join(homepath, ".config", "Tracktion", "Waveform")
+	l_paths_lv2 = ['/usr/local/lib/lv2', '/usr/lib/lv2']
 
 if os.path.exists(l_path_aurdor) == True: dawlist.append('ardour')
 if os.path.exists(l_path_waveform) == True: dawlist.append('waveform')
@@ -177,7 +192,24 @@ if 'waveform' in dawlist:
 					db_plugins.execute("UPDATE ladspa SET audio_num_inputs = ? WHERE name = ?", (pluginfo.get('numInputs'), ladspa_name,))
 					db_plugins.execute("UPDATE ladspa SET audio_num_outputs = ? WHERE name = ?", (pluginfo.get('numOutputs'), ladspa_name,))
 
+#  ------------------------------------- LV2 -------------------------------------
+
+#for lv2path in l_paths_lv2:
+#	if os.path.exists(lv2path):
+#		subfolders = [ f.path for f in os.scandir(lv2path) if f.is_dir() ]
+#		for subfolder in subfolders:
+#			lv2folder = subfolder
+#			manifestttlpath = os.path.join(lv2path, subfolder, 'manifest.ttl')
+#			if os.path.exists(manifestttlpath):
+#				rdfgraph.parse(manifestttlpath)
+#				for stmt in rdfgraph:
+#					print(stmt)
+#					stmt.parse("demo.xml", format="xml")
+#				exit()
+
+
 #  ------------------------------------- Output -------------------------------------
+
 
 db_plugins.commit()
 db_plugins.close()

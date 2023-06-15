@@ -16,3 +16,4 @@ def convert_inst(instdata):
 	params_ninjas2.slicerdata(slicerdata)
 	ninjas2out = params_ninjas2.getparams()
 	plugin_vst2.replace_data(instdata, 'any', 'Ninjas 2', 'chunk', data_nullbytegroup.make(ninjas2out), None)
+	return True

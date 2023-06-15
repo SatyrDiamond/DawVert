@@ -22,6 +22,7 @@ def convert_fx(fxdata):
 		params_vst.add_param(zamdelayparams, 6, "Dry/Wet", 0.24)
 		params_vst.add_param(zamdelayparams, 7, "Feedback", 0.265)
 		plugin_vst2.replace_data(fxdata, 'any', 'ZamDelay', 'param', zamdelayparams, 8)
+		return True
 
 	if osnat_name == 'eq':
 		threebandparams = {}
@@ -32,3 +33,4 @@ def convert_fx(fxdata):
 		params_vst.add_param(threebandparams, 4, "Low-Mid Freq", 0.22)
 		params_vst.add_param(threebandparams, 5, "Mid-High Freq", 0.06)
 		plugin_vst2.replace_data(fxdata, 'any', '3 Band EQ', 'param', threebandparams, 5)
+		return True

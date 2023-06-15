@@ -51,6 +51,8 @@ def find_path_by_name(in_name, platformtype):
 	else:
 		out_paths = [None, None]
 
+	if out_paths == None: out_paths = [None, None]
+
 	if out_paths[0] != None and out_paths[1] == None and 32 in cpu_arch_list: 
 		vst_cpuarch = 32
 		vst_path = out_paths[0]
@@ -93,7 +95,7 @@ def replace_data(instdata, platform, in_name, datatype, data, numparams):
 
 		if fouridval != None and fouridval != (None,): instdata['plugindata']['plugin']['fourid'] = int(fouridval[0])
 
-		if versionval != None and versionval != (None,): 
+		if versionval != None and versionval != (None,) and versionval != ('',): 
 			versionsplit = [int(i) for i in versionval[0].split('.')]
 			versionbytes =  struct.pack('B'*len(versionsplit), *versionsplit)
 			instdata['plugindata']['plugin']['version'] = int.from_bytes(versionbytes, "little")

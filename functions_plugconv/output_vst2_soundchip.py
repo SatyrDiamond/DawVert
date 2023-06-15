@@ -54,10 +54,12 @@ def convert_inst(instdata, out_daw):
 			if plugindata['wave'] == 'noise': params_various_inst.m8bp_setvalue("osc", 2.0)
 
 		plugin_vst2.replace_data(instdata, 'any', 'Magical 8bit Plug 2', 'chunk', data_vc2xml.make(params_various_inst.m8bp_out()), None)
+		return True
 
 	if pluginname == 'opn2':
 		xmlout = params_adlplug.opnplug_convert(plugindata)
 		plugin_vst2.replace_data(instdata, 'any', 'OPNplug', 'chunk', data_vc2xml.make(xmlout), None)
+		return True
 
 	#if pluginname == 'opl2':
 

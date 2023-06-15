@@ -65,6 +65,7 @@ def convert_inst(instdata):
 		plugin_vst2.replace_data(instdata, 'any', 'Kickmess (VST)', 'chunk', params_kickmess.getparams(), None)
 		if 'middlenote' in instdata: instdata['middlenote'] -= 12
 		else: instdata['middlenote'] = -12
+		return True
 
 	# ---------------------------------------- Wasp ----------------------------------------
 	elif plugindata['name'].lower() == 'wasp':
@@ -122,6 +123,7 @@ def convert_inst(instdata):
 		params_vst.add_param(vstdxparams, 14, "Mod Thru", fldx_mod_thru/65536)
 		params_vst.add_param(vstdxparams, 15, "LFO Rate", fldx_lforate/65536)
 		plugin_vst2.replace_data(instdata, 'any', 'DX10', 'param', vstdxparams, 16)
+		return True
 
 	# ---------------------------------------- SimSynth ----------------------------------------
 	elif plugindata['name'].lower() == 'simsynth':
@@ -209,7 +211,7 @@ def convert_inst(instdata):
 		
 		vitaldata = params_vital.getdata()
 		plugin_vst2.replace_data(instdata, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
-
+		return True
 
 
 
@@ -247,6 +249,7 @@ def convert_fx(fxdata):
 		params_vst.add_param(airwindowparams, 0, "Freq", (flpbb[1]/1024)*0.8)
 		params_vst.add_param(airwindowparams, 1, "Weight", (flpbb[2]/1024)*0.8)
 		plugin_vst2.replace_data(fxdata, 'any', 'Weight', 'param', airwindowparams, 2)
+		return True
 
 	#if pluginname == 'fruity convolver':
 	#	print(fl_plugstr.read(21))
@@ -280,15 +283,13 @@ def convert_fx(fxdata):
 		params_various_inst.socalabs_addparam(x_spectrumanalyzer, "mode", float(spectroman_data[1]))
 		params_various_inst.socalabs_addparam(x_spectrumanalyzer, "log", 1.0)
 		plugin_vst2.replace_data(fxdata, 'any', 'SpectrumAnalyzer', 'chunk', ET.tostring(x_spectrumanalyzer, encoding='utf-8'), None)
+		return True
 
 	if pluginname == 'fruity waveshaper':
 		headerdata = fl_plugstr.read(22)
 		headerdata_ints = struct.unpack('bHHIIbbbbbb', headerdata)
-		
 		pointsdata = decode_pointdata(fl_plugstr)
-
 		params_various_fx.wolfshaper_init()
-
 		t_pointdata = []
 		for pointdata in pointsdata:
 			t_pointdata.append({
@@ -323,3 +324,4 @@ def convert_fx(fxdata):
 		params_various_fx.wolfshaper_setvalue('removedc', float(headerdata_ints[6]))
 
 		plugin_vst2.replace_data(fxdata, 'any', 'Wolf Shaper', 'chunk', data_nullbytegroup.make(params_various_fx.wolfshaper_get()), None)
+		return True

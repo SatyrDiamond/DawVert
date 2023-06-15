@@ -32,3 +32,4 @@ def convert_inst(instdata):
 
 		vitaldata = params_vital.getdata()
 		plugin_vst2.replace_data(instdata, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
+		return True

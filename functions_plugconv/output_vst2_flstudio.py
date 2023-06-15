@@ -27,10 +27,7 @@ simsynth_shapes = {0.4: 'noise', 0.3: 'sine', 0.2: 'square', 0.1: 'saw', 0.0: 't
 def simsynth_time(value): return pow(value*2, 3)
 def simsynth_2time(value): return pow(value*2, 3)
 
-temp_count = 0
-
 def convert_inst(instdata):
-	global temp_count
 	pluginname = instdata['plugin']
 	plugindata = instdata['plugindata']
 	fl_plugdata = base64.b64decode(plugindata['data'])
@@ -128,7 +125,6 @@ def convert_inst(instdata):
 
 	# ---------------------------------------- SimSynth ----------------------------------------
 	elif plugindata['name'].lower() == 'simsynth':
-		#osc1_pw, osc1_crs, osc1_fine, osc1_lvl, osc1_lfo, osc1_env, osc1_shape
 		osc1_pw, osc1_crs, osc1_fine, osc1_lvl, osc1_lfo, osc1_env, osc1_shape = struct.unpack('ddddddd', fl_plugstr.read(56))
 		osc2_pw, osc2_crs, osc2_fine, osc2_lvl, osc2_lfo, osc2_env, osc2_shape = struct.unpack('ddddddd', fl_plugstr.read(56))
 		osc3_pw, osc3_crs, osc3_fine, osc3_lvl, osc3_lfo, osc3_env, osc3_shape = struct.unpack('ddddddd', fl_plugstr.read(56))

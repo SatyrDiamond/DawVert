@@ -101,9 +101,9 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
 
     cvpj_pldata['audiomod'] = {}
     cvpj_pldata['audiomod']['stretch_algorithm'] = 'beats'
+    cvpj_pldata['audiomod']['pitch'] = j_wvtl_trc_transpose
 
     if j_wvtl_trc_warp_enabled == False:
-        cvpj_pldata['audiomod']['pitch'] = j_wvtl_trc_transpose
         cvpj_pldata['audiomod']['stretch_method'] = 'rate_ignoretempo'
         cvpj_pldata['audiomod']['stretch_data'] = {'rate': pow(2, j_wvtl_trc_transpose/12)}
     else:

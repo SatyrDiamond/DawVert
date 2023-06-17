@@ -134,11 +134,12 @@ def r2m(song):
                     if singletrack_laned == 0: plnum += 1
 
             if singletrack_data['type'] == 'audio':
-                pltrack = t_s_trackplacements[trackid]
-                print('[song-convert] r2m: audio non-laned:', trackid)
-                singletrack_pl = pltrack['audio']
-                r2m_makeplaylistrow_audio(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color)
-                plnum += 1
+                if trackid in t_s_trackplacements:
+                    pltrack = t_s_trackplacements[trackid]
+                    print('[song-convert] r2m: audio non-laned:', trackid)
+                    singletrack_pl = pltrack['audio']
+                    r2m_makeplaylistrow_audio(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color)
+                    plnum += 1
 
     return json.dumps(cvpj_proj)
 

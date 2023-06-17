@@ -196,7 +196,7 @@ class output_reaper(plugin_output.base):
         'time_seconds': True,
         'placement_audio_stretch': ['rate']
         }
-    def getsupportedplugins(self): return []
+    def getsupportedplugins(self): return ['vst2']
     def parse(self, convproj_json, output_file):
         global reaper_tempo
         global tempomul

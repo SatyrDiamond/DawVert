@@ -25,6 +25,7 @@ parser.add_argument("--songnum", default=1)
 parser.add_argument("--extrafile", default=None)
 parser.add_argument("--use-experiments-input", action='store_true')
 parser.add_argument("--mi2m--output-unused-nle", action='store_true')
+parser.add_argument("--nonfree-plugins", action='store_true')
 parser.add_argument("-y", action='store_true')
 args = parser.parse_args()
 
@@ -43,6 +44,7 @@ if args.samplefolder != None: extra_json['samplefolder'] = args.samplefolder
 if args.songnum != None: extra_json['songnum'] = args.songnum
 if args.extrafile != None: extra_json['extrafile'] = args.extrafile
 if args.mi2m__output_unused_nle == True: extra_json['mi2m-output-unused-nle'] = True
+if args.nonfree_plugins == True: extra_json['nonfree-plugins'] = True
 
 typelist = {}
 typelist['r'] = 'Regular'

@@ -6,6 +6,7 @@ import os
 import struct
 import math
 import base64
+from functions import data_values
 from functions import plugin_vst2
 
 from functions_plugparams import params_vital
@@ -39,6 +40,8 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 		if 'plugindata' in instdata:
 			pluginname = instdata['plugin']
 			plugindata = instdata['plugindata']
+
+			nonfree_flag = data_values.get_value(extra_json, 'nonfree-plugins', '')
 
 			# ---------------------------------------- input ----------------------------------------
 			input_soundchip.convert_inst(instdata)
@@ -97,12 +100,9 @@ def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 			# ---------- from native soundfont2
 			elif pluginname == 'soundfont2' and 'sf2' not in supportedplugins:
 				sf2data = instdata['plugindata']
-				if 'bank' in sf2data: sf2_bank = sf2data['bank']
-				else: sf2_bank = 0
-				if 'patch' in sf2data: sf2_patch = sf2data['patch']
-				else: sf2_params = 0
-				if 'file' in sf2data: sf2_filename = sf2data['file']
-				else: sf2_filename = 0
+				sf2_bank = data_values.get_value(sf2data, 'bank', 0)
+				sf2_patch = data_values.get_value(sf2data, 'patch', 0)
+				sf2_filename = data_values.get_value(sf2data, 'file', '')
 				jsfp_xml = params_various_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
 				plugin_vst2.replace_data(instdata, 'any', 'juicysfplugin', 'chunk', data_vc2xml.make(jsfp_xml), None)
 

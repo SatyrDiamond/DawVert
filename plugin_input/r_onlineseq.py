@@ -3,7 +3,7 @@
 
 from functions import data_values
 from functions import idvals
-from functions import note_data
+from functions import notedata
 from functions import placement_data
 from functions import tracks
 import plugin_input
@@ -98,32 +98,16 @@ def parse_marker(markerdata):
 
     return [inst_id, inst_param, data_pos, data_value, data_markertype]
 
-def parse_note(notedata):
-    global onlseq_notelist
-    ols_pos = 0
-    ols_inst = 0
-    ols_vol = 1
-    ols_note = int(notedata['1'])
-    ols_dur = 1
-    if '4' in notedata: ols_inst = int(notedata['4'])
-    if '2' in notedata: ols_pos = int2float(int(notedata['2']))
-    if '3' in notedata: ols_dur = int2float(int(notedata['3']))
-    if '5' in notedata: ols_vol = int2float(int(notedata['5']))
-    if ols_dur > 0.00001:
-        cvpj_notedata = note_data.rx_makenote(ols_pos, ols_dur, ols_note-60, ols_vol, None)
-        if ols_inst not in onlseq_notelist: onlseq_notelist[ols_inst] = []
-        onlseq_notelist[ols_inst].append(cvpj_notedata)
-
 class input_onlinesequencer(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'onlineseq'
     def getname(self): return 'Online Sequencer'
-    def gettype(self): return 'r'
+    def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
         'fxrack': False,
-        'track_lanes': False,
+        'track_lanes': True,
         'placement_cut': False,
         'placement_loop': False,
         'auto_nopl': True,
@@ -168,17 +152,30 @@ class input_onlinesequencer(plugin_input.base):
         if "3" in onlseq_data_main: onlseq_data_instparams = parse_inst_params(os_data["1"]["3"])
         else: onlseq_data_instparams = {}
 
-        onlseq_notelist = {}
-
         used_fx_inst = {}
 
-        for os_note in onlseq_data_notes: parse_note(os_note)
+        cvpj_notelist = notedata.NoteList('steps')
 
-        for instid in onlseq_notelist:
+        usedinst = []
+
+        for os_note in onlseq_data_notes: 
+            ols_pos = 0
+            ols_inst = 0
+            ols_vol = 1
+            ols_note = int(os_note['1'])
+            ols_dur = 1
+            if '4' in os_note: ols_inst = int(os_note['4'])
+            if '2' in os_note: ols_pos = int2float(int(os_note['2']))
+            if '3' in os_note: ols_dur = int2float(int(os_note['3']))
+            if '5' in os_note: ols_vol = int2float(int(os_note['5']))
+            if ols_dur > 0.00001:
+                cvpj_notelist.add(ols_pos, ols_dur, ols_note-60, vol=ols_vol, instrument='os_'+str(ols_inst))
+                if ols_inst not in usedinst: usedinst.append(ols_inst)
+
+        for instid in usedinst:
             used_fx_inst[instid] = []
 
             cvpj_instid = 'os_'+str(instid)
-            cvpj_notelist = onlseq_notelist[instid]
             inst_name = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'name')
             inst_color = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'color')
             inst_gminst = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'gm_inst')
@@ -198,9 +195,9 @@ class input_onlinesequencer(plugin_input.base):
             trk_vol = data_values.get_value(onlseq_s_iparams, 'vol', 1)
             trk_pan = data_values.get_value(onlseq_s_iparams, 'pan', 0)
 
-            tracks.r_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
-            tracks.r_basicdata(cvpj_l, cvpj_instid, inst_name, inst_color, trk_vol, trk_pan)
-            tracks.r_pl_notes(cvpj_l, cvpj_instid, placement_data.nl2pl(cvpj_notelist))
+            tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
+            tracks.m_basicdata_inst(cvpj_l, cvpj_instid, inst_name, inst_color, trk_vol, trk_pan)
+            tracks.m_playlist_pl(cvpj_l, 1, None, None, placement_data.nl2pl(cvpj_notelist.get()))
 
             if 'delay_on' in onlseq_s_iparams: 
                 if 'delay' not in used_fx_inst[instid]: used_fx_inst[instid].append('delay')

@@ -79,7 +79,7 @@ def replace_data(instdata, platform, in_name, datatype, data, numparams):
 
 	if vst_path != None:
 		if 'plugin' not in instdata: instdata['plugin'] = 'none'
-		print('[list-vst2] ' + instdata['plugin'] +' > ' + in_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
+		print('[plugin-vst2] ' + instdata['plugin'] +' > ' + in_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
 
 		if platformtxt == 'win': instdata['plugin'] = 'vst2-dll'
 		if platformtxt == 'lin': instdata['plugin'] = 'vst2-so'
@@ -107,5 +107,7 @@ def replace_data(instdata, platform, in_name, datatype, data, numparams):
 			instdata['plugindata']['datatype'] = 'param'
 			instdata['plugindata']['numparams'] = numparams
 			instdata['plugindata']['params'] = data
+	else:
+		print('[plugin-vst2] Plugin, '+in_name+' not found.')
 
 def vstpaths(): return glo_vstpaths

@@ -10,23 +10,23 @@ os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
 db_plugins = sqlite3.connect('./__config/plugins_external.db')
 
 db_plugins.execute('''
-   CREATE TABLE IF NOT EXISTS vst2(
-       name text,
-       internal_name text,
-       id text,
-       type text,
-       creator text,
-       version text,
-       audio_num_inputs integer,
-       audio_num_outputs integer,
-       midi_num_inputs integer,
-       midi_num_outputs integer,
-       path_32bit_win text,
-       path_64bit_win text,
-       path_32bit_unix text,
-       path_64bit_unix text,
-       UNIQUE(id)
-   )''')
+	CREATE TABLE IF NOT EXISTS vst2(
+		name text,
+		internal_name text,
+		id text,
+		type text,
+		creator text,
+		version text,
+		audio_num_inputs integer,
+		audio_num_outputs integer,
+		midi_num_inputs integer,
+		midi_num_outputs integer,
+		path_32bit_win text,
+		path_64bit_win text,
+		path_32bit_unix text,
+		path_64bit_unix text,
+		UNIQUE(id)
+	)''')
 
 db_plugins.execute('''
    CREATE TABLE IF NOT EXISTS vst3(
@@ -42,21 +42,21 @@ db_plugins.execute('''
 		audio_num_outputs integer,
 		midi_num_inputs integer,
 		midi_num_outputs integer,
-      path_32bit_win text,
-      path_64bit_win text,
-      path_32bit_unix text,
-      path_64bit_unix text,
+		path_32bit_win text,
+		path_64bit_win text,
+		path_32bit_unix text,
+		path_64bit_unix text,
 		UNIQUE(id)
-   )''')
+	)''')
 
 def reg_get(name, regpath):
-    try:
-        registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, regpath, 0, winreg.KEY_READ)
-        value, regtype = winreg.QueryValueEx(registry_key, name)
-        winreg.CloseKey(registry_key)
-        return value
-    except WindowsError:
-        return None
+	try:
+		registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, regpath, 0, winreg.KEY_READ)
+		value, regtype = winreg.QueryValueEx(registry_key, name)
+		winreg.CloseKey(registry_key)
+		return value
+	except WindowsError:
+		return None
 
 def reg_list(winregpath):
 	winregobj = winreg.OpenKey(winreg.HKEY_CURRENT_USER, winregpath)

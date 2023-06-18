@@ -34,6 +34,8 @@ from functions_plugconv import output_vst2_onlineseq
 from functions_plugconv import output_vst2_piyopiyo
 from functions_plugconv import output_vst2_namco163_famistudio
 
+from functions_plugconv import output_vst2nonfree_flstudio
+
 # -------------------- Instruments --------------------
 def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
 	if 'plugin' in instdata:
@@ -132,6 +134,9 @@ def convplug_fx(fxdata, in_daw, out_daw, extra_json):
 
 				if replacingdone == None and in_daw == 'flp' and pluginname == 'native-fl':
 					replacingdone = output_vst2_flstudio.convert_fx(fxdata)
+
+				if 'nonfree-plugins' in extra_json and replacingdone == None and in_daw == 'flp' and pluginname == 'native-fl':
+					replacingdone = output_vst2nonfree_flstudio.convert_fx(fxdata)
 
 				if replacingdone == None and in_daw == 'onlineseq' and pluginname == 'native-onlineseq':
 					replacingdone = output_vst2_onlineseq.convert_fx(fxdata)

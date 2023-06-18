@@ -4,7 +4,7 @@
 from functions import placement_data
 from functions import tracks
 from functions import song
-from functions import note_data
+from functions import notedata
 from functions import idvals
 import plugin_input
 import json
@@ -53,22 +53,23 @@ def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
     org_l_nl = {}
     for org_note in org_notelist: org_l_nl[org_note[0]] = org_note[1:5]
     org_l_nl = dict(sorted(org_l_nl.items(), key=lambda item: item[0]))
-    cvpj_nl = []
+    cvpj_nl = notedata.NoteList('steps')
     endnote = None
     notedur = 0
     for org_l_n in org_l_nl:
-        notedata = org_l_nl[org_l_n]
+        org_notedata = org_l_nl[org_l_n]
         if endnote != None: 
             if org_l_n >= endnote: endnote = None
-        if notedata[1] != 1:
-            notedur = notedata[1]
+        if org_notedata[1] != 1:
+            notedur = org_notedata[1]
             endnote = org_l_n+notedur
         if endnote != None:
             if endnote-org_l_n == notedur: isinsidenote = False
             else: isinsidenote = True
         else: isinsidenote = False
-        if isinsidenote == False: cvpj_nl.append(note_data.rx_makenote(org_l_n, notedata[1], notedata[0]-48, notedata[2]/254, (notedata[3]-6)/6))
-    return cvpj_nl
+        if isinsidenote == False: 
+            cvpj_nl.add(org_l_n, org_notedata[1], org_notedata[0]-48, vol=org_notedata[2]/254, pan=(org_notedata[3]-6)/6)
+    return cvpj_nl.get()
 
 class input_orgyana(plugin_input.base):
     def __init__(self): pass

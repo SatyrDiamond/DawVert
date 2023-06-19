@@ -11,7 +11,7 @@ from functions import folder_samples
 from functions import placement_data
 from functions import tracks
 from functions import song
-from functions import notedata
+from functions import note_data
 
 track_colors = [[0.25, 0.38, 0.49], [0.36, 0.43, 0.46], [0.51, 0.57, 0.47], [0.58, 0.64, 0.40]]
 
@@ -84,7 +84,7 @@ class input_piyopiyo(plugin_input.base):
 
         pmdfile.seek(trackdatapos)
         for tracknum in range(4):
-            notelist = notedata.NoteList('steps')
+            notelist = []
             t_placements = []
             currentpan = 0
             for pmdpos in range(recordspertrack):
@@ -93,10 +93,9 @@ class input_piyopiyo(plugin_input.base):
                 if pan != 0: currentpan = (pan-4)/3
                 notenum = 11
                 for bitnote in bitnotes:
-                    if bitnote == '1': 
-                        notelist.add(pmdpos, 1, notenum+keyoffset[tracknum], pan=currentpan)
+                    if bitnote == '1': notelist.append(note_data.rx_makenote(pmdpos, 1, notenum+keyoffset[tracknum], 1.0, currentpan))
                     notenum -= 1
-            if notelist.data != []: t_placements = placement_data.nl2pl(notelist.get())
+            if notelist != []: t_placements = placement_data.nl2pl(notelist)
             else: t_placements = []
             tracks.r_pl_notes(cvpj_l, str(tracknum), t_placements)
 

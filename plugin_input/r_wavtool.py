@@ -5,7 +5,7 @@ from functions import colors
 from functions import data_bytes
 from functions import data_values
 from functions import folder_samples
-from functions import notedata
+from functions import note_data
 from functions import tracks
 
 import plugin_input
@@ -23,7 +23,7 @@ def parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype):
     j_wvtl_trc_timelineEnd = j_wvtl_trackclip['timelineEnd']
     j_wvtl_trc_readStart = j_wvtl_trackclip['readStart']
 
-    cvpj_notelist = notedata.NoteList('beats')
+    cvpj_notelist = []
 
     cvpj_pldata = {}
     if 'color' in j_wvtl_trackclip: cvpj_pldata["color"] = colors.hex_to_rgb_float(j_wvtl_trackclip['color'])
@@ -37,9 +37,15 @@ def parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype):
     if j_wvtl_trc_type == 'MIDI':
         if 'notes' in j_wvtl_trackclip:
             for j_wvtl_n in j_wvtl_trackclip['notes']:
-                cvpj_notelist.add(j_wvtl_n['start'], j_wvtl_n['end']-j_wvtl_n['start'], j_wvtl_n['pitch']-60, vol=j_wvtl_n['velocity'])
+                cvpj_notelist.append(
+                    note_data.rx_makenote(
+                        j_wvtl_n['start']*4, 
+                        j_wvtl_n['end']*4 - j_wvtl_n['start']*4, 
+                        j_wvtl_n['pitch']-60, 
+                        j_wvtl_n['velocity'], 
+                        None))
 
-    cvpj_pldata["notelist"] = cvpj_notelist.get()
+    cvpj_pldata["notelist"] = cvpj_notelist
     return cvpj_pldata
 
 # -------------------------------------------- audio --------------------------------------------

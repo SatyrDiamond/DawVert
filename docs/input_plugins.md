@@ -30,10 +30,10 @@
 | DataType | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | :--- | :--- | :--- | :--- |
 | M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | |
-| M | ```onlineseq``` | Online Sequencer | ```.sequence``` | ❌ | |
+| R | ```onlineseq``` | Online Sequencer | ```.sequence``` | ❌ | |
 | R | ```wavtool``` | WavTool | ```.zip``` | ❌ | |
 | R | ```audiosauna``` | AudioSauna | ```.song``` | ❌ | |
-| M | ```petaporon``` | Petaporon | ```.json``` | ❌ | |
+| R | ```petaporon``` | Petaporon | ```.json``` | ❌ | |
 
 ## Other
 | DataType | Short Name | Name | Ext | Autodetect | Info | 

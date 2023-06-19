@@ -3,7 +3,7 @@
 
 from functions import data_bytes
 from functions import tracks
-from functions import notedata
+from functions import note_data
 from functions import placement_data
 import plugin_input
 import io
@@ -34,11 +34,10 @@ class input_soundation(plugin_input.base):
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'petaporon'
     def getname(self): return 'Petaporon'
-    def gettype(self): return 'm'
+    def gettype(self): return 'r'
     def supported_autodetect(self): return False
     def getdawcapabilities(self): 
         return {
-        'track_lanes': True,
         'track_nopl': True
         }
     def parse(self, input_file, extra_param):
@@ -49,12 +48,12 @@ class input_soundation(plugin_input.base):
         peta_noteints = struct.unpack("B"*len(peta_notedata), peta_notedata)
         bio_peta_notebytes = data_bytes.to_bytesio(bytes(peta_noteints))
 
-        cvpj_notelist = notedata.NoteList('steps')
-
+        cvpj_notelists = {}
         for instnum in range(10):
+            cvpj_notelists[instnum] = []
             instid = 'petaporon'+str(instnum)
-            tracks.m_create_inst(cvpj_l, instid, {})
-            tracks.m_basicdata_inst(cvpj_l, instid, 'Inst #'+str(instnum+1), peta_colors[instnum], 1.0, 0.0)
+            tracks.r_create_inst(cvpj_l, instid, {})
+            tracks.r_basicdata(cvpj_l, instid, 'Inst #'+str(instnum+1), peta_colors[instnum], 1.0, 0.0)
 
         for _ in range(len(peta_noteints)//5):
             partdata = bio_peta_notebytes.read(5)
@@ -64,15 +63,10 @@ class input_soundation(plugin_input.base):
             peta_poshigh = getval(partdata[3]-35)
             peta_poslow = getval(partdata[4]-35)
             peta_pos = peta_poslow+(peta_poshigh*94)
+            cvpj_notelists[peta_inst].append(note_data.rx_makenote(peta_pos, peta_len, peta_note-12, None, None))
 
-            cvpj_notelist.add(
-                peta_pos, 
-                peta_len, 
-                peta_note-12, 
-                instrument='petaporon'+str(peta_inst))   
-
-        placementdata = placement_data.nl2pl(cvpj_notelist.get())
-        tracks.m_playlist_pl(cvpj_l, 1, None, None, placementdata)
+        for instnum in range(10):
+            tracks.r_pl_notes(cvpj_l, 'petaporon'+str(instnum), placement_data.nl2pl(cvpj_notelists[instnum]))
 
         cvpj_l['do_singlenotelistcut'] = True
 

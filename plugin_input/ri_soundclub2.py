@@ -3,9 +3,11 @@
 
 from functions import data_bytes
 from functions import tracks
+from functions import note_data
 from functions import audio_wav
 from functions import folder_samples
-from functions import notedata
+from functions import note_mod
+from functions import notelist_data
 from functions import placement_data
 from functions import idvals
 from functions import song
@@ -86,7 +88,7 @@ class input_soundclub2(plugin_input.base):
                             tp_sc2temp_out = ((((tp_sc2temp-30)*-6)+60)/120)*sc2_globaltempo
                             pat_tempopoints[cur_patnum].append({"type": 'instant', "position": tp_pos, "value": tp_sc2temp_out})
                     elif sc2_patobj[0] == b'voi': 
-                        cvpj_notelist = notedata.NoteList('steps')
+                        cvpj_notelist = []
                         t_instid = int.from_bytes(sc2_patobj[1][:4], "little")+1
                         print('[input-soundclub2]      Events for Inst '+str(t_instid)+': '+str(len(sc2_patobj[1][5:])//3))
                         sc2_notedata = sc2_patobj[1][4:]
@@ -109,11 +111,10 @@ class input_soundclub2(plugin_input.base):
                             if n_type == 19: #off
                                 if t_active_notes[n_note] != None:
                                     t_notedata = t_active_notes[n_note]
-                                    cvpj_notemod = notedata.NoteMod()
-                                    for autopoint in t_notedata[4]: 
-                                        cvpj_notemod.pitchmod2point(autopoint[0], 2, curpos-t_notedata[1], autopoint[1], autopoint[2])
-                                    cvpj_notelist.add(t_notedata[1], curpos-t_notedata[1], t_notedata[0]-36, vol=n_curvol/31, pan=(n_curpan-15)/-15, notemod=cvpj_notemod.data)
-
+                                    cvpj_notedata = note_data.rx_makenote(t_notedata[1], curpos-t_notedata[1], t_notedata[0]-36, n_curvol/31, (n_curpan-15)/-15)
+                                    note_mod.pitchmod2point_init()
+                                    for autopoint in t_notedata[4]: note_mod.pitchmod2point(cvpj_notedata, autopoint[0], 2, curpos-t_notedata[1], autopoint[1], autopoint[2])
+                                    cvpj_notelist.append(cvpj_notedata)
                             if n_type == 20: n_curvol = n_note
                             if n_type == 21: n_curpan = n_note
                             if n_type == 54: #porta
@@ -122,10 +123,10 @@ class input_soundclub2(plugin_input.base):
                                 t_active_notes[n_p_k][4].append([curpos-t_active_notes[n_note][1], n_p_l, n_p_k-t_active_notes[n_note][0]])
                                 t_active_notes[n_note] = None
 
-                        detectlen = cvpj_notelist.duration()
+                        detectlen = notelist_data.getduration(cvpj_notelist)
                         if pat_duration < detectlen: pat_duration = detectlen
                         if t_instid not in pat_cvpj_notelist[cur_patnum][1]: pat_cvpj_notelist[cur_patnum][1][t_instid] = []
-                        if cvpj_notelist != []: pat_cvpj_notelist[cur_patnum][1][t_instid].append(cvpj_notelist.get())
+                        if cvpj_notelist != []: pat_cvpj_notelist[cur_patnum][1][t_instid].append(cvpj_notelist)
 
                 pat_cvpj_notelist[cur_patnum][0] = pat_duration
                 cur_patnum += 1

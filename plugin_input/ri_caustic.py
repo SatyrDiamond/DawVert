@@ -7,7 +7,7 @@ from functions import data_bytes
 from functions import folder_samples
 from functions import format_caustic
 from functions import idvals
-from functions import notedata
+from functions import note_data
 from functions import placements
 from functions import tracks
 import plugin_input
@@ -79,14 +79,15 @@ master_idnames[43] = ['limiter', 'muted']
 patletters = ['A','B','C','D']
 
 def parse_notelist(causticpattern, machid): 
-    cvpj_notelist = notedata.NoteList('beats')
+    notelist = []
     causticnotes = causticpattern['notes']
     for causticnote in causticnotes:
         if causticnote[1] != 4294967295:
             key = causticnote[6]
             if key != 0: 
-                cvpj_notelist.add(causticnote[2], causticnote[3], key-60, vol=causticnote[14])
-    return cvpj_notelist.get()
+                notedata = note_data.rx_makenote(causticnote[2]*4, causticnote[3]*4, key-60, causticnote[14], None)
+                notelist.append(notedata)
+    return notelist
 
 def loopmode_cvpj(cvpjdata, wavdata): 
     lm = wavdata['mode']
@@ -338,13 +339,6 @@ class input_cvpj_r(plugin_input.base):
                 if 'controls' in machine: cvpj_instdata['plugindata']['data'] = machine['controls']
                 if 'customwaveform1' in machine: cvpj_instdata['plugindata']['data']['customwaveform1'] = struct.unpack("<"+("i"*330), machine['customwaveform1'])
                 if 'customwaveform2' in machine: cvpj_instdata['plugindata']['data']['customwaveform2'] = struct.unpack("<"+("i"*330), machine['customwaveform2'])
-
-            if machine['id'] == 'MDLR':
-                for conval in machine['modules']:
-                    print('module', conval)
-                for conval in machine['connections']:
-                    print('connection', conval)
-                exit()
 
             tracks.ri_create_inst(cvpj_l, cvpj_trackid, cvpj_notelistindex, cvpj_instdata)
             tracks.r_basicdata(cvpj_l, cvpj_trackid, cvpj_trackname, idvals.get_idval(idvals_inst_caustic, machine['id'], 'color'), mach_mixer_vol[machnum-1], mach_mixer_pan[machnum-1])

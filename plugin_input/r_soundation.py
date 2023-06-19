@@ -4,14 +4,14 @@
 from functions import data_bytes
 from functions import tracks
 from functions import colors
-from functions import notedata
+from functions import note_data
 import plugin_input
 import struct
 import json
 
 
 def parse_clip_notes(sndstat_clip):
-    cvpj_notelist = notedata.NoteList('steps')
+    cvpj_notelist = []
     ticksdiv = 5168
     sndstat_clip_position = sndstat_clip['position']/ticksdiv
     sndstat_clip_duration = sndstat_clip['length']/ticksdiv
@@ -39,13 +39,9 @@ def parse_clip_notes(sndstat_clip):
     cvpj_pldata['cut'] = {'type': 'loop', 'start': sndstat_clip_start, 'loopstart': 0, 'loopend': sndstat_clip_duration}
 
     for sndstat_note in sndstat_clip['notes']:
-        cvpj_notelist.add(
-            sndstat_note['position']/ticksdiv, 
-            sndstat_note['length']/ticksdiv, 
-            sndstat_note['note']-60, 
-            vol=sndstat_note['velocity'])
+        cvpj_notelist.append( note_data.rx_makenote(sndstat_note['position']/ticksdiv, sndstat_note['length']/ticksdiv, sndstat_note['note']-60, sndstat_note['velocity'], None) )
 
-    cvpj_pldata["notelist"] = cvpj_notelist.get()
+    cvpj_pldata["notelist"] = cvpj_notelist
     return cvpj_pldata
 
 class input_soundation(plugin_input.base):

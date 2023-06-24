@@ -5,6 +5,7 @@ from functions import notelist_data
 from functions import note_data
 from functions import data_values
 from functions import idvals
+from functions import plugins
 from functions import tracks
 
 idvals_midi_ctrl = idvals.parse_idvalscsv('data_idvals/midi_ctrl.csv')
@@ -169,32 +170,29 @@ def make_inst(channelnum, cvpj_midibank, cvpj_midiinst):
     cvpj_trackdata = cvpj_l_instruments[cvpj_instid]
     cvpj_trackdata['fxrack_channel'] = channelnum+1
 
-    cvpj_trackdata["instdata"] = {}
+    pluginid = plugins.get_id()
+    cvpj_trackdata["instdata"] = {'pluginid': pluginid}
 
     if cvpj_midiinst == -1:
         if midichanneltype[channelnum] == 0: 
-            cvpj_trackdata["instdata"] = {}
-            cvpj_trackdata["instdata"]['plugin'] = 'none'
             cvpj_trackdata["color"] = [0,0,0]
         else: 
-            cvpj_trackdata["instdata"]['plugin'] = 'general-midi'
-            cvpj_trackdata["instdata"]['plugindata'] = {'bank':128, 'inst':cvpj_midiinst}
+            plugins.add_plug_gm_midi(cvpj_l, pluginid, 128, cvpj_midiinst)
             cvpj_trackdata["instdata"]['usemasterpitch'] = 0
             cvpj_trackdata["name"] = 'Drums [Ch10]'
             cvpj_trackdata["color"] = [0.81, 0.80, 0.82]
     else:
-        cvpj_trackdata["instdata"]['plugin'] = 'general-midi'
         if midichanneltype[channelnum] == 0: 
-            cvpj_trackdata["instdata"]['plugindata'] = {'bank':cvpj_midibank, 'inst':cvpj_midiinst}
+            plugins.add_plug_gm_midi(cvpj_l, pluginid, cvpj_midibank, cvpj_midiinst)
             cvpj_trackdata["instdata"]['usemasterpitch'] = 1
             cvpj_trackdata["name"] = idvals.get_idval(idvals_midi_inst, str(cvpj_midiinst), 'name') + ' [Ch' + str(channelnum+1) + ']'
             miditrkcolor = idvals.get_idval(idvals_midi_inst, str(cvpj_midiinst), 'color')
             if miditrkcolor != None:
                 cvpj_trackdata["color"] = miditrkcolor
         else: 
-            cvpj_trackdata["instdata"]['plugindata'] = {'bank':128, 'inst':cvpj_midiinst}
+            plugins.add_plug_gm_midi(cvpj_l, pluginid, 128, cvpj_midiinst)
             cvpj_trackdata["instdata"]['usemasterpitch'] = 0
-            cvpj_trackdata["name"] = 'Drums [Ch10]'
+            cvpj_trackdata["name"] = 'Drums'
             cvpj_trackdata["color"] = [0.81, 0.80, 0.82]
 
 
@@ -407,10 +405,12 @@ def song_end(channels):
 
     if fx_used == True:
         tracks.fxrack_add(cvpj_l, channels+1, "[S] Reverb", [0.4, 0.4, 0.4], 1.0, None)
-        tracks.add_fxslot_native(cvpj_l, 'audio', 'simple', ['fxrack', channels+1], 1, None, None, 'reverb-send', {})
 
-        tracks.fxrack_add(cvpj_l, channels+2, "[S] Chorus", [0.4, 0.4, 0.4], 1.0, None)
-        tracks.add_fxslot_native(cvpj_l, 'audio', 'simple', ['fxrack', channels+2], 1, None, None, 'chorus-send', {})
+        plugins.add_plug(cvpj_l, 'plugin-reverb', 'simple', 'reverb-send')
+        tracks.insert_fxslot(cvpj_l, ['fxrack', channels+1], 'audio', 'plugin-reverb')
+
+        plugins.add_plug(cvpj_l, 'plugin-chorus', 'simple', 'chorus-send')
+        tracks.insert_fxslot(cvpj_l, ['fxrack', channels+2], 'audio', 'plugin-chorus')
 
     tracks.a_auto_nopl_to_cvpj(cvpj_l)
     cvpj_l['timemarkers'] = s_timemarkers

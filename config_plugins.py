@@ -112,8 +112,11 @@ if 'ardour' in dawlist:
 			pluginfo = vstxmlroot.findall('VST2Info')[0]
 			vst_arch = vstxmlroot.get('arch')
 			vst_category = pluginfo.get('category')
+
 			if vst_arch == 'x86_64' and os.path.exists(vstxmlroot.get('binary')):
 				vst2data_fourid = int(pluginfo.get('id'))
+				if vst2data_fourid < 0: vst2data_fourid = int(pluginfo.get('id')) + 2**32
+
 				if vst_category == 'Instrument': vst2data_type = 'synth'
 				if vst_category == 'Effect': vst2data_type = 'effect'
 				db_plugins.execute("INSERT OR IGNORE INTO vst2 (id) VALUES (?)", (vst2data_fourid,))

@@ -6,6 +6,7 @@ from functions import note_mod
 from functions import audio_wav
 from functions import folder_samples
 from functions import tracks
+from functions import plugins
 from functions import placement_data
 from functions import note_data
 from functions import song

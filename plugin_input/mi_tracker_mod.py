@@ -11,6 +11,7 @@ from functions import data_bytes
 from functions import song_tracker
 from functions import audio_wav
 from functions import tracks
+from functions import plugins
 from functions import folder_samples
 from functions import song
 
@@ -18,10 +19,10 @@ modfinetune = [8363, 8413, 8463, 8529, 8581, 8651, 8723, 8757, 7895, 7941, 7985,
 
 def parse_mod_cell(file_stream, firstrow):
     global current_speed
+    global table_samples
     output_note = None
     output_inst = None
     vibrato_depth = 0
-    global table_samples
     output_param = {}
     output_extra = {}
     if firstrow == 1: output_extra['firstrow'] = 1
@@ -170,6 +171,8 @@ class input_mod(plugin_input.base):
         global table_samples
         global current_speed
 
+        cvpj_l = {}
+        
         file_name = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, file_name)
 
@@ -185,37 +188,42 @@ class input_mod(plugin_input.base):
         for mod_numinst in range(31):
             mod_numinst += 1
             mod_inst_mod_name = data_bytes.readstring_fixedlen(file_stream, 22, "ascii")
-
             mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength = struct.unpack('>HBBHH', file_stream.read(8))
-
             print('[input-mod] Instrument ' + str(mod_numinst) + ': ' + mod_inst_mod_name)
             table_samples.append([mod_inst_mod_name, mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart*2, mod_inst_looplength*2])
             cvpj_l_instruments[text_inst_start + str(mod_numinst)] = {}
             cvpj_l_single_inst = cvpj_l_instruments[text_inst_start + str(mod_numinst)]
+
+            pluginid = plugins.get_id()
             if mod_inst_mod_name != "": cvpj_l_single_inst['name'] = mod_inst_mod_name
             else: cvpj_l_single_inst['name'] = ' '
             cvpj_l_single_inst['vol'] = 0.3
-            cvpj_l_single_inst['instdata'] = {}
+            cvpj_l_single_inst['instdata'] = {'pluginid': pluginid}
+            
             if mod_inst_length != 0 and mod_inst_length != 1:
-                cvpj_l_single_inst['color'] = [0.53, 0.53, 0.53]
-                cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
-                cvpj_l_single_inst['instdata']['plugindata'] = {}
-                cvpj_l_single_inst['instdata']['plugindata']['point_value_type'] = "samples"
-                cvpj_l_single_inst['instdata']['plugindata']['trigger'] = 'normal'
-                cvpj_l_single_inst['instdata']['plugindata']['length'] = mod_inst_length
-                cvpj_l_single_inst['instdata']['plugindata']['file'] = samplefolder + str(mod_numinst).zfill(2) + '.wav'
-                cvpj_l_single_inst['instdata']['plugindata']['loop'] = {}
+                wave_path = samplefolder + str(mod_numinst).zfill(2) + '.wav'
+                plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, wave_path)
+                plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
+                plugins.add_plug_data(cvpj_l, pluginid, 'trigger', "normal")
+                plugins.add_plug_data(cvpj_l, pluginid, 'start', 0)
+                plugins.add_plug_data(cvpj_l, pluginid, 'end', mod_inst_length)
+                plugins.add_plug_data(cvpj_l, pluginid, 'length', mod_inst_length)
+
+                cvpj_loopdata = {}
                 if mod_inst_loopstart != 0 and mod_inst_looplength != 1:
-                    cvpj_l_single_inst['instdata']['plugindata']['loop']['enabled'] = 1
-                    cvpj_l_single_inst['instdata']['plugindata']['loop']['mode'] = "normal"
-                    cvpj_l_single_inst['instdata']['plugindata']['loop']['points'] = [mod_inst_loopstart, mod_inst_loopstart+mod_inst_looplength]
-                else:
-                    cvpj_l_single_inst['instdata']['plugindata']['loop']['enabled'] = 0
+                    cvpj_loopdata['enabled'] = 1
+                    cvpj_loopdata['mode'] = "normal"
+                    cvpj_loopdata['points'] = [mod_inst_loopstart, mod_inst_loopstart+mod_inst_looplength]
+                else: cvpj_loopdata['enabled'] = 0
+
+                plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loopdata)
+
             else: 
                 cvpj_l_single_inst['color'] = [0.33, 0.33, 0.33]
                 cvpj_l_single_inst['instdata']['plugin'] = 'none'
 
             cvpj_l_instrumentsorder.append(text_inst_start + str(mod_numinst))
+
         mod_orderlist_length = int.from_bytes(file_stream.read(1), "big")
         mod_extravalue = int.from_bytes(file_stream.read(1), "big")
         t_orderlist = []
@@ -269,28 +277,11 @@ class input_mod(plugin_input.base):
             else:
                 audio_wav.generate(wave_path, wave_data, 1, finetune, 8, {'loop':[mod_inst_entry[4]*2, (mod_inst_entry[4]*2)+(mod_inst_entry[5]*2)]})
 
-        
-        for sample in range(31):
-            cvpj_l_single_inst = cvpj_l_instruments[text_inst_start + str(mod_numinst)]
-            cvpj_l_inst = cvpj_l_single_inst['instdata']
-            if 'plugindata' in cvpj_l_inst:
-                cvpj_l_plugin = cvpj_l_inst['plugindata']
-                cvpj_l_plugin['loop'] = {}
-                if mod_inst_entry[4] == 0 and mod_inst_entry[5] == 1:
-                    cvpj_l_plugin['loop']['enabled'] = 0
-                else:
-                    loopdata = [mod_inst_entry[4]*2, (mod_inst_entry[4]*2)+(mod_inst_entry[5]*2)]
-                    cvpj_l_plugin['loop']['enabled'] = 1
-                    cvpj_l_plugin['loop']['mode'] = "normal"
-                    cvpj_l_plugin['loop']['points'] = loopdata
-
         cvpj_l_playlist = song_tracker.song2playlist(patterntable_all, mod_num_channels, t_orderlist, text_inst_start, [0.47, 0.47, 0.47])
 
         if 'tempo' in veryfirstrow: cvpj_bpm = veryfirstrow['tempo']
         print("[input-mod] Tempo: " + str(cvpj_bpm))
 
-        cvpj_l = {}
-        
         tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, cvpj_bpm))
 
         song.add_info(cvpj_l, 'title', mod_name)

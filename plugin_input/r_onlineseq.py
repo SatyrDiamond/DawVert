@@ -184,15 +184,22 @@ class input_onlinesequencer(plugin_input.base):
             inst_color = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'color')
             inst_gminst = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'gm_inst')
             inst_isdrum = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'isdrum')
-            cvpj_instdata = {}
-            if instid == 13: cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave':'sine'}}
-            elif instid == 14: cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave':'square'}}
-            elif instid == 15: cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave':'saw'}}
-            elif instid == 16: cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave':'triangle'}}
+
+            pluginid = cvpj_instid
+            cvpj_instdata = {'pluginid': pluginid}
+
+            if instid == 13: plugins.add_plug(cvpj_l, pluginid, 'retro', 'sine')
+            elif instid == 14: plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
+            elif instid == 15: plugins.add_plug(cvpj_l, pluginid, 'retro', 'saw')
+            elif instid == 16: plugins.add_plug(cvpj_l, pluginid, 'retro', 'triangle')
             else:
                 if inst_gminst != None:
-                    if inst_isdrum == True: cvpj_instdata = {'plugin': 'general-midi', 'usemasterpitch': 0, 'plugindata': {'bank':128, 'inst':inst_gminst-1}}
-                    else: cvpj_instdata = {'plugin': 'general-midi', 'usemasterpitch': 1, 'plugindata': {'bank':0, 'inst':inst_gminst-1}}
+                    if inst_isdrum == True: 
+                        plugins.add_plug_gm_midi(cvpj_l, pluginid, 128, inst_gminst-1)
+                        cvpj_instdata['usemasterpitch'] = 0
+                    else: 
+                        plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, inst_gminst-1)
+                        cvpj_instdata['usemasterpitch'] = 1
 
             onlseq_s_iparams = {}
             if instid in onlseq_data_instparams: onlseq_s_iparams = onlseq_data_instparams[instid]

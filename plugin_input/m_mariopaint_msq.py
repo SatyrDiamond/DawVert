@@ -5,6 +5,7 @@ from functions import colors
 from functions import idvals
 from functions import tracks
 from functions import song
+from functions import plugins
 from functions import note_data
 from functions import placement_data
 import plugin_input
@@ -92,8 +93,8 @@ class input_mariopaint_msq(plugin_input.base):
             s_inst_name = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'name')
             s_inst_color = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'color')
             if s_inst_color != None: s_inst_color = colors.moregray(s_inst_color)
-
-            tracks.m_create_inst(cvpj_l, instname, {'plugin': 'general-midi', 'plugindata': {'bank':0, 'inst':instnames.index(instname)}})
+            plugins.add_plug_gm_midi(cvpj_l, instname, 0, instnames.index(instname))
+            tracks.m_create_inst(cvpj_l, instname, {'pluginid': instname})
             tracks.m_basicdata_inst(cvpj_l, instname, s_inst_name, s_inst_color, None, None)
 
         cvpj_l['do_addloop'] = True

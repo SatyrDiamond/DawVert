@@ -8,6 +8,7 @@ import struct
 from functions import placements
 from functions import placement_data
 from functions import tracks
+from functions import plugins
 from functions import note_data
 from functions import data_bytes
 
@@ -248,19 +249,35 @@ class input_lc(plugin_input.base):
         tracks.m_playlist_pl(cvpj_l, 5, "Chord", lc_colors[4], [])
 
         for used_instrument in used_instruments:
+            pluginid = plugins.get_id()
 
             cvpj_instdata = {}
-            if used_instrument == 'Sine': cvpj_instdata = {'plugin': 'shape-sine'}
-            elif used_instrument == 'Square': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'square', 'duty': 0}}
-            elif used_instrument == 'Triangle': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'triangle'}}
-            elif used_instrument == 'Saw': cvpj_instdata = {'plugin': 'shape-saw'}
-            elif used_instrument == 'Noise': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'noise', 'type': '4bit'}}
-            elif used_instrument == 'FreqNoise': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'noise', 'type': '1bit_short'}}
-            elif used_instrument == 'Pulse25': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'square', 'duty': 1}}
-            elif used_instrument == 'Pulse125': cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave': 'square', 'duty': 2}}
-            else: cvpj_instdata = {'plugin': 'lovelycomposer', 'plugindata': {'inst': used_instrument}}
+            if used_instrument == 'Sine': 
+                plugins.add_plug(cvpj_l, pluginid, 'shape', 'sine')
+            elif used_instrument == 'Square': 
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
+                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 0)
+            elif used_instrument == 'Triangle':
+                plugins.add_plug(cvpj_l, pluginid, 'shape', 'triangle')
+            elif used_instrument == 'Saw': 
+                plugins.add_plug(cvpj_l, pluginid, 'shape', 'saw')
+            elif used_instrument == 'Noise': 
+                plugins.add_plug(cvpj_l, pluginid, 'shape', 'noise')
+                plugins.add_plug_data(cvpj_l, pluginid, 'type', '4bit')
+            elif used_instrument == 'FreqNoise': 
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'noise')
+                plugins.add_plug_data(cvpj_l, pluginid, 'type', '1bit_short')
+            elif used_instrument == 'Pulse25': 
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
+                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 1)
+            elif used_instrument == 'Pulse125': 
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
+                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 2)
+            else: 
+                plugins.add_plug(cvpj_l, pluginid, 'lovelycomposer', used_instrument)
+                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 2)
 
-            tracks.m_create_inst(cvpj_l, used_instrument, cvpj_instdata)
+            tracks.m_create_inst(cvpj_l, used_instrument, {'pluginid': pluginid})
             tracks.m_basicdata_inst(cvpj_l, used_instrument, used_instrument, None, None, None)
 
         startinststr = 'lc_instlist_'

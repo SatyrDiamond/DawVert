@@ -7,6 +7,7 @@ import json
 from functions import placements
 from functions import note_data
 from functions import tracks
+from functions import plugins
 from functions import placement_data
 from functions import song
 
@@ -136,14 +137,14 @@ def decode_fst(infile):
     fst_Main['DPCMMappings'] = fst_DPCMMappings
     return fst_Main
 
-def add_envelope(cvpj_plugdata, fst_Instrument, cvpj_name, fst_name):
+def fadd_envelope(pluginid, fst_Instrument, cvpj_name, fst_name):
     if fst_name in fst_Instrument['Envelopes']:
-        cvpj_plugdata[cvpj_name] = {}
-        envdata = cvpj_plugdata[cvpj_name]
+        envdata = {}
         if fst_name == 'FDSWave':
             if 'Values' in fst_Instrument['Envelopes'][fst_name]: envdata['values'] = [int(i) for i in fst_Instrument['Envelopes'][fst_name]['Values'].split(',')]
             if 'Loop' in fst_Instrument['Envelopes'][fst_name]: envdata['loop'] = fst_Instrument['Envelopes'][fst_name]['Loop']
             if 'Release' in fst_Instrument['Envelopes'][fst_name]: envdata['release'] = fst_Instrument['Envelopes'][fst_name]['Release']
+            plugins.add_plug_data(cvpj_l, pluginid, 'wave', envdata)
         elif fst_name == 'N163Wave':
             if 'Values' in fst_Instrument['Envelopes'][fst_name]: envdata['values'] = [int(i) for i in fst_Instrument['Envelopes'][fst_name]['Values'].split(',')]
             if 'Loop' in fst_Instrument['Envelopes'][fst_name]: envdata['loop'] = fst_Instrument['Envelopes'][fst_name]['Loop']
@@ -151,16 +152,23 @@ def add_envelope(cvpj_plugdata, fst_Instrument, cvpj_name, fst_name):
             envdata['size'] = fst_Instrument['N163WaveSize']
             envdata['pos'] = fst_Instrument['N163WavePos']
             envdata['count'] = fst_Instrument['N163WaveCount']
+            plugins.add_plug_data(cvpj_l, pluginid, 'wave', envdata)
         else:
-            cvpj_plugdata[cvpj_name]['values'] = [int(i) for i in fst_Instrument['Envelopes'][fst_name]['Values'].split(',')]
-            if 'Loop' in fst_Instrument['Envelopes'][fst_name]: envdata['loop'] = fst_Instrument['Envelopes'][fst_name]['Loop']
-            if 'Release' in fst_Instrument['Envelopes'][fst_name]: envdata['release'] = fst_Instrument['Envelopes'][fst_name]['Release']
+            envdata_values = [int(i) for i in fst_Instrument['Envelopes'][fst_name]['Values'].split(',')]
+            envdata_loop = None
+            envdata_release = None
+            if 'Loop' in fst_Instrument['Envelopes'][fst_name]: 
+                envdata_loop = fst_Instrument['Envelopes'][fst_name]['Loop']
+            if 'Release' in fst_Instrument['Envelopes'][fst_name]: 
+                envdata_release = fst_Instrument['Envelopes'][fst_name]['Release']
+            plugins.add_env_blocks(cvpj_l, pluginid, cvpj_name, envdata_values, envdata_loop, envdata_release)
 
-def add_envelopes(cvpj_plugdata, fst_Instrument):
+
+def add_envelopes(pluginid, fst_Instrument):
     if 'Envelopes' in fst_Instrument:
-        add_envelope(cvpj_plugdata, fst_Instrument, 'env_vol', 'Volume')
-        add_envelope(cvpj_plugdata, fst_Instrument, 'env_duty', 'DutyCycle')
-        add_envelope(cvpj_plugdata, fst_Instrument, 'env_pitch', 'Pitch')
+        add_envelope(pluginid, fst_Instrument, 'vol', 'Volume')
+        add_envelope(pluginid, fst_Instrument, 'duty', 'DutyCycle')
+        add_envelope(pluginid, fst_Instrument, 'pitch', 'Pitch')
 
 def create_inst(WaveType, fst_Instrument, fxrack_channel):
     instname = fst_Instrument['Name']
@@ -168,85 +176,81 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
     instvolume = 0.2
     instpan = 0
 
+    pluginid = plugins.get_id()
+
     cvpj_instdata = {}
-    cvpj_instdata['plugin'] = 'none'
-    cvpj_plugdata = cvpj_instdata['plugindata'] = {}
     cvpj_instdata['pitch'] = 0
+    cvpj_instdata['pluginid'] = pluginid
+
     if WaveType == 'Square1' or WaveType == 'Square2' or WaveType == 'Triangle' or WaveType == 'Noise':
-        cvpj_instdata['plugin'] = '2a03'
-        if WaveType == 'Square1' or WaveType == 'Square2': cvpj_plugdata['wave'] = 'square'
-        if WaveType == 'Triangle': cvpj_plugdata['wave'] = 'triangle'
-        if WaveType == 'Noise': cvpj_plugdata['wave'] = 'noise'
-        add_envelopes(cvpj_plugdata, fst_Instrument)
+        if WaveType == 'Square1' or WaveType == 'Square2': wavetype = 'square'
+        if WaveType == 'Triangle': wavetype = 'triangle'
+        if WaveType == 'Noise': wavetype = 'noise'
+        plugins.add_plug(cvpj_l, pluginid, '2a03', wavetype)
+        add_envelopes(pluginid, fst_Instrument)
 
     if WaveType == 'VRC7FM':
-        cvpj_instdata['plugin'] = 'vrc7'
-        add_envelopes(cvpj_plugdata, fst_Instrument)
+        plugins.add_plug(cvpj_l, pluginid, 'fm', 'vrc7')
+        add_envelopes(pluginid, fst_Instrument)
         instvolume = 1
         if 'Vrc7Patch' in fst_Instrument:
-            cvpj_plugdata['use_patch'] = True
-            cvpj_plugdata['patch'] = int(fst_Instrument['Vrc7Patch'])
+            plugins.add_plug_data(cvpj_l, pluginid, 'use_patch', True)
+            plugins.add_plug_data(cvpj_l, pluginid, 'patch', int(fst_Instrument['Vrc7Patch']))
         else:
-            cvpj_plugdata['use_patch'] = False
-            cvpj_plugdata['regs'] = fst_Instrument['Vrc7Reg']
+            plugins.add_plug_data(cvpj_l, pluginid, 'use_patch', False)
+            plugins.add_plug_data(cvpj_l, pluginid, 'regs', fst_Instrument['Vrc7Reg'])
 
     if WaveType == 'VRC6Square' or WaveType == 'VRC6Saw':
-        cvpj_instdata['plugin'] = 'vrc6'
-        if WaveType == 'VRC6Saw': cvpj_plugdata['wave'] = 'saw'
-        if WaveType == 'VRC6Square': cvpj_plugdata['wave'] = 'square'
-        add_envelopes(cvpj_plugdata, fst_Instrument)
+        if WaveType == 'VRC6Saw': wavetype = 'saw'
+        if WaveType == 'VRC6Square': wavetype = 'square'
+        plugins.add_plug(cvpj_l, pluginid, 'vrc6', wavetype)
+        add_envelopes(pluginid, fst_Instrument)
 
     if WaveType == 'FDS':
-        cvpj_instdata['plugin'] = 'fds'
-        add_envelopes(cvpj_plugdata, fst_Instrument)
-        add_envelope(cvpj_plugdata, fst_Instrument, 'wave', 'FDSWave')
+        plugins.add_plug(cvpj_l, pluginid, 'fds', None)
+        add_envelopes(pluginid, fst_Instrument)
+        add_envelope(pluginid, fst_Instrument, 'wave', 'FDSWave')
 
     if WaveType == 'N163':
-        cvpj_instdata['plugin'] = 'namco163_famistudio'
-        add_envelopes(cvpj_plugdata, fst_Instrument)
-        add_envelope(cvpj_plugdata, fst_Instrument, 'wave', 'N163Wave')
+        plugins.add_plug(cvpj_l, pluginid, 'namco163_famistudio', None)
+        add_envelopes(pluginid, fst_Instrument)
+        add_envelope(pluginid, fst_Instrument, 'wave', 'N163Wave')
 
     if WaveType == 'S5B':
-        cvpj_instdata['plugin'] = 'sunsoft_5b'
-        add_envelopes(cvpj_plugdata, fst_Instrument)
+        plugins.add_plug(cvpj_l, pluginid, 'sunsoft_5b', None)
+        add_envelopes(pluginid, fst_Instrument)
 
     if WaveType == 'MMC5':
-        cvpj_instdata['plugin'] = 'mmc5'
+        plugins.add_plug(cvpj_l, pluginid, 'mmc5', None)
 
     if WaveType == 'EPSMSquare':
-        cvpj_instdata['plugin'] = 'sunsoft_5b'
-        add_envelopes(cvpj_plugdata, fst_Instrument)
+        plugins.add_plug(cvpj_l, pluginid, 'epsm_square', None)
+        add_envelopes(pluginid, fst_Instrument)
 
     if WaveType == 'EPSMFM':
         instvolume = 0.7
-        cvpj_instdata['plugin'] = 'epsm_fm'
-        cvpj_plugdata['regs'] = fst_Instrument['EpsmReg']
-        instpan += int(bool(cvpj_plugdata['regs'][1] & 0x80))*-1
-        instpan += int(bool(cvpj_plugdata['regs'][1] & 0x40))
+        plugins.add_plug(cvpj_l, pluginid, 'fm', 'epsm')
+        plugins.add_plug_data(cvpj_l, pluginid, 'regs', fst_Instrument['EpsmReg'])
+        instpan += int(bool(fst_Instrument['EpsmReg'][1] & 0x80))*-1
+        instpan += int(bool(fst_Instrument['EpsmReg'][1] & 0x40))
 
     if WaveType == 'EPSM_Kick':
-        cvpj_instdata['plugin'] = 'epsm_rhythm'
-        cvpj_plugdata['type'] = 'kick'
+        plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'kick')
 
     if WaveType == 'EPSM_Snare':
-        cvpj_instdata['plugin'] = 'epsm_rhythm'
-        cvpj_plugdata['type'] = 'snare'
+        plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'snare')
 
     if WaveType == 'EPSM_Cymbal':
-        cvpj_instdata['plugin'] = 'epsm_rhythm'
-        cvpj_plugdata['type'] = 'cymbal'
+        plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'cymbal')
 
     if WaveType == 'EPSM_HiHat':
-        cvpj_instdata['plugin'] = 'epsm_rhythm'
-        cvpj_plugdata['type'] = 'hihat'
+        plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'hihat')
 
     if WaveType == 'EPSM_Tom':
-        cvpj_instdata['plugin'] = 'epsm_rhythm'
-        cvpj_plugdata['type'] = 'tom'
+        plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'tom')
 
     if WaveType == 'EPSM_Rimshot':
-        cvpj_instdata['plugin'] = 'epsm_rhythm'
-        cvpj_plugdata['type'] = 'rimshot'
+        plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'rimshot')
 
     #print('DATA ------------' , fst_Instrument)
     #print('OUT ------------' , plugname, cvpj_plugdata)
@@ -269,7 +273,6 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fxrack_channel):
 
     cvpj_instdata = {}
     cvpj_instdata['pitch'] = 0
-    cvpj_instdata['plugin'] = 'none'
     cvpj_instdata['usemasterpitch'] = 0
 
     tracks.m_create_inst(cvpj_l, 'DPCM', cvpj_instdata)

@@ -9,7 +9,6 @@ import plugin_input
 import struct
 import json
 
-
 def parse_clip_notes(sndstat_clip):
     cvpj_notelist = []
     ticksdiv = 5168

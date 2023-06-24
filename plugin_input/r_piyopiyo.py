@@ -10,6 +10,7 @@ from functions import data_bytes
 from functions import folder_samples
 from functions import placement_data
 from functions import tracks
+from functions import plugins
 from functions import song
 from functions import note_data
 
@@ -56,6 +57,8 @@ class input_piyopiyo(plugin_input.base):
         cvpj_l = {}
 
         for tracknum in range(3):
+            pluginid = str(tracknum)
+            plugins.add_plug(cvpj_l, pluginid, 'native-piyopiyo', 'wave')
             print("[input-piyopiyo] Track " + str(tracknum+1), end=",")
             trk_octave = pmdfile.read(1)[0]
             print(" Oct:" + str(trk_octave), end=",")
@@ -72,14 +75,15 @@ class input_piyopiyo(plugin_input.base):
             keyoffset[tracknum] = (trk_octave-2)*12
 
             wave_path = samplefolder+'/'+str(tracknum+1)+'.wav'
-            cvpj_instdata = {'plugin': "native-piyopiyo"}
-            cvpj_instdata['plugindata'] = {'wave': trk_waveform, 'env': trk_envelope}
+            plugins.add_plug_data(cvpj_l, pluginid, 'wave', trk_waveform)
+            plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trk_envelope, None, None)
             idval = str(tracknum)
-            tracks.r_create_inst(cvpj_l, idval, cvpj_instdata)
+            tracks.r_create_inst(cvpj_l, idval, {'pluginid': pluginid})
             tracks.r_basicdata(cvpj_l, idval, 'note'+str(tracknum), track_colors[tracknum], trk_volume/250, None)
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
-        tracks.r_create_inst(cvpj_l, "3", {'plugin': "none", 'plugindata': {}})
+        plugins.add_plug(cvpj_l, "3", 'native-piyopiyo', 'drums')
+        tracks.r_create_inst(cvpj_l, "3", {'pluginid': "3"})
         tracks.r_basicdata(cvpj_l, "3", 'perc', track_colors[3], TrackPVol/250, None)
 
         pmdfile.seek(trackdatapos)

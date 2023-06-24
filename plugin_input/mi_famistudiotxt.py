@@ -137,7 +137,7 @@ def decode_fst(infile):
     fst_Main['DPCMMappings'] = fst_DPCMMappings
     return fst_Main
 
-def fadd_envelope(pluginid, fst_Instrument, cvpj_name, fst_name):
+def add_envelope(pluginid, fst_Instrument, cvpj_name, fst_name):
     if fst_name in fst_Instrument['Envelopes']:
         envdata = {}
         if fst_name == 'FDSWave':

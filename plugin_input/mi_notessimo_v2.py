@@ -7,6 +7,7 @@ from functions import idvals
 from functions import note_data
 from functions import placement_data
 from functions import song
+from functions import plugins
 from functions import tracks
 import json
 import plugin_input
@@ -92,8 +93,11 @@ class input_notessimo_v2(plugin_input.base):
 
             print("[input-notessimo_v2] Instrument: " + str(notetess_instname))
 
+            pluginid = plugins.get_id()
             cvpj_instdata = {}
-            if notetess_gminst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': notetess_gminst}}
+            if notetess_gminst != None: 
+                plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, notetess_gminst)
+                cvpj_instdata = {'pluginid': pluginid}
 
             tracks.m_create_inst(cvpj_l, str(used_instrument), cvpj_instdata)
             tracks.m_basicdata_inst(cvpj_l, str(used_instrument), notetess_instname, notetess_instcolor, 1.0, 0.0)

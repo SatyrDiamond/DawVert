@@ -33,6 +33,8 @@ autoval_inst['vibedstrings'] = [ ['active0','active1','active2','active3','activ
 
 autoval_inst['watsyn'] = [ ['a1_ltune','a1_mult','a1_pan','a1_rtune','a1_vol','a2_ltune','a2_mult','a2_pan','a2_rtune','a2_vol','abmix','amod','b1_ltune','b1_mult','b1_pan','b1_rtune','b1_vol','b2_ltune','b2_mult','b2_pan','b2_rtune','b2_vol','bmod','envAmt','envAtt','envAtt_denominator','envAtt_numerator','envAtt_syncmode','envDec','envDec_denominator','envDec_numerator','envDec_syncmode','envHold','envHold_denominator','envHold_numerator','envHold_syncmode','xtalk'], ['a1_wave','a2_wave','b1_wave','b2_wave'] ]
 
+autoval_inst['zynaddsubfx'] = [ ['bandwidth', 'filterfreq', 'filterq', 'fmgain', 'forwardmidicc', 'portamento', 'resbandwidth', 'rescenterfreq'], ['modifiedcontrollers'] ]
+
 def get_params_inst(pluginname): 
 	if pluginname in autoval_inst: return autoval_inst[pluginname] 
 	else: return [ [], [] ]

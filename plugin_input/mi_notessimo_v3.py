@@ -10,6 +10,7 @@ from functions import notelist_data
 from functions import placement_data
 from functions import note_data
 from functions import auto
+from functions import plugins
 from functions import song
 import plugin_input
 import json
@@ -334,8 +335,11 @@ class input_notessimo_v3(plugin_input.base):
 
             inst_color = colors.moregray(inst_color)
 
+            pluginid = plugins.get_id()
             cvpj_instdata = {}
-            if midiinst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': midiinst}}
+            if midiinst != None: 
+                plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, midiinst)
+                cvpj_instdata = {'pluginid': pluginid}
 
             tracks.m_create_inst(cvpj_l, str(inst), cvpj_instdata)
             tracks.m_basicdata_inst(cvpj_l, str(inst), inst_name, inst_color, 1.0, 0.0)

@@ -98,6 +98,7 @@ def mono2stereo(leftdata, rightdata, samplebytes):
 
 # ----- RIFF -----
 
+
 def riff_read_debug_big(riffbytebuffer, offset):
 	return customchunk_read(riffbytebuffer, offset, 4, 4, "big", True)
 

@@ -4,14 +4,16 @@
 import plugin_input
 import json
 import math
-import base64
 import struct
 import av
 import os.path
+import varint
 from pathlib import Path
 
+from functions_plugin import flp_pluginparams
 from functions import format_flp_dec
 from functions import note_mod
+from functions import folder_samples
 from functions import data_bytes
 from functions import colors
 from functions import notelist_data
@@ -35,6 +37,7 @@ def getsamplefile(channeldata, flppath):
     else:
         return ''
 
+
 class input_flp(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -56,8 +59,8 @@ class input_flp(plugin_input.base):
         if bytesdata == b'FLhd': return True
         else: return False
     def parse(self, input_file, extra_param):
+        global cvpj_l
         FLP_Data = format_flp_dec.parse(input_file)
-        #print(FLP_Data['FL_Main'])
 
         FL_Main = FLP_Data['FL_Main']
         FL_Patterns = FLP_Data['FL_Patterns']
@@ -96,6 +99,9 @@ class input_flp(plugin_input.base):
         sampleinfo = {}
         samplestretch = {}
 
+        flp_basename = os.path.splitext(os.path.basename(input_file))[0]
+        samplefolder = folder_samples.samplefolder(extra_param, flp_basename)
+
         for instrument in FL_Channels:
             channeldata = FL_Channels[instrument]
             instdata = {}
@@ -130,8 +136,7 @@ class input_flp(plugin_input.base):
                     if 'plugin' in channeldata: flpluginname = channeldata['plugin']
                     plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', flpluginname)
                     if 'pluginparams' in channeldata: 
-                        plugins.add_plug_data(cvpj_l, pluginid, 'chunk', 
-                            base64.b64encode(channeldata['pluginparams']).decode('ascii'))
+                        flp_pluginparams.getparams(cvpj_l, pluginid, flpluginname, channeldata['pluginparams'], samplefolder)
 
                 cvpj_inst['poly'] = {}
                 cvpj_inst['poly']['max'] = channeldata['polymax']
@@ -347,16 +352,24 @@ class input_flp(plugin_input.base):
                 for fl_fxslot in fl_fxhan['slots']:
                     fl_fxslotdata = fl_fxhan['slots'][fl_fxslot]
                     if fl_fxslotdata != None and 'plugin' in fl_fxslotdata and 'pluginparams' in fl_fxslotdata:
+
+                        pluginid = plugins.get_id()
+
                         fxslotdata = {}
-                        fxslotdata['enabled'] = 1
-                        fxslotdata['plugin'] = 'native-fl'
+                        fxslotdata['pluginid'] = pluginid
+                        flpluginname = ''
+                        if 'plugin' in fl_fxslotdata: flpluginname = fl_fxslotdata['plugin']
+                        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', flpluginname)
+                        if 'pluginparams' in fl_fxslotdata: 
+                            flp_pluginparams.getparams(cvpj_l, pluginid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder)
+
+                        v_color = None
                         if 'color' in fl_fxslotdata:
                             color = fl_fxslotdata['color'].to_bytes(4, "little")
-                            fxslotdata['color'] = [color[0]/255,color[1]/255,color[2]/255]
-                        fxslotdata['plugindata'] = {}
-                        fxslotdata['plugindata']['plugin'] = fl_fxslotdata['plugin']
-                        fxslotdata['plugindata']['data'] = base64.b64encode(fl_fxslotdata['pluginparams']).decode('ascii')
-                        fxdata["chain_fx_audio"].append(fxslotdata)
+                            v_color = [color[0]/255,color[1]/255,color[2]/255]
+                        plugins.add_plug_fxvisual(cvpj_l, pluginid, None, v_color)
+
+                        fxdata["chain_fx_audio"].append(pluginid)
 
             if fxchannel == '100': fxdata["vol"] = 0.0
             elif fxchannel == '101': fxdata["vol"] = 0.0

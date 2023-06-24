@@ -4,6 +4,7 @@
 from functions import data_bytes
 from functions import song_tracker
 from functions import tracks
+from functions import plugins
 from functions import song
 import plugin_input
 import json
@@ -215,7 +216,11 @@ class input_trackerboy(plugin_input.base):
                 print("[input-trackerboy] Wave " + str(tb_id) + ':')
                 tb_name = data_bytes.readstring_lenbyte(tb_instdata, 2, "little", None)
                 print("[input-trackerboy]     Name: " + str(tb_name))
-                tb_wave = list(tb_instdata.read(16))
+                tb_wave = []
+                for wavepoint in list(tb_instdata.read(16)):
+                    splitwave = data_bytes.splitbyte(wavepoint)
+                    tb_wave.append(splitwave[0])
+                    tb_wave.append(splitwave[1])
                 print("[input-trackerboy]     Data: " + str(tb_wave))
                 t_waves[tb_id] = [tb_name, tb_wave]
 
@@ -236,30 +241,44 @@ class input_trackerboy(plugin_input.base):
                 if insttype in chiptypecolors: cvpj_instcolor = chiptypecolors[insttype]
                 else: cvpj_instcolor = None
 
-                cvpj_instdata = {'plugin': 'gameboy'}
-                plugindata = {'type': insttype}
+                pluginid = plugins.get_id()
+                plugins.add_plug(cvpj_l, pluginid, 'gameboy', insttype)
 
-                if trackerboy_instdata[1][0] != (): plugindata['env_arp'] = {'values': trackerboy_instdata[1][0]}
-                if trackerboy_instdata[2][0] != (): plugindata['env_vol'] = {'values': trackerboy_instdata[2][0]}
-                if trackerboy_instdata[3][0] != (): plugindata['env_pitch'] = {'values': trackerboy_instdata[4][0]}
+                if trackerboy_instdata[1][0] != (): 
+                    plugins.add_env_blocks(cvpj_l, pluginid, 'arp', trackerboy_instdata[1][0], None, None)
+
+                if trackerboy_instdata[2][0] != (): 
+                    plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trackerboy_instdata[2][0], None, None)
+
+                if trackerboy_instdata[3][0] != (): 
+                    plugins.add_env_blocks(cvpj_l, pluginid, 'pitch', trackerboy_instdata[4][0], None, None)
+
                 if trackerboy_instdata[4][0] != (): 
-                    if insttype == 'pulse': plugindata['env_duty'] = {'values': trackerboy_instdata[4][0]}
-                    if insttype == 'wavetable': plugindata['env_vol'] = {'values': trackerboy_instdata[4][0]}
-                    if insttype == 'noise': plugindata['env_noise'] = {'values': trackerboy_instdata[4][0]}
+                    if insttype == 'pulse': 
+                        plugins.add_env_blocks(cvpj_l, pluginid, 'duty', trackerboy_instdata[4][0], None, None)
+                    if insttype == 'wavetable':
+                        plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trackerboy_instdata[4][0], None, None)
+                    if insttype == 'noise': 
+                        plugins.add_env_blocks(cvpj_l, pluginid, 'noise', trackerboy_instdata[4][0], None, None)
 
                 if insttype != 'wavetable':
-                    if trackerboy_instdata[6] == 0: plugindata['sustain'] = 1
-                    elif trackerboy_instdata[6] < 8: plugindata['decay'] = trackerboy_instdata[6]/5
+                    env_attack = 0
+                    env_decay = 0
+                    env_sustain = 1
+
+                    if trackerboy_instdata[6] == 0: env_sustain = 1
+                    elif trackerboy_instdata[6] < 8: env_decay = trackerboy_instdata[6]/5
                     elif trackerboy_instdata[6] >= 8:
-                        plugindata['attack'] = (trackerboy_instdata[6]-8)/5
-                        plugindata['sustain'] = 1
+                        env_attack = (trackerboy_instdata[6]-8)/5
+                        env_sustain = 1
+                    plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, env_attack, 0, env_decay, env_sustain, 0, 1)
                 else:
-                    if trackerboy_instdata[6] == 0: plugindata['wave_name'], plugindata['wave'] = t_waves[1]
-                    else: plugindata['wave_name'], plugindata['wave'] = t_waves[trackerboy_instdata[6]+1]
+                    if trackerboy_instdata[6] == 0: 
+                        plugins.add_plug_data(cvpj_l, pluginid, 'wave', t_waves[1][1])
+                    else: 
+                        plugins.add_plug_data(cvpj_l, pluginid, 'wave', t_waves[trackerboy_instdata[6]+1][1])
 
-                cvpj_instdata["plugindata"] = plugindata
-
-                tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
+                tracks.m_create_inst(cvpj_l, cvpj_instid, {'pluginid': pluginid})
                 tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, 0.4, 0.0)
 
         song.add_info(cvpj_l, 'title', trackerboy_title)

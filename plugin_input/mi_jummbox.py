@@ -5,6 +5,7 @@ from functions import data_bytes
 from functions import auto
 from functions import idvals
 from functions import tracks
+from functions import plugins
 from functions import note_data
 from functions import placement_data
 from functions import song
@@ -83,17 +84,17 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
     if bb_preset in idvals_inst_beepbox:
         gm_inst = idvals.get_idval(idvals_inst_beepbox, bb_preset, 'gm_inst')
 
-    cvpj_instdata = {}
+    pluginid = plugins.get_id()
+
     if gm_inst == None:
-        cvpj_instdata['plugin'] = 'native-jummbox'
-        cvpj_instdata['plugindata'] = {'type':bb_type, 'data':bb_instrument}
+        plugins.add_plug(cvpj_l, pluginid, 'native-jummbox', bb_type)
+        plugins.add_plug_data(cvpj_l, pluginid, 'data', bb_instrument)
         cvpj_instname = inst_names[bb_type]
     else:
-        cvpj_instdata['plugin'] = 'general-midi'
-        cvpj_instdata['plugindata'] = {'bank':0, 'inst':gm_inst}
+        plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, gm_inst)
         cvpj_instname = idvals.get_idval(idvals_inst_beepbox, bb_preset, 'name')
 
-    tracks.m_create_inst(cvpj_l, trackid, cvpj_instdata)
+    tracks.m_create_inst(cvpj_l, trackid, {'pluginid': pluginid})
     tracks.m_basicdata_inst(cvpj_l, trackid, cvpj_instname, bb_color, None, None)
 
 def parse_notes(channum, bb_notes, bb_instruments):

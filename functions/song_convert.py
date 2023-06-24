@@ -14,36 +14,6 @@ from functions import notelist_data
 from functions import xtramath
 import json
 
-# --------------------------------------------------------------------
-
-def instrack2singleinst(cvpj_l, cvpjtype):
-    if cvpj_l['use_instrack'] == True:
-        fxnum = 1
-        if cvpjtype == 's':
-            c_orderingdata = cvpj_l['track_order']
-            c_trackdata = cvpj_l['track_data']
-        if cvpjtype == 'm':
-            c_orderingdata = cvpj_l['instruments_order']
-            c_trackdata = cvpj_l['instruments_data']
-
-        for trackid in c_trackdata:
-            chain_inst = c_trackdata[trackid]['chain_inst']
-            c_trackdata[trackid]["instdata"] = {}
-            if len(chain_inst) == 0:
-                c_trackdata[trackid]["instdata"]["plugin"] = "none"
-                c_trackdata[trackid]["instdata"]["plugindata"] = {}
-            elif len(chain_inst) == 1:
-                c_trackdata[trackid]["instdata"] = chain_inst[0]
-                if 'vol' in chain_inst[0]: 
-                    if 'vol' in c_trackdata[trackid]:
-                        c_trackdata[trackid]['vol'] = c_trackdata[trackid]['vol'] * chain_inst[0]['vol']
-                    else:
-                        c_trackdata[trackid]['vol'] = chain_inst[0]['vol']
-            else:
-                c_trackdata[trackid]["instdata"]["plugin"] = "none"
-                c_trackdata[trackid]["instdata"]["plugindata"] = {}
-        cvpj_l['use_instrack'] == False
-
 # ---------------------------------- Regular to Multiple ----------------------------------
 
 def r2m_pl_addinst(placements, trackid):

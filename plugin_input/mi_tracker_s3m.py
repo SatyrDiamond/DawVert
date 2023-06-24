@@ -9,6 +9,7 @@ from functions import audio_wav
 from functions import data_bytes
 from functions import folder_samples
 from functions import placements
+from functions import plugins
 from functions import tracks
 from functions import song
 
@@ -39,6 +40,7 @@ class input_s3m(plugin_input.base):
         s3m_modulename = os.path.splitext(os.path.basename(input_file))[0]
         samplefolder = folder_samples.samplefolder(extra_param, s3m_modulename)
 
+        cvpj_l = {}
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
 
@@ -125,42 +127,41 @@ class input_s3m(plugin_input.base):
             else: print("[input-st3] Instrument #" + str(s3m_numinst) + ': "' + s3m_inst_name + '", Filename:"' + s3m_inst_filename+ '"')
             table_defualtvol.append(s3m_inst_vol)
 
+            pluginid = plugins.get_id()
             if s3m_inst_filename != '': cvpj_l_single_inst['name'] = s3m_inst_filename
             elif s3m_inst_name != '': cvpj_l_single_inst['name'] = s3m_inst_name
             else: cvpj_l_single_inst['name'] = ' '
-
             cvpj_l_single_inst['vol'] = 0.3
-            cvpj_l_single_inst['instdata'] = {}
-            cvpj_l_inst = cvpj_l_single_inst['instdata']
-            cvpj_l_inst['plugindata'] = {}
-            cvpj_l_plugin = cvpj_l_inst['plugindata']
-            cvpj_l_plugin['trigger'] = 'normal'
-            cvpj_l_plugin['point_value_type'] = "samples"
+            cvpj_l_single_inst['instdata'] = {'pluginid': pluginid}
+
+            wave_path = samplefolder+str(s3m_numinst).zfill(2)+'.wav'
 
             if s3m_inst_type == 1:
                 cvpj_l_single_inst['color'] = [0.65, 0.57, 0.33]
-                cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
-                cvpj_l_plugin['file'] = samplefolder + str(s3m_numinst).zfill(2) + '.wav'
+                plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, wave_path)
             else:
                 cvpj_l_single_inst['color'] = [0.32, 0.27, 0.16]
-                cvpj_l_inst['plugin'] = 'none'
 
-            cvpj_l_plugin['length'] = s3m_inst_length
+            plugins.add_plug_data(cvpj_l, pluginid, 'length', s3m_inst_length)
+            plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
+            plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
 
             if cvpj_inst_samplelocation != 0 and s3m_inst_length != 0:
-                cvpj_l_plugin['loop'] = {}
+                cvpj_loop = {}
                 if s3m_inst_loopon == 1:
-                    cvpj_l_plugin['loop']['enabled'] = 1
-                    cvpj_l_plugin['loop']['mode'] = "normal"
-                    cvpj_l_plugin['loop']['points'] = [s3m_inst_loopStart, s3m_inst_loopEnd-1]
+                    cvpj_loop['enabled'] = 1
+                    cvpj_loop['mode'] = "normal"
+                    cvpj_loop['points'] = [s3m_inst_loopStart, s3m_inst_loopEnd-1]
                     loopdata = {'loop':[s3m_inst_loopStart, s3m_inst_loopEnd-1]}
                 else:
-                    cvpj_l_plugin['loop']['enabled'] = 0
+                    cvpj_loop['enabled'] = 0
                     loopdata = None
+
+                plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
+
                 print("[input-st3] Ripping Sample " + str(s3m_numinst))
                 bio_mainfile.seek(cvpj_inst_samplelocation)
                 os.makedirs(samplefolder, exist_ok=True)
-                wave_path = samplefolder + str(s3m_numinst).zfill(2) + '.wav'
 
                 if s3m_inst_16bit == 0: t_samplelen = s3m_inst_length
                 if s3m_inst_16bit == 1: t_samplelen = s3m_inst_length*2
@@ -373,8 +374,6 @@ class input_s3m(plugin_input.base):
         cvpj_l_playlist = song_tracker.song2playlist(patterntable_all, 32, t_orderlist, startinststr, [0.65, 0.57, 0.33])
 
         patlentable = song_tracker.get_len_table(patterntable_all, t_orderlist)
-
-        cvpj_l = {}
 
         tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, s3m_speed, s3m_tempo))
         placements.make_timemarkers(cvpj_l, [4,16], patlentable, None)

@@ -4,6 +4,7 @@
 from functions import tracks
 from functions import note_data
 from functions import song
+from functions import plugins
 from functions import placement_data
 import xml.etree.ElementTree as ET
 import plugin_input
@@ -31,59 +32,68 @@ def getbool(input_val):
     if input_val == 'true': return 1
     if input_val == 'false': return 0
 
-def setasdr(i_dict, i_attack, i_decay, i_release, i_sustain):
-    i_dict['amount'] = 1
-    i_dict['attack'] = i_attack
-    i_dict['decay'] = i_decay
-    i_dict['hold'] = 0
-    i_dict['predelay'] = 0
-    i_dict['release'] = i_release
-    i_dict['sustain'] = i_sustain
-    if i_dict['decay'] == 0: i_sustain = 1
+def setasdr(i_attack, i_decay, i_release, i_sustain):
+    out_attack = i_attack
+    out_decay = i_decay
+    out_release = i_release
+    out_sustain = i_sustain
+    if out_decay == 0: i_sustain = 1
+    return out_attack, out_decay, out_release, out_sustain
 
 audiosanua_device_params = {}
 audiosanua_device_params[1] = ['aOp1', 'aOp2', 'attack', 'decay', 'dOp1', 'dOp2', 'fine1', 'fine2', 'fm', 'oct1', 'oct2', 'osc1Vol', 'osc2Vol', 'portamento', 'release', 'semi1', 'semi2', 'sOp1', 'sOp2', 'sustain', 'wave1', 'wave2', 'waveform']
 audiosanua_device_params[0] = ['aOp1', 'aOp2', 'aOp3', 'aOp4', 'attack', 'decay', 'dOp1', 'dOp2', 'dOp3', 'dOp4','fine1', 'fine2', 'fine3', 'fine4', 'fmAlgorithm', 'fmFeedBack', 'frq1', 'frq2', 'frq3', 'frq4', 'opAmp1', 'opAmp2', 'opAmp3', 'opAmp4', 'portamento', 'release', 'sOp1', 'sOp2', 'sOp3', 'sOp4', 'sustain', 'waveform']
+audiosanua_device_id = ['analog', 'fm']
 
 def make_fxslot(x_device_sound, fx_type, as_device):
-    fx_plugindata = {}
+    pluginid = plugins.get_id()
+
     fx_wet = 1
     if fx_type == 'chorus':
-        fx_plugindata['speed'] = float(getvalue(x_device_sound, 'chorusSpeed', 0))/100
+        plugins.add_plug(cvpj_l, pluginid, 'native-audiosauna', 'chorus')
+        plugins.add_plug_param(cvpj_l, pluginid, "speed", float(getvalue(x_device_sound, 'chorusSpeed', 0))/100, 'float', "Speed")
+
         if as_device in [0,1]: 
             fx_wet = float(getvalue(x_device_sound, 'chorusMix', 0))/100
-            fx_plugindata['level'] = float(getvalue(x_device_sound, 'chorusLevel', 0))/100
+            plugins.add_plug_param(cvpj_l, pluginid, "size", float(getvalue(x_device_sound, 'chorusLevel', 0))/100, 'float', "Size")
         else: 
             fx_wet = float(getvalue(x_device_sound, 'chorusDryWet', 0))/100
-            fx_plugindata['level'] = float(getvalue(x_device_sound, 'chorusSize', 0))/100
+            plugins.add_plug_param(cvpj_l, pluginid, "size", float(getvalue(x_device_sound, 'chorusSize', 0))/100, 'float', "Size")
+
+        plugins.add_plug_fxdata(cvpj_l, pluginid, True, fx_wet)
 
     if fx_type == 'distortion':
-        fx_plugindata['overdrive'] = float(getvalue(x_device_sound, 'overdrive', 0))/100
-        if as_device in [0,1]: fx_plugindata['modulate'] = float(getvalue(x_device_sound, 'driveModul', 0))/100
-        else: fx_plugindata['modulate'] = float(getvalue(x_device_sound, 'modulate', 0))/100
+        plugins.add_plug(cvpj_l, pluginid, 'native-audiosauna', 'distortion')
+        plugins.add_plug_param(cvpj_l, pluginid, "overdrive", float(getvalue(x_device_sound, 'overdrive', 0))/100, 'float', "Overdrive")
+        if as_device in [0,1]: plugins.add_plug_param(cvpj_l, pluginid, "modulate", float(getvalue(x_device_sound, 'driveModul', 0))/100, 'float', "Modulate")
+        else: plugins.add_plug_param(cvpj_l, pluginid, "modulate", float(getvalue(x_device_sound, 'modulate', 0))/100, 'float', "Modulate")
 
-    bitrateval = float(getvalue(x_device_sound, 'bitrate', 0))
-    if bitrateval != 0.0: 
-        if fx_type == 'bitcrush': fx_plugindata['frames'] = bitrateval
-
-    ampval = float(getvalue(x_device_sound, 'masterAmp', 0))/100
-    if ampval != 1.0: 
-        if fx_type == 'amp': fx_plugindata['level'] = ampval
-
+    if fx_type == 'bitcrush':
+        bitrateval = float(getvalue(x_device_sound, 'bitrate', 0))
+        if bitrateval != 0.0: 
+            plugins.add_plug(cvpj_l, pluginid, 'native-audiosauna', 'bitcrush')
+            plugins.add_plug_param(cvpj_l, pluginid, "frames", bitrateval, 'float', "Frames")
 
     if fx_type == 'tape_delay':
-        fx_plugindata['time'] = float(getvalue(x_device_sound, 'dlyTime', 0))
-        fx_plugindata['damage'] = float(getvalue(x_device_sound, 'dlyDamage', 0))/100
-        fx_plugindata['feedback'] = float(getvalue(x_device_sound, 'dlyFeed', 0))/100
-        fx_plugindata['sync'] = getbool(getvalue(x_device_sound, 'dlySync', 0))
-        fx_plugindata['bpm'] = x_BPM
+        plugins.add_plug(cvpj_l, pluginid, 'native-audiosauna', 'tape_delay')
+        plugins.add_plug_param(cvpj_l, pluginid, "time", float(getvalue(x_device_sound, 'dlyTime', 0)), 'float', "Time")
+        plugins.add_plug_param(cvpj_l, pluginid, "damage", float(getvalue(x_device_sound, 'dlyDamage', 0))/100, 'float', "Damage")
+        plugins.add_plug_param(cvpj_l, pluginid, "feedback", float(getvalue(x_device_sound, 'dlyFeed', 0))/100, 'float', "Feedback")
+        plugins.add_plug_param(cvpj_l, pluginid, "sync", getbool(getvalue(x_device_sound, 'dlySync', 0)), 'float', "Sync")
 
     if fx_type == 'reverb':
-        fx_plugindata['time'] = float(getvalue(x_device_sound, 'rvbTime', 0))/100
-        fx_plugindata['feedback'] = float(getvalue(x_device_sound, 'rvbFeed', 0))/100
-        fx_plugindata['width'] = float(getvalue(x_device_sound, 'rvbWidth', 0))/100
+        plugins.add_plug(cvpj_l, pluginid, 'native-audiosauna', 'reverb')
+        plugins.add_plug_param(cvpj_l, pluginid, "time", float(getvalue(x_device_sound, 'rvbTime', 0)), 'float', "Time")
+        plugins.add_plug_param(cvpj_l, pluginid, "feedback", float(getvalue(x_device_sound, 'rvbFeed', 0))/100, 'float', "Feedback")
+        plugins.add_plug_param(cvpj_l, pluginid, "width", float(getvalue(x_device_sound, 'rvbWidth', 0))/100, 'float', "Width")
 
-    return fx_plugindata, fx_wet
+    if fx_type == 'amp':
+        ampval = float(getvalue(x_device_sound, 'masterAmp', 0))/100
+        if ampval != 1.0: 
+            plugins.add_plug(cvpj_l, pluginid, 'native-audiosauna', 'amp')
+            plugins.add_plug_param(cvpj_l, pluginid, "level", ampval, 'float', "Level")
+
+    return pluginid
 
 class input_audiosanua(plugin_input.base):
     def __init__(self): pass
@@ -94,6 +104,7 @@ class input_audiosanua(plugin_input.base):
     def getdawcapabilities(self): return {'placement_cut': True}
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
+        global cvpj_l
         zip_data = zipfile.ZipFile(input_file, 'r')
 
         cvpj_l = {}
@@ -114,7 +125,6 @@ class input_audiosanua(plugin_input.base):
         xt_pattern = x_proj_songPatterns.findall('pattern')
         xt_devices = x_proj_devices.findall('audioDevice')
 
-        global x_BPM
         x_BPM = float(getvalue(x_proj, 'appTempo', 170))
 
         cvpj_plnotes = {}
@@ -124,13 +134,11 @@ class input_audiosanua(plugin_input.base):
 
         tracks.r_add_return(cvpj_l, ['master'], 'audiosauna_send_tape_delay')
         tracks.r_add_return_basicdata(cvpj_l, ['master'], 'audiosauna_send_tape_delay', 'Tape Delay', None, int(getvalue(x_proj,'dlyLevel',100))/100, None)
-        send_reverb_data = make_fxslot(x_proj, 'tape_delay', None)
-        tracks.add_fxslot_native(cvpj_l, 'audio', 'audiosauna', ['return', None, 'audiosauna_send_tape_delay'], None, None, None, 'tape_delay', send_reverb_data[0])
+        tracks.insert_fxslot(cvpj_l, ['return', None, 'audiosauna_send_tape_delay'], 'audio', make_fxslot(x_proj, 'tape_delay', None))
 
         tracks.r_add_return(cvpj_l, ['master'], 'audiosauna_send_reverb')
         tracks.r_add_return_basicdata(cvpj_l, ['master'], 'audiosauna_send_reverb', 'Reverb', None, int(getvalue(x_proj,'rvbLevel',100))/100, None)
-        send_reverb_data = make_fxslot(x_proj, 'reverb', None)
-        tracks.add_fxslot_native(cvpj_l, 'audio', 'audiosauna', ['return', None, 'audiosauna_send_reverb'], None, None, None, 'reverb', send_reverb_data[0])
+        tracks.insert_fxslot(cvpj_l, ['return', None, 'audiosauna_send_reverb'], 'audio', make_fxslot(x_proj, 'reverb', None))
 
         # ------------------------------------------ tracks ------------------------------------------
         for x_track in xt_track:
@@ -196,36 +204,30 @@ class input_audiosanua(plugin_input.base):
             cvpj_trackid = 'audiosanua'+str(devicenum)
 
             cvpj_instdata = {}
-            cvpj_instdata['plugindata'] = {}
-            cvpj_plugindata = cvpj_instdata['plugindata']
-            cvpj_plugindata['asdrlfo'] = {}
-            cvpj_plugindata['asdrlfo']['volume'] = {'envelope': {}, 'lfo': {}}
-            cvpj_plugindata['asdrlfo']['cutoff'] = {'envelope': {}, 'lfo': {}}
-            cvpj_plugindata['asdrlfo']['pitch'] = {'envelope': {}, 'lfo': {}}
-            vol_asdr = cvpj_plugindata['asdrlfo']['volume']['envelope']
-            cutoff_asdr = cvpj_plugindata['asdrlfo']['cutoff']['envelope']
-            cutoff_lfo = cvpj_plugindata['asdrlfo']['cutoff']['lfo']
-            pitch_lfo = cvpj_plugindata['asdrlfo']['pitch']['lfo']
+
+            pluginid = plugins.get_id()
 
             if v_device_deviceType == 1 or v_device_deviceType == 0:
+                plugins.add_plug(cvpj_l, pluginid, 'native-audiosauna', audiosanua_device_id[v_device_deviceType])
                 x_device_sound = x_device.findall('sound')[0]
-                cvpj_instdata['plugin'] = 'native-audiosauna'
-                cvpj_plugindata['type'] = v_device_deviceType
-                cvpj_plugindata['data'] = {}
-                for v_device_param in audiosanua_device_params[v_device_deviceType]:
-                    cvpj_plugindata['data'][v_device_param] = getvalue(x_device_sound, v_device_param, 0)
 
-                setasdr(vol_asdr, 
+                for v_device_param in audiosanua_device_params[v_device_deviceType]:
+                    plugins.add_plug_param(cvpj_l, pluginid, v_device_param, float(getvalue(x_device_sound, v_device_param, 0)), 'float', v_device_param)
+
+                v_attack, v_decay, v_release, v_sustain = setasdr(
                     float(getvalue(x_device_sound, 'attack', 0)), 
                     float(getvalue(x_device_sound, 'decay', 0)), 
                     float(getvalue(x_device_sound, 'release', 0)), 
-                    float(getvalue(x_device_sound, 'sustain', 0)))
+                    float(getvalue(x_device_sound, 'sustain', 0))
+                    )
+
+                plugins.add_asdr_env(cvpj_l, pluginid, 'volume', 0, v_attack, 0, v_decay, v_sustain, v_release, 1)
                 
             if v_device_deviceType == 2:
+                plugins.add_plug_multisampler(cvpj_l, pluginid)
+                plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "percent")
                 x_device_sound = x_device.findall('sampler')[0]
-                cvpj_instdata['plugin'] = 'sampler-multi'
-                cvpj_plugindata['point_value_type'] = 'percent'
-                cvpj_plugindata['regions'] = []
+
                 x_device_samples = x_device_sound.findall('samples')[0]
                 for x_cell in x_device_samples.findall('cell'):
                     t_loKey = float(getvalue(x_cell, 'loKey', 60))
@@ -262,35 +264,37 @@ class input_audiosanua(plugin_input.base):
                     cvpj_region['start'] = float(t_smpStart)/100
                     cvpj_region['end'] = float(t_smpEnd)/100
                     cvpj_region['trigger'] = 'normal'
+                    plugins.add_plug_multisampler_region(cvpj_l, pluginid, cvpj_region)
 
-                    cvpj_plugindata['regions'].append(cvpj_region)
-
-                setasdr(vol_asdr, 
+                v_attack, v_decay, v_release, v_sustain = setasdr(
                     float(getvalue(x_device_sound, 'masterAttack', 0)), 
                     float(getvalue(x_device_sound, 'masterDecay', 0)), 
                     float(getvalue(x_device_sound, 'masterRelease', 0)), 
-                    float(getvalue(x_device_sound, 'masterSustain', 0)))
+                    float(getvalue(x_device_sound, 'masterSustain', 0))
+                    )
 
-            cvpj_plugindata['middlenote'] = int(getvalue(x_device_sound, 'masterTranspose', 0))*-1
-            cvpj_plugindata['amp'] = int(getvalue(x_device_sound, 'masterAmp', 0))/100
-            cvpj_plugindata['filter'] = {}
-            t_cutoff = int(getvalue(x_device_sound, 'cutoff', 0))/100
-            cvpj_plugindata['filter']['cutoff'] = int(t_cutoff)*7200
-            cvpj_plugindata['filter']['reso'] = int(getvalue(x_device_sound, 'resonance', 0))/100
-            audiosauna_filtertype = getvalue(x_device_sound, 'filterType', 0)
-            if audiosauna_filtertype == '0': 
-                cvpj_plugindata['filter']['type'] = "lowpass"
-            if audiosauna_filtertype == '1': 
-                cvpj_plugindata['filter']['type'] = 'highpass'
-            if audiosauna_filtertype == '2': 
-                cvpj_plugindata['filter']['type'] = "lowpass"
-                cvpj_plugindata['filter']['subtype'] = "double"
-            cvpj_plugindata['filter']['wet'] = 1
-            setasdr(cutoff_asdr, 
+                plugins.add_asdr_env(cvpj_l, pluginid, 'volume', 0, v_attack, 0, v_decay, v_sustain, v_release, 1)
+                
+            cvpj_instdata['middlenote'] = int(getvalue(x_device_sound, 'masterTranspose', 0))*-1
+
+            pre_t_cutoff = int(getvalue(x_device_sound, 'cutoff', 0))/100
+
+            filter_cutoff = int(pre_t_cutoff)*7200
+            filter_reso = int(getvalue(x_device_sound, 'resonance', 0))/100
+
+            audiosauna_filtertype = getvalue(x_device_sound, 'filterType', '0')
+            if audiosauna_filtertype == '0': filter_type = ['lowpass', None]
+            if audiosauna_filtertype == '1': filter_type = ['highpass', None]
+            if audiosauna_filtertype == '2': filter_type = ["lowpass", "double"]
+
+            plugins.add_filter(cvpj_l, pluginid, True, filter_cutoff, filter_reso, filter_type[0], filter_type[1])
+
+            f_attack, f_decay, f_release, f_sustain = setasdr(
                 float(getvalue(x_device_sound, 'filterAttack', 0)), 
                 float(getvalue(x_device_sound, 'filterDecay', 0)), 
                 float(getvalue(x_device_sound, 'filterRelease', 0)), 
                 float(getvalue(x_device_sound, 'filterSustain', 0)))
+
             audiosauna_lfoActive = getvalue(x_device_sound, 'lfoActive', 'false')
             audiosauna_lfoToggled = getvalue(x_device_sound, 'lfoToggled', 'false')
             audiosauna_lfoTime = float(getvalue(x_device_sound, 'lfoTime', 1))
@@ -298,28 +302,27 @@ class input_audiosanua(plugin_input.base):
             audiosauna_lfoPitch = float(getvalue(x_device_sound, 'lfoPitch', 0))
             audiosauna_lfoDelay = float(getvalue(x_device_sound, 'lfoDelay', 0))
             audiosauna_lfoWaveForm = getvalue(x_device_sound, 'lfoWaveForm', 0)
+
             if audiosauna_lfoWaveForm == '0': audiosauna_lfoWaveForm = "tri"
             if audiosauna_lfoWaveForm == '1': audiosauna_lfoWaveForm = 'square'
             if audiosauna_lfoWaveForm == '2': audiosauna_lfoWaveForm = "random"
             if audiosauna_lfoToggled == 'true': audiosauna_lfoToggled = 1
             if audiosauna_lfoToggled == 'false': audiosauna_lfoToggled = 0
-            pitch_lfo['amount'] = ((audiosauna_lfoPitch/100)*12)*audiosauna_lfoToggled
-            pitch_lfo['attack'] = audiosauna_lfoDelay
-            pitch_lfo['predelay'] = 0
-            pitch_lfo['shape'] = audiosauna_lfoWaveForm
-            pitch_lfo['speed'] = {"time": audiosauna_lfoTime, "type": "seconds"}
-            cutoff_lfo['amount'] = ((audiosauna_lfoFilter/100)*-7200)*audiosauna_lfoToggled
-            cutoff_lfo['attack'] = audiosauna_lfoDelay
-            cutoff_lfo['predelay'] = 0
-            cutoff_lfo['shape'] = audiosauna_lfoWaveForm
-            cutoff_lfo['speed'] = {"time": audiosauna_lfoTime, "type": "seconds"}
+            p_lfo_amount = ((audiosauna_lfoPitch/100)*12)*audiosauna_lfoToggled
+            c_lfo_amount = ((audiosauna_lfoFilter/100)*-7200)*audiosauna_lfoToggled
+            g_lfo_attack = audiosauna_lfoDelay
+            g_lfo_shape = audiosauna_lfoWaveForm
+            g_lfo_speed = audiosauna_lfoTime
 
-            tracks.r_param(cvpj_l, cvpj_trackid, 'instdata', cvpj_instdata)
+            plugins.add_lfo(cvpj_l, pluginid, 'pitch', 
+                g_lfo_shape, 'seconds', g_lfo_speed, 0, g_lfo_attack, p_lfo_amount)
+            plugins.add_lfo(cvpj_l, pluginid, 'cutoff', 
+                g_lfo_shape, 'seconds', g_lfo_speed, 0, g_lfo_attack, c_lfo_amount)
+            
+            tracks.r_param(cvpj_l, cvpj_trackid, 'instdata', {'pluginid': pluginid})
 
             for fx_name in ['distortion', 'bitcrush', 'chorus', 'amp']:
-                fx_plugindata, fx_wet = make_fxslot(x_device_sound, fx_name, v_device_deviceType)
-                if fx_plugindata != {}:
-                    tracks.add_fxslot_native(cvpj_l, 'audio', 'audiosauna', ['track', cvpj_trackid], None, fx_wet, None, fx_name, fx_plugindata)
+                tracks.insert_fxslot(cvpj_l, ['track', cvpj_trackid], 'audio', make_fxslot(x_proj, fx_name, v_device_deviceType))
 
             devicenum += 1
 

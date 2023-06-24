@@ -18,20 +18,17 @@ from functions import notelist_data
 from functions import data_values
 from functions import song
 from functions import audio
-
+from functions import plugins
 
 filename_len = {}
 
-
-def getsamplefile(jsontag, channeldata, flppath):
+def getsamplefile(channeldata, flppath):
     if 'samplefilename' in channeldata: 
         pathout = channeldata['samplefilename']
         samepath = os.path.join(os.path.dirname(flppath), os.path.basename(pathout))
         if os.path.exists(samepath): pathout = samepath
 
-        jsontag['file'] = ''
-        if pathout != None: 
-            jsontag['file'] = pathout
+        if pathout != None:
             audioinfo = audio.get_audiofile_info(pathout)
             filename_len[pathout] = audioinfo
         return pathout
@@ -120,15 +117,22 @@ class input_flp(plugin_input.base):
                 cvpj_inst['color'] = [color[0]/255,color[1]/255,color[2]/255]
                 cvpj_inst['fxrack_channel'] = channeldata['fxchannel']
 
+                pluginid = plugins.get_id()
+
                 if channeldata['type'] == 0:
-                    cvpj_inst['instdata']['plugin'] = "sampler"
-                    cvpj_inst['instdata']['plugindata'] = {}
-                    getsamplefile(cvpj_inst['instdata']['plugindata'], channeldata, input_file)
+                    cvpj_inst['instdata']['pluginid'] = pluginid
+                    plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, 
+                        getsamplefile(channeldata, input_file))
+                    
                 if channeldata['type'] == 2:
-                    cvpj_inst['instdata']['plugin'] = "native-fl"
-                    cvpj_inst['instdata']['plugindata'] = {}
-                    if 'plugin' in channeldata: cvpj_inst['instdata']['plugindata']['name'] = channeldata['plugin']
-                    if 'pluginparams' in channeldata: cvpj_inst['instdata']['plugindata']['data'] = base64.b64encode(channeldata['pluginparams']).decode('ascii')
+                    cvpj_inst['instdata']['pluginid'] = pluginid
+                    flpluginname = ''
+                    if 'plugin' in channeldata: flpluginname = channeldata['plugin']
+                    plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', flpluginname)
+                    if 'pluginparams' in channeldata: 
+                        plugins.add_plug_data(cvpj_l, pluginid, 'chunk', 
+                            base64.b64encode(channeldata['pluginparams']).decode('ascii'))
+
                 cvpj_inst['poly'] = {}
                 cvpj_inst['poly']['max'] = channeldata['polymax']
 

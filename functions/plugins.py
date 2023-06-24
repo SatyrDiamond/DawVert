@@ -34,6 +34,10 @@ def add_plug_fxdata(cvpj_l, pluginid, i_enabled, i_wet):
 	if i_enabled != None: data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'enabled'], i_enabled)
 	if i_wet != None: data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'wet'], i_wet)
 
+def add_plug_fxvisual(cvpj_l, pluginid, v_name, v_color):
+	if v_name != None: data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'name'], v_name)
+	if v_color != None: data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'color'], v_color)
+
 def add_plug_data(cvpj_l, pluginid, i_name, i_value):
 	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'data', i_name], i_value)
 
@@ -80,6 +84,14 @@ def add_asdr_env(cvpj_l, pluginid, a_type, a_predelay, a_attack, a_hold, a_decay
 	asdrdata['release'] = a_release
 	asdrdata['amount'] = a_amount
 	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'env_asdr', a_type], asdrdata)
+
+def add_env_point(cvpj_l, pluginid, a_type, p_position, p_value, **kwargs):
+	pointdata = {}
+	pointdata['position'] = p_position
+	pointdata['value'] = p_value
+	for key, value in kwargs.items():
+		pointdata[key] = value
+	data_values.nested_dict_add_to_list(cvpj_l, ['plugins', pluginid, 'env_points', a_type], pointdata)
 
 def add_env_blocks(cvpj_l, pluginid, a_type, a_vals, a_loop, a_release):
 	asdrdata = {}

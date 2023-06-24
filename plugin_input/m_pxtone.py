@@ -442,8 +442,15 @@ class input_pxtone(plugin_input.base):
             if t_voice_data[voicenum][0] == 'sampler': cvpj_instvol = 0.3
             else: cvpj_instvol = 1.0
             cvpj_instdata = {}
-            cvpj_instdata['plugin'] = t_voice_data[voicenum][0]
-            cvpj_instdata['plugindata'] = t_voice_data[voicenum][1]
+            pluginid = plugins.get_id()
+
+            plugindata = t_voice_data[voicenum][1]
+            if t_voice_data[voicenum][0] == 'sampler':
+                cvpj_instdata['pluginid'] = pluginid
+                plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, plugindata['file'])
+                plugins.add_plug_data(cvpj_l, pluginid, 'trigger', plugindata['trigger'])
+                plugins.add_plug_data(cvpj_l, pluginid, 'interpolation', plugindata['interpolation'])
+
             cvpj_instdata['middlenote'] = t_voice_data[voicenum][2]
             instid = 'ptcop_'+str(voicenum)
             tracks.m_create_inst(cvpj_l, instid, cvpj_instdata)

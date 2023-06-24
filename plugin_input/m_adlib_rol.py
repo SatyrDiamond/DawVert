@@ -7,6 +7,7 @@ from functions import placement_data
 from functions import idvals
 from functions import auto
 from functions import data_bytes
+from functions import plugins
 import plugin_input
 import json
 import struct
@@ -42,54 +43,6 @@ def load_bank(filename):
         adlib_bnk_data.append([PercData, oplModulator, oplCarrier, WaveSel])
     
     return adlib_bnk_names, adlib_bnk_data
-
-def decode_inst(instname):
-    opl2data = adlib_bnk[1][adlib_bnk[0][instname][0]]
-
-    cvpj_instdata = {}
-    cvpj_instdata['middlenote'] = 24
-    cvpj_instdata['plugin'] = 'opl2'
-    plugindata = cvpj_instdata['plugindata'] = {}
-
-    if opl2data[0][0] == 1: plugindata['perctype'] = opl2data[0][1]-6
-    else: plugindata['perctype'] = 0
-
-    plugindata['tremolo_depth'] = 0
-    plugindata['vibrato_depth'] = 0
-    plugindata['fm'] = 1
-
-    plugindata['op1'] = {}
-    plugindata['op2'] = {}
-
-    plugindata['op1']['scale'] = opl2data[1][0]
-    plugindata['op1']['freqmul'] = opl2data[1][1]
-    plugindata['feedback'] = opl2data[1][2]
-    plugindata['op1']['env_attack'] = (opl2data[1][3]*-1)+15
-    plugindata['op1']['env_sustain'] = (opl2data[1][4]*-1)+15
-    plugindata['op1']['perc_env'] = int(not bool(opl2data[1][5]))
-    plugindata['op1']['env_decay'] = (opl2data[1][6]*-1)+15
-    plugindata['op1']['env_release'] = (opl2data[1][7]*-1)+15
-    plugindata['op1']['level'] = (opl2data[1][8]*-1)+63
-    plugindata['op1']['tremolo'] = opl2data[1][9]
-    plugindata['op1']['vibrato'] = opl2data[1][10]
-    plugindata['op1']['ksr'] = opl2data[1][11]
-    plugindata['fm'] = opl2data[1][12]
-    plugindata['op1']['waveform'] = opl2data[3][0]
-
-    plugindata['op2']['scale'] = opl2data[2][0]
-    plugindata['op2']['freqmul'] = opl2data[2][1]
-    plugindata['op2']['env_attack'] = (opl2data[2][3]*-1)+15
-    plugindata['op2']['env_sustain'] = (opl2data[2][4]*-1)+15
-    plugindata['op2']['perc_env'] = int(not bool(opl2data[2][5]))
-    plugindata['op2']['env_decay'] = (opl2data[2][6]*-1)+15
-    plugindata['op2']['env_release'] = (opl2data[2][7]*-1)+15
-    plugindata['op2']['level'] = (opl2data[2][8]*-1)+63
-    plugindata['op2']['tremolo'] = opl2data[2][9]
-    plugindata['op2']['vibrato'] = opl2data[2][10]
-    plugindata['op2']['ksr'] = opl2data[2][11]
-    plugindata['op2']['waveform'] = opl2data[3][1]
-
-    return cvpj_instdata
 
 # --------------------------------------- Track Data ----------------------------------------
 
@@ -169,11 +122,58 @@ def parsetrack(file_stream, tracknum, notelen):
         cvpj_instdata = {}
 
         if adlib_bnk == None:
+            cvpj_instdata = {}
             adlibrol_gminst = idvals.get_idval(idvals_inst_adlib_rol, used_instrument_upper, 'gm_inst')
-            if adlibrol_gminst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': adlibrol_gminst-1}}
+            if adlibrol_gminst != None: 
+                pluginid = plugins.get_id()
+                plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, adlibrol_gminst-1)
+                cvpj_instdata['pluginid'] = pluginid
         else:
             if used_instrument_upper in adlib_bnk[0]:
-                cvpj_instdata = decode_inst(used_instrument_upper)
+                opl2data = adlib_bnk[1][adlib_bnk[0][used_instrument_upper][0]]
+                pluginid = plugins.get_id()
+                cvpj_instdata = {}
+                cvpj_instdata['middlenote'] = 24
+                cvpj_instdata['pluginid'] = pluginid
+                plugins.add_plug(cvpj_l, pluginid, 'fm', 'opl2')
+                
+                if opl2data[0][0] == 1: 
+                    plugins.add_plug_param(cvpj_l, pluginid, 'perctype', opl2data[0][1]-6, 'int', 'perctype')
+                else: 
+                    plugins.add_plug_param(cvpj_l, pluginid, 'perctype', 0, 'int', 'perctype')
+
+                plugins.add_plug_param(cvpj_l, pluginid, 'tremolo_depth', 0, 'int', 'tremolo_depth')
+                plugins.add_plug_param(cvpj_l, pluginid, 'vibrato_depth', 0, 'int', 'vibrato_depth')
+                plugins.add_plug_param(cvpj_l, pluginid, 'fm', 1, 'int', 'fm')
+                
+                plugins.add_plug_param(cvpj_l, pluginid, 'op1_scale', opl2data[1][0], 'int', 'op1_scale')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op1_freqmul', opl2data[1][1], 'int', 'op1_freqmul')
+                plugins.add_plug_param(cvpj_l, pluginid, 'feedback', opl2data[1][2], 'int', 'feedback')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op1_env_attack', (opl2data[1][3]*-1)+15, 'int', 'op1_env_attack')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op1_env_sustain', (opl2data[1][4]*-1)+15, 'int', 'op1_env_sustain')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op1_perc_env', int(not bool(opl2data[1][5])), 'int', 'op1_perc_env')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op1_env_decay', (opl2data[1][6]*-1)+15, 'int', 'op1_env_decay')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op1_env_release', (opl2data[1][7]*-1)+15, 'int', 'op1_env_release')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op1_level', (opl2data[1][8]*-1)+63, 'int', 'op1_level')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op1_tremolo', opl2data[1][9], 'int', 'op1_tremolo')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op1_vibrato', opl2data[1][10], 'int', 'op1_vibrato')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op1_ksr', opl2data[1][11], 'int', 'op1_ksr')
+                plugins.add_plug_param(cvpj_l, pluginid, 'fm', opl2data[1][12], 'int', 'fm')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op1_waveform', opl2data[3][0], 'int', 'op1_waveform')
+
+                plugins.add_plug_param(cvpj_l, pluginid, 'op2_scale', opl2data[2][0], 'int', 'op2_scale')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op2_freqmul', opl2data[2][1], 'int', 'op2_freqmul')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op2_env_attack', (opl2data[2][3]*-1)+15, 'int', 'op2_env_attack')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op2_env_sustain', (opl2data[2][4]*-1)+15, 'int', 'op2_env_sustain')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op2_perc_env', int(not bool(opl2data[2][5])), 'int', 'op2_perc_env')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op2_env_decay', (opl2data[2][6]*-1)+15, 'int', 'op2_env_decay')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op2_env_release', (opl2data[2][7]*-1)+15, 'int', 'op2_env_release')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op2_level', (opl2data[2][8]*-1)+63, 'int', 'op2_level')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op2_tremolo', opl2data[2][9], 'int', 'op2_tremolo')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op2_vibrato', opl2data[2][10], 'int', 'op2_vibrato')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op2_ksr', opl2data[2][11], 'int', 'op2_ksr')
+                plugins.add_plug_param(cvpj_l, pluginid, 'op2_waveform', opl2data[3][1], 'int', 'op2_waveform')
+
 
         tracks.m_create_inst(cvpj_l, instid, cvpj_instdata)
         tracks.m_basicdata_inst(cvpj_l, instid, adlibrol_instname+' (Trk'+str(tracknum+1)+')', None, None, None)

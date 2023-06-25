@@ -239,11 +239,11 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_inst):
             plugins.add_plug_param(cvpj_l, pluginid, 'chorus_depth', float(xml_plugin.get('chorusDepth')), 'float', 'chorusDepth')
             plugins.add_plug_param(cvpj_l, pluginid, 'chorus_level', float(xml_plugin.get('chorusLevel')), 'float', 'chorusLevel')
             plugins.add_plug_param(cvpj_l, pluginid, 'chorus_lines', float(xml_plugin.get('chorusNum')), 'float', 'chorusNum')
-            plugins.add_plug_param(cvpj_l, pluginid, 'chorus_enabled', float(xml_plugin.get('chorusOn')), 'float', 'chorusOn')
+            plugins.add_plug_param(cvpj_l, pluginid, 'chorus_enabled', float(xml_plugin.get('chorusOn')), 'bool', 'chorusOn')
             plugins.add_plug_param(cvpj_l, pluginid, 'chorus_speed', float(xml_plugin.get('chorusSpeed')), 'float', 'chorusSpeed')
             plugins.add_plug_param(cvpj_l, pluginid, 'reverb_damping', float(xml_plugin.get('reverbDamping')), 'float', 'reverbDamping')
             plugins.add_plug_param(cvpj_l, pluginid, 'reverb_level', float(xml_plugin.get('reverbLevel')), 'float', 'reverbLevel')
-            plugins.add_plug_param(cvpj_l, pluginid, 'reverb_enabled', float(xml_plugin.get('reverbOn')), 'float', 'reverbOn')
+            plugins.add_plug_param(cvpj_l, pluginid, 'reverb_enabled', float(xml_plugin.get('reverbOn')), 'bool', 'reverbOn')
             plugins.add_plug_param(cvpj_l, pluginid, 'reverb_roomsize', float(xml_plugin.get('reverbRoomSize')), 'float', 'reverbRoomSize')
             plugins.add_plug_param(cvpj_l, pluginid, 'reverb_width', float(xml_plugin.get('reverbWidth')), 'float', 'reverbWidth')
 

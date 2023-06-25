@@ -274,9 +274,9 @@ class input_trackerboy(plugin_input.base):
                     plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, env_attack, 0, env_decay, env_sustain, 0, 1)
                 else:
                     if trackerboy_instdata[6] == 0: 
-                        plugins.add_plug_data(cvpj_l, pluginid, 'wave', t_waves[1][1])
+                        plugins.add_wave(cvpj_l, pluginid, 'main', t_waves[1][1], 0, 15)
                     else: 
-                        plugins.add_plug_data(cvpj_l, pluginid, 'wave', t_waves[trackerboy_instdata[6]+1][1])
+                        plugins.add_wave(cvpj_l, pluginid, 'main', t_waves[trackerboy_instdata[6]+1][1], 0, 15)
 
                 tracks.m_create_inst(cvpj_l, cvpj_instid, {'pluginid': pluginid})
                 tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, 0.4, 0.0)

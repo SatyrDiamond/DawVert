@@ -91,7 +91,10 @@ def add_env_point(cvpj_l, pluginid, a_type, p_position, p_value, **kwargs):
 	pointdata['value'] = p_value
 	for key, value in kwargs.items():
 		pointdata[key] = value
-	data_values.nested_dict_add_to_list(cvpj_l, ['plugins', pluginid, 'env_points', a_type], pointdata)
+	data_values.nested_dict_add_to_list(cvpj_l, ['plugins', pluginid, 'env_points', a_type, 'points'], pointdata)
+
+def add_env_point_var(cvpj_l, pluginid, a_type, p_name, p_value):
+	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'env_points', a_type, p_name], p_value)
 
 def add_env_blocks(cvpj_l, pluginid, a_type, a_vals, a_loop, a_release):
 	asdrdata = {}
@@ -105,6 +108,12 @@ def add_lfo(cvpj_l, pluginid, a_type, a_shape, a_time_type, a_speed, a_predelay,
 	lfodata['amount'] = a_amount
 	lfodata['shape'] = a_shape
 	lfodata['speed'] = {'type': a_time_type, 'speed': a_speed}
-	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'lfo', a_type], lfodata)
 	lfodata['predelay'] = a_predelay
 	lfodata['attack'] = a_attack
+	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'lfo', a_type], lfodata)
+
+def add_wave(cvpj_l, pluginid, i_name, i_wavepoints, i_min, i_max):
+	wavedata = {}
+	wavedata['range'] = [i_min,i_max]
+	wavedata['points'] = i_wavepoints
+	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'wave', i_name], wavedata)

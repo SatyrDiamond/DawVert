@@ -76,13 +76,10 @@ def convert_inst(instdata):
 		flsf_unk, flsf_patch, flsf_bank, flsf_reverb_sendlvl, flsf_chorus_sendlvl, flsf_mod = struct.unpack('iiiiii', fl_plugstr.read(24))
 		flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R = struct.unpack('iiii', fl_plugstr.read(16))
 		flsf_lfo_predelay, flsf_lfo_amount, flsf_lfo_speed, flsf_cutoff = struct.unpack('iiii', fl_plugstr.read(16))
-
 		flsf_filelen = int.from_bytes(fl_plugstr.read(1), "little")
 		flsf_filename = fl_plugstr.read(flsf_filelen).decode('utf-8')
-
 		flsf_reverb_sendto, flsf_reverb_builtin = struct.unpack('ib', fl_plugstr.read(5))
 		flsf_chorus_sendto, flsf_chorus_builtin = struct.unpack('ib', fl_plugstr.read(5))
-
 		flsf_hqrender = int.from_bytes(fl_plugstr.read(1), "little")
 
 		flsf_patch -= 1

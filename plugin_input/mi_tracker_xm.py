@@ -225,8 +225,8 @@ def parse_instrument(file_stream, samplecount):
         xm_inst_e_head_size = int.from_bytes(file_stream.read(4), "little")
         print("[input-xm]     Sample header size: " + str(xm_inst_e_head_size))
         xm_inst_e_table = struct.unpack('B'*96, file_stream.read(96))
-        xm_inst_e_env_v = struct.unpack('B'*48, file_stream.read(48))
-        xm_inst_e_env_p = struct.unpack('B'*48, file_stream.read(48))
+        xm_inst_e_env_v = struct.unpack('>'+'H'*24, file_stream.read(48))
+        xm_inst_e_env_p = struct.unpack('>'+'H'*24, file_stream.read(48))
         xm_inst_e_number_of_volume_points = file_stream.read(1)[0]
         xm_inst_e_number_of_panning_points = file_stream.read(1)[0]
         xm_inst_e_volume_sustain_point = file_stream.read(1)[0]
@@ -309,6 +309,31 @@ def parse_instrument(file_stream, samplecount):
                 regionparams['loop']['points'] = [xm_loop_start,xm_loop_start+xm_loop_len]
 
             plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
+
+    splitted_points_v = data_values.list_chunks(xm_inst_e_env_v, 2)
+    splitted_points_p = data_values.list_chunks(xm_inst_e_env_p, 2)
+
+    pointsdata = [
+    ['vol', splitted_points_v, xm_inst_e_volume_sustain_point, xm_inst_e_volume_loop_start_point, xm_inst_e_volume_loop_end_point], 
+    ['pan', splitted_points_p, xm_inst_e_panning_sustain_point, xm_inst_e_panning_loop_start_point, xm_inst_e_panning_loop_end_point]
+    ]
+
+    for typedata in pointsdata:
+        zerofound = False
+
+        if typedata[2] != 0: 
+            plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'sustain', typedata[2])
+        if typedata[3] != 0: 
+            plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'loop', [typedata[3], typedata[3]+typedata[4]])
+
+        for groupval in typedata[1]:
+            if groupval[0] == 0:
+                if zerofound == True: break
+                zerofound = True
+            if typedata[0] == 'vol':
+                plugins.add_env_point(cvpj_l, pluginid, 'vol', groupval[0]/48, groupval[1]/64)
+            if typedata[0] == 'pan':
+                plugins.add_env_point(cvpj_l, pluginid, 'pan', groupval[0]/48, (groupval[1]-32)/32)
 
     cvpj_l_instrumentsorder.append(it_samplename)
     if xm_inst_num_samples != 0: xm_cursamplenum += xm_inst_num_samples

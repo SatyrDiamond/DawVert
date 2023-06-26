@@ -75,7 +75,7 @@ class input_piyopiyo(plugin_input.base):
             keyoffset[tracknum] = (trk_octave-2)*12
             wave_path = samplefolder+'/'+str(tracknum+1)+'.wav'
             plugins.add_wave(cvpj_l, pluginid, 'main', trk_waveform, -128, 128)
-            plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trk_envelope, None, None)
+            plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trk_envelope, 128, None, None)
             idval = str(tracknum)
             tracks.r_create_inst(cvpj_l, idval, {'pluginid': pluginid})
             tracks.r_basicdata(cvpj_l, idval, 'note'+str(tracknum), track_colors[tracknum], trk_volume/250, None)

@@ -199,11 +199,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
         pluginid = instJ['pluginid']
         plugintype = plugins.get_plug_type(cvpj_l, pluginid)
 
-        if plugintype[0] != None:
-            if plugintype[1] == None: visual_plugname = plugintype[0]
-            elif plugintype[0] == None: visual_plugname = plugintype[0]+' ('+plugintype[1]+')'
-            else: visual_plugname = 'none'
-        else: visual_plugname = 'none'
+        visual_plugname = str(plugintype[0])+' ('+str(plugintype[1])+')'
 
         cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
 

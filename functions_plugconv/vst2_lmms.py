@@ -31,7 +31,6 @@ def getparam(paramname):
 def convert(cvpj_l, pluginid, plugintype):
 	global pluginid_g
 	global cvpj_l_g
-
 	pluginid_g = pluginid
 	cvpj_l_g = cvpj_l
 
@@ -42,7 +41,7 @@ def convert(cvpj_l, pluginid, plugintype):
 		params_vital.setvalue('osc_1_on', 1)
 		params_vital.setvalue('osc_1_transpose', 12)
 		params_vital.replacewave(0, params_vital_wavetable.resizewave(bitinvader_shape_vals))
-		params_vital.cvpj_asdrlfo2vitalparams(cvpj_l, pluginid, 1, 'volume')
+		params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 1, 'volume')
 		vitaldata = params_vital.getdata()
 		plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
 		return True

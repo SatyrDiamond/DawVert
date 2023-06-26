@@ -7,6 +7,7 @@ import struct
 import math
 from functions_plugparams import params_vital_wavetable
 from functions import plugins
+from functions import xtramath
 
 def create():
     global vitaldata
@@ -358,7 +359,7 @@ def replacewavetables(wavenum, l_keyframes):
     l_wavetable = {}
     l_wavetable['author'] = ''
     l_wavetable['full_normalize'] = True
-    l_wavetable['name'] = "noname"
+    l_wavetable['name'] = ""
     l_wavetable['remove_all_dc'] = True
     l_wavetable['version'] = "1.0.7"
     l_wavetable['groups'] = []
@@ -387,7 +388,7 @@ def set_modulation(num, src, dest, amt, power, bipol, byp, ster):
 def set_lfo(num, num_points, points, powers, smooth, name):
     vitaldata["settings"]["lfos"][num-1] = {"name":name, "num_points":num_points, "points":points,"powers":powers,"smooth":smooth}
 
-def cvpj_asdrlfo2vitalparams(cvpj_l, pluginid, env_num, a_type):
+def importcvpj_env_asdr(cvpj_l, pluginid, env_num, a_type):
     asdrdata = plugins.get_asdr_env(cvpj_l, pluginid, a_type)
     setvalue_timed('env_'+str(env_num)+'_delay', asdrdata[0])
     setvalue_timed('env_'+str(env_num)+'_attack', asdrdata[1])
@@ -396,6 +397,34 @@ def cvpj_asdrlfo2vitalparams(cvpj_l, pluginid, env_num, a_type):
     setvalue('env_'+str(env_num)+'_sustain', asdrdata[4])
     setvalue_timed('env_'+str(env_num)+'_release', asdrdata[5])
 
+def importcvpj_env_block(cvpj_l, pluginid, lfo_num, a_type):
+    blockdata = plugins.get_env_blocks(cvpj_l, pluginid, a_type)
+    if 'values' in blockdata:
+        blockvals = blockdata['values']
+        blockcount = len(blockvals)
+        if 'max' in blockdata: 
+            maxval = blockdata['max']
+            blockvals = [xtramath.betweenvalues_r(0, maxval, i) for i in blockvals]
+
+        vital_points = []
+        vital_powers = []
+        for pointnum in range(blockcount):
+            envpoint = blockvals[pointnum]
+            vital_points.append(pointnum/(blockcount-1))
+            vital_points.append(1+(envpoint*-1))
+            vital_powers.append(0.0)
+
+        set_lfo(1, 64, vital_points, vital_powers, False, 'PiyoPiyo')
+        setvalue('lfo_'+str(lfo_num)+'_sync_type', 2.0)
+
+def importcvpj_wave(cvpj_l, pluginid, osc_num, wave_name):
+    wavedata = plugins.get_wave(cvpj_l, pluginid, wave_name)
+    if wavedata != None:
+        wavedata_points = wavedata['points']
+        if 'range' in wavedata:
+            rangedata = wavedata['range']
+            wavedata_points = [xtramath.betweenvalues_r(rangedata[0], rangedata[1], i) for i in wavedata_points]
+        replacewave(osc_num-1, params_vital_wavetable.resizewave(wavedata_points))
 
 def getdata():
     global vitaldata

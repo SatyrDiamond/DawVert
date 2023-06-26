@@ -80,7 +80,6 @@ def replace_data(cvpj_l, pluginid, platform, in_name, datatype, data, numparams)
 
 	if vst_path != None:
 		plugintype = plugins.get_plug_type(cvpj_l, pluginid)
-		print(plugintype)
 
 		if plugintype[0] != 'vst2':
 			plugins.replace_plug(cvpj_l, pluginid, 'vst2', platformtxt)

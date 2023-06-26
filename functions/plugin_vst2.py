@@ -3,6 +3,7 @@
 
 from os.path import exists
 from functions import data_values
+from functions import plugins
 import configparser
 import base64
 import struct
@@ -72,41 +73,42 @@ def check_exists(in_name):
 	else:
 		return False
 
-def replace_data(instdata, platform, in_name, datatype, data, numparams):
+def replace_data(cvpj_l, pluginid, platform, in_name, datatype, data, numparams):
 	global cpu_arch_list
 	platformtxt = getplatformtxt(platform)
 	vst_cpuarch, vst_path = find_path_by_name(in_name, platformtxt)
 
 	if vst_path != None:
-		if 'plugin' not in instdata: instdata['plugin'] = 'none'
-		print('[plugin-vst2] ' + instdata['plugin'] +' > ' + in_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
+		plugintype = plugins.get_plug_type(cvpj_l, pluginid)
+		print(plugintype)
 
-		if platformtxt == 'win': instdata['plugin'] = 'vst2-dll'
-		if platformtxt == 'lin': instdata['plugin'] = 'vst2-so'
-		instdata['plugindata'] = {}
-		instdata['plugindata']['plugin'] = {}
-		instdata['plugindata']['plugin']['name'] = in_name
-		instdata['plugindata']['plugin']['path'] = vst_path
-		instdata['plugindata']['plugin']['cpu_arch'] = vst_cpuarch
+		if plugintype[0] != 'vst2':
+			plugins.replace_plug(cvpj_l, pluginid, 'vst2', platformtxt)
+
+		print('[plugin-vst2] ' + str(plugintype) +' > ' + in_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
+
+		plugins.add_plug_data(cvpj_l, pluginid, 'name', in_name)
+		plugins.add_plug_data(cvpj_l, pluginid, 'path', vst_path)
+		plugins.add_plug_data(cvpj_l, pluginid, 'cpu_arch', vst_cpuarch)
 
 		if db_exists:
 			fouridval = db_plugins.execute("SELECT id FROM vst2 WHERE name = ?", (in_name,)).fetchone()
 			versionval = db_plugins.execute("SELECT version FROM vst2 WHERE name = ?", (in_name,)).fetchone()
 
-		if fouridval != None and fouridval != (None,): instdata['plugindata']['plugin']['fourid'] = int(fouridval[0])
+		if fouridval != None and fouridval != (None,): 
+			plugins.add_plug_data(cvpj_l, pluginid, 'fourid', int(fouridval[0]))
 
 		if versionval != None and versionval != (None,) and versionval != ('',): 
 			versionsplit = [int(i) for i in versionval[0].split('.')]
 			versionbytes =  struct.pack('B'*len(versionsplit), *versionsplit)
-			instdata['plugindata']['plugin']['version'] = int.from_bytes(versionbytes, "little")
+			plugins.add_plug_data(cvpj_l, pluginid, 'version', int.from_bytes(versionbytes, "little"))
 
 		if datatype == 'chunk':
-			instdata['plugindata']['datatype'] = 'chunk'
-			instdata['plugindata']['data'] = base64.b64encode(data).decode('ascii')
+			plugins.add_plug_data(cvpj_l, pluginid, 'datatype', 'chunk')
+			plugins.add_plug_data(cvpj_l, pluginid, 'chunk', base64.b64encode(data).decode('ascii'))
 		if datatype == 'param':
-			instdata['plugindata']['datatype'] = 'param'
-			instdata['plugindata']['numparams'] = numparams
-			instdata['plugindata']['params'] = data
+			plugins.add_plug_data(cvpj_l, pluginid, 'datatype', 'param')
+			plugins.add_plug_data(cvpj_l, pluginid, 'numparams', numparams)
 	else:
 		print('[plugin-vst2] Plugin, '+in_name+' not found.')
 

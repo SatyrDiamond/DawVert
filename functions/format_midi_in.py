@@ -405,6 +405,7 @@ def song_end(channels):
 
     if fx_used == True:
         tracks.fxrack_add(cvpj_l, channels+1, "[S] Reverb", [0.4, 0.4, 0.4], 1.0, None)
+        tracks.fxrack_add(cvpj_l, channels+2, "[S] Chorus", [0.4, 0.4, 0.4], 1.0, None)
 
         plugins.add_plug(cvpj_l, 'plugin-reverb', 'simple', 'reverb-send')
         tracks.insert_fxslot(cvpj_l, ['fxrack', channels+1], 'audio', 'plugin-reverb')

@@ -18,8 +18,8 @@ from functions_plugparams import params_vital
 from functions_plugconv import vst2_lmms
 from functions_plugconv import vst2_piyopiyo
 from functions_plugconv import vst2_flstudio
+from functions_plugconv import sf2_gmmidi
 
-#from functions_plugconv import input_flstudio
 #from functions_plugconv import input_pxtone
 #from functions_plugconv import input_jummbox
 #from functions_plugconv import input_soundchip
@@ -52,16 +52,23 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 
 				replacingdone = None
 
-				if replacingdone == None and plugintype[0] == 'native-flstudio' and out_daw != 'flp':
-					print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))
-					replacingdone = vst2_flstudio.convert(cvpj_l, pluginid, plugintype) 
+				if plugintype[0] == 'general-midi' and 'soundfont' in extra_json:
+					sf2_gmmidi.convert(cvpj_l, pluginid, plugintype, extra_json)
+					print('[plug-conv] GM MIDI > soundfont2')
+				else:
+					print('[plug-conv] Soundfont argument not defined.') 
 
-				if replacingdone == None and plugintype[0] == 'native-lmms' and plugintype[1] not in ['arpeggiator', 'chordcreator'] and out_daw != 'lmms':
-					print('[plug-conv] '+pluginid+' | LMMS: '+str(plugintype[1]))
-					replacingdone = vst2_lmms.convert(cvpj_l, pluginid, plugintype) 
+				if 'vst2' in supportedplugins:
+					if replacingdone == None and plugintype[0] == 'native-flstudio' and out_daw != 'flp':
+						print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))
+						replacingdone = vst2_flstudio.convert(cvpj_l, pluginid, plugintype) 
 
-				if replacingdone == None and plugintype == ['native-piyopiyo', 'wave']:
-					print('[plug-conv] '+pluginid+' | PiyoPiyo '+str(plugintype[1]))
-					replacingdone = vst2_piyopiyo.convert(cvpj_l, pluginid, plugintype) 
+					if replacingdone == None and plugintype[0] == 'native-lmms' and plugintype[1] not in ['arpeggiator', 'chordcreator'] and out_daw != 'lmms':
+						print('[plug-conv] '+pluginid+' | LMMS: '+str(plugintype[1]))
+						replacingdone = vst2_lmms.convert(cvpj_l, pluginid, plugintype) 
+
+					if replacingdone == None and plugintype == ['native-piyopiyo', 'wave']:
+						print('[plug-conv] '+pluginid+' | PiyoPiyo '+str(plugintype[1]))
+						replacingdone = vst2_piyopiyo.convert(cvpj_l, pluginid, plugintype) 
 
 		return json.dumps(cvpj_l, indent=2)

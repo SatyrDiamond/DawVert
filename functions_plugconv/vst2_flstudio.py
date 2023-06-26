@@ -158,6 +158,26 @@ def convert(cvpj_l, pluginid, plugintype):
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', (getparam_old('amount')/1024)*0.8, 'float', "Weight")
 		return True
 
+	elif plugintype[1].lower() == 'fruity phaser':
+		plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'SupaPhaser', 'param', None, 16)
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', 0, 'float', "attack")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', 0, 'float', "release")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_2', 0, 'float', "min env")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_3', 0, 'float', "max env")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_4', 0, 'float', "env-lfo mixture")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_5', getparam_old('sweep_freq')/5000, 'float', "sweep freq.")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_6', getparam_old('depth_min')/1000, 'float', "min. depth")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_7', getparam_old('depth_max')/1000, 'float', "max. depth")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_8', getparam_old('freq_range')/1024, 'float', "freq. range")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_9', getparam_old('stereo')/1024, 'float', "stereo")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_10', getparam_old('num_stages')/22, 'float', "nr. stages")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_11', 0, 'float', "distortion")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_12', getparam_old('feedback')/1000, 'float', "feedback")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_13', getparam_old('drywet')/1024, 'float', "dry-wet")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_14', getparam_old('gain')/5000, 'float', "out gain")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_15', 0, 'float', "invert")
+		return True
+
 	elif plugintype[1].lower() == 'fruity spectroman':
 		spectroman_mode = getparam_old('outputmode')
 		x_spectrumanalyzer = ET.Element("state")

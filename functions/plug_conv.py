@@ -15,6 +15,7 @@ from functions_plugparams import params_various_fx
 from functions_plugparams import params_various_inst
 from functions_plugparams import params_vital
 
+from functions_plugconv import vst2_simple
 from functions_plugconv import vst2_lmms
 from functions_plugconv import vst2_piyopiyo
 from functions_plugconv import vst2_flstudio
@@ -55,10 +56,13 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 				if plugintype[0] == 'general-midi' and 'soundfont' in extra_json:
 					sf2_gmmidi.convert(cvpj_l, pluginid, plugintype, extra_json)
 					print('[plug-conv] GM MIDI > soundfont2')
-				else:
-					print('[plug-conv] Soundfont argument not defined.') 
 
 				if 'vst2' in supportedplugins:
+
+					if replacingdone == None and plugintype[0] == 'simple' :
+						print('[plug-conv] '+pluginid+' | Simple '+str(plugintype[1]))
+						replacingdone = vst2_simple.convert(cvpj_l, pluginid, plugintype) 
+
 					if replacingdone == None and plugintype[0] == 'native-flstudio' and out_daw != 'flp':
 						print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))
 						replacingdone = vst2_flstudio.convert(cvpj_l, pluginid, plugintype) 

@@ -465,7 +465,7 @@ def lmms_decode_inst_track(trkX, trackid):
                 lmms_auto_getvalue(trkX_chordcreator, pluginparam, 0, 'float', None, ['plugin', pluginid, pluginparam])
                 , 'float', pluginparam)
 
-        tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
+        tracks.insert_fxslot(cvpj_l, ['track', trackid], 'notes', pluginid)
 
 
     tracks.r_pl_notes(cvpj_l, trackid, lmms_decode_nlplacements(trkX))

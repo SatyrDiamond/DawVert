@@ -26,11 +26,14 @@ def get_plug_type(cvpj_l, pluginid):
 
 def replace_plug(cvpj_l, pluginid, i_type, i_subtype):
 	plugdata = cvpj_l['plugins'][pluginid]
-	for name in ['data', 'type', 'subtype']:
+	for name in ['type', 'subtype']:
 		if name in plugdata: del plugdata[name]
 	if 'params' in plugdata: 
 		plugdata['params_old'] = plugdata['params'].copy()
 		del plugdata['params']
+	if 'data' in plugdata: 
+		plugdata['data_old'] = plugdata['data'].copy()
+		del plugdata['data']
 	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'type'], i_type)
 	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'subtype'], i_subtype)
 
@@ -61,6 +64,11 @@ def get_plug_data(cvpj_l, pluginid):
 
 def get_plug_dataval(cvpj_l, pluginid, paramname, fallbackval):
 	paramdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'data', paramname])
+	if paramdata != None: return paramdata
+	return fallbackval
+
+def get_plug_olddataval(cvpj_l, pluginid, paramname, fallbackval):
+	paramdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'data_old', paramname])
 	if paramdata != None: return paramdata
 	return fallbackval
 

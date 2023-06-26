@@ -76,14 +76,14 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
         plugins.add_plug_param(cvpj_l, pluginid, 'osc3_invert', osc3_invert, 'bool', "Osc 3 Invert")
         plugins.add_plug_param(cvpj_l, pluginid, 'osc3_am', osc3_am, 'bool', "Osc 3 AM")
 
-    #elif pluginname == 'Fruit Kick':
-    #    flplugvals = struct.unpack('iiiiiii', chunkdata)
-    #    plugins.add_plug_param(cvpj_l, pluginid, 'max_freq', fkp[1], 'int', "Max Freq")
-    #    plugins.add_plug_param(cvpj_l, pluginid, 'min_freq', fkp[2], 'int', "Min Freq")
-    #    plugins.add_plug_param(cvpj_l, pluginid, 'decay_freq', fkp[3], 'int', "Decay Freq")
-    #    plugins.add_plug_param(cvpj_l, pluginid, 'decay_vol', fkp[4], 'int', "Decay Vol")
-    #    plugins.add_plug_param(cvpj_l, pluginid, 'osc_click', fkp[5], 'int', "Osc Click")
-    #    plugins.add_plug_param(cvpj_l, pluginid, 'osc_dist', fkp[6], 'int', "Osc Dist")
+    elif pluginname == 'fruit kick':
+        flplugvals = struct.unpack('iiiiiii', fl_plugstr.read(28))
+        plugins.add_plug_param(cvpj_l, pluginid, 'max_freq', flplugvals[1], 'int', "Max Freq")
+        plugins.add_plug_param(cvpj_l, pluginid, 'min_freq', flplugvals[2], 'int', "Min Freq")
+        plugins.add_plug_param(cvpj_l, pluginid, 'decay_freq', flplugvals[3], 'int', "Decay Freq")
+        plugins.add_plug_param(cvpj_l, pluginid, 'decay_vol', flplugvals[4], 'int', "Decay Vol")
+        plugins.add_plug_param(cvpj_l, pluginid, 'osc_click', flplugvals[5], 'int', "Osc Click")
+        plugins.add_plug_param(cvpj_l, pluginid, 'osc_dist', flplugvals[6], 'int', "Osc Dist")
 
     elif pluginname == 'fruity dx10':
         int.from_bytes(fl_plugstr.read(4), "little")
@@ -114,6 +114,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
         plugins.add_plug_param(cvpj_l, pluginid, 'mod2_time', fldx_mod2_time, 'int', "Mod 2 Dec")
         plugins.add_plug_param(cvpj_l, pluginid, 'mod2_sus', fldx_mod2_sus, 'int', "Mod 2 Sus")
         plugins.add_plug_param(cvpj_l, pluginid, 'mod2_rel', fldx_mod2_rel, 'int', "Mod 2 Rel")
+        plugins.add_plug_param(cvpj_l, pluginid, 'octave', fldx_octave, 'int', "Octave")
 
     elif pluginname == 'plucked!':
         flplugvals = struct.unpack('iiiii', chunkdata)

@@ -26,8 +26,11 @@ def get_plug_type(cvpj_l, pluginid):
 
 def replace_plug(cvpj_l, pluginid, i_type, i_subtype):
 	plugdata = cvpj_l['plugins'][pluginid]
-	for name in ['params', 'data', 'type', 'subtype']:
+	for name in ['data', 'type', 'subtype']:
 		if name in plugdata: del plugdata[name]
+	if 'params' in plugdata: 
+		plugdata['params_old'] = plugdata['params'].copy()
+		del plugdata['params']
 	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'type'], i_type)
 	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'subtype'], i_subtype)
 
@@ -70,6 +73,11 @@ def add_plug_param(cvpj_l, pluginid, i_name, p_value, p_type, p_name):
 
 def get_plug_param(cvpj_l, pluginid, paramname, fallbackval):
 	paramdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'params', paramname])
+	if paramdata != None: return paramdata['value'], paramdata['type'], paramdata['name']
+	return fallbackval, 'notfound', ''
+
+def get_plug_oldparam(cvpj_l, pluginid, paramname, fallbackval):
+	paramdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'params_old', paramname])
 	if paramdata != None: return paramdata['value'], paramdata['type'], paramdata['name']
 	return fallbackval, 'notfound', ''
 
@@ -161,7 +169,20 @@ def get_lfo(cvpj_l, pluginid, a_type):
 	if lfo != None: return lfo['predelay'], lfo['attack'], lfo['shape'], lfo['speed_type'], lfo['speed_time'], lfo['amount']
 	else: return 0,0,'sine','seconds',1,0
 
-# -------------------------------------------------- asdr_env
+# -------------------------------------------------- env_blocks
+
+def add_env_blocks(cvpj_l, pluginid, a_type, a_vals, a_max, a_loop, a_release):
+	envdata = {}
+	envdata['values'] = a_vals
+	if a_max != None: envdata['max'] = a_max
+	if a_loop != None: envdata['loop'] = a_loop
+	if a_release != None: envdata['release'] = a_release
+	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'env_block', a_type], envdata)
+
+def get_env_blocks(cvpj_l, pluginid, a_type):
+	return data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'env_block', a_type])
+
+# -------------------------------------------------- env_point
 
 def add_env_point(cvpj_l, pluginid, a_type, p_position, p_value, **kwargs):
 	pointdata = {}
@@ -174,15 +195,22 @@ def add_env_point(cvpj_l, pluginid, a_type, p_position, p_value, **kwargs):
 def add_env_point_var(cvpj_l, pluginid, a_type, p_name, p_value):
 	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'env_points', a_type, p_name], p_value)
 
-def add_env_blocks(cvpj_l, pluginid, a_type, a_vals, a_loop, a_release):
-	asdrdata = {}
-	asdrdata['values'] = a_vals
-	if a_loop != None: asdrdata['loop'] = a_loop
-	if a_release != None: asdrdata['release'] = a_release
-	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'env_block', a_type], asdrdata)
+def get_env_point(cvpj_l, pluginid, a_type):
+	return data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'env_points', a_type])
+
+# -------------------------------------------------- wave
 
 def add_wave(cvpj_l, pluginid, i_name, i_wavepoints, i_min, i_max):
 	wavedata = {}
 	wavedata['range'] = [i_min,i_max]
 	wavedata['points'] = i_wavepoints
 	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'wave', i_name], wavedata)
+
+def get_wave(cvpj_l, pluginid, wave_name):
+	wavedata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'wave'])
+	if wavedata != None:
+		if wave_name != None: 
+			return wavedata[wave_name]
+		else:
+			firstwave = list(wavedata.keys())[0]
+			return wavedata[firstwave]

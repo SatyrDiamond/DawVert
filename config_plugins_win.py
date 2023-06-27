@@ -49,6 +49,22 @@ db_plugins.execute('''
 		UNIQUE(id)
 	)''')
 
+db_plugins.execute('''
+   CREATE TABLE IF NOT EXISTS clap(
+		name text,
+		id text,
+		creator text,
+		category text,
+		version text,
+		audio_num_inputs integer,
+		audio_num_outputs integer,
+		midi_num_inputs integer,
+		midi_num_outputs integer,
+		path_64bit_win text,
+		path_64bit_unix text,
+		UNIQUE(id)
+	)''')
+
 def reg_get(name, regpath):
 	try:
 		registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, regpath, 0, winreg.KEY_READ)
@@ -81,14 +97,22 @@ dawlist = []
 homepath = os.path.expanduser("~")
 
 w_regkey_cakewalk = 'SOFTWARE\\Cakewalk Music Software\\Cakewalk\\Cakewalk VST X64\\Inventory'
+
 path_flstudio = os.path.join(homepath, "Documents", "Image-Line", "FL Studio", "Presets", "Plugin database", "Installed")
 path_flstudio_vst2_inst = os.path.join(homepath, "Documents", "Image-Line", "FL Studio", "Presets", "Plugin database", "Installed", "Generators", "VST")
 path_flstudio_vst2_fx = os.path.join(homepath, "Documents", "Image-Line", "FL Studio", "Presets", "Plugin database", "Installed", "Effects", "VST")
 path_flstudio_vst3_inst = os.path.join(homepath, "Documents", "Image-Line", "FL Studio", "Presets", "Plugin database", "Installed", "Generators", "VST3")
 path_flstudio_vst3_fx = os.path.join(homepath, "Documents", "Image-Line", "FL Studio", "Presets", "Plugin database", "Installed", "Effects", "VST3")
 
+path_ploguebidule = os.path.join(homepath, "AppData", "Roaming", "Plogue", "Bidule")
+path_ploguebidule_vst3_64 = os.path.join(homepath, "AppData", "Roaming", "Plogue", "Bidule", "vst3_x64.cache")
+path_ploguebidule_vst2_64 = os.path.join(homepath, "AppData", "Roaming", "Plogue", "Bidule", "vst_x64.cache")
+path_ploguebidule_clap_64 = os.path.join(homepath, "AppData", "Roaming", "Plogue", "Bidule", "clap_x64.cache")
+
+
 if reg_checkexist(w_regkey_cakewalk) == True: dawlist.append('cakewalk')
 if os.path.exists(path_flstudio) == True: dawlist.append('flstudio')
+if os.path.exists(path_ploguebidule) == True: dawlist.append('bidule')
 
 if len(dawlist) == 0:
 	print('[dawvert-vst] No DAWs Found. exit', end=' ')
@@ -173,6 +197,47 @@ if 'flstudio' in dawlist:
 								if 'ps_file_category_'+str(filenum) in dict_vstinfo: db_plugins.execute("UPDATE vst3 SET category = ? WHERE id = ?", (dict_vstinfo['ps_file_category_'+str(filenum)], vst_uniqueId,))
 								if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '32': db_plugins.execute("UPDATE vst3 SET path_32bit_win = ? WHERE id = ?", (dict_vstinfo['ps_file_filename_'+str(filenum)], vst_uniqueId,))
 								if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '64': db_plugins.execute("UPDATE vst3 SET path_64bit_win = ? WHERE id = ?", (dict_vstinfo['ps_file_filename_'+str(filenum)], vst_uniqueId,))
+
+#  ------------------------------------- CakeWalk -------------------------------------
+if 'bidule' in dawlist:
+	print('[dawvert-vst] Importing VST List from: Plogue Bidule')
+
+	if os.path.exists(path_ploguebidule_vst2_64) == True:
+		bio_data = open(path_ploguebidule_vst2_64, "r")
+		for vstline in bio_data.readlines():
+			vstsplit = vstline.strip().split(';')
+			if '_' not in vstsplit[5]:
+				if os.path.exists(vstsplit[0]) == True:
+					vst_uniqueId = vstsplit[5]
+					db_plugins.execute("INSERT OR IGNORE INTO vst2 (id) VALUES (?)", (vst_uniqueId,))
+					db_plugins.execute("UPDATE vst2 SET path_64bit_win = ? WHERE id = ?", (vstsplit[0], vst_uniqueId,))
+					db_plugins.execute("UPDATE vst2 SET name = ? WHERE id = ?", (vstsplit[2], vst_uniqueId,))
+					db_plugins.execute("UPDATE vst2 SET creator = ? WHERE id = ?", (vstsplit[3], vst_uniqueId,))
+
+	if os.path.exists(path_ploguebidule_vst3_64) == True:
+		bio_data = open(path_ploguebidule_vst3_64, "r")
+		for vstline in bio_data.readlines():
+			vstsplit = vstline.strip().split(';')
+			if '_' not in vstsplit[3]:
+				if os.path.exists(vstsplit[0]) == True:
+					vst_uniqueId = uuid.UUID(vstsplit[3]).hex.upper()
+					db_plugins.execute("INSERT OR IGNORE INTO vst3 (id) VALUES (?)", (vst_uniqueId,))
+					db_plugins.execute("UPDATE vst3 SET path_64bit_win = ? WHERE id = ?", (vstsplit[0], vst_uniqueId,))
+					db_plugins.execute("UPDATE vst3 SET name = ? WHERE id = ?", (vstsplit[1], vst_uniqueId,))
+					db_plugins.execute("UPDATE vst3 SET creator = ? WHERE id = ?", (vstsplit[2], vst_uniqueId,))
+
+	if os.path.exists(path_ploguebidule_clap_64) == True:
+		bio_data = open(path_ploguebidule_clap_64, "r")
+		for vstline in bio_data.readlines():
+			clapsplit = vstline.strip().split(';')
+			if os.path.exists(vstsplit[0]) == True:
+				vst_uniqueId = clapsplit[3]
+				db_plugins.execute("INSERT OR IGNORE INTO clap (id) VALUES (?)", (vst_uniqueId,))
+				db_plugins.execute("UPDATE clap SET path_64bit_win = ? WHERE id = ?", (clapsplit[0], vst_uniqueId,))
+				db_plugins.execute("UPDATE clap SET name = ? WHERE id = ?", (clapsplit[1], vst_uniqueId,))
+				db_plugins.execute("UPDATE clap SET creator = ? WHERE id = ?", (clapsplit[2], vst_uniqueId,))
+
+
 
 #  ------------------------------------- Output -------------------------------------
 

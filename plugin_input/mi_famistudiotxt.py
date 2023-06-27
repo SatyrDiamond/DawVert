@@ -161,7 +161,7 @@ def add_envelope(pluginid, fst_Instrument, cvpj_name, fst_name):
                 envdata_loop = fst_Instrument['Envelopes'][fst_name]['Loop']
             if 'Release' in fst_Instrument['Envelopes'][fst_name]: 
                 envdata_release = fst_Instrument['Envelopes'][fst_name]['Release']
-            plugins.add_env_blocks(cvpj_l, pluginid, cvpj_name, envdata_values, envdata_loop, envdata_release)
+            plugins.add_env_blocks(cvpj_l, pluginid, cvpj_name, envdata_values, 15, envdata_loop, envdata_release)
 
 
 def add_envelopes(pluginid, fst_Instrument):
@@ -186,7 +186,7 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
         if WaveType == 'Square1' or WaveType == 'Square2': wavetype = 'square'
         if WaveType == 'Triangle': wavetype = 'triangle'
         if WaveType == 'Noise': wavetype = 'noise'
-        plugins.add_plug(cvpj_l, pluginid, '2a03', wavetype)
+        plugins.add_plug(cvpj_l, pluginid, 'retro', wavetype)
         add_envelopes(pluginid, fst_Instrument)
 
     if WaveType == 'VRC7FM':
@@ -203,7 +203,7 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
     if WaveType == 'VRC6Square' or WaveType == 'VRC6Saw':
         if WaveType == 'VRC6Saw': wavetype = 'saw'
         if WaveType == 'VRC6Square': wavetype = 'square'
-        plugins.add_plug(cvpj_l, pluginid, 'vrc6', wavetype)
+        plugins.add_plug(cvpj_l, pluginid, 'retro', wavetype)
         add_envelopes(pluginid, fst_Instrument)
 
     if WaveType == 'FDS':

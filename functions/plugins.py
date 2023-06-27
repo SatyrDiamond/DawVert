@@ -203,8 +203,94 @@ def add_env_point(cvpj_l, pluginid, a_type, p_position, p_value, **kwargs):
 def add_env_point_var(cvpj_l, pluginid, a_type, p_name, p_value):
 	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'env_points', a_type, p_name], p_value)
 
-def get_env_point(cvpj_l, pluginid, a_type):
+def get_env_points(cvpj_l, pluginid, a_type):
 	return data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'env_points', a_type])
+
+def env_point_to_asdr(cvpj_l, pluginid, a_type):
+	env_pointsdata = get_env_points(cvpj_l, pluginid, a_type)
+	if env_pointsdata != None:
+		sustainpoint = data_values.get_value(env_pointsdata, 'sustain', None)
+		pointsdata = env_pointsdata['points']
+		numpoints = len(pointsdata)
+
+		a_predelay = 0
+		a_attack = 0
+		a_hold = 0
+		a_decay = 0
+		a_sustain = 1
+		a_release = 0
+		a_amount = 1
+
+		print(sustainpoint)
+
+		if True:
+			if numpoints == 2:
+				env_duration = pointsdata[1]['position']
+				env_value = pointsdata[0]['value'] - pointsdata[1]['value']
+				if env_value > 0:
+					a_decay = env_duration
+					a_sustain = 0
+				if env_value < 0:
+					a_attack = env_duration
+			elif numpoints == 3:
+				envp_first = pointsdata[0]['position']
+				envp_middle = pointsdata[1]['position']
+				envp_end = pointsdata[2]['position']
+
+				envv_first = pointsdata[0]['value']
+				envv_middle = pointsdata[1]['value']
+				envv_end = pointsdata[2]['value']
+
+				firstmid_s = envv_first-envv_middle
+				midend_s = envv_end-envv_middle
+
+				print(envp_first, envv_first)
+				print(envp_middle, envv_middle, firstmid_s)
+				print(envp_end-envp_middle, envv_end, midend_s)
+
+				if firstmid_s > 0: a_sustain = 0
+
+				if firstmid_s > 0 and midend_s == 0:
+					print("^__")
+					a_decay = envp_middle
+				elif firstmid_s > 0 and midend_s < 0: #to-do: tension
+					print("^._")
+					a_decay = envp_end
+				elif firstmid_s < 0 and midend_s < 0:
+					print("_^.")
+					a_attack = envp_middle
+					a_decay = (envp_end-envp_middle)
+					a_sustain = envv_end
+				elif firstmid_s == 0 and midend_s < 0:
+					print("^^.")
+					a_hold = envp_middle
+					a_decay = envp_end-envp_middle
+					a_sustain = envv_end
+				elif firstmid_s < 0 and midend_s > 0: #to-do: tension
+					print("_.^")
+					a_attack = envp_end
+				elif firstmid_s == 0 and midend_s > 0:
+					print("__^")
+					a_predelay = envp_middle
+					a_attack = envp_end
+				elif firstmid_s < 0 and midend_s == 0:
+					print("_^^")
+					a_attack = envp_middle
+					a_hold = envp_end-envp_middle
+				elif firstmid_s > 0 and midend_s > 0:
+					print("^.^")
+					a_attack = envp_middle
+					a_decay = (envp_end-envp_middle)
+					a_amount = envv_middle-1
+
+		susinvert = (a_sustain*-1)+1
+		if susinvert != 0:
+			a_decay /= susinvert
+
+		print(pointsdata, numpoints, sustainpoint)
+		#exit()
+			
+		add_asdr_env(cvpj_l, pluginid, a_type, a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount)
 
 # -------------------------------------------------- wave
 
@@ -216,6 +302,24 @@ def add_wave(cvpj_l, pluginid, i_name, i_wavepoints, i_min, i_max):
 
 def get_wave(cvpj_l, pluginid, wave_name):
 	wavedata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'wave'])
+	if wavedata != None:
+		if wave_name != None: 
+			return wavedata[wave_name]
+		else:
+			firstwave = list(wavedata.keys())[0]
+			return wavedata[firstwave]
+
+# -------------------------------------------------- wave
+
+def add_wavetable(cvpj_l, pluginid, i_name, i_wavenames, i_wavelocs, i_phase):
+	wavedata = {}
+	wavedata['ids'] = i_wavenames
+	if i_wavelocs != None: wavedata['locs'] = i_wavelocs
+	if i_phase != None: wavedata['phase'] = i_phase
+	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'wavetable', i_name], wavedata)
+
+def get_wavetable(cvpj_l, pluginid, wave_name):
+	wavedata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'wavetable'])
 	if wavedata != None:
 		if wave_name != None: 
 			return wavedata[wave_name]

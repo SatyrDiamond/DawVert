@@ -169,7 +169,7 @@ def asdflfo_get(trkX_insttr, pluginid):
     elcX = trkX_insttr.findall('eldata')
     if len(elcX) != 0:
         eldataX = elcX[0]
-        if eldataX.findall('elvol'): asdflfo(pluginid, eldataX.findall('elvol')[0], 'volume')
+        if eldataX.findall('elvol'): asdflfo(pluginid, eldataX.findall('elvol')[0], 'vol')
         if eldataX.findall('elcut'): asdflfo(pluginid, eldataX.findall('elcut')[0], 'cutoff')
         if eldataX.findall('elres'): asdflfo(pluginid, eldataX.findall('elres')[0], 'reso')
 

@@ -31,7 +31,6 @@ from functions_plugconv import sf2_gmmidi
 #from functions_plugconv import output_vst2_multisampler
 #from functions_plugconv import output_vst2_slicer
 #
-#from functions_plugconv import output_vst2_retro
 #from functions_plugconv import output_vst2_soundchip
 #
 #from functions_plugconv import output_vst2_onlineseq

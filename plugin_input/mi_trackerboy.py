@@ -245,21 +245,21 @@ class input_trackerboy(plugin_input.base):
                 plugins.add_plug(cvpj_l, pluginid, 'gameboy', insttype)
 
                 if trackerboy_instdata[1][0] != (): 
-                    plugins.add_env_blocks(cvpj_l, pluginid, 'arp', trackerboy_instdata[1][0], None, None)
+                    plugins.add_env_blocks(cvpj_l, pluginid, 'arp', trackerboy_instdata[1][0], None, None, None)
 
                 if trackerboy_instdata[2][0] != (): 
-                    plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trackerboy_instdata[2][0], None, None)
+                    plugins.add_env_blocks(cvpj_l, pluginid, 'pan', trackerboy_instdata[2][0], None, None, None)
 
                 if trackerboy_instdata[3][0] != (): 
-                    plugins.add_env_blocks(cvpj_l, pluginid, 'pitch', trackerboy_instdata[4][0], None, None)
+                    plugins.add_env_blocks(cvpj_l, pluginid, 'pitch', trackerboy_instdata[4][0], None, None, None)
 
                 if trackerboy_instdata[4][0] != (): 
                     if insttype == 'pulse': 
-                        plugins.add_env_blocks(cvpj_l, pluginid, 'duty', trackerboy_instdata[4][0], None, None)
+                        plugins.add_env_blocks(cvpj_l, pluginid, 'duty', trackerboy_instdata[4][0], 4, None, None)
                     if insttype == 'wavetable':
-                        plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trackerboy_instdata[4][0], None, None)
+                        plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trackerboy_instdata[4][0], 3, None, None)
                     if insttype == 'noise': 
-                        plugins.add_env_blocks(cvpj_l, pluginid, 'noise', trackerboy_instdata[4][0], None, None)
+                        plugins.add_env_blocks(cvpj_l, pluginid, 'noise', trackerboy_instdata[4][0], 3, None, None)
 
                 if insttype != 'wavetable':
                     env_attack = 0

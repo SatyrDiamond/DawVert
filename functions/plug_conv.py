@@ -19,6 +19,7 @@ from functions_plugconv import vst2_simple
 from functions_plugconv import vst2_lmms
 from functions_plugconv import vst2_piyopiyo
 from functions_plugconv import vst2_flstudio
+from functions_plugconv import vst2_retro
 from functions_plugconv import sf2_gmmidi
 
 #from functions_plugconv import input_pxtone
@@ -26,7 +27,6 @@ from functions_plugconv import sf2_gmmidi
 #from functions_plugconv import input_soundchip
 #from functions_plugconv import input_audiosauna
 #
-#from functions_plugconv import output_vst2_simple
 #from functions_plugconv import output_vst2_sampler
 #from functions_plugconv import output_vst2_multisampler
 #from functions_plugconv import output_vst2_slicer
@@ -51,13 +51,17 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 		for pluginid in cvpj_plugins:
 				plugintype = plugins.get_plug_type(cvpj_l, pluginid)
 
+				if plugintype[0] == 'general-midi':
+					if 'soundfont' in extra_json:
+						sf2_gmmidi.convert(cvpj_l, pluginid, plugintype, extra_json)
+						print('[plug-conv] GM MIDI > soundfont2')
+					else: print('[plug-conv] Soundfont argument not defined.')
+
 				replacingdone = None
-
-				if plugintype[0] == 'general-midi' and 'soundfont' in extra_json:
-					sf2_gmmidi.convert(cvpj_l, pluginid, plugintype, extra_json)
-					print('[plug-conv] GM MIDI > soundfont2')
-
 				if 'vst2' in supportedplugins:
+					if replacingdone == None and plugintype[0] == 'retro' :
+						print('[plug-conv] '+pluginid+' | Retro '+str(plugintype[1]))
+						replacingdone = vst2_retro.convert(cvpj_l, pluginid, plugintype) 
 
 					if replacingdone == None and plugintype[0] == 'simple' :
 						print('[plug-conv] '+pluginid+' | Simple '+str(plugintype[1]))

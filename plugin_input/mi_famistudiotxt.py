@@ -6,6 +6,7 @@ import plugin_input
 import json
 from functions import placements
 from functions import note_data
+from functions import data_values
 from functions import tracks
 from functions import plugins
 from functions import placement_data
@@ -146,13 +147,24 @@ def add_envelope(pluginid, fst_Instrument, cvpj_name, fst_name):
             if 'Release' in fst_Instrument['Envelopes'][fst_name]: envdata['release'] = fst_Instrument['Envelopes'][fst_name]['Release']
             plugins.add_plug_data(cvpj_l, pluginid, 'wave', envdata)
         elif fst_name == 'N163Wave':
+            envdata['loop'] = 0
             if 'Values' in fst_Instrument['Envelopes'][fst_name]: envdata['values'] = [int(i) for i in fst_Instrument['Envelopes'][fst_name]['Values'].split(',')]
-            if 'Loop' in fst_Instrument['Envelopes'][fst_name]: envdata['loop'] = fst_Instrument['Envelopes'][fst_name]['Loop']
+            if 'Loop' in fst_Instrument['Envelopes'][fst_name]: envdata['loop'] = int(fst_Instrument['Envelopes'][fst_name]['Loop'])
             envdata['preset'] = fst_Instrument['N163WavePreset']
-            envdata['size'] = fst_Instrument['N163WaveSize']
-            envdata['pos'] = fst_Instrument['N163WavePos']
-            envdata['count'] = fst_Instrument['N163WaveCount']
+            envdata['size'] = int(fst_Instrument['N163WaveSize'])
+            envdata['pos'] = int(fst_Instrument['N163WavePos'])
+            envdata['count'] = int(fst_Instrument['N163WaveCount'])
             plugins.add_plug_data(cvpj_l, pluginid, 'wave', envdata)
+
+            waveids = []
+            namco163_wave_chunks = data_values.list_chunks(envdata['values'], int(envdata['size']))
+            for wavenum in range(len(namco163_wave_chunks)):
+                wavedata = namco163_wave_chunks[wavenum]
+                if len(wavedata) == int(envdata['size']):
+                    plugins.add_wave(cvpj_l, pluginid, str(wavenum), wavedata, 0, 15)
+                    waveids.append(str(wavenum))
+            plugins.add_wavetable(cvpj_l, pluginid, 'N163', waveids, None, envdata['loop']/(envdata['size']*envdata['count']))
+
         else:
             envdata_values = [int(i) for i in fst_Instrument['Envelopes'][fst_name]['Values'].split(',')]
             envdata_loop = None

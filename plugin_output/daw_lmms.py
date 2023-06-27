@@ -149,7 +149,7 @@ def asdrlfo_set(pluginid, trkX_insttr):
     eldataX.set('fwet', str(int(filt_enabled)))
     eldataX.set('fres', str(filt_reso))
 
-    asdrlfo(pluginid, eldataX, 'volume', 'vol')
+    asdrlfo(pluginid, eldataX, 'vol', 'vol')
     asdrlfo(pluginid, eldataX, 'cutoff', 'cut')
     asdrlfo(pluginid, eldataX, 'reso', 'res')
 
@@ -159,7 +159,7 @@ def asdrlfo(pluginid, xmlobj, asdrtype, xmltype):
 
     a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, asdrtype)
     if asdrtype == 'cutoff': elmodX.set('amt', str(a_amount/6000))
-    else: elmodX.set('amt', str(a_amount))
+    else: elmodX.set('amt', str(float(a_amount)))
     elmodX.set('pdel', str(sec2exp(a_predelay)))
     elmodX.set('att', str(sec2exp(a_attack)))
     elmodX.set('hold', str(sec2exp(a_hold)))
@@ -256,7 +256,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             if interpolation == "linear": xml_sampler.set('interp', '1')
             if interpolation == "sinc": xml_sampler.set('interp', '2')
             else: xml_sampler.set('interp', '2')
-            middlenotefix += 12
+            middlenotefix += 3
 
         elif plugintype[0] == 'soundfont2':
             print('[output-lmms]       Plugin: soundfont2 > sf2player')

@@ -498,9 +498,9 @@ class input_it(plugin_input.base):
                             if envtype == 'vol':
                                 plugins.add_env_point(cvpj_l, pluginid, 'vol', itpd['pos']/48, itpd['value']/64)
                             if envtype == 'pan':
-                                plugins.add_env_point(cvpj_l, pluginid, 'vol', itpd['pos']/48, (itpd['value'])/32)
+                                plugins.add_env_point(cvpj_l, pluginid, 'pan', itpd['pos']/48, (itpd['value'])/32)
                             if envtype == 'pitch':
-                                plugins.add_env_point(cvpj_l, pluginid, 'vol', itpd['pos']/48, (itpd['value']))
+                                plugins.add_env_point(cvpj_l, pluginid, 'pitch', itpd['pos']/48, (itpd['value']))
 
                 tracks.m_create_inst(cvpj_l, it_instname, cvpj_instdata)
                 tracks.m_basicdata_inst(cvpj_l, it_instname, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)

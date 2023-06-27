@@ -276,7 +276,8 @@ def parse_instrument(file_stream, samplecount):
         plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
         plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
         plugins.add_plug_data(cvpj_l, pluginid, 'length', t_sampleheaders[0][0][0])
-        if t_sampleheaders[0][0][1:3] == (0, 0):
+
+        if t_sampleheaders[0][0][5] != 1:
             plugins.add_plug_data(cvpj_l, pluginid, 'loop', {"enabled": 0})
         else:
             xm_loop_start = t_sampleheaders[0][0][1]
@@ -334,6 +335,8 @@ def parse_instrument(file_stream, samplecount):
                 plugins.add_env_point(cvpj_l, pluginid, 'vol', groupval[0]/48, groupval[1]/64)
             if typedata[0] == 'pan':
                 plugins.add_env_point(cvpj_l, pluginid, 'pan', groupval[0]/48, (groupval[1]-32)/32)
+
+    plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
 
     cvpj_l_instrumentsorder.append(it_samplename)
     if xm_inst_num_samples != 0: xm_cursamplenum += xm_inst_num_samples

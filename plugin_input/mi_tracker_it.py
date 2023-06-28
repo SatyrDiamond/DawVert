@@ -510,7 +510,7 @@ class input_it(plugin_input.base):
                     susenabled = envvardata['susloop_enabled']
                     
                     if envvarname in it_singleinst: 
-                        if envtype == 'vol':
+                        if envtype == 'vol' and len(envvardata['points']) != 0:
                             track_volume *= max([i['value']/64 for i in envvardata['points']])
                         for itpd in envvardata['points']:
                             if envtype == 'vol': 

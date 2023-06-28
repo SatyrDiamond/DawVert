@@ -528,6 +528,9 @@ class input_it(plugin_input.base):
                                     if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'cutoff', 'sustain', envvardata['susloop_start']+1)
                                     filterenv_used = True
 
+                if it_singleinst['fadeout'] != 0:
+                    plugins.add_env_point_var(cvpj_l, pluginid, 'vol', 'fadeout', (256/it_singleinst['fadeout'])/8)
+
                 if filterenv_used == False:
                     if it_singleinst['filtercutoff'] != None:
                         if it_singleinst['filtercutoff'] != 127:

@@ -147,10 +147,10 @@ class input_it(plugin_input.base):
             for env_type in range(3):
                 env_out = {}
                 env_flags = bin(it_file.read(1)[0])[2:].zfill(8)
-                env_out['enabled'] = env_flags[7]
-                env_out['loop_enabled'] = env_flags[6]
-                env_out['susloop_enabled'] = env_flags[5]
-                env_out['usepitch'] = env_flags[0]
+                env_out['enabled'] = int(env_flags[7])
+                env_out['loop_enabled'] = int(env_flags[6])
+                env_out['susloop_enabled'] = int(env_flags[5])
+                env_out['usepitch'] = int(env_flags[0])
                 env_numpoints = it_file.read(1)[0]
                 env_out['loop_start'] = it_file.read(1)[0]
                 env_out['loop_end'] = it_file.read(1)[0]
@@ -161,11 +161,12 @@ class input_it(plugin_input.base):
                     env_point = {}
                     env_point['value'] = int.from_bytes(it_file.read(1), "little", signed=True)
                     env_point['pos'] = int.from_bytes(it_file.read(2), "little")
-                    print(env_point)
                     env_points.append(env_point)
-                if env_type == 0: it_singleinst['env_vol'] = env_points
-                if env_type == 1: it_singleinst['env_pan'] = env_points
-                if env_type == 2: it_singleinst['env_pitch'] = env_points
+                env_data = {}
+                env_out['points'] = env_points
+                if env_type == 0: it_singleinst['env_vol'] = env_out
+                if env_type == 1: it_singleinst['env_pan'] = env_out
+                if env_type == 2: it_singleinst['env_pitch'] = env_out
                 it_file.read(76-(env_numpoints*3))
             instrumentcount += 1
         
@@ -490,20 +491,24 @@ class input_it(plugin_input.base):
                 if 'midi_bank' in it_singleinst: cvpj_instdata_midi['out']['bank'] = it_singleinst['midi_bank']+1
                 cvpj_instdata['midi'] = cvpj_instdata_midi
 
-                for envtype in ['vol', 'pan', 'pitch']:
-                    envvarname = 'env_'+envtype
-                    if envvarname in it_singleinst: 
-                        for itpd in it_singleinst[envvarname]:
-                            print(envtype, itpd['pos']/48, itpd['value'])
-                            if envtype == 'vol':
-                                plugins.add_env_point(cvpj_l, pluginid, 'vol', itpd['pos']/48, itpd['value']/64)
-                            if envtype == 'pan':
-                                plugins.add_env_point(cvpj_l, pluginid, 'pan', itpd['pos']/48, (itpd['value'])/32)
-                            if envtype == 'pitch':
-                                plugins.add_env_point(cvpj_l, pluginid, 'pitch', itpd['pos']/48, (itpd['value']))
-
                 tracks.m_create_inst(cvpj_l, it_instname, cvpj_instdata)
                 tracks.m_basicdata_inst(cvpj_l, it_instname, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)
+
+                for envtype in ['vol', 'pan', 'pitch']:
+                    envvarname = 'env_'+envtype
+                    envvardata = it_singleinst[envvarname]
+
+                    if envvardata['susloop_enabled'] == 1:
+                        plugins.add_env_point_var(cvpj_l, pluginid, envtype, 'sustain', envvardata['susloop_start']+1)
+
+                    if envvarname in it_singleinst: 
+                        for itpd in envvardata['points']:
+                            #print(envtype, itpd['pos']/48, itpd['value'])
+                            if envtype == 'vol': plugins.add_env_point(cvpj_l, pluginid, 'vol', itpd['pos']/48, itpd['value']/64)
+                            if envtype == 'pan': plugins.add_env_point(cvpj_l, pluginid, 'pan', itpd['pos']/48, (itpd['value'])/32)
+                            if envtype == 'pitch': plugins.add_env_point(cvpj_l, pluginid, 'pitch', itpd['pos']/48, (itpd['value']))
+
+                plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
 
                 instrumentcount += 1
         if it_header_flag_useinst == 0:

@@ -151,6 +151,7 @@ class input_it(plugin_input.base):
                 env_out['loop_enabled'] = int(env_flags[6])
                 env_out['susloop_enabled'] = int(env_flags[5])
                 env_out['usepitch'] = int(env_flags[0])
+
                 env_numpoints = it_file.read(1)[0]
                 env_out['loop_start'] = it_file.read(1)[0]
                 env_out['loop_end'] = it_file.read(1)[0]
@@ -474,14 +475,6 @@ class input_it(plugin_input.base):
                             regionparams['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
                             plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
 
-                if it_singleinst['filtercutoff'] != None:
-                    if it_singleinst['filtercutoff'] != 127:
-                        computedCutoff = (it_singleinst['filtercutoff'] * 512)
-                        outputcutoff = 131.0 * pow(2.0, computedCutoff * (5.29 / (127.0 * 512.0)))
-                        if it_singleinst['filterresonance'] != None: outputreso = (it_singleinst['filterresonance']/127)*6 + 1
-                        else: outputreso = 1
-                        plugins.add_filter(cvpj_l, pluginid, True, outputcutoff, outputreso, "lowpass", None)
-
                 cvpj_instdata_midi = {}
                 cvpj_instdata_midi['out'] = {}
                 if 'midi_chan' in it_singleinst: 
@@ -494,21 +487,47 @@ class input_it(plugin_input.base):
                 tracks.m_create_inst(cvpj_l, it_instname, cvpj_instdata)
                 tracks.m_basicdata_inst(cvpj_l, it_instname, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)
 
+                filterenv_used = False
+
                 for envtype in ['vol', 'pan', 'pitch']:
                     envvarname = 'env_'+envtype
                     envvardata = it_singleinst[envvarname]
 
-                    if envvardata['susloop_enabled'] == 1:
-                        plugins.add_env_point_var(cvpj_l, pluginid, envtype, 'sustain', envvardata['susloop_start']+1)
-
+                    susenabled = envvardata['susloop_enabled']
+                    
                     if envvarname in it_singleinst: 
                         for itpd in envvardata['points']:
                             #print(envtype, itpd['pos']/48, itpd['value'])
-                            if envtype == 'vol': plugins.add_env_point(cvpj_l, pluginid, 'vol', itpd['pos']/48, itpd['value']/64)
-                            if envtype == 'pan': plugins.add_env_point(cvpj_l, pluginid, 'pan', itpd['pos']/48, (itpd['value'])/32)
-                            if envtype == 'pitch': plugins.add_env_point(cvpj_l, pluginid, 'pitch', itpd['pos']/48, (itpd['value']))
+                            if envtype == 'vol': 
+                                plugins.add_env_point(cvpj_l, pluginid, 'vol', itpd['pos']/48, itpd['value']/64)
+                                if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'vol', 'sustain', envvardata['susloop_start']+1)
+                            if envtype == 'pan': 
+                                plugins.add_env_point(cvpj_l, pluginid, 'pan', itpd['pos']/48, (itpd['value'])/32)
+                                if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'pan', 'sustain', envvardata['susloop_start']+1)
+                            if envtype == 'pitch': 
+                                if envvardata['usepitch'] != 1:
+                                    plugins.add_env_point(cvpj_l, pluginid, 'pitch', itpd['pos']/48, (itpd['value']))
+                                    if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'pitch', 'sustain', envvardata['susloop_start']+1)
+                                else:
+                                    plugins.add_env_point(cvpj_l, pluginid, 'cutoff', itpd['pos']/48, (itpd['value']/64))
+                                    if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'cutoff', 'sustain', envvardata['susloop_start']+1)
+                                    filterenv_used = True
+
+                if filterenv_used == False:
+                    if it_singleinst['filtercutoff'] != None:
+                        if it_singleinst['filtercutoff'] != 127:
+                            computedCutoff = (it_singleinst['filtercutoff'] * 512)
+                            outputcutoff = 131.0 * pow(2.0, computedCutoff * (5.29 / (127.0 * 512.0)))
+                            if it_singleinst['filterresonance'] != None: outputreso = (it_singleinst['filterresonance']/127)*6 + 1
+                            else: outputreso = 1
+                            plugins.add_filter(cvpj_l, pluginid, True, outputcutoff, outputreso, "lowpass", None)
+                else:
+                    if it_singleinst['filterresonance'] != None: outputreso = (it_singleinst['filterresonance']/127)*6 + 1
+                    else: outputreso = 0
+                    plugins.add_filter(cvpj_l, pluginid, True, 0, outputreso, "lowpass", None)
 
                 plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
+                plugins.env_point_to_asdr(cvpj_l, pluginid, 'cutoff')
 
                 instrumentcount += 1
         if it_header_flag_useinst == 0:

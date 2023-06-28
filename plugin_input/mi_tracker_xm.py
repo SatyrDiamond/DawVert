@@ -214,7 +214,7 @@ def parse_instrument(file_stream, samplecount):
     xm_inst_header_length = int.from_bytes(file_stream.read(4), "little")
     print("[input-xm]     Header Length: " + str(xm_inst_header_length))
 
-    xm_inst_name = data_bytes.readstring_fixedlen(file_stream, 22, "windows-1252")
+    xm_inst_name = data_bytes.readstring_fixedlen(file_stream, 22, "latin1")
     print("[input-xm]     Name: " + str(xm_inst_name))
     xm_inst_type = file_stream.read(1)[0]
     print("[input-xm]     Type: " + str(xm_inst_type))

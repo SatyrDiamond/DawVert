@@ -211,6 +211,9 @@ def one_invert(input):
 
 def env_point_to_asdr(cvpj_l, pluginid, a_type):
 	env_pointsdata = get_env_points(cvpj_l, pluginid, a_type)
+
+	use_tension = 1
+
 	if env_pointsdata != None:
 		sustainpoint = data_values.get_value(env_pointsdata, 'sustain', None)
 		if 'points' in env_pointsdata:
@@ -274,7 +277,10 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 				elif firstmid_s > 0 and midend_s < 0: #to-do: tension
 					#print("^._")
 					if sustainnum == None: a_decay = envp_end
-					if sustainnum == 1: a_release = envp_end
+					if sustainnum == 1: 
+						if -midend_s <= firstmid_s and use_tension == 0: a_release = envp_middle
+						else: a_release = envp_end
+
 					if sustainnum == 2: 
 						a_decay = envp_middle
 						a_release = envp_end-envp_middle
@@ -340,8 +346,8 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 			if susinvert != 0:
 				a_decay /= susinvert
 
-			#exit()
-			
+			if a_type == 'cutoff': a_amount *= 6000
+
 			add_asdr_env(cvpj_l, pluginid, a_type, a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount)
 
 # -------------------------------------------------- wave

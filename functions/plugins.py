@@ -225,6 +225,8 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 			a_release = 0
 			a_amount = 1
 
+
+
 			if (sustainpoint == None or sustainpoint == numpoints): sustainnum = None
 			else: sustainnum = sustainpoint
 
@@ -320,7 +322,7 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 						a_release = (envp_end-envp_middle)
 						a_amount = envv_middle-1
 
-
+			if a_sustain != 0 and a_release == 0: a_release = data_values.get_value(env_pointsdata, 'fadeout', 0)
 
 			susinvert = (a_sustain*-1)+1
 			if susinvert != 0:

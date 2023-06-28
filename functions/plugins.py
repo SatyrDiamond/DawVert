@@ -212,8 +212,6 @@ def one_invert(input):
 def env_point_to_asdr(cvpj_l, pluginid, a_type):
 	env_pointsdata = get_env_points(cvpj_l, pluginid, a_type)
 
-	use_tension = 1
-
 	if env_pointsdata != None:
 		sustainpoint = data_values.get_value(env_pointsdata, 'sustain', None)
 		if 'points' in env_pointsdata:
@@ -227,8 +225,6 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 			a_sustain = 1
 			a_release = 0
 			a_amount = 1
-
-
 
 			if (sustainpoint == None or sustainpoint == numpoints): sustainnum = None
 			else: sustainnum = sustainpoint
@@ -278,7 +274,7 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 					#print("^._")
 					if sustainnum == None: a_decay = envp_end
 					if sustainnum == 1: 
-						if -midend_s <= firstmid_s and use_tension == 0: a_release = envp_middle
+						if -midend_s <= firstmid_s: a_release = envp_middle
 						else: a_release = envp_end
 
 					if sustainnum == 2: 

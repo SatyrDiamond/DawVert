@@ -319,24 +319,27 @@ def parse_instrument(file_stream, samplecount):
     ['pan', splitted_points_p, xm_inst_e_panning_sustain_point, xm_inst_e_panning_loop_start_point, xm_inst_e_panning_loop_end_point]
     ]
 
-    for typedata in pointsdata:
-        zerofound = False
+    if xm_inst_num_samples != 0:
+        envflags = data_bytes.to_bin(xm_inst_e_panning_type, 8)
 
-        if typedata[2] != 0: 
-            plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'sustain', typedata[2])
-        if typedata[3] != 0: 
-            plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'loop', [typedata[3], typedata[3]+typedata[4]])
+        for typedata in pointsdata:
+            zerofound = False
 
-        for groupval in typedata[1]:
-            if groupval[0] == 0:
-                if zerofound == True: break
-                zerofound = True
-            if typedata[0] == 'vol':
-                plugins.add_env_point(cvpj_l, pluginid, 'vol', groupval[0]/48, groupval[1]/64)
-            if typedata[0] == 'pan':
-                plugins.add_env_point(cvpj_l, pluginid, 'pan', groupval[0]/48, (groupval[1]-32)/32)
+            if envflags[6] == 1:
+                plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'sustain', typedata[3]+1)
+            if envflags[5] == 1: 
+                plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'loop', [typedata[4], typedata[3]+typedata[4]])
 
-    plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
+            for groupval in typedata[1]:
+                if groupval[0] == 0:
+                    if zerofound == True: break
+                    zerofound = True
+                if typedata[0] == 'vol' and envflags[7] == 1:
+                    plugins.add_env_point(cvpj_l, pluginid, 'vol', groupval[0]/48, groupval[1]/64)
+                if typedata[0] == 'pan':
+                    plugins.add_env_point(cvpj_l, pluginid, 'pan', groupval[0]/48, (groupval[1]-32)/32)
+
+        plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
 
     cvpj_l_instrumentsorder.append(it_samplename)
     if xm_inst_num_samples != 0: xm_cursamplenum += xm_inst_num_samples

@@ -186,7 +186,7 @@ class input_it(plugin_input.base):
             it_singlesample['dosfilename'] = data_bytes.readstring_fixedlen(it_file, 12, "windows-1252")
             it_file.read(2)
             it_singlesample['flags'] = bin(it_file.read(1)[0])[2:].zfill(8)
-            it_file.read(1)
+            it_singlesample['defualtvolume'] = it_file.read(1)[0]/64
             it_singlesample['name'] = data_bytes.readstring_fixedlen(it_file, 26, "windows-1252")
             it_file.read(2)
             it_singlesample['length'] = int.from_bytes(it_file.read(4), "little")
@@ -413,6 +413,9 @@ class input_it(plugin_input.base):
 
         instrumentcount = 0
         samplecount = 0
+
+        track_volume = 0.3
+
         it_header_flag_useinst = int(it_header_flag_useinst)
         if it_header_flag_useinst == 1:
             for IT_Inst in IT_Insts:
@@ -445,9 +448,13 @@ class input_it(plugin_input.base):
                 cvpj_instdata = {'pluginid': pluginid}
                 if bn_s_t_ifsame == True and str(bn_s_t_f[1]-1) in IT_Samples:
                     it_singlesample = IT_Samples[str(bn_s_t_f[1]-1)]
+
+                    track_volume = 0.3*it_singleinst['globalvol']*it_singlesample['defualtvolume']
+
                     plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, samplefolder+str(bn_s_t_f[1])+'.wav')
                     plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
                     plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
+
                     if it_singlesample['length'] != 0:
                         plugins.add_plug_data(cvpj_l, pluginid, 'length', it_singlesample['length'])
                         cvpj_loop = {}
@@ -493,7 +500,6 @@ class input_it(plugin_input.base):
                 cvpj_instdata['midi'] = cvpj_instdata_midi
 
                 tracks.m_create_inst(cvpj_l, it_instname, cvpj_instdata)
-                tracks.m_basicdata_inst(cvpj_l, it_instname, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)
 
                 filterenv_used = False
 
@@ -504,8 +510,9 @@ class input_it(plugin_input.base):
                     susenabled = envvardata['susloop_enabled']
                     
                     if envvarname in it_singleinst: 
+                        if envtype == 'vol':
+                            track_volume *= max([i['value']/64 for i in envvardata['points']])
                         for itpd in envvardata['points']:
-                            #print(envtype, itpd['pos']/48, itpd['value'])
                             if envtype == 'vol': 
                                 plugins.add_env_point(cvpj_l, pluginid, 'vol', itpd['pos']/48, itpd['value']/64)
                                 if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'vol', 'sustain', envvardata['susloop_start']+1)
@@ -536,6 +543,7 @@ class input_it(plugin_input.base):
 
                 plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
                 plugins.env_point_to_asdr(cvpj_l, pluginid, 'cutoff')
+                tracks.m_basicdata_inst(cvpj_l, it_instname, cvpj_instname, [0.71, 0.58, 0.47], track_volume, None)
 
                 instrumentcount += 1
         if it_header_flag_useinst == 0:
@@ -557,7 +565,7 @@ class input_it(plugin_input.base):
                     plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
 
                 tracks.m_create_inst(cvpj_l, it_samplename, {'pluginid': pluginid})
-                tracks.m_basicdata_inst(cvpj_l, it_samplename, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)
+                tracks.m_basicdata_inst(cvpj_l, it_samplename, cvpj_instname, [0.71, 0.58, 0.47], track_volume, None)
 
                 samplecount += 1
 

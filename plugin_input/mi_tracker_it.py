@@ -184,7 +184,8 @@ class input_it(plugin_input.base):
                 exit()
             print("[input-it] Sample " + str(samplecount) + ': at offset ' + str(table_offset_sample))
             it_singlesample['dosfilename'] = data_bytes.readstring_fixedlen(it_file, 12, "windows-1252")
-            it_file.read(2)
+            it_file.read(1)
+            it_singlesample['globalvol'] = it_file.read(1)[0]/64
             it_singlesample['flags'] = bin(it_file.read(1)[0])[2:].zfill(8)
             it_singlesample['defualtvolume'] = it_file.read(1)[0]/64
             it_singlesample['name'] = data_bytes.readstring_fixedlen(it_file, 26, "windows-1252")
@@ -449,7 +450,7 @@ class input_it(plugin_input.base):
                 if bn_s_t_ifsame == True and str(bn_s_t_f[1]-1) in IT_Samples:
                     it_singlesample = IT_Samples[str(bn_s_t_f[1]-1)]
 
-                    track_volume = 0.3*it_singleinst['globalvol']*it_singlesample['defualtvolume']
+                    track_volume = 0.3*it_singleinst['globalvol']*it_singlesample['defualtvolume']*it_singlesample['globalvol']
 
                     plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, samplefolder+str(bn_s_t_f[1])+'.wav')
                     plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')

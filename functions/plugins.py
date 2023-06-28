@@ -232,6 +232,8 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 
 			#print(pointsdata, numpoints, sustainpoint)
 			
+			isenvconverted = False
+
 			if numpoints == 2:
 				env_duration = pointsdata[1]['position']
 				env_value = pointsdata[0]['value'] - pointsdata[1]['value']
@@ -241,12 +243,14 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 						a_decay = env_duration
 						a_sustain = 0
 					if env_value < 0: a_attack = env_duration
+					isenvconverted = True
 
 				elif sustainnum == 1:
 					if env_value > 0: a_release = env_duration
 					if env_value < 0:
 						a_release = env_duration
 						a_amount = -1
+					isenvconverted = True
 
 			elif numpoints == 3:
 				envp_middle = pointsdata[1]['position']
@@ -265,6 +269,7 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 					#print("^__")
 					if sustainnum == None: a_decay = envp_middle
 					if sustainnum == 1: a_release = envp_middle
+					isenvconverted = True
 
 				elif firstmid_s > 0 and midend_s < 0: #to-do: tension
 					#print("^._")
@@ -274,6 +279,7 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 						a_decay = envp_middle
 						a_release = envp_end-envp_middle
 						a_sustain = envv_middle
+					isenvconverted = True
 
 				elif firstmid_s < 0 and midend_s < 0:
 					#print("_^.")
@@ -285,6 +291,7 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 						a_attack = envp_middle
 						a_release = (envp_end-envp_middle)
 						if envv_end != 0: a_release /= one_invert(envv_end)
+					isenvconverted = True
 
 				elif firstmid_s == 0 and midend_s < 0:
 					#print("^^.")
@@ -296,20 +303,24 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 						a_hold = envp_middle
 						a_release = envp_end-envp_middle
 						if envv_end != 0: a_release /= one_invert(envv_end)
+					isenvconverted = True
 
 				elif firstmid_s < 0 and midend_s > 0: #to-do: tension
 					#print("_.^")
 					a_attack = envp_end
+					isenvconverted = True
 
 				elif firstmid_s == 0 and midend_s > 0:
 					#print("__^")
 					a_predelay = envp_middle
 					a_attack = envp_end
+					isenvconverted = True
 
 				elif firstmid_s < 0 and midend_s == 0:
 					#print("_^^")
 					a_attack = envp_middle
 					a_hold = envp_end-envp_middle
+					isenvconverted = True
 
 				elif firstmid_s > 0 and midend_s > 0:
 					#print("^.^")
@@ -321,8 +332,9 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 						a_attack = envp_middle
 						a_release = (envp_end-envp_middle)
 						a_amount = envv_middle-1
+					isenvconverted = True
 
-			if a_sustain != 0 and a_release == 0: a_release = data_values.get_value(env_pointsdata, 'fadeout', 0)
+			if isenvconverted == True and a_sustain != 0 and a_release == 0: a_release = data_values.get_value(env_pointsdata, 'fadeout', 0)
 
 			susinvert = (a_sustain*-1)+1
 			if susinvert != 0:

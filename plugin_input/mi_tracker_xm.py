@@ -227,6 +227,7 @@ def parse_instrument(file_stream, samplecount):
         xm_inst_e_table = struct.unpack('B'*96, file_stream.read(96))
         xm_inst_e_env_v = struct.unpack('>'+'H'*24, file_stream.read(48))
         xm_inst_e_env_p = struct.unpack('>'+'H'*24, file_stream.read(48))
+        file_stream.read(1)
         xm_inst_e_number_of_volume_points = file_stream.read(1)[0]
         xm_inst_e_number_of_panning_points = file_stream.read(1)[0]
         xm_inst_e_volume_sustain_point = file_stream.read(1)[0]
@@ -271,19 +272,27 @@ def parse_instrument(file_stream, samplecount):
     if xm_inst_num_samples == 0:
         pass
     elif xm_inst_num_samples == 1:
+
         cvpj_l_single_inst['vol'] = 0.3*(t_sampleheaders[0][0][3]/64)
         plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, samplefolder+str(xm_cursamplenum)+'.wav')
         plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
         plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
         plugins.add_plug_data(cvpj_l, pluginid, 'length', t_sampleheaders[0][0][0])
 
-        if t_sampleheaders[0][0][5] != 1:
+        sampleflags = data_bytes.to_bin(t_sampleheaders[0][0][5], 8)
+
+        loopon = None
+        xm_loop_start = t_sampleheaders[0][0][1]
+        xm_loop_len = t_sampleheaders[0][0][2]
+
+        if sampleflags[7] == 1: loopon = 'normal'
+        if sampleflags[6] == 1: loopon = 'pingpong'
+
+        if loopon == None:
             plugins.add_plug_data(cvpj_l, pluginid, 'loop', {"enabled": 0})
         else:
-            xm_loop_start = t_sampleheaders[0][0][1]
-            xm_loop_len = t_sampleheaders[0][0][2]
             plugins.add_plug_data(cvpj_l, pluginid, 'loop', 
-                {"enabled": 1, "mode": "normal", "points": [xm_loop_start,xm_loop_start+xm_loop_len]})
+                {"enabled": 1, "mode": loopon, "points": [xm_loop_start,xm_loop_start+xm_loop_len]})
     else:
         cvpj_l_single_inst['vol'] = 0.3
         sampleregions = data_values.list_to_reigons(xm_inst_e_table, 48)
@@ -311,22 +320,23 @@ def parse_instrument(file_stream, samplecount):
 
             plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
 
-    splitted_points_v = data_values.list_chunks(xm_inst_e_env_v, 2)
-    splitted_points_p = data_values.list_chunks(xm_inst_e_env_p, 2)
-
-    pointsdata = [
-    ['vol', splitted_points_v, xm_inst_e_volume_sustain_point, xm_inst_e_volume_loop_start_point, xm_inst_e_volume_loop_end_point], 
-    ['pan', splitted_points_p, xm_inst_e_panning_sustain_point, xm_inst_e_panning_loop_start_point, xm_inst_e_panning_loop_end_point]
-    ]
-
     if xm_inst_num_samples != 0:
-        envflags = data_bytes.to_bin(xm_inst_e_panning_type, 8)
+
+        splitted_points_v = data_values.list_chunks(xm_inst_e_env_v[0:xm_inst_e_number_of_volume_points*2], 2)
+        splitted_points_p = data_values.list_chunks(xm_inst_e_env_p[0:xm_inst_e_number_of_panning_points*2], 2)
+
+        pointsdata = [
+        ['vol', splitted_points_v, xm_inst_e_volume_sustain_point, xm_inst_e_volume_loop_start_point, xm_inst_e_volume_loop_end_point], 
+        ['pan', splitted_points_p, xm_inst_e_panning_sustain_point, xm_inst_e_panning_loop_start_point, xm_inst_e_panning_loop_end_point]
+        ]
+
+        envflags = data_bytes.to_bin(xm_inst_e_volume_type, 8)
 
         for typedata in pointsdata:
             zerofound = False
 
             if envflags[6] == 1:
-                plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'sustain', typedata[3]+1)
+                plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'sustain', typedata[2]+1)
             if envflags[5] == 1: 
                 plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'loop', [typedata[4], typedata[3]+typedata[4]])
 

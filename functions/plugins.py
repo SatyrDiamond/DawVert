@@ -228,6 +228,8 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 			if (sustainpoint == None or sustainpoint == numpoints): sustainnum = None
 			else: sustainnum = sustainpoint
 
+			#print(pointsdata, numpoints, sustainpoint)
+			
 			if numpoints == 2:
 				env_duration = pointsdata[1]['position']
 				env_value = pointsdata[0]['value'] - pointsdata[1]['value']
@@ -324,7 +326,6 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 			if susinvert != 0:
 				a_decay /= susinvert
 
-			print(pointsdata, numpoints, sustainpoint)
 			#exit()
 			
 			add_asdr_env(cvpj_l, pluginid, a_type, a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount)

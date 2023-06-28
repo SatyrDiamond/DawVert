@@ -340,7 +340,8 @@ def parse_instrument(file_stream, samplecount):
                 plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'loop', [typedata[4], typedata[3]+typedata[4]])
 
             if typedata[0] == 'vol':
-                plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'fadeout', (128/xm_inst_e_volume_fadeout)*5)
+                if xm_inst_e_volume_fadeout != 0:
+                    plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'fadeout', (128/xm_inst_e_volume_fadeout)*5)
 
             for groupval in typedata[1]:
                 if groupval[0] == 0:

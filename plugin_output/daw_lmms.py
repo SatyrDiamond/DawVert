@@ -245,7 +245,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             if 'loop' in cvpj_plugindata:
                 trkJ_loop = cvpj_plugindata['loop']
                 if 'enabled' in trkJ_loop: loopenabled = trkJ_loop['enabled']
-                if 'mode' in trkJ_loop: mode = trkJ_loop['mode']
+                if 'mode' in trkJ_loop: loopmode = trkJ_loop['mode']
             if loopenabled == 0: xml_sampler.set('looped', '0')
             if loopenabled == 1:
                 if loopmode == "normal": xml_sampler.set('looped', '1')

@@ -475,6 +475,14 @@ class input_it(plugin_input.base):
                             regionparams['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
                             plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
 
+                if it_singleinst['filtercutoff'] != None:
+                    if it_singleinst['filtercutoff'] != 127:
+                        computedCutoff = (it_singleinst['filtercutoff'] * 512)
+                        outputcutoff = 131.0 * pow(2.0, computedCutoff * (5.29 / (127.0 * 512.0)))
+                        if it_singleinst['filterresonance'] != None: outputreso = (it_singleinst['filterresonance']/127)*6 + 1
+                        else: outputreso = 1
+                        plugins.add_filter(cvpj_l, pluginid, True, outputcutoff, outputreso, "lowpass", None)
+
                 cvpj_instdata_midi = {}
                 cvpj_instdata_midi['out'] = {}
                 if 'midi_chan' in it_singleinst: 
@@ -521,10 +529,10 @@ class input_it(plugin_input.base):
                             if it_singleinst['filterresonance'] != None: outputreso = (it_singleinst['filterresonance']/127)*6 + 1
                             else: outputreso = 1
                             plugins.add_filter(cvpj_l, pluginid, True, outputcutoff, outputreso, "lowpass", None)
-                else:
-                    if it_singleinst['filterresonance'] != None: outputreso = (it_singleinst['filterresonance']/127)*6 + 1
-                    else: outputreso = 0
-                    plugins.add_filter(cvpj_l, pluginid, True, 0, outputreso, "lowpass", None)
+                #else:
+                #    if it_singleinst['filterresonance'] != None: outputreso = (it_singleinst['filterresonance']/127)*6 + 1
+                #    else: outputreso = 0
+                #    plugins.add_filter(cvpj_l, pluginid, True, 0, outputreso, "lowpass", None)
 
                 plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
                 plugins.env_point_to_asdr(cvpj_l, pluginid, 'cutoff')

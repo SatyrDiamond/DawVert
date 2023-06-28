@@ -206,91 +206,128 @@ def add_env_point_var(cvpj_l, pluginid, a_type, p_name, p_value):
 def get_env_points(cvpj_l, pluginid, a_type):
 	return data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'env_points', a_type])
 
+def one_invert(input):
+	return (input*-1)+1
+
 def env_point_to_asdr(cvpj_l, pluginid, a_type):
 	env_pointsdata = get_env_points(cvpj_l, pluginid, a_type)
 	if env_pointsdata != None:
 		sustainpoint = data_values.get_value(env_pointsdata, 'sustain', None)
-		pointsdata = env_pointsdata['points']
-		numpoints = len(pointsdata)
+		if 'points' in env_pointsdata:
+			pointsdata = env_pointsdata['points']
+			numpoints = len(pointsdata)
 
-		a_predelay = 0
-		a_attack = 0
-		a_hold = 0
-		a_decay = 0
-		a_sustain = 1
-		a_release = 0
-		a_amount = 1
+			a_predelay = 0
+			a_attack = 0
+			a_hold = 0
+			a_decay = 0
+			a_sustain = 1
+			a_release = 0
+			a_amount = 1
 
-		print(sustainpoint)
+			if (sustainpoint == None or sustainpoint == numpoints): sustainnum = None
+			else: sustainnum = sustainpoint
 
-		if True:
 			if numpoints == 2:
 				env_duration = pointsdata[1]['position']
 				env_value = pointsdata[0]['value'] - pointsdata[1]['value']
-				if env_value > 0:
-					a_decay = env_duration
-					a_sustain = 0
-				if env_value < 0:
-					a_attack = env_duration
+
+				if sustainnum == None:
+					if env_value > 0:
+						a_decay = env_duration
+						a_sustain = 0
+					if env_value < 0: a_attack = env_duration
+
+				elif sustainnum == 1:
+					if env_value > 0: a_release = env_duration
+					if env_value < 0:
+						a_release = env_duration
+						a_amount = -1
+
 			elif numpoints == 3:
-				envp_first = pointsdata[0]['position']
 				envp_middle = pointsdata[1]['position']
 				envp_end = pointsdata[2]['position']
-
 				envv_first = pointsdata[0]['value']
 				envv_middle = pointsdata[1]['value']
 				envv_end = pointsdata[2]['value']
-
 				firstmid_s = envv_first-envv_middle
 				midend_s = envv_end-envv_middle
-
-				print(envp_first, envv_first)
-				print(envp_middle, envv_middle, firstmid_s)
-				print(envp_end-envp_middle, envv_end, midend_s)
-
-				if firstmid_s > 0: a_sustain = 0
+				#print(0, envv_first)
+				#print(envp_middle, envv_middle, firstmid_s)
+				#print(envp_end-envp_middle, envv_end, midend_s)
+				if firstmid_s > 0 and sustainnum == None: a_sustain = 0
 
 				if firstmid_s > 0 and midend_s == 0:
-					print("^__")
-					a_decay = envp_middle
+					#print("^__")
+					if sustainnum == None: a_decay = envp_middle
+					if sustainnum == 1: a_release = envp_middle
+
 				elif firstmid_s > 0 and midend_s < 0: #to-do: tension
-					print("^._")
-					a_decay = envp_end
+					#print("^._")
+					if sustainnum == None: a_decay = envp_end
+					if sustainnum == 1: a_release = envp_end
+					if sustainnum == 2: 
+						a_decay = envp_middle
+						a_release = envp_end-envp_middle
+						a_sustain = envv_middle
+
 				elif firstmid_s < 0 and midend_s < 0:
-					print("_^.")
-					a_attack = envp_middle
-					a_decay = (envp_end-envp_middle)
-					a_sustain = envv_end
+					#print("_^.")
+					if sustainnum in [None, 1]: 
+						a_attack = envp_middle
+						a_decay = (envp_end-envp_middle)
+						a_sustain = envv_end
+					if sustainnum == 2: 
+						a_attack = envp_middle
+						a_release = (envp_end-envp_middle)
+						if envv_end != 0: a_release /= one_invert(envv_end)
+
 				elif firstmid_s == 0 and midend_s < 0:
-					print("^^.")
-					a_hold = envp_middle
-					a_decay = envp_end-envp_middle
-					a_sustain = envv_end
+					#print("^^.")
+					if sustainnum in [None, 1]:
+						a_hold = envp_middle
+						a_decay = envp_end-envp_middle
+						a_sustain = envv_end
+					if sustainnum == 2: 
+						a_hold = envp_middle
+						a_release = envp_end-envp_middle
+						if envv_end != 0: a_release /= one_invert(envv_end)
+
 				elif firstmid_s < 0 and midend_s > 0: #to-do: tension
-					print("_.^")
+					#print("_.^")
 					a_attack = envp_end
+
 				elif firstmid_s == 0 and midend_s > 0:
-					print("__^")
+					#print("__^")
 					a_predelay = envp_middle
 					a_attack = envp_end
+
 				elif firstmid_s < 0 and midend_s == 0:
-					print("_^^")
+					#print("_^^")
 					a_attack = envp_middle
 					a_hold = envp_end-envp_middle
+
 				elif firstmid_s > 0 and midend_s > 0:
-					print("^.^")
-					a_attack = envp_middle
-					a_decay = (envp_end-envp_middle)
-					a_amount = envv_middle-1
+					#print("^.^")
+					if sustainnum in [None, 1]:
+						a_attack = envp_middle
+						a_decay = (envp_end-envp_middle)
+						a_amount = envv_middle-1
+					if sustainnum == 2: 
+						a_attack = envp_middle
+						a_release = (envp_end-envp_middle)
+						a_amount = envv_middle-1
 
-		susinvert = (a_sustain*-1)+1
-		if susinvert != 0:
-			a_decay /= susinvert
 
-		print(pointsdata, numpoints, sustainpoint)
-		#exit()
+
+			susinvert = (a_sustain*-1)+1
+			if susinvert != 0:
+				a_decay /= susinvert
+
+			print(pointsdata, numpoints, sustainpoint)
+			#exit()
 			
-		add_asdr_env(cvpj_l, pluginid, a_type, a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount)
+			add_asdr_env(cvpj_l, pluginid, a_type, a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount)
 
 # -------------------------------------------------- wave
 

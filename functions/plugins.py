@@ -167,7 +167,11 @@ def get_asdr_env(cvpj_l, pluginid, a_type):
 
 def get_asdr_env_tension(cvpj_l, pluginid, a_type):
 	asdr = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'env_asdr', a_type])
-	if asdr != None: return asdr['attack_tension'], asdr['decay_tension'], asdr['release_tension']
+	if asdr != None: 
+		attack_tension = data_values.get_value(asdr, 'attack_tension', 0)
+		decay_tension = data_values.get_value(asdr, 'decay_tension', 0)
+		release_tension = data_values.get_value(asdr, 'release_tension', 0)
+		return attack_tension, decay_tension, release_tension
 	else: return 0,0,0
 
 # -------------------------------------------------- LFO

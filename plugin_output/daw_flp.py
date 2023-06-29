@@ -14,6 +14,7 @@ from functions import data_values
 from functions import audio
 from functions import notelist_data
 from functions import xtramath
+from functions import plugins
 
 filename_len = {}
 
@@ -156,13 +157,13 @@ class output_cvpjs(plugin_output.base):
                 if 'pitch' in CVPJ_Inst: T_Main['pitch'] = CVPJ_Inst['pitch']
                 if 'usemasterpitch' in CVPJ_Inst: T_Main['main_pitch'] = CVPJ_Inst['usemasterpitch']
 
-                if 'plugin' in CVPJ_Inst:
-                    if CVPJ_Inst['plugin'] == 'sampler':
+                if 'pluginid' in CVPJ_Inst:
+                    plugintype = plugins.get_plug_type(projJ, CVPJ_Inst['pluginid'])
+                    if plugintype == ['sampler', 'single']:
                         T_Main['type'] = 0
                         T_Main['plugin'] = ''
-                        if 'plugindata' in CVPJ_Inst:
-                            samplerdata = CVPJ_Inst['plugindata'] 
-                            if 'file' in samplerdata: T_Main['samplefilename'] = samplerdata['file'] 
+                        cvpj_plugindata = plugins.get_plug_data(projJ, CVPJ_Inst['pluginid'])
+                        T_Main['samplefilename'] = data_values.get_value(cvpj_plugindata, 'file', '')
                     else:
                         T_Main['type'] = 0
                         T_Main['plugin'] = ''

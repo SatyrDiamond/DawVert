@@ -155,11 +155,12 @@ class input_flp(plugin_input.base):
                 color = channeldata['color'].to_bytes(4, "little")
                 cvpj_s_sample['color'] = [color[0]/255,color[1]/255,color[2]/255]
                 cvpj_s_sample['fxrack_channel'] = channeldata['fxchannel']
-                filename_sample = getsamplefile(cvpj_s_sample, channeldata, input_file)
+                filename_sample = getsamplefile(cvpj_s_sample, input_file)
 
+                ald = None
                 sampleinfo[instrument] = audio.get_audiofile_info(filename_sample)
                 if filename_sample in filename_len: ald = filename_len[filename_sample]
-                stretchbpm = (ald['dur_sec']*(cvpj_l['bpm']/120))
+                if ald != None: stretchbpm = (ald['dur_sec']*(cvpj_l['bpm']/120))
 
                 cvpj_audiomod = cvpj_s_sample['audiomod'] = {}
 
@@ -192,20 +193,21 @@ class input_flp(plugin_input.base):
 
                 #if t_stretchingtime != 0 or t_stretchingmultiplier != 1 or t_stretchingpitch != 0:
 
-                if t_stretchingtime != 0:
-                    cvpj_audiomod['stretch_method'] = 'rate_tempo'
-                    cvpj_audiomod['stretch_data'] = {}
-                    cvpj_audiomod['stretch_data']['rate'] = (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier
-                    samplestretch[instrument] = ['rate_tempo', (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier]
+                if ald != None:
+                    if t_stretchingtime != 0:
+                        cvpj_audiomod['stretch_method'] = 'rate_tempo'
+                        cvpj_audiomod['stretch_data'] = {}
+                        cvpj_audiomod['stretch_data']['rate'] = (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier
+                        samplestretch[instrument] = ['rate_tempo', (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier]
 
-                elif t_stretchingtime == 0:
-                    cvpj_audiomod['stretch_method'] = 'rate_speed'
-                    cvpj_audiomod['stretch_data'] = {}
-                    cvpj_audiomod['stretch_data']['rate'] = 1/t_stretchingmultiplier
-                    samplestretch[instrument] = ['rate_speed', 1/t_stretchingmultiplier]
+                    elif t_stretchingtime == 0:
+                        cvpj_audiomod['stretch_method'] = 'rate_speed'
+                        cvpj_audiomod['stretch_data'] = {}
+                        cvpj_audiomod['stretch_data']['rate'] = 1/t_stretchingmultiplier
+                        samplestretch[instrument] = ['rate_speed', 1/t_stretchingmultiplier]
 
-                else:
-                    samplestretch[instrument] = ['rate_speed', 1]
+                    else:
+                        samplestretch[instrument] = ['rate_speed', 1]
 
                 cvpj_l_samples['FLSample' + str(instrument)] = cvpj_s_sample
 

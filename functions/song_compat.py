@@ -20,7 +20,8 @@ def list2fxrack(cvpj_l, input_list, fxnum, defualtname, starttext):
     else: fx_color = None
     tracks.fxrack_add(cvpj_l, fxnum, fx_name, fx_color, None, None)
     if 'chain_fx_audio' in input_list: 
-        tracks.add_fxslot(cvpj_l, ['fxrack', fxnum], 'audio', input_list['chain_fx_audio'])
+        for plugid in input_list['chain_fx_audio']:
+            tracks.insert_fxslot(cvpj_l, ['fxrack', fxnum], 'audio', plugid)
         del input_list['chain_fx_audio']
 
 

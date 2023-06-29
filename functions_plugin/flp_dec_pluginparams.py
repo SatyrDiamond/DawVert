@@ -761,16 +761,17 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
             if chunktype == 56: wrapperdata['vendor'] = chunkdata.decode()
             if chunktype == 57: wrapperdata['57'] = chunkdata
 
-        wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
-        if 'fourid' in wrapperdata:
-            pluginstate = wrapperdata['state']
-            wrapper_vststate = pluginstate[0:9]
-            wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
-            wrapper_vstpad = pluginstate[13:17]
-            wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
-            wrapper_vstdata = pluginstate[21:]
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
-            plugins.add_plug_data(cvpj_l, pluginid, 'current_program', wrapper_vstprogram)
+        if 'plugin_info' in wrapperdata:
+            wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
+            if 'fourid' in wrapperdata:
+                pluginstate = wrapperdata['state']
+                wrapper_vststate = pluginstate[0:9]
+                wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
+                wrapper_vstpad = pluginstate[13:17]
+                wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
+                wrapper_vstdata = pluginstate[21:]
+                plugin_vst2.replace_data(cvpj_l, pluginid, 'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
+                plugins.add_plug_data(cvpj_l, pluginid, 'current_program', wrapper_vstprogram)
 
     # ------------------------------------------------------------------------------------------- Other
 

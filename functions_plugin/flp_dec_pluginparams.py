@@ -6,6 +6,7 @@ import struct
 import os
 from functions import data_bytes
 from functions import plugins
+from functions import plugin_vst2
 from functions import debug
 
 def decode_pointdata(fl_plugstr):
@@ -439,7 +440,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
         plugins.add_plug_param(cvpj_l, pluginid, 'attack', flplugvals[4], 'int', 'Attack')
         plugins.add_plug_param(cvpj_l, pluginid, 'release', flplugvals[5], 'int', 'Release')
         plugins.add_plug_param(cvpj_l, pluginid, 'type', flplugvals[6], 'int', 'Type')
-        print(flplugvals)
+        ##print(flplugvals)
 
     elif pluginname == 'fruity convolver':
         fl_plugstr.read(20)
@@ -457,7 +458,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
         for autoname in ['pan', 'vol', 'stereo', 'allpurpose', 'eq']:
             autodata_table = decode_pointdata(fl_plugstr)
             for point in autodata_table:
-                print(autoname, test)
+                #print(autoname, test)
                 plugins.add_env_point(cvpj_l, pluginid, autoname, point[0], point[1][0], tension=point[2], type=envshapes[point[3]])
             autodata[autoname] = autodata_table
 
@@ -522,7 +523,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
         flplugvals = struct.unpack('III', chunkdata)
         plugins.add_plug_param(cvpj_l, pluginid, 'mute', flplugvals[0], 'int', 'Mute')
         plugins.add_plug_param(cvpj_l, pluginid, 'channel', flplugvals[1], 'int', 'Channel')
-        print(flplugvals)
+        ##print(flplugvals)
 
     elif pluginname == 'fruity limiter':
         fl_plugstr.read(4)
@@ -676,7 +677,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
         plugins.add_plug_param(cvpj_l, pluginid, 'dephase', flplugvals[6], 'int', "Dephaseing")
         plugins.add_plug_param(cvpj_l, pluginid, 'iodiff', flplugvals[7], 'bool', "In/Out Diffrence")
         plugins.add_plug_param(cvpj_l, pluginid, 'prepost', flplugvals[8], 'bool', "Pre/Post")
-        print(flplugvals)
+        ##print(flplugvals)
 
     elif pluginname == 'fruity spectroman':
         flplugvals = struct.unpack('bIIIbbb', chunkdata)
@@ -694,7 +695,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
         plugins.add_plug_data(cvpj_l, pluginid, 'filter', flplugvals[2])
         plugins.add_plug_data(cvpj_l, pluginid, 'left_right', flplugvals[4])
         flplugvalsafter = struct.unpack('i'*12, fl_plugstr.read(12*4))
-        print(flplugvalsafter)
+        #print(flplugvalsafter)
         plugins.add_plug_param(cvpj_l, pluginid, 'freq_min', flplugvalsafter[0], 'int', "Freq Min")
         plugins.add_plug_param(cvpj_l, pluginid, 'freq_max', flplugvalsafter[1], 'int', "Freq Max")
         plugins.add_plug_param(cvpj_l, pluginid, 'freq_scale', flplugvalsafter[2], 'int', "Freq Scale")
@@ -709,7 +710,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
 
     elif pluginname == 'fruity waveshaper':
         flplugvals = struct.unpack('bHHIIbbbbbb', fl_plugstr.read(22))
-        print(flplugvals)
+        #print(flplugvals)
         plugins.add_plug_param(cvpj_l, pluginid, 'preamp', flplugvals[2], 'int', "Pre Amp")
         plugins.add_plug_param(cvpj_l, pluginid, 'wet', flplugvals[3], 'int', "Wet")
         plugins.add_plug_param(cvpj_l, pluginid, 'postgain', flplugvals[4], 'int', "Post Gain")
@@ -722,7 +723,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
 
     elif pluginname == 'pitch shifter':
         flplugvals = struct.unpack('iiiiiiiiiiiiiiiiii', fl_plugstr.read(18*4))
-        print(flplugvals)
+        #print(flplugvals)
 
     #elif pluginname == 'pitcher': LATER
     #    chunkdata = data_bytes.riff_read(chunkdata, 0)
@@ -734,6 +735,42 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
     #    plugins.add_plug_param(cvpj_l, pluginid, 'speed', flplugvals[0], 'int', "Correction Speed")
     #    plugins.add_plug_param(cvpj_l, pluginid, 'gender', flplugvals[2], 'int', "Gender")
     #    plugins.add_plug_param(cvpj_l, pluginid, 'finetune', flplugvals[3], 'int', "Fine Tune")
+
+    # ------------------------------------------------------------------------------------------- VST
+    elif pluginname == 'fruity wrapper':
+        fl_plugstr.seek(0,2)
+        fl_plugstr_size = fl_plugstr.tell()
+        fl_plugstr.seek(0)
+        fl_plugstr.read(4)
+
+        wrapperdata = {}
+        while fl_plugstr.tell() < fl_plugstr_size:
+            chunktype = int.from_bytes(fl_plugstr.read(4), "little")
+            chunksize = int.from_bytes(fl_plugstr.read(4), "little")
+            fl_plugstr.read(4)
+            chunkdata = fl_plugstr.read(chunksize)
+            if chunktype == 1: wrapperdata['midi'] = chunkdata
+            if chunktype == 2: wrapperdata['flags'] = chunkdata
+            if chunktype == 30: wrapperdata['io'] = chunkdata
+            if chunktype == 32: wrapperdata['outputs'] = chunkdata
+            if chunktype == 50: wrapperdata['plugin_info'] = chunkdata
+            if chunktype == 51: wrapperdata['fourid'] = int.from_bytes(chunkdata, "little")
+            if chunktype == 53: wrapperdata['state'] = chunkdata
+            if chunktype == 54: wrapperdata['name'] = chunkdata.decode()
+            if chunktype == 55: wrapperdata['file'] = chunkdata.decode()
+            if chunktype == 56: wrapperdata['vendor'] = chunkdata.decode()
+            if chunktype == 57: wrapperdata['57'] = chunkdata
+
+        wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
+        if 'fourid' in wrapperdata:
+            pluginstate = wrapperdata['state']
+            wrapper_vststate = pluginstate[0:9]
+            wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
+            wrapper_vstpad = pluginstate[13:17]
+            wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
+            wrapper_vstdata = pluginstate[21:]
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
+            plugins.add_plug_data(cvpj_l, pluginid, 'current_program', wrapper_vstprogram)
 
     # ------------------------------------------------------------------------------------------- Other
 

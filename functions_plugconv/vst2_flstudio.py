@@ -196,7 +196,7 @@ def convert(cvpj_l, pluginid, plugintype):
 		params_various_fx.wolfshaper_setvalue('bipolarmode', float(getparam('bipolarmode')))
 		params_various_fx.wolfshaper_setvalue('removedc', float(getparam('removedc')))
 
-		shapeenv = plugins.get_env_point(cvpj_l, pluginid, 'shape')
+		shapeenv = plugins.get_env_points(cvpj_l, pluginid, 'shape')
 		if shapeenv != None:
 			params_various_fx.wolfshaper_addshape(shapeenv)
 

@@ -301,7 +301,7 @@ class input_audiosanua(plugin_input.base):
             audiosauna_lfoFilter = float(getvalue(x_device_sound, 'lfoFilter', 0))
             audiosauna_lfoPitch = float(getvalue(x_device_sound, 'lfoPitch', 0))
             audiosauna_lfoDelay = float(getvalue(x_device_sound, 'lfoDelay', 0))
-            audiosauna_lfoWaveForm = getvalue(x_device_sound, 'lfoWaveForm', 0)
+            audiosauna_lfoWaveForm = getvalue(x_device_sound, 'lfoWaveForm', '0')
 
             if audiosauna_lfoWaveForm == '0': audiosauna_lfoWaveForm = "tri"
             if audiosauna_lfoWaveForm == '1': audiosauna_lfoWaveForm = 'square'

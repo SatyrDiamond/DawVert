@@ -158,6 +158,11 @@ def asdrlfo(pluginid, xmlobj, asdrtype, xmltype):
     elmodX = ET.SubElement(xmlobj, 'el' + xmltype)
 
     a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, asdrtype)
+    t_attack, t_decay, t_release = plugins.get_asdr_env_tension(cvpj_l, pluginid, asdrtype)
+    a_attack *= pow(2, min(t_attack*3.14, 0))
+    a_decay *= pow(2, min(t_decay*3.14, 0))
+    a_release *= pow(2, min(t_release*3.14, 0))
+
     if asdrtype == 'cutoff': elmodX.set('amt', str(a_amount/6000))
     else: elmodX.set('amt', str(float(a_amount)))
     elmodX.set('pdel', str(sec2exp(a_predelay)))

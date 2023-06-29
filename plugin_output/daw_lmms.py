@@ -570,7 +570,7 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
                 xml_sampletco = ET.SubElement(xmltag, 'sampletco')
                 xml_sampletco.set('pos', str(int(json_placement['position'] * 12)))
                 xml_sampletco.set('len', str(int(json_placement['duration'] * 12)))
-                xml_sampletco.set('src', json_placement['file'])
+                if 'file' in json_placement: xml_sampletco.set('src', json_placement['file'])
                 if 'enabled' in json_placement: xml_sampletco.set('muted', str(int(not json_placement['enabled'])))
                 if 'sample_rate' in json_placement: xml_sampletco.set('sample_rate', str(json_placement['sample_rate']))
                 if 'color' in json_placement: xml_sampletco.set('color', '#' + colors.rgb_float_2_hex(json_placement['color']))

@@ -213,7 +213,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             xml_instrumentpreplugin.set('name', "audiofileprocessor")
             xml_sampler = ET.SubElement(xml_instrumentpreplugin, "audiofileprocessor")
 
-            xml_sampler.set('reversed', str(int(data_values.get_value(cvpj_plugindata, 'reverse', False))))
+            xml_sampler.set('reversed', str(int(data_values.get_value(cvpj_plugindata, 'reverse', 0))))
             xml_sampler.set('amp', str(oneto100(data_values.get_value(cvpj_plugindata, 'amp', 1))))
             xml_sampler.set('stutter', str(int(data_values.get_value(cvpj_plugindata, 'continueacrossnotes', False))))
             xml_sampler.set('src', data_values.get_value(cvpj_plugindata, 'file', ''))

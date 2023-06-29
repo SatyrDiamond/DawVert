@@ -155,10 +155,20 @@ def add_asdr_env(cvpj_l, pluginid, a_type, a_predelay, a_attack, a_hold, a_decay
 	asdrdata['amount'] = a_amount
 	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'env_asdr', a_type], asdrdata)
 
+def add_asdr_env_tension(cvpj_l, pluginid, a_type, t_attack, t_decay, t_release):
+	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'env_asdr', a_type, 'attack_tension'], t_attack)
+	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'env_asdr', a_type, 'decay_tension'], t_decay)
+	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'env_asdr', a_type, 'release_tension'], t_release)
+
 def get_asdr_env(cvpj_l, pluginid, a_type):
 	asdr = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'env_asdr', a_type])
 	if asdr != None: return asdr['predelay'], asdr['attack'], asdr['hold'], asdr['decay'], asdr['sustain'], asdr['release'], asdr['amount']
 	else: return 0,0,0,0,1,0,0
+
+def get_asdr_env_tension(cvpj_l, pluginid, a_type):
+	asdr = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'env_asdr', a_type])
+	if asdr != None: return asdr['attack_tension'], asdr['decay_tension'], asdr['release_tension']
+	else: return 0,0,0
 
 # -------------------------------------------------- LFO
 
@@ -226,6 +236,10 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 			a_release = 0
 			a_amount = 1
 
+			t_attack = 0
+			t_decay = 0
+			t_release = 0
+
 			if (sustainpoint == None or sustainpoint == numpoints): sustainnum = None
 			else: sustainnum = sustainpoint
 
@@ -272,10 +286,12 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 
 				elif firstmid_s > 0 and midend_s < 0: #to-do: tension
 					#print("^._")
-					if sustainnum == None: a_decay = envp_end
+					if sustainnum == None: 
+						a_decay = envp_end
+
 					if sustainnum == 1: 
-						if -midend_s <= firstmid_s: a_release = envp_middle
-						else: a_release = envp_end
+						a_release = envp_end
+						t_release = ((((envp_middle/envp_end)/2)+(envv_middle/2))-0.5)*2
 
 					if sustainnum == 2: 
 						a_decay = envp_middle
@@ -345,6 +361,7 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 			if a_type == 'cutoff': a_amount *= 6000
 
 			add_asdr_env(cvpj_l, pluginid, a_type, a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount)
+			add_asdr_env_tension(cvpj_l, pluginid, a_type, t_attack, t_decay, t_release)
 
 # -------------------------------------------------- wave
 

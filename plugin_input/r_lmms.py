@@ -249,9 +249,9 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_inst):
 
         elif pluginname == "audiofileprocessor":
             plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, lmms_getvalue(xml_plugin, 'src', ''))
-            plugins.add_plug_data(cvpj_l, pluginid, 'reverse', bool(lmms_getvalue(xml_plugin, 'reversed', 0)))
-            plugins.add_plug_data(cvpj_l, pluginid, 'amp', float(lmms_getvalue(xml_plugin, 'amp', 1)))
-            plugins.add_plug_data(cvpj_l, pluginid, 'continueacrossnotes', bool(lmms_getvalue(xml_plugin, 'stutter', 0)))
+            plugins.add_plug_data(cvpj_l, pluginid, 'reverse', bool(int(lmms_getvalue(xml_plugin, 'reversed', 0))))
+            plugins.add_plug_data(cvpj_l, pluginid, 'amp', float(lmms_getvalue(xml_plugin, 'amp', 1))/100)
+            plugins.add_plug_data(cvpj_l, pluginid, 'continueacrossnotes', bool(int(lmms_getvalue(xml_plugin, 'stutter', 0))))
             plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
             plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "percent")
 

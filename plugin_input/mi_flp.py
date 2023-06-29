@@ -10,7 +10,7 @@ import os.path
 import varint
 from pathlib import Path
 
-from functions_plugin import flp_pluginparams
+from functions_plugin import flp_dec_pluginparams
 from functions import format_flp_dec
 from functions import note_mod
 from functions import folder_samples
@@ -137,7 +137,7 @@ class input_flp(plugin_input.base):
                     if flpluginname.lower() not in ['fruity soundfont player', 'soundfont player', 'fruity slicer']: 
                         plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', flpluginname)
                     if 'pluginparams' in channeldata: 
-                        flp_pluginparams.getparams(cvpj_l, pluginid, flpluginname, channeldata['pluginparams'], samplefolder)
+                        flp_dec_pluginparams.getparams(cvpj_l, pluginid, flpluginname, channeldata['pluginparams'], samplefolder)
 
                 cvpj_inst['poly'] = {}
                 cvpj_inst['poly']['max'] = channeldata['polymax']
@@ -364,7 +364,7 @@ class input_flp(plugin_input.base):
                         if 'plugin' in fl_fxslotdata: flpluginname = fl_fxslotdata['plugin']
                         plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', flpluginname)
                         if 'pluginparams' in fl_fxslotdata: 
-                            flp_pluginparams.getparams(cvpj_l, pluginid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder)
+                            flp_dec_pluginparams.getparams(cvpj_l, pluginid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder)
 
                         v_color = None
                         if 'color' in fl_fxslotdata:

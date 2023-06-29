@@ -460,6 +460,8 @@ class input_it(plugin_input.base):
                         plugins.add_plug_data(cvpj_l, pluginid, 'length', it_singlesample['length'])
                         cvpj_loop = {}
                         cvpj_loop['enabled'] = int(it_singlesample['flags'][3])
+                        if int(it_singlesample['flags'][1]) == 0: cvpj_loop['mode'] = 'normal'
+                        else: cvpj_loop['mode'] = 'pingpong'
                         cvpj_loop['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
                         plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
                 else:
@@ -557,6 +559,9 @@ class input_it(plugin_input.base):
                 if it_singlesample['name'] != '': cvpj_instname = it_singlesample['name']
                 elif it_singlesample['dosfilename'] != '': cvpj_instname = it_singlesample['dosfilename']
                 else: cvpj_instname = " "
+
+                track_volume = 0.3*it_singlesample['defualtvolume']*it_singlesample['globalvol']
+
                 pluginid = plugins.get_id()
                 plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, samplefolder+str(samplecount+1)+'.wav')
                 plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
@@ -565,7 +570,10 @@ class input_it(plugin_input.base):
                     plugins.add_plug_data(cvpj_l, pluginid, 'length', it_singlesample['length'])
                     cvpj_loop = {}
                     cvpj_loop['enabled'] = int(it_singlesample['flags'][3])
+                    if int(it_singlesample['flags'][1]) == 0: cvpj_loop['mode'] = 'normal'
+                    else: cvpj_loop['mode'] = 'pingpong'
                     cvpj_loop['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
+
                     plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
 
                 tracks.m_create_inst(cvpj_l, it_samplename, {'pluginid': pluginid})

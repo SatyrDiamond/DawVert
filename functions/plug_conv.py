@@ -47,35 +47,35 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 	if out_type != 'debug':
 		if 'plugins' in cvpj_l:
 			cvpj_plugins = cvpj_l['plugins']
-		for pluginid in cvpj_plugins:
-				plugintype = plugins.get_plug_type(cvpj_l, pluginid)
+			for pluginid in cvpj_plugins:
+					plugintype = plugins.get_plug_type(cvpj_l, pluginid)
 
-				if plugintype[0] == 'general-midi':
-					if 'soundfont' in extra_json:
-						sf2_gmmidi.convert(cvpj_l, pluginid, plugintype, extra_json)
-						print('[plug-conv] GM MIDI > soundfont2')
-					else: print('[plug-conv] Soundfont argument not defined.')
+					if plugintype[0] == 'general-midi':
+						if 'soundfont' in extra_json:
+							sf2_gmmidi.convert(cvpj_l, pluginid, plugintype, extra_json)
+							print('[plug-conv] GM MIDI > soundfont2')
+						else: print('[plug-conv] Soundfont argument not defined.')
 
-				replacingdone = None
-				if 'vst2' in supportedplugins:
-					if replacingdone == None and plugintype[0] == 'retro' :
-						print('[plug-conv] '+pluginid+' | Retro '+str(plugintype[1]))
-						replacingdone = vst2_retro.convert(cvpj_l, pluginid, plugintype) 
+					replacingdone = None
+					if 'vst2' in supportedplugins:
+						if replacingdone == None and plugintype[0] == 'retro' :
+							print('[plug-conv] '+pluginid+' | Retro '+str(plugintype[1]))
+							replacingdone = vst2_retro.convert(cvpj_l, pluginid, plugintype) 
 
-					if replacingdone == None and plugintype[0] == 'simple' :
-						print('[plug-conv] '+pluginid+' | Simple '+str(plugintype[1]))
-						replacingdone = vst2_simple.convert(cvpj_l, pluginid, plugintype) 
+						if replacingdone == None and plugintype[0] == 'simple' :
+							print('[plug-conv] '+pluginid+' | Simple '+str(plugintype[1]))
+							replacingdone = vst2_simple.convert(cvpj_l, pluginid, plugintype) 
 
-					if replacingdone == None and plugintype[0] == 'native-flstudio' and out_daw != 'flp':
-						print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))
-						replacingdone = vst2_flstudio.convert(cvpj_l, pluginid, plugintype) 
+						if replacingdone == None and plugintype[0] == 'native-flstudio' and out_daw != 'flp':
+							print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))
+							replacingdone = vst2_flstudio.convert(cvpj_l, pluginid, plugintype) 
 
-					if replacingdone == None and plugintype[0] == 'native-lmms' and plugintype[1] not in ['arpeggiator', 'chordcreator'] and out_daw != 'lmms':
-						print('[plug-conv] '+pluginid+' | LMMS: '+str(plugintype[1]))
-						replacingdone = vst2_lmms.convert(cvpj_l, pluginid, plugintype) 
+						if replacingdone == None and plugintype[0] == 'native-lmms' and plugintype[1] not in ['arpeggiator', 'chordcreator'] and out_daw != 'lmms':
+							print('[plug-conv] '+pluginid+' | LMMS: '+str(plugintype[1]))
+							replacingdone = vst2_lmms.convert(cvpj_l, pluginid, plugintype) 
 
-					if replacingdone == None and plugintype == ['native-piyopiyo', 'wave']:
-						print('[plug-conv] '+pluginid+' | PiyoPiyo '+str(plugintype[1]))
-						replacingdone = vst2_piyopiyo.convert(cvpj_l, pluginid, plugintype) 
+						if replacingdone == None and plugintype == ['native-piyopiyo', 'wave']:
+							print('[plug-conv] '+pluginid+' | PiyoPiyo '+str(plugintype[1]))
+							replacingdone = vst2_piyopiyo.convert(cvpj_l, pluginid, plugintype) 
 
 		return json.dumps(cvpj_l, indent=2)

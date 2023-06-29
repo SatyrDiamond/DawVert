@@ -25,6 +25,7 @@ from functions import plugins
 filename_len = {}
 
 def getsamplefile(channeldata, flppath):
+
     if 'samplefilename' in channeldata: 
         pathout = channeldata['samplefilename']
         samepath = os.path.join(os.path.dirname(flppath), os.path.basename(pathout))
@@ -155,7 +156,8 @@ class input_flp(plugin_input.base):
                 color = channeldata['color'].to_bytes(4, "little")
                 cvpj_s_sample['color'] = [color[0]/255,color[1]/255,color[2]/255]
                 cvpj_s_sample['fxrack_channel'] = channeldata['fxchannel']
-                filename_sample = getsamplefile(cvpj_s_sample, input_file)
+                filename_sample = getsamplefile(channeldata, input_file)
+                cvpj_s_sample['file'] = filename_sample
 
                 ald = None
                 sampleinfo[instrument] = audio.get_audiofile_info(filename_sample)

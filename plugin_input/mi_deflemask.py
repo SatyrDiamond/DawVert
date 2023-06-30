@@ -218,7 +218,7 @@ class input_cvpj_r(plugin_input.base):
                 fmdata['lfo_enable'] = 0
                 fmdata['lfo_frequency'] = 0
                 for opnum in [0,2,1,3]:
-                    optxt = str(opnum)+'_'
+                    optxt = 'op'+str(opnum+1)+'_'
                     fmdata[optxt+'am'] = bio_dmf.read(1)[0]
                     fmdata[optxt+'env_attack'] = bio_dmf.read(1)[0]
                     fmdata[optxt+'env_decay'] = bio_dmf.read(1)[0]
@@ -366,7 +366,6 @@ class input_cvpj_r(plugin_input.base):
 
             elif insttype == 'opn2':
                 plugins.add_plug(cvpj_l, pluginid, 'fm', 'opn2')
-                print(dmf_instdata['fmdata'])
                 for fmdataval in dmf_instdata['fmdata']:
                     plugins.add_plug_param(cvpj_l, pluginid, fmdataval, 
                         dmf_instdata['fmdata'][fmdataval], 'int', fmdataval)

@@ -427,7 +427,7 @@ def lmms_decode_inst_track(trkX, trackid):
         basenote = int(trkX_insttr.get('basenote'))-57
         noteoffset = 0
         if pluginname == 'sampler': noteoffset = 3
-        #if pluginname == 'soundfont2': noteoffset = -12
+        if pluginname == 'soundfont2': noteoffset = 12
         middlenote = basenote - noteoffset
         if middlenote != 0: cvpj_l_track_inst['middlenote'] = middlenote
 

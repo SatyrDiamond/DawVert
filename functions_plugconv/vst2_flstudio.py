@@ -13,8 +13,6 @@ from functions import data_values
 from functions import plugin_vst2
 from functions import plugins
 
-from functions_plugconv import input_flstudio_wrapper
-
 from functions_plugparams import params_various_inst
 from functions_plugparams import params_kickmess
 from functions_plugparams import params_various_fx

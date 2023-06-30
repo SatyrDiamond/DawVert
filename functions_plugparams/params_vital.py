@@ -6,6 +6,7 @@ import base64
 import struct
 import math
 from functions_plugparams import params_vital_wavetable
+from functions import data_values
 from functions import plugins
 from functions import xtramath
 
@@ -416,20 +417,46 @@ def importcvpj_env_block(cvpj_l, pluginid, lfo_num, a_type):
                 vital_points.append(1+(envpoint*-1))
                 vital_powers.append(0.0)
 
-            set_lfo(1, blockcount, vital_points, vital_powers, False, '')
+            set_lfo(lfo_num, blockcount, vital_points, vital_powers, False, '')
+
+            lfo_freq_out = math.log2(blockcount/8)
+
+            setvalue('lfo_'+str(lfo_num)+'_frequency', lfo_freq_out)
             setvalue('lfo_'+str(lfo_num)+'_sync_type', 2.0)
         return True
     else:
         return False
 
-def importcvpj_wave(cvpj_l, pluginid, osc_num, wave_name):
+def cvpjwave2vitalwave(cvpj_l, pluginid, wave_name):
     wavedata = plugins.get_wave(cvpj_l, pluginid, wave_name)
     if wavedata != None:
         wavedata_points = wavedata['points']
         if 'range' in wavedata:
             rangedata = wavedata['range']
             wavedata_points = [xtramath.betweenvalues_r(rangedata[0], rangedata[1], i) for i in wavedata_points]
-        replacewave(osc_num-1, params_vital_wavetable.resizewave(wavedata_points))
+        return params_vital_wavetable.resizewave(wavedata_points)
+    else: return None
+
+def importcvpj_wave(cvpj_l, pluginid, osc_num, wave_name):
+    wavedata = cvpjwave2vitalwave(cvpj_l, pluginid, wave_name)
+    if wavedata != None: replacewave(osc_num-1, wavedata)
+
+def importcvpj_wavetable(cvpj_l, pluginid, osc_num, lfo_num, wave_name):
+    wavedata = plugins.get_wavetable(cvpj_l, pluginid, wave_name)
+    if wavedata != None:
+        cvpj_wt_ids = wavedata['ids']
+        cvpj_wt_len = len(cvpj_wt_ids)
+        cvpj_wt_phase = data_values.get_value(wavedata, 'phase', 0)
+        cvpj_wt_locs = data_values.get_value(wavedata, 'locs', None)
+        setvalue('lfo_'+str(lfo_num)+'_phase', cvpj_wt_phase)
+
+        if cvpj_wt_locs == None: cvpj_wt_locs = [i/(cvpj_wt_len-1) for i in range(cvpj_wt_len)]
+
+        vital_keyframes = {}
+        for num in range(cvpj_wt_len):
+            vital_keyframes[cvpj_wt_locs[num]*256] = cvpjwave2vitalwave(cvpj_l, pluginid, cvpj_wt_ids[num])
+
+        replacemultiwave(osc_num, vital_keyframes)
 
 def getdata():
     global vitaldata

@@ -16,11 +16,14 @@ from functions_plugparams import params_various_inst
 from functions_plugparams import params_vital
 
 from functions_plugconv import vst2_simple
+from functions_plugconv import vst2_retro
+from functions_plugconv import vst2_namco163_famistudio
+from functions_plugconv import sf2_gmmidi
+
 from functions_plugconv import vst2_lmms
 from functions_plugconv import vst2_piyopiyo
 from functions_plugconv import vst2_flstudio
-from functions_plugconv import vst2_retro
-from functions_plugconv import sf2_gmmidi
+from functions_plugconv import vst2_onlineseq
 
 #from functions_plugconv import input_pxtone
 #from functions_plugconv import input_jummbox
@@ -32,9 +35,6 @@ from functions_plugconv import sf2_gmmidi
 #from functions_plugconv import output_vst2_slicer
 #
 #from functions_plugconv import output_vst2_soundchip
-#
-#from functions_plugconv import output_vst2_onlineseq
-#from functions_plugconv import output_vst2_namco163_famistudio
 #
 #from functions_plugconv import output_vst2nonfree_flstudio
 
@@ -57,6 +57,7 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 						else: print('[plug-conv] Soundfont argument not defined.')
 
 					replacingdone = None
+
 					if 'vst2' in supportedplugins:
 						if replacingdone == None and plugintype[0] == 'retro' :
 							print('[plug-conv] '+pluginid+' | Retro '+str(plugintype[1]))
@@ -74,8 +75,16 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 							print('[plug-conv] '+pluginid+' | LMMS: '+str(plugintype[1]))
 							replacingdone = vst2_lmms.convert(cvpj_l, pluginid, plugintype) 
 
+						if replacingdone == None and plugintype[0] == 'native-onlineseq':
+							print('[plug-conv] '+pluginid+' | Online Sequencer: '+str(plugintype[1]))
+							replacingdone = vst2_onlineseq.convert(cvpj_l, pluginid, plugintype) 
+							
 						if replacingdone == None and plugintype == ['native-piyopiyo', 'wave']:
 							print('[plug-conv] '+pluginid+' | PiyoPiyo '+str(plugintype[1]))
 							replacingdone = vst2_piyopiyo.convert(cvpj_l, pluginid, plugintype) 
+
+						if replacingdone == None and  plugintype[0] == 'namco163_famistudio':
+							print('[plug-conv] '+pluginid+' | FamiStudio N163 '+str(plugintype[1]))
+							replacingdone = vst2_namco163_famistudio.convert(cvpj_l, pluginid, plugintype)
 
 		return json.dumps(cvpj_l, indent=2)

@@ -163,7 +163,7 @@ def add_envelope(pluginid, fst_Instrument, cvpj_name, fst_name):
                 if len(wavedata) == int(envdata['size']):
                     plugins.add_wave(cvpj_l, pluginid, str(wavenum), wavedata, 0, 15)
                     waveids.append(str(wavenum))
-            plugins.add_wavetable(cvpj_l, pluginid, 'N163', waveids, None, envdata['loop']/(envdata['size']*envdata['count']))
+            plugins.add_wavetable(cvpj_l, pluginid, 'N163', waveids, None, envdata['loop']/((envdata['size']*envdata['count'])-1))
 
         else:
             envdata_values = [int(i) for i in fst_Instrument['Envelopes'][fst_name]['Values'].split(',')]
@@ -224,6 +224,7 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
         add_envelope(pluginid, fst_Instrument, 'wave', 'FDSWave')
 
     if WaveType == 'N163':
+        instvolume = 1
         plugins.add_plug(cvpj_l, pluginid, 'namco163_famistudio', None)
         add_envelopes(pluginid, fst_Instrument)
         add_envelope(pluginid, fst_Instrument, 'wave', 'N163Wave')

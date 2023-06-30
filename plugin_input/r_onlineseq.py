@@ -173,7 +173,7 @@ class input_onlinesequencer(plugin_input.base):
 
         used_fx_inst = {}
 
-        for os_note in onlseq_data_notes: parse_note(os_note)
+        for os_note in dict2list(onlseq_data_notes): parse_note(os_note)
 
         for instid in onlseq_notelist:
             used_fx_inst[instid] = []
@@ -242,7 +242,7 @@ class input_onlinesequencer(plugin_input.base):
 
                 if t_markerdata[1] == 'vol': tracks.a_auto_nopl_addpoint(['track', trackid, 'vol'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
                 if t_markerdata[1] == 'pan': tracks.a_auto_nopl_addpoint(['track', trackid, 'pan'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                if t_markerdata[1] == 'detune': tracks.a_auto_nopl_addpoint(['track', trackid, 'pitch'], 'float', t_markerdata[2], t_markerdata[3]/100, t_markerdata[4])
+                if t_markerdata[1] == 'detune': tracks.a_auto_nopl_addpoint(['track', trackid, 'pitch'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
 
                 if t_markerdata[1] in ['eq_high', 'eq_mid', 'eq_low']: 
                     tracks.a_auto_nopl_addpoint(['plugin', trackid+'_eq', t_markerdata[1]], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
@@ -288,7 +288,7 @@ class input_onlinesequencer(plugin_input.base):
             if 'distort' in used_fx_inst[used_fx_inst_i]:
                 pluginid = trackid+'_distort'
                 plugins.add_plug(cvpj_l, pluginid, 'native-onlineseq', 'distort')
-                fx_wet = bool(data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'distort_wet', 0))
+                fx_wet = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'distort_wet', 0)
                 plugins.add_plug_fxdata(cvpj_l, pluginid, True, fx_wet)
                 plugins.add_plug_param(cvpj_l, pluginid, 'distort_type', 
                     data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'distort_type', 0)

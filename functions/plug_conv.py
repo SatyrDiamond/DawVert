@@ -17,13 +17,15 @@ from functions_plugparams import params_vital
 
 from functions_plugconv import vst2_simple
 from functions_plugconv import vst2_retro
-from functions_plugconv import vst2_namco163_famistudio
 from functions_plugconv import sf2_gmmidi
+
+from functions_plugconv import vst2_fm_opn2
 
 from functions_plugconv import vst2_lmms
 from functions_plugconv import vst2_piyopiyo
 from functions_plugconv import vst2_flstudio
 from functions_plugconv import vst2_onlineseq
+from functions_plugconv import vst2_namco163_famistudio
 
 #from functions_plugconv import input_pxtone
 #from functions_plugconv import input_jummbox
@@ -66,6 +68,15 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 						if replacingdone == None and plugintype[0] == 'simple' :
 							print('[plug-conv] '+pluginid+' | Simple '+str(plugintype[1]))
 							replacingdone = vst2_simple.convert(cvpj_l, pluginid, plugintype) 
+
+
+
+						if replacingdone == None and plugintype == ['fm', 'opn2']:
+							print('[plug-conv] '+pluginid+' | OPN2 '+str(plugintype[1]))
+							replacingdone = vst2_fm_opn2.convert(cvpj_l, pluginid, plugintype) 
+
+
+
 
 						if replacingdone == None and plugintype[0] == 'native-flstudio' and out_daw != 'flp':
 							print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))

@@ -15,9 +15,11 @@ from functions_plugparams import params_various_fx
 from functions_plugparams import params_various_inst
 from functions_plugparams import params_vital
 
+from functions_plugconv import sf2_gmmidi
+from functions_plugconv import opl2_vrc7
+
 from functions_plugconv import vst2_simple
 from functions_plugconv import vst2_retro
-from functions_plugconv import sf2_gmmidi
 
 from functions_plugconv import vst2_fm_opn2
 
@@ -52,14 +54,21 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 			for pluginid in cvpj_plugins:
 					plugintype = plugins.get_plug_type(cvpj_l, pluginid)
 
+					# ------------------------ #1 ------------------------
+
 					if plugintype[0] == 'general-midi':
 						if 'soundfont' in extra_json:
 							sf2_gmmidi.convert(cvpj_l, pluginid, plugintype, extra_json)
 							print('[plug-conv] GM MIDI > soundfont2')
 						else: print('[plug-conv] Soundfont argument not defined.')
 
-					replacingdone = None
+					if plugintype == ['fm', 'vrc7']:
+						print('[plug-conv] '+pluginid+' | VRC7 to OPL2')
+						replacingdone = opl2_vrc7.convert(cvpj_l, pluginid, plugintype) 
 
+					# ------------------------ #2 ------------------------
+
+					replacingdone = None
 					if 'vst2' in supportedplugins:
 						if replacingdone == None and plugintype[0] == 'retro' :
 							print('[plug-conv] '+pluginid+' | Retro '+str(plugintype[1]))

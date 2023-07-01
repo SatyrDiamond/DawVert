@@ -18,16 +18,13 @@ vrc7patch[13] = [1,2,211,5,201,149,3,2]
 vrc7patch[14] = [97,99,12,0,148,192,51,246]
 vrc7patch[15] = [33,114,13,0,193,213,86,6]
 
-from functions import plugin_vst2
 from functions import plugins
 from functions import data_bytes
-from functions_plugparams import data_vc2xml
 import math
 import struct
 import xml.etree.ElementTree as ET
 
 def convert(cvpj_l, pluginid, plugintype):
-
 	use_patch = plugins.get_plug_dataval(cvpj_l, pluginid, 'use_patch', False)
 	patch = plugins.get_plug_dataval(cvpj_l, pluginid, 'patch', 0)
 	vrcregs = plugins.get_plug_dataval(cvpj_l, pluginid, 'regs', [0,0,0,0,0,0,0,0])

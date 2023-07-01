@@ -17,6 +17,7 @@ from functions_plugparams import params_vital
 
 from functions_plugconv import sf2__gmmidi
 from functions_plugconv import opl2__vrc7
+from functions_plugconv import opn2__epsm
 
 from functions_plugconv import vst2__simple
 from functions_plugconv import vst2__retro
@@ -62,9 +63,15 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 							sf2__gmmidi.convert(cvpj_l, pluginid, plugintype, extra_json)
 						else: print('[plug-conv] Soundfont argument not defined.')
 
-					if plugintype == ['fm', 'vrc7']:
+					elif plugintype == ['fm', 'vrc7']:
 						print('[plug-conv] '+pluginid+' | VRC7 to OPL2')
-						replacingdone = opl2__vrc7.convert(cvpj_l, pluginid, plugintype) 
+						opl2__vrc7.convert(cvpj_l, pluginid, plugintype) 
+
+					elif plugintype == ['fm', 'epsm']:
+						print('[plug-conv] '+pluginid+' | EPSM to OPN2')
+						opn2__epsm.convert(cvpj_l, pluginid, plugintype) 
+
+					plugintype = plugins.get_plug_type(cvpj_l, pluginid)
 
 					# ------------------------ #2 ------------------------
 
@@ -77,7 +84,6 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 						if replacingdone == None and plugintype[0] == 'simple' :
 							print('[plug-conv] '+pluginid+' | Simple '+str(plugintype[1]))
 							replacingdone = vst2__simple.convert(cvpj_l, pluginid, plugintype) 
-
 
 
 						if replacingdone == None and plugintype == ['fm', 'opn2']:

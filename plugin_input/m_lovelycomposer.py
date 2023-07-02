@@ -253,16 +253,16 @@ class input_lc(plugin_input.base):
 
             cvpj_instdata = {}
             if used_instrument == 'Sine': 
-                plugins.add_plug(cvpj_l, pluginid, 'shape', 'sine')
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'sine')
             elif used_instrument == 'Square': 
                 plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
                 plugins.add_plug_data(cvpj_l, pluginid, 'duty', 0)
             elif used_instrument == 'Triangle':
-                plugins.add_plug(cvpj_l, pluginid, 'shape', 'triangle')
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'triangle')
             elif used_instrument == 'Saw': 
-                plugins.add_plug(cvpj_l, pluginid, 'shape', 'saw')
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'saw')
             elif used_instrument == 'Noise': 
-                plugins.add_plug(cvpj_l, pluginid, 'shape', 'noise')
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'noise')
                 plugins.add_plug_data(cvpj_l, pluginid, 'type', '4bit')
             elif used_instrument == 'FreqNoise': 
                 plugins.add_plug(cvpj_l, pluginid, 'retro', 'noise')

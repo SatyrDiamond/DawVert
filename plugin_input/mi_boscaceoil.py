@@ -125,8 +125,12 @@ class input_ceol(plugin_input.base):
                 plugins.add_plug_gm_midi(cvpj_l, pluginid, 128, 0)
             else: 
                 cvpj_instname = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'name')
-                plugins.add_plug(cvpj_l, pluginid, 'native-boscaceoil', 'instrument')
-                plugins.add_plug_data(cvpj_l, pluginid, 'instrument', ceol_inst_number)
+                valsoundid = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'valsoundid')
+                if valsoundid not in [None, '']:
+                    plugins.add_plug(cvpj_l, pluginid, 'valsound', valsoundid)
+                else:
+                    plugins.add_plug(cvpj_l, pluginid, 'native-boscaceoil', 'instrument')
+                    plugins.add_plug_data(cvpj_l, pluginid, 'instrument', ceol_inst_number)
 
             plugins.add_filter(cvpj_l, pluginid, True, calc_initcutoffval, ceol_inst_resonance, "lowpass", None)
 

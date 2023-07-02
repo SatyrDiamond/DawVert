@@ -40,7 +40,7 @@ def convert(cvpj_l, pluginid, plugintype):
 	opnplug_addvalue(opnplug_params, "four_op" ,0)
 	opnplug_addvalue(opnplug_params, "pseudo_four_op" ,0)
 	opnplug_addvalue(opnplug_params, "blank" ,0)
-	opnplug_addvalue(opnplug_params, "con12" ,0)
+	opnplug_addvalue(opnplug_params, "con12" ,int(not getparam('fm')))
 	opnplug_addvalue(opnplug_params, "con34" ,0)
 	opnplug_addvalue(opnplug_params, "note_offset1" ,0)
 	opnplug_addvalue(opnplug_params, "note_offset2" ,0)

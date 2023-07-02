@@ -22,7 +22,8 @@ from functions_plugconv import opn2__epsm
 from functions_plugconv import vst2__simple
 from functions_plugconv import vst2__retro
 
-from functions_plugconv import vst2__fm_opn2
+from functions_plugconv import vst2__opn2
+#from functions_plugconv import vst2__opl2
 
 from functions_plugconv import vst2__lmms
 from functions_plugconv import vst2__piyopiyo
@@ -86,9 +87,11 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 							replacingdone = vst2__simple.convert(cvpj_l, pluginid, plugintype) 
 
 
+
+
 						if replacingdone == None and plugintype == ['fm', 'opn2']:
 							print('[plug-conv] '+pluginid+' | OPN2 '+str(plugintype[1]))
-							replacingdone = vst2__fm_opn2.convert(cvpj_l, pluginid, plugintype) 
+							replacingdone = vst2__opn2.convert(cvpj_l, pluginid, plugintype) 
 
 
 

@@ -97,6 +97,13 @@ def addfx(trackid, fxname):
     tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
     return pluginid
 
+def get_harmonics(i_harmonics):
+    harmonics = [i/100 for i in i_harmonics]
+    harmonics.append(harmonics[-1])
+    harmonics.append(harmonics[-1])
+    harmonics.append(harmonics[-1])
+    return harmonics
+
 def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
     global idvals_inst_beepbox
     bb_volume = bb_instrument['volume']
@@ -108,6 +115,9 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
 
     instslot = {}
     cvpj_volume = (bb_volume/50)+0.5
+
+    a_decay = 3
+    a_sustain = 1
 
     gm_inst = None
     if bb_preset in idvals_inst_beepbox:
@@ -121,6 +131,9 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
         bb_inst_type = bb_instrument['type']
         plugins.add_plug(cvpj_l, trackid, 'native-jummbox', bb_inst_type)
 
+        if 'unison' in bb_instrument:
+            plugins.add_plug_data(cvpj_l, trackid, 'unison', bb_instrument['unison'])
+
         if bb_inst_type == 'chip':
             bb_inst_wave = bb_instrument['wave']
             if bb_inst_wave in rawChipWaves:
@@ -131,11 +144,13 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
             plugins.add_plug_param(cvpj_l, trackid, "pulse_width", bb_instrument['pulseWidth']/100, 'float', "Pulse Width")
 
         if bb_inst_type == 'harmonics':
-            plugins.add_harmonics(cvpj_l, trackid, 'harmonics', [i/100 for i in bb_instrument['harmonics']])
+            harmonics = get_harmonics(bb_instrument['harmonics'])
+            plugins.add_harmonics(cvpj_l, trackid, 'harmonics', harmonics)
 
         if bb_inst_type == 'Picked String':
-            plugins.add_harmonics(cvpj_l, trackid, 'harmonics', [i/100 for i in bb_instrument['harmonics']])
-            plugins.add_plug_param(cvpj_l, trackid, "sustain", bb_instrument['stringSustain']/100, 'float', "Sustain")
+            harmonics = get_harmonics(bb_instrument['harmonics'])
+            plugins.add_harmonics(cvpj_l, trackid, 'harmonics', harmonics)
+            a_sustain = bb_instrument['stringSustain']/100
 
         if bb_inst_type == 'spectrum':
             plugins.add_plug_data(cvpj_l, trackid, 'spectrum', bb_instrument['spectrum'])
@@ -194,9 +209,16 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
             pluginid = addfx(trackid, 'reverb')
             plugins.add_plug_param(cvpj_l, pluginid, 'amount', bb_instrument['reverb']/100, 'float', "")
 
+        if 'vibrato' in bb_inst_effects:
+            if bb_instrument['vibratoSpeed'] != 0 and bb_instrument['vibratoDelay'] != 50:
+                vibrato_speed = 0.7*(1/bb_instrument['vibratoSpeed'])
+                vibrato_amount = bb_instrument['vibratoDepth']
+                vibrato_delay = (bb_instrument['vibratoDelay']/49)*2
+                plugins.add_lfo(cvpj_l, pluginid, 'pitch', 'sine', 'seconds', vibrato_speed, vibrato_delay, 0, vibrato_amount)
+
         a_attack = data_values.get_value(bb_instrument, 'fadeInSeconds', 0)
         a_release = abs(data_values.get_value(bb_instrument, 'fadeOutTicks', 0)/(jummbox_ticksPerBeat*32))
-        plugins.add_asdr_env(cvpj_l, trackid, 'vol', 0, a_attack, 0, 0, 1, a_release, 1)
+        plugins.add_asdr_env(cvpj_l, trackid, 'vol', 0, a_attack, 0, a_decay, a_sustain, a_release, 1)
 
         cvpj_instname = inst_names[bb_inst_type]
 

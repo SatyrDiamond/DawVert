@@ -441,6 +441,22 @@ def importcvpj_wave(cvpj_l, pluginid, osc_num, wave_name):
     wavedata = cvpjwave2vitalwave(cvpj_l, pluginid, wave_name)
     if wavedata != None: replacewave(osc_num-1, wavedata)
 
+def importcvpj_harm(cvpj_l, pluginid, osc_num, harm_name):
+    harmdata = plugins.get_harmonics(cvpj_l, pluginid, harm_name)
+
+    if harmdata != None: 
+        harmonics_data = harmdata['harmonics']
+        t_sample = []
+        for num in range(2048):
+            s_pos = num/2048
+            sample = 0
+            for harm_num in range(len(harmonics_data)):
+                sine_pitch = s_pos*(harm_num+1)
+                sine_vol = harmonics_data[harm_num]
+                sample += params_vital_wavetable.wave_sine(sine_pitch)*sine_vol
+            t_sample.append(sample)
+        replacewave(osc_num-1, t_sample)
+
 def importcvpj_wavetable(cvpj_l, pluginid, osc_num, lfo_num, wave_name):
     wavedata = plugins.get_wavetable(cvpj_l, pluginid, wave_name)
     if wavedata != None:

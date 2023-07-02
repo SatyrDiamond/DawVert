@@ -12,19 +12,18 @@ from functions import plugins
 
 from functions_plugparams import data_vc2xml
 from functions_plugparams import params_various_fx
-from functions_plugparams import params_various_inst
 from functions_plugparams import params_vital
 
 
 
 
 
-#from functions_plugconv import vst2__i_opl2
 from functions_plugconv import opl2__vrc7
 from functions_plugconv import opm__valsound
 from functions_plugconv import opn2__epsm
 from functions_plugconv import sf2__gmmidi
 
+from functions_plugconv import vst2__i_opl2
 from functions_plugconv import vst2__i_opn2
 from functions_plugconv import vst2__i_sampler_slicer
 from functions_plugconv import vst2__i_soundfont2
@@ -57,8 +56,6 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 					plugintype = plugins.get_plug_type(cvpj_l, pluginid)
 
 					# ------------------------ #1 ------------------------
-
-					print(plugintype)
 
 					if plugintype[0] == 'general-midi':
 						if 'soundfont' in extra_json:
@@ -102,15 +99,17 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 
 
 
-						if replacingdone == None and plugintype == ['fm', 'opn2']:
+						if replacingdone == None and plugintype == ['fm', 'opn2'] and 'opn2' in supportedplugins:
 							print('[plug-conv] '+pluginid+' | OPN2 '+str(plugintype[1]))
 							replacingdone = vst2__i_opn2.convert(cvpj_l, pluginid, plugintype) 
 
+						if replacingdone == None and plugintype == ['fm', 'opl2'] and 'opl2' in supportedplugins:
+							print('[plug-conv] '+pluginid+' | OPL2 '+str(plugintype[1]))
+							replacingdone = vst2__i_opl2.convert(cvpj_l, pluginid, plugintype) 
 
 
-						#if replacingdone == None and plugintype[0] == 'native-jummbox':
-						#	print('[plug-conv] '+pluginid+' | Jummbox: '+str(plugintype[1]))
-						#	replacingdone = vst2__n_jummbox.convert(cvpj_l, pluginid, plugintype) 
+
+
 
 						if plugintype[0] == 'native-flstudio' and out_daw != 'flp':
 							print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))

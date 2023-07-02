@@ -384,7 +384,23 @@ def get_wave(cvpj_l, pluginid, wave_name):
 			firstwave = list(wavedata.keys())[0]
 			return wavedata[firstwave]
 
-# -------------------------------------------------- wave
+# -------------------------------------------------- harmonics
+
+def add_harmonics(cvpj_l, pluginid, i_name, i_harmonics):
+	harmdata = {}
+	harmdata['harmonics'] = i_harmonics
+	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'harmonics', i_name], harmdata)
+
+def get_harmonics(cvpj_l, pluginid, wave_name):
+	harmdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'harmonics'])
+	if harmdata != None:
+		if wave_name != None: 
+			return harmdata[wave_name]
+		else:
+			firstharm = list(wavedata.keys())[0]
+			return harmdata[firstwave]
+
+# -------------------------------------------------- wavetable
 
 def add_wavetable(cvpj_l, pluginid, i_name, i_wavenames, i_wavelocs, i_phase):
 	wavedata = {}

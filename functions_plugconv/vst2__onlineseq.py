@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import struct
-from functions import params_vst
 from functions import plugin_vst2
 from functions import plugins
 

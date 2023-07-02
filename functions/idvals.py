@@ -57,6 +57,10 @@ def get_idval(valdata, i_id, i_param):
 		outval = None
 		if i_id in valdata:
 			if 'gm_inst' in valdata[i_id]: outval = valdata[i_id]['gm_inst']
+	else:
+		if i_id in valdata:
+			if i_param in valdata[i_id]: outval = valdata[i_id][i_param]
+			else: outval = None
 
 	return outval
 

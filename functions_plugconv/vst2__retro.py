@@ -22,7 +22,7 @@ def convert(cvpj_l, pluginid, plugintype):
 	if blk_env_vol != None:
 		if blk_env_vol['max'] != 15: m8bp_out = False
 
-	if plugintype[1] in ['square', 'triangle', 'noise'] and m8bp_out == True:
+	if plugintype[1] in ['square', 'triangle', 'noise', 'pulse'] and m8bp_out == True:
 		params_various_inst.m8bp_init()
 
 		a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'volume')
@@ -58,6 +58,7 @@ def convert(cvpj_l, pluginid, plugintype):
 		if plugintype[1] == 'noise': params_various_inst.m8bp_setvalue("osc", 2.0)
 
 		plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Magical 8bit Plug 2', 'chunk', data_vc2xml.make(params_various_inst.m8bp_out()), None)
+		plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', 0)
 		return True
 	else:
 		params_vital.create()
@@ -72,8 +73,10 @@ def convert(cvpj_l, pluginid, plugintype):
 
 		if plugintype[1] == 'sine': vital_shape = params_vital_wavetable.create_wave('sine', 0, None)
 		if plugintype[1] == 'square': vital_shape = params_vital_wavetable.create_wave('square', 0, vital_duty)
+		if plugintype[1] == 'pulse': vital_shape = params_vital_wavetable.create_wave('square', 0, vital_duty)
 		if plugintype[1] == 'triangle': vital_shape = params_vital_wavetable.create_wave('triangle', 0, None)
 		if plugintype[1] == 'saw': vital_shape = params_vital_wavetable.create_wave('saw', 0, None)
+		if plugintype[1] == 'wavetable': vital_shape = params_vital.cvpjwave2vitalwave(cvpj_l, pluginid, None)
 
 		params_vital.replacewave(0, vital_shape)
 
@@ -85,4 +88,5 @@ def convert(cvpj_l, pluginid, plugintype):
 
 		vitaldata = params_vital.getdata()
 		plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
+		plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', 12)
 		return True

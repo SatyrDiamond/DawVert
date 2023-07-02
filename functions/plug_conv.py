@@ -18,6 +18,7 @@ from functions_plugparams import params_vital
 from functions_plugconv import sf2__gmmidi
 from functions_plugconv import opl2__vrc7
 from functions_plugconv import opn2__epsm
+from functions_plugconv import opm__valsound
 
 from functions_plugconv import vst2__simple
 from functions_plugconv import vst2__retro
@@ -72,13 +73,17 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 						print('[plug-conv] '+pluginid+' | EPSM to OPN2')
 						opn2__epsm.convert(cvpj_l, pluginid, plugintype) 
 
+					elif plugintype[0] == 'valsound':
+						print('[plug-conv] '+pluginid+' | ValSound to OPM')
+						opm__valsound.convert(cvpj_l, pluginid, plugintype) 
+
 					plugintype = plugins.get_plug_type(cvpj_l, pluginid)
 
 					# ------------------------ #2 ------------------------
 
 					replacingdone = None
 					if 'vst2' in supportedplugins:
-						if replacingdone == None and plugintype[0] == 'retro' :
+						if replacingdone == None and plugintype[0] in ['retro', 'gameboy']:
 							print('[plug-conv] '+pluginid+' | Retro '+str(plugintype[1]))
 							replacingdone = vst2__retro.convert(cvpj_l, pluginid, plugintype) 
 

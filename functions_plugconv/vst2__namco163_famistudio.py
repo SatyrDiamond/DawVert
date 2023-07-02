@@ -7,7 +7,6 @@ from functions_plugparams import params_vital
 from functions_plugparams import params_vital_wavetable
 from functions import data_bytes
 from functions import data_values
-from functions import params_vst
 from functions import plugin_vst2
 
 def convert(cvpj_l, pluginid, plugintype):

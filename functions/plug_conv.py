@@ -31,6 +31,7 @@ from functions_plugconv import vst2__piyopiyo
 from functions_plugconv import vst2__flstudio
 from functions_plugconv import vst2__onlineseq
 from functions_plugconv import vst2__namco163_famistudio
+#from functions_plugconv import vst2__jummbox
 
 #from functions_plugconv import input_pxtone
 #from functions_plugconv import input_jummbox
@@ -99,6 +100,10 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 							replacingdone = vst2__opn2.convert(cvpj_l, pluginid, plugintype) 
 
 
+
+						#if replacingdone == None and plugintype[0] == 'native-jummbox':
+						#	print('[plug-conv] '+pluginid+' | Jummbox: '+str(plugintype[1]))
+						#	replacingdone = vst2__jummbox.convert(cvpj_l, pluginid, plugintype) 
 
 						if replacingdone == None and plugintype[0] == 'native-flstudio' and out_daw != 'flp':
 							print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))

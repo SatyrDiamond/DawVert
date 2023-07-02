@@ -397,8 +397,8 @@ def get_harmonics(cvpj_l, pluginid, wave_name):
 		if wave_name != None: 
 			return harmdata[wave_name]
 		else:
-			firstharm = list(wavedata.keys())[0]
-			return harmdata[firstwave]
+			firstharm = list(harmdata.keys())[0]
+			return harmdata[firstharm]
 
 # -------------------------------------------------- wavetable
 

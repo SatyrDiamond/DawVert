@@ -15,23 +15,28 @@ from functions_plugparams import params_various_fx
 from functions_plugparams import params_various_inst
 from functions_plugparams import params_vital
 
-from functions_plugconv import sf2__gmmidi
-from functions_plugconv import opl2__vrc7
-from functions_plugconv import opn2__epsm
-from functions_plugconv import opm__valsound
 
-from functions_plugconv import vst2__v_simple
-from functions_plugconv import vst2__i_sampler_slicer
-from functions_plugconv import vst2__v_retro
+
+
+
+#from functions_plugconv import vst2__i_opl2
+from functions_plugconv import opl2__vrc7
+from functions_plugconv import opm__valsound
+from functions_plugconv import opn2__epsm
+from functions_plugconv import sf2__gmmidi
 
 from functions_plugconv import vst2__i_opn2
-#from functions_plugconv import vst2__i_opl2
+from functions_plugconv import vst2__i_sampler_slicer
+from functions_plugconv import vst2__i_soundfont2
 
-from functions_plugconv import vst2__n_lmms
-from functions_plugconv import vst2__n_piyopiyo
 from functions_plugconv import vst2__n_flstudio
-from functions_plugconv import vst2__n_onlineseq
+from functions_plugconv import vst2__n_lmms
 from functions_plugconv import vst2__n_namco163_famistudio
+from functions_plugconv import vst2__n_onlineseq
+from functions_plugconv import vst2__n_piyopiyo
+
+from functions_plugconv import vst2__v_retro
+from functions_plugconv import vst2__v_simple
 
 from functions_plugconv import vst2_nonfree__flstudio
 
@@ -53,6 +58,8 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 
 					# ------------------------ #1 ------------------------
 
+					print(plugintype)
+
 					if plugintype[0] == 'general-midi':
 						if 'soundfont' in extra_json:
 							print('[plug-conv] '+pluginid+' | GM MIDI > soundfont2')
@@ -66,6 +73,9 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 					elif plugintype == ['fm', 'epsm']:
 						print('[plug-conv] '+pluginid+' | EPSM to OPN2')
 						opn2__epsm.convert(cvpj_l, pluginid, plugintype) 
+
+					elif plugintype[0] == 'soundfont2':
+						vst2__i_soundfont2.convert(cvpj_l, pluginid, plugintype) 
 
 					elif plugintype[0] == 'valsound':
 						print('[plug-conv] '+pluginid+' | ValSound to OPM')

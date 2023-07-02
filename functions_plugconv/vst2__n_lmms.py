@@ -161,6 +161,13 @@ def convert(cvpj_l, pluginid, plugintype):
 		plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', -12)
 		return True
 
+	if plugintype[1] == 'zynaddsubfx':
+		zasfxdata = plugins.get_plug_dataval(cvpj_l, pluginid, 'data', '')
+		zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
+		zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
+		plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'ZynAddSubFX', 'chunk', zasfxdatafixed, None)
+		return True
+
 	if plugintype[1] == 'spectrumanalyzer':
 		x_spectrumanalyzer = ET.Element("state")
 		x_spectrumanalyzer.set('valueTree', '<?xml version="1.0" encoding="UTF-8"?>\n<state width="400" height="328"/>')

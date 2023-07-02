@@ -64,7 +64,7 @@ def convert(cvpj_l, pluginid, plugintype):
 		params_vital.create()
 		params_vital.setvalue('osc_1_on', 1)
 		params_vital.setvalue('osc_1_level', 0.5)
-		params_vital.setvalue('volume', 4000)
+		params_vital.setvalue('volume', 5000)
 
 		r_duty = plugins.get_plug_dataval(cvpj_l, pluginid, 'duty', 0)
 		if r_duty == 0: vital_duty = 0.5

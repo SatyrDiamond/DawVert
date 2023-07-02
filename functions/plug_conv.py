@@ -20,22 +20,22 @@ from functions_plugconv import opl2__vrc7
 from functions_plugconv import opn2__epsm
 from functions_plugconv import opm__valsound
 
-from functions_plugconv import vst2__simple
-from functions_plugconv import vst2__sampler_slicer
-from functions_plugconv import vst2__retro
+from functions_plugconv import vst2__v_simple
+from functions_plugconv import vst2__i_sampler_slicer
+from functions_plugconv import vst2__v_retro
 
-from functions_plugconv import vst2__opn2
-#from functions_plugconv import vst2__opl2
+from functions_plugconv import vst2__i_opn2
+#from functions_plugconv import vst2__i_opl2
 
-from functions_plugconv import vst2__lmms
-from functions_plugconv import vst2__piyopiyo
-from functions_plugconv import vst2__flstudio
-from functions_plugconv import vst2__onlineseq
-from functions_plugconv import vst2__namco163_famistudio
+from functions_plugconv import vst2__n_lmms
+from functions_plugconv import vst2__n_piyopiyo
+from functions_plugconv import vst2__n_flstudio
+from functions_plugconv import vst2__n_onlineseq
+from functions_plugconv import vst2__n_namco163_famistudio
 
 from functions_plugconv import vst2_nonfree__flstudio
 
-#from functions_plugconv import vst2__jummbox
+#from functions_plugconv import vst2__n_jummbox
 #from functions_plugconv import input_pxtone
 #
 #
@@ -79,50 +79,50 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 					if 'vst2' in supportedplugins:
 						if replacingdone == None and plugintype[0] in ['retro', 'gameboy']:
 							print('[plug-conv] '+pluginid+' | Retro '+str(plugintype[1]))
-							replacingdone = vst2__retro.convert(cvpj_l, pluginid, plugintype) 
+							replacingdone = vst2__v_retro.convert(cvpj_l, pluginid, plugintype) 
 
 						if replacingdone == None and plugintype[0] == 'simple' :
 							print('[plug-conv] '+pluginid+' | Simple '+str(plugintype[1]))
-							replacingdone = vst2__simple.convert(cvpj_l, pluginid, plugintype) 
+							replacingdone = vst2__v_simple.convert(cvpj_l, pluginid, plugintype) 
 
 						if replacingdone == None and plugintype == ['sampler', 'slicer']:
 							print('[plug-conv] '+pluginid+' | Slicer')
-							replacingdone = vst2__sampler_slicer.convert(cvpj_l, pluginid, plugintype) 
+							replacingdone = vst2__i_sampler_slicer.convert(cvpj_l, pluginid, plugintype) 
 
 
 
 
 						if replacingdone == None and plugintype == ['fm', 'opn2']:
 							print('[plug-conv] '+pluginid+' | OPN2 '+str(plugintype[1]))
-							replacingdone = vst2__opn2.convert(cvpj_l, pluginid, plugintype) 
+							replacingdone = vst2__i_opn2.convert(cvpj_l, pluginid, plugintype) 
 
 
 
 						#if replacingdone == None and plugintype[0] == 'native-jummbox':
 						#	print('[plug-conv] '+pluginid+' | Jummbox: '+str(plugintype[1]))
-						#	replacingdone = vst2__jummbox.convert(cvpj_l, pluginid, plugintype) 
+						#	replacingdone = vst2__n_jummbox.convert(cvpj_l, pluginid, plugintype) 
 
 						if plugintype[0] == 'native-flstudio' and out_daw != 'flp':
 							print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))
 							if replacingdone == None: 
-								replacingdone = vst2__flstudio.convert(cvpj_l, pluginid, plugintype) 
+								replacingdone = vst2__n_flstudio.convert(cvpj_l, pluginid, plugintype) 
 							if replacingdone == None and 'nonfree-plugins' in extra_json: 
 								replacingdone = vst2_nonfree__flstudio.convert(cvpj_l, pluginid, plugintype) 
 
 						if replacingdone == None and plugintype[0] == 'native-lmms' and out_daw != 'lmms':
 							print('[plug-conv] '+pluginid+' | LMMS: '+str(plugintype[1]))
-							replacingdone = vst2__lmms.convert(cvpj_l, pluginid, plugintype) 
+							replacingdone = vst2__n_lmms.convert(cvpj_l, pluginid, plugintype) 
 
 						if replacingdone == None and plugintype[0] == 'native-onlineseq':
 							print('[plug-conv] '+pluginid+' | Online Sequencer: '+str(plugintype[1]))
-							replacingdone = vst2__onlineseq.convert(cvpj_l, pluginid, plugintype) 
+							replacingdone = vst2__n_onlineseq.convert(cvpj_l, pluginid, plugintype) 
 							
 						if replacingdone == None and plugintype == ['native-piyopiyo', 'wave']:
 							print('[plug-conv] '+pluginid+' | PiyoPiyo '+str(plugintype[1]))
-							replacingdone = vst2__piyopiyo.convert(cvpj_l, pluginid, plugintype) 
+							replacingdone = vst2__n_piyopiyo.convert(cvpj_l, pluginid, plugintype) 
 
 						if replacingdone == None and  plugintype[0] == 'namco163_famistudio':
 							print('[plug-conv] '+pluginid+' | FamiStudio N163 '+str(plugintype[1]))
-							replacingdone = vst2__namco163_famistudio.convert(cvpj_l, pluginid, plugintype)
+							replacingdone = vst2__n_namco163_famistudio.convert(cvpj_l, pluginid, plugintype)
 
 		return json.dumps(cvpj_l, indent=2)

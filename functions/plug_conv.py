@@ -21,6 +21,7 @@ from functions_plugconv import opn2__epsm
 from functions_plugconv import opm__valsound
 
 from functions_plugconv import vst2__simple
+from functions_plugconv import vst2__sampler_slicer
 from functions_plugconv import vst2__retro
 
 from functions_plugconv import vst2__opn2
@@ -37,7 +38,6 @@ from functions_plugconv import vst2_nonfree__flstudio
 #from functions_plugconv import vst2__jummbox
 #from functions_plugconv import input_pxtone
 #
-#from functions_plugconv import output_vst2__slicer
 #
 # -------------------- convproj --------------------
 
@@ -84,6 +84,10 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 						if replacingdone == None and plugintype[0] == 'simple' :
 							print('[plug-conv] '+pluginid+' | Simple '+str(plugintype[1]))
 							replacingdone = vst2__simple.convert(cvpj_l, pluginid, plugintype) 
+
+						if replacingdone == None and plugintype == ['sampler', 'slicer']:
+							print('[plug-conv] '+pluginid+' | Slicer')
+							replacingdone = vst2__sampler_slicer.convert(cvpj_l, pluginid, plugintype) 
 
 
 

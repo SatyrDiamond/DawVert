@@ -99,11 +99,11 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 
 
 
-						if replacingdone == None and plugintype == ['fm', 'opn2'] and 'opn2' in supportedplugins:
+						if replacingdone == None and plugintype == ['fm', 'opn2'] and 'opn2' not in supportedplugins:
 							print('[plug-conv] '+pluginid+' | OPN2 '+str(plugintype[1]))
 							replacingdone = vst2__i_opn2.convert(cvpj_l, pluginid, plugintype) 
 
-						if replacingdone == None and plugintype == ['fm', 'opl2'] and 'opl2' in supportedplugins:
+						if replacingdone == None and plugintype == ['fm', 'opl2'] and 'opl2' not in supportedplugins:
 							print('[plug-conv] '+pluginid+' | OPL2 '+str(plugintype[1]))
 							replacingdone = vst2__i_opl2.convert(cvpj_l, pluginid, plugintype) 
 

@@ -31,21 +31,14 @@ from functions_plugconv import vst2__piyopiyo
 from functions_plugconv import vst2__flstudio
 from functions_plugconv import vst2__onlineseq
 from functions_plugconv import vst2__namco163_famistudio
-#from functions_plugconv import vst2__jummbox
 
+from functions_plugconv import vst2_nonfree__flstudio
+
+#from functions_plugconv import vst2__jummbox
 #from functions_plugconv import input_pxtone
-#from functions_plugconv import input_jummbox
-#from functions_plugconv import input_soundchip
-#from functions_plugconv import input_audiosauna
 #
-#from functions_plugconv import output_vst2__sampler
-#from functions_plugconv import output_vst2__multisampler
 #from functions_plugconv import output_vst2__slicer
 #
-#from functions_plugconv import output_vst2__soundchip
-#
-#from functions_plugconv import output_vst2nonfree_flstudio
-
 # -------------------- convproj --------------------
 
 def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supportedplugins, extra_json):#
@@ -105,9 +98,12 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 						#	print('[plug-conv] '+pluginid+' | Jummbox: '+str(plugintype[1]))
 						#	replacingdone = vst2__jummbox.convert(cvpj_l, pluginid, plugintype) 
 
-						if replacingdone == None and plugintype[0] == 'native-flstudio' and out_daw != 'flp':
+						if plugintype[0] == 'native-flstudio' and out_daw != 'flp':
 							print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))
-							replacingdone = vst2__flstudio.convert(cvpj_l, pluginid, plugintype) 
+							if replacingdone == None: 
+								replacingdone = vst2__flstudio.convert(cvpj_l, pluginid, plugintype) 
+							if replacingdone == None and 'nonfree-plugins' in extra_json: 
+								replacingdone = vst2_nonfree__flstudio.convert(cvpj_l, pluginid, plugintype) 
 
 						if replacingdone == None and plugintype[0] == 'native-lmms' and out_daw != 'lmms':
 							print('[plug-conv] '+pluginid+' | LMMS: '+str(plugintype[1]))

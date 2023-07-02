@@ -841,7 +841,7 @@ class output_lmms(plugin_output.base):
         'auto_nopl': False,
         'track_nopl': False
         }
-    def getsupportedplugins(self): return ['sampler', 'sf2', 'vst2', 'ladspa']
+    def getsupportedplugins(self): return ['sampler', 'sf2', 'vst2', 'ladspa', 'opl2']
     def parse(self, convproj_json, output_file):
         global autoidnum
         global trkcX

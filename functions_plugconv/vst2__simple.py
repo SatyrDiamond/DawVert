@@ -3,7 +3,6 @@
 
 import struct
 from functions import plugin_vst2
-from functions import params_vst
 
 def convert(cvpj_l, pluginid, plugintype):
 

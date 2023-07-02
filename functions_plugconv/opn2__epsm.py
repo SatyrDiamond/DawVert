@@ -1,21 +1,14 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import plugin_vst2
 from functions import plugins
-from functions import data_bytes
-from functions_plugparams import data_vc2xml
-import math
-import struct
-import xml.etree.ElementTree as ET
+from functions import idvals
 
 def convert(cvpj_l, pluginid, plugintype):
-
 	epsmregs = plugins.get_plug_dataval(cvpj_l, pluginid, 'regs', None)
 
 	if epsmregs != None:
 		epsmopregs = [epsmregs[2:9], epsmregs[9:16], epsmregs[16:23], epsmregs[23:30]]
-		epsmopnums = [1,2,3,4]
 
 		plugins.replace_plug(cvpj_l, pluginid, 'fm', 'opn2')
 		plugins.add_plug_param(cvpj_l, pluginid, "algorithm", epsmregs[0]&0x0F, 'int', "")
@@ -27,7 +20,7 @@ def convert(cvpj_l, pluginid, plugintype):
 
 		for opnum in range(4):
 			op_reg = epsmopregs[opnum]
-			op_num = 'op'+str(epsmopnums[opnum])
+			op_num = 'op'+str(opnum)
 			plugins.add_plug_param(cvpj_l, pluginid, op_num+'_am', op_reg[3] >> 7, 'int', "")
 			plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_attack', op_reg[2] & 0x3F, 'int', "")
 			plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_decay', op_reg[3] & 0x3F, 'int', "")

@@ -71,9 +71,6 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 						print('[plug-conv] '+pluginid+' | EPSM to OPN2')
 						opn2__epsm.convert(cvpj_l, pluginid, plugintype) 
 
-					elif plugintype[0] == 'soundfont2':
-						vst2__i_soundfont2.convert(cvpj_l, pluginid, plugintype) 
-
 					elif plugintype[0] == 'valsound':
 						print('[plug-conv] '+pluginid+' | ValSound to OPM')
 						opm__valsound.convert(cvpj_l, pluginid, plugintype) 
@@ -84,6 +81,13 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 
 					replacingdone = None
 					if 'vst2' in supportedplugins:
+
+
+						if plugintype[0] == 'soundfont2' and 'sf2' not in supportedplugins:
+							vst2__i_soundfont2.convert(cvpj_l, pluginid, plugintype) 
+
+
+
 						if replacingdone == None and plugintype[0] in ['retro', 'gameboy']:
 							print('[plug-conv] '+pluginid+' | Retro '+str(plugintype[1]))
 							replacingdone = vst2__v_retro.convert(cvpj_l, pluginid, plugintype) 
@@ -92,12 +96,12 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 							print('[plug-conv] '+pluginid+' | Simple '+str(plugintype[1]))
 							replacingdone = vst2__v_simple.convert(cvpj_l, pluginid, plugintype) 
 
+
+
+
 						if replacingdone == None and plugintype == ['sampler', 'slicer']:
 							print('[plug-conv] '+pluginid+' | Slicer')
 							replacingdone = vst2__i_sampler_slicer.convert(cvpj_l, pluginid, plugintype) 
-
-
-
 
 						if replacingdone == None and plugintype == ['fm', 'opn2'] and 'opn2' not in supportedplugins:
 							print('[plug-conv] '+pluginid+' | OPN2 '+str(plugintype[1]))
@@ -106,7 +110,6 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 						if replacingdone == None and plugintype == ['fm', 'opl2'] and 'opl2' not in supportedplugins:
 							print('[plug-conv] '+pluginid+' | OPL2 '+str(plugintype[1]))
 							replacingdone = vst2__i_opl2.convert(cvpj_l, pluginid, plugintype) 
-
 
 
 

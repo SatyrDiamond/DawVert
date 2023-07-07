@@ -191,6 +191,22 @@ def get_lfo(cvpj_l, pluginid, a_type):
 	if lfo != None: return lfo['predelay'], lfo['attack'], lfo['shape'], lfo['speed_type'], lfo['speed_time'], lfo['amount']
 	else: return 0,0,'sine','seconds',1,0
 
+# -------------------------------------------------- eqbands
+
+def add_eqband(cvpj_l, pluginid, b_on, b_freq, b_gain, b_type, b_var):
+	banddata = {}
+	banddata['on'] = b_on
+	banddata['freq'] = b_freq
+	banddata['gain'] = b_gain
+	banddata['type'] = b_type
+	banddata['var'] = b_var
+	data_values.nested_dict_add_to_list(cvpj_l, ['plugins', pluginid, 'eqbands'], banddata)
+
+def get_eqband(cvpj_l, pluginid):
+	banddata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'eqbands'])
+	if banddata != None: return banddata
+	else: return []
+
 # -------------------------------------------------- env_blocks
 
 def add_env_blocks(cvpj_l, pluginid, a_type, a_vals, a_max, a_loop, a_release):

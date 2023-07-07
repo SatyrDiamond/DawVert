@@ -47,6 +47,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
 
     # ------------------------------------------------------------------------------------------- Inst
     if pluginname == '3x osc':
+        fl_plugstr.read(4)
         osc1_pan, osc1_shape, osc1_coarse, osc1_fine, osc1_ofs, osc1_detune, osc1_mixlevel = struct.unpack('iiiiiii', fl_plugstr.read(28))
         plugins.add_plug_param(cvpj_l, pluginid, 'osc1_pan', osc1_pan, 'int', "Osc 1 Pan")
         plugins.add_plug_param(cvpj_l, pluginid, 'osc1_shape', osc1_shape, 'int', "Osc 1 Shape")

@@ -94,7 +94,14 @@ def addfx(trackid, fxname):
     pluginid = trackid+'_'+fxname
     plugins.add_plug(cvpj_l, pluginid, 'native-jummbox', fxname)
     plugins.add_plug_fxdata(cvpj_l, pluginid, True, 1)
-    tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
+    tracks.insert_fxslot(cvpj_l, ['instrument', trackid], 'audio', pluginid)
+    return pluginid
+
+def addfx_eq(trackid):
+    pluginid = trackid+'_'+'eq'
+    plugins.add_plug(cvpj_l, pluginid, 'eq', 'peaks')
+    plugins.add_plug_fxdata(cvpj_l, pluginid, True, 1)
+    tracks.insert_fxslot(cvpj_l, ['instrument', trackid], 'audio', pluginid)
     return pluginid
 
 def get_harmonics(i_harmonics):
@@ -126,6 +133,9 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
     if gm_inst != None:
         plugins.add_plug_gm_midi(cvpj_l, trackid, 0, gm_inst)
         cvpj_instname = idvals.get_idval(idvals_inst_beepbox, bb_preset, 'name')
+
+        tracks.m_create_inst(cvpj_l, trackid, {'pluginid': trackid})
+        tracks.m_basicdata_inst(cvpj_l, trackid, cvpj_instname, bb_color, None, None)
     else:
         bb_inst_effects = bb_instrument['effects']
         bb_inst_type = bb_instrument['type']
@@ -164,8 +174,10 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
                 opdata = bb_instrument['operators'][opnum]
                 opnumtext = 'op'+str(opnum+1)+'_'
                 plugins.add_plug_data(cvpj_l, trackid, opnumtext+'frequency', opdata['frequency'])
-                plugins.add_plug_data(cvpj_l, trackid, opnumtext+'waveform', opdata['waveform'])
-                plugins.add_plug_data(cvpj_l, trackid, opnumtext+'pulseWidth', opdata['pulseWidth'])
+                op_waveform = data_values.get_value(opdata, 'waveform', 'sine')
+                plugins.add_plug_data(cvpj_l, trackid, opnumtext+'waveform', op_waveform)
+                op_pulseWidth = data_values.get_value(opdata, 'waveform', 'sine')
+                plugins.add_plug_data(cvpj_l, trackid, opnumtext+'pulseWidth', 5)
                 plugins.add_plug_param(cvpj_l, trackid, opnumtext+"amplitude", opdata['amplitude'], 'int', "")
 
         if bb_inst_type == 'custom chip':
@@ -173,23 +185,51 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
             customChipWave = [customChipWave[str(i)] for i in range(64)]
             plugins.add_wave(cvpj_l, trackid, 'chipwave', customChipWave, -24, 24)
 
+        cvpj_instname = inst_names[bb_inst_type]
+
+        tracks.m_create_inst(cvpj_l, trackid, {'pluginid': trackid})
+        tracks.m_basicdata_inst(cvpj_l, trackid, cvpj_instname, bb_color, None, None)
+
         if 'eqFilterType' in bb_instrument:
             if bb_instrument['eqFilterType'] == False:
-                pluginid = addfx(trackid, 'eq')
-                plugins.add_plug_data(cvpj_l, pluginid, 'eq', bb_instrument['eqFilter'])
-                for subfilternum in range(8):
-                    subfname = 'eqSubFilters'+str(subfilternum)
-                    if subfname in bb_instrument:
-                        plugins.add_plug_data(cvpj_l, pluginid, 'subfilter'+str(subfilternum), bb_instrument[subfname])
+                if 'eqSubFilters0' in bb_instrument:
+                    pluginid = addfx_eq(trackid)
+                    for eqfiltdata in bb_instrument['eqSubFilters0']:
+                        eqgain_pass = eqfiltdata['linearGain']
+                        eqgain = (eqfiltdata['linearGain']-2)*6
+                        eqtype = eqfiltdata['type']
+                        if eqtype == 'low-pass':
+                            plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'low_pass', eqgain_pass)
+                        if eqtype == 'peak':
+                            plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], eqgain, 'peak', 1)
+                        if eqtype == 'high-pass':
+                            plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass)
+                    tracks.insert_fxslot(cvpj_l, ['instrument', trackid], 'audio', pluginid)
             else:
                 pluginid = addfx(trackid, 'filter')
                 plugins.add_plug_param(cvpj_l, pluginid, 'cutoff', bb_instrument['eqSimpleCut'], 'int', "")
                 plugins.add_plug_param(cvpj_l, pluginid, 'reso', bb_instrument['eqSimplePeak'], 'int', "")
+        elif 'eqFilter' in bb_instrument:
+            bb_eqFilter = bb_instrument['eqFilter']
+            if bb_eqFilter != []:
+                pluginid = addfx_eq(trackid)
+                for eqfiltdata in bb_eqFilter:
+                    eqgain_pass = eqfiltdata['linearGain']
+                    eqgain = (eqfiltdata['linearGain']-2)*6
+                    eqtype = eqfiltdata['type']
+                    if eqtype == 'low-pass':
+                        plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'low_pass', eqgain_pass)
+                    if eqtype == 'peak':
+                        plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], eqgain, 'peak', 1)
+                    if eqtype == 'high-pass':
+                        plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass)
+
+                tracks.insert_fxslot(cvpj_l, ['instrument', trackid], 'audio', pluginid)
 
         if 'distortion' in bb_inst_effects:
             pluginid = addfx(trackid, 'distortion')
             plugins.add_plug_param(cvpj_l, pluginid, 'amount', bb_instrument['distortion']/100, 'float', "")
-            plugins.add_plug_data(cvpj_l, pluginid, 'aliases', bb_instrument['aliases'])
+            if 'aliases' in bb_instrument: plugins.add_plug_data(cvpj_l, pluginid, 'aliases', bb_instrument['aliases'])
 
         if 'bitcrusher' in bb_inst_effects:
             pluginid = addfx(trackid, 'bitcrusher')
@@ -210,20 +250,17 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
             plugins.add_plug_param(cvpj_l, pluginid, 'amount', bb_instrument['reverb']/100, 'float', "")
 
         if 'vibrato' in bb_inst_effects:
-            if bb_instrument['vibratoSpeed'] != 0 and bb_instrument['vibratoDelay'] != 50:
-                vibrato_speed = 0.7*(1/bb_instrument['vibratoSpeed'])
-                vibrato_amount = bb_instrument['vibratoDepth']
-                vibrato_delay = (bb_instrument['vibratoDelay']/49)*2
-                plugins.add_lfo(cvpj_l, pluginid, 'pitch', 'sine', 'seconds', vibrato_speed, vibrato_delay, 0, vibrato_amount)
+            if 'vibratoSpeed' in bb_instrument and 'vibratoDelay' in bb_instrument:
+                if bb_instrument['vibratoSpeed'] != 0 and bb_instrument['vibratoDelay'] != 50:
+                    vibrato_speed = 0.7*(1/bb_instrument['vibratoSpeed'])
+                    vibrato_amount = bb_instrument['vibratoDepth']
+                    vibrato_delay = (bb_instrument['vibratoDelay']/49)*2
+                    plugins.add_lfo(cvpj_l, pluginid, 'pitch', 'sine', 'seconds', vibrato_speed, vibrato_delay, 0, vibrato_amount)
 
         a_attack = data_values.get_value(bb_instrument, 'fadeInSeconds', 0)
         a_release = abs(data_values.get_value(bb_instrument, 'fadeOutTicks', 0)/(jummbox_ticksPerBeat*32))
         plugins.add_asdr_env(cvpj_l, trackid, 'vol', 0, a_attack, 0, a_decay, a_sustain, a_release, 1)
 
-        cvpj_instname = inst_names[bb_inst_type]
-
-    tracks.m_create_inst(cvpj_l, trackid, {'pluginid': trackid})
-    tracks.m_basicdata_inst(cvpj_l, trackid, cvpj_instname, bb_color, None, None)
 
 def parse_notes(channum, bb_notes, bb_instruments):
     cvpj_notelist = []

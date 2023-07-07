@@ -137,14 +137,20 @@ def getvstparams(pluginid, xmldata):
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
 
 def lmms_auto_getvalue(x_tag, x_name, i_fbv, i_type, i_addmul, i_loc):
-    if x_tag.get(x_name) != None: return float(x_tag.get(x_name))
+    if x_tag.get(x_name) != None: 
+        if i_type == 'float': return float(x_tag.get(x_name))
+        if i_type == 'int': return int(x_tag.get(x_name))
+        if i_type == 'bool': return int(bool(x_tag.get(x_name)))
     elif x_tag.findall(x_name) != []: 
         realvaluetag = x_tag.findall(x_name)[0]
         value = realvaluetag.get('value')
         if value != None:
             tracks.autoid_in_define(str(realvaluetag.get('id')), i_loc, i_type, i_addmul)
-            return realvaluetag.get('value')
-    else: return i_fbv
+            if i_type == 'float': return float(realvaluetag.get('value'))
+            if i_type == 'int': return int(realvaluetag.get('value'))
+            if i_type == 'bool': return int(bool(realvaluetag.get('value')))
+    else: 
+        return i_fbv
 
 def lmms_getvalue_int(json_name, xml_in): 
     if xml_in != None: json_in[json_name] = int(xml_in)
@@ -379,7 +385,7 @@ def lmms_decode_inst_track(trkX, trackid):
 
     tracks.r_create_inst(cvpj_l, trackid, cvpj_l_track_inst)
 
-    tracks.r_param(cvpj_l, trackid, 'enabled', int(not int( lmms_auto_getvalue(trkX, 'muted', 1, 'bool', [-1, -1] ,['track', trackid, 'enabled']) )))
+    tracks.r_param(cvpj_l, trackid, 'enabled', int( lmms_auto_getvalue(trkX, 'muted', 1, 'bool', [-1, -1] ,['track', trackid, 'enabled']) ))
     tracks.r_param(cvpj_l, trackid, 'solo', int(trkX.get('solo')))
 
     #trkX_insttr
@@ -512,7 +518,7 @@ def lmms_decode_audio_track(trkX, trackid):
         tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
     print('[input-lmms]')
     tracks.r_pl_audio(cvpj_l, trackid, lmms_decode_audioplacements(trkX))
-    tracks.r_param(cvpj_l, trackid, 'enabled', int(not int(lmms_auto_getvalue(trkX, 'muted', 1, 'bool', [-1, -1] ,['track', trackid, 'enabled']))))
+    tracks.r_param(cvpj_l, trackid, 'enabled', int(lmms_auto_getvalue(trkX, 'muted', 1, 'bool', [-1, -1] ,['track', trackid, 'enabled'])))
     tracks.r_param(cvpj_l, trackid, 'solo', int(trkX.get('solo')))
 
 # ------- Track: Automation -------
@@ -585,7 +591,58 @@ def lmms_decode_effectslot(fxslotX):
 
     pluginid = plugins.get_id()
 
-    if fxpluginname == 'vsteffect':
+    if fxpluginname == 'eq':
+        fxxml_plugin = fxslotX.findall('Eq')[0]
+
+        plugins.add_plug(cvpj_l, pluginid, 'eq', 'peaks')
+
+        LPactive = lmms_auto_getvalue(fxxml_plugin, 'LPactive', 0, 'int', None, ['slot', pluginid, 'peak_1_on'])
+        LPfreq   = lmms_auto_getvalue(fxxml_plugin, 'LPfreq', 0, 'float', None,   ['slot', pluginid, 'peak_1_freq'])
+        LPres    = lmms_auto_getvalue(fxxml_plugin, 'LPres', 0, 'float', None,    ['slot', pluginid, 'peak_1_val'])
+        plugins.add_eqband(cvpj_l, pluginid, LPactive, LPfreq, 0, 'low_pass', LPres)
+
+        Lowshelfactive = lmms_auto_getvalue(fxxml_plugin, 'Lowshelfactive', 0, 'int', None, ['slot', pluginid, 'peak_2_on'])
+        LowShelffreq   = lmms_auto_getvalue(fxxml_plugin, 'LowShelffreq', 0, 'float', None,   ['slot', pluginid, 'peak_2_freq'])
+        Lowshelfgain   = lmms_auto_getvalue(fxxml_plugin, 'Lowshelfgain', 0, 'float', None,   ['slot', pluginid, 'peak_2_gain'])
+        LowShelfres    = lmms_auto_getvalue(fxxml_plugin, 'LowShelfres', 0, 'float', None,    ['slot', pluginid, 'peak_2_val'])
+        plugins.add_eqband(cvpj_l, pluginid, Lowshelfactive, LowShelffreq, Lowshelfgain, 'low_shelf', LowShelfres)
+
+        Peak1active = lmms_auto_getvalue(fxxml_plugin, 'Peak1active', 0, 'int', None, ['slot', pluginid, 'peak_3_on'])
+        Peak1bw     = lmms_auto_getvalue(fxxml_plugin, 'Peak1bw', 0, 'float', None,     ['slot', pluginid, 'peak_3_val'])
+        Peak1freq   = lmms_auto_getvalue(fxxml_plugin, 'Peak1freq', 0, 'float', None,   ['slot', pluginid, 'peak_3_freq'])
+        Peak1gain   = lmms_auto_getvalue(fxxml_plugin, 'Peak1gain', 0, 'float', None,   ['slot', pluginid, 'peak_3_gain'])
+        plugins.add_eqband(cvpj_l, pluginid, Peak1active, Peak1freq, Peak1gain, 'peak', Peak1bw)
+
+        Peak2active = lmms_auto_getvalue(fxxml_plugin, 'Peak2active', 0, 'int', None, ['slot', pluginid, 'peak_4_on'])
+        Peak2bw     = lmms_auto_getvalue(fxxml_plugin, 'Peak2bw', 0, 'float', None,     ['slot', pluginid, 'peak_4_val'])
+        Peak2freq   = lmms_auto_getvalue(fxxml_plugin, 'Peak2freq', 0, 'float', None,   ['slot', pluginid, 'peak_4_freq'])
+        Peak2gain   = lmms_auto_getvalue(fxxml_plugin, 'Peak2gain', 0, 'float', None,   ['slot', pluginid, 'peak_4_gain'])
+        plugins.add_eqband(cvpj_l, pluginid, Peak2active, Peak2freq, Peak2gain, 'peak', Peak2bw)
+
+        Peak3active = lmms_auto_getvalue(fxxml_plugin, 'Peak3active', 0, 'int', None, ['slot', pluginid, 'peak_5_on'])
+        Peak3bw     = lmms_auto_getvalue(fxxml_plugin, 'Peak3bw', 0, 'float', None,     ['slot', pluginid, 'peak_5_val'])
+        Peak3freq   = lmms_auto_getvalue(fxxml_plugin, 'Peak3freq', 0, 'float', None,   ['slot', pluginid, 'peak_5_freq'])
+        Peak3gain   = lmms_auto_getvalue(fxxml_plugin, 'Peak3gain', 0, 'float', None,   ['slot', pluginid, 'peak_5_gain'])
+        plugins.add_eqband(cvpj_l, pluginid, Peak3active, Peak3freq, Peak3gain, 'peak', Peak3bw)
+
+        Peak4active = lmms_auto_getvalue(fxxml_plugin, 'Peak4active', 0, 'int', None, ['slot', pluginid, 'peak_6_on'])
+        Peak4bw     = lmms_auto_getvalue(fxxml_plugin, 'Peak4bw', 0, 'float', None,     ['slot', pluginid, 'peak_6_val'])
+        Peak4freq   = lmms_auto_getvalue(fxxml_plugin, 'Peak4freq', 0, 'float', None,   ['slot', pluginid, 'peak_6_freq'])
+        Peak4gain   = lmms_auto_getvalue(fxxml_plugin, 'Peak4gain', 0, 'float', None,   ['slot', pluginid, 'peak_6_gain'])
+        plugins.add_eqband(cvpj_l, pluginid, Peak4active, Peak4freq, Peak4gain, 'peak', Peak4bw)
+
+        Highshelfactive = lmms_auto_getvalue(fxxml_plugin, 'Highshelfactive', 0, 'int', None, ['slot', pluginid, 'peak_7_on'])
+        Highshelffreq   = lmms_auto_getvalue(fxxml_plugin, 'Highshelffreq', 0, 'float', None,   ['slot', pluginid, 'peak_7_freq'])
+        HighShelfgain   = lmms_auto_getvalue(fxxml_plugin, 'HighShelfgain', 0, 'float', None,   ['slot', pluginid, 'peak_7_gain'])
+        HighShelfres    = lmms_auto_getvalue(fxxml_plugin, 'HighShelfres', 0, 'float', None,    ['slot', pluginid, 'peak_7_val'])
+        plugins.add_eqband(cvpj_l, pluginid, Highshelfactive, Highshelffreq, HighShelfgain, 'high_shelf', HighShelfres)
+
+        HPactive = lmms_auto_getvalue(fxxml_plugin, 'HPactive', 0, 'int', None, ['slot', pluginid, 'peak_8_on'])
+        HPfreq   = lmms_auto_getvalue(fxxml_plugin, 'HPfreq', 0, 'float', None,   ['slot', pluginid, 'peak_8_freq'])
+        HPres    = lmms_auto_getvalue(fxxml_plugin, 'HPres', 0, 'float', None,    ['slot', pluginid, 'peak_8_val'])
+        plugins.add_eqband(cvpj_l, pluginid, HPactive, HPfreq, 0, 'high_pass', HPres)
+
+    elif fxpluginname == 'vsteffect':
         fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
         print('[vst2-dll',end='] ')
         plugins.add_plug(cvpj_l, pluginid, 'vst2', 'win')
@@ -676,7 +733,7 @@ def lmms_decode_fxmixer(fxX):
         print('[input-lmms]       Name: ' + fx_name)
         fxcJ = {}
         fxcJ['name'] = fx_name
-        if fxcX.get('muted') != None: fxcJ['muted'] = int(fxcX.get('muted'))
+        if fxcX.get('muted') != None: fxcJ['enabled'] = not int(fxcX.get('muted'))
         fxcJ['vol'] = float(lmms_auto_getvalue(fxcX, 'volume', 1, 'float', None, ['fxmixer', fx_num, 'vol']))
         fxchainX = fxcX.find('fxchain')
         if fxchainX != None:

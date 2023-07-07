@@ -156,9 +156,9 @@ def o_trackfx2fxrack(cvpj_l, cvpjtype):
             print('[compat] trackfx2fxrack: Track to FX '+str(fxnum))
 
         if 'color' in trackdata: fxtrack['color'] = trackdata['color']
-        if 'fxchain_audio' in trackdata: 
-            fxtrack['fxchain_audio'] = trackdata['fxchain_audio']
-            del trackdata['fxchain_audio']
+        if 'chain_fx_audio' in trackdata: 
+            fxtrack['chain_fx_audio'] = trackdata['chain_fx_audio']
+            del trackdata['chain_fx_audio']
         cvpj_l['fxrack'][str(fxnum)] = fxtrack
         fxnum += 1
 

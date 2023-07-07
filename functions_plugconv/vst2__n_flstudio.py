@@ -69,6 +69,7 @@ def convert(cvpj_l, pluginid, plugintype):
 
 	# ---------------------------------------- DX10 ----------------------------------------
 	elif plugintype[1].lower() == 'fruity dx10':
+
 		plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'DX10', 'param', None, 16)
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', getparam_old('amp_att')/65536, 'float', "Attack  ", )
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', getparam_old('amp_dec')/65536, 'float', "Decay   ", )
@@ -81,7 +82,7 @@ def convert(cvpj_l, pluginid, plugintype):
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_8', getparam_old('mod_rel')/65536, 'float', "Mod Rel ", )
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_9', getparam_old('velsen')/65536, 'float', "Mod Vel ", )
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_10', getparam_old('vibrato')/65536, 'float', "Vibrato ", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_11', (getparam_old('octave')+2)/2, 'float', "Octave  ", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_11', (getparam_old('octave')+2)/5, 'float', "Octave  ", )
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_12', 0.5, 'float', "FineTune", )
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_13', getparam_old('waveform')/65536, 'float', "Waveform", )
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_14', getparam_old('mod_thru')/65536, 'float', "Mod Thru", )

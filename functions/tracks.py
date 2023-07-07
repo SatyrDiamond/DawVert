@@ -259,8 +259,10 @@ def get_fxcvpjlocation(fxloc):
 
 def insert_fxslot(cvpj_l, fxloc, fxtype, pluginid):
     out_location = get_fxcvpjlocation(fxloc)
-    if fxtype == 'audio': data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_audio'], pluginid)
-    if fxtype == 'notes': data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_notes'], pluginid)
+    if fxtype == 'audio': 
+        data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_audio'], pluginid)
+    if fxtype == 'notes': 
+        data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_notes'], pluginid)
 
 #def add_fxslot(cvpj_l, fxloc, fxtype, chain_fx_data):
 #    out_location = get_fxcvpjlocation(fxloc)

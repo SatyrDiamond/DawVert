@@ -187,11 +187,27 @@ def asdrlfo(pluginid, xmlobj, asdrtype, xmltype):
     elmodX.set('lspd', str(lfospeed))
     elmodX.set('lshp', str(lfoshape[l_shape]))
 
-def get_plugin_param(xmltag, xmlname, pluginid, paramname, fallback):
+def get_plugin_param(pluginautoid, xmltag, xmlname, pluginid, paramname, fallback):
     pluginparam = plugins.get_plug_param(cvpj_l, pluginid, paramname, fallback)
+
+    aid_id, aid_data = tracks.autoid_out_get(['plugin', pluginid, paramname])
+
     if pluginparam[1] != 'bool': outparam = pluginparam[0]
     else: outparam = int(pluginparam[0])
-    xmltag.set(xmlname, str(outparam))
+
+    if pluginparam[2] != '': v_name = pluginparam[2]
+    else: v_name = paramname
+
+    if aid_id != None and len(aid_data['placements']) != 0:
+        aid_data['placements'] = auto.multiply(aid_data['placements'], 0, 1)
+        lmms_make_main_auto_track(aid_id, aid_data, 'Plugin: '+v_name)
+        autovarX = ET.SubElement(xmltag, xmlname)
+        autovarX.set('value', str(outparam))
+        autovarX.set('scale_type', 'linear')
+        autovarX.set('id', str(aid_id))
+    else:
+        xmltag.set(xmlname, str(outparam))
+
 
 def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
     instJ = trkJ['instdata']
@@ -207,6 +223,8 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
         visual_plugname = str(plugintype[0])+' ('+str(plugintype[1])+')'
 
         cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
+
+        pluginautoid = tracks.autoid_out_getlist(['plugin', pluginid])
 
         if plugintype == ['sampler', 'single']:
             print('[output-lmms]       Plugin: Sampler (Single) > audiofileprocessor')
@@ -270,17 +288,17 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             xml_sf2.set('bank', str(int(data_values.get_value(cvpj_plugindata, 'bank', 0))))
             xml_sf2.set('patch', str(int(data_values.get_value(cvpj_plugindata, 'patch', 0))))
             xml_sf2.set('src', str(data_values.get_value(cvpj_plugindata, 'file', '')))
-            get_plugin_param(xml_sf2, 'gain', pluginid, 'gain', 1)
-            get_plugin_param(xml_sf2, 'chorusDepth', pluginid, 'chorus_depth', 0)
-            get_plugin_param(xml_sf2, 'chorusLevel', pluginid, 'chorus_level', 0)
-            get_plugin_param(xml_sf2, 'chorusNum', pluginid, 'chorus_lines', 0)
-            get_plugin_param(xml_sf2, 'chorusOn', pluginid, 'chorus_enabled', 0)
-            get_plugin_param(xml_sf2, 'chorusSpeed', pluginid, 'chorus_speed', 0)
-            get_plugin_param(xml_sf2, 'reverbDamping', pluginid, 'reverb_damping', 0)
-            get_plugin_param(xml_sf2, 'reverbLevel', pluginid, 'reverb_level', 0)
-            get_plugin_param(xml_sf2, 'reverbOn', pluginid, 'reverb_enabled', 0)
-            get_plugin_param(xml_sf2, 'reverbRoomSize', pluginid, 'reverb_roomsize', 0)
-            get_plugin_param(xml_sf2, 'reverbWidth', pluginid, 'reverb_width', 0)
+            get_plugin_param(pluginautoid, xml_sf2, 'gain', pluginid, 'gain', 1)
+            get_plugin_param(pluginautoid, xml_sf2, 'chorusDepth', pluginid, 'chorus_depth', 0)
+            get_plugin_param(pluginautoid, xml_sf2, 'chorusLevel', pluginid, 'chorus_level', 0)
+            get_plugin_param(pluginautoid, xml_sf2, 'chorusNum', pluginid, 'chorus_lines', 0)
+            get_plugin_param(pluginautoid, xml_sf2, 'chorusOn', pluginid, 'chorus_enabled', 0)
+            get_plugin_param(pluginautoid, xml_sf2, 'chorusSpeed', pluginid, 'chorus_speed', 0)
+            get_plugin_param(pluginautoid, xml_sf2, 'reverbDamping', pluginid, 'reverb_damping', 0)
+            get_plugin_param(pluginautoid, xml_sf2, 'reverbLevel', pluginid, 'reverb_level', 0)
+            get_plugin_param(pluginautoid, xml_sf2, 'reverbOn', pluginid, 'reverb_enabled', 0)
+            get_plugin_param(pluginautoid, xml_sf2, 'reverbRoomSize', pluginid, 'reverb_roomsize', 0)
+            get_plugin_param(pluginautoid, xml_sf2, 'reverbWidth', pluginid, 'reverb_width', 0)
             middlenotefix = 12
 
         elif plugintype == ['fm', 'opl2']:
@@ -290,9 +308,9 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             for opnum in range(2):
                 opl2_optxt = 'op'+str(opnum+1)
                 for varname in opl2opvarnames:
-                    get_plugin_param(xml_opl2, opl2_optxt+varname[0], pluginid, opl2_optxt+varname[1], 0)
+                    get_plugin_param(pluginautoid, xml_opl2, opl2_optxt+varname[0], pluginid, opl2_optxt+varname[1], 0)
             for varname in opl2varnames:
-                get_plugin_param(xml_opl2, varname[0], pluginid, varname[1], 0)
+                get_plugin_param(pluginautoid, xml_opl2, varname[0], pluginid, varname[1], 0)
 
         elif plugintype == ['vst2', 'win']:
             print('[output-lmms]       Plugin: vst2 > vestige')
@@ -314,7 +332,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             xml_lmmsnat = ET.SubElement(xml_instrumentpreplugin, plugintype[1])
             lmms_autovals = lmms_auto.get_params_inst(plugintype[1])
             for pluginparam in lmms_autovals[0]: 
-                get_plugin_param(xml_lmmsnat, pluginparam, pluginid, pluginparam, 0)
+                get_plugin_param(pluginautoid, xml_lmmsnat, pluginparam, pluginid, pluginparam, 0)
             for pluginparam in lmms_autovals[1]: 
                 xml_lmmsnat.set(pluginparam, 
                     str(plugins.get_plug_dataval(cvpj_l, pluginid, pluginparam, ''))
@@ -593,7 +611,70 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
 
     cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
 
-    if plugintype == ['vst2', 'win']:
+    pluginautoid = tracks.autoid_out_getlist(['plugin', pluginid])
+
+    if plugintype == ['eq', 'peaks']:
+        #used, active, freq, gain, res/bw
+
+        print('[output-lmms]       Audio FX: [eq] ')
+        fxslotX.set('name', 'eq')
+        xml_lmmsnat = ET.SubElement(fxslotX, 'Eq')
+
+        data_LP =        [False,0,0,0,0]
+        data_Lowshelf =  [False,0,0,0,0]
+        data_Peaks =     [[False,0,0,0,0],[False,0,0,0,0],[False,0,0,0,0],[False,0,0,0,0]]
+        data_HighShelf = [False,0,0,0,0]
+        data_HP =        [False,0,0,0,0]
+
+        banddata = plugins.get_eqband(cvpj_l, pluginid)
+
+        for s_band in banddata:
+            bandtype = s_band['type']
+
+            part = [True,
+            data_values.get_value(s_band, 'on', 0),
+            data_values.get_value(s_band, 'freq', 0),
+            data_values.get_value(s_band, 'gain', 0),
+            data_values.get_value(s_band, 'var', 0)
+            ]
+
+            if bandtype == 'low_pass': data_LP = part
+            if bandtype == 'low_shelf': data_Lowshelf = part
+            if bandtype == 'peak': 
+                for peaknum in range(4):
+                    peakdata = data_Peaks[peaknum]
+                    if peakdata[0] == False: 
+                        data_Peaks[peaknum] = part
+                        break
+            if bandtype == 'high_shelf': data_HighShelf = part
+            if bandtype == 'high_pass': data_HP = part
+
+        xml_lmmsnat.set('LPactive', str(data_LP[1]))
+        xml_lmmsnat.set('LPfreq', str(data_LP[2]))
+        xml_lmmsnat.set('LPres', str(data_LP[4]))
+
+        xml_lmmsnat.set('Lowshelfactive', str(data_Lowshelf[1]))
+        xml_lmmsnat.set('LowShelffreq', str(data_Lowshelf[2]))
+        xml_lmmsnat.set('Lowshelfgain', str(data_Lowshelf[3]))
+        xml_lmmsnat.set('LowShelfres', str(data_Lowshelf[4]))
+
+        for num in range(4):
+            xml_lmmsnat.set('Peak'+str(num+1)+'active', str(data_Peaks[num][1]))
+            xml_lmmsnat.set('Peak'+str(num+1)+'freq', str(data_Peaks[num][2]))
+            xml_lmmsnat.set('Peak'+str(num+1)+'gain', str(data_Peaks[num][3]))
+            xml_lmmsnat.set('Peak'+str(num+1)+'bw', str(data_Peaks[num][4]))
+
+        xml_lmmsnat.set('Highshelfactive', str(data_HighShelf[1]))
+        xml_lmmsnat.set('Highshelffreq', str(data_HighShelf[2]))
+        xml_lmmsnat.set('HighShelfgain', str(data_HighShelf[3]))
+        xml_lmmsnat.set('HighShelfres', str(data_HighShelf[4]))
+
+        xml_lmmsnat.set('HPactive', str(data_HP[1]))
+        xml_lmmsnat.set('HPfreq', str(data_HP[2]))
+        xml_lmmsnat.set('HPres', str(data_HP[4]))
+
+
+    elif plugintype == ['vst2', 'win']:
         print('[output-lmms]       Audio FX: [vst2] ')
         fxslotX.set('name', 'vsteffect')
         xml_vst = ET.SubElement(fxslotX, "vsteffectcontrols")
@@ -606,7 +687,7 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
         print('[output-lmms]       Audio FX: ['+plugintype[1]+'] ')
         xml_lmmsnat = ET.SubElement(fxslotX, xml_name)
         for pluginparam in lmms_autovals[0]: 
-            get_plugin_param(xml_lmmsnat, pluginparam, pluginid, pluginparam, 0)
+            get_plugin_param(pluginautoid, xml_lmmsnat, pluginparam, pluginid, pluginparam, 0)
         for pluginparam in lmms_autovals[1]: 
             xml_lmmsnat.set(pluginparam, str(data_values.get_value(cvpj_plugindata, pluginparam, 0)))
 
@@ -668,6 +749,8 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
 
 def lmms_encode_effectslot(pluginid, fxcX):
     fxslotX = ET.SubElement(fxcX, "effect")
+
+    pluginautoid = tracks.autoid_out_getlist(['slot', pluginid])
 
     fxdata = plugins.get_plug_fxdata(cvpj_l, pluginid)
     #add_auto_placements(1, None, ['slot', pluginid], 'enabled', json_plugin, 'enabled', fxslotX, 'on', 'Slot', 'On')

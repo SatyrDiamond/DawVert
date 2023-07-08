@@ -144,14 +144,19 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
         if 'unison' in bb_instrument:
             plugins.add_plug_data(cvpj_l, trackid, 'unison', bb_instrument['unison'])
 
+        cvpj_instname = inst_names[bb_inst_type]
+
         if bb_inst_type == 'chip':
             bb_inst_wave = bb_instrument['wave']
+            cvpj_instname = bb_inst_wave+' ('+cvpj_instname+')'
             if bb_inst_wave in rawChipWaves:
                 wavesample = rawChipWaves[bb_inst_wave]['samples']
                 plugins.add_wave(cvpj_l, trackid, 'chipwave', wavesample, min(wavesample), max(wavesample))
 
         if bb_inst_type == 'PWM':
-            plugins.add_plug_param(cvpj_l, trackid, "pulse_width", bb_instrument['pulseWidth']/100, 'float', "Pulse Width")
+            pulseWidth = bb_instrument['pulseWidth']
+            cvpj_instname = str(pulseWidth)+'% pulse ('+cvpj_instname+')'
+            plugins.add_plug_param(cvpj_l, trackid, "pulse_width", pulseWidth/100, 'float', "Pulse Width")
 
         if bb_inst_type == 'harmonics':
             harmonics = get_harmonics(bb_instrument['harmonics'])
@@ -185,8 +190,6 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
             customChipWave = [customChipWave[str(i)] for i in range(64)]
             plugins.add_wave(cvpj_l, trackid, 'chipwave', customChipWave, -24, 24)
 
-        cvpj_instname = inst_names[bb_inst_type]
-
         tracks.m_create_inst(cvpj_l, trackid, {'pluginid': trackid})
         tracks.m_basicdata_inst(cvpj_l, trackid, cvpj_instname, bb_color, None, None)
 
@@ -204,7 +207,6 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
                             plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], eqgain, 'peak', 1)
                         if eqtype == 'high-pass':
                             plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass)
-                    tracks.insert_fxslot(cvpj_l, ['instrument', trackid], 'audio', pluginid)
             else:
                 pluginid = addfx(trackid, 'filter')
                 plugins.add_plug_param(cvpj_l, pluginid, 'cutoff', bb_instrument['eqSimpleCut'], 'int', "")
@@ -224,7 +226,6 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
                     if eqtype == 'high-pass':
                         plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass)
 
-                tracks.insert_fxslot(cvpj_l, ['instrument', trackid], 'audio', pluginid)
 
         if 'distortion' in bb_inst_effects:
             pluginid = addfx(trackid, 'distortion')
@@ -378,7 +379,7 @@ def parse_channel(channeldata, channum):
 
         bb_def = []
         for num in range(6):
-            bb_def.append([modChannels[num],modSettings[num]])
+            bb_def.append([modChannels[num],modInstruments[num],modSettings[num]])
 
         sequencecount = 0
         for bb_part in bb_sequence:
@@ -391,7 +392,7 @@ def parse_channel(channeldata, channum):
                         bb_mod_pos = basepos+bb_mod_points[0]['tick']
                         bb_mod_dur = bb_mod_points[-1]['tick'] - bb_mod_points[0]['tick']
                         bb_mod_target = bb_def[(note['pitches'][0]*-1)+5]
-                        #print(bb_mod_pos, bb_mod_dur, bb_mod_target)
+
                         cvpj_autodata_points = []
                         for bb_mod_point in bb_mod_points:
                             cvpj_pointdata = {}
@@ -401,30 +402,32 @@ def parse_channel(channeldata, channum):
 
                         cvpj_autodata = auto.makepl(calcval(bb_mod_pos), calcval(bb_mod_dur), cvpj_autodata_points)
 
-
                         if bb_mod_target[0] == -1:
-                            if bb_mod_target[1] == 1: 
+                            if bb_mod_target[2] == 1: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.01)
                                 tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'vol'], cvpj_autopl[0])
-                            if bb_mod_target[1] == 2: 
+                            elif bb_mod_target[2] == 2: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], 30, 1)
                                 tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], cvpj_autopl[0])
-                            if bb_mod_target[1] == 17: 
+                            elif bb_mod_target[2] == 17: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], -250, 0.01)
                                 tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'pitch'], cvpj_autopl[0])
+
                         else:
                             auto_instnum = 1
-                            auto_trackid = 'bb_ch'+str(bb_mod_target[0]+1)+'_inst'+str(auto_instnum)
+                            auto_trackid = 'bb_ch'+str(bb_mod_target[0]+1)+'_inst'+str(bb_mod_target[1]+1)
 
-                            if bb_mod_target[1] == 6: 
+                            if bb_mod_target[2] == 6: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], -50, 0.02)
                                 tracks.a_add_auto_pl(cvpj_l, 'float', ['track', auto_trackid, 'pan'], cvpj_autopl[0])
-                            if bb_mod_target[1] == 15: 
+                            elif bb_mod_target[2] == 15: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], -200, 1)
                                 tracks.a_add_auto_pl(cvpj_l, 'float', ['track', auto_trackid, 'pitch'], cvpj_autodata)
-                            #if bb_mod_target[1] == 34: 
-                            #    cvpj_autopl = auto.multiply([cvpj_autodata], -12, 100)
-                            #    tracks.a_add_auto_pl(cvpj_l, ['track', 'bb_ch'+str(bb_mod_target[0]+1)+'_inst1', 'pitch'], cvpj_autopl[0])
+                            elif bb_mod_target[2] == 36: 
+                                cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.04)
+                                tracks.a_add_auto_pl(cvpj_l, 'float', ['track', auto_trackid, 'vol'], cvpj_autopl[0])
+
+
 
             sequencecount += 1
 
@@ -494,10 +497,6 @@ class input_jummbox(plugin_input.base):
             chancount += 1
 
         cvpj_l['do_addloop'] = True
-
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = False
-        cvpj_l['use_placements_notes'] = True
 
         cvpj_l['bpm'] = jummbox_beatsPerMinute
 

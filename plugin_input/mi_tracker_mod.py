@@ -220,7 +220,6 @@ class input_mod(plugin_input.base):
 
             else: 
                 cvpj_l_single_inst['color'] = [0.33, 0.33, 0.33]
-                cvpj_l_single_inst['instdata']['plugin'] = 'none'
 
             cvpj_l_instrumentsorder.append(text_inst_start + str(mod_numinst))
 

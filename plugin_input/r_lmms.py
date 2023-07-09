@@ -661,8 +661,10 @@ def lmms_decode_effectslot(fxslotX):
             attname = attribute.get('name')
             if attname == 'file':
                 if os.path.exists(attval): 
+                    plugins.add_plug_data(cvpj_l, pluginid, 'name', attval)
                     plugins.add_plug_data(cvpj_l, pluginid, 'path', attval)
                 else: 
+                    plugins.add_plug_data(cvpj_l, pluginid, 'name', attval)
                     plugins.add_plug_data(cvpj_l, pluginid, 'path', get_ladspa_path(attval))
             if attname == 'plugin': 
                 plugins.add_plug_data(cvpj_l, pluginid, 'plugin', attval)
@@ -674,6 +676,8 @@ def lmms_decode_effectslot(fxslotX):
         if ladspa_linked != None: 
             ladspa_ports //= 2
             if ladspa_linked == "0": seperated_channels = True
+
+        plugins.add_plug_data(cvpj_l, pluginid, 'numparams', ladspa_ports)
 
         for node in fxxml_plugin_ladspacontrols.iter():
             notetagtxt = node.tag

@@ -753,10 +753,8 @@ def lmms_encode_effectslot(pluginid, fxcX):
     pluginautoid = tracks.autoid_out_getlist(['slot', pluginid])
 
     fxdata = plugins.get_plug_fxdata(cvpj_l, pluginid)
-    #add_auto_placements(1, None, ['slot', pluginid], 'enabled', json_plugin, 'enabled', fxslotX, 'on', 'Slot', 'On')
-    #add_auto_placements(1, None, ['slot', pluginid], 'wet', json_plugin, 'wet', fxslotX, 'wet', 'Slot', 'Wet')
-    fxslotX.set('enabled', str(fxdata[0]) )
-    fxslotX.set('wet', str(fxdata[1]) )
+    add_auto_placements(1, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', fxslotX, 'on', 'Slot', 'On')
+    add_auto_placements(1, None, ['slot', pluginid], 'wet', fxdata, 'wet', fxslotX, 'wet', 'Slot', 'Wet')
 
     lmms_encode_effectplugin(pluginid, fxslotX)
     return fxslotX

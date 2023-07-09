@@ -485,8 +485,16 @@ class input_cvpj_r(plugin_input.base):
             for slotnum in CausticFXData:
                 if CausticFXData[slotnum] != {}: 
                     slot_fxslotdata = CausticFXData[slotnum]['controls']
-                    tracks.add_fxslot_native(cvpj_l, 'audio', 'caustic', ['master'], not int(slot_fxslotdata[5]), None, 
-                        'master_slot'+str(slotnum), caustic_fxtype[CausticFXData[slotnum]['type']], slot_fxslotdata)
+
+                    masterslotplugid = 'master_slot'+str(slotnum)
+
+                    plugins.add_plug(cvpj_l, masterslotplugid, 'native-caustic', caustic_fxtype[CausticFXData[slotnum]['type']])
+                    plugins.add_plug_fxdata(cvpj_l, masterslotplugid, not int(slot_fxslotdata[5]), None)
+                    tracks.insert_fxslot(cvpj_l, ['master'], 'audio', masterslotplugid)
+
+                    for paramid in slot_fxslotdata:
+                        plugins.add_plug_param(cvpj_l, masterslotplugid, paramid, slot_fxslotdata[paramid], 'float', str(paramid))
+
 
         for fxids in [
             ['master_delay', 'delay', 'Delay', [0.64, 0.78, 0.87]],
@@ -498,7 +506,7 @@ class input_cvpj_r(plugin_input.base):
             plugins.add_plug_fxdata(cvpj_l, fxids[0], True, master_params[fxids[1]]['wet'])
             tracks.insert_fxslot(cvpj_l, ['return', None, fxids[0]], 'audio', fxids[0])
             for paramid in master_params[fxids[1]]:
-                plugins.add_plug_param(cvpj_l, fxids[0], paramid, master_params[fxids[1]][paramid], 'float', paramid)
+                plugins.add_plug_param(cvpj_l, fxids[0], paramid, master_params[fxids[1]][paramid], 'float', str(paramid))
 
 
         for fxids in [['master_eq', 'eq'], ['master_limiter', 'limiter']]:
@@ -506,7 +514,7 @@ class input_cvpj_r(plugin_input.base):
             plugins.add_plug_fxdata(cvpj_l, fxids[0], not int(master_params[fxids[1]]['muted']), 1)
             tracks.insert_fxslot(cvpj_l, ['master'], 'audio', fxids[0])
             for paramid in master_params[fxids[1]]:
-                plugins.add_plug_param(cvpj_l, fxids[0], paramid, master_params[fxids[1]][paramid], 'float', paramid)
+                plugins.add_plug_param(cvpj_l, fxids[0], paramid, master_params[fxids[1]][paramid], 'float', str(paramid))
 
 
         #print(AUTO_data)

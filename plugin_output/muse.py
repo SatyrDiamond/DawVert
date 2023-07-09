@@ -86,11 +86,21 @@ def maketrack_synth(xmltag, insttrackdata, portnum):
     addvalue(x_synthtrack, 'automation', 0)
     addvalue(x_synthtrack, 'port', portnum)
 
-    #if 'chain_fx_audio' in insttrackdata: 
-    #    chain_fx_audio = insttrackdata['chain_fx_audio']
-    #    for pluginid in chain_fx_audio:
-    #        plugintype = plugins.get_plug_type(cvpj_l, pluginid)
-    #        print(pluginid, plugintype)
+    if 'chain_fx_audio' in insttrackdata: 
+        chain_fx_audio = insttrackdata['chain_fx_audio']
+        for pluginid in chain_fx_audio:
+            plugintype = plugins.get_plug_type(cvpj_l, pluginid)
+            if plugintype[0] == 'ladspa':
+                cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
+                x_fx_plugin = ET.SubElement(x_synthtrack, "plugin")
+                x_fx_plugin.set('file', cvpj_plugindata['name'])
+                x_fx_plugin.set('label', cvpj_plugindata['plugin'])
+                x_fx_plugin.set('channel', '1')
+                for paramnum in range(cvpj_plugindata['numparams']):
+                    pval, ptype, pname = plugins.get_plug_param(cvpj_l, pluginid, 'ladspa_param_'+str(paramnum), 0)
+                    x_fx_control = ET.SubElement(x_fx_plugin, "control")
+                    x_fx_control.set('name', pname)
+                    x_fx_control.set('val', str(pval))
 
     if 'instdata' in insttrackdata: 
         insttrackdata_instdata = insttrackdata['instdata']

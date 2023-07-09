@@ -18,7 +18,6 @@ db_plugins = sqlite3.connect('./__config/plugins_external.db')
 db_plugins.execute('''
    CREATE TABLE IF NOT EXISTS vst2(
        name text,
-       internal_name text,
        id text,
        type text,
        creator text,
@@ -27,6 +26,7 @@ db_plugins.execute('''
        audio_num_outputs integer,
        midi_num_inputs integer,
        midi_num_outputs integer,
+       num_params integer,
        path_32bit_win text,
        path_64bit_win text,
        path_32bit_unix text,
@@ -48,6 +48,7 @@ db_plugins.execute('''
 		audio_num_outputs integer,
 		midi_num_inputs integer,
 		midi_num_outputs integer,
+      num_params integer,
       path_32bit_win text,
       path_64bit_win text,
       path_32bit_unix text,
@@ -62,21 +63,10 @@ db_plugins.execute('''
 		version text,
 		audio_num_inputs integer,
 		audio_num_outputs integer,
+      num_params integer,
       path_win text,
       path_unix text,
       UNIQUE(name)
-   )''')
-
-db_plugins.execute('''
-   CREATE TABLE IF NOT EXISTS lv2(
-		name text,
-		id text,
-		creator text,
-      path_win_dir text,
-      path_win_bin text,
-      path_unix_dir text,
-      path_unix_bin text,
-      UNIQUE(id)
    )''')
 
 homepath = os.path.expanduser("~")
@@ -99,7 +89,7 @@ elif len(dawlist) == 0:
 
 #  ------------------------------------- Ardour -------------------------------------
 if 'ardour' in dawlist:
-	print('[dawvert-vst] Importing VST List from: Ardour')
+	print('[dawvert-vst] Importing Plugin List from: Ardour')
 	vstcachelist = os.listdir(l_path_aurdor)
 	for vstcache in vstcachelist:
 		vstxmlfile = vstcache
@@ -156,7 +146,7 @@ if 'ardour' in dawlist:
 
 #  ------------------------------------- Waveform -------------------------------------
 if 'waveform' in dawlist:
-	print('[dawvert-vst] Importing VST List from: Waveform')
+	print('[dawvert-vst] Importing Plugin List from: Waveform')
 	plugfilename = os.path.join(l_path_waveform, 'knownPluginList64.settings')
 	if exists(plugfilename):
 		vstxmldata = ET.parse(plugfilename)
@@ -176,7 +166,6 @@ if 'waveform' in dawlist:
 					db_plugins.execute("INSERT OR IGNORE INTO vst2 (id) VALUES (?)", (plugdata_fourid,))
 					if vst_name != None: db_plugins.execute("UPDATE vst2 SET name = ? WHERE id = ?", (vst_name, plugdata_fourid,))
 					else: db_plugins.execute("UPDATE vst2 SET name = ? WHERE id = ?", (pluginfo.get('name'), plugdata_fourid,))
-					db_plugins.execute("UPDATE vst2 SET internal_name = ? WHERE id = ?", (pluginfo.get('name'), plugdata_fourid,))
 					if platformtxt == 'win':
 						db_plugins.execute("UPDATE vst3 SET path_64bit_win = ? WHERE id = ?", (pluginfo.get('file'), plugdata_fourid,))
 					if platformtxt == 'lin':

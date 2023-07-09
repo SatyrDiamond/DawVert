@@ -39,6 +39,48 @@ def getsamplefile(channeldata, flppath):
         return ''
 
 
+def parse_envlfo(envlfo, pluginid, envtype):
+    bio_envlfo = data_bytes.to_bytesio(envlfo)
+
+    envlfo_flags = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_enabled = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_predelay = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_attack = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_hold = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_decay = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_sustain = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_release = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_aomunt = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_lfo_predelay = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_lfo_attack = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_lfo_amount = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_lfo_speed = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_lfo_shape = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_attack_tension = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_decay_tension = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_release_tension = int.from_bytes(bio_envlfo.read(4), "little")
+
+
+    #print(envlfo, pluginid, envtype)
+
+    #print(     envlfo_envelope_hold            )
+    #print(     envlfo_envelope_release            )
+
+
+    # 15087 = 0.25
+    # 20643 = 0.5
+    # 26664 = 1
+    # 32950 = 2
+    # 39376 = 4
+
+
+    #print(    pow(2, envlfo_envelope_hold/32950)     )
+    
+
+
+    #exit()
+
+
 class input_flp(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -139,6 +181,8 @@ class input_flp(plugin_input.base):
                         plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', flpluginname)
                     if 'pluginparams' in channeldata: 
                         flp_dec_pluginparams.getparams(cvpj_l, pluginid, flpluginname, channeldata['pluginparams'], samplefolder)
+
+                #parse_envlfo(channeldata['envlfo_vol'], pluginid, 'vol')
 
                 cvpj_inst['poly'] = {}
                 cvpj_inst['poly']['max'] = channeldata['polymax']

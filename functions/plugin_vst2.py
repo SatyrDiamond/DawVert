@@ -11,8 +11,6 @@ import platform
 import os
 import sqlite3
 
-glo_vstpaths = {}
-
 cpu_arch_list = [64, 32]
 
 platform_architecture = platform.architecture()
@@ -110,5 +108,3 @@ def replace_data(cvpj_l, pluginid, platform, in_name, datatype, data, numparams)
 			plugins.add_plug_data(cvpj_l, pluginid, 'numparams', numparams)
 	else:
 		print('[plugin-vst2] Plugin, '+in_name+' not found.')
-
-def vstpaths(): return glo_vstpaths

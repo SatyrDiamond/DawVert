@@ -10,23 +10,23 @@ os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
 db_plugins = sqlite3.connect('./__config/plugins_external.db')
 
 db_plugins.execute('''
-	CREATE TABLE IF NOT EXISTS vst2(
-		name text,
-		internal_name text,
-		id text,
-		type text,
-		creator text,
-		version text,
-		audio_num_inputs integer,
-		audio_num_outputs integer,
-		midi_num_inputs integer,
-		midi_num_outputs integer,
-		path_32bit_win text,
-		path_64bit_win text,
-		path_32bit_unix text,
-		path_64bit_unix text,
-		UNIQUE(id)
-	)''')
+   CREATE TABLE IF NOT EXISTS vst2(
+       name text,
+       id text,
+       type text,
+       creator text,
+       version text,
+       audio_num_inputs integer,
+       audio_num_outputs integer,
+       midi_num_inputs integer,
+       midi_num_outputs integer,
+       num_params integer,
+       path_32bit_win text,
+       path_64bit_win text,
+       path_32bit_unix text,
+       path_64bit_unix text,
+       UNIQUE(id)
+   )''')
 
 db_plugins.execute('''
    CREATE TABLE IF NOT EXISTS vst3(
@@ -42,12 +42,13 @@ db_plugins.execute('''
 		audio_num_outputs integer,
 		midi_num_inputs integer,
 		midi_num_outputs integer,
-		path_32bit_win text,
-		path_64bit_win text,
-		path_32bit_unix text,
-		path_64bit_unix text,
-		UNIQUE(id)
-	)''')
+      num_params integer,
+      path_32bit_win text,
+      path_64bit_win text,
+      path_32bit_unix text,
+      path_64bit_unix text,
+      UNIQUE(id)
+   )''')
 
 db_plugins.execute('''
    CREATE TABLE IF NOT EXISTS clap(
@@ -120,7 +121,7 @@ if len(dawlist) == 0:
 
 #  ------------------------------------- CakeWalk -------------------------------------
 if 'cakewalk' in dawlist:
-	print('[dawvert-vst] Importing VST List from: Cakewalk')
+	print('[dawvert-vst] Importing Plugin List from: Cakewalk')
 	vstlist = reg_list(w_regkey_cakewalk)
 	for vstplugin in vstlist:
 		registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, vstplugin, 0, winreg.KEY_READ)
@@ -163,7 +164,7 @@ if 'cakewalk' in dawlist:
 
 #  ------------------------------------- CakeWalk -------------------------------------
 if 'flstudio' in dawlist:
-	print('[dawvert-vst] Importing VST List from: FL Studio')
+	print('[dawvert-vst] Importing Plugin List from: FL Studio')
 	for pathtype in [ ['vst2',path_flstudio_vst2_inst],['vst2',path_flstudio_vst2_fx],['vst3',path_flstudio_vst3_inst],['vst3',path_flstudio_vst3_fx] ]:
 		for filename in os.listdir(pathtype[1]):
 			if '.nfo' in filename:
@@ -200,7 +201,7 @@ if 'flstudio' in dawlist:
 
 #  ------------------------------------- CakeWalk -------------------------------------
 if 'bidule' in dawlist:
-	print('[dawvert-vst] Importing VST List from: Plogue Bidule')
+	print('[dawvert-vst] Importing Plugin List from: Plogue Bidule')
 
 	if os.path.exists(path_ploguebidule_vst2_64) == True:
 		bio_data = open(path_ploguebidule_vst2_64, "r")

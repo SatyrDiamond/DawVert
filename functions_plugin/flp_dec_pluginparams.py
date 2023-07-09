@@ -453,7 +453,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
             filename = os.path.join(foldername, pluginid+'_custom_audio.wav')
             with open(filename, "wb") as customconvolverfile:
                 customconvolverfile.write(fl_plugstr.read(audiosize))
-        plugins.add_plug_data(cvpj_l, pluginid, 'file', filename)
+        plugins.add_plug_data(cvpj_l, pluginid, 'file', filename.decode())
         fl_plugstr.read(36)
         autodata = {}
         for autoname in ['pan', 'vol', 'stereo', 'allpurpose', 'eq']:
@@ -509,12 +509,12 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
         plugins.add_plug_param(cvpj_l, pluginid, 'center', flplugvals[6], 'bool', 'Center')
 
     elif pluginname == 'fruity free filter':
-        flplugvals = struct.unpack('IIIIIb', chunkdata)
-        plugins.add_plug_param(cvpj_l, pluginid, 'type', flplugvals[1], 'int', 'Type')
-        plugins.add_plug_param(cvpj_l, pluginid, 'freq', flplugvals[2], 'int', 'Frequency')
-        plugins.add_plug_param(cvpj_l, pluginid, 'lowpass', flplugvals[3], 'int', 'Q')
-        plugins.add_plug_param(cvpj_l, pluginid, 'gain', flplugvals[4], 'int', 'Gain')
-        plugins.add_plug_param(cvpj_l, pluginid, 'center', flplugvals[5], 'bool', 'Center')
+        flplugvals = struct.unpack('IIIII', chunkdata)
+        plugins.add_plug_param(cvpj_l, pluginid, 'type', flplugvals[0], 'int', 'Type')
+        plugins.add_plug_param(cvpj_l, pluginid, 'freq', flplugvals[1], 'int', 'Frequency')
+        plugins.add_plug_param(cvpj_l, pluginid, 'lowpass', flplugvals[2], 'int', 'Q')
+        plugins.add_plug_param(cvpj_l, pluginid, 'gain', flplugvals[3], 'int', 'Gain')
+        plugins.add_plug_param(cvpj_l, pluginid, 'center', flplugvals[4], 'bool', 'Center')
 
     elif pluginname == 'fruity html notebook':
         version = int.from_bytes(fl_plugstr.read(4), "little")

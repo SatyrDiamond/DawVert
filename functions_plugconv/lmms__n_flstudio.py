@@ -63,6 +63,8 @@ def convert(cvpj_l, pluginid, plugintype):
 	pluginid_g = pluginid
 	cvpj_l_g = cvpj_l
 
+	if plugintype[1] == None: plugintype[1] = ''
+
 	#---------------------------------------- Fruit Kick ----------------------------------------
 	if plugintype[1].lower() == '3x osc':
 		fl_osc1_coarse = getparam('osc1_coarse')

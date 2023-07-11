@@ -187,7 +187,7 @@ def asdrlfo(pluginid, xmlobj, asdrtype, xmltype):
     elmodX.set('lspd', str(lfospeed))
     elmodX.set('lshp', str(lfoshape[l_shape]))
 
-def get_plugin_param(pluginautoid, xmltag, xmlname, pluginid, paramname, fallback):
+def get_plugin_param(pluginautoid, xmltag, xmlname, pluginid, paramname, fallback, **kwargs):
     pluginparam = plugins.get_plug_param(cvpj_l, pluginid, paramname, fallback)
 
     aid_id, aid_data = tracks.autoid_out_get(['plugin', pluginid, paramname])
@@ -205,8 +205,10 @@ def get_plugin_param(pluginautoid, xmltag, xmlname, pluginid, paramname, fallbac
         autovarX.set('value', str(outparam))
         autovarX.set('scale_type', 'linear')
         autovarX.set('id', str(aid_id))
+        return autovarX
     else:
         xmltag.set(xmlname, str(outparam))
+
 
 
 def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
@@ -699,9 +701,10 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
 
         ladspa_file = data_values.get_value(cvpj_plugindata, 'path', '')
 
-        if ladspa_file != None:
+        if ladspa_file != '':
             ladspa_plugin = data_values.get_value(cvpj_plugindata, 'plugin', '')
-            ladspa_sep_chan = notemod_conv= data_values.get_value(cvpj_plugindata, 'seperated_channels', False)
+            ladspa_sep_chan = data_values.get_value(cvpj_plugindata, 'seperated_channels', False)
+            ladspa_numparams = data_values.get_value(cvpj_plugindata, 'numparams', '1')
 
             xml_ladspa = ET.SubElement(fxslotX, 'ladspacontrols')
             xml_ladspa_key = ET.SubElement(fxslotX, 'key')
@@ -719,25 +722,13 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
                 paramchan = '0'
                 if len(paramspl) == 2: paramchan = paramspl[1]
 
-                print(paramnum, paramchan)
-                #if ladspa_sep_chan == False:
-                #    xml_ladspa.set('link', '1')
-                #    for param in cvpj_params:
-                #        xml_param = ET.SubElement(xml_ladspa, 'port0'+param)
-                #        add_auto_placements(cvpj_params[param], None, pluginautoid, 'ladspa_param_0_'+param, param, 'ladspa_param_0_'+param, xml_param, 'data', 'LADSPA', '#'+param)
-                #        xml_param.set('link', '1')
-                #        xml_param = ET.SubElement(xml_ladspa, 'port1'+param)
-                #        add_auto_placements(cvpj_params[param], None, pluginautoid, 'ladspa_param_1_'+param, param, 'ladspa_param_1_'+param, xml_param, 'data', 'LADSPA', '#'+param)
-                #else:
-                #    xml_ladspa.set('link', '0')
-                #    for param in cvpj_params['0']:
-                #        xml_param = ET.SubElement(xml_ladspa, 'port0'+param)
-                #        add_auto_placements(cvpj_params['0'][param], None, pluginautoid, 'ladspa_param_0_'+param, param, 'ladspa_param_0_'+param, xml_param, 'data', 'LADSPA', 'L #'+param)
-                #        xml_param.set('link', '0')
-                #    for param in cvpj_params['1']:
-                #        xml_param = ET.SubElement(xml_ladspa, 'port1'+param)
-                #        add_auto_placements(cvpj_params['1'][param], None, pluginautoid, 'ladspa_param_1_'+param, param, 'ladspa_param_1_'+param, xml_param, 'data', 'LADSPA', 'R #'+param)
- 
+                if ladspa_sep_chan == False: xml_ladspa.set('link', '1')
+                else: xml_ladspa.set('link', '0')
+
+                for param in range(ladspa_numparams):
+                    paramxml = get_plugin_param(pluginautoid, xml_ladspa, 'port0'+str(param), pluginid, 'ladspa_param_'+str(param), 0)
+                    get_plugin_param(pluginautoid, xml_ladspa, 'port1'+str(param), pluginid, 'ladspa_param_'+str(param)+'_1', 0)
+
     else:
         fxslotX.set('name', 'stereomatrix')
         xml_lmmsnat = ET.SubElement(fxslotX, 'stereomatrixcontrols')
@@ -751,8 +742,8 @@ def lmms_encode_effectslot(pluginid, fxcX):
     fxslotX = ET.SubElement(fxcX, "effect")
 
     pluginautoid = tracks.autoid_out_getlist(['slot', pluginid])
-
     fxdata = plugins.get_plug_fxdata(cvpj_l, pluginid)
+
     add_auto_placements(1, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', fxslotX, 'on', 'Slot', 'On')
     add_auto_placements(1, None, ['slot', pluginid], 'wet', fxdata, 'wet', fxslotX, 'wet', 'Slot', 'Wet')
 

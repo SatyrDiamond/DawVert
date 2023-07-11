@@ -509,7 +509,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
         plugins.add_plug_param(cvpj_l, pluginid, 'center', flplugvals[6], 'bool', 'Center')
 
     elif pluginname == 'fruity free filter':
-        flplugvals = struct.unpack('IIIII', chunkdata)
+        flplugvals = struct.unpack('IIIII', chunkdata[0:20])
         plugins.add_plug_param(cvpj_l, pluginid, 'type', flplugvals[0], 'int', 'Type')
         plugins.add_plug_param(cvpj_l, pluginid, 'freq', flplugvals[1], 'int', 'Frequency')
         plugins.add_plug_param(cvpj_l, pluginid, 'lowpass', flplugvals[2], 'int', 'Q')

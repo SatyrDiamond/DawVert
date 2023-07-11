@@ -81,17 +81,32 @@ def setvstparams(cvpj_plugindata, pluginid, xmldata):
     middlenotefix = data_values.get_value(cvpj_plugindata, 'middlenotefix', 0)
 
     datatype = data_values.get_value(cvpj_plugindata, 'datatype', 'none')
+    numparams = data_values.get_value(cvpj_plugindata, 'numparams', 0)
 
     if datatype == 'chunk':
         xmldata.set('chunk', data_values.get_value(cvpj_plugindata, 'chunk', 0))
 
     if datatype == 'param':
-        numparams = data_values.get_value(cvpj_plugindata, 'numparams', 0)
         xmldata.set('numparams', str(data_values.get_value(cvpj_plugindata, 'numparams', 0)))
         for param in range(numparams):
             pval, ptype, pname = plugins.get_plug_param(cvpj_l, pluginid, 'vst_param_'+str(param), 0)
             xmldata.set('param'+str(param), str(param)+':'+pname+':'+str(pval))
+             
+    pluginautoid = tracks.autoid_out_getlist(['plugin', pluginid])
+    if pluginautoid != None:
+        for paramname in pluginautoid:
+            if 'vst_param_' in paramname:
+                paramid = paramname[10:]
+                paramvisname = int(paramname[10:])+1
+                aid_id, aid_data = tracks.autoid_out_get(['plugin', pluginid, paramname])
+                if aid_id != None and len(aid_data['placements']) != 0:
+                    lmms_make_main_auto_track(aid_id, aid_data, 'VST2: #'+str(paramvisname))
+                    autovarX = ET.SubElement(xmldata, 'param'+paramid)
+                    autovarX.set('scale_type', 'linear')
+                    autovarX.set('id', str(aid_id))
+
     return middlenotefix
+
 
 def onetime2lmmstime(input): return int(round(float(input * 12)))
 
@@ -198,16 +213,22 @@ def get_plugin_param(pluginautoid, xmltag, xmlname, pluginid, paramname, fallbac
     if pluginparam[2] != '': v_name = pluginparam[2]
     else: v_name = paramname
 
+    visname = 'Plugin: '+v_name
+
+    if 'visualname' in kwargs: visname = kwargs['visualname']
+
     if aid_id != None and len(aid_data['placements']) != 0:
         aid_data['placements'] = auto.multiply(aid_data['placements'], 0, 1)
-        lmms_make_main_auto_track(aid_id, aid_data, 'Plugin: '+v_name)
+        lmms_make_main_auto_track(aid_id, aid_data, visname)
         autovarX = ET.SubElement(xmltag, xmlname)
         autovarX.set('value', str(outparam))
         autovarX.set('scale_type', 'linear')
         autovarX.set('id', str(aid_id))
+        for name in kwargs:
+            autovarX.set(name, str(kwargs[name]))
         return autovarX
     else:
-        xmltag.set(xmlname, str(outparam))
+        xmltag.set(paramname, str(outparam))
 
 
 
@@ -343,6 +364,12 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
                 zdata = cvpj_plugindata['data'].encode('ascii')
                 zdataxs = ET.fromstring(base64.b64decode(zdata).decode('ascii'))
                 xml_lmmsnat.append(zdataxs)
+            if plugintype[1] == 'tripleoscillator':
+                for names in [['userwavefile0', 'osc_1'],
+                            ['userwavefile1', 'osc_2'],
+                            ['userwavefile2', 'osc_3']]:
+                    filedata = plugins.get_fileref(cvpj_l, pluginid, names[1])
+                    if filedata != None: xml_lmmsnat.set(names[0], filedata['path'])
 
         else:
             print('[output-lmms]       Plugin: '+visual_plugname+' > None')
@@ -697,37 +724,27 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
         print('[output-lmms]       Audio FX: [ladspa] ')
         fxslotX.set('name', 'ladspaeffect')
 
-        print(cvpj_plugindata)
-
         ladspa_file = data_values.get_value(cvpj_plugindata, 'path', '')
 
-        if ladspa_file != '':
-            ladspa_plugin = data_values.get_value(cvpj_plugindata, 'plugin', '')
-            ladspa_sep_chan = data_values.get_value(cvpj_plugindata, 'seperated_channels', False)
-            ladspa_numparams = data_values.get_value(cvpj_plugindata, 'numparams', '1')
+        ladspa_plugin = data_values.get_value(cvpj_plugindata, 'plugin', '')
+        ladspa_sep_chan = data_values.get_value(cvpj_plugindata, 'seperated_channels', False)
+        ladspa_numparams = data_values.get_value(cvpj_plugindata, 'numparams', '1')
 
-            xml_ladspa = ET.SubElement(fxslotX, 'ladspacontrols')
-            xml_ladspa_key = ET.SubElement(fxslotX, 'key')
-            xml_ladspa_key_file = ET.SubElement(xml_ladspa_key, 'attribute')
-            xml_ladspa_key_file.set('name', 'file')
-            xml_ladspa_key_file.set('value', Path(ladspa_file).stem)
-            xml_ladspa_key_plugin = ET.SubElement(xml_ladspa_key, 'attribute')
-            xml_ladspa_key_plugin.set('name', 'plugin')
-            xml_ladspa_key_plugin.set('value', ladspa_plugin)
+        xml_ladspa = ET.SubElement(fxslotX, 'ladspacontrols')
+        xml_ladspa_key = ET.SubElement(fxslotX, 'key')
+        xml_ladspa_key_file = ET.SubElement(xml_ladspa_key, 'attribute')
+        xml_ladspa_key_file.set('name', 'file')
+        xml_ladspa_key_file.set('value', Path(ladspa_file).stem)
+        xml_ladspa_key_plugin = ET.SubElement(xml_ladspa_key, 'attribute')
+        xml_ladspa_key_plugin.set('name', 'plugin')
+        xml_ladspa_key_plugin.set('value', ladspa_plugin)
 
-            for paramname in plugins.get_plug_paramlist(cvpj_l, pluginid):
-                paramspl = paramname.split('ladspa_param_')[1].split('_')
+        for param in range(ladspa_numparams):
+            paramid = 'ladspa_param_'+str(param)
+            paramvisname = 'LADSPA: #'+str(param+1)
 
-                paramnum = paramspl[0]
-                paramchan = '0'
-                if len(paramspl) == 2: paramchan = paramspl[1]
-
-                if ladspa_sep_chan == False: xml_ladspa.set('link', '1')
-                else: xml_ladspa.set('link', '0')
-
-                for param in range(ladspa_numparams):
-                    paramxml = get_plugin_param(pluginautoid, xml_ladspa, 'port0'+str(param), pluginid, 'ladspa_param_'+str(param), 0)
-                    get_plugin_param(pluginautoid, xml_ladspa, 'port1'+str(param), pluginid, 'ladspa_param_'+str(param)+'_1', 0)
+            paramxml = get_plugin_param(pluginautoid, xml_ladspa, 'port0'+str(param), pluginid, paramid, 0, visualname=paramvisname)
+            get_plugin_param(pluginautoid, xml_ladspa, 'port1'+str(param), pluginid, paramid+'_1', 0, visualname=paramvisname)
 
     else:
         fxslotX.set('name', 'stereomatrix')
@@ -865,21 +882,6 @@ def add_auto_placements(i_fallback, i_addmul, i_id, i_autoname, j_tag, j_name, x
         autovarX.set('id', str(aid_id))
     else:
         x_tag.set(x_name, str(i_value))
-
-def add_auto_placements_noset(i_value, i_addmul, i_id, i_autoname, x_tag, x_name, v_type, v_name):
-    if i_addmul != None: i_value = (i_value+i_addmul[0])*i_addmul[1]
-
-    if i_id != None and i_autoname != None: aid_id, aid_data = tracks.autoid_out_get(i_id+[i_autoname])
-    else: aid_id, aid_data = None, None
-
-    if aid_id != None and len(aid_data['placements']) != 0:
-        if i_addmul != None: aid_data['placements'] = auto.multiply(aid_data['placements'], i_addmul[0], i_addmul[1])
-        lmms_make_main_auto_track(aid_id, aid_data, v_type+': '+v_name)
-        if x_tag != None:
-            autovarX = ET.SubElement(x_tag, x_name)
-            autovarX.set('value', str(i_value))
-            autovarX.set('scale_type', 'linear')
-            autovarX.set('id', str(aid_id))
 
 def add_auto_unused(i_ids, pluginautoid, i_name):
     #print(i_ids, i_name)

@@ -115,6 +115,7 @@ def getvstparams(pluginid, xmldata):
     vst_data = xmldata.get('chunk')
     vst_numparams = xmldata.get('numparams')
     vst_program = xmldata.get('program')
+
     if vst_program != None: 
         plugins.add_plug_data(cvpj_l, pluginid, 'current_program', int(vst_program))
     if vst_data != None:
@@ -137,10 +138,10 @@ def getvstparams(pluginid, xmldata):
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
 
 def lmms_auto_getvalue(x_tag, x_name, i_fbv, i_type, i_addmul, i_loc):
-    if x_tag.get(x_name) != None: 
+    if x_tag.get(x_name) != None:
         if i_type == 'float': return float(x_tag.get(x_name))
         if i_type == 'int': return int(x_tag.get(x_name))
-        if i_type == 'bool': return int(bool(x_tag.get(x_name)))
+        if i_type == 'bool': return int(bool(int(x_tag.get(x_name))))
     elif x_tag.findall(x_name) != []: 
         realvaluetag = x_tag.findall(x_name)[0]
         value = realvaluetag.get('value')
@@ -319,6 +320,13 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_inst):
                 plugins.add_plug_data(cvpj_l, pluginid, 'data', 
                     base64.b64encode(ET.tostring(zdata, encoding='utf-8')).decode('ascii')
                     )
+            if pluginname == "tripleoscillator":
+                threeosc_userwavefile0 = xml_plugin.get('userwavefile0')
+                threeosc_userwavefile1 = xml_plugin.get('userwavefile1')
+                threeosc_userwavefile2 = xml_plugin.get('userwavefile2')
+                plugins.add_fileref(cvpj_l, pluginid, 'osc_1', threeosc_userwavefile0)
+                plugins.add_fileref(cvpj_l, pluginid, 'osc_2', threeosc_userwavefile1)
+                plugins.add_fileref(cvpj_l, pluginid, 'osc_3', threeosc_userwavefile2)
 
     if pluginname in plugincolors: plugincolor = plugincolors[pluginname]
     else: plugincolor = None
@@ -654,7 +662,7 @@ def lmms_decode_effectslot(fxslotX):
         fxxml_plugin_key = fxslotX.findall('key')[0]
         fxxml_plugin_ladspacontrols = fxslotX.findall('ladspacontrols')[0]
 
-        plugins.add_plug(cvpj_l, pluginid, 'ladspa', 'win')
+        plugins.add_plug(cvpj_l, pluginid, 'ladspa', None)
 
         for attribute in fxxml_plugin_key.findall('attribute'):
             attval = attribute.get('value')

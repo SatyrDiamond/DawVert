@@ -130,6 +130,8 @@ def convert(cvpj_l, pluginid, plugintype):
 		lmms_userwavefile1 = 0
 		lmms_userwavefile2 = 0
 
+		filedata = plugins.get_fileref(cvpj_l, pluginid, 'audiofile')
+
 		plugins.replace_plug(cvpj_l, pluginid, 'native-lmms', 'tripleoscillator')
 
 		plugins.add_plug_param(cvpj_l, pluginid, 'coarse0', lmms_coarse0, 'int', "")
@@ -166,3 +168,8 @@ def convert(cvpj_l, pluginid, plugintype):
 		plugins.add_plug_param(cvpj_l, pluginid, 'wavetype0', lmms_wavetype0, 'int', "")
 		plugins.add_plug_param(cvpj_l, pluginid, 'wavetype1', lmms_wavetype1, 'int', "")
 		plugins.add_plug_param(cvpj_l, pluginid, 'wavetype2', lmms_wavetype2, 'int', "")
+
+		if filedata != None:
+			plugins.add_fileref(cvpj_l, pluginid, 'osc_1', filedata['path'])
+			plugins.add_fileref(cvpj_l, pluginid, 'osc_2', filedata['path'])
+			plugins.add_fileref(cvpj_l, pluginid, 'osc_3', filedata['path'])

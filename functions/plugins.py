@@ -1,17 +1,16 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import os 
 from functions import params
 from functions import data_values
 
 pluginid_num = 1000
 
-
 def get_id():
 	global pluginid_num
 	pluginid_num += 1
 	return 'plugin'+str(pluginid_num)
-
 
 # -------------------------------------------------- plugdata
 
@@ -26,7 +25,7 @@ def get_plug_type(cvpj_l, pluginid):
 
 def replace_plug(cvpj_l, pluginid, i_type, i_subtype):
 	plugdata = cvpj_l['plugins'][pluginid]
-	for name in ['type', 'subtype']:
+	for name in ['type', 'subtype', 'fileref']:
 		if name in plugdata: del plugdata[name]
 	if 'params' in plugdata: 
 		plugdata['params_old'] = plugdata['params'].copy()
@@ -434,3 +433,16 @@ def get_wavetable(cvpj_l, pluginid, wave_name):
 		else:
 			firstwave = list(wavedata.keys())[0]
 			return wavedata[firstwave]
+
+# -------------------------------------------------- fileref
+
+def add_fileref(cvpj_l, pluginid, i_name, i_location):
+	filerefdata = {}
+	filerefdata['path'] = i_location
+	#fileexists = os.path.exists(i_location)
+	#print(fileexists, i_location)
+	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'fileref', i_name], filerefdata)
+
+def get_fileref(cvpj_l, pluginid, i_name):
+	filerefdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'fileref', i_name])
+	return filerefdata

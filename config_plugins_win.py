@@ -138,6 +138,7 @@ if 'cakewalk' in dawlist:
 			vst_isSynth = winreg.QueryValueEx(registry_key, 'isSynth')[0]
 			vst_numInputs = winreg.QueryValueEx(registry_key, 'numInputs')[0]
 			vst_numOutputs = winreg.QueryValueEx(registry_key, 'numOutputs')[0]
+			vst_numParams = winreg.QueryValueEx(registry_key, 'numParams')[0]
 
 			if vst_is_v2 == 1:
 				db_plugins.execute("INSERT OR IGNORE INTO vst2 (id) VALUES (?)", (vst_uniqueId,))
@@ -149,6 +150,7 @@ if 'cakewalk' in dawlist:
 				if vst_Vendor != None: db_plugins.execute("UPDATE vst2 SET creator = ? WHERE id = ?", (vst_Vendor, vst_uniqueId,))
 				db_plugins.execute("UPDATE vst2 SET audio_num_inputs = ? WHERE id = ?", (vst_numInputs, vst_uniqueId,))
 				db_plugins.execute("UPDATE vst2 SET audio_num_outputs = ? WHERE id = ?", (vst_numOutputs, vst_uniqueId,))
+				db_plugins.execute("UPDATE vst2 SET num_params = ? WHERE id = ?", (vst_numParams, vst_uniqueId,))
 
 			if vst_is_v3 == 1:
 				vst_clsidPlug = uuid.UUID(winreg.QueryValueEx(registry_key, 'clsidPlug')[0]).hex.upper()
@@ -161,6 +163,7 @@ if 'cakewalk' in dawlist:
 				if vst_Vendor != None: db_plugins.execute("UPDATE vst3 SET creator = ? WHERE id = ?", (vst_Vendor, vst_clsidPlug,))
 				db_plugins.execute("UPDATE vst3 SET audio_num_inputs = ? WHERE id = ?", (vst_numInputs, vst_clsidPlug,))
 				db_plugins.execute("UPDATE vst3 SET audio_num_outputs = ? WHERE id = ?", (vst_numOutputs, vst_clsidPlug,))
+				db_plugins.execute("UPDATE vst3 SET num_params = ? WHERE id = ?", (vst_numParams, vst_clsidPlug,))
 
 #  ------------------------------------- CakeWalk -------------------------------------
 if 'flstudio' in dawlist:

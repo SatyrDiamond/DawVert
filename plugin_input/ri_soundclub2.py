@@ -5,7 +5,6 @@ from functions import data_bytes
 from functions import tracks
 from functions import note_data
 from functions import audio_wav
-from functions import folder_samples
 from functions import note_mod
 from functions import notelist_data
 from functions import plugins
@@ -29,6 +28,7 @@ class input_soundclub2(plugin_input.base):
     def gettype(self): return 'ri'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'track_lanes': True,
         'auto_nopl': True
         }
@@ -47,8 +47,8 @@ class input_soundclub2(plugin_input.base):
 
         print('[input-soundclub2] Tempo', sc2_globaltempo)
 
-        file_name = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, file_name)
+        samplefolder = extra_param['samplefolder']
+
         idvals_inst_soundclub2 = idvals.parse_idvalscsv('data_idvals/soundclub2_inst.csv')
 
         cvpj_l = {}
@@ -164,7 +164,7 @@ class input_soundclub2(plugin_input.base):
                         sc2_i_samplesize, sc2_i_loopstart, sc2_i_unk3, sc2_i_unk4, sc2_i_freq = struct.unpack("IIIHH", bio_sc2_insdata.read(16))
                         cvpj_wavdata = bio_sc2_insdata.read()
 
-                        wave_path = samplefolder + 'sc2_'+file_name+'_'+str(cur_instnum)+'.wav'
+                        wave_path = samplefolder + 'sc2_'+str(cur_instnum)+'.wav'
 
                         plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, wave_path)
                         plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', 'samples')

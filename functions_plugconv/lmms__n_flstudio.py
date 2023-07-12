@@ -13,13 +13,6 @@ from functions import data_values
 from functions import plugin_vst2
 from functions import plugins
 
-from functions_plugparams import params_various_inst
-from functions_plugparams import params_kickmess
-from functions_plugparams import params_various_fx
-from functions_plugparams import params_vital
-from functions_plugparams import params_vital_wavetable
-from functions_plugparams import data_nullbytegroup
-
 # -- 3XOSC
 # 0 Sine
 # 1 Triangle
@@ -47,9 +40,6 @@ threeosc_shapes = {
 	5: 6,
 	6: 7}
 
-
-def simsynth_time(value): return pow(value*2, 3)
-def simsynth_2time(value): return pow(value*2, 3)
 
 def getparam(paramname):
 	global pluginid_g

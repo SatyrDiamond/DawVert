@@ -4,7 +4,6 @@
 from functions import audio_wav
 from functions import auto
 from functions import data_bytes
-from functions import folder_samples
 from functions import format_caustic
 from functions import idvals
 from functions import note_data
@@ -158,6 +157,7 @@ class input_cvpj_r(plugin_input.base):
     def gettype(self): return 'ri'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'fxrack': False,
         'track_lanes': False,
         'placement_cut': True,
@@ -179,8 +179,7 @@ class input_cvpj_r(plugin_input.base):
 
         cvpj_l = {}
         
-        file_name = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, file_name)
+        samplefolder = extra_param['samplefolder']
 
         mach_mixer_vol = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
         mach_mixer_pan = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]

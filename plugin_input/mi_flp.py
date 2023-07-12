@@ -13,7 +13,6 @@ from pathlib import Path
 from functions_plugin import flp_dec_pluginparams
 from functions import format_flp_dec
 from functions import note_mod
-from functions import folder_samples
 from functions import data_bytes
 from functions import colors
 from functions import notelist_data
@@ -89,6 +88,7 @@ class input_flp(plugin_input.base):
     def gettype(self): return 'mi'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'fxrack': True,
         'track_lanes': True,
         'placement_cut': True,
@@ -142,8 +142,7 @@ class input_flp(plugin_input.base):
         sampleinfo = {}
         samplestretch = {}
 
-        flp_basename = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, flp_basename)
+        samplefolder = extra_param['samplefolder']
 
         for instrument in FL_Channels:
             channeldata = FL_Channels[instrument]

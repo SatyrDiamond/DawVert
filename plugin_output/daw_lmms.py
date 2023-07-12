@@ -870,6 +870,9 @@ def add_auto_placements(i_fallback, i_addmul, i_id, i_autoname, j_tag, j_name, x
 
     if i_addmul != None: i_value = (i_value+i_addmul[0])*i_addmul[1]
 
+    if isinstance(i_value, bool):
+        i_value = int(i_value)
+
     if i_id != None and i_autoname != None: aid_id, aid_data = tracks.autoid_out_get(i_id+[i_autoname])
     else: aid_id, aid_data = None, None
 

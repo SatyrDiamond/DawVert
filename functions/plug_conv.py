@@ -22,6 +22,7 @@ from functions_plugconv import sf2__gmmidi
 
 
 from functions_plugconv import lmms__n_flstudio
+from functions_plugconv import lmms__n_beepbox
 
 
 from functions_plugconv import vst2__i_opl2
@@ -84,9 +85,15 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 
 					# ------------------------ LMMS ------------------------
 
-					if 'flp' == in_daw and 'lmms' == out_daw:
-						print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))
-						lmms__n_flstudio.convert(cvpj_l, pluginid, plugintype) 
+					if 'lmms' == out_daw:
+						if plugintype[0] == 'native-flstudio':
+							print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))
+							lmms__n_flstudio.convert(cvpj_l, pluginid, plugintype) 
+
+						if plugintype[0] == 'native-jummbox':
+							print('[plug-conv] '+pluginid+' | Jummbox/Beepbox: '+str(plugintype[1]))
+							lmms__n_beepbox.convert(cvpj_l, pluginid, plugintype, extra_json) 
+
 
 
 					# ------------------------ VST2 ------------------------

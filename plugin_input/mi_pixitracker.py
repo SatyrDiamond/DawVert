@@ -3,7 +3,6 @@
 
 from functions import data_bytes
 from functions import audio_wav
-from functions import folder_samples
 from functions import tracks
 from functions import note_data
 from functions import placement_data
@@ -24,6 +23,7 @@ class input_cvpj_f(plugin_input.base):
     def supported_autodetect(self): return True
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'fxrack': False,
         'track_lanes': True,
         'placement_cut': False,
@@ -45,9 +45,8 @@ class input_cvpj_f(plugin_input.base):
 
         cvpj_l = {}
         
-        file_name = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, file_name)
-
+        samplefolder = extra_param['samplefolder']
+        
         for _ in range(16): pixi_data_sounds.append([None,None,None,None,None,None,None,None])
 
         for pixi_chunk in pixi_chunks:

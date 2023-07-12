@@ -7,7 +7,6 @@ import json
 from functions import song_tracker
 from functions import audio_wav
 from functions import data_bytes
-from functions import folder_samples
 from functions import placements
 from functions import plugins
 from functions import tracks
@@ -23,6 +22,7 @@ class input_s3m(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'track_lanes': True
         }
     def supported_autodetect(self): return True
@@ -37,9 +37,8 @@ class input_s3m(plugin_input.base):
     def parse(self, input_file, extra_param):
         bio_mainfile = open(input_file, 'rb')
         
-        s3m_modulename = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, s3m_modulename)
-
+        samplefolder = extra_param['samplefolder']
+        
         cvpj_l = {}
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []

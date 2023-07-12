@@ -5,6 +5,7 @@ import json
 import argparse
 import os
 from functions import core
+from functions import folder_samples
 
 print('DawVert: Daw Conversion Tool')
 
@@ -34,7 +35,6 @@ do_overwrite = False
 
 if args.y == True: do_overwrite = True
 if args.soundfont != None: extra_json['soundfont'] = args.soundfont
-if args.samplefolder != None: extra_json['samplefolder'] = args.samplefolder
 if args.songnum != None: extra_json['songnum'] = args.songnum
 if args.extrafile != None: extra_json['extrafile'] = args.extrafile
 if args.mi2m__output_unused_nle == True: extra_json['mi2m-output-unused-nle'] = True
@@ -69,6 +69,12 @@ if out_format in core.output_get_plugins():
 else:
 	print('[error] output format plugin not found')
 	exit()
+
+# -------------------------------------------------------------- convert --------------------------------------------------------------
+
+file_name = os.path.splitext(os.path.basename(in_file))[0]
+if args.samplefolder != None: extra_json['samplefolder'] = args.samplefolder
+else: extra_json['samplefolder'] = os.getcwd() + '/__extracted_samples/' + file_name + '/'
 
 # -------------------------------------------------------------- convert --------------------------------------------------------------
 

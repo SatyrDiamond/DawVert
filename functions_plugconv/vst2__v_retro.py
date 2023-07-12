@@ -11,7 +11,7 @@ from functions import plugins
 from functions_plugparams import params_various_inst
 from functions_plugparams import data_vc2xml
 from functions_plugparams import params_vital
-from functions_plugparams import params_vital_wavetable
+from functions_plugparams import wave
 
 def convert(cvpj_l, pluginid, plugintype):
 	blk_env_pitch = plugins.get_env_blocks(cvpj_l, pluginid, 'pitch')
@@ -71,12 +71,12 @@ def convert(cvpj_l, pluginid, plugintype):
 		if r_duty == 1: vital_duty = 0.25
 		if r_duty == 2: vital_duty = 0.125
 
-		if plugintype[1] == 'sine': vital_shape = params_vital_wavetable.create_wave('sine', 0, None)
-		if plugintype[1] == 'square': vital_shape = params_vital_wavetable.create_wave('square', 0, vital_duty)
-		if plugintype[1] == 'pulse': vital_shape = params_vital_wavetable.create_wave('square', 0, vital_duty)
-		if plugintype[1] == 'triangle': vital_shape = params_vital_wavetable.create_wave('triangle', 0, None)
-		if plugintype[1] == 'saw': vital_shape = params_vital_wavetable.create_wave('saw', 0, None)
-		if plugintype[1] == 'wavetable': vital_shape = params_vital.cvpjwave2vitalwave(cvpj_l, pluginid, None)
+		if plugintype[1] == 'sine': vital_shape = wave.create_wave('sine', 0, None)
+		if plugintype[1] == 'square': vital_shape = wave.create_wave('square', 0, vital_duty)
+		if plugintype[1] == 'pulse': vital_shape = wave.create_wave('square', 0, vital_duty)
+		if plugintype[1] == 'triangle': vital_shape = wave.create_wave('triangle', 0, None)
+		if plugintype[1] == 'saw': vital_shape = wave.create_wave('saw', 0, None)
+		if plugintype[1] == 'wavetable': vital_shape = wave.cvpjwave2wave(cvpj_l, pluginid, None)
 
 		params_vital.replacewave(0, vital_shape)
 

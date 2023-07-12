@@ -191,7 +191,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
             plugins.add_wave(cvpj_l, trackid, 'chipwave', customChipWave, -24, 24)
 
         tracks.m_create_inst(cvpj_l, trackid, {'pluginid': trackid})
-        tracks.m_basicdata_inst(cvpj_l, trackid, cvpj_instname, bb_color, None, None)
+        tracks.m_basicdata_inst(cvpj_l, trackid, cvpj_instname, bb_color, cvpj_volume, None)
 
         if 'eqFilterType' in bb_instrument:
             if bb_instrument['eqFilterType'] == False:
@@ -225,7 +225,6 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
                         plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], eqgain, 'peak', 1)
                     if eqtype == 'high-pass':
                         plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass)
-
 
         if 'distortion' in bb_inst_effects:
             pluginid = addfx(trackid, 'distortion')
@@ -342,8 +341,6 @@ def parse_channel(channeldata, channum):
         for bb_instrument in bb_instruments:
             parse_instrument(channum, t_instnum, bb_instrument, bb_type, bb_color)
             cvpj_instid = 'bb_ch'+str(channum)+'_inst'+str(t_instnum)
-
-            #print(bb_instrument['effects'])
 
             if 'panning' in bb_instrument['effects']: tracks.m_param_inst(cvpj_l, cvpj_instid, 'pan', bb_instrument['pan']/50)
             #if 'pitch shift' in bb_instrument['effects']: tracks.m_param_instdata(cvpj_l, cvpj_instid, 'pitch', (bb_instrument['pitchShiftSemitones']-12)*100 )

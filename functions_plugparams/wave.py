@@ -4,6 +4,7 @@
 import math
 import struct
 from functions import data_values
+from functions import data_bytes
 from functions import plugins
 from functions import xtramath
 from functions import audio_wav
@@ -68,9 +69,34 @@ def cvpjwave2wave(cvpj_l, pluginid, wave_name):
     else: return None
 
 def wave2file(cvpj_l, pluginid, wave_name, fileloc):
-    wavedata = cvpjwave2wave(cvpj_l, pluginid, 'chipwave')
-    audiowavdata = [int(i*255) for i in wavedata]
-    wave_data = struct.pack('B'*len(audiowavdata), *audiowavdata)
-    audio_wav.generate(fileloc, wave_data, 1, 44100, 8, None)
+    wavedata = cvpjwave2wave(cvpj_l, pluginid, wave_name)
+    audiowavdata = [int(i*65535) for i in wavedata]
+    wave_data = data_bytes.unsign_16(struct.pack('H'*len(audiowavdata), *audiowavdata))
+    audio_wav.generate(fileloc, wave_data, 1, 44100, 16, None)
+
+def cvpjharm2wave(cvpj_l, pluginid, harm_name):
+    harmdata = plugins.get_harmonics(cvpj_l, pluginid, harm_name)
+    if harmdata != None: 
+        harmonics_data = harmdata['harmonics']
+        wavedata_points = []
+        for num in range(2048):
+            s_pos = num/2048
+            sample = 0
+            for harm_num in range(len(harmonics_data)):
+                sine_pitch = s_pos*(harm_num+1)
+                sine_vol = harmonics_data[harm_num]
+                sample += wave_sine(sine_pitch)*sine_vol
+            wavedata_points.append(sample)
+        min_value = min(wavedata_points)
+        max_value = max(wavedata_points)
+        wavedata_points = [xtramath.betweenvalues_r(min_value, max_value, i) for i in wavedata_points]
+        return wavedata_points
+    else: return None
+
+def harm2file(cvpj_l, pluginid, harm_name, fileloc):
+    wavedata = cvpjharm2wave(cvpj_l, pluginid, harm_name)
+    audiowavdata = [int(i*65535) for i in wavedata]
+    wave_data = data_bytes.unsign_16(struct.pack('H'*len(audiowavdata), *audiowavdata))
+    audio_wav.generate(fileloc, wave_data, 1, 44100, 16, None)
 
 #[xtramath.betweenvalues_r(rangedata[0], rangedata[1], i) for i in wavedata_points]

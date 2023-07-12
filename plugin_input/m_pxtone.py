@@ -4,7 +4,6 @@
 from functions import data_bytes
 from functions import note_mod
 from functions import audio_wav
-from functions import folder_samples
 from functions import tracks
 from functions import plugins
 from functions import placement_data
@@ -170,6 +169,7 @@ class input_pxtone(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'track_lanes': True,
         'auto_nopl': True,
         'track_nopl': True
@@ -202,8 +202,7 @@ class input_pxtone(plugin_input.base):
 
         t_voice_data = []
 
-        file_name = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, file_name)
+        samplefolder = extra_param['samplefolder']
 
         cvpj_l = {}
 

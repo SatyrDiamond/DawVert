@@ -12,7 +12,7 @@ from functions import xtramath
 from functions_plugparams import params_various_inst
 from functions_plugparams import params_various_fx
 from functions_plugparams import params_vital
-from functions_plugparams import params_vital_wavetable
+from functions_plugparams import wave
 from functions_plugparams import params_kickmess
 from functions_plugparams import data_nullbytegroup
 
@@ -40,7 +40,7 @@ def convert(cvpj_l, pluginid, plugintype):
 		bitinvader_shape_vals = struct.unpack('f'*(len(bitinvader_shape_data)//4), bitinvader_shape_data)
 		params_vital.setvalue('osc_1_on', 1)
 		params_vital.setvalue('osc_1_transpose', 12)
-		params_vital.replacewave(0, params_vital_wavetable.resizewave(bitinvader_shape_vals))
+		params_vital.replacewave(0, wave.resizewave(bitinvader_shape_vals))
 		params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 1, 'volume')
 		vitaldata = params_vital.getdata()
 		plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
@@ -120,17 +120,17 @@ def convert(cvpj_l, pluginid, plugintype):
 	if plugintype[1] == 'lb302':
 		params_vital.create()
 		lb302_shape = getparam('shape')
-		if lb302_shape == 0: vital_shape = params_vital_wavetable.create_wave('saw', 0, None)
-		if lb302_shape == 1: vital_shape = params_vital_wavetable.create_wave('triangle', 0, None)
-		if lb302_shape == 2: vital_shape = params_vital_wavetable.create_wave('square', 0, 0.5)
-		if lb302_shape == 3: vital_shape = params_vital_wavetable.create_wave('square_roundend', 0, None)
-		if lb302_shape == 4: vital_shape = params_vital_wavetable.create_wave('mooglike', 0, None)
-		if lb302_shape == 5: vital_shape = params_vital_wavetable.create_wave('sine', 0, None)
-		if lb302_shape == 6: vital_shape = params_vital_wavetable.create_wave('exp', 0, None)
-		if lb302_shape == 8: vital_shape = params_vital_wavetable.create_wave('saw', 0, None)
-		if lb302_shape == 9: vital_shape = params_vital_wavetable.create_wave('square', 0, 0.5)
-		if lb302_shape == 10: vital_shape = params_vital_wavetable.create_wave('triangle', 0, None)
-		if lb302_shape == 11: vital_shape = params_vital_wavetable.create_wave('mooglike', 0, None)
+		if lb302_shape == 0: vital_shape = wave.create_wave('saw', 0, None)
+		if lb302_shape == 1: vital_shape = wave.create_wave('triangle', 0, None)
+		if lb302_shape == 2: vital_shape = wave.create_wave('square', 0, 0.5)
+		if lb302_shape == 3: vital_shape = wave.create_wave('square_roundend', 0, None)
+		if lb302_shape == 4: vital_shape = wave.create_wave('mooglike', 0, None)
+		if lb302_shape == 5: vital_shape = wave.create_wave('sine', 0, None)
+		if lb302_shape == 6: vital_shape = wave.create_wave('exp', 0, None)
+		if lb302_shape == 8: vital_shape = wave.create_wave('saw', 0, None)
+		if lb302_shape == 9: vital_shape = wave.create_wave('square', 0, 0.5)
+		if lb302_shape == 10: vital_shape = wave.create_wave('triangle', 0, None)
+		if lb302_shape == 11: vital_shape = wave.create_wave('mooglike', 0, None)
 		if lb302_shape != 7: 
 			params_vital.setvalue('osc_1_on', 1)
 			params_vital.replacewave(0, vital_shape)

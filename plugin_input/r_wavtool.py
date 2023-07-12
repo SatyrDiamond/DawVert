@@ -4,7 +4,6 @@
 from functions import colors
 from functions import data_bytes
 from functions import data_values
-from functions import folder_samples
 from functions import note_data
 from functions import tracks
 
@@ -154,6 +153,7 @@ class input_wavtool(plugin_input.base):
     def gettype(self): return 'r'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'placement_cut': True,
         'placement_loop': True,
         'placement_audio_stretch': ['rate']
@@ -171,8 +171,7 @@ class input_wavtool(plugin_input.base):
 
         json_filename = None
 
-        file_name = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, file_name)
+        samplefolder = extra_param['samplefolder']
 
         for jsonname in zip_data.namelist():
             if '.json' in jsonname:

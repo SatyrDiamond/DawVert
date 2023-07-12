@@ -4,7 +4,6 @@
 import struct
 import math
 from functions_plugparams import params_vital
-from functions_plugparams import params_vital_wavetable
 from functions import plugin_vst2
 
 def convert(cvpj_l, pluginid, plugintype):

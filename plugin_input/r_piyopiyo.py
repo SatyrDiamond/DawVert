@@ -7,7 +7,6 @@ import struct
 import os.path
 from functions import audio_wav
 from functions import data_bytes
-from functions import folder_samples
 from functions import placement_data
 from functions import tracks
 from functions import plugins
@@ -48,8 +47,7 @@ class input_piyopiyo(plugin_input.base):
         recordspertrack = int.from_bytes(pmdfile.read(4), "little")
         print("[input-piyopiyo] Records Per Track: " + str(recordspertrack))
 
-        file_name = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, file_name)
+        #samplefolder = extra_param['samplefolder']
 
         pmdtrackdata = []
         keyoffset = [0,0,0,0]
@@ -73,7 +71,7 @@ class input_piyopiyo(plugin_input.base):
             trk_waveform = struct.unpack('b'*256, pmdfile.read(256))
             trk_envelope = struct.unpack('B'*64, pmdfile.read(64))
             keyoffset[tracknum] = (trk_octave-2)*12
-            wave_path = samplefolder+'/'+str(tracknum+1)+'.wav'
+            #wave_path = samplefolder+'/'+str(tracknum+1)+'.wav'
             plugins.add_wave(cvpj_l, pluginid, 'main', trk_waveform, -128, 128)
             plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trk_envelope, 128, None, None)
             idval = str(tracknum)

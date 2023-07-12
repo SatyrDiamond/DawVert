@@ -5,7 +5,7 @@ import json
 import base64
 import struct
 import math
-from functions_plugparams import params_vital_wavetable
+from functions_plugparams import wave
 from functions import data_values
 from functions import plugins
 from functions import xtramath
@@ -427,18 +427,8 @@ def importcvpj_env_block(cvpj_l, pluginid, lfo_num, a_type):
     else:
         return False
 
-def cvpjwave2vitalwave(cvpj_l, pluginid, wave_name):
-    wavedata = plugins.get_wave(cvpj_l, pluginid, wave_name)
-    if wavedata != None:
-        wavedata_points = wavedata['points']
-        if 'range' in wavedata:
-            rangedata = wavedata['range']
-            wavedata_points = [xtramath.betweenvalues_r(rangedata[0], rangedata[1], i) for i in wavedata_points]
-        return params_vital_wavetable.resizewave(wavedata_points)
-    else: return None
-
 def importcvpj_wave(cvpj_l, pluginid, osc_num, wave_name):
-    wavedata = cvpjwave2vitalwave(cvpj_l, pluginid, wave_name)
+    wavedata = wave.cvpjwave2wave(cvpj_l, pluginid, wave_name)
     if wavedata != None: replacewave(osc_num-1, wavedata)
 
 def importcvpj_harm(cvpj_l, pluginid, osc_num, harm_name):
@@ -453,7 +443,7 @@ def importcvpj_harm(cvpj_l, pluginid, osc_num, harm_name):
             for harm_num in range(len(harmonics_data)):
                 sine_pitch = s_pos*(harm_num+1)
                 sine_vol = harmonics_data[harm_num]
-                sample += params_vital_wavetable.wave_sine(sine_pitch)*sine_vol
+                sample += wave.wave_sine(sine_pitch)*sine_vol
             t_sample.append(sample)
         replacewave(osc_num-1, t_sample)
 
@@ -470,7 +460,7 @@ def importcvpj_wavetable(cvpj_l, pluginid, osc_num, lfo_num, wave_name):
 
         vital_keyframes = {}
         for num in range(cvpj_wt_len):
-            vital_keyframes[cvpj_wt_locs[num]*256] = cvpjwave2vitalwave(cvpj_l, pluginid, cvpj_wt_ids[num])
+            vital_keyframes[cvpj_wt_locs[num]*256] = wave.cvpjwave2wave(cvpj_l, pluginid, cvpj_wt_ids[num])
 
         replacemultiwave(osc_num, vital_keyframes)
 

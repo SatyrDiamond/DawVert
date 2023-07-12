@@ -12,7 +12,6 @@ from functions import song_tracker
 from functions import audio_wav
 from functions import tracks
 from functions import plugins
-from functions import folder_samples
 from functions import song
 
 modfinetune = [8363, 8413, 8463, 8529, 8581, 8651, 8723, 8757, 7895, 7941, 7985, 8046, 8107, 8169, 8232, 8280]
@@ -162,6 +161,7 @@ class input_mod(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'track_lanes': True
         }
     def supported_autodetect(self): return False
@@ -173,8 +173,7 @@ class input_mod(plugin_input.base):
 
         cvpj_l = {}
         
-        file_name = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, file_name)
+        samplefolder = extra_param['samplefolder']
 
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []

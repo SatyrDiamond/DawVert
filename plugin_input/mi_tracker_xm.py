@@ -6,7 +6,6 @@ import os.path
 import json
 import struct
 from functions import song_tracker
-from functions import folder_samples
 from functions import data_values
 from functions import data_bytes
 from functions import plugins
@@ -365,6 +364,7 @@ class input_xm(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'track_lanes': True
         }
     def supported_autodetect(self): return True
@@ -387,9 +387,8 @@ class input_xm(plugin_input.base):
         
         xm_cursamplenum = 1
 
-        file_name = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, file_name)
-
+        samplefolder = extra_param['samplefolder']
+        
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
         cvpj_l_playlist = []

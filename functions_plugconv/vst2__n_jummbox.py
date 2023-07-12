@@ -5,7 +5,7 @@ import struct
 from functions import plugins
 from functions import plugin_vst2
 from functions_plugparams import params_vital
-from functions_plugparams import params_vital_wavetable
+from functions_plugparams import wave
 
 def convert(cvpj_l, pluginid, plugintype):
 	print(plugintype[1])
@@ -67,7 +67,7 @@ def convert(cvpj_l, pluginid, plugintype):
 			params_vital.setvalue('osc_2_tune', out_semi)
 			start_level = start_level/1.3
 		if unisontype == 'bowed':
-			#params_vital.replacewave(1, params_vital_wavetable.resizewave(t_sample_invert))
+			#params_vital.replacewave(1, wave.resizewave(t_sample_invert))
 			params_vital.setvalue('osc_2_on', 2)
 			params_vital.setvalue('osc_2_transpose', out_cents)
 			params_vital.setvalue('osc_2_tune', out_semi+0.05)

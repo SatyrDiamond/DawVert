@@ -138,20 +138,25 @@ def getvstparams(pluginid, xmldata):
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
 
 def lmms_auto_getvalue(x_tag, x_name, i_fbv, i_type, i_addmul, i_loc):
+    outval = i_fbv
+
+    xmlval = None
     if x_tag.get(x_name) != None:
-        if i_type == 'float': return float(x_tag.get(x_name))
-        if i_type == 'int': return int(x_tag.get(x_name))
-        if i_type == 'bool': return int(bool(int(x_tag.get(x_name))))
+        xmlval = x_tag.get(x_name)
     elif x_tag.findall(x_name) != []: 
         realvaluetag = x_tag.findall(x_name)[0]
-        value = realvaluetag.get('value')
-        if value != None:
-            tracks.autoid_in_define(str(realvaluetag.get('id')), i_loc, i_type, i_addmul)
-            if i_type == 'float': return float(realvaluetag.get('value'))
-            if i_type == 'int': return int(realvaluetag.get('value'))
-            if i_type == 'bool': return int(bool(realvaluetag.get('value')))
-    else: 
-        return i_fbv
+        xmlval = realvaluetag.get('value')
+        if xmlval != None: tracks.autoid_in_define(str(realvaluetag.get('id')), i_loc, i_type, i_addmul)
+    
+    if xmlval != None:
+        if i_addmul != None: outval = (float(xmlval)+i_addmul[0])*i_addmul[1]
+        else: outval = float(xmlval)
+
+    if i_type == 'float': outval = outval
+    if i_type == 'int': outval = int(outval)
+    if i_type == 'bool': outval = bool(int(outval))
+
+    return outval
 
 def lmms_getvalue_int(json_name, xml_in): 
     if xml_in != None: json_in[json_name] = int(xml_in)
@@ -398,8 +403,8 @@ def lmms_decode_inst_track(trkX, trackid):
 
     #trkX_insttr
     trkX_insttr = trkX.findall('instrumenttrack')[0]
-    cvpj_pan = hundredto1(float(lmms_auto_getvalue(trkX_insttr, 'pan', 0, 'float', [0, 0.01], ['track', trackid, 'pan'])))
-    cvpj_vol = hundredto1(float(lmms_auto_getvalue(trkX_insttr, 'vol', 1, 'float', [0, 0.01], ['track', trackid, 'vol'])))
+    cvpj_pan = float(lmms_auto_getvalue(trkX_insttr, 'pan', 0, 'float', [0, 0.01], ['track', trackid, 'pan']))
+    cvpj_vol = float(lmms_auto_getvalue(trkX_insttr, 'vol', 100, 'float', [0, 0.01], ['track', trackid, 'vol']))
     
     #midi
     xml_a_midiport = trkX_insttr.findall('midiport')
@@ -516,8 +521,8 @@ def lmms_decode_audio_track(trkX, trackid):
     print('[input-lmms] Audio Track')
     print('[input-lmms]       Name: ' + cvpj_name)
     trkX_audiotr = trkX.findall('sampletrack')[0]
-    cvpj_pan = hundredto1(float(lmms_auto_getvalue(trkX_audiotr, 'pan', 0, 'float', [0, 0.01], ['track', trackid, 'pan'])))
-    cvpj_vol = hundredto1(float(lmms_auto_getvalue(trkX_audiotr, 'vol', 1, 'float', [0, 0.01], ['track', trackid, 'vol'])))
+    cvpj_pan = float(lmms_auto_getvalue(trkX_audiotr, 'pan', 0, 'float', [0, 0.01], ['track', trackid, 'pan']))
+    cvpj_vol = float(lmms_auto_getvalue(trkX_audiotr, 'vol', 100, 'float', [0, 0.01], ['track', trackid, 'vol']))
     tracks.r_basicdata(cvpj_l, trackid, cvpj_name, None, cvpj_vol, cvpj_pan)
     xml_fxch = trkX_audiotr.get('fxch')
     if xml_fxch != None: tracks.r_param(cvpj_l, trackid, 'fxrack_channel', int(xml_fxch))
@@ -719,8 +724,8 @@ def lmms_decode_effectslot(fxslotX):
             if xml_pluginparam: 
                 plugins.add_plug_data(cvpj_l, pluginid, pluginparam, xml_pluginparam)
 
-    fxenabled = lmms_auto_getvalue(fxslotX, 'on', 0, 'bool', None, ['slot', pluginid, 'enabled'])
-    fxwet = lmms_auto_getvalue(fxslotX, 'wet', 0, 'float', None, ['slot', pluginid, 'wet'])
+    fxenabled = lmms_auto_getvalue(fxslotX, 'on', 1, 'bool', None, ['slot', pluginid, 'enabled'])
+    fxwet = lmms_auto_getvalue(fxslotX, 'wet', 1, 'float', None, ['slot', pluginid, 'wet'])
 
     plugins.add_plug_fxdata(cvpj_l, pluginid, fxenabled, fxwet)
 
@@ -831,7 +836,7 @@ class input_lmms(plugin_input.base):
 
         cvpj_l = {}
         cvpj_l['bpm'] = float(lmms_auto_getvalue(headX, 'bpm', 140, 'float', None, ['main', 'bpm']))
-        cvpj_l['vol'] = hundredto1(float(lmms_auto_getvalue(headX, 'mastervol', 1, 'float', [0, 0.01], ['main', 'vol'])))
+        cvpj_l['vol'] = float(lmms_auto_getvalue(headX, 'mastervol', 100, 'float', [0, 0.01], ['main', 'vol']))
         cvpj_l['pitch'] = float(lmms_auto_getvalue(headX, 'masterpitch', 0, 'float', None, ['main', 'pitch']))
         cvpj_l['timesig_numerator'] = lmms_auto_getvalue(headX, 'timesig_numerator', 4, 'int', None, None)
         cvpj_l['timesig_denominator'] = lmms_auto_getvalue(headX, 'timesig_denominator', 4, 'int', None, None)

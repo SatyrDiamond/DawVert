@@ -98,5 +98,3 @@ def harm2file(cvpj_l, pluginid, harm_name, fileloc):
     audiowavdata = [int(i*65535) for i in wavedata]
     wave_data = data_bytes.unsign_16(struct.pack('H'*len(audiowavdata), *audiowavdata))
     audio_wav.generate(fileloc, wave_data, 1, 44100, 16, None)
-
-#[xtramath.betweenvalues_r(rangedata[0], rangedata[1], i) for i in wavedata_points]

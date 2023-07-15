@@ -341,14 +341,6 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             xml_vst = ET.SubElement(xml_instrumentpreplugin, "vestige")
             middlenotefix += setvstparams(cvpj_plugindata, pluginid, xml_vst)
 
-    #    if pluginautoid != None:
-    #        autoidlist = tracks.autoid_out_getlist(pluginautoid)
-    #        if autoidlist != None:
-    #            for vstparam in autoidlist:
-    #                if vstparam.startswith('vst_param_'):
-    #                    xmlparamname = 'param'+vstparam[10:]
-    #                    add_auto_placements_noset(0, None, pluginautoid, vstparam, xml_vst, xmlparamname, 'VST', '#'+vstparam[10:])
-
         elif plugintype[0] == 'native-lmms':
             print('[output-lmms]       Plugin: '+plugintype[1]+' > '+plugintype[1])
             xml_instrumentpreplugin.set('name', plugintype[1])
@@ -374,6 +366,10 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
         else:
             print('[output-lmms]       Plugin: '+visual_plugname+' > None')
             xml_instrumentpreplugin.set('name', "audiofileprocessor")
+            paramlist = plugins.get_plug_paramlist(cvpj_l, pluginid)
+
+            if trackname not in ['', None]: visual_plugname = trackname
+            add_auto_unused(paramlist, pluginautoid, pluginid, visual_plugname)
 
         asdrlfo_set(pluginid, trkX_insttr)
 
@@ -382,10 +378,6 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
         print('[output-lmms]       Plugin: '+visual_plugname+' > None')
         xml_instrumentpreplugin.set('name', "audiofileprocessor")
 
-    #    xml_instrumentpreplugin.set('name', "audiofileprocessor")
-    #    if pluginautoid != None:
-    #        autoidlist = tracks.autoid_out_getlist(pluginautoid)
-    #        add_auto_unused(autoidlist, pluginautoid, trackname)
     return plugintype, middlenotefix
 
 # ------- Inst and Notelist -------
@@ -466,35 +458,29 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     add_auto_placements(0, None, ['track', trackid], 'pitch', instJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
 
     #TO BE DONE
-    #if 'chain_fx_notes' in trkJ:
-    #    trkJ_notefx = trkJ['chain_fx_notes']
-    #    for trkJ_notefxslot in trkJ_notefx:
-    #        trkJ_plugindata = trkJ_notefxslot['plugindata']
+    if 'chain_fx_notes' in trkJ:
+        trkJ_notefx = trkJ['chain_fx_notes']
 
-    #        pluginautoid = None
-    #        if 'pluginautoid' in trkJ_notefxslot: pluginautoid = ['plugin', trkJ_notefxslot['pluginautoid']]
+        for pluginid in trkJ_notefx:
+            plugintype = plugins.get_plug_type(cvpj_l, pluginid)
 
-    #        if trkJ_notefxslot['plugin'] == 'native-lmms':
-    #            trkJ_nativelmms_name = trkJ_plugindata['name']
-    #            trkJ_nativelmms_data = trkJ_plugindata['data']
-    #            if trkJ_nativelmms_name == 'arpeggiator':
-    #                trkX_arpeggiator = ET.SubElement(trkX_insttr, "arpeggiator")
-    #                trkX_arpeggiator.set('arp-enabled', str(trkJ_notefxslot['enabled']))
+            if plugintype[0] == 'native-lmms' and plugintype[1] in ['arpeggiator', 'chordcreator']:
+                pluginautoid = tracks.autoid_out_getlist(['plugin', pluginid])
+                slotautoid = tracks.autoid_out_getlist(['slot', pluginid])
+                fxdata = plugins.get_plug_fxdata(cvpj_l, pluginid)
 
-    #                lmms_autovals = lmms_auto.get_params_notefx('arpeggiator')
-    #                for pluginparam in lmms_autovals[0]: 
-    #                    add_auto_placements(0, None, pluginautoid, pluginparam, trkJ_nativelmms_data, pluginparam, 
-    #                        trkX_arpeggiator, pluginparam, 'FX Slot: Arpeggiator', pluginparam)
+                if plugintype[1] == 'arpeggiator':
+                    trkX_notefx = ET.SubElement(trkX_insttr, "arpeggiator")
+                    paramlist = ['arpgate', 'arprange', 'arpmode', 'arpdir', 'arpmiss', 'arpskip', 'arptime', 'arpcycle', 'arp']
+                    add_auto_placements(0, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', trkX_notefx, 'arp-enabled', 'Arp', 'On')
 
-    #            if trkJ_nativelmms_name == 'chordcreator':
-    #                trkX_chordcreator = ET.SubElement(trkX_insttr, "chordcreator")
-    #                trkX_chordcreator.set('chord-enabled', str(trkJ_notefxslot['enabled']))
-#
-    #                lmms_autovals = lmms_auto.get_params_notefx('chordcreator')
-    #                for pluginparam in lmms_autovals[0]: 
-    #                    add_auto_placements(0, None, pluginautoid, pluginparam, trkJ_nativelmms_data, pluginparam, 
-    #                        trkX_chordcreator, pluginparam, 'FX Slot: Chord Creator', pluginparam)
+                if plugintype[1] == 'chordcreator':
+                    trkX_notefx = ET.SubElement(trkX_insttr, "chordcreator")
+                    paramlist = ['chordrange', 'chord']
+                    add_auto_placements(0, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', trkX_notefx, 'chord-enabled', 'Chord', 'On')
 
+                for paramid in paramlist:
+                    get_plugin_param(pluginautoid, trkX_notefx, paramid, pluginid, paramid, 0)
 
 
     middlenote = 0
@@ -742,17 +728,14 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
         for param in range(ladspa_numparams):
             paramid = 'ladspa_param_'+str(param)
             paramvisname = 'LADSPA: #'+str(param+1)
-
             paramxml = get_plugin_param(pluginautoid, xml_ladspa, 'port0'+str(param), pluginid, paramid, 0, visualname=paramvisname)
             get_plugin_param(pluginautoid, xml_ladspa, 'port1'+str(param), pluginid, paramid+'_1', 0, visualname=paramvisname)
 
     else:
         fxslotX.set('name', 'stereomatrix')
         xml_lmmsnat = ET.SubElement(fxslotX, 'stereomatrixcontrols')
-
-        #if pluginautoid != None:
-        #    autoidlist = tracks.autoid_out_getlist(pluginautoid)
-        #    add_auto_unused(autoidlist, pluginautoid, 'FX Plug')
+        paramlist = plugins.get_plug_paramlist(cvpj_l, pluginid)
+        add_auto_unused(paramlist, pluginautoid, pluginid, 'FX Plug')
 
 
 def lmms_encode_effectslot(pluginid, fxcX):
@@ -865,8 +848,10 @@ def lmms_make_main_auto_track(autoidnum, autodata, visualname):
             xml_object.set('id', str(autoidnum))
 
 def add_auto_placements(i_fallback, i_addmul, i_id, i_autoname, j_tag, j_name, x_tag, x_name, v_type, v_name):
-    if j_name in j_tag: i_value = j_tag[j_name]
-    else: i_value = i_fallback
+    i_value = i_fallback
+    if j_tag != None:
+        if j_name in j_tag: 
+            i_value = j_tag[j_name]
 
     if i_addmul != None: i_value = (i_value+i_addmul[0])*i_addmul[1]
 
@@ -876,21 +861,23 @@ def add_auto_placements(i_fallback, i_addmul, i_id, i_autoname, j_tag, j_name, x
     if i_id != None and i_autoname != None: aid_id, aid_data = tracks.autoid_out_get(i_id+[i_autoname])
     else: aid_id, aid_data = None, None
 
-    if aid_id != None and len(aid_data['placements']) != 0:
-        if i_addmul != None: aid_data['placements'] = auto.multiply(aid_data['placements'], i_addmul[0], i_addmul[1])
+    if x_tag != None:
+        if aid_id != None and len(aid_data['placements']) != 0:
+            if i_addmul != None: aid_data['placements'] = auto.multiply(aid_data['placements'], i_addmul[0], i_addmul[1])
+            lmms_make_main_auto_track(aid_id, aid_data, v_type+': '+v_name)
+            autovarX = ET.SubElement(x_tag, x_name)
+            autovarX.set('value', str(i_value))
+            autovarX.set('scale_type', 'linear')
+            autovarX.set('id', str(aid_id))
+        else:
+            x_tag.set(x_name, str(i_value))
+    elif aid_id != None and aid_data != None:
         lmms_make_main_auto_track(aid_id, aid_data, v_type+': '+v_name)
-        autovarX = ET.SubElement(x_tag, x_name)
-        autovarX.set('value', str(i_value))
-        autovarX.set('scale_type', 'linear')
-        autovarX.set('id', str(aid_id))
-    else:
-        x_tag.set(x_name, str(i_value))
 
-def add_auto_unused(i_ids, pluginautoid, i_name):
-    #print(i_ids, i_name)
-    if pluginautoid != None and i_ids != None:
-        for i_id in i_ids:
-            add_auto_placements_noset(0, None, pluginautoid, i_id, None, None, i_name, str(i_id))
+def add_auto_unused(paramlist, pluginautoid, pluginid, i_name):
+    if pluginautoid != None:
+        for paramid in pluginautoid:
+            add_auto_placements(1, None, ['plugin', pluginid], paramid, None, paramid, None, paramid, i_name, paramid)
 
 # ------- Main -------
 

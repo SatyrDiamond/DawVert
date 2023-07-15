@@ -25,17 +25,17 @@ caustic_fxtype[5] = 'flanger'
 caustic_fxtype[6] = 'phaser'
 caustic_fxtype[7] = 'chorus'
 caustic_fxtype[8] = 'auto_wah'
-caustic_fxtype[9] = 'param_eq'
+caustic_fxtype[9] = 'parameq'
 caustic_fxtype[10] = 'limiter'
-caustic_fxtype[11] = 'vinyl_sim'
+caustic_fxtype[11] = 'vinylsim'
 caustic_fxtype[12] = 'comb'
 caustic_fxtype[14] = 'cabsim'
-caustic_fxtype[16] = 'static_flanger'
+caustic_fxtype[16] = 'staticflanger'
 caustic_fxtype[17] = 'filter'
 caustic_fxtype[18] = 'octaver'
 caustic_fxtype[19] = 'vibrato'
 caustic_fxtype[20] = 'tremolo'
-caustic_fxtype[21] = 'auto_pan'
+caustic_fxtype[21] = 'autopan'
 
 master_idnames = {}
 
@@ -176,6 +176,7 @@ class input_cvpj_r(plugin_input.base):
         AUTO_data = CausticData['AUTO']
 
         idvals_inst_caustic = idvals.parse_idvalscsv('data_idvals/caustic_inst.csv')
+        idvals_fx_caustic = idvals.parse_idvalscsv('data_idvals/caustic_fx.csv')
 
         cvpj_l = {}
         
@@ -369,11 +370,13 @@ class input_cvpj_r(plugin_input.base):
             plugins.add_plug_param(cvpj_l, mixereq_plugid, 'mid', mach_mixer_eq_mid[machnum-1], 'float', 'mid')
             plugins.add_plug_param(cvpj_l, mixereq_plugid, 'high', mach_mixer_eq_high[machnum-1], 'float', 'high')
             tracks.insert_fxslot(cvpj_l, ['track', cvpj_trackid], 'audio', mixereq_plugid)
+            plugins.add_plug_fxvisual(cvpj_l, mixereq_plugid, 'Mixer EQ', [0.67, 0.67, 0.67])
 
             width_plugid = 'machine'+str(machnum)+'_width'
             plugins.add_plug(cvpj_l, width_plugid, 'native-caustic', 'width')
             plugins.add_plug_param(cvpj_l, width_plugid, 'width', mach_mixer_width[machnum-1], 'float', 'width')
             tracks.insert_fxslot(cvpj_l, ['track', cvpj_trackid], 'audio', width_plugid)
+            plugins.add_plug_fxvisual(cvpj_l, width_plugid, 'Width', [0.66, 0.61, 0.76])
 
         t_track_placements = {}
 
@@ -487,8 +490,13 @@ class input_cvpj_r(plugin_input.base):
 
                     masterslotplugid = 'master_slot'+str(slotnum)
 
-                    plugins.add_plug(cvpj_l, masterslotplugid, 'native-caustic', caustic_fxtype[CausticFXData[slotnum]['type']])
+                    fxtype = caustic_fxtype[CausticFXData[slotnum]['type']]
+                    cvpj_fx_name = idvals.get_idval(idvals_fx_caustic, fxtype, 'name')
+                    cvpj_fx_color = idvals.get_idval(idvals_fx_caustic, fxtype, 'color')
+
+                    plugins.add_plug(cvpj_l, masterslotplugid, 'native-caustic', fxtype)
                     plugins.add_plug_fxdata(cvpj_l, masterslotplugid, not int(slot_fxslotdata[5]), None)
+                    plugins.add_plug_fxvisual(cvpj_l, masterslotplugid, cvpj_fx_name, cvpj_fx_color)
                     tracks.insert_fxslot(cvpj_l, ['master'], 'audio', masterslotplugid)
 
                     for paramid in slot_fxslotdata:
@@ -504,14 +512,19 @@ class input_cvpj_r(plugin_input.base):
             plugins.add_plug(cvpj_l, fxids[0], 'native-caustic', fxids[0])
             plugins.add_plug_fxdata(cvpj_l, fxids[0], True, master_params[fxids[1]]['wet'])
             tracks.insert_fxslot(cvpj_l, ['return', None, fxids[0]], 'audio', fxids[0])
+            plugins.add_plug_fxvisual(cvpj_l, fxids[0], fxids[2], fxids[3])
             for paramid in master_params[fxids[1]]:
                 plugins.add_plug_param(cvpj_l, fxids[0], paramid, master_params[fxids[1]][paramid], 'float', str(paramid))
 
 
-        for fxids in [['master_eq', 'eq'], ['master_limiter', 'limiter']]:
+        for fxids in [
+            ['master_eq', 'eq', 'Equalizer', [0.76, 0.27, 0.27]], 
+            ['master_limiter', 'limiter', 'Limiter', [0.62, 0.49, 0.42]]
+            ]:
             plugins.add_plug(cvpj_l, fxids[0], 'native-caustic', fxids[0])
             plugins.add_plug_fxdata(cvpj_l, fxids[0], not int(master_params[fxids[1]]['muted']), 1)
             tracks.insert_fxslot(cvpj_l, ['master'], 'audio', fxids[0])
+            plugins.add_plug_fxvisual(cvpj_l, fxids[0], fxids[2], fxids[3])
             for paramid in master_params[fxids[1]]:
                 plugins.add_plug_param(cvpj_l, fxids[0], paramid, master_params[fxids[1]][paramid], 'float', str(paramid))
 

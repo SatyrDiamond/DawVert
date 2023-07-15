@@ -55,6 +55,11 @@ def add_plug_fxvisual(cvpj_l, pluginid, v_name, v_color):
 	if v_name != None: data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'name'], v_name)
 	if v_color != None: data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'color'], v_color)
 
+def get_plug_fxvisual(cvpj_l, pluginid):
+	name = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'name'])
+	color = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'color'])
+	return name, color
+
 # -------------------------------------------------- data
 
 def add_plug_data(cvpj_l, pluginid, i_name, i_value):

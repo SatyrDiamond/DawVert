@@ -61,18 +61,21 @@ def make_fxslot(x_device_sound, fx_type, as_device):
             plugins.add_plug_param(cvpj_l, pluginid, "size", float(getvalue(x_device_sound, 'chorusSize', 0))/100, 'float', "Size")
 
         plugins.add_plug_fxdata(cvpj_l, pluginid, True, fx_wet)
+        plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Chorus', None)
 
     if fx_type == 'distortion':
         plugins.add_plug(cvpj_l, pluginid, 'native-audiosauna', 'distortion')
         plugins.add_plug_param(cvpj_l, pluginid, "overdrive", float(getvalue(x_device_sound, 'overdrive', 0))/100, 'float', "Overdrive")
         if as_device in [0,1]: plugins.add_plug_param(cvpj_l, pluginid, "modulate", float(getvalue(x_device_sound, 'driveModul', 0))/100, 'float', "Modulate")
         else: plugins.add_plug_param(cvpj_l, pluginid, "modulate", float(getvalue(x_device_sound, 'modulate', 0))/100, 'float', "Modulate")
+        plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Distortion', None)
 
     if fx_type == 'bitcrush':
         bitrateval = float(getvalue(x_device_sound, 'bitrate', 0))
         if bitrateval != 0.0: 
             plugins.add_plug(cvpj_l, pluginid, 'native-audiosauna', 'bitcrush')
             plugins.add_plug_param(cvpj_l, pluginid, "frames", bitrateval, 'float', "Frames")
+        plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Bitcrush', None)
 
     if fx_type == 'tape_delay':
         plugins.add_plug(cvpj_l, pluginid, 'native-audiosauna', 'tape_delay')
@@ -80,18 +83,21 @@ def make_fxslot(x_device_sound, fx_type, as_device):
         plugins.add_plug_param(cvpj_l, pluginid, "damage", float(getvalue(x_device_sound, 'dlyDamage', 0))/100, 'float', "Damage")
         plugins.add_plug_param(cvpj_l, pluginid, "feedback", float(getvalue(x_device_sound, 'dlyFeed', 0))/100, 'float', "Feedback")
         plugins.add_plug_param(cvpj_l, pluginid, "sync", getbool(getvalue(x_device_sound, 'dlySync', 0)), 'float', "Sync")
+        plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Tape Delay', None)
 
     if fx_type == 'reverb':
         plugins.add_plug(cvpj_l, pluginid, 'native-audiosauna', 'reverb')
         plugins.add_plug_param(cvpj_l, pluginid, "time", float(getvalue(x_device_sound, 'rvbTime', 0)), 'float', "Time")
         plugins.add_plug_param(cvpj_l, pluginid, "feedback", float(getvalue(x_device_sound, 'rvbFeed', 0))/100, 'float', "Feedback")
         plugins.add_plug_param(cvpj_l, pluginid, "width", float(getvalue(x_device_sound, 'rvbWidth', 0))/100, 'float', "Width")
+        plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Reverb', None)
 
     if fx_type == 'amp':
         ampval = float(getvalue(x_device_sound, 'masterAmp', 0))/100
         if ampval != 1.0: 
             plugins.add_plug(cvpj_l, pluginid, 'native-audiosauna', 'amp')
             plugins.add_plug_param(cvpj_l, pluginid, "level", ampval, 'float', "Level")
+        plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Amp', None)
 
     return pluginid
 

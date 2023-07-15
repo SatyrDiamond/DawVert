@@ -283,6 +283,7 @@ class input_onlinesequencer(plugin_input.base):
                 plugins.add_plug(cvpj_l, pluginid, 'native-onlineseq', 'delay')
                 fx_enabled = bool(data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'delay_on', 0))
                 plugins.add_plug_fxdata(cvpj_l, pluginid, fx_enabled, 1)
+                plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Delay', None)
                 tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
 
             if 'distort' in used_fx_inst[used_fx_inst_i]:
@@ -293,6 +294,7 @@ class input_onlinesequencer(plugin_input.base):
                 plugins.add_plug_param(cvpj_l, pluginid, 'distort_type', 
                     data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'distort_type', 0)
                     , 'int', 'Type')
+                plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Distortion', None)
                 tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
 
             if 'reverb' in used_fx_inst[used_fx_inst_i]:
@@ -303,6 +305,7 @@ class input_onlinesequencer(plugin_input.base):
                 plugins.add_plug_param(cvpj_l, pluginid, 'reverb_type', 
                     data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'reverb_type', 0)
                     , 'int', 'Type')
+                plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Reverb', None)
                 tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
 
             if 'eq' in used_fx_inst[used_fx_inst_i]:
@@ -314,6 +317,7 @@ class input_onlinesequencer(plugin_input.base):
                     plugins.add_plug_param(cvpj_l, pluginid, paramname, 
                         data_values.get_value(onlseq_data_instparams[used_fx_inst_i], paramname, 0)
                         , 'float', paramname)
+                plugins.add_plug_fxvisual(cvpj_l, pluginid, 'EQ', None)
                 tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
 
         tracks.a_auto_nopl_to_cvpj(cvpj_l)

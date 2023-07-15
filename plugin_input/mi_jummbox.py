@@ -197,6 +197,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
             if bb_instrument['eqFilterType'] == False:
                 if 'eqSubFilters0' in bb_instrument:
                     pluginid = addfx_eq(trackid)
+                    plugins.add_plug_fxvisual(cvpj_l, pluginid, 'EQ', None)
                     for eqfiltdata in bb_instrument['eqSubFilters0']:
                         eqgain_pass = eqfiltdata['linearGain']
                         eqgain = (eqfiltdata['linearGain']-2)*6
@@ -209,12 +210,14 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
                             plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass)
             else:
                 pluginid = addfx(trackid, 'filter')
+                plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Filter', None)
                 plugins.add_plug_param(cvpj_l, pluginid, 'cutoff', bb_instrument['eqSimpleCut'], 'int', "")
                 plugins.add_plug_param(cvpj_l, pluginid, 'reso', bb_instrument['eqSimplePeak'], 'int', "")
         elif 'eqFilter' in bb_instrument:
             bb_eqFilter = bb_instrument['eqFilter']
             if bb_eqFilter != []:
                 pluginid = addfx_eq(trackid)
+                plugins.add_plug_fxvisual(cvpj_l, pluginid, 'EQ', None)
                 for eqfiltdata in bb_eqFilter:
                     eqgain_pass = eqfiltdata['linearGain']
                     eqgain = (eqfiltdata['linearGain']-2)*6
@@ -228,25 +231,30 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
 
         if 'distortion' in bb_inst_effects:
             pluginid = addfx(trackid, 'distortion')
+            plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Distortion', None)
             plugins.add_plug_param(cvpj_l, pluginid, 'amount', bb_instrument['distortion']/100, 'float', "")
             if 'aliases' in bb_instrument: plugins.add_plug_data(cvpj_l, pluginid, 'aliases', bb_instrument['aliases'])
 
         if 'bitcrusher' in bb_inst_effects:
             pluginid = addfx(trackid, 'bitcrusher')
+            plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Bitcrusher', None)
             plugins.add_plug_param(cvpj_l, pluginid, 'octave', bb_instrument['bitcrusherOctave'], 'float', "")
             plugins.add_plug_param(cvpj_l, pluginid, 'quantization', bb_instrument['bitcrusherQuantization']/100, 'float', "")
 
         if 'chorus' in bb_inst_effects:
             pluginid = addfx(trackid, 'chorus')
+            plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Chorus', None)
             plugins.add_plug_param(cvpj_l, pluginid, 'amount', bb_instrument['chorus']/100, 'float', "")
 
         if 'echo' in bb_inst_effects:
             pluginid = addfx(trackid, 'echo')
+            plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Echo', None)
             plugins.add_plug_param(cvpj_l, pluginid, 'sustain', bb_instrument['echoSustain']/100, 'float', "")
             plugins.add_plug_param(cvpj_l, pluginid, 'delay_beats', bb_instrument['echoDelayBeats'], 'int', "")
 
         if 'reverb' in bb_inst_effects:
             pluginid = addfx(trackid, 'reverb')
+            plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Reverb', None)
             plugins.add_plug_param(cvpj_l, pluginid, 'amount', bb_instrument['reverb']/100, 'float', "")
 
         if 'vibrato' in bb_inst_effects:

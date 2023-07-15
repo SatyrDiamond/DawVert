@@ -20,6 +20,7 @@ ceol_colors[5] = [0.07, 0.56, 0.91]
 datapos = 0
 
 globalfxname = ['delay','chorus','reverb','distortion','low_boost','compresser','high_pass']
+globalfxname_vis = ['Delay','Chorus','Reverb','Distortion','Low Boost','Compresser','High Pass']
 
 def ceol_read():
     global datapos
@@ -27,14 +28,6 @@ def ceol_read():
     output = int(ceol_data[datapos])
     datapos += 1
     return output
-
-def make_fxslot(fx_type, fx_data):
-    fxslotdata = {}
-    fxslotdata['plugin'] = 'native-boscaceoil'
-    fxslotdata['plugindata'] = {}
-    fxslotdata['plugindata']['name'] = fx_type
-    fxslotdata['plugindata']['data'] = fx_data
-    return fxslotdata
 
 class input_ceol(plugin_input.base):
     def __init__(self): pass
@@ -87,6 +80,7 @@ class input_ceol(plugin_input.base):
         plugins.add_plug(cvpj_l, 'master-effect', 'native-boscaceoil', globalfxname[ceol_basic_effect])
         plugins.add_plug_param(cvpj_l, 'master-effect', 'power', ceol_basic_effectvalue, 'int', 'power')
         tracks.insert_fxslot(cvpj_l, ['master'], 'audio', 'master-effect')
+        plugins.add_plug_fxvisual(cvpj_l, 'master-effect', globalfxname_vis[ceol_basic_effect], None)
 
         ceol_numinstrument = ceol_read()
 

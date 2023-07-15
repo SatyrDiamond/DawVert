@@ -408,9 +408,11 @@ def song_end(channels):
         tracks.fxrack_add(cvpj_l, channels+2, "[S] Chorus", [0.4, 0.4, 0.4], 1.0, None)
 
         plugins.add_plug(cvpj_l, 'plugin-reverb', 'simple', 'reverb-send')
+        plugins.add_plug_fxvisual(cvpj_l, 'plugin-reverb', 'Reverb', None)
         tracks.insert_fxslot(cvpj_l, ['fxrack', channels+1], 'audio', 'plugin-reverb')
 
         plugins.add_plug(cvpj_l, 'plugin-chorus', 'simple', 'chorus-send')
+        plugins.add_plug_fxvisual(cvpj_l, 'plugin-chorus', 'Chorus', None)
         tracks.insert_fxslot(cvpj_l, ['fxrack', channels+2], 'audio', 'plugin-chorus')
 
     tracks.a_auto_nopl_to_cvpj(cvpj_l)

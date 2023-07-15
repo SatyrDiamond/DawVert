@@ -476,7 +476,7 @@ def lmms_decode_inst_track(trkX, trackid):
         lmms_autovals = lmms_auto.get_params_notefx('chordcreator')
 
         plugins.add_plug(cvpj_l, pluginid, 'native-lmms', 'chordcreator')
-        cvpj_l_chordcreator_enabled = lmms_auto_getvalue(trkX_arpeggiator, 'chord-enabled', 0, 'bool', None, ['slot', pluginid, 'enabled'])
+        cvpj_l_chordcreator_enabled = lmms_auto_getvalue(trkX_chordcreator, 'chord-enabled', 0, 'bool', None, ['slot', pluginid, 'enabled'])
         plugins.add_plug_fxdata(cvpj_l, pluginid, cvpj_l_chordcreator_enabled, None)
 
         for pluginparam in lmms_autovals[0]:

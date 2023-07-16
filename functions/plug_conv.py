@@ -8,186 +8,150 @@ import math
 import base64
 from functions import data_values
 from functions import plugin_vst2
+from functions import plugins
 
-from functions_plugparams import params_vital
 from functions_plugparams import data_vc2xml
 from functions_plugparams import params_various_fx
-from functions_plugparams import params_various_inst
-
-from functions_plugconv import input_flstudio
-from functions_plugconv import input_pxtone
-from functions_plugconv import input_jummbox
-from functions_plugconv import input_soundchip
-from functions_plugconv import input_audiosauna
-
-from functions_plugconv import output_vst2_simple
-from functions_plugconv import output_vst2_sampler
-from functions_plugconv import output_vst2_multisampler
-from functions_plugconv import output_vst2_slicer
-
-from functions_plugconv import output_vst2_retro
-from functions_plugconv import output_vst2_soundchip
-
-from functions_plugconv import output_vst2_flstudio
-from functions_plugconv import output_vst2_lmms
-from functions_plugconv import output_vst2_onlineseq
-from functions_plugconv import output_vst2_piyopiyo
-from functions_plugconv import output_vst2_namco163_famistudio
-
-from functions_plugconv import output_vst2nonfree_flstudio
-
-# -------------------- Instruments --------------------
-def convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id):
-	if 'plugin' in instdata:
-		if 'plugindata' in instdata:
-			pluginname = instdata['plugin']
-			plugindata = instdata['plugindata']
-
-			nonfree_flag = data_values.get_value(extra_json, 'nonfree-plugins', '')
-
-			# ---------------------------------------- input ----------------------------------------
-			input_soundchip.convert_inst(instdata)
-			if pluginname == 'native-fl': input_flstudio.convert_inst(instdata)
-			if pluginname == 'native-pxtone': input_pxtone.convert_inst(instdata)
-			if pluginname == 'native-jummbox': input_jummbox.convert_inst(instdata)
-			if pluginname == 'native-audiosauna': input_audiosauna.convert_inst(instdata)
-
-			# ---------- from general-midi
-			elif pluginname == 'general-midi':
-				if 'soundfont' in extra_json:
-					sffile = extra_json['soundfont']
-					gmdata = instdata['plugindata']
-					instdata['plugin'] = "soundfont2"
-					instdata['plugindata'] = {}
-					instdata['plugindata']['bank'] = gmdata['bank']
-					instdata['plugindata']['patch'] = gmdata['inst']
-					instdata['plugindata']['file'] = sffile
-					print('[plug-conv] GM MIDI > soundfont2')
-				else:
-					print('[plug-conv] Soundfont argument not defined.')
-
-			# ---------------------------------------- output ----------------------------------------
-			pluginname = instdata['plugin']
-			plugindata = instdata['plugindata']
-
-			replacingdone = None
-
-			if 'vst2' in supportedplugins:
-				if pluginname == 'sampler' and 'sampler' not in supportedplugins: 
-					replacingdone = output_vst2_sampler.convert_inst(instdata, platform_id)
-
-				if replacingdone == None and pluginname == 'sampler-multi' and 'sampler-multi' not in supportedplugins: 
-					replacingdone = output_vst2_multisampler.convert_inst(instdata, platform_id)
-
-				if replacingdone == None and pluginname == 'sampler-slicer' and 'sampler-slicer' not in supportedplugins: 
-					replacingdone = output_vst2_slicer.convert_inst(instdata)
-
-				if replacingdone == None and (pluginname == 'native-lmms' or pluginname == 'zynaddsubfx-lmms') and out_daw != 'lmms':
-					replacingdone = output_vst2_lmms.convert_inst(instdata) 
-
-				if replacingdone == None and pluginname == 'native-fl':
-					replacingdone = output_vst2_flstudio.convert_inst(instdata)
-
-				if replacingdone == None and pluginname == 'native-piyopiyo':
-					replacingdone = output_vst2_piyopiyo.convert_inst(instdata)
-
-				if replacingdone == None and pluginname == 'namco163_famistudio':
-					replacingdone = output_vst2_namco163_famistudio.convert_inst(instdata)
-
-				if replacingdone == None:
-					replacingdone = output_vst2_soundchip.convert_inst(instdata, out_daw)
-
-			# -------------------- vst2 (juicysfplugin) --------------------
-
-			# ---------- from native soundfont2
-			elif pluginname == 'soundfont2' and 'sf2' not in supportedplugins:
-				sf2data = instdata['plugindata']
-				sf2_bank = data_values.get_value(sf2data, 'bank', 0)
-				sf2_patch = data_values.get_value(sf2data, 'patch', 0)
-				sf2_filename = data_values.get_value(sf2data, 'file', '')
-				jsfp_xml = params_various_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
-				plugin_vst2.replace_data(instdata, 'any', 'juicysfplugin', 'chunk', data_vc2xml.make(jsfp_xml), None)
-
-# -------------------- FX --------------------
-def convplug_fx(fxdata, in_daw, out_daw, extra_json):
-	global supportedplugins
-	if 'plugin' in fxdata:
-		if 'plugindata' in fxdata:
-			pluginname = fxdata['plugin']
-			plugindata = fxdata['plugindata']
-
-			# ---------------------------------------- input ----------------------------------------
-			
-			if in_daw == 'flp' and pluginname == 'native-fl': 
-				input_flstudio.convert_fx(fxdata)
-
-			# ---------------------------------------- output ----------------------------------------
-
-			replacingdone = None
-
-			if 'vst2' in supportedplugins:
-				if pluginname == 'native-simple': 
-					replacingdone = output_vst2_simple.convert_fx(fxdata)
-
-				if replacingdone == None and in_daw == 'lmms' and pluginname == 'native-lmms': 
-					replacingdone = output_vst2_lmms.convert_fx(fxdata)
-
-				if replacingdone == None and in_daw == 'flp' and pluginname == 'native-fl':
-					replacingdone = output_vst2_flstudio.convert_fx(fxdata)
-
-				if 'nonfree-plugins' in extra_json and replacingdone == None and in_daw == 'flp' and pluginname == 'native-fl':
-					replacingdone = output_vst2nonfree_flstudio.convert_fx(fxdata)
-
-				if replacingdone == None and in_daw == 'onlineseq' and pluginname == 'native-onlineseq':
-					replacingdone = output_vst2_onlineseq.convert_fx(fxdata)
-
-			#elif in_daw == 'audiosauna' and pluginname == 'native-audiosauna':
-			#	output_audiosauna_vst2.convert_fx(fxdata)
+from functions_plugparams import params_vital
 
 
+from functions_plugconv import opl2__vrc7
+from functions_plugconv import opm__valsound
+from functions_plugconv import opn2__epsm
+from functions_plugconv import sf2__gmmidi
 
+
+from functions_plugconv import lmms__n_flstudio
+from functions_plugconv import lmms__n_beepbox
+
+
+from functions_plugconv import vst2__i_opl2
+from functions_plugconv import vst2__i_opn2
+from functions_plugconv import vst2__i_sampler_slicer
+from functions_plugconv import vst2__i_soundfont2
+
+from functions_plugconv import vst2__n_flstudio
+from functions_plugconv import vst2__n_lmms
+from functions_plugconv import vst2__n_namco163_famistudio
+from functions_plugconv import vst2__n_onlineseq
+from functions_plugconv import vst2__n_piyopiyo
+
+from functions_plugconv import vst2__v_retro
+from functions_plugconv import vst2__v_simple
+
+from functions_plugconv import vst2_nonfree__flstudio
+
+#from functions_plugconv import vst2__n_jummbox
+#from functions_plugconv import input_pxtone
+#
+#
 # -------------------- convproj --------------------
 
-def do_inst(track_data, in_daw, out_daw, extra_json, nameid, platform_id):
-	if 'instdata' in track_data:
-		instdata = track_data['instdata']
-		print('[plug-conv] --- Inst: '+nameid)
-		convplug_inst(instdata, in_daw, out_daw, extra_json, nameid, platform_id)
-
-def do_fxchain_audio(fxdata, in_daw, out_daw, extra_json, textin):
-	if 'chain_fx_audio' in fxdata:
-		for fxslot in fxdata['chain_fx_audio']:
-			print('[plug-conv] --- FX ('+textin+')')
-			convplug_fx(fxslot, in_daw, out_daw, extra_json)
-
-def do_sends(master_data, in_daw, out_daw, extra_json, platform_id, intext):
-	if 'sends_audio' in master_data:
-		mastersends = master_data['sends_audio']
-		for sendid in mastersends:
-			do_fxchain_audio(mastersends[sendid], in_daw, out_daw, extra_json,intext+' Send: '+sendid)
-
-def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supportedplugins, extra_json):
+def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supportedplugins, extra_json):#
 	global supportedplugins
 	supportedplugins = out_supportedplugins
 	cvpj_l = json.loads(cvpjdata)
 	if out_type != 'debug':
-		if 'track_master' in cvpj_l:
-			do_sends(cvpj_l['track_master'], in_daw, out_daw, extra_json, platform_id, 'Master')
-		if in_type == 'r' or in_type == 'ri':
-			if 'track_data' in cvpj_l:
-				for track in cvpj_l['track_data']:
-					track_data = cvpj_l['track_data'][track]
-					if 'type' in track_data:
-						if track_data['type'] == 'instrument':
-							do_inst(track_data, in_daw, out_daw, extra_json, track, platform_id)
-					do_fxchain_audio(track_data, in_daw, out_daw, extra_json,'Track: '+track)
-		if in_type == 'm' or in_type == 'mi':
-			if 'instruments_data' in cvpj_l:
-				for track in cvpj_l['instruments_data']:
-					track_data = cvpj_l['instruments_data'][track]
-					do_inst(track_data, in_daw, out_daw, extra_json, track, platform_id)
-		if 'fxrack' in cvpj_l:
-			for fxid in cvpj_l['fxrack']:
-				fxiddata = cvpj_l['fxrack'][fxid]
-				do_fxchain_audio(fxiddata, in_daw, out_daw, extra_json, 'Send: '+fxid)
+		if 'plugins' in cvpj_l:
+			cvpj_plugins = cvpj_l['plugins']
+			for pluginid in cvpj_plugins:
+					plugintype = plugins.get_plug_type(cvpj_l, pluginid)
+
+					# ------------------------ #1 ------------------------
+
+					if plugintype[0] == 'midi':
+						if 'soundfont' in extra_json:
+							print('[plug-conv] '+pluginid+' | GM MIDI > soundfont2')
+							sf2__gmmidi.convert(cvpj_l, pluginid, plugintype, extra_json)
+						else: print('[plug-conv] Soundfont argument not defined.')
+
+					elif plugintype == ['fm', 'vrc7']:
+						print('[plug-conv] '+pluginid+' | VRC7 to OPL2')
+						opl2__vrc7.convert(cvpj_l, pluginid, plugintype) 
+
+					elif plugintype == ['fm', 'epsm']:
+						print('[plug-conv] '+pluginid+' | EPSM to OPN2')
+						opn2__epsm.convert(cvpj_l, pluginid, plugintype) 
+
+					elif plugintype[0] == 'valsound':
+						print('[plug-conv] '+pluginid+' | ValSound to OPM')
+						opm__valsound.convert(cvpj_l, pluginid, plugintype) 
+
+					plugintype = plugins.get_plug_type(cvpj_l, pluginid)
+
+					# ------------------------ #2 ------------------------
+
+					replacingdone = None
+
+					# ------------------------ LMMS ------------------------
+
+					if 'lmms' == out_daw:
+						if plugintype[0] == 'native-flstudio':
+							print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))
+							lmms__n_flstudio.convert(cvpj_l, pluginid, plugintype) 
+
+						if plugintype[0] == 'native-jummbox':
+							print('[plug-conv] '+pluginid+' | Jummbox/Beepbox: '+str(plugintype[1]))
+							lmms__n_beepbox.convert(cvpj_l, pluginid, plugintype, extra_json) 
+
+
+
+					# ------------------------ VST2 ------------------------
+
+					if 'vst2' in supportedplugins:
+
+						if plugintype[0] == 'soundfont2' and 'sf2' not in supportedplugins:
+							vst2__i_soundfont2.convert(cvpj_l, pluginid, plugintype) 
+
+
+
+						if replacingdone == None and plugintype[0] in ['retro', 'gameboy']:
+							print('[plug-conv] '+pluginid+' | Retro '+str(plugintype[1]))
+							replacingdone = vst2__v_retro.convert(cvpj_l, pluginid, plugintype) 
+
+						if replacingdone == None and plugintype[0] == 'simple' :
+							print('[plug-conv] '+pluginid+' | Simple '+str(plugintype[1]))
+							replacingdone = vst2__v_simple.convert(cvpj_l, pluginid, plugintype) 
+
+
+
+
+						if replacingdone == None and plugintype == ['sampler', 'slicer']:
+							print('[plug-conv] '+pluginid+' | Slicer')
+							replacingdone = vst2__i_sampler_slicer.convert(cvpj_l, pluginid, plugintype) 
+
+						if replacingdone == None and plugintype == ['fm', 'opn2'] and 'opn2' not in supportedplugins:
+							print('[plug-conv] '+pluginid+' | OPN2 '+str(plugintype[1]))
+							replacingdone = vst2__i_opn2.convert(cvpj_l, pluginid, plugintype) 
+
+						if replacingdone == None and plugintype == ['fm', 'opl2'] and 'opl2' not in supportedplugins:
+							print('[plug-conv] '+pluginid+' | OPL2 '+str(plugintype[1]))
+							replacingdone = vst2__i_opl2.convert(cvpj_l, pluginid, plugintype) 
+
+
+
+
+						if plugintype[0] == 'native-flstudio' and out_daw != 'flp':
+							print('[plug-conv] '+pluginid+' | FL Studio: '+str(plugintype[1]))
+							if replacingdone == None: 
+								replacingdone = vst2__n_flstudio.convert(cvpj_l, pluginid, plugintype) 
+							if replacingdone == None and 'nonfree-plugins' in extra_json: 
+								replacingdone = vst2_nonfree__flstudio.convert(cvpj_l, pluginid, plugintype) 
+
+						if replacingdone == None and plugintype[0] == 'native-lmms' and out_daw != 'lmms':
+							print('[plug-conv] '+pluginid+' | LMMS: '+str(plugintype[1]))
+							replacingdone = vst2__n_lmms.convert(cvpj_l, pluginid, plugintype) 
+
+						if replacingdone == None and plugintype[0] == 'native-onlineseq':
+							print('[plug-conv] '+pluginid+' | Online Sequencer: '+str(plugintype[1]))
+							replacingdone = vst2__n_onlineseq.convert(cvpj_l, pluginid, plugintype) 
+							
+						if replacingdone == None and plugintype == ['native-piyopiyo', 'wave']:
+							print('[plug-conv] '+pluginid+' | PiyoPiyo '+str(plugintype[1]))
+							replacingdone = vst2__n_piyopiyo.convert(cvpj_l, pluginid, plugintype) 
+
+						if replacingdone == None and  plugintype[0] == 'namco163_famistudio':
+							print('[plug-conv] '+pluginid+' | FamiStudio N163 '+str(plugintype[1]))
+							replacingdone = vst2__n_namco163_famistudio.convert(cvpj_l, pluginid, plugintype)
+
 		return json.dumps(cvpj_l, indent=2)

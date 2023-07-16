@@ -22,13 +22,13 @@ def gen_float_range(start,stop,step):
     for i in range(int(istop)):
         yield start + i * step
 
-def steps_to_one(audio_value, steps):
+def steps_to_one(in_val, steps):
     prev_step = steps[0]
     maxlen = len(steps)-1
     for index_n in range(1, maxlen):
         step = steps[index_n]
         index = index_n-1
-        if is_between(prev_step, step, audio_value) == True:
-            return betweenvalues_r(prev_step, step, audio_value)*(1/maxlen)+(index/maxlen)
+        if is_between(prev_step, step, in_val) == True:
+            return betweenvalues_r(prev_step, step, in_val)*(1/maxlen)+(index/maxlen)
         prev_step = step
     return 0

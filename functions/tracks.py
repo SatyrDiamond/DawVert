@@ -257,24 +257,31 @@ def get_fxcvpjlocation(fxloc):
         else: out_location = ['groups', fxloc[1], 'returns', fxloc[2]]
     return out_location
 
-def add_fxslot(cvpj_l, fxloc, fxtype, chain_fx_data):
+def insert_fxslot(cvpj_l, fxloc, fxtype, pluginid):
     out_location = get_fxcvpjlocation(fxloc)
-    if fxtype == 'audio': data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_audio'], chain_fx_data)
-    if fxtype == 'notes': data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_notes'], chain_fx_data)
+    if fxtype == 'audio': 
+        data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_audio'], pluginid)
+    if fxtype == 'notes': 
+        data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_notes'], pluginid)
 
-def add_fxslot_basic(cvpj_l, fxloc, fxtype, enabled, wet, auto_plug, auto_slot, pluginname, plugindata):
-    fxslot_data = {"plugin": pluginname, "plugindata": plugindata}
-    if auto_plug != None: fxslot_data['pluginautoid'] = auto_plug
-    if auto_slot != None: fxslot_data['slotautoid'] = auto_slot
-    if enabled != None: fxslot_data['enabled'] = enabled
-    if wet != None: fxslot_data['wet'] = wet
-    add_fxslot(cvpj_l, fxloc, fxtype, fxslot_data)
+#def add_fxslot(cvpj_l, fxloc, fxtype, chain_fx_data):
+#    out_location = get_fxcvpjlocation(fxloc)
+#    if fxtype == 'audio': data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_audio'], chain_fx_data)
+#    if fxtype == 'notes': data_values.nested_dict_add_to_list(cvpj_l, out_location+['chain_fx_notes'], chain_fx_data)
 
-def add_fxslot_native(cvpj_l, fxtype, nativedawname, fxloc, enabled, wet, auto_id, fx_name, fx_data):
-    plugindata = {}
-    plugindata['name'] = fx_name
-    plugindata['data'] = fx_data
-    add_fxslot_basic(cvpj_l, fxloc, fxtype, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
+#def add_fxslot_basic(cvpj_l, fxloc, fxtype, enabled, wet, auto_plug, auto_slot, pluginname, plugindata):
+#    fxslot_data = {"plugin": pluginname, "plugindata": plugindata}
+#    if auto_plug != None: fxslot_data['pluginautoid'] = auto_plug
+#    if auto_slot != None: fxslot_data['slotautoid'] = auto_slot
+#    if enabled != None: fxslot_data['enabled'] = enabled
+#    if wet != None: fxslot_data['wet'] = wet
+#    add_fxslot(cvpj_l, fxloc, fxtype, fxslot_data)
+
+#def add_fxslot_native(cvpj_l, fxtype, nativedawname, fxloc, enabled, wet, auto_id, fx_name, fx_data):
+#    plugindata = {}
+#    plugindata['name'] = fx_name
+#    plugindata['data'] = fx_data
+#    add_fxslot_basic(cvpj_l, fxloc, fxtype, enabled, wet, auto_id, auto_id, 'native-'+nativedawname, plugindata)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------

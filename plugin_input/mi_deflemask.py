@@ -4,6 +4,7 @@
 from functions import data_bytes
 from functions import song_tracker
 from functions import tracks
+from functions import plugins
 from functions import song
 import plugin_input
 import zlib
@@ -217,22 +218,21 @@ class input_cvpj_r(plugin_input.base):
                 fmdata['lfo_enable'] = 0
                 fmdata['lfo_frequency'] = 0
                 for opnum in [0,2,1,3]:
-                    operator_param = {}
-                    operator_param['am'] = bio_dmf.read(1)[0]
-                    operator_param['env_attack'] = bio_dmf.read(1)[0]
-                    operator_param['env_decay'] = bio_dmf.read(1)[0]
-                    operator_param['freqmul'] = bio_dmf.read(1)[0]
-                    operator_param['env_release'] = bio_dmf.read(1)[0]
-                    operator_param['env_sustain'] = bio_dmf.read(1)[0]
-                    operator_param['level'] = (bio_dmf.read(1)[0]*-1)+127
-                    operator_param['detune2'] = bio_dmf.read(1)[0]
-                    operator_param['ratescale'] = bio_dmf.read(1)[0]
-                    operator_param['detune'] = bio_dmf.read(1)[0]
-                    operator_param['env_decay2'] = bio_dmf.read(1)[0]
+                    optxt = 'op'+str(opnum+1)+'_'
+                    fmdata[optxt+'am'] = bio_dmf.read(1)[0]
+                    fmdata[optxt+'env_attack'] = bio_dmf.read(1)[0]
+                    fmdata[optxt+'env_decay'] = bio_dmf.read(1)[0]
+                    fmdata[optxt+'freqmul'] = bio_dmf.read(1)[0]
+                    fmdata[optxt+'env_release'] = bio_dmf.read(1)[0]
+                    fmdata[optxt+'env_sustain'] = bio_dmf.read(1)[0]
+                    fmdata[optxt+'level'] = (bio_dmf.read(1)[0]*-1)+127
+                    fmdata[optxt+'detune2'] = bio_dmf.read(1)[0]
+                    fmdata[optxt+'ratescale'] = bio_dmf.read(1)[0]
+                    fmdata[optxt+'detune'] = bio_dmf.read(1)[0]
+                    fmdata[optxt+'env_decay2'] = bio_dmf.read(1)[0]
                     ssgmode = bio_dmf.read(1)[0]
-                    operator_param['ssg_enable'] = int(bool(ssgmode & 0b0001000))
-                    operator_param['ssg_mode'] = ssgmode & 0b00001111
-                    fmdata['op'+str(opnum+1)] = operator_param
+                    fmdata[optxt+'ssg_enable'] = int(bool(ssgmode & 0b0001000))
+                    fmdata[optxt+'ssg_mode'] = ssgmode & 0b00001111
                 dmf_inst['fmdata'] = fmdata
             else:
                 dmf_inst['fm'] = False
@@ -343,6 +343,8 @@ class input_cvpj_r(plugin_input.base):
 
         total_used_instruments = song_tracker.get_multi_used_instruments()
         for total_used_instrument in total_used_instruments:
+            pluginid = plugins.get_id()
+
             insttype = total_used_instrument[0]
             dmf_instid = total_used_instrument[1]
             dmf_instdata = dmf_insts[int(dmf_instid)]
@@ -356,22 +358,21 @@ class input_cvpj_r(plugin_input.base):
             cvpj_instdata = {}
             cvpj_instdata["plugindata"] = {}
             if insttype == 'square' or insttype == 'noise':
-                cvpj_instdata["plugin"] = 'retro'
-                cvpj_instdata["plugindata"]['wave'] = insttype
+                plugins.add_plug(cvpj_l, pluginid, 'retro', insttype)
                 if 'env_volume' in dmf_instdata:
-                    cvpj_instdata["plugindata"]['env_vol'] = {}
-                    valuet = []
-                    for item in dmf_instdata['env_volume']['values']: valuet.append(item)
-                    cvpj_instdata["plugindata"]['env_vol']['values'] = valuet
-                    if dmf_instdata['env_volume']['looppos'] != -1:
-                        cvpj_instdata["plugindata"]['env_vol']['loop'] = dmf_instdata['env_volume']['looppos']
+                    loopval = None
+                    if dmf_instdata['env_volume']['looppos'] != -1: loopval = dmf_instdata['env_volume']['looppos']
+                    add_env_blocks(cvpj_l, pluginid, 'vol', dmf_instdata['env_volume']['values'], loopval, None)
+
             elif insttype == 'opn2':
-                cvpj_instdata["plugin"] = 'opn2'
-                cvpj_instdata["plugindata"] = dmf_instdata['fmdata']
+                plugins.add_plug(cvpj_l, pluginid, 'fm', 'opn2')
+                for fmdataval in dmf_instdata['fmdata']:
+                    plugins.add_plug_param(cvpj_l, pluginid, fmdataval, 
+                        dmf_instdata['fmdata'][fmdataval], 'int', fmdataval)
             else: 
                 cvpj_instdata["plugin"] = 'none'
             
-            tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
+            tracks.m_create_inst(cvpj_l, cvpj_instid, {'pluginid': pluginid})
             tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, 1.0, 0.0)
 
         #dmf_insts

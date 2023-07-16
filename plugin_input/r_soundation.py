@@ -9,7 +9,6 @@ import plugin_input
 import struct
 import json
 
-
 def parse_clip_notes(sndstat_clip):
     cvpj_notelist = []
     ticksdiv = 5168
@@ -28,7 +27,6 @@ def parse_clip_notes(sndstat_clip):
             clipcolor = colors.hex_to_rgb_float(sndstat_clip['color'])
         else: 
             clipcolor = struct.unpack("4B", struct.pack("i", sndstat_clip["color"]))
-            print(clipcolor)
             clipcolor = [clipcolor[2]/255, clipcolor[1]/255, clipcolor[0]/255]
             clipcolor = colors.darker(clipcolor, 0.3)
 

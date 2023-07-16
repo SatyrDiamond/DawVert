@@ -1,239 +1,239 @@
-id;name;group
-128;Square Wave;CHIPTUNE
-129;Saw Wave;CHIPTUNE
-130;Triangle Wave;CHIPTUNE
-131;Sine Wave;CHIPTUNE
-132;Noise;CHIPTUNE
-133;Dual Square;CHIPTUNE
-134;Dual Saw;CHIPTUNE
-135;Triangle LO-FI;CHIPTUNE
-136;Konami Wave;CHIPTUNE
-137;Ramp Wave;CHIPTUNE
-138;Pulse Wave;CHIPTUNE
-139;MA3 Wave;CHIPTUNE
-140;Noise (Bass);CHIPTUNE
-141;Noise (Snare);CHIPTUNE
-142;Noise (Hi-Hat);CHIPTUNE
-143;Analog Bass;BASS
-144;Analog Bass #2;BASS
-145;Analog Bass #2 (q2);BASS
-146;Chopper Bass 0;BASS
-147;Chopper Bass 1;BASS
-148;Chopper bass 2 (CUT);BASS
-149;Chopper bass 3;BASS
-150;Elec.Chopper Bass;BASS
-151;Effect Bass 1;BASS
-152;Effect Bass 2 to UP;BASS
-153;Effect Bass 1;BASS
-154;Mohaaa;BASS
-155;Effect FB Bass #5;BASS
-156;Magical bass;BASS
-157;E.Bass #6;BASS
-158;E.Bass #7;BASS
-159;E.Bass 70;BASS
-160;VAL006 Euro;BASS
-161;E.Bass x2;BASS
-162;E.Bass x4;BASS
-163;Metal pick bass X5;BASS
-164;Groove Bass #1;BASS
-165;Analog Groove #2;BASS
-166;Harmonics #1;BASS
-167;Low Bass x1;BASS
-168;Low_bass x2;BASS
-169;Low Bass Rezzo;BASS
-170;Low Bass Picked;BASS
-171;Metal Bass;BASS
-172;e.n.bass 1;BASS
-173;psg bass 1;BASS
-174;psg bass 2;BASS
-175;rezonance bass;BASS
-176;slap bass;BASS
-177;slap bass 1;BASS
-178;slap bass 2 (1+);BASS
-179;slap bass #3;BASS
-180;slap bass pull;BASS
-181;slap bass mute;BASS
-182;slap bass pick;BASS
-183;super bass #2;BASS
-184;sp_bass#3 soft;BASS
-185;sp_bass#4 soft*2;BASS
-186;sp_bass#5 attack;BASS
-187;sp.bass#6 rezz;BASS
-188;synth bass 1;BASS
-189;synth bass 2 myon;BASS
-190;synth bass #3 cho!;BASS
-191;synth-wind-bass #4;BASS
-192;synth bass #5 q2;BASS
-193;old wood bass;BASS
-194;w.bass bright;BASS
-195;w.bass x2 bow;BASS
-196;Wood Bass 3;BASS
-197;Brass strings;BRASS
-198;E.mute Trampet;BRASS
-199;HORN 2;BRASS
-200;Alpine Horn #3;BRASS
-201;Lead brass;BRASS
-202;Normal HORN;BRASS
-203;Synth Oboe;BRASS
-204;Oboe 2;BRASS
-205;Attack Brass (q2);BRASS
-206;SAX;BRASS
-207;Soft brass(lead);BRASS
-208;Synth Brass 1 OLD;BRASS
-209;Synth Brass 2 OLD;BRASS
-210;Synth Brass 3;BRASS
-211;Synth Brass #4;BRASS
-212;Syn.Brass 5(long);BRASS
-213;Synth Brass 6;BRASS
-214;Trumpet;BRASS
-215;Trumpet 2;BRASS
-216;Twin Horn (or OL=25);BRASS
-217;Calm Bell;BELL
-218;China Bell Double;BELL
-219;Church Bell;BELL
-220;Church Bell 2;BELL
-221;Glocken 1;BELL
-222;Harp #1;BELL
-223;Harp #2;BELL
-224;Kirakira;BELL
-225;Marimba;BELL
-226;Old Bell;BELL
-227;Percus. Bell;BELL
-228;Pretty Bell;BELL
-229;Synth Bell #0;BELL
-230;Synth Bell #1 o5;BELL
-231;Synth Bell 2;BELL
-232;Viberaphone;BELL
-233;Twin Marinba;BELL
-234;Bellend;BELL
-235;Guitar VeloLow;GUITAR
-236;Guitar VeloHigh;GUITAR
-237;A.Guitar #3;GUITAR
-238;Cutting E.Guitar;GUITAR
-239;Dis. Synth (old);GUITAR
-240;Dra-spi-Dis.G.;GUITAR
-241;Dis.Guitar 3-;GUITAR
-242;Dis.Guitar 3+;GUITAR
-243;Feed-back Guitar 1;GUITAR
-244;Hard Dis. Guitar 1;GUITAR
-245;Hard Dis.Guitar 3;GUITAR
-246;Dis.Guitar '94 Hard;GUITAR
-247;New Dis.Guitar 1;GUITAR
-248;New Dis.Guitar 2;GUITAR
-249;New Dis.Guitar 3;GUITAR
-250;Overdrive.G. (AL=013);GUITAR
-251;METAL;GUITAR
-252;Soft Dis.Guitar;GUITAR
-253;Aco code;LEAD
-254;Analog synthe 1;LEAD
-255;Bosco-lead;LEAD
-256;Cosmo Lead;LEAD
-257;Cosmo Lead 2;LEAD
-258;Digital lead #1;LEAD
-259;Double sin wave;LEAD
-260;E.Organ 2 bright;LEAD
-261;E.Organ 2 (voice);LEAD
-262;E.Organ 4 Click;LEAD
-263;E.Organ 5 Click;LEAD
-264;E.Organ 6;LEAD
-265;E.Organ 7 Church;LEAD
-266;Metal Lead;LEAD
-267;Metal Lead 3;LEAD
-268;MONO Lead;LEAD
-269;PSG like PC88 (long);LEAD
-270;PSG Cut 1;LEAD
-271;Attack Synth;LEAD
-272;Sin wave;LEAD
-273;Synth, Bell 2;LEAD
-274;Chorus #2(Voice)+bell;LEAD
-275;Synth Cut 8-4;LEAD
-276;Synth long 8-4;LEAD
-277;ACO_Code #2;LEAD
-278;ACO_Code #3;LEAD
-279;Synth FB long 4;LEAD
-280;Synth FB long 5;LEAD
-281;Synth Lead 0;LEAD
-282;Synth Lead 1;LEAD
-283;Synth Lead 2;LEAD
-284;Synth Lead 3;LEAD
-285;Synth Lead 4;LEAD
-286;Synth Lead 5;LEAD
-287;Synth Lead 6;LEAD
-288;Synth Lead 7 (Soft FB);LEAD
-289;Synth PSG;LEAD
-290;Synth PSG 2;LEAD
-291;Synth PSG 3;LEAD
-292;Synth PSG 4;LEAD
-293;Synth PSG 5;LEAD
-294;Sin water synth;LEAD
-295;Aco Piano2 (Attack);PIANO
-296;Backing 1 (Clav.);PIANO
-297;Clav. coad;PIANO
-298;Deep Piano 1;PIANO
-299;Deep Piano 3;PIANO
-300;E.piano #2;PIANO
-301;E.piano #3;PIANO
-302;E.piano #4(2+);PIANO
-303;E.(Bell)Piano #5;PIANO
-304;E.Piano #6;PIANO
-305;E.Piano #7;PIANO
-306;Harpci chord 1;PIANO
-307;Harpci 2;PIANO
-308;Piano1;PIANO
-309;Piano3;PIANO
-310;Piano4;PIANO
-311;Digital Piano #5;PIANO
-312;Piano 6 High-tone;PIANO
-313;Panning Harpci;PIANO
-314;Yam Harpci chord;PIANO
-315;S.E.(Detune is needed o2c);SPECIAL
-316;S.E. 2 o0-1-2;SPECIAL
-317;S.E. 3(Feedin /noise add.);SPECIAL
-318;Digital 1;SPECIAL
-319;Digital 2;SPECIAL
-320;Digital[BAS] 3 o2-o3;SPECIAL
-321;Digital[GTR] 3 o2-o3;SPECIAL
-322;Digital 4 o4a;SPECIAL
-323;Accordion1;STRINGS
-324;Accordion2;STRINGS
-325;Accordion3;STRINGS
-326;Chorus #2(Voice);STRINGS
-327;Chorus #3;STRINGS
-328;Chorus #4;STRINGS
-329;F.Strings 1;STRINGS
-330;F.Strings 2;STRINGS
-331;F.Strings 3;STRINGS
-332;F.Strings 4 (low);STRINGS
-333;Pizzicate#1(KOTO2);STRINGS
-334;sound truck modoki;STRINGS
-335;Strings;STRINGS
-336;Synth Accordion;STRINGS
-337;Phaser synthe.;STRINGS
-338;FB Synth.;STRINGS
-339;Synth Strings MB;STRINGS
-340;Synth Strings #2;STRINGS
-341;Synth.Sweep Pad #1;STRINGS
-342;Twin synth. #1 Calm;STRINGS
-343;Twin synth. #2 FB;STRINGS
-344;Twin synth. #3 FB;STRINGS
-345;Vocoder voice1;STRINGS
-346;Voice o3-o5;STRINGS
-347;Voice' o3-o5;STRINGS
-348;Clarinet #1;WIND
-349;Clarinet #2 Brighter;WIND
-350;E.Flute;WIND
-351;E.Flute 2;WIND
-352;Flute + Bell;WIND
-353;Old flute;WIND
-354;Whistle 1;WIND
-355;Whistle 2;WIND
-356;Banjo (Harpci);WORLD
-357;KOTO;WORLD
-358;Koto 2;WORLD
-359;Sitar 1;WORLD
-360;Shamisen 2;WORLD
-361;Shamisen 1;WORLD
-362;Synth Shamisen;WORLD
-363;Simple Drumkit;DRUMKIT
-364;SiON Drumkit;DRUMKIT
-365;Midi Drumkit;DRUMKIT
+id;name;group;valsoundid
+128;Square Wave;CHIPTUNE;
+129;Saw Wave;CHIPTUNE;
+130;Triangle Wave;CHIPTUNE;
+131;Sine Wave;CHIPTUNE;
+132;Noise;CHIPTUNE;
+133;Dual Square;CHIPTUNE;
+134;Dual Saw;CHIPTUNE;
+135;Triangle LO-FI;CHIPTUNE;
+136;Konami Wave;CHIPTUNE;
+137;Ramp Wave;CHIPTUNE;
+138;Pulse Wave;CHIPTUNE;
+139;MA3 Wave;CHIPTUNE;
+140;Noise (Bass);CHIPTUNE;
+141;Noise (Snare);CHIPTUNE;
+142;Noise (Hi-Hat);CHIPTUNE;
+143;Analog Bass;BASS;bass1
+144;Analog Bass #2;BASS;bass2
+145;Analog Bass #2 (q2);BASS;bass3
+146;Chopper Bass 0;BASS;bass4
+147;Chopper Bass 1;BASS;bass5
+148;Chopper bass 2 (CUT);BASS;bass6
+149;Chopper bass 3;BASS;bass7
+150;Elec.Chopper Bass;BASS;bass8
+151;Effect Bass 1;BASS;bass9
+152;Effect Bass 2 to UP;BASS;bass10
+153;Effect Bass 1;BASS;bass11
+154;Mohaaa;BASS;bass12
+155;Effect FB Bass #5;BASS;bass13
+156;Magical bass;BASS;bass14
+157;E.Bass #6;BASS;bass15
+158;E.Bass #7;BASS;bass16
+159;E.Bass 70;BASS;bass17
+160;VAL006 Euro;BASS;bass18
+161;E.Bass x2;BASS;bass19
+162;E.Bass x4;BASS;bass20
+163;Metal pick bass X5;BASS;bass21
+164;Groove Bass #1;BASS;bass22
+165;Analog Groove #2;BASS;bass23
+166;Harmonics #1;BASS;bass24
+167;Low Bass x1;BASS;bass25
+168;Low_bass x2;BASS;bass26
+169;Low Bass Rezzo;BASS;bass27
+170;Low Bass Picked;BASS;bass28
+171;Metal Bass;BASS;bass29
+172;e.n.bass 1;BASS;bass30
+173;psg bass 1;BASS;bass31
+174;psg bass 2;BASS;bass32
+175;rezonance bass;BASS;bass33
+176;slap bass;BASS;bass34
+177;slap bass 1;BASS;bass35
+178;slap bass 2 (1+);BASS;bass36
+179;slap bass #3;BASS;bass37
+180;slap bass pull;BASS;bass38
+181;slap bass mute;BASS;bass39
+182;slap bass pick;BASS;bass40
+183;super bass #2;BASS;bass41
+184;sp_bass#3 soft;BASS;bass42
+185;sp_bass#4 soft*2;BASS;bass43
+186;sp_bass#5 attack;BASS;bass44
+187;sp.bass#6 rezz;BASS;bass45
+188;synth bass 1;BASS;bass46
+189;synth bass 2 myon;BASS;bass47
+190;synth bass #3 cho!;BASS;bass48
+191;synth-wind-bass #4;BASS;bass49
+192;synth bass #5 q2;BASS;bass50
+193;old wood bass;BASS;bass51
+194;w.bass bright;BASS;bass52
+195;w.bass x2 bow;BASS;bass53
+196;Wood Bass 3;BASS;bass54
+197;Brass strings;BRASS;brass1
+198;E.mute Trampet;BRASS;brass2
+199;HORN 2;BRASS;brass3
+200;Alpine Horn #3;BRASS;brass4
+201;Lead brass;BRASS;brass5
+202;Normal HORN;BRASS;brass6
+203;Synth Oboe;BRASS;brass7
+204;Oboe 2;BRASS;brass8
+205;Attack Brass (q2);BRASS;brass9
+206;SAX;BRASS;brass10
+207;Soft brass(lead);BRASS;brass11
+208;Synth Brass 1 OLD;BRASS;brass12
+209;Synth Brass 2 OLD;BRASS;brass13
+210;Synth Brass 3;BRASS;brass14
+211;Synth Brass #4;BRASS;brass15
+212;Syn.Brass 5(long);BRASS;brass16
+213;Synth Brass 6;BRASS;brass17
+214;Trumpet;BRASS;brass18
+215;Trumpet 2;BRASS;brass19
+216;Twin Horn (or OL=25);BRASS;brass20
+217;Calm Bell;BELL;bell1
+218;China Bell Double;BELL;bell2
+219;Church Bell;BELL;bell3
+220;Church Bell 2;BELL;bell4
+221;Glocken 1;BELL;bell5
+222;Harp #1;BELL;bell6
+223;Harp #2;BELL;bell7
+224;Kirakira;BELL;bell8
+225;Marimba;BELL;bell9
+226;Old Bell;BELL;bell10
+227;Percus. Bell;BELL;bell11
+228;Pretty Bell;BELL;bell12
+229;Synth Bell #0;BELL;bell13
+230;Synth Bell #1 o5;BELL;bell14
+231;Synth Bell 2;BELL;bell15
+232;Viberaphone;BELL;bell16
+233;Twin Marinba;BELL;bell17
+234;Bellend;BELL;bell18
+235;Guitar VeloLow;GUITAR;guitar1
+236;Guitar VeloHigh;GUITAR;guitar2
+237;A.Guitar #3;GUITAR;guitar3
+238;Cutting E.Guitar;GUITAR;guitar4
+239;Dis. Synth (old);GUITAR;guitar5
+240;Dra-spi-Dis.G.;GUITAR;guitar6
+241;Dis.Guitar 3-;GUITAR;guitar7
+242;Dis.Guitar 3+;GUITAR;guitar8
+243;Feed-back Guitar 1;GUITAR;guitar9
+244;Hard Dis. Guitar 1;GUITAR;guitar10
+245;Hard Dis.Guitar 3;GUITAR;guitar11
+246;Dis.Guitar '94 Hard;GUITAR;guitar12
+247;New Dis.Guitar 1;GUITAR;guitar13
+248;New Dis.Guitar 2;GUITAR;guitar14
+249;New Dis.Guitar 3;GUITAR;guitar15
+250;Overdrive.G. (AL=013);GUITAR;guitar16
+251;METAL;GUITAR;guitar17
+252;Soft Dis.Guitar;GUITAR;guitar18
+253;Aco code;LEAD;lead1
+254;Analog synthe 1;LEAD;lead2
+255;Bosco-lead;LEAD;lead3
+256;Cosmo Lead;LEAD;lead4
+257;Cosmo Lead 2;LEAD;lead5
+258;Digital lead #1;LEAD;lead6
+259;Double sin wave;LEAD;lead7
+260;E.Organ 2 bright;LEAD;lead8
+261;E.Organ 2 (voice);LEAD;lead9
+262;E.Organ 4 Click;LEAD;lead10
+263;E.Organ 5 Click;LEAD;lead11
+264;E.Organ 6;LEAD;lead12
+265;E.Organ 7 Church;LEAD;lead13
+266;Metal Lead;LEAD;lead14
+267;Metal Lead 3;LEAD;lead15
+268;MONO Lead;LEAD;lead16
+269;PSG like PC88 (long);LEAD;lead17
+270;PSG Cut 1;LEAD;lead18
+271;Attack Synth;LEAD;lead19
+272;Sin wave;LEAD;lead20
+273;Synth, Bell 2;LEAD;lead21
+274;Chorus #2(Voice)+bell;LEAD;lead22
+275;Synth Cut 8-4;LEAD;lead23
+276;Synth long 8-4;LEAD;lead24
+277;ACO_Code #2;LEAD;lead25
+278;ACO_Code #3;LEAD;lead26
+279;Synth FB long 4;LEAD;lead27
+280;Synth FB long 5;LEAD;lead28
+281;Synth Lead 0;LEAD;lead29
+282;Synth Lead 1;LEAD;lead30
+283;Synth Lead 2;LEAD;lead31
+284;Synth Lead 3;LEAD;lead32
+285;Synth Lead 4;LEAD;lead33
+286;Synth Lead 5;LEAD;lead34
+287;Synth Lead 6;LEAD;lead35
+288;Synth Lead 7 (Soft FB);LEAD;lead36
+289;Synth PSG;LEAD;lead37
+290;Synth PSG 2;LEAD;lead38
+291;Synth PSG 3;LEAD;lead39
+292;Synth PSG 4;LEAD;lead40
+293;Synth PSG 5;LEAD;lead41
+294;Sin water synth;LEAD;lead42
+295;Aco Piano2 (Attack);PIANO;piano1
+296;Backing 1 (Clav.);PIANO;piano2
+297;Clav. coad;PIANO;piano3
+298;Deep Piano 1;PIANO;piano4
+299;Deep Piano 3;PIANO;piano5
+300;E.piano #2;PIANO;piano6
+301;E.piano #3;PIANO;piano7
+302;E.piano #4(2+);PIANO;piano8
+303;E.(Bell)Piano #5;PIANO;piano9
+304;E.Piano #6;PIANO;piano10
+305;E.Piano #7;PIANO;piano11
+306;Harpci chord 1;PIANO;piano12
+307;Harpci 2;PIANO;piano13
+308;Piano1;PIANO;piano14
+309;Piano3;PIANO;piano15
+310;Piano4;PIANO;piano16
+311;Digital Piano #5;PIANO;piano17
+312;Piano 6 High-tone;PIANO;piano18
+313;Panning Harpci;PIANO;piano19
+314;Yam Harpci chord;PIANO;piano20
+315;S.E.(Detune is needed o2c);SPECIAL;se1
+316;S.E. 2 o0-1-2;SPECIAL;se2
+317;S.E. 3(Feedin /noise add.);SPECIAL;se3
+318;Digital 1;SPECIAL;special1
+319;Digital 2;SPECIAL;special2
+320;Digital[BAS] 3 o2-o3;SPECIAL;special3
+321;Digital[GTR] 3 o2-o3;SPECIAL;special4
+322;Digital 4 o4a;SPECIAL;special5
+323;Accordion1;STRINGS;strpad1
+324;Accordion2;STRINGS;strpad2
+325;Accordion3;STRINGS;strpad3
+326;Chorus #2(Voice);STRINGS;strpad4
+327;Chorus #3;STRINGS;strpad5
+328;Chorus #4;STRINGS;strpad6
+329;F.Strings 1;STRINGS;strpad7
+330;F.Strings 2;STRINGS;strpad8
+331;F.Strings 3;STRINGS;strpad9
+332;F.Strings 4 (low);STRINGS;strpad10
+333;Pizzicate#1(KOTO2);STRINGS;strpad11
+334;sound truck modoki;STRINGS;strpad12
+335;Strings;STRINGS;strpad13
+336;Synth Accordion;STRINGS;strpad14
+337;Phaser synthe.;STRINGS;strpad15
+338;FB Synth.;STRINGS;strpad16
+339;Synth Strings MB;STRINGS;strpad17
+340;Synth Strings #2;STRINGS;strpad18
+341;Synth.Sweep Pad #1;STRINGS;strpad19
+342;Twin synth. #1 Calm;STRINGS;strpad20
+343;Twin synth. #2 FB;STRINGS;strpad21
+344;Twin synth. #3 FB;STRINGS;strpad22
+345;Vocoder voice1;STRINGS;strpad23
+346;Voice o3-o5;STRINGS;strpad24
+347;Voice' o3-o5;STRINGS;strpad25
+348;Clarinet #1;WIND;wind1
+349;Clarinet #2 Brighter;WIND;wind2
+350;E.Flute;WIND;wind3
+351;E.Flute 2;WIND;wind4
+352;Flute + Bell;WIND;wind5
+353;Old flute;WIND;wind6
+354;Whistle 1;WIND;wind7
+355;Whistle 2;WIND;wind8
+356;Banjo (Harpci);WORLD;world1
+357;KOTO;WORLD;world2
+358;Koto 2;WORLD;world3
+359;Sitar 1;WORLD;world4
+360;Shamisen 2;WORLD;world5
+361;Shamisen 1;WORLD;world6
+362;Synth Shamisen;WORLD;world7
+363;Simple Drumkit;DRUMKIT;
+364;SiON Drumkit;DRUMKIT;
+365;Midi Drumkit;DRUMKIT;

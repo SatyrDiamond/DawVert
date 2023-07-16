@@ -5,6 +5,7 @@ from functions import placements
 from functions import placement_data
 from functions import idvals
 from functions import tracks
+from functions import plugins
 import plugin_input
 import json
 
@@ -19,6 +20,7 @@ ceol_colors[5] = [0.07, 0.56, 0.91]
 datapos = 0
 
 globalfxname = ['delay','chorus','reverb','distortion','low_boost','compresser','high_pass']
+globalfxname_vis = ['Delay','Chorus','Reverb','Distortion','Low Boost','Compresser','High Pass']
 
 def ceol_read():
     global datapos
@@ -26,14 +28,6 @@ def ceol_read():
     output = int(ceol_data[datapos])
     datapos += 1
     return output
-
-def make_fxslot(fx_type, fx_data):
-    fxslotdata = {}
-    fxslotdata['plugin'] = 'native-boscaceoil'
-    fxslotdata['plugindata'] = {}
-    fxslotdata['plugindata']['name'] = fx_type
-    fxslotdata['plugindata']['data'] = fx_data
-    return fxslotdata
 
 class input_ceol(plugin_input.base):
     def __init__(self): pass
@@ -83,7 +77,10 @@ class input_ceol(plugin_input.base):
         print('[input-boscaceoil] Bar Length: '+str(ceol_basic_barlength))
 
         tracks.a_addtrack_master(cvpj_l, 'Master', 1, [0.31373, 0.39608, 0.41569])
-        tracks.add_fxslot(cvpj_l, ['master'], 'audio', make_fxslot(globalfxname[ceol_basic_effect], {'power': ceol_basic_effectvalue}))
+        plugins.add_plug(cvpj_l, 'master-effect', 'native-boscaceoil', globalfxname[ceol_basic_effect])
+        plugins.add_plug_param(cvpj_l, 'master-effect', 'power', ceol_basic_effectvalue, 'int', 'power')
+        tracks.insert_fxslot(cvpj_l, ['master'], 'audio', 'master-effect')
+        plugins.add_plug_fxvisual(cvpj_l, 'master-effect', globalfxname_vis[ceol_basic_effect], None)
 
         ceol_numinstrument = ceol_read()
 
@@ -113,30 +110,30 @@ class input_ceol(plugin_input.base):
             if ceol_inst_palette in ceol_colors:  cvpj_instcolor = ceol_colors[ceol_inst_palette]
             else: cvpj_instcolor = [0.55, 0.55, 0.55]
 
-            cvpj_instdata = {}
-
+            pluginid = plugins.get_id()
             if ceol_inst_number <= 127:
                 cvpj_instname = idvals.get_idval(idvals_inst_midi, str(ceol_inst_number), 'name')
-                cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank':0, 'inst':ceol_inst_number}}
+                plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, ceol_inst_number)
             elif ceol_inst_number == 365: 
                 cvpj_instname = 'MIDI Drums'
-                cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank':128, 'inst':0}}
+                plugins.add_plug_gm_midi(cvpj_l, pluginid, 128, 0)
             else: 
                 cvpj_instname = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'name')
-                cvpj_instdata = {'plugin': 'native-boscaceoil', 'plugindata': {'name':'instrument', 'instnum': ceol_inst_number}}
+                valsoundid = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'valsoundid')
+                if valsoundid not in [None, '']:
+                    plugins.add_plug(cvpj_l, pluginid, 'valsound', valsoundid)
+                else:
+                    plugins.add_plug(cvpj_l, pluginid, 'native-boscaceoil', 'instrument')
+                    plugins.add_plug_data(cvpj_l, pluginid, 'instrument', ceol_inst_number)
 
-            cvpj_plugindata = cvpj_instdata['plugindata']
-            cvpj_plugindata['filter'] = {}
-            cvpj_plugindata['filter']['cutoff'] = calc_initcutoffval
-            cvpj_plugindata['filter']['reso'] = ceol_inst_resonance
-            cvpj_plugindata['filter']['type'] = "lowpass"
+            plugins.add_filter(cvpj_l, pluginid, True, calc_initcutoffval, ceol_inst_resonance, "lowpass", None)
 
             if ceol_inst_number == 363: t_key_offset.append(60)
             if ceol_inst_number == 364: t_key_offset.append(48)
             if ceol_inst_number == 365: t_key_offset.append(24)
             else: t_key_offset.append(0)
 
-            tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
+            tracks.m_create_inst(cvpj_l, cvpj_instid, {'pluginid': pluginid})
             tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, cvpj_instvol, 0.0)
 
         ceol_numpattern = ceol_read()

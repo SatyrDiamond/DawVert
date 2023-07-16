@@ -4,6 +4,7 @@
 from functions import data_values
 from functions import idvals
 from functions import note_data
+from functions import plugins
 from functions import placement_data
 from functions import tracks
 import plugin_input
@@ -172,7 +173,7 @@ class input_onlinesequencer(plugin_input.base):
 
         used_fx_inst = {}
 
-        for os_note in onlseq_data_notes: parse_note(os_note)
+        for os_note in dict2list(onlseq_data_notes): parse_note(os_note)
 
         for instid in onlseq_notelist:
             used_fx_inst[instid] = []
@@ -183,15 +184,22 @@ class input_onlinesequencer(plugin_input.base):
             inst_color = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'color')
             inst_gminst = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'gm_inst')
             inst_isdrum = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'isdrum')
-            cvpj_instdata = {}
-            if instid == 13: cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave':'sine'}}
-            elif instid == 14: cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave':'square'}}
-            elif instid == 15: cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave':'saw'}}
-            elif instid == 16: cvpj_instdata = {'plugin': 'retro', 'plugindata': {'wave':'triangle'}}
+
+            pluginid = cvpj_instid
+            cvpj_instdata = {'pluginid': pluginid}
+
+            if instid == 13: plugins.add_plug(cvpj_l, pluginid, 'retro', 'sine')
+            elif instid == 14: plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
+            elif instid == 15: plugins.add_plug(cvpj_l, pluginid, 'retro', 'saw')
+            elif instid == 16: plugins.add_plug(cvpj_l, pluginid, 'retro', 'triangle')
             else:
                 if inst_gminst != None:
-                    if inst_isdrum == True: cvpj_instdata = {'plugin': 'general-midi', 'usemasterpitch': 0, 'plugindata': {'bank':128, 'inst':inst_gminst-1}}
-                    else: cvpj_instdata = {'plugin': 'general-midi', 'usemasterpitch': 1, 'plugindata': {'bank':0, 'inst':inst_gminst-1}}
+                    if inst_isdrum == True: 
+                        plugins.add_plug_gm_midi(cvpj_l, pluginid, 128, inst_gminst-1)
+                        cvpj_instdata['usemasterpitch'] = 0
+                    else: 
+                        plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, inst_gminst-1)
+                        cvpj_instdata['usemasterpitch'] = 1
 
             onlseq_s_iparams = {}
             if instid in onlseq_data_instparams: onlseq_s_iparams = onlseq_data_instparams[instid]
@@ -229,10 +237,12 @@ class input_onlinesequencer(plugin_input.base):
 
             trackid = 'os_'+str(t_markerdata[0])
             if t_markerdata[0] != -1:
+
+                if t_markerdata[0] not in used_fx_inst: used_fx_inst[t_markerdata[0]] = []
+
                 if t_markerdata[1] == 'vol': tracks.a_auto_nopl_addpoint(['track', trackid, 'vol'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
                 if t_markerdata[1] == 'pan': tracks.a_auto_nopl_addpoint(['track', trackid, 'pan'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                if t_markerdata[1] == 'detune': tracks.a_auto_nopl_addpoint(['track', trackid, 'pitch'], 'float', t_markerdata[2], t_markerdata[3]/100, t_markerdata[4])
-
+                if t_markerdata[1] == 'detune': tracks.a_auto_nopl_addpoint(['track', trackid, 'pitch'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
 
                 if t_markerdata[1] in ['eq_high', 'eq_mid', 'eq_low']: 
                     tracks.a_auto_nopl_addpoint(['plugin', trackid+'_eq', t_markerdata[1]], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
@@ -260,51 +270,55 @@ class input_onlinesequencer(plugin_input.base):
                     if 'distort' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('distort')
 
             else:
-                if t_markerdata[1] == 'vol': tracks.a_auto_nopl_addpoint(['song', 'vol'], t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                if t_markerdata[1] == 'bpm': tracks.a_auto_nopl_addpoint(['song', 'bpm'], t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                if t_markerdata[1] == 'vol': tracks.a_auto_nopl_addpoint(['song', 'vol'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                if t_markerdata[1] == 'bpm': tracks.a_auto_nopl_addpoint(['song', 'bpm'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
 
         for used_fx_inst_i in used_fx_inst:
-
-            #print(used_fx_inst[used_fx_inst_i])
 
             autoid = str(used_fx_inst_i)
             trackid = 'os_'+str(used_fx_inst_i)
 
             if 'delay' in used_fx_inst[used_fx_inst_i]:
-                tracks.add_fxslot_native(cvpj_l, 'audio', 'onlineseq', ['track', trackid], 
-                    data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'delay_on', 0), 
-                    None, 
-                    autoid+'_delay', 'delay', {})
+                pluginid = trackid+'_delay'
+                plugins.add_plug(cvpj_l, pluginid, 'native-onlineseq', 'delay')
+                fx_enabled = bool(data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'delay_on', 0))
+                plugins.add_plug_fxdata(cvpj_l, pluginid, fx_enabled, 1)
+                plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Delay', None)
+                tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
 
             if 'distort' in used_fx_inst[used_fx_inst_i]:
-                fx_distort_data = {}
-                fx_distort_data['distort_type'] = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'distort_type', 0)
-                tracks.add_fxslot_native(cvpj_l, 'audio', 'onlineseq', ['track', trackid], 
-                    None, 
-                    data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'distort_wet', 1), 
-                    autoid+'_distort', 'distort', fx_distort_data)
+                pluginid = trackid+'_distort'
+                plugins.add_plug(cvpj_l, pluginid, 'native-onlineseq', 'distort')
+                fx_wet = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'distort_wet', 0)
+                plugins.add_plug_fxdata(cvpj_l, pluginid, True, fx_wet)
+                plugins.add_plug_param(cvpj_l, pluginid, 'distort_type', 
+                    data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'distort_type', 0)
+                    , 'int', 'Type')
+                plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Distortion', None)
+                tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
 
             if 'reverb' in used_fx_inst[used_fx_inst_i]:
-                fx_reverb_data = {}
-                fx_reverb_data['reverb_type'] = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'reverb_type', 0)
-                tracks.add_fxslot_native(cvpj_l, 'audio', 'onlineseq', ['track', trackid], 
-                    data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'reverb_on', 0), 
-                    data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'reverb_wet', 1), 
-                    autoid+'_reverb', 'reverb', fx_reverb_data)
+                pluginid = trackid+'_reverb'
+                plugins.add_plug(cvpj_l, pluginid, 'native-onlineseq', 'reverb')
+                fx_enabled = bool(data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'reverb_on', 0))
+                fx_wet = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'reverb_wet', 1)
+                plugins.add_plug_param(cvpj_l, pluginid, 'reverb_type', 
+                    data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'reverb_type', 0)
+                    , 'int', 'Type')
+                plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Reverb', None)
+                tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
 
             if 'eq' in used_fx_inst[used_fx_inst_i]:
-                fx_eq_data = {}
-                fx_eq_data['eq_high'] = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'eq_high', 0)
-                fx_eq_data['eq_mid'] = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'eq_mid', 0)
-                fx_eq_data['eq_low'] = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'eq_low', 0)
-                tracks.add_fxslot_native(cvpj_l, 'audio', 'onlineseq', ['track', trackid], 
-                    data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'enable_eq', 0), None, autoid+'_eq', 'eq', fx_eq_data)
-
-
-
-
-
-
+                pluginid = trackid+'_eq'
+                fx_enabled = bool(data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'enable_eq', 0))
+                plugins.add_plug(cvpj_l, pluginid, 'native-onlineseq', 'eq')
+                plugins.add_plug_fxdata(cvpj_l, pluginid, fx_enabled, 1)
+                for paramname in ['eq_high', 'eq_mid', 'eq_low']:
+                    plugins.add_plug_param(cvpj_l, pluginid, paramname, 
+                        data_values.get_value(onlseq_data_instparams[used_fx_inst_i], paramname, 0)
+                        , 'float', paramname)
+                plugins.add_plug_fxvisual(cvpj_l, pluginid, 'EQ', None)
+                tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
 
         tracks.a_auto_nopl_to_cvpj(cvpj_l)
 

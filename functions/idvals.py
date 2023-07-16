@@ -43,20 +43,24 @@ def get_idval(valdata, i_id, i_param):
 		outval = 'noname'
 		if i_id in valdata:
 			if 'name' in valdata[i_id]: outval = valdata[i_id]['name']
-	if i_param == 'color':
+	elif i_param == 'color':
 		outval = None
 		if i_id in valdata:
 			valdata_f = valdata[i_id]
 			if 'color_r' in valdata_f and 'color_g' in valdata_f and 'color_b' in valdata_f:
 				outval = [valdata_f['color_r'], valdata_f['color_g'], valdata_f['color_b']]
-	if i_param == 'isdrum':
+	elif i_param == 'isdrum':
 		outval = False
 		if i_id in valdata:
 			if 'isdrum' in valdata[i_id]: outval = valdata[i_id]['isdrum']
-	if i_param == 'gm_inst':
+	elif i_param == 'gm_inst':
 		outval = None
 		if i_id in valdata:
 			if 'gm_inst' in valdata[i_id]: outval = valdata[i_id]['gm_inst']
+	else:
+		if i_id in valdata:
+			if i_param in valdata[i_id]: outval = valdata[i_id][i_param]
+			else: outval = None
 
 	return outval
 

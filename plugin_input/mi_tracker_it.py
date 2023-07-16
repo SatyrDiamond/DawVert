@@ -9,9 +9,9 @@ import struct
 import numpy as np
 from functions import song_tracker
 from functions import audio_wav
-from functions import folder_samples
 from functions import data_values
 from functions import placements
+from functions import plugins
 from functions import tracks
 from functions import data_bytes
 from functions import song
@@ -31,6 +31,7 @@ class input_it(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'track_lanes': True
         }
     def supported_autodetect(self): return True
@@ -44,9 +45,8 @@ class input_it(plugin_input.base):
     def parse(self, input_file, extra_param):
         it_file = open(input_file, 'rb')
 
-        modulename = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, modulename)
-
+        samplefolder = extra_param['samplefolder']
+        
         cvpj_l = {}
 
         it_header_magic = it_file.read(4)
@@ -146,10 +146,11 @@ class input_it(plugin_input.base):
             for env_type in range(3):
                 env_out = {}
                 env_flags = bin(it_file.read(1)[0])[2:].zfill(8)
-                env_out['enabled'] = env_flags[7]
-                env_out['loop_enabled'] = env_flags[6]
-                env_out['susloop_enabled'] = env_flags[5]
-                env_out['usepitch'] = env_flags[0]
+                env_out['enabled'] = int(env_flags[7])
+                env_out['loop_enabled'] = int(env_flags[6])
+                env_out['susloop_enabled'] = int(env_flags[5])
+                env_out['usepitch'] = int(env_flags[0])
+
                 env_numpoints = it_file.read(1)[0]
                 env_out['loop_start'] = it_file.read(1)[0]
                 env_out['loop_end'] = it_file.read(1)[0]
@@ -158,12 +159,14 @@ class input_it(plugin_input.base):
                 env_points = []
                 for _ in range(env_numpoints):
                     env_point = {}
-                    env_point['value'] = it_file.read(1)[0]
+                    env_point['value'] = int.from_bytes(it_file.read(1), "little", signed=True)
                     env_point['pos'] = int.from_bytes(it_file.read(2), "little")
                     env_points.append(env_point)
-                if env_type == 0: it_singleinst['env_volume'] = env_points
-                if env_type == 1: it_singleinst['env_pan'] = env_points
-                if env_type == 2: it_singleinst['env_pitch'] = env_points
+                env_data = {}
+                env_out['points'] = env_points
+                if env_type == 0: it_singleinst['env_vol'] = env_out
+                if env_type == 1: it_singleinst['env_pan'] = env_out
+                if env_type == 2: it_singleinst['env_pitch'] = env_out
                 it_file.read(76-(env_numpoints*3))
             instrumentcount += 1
         
@@ -180,9 +183,10 @@ class input_it(plugin_input.base):
                 exit()
             print("[input-it] Sample " + str(samplecount) + ': at offset ' + str(table_offset_sample))
             it_singlesample['dosfilename'] = data_bytes.readstring_fixedlen(it_file, 12, "windows-1252")
-            it_file.read(2)
-            it_singlesample['flags'] = bin(it_file.read(1)[0])[2:].zfill(8)
             it_file.read(1)
+            it_singlesample['globalvol'] = it_file.read(1)[0]/64
+            it_singlesample['flags'] = bin(it_file.read(1)[0])[2:].zfill(8)
+            it_singlesample['defualtvolume'] = it_file.read(1)[0]/64
             it_singlesample['name'] = data_bytes.readstring_fixedlen(it_file, 26, "windows-1252")
             it_file.read(2)
             it_singlesample['length'] = int.from_bytes(it_file.read(4), "little")
@@ -409,6 +413,9 @@ class input_it(plugin_input.base):
 
         instrumentcount = 0
         samplecount = 0
+
+        track_volume = 0.3
+
         it_header_flag_useinst = int(it_header_flag_useinst)
         if it_header_flag_useinst == 1:
             for IT_Inst in IT_Insts:
@@ -437,50 +444,54 @@ class input_it(plugin_input.base):
                     bn_s_t_ifsame = True
                     bn_s_t_f = bn_s_t[12]
 
-                cvpj_instdata = {}
+                pluginid = plugins.get_id()
+                cvpj_instdata = {'pluginid': pluginid}
                 if bn_s_t_ifsame == True and str(bn_s_t_f[1]-1) in IT_Samples:
                     it_singlesample = IT_Samples[str(bn_s_t_f[1]-1)]
-                    cvpj_instdata['plugin'] = 'sampler'
-                    cvpj_instdata['plugindata'] = {}
-                    cvpj_instdata['plugindata']['point_value_type'] = "samples"
-                    cvpj_instdata['plugindata']['file'] = samplefolder + str(bn_s_t_f[1]) + '.wav'
+
+                    track_volume = 0.3*it_singleinst['globalvol']*it_singlesample['defualtvolume']*it_singlesample['globalvol']
+
+                    plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, samplefolder+str(bn_s_t_f[1])+'.wav')
+                    plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
+                    plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
+
                     if it_singlesample['length'] != 0:
-                        cvpj_instdata['plugindata']['length'] = it_singlesample['length']
-                        cvpj_instdata['plugindata']['loop'] = {}
-                        cvpj_instdata['plugindata']['loop']['enabled'] = int(it_singlesample['flags'][3])
-                        cvpj_instdata['plugindata']['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
+                        plugins.add_plug_data(cvpj_l, pluginid, 'length', it_singlesample['length'])
+                        cvpj_loop = {}
+                        cvpj_loop['enabled'] = int(it_singlesample['flags'][3])
+                        if int(it_singlesample['flags'][1]) == 0: cvpj_loop['mode'] = 'normal'
+                        else: cvpj_loop['mode'] = 'pingpong'
+                        if int(it_singlesample['flags'][3]) != 0:
+                            cvpj_loop['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
+                        plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
                 else:
                     sampleregions = data_values.list_to_reigons(bn_s_t, 60)
-                    cvpj_instdata['plugin'] = 'sampler-multi'
-                    cvpj_instdata['plugindata'] = {}
-                    cvpj_instdata['plugindata']['point_value_type'] = "samples"
-                    cvpj_instdata['plugindata']['regions'] = []
+                    plugins.add_plug_multisampler(cvpj_l, pluginid)
+                    plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
+
                     for sampleregion in sampleregions:
                         instrumentnum = sampleregion[0][1]
-                        it_singlesample = IT_Samples[str(instrumentnum-1)]
-                        regionparams = {}
-                        regionparams['r_key'] = [sampleregion[1], sampleregion[2]]
-                        regionparams['middlenote'] = sampleregion[0][0]*-1
-                        regionparams['file'] = samplefolder + str(instrumentnum) + '.wav'
-                        regionparams['start'] = 0
-                        regionparams['end'] = it_singlesample['length']
-                        regionparams['trigger'] = 'oneshot'
-                        regionparams['loop'] = {}
-                        regionparams['loop']['enabled'] = int(it_singlesample['flags'][3])
-                        regionparams['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
-                        cvpj_instdata['plugindata']['regions'].append(regionparams)
+                        if instrumentnum-1 in IT_Samples:
+                            it_singlesample = IT_Samples[str(instrumentnum-1)]
+                            regionparams = {}
+                            regionparams['r_key'] = [sampleregion[1], sampleregion[2]]
+                            regionparams['middlenote'] = sampleregion[0][0]*-1
+                            regionparams['file'] = samplefolder + str(instrumentnum) + '.wav'
+                            regionparams['start'] = 0
+                            regionparams['end'] = it_singlesample['length']
+                            regionparams['trigger'] = 'oneshot'
+                            regionparams['loop'] = {}
+                            regionparams['loop']['enabled'] = int(it_singlesample['flags'][3])
+                            regionparams['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
+                            plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
 
-                if it_singleinst['filtercutoff'] != None and 'plugindata' in cvpj_instdata:
+                if it_singleinst['filtercutoff'] != None:
                     if it_singleinst['filtercutoff'] != 127:
-                        plugdata = cvpj_instdata['plugindata']
-                        plugdata['filter'] = {}
                         computedCutoff = (it_singleinst['filtercutoff'] * 512)
                         outputcutoff = 131.0 * pow(2.0, computedCutoff * (5.29 / (127.0 * 512.0)))
-                        plugdata['filter']['cutoff'] = outputcutoff
-                        if it_singleinst['filterresonance'] != None: plugdata['filter']['reso'] = (it_singleinst['filterresonance']/127)*6 + 1
-                        else: plugdata['filter']['reso'] = 1
-                        plugdata['filter']['type'] = "lowpass"
-                        plugdata['filter']['wet'] = 1
+                        if it_singleinst['filterresonance'] != None: outputreso = (it_singleinst['filterresonance']/127)*6 + 1
+                        else: outputreso = 1
+                        plugins.add_filter(cvpj_l, pluginid, True, outputcutoff, outputreso, "lowpass", None)
 
                 cvpj_instdata_midi = {}
                 cvpj_instdata_midi['out'] = {}
@@ -492,29 +503,82 @@ class input_it(plugin_input.base):
                 cvpj_instdata['midi'] = cvpj_instdata_midi
 
                 tracks.m_create_inst(cvpj_l, it_instname, cvpj_instdata)
-                tracks.m_basicdata_inst(cvpj_l, it_instname, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)
+
+                filterenv_used = False
+
+                for envtype in ['vol', 'pan', 'pitch']:
+                    envvarname = 'env_'+envtype
+                    envvardata = it_singleinst[envvarname]
+
+                    susenabled = envvardata['susloop_enabled']
+                    
+                    if envvarname in it_singleinst: 
+                        if envtype == 'vol' and len(envvardata['points']) != 0:
+                            track_volume *= max([i['value']/64 for i in envvardata['points']])
+                        for itpd in envvardata['points']:
+                            if envtype == 'vol': 
+                                plugins.add_env_point(cvpj_l, pluginid, 'vol', itpd['pos']/48, itpd['value']/64)
+                                if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'vol', 'sustain', envvardata['susloop_start']+1)
+                            if envtype == 'pan': 
+                                plugins.add_env_point(cvpj_l, pluginid, 'pan', itpd['pos']/48, (itpd['value'])/32)
+                                if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'pan', 'sustain', envvardata['susloop_start']+1)
+                            if envtype == 'pitch': 
+                                if envvardata['usepitch'] != 1:
+                                    plugins.add_env_point(cvpj_l, pluginid, 'pitch', itpd['pos']/48, (itpd['value']))
+                                    if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'pitch', 'sustain', envvardata['susloop_start']+1)
+                                else:
+                                    plugins.add_env_point(cvpj_l, pluginid, 'cutoff', itpd['pos']/48, (itpd['value']/64))
+                                    if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'cutoff', 'sustain', envvardata['susloop_start']+1)
+                                    filterenv_used = True
+
+                if it_singleinst['fadeout'] != 0:
+                    plugins.add_env_point_var(cvpj_l, pluginid, 'vol', 'fadeout', (256/it_singleinst['fadeout'])/8)
+
+                if filterenv_used == False:
+                    if it_singleinst['filtercutoff'] != None:
+                        if it_singleinst['filtercutoff'] != 127:
+                            computedCutoff = (it_singleinst['filtercutoff'] * 512)
+                            outputcutoff = 131.0 * pow(2.0, computedCutoff * (5.29 / (127.0 * 512.0)))
+                            if it_singleinst['filterresonance'] != None: outputreso = (it_singleinst['filterresonance']/127)*6 + 1
+                            else: outputreso = 1
+                            plugins.add_filter(cvpj_l, pluginid, True, outputcutoff, outputreso, "lowpass", None)
+                #else:
+                #    if it_singleinst['filterresonance'] != None: outputreso = (it_singleinst['filterresonance']/127)*6 + 1
+                #    else: outputreso = 0
+                #    plugins.add_filter(cvpj_l, pluginid, True, 0, outputreso, "lowpass", None)
+
+                plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
+                plugins.env_point_to_asdr(cvpj_l, pluginid, 'cutoff')
+                tracks.m_basicdata_inst(cvpj_l, it_instname, cvpj_instname, [0.71, 0.58, 0.47], track_volume, None)
 
                 instrumentcount += 1
         if it_header_flag_useinst == 0:
             for IT_Sample in IT_Samples:
                 it_samplename = startinststr + str(samplecount+1)
                 it_singlesample = IT_Samples[IT_Sample]
-                print(IT_Samples[IT_Sample])
                 if it_singlesample['name'] != '': cvpj_instname = it_singlesample['name']
                 elif it_singlesample['dosfilename'] != '': cvpj_instname = it_singlesample['dosfilename']
                 else: cvpj_instname = " "
-                cvpj_instdata = {}
-                cvpj_instdata['plugin'] = 'sampler'
-                cvpj_instdata['plugindata'] = {}
-                cvpj_instdata['plugindata']['file'] = samplefolder + str(samplecount+1) + '.wav'
-                if it_singlesample['length'] != 0:
-                    cvpj_instdata['plugindata']['length'] = it_singlesample['length']
-                    cvpj_instdata['plugindata']['loop'] = {}
-                    cvpj_instdata['plugindata']['loop']['enabled'] = int(it_singlesample['flags'][3])
-                    cvpj_instdata['plugindata']['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
 
-                tracks.m_create_inst(cvpj_l, it_samplename, cvpj_instdata)
-                tracks.m_basicdata_inst(cvpj_l, it_samplename, cvpj_instname, [0.71, 0.58, 0.47], 0.3, None)
+                track_volume = 0.3*it_singlesample['defualtvolume']*it_singlesample['globalvol']
+
+                pluginid = plugins.get_id()
+                plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, samplefolder+str(samplecount+1)+'.wav')
+                plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
+                plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
+                if it_singlesample['length'] != 0:
+                    plugins.add_plug_data(cvpj_l, pluginid, 'length', it_singlesample['length'])
+                    cvpj_loop = {}
+                    cvpj_loop['enabled'] = int(it_singlesample['flags'][3])
+                    if int(it_singlesample['flags'][1]) == 0: cvpj_loop['mode'] = 'normal'
+                    else: cvpj_loop['mode'] = 'pingpong'
+                    if int(it_singlesample['flags'][3]) != 0:
+                        cvpj_loop['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
+
+                    plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
+
+                tracks.m_create_inst(cvpj_l, it_samplename, {'pluginid': pluginid})
+                tracks.m_basicdata_inst(cvpj_l, it_samplename, cvpj_instname, [0.71, 0.58, 0.47], track_volume, None)
 
                 samplecount += 1
 

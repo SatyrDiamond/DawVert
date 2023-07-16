@@ -5,9 +5,9 @@ from functions import data_bytes
 from functions import tracks
 from functions import note_data
 from functions import audio_wav
-from functions import folder_samples
 from functions import note_mod
 from functions import notelist_data
+from functions import plugins
 from functions import placement_data
 from functions import idvals
 from functions import song
@@ -28,6 +28,7 @@ class input_soundclub2(plugin_input.base):
     def gettype(self): return 'ri'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'track_lanes': True,
         'auto_nopl': True
         }
@@ -46,8 +47,8 @@ class input_soundclub2(plugin_input.base):
 
         print('[input-soundclub2] Tempo', sc2_globaltempo)
 
-        file_name = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, file_name)
+        samplefolder = extra_param['samplefolder']
+
         idvals_inst_soundclub2 = idvals.parse_idvalscsv('data_idvals/soundclub2_inst.csv')
 
         cvpj_l = {}
@@ -137,6 +138,7 @@ class input_soundclub2(plugin_input.base):
                 print('[input-soundclub2] Sequence', sc2_seqdata)
 
             elif sc2_datatype == b'INS': 
+                pluginid = plugins.get_id()
                 sc2_insdata = sc2object[1]
                 print('[input-soundclub2] Instrument: ', end='')
                 cvpj_instid = 'sc2_'+str(cur_instnum)
@@ -146,10 +148,11 @@ class input_soundclub2(plugin_input.base):
                     print(t_instname)
                     sc2idvinst_instname = idvals.get_idval(idvals_inst_soundclub2, t_instname, 'name')
                     sc2idvinst_gminst = idvals.get_idval(idvals_inst_soundclub2, t_instname, 'gm_inst')
-                    cvpj_instdata = {}
-                    if sc2idvinst_gminst != None: cvpj_instdata = {'plugin': 'general-midi', 'plugindata': {'bank': 0, 'inst': sc2idvinst_gminst}}
-                    tracks.r_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
+                    if sc2idvinst_gminst != None: 
+                        plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, sc2idvinst_gminst)
+                    tracks.ri_create_inst(cvpj_l, cvpj_instid, None, {'pluginid': pluginid})
                     tracks.r_basicdata(cvpj_l, cvpj_instid, sc2_insdata[1:].decode('ascii'), None, None, None)
+
                 elif sc2_insdata[0] == 0:
                     bio_sc2_insdata = data_bytes.to_bytesio(sc2_insdata)
                     bio_sc2_insdata.seek(1)
@@ -161,20 +164,20 @@ class input_soundclub2(plugin_input.base):
                         sc2_i_samplesize, sc2_i_loopstart, sc2_i_unk3, sc2_i_unk4, sc2_i_freq = struct.unpack("IIIHH", bio_sc2_insdata.read(16))
                         cvpj_wavdata = bio_sc2_insdata.read()
 
-                        wave_path = samplefolder + 'sc2_'+file_name+'_'+str(cur_instnum)+'.wav'
+                        wave_path = samplefolder + 'sc2_'+str(cur_instnum)+'.wav'
 
-                        loopdata = None
-                        cvpj_instdata = {}
-                        cvpj_instdata['plugin'] = 'sampler'
-                        cvpj_instdata['plugindata'] = {'file': wave_path}
-                        cvpj_instdata['plugindata']['point_value_type'] = "samples"
+                        plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, wave_path)
+                        plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', 'samples')
                         if sc2_i_loopstart != 4294967295:
                             loopdata = {'loop':[sc2_i_loopstart, sc2_i_samplesize]}
-                            cvpj_instdata['plugindata']['loop'] = {'enabled': 1, 'mode': "normal", 'points': [sc2_i_loopstart, sc2_i_samplesize]}
-                        else: cvpj_instdata['plugindata']['loop'] = {'enabled': 0}
-                        audio_wav.generate(wave_path, cvpj_wavdata, 1, sc2_i_freq, 8, loopdata)
+                            cvpj_loop = {'enabled': 1, 'mode': "normal", 'points': [sc2_i_loopstart, sc2_i_samplesize]}
+                        else: 
+                            loopdata = None
+                            cvpj_loop = {'enabled': 0}
+                        plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
+                        audio_wav.generate(wave_path, cvpj_wavdata, 1, sc2_i_freq, 8, cvpj_loop)
 
-                        tracks.ri_create_inst(cvpj_l, cvpj_instid, None, cvpj_instdata)
+                        tracks.ri_create_inst(cvpj_l, cvpj_instid, None, {'pluginid': pluginid})
                         tracks.r_basicdata(cvpj_l, cvpj_instid, cvpj_instname, None, 0.3, None)
                 tracks.r_pl_notes(cvpj_l, cvpj_instid, [])
                 cur_instnum += 1

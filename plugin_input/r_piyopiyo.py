@@ -71,7 +71,6 @@ class input_piyopiyo(plugin_input.base):
             trk_waveform = struct.unpack('b'*256, pmdfile.read(256))
             trk_envelope = struct.unpack('B'*64, pmdfile.read(64))
             keyoffset[tracknum] = (trk_octave-2)*12
-            #wave_path = samplefolder+'/'+str(tracknum+1)+'.wav'
             plugins.add_wave(cvpj_l, pluginid, 'main', trk_waveform, -128, 128)
             plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trk_envelope, 128, None, None)
             idval = str(tracknum)

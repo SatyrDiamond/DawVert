@@ -6,9 +6,9 @@ import os.path
 import json
 import struct
 from functions import song_tracker
-from functions import folder_samples
 from functions import data_values
 from functions import data_bytes
+from functions import plugins
 from functions import tracks
 from functions import song
 
@@ -204,6 +204,7 @@ def parse_pattern(file_stream, num_channels):
     return patterntable_single
 
 def parse_instrument(file_stream, samplecount):
+    global cvpj_l
     global cvpj_l_instruments
     global cvpj_l_instrumentsorder 
     global xm_cursamplenum
@@ -212,7 +213,7 @@ def parse_instrument(file_stream, samplecount):
     xm_inst_header_length = int.from_bytes(file_stream.read(4), "little")
     print("[input-xm]     Header Length: " + str(xm_inst_header_length))
 
-    xm_inst_name = data_bytes.readstring_fixedlen(file_stream, 22, "windows-1252")
+    xm_inst_name = data_bytes.readstring_fixedlen(file_stream, 22, "latin1")
     print("[input-xm]     Name: " + str(xm_inst_name))
     xm_inst_type = file_stream.read(1)[0]
     print("[input-xm]     Type: " + str(xm_inst_type))
@@ -223,8 +224,9 @@ def parse_instrument(file_stream, samplecount):
         xm_inst_e_head_size = int.from_bytes(file_stream.read(4), "little")
         print("[input-xm]     Sample header size: " + str(xm_inst_e_head_size))
         xm_inst_e_table = struct.unpack('B'*96, file_stream.read(96))
-        xm_inst_e_env_v = struct.unpack('B'*48, file_stream.read(48))
-        xm_inst_e_env_p = struct.unpack('B'*48, file_stream.read(48))
+        xm_inst_e_env_v = struct.unpack('>'+'H'*24, file_stream.read(48))
+        xm_inst_e_env_p = struct.unpack('>'+'H'*24, file_stream.read(48))
+        file_stream.read(1)
         xm_inst_e_number_of_volume_points = file_stream.read(1)[0]
         xm_inst_e_number_of_panning_points = file_stream.read(1)[0]
         xm_inst_e_volume_sustain_point = file_stream.read(1)[0]
@@ -238,7 +240,6 @@ def parse_instrument(file_stream, samplecount):
         xm_inst_e_vibrato_type = file_stream.read(1)[0]
         xm_inst_e_vibrato_sweep = file_stream.read(1)[0]
         xm_inst_e_vibrato_depth = file_stream.read(1)[0]
-        xm_inst_e_vibrato_rate = file_stream.read(1)[0]
         xm_inst_e_vibrato_rate = file_stream.read(1)[0]
         xm_inst_e_volume_fadeout = int.from_bytes(file_stream.read(2), "little")
         xm_inst_e_reserved = int.from_bytes(file_stream.read(2), "little")
@@ -256,34 +257,45 @@ def parse_instrument(file_stream, samplecount):
     for t_sampleheader in t_sampleheaders:
         file_stream.read(t_sampleheader[0][0])
 
+    pluginid = plugins.get_id()
     it_samplename = startinststr + str(samplecount+1)
     cvpj_l_instruments[it_samplename] = {}
     cvpj_l_single_inst = cvpj_l_instruments[it_samplename]
     cvpj_l_single_inst['color'] = [0.16, 0.33, 0.53]
     cvpj_l_single_inst['name'] = xm_inst_name
     cvpj_l_single_inst['vol'] = 0.3
-    cvpj_l_single_inst['instdata'] = {}
+    cvpj_l_single_inst['instdata'] = {'pluginid': pluginid}
+
+
     if xm_inst_num_samples == 0:
         pass
     elif xm_inst_num_samples == 1:
+
         cvpj_l_single_inst['vol'] = 0.3*(t_sampleheaders[0][0][3]/64)
-        cvpj_l_single_inst['instdata']['plugin'] = 'sampler'
-        cvpj_l_single_inst['instdata']['plugindata'] = {'file': samplefolder + str(xm_cursamplenum) + '.wav'}
-        cvpj_l_single_inst['instdata']['plugindata']['point_value_type'] = "samples"
-        cvpj_l_single_inst['instdata']['plugindata']['length'] = t_sampleheaders[0][0][0]
-        if t_sampleheaders[0][0][1:3] == (0, 0):
-            cvpj_l_single_inst['instdata']['plugindata']['loop'] = {"enabled": 0}
+        plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, samplefolder+str(xm_cursamplenum)+'.wav')
+        plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
+        plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
+        plugins.add_plug_data(cvpj_l, pluginid, 'length', t_sampleheaders[0][0][0])
+
+        sampleflags = data_bytes.to_bin(t_sampleheaders[0][0][5], 8)
+
+        loopon = None
+        xm_loop_start = t_sampleheaders[0][0][1]
+        xm_loop_len = t_sampleheaders[0][0][2]
+
+        if sampleflags[7] == 1: loopon = 'normal'
+        if sampleflags[6] == 1: loopon = 'pingpong'
+
+        if loopon == None:
+            plugins.add_plug_data(cvpj_l, pluginid, 'loop', {"enabled": 0})
         else:
-            xm_loop_start = t_sampleheaders[0][0][1]
-            xm_loop_len = t_sampleheaders[0][0][2]
-            cvpj_l_single_inst['instdata']['plugindata']['loop'] = {"enabled": 1, "mode": "normal", "points": [xm_loop_start,xm_loop_start+xm_loop_len]}
+            plugins.add_plug_data(cvpj_l, pluginid, 'loop', 
+                {"enabled": 1, "mode": loopon, "points": [xm_loop_start,xm_loop_start+xm_loop_len]})
     else:
         cvpj_l_single_inst['vol'] = 0.3
         sampleregions = data_values.list_to_reigons(xm_inst_e_table, 48)
-        cvpj_l_single_inst['instdata']['plugin'] = 'sampler-multi'
-        cvpj_l_single_inst['instdata']['plugindata'] = {}
-        cvpj_l_single_inst['instdata']['plugindata']['point_value_type'] = "samples"
-        cvpj_l_single_inst['instdata']['plugindata']['regions'] = []
+        plugins.add_plug_multisampler(cvpj_l, pluginid)
+        plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
 
         for sampleregion in sampleregions:
             instrumentnum = sampleregion[0]
@@ -296,7 +308,7 @@ def parse_instrument(file_stream, samplecount):
             regionparams['name'] = t_sampleheaders[instrumentnum][1]
             regionparams['trigger'] = 'oneshot'
             regionparams['loop'] = {}
-            if t_sampleheaders[instrumentnum][0][1:3] == (0, 0):
+            if t_sampleheaders[instrumentnum][0][1:3] == (0, 0): 
                 regionparams['loop']['enabled'] = 0
             else:
                 regionparams['loop']['enabled'] = 1
@@ -304,7 +316,42 @@ def parse_instrument(file_stream, samplecount):
                 xm_loop_len = t_sampleheaders[instrumentnum][0][2]
                 regionparams['loop']['points'] = [xm_loop_start,xm_loop_start+xm_loop_len]
 
-            cvpj_l_single_inst['instdata']['plugindata']['regions'].append(regionparams)
+            plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
+
+    if xm_inst_num_samples != 0:
+
+        splitted_points_v = data_values.list_chunks(xm_inst_e_env_v[0:xm_inst_e_number_of_volume_points*2], 2)
+        splitted_points_p = data_values.list_chunks(xm_inst_e_env_p[0:xm_inst_e_number_of_panning_points*2], 2)
+
+        pointsdata = [
+        ['vol', splitted_points_v, xm_inst_e_volume_sustain_point, xm_inst_e_volume_loop_start_point, xm_inst_e_volume_loop_end_point], 
+        ['pan', splitted_points_p, xm_inst_e_panning_sustain_point, xm_inst_e_panning_loop_start_point, xm_inst_e_panning_loop_end_point]
+        ]
+
+        envflags = data_bytes.to_bin(xm_inst_e_volume_type, 8)
+
+        for typedata in pointsdata:
+            zerofound = False
+
+            if envflags[6] == 1:
+                plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'sustain', typedata[2]+1)
+            if envflags[5] == 1: 
+                plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'loop', [typedata[4], typedata[3]+typedata[4]])
+
+            if typedata[0] == 'vol':
+                if xm_inst_e_volume_fadeout != 0:
+                    plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'fadeout', (128/xm_inst_e_volume_fadeout)*5)
+
+            for groupval in typedata[1]:
+                if groupval[0] == 0:
+                    if zerofound == True: break
+                    zerofound = True
+                if typedata[0] == 'vol' and envflags[7] == 1:
+                    plugins.add_env_point(cvpj_l, pluginid, 'vol', groupval[0]/48, groupval[1]/64)
+                if typedata[0] == 'pan':
+                    plugins.add_env_point(cvpj_l, pluginid, 'pan', groupval[0]/48, (groupval[1]-32)/32)
+
+        plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
 
     cvpj_l_instrumentsorder.append(it_samplename)
     if xm_inst_num_samples != 0: xm_cursamplenum += xm_inst_num_samples
@@ -317,6 +364,7 @@ class input_xm(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'track_lanes': True
         }
     def supported_autodetect(self): return True
@@ -328,17 +376,19 @@ class input_xm(plugin_input.base):
         bytestream.seek(0)
 
     def parse(self, input_file, extra_param):
+        global cvpj_l
         global cvpj_l_instruments
         global cvpj_l_instrumentsorder
         global samplefolder
         global current_speed
         global xm_cursamplenum
 
+        cvpj_l = {}
+        
         xm_cursamplenum = 1
 
-        file_name = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, file_name)
-
+        samplefolder = extra_param['samplefolder']
+        
         cvpj_l_instruments = {}
         cvpj_l_instrumentsorder = []
         cvpj_l_playlist = []
@@ -405,8 +455,6 @@ class input_xm(plugin_input.base):
             try: xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
             except: pass
 
-        cvpj_l = {}
-        
         cvpj_l_playlist = song_tracker.song2playlist(patterntable_all, xm_song_num_channels, t_orderlist, startinststr, [0.16, 0.33, 0.53])
 
         tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, xm_song_bpm))

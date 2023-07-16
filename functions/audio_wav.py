@@ -135,9 +135,9 @@ def generate(file, data, channels, freq, bits, instdata):
 	# ----- data -----
 	table_chunks.append([b'data',data])
 	# ----- smpl -----
-	wav_CHUNK_smpl = makesmpl(instdata)
-	if wav_CHUNK_smpl != None:
-		table_chunks.append(wav_CHUNK_smpl)
+	#wav_CHUNK_smpl = makesmpl(instdata)
+	#if wav_CHUNK_smpl != None:
+	#	table_chunks.append(wav_CHUNK_smpl)
 
 	chunk_data_bytes = data_bytes.riff_make(table_chunks)
 	bytes_wavdata = b'WAVE' + chunk_data_bytes

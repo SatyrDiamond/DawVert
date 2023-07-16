@@ -152,6 +152,10 @@ def get_cvpj(extra_json): return convproj_j
 
 def parse_input(in_file, extra_json): 
 	global convproj_j
+
+	if 'samples_inside' in currentplug_input[4]:
+		os.makedirs(extra_json['samplefolder'], exist_ok=True)
+
 	convproj_j = [currentplug_input[0].parse(in_file, extra_json), currentplug_input[3], currentplug_input[4]]
 	if convproj_j == '{}' or convproj_j == None:
 		print('[error] Input Plugin outputted no json')

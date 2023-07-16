@@ -59,7 +59,7 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, out_supp
 
 					# ------------------------ #1 ------------------------
 
-					if plugintype[0] == 'general-midi':
+					if plugintype[0] == 'midi':
 						if 'soundfont' in extra_json:
 							print('[plug-conv] '+pluginid+' | GM MIDI > soundfont2')
 							sf2__gmmidi.convert(cvpj_l, pluginid, plugintype, extra_json)

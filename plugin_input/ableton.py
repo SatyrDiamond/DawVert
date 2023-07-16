@@ -198,10 +198,6 @@ class input_ableton(plugin_input.base):
                     for t_note in t_notes:
                         cvpj_placement['notelist'].append(t_notes[t_note])
 
-                    #for value in ["CurrentStart", "CurrentEnd", "StartRelative", "LoopStart", "LoopEnd"]:
-                    #    print(get_value(x_track_MidiClip, 'CurrentEnd', 0).ljust(20), end=' ')
-                    #print()
-
                     tracks.r_pl_notes(cvpj_l, track_id, cvpj_placement)  
 
             if tracktype == 'AudioTrack':

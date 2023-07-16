@@ -5,6 +5,7 @@ from functions import data_bytes
 from functions import tracks
 from functions import note_data
 from functions import placement_data
+from functions import plugins
 import plugin_input
 import io
 import struct
@@ -29,6 +30,10 @@ def getval(i_val):
     elif i_val == -2: i_val = 93
     return i_val
 
+midi_inst = {
+    'paint': [5,0,3,4,9,14,11,13,1,12]
+}
+
 class input_soundation(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -46,14 +51,52 @@ class input_soundation(plugin_input.base):
         cvpj_l = {}
         peta_notedata = sndstat_data['n'].encode('ascii')
         peta_noteints = struct.unpack("B"*len(peta_notedata), peta_notedata)
+        peta_instset = sndstat_data['i']
         bio_peta_notebytes = data_bytes.to_bytesio(bytes(peta_noteints))
 
         cvpj_notelists = {}
+
         for instnum in range(10):
             cvpj_notelists[instnum] = []
+            pluginid = plugins.get_id()
             instid = 'petaporon'+str(instnum)
-            tracks.r_create_inst(cvpj_l, instid, {})
+            tracks.r_create_inst(cvpj_l, instid, {'pluginid': pluginid})
             tracks.r_basicdata(cvpj_l, instid, 'Inst #'+str(instnum+1), peta_colors[instnum], 1.0, 0.0)
+            if instnum == 0:
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
+                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 2)
+                plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0, 0, 0.1, 0, 0, 1)
+            if instnum == 1:
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
+                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 2)
+                plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0, 0, 0.1, 0.7, 0, 1)
+            if instnum == 2:
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
+                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 1)
+                plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0, 0, 0.25, 0, 0, 1)
+            if instnum == 3:
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
+                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 0)
+                plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0, 0, 0.2, 0, 0, 1)
+            if instnum == 4:
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
+                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 0)
+                plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0, 0, 0, 1, 0, 1)
+            if instnum == 5:
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'triangle')
+                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 0)
+                plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0, 0, 0, 1, 0, 1)
+            if instnum == 6:
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'triangle')
+                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 0)
+                plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0, 0, 0.2, 0, 0, 1)
+            if instnum == 7:
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
+                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 1)
+                plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0.3, 0, 0.3, 0.2, 0.3, 1)
+            if instnum == 8:
+                plugins.add_plug(cvpj_l, pluginid, 'retro', 'noise')
+                plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0, 0, 0.4, 0, 0, 1)
 
         for _ in range(len(peta_noteints)//5):
             partdata = bio_peta_notebytes.read(5)

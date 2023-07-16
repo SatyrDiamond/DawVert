@@ -643,6 +643,9 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
 
         banddata = plugins.get_eqband(cvpj_l, pluginid)
 
+        get_plugin_param(pluginautoid, xml_lmmsnat, 'Outputgain', pluginid, 'gain_out', 0)
+        get_plugin_param(pluginautoid, xml_lmmsnat, 'Inputgain', pluginid, 'gain_in', 0)
+
         for s_band in banddata:
             bandtype = s_band['type']
 

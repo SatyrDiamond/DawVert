@@ -609,6 +609,12 @@ def lmms_decode_effectslot(fxslotX):
 
         plugins.add_plug(cvpj_l, pluginid, 'eq', 'peaks')
 
+        Outputgain = lmms_auto_getvalue(fxxml_plugin, 'Outputgain', 0, 'float', None, ['slot', pluginid, 'gain_out'])
+        Inputgain = lmms_auto_getvalue(fxxml_plugin, 'Inputgain', 0, 'float', None, ['slot', pluginid, 'gain_in'])
+
+        plugins.add_plug_param(cvpj_l, pluginid, 'gain_out', Outputgain, 'float', 'Out Gain')
+        plugins.add_plug_param(cvpj_l, pluginid, 'gain_in', Inputgain, 'float', 'In Gain')
+
         LPactive = lmms_auto_getvalue(fxxml_plugin, 'LPactive', 0, 'int', None, ['slot', pluginid, 'peak_1_on'])
         LPfreq   = lmms_auto_getvalue(fxxml_plugin, 'LPfreq', 0, 'float', None,   ['slot', pluginid, 'peak_1_freq'])
         LPres    = lmms_auto_getvalue(fxxml_plugin, 'LPres', 0, 'float', None,    ['slot', pluginid, 'peak_1_val'])

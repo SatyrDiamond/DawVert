@@ -3,10 +3,10 @@
 
 from functions import data_bytes
 from functions import audio_wav
-from functions import folder_samples
 from functions import tracks
 from functions import note_data
 from functions import placement_data
+from functions import plugins
 import plugin_input
 import json
 import struct
@@ -23,6 +23,7 @@ class input_cvpj_f(plugin_input.base):
     def supported_autodetect(self): return True
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'fxrack': False,
         'track_lanes': True,
         'placement_cut': False,
@@ -44,9 +45,8 @@ class input_cvpj_f(plugin_input.base):
 
         cvpj_l = {}
         
-        file_name = os.path.splitext(os.path.basename(input_file))[0]
-        samplefolder = folder_samples.samplefolder(extra_param, file_name)
-
+        samplefolder = extra_param['samplefolder']
+        
         for _ in range(16): pixi_data_sounds.append([None,None,None,None,None,None,None,None])
 
         for pixi_chunk in pixi_chunks:
@@ -144,21 +144,21 @@ class input_cvpj_f(plugin_input.base):
             cvpj_instvol = 1.0
             cvpj_instdata = {}
 
+            pluginid = plugins.get_id()
             if pixi_data_sounds[instnum] != [None,None,None,None,None,None,None,None]:
                 t_sounddata = pixi_data_sounds[instnum]
                 wave_path = samplefolder + str(instnum) + '.wav'
                 audio_wav.generate(wave_path, t_sounddata[7], t_sounddata[0], t_sounddata[1], 16, None)
                 cvpj_instvol = t_sounddata[4]/100
+                cvpj_instdata['pluginid'] = pluginid
                 cvpj_instdata['pitch'] = t_sounddata[2]
                 cvpj_instdata['middlenote'] = t_sounddata[3]*-1
-                cvpj_instdata['plugin'] = 'sampler'
-                cvpj_instdata['plugindata'] = {}
-                cvpj_instdata['plugindata']['point_value_type'] = "samples"
-                cvpj_instdata['plugindata']['file'] = wave_path
-                cvpj_instdata['plugindata']['start'] = t_sounddata[5]
-                cvpj_instdata['plugindata']['end'] = t_sounddata[6]
-                cvpj_instdata['plugindata']['length'] = len(t_sounddata[7])//t_sounddata[0]
-                cvpj_instdata['plugindata']['trigger'] = 'normal'
+                plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, wave_path)
+                plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
+                plugins.add_plug_data(cvpj_l, pluginid, 'start', t_sounddata[5])
+                plugins.add_plug_data(cvpj_l, pluginid, 'end', t_sounddata[6])
+                plugins.add_plug_data(cvpj_l, pluginid, 'length', len(t_sounddata[7])//t_sounddata[0])
+                plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
             tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
             tracks.m_basicdata_inst(cvpj_l, cvpj_instid, 'Inst #'+str(instnum+1), pixi_colors[instnum], cvpj_instvol, None)
 

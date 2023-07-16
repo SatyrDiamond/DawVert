@@ -5,15 +5,19 @@ from functions import data_bytes
 from functions import song_tracker
 from functions import note_data
 from functions import tracks
+from functions import plugins
 import plugin_input
 import json
 
 def hextoint(value):
     return int(value, 16)
 
-def setmacro(cvpj_plugdata, macro_list, listname, macronum, famitrkr_instdata_macro_id):
+def setmacro(pluginid, macro_list, listname, macronum, famitrkr_instdata_macro_id):
     if famitrkr_instdata_macro_id in macro_list[macronum]:
-        cvpj_plugdata[listname] = macro_list[macronum][famitrkr_instdata_macro_id]
+        macrodata = macro_list[macronum][famitrkr_instdata_macro_id]
+        looploc = None
+        if 'loop' in macrodata: looploc = macrodata['loop']
+        plugins.add_env_blocks(cvpj_l, pluginid, listname, macrodata['values'], looploc, None)
 
 def parsecell(celldata):
     cellsplit = celldata.split(' ')
@@ -63,8 +67,11 @@ class input_famitrkr_txt(plugin_input.base):
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
+        global cvpj_l
         f_smp = open(input_file, 'r')
         lines_smp = f_smp.readlines()
+
+        cvpj_l = {}
 
         if 'songnum' in extra_param: selectedsong = int(extra_param['songnum'])
         else: selectedsong = 1
@@ -177,7 +184,7 @@ class input_famitrkr_txt(plugin_input.base):
                     mt_ord[chnum] = []
                     mt_pat[chnum] = {}
 
-                print(mt_ch_names, len(mt_ch_names))
+                #print(mt_ch_names, len(mt_ch_names))
 
             if ft_cmd_data[0] == 'INST2A03':
                 t_instdata = ft_cmd_data[1].split('"')[:2]
@@ -245,10 +252,6 @@ class input_famitrkr_txt(plugin_input.base):
                     for chnum in range(len(s_patdata[rownum+1])):
                         mt_pat[chnum][patnum][rownum] = parsecell(s_patdata[rownum+1][chnum])
 
-        cvpj_l = {}
-        cvpj_l_instrument_data = {}
-        cvpj_l_instrument_order = []
-
         len_table = song_tracker.multi_get_len_table(song_rows, mt_pat, mt_ord, mt_ch_insttype)
 
         song_tracker.multi_convert(cvpj_l, song_rows, mt_pat, mt_ord, mt_ch_insttype, len_table)
@@ -263,40 +266,34 @@ class input_famitrkr_txt(plugin_input.base):
             cvpj_inst = {}
             cvpj_instdata = {}
 
+            pluginid = plugins.get_id()
+
             if int(instid) in famitrkr_instdata:
                 cvpj_instname = insttype+'-'+famitrkr_instdata[int(instid)][0]
                 if insttype in retroinst_names:
-                    cvpj_instdata = {"plugin": '2a03', "plugindata": {}}
-                    cvpj_plugdata = cvpj_instdata["plugindata"]
-                    if insttype == 'Square1' or insttype == 'Square2': cvpj_plugdata["wave"] = "square"
-                    if insttype == 'Triangle': cvpj_plugdata["wave"] = "triangle"
-                    if insttype == 'Noise': cvpj_plugdata["wave"] = "noise"
-                    setmacro(cvpj_plugdata, macro_nes, "env_vol", 0, famitrkr_instdata[int(instid)][1]) 
-                    setmacro(cvpj_plugdata, macro_nes, "env_arp", 1, famitrkr_instdata[int(instid)][2]) 
-                    setmacro(cvpj_plugdata, macro_nes, "env_pitch", 2, famitrkr_instdata[int(instid)][3]*-1) 
-                    setmacro(cvpj_plugdata, macro_nes, "env_hipitch", 3, famitrkr_instdata[int(instid)][4]*-1)
-                    setmacro(cvpj_plugdata, macro_nes, "env_duty", 4, famitrkr_instdata[int(instid)][5]) 
-                else:
-                    cvpj_instdata = {"plugin": 'none', "plugindata": {}}
+                    if insttype == 'Square1' or insttype == 'Square2': wavetype = "square"
+                    if insttype == 'Triangle': wavetype = "triangle"
+                    if insttype == 'Noise': wavetype = "noise"
+                    plugins.add_plug(cvpj_l, pluginid, '2a03', wavetype)
+                    setmacro(pluginid, macro_nes, "vol", 0, famitrkr_instdata[int(instid)][1]) 
+                    setmacro(pluginid, macro_nes, "arp", 1, famitrkr_instdata[int(instid)][2]) 
+                    setmacro(pluginid, macro_nes, "pitch", 2, famitrkr_instdata[int(instid)][3]*-1) 
+                    setmacro(pluginid, macro_nes, "hipitch", 3, famitrkr_instdata[int(instid)][4]*-1)
+                    setmacro(pluginid, macro_nes, "duty", 4, famitrkr_instdata[int(instid)][5]) 
 
             elif int(instid) in famitrkr_instdata_vrc6:
                 cvpj_instname = insttype+'-'+famitrkr_instdata_vrc6[int(instid)][0]
                 if insttype in retroinst_names_vrc6:
                     cvpj_instdata = {"plugin": 'retro', "plugindata": {}}
                     cvpj_plugdata = cvpj_instdata["plugindata"]
-                    if insttype == 'VRC6Square': cvpj_plugdata["wave"] = "square"
-                    if insttype == 'VRC6Saw': cvpj_plugdata["wave"] = "square"
-                    setmacro(cvpj_plugdata, macro_nes_vrc6, "env_vol", 0, famitrkr_instdata_vrc6[int(instid)][1]) 
-                    setmacro(cvpj_plugdata, macro_nes_vrc6, "env_arp", 1, famitrkr_instdata_vrc6[int(instid)][2]) 
-                    setmacro(cvpj_plugdata, macro_nes_vrc6, "env_pitch", 2, famitrkr_instdata_vrc6[int(instid)][3]*-1) 
-                    setmacro(cvpj_plugdata, macro_nes_vrc6, "env_hipitch", 3, famitrkr_instdata_vrc6[int(instid)][4]*-1)
-                    setmacro(cvpj_plugdata, macro_nes_vrc6, "env_duty", 4, famitrkr_instdata_vrc6[int(instid)][5])
-                else:
-                    cvpj_instdata = {"plugin": 'none', "plugindata": {}}
-
-            else:
-                cvpj_instname = insttype+'_'+instid
-                cvpj_instdata = {"plugin": 'none', "plugindata": {}}
+                    if insttype == 'VRC6Square': wavetype = "square"
+                    if insttype == 'VRC6Saw': wavetype = "saw"
+                    plugins.add_plug(cvpj_l, pluginid, 'vrc6', wavetype)
+                    setmacro(pluginid, macro_nes_vrc6, "vol", 0, famitrkr_instdata_vrc6[int(instid)][1]) 
+                    setmacro(pluginid, macro_nes_vrc6, "arp", 1, famitrkr_instdata_vrc6[int(instid)][2]) 
+                    setmacro(pluginid, macro_nes_vrc6, "pitch", 2, famitrkr_instdata_vrc6[int(instid)][3]*-1) 
+                    setmacro(pluginid, macro_nes_vrc6, "hipitch", 3, famitrkr_instdata_vrc6[int(instid)][4]*-1)
+                    setmacro(pluginid, macro_nes_vrc6, "duty", 4, famitrkr_instdata_vrc6[int(instid)][5])
 
             tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
             tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, None, 1.0, 0.0)

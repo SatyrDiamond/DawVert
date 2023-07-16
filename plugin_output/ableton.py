@@ -975,9 +975,10 @@ def ableton_make_midi_track(cvpj_trackid):
     if cvpj_trackid in cvpj_l['track_data']: cvpj_track_data = cvpj_l['track_data'][cvpj_trackid]
 
     cvpj_trackplacements = []
-    if cvpj_trackid in cvpj_l['track_placements']:
-        if 'notes' in cvpj_l['track_placements'][cvpj_trackid]:
-            cvpj_trackplacements = notelist_data.sort(cvpj_l['track_placements'][cvpj_trackid]['notes'])
+    if 'track_placements' in cvpj_l:
+        if cvpj_trackid in cvpj_l['track_placements']:
+            if 'notes' in cvpj_l['track_placements'][cvpj_trackid]:
+                cvpj_trackplacements = notelist_data.sort(cvpj_l['track_placements'][cvpj_trackid]['notes'])
 
     x_MidiTrack = addId(x_Tracks, 'MidiTrack', str(tracknum))
     set_add_trackbase(x_MidiTrack, cvpj_track_data, 'miditrack', 'true', cvpj_trackplacements)
@@ -990,9 +991,10 @@ def ableton_make_audio_track(cvpj_trackid):
     if cvpj_trackid in cvpj_l['track_data']: cvpj_track_data = cvpj_l['track_data'][cvpj_trackid]
 
     cvpj_trackplacements = []
-    if cvpj_trackid in cvpj_l['track_placements']:
-        if 'audio' in cvpj_l['track_placements'][cvpj_trackid]:
-            cvpj_trackplacements = notelist_data.sort(cvpj_l['track_placements'][cvpj_trackid]['audio'])
+    if 'track_placements' in cvpj_l:
+        if cvpj_trackid in cvpj_l['track_placements']:
+            if 'audio' in cvpj_l['track_placements'][cvpj_trackid]:
+                cvpj_trackplacements = notelist_data.sort(cvpj_l['track_placements'][cvpj_trackid]['audio'])
 
     x_AudioTrack = addId(x_Tracks, 'AudioTrack', str(tracknum))
     set_add_trackbase(x_AudioTrack, cvpj_track_data, 'audiotrack', 'true', cvpj_trackplacements)

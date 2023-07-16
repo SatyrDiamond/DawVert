@@ -10,10 +10,9 @@ from functions import plugin_vst2
 from functions_plugparams import params_ninjas2
 from functions_plugparams import data_nullbytegroup
 
-def convert_inst(instdata):
-	slicerdata = instdata['plugindata']
+def convert(cvpj_l, pluginid, plugintype):
 	params_ninjas2.initparams()
-	params_ninjas2.slicerdata(slicerdata)
+	params_ninjas2.slicerdata(cvpj_l, pluginid)
 	ninjas2out = params_ninjas2.getparams()
-	plugin_vst2.replace_data(instdata, 'any', 'Ninjas 2', 'chunk', data_nullbytegroup.make(ninjas2out), None)
+	plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Ninjas 2', 'chunk', data_nullbytegroup.make(ninjas2out), None)
 	return True

@@ -4,12 +4,13 @@
 import plugin_input
 import json
 import math
-import base64
 import struct
 import av
 import os.path
+import varint
 from pathlib import Path
 
+from functions_plugin import flp_dec_pluginparams
 from functions import format_flp_dec
 from functions import note_mod
 from functions import data_bytes
@@ -18,25 +19,66 @@ from functions import notelist_data
 from functions import data_values
 from functions import song
 from functions import audio
-
+from functions import plugins
 
 filename_len = {}
 
+def getsamplefile(channeldata, flppath):
 
-def getsamplefile(jsontag, channeldata, flppath):
     if 'samplefilename' in channeldata: 
         pathout = channeldata['samplefilename']
         samepath = os.path.join(os.path.dirname(flppath), os.path.basename(pathout))
         if os.path.exists(samepath): pathout = samepath
 
-        jsontag['file'] = ''
-        if pathout != None: 
-            jsontag['file'] = pathout
+        if pathout != None:
             audioinfo = audio.get_audiofile_info(pathout)
             filename_len[pathout] = audioinfo
         return pathout
     else:
         return ''
+
+
+def parse_envlfo(envlfo, pluginid, envtype):
+    bio_envlfo = data_bytes.to_bytesio(envlfo)
+
+    envlfo_flags = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_enabled = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_predelay = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_attack = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_hold = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_decay = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_sustain = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_release = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_aomunt = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_lfo_predelay = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_lfo_attack = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_lfo_amount = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_lfo_speed = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_lfo_shape = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_attack_tension = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_decay_tension = int.from_bytes(bio_envlfo.read(4), "little")
+    envlfo_envelope_release_tension = int.from_bytes(bio_envlfo.read(4), "little")
+
+
+    #print(envlfo, pluginid, envtype)
+
+    #print(     envlfo_envelope_hold            )
+    #print(     envlfo_envelope_release            )
+
+
+    # 15087 = 0.25
+    # 20643 = 0.5
+    # 26664 = 1
+    # 32950 = 2
+    # 39376 = 4
+
+
+    #print(    pow(2, envlfo_envelope_hold/32950)     )
+    
+
+
+    #exit()
+
 
 class input_flp(plugin_input.base):
     def __init__(self): pass
@@ -46,6 +88,7 @@ class input_flp(plugin_input.base):
     def gettype(self): return 'mi'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'fxrack': True,
         'track_lanes': True,
         'placement_cut': True,
@@ -59,8 +102,8 @@ class input_flp(plugin_input.base):
         if bytesdata == b'FLhd': return True
         else: return False
     def parse(self, input_file, extra_param):
+        global cvpj_l
         FLP_Data = format_flp_dec.parse(input_file)
-        #print(FLP_Data['FL_Main'])
 
         FL_Main = FLP_Data['FL_Main']
         FL_Patterns = FLP_Data['FL_Patterns']
@@ -99,6 +142,8 @@ class input_flp(plugin_input.base):
         sampleinfo = {}
         samplestretch = {}
 
+        samplefolder = extra_param['samplefolder']
+
         for instrument in FL_Channels:
             channeldata = FL_Channels[instrument]
             instdata = {}
@@ -120,15 +165,27 @@ class input_flp(plugin_input.base):
                 cvpj_inst['color'] = [color[0]/255,color[1]/255,color[2]/255]
                 cvpj_inst['fxrack_channel'] = channeldata['fxchannel']
 
+                pluginid = plugins.get_id()
+
                 if channeldata['type'] == 0:
-                    cvpj_inst['instdata']['plugin'] = "sampler"
-                    cvpj_inst['instdata']['plugindata'] = {}
-                    getsamplefile(cvpj_inst['instdata']['plugindata'], channeldata, input_file)
+                    cvpj_inst['instdata']['pluginid'] = pluginid
+                    plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, 
+                        getsamplefile(channeldata, input_file))
+                    
                 if channeldata['type'] == 2:
-                    cvpj_inst['instdata']['plugin'] = "native-fl"
-                    cvpj_inst['instdata']['plugindata'] = {}
-                    if 'plugin' in channeldata: cvpj_inst['instdata']['plugindata']['name'] = channeldata['plugin']
-                    if 'pluginparams' in channeldata: cvpj_inst['instdata']['plugindata']['data'] = base64.b64encode(channeldata['pluginparams']).decode('ascii')
+                    cvpj_inst['instdata']['pluginid'] = pluginid
+                    filename_sample = getsamplefile(channeldata, input_file)
+                    print(filename_sample)
+                    plugins.add_fileref(cvpj_l, pluginid, 'audiofile', filename_sample)
+                    flpluginname = ''
+                    if 'plugin' in channeldata: 
+                        flpluginname = channeldata['plugin']
+                        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', flpluginname)
+                    if 'pluginparams' in channeldata: 
+                        flp_dec_pluginparams.getparams(cvpj_l, pluginid, flpluginname, channeldata['pluginparams'], samplefolder)
+
+                #parse_envlfo(channeldata['envlfo_vol'], pluginid, 'vol')
+
                 cvpj_inst['poly'] = {}
                 cvpj_inst['poly']['max'] = channeldata['polymax']
 
@@ -145,11 +202,13 @@ class input_flp(plugin_input.base):
                 color = channeldata['color'].to_bytes(4, "little")
                 cvpj_s_sample['color'] = [color[0]/255,color[1]/255,color[2]/255]
                 cvpj_s_sample['fxrack_channel'] = channeldata['fxchannel']
-                filename_sample = getsamplefile(cvpj_s_sample, channeldata, input_file)
+                filename_sample = getsamplefile(channeldata, input_file)
+                cvpj_s_sample['file'] = filename_sample
 
+                ald = None
                 sampleinfo[instrument] = audio.get_audiofile_info(filename_sample)
                 if filename_sample in filename_len: ald = filename_len[filename_sample]
-                stretchbpm = (ald['dur_sec']*(cvpj_l['bpm']/120))
+                if ald != None: stretchbpm = (ald['dur_sec']*(cvpj_l['bpm']/120))
 
                 cvpj_audiomod = cvpj_s_sample['audiomod'] = {}
 
@@ -182,20 +241,21 @@ class input_flp(plugin_input.base):
 
                 #if t_stretchingtime != 0 or t_stretchingmultiplier != 1 or t_stretchingpitch != 0:
 
-                if t_stretchingtime != 0:
-                    cvpj_audiomod['stretch_method'] = 'rate_tempo'
-                    cvpj_audiomod['stretch_data'] = {}
-                    cvpj_audiomod['stretch_data']['rate'] = (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier
-                    samplestretch[instrument] = ['rate_tempo', (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier]
+                if ald != None:
+                    if t_stretchingtime != 0:
+                        cvpj_audiomod['stretch_method'] = 'rate_tempo'
+                        cvpj_audiomod['stretch_data'] = {}
+                        cvpj_audiomod['stretch_data']['rate'] = (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier
+                        samplestretch[instrument] = ['rate_tempo', (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier]
 
-                elif t_stretchingtime == 0:
-                    cvpj_audiomod['stretch_method'] = 'rate_speed'
-                    cvpj_audiomod['stretch_data'] = {}
-                    cvpj_audiomod['stretch_data']['rate'] = 1/t_stretchingmultiplier
-                    samplestretch[instrument] = ['rate_speed', 1/t_stretchingmultiplier]
+                    elif t_stretchingtime == 0:
+                        cvpj_audiomod['stretch_method'] = 'rate_speed'
+                        cvpj_audiomod['stretch_data'] = {}
+                        cvpj_audiomod['stretch_data']['rate'] = 1/t_stretchingmultiplier
+                        samplestretch[instrument] = ['rate_speed', 1/t_stretchingmultiplier]
 
-                else:
-                    samplestretch[instrument] = ['rate_speed', 1]
+                    else:
+                        samplestretch[instrument] = ['rate_speed', 1]
 
                 cvpj_l_samples['FLSample' + str(instrument)] = cvpj_s_sample
 
@@ -343,16 +403,24 @@ class input_flp(plugin_input.base):
                 for fl_fxslot in fl_fxhan['slots']:
                     fl_fxslotdata = fl_fxhan['slots'][fl_fxslot]
                     if fl_fxslotdata != None and 'plugin' in fl_fxslotdata and 'pluginparams' in fl_fxslotdata:
+
+                        pluginid = plugins.get_id()
+
                         fxslotdata = {}
-                        fxslotdata['enabled'] = 1
-                        fxslotdata['plugin'] = 'native-fl'
+                        fxslotdata['pluginid'] = pluginid
+                        flpluginname = ''
+                        if 'plugin' in fl_fxslotdata: flpluginname = fl_fxslotdata['plugin']
+                        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', flpluginname)
+                        if 'pluginparams' in fl_fxslotdata: 
+                            flp_dec_pluginparams.getparams(cvpj_l, pluginid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder)
+
+                        v_color = None
                         if 'color' in fl_fxslotdata:
                             color = fl_fxslotdata['color'].to_bytes(4, "little")
-                            fxslotdata['color'] = [color[0]/255,color[1]/255,color[2]/255]
-                        fxslotdata['plugindata'] = {}
-                        fxslotdata['plugindata']['plugin'] = fl_fxslotdata['plugin']
-                        fxslotdata['plugindata']['data'] = base64.b64encode(fl_fxslotdata['pluginparams']).decode('ascii')
-                        fxdata["chain_fx_audio"].append(fxslotdata)
+                            v_color = [color[0]/255,color[1]/255,color[2]/255]
+                        plugins.add_plug_fxvisual(cvpj_l, pluginid, None, v_color)
+
+                        fxdata["chain_fx_audio"].append(pluginid)
 
             if fxchannel == '100': fxdata["vol"] = 0.0
             elif fxchannel == '101': fxdata["vol"] = 0.0

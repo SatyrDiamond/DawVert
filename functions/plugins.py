@@ -107,7 +107,7 @@ def get_plug_paramlist(cvpj_l, pluginid):
 # -------------------------------------------------- data
 
 def add_plug_gm_midi(cvpj_l, pluginid, i_bank, i_inst):
-	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'type'], 'general-midi')
+	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'type'], 'midi')
 	add_plug_data(cvpj_l, pluginid, 'bank', i_bank)
 	add_plug_data(cvpj_l, pluginid, 'inst', i_inst)
 

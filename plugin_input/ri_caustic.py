@@ -330,9 +330,11 @@ class input_cvpj_r(plugin_input.base):
                     for paramid in machine['controls']:
                         plugins.add_plug_param(cvpj_l, pluginid, str(paramid), machine['controls'][paramid], 'float', str(paramid))
                 if 'customwaveform1' in machine: 
-                    plugins.add_plug_data(cvpj_l, pluginid, 'customwaveform1', struct.unpack("<"+("i"*330), machine['customwaveform1']))
+                    wavedata = list(struct.unpack("<"+("h"*660), machine['customwaveform1']))
+                    plugins.add_plug_data(cvpj_l, pluginid, 'customwaveform1', wavedata)
                 if 'customwaveform2' in machine: 
-                    plugins.add_plug_data(cvpj_l, pluginid, 'customwaveform2', struct.unpack("<"+("i"*330), machine['customwaveform2']))
+                    wavedata = list(struct.unpack("<"+("h"*660), machine['customwaveform2']))
+                    plugins.add_plug_data(cvpj_l, pluginid, 'customwaveform2', wavedata)
 
             tracks.ri_create_inst(cvpj_l, cvpj_trackid, cvpj_notelistindex, cvpj_instdata)
             tracks.r_basicdata(cvpj_l, cvpj_trackid, cvpj_trackname, idvals.get_idval(idvals_inst_caustic, machine['id'], 'color'), mach_mixer_vol[machnum-1], mach_mixer_pan[machnum-1])

@@ -571,7 +571,8 @@ class input_it(plugin_input.base):
                     cvpj_loop['enabled'] = int(it_singlesample['flags'][3])
                     if int(it_singlesample['flags'][1]) == 0: cvpj_loop['mode'] = 'normal'
                     else: cvpj_loop['mode'] = 'pingpong'
-                    cvpj_loop['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
+                    if int(it_singlesample['flags'][3]) != 0:
+                        cvpj_loop['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
 
                     plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
 

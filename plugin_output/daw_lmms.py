@@ -228,7 +228,7 @@ def get_plugin_param(pluginautoid, xmltag, xmlname, pluginid, paramname, fallbac
             autovarX.set(name, str(kwargs[name]))
         return autovarX
     else:
-        xmltag.set(paramname, str(outparam))
+        xmltag.set(xmlname, str(outparam))
 
 
 
@@ -633,7 +633,7 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
 
         print('[output-lmms]       Audio FX: [eq] ')
         fxslotX.set('name', 'eq')
-        xml_lmmsnat = ET.SubElement(fxslotX, 'Eq')
+        xml_lmmseq = ET.SubElement(fxslotX, 'Eq')
 
         data_LP =        [False,0,0,0,0]
         data_Lowshelf =  [False,0,0,0,0]
@@ -642,9 +642,6 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
         data_HP =        [False,0,0,0,0]
 
         banddata = plugins.get_eqband(cvpj_l, pluginid)
-
-        get_plugin_param(pluginautoid, xml_lmmsnat, 'Outputgain', pluginid, 'gain_out', 0)
-        get_plugin_param(pluginautoid, xml_lmmsnat, 'Inputgain', pluginid, 'gain_in', 0)
 
         for s_band in banddata:
             bandtype = s_band['type']
@@ -667,29 +664,32 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
             if bandtype == 'high_shelf': data_HighShelf = part
             if bandtype == 'high_pass': data_HP = part
 
-        xml_lmmsnat.set('LPactive', str(data_LP[1]))
-        xml_lmmsnat.set('LPfreq', str(data_LP[2]))
-        xml_lmmsnat.set('LPres', str(data_LP[4]))
+        xml_lmmseq.set('LPactive', str(data_LP[1]))
+        xml_lmmseq.set('LPfreq', str(data_LP[2]))
+        xml_lmmseq.set('LPres', str(data_LP[4]))
 
-        xml_lmmsnat.set('Lowshelfactive', str(data_Lowshelf[1]))
-        xml_lmmsnat.set('LowShelffreq', str(data_Lowshelf[2]))
-        xml_lmmsnat.set('Lowshelfgain', str(data_Lowshelf[3]))
-        xml_lmmsnat.set('LowShelfres', str(data_Lowshelf[4]))
+        xml_lmmseq.set('Lowshelfactive', str(data_Lowshelf[1]))
+        xml_lmmseq.set('LowShelffreq', str(data_Lowshelf[2]))
+        xml_lmmseq.set('Lowshelfgain', str(data_Lowshelf[3]))
+        xml_lmmseq.set('LowShelfres', str(data_Lowshelf[4]))
 
         for num in range(4):
-            xml_lmmsnat.set('Peak'+str(num+1)+'active', str(data_Peaks[num][1]))
-            xml_lmmsnat.set('Peak'+str(num+1)+'freq', str(data_Peaks[num][2]))
-            xml_lmmsnat.set('Peak'+str(num+1)+'gain', str(data_Peaks[num][3]))
-            xml_lmmsnat.set('Peak'+str(num+1)+'bw', str(data_Peaks[num][4]))
+            xml_lmmseq.set('Peak'+str(num+1)+'active', str(data_Peaks[num][1]))
+            xml_lmmseq.set('Peak'+str(num+1)+'freq', str(data_Peaks[num][2]))
+            xml_lmmseq.set('Peak'+str(num+1)+'gain', str(data_Peaks[num][3]))
+            xml_lmmseq.set('Peak'+str(num+1)+'bw', str(data_Peaks[num][4]))
 
-        xml_lmmsnat.set('Highshelfactive', str(data_HighShelf[1]))
-        xml_lmmsnat.set('Highshelffreq', str(data_HighShelf[2]))
-        xml_lmmsnat.set('HighShelfgain', str(data_HighShelf[3]))
-        xml_lmmsnat.set('HighShelfres', str(data_HighShelf[4]))
+        xml_lmmseq.set('Highshelfactive', str(data_HighShelf[1]))
+        xml_lmmseq.set('Highshelffreq', str(data_HighShelf[2]))
+        xml_lmmseq.set('HighShelfgain', str(data_HighShelf[3]))
+        xml_lmmseq.set('HighShelfres', str(data_HighShelf[4]))
 
-        xml_lmmsnat.set('HPactive', str(data_HP[1]))
-        xml_lmmsnat.set('HPfreq', str(data_HP[2]))
-        xml_lmmsnat.set('HPres', str(data_HP[4]))
+        xml_lmmseq.set('HPactive', str(data_HP[1]))
+        xml_lmmseq.set('HPfreq', str(data_HP[2]))
+        xml_lmmseq.set('HPres', str(data_HP[4]))
+
+        get_plugin_param(pluginautoid, xml_lmmseq, 'Outputgain', pluginid, 'gain_out', 0)
+        get_plugin_param(pluginautoid, xml_lmmseq, 'Inputgain', pluginid, 'gain_in', 0)
 
 
     elif plugintype == ['vst2', 'win']:

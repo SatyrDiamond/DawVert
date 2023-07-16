@@ -25,7 +25,7 @@ def convert(cvpj_l, pluginid, plugintype):
 	if plugintype[1] in ['square', 'triangle', 'noise', 'pulse'] and m8bp_out == True:
 		params_various_inst.m8bp_init()
 
-		a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'volume')
+		a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'vol')
 		params_various_inst.m8bp_setvalue("attack", a_attack)
 		params_various_inst.m8bp_setvalue("decay", a_decay)
 		params_various_inst.m8bp_setvalue("suslevel", a_sustain)

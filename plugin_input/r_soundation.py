@@ -4,10 +4,22 @@
 from functions import data_bytes
 from functions import tracks
 from functions import colors
+from functions import plugins
+from functions import xtramath
 from functions import note_data
 import plugin_input
 import struct
 import json
+
+def get_paramval(i_params, i_name):
+    outval = 0
+    if i_name in i_params:
+        if 'value' in i_params[i_name]:
+            outval = i_params[i_name]['value']
+    return outval
+
+def get_param(i_name, i_plugid, i_params):
+    plugins.add_plug_param(cvpj_l, i_plugid, i_name, get_paramval(i_params, i_name), 'float', i_name)
 
 def parse_clip_notes(sndstat_clip):
     cvpj_notelist = []
@@ -55,6 +67,7 @@ class input_soundation(plugin_input.base):
         'placement_loop': True
         }
     def parse(self, input_file, extra_param):
+        global cvpj_l
         bytestream = open(input_file, 'r')
         sndstat_data = json.load(bytestream)
 
@@ -75,11 +88,78 @@ class input_soundation(plugin_input.base):
             trackid = 'soundation'+str(tracknum)
             trackcolor = colors.hsv_to_rgb(tracknum_hue, 0.7, 0.7)
             if sound_chan_type == 'instrument':
-                tracks.r_create_inst(cvpj_l, trackid, {})
+                pluginid = plugins.get_id()
+                tracks.r_create_inst(cvpj_l, trackid, {'pluginid': pluginid})
                 tracks.r_basicdata(cvpj_l, trackid, sndstat_chan['name'], [trackcolor[0], trackcolor[1], trackcolor[2]], sndstat_chan['volume'], (sndstat_chan['pan']-0.5)*2)
                 tracks.r_param(cvpj_l, trackid, 'enabled', int(not sndstat_chan['mute']))
                 tracks.r_param(cvpj_l, trackid, 'solo', int(sndstat_chan['solo']))
+
+                sound_instdata = sndstat_chan['instrument']
+                instpluginname = sound_instdata['identifier']
+
+                if instpluginname in ['com.soundation.simple', 'com.soundation.GM-2', 'com.soundation.supersaw']:
+                    asdr_a = get_paramval(sound_instdata, 'attack')
+                    asdr_s = get_paramval(sound_instdata, 'sustain')
+                    asdr_d = get_paramval(sound_instdata, 'decay')
+                    asdr_r = get_paramval(sound_instdata, 'release')
+                    plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, asdr_a, 0, asdr_d, asdr_s, asdr_r, 1)
+
+                if instpluginname == 'com.soundation.GM-2':
+                    if 'value' in sound_instdata['sample_pack']:
+                        sample_pack = sound_instdata['sample_pack']['value']
+                        plugins.add_plug_data(cvpj_l, pluginid, 'sample_pack', sample_pack)
+
+                elif instpluginname == 'com.soundation.simple':
+                    asdrf_a = get_paramval(sound_instdata, 'filter_attack')
+                    asdrf_s = get_paramval(sound_instdata, 'filter_decay')
+                    asdrf_d = get_paramval(sound_instdata, 'filter_sustain')
+                    asdrf_r = get_paramval(sound_instdata, 'filter_release')
+                    asdrf_i = get_paramval(sound_instdata, 'filter_int')
+                    plugins.add_asdr_env(cvpj_l, pluginid, 'cutoff', 0, asdrf_a, 0, asdrf_d, asdrf_s, asdrf_r, asdrf_i)
+
+                    filter_cutoff = xtramath.betweenvalues(20, 7500, get_paramval(sound_instdata, 'filter_cutoff'))
+                    filter_reso = get_paramval(sound_instdata, 'filter_resonance')
+
+                    plugins.add_filter(cvpj_l, pluginid, True, filter_cutoff, filter_reso, 'lowpass', None)
+
+                    for snd_param in ['noise_vol', 'noise_color']:
+                        get_param(snd_param, pluginid, sound_instdata)
+
+                    for oscnum in range(4):
+                        for paramtype in ['detune','pitch','type','vol']:
+                            get_param('osc_'+str(oscnum)+'_'+paramtype, pluginid, sound_instdata)
+
+                else:
+                    snd_params = []
+                    if instpluginname == 'com.soundation.va_synth': snd_params = ["aatt", "adec", "arel", "asus", "fatt", "fdec", "fdyn", "feg", "ffreq", "frel", "fres", "fsus", "glide_bend", "glide_mode", "glide_rate", "lfolpf", "lfoosc", "lforate", "octave", "osc_2_fine", "osc_2_mix", "osc_2_noise", "osc_2_octave", "tune"]
+                    if instpluginname == 'com.soundation.supersaw': snd_params = ["detune", "spread"]
+                    for snd_param in snd_params:
+                        get_param(snd_param, pluginid, sound_instdata)
+
                 for sndstat_region in sndstat_chan['regions']:
                     tracks.r_pl_notes(cvpj_l, trackid, parse_clip_notes(sndstat_region))
+
+            sound_chan_effects = sndstat_chan['effects']
+            for sound_chan_effect in sound_chan_effects:
+                fxpluginid = plugins.get_id()
+                fxpluginname = sound_chan_effect['identifier']
+                fxenabled = not sound_chan_effect['bypass']
+                plugins.add_plug(cvpj_l, fxpluginid, 'native-soundation', fxpluginname)
+                plugins.add_plug_fxdata(cvpj_l, fxpluginid, fxenabled, 1)
+                tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', fxpluginid)
+                snd_params = []
+
+                if fxpluginname == 'com.soundation.compressor': snd_params = ['gain','release','ratio','threshold','attack']
+                elif fxpluginname == 'com.soundation.parametric-eq': snd_params = ["highshelf_enable", "highshelf_freq", "highshelf_gain", "highshelf_res", "hpf_enable", "hpf_freq", "hpf_res", "hpf_slope", "lowshelf_enable", "lowshelf_freq", "lowshelf_gain", "lowshelf_res", "lpf_enable", "lpf_freq", "lpf_res", "lpf_slope", "master_gain", "peak1_enable", "peak1_freq", "peak1_gain", "peak1_res", "peak2_enable", "peak2_freq", "peak2_gain", "peak2_res", "peak3_enable", "peak3_freq", "peak3_gain", "peak3_res", "peak4_enable", "peak4_freq", "peak4_gain", "peak4_res"]
+                elif fxpluginname == 'com.soundation.fakie': snd_params = ['attack','hold','release','depth']
+                elif fxpluginname == 'com.soundation.reverb': snd_params = ['size','damp','width','wet','dry']
+                elif fxpluginname == 'com.soundation.distortion': snd_params = ['gain','volume','mode']
+                elif fxpluginname == 'com.soundation.filter': snd_params = ['cutoff','resonance','mode']
+                elif fxpluginname == 'com.soundation.equalizer': snd_params = ['low','mid','high']
+                elif fxpluginname == 'com.soundation.tremolo': snd_params = ['speed','depth','phase']
+                else: print('UNKNOWN', fxpluginname)
+
+                for snd_param in snd_params:
+                    get_param(snd_param, fxpluginid, sound_chan_effect)
 
         return json.dumps(cvpj_l)

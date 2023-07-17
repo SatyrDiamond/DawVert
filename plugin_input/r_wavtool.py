@@ -174,8 +174,7 @@ class input_wavtool(plugin_input.base):
         samplefolder = extra_param['samplefolder']
 
         for jsonname in zip_data.namelist():
-            if '.json' in jsonname:
-                json_filename = jsonname
+            if '.json' in jsonname: json_filename = jsonname
 
         t_wavtool_project = zip_data.read(json_filename)
         j_wvtl_project = json.loads(t_wavtool_project)

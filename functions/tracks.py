@@ -182,6 +182,8 @@ def fxrack_add(cvpj_l, fx_num, fx_name, fx_color, fx_vol, fx_pan):
     fxdata = cvpj_l['fxrack'][str(fx_num)]
     if fx_color != None: fxdata['color'] = fx_color
     if fx_name != None: fxdata['name'] = fx_name
+    if fx_vol != None: fxdata['vol'] = fx_vol
+    if fx_pan != None: fxdata['pan'] = fx_pan
 
 def fxrack_param(cvpj_l, fx_num, v_name, v_value):
     data_values.nested_dict_add_value(cvpj_l, ['fxrack', str(fx_num)], {})

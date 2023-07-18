@@ -7,10 +7,10 @@ def clamp(n, minn, maxn):
 def overlap(start1, end1, start2, end2):
     return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
 
-def betweenvalues(minval, maxval, value): 
+def between_from_one(minval, maxval, value): 
     return (minval*(1-value))+(maxval*value)
 
-def betweenvalues_r(minval, maxval, value): 
+def between_to_one(minval, maxval, value): 
     if minval == maxval: return 0
     else: return (value-minval)/(maxval-minval)
 
@@ -29,6 +29,6 @@ def steps_to_one(in_val, steps):
         step = steps[index_n]
         index = index_n-1
         if is_between(prev_step, step, in_val) == True:
-            return betweenvalues_r(prev_step, step, in_val)*(1/maxlen)+(index/maxlen)
+            return between_to_one(prev_step, step, in_val)*(1/maxlen)+(index/maxlen)
         prev_step = step
     return 0

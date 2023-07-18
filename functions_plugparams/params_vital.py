@@ -406,7 +406,7 @@ def importcvpj_env_block(cvpj_l, pluginid, lfo_num, a_type):
             blockcount = len(blockvals)
             if 'max' in blockdata: 
                 maxval = blockdata['max']
-                blockvals = [xtramath.betweenvalues_r(0, maxval, i) for i in blockvals]
+                blockvals = [xtramath.between_to_one(0, maxval, i) for i in blockvals]
 
             vital_points = []
             vital_powers = []

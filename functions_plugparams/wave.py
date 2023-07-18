@@ -64,7 +64,7 @@ def cvpjwave2wave(cvpj_l, pluginid, wave_name):
         wavedata_points = wavedata['points']
         if 'range' in wavedata:
             rangedata = wavedata['range']
-            wavedata_points = [xtramath.betweenvalues_r(rangedata[0], rangedata[1], i) for i in wavedata_points]
+            wavedata_points = [xtramath.between_to_one(rangedata[0], rangedata[1], i) for i in wavedata_points]
         return resizewave(wavedata_points)
     else: return None
 
@@ -89,7 +89,7 @@ def cvpjharm2wave(cvpj_l, pluginid, harm_name):
             wavedata_points.append(sample)
         min_value = min(wavedata_points)
         max_value = max(wavedata_points)
-        wavedata_points = [xtramath.betweenvalues_r(min_value, max_value, i) for i in wavedata_points]
+        wavedata_points = [xtramath.between_to_one(min_value, max_value, i) for i in wavedata_points]
         return wavedata_points
     else: return None
 

@@ -691,6 +691,20 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
         get_plugin_param(pluginautoid, xml_lmmseq, 'Outputgain', pluginid, 'gain_out', 0)
         get_plugin_param(pluginautoid, xml_lmmseq, 'Inputgain', pluginid, 'gain_in', 0)
 
+    elif plugintype == ['delay', 'single']:
+
+        print('[output-lmms]       Audio FX: [delay] ')
+        fxslotX.set('name', 'delay')
+        xml_lmmsdelay = ET.SubElement(fxslotX, 'Delay')
+
+        time_type = plugins.get_plug_dataval(cvpj_l, pluginid, 'timetype', 'seconds')
+
+        if time_type == 'seconds': 
+            get_plugin_param(pluginautoid, xml_lmmsdelay, 'DelayTimeSamples', pluginid, 'time_seconds', 0)
+        get_plugin_param(pluginautoid, xml_lmmsdelay, 'FeebackAmount', pluginid, 'feedback', 0)
+        get_plugin_param(pluginautoid, xml_lmmsdelay, 'LfoAmount', pluginid, 'lfo_amount', 0)
+        get_plugin_param(pluginautoid, xml_lmmsdelay, 'LfoFrequency', pluginid, 'lfo_freq', 0)
+        get_plugin_param(pluginautoid, xml_lmmsdelay, 'OutGain', pluginid, 'gain_out', 0)
 
     elif plugintype == ['vst2', 'win']:
         print('[output-lmms]       Audio FX: [vst2] ')
@@ -906,7 +920,8 @@ class output_lmms(plugin_output.base):
         'placement_cut': False,
         'placement_loop': False,
         'auto_nopl': False,
-        'track_nopl': False
+        'track_nopl': False,
+        'traits_fx_delay': ['time_seconds', 'lfo', 'gain_out'],
         }
     def getsupportedplugins(self): return ['sampler', 'sf2', 'vst2', 'ladspa', 'opl2']
     def parse(self, convproj_json, output_file):

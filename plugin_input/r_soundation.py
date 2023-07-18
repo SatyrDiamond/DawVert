@@ -124,7 +124,7 @@ class input_soundation(plugin_input.base):
                         asdrf_r = get_paramval(sound_instdata, 'filter_release')
                         asdrf_i = get_paramval(sound_instdata, 'filter_int')
                         plugins.add_asdr_env(cvpj_l, pluginid, 'cutoff', 0, asdrf_a, 0, asdrf_d, asdrf_s, asdrf_r, asdrf_i)
-                        filter_cutoff = xtramath.betweenvalues(20, 7500, get_paramval(sound_instdata, 'filter_cutoff'))
+                        filter_cutoff = xtramath.between_from_one(20, 7500, get_paramval(sound_instdata, 'filter_cutoff'))
                         filter_reso = get_paramval(sound_instdata, 'filter_resonance')
                         plugins.add_filter(cvpj_l, pluginid, True, filter_cutoff, filter_reso, 'lowpass', None)
                         for snd_param in ['noise_vol', 'noise_color']:

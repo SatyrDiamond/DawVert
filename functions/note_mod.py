@@ -80,7 +80,7 @@ def pitchmod2point(cvpj_note, position, ptype, maindur, slideparam, input_pitch)
 			pitchpoints.append({'position': position, 'value': pitch_prev})
 			pitchpoints.append({'position': position+slideparam, 'value': pitch_cur})
 		elif slideparam > maindur:
-			pitch_cur = xtramath.betweenvalues(pitch_prev, pitch_prev+input_pitch, maindur/slideparam)
+			pitch_cur = xtramath.between_from_one(pitch_prev, pitch_prev+input_pitch, maindur/slideparam)
 			pitchpoints.append({'position': position, 'value': pitch_prev})
 			pitchpoints.append({'position': position+maindur, 'value': pitch_cur})
 

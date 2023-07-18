@@ -91,11 +91,12 @@ xmodits_py - for extracting Impulse Tracker and FastTracker2 Samples
 | M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | M-I | ```flp``` | FL Studio | ```.flp``` | ✔️ |
 | R | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ |
-| R | ```lmms``` | LMMS | ```.mmp``` | ✔️ |
+| R | ```lmms``` | LMMS | ```.mmp```/```.mmpz``` | ✔️ |
 | M | ```mod``` | ProTracker | ```.mod``` | ❌ | 
 | M | ```xm``` | FastTracker 2 | ```.xm``` | ✔️ | 
 | M | ```s3m``` | Scream Tracker 3 | ```.s3m``` | ✔️ | 
 | M | ```it``` | Impulse Tracker | ```.it``` | ✔️ | 
+| M | ```umx``` | Unreal Music Package  | ```.umx``` | ✔️ | 
 | R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ |
 | M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ |
 | M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 

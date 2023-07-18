@@ -124,3 +124,11 @@ def time_from_seconds(i_dict, i_name, i_stretched, i_value, i_rate):
 
     i_dict[i_name+'_nonstretch'] = out_nonstretch
     i_dict[i_name] = out_normal
+
+
+def list_traits_supported(i_required, i_supported):
+    print(i_required)
+    print(i_supported)
+    for part in i_supported:
+        if part in i_required: i_required.remove(part)
+    return i_required == []

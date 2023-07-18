@@ -4,7 +4,6 @@
 import struct
 import base64
 from functions import data_bytes
-from functions import list_vst
 from io import BytesIO
 
 def read_vst2_chunk(in_stream):

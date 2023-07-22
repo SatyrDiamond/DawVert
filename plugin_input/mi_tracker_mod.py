@@ -175,9 +175,6 @@ class input_mod(plugin_input.base):
         
         samplefolder = extra_param['samplefolder']
 
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
-
         file_stream = open(input_file, 'rb')
         mod_name = data_bytes.readstring_fixedlen(file_stream, 20, "ascii")
         print("[input-mod] Song Name: " + str(mod_name))
@@ -190,14 +187,15 @@ class input_mod(plugin_input.base):
             mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart, mod_inst_looplength = struct.unpack('>HBBHH', file_stream.read(8))
             print('[input-mod] Instrument ' + str(mod_numinst) + ': ' + mod_inst_mod_name)
             table_samples.append([mod_inst_mod_name, mod_inst_length, mod_inst_finetune, mod_inst_defaultvol, mod_inst_loopstart*2, mod_inst_looplength*2])
-            cvpj_l_instruments[text_inst_start + str(mod_numinst)] = {}
-            cvpj_l_single_inst = cvpj_l_instruments[text_inst_start + str(mod_numinst)]
+
+            cvpj_instid = text_inst_start + str(mod_numinst)
 
             pluginid = plugins.get_id()
-            if mod_inst_mod_name != "": cvpj_l_single_inst['name'] = mod_inst_mod_name
-            else: cvpj_l_single_inst['name'] = ' '
-            cvpj_l_single_inst['vol'] = 0.3
-            cvpj_l_single_inst['instdata'] = {'pluginid': pluginid}
+            if mod_inst_mod_name != "": cvpj_instname = mod_inst_mod_name
+            else: cvpj_instname = ' '
+            tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=[0.33, 0.33, 0.33])
+            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+            tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
             
             if mod_inst_length != 0 and mod_inst_length != 1:
                 wave_path = samplefolder + str(mod_numinst).zfill(2) + '.wav'
@@ -216,11 +214,6 @@ class input_mod(plugin_input.base):
                 else: cvpj_loopdata['enabled'] = 0
 
                 plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loopdata)
-
-            else: 
-                cvpj_l_single_inst['color'] = [0.33, 0.33, 0.33]
-
-            cvpj_l_instrumentsorder.append(text_inst_start + str(mod_numinst))
 
         mod_orderlist_length = int.from_bytes(file_stream.read(1), "big")
         mod_extravalue = int.from_bytes(file_stream.read(1), "big")
@@ -290,9 +283,7 @@ class input_mod(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         cvpj_l['use_instrack'] = False
         
-        cvpj_l['instruments_data'] = cvpj_l_instruments
-        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['bpm'] = cvpj_bpm
+        song.add_param(cvpj_l, 'bpm', cvpj_bpm)
         return json.dumps(cvpj_l)
 

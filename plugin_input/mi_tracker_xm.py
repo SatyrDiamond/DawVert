@@ -258,20 +258,15 @@ def parse_instrument(file_stream, samplecount):
         file_stream.read(t_sampleheader[0][0])
 
     pluginid = plugins.get_id()
-    it_samplename = startinststr + str(samplecount+1)
-    cvpj_l_instruments[it_samplename] = {}
-    cvpj_l_single_inst = cvpj_l_instruments[it_samplename]
-    cvpj_l_single_inst['color'] = [0.16, 0.33, 0.53]
-    cvpj_l_single_inst['name'] = xm_inst_name
-    cvpj_l_single_inst['vol'] = 0.3
-    cvpj_l_single_inst['instdata'] = {'pluginid': pluginid}
+    cvpj_instid = startinststr + str(samplecount+1)
 
+    tracks.m_inst_create(cvpj_l, cvpj_instid, name=xm_inst_name, color=[0.16, 0.33, 0.53])
+    tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
     if xm_inst_num_samples == 0:
         pass
     elif xm_inst_num_samples == 1:
-
-        cvpj_l_single_inst['vol'] = 0.3*(t_sampleheaders[0][0][3]/64)
+        tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', 0.3*(t_sampleheaders[0][0][3]/64), 'float')
         plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, samplefolder+str(xm_cursamplenum)+'.wav')
         plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
         plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
@@ -292,7 +287,7 @@ def parse_instrument(file_stream, samplecount):
             plugins.add_plug_data(cvpj_l, pluginid, 'loop', 
                 {"enabled": 1, "mode": loopon, "points": [xm_loop_start,xm_loop_start+xm_loop_len]})
     else:
-        cvpj_l_single_inst['vol'] = 0.3
+        tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
         sampleregions = data_values.list_to_reigons(xm_inst_e_table, 48)
         plugins.add_plug_multisampler(cvpj_l, pluginid)
         plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
@@ -353,7 +348,6 @@ def parse_instrument(file_stream, samplecount):
 
         plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
 
-    cvpj_l_instrumentsorder.append(it_samplename)
     if xm_inst_num_samples != 0: xm_cursamplenum += xm_inst_num_samples
 
 class input_xm(plugin_input.base):
@@ -377,8 +371,6 @@ class input_xm(plugin_input.base):
 
     def parse(self, input_file, extra_param):
         global cvpj_l
-        global cvpj_l_instruments
-        global cvpj_l_instrumentsorder
         global samplefolder
         global current_speed
         global xm_cursamplenum
@@ -389,8 +381,6 @@ class input_xm(plugin_input.base):
 
         samplefolder = extra_param['samplefolder']
         
-        cvpj_l_instruments = {}
-        cvpj_l_instrumentsorder = []
         cvpj_l_playlist = []
 
         file_stream = open(input_file, 'rb')
@@ -466,9 +456,8 @@ class input_xm(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         cvpj_l['use_instrack'] = False
         
-        cvpj_l['instruments_data'] = cvpj_l_instruments
-        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['bpm'] = xm_song_bpm
+        cvpj_l['timesig'] = [4,4]
+        song.add_param(cvpj_l, 'bpm', xm_song_bpm)
         return json.dumps(cvpj_l)
 

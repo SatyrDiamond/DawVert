@@ -70,8 +70,7 @@ class output_cvpj_f(plugin_output.base):
             midi_numerator = 4
             midi_denominator = 4
 
-            if 'timesig_numerator' in projJ: midi_numerator = int(projJ['timesig_numerator'])
-            if 'timesig_denominator' in projJ: midi_denominator = int(projJ['timesig_denominator'])
+            if 'timesig' in projJ: midi_numerator, midi_denominator = projJ['timesig']
             if 'bpm' in projJ: midi_tempo = mido.bpm2tempo(projJ['bpm'])
 
             multi_miditrack[0].append(mido.MetaMessage('time_signature', numerator=midi_numerator, denominator=midi_denominator, clocks_per_click=24, notated_32nd_notes_per_beat=8, time=0))

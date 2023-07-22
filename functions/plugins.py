@@ -80,20 +80,11 @@ def get_plug_olddataval(cvpj_l, pluginid, paramname, fallbackval):
 
 # -------------------------------------------------- param
 
-def add_plug_param(cvpj_l, pluginid, i_name, p_value, p_type, p_name):
-	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'params', i_name], 
-		params.make(p_value, p_type, p_name)
-		)
+def add_plug_param(cvpj_l, pluginid, p_id, p_value, p_type, p_name):
+	params.add(cvpj_l, ['plugins', pluginid], p_id, p_value, p_type, visname=p_name)
 
 def get_plug_param(cvpj_l, pluginid, paramname, fallbackval):
-	paramdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'params', paramname])
-	if paramdata != None: return paramdata['value'], paramdata['type'], paramdata['name']
-	return fallbackval, 'notfound', ''
-
-def get_plug_oldparam(cvpj_l, pluginid, paramname, fallbackval):
-	paramdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'params_old', paramname])
-	if paramdata != None: return paramdata['value'], paramdata['type'], paramdata['name']
-	return fallbackval, 'notfound', ''
+	return params.get(cvpj_l, ['plugins', pluginid], paramname, fallbackval)
 
 def get_plug_paramlist(cvpj_l, pluginid):
 	output = []

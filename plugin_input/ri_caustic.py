@@ -10,6 +10,7 @@ from functions import note_data
 from functions import plugins
 from functions import placements
 from functions import tracks
+from functions import song
 import plugin_input
 import os.path
 import json
@@ -224,26 +225,18 @@ class input_cvpj_r(plugin_input.base):
 
             cvpj_notelistindex = {}
 
-            if machine['id'] != 'NULL':
-                if 'patterns' in machine:
-                    patterns = machine['patterns']
-                    for pattern in patterns:
-                        patid = pattern
-                        causticpattern = patterns[pattern]
-                        notelist = parse_notelist(causticpattern, machid)
-                        if notelist != []: 
-                            cvpj_notelistindex[patid] = {}
-                            cvpj_notelistindex[patid]['name'] = pattern
-                            cvpj_notelistindex[patid]['notelist'] = notelist
-
             pluginid = 'machine'+machid
             cvpj_trackid = 'MACH'+machid
             cvpj_instdata = {'pluginid': pluginid}
 
+            cvpj_trackcolor = idvals.get_idval(idvals_inst_caustic, machine['id'], 'color')
+            tracks.r_create_track(cvpj_l, 'instrument', cvpj_trackid, name=cvpj_trackname, color=cvpj_trackcolor)
+            tracks.r_track_pluginid(cvpj_l, cvpj_trackid, pluginid)
+
             # -------------------------------- PCMSynth --------------------------------
             if machine['id'] == 'PCMS':
                 middlenote = 0
-                cvpj_instdata['usemasterpitch'] = 1
+                tracks.r_add_param(cvpj_l, cvpj_trackid, 'usemasterpitch', True, 'bool')
                 if len(machine['regions']) == 1:
                     singlewav = machine['regions'][0]
                     if singlewav['key_lo'] == 24 and singlewav['key_hi'] == 108: isMultiSampler = False
@@ -296,13 +289,13 @@ class input_cvpj_r(plugin_input.base):
                 middlenote += int(pcms_c[1]*12)
                 middlenote += int(pcms_c[2])
 
-                cvpj_instdata['pitch'] = pcms_c[3]
+                tracks.r_add_param(cvpj_l, cvpj_trackid, 'pitch', pcms_c[3], 'float')
 
                 plugins.add_asdr_env(cvpj_l, pluginid, 'volume', 0, pcms_c[5], 0, pcms_c[6], pcms_c[7], pcms_c[8], 1)
 
             # -------------------------------- BeatBox --------------------------------
             elif machine['id'] == 'BBOX':
-                cvpj_instdata['usemasterpitch'] = 0
+                tracks.r_add_param(cvpj_l, cvpj_trackid, 'usemasterpitch', False, 'bool')
                 plugins.add_plug_multisampler(cvpj_l, pluginid)
                 samplecount = 0
                 bbox_key = -12
@@ -336,12 +329,20 @@ class input_cvpj_r(plugin_input.base):
                     wavedata = list(struct.unpack("<"+("h"*660), machine['customwaveform2']))
                     plugins.add_plug_data(cvpj_l, pluginid, 'customwaveform2', wavedata)
 
-            tracks.ri_create_inst(cvpj_l, cvpj_trackid, cvpj_notelistindex, cvpj_instdata)
-            tracks.r_basicdata(cvpj_l, cvpj_trackid, cvpj_trackname, idvals.get_idval(idvals_inst_caustic, machine['id'], 'color'), mach_mixer_vol[machnum-1], mach_mixer_pan[machnum-1])
-            tracks.r_param(cvpj_l, cvpj_trackid, 'enabled', int(not bool(mach_mixer_mute[machnum-1])))
-            tracks.r_param(cvpj_l, cvpj_trackid, 'solo', mach_mixer_solo[machnum-1])
+            tracks.r_add_param(cvpj_l, cvpj_trackid, 'vol', mach_mixer_vol[machnum-1], 'float')
+            tracks.r_add_param(cvpj_l, cvpj_trackid, 'pan', mach_mixer_pan[machnum-1], 'float')
+            tracks.r_add_param(cvpj_l, cvpj_trackid, 'enabled', int(not bool(mach_mixer_mute[machnum-1])), 'bool')
+            tracks.r_add_param(cvpj_l, cvpj_trackid, 'solo', mach_mixer_solo[machnum-1], 'bool')
 
-            cvpj_fxchaindata = []
+            if machine['id'] != 'NULL':
+                if 'patterns' in machine:
+                    patterns = machine['patterns']
+                    for pattern in patterns:
+                        patid = pattern
+                        causticpattern = patterns[pattern]
+                        notelist = parse_notelist(causticpattern, machid)
+                        if notelist != []: 
+                            tracks.ri_nle_add(cvpj_l, cvpj_trackid, patid, notelist, pattern)
 
             if machnum in CausticData['EFFX']:
                 CausticFXData = CausticData['EFFX'][machnum]
@@ -559,8 +560,7 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
 
-        cvpj_l['bpm'] = CausticData['Tempo']
-        cvpj_l['timesig_numerator'] = CausticData['Numerator']
-        cvpj_l['timesig_denominator'] = 4
+        song.add_param(cvpj_l, 'bpm', CausticData['Tempo'])
+        cvpj_l['timesig'] = [CausticData['Numerator'], 4]
         return json.dumps(cvpj_l)
 

@@ -6,6 +6,7 @@ from functions import placement_data
 from functions import idvals
 from functions import tracks
 from functions import plugins
+from functions import song
 import plugin_input
 import json
 
@@ -133,8 +134,9 @@ class input_ceol(plugin_input.base):
             if ceol_inst_number == 365: t_key_offset.append(24)
             else: t_key_offset.append(0)
 
-            tracks.m_create_inst(cvpj_l, cvpj_instid, {'pluginid': pluginid})
-            tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, cvpj_instvol, 0.0)
+            tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)
+            tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
+            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
         ceol_numpattern = ceol_read()
         for patnum in range(ceol_numpattern):
@@ -211,5 +213,5 @@ class input_ceol(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         
         cvpj_l['keynames_data'] = cvpj_l_keynames_data
-        cvpj_l['bpm'] = ceol_basic_bpm
+        song.add_param(cvpj_l, 'bpm', ceol_basic_bpm)
         return json.dumps(cvpj_l)

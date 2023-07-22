@@ -55,11 +55,10 @@ class input_cvpj_f(plugin_input.base):
 
         tracknum = 0
         for mmc_track in mmc_tracks:
-            trackid = 'CH'+str(tracknum)
-            tracks.r_create_inst(cvpj_l, trackid, {})
-            tracks.r_basicdata(cvpj_l, trackid, trackid, maincolor, None, None)
-            tracks.r_param(cvpj_l, trackid, 'enabled', int(not getvalue(mmc_track, 'Mute', False)))
-            tracks.r_param(cvpj_l, trackid, 'solo', int(getvalue(mmc_track, 'Solo', False)))
+            cvpj_instid = 'CH'+str(tracknum)
+            tracks.r_create_track(cvpj_l, 'instrument', cvpj_instid, color=maincolor)
+            tracks.r_add_param(cvpj_l, cvpj_instid, 'enabled', int(not getvalue(mmc_track, 'Mute', False)), 'bool')
+            tracks.r_add_param(cvpj_l, cvpj_instid, 'solo', int(getvalue(mmc_track, 'Solo', False)), 'bool')
 
             cvpj_notelist = []
 
@@ -85,7 +84,7 @@ class input_cvpj_f(plugin_input.base):
                 cvpj_notedata = note_data.rx_makenote(notepos, notedur, notekey, notevol, notepan)
                 cvpj_notelist.append(cvpj_notedata)
 
-            tracks.r_pl_notes(cvpj_l, trackid, placement_data.nl2pl(cvpj_notelist))
+            tracks.r_pl_notes(cvpj_l, cvpj_instid, placement_data.nl2pl(cvpj_notelist))
 
             tracknum += 1
 
@@ -94,7 +93,8 @@ class input_cvpj_f(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
+        cvpj_l['timesig'] = [4, 4]
 
-        cvpj_l['bpm'] = mmc_bpm
+        song.add_param(cvpj_l, 'bpm', mmc_bpm)
         return json.dumps(cvpj_l)
 

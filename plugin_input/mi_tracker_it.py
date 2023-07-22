@@ -445,7 +445,7 @@ class input_it(plugin_input.base):
                     bn_s_t_f = bn_s_t[12]
 
                 pluginid = plugins.get_id()
-                cvpj_instdata = {'pluginid': pluginid}
+
                 if bn_s_t_ifsame == True and str(bn_s_t_f[1]-1) in IT_Samples:
                     it_singlesample = IT_Samples[str(bn_s_t_f[1]-1)]
 
@@ -493,16 +493,17 @@ class input_it(plugin_input.base):
                         else: outputreso = 1
                         plugins.add_filter(cvpj_l, pluginid, True, outputcutoff, outputreso, "lowpass", None)
 
-                cvpj_instdata_midi = {}
-                cvpj_instdata_midi['out'] = {}
-                if 'midi_chan' in it_singleinst: 
-                    cvpj_instdata_midi['out']['enabled'] = 1
-                    cvpj_instdata_midi['out']['channel'] = it_singleinst['midi_chan']+1
-                if 'midi_inst' in it_singleinst: cvpj_instdata_midi['out']['program'] = it_singleinst['midi_inst']+1
-                if 'midi_bank' in it_singleinst: cvpj_instdata_midi['out']['bank'] = it_singleinst['midi_bank']+1
-                cvpj_instdata['midi'] = cvpj_instdata_midi
+                tracks.m_inst_create(cvpj_l, it_instname, name=cvpj_instname, color=[0.71, 0.58, 0.47])
 
-                tracks.m_create_inst(cvpj_l, it_instname, cvpj_instdata)
+                tracks.m_inst_pluginid(cvpj_l, it_instname, pluginid)
+
+                cvpj_instdata_midiout = {}
+                if 'midi_chan' in it_singleinst: 
+                    cvpj_instdata_midiout['enabled'] = 1
+                    cvpj_instdata_midiout['channel'] = it_singleinst['midi_chan']+1
+                if 'midi_inst' in it_singleinst: cvpj_instdata_midiout['program'] = it_singleinst['midi_inst']+1
+                if 'midi_bank' in it_singleinst: cvpj_instdata_midiout['bank'] = it_singleinst['midi_bank']+1
+                tracks.m_inst_add_dataval(cvpj_l, it_instname, 'midi', 'output', cvpj_instdata_midiout)
 
                 filterenv_used = False
 
@@ -549,12 +550,12 @@ class input_it(plugin_input.base):
 
                 plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
                 plugins.env_point_to_asdr(cvpj_l, pluginid, 'cutoff')
-                tracks.m_basicdata_inst(cvpj_l, it_instname, cvpj_instname, [0.71, 0.58, 0.47], track_volume, None)
+                tracks.m_inst_add_param(cvpj_l, it_instname, 'vol', track_volume, 'float')
 
                 instrumentcount += 1
         if it_header_flag_useinst == 0:
             for IT_Sample in IT_Samples:
-                it_samplename = startinststr + str(samplecount+1)
+                it_instname = startinststr + str(samplecount+1)
                 it_singlesample = IT_Samples[IT_Sample]
                 if it_singlesample['name'] != '': cvpj_instname = it_singlesample['name']
                 elif it_singlesample['dosfilename'] != '': cvpj_instname = it_singlesample['dosfilename']
@@ -577,8 +578,9 @@ class input_it(plugin_input.base):
 
                     plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
 
-                tracks.m_create_inst(cvpj_l, it_samplename, {'pluginid': pluginid})
-                tracks.m_basicdata_inst(cvpj_l, it_samplename, cvpj_instname, [0.71, 0.58, 0.47], track_volume, None)
+                tracks.m_inst_create(cvpj_l, it_instname, name=cvpj_instname, color=[0.71, 0.58, 0.47])
+                tracks.m_inst_pluginid(cvpj_l, it_instname, pluginid)
+                tracks.m_inst_add_param(cvpj_l, it_instname, 'vol', track_volume, 'float')
 
                 samplecount += 1
 
@@ -600,6 +602,6 @@ class input_it(plugin_input.base):
         cvpj_l['use_fxrack'] = False
 
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['bpm'] = it_header_tempo/(it_header_speed/6)
+        song.add_param(cvpj_l, 'bpm', it_header_tempo/(it_header_speed/6))
         return json.dumps(cvpj_l)
 

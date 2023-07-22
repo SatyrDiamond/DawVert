@@ -190,10 +190,6 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
 
     pluginid = plugins.get_id()
 
-    cvpj_instdata = {}
-    cvpj_instdata['pitch'] = 0
-    cvpj_instdata['pluginid'] = pluginid
-
     if WaveType == 'Square1' or WaveType == 'Square2' or WaveType == 'Triangle' or WaveType == 'Noise':
         if WaveType == 'Square1' or WaveType == 'Square2': wavetype = 'square'
         if WaveType == 'Triangle': wavetype = 'triangle'
@@ -268,29 +264,29 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
     #print('DATA ------------' , fst_Instrument)
     #print('OUT ------------' , plugname, cvpj_plugdata)
 
-    cvpj_instdata['usemasterpitch'] = 1
-
-    if WaveType in ['EPSMFM', 'EPSMSquare']:
-        cvpj_instdata['middlenote'] = 12
-
     inst_color = InstColors[WaveType]
 
     cvpj_instid = WaveType+'-'+instname
 
-    tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
-    tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instid, inst_color, instvolume, instpan)
-    tracks.m_param_inst(cvpj_l, cvpj_instid, 'fxrack_channel', fxrack_channel)
+    tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instid, color=inst_color)
+    tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+    tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', instvolume, 'float')
+    tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pan', instpan, 'float')
+    tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pitch', 0, 'float')
+    tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'usemasterpitch', True, 'bool')
+
+    if WaveType in ['EPSMFM', 'EPSMSquare']:
+        tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'middlenote', 12)
+
+    tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', fxrack_channel)
+
 
 def create_dpcm_inst(DPCMMappings, DPCMSamples, fxrack_channel):
-    instname = 'DPCM'
-
-    cvpj_instdata = {}
-    cvpj_instdata['pitch'] = 0
-    cvpj_instdata['usemasterpitch'] = 0
-
-    tracks.m_create_inst(cvpj_l, 'DPCM', cvpj_instdata)
-    tracks.m_basicdata_inst(cvpj_l, 'DPCM', 'DPCM', [0.48, 0.83, 0.49], 0.6, 0.0)
-    tracks.m_param_inst(cvpj_l, 'DPCM', 'fxrack_channel', fxrack_channel)
+    tracks.m_inst_create(cvpj_l, 'DPCM', name='DPCM', color= [0.48, 0.83, 0.49])
+    tracks.m_inst_add_param(cvpj_l, 'DPCM', 'vol', 0.6, 'float')
+    tracks.m_inst_add_param(cvpj_l, 'DPCM', 'pitch', 0, 'float')
+    tracks.m_inst_add_param(cvpj_l, 'DPCM', 'usemasterpitch', False, 'bool')
+    tracks.m_inst_add_dataval(cvpj_l, 'DPCM', None, 'fxrack_channel', fxrack_channel)
 
 def NoteToMidi(keytext):
     l_key = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
@@ -534,7 +530,6 @@ class input_famistudio(plugin_input.base):
 
         cvpj_l['do_addloop'] = True
         
-        cvpj_l['timesig_numerator'] = timesig[0]
-        cvpj_l['timesig_denominator'] = timesig[1]
-        cvpj_l['bpm'] = bpm
+        cvpj_l['timesig'] = timesig
+        song.add_param(cvpj_l, 'bpm', bpm)
         return json.dumps(cvpj_l)

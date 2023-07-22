@@ -222,6 +222,8 @@ def parse_song(songid):
     bpm = None
     song_vars = get_vars(notess_x_song)
 
+    cvpj_l['timesig'] = [4, 4]
+
     if 'author' in song_vars:
         song.add_info(cvpj_l, 'author', song_vars['author'])
         print("[input-notessimo_v3] Song Author: " + song_vars['author'])
@@ -229,10 +231,10 @@ def parse_song(songid):
         song_length = song_vars['width']*60
         print("[input-notessimo_v3] Song Length: " + str(song_vars['width']*60) + ' Seconds')
     if 'video_time' in song_vars: 
-        cvpj_l['timesig_numerator'] = song_vars['video_time']
+        cvpj_l['timesig'][0] = song_vars['video_time']
         print("[input-notessimo_v3] Song Numerator: " + str(song_vars['video_time']))
     if 'video_beat' in song_vars: 
-        cvpj_l['timesig_denominator'] = song_vars['video_beat']
+        cvpj_l['timesig'][1] = song_vars['video_beat']
         print("[input-notessimo_v3] Song Denominator: " + str(song_vars['video_beat']))
 
     # ---------------- objects ----------------
@@ -336,21 +338,26 @@ class input_notessimo_v3(plugin_input.base):
             inst_color = colors.moregray(inst_color)
 
             pluginid = plugins.get_id()
-            cvpj_instdata = {}
+
             if midiinst != None: 
                 plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, midiinst)
                 cvpj_instdata = {'pluginid': pluginid}
 
-            tracks.m_create_inst(cvpj_l, str(inst), cvpj_instdata)
-            tracks.m_basicdata_inst(cvpj_l, str(inst), inst_name, inst_color, 1.0, 0.0)
+            cvpj_instid = str(inst)
 
-            if isbuiltindrum == 1: tracks.m_param_inst(cvpj_l, str(inst), 'fxrack_channel', 1)
+            tracks.m_inst_create(cvpj_l, cvpj_instid, name=inst_name, color=inst_color)
+            if midiinst != None: 
+                plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, midiinst)
+                tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+
+            if isbuiltindrum == 1: 
+                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', 1)
             else:
-                tracks.m_param_inst(cvpj_l, str(inst), 'fxrack_channel', fxnum)
+                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', fxnum)
                 tracks.fxrack_add(cvpj_l, fxnum, inst_name, inst_color, None, None)
                 fxnum += 1
 
-        cvpj_l['bpm'] = 120
+        song.add_param(cvpj_l, 'bpm', 120)
 
         return json.dumps(cvpj_l)
 

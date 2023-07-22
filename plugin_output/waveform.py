@@ -7,6 +7,7 @@ import lxml.etree as ET
 from functions import xtramath
 from functions import colors
 from functions import data_values
+from functions import params
 
 class output_waveform_edit(plugin_output.base):
     def __init__(self): pass
@@ -34,8 +35,7 @@ class output_waveform_edit(plugin_output.base):
         wf_numerator = 4
         wf_denominator = 4
         if 'bpm' in projJ: wf_bpmdata = projJ['bpm']
-        if 'timesig_numerator' in projJ: wf_numerator = projJ['timesig_numerator']
-        if 'timesig_denominator' in projJ: wf_denominator = projJ['timesig_denominator']
+        if 'timesig' in projJ: wf_numerator, wf_denominator = projJ['timesig']
 
         tempomul = 120/wf_bpmdata
 
@@ -67,8 +67,8 @@ class output_waveform_edit(plugin_output.base):
                 if 'name' in cvpj_s_track_data: wf_TRACK.set('name', cvpj_s_track_data['name'])
                 if 'color' in cvpj_s_track_data: wf_TRACK.set('colour', 'ff'+colors.rgb_float_2_hex(cvpj_s_track_data['color']))
                 
-                cvpj_track_vol = data_values.get_value(cvpj_s_track_data, 'vol', 1)
-                cvpj_track_pan = data_values.get_value(cvpj_s_track_data, 'pan', 0)
+                cvpj_track_vol = params.get(cvpj_s_track_data, [], 'vol', 1)
+                cvpj_track_pan = params.get(cvpj_s_track_data, [], 'pan', 0)
 
                 wf_PLUGINVOLPAN = ET.SubElement(wf_TRACK, "PLUGIN")
                 wf_PLUGINVOLPAN.set('type', 'volume')

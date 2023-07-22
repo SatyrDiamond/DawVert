@@ -7,6 +7,7 @@ from functions import tracks
 from functions import note_data
 from functions import placement_data
 from functions import plugins
+from functions import song
 import plugin_input
 import json
 import struct
@@ -142,25 +143,25 @@ class input_cvpj_f(plugin_input.base):
             cvpj_inst = {}
             cvpj_instid = 'pixi_'+str(instnum)
             cvpj_instvol = 1.0
-            cvpj_instdata = {}
 
             pluginid = plugins.get_id()
+
+            tracks.m_inst_create(cvpj_l, cvpj_instid, name='Inst #'+str(instnum+1), color=pixi_colors[instnum])
+
             if pixi_data_sounds[instnum] != [None,None,None,None,None,None,None,None]:
                 t_sounddata = pixi_data_sounds[instnum]
                 wave_path = samplefolder + str(instnum) + '.wav'
                 audio_wav.generate(wave_path, t_sounddata[7], t_sounddata[0], t_sounddata[1], 16, None)
-                cvpj_instvol = t_sounddata[4]/100
-                cvpj_instdata['pluginid'] = pluginid
-                cvpj_instdata['pitch'] = t_sounddata[2]
-                cvpj_instdata['middlenote'] = t_sounddata[3]*-1
+                tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pitch', t_sounddata[2], 'float')
+                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'middlenote', t_sounddata[3]*-1)
+                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', t_sounddata[4]/100, 'float')
                 plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, wave_path)
                 plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
                 plugins.add_plug_data(cvpj_l, pluginid, 'start', t_sounddata[5])
                 plugins.add_plug_data(cvpj_l, pluginid, 'end', t_sounddata[6])
                 plugins.add_plug_data(cvpj_l, pluginid, 'length', len(t_sounddata[7])//t_sounddata[0])
                 plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
-            tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
-            tracks.m_basicdata_inst(cvpj_l, cvpj_instid, 'Inst #'+str(instnum+1), pixi_colors[instnum], cvpj_instvol, None)
 
         for pixi_data_pattern in pixi_data_patterns:
             nli_notes = []
@@ -180,8 +181,6 @@ class input_cvpj_f(plugin_input.base):
 
         cvpj_l['do_addloop'] = True
 
-        cvpj_l['use_fxrack'] = False
-        
-        cvpj_l['vol'] = pixi_vol/100
-        cvpj_l['bpm'] = pixi_bpm
+        song.add_param(cvpj_l, 'vol', pixi_vol/100)
+        song.add_param(cvpj_l, 'bpm', pixi_bpm)
         return json.dumps(cvpj_l)

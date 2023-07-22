@@ -74,13 +74,15 @@ class input_piyopiyo(plugin_input.base):
             plugins.add_wave(cvpj_l, pluginid, 'main', trk_waveform, -128, 128)
             plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trk_envelope, 128, None, None)
             idval = str(tracknum)
-            tracks.r_create_inst(cvpj_l, idval, {'pluginid': pluginid})
-            tracks.r_basicdata(cvpj_l, idval, 'note'+str(tracknum), track_colors[tracknum], trk_volume/250, None)
+            tracks.r_create_track(cvpj_l, 'instrument', idval, name='note'+str(tracknum), color=track_colors[tracknum])
+            tracks.r_track_pluginid(cvpj_l, idval, pluginid)
+            tracks.r_add_param(cvpj_l, idval, 'vol', trk_volume/250, 'float')
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
         plugins.add_plug(cvpj_l, "3", 'native-piyopiyo', 'drums')
-        tracks.r_create_inst(cvpj_l, "3", {'pluginid': "3"})
-        tracks.r_basicdata(cvpj_l, "3", 'perc', track_colors[3], TrackPVol/250, None)
+        tracks.r_create_track(cvpj_l, 'instrument', "3", name='perc', color=track_colors[3])
+        tracks.r_track_pluginid(cvpj_l, "3", "3")
+        tracks.r_add_param(cvpj_l, "3", 'vol', TrackPVol/250, 'float')
 
         pmdfile.seek(trackdatapos)
         for tracknum in range(4):
@@ -100,8 +102,9 @@ class input_piyopiyo(plugin_input.base):
             tracks.r_pl_notes(cvpj_l, str(tracknum), t_placements)
 
         cvpj_l['do_addloop'] = True
+        cvpj_l['timesig'] = [4, 4]
         cvpj_l['do_singlenotelistcut'] = True
-        cvpj_l['bpm'] = bpm
+        song.add_param(cvpj_l, 'bpm', bpm)
 
         song.add_timemarker_looparea(cvpj_l, None, loopstart, loopend)
         return json.dumps(cvpj_l)

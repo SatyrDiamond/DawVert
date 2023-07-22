@@ -3,6 +3,7 @@
 
 from functions import data_values
 from functions import auto
+from functions import params
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -10,62 +11,34 @@ from functions import auto
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
-def r_create_copy(cvpj_l, trackid, trackdata):
-    cvpj_l['track_data'][trackid] = trackdata
-    cvpj_l['track_order'].append(trackid)
-
-def r_create_inst(cvpj_l, trackid, instdata):
+def r_create_track(cvpj_l, tracktype, trackid, **kwargs):
     if 'track_data' not in cvpj_l: cvpj_l['track_data'] = {}
     if 'track_order' not in cvpj_l: cvpj_l['track_order'] = []
-    cvpj_inst = {}
-    cvpj_inst['type'] = 'instrument'
-    cvpj_inst['instdata'] = instdata
-    cvpj_l['track_data'][trackid] = cvpj_inst
+    cvpj_track = {}
+    cvpj_track['type'] = tracktype
+    if 'name' in kwargs: 
+        if kwargs['name'] != None: cvpj_track['name'] = kwargs['name']
+    if 'color' in kwargs: 
+        if kwargs['color'] != None: cvpj_track['color'] = kwargs['color']
+    cvpj_l['track_data'][trackid] = cvpj_track
     cvpj_l['track_order'].append(trackid)
 
-def r_create_audio(cvpj_l, trackid, audiodata):
-    if 'track_data' not in cvpj_l: cvpj_l['track_data'] = {}
-    if 'track_order' not in cvpj_l: cvpj_l['track_order'] = []
-    cvpj_inst = {}
-    cvpj_inst['type'] = 'audio'
-    cvpj_inst['audiodata'] = audiodata
-    cvpj_l['track_data'][trackid] = cvpj_inst
-    cvpj_l['track_order'].append(trackid)
+def r_track_pluginid(cvpj_l, trackid, pluginid):
+    data_values.nested_dict_add_value(cvpj_l, ['track_data', trackid, 'instdata', 'pluginid'], pluginid)
 
-def r_basicdata(cvpj_l, trackid, trk_name, trk_color, trk_vol, trk_pan):
-    if 'track_data' in cvpj_l:
-        if trackid in cvpj_l['track_data']:
-            cvpj_inst = cvpj_l['track_data'][trackid]
-            if trk_name != None: cvpj_inst['name'] = trk_name
-            if trk_color != None: cvpj_inst['color'] = trk_color
-            if trk_vol != None: cvpj_inst['vol'] = trk_vol
-            if trk_pan != None: cvpj_inst['pan'] = trk_pan
+def r_add_param(cvpj_l, trackid, p_id, p_value, p_type, **kwargs):
+    params.add(cvpj_l, ['track_data', trackid], p_id, p_value, p_type, **kwargs)
 
-def r_param_inst(cvpj_l, trackid, v_name, v_value):
-    if 'track_data' in cvpj_l:
-        if trackid in cvpj_l['track_data']:
-            if 'instdata' not in cvpj_l['track_data'][trackid]: cvpj_l['track_data'][trackid]['instdata'] = {}
-            cvpj_inst = cvpj_l['track_data'][trackid]['instdata']
-            cvpj_inst[v_name] = v_value
+def r_get_param(cvpj_l, trackid, paramname, fallbackval):
+    return params.get(cvpj_l, ['track_data', trackid], paramname, fallbackval)
 
-def r_param(cvpj_l, trackid, v_name, v_value):
-    if 'track_data' in cvpj_l:
-        if trackid in cvpj_l['track_data']:
-            cvpj_inst = cvpj_l['track_data'][trackid]
-            cvpj_inst[v_name] = v_value
+def r_add_dataval(cvpj_l, trackid, datagroup, i_name, i_value):
+    if datagroup != None:
+        data_values.nested_dict_add_value(cvpj_l, ['track_data', trackid, datagroup, i_name], i_value)
+    else:
+        data_values.nested_dict_add_value(cvpj_l, ['track_data', trackid, i_name], i_value)
 
 # ------------------------ RegularIndexed ------------------------
-
-def ri_create_inst(cvpj_l, trackid, notelistindex, instdata):
-    if 'track_data' not in cvpj_l: cvpj_l['track_data'] = {}
-    if 'track_order' not in cvpj_l: cvpj_l['track_order'] = []
-    cvpj_inst = {}
-    cvpj_inst['type'] = 'instrument'
-    cvpj_inst['instdata'] = instdata
-    if notelistindex != None: cvpj_inst['notelistindex'] = notelistindex
-    else: cvpj_inst['notelistindex'] = {}
-    cvpj_l['track_data'][trackid] = cvpj_inst
-    cvpj_l['track_order'].append(trackid)
 
 def ri_nle_add(cvpj_l, trackid, patid, nle_notelist, nle_name):
     data_values.nested_dict_add_value(cvpj_l, ['track_data', trackid, 'notelistindex', patid], {})
@@ -104,36 +77,33 @@ def r_pl_laned(cvpj_l, trackid, laneddata):
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
-def m_create_inst(cvpj_l, trackid, instdata):
+
+def m_inst_create(cvpj_l, trackid, **kwargs):
     if 'instruments_data' not in cvpj_l: cvpj_l['instruments_data'] = {}
     if 'instruments_order' not in cvpj_l: cvpj_l['instruments_order'] = []
     cvpj_inst = {}
-    cvpj_inst['instdata'] = instdata
+    if 'name' in kwargs: 
+        if kwargs['name'] != None: cvpj_inst['name'] = kwargs['name']
+    if 'color' in kwargs: 
+        if kwargs['color'] != None: cvpj_inst['color'] = kwargs['color']
     cvpj_l['instruments_data'][trackid] = cvpj_inst
     if trackid not in cvpj_l['instruments_order']: cvpj_l['instruments_order'].append(trackid)
 
-def m_basicdata_inst(cvpj_l, trackid, trk_name, trk_color, trk_vol, trk_pan):
-    if 'instruments_data' in cvpj_l:
-        if trackid in cvpj_l['instruments_data']:
-            cvpj_inst = cvpj_l['instruments_data'][trackid]
-            cvpj_inst['name'] = trk_name
-            if trk_color != None: cvpj_inst['color'] = trk_color
-            if trk_vol != None: cvpj_inst['vol'] = trk_vol
-            if trk_pan != None: cvpj_inst['pan'] = trk_pan
+def m_inst_pluginid(cvpj_l, trackid, pluginid):
+    data_values.nested_dict_add_value(cvpj_l, ['instruments_data', trackid, 'instdata', 'pluginid'], pluginid)
 
-def m_param_inst(cvpj_l, trackid, v_name, v_value):
-    if 'instruments_data' in cvpj_l:
-        if trackid in cvpj_l['instruments_data']:
-            cvpj_inst = cvpj_l['instruments_data'][trackid]
-            cvpj_inst[v_name] = v_value
+def m_inst_add_param(cvpj_l, trackid, p_id, p_value, p_type, **kwargs):
+    params.add(cvpj_l, ['instruments_data', trackid], p_id, p_value, p_type, **kwargs)
 
-def m_param_instdata(cvpj_l, trackid, v_name, v_value):
-    if 'instruments_data' in cvpj_l:
-        if trackid in cvpj_l['instruments_data']:
-            if 'instdata' not in cvpj_l['instruments_data'][trackid]: cvpj_l['instruments_data'][trackid]['instdata'] = {}
-            cvpj_inst = cvpj_l['instruments_data'][trackid]['instdata']
-            cvpj_inst[v_name] = v_value
-    
+def m_inst_get_param(cvpj_l, trackid, paramname, fallbackval):
+    return params.get(cvpj_l, ['instruments_data', trackid], paramname, fallbackval)
+
+def m_inst_add_dataval(cvpj_l, trackid, datagroup, i_name, i_value):
+    if datagroup != None:
+        data_values.nested_dict_add_value(cvpj_l, ['instruments_data', trackid, datagroup, i_name], i_value)
+    else:
+        data_values.nested_dict_add_value(cvpj_l, ['instruments_data', trackid, i_name], i_value)
+
 # ------------------------ Multiple******** ------------------------
 
 def m_playlist_pl(cvpj_l, idnum, trk_name, trk_color, placements_notes):
@@ -164,12 +134,13 @@ def m_add_nle_info(cvpj_l, patid, nle_name, nle_color):
 
 def a_addtrack_master(cvpj_l, i_name, i_vol, i_color):
     if 'track_master' not in cvpj_l: cvpj_l['track_master'] = {}
-    if i_name != None: cvpj_l['track_master']['name'] = i_name
-    if i_vol != None: cvpj_l['track_master']['vol'] = i_vol
-    if i_color != None: cvpj_l['track_master']['color'] = i_color
+    cvpj_master = cvpj_l['track_master']
+    if i_name != None: cvpj_master['name'] = i_name
+    if i_vol != None: params.add(cvpj_l, ['track_master'], 'vol', i_vol, 'float')
+    if i_color != None: cvpj_master['color'] = i_color
 
-def a_addtrack_master_param(cvpj_l, v_name, v_value):
-    cvpj_l['track_master'][v_name] = v_value
+def a_addtrack_master_param(cvpj_l, p_id, p_value):
+    params.add(cvpj_l, ['track_master'], p_id, p_value, 'float', **kwargs)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -182,12 +153,12 @@ def fxrack_add(cvpj_l, fx_num, fx_name, fx_color, fx_vol, fx_pan):
     fxdata = cvpj_l['fxrack'][str(fx_num)]
     if fx_color != None: fxdata['color'] = fx_color
     if fx_name != None: fxdata['name'] = fx_name
-    if fx_vol != None: fxdata['vol'] = fx_vol
-    if fx_pan != None: fxdata['pan'] = fx_pan
+    if fx_vol != None: params.add(fxdata, [], 'vol', fx_vol, 'float')
+    if fx_pan != None: params.add(fxdata, [], 'pan', fx_pan, 'float')
 
-def fxrack_param(cvpj_l, fx_num, v_name, v_value):
+def fxrack_param(cvpj_l, fx_num, v_name, v_value, v_type):
     data_values.nested_dict_add_value(cvpj_l, ['fxrack', str(fx_num)], {})
-    cvpj_l['fxrack'][str(fx_num)][v_name] = v_value
+    params.add(cvpj_l, ['fxrack',str(fx_num)], v_name, v_value, v_type)
 
 def fxrack_addsend(cvpj_l, fx_num, fx_to_num, fx_amount, fx_sendautoid):
     senddata = {"amount": fx_amount, "channel": fx_to_num}
@@ -210,8 +181,8 @@ def group_add(cvpj_l, i_id, i_inside_group):
 
 def group_basicdata(cvpj_l, i_id, i_name, i_vol, i_color):
     if i_name != None: data_values.nested_dict_add_value(cvpj_l, ['groups', i_id, 'name'], i_name)
-    if i_vol != None: data_values.nested_dict_add_value(cvpj_l, ['groups', i_id, 'vol'], i_vol)
     if i_color != None: data_values.nested_dict_add_value(cvpj_l, ['groups', i_id, 'color'], i_color)
+    if i_vol != None: params.add(cvpj_l, ['groups', i_id], 'vol', i_vol, 'float')
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -233,8 +204,8 @@ def r_add_return_basicdata(cvpj_l, i_location, i_sendname, trk_name, trk_color, 
     out_location = get_sendcvpjlocation(i_location)
     if trk_name != None: data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname, 'name'], trk_name)
     if trk_color != None: data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname, 'color'], trk_color)
-    if trk_vol != None: data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname, 'vol'], trk_vol)
-    if trk_pan != None: data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname, 'pan'], trk_pan)
+    if trk_vol != None: params.add(cvpj_l, out_location, 'vol', trk_vol, 'float')
+    if trk_pan != None: params.add(cvpj_l, out_location, 'pan', trk_pan, 'float')
 
 def r_add_send(cvpj_l, i_trackid, i_sendname, i_amount, i_sendautoid):
     send_data = {'amount': i_amount, 'sendid': i_sendname}

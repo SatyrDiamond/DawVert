@@ -10,6 +10,7 @@ import os
 import base64
 from functions import placements
 from functions import colors
+from functions import params
 from functions import data_values
 from functions import plugins
 
@@ -285,12 +286,9 @@ class output_cvpj(plugin_output.base):
         for routeid in routelist:
             addroute_audio(x_song, routeid[0], routeid[1])
 
-        muse_bpm = int(data_values.get_value(cvpj_l, 'bpm', 120))
-        muse_numerator = data_values.get_value(cvpj_l, 'timesig_numerator', 4)
-        muse_denominator = data_values.get_value(cvpj_l, 'timesig_denominator', 4)
+        muse_bpm = int(params.get(cvpj_l, [], 'bpm', 120)[0])
 
-        if muse_numerator == None: muse_numerator = 4
-        if muse_denominator == None: muse_denominator = 4
+        muse_numerator, muse_denominator = data_values.get_value(cvpj_l, 'timesig', [4,4])
 
         x_tempolist = ET.SubElement(x_song, "tempolist")
         x_tempolist.set('fix', "0")

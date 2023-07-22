@@ -15,6 +15,7 @@ from functions import audio
 from functions import notelist_data
 from functions import xtramath
 from functions import plugins
+from functions import params
 
 filename_len = {}
 
@@ -37,7 +38,7 @@ class output_cvpjs(plugin_output.base):
         }
     def getsupportedplugins(self): return ['sampler', 'vst2', 'vst3']
     def parse(self, convproj_json, output_file):
-        projJ = json.loads(convproj_json)
+        cvpj_l = json.loads(convproj_json)
 
         FLP_Data = {}
 
@@ -46,13 +47,13 @@ class output_cvpjs(plugin_output.base):
 
         FLP_Data['FL_Channels'] = {}
         FL_Channels = FLP_Data['FL_Channels']
-        CVPJ_Instruments = projJ['instruments_data']
+        CVPJ_Instruments = cvpj_l['instruments_data']
         CVPJ_Samples = {}
-        if 'sampleindex' in projJ: CVPJ_Samples = projJ['sampleindex']
+        if 'sampleindex' in cvpj_l: CVPJ_Samples = cvpj_l['sampleindex']
 
         FLP_Data['FL_Patterns'] = {}
         FL_Patterns = FLP_Data['FL_Patterns']
-        CVPJ_NotelistIndex = projJ['notelistindex']
+        CVPJ_NotelistIndex = cvpj_l['notelistindex']
 
         FLP_Data['FL_Arrangements'] = {}
         FL_Arrangements = FLP_Data['FL_Arrangements']
@@ -62,7 +63,7 @@ class output_cvpjs(plugin_output.base):
 
         FLP_Data['FL_Tracks'] = {}
         FL_Tracks = FLP_Data['FL_Tracks']
-        CVPJ_playlist = projJ['playlist']
+        CVPJ_playlist = cvpj_l['playlist']
 
         FLP_Data['FL_Mixer'] = {}
         FL_Mixer = FLP_Data['FL_Mixer']
@@ -78,8 +79,8 @@ class output_cvpjs(plugin_output.base):
         sampleinfo = {}
         samplestretch = {}
 
-        if 'info' in projJ: 
-            infoJ = projJ['info']
+        if 'info' in cvpj_l: 
+            infoJ = cvpj_l['info']
             FL_Main['ShowInfo'] = 1
             if 'title' in infoJ: 
                 if 'title' != '': FL_Main['Title'] = infoJ['title']
@@ -113,13 +114,14 @@ class output_cvpjs(plugin_output.base):
 
         FL_Main['ProjectDataPath'] = ''
 
-        if 'shuffle' in projJ: FL_Main['Shuffle'] = int(projJ['shuffle']*128)
-        else: FL_Main['Shuffle'] = 0
-        if 'timesig_numerator' in projJ: FL_Main['Numerator'] = projJ['timesig_numerator']
-        if 'timesig_denominator' in projJ: FL_Main['Denominator'] = projJ['timesig_denominator']
-        if 'bpm' in projJ: FL_Main['Tempo'] = projJ['bpm']
-        else: FL_Main['Tempo'] = 120
-        if 'pitch' in projJ: FL_Main['MainPitch'] = struct.unpack('H', struct.pack('h', int(projJ['pitch'])))[0]
+        if 'timesig' in cvpj_l:
+            timesig = cvpj_l['timesig']
+            FL_Main['Numerator'] = timesig[0]
+            FL_Main['Denominator'] = timesig[1]
+
+        FL_Main['Tempo'] = params.get(cvpj_l, [], 'bpm', 140)[0]
+        FL_Main['MainPitch'] = struct.unpack('H', struct.pack('h', int(params.get(cvpj_l, [], 'pitch', 0)[0])))[0]
+        FL_Main['Shuffle'] = params.get(cvpj_l, [], 'shuffle', 0)[0]*128
 
         tempomul = (120/FL_Main['Tempo'])
 
@@ -127,7 +129,7 @@ class output_cvpjs(plugin_output.base):
         inst_id = {}
         inst_id_count = 0
 
-        instrumentsorder = projJ['instruments_order']
+        instrumentsorder = cvpj_l['instruments_order']
 
         for instentry in instrumentsorder:
             inst_id[instentry] = str(inst_id_count)
@@ -141,10 +143,15 @@ class output_cvpjs(plugin_output.base):
         for CVPJ_Entry in CVPJ_Instruments:
             T_Main = {}
             CVPJ_Data = CVPJ_Instruments[CVPJ_Entry]
-            if 'vol' in CVPJ_Data: T_Main['volume'] = CVPJ_Data['vol']
-            if 'pan' in CVPJ_Data: T_Main['pan'] = CVPJ_Data['pan']
+
+            T_Main['volume'] = params.get(CVPJ_Data, [], 'vol', 1)[0]
+            T_Main['pan'] = params.get(CVPJ_Data, [], 'pan', 0)[0]
+            T_Main['enabled'] = int(params.get(CVPJ_Data, [], 'enabled', True)[0])
+            T_Main['pitch'] = params.get(CVPJ_Data, [], 'pitch', 0)[0]
+            T_Main['main_pitch'] = int(params.get(CVPJ_Data, [], 'usemasterpitch', True)[0])
+
+            if 'middlenote' in CVPJ_Data: T_Main['middlenote'] = CVPJ_Data['middlenote']+60
             if 'name' in CVPJ_Data: T_Main['name'] = CVPJ_Data['name']
-            if 'enabled' in CVPJ_Data: T_Main['enabled'] = CVPJ_Data['enabled']
             if 'fxrack_channel' in CVPJ_Data: T_Main['fxchannel'] = CVPJ_Data['fxrack_channel']
             if 'filtergroup' in CVPJ_Data:
                 if CVPJ_Data['filtergroup'] in filtergroups_id:
@@ -152,17 +159,13 @@ class output_cvpjs(plugin_output.base):
 
             if 'instdata' in CVPJ_Data:
                 CVPJ_Inst = CVPJ_Data['instdata']
-                if 'middlenote' in CVPJ_Inst: 
-                    T_Main['middlenote'] = CVPJ_Inst['middlenote']+60
-                if 'pitch' in CVPJ_Inst: T_Main['pitch'] = CVPJ_Inst['pitch']
-                if 'usemasterpitch' in CVPJ_Inst: T_Main['main_pitch'] = CVPJ_Inst['usemasterpitch']
 
                 if 'pluginid' in CVPJ_Inst:
-                    plugintype = plugins.get_plug_type(projJ, CVPJ_Inst['pluginid'])
+                    plugintype = plugins.get_plug_type(cvpj_l, CVPJ_Inst['pluginid'])
                     if plugintype == ['sampler', 'single']:
                         T_Main['type'] = 0
                         T_Main['plugin'] = ''
-                        cvpj_plugindata = plugins.get_plug_data(projJ, CVPJ_Inst['pluginid'])
+                        cvpj_plugindata = plugins.get_plug_data(cvpj_l, CVPJ_Inst['pluginid'])
                         T_Main['samplefilename'] = data_values.get_value(cvpj_plugindata, 'file', '')
                     else:
                         T_Main['type'] = 0
@@ -424,8 +427,8 @@ class output_cvpjs(plugin_output.base):
             for itemrow in playlistposvalues:
                 FL_Playlist.append(itemrow)
 
-        if 'timemarkers' in projJ:
-            CVPJ_TimeMarkers = projJ['timemarkers']
+        if 'timemarkers' in cvpj_l:
+            CVPJ_TimeMarkers = cvpj_l['timemarkers']
             markernum = 0
             for timemarker in CVPJ_TimeMarkers:
                 markernum += 1
@@ -453,9 +456,9 @@ class output_cvpjs(plugin_output.base):
                 else: FL_TimeMarker['type'] = 0
                 FL_TimeMarkers[str(markernum)] = FL_TimeMarker
 
-        if 'fxrack' in projJ:
-            for cvpj_fx in projJ['fxrack']:
-                cvpj_fxdata = projJ['fxrack'][cvpj_fx]
+        if 'fxrack' in cvpj_l:
+            for cvpj_fx in cvpj_l['fxrack']:
+                cvpj_fxdata = cvpj_l['fxrack'][cvpj_fx]
                 FL_Mixer[cvpj_fx] = {}
                 if 'name' in cvpj_fxdata:
                     FL_Mixer[cvpj_fx]['name'] = cvpj_fxdata['name']

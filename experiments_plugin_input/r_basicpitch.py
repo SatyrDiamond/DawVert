@@ -53,7 +53,7 @@ class input_ex_basic_pitch(experiments_plugin_input.base):
                     autonum += 0.1
             cvpj_notelist.append(cvpj_note)
 
-        tracks.r_create_inst(cvpj_l, 'basicpitch', {})
+        tracks.r_create_track(cvpj_l, 'instrument', 'basicpitch')
         tracks.r_pl_notes(cvpj_l, 'basicpitch', placement_data.nl2pl(cvpj_notelist))
 
         cvpj_l['bpm'] = 120

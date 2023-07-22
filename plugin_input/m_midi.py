@@ -165,9 +165,8 @@ class input_midi(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
-        cvpj_l['timesig_numerator'] = s_timesig[0]
-        cvpj_l['timesig_denominator'] = s_timesig[1]
-        cvpj_l['bpm'] = s_tempo
+        cvpj_l['timesig'] = s_timesig
+        song.add_param(cvpj_l, 'bpm', s_tempo)
 
         author = None
         titlefound = False

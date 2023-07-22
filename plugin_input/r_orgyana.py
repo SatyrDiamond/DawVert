@@ -131,16 +131,16 @@ class input_orgyana(plugin_input.base):
                 if tracknum < 8: trackname = "Melody "+str(tracknum+1)
                 else: trackname = idvals.get_idval(idvals_orgyana_inst_drums, str(org_insttable[tracknum]), 'name')
                 idval = 'org_'+str(tracknum)
-                tracks.r_create_inst(cvpj_l, idval, {'pitch': (org_pitch-1000)/18})
-                tracks.r_basicdata(cvpj_l, idval, trackname, l_org_colors[tracknum], 1.0, None)
+                tracks.r_create_track(cvpj_l, 'instrument', idval, name=trackname, color=l_org_colors[tracknum])
+                tracks.r_add_param(cvpj_l, idval, 'pitch', (org_pitch-1000)/18, 'float')
                 tracks.r_pl_notes(cvpj_l, idval, placement_data.nl2pl(s_cvpj_nl))
+
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
-        cvpj_l['bpm'] = (1/(org_wait/122))*122
-        cvpj_l['timesig_denominator'] = org_stepsperbar
-        cvpj_l['timesig_numerator'] = org_beatsperstep
+        song.add_param(cvpj_l, 'bpm', (1/(org_wait/122))*122)
+        cvpj_l['timesig'] = [org_stepsperbar, org_beatsperstep]
        
         if org_loop_beginning != 0: song.add_timemarker_looparea(cvpj_l, None, org_loop_beginning, org_loop_end)
         return json.dumps(cvpj_l)

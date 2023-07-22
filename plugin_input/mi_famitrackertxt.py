@@ -6,6 +6,7 @@ from functions import song_tracker
 from functions import note_data
 from functions import tracks
 from functions import plugins
+from functions import song
 import plugin_input
 import json
 
@@ -264,7 +265,6 @@ class input_famitrkr_txt(plugin_input.base):
 
             cvpj_instid = insttype+'_'+instid
             cvpj_inst = {}
-            cvpj_instdata = {}
 
             pluginid = plugins.get_id()
 
@@ -284,8 +284,6 @@ class input_famitrkr_txt(plugin_input.base):
             elif int(instid) in famitrkr_instdata_vrc6:
                 cvpj_instname = insttype+'-'+famitrkr_instdata_vrc6[int(instid)][0]
                 if insttype in retroinst_names_vrc6:
-                    cvpj_instdata = {"plugin": 'retro', "plugindata": {}}
-                    cvpj_plugdata = cvpj_instdata["plugindata"]
                     if insttype == 'VRC6Square': wavetype = "square"
                     if insttype == 'VRC6Saw': wavetype = "saw"
                     plugins.add_plug(cvpj_l, pluginid, 'vrc6', wavetype)
@@ -295,14 +293,11 @@ class input_famitrkr_txt(plugin_input.base):
                     setmacro(pluginid, macro_nes_vrc6, "hipitch", 3, famitrkr_instdata_vrc6[int(instid)][4]*-1)
                     setmacro(pluginid, macro_nes_vrc6, "duty", 4, famitrkr_instdata_vrc6[int(instid)][5])
 
-            tracks.m_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
-            tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, None, 1.0, 0.0)
+            tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname)
+            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True
         
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = False
-
-        cvpj_l['bpm'] = song_tempo
+        song.add_param(cvpj_l, 'bpm', song_tempo)
         return json.dumps(cvpj_l)

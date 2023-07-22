@@ -14,8 +14,6 @@ idvals_midi_inst_drums = idvals.parse_idvalscsv('data_idvals/midi_inst_drums.csv
 
 cvpj_l = {}
 cvpj_l_playlist = {}
-cvpj_l_instruments = {}
-cvpj_l_instrumentsorder = []
 cvpj_l_timemarkers = []
 cvpj_l_fxrack = {}
 
@@ -156,48 +154,49 @@ def track_end(channels):
 
     cvpj_l_playlist[str(t_tracknum)] = playlistrowdata
 
-def make_custominst(channelnum, cvpj_midibank, cvpj_midiinst, instdata):
+def make_custominst(channelnum, cvpj_midibank, cvpj_midiinst, **kwargs):
     cvpj_instid = get_trackid(t_tracknum, channelnum, cvpj_midibank, cvpj_midiinst)
-    cvpj_l_instruments[cvpj_instid] = instdata
-    cvpj_l_instrumentsorder.append(cvpj_instid)
+    cvpj_name = data_values.get_value(kwargs, 'name', '')
+    cvpj_color = data_values.get_value(kwargs, 'color', None)
+    tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_name, color=cvpj_color)
+    if 'pluginid' in kwargs:
+        tracks.m_inst_pluginid(cvpj_l, cvpj_instid, kwargs['pluginid'])
 
 def make_inst(channelnum, cvpj_midibank, cvpj_midiinst):
     cvpj_instid = get_trackid(t_tracknum, channelnum, cvpj_midibank, cvpj_midiinst)
     if cvpj_instid not in t_trk_ch[channelnum]:
         t_trk_ch[channelnum].append(cvpj_instid)
 
-    cvpj_l_instruments[cvpj_instid] = {}
-    cvpj_trackdata = cvpj_l_instruments[cvpj_instid]
-    cvpj_trackdata['fxrack_channel'] = channelnum+1
+    cvpj_color = [0,0,0]
+    cvpj_name = ''
+    cvpj_usemasterpitch = True
 
     pluginid = plugins.get_id()
-    cvpj_trackdata["instdata"] = {'pluginid': pluginid}
 
     if cvpj_midiinst == -1:
-        if midichanneltype[channelnum] == 0: 
-            cvpj_trackdata["color"] = [0,0,0]
-        else: 
+        if midichanneltype[channelnum] != 0: 
             plugins.add_plug_gm_midi(cvpj_l, pluginid, 128, cvpj_midiinst)
-            cvpj_trackdata["instdata"]['usemasterpitch'] = 0
-            cvpj_trackdata["name"] = 'Drums [Ch10]'
-            cvpj_trackdata["color"] = [0.81, 0.80, 0.82]
+            cvpj_usemasterpitch = False
+            cvpj_name = 'Drums'
+            cvpj_color = [0.81, 0.80, 0.82]
     else:
         if midichanneltype[channelnum] == 0: 
             plugins.add_plug_gm_midi(cvpj_l, pluginid, cvpj_midibank, cvpj_midiinst)
-            cvpj_trackdata["instdata"]['usemasterpitch'] = 1
-            cvpj_trackdata["name"] = idvals.get_idval(idvals_midi_inst, str(cvpj_midiinst), 'name') + ' [Ch' + str(channelnum+1) + ']'
+            cvpj_usemasterpitch = True
+            cvpj_name = idvals.get_idval(idvals_midi_inst, str(cvpj_midiinst), 'name') + ' [Ch' + str(channelnum+1) + ']'
             miditrkcolor = idvals.get_idval(idvals_midi_inst, str(cvpj_midiinst), 'color')
-            if miditrkcolor != None:
-                cvpj_trackdata["color"] = miditrkcolor
+            if miditrkcolor != None: cvpj_color = miditrkcolor
         else: 
             plugins.add_plug_gm_midi(cvpj_l, pluginid, 128, cvpj_midiinst)
-            cvpj_trackdata["instdata"]['usemasterpitch'] = 0
-            cvpj_trackdata["name"] = 'Drums'
-            cvpj_trackdata["color"] = [0.81, 0.80, 0.82]
+            cvpj_usemasterpitch = False
+            cvpj_name = 'Drums'
+            cvpj_color = [0.81, 0.80, 0.82]
 
+    tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_name, color=cvpj_color)
+    tracks.r_add_param(cvpj_l, cvpj_instid, 'usemasterpitch', cvpj_usemasterpitch, 'bool')
 
-    cvpj_l_instruments[cvpj_instid] = cvpj_trackdata
-    cvpj_l_instrumentsorder.append(cvpj_instid)
+    tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+    tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', channelnum+1)
 
 def getusedinsts(channels):
     global t_chan_usedinst
@@ -417,8 +416,6 @@ def song_end(channels):
 
     tracks.a_auto_nopl_to_cvpj(cvpj_l)
     cvpj_l['timemarkers'] = s_timemarkers
-    cvpj_l['instruments_data'] = cvpj_l_instruments
-    cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
     cvpj_l['playlist'] = cvpj_l_playlist
     return cvpj_l
     

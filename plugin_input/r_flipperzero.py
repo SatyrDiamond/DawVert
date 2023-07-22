@@ -6,6 +6,7 @@ import json
 from functions import placement_data
 from functions import tracks
 from functions import note_data
+from functions import song
 
 class input_fmf(plugin_input.base):
     def __init__(self): pass
@@ -91,13 +92,13 @@ class input_fmf(plugin_input.base):
 
         cvpj_l = {}
 
-        tracks.r_create_inst(cvpj_l, 'flipperzero', {})
-        tracks.r_basicdata(cvpj_l, 'flipperzero', 'Flipper Zero', [0.94, 0.58, 0.23], None, None)
+        tracks.r_create_track(cvpj_l, 'instrument', 'flipperzero', name='Flipper Zero', color=[0.94, 0.58, 0.23])
         tracks.r_pl_notes(cvpj_l, 'flipperzero', placement_data.nl2pl(notelist))
 
         cvpj_l['do_singlenotelistcut'] = True
+        cvpj_l['timesig'] = [4, 4]
 
-        cvpj_l['bpm'] = fmf_BPM
+        song.add_param(cvpj_l, 'bpm', fmf_BPM)
 
         return json.dumps(cvpj_l)
 

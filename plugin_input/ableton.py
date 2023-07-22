@@ -6,6 +6,7 @@ from functions import tracks
 from functions import colors
 from functions import audio
 from functions import data_values
+from functions import song
 
 import xml.etree.ElementTree as ET
 import plugin_input
@@ -90,8 +91,8 @@ class input_ableton(plugin_input.base):
         tracks.a_addtrack_master(cvpj_l, mastertrack_name, track_vol, mastertrack_color)
         x_mastertrack_DeviceChain = x_MasterTrack.findall('DeviceChain')[0]
         x_mastertrack_Mixer = x_mastertrack_DeviceChain.findall('Mixer')[0]
-        cvpj_l['bpm'] = get_param(x_mastertrack_Mixer, 'Tempo', 'float', 140)
-        tempo = cvpj_l['bpm']
+        tempo = get_param(x_mastertrack_Mixer, 'Tempo', 'float', 140)
+        song.add_param(cvpj_l, 'bpm', tempo)
 
         returnid = 0
 
@@ -113,8 +114,10 @@ class input_ableton(plugin_input.base):
             track_sendholders = track_sends.findall('TrackSendHolder')
 
             if tracktype == 'MidiTrack':
-                tracks.r_create_inst(cvpj_l, track_id, {})
-                tracks.r_basicdata(cvpj_l, track_id, track_name, track_color, track_vol, track_pan)
+
+                tracks.r_create_track(cvpj_l, 'instrument', track_id, name=track_name, color=track_color)
+                tracks.r_add_param(cvpj_l, track_id, 'vol', track_vol, 'float')
+                tracks.r_add_param(cvpj_l, track_id, 'pan', track_pan, 'float')
                 tracks.r_pl_notes(cvpj_l, track_id, [])
 
                 x_track_MainSequencer = x_track_DeviceChain.findall('MainSequencer')[0]
@@ -201,9 +204,11 @@ class input_ableton(plugin_input.base):
                     tracks.r_pl_notes(cvpj_l, track_id, cvpj_placement)  
 
             if tracktype == 'AudioTrack':
-                tracks.r_create_audio(cvpj_l, track_id, {})
-                tracks.r_basicdata(cvpj_l, track_id, track_name, track_color, track_vol, track_pan)
+                tracks.r_create_track(cvpj_l, 'audio', track_id, name=track_name, color=track_color)
+                tracks.r_add_param(cvpj_l, track_id, 'vol', track_vol, 'float')
+                tracks.r_add_param(cvpj_l, track_id, 'pan', track_pan, 'float')
                 tracks.r_pl_audio(cvpj_l, track_id, [])
+
                 x_track_MainSequencer = x_track_DeviceChain.findall('MainSequencer')[0]
                 x_track_Sample = x_track_MainSequencer.findall('Sample')[0]
                 x_track_ArrangerAutomation = x_track_Sample.findall('ArrangerAutomation')[0]

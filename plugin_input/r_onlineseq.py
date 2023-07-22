@@ -7,6 +7,7 @@ from functions import note_data
 from functions import plugins
 from functions import placement_data
 from functions import tracks
+from functions import song
 import plugin_input
 import json
 import struct
@@ -186,7 +187,16 @@ class input_onlinesequencer(plugin_input.base):
             inst_isdrum = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'isdrum')
 
             pluginid = cvpj_instid
-            cvpj_instdata = {'pluginid': pluginid}
+
+            onlseq_s_iparams = {}
+            if instid in onlseq_data_instparams: onlseq_s_iparams = onlseq_data_instparams[instid]
+            trk_vol = data_values.get_value(onlseq_s_iparams, 'vol', 1)
+            trk_pan = data_values.get_value(onlseq_s_iparams, 'pan', 0)
+
+            tracks.r_create_track(cvpj_l, 'instrument', cvpj_instid, name=inst_name, color=inst_color)
+            tracks.r_track_pluginid(cvpj_l, cvpj_instid, pluginid)
+            tracks.r_add_param(cvpj_l, cvpj_instid, 'vol', trk_vol, 'float')
+            tracks.r_add_param(cvpj_l, cvpj_instid, 'pan', trk_pan, 'float')
 
             if instid == 13: plugins.add_plug(cvpj_l, pluginid, 'retro', 'sine')
             elif instid == 14: plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
@@ -196,18 +206,11 @@ class input_onlinesequencer(plugin_input.base):
                 if inst_gminst != None:
                     if inst_isdrum == True: 
                         plugins.add_plug_gm_midi(cvpj_l, pluginid, 128, inst_gminst-1)
-                        cvpj_instdata['usemasterpitch'] = 0
+                        tracks.r_add_param(cvpj_l, cvpj_instid, 'usemasterpitch', False, 'bool')
                     else: 
                         plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, inst_gminst-1)
-                        cvpj_instdata['usemasterpitch'] = 1
+                        tracks.r_add_param(cvpj_l, cvpj_instid, 'usemasterpitch', True, 'bool')
 
-            onlseq_s_iparams = {}
-            if instid in onlseq_data_instparams: onlseq_s_iparams = onlseq_data_instparams[instid]
-            trk_vol = data_values.get_value(onlseq_s_iparams, 'vol', 1)
-            trk_pan = data_values.get_value(onlseq_s_iparams, 'pan', 0)
-
-            tracks.r_create_inst(cvpj_l, cvpj_instid, cvpj_instdata)
-            tracks.r_basicdata(cvpj_l, cvpj_instid, inst_name, inst_color, trk_vol, trk_pan)
             tracks.r_pl_notes(cvpj_l, cvpj_instid, placement_data.nl2pl(cvpj_notelist))
 
             if 'delay_on' in onlseq_s_iparams: 
@@ -329,8 +332,7 @@ class input_onlinesequencer(plugin_input.base):
         cvpj_l['do_singlenotelistcut'] = True
 
         cvpj_l['keynames_data'] = cvpj_l_keynames_data
-        cvpj_l['bpm'] = bpm
-        cvpj_l['timesig_denominator'] = 4
-        cvpj_l['timesig_numerator'] = timesig_numerator
+        song.add_param(cvpj_l, 'bpm', bpm)
+        cvpj_l['timesig'] = [timesig_numerator, 4]
 
         return json.dumps(cvpj_l)

@@ -150,7 +150,6 @@ class input_audiosanua(plugin_input.base):
         for x_track in xt_track:
             x_track_trackIndex = int(x_track.get('trackIndex'))
             xt_track_seqNote = x_track.findall('seqNote')
-            tracks.r_create_inst(cvpj_l, 'audiosanua'+str(x_track_trackIndex), {})
             for x_track_seqNote in xt_track_seqNote:
                 as_note_patternId = int(x_track_seqNote.get('patternId'))
                 as_note_startTick = int(x_track_seqNote.get('startTick'))
@@ -175,9 +174,11 @@ class input_audiosanua(plugin_input.base):
 
             cvpj_tr_color = as_pattern_color[as_channum]
 
-            tracks.r_basicdata(cvpj_l, cvpj_id, cvpj_tr_name, cvpj_tr_color, cvpj_tr_vol, cvpj_tr_pan)
-            tracks.r_param(cvpj_l, cvpj_id,'mute', int(not getbool(x_chan.get('mute'))))
-            tracks.r_param(cvpj_l, cvpj_id,'mute', getbool(x_chan.get('solo')))
+            tracks.r_create_track(cvpj_l, 'instrument', cvpj_id, name=cvpj_tr_name, color=cvpj_tr_color)
+            tracks.r_add_param(cvpj_l, cvpj_id, 'vol', cvpj_tr_vol, 'float')
+            tracks.r_add_param(cvpj_l, cvpj_id, 'pan', cvpj_tr_pan, 'float')
+            tracks.r_add_param(cvpj_l, cvpj_id, 'enabled', int(not getbool(x_chan.get('mute'))), 'bool')
+            tracks.r_add_param(cvpj_l, cvpj_id, 'solo', getbool(x_chan.get('solo')), 'bool')
             tracks.r_add_send(cvpj_l, cvpj_id, 'audiosauna_send_tape_delay', int(x_chan.get('delay'))/100, None)
             tracks.r_add_send(cvpj_l, cvpj_id, 'audiosauna_send_reverb', int(x_chan.get('reverb'))/100, None)
 
@@ -209,7 +210,7 @@ class input_audiosanua(plugin_input.base):
 
             cvpj_trackid = 'audiosanua'+str(devicenum)
 
-            cvpj_instdata = {}
+            #cvpj_instdata = {}
 
             pluginid = plugins.get_id()
 
@@ -281,7 +282,7 @@ class input_audiosanua(plugin_input.base):
 
                 plugins.add_asdr_env(cvpj_l, pluginid, 'volume', 0, v_attack, 0, v_decay, v_sustain, v_release, 1)
                 
-            cvpj_instdata['middlenote'] = int(getvalue(x_device_sound, 'masterTranspose', 0))*-1
+            #cvpj_instdata['middlenote'] = int(getvalue(x_device_sound, 'masterTranspose', 0))*-1
 
             pre_t_cutoff = int(getvalue(x_device_sound, 'cutoff', 0))/100
 
@@ -325,7 +326,7 @@ class input_audiosanua(plugin_input.base):
             plugins.add_lfo(cvpj_l, pluginid, 'cutoff', 
                 g_lfo_shape, 'seconds', g_lfo_speed, 0, g_lfo_attack, c_lfo_amount)
             
-            tracks.r_param(cvpj_l, cvpj_trackid, 'instdata', {'pluginid': pluginid})
+            tracks.r_track_pluginid(cvpj_l, cvpj_trackid, pluginid)
 
             for fx_name in ['distortion', 'bitcrush', 'chorus', 'amp']:
                 tracks.insert_fxslot(cvpj_l, ['track', cvpj_trackid], 'audio', make_fxslot(x_proj, fx_name, v_device_deviceType))
@@ -336,7 +337,7 @@ class input_audiosanua(plugin_input.base):
         as_loopend = float(getvalue(x_proj, 'appLoopEnd', 0))
         if as_loopstart != 0 and as_loopend != 0: song.add_timemarker_looparea(cvpj_l, None, as_loopstart, as_loopend)
 
-        cvpj_l['bpm'] = x_BPM
+        song.add_param(cvpj_l, 'bpm', x_BPM)
         return json.dumps(cvpj_l)
 
 

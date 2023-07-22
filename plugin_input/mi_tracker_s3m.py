@@ -118,28 +118,26 @@ class input_s3m(plugin_input.base):
 
             cvpj_instid = startinststr + str(s3m_numinst+1)
 
-            cvpj_l_instruments[cvpj_instid] = {}
-            cvpj_l_single_inst = cvpj_l_instruments[cvpj_instid]
-            cvpj_l_instrumentsorder.append(cvpj_instid)
-
             if s3m_inst_type == 0: print("[input-st3] Message #" + str(s3m_numinst) + ': "' + s3m_inst_name + '", Filename:"' + s3m_inst_filename+ '"')
             else: print("[input-st3] Instrument #" + str(s3m_numinst) + ': "' + s3m_inst_name + '", Filename:"' + s3m_inst_filename+ '"')
             table_defualtvol.append(s3m_inst_vol)
 
             pluginid = plugins.get_id()
-            if s3m_inst_filename != '': cvpj_l_single_inst['name'] = s3m_inst_filename
-            elif s3m_inst_name != '': cvpj_l_single_inst['name'] = s3m_inst_name
-            else: cvpj_l_single_inst['name'] = ' '
-            cvpj_l_single_inst['vol'] = 0.3
-            cvpj_l_single_inst['instdata'] = {'pluginid': pluginid}
+            if s3m_inst_filename != '': cvpj_inst_name = s3m_inst_filename
+            elif s3m_inst_name != '': cvpj_inst_name = s3m_inst_name
+            else: cvpj_inst_name = ' '
 
             wave_path = samplefolder+str(s3m_numinst).zfill(2)+'.wav'
-
             if s3m_inst_type == 1:
-                cvpj_l_single_inst['color'] = [0.65, 0.57, 0.33]
+                cvpj_inst_color = [0.65, 0.57, 0.33]
                 plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, wave_path)
             else:
-                cvpj_l_single_inst['color'] = [0.32, 0.27, 0.16]
+                cvpj_inst_color = [0.32, 0.27, 0.16]
+
+            tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_inst_name, color=cvpj_inst_color)
+            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+            tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
+
 
             plugins.add_plug_data(cvpj_l, pluginid, 'length', s3m_inst_length)
             plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
@@ -381,11 +379,6 @@ class input_s3m(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True
 
-        cvpj_l['use_fxrack'] = False
-        cvpj_l['use_instrack'] = False
-        
-        cvpj_l['instruments_data'] = cvpj_l_instruments
-        cvpj_l['instruments_order'] = cvpj_l_instrumentsorder
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['bpm'] = s3m_tempo
+        song.add_param(cvpj_l, 'bpm', s3m_tempo)
         return json.dumps(cvpj_l)

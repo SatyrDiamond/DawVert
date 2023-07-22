@@ -20,6 +20,7 @@ from functions import data_values
 from functions import song
 from functions import audio
 from functions import plugins
+from functions import tracks
 
 filename_len = {}
 
@@ -38,46 +39,40 @@ def getsamplefile(channeldata, flppath):
         return ''
 
 
+def calc_time(i_value):
+    oneval = i_value/65535
+    outval = math.log10(oneval)
+
+    for val in [i_value, oneval, outval]:
+        print(str(val).rjust(24), end=' ')
+    print()
+
+    return oneval
+
 def parse_envlfo(envlfo, pluginid, envtype):
     bio_envlfo = data_bytes.to_bytesio(envlfo)
 
     envlfo_flags = int.from_bytes(bio_envlfo.read(4), "little")
-    envlfo_envelope_enabled = int.from_bytes(bio_envlfo.read(4), "little")
-    envlfo_envelope_predelay = int.from_bytes(bio_envlfo.read(4), "little")
-    envlfo_envelope_attack = int.from_bytes(bio_envlfo.read(4), "little")
-    envlfo_envelope_hold = int.from_bytes(bio_envlfo.read(4), "little")
-    envlfo_envelope_decay = int.from_bytes(bio_envlfo.read(4), "little")
-    envlfo_envelope_sustain = int.from_bytes(bio_envlfo.read(4), "little")
-    envlfo_envelope_release = int.from_bytes(bio_envlfo.read(4), "little")
-    envlfo_envelope_aomunt = int.from_bytes(bio_envlfo.read(4), "little")
+    el_env_enabled = int.from_bytes(bio_envlfo.read(4), "little")
+    el_env_predelay = int.from_bytes(bio_envlfo.read(4), "little")
+    el_env_attack = int.from_bytes(bio_envlfo.read(4), "little")
+    el_env_hold = calc_time(int.from_bytes(bio_envlfo.read(4), "little"))
+    el_env_decay = int.from_bytes(bio_envlfo.read(4), "little")
+    el_env_sustain = int.from_bytes(bio_envlfo.read(4), "little")
+    el_env_release = int.from_bytes(bio_envlfo.read(4), "little")
+    el_env_aomunt = int.from_bytes(bio_envlfo.read(4), "little")
     envlfo_lfo_predelay = int.from_bytes(bio_envlfo.read(4), "little")
     envlfo_lfo_attack = int.from_bytes(bio_envlfo.read(4), "little")
     envlfo_lfo_amount = int.from_bytes(bio_envlfo.read(4), "little")
     envlfo_lfo_speed = int.from_bytes(bio_envlfo.read(4), "little")
     envlfo_lfo_shape = int.from_bytes(bio_envlfo.read(4), "little")
-    envlfo_envelope_attack_tension = int.from_bytes(bio_envlfo.read(4), "little")
-    envlfo_envelope_decay_tension = int.from_bytes(bio_envlfo.read(4), "little")
-    envlfo_envelope_release_tension = int.from_bytes(bio_envlfo.read(4), "little")
+    el_env_attack_tension = int.from_bytes(bio_envlfo.read(4), "little")
+    el_env_decay_tension = int.from_bytes(bio_envlfo.read(4), "little")
+    el_env_release_tension = int.from_bytes(bio_envlfo.read(4), "little")
 
+    plugins.add_asdr_env(cvpj_l, pluginid, envtype, el_env_predelay, el_env_attack, el_env_hold, el_env_decay, el_env_sustain, el_env_release, el_env_aomunt)
+    plugins.add_asdr_env_tension(cvpj_l, pluginid, envtype, el_env_attack_tension, el_env_decay_tension, el_env_release_tension)
 
-    #print(envlfo, pluginid, envtype)
-
-    #print(     envlfo_envelope_hold            )
-    #print(     envlfo_envelope_release            )
-
-
-    # 15087 = 0.25
-    # 20643 = 0.5
-    # 26664 = 1
-    # 32950 = 2
-    # 39376 = 4
-
-
-    #print(    pow(2, envlfo_envelope_hold/32950)     )
-    
-
-
-    #exit()
 
 
 class input_flp(plugin_input.base):
@@ -116,17 +111,17 @@ class input_flp(plugin_input.base):
         ppq = FL_Main['ppq']
 
         cvpj_l = {}
-        cvpj_l['vol'] = 1
-        if 'MainPitch' in FL_Main: cvpj_l['pitch'] = struct.unpack('h', struct.pack('H', FL_Main['MainPitch']))[0]
-        if 'Numerator' in FL_Main: cvpj_l['timesig_numerator'] = FL_Main['Numerator']
-        else: cvpj_l['timesig_numerator'] = 4
-        if 'Numerator' in FL_Main: cvpj_l['timesig_denominator'] = FL_Main['Numerator']
-        else: cvpj_l['timesig_denominator'] = 4
-        if 'Tempo' in FL_Main: cvpj_l['bpm'] = FL_Main['Tempo']
-        else: cvpj_l['bpm'] = 120
-        if 'Shuffle' in FL_Main: cvpj_l['shuffle'] = FL_Main['Shuffle']/128
+        cvpj_l['timesig'] = [4, 4]
 
-        tempomul = (120/cvpj_l['bpm'])
+        if 'Numerator' in FL_Main: cvpj_l['timesig'][0] = FL_Main['Numerator']
+        if 'Denominator' in FL_Main: cvpj_l['timesig'][1] = FL_Main['Denominator']
+        if 'MainPitch' in FL_Main: song.add_param(cvpj_l, 'pitch', struct.unpack('h', struct.pack('H', FL_Main['MainPitch']))[0]/100)
+        if 'Tempo' in FL_Main: song.add_param(cvpj_l, 'bpm', FL_Main['Tempo'])
+        if 'Shuffle' in FL_Main: song.add_param(cvpj_l, 'shuffle', FL_Main['Shuffle']/128)
+        song.add_param(cvpj_l, 'vol', 1)
+
+        tempomul = (120/FL_Main['Tempo'])
+        tempomulmin = (FL_Main['Tempo']/120)
 
         cvpj_l_instrument_data = {}
         cvpj_l_instrument_order = []
@@ -148,49 +143,49 @@ class input_flp(plugin_input.base):
             channeldata = FL_Channels[instrument]
             instdata = {}
             if channeldata['type'] in [0,2]:
-                cvpj_inst = {}
-                cvpj_inst['enabled'] = channeldata['enabled']
-                cvpj_inst['chain_fx_note'] = []
-                cvpj_inst['instdata'] = {}
-                if 'middlenote' in channeldata: 
-                    cvpj_inst['instdata']['middlenote'] = channeldata['middlenote'] - 60
-                cvpj_inst['instdata']['pitch'] = channeldata['pitch']
-                cvpj_inst['instdata']['usemasterpitch'] = channeldata['main_pitch']
 
-                if 'name' in channeldata: cvpj_inst['name'] = channeldata['name']
-                else: cvpj_inst['name'] = ''
-                cvpj_inst['pan'] = channeldata['pan']
-                cvpj_inst['vol'] = channeldata['volume']
+                cvpj_instid = 'FLInst' + str(instrument)
+
+                if 'name' in channeldata: cvpj_inst_name = channeldata['name']
+                else: cvpj_inst_name = ''
+
                 color = channeldata['color'].to_bytes(4, "little")
-                cvpj_inst['color'] = [color[0]/255,color[1]/255,color[2]/255]
-                cvpj_inst['fxrack_channel'] = channeldata['fxchannel']
+                cvpj_inst_color = [color[0]/255,color[1]/255,color[2]/255]
+
+                tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_inst_name, color=cvpj_inst_color)
+
+                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'enabled', channeldata['enabled'], 'bool')
+
+                if 'middlenote' in channeldata: 
+                    tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'middlenote', channeldata['middlenote']-60)
+
+                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pitch', channeldata['pitch'], 'float')
+                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'usemasterpitch', channeldata['main_pitch'], 'bool')
+                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pan', channeldata['pan'], 'float')
+                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', channeldata['volume'], 'float')
+                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', channeldata['fxchannel'])
 
                 pluginid = plugins.get_id()
 
                 if channeldata['type'] == 0:
-                    cvpj_inst['instdata']['pluginid'] = pluginid
+                    tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
                     plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, 
                         getsamplefile(channeldata, input_file))
                     
                 if channeldata['type'] == 2:
-                    cvpj_inst['instdata']['pluginid'] = pluginid
+                    tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
                     filename_sample = getsamplefile(channeldata, input_file)
-                    print(filename_sample)
                     plugins.add_fileref(cvpj_l, pluginid, 'audiofile', filename_sample)
                     flpluginname = ''
                     if 'plugin' in channeldata: 
-                        flpluginname = channeldata['plugin']
-                        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', flpluginname)
+                        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', channeldata['plugin'])
                     if 'pluginparams' in channeldata: 
                         flp_dec_pluginparams.getparams(cvpj_l, pluginid, flpluginname, channeldata['pluginparams'], samplefolder)
 
                 #parse_envlfo(channeldata['envlfo_vol'], pluginid, 'vol')
 
-                cvpj_inst['poly'] = {}
-                cvpj_inst['poly']['max'] = channeldata['polymax']
+                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, 'poly', 'max', channeldata['polymax'])
 
-                cvpj_l_instrument_data['FLInst' + str(instrument)] = cvpj_inst
-                cvpj_l_instrument_order.append('FLInst' + str(instrument))
                 id_inst[str(instrument)] = 'FLInst' + str(instrument)
 
             if channeldata['type'] == 4:
@@ -208,7 +203,7 @@ class input_flp(plugin_input.base):
                 ald = None
                 sampleinfo[instrument] = audio.get_audiofile_info(filename_sample)
                 if filename_sample in filename_len: ald = filename_len[filename_sample]
-                if ald != None: stretchbpm = (ald['dur_sec']*(cvpj_l['bpm']/120))
+                if ald != None: stretchbpm = ald['dur_sec']*tempomulmin
 
                 cvpj_audiomod = cvpj_s_sample['audiomod'] = {}
 
@@ -470,8 +465,6 @@ class input_flp(plugin_input.base):
 
         cvpj_l['do_addloop'] = True
 
-        cvpj_l['instruments_order'] = cvpj_l_instrument_order
-        cvpj_l['instruments_data'] = cvpj_l_instrument_data
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['playlist'] = cvpj_l_playlist
         cvpj_l['fxrack'] = cvpj_l_fxrack

@@ -8,6 +8,7 @@ from functions import idvals
 from functions import auto
 from functions import data_bytes
 from functions import plugins
+from functions import song
 import plugin_input
 import json
 import struct
@@ -119,22 +120,19 @@ def parsetrack(file_stream, tracknum, notelen):
         adlibrol_instname = idvals.get_idval(idvals_inst_adlib_rol, used_instrument_upper, 'name')
         if adlibrol_instname == 'noname': adlibrol_instname = used_instrument
 
-        cvpj_instdata = {}
+        tracks.m_inst_create(cvpj_l, instid, name=adlibrol_instname+' (Trk'+str(tracknum+1)+')')
+        tracks.m_inst_add_dataval(cvpj_l, instid, None, 'fxrack_channel', tracknum+1)
 
         if adlib_bnk == None:
-            cvpj_instdata = {}
             adlibrol_gminst = idvals.get_idval(idvals_inst_adlib_rol, used_instrument_upper, 'gm_inst')
             if adlibrol_gminst != None: 
                 pluginid = plugins.get_id()
                 plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, adlibrol_gminst-1)
-                cvpj_instdata['pluginid'] = pluginid
         else:
             if used_instrument_upper in adlib_bnk[0]:
                 opl2data = adlib_bnk[1][adlib_bnk[0][used_instrument_upper][0]]
                 pluginid = plugins.get_id()
-                cvpj_instdata = {}
-                cvpj_instdata['middlenote'] = 24
-                cvpj_instdata['pluginid'] = pluginid
+                tracks.r_add_dataval(cvpj_l, instid, None, 'middlenote', 24)
                 plugins.add_plug(cvpj_l, pluginid, 'fm', 'opl2')
                 
                 if opl2data[0][0] == 1: 
@@ -174,10 +172,7 @@ def parsetrack(file_stream, tracknum, notelen):
                 plugins.add_plug_param(cvpj_l, pluginid, 'op2_ksr', opl2data[2][11], 'int', 'op2_ksr')
                 plugins.add_plug_param(cvpj_l, pluginid, 'op2_waveform', opl2data[3][1], 'int', 'op2_waveform')
 
-
-        tracks.m_create_inst(cvpj_l, instid, cvpj_instdata)
-        tracks.m_basicdata_inst(cvpj_l, instid, adlibrol_instname+' (Trk'+str(tracknum+1)+')', None, None, None)
-        tracks.m_param_inst(cvpj_l, instid, 'fxrack_channel', tracknum+1)
+            tracks.m_inst_pluginid(cvpj_l, instid, pluginid)
 
         if len(rol_tr_pitch[1]) > 1: tracks.a_auto_nopl_twopoints(['track', instid, 'pitch'], 'float', rol_tr_pitch[1], notelen, 'instant')
 
@@ -286,9 +281,8 @@ class input_adlib_rol(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
-        cvpj_l['timesig_numerator'] = rol_header_beatMeasure
-        cvpj_l['timesig_denominator'] = 4
+        cvpj_l['timesig'] = [rol_header_beatMeasure, 4]
         
-        cvpj_l['bpm'] = t_tempo_data[1]
+        song.add_param(cvpj_l, 'bpm', t_tempo_data[1])
         return json.dumps(cvpj_l)
 

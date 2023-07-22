@@ -31,12 +31,6 @@ def getparam(paramname):
 	paramval = plugins.get_plug_param(cvpj_l_g, pluginid_g, paramname, 0)
 	return paramval[0]
 
-def getparam_old(paramname):
-	global pluginid_g
-	global cvpj_l_g
-	paramval = plugins.get_plug_oldparam(cvpj_l_g, pluginid_g, paramname, 0)
-	return paramval[0]
-
 def convert(cvpj_l, pluginid, plugintype):
 	global pluginid_g
 	global cvpj_l_g
@@ -69,24 +63,39 @@ def convert(cvpj_l, pluginid, plugintype):
 
 	# ---------------------------------------- DX10 ----------------------------------------
 	elif plugintype[1].lower() == 'fruity dx10':
+		param_amp_att = getparam('amp_att')/65536
+		param_amp_dec = getparam('amp_dec')/65536
+		param_amp_rel = getparam('amp_rel')/65536
+		param_mod_course = getparam('mod_course')/65536
+		param_mod_fine = getparam('mod_fine')/65536
+		param_mod_init = getparam('mod_init')/65536
+		param_mod_time = getparam('mod_time')/65536
+		param_mod_sus = getparam('mod_sus')/65536
+		param_mod_rel = getparam('mod_rel')/65536
+		param_velsen = getparam('velsen')/65536
+		param_vibrato = getparam('vibrato')/65536
+		param_octave = (getparam('octave')+2)/5
+		param_waveform = getparam('waveform')/65536
+		param_mod_thru = getparam('mod_thru')/65536
+		param_lforate = getparam('lforate')/65536
 
 		plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'DX10', 'param', None, 16)
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', getparam_old('amp_att')/65536, 'float', "Attack  ", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', getparam_old('amp_dec')/65536, 'float', "Decay   ", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_2', getparam_old('amp_rel')/65536, 'float', "Release ", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_3', getparam_old('mod_course')/65536, 'float', "Coarse  ", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_4', getparam_old('mod_fine')/65536, 'float', "Fine    ", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_5', getparam_old('mod_init')/65536, 'float', "Mod Init", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_6', getparam_old('mod_time')/65536, 'float', "Mod Dec ", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_7', getparam_old('mod_sus')/65536, 'float', "Mod Sus ", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_8', getparam_old('mod_rel')/65536, 'float', "Mod Rel ", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_9', getparam_old('velsen')/65536, 'float', "Mod Vel ", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_10', getparam_old('vibrato')/65536, 'float', "Vibrato ", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_11', (getparam_old('octave')+2)/5, 'float', "Octave  ", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', param_amp_att, 'float', "Attack  ", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', param_amp_dec, 'float', "Decay   ", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_2', param_amp_rel, 'float', "Release ", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_3', param_mod_course, 'float', "Coarse  ", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_4', param_mod_fine, 'float', "Fine    ", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_5', param_mod_init, 'float', "Mod Init", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_6', param_mod_time, 'float', "Mod Dec ", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_7', param_mod_sus, 'float', "Mod Sus ", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_8', param_mod_rel, 'float', "Mod Rel ", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_9', param_velsen, 'float', "Mod Vel ", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_10', param_vibrato, 'float', "Vibrato ", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_11', param_octave, 'float', "Octave  ", )
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_12', 0.5, 'float', "FineTune", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_13', getparam_old('waveform')/65536, 'float', "Waveform", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_14', getparam_old('mod_thru')/65536, 'float', "Mod Thru", )
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_15', getparam_old('lforate')/65536, 'float', "LFO Rate", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_13', param_waveform, 'float', "Waveform", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_14', param_mod_thru, 'float', "Mod Thru", )
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_15', param_lforate, 'float', "LFO Rate", )
 		return True
 
 	# ---------------------------------------- SimSynth ----------------------------------------
@@ -152,33 +161,44 @@ def convert(cvpj_l, pluginid, plugintype):
 		return True
 
 	elif plugintype[1].lower() == 'fruity bass boost':
+		param_freq = (getparam('freq')/1024)*0.8
+		param_amount = (getparam('amount')/1024)*0.8
 		plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Weight', 'param', None, 2)
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', (getparam_old('freq')/1024)*0.8, 'float', "Freq")
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', (getparam_old('amount')/1024)*0.8, 'float', "Weight")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', param_freq, 'float', "Freq")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', param_amount, 'float', "Weight")
 		return True
 
 	elif plugintype[1].lower() == 'fruity phaser':
+		param_sweep_freq = getparam('sweep_freq')/5000
+		param_depth_min = getparam('depth_min')/1000
+		param_depth_max = getparam('depth_max')/1000
+		param_freq_range = getparam('freq_range')/1024
+		param_stereo = getparam('stereo')/1024
+		param_num_stages = getparam('num_stages')/22
+		param_feedback = getparam('feedback')/1000
+		param_drywet = getparam('drywet')/1024
+		param_gain = getparam('gain')/5000
 		plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'SupaPhaser', 'param', None, 16)
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', 0, 'float', "attack")
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', 0, 'float', "release")
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_2', 0, 'float', "min env")
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_3', 0, 'float', "max env")
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_4', 0, 'float', "env-lfo mixture")
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_5', getparam_old('sweep_freq')/5000, 'float', "sweep freq.")
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_6', getparam_old('depth_min')/1000, 'float', "min. depth")
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_7', getparam_old('depth_max')/1000, 'float', "max. depth")
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_8', getparam_old('freq_range')/1024, 'float', "freq. range")
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_9', getparam_old('stereo')/1024, 'float', "stereo")
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_10', getparam_old('num_stages')/22, 'float', "nr. stages")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_5', param_sweep_freq, 'float', "sweep freq.")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_6', param_depth_min, 'float', "min. depth")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_7', param_depth_max, 'float', "max. depth")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_8', param_freq_range, 'float', "freq. range")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_9', param_stereo, 'float', "stereo")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_10', param_num_stages, 'float', "nr. stages")
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_11', 0, 'float', "distortion")
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_12', getparam_old('feedback')/1000, 'float', "feedback")
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_13', getparam_old('drywet')/1024, 'float', "dry-wet")
-		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_14', getparam_old('gain')/5000, 'float', "out gain")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_12', param_feedback, 'float', "feedback")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_13', param_drywet, 'float', "dry-wet")
+		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_14', param_gain, 'float', "out gain")
 		plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_15', 0, 'float', "invert")
 		return True
 
 	elif plugintype[1].lower() == 'fruity spectroman':
-		spectroman_mode = getparam_old('outputmode')
+		spectroman_mode = getparam('outputmode')
 		x_spectrumanalyzer = ET.Element("state")
 		x_spectrumanalyzer.set('valueTree', '<?xml version="1.0" encoding="UTF-8"?>\n<state width="400" height="328"/>')
 		x_spectrumanalyzer.set('program', '0')

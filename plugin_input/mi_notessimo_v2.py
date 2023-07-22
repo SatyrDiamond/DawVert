@@ -9,6 +9,7 @@ from functions import placement_data
 from functions import song
 from functions import plugins
 from functions import tracks
+from functions import song
 import json
 import plugin_input
 import struct
@@ -94,18 +95,19 @@ class input_notessimo_v2(plugin_input.base):
             print("[input-notessimo_v2] Instrument: " + str(notetess_instname))
 
             pluginid = plugins.get_id()
-            cvpj_instdata = {}
+
+            cvpj_instid = str(used_instrument)
+            tracks.m_inst_create(cvpj_l, cvpj_instid, name=notetess_instname, color=notetess_instcolor)
+            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
+
             if notetess_gminst != None: 
                 plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, notetess_gminst)
-                cvpj_instdata = {'pluginid': pluginid}
-
-            tracks.m_create_inst(cvpj_l, str(used_instrument), cvpj_instdata)
-            tracks.m_basicdata_inst(cvpj_l, str(used_instrument), notetess_instname, notetess_instcolor, 1.0, 0.0)
+                tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
             if notetess_isdrum == True:
-                tracks.m_param_inst(cvpj_l, str(used_instrument), 'fxrack_channel', 1)
+                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', 1)
             else:
-                tracks.m_param_inst(cvpj_l, str(used_instrument), 'fxrack_channel', fxnum)
+                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', fxnum)
                 tracks.fxrack_add(cvpj_l, fxnum, notetess_instname, notetess_instcolor, None, None)
                 fxnum += 1
                 
@@ -130,5 +132,5 @@ class input_notessimo_v2(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True
         
-        cvpj_l['bpm'] = tempo_table[0]*notess_sheets[arr_order[0]][1]
+        song.add_param(cvpj_l, 'bpm', tempo_table[0]*notess_sheets[arr_order[0]][1])
         return json.dumps(cvpj_l)

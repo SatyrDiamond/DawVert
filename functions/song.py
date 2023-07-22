@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_values
+from functions import params
 
 def r_getduration(projJ):
     trackplacements = projJ['track_placements']
@@ -74,3 +75,5 @@ def add_info(cvpj_l, i_type, i_value):
 def add_info_msg(cvpj_l, i_datatype, i_value):
     data_values.nested_dict_add_value(cvpj_l, ['info', 'message'], {'type': i_datatype, 'text': i_value})
 
+def add_param(cvpj_l, p_id, p_value, **kwargs):
+    params.add(cvpj_l, [], p_id, p_value, 'float', **kwargs)

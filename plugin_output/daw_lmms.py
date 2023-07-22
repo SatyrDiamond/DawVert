@@ -17,6 +17,7 @@ from functions import notelist_data
 from functions import song_convert
 from functions import colors
 from functions import tracks
+from functions import params
 
 lfoshape = {'sine': 0,'tri': 1,'saw': 2,'square': 3,'custom': 4,'random': 5}
 chord = {'0': 0, '0,4,7': 1, '0,4,6': 2, '0,3,7': 3, '0,3,6': 4, '0,2,7': 5, '0,5,7': 6, '0,4,8': 7, '0,5,8': 8, '0,3,6,9': 9, '0,4,7,9': 10, '0,5,7,9': 11, '0,4,7,9,14': 12, '0,3,7,9': 13, '0,3,7,9,14': 14, '0,4,7,10': 15, '0,5,7,10': 16, '0,4,8,10': 17, '0,4,6,10': 18, '0,4,7,10,15': 19, '0,4,7,10,13': 20, '0,4,8,10,15': 21, '0,4,8,10,13': 22, '0,4,6,10,13': 23, '0,4,7,10,17': 24, '0,4,7,10,21': 25, '0,4,7,10,18': 26, '0,4,7,11': 27, '0,4,6,11': 28, '0,4,8,11': 29, '0,4,7,11,18': 30, '0,4,7,11,21': 31, '0,3,7,10': 32, '0,3,6,10': 33, '0,3,7,10,13': 34, '0,3,7,10,17': 35, '0,3,7,10,21': 36, '0,3,7,11': 37, '0,3,7,11,17': 38, '0,3,7,11,21': 39, '0,4,7,10,14': 40, '0,5,7,10,14': 41, '0,4,7,14': 42, '0,4,8,10,14': 43, '0,4,6,10,14': 44, '0,4,7,10,14,18': 45, '0,4,7,10,14,20': 46, '0,4,7,11,14': 47, '0,5,7,11,15': 48, '0,4,8,11,14': 49, '0,4,7,11,14,18': 50, '0,3,7,10,14': 51, '0,3,7,14': 52, '0,3,6,10,14': 53, '0,3,7,11,14': 54, '0,4,7,10,14,17': 55, '0,4,7,10,13,17': 56, '0,4,7,11,14,17': 57, '0,3,7,10,14,17': 58, '0,3,7,11,14,17': 59, '0,4,7,10,14,21': 60, '0,4,7,10,15,21': 61, '0,4,7,10,13,21': 62, '0,4,6,10,13,21': 63, '0,4,7,11,14,21': 64, '0,3,7,10,14,21': 65, '0,3,7,11,14,21': 66, '0,2,4,5,7,9,11': 67, '0,2,3,5,7,8,11': 68, '0,2,3,5,7,9,11': 69, '0,2,4,6,8,10': 70, '0,2,3,5,6,8,9,11': 71, '0,2,4,7,9': 72, '0,3,5,7,10': 73, '0,1,5,7,10': 74, '0,2,4,5,7,8,9,11': 75, '0,2,4,5,7,9,10,11': 76, '0,3,5,6,7,10': 77, '0,1,4,5,7,8,11': 78, '0,1,4,6,8,10,11': 79, '0,1,3,5,7,9,11': 80, '0,1,3,5,7,8,11': 81, '0,2,3,6,7,8,11': 82, '0,2,3,5,7,9,10': 83, '0,1,3,5,7,8,10': 84, '0,2,4,6,7,9,11': 85, '0,2,4,5,7,9,10': 86, '0,2,3,5,7,8,10': 87, '0,1,3,5,6,8,10': 88, '0,1,2,3,4,5,6,7,8,9,10,11': 90, '0,1,3,4,6,7,9,10': 91, '0,7': 92, '0,1,4,5,7,8,10': 93, '0,1,4,5,6,8,11': 94}
@@ -233,7 +234,7 @@ def get_plugin_param(pluginautoid, xmltag, xmlname, pluginid, paramname, fallbac
 
 
 def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
-    instJ = trkJ['instdata']
+    instJ = data_values.get_value(trkJ, 'instdata', {})
     xml_instrumentpreplugin = ET.SubElement(xmltag, "instrument")
 
     visual_plugname = 'none'
@@ -455,7 +456,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     add_auto_placements(1, [0, 100], ['track', trackid], 'vol', trkJ, 'vol', trkX_insttr, 'vol', trackname, 'Volume')
     add_auto_placements(0, [0, 100], ['track', trackid], 'pan', trkJ, 'pan', trkX_insttr, 'pan', trackname, 'Pan')
     add_auto_placements(1, [-1, -1], ['track', trackid], 'enabled', trkJ, 'enabled', xmltag, 'muted', trackname, 'Muted')
-    add_auto_placements(0, None, ['track', trackid], 'pitch', instJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
+    add_auto_placements(0, None, ['track', trackid], 'pitch', trkJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
 
     #TO BE DONE
     if 'chain_fx_notes' in trkJ:
@@ -493,7 +494,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
 
     plugintype, middlenotefix = lmms_encode_plugin(trkX_insttr, trkJ, trackid, trackname, trkX_insttr)
 
-    if 'middlenote' in instJ: middlenote = instJ['middlenote']
+    if 'middlenote' in trkJ: middlenote = trkJ['middlenote']
     middlenote += middlenotefix
     trkX_insttr.set('basenote', str(middlenote+57))
 
@@ -867,8 +868,9 @@ def lmms_make_main_auto_track(autoidnum, autodata, visualname):
 def add_auto_placements(i_fallback, i_addmul, i_id, i_autoname, j_tag, j_name, x_tag, x_name, v_type, v_name):
     i_value = i_fallback
     if j_tag != None:
-        if j_name in j_tag: 
-            i_value = j_tag[j_name]
+        if j_name in j_tag: i_value = j_tag[j_name]
+        paramdata = params.get(j_tag, [], j_name, i_fallback)
+        if paramdata != None: i_value = paramdata[0]
 
     if i_addmul != None: i_value = (i_value+i_addmul[0])*i_addmul[1]
 
@@ -955,8 +957,14 @@ class output_lmms(plugin_output.base):
         add_auto_placements(120, None, ['main'], 'bpm', cvpj_l, 'bpm', headX, 'bpm', 'Song', 'Tempo')
         add_auto_placements(0, None, ['main'], 'pitch', cvpj_l, 'pitch', headX, 'masterpitch', 'Song', 'Pitch')
         add_auto_placements(1, [0, 100], ['main'], 'vol', cvpj_l, 'vol', headX, 'mastervol', 'Song', 'Volume')
-        add_auto_placements(4, None, ['main'], 'timesig_numerator', cvpj_l, 'timesig_numerator', headX, 'timesig_numerator', 'Song', 'Numerator')
-        add_auto_placements(4, None, ['main'], 'timesig_denominator', cvpj_l, 'timesig_denominator', headX, 'timesig_denominator', 'Song', 'Denominator')
+
+        if 'timesig' in cvpj_l:
+            timesig = cvpj_l['timesig']
+            headX.set("timesig_numerator", str(timesig[0]))
+            headX.set("timesig_denominator", str(timesig[1]))
+        else:
+            headX.set("timesig_numerator", str(4))
+            headX.set("timesig_denominator", str(4))
 
         lmms_encode_tracks(trkcX, trksJ, trkorderJ, trkplacementsJ)
 

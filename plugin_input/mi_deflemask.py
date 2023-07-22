@@ -367,13 +367,12 @@ class input_cvpj_r(plugin_input.base):
             elif insttype == 'opn2':
                 plugins.add_plug(cvpj_l, pluginid, 'fm', 'opn2')
                 for fmdataval in dmf_instdata['fmdata']:
-                    plugins.add_plug_param(cvpj_l, pluginid, fmdataval, 
-                        dmf_instdata['fmdata'][fmdataval], 'int', fmdataval)
+                    plugins.add_plug_param(cvpj_l, pluginid, fmdataval, dmf_instdata['fmdata'][fmdataval], 'int', fmdataval)
             else: 
                 cvpj_instdata["plugin"] = 'none'
             
-            tracks.m_create_inst(cvpj_l, cvpj_instid, {'pluginid': pluginid})
-            tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, 1.0, 0.0)
+            tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)
+            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
         #dmf_insts
 
@@ -386,6 +385,6 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
         
-        cvpj_l['bpm'] = 140
+        song.add_param(cvpj_l, 'bpm', 140)
         return json.dumps(cvpj_l)
 

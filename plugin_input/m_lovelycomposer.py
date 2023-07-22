@@ -11,6 +11,7 @@ from functions import tracks
 from functions import plugins
 from functions import note_data
 from functions import data_bytes
+from functions import song
 
 #               Name,              Type, FadeIn, FadeOut, PitchMod, Slide, Vib, Color
 lc_instlist = {}
@@ -277,8 +278,8 @@ class input_lc(plugin_input.base):
                 plugins.add_plug(cvpj_l, pluginid, 'lovelycomposer', used_instrument)
                 plugins.add_plug_data(cvpj_l, pluginid, 'duty', 2)
 
-            tracks.m_create_inst(cvpj_l, used_instrument, {'pluginid': pluginid})
-            tracks.m_basicdata_inst(cvpj_l, used_instrument, used_instrument, None, None, None)
+            tracks.m_inst_create(cvpj_l, used_instrument, name=used_instrument)
+            tracks.m_inst_pluginid(cvpj_l, used_instrument, pluginid)
 
         startinststr = 'lc_instlist_'
 
@@ -286,7 +287,7 @@ class input_lc(plugin_input.base):
 
         cvpj_l['do_addloop'] = True
         
-        cvpj_l['bpm'] = (3614.75409836/lc_speed)/2
+        song.add_param(cvpj_l, 'bpm', (3614.75409836/lc_speed)/2)
 
         return json.dumps(cvpj_l)
 

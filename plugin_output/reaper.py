@@ -13,6 +13,7 @@ from functions import data_bytes
 from functions import data_values
 from functions import colors
 from functions import notelist_data
+from functions import params
 from functions import xtramath
 
 
@@ -206,8 +207,7 @@ class output_reaper(plugin_output.base):
         reaper_numerator = 4
         reaper_denominator = 4
 
-        if 'timesig_numerator' in projJ: reaper_numerator = int(projJ['timesig_numerator'])
-        if 'timesig_denominator' in projJ: reaper_denominator = int(projJ['timesig_denominator'])
+        if 'timesig' in projJ: reaper_numerator, reaper_denominator = projJ['timesig']
         if 'bpm' in projJ: reaper_tempo = projJ['bpm']
 
         tempomul = reaper_tempo/120
@@ -288,8 +288,8 @@ class output_reaper(plugin_output.base):
 
                     cvpj_trackcolor = "0"
                     cvpj_trackname = data_values.get_value(trackdata, 'name', '')
-                    cvpj_trackvol = data_values.get_value(trackdata, 'vol', 1)
-                    cvpj_trackpan = data_values.get_value(trackdata, 'pan', 0)
+                    cvpj_trackvol = params.get(trackdata, [], 'vol', 1)
+                    cvpj_trackpan = params.get(trackdata, [], 'pan', 0)
 
                     if 'color' in trackdata: cvpj_trackcolor = cvpj_color_to_reaper_color(trackdata['color'])
 

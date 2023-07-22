@@ -5,6 +5,7 @@ from functions import song
 from functions import notelist_data
 from functions import data_values
 from functions import xtramath
+from functions import params
 from functions import tracks
 from functions import data_values
 from functions import audio
@@ -336,7 +337,7 @@ def r_removeloops_placements(cvpj_placements, tempo, isaudio):
     return new_placements
 
 def r_removeloops(projJ):
-    tempo = projJ['bpm']
+    tempo = params.get(projJ, [], 'bpm', 120)[0]
     if 'track_placements' in projJ:
         for track_placements_id in projJ['track_placements']:
             track_placements_data = projJ['track_placements'][track_placements_id]
@@ -364,7 +365,7 @@ def r_removeloops(projJ):
                     track_placements_data['audio'] = r_removeloops_placements(track_placements_data['audio'], tempo, True)
 
 def m_removeloops(projJ):
-    tempo = projJ['bpm']
+    tempo = params.get(projJ, [], 'bpm', 120)[0]
     for playlist_id in projJ['playlist']:
         playlist_id_data = projJ['playlist'][playlist_id]
         if 'placements_notes' in playlist_id_data:
@@ -493,7 +494,7 @@ def rate2warp(cvpj_placements, tempo):
     return cvpj_placements
 
 def r_changestretch(projJ, stretchtype):
-    tempo = projJ['bpm']
+    tempo = params.get(projJ, [], 'bpm', 120)[0]
     if 'track_placements' in projJ:
         for track_placements_id in projJ['track_placements']:
             track_placements_data = projJ['track_placements'][track_placements_id]
@@ -525,7 +526,7 @@ def r_changestretch(projJ, stretchtype):
 
 
 def m_changestretch(projJ, stretchtype):
-    tempo = projJ['bpm']
+    tempo = params.get(projJ, [], 'bpm', 120)[0]
     for playlist_id in projJ['playlist']:
         playlist_id_data = projJ['playlist'][playlist_id]
         if 'placements_audio' in playlist_id_data:

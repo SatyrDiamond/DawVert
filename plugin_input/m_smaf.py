@@ -8,6 +8,7 @@ import math
 from functions import data_bytes
 from functions import note_mod
 from functions import format_midi_in
+from functions import song
 
 def calc_gatetime(bio_mmf_Mtsq):
     out_duration = 0
@@ -110,19 +111,9 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
 
     for usedinst in usedinsts:
         if usedinst[1] == 124: 
-            cvpj_trackdata = {}
-            cvpj_trackdata["instdata"] = {}
-            cvpj_trackdata["instdata"]['plugin'] = 'none'
-            cvpj_trackdata["color"] = [0.3,0.3,0.3]
-            cvpj_trackdata["name"] = 'MA-3 User #' + str(usedinst[2])
-            format_midi_in.make_custominst(usedinst[0], usedinst[1], usedinst[2], cvpj_trackdata)
+            format_midi_in.make_custominst(usedinst[0], usedinst[1], usedinst[2], name='MA-3 User #' + str(usedinst[2]), color=[0.3,0.3,0.3])
         elif usedinst[1] == 125: 
-            cvpj_trackdata = {}
-            cvpj_trackdata["instdata"] = {}
-            cvpj_trackdata["instdata"]['plugin'] = 'none'
-            cvpj_trackdata["color"] = [0.2,0.2,0.2]
-            cvpj_trackdata["name"] = 'MA-3 PCM #' + str(usedinst[2])
-            format_midi_in.make_custominst(usedinst[0], usedinst[1], usedinst[2], cvpj_trackdata)
+            format_midi_in.make_custominst(usedinst[0], usedinst[1], usedinst[2], name='MA-3 PCM #' + str(usedinst[2]), color=[0.3,0.3,0.3])
         else: 
             format_midi_in.make_inst(usedinst[0], usedinst[1], usedinst[2])
 
@@ -210,5 +201,5 @@ class input_mmf(plugin_input.base):
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = True
         
-        cvpj_l['bpm'] = 120
+        song.add_param(cvpj_l, 'bpm', 120)
         return json.dumps(cvpj_l)

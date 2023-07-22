@@ -1,17 +1,17 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
-from functions import tracks
-from functions import note_data
 from functions import audio_wav
+from functions import auto
+from functions import data_bytes
+from functions import idvals
+from functions import note_data
 from functions import note_mod
 from functions import notelist_data
-from functions import plugins
 from functions import placement_data
-from functions import idvals
+from functions import plugins
 from functions import song
-from functions import auto
+from functions import tracks
 import plugin_input
 import struct
 import json
@@ -150,8 +150,8 @@ class input_soundclub2(plugin_input.base):
                     sc2idvinst_gminst = idvals.get_idval(idvals_inst_soundclub2, t_instname, 'gm_inst')
                     if sc2idvinst_gminst != None: 
                         plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, sc2idvinst_gminst)
-                    tracks.ri_create_inst(cvpj_l, cvpj_instid, None, {'pluginid': pluginid})
-                    tracks.r_basicdata(cvpj_l, cvpj_instid, sc2_insdata[1:].decode('ascii'), None, None, None)
+                    tracks.r_create_track(cvpj_l, 'instrument', cvpj_instid, name=sc2_insdata[1:].decode('ascii'))
+                    tracks.r_track_pluginid(cvpj_l, cvpj_instid, pluginid)
 
                 elif sc2_insdata[0] == 0:
                     bio_sc2_insdata = data_bytes.to_bytesio(sc2_insdata)
@@ -177,8 +177,9 @@ class input_soundclub2(plugin_input.base):
                         plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
                         audio_wav.generate(wave_path, cvpj_wavdata, 1, sc2_i_freq, 8, cvpj_loop)
 
-                        tracks.ri_create_inst(cvpj_l, cvpj_instid, None, {'pluginid': pluginid})
-                        tracks.r_basicdata(cvpj_l, cvpj_instid, cvpj_instname, None, 0.3, None)
+                        tracks.r_create_track(cvpj_l, 'instrument', cvpj_instid, name=cvpj_instname)
+                        tracks.r_track_pluginid(cvpj_l, cvpj_instid, pluginid)
+                        tracks.r_add_param(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
                 tracks.r_pl_notes(cvpj_l, cvpj_instid, [])
                 cur_instnum += 1
             else:  print('UNK', sc2object[0])
@@ -215,7 +216,6 @@ class input_soundclub2(plugin_input.base):
 
         cvpj_l['do_addloop'] = True
         song.add_info_msg(cvpj_l, 'text', sc2_songdisc)
-        cvpj_l['timesig_denominator'] = sc2_headerdata[4]
-        cvpj_l['timesig_numerator'] = sc2_headerdata[5]
-        cvpj_l['bpm'] = sc2_globaltempo
+        cvpj_l['timesig'] = [sc2_headerdata[4], sc2_headerdata[5]]
+        song.add_param(cvpj_l, 'bpm', sc2_globaltempo)
         return json.dumps(cvpj_l)

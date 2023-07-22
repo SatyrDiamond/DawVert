@@ -7,6 +7,7 @@ from functions import colors
 from functions import plugins
 from functions import xtramath
 from functions import note_data
+from functions import song
 import plugin_input
 import struct
 import json
@@ -81,9 +82,8 @@ class input_soundation(plugin_input.base):
         cvpj_l = {}
 
         timeSignaturesplit = sndstat_data['timeSignature'].split('/')
-        cvpj_l['timesig_numerator'] = int(timeSignaturesplit[0])
-        cvpj_l['timesig_denominator'] = int(timeSignaturesplit[1])
-        cvpj_l['bpm'] = sndstat_data['bpm']
+        cvpj_l['timesig'] = [int(timeSignaturesplit[0]), int(timeSignaturesplit[1])]
+        song.add_param(cvpj_l, 'bpm', sndstat_data['bpm'])
         sndstat_chans = sndstat_data['channels']
 
         tracknum = 0
@@ -96,10 +96,12 @@ class input_soundation(plugin_input.base):
             trackcolor = colors.hsv_to_rgb(tracknum_hue, 0.7, 0.7)
             if sound_chan_type == 'instrument':
                 pluginid = plugins.get_id()
-                tracks.r_create_inst(cvpj_l, trackid, {'pluginid': pluginid})
-                tracks.r_basicdata(cvpj_l, trackid, sndstat_chan['name'], [trackcolor[0], trackcolor[1], trackcolor[2]], sndstat_chan['volume'], (sndstat_chan['pan']-0.5)*2)
-                tracks.r_param(cvpj_l, trackid, 'enabled', int(not sndstat_chan['mute']))
-                tracks.r_param(cvpj_l, trackid, 'solo', int(sndstat_chan['solo']))
+                tracks.r_create_track(cvpj_l, 'instrument', trackid, name=sndstat_chan['name'], color=[trackcolor[0], trackcolor[1], trackcolor[2]])
+                tracks.r_track_pluginid(cvpj_l, trackid, pluginid)
+                tracks.r_add_param(cvpj_l, trackid, 'vol', sndstat_chan['volume'], 'float')
+                tracks.r_add_param(cvpj_l, trackid, 'pan', (sndstat_chan['pan']-0.5)*2, 'float')
+                tracks.r_add_param(cvpj_l, trackid, 'enabled', int(not sndstat_chan['mute']), 'bool')
+                tracks.r_add_param(cvpj_l, trackid, 'solo', int(sndstat_chan['solo']), 'bool')
 
                 sound_instdata = sndstat_chan['instrument']
 

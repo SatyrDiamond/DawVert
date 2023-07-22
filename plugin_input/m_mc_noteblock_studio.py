@@ -127,13 +127,14 @@ class input_gt_mnbs(plugin_input.base):
             cvpj_instname = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'name')
             cvpj_instcolor = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'color')
             cvpj_instgm = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'gm_inst')
-            cvpj_instdata = {}
+
+            tracks.m_inst_create(cvpj_l, instid, name=cvpj_instname, color=cvpj_instcolor)
+
             if cvpj_instgm != None: 
                 plugid = plugins.get_id()
                 plugins.add_plug_gm_midi(cvpj_l, plugid, 0, cvpj_instgm-1)
-                cvpj_instdata = {'pluginid': plugid}
-            tracks.m_create_inst(cvpj_l, instid, cvpj_instdata)
-            tracks.m_basicdata_inst(cvpj_l, instid, cvpj_instname, cvpj_instcolor, 1.0, 0.0)
+                tracks.m_inst_pluginid(cvpj_l, instid, plugid)
+
 
         # PART 4: CUSTOM INSTRUMENTS
         custominstid = 16
@@ -146,9 +147,11 @@ class input_gt_mnbs(plugin_input.base):
                 custominst_presskey = nbs_file.read(1)[0]
                 #print(custominst_name, custominst_file, custominst_key, custominst_presskey)
                 plugid = plugins.get_id()
+
+                instid = 'NoteBlock'+str(instnum)
+                tracks.m_inst_create(cvpj_l, instid, name=custominst_name)
+                tracks.m_inst_pluginid(cvpj_l, instid, plugid)
                 plugins.add_plug_sampler_singlefile(cvpj_l, plugid, custominst_file)
-                tracks.m_create_inst(cvpj_l, 'NoteBlock'+str(custominstid), {'pluginid': plugid})
-                tracks.m_basicdata_inst(cvpj_l, 'NoteBlock'+str(custominstid), custominst_name, None, 1.0, 0.0)
                 custominstid += 1
 
         for nbs_layer in nbs_notes:
@@ -176,8 +179,7 @@ class input_gt_mnbs(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
-        cvpj_l['timesig_numerator'] = timesig_numerator
-        cvpj_l['timesig_denominator'] = 4
-        cvpj_l['bpm'] = tempo
+        cvpj_l['timesig'] = [timesig_numerator, 4]
+        song.add_param(cvpj_l, 'bpm', tempo)
         return json.dumps(cvpj_l)
 

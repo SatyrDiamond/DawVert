@@ -9,8 +9,12 @@ import io
 import zipfile
 from bs4 import BeautifulSoup
 from functions import placements
+from functions import data_values
+from functions import params
 from functions import auto
 from functions import colors
+
+truefalse = ['false','true']
 
 def addvalue_bool(xmltag, xmlname, i_value, i_id, i_name):
     x_temp = ET.SubElement(xmltag, xmlname)
@@ -26,6 +30,25 @@ def addvalue(xmltag, xmlname, i_max, i_min, i_unit, i_value, i_id, i_name):
     x_temp.set('value', str(i_value))
     x_temp.set('id', str(i_id))
     x_temp.set('name', str(i_name))
+
+def param_cvpj2dawp(xmltag, xmlname, dicttag, dictname, i_max, i_min, i_id, i_fallback, **kwargs):
+    x_temp = ET.SubElement(xmltag, xmlname)
+    paramdata = params.get(dicttag, [], dictname, i_fallback)
+
+    if paramdata[1] != 'bool':
+        x_temp.set('max', str(i_max))
+        x_temp.set('min', str(i_min))
+        x_temp.set('unit', data_values.get_value(kwargs, 'unit', 'linear'))
+    if paramdata[1] == 'bool': 
+        outval = paramdata[0]
+        if 'invert' in kwargs:
+            if kwargs['invert'] == True:
+                outval = not outval
+        x_temp.set('value', truefalse[int(outval)])
+    else: x_temp.set('value', str(paramdata[0]))
+    
+    x_temp.set('id', str(i_id))
+    x_temp.set('name', paramdata[2])
 
 def addmeta(xmltag, name, value):
     x_temp = ET.SubElement(xmltag, name)
@@ -75,11 +98,9 @@ def maketrack(xmltag, cvpj_trackdata, cvpj_trackname):
     x_str_track_ch.set('role', 'regular')
     x_str_track_ch.set('solo', 'false')
     x_str_track_ch.set('id', 'trackch_'+cvpj_trackname)
-    addvalue_bool(x_str_track_ch, 'Mute', 'false',  '__param__track__mute__'+cvpj_trackname, 'Mute')
-    if 'pan' in cvpj_trackdata: addvalue(x_str_track_ch, 'Pan', 1, -1, 'linear', cvpj_trackdata['pan'], '__param__track__pan__'+cvpj_trackname, 'Pan')
-    else: addvalue(x_str_track_ch, 'Pan', 1, -1, 'linear', 0, cvpj_trackname+'_pan', 'Pan')
-    if 'vol' in cvpj_trackdata: addvalue(x_str_track_ch, 'Volume', 2, 0, 'linear', cvpj_trackdata['vol'], '__param__track__vol__'+cvpj_trackname, 'Volume')
-    else: addvalue(x_str_track_ch, 'Volume', 2, 0, 'linear', 1, cvpj_trackname+'_vol', 'Volume')
+    param_cvpj2dawp(x_str_track_ch, 'Mute', cvpj_trackdata, 'enabled', 1, 0, '__param__track__mute__'+cvpj_trackname, True, invert=True)
+    param_cvpj2dawp(x_str_track_ch, 'Pan', cvpj_trackdata, 'pan', 1, -1, '__param__track__pan__'+cvpj_trackname, 0)
+    param_cvpj2dawp(x_str_track_ch, 'Volume', cvpj_trackdata, 'vol', 2, 0, '__param__track__vol__'+cvpj_trackname, 1)
     if cvpj_trackdata['type'] == 'instrument': 
         x_str_track.set('contentType', 'notes')
 
@@ -114,11 +135,11 @@ class output_cvpj(plugin_output.base):
 
         tracknum = 0
 
-        projJ = json.loads(convproj_json)
+        cvpj_l = json.loads(convproj_json)
         
-        cvpj_trackdata = projJ['track_data']
-        cvpj_trackordering = projJ['track_order']
-        cvpj_trackplacements = projJ['track_placements']
+        cvpj_trackdata = cvpj_l['track_data']
+        cvpj_trackordering = cvpj_l['track_order']
+        cvpj_trackplacements = cvpj_l['track_placements']
 
         x_project = ET.Element("Project")
         x_project.set('version', '0.1')
@@ -131,14 +152,10 @@ class output_cvpj(plugin_output.base):
 
         # ----------------------------------------- Transport -----------------------------------------
 
-        if 'timesig_numerator' in projJ: dp_numerator = projJ['timesig_numerator']
-        else: dp_numerator = 4
-        if 'timesig_denominator' in projJ: dp_denominator = projJ['timesig_denominator']
-        else: dp_denominator = 4
-
+        dp_numerator, dp_denominator = data_values.get_value(cvpj_l, 'timesig', [4,4])
+        
         x_project_tr = ET.SubElement(x_project, "Transport")
-        if 'bpm' in projJ: addvalue(x_project_tr, 'Tempo', 666, 20, 'bpm', projJ['bpm'], 'dawvert_bpm', 'Tempo')
-        else: addvalue(x_project_tr, 'Tempo', 666, 20, 'bpm', 140, 'dawvert_bpm', 'Tempo')
+        param_cvpj2dawp(x_project_tr, 'Tempo', cvpj_l, 'bpm', 999, 20, 'dawvert_bpm', 140, unit='bpm')
         x_project_tr_ts = ET.SubElement(x_project_tr, 'TimeSignature')
         x_project_tr_ts.set('denominator', str(int(dp_denominator)))
         x_project_tr_ts.set('numerator', str(int(dp_numerator)))
@@ -229,14 +246,15 @@ class output_cvpj(plugin_output.base):
         x_str_mas_ch.set('role', 'master')
         x_str_mas_ch.set('solo', 'false')
         x_str_mas_ch.set('id', '__mastertrack__')
+        cvpj_mastertrack = data_values.get_value(cvpj_l, 'track_master', {})
         addvalue_bool(x_str_mas_ch, 'Mute', 'false', '__param__mastertrack__mute', 'Mute')
         addvalue(x_str_mas_ch, 'Pan', 1, -1, 'linear', 0, '__param__mastertrack__pan', 'Pan')
         addvalue(x_str_mas_ch, 'Volume', 2, 0, 'linear', 1, '__param__mastertrack__vol', 'Volume')
 
         # ----------------------------------------- info -----------------------------------------
 
-        if 'info' in projJ:
-            infoJ = projJ['info']
+        if 'info' in cvpj_l:
+            infoJ = cvpj_l['info']
             if 'title' in infoJ: addmeta(x_metadata, 'Title', infoJ['title'])
             if 'author' in infoJ: addmeta(x_metadata, 'Artist', infoJ['author'])
             if 'original_author' in infoJ: addmeta(x_metadata, 'OriginalArtist', infoJ['original_author'])
@@ -256,8 +274,8 @@ class output_cvpj(plugin_output.base):
 
         # ----------------------------------------- timemarkers -----------------------------------------
 
-        if 'timemarkers' in projJ:
-            for timemarker in projJ['timemarkers']:
+        if 'timemarkers' in cvpj_l:
+            for timemarker in cvpj_l['timemarkers']:
                 if 'type' in timemarker:
                     if timemarker['type'] == 'timesig':
                         x_arr_tsa_tsp = ET.SubElement(x_arr_tsa, "TimeSignaturePoint")
@@ -277,10 +295,10 @@ class output_cvpj(plugin_output.base):
 
         # ----------------------------------------- auto -----------------------------------------
 
-        if 'automation' in projJ:
-            if 'main' in projJ['automation']:
-                if 'bpm' in projJ['automation']['main']:
-                    make_automation(x_project_arr, "TempoAutomation", projJ['automation']['main']['bpm'], 'bpm', 'dawvert_bpm')
+        if 'automation' in cvpj_l:
+            if 'main' in cvpj_l['automation']:
+                if 'bpm' in cvpj_l['automation']['main']:
+                    make_automation(x_project_arr, "TempoAutomation", cvpj_l['automation']['main']['bpm'], 'bpm', 'dawvert_bpm')
 
 
         # ----------------------------------------- zip -----------------------------------------

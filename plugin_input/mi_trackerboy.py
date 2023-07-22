@@ -278,8 +278,9 @@ class input_trackerboy(plugin_input.base):
                     else: 
                         plugins.add_wave(cvpj_l, pluginid, 'main', t_waves[trackerboy_instdata[6]+1][1], 0, 15)
 
-                tracks.m_create_inst(cvpj_l, cvpj_instid, {'pluginid': pluginid})
-                tracks.m_basicdata_inst(cvpj_l, cvpj_instid, cvpj_instname, cvpj_instcolor, 0.4, 0.0)
+                tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)
+                tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', 0.4, 'float')
 
         song.add_info(cvpj_l, 'title', trackerboy_title)
         song.add_info(cvpj_l, 'author', trackerboy_artist)
@@ -288,8 +289,5 @@ class input_trackerboy(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True
         
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = False
-
-        cvpj_l['bpm'] = speed_to_tempo(60, tb_speed)*20
+        song.add_param(cvpj_l, 'bpm', speed_to_tempo(60, tb_speed)*20)
         return json.dumps(cvpj_l)

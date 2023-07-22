@@ -89,14 +89,13 @@ class input_mariopaint_mss(plugin_input.base):
             s_inst_color = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'color')
             if s_inst_color != None: s_inst_color = colors.moregray(s_inst_color)
             plugins.add_plug_gm_midi(cvpj_l, instname, 0, instnames.index(instname))
-            tracks.m_create_inst(cvpj_l, instname, {'pluginid': instname})
-            tracks.m_basicdata_inst(cvpj_l, instname, s_inst_name, s_inst_color, None, None)
+            tracks.m_inst_create(cvpj_l, instname, name=s_inst_name, color=s_inst_color)
+            tracks.m_inst_pluginid(cvpj_l, instname, instname)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
-        cvpj_l['timesig_numerator'] = mss_measure
-        cvpj_l['timesig_denominator'] = 4
-        cvpj_l['bpm'] = mss_tempo
+        cvpj_l['timesig'] = [mss_measure, 4]
+        song.add_param(cvpj_l, 'bpm', mss_tempo)
         return json.dumps(cvpj_l)
 

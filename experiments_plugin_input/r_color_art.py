@@ -5,6 +5,7 @@ from PIL import Image
 
 import experiments_plugin_input
 import json
+from functions import tracks
 
 class input_color_art(experiments_plugin_input.base):
     def __init__(self): pass
@@ -25,13 +26,9 @@ class input_color_art(experiments_plugin_input.base):
         im = Image.open(input_file)
         px = im.load()
 
+        cvpj_l = {}
+        
         w, h = im.size
-
-        cvpj_l_trackdata = {}
-        cvpj_l_trackordering = []
-        cvpj_l_trackplacements = {}
-
-        cvpj_l_track_master = {}
 
         pcnt = 0
 
@@ -44,15 +41,7 @@ class input_color_art(experiments_plugin_input.base):
         for height in range(h-1):
             trackid = str('track'+str(height))
 
-            trackdata = {}
-            trackdata['name'] = '.'
-            trackdata['type'] = 'instrument'
-            trackdata['placements'] = []
-            trackdata["instdata"] = {}
-            trackdata["instdata"]['plugin'] = 'none'
-
-            cvpj_l_trackplacements[trackid] = {}
-            cvpj_l_trackplacements[trackid]['notes'] = []
+            tracks.r_create_track(cvpj_l, 'instrument', trackid, name='.')
 
             for width in range(w):
                 coordinate = width, height
@@ -63,25 +52,10 @@ class input_color_art(experiments_plugin_input.base):
                 placement_pl['color'] = [pixel_color[0]/255,pixel_color[1]/255,pixel_color[2]/255]
                 placement_pl['position'] = width*16
                 placement_pl['duration'] = 16
-                placement_pl['notelist'] = [{}]
-                placement_pl['notelist'][0]["key"] = 0
-                placement_pl['notelist'][0]["position"] = 0
-                placement_pl['notelist'][0]["duration"] = 0.2
+                placement_pl['notelist'] = [{"key": 0, "position": 0, "duration": 0.2}]
+                tracks.r_pl_notes(cvpj_l, trackid, placement_pl)
 
-                cvpj_l_trackplacements[trackid]['notes'].append(placement_pl)
-
-            cvpj_l_trackdata[trackid] = trackdata
-            cvpj_l_trackordering.append(trackid)
-
-        cvpj_l = {}
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = False
-        
         cvpj_l['bpm'] = 140
-        cvpj_l['track_data'] = cvpj_l_trackdata
-        cvpj_l['track_order'] = cvpj_l_trackordering
-        cvpj_l['track_placements'] = cvpj_l_trackplacements
-        cvpj_l['track_master'] = cvpj_l_track_master
         return json.dumps(cvpj_l)
 
 

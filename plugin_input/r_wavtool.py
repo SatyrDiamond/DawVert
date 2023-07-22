@@ -6,6 +6,7 @@ from functions import data_bytes
 from functions import data_values
 from functions import note_data
 from functions import tracks
+from functions import song
 
 import plugin_input
 import json
@@ -130,16 +131,18 @@ def parse_track(j_wvtl_track):
     print('[input-wavtool] '+j_wvtl_tracktype+' Track: '+j_wvtl_trackname)
 
     if j_wvtl_tracktype == 'MIDI':
-        tracks.r_create_inst(cvpj_l, j_wvtl_trackid, {})
-        tracks.r_param(cvpj_l, j_wvtl_trackid, 'enabled', int(not j_wvtl_mute))
-        tracks.r_basicdata(cvpj_l, j_wvtl_trackid, j_wvtl_trackname, j_wvtl_trackcolor, j_wvtl_gain, j_wvtl_balance)
+        tracks.r_create_track(cvpj_l, 'instrument', j_wvtl_trackid, name=j_wvtl_trackname, color=j_wvtl_trackcolor)
+        tracks.r_add_param(cvpj_l, trackid, 'vol', j_wvtl_gain, 'float')
+        tracks.r_add_param(cvpj_l, trackid, 'pan', j_wvtl_balance, 'float')
+        tracks.r_add_param(cvpj_l, trackid, 'enabled', int(not j_wvtl_mute), 'bool')
         for j_wvtl_trackclip in j_wvtl_trackclips:
             tracks.r_pl_notes(cvpj_l, j_wvtl_trackid, parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype))
 
     if j_wvtl_tracktype == 'Audio':
-        tracks.r_create_audio(cvpj_l, j_wvtl_trackid, {})
-        tracks.r_param(cvpj_l, j_wvtl_trackid, 'enabled', int(not j_wvtl_mute))
-        tracks.r_basicdata(cvpj_l, j_wvtl_trackid, j_wvtl_trackname, j_wvtl_trackcolor, j_wvtl_gain, j_wvtl_balance)
+        tracks.r_create_track(cvpj_l, 'audio', j_wvtl_trackid, name=j_wvtl_trackname, color=j_wvtl_trackcolor)
+        tracks.r_add_param(cvpj_l, trackid, 'vol', j_wvtl_gain, 'float')
+        tracks.r_add_param(cvpj_l, trackid, 'pan', j_wvtl_balance, 'float')
+        tracks.r_add_param(cvpj_l, trackid, 'enabled', int(not j_wvtl_mute), 'bool')
         for j_wvtl_trackclip in j_wvtl_trackclips:
             tracks.r_pl_audio(cvpj_l, j_wvtl_trackid, parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype))
 
@@ -191,8 +194,7 @@ class input_wavtool(plugin_input.base):
 
         tracks.a_addtrack_master(cvpj_l, 'Master', 1, [0.14, 0.14, 0.14])
 
-        cvpj_l['timesig_numerator'] = j_wvtl_beatNumerator
-        cvpj_l['timesig_denominator'] = j_wvtl_beatDenominator
-        cvpj_l['bpm'] = j_wvtl_bpm
+        cvpj_l['timesig'] = [j_wvtl_beatNumerator, j_wvtl_beatDenominator]
+        song.add_param(cvpj_l, 'bpm', j_wvtl_bpm)
         return json.dumps(cvpj_l)
 

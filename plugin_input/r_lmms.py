@@ -229,18 +229,17 @@ def asdflfo(pluginid, xmlO, asdrtype):
     plugins.add_lfo(cvpj_l, pluginid, asdrtype, 
         lfo_shape, 'seconds', lfo_speed, lfo_predelay, lfo_attack, lfo_amount)
 
-def lmms_decodeplugin(trkX_insttr, cvpj_l_inst):
+def lmms_decodeplugin(trkX_insttr):
     trkX_instrument = trkX_insttr.findall('instrument')[0]
     pluginname = trkX_instrument.get('name')
 
     out_color = None
 
+    pluginid = plugins.get_id()
+
     xml_a_plugin = trkX_instrument.findall(pluginname)
     if len(xml_a_plugin) != 0: 
         xml_plugin = xml_a_plugin[0]
-
-        pluginid = plugins.get_id()
-        cvpj_l_inst['pluginid'] = pluginid
 
         if pluginname == "sf2player":
             plugins.add_plug(cvpj_l, pluginid, 'soundfont2', None)
@@ -292,16 +291,12 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_inst):
             for opnum in range(2):
                 opl2_optxt = 'op'+str(opnum+1)
                 for varname in opl2opvarnames:
-                    plugins.add_plug_param(cvpj_l, pluginid, opl2_optxt+varname[1], 
-                    lmms_auto_getvalue(xml_plugin, opl2_optxt+varname[0], 0, 'int', None, 
-                        ['plugin', pluginid, opl2_optxt+varname[1]]), 
-                    'int', opl2_optxt+varname[1])
+                    plugval = lmms_auto_getvalue(xml_plugin, opl2_optxt+varname[0], 0, 'int', None, ['plugin', pluginid, opl2_optxt+varname[1]])
+                    plugins.add_plug_param(cvpj_l, pluginid, opl2_optxt+varname[1], plugval, 'int', opl2_optxt+varname[1])
                 
             for varname in opl2varnames:
-                plugins.add_plug_param(cvpj_l, pluginid, varname[1], 
-                lmms_auto_getvalue(xml_plugin, varname[0], 0, 'int', None, 
-                    ['plugin', pluginid, varname[1]]), 
-                'int', varname[1])
+                plugval = lmms_auto_getvalue(xml_plugin, varname[0], 0, 'int', None,  ['plugin', pluginid, varname[1]])
+                plugins.add_plug_param(cvpj_l, pluginid, varname[1], plugval, 'int', varname[1])
 
         elif pluginname == "vestige":
             plugins.add_plug(cvpj_l, pluginid, 'vst2', 'win')
@@ -311,10 +306,8 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_inst):
             plugins.add_plug(cvpj_l, pluginid, 'native-lmms', pluginname)
             lmms_autovals = lmms_auto.get_params_inst(pluginname)
             for pluginparam in lmms_autovals[0]:
-                plugins.add_plug_param(cvpj_l, pluginid, pluginparam, 
-                lmms_auto_getvalue(xml_plugin, pluginparam, 0, 'float', None, 
-                    ['plugin', pluginid, pluginparam]), 
-                'float', pluginparam)
+                plugval = lmms_auto_getvalue(xml_plugin, pluginparam, 0, 'float', None, ['plugin', pluginid, pluginparam])
+                plugins.add_plug_param(cvpj_l, pluginid, pluginparam, plugval, 'float', pluginparam)
             for pluginparam in lmms_autovals[1]:
                 xml_pluginparam = xml_plugin.get(pluginparam)
                 if xml_pluginparam: 
@@ -322,9 +315,7 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_inst):
             asdflfo_get(trkX_insttr, pluginid)
             if pluginname == "zynaddsubfx":
                 zdata = xml_plugin.findall('ZynAddSubFX-data')[0]
-                plugins.add_plug_data(cvpj_l, pluginid, 'data', 
-                    base64.b64encode(ET.tostring(zdata, encoding='utf-8')).decode('ascii')
-                    )
+                plugins.add_plug_data(cvpj_l, pluginid, 'data', base64.b64encode(ET.tostring(zdata, encoding='utf-8')).decode('ascii'))
             if pluginname == "tripleoscillator":
                 threeosc_userwavefile0 = xml_plugin.get('userwavefile0')
                 threeosc_userwavefile1 = xml_plugin.get('userwavefile1')
@@ -335,7 +326,7 @@ def lmms_decodeplugin(trkX_insttr, cvpj_l_inst):
 
     if pluginname in plugincolors: plugincolor = plugincolors[pluginname]
     else: plugincolor = None
-    return plugincolor, pluginname
+    return plugincolor, pluginname, pluginid
 
 # ------- Notelist -------
 
@@ -390,27 +381,30 @@ def lmms_decode_nlplacements(trkX):
 # ------- Track: Inst -------
 
 def lmms_decode_inst_track(trkX, trackid):
-    cvpj_l_track_inst = {}
-
     cvpj_name = trkX.get('name')
     print('[input-lmms] Instrument Track')
     print('[input-lmms]       Name: ' + cvpj_name)
 
-    tracks.r_create_inst(cvpj_l, trackid, cvpj_l_track_inst)
-
-    tracks.r_param(cvpj_l, trackid, 'enabled', int( lmms_auto_getvalue(trkX, 'muted', 1, 'bool', [-1, -1] ,['track', trackid, 'enabled']) ))
-    tracks.r_param(cvpj_l, trackid, 'solo', int(trkX.get('solo')))
+    cvpj_enabled = int(lmms_auto_getvalue(trkX, 'muted', 1, 'bool', [-1, -1], ['track', trackid, 'enabled']))
+    cvpj_solo = int(lmms_auto_getvalue(trkX, 'solo', 1, 'bool', None, ['track', trackid, 'solo']))
 
     #trkX_insttr
     trkX_insttr = trkX.findall('instrumenttrack')[0]
+    track_color, pluginname, instpluginid = lmms_decodeplugin(trkX_insttr)
     cvpj_pan = float(lmms_auto_getvalue(trkX_insttr, 'pan', 0, 'float', [0, 0.01], ['track', trackid, 'pan']))
     cvpj_vol = float(lmms_auto_getvalue(trkX_insttr, 'vol', 100, 'float', [0, 0.01], ['track', trackid, 'vol']))
     
+    tracks.r_create_track(cvpj_l, 'instrument', trackid, name=cvpj_name, color=track_color)
+    tracks.r_track_pluginid(cvpj_l, trackid, instpluginid)
+    tracks.r_add_param(cvpj_l, trackid, 'vol', cvpj_vol, 'float')
+    tracks.r_add_param(cvpj_l, trackid, 'pan', cvpj_pan, 'float')
+    tracks.r_add_param(cvpj_l, trackid, 'enabled', cvpj_enabled, 'bool')
+    tracks.r_add_param(cvpj_l, trackid, 'solo', cvpj_solo, 'bool')
+
     #midi
     xml_a_midiport = trkX_insttr.findall('midiport')
     if len(xml_a_midiport) != 0:
-        midiJ = {}
-        midi_outJ = {}
+
         midi_inJ = {}
         midiportX = trkX_insttr.findall('midiport')[0]
         midi_inJ['enabled'] = int(midiportX.get('readable'))
@@ -418,6 +412,9 @@ def lmms_decode_inst_track(trkX, trackid):
             midi_inJ['channel'] = int(midiportX.get('inputchannel'))
         if midiportX.get('fixedinputvelocity') != '-1' and midiportX.get('fixedinputvelocity') != None: 
             midi_inJ['fixedvelocity'] = int(midiportX.get('fixedinputvelocity'))+1
+        tracks.r_add_dataval(cvpj_l, trackid, 'midi', 'input', midi_inJ)
+
+        midi_outJ = {}
         midi_outJ['enabled'] = int(midiportX.get('writable'))
         midi_outJ['channel'] = int(midiportX.get('outputchannel'))
         if midiportX.get('outputprogram') != None: 
@@ -426,21 +423,17 @@ def lmms_decode_inst_track(trkX, trackid):
             midi_outJ['fixedvelocity'] = int(midiportX.get('fixedoutputvelocity'))+1
         if midiportX.get('fixedoutputnote') != '-1' and midiportX.get('fixedoutputnote') != None: 
             midi_outJ['fixednote'] = int(midiportX.get('fixedoutputnote'))+1
-        midiJ['basevelocity'] = int(midiportX.get('basevelocity'))
-        midiJ['out'] = midi_outJ
-        midiJ['in'] = midi_inJ
-        cvpj_l_track_inst['midi'] = midiJ
+        tracks.r_add_dataval(cvpj_l, trackid, 'midi', 'output', midi_outJ)
+
+        tracks.r_add_dataval(cvpj_l, trackid, 'midi', 'basevelocity', int(midiportX.get('basevelocity')))
 
     xml_a_fxchain = trkX_insttr.findall('fxchain')
     if len(xml_a_fxchain) != 0: 
         tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
 
-    track_color, pluginname = lmms_decodeplugin(trkX_insttr, cvpj_l_track_inst)
-
-    tracks.r_param(cvpj_l, trackid, 'fxrack_channel', int(trkX_insttr.get('fxch')))
-    tracks.r_param_inst(cvpj_l, trackid, 'usemasterpitch', int(trkX_insttr.get('usemasterpitch')))
-    tracks.r_param_inst(cvpj_l, trackid, 'pitch', float(lmms_auto_getvalue(trkX_insttr, 'pitch', 0, 'float', [0, 0.01], ['track', trackid, 'pitch'])))
-    tracks.r_basicdata(cvpj_l, trackid, cvpj_name, track_color, cvpj_vol, cvpj_pan)
+    tracks.r_add_dataval(cvpj_l, trackid, None, 'fxrack_channel', int(trkX_insttr.get('fxch')))
+    tracks.r_add_param(cvpj_l, trackid, 'usemasterpitch', int(trkX_insttr.get('usemasterpitch')), 'bool')
+    tracks.r_add_param(cvpj_l, trackid, 'pitch', float(lmms_auto_getvalue(trkX_insttr, 'pitch', 0, 'float', [0, 0.01], ['track', trackid, 'pitch'])), 'float')
 
     if 'basenote' in trkX_insttr.attrib:
         basenote = int(trkX_insttr.get('basenote'))-57
@@ -448,8 +441,7 @@ def lmms_decode_inst_track(trkX, trackid):
         if pluginname == 'sampler': noteoffset = 3
         if pluginname == 'soundfont2': noteoffset = -12
         middlenote = basenote - noteoffset
-        if middlenote != 0: cvpj_l_track_inst['middlenote'] = middlenote
-
+        tracks.r_add_dataval(cvpj_l, trackid, None, 'middlenote', middlenote)
 
     xml_a_arpeggiator = trkX_insttr.findall('arpeggiator')
     if len(xml_a_arpeggiator) != 0:
@@ -516,23 +508,32 @@ def lmms_decode_audioplacements(trkX):
 # ------- Track: audio -------
 
 def lmms_decode_audio_track(trkX, trackid):
-    tracks.r_create_audio(cvpj_l, trackid, None)
     cvpj_name = trkX.get('name')
-    print('[input-lmms] Audio Track')
-    print('[input-lmms]       Name: ' + cvpj_name)
     trkX_audiotr = trkX.findall('sampletrack')[0]
+
     cvpj_pan = float(lmms_auto_getvalue(trkX_audiotr, 'pan', 0, 'float', [0, 0.01], ['track', trackid, 'pan']))
     cvpj_vol = float(lmms_auto_getvalue(trkX_audiotr, 'vol', 100, 'float', [0, 0.01], ['track', trackid, 'vol']))
-    tracks.r_basicdata(cvpj_l, trackid, cvpj_name, None, cvpj_vol, cvpj_pan)
+    cvpj_enabled = int(lmms_auto_getvalue(trkX, 'muted', 1, 'bool', [-1, -1] ,['track', trackid, 'enabled']))
+    cvpj_solo = int(trkX.get('solo'))
+
+    tracks.r_create_track(cvpj_l, 'audio', trackid, name=cvpj_name)
+
+    tracks.r_add_param(cvpj_l, trackid, 'vol', cvpj_vol, 'float')
+    tracks.r_add_param(cvpj_l, trackid, 'pan', cvpj_pan, 'float')
+    tracks.r_add_param(cvpj_l, trackid, 'enabled', cvpj_enabled, 'bool')
+    tracks.r_add_param(cvpj_l, trackid, 'solo', cvpj_solo, 'bool')
+
+    print('[input-lmms] Audio Track')
+    print('[input-lmms]       Name: ' + cvpj_name)
+
     xml_fxch = trkX_audiotr.get('fxch')
-    if xml_fxch != None: tracks.r_param(cvpj_l, trackid, 'fxrack_channel', int(xml_fxch))
+    if xml_fxch != None: 
+        tracks.r_add_dataval(cvpj_l, trackid, None, 'fxrack_channel', int(xml_fxch))
     xml_a_fxchain = trkX_audiotr.findall('fxchain')
     if len(xml_a_fxchain) != 0: 
         tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
     print('[input-lmms]')
     tracks.r_pl_audio(cvpj_l, trackid, lmms_decode_audioplacements(trkX))
-    tracks.r_param(cvpj_l, trackid, 'enabled', int(lmms_auto_getvalue(trkX, 'muted', 1, 'bool', [-1, -1] ,['track', trackid, 'enabled'])))
-    tracks.r_param(cvpj_l, trackid, 'solo', int(trkX.get('solo')))
 
 # ------- Track: Automation -------
 
@@ -765,33 +766,35 @@ def lmms_decode_fxchain(fxchainX):
     print('')
     return fxchain
 
-def lmms_decode_fxmixer(fxX):
+def lmms_decode_fxmixer(cvpj_l, fxX):
     fxlist = {}
     for fxcX in fxX:
         fx_name = fxcX.get('name')
         fx_num = fxcX.get('num')
-        print('[input-lmms] FX ' + str(fx_num))
+        print('[input-lmms] FX ' + fx_num)
         print('[input-lmms]       Name: ' + fx_name)
-        fxcJ = {}
-        fxcJ['name'] = fx_name
-        if fxcX.get('muted') != None: fxcJ['enabled'] = not int(fxcX.get('muted'))
-        fxcJ['vol'] = float(lmms_auto_getvalue(fxcX, 'volume', 1, 'float', None, ['fxmixer', fx_num, 'vol']))
+        fxc_vol = float(lmms_auto_getvalue(fxcX, 'volume', 1, 'float', None, ['fxmixer', fx_num, 'vol']))
+        tracks.fxrack_add(cvpj_l, fx_num, fx_name, None, fxc_vol, 0)
+
+        fxc_enabled = True
+        if fxcX.get('muted') != None: fxc_enabled = not int(fxcX.get('muted'))
+        tracks.fxrack_param(cvpj_l, fx_num, 'enabled', fxc_enabled, 'bool')
+
         fxchainX = fxcX.find('fxchain')
         if fxchainX != None:
-            fxcJ['fxenabled'] = int(fxchainX.get('enabled'))
-            fxcJ['chain_fx_audio'] = lmms_decode_fxchain(fxchainX)
-        sendlist = []
+            tracks.fxrack_param(cvpj_l, fx_num, 'fx_enabled', bool(int(fxchainX.get('enabled'))), 'bool')
+            fxslotids = lmms_decode_fxchain(fxchainX)
+            for fxslotid in fxslotids:
+                tracks.insert_fxslot(cvpj_l, ['fxrack', fx_num], 'audio', fxslotid)
+
         sendsxml = fxcX.findall('send')
         for sendxml in sendsxml:
             send_id = get_send_auto_id()
-            sendentryjson = {}
-            sendentryjson['channel'] = int(sendxml.get('channel'))
-            sendentryjson['amount'] = lmms_auto_getvalue(sendxml, 'amount', 1, 'float', None, ['send', send_id, 'amount'])
-            sendentryjson['sendautoid'] = send_id
-            sendlist.append(sendentryjson)
-        fxcJ['sends'] = sendlist
-        fxlist[str(fx_num)] = fxcJ
+            fx_to_num = int(sendxml.get('channel'))
+            fx_amount = lmms_auto_getvalue(sendxml, 'amount', 1, 'float', None, ['send', send_id, 'amount'])
+            tracks.fxrack_addsend(cvpj_l, fx_num, fx_to_num, fx_amount, send_id)
         print('[input-lmms]')
+
     return fxlist
 
 # ------- Main -------
@@ -864,21 +867,23 @@ class input_lmms(plugin_input.base):
         projnotesX = tree.find('song/projectnotes')
 
         cvpj_l = {}
-        cvpj_l['bpm'] = float(lmms_auto_getvalue(headX, 'bpm', 140, 'float', None, ['main', 'bpm']))
-        cvpj_l['vol'] = float(lmms_auto_getvalue(headX, 'mastervol', 100, 'float', [0, 0.01], ['main', 'vol']))
-        cvpj_l['pitch'] = float(lmms_auto_getvalue(headX, 'masterpitch', 0, 'float', None, ['main', 'pitch']))
-        cvpj_l['timesig_numerator'] = lmms_auto_getvalue(headX, 'timesig_numerator', 4, 'int', None, None)
-        cvpj_l['timesig_denominator'] = lmms_auto_getvalue(headX, 'timesig_denominator', 4, 'int', None, None)
+        cvpj_bpm = float(lmms_auto_getvalue(headX, 'bpm', 140, 'float', None, ['main', 'bpm']))
+        cvpj_vol = float(lmms_auto_getvalue(headX, 'mastervol', 100, 'float', [0, 0.01], ['main', 'vol']))
+        cvpj_pitch = float(lmms_auto_getvalue(headX, 'masterpitch', 0, 'float', None, ['main', 'pitch']))
+        timesig_numerator = lmms_auto_getvalue(headX, 'timesig_numerator', 4, 'int', None, None)
+        timesig_denominator = lmms_auto_getvalue(headX, 'timesig_denominator', 4, 'int', None, None)
+        cvpj_l['timesig'] = [timesig_numerator, timesig_denominator]
+
+        song.add_param(cvpj_l, 'bpm', cvpj_bpm)
+        song.add_param(cvpj_l, 'vol', cvpj_vol)
+        song.add_param(cvpj_l, 'pitch', cvpj_pitch)
 
         if projnotesX.text != None: song.add_info_msg(cvpj_l, 'html', projnotesX.text)
 
         lmms_decode_tracks(trksX)
-        fxrackdata = lmms_decode_fxmixer(fxX)
+        lmms_decode_fxmixer(cvpj_l, fxX)
 
         trackdata = cvpj_l['track_data']
-
-        cvpj_l['use_fxrack'] = True
-        cvpj_l['fxrack'] = fxrackdata
 
         tracks.autoid_in_output(cvpj_l)
 

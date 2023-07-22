@@ -440,30 +440,29 @@ class input_pxtone(plugin_input.base):
             else: cvpj_instname = ''
             if t_voice_data[voicenum][0] == 'sampler': cvpj_instvol = 0.3
             else: cvpj_instvol = 1.0
-            cvpj_instdata = {}
             pluginid = plugins.get_id()
 
             plugindata = t_voice_data[voicenum][1]
             if t_voice_data[voicenum][0] == 'sampler':
-                cvpj_instdata['pluginid'] = pluginid
                 plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, plugindata['file'])
                 plugins.add_plug_data(cvpj_l, pluginid, 'trigger', plugindata['trigger'])
                 plugins.add_plug_data(cvpj_l, pluginid, 'interpolation', plugindata['interpolation'])
 
-            cvpj_instdata['middlenote'] = t_voice_data[voicenum][2]
-            instid = 'ptcop_'+str(voicenum)
-            tracks.m_create_inst(cvpj_l, instid, cvpj_instdata)
-            tracks.m_basicdata_inst(cvpj_l, instid, cvpj_instname, getcolor(), cvpj_instvol, 0.0)
+            cvpj_instid = 'ptcop_'+str(voicenum)
+
+            tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=getcolor())
+            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+            tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
+            tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'middlenote', t_voice_data[voicenum][2])
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
-        cvpj_l['timesig_numerator'] = ptcop_mas_beat
-        cvpj_l['timesig_denominator'] = 4
+        cvpj_l['timesig'] = [ptcop_mas_beat, 4]
 
         if ptcop_song_name != None: song.add_info(cvpj_l, 'title', ptcop_song_name)
         if ptcop_song_comment != None: song.add_info_msg(cvpj_l, 'text', ptcop_song_comment)
         if ptcop_mas_repeat != 0: song.add_timemarker_looparea(cvpj_l, None, ptcop_mas_repeat/timebase, ptcop_mas_last/timebase)
 
-        cvpj_l['bpm'] = ptcop_mas_beattempo
+        song.add_param(cvpj_l, 'bpm', ptcop_mas_beattempo)
         return json.dumps(cvpj_l)

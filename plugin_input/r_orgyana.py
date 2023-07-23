@@ -132,7 +132,7 @@ class input_orgyana(plugin_input.base):
                 else: trackname = idvals.get_idval(idvals_orgyana_inst_drums, str(org_insttable[tracknum]), 'name')
                 idval = 'org_'+str(tracknum)
                 tracks.r_create_track(cvpj_l, 'instrument', idval, name=trackname, color=l_org_colors[tracknum])
-                tracks.r_add_param(cvpj_l, idval, 'pitch', (org_pitch-1000)/18, 'float')
+                tracks.r_add_param(cvpj_l, idval, 'pitch', (org_pitch-1000)/1800, 'float')
                 tracks.r_pl_notes(cvpj_l, idval, placement_data.nl2pl(s_cvpj_nl))
 
 

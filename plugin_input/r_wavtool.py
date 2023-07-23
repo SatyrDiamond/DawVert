@@ -132,17 +132,17 @@ def parse_track(j_wvtl_track):
 
     if j_wvtl_tracktype == 'MIDI':
         tracks.r_create_track(cvpj_l, 'instrument', j_wvtl_trackid, name=j_wvtl_trackname, color=j_wvtl_trackcolor)
-        tracks.r_add_param(cvpj_l, trackid, 'vol', j_wvtl_gain, 'float')
-        tracks.r_add_param(cvpj_l, trackid, 'pan', j_wvtl_balance, 'float')
-        tracks.r_add_param(cvpj_l, trackid, 'enabled', int(not j_wvtl_mute), 'bool')
+        tracks.r_add_param(cvpj_l, j_wvtl_trackid, 'vol', j_wvtl_gain, 'float')
+        tracks.r_add_param(cvpj_l, j_wvtl_trackid, 'pan', j_wvtl_balance, 'float')
+        tracks.r_add_param(cvpj_l, j_wvtl_trackid, 'enabled', int(not j_wvtl_mute), 'bool')
         for j_wvtl_trackclip in j_wvtl_trackclips:
             tracks.r_pl_notes(cvpj_l, j_wvtl_trackid, parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype))
 
     if j_wvtl_tracktype == 'Audio':
         tracks.r_create_track(cvpj_l, 'audio', j_wvtl_trackid, name=j_wvtl_trackname, color=j_wvtl_trackcolor)
-        tracks.r_add_param(cvpj_l, trackid, 'vol', j_wvtl_gain, 'float')
-        tracks.r_add_param(cvpj_l, trackid, 'pan', j_wvtl_balance, 'float')
-        tracks.r_add_param(cvpj_l, trackid, 'enabled', int(not j_wvtl_mute), 'bool')
+        tracks.r_add_param(cvpj_l, j_wvtl_trackid, 'vol', j_wvtl_gain, 'float')
+        tracks.r_add_param(cvpj_l, j_wvtl_trackid, 'pan', j_wvtl_balance, 'float')
+        tracks.r_add_param(cvpj_l, j_wvtl_trackid, 'enabled', int(not j_wvtl_mute), 'bool')
         for j_wvtl_trackclip in j_wvtl_trackclips:
             tracks.r_pl_audio(cvpj_l, j_wvtl_trackid, parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype))
 

@@ -219,6 +219,46 @@ def get_env_blocks(cvpj_l, pluginid, a_type):
 
 # -------------------------------------------------- env_point
 
+def add_points_from_blocks(cvpj_l, pluginid, a_type, **kwargs):
+	blocksdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'env_block', a_type])
+	blocksvalues = blocksdata['values']
+	numblocks = len(blocksdata['values'])
+
+	t_valchange = []
+	valchange = None
+	prevval = 0
+
+	for orgvalue in blocksvalues:
+		t_valchange.append(orgvalue-prevval)
+		prevval = orgvalue
+
+	t_valrepeats = []
+	for valpart in t_valchange:
+		if t_valrepeats == []: t_valrepeats.append([valpart,1])
+		else:
+			if valpart == t_valrepeats[-1][0]: 
+				t_valrepeats[-1][0] += valpart
+				t_valrepeats[-1][1] += 1
+			else: t_valrepeats.append([valpart,1])
+
+	numpoints = {}
+	curpos = 0
+	curval = 0
+
+	min_val = data_values.get_value(blocksdata, 'min', 0)
+	max_val = data_values.get_value(blocksdata, 'max', 1)
+	blockdur = data_values.get_value(kwargs, 'blockdur', 0.018)
+
+	for valpart in t_valrepeats:
+		curval += valpart[0]
+		numpoints[curpos] = curval
+		curpos += valpart[1]
+
+	if numblocks-1 not in numpoints: numpoints[numblocks-1] = blocksvalues[numblocks-1]
+
+	for numpoint in numpoints:
+		add_env_point(cvpj_l, pluginid, a_type, numpoint*blockdur, xtramath.between_to_one(min_val, max_val, numpoints[numpoint]))
+
 def add_env_point(cvpj_l, pluginid, a_type, p_position, p_value, **kwargs):
 	pointdata = {}
 	pointdata['position'] = p_position
@@ -263,6 +303,10 @@ def env_point_to_asdr(cvpj_l, pluginid, a_type):
 			#print(pointsdata, numpoints, sustainpoint)
 			
 			isenvconverted = False
+
+			#for pointdata in pointsdata:
+			#	print(pointdata)
+			#exit()
 
 			if numpoints == 2:
 				env_duration = pointsdata[1]['position']

@@ -13,7 +13,10 @@ def convert(cvpj_l, pluginid, plugintype):
 	params_vital.setvalue('volume', 4000)
 	params_vital.setvalue_timed('env_1_release', 20)
 	params_vital.importcvpj_wave(cvpj_l, pluginid, 1, None)
+
 	params_vital.importcvpj_env_block(cvpj_l, pluginid, 1, 'vol')
+	params_vital.importcvpj_env_points(cvpj_l, pluginid, 1, 'vol')
+
 	params_vital.set_modulation(1, 'lfo_1', 'osc_1_level', 1, 0, 1, 0, 0)
 	vitaldata = params_vital.getdata()
 	plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)

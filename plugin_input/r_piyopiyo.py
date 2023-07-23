@@ -73,6 +73,7 @@ class input_piyopiyo(plugin_input.base):
             keyoffset[tracknum] = (trk_octave-2)*12
             plugins.add_wave(cvpj_l, pluginid, 'main', trk_waveform, -128, 128)
             plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trk_envelope, 128, None, None)
+            plugins.add_points_from_blocks(cvpj_l, pluginid, 'vol')
             idval = str(tracknum)
             tracks.r_create_track(cvpj_l, 'instrument', idval, name='note'+str(tracknum), color=track_colors[tracknum])
             tracks.r_track_pluginid(cvpj_l, idval, pluginid)

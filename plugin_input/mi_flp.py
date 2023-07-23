@@ -176,11 +176,12 @@ class input_flp(plugin_input.base):
                     tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
                     filename_sample = getsamplefile(channeldata, input_file)
                     plugins.add_fileref(cvpj_l, pluginid, 'audiofile', filename_sample)
+
                     flpluginname = ''
                     if 'plugin' in channeldata: 
                         plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', channeldata['plugin'])
                     if 'pluginparams' in channeldata: 
-                        flp_dec_pluginparams.getparams(cvpj_l, pluginid, flpluginname, channeldata['pluginparams'], samplefolder)
+                        flp_dec_pluginparams.getparams(cvpj_l, pluginid, channeldata['plugin'], channeldata['pluginparams'], samplefolder)
 
                 #parse_envlfo(channeldata['envlfo_vol'], pluginid, 'vol')
 

@@ -135,7 +135,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color):
         cvpj_instname = idvals.get_idval(idvals_inst_beepbox, bb_preset, 'name')
 
         tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=bb_color)
-        tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+        #tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
     else:
         bb_inst_effects = bb_instrument['effects']
         bb_inst_type = bb_instrument['type']
@@ -353,7 +353,7 @@ def parse_channel(channeldata, channum):
 
             if 'panning' in bb_instrument['effects']: tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pan', bb_instrument['pan']/50, 'float')
             #if 'pitch shift' in bb_instrument['effects']: tracks.m_param_instdata(cvpj_l, cvpj_instid, 'pitch', (bb_instrument['pitchShiftSemitones']-12)*100 )
-            if 'detune' in bb_instrument['effects']: tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pitch', bb_instrument['detuneCents'], 'float')
+            if 'detune' in bb_instrument['effects']: tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pitch', bb_instrument['detuneCents']/100, 'float')
 
             tracks.m_playlist_pl(cvpj_l, str(channum), None, bb_color, None)
             t_instnum += 1

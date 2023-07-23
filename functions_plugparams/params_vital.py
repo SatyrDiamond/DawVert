@@ -398,6 +398,32 @@ def importcvpj_env_asdr(cvpj_l, pluginid, env_num, a_type):
     setvalue('env_'+str(env_num)+'_sustain', asdrdata[4])
     setvalue_timed('env_'+str(env_num)+'_release', asdrdata[5])
 
+def importcvpj_env_points(cvpj_l, pluginid, lfo_num, a_type):
+    pointsdata = plugins.get_env_points(cvpj_l, pluginid, a_type)
+    if pointsdata != None:
+        pointsvals = pointsdata['points']
+        duration = pointsvals[-1]['position']
+
+        vital_points = []
+        vital_powers = []
+
+        for pointsval in pointsvals:
+            #for val in [pointsval['position']/duration, pointsval['value']]:
+            #   print(str(val).rjust(23), end='')
+            #print()
+            vital_points.append(pointsval['position']/duration)
+            vital_points.append(1+(pointsval['value']*-1))
+            vital_powers.append(0.0)
+
+        set_lfo(lfo_num, len(pointsvals), vital_points, vital_powers, False, '')
+
+        lfo_freq_out = -math.log2(duration)
+
+        setvalue('lfo_'+str(lfo_num)+'_frequency', lfo_freq_out)
+        setvalue('lfo_'+str(lfo_num)+'_sync_type', 2.0)
+        setvalue('lfo_'+str(lfo_num)+'_sync', 0.0)
+
+
 def importcvpj_env_block(cvpj_l, pluginid, lfo_num, a_type):
     blockdata = plugins.get_env_blocks(cvpj_l, pluginid, a_type)
     if blockdata != None:

@@ -335,6 +335,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
                     get_plugin_param(pluginautoid, xml_opl2, opl2_optxt+varname[0], pluginid, opl2_optxt+varname[1], 0)
             for varname in opl2varnames:
                 get_plugin_param(pluginautoid, xml_opl2, varname[0], pluginid, varname[1], 0)
+            middlenotefix = 24
 
         elif plugintype == ['vst2', 'win']:
             print('[output-lmms]       Plugin: vst2 > vestige')
@@ -456,7 +457,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     add_auto_placements(1, [0, 100], ['track', trackid], 'vol', trkJ, 'vol', trkX_insttr, 'vol', trackname, 'Volume')
     add_auto_placements(0, [0, 100], ['track', trackid], 'pan', trkJ, 'pan', trkX_insttr, 'pan', trackname, 'Pan')
     add_auto_placements(1, [-1, -1], ['track', trackid], 'enabled', trkJ, 'enabled', xmltag, 'muted', trackname, 'Muted')
-    add_auto_placements(0, None, ['track', trackid], 'pitch', trkJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
+    add_auto_placements(0, [0, 100], ['track', trackid], 'pitch', trkJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
 
     #TO BE DONE
     if 'chain_fx_notes' in trkJ:

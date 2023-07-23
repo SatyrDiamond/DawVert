@@ -191,8 +191,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
             plugins.add_plug_param(cvpj_l, pluginid, 'me_filter', waspxt_me_filter, 'int', "")
             plugins.add_plug_param(cvpj_l, pluginid, 'wnoise', waspxt_wnoise, 'int', "")
 
-
-    elif pluginname == 'simsynth':
+    elif pluginname.lower() == 'simsynth':
         for oscnum in range(3):
             osc_pw, osc_crs, osc_fine, osc_lvl, osc_lfo, osc_env, osc_shape = struct.unpack('ddddddd', fl_plugstr.read(56))
             plugins.add_plug_param(cvpj_l, pluginid, 'osc'+str(oscnum+1)+'_pw', osc_pw, 'float', "")

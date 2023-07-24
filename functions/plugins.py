@@ -40,16 +40,10 @@ def replace_plug(cvpj_l, pluginid, i_type, i_subtype):
 # -------------------------------------------------- fxdata
 
 def add_plug_fxdata(cvpj_l, pluginid, i_enabled, i_wet):
-	if i_enabled != None: data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'enabled'], i_enabled)
-	if i_wet != None: data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'wet'], i_wet)
-
-def get_plug_fxdata(cvpj_l, pluginid):
-	outdata = {}
-	enabled = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'enabled'])
-	wet = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'wet'])
-	if enabled != None: outdata['enabled'] = enabled
-	if wet != None: outdata['wet'] = wet
-	return outdata
+	if i_enabled != None: 
+		params.add(cvpj_l, ['plugins', pluginid], 'enabled', i_enabled, 'bool', groupname='params_slot')
+	if i_wet != None: 
+		params.add(cvpj_l, ['plugins', pluginid], 'wet', i_wet, 'float', groupname='params_slot')
 
 def add_plug_fxvisual(cvpj_l, pluginid, v_name, v_color):
 	if v_name != None: data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'name'], v_name)

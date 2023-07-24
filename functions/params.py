@@ -26,9 +26,11 @@ def add(cvpj_l, location, p_id, p_value, p_type, **kwargs):
     if p_type == 'bool': param_data['value'] = bool(p_value)
     if p_type == 'string': param_data['value'] = p_value
 
-    data_values.nested_dict_add_value(cvpj_l, location+['params', p_id], param_data)
+    paramsvalname = data_values.get_value(kwargs, 'groupname', 'params')
+    data_values.nested_dict_add_value(cvpj_l, location+[paramsvalname, p_id], param_data)
 
-def get(cvpj_l, location, p_id, fallbackval):
-    paramdata = data_values.nested_dict_get_value(cvpj_l, location+['params', p_id])
+def get(cvpj_l, location, p_id, fallbackval, **kwargs):
+    paramsvalname = data_values.get_value(kwargs, 'groupname', 'params')
+    paramdata = data_values.nested_dict_get_value(cvpj_l, location+[paramsvalname, p_id])
     if paramdata != None: return paramdata['value'], paramdata['type'], paramdata['name']
     return fallbackval, 'notfound', ''

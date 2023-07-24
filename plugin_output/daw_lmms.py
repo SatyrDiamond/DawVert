@@ -204,6 +204,7 @@ def asdrlfo(pluginid, xmlobj, asdrtype, xmltype):
     elmodX.set('lshp', str(lfoshape[l_shape]))
 
 def get_plugin_param(pluginautoid, xmltag, xmlname, pluginid, paramname, fallback, **kwargs):
+    isslot = data_values.get_value(kwargs, 'isslot', False)
     pluginparam = plugins.get_plug_param(cvpj_l, pluginid, paramname, fallback)
 
     aid_id, aid_data = tracks.autoid_out_get(['plugin', pluginid, paramname])
@@ -323,7 +324,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             get_plugin_param(pluginautoid, xml_sf2, 'reverbOn', pluginid, 'reverb_enabled', 0)
             get_plugin_param(pluginautoid, xml_sf2, 'reverbRoomSize', pluginid, 'reverb_roomsize', 0)
             get_plugin_param(pluginautoid, xml_sf2, 'reverbWidth', pluginid, 'reverb_width', 0)
-            middlenotefix = 12
+            middlenotefix = 0
 
         elif plugintype == ['fm', 'opl2']:
             print('[output-lmms]       Plugin: OPL2 > OPL2')
@@ -760,14 +761,12 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
 def lmms_encode_effectslot(pluginid, fxcX):
     fxslotX = ET.SubElement(fxcX, "effect")
 
-    pluginautoid = tracks.autoid_out_getlist(['slot', pluginid])
-    fxdata = plugins.get_plug_fxdata(cvpj_l, pluginid)
+    fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid])
 
-    add_auto_placements(1, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', fxslotX, 'on', 'Slot', 'On')
-    add_auto_placements(1, None, ['slot', pluginid], 'wet', fxdata, 'wet', fxslotX, 'wet', 'Slot', 'Wet')
-
-    lmms_encode_effectplugin(pluginid, fxslotX)
-    return fxslotX
+    if fxdata != None:
+        add_auto_placements(1, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', fxslotX, 'on', 'Slot', 'On', isslot=True)
+        add_auto_placements(1, None, ['slot', pluginid], 'wet', fxdata, 'wet', fxslotX, 'wet', 'Slot', 'Wet', isslot=True)
+        lmms_encode_effectplugin(pluginid, fxslotX)
 
 def lmms_encode_fxchain(xmltag, json_fxchannel):
     if 'chain_fx_audio' in json_fxchannel:
@@ -779,7 +778,7 @@ def lmms_encode_fxchain(xmltag, json_fxchannel):
             fxcX.set('numofeffects', str(len(json_fxchannel['chain_fx_audio'])))
 
             for pluginid in json_fxchain:
-                fxslotX = lmms_encode_effectslot(pluginid, fxcX)
+                lmms_encode_effectslot(pluginid, fxcX)
 
 def lmms_encode_fxmixer(xmltag, json_fxrack):
     for json_fxchannel in json_fxrack:
@@ -866,11 +865,13 @@ def lmms_make_main_auto_track(autoidnum, autodata, visualname):
             xml_object = ET.SubElement(xml_automationpattern, "object")
             xml_object.set('id', str(autoidnum))
 
-def add_auto_placements(i_fallback, i_addmul, i_id, i_autoname, j_tag, j_name, x_tag, x_name, v_type, v_name):
+def add_auto_placements(i_fallback, i_addmul, i_id, i_autoname, j_tag, j_name, x_tag, x_name, v_type, v_name, **kwargs):
     i_value = i_fallback
+    isslot = data_values.get_value(kwargs, 'isslot', False)
+
     if j_tag != None:
-        if j_name in j_tag: i_value = j_tag[j_name]
-        paramdata = params.get(j_tag, [], j_name, i_fallback)
+        if isslot == False: paramdata = params.get(j_tag, [], j_name, i_fallback)
+        else: paramdata = params.get(j_tag, [], j_name, i_fallback, groupname='params_slot')
         if paramdata != None: i_value = paramdata[0]
 
     if i_addmul != None: i_value = (i_value+i_addmul[0])*i_addmul[1]

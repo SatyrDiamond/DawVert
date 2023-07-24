@@ -27,7 +27,7 @@ def r_track_pluginid(cvpj_l, trackid, pluginid):
     data_values.nested_dict_add_value(cvpj_l, ['track_data', trackid, 'instdata', 'pluginid'], pluginid)
 
 def r_add_param(cvpj_l, trackid, p_id, p_value, p_type, **kwargs):
-    params.add(cvpj_l, ['track_data', trackid], p_id, p_value, p_type, **kwargs)
+    if p_value != None: params.add(cvpj_l, ['track_data', trackid], p_id, p_value, p_type, **kwargs)
 
 def r_get_param(cvpj_l, trackid, paramname, fallbackval):
     return params.get(cvpj_l, ['track_data', trackid], paramname, fallbackval)

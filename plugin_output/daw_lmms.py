@@ -470,17 +470,18 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
             if plugintype[0] == 'native-lmms' and plugintype[1] in ['arpeggiator', 'chordcreator']:
                 pluginautoid = tracks.autoid_out_getlist(['plugin', pluginid])
                 slotautoid = tracks.autoid_out_getlist(['slot', pluginid])
-                fxdata = plugins.get_plug_fxdata(cvpj_l, pluginid)
+
+                fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid])
 
                 if plugintype[1] == 'arpeggiator':
                     trkX_notefx = ET.SubElement(trkX_insttr, "arpeggiator")
                     paramlist = ['arpgate', 'arprange', 'arpmode', 'arpdir', 'arpmiss', 'arpskip', 'arptime', 'arpcycle', 'arp']
-                    add_auto_placements(0, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', trkX_notefx, 'arp-enabled', 'Arp', 'On')
+                    add_auto_placements(0, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', trkX_notefx, 'arp-enabled', 'Arp', 'On', isslot=True)
 
                 if plugintype[1] == 'chordcreator':
                     trkX_notefx = ET.SubElement(trkX_insttr, "chordcreator")
                     paramlist = ['chordrange', 'chord']
-                    add_auto_placements(0, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', trkX_notefx, 'chord-enabled', 'Chord', 'On')
+                    add_auto_placements(0, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', trkX_notefx, 'chord-enabled', 'Chord', 'On', isslot=True)
 
                 for paramid in paramlist:
                     get_plugin_param(pluginautoid, trkX_notefx, paramid, pluginid, paramid, 0)

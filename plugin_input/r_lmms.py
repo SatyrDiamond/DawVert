@@ -218,7 +218,7 @@ def asdflfo(pluginid, xmlO, asdrtype):
     lfo_predelay = float(lmms_getvalue(xmlO, 'pdel', 0))
     lfo_attack = exp2sec(float(lmms_getvalue(xmlO, 'latt', 0)))
     lfo_amount = float(lmms_getvalue(xmlO, 'lamt', 0))
-    lfo_shape = lfoshape[int(lmms_getvalue(xmlO, 'lamt', 0))]
+    lfo_shape = lfoshape[int(lmms_getvalue(xmlO, 'lshape', 0))]
     if asdrtype == 'cutoff': lfo_amount *= 6000
 
     lfo_speed = 0
@@ -432,7 +432,7 @@ def lmms_decode_inst_track(trkX, trackid):
         tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
 
     tracks.r_add_dataval(cvpj_l, trackid, None, 'fxrack_channel', int(trkX_insttr.get('fxch')))
-    tracks.r_add_param(cvpj_l, trackid, 'usemasterpitch', int(trkX_insttr.get('usemasterpitch')), 'bool')
+    tracks.r_add_param(cvpj_l, trackid, 'usemasterpitch', trkX_insttr.get('usemasterpitch'), 'bool')
     tracks.r_add_param(cvpj_l, trackid, 'pitch', float(lmms_auto_getvalue(trkX_insttr, 'pitch', 0, 'float', [0, 0.01], ['track', trackid, 'pitch'])), 'float')
 
     if 'basenote' in trkX_insttr.attrib:

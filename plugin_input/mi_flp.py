@@ -159,7 +159,7 @@ class input_flp(plugin_input.base):
                 if 'middlenote' in channeldata: 
                     tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'middlenote', channeldata['middlenote']-60)
 
-                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pitch', channeldata['pitch'], 'float')
+                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pitch', channeldata['pitch']/100, 'float')
                 tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'usemasterpitch', channeldata['main_pitch'], 'bool')
                 tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pan', channeldata['pan'], 'float')
                 tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', channeldata['volume'], 'float')

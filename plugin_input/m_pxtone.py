@@ -447,6 +447,7 @@ class input_pxtone(plugin_input.base):
                 plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, plugindata['file'])
                 plugins.add_plug_data(cvpj_l, pluginid, 'trigger', plugindata['trigger'])
                 plugins.add_plug_data(cvpj_l, pluginid, 'interpolation', plugindata['interpolation'])
+                plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0, 0, 0, 1, 0, 1)
 
             cvpj_instid = 'ptcop_'+str(voicenum)
 

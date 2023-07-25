@@ -218,7 +218,7 @@ def ri2r(song):
     for trackid in t_s_track_order:
         if trackid in t_s_trackdata:
             singletrack_data = t_s_trackdata[trackid]
-            notelistindex = singletrack_data['notelistindex']
+            notelistindex = data_values.get_value(singletrack_data, 'notelistindex', {})
             if trackid in t_s_trackplacements:
                 trkpldata = t_s_trackplacements[trackid]
 
@@ -240,7 +240,7 @@ def ri2r(song):
                         for s_pl in placements:
                             ri2r_fromindex2notelist(s_pl, notelistindex)
 
-            del singletrack_data['notelistindex']
+            if 'notelistindex' in singletrack_data: del singletrack_data['notelistindex']
 
     return json.dumps(cvpj_proj)
 

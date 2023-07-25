@@ -73,6 +73,14 @@ def list_to_reigons(i_list, offsetval):
         mscount += 1
     return output
 
+def dict_findrepeat(i_dict):
+    outdata = []
+    for part in i_dict:
+        if outdata == []: outdata.append([part, 1])
+        else:
+            if outdata[-1][0] == part: outdata[-1][1] += 1
+            else: outdata.append([part, 1])
+    return outdata
 
 def tempo_to_rate(i_in, i_mode):
     if i_mode == True: return (120/i_in)

@@ -169,8 +169,26 @@ class input_flp(plugin_input.base):
 
                 if channeldata['type'] == 0:
                     tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-                    plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, 
-                        getsamplefile(channeldata, input_file))
+                    plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, getsamplefile(channeldata, input_file))
+
+                    tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'remove_dc', channeldata['remove_dc'])
+                    tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'normalize', channeldata['normalize'])
+                    tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'reversepolarity', channeldata['reversepolarity'])
+
+                    cvpj_loopdata = {}
+                    if 'sampleflags' in channeldata:
+                        fl_sampleflags = data_bytes.to_bin(channeldata['sampleflags'], 8)
+                        cvpj_loopdata['enabled'] = fl_sampleflags[4]
+                        interpolation = "none"
+                        if fl_sampleflags[7] == 1: interpolation = "sinc"
+                        tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'interpolation', interpolation)
+
+                    if 'looptype' in channeldata:
+                        fl_looptype = channeldata['looptype']
+                        if fl_looptype == 0: cvpj_loopdata['mode'] = "normal"
+                        else: cvpj_loopdata['mode'] = "pingpong"
+
+                    plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loopdata)
                     
                 if channeldata['type'] == 2:
                     tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)

@@ -11,6 +11,7 @@ from functions import tracks
 from functions import plugins
 from functions import note_data
 from functions import data_bytes
+from functions import data_values
 from functions import song
 
 #               Name,              Type, FadeIn, FadeOut, PitchMod, Slide, Vib, Color
@@ -95,37 +96,60 @@ lc_instlist[72] = ['FastArp Sine'    ,'FA-Sine'   ,0  ,0  ,0  ,False ,False]
 lc_instlist[73] =['FastArp TiltedSaw','FA-TiltSaw',0  ,0  ,0  ,False ,False]
 lc_instlist[74] = ['FastArp Noise'   ,'FA-Noise'  ,0  ,0  ,0  ,False ,False]
 
-
 lc_instlist[128]= ['_EXT'            ,'_EXT'      ,0  ,0  ,0  ,False ,False]
 lc_instlist[129]= ['_EXT_E'          ,'_EXT'      ,0  ,1  ,0  ,False ,False]
-
 
 used_instruments = []
 
 def chord_parser(chordbytes_chord, chordbytes_seven, chordbytes_nine):
-    output_val = [chordbytes_chord, chordbytes_seven, chordbytes_nine]
+    chordtype = chordbytes_chord-1
+    if chordtype == 0: output_val = None
+    else: 
+        if chordbytes_chord == 2: output_val = [0, 4, 7]
+        if chordbytes_chord == 3: output_val = [0, 3, 7]
+        if chordbytes_chord == 6: output_val = [0, 3, 6]
+        if chordbytes_chord == 5: output_val = [0, 4, 8]
+        if chordbytes_chord == 4: output_val = [0, 5, 7]
+        if chordbytes_seven == 4: output_val.append(10)
+        if chordbytes_seven == 8: output_val.append(11)
+        if chordbytes_nine == 1: output_val.append(14)
+        if chordbytes_nine == 2: output_val.append(13)
     return output_val
 
-def lc_parse_voice_chords(sl_json, length):
+def lc_parse_voice_chords(sl_json, length, currentchord):
     global used_instruments
     position = 0
 
+    dictdata = []
     for notenum in range(length):
         lc_notedata = sl_json[notenum]
 
         chordbytes = None
         if lc_notedata['id'] != None: 
             chordbytes_parts = struct.unpack("BBBB", lc_notedata['id'].to_bytes(4, 'little'))
-            chordbytes_nine = chordbytes_parts[3]
-            chordbytes_seven, chordbytes_chord = data_bytes.splitbyte(chordbytes_parts[2])
-            chordbytes = chord_parser(chordbytes_chord, chordbytes_seven, chordbytes_nine)
-        #print(lc_notedata, chordbytes)
+            chordbytes_first = chordbytes_parts[3]
+            chordbytes_second, chordbytes_third = data_bytes.splitbyte(chordbytes_parts[2])
+            chorddata = chord_parser(chordbytes_third, chordbytes_second, chordbytes_first)
+            if chorddata == None: currentchord = None
+            else: currentchord = [lc_notedata['n']]+chorddata
+        dictdata.append(currentchord)
 
         position += 1
 
     cvpj_notelist = []
 
-    return cvpj_notelist
+    chords = data_values.dict_findrepeat(dictdata)
+    notepos = 0
+    for chord in chords:
+        if chord[0] != None:
+            key = chord[0][0]-60
+            for chordnote in chord[0][1:]:
+                cvpj_notelist.append(
+                    note_data.mx_makenote('chord', notepos, chord[1], key+chordnote, None, None)
+                    )
+        notepos += chord[1]
+
+    return cvpj_notelist, currentchord
 
 def lc_parse_voice(sl_json, length):
     global used_instruments
@@ -193,13 +217,14 @@ def lc_parse_placements(sl_json, pl_color, ischord):
     patternlen = []
     placements = []
     position = 0
+    currentchord = None
     for sle in sl_json:
         if 'play_notes' in sle: length = sle['play_notes']
         else: length = 32
         lc_notes = sle['vl']
 
         if ischord == False: notelist = lc_parse_voice(lc_notes, length)
-        else: notelist = lc_parse_voice_chords(lc_notes, length)
+        else: notelist, currentchord = lc_parse_voice_chords(lc_notes, length, currentchord)
 
         placement = placement_data.makepl_n(position, length, notelist)
         placement['color'] = pl_color
@@ -247,7 +272,7 @@ class input_lc(plugin_input.base):
         tracks.m_playlist_pl(cvpj_l, 2, "Part 2", lc_colors[1], lc_parse_placements(lc_ch_p2, lc_colors[1], False))
         tracks.m_playlist_pl(cvpj_l, 3, "Part 3", lc_colors[2], lc_parse_placements(lc_ch_p3, lc_colors[2], False))
         tracks.m_playlist_pl(cvpj_l, 4, "Part 4", lc_colors[3], lc_parse_placements(lc_ch_p4, lc_colors[3], False))
-        tracks.m_playlist_pl(cvpj_l, 5, "Chord", lc_colors[4], [])
+        tracks.m_playlist_pl(cvpj_l, 5, "Chord", lc_colors[4], lc_parse_placements(lc_ch_chords, lc_colors[4], True))
 
         for used_instrument in used_instruments:
             pluginid = plugins.get_id()
@@ -281,6 +306,7 @@ class input_lc(plugin_input.base):
             tracks.m_inst_create(cvpj_l, used_instrument, name=used_instrument)
             tracks.m_inst_pluginid(cvpj_l, used_instrument, pluginid)
 
+        tracks.m_inst_create(cvpj_l, 'chord', name='Chord')
         startinststr = 'lc_instlist_'
 
         placements.make_timemarkers(cvpj_l, [4, 4], patternlen, lc_loop_start_bar)

@@ -290,6 +290,7 @@ class input_cvpj_r(plugin_input.base):
                 middlenote += int(pcms_c[2])
 
                 tracks.r_add_param(cvpj_l, cvpj_trackid, 'pitch', pcms_c[3], 'float')
+                tracks.r_add_dataval(cvpj_l, cvpj_trackid, None, 'middlenote', -middlenote)
 
                 plugins.add_asdr_env(cvpj_l, pluginid, 'volume', 0, pcms_c[5], 0, pcms_c[6], pcms_c[7], pcms_c[8], 1)
 

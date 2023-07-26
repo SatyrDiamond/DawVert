@@ -222,7 +222,7 @@ def lc_parse_voice(sl_json, length):
             cvpj_notedata['vol'] = max(t_note[5])/15
             data_values.nested_dict_add_value(cvpj_notedata, ['notemod','auto','gain'], auto_vals)
 
-        if None not in t_note[6] 
+        if None not in t_note[6]:
             if len(t_note[6]) == 1:
                 cvpj_notedata['pan'] = t_note[6]
             elif len(t_note[6]) != 0:

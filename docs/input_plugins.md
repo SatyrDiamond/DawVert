@@ -5,7 +5,7 @@
 | --- | --- | :--- | :--- | :--- | :--- |
 | R | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ | 11 only |
 | M-I | ```flp``` | FL Studio | ```.flp``` | ✔️ | FL 20+ or higher |
-| R | ```lmms``` | LMMS | ```.mmp``` | ✔️ | Stable and Alpha |
+| R | ```lmms``` | LMMS | ```.mmp```/```.mmpz``` | ✔️ | Stable and Alpha |
 
 ## Tracker
 | DataType | Short Name | Name | Ext | Autodetect | Info | 
@@ -14,6 +14,8 @@
 | M | ```xm``` | FastTracker 2 | ```.xm``` | ✔️ | |
 | M | ```s3m``` | Scream Tracker 3 | ```.s3m``` | ✔️ | |
 | M | ```it``` | Impulse Tracker | ```.it``` | ✔️ | |
+| M | ```umx``` | Unreal Music Package | ```.umx``` | ✔️ | Only if it contains ``mod``, ``xm``, ``s3m``, or ``it``|
+
 
 ## Chiptune/Retro
 | DataType | Short Name | Name | Ext | Autodetect | Info | 

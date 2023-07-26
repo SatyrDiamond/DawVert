@@ -224,7 +224,7 @@ def lc_parse_voice(sl_json, length):
 
         if None not in t_note[6]:
             if len(t_note[6]) == 1:
-                cvpj_notedata['pan'] = t_note[6]
+                cvpj_notedata['pan'] = t_note[6][0]
             elif len(t_note[6]) != 0:
                 auto_vals = auto.values2points(t_note[6], None)
                 data_values.nested_dict_add_value(cvpj_notedata, ['notemod','auto','pan'], auto_vals)

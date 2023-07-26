@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from functions import xtramath
 
 def move(points, pos):
     newautopoints = []
@@ -131,6 +132,20 @@ def blocks2points(auto_pl_blocks):
             else: outtype = 'normal'
             autopl['points'].append( {"position": point[0]-basepos, "value": point[2], "type": outtype} )
     return autopl
+
+def values2points(i_values, i_minmax):
+    curpos = 0
+    points = []
+    if i_minmax == None:
+        for i_value in i_values:
+            points.append( {"position": curpos, "value": i_value} )
+            curpos += 1
+    else:
+        for i_value in i_values:
+            normval = xtramath.between_to_one(i_minmax[0], i_minmax[1], i_value)
+            points.append( {"position": curpos, "value": normval} )
+            curpos += 1
+    return points
 
 def twopoints_addmul(twopoints, addval, mulval):
     for twopoint in twopoints:

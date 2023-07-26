@@ -118,7 +118,6 @@ def chord_parser(chordbytes_chord, chordbytes_seven, chordbytes_nine):
     return output_val
 
 def lc_parse_voice_chords(sl_json, length, currentchord):
-    global used_instruments
     position = 0
 
     dictdata = []
@@ -152,7 +151,7 @@ def lc_parse_voice_chords(sl_json, length, currentchord):
 
     return cvpj_notelist, currentchord
 
-def lc_parse_voice(sl_json, length):
+def lc_parse_voice(sl_json, tracknum, length):
     global used_instruments
     position = 0
 
@@ -215,7 +214,8 @@ def lc_parse_voice(sl_json, length):
     cvpj_notelist = []
 
     for t_note in t_notelist:
-        cvpj_notedata = note_data.mx_makenote(t_note[1], t_note[0], t_note[4], t_note[2], None, None)
+        cvpj_instid = str(tracknum)+'_'+t_note[1]
+        cvpj_notedata = note_data.mx_makenote(cvpj_instid, t_note[0], t_note[4], t_note[2], None, None)
 
         if None not in t_note[5] and len(t_note[5]) != 0:
             auto_vals = auto.values2points(t_note[5], [0, 15])
@@ -231,12 +231,12 @@ def lc_parse_voice(sl_json, length):
 
         cvpj_notelist.append(cvpj_notedata)
 
-        if t_note[1] not in used_instruments:
-            used_instruments.append(t_note[1])
+        if [tracknum, t_note[1]] not in used_instruments:
+            used_instruments.append([tracknum, t_note[1]])
 
     return cvpj_notelist
 
-def lc_parse_placements(sl_json, pl_color, ischord):
+def lc_parse_placements(sl_json, tracknum, pl_color, ischord):
     global patternpos
     global patternlen
     patternpos = []
@@ -249,7 +249,7 @@ def lc_parse_placements(sl_json, pl_color, ischord):
         else: length = 32
         lc_notes = sle['vl']
 
-        if ischord == False: notelist = lc_parse_voice(lc_notes, length)
+        if ischord == False: notelist = lc_parse_voice(lc_notes, tracknum, length)
         else: notelist, currentchord = lc_parse_voice_chords(lc_notes, length, currentchord)
 
         placement = placement_data.makepl_n(position, length, notelist)
@@ -294,45 +294,47 @@ class input_lc(plugin_input.base):
 
         cvpj_l = {}
 
-        tracks.m_playlist_pl(cvpj_l, 1, "Part 1", lc_colors[0], lc_parse_placements(lc_ch_p1, lc_colors[0], False))
-        tracks.m_playlist_pl(cvpj_l, 2, "Part 2", lc_colors[1], lc_parse_placements(lc_ch_p2, lc_colors[1], False))
-        tracks.m_playlist_pl(cvpj_l, 3, "Part 3", lc_colors[2], lc_parse_placements(lc_ch_p3, lc_colors[2], False))
-        tracks.m_playlist_pl(cvpj_l, 4, "Part 4", lc_colors[3], lc_parse_placements(lc_ch_p4, lc_colors[3], False))
-        tracks.m_playlist_pl(cvpj_l, 5, "Chord", lc_colors[4], lc_parse_placements(lc_ch_chords, lc_colors[4], True))
+        tracks.m_playlist_pl(cvpj_l, 1, "Part 1", lc_colors[0], lc_parse_placements(lc_ch_p1, 0, lc_colors[0], False))
+        tracks.m_playlist_pl(cvpj_l, 2, "Part 2", lc_colors[1], lc_parse_placements(lc_ch_p2, 1, lc_colors[1], False))
+        tracks.m_playlist_pl(cvpj_l, 3, "Part 3", lc_colors[2], lc_parse_placements(lc_ch_p3, 2, lc_colors[2], False))
+        tracks.m_playlist_pl(cvpj_l, 4, "Part 4", lc_colors[3], lc_parse_placements(lc_ch_p4, 3, lc_colors[3], False))
+        tracks.m_playlist_pl(cvpj_l, 5, "Chord", lc_colors[4], lc_parse_placements(lc_ch_chords, 4, lc_colors[4], True))
 
         for used_instrument in used_instruments:
             pluginid = plugins.get_id()
 
+            cvpj_instid = str(used_instrument[0])+'_'+used_instrument[1]
+
             cvpj_instdata = {}
-            if used_instrument == 'Sine': 
+            if used_instrument[1] == 'Sine': 
                 plugins.add_plug(cvpj_l, pluginid, 'retro', 'sine')
-            elif used_instrument == 'Square': 
+            elif used_instrument[1] == 'Square': 
                 plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
                 plugins.add_plug_data(cvpj_l, pluginid, 'duty', 0)
-            elif used_instrument == 'Triangle':
+            elif used_instrument[1] == 'Triangle':
                 plugins.add_plug(cvpj_l, pluginid, 'retro', 'triangle')
-            elif used_instrument == 'Saw': 
+            elif used_instrument[1] == 'Saw': 
                 plugins.add_plug(cvpj_l, pluginid, 'retro', 'saw')
-            elif used_instrument == 'Noise': 
+            elif used_instrument[1] == 'Noise': 
                 plugins.add_plug(cvpj_l, pluginid, 'retro', 'noise')
                 plugins.add_plug_data(cvpj_l, pluginid, 'type', '4bit')
-            elif used_instrument == 'FreqNoise': 
+            elif used_instrument[1] == 'FreqNoise': 
                 plugins.add_plug(cvpj_l, pluginid, 'retro', 'noise')
                 plugins.add_plug_data(cvpj_l, pluginid, 'type', '1bit_short')
-            elif used_instrument == 'Pulse25': 
+            elif used_instrument[1] == 'Pulse25': 
                 plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
                 plugins.add_plug_data(cvpj_l, pluginid, 'duty', 1)
-            elif used_instrument == 'Pulse125': 
+            elif used_instrument[1] == 'Pulse125': 
                 plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
                 plugins.add_plug_data(cvpj_l, pluginid, 'duty', 2)
             else: 
-                plugins.add_plug(cvpj_l, pluginid, 'lovelycomposer', used_instrument)
+                plugins.add_plug(cvpj_l, pluginid, 'lovelycomposer', used_instrument[1])
                 plugins.add_plug_data(cvpj_l, pluginid, 'duty', 2)
 
-            tracks.m_inst_create(cvpj_l, used_instrument, name=used_instrument)
-            tracks.m_inst_pluginid(cvpj_l, used_instrument, pluginid)
+            tracks.m_inst_create(cvpj_l, cvpj_instid, name=used_instrument[1], color=lc_colors[used_instrument[0]])
+            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
-        tracks.m_inst_create(cvpj_l, 'chord', name='Chord')
+        tracks.m_inst_create(cvpj_l, 'chord', name='Chord', color=lc_colors[4])
         startinststr = 'lc_instlist_'
 
         placements.make_timemarkers(cvpj_l, [4, 4], patternlen, lc_loop_start_bar)

@@ -9,6 +9,7 @@ from functions import placements
 from functions import placement_data
 from functions import tracks
 from functions import plugins
+from functions import auto
 from functions import note_data
 from functions import data_bytes
 from functions import data_values
@@ -176,14 +177,23 @@ def lc_parse_voice(sl_json, length):
         if 'n' in lc_notedata: 
             if lc_notedata['n'] != None: out_key = lc_notedata['n']-60
 
-        out_vol = None
+        out_vol = 14
         if 'x' in lc_notedata: 
             if lc_notedata['x'] != None: out_vol = lc_notedata['x']
 
+        out_pan = 0
+        if 'p' in lc_notedata: 
+            if lc_notedata['p'] != None: 
+                panbyte = lc_notedata['p']
+                if panbyte == 8: out_pan = 0
+                if panbyte == 15: out_pan = 1
+                if panbyte == 1: out_pan = -1
+
         if out_inst != '_EXT': curinst = out_inst
-        out_notetable = [out_pos, curinst, out_key, out_vol, out_fadeout, 1]
+        out_notetable = [out_pos, curinst, out_key, out_fadeout, 1, [], []]
         useappend = True
         if out_notetable[1] != None: 
+
             if len(t_notelist) != 0 and prev_notetable != None:
                 extend_cont_pos = prev_notetable[0] == out_notetable[0]-1
                 extend_cont_key = prev_notetable[2] == out_notetable[2]
@@ -193,7 +203,10 @@ def lc_parse_voice(sl_json, length):
                     useappend = False
             if useappend == True and out_notetable[2] != None: 
                 t_notelist.append(out_notetable)
-            if len(t_notelist) != 0 and useappend == False: t_notelist[-1][5] += 1 
+            if len(t_notelist) != 0 and useappend == False: 
+                t_notelist[-1][4] += 1 
+                t_notelist[-1][5].append(out_vol)
+                t_notelist[-1][6].append(out_pan)
 
         prev_notetable = out_notetable
 
@@ -202,8 +215,21 @@ def lc_parse_voice(sl_json, length):
     cvpj_notelist = []
 
     for t_note in t_notelist:
-        #print(t_note)
-        cvpj_notelist.append(note_data.mx_makenote(t_note[1], t_note[0], t_note[5], t_note[2], None, None))
+        cvpj_notedata = note_data.mx_makenote(t_note[1], t_note[0], t_note[4], t_note[2], None, None)
+
+        if None not in t_note[5] and len(t_note[5]) != 0:
+            auto_vals = auto.values2points(t_note[5], [0, 15])
+            cvpj_notedata['vol'] = max(t_note[5])/15
+            data_values.nested_dict_add_value(cvpj_notedata, ['notemod','auto','gain'], auto_vals)
+
+        if None not in t_note[6] 
+            if len(t_note[6]) == 1:
+                cvpj_notedata['pan'] = t_note[6]
+            elif len(t_note[6]) != 0:
+                auto_vals = auto.values2points(t_note[6], None)
+                data_values.nested_dict_add_value(cvpj_notedata, ['notemod','auto','pan'], auto_vals)
+
+        cvpj_notelist.append(cvpj_notedata)
 
         if t_note[1] not in used_instruments:
             used_instruments.append(t_note[1])

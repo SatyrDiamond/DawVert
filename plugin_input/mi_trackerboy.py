@@ -6,6 +6,7 @@ from functions import song_tracker
 from functions import tracks
 from functions import plugins
 from functions import song
+from functions import xtramath
 import plugin_input
 import json
 import struct
@@ -48,15 +49,7 @@ def parse_fx_event(l_celldata, fx_p, fx_v):
         vol_left, vol_right = data_bytes.splitbyte(fx_v)
         if vol_left < 0: vol_left += 16
         if vol_right < 0: vol_right += 16
-        vol_left = vol_left/15
-        vol_right = vol_right/15
-        val_vol = max(vol_left, vol_right)
-        if val_vol != 0: 
-            vol_left = vol_left/val_vol
-            vol_right = vol_right/val_vol
-        pan_val = (vol_left*-1)+vol_right
-        l_celldata[0]['global_volume'] = val_vol
-        l_celldata[0]['global_pan'] = pan_val
+        l_celldata[0]['global_pan'], l_celldata[0]['global_volume'] = xtramath.sep_pan_to_vol(vol_left/15, vol_right/15)
 
 class input_trackerboy(plugin_input.base):
     def __init__(self): pass

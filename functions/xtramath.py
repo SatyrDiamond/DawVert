@@ -32,3 +32,11 @@ def steps_to_one(in_val, steps):
             return between_to_one(prev_step, step, in_val)*(1/maxlen)+(index/maxlen)
         prev_step = step
     return 0
+
+def sep_pan_to_vol(i_left, i_right):
+    val_vol = max(i_left, i_right)
+    if val_vol != 0: 
+        i_left = i_left/val_vol
+        i_right = i_right/val_vol
+    pan_val = (i_left*-1)+i_right
+    return pan_val, val_vol

@@ -134,7 +134,7 @@ def blocks2points(auto_pl_blocks):
     return autopl
 
 def values2points(i_values, i_minmax):
-    curpos = 0
+    curpos = 1
     points = []
     if i_minmax == None:
         for i_value in i_values:

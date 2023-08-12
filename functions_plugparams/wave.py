@@ -70,9 +70,10 @@ def cvpjwave2wave(cvpj_l, pluginid, wave_name):
 
 def wave2file(cvpj_l, pluginid, wave_name, fileloc):
     wavedata = cvpjwave2wave(cvpj_l, pluginid, wave_name)
-    audiowavdata = [int(i*65535) for i in wavedata]
-    wave_data = data_bytes.unsign_16(struct.pack('H'*len(audiowavdata), *audiowavdata))
-    audio_wav.generate(fileloc, wave_data, 1, 44100, 16, None)
+    if wavedata != None:
+        audiowavdata = [int(i*65535) for i in wavedata]
+        wave_data = data_bytes.unsign_16(struct.pack('H'*len(audiowavdata), *audiowavdata))
+        audio_wav.generate(fileloc, wave_data, 1, 44100, 16, None)
 
 def cvpjharm2wave(cvpj_l, pluginid, harm_name):
     harmdata = plugins.get_harmonics(cvpj_l, pluginid, harm_name)

@@ -377,8 +377,6 @@ def m2r(song):
     for playlistentry in playlist:
         plrow = playlist[playlistentry]
 
-
-
         if 'placements_notes' in plrow:
             placements = plrow['placements_notes']
             if 'name' in playlist[playlistentry]:
@@ -509,6 +507,7 @@ def m2mi(song):
         cvpj_sampleindex['m2mi_audio_' + str(sample_number)] = cvpj_sampledata
         sample_number += 1
 
+    if 'notelistindex' not in cvpj_proj: cvpj_proj['notelistindex'] = {}
 
     cvpj_proj['sampleindex'] = cvpj_sampleindex
 

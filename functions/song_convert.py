@@ -436,16 +436,8 @@ def m2r(song):
 
 # ---------------------------------- Multiple to MultipleIndexed ----------------------------------
 
-def m2mi_checkdup(cvpj_notelistindex, nledata):
-    for pattern in cvpj_notelistindex:
-        patterndat = cvpj_notelistindex[pattern]
-        if patterndat == nledata:
-            return pattern
-    else:
-        return None
-
 m2mi_sample_names = ['file', 'name', 'color', 'audiomod', 'vol', 'pan', 'fxrack_channel']
-m2mi_notes_names = ['notelist', 'name', 'color']
+m2mi_notes_names = ['id', 'notelist', 'name', 'color']
 
 def m2mi(song):
     print('[song-convert] Converting from Multiple > MultipleIndexed')
@@ -455,25 +447,35 @@ def m2mi(song):
 
     pattern_number = 1
     cvpj_notelistindex = {}
+    existingpatterns = []
     for cvpj_playlistentry in cvpj_playlist:
         cvpj_playlistentry_data = cvpj_playlist[cvpj_playlistentry]
         if 'placements_notes' not in cvpj_playlistentry_data: cvpj_placements_notes = []
         else: cvpj_placements_notes = cvpj_playlistentry_data['placements_notes']
         for cvpj_placement in cvpj_placements_notes:
-            cvpj_notelist = cvpj_placement['notelist']
-            temp_nle = {}
-            temp_nle['notelist'] = cvpj_notelist.copy()
-            checksamenl = m2mi_checkdup(cvpj_notelistindex, temp_nle)
-            if checksamenl != None: cvpj_placement['fromindex'] = checksamenl
-            else:
-                cvpj_notelistindex['m2mi_' + str(pattern_number)] = temp_nle
-                if 'color' in cvpj_placement: temp_nle['color'] = cvpj_placement['color']
-                if 'name' in cvpj_placement: temp_nle['name'] = cvpj_placement['name']
-                cvpj_placement['fromindex'] = 'm2mi_' + str(pattern_number)
-                del cvpj_placement['notelist']
-            pattern_number += 1
+            nle_data = [None, None, None]
 
-    cvpj_proj['notelistindex'] = cvpj_notelistindex
+            nle_data[0] = cvpj_placement['notelist'].copy()
+            if 'name' in cvpj_placement: nle_data[1] = cvpj_placement['name']
+            if 'color' in cvpj_placement: nle_data[2] = cvpj_placement['color']
+
+            dupepatternfound = None
+            for existingpattern in existingpatterns:
+                if existingpattern[1] == nle_data: 
+                    dupepatternfound = existingpattern[0]
+                    break
+
+            if dupepatternfound == None:
+                patid = 'm2mi_' + str(pattern_number)
+                existingpatterns.append([patid, nle_data])
+                dupepatternfound = patid
+                pattern_number += 1
+
+            cvpj_placement['fromindex'] = dupepatternfound
+
+    for existingpattern in existingpatterns:
+        tracks.m_add_nle(cvpj_proj, existingpattern[0], existingpattern[1][0])
+        tracks.m_add_nle_info(cvpj_proj, existingpattern[0], existingpattern[1][1], existingpattern[1][2])
 
     sample_number = 1
     cvpj_sampleindex = {}

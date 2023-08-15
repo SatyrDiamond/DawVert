@@ -38,11 +38,12 @@ if args.soundfont != None: extra_json['soundfont'] = args.soundfont
 if args.songnum != None: extra_json['songnum'] = args.songnum
 if args.extrafile != None: extra_json['extrafile'] = args.extrafile
 if args.mi2m__output_unused_nle == True: extra_json['mi2m-output-unused-nle'] = True
-if args.nonfree_plugins == True: extra_json['nonfree-plugins'] = True
+if args.use_experiments_input == True: extra_json['use_experiments_input'] = True
 
+if args.nonfree_plugins == True: extra_json['nonfree-plugins'] = True
 # -------------------------------------------------------------- Input Plugin List--------------------------------------------------------------
 
-core.input_load_plugins()
+core.input_load_plugins(extra_json)
 
 # -------------------------------------------------------------- Output Plugin List -------------------------------------------------------------
 

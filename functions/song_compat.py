@@ -250,51 +250,6 @@ def r_addloops(projJ):
                 else: print('unchanged')
 
 
-def r_removeloops_cutpoint(pl_pos, pl_dur, cut_start, cut_end):
-    return [pl_pos, pl_dur, cut_start, cut_end]
-
-def r_removeloops_before_loop(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_end):
-    #print('BEFORE')
-    cutpoints = []
-    temppos = min(bl_l_end, bl_p_dur)
-    cutpoints.append( r_removeloops_cutpoint((bl_p_pos+bl_p_start)-bl_p_start, temppos-bl_p_start, bl_p_start, min(bl_l_end, bl_p_dur)) )
-    bl_p_dur += bl_p_start
-    placement_loop_size = bl_l_end-bl_l_start
-    if bl_l_end < bl_p_dur and bl_l_end > bl_l_start:
-        remainingcuts = (bl_p_dur-bl_l_end)/placement_loop_size
-        while remainingcuts > 0:
-            outdur = min(remainingcuts, 1)
-            cutpoints.append( r_removeloops_cutpoint((bl_p_pos+temppos)-bl_p_start, placement_loop_size*outdur, bl_l_start, bl_l_end*outdur) )
-            temppos += placement_loop_size
-            remainingcuts -= 1
-    return cutpoints
-
-def r_removeloops_after_loop(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_end):
-    #print('AFTER')
-    cutpoints = []
-    placement_loop_size = bl_l_end-bl_l_start
-    #print(bl_p_pos, bl_p_dur, '|', bl_p_start, '|', bl_l_start, bl_l_end, '|', placement_loop_size)
-    bl_p_dur_mo = bl_p_dur-bl_l_start
-    bl_p_start_mo = bl_p_start-bl_l_start
-    bl_l_start_mo = bl_l_start-bl_l_start
-    bl_l_end_mo = bl_l_end-bl_l_start
-    remainingcuts = (bl_p_dur_mo+bl_p_start_mo)/placement_loop_size
-    #print(bl_p_pos, bl_p_dur, '|', bl_p_start_mo, '|', bl_l_start_mo, bl_l_end_mo, '|', placement_loop_size)
-    temppos = bl_p_pos
-    temppos -= bl_p_start_mo
-    flag_first_pl = True
-    while remainingcuts > 0:
-        outdur = min(remainingcuts, 1)
-        if flag_first_pl == True:
-            cutpoints.append( r_removeloops_cutpoint(temppos+bl_p_start_mo, (outdur*placement_loop_size)-bl_p_start_mo, bl_l_start+bl_p_start_mo, outdur*bl_l_end) )
-        if flag_first_pl == False:
-            cutpoints.append( r_removeloops_cutpoint(temppos, outdur*placement_loop_size, bl_l_start, outdur*bl_l_end) )
-        temppos += placement_loop_size
-        remainingcuts -= 1
-        flag_first_pl = False
-    return cutpoints
-
-
 def r_removeloops_placements(cvpj_placements, tempo, isaudio):
     tempomul = data_values.tempo_to_rate(tempo, False)
 
@@ -313,8 +268,7 @@ def r_removeloops_placements(cvpj_placements, tempo, isaudio):
                 loop_loopstart = cvpj_placement['cut']['loopstart']
                 loop_loopend = cvpj_placement['cut']['loopend']
 
-                if loop_loopstart > loop_start: cutpoints = r_removeloops_before_loop(loop_base_position, loop_base_duration, loop_start, loop_loopstart, loop_loopend)
-                else: cutpoints = r_removeloops_after_loop(loop_base_position, loop_base_duration, loop_start, loop_loopstart, loop_loopend)
+                cutpoints = xtramath.cutloop(loop_base_position, loop_base_duration, loop_start, loop_loopstart, loop_loopend)
 
                 #print(cutpoints)
                 for cutpoint in cutpoints:
@@ -323,14 +277,8 @@ def r_removeloops_placements(cvpj_placements, tempo, isaudio):
                     cvpj_placement_cutted['duration'] = cutpoint[1]
                     cvpj_placement_cutted['cut'] = {}
                     cvpj_placement_cutted['cut']['type'] = 'cut'
-
-                    if isaudio == False:
-                        cvpj_placement_cutted['cut']['start'] = cutpoint[2]
-                        cvpj_placement_cutted['cut']['end'] = cutpoint[3]
-                    else:
-                        cvpj_placement_cutted['cut']['start'] = cutpoint[2]
-                        cvpj_placement_cutted['cut']['end'] = cutpoint[3]
-
+                    cvpj_placement_cutted['cut']['start'] = cutpoint[2]
+                    cvpj_placement_cutted['cut']['end'] = cutpoint[3]
                     new_placements.append(cvpj_placement_cutted)
             else: new_placements.append(cvpj_placement)
         else: new_placements.append(cvpj_placement)

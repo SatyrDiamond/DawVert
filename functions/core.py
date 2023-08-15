@@ -3,6 +3,7 @@
 
 from plugin_input import base as base_input
 from plugin_output import base as base_output
+from experiments_plugin_input import base as experiments_plugin_input
 from functions import song_convert
 from functions import song_compat
 from functions import plug_conv
@@ -36,9 +37,15 @@ pluglist_input = {}
 pluglist_input_auto = {}
 currentplug_input = [None, None]
 
-def input_load_plugins():
+def input_load_plugins(extra_json):
 	print('[core] Plugins (Input): ',end='')
-	for inputplugin in base_input.plugins:
+
+	dv_pluginclasses = base_input
+
+	if 'use_experiments_input' in extra_json:
+		dv_pluginclasses = experiments_plugin_input
+
+	for inputplugin in dv_pluginclasses.plugins:
 		in_class_list = inputplugin()
 		in_validplugin = False
 		try:

@@ -53,3 +53,42 @@ def get_audiofile_info(sample_filename):
                 out_data = out_db_data
 
     return out_data
+
+def get_audiofile_info_nocache(sample_filename):
+    audio_hz = 44100
+
+    out_data = {}
+    out_data['path'] = sample_filename
+    out_data['file_size'] = 0
+    out_data['mod_date'] = 0
+    out_data['dur'] = 1
+    out_data['crc'] = 0
+    out_data['audio_timebase'] = 44100
+    out_data['rate'] = 44100
+    out_data['dur_sec'] = 1
+    out_data['found'] = False
+
+    if os.path.exists(sample_filename):
+        avdata = av.open(sample_filename)
+        audio_path = sample_filename
+        audio_filesize = os.path.getsize(sample_filename)
+        audio_moddate = int(os.path.getmtime(sample_filename))
+        if len(avdata.streams.audio) != 0:
+            audio_duration = avdata.streams.audio[0].duration
+            audio_timebase = avdata.streams.audio[0].time_base.denominator
+            audio_hz_b = avdata.streams.audio[0].rate
+            if audio_hz_b != None: audio_hz = audio_hz_b
+
+            out_db_data = {}
+            out_db_data['path'] = audio_path
+            out_db_data['file_size'] = audio_filesize
+            out_db_data['mod_date'] = audio_moddate
+            out_db_data['dur'] = audio_duration
+            out_db_data['crc'] = 0
+            out_db_data['audio_timebase'] = audio_timebase
+            out_db_data['rate'] = audio_hz
+            out_db_data['dur_sec'] = (audio_duration/audio_timebase)
+            out_db_data['found'] = True
+            out_data = out_db_data
+
+    return out_data

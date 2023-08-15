@@ -140,3 +140,6 @@ def list_traits_supported(i_required, i_supported):
     for part in i_supported:
         if part in i_required: i_required.remove(part)
     return i_required == []
+
+def ifallsame(i_list):
+    return all(item == i_list[0] for item in i_list) 

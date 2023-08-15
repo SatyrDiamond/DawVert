@@ -98,18 +98,23 @@ def decodeblock(cvpj_l, input_block, position):
             placementdata = placement_data.makepl_n(position, pl_dur, notelist)
             placementdata['name'] = instdata[instnum]['preset']
             placementdata['color'] = onebd_colors[instnum]
-            tracks.m_playlist_pl_add(cvpj_l, instnum+1, placementdata)
+
+            longpldata = placement_data.longpl_split(placementdata)
+            for longpls in longpldata:
+                tracks.m_playlist_pl_add(cvpj_l, instnum+1, longpls)
 
     for drumnum in range(5):
         drumnumminv = -drumnum+4
-        notelist = tnotedata_to_cvpj_nl([], blockdrums[drumnumminv], t_notedata_drums[drumnum], 0)
+        notelist = tnotedata_to_cvpj_nl([], blockdrums[drumnum], t_notedata_drums[drumnum], 0)
         if notelist != []: 
             blockdrumid = blockdrums[drumnum]
-            if blockdrumid not in used_instruments[drumnum+4]: used_instruments[drumnum+4].append(blockdrumid)
+            if blockdrumid not in used_instruments[drumnumminv+4]: used_instruments[drumnumminv+4].append(blockdrumid)
             placementdata = placement_data.makepl_n(position, pl_dur, notelist)
             placementdata['name'] = drumsdata[drumnumminv]['preset']
             placementdata['color'] = onebd_colors[drumnumminv+4]
-            tracks.m_playlist_pl_add(cvpj_l, drumnumminv+5, placementdata )
+            longpldata = placement_data.longpl_split(placementdata)
+            for longpls in longpldata:
+                tracks.m_playlist_pl_add(cvpj_l, drumnumminv+5, longpls)
 
     return pl_dur
 

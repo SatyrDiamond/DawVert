@@ -44,10 +44,9 @@ def longpl_split(placement_data):
     notelist = data_values.sort_pos(placement_data['notelist'])
     outpl = [placement_data]
 
-    if pldur in [64, 128, 256]:
+    if (pldur % 16 == 0):
         split_notelists = [[0,[]] for x in range(pldur//16)]
         len_split_notelists = len(split_notelists)
-
         for note in notelist:
             notepos = note['position']
             notedur = note['duration']
@@ -65,29 +64,50 @@ def longpl_split(placement_data):
             if blocknum < len_split_notelists:
                 split_notelists[blocknum][1].append(notecpy)
 
-        for test in split_notelists:
-            print(str(test[0]).rjust(3), str(len(test[1])).ljust(3), '|', end=' ')
+        #for test in split_notelists:
+        #    print(str(test[0]).rjust(3), str(len(test[1])).ljust(3), '|', end=' ')
+        #print()
 
-        #repeating notes
-        cursamesplit = 1
+        basepl = placement_data.copy()
+        pl_color = data_values.get_value(basepl, 'color', None)
+        pl_name = data_values.get_value(basepl, 'name', None)
+
         repeatingnotesfound = False
-        while cursamesplit != pldur//16:
-            repeatingnotesfound = findsame(split_notelists, cursamesplit)
-            if repeatingnotesfound == True: break
-            cursamesplit *= 2
+        if pldur in [64, 128, 256]:
+            #repeating notes
+            cursamesplit = 1
+            while cursamesplit != pldur//16:
+                repeatingnotesfound = findsame(split_notelists, cursamesplit)
+                if repeatingnotesfound == True: break
+                cursamesplit *= 2
 
-        #print(repeatingnotesfound, cursamesplit)
-        if repeatingnotesfound == True:
-            repeatingnotelist = longpl_blkmerge(split_notelists[0:cursamesplit], 16)
-            basepl = placement_data.copy()
-            pl_color = data_values.get_value(basepl, 'color', None)
-            pl_name = data_values.get_value(basepl, 'name', None)
-            outpl = []
-            for repeatnum in range((pldur//16)//cursamesplit):
-                repeatpldata = makepl_n(plpos+((repeatnum*cursamesplit)*16), cursamesplit*16, repeatingnotelist)
-                if pl_color != None: repeatpldata['color'] = pl_color
-                if pl_name != None: repeatpldata['name'] = pl_name
-                outpl.append(repeatpldata)
+            if repeatingnotesfound == True:
+                repeatingnotelist = longpl_blkmerge(split_notelists[0:cursamesplit], 16)
+                outpl = []
+                for repeatnum in range((pldur//16)//cursamesplit):
+                    repeatpldata = makepl_n(plpos+((repeatnum*cursamesplit)*16), cursamesplit*16, repeatingnotelist)
+                    if pl_color != None: repeatpldata['color'] = pl_color
+                    if pl_name != None: repeatpldata['name'] = pl_name
+                    outpl.append(repeatpldata)
+
+        if repeatingnotesfound == False:
+            splitareas = []
+            for split_notelist in split_notelists:
+                splitareas.append(bool(split_notelist[0]) or bool(len(split_notelist[1])))
+            if all(splitareas) == False:
+                curblocknum = 0
+                outpl = []
+                for splitarea in data_values.dict_findrepeat(splitareas):
+                    if splitarea[0] == True:
+                        splitnotelist = longpl_blkmerge(split_notelists[curblocknum:curblocknum+splitarea[1]], 16)
+                        splitpldata = makepl_n(
+                            plpos+(curblocknum*16), 
+                            ((curblocknum+splitarea[1])-curblocknum)*16, 
+                            splitnotelist)
+                        if pl_color != None: splitpldata['color'] = pl_color
+                        if pl_name != None: splitpldata['name'] = pl_name
+                        outpl.append(splitpldata)
+                    curblocknum += splitarea[1]
 
     return outpl
 

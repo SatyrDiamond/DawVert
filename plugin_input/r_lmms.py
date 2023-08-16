@@ -431,7 +431,11 @@ def lmms_decode_inst_track(trkX, trackid):
     if len(xml_a_fxchain) != 0: 
         tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
 
-    tracks.r_add_dataval(cvpj_l, trackid, None, 'fxrack_channel', int(trkX_insttr.get('fxch')))
+
+    xml_fxch = trkX_insttr.get('fxch')
+    if xml_fxch != None: 
+        tracks.r_add_dataval(cvpj_l, trackid, None, 'fxrack_channel', int(xml_fxch))
+        
     tracks.r_add_param(cvpj_l, trackid, 'usemasterpitch', trkX_insttr.get('usemasterpitch'), 'bool')
     tracks.r_add_param(cvpj_l, trackid, 'pitch', float(lmms_auto_getvalue(trkX_insttr, 'pitch', 0, 'float', [0, 0.01], ['track', trackid, 'pitch'])), 'float')
 

@@ -703,8 +703,7 @@ def beats_to_seconds_all(s_track_pl, i_bpm):
     if 'placements_audio' in s_track_pl: beats_to_seconds_dopls(s_track_pl['placements_audio'], i_bpm)
 
 def beats_to_seconds(cvpj_l, cvpj_type):
-    bpm = 120
-    if 'bpm' in cvpj_l: bpm = cvpj_l['bpm']
+    bpm = params.get(cvpj_l, [], 'bpm', 120)[0]
     print('[compat] Beats2Seconds: BPM:', bpm)
 
     if cvpj_type in ['r', 'ri']:

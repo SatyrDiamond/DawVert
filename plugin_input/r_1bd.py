@@ -110,7 +110,7 @@ def decodeblock(cvpj_l, input_block, position):
             blockdrumid = blockdrums[drumnum]
             if blockdrumid not in used_instruments[drumnumminv+4]: used_instruments[drumnumminv+4].append(blockdrumid)
             placementdata = placement_data.makepl_n(position, pl_dur, notelist)
-            placementdata['name'] = drumsdata[drumnumminv]['preset']
+            placementdata['name'] = drumsdata[drumnum]['preset']
             placementdata['color'] = onebd_colors[drumnumminv+4]
             longpldata = placement_data.longpl_split(placementdata)
             for longpls in longpldata:

@@ -27,6 +27,7 @@
 | M-I | ```trackerboy``` | TrackerBoy | ```.tbm``` | ✔️ | |
 | M | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ❌ | |
 | R | ```mekimekichip``` | メキメキチップ (MekiMeki Chip) | ```.json``` | ❌ | |
+| M | ```1bitdragon``` | 1BITDRAGON | ```.ibd``` | ❌ | |
 
 ## Web
 | DataType | Short Name | Name | Ext | Autodetect | Info | 

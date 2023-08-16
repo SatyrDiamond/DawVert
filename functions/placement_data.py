@@ -38,6 +38,8 @@ def longpl_blkmerge(plblocks, steps):
         notelist += partnotelist
     return notelist
 
+validdursplit = [64, 128, 256]
+
 def longpl_split(placement_data):
     plpos = placement_data['position']
     pldur = placement_data['duration']
@@ -47,6 +49,8 @@ def longpl_split(placement_data):
     if (pldur % 16 == 0):
         split_notelists = [[0,[]] for x in range(pldur//16)]
         len_split_notelists = len(split_notelists)
+        len_split_notelists_half = len_split_notelists//2
+
         for note in notelist:
             notepos = note['position']
             notedur = note['duration']
@@ -72,9 +76,9 @@ def longpl_split(placement_data):
         pl_color = data_values.get_value(basepl, 'color', None)
         pl_name = data_values.get_value(basepl, 'name', None)
 
+        # ---------------------------- repeating notes ----------------------------
         repeatingnotesfound = False
-        if pldur in [64, 128, 256]:
-            #repeating notes
+        if pldur in validdursplit:
             cursamesplit = 1
             while cursamesplit != pldur//16:
                 repeatingnotesfound = findsame(split_notelists, cursamesplit)
@@ -90,6 +94,7 @@ def longpl_split(placement_data):
                     if pl_name != None: repeatpldata['name'] = pl_name
                     outpl.append(repeatpldata)
 
+        # ---------------------------- autosplit ----------------------------
         if repeatingnotesfound == False:
             splitareas = []
             for split_notelist in split_notelists:
@@ -108,6 +113,26 @@ def longpl_split(placement_data):
                         if pl_name != None: splitpldata['name'] = pl_name
                         outpl.append(splitpldata)
                     curblocknum += splitarea[1]
+            elif pldur in validdursplit[1:]:
+
+                # ---------------------------- half notes ----------------------------
+                ifhalfsplitpossable = split_notelists[(len_split_notelists//2)-1][0]
+                if ifhalfsplitpossable == 0:
+                    first_nl = longpl_blkmerge(split_notelists[0:len_split_notelists_half], 16)
+                    second_nl = longpl_blkmerge(split_notelists[len_split_notelists_half:len_split_notelists], 16)
+                    halfnotelist = [first_nl, second_nl]
+
+                    outpl = []
+                    for halfsplitnum in range(2):
+                        splitpldata = makepl_n(
+                            plpos+(halfsplitnum*16*len_split_notelists_half), 
+                            (16*len_split_notelists_half), 
+                            halfnotelist[halfsplitnum])
+                        if pl_color != None: splitpldata['color'] = pl_color
+                        if pl_name != None: splitpldata['name'] = pl_name
+                        outpl.append(splitpldata)
+
+
 
     return outpl
 

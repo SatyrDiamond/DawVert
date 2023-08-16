@@ -9,6 +9,7 @@ from functions import placements
 from functions import idvals
 from functions import notelist_data
 from functions import xtramath
+from functions import params
 
 unusedchannel = 0
 
@@ -71,7 +72,7 @@ class output_cvpj_f(plugin_output.base):
             midi_denominator = 4
 
             if 'timesig' in projJ: midi_numerator, midi_denominator = projJ['timesig']
-            if 'bpm' in projJ: midi_tempo = mido.bpm2tempo(params.get(cvpj_l, [], 'bpm', 120)[0])
+            midi_tempo = mido.bpm2tempo(params.get(projJ, [], 'bpm', 120)[0])
 
             multi_miditrack[0].append(mido.MetaMessage('time_signature', numerator=midi_numerator, denominator=midi_denominator, clocks_per_click=24, notated_32nd_notes_per_beat=8, time=0))
 

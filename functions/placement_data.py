@@ -130,7 +130,7 @@ def longpl_split(placement_data):
                             halfnotelist[halfsplitnum])
                         if pl_color != None: splitpldata['color'] = pl_color
                         if pl_name != None: splitpldata['name'] = pl_name
-                        outpl.append(splitpldata)
+                        outpl += longpl_split(splitpldata)
 
 
 

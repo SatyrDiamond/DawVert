@@ -33,17 +33,21 @@ extra_json = {}
 
 do_overwrite = False
 
+pluginset = 'main'
+
 if args.y == True: do_overwrite = True
 if args.soundfont != None: extra_json['soundfont'] = args.soundfont
 if args.songnum != None: extra_json['songnum'] = args.songnum
 if args.extrafile != None: extra_json['extrafile'] = args.extrafile
 if args.mi2m__output_unused_nle == True: extra_json['mi2m-output-unused-nle'] = True
-if args.use_experiments_input == True: extra_json['use_experiments_input'] = True
+if args.use_experiments_input == True: 
+	extra_json['use_experiments_input'] = True
+	pluginset = 'experiments'
 
 if args.nonfree_plugins == True: extra_json['nonfree-plugins'] = True
 # -------------------------------------------------------------- Input Plugin List--------------------------------------------------------------
 
-core.input_load_plugins(extra_json)
+core.input_load_plugins(pluginset)
 
 # -------------------------------------------------------------- Output Plugin List -------------------------------------------------------------
 

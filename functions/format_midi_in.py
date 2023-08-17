@@ -358,19 +358,19 @@ def song_end(channels):
             schannum = s_chan_auto[s_chan_auto_num]
 
             if s_chan_auto_num == 1: 
-                if len(schannum) == 1 and 0 in schannum: tracks.r_param(cvpj_l, schannum[0], 'modulation', schannum[0]/127)
+                if len(schannum) == 1 and 0 in schannum: tracks.r_add_param(cvpj_l, schannum[0], 'modulation', schannum[0]/127)
                 else: add_auto_to_song_no_mixer(midiauto2cvpjauto(schannum,127,0), 'modulation', midi_channum, s_chan_trackids)
 
             elif s_chan_auto_num == 7: 
-                if len(schannum) == 1 and 0 in schannum: tracks.fxrack_param(cvpj_l, fxrack_chan, 'vol', schannum[0]/127)
+                if len(schannum) == 1 and 0 in schannum: tracks.fxrack_param(cvpj_l, fxrack_chan, 'vol', schannum[0]/127, 'Float')
                 else: add_auto_to_song(midiauto2cvpjauto(schannum,127,0), 'vol', midi_channum, s_chan_trackids)
 
             elif s_chan_auto_num == 10: 
-                if len(schannum) == 1 and 0 in schannum: tracks.r_param(cvpj_l, schannum[0], 'pan', (schannum[0]/64)-1)
+                if len(schannum) == 1 and 0 in schannum: tracks.r_add_param(cvpj_l, schannum[0], 'pan', (schannum[0]/64)-1, 'Float')
                 else: add_auto_to_song_no_mixer(midiauto2cvpjauto(schannum,64,-1), 'pan', midi_channum, s_chan_trackids)
 
             elif s_chan_auto_num == 11: 
-                if len(schannum) == 1 and 0 in schannum: tracks.r_param(cvpj_l, schannum[0], 'expression', schannum[0]/127)
+                if len(schannum) == 1 and 0 in schannum: tracks.r_add_param(cvpj_l, schannum[0], 'expression', schannum[0]/127, 'Float')
                 else: add_auto_to_song_no_mixer(midiauto2cvpjauto(schannum,127,0), 'expression', midi_channum, s_chan_trackids)
 
             elif s_chan_auto_num == 91: 

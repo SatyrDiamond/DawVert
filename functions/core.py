@@ -37,12 +37,14 @@ pluglist_input = {}
 pluglist_input_auto = {}
 currentplug_input = [None, None]
 
-def input_load_plugins(extra_json):
+def input_load_plugins(pluginset):
+	global pluglist_input
+	pluglist_input = {}
 	print('[core] Plugins (Input): ',end='')
 
 	dv_pluginclasses = base_input
 
-	if 'use_experiments_input' in extra_json:
+	if pluginset == 'experiments':
 		dv_pluginclasses = experiments_plugin_input
 
 	for inputplugin in dv_pluginclasses.plugins:

@@ -106,7 +106,7 @@ def r_trackfx2fxrack(cvpj_l, cvpjtype):
         data_values.nested_dict_add_value(outfxnum, ['track', trackid], [fxnum, 1.0])
 
         list2fxrack(cvpj_l, s_trkdata, fxnum, trackid, '')
-        s_trkdata['fxrack_channel'] = fxnum
+        tracks.r_add_dataval(cvpj_l, trackid, None, 'fxrack_channel', int(fxnum))
 
         fxnum += 1
 

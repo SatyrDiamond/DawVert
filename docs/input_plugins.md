@@ -63,4 +63,6 @@
 | M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ | |
 | R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ | |
 | R | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ | |
+| R | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
 | R-I | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | |
+

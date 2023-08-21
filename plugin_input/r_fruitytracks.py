@@ -108,6 +108,7 @@ class input_fruitytracks(plugin_input.base):
                     cvpj_pldata['cut']['loopstart'] = 0
                     cvpj_pldata['cut']['loopend'] = (sampleda["repeatlen"]/bpmticks)/bpmdiv
                     cvpj_pldata['audiomod'] = {}
+                    cvpj_pldata['audiomod']['stretch_algorithm'] = 'resample'
                     cvpj_pldata['audiomod']['stretch_method'] = 'rate_tempo'
                     cvpj_pldata['audiomod']['stretch_data'] = {'rate': audduration/stretch}
 

@@ -72,10 +72,13 @@ def parse_inst_params(data):
         if '2' in part: 
             params = part['2']
             instparams = {}
-            for param in params:
-                param_name, param_isfloat = onlseq_param_inst[param]
-                if param_isfloat == 1: instparams[param_name] = int2float(int(params[param]))
-                if param_isfloat == 0: instparams[param_name] = int(params[param])
+            for param in params: 
+                if param == '15':
+                    onlseq_customnames[instid] = params['15']
+                elif param in onlseq_param_inst: 
+                    param_name, param_isfloat = onlseq_param_inst[param]
+                    if param_isfloat == 1: instparams[param_name] = int2float(int(params[param]))
+                    if param_isfloat == 0: instparams[param_name] = int(params[param])
             outputlist[instid] = instparams
     return outputlist
 
@@ -134,10 +137,12 @@ class input_onlinesequencer(plugin_input.base):
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global onlseq_notelist
+        global onlseq_customnames
 
         cvpj_l = {}
         
         cvpj_l_keynames_data = {}
+        onlseq_customnames = {}
 
         os_data_song_stream = open(input_file, 'rb')
         os_data_song_data = os_data_song_stream.read()
@@ -181,10 +186,17 @@ class input_onlinesequencer(plugin_input.base):
 
             cvpj_instid = 'os_'+str(instid)
             cvpj_notelist = onlseq_notelist[instid]
-            inst_name = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'name')
-            inst_color = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'color')
-            inst_gminst = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'gm_inst')
-            inst_isdrum = idvals.get_idval(idvals_onlineseq_inst, str(instid), 'isdrum')
+
+            trueinstid = instid%10000
+
+            if instid in onlseq_customnames:
+                inst_name = onlseq_customnames[instid]
+            else:
+                inst_name = idvals.get_idval(idvals_onlineseq_inst, str(trueinstid), 'name')
+
+            inst_color = idvals.get_idval(idvals_onlineseq_inst, str(trueinstid), 'color')
+            inst_gminst = idvals.get_idval(idvals_onlineseq_inst, str(trueinstid), 'gm_inst')
+            inst_isdrum = idvals.get_idval(idvals_onlineseq_inst, str(trueinstid), 'isdrum')
 
             pluginid = cvpj_instid
 

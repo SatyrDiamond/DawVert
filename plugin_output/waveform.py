@@ -21,6 +21,7 @@ class output_waveform_edit(plugin_output.base):
         'placement_cut': True,
         'placement_loop': True,
         'time_seconds': True,
+        'track_hybrid': True,
         'placement_audio_stretch': ['rate']
         }
     def getsupportedplugins(self): return []
@@ -34,7 +35,7 @@ class output_waveform_edit(plugin_output.base):
         wf_bpmdata = 120
         wf_numerator = 4
         wf_denominator = 4
-        if 'bpm' in projJ: wf_bpmdata = projJ['bpm']
+        wf_bpmdata = params.get(projJ, [], 'bpm', 120)[0]
         if 'timesig' in projJ: wf_numerator, wf_denominator = projJ['timesig']
 
         tempomul = 120/wf_bpmdata

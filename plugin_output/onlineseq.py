@@ -7,6 +7,8 @@ import struct
 import blackboxprotobuf
 from functions import data_values
 from functions import params
+from functions import idvals
+from functions import plugins
 
 def float2int(value): return struct.unpack("<I", struct.pack("<f", value))[0]
 
@@ -24,9 +26,9 @@ class output_onlineseq(plugin_output.base):
         'placement_cut': False,
         'placement_loop': False,
         'auto_nopl': True,
-        'track_nopl': False
+        'track_nopl': True
         }
-    def getsupportedplugins(self): return []
+    def getsupportedplugins(self): return ['midi']
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
 
@@ -36,6 +38,10 @@ class output_onlineseq(plugin_output.base):
         onlineseqdata[1] = {1: tempo, 3: []}
         onlineseqdata[2] = []
 
+        idvals_onlineseq_inst = idvals.parse_idvalscsv('data_idvals/onlineseq_map_midi.csv')
+
+        repeatedolinst = {}
+
         if 'track_data' in projJ and 'track_order' in projJ:
             #print('[output-midi] Trk# | Ch# | Bnk | Prog | Key | Name')
             tracknum = 0
@@ -44,16 +50,35 @@ class output_onlineseq(plugin_output.base):
                 if trackid in projJ['track_data']:
                     trackdata = projJ['track_data'][trackid]
 
+
+
                     if trackid in projJ['track_placements']:
                         if 'notes' in projJ['track_placements'][trackid]:
 
-                            track_pls = projJ['track_placements'][trackid]['notes']
-
-                            onlineseqnum = 43 + tracknum*10000
-
+                            #onlineseqinst = 43
                             trackname = data_values.get_value(trackdata, 'name', 'noname')
                             trackvol = params.get(trackdata, [], 'vol', 1.0)[0]
-                    
+
+                            if 'instdata' in trackdata:
+                                pluginid = data_values.get_value(trackdata['instdata'], 'pluginid', 1.0)
+                                plugintype = plugins.get_plug_type(projJ, pluginid)
+                                if plugintype[0] == 'midi':
+                                    cvpj_plugindata = plugins.get_plug_data(projJ, pluginid)
+                                    if cvpj_plugindata['bank'] != 128:
+                                        olinst = idvals.get_idval(idvals_onlineseq_inst, str(cvpj_plugindata['inst']), 'outid')
+                                        if olinst != 'null': onlineseqinst = int(olinst)
+                                    else:
+                                        onlineseqinst = 2
+
+                            #print(str(onlineseqinst).rjust(10), trackid)
+
+                            if onlineseqinst not in repeatedolinst: repeatedolinst[onlineseqinst] = 0
+                            else: repeatedolinst[onlineseqinst] += 1 
+
+                            track_pls = projJ['track_placements'][trackid]['notes']
+
+                            onlineseqnum = onlineseqinst + repeatedolinst[onlineseqinst]*10000
+
                             onlseqinst = {1: onlineseqnum, 2: {1: float2int(trackvol), 10: 1, 15: trackname}}
                             onlineseqdata[1][3].append(onlseqinst)
 

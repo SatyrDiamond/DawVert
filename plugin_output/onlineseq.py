@@ -66,7 +66,7 @@ class output_onlineseq(plugin_output.base):
                                         "2": float2int(cvpj_note['position']+basepos),
                                         "3": float2int(cvpj_note['duration']),
                                         "4": onlineseqnum,
-                                        "5": float2int(cvpj_note['vol'])
+                                        "5": float2int(data_values.get_value(cvpj_note, 'vol', 1.0))
                                         }
                                     onlineseqdata[2].append(onlineseq_note)
 

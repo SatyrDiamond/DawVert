@@ -62,7 +62,7 @@ class output_onlineseq(plugin_output.base):
                                 notelist = track_pl['notelist']
                                 for cvpj_note in notelist:
                                     onlineseq_note = {
-                                        "1": cvpj_note['key']+60,
+                                        "1": int(cvpj_note['key']+60),
                                         "2": float2int(cvpj_note['position']+basepos),
                                         "3": float2int(cvpj_note['duration']),
                                         "4": onlineseqnum,

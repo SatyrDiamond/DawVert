@@ -53,7 +53,7 @@ class output_onlineseq(plugin_output.base):
                     if trackid in projJ['track_placements']:
                         if 'notes' in projJ['track_placements'][trackid]:
 
-                            #onlineseqinst = 43
+                            onlineseqinst = 43
                             trackname = data_values.get_value(trackdata, 'name', 'noname')
                             trackvol = params.get(trackdata, [], 'vol', 1.0)[0]
 

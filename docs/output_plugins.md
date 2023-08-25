@@ -10,3 +10,4 @@
 | R | ```muse``` | MusE Sequencer |
 | R | ```reaper``` | Reaper |
 | R | ```waveform_edit``` | Waveform Edit |
+| R | ```onlineseq``` | Online Sequencer |

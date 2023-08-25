@@ -31,7 +31,7 @@ def getsamplefile(channeldata, flppath):
         samepath = os.path.join(os.path.dirname(flppath), os.path.basename(pathout))
         if os.path.exists(samepath): pathout = samepath
 
-        if pathout != None:
+        if pathout != None and pathout.split('.')[-1] not in ['SYN', 'syn']:
             audioinfo = audio.get_audiofile_info(pathout)
             filename_len[pathout] = audioinfo
         return pathout

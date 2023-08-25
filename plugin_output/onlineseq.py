@@ -12,6 +12,23 @@ from functions import plugins
 
 def float2int(value): return struct.unpack("<I", struct.pack("<f", value))[0]
 
+def create_markers(cvpj_auto, inst_id, instparam):
+    mainauto = cvpj_auto['placements'][0]
+    basepos = mainauto['position']
+    points = mainauto['points']
+
+    for point in points:
+        markerdata = {}
+        posdata = point['position']+basepos
+        markerdata[1] = float2int(point['position']+basepos)
+        markerdata[2] = instparam
+        markerdata[3] = inst_id
+        markerdata[4] = float2int(point['value'])
+        pointtype = data_values.get_value(point, 'type', 'normal')
+        if pointtype == 'normal': markerdata[5] = 1
+        if posdata not in glob_markerdata: glob_markerdata[posdata] = []
+        glob_markerdata[posdata].append(markerdata)
+
 class output_onlineseq(plugin_output.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'output'
@@ -30,6 +47,7 @@ class output_onlineseq(plugin_output.base):
         }
     def getsupportedplugins(self): return ['midi']
     def parse(self, convproj_json, output_file):
+        global glob_markerdata
         projJ = json.loads(convproj_json)
 
         tempo = int(params.get(projJ, [], 'bpm', 120)[0])
@@ -37,14 +55,18 @@ class output_onlineseq(plugin_output.base):
         onlineseqdata = {}
         onlineseqdata[1] = {1: tempo, 3: []}
         onlineseqdata[2] = []
+        onlineseqdata[3] = []
 
         idvals_onlineseq_inst = idvals.parse_idvalscsv('data_idvals/onlineseq_map_midi.csv')
 
         repeatedolinst = {}
 
+        cvpjid_onlineseqid = {}
+
+        glob_markerdata = {}
+
         if 'track_data' in projJ and 'track_order' in projJ:
             #print('[output-midi] Trk# | Ch# | Bnk | Prog | Key | Name')
-            tracknum = 0
 
             for trackid in projJ['track_order']:
                 if trackid in projJ['track_data']:
@@ -93,9 +115,29 @@ class output_onlineseq(plugin_output.base):
                                         }
                                     onlineseqdata[2].append(onlineseq_note)
 
-                            tracknum += 1
+                            cvpjid_onlineseqid[trackid] = onlineseqnum
 
-        protobuf_typedef = {'1': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '3': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '2': {'type': 'message', 'message_typedef': {'1': {'type': 'fixed32', 'name': ''}, '10': {'type': 'int', 'name': ''}, '15': {'type': 'bytes', 'name': ''}}, 'name': ''}}, 'name': ''}}, 'name': ''}, '2': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '3': {'type': 'fixed32', 'name': ''}, '4': {'type': 'int', 'name': ''}, '5': {'type': 'fixed32', 'name': ''}, '2': {'type': 'fixed32', 'name': ''}}, 'name': ''}}
+        if 'automation' in projJ:
+            cvpj_autodata = projJ['automation']
+            for autogroup in cvpj_autodata:
+                autogroupdata = cvpj_autodata[autogroup]
+                for autoname in autogroupdata:
+                    s_autodata = autogroupdata[autoname]
+                    if [autogroup, autoname] == ['main', 'bpm']: create_markers(s_autodata, 0, 0)
+                    if [autogroup, autoname] == ['main', 'vol']: create_markers(s_autodata, 0, 8)
+                    if autogroup == 'track': 
+                        for trackautodata in s_autodata:
+                            s_trackautodata = s_autodata[trackautodata]
+                            if autoname in cvpjid_onlineseqid:
+                                onlineseqid = cvpjid_onlineseqid[autoname]
+                                if trackautodata == 'vol': create_markers(s_trackautodata, onlineseqid, 1)
+                                if trackautodata == 'pan': create_markers(s_trackautodata, onlineseqid, 2)
+
+        protobuf_typedef = {'1': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '3': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '2': {'type': 'message', 'message_typedef': {'1': {'type': 'fixed32', 'name': ''}, '10': {'type': 'int', 'name': ''}, '15': {'type': 'bytes', 'name': ''}}, 'name': ''}}, 'name': ''}}, 'name': ''}, '2': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '3': {'type': 'fixed32', 'name': ''}, '4': {'type': 'int', 'name': ''}, '5': {'type': 'fixed32', 'name': ''}, '2': {'type': 'fixed32', 'name': ''}}, 'name': ''}, '3': {'type': 'message', 'message_typedef': {'1': {'type': 'fixed32', 'name': ''}, '4': {'type': 'fixed32', 'name': ''}, '5': {'type': 'int', 'name': ''}, '2': {'type': 'int', 'name': ''}, '3': {'type': 'int', 'name': ''}}, 'name': ''}}
+
+        for num in sorted(glob_markerdata):
+            for markdata in glob_markerdata[num]:
+                onlineseqdata[3].append(markdata)
 
         with open(output_file, "wb") as fileout:
             fileout.write(blackboxprotobuf.encode_message(onlineseqdata,protobuf_typedef))

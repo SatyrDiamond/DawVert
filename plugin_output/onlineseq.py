@@ -50,8 +50,6 @@ class output_onlineseq(plugin_output.base):
                 if trackid in projJ['track_data']:
                     trackdata = projJ['track_data'][trackid]
 
-
-
                     if trackid in projJ['track_placements']:
                         if 'notes' in projJ['track_placements'][trackid]:
 

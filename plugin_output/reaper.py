@@ -195,6 +195,7 @@ class output_reaper(plugin_output.base):
         return {
         'placement_cut': True,
         'time_seconds': True,
+        'track_hybrid': True,
         'placement_audio_stretch': ['rate']
         }
     def getsupportedplugins(self): return ['vst2']
@@ -208,7 +209,7 @@ class output_reaper(plugin_output.base):
         reaper_denominator = 4
 
         if 'timesig' in projJ: reaper_numerator, reaper_denominator = projJ['timesig']
-        if 'bpm' in projJ: reaper_tempo = projJ['bpm']
+        reaper_tempo = params.get(projJ, [], 'bpm', 120)[0]
 
         tempomul = reaper_tempo/120
 

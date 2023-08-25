@@ -38,7 +38,7 @@ class output_cvpj_f(plugin_output.base):
         'placement_cut': False,
         'placement_loop': False,
         'auto_nopl': True,
-        'track_nopl': False
+        'track_nopl': True
         }
     def getsupportedplugins(self): return []
     def parse(self, convproj_json, output_file):

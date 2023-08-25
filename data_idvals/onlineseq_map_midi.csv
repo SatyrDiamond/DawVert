@@ -1,0 +1,129 @@
+id;outid;group;name
+2;0;piano;Electric Grand Piano
+80;3;synthlead;Square Lead
+81;3;synthlead;Sawtooth Lead
+82;3;synthlead;Calliope Lead
+83;3;synthlead;Chiff Lead
+84;3;synthlead;Charang Lead
+85;3;synthlead;Voice Lead
+86;3;synthlead;Fifths Lead
+87;3;synthlead;Bass + Lead
+1;8;piano;Bright Acoustic Piano
+60;9;brass;French Horn
+56;10;brass;Trumpet
+57;10;brass;Trombone
+58;10;brass;Tuba
+59;10;brass;Muted Trumpet
+61;10;brass;Brass Section
+62;10;brass;SynthBrass 1
+63;10;brass;SynthBrass 2
+6;17;piano;Harpsichord
+7;17;piano;Clavi
+46;18;strings;Orchestral Harp
+47;18;strings;Timpani
+12;19;chromaticperc;Marimba
+13;19;chromaticperc;Xylophone
+14;19;chromaticperc;Tubular Bells
+15;19;chromaticperc;Dulcimer
+45;20;strings;Pizzicato Strings
+114;21;perc;Steel Drums
+104;22;Ethnic;Sitar
+105;22;Ethnic;Banjo
+106;22;Ethnic;Shamisen
+70;23;pipe;Bassoon
+71;23;pipe;Clarinet
+72;23;pipe;Piccolo
+73;23;pipe;Flute
+74;23;pipe;Recorder
+75;23;pipe;Pan Flute
+76;23;pipe;Blown Bottle
+77;23;pipe;Shakuhachi
+78;23;pipe;Whistle
+79;23;pipe;Ocarina
+64;24;reed;Soprano Sax
+65;24;reed;Alto Sax
+66;24;reed;Tenor Sax
+67;24;reed;Baritone Sax
+68;24;reed;Oboe
+69;24;reed;English Horn
+3;25;piano;Honky-tonk Piano
+8;26;chromaticperc;Celesta
+9;26;chromaticperc;Glockenspiel
+10;26;chromaticperc;Music Box
+38;27;bass;Synth Bass 1
+39;27;bass;Synth Bass 2
+16;28;organ;Drawbar Organ
+17;28;organ;Percussive Organ
+18;28;organ;Rock Organ
+19;28;organ;Church Organ
+20;28;organ;Reed Organ
+21;28;organ;Accordion
+22;28;organ;Harmonica
+23;28;organ;Tango Accordion
+36;29;bass;Slap Bass 1
+37;29;bass;Slap Bass 2
+88;30;synthpad;New Age Pad
+89;30;synthpad;Warm Pad
+90;30;synthpad;Polysynth Pad
+91;30;synthpad;Choir Pad
+92;30;synthpad;Bowed Pad
+93;30;synthpad;Metallic Pad
+94;30;synthpad;Halo Pad
+95;30;synthpad;Sweep Pad
+24;31;guitar;Acoustic Guitar (nylon)
+26;32;guitar;Electric Guitar (jazz)
+107;33;Ethnic;Koto
+108;33;Ethnic;Kalimba
+109;33;Ethnic;Bag pipe
+110;33;Ethnic;Fiddle
+111;33;Ethnic;Shanai
+11;34;chromaticperc;Vibraphone
+28;35;guitar;Electric Guitar (muted)
+25;36;guitar;Acoustic Guitar (steel)
+29;38;guitar;Overdriven Guitar
+30;38;guitar;Distortion Guitar
+31;38;guitar;Guitar harmonics
+0;41;piano;Acoustic Grand Piano
+4;43;piano;Electric Piano 1
+5;43;piano;Electric Piano 2
+42;45;strings;Cello
+40;46;strings;Violin
+41;46;strings;Viola
+44;47;strings;Tremolo Strings
+48;47;ensemble;String Ensemble 1
+49;47;ensemble;String Ensemble 2
+50;47;ensemble;SynthStrings 1
+51;47;ensemble;SynthStrings 2
+52;47;ensemble;Choir Aahs
+53;47;ensemble;Voice Oohs
+54;47;ensemble;Synth Voice
+55;47;ensemble;Orchestra Hit
+32;48;bass;Acoustic Bass
+33;48;bass;Electric Bass (finger)
+34;48;bass;Electric Bass (pick)
+35;48;bass;Fretless Bass
+43;48;strings;Contrabass
+27;49;guitar;Electric Guitar (clean)
+96;null;synthfx;Ice Rain
+97;null;synthfx;Soundtrack
+98;null;synthfx;Crystal
+99;null;synthfx;Atmosphere
+100;null;synthfx;Brightness
+101;null;synthfx;Goblin
+102;null;synthfx;Echo Drops
+103;null;synthfx;Star Theme
+112;null;perc;Tinkle Bell
+113;null;perc;Agogo
+115;null;perc;Woodblock
+116;null;perc;Taiko Drum
+117;null;perc;Melodic Tom
+118;null;perc;Synth Drum
+119;null;perc;Reverse Cymbal
+120;null;perc;Guitar Fret Noise
+121;null;sfx;Breath Noise
+122;null;sfx;Seashore
+123;null;sfx;Bird Tweet
+124;null;sfx;Telephone Ring
+125;null;sfx;Helicopter
+126;null;sfx;Applause
+127;null;sfx;Gunshot

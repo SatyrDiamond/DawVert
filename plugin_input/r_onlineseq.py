@@ -110,9 +110,9 @@ def parse_note(notedata):
     ols_vol = 1
     ols_note = int(notedata['1'])
     ols_dur = 1
-    if '4' in notedata: ols_inst = int(notedata['4'])
     if '2' in notedata: ols_pos = int2float(int(notedata['2']))
     if '3' in notedata: ols_dur = int2float(int(notedata['3']))
+    if '4' in notedata: ols_inst = int(notedata['4'])
     if '5' in notedata: ols_vol = int2float(int(notedata['5']))
     if ols_dur > 0.00001:
         cvpj_notedata = note_data.rx_makenote(ols_pos, ols_dur, ols_note-60, ols_vol, None)

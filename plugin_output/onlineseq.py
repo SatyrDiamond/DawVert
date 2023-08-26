@@ -88,17 +88,17 @@ class output_onlineseq(plugin_output.base):
                                 if plugintype[0] == 'midi':
                                     cvpj_plugindata = plugins.get_plug_data(projJ, pluginid)
                                     if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['inst']
-                                    else: midiinst = 2
+                                    else: midiinst = -1
                                 if plugintype[0] == 'soundfont2':
                                     cvpj_plugindata = plugins.get_plug_data(projJ, pluginid)
                                     if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['patch']
-                                    else: midiinst = 2
+                                    else: midiinst = -1
 
                             t_instid = idvals.get_idval(idvals_onlineseq_inst, str(midiinst), 'outid')
 
                             if t_instid not in ['null', None]: 
                                 onlineseqinst = int(t_instid)
-                            #print(str(onlineseqinst).rjust(10), trackid)
+                            #print(str(onlineseqinst).rjust(10), trackname)
 
                             if onlineseqinst not in repeatedolinst: repeatedolinst[onlineseqinst] = 0
                             else: repeatedolinst[onlineseqinst] += 1 

@@ -94,8 +94,10 @@ class output_onlineseq(plugin_output.base):
                                     if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['patch']
                                     else: midiinst = 2
 
-                            if midiinst not in ['null', None]: 
-                                onlineseqinst = int(idvals.get_idval(idvals_onlineseq_inst, str(midiinst), 'outid'))
+                            t_instid = idvals.get_idval(idvals_onlineseq_inst, str(midiinst), 'outid')
+
+                            if t_instid not in ['null', None]: 
+                                onlineseqinst = int(t_instid)
                             #print(str(onlineseqinst).rjust(10), trackid)
 
                             if onlineseqinst not in repeatedolinst: repeatedolinst[onlineseqinst] = 0

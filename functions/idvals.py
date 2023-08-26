@@ -39,6 +39,9 @@ def parse_idvalscsv(filename):
 		return {}
 
 def get_idval(valdata, i_id, i_param):
+
+	outval = None
+
 	if i_param == 'name':
 		outval = 'noname'
 		if i_id in valdata:

@@ -13,21 +13,22 @@ from functions import plugins
 def float2int(value): return struct.unpack("<I", struct.pack("<f", value))[0]
 
 def create_markers(cvpj_auto, inst_id, instparam):
-    mainauto = cvpj_auto['placements'][0]
-    basepos = mainauto['position']
-    points = mainauto['points']
+    if len(cvpj_auto['placements']) != 0:
+        mainauto = cvpj_auto['placements'][0]
+        basepos = mainauto['position']
+        points = mainauto['points']
 
-    for point in points:
-        markerdata = {}
-        posdata = point['position']+basepos
-        markerdata[1] = float2int(point['position']+basepos)
-        markerdata[2] = instparam
-        markerdata[3] = inst_id
-        markerdata[4] = float2int(point['value'])
-        pointtype = data_values.get_value(point, 'type', 'normal')
-        if pointtype == 'normal': markerdata[5] = 1
-        if posdata not in glob_markerdata: glob_markerdata[posdata] = []
-        glob_markerdata[posdata].append(markerdata)
+        for point in points:
+            markerdata = {}
+            posdata = point['position']+basepos
+            markerdata[1] = float2int(point['position']+basepos)
+            markerdata[2] = instparam
+            markerdata[3] = inst_id
+            markerdata[4] = float2int(point['value'])
+            pointtype = data_values.get_value(point, 'type', 'normal')
+            if pointtype == 'normal': markerdata[5] = 1
+            if posdata not in glob_markerdata: glob_markerdata[posdata] = []
+            glob_markerdata[posdata].append(markerdata)
 
 class output_onlineseq(plugin_output.base):
     def __init__(self): pass

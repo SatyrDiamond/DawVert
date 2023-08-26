@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
+import math
 
 def rx_makenote(t_pos, t_dur, t_key, t_vol, t_pan):
     note_data = {}

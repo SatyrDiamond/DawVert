@@ -70,7 +70,7 @@ id;outid;group;name
 93;30;synthpad;Metallic Pad
 94;30;synthpad;Halo Pad
 95;30;synthpad;Sweep Pad
-24;31;guitar;Acoustic Guitar (nylon)
+24;1;guitar;Acoustic Guitar (nylon)
 26;32;guitar;Electric Guitar (jazz)
 107;33;Ethnic;Koto
 108;33;Ethnic;Kalimba
@@ -127,3 +127,4 @@ id;outid;group;name
 125;null;sfx;Helicopter
 126;null;sfx;Applause
 127;null;sfx;Gunshot
+-1;2;drums;

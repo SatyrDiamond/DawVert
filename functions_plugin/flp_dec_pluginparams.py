@@ -4,6 +4,7 @@
 import base64
 import struct
 import os
+import math
 from functions import data_bytes
 from functions import plugins
 from functions import plugin_vst2
@@ -309,19 +310,29 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
         if flsf_lfo_predelay != -1: pitch_predelay = flsf_lfo_predelay/256
         if flsf_lfo_speed != -1: pitch_speed = 1/(flsf_lfo_speed/6)
 
-        plugins.add_lfo(cvpj_l, pluginid, 'pitch', 'sine', 'seconds', 
-            pitch_speed, pitch_predelay, 0, pitch_amount)
+        plugins.add_lfo(cvpj_l, pluginid, 'pitch', 'sine', 'seconds', pitch_speed, pitch_predelay, 0, pitch_amount)
 
     elif pluginname == 'fruity slicer':
         plugins.add_plug(cvpj_l, pluginid, 'sampler', 'slicer')
         fl_plugstr.read(4)
         slicer_beats = struct.unpack('f', fl_plugstr.read(4))[0]
         slicer_bpm = struct.unpack('f', fl_plugstr.read(4))[0]
-        slicer_pitch, slicer_fitlen, slicer_unk1, slicer_att, slicer_dec = struct.unpack('iiiii', fl_plugstr.read(20))
+        slicer_pitch, slicer_fitlen, slicer_stretchtype, slicer_att, slicer_dec = struct.unpack('iiiii', fl_plugstr.read(20))
 
-        plugins.add_plug_data(cvpj_l, pluginid, 'pitch', slicer_pitch/100)
+        stretch_data = {}
+        stretch_data['multiplier'] = pow(2, slicer_fitlen/10000)
+
+        if slicer_stretchtype == 0: stretch_data['stretch_algorithm'] = 'fill_gaps'
+        if slicer_stretchtype == 1: stretch_data['stretch_algorithm'] = 'alt_fill_gaps'
+        if slicer_stretchtype == 2: stretch_data['stretch_algorithm'] = 'elastique_pro'
+        if slicer_stretchtype == 3: stretch_data['stretch_algorithm'] = 'elastique_pro_transient'
+        if slicer_stretchtype == 4: stretch_data['stretch_algorithm'] = 'elastique_v2_transient'
+        if slicer_stretchtype == 5: stretch_data['stretch_algorithm'] = 'elastique_v2_tonal'
+        if slicer_stretchtype == 6: stretch_data['stretch_algorithm'] = 'elastique_v2_mono'
+        if slicer_stretchtype == 7: stretch_data['stretch_algorithm'] = 'elastique_v2_speech'
 
         slicer_filelen = int.from_bytes(fl_plugstr.read(1), "little")
+
         slicer_filename = fl_plugstr.read(slicer_filelen).decode('utf-8')
         if slicer_filename != "": 
             plugins.add_plug_data(cvpj_l, pluginid, 'file', slicer_filename)
@@ -347,7 +358,11 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
         plugins.add_plug_data(cvpj_l, pluginid, 'bpm', slicer_bpm)
         plugins.add_plug_data(cvpj_l, pluginid, 'beats', slicer_beats)
         plugins.add_plug_data(cvpj_l, pluginid, 'slices', cvpj_slices)
-
+        plugins.add_plug_data(cvpj_l, pluginid, 'pitch', slicer_pitch/100)
+        plugins.add_plug_data(cvpj_l, pluginid, 'fade_in', slicer_att)
+        plugins.add_plug_data(cvpj_l, pluginid, 'fade_out', slicer_dec)
+        plugins.add_plug_data(cvpj_l, pluginid, 'stretch', stretch_data)
+        
     # ------------------------------------------------------------------------------------------- FX
 
     elif pluginname == 'effector':

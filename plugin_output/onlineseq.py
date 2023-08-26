@@ -12,7 +12,7 @@ from functions import plugins
 
 def float2int(value): return struct.unpack("<I", struct.pack("<f", value))[0]
 
-def create_markers(cvpj_auto, inst_id, instparam):
+def create_markers(cvpj_auto, inst_id, instparam, mul):
     if len(cvpj_auto['placements']) != 0:
         mainauto = cvpj_auto['placements'][0]
         basepos = mainauto['position']
@@ -24,7 +24,7 @@ def create_markers(cvpj_auto, inst_id, instparam):
             markerdata[1] = float2int(point['position']+basepos)
             markerdata[2] = instparam
             markerdata[3] = inst_id
-            markerdata[4] = float2int(point['value'])
+            markerdata[4] = float2int(point['value']*mul)
             pointtype = data_values.get_value(point, 'type', 'normal')
             if pointtype == 'normal': markerdata[5] = 1
             if posdata not in glob_markerdata: glob_markerdata[posdata] = []
@@ -80,17 +80,22 @@ class output_onlineseq(plugin_output.base):
                             trackname = data_values.get_value(trackdata, 'name', 'noname')
                             trackvol = params.get(trackdata, [], 'vol', 1.0)[0]
 
+                            midiinst = None
+
                             if 'instdata' in trackdata:
                                 pluginid = data_values.get_value(trackdata['instdata'], 'pluginid', 1.0)
                                 plugintype = plugins.get_plug_type(projJ, pluginid)
                                 if plugintype[0] == 'midi':
                                     cvpj_plugindata = plugins.get_plug_data(projJ, pluginid)
-                                    if cvpj_plugindata['bank'] != 128:
-                                        olinst = idvals.get_idval(idvals_onlineseq_inst, str(cvpj_plugindata['inst']), 'outid')
-                                        if olinst != 'null': onlineseqinst = int(olinst)
-                                    else:
-                                        onlineseqinst = 2
+                                    if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['inst']
+                                    else: midiinst = 2
+                                if plugintype[0] == 'soundfont2':
+                                    cvpj_plugindata = plugins.get_plug_data(projJ, pluginid)
+                                    if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['patch']
+                                    else: midiinst = 2
 
+                            if midiinst not in ['null', None]: 
+                                onlineseqinst = int(idvals.get_idval(idvals_onlineseq_inst, str(midiinst), 'outid'))
                             #print(str(onlineseqinst).rjust(10), trackid)
 
                             if onlineseqinst not in repeatedolinst: repeatedolinst[onlineseqinst] = 0
@@ -124,15 +129,16 @@ class output_onlineseq(plugin_output.base):
                 autogroupdata = cvpj_autodata[autogroup]
                 for autoname in autogroupdata:
                     s_autodata = autogroupdata[autoname]
-                    if [autogroup, autoname] == ['main', 'bpm']: create_markers(s_autodata, 0, 0)
-                    if [autogroup, autoname] == ['main', 'vol']: create_markers(s_autodata, 0, 8)
+                    if [autogroup, autoname] == ['main', 'bpm']: create_markers(s_autodata, 0, 0, 1)
+                    if [autogroup, autoname] == ['main', 'vol']: create_markers(s_autodata, 0, 8, 1)
                     if autogroup == 'track': 
                         for trackautodata in s_autodata:
                             s_trackautodata = s_autodata[trackautodata]
                             if autoname in cvpjid_onlineseqid:
                                 onlineseqid = cvpjid_onlineseqid[autoname]
-                                if trackautodata == 'vol': create_markers(s_trackautodata, onlineseqid, 1)
-                                if trackautodata == 'pan': create_markers(s_trackautodata, onlineseqid, 2)
+                                if trackautodata == 'vol': create_markers(s_trackautodata, onlineseqid, 1, 1)
+                                if trackautodata == 'pan': create_markers(s_trackautodata, onlineseqid, 2, 1)
+                                if trackautodata == 'pitch': create_markers(s_trackautodata, onlineseqid, 11, 100)
 
         protobuf_typedef = {'1': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '3': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '2': {'type': 'message', 'message_typedef': {'1': {'type': 'fixed32', 'name': ''}, '10': {'type': 'int', 'name': ''}, '15': {'type': 'bytes', 'name': ''}}, 'name': ''}}, 'name': ''}}, 'name': ''}, '2': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '3': {'type': 'fixed32', 'name': ''}, '4': {'type': 'int', 'name': ''}, '5': {'type': 'fixed32', 'name': ''}, '2': {'type': 'fixed32', 'name': ''}}, 'name': ''}, '3': {'type': 'message', 'message_typedef': {'1': {'type': 'fixed32', 'name': ''}, '4': {'type': 'fixed32', 'name': ''}, '5': {'type': 'int', 'name': ''}, '2': {'type': 'int', 'name': ''}, '3': {'type': 'int', 'name': ''}}, 'name': ''}}
 

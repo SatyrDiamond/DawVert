@@ -267,8 +267,9 @@ def insert_fxslot(cvpj_l, fxloc, fxtype, pluginid):
 # ------------------------ Auto ------------------------
 
 def a_add_auto_pl(cvpj_l, val_type, autolocation, in_autopoints):
-    data_values.nested_dict_add_value(cvpj_l, ['automation']+autolocation+['type'], val_type)
-    data_values.nested_dict_add_to_list(cvpj_l, ['automation']+autolocation+['placements'], in_autopoints)
+    if autolocation != None:
+        data_values.nested_dict_add_value(cvpj_l, ['automation']+autolocation+['type'], val_type)
+        data_values.nested_dict_add_to_list(cvpj_l, ['automation']+autolocation+['placements'], in_autopoints)
 
 # ------------------------ NoPl Auto ------------------------
 

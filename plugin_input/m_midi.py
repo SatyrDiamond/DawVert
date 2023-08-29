@@ -143,7 +143,7 @@ class input_midi(plugin_input.base):
                     if exdata[0] == [83]:
                         if exdata[1][0:5] == b'ign\x01\xff':
                             print("[input-midi] Track Color (from Signal)")
-                            format_midi_in.track_color(colors.rgb_int_to_rgb_float(exdata[1][5:8]))
+                            format_midi_in.track_color(colors.rgb_int_to_rgb_float(exdata[1][5:8][::-1]))
 
                 if msg.type == 'copyright': 
                     midi_copyright = msg.text

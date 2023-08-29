@@ -219,9 +219,11 @@ class input_onlinesequencer(plugin_input.base):
                     if inst_isdrum == True: 
                         plugins.add_plug_gm_midi(cvpj_l, pluginid, 128, inst_gminst-1)
                         tracks.r_add_param(cvpj_l, cvpj_instid, 'usemasterpitch', False, 'bool')
+                        tracks.r_add_dataval(cvpj_l, cvpj_instid, 'midi', 'output', {'drums': True, 'program': inst_gminst-1})
                     else: 
                         plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, inst_gminst-1)
                         tracks.r_add_param(cvpj_l, cvpj_instid, 'usemasterpitch', True, 'bool')
+                        tracks.r_add_dataval(cvpj_l, cvpj_instid, 'midi', 'output', {'program': inst_gminst-1})
 
             tracks.r_pl_notes(cvpj_l, cvpj_instid, placement_data.nl2pl(cvpj_notelist))
 
@@ -257,7 +259,7 @@ class input_onlinesequencer(plugin_input.base):
 
                 if t_markerdata[1] == 'vol': tracks.a_auto_nopl_addpoint(['track', trackid, 'vol'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
                 if t_markerdata[1] == 'pan': tracks.a_auto_nopl_addpoint(['track', trackid, 'pan'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                if t_markerdata[1] == 'detune': tracks.a_auto_nopl_addpoint(['track', trackid, 'pitch'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                if t_markerdata[1] == 'detune': tracks.a_auto_nopl_addpoint(['track', trackid, 'pitch'], 'float', t_markerdata[2], t_markerdata[3]/100, t_markerdata[4])
 
                 if t_markerdata[1] in ['eq_high', 'eq_mid', 'eq_low']: 
                     tracks.a_auto_nopl_addpoint(['plugin', trackid+'_eq', t_markerdata[1]], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])

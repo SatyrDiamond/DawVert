@@ -201,6 +201,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 
         tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=bb_color)
         tracks.m_inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
+        tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, 'midi', 'output', {'program': gm_inst})
     else:
         bb_inst_type = bb_instrument['type']
         plugins.add_plug(cvpj_l, cvpj_instid, 'native-jummbox', bb_inst_type)

@@ -93,9 +93,11 @@ class input_mariopaint_msq(plugin_input.base):
             s_inst_name = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'name')
             s_inst_color = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'color')
             if s_inst_color != None: s_inst_color = colors.moregray(s_inst_color)
-            plugins.add_plug_gm_midi(cvpj_l, instname, 0, instnames.index(instname))
+            mpinstid = instnames.index(instname)
+            plugins.add_plug_gm_midi(cvpj_l, instname, 0, mpinstid)
             tracks.m_inst_create(cvpj_l, instname, name=s_inst_name, color=s_inst_color)
             tracks.m_inst_pluginid(cvpj_l, instname, instname)
+            tracks.m_inst_add_dataval(cvpj_l, instname, 'midi', 'output', {'program': mpinstid})
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True

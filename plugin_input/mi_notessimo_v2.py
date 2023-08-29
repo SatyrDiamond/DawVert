@@ -103,6 +103,7 @@ class input_notessimo_v2(plugin_input.base):
             if notetess_gminst != None: 
                 plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, notetess_gminst)
                 tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, 'midi', 'output', {'program': notetess_gminst})
 
             if notetess_isdrum == True:
                 tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', 1)

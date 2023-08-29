@@ -134,6 +134,7 @@ class input_gt_mnbs(plugin_input.base):
                 plugid = plugins.get_id()
                 plugins.add_plug_gm_midi(cvpj_l, plugid, 0, cvpj_instgm-1)
                 tracks.m_inst_pluginid(cvpj_l, instid, plugid)
+                tracks.m_inst_add_dataval(cvpj_l, instid, 'midi', 'output', {'program': cvpj_instgm})
 
 
         # PART 4: CUSTOM INSTRUMENTS

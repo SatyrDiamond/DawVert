@@ -137,6 +137,8 @@ class input_ceol(plugin_input.base):
             tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)
             tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
             tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+            if ceol_inst_number <= 127:
+                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, 'midi', 'output', {'program': ceol_inst_number})
 
         ceol_numpattern = ceol_read()
         for patnum in range(ceol_numpattern):

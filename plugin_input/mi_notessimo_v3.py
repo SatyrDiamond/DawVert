@@ -349,6 +349,7 @@ class input_notessimo_v3(plugin_input.base):
             if midiinst != None: 
                 plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, midiinst)
                 tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, 'midi', 'output', {'program': midiinst})
 
             if isbuiltindrum == 1: 
                 tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', 1)

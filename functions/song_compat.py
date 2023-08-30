@@ -530,6 +530,11 @@ def r_removelanes(projJ):
                             new_trackdata[trackid] = s_trackdata
                             new_trackplacements[trackid] = {}
                             new_trackplacements[trackid]['notes'] = s_lanedata[s_laneordering[0]]['notes']
+
+                            if 'color' in s_lanedata[s_laneordering[0]]:
+                                new_trackdata[trackid]['color'] = s_lanedata[s_laneordering[0]]['color']
+
+
                             new_trackordering.append(trackid)
 
                         if len(s_laneordering) > 1:

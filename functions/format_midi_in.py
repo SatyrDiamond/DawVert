@@ -375,25 +375,25 @@ def song_end(channels):
 
             elif s_chan_auto_num == 91: 
                 wetval = do_slot_wet(schannum, '_reverb', fxrack_chan, True)
-                tracks.fxrack_addsend(cvpj_l, fxrack_chan, channels+1, wetval, fxrack_chan+'_reverb')
                 fx_used = True
 
             elif s_chan_auto_num == 92: 
                 wetval = do_slot_wet(schannum, '_tremelo', fxrack_chan, False)
                 tracks.add_fxslot_native(cvpj_l, 'audio', 'simple', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_tremelo', 'tremelo', {})
+                fx_used = True
 
             elif s_chan_auto_num == 93: 
                 wetval = do_slot_wet(schannum, '_chorus', fxrack_chan, True)
-                tracks.fxrack_addsend(cvpj_l, fxrack_chan, channels+2, wetval, fxrack_chan+'_chorus')
                 fx_used = True
 
             elif s_chan_auto_num == 94: 
-                wetval = do_slot_wet(schannum, '_detuning', fxrack_chan, False)
-                tracks.add_fxslot_native(cvpj_l, 'audio', 'general-midi', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_detuning', 'detuning', {})
+                if len(schannum) == 1 and 0 in schannum: tracks.r_add_param(cvpj_l, schannum[0], 'detuning', schannum[0]/127, 'Float')
+                else: add_auto_to_song_no_mixer(midiauto2cvpjauto(schannum,127,0), 'detuning', midi_channum, s_chan_trackids)
 
             elif s_chan_auto_num == 95: 
                 wetval = do_slot_wet(schannum, '_phaser', fxrack_chan, False)
                 tracks.add_fxslot_native(cvpj_l, 'audio', 'simple', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_phaser', 'phaser', {})
+                fx_used = True
 
             elif s_chan_auto_num == 'pitch':
                 add_auto_to_song_no_mixer(midiauto2cvpjauto(s_chan_auto['pitch'],12,0), 'pitch', midi_channum, s_chan_trackids)
@@ -405,6 +405,8 @@ def song_end(channels):
     if fx_used == True:
         tracks.fxrack_add(cvpj_l, channels+1, "[S] Reverb", [0.4, 0.4, 0.4], 1.0, None)
         tracks.fxrack_add(cvpj_l, channels+2, "[S] Chorus", [0.4, 0.4, 0.4], 1.0, None)
+        tracks.fxrack_add(cvpj_l, channels+3, "[S] Tremelo", [0.4, 0.4, 0.4], 1.0, None)
+        tracks.fxrack_add(cvpj_l, channels+4, "[S] Phaser", [0.4, 0.4, 0.4], 1.0, None)
 
         plugins.add_plug(cvpj_l, 'plugin-reverb', 'simple', 'reverb-send')
         plugins.add_plug_fxvisual(cvpj_l, 'plugin-reverb', 'Reverb', None)
@@ -413,6 +415,14 @@ def song_end(channels):
         plugins.add_plug(cvpj_l, 'plugin-chorus', 'simple', 'chorus-send')
         plugins.add_plug_fxvisual(cvpj_l, 'plugin-chorus', 'Chorus', None)
         tracks.insert_fxslot(cvpj_l, ['fxrack', channels+2], 'audio', 'plugin-chorus')
+
+        plugins.add_plug(cvpj_l, 'plugin-tremelo', 'simple', 'tremelo-send')
+        plugins.add_plug_fxvisual(cvpj_l, 'plugin-tremelo', 'Tremelo', None)
+        tracks.insert_fxslot(cvpj_l, ['fxrack', channels+3], 'audio', 'plugin-tremelo')
+
+        plugins.add_plug(cvpj_l, 'plugin-phaser', 'simple', 'phaser-send')
+        plugins.add_plug_fxvisual(cvpj_l, 'plugin-phaser', 'Phaser', None)
+        tracks.insert_fxslot(cvpj_l, ['fxrack', channels+4], 'audio', 'plugin-phaser')
 
     tracks.a_auto_nopl_to_cvpj(cvpj_l)
     cvpj_l['timemarkers'] = s_timemarkers

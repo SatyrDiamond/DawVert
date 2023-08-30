@@ -85,15 +85,20 @@ class output_onlineseq(plugin_output.base):
                             if 'instdata' in trackdata:
                                 pluginid = data_values.get_value(trackdata['instdata'], 'pluginid', 1.0)
                                 plugintype = plugins.get_plug_type(projJ, pluginid)
+                                cvpj_plugindata = plugins.get_plug_data(projJ, pluginid)
+
                                 if plugintype[0] == 'midi':
-                                    cvpj_plugindata = plugins.get_plug_data(projJ, pluginid)
                                     if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['inst']
                                     else: midiinst = -1
                                 if plugintype[0] == 'soundfont2':
-                                    cvpj_plugindata = plugins.get_plug_data(projJ, pluginid)
                                     if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['patch']
                                     else: midiinst = -1
-
+                                if plugintype[0] == 'retro':
+                                    if plugintype[1] == 'sine': onlineseqinst = 13
+                                    if plugintype[1] == 'square': onlineseqinst = 14
+                                    if plugintype[1] == 'triangle': onlineseqinst = 16
+                                    if plugintype[1] == 'saw': onlineseqinst = 15
+                            
                             t_instid = idvals.get_idval(idvals_onlineseq_inst, str(midiinst), 'outid')
 
                             if t_instid not in ['null', None]: 

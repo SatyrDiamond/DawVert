@@ -311,7 +311,7 @@ class input_flp(plugin_input.base):
                         nn_pos = cvpj_note['position']
                         nn_dur = cvpj_note['duration']
                         nn_inst = cvpj_note['instrument']
-                        if nn_pos <= sn_pos <= nn_pos+nn_dur and sn_inst == nn_inst:
+                        if nn_pos <= sn_pos < nn_pos+nn_dur and sn_inst == nn_inst:
                             slidenote['position'] = sn_pos - nn_pos 
                             slidenote['key'] -= cvpj_note['key'] 
                             cvpj_note['notemod']['slide'].append(slidenote)

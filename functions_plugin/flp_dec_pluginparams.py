@@ -8,7 +8,6 @@ import math
 from functions import data_bytes
 from functions import plugins
 from functions import plugin_vst2
-from functions import debug
 
 def decode_pointdata(fl_plugstr):
     autoheader = struct.unpack('bii', fl_plugstr.read(12))

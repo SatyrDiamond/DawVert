@@ -144,7 +144,7 @@ class output_cvpj_f(plugin_output.base):
 
                     if midi_trackcolor != None: 
                         midi_trackcolor = colors.rgb_float_to_rgb_int(midi_trackcolor)
-                        miditrack.append(mido.MetaMessage('sequencer_specific', data=(83, 105, 103, 110, 1, 255)+midi_trackcolor[::-1]))
+                        miditrack.append(mido.MetaMessage('sequencer_specific', data=(83, 105, 103, 110, 1, 255)+midi_trackcolor[::-1])) #from Signal MIDI Editor
 
                     if midi_program != None: miditrack.append(mido.Message('program_change', channel=midi_channel, program=midi_program, time=0))
                     else: miditrack.append(mido.Message('program_change', channel=midi_channel, program=0, time=0))

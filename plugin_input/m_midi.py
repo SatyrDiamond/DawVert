@@ -141,7 +141,7 @@ class input_midi(plugin_input.base):
                 if msg.type == 'sequencer_specific': 
                     exdata = midi_exdata.decode_exdata(msg.data, True)
                     if exdata[0] == [83]:
-                        if exdata[1][0:5] == b'ign\x01\xff':
+                        if exdata[1][0:5] == b'ign\x01\xff': #from Signal MIDI Editor
                             print("[input-midi] Track Color (from Signal)")
                             format_midi_in.track_color(colors.rgb_int_to_rgb_float(exdata[1][5:8][::-1]))
 

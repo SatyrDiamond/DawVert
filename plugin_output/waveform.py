@@ -66,7 +66,7 @@ class output_waveform_edit(plugin_output.base):
                 wf_TRACK = ET.SubElement(wf_proj, "TRACK")
                 wf_TRACK.set('id', str(wf_globalid))
                 if 'name' in cvpj_s_track_data: wf_TRACK.set('name', cvpj_s_track_data['name'])
-                if 'color' in cvpj_s_track_data: wf_TRACK.set('colour', 'ff'+colors.rgb_float_2_hex(cvpj_s_track_data['color']))
+                if 'color' in cvpj_s_track_data: wf_TRACK.set('colour', 'ff'+colors.rgb_float_to_hex(cvpj_s_track_data['color']))
                 
                 cvpj_track_vol = params.get(cvpj_s_track_data, [], 'vol', 1)
                 cvpj_track_pan = params.get(cvpj_s_track_data, [], 'pan', 0)
@@ -105,7 +105,7 @@ class output_waveform_edit(plugin_output.base):
                                 wf_MIDICLIP.set('length', str(cvpj_midiplacement['duration']))
 
                             if 'name' in cvpj_midiplacement: wf_MIDICLIP.set('name', cvpj_midiplacement['name'])
-                            if 'color' in cvpj_midiplacement: wf_MIDICLIP.set('colour', 'ff'+colors.rgb_float_2_hex(cvpj_midiplacement['color']))
+                            if 'color' in cvpj_midiplacement: wf_MIDICLIP.set('colour', 'ff'+colors.rgb_float_to_hex(cvpj_midiplacement['color']))
                             if 'muted' in cvpj_midiplacement: wf_MIDICLIP.set('mute', str(int(cvpj_midiplacement['muted'])))
                             if 'notelist' in cvpj_midiplacement: 
                                 wf_SEQUENCE = ET.SubElement(wf_MIDICLIP, "SEQUENCE")

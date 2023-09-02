@@ -324,7 +324,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             get_plugin_param(pluginautoid, xml_sf2, 'reverbOn', pluginid, 'reverb_enabled', 0)
             get_plugin_param(pluginautoid, xml_sf2, 'reverbRoomSize', pluginid, 'reverb_roomsize', 0)
             get_plugin_param(pluginautoid, xml_sf2, 'reverbWidth', pluginid, 'reverb_width', 0)
-            middlenotefix = 0
+            middlenotefix = 12
 
         elif plugintype == ['fm', 'opl2']:
             print('[output-lmms]       Plugin: OPL2 > OPL2')
@@ -438,7 +438,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     else: trackname = 'noname'
     xmltag.set('name', trackname)
 
-    if 'color' in trkJ: xmltag.set('color', '#' + colors.rgb_float_2_hex(trkJ['color']))
+    if 'color' in trkJ: xmltag.set('color', '#' + colors.rgb_float_to_hex(trkJ['color']))
 
     if 'instdata' not in trkJ: instJ = {}
     else: instJ = trkJ['instdata']
@@ -525,7 +525,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
                 patX.set('name', "")
                 if 'name' in json_placement: patX.set('name', json_placement['name'])
                 patX.set('type', "1")
-                if 'color' in json_placement: patX.set('color', '#' + colors.rgb_float_2_hex(json_placement['color']))
+                if 'color' in json_placement: patX.set('color', '#' + colors.rgb_float_to_hex(json_placement['color']))
                 lmms_encode_notelist(patX, json_notelist)
                 tracksnum += 1
             print(' ')
@@ -588,7 +588,7 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
     else: trackname = 'untitled'
     xmltag.set('name', trackname)
 
-    if 'color' in trkJ: xmltag.set('color', '#' + colors.rgb_float_2_hex(trkJ['color']))
+    if 'color' in trkJ: xmltag.set('color', '#' + colors.rgb_float_to_hex(trkJ['color']))
     
     trkX_samptr = ET.SubElement(xmltag, "sampletrack")
     trkX_samptr.set('pan', "0")
@@ -610,7 +610,7 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
                 if 'file' in json_placement: xml_sampletco.set('src', json_placement['file'])
                 if 'enabled' in json_placement: xml_sampletco.set('muted', str(int(not json_placement['enabled'])))
                 if 'sample_rate' in json_placement: xml_sampletco.set('sample_rate', str(json_placement['sample_rate']))
-                if 'color' in json_placement: xml_sampletco.set('color', '#' + colors.rgb_float_2_hex(json_placement['color']))
+                if 'color' in json_placement: xml_sampletco.set('color', '#' + colors.rgb_float_to_hex(json_placement['color']))
 
                 if 'cut' in json_placement: 
                     if 'type' in json_placement['cut']:
@@ -795,7 +795,7 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
         else: name = 'FX ' + str(num)
         print('[output-lmms]       Name: ' + name)
 
-        if 'color' in fxchannelJ: fxcX.set('color', '#' + colors.rgb_float_2_hex(fxchannelJ['color']))
+        if 'color' in fxchannelJ: fxcX.set('color', '#' + colors.rgb_float_to_hex(fxchannelJ['color']))
 
         add_auto_placements(1, None, ['fxmixer', num], 'vol', fxchannelJ, 'vol', fxcX, 'volume', 'FX '+str(num), 'Volume')
 

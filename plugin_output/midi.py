@@ -10,6 +10,7 @@ from functions import idvals
 from functions import notelist_data
 from functions import xtramath
 from functions import params
+from functions import colors
 
 unusedchannel = 0
 
@@ -88,9 +89,10 @@ class output_cvpj_f(plugin_output.base):
                     midi_program = None
                     midi_key = None
                     midi_trackname = ''
+                    midi_trackcolor = None
 
-                    if 'name' in trackdata:
-                        midi_trackname = trackdata['name']
+                    if 'name' in trackdata: midi_trackname = trackdata['name']
+                    if 'color' in trackdata: midi_trackcolor = trackdata['color']
 
                     if guess_gmmidi == True:
                         if midi_trackname != '':
@@ -138,7 +140,11 @@ class output_cvpj_f(plugin_output.base):
 
                     miditrack = multi_miditrack[tracknum+1]
 
-                    if midi_trackname != '': multi_miditrack[0].append(mido.MetaMessage('track_name', name=midi_trackname, time=0))
+                    if midi_trackname != '': miditrack.append(mido.MetaMessage('track_name', name=midi_trackname, time=0))
+
+                    if midi_trackcolor != None: 
+                        midi_trackcolor = colors.rgb_float_to_rgb_int(midi_trackcolor)
+                        miditrack.append(mido.MetaMessage('sequencer_specific', data=(83, 105, 103, 110, 1, 255)+midi_trackcolor))
 
                     if midi_program != None: miditrack.append(mido.Message('program_change', channel=midi_channel, program=midi_program, time=0))
                     else: miditrack.append(mido.Message('program_change', channel=midi_channel, program=0, time=0))

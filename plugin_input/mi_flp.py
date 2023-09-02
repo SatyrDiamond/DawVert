@@ -142,7 +142,7 @@ class input_flp(plugin_input.base):
         for instrument in FL_Channels:
             channeldata = FL_Channels[instrument]
             instdata = {}
-            if channeldata['type'] in [0,2]:
+            if channeldata['type'] in [0,1,2,3]:
 
                 cvpj_instid = 'FLInst' + str(instrument)
 

@@ -90,7 +90,7 @@ def maketrack(xmltag, cvpj_trackdata, cvpj_trackname):
     x_str_track = ET.SubElement(xmltag, "Track")
     x_str_track.set('loaded', 'true')
     x_str_track.set('id', '__track__'+cvpj_trackname)
-    if 'color' in cvpj_trackdata: x_str_track.set('color', '#'+colors.rgb_float_2_hex(cvpj_trackdata['color']))
+    if 'color' in cvpj_trackdata: x_str_track.set('color', '#'+colors.rgb_float_to_hex(cvpj_trackdata['color']))
     if 'name' in cvpj_trackdata: x_str_track.set('name', cvpj_trackdata['name'])
     x_str_track_ch = ET.SubElement(x_str_track, "Channel")
     x_str_track_ch.set('audioChannels', '2')
@@ -194,7 +194,7 @@ class output_cvpj(plugin_output.base):
 
                 for s_trkplacement in s_pl_nl:
                     x_arr_lanes_clip = ET.SubElement(x_arr_lanes_clips, "Clip")
-                    if 'color' in s_trkplacement: x_arr_lanes_clip.set('color', '#'+colors.rgb_float_2_hex(s_trkplacement['color']))
+                    if 'color' in s_trkplacement: x_arr_lanes_clip.set('color', '#'+colors.rgb_float_to_hex(s_trkplacement['color']))
                     if 'name' in s_trkplacement: x_arr_lanes_clip.set('name', s_trkplacement['name'])
                     x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
 

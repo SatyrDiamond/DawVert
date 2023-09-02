@@ -73,7 +73,7 @@ def maketrack_synth(xmltag, insttrackdata, portnum):
     track_mute = 0
     if 'muted' in insttrackdata: track_mute = insttrackdata['muted']
     else: track_mute = 0
-    if 'color' in insttrackdata: addvalue(x_synthtrack, 'color', '#'+colors.rgb_float_2_hex(insttrackdata['color']))
+    if 'color' in insttrackdata: addvalue(x_synthtrack, 'color', '#'+colors.rgb_float_to_hex(insttrackdata['color']))
     addvalue(x_synthtrack, 'solo', 0)
     addvalue(x_synthtrack, 'channels', 2)
     addvalue(x_synthtrack, 'height', 24)
@@ -154,7 +154,7 @@ def maketrack_midi(xmltag, cvpj_trackplacements, trackname, portnum, insttrackda
     global synthidnum
     track_transposition = 0
     x_miditrack = ET.SubElement(xmltag, "miditrack")
-    if 'color' in insttrackdata: addvalue(x_miditrack, 'color', '#'+colors.rgb_float_2_hex(insttrackdata['color']))
+    if 'color' in insttrackdata: addvalue(x_miditrack, 'color', '#'+colors.rgb_float_to_hex(insttrackdata['color']))
     if 'name' in insttrackdata: addvalue(x_miditrack, 'name', insttrackdata['name'])
     if 'instdata' in insttrackdata:
         if 'middlenote' in insttrackdata['instdata']: 

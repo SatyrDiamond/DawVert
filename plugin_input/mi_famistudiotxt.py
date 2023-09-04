@@ -127,9 +127,9 @@ def decode_fst(infile):
             notetime = cmd_params['Time']
             fst_Pattern[notetime] = cmd_params
     
-        else:
-            print('unexpected command and/or wrong tabs:', cmd_name)
-            exit()
+        #else:
+        #    print('unexpected command and/or wrong tabs:', cmd_name)
+        #    exit()
     
     fst_Main['Instruments'] = fst_instruments
     fst_Main['Songs'] = fst_Songs

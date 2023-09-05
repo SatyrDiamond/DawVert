@@ -77,6 +77,7 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
         sourcebpm = j_wvtl_trc_warp['sourceBPM']/120
         for anchor in j_wvtl_trc_warp['anchors']:
             t_warpmarker = {}
+
             w_pos_real = ((float(anchor))/sourcebpm)/2
             w_pos = (j_wvtl_trc_warp['anchors'][anchor]['destination'])*4
 
@@ -107,8 +108,8 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
     cvpj_pldata['audiomod']['pitch'] = j_wvtl_trc_transpose
 
     if j_wvtl_trc_warp_enabled == False:
-        cvpj_pldata['audiomod']['stretch_method'] = 'rate_ignoretempo'
-        cvpj_pldata['audiomod']['stretch_data'] = {'rate': pow(2, j_wvtl_trc_transpose/12)}
+        cvpj_pldata['audiomod']['stretch_method'] = 'rate_tempo'
+        cvpj_pldata['audiomod']['stretch_data'] = {'rate': pow(2, j_wvtl_trc_transpose/12)*(120/j_wvtl_bpm)}
     else:
         cvpj_pldata['audiomod']['stretch_method'] = 'warp'
         cvpj_pldata['audiomod']['stretch_data'] = j_wvtl_trc_warp_data

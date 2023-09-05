@@ -21,6 +21,7 @@ class input_cvpj_r(plugin_input.base):
         'track_nopl': 'debug',
         'auto_nopl': 'debug',
         'placement_audio_events': 'debug',
+        'placement_audio_stretch': ['warp', 'rate']
         }
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')

@@ -20,6 +20,7 @@ class output_cvpj(plugin_output.base):
         'track_nopl': 'debug',
         'auto_nopl': 'debug',
         'placement_audio_events': 'debug',
+        'placement_audio_stretch': ['warp', 'rate']
         }
     def getsupportedplugins(self): return ['sampler', 'sampler-multi', 'sampler-slicer', 'sf2', 'vst2', 'vst3', 'clap', 'ladspa']
     def parse(self, convproj_json, output_file):

@@ -409,25 +409,14 @@ def rate2warp(cvpj_placements, tempo):
                     audiorate = t_stretch_data['rate']
                     ratetempo = 1/(audiorate/tempomul)
 
-                    if old_audiomod['stretch_method'] == 'rate_ignoretempo':
-                        new_audiomod['stretch_data'] = [
-                            {'pos': 0.0, 'pos_real': 0.0}, 
-                            {'pos': audio_dur_sec*8, 'pos_real': (audio_dur_sec*audiorate)/tempomul}
-                        ]
+                    if old_audiomod['stretch_method'] == 'rate_ignoretempo': endwarpdat = [audio_dur_sec*8, (audio_dur_sec*audiorate)/tempomul]
+                    if old_audiomod['stretch_method'] == 'rate_tempo': endwarpdat = [audio_dur_sec*8, (audio_dur_sec*audiorate)]
+                    if old_audiomod['stretch_method'] == 'rate_speed': endwarpdat = [audio_dur_sec*8, (audio_dur_sec*audiorate)*tempomul]
 
-                    if old_audiomod['stretch_method'] == 'rate_tempo':
-                        end_warp = [audio_dur_sec*8/tempomul, (audio_dur_sec*audiorate)/tempomul]
-                        new_audiomod['stretch_data'] = [
-                            {'pos': 0.0, 'pos_real': 0.0}, 
-                            {'pos': end_warp[0]/2, 'pos_real': end_warp[1]/2},
-                            {'pos': end_warp[0], 'pos_real': end_warp[1]}
-                        ]
-
-                    if old_audiomod['stretch_method'] == 'rate_speed':
-                        new_audiomod['stretch_data'] = [
-                            {'pos': 0.0, 'pos_real': 0.0}, 
-                            {'pos': audio_dur_sec*8, 'pos_real': (audio_dur_sec*audiorate)*tempomul}
-                        ]
+                    new_audiomod['stretch_data'] = []
+                    for pointnum in xtramath.gen_float_range(0,endwarpdat[0],4):
+                        pointmul = pointnum/endwarpdat[0]
+                        new_audiomod['stretch_data'].append({'pos': endwarpdat[0]*pointmul, 'pos_real': (endwarpdat[1]*pointmul)})
 
                     cvpj_placement['audiomod'] = new_audiomod
 

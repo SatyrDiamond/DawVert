@@ -153,7 +153,7 @@ class input_cvpj_f(plugin_input.base):
                 wave_path = samplefolder + str(instnum) + '.wav'
                 audio_wav.generate(wave_path, t_sounddata[7], t_sounddata[0], t_sounddata[1], 16, None)
                 tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pitch', t_sounddata[2], 'float')
+                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pitch', t_sounddata[2]/100, 'float')
                 tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'middlenote', t_sounddata[3]*-1)
                 tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', t_sounddata[4]/100, 'float')
                 plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, wave_path)

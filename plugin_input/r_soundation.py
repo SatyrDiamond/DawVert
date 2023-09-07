@@ -7,6 +7,7 @@ from functions import colors
 from functions import plugins
 from functions import xtramath
 from functions import note_data
+from functions import placement_data
 from functions import song
 import plugin_input
 import struct
@@ -31,15 +32,12 @@ def get_asdr(pluginid, sound_instdata):
 
 def parse_clip_notes(sndstat_clip):
     cvpj_notelist = []
-    ticksdiv = 5168
     sndstat_clip_position = sndstat_clip['position']/ticksdiv
     sndstat_clip_duration = sndstat_clip['length']/ticksdiv
-    sndstat_clip_start = sndstat_clip['contentPosition']/ticksdiv
+    sndstat_clip_contentPosition = sndstat_clip['contentPosition']/ticksdiv
     sndstat_clip_loopcount = sndstat_clip['loopcount']
 
     sndstat_clip_loopduration = sndstat_clip_duration*sndstat_clip_loopcount
-
-    if sndstat_clip_start < 0: sndstat_clip_start += sndstat_clip_duration
 
     cvpj_pldata = {}
     if 'color' in sndstat_clip: 
@@ -54,12 +52,20 @@ def parse_clip_notes(sndstat_clip):
 
     cvpj_pldata["position"] = sndstat_clip_position
     cvpj_pldata["duration"] = sndstat_clip_loopduration
-    cvpj_pldata['cut'] = {'type': 'loop', 'start': sndstat_clip_start, 'loopstart': 0, 'loopend': sndstat_clip_duration}
+    cvpj_pldata['cut'] = placement_data.cutloopdata(-sndstat_clip_contentPosition, 0, sndstat_clip_duration)
 
     for sndstat_note in sndstat_clip['notes']:
-        cvpj_notelist.append( note_data.rx_makenote(sndstat_note['position']/ticksdiv, sndstat_note['length']/ticksdiv, sndstat_note['note']-60, sndstat_note['velocity'], None) )
+        cvpj_notelist.append(
+            note_data.rx_makenote(
+                sndstat_note['position']/ticksdiv, 
+                sndstat_note['length']/ticksdiv, 
+                sndstat_note['note']-60, 
+                sndstat_note['velocity'], 
+                None)
+            )
 
     cvpj_pldata["notelist"] = cvpj_notelist
+    placement_data.unminus(cvpj_pldata)
     return cvpj_pldata
 
 class input_soundation(plugin_input.base):
@@ -72,10 +78,12 @@ class input_soundation(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'placement_cut': True,
-        'placement_loop': True
+        'placement_loop': ['loop', 'loop_off']
         }
     def parse(self, input_file, extra_param):
         global cvpj_l
+        global ticksdiv
+
         bytestream = open(input_file, 'r')
         sndstat_data = json.load(bytestream)
 
@@ -83,8 +91,12 @@ class input_soundation(plugin_input.base):
 
         timeSignaturesplit = sndstat_data['timeSignature'].split('/')
         cvpj_l['timesig'] = [int(timeSignaturesplit[0]), int(timeSignaturesplit[1])]
-        song.add_param(cvpj_l, 'bpm', sndstat_data['bpm'])
+        bpm = sndstat_data['bpm']
+        song.add_param(cvpj_l, 'bpm', bpm)
+        bpmdiv = 120/bpm
         sndstat_chans = sndstat_data['channels']
+
+        ticksdiv = 5512*bpmdiv
 
         tracknum = 0
         for sndstat_chan in sndstat_chans:
@@ -110,6 +122,7 @@ class input_soundation(plugin_input.base):
 
                 if 'identifier' in sound_instdata:
                     instpluginname = sound_instdata['identifier']
+
                     plugins.add_plug(cvpj_l, pluginid, 'native-soundation', instpluginname)
 
                     if instpluginname == 'com.soundation.GM-2':

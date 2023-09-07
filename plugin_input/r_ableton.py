@@ -6,6 +6,7 @@ from functions import tracks
 from functions import colors
 from functions import audio
 from functions import data_values
+from functions import placement_data
 from functions import song
 
 import xml.etree.ElementTree as ET
@@ -56,7 +57,7 @@ class input_ableton(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'placement_cut': True,
-        'placement_loop': True,
+        'placement_loop': ['loop', 'loop_off', 'loop_adv'],
         'placement_audio_stretch': ['warp'],
         }
     def parse(self, input_file, extra_param):
@@ -146,11 +147,7 @@ class input_ableton(plugin_input.base):
                     note_placement_loop_on = ['false','true'].index(get_value(x_track_MidiClip_loop, 'LoopOn', 'false'))
 
                     if note_placement_loop_on == 1:
-                        cvpj_placement['cut'] = {}
-                        cvpj_placement['cut']['type'] = 'loop'
-                        cvpj_placement['cut']['start'] = note_placement_loop_start
-                        cvpj_placement['cut']['loopstart'] = note_placement_loop_l_start
-                        cvpj_placement['cut']['loopend'] = note_placement_loop_l_end
+                        cvpj_placement['cut'] = placement_data.cutloopdata(note_placement_loop_start, note_placement_loop_l_start, note_placement_loop_l_end)
                     else:
                         cvpj_placement['cut'] = {}
                         cvpj_placement['cut']['type'] = 'cut'

@@ -159,12 +159,8 @@ class input_cvpj_r(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'samples_inside': True,
-        'fxrack': False,
-        'track_lanes': False,
         'placement_cut': True,
-        'placement_loop': True,
-        'auto_nopl': False,
-        'track_nopl': False
+        'placement_loop': ['loop']
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
@@ -407,7 +403,7 @@ class input_cvpj_r(plugin_input.base):
                 pl_placement['position'] = SEQNe_pos
                 pl_placement['duration'] = SEQNe_len
                 if patmeasures != 0:
-                    pl_placement['cut'] = {'type': 'loop', 'start': 0, 'loopstart': 0, 'loopend': patmeasures}
+                    pl_placement['cut'] = {'type': 'loop', 'loopend': patmeasures}
                 pl_placement['fromindex'] = t_patid
                 if str(SEQNe_mach) not in t_track_placements: t_track_placements[str(SEQNe_mach)] = []
                 t_track_placements[str(SEQNe_mach)].append(pl_placement)

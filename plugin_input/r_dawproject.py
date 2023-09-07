@@ -5,6 +5,7 @@ from functions import data_bytes
 from functions import colors
 from functions import tracks
 from functions import song
+from functions import placement_data
 import plugin_input
 import json
 import zipfile
@@ -89,7 +90,7 @@ class input_dawproject(plugin_input.base):
         'fxrack': False,
         'track_lanes': False,
         'placement_cut': True,
-        'placement_loop': True,
+        'placement_loop': ['loop', 'loop_off', 'loop_adv'],
         'auto_nopl': True,
         'track_nopl': False
         }
@@ -180,11 +181,7 @@ class input_dawproject(plugin_input.base):
                                 cvpj_pldata["cut"]['end'] = (float(dpx_p_duration)+float(dpx_p_playStart))*4
                             elif dpx_p_loopStart != None and dpx_p_loopEnd != None:
                                 #print('loop', dpx_p_playStart, dpx_p_duration, dpx_p_loopStart,dpx_p_loopEnd)
-                                cvpj_pldata["cut"] = {}
-                                cvpj_pldata["cut"]['type'] = 'loop'
-                                cvpj_pldata["cut"]['start'] = float(dpx_p_playStart)*4
-                                cvpj_pldata["cut"]['loopstart'] = float(dpx_p_loopStart)*4
-                                cvpj_pldata["cut"]['loopend'] = float(dpx_p_loopEnd)*4
+                                cvpj_pldata["cut"] = placement_data.cutloopdata(float(dpx_p_playStart)*4, float(dpx_p_loopStart)*4, float(dpx_p_loopEnd)*4)
 
                             if dpx_clip.findall('Notes') != []:
                                 dpx_notes = dpx_clip.findall('Notes')[0]

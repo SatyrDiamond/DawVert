@@ -23,7 +23,7 @@ class input_fruitytracks(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'placement_cut': True,
-        'placement_loop': True,
+        'placement_loop': ['loop', 'loop_off', 'loop_adv'],
         'placement_audio_stretch': ['rate'],
         }
     def detect(self, input_file):
@@ -94,10 +94,8 @@ class input_fruitytracks(plugin_input.base):
 
                 cvpj_pldata['cut'] = {}
                 cvpj_pldata['cut']['type'] = 'loop'
-                cvpj_pldata['cut']['start'] = 0
                 if stretch == 0:
                     cvpj_pldata["duration"] = (sampleda["dur"]/bpmticks)
-                    cvpj_pldata['cut']['loopstart'] = 0
                     cvpj_pldata['cut']['loopend'] = (sampleda["repeatlen"]/bpmticks)
                 else:
                     audioinfo = audio.get_audiofile_info(sampleda['file'])

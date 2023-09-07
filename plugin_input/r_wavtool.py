@@ -7,6 +7,7 @@ from functions import data_values
 from functions import note_data
 from functions import tracks
 from functions import song
+from functions import placement_data
 
 import plugin_input
 import json
@@ -32,7 +33,7 @@ def parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype):
     if 'fadeOut' in j_wvtl_trackclip: data_values.nested_dict_add_value(cvpj_pldata, ['fade', 'out', 'duration'], j_wvtl_trackclip['fadeOut']*4)
     cvpj_pldata["position"] = j_wvtl_trc_timelineStart*4
     cvpj_pldata["duration"] = j_wvtl_trc_timelineEnd*4 - j_wvtl_trc_timelineStart*4
-    cvpj_pldata['cut'] = {'type': 'loop', 'start': j_wvtl_trc_readStart*4, 'loopstart': j_wvtl_trc_loopStart*4, 'loopend': j_wvtl_trc_loopEnd*4}
+    cvpj_pldata['cut'] = placement_data.cutloopdata(j_wvtl_trc_readStart*4, j_wvtl_trc_loopStart*4, j_wvtl_trc_loopEnd*4)
 
     if j_wvtl_trc_type == 'MIDI':
         if 'notes' in j_wvtl_trackclip:
@@ -162,7 +163,7 @@ class input_wavtool(plugin_input.base):
         return {
         'samples_inside': True,
         'placement_cut': True,
-        'placement_loop': True,
+        'placement_loop': ['loop', 'loop_off', 'loop_adv'],
         'placement_audio_stretch': ['rate']
         }
     def supported_autodetect(self): return False

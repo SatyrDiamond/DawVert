@@ -136,7 +136,35 @@ def longpl_split(placement_data):
 
     return outpl
 
+def unminus(cvpj_pl):
+    if 'cut' in cvpj_pl:
+        cvpj_pl_cut = cvpj_pl['cut']
 
+        offset = 0
+        if cvpj_pl_cut['type'] in ['loop_adv', 'cut']:
+            if cvpj_pl_cut['start'] < 0: 
+                offset = math.ceil(-cvpj_pl_cut['start']/16)*16
 
+            if offset != 0:
+                if 'loopstart' in cvpj_pl_cut: cvpj_pl_cut['loopstart'] += offset
+                if 'loopend' in cvpj_pl_cut: cvpj_pl_cut['loopend'] += offset
+                if 'start' in cvpj_pl_cut: cvpj_pl_cut['start'] += offset
 
-    #exit()
+    if offset != 0:
+        if 'notelist' in cvpj_pl: cvpj_pl['notelist'] = notelist_data.move(cvpj_pl['notelist'], offset)
+
+def cutloopdata(start, loopstart, loopend):
+    out = {}
+    if start == 0 and loopstart == 0:
+        out['type'] = 'loop'
+        out['loopend'] = loopend
+    elif loopstart == 0:
+        out['type'] = 'loop_off'
+        out['start'] = start
+        out['loopend'] = loopend
+    else:
+        out['type'] = 'loop_adv'
+        out['start'] = start
+        out['loopstart'] = loopstart
+        out['loopend'] = loopend
+    return out

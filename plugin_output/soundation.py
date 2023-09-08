@@ -12,6 +12,8 @@ from functions import plugins
 from functions import idvals
 from functions import notelist_data
 from functions import params
+from functions import tracks
+from functions import auto
 
 def makechannel(i_type): 
     return {
@@ -79,6 +81,12 @@ def add_fx(sng_trkdata, s_trackdata):
 
                 sng_fxchain.append(sng_fxdata)
 
+def cvpjauto_to_sngauto(autopoints, ticks):
+    sngauto = []
+    for autopoint in autopoints:
+        sngauto.append({"pos": autopoint['position']*ticks, "value": autopoint['value']})
+    return sngauto
+
 class output_soundation(plugin_output.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'output'
@@ -89,7 +97,8 @@ class output_soundation(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'placement_cut': True,
-        'placement_loop': ['loop']
+        'placement_loop': ['loop'],
+        'nopl_auto': True
         }
     def getsupportedplugins(self): return []
     def parse(self, convproj_json, output_file):
@@ -140,6 +149,11 @@ class output_soundation(plugin_output.base):
                     sng_trkdata['solo'] = params.get(s_trackdata, [], 'solo', 0)[0]
                     trackcolor = data_values.get_value(s_trackdata, 'color', [0.5,0.5,0.5])
                     sng_instparams = sng_trkdata['instrument'] = {"identifier": "com.soundation.GM-2"}
+
+                    cvpjauto_vol = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,'vol'])
+                    if cvpjauto_vol != None: sng_trkdata['volumeAutomation'] = cvpjauto_to_sngauto(cvpjauto_vol, ticksdiv)
+                    cvpjauto_pan = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,'pan'])
+                    if cvpjauto_pan != None: sng_trkdata['panAutomation'] = cvpjauto_to_sngauto(auto.multiply_nopl(cvpjauto_pan, 0.5, 0.5), ticksdiv)
 
                     inst_supported = False
 

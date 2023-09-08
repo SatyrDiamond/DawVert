@@ -9,6 +9,8 @@ import uuid
 import lxml.etree as ET
 import os
 import math
+import av
+from io import BytesIO
 from functions import xtramath
 from functions import colors
 from functions import data_values
@@ -47,7 +49,29 @@ def addsample(zip_wt, filepath, alredyexists):
         if filepath not in audio_id:
             audio_id[filepath] = datauuid
             if os.path.exists(filepath):
-                filetype = os.path.basename(filepath).split('.')[1]
+                filename, filetype = os.path.basename(filepath).split('.')
+
+                if filetype in ['wav', 'mp3']:
+                    zip_wt.write(filepath, datauuid+'.'+filetype)
+                else:
+                    container = av.open(filepath, 'r')
+                    for stream in container.streams:
+                        if stream.type == 'audio':
+                            audio_stream = stream
+                            break
+                    if audio_stream:
+                        print('[output-wavtool] Converting', filepath)
+                        outdata = BytesIO()
+                        out_container = av.open(outdata, 'w', format='wav')
+                        out_stream = out_container.add_stream(codec_name='pcm_s16le', rate=44100)
+                        for i, frame in enumerate(container.decode(audio_stream)):
+                            for packet in out_stream.encode(frame):
+                                out_container.mux(packet)
+                        for packet in out_stream.encode(None):
+                            out_container.mux(packet)
+                        out_container.close()
+                        zip_wt.writestr(datauuid+'.wav', outdata.getvalue())
+
                 zip_wt.write(filepath, datauuid+'.'+filetype)
             datauuid = audio_id[filepath]
         else:
@@ -291,7 +315,8 @@ class output_wavtool(plugin_output.base):
                                             warpdata['anchors'] = {}
                                             warpdata['enabled'] = True
                                             warpdata['anchors']["0"] = {"destination": 0, "pinned": True}
-                                            maxpoints = 32
+                                            maxpoints = 32*max(1, math.ceil(dur_seconds/8))
+
                                             for num in range(int(maxpoints/warprate)):
                                                 numpart = (num+1)/maxpoints
                                                 warppoint = (dur_seconds*2)*numpart

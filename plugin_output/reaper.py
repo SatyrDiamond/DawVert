@@ -116,7 +116,7 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
         cvpj_pl_volume = data_values.get_value(trackplacement_data, 'vol', 1)
         cvpj_pl_pan = data_values.get_value(trackplacement_data, 'pan', 0)
         clip_color = data_values.get_value(trackplacement_data, 'color', None)
-        clip_muted = data_values.get_value(trackplacement_data, 'muted', False)
+        clip_muted = not data_values.get_value(trackplacement_data, 'enabled', False)
 
         clip_position = trackplacement_data['position']
         clip_duration = trackplacement_data['duration']

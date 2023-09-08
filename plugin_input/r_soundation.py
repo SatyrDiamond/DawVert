@@ -68,6 +68,12 @@ def parse_clip_notes(sndstat_clip):
     placement_data.unminus(cvpj_pldata)
     return cvpj_pldata
 
+def sngauto_to_cvpjauto(autopoints):
+    sngauto = []
+    for autopoint in autopoints:
+        sngauto.append({"position": autopoint['pos']/ticksdiv, "value": autopoint['value']})
+    return sngauto
+
 class input_soundation(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -123,6 +129,12 @@ class input_soundation(plugin_input.base):
                 tracks.r_add_param(cvpj_l, trackid, 'pan', (sndstat_chan['pan']-0.5)*2, 'float')
                 tracks.r_add_param(cvpj_l, trackid, 'enabled', int(not sndstat_chan['mute']), 'bool')
                 tracks.r_add_param(cvpj_l, trackid, 'solo', int(sndstat_chan['solo']), 'bool')
+
+                for autoname in [['vol','volumeAutomation'],['pan','panAutomation']]:
+                    if sndstat_chan[autoname[1]] != []:
+                        autodata = sngauto_to_cvpjauto(sndstat_chan[autoname[1]])
+                        if autoname[0] == 'pan': autodata = auto.multiply_nopl(autodata, -1, 2)
+                        tracks.a_add_auto_pl(cvpj_l, 'float', ['track',trackid,autoname[0]], tracks.a_auto_nopl_to_pl(autodata))
 
                 sound_instdata = sndstat_chan['instrument']
 

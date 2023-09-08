@@ -116,8 +116,9 @@ class output_soundation(plugin_output.base):
         sng_master = makechannel("master")
         if 'track_master' in cvpj_l: 
             cvpj_master = cvpj_l['track_master']
+            print(sng_master)
             sng_master['name'] = data_values.get_value(cvpj_master, 'name', 'Master Channel')
-            sng_master['volume'] = data_values.get_value(cvpj_master, 'vol', 1)
+            sng_master['volume'] = data_values.get_value(cvpj_master, 'vol', 1.0)
             add_fx(sng_master, cvpj_master)
         sng_channels.append(sng_master)
 
@@ -132,12 +133,12 @@ class output_soundation(plugin_output.base):
                 if tracktype == 'instrument':
                     sng_trkdata = makechannel("instrument")
                     sng_trkdata['name'] = data_values.get_value(s_trackdata, 'name', 'noname')
-                    sng_trkdata['volume'] = params.get(s_trackdata, [], 'vol', 0)[0]
+                    sng_trkdata['volume'] = params.get(s_trackdata, [], 'vol', 1)[0]
                     sng_trkdata['pan'] = 0.5 + params.get(s_trackdata, [], 'pan', 0)[0]/2
                     muteddata = params.get(s_trackdata, [], 'enabled', None)[0]
                     if muteddata != None: sng_trkdata['mute'] = not muteddata
                     sng_trkdata['solo'] = params.get(s_trackdata, [], 'solo', 0)[0]
-                    trackcolor = data_values.get_value(s_trackdata, 'color', None)
+                    trackcolor = data_values.get_value(s_trackdata, 'color', [0.5,0.5,0.5])
                     sng_instparams = sng_trkdata['instrument'] = {"identifier": "com.soundation.GM-2"}
 
                     inst_supported = False
@@ -215,11 +216,11 @@ class output_soundation(plugin_output.base):
                             if gm2_samplepack == None and midibank not in [0, 128]:
                                 gm2_samplepack = idvals.get_idval(idvals_inst_gm2, str(midiinst)+'_0', 'url')
                             add_sndinstparam(sng_instparams, 'sample_pack', gm2_samplepack, False)
-                        elif plugintype[0] == 'retro':
-                            if plugintype[1] == 'sine': gm2_samplepack = '81_8_Sine_Wave.smplpck'
-                            if plugintype[1] == 'square': gm2_samplepack = '81_0_Square_Lead.smplpck'
-                            if plugintype[1] == 'triangle': gm2_samplepack = '85_0_Charang.smplpck'
-                            if plugintype[1] == 'saw': gm2_samplepack = '82_0_Saw_Wave.smplpck'
+                        elif plugtype[0] == 'retro':
+                            if plugtype[1] == 'sine': gm2_samplepack = '81_8_Sine_Wave.smplpck'
+                            if plugtype[1] == 'square': gm2_samplepack = '81_0_Square_Lead.smplpck'
+                            if plugtype[1] == 'triangle': gm2_samplepack = '85_0_Charang.smplpck'
+                            if plugtype[1] == 'saw': gm2_samplepack = '82_0_Saw_Wave.smplpck'
 
                     if inst_supported == False: 
                         add_sndinstparam(sng_instparams, 'sample_pack', '2_0_Bright_Yamaha_Grand.smplpck', False)
@@ -228,6 +229,11 @@ class output_soundation(plugin_output.base):
                             add_sndinstparam(sng_instparams, 'decay', a_decay, True)
                             add_sndinstparam(sng_instparams, 'sustain', a_sustain, True)
                             add_sndinstparam(sng_instparams, 'release', a_release, True)
+                        else:
+                            add_sndinstparam(sng_instparams, 'attack', 0, True)
+                            add_sndinstparam(sng_instparams, 'decay', 0, True)
+                            add_sndinstparam(sng_instparams, 'sustain', 1, True)
+                            add_sndinstparam(sng_instparams, 'release', 0, True)
 
                     sng_channels.append(sng_trkdata)
 
@@ -236,10 +242,8 @@ class output_soundation(plugin_output.base):
                             cvpj_clips = notelist_data.sort(cvpj_placements[cvpj_trackid]['notes'])
                             for cvpj_clip in cvpj_clips:
                                 sng_region = {}
-                                plcolor = colors.rgb_float_to_rgb_int(cvpj_clip['color']) if 'color' in cvpj_clip else '444444'
-                                intcolor = struct.pack("3B", *plcolor)
-
-                                sng_region["color"] = int.from_bytes(intcolor, "little")
+                                intcolor = cvpj_clip['color'] if 'color' in cvpj_clip else trackcolor
+                                sng_region["color"] = int.from_bytes(struct.pack("3B", *colors.rgb_float_to_rgb_int(intcolor)), "little")
                                 sng_region["position"] = int(cvpj_clip['position']*ticksdiv)
                                 sng_region["length"] = int(cvpj_clip['duration']*ticksdiv)
                                 sng_region["loopcount"] = 1

@@ -35,9 +35,6 @@ class output_cvpj_f(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': True,
-        'track_lanes': False,
-        'placement_cut': False,
-        'placement_loop': False,
         'auto_nopl': True,
         'track_nopl': True
         }

@@ -351,12 +351,17 @@ def m2r(song):
     cvpj_proj = json.loads(song)
 
     playlist = cvpj_proj['playlist']
-    cvpjm_instruments = cvpj_proj['instruments_data']
-    cvpjm_instruments_order = cvpj_proj['instruments_order']
+    if 'instruments_data' in cvpj_proj:
+        cvpjm_instruments = cvpj_proj['instruments_data'] 
+        del cvpj_proj['instruments_data']
+    else: cvpjm_instruments = {}
+
+    if 'instruments_order' in cvpj_proj:
+        cvpjm_instruments_order = cvpj_proj['instruments_order'] 
+        del cvpj_proj['instruments_order']
+    else: cvpjm_instruments_order = []
 
     del cvpj_proj['playlist']
-    del cvpj_proj['instruments_data']
-    del cvpj_proj['instruments_order']
 
     cvpj_trackdata = {}
     cvpj_trackorder = []

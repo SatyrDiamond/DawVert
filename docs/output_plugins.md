@@ -12,3 +12,4 @@
 | R | ```waveform_edit``` | Waveform Edit |
 | R | ```onlineseq``` | Online Sequencer |
 | R | ```soundation``` | Soundation |
+| R | ```wavtool``` | Wavtool |

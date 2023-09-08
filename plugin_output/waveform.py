@@ -19,7 +19,7 @@ class output_waveform_edit(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'placement_cut': True,
-        'placement_loop': True,
+        'placement_loop': ['loop', 'loop_off', 'loop_adv'],
         'time_seconds': True,
         'track_hybrid': True,
         'placement_audio_stretch': ['rate']
@@ -94,11 +94,10 @@ class output_waveform_edit(plugin_output.base):
                                     wf_MIDICLIP.set('start', str(cvpj_midiplacement['position']))
                                     wf_MIDICLIP.set('length', str(cvpj_midiplacement['duration']))
                                 if cutdata['type'] == 'loop':
-                                    wf_MIDICLIP.set('offset', str((cutdata['start']/8)*tempomul))
                                     wf_MIDICLIP.set('start', str(cvpj_midiplacement['position']))
                                     wf_MIDICLIP.set('length', str(cvpj_midiplacement['duration']))
-                                    wf_MIDICLIP.set('offset', str((cutdata['start']/8)*tempomul))
-                                    wf_MIDICLIP.set('loopStartBeats', str((cutdata['loopstart']/4)))
+                                    wf_MIDICLIP.set('offset', str((cutdata['start']/8 if 'start' in cutdata else 0)*tempomul))
+                                    wf_MIDICLIP.set('loopStartBeats', str((cutdata['loopstart']/4 if 'loopstart' in cutdata else 0)))
                                     wf_MIDICLIP.set('loopLengthBeats', str((cutdata['loopend']/4)))
                             else:
                                 wf_MIDICLIP.set('start', str(cvpj_midiplacement['position']))

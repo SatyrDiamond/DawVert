@@ -202,10 +202,7 @@ class input_adlib_rol(plugin_input.base):
     def gettype(self): return 'm'
     def getdawcapabilities(self): 
         return {
-        'auto_nopl': False,
         'fxrack': True,
-        'placement_cut': False,
-        'placement_loop': False,
         'track_lanes': True,
         'track_nopl': True
         }

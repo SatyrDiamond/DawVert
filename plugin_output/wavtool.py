@@ -182,9 +182,9 @@ class output_wavtool(plugin_output.base):
         if 'track_order' in cvpj_l and 'track_data' in cvpj_l:
 
             numtracks = len(cvpj_l['track_order'])
-            print('[output-wavtool] # of Tracks: '+str(numtracks), end=' ')
-            if numtracks <= 6: print('(Free)')
-            else: print('(Pro)')
+            #print('[output-wavtool] # of Tracks: '+str(numtracks), end=' ')
+            #if numtracks <= 6: print('(Free)')
+            #else: print('(Pro)')
 
             for cvpj_trackid in cvpj_l['track_order']:
                 s_trackdata = cvpj_l['track_data'][cvpj_trackid]

@@ -78,7 +78,9 @@ def loop_after(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_end):
     bl_p_start_mo = bl_p_start-bl_l_start
     bl_l_start_mo = bl_l_start-bl_l_start
     bl_l_end_mo = bl_l_end-bl_l_start
-    remainingcuts = (bl_p_dur_mo+bl_p_start_mo)/placement_loop_size
+
+    if placement_loop_size != 0: remainingcuts = (bl_p_dur_mo+bl_p_start_mo)/placement_loop_size
+    else: remainingcuts = 0
     #print(bl_p_pos, bl_p_dur, '|', bl_p_start_mo, '|', bl_l_start_mo, bl_l_end_mo, '|', placement_loop_size)
     temppos = bl_p_pos
     temppos -= bl_p_start_mo

@@ -378,6 +378,18 @@ def a_auto_nopl_to_cvpj(cvpj_l):
                 data_values.nested_dict_add_value(cvpj_l, ['automation', in_type, in_name, 'type'], s_autodata['type'])
                 data_values.nested_dict_add_to_list(cvpj_l, ['automation', in_type, in_name, 'placements'], a_auto_nopl_to_pl(s_autodata['points']))
 
+def a_auto_nopl_getpoints(cvpj_l, in_autoloc):
+    out = None
+    autopoints = data_values.nested_dict_get_value(cvpj_l, ['automation']+in_autoloc)
+    if autopoints != None:
+        if 'placements' in autopoints:
+            spldat = autopoints['placements']
+            if len(spldat) != 0:
+                out = spldat[0]['points']
+    return out
+
+
+
 # ------------------------ autoid to cvpjauto ------------------------
 
 autoid_in_data = {}

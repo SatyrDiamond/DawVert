@@ -124,11 +124,16 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
 
         stretchinfo = [None, 1]
         pitch = 0
+        preserve_pitch = 0
 
         if 'audiomod' in trackplacement_data:
             audiomoddata = trackplacement_data['audiomod']
             #print(audiomoddata)
             if 'pitch' in audiomoddata: pitch = audiomoddata['pitch']
+
+            stretch_algorithm = audiomoddata['stretch_algorithm']
+
+            if stretch_algorithm != 'resample': preserve_pitch = 1
 
             if audiomoddata['stretch_method'] == 'rate_speed': 
                 stretchinfo = ['rate_tempo', (audiomoddata['stretch_data']['rate'])]
@@ -171,7 +176,7 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
         rpp_clipdata.children.append(['VOLPAN',str(cvpj_pl_volume),cvpj_pl_pan,'1','-1'])
         rpp_clipdata.children.append(['SOFFS',clip_startat,'0'])
 
-        rpp_clipdata.children.append(['PLAYRATE',str(stretchinfo[1]),'1',str(pitch),'-1','0','0.0025'])
+        rpp_clipdata.children.append(['PLAYRATE',str(stretchinfo[1]),preserve_pitch,str(pitch),'-1','0','0.0025'])
         rpp_clipdata.children.append(['CHANMODE','0'])
         rpp_clipdata.children.append(['GUID',clip_GUID])
         if cliptype == 'notes': 

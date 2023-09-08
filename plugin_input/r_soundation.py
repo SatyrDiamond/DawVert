@@ -52,7 +52,7 @@ def parse_clip_notes(sndstat_clip):
 
     cvpj_pldata["position"] = sndstat_clip_position
     cvpj_pldata["duration"] = sndstat_clip_loopduration
-    cvpj_pldata['cut'] = placement_data.cutloopdata(-sndstat_clip_contentPosition, 0, sndstat_clip_duration)
+    cvpj_pldata['cut'] = placement_data.cutloopdata(-sndstat_clip_contentPosition, -sndstat_clip_contentPosition, sndstat_clip_duration)
 
     for sndstat_note in sndstat_clip['notes']:
         cvpj_notelist.append(

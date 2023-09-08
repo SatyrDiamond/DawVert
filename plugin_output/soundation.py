@@ -153,7 +153,7 @@ class output_soundation(plugin_output.base):
                     cvpjauto_vol = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,'vol'])
                     if cvpjauto_vol != None: sng_trkdata['volumeAutomation'] = cvpjauto_to_sngauto(cvpjauto_vol, ticksdiv)
                     cvpjauto_pan = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,'pan'])
-                    if cvpjauto_pan != None: sng_trkdata['panAutomation'] = cvpjauto_to_sngauto(auto.multiply_nopl(cvpjauto_pan, 0.5, 0.5), ticksdiv)
+                    if cvpjauto_pan != None: sng_trkdata['panAutomation'] = cvpjauto_to_sngauto(auto.multiply_nopl(cvpjauto_pan, 1, 0.5), ticksdiv)
 
                     inst_supported = False
 
@@ -257,7 +257,7 @@ class output_soundation(plugin_output.base):
                             for cvpj_clip in cvpj_clips:
                                 sng_region = {}
                                 intcolor = cvpj_clip['color'] if 'color' in cvpj_clip else trackcolor
-                                sng_region["color"] = int.from_bytes(struct.pack("3B", *colors.rgb_float_to_rgb_int(intcolor)), "little")
+                                sng_region["color"] = '#'+colors.rgb_float_to_hex(intcolor if 'color' in s_trackdata else [.6,.6,.6])
                                 sng_region["position"] = int(cvpj_clip['position']*ticksdiv)
                                 sng_region["length"] = int(cvpj_clip['duration']*ticksdiv)
                                 sng_region["loopcount"] = 1

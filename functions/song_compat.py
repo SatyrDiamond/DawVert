@@ -677,16 +677,12 @@ def remove_auto_placements(cvpj_l):
     if 'automation' in cvpj_l:
         cvpj_auto = cvpj_l['automation']
         for autotype in cvpj_auto:
-            #print('CAT', autotype)
             if autotype == 'main':
                 for autoid in cvpj_auto[autotype]:
-                    #print('PARAM', autoid)
                     cvpj_auto[autotype][autoid] = remove_auto_placements_single(cvpj_auto[autotype][autoid])
             else:
                 for packid in cvpj_auto[autotype]:
-                    #print('PACK', packid)
                     for autoid in cvpj_auto[autotype][packid]:
-                        #print('PARAM', autoid)
                         cvpj_auto[autotype][packid][autoid] = remove_auto_placements_single(cvpj_auto[autotype][packid][autoid])
                     
 # -------------------------------------------- time_seconds --------------------------------------------

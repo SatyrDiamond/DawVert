@@ -4,6 +4,7 @@
 import os
 import av
 from tinydb import TinyDB, Query
+from io import BytesIO
 
 os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
 audioinfo_cache_filepath = './__config/cache_audioinfo.db'
@@ -92,3 +93,24 @@ def get_audiofile_info_nocache(sample_filename):
             out_data = out_db_data
 
     return out_data
+
+def convert_to_wav(filepath):
+    container = av.open(filepath, 'r')
+    for stream in container.streams:
+        if stream.type == 'audio':
+            audio_stream = stream
+            break
+    if audio_stream:
+        print('[auduo] Converting', filepath)
+        outdata = BytesIO()
+        out_container = av.open(outdata, 'w', format='wav')
+        out_stream = out_container.add_stream(codec_name='pcm_s16le', rate=44100)
+        for i, frame in enumerate(container.decode(audio_stream)):
+            for packet in out_stream.encode(frame):
+                out_container.mux(packet)
+        for packet in out_stream.encode(None):
+            out_container.mux(packet)
+        out_container.close()
+        return outdata.getvalue()
+    else:
+        return b''

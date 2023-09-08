@@ -10,7 +10,6 @@ import lxml.etree as ET
 import os
 import math
 import av
-from io import BytesIO
 from functions import xtramath
 from functions import colors
 from functions import data_values
@@ -51,27 +50,11 @@ def addsample(zip_wt, filepath, alredyexists):
             if os.path.exists(filepath):
                 filename, filetype = os.path.basename(filepath).split('.')
 
-                if datauuid in zip_wt.namelist():
+                if datauuid not in zip_wt.namelist():
                     if filetype in ['wav', 'mp3']:
                         zip_wt.write(filepath, datauuid+'.'+filetype)
                     else:
-                        container = av.open(filepath, 'r')
-                        for stream in container.streams:
-                            if stream.type == 'audio':
-                                audio_stream = stream
-                                break
-                        if audio_stream:
-                            print('[output-wavtool] Converting', filepath)
-                            outdata = BytesIO()
-                            out_container = av.open(outdata, 'w', format='wav')
-                            out_stream = out_container.add_stream(codec_name='pcm_s16le', rate=44100)
-                            for i, frame in enumerate(container.decode(audio_stream)):
-                                for packet in out_stream.encode(frame):
-                                    out_container.mux(packet)
-                            for packet in out_stream.encode(None):
-                                out_container.mux(packet)
-                            out_container.close()
-                            zip_wt.writestr(datauuid+'.wav', outdata.getvalue())
+                        zip_wt.writestr(datauuid+'.wav', audio.convert_to_wav(filepath))
 
                 zip_wt.write(filepath, datauuid+'.'+filetype)
             datauuid = audio_id[filepath]

@@ -46,6 +46,12 @@ def makepl(t_pos, t_dur, t_points):
     pl_data['points'] = t_points
     return pl_data
 
+def multiply_nopl(auto_data, addval, mulval):
+    for point in auto_data:
+        if 'value' in point:
+            point['value'] = (point['value']+addval)*mulval
+    return auto_data
+
 def multiply(auto_data, addval, mulval):
     for autopl in auto_data:
         if 'points' in autopl:

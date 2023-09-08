@@ -151,9 +151,9 @@ class output_soundation(plugin_output.base):
                     sng_instparams = sng_trkdata['instrument'] = {"identifier": "com.soundation.GM-2"}
 
                     cvpjauto_vol = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,'vol'])
-                    if cvpjauto_vol != None: sng_trkdata['volumeAutomation'] = cvpjauto_to_sngauto(cvpjauto_vol, ticksdiv)
+                    sng_trkdata['volumeAutomation'] = cvpjauto_to_sngauto(cvpjauto_vol, ticksdiv) if cvpjauto_vol != None else []
                     cvpjauto_pan = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,'pan'])
-                    if cvpjauto_pan != None: sng_trkdata['panAutomation'] = cvpjauto_to_sngauto(auto.multiply_nopl(cvpjauto_pan, 1, 0.5), ticksdiv)
+                    sng_trkdata['panAutomation'] = cvpjauto_to_sngauto(auto.multiply_nopl(cvpjauto_pan, 1, 0.5), ticksdiv) if cvpjauto_pan != None else []
 
                     inst_supported = False
 
@@ -230,11 +230,19 @@ class output_soundation(plugin_output.base):
                             if gm2_samplepack == None and midibank not in [0, 128]:
                                 gm2_samplepack = idvals.get_idval(idvals_inst_gm2, str(midiinst)+'_0', 'url')
                             add_sndinstparam(sng_instparams, 'sample_pack', gm2_samplepack, False)
+                            add_sndinstparam(sng_instparams, 'attack', 0, True)
+                            add_sndinstparam(sng_instparams, 'decay', 0, True)
+                            add_sndinstparam(sng_instparams, 'sustain', 1, True)
+                            add_sndinstparam(sng_instparams, 'release', 0, True)
                         elif plugtype[0] == 'retro':
                             if plugtype[1] == 'sine': gm2_samplepack = '81_8_Sine_Wave.smplpck'
                             if plugtype[1] == 'square': gm2_samplepack = '81_0_Square_Lead.smplpck'
                             if plugtype[1] == 'triangle': gm2_samplepack = '85_0_Charang.smplpck'
                             if plugtype[1] == 'saw': gm2_samplepack = '82_0_Saw_Wave.smplpck'
+                            add_sndinstparam(sng_instparams, 'attack', 0, True)
+                            add_sndinstparam(sng_instparams, 'decay', 0, True)
+                            add_sndinstparam(sng_instparams, 'sustain', 1, True)
+                            add_sndinstparam(sng_instparams, 'release', 0, True)
 
                     if inst_supported == False: 
                         add_sndinstparam(sng_instparams, 'sample_pack', '2_0_Bright_Yamaha_Grand.smplpck', False)
@@ -257,7 +265,7 @@ class output_soundation(plugin_output.base):
                             for cvpj_clip in cvpj_clips:
                                 sng_region = {}
                                 intcolor = cvpj_clip['color'] if 'color' in cvpj_clip else trackcolor
-                                sng_region["color"] = '#'+colors.rgb_float_to_hex(intcolor if 'color' in s_trackdata else [.6,.6,.6])
+                                sng_region["color"] = int.from_bytes(struct.pack("3B", *colors.rgb_float_to_rgb_int(intcolor)), "little")
                                 sng_region["position"] = int(cvpj_clip['position']*ticksdiv)
                                 sng_region["length"] = int(cvpj_clip['duration']*ticksdiv)
                                 sng_region["loopcount"] = 1

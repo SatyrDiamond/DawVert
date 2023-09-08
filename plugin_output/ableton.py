@@ -543,9 +543,9 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                         if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end']/4
                     if cvpj_placement_cut['type'] == 'loop':
                         t_LoopOn = 'true'
-                        if 'start' in cvpj_placement_cut: t_StartRelative = cvpj_placement_cut['start']/4
-                        if 'loopstart' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['loopstart']/4
-                        if 'loopend' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['loopend']/4
+                        t_StartRelative = cvpj_placement_cut['start']/4 if 'start' in cvpj_placement_cut else 0
+                        t_LoopStart = cvpj_placement_cut['loopstart']/4 if 'loopstart' in cvpj_placement_cut else 0
+                        t_LoopEnd = cvpj_placement_cut['loopend']/4
 
                 else:
                     if cvpj_placement_cut['type'] == 'cut':
@@ -577,8 +577,8 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
 
                 if cvpj_placement_cut['type'] == 'loop':
                     t_LoopOn = 'true'
-                    t_StartRelative = cvpj_placement_cut['start']/4
-                    t_LoopStart = cvpj_placement_cut['loopstart']/4
+                    t_StartRelative = cvpj_placement_cut['start']/4 if 'start' in cvpj_placement_cut else 0
+                    t_LoopStart = cvpj_placement_cut['loopstart']/4 if 'loopstart' in cvpj_placement_cut else 0
                     t_LoopEnd = cvpj_placement_cut['loopend']/4
         else:
             t_LoopStart = 0
@@ -1020,7 +1020,7 @@ class output_cvpj(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'placement_cut': True,
-        'placement_loop': True,
+        'placement_loop': ['loop', 'loop_off', 'loop_adv'],
         'auto_nopl': True,
         'placement_audio_stretch': ['warp']
         }

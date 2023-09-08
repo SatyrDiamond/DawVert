@@ -755,17 +755,24 @@ def makecompat_any(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     if 'auto_nopl' in in_dawcapabilities: in__auto_nopl = in_dawcapabilities['auto_nopl']
     if 'auto_nopl' in out_dawcapabilities: out__auto_nopl = out_dawcapabilities['auto_nopl']
 
+    print('[compat] '+str(in__auto_nopl).ljust(5)+' | '+str(out__auto_nopl).ljust(5)+' | auto_nopl')
+    print('[compat] '+str(in__fxrack).ljust(5)+' | '+str(out__fxrack).ljust(5)+' | fxrack')
+
+    if in__fxrack == False and out__fxrack == True: trackfx2fxrack(cvpj_proj, cvpj_type)
+    if in__auto_nopl == False and out__auto_nopl == True: remove_auto_placements(cvpj_proj)
+
+    return json.dumps(cvpj_proj)
+
+def makecompat_time(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
+    cvpj_proj = json.loads(cvpj_l)
+
     in__time_seconds = False
     out__time_seconds = False
     if 'time_seconds' in in_dawcapabilities: in__time_seconds = in_dawcapabilities['time_seconds']
     if 'time_seconds' in out_dawcapabilities: out__time_seconds = out_dawcapabilities['time_seconds']
 
-    print('[compat] '+str(in__auto_nopl).ljust(5)+' | '+str(out__auto_nopl).ljust(5)+' | auto_nopl')
-    print('[compat] '+str(in__fxrack).ljust(5)+' | '+str(out__fxrack).ljust(5)+' | fxrack')
     print('[compat] '+str(in__time_seconds).ljust(5)+' | '+str(out__time_seconds).ljust(5)+' | time_seconds')
 
-    if in__fxrack == False and out__fxrack == True: trackfx2fxrack(cvpj_proj, cvpj_type)
-    if in__auto_nopl == False and out__auto_nopl == True: remove_auto_placements(cvpj_proj)
     if in__time_seconds == False and out__time_seconds == True: beats_to_seconds(cvpj_proj, cvpj_type)
 
     return json.dumps(cvpj_proj)
@@ -822,20 +829,22 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     #    if in__placement_loop == [] and out__placement_loop == True: r_addloops(cvpj_proj)
     #    m_processed = True
 
+    remainingplloop = [e for e in in__placement_loop if e not in out__placement_loop]
+
     if cvpj_type == 'mi' and mi_processed == False:
-        if in__placement_loop != [] and out__placement_loop == []: m_removeloops(cvpj_proj, out__placement_loop)
+        if in__placement_loop != [] and remainingplloop != []: m_removeloops(cvpj_proj, out__placement_loop)
         mi_processed = True
 
     if cvpj_type == 'r' and r_processed == False:
         if in__track_nopl == True and out__track_nopl == False: r_split_single_notelist(cvpj_proj)
         if in__track_lanes == True and out__track_lanes == False: r_removelanes(cvpj_proj)
-        if in__placement_loop != [] and out__placement_loop == []: r_removeloops(cvpj_proj, out__placement_loop)
+        if in__placement_loop != [] and remainingplloop != []: r_removeloops(cvpj_proj, out__placement_loop)
         if in__placement_cut == True and out__placement_cut == False: r_removecut(cvpj_proj)
-        if in__placement_loop == [] and out__placement_loop != []: r_addloops(cvpj_proj)
+        if in__placement_loop == [] and 'loop' in out__placement_loop: r_addloops(cvpj_proj)
         r_processed = True
 
     if cvpj_type == 'ri' and ri_processed == False:
-        if in__placement_loop != [] and out__placement_loop == []: r_removeloops(cvpj_proj, out__placement_loop)
+        if in__placement_loop != [] and remainingplloop != []: r_removeloops(cvpj_proj, out__placement_loop)
         ri_processed = True
 
     return json.dumps(cvpj_proj)

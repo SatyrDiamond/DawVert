@@ -128,6 +128,60 @@ def m_add_nle_info(cvpj_l, patid, nle_name, nle_color):
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------- Cloned ------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+def c_inst_create(cvpj_l, trackid, **kwargs):
+    if 'instruments_data' not in cvpj_l: cvpj_l['instruments_data'] = {}
+    cvpj_inst = {}
+    if 'name' in kwargs: 
+        if kwargs['name'] != None: cvpj_inst['name'] = kwargs['name']
+    if 'color' in kwargs: 
+        if kwargs['color'] != None: cvpj_inst['color'] = kwargs['color']
+    cvpj_l['instruments_data'][trackid] = cvpj_inst
+
+def c_create_track(cvpj_l, tracktype, trackid, **kwargs):
+    if 'track_data' not in cvpj_l: cvpj_l['track_data'] = {}
+    if 'track_order' not in cvpj_l: cvpj_l['track_order'] = []
+    cvpj_track = {}
+    cvpj_track['type'] = tracktype
+    if 'name' in kwargs: 
+        if kwargs['name'] != None: cvpj_track['name'] = kwargs['name']
+    if 'color' in kwargs: 
+        if kwargs['color'] != None: cvpj_track['color'] = kwargs['color']
+    cvpj_l['track_data'][trackid] = cvpj_track
+    cvpj_l['track_order'].append(trackid)
+
+def c_add_dataval(cvpj_l, trackid, datagroup, i_name, i_value):
+    if datagroup != None:
+        data_values.nested_dict_add_value(cvpj_l, ['track_data', trackid, datagroup, i_name], i_value)
+    else:
+        data_values.nested_dict_add_value(cvpj_l, ['track_data', trackid, i_name], i_value)
+
+def c_inst_pluginid(cvpj_l, trackid, pluginid):
+    data_values.nested_dict_add_value(cvpj_l, ['instruments_data', trackid, 'instdata', 'pluginid'], pluginid)
+
+def c_inst_add_param(cvpj_l, trackid, p_id, p_value, p_type, **kwargs):
+    params.add(cvpj_l, ['instruments_data', trackid], p_id, p_value, p_type, **kwargs)
+
+def c_inst_get_param(cvpj_l, trackid, paramname, fallbackval):
+    return params.get(cvpj_l, ['instruments_data', trackid], paramname, fallbackval)
+
+def c_inst_add_dataval(cvpj_l, trackid, datagroup, i_name, i_value):
+    if datagroup != None:
+        data_values.nested_dict_add_value(cvpj_l, ['instruments_data', trackid, datagroup, i_name], i_value)
+    else:
+        data_values.nested_dict_add_value(cvpj_l, ['instruments_data', trackid, i_name], i_value)
+
+def c_pl_notes(cvpj_l, trackid, placements_data):
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_placements', trackid, 'notes'], placements_data)
+
+def c_pl_audio(cvpj_l, trackid, placements_data):
+    data_values.nested_dict_add_to_list(cvpj_l, ['track_placements', trackid, 'audio'], placements_data)
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------ All -------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -139,8 +193,8 @@ def a_addtrack_master(cvpj_l, i_name, i_vol, i_color):
     if i_vol != None: params.add(cvpj_l, ['track_master'], 'vol', i_vol, 'float')
     if i_color != None: cvpj_master['color'] = i_color
 
-def a_addtrack_master_param(cvpj_l, p_id, p_value):
-    params.add(cvpj_l, ['track_master'], p_id, p_value, 'float', **kwargs)
+def a_addtrack_master_param(cvpj_l, p_id, p_value, p_type):
+    params.add(cvpj_l, ['track_master'], p_id, p_value, p_type)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -271,6 +325,21 @@ def a_add_auto_pl(cvpj_l, val_type, autolocation, in_autopoints):
         data_values.nested_dict_add_value(cvpj_l, ['automation']+autolocation+['type'], val_type)
         data_values.nested_dict_add_to_list(cvpj_l, ['automation']+autolocation+['placements'], in_autopoints)
 
+def a_auto_iter(cvpj_l):
+    outdata = []
+    if 'automation' in cvpj_l:
+        for autotype in cvpj_l['automation']:
+
+            if autotype in ['track', 'plugin', 'fxmixer', 'send', 'slot']:
+                for autonameid in cvpj_l['automation'][autotype]:
+                    for autovarname in cvpj_l['automation'][autotype][autonameid]:
+                        outdata.append([True, [autotype, autonameid, autovarname], cvpj_l['automation'][autotype][autonameid][autovarname]])
+            else:
+                for autovarname in cvpj_l['automation'][autotype]:
+                    outdata.append([False, [autotype, autovarname], cvpj_l['automation'][autotype][autovarname]])
+    return outdata
+
+
 # ------------------------ NoPl Auto ------------------------
 
 nopl_autopoints = {}
@@ -365,19 +434,7 @@ def autoid_out_load(cvpj_l):
     global autoid_out_num
     global autoid_out_data
 
-    if 'automation' in cvpj_l:
-        for autotype in cvpj_l['automation']:
-
-            if autotype in ['track', 'plugin', 'fxmixer', 'send', 'slot']:
-                for autonameid in cvpj_l['automation'][autotype]:
-                    for autovarname in cvpj_l['automation'][autotype][autonameid]:
-                        print(autoid_out_num, autotype, autonameid, autovarname)
-                        data_values.nested_dict_add_value(autoid_out_ids, [autotype, autonameid, autovarname], autoid_out_num)
-                        autoid_out_data[autoid_out_num] = cvpj_l['automation'][autotype][autonameid][autovarname]
-                        autoid_out_num += 1
-            else:
-                for autovarname in cvpj_l['automation'][autotype]:
-                    print(autoid_out_num, autotype, autovarname)
-                    data_values.nested_dict_add_value(autoid_out_ids, [autotype, autovarname], autoid_out_num)
-                    autoid_out_data[autoid_out_num] = cvpj_l['automation'][autotype][autovarname]
-                    autoid_out_num += 1
+    for autopart in a_auto_iter(cvpj_l):
+        data_values.nested_dict_add_value(autoid_out_ids, autopart[1], autoid_out_num)
+        autoid_out_data[autoid_out_num] = autopart[2]
+        autoid_out_num += 1

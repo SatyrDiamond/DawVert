@@ -324,7 +324,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             get_plugin_param(pluginautoid, xml_sf2, 'reverbOn', pluginid, 'reverb_enabled', 0)
             get_plugin_param(pluginautoid, xml_sf2, 'reverbRoomSize', pluginid, 'reverb_roomsize', 0)
             get_plugin_param(pluginautoid, xml_sf2, 'reverbWidth', pluginid, 'reverb_width', 0)
-            middlenotefix = 12
+            middlenotefix = 0
 
         elif plugintype == ['fm', 'opl2']:
             print('[output-lmms]       Plugin: OPL2 > OPL2')
@@ -921,11 +921,6 @@ class output_lmms(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': True,
-        'track_lanes': False,
-        'placement_cut': False,
-        'placement_loop': False,
-        'auto_nopl': False,
-        'track_nopl': False,
         'traits_fx_delay': ['time_seconds', 'lfo', 'gain_out'],
         }
     def getsupportedplugins(self): return ['sampler', 'sf2', 'vst2', 'ladspa', 'opl2']
@@ -1001,7 +996,14 @@ class output_lmms(plugin_output.base):
 
         trksJ = cvpj_l['track_data']
         
-        
+        if 'timemarkers' in cvpj_l:
+            for timemarkdata in cvpj_l['timemarkers']:
+                if timemarkdata['type'] == 'loop_area':
+                    timelineX = ET.SubElement(songX, "timeline")
+                    timelineX.set("lp0pos", str(int(timemarkdata['position']*12)))
+                    timelineX.set("lpstate", '0')
+                    timelineX.set("lp1pos", str(int(timemarkdata['end']*12)))
+
         outfile = ET.ElementTree(projX)
         
         ET.indent(outfile)

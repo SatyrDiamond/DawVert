@@ -39,10 +39,6 @@ class output_onlineseq(plugin_output.base):
     def plugin_archs(self): return None
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'track_lanes': False,
-        'placement_cut': False,
-        'placement_loop': False,
         'auto_nopl': True,
         'track_nopl': True
         }

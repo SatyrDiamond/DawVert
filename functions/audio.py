@@ -101,7 +101,7 @@ def convert_to_wav(filepath):
             audio_stream = stream
             break
     if audio_stream:
-        print('[auduo] Converting', filepath)
+        print('[audio] Converting', filepath)
         outdata = BytesIO()
         out_container = av.open(outdata, 'w', format='wav')
         out_stream = out_container.add_stream(codec_name='pcm_s16le', rate=44100)

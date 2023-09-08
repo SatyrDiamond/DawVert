@@ -120,11 +120,8 @@ class output_cvpj(plugin_output.base):
     def plugin_archs(self): return None
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'track_lanes': False,
         'placement_cut': True,
-        'placement_loop': True,
-        'track_nopl': False,
+        'placement_loop': ['loop', 'loop_off', 'loop_adv'],
         'auto_nopl': True,
         'placement_audio_events': True
         }
@@ -199,14 +196,15 @@ class output_cvpj(plugin_output.base):
                     x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
 
                     if 'cut' in s_trkplacement:
+                        trkplcut = s_trkplacement['cut']
                         if s_trkplacement['cut']['type'] == 'cut':
-                            x_arr_lanes_clip.set('duration', str((s_trkplacement['cut']['end'] - s_trkplacement['cut']['start'])/4))
-                            x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
+                            x_arr_lanes_clip.set('duration', str((trkplcut['end'] - s_trkplacement['cut']['start'])/4))
+                            x_arr_lanes_clip.set('playStart', str(trkplcut['start']/4))
                         if s_trkplacement['cut']['type'] == 'loop':
                             x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
-                            x_arr_lanes_clip.set('playStart', str(s_trkplacement['cut']['start']/4))
-                            x_arr_lanes_clip.set('loopStart', str(s_trkplacement['cut']['loopstart']/4))
-                            x_arr_lanes_clip.set('loopEnd', str(s_trkplacement['cut']['loopend']/4))
+                            x_arr_lanes_clip.set('playStart', str(trkplcut['start']/4 if 'start' in trkplcut else 0))
+                            x_arr_lanes_clip.set('loopStart', str(trkplcut['loopstart']/4 if 'loopstart' in trkplcut else 0))
+                            x_arr_lanes_clip.set('loopEnd', str(trkplcut['loopend']/4))
                     else:
                         x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
                         x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))

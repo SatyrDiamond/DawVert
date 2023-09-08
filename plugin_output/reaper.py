@@ -49,11 +49,11 @@ def rpp_obj(i_name, i_vals): return Element(tag=i_name, attrib=i_vals, children=
 def rpp_obj_data(i_name, i_vals, i_data): return Element(tag=i_name, attrib=i_vals, children=i_data)
 
 def cvpj_color_to_reaper_color(i_color): 
-    cvpj_trackcolor = bytes(colors.rgb_float_2_rgb_int(i_color))+b'\x01'
+    cvpj_trackcolor = bytes(colors.rgb_float_to_rgb_int(i_color))+b'\x01'
     return int.from_bytes(cvpj_trackcolor, 'little')
 
 def cvpj_color_to_reaper_color_clip(i_color): 
-    cvpj_trackcolor = bytes(colors.rgb_float_2_rgb_int([i_color[2],i_color[1],i_color[0]]))+b'\x01'
+    cvpj_trackcolor = bytes(colors.rgb_float_to_rgb_int([i_color[2],i_color[1],i_color[0]]))+b'\x01'
     return int.from_bytes(cvpj_trackcolor, 'little')
 
 def midi_add_cmd(i_list, i_pos, i_cmd):
@@ -69,10 +69,10 @@ def convert_midi(notelist, tempo, num, dem, enddur):
     midiclipdata.children.append(['CCINTERP',32])
     midiclipdata.children.append(['POOLEDEVTS',clip_POOLEDEVTS])
 
+    endmidi = (enddur*24)/tempomul
+
     i_list = {}
     notelist = notelist_data.sort(notelist)
-
-    midi_add_cmd(i_list, (enddur*4)*60, ['end'])
 
     for cvpj_tr_pl_n in notelist:
         cvmi_n_pos = int(cvpj_tr_pl_n['position']*4)*60
@@ -82,6 +82,8 @@ def convert_midi(notelist, tempo, num, dem, enddur):
         if 'vol' in cvpj_tr_pl_n: cvmi_n_vol = xtramath.clamp(int(cvpj_tr_pl_n['vol']*127), 0, 127)
         midi_add_cmd(i_list, cvmi_n_pos, ['note_on', cvmi_n_key, cvmi_n_vol])
         midi_add_cmd(i_list, cvmi_n_pos+cvmi_n_dur, ['note_off', cvmi_n_key])
+
+    midi_add_cmd(i_list, int((endmidi)*60), ['end'])
 
     i_list = dict(sorted(i_list.items(), key=lambda item: item[0]))
 
@@ -137,12 +139,15 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
 
             #print(stretchinfo, tempomul)
 
+        endmidi = clip_duration
+
         if 'cut' in trackplacement_data:
                 clip_cutdata = trackplacement_data['cut']
 
                 if clip_cutdata['type'] == 'cut':
                     if cliptype == 'notes':  
                         if 'start' in clip_cutdata: clip_startat = clip_cutdata['start']/8/tempomul
+
                     if cliptype == 'audio': 
                         if 'start' in clip_cutdata: 
                             if stretchinfo[0] == 'rate_ignoretempo': clip_startat = (clip_cutdata['start']/8)
@@ -170,7 +175,7 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
         rpp_clipdata.children.append(['CHANMODE','0'])
         rpp_clipdata.children.append(['GUID',clip_GUID])
         if cliptype == 'notes': 
-            rpp_clipdata.children.append(rpp_obj_data('SOURCE', ['MIDI'], convert_midi(clip_notelist,reaper_tempo,'4','4', clip_duration+clip_startat)))
+            rpp_clipdata.children.append(rpp_obj_data('SOURCE', ['MIDI'], convert_midi(clip_notelist,reaper_tempo,'4','4', endmidi)))
         if cliptype == 'audio': 
             audiotype = clip_filename.split('.')[-1]
             wavefiledata = rpp_obj('FILE',clip_filename)
@@ -194,6 +199,7 @@ class output_reaper(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'placement_cut': True,
+        'placement_loop': [],
         'time_seconds': True,
         'track_hybrid': True,
         'placement_audio_stretch': ['rate']

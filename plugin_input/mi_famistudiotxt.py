@@ -379,12 +379,8 @@ class input_famistudio(plugin_input.base):
     def gettype(self): return 'mi'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
         'track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
         'auto_nopl': True,
-        'track_nopl': False
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):

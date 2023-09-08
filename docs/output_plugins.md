@@ -11,5 +11,6 @@
 | R | ```reaper``` | Reaper |
 | R | ```waveform_edit``` | Waveform Edit |
 | R | ```onlineseq``` | Online Sequencer |
+| R | ```amped``` | Amped Studio |
 | R | ```soundation``` | Soundation |
 | R | ```wavtool``` | Wavtool |

@@ -98,7 +98,7 @@ class output_soundation(plugin_output.base):
         return {
         'placement_cut': True,
         'placement_loop': ['loop'],
-        'nopl_auto': True
+        'auto_nopl': True
         }
     def getsupportedplugins(self): return []
     def parse(self, convproj_json, output_file):

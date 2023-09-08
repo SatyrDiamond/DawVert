@@ -385,7 +385,7 @@ class output_wavtool(plugin_output.base):
                     wt_tracks.append(wt_track)
 
                     for autoname in [['vol','gain'],['pan','balance']]:
-                        autopoints = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,autoname[0]])
+                        autopoints = auto.remove_instant(tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,autoname[0]]), 0, False)
                         if autopoints != None: 
                             if autoname[0] == 'pan': autopoints = auto.multiply_nopl(autopoints, 1, 0.5)
                             wt_trackauto = make_automation(autoname[0], cvpj_trackid, autoname[1], wt_trackid_ChanStrip, wt_trackid, autopoints, trackcolor)

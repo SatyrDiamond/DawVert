@@ -125,7 +125,6 @@ class output_soundation(plugin_output.base):
         sng_master = makechannel("master")
         if 'track_master' in cvpj_l: 
             cvpj_master = cvpj_l['track_master']
-            print(sng_master)
             sng_master['name'] = data_values.get_value(cvpj_master, 'name', 'Master Channel')
             sng_master['volume'] = data_values.get_value(cvpj_master, 'vol', 1.0)
             add_fx(sng_master, cvpj_master)

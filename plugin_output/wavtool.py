@@ -83,6 +83,7 @@ def make_automation(autoid, trackid, autoname, stripdevice, trackdevice, autopoi
     for point in autopoints:
         wt_points.append({"time": point['position']/4, "value": point['value'], "exponent": 1, "lifted": False})
 
+    print('[output-wavtool] Automation Track: '+autoname)
     wt_track = {}
     wt_track["id"] = wt_autoid_AutoTrack
     wt_track["armed"] = False
@@ -188,6 +189,7 @@ class output_wavtool(plugin_output.base):
                     if trackcolor == '000000': trackcolor = 'AAAAAA'
                     wt_track["color"] = '#'+trackcolor
 
+                    print('[output-wavtool] '+wt_track["type"]+' Track: '+wt_track["name"])
                     if tracktype == 'instrument':
                         adddevice_c(wt_devices, wt_trackid_MIDIRec, 'Track MIDI', 'PortalOut', 'MIDI', wt_trackid, 10, 35.75)
                         adddevice_e(wt_devices, wt_trackid_ChanStrip, 'Channel Strip', 'JS', 'a19792b0-326f-4b82-93a8-2422ffe215b5', wt_trackid, 350, 10, 0.5011872336272722)

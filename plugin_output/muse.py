@@ -202,12 +202,9 @@ class output_cvpj(plugin_output.base):
     def plugin_archs(self): return None
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
         'track_lanes': True,
         'placement_cut': True,
-        'placement_loop': False,
         'auto_nopl': True,
-        'track_nopl': False
         }
     def getsupportedplugins(self): return ['vst2']
     def parse(self, convproj_json, output_file):

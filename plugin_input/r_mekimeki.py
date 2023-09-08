@@ -24,10 +24,6 @@ class input_cvpj_f(plugin_input.base):
     def gettype(self): return 'r'
     def getdawcapabilities(self): 
         return {
-        'fxrack': False,
-        'track_lanes': False,
-        'placement_cut': False,
-        'placement_loop': False,
         'auto_nopl': True,
         'track_nopl': True
         }

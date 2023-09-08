@@ -212,6 +212,8 @@ def convert_type_output(extra_json):
 
 	if out_type in ['r', 'm']: convproj_j[0] = song_compat.makecompat_audiostretch(convproj_j[0], out_type, in_dawcapabilities, out_dawcapabilities)
 	
+	convproj_j[0] = song_compat.makecompat_time(convproj_j[0], out_type, in_dawcapabilities, out_dawcapabilities)
+
 	convproj_j[1] = currentplug_output[3]
 	convproj_j[2] = currentplug_output[4]
 

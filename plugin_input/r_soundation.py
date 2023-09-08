@@ -106,6 +106,15 @@ class input_soundation(plugin_input.base):
             sound_chan_type = sndstat_chan['type']
             trackid = 'soundation'+str(tracknum)
             trackcolor = colors.hsv_to_rgb(tracknum_hue, 0.7, 0.7)
+
+            ismaster = False
+            if sound_chan_type == 'master':
+                ismaster = True
+                tracks.a_addtrack_master(cvpj_l, sndstat_chan['name'], sndstat_chan['volume'], None)
+                tracks.a_addtrack_master_param(cvpj_l, 'pan', (sndstat_chan['pan']-0.5)*2, 'float')
+                tracks.a_addtrack_master_param(cvpj_l, 'enabled', int(not sndstat_chan['mute']), 'bool')
+                tracks.a_addtrack_master_param(cvpj_l, 'solo', int(sndstat_chan['solo']), 'bool')
+
             if sound_chan_type == 'instrument':
                 pluginid = plugins.get_id()
                 tracks.r_create_track(cvpj_l, 'instrument', trackid, name=sndstat_chan['name'], color=[trackcolor[0], trackcolor[1], trackcolor[2]])
@@ -189,7 +198,9 @@ class input_soundation(plugin_input.base):
                 fxenabled = not sound_chan_effect['bypass']
                 plugins.add_plug(cvpj_l, fxpluginid, 'native-soundation', fxpluginname)
                 plugins.add_plug_fxdata(cvpj_l, fxpluginid, fxenabled, 1)
-                tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', fxpluginid)
+                if ismaster: tracks.insert_fxslot(cvpj_l, ['master'], 'audio', fxpluginid)
+                else: tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', fxpluginid)
+                
                 snd_params = []
 
                 if fxpluginname == 'com.soundation.compressor': snd_params = ['gain','release','ratio','threshold','attack']

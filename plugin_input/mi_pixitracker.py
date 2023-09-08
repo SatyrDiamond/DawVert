@@ -25,12 +25,7 @@ class input_cvpj_f(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'samples_inside': True,
-        'fxrack': False,
         'track_lanes': True,
-        'placement_cut': False,
-        'placement_loop': False,
-        'auto_nopl': False,
-        'track_nopl': False
         }
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')

@@ -141,7 +141,7 @@ class output_wavtool(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'placement_cut': True,
-        'nopl_auto': True,
+        'auto_nopl': True,
         'placement_loop': ['loop', 'loop_off', 'loop_adv'],
         'placement_audio_stretch': ['warp', 'rate']
         }
@@ -181,7 +181,7 @@ class output_wavtool(plugin_output.base):
 
         if 'track_order' in cvpj_l and 'track_data' in cvpj_l:
 
-            numtracks = len(cvpj_l['track_order'])
+            #numtracks = len(cvpj_l['track_order'])
             #print('[output-wavtool] # of Tracks: '+str(numtracks), end=' ')
             #if numtracks <= 6: print('(Free)')
             #else: print('(Pro)')
@@ -376,8 +376,8 @@ class output_wavtool(plugin_output.base):
                             wt_clips.append(wt_clip)
 
                     wt_track["clips"] = wt_clips
-                    wt_track["mute"] = False
-                    wt_track["solo"] = False
+                    wt_track["mute"] = not params.get(s_trackdata, [], 'on', 1.0)[0]
+                    wt_track["solo"] = bool(params.get(s_trackdata, [], 'solo', 1.0)[0])
                     wt_track["channelStripId"] = wt_trackid_ChanStrip
                     wt_track["monitorInput"] = 1
                     

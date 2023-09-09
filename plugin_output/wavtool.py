@@ -66,25 +66,43 @@ def addsample(zip_wt, filepath, alredyexists):
             zip_wt.write(filepath, datauuid+'.'+filetype)
 
     return datauuid
-            
-def make_automation(autoid, trackid, autoname, stripdevice, trackdevice, autopoints, color): 
-    endtext = autoid+'-'+trackid
-    wt_autoid_AutoTrack = 'DawVert-AutoTrack-'+endtext
-    wt_autoid_AutoRec = 'DawVert-AutoRec-'+endtext
-    wt_autoid_AutoStrip = 'DawVert-AutoStrip-'+endtext
-    wt_autoid_AutoPortalIn = 'DawVert-AutoPortalIn-'+endtext
-    wt_autoid_AutoPortalOut = 'DawVert-AutoPortalOut-'+endtext
-    wt_autoid_ChanStrip = 'DawVert-ChanStrip-'+trackid
-    adddevice_c(wt_devices, wt_autoid_AutoRec, 'Track Automation', 'PortalOut', 'Mono', wt_autoid_AutoTrack, 10, 35.75)
-    adddevice_g(wt_devices, wt_autoid_AutoStrip, 'Channel Strip', 'JS', '689d5a16-8812-4b98-989a-1444069cded3', wt_autoid_AutoTrack, 210, 10)
-    adddevice_a(wt_devices, wt_autoid_AutoPortalIn, 'Gain', 'PortalIn', 'Mono', wt_autoid_AutoTrack, 590, 35.75)
-    adddevice_a(wt_devices, wt_autoid_AutoPortalOut, 'Gain', 'PortalOut', 'Mono', trackdevice, 10, 85.75)
+           
 
-    wt_deviceRouting[wt_autoid_AutoRec+".input"] = wt_autoid_AutoTrack+".output"
-    wt_deviceRouting[wt_autoid_AutoStrip+".input"] = wt_autoid_AutoRec+".output"
-    wt_deviceRouting[wt_autoid_AutoPortalOut+".input"] = wt_autoid_AutoPortalIn+".output"
-    wt_deviceRouting[stripdevice+"."+autoname] = wt_autoid_AutoPortalOut+".output"
-    wt_deviceRouting[wt_autoid_AutoPortalIn+".input"] = wt_autoid_AutoStrip+".output"
+def make_automation(autoid, trackid, autoname, stripdevice, trackdevice, autopoints, color, istrack):
+    if istrack == True: 
+        endtext = autoid+'-'+trackid
+        wt_autoid_AutoTrack = 'DawVert-AutoTrack-'+endtext
+        wt_autoid_AutoRec = 'DawVert-AutoRec-'+endtext
+        wt_autoid_AutoStrip = 'DawVert-AutoStrip-'+endtext
+        wt_autoid_AutoPortalIn = 'DawVert-AutoPortalIn-'+endtext
+        wt_autoid_AutoPortalOut = 'DawVert-AutoPortalOut-'+endtext
+        wt_autoid_ChanStrip = 'DawVert-ChanStrip-'+trackid
+        adddevice_c(wt_devices, wt_autoid_AutoRec, 'Track Automation', 'PortalOut', 'Mono', wt_autoid_AutoTrack, 10, 35.75)
+        adddevice_g(wt_devices, wt_autoid_AutoStrip, 'Channel Strip', 'JS', '689d5a16-8812-4b98-989a-1444069cded3', wt_autoid_AutoTrack, 210, 10)
+        adddevice_a(wt_devices, wt_autoid_AutoPortalIn, 'Gain', 'PortalIn', 'Mono', wt_autoid_AutoTrack, 590, 35.75)
+        adddevice_a(wt_devices, wt_autoid_AutoPortalOut, 'Gain', 'PortalOut', 'Mono', trackdevice, 10, 85.75)
+
+        wt_deviceRouting[wt_autoid_AutoRec+".input"] = wt_autoid_AutoTrack+".output"
+        wt_deviceRouting[wt_autoid_AutoStrip+".input"] = wt_autoid_AutoRec+".output"
+        wt_deviceRouting[wt_autoid_AutoPortalOut+".input"] = wt_autoid_AutoPortalIn+".output"
+        wt_deviceRouting[stripdevice+"."+autoname] = wt_autoid_AutoPortalOut+".output"
+        wt_deviceRouting[wt_autoid_AutoPortalIn+".input"] = wt_autoid_AutoStrip+".output"
+    else:
+        wt_autoid_AutoTrack = 'DawVert-Master-AutoTrack-'+autoname
+        wt_autoid_AutoRec = 'DawVert-Master-AutoRec-'+autoname
+        wt_autoid_AutoStrip = 'DawVert-Master-AutoStrip-'+autoname
+        wt_autoid_AutoPortalIn = 'DawVert-Master-AutoPortalIn-'+autoname
+        wt_autoid_AutoPortalOut = 'DawVert-Master-AutoPortalOut-'+autoname
+        wt_autoid_ChanStrip = 'DawVert-Master-ChanStrip-'+autoname
+        adddevice_c(wt_devices, wt_autoid_AutoRec, 'Track Automation', 'PortalOut', 'Mono', wt_autoid_AutoTrack, 10, 35.75)
+        adddevice_g(wt_devices, wt_autoid_AutoStrip, 'Channel Strip', 'JS', '689d5a16-8812-4b98-989a-1444069cded3', wt_autoid_AutoTrack, 210, 10)
+        adddevice_a(wt_devices, wt_autoid_AutoPortalIn, 'Gain', 'PortalIn', 'Mono', wt_autoid_AutoTrack, 590, 35.75)
+        adddevice_a(wt_devices, wt_autoid_AutoPortalOut, 'Gain', 'PortalOut', 'Mono', trackdevice, 10, 85.75)
+        wt_deviceRouting[wt_autoid_AutoRec+".input"] = wt_autoid_AutoTrack+".output"
+        wt_deviceRouting[wt_autoid_AutoStrip+".input"] = wt_autoid_AutoRec+".output"
+        wt_deviceRouting[wt_autoid_AutoPortalOut+".input"] = wt_autoid_AutoPortalIn+".output"
+        wt_deviceRouting[stripdevice+"."+autoname] = wt_autoid_AutoPortalOut+".output"
+        wt_deviceRouting[wt_autoid_AutoPortalIn+".input"] = wt_autoid_AutoStrip+".output"
 
     wt_points = []
 
@@ -366,9 +384,14 @@ class output_wavtool(plugin_output.base):
                     if autopoints != None: 
                         autopoints = auto.remove_instant(autopoints, 0, False)
                         if autoname[0] == 'pan': autopoints = auto.multiply_nopl(autopoints, 1, 0.5)
-                        wt_trackauto = make_automation(autoname[0], cvpj_trackid, autoname[1], wt_trackid_ChanStrip, wt_trackid, autopoints, trackcolor)
+                        wt_trackauto = make_automation(autoname[0], cvpj_trackid, autoname[1], wt_trackid_ChanStrip, wt_trackid, autopoints, trackcolor, True)
                         wt_tracks.append(wt_trackauto)
 
+        mas_cvpjauto_vol = tracks.a_auto_nopl_getpoints(cvpj_l, ['master','vol'])
+        if mas_cvpjauto_vol != None:
+            mas_cvpjauto_vol = auto.remove_instant(mas_cvpjauto_vol, 0, False)
+            wt_trackauto = make_automation('vol', 'master', 'gain', 'masterFader', 'master', mas_cvpjauto_vol, 'AAAAAA', False)
+            wt_tracks.insert(0, wt_trackauto)
 
         wt_out = {}
         wt_out["id"] = "projectState-b22f188e-ecb3-4ef5-96af-a41fb18a8660"
@@ -409,5 +432,5 @@ class output_wavtool(plugin_output.base):
         zip_wt.close()
         open(output_file, 'wb').write(zip_bio.getbuffer())
 
-        #with open('_test.json', "w") as fileout:
+        #with open('WavTool Project.json', "w") as fileout:
         #    json.dump(wt_out, fileout, indent=2)

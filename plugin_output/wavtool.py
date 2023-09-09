@@ -425,10 +425,11 @@ class output_wavtool(plugin_output.base):
 
         if 'timemarkers' in cvpj_l:
             for timemarkdata in cvpj_l['timemarkers']:
-                if timemarkdata['type'] == 'loop_area':
-                    wt_out["loopStart"] = timemarkdata['position']/4
-                    wt_out["loopEnd"] = timemarkdata['end']/4
-                    wt_out["loopEnabled"] = True
+                if 'type' in timemarkdata:
+                    if timemarkdata['type'] == 'loop_area': 
+                        wt_out["loopStart"] = timemarkdata['position']/4
+                        wt_out["loopEnd"] = timemarkdata['end']/4
+                        wt_out["loopEnabled"] = True
 
         zip_wt.writestr('WavTool Project.json', json.dumps(wt_out))
         zip_wt.close()

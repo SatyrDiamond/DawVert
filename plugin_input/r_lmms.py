@@ -883,7 +883,7 @@ class input_lmms(plugin_input.base):
         lmms_decode_tracks(trksX)
         lmms_decode_fxmixer(cvpj_l, fxX)
 
-        trackdata = cvpj_l['track_data']
+        trackdata = cvpj_l['track_data'] if 'track_data' in cvpj_l else {}
 
         tracks.autoid_in_output(cvpj_l)
 

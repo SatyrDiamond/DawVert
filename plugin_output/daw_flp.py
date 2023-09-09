@@ -47,7 +47,8 @@ class output_cvpjs(plugin_output.base):
 
         FLP_Data['FL_Channels'] = {}
         FL_Channels = FLP_Data['FL_Channels']
-        CVPJ_Instruments = cvpj_l['instruments_data']
+        instrumentsorder = cvpj_l['instruments_order'] if 'instruments_order' in cvpj_l else []
+        CVPJ_Instruments = cvpj_l['instruments_data'] if 'instruments_data' in cvpj_l else {}
         CVPJ_Samples = {}
         if 'sampleindex' in cvpj_l: CVPJ_Samples = cvpj_l['sampleindex']
 
@@ -128,8 +129,6 @@ class output_cvpjs(plugin_output.base):
         samples_id = {}
         inst_id = {}
         inst_id_count = 0
-
-        instrumentsorder = cvpj_l['instruments_order']
 
         for instentry in instrumentsorder:
             inst_id[instentry] = str(inst_id_count)

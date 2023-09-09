@@ -258,8 +258,10 @@ class output_wavtool(plugin_output.base):
 
                 wt_clips = []
                 if tracktype in ['instrument', 'audio']:
-                    if tracktype == 'instrument': cvpj_clips = notelist_data.sort(track_placements['notes'])
-                    if tracktype == 'audio': cvpj_clips = notelist_data.sort(track_placements['audio'])
+                    if tracktype == 'instrument': 
+                        cvpj_clips = notelist_data.sort(track_placements['notes']) if 'notes' in track_placements else []
+                    if tracktype == 'audio': 
+                        cvpj_clips = notelist_data.sort(track_placements['audio']) if 'audio' in track_placements else []
                     for cvpj_clip in cvpj_clips:
                         clip_pos = cvpj_clip['position']/4
                         clip_dur = cvpj_clip['duration']/4

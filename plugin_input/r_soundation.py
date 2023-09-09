@@ -121,6 +121,12 @@ class input_soundation(plugin_input.base):
                 tracks.a_addtrack_master_param(cvpj_l, 'enabled', int(not sndstat_chan['mute']), 'bool')
                 tracks.a_addtrack_master_param(cvpj_l, 'solo', int(sndstat_chan['solo']), 'bool')
 
+                for autoname in [['vol','volumeAutomation'],['pan','panAutomation']]:
+                    if sndstat_chan[autoname[1]] != []:
+                        autodata = sngauto_to_cvpjauto(sndstat_chan[autoname[1]])
+                        if autoname[0] == 'pan': autodata = auto.multiply_nopl(autodata, -1, 2)
+                        tracks.a_add_auto_pl(cvpj_l, 'float', ['master',autoname[0]], tracks.a_auto_nopl_to_pl(autodata))
+
             if sound_chan_type == 'instrument':
                 pluginid = plugins.get_id()
                 tracks.r_create_track(cvpj_l, 'instrument', trackid, name=sndstat_chan['name'], color=[trackcolor[0], trackcolor[1], trackcolor[2]])

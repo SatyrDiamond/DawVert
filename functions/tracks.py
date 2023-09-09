@@ -420,7 +420,7 @@ def autoid_in_define(i_id, i_loc, i_type, i_addmul):
         autoid_in_data[i_id][2] = i_addmul
 
 def autoid_in_add_pl(i_id, i_autopl):
-    #print('autoid_in_define', i_id, len(i_autopl))
+    #print('autoid_in_add_pl', i_id, len(i_autopl))
     if i_id not in autoid_in_data: autoid_in_data[i_id] = [None, None, None, []]
     autoid_in_data[i_id][3].append(i_autopl)
 

@@ -134,6 +134,10 @@ class output_soundation(plugin_output.base):
         if mas_cvpjauto_vol != None:
             mas_cvpjauto_vol = auto.remove_instant(mas_cvpjauto_vol, 0, False)
             sng_master['volumeAutomation'] = cvpjauto_to_sngauto(mas_cvpjauto_vol, ticksdiv)
+        mas_cvpjauto_pan = tracks.a_auto_nopl_getpoints(cvpj_l, ['master','pan'])
+        if mas_cvpjauto_pan != None:
+            mas_cvpjauto_pan = auto.remove_instant(mas_cvpjauto_vol, 0, False)
+            sng_master['panAutomation'] = cvpjauto_to_sngauto(auto.multiply_nopl(mas_cvpjauto_pan, 1, 0.5), ticksdiv)
 
         if 'timesig' in cvpj_l: 
             ts_numerator, ts_denominator = cvpj_l['timesig']

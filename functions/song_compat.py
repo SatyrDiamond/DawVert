@@ -27,6 +27,9 @@ def list2fxrack(cvpj_l, input_list, fxnum, defualtname, starttext):
 
 
 def trackfx2fxrack(cvpj_l, cvpjtype):
+
+    tracks.a_move_auto(cvpj_l, ['master','vol'], ['fxmixer','0','vol'])
+    
     if cvpjtype == 'r' or cvpjtype == 'ri':
         r_trackfx2fxrack(cvpj_l, cvpjtype)
     else:

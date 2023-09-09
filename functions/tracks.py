@@ -328,17 +328,25 @@ def a_add_auto_pl(cvpj_l, val_type, autolocation, in_autopoints):
 def a_auto_iter(cvpj_l):
     outdata = []
     if 'automation' in cvpj_l:
-        for autotype in cvpj_l['automation']:
-
-            if autotype in ['track', 'plugin', 'fxmixer', 'send', 'slot']:
-                for autonameid in cvpj_l['automation'][autotype]:
-                    for autovarname in cvpj_l['automation'][autotype][autonameid]:
-                        outdata.append([True, [autotype, autonameid, autovarname], cvpj_l['automation'][autotype][autonameid][autovarname]])
+        cvpj_auto = cvpj_l['automation']
+        for autotype in cvpj_auto:
+            if autotype in ['main', 'master']:
+                for autovarname in cvpj_auto[autotype]:
+                    outdata.append([False, [autotype, autovarname], cvpj_auto[autotype][autovarname]])
             else:
-                for autovarname in cvpj_l['automation'][autotype]:
-                    outdata.append([False, [autotype, autovarname], cvpj_l['automation'][autotype][autovarname]])
+                for autonameid in cvpj_auto[autotype]:
+                    for autovarname in cvpj_auto[autotype][autonameid]:
+                        outdata.append([True, [autotype, autonameid, autovarname], cvpj_auto[autotype][autonameid][autovarname]])
     return outdata
 
+def a_move_auto(cvpj_l, old_autolocation, new_autolocation):
+    dictvals = data_values.nested_dict_get_value(cvpj_l, ['automation']+old_autolocation)
+    if dictvals != None:
+        data_values.nested_dict_add_value(cvpj_l, ['automation']+new_autolocation, dictvals)
+        if old_autolocation[0] in ['main', 'master']:
+            del cvpj_l['automation'][old_autolocation[0]][old_autolocation[1]]
+        else:
+            del cvpj_l['automation'][old_autolocation[0]][old_autolocation[1]][old_autolocation[2]]
 
 # ------------------------ NoPl Auto ------------------------
 

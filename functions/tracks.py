@@ -266,8 +266,8 @@ def r_add_return_basicdata(cvpj_l, i_location, i_sendname, trk_name, trk_color, 
     out_location = get_sendcvpjlocation(i_location)
     if trk_name != None: data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname, 'name'], trk_name)
     if trk_color != None: data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname, 'color'], trk_color)
-    if trk_vol != None: params.add(cvpj_l, out_location, 'vol', trk_vol, 'float')
-    if trk_pan != None: params.add(cvpj_l, out_location, 'pan', trk_pan, 'float')
+    if trk_vol != None: params.add(cvpj_l, out_location+[i_sendname], 'vol', trk_vol, 'float')
+    if trk_pan != None: params.add(cvpj_l, out_location+[i_sendname], 'pan', trk_pan, 'float')
 
 def r_add_send(cvpj_l, i_trackid, i_sendname, i_amount, i_sendautoid):
     send_data = {'amount': i_amount, 'sendid': i_sendname}

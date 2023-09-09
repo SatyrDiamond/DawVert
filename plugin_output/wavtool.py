@@ -136,8 +136,6 @@ class output_wavtool(plugin_output.base):
         global cvpj_l
         cvpj_l = json.loads(convproj_json)
 
-        cvpj_placements = cvpj_l['track_placements']
-
         audio_id = {}
 
         wt_tracks = []
@@ -162,222 +160,214 @@ class output_wavtool(plugin_output.base):
         wt_deviceRouting["auxSum.inputs[0]"] = "masterFader.output"
         wt_deviceRouting["auxSum.inputs[1]"] = "metronome.output"
 
-        if 'track_order' in cvpj_l and 'track_data' in cvpj_l:
+        for cvpj_trackid, s_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+            tracktype = s_trackdata['type']
 
-            #numtracks = len(cvpj_l['track_order'])
-            #print('[output-wavtool] # of Tracks: '+str(numtracks), end=' ')
-            #if numtracks <= 6: print('(Free)')
-            #else: print('(Pro)')
+            wt_trackid = 'DawVert-Track-'+cvpj_trackid
+            wt_trackid_MIDIRec = 'DawVert-MIDIRec-'+cvpj_trackid
+            wt_trackid_AudioRec = 'DawVert-AudioRec-'+cvpj_trackid
+            wt_trackid_ChanStrip = 'DawVert-ChanStrip-'+cvpj_trackid
+            wt_trackid_Instrument = 'DawVert-Instrument-'+cvpj_trackid
+            wt_trackid_BusSend = 'DawVert-BusSend-'+cvpj_trackid
 
-            for cvpj_trackid in cvpj_l['track_order']:
-                s_trackdata = cvpj_l['track_data'][cvpj_trackid]
-                tracktype = s_trackdata['type']
+            if tracktype in ['instrument', 'audio']:
+                wt_track = {}
+                wt_track['id'] = wt_trackid
+                wt_track["armed"] = False
+                if tracktype == 'instrument': wt_track["type"] = "MIDI"
+                if tracktype == 'audio': wt_track["type"] = "Audio"
+                wt_track["name"] = s_trackdata['name'] if 'name' in s_trackdata else ''
+                if tracktype == 'instrument': wt_track["height"] = 125
+                if tracktype == 'audio': wt_track["height"] = 160
+                wt_track["hasTimelineSelection"] = False
+                wt_track["hasHeaderSelection"] = True
+                wt_track["gain"] = params.get(s_trackdata, [], 'vol', 1.0)[0]
+                wt_track["balance"] = params.get(s_trackdata, [], 'pan', 0)[0]
+                trackcolor = colors.rgb_float_to_hex(s_trackdata['color'] if 'color' in s_trackdata else [0.0,0.0,0.0])
+                if trackcolor == '000000': trackcolor = 'AAAAAA'
+                wt_track["color"] = '#'+trackcolor
 
-                wt_trackid = 'DawVert-Track-'+cvpj_trackid
-                wt_trackid_MIDIRec = 'DawVert-MIDIRec-'+cvpj_trackid
-                wt_trackid_AudioRec = 'DawVert-AudioRec-'+cvpj_trackid
-                wt_trackid_ChanStrip = 'DawVert-ChanStrip-'+cvpj_trackid
-                wt_trackid_Instrument = 'DawVert-Instrument-'+cvpj_trackid
-                wt_trackid_BusSend = 'DawVert-BusSend-'+cvpj_trackid
+                print('[output-wavtool] '+wt_track["type"]+' Track: '+wt_track["name"])
+                if tracktype == 'instrument':
+                    adddevice_c(wt_devices, wt_trackid_MIDIRec, 'Track MIDI', 'PortalOut', 'MIDI', wt_trackid, 10, 35.75)
+                    adddevice_e(wt_devices, wt_trackid_ChanStrip, 'Channel Strip', 'JS', 'a19792b0-326f-4b82-93a8-2422ffe215b5', wt_trackid, 350, 10, 0.5011872336272722)
+                    pluginid = data_values.nested_dict_get_value(s_trackdata, ['instdata', 'pluginid'])
 
-                if tracktype in ['instrument', 'audio']:
-                    wt_track = {}
-                    wt_track['id'] = wt_trackid
-                    wt_track["armed"] = False
-                    if tracktype == 'instrument': wt_track["type"] = "MIDI"
-                    if tracktype == 'audio': wt_track["type"] = "Audio"
-                    wt_track["name"] = s_trackdata['name'] if 'name' in s_trackdata else ''
-                    if tracktype == 'instrument': wt_track["height"] = 125
-                    if tracktype == 'audio': wt_track["height"] = 160
-                    wt_track["hasTimelineSelection"] = False
-                    wt_track["hasHeaderSelection"] = True
-                    wt_track["gain"] = params.get(s_trackdata, [], 'vol', 1.0)[0]
-                    wt_track["balance"] = params.get(s_trackdata, [], 'pan', 0)[0]
-                    trackcolor = colors.rgb_float_to_hex(s_trackdata['color'] if 'color' in s_trackdata else [0.0,0.0,0.0])
-                    if trackcolor == '000000': trackcolor = 'AAAAAA'
-                    wt_track["color"] = '#'+trackcolor
+                    inst_supported = False
+                    middlenote = data_values.get_value(s_trackdata, 'middlenote', 0)+60
 
-                    print('[output-wavtool] '+wt_track["type"]+' Track: '+wt_track["name"])
-                    if tracktype == 'instrument':
-                        adddevice_c(wt_devices, wt_trackid_MIDIRec, 'Track MIDI', 'PortalOut', 'MIDI', wt_trackid, 10, 35.75)
-                        adddevice_e(wt_devices, wt_trackid_ChanStrip, 'Channel Strip', 'JS', 'a19792b0-326f-4b82-93a8-2422ffe215b5', wt_trackid, 350, 10, 0.5011872336272722)
-                        pluginid = data_values.nested_dict_get_value(s_trackdata, ['instdata', 'pluginid'])
-
-                        inst_supported = False
-                        middlenote = data_values.get_value(s_trackdata, 'middlenote', 0)+60
-
-                        if pluginid != None:
-                            plugtype = plugins.get_plug_type(cvpj_l, pluginid)
-                            a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'vol')
-                            if plugtype == ['sampler', 'single']:
-                                inst_supported = True
-                                filename = plugins.get_plug_dataval(cvpj_l, pluginid, 'file', '')
-                                if os.path.exists(filename):
-                                    audiouuid = addsample(zip_wt, filename, True)
-                                    adddevice_d(wt_devices, wt_trackid_Instrument, 'MonoSampler', 'JS', 'c4888b49-3a72-4b0a-bd4a-a06e9937000a', wt_trackid, 160, 10)
-                                    wt_devices[wt_trackid_Instrument]['inputs'] = {
-                                              "decay": xtramath.clamp(a_decay, 0.001, 32)*48000,
-                                              "gain": 1,
-                                              "attack": xtramath.clamp(a_attack, 0.001, 32)*48000,
-                                              "sustain": a_sustain,
-                                              "release": xtramath.clamp(a_release, 0.001, 32)*48000}
-                                    wt_devices[wt_trackid_Instrument]['constants'] = {'sample1Pitch': middlenote, 'sample1All': audiouuid}
-
-                        if inst_supported == False: 
-                            adddevice_d(wt_devices, wt_trackid_Instrument, 'Simple Synth', 'JS', 'd694ef91-e624-404d-8e34-829d9c1c04b3', wt_trackid, 160, 10)
-                            if pluginid != None:
+                    if pluginid != None:
+                        plugtype = plugins.get_plug_type(cvpj_l, pluginid)
+                        a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'vol')
+                        if plugtype == ['sampler', 'single']:
+                            inst_supported = True
+                            filename = plugins.get_plug_dataval(cvpj_l, pluginid, 'file', '')
+                            if os.path.exists(filename):
+                                audiouuid = addsample(zip_wt, filename, True)
+                                adddevice_d(wt_devices, wt_trackid_Instrument, 'MonoSampler', 'JS', 'c4888b49-3a72-4b0a-bd4a-a06e9937000a', wt_trackid, 160, 10)
                                 wt_devices[wt_trackid_Instrument]['inputs'] = {
-                                      "decay": xtramath.clamp(a_decay, 0.001, 32)*48000,
-                                      "attack": xtramath.clamp(a_attack, 0.001, 32)*48000,
-                                      "sustain": a_sustain,
-                                      "release": xtramath.clamp(a_release, 0.001, 32)*48000}
+                                          "decay": xtramath.clamp(a_decay, 0.001, 32)*48000,
+                                          "gain": 1,
+                                          "attack": xtramath.clamp(a_attack, 0.001, 32)*48000,
+                                          "sustain": a_sustain,
+                                          "release": xtramath.clamp(a_release, 0.001, 32)*48000}
+                                wt_devices[wt_trackid_Instrument]['constants'] = {'sample1Pitch': middlenote, 'sample1All': audiouuid}
 
-                        adddevice_f(wt_devices, wt_trackid_BusSend, 'Master Bus', 'PortalIn', 'Stereo', wt_trackid, 530, 35.75)
-                        wt_deviceRouting[wt_trackid_MIDIRec+'.input'] = wt_trackid+'.output'
-                        wt_deviceRouting['masterBus.inputs['+wt_trackid+']'] = wt_trackid_BusSend+'.output'
-                        wt_deviceRouting[wt_trackid_ChanStrip+'.input'] = wt_trackid_Instrument+'.output'
-                        wt_deviceRouting[wt_trackid_Instrument+'.input'] = wt_trackid_MIDIRec+'.output'
-                        wt_deviceRouting[wt_trackid_BusSend+'.input'] = wt_trackid_ChanStrip+'.output'
+                    if inst_supported == False: 
+                        adddevice_d(wt_devices, wt_trackid_Instrument, 'Simple Synth', 'JS', 'd694ef91-e624-404d-8e34-829d9c1c04b3', wt_trackid, 160, 10)
+                        if pluginid != None:
+                            wt_devices[wt_trackid_Instrument]['inputs'] = {
+                                  "decay": xtramath.clamp(a_decay, 0.001, 32)*48000,
+                                  "attack": xtramath.clamp(a_attack, 0.001, 32)*48000,
+                                  "sustain": a_sustain,
+                                  "release": xtramath.clamp(a_release, 0.001, 32)*48000}
 
-                    if tracktype == 'audio':
-                        adddevice_c(wt_devices, wt_trackid_AudioRec, 'Track Audio', 'PortalOut', 'Stereo', wt_trackid, 10, 35.75)
-                        adddevice_g(wt_devices, wt_trackid_ChanStrip, 'Channel Strip', 'JS', 'a19792b0-326f-4b82-93a8-2422ffe215b5', wt_trackid, 350, 10)
-                        adddevice_f(wt_devices, wt_trackid_BusSend, 'Master Bus', 'PortalIn', 'Stereo', wt_trackid, 530, 35.75)
-                        wt_deviceRouting[wt_trackid_AudioRec+'.input'] = wt_trackid+'.output'
-                        wt_deviceRouting[wt_trackid_ChanStrip+'.input'] = wt_trackid_AudioRec+'.output'
-                        wt_deviceRouting[wt_trackid_BusSend+'.input'] = wt_trackid_ChanStrip+'.output'
-                        wt_deviceRouting['masterBus.inputs['+wt_trackid+']'] = wt_trackid_BusSend+'.output'
+                    adddevice_f(wt_devices, wt_trackid_BusSend, 'Master Bus', 'PortalIn', 'Stereo', wt_trackid, 530, 35.75)
+                    wt_deviceRouting[wt_trackid_MIDIRec+'.input'] = wt_trackid+'.output'
+                    wt_deviceRouting['masterBus.inputs['+wt_trackid+']'] = wt_trackid_BusSend+'.output'
+                    wt_deviceRouting[wt_trackid_ChanStrip+'.input'] = wt_trackid_Instrument+'.output'
+                    wt_deviceRouting[wt_trackid_Instrument+'.input'] = wt_trackid_MIDIRec+'.output'
+                    wt_deviceRouting[wt_trackid_BusSend+'.input'] = wt_trackid_ChanStrip+'.output'
 
-                    wt_clips = []
-                    if cvpj_trackid in cvpj_placements and tracktype in ['instrument', 'audio']:
-                        if tracktype == 'instrument': cvpj_clips = notelist_data.sort(cvpj_placements[cvpj_trackid]['notes'])
-                        if tracktype == 'audio': cvpj_clips = notelist_data.sort(cvpj_placements[cvpj_trackid]['audio'])
-                        for cvpj_clip in cvpj_clips:
-                            clip_pos = cvpj_clip['position']/4
-                            clip_dur = cvpj_clip['duration']/4
+                if tracktype == 'audio':
+                    adddevice_c(wt_devices, wt_trackid_AudioRec, 'Track Audio', 'PortalOut', 'Stereo', wt_trackid, 10, 35.75)
+                    adddevice_g(wt_devices, wt_trackid_ChanStrip, 'Channel Strip', 'JS', 'a19792b0-326f-4b82-93a8-2422ffe215b5', wt_trackid, 350, 10)
+                    adddevice_f(wt_devices, wt_trackid_BusSend, 'Master Bus', 'PortalIn', 'Stereo', wt_trackid, 530, 35.75)
+                    wt_deviceRouting[wt_trackid_AudioRec+'.input'] = wt_trackid+'.output'
+                    wt_deviceRouting[wt_trackid_ChanStrip+'.input'] = wt_trackid_AudioRec+'.output'
+                    wt_deviceRouting[wt_trackid_BusSend+'.input'] = wt_trackid_ChanStrip+'.output'
+                    wt_deviceRouting['masterBus.inputs['+wt_trackid+']'] = wt_trackid_BusSend+'.output'
 
-                            wt_clip = {}
+                wt_clips = []
+                if tracktype in ['instrument', 'audio']:
+                    if tracktype == 'instrument': cvpj_clips = notelist_data.sort(track_placements['notes'])
+                    if tracktype == 'audio': cvpj_clips = notelist_data.sort(track_placements['audio'])
+                    for cvpj_clip in cvpj_clips:
+                        clip_pos = cvpj_clip['position']/4
+                        clip_dur = cvpj_clip['duration']/4
 
-                            if tracktype == 'instrument':
-                                clip_notes = cvpj_clip['notelist']
-                                wt_notes = []
-                                for clip_note in clip_notes:
-                                    wt_note = {}
-                                    wt_note['pitch'] = clip_note['key']+60
-                                    wt_note['start'] = (clip_note['position'])/4
-                                    wt_note['end'] = (clip_note['position']+clip_note['duration'])/4
-                                    wt_note['lifted'] = False
-                                    wt_note['velocity'] = clip_note['vol'] if 'vol' in clip_note else ''
-                                    wt_notes.append(wt_note)
+                        wt_clip = {}
 
-                            loopEnabled = False
-                            transpose = 0
-                            if tracktype == 'audio':
-                                audiofilename = cvpj_clip['file']
-                                audioBufferId = addsample(zip_wt, audiofilename, False)
-                                wt_clip["audioBufferId"] = audioBufferId
+                        if tracktype == 'instrument':
+                            clip_notes = cvpj_clip['notelist']
+                            wt_notes = []
+                            for clip_note in clip_notes:
+                                wt_note = {}
+                                wt_note['pitch'] = clip_note['key']+60
+                                wt_note['start'] = (clip_note['position'])/4
+                                wt_note['end'] = (clip_note['position']+clip_note['duration'])/4
+                                wt_note['lifted'] = False
+                                wt_note['velocity'] = clip_note['vol'] if 'vol' in clip_note else ''
+                                wt_notes.append(wt_note)
 
-                                if 'audiomod' in cvpj_clip:
-                                    cvpj_audiomod = cvpj_clip['audiomod']
-                                    stretch_method = cvpj_audiomod['stretch_method'] if 'stretch_method' in cvpj_audiomod else None
-                                    stretch_data = cvpj_audiomod['stretch_data'] if 'stretch_data' in cvpj_audiomod else {'rate': 1.0}
-                                    stretch_rate = stretch_data['rate'] if 'rate' in stretch_data else 1
-                                    stretch_algorithm = cvpj_audiomod['stretch_algorithm'] if 'stretch_algorithm' in cvpj_audiomod else 'resample'
-                                    cvpj_pitch = cvpj_audiomod['pitch'] if 'pitch' in cvpj_audiomod else 0
+                        loopEnabled = False
+                        transpose = 0
+                        if tracktype == 'audio':
+                            audiofilename = cvpj_clip['file']
+                            audioBufferId = addsample(zip_wt, audiofilename, False)
+                            wt_clip["audioBufferId"] = audioBufferId
 
-                                    if stretch_method != 'warp':
-                                        if stretch_algorithm == 'resample':
-                                            if stretch_method == 'rate_speed': transpose = (math.log2(stretch_rate)*12)
-                                            if stretch_method == 'rate_tempo': transpose = (math.log2(stretch_rate*bpmmul)*12)
-                                        else:
-                                            if stretch_method == 'rate_speed': warprate = (stretch_rate)
-                                            if stretch_method == 'rate_tempo': warprate = (stretch_rate*bpmmul)
-                                            audiodata = audio.get_audiofile_info(audiofilename)
-                                            dur_seconds = audiodata['dur_sec']*warprate
-                                            warpdata = {}
-                                            warpdata['sourceBPM'] = bpm
-                                            warpdata['anchors'] = {}
-                                            warpdata['enabled'] = True
-                                            warpdata['anchors']["0"] = {"destination": 0, "pinned": True}
-                                            maxpoints = 32*max(1, math.ceil(dur_seconds/8))
+                            if 'audiomod' in cvpj_clip:
+                                cvpj_audiomod = cvpj_clip['audiomod']
+                                stretch_method = cvpj_audiomod['stretch_method'] if 'stretch_method' in cvpj_audiomod else None
+                                stretch_data = cvpj_audiomod['stretch_data'] if 'stretch_data' in cvpj_audiomod else {'rate': 1.0}
+                                stretch_rate = stretch_data['rate'] if 'rate' in stretch_data else 1
+                                stretch_algorithm = cvpj_audiomod['stretch_algorithm'] if 'stretch_algorithm' in cvpj_audiomod else 'resample'
+                                cvpj_pitch = cvpj_audiomod['pitch'] if 'pitch' in cvpj_audiomod else 0
 
-                                            for num in range(int(maxpoints/warprate)):
-                                                numpart = (num+1)/maxpoints
-                                                warppoint = (dur_seconds*2)*numpart
-                                                warpdata['anchors']["%g" % warppoint] = {"destination": warppoint/warprate, "pinned": True}
-                                            wt_clip["warp"] = warpdata
-                                            transpose = cvpj_pitch
-
+                                if stretch_method != 'warp':
+                                    if stretch_algorithm == 'resample':
+                                        if stretch_method == 'rate_speed': transpose = (math.log2(stretch_rate)*12)
+                                        if stretch_method == 'rate_tempo': transpose = (math.log2(stretch_rate*bpmmul)*12)
                                     else:
+                                        if stretch_method == 'rate_speed': warprate = (stretch_rate)
+                                        if stretch_method == 'rate_tempo': warprate = (stretch_rate*bpmmul)
+                                        audiodata = audio.get_audiofile_info(audiofilename)
+                                        dur_seconds = audiodata['dur_sec']*warprate
                                         warpdata = {}
                                         warpdata['sourceBPM'] = bpm
                                         warpdata['anchors'] = {}
                                         warpdata['enabled'] = True
+                                        warpdata['anchors']["0"] = {"destination": 0, "pinned": True}
+                                        maxpoints = 32*max(1, math.ceil(dur_seconds/8))
 
-                                        for warppoint in stretch_data:
-                                            wt_warp_pos = warppoint['pos']/4
-                                            wt_warp_pos_real = (warppoint['pos_real']/bpmmul)*2
-                                            warpdata['anchors']["%g" % wt_warp_pos_real] = {"destination": wt_warp_pos, "pinned": False}
-
+                                        for num in range(int(maxpoints/warprate)):
+                                            numpart = (num+1)/maxpoints
+                                            warppoint = (dur_seconds*2)*numpart
+                                            warpdata['anchors']["%g" % warppoint] = {"destination": warppoint/warprate, "pinned": True}
                                         wt_clip["warp"] = warpdata
+                                        transpose = cvpj_pitch
+
+                                else:
+                                    warpdata = {}
+                                    warpdata['sourceBPM'] = bpm
+                                    warpdata['anchors'] = {}
+                                    warpdata['enabled'] = True
+
+                                    for warppoint in stretch_data:
+                                        wt_warp_pos = warppoint['pos']/4
+                                        wt_warp_pos_real = (warppoint['pos_real']/bpmmul)*2
+                                        warpdata['anchors']["%g" % wt_warp_pos_real] = {"destination": wt_warp_pos, "pinned": False}
+
+                                    wt_clip["warp"] = warpdata
 
 
-                            wt_clip["name"] = cvpj_clip['name'] if 'name' in cvpj_clip else ''
-                            plcolor = colors.rgb_float_to_hex(cvpj_clip['color']) if 'color' in cvpj_clip else None
-                            if plcolor == None: plcolor = trackcolor
-                            wt_clip["color"] = '#'+plcolor
-                            wt_clip["lifted"] = False
-                            if tracktype == 'instrument': wt_clip["notes"] = wt_notes
-                            wt_clip["ccs"] = {}
-                            wt_clip["timelineStart"] = clip_pos
-                            wt_clip["timelineEnd"] = clip_pos+clip_dur
-                            wt_cutnorm = True
-                            if 'cut' in cvpj_clip:
-                                cutdata = cvpj_clip['cut']
-                                cuttype = cutdata['type']
-                                if cuttype in ['loop', 'loop_off', 'loop_adv']: 
-                                    wt_cutnorm = False
-                                    wt_clip["readStart"] = cutdata['start']/4 if 'start' in cutdata else 0
-                                    wt_clip["loopStart"] = cutdata['loopstart']/4 if 'loopstart' in cutdata else 0
-                                    wt_clip["loopEnd"] = cutdata['loopend']/4
-                                if cuttype == 'cut': 
-                                    wt_cutnorm = False
-                                    wt_clip["readStart"] = cutdata['start']/4 if 'start' in cutdata else 0
-                                    wt_clip["loopStart"] = 0
-                                    wt_clip["loopEnd"] = cutdata['end']/4
-                            if wt_cutnorm == True:
-                                wt_clip["readStart"] = 0
+                        wt_clip["name"] = cvpj_clip['name'] if 'name' in cvpj_clip else ''
+                        plcolor = colors.rgb_float_to_hex(cvpj_clip['color']) if 'color' in cvpj_clip else None
+                        if plcolor == None: plcolor = trackcolor
+                        wt_clip["color"] = '#'+plcolor
+                        wt_clip["lifted"] = False
+                        if tracktype == 'instrument': wt_clip["notes"] = wt_notes
+                        wt_clip["ccs"] = {}
+                        wt_clip["timelineStart"] = clip_pos
+                        wt_clip["timelineEnd"] = clip_pos+clip_dur
+                        wt_cutnorm = True
+                        if 'cut' in cvpj_clip:
+                            cutdata = cvpj_clip['cut']
+                            cuttype = cutdata['type']
+                            if cuttype in ['loop', 'loop_off', 'loop_adv']: 
+                                wt_cutnorm = False
+                                wt_clip["readStart"] = cutdata['start']/4 if 'start' in cutdata else 0
+                                wt_clip["loopStart"] = cutdata['loopstart']/4 if 'loopstart' in cutdata else 0
+                                wt_clip["loopEnd"] = cutdata['loopend']/4
+                            if cuttype == 'cut': 
+                                wt_cutnorm = False
+                                wt_clip["readStart"] = cutdata['start']/4 if 'start' in cutdata else 0
                                 wt_clip["loopStart"] = 0
-                                wt_clip["loopEnd"] = clip_dur
+                                wt_clip["loopEnd"] = cutdata['end']/4
+                        if wt_cutnorm == True:
+                            wt_clip["readStart"] = 0
+                            wt_clip["loopStart"] = 0
+                            wt_clip["loopEnd"] = clip_dur
 
-                            fadeinval = data_values.nested_dict_get_value(cvpj_clip, ['fade', 'in', 'duration'])
-                            fadeoutval = data_values.nested_dict_get_value(cvpj_clip, ['fade', 'out', 'duration'])
-                            wt_clip["fadeIn"] = fadeinval if fadeinval != None else 0
-                            wt_clip["fadeOut"] = fadeoutval if fadeoutval != None else 0
+                        fadeinval = data_values.nested_dict_get_value(cvpj_clip, ['fade', 'in', 'duration'])
+                        fadeoutval = data_values.nested_dict_get_value(cvpj_clip, ['fade', 'out', 'duration'])
+                        wt_clip["fadeIn"] = fadeinval if fadeinval != None else 0
+                        wt_clip["fadeOut"] = fadeoutval if fadeoutval != None else 0
 
-                            if tracktype == 'instrument': wt_clip["type"] = "MIDI"
-                            if tracktype == 'audio': 
-                                wt_clip["type"] = "Audio"
-                                wt_clip["loopEnabled"] = loopEnabled
-                                wt_clip["transpose"] = float(transpose)
-                            wt_clips.append(wt_clip)
+                        if tracktype == 'instrument': wt_clip["type"] = "MIDI"
+                        if tracktype == 'audio': 
+                            wt_clip["type"] = "Audio"
+                            wt_clip["loopEnabled"] = loopEnabled
+                            wt_clip["transpose"] = float(transpose)
+                        wt_clips.append(wt_clip)
 
-                    wt_track["clips"] = wt_clips
-                    wt_track["mute"] = not params.get(s_trackdata, [], 'on', True)[0]
-                    wt_track["solo"] = bool(params.get(s_trackdata, [], 'solo', False)[0])
-                    wt_track["channelStripId"] = wt_trackid_ChanStrip
-                    wt_track["monitorInput"] = 1
-                    
-                    if tracktype == 'instrument': wt_track["input"] = None
-                    wt_tracks.append(wt_track)
+                wt_track["clips"] = wt_clips
+                wt_track["mute"] = not params.get(s_trackdata, [], 'on', True)[0]
+                wt_track["solo"] = bool(params.get(s_trackdata, [], 'solo', False)[0])
+                wt_track["channelStripId"] = wt_trackid_ChanStrip
+                wt_track["monitorInput"] = 1
+                
+                if tracktype == 'instrument': wt_track["input"] = None
+                wt_tracks.append(wt_track)
 
-                    for autoname in [['vol','gain'],['pan','balance']]:
-                        autopoints = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,autoname[0]])
-                        if autopoints != None: 
-                            autopoints = auto.remove_instant(autopoints, 0, False)
-                            if autoname[0] == 'pan': autopoints = auto.multiply_nopl(autopoints, 1, 0.5)
-                            wt_trackauto = make_automation(autoname[0], cvpj_trackid, autoname[1], wt_trackid_ChanStrip, wt_trackid, autopoints, trackcolor)
-                            wt_tracks.append(wt_trackauto)
+                for autoname in [['vol','gain'],['pan','balance']]:
+                    autopoints = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,autoname[0]])
+                    if autopoints != None: 
+                        autopoints = auto.remove_instant(autopoints, 0, False)
+                        if autoname[0] == 'pan': autopoints = auto.multiply_nopl(autopoints, 1, 0.5)
+                        wt_trackauto = make_automation(autoname[0], cvpj_trackid, autoname[1], wt_trackid_ChanStrip, wt_trackid, autopoints, trackcolor)
+                        wt_tracks.append(wt_trackauto)
 
 
         wt_out = {}

@@ -335,7 +335,7 @@ class output_wavtool(plugin_output.base):
                             if 'cut' in cvpj_clip:
                                 cutdata = cvpj_clip['cut']
                                 cuttype = cutdata['type']
-                                if cuttype == 'loop': 
+                                if cuttype in ['loop', 'loop_off', 'loop_adv']: 
                                     wt_cutnorm = False
                                     wt_clip["readStart"] = cutdata['start']/4 if 'start' in cutdata else 0
                                     wt_clip["loopStart"] = cutdata['loopstart']/4 if 'loopstart' in cutdata else 0
@@ -349,8 +349,12 @@ class output_wavtool(plugin_output.base):
                                 wt_clip["readStart"] = 0
                                 wt_clip["loopStart"] = 0
                                 wt_clip["loopEnd"] = clip_dur
-                            wt_clip["fadeIn"] = 0
-                            wt_clip["fadeOut"] = 0
+
+                            fadeinval = data_values.nested_dict_get_value(cvpj_clip, ['fade', 'in', 'duration'])
+                            fadeoutval = data_values.nested_dict_get_value(cvpj_clip, ['fade', 'out', 'duration'])
+                            wt_clip["fadeIn"] = fadeinval if fadeinval != None else 0
+                            wt_clip["fadeOut"] = fadeoutval if fadeoutval != None else 0
+
                             if tracktype == 'instrument': wt_clip["type"] = "MIDI"
                             if tracktype == 'audio': 
                                 wt_clip["type"] = "Audio"

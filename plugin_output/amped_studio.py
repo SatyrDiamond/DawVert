@@ -321,8 +321,9 @@ class output_cvpj_f(plugin_output.base):
 
         if 'timemarkers' in cvpj_l:
             for timemarkdata in cvpj_l['timemarkers']:
-                if timemarkdata['type'] == 'loop_area':
-                    amped_out["looping"] = {"active": True, "start": timemarkdata['position']/4, "end": timemarkdata['end']/4}
+                if 'type' in timemarkdata:
+                    if timemarkdata['type'] == 'loop_area':
+                        amped_out["looping"] = {"active": True, "start": timemarkdata['position']/4, "end": timemarkdata['end']/4}
 
         zip_amped.writestr('amped-studio-project.json', json.dumps(amped_out))
         zip_amped.writestr('filenames.json', json.dumps(amped_filenames))

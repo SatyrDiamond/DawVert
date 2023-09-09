@@ -308,10 +308,11 @@ class output_soundation(plugin_output.base):
 
         if 'timemarkers' in cvpj_l:
             for timemarkdata in cvpj_l['timemarkers']:
-                if timemarkdata['type'] == 'loop_area':
-                    sng_output["looping"] = True
-                    sng_output["loopStart"] = int(timemarkdata['position']*ticksdiv)
-                    sng_output["loopEnd"] = int(timemarkdata['end']*ticksdiv)
+                if 'type' in timemarkdata:
+                    if timemarkdata['type'] == 'loop_area':
+                        sng_output["looping"] = True
+                        sng_output["loopStart"] = int(timemarkdata['position']*ticksdiv)
+                        sng_output["loopEnd"] = int(timemarkdata['end']*ticksdiv)
 
         with open(output_file, "w") as fileout:
             json.dump(sng_output, fileout, indent=2)

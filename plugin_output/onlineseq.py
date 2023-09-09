@@ -127,7 +127,7 @@ class output_onlineseq(plugin_output.base):
                 for autoname in autogroupdata:
                     s_autodata = autogroupdata[autoname]
                     if [autogroup, autoname] == ['main', 'bpm']: create_markers(s_autodata, 0, 0, 1)
-                    if [autogroup, autoname] == ['main', 'vol']: create_markers(s_autodata, 0, 8, 1)
+                    if [autogroup, autoname] == ['master', 'vol']: create_markers(s_autodata, 0, 8, 1)
                     if autogroup == 'track': 
                         for trackautodata in s_autodata:
                             s_trackautodata = s_autodata[trackautodata]

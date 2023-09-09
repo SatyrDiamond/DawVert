@@ -69,7 +69,15 @@ def r_pl_laned(cvpj_l, trackid, laneddata):
     cvpj_l['track_placements'][trackid] = {}
     if laneddata != None: cvpj_l['track_placements'][trackid] = laneddata
 
-
+def r_track_iter(cvpj_l):
+    cvpj_track_placements = cvpj_l['track_placements'] if 'track_placements' in cvpj_l else {}
+    cvpj_track_order = cvpj_l['track_order'] if 'track_order' in cvpj_l else []
+    cvpj_track_data = cvpj_l['track_data'] if 'track_data' in cvpj_l else {}
+    outdata = []
+    for trackid in cvpj_track_order:
+        track_placements = cvpj_track_placements[trackid] if trackid in cvpj_track_placements else {}
+        track_data = cvpj_track_data[trackid] if trackid in cvpj_track_data else {}
+        yield trackid, track_data, track_placements
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------

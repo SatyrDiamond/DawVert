@@ -805,14 +805,18 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
         fxcX.set('name', name)
         fxcX.set('muted', str(muted))
         lmms_encode_fxchain(fxcX, fxchannelJ)
+
         if 'sends' in fxchannelJ:
             sendsJ = fxchannelJ['sends']
             for json_send in sendsJ:
                 sendX = ET.SubElement(fxcX, "send")
                 sendX.set('channel', str(json_send['channel']))
                 sendautoid = None
-                if 'sendautoid' in json_send: sendautoid = ['send', json_send['sendautoid']]
-                add_auto_placements(1, None, sendautoid, 'amount', json_send, 'amount', sendX, 'amount', 'Send '+num+' > '+str(json_send['channel']), 'Amount')
+                if 'sendautoid' in json_send: 
+                    sendautoid = ['send', json_send['sendautoid']]
+                    add_auto_placements(json_send['amount'], None, sendautoid, 'amount', json_send, 'amount', sendX, 'amount', 'Send '+num+' > '+str(json_send['channel']), 'Amount')
+                else:
+                    sendX.set('amount', str(json_send['amount']))
         else:
             sendX = ET.SubElement(fxcX, "send")
             sendX.set('channel', '0')
@@ -936,8 +940,8 @@ class output_lmms(plugin_output.base):
 
         tracks.autoid_out_load(cvpj_l)
 
-        trksJ = cvpj_l['track_data']
-        trkorderJ = cvpj_l['track_order']
+        trksJ = cvpj_l['track_data'] if 'track_data' in cvpj_l else {}
+        trkorderJ = cvpj_l['track_order'] if 'track_order' in cvpj_l else []
         if 'track_placements' in cvpj_l: trkplacementsJ = cvpj_l['track_placements']
         else: trkplacementsJ = {}
 
@@ -994,7 +998,7 @@ class output_lmms(plugin_output.base):
         print("[output-lmms] Number of Patterns: " + str(patternscount_forprinting))
         print("[output-lmms] Number of Tracks: " + str(trackscount_forprinting))      
 
-        trksJ = cvpj_l['track_data']
+        trksJ = cvpj_l['track_data'] if 'track_data' in trksJ else {}
         
         if 'timemarkers' in cvpj_l:
             for timemarkdata in cvpj_l['timemarkers']:

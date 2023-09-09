@@ -125,8 +125,8 @@ class input_ableton(plugin_input.base):
 		tracks.a_addtrack_master(cvpj_l, mastertrack_name, mas_track_vol, mastertrack_color)
 		song.add_param(cvpj_l, 'bpm', tempo)
 
-
-		returnid = 0
+		sendnum = 1
+		returnid = 1
 
 		for x_track_data in list(x_Tracks):
 			tracktype = x_track_data.tag
@@ -144,6 +144,7 @@ class input_ableton(plugin_input.base):
 			track_sendholders = track_sends.findall('TrackSendHolder')
 
 			if tracktype == 'MidiTrack':
+				print('[input-ableton] MIDI: '+track_name+' ['+track_id+']')
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['track', track_id, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['track', track_id, 'pan'], None)
 
@@ -232,6 +233,7 @@ class input_ableton(plugin_input.base):
 					tracks.r_pl_notes(cvpj_l, track_id, cvpj_placement)  
 
 			if tracktype == 'AudioTrack':
+				print('[input-ableton] Audio: '+track_name+' ['+track_id+']')
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['track', track_id, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['track', track_id, 'pan'], None)
 
@@ -373,17 +375,20 @@ class input_ableton(plugin_input.base):
 
 			sendcount = 1
 			if tracktype in ['MidiTrack', 'AudioTrack']:
-
 				get_auto(x_track_data)
-
 				for track_sendholder in track_sendholders:
-					sendid = track_sendholder.get('Id')
-					sendlevel = get_param(track_sendholder, 'Send', 'float', 0, ['send', track_id, 'return_'+str(sendid)], None)
-					tracks.r_add_send(cvpj_l, track_id, 'return_'+str(sendid), sendlevel, None)
+					sendid = sendcount
+					sendautoid = 'send_'+track_id+'_'+str(sendid)
+					sendlevel = get_param(track_sendholder, 'Send', 'float', 0, ['send', sendautoid, 'amount'], None)
+					print('[input-ableton] Send Holder: '+str(sendid))
+					tracks.r_add_send(cvpj_l, track_id, 'return_'+str(sendid), sendlevel, sendautoid)
 					sendcount += 1
 
 			if tracktype == 'ReturnTrack':
 				cvpj_returntrackid = 'return_'+str(returnid)
+				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['return', returnid, 'vol'], None)
+				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['return', returnid, 'pan'], None)
+				print('[input-ableton] Return: '+track_name+' ['+str(returnid)+']')
 				tracks.r_add_return(cvpj_l, ['master'], cvpj_returntrackid)
 				tracks.r_add_return_basicdata(cvpj_l, ['master'], cvpj_returntrackid, track_name, track_color, track_vol, track_pan)
 				returnid += 1

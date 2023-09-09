@@ -337,6 +337,18 @@ class input_lc(plugin_input.base):
         tracks.m_inst_create(cvpj_l, 'chord', name='Chord', color=lc_colors[4])
         startinststr = 'lc_instlist_'
 
+        tempoauto = []
+        position = 0
+        prevtempo = 0
+        for chandata in lc_ch_p1:
+            duration = chandata['play_notes'] if 'play_notes' in chandata else 32
+            bpm = (3614.75409836/chandata['play_speed'])/2 if 'play_speed' in chandata else 120
+            tempopldata = auto.makepl(position, duration, [{"position": 0, "value": bpm}])
+            if prevtempo != bpm:
+                tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], tempopldata)
+                prevtempo = bpm
+            position += duration
+
         placements.make_timemarkers(cvpj_l, [4, 4], patternlen, lc_loop_start_bar)
 
         cvpj_l['do_addloop'] = True

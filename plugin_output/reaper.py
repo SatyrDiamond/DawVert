@@ -14,8 +14,8 @@ from functions import data_values
 from functions import colors
 from functions import notelist_data
 from functions import params
+from functions import tracks
 from functions import xtramath
-
 
 def make_vst2(rpp_fxchain, cvpj_plugindata): 
     vst_fx_name = cvpj_plugindata['plugin']['name']
@@ -213,14 +213,14 @@ class output_reaper(plugin_output.base):
     def parse(self, convproj_json, output_file):
         global reaper_tempo
         global tempomul
-        projJ = json.loads(convproj_json)
+        cvpj_l = json.loads(convproj_json)
 
         reaper_tempo = 140
         reaper_numerator = 4
         reaper_denominator = 4
 
-        if 'timesig' in projJ: reaper_numerator, reaper_denominator = projJ['timesig']
-        reaper_tempo = params.get(projJ, [], 'bpm', 120)[0]
+        if 'timesig' in cvpj_l: reaper_numerator, reaper_denominator = cvpj_l['timesig']
+        reaper_tempo = params.get(cvpj_l, [], 'bpm', 120)[0]
 
         tempomul = reaper_tempo/120
 
@@ -293,71 +293,60 @@ class output_reaper(plugin_output.base):
         rppdata.children.append(['MASTER_FX','1'])
         rppdata.children.append(['MASTER_SEL','0'])
 
-        if 'track_data' in projJ and 'track_order' in projJ:
-            for trackid in projJ['track_order']:
-                if trackid in projJ['track_data']:
-                    trackdata = projJ['track_data'][trackid]
+        for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+            cvpj_trackcolor = "0"
+            cvpj_trackname = data_values.get_value(cvpj_trackdata, 'name', '')
+            cvpj_trackvol = params.get(cvpj_trackdata, [], 'vol', 1)
+            cvpj_trackpan = params.get(cvpj_trackdata, [], 'pan', 0)
 
-                    cvpj_trackcolor = "0"
-                    cvpj_trackname = data_values.get_value(trackdata, 'name', '')
-                    cvpj_trackvol = params.get(trackdata, [], 'vol', 1)
-                    cvpj_trackpan = params.get(trackdata, [], 'pan', 0)
+            if 'color' in cvpj_trackdata: cvpj_trackcolor = cvpj_color_to_reaper_color(cvpj_trackdata['color'])
 
-                    if 'color' in trackdata: cvpj_trackcolor = cvpj_color_to_reaper_color(trackdata['color'])
+            track_uuid = '{'+str(uuid.uuid4())+'}'
 
-                    track_uuid = '{'+str(uuid.uuid4())+'}'
+            rpp_trackdata = rpp_obj('TRACK',[track_uuid])
+            rpp_trackdata.children.append(['NAME',cvpj_trackname])
+            rpp_trackdata.children.append(['PEAKCOL',cvpj_trackcolor])
+            rpp_trackdata.children.append(['BEAT','-1'])
+            rpp_trackdata.children.append(['AUTOMODE','0'])
+            rpp_trackdata.children.append(['VOLPAN',cvpj_trackvol,cvpj_trackpan,'-1','-1','1'])
+            rpp_trackdata.children.append(['MUTESOLO','0','0','0'])
+            rpp_trackdata.children.append(['IPHASE','0'])
+            rpp_trackdata.children.append(['PLAYOFFS','0','1'])
+            rpp_trackdata.children.append(['ISBUS','0','0'])
+            rpp_trackdata.children.append(['BUSCOMP','0','0','0','0','0'])
+            rpp_trackdata.children.append(['SHOWINMIX','1','0.6667','0.5','1','0.5','-1','-1','-1'])
+            rpp_trackdata.children.append(['SEL','0'])
+            rpp_trackdata.children.append(['REC','0','0','1','0','0','0','0','0'])
+            rpp_trackdata.children.append(['VU','2'])
+            rpp_trackdata.children.append(['TRACKHEIGHT','0','0','0','0','0','0'])
+            rpp_trackdata.children.append(['INQ','0','0','0','0.5','100','0','0','100'])
+            rpp_trackdata.children.append(['NCHAN','2'])
+            rpp_trackdata.children.append(['FX','1'])
+            rpp_trackdata.children.append(['TRACKID',track_uuid])
+            rpp_trackdata.children.append(['PERF','0'])
+            rpp_trackdata.children.append(['MIDIOUT','-1'])
+            rpp_trackdata.children.append(['MAINSEND','1','0'])
 
-                    rpp_trackdata = rpp_obj('TRACK',[track_uuid])
-                    rpp_trackdata.children.append(['NAME',cvpj_trackname])
-                    rpp_trackdata.children.append(['PEAKCOL',cvpj_trackcolor])
-                    rpp_trackdata.children.append(['BEAT','-1'])
-                    rpp_trackdata.children.append(['AUTOMODE','0'])
-                    rpp_trackdata.children.append(['VOLPAN',cvpj_trackvol,cvpj_trackpan,'-1','-1','1'])
-                    rpp_trackdata.children.append(['MUTESOLO','0','0','0'])
-                    rpp_trackdata.children.append(['IPHASE','0'])
-                    rpp_trackdata.children.append(['PLAYOFFS','0','1'])
-                    rpp_trackdata.children.append(['ISBUS','0','0'])
-                    rpp_trackdata.children.append(['BUSCOMP','0','0','0','0','0'])
-                    rpp_trackdata.children.append(['SHOWINMIX','1','0.6667','0.5','1','0.5','-1','-1','-1'])
-                    rpp_trackdata.children.append(['SEL','0'])
-                    rpp_trackdata.children.append(['REC','0','0','1','0','0','0','0','0'])
-                    rpp_trackdata.children.append(['VU','2'])
-                    rpp_trackdata.children.append(['TRACKHEIGHT','0','0','0','0','0','0'])
-                    rpp_trackdata.children.append(['INQ','0','0','0','0.5','100','0','0','100'])
-                    rpp_trackdata.children.append(['NCHAN','2'])
-                    rpp_trackdata.children.append(['FX','1'])
-                    rpp_trackdata.children.append(['TRACKID',track_uuid])
-                    rpp_trackdata.children.append(['PERF','0'])
-                    rpp_trackdata.children.append(['MIDIOUT','-1'])
-                    rpp_trackdata.children.append(['MAINSEND','1','0'])
+            rpp_fxchain = rpp_obj('FXCHAIN',[])
+            rpp_fxchain.children.append(['SHOW','0'])
+            rpp_fxchain.children.append(['LASTSEL','0'])
+            rpp_fxchain.children.append(['DOCKED','0'])
+            rpp_fxchain.children.append(['BYPASS','0','0','0'])
 
-                    rpp_fxchain = rpp_obj('FXCHAIN',[])
-                    rpp_fxchain.children.append(['SHOW','0'])
-                    rpp_fxchain.children.append(['LASTSEL','0'])
-                    rpp_fxchain.children.append(['DOCKED','0'])
-                    rpp_fxchain.children.append(['BYPASS','0','0','0'])
+            if 'instdata' in cvpj_trackdata:
+                cvpj_instdata = cvpj_trackdata['instdata']
+                if 'plugin' in cvpj_instdata:
+                        if cvpj_instdata['plugin'] in ['vst2-dll', 'vst2-so']:
+                            cvpj_plugindata = cvpj_instdata['plugindata']
+                            make_vst2(rpp_fxchain, cvpj_plugindata)
 
-                    if 'instdata' in trackdata:
-                        cvpj_instdata = trackdata['instdata']
-                        if 'plugin' in cvpj_instdata:
-                            if cvpj_instdata['plugin'] in ['vst2-dll', 'vst2-so']:
-                                cvpj_plugindata = cvpj_instdata['plugindata']
-                                make_vst2(rpp_fxchain, cvpj_plugindata)
+            rpp_trackdata.children.append(rpp_obj_data('FXCHAIN', [], rpp_fxchain))
 
-
-                    rpp_trackdata.children.append(rpp_obj_data('FXCHAIN', [], rpp_fxchain))
+            if 'notes' in track_placements: convert_placementdata(rpp_trackdata, track_placements['notes'], 'notes', track_uuid)
+            if 'audio' in track_placements: convert_placementdata(rpp_trackdata, track_placements['audio'], 'audio', track_uuid)
 
 
-                    if trackid in projJ['track_placements']:
-                        trackplacements = projJ['track_placements'][trackid]
-
-                        if 'notes' in trackplacements:
-                            convert_placementdata(rpp_trackdata, trackplacements['notes'], 'notes', track_uuid)
-                        if 'audio' in trackplacements:
-                            convert_placementdata(rpp_trackdata, trackplacements['audio'], 'audio', track_uuid)
-
-
-                    rppdata.children.append(rpp_obj_data('TRACK', [track_uuid], rpp_trackdata))
+            rppdata.children.append(rpp_obj_data('TRACK', [track_uuid], rpp_trackdata))
 
 
 

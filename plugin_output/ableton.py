@@ -6,6 +6,7 @@ from functions import notelist_data
 from functions import data_bytes
 from functions import auto
 from functions import audio
+from functions import tracks
 import plugin_output
 import math
 import json
@@ -968,33 +969,25 @@ def set_add_trackbase(xmltag, cvpj_track_data, tracktype, TrackUnfolded, track_p
 
 tracknum = 1
 
-def ableton_make_midi_track(cvpj_trackid):
+def ableton_make_midi_track(cvpj_trackid, track_placements):
     global tracknum
 
     cvpj_track_data = {}
     if cvpj_trackid in cvpj_l['track_data']: cvpj_track_data = cvpj_l['track_data'][cvpj_trackid]
 
-    cvpj_trackplacements = []
-    if 'track_placements' in cvpj_l:
-        if cvpj_trackid in cvpj_l['track_placements']:
-            if 'notes' in cvpj_l['track_placements'][cvpj_trackid]:
-                cvpj_trackplacements = notelist_data.sort(cvpj_l['track_placements'][cvpj_trackid]['notes'])
+    cvpj_trackplacements = notelist_data.sort(track_placements['notes']) if 'notes' in track_placements else []
 
     x_MidiTrack = addId(x_Tracks, 'MidiTrack', str(tracknum))
     set_add_trackbase(x_MidiTrack, cvpj_track_data, 'miditrack', 'true', cvpj_trackplacements)
     tracknum += 1
 
-def ableton_make_audio_track(cvpj_trackid):
+def ableton_make_audio_track(cvpj_trackid, track_placements):
     global tracknum
 
     cvpj_track_data = {}
     if cvpj_trackid in cvpj_l['track_data']: cvpj_track_data = cvpj_l['track_data'][cvpj_trackid]
 
-    cvpj_trackplacements = []
-    if 'track_placements' in cvpj_l:
-        if cvpj_trackid in cvpj_l['track_placements']:
-            if 'audio' in cvpj_l['track_placements'][cvpj_trackid]:
-                cvpj_trackplacements = notelist_data.sort(cvpj_l['track_placements'][cvpj_trackid]['audio'])
+    cvpj_trackplacements = notelist_data.sort(track_placements['audio']) if 'audio' in track_placements else []
 
     x_AudioTrack = addId(x_Tracks, 'AudioTrack', str(tracknum))
     set_add_trackbase(x_AudioTrack, cvpj_track_data, 'audiotrack', 'true', cvpj_trackplacements)
@@ -1096,21 +1089,13 @@ class output_cvpj(plugin_output.base):
         addvalue(x_LiveSet, 'LomIdView', '0')
 
         x_Tracks = ET.SubElement(x_LiveSet, "Tracks")
-        if 'track_order' in cvpj_l:
 
-            cvpj_numtracks = len(cvpj_l['track_order'])
-
-            if cvpj_numtracks > 35: LaneHeight = 17
-
-            for cvpj_trackid in cvpj_l['track_order']:
-                if cvpj_trackid in cvpj_l['track_data']:
-                    cvpj_s_track_data = cvpj_l['track_data'][cvpj_trackid]
-                    if 'type' in cvpj_s_track_data:
-                        if cvpj_s_track_data['type'] == 'instrument':
-                            ableton_make_midi_track(cvpj_trackid)
-                        if cvpj_s_track_data['type'] == 'audio':
-                            ableton_make_audio_track(cvpj_trackid)
-                    #print(cvpj_trackid)
+        LaneHeight = 35
+        for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+            tracktype = cvpj_trackdata['type']
+            if tracktype == 'instrument': ableton_make_midi_track(cvpj_trackid, track_placements)
+            if tracktype == 'audio': ableton_make_audio_track(cvpj_trackid, track_placements)
+            #print(cvpj_trackid)
 
         for master_return in master_returns:
             ableton_make_return_track(master_returns[master_return])

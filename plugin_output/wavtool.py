@@ -363,7 +363,7 @@ class output_wavtool(plugin_output.base):
                             wt_clips.append(wt_clip)
 
                     wt_track["clips"] = wt_clips
-                    wt_track["mute"] = not params.get(s_trackdata, [], 'on', 1.0)[0]
+                    wt_track["mute"] = not params.get(s_trackdata, [], 'on', True)[0]
                     wt_track["solo"] = bool(params.get(s_trackdata, [], 'solo', False)[0])
                     wt_track["channelStripId"] = wt_trackid_ChanStrip
                     wt_track["monitorInput"] = 1

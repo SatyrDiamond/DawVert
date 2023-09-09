@@ -541,7 +541,7 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                     if cvpj_placement_cut['type'] == 'cut':
                         if 'start' in cvpj_placement_cut: t_LoopStart = cvpj_placement_cut['start']/4
                         if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end']/4
-                    if cvpj_placement_cut['type'] == 'loop':
+                    if cvpj_placement_cut['type'] in ['loop', 'loop_off', 'loop_adv']:
                         t_LoopOn = 'true'
                         t_StartRelative = cvpj_placement_cut['start']/4 if 'start' in cvpj_placement_cut else 0
                         t_LoopStart = cvpj_placement_cut['loopstart']/4 if 'loopstart' in cvpj_placement_cut else 0
@@ -575,7 +575,7 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                     if 'start' in cvpj_placement_cut: t_LoopStart = (cvpj_placement_cut['start']/4)
                     if 'start' in cvpj_placement_cut: t_LoopEnd = (cvpj_placement_cut['end']/4)
 
-                if cvpj_placement_cut['type'] == 'loop':
+                if cvpj_placement_cut['type'] in ['loop', 'loop_off', 'loop_adv']:
                     t_LoopOn = 'true'
                     t_StartRelative = cvpj_placement_cut['start']/4 if 'start' in cvpj_placement_cut else 0
                     t_LoopStart = cvpj_placement_cut['loopstart']/4 if 'loopstart' in cvpj_placement_cut else 0

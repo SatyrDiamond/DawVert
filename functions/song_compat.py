@@ -145,6 +145,7 @@ def o_trackfx2fxrack(cvpj_l, cvpjtype):
     if 'track_master' in cvpj_l:
         print('[compat] trackfx2fxrack: Master to FX 0')
         cvpj_l['fxrack']['0'] = cvpj_l['track_master']
+        tracks.a_move_auto(cvpj_l, ['master','vol'], ['fxmixer','0','vol'])
 
     for trackid in c_orderingdata:
         trackdata = c_trackdata[trackid]
@@ -161,7 +162,15 @@ def o_trackfx2fxrack(cvpj_l, cvpjtype):
             fxtrack['chain_fx_audio'] = trackdata['chain_fx_audio']
             del trackdata['chain_fx_audio']
         cvpj_l['fxrack'][str(fxnum)] = fxtrack
+
         fxnum += 1
+
+def fxrack2trackfx(cvpj_l, cvpjtype): #unfinished
+    if 'fxmixer' in cvpj_l:
+        if '0' in cvpj_l['fxmixer']:
+            print('[compat] trackfx2fxrack: FX 0 to Master')
+            cvpj_l['track_master'] = cvpj_l['fxmixer']['0']
+    tracks.a_move_auto(cvpj_l, ['fxmixer','0','vol'], ['master','vol'])
 
 # -------------------------------------------- placement_cut --------------------------------------------
 
@@ -677,7 +686,7 @@ def remove_auto_placements(cvpj_l):
     if 'automation' in cvpj_l:
         cvpj_auto = cvpj_l['automation']
         for autotype in cvpj_auto:
-            if autotype == 'main':
+            if autotype in ['main', 'master']:
                 for autoid in cvpj_auto[autotype]:
                     cvpj_auto[autotype][autoid] = remove_auto_placements_single(cvpj_auto[autotype][autoid])
             else:
@@ -755,6 +764,7 @@ def makecompat_any(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     print('[compat] '+str(in__fxrack).ljust(5)+' | '+str(out__fxrack).ljust(5)+' | fxrack')
 
     if in__fxrack == False and out__fxrack == True: trackfx2fxrack(cvpj_proj, cvpj_type)
+    if in__fxrack == True and out__fxrack == False: fxrack2trackfx(cvpj_proj, cvpj_type)
     if in__auto_nopl == False and out__auto_nopl == True: remove_auto_placements(cvpj_proj)
 
     return json.dumps(cvpj_proj)

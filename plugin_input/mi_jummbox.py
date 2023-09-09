@@ -480,7 +480,7 @@ def parse_channel(channeldata, channum):
                         if bb_mod_target[0] == -1:
                             if bb_mod_target[2] == 1: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.01)
-                                tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'vol'], cvpj_autopl[0])
+                                tracks.a_add_auto_pl(cvpj_l, 'float', ['master', 'vol'], cvpj_autopl[0])
                             elif bb_mod_target[2] == 2: 
                                 cvpj_autopl = auto.multiply([cvpj_autodata], 30, 1)
                                 tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], cvpj_autopl[0])
@@ -540,6 +540,7 @@ class input_jummbox(plugin_input.base):
         bytestream = open(input_file, 'r', encoding='utf8')
         jummbox_json = json.load(bytestream)
 
+        tracks.a_addtrack_master(cvpj_l, 'Master', jummbox_json['masterGain'], None)
         cvpj_l_track_data = {}
         cvpj_l_track_order = []
         cvpj_l_track_placements = {}

@@ -138,7 +138,6 @@ class output_cvpj_f(plugin_output.base):
                 pluginid = cvpj_instadata['pluginid'] if 'pluginid' in cvpj_instadata else None
                 if pluginid != None:
                     plugtype = plugins.get_plug_type(cvpj_l, pluginid)
-                    print(plugtype)
 
                     if plugtype[0] == 'midi':
                         inst_supported = True
@@ -165,8 +164,6 @@ class output_cvpj_f(plugin_output.base):
                         amped_trackdata["devices"].append(vstcondata)
 
             if inst_supported == False:
-                midi_bank = plugins.get_plug_dataval(cvpj_l, pluginid, 'bank', 0)
-                midi_patch = plugins.get_plug_dataval(cvpj_l, pluginid, 'inst', 0)
                 sf2data = amped_makedevice('SF2','GM Player')
                 sf2params = []
                 sf2params.append(amped_makeparam(0, 'patch', 0))

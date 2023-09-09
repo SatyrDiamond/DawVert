@@ -9,6 +9,7 @@ from functions import data_values
 from functions import params
 from functions import idvals
 from functions import plugins
+from functions import tracks
 
 def float2int(value): return struct.unpack("<I", struct.pack("<f", value))[0]
 
@@ -45,9 +46,9 @@ class output_onlineseq(plugin_output.base):
     def getsupportedplugins(self): return ['midi']
     def parse(self, convproj_json, output_file):
         global glob_markerdata
-        projJ = json.loads(convproj_json)
+        cvpj_l = json.loads(convproj_json)
 
-        tempo = int(params.get(projJ, [], 'bpm', 120)[0])
+        tempo = int(params.get(cvpj_l, [], 'bpm', 120)[0])
 
         onlineseqdata = {}
         onlineseqdata[1] = {1: tempo, 3: []}
@@ -62,72 +63,65 @@ class output_onlineseq(plugin_output.base):
 
         glob_markerdata = {}
 
-        if 'track_data' in projJ and 'track_order' in projJ:
+        for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
             #print('[output-midi] Trk# | Ch# | Bnk | Prog | Key | Name')
+            if 'notes' in track_placements:
+                onlineseqinst = 43
+                trackname = data_values.get_value(cvpj_trackdata, 'name', 'noname')
+                trackvol = params.get(cvpj_trackdata, [], 'vol', 1.0)[0]
 
-            for trackid in projJ['track_order']:
-                if trackid in projJ['track_data']:
-                    trackdata = projJ['track_data'][trackid]
+                midiinst = None
 
-                    if trackid in projJ['track_placements']:
-                        if 'notes' in projJ['track_placements'][trackid]:
+                if 'instdata' in cvpj_trackdata:
+                    pluginid = data_values.get_value(cvpj_trackdata['instdata'], 'pluginid', 1.0)
+                    plugintype = plugins.get_plug_type(cvpj_l, pluginid)
+                    cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
 
-                            onlineseqinst = 43
-                            trackname = data_values.get_value(trackdata, 'name', 'noname')
-                            trackvol = params.get(trackdata, [], 'vol', 1.0)[0]
+                    if plugintype[0] == 'midi':
+                        if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['inst']
+                        else: midiinst = -1
+                    if plugintype[0] == 'soundfont2':
+                        if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['patch']
+                        else: midiinst = -1
+                    if plugintype[0] == 'retro':
+                        if plugintype[1] == 'sine': onlineseqinst = 13
+                        if plugintype[1] == 'square': onlineseqinst = 14
+                        if plugintype[1] == 'triangle': onlineseqinst = 16
+                        if plugintype[1] == 'saw': onlineseqinst = 15
+                
+                t_instid = idvals.get_idval(idvals_onlineseq_inst, str(midiinst), 'outid')
 
-                            midiinst = None
+                if t_instid not in ['null', None]: 
+                    onlineseqinst = int(t_instid)
+                #print(str(onlineseqinst).rjust(10), trackname)
 
-                            if 'instdata' in trackdata:
-                                pluginid = data_values.get_value(trackdata['instdata'], 'pluginid', 1.0)
-                                plugintype = plugins.get_plug_type(projJ, pluginid)
-                                cvpj_plugindata = plugins.get_plug_data(projJ, pluginid)
+                if onlineseqinst not in repeatedolinst: repeatedolinst[onlineseqinst] = 0
+                else: repeatedolinst[onlineseqinst] += 1 
 
-                                if plugintype[0] == 'midi':
-                                    if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['inst']
-                                    else: midiinst = -1
-                                if plugintype[0] == 'soundfont2':
-                                    if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['patch']
-                                    else: midiinst = -1
-                                if plugintype[0] == 'retro':
-                                    if plugintype[1] == 'sine': onlineseqinst = 13
-                                    if plugintype[1] == 'square': onlineseqinst = 14
-                                    if plugintype[1] == 'triangle': onlineseqinst = 16
-                                    if plugintype[1] == 'saw': onlineseqinst = 15
-                            
-                            t_instid = idvals.get_idval(idvals_onlineseq_inst, str(midiinst), 'outid')
+                track_pls = track_placements['notes']
 
-                            if t_instid not in ['null', None]: 
-                                onlineseqinst = int(t_instid)
-                            #print(str(onlineseqinst).rjust(10), trackname)
+                onlineseqnum = onlineseqinst + repeatedolinst[onlineseqinst]*10000
 
-                            if onlineseqinst not in repeatedolinst: repeatedolinst[onlineseqinst] = 0
-                            else: repeatedolinst[onlineseqinst] += 1 
+                onlseqinst = {1: onlineseqnum, 2: {1: float2int(trackvol), 10: 1, 15: trackname}}
+                onlineseqdata[1][3].append(onlseqinst)
 
-                            track_pls = projJ['track_placements'][trackid]['notes']
+                for track_pl in track_pls:
+                    basepos = track_pl['position']
+                    notelist = track_pl['notelist']
+                    for cvpj_note in notelist:
+                        onlineseq_note = {
+                            "1": int(cvpj_note['key']+60),
+                            "2": float2int(cvpj_note['position']+basepos),
+                            "3": float2int(cvpj_note['duration']),
+                            "4": onlineseqnum,
+                            "5": float2int(data_values.get_value(cvpj_note, 'vol', 1.0))
+                            }
+                        onlineseqdata[2].append(onlineseq_note)
 
-                            onlineseqnum = onlineseqinst + repeatedolinst[onlineseqinst]*10000
+                cvpjid_onlineseqid[onlineseqnum] = onlineseqnum
 
-                            onlseqinst = {1: onlineseqnum, 2: {1: float2int(trackvol), 10: 1, 15: trackname}}
-                            onlineseqdata[1][3].append(onlseqinst)
-
-                            for track_pl in track_pls:
-                                basepos = track_pl['position']
-                                notelist = track_pl['notelist']
-                                for cvpj_note in notelist:
-                                    onlineseq_note = {
-                                        "1": int(cvpj_note['key']+60),
-                                        "2": float2int(cvpj_note['position']+basepos),
-                                        "3": float2int(cvpj_note['duration']),
-                                        "4": onlineseqnum,
-                                        "5": float2int(data_values.get_value(cvpj_note, 'vol', 1.0))
-                                        }
-                                    onlineseqdata[2].append(onlineseq_note)
-
-                            cvpjid_onlineseqid[trackid] = onlineseqnum
-
-        if 'automation' in projJ:
-            cvpj_autodata = projJ['automation']
+        if 'automation' in cvpj_l:
+            cvpj_autodata = cvpj_l['automation']
             for autogroup in cvpj_autodata:
                 autogroupdata = cvpj_autodata[autogroup]
                 for autoname in autogroupdata:

@@ -105,96 +105,93 @@ class output_cvpj_f(plugin_output.base):
         amped_tracks = []
         amped_filenames = {}
 
-        if 'track_order' in cvpj_l and 'track_data' in cvpj_l:
-            for cvpj_trackid in cvpj_l['track_order']:
-                cvpj_trackdata = cvpj_l['track_data'][cvpj_trackid]
+        for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+            amped_trackdata = amped_maketrack()
+            amped_trackdata["name"] = cvpj_trackdata['name'] if 'name' in cvpj_trackdata else ''
+            amped_trackdata["pan"] = params.get(cvpj_trackdata, [], 'pan', 0)[0]
+            amped_trackdata["volume"] = params.get(cvpj_trackdata, [], 'vol', 1.0)[0]
+            amped_trackdata["mute"] = not params.get(cvpj_trackdata, [], 'on', True)[0]
+            amped_trackdata["solo"] = bool(params.get(cvpj_trackdata, [], 'solo', False)[0])
 
-                amped_trackdata = amped_maketrack()
-                amped_trackdata["name"] = cvpj_trackdata['name'] if 'name' in cvpj_trackdata else ''
-                amped_trackdata["pan"] = params.get(cvpj_trackdata, [], 'pan', 0)[0]
-                amped_trackdata["volume"] = params.get(cvpj_trackdata, [], 'vol', 1.0)[0]
-                amped_trackdata["mute"] = not params.get(cvpj_trackdata, [], 'on', 1.0)[0]
-                amped_trackdata["solo"] = bool(params.get(cvpj_trackdata, [], 'solo', 1.0)[0])
+            if cvpj_trackid in cvpj_placements:
 
-                if cvpj_trackid in cvpj_placements:
+                if 'notes' in cvpj_placements[cvpj_trackid]: 
+                    cvpj_noteclips = notelist_data.sort(cvpj_placements[cvpj_trackid]['notes'])
+                    for cvpj_noteclip in cvpj_noteclips:
+                        amped_position = cvpj_noteclip['position']
+                        amped_duration = cvpj_noteclip['duration']
+                        amped_offset = 0
+                        if 'cut' in cvpj_noteclip:
+                            cutdata = cvpj_noteclip['cut']
+                            cuttype = cutdata['type']
+                            if cuttype == 'cut': 
+                                amped_offset = cutdata['start']/4 if 'start' in cutdata else 0
+                        amped_region = amped_makeregion(amped_position, amped_duration, amped_offset)
 
-                    if 'notes' in cvpj_placements[cvpj_trackid]: 
-                        cvpj_noteclips = notelist_data.sort(cvpj_placements[cvpj_trackid]['notes'])
-                        for cvpj_noteclip in cvpj_noteclips:
-                            amped_position = cvpj_noteclip['position']
-                            amped_duration = cvpj_noteclip['duration']
-                            amped_offset = 0
-                            if 'cut' in cvpj_noteclip:
-                                cutdata = cvpj_noteclip['cut']
-                                cuttype = cutdata['type']
-                                if cuttype == 'cut': 
-                                    amped_offset = cutdata['start']/4 if 'start' in cutdata else 0
-                            amped_region = amped_makeregion(amped_position, amped_duration, amped_offset)
+                        amped_notes = []
 
-                            amped_notes = []
+                        if 'notelist' in cvpj_noteclip:
+                            for cvpj_note in cvpj_noteclip['notelist']:
+                                amped_notes.append({
+                                    "position": cvpj_note['position']/4, 
+                                    "length": cvpj_note['duration']/4, 
+                                    "key": int(cvpj_note['key']+60),
+                                    "velocity": cvpj_note['vol']*100 if 'vol' in cvpj_note else 100, 
+                                    "channel": 0
+                                    })
 
-                            if 'notelist' in cvpj_noteclip:
-                                for cvpj_note in cvpj_noteclip['notelist']:
-                                    amped_notes.append({
-                                        "position": cvpj_note['position']/4, 
-                                        "length": cvpj_note['duration']/4, 
-                                        "key": int(cvpj_note['key']+60),
-                                        "velocity": cvpj_note['vol']*100 if 'vol' in cvpj_note else 100, 
-                                        "channel": 0
-                                        })
+                        amped_region["midi"]['notes'] = amped_notes
 
-                            amped_region["midi"]['notes'] = amped_notes
+                        amped_trackdata["regions"].append(amped_region)
 
-                            amped_trackdata["regions"].append(amped_region)
+                if 'audio' in cvpj_placements[cvpj_trackid]:
+                    cvpj_audioclips = notelist_data.sort(cvpj_placements[cvpj_trackid]['audio'])
+                    for cvpj_audioclip in cvpj_audioclips:
+                        amped_position = cvpj_audioclip['position']
+                        amped_duration = cvpj_audioclip['duration']
+                        amped_offset = 0
 
-                    if 'audio' in cvpj_placements[cvpj_trackid]:
-                        cvpj_audioclips = notelist_data.sort(cvpj_placements[cvpj_trackid]['audio'])
-                        for cvpj_audioclip in cvpj_audioclips:
-                            amped_position = cvpj_audioclip['position']
-                            amped_duration = cvpj_audioclip['duration']
-                            amped_offset = 0
+                        rate = 1
 
-                            rate = 1
+                        if 'cut' in cvpj_audioclip:
+                            cutdata = cvpj_audioclip['cut']
+                            cuttype = cutdata['type']
+                            if cuttype == 'cut': 
+                                amped_offset = cutdata['start']/4 if 'start' in cutdata else 0
 
-                            if 'cut' in cvpj_audioclip:
-                                cutdata = cvpj_audioclip['cut']
-                                cuttype = cutdata['type']
-                                if cuttype == 'cut': 
-                                    amped_offset = cutdata['start']/4 if 'start' in cutdata else 0
+                        if 'audiomod' in cvpj_audioclip:
+                            cvpj_audiomod = cvpj_audioclip['audiomod']
+                            stretch_method = cvpj_audiomod['stretch_method'] if 'stretch_method' in cvpj_audiomod else None
+                            stretch_data = cvpj_audiomod['stretch_data'] if 'stretch_data' in cvpj_audiomod else {'rate': 1.0}
+                            stretch_rate = stretch_data['rate'] if 'rate' in stretch_data else 1
+                            if stretch_method == 'rate_speed': rate = stretch_rate
+                            if stretch_method == 'rate_tempo': rate = stretch_rate*(amped_bpm/120)
 
-                            if 'audiomod' in cvpj_audioclip:
-                                cvpj_audiomod = cvpj_audioclip['audiomod']
-                                stretch_method = cvpj_audiomod['stretch_method'] if 'stretch_method' in cvpj_audiomod else None
-                                stretch_data = cvpj_audiomod['stretch_data'] if 'stretch_data' in cvpj_audiomod else {'rate': 1.0}
-                                stretch_rate = stretch_data['rate'] if 'rate' in stretch_data else 1
-                                if stretch_method == 'rate_speed': rate = stretch_rate
-                                if stretch_method == 'rate_tempo': rate = stretch_rate*(amped_bpm/120)
+                        audioid = None
+                        if 'file' in cvpj_audioclip:
+                            audioid = addsample(zip_amped, cvpj_audioclip['file'])
+                        amped_audclip = {}
+                        amped_audclip['contentGuid'] = {}
+                        if audioid != None: amped_audclip['contentGuid']['userAudio'] = {"exportedId": audioid}
+                        amped_audclip['position'] = 0
+                        amped_audclip['gain'] = 1
+                        amped_audclip['length'] = amped_duration+amped_offset
+                        amped_audclip['offset'] = amped_offset
+                        amped_audclip['stretch'] = 1/rate
+                        amped_audclip['reversed'] = False
 
-                            audioid = None
-                            if 'file' in cvpj_audioclip:
-                                audioid = addsample(zip_amped, cvpj_audioclip['file'])
-                            amped_audclip = {}
-                            amped_audclip['contentGuid'] = {}
-                            if audioid != None: amped_audclip['contentGuid']['userAudio'] = {"exportedId": audioid}
-                            amped_audclip['position'] = 0
-                            amped_audclip['gain'] = 1
-                            amped_audclip['length'] = amped_duration+amped_offset
-                            amped_audclip['offset'] = amped_offset
-                            amped_audclip['stretch'] = 1/rate
-                            amped_audclip['reversed'] = False
-
-                            amped_region = amped_makeregion(amped_position, amped_duration, 0)
-                            amped_region["clips"] = [amped_audclip]
-                            amped_trackdata["regions"].append(amped_region)
+                        amped_region = amped_makeregion(amped_position, amped_duration, 0)
+                        amped_region["clips"] = [amped_audclip]
+                        amped_trackdata["regions"].append(amped_region)
 
 
-                    for autoname in [['vol','volume'], ['pan','pan']]:
-                        autopoints = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,autoname[0]])
-                        if autopoints != None: 
-                            ampedauto = cvpjauto_to_ampedauto(auto.remove_instant(autopoints, 0, False))
-                            amped_trackdata["automations"].append({"param": autoname[1], "points": ampedauto})
+                for autoname in [['vol','volume'], ['pan','pan']]:
+                    autopoints = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,autoname[0]])
+                    if autopoints != None: 
+                        ampedauto = cvpjauto_to_ampedauto(auto.remove_instant(autopoints, 0, False))
+                        amped_trackdata["automations"].append({"param": autoname[1], "points": ampedauto})
 
-                amped_tracks.append(amped_trackdata)
+            amped_tracks.append(amped_trackdata)
 
         for aid in audio_id:
             amped_filenames[audio_id[aid]] = aid

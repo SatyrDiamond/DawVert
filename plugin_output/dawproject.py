@@ -13,6 +13,7 @@ from functions import data_values
 from functions import params
 from functions import auto
 from functions import colors
+from functions import tracks
 
 truefalse = ['false','true']
 
@@ -172,19 +173,13 @@ class output_cvpj(plugin_output.base):
 
         # ----------------------------------------- Tracks -----------------------------------------
 
-        for cvpj_trackentry in cvpj_trackordering:
-            if cvpj_trackentry in cvpj_trackdata:
-                maketrack(x_str, cvpj_trackdata[cvpj_trackentry], cvpj_trackentry)
-
-        # ----------------------------------------- Tracks -----------------------------------------
-
-        for trackid in cvpj_trackplacements:
-            pldata = cvpj_trackplacements[trackid]
-
-            if 'notes' in pldata:
-                s_pl_nl = pldata['notes']
+        for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+            maketrack(x_str, cvpj_trackdata, cvpj_trackid)
+            
+            if 'notes' in track_placements:
+                s_pl_nl = track_placements['notes']
                 x_arr_lanes_pl = ET.SubElement(x_arr_lanes, "Lanes")
-                x_arr_lanes_pl.set('track', '__track__'+trackid)
+                x_arr_lanes_pl.set('track', '__track__'+cvpj_trackid)
                 #x_arr_lanes_pl.set('id', get_unused_id())
                 x_arr_lanes_clips = ET.SubElement(x_arr_lanes_pl, "Clips")
                 #x_arr_lanes_clips.set('id', get_unused_id())
@@ -200,7 +195,7 @@ class output_cvpj(plugin_output.base):
                         if s_trkplacement['cut']['type'] == 'cut':
                             x_arr_lanes_clip.set('duration', str((trkplcut['end'] - s_trkplacement['cut']['start'])/4))
                             x_arr_lanes_clip.set('playStart', str(trkplcut['start']/4))
-                        if s_trkplacement['cut']['type'] == 'loop':
+                        if s_trkplacement['cut']['type'] == ['loop', 'loop_off', 'loop_adv']:
                             x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
                             x_arr_lanes_clip.set('playStart', str(trkplcut['start']/4 if 'start' in trkplcut else 0))
                             x_arr_lanes_clip.set('loopStart', str(trkplcut['loopstart']/4 if 'loopstart' in trkplcut else 0))

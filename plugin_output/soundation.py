@@ -149,10 +149,14 @@ class output_soundation(plugin_output.base):
                     trackcolor = data_values.get_value(s_trackdata, 'color', [0.5,0.5,0.5])
                     sng_instparams = sng_trkdata['instrument'] = {"identifier": "com.soundation.GM-2"}
 
-                    cvpjauto_vol = auto.remove_instant(tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,'vol']), 0, False)
-                    sng_trkdata['volumeAutomation'] = cvpjauto_to_sngauto(cvpjauto_vol, ticksdiv) if cvpjauto_vol != None else []
-                    cvpjauto_pan = auto.remove_instant(tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,'pan']), 0, False)
-                    sng_trkdata['panAutomation'] = cvpjauto_to_sngauto(auto.multiply_nopl(cvpjauto_pan, 1, 0.5), ticksdiv) if cvpjauto_pan != None else []
+                    cvpjauto_vol = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,'vol'])
+                    if cvpjauto_vol != None:
+                        cvpjauto_vol = auto.remove_instant(cvpjauto_vol, 0, False)
+                        sng_trkdata['volumeAutomation'] = cvpjauto_to_sngauto(cvpjauto_vol, ticksdiv) if cvpjauto_vol != None else []
+                    cvpjauto_pan = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,'pan'])
+                    if cvpjauto_pan != None:
+                        cvpjauto_pan = auto.remove_instant(cvpjauto_vol, 0, False)
+                        sng_trkdata['panAutomation'] = cvpjauto_to_sngauto(auto.multiply_nopl(cvpjauto_pan, 1, 0.5), ticksdiv) if cvpjauto_pan != None else []
 
                     inst_supported = False
 

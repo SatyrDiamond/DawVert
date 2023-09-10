@@ -349,7 +349,6 @@ class output_cvpjs(plugin_output.base):
                         if 'cut' in CVPJ_Placement:
                             if 'type' in CVPJ_Placement['cut']:
                                 if CVPJ_Placement['cut']['type'] == 'cut':
-
                                     if 'start' in CVPJ_Placement['cut']: FL_playlistitem['startoffset'] = int((CVPJ_Placement['cut']['start']*ppq)/4)
                                     if 'end' in CVPJ_Placement['cut']: FL_playlistitem['endoffset'] = int((CVPJ_Placement['cut']['end']*ppq)/4)
                         if FL_playlistitem['position'] not in FL_Playlist_BeforeSort:

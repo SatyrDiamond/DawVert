@@ -163,7 +163,7 @@ class input_cvpj_r(plugin_input.base):
                             if cvpj_audio_preserve_pitch == 0: cvpj_placement['audiomod']['stretch_algorithm'] = 'resample'
                             else: cvpj_placement['audiomod']['stretch_algorithm'] = 'stretch'
                             cvpj_placement['audiomod']['pitch'] = cvpj_audio_pitch
-                            cvpj_placement['audiomod']['stretch_method'] = 'rate_ignoretempo'
+                            cvpj_placement['audiomod']['stretch_method'] = 'rate_speed'
                             cvpj_placement['audiomod']['stretch_data'] = {'rate': cvpj_audio_rate}
                             tracks.r_pl_audio(cvpj_l, cvpj_trackid, cvpj_placement)
 

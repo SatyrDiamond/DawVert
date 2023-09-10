@@ -70,6 +70,7 @@ def r2m(song):
             if 'name' in singletrack_data: m_name = singletrack_data['name']
             if 'color' in singletrack_data: m_color = singletrack_data['color']
   
+            ishybrid = True if singletrack_data['type'] == 'hybrid' else False
             singletrack_laned = 0
 
             if singletrack_data['type'] == 'instrument':
@@ -79,14 +80,10 @@ def r2m(song):
             if singletrack_data['type'] == 'instrument':
                 if trackid in t_s_trackplacements:
                     pltrack = t_s_trackplacements[trackid]
-
-                    if 'laned' in pltrack: 
-                        if pltrack['laned'] == 1: 
-                            singletrack_laned = 1
-
+                    singletrack_laned = 1 if 'laned' in pltrack else 0
                     if singletrack_laned == 0: 
                         print('[song-convert] r2m: inst non-laned:', trackid)
-                        singletrack_pl = pltrack['notes']
+                        singletrack_pl = pltrack['notes'] if 'notes' in pltrack else []
                         r2m_makeplaylistrow(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color, None, None)
                     else:
                         print('[song-convert] r2m: inst laned:', trackid)
@@ -94,22 +91,22 @@ def r2m(song):
                         t_lanedata = pltrack['lanedata']
                         for laneid in t_laneorder:
                             lane_data = t_lanedata[laneid]
-                            l_name = None
-                            l_color = None
-                            if 'name' in lane_data: l_name = lane_data['name']
-                            if 'color' in lane_data: l_color = lane_data['color']
+                            l_name = lane_data['name'] if 'name' in lane_data else None
+                            l_color = lane_data['color'] if 'color' in lane_data else None
                             if 'notes' in lane_data:
                                 r2m_makeplaylistrow(cvpj_proj, plnum, trackid, lane_data['notes'], m_name, m_color, l_name, l_color)
                                 plnum += 1
-                    if singletrack_laned == 0: plnum += 1
+                    if singletrack_laned == 0 and ishybrid == False: plnum += 1
 
             if singletrack_data['type'] == 'audio':
                 if trackid in t_s_trackplacements:
                     pltrack = t_s_trackplacements[trackid]
                     print('[song-convert] r2m: audio non-laned:', trackid)
-                    singletrack_pl = pltrack['audio']
+                    singletrack_pl = pltrack['audio'] if 'audio' in pltrack else []
                     r2m_makeplaylistrow_audio(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color)
                     plnum += 1
+
+            
 
     return json.dumps(cvpj_proj)
 
@@ -458,7 +455,7 @@ def m2mi(song):
         for cvpj_placement in cvpj_placements_notes:
             nle_data = [None, None, None]
 
-            nle_data[0] = cvpj_placement['notelist'].copy()
+            nle_data[0] = cvpj_placement['notelist'].copy() if 'notelist' in cvpj_placement else []
             if 'name' in cvpj_placement: nle_data[1] = cvpj_placement['name']
             if 'color' in cvpj_placement: nle_data[2] = cvpj_placement['color']
 

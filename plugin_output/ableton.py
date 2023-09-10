@@ -533,7 +533,7 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                     if cvpj_audiomod['stretch_algorithm'] == 'stretch_complexpro': w_WarpMode = 6
 
                 if 'stretch_data' in cvpj_audiomod: 
-                    w_timemarkers = cvpj_audiomod['stretch_data']
+                    if cvpj_audiomod['stretch_data'] != []: w_timemarkers = cvpj_audiomod['stretch_data']
 
         if 'cut' in cvpj_placement:
             cvpj_placement_cut = cvpj_placement['cut']
@@ -572,9 +572,10 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
 
                 if cvpj_placement_cut['type'] == 'cut':
                     t_LoopOn = 'false'
+                    if 'start' in cvpj_placement_cut: 
+                        t_LoopStart = (cvpj_placement_cut['start']/4)
+                        t_LoopEnd = able_duration+t_LoopStart
                     t_StartRelative = 0
-                    if 'start' in cvpj_placement_cut: t_LoopStart = (cvpj_placement_cut['start']/4)
-                    if 'start' in cvpj_placement_cut: t_LoopEnd = (cvpj_placement_cut['end']/4)
 
                 if cvpj_placement_cut['type'] in ['loop', 'loop_off', 'loop_adv']:
                     t_LoopOn = 'true'

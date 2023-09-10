@@ -299,9 +299,11 @@ class output_wavtool(plugin_output.base):
                                     if stretch_algorithm == 'resample':
                                         if stretch_method == 'rate_speed': transpose = (math.log2(stretch_rate)*12)
                                         if stretch_method == 'rate_tempo': transpose = (math.log2(stretch_rate*bpmmul)*12)
+                                        if stretch_method == 'rate_ignoretempo': transpose = (math.log2(stretch_rate)*12)
                                     else:
                                         if stretch_method == 'rate_speed': warprate = (stretch_rate)
                                         if stretch_method == 'rate_tempo': warprate = (stretch_rate*bpmmul)
+                                        if stretch_method == 'rate_ignoretempo': warprate = (stretch_rate)
                                         audiodata = audio.get_audiofile_info(audiofilename)
                                         dur_seconds = audiodata['dur_sec']*warprate
                                         warpdata = {}

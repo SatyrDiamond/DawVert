@@ -296,8 +296,8 @@ class output_reaper(plugin_output.base):
         for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
             cvpj_trackcolor = "0"
             cvpj_trackname = data_values.get_value(cvpj_trackdata, 'name', '')
-            cvpj_trackvol = params.get(cvpj_trackdata, [], 'vol', 1)
-            cvpj_trackpan = params.get(cvpj_trackdata, [], 'pan', 0)
+            cvpj_trackvol = params.get(cvpj_trackdata, [], 'vol', 1)[0]
+            cvpj_trackpan = params.get(cvpj_trackdata, [], 'pan', 0)[0]
 
             if 'color' in cvpj_trackdata: cvpj_trackcolor = cvpj_color_to_reaper_color(cvpj_trackdata['color'])
 

@@ -285,11 +285,14 @@ class output_cvpj_f(plugin_output.base):
                     amped_audclip['contentGuid'] = {}
                     if audioid != None: amped_audclip['contentGuid']['userAudio'] = {"exportedId": audioid}
                     amped_audclip['position'] = 0
-                    amped_audclip['gain'] = 1
+                    amped_audclip['gain'] = cvpj_audioclip['vol'] if 'vol' in cvpj_audioclip else 1
                     amped_audclip['length'] = amped_duration+amped_offset
                     amped_audclip['offset'] = amped_offset
                     amped_audclip['stretch'] = 1/rate
                     amped_audclip['reversed'] = False
+
+                    fadeinval = data_values.nested_dict_get_value(cvpj_audioclip, ['fade', 'in', 'duration'])
+                    amped_audclip["fadeIn"] = fadeinval if fadeinval != None else 0
 
                     amped_region = amped_makeregion(amped_position, amped_duration, 0)
                     amped_region["clips"] = [amped_audclip]

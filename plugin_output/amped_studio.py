@@ -276,6 +276,7 @@ class output_cvpj_f(plugin_output.base):
                         stretch_data = cvpj_audiomod['stretch_data'] if 'stretch_data' in cvpj_audiomod else {'rate': 1.0}
                         stretch_rate = stretch_data['rate'] if 'rate' in stretch_data else 1
                         if stretch_method == 'rate_speed': rate = stretch_rate
+                        if stretch_method == 'rate_ignoretempo': rate = stretch_rate
                         if stretch_method == 'rate_tempo': rate = stretch_rate*(amped_bpm/120)
 
                     audioid = None

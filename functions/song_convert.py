@@ -545,7 +545,7 @@ def mi2m(song, extra_json):
                                 if 'color' in index_pl_data: pldata['color'] = index_pl_data['color']
 
         del cvpj_proj['notelistindex']
-        print('[song-convert] Unused NotelistIndexes:', unused_notelistindex)
+        print('[song-convert] Unused NotelistIndexes:', ', '.join(unused_notelistindex))
 
         output_unused_patterns = False
         if 'mi2m-output-unused-nle' in extra_json:

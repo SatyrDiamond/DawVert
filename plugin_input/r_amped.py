@@ -40,7 +40,7 @@ def getsamplefile(filename):
     if os.path.exists(filename): return filename
     else: return localpath
 
-def do_params_path(paramsdata, pluginid):
+def do_idparams(paramsdata, pluginid):
     for param in paramsdata:
         plugins.add_plug_param(cvpj_l, pluginid, param['name'], param['value'], 'float', param['name'])
 
@@ -52,7 +52,7 @@ def get_contentGuid(contentGuid):
 
 def encode_devices(amped_tr_devices, trackid):
     for amped_tr_device in amped_tr_devices:
-        pluginid = plugins.get_id()
+        pluginid = str(amped_tr_device['id'])
         devicetype = [amped_tr_device['className'], amped_tr_device['label']]
 
         is_instrument = False
@@ -68,7 +68,7 @@ def encode_devices(amped_tr_devices, trackid):
             is_instrument = True
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', 'Drumpler')
             plugins.add_plug_data(cvpj_l, pluginid, 'kit', amped_tr_device['kit'])
-            do_params_path(amped_tr_device['params'], pluginid)
+            do_idparams(amped_tr_device['params'], pluginid)
 
         elif devicetype == ['SF2', 'GM Player']:
             is_instrument = True
@@ -86,19 +86,19 @@ def encode_devices(amped_tr_devices, trackid):
         elif devicetype == ['Granny', 'Granny']:
             is_instrument = True
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', 'Granny')
-            do_params_path(amped_tr_device['params'], pluginid)
+            do_idparams(amped_tr_device['params'], pluginid)
             plugins.add_plug_data(cvpj_l, pluginid, 'grannySampleGuid', amped_tr_device['grannySampleGuid'])
             plugins.add_plug_data(cvpj_l, pluginid, 'grannySampleName', amped_tr_device['grannySampleName'])
 
         elif devicetype == ['Volt', 'VOLT']:
             is_instrument = True
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', 'VOLT')
-            do_params_path(amped_tr_device['params'], pluginid)
+            do_idparams(amped_tr_device['params'], pluginid)
 
         elif devicetype == ['VoltMini', 'VOLT Mini']:
             is_instrument = True
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', 'VoltMini')
-            do_params_path(amped_tr_device['params'], pluginid)
+            do_idparams(amped_tr_device['params'], pluginid)
 
         elif devicetype == ['Sampler', 'Sampler']:
             is_instrument = True
@@ -131,25 +131,17 @@ def encode_devices(amped_tr_devices, trackid):
                 cvpj_region['r_key'] = [int(amped_samp_part['key']['min'])-60, int(amped_samp_part['key']['max'])-60]
                 plugins.add_plug_multisampler_region(cvpj_l, pluginid, cvpj_region)
 
-        elif devicetype == ['EqualizerPro', 'Equalizer']:
-            eqdata = {}
-            for param in amped_tr_device['params']:
-                data_values.nested_dict_add_value(eqdata, param['name'].split('/'), param['value'])
-            plugins.add_plug_data(cvpj_l, pluginid, 'eqdata', eqdata)
-
         elif devicetype[0] in ['BitCrusher', 'Chorus', 'Compressor', 
         'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 'Expander', 
         'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
-        'Reverb', 'Tremolo', 'Vibrato']:
+        'Reverb', 'Tremolo', 'Vibrato', 'EqualizerPro']:
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', devicetype[0])
-            do_params_path(amped_tr_device['params'], pluginid)
-
-        else:
-            print('UNKNOWN DEVICE TYPE')
-            exit()
-
+            do_idparams(amped_tr_device['params'], pluginid)
 
         if is_instrument == True: tracks.r_track_pluginid(cvpj_l, trackid, pluginid)
+        else:
+            if trackid == None: tracks.insert_fxslot(cvpj_l, ['master'], 'audio', pluginid)
+            else: tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
 
 def ampedauto_to_cvpjauto(autopoints):
     ampedauto = []
@@ -191,6 +183,7 @@ class input_amped(plugin_input.base):
 
         amped_tracks = amped_project['tracks']
         amped_masterTrack = amped_project['masterTrack']
+        #encode_devices(amped_masterTrack['devices'], None)
         amped_looping = amped_project['looping']
         amped_tempo = amped_project['tempo']
         amped_timeSignature = amped_project['timeSignature']

@@ -97,6 +97,7 @@ class output_cvpj_f(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'placement_cut': True,
+        'track_hybrid': True,
         'auto_nopl': True,
         'placement_audio_stretch': ['rate']
         }

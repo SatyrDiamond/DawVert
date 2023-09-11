@@ -554,7 +554,6 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
                         if 'end' in cvpj_placement_cut: t_LoopEnd = cvpj_placement_cut['end']
 
         timemarkerdur = (w_timemarkers[-1]['pos_real']-w_timemarkers[0]['pos_real'])
-
         ifnotexist = ((AudioDuration/timemarkerdur)*AudioDuration)*2
 
         #print('---------------------------------------- ',AudioDuration, timemarkerdur, ifnotexist)

@@ -108,7 +108,14 @@ class input_audiosanua(plugin_input.base):
     def getname(self): return 'AudioSauna'
     def gettype(self): return 'r'
     def getdawcapabilities(self): return {'placement_cut': True}
-    def supported_autodetect(self): return False
+    def supported_autodetect(self): return True
+    def detect(self, input_file): 
+        try:
+            zip_data = zipfile.ZipFile(input_file, 'r')
+            if 'songdata.xml' in zip_data.namelist(): return True
+            else: return False
+        except:
+            return False
     def parse(self, input_file, extra_param):
         global cvpj_l
         zip_data = zipfile.ZipFile(input_file, 'r')

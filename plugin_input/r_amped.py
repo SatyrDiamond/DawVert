@@ -163,7 +163,14 @@ class input_amped(plugin_input.base):
     def getshortname(self): return 'amped'
     def getname(self): return 'Amped Studio'
     def gettype(self): return 'r'
-    def supported_autodetect(self): return False
+    def supported_autodetect(self): return True
+    def detect(self, input_file): 
+        try:
+            zip_data = zipfile.ZipFile(input_file, 'r')
+            if 'amped-studio-project.json' in zip_data.namelist(): return True
+            else: return False
+        except:
+            return False
     def getdawcapabilities(self): 
         return {
         'placement_cut': True,
@@ -232,7 +239,7 @@ class input_amped(plugin_input.base):
                 amped_reg_clips = amped_reg['clips']
                 amped_reg_midi = amped_reg['midi']
                 amped_reg_name = amped_reg['name']
-                amped_reg_color = amped_reg['color'] if 'color' in amped_track else 'lime'
+                amped_reg_color = amped_reg['color'] if 'color' in amped_reg else 'lime'
                 cvpj_placement_base = {}
                 cvpj_placement_base['position'] = amped_reg_position
                 cvpj_placement_base['duration'] = amped_reg_length

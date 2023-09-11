@@ -32,11 +32,12 @@
 ## Web
 | DataType | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | :--- | :--- | :--- | :--- |
+| R | ```amped``` | Amped Studio | ```.json``` | ✔️ | |
+| R | ```soundation``` | Soundation | ```.sng``` | ❌ | |
+| R | ```wavtool``` | WavTool | ```.zip``` | ❌ | |
 | M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | |
 | R | ```onlineseq``` | Online Sequencer | ```.sequence``` | ❌ | |
-| R | ```wavtool``` | WavTool | ```.zip``` | ❌ | |
-| R | ```audiosauna``` | AudioSauna | ```.song``` | ❌ | |
-| R | ```soundation``` | Soundation | ```.sng``` | ❌ | |
+| R | ```audiosauna``` | AudioSauna | ```.song``` | ✔️ | |
 | R | ```petaporon``` | Petaporon | ```.json``` | ❌ | |
 
 ## Other

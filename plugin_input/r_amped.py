@@ -42,7 +42,6 @@ def encode_devices(amped_tr_devices, trackid):
         pluginid = plugins.get_id()
         devicetype = [amped_tr_device['className'], amped_tr_device['label']]
 
-        print(devicetype)
         is_instrument = False
 
         plugins.add_plug_fxdata(cvpj_l, pluginid, not amped_tr_device['bypass'], 1)
@@ -52,13 +51,13 @@ def encode_devices(amped_tr_devices, trackid):
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', devicetype[1])
             plugins.add_plug_data(cvpj_l, pluginid, 'data', amped_tr_device['wamPreset'])
 
-        if devicetype == ['Drumpler', 'Drumpler']:
+        elif devicetype == ['Drumpler', 'Drumpler']:
             is_instrument = True
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', 'Drumpler')
             plugins.add_plug_data(cvpj_l, pluginid, 'kit', amped_tr_device['kit'])
             do_params_path(amped_tr_device['params'], pluginid)
 
-        if devicetype == ['SF2', 'GM Player']:
+        elif devicetype == ['SF2', 'GM Player']:
             is_instrument = True
             value_patch = 0
             value_bank = 0
@@ -71,24 +70,24 @@ def encode_devices(amped_tr_devices, trackid):
             plugins.add_plug_gm_midi(cvpj_l, pluginid, value_bank, value_patch)
             plugins.add_plug_param(cvpj_l, pluginid, 'gain', paramval, 'float', 'Gain')
 
-        if devicetype == ['Granny', 'Granny']:
+        elif devicetype == ['Granny', 'Granny']:
             is_instrument = True
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', 'Granny')
             do_params_path(amped_tr_device['params'], pluginid)
             plugins.add_plug_data(cvpj_l, pluginid, 'grannySampleGuid', amped_tr_device['grannySampleGuid'])
             plugins.add_plug_data(cvpj_l, pluginid, 'grannySampleName', amped_tr_device['grannySampleName'])
 
-        if devicetype == ['Volt', 'VOLT']:
+        elif devicetype == ['Volt', 'VOLT']:
             is_instrument = True
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', 'VOLT')
             do_params_path(amped_tr_device['params'], pluginid)
 
-        if devicetype == ['VoltMini', 'VOLT Mini']:
+        elif devicetype == ['VoltMini', 'VOLT Mini']:
             is_instrument = True
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', 'VoltMini')
             do_params_path(amped_tr_device['params'], pluginid)
 
-        if devicetype == ['Sampler', 'Sampler']:
+        elif devicetype == ['Sampler', 'Sampler']:
             is_instrument = True
             samplerdata = {}
             for param in amped_tr_device['params']:
@@ -119,7 +118,31 @@ def encode_devices(amped_tr_devices, trackid):
                 cvpj_region['r_key'] = [int(amped_samp_part['key']['min'])-60, int(amped_samp_part['key']['max'])-60]
                 plugins.add_plug_multisampler_region(cvpj_l, pluginid, cvpj_region)
 
+        elif devicetype == ['EqualizerPro', 'Equalizer']:
+            eqdata = {}
+            for param in amped_tr_device['params']:
+                data_values.nested_dict_add_value(eqdata, param['name'].split('/'), param['value'])
+            plugins.add_plug_data(cvpj_l, pluginid, 'eqdata', eqdata)
+
+        elif devicetype[0] in ['BitCrusher', 'Chorus', 'Compressor', 
+        'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 'Expander', 
+        'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
+        'Reverb', 'Tremolo', 'Vibrato']:
+            plugins.add_plug(cvpj_l, pluginid, 'native-amped', devicetype[0])
+            do_params_path(amped_tr_device['params'], pluginid)
+
+        else:
+            print('UNKNOWN DEVICE TYPE')
+            exit()
+
+
         if is_instrument == True: tracks.r_track_pluginid(cvpj_l, trackid, pluginid)
+
+def ampedauto_to_cvpjauto(autopoints):
+    ampedauto = []
+    for autopoint in autopoints:
+        ampedauto.append({"position": autopoint['pos']*4, "value": autopoint['value']})
+    return ampedauto
 
 class input_amped(plugin_input.base):
     def __init__(self): pass
@@ -174,6 +197,16 @@ class input_amped(plugin_input.base):
             amped_tr_regions = amped_track['regions']
             amped_tr_devices = amped_track['devices']
             amped_tr_automations = amped_track['automations']
+
+            for amped_tr_automation in amped_tr_automations:
+                autoname = amped_tr_automation['param']
+                autopoints = tracks.a_auto_nopl_to_pl(ampedauto_to_cvpjauto(amped_tr_automation['points']))
+                if autoname == 'volume': 
+                    tracks.a_add_auto_pl(cvpj_l, 'float', ['track',amped_tr_id,'vol'], autopoints)
+                if autoname == 'pan': 
+                    tracks.a_add_auto_pl(cvpj_l, 'float', ['track',amped_tr_id,'pan'], autopoints)
+                
+
             tracks.r_create_track(cvpj_l, 'hybrid', amped_tr_id, name=amped_tr_name)
             tracks.r_add_param(cvpj_l, amped_tr_id, 'vol', amped_tr_volume, 'float')
             tracks.r_add_param(cvpj_l, amped_tr_id, 'pan', amped_tr_pan, 'float')

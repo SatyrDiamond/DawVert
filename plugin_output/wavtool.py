@@ -408,8 +408,9 @@ class output_wavtool(plugin_output.base):
         wt_out["loopLifted"] = False
         wt_out["loopEnabled"] = False
         wt_out["bpm"] = bpm
-        wt_out["beatNumerator"] = cvpj_l['timesig_numerator'] if 'timesig_numerator' in cvpj_l else 4
-        wt_out["beatDenominator"] = cvpj_l['timesig_denominator'] if 'timesig_denominator' in cvpj_l else 4
+        wt_out["beatNumerator"] = 4
+        wt_out["beatDenominator"] = 4
+        if 'timesig' in cvpj_l: wt_out["beatNumerator"], wt_out["beatDenominator"] = cvpj_l['timesig']
         wt_out["name"] = data_values.nested_dict_get_value(cvpj_l, ['info', 'name'])
         wt_out["arrangementFocusCategory"] = "TrackContent"
         wt_out["tracks"] = wt_tracks

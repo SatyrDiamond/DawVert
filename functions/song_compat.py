@@ -756,6 +756,8 @@ def r_unhybrid(cvpj_l):
     new_trackordering = []
     for cvpj_trackid, s_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
         tracktype = s_trackdata['type']
+        trackauto = data_values.nested_dict_get_value(cvpj_l, ['automation', 'track', cvpj_trackid])
+        if trackauto != None: del cvpj_l['automation']['track'][cvpj_trackid]
         if tracktype == 'hybrid':
             print('[r_unhybrid] '+cvpj_trackid+':', end=' ')
             for track_placement_type in track_placements:
@@ -767,6 +769,8 @@ def r_unhybrid(cvpj_l):
                     new_trackpl[split_cvpj_trackid] = {}
                     if track_placement_type == 'notes': new_trackpl[split_cvpj_trackid]['notes'] = track_placements['notes']
                     new_trackordering.append(split_cvpj_trackid)
+                    if trackauto != None: 
+                        data_values.nested_dict_add_value(cvpj_l, ['automation', 'track', split_cvpj_trackid], trackauto)
                 if track_placement_type == 'audio': 
                     print('Audio', end=' ')
                     split_cvpj_trackid = cvpj_trackid+'_unhybrid_audio'
@@ -775,6 +779,8 @@ def r_unhybrid(cvpj_l):
                     new_trackpl[split_cvpj_trackid] = {}
                     new_trackpl[split_cvpj_trackid]['audio'] = track_placements['audio']
                     new_trackordering.append(split_cvpj_trackid)
+                    if trackauto != None: 
+                        data_values.nested_dict_add_value(cvpj_l, ['automation', 'track', split_cvpj_trackid], trackauto)
             print()
         else:
             new_trackdata[cvpj_trackid] = s_trackdata

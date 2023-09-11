@@ -385,17 +385,21 @@ class output_cvpjs(plugin_output.base):
                                 cutdata = CVPJ_Placement['cut']
                                 if cutdata['type'] == 'cut':
                                     if pl_stretch[0] == 'rate_tempo':
-                                        if 'start' in cutdata: FL_playlistitem['startoffset'] = cutdata['start']*pl_stretch[1]
-                                        if 'end' in cutdata: FL_playlistitem['endoffset'] = cutdata['end']*pl_stretch[1]
+                                        if 'start' in cutdata: 
+                                            FL_playlistitem['startoffset'] = cutdata['start']*pl_stretch[1]
+                                            FL_playlistitem['endoffset'] = CVPJ_Placement['duration']*pl_stretch[1] + FL_playlistitem['startoffset']
                                     elif pl_stretch[0] == 'rate_ignoretempo':
-                                        if 'start' in cutdata: FL_playlistitem['startoffset'] = cutdata['start']*tempomul
-                                        if 'end' in cutdata: FL_playlistitem['endoffset'] = cutdata['end']*tempomul
+                                        if 'start' in cutdata: 
+                                            FL_playlistitem['startoffset'] = cutdata['start']*tempomul
+                                            FL_playlistitem['endoffset'] = CVPJ_Placement['duration']*tempomul + FL_playlistitem['startoffset']
                                     elif pl_stretch[0] == 'rate_speed':
-                                        if 'start' in cutdata: FL_playlistitem['startoffset'] = (cutdata['start']*tempomul)*pl_stretch[1]
-                                        if 'end' in cutdata: FL_playlistitem['endoffset'] = (cutdata['end']*tempomul)*pl_stretch[1]
+                                        if 'start' in cutdata: 
+                                            FL_playlistitem['startoffset'] = (cutdata['start']*tempomul)*pl_stretch[1]
+                                            FL_playlistitem['endoffset'] = (CVPJ_Placement['duration']*tempomul)*pl_stretch[1] + FL_playlistitem['startoffset']
                                     else:
-                                        if 'start' in cutdata: FL_playlistitem['startoffset'] = cutdata['start']
-                                        if 'end' in cutdata: FL_playlistitem['endoffset'] = cutdata['end']
+                                        if 'start' in cutdata: 
+                                            FL_playlistitem['startoffset'] = cutdata['start']
+                                            FL_playlistitem['endoffset'] = cutdata['start']+FL_playlistitem['length']
 
                         #for value in ['startoffset', 'endoffset']:
                         #    outprint = None

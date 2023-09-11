@@ -238,7 +238,7 @@ class output_cvpj_f(plugin_output.base):
                         cuttype = cutdata['type']
                         if cuttype == 'cut': 
                             amped_offset = cutdata['start']/4 if 'start' in cutdata else 0
-                    amped_region = amped_makeregion(amped_position, amped_duration, amped_offset)
+                    amped_region = amped_makeregion(amped_position, amped_duration, amped_offset*4)
 
                     amped_notes = []
 

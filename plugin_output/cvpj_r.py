@@ -14,7 +14,13 @@ class output_cvpj_f(plugin_output.base):
     def plugin_archs(self): return None
     def getdawcapabilities(self): 
         return {
-        'fxrack': True,
+        'track_hybrid': False,
+        'track_lanes': True,
+        'placement_cut': True,
+        'placement_loop': [],
+        'track_nopl': True,
+        'auto_nopl': True,
+        'placement_audio_events': True,
         'placement_audio_stretch': ['warp', 'rate']
         }
     def getsupportedplugins(self): return ['sampler', 'sampler-multi', 'sampler-slicer', 'sf2', 'vst2', 'vst3', 'clap', 'ladspa']

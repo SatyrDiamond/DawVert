@@ -147,16 +147,19 @@ class input_cvpj_r(plugin_input.base):
                                                     #print(c_mid_ch, c_mid_key, midinotes[c_mid_ch][c_mid_key])
 
                         #print(cvpj_offset)
-                        cvpj_offset_bpm = (  (cvpj_offset) *8)*tempomul
-                        cvpj_cutend = (  (cvpj_duration+cvpj_offset) *8)*tempomul
+                        cvpj_offset_bpm = ((cvpj_offset)*8)*tempomul
 
-                        cvpj_placement['duration'] = cvpj_duration
-                        cvpj_placement['cut'] = {'type': 'cut', 'start': cvpj_offset_bpm, 'end': cvpj_cutend}
-
-                        if cvpj_placement_type == 'notes': 
+                        if cvpj_placement_type == 'notes':
+                            cvpj_cutend = (  (cvpj_duration+cvpj_offset) *8)*tempomul
+                            cvpj_placement['duration'] = cvpj_duration
+                            cvpj_placement['cut'] = {'type': 'cut', 'start': cvpj_offset_bpm, 'end': cvpj_cutend}
                             tracks.r_pl_notes(cvpj_l, cvpj_trackid, cvpj_placement)
 
-                        if cvpj_placement_type == 'audio': 
+                        if cvpj_placement_type == 'audio':
+                            cvpj_offset /= cvpj_audio_rate
+                            cvpj_cutend = (((cvpj_duration+cvpj_offset)*8)*tempomul)
+                            cvpj_placement['duration'] = cvpj_duration
+                            cvpj_placement['cut'] = {'type': 'cut', 'start': cvpj_offset_bpm/cvpj_audio_rate, 'end': cvpj_cutend}
                             cvpj_placement['vol'] = cvpj_vol
                             cvpj_placement['pan'] = cvpj_pan
                             cvpj_placement['audiomod'] = {}
@@ -166,5 +169,7 @@ class input_cvpj_r(plugin_input.base):
                             cvpj_placement['audiomod']['stretch_method'] = 'rate_speed'
                             cvpj_placement['audiomod']['stretch_data'] = {'rate': cvpj_audio_rate}
                             tracks.r_pl_audio(cvpj_l, cvpj_trackid, cvpj_placement)
+
+                        #print(cvpj_placement['duration'], cvpj_placement['cut'])
 
         return json.dumps(cvpj_l)

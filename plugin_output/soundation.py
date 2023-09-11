@@ -111,6 +111,9 @@ class output_soundation(plugin_output.base):
         sng_output["studio"] = "v3.0.0-1278-g1d69643f3"
         sng_output["bpm"] = int(bpm)
         sng_output["timeSignature"] = "4/4"
+        if 'timesig' in cvpj_l: 
+            beatNumerator, beatDenominator = cvpj_l['timesig']
+            sng_output["timeSignature"] = str(beatNumerator)+'/'+str(beatDenominator)
         sng_output["looping"] = False
         sng_output["loopStart"] = 0
         sng_output["loopEnd"] = 0

@@ -179,7 +179,6 @@ def audiotrim(pls_data, basepos, startat, endat):
         plend = plpos+pldur
         orgoffset = 0
         if plcut != None: orgoffset = plcut['start']
-        print(orgoffset)
 
         start2, end2 = startat, plend
         start1, end1 = plpos, endat

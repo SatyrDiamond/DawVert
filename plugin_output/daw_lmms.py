@@ -595,7 +595,8 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
     add_auto_placements(1, [0, 100], ['track', trackid], 'vol', trkJ, 'vol', trkX_samptr, 'vol', trackname, 'Volume')
     add_auto_placements(0, [0, 100], ['track', trackid], 'pan', trkJ, 'pan', trkX_samptr, 'pan', trackname, 'Pan')
 
-    if 'fxrack_channel' in trkJ: trkX_samptr.set('fxch', str(trkJ['fxrack_channel']))
+    if 'fxrack_channel' in trkJ: 
+        trkX_samptr.set('fxch', str(trkJ['fxrack_channel']))
     
     if 'chain_fx_audio' in trkJ: lmms_encode_fxchain(trkX_samptr, trkJ)
 

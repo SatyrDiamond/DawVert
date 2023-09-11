@@ -248,7 +248,7 @@ class output_cvpj_f(plugin_output.base):
                                 "position": cvpj_note['position']/4, 
                                 "length": cvpj_note['duration']/4, 
                                 "key": int(cvpj_note['key']+60),
-                                "velocity": cvpj_note['vol']*100 if 'vol' in cvpj_note else 100, 
+                                "velocity": cvpj_note['vol']*127 if 'vol' in cvpj_note else 100, 
                                 "channel": 0
                                 })
 

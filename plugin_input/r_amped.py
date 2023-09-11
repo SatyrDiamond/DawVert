@@ -17,6 +17,19 @@ import struct
 import rpp
 import zipfile
 
+amped_colors = {
+                'mint': [0.20, 0.80, 0.63],
+                'lime': [0.54, 0.92, 0.16],
+                'yellow': [0.97, 0.91, 0.11],
+                'amber': [1.00, 0.76, 0.33],
+                'orange': [0.98, 0.61, 0.38],
+                'red': [0.96, 0.38, 0.43],
+                'magenta': [0.87, 0.44, 0.96],
+                'purple': [0.64, 0.48, 0.96],
+                'blue': [0.13, 0.51, 0.96],
+                'cyan': [0.20, 0.80, 0.63]
+                }
+
 def reaper_color_to_cvpj_color(i_color, isreversed): 
     bytecolors = struct.pack('i', i_color)
     if isreversed == True: return colors.rgb_int_to_rgb_float([bytecolors[0],bytecolors[1],bytecolors[2]])
@@ -189,7 +202,7 @@ class input_amped(plugin_input.base):
         for amped_track in amped_tracks:
             amped_tr_id = str(amped_track['id'])
             amped_tr_name = amped_track['name']
-            amped_tr_color = amped_track['color']
+            amped_tr_color = amped_track['color'] if 'color' in amped_track else 'lime'
             amped_tr_pan = amped_track['pan']
             amped_tr_volume = amped_track['volume']
             amped_tr_mute = amped_track['mute']
@@ -206,8 +219,7 @@ class input_amped(plugin_input.base):
                 if autoname == 'pan': 
                     tracks.a_add_auto_pl(cvpj_l, 'float', ['track',amped_tr_id,'pan'], autopoints)
                 
-
-            tracks.r_create_track(cvpj_l, 'hybrid', amped_tr_id, name=amped_tr_name)
+            tracks.r_create_track(cvpj_l, 'hybrid', amped_tr_id, name=amped_tr_name, color=amped_colors[amped_tr_color])
             tracks.r_add_param(cvpj_l, amped_tr_id, 'vol', amped_tr_volume, 'float')
             tracks.r_add_param(cvpj_l, amped_tr_id, 'pan', amped_tr_pan, 'float')
             tracks.r_add_param(cvpj_l, amped_tr_id, 'enabled', int(not amped_tr_mute), 'bool')
@@ -220,13 +232,14 @@ class input_amped(plugin_input.base):
                 amped_reg_clips = amped_reg['clips']
                 amped_reg_midi = amped_reg['midi']
                 amped_reg_name = amped_reg['name']
-                amped_reg_color = amped_reg['color'] if 'color' in amped_reg else None
+                amped_reg_color = amped_reg['color'] if 'color' in amped_track else 'lime'
                 cvpj_placement_base = {}
                 cvpj_placement_base['position'] = amped_reg_position
                 cvpj_placement_base['duration'] = amped_reg_length
                 cvpj_placement_base['name'] = amped_reg['name']
+                cvpj_placement_base['color'] = amped_colors[amped_reg_color]
                 cvpj_placement_base['cut'] = {'type': 'cut', 'start':amped_reg_offset, 'end': amped_reg_length+amped_reg_offset}
-                if amped_reg_midi != {'notes': [], 'events': [], 'chords': []}:
+                if amped_reg_midi != {'notes': [], 'events': [], 'chords': []}: 
                     cvpj_placement_notes = cvpj_placement_base.copy()
                     cvpj_placement_notes['notelist'] = []
                     for amped_note in amped_reg_midi['notes']:
@@ -254,6 +267,7 @@ class input_amped(plugin_input.base):
                     trimpls = placement_data.audiotrim(temp_pls, amped_reg_position-amped_reg_offset,amped_reg_offset, amped_reg_offset+amped_reg_length)
 
                     for temp_pl in trimpls:
+                        temp_pl['color'] = amped_colors[amped_reg_color]
                         tracks.r_pl_audio(cvpj_l, amped_tr_id, temp_pl)
 
         return json.dumps(cvpj_l)

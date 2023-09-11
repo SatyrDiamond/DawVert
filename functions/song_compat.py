@@ -765,7 +765,7 @@ def r_unhybrid(cvpj_l):
                     new_trackdata[split_cvpj_trackid] = s_trackdata.copy()
                     new_trackdata[split_cvpj_trackid]['type'] = 'instrument'
                     new_trackpl[split_cvpj_trackid] = {}
-                    new_trackpl[split_cvpj_trackid]['notes'] = track_placements['notes']
+                    if track_placement_type == 'notes': new_trackpl[split_cvpj_trackid]['notes'] = track_placements['notes']
                     new_trackordering.append(split_cvpj_trackid)
                 if track_placement_type == 'audio': 
                     print('Audio', end=' ')

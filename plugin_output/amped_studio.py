@@ -16,12 +16,18 @@ from functions import auto
 from functions import notelist_data
 
 id_out_num = 10000
+devid_out_num = 30000
 audioidnum = 0
 
 def getid(): 
     global id_out_num
     id_out_num += 1
     return id_out_num
+
+def device_getid(): 
+    global devid_out_num
+    devid_out_num += 1
+    return devid_out_num
 
 def addsample(zip_amped, filepath): 
     global audioidnum
@@ -70,13 +76,53 @@ def amped_makeregion(position, duration, offset):
 
 def amped_makedevice(className, label): 
     amped_device = {}
-    amped_device["id"] = getid()
+    amped_device["id"] = device_getid()
     amped_device["className"] = className
     amped_device["label"] = label
     amped_device["params"] = []
     amped_device["preset"] = {}
     amped_device["bypass"] = False
     return amped_device
+
+def do_idparams(pluginid):
+    paramout = []
+    paramlist = plugins.get_plug_paramlist(cvpj_l, pluginid)
+    for paramnum in range(len(paramlist)):
+        paramdata = plugins.get_plug_param(cvpj_l, pluginid, paramlist[paramnum], 0)
+        paramout.append({"id": paramnum, "name": paramdata[2], "value": paramdata[0]})
+    return paramout
+
+def amped_parse_effects(fxchain_audio):
+    outdata = []
+    for pluginid in fxchain_audio:
+        plugtype = plugins.get_plug_type(cvpj_l, pluginid)
+        if plugtype[0] == 'native-amped':
+
+            if plugtype[1] in ["Amp Sim Utility", 'Clean Machine', 'Distortion Machine', 'Metal Machine']:
+                devicedata = amped_makedevice('WAM', 'Amp Sim Utility')
+                if plugtype[1] == "Amp Sim Utility": wamClassName = "WASABI_SC.Utility"
+                if plugtype[1] == "Clean Machine": wamClassName = 'WASABI_SC.CleanMachine'
+                if plugtype[1] == "Distortion Machine": wamClassName = 'WASABI_SC.DistoMachine'
+                if plugtype[1] == "Metal Machine": wamClassName = 'WASABI_SC.MetalMachine'
+                devicedata['wamClassName'] = wamClassName
+                devicedata['wamPreset'] = plugins.get_plug_dataval(cvpj_l, pluginid, 'data', '{}')
+                outdata.append(devicedata)
+
+            elif plugtype[1] in ['BitCrusher', 'Chorus', 'Compressor', 
+        'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 'Expander', 
+        'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
+        'Reverb', 'Tremolo', 'Vibrato', 'EqualizerPro']:
+                classname = plugtype[1]
+                classlabel = plugtype[1]
+                if classname == 'CompressorMini': classlabel = 'Equalizer Mini'
+                if classname == 'Equalizer': classlabel = 'Equalizer Mini'
+                if classname == 'LimiterMini': classlabel = 'Limiter Mini'
+                if classname == 'EqualizerPro': classlabel = 'Equalizer'
+                devicedata = amped_makedevice(classname, classlabel)
+                devicedata['params'] = do_idparams(pluginid)
+                outdata.append(devicedata)
+
+    return outdata
 
 def amped_makeparam(i_id, i_name, i_value):
     return {"id": i_id, "name": i_name, "value": i_value}
@@ -104,6 +150,8 @@ class output_cvpj_f(plugin_output.base):
     def getsupportedplugins(self): return ['sampler', 'midi', 'vst2']
     def parse(self, convproj_json, output_file):
         global audio_id
+        global cvpj_l
+
         cvpj_l = json.loads(convproj_json)
         cvpj_placements = cvpj_l['track_placements']
         audio_id = {}
@@ -306,6 +354,11 @@ class output_cvpj_f(plugin_output.base):
                     if autopoints != None: 
                         ampedauto = cvpjauto_to_ampedauto(auto.remove_instant(autopoints, 0, False))
                         amped_trackdata["automations"].append({"param": autoname[1], "points": ampedauto})
+
+            if 'chain_fx_audio' in cvpj_trackdata:
+                amped_effects = amped_parse_effects(cvpj_trackdata['chain_fx_audio'])
+                for amped_effect in amped_effects:
+                    amped_trackdata["devices"].append(amped_effect)
 
             amped_tracks.append(amped_trackdata)
 

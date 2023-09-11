@@ -244,13 +244,14 @@ class output_cvpj_f(plugin_output.base):
 
                     if 'notelist' in cvpj_noteclip:
                         for cvpj_note in cvpj_noteclip['notelist']:
-                            amped_notes.append({
-                                "position": cvpj_note['position']/4, 
-                                "length": cvpj_note['duration']/4, 
-                                "key": int(cvpj_note['key']+60),
-                                "velocity": cvpj_note['vol']*127 if 'vol' in cvpj_note else 100, 
-                                "channel": 0
-                                })
+                            if 0 <= cvpj_note['key']+60 <= 128:
+                                amped_notes.append({
+                                    "position": cvpj_note['position']/4, 
+                                    "length": cvpj_note['duration']/4, 
+                                    "key": int(cvpj_note['key']+60),
+                                    "velocity": cvpj_note['vol']*100 if 'vol' in cvpj_note else 100, 
+                                    "channel": 0
+                                    })
 
                     amped_region["midi"]['notes'] = amped_notes
 

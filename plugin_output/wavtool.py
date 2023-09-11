@@ -272,13 +272,14 @@ class output_wavtool(plugin_output.base):
                             clip_notes = cvpj_clip['notelist']
                             wt_notes = []
                             for clip_note in clip_notes:
-                                wt_note = {}
-                                wt_note['pitch'] = clip_note['key']+60
-                                wt_note['start'] = (clip_note['position'])/4
-                                wt_note['end'] = (clip_note['position']+clip_note['duration'])/4
-                                wt_note['lifted'] = False
-                                wt_note['velocity'] = clip_note['vol'] if 'vol' in clip_note else ''
-                                wt_notes.append(wt_note)
+                                if 0 <= clip_note['key']+60 <= 128:
+                                    wt_note = {}
+                                    wt_note['pitch'] = clip_note['key']+60
+                                    wt_note['start'] = (clip_note['position'])/4
+                                    wt_note['end'] = (clip_note['position']+clip_note['duration'])/4
+                                    wt_note['lifted'] = False
+                                    wt_note['velocity'] = clip_note['vol'] if 'vol' in clip_note else ''
+                                    wt_notes.append(wt_note)
 
                         loopEnabled = False
                         transpose = 0

@@ -295,12 +295,13 @@ class output_soundation(plugin_output.base):
                         sng_region["notes"] = []
                         if 'notelist' in cvpj_clip:
                             for cvpj_note in cvpj_clip['notelist']:
-                                sng_note = {}
-                                sng_note["note"] = int(cvpj_note['key']+60)
-                                sng_note["velocity"] = data_values.get_value(cvpj_note, 'vol', 1)
-                                sng_note["position"] = int(cvpj_note['position']*ticksdiv)
-                                sng_note["length"] = int(cvpj_note['duration']*ticksdiv)
-                                sng_region["notes"].append(sng_note)
+                                if 0 <= cvpj_note['key']+60 <= 128:
+                                    sng_note = {}
+                                    sng_note["note"] = int(cvpj_note['key']+60)
+                                    sng_note["velocity"] = data_values.get_value(cvpj_note, 'vol', 1)
+                                    sng_note["position"] = int(cvpj_note['position']*ticksdiv)
+                                    sng_note["length"] = int(cvpj_note['duration']*ticksdiv)
+                                    sng_region["notes"].append(sng_note)
 
                         sng_trkdata['regions'].append(sng_region)
 

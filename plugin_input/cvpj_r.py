@@ -14,7 +14,7 @@ class input_cvpj_r(plugin_input.base):
     def supported_autodetect(self): return True
     def getdawcapabilities(self): 
         return {
-        'fxrack': 'debug',
+        'track_hybrid': 'True',
         'track_lanes': 'debug',
         'placement_cut': 'debug',
         'placement_loop': 'debug',

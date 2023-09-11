@@ -24,7 +24,7 @@ def getsamplefile(filename):
     if os.path.exists(filename): return filename
     else: return localpath
 
-class input_cvpj_r(plugin_input.base):
+class input_reaper(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'reaper'
@@ -149,13 +149,13 @@ class input_cvpj_r(plugin_input.base):
                         #print(cvpj_offset)
                         cvpj_offset_bpm = ((cvpj_offset)*8)*tempomul
 
-                        if cvpj_placement_type == 'notes':
+                        if cvpj_placement_type == 'notes': 
                             cvpj_cutend = (  (cvpj_duration+cvpj_offset) *8)*tempomul
                             cvpj_placement['duration'] = cvpj_duration
                             cvpj_placement['cut'] = {'type': 'cut', 'start': cvpj_offset_bpm, 'end': cvpj_cutend}
                             tracks.r_pl_notes(cvpj_l, cvpj_trackid, cvpj_placement)
 
-                        if cvpj_placement_type == 'audio':
+                        if cvpj_placement_type == 'audio': 
                             cvpj_offset /= cvpj_audio_rate
                             cvpj_cutend = (((cvpj_duration+cvpj_offset)*8)*tempomul)
                             cvpj_placement['duration'] = cvpj_duration

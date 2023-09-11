@@ -168,3 +168,64 @@ def cutloopdata(start, loopstart, loopend):
         out['loopstart'] = loopstart
         out['loopend'] = loopend
     return out
+
+def audiotrim(pls_data, basepos, startat, endat):
+    #print('audiotrim')
+    out_plsdata = []
+    for pl_data in pls_data:
+        plpos = pl_data['position']
+        pldur = pl_data['duration']
+        plcut = pl_data['cut'] if 'cut' in pl_data else None
+        plend = plpos+pldur
+        orgoffset = 0
+        if plcut != None: orgoffset = plcut['start']
+        print(orgoffset)
+
+        start2, end2 = startat, plend
+        start1, end1 = plpos, endat
+
+        overlap_left = max((start2-start1), 0)
+        overlap_right = max((end2-end1), 0)
+
+        out_plpos, out_pldur = pl_data['position'], pl_data['duration']
+
+        idoutpl = False
+        if overlap_left == 0 and overlap_right == 0:
+            idoutpl = True
+
+        if overlap_left != 0 and overlap_right == 0: 
+            ol_plpos = overlap_left
+            if pldur > ol_plpos: 
+            #    print(' ==|==  |  ', end=' - ')
+                out_plpos += ol_plpos
+                out_pldur -= overlap_left
+            #    print(pl_data['position'], pldur)
+                pl_data['cut'] = {'type': 'cut', 'start':overlap_left+orgoffset}
+                idoutpl = True
+            #else:
+            #    print('===|    |  ')
+
+        if overlap_left == 0 and overlap_right != 0: 
+            #print('   |  ==|== - ', end='')
+            #print(out_plpos, out_pldur, overlap_left, overlap_right)
+            out_pldur -= overlap_right
+            if out_pldur > 0: 
+                pl_data['cut'] = {'type': 'cut', 'start':0+orgoffset}
+                idoutpl = True
+
+        if overlap_left != 0 and overlap_right != 0: 
+            #print(' ==|====|== - ', end='')
+            out_plpos += overlap_left
+            out_pldur -= overlap_right+overlap_left
+            #print(out_plpos, out_plpos+overlap_left, plend-plpos)
+            if out_pldur > 0 and plend-plpos > out_plpos+overlap_left: 
+                pl_data['cut'] = {'type': 'cut', 'start':out_plpos-plpos+orgoffset}
+                idoutpl = True
+
+        if idoutpl != False:
+            out_pl = pl_data.copy()
+            out_pl['position'] = out_plpos+basepos
+            out_pl['duration'] = out_pldur
+            out_plsdata.append(out_pl)
+
+    return out_plsdata

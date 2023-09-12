@@ -17,7 +17,6 @@
 | M | ```it``` | Impulse Tracker | ```.it``` | ✔️ | |
 | M | ```umx``` | Unreal Music Package | ```.umx``` | ✔️ | Only if it contains ``mod``, ``xm``, ``s3m``, or ``it``|
 
-
 ## Chiptune/Retro
 | DataType | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | :--- | :--- | :--- | :--- |

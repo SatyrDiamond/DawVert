@@ -6,6 +6,7 @@
 | R | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ | 11 only |
 | M-I | ```flp``` | FL Studio | ```.flp``` | ✔️ | FL 20+ or higher |
 | R | ```lmms``` | LMMS | ```.mmp```/```.mmpz``` | ✔️ | Stable and Alpha |
+| R | ```reaper``` | Reaper | ```.rpp``` | ✔️ | |
 
 ## Tracker
 | DataType | Short Name | Name | Ext | Autodetect | Info | 

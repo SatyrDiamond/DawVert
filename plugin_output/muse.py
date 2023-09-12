@@ -13,6 +13,7 @@ from functions import colors
 from functions import params
 from functions import data_values
 from functions import plugins
+from functions import tracks
 
 def addvalue(xmltag, name, value):
     x_temp = ET.SubElement(xmltag, name)
@@ -172,18 +173,19 @@ def maketrack_midi(xmltag, cvpj_trackplacements, trackname, portnum, insttrackda
         if 'name' in placement: addvalue(x_part, 'name', placement['name'])
         p_dur = int(placement['duration']*NoteStep)
         p_pos = int(placement['position']*NoteStep)
-        x_poslen = ET.SubElement(x_part, 'poslen')
-        x_poslen.set('len', str(p_dur))
-        x_poslen.set('tick', str(p_pos))
-        if 'notelist' in placement: 
-            notelist = placement['notelist']
-            for note in notelist:
-                x_event = ET.SubElement(x_part, "event")
-                x_event.set('tick', str(int(note['position']*NoteStep)+p_pos))
-                x_event.set('len', str(int(note['duration']*NoteStep)))
-                x_event.set('a', str(note['key']+60))
-                if 'vol' in note: x_event.set('b', str(int(note['vol']*100)))
-                else: x_event.set('b', '100')
+        if p_dur != 0:
+            x_poslen = ET.SubElement(x_part, 'poslen')
+            x_poslen.set('len', str(p_dur))
+            x_poslen.set('tick', str(p_pos))
+            if 'notelist' in placement: 
+                notelist = placement['notelist']
+                for note in notelist:
+                    x_event = ET.SubElement(x_part, "event")
+                    x_event.set('tick', str(int(note['position']*NoteStep)+p_pos))
+                    x_event.set('len', str(int(note['duration']*NoteStep)))
+                    x_event.set('a', str(note['key']+60))
+                    if 'vol' in note: x_event.set('b', str(int(note['vol']*100)))
+                    else: x_event.set('b', '100')
     tracknum += 1
 
 def add_timesig(x_siglist, pos, numerator, denominator):
@@ -222,10 +224,6 @@ class output_cvpj(plugin_output.base):
         midiDivision = 384
         NoteStep = midiDivision/4
         
-        cvpj_trackdata = cvpj_l['track_data']
-        cvpj_trackordering = cvpj_l['track_order']
-        cvpj_trackplacements = cvpj_l['track_placements']
-
         x_muse = ET.Element("muse")
         x_muse.set('version', "3.4")
         x_song = ET.SubElement(x_muse, "song")
@@ -255,27 +253,23 @@ class output_cvpj(plugin_output.base):
 
         routelist = []
 
-        for cvpj_trackentry in cvpj_trackordering:
-            if cvpj_trackentry in cvpj_trackdata:
-                s_trkdata = cvpj_trackdata[cvpj_trackentry]
-                if s_trkdata['type'] == 'instrument':
-                    if cvpj_trackentry in cvpj_trackplacements:
-                        cvpj_tr = cvpj_trackplacements[cvpj_trackentry]
-                        cvpj_tr_islaned = False
-                        if 'laned' in cvpj_tr: 
-                            if cvpj_tr['laned'] == 1: 
-                                cvpj_tr_islaned = True
-                        if cvpj_tr_islaned == False:
-                            if 'notes' in cvpj_tr: 
-                                maketrack_midi(x_song, cvpj_tr['notes'], s_trkdata['name'], synthidnum, s_trkdata)
-                        else:
-                            for laneid in cvpj_tr['laneorder']:
-                                lanedata = cvpj_tr['lanedata'][laneid]
-                                lanename = ''
-                                if 'name' in lanedata: lanename = lanedata['name']
-                                maketrack_midi(x_song, lanedata['notes'], lanename, synthidnum, s_trkdata)
+        for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+            if cvpj_trackdata['type'] == 'instrument':
+                track_placements_islaned = False
+                if 'laned' in track_placements: 
+                    if track_placements['laned'] == 1: 
+                        track_placements_islaned = True
+                if track_placements_islaned == False:
+                    if 'notes' in track_placements: 
+                        maketrack_midi(x_song, track_placements['notes'], cvpj_trackdata['name'], synthidnum, cvpj_trackdata)
+                else:
+                    for laneid in track_placements['laneorder']:
+                        lanedata = track_placements['lanedata'][laneid]
+                        lanename = ''
+                        if 'name' in lanedata: lanename = lanedata['name']
+                        maketrack_midi(x_song, lanedata['notes'], lanename, synthidnum, cvpj_trackdata)
     
-                    maketrack_synth(x_song, s_trkdata, synthidnum)
+                maketrack_synth(x_song, cvpj_trackdata, synthidnum)
 
         addroute_audioout(x_song, 0, 0, 1, "system:playback_1")
         addroute_audioout(x_song, 1, 0, 1, "system:playback_2")

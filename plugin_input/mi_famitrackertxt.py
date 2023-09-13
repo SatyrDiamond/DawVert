@@ -274,7 +274,7 @@ class input_famitrkr_txt(plugin_input.base):
                     if insttype == 'Square1' or insttype == 'Square2': wavetype = "square"
                     if insttype == 'Triangle': wavetype = "triangle"
                     if insttype == 'Noise': wavetype = "noise"
-                    plugins.add_plug(cvpj_l, pluginid, '2a03', wavetype)
+                    plugins.add_plug(cvpj_l, pluginid, 'retro', wavetype)
                     setmacro(pluginid, macro_nes, "vol", 0, famitrkr_instdata[int(instid)][1]) 
                     setmacro(pluginid, macro_nes, "arp", 1, famitrkr_instdata[int(instid)][2]) 
                     setmacro(pluginid, macro_nes, "pitch", 2, famitrkr_instdata[int(instid)][3]*-1) 
@@ -286,7 +286,7 @@ class input_famitrkr_txt(plugin_input.base):
                 if insttype in retroinst_names_vrc6:
                     if insttype == 'VRC6Square': wavetype = "square"
                     if insttype == 'VRC6Saw': wavetype = "saw"
-                    plugins.add_plug(cvpj_l, pluginid, 'vrc6', wavetype)
+                    plugins.add_plug(cvpj_l, pluginid, 'retro', wavetype)
                     setmacro(pluginid, macro_nes_vrc6, "vol", 0, famitrkr_instdata_vrc6[int(instid)][1]) 
                     setmacro(pluginid, macro_nes_vrc6, "arp", 1, famitrkr_instdata_vrc6[int(instid)][2]) 
                     setmacro(pluginid, macro_nes_vrc6, "pitch", 2, famitrkr_instdata_vrc6[int(instid)][3]*-1) 

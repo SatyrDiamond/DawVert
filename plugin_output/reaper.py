@@ -209,7 +209,8 @@ class output_reaper(plugin_output.base):
         'track_hybrid': True,
         'placement_audio_stretch': ['rate']
         }
-    def getsupportedplugins(self): return ['vst2']
+    def getsupportedplugformats(self): return ['vst2']
+    def getsupportedplugins(self): return []
     def parse(self, convproj_json, output_file):
         global reaper_tempo
         global tempomul

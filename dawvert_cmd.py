@@ -6,6 +6,7 @@ import argparse
 import os
 from functions import core
 from functions import folder_samples
+from functions import plug_conv
 
 print('DawVert: Daw Conversion Tool')
 
@@ -29,10 +30,13 @@ out_file = args.o
 in_format = args.it
 out_format = args.ot
 
+if not os.path.exists(in_file):
+	print('[error] Input File Not Found.')
+	exit()
+
+
 extra_json = {}
-
 do_overwrite = False
-
 pluginset = 'main'
 
 if args.y == True: do_overwrite = True
@@ -48,6 +52,7 @@ if args.nonfree_plugins == True: extra_json['nonfree-plugins'] = True
 # -------------------------------------------------------------- Input Plugin List--------------------------------------------------------------
 
 core.input_load_plugins(pluginset)
+plug_conv.load_plugins()
 
 # -------------------------------------------------------------- Output Plugin List -------------------------------------------------------------
 

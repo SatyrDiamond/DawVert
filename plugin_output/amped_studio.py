@@ -151,7 +151,8 @@ class output_cvpj_f(plugin_output.base):
         'auto_nopl': True,
         'placement_audio_stretch': ['rate']
         }
-    def getsupportedplugins(self): return ['sampler', 'midi', 'vst2']
+    def getsupportedplugformats(self): return ['vst2']
+    def getsupportedplugins(self): return ['sampler:single', 'midi']
     def parse(self, convproj_json, output_file):
         global audio_id
         global cvpj_l

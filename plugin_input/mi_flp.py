@@ -197,11 +197,13 @@ class input_flp(plugin_input.base):
 
                     flpluginname = ''
                     if 'plugin' in channeldata: 
-                        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', channeldata['plugin'])
+                        if channeldata['plugin'].lower() == 'fruity slicer':
+                            plugins.add_plug(cvpj_l, pluginid, 'sampler', 'slicer')
+                        else:
+                            plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', channeldata['plugin'])
+
                     if 'pluginparams' in channeldata: 
                         flp_dec_pluginparams.getparams(cvpj_l, pluginid, channeldata['plugin'], channeldata['pluginparams'], samplefolder)
-
-                #parse_envlfo(channeldata['envlfo_vol'], pluginid, 'vol')
 
                 tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, 'poly', 'max', channeldata['polymax'])
 

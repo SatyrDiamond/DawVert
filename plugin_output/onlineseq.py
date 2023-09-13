@@ -43,6 +43,7 @@ class output_onlineseq(plugin_output.base):
         'auto_nopl': True,
         'track_nopl': True
         }
+    def getsupportedplugformats(self): return []
     def getsupportedplugins(self): return ['midi']
     def parse(self, convproj_json, output_file):
         global glob_markerdata

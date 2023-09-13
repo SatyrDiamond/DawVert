@@ -143,7 +143,8 @@ def output_set(pluginname):
 			pluglist_output[pluginname].getname(),
 			pluglist_output[pluginname].gettype(),
 			pluglist_output[pluginname].getdawcapabilities(),
-			pluglist_output[pluginname].getsupportedplugins()
+			pluglist_output[pluginname].getsupportedplugins(),
+			pluglist_output[pluginname].getsupportedplugformats()
 			]
 		print('[core] Output Format:',currentplug_output[1])
 		print('[core] Output DataType:',typelist[currentplug_output[3]])
@@ -173,7 +174,7 @@ def parse_input(in_file, extra_json):
 def convert_plugins(extra_json): 
 	global platform_id
 	global convproj_j
-	CVPJ_C = plug_conv.convproj(convproj_j[0], platform_id, convproj_j[1], currentplug_output[3], currentplug_input[1], currentplug_output[1], currentplug_output[5], extra_json)
+	CVPJ_C = plug_conv.convproj(convproj_j[0], platform_id, convproj_j[1], currentplug_output[3], currentplug_input[1], currentplug_output[1], currentplug_output[5], currentplug_output[6], extra_json)
 	if CVPJ_C != None: convproj_j[0] = CVPJ_C
 
 def convert_type_output(extra_json): 

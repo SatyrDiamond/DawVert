@@ -25,6 +25,7 @@ class output_waveform_edit(plugin_output.base):
         'track_hybrid': True,
         'placement_audio_stretch': ['rate']
         }
+    def getsupportedplugformats(self): return []
     def getsupportedplugins(self): return []
     def parse(self, convproj_json, output_file):
         wf_proj = ET.Element("EDIT")

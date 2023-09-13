@@ -4,12 +4,16 @@
 from functions import colors
 from functions import notelist_data
 from functions import data_bytes
+from functions import data_values
 from functions import auto
 from functions import audio
 from functions import tracks
+from functions import plugins
+from functions_plugin import ableton_values
 import plugin_output
 import math
 import json
+import base64
 import lxml.etree as ET
 from xml.dom import minidom
 
@@ -70,6 +74,16 @@ def get_noteid_next():
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 
+abl_bool_val = ['false','true']
+
+def makevaltype(value, valtype):
+    if valtype != None:
+        if valtype == 'bool': return abl_bool_val[bool(value)]
+        elif valtype == 'float': return float(value)
+        elif valtype == 'int': return str(int(value))
+        else: return str(value)
+    return valtype
+
 def addvalue(xmltag, name, value):
     x_temp = ET.SubElement(xmltag, name)
     x_temp.set('Value', str(value))
@@ -92,10 +106,14 @@ def add_up_lower(xmltag, name, target, upper, lower):
     addvalue(x_temp, 'LowerDisplayString', lower)
     return x_temp
       
-def add_min_max(xmltag, name, imin, imax):
+def add_min_max(xmltag, name, imin, imax, isint):
     x_temp = ET.SubElement(xmltag, name)
-    addvalue(x_temp, 'Min', str(imin))
-    addvalue(x_temp, 'Max', str(imax))
+    if isint:
+        addvalue(x_temp, 'Min', str(int(imin)))
+        addvalue(x_temp, 'Max', str(int(imax)))
+    else:
+        addvalue(x_temp, 'Min', str(imin))
+        addvalue(x_temp, 'Max', str(imax))
     return x_temp
       
 def set_add_VideoWindowRect(xmltag):
@@ -250,6 +268,154 @@ def add_env_target(xmltag, i_name, i_id):
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 
+# ---------------------------------------------------------------- Device Param/Data --------------------------------------------------------------
+
+def do_device_data(cvpj_track_data, xmltag):
+    ableton_deviceid = 0
+    if 'chain_fx_audio' in cvpj_track_data:
+        for fxpluginid in cvpj_track_data['chain_fx_audio']:
+            plugtype = plugins.get_plug_type(cvpj_l, fxpluginid)
+            if plugtype[0] in ['native-ableton']:
+
+                ableton_devicename = plugtype[1]
+                ableton_deviceparams = abletondatadef_params[ableton_devicename]
+                ableton_devicedata = abletondatadef_data[ableton_devicename]
+
+                xml_device = ET.SubElement(xmltag, ableton_devicename)
+                xml_device.set('Id', str(ableton_deviceid))
+                addvalue(xml_device, 'LomId', '0')
+                addvalue(xml_device, 'LomIdView', '0')
+                addvalue(xml_device, 'IsExpanded', 'false')
+                set_add_param(xml_device, 'On', 'true', str(get_unused_id()), None, [64,127], None)
+                addvalue(xml_device, 'ModulationSourceCount', '0')
+                addLomId(xml_device, 'ParametersListWrapper', '0')
+                addId(xml_device, 'Pointee', str(get_pointee()))
+                addvalue(xml_device, 'LastSelectedTimeableIndex', '0')
+                addvalue(xml_device, 'LastSelectedClipEnvelopeIndex', '0')
+                x_LastPresetRef = ET.SubElement(xml_device, 'LastPresetRef')
+                x_LastPresetRef_Value = ET.SubElement(x_LastPresetRef, 'Value')
+                x_LockedScripts = ET.SubElement(xml_device, 'LockedScripts')
+                addvalue(xml_device, 'IsFolded', 'false')
+                addvalue(xml_device, 'ShouldShowPresetName', 'false')
+                addvalue(xml_device, 'UserName', '')
+                addvalue(xml_device, 'Annotation', '')
+                x_SourceContext = ET.SubElement(xml_device, 'SourceContext')
+                x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
+
+                if ableton_devicename == 'Vocoder':
+                    x_FilterBank = ET.SubElement(xml_device, 'FilterBank')
+                    banddata = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'banddata', None)
+                    bandcount = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'bandcount', None)
+                    if bandcount != None:
+                        addvalue(x_FilterBank, 'BandCount', bandcount)
+                    if banddata != None:
+                        for bandnum in range(40):
+                            addvalue(x_FilterBank, 'BandLevel.'+str(bandnum), '1')
+
+                if ableton_devicename not in ['MultiSampler', 'OriginalSimpler']:
+                    for ableton_deviceparam in ableton_deviceparams:
+                        known_paramdata = ableton_deviceparams[ableton_deviceparam]
+                        paramval = plugins.get_plug_param(cvpj_l, fxpluginid, ableton_deviceparam, 0)[0]
+                        if known_paramdata[2] != None: known_paramdata[2] = [makevaltype(known_paramdata[2][0], known_paramdata[0]), makevaltype(known_paramdata[2][1], known_paramdata[0])]
+                        set_add_param(xml_device, ableton_deviceparam, makevaltype(paramval, known_paramdata[0]), str(get_unused_id()), None, known_paramdata[3], known_paramdata[2])
+
+                    for ableton_devicedatval in ableton_devicedata:
+                        known_dataval = ableton_devicedata[ableton_devicedatval]
+                        paramdataval = plugins.get_plug_dataval(cvpj_l, fxpluginid, ableton_devicedatval, ableton_devicedata[ableton_devicedatval])
+                        addvalue(xml_device, ableton_devicedatval, makevaltype(paramdataval, paramdataval))
+
+                    if ableton_devicename == 'Looper':
+                        savedbufferdat = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'SavedBuffer', None)
+                        if savedbufferdat != None:
+                            bufferbin = base64.b64decode(savedbufferdat.encode())
+                            hexbuffer = ''.join('{:02X}'.format(x) for x in bufferbin)
+                            x_SavedBuffer = ET.SubElement(xml_device, 'SavedBuffer')
+                            x_SavedBuffer.text = '\n' + '\n'.join(data_values.list_chunks(hexbuffer, 80))
+
+                    if ableton_devicename == 'Saturator':
+                        x_WaveShaper = ET.SubElement(xml_device, 'WaveShaper')
+                        for waveshapevarname in ['Drive','Lin','Curve','Damp','Period','Depth']:
+                            ws_p_name = 'waveshaper_'+waveshapevarname
+                            paramdataval = plugins.get_plug_param(cvpj_l, fxpluginid, ws_p_name, 0)[0]
+                            set_add_param(x_WaveShaper, waveshapevarname, str(paramdataval), str(get_unused_id()), None, None, [0,1])
+
+                    if ableton_devicename in ['AutoPan', 'AutoFilter', 'FrequencyShifter']:
+                        lfodata = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'lfo_data', None)
+                        if lfodata != None:
+                            x_Lfo = ET.SubElement(xml_device, 'Lfo')
+                            for lfoparams in [
+                            ['Type', 'int', None],
+                            ['Frequency', 'float', [0.009999999776, 10]],
+                            ['RateType', 'int', None],
+                            ['BeatRate', 'float', [0,21]],
+                            ['StereoMode', 'int', None],
+                            ['Spin', 'float', [0,0.5]],
+                            ['Phase', 'float', [0,360]],
+                            ['Offset', 'float', [0,360]],
+                            ['IsOn', 'bool', None],
+                            ['Quantize', 'bool', None],
+                            ['BeatQuantize', 'int', None],
+                            ['NoiseWidth', 'float', [0,1]],
+                            ['LfoAmount', 'float', None],
+                            ['LfoInvert', 'bool', None],
+                            ['LfoShape', 'float', None]
+                            ]:
+                                if lfoparams[0] in lfodata:
+                                    if lfodata[lfoparams[0]] != None:
+                                        set_add_param(x_Lfo, lfoparams[0], makevaltype(lfodata[lfoparams[0]], lfoparams[1]), str(get_unused_id()), None, None, lfoparams[2])
+
+                    if ableton_devicename == 'Hybrid':
+                        samplefilepath = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'sample', '')
+                        samplerefdict = {}
+                        samplerefdict['path'] = samplefilepath
+                        aud_sampledata = audio.get_audiofile_info(samplefilepath)
+
+                        x_ImpulseResponseHandler = ET.SubElement(xml_device, 'ImpulseResponseHandler')
+                        x_SampleSlot = ET.SubElement(x_ImpulseResponseHandler, 'SampleSlot')
+                        x_SampleSlotValue = ET.SubElement(x_SampleSlot, 'Value')
+                        create_sampleref(x_SampleSlotValue, aud_sampledata)
+
+
+                    #paramletter = ['A','B']
+                    #if ableton_devicename == 'Eq8':
+                    #    lfodata = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'band_data', None)
+                    #    if lfodata != None:
+                    #        for num in range(8):
+                    #            x_eq8band = ET.SubElement(xml_device, 'Bands.'+str(num))
+                    #            x_eq8let_a = ET.SubElement(x_eq8band, 'ParameterA')
+                    #            x_eq8let_b = ET.SubElement(x_eq8band, 'ParameterB')
+                    #            x_eq8let_list = [x_eq8let_a, x_eq8let_b]
+
+                    #            for paramletnum in range(2):
+                    #                cvpj_eq_data = lfodata[paramletnum][num]
+                    #                for eq8param in [
+                    #                    ['IsOn', 'bool', None],
+                    #                    ['Mode', 'int', [10,22000]],
+                    #                    ['Freq', 'float', None],
+                    #                    ['Gain', 'float', [-15,15]],
+                    #                    ['Q', 'float', [0.1000000015,18]]
+                    #                    ]:
+                    #                    cctreshold = [64,127] if eq8param[1] == True else None
+                    #                    set_add_param(x_eq8let_list[paramletnum], eq8param[0], makevaltype(cvpj_eq_data[eq8param[0]], eq8param[1]), str(get_unused_id()), None, cctreshold, eq8param[2])
+
+
+                ##set_add_param(xmltag, param_name, param_value, auto_id, modu_id, midi_cc_thres, midi_cont_range):
+                ableton_deviceid += 1
+
+
+
+
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+
 # ---------------------------------------------------------------- Track Base Data --------------------------------------------------------------
 
 # ---------------- Device Chain / Mixer ----------------
@@ -260,8 +426,8 @@ def set_add_param(xmltag, param_name, param_value, auto_id, modu_id, midi_cc_thr
     addvalue(x_temp, 'Manual', param_value)
     add_env_target(x_temp, 'AutomationTarget', auto_id)
     if modu_id != None: add_env_target(x_temp, 'ModulationTarget', modu_id)
-    if midi_cont_range != None: add_min_max(x_temp, 'MidiControllerRange', midi_cont_range[0], midi_cont_range[1])
-    if midi_cc_thres != None: add_min_max(x_temp, 'MidiCCOnOffThresholds', midi_cc_thres[0], midi_cc_thres[1])
+    if midi_cont_range != None: add_min_max(x_temp, 'MidiControllerRange', midi_cont_range[0], midi_cont_range[1], False)
+    if midi_cc_thres != None: add_min_max(x_temp, 'MidiCCOnOffThresholds', midi_cc_thres[0], midi_cc_thres[1], True)
       
 def create_devicechain_mixer(xmltag, cvpj_track_data, tracktype):
     global cvpj_bpm
@@ -411,9 +577,9 @@ def create_notelist(xmltag, cvpj_notelist):
 
 # ---------------- Track Base / MainSequencer / Audio Clips ----------------
 
-
 def create_sampleref(xmltag, aud_sampledata):
     x_SampleRef = ET.SubElement(xmltag, 'SampleRef')
+    x_SampleRef.set('Id', '1')
     x_FileRef = ET.SubElement(x_SampleRef, 'FileRef')
     addvalue(x_FileRef, 'RelativePathType', '1')
     addvalue(x_FileRef, 'RelativePath', '')
@@ -896,6 +1062,8 @@ def create_devicechain(xmltag, cvpj_track_data, tracktype, track_placements, tra
 
     x_DeviceChain_i = ET.SubElement(xmltag, 'DeviceChain')
     x_DeviceChain_i_Devices = ET.SubElement(x_DeviceChain_i, 'Devices')
+    do_device_data(cvpj_track_data, x_DeviceChain_i_Devices)
+
     x_DeviceChain_i_SignalModulations = ET.SubElement(x_DeviceChain_i, 'SignalModulations')
 
     if tracktype == 'returntrack':
@@ -1027,10 +1195,15 @@ class output_cvpj(plugin_output.base):
         global cvpj_bpm
         global master_returnid
 
+        global abletondatadef_params
+        global abletondatadef_data
+
         output_file_global = output_file
 
         cvpj_l = json.loads(convproj_json)
         LaneHeight = 68
+        abletondatadef_params = ableton_values.devicesparam()
+        abletondatadef_data = ableton_values.devicesdata()
 
         if 'bpm' in cvpj_l: cvpj_bpm = cvpj_l['bpm']
         else: cvpj_bpm = 120

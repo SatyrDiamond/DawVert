@@ -96,10 +96,13 @@ def amped_parse_effects(fxchain_audio):
     outdata = []
     for pluginid in fxchain_audio:
         plugtype = plugins.get_plug_type(cvpj_l, pluginid)
+        fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid])
+        fx_on = not params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
         if plugtype[0] == 'native-amped':
 
             if plugtype[1] in ["Amp Sim Utility", 'Clean Machine', 'Distortion Machine', 'Metal Machine']:
                 devicedata = amped_makedevice('WAM', 'Amp Sim Utility')
+                devicedata['bypass'] = fx_on
                 if plugtype[1] == "Amp Sim Utility": wamClassName = "WASABI_SC.Utility"
                 if plugtype[1] == "Clean Machine": wamClassName = 'WASABI_SC.CleanMachine'
                 if plugtype[1] == "Distortion Machine": wamClassName = 'WASABI_SC.DistoMachine'
@@ -119,6 +122,7 @@ def amped_parse_effects(fxchain_audio):
                 if classname == 'LimiterMini': classlabel = 'Limiter Mini'
                 if classname == 'EqualizerPro': classlabel = 'Equalizer'
                 devicedata = amped_makedevice(classname, classlabel)
+                devicedata['bypass'] = fx_on
                 devicedata['params'] = do_idparams(pluginid)
                 outdata.append(devicedata)
 

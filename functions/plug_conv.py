@@ -107,7 +107,7 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw,
 
 	out_supportedplugins = commalist2plugtypes(out_supportedplugins)
 
-	out_daw = 'lmms'
+	#out_daw = 'lmms'
 
 	sep_pl_pc_out__native = []
 	sep_pl_pc_out__plugins = {}

@@ -36,7 +36,8 @@ class output_cvpjs(plugin_output.base):
         'placement_cut': True,
         'placement_audio_stretch': ['rate', 'rate_ignoretempo']
         }
-    def getsupportedplugins(self): return ['sampler', 'vst2', 'vst3']
+    def getsupportedplugformats(self): return ['vst2', 'vst3']
+    def getsupportedplugins(self): return ['sampler:single']
     def parse(self, convproj_json, output_file):
         cvpj_l = json.loads(convproj_json)
 

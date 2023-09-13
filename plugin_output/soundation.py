@@ -100,6 +100,7 @@ class output_soundation(plugin_output.base):
         'placement_loop': ['loop'],
         'auto_nopl': True
         }
+    def getsupportedplugformats(self): return []
     def getsupportedplugins(self): return []
     def parse(self, convproj_json, output_file):
         global cvpj_l

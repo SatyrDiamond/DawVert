@@ -235,7 +235,7 @@ class input_trackerboy(plugin_input.base):
                 else: cvpj_instcolor = None
 
                 pluginid = plugins.get_id()
-                plugins.add_plug(cvpj_l, pluginid, 'gameboy', insttype)
+                plugins.add_plug(cvpj_l, pluginid, 'retro', insttype)
 
                 if trackerboy_instdata[1][0] != (): 
                     plugins.add_env_blocks(cvpj_l, pluginid, 'arp', trackerboy_instdata[1][0], None, None, None)

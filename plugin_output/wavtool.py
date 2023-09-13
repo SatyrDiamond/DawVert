@@ -358,7 +358,7 @@ class output_wavtool(plugin_output.base):
                                 wt_cutnorm = False
                                 wt_clip["readStart"] = cutdata['start']/4 if 'start' in cutdata else 0
                                 wt_clip["loopStart"] = 0
-                                wt_clip["loopEnd"] = (cutdata['start']+clip_dur)/4
+                                wt_clip["loopEnd"] = (cutdata['start']/4+clip_dur)
                         if wt_cutnorm == True:
                             wt_clip["readStart"] = 0
                             wt_clip["loopStart"] = 0

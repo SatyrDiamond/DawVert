@@ -177,10 +177,18 @@ def add_lfo(cvpj_l, pluginid, a_type, a_shape, a_time_type, a_speed, a_predelay,
 	lfodata['amount'] = a_amount
 	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'lfo', a_type], lfodata)
 
+def add_lfo_extra(cvpj_l, pluginid, a_type, a_name, a_val):
+	data_values.nested_dict_add_value(cvpj_l, ['plugins', pluginid, 'lfo', a_type, a_name], a_val)
+
 def get_lfo(cvpj_l, pluginid, a_type):
 	lfo = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'lfo', a_type])
 	if lfo != None: return lfo['predelay'], lfo['attack'], lfo['shape'], lfo['speed_type'], lfo['speed_time'], lfo['amount']
 	else: return 0,0,'sine','seconds',1,0
+
+def get_lfo_all(cvpj_l, pluginid, a_type):
+	lfo = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'lfo', a_type])
+	if lfo != None: return lfo
+	else: {}
 
 # -------------------------------------------------- eqbands
 

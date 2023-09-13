@@ -146,7 +146,8 @@ class output_wavtool(plugin_output.base):
         'placement_loop': ['loop', 'loop_off', 'loop_adv'],
         'placement_audio_stretch': ['warp', 'rate']
         }
-    def getsupportedplugins(self): return []
+    def getsupportedplugformats(self): return []
+    def getsupportedplugins(self): return ['sampler:single']
     def parse(self, convproj_json, output_file):
         global audio_id
         global wt_deviceRouting
@@ -357,7 +358,7 @@ class output_wavtool(plugin_output.base):
                                 wt_cutnorm = False
                                 wt_clip["readStart"] = cutdata['start']/4 if 'start' in cutdata else 0
                                 wt_clip["loopStart"] = 0
-                                wt_clip["loopEnd"] = cutdata['end']/4
+                                wt_clip["loopEnd"] = (cutdata['start']+clip_dur)/4
                         if wt_cutnorm == True:
                             wt_clip["readStart"] = 0
                             wt_clip["loopStart"] = 0

@@ -23,7 +23,8 @@ class output_cvpj_f(plugin_output.base):
         'placement_audio_events': True,
         'placement_audio_stretch': ['warp', 'rate']
         }
-    def getsupportedplugins(self): return ['sampler', 'sampler-multi', 'sampler-slicer', 'sf2', 'vst2', 'vst3', 'clap', 'ladspa']
+    def getsupportedplugformats(self): return ['vst2', 'vst3', 'clap', 'ladspa']
+    def getsupportedplugins(self): return ['sampler:single', 'sampler:multi', 'sampler:slicer', 'soundfont2']
     def parse(self, convproj_json, output_file):
         projJ = json.loads(convproj_json)
 

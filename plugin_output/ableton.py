@@ -380,7 +380,7 @@ def do_device_data(cvpj_track_data, xmltag):
                         x_ImpulseResponseHandler = ET.SubElement(xml_device, 'ImpulseResponseHandler')
                         x_SampleSlot = ET.SubElement(x_ImpulseResponseHandler, 'SampleSlot')
                         x_SampleSlotValue = ET.SubElement(x_SampleSlot, 'Value')
-                        create_sampleref(x_SampleSlotValue, aud_sampledata)
+                        create_sampleref(x_SampleSlotValue, aud_sampledata, 1)
 
 
                     #paramletter = ['A','B']
@@ -588,9 +588,9 @@ def create_notelist(xmltag, cvpj_notelist):
 
 # ---------------- Track Base / MainSequencer / Audio Clips ----------------
 
-def create_sampleref(xmltag, aud_sampledata):
+def create_sampleref(xmltag, aud_sampledata, idnum):
     x_SampleRef = ET.SubElement(xmltag, 'SampleRef')
-    x_SampleRef.set('Id', '1')
+    if idnum != None: x_SampleRef.set('Id', str(idnum))
     x_FileRef = ET.SubElement(x_SampleRef, 'FileRef')
     addvalue(x_FileRef, 'RelativePathType', '1')
     addvalue(x_FileRef, 'RelativePath', '')
@@ -847,7 +847,7 @@ def create_clip(xmltag, cliptype, cvpj_placement, trackcolor):
 
         addvalue(x_ClipData, 'IsWarped', w_IsWarped)
         addvalue(x_ClipData, 'TakeId', '1')
-        create_sampleref(x_ClipData, aud_sampledata)
+        create_sampleref(x_ClipData, aud_sampledata, None)
         x_ClipData_Onsets = ET.SubElement(x_ClipData, 'Onsets')
         x_ClipData_UserOnsets = ET.SubElement(x_ClipData_Onsets, 'UserOnsets')
         addvalue(x_ClipData_Onsets, 'HasUserOnsets', 'false')

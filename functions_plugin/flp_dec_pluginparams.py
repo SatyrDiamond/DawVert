@@ -789,5 +789,4 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
 
     # ------------------------------------------------------------------------------------------- Other
 
-    else:
-        plugins.add_plug_data(cvpj_l, pluginid, 'chunk', base64.b64encode(chunkdata).decode('ascii'))
+    plugins.add_plug_data(cvpj_l, pluginid, 'chunk', base64.b64encode(chunkdata).decode('ascii'))

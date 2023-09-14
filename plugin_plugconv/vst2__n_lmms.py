@@ -50,7 +50,7 @@ class plugconv(plugin_plugconv.base):
             params_vital.replacewave(0, wave.resizewave(bitinvader_shape_vals))
             params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 1, 'volume')
             vitaldata = params_vital.getdata()
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
             return True
 
         if plugintype[1] == 'sid':
@@ -102,7 +102,7 @@ class plugconv(plugin_plugconv.base):
             params_various_inst.socalabs_addparam(x_sid, "w1", sid_shape(getparam('waveform0')))
             params_various_inst.socalabs_addparam(x_sid, "w2", sid_shape(getparam('waveform1')))
             params_various_inst.socalabs_addparam(x_sid, "w3", sid_shape(getparam('waveform2')))
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'SID', 'chunk', ET.tostring(x_sid, encoding='utf-8'), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'SID', 'chunk', ET.tostring(x_sid, encoding='utf-8'), None)
             plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', -12)
             return True
 
@@ -120,7 +120,7 @@ class plugconv(plugin_plugconv.base):
             if getparam('startnote') == 1: params_kickmess.setvalue('pub', 'freq_note_start', 0.5)
             if getparam('endnote') == 1: params_kickmess.setvalue('pub', 'freq_note_end', 0.5)
             params_kickmess.setvalue('pub', 'phase_offs', getparam('click'))
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Kickmess (VST)', 'chunk', params_kickmess.getparams(), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Kickmess (VST)', 'chunk', params_kickmess.getparams(), None)
             plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', -12)
             return True
 
@@ -164,7 +164,7 @@ class plugconv(plugin_plugconv.base):
             else: params_vital.setvalue_timed('env_2_decay', 0)
             params_vital.setvalue('env_2_sustain', 0)
             vitaldata = params_vital.getdata()
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
             plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', -12)
             return True
 
@@ -172,7 +172,7 @@ class plugconv(plugin_plugconv.base):
             zasfxdata = plugins.get_plug_dataval(cvpj_l, pluginid, 'data', '')
             zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
             zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'ZynAddSubFX', 'chunk', zasfxdatafixed, None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'ZynAddSubFX', 'chunk', zasfxdatafixed, None)
             return True
 
         if plugintype[1] == 'spectrumanalyzer':
@@ -181,7 +181,7 @@ class plugconv(plugin_plugconv.base):
             x_spectrumanalyzer.set('program', '0')
             params_various_inst.socalabs_addparam(x_spectrumanalyzer, "mode", 0.0)
             params_various_inst.socalabs_addparam(x_spectrumanalyzer, "log", 1.0)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'SpectrumAnalyzer', 'chunk', ET.tostring(x_spectrumanalyzer, encoding='utf-8'), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'SpectrumAnalyzer', 'chunk', ET.tostring(x_spectrumanalyzer, encoding='utf-8'), None)
             return True
 
         if plugintype[1] == 'waveshaper':
@@ -191,5 +191,5 @@ class plugconv(plugin_plugconv.base):
             for pointnum in range(50):
                 pointdata = waveshapepoints[pointnum*4][0]
                 params_various_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Wolf Shaper', 'chunk', data_nullbytegroup.make(params_various_fx.wolfshaper_get()), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Wolf Shaper', 'chunk', data_nullbytegroup.make(params_various_fx.wolfshaper_get()), None)
             return True

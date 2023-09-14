@@ -18,5 +18,5 @@ class plugconv(plugin_plugconv.base):
         sf2_patch = plugins.get_plug_dataval(cvpj_l, pluginid, 'patch', 0)
         sf2_filename = plugins.get_plug_dataval(cvpj_l, pluginid, 'file', 0)
         jsfp_xml = params_various_inst.juicysfplugin_create(sf2_bank, sf2_patch, sf2_filename)
-        plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'juicysfplugin', 'chunk', data_vc2xml.make(jsfp_xml), None)
+        plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'juicysfplugin', 'chunk', data_vc2xml.make(jsfp_xml), None)
         return True

@@ -21,6 +21,7 @@ from functions import song
 from functions import audio
 from functions import plugins
 from functions import tracks
+from functions import params
 
 filename_len = {}
 
@@ -107,6 +108,9 @@ class input_flp(plugin_input.base):
         FL_Arrangements = FLP_Data['FL_Arrangements']
         FL_TimeMarkers = FLP_Data['FL_TimeMarkers']
         FL_FilterGroups = FLP_Data['FL_FilterGroups']
+        FL_InitFXVals = FLP_Data['FL_InitFXVals']
+
+        FL_InitFXVals_exists = True if FL_InitFXVals != {} else False
 
         ppq = FL_Main['ppq']
 
@@ -127,7 +131,6 @@ class input_flp(plugin_input.base):
         cvpj_l_instrument_order = []
         cvpj_l_samples = {}
         cvpj_l_notelistindex = {}
-        cvpj_l_fxrack = {}
         cvpj_l_playlist = {}
         cvpj_l_timemarkers = []
 
@@ -399,52 +402,58 @@ class input_flp(plugin_input.base):
                     if 'enabled' in FL_Tracks[track]:
                         cvpj_l_playlist[str(track)]['enabled'] = FL_Tracks[track]['enabled']
 
-        for fxchannel in FL_Mixer:
-            fl_fxhan = FL_Mixer[str(fxchannel)]
-            cvpj_l_fxrack[fxchannel] = {}
-            fxdata = cvpj_l_fxrack[fxchannel]
-            fxdata["fxenabled"] = 1
-            fxdata["chain_fx_audio"] = []
-            fxdata["muted"] = 0
-            fxdata["sends"] = []
-            if 'name' in fl_fxhan:
-                fxdata["name"] = fl_fxhan['name']
-            if 'color' in fl_fxhan:
-                if fl_fxhan['color'] != None:
-                    color = fl_fxhan['color'].to_bytes(4, "little")
-                    fxdata['color'] = [color[0]/255,color[1]/255,color[2]/255]
-            if 'routing' in fl_fxhan:
-                for route in fl_fxhan['routing']:
-                    fxdata["sends"].append({"amount": 1.0, "channel": route})
 
-            if 'slots' in fl_fxhan:
-                for fl_fxslot in fl_fxhan['slots']:
-                    fl_fxslotdata = fl_fxhan['slots'][fl_fxslot]
+        #for hexnum in FL_InitFXVals:
+        #    print(hexnum, FL_InitFXVals[test][0])
+
+
+        for fxchannel in FL_Mixer:
+            fl_fx_chan = FL_Mixer[str(fxchannel)]
+
+            fx_name = fl_fx_chan["name"] if "name" in fl_fx_chan else None
+
+            fx_color = None
+            if 'color' in fl_fx_chan:
+                if fl_fx_chan['color'] != None:
+                    color = fl_fx_chan['color'].to_bytes(4, "little")
+                    fx_color = [color[0]/255,color[1]/255,color[2]/255]
+
+            #print(fxchannel)
+            #for hexnum in fl_fxdata_initvals:
+            #    print(hexnum, int.from_bytes(fl_fxdata_initvals[hexnum], "little", signed=True) )
+            if FL_InitFXVals_exists == True:
+                fl_fxdata_initvals = FL_InitFXVals[int(fxchannel)][0]
+                fx_volume = struct.unpack('i', fl_fxdata_initvals[b'\x1f\xc0'])[0]/12800 if b'\x1f\xc0' in fl_fxdata_initvals else 1
+                fx_pan = struct.unpack('i', fl_fxdata_initvals[b'\x1f\xc1'])[0]/6400 if b'\x1f\xc1' in fl_fxdata_initvals else 0
+            else:
+                fx_volume = 1
+                fx_pan = 0
+
+            tracks.fxrack_add(cvpj_l, fxchannel, fx_name, fx_color, fx_volume, fx_pan)
+
+            if 'routing' in fl_fx_chan:
+                for route in fl_fx_chan['routing']:
+                    tracks.fxrack_addsend(cvpj_l, fxchannel, route, 1, None)
+
+            if 'slots' in fl_fx_chan:
+                for fl_fxslotnum in range(10):
+                    fl_fxslotdata = fl_fx_chan['slots'][fl_fxslotnum]
+
                     if fl_fxslotdata != None and 'plugin' in fl_fxslotdata and 'pluginparams' in fl_fxslotdata:
 
-                        pluginid = plugins.get_id()
+                        fxslotid = plugins.get_id()
 
-                        fxslotdata = {}
-                        fxslotdata['pluginid'] = pluginid
-                        flpluginname = ''
-                        if 'plugin' in fl_fxslotdata: flpluginname = fl_fxslotdata['plugin']
-                        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', flpluginname)
-                        if 'pluginparams' in fl_fxslotdata: 
-                            flp_dec_pluginparams.getparams(cvpj_l, pluginid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder)
+                        flpluginname = fl_fxslotdata['plugin'] if 'plugin' in fl_fxslotdata else None
+                        plugins.add_plug(cvpj_l, fxslotid, 'native-flstudio', flpluginname)
+                        if 'pluginparams' in fl_fxslotdata: flp_dec_pluginparams.getparams(cvpj_l, fxslotid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder)
 
+                        v_name = fl_fxslotdata["name"] if "name" in fl_fxslotdata else None
                         v_color = None
                         if 'color' in fl_fxslotdata:
                             color = fl_fxslotdata['color'].to_bytes(4, "little")
                             v_color = [color[0]/255,color[1]/255,color[2]/255]
-                        plugins.add_plug_fxvisual(cvpj_l, pluginid, None, v_color)
-
-                        fxdata["chain_fx_audio"].append(pluginid)
-
-            if fxchannel == '100': fxdata["vol"] = 0.0
-            elif fxchannel == '101': fxdata["vol"] = 0.0
-            elif fxchannel == '102': fxdata["vol"] = 0.0
-            elif fxchannel == '103': fxdata["vol"] = 0.0
-            else: fxdata["vol"] = 1.0
+                        plugins.add_plug_fxvisual(cvpj_l, pluginid, v_name, v_color)
+                        tracks.insert_fxslot(cvpj_l, ['fxrack', fxchannel], 'audio', fxslotid)
 
         for timemarker in FL_TimeMarkers:
             tm_pos = FL_TimeMarkers[timemarker]['pos']/ppq*4
@@ -490,7 +499,6 @@ class input_flp(plugin_input.base):
 
         cvpj_l['notelistindex'] = cvpj_l_notelistindex
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['fxrack'] = cvpj_l_fxrack
         cvpj_l['timemarkers'] = cvpj_l_timemarkers
         cvpj_l['sampleindex'] = cvpj_l_samples
 

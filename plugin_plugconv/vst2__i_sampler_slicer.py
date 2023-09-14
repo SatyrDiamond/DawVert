@@ -16,5 +16,5 @@ class plugconv(plugin_plugconv.base):
         params_ninjas2.initparams()
         params_ninjas2.slicerdata(cvpj_l, pluginid)
         ninjas2out = params_ninjas2.getparams()
-        plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Ninjas 2', 'chunk', data_nullbytegroup.make(ninjas2out), None)
+        plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Ninjas 2', 'chunk', data_nullbytegroup.make(ninjas2out), None)
         return True

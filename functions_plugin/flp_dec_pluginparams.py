@@ -784,7 +784,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
                 wrapper_vstpad = pluginstate[13:17]
                 wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
                 wrapper_vstdata = pluginstate[21:]
-                plugin_vst2.replace_data(cvpj_l, pluginid, 'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
+                plugin_vst2.replace_data(cvpj_l, pluginid, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
                 plugins.add_plug_data(cvpj_l, pluginid, 'current_program', wrapper_vstprogram)
 
     # ------------------------------------------------------------------------------------------- Other

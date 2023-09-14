@@ -31,5 +31,5 @@ class plugconv(plugin_plugconv.base):
         if ifvol: params_vital.set_modulation(2, 'lfo_2', 'osc_1_level', 1, 0, 1, 0, 0)
 
         vitaldata = params_vital.getdata()
-        plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
+        plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
         return True

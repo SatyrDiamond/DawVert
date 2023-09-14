@@ -64,7 +64,7 @@ class plugconv(plugin_plugconv.base):
                 params_kickmess.setvalue('pub', 'dist_on', 1)
                 params_kickmess.setvalue('pub', 'dist_start', osc_dist*0.1)
                 params_kickmess.setvalue('pub', 'dist_end', osc_dist*0.1)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Kickmess (VST)', 'chunk', params_kickmess.getparams(), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Kickmess (VST)', 'chunk', params_kickmess.getparams(), None)
             plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', -12)
             return True
 
@@ -87,7 +87,7 @@ class plugconv(plugin_plugconv.base):
             param_mod_thru = getparam('mod_thru')/65536
             param_lforate = getparam('lforate')/65536
 
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'DX10', 'param', None, 16)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'DX10', 'param', None, 16)
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', param_amp_att, 'float', "Attack  ", )
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', param_amp_dec, 'float', "Decay   ", )
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_2', param_amp_rel, 'float', "Release ", )
@@ -166,14 +166,14 @@ class plugconv(plugin_plugconv.base):
             if getparam('chorus_on') == True: params_vital.setvalue('chorus_on', 1.0)
             
             vitaldata = params_vital.getdata()
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
             return True
 
         elif plugintype[1].lower() == 'fruity bass boost':
             print('[plug-conv] Converting Fruity Bass Boost to Airwindows Weight:',pluginid)
             param_freq = (getparam('freq')/1024)*0.8
             param_amount = (getparam('amount')/1024)*0.8
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Weight', 'param', None, 2)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Weight', 'param', None, 2)
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', param_freq, 'float', "Freq")
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', param_amount, 'float', "Weight")
             return True
@@ -189,7 +189,7 @@ class plugconv(plugin_plugconv.base):
             param_feedback = getparam('feedback')/1000
             param_drywet = getparam('drywet')/1024
             param_gain = getparam('gain')/5000
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'SupaPhaser', 'param', None, 16)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'SupaPhaser', 'param', None, 16)
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', 0, 'float', "attack")
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', 0, 'float', "release")
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_2', 0, 'float', "min env")
@@ -216,7 +216,7 @@ class plugconv(plugin_plugconv.base):
             x_spectrumanalyzer.set('program', '0')
             params_various_inst.socalabs_addparam(x_spectrumanalyzer, "mode", float(spectroman_mode))
             params_various_inst.socalabs_addparam(x_spectrumanalyzer, "log", 1.0)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'SpectrumAnalyzer', 'chunk', ET.tostring(x_spectrumanalyzer, encoding='utf-8'), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'SpectrumAnalyzer', 'chunk', ET.tostring(x_spectrumanalyzer, encoding='utf-8'), None)
             return True
 
         if plugintype[1].lower() == 'fruity waveshaper':
@@ -232,5 +232,5 @@ class plugconv(plugin_plugconv.base):
             if shapeenv != None:
                 params_various_fx.wolfshaper_addshape(shapeenv)
 
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Wolf Shaper', 'chunk', data_nullbytegroup.make(params_various_fx.wolfshaper_get()), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Wolf Shaper', 'chunk', data_nullbytegroup.make(params_various_fx.wolfshaper_get()), None)
             return True

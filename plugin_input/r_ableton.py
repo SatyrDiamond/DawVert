@@ -496,7 +496,7 @@ class input_ableton(plugin_input.base):
 				able_plug_id = x_trackdevice.get('Id')
 				pluginid = track_id+'_'+able_plug_id
 				devicename = str(x_trackdevice.tag)
-				print(pluginid, devicename)
+				#print(pluginid, devicename)
 
 				devfx_enabled = get_param(x_trackdevice, 'On', 'bool', True, ['slot', 'able_plug_id', 'enabled'], None)
 				devfx_wet = 1

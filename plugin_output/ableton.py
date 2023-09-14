@@ -9,6 +9,7 @@ from functions import auto
 from functions import audio
 from functions import tracks
 from functions import plugins
+from functions import params
 from functions_plugin import ableton_values
 import plugin_output
 import math
@@ -271,7 +272,7 @@ def add_env_target(xmltag, i_name, i_id):
 # ---------------------------------------------------------------- Device Param/Data --------------------------------------------------------------
 
 def do_device_data(cvpj_track_data, xmltag):
-    ableton_deviceid = 0
+    ableton_deviceid = 2
     if 'chain_fx_audio' in cvpj_track_data:
         for fxpluginid in cvpj_track_data['chain_fx_audio']:
             plugtype = plugins.get_plug_type(cvpj_l, fxpluginid)
@@ -281,12 +282,17 @@ def do_device_data(cvpj_track_data, xmltag):
                 ableton_deviceparams = abletondatadef_params[ableton_devicename]
                 ableton_devicedata = abletondatadef_data[ableton_devicename]
 
+                print('[output-ableton] Device', ableton_devicename)
+
+                fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', fxpluginid])
+                fx_on = params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
+
                 xml_device = ET.SubElement(xmltag, ableton_devicename)
                 xml_device.set('Id', str(ableton_deviceid))
                 addvalue(xml_device, 'LomId', '0')
                 addvalue(xml_device, 'LomIdView', '0')
                 addvalue(xml_device, 'IsExpanded', 'false')
-                set_add_param(xml_device, 'On', 'true', str(get_unused_id()), None, [64,127], None)
+                set_add_param(xml_device, 'On', fx_on, str(get_unused_id()), None, [64,127], None)
                 addvalue(xml_device, 'ModulationSourceCount', '0')
                 addLomId(xml_device, 'ParametersListWrapper', '0')
                 addId(xml_device, 'Pointee', str(get_pointee()))
@@ -423,7 +429,11 @@ def do_device_data(cvpj_track_data, xmltag):
 def set_add_param(xmltag, param_name, param_value, auto_id, modu_id, midi_cc_thres, midi_cont_range):
     x_temp = ET.SubElement(xmltag, param_name)
     addvalue(x_temp, 'LomId', '0')
-    addvalue(x_temp, 'Manual', param_value)
+    if isinstance(param_value, bool): 
+        if param_value: addvalue(x_temp, 'Manual', 'true')
+        else: addvalue(x_temp, 'Manual', 'false')
+    else:
+        addvalue(x_temp, 'Manual', param_value)
     add_env_target(x_temp, 'AutomationTarget', auto_id)
     if modu_id != None: add_env_target(x_temp, 'ModulationTarget', modu_id)
     if midi_cont_range != None: add_min_max(x_temp, 'MidiControllerRange', midi_cont_range[0], midi_cont_range[1], False)

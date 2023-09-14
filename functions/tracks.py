@@ -236,9 +236,11 @@ def fxrack_addsend(cvpj_l, fx_num, fx_to_num, fx_amount, fx_sendautoid):
 def group_add(cvpj_l, i_id, i_inside_group):
     data_values.nested_dict_add_value(cvpj_l, ['groups', i_id], {})
     if i_inside_group != None: 
+        print('[tracks] Adding Group: "'+i_id+'" inside "'+i_inside_group+'"')
         data_values.nested_dict_add_value(cvpj_l, ['groups', i_id, 'parent_group'], i_inside_group)
         data_values.nested_dict_add_value(cvpj_l, ['groups', i_id, 'audio_destination'], {'type': 'group', 'id': i_inside_group})
     else:
+        print('[tracks] Adding Group: "'+i_id+'"')
         data_values.nested_dict_add_value(cvpj_l, ['groups', i_id, 'audio_destination'], {'type': 'master'})
 
 def group_basicdata(cvpj_l, i_id, i_name, i_vol, i_color):
@@ -258,9 +260,10 @@ def get_sendcvpjlocation(sendloc):
     if sendloc[0] == 'group': out_location = ['groups', sendloc[1], 'returns']
     return out_location
 
-def r_add_return(cvpj_l, i_location, i_sendname):
+def r_add_return(cvpj_l, i_location, i_returnname):
     out_location = get_sendcvpjlocation(i_location)
-    data_values.nested_dict_add_value(cvpj_l, out_location+[i_sendname], {})
+    print('[tracks] Adding Return: "'+i_returnname+'" in '+'/'.join(out_location))
+    data_values.nested_dict_add_value(cvpj_l, out_location+[i_returnname], {})
 
 def r_add_return_basicdata(cvpj_l, i_location, i_sendname, trk_name, trk_color, trk_vol, trk_pan):
     out_location = get_sendcvpjlocation(i_location)
@@ -272,6 +275,7 @@ def r_add_return_basicdata(cvpj_l, i_location, i_sendname, trk_name, trk_color, 
 def r_add_send(cvpj_l, i_trackid, i_sendname, i_amount, i_sendautoid):
     send_data = {'amount': i_amount, 'sendid': i_sendname}
     if i_sendautoid != None: send_data['sendautoid'] = i_sendautoid
+    print('[tracks] Adding Send: "'+i_sendname+'"')
     data_values.nested_dict_add_to_list(cvpj_l, ['track_data', i_trackid, 'sends_audio'], send_data)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -348,6 +352,7 @@ def a_auto_iter(cvpj_l):
     return outdata
 
 def a_move_auto(cvpj_l, old_autolocation, new_autolocation):
+    print('[tracks] Moving Automation:','/'.join(old_autolocation),'to','/'.join(new_autolocation))
     dictvals = data_values.nested_dict_get_value(cvpj_l, ['automation']+old_autolocation)
     if dictvals != None:
         data_values.nested_dict_add_value(cvpj_l, ['automation']+new_autolocation, dictvals)
@@ -355,6 +360,11 @@ def a_move_auto(cvpj_l, old_autolocation, new_autolocation):
             del cvpj_l['automation'][old_autolocation[0]][old_autolocation[1]]
         else:
             del cvpj_l['automation'][old_autolocation[0]][old_autolocation[1]][old_autolocation[2]]
+
+def a_del_auto_plugin(cvpj_l, pluginid):
+    print('[tracks] Removing Plugin Automation:',pluginid)
+    dictvals = data_values.nested_dict_get_value(cvpj_l, ['automation', 'plugin']+pluginid)
+    if dictvals != None: del cvpj_l['automation', 'plugin'][pluginid]
 
 # ------------------------ NoPl Auto ------------------------
 
@@ -430,8 +440,8 @@ def autoid_in_output(cvpj_l):
         out_auto_type = autoid_in_data[i_id][1]
         out_auto_addmul = autoid_in_data[i_id][2]
         out_auto_data = autoid_in_data[i_id][3]
-        #print(i_id, autoid_in_data[i_id][0:3])
-        if autoid_in_data[i_id][0:3] != [None, None, None]:
+        #print(i_id, autoid_in_data[i_id][0:3], out_auto_data)
+        if autoid_in_data[i_id][0:4] != [None, None, None] and out_auto_data != []:
             if out_auto_addmul != None: out_auto_data = auto.multiply(out_auto_data, out_auto_addmul[0], out_auto_addmul[1])
             a_add_auto_pl(cvpj_l, out_auto_type, out_auto_loc, out_auto_data)
 

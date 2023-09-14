@@ -41,6 +41,8 @@ def getplatformtxt(in_platform):
 # -------------------- VST List --------------------
 
 def find_locpath(out_paths):
+	vst_cpuarch = None
+	vst_path = None
 
 	if out_paths[0] != None and out_paths[1] == None and 32 in cpu_arch_list: 
 		vst_cpuarch = 32
@@ -72,8 +74,8 @@ def find_path(in_data, platformtype, bycat):
 		out_paths = [None, None]
 
 	#print(bycat, vst_cpuarch, out_paths, vst_name)
-	vst_cpuarch, vst_path = find_locpath(out_paths)
 	if out_paths == None: out_paths = [None, None]
+	vst_cpuarch, vst_path = find_locpath(out_paths)
 
 	return vst_cpuarch, vst_path, vst_name
 

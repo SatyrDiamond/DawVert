@@ -158,7 +158,6 @@ class output_cvpj_f(plugin_output.base):
         global cvpj_l
 
         cvpj_l = json.loads(convproj_json)
-        cvpj_placements = cvpj_l['track_placements']
         audio_id = {}
 
         zip_bio = io.BytesIO()

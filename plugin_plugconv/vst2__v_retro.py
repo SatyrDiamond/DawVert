@@ -15,7 +15,7 @@ from functions_plugparams import wave
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['retro', None, None], ['vst2', None, None], False, False
+    def getplugconvinfo(self): return ['retro', None, None], ['vst2', None, None], True, False
     def convert(self, cvpj_l, pluginid, plugintype, extra_json):
         blk_env_pitch = plugins.get_env_blocks(cvpj_l, pluginid, 'pitch')
         blk_env_duty = plugins.get_env_blocks(cvpj_l, pluginid, 'duty')

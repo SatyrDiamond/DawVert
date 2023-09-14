@@ -421,13 +421,14 @@ class input_flp(plugin_input.base):
             #print(fxchannel)
             #for hexnum in fl_fxdata_initvals:
             #    print(hexnum, int.from_bytes(fl_fxdata_initvals[hexnum], "little", signed=True) )
+
+            fx_volume = 1
+            fx_pan = 0
+
             if FL_InitFXVals_exists == True:
                 fl_fxdata_initvals = FL_InitFXVals[int(fxchannel)][0]
                 fx_volume = struct.unpack('i', fl_fxdata_initvals[b'\x1f\xc0'])[0]/12800 if b'\x1f\xc0' in fl_fxdata_initvals else 1
                 fx_pan = struct.unpack('i', fl_fxdata_initvals[b'\x1f\xc1'])[0]/6400 if b'\x1f\xc1' in fl_fxdata_initvals else 0
-            else:
-                fx_volume = 1
-                fx_pan = 0
 
             tracks.fxrack_add(cvpj_l, fxchannel, fx_name, fx_color, fx_volume, fx_pan)
 
@@ -440,8 +441,13 @@ class input_flp(plugin_input.base):
                     fl_fxslotdata = fl_fx_chan['slots'][fl_fxslotnum]
 
                     if fl_fxslotdata != None and 'plugin' in fl_fxslotdata and 'pluginparams' in fl_fxslotdata:
-
                         fxslotid = plugins.get_id()
+
+                        if FL_InitFXVals_exists == True:
+                            fl_fxslot_initvals = FL_InitFXVals[int(fxchannel)][fl_fxslotnum]
+                            fx_slot_on = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x00'])[0] if b'\x1f\x00' in fl_fxslot_initvals else 1
+                            fx_slot_wet = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x01'])[0]/12800 if b'\x1f\x01' in fl_fxslot_initvals else 0
+                            plugins.add_plug_fxdata(cvpj_l, fxslotid, fx_slot_on, fx_slot_wet)
 
                         flpluginname = fl_fxslotdata['plugin'] if 'plugin' in fl_fxslotdata else None
                         plugins.add_plug(cvpj_l, fxslotid, 'native-flstudio', flpluginname)

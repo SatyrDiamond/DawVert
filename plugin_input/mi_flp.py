@@ -197,7 +197,9 @@ class input_flp(plugin_input.base):
 
                     flpluginname = ''
                     if 'plugin' in channeldata: 
-                        if channeldata['plugin'].lower() == 'fruity slicer':
+                        if channeldata['plugin'].lower() in ['fruity soundfont player', 'soundfont player']:
+                            plugins.add_plug(cvpj_l, pluginid, 'soundfont2', None)
+                        elif channeldata['plugin'].lower() == 'fruity slicer':
                             plugins.add_plug(cvpj_l, pluginid, 'sampler', 'slicer')
                         else:
                             plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', channeldata['plugin'])

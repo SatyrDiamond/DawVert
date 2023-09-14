@@ -475,7 +475,7 @@ class input_ableton(plugin_input.base):
 					sendid = sendcount
 					sendautoid = 'send_'+track_id+'_'+str(sendid)
 					sendlevel = get_param(track_sendholder, 'Send', 'float', 0, ['send', sendautoid, 'amount'], None)
-					print('[input-ableton] Send Holder: '+str(sendid))
+					#print('[input-ableton] Send Holder: '+str(sendid))
 					tracks.r_add_send(cvpj_l, track_id, 'return_'+str(sendid), sendlevel, sendautoid)
 					sendcount += 1
 
@@ -484,7 +484,7 @@ class input_ableton(plugin_input.base):
 				fxloc = ['return', None, cvpj_returntrackid]
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['return', returnid, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['return', returnid, 'pan'], None)
-				print('[input-ableton] Return: '+track_name+' ['+str(returnid)+']')
+				#print('[input-ableton] Return: '+track_name+' ['+str(returnid)+']')
 				tracks.r_add_return(cvpj_l, ['master'], cvpj_returntrackid)
 				tracks.r_add_return_basicdata(cvpj_l, ['master'], cvpj_returntrackid, track_name, track_color, track_vol, track_pan)
 				returnid += 1

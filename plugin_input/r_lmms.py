@@ -271,7 +271,13 @@ def lmms_decodeplugin(trkX_insttr):
             if looped == 0: cvpj_loop = {'enabled': 0}
             if looped == 1: cvpj_loop = {'enabled': 1, 'mode': "normal"}
             if looped == 2: cvpj_loop = {'enabled': 1, 'mode': "pingpong"}
-            cvpj_loop['points'] = [float(xml_plugin.get('lframe')), float(xml_plugin.get('eframe'))]
+
+            looppoint = xml_plugin.get('lframe')
+            startpoint = xml_plugin.get('eframe')
+
+            cvpj_loop['points'] = [
+                float(looppoint) if looppoint != None else 0, 
+                float(startpoint) if startpoint != None else 0]
             plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
             plugins.add_plug_data(cvpj_l, pluginid, 'end', float(lmms_getvalue(xml_plugin, 'eframe', 1)))
             plugins.add_plug_data(cvpj_l, pluginid, 'start', float(lmms_getvalue(xml_plugin, 'sframe', 0)))

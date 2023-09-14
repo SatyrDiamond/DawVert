@@ -6,6 +6,7 @@ import plugin_plugconv
 from functions import plugins
 from functions import data_bytes
 from functions import xtramath
+from functions import tracks
 
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
@@ -15,6 +16,7 @@ class plugconv(plugin_plugconv.base):
         #print(plugintype[1])
 
         if plugintype[1] == 'Chorus':
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             print('[plug-conv] Amped to Ableton: Chorus > Chorus2:',pluginid)  
             amped_delayLfoDepth = plugins.get_plug_param(cvpj_l, pluginid, 'delayLfoDepth', 0.15)[0]
             amped_delayLfoRateHz = plugins.get_plug_param(cvpj_l, pluginid, 'delayLfoRateHz', 0.7585000000000001)[0]
@@ -30,6 +32,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         if plugintype[1] == 'Vibrato':
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             print('[plug-conv] Amped to Ableton: Vibrato > Chorus2:',pluginid)  
             amped_delayLfoDepth = plugins.get_plug_param(cvpj_l, pluginid, 'delayLfoDepth', 0.15)[0]
             amped_delayLfoRateHz = plugins.get_plug_param(cvpj_l, pluginid, 'delayLfoRateHz', 0.7585000000000001)[0]
@@ -42,11 +45,34 @@ class plugconv(plugin_plugconv.base):
             plugins.add_plug_param(cvpj_l, pluginid, 'Amount', amped_delayLfoDepth/2, 'float', "")
             return True
             
-        #if plugintype[1] == 'Tremolo':
-        #    amped_lfoADepth = plugins.get_plug_param(cvpj_l, pluginid, 'lfoADepth', 0.15)[0]
-        #    amped_lfoARateHz = plugins.get_plug_param(cvpj_l, pluginid, 'lfoARateHz', 0.7585000000000001)[0]
+        if plugintype[1] == 'Tremolo':
+            amped_lfoADepth = plugins.get_plug_param(cvpj_l, pluginid, 'lfoADepth', 0.15)[0]
+            amped_lfoARateHz = plugins.get_plug_param(cvpj_l, pluginid, 'lfoARateHz', 0.7585000000000001)[0]
+
+            als_lfo_data = {
+                "BeatQuantize": 2.0,
+                "BeatRate": 4,
+                "Frequency": amped_lfoARateHz,
+                "IsOn": 1,
+                "LfoAmount": amped_lfoADepth,
+                "LfoInvert": 0,
+                "LfoShape": 0.0,
+                "NoiseWidth": 0.5,
+                "Offset": 0.0,
+                "Phase": 180.0,
+                "Quantize": 0,
+                "RateType": 0.0,
+                "Spin": 0.0,
+                "StereoMode": 0,
+                "Type": 0
+            }
+            plugins.replace_plug(cvpj_l, pluginid, 'native-ableton', 'AutoPan')
+            plugins.add_plug_data(cvpj_l, pluginid, 'lfo_data', als_lfo_data)
+            return True
+
 
         if plugintype[1] == 'Phaser':
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             print('[plug-conv] Amped to Ableton: Phaser > PhaserNew:',pluginid)  
             amped_feedback = plugins.get_plug_param(cvpj_l, pluginid, 'feedback', 0.0)[0]
             amped_hzmin = plugins.get_plug_param(cvpj_l, pluginid, 'hzmin', 400.0)[0]

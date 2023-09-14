@@ -363,8 +363,8 @@ def a_move_auto(cvpj_l, old_autolocation, new_autolocation):
 
 def a_del_auto_plugin(cvpj_l, pluginid):
     print('[tracks] Removing Plugin Automation:',pluginid)
-    dictvals = data_values.nested_dict_get_value(cvpj_l, ['automation', 'plugin']+pluginid)
-    if dictvals != None: del cvpj_l['automation', 'plugin'][pluginid]
+    dictvals = data_values.nested_dict_get_value(cvpj_l, ['automation', 'plugin', pluginid])
+    if dictvals != None: del cvpj_l['automation', 'plugin', pluginid]
 
 # ------------------------ NoPl Auto ------------------------
 

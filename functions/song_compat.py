@@ -205,7 +205,7 @@ def r_removecut_placements(note_placements):
             cut_end = note_placement['duration']
             if note_placement['cut']['type'] == 'cut': 
                 if 'start' in note_placement['cut']: cut_start = note_placement['cut']['start']
-                cut_end -= cut_start
+                cut_end += cut_start
                 note_placement['notelist'] = notelist_data.trimmove(note_placement['notelist'], cut_start, cut_end)
                 del note_placement['cut']
 

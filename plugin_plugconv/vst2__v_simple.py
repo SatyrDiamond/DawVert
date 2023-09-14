@@ -14,24 +14,24 @@ class plugconv(plugin_plugconv.base):
 
         if plugintype[1] == 'reverb': 
             print('[plug-conv] Converting Simple Reverb to Airwindows Reverb:',pluginid)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Reverb', 'chunk', struct.pack('<ff', 0.5, 0.5), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Reverb', 'chunk', struct.pack('<ff', 0.5, 0.5), None)
             return True
         elif plugintype[1] == 'reverb-send': 
             print('[plug-conv] Converting Simple Reverb (Send) to Airwindows Reverb:',pluginid)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Reverb', 'chunk', struct.pack('<ff', 0.5, 1), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Reverb', 'chunk', struct.pack('<ff', 0.5, 1), None)
             return True
 
         elif plugintype[1] == 'chorus': 
             print('[plug-conv] Converting Simple Chorus to Airwindows ChorusEnsemble:',pluginid)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'ChorusEnsemble', 'chunk', struct.pack('<fff', 0.5, 0.5, 0.5), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'ChorusEnsemble', 'chunk', struct.pack('<fff', 0.5, 0.5, 0.5), None)
             return True
         elif plugintype[1] == 'chorus-send': 
             print('[plug-conv] Converting Simple Chorus (Send) to Airwindows ChorusEnsemble:',pluginid)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'ChorusEnsemble', 'chunk', struct.pack('<fff', 0.5, 0.5, 1), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'ChorusEnsemble', 'chunk', struct.pack('<fff', 0.5, 0.5, 1), None)
             return True
     
         elif plugintype[1] == 'tremelo': 
             print('[plug-conv] Converting Simple Tremelo to Airwindows Tremolo:',pluginid)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Tremolo', 'chunk', struct.pack('<ff', 0.5, 0.5), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Tremolo', 'chunk', struct.pack('<ff', 0.5, 0.5), None)
             return True
         else: return False

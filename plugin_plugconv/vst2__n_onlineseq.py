@@ -17,12 +17,12 @@ class plugconv(plugin_plugconv.base):
             distlevel = 0.5
             distort_type = plugins.get_plug_param(cvpj_l, pluginid, 'distort_type', 0)[0]
             if distort_type == [10, 6]: distlevel = 0.3
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Density2', 'chunk', struct.pack('<ffff', distlevel, 0, 1, 1), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Density2', 'chunk', struct.pack('<ffff', distlevel, 0, 1, 1), None)
             return True
 
         if plugintype[1] == 'delay':
             print('[plug-conv] Converting Online Sequencer Delay to ZamDelay:',pluginid)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'ZamDelay', 'param', None, 8)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'ZamDelay', 'param', None, 8)
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', 0, 'float', "Invert")
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', 0.019877, 'float', "Time")
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_2', 1, 'float', "Sync BPM")
@@ -38,7 +38,7 @@ class plugconv(plugin_plugconv.base):
             eq_high = plugins.get_plug_param(cvpj_l, pluginid, 'eq_high', 0)[0]
             eq_mid = plugins.get_plug_param(cvpj_l, pluginid, 'eq_mid', 0)[0]
             eq_high = plugins.get_plug_param(cvpj_l, pluginid, 'eq_high', 0)[0]
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', '3 Band EQ', 'param', None, 6)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', '3 Band EQ', 'param', None, 6)
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', (eq_high/96)+0.5, 'float', "Low")
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', (eq_mid/96)+0.5, 'float', "Mid")
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_2', (eq_high/96)+0.5, 'float', "High")

@@ -90,5 +90,5 @@ class plugconv(plugin_plugconv.base):
         opnplug_addvalue(opnplug_common, "part" ,0) 
         opnplug_addvalue(opnplug_common, "master_volume" ,12.0)
     
-        plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'OPNplug', 'chunk', data_vc2xml.make(opnplug_root), None) 
+        plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'OPNplug', 'chunk', data_vc2xml.make(opnplug_root), None) 
         return True

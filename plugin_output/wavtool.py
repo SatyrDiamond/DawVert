@@ -279,7 +279,7 @@ class output_wavtool(plugin_output.base):
                                     wt_note['start'] = (clip_note['position'])/4
                                     wt_note['end'] = (clip_note['position']+clip_note['duration'])/4
                                     wt_note['lifted'] = False
-                                    wt_note['velocity'] = clip_note['vol'] if 'vol' in clip_note else ''
+                                    wt_note['velocity'] = clip_note['vol'] if 'vol' in clip_note else 1
                                     wt_notes.append(wt_note)
 
                         loopEnabled = False

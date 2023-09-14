@@ -329,7 +329,7 @@ def do_device_data(cvpj_track_data, xmltag):
                     for ableton_devicedatval in ableton_devicedata:
                         known_dataval = ableton_devicedata[ableton_devicedatval]
                         paramdataval = plugins.get_plug_dataval(cvpj_l, fxpluginid, ableton_devicedatval, ableton_devicedata[ableton_devicedatval])
-                        addvalue(xml_device, ableton_devicedatval, makevaltype(paramdataval, paramdataval))
+                        addvalue(xml_device, ableton_devicedatval, makevaltype(paramdataval[1], paramdataval[0]))
 
                     if ableton_devicename == 'Looper':
                         savedbufferdat = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'SavedBuffer', None)

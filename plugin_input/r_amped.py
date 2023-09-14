@@ -58,6 +58,7 @@ def encode_devices(amped_tr_devices, trackid):
         is_instrument = False
 
         plugins.add_plug_fxdata(cvpj_l, pluginid, not amped_tr_device['bypass'], 1)
+        plugins.add_plug_fxvisual(cvpj_l, pluginid, devicetype[1], None)
 
         if devicetype[0] == 'WAM': 
             if devicetype[1] in ['Augur', 'Europa', 'OBXD', 'Dexed']: is_instrument = True

@@ -151,6 +151,40 @@ def parse_fxrouting(fxroutingbytes):
         fxcount += 1
     return routes
 
+def parse_InitCtrlRecChan(icrc_bytes):
+    icrcstream = create_bytesio(icrc_bytes)
+    icrc_bytes_len = len(icrc_bytes)
+
+    fxinitvaldata = {}
+
+    while icrcstream[0].tell() < icrcstream[1]:
+        icrc_dummy = icrcstream[0].read(4)
+        icrc_control = icrcstream[0].read(2)[::-1]
+        icrc_group_bytes = icrcstream[0].read(2)
+        icrc_group = int.from_bytes(icrc_group_bytes, "little")
+        icrc_value = icrcstream[0].read(4)
+
+        fxslotnum = (icrc_group & 0x3f)
+        fxnum = (icrc_group >> 6) & 0x7f
+
+        if fxnum not in fxinitvaldata: fxinitvaldata[fxnum] = {}
+        if fxslotnum not in fxinitvaldata[fxnum]: fxinitvaldata[fxnum][fxslotnum] = {}
+        fxinitvaldata[fxnum][fxslotnum][icrc_control] = icrc_value
+
+        #print('\t\t', 
+        #    format(icrc_group, '016b'), 
+        #    bytes(icrc_group_bytes[::-1]).hex(), 
+        #    (icrc_group >> 13), 
+        #    fxnum, 
+        #    fxslotnum, 
+        #    bytes(icrc_control).hex(), 
+        #    bytes(icrc_value).hex(),
+        #    str(int.from_bytes(icrc_value, "little", signed=True)).ljust(10),
+        #    str(struct.unpack('<f', icrc_value)[0]),
+        #    )
+
+    return fxinitvaldata
+
 def parse(inputfile):
     global FL_Main
     global FLSplitted
@@ -176,6 +210,7 @@ def parse(inputfile):
         FL_Mixer[str(fxnum)] = {}
 
     TimeMarker_id = 0
+    FL_InitFXVals = {}
     FL_Arrangements = {}
     FL_FXCreationMode = 0
     FL_TimeMarkers = {}
@@ -319,7 +354,8 @@ def parse(inputfile):
             #print('\\__Type:', event_data)
             FL_Channels[str(T_FL_CurrentChannel)]['type'] = event_data
     
-    
+        if event_id == 225: 
+            FL_InitFXVals = parse_InitCtrlRecChan(event_data)
     
         if event_id == 38: 
             FL_FXCreationMode = 1
@@ -433,4 +469,5 @@ def parse(inputfile):
     output['FL_FilterGroups'] = FL_ChanGroupName
     output['FL_Arrangements'] = FL_Arrangements
     output['FL_TimeMarkers'] = FL_TimeMarkers
+    output['FL_InitFXVals'] = FL_InitFXVals
     return output

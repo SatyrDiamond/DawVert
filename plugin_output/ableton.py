@@ -286,6 +286,7 @@ def do_device_data(cvpj_track_data, xmltag):
 
                 fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', fxpluginid])
                 fx_on = params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
+                fx_name = fxdata['name'] if 'name' in fxdata else ''
 
                 xml_device = ET.SubElement(xmltag, ableton_devicename)
                 xml_device.set('Id', str(ableton_deviceid))
@@ -303,7 +304,7 @@ def do_device_data(cvpj_track_data, xmltag):
                 x_LockedScripts = ET.SubElement(xml_device, 'LockedScripts')
                 addvalue(xml_device, 'IsFolded', 'false')
                 addvalue(xml_device, 'ShouldShowPresetName', 'false')
-                addvalue(xml_device, 'UserName', '')
+                addvalue(xml_device, 'UserName', fx_name)
                 addvalue(xml_device, 'Annotation', '')
                 x_SourceContext = ET.SubElement(xml_device, 'SourceContext')
                 x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')

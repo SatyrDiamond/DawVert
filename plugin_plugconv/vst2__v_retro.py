@@ -60,7 +60,7 @@ class plugconv(plugin_plugconv.base):
             if plugintype[1] == 'triangle': params_various_inst.m8bp_setvalue("osc", 1.0)
             if plugintype[1] == 'noise': params_various_inst.m8bp_setvalue("osc", 2.0)
 
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Magical 8bit Plug 2', 'chunk', data_vc2xml.make(params_various_inst.m8bp_out()), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Magical 8bit Plug 2', 'chunk', data_vc2xml.make(params_various_inst.m8bp_out()), None)
             plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', 0)
             return True
         else:
@@ -90,6 +90,6 @@ class plugconv(plugin_plugconv.base):
             #if env_found: params_vital.set_modulation(1, 'lfo_1', 'osc_1_level', 1, 0, 1, 0, 0)
 
             vitaldata = params_vital.getdata()
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
             plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', 12)
             return True

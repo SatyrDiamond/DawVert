@@ -100,7 +100,7 @@ class plugconv(plugin_plugconv.base):
     
         outfile = ET.ElementTree(adlplug_root)
     
-        plugin_vst2.replace_data(cvpj_l, pluginid, 'any', 'ADLplug', 'chunk', data_vc2xml.make(adlplug_root), None)
+        plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'ADLplug', 'chunk', data_vc2xml.make(adlplug_root), None)
     
         plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', -12)   
         return True

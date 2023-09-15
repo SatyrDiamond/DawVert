@@ -614,69 +614,144 @@ def r_removelanes(projJ):
 
 points_items = None
 
+def n2p_mergetablenotes(initnotereg, addnotereg):
+    inr_pos, inr_dur, inr_notes = initnotereg
+    anr_pos, anr_dur, anr_notes = addnotereg
+
+    for anr_note in anr_notes:
+        inr_notes.append([anr_note[0]+inr_dur, anr_note[1], anr_note[2]])
+
+    return [inr_pos, inr_dur+anr_dur, inr_notes]
+
+
+
+
 def single_notelists2placements(placementsdata):
-    global points_items
-    timepoints = []
-    numarea = len(points_items)-1
+    global timesigblocks
+
+    out_placements = []
 
     nlname = None
     if 'name' in placementsdata[0]: nlname = placementsdata[0]['name']
 
-    if numarea >= 1:
-        for num in range(numarea):
-            timepoints_part = xtramath.gen_float_range(points_items[num][0],points_items[num+1][0],points_items[num][1]*4)
-            for timepoints_pp in timepoints_part:
-                if timepoints_pp < points_items[num+1][0]:
-                    timepoints.append([timepoints_pp, timepoints_pp+points_items[num][1]*4, False, False])
+    notelist_regions = []
+    for _ in range(len(timesigblocks)):
+        notelist_regions.append([])
+
+    notelist_sepdata = []
     if 'notelist' in placementsdata[0]:
         notelist = placementsdata[0]['notelist']
         for note in notelist:
             note_start = note['position']
-            note_end = note['duration'] + note_start
-            for timepoint in timepoints:
-                position = timepoint[0]
-                position_end = timepoint[1]
-                note_overlap = bool(xtramath.overlap(position, position_end, note_start, note_end))
-                if timepoint[2] == False: timepoint[2] = note_overlap
-                if timepoint[3] == False: timepoint[3] = note_overlap and position_end<note_end
-        cutranges = []
-        appendnext = False
-        for timepoint in timepoints:
-            #print(timepoint)
-            if timepoint[2] == True:
-                if appendnext == False: cutranges.append([timepoint[0], timepoint[1]])
-                else: cutranges[-1][1] = timepoint[1]
-            appendnext = timepoint[3]
-        new_placements = []
-        for cutrange in cutranges:
-            new_placement = {}
-            new_placement['notelist'] = notelist_data.trimmove(notelist, cutrange[0], cutrange[1])
-            if nlname != None: new_placement['name'] = nlname
-            new_placement['position'] = cutrange[0]
-            new_placement['duration'] = cutrange[1]-cutrange[0]
-            new_placements.append(new_placement)
-    return new_placements
+            note_end = note['duration']
+            del note['position']
+            del note['duration']
+            for tsbnum in range(len(timesigblocks)):
+                tsbdat = timesigblocks[tsbnum]
+                if tsbdat[0] <= note_start < tsbdat[1]:
+                    notelist_regions[tsbnum].append([note_start-tsbdat[0], note_end, note])
+                    break
+
+    global_regions = []
+    local_region_count_list = []
+
+    #notelist to gregions
+    for reigionnum in range(len(timesigblocks)):
+        area_start, area_end, splitdur = timesigblocks[reigionnum]
+        area_notelist = notelist_regions[reigionnum]
+
+        local_region = []
+        curpos = area_start
+        local_region_count = 0
+        for steplen in xtramath.gen_float_blocks((area_end-area_start), splitdur):
+            local_region.append([curpos, splitdur, [], False, splitdur, False])
+            local_region_count += 1
+            curpos += steplen
+        local_region_count_list.append(local_region_count)
+
+        for area_note in area_notelist:
+            noteregionnnum = int(area_note[0]//splitdur)
+            area_note[0] -= noteregionnnum*splitdur
+            local_region[noteregionnnum][2].append(area_note)
+            local_region[noteregionnnum][3] = True
+            if local_region[noteregionnnum][4] < area_note[0]+area_note[1]:
+                local_region[noteregionnnum][4] = area_note[0]+area_note[1]
+
+        for local_region_part in local_region:
+            local_region_part[4] -= local_region_part[1] 
+
+        global_regions += local_region
+
+    #gregions merge overlap
+    for greg_num in range(len(global_regions)):
+        greg_pos, greg_dur, greg_notes, greg_used, greg_of, greg_ofmarked = global_regions[greg_num]
+        greg_lanum = greg_num
+
+        while greg_of > 0:
+            global_regions[greg_lanum][5] = True
+            global_regions[greg_lanum+1][3] = True
+            greg_of -= global_regions[greg_lanum][1]
+            greg_lanum += 1
+
+
+    #out regions
+    curreg = None
+    preoutput_regs = []
+
+    for global_region in global_regions:
+        greg_pos, greg_dur, greg_notes, greg_used, greg_of, greg_ofmarked = global_region
+
+        if greg_used == True and greg_ofmarked == False: 
+            if curreg == None: curreg = global_region[0:3]
+            else: curreg = n2p_mergetablenotes(curreg, global_region[0:3])
+            preoutput_regs.append(curreg)
+            curreg = None
+
+        elif greg_used == True and greg_ofmarked == True: 
+            if curreg == None: curreg = global_region[0:3]
+            else: curreg = n2p_mergetablenotes(curreg, global_region[0:3])
+
+        else:
+            if curreg != None: preoutput_regs.append(global_region[0:3])
+            curreg = None
+
+    if curreg != None: preoutput_regs.append(global_region[0:3])
+
+    for preoutput_reg in preoutput_regs:
+        pop_pos, pop_dur, pop_notes = preoutput_reg
+        cur_placement = {'notelist': [], 'position': pop_pos, 'duration': pop_dur}
+        for rn_pos, rn_dur, rn_extra in pop_notes:
+            out_note = rn_extra
+            out_note['position'] = rn_pos
+            out_note['duration'] = rn_dur
+            cur_placement['notelist'].append(out_note)
+        out_placements.append(cur_placement)
+
+    return out_placements
 
 def create_points_cut(projJ):
-    global points_items
+    global timesigblocks
     if points_items == None:
         songduration = song.r_getduration(projJ)
-        if 'timesig_numerator' in projJ:
-            timesig_numerator = projJ['timesig_numerator']
+        if 'timesig_numerator' in projJ: timesig_numerator = projJ['timesig_numerator']
         else: timesig_numerator = 4
-        points = {}
-        points[0] = timesig_numerator
+
+        timesigposs = []
+        timesigblocks = []
         if 'timemarkers' in projJ:
             for timemarker in projJ['timemarkers']:
                 if 'type' in timemarker:
                     if timemarker['type'] == 'timesig':
-                        points[timemarker['position']] = timemarker['numerator']
-        points[songduration] = 4
-        points = dict(sorted(points.items(), key=lambda item: item[0]))
-        points_items = [(k,v) for k,v in points.items()]
+                        timesigposs.append([timemarker['position'], timemarker['numerator']])
+
+        timesigposs.append([songduration, None])
+        if timesigposs == []: timesigposs = [[0, timesig_numerator],[songduration, timesig_numerator]] 
+
+        for timesigposnum in range(len(timesigposs)-1):
+            timesigpos = timesigposs[timesigposnum]
+            timesigblocks.append([timesigpos[0], timesigposs[timesigposnum+1][0], float(timesigpos[1])*4])
 
 def r_split_single_notelist(projJ):
-    global points_items
     create_points_cut(projJ)
     if 'do_singlenotelistcut' in projJ:
         if projJ['do_singlenotelistcut'] == True:

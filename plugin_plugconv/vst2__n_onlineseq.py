@@ -3,6 +3,7 @@
 
 import plugin_plugconv
 
+import struct
 from functions import plugin_vst2
 from functions import plugins
 

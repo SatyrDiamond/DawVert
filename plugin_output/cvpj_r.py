@@ -18,8 +18,8 @@ class output_cvpj_f(plugin_output.base):
         'track_lanes': True,
         'placement_cut': True,
         'placement_loop': [],
-        'track_nopl': True,
-        'auto_nopl': True,
+        'track_nopl': False,
+        'auto_nopl': False,
         'placement_audio_events': True,
         'placement_audio_stretch': ['warp', 'rate']
         }

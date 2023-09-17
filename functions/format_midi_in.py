@@ -379,7 +379,6 @@ def song_end(channels):
 
             elif s_chan_auto_num == 92: 
                 wetval = do_slot_wet(schannum, '_tremelo', fxrack_chan, False)
-                tracks.add_fxslot_native(cvpj_l, 'audio', 'simple', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_tremelo', 'tremelo', {})
                 fx_used = True
 
             elif s_chan_auto_num == 93: 
@@ -392,7 +391,6 @@ def song_end(channels):
 
             elif s_chan_auto_num == 95: 
                 wetval = do_slot_wet(schannum, '_phaser', fxrack_chan, False)
-                tracks.add_fxslot_native(cvpj_l, 'audio', 'simple', ['fxrack', fxrack_chan], 1, wetval, fxrack_chan+'_phaser', 'phaser', {})
                 fx_used = True
 
             elif s_chan_auto_num == 'pitch':

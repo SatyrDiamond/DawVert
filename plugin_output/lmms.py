@@ -403,7 +403,7 @@ def lmms_encode_notelist(xmltag, json_notelist):
         patX.set('key', str(key))
         patX.set('pos', str(int(round(position))))
         patX.set('pan', str(pan))
-        patX.set('len', str(int(round(duration))))
+        patX.set('len', str(  max(1,int(round(duration))))   )
         patX.set('vol', str(vol))
         if 'notemod' in json_note:
             if 'auto' in json_note['notemod']:
@@ -1005,11 +1005,12 @@ class output_lmms(plugin_output.base):
         
         if 'timemarkers' in cvpj_l:
             for timemarkdata in cvpj_l['timemarkers']:
-                if timemarkdata['type'] == 'loop_area':
-                    timelineX = ET.SubElement(songX, "timeline")
-                    timelineX.set("lp0pos", str(int(timemarkdata['position']*12)))
-                    timelineX.set("lpstate", '0')
-                    timelineX.set("lp1pos", str(int(timemarkdata['end']*12)))
+                if 'type' in timemarkdata:
+                    if timemarkdata['type'] == 'loop_area':
+                        timelineX = ET.SubElement(songX, "timeline")
+                        timelineX.set("lp0pos", str(int(timemarkdata['position']*12)))
+                        timelineX.set("lpstate", '0')
+                        timelineX.set("lp1pos", str(int(timemarkdata['end']*12)))
 
         outfile = ET.ElementTree(projX)
         

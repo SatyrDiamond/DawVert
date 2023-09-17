@@ -11,9 +11,8 @@ from functions import tracks
 from functions import plugins
 from functions import placement_data
 from functions import song
+from functions import xtramath
 
-def average(lst):
-    return sum(lst) / len(lst)
 
 def get_used_insts(channeldata):
     usedinsts = []
@@ -415,7 +414,7 @@ class input_famistudio(plugin_input.base):
         groovesplit = fst_groove.split('-')
         for groovenumber in groovesplit:
             groovetable.append(int(groovenumber))
-        bpm = 60/(average(groovetable)/60*fst_beatlength)
+        bpm = 60/(xtramath.average(groovetable)/60*fst_beatlength)
 
         PatternLengthList = []
         for number in range(SongLength):

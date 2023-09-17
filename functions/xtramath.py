@@ -7,6 +7,9 @@ def clamp(n, minn, maxn):
 def overlap(start1, end1, start2, end2):
     return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
 
+def average(lst):
+    return sum(lst) / len(lst)
+
 def between_from_one(minval, maxval, value): 
     return (minval*(1-value))+(maxval*value)
 

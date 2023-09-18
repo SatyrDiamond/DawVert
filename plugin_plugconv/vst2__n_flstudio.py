@@ -45,7 +45,7 @@ class plugconv(plugin_plugconv.base):
 
         #---------------------------------------- Fruit Kick ----------------------------------------
         if plugintype[1].lower() == 'fruit kick':
-            print('[plug-conv] Converting Fruit Kick to Kickmess:',pluginid)
+            print("[plug-conv] FL Studio to VST2: Fruit Kick > Kickmess:",pluginid)
             max_freq = note_data.note_to_freq((getparam('max_freq')/100)+12) #1000
             min_freq = note_data.note_to_freq((getparam('min_freq')/100)-36) #130.8128
             decay_freq = getparam('decay_freq')/256
@@ -70,7 +70,7 @@ class plugconv(plugin_plugconv.base):
 
         # ---------------------------------------- DX10 ----------------------------------------
         elif plugintype[1].lower() == 'fruity dx10':
-            print('[plug-conv] Converting Fruity DX10 to mda DX10:',pluginid)
+            print("[plug-conv] FL Studio to VST2: Fruity DX10 > mda DX10:",pluginid)
             param_amp_att = getparam('amp_att')/65536
             param_amp_dec = getparam('amp_dec')/65536
             param_amp_rel = getparam('amp_rel')/65536
@@ -108,7 +108,7 @@ class plugconv(plugin_plugconv.base):
 
         # ---------------------------------------- SimSynth ----------------------------------------
         elif plugintype[1].lower() == 'simsynth':
-            print('[plug-conv] Converting SimSynth to Vital:',pluginid)
+            print("[plug-conv] FL Studio to VST2: SimSynth > Vital:",pluginid)
             params_vital.create()
 
             for oscnum in range(3):
@@ -170,7 +170,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         elif plugintype[1].lower() == 'fruity bass boost':
-            print('[plug-conv] Converting Fruity Bass Boost to Airwindows Weight:',pluginid)
+            print("[plug-conv] FL Studio to VST2: Fruity Bass Boost > Airwindows Weight:",pluginid)
             param_freq = (getparam('freq')/1024)*0.8
             param_amount = (getparam('amount')/1024)*0.8
             plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Weight', 'param', None, 2)
@@ -179,7 +179,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         elif plugintype[1].lower() == 'fruity phaser':
-            print('[plug-conv] Converting Fruity Phaser to SupaPhaser:',pluginid)
+            print("[plug-conv] FL Studio to VST2: Fruity Phaser > SupaPhaser:",pluginid)
             param_sweep_freq = getparam('sweep_freq')/5000
             param_depth_min = getparam('depth_min')/1000
             param_depth_max = getparam('depth_max')/1000
@@ -209,7 +209,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         elif plugintype[1].lower() == 'fruity spectroman':
-            print("[plug-conv] Converting Fruity Spectroman to Socalab's SpectrumAnalyzer:",pluginid)
+            print("[plug-conv] FL Studio to VST2: Fruity Spectroman > SocaLabs's SpectrumAnalyzer:",pluginid)
             spectroman_mode = getparam('outputmode')
             x_spectrumanalyzer = ET.Element("state")
             x_spectrumanalyzer.set('valueTree', '<?xml version="1.0" encoding="UTF-8"?>\n<state width="400" height="328"/>')
@@ -220,7 +220,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         if plugintype[1].lower() == 'fruity waveshaper':
-            print('[plug-conv] Converting Fruity Waveshaper to Wolf Shaper:',pluginid)
+            print("[plug-conv] FL Studio to VST2: Fruity Waveshaper > Wolf Shaper:",pluginid)
             params_various_fx.wolfshaper_init()
             params_various_fx.wolfshaper_setvalue('pregain', ((getparam('preamp')/128)-0.5)*2)
             params_various_fx.wolfshaper_setvalue('wet', getparam('wet')/128)

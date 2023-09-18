@@ -8,7 +8,28 @@ from functions import xtramath
 from functions import colors
 from functions import data_values
 from functions import params
+from functions import plugins
 from functions import tracks
+from functions_plugin import waveform_values
+
+def get_plugins(xml_tag, cvpj_fxids):
+    for cvpj_fxid in cvpj_fxids:
+        plugtype = plugins.get_plug_type(cvpj_l, cvpj_fxid)
+        fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', cvpj_fxid])
+        fx_on = params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
+        if plugtype[0] == 'native-tracktion' and plugtype[1] in waveform_params:
+
+            wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
+            wf_PLUGIN.set('type', plugtype[1])
+            wf_PLUGIN.set('presetDirty', '1')
+            wf_PLUGIN.set('enabled', str(fx_on))
+
+            for waveform_param in waveform_params[plugtype[1]]:
+                defvaluevals = waveform_params[plugtype[1]][waveform_param]
+                paramdata = plugins.get_plug_param(cvpj_l, cvpj_fxid, waveform_param, defvaluevals[1])[0]
+                wf_PLUGIN.set(waveform_param, str(paramdata))
+
+
 
 class output_waveform_edit(plugin_output.base):
     def __init__(self): pass
@@ -28,9 +49,13 @@ class output_waveform_edit(plugin_output.base):
     def getsupportedplugformats(self): return []
     def getsupportedplugins(self): return []
     def parse(self, convproj_json, output_file):
+        global cvpj_l
+        global waveform_params
         wf_proj = ET.Element("EDIT")
         wf_proj.set('appVersion', "Waveform 11.5.18")
         wf_proj.set('modifiedBy', "DawVert")
+
+        waveform_params = waveform_values.devicesparam()
 
         cvpj_l = json.loads(convproj_json)
 
@@ -56,25 +81,38 @@ class output_waveform_edit(plugin_output.base):
 
         if 'track_master' in cvpj_l:
             cvpj_track_master = cvpj_l['track_master']
+
+            wf_MASTERPLUGINS = ET.SubElement(wf_proj, "MASTERPLUGINS")
+            if 'chain_fx_audio' in cvpj_track_master: 
+                get_plugins(wf_MASTERPLUGINS, cvpj_track_master['chain_fx_audio'])
+
             wf_MASTERTRACK = ET.SubElement(wf_proj, "MASTERTRACK")
             wf_MASTERTRACK.set('id', str(wf_globalid))
             if 'name' in cvpj_track_master: wf_MASTERTRACK.set('name', cvpj_track_master['name'])
             wf_globalid =+ 1
 
         for cvpj_trackid, s_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+
             wf_TRACK = ET.SubElement(wf_proj, "TRACK")
             wf_TRACK.set('id', str(wf_globalid))
             if 'name' in s_trackdata: wf_TRACK.set('name', s_trackdata['name'])
             if 'color' in s_trackdata: wf_TRACK.set('colour', 'ff'+colors.rgb_float_to_hex(s_trackdata['color']))
             
-            cvpj_track_vol = params.get(s_trackdata, [], 'vol', 1)
-            cvpj_track_pan = params.get(s_trackdata, [], 'pan', 0)
+            #cvpj_track_vol = params.get(s_trackdata, [], 'vol', 1.0)
+            #cvpj_track_pan = params.get(s_trackdata, [], 'pan', 0)
 
-            wf_PLUGINVOLPAN = ET.SubElement(wf_TRACK, "PLUGIN")
-            wf_PLUGINVOLPAN.set('type', 'volume')
-            wf_PLUGINVOLPAN.set('enabled', '1')
-            wf_PLUGINVOLPAN.set('volume', str(cvpj_track_vol))
-            wf_PLUGINVOLPAN.set('pan', str(cvpj_track_pan))
+            #wf_PLUGINVOLPAN = ET.SubElement(wf_TRACK, "PLUGIN")
+            #wf_PLUGINVOLPAN.set('type', 'volume')
+            #wf_PLUGINVOLPAN.set('enabled', '1')
+            #wf_PLUGINVOLPAN.set('volume', str(cvpj_track_vol))
+            #wf_PLUGINVOLPAN.set('pan', str(cvpj_track_pan))
+
+            wf_INST = ET.SubElement(wf_TRACK, "PLUGIN")
+            wf_INST.set('type', '4osc')
+            wf_INST.set('enabled', '1')
+
+            if 'chain_fx_audio' in s_trackdata: 
+                get_plugins(wf_TRACK, s_trackdata['chain_fx_audio'])
 
             wf_PLUGINMETER = ET.SubElement(wf_TRACK, "PLUGIN")
             wf_PLUGINMETER.set('type', 'level')

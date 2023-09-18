@@ -322,6 +322,20 @@ def do_device_data(cvpj_track_data, xmltag):
                             addvalue(x_FilterBank, 'BandLevel.'+str(bandnum), '1')
 
                 if ableton_devicename not in ['MultiSampler', 'OriginalSimpler']:
+
+                    if ableton_devicename == 'Hybrid':
+                        samplefilepath = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'sample', '')
+                        samplerefdict = {}
+                        samplerefdict['path'] = samplefilepath
+                        aud_sampledata = audio.get_audiofile_info(samplefilepath)
+
+                        x_ImpulseResponseHandler = ET.SubElement(xml_device, 'ImpulseResponseHandler')
+                        x_SampleSlot = ET.SubElement(x_ImpulseResponseHandler, 'SampleSlot')
+                        x_SampleSlotValue = ET.SubElement(x_SampleSlot, 'Value')
+                        x_SampleSlotTrueStereo = ET.SubElement(x_ImpulseResponseHandler, 'SampleSlotTrueStereo')
+                        x_SampleSlotTrueStereoValue = ET.SubElement(x_SampleSlotTrueStereo, 'Value')
+                        create_sampleref(x_SampleSlotValue, aud_sampledata, 3)
+
                     for ableton_deviceparam in ableton_deviceparams:
                         known_paramdata = ableton_deviceparams[ableton_deviceparam]
                         paramval = plugins.get_plug_param(cvpj_l, fxpluginid, ableton_deviceparam, 0)[0]
@@ -372,17 +386,6 @@ def do_device_data(cvpj_track_data, xmltag):
                                 if lfoparams[0] in lfodata:
                                     if lfodata[lfoparams[0]] != None:
                                         set_add_param(x_Lfo, lfoparams[0], makevaltype(lfodata[lfoparams[0]], lfoparams[1]), str(get_unused_id()), None, None, lfoparams[2])
-
-                    if ableton_devicename == 'Hybrid':
-                        samplefilepath = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'sample', '')
-                        samplerefdict = {}
-                        samplerefdict['path'] = samplefilepath
-                        aud_sampledata = audio.get_audiofile_info(samplefilepath)
-
-                        x_ImpulseResponseHandler = ET.SubElement(xml_device, 'ImpulseResponseHandler')
-                        x_SampleSlot = ET.SubElement(x_ImpulseResponseHandler, 'SampleSlot')
-                        x_SampleSlotValue = ET.SubElement(x_SampleSlot, 'Value')
-                        create_sampleref(x_SampleSlotValue, aud_sampledata, 1)
 
 
                     #paramletter = ['A','B']

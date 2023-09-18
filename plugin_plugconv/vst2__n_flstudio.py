@@ -14,6 +14,7 @@ from functions import data_bytes
 from functions import data_values
 from functions import plugin_vst2
 from functions import plugins
+from functions import tracks
 
 from functions_plugparams import params_various_inst
 from functions_plugparams import params_kickmess
@@ -42,6 +43,21 @@ class plugconv(plugin_plugconv.base):
         global cvpj_l_g
         pluginid_g = pluginid
         cvpj_l_g = cvpj_l
+        #---------------------------------------- nonfree ----------------------------------------
+
+        if 'nonfree-plugins' in extra_json:
+            if plugintype[1].lower() == 'fruity blood overdrive':
+
+                paramvals = [getparam('preband')/10000, getparam('color')/10000, getparam('preamp')/10000,
+                getparam('x100'), getparam('postfilter')/10000, getparam('postgain')/10000]
+                plugin_vst2.replace_data(cvpj_l, pluginid, 'name', 'win', 'BloodOverdrive', 'param', None, 6)
+                plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', paramvals[0], 'float', " PreBand  ")
+                plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', paramvals[1], 'float', "  Color   ")
+                plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_2', paramvals[2], 'float', "  PreAmp  ")
+                plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_3', paramvals[3], 'float', "  x 100   ")
+                plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_4', paramvals[4], 'float', "PostFilter")
+                plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_5', paramvals[5], 'float', " PostGain ")
+                return True
 
         #---------------------------------------- Fruit Kick ----------------------------------------
         if plugintype[1].lower() == 'fruit kick':

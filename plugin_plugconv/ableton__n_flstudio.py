@@ -51,6 +51,7 @@ class plugconv(plugin_plugconv.base):
             plugins.add_plug_param(cvpj_l, pluginid, 'Gain', comp_gain, 'float', "")
             plugins.add_plug_param(cvpj_l, pluginid, 'Model', als_model, 'int', "")
             plugins.add_plug_param(cvpj_l, pluginid, 'Knee', als_knee, 'float', "")
+            return True
 
         if plugintype[1].lower() == 'fruity balance':  
             print('[plug-conv] FL Studio to Ableton: Fruity Balance > StereoGain:',pluginid)
@@ -73,4 +74,14 @@ class plugconv(plugin_plugconv.base):
             plugins.add_plug_param(cvpj_l, pluginid, 'LegacyGain', ((bal_vol/256)-1)*35, 'float', "")
             plugins.add_plug_param(cvpj_l, pluginid, 'Mute', False, 'bool', "")
             plugins.add_plug_param(cvpj_l, pluginid, 'DcFilter', False, 'bool', "")
+            return True
+
+        if plugintype[1].lower() == 'fruity convolver':  
+            print('[plug-conv] FL Studio to Ableton: Fruity convolver > Hybrid:',pluginid)
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
+            conv_file = plugins.get_plug_dataval(cvpj_l, pluginid, 'file', 0)
+
+            plugins.replace_plug(cvpj_l, pluginid, 'native-ableton', 'Hybrid')
+            
+            plugins.add_plug_data(cvpj_l, pluginid, 'sample', conv_file)
             return True

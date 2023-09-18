@@ -21,6 +21,7 @@ class plugconv(plugin_plugconv.base):
     
         if plugintype[1].lower() == 'fruity balance':  
             print('[plug-conv] FL Studio to Waveform: Fruity Balance > Volume:',pluginid)
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             bal_pan = plugins.get_plug_param(cvpj_l, pluginid, 'pan', 0)[0]
             bal_vol = plugins.get_plug_param(cvpj_l, pluginid, 'vol', 256)[0]
 

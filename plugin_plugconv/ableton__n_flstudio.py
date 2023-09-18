@@ -31,6 +31,7 @@ class plugconv(plugin_plugconv.base):
     
         if plugintype[1].lower() == 'fruity balance':  
             print('[plug-conv] FL Studio to Ableton: Fruity Balance > StereoGain:',pluginid)
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             bal_pan = plugins.get_plug_param(cvpj_l, pluginid, 'pan', 0)[0]
             bal_vol = plugins.get_plug_param(cvpj_l, pluginid, 'vol', 256)[0]
 
@@ -49,5 +50,4 @@ class plugconv(plugin_plugconv.base):
             plugins.add_plug_param(cvpj_l, pluginid, 'LegacyGain', ((bal_vol/256)-1)*35, 'float', "")
             plugins.add_plug_param(cvpj_l, pluginid, 'Mute', False, 'bool', "")
             plugins.add_plug_param(cvpj_l, pluginid, 'DcFilter', False, 'bool', "")
-
             return True

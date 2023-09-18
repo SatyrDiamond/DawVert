@@ -44,7 +44,7 @@ class plugconv(plugin_plugconv.base):
         if plugintype[1] == None: plugintype[1] = ''
     
         if plugintype[1].lower() == '3x osc':   
-            print('[plug-conv] Converting 3xOsc to TripleOscillator:',pluginid)
+            print('[plug-conv] FL Studio to LMMS: 3xOsc > TripleOscillator:',pluginid)
             fl_osc1_coarse = getparam('osc1_coarse')    
             fl_osc1_detune = getparam('osc1_detune')    
             fl_osc1_fine = getparam('osc1_fine')    

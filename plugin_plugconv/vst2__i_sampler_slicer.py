@@ -12,7 +12,7 @@ class plugconv(plugin_plugconv.base):
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['sampler', 'slicer', None], ['vst2', None, None], True, False
     def convert(self, cvpj_l, pluginid, plugintype, extra_json):
-        print('[plug-conv] Converting Slicer to Ninjas 2:',pluginid)
+        print('[plug-conv] Slicer > Ninjas 2:',pluginid)
         params_ninjas2.initparams()
         params_ninjas2.slicerdata(cvpj_l, pluginid)
         ninjas2out = params_ninjas2.getparams()

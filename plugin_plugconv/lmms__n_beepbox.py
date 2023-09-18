@@ -22,6 +22,7 @@ class plugconv(plugin_plugconv.base):
 	def getplugconvinfo(self): return ['native-jummbox', None, 'jummbox'], ['native-lmms', None, 'lmms'], True, False
 	def convert(self, cvpj_l, pluginid, plugintype, extra_json):
 		if plugintype[1] in ['custom chip', 'chip', 'harmonics']:
+			print('[plug-conv] Beepbox to LMMS: '+plugintype[1]+' > TripleOscillator:',pluginid)
 			plugdata = plugins.get_plug_data(cvpj_l, pluginid)
 			plugins.replace_plug(cvpj_l, pluginid, 'native-lmms', 'tripleoscillator')
 

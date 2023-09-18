@@ -46,6 +46,7 @@ class plugconv(plugin_plugconv.base):
             return True
             
         if plugintype[1] == 'Tremolo':
+            print('[plug-conv] Amped to Ableton: Tremolo > AutoPan:',pluginid)  
             amped_lfoADepth = plugins.get_plug_param(cvpj_l, pluginid, 'lfoADepth', 0.15)[0]
             amped_lfoARateHz = plugins.get_plug_param(cvpj_l, pluginid, 'lfoARateHz', 0.7585000000000001)[0]
 

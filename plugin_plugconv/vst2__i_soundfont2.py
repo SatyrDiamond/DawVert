@@ -13,7 +13,7 @@ class plugconv(plugin_plugconv.base):
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['soundfont2', None, None], ['vst2', None, None], True, False
     def convert(self, cvpj_l, pluginid, plugintype, extra_json):
-        print('[plug-conv] Converting SF2 to juicysfplugin:',pluginid)
+        print('[plug-conv] SoundFont2 > juicysfplugin:',pluginid)
         sf2_bank = plugins.get_plug_dataval(cvpj_l, pluginid, 'bank', 0)
         sf2_patch = plugins.get_plug_dataval(cvpj_l, pluginid, 'patch', 0)
         sf2_filename = plugins.get_plug_dataval(cvpj_l, pluginid, 'file', 0)

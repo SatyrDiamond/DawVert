@@ -11,7 +11,7 @@ class plugconv(plugin_plugconv.base):
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['namco163_famistudio', None, None], ['vst2', None, None], True, False
     def convert(self, cvpj_l, pluginid, plugintype, extra_json):
-        print('[plug-conv] Converting N163-Famistudio to Vital:',pluginid)
+        print('[plug-conv] N163-Famistudio > Vital:',pluginid)
         params_vital.create()
         params_vital.setvalue('volume', 4000)
         params_vital.setvalue('osc_1_level', 0.5)

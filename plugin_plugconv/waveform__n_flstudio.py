@@ -25,9 +25,7 @@ class plugconv(plugin_plugconv.base):
             tracks.a_del_auto_plugin(cvpj_l, pluginid)
             bal_pan = plugins.get_plug_param(cvpj_l, pluginid, 'pan', 0)[0]
             bal_vol = plugins.get_plug_param(cvpj_l, pluginid, 'vol', 256)[0]
-
             plugins.replace_plug(cvpj_l, pluginid, 'native-tracktion', 'volume')
-
             plugins.add_plug_param(cvpj_l, pluginid, 'volume', (bal_vol/256), 'float', "")
             plugins.add_plug_param(cvpj_l, pluginid, 'pan', (bal_pan/128), 'float', "")
             return True

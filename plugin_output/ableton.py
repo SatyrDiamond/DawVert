@@ -79,7 +79,9 @@ abl_bool_val = ['false','true']
 
 def makevaltype(value, valtype):
     if valtype != None:
-        if valtype == 'bool': return abl_bool_val[bool(value)]
+        if valtype == 'bool': 
+            if isinstance(value, bool): return abl_bool_val[bool(value)]
+            else: return value
         elif valtype == 'float': return float(value)
         elif valtype == 'int': return str(int(value))
         else: return str(value)
@@ -328,8 +330,8 @@ def do_device_data(cvpj_track_data, xmltag):
 
                     for ableton_devicedatval in ableton_devicedata:
                         known_dataval = ableton_devicedata[ableton_devicedatval]
-                        paramdataval = plugins.get_plug_dataval(cvpj_l, fxpluginid, ableton_devicedatval, ableton_devicedata[ableton_devicedatval])
-                        addvalue(xml_device, ableton_devicedatval, makevaltype(paramdataval[1], paramdataval[0]))
+                        paramdataval = plugins.get_plug_dataval(cvpj_l, fxpluginid, ableton_devicedatval, ableton_devicedata[ableton_devicedatval][1])
+                        addvalue(xml_device, ableton_devicedatval, makevaltype(paramdataval, known_dataval[0]))
 
                     if ableton_devicename == 'Looper':
                         savedbufferdat = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'SavedBuffer', None)

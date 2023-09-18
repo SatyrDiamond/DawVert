@@ -1,3 +1,6 @@
+def hz_to_value(freq): return 12*math.log2(freq/(440*pow(2, -4.75)))+12
+def value_to_hz(note): return (440/32)*(2**((note-9)/12))
+
 def devicesparam():
 	return {
 "1bandEq":
@@ -21,8 +24,8 @@ def devicesparam():
 	'mode': ['int', '1'], 
 	'analyzer': ['int', '0'], 
 
-	'enable1lm': ['float', '1'], 
-	'enable1rs': ['float', '1'], 
+	'enable1lm': ['float', '0'], 
+	'enable1rs': ['float', '0'], 
 	'freq1lm': ['float', '22.5063'], 
 	'freq1rs': ['float', '22.5063'],
 	'gain1lm': ['float', '0.0'],
@@ -32,8 +35,8 @@ def devicesparam():
 	'shape1lm': ['float', '1'],
 	'shape1rs': ['float', '1'],
 
-	'enable2lm': ['float', '1'], 
-	'enable2rs': ['float', '1'], 
+	'enable2lm': ['float', '0'], 
+	'enable2rs': ['float', '0'], 
 	'freq2lm': ['float', '22.5063'], 
 	'freq2rs': ['float', '22.5063'],
 	'gain2lm': ['float', '0.0'],
@@ -43,8 +46,8 @@ def devicesparam():
 	'shape2lm': ['float', '1'],
 	'shape2rs': ['float', '1'],
 
-	'enable3lm': ['float', '1'], 
-	'enable3rs': ['float', '1'], 
+	'enable3lm': ['float', '0'], 
+	'enable3rs': ['float', '0'], 
 	'freq3lm': ['float', '22.5063'], 
 	'freq3rs': ['float', '22.5063'],
 	'gain3lm': ['float', '0.0'],
@@ -54,8 +57,8 @@ def devicesparam():
 	'shape3lm': ['float', '1'],
 	'shape3rs': ['float', '1'],
 
-	'enable4lm': ['float', '1'], 
-	'enable4rs': ['float', '1'], 
+	'enable4lm': ['float', '0'], 
+	'enable4rs': ['float', '0'], 
 	'freq4lm': ['float', '22.5063'], 
 	'freq4rs': ['float', '22.5063'],
 	'gain4lm': ['float', '0.0'],
@@ -65,8 +68,8 @@ def devicesparam():
 	'shape4lm': ['float', '1'],
 	'shape4rs': ['float', '1'],
 
-	'enable5lm': ['float', '1'], 
-	'enable5rs': ['float', '1'], 
+	'enable5lm': ['float', '0'], 
+	'enable5rs': ['float', '0'], 
 	'freq5lm': ['float', '22.5063'], 
 	'freq5rs': ['float', '22.5063'],
 	'gain5lm': ['float', '0.0'],
@@ -76,8 +79,8 @@ def devicesparam():
 	'shape5lm': ['float', '1'],
 	'shape5rs': ['float', '1'],
 
-	'enable6lm': ['float', '1'], 
-	'enable6rs': ['float', '1'], 
+	'enable6lm': ['float', '0'], 
+	'enable6rs': ['float', '0'], 
 	'freq6lm': ['float', '22.5063'], 
 	'freq6rs': ['float', '22.5063'],
 	'gain6lm': ['float', '0.0'],
@@ -87,8 +90,8 @@ def devicesparam():
 	'shape6lm': ['float', '1'],
 	'shape6rs': ['float', '1'],
 
-	'enable7lm': ['float', '1'], 
-	'enable7rs': ['float', '1'], 
+	'enable7lm': ['float', '0'], 
+	'enable7rs': ['float', '0'], 
 	'freq7lm': ['float', '22.5063'], 
 	'freq7rs': ['float', '22.5063'],
 	'gain7lm': ['float', '0.0'],
@@ -98,8 +101,8 @@ def devicesparam():
 	'shape7lm': ['float', '1'],
 	'shape7rs': ['float', '1'],
 
-	'enable8lm': ['float', '1'], 
-	'enable8rs': ['float', '1'], 
+	'enable8lm': ['float', '0'], 
+	'enable8rs': ['float', '0'], 
 	'freq8lm': ['float', '22.5063'], 
 	'freq8rs': ['float', '22.5063'],
 	'gain8lm': ['float', '0.0'],
@@ -121,18 +124,6 @@ def devicesparam():
 	'mixLock': ['float', '0.0']
 	},
 "comp":
-	{
-	'rms': ['float', '0'], 
-	'threshold': ['float', '-30.0'], 
-	'ratio': ['float', '2.0'], 
-	'attack': ['float', '50.0'],
-	'release': ['float', '500.0'],
-	'knee': ['float', '0.0'],
-	'outputDb': ['float', '0.0'],
-	'sidechainTrigger': ['float', '0'],
-	'inputDb': ['float', '0.0']
-	},
-"stereoDelay":
 	{
 	'rms': ['float', '0'], 
 	'threshold': ['float', '-30.0'], 

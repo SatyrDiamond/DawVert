@@ -43,6 +43,19 @@ class plugconv(plugin_plugconv.base):
     
         if plugintype[1] == None: plugintype[1] = ''
     
+        if plugintype[1].lower() == 'fruity balance':  
+            print('[plug-conv] FL Studio to LMMS: Fruity Balance > Amplifier:',pluginid)
+            bal_pan = getparam('pan')    
+            bal_vol = getparam('vol')    
+            print(bal_vol, bal_pan)
+            plugins.replace_plug(cvpj_l, pluginid, 'native-lmms', 'amplifier')
+
+            plugins.add_plug_param(cvpj_l, pluginid, 'pan', (bal_pan/128)*100, 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, 'right', 100, 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, 'volume', (bal_vol/256)*100, 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, 'left', 100, 'int', "")
+            return True
+
         if plugintype[1].lower() == '3x osc':   
             print('[plug-conv] FL Studio to LMMS: 3xOsc > TripleOscillator:',pluginid)
             fl_osc1_coarse = getparam('osc1_coarse')    

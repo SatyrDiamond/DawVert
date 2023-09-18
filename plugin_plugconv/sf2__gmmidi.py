@@ -12,7 +12,7 @@ class plugconv_vrc7_opl2(plugin_plugconv.base):
     def getplugconvinfo(self): return ['midi', None, None], ['soundfont2', None, None], False, False
     def convert(self, cvpj_l, pluginid, plugintype, extra_json):
         if 'soundfont' in extra_json:
-            print('[plug-conv] Converting MIDI to SF2 Player:',pluginid)
+            print('[plug-conv] MIDI to SoundFont2:',pluginid)
             sffile = extra_json['soundfont']
             v_bank = plugins.get_plug_dataval(cvpj_l, pluginid, 'bank', 0)
             v_inst = plugins.get_plug_dataval(cvpj_l, pluginid, 'inst', 0)

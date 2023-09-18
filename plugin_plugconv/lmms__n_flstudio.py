@@ -7,12 +7,7 @@ import base64
 import struct
 import os
 import math
-import lxml.etree as ET
 
-from functions import note_data
-from functions import data_bytes
-from functions import data_values
-from functions import plugin_vst2
 from functions import plugins
 
 threeosc_shapes = {
@@ -45,11 +40,10 @@ class plugconv(plugin_plugconv.base):
     
         if plugintype[1].lower() == 'fruity balance':  
             print('[plug-conv] FL Studio to LMMS: Fruity Balance > Amplifier:',pluginid)
-            bal_pan = getparam('pan')    
-            bal_vol = getparam('vol')    
-            print(bal_vol, bal_pan)
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
+            bal_pan = getparam('pan')
+            bal_vol = getparam('vol')
             plugins.replace_plug(cvpj_l, pluginid, 'native-lmms', 'amplifier')
-
             plugins.add_plug_param(cvpj_l, pluginid, 'pan', (bal_pan/128)*100, 'int', "")
             plugins.add_plug_param(cvpj_l, pluginid, 'right', 100, 'int', "")
             plugins.add_plug_param(cvpj_l, pluginid, 'volume', (bal_vol/256)*100, 'int', "")
@@ -58,6 +52,7 @@ class plugconv(plugin_plugconv.base):
 
         if plugintype[1].lower() == '3x osc':   
             print('[plug-conv] FL Studio to LMMS: 3xOsc > TripleOscillator:',pluginid)
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             fl_osc1_coarse = getparam('osc1_coarse')    
             fl_osc1_detune = getparam('osc1_detune')    
             fl_osc1_fine = getparam('osc1_fine')    

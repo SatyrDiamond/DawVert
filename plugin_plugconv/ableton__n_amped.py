@@ -16,8 +16,8 @@ class plugconv(plugin_plugconv.base):
         #print(plugintype[1])
 
         if plugintype[1] == 'Chorus':
-            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             print('[plug-conv] Amped to Ableton: Chorus > Chorus2:',pluginid)  
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             amped_delayLfoDepth = plugins.get_plug_param(cvpj_l, pluginid, 'delayLfoDepth', 0.15)[0]
             amped_delayLfoRateHz = plugins.get_plug_param(cvpj_l, pluginid, 'delayLfoRateHz', 0.7585000000000001)[0]
             amped_mix = plugins.get_plug_param(cvpj_l, pluginid, 'mix', 0.85)[0]
@@ -32,8 +32,8 @@ class plugconv(plugin_plugconv.base):
             return True
 
         if plugintype[1] == 'Vibrato':
-            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             print('[plug-conv] Amped to Ableton: Vibrato > Chorus2:',pluginid)  
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             amped_delayLfoDepth = plugins.get_plug_param(cvpj_l, pluginid, 'delayLfoDepth', 0.15)[0]
             amped_delayLfoRateHz = plugins.get_plug_param(cvpj_l, pluginid, 'delayLfoRateHz', 0.7585000000000001)[0]
             plugins.replace_plug(cvpj_l, pluginid, 'native-ableton', 'Chorus2')
@@ -47,6 +47,7 @@ class plugconv(plugin_plugconv.base):
             
         if plugintype[1] == 'Tremolo':
             print('[plug-conv] Amped to Ableton: Tremolo > AutoPan:',pluginid)  
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             amped_lfoADepth = plugins.get_plug_param(cvpj_l, pluginid, 'lfoADepth', 0.15)[0]
             amped_lfoARateHz = plugins.get_plug_param(cvpj_l, pluginid, 'lfoARateHz', 0.7585000000000001)[0]
 
@@ -73,8 +74,8 @@ class plugconv(plugin_plugconv.base):
 
 
         if plugintype[1] == 'Phaser':
-            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             print('[plug-conv] Amped to Ableton: Phaser > PhaserNew:',pluginid)  
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
             amped_feedback = plugins.get_plug_param(cvpj_l, pluginid, 'feedback', 0.0)[0]
             amped_hzmin = plugins.get_plug_param(cvpj_l, pluginid, 'hzmin', 400.0)[0]
             amped_hzrange = plugins.get_plug_param(cvpj_l, pluginid, 'hzrange', 4.0)[0]

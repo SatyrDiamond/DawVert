@@ -9,6 +9,7 @@ import os
 import math
 
 from functions import plugins
+from functions import tracks
 
 threeosc_shapes = {
     0: 0,

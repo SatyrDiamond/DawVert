@@ -14,6 +14,7 @@ from functions import data_bytes
 from functions import data_values
 from functions import plugin_vst2
 from functions import plugins
+from functions import tracks
 
 def getparam(paramname):
     global pluginid_g

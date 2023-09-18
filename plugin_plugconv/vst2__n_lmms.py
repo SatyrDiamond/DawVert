@@ -42,6 +42,7 @@ class plugconv(plugin_plugconv.base):
         cvpj_l_g = cvpj_l
 
         if plugintype[1] == 'bitinvader':
+            print('[plug-conv] LMMS to VST2: BitInvader > Vital:',pluginid)
             params_vital.create()
             bitinvader_shape_data = base64.b64decode(plugins.get_plug_dataval(cvpj_l, pluginid, 'sampleShape', ''))
             bitinvader_shape_vals = struct.unpack('f'*(len(bitinvader_shape_data)//4), bitinvader_shape_data)
@@ -54,6 +55,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         if plugintype[1] == 'sid':
+            print("[plug-conv] LMMS to VST2: SID > SocaLabs's SID:",pluginid)
             x_sid = ET.Element("state")
             x_sid.set('valueTree', '<?xml version="1.0" encoding="UTF-8"?>\n<state/>')
             x_sid.set('program', '0')
@@ -107,6 +109,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         if plugintype[1] == 'kicker':
+            print("[plug-conv] LMMS to VST2: Kicker > Kickmess:",pluginid)
             params_kickmess.initparams()
             params_kickmess.setvalue('pub', 'freq_start', getparam('startfreq'))
             params_kickmess.setvalue('pub', 'freq_end', getparam('endfreq'))
@@ -125,6 +128,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         if plugintype[1] == 'lb302':
+            print("[plug-conv] LMMS to VST2: LB302 > Vital:",pluginid)
             params_vital.create()
             lb302_shape = getparam('shape')
             if lb302_shape == 0: vital_shape = wave.create_wave('saw', 0, None)
@@ -169,6 +173,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         if plugintype[1] == 'zynaddsubfx':
+            print("[plug-conv] LMMS to VST2: ZynAddSubFX > ZynAddSubFX/Zyn-Fusion:",pluginid)
             zasfxdata = plugins.get_plug_dataval(cvpj_l, pluginid, 'data', '')
             zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
             zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
@@ -176,6 +181,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         if plugintype[1] == 'spectrumanalyzer':
+            print("[plug-conv] LMMS to VST2: Spectrum Analyzer > SocaLabs's SpectrumAnalyzer:",pluginid)
             x_spectrumanalyzer = ET.Element("state")
             x_spectrumanalyzer.set('valueTree', '<?xml version="1.0" encoding="UTF-8"?>\n<state width="400" height="328"/>')
             x_spectrumanalyzer.set('program', '0')
@@ -185,6 +191,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         if plugintype[1] == 'waveshaper':
+            print("[plug-conv] LMMS to VST2: Wave Shaper > Wolf Shaper:",pluginid)
             waveshapebytes = base64.b64decode(plugins.get_plug_dataval(cvpj_l, pluginid, 'waveShape', ''))
             waveshapepoints = [struct.unpack('f', waveshapebytes[i:i+4]) for i in range(0, len(waveshapebytes), 4)]
             params_various_fx.wolfshaper_init()

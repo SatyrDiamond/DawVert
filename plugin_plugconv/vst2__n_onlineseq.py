@@ -14,7 +14,7 @@ class plugconv(plugin_plugconv.base):
     def convert(self, cvpj_l, pluginid, plugintype, extra_json):
 
         if plugintype[1] == 'distort':
-            print('[plug-conv] Converting Online Sequencer Distortion to Density2:',pluginid)
+            print('[plug-conv] Online Sequencer to VST2: Distortion > Airwindows Density2:',pluginid)
             distlevel = 0.5
             distort_type = plugins.get_plug_param(cvpj_l, pluginid, 'distort_type', 0)[0]
             if distort_type == [10, 6]: distlevel = 0.3
@@ -22,7 +22,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         if plugintype[1] == 'delay':
-            print('[plug-conv] Converting Online Sequencer Delay to ZamDelay:',pluginid)
+            print('[plug-conv] Online Sequencer to VST2: Delay > ZamDelay:',pluginid)
             plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'ZamDelay', 'param', None, 8)
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_0', 0, 'float', "Invert")
             plugins.add_plug_param(cvpj_l, pluginid, 'vst_param_1', 0.019877, 'float', "Time")
@@ -35,7 +35,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         elif plugintype[1] == 'eq':
-            print('[plug-conv] Converting Online Sequencer EQ to 3 Band EQ:',pluginid)
+            print('[plug-conv] Online Sequencer to VST2: EQ > 3 Band EQ:',pluginid)
             eq_high = plugins.get_plug_param(cvpj_l, pluginid, 'eq_high', 0)[0]
             eq_mid = plugins.get_plug_param(cvpj_l, pluginid, 'eq_mid', 0)[0]
             eq_high = plugins.get_plug_param(cvpj_l, pluginid, 'eq_high', 0)[0]

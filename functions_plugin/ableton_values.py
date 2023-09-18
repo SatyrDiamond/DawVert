@@ -639,7 +639,7 @@ def devicesparam():
 "StereoGain":
 	{'PhaseInvertL': ['bool', 'false', None, [64.0, 127.0]], 
 	'PhaseInvertR': ['bool', 'false', None, [64.0, 127.0]], 
-	'ChannelMode': ['float', '1', None, None], 
+	'ChannelMode': ['int', '2', None, None], 
 	'StereoWidth': ['float', '1', [0.0, 4.0], None], 
 	'MidSideBalance': ['float', '1', [0.0, 2.0], None], 
 	'Mono': ['bool', 'false', None, [64.0, 127.0]], 

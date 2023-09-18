@@ -1,3 +1,8 @@
+import math
+
+def compressor_threshold_in(comp_threshold):
+	return math.pow(0.8913,(-comp_threshold))
+
 def devicesparam():
 	return {
 "BeatRepeat":
@@ -1151,7 +1156,7 @@ def devicesdata():
 	{},
 "Compressor2":
 	{'Live8LegacyMode': ['bool', 'false'], 
-	'ViewMode': ['int', '2'], 
+	'ViewMode': ['int', '1'], 
 	'IsOutputCurveVisible': ['bool', 'false'], 
 	'RmsTimeShort': ['float', '8'], 
 	'RmsTimeLong': ['float', '250'], 

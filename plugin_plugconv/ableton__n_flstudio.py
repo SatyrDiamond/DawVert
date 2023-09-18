@@ -9,6 +9,7 @@ import os
 import math
 import lxml.etree as ET
 
+from functions_plugin import ableton_values
 from functions import note_data
 from functions import data_bytes
 from functions import data_values
@@ -33,7 +34,7 @@ class plugconv(plugin_plugconv.base):
             comp_attack = plugins.get_plug_param(cvpj_l, pluginid, 'attack', 0)[0]/10000
             comp_release = plugins.get_plug_param(cvpj_l, pluginid, 'release', 0)[0]/1000
             comp_type = plugins.get_plug_param(cvpj_l, pluginid, 'type', 0)[0]
-            comp_threshold = math.pow(0.8913,(-comp_threshold))
+            comp_threshold = ableton_values.compressor_threshold_in(comp_threshold)
             first_type = comp_type>>2
             second_type = comp_type%4
             if second_type == 0: als_knee = 0

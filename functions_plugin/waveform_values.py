@@ -3,6 +3,11 @@ def value_to_hz(note): return (440/32)*(2**((note-9)/12))
 
 def devicesparam():
 	return {
+"volume":
+	{
+	'volume': ['float', '1.0'], 
+	'pan': ['float', '0.0']
+	},
 "1bandEq":
 	{
 	'gain': ['float', '0.0'], 

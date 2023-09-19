@@ -324,7 +324,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             get_plugin_param(pluginautoid, xml_sf2, 'reverbOn', pluginid, 'reverb_enabled', 0)
             get_plugin_param(pluginautoid, xml_sf2, 'reverbRoomSize', pluginid, 'reverb_roomsize', 0)
             get_plugin_param(pluginautoid, xml_sf2, 'reverbWidth', pluginid, 'reverb_width', 0)
-            middlenotefix = 0
+            middlenotefix += 12
 
         elif plugintype == ['fm', 'opl2']:
             print('[output-lmms]       Plugin: OPL2 > OPL2')

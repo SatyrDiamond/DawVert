@@ -449,7 +449,7 @@ def lmms_decode_inst_track(trkX, trackid):
         basenote = int(trkX_insttr.get('basenote'))-57
         noteoffset = 0
         if pluginname == 'audiofileprocessor': noteoffset = 3
-        if pluginname == 'sf2player': noteoffset = -12
+        if pluginname == 'sf2player': noteoffset = 0
         if pluginname == 'OPL2': noteoffset = 24
         middlenote = basenote - noteoffset
         tracks.r_add_dataval(cvpj_l, trackid, None, 'middlenote', middlenote)

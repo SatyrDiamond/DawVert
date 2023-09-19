@@ -297,7 +297,7 @@ class plugconv(plugin_plugconv.base):
             plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'SpectrumAnalyzer', 'chunk', ET.tostring(x_spectrumanalyzer, encoding='utf-8'), None)
             return True
 
-        if flpluginname == 'fruity waveshaper':
+        elif flpluginname == 'fruity waveshaper':
             print("[plug-conv] FL Studio to VST2: Fruity Waveshaper > Wolf Shaper:",pluginid)
             params_various_fx.wolfshaper_init()
             params_various_fx.wolfshaper_setvalue('pregain', ((getparam('preamp')/128)-0.5)*2)
@@ -311,4 +311,34 @@ class plugconv(plugin_plugconv.base):
                 params_various_fx.wolfshaper_addshape(shapeenv)
 
             plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Wolf Shaper', 'chunk', data_nullbytegroup.make(params_various_fx.wolfshaper_get()), None)
+            return True
+
+        elif flpluginname == 'fruity compressor':  
+            print('[plug-conv] FL Studio to VST2: Fruity Compressor > Compressor:',pluginid)
+            tracks.a_del_auto_plugin(cvpj_l, pluginid)
+            comp_threshold = plugins.get_plug_param(cvpj_l, pluginid, 'threshold', 0)[0]/10
+            comp_ratio = plugins.get_plug_param(cvpj_l, pluginid, 'ratio', 0)[0]/10
+            comp_gain = plugins.get_plug_param(cvpj_l, pluginid, 'gain', 0)[0]/10
+            comp_attack = plugins.get_plug_param(cvpj_l, pluginid, 'attack', 0)[0]/10
+            comp_release = plugins.get_plug_param(cvpj_l, pluginid, 'release', 0)[0]
+            comp_type = plugins.get_plug_param(cvpj_l, pluginid, 'type', 0)[0]
+            first_type = comp_type>>2
+            second_type = comp_type%4
+
+            if second_type == 0: vc_knee = 0
+            if second_type == 1: vc_knee = 0.3
+            if second_type == 2: vc_knee = 0.6
+            if second_type == 3: vc_knee = 1
+
+            x_compressor = ET.Element("state")
+            x_compressor.set('valueTree', '<?xml version="1.0" encoding="UTF-8"?>\n<state width="400" height="328"/>')
+            x_compressor.set('program', '0')
+            params_various_inst.socalabs_addparam(x_compressor, "attack", comp_attack)
+            params_various_inst.socalabs_addparam(x_compressor, "release", comp_release)
+            params_various_inst.socalabs_addparam(x_compressor, "ratio", comp_ratio)
+            params_various_inst.socalabs_addparam(x_compressor, "threshold", comp_threshold)
+            params_various_inst.socalabs_addparam(x_compressor, "knee", vc_knee)
+            params_various_inst.socalabs_addparam(x_compressor, "input", 1.0)
+            params_various_inst.socalabs_addparam(x_compressor, "output", 1.0)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Compressor', 'chunk', ET.tostring(x_compressor, encoding='utf-8'), None)
             return True

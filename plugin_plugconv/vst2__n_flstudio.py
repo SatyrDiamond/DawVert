@@ -340,5 +340,5 @@ class plugconv(plugin_plugconv.base):
             params_various_inst.socalabs_addparam(x_compressor, "knee", vc_knee)
             params_various_inst.socalabs_addparam(x_compressor, "input", 1.0)
             params_various_inst.socalabs_addparam(x_compressor, "output", 1.0)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Compressor', 'chunk', ET.tostring(x_compressor, encoding='utf-8'), None)
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'id','any', 1397515120, 'chunk', ET.tostring(x_compressor, encoding='utf-8'), None)
             return True

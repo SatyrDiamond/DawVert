@@ -273,8 +273,96 @@ def add_env_target(xmltag, i_name, i_id):
 
 # ---------------------------------------------------------------- Device Param/Data --------------------------------------------------------------
 
+def add_range_val(xmltag, name, low_range, hi_range, low_cr_range, hi_cr_range):
+    x_subtag = ET.SubElement(xmltag, name)
+    addvalue(x_subtag, 'Min', str(low_range))
+    addvalue(x_subtag, 'Max', str(hi_range))
+    addvalue(x_subtag, 'CrossfadeMin', str(low_cr_range))
+    addvalue(x_subtag, 'CrossfadeMax', str(hi_cr_range))
+
+def do_device_data_instrument(cvpj_track_data, xmltag):
+    ableton_deviceid = 3
+    if 'instdata' in cvpj_track_data:
+        if 'pluginid' in cvpj_track_data['instdata']:
+            pluginid = cvpj_track_data['instdata']['pluginid']
+            plugtype = plugins.get_plug_type(cvpj_l, pluginid)
+            print(pluginid, plugtype)
+
+            if plugtype in [['sampler', 'single']]:
+                xml_device = ET.SubElement(xmltag, 'MultiSampler')
+                xml_device.set('Id', str(ableton_deviceid))
+                addvalue(xml_device, 'LomId', '0')
+                addvalue(xml_device, 'LomIdView', '0')
+                addvalue(xml_device, 'IsExpanded', 'false')
+                set_add_param(xml_device, 'On', True, str(get_unused_id()), None, [64,127], None)
+                addvalue(xml_device, 'ModulationSourceCount', '0')
+                addLomId(xml_device, 'ParametersListWrapper', '0')
+                addId(xml_device, 'Pointee', str(get_pointee()))
+                addvalue(xml_device, 'LastSelectedTimeableIndex', '0')
+                addvalue(xml_device, 'LastSelectedClipEnvelopeIndex', '0')
+                x_LastPresetRef = ET.SubElement(xml_device, 'LastPresetRef')
+                x_LastPresetRef_Value = ET.SubElement(x_LastPresetRef, 'Value')
+                x_LockedScripts = ET.SubElement(xml_device, 'LockedScripts')
+                addvalue(xml_device, 'IsFolded', 'false')
+                addvalue(xml_device, 'ShouldShowPresetName', 'false')
+                addvalue(xml_device, 'UserName', '')
+                addvalue(xml_device, 'Annotation', '')
+                x_SourceContext = ET.SubElement(xml_device, 'SourceContext')
+                x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
+
+                if plugtype[1] in ['single', 'multi']:
+                    x_Player = ET.SubElement(xml_device, 'Player')
+
+                    x_MultiSampleMap = ET.SubElement(x_Player, 'MultiSampleMap')
+                    addvalue(x_MultiSampleMap, 'LoadInRam', 'false')
+                    addvalue(x_MultiSampleMap, 'LayerCrossfade', '0')
+                    x_SampleParts = ET.SubElement(x_MultiSampleMap, 'SampleParts')
+
+                    if plugtype[1] == 'single':
+                        x_MultiSamplePart = ET.SubElement(x_SampleParts, 'MultiSamplePart')
+                        x_MultiSamplePart.set('Id', '0')
+                        x_MultiSamplePart.set('HasImportedSlicePoints', 'false')
+                        x_MultiSamplePart.set('NeedsAnalysisData', 'false')
+                        addvalue(x_MultiSamplePart, 'LomId', '0')
+                        addvalue(x_MultiSamplePart, 'Selection', 'true')
+                        addvalue(x_MultiSamplePart, 'IsActive', 'true')
+                        addvalue(x_MultiSamplePart, 'Solo', 'false')
+                        add_range_val(x_MultiSamplePart, 'KeyRange', 0, 127, 0, 127)
+                        add_range_val(x_MultiSamplePart, 'VelocityRange', 1, 127, 1, 127)
+                        add_range_val(x_MultiSamplePart, 'SelectorRange', 0, 127, 0, 127)
+                        addvalue(x_MultiSamplePart, 'RootKey', '60')
+                        addvalue(x_MultiSamplePart, 'Detune', '0')
+                        addvalue(x_MultiSamplePart, 'TuneScale', '100')
+                        addvalue(x_MultiSamplePart, 'Panorama', '0')
+                        addvalue(x_MultiSamplePart, 'Volume', '1')
+                        addvalue(x_MultiSamplePart, 'Link', 'false')
+
+                        samplefilepath = plugins.get_plug_dataval(cvpj_l, pluginid, 'file', '')
+
+                        aud_sampledata = audio.get_audiofile_info(samplefilepath)
+                        create_sampleref(x_MultiSamplePart, aud_sampledata, None)
+
+
+
+
+                    set_add_param(x_Player, 'Reverse', False, str(get_unused_id()), None, [64,127], None)
+                    set_add_param(x_Player, 'Snap', False, str(get_unused_id()), None, [64,127], None)
+                    set_add_param(x_Player, 'SampleSelector', 0, str(get_unused_id()), None, None, None)
+                    addvalue(x_Player, 'InterpolationMode', '1')
+                    addvalue(x_Player, 'UseConstPowCrossfade', 'true')
+
+
+
+
+
+
+
+
+
+
+
 def do_device_data(cvpj_track_data, xmltag):
-    ableton_deviceid = 2
+    ableton_deviceid = 4
     if 'chain_fx_audio' in cvpj_track_data:
         for fxpluginid in cvpj_track_data['chain_fx_audio']:
             plugtype = plugins.get_plug_type(cvpj_l, fxpluginid)
@@ -547,7 +635,7 @@ def create_notelist(xmltag, cvpj_notelist):
             x_MidiNoteEvent = ET.SubElement(x_KeyTrack_notes, 'MidiNoteEvent')
             x_MidiNoteEvent.set('Time', str(t_note['position']/4))
             x_MidiNoteEvent.set('Duration', str(t_note['duration']/4))
-            if 'vol' in t_note: x_MidiNoteEvent.set('Velocity', str(t_note['duration']*100))
+            if 'vol' in t_note: x_MidiNoteEvent.set('Velocity', str(t_note['vol']*100))
             else: x_MidiNoteEvent.set('Velocity', "100")
             x_MidiNoteEvent.set('VelocityDeviation', "0")
             if 'off_vol' in t_note: x_MidiNoteEvent.set('OffVelocity', str(t_note['off_vol']*100))
@@ -1078,6 +1166,7 @@ def create_devicechain(xmltag, cvpj_track_data, tracktype, track_placements, tra
 
     x_DeviceChain_i = ET.SubElement(xmltag, 'DeviceChain')
     x_DeviceChain_i_Devices = ET.SubElement(x_DeviceChain_i, 'Devices')
+    do_device_data_instrument(cvpj_track_data, x_DeviceChain_i_Devices)
     do_device_data(cvpj_track_data, x_DeviceChain_i_Devices)
 
     x_DeviceChain_i_SignalModulations = ET.SubElement(x_DeviceChain_i, 'SignalModulations')

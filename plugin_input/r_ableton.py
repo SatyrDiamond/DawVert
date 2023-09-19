@@ -100,6 +100,39 @@ def get_Range(x_xml, rangename):
 		output.append(float(get_value(x_range, 'Max', None)))
 		return output
 
+def isfloatboolstring(valuedata): 
+	if valuedata.replace('.','',1).replace('-','',1).isdigit():
+		return 'float'
+	elif valuedata in ['true', 'false']:
+		return 'bool'
+	else:
+		return 'string'
+
+lfo_beatsteps = []
+for lfo_beatstep in [1/64, 1/48, 1/32, 1/24, 1/16, 1/12, 1/8, 
+	1/6, 3/16, 1/4, 5/16, 1/3, 3/8, 1/2, 3/4, 1, 1.5, 2, 3, 4, 6, 8]:
+	lfo_beatsteps.append( math.log2(lfo_beatstep) )
+
+
+
+
+
+
+
+
+
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 def get_MultiSampleMap(x_MultiSampleMap):
 	outdata = []
 	x_sampleparts = x_MultiSampleMap.findall('SampleParts')[0]
@@ -148,18 +181,21 @@ def get_MultiSampleMap(x_MultiSampleMap):
 		
 		return outdata
 
-def isfloatboolstring(valuedata): 
-	if valuedata.replace('.','',1).replace('-','',1).isdigit():
-		return 'float'
-	elif valuedata in ['true', 'false']:
-		return 'bool'
-	else:
-		return 'string'
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
 
-lfo_beatsteps = []
-for lfo_beatstep in [1/64, 1/48, 1/32, 1/24, 1/16, 1/12, 1/8, 
-	1/6, 3/16, 1/4, 5/16, 1/3, 3/8, 1/2, 3/4, 1, 1.5, 2, 3, 4, 6, 8]:
-	lfo_beatsteps.append( math.log2(lfo_beatstep) )
+
+
+
+
+
 
 class input_ableton(plugin_input.base):
 	def __init__(self): pass
@@ -613,23 +649,46 @@ class input_ableton(plugin_input.base):
 				#if devicename in ['OriginalSimpler', 'MultiSampler']:
 				#	plugins.add_plug(cvpj_l, pluginid, 'native-ableton', 'sampler')
 
-				#	# Player
+					# Player
 				#	x_samp_Player = x_trackdevice.findall('Player')[0]
 				#	plugins.add_plug_data(cvpj_l, pluginid, 'samplemap', get_MultiSampleMap(x_samp_Player.findall('MultiSampleMap')[0]))
 				#	plugins.add_plug_data(cvpj_l, pluginid, 'reverse', get_param(x_samp_Player, 'Reverse', 'bool', 'false', None, None))
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'subosc_on', get_param(x_samp_Player.findall('SubOsc')[0], 'IsOn', 'bool', 'false', None, None))
+				#	x_samp_subosc = x_samp_Player.findall('SubOsc')[0]
+				#	plugins.add_plug_data(cvpj_l, pluginid, 'subosc_on', get_param(x_samp_subosc, 'IsOn', 'bool', 'false', None, None))
 				#	plugins.add_plug_data(cvpj_l, pluginid, 'interpolation', int(get_value(x_samp_Player, 'InterpolationMode', 1)))
 
-				#	# Pitch
+					# Pitch
 				#	x_samp_Pitch = x_trackdevice.findall('Pitch')[0]
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'interpolation', int(get_value(x_samp_Player, 'InterpolationMode', 1)))
 				#	TransposeKey = float(get_param(x_samp_Pitch, 'TransposeKey', 'float', 0, None, None))
 				#	TransposeFine = float(get_param(x_samp_Pitch, 'TransposeFine', 'float', 0, None, None))
 				#	plugins.add_plug_data(cvpj_l, pluginid, 'transpose', TransposeKey + TransposeFine/100)
 				#	PitchLfoAmount = float(get_param(x_samp_Pitch, 'PitchLfoAmount', 'float', 0, None, None))
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'pitch_env_on', get_param(x_samp_Player.findall('Envelope')[0], 'IsOn', 'bool', 'false', None, None))
-				#	ableton_pitch_data = {}
-					# --------------------- SimplerSubOsc
+				#	x_samp_Envelope = x_samp_Pitch.findall('Envelope')[0]
+				#	plugins.add_plug_data(cvpj_l, pluginid, 'pitch_env_on', get_param(x_samp_Envelope, 'IsOn', 'bool', 'false', None, None))
+
+					# Filter
+				#	x_samp_Filter = x_trackdevice.findall('Filter')[0]
+				#	plugins.add_plug_data(cvpj_l, pluginid, 'filter_env_on', get_param(x_samp_Filter, 'IsOn', 'bool', 'false', None, None))
+
+					# Shaper
+				#	x_samp_Shaper = x_trackdevice.findall('Shaper')[0]
+				#	plugins.add_plug_data(cvpj_l, pluginid, 'shaper_env_on', get_param(x_samp_Shaper, 'IsOn', 'bool', 'false', None, None))
+
+					# VolumeAndPan
+				#	x_samp_VolumeAndPan = x_trackdevice.findall('VolumeAndPan')[0]
+					
+				#	plugins.add_plug_data(cvpj_l, pluginid, 'Volume', get_param(x_samp_VolumeAndPan, 'Volume', 'float', 0, None, None))
+				#	plugins.add_plug_data(cvpj_l, pluginid, 'Volume_vel_scale', get_param(x_samp_VolumeAndPan, 'VolumeVelScale', 'float', 0, None, None))
+				#	plugins.add_plug_data(cvpj_l, pluginid, 'Volume_key_scale', get_param(x_samp_VolumeAndPan, 'VolumeKeyScale', 'float', 0, None, None))
+				#	plugins.add_plug_data(cvpj_l, pluginid, 'Volume_lfo_amount', get_param(x_samp_VolumeAndPan, 'VolumeLfoAmount', 'float', 0, None, None))
+
+				#	plugins.add_plug_data(cvpj_l, pluginid, 'Panorama', get_param(x_samp_VolumeAndPan, 'Panorama', 'float', 0, None, None))
+				#	plugins.add_plug_data(cvpj_l, pluginid, 'Panorama_key_scale', get_param(x_samp_VolumeAndPan, 'PanoramaKeyScale', 'float', 0, None, None))
+				#	plugins.add_plug_data(cvpj_l, pluginid, 'Panorama_rnd', get_param(x_samp_VolumeAndPan, 'PanoramaRnd', 'float', 0, None, None))
+				#	plugins.add_plug_data(cvpj_l, pluginid, 'Panorama_lfo_amount', get_param(x_samp_VolumeAndPan, 'PanoramaLfoAmount', 'float', 0, None, None))
+
+
+
 
 				#	# Pitch
 				#	x_samp_Filter = x_trackdevice.findall('Filter')[0]

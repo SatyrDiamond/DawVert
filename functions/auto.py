@@ -81,6 +81,30 @@ def twopoints2cvpjpoints(twopoints, notelen, pointtype, endlen):
         cvpj_points.append({"type": pointtype, "position": twopoint[0]*notelen, "value": twopoint[1]})
     return [{'position': 0, 'duration': (twopoints[-1][0]*notelen)+endlen, 'points': cvpj_points}]
 
+def remove_instant_note(cvpj_points):
+    cvpj_output = []
+    startpoint = True
+    prevvalue = 0
+
+    zerofound = False
+    for cvpj_auto_poi in cvpj_points:
+        if cvpj_auto_poi['position'] == 0: zerofound = True
+
+    if zerofound == False: cvpj_output.append({'position': 0, 'value': 0})
+
+    for cvpj_auto_poi in cvpj_points:
+        pointtype = cvpj_auto_poi['type'] if 'type' in cvpj_auto_poi else 'normal'
+        instanttype = True if pointtype == 'instant' else False
+        if instanttype == True:
+            cvpj_output.append({'position': cvpj_auto_poi['position'], 'value': prevvalue})
+
+        cvpj_output.append({'position': cvpj_auto_poi['position'], 'value': cvpj_auto_poi['value']})
+        prevvalue = cvpj_auto_poi['value']
+        startpoint = False
+
+    return cvpj_output
+
+
 def remove_instant(cvpj_points, startposition, isnote):
     cvpj_output = []
     startpoint = True

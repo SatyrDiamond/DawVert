@@ -533,8 +533,9 @@ class input_ableton(plugin_input.base):
 				pluginid = track_id+'_'+able_plug_id
 				devicename = str(x_trackdevice.tag)
 				#print(pluginid, devicename)
+				is_instrument = False
 
-				devfx_enabled = get_param(x_trackdevice, 'On', 'bool', True, ['slot', 'able_plug_id', 'enabled'], None)
+				devfx_enabled = get_param(x_trackdevice, 'On', 'bool', True, ['slot', able_plug_id, 'enabled'], None)
 				devfx_wet = 1
 
 				if devicename not in ['MultiSampler', 'OriginalSimpler']:
@@ -646,60 +647,88 @@ class input_ableton(plugin_input.base):
 
 
 
-				#if devicename in ['OriginalSimpler', 'MultiSampler']:
-				#	plugins.add_plug(cvpj_l, pluginid, 'native-ableton', 'sampler')
+				if devicename in ['OriginalSimpler', 'MultiSampler']:
+					plugins.add_plug_multisampler(cvpj_l, pluginid)
+					is_instrument = True
 
 					# Player
-				#	x_samp_Player = x_trackdevice.findall('Player')[0]
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'samplemap', get_MultiSampleMap(x_samp_Player.findall('MultiSampleMap')[0]))
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'reverse', get_param(x_samp_Player, 'Reverse', 'bool', 'false', None, None))
-				#	x_samp_subosc = x_samp_Player.findall('SubOsc')[0]
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'subosc_on', get_param(x_samp_subosc, 'IsOn', 'bool', 'false', None, None))
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'interpolation', int(get_value(x_samp_Player, 'InterpolationMode', 1)))
+					x_samp_Player = x_trackdevice.findall('Player')[0]
+					x_samp_MultiSampleMap = x_samp_Player.findall('MultiSampleMap')[0]
+					x_samp_SampleParts = x_samp_MultiSampleMap.findall('SampleParts')[0]
+					x_samp_MultiSampleParts = x_samp_SampleParts.findall('MultiSamplePart')
+					for x_samp_MultiSamplePart in x_samp_MultiSampleParts:
+						regionparams = {}
+						regionparams['name'] = get_value(x_samp_MultiSamplePart, 'Name', '')
 
-					# Pitch
-				#	x_samp_Pitch = x_trackdevice.findall('Pitch')[0]
-				#	TransposeKey = float(get_param(x_samp_Pitch, 'TransposeKey', 'float', 0, None, None))
-				#	TransposeFine = float(get_param(x_samp_Pitch, 'TransposeFine', 'float', 0, None, None))
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'transpose', TransposeKey + TransposeFine/100)
-				#	PitchLfoAmount = float(get_param(x_samp_Pitch, 'PitchLfoAmount', 'float', 0, None, None))
-				#	x_samp_Envelope = x_samp_Pitch.findall('Envelope')[0]
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'pitch_env_on', get_param(x_samp_Envelope, 'IsOn', 'bool', 'false', None, None))
+						if x_samp_MultiSamplePart.findall('KeyRange')[0]:
+							x_KeyRange = x_samp_MultiSamplePart.findall('KeyRange')[0]
+							xv_Min = int(get_value(x_KeyRange, 'Min', '0'))-60
+							xv_Max = int(get_value(x_KeyRange, 'Max', '127'))-60
+							xv_CrossfadeMin = int(get_value(x_KeyRange, 'CrossfadeMin', '0'))-60
+							xv_CrossfadeMax = int(get_value(x_KeyRange, 'CrossfadeMax', '127'))-60
+							regionparams['r_key'] = [xv_Min, xv_Max]
+							regionparams['r_key_fade'] = [xv_CrossfadeMin, xv_CrossfadeMax]
 
-					# Filter
-				#	x_samp_Filter = x_trackdevice.findall('Filter')[0]
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'filter_env_on', get_param(x_samp_Filter, 'IsOn', 'bool', 'false', None, None))
+						if x_samp_MultiSamplePart.findall('VelocityRange')[0]:
+							x_VelocityRange = x_samp_MultiSamplePart.findall('VelocityRange')[0]
+							xv_Min = int(get_value(x_VelocityRange, 'Min', '1'))
+							xv_Max = int(get_value(x_VelocityRange, 'Max', '127'))
+							xv_CrossfadeMin = int(get_value(x_VelocityRange, 'CrossfadeMin', '1'))
+							xv_CrossfadeMax = int(get_value(x_VelocityRange, 'CrossfadeMax', '127'))
+							regionparams['r_vel'] = [xv_Min, xv_Max]
+							regionparams['r_vel_fade'] = [xv_CrossfadeMin, xv_CrossfadeMax]
 
-					# Shaper
-				#	x_samp_Shaper = x_trackdevice.findall('Shaper')[0]
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'shaper_env_on', get_param(x_samp_Shaper, 'IsOn', 'bool', 'false', None, None))
+						regionparams['middlenote'] = int(get_value(x_samp_MultiSamplePart, 'RootKey', '60'))-60
+						regionparams['volume'] = float(get_value(x_samp_MultiSamplePart, 'volume', '1'))
+						regionparams['pan'] = float(get_value(x_samp_MultiSamplePart, 'pan', '0'))
 
-					# VolumeAndPan
-				#	x_samp_VolumeAndPan = x_trackdevice.findall('VolumeAndPan')[0]
-					
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'Volume', get_param(x_samp_VolumeAndPan, 'Volume', 'float', 0, None, None))
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'Volume_vel_scale', get_param(x_samp_VolumeAndPan, 'VolumeVelScale', 'float', 0, None, None))
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'Volume_key_scale', get_param(x_samp_VolumeAndPan, 'VolumeKeyScale', 'float', 0, None, None))
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'Volume_lfo_amount', get_param(x_samp_VolumeAndPan, 'VolumeLfoAmount', 'float', 0, None, None))
+						if x_samp_MultiSamplePart.findall('SustainLoop')[0]:
+							x_SustainLoop = x_samp_MultiSamplePart.findall('SustainLoop')[0]
+							xv_Start = int(get_value(x_SustainLoop, 'Start', '0'))
+							xv_End = int(get_value(x_SustainLoop, 'End', '1'))
+							xv_Mode = int(get_value(x_SustainLoop, 'Mode', '0'))
+							xv_Crossfade = int(get_value(x_SustainLoop, 'Crossfade', '0'))
+							xv_Detune = int(get_value(x_SustainLoop, 'Detune', '0'))
+							loopdata = {}
+							if xv_Mode == 0: loopdata['enabled'] = 0
+							else:
+								loopdata['enabled'] = 1
+								loopdata['mode'] = 'normal'
+								loopdata['points'] = [xv_Start, xv_End]
+								loopdata['crossfade'] = xv_Crossfade
+								loopdata['detune'] = xv_Detune
+							regionparams['loop_sustain'] = loopdata
 
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'Panorama', get_param(x_samp_VolumeAndPan, 'Panorama', 'float', 0, None, None))
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'Panorama_key_scale', get_param(x_samp_VolumeAndPan, 'PanoramaKeyScale', 'float', 0, None, None))
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'Panorama_rnd', get_param(x_samp_VolumeAndPan, 'PanoramaRnd', 'float', 0, None, None))
-				#	plugins.add_plug_data(cvpj_l, pluginid, 'Panorama_lfo_amount', get_param(x_samp_VolumeAndPan, 'PanoramaLfoAmount', 'float', 0, None, None))
+						if x_samp_MultiSamplePart.findall('ReleaseLoop')[0]:
+							x_ReleaseLoop = x_samp_MultiSamplePart.findall('ReleaseLoop')[0]
+							xv_Start = int(get_value(x_ReleaseLoop, 'Start', '0'))
+							xv_End = int(get_value(x_ReleaseLoop, 'End', '1'))
+							xv_Mode = int(get_value(x_ReleaseLoop, 'Mode', '0'))
+							xv_Crossfade = int(get_value(x_ReleaseLoop, 'Crossfade', '0'))
+							xv_Detune = int(get_value(x_ReleaseLoop, 'Detune', '0'))
+							loopdata = {}
+							if xv_Mode == 0: loopdata['enabled'] = 0
+							else:
+								loopdata['enabled'] = 1
+								loopdata['mode'] = 'normal'
+								loopdata['points'] = [xv_Start, xv_End]
+								loopdata['crossfade'] = xv_Crossfade
+								loopdata['detune'] = xv_Detune
+							regionparams['loop'] = loopdata
 
+						sampleref = get_sampleref(x_samp_MultiSamplePart)
+						regionparams['file'] = sampleref['file']
 
+						regionparams['start'] = int(get_value(x_ReleaseLoop, 'SampleStart', '0'))
+						regionparams['end'] = int(get_value(x_ReleaseLoop, 'SampleEnd', '1'))
 
+						plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
 
-				#	# Pitch
-				#	x_samp_Filter = x_trackdevice.findall('Filter')[0]
-				#	x_samp_Filter_on = get_param(x_samp_Filter, 'IsOn', 'bool', 'false', None, None)
-				#	# --------------------- Filter
-				#	ableton_filter_data = {}
-
-				if fxloc != None: tracks.insert_fxslot(cvpj_l, fxloc, 'audio', pluginid)
-
-				plugins.add_plug_fxdata(cvpj_l, pluginid, able_plug_id, devfx_wet)
-
+				if is_instrument == True:
+					tracks.r_track_pluginid(cvpj_l, track_id, pluginid)
+				else:
+					if fxloc != None: tracks.insert_fxslot(cvpj_l, fxloc, 'audio', pluginid)
+					plugins.add_plug_fxdata(cvpj_l, pluginid, able_plug_id, devfx_wet)
 
 				#_______paramfinder_data[devicename] = {}
 				#_______paramfinder_param[devicename] = {}

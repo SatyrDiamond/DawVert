@@ -582,30 +582,6 @@ class input_ableton(plugin_input.base):
 
 					plugins.add_plug_data(cvpj_l, pluginid, 'lfo_data', lfo_data)
 
-					#if lfo_IsOn == False: lfo_amount = 0
-
-					#if lfo_Type == 0: a_shape = 'sine'
-					#if lfo_Type == 1: a_shape = 'square'
-					#if lfo_Type == 2: a_shape = 'triangle'
-					#if lfo_Type == 3: a_shape = 'saw'
-					#if lfo_Type == 4: a_shape = 'reverse_saw'
-					#if lfo_Type == 4: a_shape = 'noise'
-
-					#if lfo_RateType:
-					#	a_speed = lfo_Frequency
-					#	a_time_type = 'seconds'
-					#	if lfo_StereoMode: lfo_stereo = {'type': 'spin', 'spin': lfo_Spin}
-					#	else: lfo_stereo = {'type': 'phase', 'spin': lfo_Phase, 'offset': 0}
-					#else:
-					#	a_speed = lfo_beatsteps[lfo_BeatRate]
-					#	a_time_type = 'bar'
-					#	lfo_stereo = {'type': 'phase', 'spin': lfo_Phase, 'offset': lfo_Offset}
-
-					#plugins.add_lfo(cvpj_l, pluginid, 'main', a_shape, a_time_type, a_speed, 0, 0, lfo_Amount)
-					#plugins.add_lfo_extra(cvpj_l, pluginid, 'main', 'quantize', lfo_Quantize)
-					#plugins.add_lfo_extra(cvpj_l, pluginid, 'main', 'beat_quantize', lfo_BeatQuantize)
-					#plugins.add_lfo_extra(cvpj_l, pluginid, 'main', 'noise_width', lfo_NoiseWidth)
-
 				if devicename in ['Looper']:
 					hextext = x_trackdevice.findall('SavedBuffer')[0].text
 					if hextext != None:

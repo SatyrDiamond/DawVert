@@ -255,6 +255,7 @@ class input_audiosanua(plugin_input.base):
                     t_smpEnd = float(getvalue(x_cell, 'smpEnd', 100))
 
                     cvpj_region = {}
+                    cvpj_region['point_value_type'] = 'percent'
                     cvpj_region['name'] = getvalue(x_cell, 'name', '')
                     cvpj_region['file'] = getvalue(x_cell, 'url', '')
                     if t_playMode == 'forward': cvpj_region['reverse'] = 0

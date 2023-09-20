@@ -471,7 +471,8 @@ class input_it(plugin_input.base):
 
                     for sampleregion in sampleregions:
                         instrumentnum = sampleregion[0][1]
-                        if instrumentnum-1 in IT_Samples:
+
+                        if str(instrumentnum-1) in IT_Samples:
                             it_singlesample = IT_Samples[str(instrumentnum-1)]
                             regionparams = {}
                             regionparams['r_key'] = [sampleregion[1], sampleregion[2]]

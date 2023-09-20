@@ -304,7 +304,7 @@ def create_SampleParts(x_SampleParts, cvpj_samplepart, idnum):
         loopdata = cvpj_samplepart['loop']
         if 'enabled' in loopdata: 
             if loopdata['enabled'] == 1:
-                if loopdata['mode'] == 'normal': samp_loop_enabled = 1
+                samp_loop_enabled = 1
                 if 'points' in loopdata:
                     if samp_point_value_type == 'samples':
                         samp_loop_start = loopdata['points'][0]/samp_dur
@@ -398,9 +398,10 @@ def do_device_data_instrument(cvpj_track_data, xmltag):
                     if plugtype[1] == 'single':
                         create_SampleParts(x_SampleParts, cvpj_plugindata, sampleidnum)
                     if plugtype[1] == 'multi':
-                        for cvpj_region in cvpj_plugindata['regions']:
-                            create_SampleParts(x_SampleParts, cvpj_region, sampleidnum)
-                            sampleidnum += 1
+                        if 'regions' in cvpj_plugindata:
+                            for cvpj_region in cvpj_plugindata['regions']:
+                                create_SampleParts(x_SampleParts, cvpj_region, sampleidnum)
+                                sampleidnum += 1
 
                     set_add_param(x_Player, 'Reverse', False, str(get_unused_id()), None, [64,127], None)
                     set_add_param(x_Player, 'Snap', False, str(get_unused_id()), None, [64,127], None)
@@ -614,6 +615,9 @@ def create_devicechain_mixer(xmltag, cvpj_track_data, tracktype):
     x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
     x_Sends = ET.SubElement(xmltag, 'Sends')
 
+    trk_vol = params.get(cvpj_track_data, [], 'vol', 1)[0]
+    trk_pan = params.get(cvpj_track_data, [], 'pan', 0)[0]
+
     cvpj_track_sends = {}
     if 'sends_audio' in cvpj_track_data:
         for cvpj_track_data_send in cvpj_track_data['sends_audio']:
@@ -632,10 +636,10 @@ def create_devicechain_mixer(xmltag, cvpj_track_data, tracktype):
     set_add_param(xmltag, 'Speaker', 'true', str(get_unused_id()), None, [64,127], None)
     addvalue(xmltag, 'SoloSink', 'false')
     addvalue(xmltag, 'PanMode', '0')
-    set_add_param(xmltag, 'Pan', '0', str(get_unused_id()), str(get_unused_id()), None, [-1,1])
+    set_add_param(xmltag, 'Pan', trk_pan, str(get_unused_id()), str(get_unused_id()), None, [-1,1])
     set_add_param(xmltag, 'SplitStereoPanL', '-1', str(get_unused_id()), str(get_unused_id()), None, [-1,1])
     set_add_param(xmltag, 'SplitStereoPanR', '1', str(get_unused_id()), str(get_unused_id()), None, [-1,1])
-    set_add_param(xmltag, 'Volume', '1', str(get_unused_id()), str(get_unused_id()), None, [0.0003162277571,1.99526238])
+    set_add_param(xmltag, 'Volume', trk_vol, str(get_unused_id()), str(get_unused_id()), None, [0.0003162277571,1.99526238])
     addvalue(xmltag, 'ViewStateSesstionTrackWidth', '93')
     set_add_param(xmltag, 'CrossFadeState', '1', str(get_unused_id()), None, None, None)
     addLomId(xmltag, 'SendsListWrapper', '0')

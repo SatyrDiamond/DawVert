@@ -673,7 +673,7 @@ def make_auto_point(xmltag, value, position, SubElementname):
     x_autopoint.set('CurveControl2Y', '0.5')
 
 def t_parse_automation(xmltag, cvpj_points):
-    cvpj_points_no_instant = auto.remove_instant(cvpj_points, 0, True)
+    cvpj_points_no_instant = auto.remove_instant_note(cvpj_points)
     for cvpj_point in cvpj_points_no_instant:
         make_auto_point(xmltag, cvpj_point['value']*170, cvpj_point['position'], "PerNoteEvent")
 

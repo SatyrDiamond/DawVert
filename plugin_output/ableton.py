@@ -411,14 +411,6 @@ def do_device_data_instrument(cvpj_track_data, xmltag):
 
 
 
-
-
-
-
-
-
-
-
 def do_device_data(cvpj_track_data, xmltag):
     ableton_deviceid = 4
     if 'chain_fx_audio' in cvpj_track_data:

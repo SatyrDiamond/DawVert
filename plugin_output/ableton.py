@@ -354,203 +354,208 @@ def add_range_val(xmltag, name, low_range, hi_range, low_cr_range, hi_cr_range):
     addvalue(x_subtag, 'CrossfadeMin', str(low_cr_range))
     addvalue(x_subtag, 'CrossfadeMax', str(hi_cr_range))
 
+def do_device_data_single(fxpluginid, xmltag, deviceid):
+    plugtype = plugins.get_plug_type(cvpj_l, fxpluginid)
+
+    if plugtype in [['sampler', 'single'], ['sampler', 'multi']]:
+        xml_device = ET.SubElement(xmltag, 'MultiSampler')
+        xml_device.set('Id', str(deviceid))
+        addvalue(xml_device, 'LomId', '0')
+        addvalue(xml_device, 'LomIdView', '0')
+        addvalue(xml_device, 'IsExpanded', 'false')
+        set_add_param(xml_device, 'On', True, str(get_unused_id()), None, [64,127], None)
+        addvalue(xml_device, 'ModulationSourceCount', '0')
+        addLomId(xml_device, 'ParametersListWrapper', '0')
+        addId(xml_device, 'Pointee', str(get_pointee()))
+        addvalue(xml_device, 'LastSelectedTimeableIndex', '0')
+        addvalue(xml_device, 'LastSelectedClipEnvelopeIndex', '0')
+        x_LastPresetRef = ET.SubElement(xml_device, 'LastPresetRef')
+        x_LastPresetRef_Value = ET.SubElement(x_LastPresetRef, 'Value')
+        x_LockedScripts = ET.SubElement(xml_device, 'LockedScripts')
+        addvalue(xml_device, 'IsFolded', 'false')
+        addvalue(xml_device, 'ShouldShowPresetName', 'false')
+        addvalue(xml_device, 'UserName', '')
+        addvalue(xml_device, 'Annotation', '')
+        x_SourceContext = ET.SubElement(xml_device, 'SourceContext')
+        x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
+
+        sampleidnum = 0
+
+        if plugtype[1] in ['single', 'multi']:
+            x_Player = ET.SubElement(xml_device, 'Player')
+            cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
+
+            x_MultiSampleMap = ET.SubElement(x_Player, 'MultiSampleMap')
+            addvalue(x_MultiSampleMap, 'LoadInRam', 'false')
+            addvalue(x_MultiSampleMap, 'LayerCrossfade', '0')
+            x_SampleParts = ET.SubElement(x_MultiSampleMap, 'SampleParts')
+
+            if plugtype[1] == 'single':
+                create_SampleParts(x_SampleParts, cvpj_plugindata, sampleidnum)
+            if plugtype[1] == 'multi':
+                if 'regions' in cvpj_plugindata:
+                    for cvpj_region in cvpj_plugindata['regions']:
+                        create_SampleParts(x_SampleParts, cvpj_region, sampleidnum)
+                        sampleidnum += 1
+
+            set_add_param(x_Player, 'Reverse', False, str(get_unused_id()), None, [64,127], None)
+            set_add_param(x_Player, 'Snap', False, str(get_unused_id()), None, [64,127], None)
+            set_add_param(x_Player, 'SampleSelector', 0, str(get_unused_id()), None, None, None)
+            addvalue(x_Player, 'InterpolationMode', '1')
+            addvalue(x_Player, 'UseConstPowCrossfade', 'true')
+
+    if plugtype[0] in ['native-ableton']:
+        ableton_devicename = plugtype[1]
+        ableton_deviceparams = abletondatadef_params[ableton_devicename]
+        ableton_devicedata = abletondatadef_data[ableton_devicename]
+
+        print('[output-ableton] Device', ableton_devicename)
+
+        fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', fxpluginid])
+        fx_on = params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
+        fx_name = fxdata['name'] if 'name' in fxdata else ''
+
+        xml_device = ET.SubElement(xmltag, ableton_devicename)
+        xml_device.set('Id', str(deviceid))
+        addvalue(xml_device, 'LomId', '0')
+        addvalue(xml_device, 'LomIdView', '0')
+        addvalue(xml_device, 'IsExpanded', 'false')
+        set_add_param(xml_device, 'On', fx_on, str(get_unused_id()), None, [64,127], None)
+        addvalue(xml_device, 'ModulationSourceCount', '0')
+        addLomId(xml_device, 'ParametersListWrapper', '0')
+        addId(xml_device, 'Pointee', str(get_pointee()))
+        addvalue(xml_device, 'LastSelectedTimeableIndex', '0')
+        addvalue(xml_device, 'LastSelectedClipEnvelopeIndex', '0')
+        x_LastPresetRef = ET.SubElement(xml_device, 'LastPresetRef')
+        x_LastPresetRef_Value = ET.SubElement(x_LastPresetRef, 'Value')
+        x_LockedScripts = ET.SubElement(xml_device, 'LockedScripts')
+        addvalue(xml_device, 'IsFolded', 'false')
+        addvalue(xml_device, 'ShouldShowPresetName', 'false')
+        addvalue(xml_device, 'UserName', fx_name)
+        addvalue(xml_device, 'Annotation', '')
+        x_SourceContext = ET.SubElement(xml_device, 'SourceContext')
+        x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
+
+        if ableton_devicename not in ['MultiSampler', 'OriginalSimpler']:
+
+            for ableton_deviceparam in ableton_deviceparams:
+                known_paramdata = ableton_deviceparams[ableton_deviceparam]
+                paramval = plugins.get_plug_param(cvpj_l, fxpluginid, ableton_deviceparam, 0)[0]
+                if known_paramdata[2] != None: known_paramdata[2] = [makevaltype(known_paramdata[2][0], known_paramdata[0]), makevaltype(known_paramdata[2][1], known_paramdata[0])]
+                set_add_param(xml_device, ableton_deviceparam, makevaltype(paramval, known_paramdata[0]), str(get_unused_id()), None, known_paramdata[3], known_paramdata[2])
+
+            for ableton_devicedatval in ableton_devicedata:
+                known_dataval = ableton_devicedata[ableton_devicedatval]
+                paramdataval = plugins.get_plug_dataval(cvpj_l, fxpluginid, ableton_devicedatval, ableton_devicedata[ableton_devicedatval][1])
+                addvalue(xml_device, ableton_devicedatval, makevaltype(paramdataval, known_dataval[0]))
+
+            if ableton_devicename == 'Hybrid':
+                samplefilepath = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'sample', '')
+                samplerefdict = {}
+                samplerefdict['path'] = samplefilepath
+                aud_sampledata = audio.get_audiofile_info(samplefilepath)
+
+                x_ImpulseResponseHandler = ET.SubElement(xml_device, 'ImpulseResponseHandler')
+                x_SampleSlot = ET.SubElement(x_ImpulseResponseHandler, 'SampleSlot')
+                x_SampleSlotValue = ET.SubElement(x_SampleSlot, 'Value')
+                x_SampleSlotTrueStereo = ET.SubElement(x_ImpulseResponseHandler, 'SampleSlotTrueStereo')
+                x_SampleSlotTrueStereoValue = ET.SubElement(x_SampleSlotTrueStereo, 'Value')
+                create_sampleref(x_SampleSlotValue, aud_sampledata, 3)
+
+            if ableton_devicename == 'Looper':
+                savedbufferdat = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'SavedBuffer', None)
+                if savedbufferdat != None:
+                    bufferbin = base64.b64decode(savedbufferdat.encode())
+                    hexbuffer = ''.join('{:02X}'.format(x) for x in bufferbin)
+                    x_SavedBuffer = ET.SubElement(xml_device, 'SavedBuffer')
+                    x_SavedBuffer.text = '\n' + '\n'.join(data_values.list_chunks(hexbuffer, 80))
+
+            if ableton_devicename == 'Saturator':
+                x_WaveShaper = ET.SubElement(xml_device, 'WaveShaper')
+                for waveshapevarname in ['Drive','Lin','Curve','Damp','Period','Depth']:
+                    ws_p_name = 'waveshaper_'+waveshapevarname
+                    paramdataval = plugins.get_plug_param(cvpj_l, fxpluginid, ws_p_name, 0)[0]
+                    set_add_param(x_WaveShaper, waveshapevarname, str(paramdataval), str(get_unused_id()), None, None, [0,1])
+
+            if ableton_devicename in ['AutoPan', 'AutoFilter', 'FrequencyShifter']:
+                lfodata = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'lfo_data', None)
+                if lfodata != None:
+                    x_Lfo = ET.SubElement(xml_device, 'Lfo')
+                    for lfoparams in [
+                    ['Type', 'int', None],
+                    ['Frequency', 'float', [0.009999999776, 10]],
+                    ['RateType', 'int', None],
+                    ['BeatRate', 'float', [0,21]],
+                    ['StereoMode', 'int', None],
+                    ['Spin', 'float', [0,0.5]],
+                    ['Phase', 'float', [0,360]],
+                    ['Offset', 'float', [0,360]],
+                    ['IsOn', 'bool', None],
+                    ['Quantize', 'bool', None],
+                    ['BeatQuantize', 'int', None],
+                    ['NoiseWidth', 'float', [0,1]],
+                    ['LfoAmount', 'float', None],
+                    ['LfoInvert', 'bool', None],
+                    ['LfoShape', 'float', None]
+                    ]:
+                        if lfoparams[0] in lfodata:
+                            if lfodata[lfoparams[0]] != None:
+                                set_add_param(x_Lfo, lfoparams[0], makevaltype(lfodata[lfoparams[0]], lfoparams[1]), str(get_unused_id()), None, None, lfoparams[2])
+
+            if ableton_devicename == 'Vocoder':
+                x_FilterBank = ET.SubElement(xml_device, 'FilterBank')
+                banddata = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'banddata', None)
+                bandcount = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'bandcount', None)
+                if bandcount != None:
+                    addvalue(x_FilterBank, 'BandCount', bandcount)
+                if banddata != None:
+                    for bandnum in range(40):
+                        addvalue(x_FilterBank, 'BandLevel.'+str(bandnum), '1')
+
+            if ableton_devicename == 'InstrumentVector':
+                x_ModulationConnections = ET.SubElement(xml_device, 'ModulationConnections')
+                d_ModulationConnections = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'ModulationConnections', [])
+                modconid = 0
+                for d_ModulationConnection in d_ModulationConnections:
+                    x_ModulationConnectionsForInstrumentVector = ET.SubElement(x_ModulationConnections, 'ModulationConnectionsForInstrumentVector')
+                    x_ModulationConnectionsForInstrumentVector.set('Id', str(modconid))
+                    x_ModulationConnectionsForInstrumentVector.set('TargetId', d_ModulationConnection['target'])
+                    addvalue(x_ModulationConnectionsForInstrumentVector, 'TargetName', d_ModulationConnection['name'])
+                    for num in range(13):
+                        addvalue(x_ModulationConnectionsForInstrumentVector, 
+                            'ModulationAmounts.'+str(num), 
+                            str(d_ModulationConnection['amounts'][num])
+                            )
+                    modconid += 1
+
+                d_UserSprite1 = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'UserSprite1', '')
+                d_UserSprite2 = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'UserSprite2', '')
+
+                x_UserSprite1 = ET.SubElement(xml_device, 'UserSprite1')
+                x_UserSprite1Value = ET.SubElement(x_UserSprite1, 'Value')
+                if d_UserSprite1 != '':
+                    aud_sampledata_UserSprite1 = audio.get_audiofile_info(d_UserSprite1)
+                    create_sampleref(x_UserSprite1Value, aud_sampledata_UserSprite1, '1')
+
+                x_UserSprite2 = ET.SubElement(xml_device, 'UserSprite2')
+                x_UserSprite2Value = ET.SubElement(x_UserSprite2, 'Value')
+                if d_UserSprite2 != '':
+                    aud_sampledata_UserSprite2 = audio.get_audiofile_info(d_UserSprite2)
+                    create_sampleref(x_UserSprite2Value, aud_sampledata_UserSprite2, '2')
+
+
 def do_device_data_instrument(cvpj_track_data, xmltag):
-    ableton_deviceid = 3
     if 'instdata' in cvpj_track_data:
         if 'pluginid' in cvpj_track_data['instdata']:
             pluginid = cvpj_track_data['instdata']['pluginid']
-            plugtype = plugins.get_plug_type(cvpj_l, pluginid)
-            #print(pluginid, plugtype)
-
-            if plugtype in [['sampler', 'single'], ['sampler', 'multi']]:
-                xml_device = ET.SubElement(xmltag, 'MultiSampler')
-                xml_device.set('Id', str(ableton_deviceid))
-                addvalue(xml_device, 'LomId', '0')
-                addvalue(xml_device, 'LomIdView', '0')
-                addvalue(xml_device, 'IsExpanded', 'false')
-                set_add_param(xml_device, 'On', True, str(get_unused_id()), None, [64,127], None)
-                addvalue(xml_device, 'ModulationSourceCount', '0')
-                addLomId(xml_device, 'ParametersListWrapper', '0')
-                addId(xml_device, 'Pointee', str(get_pointee()))
-                addvalue(xml_device, 'LastSelectedTimeableIndex', '0')
-                addvalue(xml_device, 'LastSelectedClipEnvelopeIndex', '0')
-                x_LastPresetRef = ET.SubElement(xml_device, 'LastPresetRef')
-                x_LastPresetRef_Value = ET.SubElement(x_LastPresetRef, 'Value')
-                x_LockedScripts = ET.SubElement(xml_device, 'LockedScripts')
-                addvalue(xml_device, 'IsFolded', 'false')
-                addvalue(xml_device, 'ShouldShowPresetName', 'false')
-                addvalue(xml_device, 'UserName', '')
-                addvalue(xml_device, 'Annotation', '')
-                x_SourceContext = ET.SubElement(xml_device, 'SourceContext')
-                x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
-
-                sampleidnum = 0
-
-                if plugtype[1] in ['single', 'multi']:
-                    x_Player = ET.SubElement(xml_device, 'Player')
-                    cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
-
-                    x_MultiSampleMap = ET.SubElement(x_Player, 'MultiSampleMap')
-                    addvalue(x_MultiSampleMap, 'LoadInRam', 'false')
-                    addvalue(x_MultiSampleMap, 'LayerCrossfade', '0')
-                    x_SampleParts = ET.SubElement(x_MultiSampleMap, 'SampleParts')
-
-                    if plugtype[1] == 'single':
-                        create_SampleParts(x_SampleParts, cvpj_plugindata, sampleidnum)
-                    if plugtype[1] == 'multi':
-                        if 'regions' in cvpj_plugindata:
-                            for cvpj_region in cvpj_plugindata['regions']:
-                                create_SampleParts(x_SampleParts, cvpj_region, sampleidnum)
-                                sampleidnum += 1
-
-                    set_add_param(x_Player, 'Reverse', False, str(get_unused_id()), None, [64,127], None)
-                    set_add_param(x_Player, 'Snap', False, str(get_unused_id()), None, [64,127], None)
-                    set_add_param(x_Player, 'SampleSelector', 0, str(get_unused_id()), None, None, None)
-                    addvalue(x_Player, 'InterpolationMode', '1')
-                    addvalue(x_Player, 'UseConstPowCrossfade', 'true')
-
-
+            do_device_data_single(pluginid, xmltag, 3)
 
 def do_device_data(cvpj_track_data, xmltag):
     ableton_deviceid = 4
     if 'chain_fx_audio' in cvpj_track_data:
         for fxpluginid in cvpj_track_data['chain_fx_audio']:
-            plugtype = plugins.get_plug_type(cvpj_l, fxpluginid)
-            if plugtype[0] in ['native-ableton']:
-
-                ableton_devicename = plugtype[1]
-                ableton_deviceparams = abletondatadef_params[ableton_devicename]
-                ableton_devicedata = abletondatadef_data[ableton_devicename]
-
-                print('[output-ableton] Device', ableton_devicename)
-
-                fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', fxpluginid])
-                fx_on = params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
-                fx_name = fxdata['name'] if 'name' in fxdata else ''
-
-                xml_device = ET.SubElement(xmltag, ableton_devicename)
-                xml_device.set('Id', str(ableton_deviceid))
-                addvalue(xml_device, 'LomId', '0')
-                addvalue(xml_device, 'LomIdView', '0')
-                addvalue(xml_device, 'IsExpanded', 'false')
-                set_add_param(xml_device, 'On', fx_on, str(get_unused_id()), None, [64,127], None)
-                addvalue(xml_device, 'ModulationSourceCount', '0')
-                addLomId(xml_device, 'ParametersListWrapper', '0')
-                addId(xml_device, 'Pointee', str(get_pointee()))
-                addvalue(xml_device, 'LastSelectedTimeableIndex', '0')
-                addvalue(xml_device, 'LastSelectedClipEnvelopeIndex', '0')
-                x_LastPresetRef = ET.SubElement(xml_device, 'LastPresetRef')
-                x_LastPresetRef_Value = ET.SubElement(x_LastPresetRef, 'Value')
-                x_LockedScripts = ET.SubElement(xml_device, 'LockedScripts')
-                addvalue(xml_device, 'IsFolded', 'false')
-                addvalue(xml_device, 'ShouldShowPresetName', 'false')
-                addvalue(xml_device, 'UserName', fx_name)
-                addvalue(xml_device, 'Annotation', '')
-                x_SourceContext = ET.SubElement(xml_device, 'SourceContext')
-                x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
-
-                if ableton_devicename == 'Vocoder':
-                    x_FilterBank = ET.SubElement(xml_device, 'FilterBank')
-                    banddata = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'banddata', None)
-                    bandcount = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'bandcount', None)
-                    if bandcount != None:
-                        addvalue(x_FilterBank, 'BandCount', bandcount)
-                    if banddata != None:
-                        for bandnum in range(40):
-                            addvalue(x_FilterBank, 'BandLevel.'+str(bandnum), '1')
-
-                if ableton_devicename not in ['MultiSampler', 'OriginalSimpler']:
-
-                    if ableton_devicename == 'Hybrid':
-                        samplefilepath = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'sample', '')
-                        samplerefdict = {}
-                        samplerefdict['path'] = samplefilepath
-                        aud_sampledata = audio.get_audiofile_info(samplefilepath)
-
-                        x_ImpulseResponseHandler = ET.SubElement(xml_device, 'ImpulseResponseHandler')
-                        x_SampleSlot = ET.SubElement(x_ImpulseResponseHandler, 'SampleSlot')
-                        x_SampleSlotValue = ET.SubElement(x_SampleSlot, 'Value')
-                        x_SampleSlotTrueStereo = ET.SubElement(x_ImpulseResponseHandler, 'SampleSlotTrueStereo')
-                        x_SampleSlotTrueStereoValue = ET.SubElement(x_SampleSlotTrueStereo, 'Value')
-                        create_sampleref(x_SampleSlotValue, aud_sampledata, 3)
-
-                    for ableton_deviceparam in ableton_deviceparams:
-                        known_paramdata = ableton_deviceparams[ableton_deviceparam]
-                        paramval = plugins.get_plug_param(cvpj_l, fxpluginid, ableton_deviceparam, 0)[0]
-                        if known_paramdata[2] != None: known_paramdata[2] = [makevaltype(known_paramdata[2][0], known_paramdata[0]), makevaltype(known_paramdata[2][1], known_paramdata[0])]
-                        set_add_param(xml_device, ableton_deviceparam, makevaltype(paramval, known_paramdata[0]), str(get_unused_id()), None, known_paramdata[3], known_paramdata[2])
-
-                    for ableton_devicedatval in ableton_devicedata:
-                        known_dataval = ableton_devicedata[ableton_devicedatval]
-                        paramdataval = plugins.get_plug_dataval(cvpj_l, fxpluginid, ableton_devicedatval, ableton_devicedata[ableton_devicedatval][1])
-                        addvalue(xml_device, ableton_devicedatval, makevaltype(paramdataval, known_dataval[0]))
-
-                    if ableton_devicename == 'Looper':
-                        savedbufferdat = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'SavedBuffer', None)
-                        if savedbufferdat != None:
-                            bufferbin = base64.b64decode(savedbufferdat.encode())
-                            hexbuffer = ''.join('{:02X}'.format(x) for x in bufferbin)
-                            x_SavedBuffer = ET.SubElement(xml_device, 'SavedBuffer')
-                            x_SavedBuffer.text = '\n' + '\n'.join(data_values.list_chunks(hexbuffer, 80))
-
-                    if ableton_devicename == 'Saturator':
-                        x_WaveShaper = ET.SubElement(xml_device, 'WaveShaper')
-                        for waveshapevarname in ['Drive','Lin','Curve','Damp','Period','Depth']:
-                            ws_p_name = 'waveshaper_'+waveshapevarname
-                            paramdataval = plugins.get_plug_param(cvpj_l, fxpluginid, ws_p_name, 0)[0]
-                            set_add_param(x_WaveShaper, waveshapevarname, str(paramdataval), str(get_unused_id()), None, None, [0,1])
-
-                    if ableton_devicename in ['AutoPan', 'AutoFilter', 'FrequencyShifter']:
-                        lfodata = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'lfo_data', None)
-                        if lfodata != None:
-                            x_Lfo = ET.SubElement(xml_device, 'Lfo')
-                            for lfoparams in [
-                            ['Type', 'int', None],
-                            ['Frequency', 'float', [0.009999999776, 10]],
-                            ['RateType', 'int', None],
-                            ['BeatRate', 'float', [0,21]],
-                            ['StereoMode', 'int', None],
-                            ['Spin', 'float', [0,0.5]],
-                            ['Phase', 'float', [0,360]],
-                            ['Offset', 'float', [0,360]],
-                            ['IsOn', 'bool', None],
-                            ['Quantize', 'bool', None],
-                            ['BeatQuantize', 'int', None],
-                            ['NoiseWidth', 'float', [0,1]],
-                            ['LfoAmount', 'float', None],
-                            ['LfoInvert', 'bool', None],
-                            ['LfoShape', 'float', None]
-                            ]:
-                                if lfoparams[0] in lfodata:
-                                    if lfodata[lfoparams[0]] != None:
-                                        set_add_param(x_Lfo, lfoparams[0], makevaltype(lfodata[lfoparams[0]], lfoparams[1]), str(get_unused_id()), None, None, lfoparams[2])
-
-
-                    #paramletter = ['A','B']
-                    #if ableton_devicename == 'Eq8':
-                    #    lfodata = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'band_data', None)
-                    #    if lfodata != None:
-                    #        for num in range(8):
-                    #            x_eq8band = ET.SubElement(xml_device, 'Bands.'+str(num))
-                    #            x_eq8let_a = ET.SubElement(x_eq8band, 'ParameterA')
-                    #            x_eq8let_b = ET.SubElement(x_eq8band, 'ParameterB')
-                    #            x_eq8let_list = [x_eq8let_a, x_eq8let_b]
-
-                    #            for paramletnum in range(2):
-                    #                cvpj_eq_data = lfodata[paramletnum][num]
-                    #                for eq8param in [
-                    #                    ['IsOn', 'bool', None],
-                    #                    ['Mode', 'int', [10,22000]],
-                    #                    ['Freq', 'float', None],
-                    #                    ['Gain', 'float', [-15,15]],
-                    #                    ['Q', 'float', [0.1000000015,18]]
-                    #                    ]:
-                    #                    cctreshold = [64,127] if eq8param[1] == True else None
-                    #                    set_add_param(x_eq8let_list[paramletnum], eq8param[0], makevaltype(cvpj_eq_data[eq8param[0]], eq8param[1]), str(get_unused_id()), None, cctreshold, eq8param[2])
-
-
-                ##set_add_param(xmltag, param_name, param_value, auto_id, modu_id, midi_cc_thres, midi_cont_range):
-                ableton_deviceid += 1
+            do_device_data_single(fxpluginid, xmltag, ableton_deviceid)
+            ableton_deviceid += 1
 
 
 

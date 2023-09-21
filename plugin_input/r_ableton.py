@@ -621,8 +621,6 @@ class input_ableton(plugin_input.base):
 				#			banddata[paramletnum].append(bandparams)
 				#	plugins.add_plug_data(cvpj_l, pluginid, 'band_data', banddata)
 
-
-
 				if devicename in ['OriginalSimpler', 'MultiSampler']:
 					plugins.add_plug_multisampler(cvpj_l, pluginid)
 					is_instrument = True
@@ -700,6 +698,38 @@ class input_ableton(plugin_input.base):
 
 						plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
 
+				if devicename == 'InstrumentVector':
+					is_instrument = True
+					modcons = []
+					x_ModulationConnections = x_trackdevice.findall('ModulationConnections')[0]
+					x_ModulationConnectionsForInstrumentVectors = x_ModulationConnections.findall('ModulationConnectionsForInstrumentVector')
+					for x_ModulationConnectionsForInstrumentVector in x_ModulationConnectionsForInstrumentVectors:
+						s_modcon = {}
+						s_modcon_target = x_ModulationConnectionsForInstrumentVector.get('TargetId')
+						s_modcon['target'] = x_ModulationConnectionsForInstrumentVector.get('TargetId')
+						s_modcon['name'] = get_value(x_ModulationConnectionsForInstrumentVector, 'TargetName', '')
+						s_modcon['amounts'] = []
+						for num in range(13):
+							s_modcon['amounts'].append( float(get_value(x_ModulationConnectionsForInstrumentVector, 'ModulationAmounts.'+str(num), 0)) )
+						modcons.append(s_modcon)
+					plugins.add_plug_data(cvpj_l, pluginid, 'ModulationConnections', modcons)
+
+					x_UserSprite1 = x_trackdevice.findall('UserSprite1')[0]
+					x_UserSprite1Value = x_UserSprite1.findall('Value')[0]
+					x_UserSprite1SampleRef = x_UserSprite1Value.findall('SampleRef')
+					if x_UserSprite1SampleRef != []: 
+						file1data = get_sampleref(x_UserSprite1Value)
+						plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite1', file1data['file'])
+					else: plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite1', '')
+					
+					x_UserSprite2 = x_trackdevice.findall('UserSprite2')[0]
+					x_UserSprite2Value = x_UserSprite2.findall('Value')[0]
+					x_UserSprite2SampleRef = x_UserSprite2Value.findall('SampleRef')
+					if x_UserSprite2SampleRef != []: 
+						file1data = get_sampleref(x_UserSprite2Value)
+						plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite2', file1data['file'])
+					else: plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite2', '')
+						
 				if is_instrument == True:
 					tracks.r_track_pluginid(cvpj_l, track_id, pluginid)
 				else:

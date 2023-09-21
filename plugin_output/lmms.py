@@ -431,17 +431,14 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
 
     xmltag.set('type', "0")
 
-    if 'solo' in trkJ: xmltag.set('solo', str(trkJ['solo']))
-    else: xmltag.set('solo', '0')
+    xmltag.set('solo', str(trkJ['solo'] if 'solo' in trkJ else 0))
 
-    if 'name' in trkJ: trackname = trkJ['name']
-    else: trackname = 'noname'
+    trackname = trkJ['name'] if 'name' in trkJ else 'noname'
     xmltag.set('name', trackname)
 
     if 'color' in trkJ: xmltag.set('color', '#' + colors.rgb_float_to_hex(trkJ['color']))
 
-    if 'instdata' not in trkJ: instJ = {}
-    else: instJ = trkJ['instdata']
+    instJ = trkJ['instdata'] if 'instdata' in trkJ else {}
 
     #instrumenttrack
     trkX_insttr = ET.SubElement(xmltag, "instrumenttrack")
@@ -492,8 +489,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     print('[output-lmms] Instrument Track')
     if 'name' in trkJ: print('[output-lmms]       Name: ' + trkJ['name'])
 
-    if 'chain_fx_audio' in trkJ: 
-        lmms_encode_fxchain(trkX_insttr, trkJ)
+    if 'chain_fx_audio' in trkJ: lmms_encode_fxchain(trkX_insttr, trkJ)
 
     plugintype, middlenotefix = lmms_encode_plugin(trkX_insttr, trkJ, trackid, trackname, trkX_insttr)
 
@@ -578,20 +574,16 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
 
     xmltag.set('type', "2")
 
-    if 'solo' in trkJ: xmltag.set('solo', str(trkJ['solo']))
-    else: xmltag.set('solo', '0')
+    xmltag.set('solo', str(trkJ['solo'] if 'solo' in trkJ else 0))
 
-    if 'enabled' in trkJ: xmltag.set('muted', str(int(not trkJ['enabled'])))
-    else: xmltag.set('muted', '0')
-
-    if 'name' in trkJ: trackname = trkJ['name']
-    else: trackname = 'untitled'
+    trackname = trkJ['name'] if 'name' in trkJ else 'noname'
     xmltag.set('name', trackname)
 
     if 'color' in trkJ: xmltag.set('color', '#' + colors.rgb_float_to_hex(trkJ['color']))
     
     trkX_samptr = ET.SubElement(xmltag, "sampletrack")
 
+    add_auto_placements(1, [-1, -1], ['track', trackid], 'enabled', trkJ, 'enabled', xmltag, 'muted', trackname, 'Muted')
     add_auto_placements(1, [0, 100], ['track', trackid], 'vol', trkJ, 'vol', trkX_samptr, 'vol', trackname, 'Volume')
     add_auto_placements(0, [0, 100], ['track', trackid], 'pan', trkJ, 'pan', trkX_samptr, 'pan', trackname, 'Pan')
 
@@ -945,8 +937,7 @@ class output_lmms(plugin_output.base):
 
         trksJ = cvpj_l['track_data'] if 'track_data' in cvpj_l else {}
         trkorderJ = cvpj_l['track_order'] if 'track_order' in cvpj_l else []
-        if 'track_placements' in cvpj_l: trkplacementsJ = cvpj_l['track_placements']
-        else: trkplacementsJ = {}
+        trkplacementsJ = cvpj_l['track_placements'] if 'track_placements' in cvpj_l else {}
 
         projX = ET.Element("lmms-project")
         projX.set('type', "song")

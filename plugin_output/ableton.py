@@ -1344,6 +1344,7 @@ class output_cvpj(plugin_output.base):
         }
     def getsupportedplugformats(self): return ['vst2', 'vst3']
     def getsupportedplugins(self): return ['sampler:single', 'sampler:multi', 'sampler:slicer']
+    def getfileextension(self): return 'als'
     def parse(self, convproj_json, output_file):
         global cvpj_l
         global x_Tracks

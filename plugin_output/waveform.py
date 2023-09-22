@@ -48,6 +48,7 @@ class output_waveform_edit(plugin_output.base):
         }
     def getsupportedplugformats(self): return []
     def getsupportedplugins(self): return []
+    def getfileextension(self): return 'tracktionedit'
     def parse(self, convproj_json, output_file):
         global cvpj_l
         global waveform_params

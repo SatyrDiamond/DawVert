@@ -41,6 +41,7 @@ class output_cvpj_f(plugin_output.base):
         }
     def getsupportedplugformats(self): return []
     def getsupportedplugins(self): return []
+    def getfileextension(self): return 'mid'
     def parse(self, convproj_json, output_file):
         cvpj_l = json.loads(convproj_json)
 

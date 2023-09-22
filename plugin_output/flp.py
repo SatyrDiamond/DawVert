@@ -38,6 +38,7 @@ class output_cvpjs(plugin_output.base):
         }
     def getsupportedplugformats(self): return ['vst2', 'vst3']
     def getsupportedplugins(self): return ['sampler:single']
+    def getfileextension(self): return 'flp'
     def parse(self, convproj_json, output_file):
         cvpj_l = json.loads(convproj_json)
 

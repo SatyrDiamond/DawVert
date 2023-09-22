@@ -45,6 +45,7 @@ class output_onlineseq(plugin_output.base):
         }
     def getsupportedplugformats(self): return []
     def getsupportedplugins(self): return ['midi']
+    def getfileextension(self): return 'sequence'
     def parse(self, convproj_json, output_file):
         global glob_markerdata
         cvpj_l = json.loads(convproj_json)

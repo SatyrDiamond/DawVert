@@ -134,6 +134,9 @@ def output_get_plugins():
 def output_get_current(): 
 	return currentplug_output[1]
 
+def output_get_extension(): 
+	return currentplug_output[7]
+
 def output_set(pluginname): 
 	global currentplug_output
 	if pluginname in pluglist_output:
@@ -144,7 +147,8 @@ def output_set(pluginname):
 			pluglist_output[pluginname].gettype(),
 			pluglist_output[pluginname].getdawcapabilities(),
 			pluglist_output[pluginname].getsupportedplugins(),
-			pluglist_output[pluginname].getsupportedplugformats()
+			pluglist_output[pluginname].getsupportedplugformats(),
+			pluglist_output[pluginname].getfileextension()
 			]
 		print('[core] Output Format:',currentplug_output[1])
 		print('[core] Output DataType:',typelist[currentplug_output[3]])

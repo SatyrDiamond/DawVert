@@ -153,6 +153,7 @@ class output_cvpj_f(plugin_output.base):
         }
     def getsupportedplugformats(self): return ['vst2']
     def getsupportedplugins(self): return ['sampler:single', 'midi']
+    def getfileextension(self): return 'zip'
     def parse(self, convproj_json, output_file):
         global audio_id
         global cvpj_l

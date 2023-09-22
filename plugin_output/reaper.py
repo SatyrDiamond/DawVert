@@ -211,6 +211,7 @@ class output_reaper(plugin_output.base):
         }
     def getsupportedplugformats(self): return ['vst2']
     def getsupportedplugins(self): return []
+    def getfileextension(self): return 'rpp'
     def parse(self, convproj_json, output_file):
         global reaper_tempo
         global tempomul

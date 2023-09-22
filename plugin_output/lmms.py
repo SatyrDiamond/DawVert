@@ -923,6 +923,7 @@ class output_lmms(plugin_output.base):
         }
     def getsupportedplugformats(self): return ['vst2', 'ladspa']
     def getsupportedplugins(self): return ['sampler:single', 'soundfont2', 'opl2']
+    def getfileextension(self): return 'mmp'
     def parse(self, convproj_json, output_file):
         global autoidnum
         global trkcX

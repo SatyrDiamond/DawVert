@@ -210,6 +210,7 @@ class output_cvpj(plugin_output.base):
         }
     def getsupportedplugformats(self): return ['vst2']
     def getsupportedplugins(self): return []
+    def getfileextension(self): return 'med'
     def parse(self, convproj_json, output_file):
         global NoteStep
         global tracknum

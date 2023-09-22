@@ -102,6 +102,7 @@ class output_soundation(plugin_output.base):
         }
     def getsupportedplugformats(self): return []
     def getsupportedplugins(self): return []
+    def getfileextension(self): return 'sng'
     def parse(self, convproj_json, output_file):
         global cvpj_l
         cvpj_l = json.loads(convproj_json)

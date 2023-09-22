@@ -80,6 +80,11 @@ else:
 	print('[error] output format plugin not found')
 	exit()
 
+out_plug_ext = core.output_get_extension()
+out_file_nameext = os.path.splitext(os.path.basename(out_file))
+out_file_path = os.path.dirname(out_file)
+if out_file_nameext[1] == '': out_file = os.path.join(out_file_path, out_file_nameext[0]+'.'+out_plug_ext)
+
 # -------------------------------------------------------------- convert --------------------------------------------------------------
 
 file_name = os.path.splitext(os.path.basename(in_file))[0]

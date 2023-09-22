@@ -148,6 +148,7 @@ class output_wavtool(plugin_output.base):
         }
     def getsupportedplugformats(self): return []
     def getsupportedplugins(self): return ['sampler:single']
+    def getfileextension(self): return 'zip'
     def parse(self, convproj_json, output_file):
         global audio_id
         global wt_deviceRouting

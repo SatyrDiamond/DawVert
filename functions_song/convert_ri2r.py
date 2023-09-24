@@ -29,12 +29,8 @@ def convert(song):
             if trackid in t_s_trackplacements:
                 trkpldata = t_s_trackplacements[trackid]
 
-                singletrack_laned = 0
+                singletrack_laned = trkpldata['laned'] if 'laned' in trkpldata else 0
 
-                if 'laned' in trkpldata: 
-                    if trkpldata['laned'] == 1: 
-                        singletrack_laned = 1
-    
                 if singletrack_laned == 0: 
                     placements = trkpldata['notes']
                     for s_pl in placements:

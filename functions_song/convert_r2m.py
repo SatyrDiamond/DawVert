@@ -34,15 +34,11 @@ def convert(song):
         print('[error] track_order not found')
 
     t_s_track_order = cvpj_proj['track_order']
-    del cvpj_proj['track_order']
-
     t_s_trackdata = cvpj_proj['track_data']
+    t_s_trackplacements = cvpj_proj['track_placements']
     del cvpj_proj['track_data']
-
-    if 'track_placements' in cvpj_proj: 
-        t_s_trackplacements = cvpj_proj['track_placements']
-        del cvpj_proj['track_placements']
-    else: t_s_trackplacements = {}
+    del cvpj_proj['track_order']
+    del cvpj_proj['track_placements']
 
     cvpj_proj['instruments_data'] = {}
     cvpj_proj['instruments_order'] = []
@@ -52,7 +48,7 @@ def convert(song):
     for trackid in t_s_track_order:
         if trackid in t_s_trackdata:
             singletrack_data = t_s_trackdata[trackid]
-            
+
             m_name = singletrack_data['name'] if 'name' in singletrack_data else None
             m_color = singletrack_data['color'] if 'color' in singletrack_data else None
   
@@ -66,7 +62,9 @@ def convert(song):
             if singletrack_data['type'] == 'instrument':
                 if trackid in t_s_trackplacements:
                     pltrack = t_s_trackplacements[trackid]
-                    singletrack_laned = 1 if 'laned' in pltrack else 0
+
+                    singletrack_laned = pldata['laned'] if 'laned' in pltrack else 0
+
                     if singletrack_laned == 0: 
                         print('[song-convert] r2m: inst non-laned:', trackid)
                         singletrack_pl = pltrack['notes'] if 'notes' in pltrack else []

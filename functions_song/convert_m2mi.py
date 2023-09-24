@@ -10,12 +10,10 @@ m2mi_notes_names = ['id', 'notelist', 'name', 'color']
 
 def convert(song):
     print('[song-convert] Converting from Multiple > MultipleIndexed')
-    global cvpj_proj
     cvpj_proj = json.loads(song)
     cvpj_playlist = cvpj_proj['playlist']
 
     pattern_number = 1
-    cvpj_notelistindex = {}
     existingpatterns = []
     for cvpj_playlistentry in cvpj_playlist:
         cvpj_playlistentry_data = cvpj_playlist[cvpj_playlistentry]
@@ -82,5 +80,4 @@ def convert(song):
 
     cvpj_proj['sampleindex'] = cvpj_sampleindex
 
-            
     return json.dumps(cvpj_proj)

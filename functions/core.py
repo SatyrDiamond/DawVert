@@ -4,11 +4,15 @@
 from plugin_input import base as base_input
 from plugin_output import base as base_output
 from experiments_plugin_input import base as experiments_plugin_input
-from functions import song_convert
+from functions_song import convert
 from functions import song_compat
 from functions import plug_conv
 
-from functions import song_convert_r2m
+from functions_song import convert_r2m
+
+from functions_song import convert_ri2mi
+
+from functions_song import convert_m2r
 
 import platform
 import os
@@ -201,36 +205,36 @@ def convert_type_output(extra_json):
 	convproj_j[0] = song_compat.makecompat_any(convproj_j[0], in_type, in_dawcapabilities, out_dawcapabilities)
 
 	if in_type == 'ri' and out_type == 'mi': 
-		convproj_j[0] = song_convert.ri2mi(convproj_j[0])
+		convproj_j[0] = convert_ri2mi.convert(convproj_j[0])
 	elif in_type == 'ri' and out_type == 'r': 
-		convproj_j[0] = song_convert.ri2r(convproj_j[0])
+		convproj_j[0] = convert.ri2r(convproj_j[0])
 
 	elif in_type == 'm' and out_type == 'mi': 
-		convproj_j[0] = song_convert.m2mi(convproj_j[0])
+		convproj_j[0] = convert.m2mi(convproj_j[0])
 	elif in_type == 'm' and out_type == 'r': 
-		convproj_j[0] = song_convert.m2r(convproj_j[0])
+		convproj_j[0] = convert_m2r.convert(convproj_j[0])
 
 	elif in_type == 'r' and out_type == 'm': 
-		convproj_j[0] = song_convert_r2m.convert(convproj_j[0])
+		convproj_j[0] = convert_r2m.convert(convproj_j[0])
 	elif in_type == 'r' and out_type == 'mi': 
-		convproj_j[0] = song_convert_r2m.convert(convproj_j[0])
-		convproj_j[0] = song_convert.m2mi(convproj_j[0])
+		convproj_j[0] = convert_r2m.convert(convproj_j[0])
+		convproj_j[0] = convert.m2mi(convproj_j[0])
 
 	elif in_type == 'mi' and out_type == 'm': 
-		convproj_j[0] = song_convert.mi2m(convproj_j[0], extra_json)
+		convproj_j[0] = convert.mi2m(convproj_j[0], extra_json)
 	elif in_type == 'mi' and out_type == 'r': 
-		convproj_j[0] = song_convert.mi2m(convproj_j[0], extra_json)
-		convproj_j[0] = song_convert.m2r(convproj_j[0])
+		convproj_j[0] = convert.mi2m(convproj_j[0], extra_json)
+		convproj_j[0] = convert_m2r.convert(convproj_j[0])
 
 	elif in_type == 'c' and out_type == 'r': 
-		convproj_j[0] = song_convert.c2r(convproj_j[0])
+		convproj_j[0] = convert.c2r(convproj_j[0])
 	elif in_type == 'c' and out_type == 'm': 
-		convproj_j[0] = song_convert.c2r(convproj_j[0])
-		convproj_j[0] = song_convert_r2m.convert(convproj_j[0])
+		convproj_j[0] = convert.c2r(convproj_j[0])
+		convproj_j[0] = convert_r2m.convert(convproj_j[0])
 	elif in_type == 'c' and out_type == 'mi': 
-		convproj_j[0] = song_convert.c2r(convproj_j[0])
-		convproj_j[0] = song_convert_r2m.convert(convproj_j[0])
-		convproj_j[0] = song_convert.m2mi(convproj_j[0])
+		convproj_j[0] = convert.c2r(convproj_j[0])
+		convproj_j[0] = convert_r2m.convert(convproj_j[0])
+		convproj_j[0] = convert.m2mi(convproj_j[0])
 
 	elif in_type == out_type: 
 		pass

@@ -14,7 +14,6 @@ from functions import data_values
 from functions import plugins
 from functions import note_mod
 from functions import notelist_data
-from functions import song_convert
 from functions import colors
 from functions import tracks
 from functions import params

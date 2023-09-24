@@ -11,6 +11,7 @@ import platform
 import os
 
 typelist = {}
+typelist['c'] = 'Cloned'
 typelist['r'] = 'Regular'
 typelist['ri'] = 'RegularIndexed'
 typelist['m'] = 'Multiple'
@@ -196,21 +197,47 @@ def convert_type_output(extra_json):
 
 	convproj_j[0] = song_compat.makecompat_any(convproj_j[0], in_type, in_dawcapabilities, out_dawcapabilities)
 
-	if in_type == 'ri' and out_type == 'mi': convproj_j[0] = song_convert.ri2mi(convproj_j[0])
-	if in_type == 'ri' and out_type == 'r': convproj_j[0] = song_convert.ri2r(convproj_j[0])
+	if in_type == 'ri' and out_type == 'mi': 
+		convproj_j[0] = song_convert.ri2mi(convproj_j[0])
+	elif in_type == 'ri' and out_type == 'r': 
+		convproj_j[0] = song_convert.ri2r(convproj_j[0])
 
-	if in_type == 'm' and out_type == 'mi': convproj_j[0] = song_convert.m2mi(convproj_j[0])
-	if in_type == 'm' and out_type == 'r': convproj_j[0] = song_convert.m2r(convproj_j[0])
+	elif in_type == 'm' and out_type == 'mi': 
+		convproj_j[0] = song_convert.m2mi(convproj_j[0])
+	elif in_type == 'm' and out_type == 'r': 
+		convproj_j[0] = song_convert.m2r(convproj_j[0])
 
-	if in_type == 'r' and out_type == 'm': convproj_j[0] = song_convert.r2m(convproj_j[0])
-	if in_type == 'r' and out_type == 'mi': 
+	elif in_type == 'r' and out_type == 'm': 
+		convproj_j[0] = song_convert.r2m(convproj_j[0])
+	elif in_type == 'r' and out_type == 'mi': 
 		convproj_j[0] = song_convert.r2m(convproj_j[0])
 		convproj_j[0] = song_convert.m2mi(convproj_j[0])
 
-	if in_type == 'mi' and out_type == 'm':  convproj_j[0] = song_convert.mi2m(convproj_j[0], extra_json)
-	if in_type == 'mi' and out_type == 'r': 
+	elif in_type == 'mi' and out_type == 'm': 
+		convproj_j[0] = song_convert.mi2m(convproj_j[0], extra_json)
+	elif in_type == 'mi' and out_type == 'r': 
 		convproj_j[0] = song_convert.mi2m(convproj_j[0], extra_json)
 		convproj_j[0] = song_convert.m2r(convproj_j[0])
+
+	elif in_type == 'c' and out_type == 'r': 
+		convproj_j[0] = song_convert.c2r(convproj_j[0])
+	elif in_type == 'c' and out_type == 'm': 
+		convproj_j[0] = song_convert.c2r(convproj_j[0])
+		convproj_j[0] = song_convert.r2m(convproj_j[0])
+	elif in_type == 'c' and out_type == 'mi': 
+		convproj_j[0] = song_convert.c2r(convproj_j[0])
+		convproj_j[0] = song_convert.r2m(convproj_j[0])
+		convproj_j[0] = song_convert.m2mi(convproj_j[0])
+
+	elif in_type == out_type: 
+		pass
+		
+	elif out_type == 'debug': 
+		pass
+
+	else:
+		print(typelist[in_type],'to',typelist[out_type],'is not supported')
+		exit()
 
 	if out_type != 'debug':
 		convproj_j[0] = song_compat.makecompat(convproj_j[0], out_type, in_dawcapabilities, out_dawcapabilities)

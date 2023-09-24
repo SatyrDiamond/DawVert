@@ -31,12 +31,12 @@ def trackfx2fxrack(cvpj_l, cvpjtype):
 
     tracks.a_move_auto(cvpj_l, ['master','vol'], ['fxmixer','0','vol'])
     
-    if cvpjtype == 'r' or cvpjtype == 'ri':
-        r_trackfx2fxrack(cvpj_l, cvpjtype)
+    if cvpjtype in ['r', 'ri']:
+        trackfx2fxrack_adv(cvpj_l, cvpjtype)
     else:
-        o_trackfx2fxrack(cvpj_l, cvpjtype)
+        trackfx2fxrack_simple(cvpj_l, cvpjtype)
 
-def r_trackfx2fxrack(cvpj_l, cvpjtype):
+def trackfx2fxrack_adv(cvpj_l, cvpjtype):
     cvpj_l['fxrack'] = {}
     fxnum = 1
 
@@ -116,7 +116,7 @@ def r_trackfx2fxrack(cvpj_l, cvpjtype):
 
     #print(outfxnum)
 
-    print('[r_trackfx2fxrack] Num ', 'type'.ljust(8), 'id'.ljust(12), 'dest'.ljust(8), 'dest_id'.ljust(12))
+    print('[trackfx2fxrack_adv] Num ', 'type'.ljust(8), 'id'.ljust(12), 'dest'.ljust(8), 'dest_id'.ljust(12))
     for fxslot in fxdata:
         slotdata = fxdata[fxslot]
 
@@ -129,20 +129,22 @@ def r_trackfx2fxrack(cvpj_l, cvpjtype):
 
         tracks.fxrack_addsend(cvpj_l, fxslot, out_fx_send[0], out_fx_send[1], None)
 
-        print('[r_trackfx2fxrack] '+str(fxslot).rjust(4), 
+        print('[trackfx2fxrack_adv] '+str(fxslot).rjust(4), 
               str(slotdata[0][0]).ljust(8), 
               str(slotdata[0][1]).ljust(12), 
               str(slotdata[1][0]).ljust(8),
               str(slotdata[1][1]).ljust(12),
               out_fx_send)
 
-def o_trackfx2fxrack(cvpj_l, cvpjtype):
+
+
+def trackfx2fxrack_simple(cvpj_l, cvpjtype):
     cvpj_l['fxrack'] = {}
     fxnum = 1
-    if cvpjtype == 'r' or cvpjtype == 'ri':
+    if cvpjtype in ['r', 'ri', 'c']:
         c_orderingdata = cvpj_l['track_order']
         c_trackdata = cvpj_l['track_data']
-    if cvpjtype == 'm' or cvpjtype == 'mi':
+    if cvpjtype in ['m', 'mi']:
         c_orderingdata = cvpj_l['instruments_order']
         c_trackdata = cvpj_l['instruments_data']
 
@@ -157,15 +159,18 @@ def o_trackfx2fxrack(cvpj_l, cvpjtype):
         fxtrack = {}
         if 'name' in trackdata: 
             fxtrack['name'] = trackdata['name']
-            print('[compat] trackfx2fxrack: Track to FX '+str(fxnum)+' ('+str(trackdata['name'])+')')
+            print('[trackfx2fxrack_simple] Track to FX '+str(fxnum)+' ('+str(trackdata['name'])+')')
         else:
-            print('[compat] trackfx2fxrack: Track to FX '+str(fxnum))
+            print('[trackfx2fxrack_simple] Track to FX '+str(fxnum))
 
         if 'color' in trackdata: fxtrack['color'] = trackdata['color']
         if 'chain_fx_audio' in trackdata: 
             fxtrack['chain_fx_audio'] = trackdata['chain_fx_audio']
             del trackdata['chain_fx_audio']
         cvpj_l['fxrack'][str(fxnum)] = fxtrack
+
+        if cvpjtype == 'c':
+            tracks.a_move_auto(cvpj_l, ['track',trackid,'vol'], ['fxmixer',str(fxnum),'vol'])
 
         fxnum += 1
 

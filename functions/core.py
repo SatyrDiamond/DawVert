@@ -7,6 +7,9 @@ from experiments_plugin_input import base as experiments_plugin_input
 from functions import song_convert
 from functions import song_compat
 from functions import plug_conv
+
+from functions import song_convert_r2m
+
 import platform
 import os
 
@@ -208,9 +211,9 @@ def convert_type_output(extra_json):
 		convproj_j[0] = song_convert.m2r(convproj_j[0])
 
 	elif in_type == 'r' and out_type == 'm': 
-		convproj_j[0] = song_convert.r2m(convproj_j[0])
+		convproj_j[0] = song_convert_r2m.convert(convproj_j[0])
 	elif in_type == 'r' and out_type == 'mi': 
-		convproj_j[0] = song_convert.r2m(convproj_j[0])
+		convproj_j[0] = song_convert_r2m.convert(convproj_j[0])
 		convproj_j[0] = song_convert.m2mi(convproj_j[0])
 
 	elif in_type == 'mi' and out_type == 'm': 
@@ -223,10 +226,10 @@ def convert_type_output(extra_json):
 		convproj_j[0] = song_convert.c2r(convproj_j[0])
 	elif in_type == 'c' and out_type == 'm': 
 		convproj_j[0] = song_convert.c2r(convproj_j[0])
-		convproj_j[0] = song_convert.r2m(convproj_j[0])
+		convproj_j[0] = song_convert_r2m.convert(convproj_j[0])
 	elif in_type == 'c' and out_type == 'mi': 
 		convproj_j[0] = song_convert.c2r(convproj_j[0])
-		convproj_j[0] = song_convert.r2m(convproj_j[0])
+		convproj_j[0] = song_convert_r2m.convert(convproj_j[0])
 		convproj_j[0] = song_convert.m2mi(convproj_j[0])
 
 	elif in_type == out_type: 

@@ -63,7 +63,7 @@ def convert(song):
                         print('[song-convert] ri2mi: inst non-laned:', trackid)
                         singletrack_pl = pldata['notes']
                         index_nliid(singletrack_pl, trackid)
-                        song_convert_r2m.makeplaylistrow(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color, None, None)
+                        convert_r2m.makeplaylistrow(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color, None, None)
                     else:
                         print('[song-convert] ri2mi: inst laned:', trackid)
                         t_laneorder = pldata['laneorder']
@@ -76,7 +76,7 @@ def convert(song):
                             if 'color' in lane_data: l_color = lane_data['color']
                             if 'notes' in lane_data:
                                 index_nliid(lane_data['notes'], trackid)
-                                song_convert_r2m.makeplaylistrow(cvpj_proj, plnum, trackid, lane_data['notes'], m_name, m_color, l_name, l_color)
+                                convert_r2m.makeplaylistrow(cvpj_proj, plnum, trackid, lane_data['notes'], m_name, m_color, l_name, l_color)
                                 plnum += 1
                     if singletrack_laned == 0: plnum += 1
 

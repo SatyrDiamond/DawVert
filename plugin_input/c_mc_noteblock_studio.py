@@ -27,8 +27,8 @@ class input_gt_mnbs(plugin_input.base):
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mnbs'
     def getname(self): return 'Minecraft Note Block Studio'
-    def gettype(self): return 'm'
-    def getdawcapabilities(self): return {'track_lanes': True}
+    def gettype(self): return 'c'
+    def getdawcapabilities(self): return {}
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
 
@@ -59,7 +59,7 @@ class input_gt_mnbs(plugin_input.base):
 
         nbs_notes = {}
         for playlistid in range(nbs_layercount):
-            tracks.m_playlist_pl(cvpj_l, playlistid+1, None, [0.23, 0.23, 0.23], [])
+            tracks.c_create_track(cvpj_l, 'instruments', str(playlistid+1), color=[0.23, 0.23, 0.23])
             nbs_notes[playlistid+1] = {}
 
         nbs_song_name = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
@@ -118,7 +118,8 @@ class input_gt_mnbs(plugin_input.base):
         if nbs_file.tell() <= nbs_len:
             for layernum in range(nbs_layercount):
                 layername = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
-                if layername != None: tracks.m_playlist_pl(cvpj_l, layernum+1, layername, None, None)
+                if layername != None: 
+                    tracks.c_add_dataval(cvpj_l, str(layernum+1), None, 'name', layername)
                 if nbs_newformat == 1: nbs_file.read(3)
 
         # OUTPUT
@@ -128,13 +129,13 @@ class input_gt_mnbs(plugin_input.base):
             cvpj_instcolor = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'color')
             cvpj_instgm = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'gm_inst')
 
-            tracks.m_inst_create(cvpj_l, instid, name=cvpj_instname, color=cvpj_instcolor)
+            tracks.c_inst_create(cvpj_l, instid, name=cvpj_instname, color=cvpj_instcolor)
 
             if cvpj_instgm != None: 
                 plugid = plugins.get_id()
                 plugins.add_plug_gm_midi(cvpj_l, plugid, 0, cvpj_instgm-1)
-                tracks.m_inst_pluginid(cvpj_l, instid, plugid)
-                tracks.m_inst_add_dataval(cvpj_l, instid, 'midi', 'output', {'program': cvpj_instgm})
+                tracks.c_inst_pluginid(cvpj_l, instid, plugid)
+                tracks.c_inst_add_dataval(cvpj_l, instid, 'midi', 'output', {'program': cvpj_instgm})
 
 
         # PART 4: CUSTOM INSTRUMENTS
@@ -150,8 +151,8 @@ class input_gt_mnbs(plugin_input.base):
                 plugid = plugins.get_id()
 
                 instid = 'NoteBlock'+str(instnum)
-                tracks.m_inst_create(cvpj_l, instid, name=custominst_name)
-                tracks.m_inst_pluginid(cvpj_l, instid, plugid)
+                tracks.c_inst_create(cvpj_l, instid, name=custominst_name)
+                tracks.c_inst_pluginid(cvpj_l, instid, plugid)
                 plugins.add_plug_sampler_singlefile(cvpj_l, plugid, custominst_file)
                 custominstid += 1
 
@@ -170,7 +171,7 @@ class input_gt_mnbs(plugin_input.base):
                     cvpj_notedata = note_data.mx_makenote('NoteBlock'+str(nbs_notedata[1]), note-placementnum, 2, nbs_notedata[0], None, None)
                 layer_placements[placementnum].append(cvpj_notedata)
             for placenum in layer_placements:
-                tracks.m_playlist_pl_add(cvpj_l, nbs_layer, placement_data.makepl_n(placenum, split_duration, layer_placements[placenum]))
+                tracks.c_pl_notes(cvpj_l, str(nbs_layer), placement_data.makepl_n(placenum, split_duration, layer_placements[placenum]))
 
         song.add_info(cvpj_l, 'title', nbs_song_name)
         song.add_info(cvpj_l, 'author', nbs_song_author)

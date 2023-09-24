@@ -1,10 +1,10 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from functions_plugin import format_caustic
 from functions import audio_wav
 from functions import auto
 from functions import data_bytes
-from functions import format_caustic
 from functions import idvals
 from functions import note_data
 from functions import plugins

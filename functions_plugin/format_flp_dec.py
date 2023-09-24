@@ -5,7 +5,7 @@ import argparse
 import struct
 from io import BytesIO
 from functions import data_bytes
-from functions import format_flp_tlv
+from functions_plugin import format_flp_tlv
 
 # ------------- Functions -------------
 def create_bytesio(data):

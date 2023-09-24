@@ -74,6 +74,9 @@ else:
 
 # -------------------------------------------------------------- Output Format --------------------------------------------------------------
 
+out_file_nameext = os.path.splitext(os.path.basename(out_file))
+out_file_path = os.path.dirname(out_file)
+
 if out_format in core.output_get_plugins():
 	out_class = core.output_set(out_format)
 else:
@@ -81,8 +84,6 @@ else:
 	exit()
 
 out_plug_ext = core.output_get_extension()
-out_file_nameext = os.path.splitext(os.path.basename(out_file))
-out_file_path = os.path.dirname(out_file)
 if out_file_nameext[1] == '': out_file = os.path.join(out_file_path, out_file_nameext[0]+'.'+out_plug_ext)
 
 # -------------------------------------------------------------- convert --------------------------------------------------------------
@@ -102,6 +103,6 @@ if os.path.isfile(out_file) and do_overwrite == False:
 		exit()
 
 core.parse_input(in_file, extra_json)
-core.convert_plugins(extra_json)
 core.convert_type_output(extra_json)
+core.convert_plugins(extra_json)
 core.parse_output(out_file)

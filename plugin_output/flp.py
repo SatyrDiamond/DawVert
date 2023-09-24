@@ -7,7 +7,7 @@ import math
 import base64
 import struct
 from bs4 import BeautifulSoup
-from functions import format_flp_enc
+from functions_plugin import format_flp_enc
 from functions import song_convert
 from functions import note_mod
 from functions import data_values

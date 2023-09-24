@@ -11,7 +11,7 @@ import varint
 from pathlib import Path
 
 from functions_plugin import flp_dec_pluginparams
-from functions import format_flp_dec
+from functions_plugin import format_flp_dec
 from functions import note_mod
 from functions import data_bytes
 from functions import colors

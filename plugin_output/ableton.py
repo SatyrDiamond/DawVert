@@ -383,7 +383,7 @@ def do_device_data_single(fxpluginid, xmltag, deviceid):
 
         if plugtype[1] in ['single', 'multi']:
             x_Player = ET.SubElement(xml_device, 'Player')
-            cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
+            cvpj_plugindata = plugins.get_plug_data(cvpj_l, fxpluginid)
 
             x_MultiSampleMap = ET.SubElement(x_Player, 'MultiSampleMap')
             addvalue(x_MultiSampleMap, 'LoadInRam', 'false')

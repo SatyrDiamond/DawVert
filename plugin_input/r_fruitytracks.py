@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from functions_plugin import format_flp_tlv
 from functions import colors
 from functions import data_bytes
 from functions import data_values
@@ -8,7 +9,6 @@ from functions import note_data
 from functions import tracks
 from functions import song
 from functions import audio
-from functions import format_flp_tlv
 
 import plugin_input
 import json

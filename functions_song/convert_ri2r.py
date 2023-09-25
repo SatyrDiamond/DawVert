@@ -17,32 +17,29 @@ def fromindex2notelist(placement, notelistindex):
 def convert(song):
     print('[song-convert] Converting from RegularIndexed > Regular')
     cvpj_proj = json.loads(song)
-    if 'track_order' not in cvpj_proj: print('[error] track_order not found')
-    t_s_track_order = cvpj_proj['track_order']
     t_s_trackdata = cvpj_proj['track_data']
     t_s_trackplacements = cvpj_proj['track_placements']
 
-    for trackid in t_s_track_order:
-        if trackid in t_s_trackdata:
-            singletrack_data = t_s_trackdata[trackid]
-            notelistindex = singletrack_data['notelistindex'] if 'notelistindex' in singletrack_data else {}
-            if trackid in t_s_trackplacements:
-                trkpldata = t_s_trackplacements[trackid]
+    for trackid in t_s_trackdata:
+        singletrack_data = t_s_trackdata[trackid]
+        notelistindex = singletrack_data['notelistindex'] if 'notelistindex' in singletrack_data else {}
+        if trackid in t_s_trackplacements:
+            trkpldata = t_s_trackplacements[trackid]
 
-                singletrack_laned = trkpldata['laned'] if 'laned' in trkpldata else 0
+            singletrack_laned = trkpldata['laned'] if 'laned' in trkpldata else 0
 
-                if singletrack_laned == 0: 
-                    placements = trkpldata['notes']
+            if singletrack_laned == 0: 
+                placements = trkpldata['notes']
+                for s_pl in placements:
+                    fromindex2notelist(s_pl, notelistindex)
+            else:
+                t_laneorder = trkpldata['laneorder']
+                t_lanedata = trkpldata['lanedata']
+                for laneid in t_laneorder:
+                    placements = trkpldata['lanedata'][laneid]['notes']
                     for s_pl in placements:
                         fromindex2notelist(s_pl, notelistindex)
-                else:
-                    t_laneorder = trkpldata['laneorder']
-                    t_lanedata = trkpldata['lanedata']
-                    for laneid in t_laneorder:
-                        placements = trkpldata['lanedata'][laneid]['notes']
-                        for s_pl in placements:
-                            fromindex2notelist(s_pl, notelistindex)
 
-            if 'notelistindex' in singletrack_data: del singletrack_data['notelistindex']
+        if 'notelistindex' in singletrack_data: del singletrack_data['notelistindex']
 
     return json.dumps(cvpj_proj)

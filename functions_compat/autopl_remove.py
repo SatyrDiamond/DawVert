@@ -22,15 +22,17 @@ def do_placements(i_autodata):
         o_autodata['placements'] = []
         return o_autodata
 
-def process(cvpj_l):
-    if 'automation' in cvpj_l:
-        cvpj_auto = cvpj_l['automation']
-        for autotype in cvpj_auto:
-            if autotype in ['main', 'master']:
-                for autoid in cvpj_auto[autotype]:
-                    cvpj_auto[autotype][autoid] = do_placements(cvpj_auto[autotype][autoid])
-            else:
-                for packid in cvpj_auto[autotype]:
-                    for autoid in cvpj_auto[autotype][packid]:
-                        cvpj_auto[autotype][packid][autoid] = do_placements(cvpj_auto[autotype][packid][autoid])
-                    
+def process(cvpj_l, cvpj_type, in_compat, out_compat):
+    if in_compat == False and out_compat == True:
+        if 'automation' in cvpj_l:
+            cvpj_auto = cvpj_l['automation']
+            for autotype in cvpj_auto:
+                if autotype in ['main', 'master']:
+                    for autoid in cvpj_auto[autotype]:
+                        cvpj_auto[autotype][autoid] = do_placements(cvpj_auto[autotype][autoid])
+                else:
+                    for packid in cvpj_auto[autotype]:
+                        for autoid in cvpj_auto[autotype][packid]:
+                            cvpj_auto[autotype][packid][autoid] = do_placements(cvpj_auto[autotype][packid][autoid])
+        return True
+    else: return False

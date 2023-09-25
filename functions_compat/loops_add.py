@@ -48,4 +48,10 @@ def process_r(projJ):
                 plcount_after = len(track_placements[track_placement]['notes'])
                 if plcount_before != plcount_after: print(str(plcount_before-plcount_after)+' loops found')
                 else: print('unchanged')
+    return True
 
+def process(projJ, cvpj_type, in__placement_loop, out__placement_loop):
+    if in__placement_loop == [] and 'loop' in out__placement_loop:
+        if cvpj_type == 'r': return process_r(projJ)
+        else: return False
+    else: return False

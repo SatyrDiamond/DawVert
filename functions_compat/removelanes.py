@@ -82,3 +82,10 @@ def process_r(cvpj_l):
     cvpj_l['track_data'] = new_trackdata
     cvpj_l['track_order'] = new_trackordering
     cvpj_l['track_placements'] = new_trackplacements
+    return True
+
+def process(cvpj_proj, cvpj_type, in__track_lanes, out__track_lanes):
+    if in__track_lanes == True and out__track_lanes == False:
+        if cvpj_type in ['r', 'ri', 'rm']: return process_r(cvpj_proj)
+        else: return False
+    else: return False

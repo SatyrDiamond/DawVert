@@ -42,4 +42,10 @@ def process_r(cvpj_l):
     cvpj_l['track_data'] = new_trackdata
     cvpj_l['track_placements'] = new_trackpl
     cvpj_l['track_order'] = new_trackordering
-    return cvpj_l
+    return True
+
+def process(cvpj_proj, cvpj_type, in__track_hybrid, out__track_hybrid):
+    if in__track_hybrid == True and out__track_hybrid == False:
+        if cvpj_type in ['r', 'ri', 'rm']: return process_r(cvpj_proj)
+        else: return False
+    else: return False

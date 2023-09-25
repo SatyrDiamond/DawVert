@@ -301,15 +301,11 @@ def makecompat_audiostretch(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabi
 def makecompat_any(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     cvpj_proj = json.loads(cvpj_l)
 
-    in__fxrack = False
-    out__fxrack = False
-    if 'fxrack' in in_dawcapabilities: in__fxrack = in_dawcapabilities['fxrack']
-    if 'fxrack' in out_dawcapabilities: out__fxrack = out_dawcapabilities['fxrack']
+    in__fxrack = in_dawcapabilities['fxrack'] if 'fxrack' in in_dawcapabilities else False
+    out__fxrack = out_dawcapabilities['fxrack'] if 'fxrack' in out_dawcapabilities else False
 
-    in__auto_nopl = False
-    out__auto_nopl = False
-    if 'auto_nopl' in in_dawcapabilities: in__auto_nopl = in_dawcapabilities['auto_nopl']
-    if 'auto_nopl' in out_dawcapabilities: out__auto_nopl = out_dawcapabilities['auto_nopl']
+    in__auto_nopl = in_dawcapabilities['auto_nopl'] if 'auto_nopl' in in_dawcapabilities else False
+    out__auto_nopl = out_dawcapabilities['auto_nopl'] if 'auto_nopl' in out_dawcapabilities else False
 
     print('[compat] '+str(in__auto_nopl).ljust(5)+' | '+str(out__auto_nopl).ljust(5)+' | auto_nopl')
     print('[compat] '+str(in__fxrack).ljust(5)+' | '+str(out__fxrack).ljust(5)+' | fxrack')
@@ -351,33 +347,19 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
 
     cvpj_proj = json.loads(cvpj_l)
 
-    in__track_lanes = False
-    in__placement_cut = False
-    in__placement_loop = []
-    in__track_nopl = False
-    in__track_hybrid = False
-    in__placement_audio_events = False
+    in__track_lanes = in_dawcapabilities['track_lanes'] if 'track_lanes' in in_dawcapabilities else False
+    in__track_nopl = in_dawcapabilities['track_nopl'] if 'track_nopl' in in_dawcapabilities else False
+    in__track_hybrid = in_dawcapabilities['track_hybrid'] if 'track_hybrid' in in_dawcapabilities else False
+    in__placement_cut = in_dawcapabilities['placement_cut'] if 'placement_cut' in in_dawcapabilities else False
+    in__placement_loop = in_dawcapabilities['placement_loop'] if 'placement_loop' in in_dawcapabilities else []
+    in__placement_audio_events = in_dawcapabilities['placement_audio_events'] if 'placement_audio_events' in in_dawcapabilities else False
 
-    out__track_lanes = False
-    out__placement_cut = False
-    out__placement_loop = []
-    out__track_nopl = False
-    out__track_hybrid = False
-    out__placement_audio_events = False
-
-    if 'track_lanes' in in_dawcapabilities: in__track_lanes = in_dawcapabilities['track_lanes']
-    if 'track_nopl' in in_dawcapabilities: in__track_nopl = in_dawcapabilities['track_nopl']
-    if 'track_hybrid' in in_dawcapabilities: in__track_hybrid = in_dawcapabilities['track_hybrid']
-    if 'placement_cut' in in_dawcapabilities: in__placement_cut = in_dawcapabilities['placement_cut']
-    if 'placement_loop' in in_dawcapabilities: in__placement_loop = in_dawcapabilities['placement_loop']
-    if 'placement_audio_events' in in_dawcapabilities: in__placement_audio_events = in_dawcapabilities['placement_audio_events']
-
-    if 'track_lanes' in out_dawcapabilities: out__track_lanes = out_dawcapabilities['track_lanes']
-    if 'track_nopl' in out_dawcapabilities: out__track_nopl = out_dawcapabilities['track_nopl']
-    if 'track_hybrid' in out_dawcapabilities: out__track_hybrid = out_dawcapabilities['track_hybrid']
-    if 'placement_cut' in out_dawcapabilities: out__placement_cut = out_dawcapabilities['placement_cut']
-    if 'placement_loop' in out_dawcapabilities: out__placement_loop = out_dawcapabilities['placement_loop']
-    if 'placement_audio_events' in out_dawcapabilities: out__placement_audio_events = out_dawcapabilities['placement_audio_events']
+    out__track_lanes = out_dawcapabilities['track_lanes'] if 'track_lanes' in out_dawcapabilities else False
+    out__track_nopl = out_dawcapabilities['track_nopl'] if 'track_nopl' in out_dawcapabilities else False
+    out__track_hybrid = out_dawcapabilities['track_hybrid'] if 'track_hybrid' in out_dawcapabilities else False
+    out__placement_cut = out_dawcapabilities['placement_cut'] if 'placement_cut' in out_dawcapabilities else False
+    out__placement_loop = out_dawcapabilities['placement_loop'] if 'placement_loop' in out_dawcapabilities else []
+    out__placement_audio_events = out_dawcapabilities['placement_audio_events'] if 'placement_audio_events' in out_dawcapabilities else False
 
     if isprinted == False:
         print('[compat] '+str(in__placement_audio_events).ljust(5)+' | '+str(out__placement_audio_events).ljust(5)+' | placement_audio_events')
@@ -387,10 +369,6 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
         print('[compat] '+str(in__track_lanes).ljust(5)+' | '+str(out__track_lanes).ljust(5)+' | track_lanes')
         print('[compat] '+str(in__track_nopl).ljust(5)+' | '+str(out__track_nopl).ljust(5)+' | track_nopl')
     isprinted = True
-
-    #if cvpj_type == 'm' and m_processed == False:
-    #    if in__placement_loop == [] and out__placement_loop == True: r_addloops(cvpj_proj)
-    #    m_processed = True
 
     remainingplloop = [e for e in in__placement_loop if e not in out__placement_loop]
 

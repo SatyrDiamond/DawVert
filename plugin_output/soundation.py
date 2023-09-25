@@ -100,7 +100,7 @@ class output_soundation(plugin_output.base):
         'placement_loop': ['loop'],
         'auto_nopl': True
         }
-    def getsupportedplugformats(self): return []
+    def getsupportedplugformats(self): return ['midi']
     def getsupportedplugins(self): return []
     def getfileextension(self): return 'sng'
     def parse(self, convproj_json, output_file):

@@ -35,4 +35,11 @@ def process_r(projJ):
                 if 'notes' in track_placements_data:
                     print('[compat] RemoveCut: non-laned: '+track_placements_id)
                     do_placements(track_placements_data['notes'])
+    return True
 
+
+def process(cvpj_proj, cvpj_type, in__placement_cut, out__placement_cut):
+    if in__placement_cut == True and out__placement_cut == False:
+        if cvpj_type == 'r': return process_r(cvpj_proj)
+        else: return False
+    else: return False

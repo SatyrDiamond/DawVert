@@ -120,10 +120,10 @@ def process_r(projJ, stretchtype):
             not_laned = True
             if 'laned' in track_placements_data:
                 print('[compat] warp2rate: laned: '+track_placements_id)
-                if s_pldata['laned'] == 1:
+                if track_placements_data['laned'] == 1:
                     not_laned = False
-                    s_lanedata = s_pldata['lanedata']
-                    s_laneordering = s_pldata['laneorder']
+                    s_lanedata = track_placements_data['lanedata']
+                    s_laneordering = track_placements_data['laneorder']
                     for t_lanedata in s_lanedata:
                         tj_lanedata = s_lanedata[t_lanedata]
                         if 'audio' in tj_lanedata:
@@ -142,6 +142,7 @@ def process_r(projJ, stretchtype):
                     if stretchtype == 'warp': 
                         print('[compat] rate2warp: non-laned: '+track_placements_id)
                         track_placements_data['audio'] = rate2warp(track_placements_data['audio'], tempo)
+    return True
 
 def process_m(projJ, stretchtype):
     tempo = params.get(projJ, [], 'bpm', 120)[0]
@@ -150,3 +151,17 @@ def process_m(projJ, stretchtype):
         if 'placements_audio' in playlist_id_data:
             if stretchtype == 'rate': playlist_id_data['placements_audio'] = warp2rate(playlist_id_data['placements_audio'], tempo)
             if stretchtype == 'warp': playlist_id_data['placements_audio'] = rate2warp(playlist_id_data['placements_audio'], tempo)
+    return True
+
+def process(cvpj_proj, cvpj_type, in__placement_audio_stretch, out__placement_audio_stretch):
+    if 'warp' in in__placement_audio_stretch and 'warp' not in out__placement_audio_stretch:
+        if cvpj_type == 'm': return process_m(cvpj_proj, 'rate')
+        elif cvpj_type in ['r', 'ri', 'rm']: return process_r(cvpj_proj, 'rate')
+        else: return False
+
+    elif 'rate' in in__placement_audio_stretch and 'rate' not in out__placement_audio_stretch:
+        if cvpj_type == 'm': return process_m(cvpj_proj, 'warp')
+        elif cvpj_type in ['r', 'ri', 'rm']: return process_r(cvpj_proj, 'warp')
+        else: return False
+
+    else: return False

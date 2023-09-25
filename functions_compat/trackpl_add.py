@@ -34,3 +34,10 @@ def process_r(projJ):
         if inid[0] == True: track_placements[inid[1]]['lanedata'][inid[2]]['notes'] = out_placements
 
     projJ['do_singlenotelistcut'] = False
+    return True
+
+def process(cvpj_proj, cvpj_type, in__track_nopl, out__track_nopl):
+    if in__track_nopl == True and out__track_nopl == False:
+        if cvpj_type == 'r': return process_r(cvpj_proj)
+        else: return False
+    else: return False

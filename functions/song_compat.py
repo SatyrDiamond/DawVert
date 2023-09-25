@@ -7,9 +7,18 @@ from functions import data_values
 from functions import xtramath
 from functions import params
 from functions import tracks
-from functions import data_values
 from functions import audio
 from functions import split_single_notelist
+
+from functions_compat import changestretch
+from functions_compat import autopl_remove
+from functions_compat import loops_add
+from functions_compat import loops_remove
+from functions_compat import removecut
+from functions_compat import removelanes
+from functions_compat import time_seconds
+from functions_compat import unhybrid
+
 import json
 import math
 
@@ -203,419 +212,6 @@ def fxrack2trackfx(cvpj_l, cvpjtype):
             cvpj_l['groups'][groupid] |= cvpj_fxdata
             print('[compat] trackfx2fxrack: FX to Tracks '+ ', '.join(fx_trackids[fx_trackid]))
 
-# -------------------------------------------- placement_cut --------------------------------------------
-
-def r_removecut_placements(note_placements):
-    for note_placement in note_placements:
-        if 'cut' in note_placement: 
-            cut_end = note_placement['duration']
-            if note_placement['cut']['type'] == 'cut': 
-                if 'start' in note_placement['cut']: cut_start = note_placement['cut']['start']
-                cut_end += cut_start
-                note_placement['notelist'] = notelist_data.trimmove(note_placement['notelist'], cut_start, cut_end)
-                del note_placement['cut']
-
-def r_removecut(projJ):
-    if 'track_placements' in projJ:
-        for track_placements_id in projJ['track_placements']:
-            track_placements_data = projJ['track_placements'][track_placements_id]
-
-            not_laned = True
-
-            if 'laned' in track_placements_data:
-                print('[compat] RemoveCut: laned: '+track_placements_id)
-                if s_pldata['laned'] == 1:
-                    not_laned = False
-                    s_lanedata = s_pldata['lanedata']
-                    s_laneordering = s_pldata['laneorder']
-                    for t_lanedata in s_lanedata:
-                        tj_lanedata = s_lanedata[t_lanedata]
-                        if 'notes' in tj_lanedata:
-                            r_removecut_placements(tj_lanedata['notes'])
-
-            if not_laned == True:
-                if 'notes' in track_placements_data:
-                    print('[compat] RemoveCut: non-laned: '+track_placements_id)
-                    r_removecut_placements(track_placements_data['notes'])
-
-
-# -------------------------------------------- placement_loop --------------------------------------------
-
-def addloops_pl(placementsdata):
-    prevpp = None
-    new_placements = []
-    for placement in placementsdata:
-        p_pos = placement['position']
-        p_dur = placement['duration']
-        if 'notelist' in placement: p_nl = placement['notelist']
-        else: p_nl = []
-        ipnl = False
-        if prevpp != None:
-            isfromprevpos = prevpp[0]==p_pos-p_dur
-            isdursame = prevpp[1]==p_dur
-            issamenotelist = prevpp[2]==p_nl
-            isplacecut = 'cut' in placement
-            prevpp[0]==p_pos-p_dur
-            if isfromprevpos == True:
-                if issamenotelist == True:
-                    if isdursame == True:
-                        if isplacecut == False:
-                            ipnl = True
-                            if 'cut' not in new_placements[-1]:
-                                new_placements[-1]['cut'] = {}
-                                new_placements[-1]['cut']['type'] = 'loop'
-                                new_placements[-1]['cut']['loopend'] = p_dur
-                                new_placements[-1]['duration'] += p_dur
-                            else:
-                                new_placements[-1]['duration'] += p_dur
-        if ipnl == False:
-            new_placements.append(placement)
-        prevpp = [p_pos, p_dur, p_nl]
-    return new_placements
-
-def r_addloops(projJ):
-    do_addloop = True
-    if 'do_addloop' in projJ: do_addloop = projJ['do_addloop']
-    if do_addloop == True: 
-        track_placements = projJ['track_placements']
-        for track_placement in track_placements:
-            if 'notes' in track_placements[track_placement]:
-                plcount_before = len(track_placements[track_placement]['notes'])
-                print('[compat] AddLoops: '+ track_placement +': ', end='')
-                track_placement_s = track_placements[track_placement]
-                track_placements[track_placement]['notes'] = addloops_pl(track_placement_s['notes'])
-                plcount_after = len(track_placements[track_placement]['notes'])
-                if plcount_before != plcount_after: print(str(plcount_before-plcount_after)+' loops found')
-                else: print('unchanged')
-
-
-def r_removeloops_placements(cvpj_placements, tempo, isaudio, out__placement_loop):
-    tempomul = data_values.tempo_to_rate(tempo, False)
-
-    new_placements = []
-    for cvpj_placement in cvpj_placements:
-
-        if 'cut' in cvpj_placement: 
-            cuttype = cvpj_placement['cut']['type']
-            if cuttype in ['loop', 'loop_off', 'loop_adv'] and cuttype not in out__placement_loop: 
-                cvpj_placement_base = cvpj_placement.copy()
-                cvpj_placement_cut = cvpj_placement['cut']
-                del cvpj_placement_base['cut']
-                del cvpj_placement_base['position']
-                del cvpj_placement_base['duration']
-                loop_base_position = cvpj_placement['position']
-                loop_base_duration = cvpj_placement['duration']
-
-                loop_start = 0
-                loop_loopstart = 0
-                loop_loopend = loop_base_duration
-                if 'start' in cvpj_placement_cut: loop_start = cvpj_placement_cut['start']
-                if 'loopstart' in cvpj_placement_cut: loop_loopstart = cvpj_placement_cut['loopstart']
-                if 'loopend' in cvpj_placement_cut: loop_loopend = cvpj_placement_cut['loopend']
-
-                cutpoints = xtramath.cutloop(loop_base_position, loop_base_duration, loop_start, loop_loopstart, loop_loopend)
-
-                #print(cutpoints)
-                for cutpoint in cutpoints:
-                    cvpj_placement_cutted = cvpj_placement_base.copy()
-                    cvpj_placement_cutted['position'] = cutpoint[0]
-                    cvpj_placement_cutted['duration'] = cutpoint[1]
-                    cvpj_placement_cutted['cut'] = {}
-                    cvpj_placement_cutted['cut']['type'] = 'cut'
-                    cvpj_placement_cutted['cut']['start'] = cutpoint[2]
-                    cvpj_placement_cutted['cut']['end'] = cutpoint[3]
-                    new_placements.append(cvpj_placement_cutted)
-            else: new_placements.append(cvpj_placement)
-        else: new_placements.append(cvpj_placement)
-    return new_placements
-
-def r_removeloops(projJ, out__placement_loop):
-    tempo = params.get(projJ, [], 'bpm', 120)[0]
-    if 'track_placements' in projJ:
-        for track_placements_id in projJ['track_placements']:
-            track_placements_data = projJ['track_placements'][track_placements_id]
-
-            not_laned = True
-
-            if 'laned' in track_placements_data:
-                print('[compat] RemoveLoops: laned: '+track_placements_id)
-                if s_pldata['laned'] == 1:
-                    not_laned = False
-                    s_lanedata = s_pldata['lanedata']
-                    s_laneordering = s_pldata['laneorder']
-                    for t_lanedata in s_lanedata:
-                        tj_lanedata = s_lanedata[t_lanedata]
-                        if 'notes' in tj_lanedata:
-                            track_placements_data['notes'] = r_removeloops_placements(tj_lanedata['notes'], tempo, False, out__placement_loop)
-                        if 'audio' in tj_lanedata:
-                            track_placements_data['audio'] = r_removeloops_placements(tj_lanedata['audio'], tempo, True, out__placement_loop)
-
-            if not_laned == True:
-                print('[compat] RemoveLoops: non-laned: '+track_placements_id)
-                if 'notes' in track_placements_data:
-                    track_placements_data['notes'] = r_removeloops_placements(track_placements_data['notes'], tempo, False, out__placement_loop)
-                if 'audio' in track_placements_data:
-                    track_placements_data['audio'] = r_removeloops_placements(track_placements_data['audio'], tempo, True, out__placement_loop)
-
-def m_removeloops(projJ, out__placement_loop):
-    tempo = params.get(projJ, [], 'bpm', 120)[0]
-    for playlist_id in projJ['playlist']:
-        playlist_id_data = projJ['playlist'][playlist_id]
-        if 'placements_notes' in playlist_id_data:
-            playlist_id_data['placements_notes'] = r_removeloops_placements(playlist_id_data['placements_notes'], tempo, False, out__placement_loop)
-
-# -------------------------------------------- placement_audio_stretch --------------------------------------------
-
-
-def warp2rate(cvpj_placements, tempo):
-    new_placements = []
-    tempomul = (120/tempo)
-    for cvpj_placement in cvpj_placements:
-        audiorate = 1
-        minus_offset = 0
-        plus_offset = 0
-        if 'audiomod' in cvpj_placement:
-            old_audiomod = cvpj_placement['audiomod']
-            new_audiomod = {}
-            new_audiomod['stretch_data'] = {}
-            new_audiomod['stretch_method'] = None
-            new_audiomod['stretch_algorithm'] = 'stretch'
-            if 'pitch' in old_audiomod: new_audiomod['pitch'] = old_audiomod['pitch']
-
-            if 'stretch_method' in old_audiomod: 
-                if old_audiomod['stretch_method'] == 'warp':
-                    t_warpmarkers = old_audiomod['stretch_data']
-
-                    if t_warpmarkers[0]['pos'] != 0: 
-                        minuswarppos = t_warpmarkers[0]['pos']
-                        if t_warpmarkers[0]['pos'] < 0: minus_offset -= minuswarppos
-                        if t_warpmarkers[0]['pos'] > 0: plus_offset += minuswarppos
-                        for t_warpmarker in t_warpmarkers:
-                            t_warpmarker['pos'] -= minuswarppos
-
-                    #print(minus_offset, plus_offset)
-
-                    audio_info = audio.get_audiofile_info(cvpj_placement['file'])
-                    audio_dur_sec_steps = audio_info['dur_sec']*8
-
-                    if 'stretch_algorithm' in old_audiomod: new_audiomod['stretch_algorithm'] = old_audiomod['stretch_algorithm']
-
-                    if len(t_warpmarkers) >= 2:
-                        t_warpmarker_last = t_warpmarkers[-1]
-                        new_audiomod['stretch_method'] = 'rate_tempo'
-                        audiorate = (1/((t_warpmarker_last['pos']/8)/t_warpmarkers[-1]['pos_real']))
-                        new_audiomod['stretch_data']['rate'] = audiorate
-
-            cvpj_placement['audiomod'] = new_audiomod
-
-        if 'cut' in cvpj_placement:
-            cutdata = cvpj_placement['cut']
-
-            if audiorate != 1:
-                if cutdata['type'] == 'loop':
-                    data_values.time_from_steps(cutdata, 'start', True, cutdata['start']+minus_offset, audiorate)
-                    data_values.time_from_steps(cutdata, 'loopstart', True, cutdata['loopstart']+minus_offset, audiorate)
-                    data_values.time_from_steps(cutdata, 'loopend', True, cutdata['loopend']+minus_offset, audiorate )
-                    cvpj_placement['position'] += plus_offset
-                    cvpj_placement['duration'] -= plus_offset
-                    cvpj_placement['duration'] += minus_offset
-
-                if cutdata['type'] == 'cut':
-                    data_values.time_from_steps(cutdata, 'start', True, cutdata['start']+minus_offset, (1/audiorate)*tempomul )
-                    data_values.time_from_steps(cutdata, 'end', True, cutdata['end']+minus_offset-plus_offset, (1/audiorate)*tempomul )
-
-    return cvpj_placements
-
-def rate2warp(cvpj_placements, tempo):
-    new_placements = []
-    tempomul = (120/tempo)
-
-def rate2warp(cvpj_placements, tempo):
-    new_placements = []
-    tempomul = (120/tempo)
-
-    for cvpj_placement in cvpj_placements:
-        audiorate = 1
-        ratetempo = 1
-
-        if 'audiomod' in cvpj_placement:
-            old_audiomod = cvpj_placement['audiomod']
-            new_audiomod = {}
-
-            if 'stretch_method' in old_audiomod: 
-                if old_audiomod['stretch_method'] in ['rate_tempo', 'rate_speed', 'rate_ignoretempo']:
-                    audio_info = audio.get_audiofile_info(cvpj_placement['file'])
-                    audio_dur_sec = audio_info['dur_sec']
-
-                    t_stretch_data = old_audiomod['stretch_data']
-
-                    new_audiomod = {}
-                    new_audiomod['stretch_method'] = 'warp'
-                    new_audiomod['stretch_algorithm'] = 'stretch'
-                    if 'stretch_algorithm' in old_audiomod: new_audiomod['stretch_algorithm'] = old_audiomod['stretch_algorithm']
-                    if 'pitch' in old_audiomod: new_audiomod['pitch'] = old_audiomod['pitch']
-
-                    audiorate = t_stretch_data['rate']
-                    ratetempo = 1/(audiorate/tempomul)
-
-                    if old_audiomod['stretch_method'] == 'rate_ignoretempo':
-                        new_audiomod['stretch_data'] = [
-                            {'pos': 0.0, 'pos_real': 0.0}, 
-                            {'pos': audio_dur_sec*8, 'pos_real': (audio_dur_sec*audiorate)/tempomul}
-                        ]
-
-                    if old_audiomod['stretch_method'] == 'rate_tempo':
-                        new_audiomod['stretch_data'] = [
-                            {'pos': 0.0, 'pos_real': 0.0}, 
-                            {'pos': audio_dur_sec*8, 'pos_real': (audio_dur_sec*audiorate)}
-                        ]
-
-                    if old_audiomod['stretch_method'] == 'rate_speed':
-                        new_audiomod['stretch_data'] = [
-                            {'pos': 0.0, 'pos_real': 0.0}, 
-                            {'pos': audio_dur_sec*8, 'pos_real': (audio_dur_sec*audiorate)*tempomul}
-                        ]
-
-                    cvpj_placement['audiomod'] = new_audiomod
-
-
-
-
-        #if 'cut' in cvpj_placement:
-        #    cutdata = cvpj_placement['cut']
-        #
-        #    if cutdata['type'] == 'cut':
-        #        if 'start' not in cutdata: data_values.time_from_steps(cutdata, 'start', True, 0, audiorate)
-        #        data_values.time_from_seconds(cutdata, 'start', False, cutdata['start'], 1)
-        #        if 'end' in cutdata:
-        #            data_values.time_from_seconds(cutdata, 'end', False, cutdata['end'], 1)
-
-    return cvpj_placements
-
-def r_changestretch(projJ, stretchtype):
-    tempo = params.get(projJ, [], 'bpm', 120)[0]
-    if 'track_placements' in projJ:
-        for track_placements_id in projJ['track_placements']:
-            track_placements_data = projJ['track_placements'][track_placements_id]
-            not_laned = True
-            if 'laned' in track_placements_data:
-                print('[compat] warp2rate: laned: '+track_placements_id)
-                if s_pldata['laned'] == 1:
-                    not_laned = False
-                    s_lanedata = s_pldata['lanedata']
-                    s_laneordering = s_pldata['laneorder']
-                    for t_lanedata in s_lanedata:
-                        tj_lanedata = s_lanedata[t_lanedata]
-                        if 'audio' in tj_lanedata:
-                            if stretchtype == 'rate': 
-                                print('[compat] warp2rate: laned: '+track_placements_id)
-                                tj_lanedata['audio'] = warp2rate(tj_lanedata['audio'], tempo)
-                            if stretchtype == 'warp': 
-                                print('[compat] rate2warp: laned: '+track_placements_id)
-                                tj_lanedata['audio'] = rate2warp(tj_lanedata['audio'], tempo)
-
-            if not_laned == True:
-                if 'audio' in track_placements_data:
-                    if stretchtype == 'rate': 
-                        print('[compat] warp2rate: non-laned: '+track_placements_id)
-                        track_placements_data['audio'] = warp2rate(track_placements_data['audio'], tempo)
-                    if stretchtype == 'warp': 
-                        print('[compat] rate2warp: non-laned: '+track_placements_id)
-                        track_placements_data['audio'] = rate2warp(track_placements_data['audio'], tempo)
-
-
-def m_changestretch(projJ, stretchtype):
-    tempo = params.get(projJ, [], 'bpm', 120)[0]
-    for playlist_id in projJ['playlist']:
-        playlist_id_data = projJ['playlist'][playlist_id]
-        if 'placements_audio' in playlist_id_data:
-            if stretchtype == 'rate': playlist_id_data['placements_audio'] = warp2rate(playlist_id_data['placements_audio'], tempo)
-            if stretchtype == 'warp': playlist_id_data['placements_audio'] = rate2warp(playlist_id_data['placements_audio'], tempo)
-
-# -------------------------------------------- track_lanes --------------------------------------------
-
-def tracklanename(trackname, lanename, fallback):
-    if trackname != None:
-        if lanename != None: ntp_name = trackname+' ['+lanename+']'
-        if lanename == None: ntp_name = trackname
-    if trackname == None:
-        if lanename != None: ntp_name = 'none'+' ['+lanename+']'
-        if lanename == None: ntp_name = 'none'
-    return ntp_name
-
-def r_removelanes(projJ):
-    old_trackdata = projJ['track_data']
-    old_trackordering = projJ['track_order']
-    old_trackplacements = projJ['track_placements']
-    new_trackdata = {}
-    new_trackordering = []
-    new_trackplacements = {}
-
-    for trackid in old_trackordering:
-        if trackid in old_trackdata:
-            print('[compat] RemoveLanes: '+ trackid)
-            if trackid in old_trackplacements:
-
-                s_trackdata = old_trackdata[trackid]
-                s_pldata = old_trackplacements[trackid]
-
-                if 'name' in s_trackdata: s_trackname = s_trackdata['name']
-                else: s_trackname = None
-                if 'color' in s_trackdata: s_trackcolor = s_trackdata['color']
-                else: s_trackcolor = None
-
-                not_laned = True
-
-                if 'laned' in s_pldata:
-                    if s_pldata['laned'] == 1:
-                        not_laned = False
-
-                        s_lanedata = s_pldata['lanedata']
-                        s_laneordering = s_pldata['laneorder']
-
-                        if len(s_laneordering) == 0:
-                            new_trackdata[trackid] = s_trackdata
-                            new_trackplacements[trackid] = {}
-                            new_trackplacements[trackid]['notes'] = []
-                            new_trackordering.append(trackid)
-
-                        if len(s_laneordering) == 1:
-                            new_trackdata[trackid] = s_trackdata
-                            new_trackplacements[trackid] = {}
-                            new_trackplacements[trackid]['notes'] = s_lanedata[s_laneordering[0]]['notes']
-
-                            if 'color' in s_lanedata[s_laneordering[0]]:
-                                s_trackcolor = s_lanedata[s_laneordering[0]]['color']
-
-                            new_trackordering.append(trackid)
-
-                        if len(s_laneordering) > 1:
-                            for laneid in s_laneordering:
-
-                                splitnameid = trackid+'_Lane'+laneid
-
-                                s_d_lanedata = s_lanedata[laneid]
-                                if 'name' in s_d_lanedata: s_lanename = s_d_lanedata['name']
-                                else: s_lanename = None
-
-                                septrackname = tracklanename(s_trackname, s_lanename, 'noname')
-
-                                new_trackdata[splitnameid] = s_trackdata.copy()
-                                new_trackdata[splitnameid]['name'] = septrackname
-                                if s_trackcolor != None: new_trackdata[splitnameid]['color'] = s_trackcolor
-                                new_trackplacements[splitnameid] = {}
-                                new_trackplacements[splitnameid]['notes'] = s_lanedata[laneid]['notes']
-                                new_trackordering.append(splitnameid)
-
-                if not_laned == True:
-                    new_trackdata[trackid] = s_trackdata
-                    new_trackplacements[trackid] = s_pldata
-                    new_trackordering.append(trackid)
-
-    projJ['track_data'] = new_trackdata
-    projJ['track_order'] = new_trackordering
-    projJ['track_placements'] = new_trackplacements
-
 # -------------------------------------------- track_nopl --------------------------------------------
 
 points_items = None
@@ -679,118 +275,6 @@ def r_split_single_notelist(projJ):
 
     projJ['do_singlenotelistcut'] = False
 
-# -------------------------------------------- auto_nopl --------------------------------------------
-
-def remove_auto_placements_single(i_autodata):
-    new_points = []
-    autotype = i_autodata['type']
-    autodata = i_autodata['placements']
-    for autopart in autodata:
-        base_pos = autopart['position']
-        if len(autopart['points']) != 0: autopart['points'][0]['type'] = 'instant'
-        for oldpoint in autopart['points']:
-            oldpoint['position'] += base_pos
-            new_points.append(oldpoint)
-    if len(new_points) != 0: 
-        o_autodata = {}
-        o_autodata['type'] = autotype
-        o_autodata['placements'] = [{'position': 0, 'points': new_points, 'duration': new_points[-1]['position']+8}]
-        return o_autodata
-    else: 
-        o_autodata = {}
-        o_autodata['type'] = autotype
-        o_autodata['placements'] = []
-        return o_autodata
-
-def remove_auto_placements(cvpj_l):
-    if 'automation' in cvpj_l:
-        cvpj_auto = cvpj_l['automation']
-        for autotype in cvpj_auto:
-            if autotype in ['main', 'master']:
-                for autoid in cvpj_auto[autotype]:
-                    cvpj_auto[autotype][autoid] = remove_auto_placements_single(cvpj_auto[autotype][autoid])
-            else:
-                for packid in cvpj_auto[autotype]:
-                    for autoid in cvpj_auto[autotype][packid]:
-                        cvpj_auto[autotype][packid][autoid] = remove_auto_placements_single(cvpj_auto[autotype][packid][autoid])
-                    
-# -------------------------------------------- time_seconds --------------------------------------------
-
-def step2sec(i_value, i_bpm): return (i_value/8)*(120/i_bpm)
-def sec2step(i_value, i_bpm): return (i_value*8)/(120/i_bpm)
-
-def beats_seconds_dopls(cvpj_placements, i_bpm, i_is_seconds):
-    if i_is_seconds == True:
-        for cvpj_placement in cvpj_placements:
-            if 'position' in cvpj_placement: cvpj_placement['position'] = step2sec(cvpj_placement['position'], i_bpm)
-            if 'duration' in cvpj_placement: cvpj_placement['duration'] = step2sec(cvpj_placement['duration'], i_bpm)
-    else:
-        for cvpj_placement in cvpj_placements:
-            if 'position' in cvpj_placement: cvpj_placement['position'] = sec2step(cvpj_placement['position'], i_bpm)
-            if 'duration' in cvpj_placement: cvpj_placement['duration'] = sec2step(cvpj_placement['duration'], i_bpm)
-
-def beats_seconds_all(s_track_pl, i_bpm, i_is_seconds):
-    if 'notes' in s_track_pl: beats_seconds_dopls(s_track_pl['notes'], i_bpm, i_is_seconds)
-    if 'audio' in s_track_pl: beats_seconds_dopls(s_track_pl['audio'], i_bpm, i_is_seconds)
-    if 'placements_notes' in s_track_pl: beats_seconds_dopls(s_track_pl['placements_notes'], i_bpm, i_is_seconds)
-    if 'placements_audio' in s_track_pl: beats_seconds_dopls(s_track_pl['placements_audio'], i_bpm, i_is_seconds)
-
-def beats_seconds(cvpj_l, cvpj_type, i_is_seconds):
-    bpm = params.get(cvpj_l, [], 'bpm', 120)[0]
-    print('[compat] Beats/Seconds: BPM:', bpm)
-
-    if cvpj_type in ['r', 'ri']:
-        if 'track_placements' in cvpj_l:
-            for id_track_pl in cvpj_l['track_placements']:
-                s_track_pl = cvpj_l['track_placements'][id_track_pl]
-                beats_seconds_all(s_track_pl, bpm, i_is_seconds)
-    if cvpj_type in ['m', 'mi']:
-        for playlist_id in cvpj_l['playlist']:
-            playlist_id_data = cvpj_l['playlist'][playlist_id]
-            beats_seconds_all(playlist_id_data, bpm, i_is_seconds)
-
-# -------------------------------------------- r_unhybrid --------------------------------------------
-
-def r_unhybrid(cvpj_l):
-    new_trackdata = {}
-    new_trackpl = {}
-    new_trackordering = []
-    for cvpj_trackid, s_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
-        tracktype = s_trackdata['type']
-        trackauto = data_values.nested_dict_get_value(cvpj_l, ['automation', 'track', cvpj_trackid])
-        if trackauto != None: del cvpj_l['automation']['track'][cvpj_trackid]
-        if tracktype == 'hybrid':
-            print('[r_unhybrid] '+cvpj_trackid+':', end=' ')
-            for track_placement_type in track_placements:
-                if track_placement_type == 'notes': 
-                    print('Notes', end=' ')
-                    split_cvpj_trackid = cvpj_trackid+'_unhybrid_notes'
-                    new_trackdata[split_cvpj_trackid] = s_trackdata.copy()
-                    new_trackdata[split_cvpj_trackid]['type'] = 'instrument'
-                    new_trackpl[split_cvpj_trackid] = {}
-                    if track_placement_type == 'notes': new_trackpl[split_cvpj_trackid]['notes'] = track_placements['notes']
-                    new_trackordering.append(split_cvpj_trackid)
-                    if trackauto != None: 
-                        data_values.nested_dict_add_value(cvpj_l, ['automation', 'track', split_cvpj_trackid], trackauto)
-                if track_placement_type == 'audio': 
-                    print('Audio', end=' ')
-                    split_cvpj_trackid = cvpj_trackid+'_unhybrid_audio'
-                    new_trackdata[split_cvpj_trackid] = s_trackdata.copy()
-                    new_trackdata[split_cvpj_trackid]['type'] = 'audio'
-                    new_trackpl[split_cvpj_trackid] = {}
-                    new_trackpl[split_cvpj_trackid]['audio'] = track_placements['audio']
-                    new_trackordering.append(split_cvpj_trackid)
-                    if trackauto != None: 
-                        data_values.nested_dict_add_value(cvpj_l, ['automation', 'track', split_cvpj_trackid], trackauto)
-            print()
-        else:
-            new_trackdata[cvpj_trackid] = s_trackdata
-            new_trackpl[cvpj_trackid] = track_placements
-    cvpj_l['track_data'] = new_trackdata
-    cvpj_l['track_placements'] = new_trackpl
-    cvpj_l['track_order'] = new_trackordering
-    return cvpj_l
-
 # -------------------------------------------- Main --------------------------------------------
 
 audiostretch_processed = False
@@ -804,13 +288,13 @@ def makecompat_audiostretch(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabi
         if 'placement_audio_stretch' in in_dawcapabilities: in__placement_audio_stretch = in_dawcapabilities['placement_audio_stretch']
         if 'placement_audio_stretch' in out_dawcapabilities: out__placement_audio_stretch = out_dawcapabilities['placement_audio_stretch']
         if 'warp' in in__placement_audio_stretch and 'warp' not in out__placement_audio_stretch:
-            if cvpj_type == 'm': m_changestretch(cvpj_proj, 'rate')
-            if cvpj_type == 'r': r_changestretch(cvpj_proj, 'rate')
+            if cvpj_type == 'm': changestretch.process_m(cvpj_proj, 'rate')
+            if cvpj_type == 'r': changestretch.process_r(cvpj_proj, 'rate')
             audiostretch_processed = True
 
         if 'rate' in in__placement_audio_stretch and 'rate' not in out__placement_audio_stretch:
-            if cvpj_type == 'm': m_changestretch(cvpj_proj, 'warp')
-            if cvpj_type == 'r': r_changestretch(cvpj_proj, 'warp')
+            if cvpj_type == 'm': changestretch.process_m(cvpj_proj, 'warp')
+            if cvpj_type == 'r': changestretch.process_r(cvpj_proj, 'warp')
             audiostretch_processed = True
     return json.dumps(cvpj_proj)
 
@@ -832,7 +316,7 @@ def makecompat_any(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
 
     if in__fxrack == False and out__fxrack == True: trackfx2fxrack(cvpj_proj, cvpj_type)
     if in__fxrack == True and out__fxrack == False: fxrack2trackfx(cvpj_proj, cvpj_type)
-    if in__auto_nopl == False and out__auto_nopl == True: remove_auto_placements(cvpj_proj)
+    if in__auto_nopl == False and out__auto_nopl == True: autopl_remove.process(cvpj_proj)
 
     return json.dumps(cvpj_proj)
 
@@ -846,8 +330,8 @@ def makecompat_time(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
 
     print('[compat] '+str(in__time_seconds).ljust(5)+' | '+str(out__time_seconds).ljust(5)+' | time_seconds')
 
-    if in__time_seconds == False and out__time_seconds == True: beats_seconds(cvpj_proj, cvpj_type, True)
-    if in__time_seconds == True and out__time_seconds == False: beats_seconds(cvpj_proj, cvpj_type, False)
+    if in__time_seconds == False and out__time_seconds == True: time_seconds.process(cvpj_proj, cvpj_type, True)
+    if in__time_seconds == True and out__time_seconds == False: time_seconds.process(cvpj_proj, cvpj_type, False)
 
     return json.dumps(cvpj_proj)
 
@@ -911,20 +395,20 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
     remainingplloop = [e for e in in__placement_loop if e not in out__placement_loop]
 
     if cvpj_type == 'mi' and mi_processed == False:
-        if in__placement_loop != [] and remainingplloop != []: m_removeloops(cvpj_proj, out__placement_loop)
+        if in__placement_loop != [] and remainingplloop != []: loops_remove.process_m(cvpj_proj, out__placement_loop)
         mi_processed = True
 
     if cvpj_type == 'r' and r_processed == False:
-        if in__track_hybrid == True and out__track_hybrid == False: r_unhybrid(cvpj_proj)
+        if in__track_hybrid == True and out__track_hybrid == False: unhybrid.process_r(cvpj_proj)
         if in__track_nopl == True and out__track_nopl == False: r_split_single_notelist(cvpj_proj)
-        if in__track_lanes == True and out__track_lanes == False: r_removelanes(cvpj_proj)
-        if in__placement_loop != [] and remainingplloop != []: r_removeloops(cvpj_proj, out__placement_loop)
-        if in__placement_cut == True and out__placement_cut == False: r_removecut(cvpj_proj)
-        if in__placement_loop == [] and 'loop' in out__placement_loop: r_addloops(cvpj_proj)
+        if in__track_lanes == True and out__track_lanes == False: removelanes.process_r(cvpj_proj)
+        if in__placement_loop != [] and remainingplloop != []: loops_remove.process_r(cvpj_proj, out__placement_loop)
+        if in__placement_cut == True and out__placement_cut == False: removecut.process_r(cvpj_proj)
+        if in__placement_loop == [] and 'loop' in out__placement_loop: loops_add.process_r(cvpj_proj)
         r_processed = True
 
     if cvpj_type == 'ri' and ri_processed == False:
-        if in__placement_loop != [] and remainingplloop != []: r_removeloops(cvpj_proj, out__placement_loop)
+        if in__placement_loop != [] and remainingplloop != []: loops_remove.process_r(cvpj_proj, out__placement_loop)
         ri_processed = True
 
     return json.dumps(cvpj_proj)

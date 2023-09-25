@@ -151,7 +151,7 @@ def trackfx2fxrack_adv(cvpj_l, cvpjtype):
 def trackfx2fxrack_simple(cvpj_l, cvpjtype):
     cvpj_l['fxrack'] = {}
     fxnum = 1
-    if cvpjtype in ['r', 'ri', 'c']:
+    if cvpjtype in ['r', 'ri', 'rm']:
         c_orderingdata = cvpj_l['track_order']
         c_trackdata = cvpj_l['track_data']
     if cvpjtype in ['m', 'mi']:

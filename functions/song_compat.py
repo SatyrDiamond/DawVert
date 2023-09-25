@@ -86,7 +86,5 @@ def makecompat(cvpj_l, cvpj_type):
     process_part('removecut', removecut,            cvpj_proj, cvpj_type,     in__dc['placement_cut'], out__dc['placement_cut'])
     process_part('loops_add', loops_add,            cvpj_proj, cvpj_type,     in__dc['placement_loop'], out__dc['placement_loop'])
 
-    print(finished_processes)
-
     return json.dumps(cvpj_proj)
 

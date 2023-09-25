@@ -458,7 +458,7 @@ class input_flp(plugin_input.base):
                         if 'color' in fl_fxslotdata:
                             color = fl_fxslotdata['color'].to_bytes(4, "little")
                             v_color = [color[0]/255,color[1]/255,color[2]/255]
-                        plugins.add_plug_fxvisual(cvpj_l, pluginid, v_name, v_color)
+                        plugins.add_plug_fxvisual(cvpj_l, fxslotid, v_name, v_color)
                         tracks.insert_fxslot(cvpj_l, ['fxrack', fxchannel], 'audio', fxslotid)
 
         for timemarker in FL_TimeMarkers:

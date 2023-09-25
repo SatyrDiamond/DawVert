@@ -8,7 +8,6 @@ from functions import xtramath
 from functions import params
 from functions import tracks
 from functions import audio
-from functions import split_single_notelist
 
 from functions_compat import changestretch
 from functions_compat import autopl_remove
@@ -18,6 +17,8 @@ from functions_compat import removecut
 from functions_compat import removelanes
 from functions_compat import time_seconds
 from functions_compat import unhybrid
+from functions_compat import timesigblocks
+from functions_compat import trackpl_add
 
 import json
 import math
@@ -212,69 +213,6 @@ def fxrack2trackfx(cvpj_l, cvpjtype):
             cvpj_l['groups'][groupid] |= cvpj_fxdata
             print('[compat] trackfx2fxrack: FX to Tracks '+ ', '.join(fx_trackids[fx_trackid]))
 
-# -------------------------------------------- track_nopl --------------------------------------------
-
-points_items = None
-
-
-
-def create_points_cut(projJ):
-    global timesigblocks
-    if points_items == None:
-        songduration = song.r_getduration(projJ)
-        if 'timesig_numerator' in projJ: timesig_numerator = projJ['timesig_numerator']
-        else: timesig_numerator = 4
-
-        timesigposs = []
-        timesigblocks = []
-        if 'timemarkers' in projJ:
-            for timemarker in projJ['timemarkers']:
-                if 'type' in timemarker:
-                    if timemarker['type'] == 'timesig':
-                        timesigposs.append([timemarker['position'], timemarker['numerator']])
-
-        if timesigblocks == []: timesigposs.append([0, 4])
-
-        timesigposs.append([songduration, None])
-        if timesigposs == []: timesigposs = [[0, timesig_numerator],[songduration, timesig_numerator]] 
-
-        for timesigposnum in range(len(timesigposs)-1):
-            timesigpos = timesigposs[timesigposnum]
-            timesigblocks.append([timesigpos[0], timesigposs[timesigposnum+1][0], float(timesigpos[1])*4])
-
-def r_split_single_notelist(projJ):
-    global timesigblocks
-    create_points_cut(projJ)
-    split_single_notelist.add_timesigblocks(timesigblocks)
-
-    if 'do_singlenotelistcut' in projJ:
-        if projJ['do_singlenotelistcut'] == True:
-            track_placements = projJ['track_placements']
-            for trackid in track_placements:
-                islaned = False
-                if 'laned' in track_placements[trackid]:
-                    if track_placements[trackid]['laned'] == 1:
-                        islaned = True
-                if islaned == False:
-                    if 'notes' in track_placements[trackid]:
-                        placementdata = track_placements[trackid]['notes']
-                        if len(placementdata) == 1:
-                            split_single_notelist.add_notelist([False, trackid], placementdata[0]['notelist'])
-                            #print('[compat] singlenotelist2placements: non-laned: splitted "'+trackid+'" to '+str(len(track_placements[trackid]['notes'])) + ' placements.')
-                else:
-                    for s_lanedata in track_placements[trackid]['lanedata']:
-                        placementdata = track_placements[trackid]['lanedata'][s_lanedata]['notes']
-                        if len(placementdata) == 1:
-                            split_single_notelist.add_notelist([True, trackid, s_lanedata], placementdata[0]['notelist'])
-                            #print('[compat] singlenotelist2placements: laned: splitted "'+trackid+'" from lane "'+str(s_lanedata)+'" to '+str(len(track_placements[trackid]['lanedata'][s_lanedata]['notes'])) + ' placements.')
-
-    for inid, out_placements in split_single_notelist.get_notelist():
-        if inid[0] == False: track_placements[inid[1]]['notes'] = out_placements
-        if inid[0] == True: track_placements[inid[1]]['lanedata'][inid[2]]['notes'] = out_placements
-
-
-    projJ['do_singlenotelistcut'] = False
-
 # -------------------------------------------- Main --------------------------------------------
 
 audiostretch_processed = False
@@ -378,7 +316,7 @@ def makecompat(cvpj_l, cvpj_type, in_dawcapabilities, out_dawcapabilities):
 
     if cvpj_type == 'r' and r_processed == False:
         if in__track_hybrid == True and out__track_hybrid == False: unhybrid.process_r(cvpj_proj)
-        if in__track_nopl == True and out__track_nopl == False: r_split_single_notelist(cvpj_proj)
+        if in__track_nopl == True and out__track_nopl == False: trackpl_add.process_r(cvpj_proj)
         if in__track_lanes == True and out__track_lanes == False: removelanes.process_r(cvpj_proj)
         if in__placement_loop != [] and remainingplloop != []: loops_remove.process_r(cvpj_proj, out__placement_loop)
         if in__placement_cut == True and out__placement_cut == False: removecut.process_r(cvpj_proj)

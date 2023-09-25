@@ -13,9 +13,9 @@ def convert(song):
     cvpj_proj = json.loads(song)
     if 'track_order' not in cvpj_proj: print('[error] track_order not found')
 
-    t_s_track_order = cvpj_proj['track_order']
-    t_s_trackdata = cvpj_proj['track_data']
-    t_s_trackplacements = cvpj_proj['track_placements']
+    old_track_order = cvpj_proj['track_order']
+    old_track_data = cvpj_proj['track_data']
+    old_track_placements = cvpj_proj['track_placements']
     del cvpj_proj['track_data']
     del cvpj_proj['track_order']
     del cvpj_proj['track_placements']
@@ -26,9 +26,9 @@ def convert(song):
     cvpj_proj['notelistindex'] = {}
 
     plnum = 1
-    for trackid in t_s_track_order:
-        if trackid in t_s_trackdata:
-            singletrack_data = t_s_trackdata[trackid]
+    for trackid in old_track_order:
+        if trackid in old_track_data:
+            singletrack_data = old_track_data[trackid]
             m_name = None
             m_color = None
             if 'name' in singletrack_data: m_name = singletrack_data['name']
@@ -54,8 +54,8 @@ def convert(song):
                     if m_color != None: cvpj_proj['notelistindex'][trackid+'_'+nle_id]['color'] = m_color
                 del singletrack_data['notelistindex']
 
-                if trackid in t_s_trackplacements:
-                    pldata = t_s_trackplacements[trackid]
+                if trackid in old_track_placements:
+                    pldata = old_track_placements[trackid]
 
                     singletrack_laned = pldata['laned'] if 'laned' in pldata else 0
 

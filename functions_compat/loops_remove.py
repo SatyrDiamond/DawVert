@@ -67,9 +67,18 @@ def process_r(projJ, out__placement_loop):
                     track_placements_data['notes'] = do_placements(track_placements_data['notes'], False, out__placement_loop)
                 if 'audio' in track_placements_data:
                     track_placements_data['audio'] = do_placements(track_placements_data['audio'], True, out__placement_loop)
+    return True
 
 def process_m(projJ, out__placement_loop):
     for playlist_id in projJ['playlist']:
         playlist_id_data = projJ['playlist'][playlist_id]
         if 'placements_notes' in playlist_id_data:
             playlist_id_data['placements_notes'] = do_placements(playlist_id_data['placements_notes'], False, out__placement_loop)
+    return True
+
+def process(projJ, cvpj_type, in__placement_loop, out__placement_loop):
+    remainingplloop = [e for e in in__placement_loop if e not in out__placement_loop]
+    if in__placement_loop != [] and remainingplloop != []:
+        if cvpj_type in ['r', 'ri', 'rm']: return process_r(projJ, out__placement_loop)
+        if cvpj_type in ['m', 'mi']: return process_m(projJ, out__placement_loop)
+    else: return False

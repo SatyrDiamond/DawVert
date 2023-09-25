@@ -22,12 +22,12 @@ def convert(song):
         print('[error] track_order not found')
 
     cvpj_instruments_data = cvpj_proj['instruments_data']
-    del cvpj_proj['instruments_data']
     cvpj_track_order = cvpj_proj['track_order']
-    del cvpj_proj['track_order']
     cvpj_track_data = cvpj_proj['track_data']
-    del cvpj_proj['track_data']
     cvpj_plugins = cvpj_proj['plugins']
+    del cvpj_proj['instruments_data']
+    del cvpj_proj['track_order']
+    del cvpj_proj['track_data']
     del cvpj_proj['plugins']
 
     if 'track_placements' in cvpj_proj: 

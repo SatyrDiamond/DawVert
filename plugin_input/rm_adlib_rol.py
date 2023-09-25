@@ -248,8 +248,6 @@ class input_adlib_rol(plugin_input.base):
         
         tracks.a_auto_nopl_twopoints(['main', 'bpm'], 'float', t_tempo_data[2], notelen, 'instant')
 
-        cvpj_l['fxrack'] = {}
-
         for tracknum in range(10):
             parsetrack(song_file, tracknum, (2/rol_header_tickBeat)*2)
 

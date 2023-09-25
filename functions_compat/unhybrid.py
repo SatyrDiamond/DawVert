@@ -15,26 +15,19 @@ def process_r(cvpj_l):
         if tracktype == 'hybrid':
             print('[unhybrid] '+cvpj_trackid+':', end=' ')
             for track_placement_type in track_placements:
+                split_cvpj_trackid = cvpj_trackid+'_unhybrid_'+track_placement_type
+                new_trackdata[split_cvpj_trackid] = s_trackdata.copy()
                 if track_placement_type == 'notes': 
-                    print('Notes', end=' ')
-                    split_cvpj_trackid = cvpj_trackid+'_unhybrid_notes'
-                    new_trackdata[split_cvpj_trackid] = s_trackdata.copy()
                     new_trackdata[split_cvpj_trackid]['type'] = 'instrument'
-                    new_trackpl[split_cvpj_trackid] = {}
-                    if track_placement_type == 'notes': new_trackpl[split_cvpj_trackid]['notes'] = track_placements['notes']
-                    new_trackordering.append(split_cvpj_trackid)
-                    if trackauto != None: 
-                        data_values.nested_dict_add_value(cvpj_l, ['automation', 'track', split_cvpj_trackid], trackauto)
+                    print('Notes', end=' ')
                 if track_placement_type == 'audio': 
-                    print('Audio', end=' ')
-                    split_cvpj_trackid = cvpj_trackid+'_unhybrid_audio'
-                    new_trackdata[split_cvpj_trackid] = s_trackdata.copy()
                     new_trackdata[split_cvpj_trackid]['type'] = 'audio'
-                    new_trackpl[split_cvpj_trackid] = {}
-                    new_trackpl[split_cvpj_trackid]['audio'] = track_placements['audio']
-                    new_trackordering.append(split_cvpj_trackid)
-                    if trackauto != None: 
-                        data_values.nested_dict_add_value(cvpj_l, ['automation', 'track', split_cvpj_trackid], trackauto)
+                    print('Audio', end=' ')
+                new_trackpl[split_cvpj_trackid] = {}
+                new_trackpl[split_cvpj_trackid][track_placement_type] = track_placements[track_placement_type]
+                new_trackordering.append(split_cvpj_trackid)
+                if trackauto != None: 
+                    data_values.nested_dict_add_value(cvpj_l, ['automation', 'track', split_cvpj_trackid], trackauto)
             print()
         else:
             new_trackdata[cvpj_trackid] = s_trackdata

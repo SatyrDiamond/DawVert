@@ -134,7 +134,7 @@ class input_adlib_rol(plugin_input.base):
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'adlib_rol'
     def getname(self): return 'AdLib Visual Composer'
-    def gettype(self): return 'c'
+    def gettype(self): return 'rm'
     def getdawcapabilities(self): 
         return {
         'track_nopl': True

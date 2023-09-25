@@ -27,7 +27,7 @@ class input_gt_mnbs(plugin_input.base):
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mnbs'
     def getname(self): return 'Minecraft Note Block Studio'
-    def gettype(self): return 'c'
+    def gettype(self): return 'rm'
     def getdawcapabilities(self): return {}
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):

@@ -4,7 +4,6 @@
 from plugin_input import base as base_input
 from plugin_output import base as base_output
 from experiments_plugin_input import base as experiments_plugin_input
-from functions_song import convert
 from functions import song_compat
 from functions import plug_conv
 
@@ -13,18 +12,21 @@ from functions_song import convert_r2m
 from functions_song import convert_ri2mi
 from functions_song import convert_ri2r
 
+from functions_song import convert_rm2r
+
 from functions_song import convert_m2r
 from functions_song import convert_m2mi
 
 from functions_song import convert_mi2m
 
+
 import platform
 import os
 
 typelist = {}
-typelist['c'] = 'Cloned'
 typelist['r'] = 'Regular'
 typelist['ri'] = 'RegularIndexed'
+typelist['rm'] = 'RegularMultiple'
 typelist['m'] = 'Multiple'
 typelist['mi'] = 'MultipleIndexed'
 typelist['debug'] = 'debug'
@@ -230,13 +232,13 @@ def convert_type_output(extra_json):
 		convproj_j[0] = convert_mi2m.convert(convproj_j[0], extra_json)
 		convproj_j[0] = convert_m2r.convert(convproj_j[0])
 
-	elif in_type == 'c' and out_type == 'r': 
-		convproj_j[0] = convert.c2r(convproj_j[0])
-	elif in_type == 'c' and out_type == 'm': 
-		convproj_j[0] = convert.c2r(convproj_j[0])
+	elif in_type == 'rm' and out_type == 'r': 
+		convproj_j[0] = convert_rm2r.convert(convproj_j[0])
+	elif in_type == 'rm' and out_type == 'm': 
+		convproj_j[0] = convert_rm2r.convert(convproj_j[0])
 		convproj_j[0] = convert_r2m.convert(convproj_j[0])
-	elif in_type == 'c' and out_type == 'mi': 
-		convproj_j[0] = convert.c2r(convproj_j[0])
+	elif in_type == 'rm' and out_type == 'mi': 
+		convproj_j[0] = convert_rm2r.convert(convproj_j[0])
 		convproj_j[0] = convert_r2m.convert(convproj_j[0])
 		convproj_j[0] = convert_m2mi.convert(convproj_j[0])
 

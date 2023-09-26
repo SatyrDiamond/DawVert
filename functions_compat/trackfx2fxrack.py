@@ -16,8 +16,6 @@ def list2fxrack(cvpj_l, input_list, fxnum, defualtname, starttext, dontremovebot
     if dontremoveboth == True:
         params.remove(input_list, 'pan')
 
-    print(input_list)
-
     tracks.fxrack_add(cvpj_l, fxnum, fx_name, fx_color, vol, pan)
     if 'chain_fx_audio' in input_list: 
         for plugid in input_list['chain_fx_audio']:

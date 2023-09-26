@@ -67,24 +67,35 @@ def set_dawcapabilities(in_dawcapabilities, out_dawcapabilities):
     print('[compat] '+str(in__dc['time_seconds']).ljust(5)+' | '+str(out__dc['time_seconds']).ljust(5)+' | time_seconds')
     print('[compat] '+str(in__dc['placement_audio_stretch']).ljust(5)+' | '+str(out__dc['placement_audio_stretch']).ljust(5)+' | placement_audio_stretch')
 
+currenttime = None
+
 def makecompat(cvpj_l, cvpj_type):
     global in__dc
     global out__dc
+    global finished_processes
+    global currenttime
 
     cvpj_proj = json.loads(cvpj_l)
 
-    process_part('time_seconds', time_seconds,      cvpj_proj, cvpj_type,     in__dc['time_seconds'], out__dc['time_seconds'])
+    if currenttime == None: currenttime = in__dc['time_seconds']
+
+    if 'time_seconds' in finished_processes: currenttime = out__dc['time_seconds']
+
     process_part('trackfx2fxrack', trackfx2fxrack,  cvpj_proj, cvpj_type,     in__dc['fxrack'], out__dc['fxrack'])
     process_part('fxrack2trackfx', fxrack2trackfx,  cvpj_proj, cvpj_type,     in__dc['fxrack'], out__dc['fxrack'])
 
     process_part('changestretch', changestretch,    cvpj_proj, cvpj_type,     in__dc['placement_audio_stretch'], out__dc['placement_audio_stretch'])
-    process_part('autopl_remove', autopl_remove,    cvpj_proj, cvpj_type,     in__dc['auto_nopl'], out__dc['auto_nopl'])
     process_part('unhybrid', unhybrid,              cvpj_proj, cvpj_type,     in__dc['track_hybrid'], out__dc['track_hybrid'])
-    process_part('trackpl_add', trackpl_add,        cvpj_proj, cvpj_type,     in__dc['track_nopl'], out__dc['track_nopl'])
     process_part('removelanes', removelanes,        cvpj_proj, cvpj_type,     in__dc['track_lanes'], out__dc['track_lanes'])
-    process_part('loops_remove', loops_remove,      cvpj_proj, cvpj_type,     in__dc['placement_loop'], out__dc['placement_loop'])
-    process_part('removecut', removecut,            cvpj_proj, cvpj_type,     in__dc['placement_cut'], out__dc['placement_cut'])
-    process_part('loops_add', loops_add,            cvpj_proj, cvpj_type,     in__dc['placement_loop'], out__dc['placement_loop'])
+
+    if currenttime == False:
+        process_part('autopl_remove', autopl_remove,    cvpj_proj, cvpj_type,     in__dc['auto_nopl'], out__dc['auto_nopl'])
+        process_part('trackpl_add', trackpl_add,        cvpj_proj, cvpj_type,     in__dc['track_nopl'], out__dc['track_nopl'])
+        process_part('loops_remove', loops_remove,      cvpj_proj, cvpj_type,     in__dc['placement_loop'], out__dc['placement_loop'])
+        process_part('removecut', removecut,            cvpj_proj, cvpj_type,     in__dc['placement_cut'], out__dc['placement_cut'])
+        process_part('loops_add', loops_add,            cvpj_proj, cvpj_type,     in__dc['placement_loop'], out__dc['placement_loop'])
+
+    process_part('time_seconds', time_seconds,      cvpj_proj, cvpj_type,     in__dc['time_seconds'], out__dc['time_seconds'])
 
     return json.dumps(cvpj_proj)
 

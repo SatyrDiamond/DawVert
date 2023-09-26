@@ -549,7 +549,7 @@ class input_ableton(plugin_input.base):
 				devfx_enabled = get_param(x_trackdevice, 'On', 'bool', True, ['slot', able_plug_id, 'enabled'], None)
 				devfx_wet = 1
 
-				if devicename not in ['MultiSampler', 'OriginalSimpler']:
+				if devicename not in ['MultiSampler', 'OriginalSimpler'] and devicename in abletondatadef_params:
 					plugins.add_plug(cvpj_l, pluginid, 'native-ableton', devicename)
 					device_defparams = abletondatadef_params[devicename]
 					for ableton_paramname in device_defparams:

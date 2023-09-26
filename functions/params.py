@@ -34,3 +34,8 @@ def get(cvpj_l, location, p_id, fallbackval, **kwargs):
     paramdata = data_values.nested_dict_get_value(cvpj_l, location+[paramsvalname, p_id])
     if paramdata != None: return paramdata['value'], paramdata['type'], paramdata['name']
     return fallbackval, 'notfound', ''
+
+def remove(cvpj_l, p_id):
+    if 'params' in cvpj_l:
+        if p_id in cvpj_l['params']:
+            del cvpj_l['params'][p_id]

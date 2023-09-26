@@ -91,22 +91,18 @@ def rate2warp(cvpj_placements, tempo):
                     ratetempo = 1/(audiorate/tempomul)
 
                     if old_audiomod['stretch_method'] == 'rate_ignoretempo':
-                        new_audiomod['stretch_data'] = [
-                            {'pos': 0.0, 'pos_real': 0.0}, 
-                            {'pos': audio_dur_sec*8, 'pos_real': (audio_dur_sec*audiorate)/tempomul}
-                        ]
+                        pos_real = (audio_dur_sec*audiorate)/tempomul
 
                     if old_audiomod['stretch_method'] == 'rate_tempo':
-                        new_audiomod['stretch_data'] = [
-                            {'pos': 0.0, 'pos_real': 0.0}, 
-                            {'pos': audio_dur_sec*8, 'pos_real': (audio_dur_sec*audiorate)}
-                        ]
+                        pos_real = audio_dur_sec*audiorate
 
                     if old_audiomod['stretch_method'] == 'rate_speed':
-                        new_audiomod['stretch_data'] = [
-                            {'pos': 0.0, 'pos_real': 0.0}, 
-                            {'pos': audio_dur_sec*8, 'pos_real': (audio_dur_sec*audiorate)*tempomul}
-                        ]
+                        pos_real = (audio_dur_sec*audiorate)*tempomul
+
+                    new_audiomod['stretch_data'] = [
+                        {'pos': 0.0, 'pos_real': 0.0}, 
+                        {'pos': audio_dur_sec*8, 'pos_real': pos_real}
+                    ]
 
                     cvpj_placement['audiomod'] = new_audiomod
 

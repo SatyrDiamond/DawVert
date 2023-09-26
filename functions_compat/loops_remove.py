@@ -3,7 +3,7 @@
 
 from functions import xtramath
 
-def do_placements(cvpj_placements, isaudio, out__placement_loop):
+def do_placements(cvpj_placements, out__placement_loop):
     new_placements = []
     for cvpj_placement in cvpj_placements:
 
@@ -57,23 +57,23 @@ def process_r(projJ, out__placement_loop):
                     for t_lanedata in s_lanedata:
                         tj_lanedata = s_lanedata[t_lanedata]
                         if 'notes' in tj_lanedata:
-                            track_placements_data['notes'] = do_placements(tj_lanedata['notes'], False, out__placement_loop)
+                            track_placements_data['notes'] = do_placements(tj_lanedata['notes'], out__placement_loop)
                         if 'audio' in tj_lanedata:
-                            track_placements_data['audio'] = do_placements(tj_lanedata['audio'], True, out__placement_loop)
+                            track_placements_data['audio'] = do_placements(tj_lanedata['audio'], out__placement_loop)
 
             if not_laned == True:
                 print('[compat] RemoveLoops: non-laned: '+track_placements_id)
                 if 'notes' in track_placements_data:
-                    track_placements_data['notes'] = do_placements(track_placements_data['notes'], False, out__placement_loop)
+                    track_placements_data['notes'] = do_placements(track_placements_data['notes'], out__placement_loop)
                 if 'audio' in track_placements_data:
-                    track_placements_data['audio'] = do_placements(track_placements_data['audio'], True, out__placement_loop)
+                    track_placements_data['audio'] = do_placements(track_placements_data['audio'], out__placement_loop)
     return True
 
 def process_m(projJ, out__placement_loop):
     for playlist_id in projJ['playlist']:
         playlist_id_data = projJ['playlist'][playlist_id]
         if 'placements_notes' in playlist_id_data:
-            playlist_id_data['placements_notes'] = do_placements(playlist_id_data['placements_notes'], False, out__placement_loop)
+            playlist_id_data['placements_notes'] = do_placements(playlist_id_data['placements_notes'], out__placement_loop)
     return True
 
 def process(projJ, cvpj_type, in__placement_loop, out__placement_loop):

@@ -36,10 +36,12 @@ def process(cvpj_l, cvpj_type, in_compat, out_compat):
                 process_all(s_track_pl, bpm, i_is_seconds)
         print('[compat] Beats/Seconds: BPM:', bpm)
         return True
-
-    if cvpj_type in ['m', 'mi']:
+    elif cvpj_type in ['m', 'mi']:
         for playlist_id in cvpj_l['playlist']:
             playlist_id_data = cvpj_l['playlist'][playlist_id]
             process_all(playlist_id_data, bpm, i_is_seconds)
         print('[compat] Beats/Seconds: BPM:', bpm)
         return True
+    else:
+        return False
+

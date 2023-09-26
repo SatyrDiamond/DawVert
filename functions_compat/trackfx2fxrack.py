@@ -74,6 +74,7 @@ def process_r(cvpj_l):
 
         c_orderingdata = cvpj_l['track_order']
         c_trackdata = cvpj_l['track_data']
+        c_trackplacements = cvpj_l['track_placements'] if 'track_placements' in cvpj_l else {}
 
         for trackid in c_orderingdata:
             s_trkdata = c_trackdata[trackid]
@@ -95,6 +96,11 @@ def process_r(cvpj_l):
                 track_dest_type = 'master'
             fxdata[fxnum] = [['track',trackid],[track_dest_type,track_dest_id]]
             data_values.nested_dict_add_value(outfxnum, ['track', trackid], [fxnum, 1.0])
+
+            if trackid in c_trackplacements:
+                if 'audio' in c_trackplacements[trackid]:
+                    for audiopl in c_trackplacements[trackid]['audio']:
+                        audiopl['fxrack_channel'] = int(fxnum)
 
             list2fxrack(cvpj_l, s_trkdata, fxnum, trackid, '', False)
             tracks.r_add_dataval(cvpj_l, trackid, None, 'fxrack_channel', int(fxnum))

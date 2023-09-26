@@ -81,11 +81,20 @@ def convert(song):
                 if 'name' in cvpj_instrument: 
                     instname = cvpj_instrument['name']
                     del cvpj_instrument['name']
-                else:
-                    instname = used_inst
+                else: instname = used_inst
+
+                instcolor = None
+                if 'color' in cvpj_instrument: 
+                    instcolor = cvpj_instrument['color']
+                    del cvpj_instrument['color']
+
+                trackcolor = temp_track_data['color'] if 'color' in temp_track_data else None
 
                 if 'name' in temp_track_data: temp_track_data['name'] = instname+' ('+temp_track_data['name']+')'
                 else: temp_track_data['name'] = instname
+
+                if instcolor != None: temp_track_data['color'] = instcolor
+                elif trackcolor != None: temp_track_data['color'] = trackcolor
 
                 temp_track_data |= cvpj_instrument
 

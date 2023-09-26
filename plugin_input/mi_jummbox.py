@@ -459,22 +459,24 @@ def parse_channel(channeldata, channum, durpos):
 		for num in range(6):
 			bb_def.append([modChannels[num],modInstruments[num],modSettings[num]])
 
-		sequencecount = 0
-		for bb_part in bb_sequence:
+		placement_pos = 0
+		for partnum in range(len(bb_sequence)):
+			bb_part = bb_sequence[partnum]
+			bb_partdur = durpos[partnum]
 			if bb_part != 0:
-				basepos = sequencecount*jummbox_notesize
+				placement_pos = placement_pos*bb_partdur
 				bb_modnotes = bb_patterns[bb_part-1]['notes']
 				if bb_modnotes != []:
 					for note in bb_modnotes:
 						bb_mod_points = note['points']
-						bb_mod_pos = basepos+bb_mod_points[0]['tick']
+						bb_mod_pos = placement_pos+bb_mod_points[0]['tick']
 						bb_mod_dur = bb_mod_points[-1]['tick'] - bb_mod_points[0]['tick']
 						bb_mod_target = bb_def[(note['pitches'][0]*-1)+5]
 
 						cvpj_autodata_points = []
 						for bb_mod_point in bb_mod_points:
 							cvpj_pointdata = {}
-							cvpj_pointdata["position"] = calcval(bb_mod_point['tick'])-calcval(bb_mod_pos)+calcval(basepos)
+							cvpj_pointdata["position"] = calcval(bb_mod_point['tick'])-calcval(bb_mod_pos)+calcval(placement_pos)
 							cvpj_pointdata["value"] = bb_mod_point['volume']
 							cvpj_autodata_points.append(cvpj_pointdata)
 
@@ -505,8 +507,7 @@ def parse_channel(channeldata, channum, durpos):
 								cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.04)
 								tracks.a_add_auto_pl(cvpj_l, 'float', ['track', auto_cvpj_instid, 'vol'], cvpj_autopl[0])
 
-
-			sequencecount += 1
+			placement_pos += bb_partdur
 
 def get_durpos(jummbox_channels):
 	global jummbox_notesize
@@ -606,7 +607,7 @@ class input_jummbox(plugin_input.base):
 
 		durpos = get_durpos(jummbox_channels)
 		patlentable = [calcval(x) for x in durpos]
-		placements.make_timemarkers(cvpj_l, [4,4], patlentable, None)
+		placements.make_timemarkers(cvpj_l, [4,8], patlentable, None)
 
 		chancount = 1
 		for jummbox_channel in jummbox_channels:

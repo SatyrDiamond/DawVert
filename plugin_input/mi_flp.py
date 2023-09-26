@@ -425,7 +425,7 @@ class input_flp(plugin_input.base):
             fx_volume = 1
             fx_pan = 0
 
-            if FL_InitFXVals_exists == True:
+            if FL_InitFXVals_exists == True and int(fxchannel) in FL_InitFXVals:
                 fl_fxdata_initvals = FL_InitFXVals[int(fxchannel)][0]
                 fx_volume = struct.unpack('i', fl_fxdata_initvals[b'\x1f\xc0'])[0]/12800 if b'\x1f\xc0' in fl_fxdata_initvals else 1
                 fx_pan = struct.unpack('i', fl_fxdata_initvals[b'\x1f\xc1'])[0]/6400 if b'\x1f\xc1' in fl_fxdata_initvals else 0

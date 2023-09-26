@@ -269,6 +269,8 @@ class input_ableton(plugin_input.base):
 			track_name = get_value(x_track_Name, 'EffectiveName', '')
 			track_color = colorlist_one[int(get_value(x_track_data, 'Color', ''))]
 
+			track_inside_group = int(get_value(x_track_data, 'TrackGroupId', '-1'))
+
 			track_sends = x_track_Mixer.findall('Sends')[0]
 			track_sendholders = track_sends.findall('TrackSendHolder')
 
@@ -282,6 +284,9 @@ class input_ableton(plugin_input.base):
 				tracks.r_add_param(cvpj_l, track_id, 'vol', track_vol, 'float')
 				tracks.r_add_param(cvpj_l, track_id, 'pan', track_pan, 'float')
 				tracks.r_pl_notes(cvpj_l, track_id, [])
+
+				if track_inside_group != -1:
+					tracks.r_add_dataval(cvpj_l, track_id, None, 'group', 'group_'+str(track_inside_group))
 
 				x_track_MainSequencer = x_track_DeviceChain.findall('MainSequencer')[0]
 				x_track_ClipTimeable = x_track_MainSequencer.findall('ClipTimeable')[0]
@@ -511,19 +516,25 @@ class input_ableton(plugin_input.base):
 					sendid = sendcount
 					sendautoid = 'send_'+track_id+'_'+str(sendid)
 					sendlevel = get_param(track_sendholder, 'Send', 'float', 0, ['send', sendautoid, 'amount'], None)
-					#print('[input-ableton] Send Holder: '+str(sendid))
 					tracks.r_add_send(cvpj_l, track_id, 'return_'+str(sendid), sendlevel, sendautoid)
 					sendcount += 1
 
 			if tracktype == 'ReturnTrack':
+				get_auto(x_track_data)
 				cvpj_returntrackid = 'return_'+str(returnid)
-				fxloc = ['return', None, cvpj_returntrackid]
-				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['return', returnid, 'vol'], None)
-				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['return', returnid, 'pan'], None)
-				#print('[input-ableton] Return: '+track_name+' ['+str(returnid)+']')
+				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['return', cvpj_returntrackid, 'vol'], None)
+				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['return', cvpj_returntrackid, 'pan'], None)
 				tracks.r_add_return(cvpj_l, ['master'], cvpj_returntrackid)
 				tracks.r_add_return_basicdata(cvpj_l, ['master'], cvpj_returntrackid, track_name, track_color, track_vol, track_pan)
 				returnid += 1
+
+			if tracktype == 'GroupTrack':
+				get_auto(x_track_data)
+				cvpj_grouptrackid = 'group_'+str(track_id)
+				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['group', cvpj_grouptrackid, 'vol'], None)
+				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['group', cvpj_grouptrackid, 'pan'], None)
+				tracks.group_add(cvpj_l, cvpj_grouptrackid, None)
+				tracks.group_basicdata(cvpj_l, cvpj_grouptrackid, track_name, track_color, track_vol, track_pan)
 
 			x_track_DeviceChain_inside = x_track_DeviceChain.findall('DeviceChain')[0]
 			x_trackdevices = x_track_DeviceChain_inside.findall('Devices')[0]

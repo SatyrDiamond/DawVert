@@ -1,11 +1,7 @@
 
-## VST Plugins
+## VST Plugins 
 
 # Samplers
-
-[Grace](https://github.com/s-oram/Grace) - Sampler (Windows)
-
-[Drops](https://github.com/clearly-broken-software/drops) - Sampler (Unix)
 
 [juicysfplugin](https://github.com/Birch-san/juicysfplugin) - Soundfont 2
 
@@ -23,13 +19,13 @@
 
 [Magical 8bit Plug 2](https://github.com/yokemura/Magical8bitPlug2) - Retro
 
-[OPNplug](https://github.com/jpcima/ADLplug) - OPN2
+[OPNplug](https://github.com/jpcima/ADLplug) - OPN2, OPL2
 
 [SID](https://socalabs.com/synths/commodore-64-sid/) - C64
 
 # from LMMS
 
-[Vital](https://vital.audio/) - Bitinvader
+[Vital](https://vital.audio/) - Bitinvader, LB302
 
 [Kickmess](https://github.com/WeirdConstructor/Kickmess) - Kicker
 
@@ -38,6 +34,8 @@
 [Zyn-Fusion](https://zynaddsubfx.sourceforge.io/zyn-fusion.html) - ZynAddSubFX
 
 [Spectrum Analyzer](https://socalabs.com/analysis/spectrumanalyzer/) - Spectrum Analyzer
+
+[Wolf Shaper](https://wolf-plugins.github.io/wolf-shaper/) - Fruity Waveshaper
 
 # from FL Studio
 
@@ -52,3 +50,7 @@
 [Spectrum Analyzer](https://socalabs.com/analysis/spectrumanalyzer/) - Fruity Spectroman
 
 [Wolf Shaper](https://wolf-plugins.github.io/wolf-shaper/) - Fruity Waveshaper
+
+[Compressor](https://socalabs.com/effects/compressor/) - Fruity Compressor
+
+[SupaPhaser](https://github.com/bdejong/smartelectronix) - Fruity Phaser

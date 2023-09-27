@@ -5,70 +5,10 @@ import plugin_input
 import json
 from mido import MidiFile
 from functions import format_midi_in
+from functions import infofinder
 from functions import midi_exdata
 from functions import colors
 from functions import song
-
-def setinfo(cvpj_l, textin):
-    global author
-    global titlefound
-    # ------------------------ copyright + year ------------------------
-    copyrightdatefound = False
-    if '(c)' in textin:
-        copyrightpart = textin.split('(c)', 1)
-        copyrightdatefound = True
-    elif '(C)' in textin:
-        copyrightpart = textin.split('(C)', 1)
-        copyrightdatefound = True
-    elif '©' in textin:
-        copyrightpart = textin.split('©', 1)
-        copyrightdatefound = True
-    elif 'copyright' in textin:
-        copyrightpart = textin.split('copyright', 1)
-        copyrightdatefound = True
-    elif 'Copyright' in textin:
-        copyrightpart = textin.split('Copyright', 1)
-        copyrightdatefound = True
-    elif 'Copyright (c)' in textin:
-        copyrightpart = textin.split('Copyright (c)', 1)
-        copyrightdatefound = True
-
-    if 'Composed by' in textin:
-        authorpart = textin.split('Composed by', 1)
-        if len(authorpart) != 1: author = authorpart[1]
-    if 'by ' in textin:
-        authorpart = textin.split('by ', 1)
-        if len(authorpart) != 1: author = authorpart[1]
-    if 'By ' in textin:
-        authorpart = textin.split('By ', 1)
-        if len(authorpart) != 1: author = authorpart[1]
-
-    if copyrightdatefound == True:
-        copyrightmsg_len = len(copyrightpart)
-        if copyrightmsg_len >= 2:
-            copyrightisyear = copyrightpart[1].lstrip().split(' ', 1)
-            if copyrightisyear[0].isnumeric() == True:
-                song.add_info(cvpj_l, 'year', int(copyrightisyear[0]))
-                if len(copyrightisyear) == 2: song.add_info(cvpj_l, 'author', copyrightisyear[1])
-            else:
-                song.add_info(cvpj_l, 'author', copyrightisyear[0])
-
-    # ------------------------ URL ------------------------
-    if 'http://' in textin:
-        urlparts = textin.split('"')
-        for urlpart in urlparts:
-            if 'http://' in urlpart: song.add_info(cvpj_l, 'url', urlpart)
-
-    # ------------------------ title ------------------------
-    if textin.count('"') == 2 and titlefound == False:
-        titlefound = True
-        song.add_info(cvpj_l, 'title', textin.split('"')[1::2][0])
-
-    # ------------------------ email ------------------------
-    if '.' in textin and '@' in textin:
-        emailparts = textin.split('"')
-        for emailpart in emailparts:
-            if '.' in emailpart and '@' in emailpart: song.add_info(cvpj_l, 'email', emailpart)
 
 class input_midi(plugin_input.base):
     def __init__(self): pass
@@ -86,8 +26,6 @@ class input_midi(plugin_input.base):
         if bytesdata == b'MThd': return True
         else: return False
     def parse(self, input_file, extra_param):
-        global author
-        global titlefound
 
         midifile = MidiFile(input_file, clip=True)
         ppq = midifile.ticks_per_beat
@@ -168,15 +106,14 @@ class input_midi(plugin_input.base):
         cvpj_l['timesig'] = s_timesig
         song.add_param(cvpj_l, 'bpm', s_tempo)
 
-        author = None
-        titlefound = False
+        author = infofinder.author
 
-        if midi_copyright != None:
+        if midi_copyright != None and author == None:
             song.add_info(cvpj_l, 'author', midi_copyright)
-            setinfo(cvpj_l, midi_copyright)
+            infofinder.getinfo(cvpj_l, midi_copyright)
 
         for t_trackname in t_tracknames:
-            setinfo(cvpj_l, t_trackname)
+            infofinder.getinfo(cvpj_l, t_trackname)
 
         for songdesc in songdescline:
             song_message = song_message+songdesc+'\n'

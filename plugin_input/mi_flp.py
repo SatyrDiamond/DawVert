@@ -86,6 +86,7 @@ class input_flp(plugin_input.base):
         return {
         'samples_inside': True,
         'fxrack': True,
+        'fxrack_params': ['enabled','vol','pan'],
         'track_lanes': True,
         'placement_cut': True,
         'placement_audio_stretch': ['rate']

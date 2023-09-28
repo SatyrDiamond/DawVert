@@ -88,15 +88,18 @@ def convert(song):
                     instcolor = cvpj_instrument['color']
                     del cvpj_instrument['color']
 
-                trackcolor = temp_track_data['color'] if 'color' in temp_track_data else None
+                trackcolor = None
+                if 'color' in temp_track_data: 
+                    trackcolor = temp_track_data['color']
+                    del temp_track_data['color']
 
-                if 'name' in temp_track_data: temp_track_data['name'] = instname+' ('+temp_track_data['name']+')'
+                if 'name' in temp_track_data: temp_track_data['name'] = instname+' ('+temp_track_data['name']+')' if temp_track_data['name'] != '' else instname
                 else: temp_track_data['name'] = instname
 
-                if instcolor != None: temp_track_data['color'] = instcolor
-                elif trackcolor != None: temp_track_data['color'] = trackcolor
-
                 temp_track_data |= cvpj_instrument
+
+                if trackcolor != None: temp_track_data['color'] = trackcolor
+                elif instcolor != None: temp_track_data['color'] = instcolor
 
                 r_trackid = used_inst+'_'+trackid
                 cvpj_proj['track_order'].append(r_trackid)
@@ -110,5 +113,12 @@ def convert(song):
                 ['track_placements', trackid, 'audio'], 
                 track_placements_audio)
 
+    if 'fxrack' in cvpj_proj:
+        for fxnum in cvpj_proj['fxrack']:
+            fxdata = cvpj_proj['fxrack'][fxnum]
+            if 'chain_fx_audio' in fxdata:
+                for plugid in fxdata['chain_fx_audio']:
+                    cvpj_proj['plugins'][plugid] = cvpj_plugins[plugid]
+        
 
     return json.dumps(cvpj_proj)

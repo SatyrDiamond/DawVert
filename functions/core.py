@@ -252,7 +252,7 @@ def convert_type_output(extra_json):
 		exit()
 
 	if out_type != 'debug':
-		convproj_j[0] = convproj_j[0] = song_compat.makecompat(convproj_j[0], out_type)
+		convproj_j[0] = song_compat.makecompat(convproj_j[0], out_type)
 
 	convproj_j[1] = currentplug_output[3]
 	convproj_j[2] = currentplug_output[4]

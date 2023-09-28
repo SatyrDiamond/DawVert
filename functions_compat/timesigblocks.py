@@ -14,9 +14,12 @@ def create_points_cut(projJ):
         for timemarker in projJ['timemarkers']:
             if 'type' in timemarker:
                 if timemarker['type'] == 'timesig':
-                    timesigposs.append([timemarker['position'], timemarker['numerator']])
+                    numerator = timemarker['numerator']
+                    denominator = timemarker['denominator']
+                    outval = (numerator/denominator)*4
+                    timesigposs.append([timemarker['position'], outval])
 
-    if timesigblocks == []: timesigposs.append([0, 4])
+    if timesigposs == []: timesigposs.append([0, 4])
 
     timesigposs.append([songduration, None])
     if timesigposs == []: timesigposs = [[0, timesig_numerator],[songduration, timesig_numerator]] 

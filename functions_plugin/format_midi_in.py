@@ -186,7 +186,9 @@ def add_track(startpos, midicmds):
 
 		elif midicmd[0] == 'timesig': auto_timesig[track_curpos] = [midicmd[1], midicmd[2]]
 
-		elif midicmd[0] == 'sysex': add_point(auto_sysex, track_curpos, midicmd[1])
+		elif midicmd[0] == 'sysex': 
+			add_point(auto_sysex, track_curpos, midicmd[1])
+			#print('[format-midi-in] SYSEX:', midicmd[1])
 
 		elif midicmd[0] == 'marker': add_point(auto_markers, track_curpos, midicmd[1])
 
@@ -202,7 +204,7 @@ def add_track(startpos, midicmds):
 					note[1] = track_curpos
 					break
 
-		else: print(track_curpos, midicmd)
+		#else: print(track_curpos, midicmd)
 
 	global_miditracks.append([track_active_notes, track_name, track_copyright, sequencer_specific, track_color, track_mode])
 	tracknumber += 1
@@ -373,7 +375,6 @@ def song_end(cvpj_l):
 				tracks.fxrack_addsend(cvpj_l, midi_channum+1, 0, 1, None)
 				tracks.fxrack_addsend(cvpj_l, midi_channum+1, sendtofx, sendamt, sendname)
 				if out_twopoints != []: 
-					print(out_twopoints)
 					tracks.a_auto_nopl_twopoints(['send', sendname, 'amount'], 'float', out_twopoints, 1, 'instant')
 
 	if usedeffects[0] == True:

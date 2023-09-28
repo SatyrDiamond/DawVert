@@ -828,7 +828,7 @@ class input_lmms(plugin_input.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': True,
-        'traits_fx_delay': ['time_seconds', 'lfo', 'gain_out'],
+        'fxrack_params': ['enabled','vol']
         }
     def supported_autodetect(self): return True
     def detect(self, input_file):

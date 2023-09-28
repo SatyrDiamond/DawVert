@@ -918,7 +918,7 @@ class output_lmms(plugin_output.base):
     def getdawcapabilities(self): 
         return {
         'fxrack': True,
-        'traits_fx_delay': ['time_seconds', 'lfo', 'gain_out'],
+        'fxrack_params': ['enabled','vol']
         }
     def getsupportedplugformats(self): return ['vst2', 'ladspa']
     def getsupportedplugins(self): return ['sampler:single', 'soundfont2', 'opl2']

@@ -7,7 +7,6 @@ from functions import placement_data
 from functions import idvals
 from functions import auto
 from functions import data_bytes
-from functions import data_values
 from functions import plugins
 from functions import song
 import plugin_input
@@ -93,6 +92,12 @@ def parsetrack_float(file_stream, i_mul, i_add):
         track_rol_events.append(track_rol_part)
     return track_name, track_rol_events
 
+def closest(myList, in_value):
+    outval = 0
+    for num in myList:
+        if num <= in_value: outval = num
+    return outval
+
 def parsetrack(file_stream, tracknum, notelen):
     rol_tr_voice = parsetrack_voice(file_stream)
     rol_tr_timbre = parsetrack_timbre(file_stream)
@@ -109,7 +114,7 @@ def parsetrack(file_stream, tracknum, notelen):
     curtrackpos = 0
     for rol_notedata in rol_tr_voice[1]:
         if rol_notedata[0] >= 12:
-            cvpj_noteinst = rol_tr_timbre[1][data_values.closest(timbrepoints, curtrackpos)]
+            cvpj_noteinst = rol_tr_timbre[1][closest(timbrepoints, curtrackpos)]
             cvpj_notelist.append(note_data.mx_makenote(cvpj_noteinst.upper(), curtrackpos*notelen, rol_notedata[1]*notelen, rol_notedata[0]-48, None, None))
         curtrackpos += rol_notedata[1]
 

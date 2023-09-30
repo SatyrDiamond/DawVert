@@ -381,6 +381,11 @@ def a_auto_nopl_twopoints(in_autoloc, val_type, twopoints, notelen, point_type):
     for twopoint in twopoints:
         a_auto_nopl_addpoint(in_autoloc, val_type, twopoint[0]*notelen, twopoint[1], point_type)
 
+def a_auto_nopl_paramauto(in_autoloc, val_type, input_points, ticks, before_note, fallback, divi, add):
+    out_param, out_twopoints = auto.points2paramauto(input_points, ticks, before_note, fallback, divi, add)
+    if out_twopoints != []: a_auto_nopl_twopoints(in_autoloc, val_type, out_twopoints, 1, 'instant')
+    return out_param
+
 def a_auto_nopl_to_pl(pointsdata):
     autopl = {}
     durpos = auto.getdurpos(pointsdata, 0)

@@ -280,6 +280,7 @@ def song_end(cvpj_l):
 						note_inst = t_actnote[3]
 						note_bank = t_actnote[4]
 						note_drum = int(data_values.closest(auto_chanmode[note_chan], t_actnote[0]))
+						if auto_chanmode[note_chan] == {0: True}: note_drum = 1
 
 						used_inst_part = [note_chan,note_inst,note_bank,note_drum]
 						if used_inst_part not in used_insts: used_insts.append(used_inst_part)

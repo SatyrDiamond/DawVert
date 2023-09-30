@@ -88,7 +88,7 @@ xmodits_py - for extracting Impulse Tracker and FastTracker2 Samples
 
 | DataType | Short Name | Name | Ext | Autodetect | 
 | --- | --- | :--- | :--- | :--- |
-| M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
+| R-M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | M-I | ```flp``` | FL Studio | ```.flp``` | ✔️ |
 | R | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ |
 | R | ```lmms``` | LMMS | ```.mmp```/```.mmpz``` | ✔️ |

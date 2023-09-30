@@ -148,4 +148,4 @@ def closest(i_dict, in_value):
     outnum = 0
     for num in i_dict:
         if num <= in_value: outnum = num
-    return i_dict[outnum]
+    return outnum

@@ -17,6 +17,7 @@ import chardet
 idvals_midi_ctrl = idvals.parse_idvalscsv('data_idvals/midi_ctrl.csv')
 idvals_midi_inst = idvals.parse_idvalscsv('data_idvals/midi_inst.csv')
 idvals_midi_inst_drums = idvals.parse_idvalscsv('data_idvals/midi_inst_drums.csv')
+idvals_midi_inst_group = idvals.parse_idvalscsv('data_idvals/midi_inst_group.csv')
 
 tracknumber = 0
 
@@ -279,9 +280,9 @@ def song_end(cvpj_l):
 						note_chan = channelnum
 						note_inst = t_actnote[3]
 						note_bank = t_actnote[4]
-						note_drum = int(data_values.closest(auto_chanmode[note_chan], t_actnote[0]))
-
-						if auto_chanmode[note_chan] == {0: True}: note_drum = 1
+						closest_drum = data_values.closest(auto_chanmode[note_chan], t_actnote[0])
+						note_drum = int(auto_chanmode[note_chan][closest_drum])
+						#print(note_chan, t_actnote[0], closest_drum, auto_chanmode[note_chan], note_drum)
 
 						used_inst_part = [note_chan,note_inst,note_bank,note_drum]
 						if used_inst_part not in used_insts: used_insts.append(used_inst_part)
@@ -360,19 +361,24 @@ def song_end(cvpj_l):
 				fxchannames[fxnum] = 'Drums'
 				fxchancolors[fxnum] = [0.81, 0.80, 0.82]
 				#print('alldrums')
+
 			elif ifsametrackid == True and tracknumber != 1:
 				trackname = global_miditracks[s_fx_usedinstid[0][0]][1]
 				fxchancolors[fxnum] = [0.4, 0.4, 0.4]
 				if trackname != None: fxchannames[fxnum] = trackname
-				elif ifsamegroups == True: fxchannames[fxnum] = s_fx_usedinstid[0][4]
+				elif ifsamegroups == True: 
+					fxchannames[fxnum] = idvals.get_idval(idvals_midi_inst_group, str(s_fx_usedinstid[0][4]), 'name')
+					fxchancolors[fxnum] = idvals.get_idval(idvals_midi_inst_group, str(s_fx_usedinstid[0][4]), 'color')
+				#print('track')
 
 			elif ifsameinstid == True:
 				fxchannames[fxnum] = idvals.get_idval(idvals_midi_inst, str(s_fx_usedinstid[0][1]), 'name')
 				fxchancolors[fxnum] = idvals.get_idval(idvals_midi_inst, str(s_fx_usedinstid[0][1]), 'color')
 				#print('instid')
+
 			elif ifsamegroups == True:
-				fxchannames[fxnum] = s_fx_usedinstid[0][4]
-				fxchancolors[fxnum] = [0.4, 0.4, 0.4]
+				fxchannames[fxnum] = idvals.get_idval(idvals_midi_inst_group, str(s_fx_usedinstid[0][4]), 'name')
+				fxchancolors[fxnum] = idvals.get_idval(idvals_midi_inst_group, str(s_fx_usedinstid[0][4]), 'color')
 				#print('groups')
 
 

@@ -1,17 +1,17 @@
-id;name
-piano;Piano
-chromaticperc;Chromatic Percussion
-organ;Organ
-guitar;Guitar
-bass;Bass
-strings;Strings
-ensemble;Ensemble
-brass;Brass
-reed;Reed
-pipe;Pipe
-synthlead;Synth Lead
-synthpad;Synth Pad
-synthfx;Synth Effects
-Ethnic;Ethnic
-perc;Percussive
-sfx;Sound Effects
+id;name;color_r;color_g;color_b
+piano;Pianos;0.1;0.11;0.11
+chromaticperc;Chromatic Percussion;0.82;0.32;0.18
+organ;Organ;0.76;0.44;0.15
+guitar;Guitar;0.84;0.35;0
+bass;Bass;0.15;0.15;0.15
+strings;Strings;0.41;0.06;0.02
+ensemble;Ensemble;0.41;0.06;0.02
+brass;Brass;0.94;0.87;0.47
+reed;Reed;0.84;0.69;0.41
+pipe;Pipe;0.27;0.27;0.27
+synthlead;Synth Lead;0.7;0.7;0.7
+synthpad;Synth Pad;0.7;0.7;0.7
+synthfx;Synth Effects;0.7;0.7;0.7
+Ethnic;Ethnic;0.45;0.18;0.15
+perc;Percussive;0.56;0.57;0.57
+sfx;Sound Effects;0.8;0.8;0.8

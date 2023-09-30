@@ -145,7 +145,7 @@ def ifallsame(i_list):
     return all(item == i_list[0] for item in i_list) 
 
 def closest(i_dict, in_value):
-    outval = 0
+    outnum = 0
     for num in i_dict:
-        if num <= in_value: outval = i_dict[num]
-    return outval
+        if num <= in_value: outnum = num
+    return i_dict[outnum]

@@ -84,10 +84,14 @@ def addfxsenddata(cvpj_l, fx_num, name, bapoints, divi, add):
 	if out_param != None: tracks.fxrack_param(cvpj_l, fx_num, name, out_param, 'float')
 	if out_twopoints != []: tracks.a_auto_nopl_twopoints(['fxmixer', str(fx_num), name], 'float', out_twopoints, 1, 'instant')
 
-def add_autopoint(time, channel, param, value):
+def add_chautopoint(time, channel, param, value):
 	global automation_channel
 	if param not in automation_channel[channel]: automation_channel[channel][param] = {}
 	automation_channel[channel][param][time] = value
+
+def add_autopoint(time, i_list, param, value):
+	if param not in i_list: i_list[param] = {}
+	i_list[param][time] = value
 
 def add_point(i_list, time, value):
 	if time not in i_list: i_list[time] = []
@@ -108,7 +112,9 @@ def song_start(numchannels, ppq, numtracks, tempo, timesig):
 	global auto_master
 	global auto_key_signature
 	global auto_markers
+	global auto_chanmode
 	global global_miditracks
+	global global_data
 
 	global_miditracks = []
 
@@ -118,6 +124,10 @@ def song_start(numchannels, ppq, numtracks, tempo, timesig):
 	auto_master = {}
 	auto_key_signature = {}
 	auto_markers = {}
+	auto_chanmode = [{} for _ in range(numchannels)]
+	auto_chanmode[9] = {0: True}
+	global_data = {}
+
 
 	ppq_g = ppq
 	ppq_step = ppq/4
@@ -132,6 +142,7 @@ def add_track(startpos, midicmds):
 	global used_chan_inst
 	global automation_channel
 	global song_channels
+	global ppq_step
 
 	global auto_bpm
 	global auto_timesig
@@ -139,6 +150,8 @@ def add_track(startpos, midicmds):
 	global auto_master
 	global auto_key_signature
 	global auto_markers
+	global auto_chanmode
+	global global_data
 
 	track_name = None
 	track_color = None
@@ -149,16 +162,9 @@ def add_track(startpos, midicmds):
 
 	sequencer_specific = []
 
-	t_chan_current_inst = [[0, 0, 0] for x in range(song_channels)]
+	t_chan_current_inst = [[0, 0] for x in range(song_channels)]
 	t_chan_used_inst = [[] for x in range(song_channels)]
 	track_active_notes = [[[] for x in range(128)] for x in range(song_channels)]
-
-	track_chantype = []
-	for num in range(song_channels):
-		if num == 9: 
-			track_chantype.append(1)
-			t_chan_current_inst[num] = [0, 0, 1]
-		else: track_chantype.append(0)
 
 	for midicmd in midicmds:
 
@@ -178,17 +184,33 @@ def add_track(startpos, midicmds):
 
 		elif midicmd[0] == 'program_change': t_chan_current_inst[midicmd[1]][0] = midicmd[2]
 
-		elif midicmd[0] == 'control_change': add_autopoint(track_curpos, midicmd[1], midicmd[2], midicmd[3])
+		elif midicmd[0] == 'control_change': 
+			if midicmd[2] == 111: global_data['loop'] = track_curpos/ppq_step
+			else: add_chautopoint(track_curpos, midicmd[1], midicmd[2], midicmd[3])
 
-		elif midicmd[0] == 'pitchwheel': add_autopoint(track_curpos, midicmd[1], 'pitchwheel', midicmd[2])
+		elif midicmd[0] == 'pitchwheel': add_chautopoint(track_curpos, midicmd[1], 'pitchwheel', midicmd[2])
 
 		elif midicmd[0] == 'tempo': auto_bpm[track_curpos] = midicmd[1]
 
 		elif midicmd[0] == 'timesig': auto_timesig[track_curpos] = [midicmd[1], midicmd[2]]
 
 		elif midicmd[0] == 'sysex': 
-			add_point(auto_sysex, track_curpos, midicmd[1])
-			#print('[format-midi-in] SYSEX:', midicmd[1])
+			#add_point(auto_sysex, track_curpos, midicmd[1])
+			sysexdata = midi_exdata.decode(midicmd[1])
+			if sysexdata != None:
+				out_vendor, out_vendor_ext, out_brandname, out_device, out_model, out_command, out_data, devicename, groups, nameval = sysexdata
+
+				if [out_vendor, out_vendor_ext] == [127, False]:
+					if groups == ['device', None]:
+						if nameval[0] == 'master_volume': add_autopoint(track_curpos, auto_master, 'volume', nameval[1][1]/127)
+
+				if [out_vendor, out_vendor_ext] == [65, False]:
+					if groups[0] == 'patch_a':
+						if groups[1] == None:
+							if nameval[0] == 'master_volume': add_autopoint(track_curpos, auto_master, 'volume', nameval[1][0]/127)
+						if groups[1] == 'block':
+							if nameval[0] == 'use_rhythm':
+								auto_chanmode[groups[2]-1][track_curpos] = bool(nameval)
 
 		elif midicmd[0] == 'marker': add_point(auto_markers, track_curpos, midicmd[1])
 
@@ -196,7 +218,7 @@ def add_track(startpos, midicmds):
 
 		elif midicmd[0] == 'note_on':
 			curinst = t_chan_current_inst[midicmd[1]]
-			track_active_notes[midicmd[1]][midicmd[2]].append([track_curpos,None,midicmd[3],curinst[0],curinst[1],curinst[2]])
+			track_active_notes[midicmd[1]][midicmd[2]].append([track_curpos,None,midicmd[3],curinst[0],curinst[1]])
 
 		elif midicmd[0] == 'note_off': 
 			for note in track_active_notes[midicmd[1]][midicmd[2]]:
@@ -205,6 +227,8 @@ def add_track(startpos, midicmds):
 					break
 
 		#else: print(track_curpos, midicmd)
+
+
 
 	global_miditracks.append([track_active_notes, track_name, track_copyright, sequencer_specific, track_color, track_mode])
 	tracknumber += 1
@@ -222,6 +246,7 @@ def song_end(cvpj_l):
 	global auto_key_signature
 	global auto_markers
 	global global_miditracks
+	global global_data
 
 	used_insts = []
 	firstchanusepos = [None for x in range(song_channels)]
@@ -254,7 +279,7 @@ def song_end(cvpj_l):
 						note_chan = channelnum
 						note_inst = t_actnote[3]
 						note_bank = t_actnote[4]
-						note_drum = t_actnote[5]
+						note_drum = int(data_values.closest(auto_chanmode[note_chan], t_actnote[0]))
 
 						used_inst_part = [note_chan,note_inst,note_bank,note_drum]
 						if used_inst_part not in used_insts: used_insts.append(used_inst_part)
@@ -278,21 +303,23 @@ def song_end(cvpj_l):
 
 	for instnum in range(len(used_insts)):
 		used_inst = used_insts[instnum]
-		instname = idvals.get_idval(idvals_midi_inst, str(used_inst[1]), 'name')
-		instcolor = idvals.get_idval(idvals_midi_inst, str(used_inst[1]), 'color')
+		if used_inst[3] == 0: 
+			instname = idvals.get_idval(idvals_midi_inst, str(used_inst[1]), 'name')
+			instcolor = idvals.get_idval(idvals_midi_inst, str(used_inst[1]), 'color')
+		else:
+			instname = 'Drums'
+			instcolor = [0.81, 0.80, 0.82]
+
 		used_insts[instnum] += [instname,instcolor]
 
 	for used_inst in used_insts:
 		instid = '_'.join([str(used_inst[0]), str(used_inst[1]), str(used_inst[2]), str(used_inst[3])])
 
-		if used_inst[3] == 0: 
-			instname = used_inst[4]
-			instcolor = used_inst[5]
-			plugins.add_plug_gm_midi(cvpj_l, instid, used_inst[2], used_inst[1])
-		else: 
-			instname = 'Drums'
-			instcolor = [0.81, 0.80, 0.82]
-			plugins.add_plug_gm_midi(cvpj_l, instid, 128, 1)
+		instname = used_inst[4]
+		instcolor = used_inst[5]
+
+		if used_inst[3] == 0: plugins.add_plug_gm_midi(cvpj_l, instid, used_inst[2], used_inst[1])
+		else: plugins.add_plug_gm_midi(cvpj_l, instid, 128, 1)
 
 		tracks.c_inst_create(cvpj_l, instid, name=instname, color=instcolor)
 		tracks.c_inst_add_dataval(cvpj_l, instid, None, 'fxrack_channel', int(used_inst[0]+1))
@@ -408,10 +435,24 @@ def song_end(cvpj_l):
 	if out_param != None: params.add(cvpj_l, [], 'bpm', out_param, 'float')
 	if out_twopoints != []: tracks.a_auto_nopl_twopoints(['main', 'bpm'], 'float', out_twopoints, 1, 'instant')
 
+	#volume
+	if 'volume' in auto_master:
+		out_param, out_twopoints = points2paramauto(cvpj_l, point2beforeafter(auto_master['volume'], veryfirstnotepos), 1, 0)
+		if out_param != None: tracks.fxrack_param(cvpj_l, 0, 'vol', out_param, 'float')
+		else: tracks.fxrack_param(cvpj_l, 0, 'vol', 1, 'float')
+		if out_twopoints != []: tracks.a_auto_nopl_twopoints(['fxmixer', '0', 'vol'], 'float', out_twopoints, 1, 'instant')
+
+	#timesig
 	for timesigpoint in auto_timesig:
 		timesig = auto_timesig[timesigpoint]
 		timesigpos = (timesigpoint/ppq_step)
 		if timesigpoint == 0: cvpj_l['timesig'] = timesig
 		song.add_timemarker_timesig(cvpj_l, str(timesig[0])+'/'+str(timesig[1]), (timesigpoint/ppq_step), timesig[0], timesig[1])
+
+	#timesig
+	if 'loop' in global_data:
+		song.add_timemarker_loop(cvpj_l, global_data['loop'], 'Loop')
+	
+
 
 	tracks.a_auto_nopl_to_cvpj(cvpj_l)

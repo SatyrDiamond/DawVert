@@ -43,9 +43,9 @@
 ## Other
 | DataType | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | :--- | :--- | :--- | :--- |
-| M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
+| R-M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | M | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ❌ | 
-| M | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
+| R-M | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
 | M | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
 | R-I | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
 | R | ```flipper``` | Flipper Music Format | ```.fmf``` | ❌ | 

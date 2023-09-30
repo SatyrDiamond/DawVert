@@ -7,8 +7,9 @@ import struct
 import math
 from functions import data_bytes
 from functions import note_mod
-from functions import format_midi_in
 from functions import song
+from functions import tracks
+from functions_plugin import format_midi_in
 
 def calc_gatetime(bio_mmf_Mtsq):
     out_duration = 0
@@ -42,17 +43,13 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
     #print('size', bio_mmf_Mtsq_size)
     #print('      1ST 2ND | CH#  CMD')
 
-    format_midi_in.song_start(16, int(tb_ms*(math.pi*10000)))
-    format_midi_in.track_start(16, 0)
+    format_midi_in.song_start(16, int(tb_ms*(math.pi*10000)), 1, 120, [4,4])
 
-    basepos = 0
+    midicmds = []
 
-    beforenote = True
-    position = 0
     while bio_mmf_Mtsq.tell() < bio_mmf_Mtsq_size:
         resttime = calc_gatetime(bio_mmf_Mtsq)
-        basepos += resttime
-        format_midi_in.resttime(resttime)
+        midicmds.append(['rest', resttime])
 
         #print(str(basepos).ljust(5), end=' ')
 
@@ -67,25 +64,25 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             note_note = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             note_durgate = calc_gatetime(bio_mmf_Mtsq)
             #print('| '+str(firstbyte[1]).ljust(4), 'NOTE    ', str(note_note).ljust(4), '     dur ', note_durgate)
-            format_midi_in.note(note_note, note_durgate, firstbyte[1], 127)
+            midicmds.append(['note', firstbyte[1], note_note, 127, note_durgate])
 
         elif firstbyte[0] == 9:
             note_note = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             note_vol = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             note_durgate = calc_gatetime(bio_mmf_Mtsq)
             #print('| '+str(firstbyte[1]).ljust(4), 'NOTE+V  ', str(note_note).ljust(4), str(note_vol).ljust(4), 'dur ', note_durgate)
-            format_midi_in.note(note_note, note_durgate, firstbyte[1], note_vol)
+            midicmds.append(['note', firstbyte[1], note_note, note_vol, note_durgate])
 
         elif firstbyte[0] == 11:
             cntltype = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             cntldata = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             #print('| '+str(firstbyte[1]).ljust(4), 'CONTROL ', str(cntltype).ljust(4), str(cntldata).ljust(4))
-            format_midi_in.control_change(firstbyte[1], cntltype, cntldata)
+            midicmds.append(['control_change', firstbyte[1], cntltype, cntldata])
 
         elif firstbyte[0] == 12:
             prognumber = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             #print('| '+str(firstbyte[1]).ljust(4), 'PROGRAM ', prognumber)
-            format_midi_in.program_change(firstbyte[1], prognumber)
+            midicmds.append(['program_change', firstbyte[1], prognumber])
 
         elif firstbyte[0] == 14:
             lsbpitch = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
@@ -96,6 +93,7 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             sysexsize = int.from_bytes(bio_mmf_Mtsq.read(1), "big")
             sysexdata = bio_mmf_Mtsq.read(sysexsize)
             #print('| '+str(firstbyte[1]).ljust(4), 'SYSEX   ', sysexdata.hex())
+            midicmds.append(['sysex', sysexdata])
 
         elif firstbyte[0] == 15 and firstbyte[1] == 15:
             pass
@@ -105,19 +103,21 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             print('Unknown Command', firstbyte[0], "0x%X" % firstbyte[0])
             exit()
 
-    format_midi_in.track_end(16)
+    format_midi_in.add_track(0, midicmds)
 
-    usedinsts = format_midi_in.getusedinsts(16)
+    cvpj_l = {}
+    usedinsts = format_midi_in.song_end(cvpj_l)
 
     for usedinst in usedinsts:
-        if usedinst[1] == 124: 
-            format_midi_in.make_custominst(usedinst[0], usedinst[1], usedinst[2], name='MA-3 User #' + str(usedinst[2]), color=[0.3,0.3,0.3])
-        elif usedinst[1] == 125: 
-            format_midi_in.make_custominst(usedinst[0], usedinst[1], usedinst[2], name='MA-3 PCM #' + str(usedinst[2]), color=[0.3,0.3,0.3])
-        else: 
-            format_midi_in.make_inst(usedinst[0], usedinst[1], usedinst[2])
+        instid = '_'.join([str(usedinst[0]), str(usedinst[1]), str(usedinst[2]), str(usedinst[3])])
+        
+        if usedinst[2] == 124: 
+            tracks.c_inst_create(cvpj_l, instid, name='MA-3 User #'+str(usedinst[1]), color=[0.3,0.3,0.3])
+            tracks.c_inst_add_dataval(cvpj_l, instid, None, 'fxrack_channel', int(usedinst[0]+1))
 
-    cvpj_l = format_midi_in.song_end(16)
+        elif usedinst[2] == 125: 
+            tracks.c_inst_create(cvpj_l, instid, name='MA-3 PCM #'+str(usedinst[1]), color=[0.3,0.3,0.3])
+            tracks.c_inst_add_dataval(cvpj_l, instid, None, 'fxrack_channel', int(usedinst[0]+1))
 
     return cvpj_l
 
@@ -151,7 +151,7 @@ class input_mmf(plugin_input.base):
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mmf'
     def getname(self): return 'Mobile Music File'
-    def gettype(self): return 'm'
+    def gettype(self): return 'rm'
     def getdawcapabilities(self): 
         return {
         'fxrack': True,

@@ -181,3 +181,38 @@ def twopoints_addmul(twopoints, addval, mulval):
     for twopoint in twopoints:
         twopoint[1] = (twopoint[1]+addval)*mulval
     return twopoints
+
+def points2paramauto(input_points, ticks, before_note, fallback, divi, add):
+    # beforeafter
+    prevval = None
+    norepeats = {}
+    for ctrlpos in input_points:
+        ctrlval = input_points[ctrlpos]
+        if prevval == None: norepeats[ctrlpos] = ctrlval
+        elif prevval != ctrlval: norepeats[ctrlpos] = ctrlval
+        prevval = ctrlval
+
+    beforeafter = [{},{},{}]
+    if before_note != None:
+        for ctrlpos in norepeats:
+            ctrlval = norepeats[ctrlpos]
+            if before_note > ctrlpos: beforeafter[0][ctrlpos] = ctrlval
+            elif before_note == ctrlpos: beforeafter[1][ctrlpos] = ctrlval
+            else: beforeafter[2][ctrlpos] = ctrlval
+    else: beforeafter[0] = input_points
+
+    # paramauto
+    out_param = (fallback/divi)+add
+    out_twopoints = []
+
+    twopoints_BE = [[x, beforeafter[0][x]] for x in beforeafter[0]]
+    twopoints_EX = [[x, beforeafter[1][x]] for x in beforeafter[1]]
+    twopoints_AF = [[x, beforeafter[2][x]] for x in beforeafter[2]]
+
+    bapoints_len = [len(twopoints_BE), len(twopoints_EX), len(twopoints_AF)]
+
+    if bapoints_len[0] == 1 and bapoints_len[2] == 0 and bapoints_len[1] == 0: out_param = (twopoints_BE[0][1]/divi)+add
+    elif bapoints_len[0] == 0 and bapoints_len[1] == 1 and bapoints_len[2] == 0: out_param = (twopoints_EX[0][1]/divi)+add
+    else: out_twopoints = [[x[0]/ticks, (x[1]/divi)+add] for x in twopoints_BE+twopoints_EX+twopoints_AF]
+
+    return out_param, out_twopoints

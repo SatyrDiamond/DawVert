@@ -186,7 +186,8 @@ def add_track(startpos, midicmds):
 		elif midicmd[0] == 'program_change': t_chan_current_inst[midicmd[1]][0] = midicmd[2]
 
 		elif midicmd[0] == 'control_change': 
-			if midicmd[2] == 111: global_data['loop'] = track_curpos/ppq_step
+			if midicmd[2] == 0: t_chan_current_inst[midicmd[1]][1] = midicmd[2]
+			elif midicmd[2] == 111: global_data['loop'] = track_curpos/ppq_step
 			else: add_chautopoint(track_curpos, midicmd[1], midicmd[2], midicmd[3])
 
 		elif midicmd[0] == 'pitchwheel': add_chautopoint(track_curpos, midicmd[1], 'pitchwheel', midicmd[2])
@@ -461,6 +462,6 @@ def song_end(cvpj_l):
 	if 'loop' in global_data:
 		song.add_timemarker_loop(cvpj_l, global_data['loop'], 'Loop')
 	
-
-
 	tracks.a_auto_nopl_to_cvpj(cvpj_l)
+
+	return used_insts

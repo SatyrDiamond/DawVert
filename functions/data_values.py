@@ -143,3 +143,9 @@ def list_traits_supported(i_required, i_supported):
 
 def ifallsame(i_list):
     return all(item == i_list[0] for item in i_list) 
+    
+def closest(i_dict, in_value):
+    outval = 0
+    for num in i_dict:
+        if num <= in_value: outval = num
+    return outval

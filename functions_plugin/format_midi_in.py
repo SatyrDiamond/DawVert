@@ -11,6 +11,7 @@ from functions import plugins
 from functions import tracks
 from functions import song
 from functions import colors
+from functions import auto
 
 import chardet	
 
@@ -30,60 +31,6 @@ def getbeforenoteall(table):
 			if out == None: out = tp
 			elif out > tp: out = tp
 	return out
-
-def point2beforeafter(points, notestart):
-
-	prevval = None
-	norepeats = {}
-	for ctrlpos in points:
-		ctrlval = points[ctrlpos]
-		if prevval == None: norepeats[ctrlpos] = ctrlval
-		elif prevval != ctrlval: norepeats[ctrlpos] = ctrlval
-		prevval = ctrlval
-	points = norepeats
-
-	beforeafter = [{},{},{}]
-	if notestart != None:
-		for ctrlpos in points:
-			ctrlval = points[ctrlpos]
-			if notestart > ctrlpos: beforeafter[0][ctrlpos] = ctrlval
-			elif notestart == ctrlpos: beforeafter[1][ctrlpos] = ctrlval
-			else: beforeafter[2][ctrlpos] = ctrlval
-	else: beforeafter[0] = points
-	return beforeafter
-
-def midiauto2cvpjauto(points, divi, add):
-	return [[x[0]/ppq_step, (x[1]/divi)+add] for x in points]
-
-def points2paramauto(cvpj_l, bapoints, divi, add):
-	out_param = None
-	out_twopoints = []
-
-	twopoints_BE = [[x, bapoints[0][x]] for x in bapoints[0]]
-	twopoints_EX = [[x, bapoints[1][x]] for x in bapoints[1]]
-	twopoints_AF = [[x, bapoints[2][x]] for x in bapoints[2]]
-
-	bapoints_len = [len(twopoints_BE), len(twopoints_EX), len(twopoints_AF)]
-
-	if bapoints_len[0] == 1 and bapoints_len[2] == 0 and bapoints_len[1] == 0:
-		out_param = (twopoints_BE[0][1]/divi)+add
-	elif bapoints_len[0] == 0 and bapoints_len[1] == 1 and bapoints_len[2] == 0:
-		out_param = (twopoints_EX[0][1]/divi)+add
-	else:
-		out_twopoints = midiauto2cvpjauto(twopoints_BE+twopoints_EX+twopoints_AF, divi, add)
-
-	return out_param, out_twopoints
-
-def addfxparamdata(cvpj_l, fx_num, name, fallbackval, bapoints, divi, add):
-	out_param, out_twopoints = points2paramauto(cvpj_l, bapoints, divi, add)
-	if out_param != None: tracks.fxrack_param(cvpj_l, fx_num, name, out_param, 'float')
-	else: tracks.fxrack_param(cvpj_l, fx_num, name, fallbackval, 'float')
-	if out_twopoints != []: tracks.a_auto_nopl_twopoints(['fxmixer', str(fx_num), name], 'float', out_twopoints, 1, 'instant')
-
-def addfxsenddata(cvpj_l, fx_num, name, bapoints, divi, add):
-	out_param, out_twopoints = points2paramauto(cvpj_l, bapoints, divi, add)
-	if out_param != None: tracks.fxrack_param(cvpj_l, fx_num, name, out_param, 'float')
-	if out_twopoints != []: tracks.a_auto_nopl_twopoints(['fxmixer', str(fx_num), name], 'float', out_twopoints, 1, 'instant')
 
 def add_chautopoint(time, channel, param, value):
 	global automation_channel
@@ -190,7 +137,7 @@ def add_track(startpos, midicmds):
 			elif midicmd[2] == 111: global_data['loop'] = track_curpos/ppq_step
 			else: add_chautopoint(track_curpos, midicmd[1], midicmd[2], midicmd[3])
 
-		elif midicmd[0] == 'pitchwheel': add_chautopoint(track_curpos, midicmd[1], 'pitchwheel', midicmd[2])
+		elif midicmd[0] == 'pitchwheel': add_chautopoint(track_curpos, midicmd[1], 'pitch', midicmd[2])
 
 		elif midicmd[0] == 'tempo': auto_bpm[track_curpos] = midicmd[1]
 
@@ -386,13 +333,6 @@ def song_end(cvpj_l):
 				fxchancolors[fxnum] = idvals.get_idval(idvals_midi_inst_group, str(s_fx_usedinstid[0][4]), 'color')
 				#print('groups')
 
-
-	for channum in range(song_channels):
-		s_automation_chan = automation_channel[channum]
-
-		for ctrlnum in s_automation_chan:
-			s_automation_chan[ctrlnum] = point2beforeafter(s_automation_chan[ctrlnum], firstchanusepos[channum])
-	
 	tracks.fxrack_add(cvpj_l, 0, "Master", [0.3, 0.3, 0.3], 1.0, None)
 
 	usedeffects = [False,False]
@@ -401,23 +341,27 @@ def song_end(cvpj_l):
 		s_chanauto = automation_channel[midi_channum]
 		fxrack_chan = str(midi_channum+1)
 		tracks.fxrack_add(cvpj_l, fxrack_chan, fxchannames[midi_channum], fxchancolors[midi_channum], None, None)
-		if 1 in s_chanauto: addfxparamdata(cvpj_l, midi_channum+1, 'modulation', 1, s_chanauto[1],127,0)
-		if 7 in s_chanauto: addfxparamdata(cvpj_l, midi_channum+1, 'vol', 1, s_chanauto[7],127,0)
-		if 10 in s_chanauto: addfxparamdata(cvpj_l, midi_channum+1, 'pan', 0, s_chanauto[10],64,-1)
-		if 11 in s_chanauto: addfxparamdata(cvpj_l, midi_channum+1, 'expression', 1, s_chanauto[11],127,0)
-		if 'pitchwheel' in s_chanauto: addfxparamdata(cvpj_l, midi_channum+1, 'pitch', 0, s_chanauto['pitchwheel'],1,0)
+
+		for ccnum, name, defval, valdiv, valadd in [
+			[  1 ,'modulation',    1,  127,   0],
+			[  7 ,'vol',           1,  127,   0],
+			[  10,'pan',           0,  64,   -1],
+			[  11,'expression',    1,  127,   0],
+			['pitch','pitch',      0,  1,     0],
+		]:
+			if ccnum in s_chanauto: 
+				out_param = tracks.a_auto_nopl_paramauto(
+					['fxmixer', fxrack_chan, name], 'float', s_chanauto[ccnum], ppq_step, firstchanusepos[midi_channum], defval, valdiv, valadd)
+				tracks.fxrack_param(cvpj_l, midi_channum+1, name, out_param, 'float')
 
 		for ccnum, fx2, fx1, fxname in [[91,0,0,'reverb'],[93,0,1,'chorus'],[92,1,0,'tremolo'],[95,1,1,'phaser']]:
 			if ccnum in s_chanauto:
 				sendname = str(midi_channum)+fxname
 				usedeffects[fx2] = True
 				sendtofx = song_channels+1+fx1+(fx2*2)
-				out_param, out_twopoints = points2paramauto(cvpj_l, s_chanauto[ccnum], 127, 0)
-				sendamt = out_param if out_param != None else 0
+				out_param = tracks.a_auto_nopl_paramauto(['send', sendname, 'amount'], 'float', s_chanauto[ccnum], ppq_step, firstchanusepos[midi_channum], 0, 127, 0)
 				tracks.fxrack_addsend(cvpj_l, midi_channum+1, 0, 1, None)
-				tracks.fxrack_addsend(cvpj_l, midi_channum+1, sendtofx, sendamt, sendname)
-				if out_twopoints != []: 
-					tracks.a_auto_nopl_twopoints(['send', sendname, 'amount'], 'float', out_twopoints, 1, 'instant')
+				tracks.fxrack_addsend(cvpj_l, midi_channum+1, sendtofx, out_param, sendname)
 
 	if usedeffects[0] == True:
 		plugins.add_plug(cvpj_l, 'plugin-reverb', 'simple', 'reverb-send')
@@ -446,16 +390,13 @@ def song_end(cvpj_l):
 	veryfirstnotepos = getbeforenoteall(firstchanusepos)
 
 	#tempo
-	out_param, out_twopoints = points2paramauto(cvpj_l, point2beforeafter(auto_bpm, veryfirstnotepos), 1, 0)
-	if out_param != None: params.add(cvpj_l, [], 'bpm', out_param, 'float')
-	if out_twopoints != []: tracks.a_auto_nopl_twopoints(['main', 'bpm'], 'float', out_twopoints, 1, 'instant')
+	out_param = tracks.a_auto_nopl_paramauto(['main', 'bpm'], 'float', auto_bpm, ppq_step, veryfirstnotepos, 120, 1, 0)
+	params.add(cvpj_l, [], 'bpm', out_param, 'float')
 
 	#volume
 	if 'volume' in auto_master:
-		out_param, out_twopoints = points2paramauto(cvpj_l, point2beforeafter(auto_master['volume'], veryfirstnotepos), 1, 0)
-		if out_param != None: tracks.fxrack_param(cvpj_l, 0, 'vol', out_param, 'float')
-		else: tracks.fxrack_param(cvpj_l, 0, 'vol', 1, 'float')
-		if out_twopoints != []: tracks.a_auto_nopl_twopoints(['fxmixer', '0', 'vol'], 'float', out_twopoints, 1, 'instant')
+		out_param = tracks.a_auto_nopl_paramauto(['fxmixer', '0', 'vol'], 'float', auto_master['volume'], ppq_step, veryfirstnotepos, 127, 1, 0)
+		tracks.fxrack_param(cvpj_l, 0, 'vol', out_param, 'float')
 
 	#timesig
 	for timesigpoint in auto_timesig:

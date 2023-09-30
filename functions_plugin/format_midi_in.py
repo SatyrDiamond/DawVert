@@ -401,8 +401,10 @@ def song_end(cvpj_l):
 		s_chanauto = automation_channel[midi_channum]
 		fxrack_chan = str(midi_channum+1)
 		tracks.fxrack_add(cvpj_l, fxrack_chan, fxchannames[midi_channum], fxchancolors[midi_channum], None, None)
+		if 1 in s_chanauto: addfxparamdata(cvpj_l, midi_channum+1, 'modulation', 1, s_chanauto[1],127,0)
 		if 7 in s_chanauto: addfxparamdata(cvpj_l, midi_channum+1, 'vol', 1, s_chanauto[7],127,0)
 		if 10 in s_chanauto: addfxparamdata(cvpj_l, midi_channum+1, 'pan', 0, s_chanauto[10],64,-1)
+		if 11 in s_chanauto: addfxparamdata(cvpj_l, midi_channum+1, 'expression', 1, s_chanauto[11],127,0)
 		if 'pitchwheel' in s_chanauto: addfxparamdata(cvpj_l, midi_channum+1, 'pitch', 0, s_chanauto['pitchwheel'],1,0)
 
 		for ccnum, fx2, fx1, fxname in [[91,0,0,'reverb'],[93,0,1,'chorus'],[92,1,0,'tremolo'],[95,1,1,'phaser']]:

@@ -186,7 +186,7 @@ def add_track(startpos, midicmds):
 		elif midicmd[0] == 'program_change': t_chan_current_inst[midicmd[1]][0] = midicmd[2]
 
 		elif midicmd[0] == 'control_change': 
-			if midicmd[2] == 0: t_chan_current_inst[midicmd[1]][1] = midicmd[2]
+			if midicmd[2] == 0: t_chan_current_inst[midicmd[1]][1] = midicmd[3]
 			elif midicmd[2] == 111: global_data['loop'] = track_curpos/ppq_step
 			else: add_chautopoint(track_curpos, midicmd[1], midicmd[2], midicmd[3])
 
@@ -221,6 +221,10 @@ def add_track(startpos, midicmds):
 		elif midicmd[0] == 'note_on':
 			curinst = t_chan_current_inst[midicmd[1]]
 			track_active_notes[midicmd[1]][midicmd[2]].append([track_curpos,None,midicmd[3],curinst[0],curinst[1]])
+
+		elif midicmd[0] == 'note':
+			curinst = t_chan_current_inst[midicmd[1]]
+			track_active_notes[midicmd[1]][midicmd[2]].append([track_curpos,track_curpos+midicmd[4],midicmd[3],curinst[0],curinst[1]])
 
 		elif midicmd[0] == 'note_off': 
 			for note in track_active_notes[midicmd[1]][midicmd[2]]:

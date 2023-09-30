@@ -124,7 +124,7 @@ def song_start(numchannels, ppq, numtracks, tempo, timesig):
 	auto_master = {}
 	auto_key_signature = {}
 	auto_markers = {}
-	auto_chanmode = [{} for _ in range(numchannels)]
+	auto_chanmode = [{0: False} for _ in range(numchannels)]
 	auto_chanmode[9] = {0: True}
 	global_data = {}
 
@@ -210,7 +210,7 @@ def add_track(startpos, midicmds):
 							if nameval[0] == 'master_volume': add_autopoint(track_curpos, auto_master, 'volume', nameval[1][0]/127)
 						if groups[1] == 'block':
 							if nameval[0] == 'use_rhythm':
-								auto_chanmode[groups[2]-1][track_curpos] = bool(nameval)
+								auto_chanmode[groups[2]-1][track_curpos] = bool(nameval[1])
 
 		elif midicmd[0] == 'marker': add_point(auto_markers, track_curpos, midicmd[1])
 
@@ -280,6 +280,7 @@ def song_end(cvpj_l):
 						note_inst = t_actnote[3]
 						note_bank = t_actnote[4]
 						note_drum = int(data_values.closest(auto_chanmode[note_chan], t_actnote[0]))
+
 						if auto_chanmode[note_chan] == {0: True}: note_drum = 1
 
 						used_inst_part = [note_chan,note_inst,note_bank,note_drum]

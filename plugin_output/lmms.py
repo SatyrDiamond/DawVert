@@ -329,10 +329,9 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             print('[output-lmms]       Plugin: OPL2 > OPL2')
             xml_instrumentpreplugin.set('name', "OPL2")
             xml_opl2 = ET.SubElement(xml_instrumentpreplugin, "OPL2")
-            for opnum in range(2):
-                opl2_optxt = 'op'+str(opnum+1)
+            for lmms_opname, cvpj_opname in [['op1', 'mod'],['op2', 'car']]:
                 for varname in opl2opvarnames:
-                    get_plugin_param(pluginautoid, xml_opl2, opl2_optxt+varname[0], pluginid, opl2_optxt+varname[1], 0)
+                    get_plugin_param(pluginautoid, xml_opl2, lmms_opname+varname[0], pluginid, cvpj_opname+varname[1], 0)
             for varname in opl2varnames:
                 get_plugin_param(pluginautoid, xml_opl2, varname[0], pluginid, varname[1], 0)
             middlenotefix = 24
@@ -921,7 +920,7 @@ class output_lmms(plugin_output.base):
         'fxrack_params': ['enabled','vol']
         }
     def getsupportedplugformats(self): return ['vst2', 'ladspa']
-    def getsupportedplugins(self): return ['sampler:single', 'soundfont2', 'opl2']
+    def getsupportedplugins(self): return ['sampler:single', 'soundfont2']
     def getfileextension(self): return 'mmp'
     def parse(self, convproj_json, output_file):
         global autoidnum

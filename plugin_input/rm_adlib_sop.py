@@ -55,7 +55,7 @@ class input_piyopiyo(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'adlib_sop'
-    def getname(self): return 'Note OPL3'
+    def getname(self): return 'Note Sequencer'
     def gettype(self): return 'rm'
     def getdawcapabilities(self): 
         return {

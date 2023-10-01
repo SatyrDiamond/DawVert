@@ -137,6 +137,7 @@ class input_adlib_rol(plugin_input.base):
     def gettype(self): return 'rm'
     def getdawcapabilities(self): 
         return {
+        'auto_nopl': True,
         'track_nopl': True
         }
     def supported_autodetect(self): return True

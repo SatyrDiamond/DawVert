@@ -51,7 +51,7 @@ def decode_events(song_file):
     return sop_eventdata
 
 
-class input_piyopiyo(plugin_input.base):
+class input_sop(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'adlib_sop'

@@ -31,7 +31,7 @@ opadltxt = ['m1', 'c1', 'm2', 'c2']
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['fm', 'opl2', None], ['vst2', None, None], True, False
+    def getplugconvinfo(self): return ['fm', 'opl3', None], ['vst2', None, None], True, False
     def convert(self, cvpj_l, pluginid, plugintype, extra_json):
         print('[plug-conv] Converting OPL2 to ADLplug:',pluginid)
         global pluginid_g   
@@ -43,32 +43,33 @@ class plugconv(plugin_plugconv.base):
         opnplug_addbank(adlplug_root, 1, 'DawVert') 
         opnplug_addbank(adlplug_root, 0, 'DawVert') 
         opnplug_params = ET.SubElement(adlplug_root, 'instrument')  
-        opnplug_addvalue(opnplug_params, "four_op" ,0)  
+        opnplug_addvalue(opnplug_params, "four_op" ,1)  
         opnplug_addvalue(opnplug_params, "pseudo_four_op" ,0)   
         opnplug_addvalue(opnplug_params, "blank" ,0)    
         opnplug_addvalue(opnplug_params, "con12" ,int(not getparam('fm')))  
         opnplug_addvalue(opnplug_params, "con34" ,0)    
         opnplug_addvalue(opnplug_params, "note_offset1" ,0) 
         opnplug_addvalue(opnplug_params, "note_offset2" ,0) 
-        opnplug_addvalue(opnplug_params, "fb12" ,getparam("12_fb"))  
-        opnplug_addvalue(opnplug_params, "fb34" ,getparam("34_fb")) 
+        opnplug_addvalue(opnplug_params, "fb12" ,getparam('feedback'))  
+        opnplug_addvalue(opnplug_params, "fb34" ,0) 
         opnplug_addvalue(opnplug_params, "midi_velocity_offset" ,0) 
         opnplug_addvalue(opnplug_params, "second_voice_detune" ,0)  
         opnplug_addvalue(opnplug_params, "percussion_key_number" ,0)
     
-        for opnplugopname, cvpjopname in [['m1', 'mod'], ['c1', 'car'], ['m2', ''], ['c2', '']]:  
-            opnplug_addvalue(opnplug_params, opnplugopname+"attack" ,getparam(cvpjopname+"_env_attack"))    
-            opnplug_addvalue(opnplug_params, opnplugopname+"decay" ,getparam(cvpjopname+"_env_decay"))  
-            opnplug_addvalue(opnplug_params, opnplugopname+"sustain" ,getparam(cvpjopname+"_env_sustain"))  
-            opnplug_addvalue(opnplug_params, opnplugopname+"release" ,getparam(cvpjopname+"_env_release"))  
-            opnplug_addvalue(opnplug_params, opnplugopname+"level" ,getparam(cvpjopname+"_level"))  
-            opnplug_addvalue(opnplug_params, opnplugopname+"ksl" ,getparam(cvpjopname+"_ksr"))  
-            opnplug_addvalue(opnplug_params, opnplugopname+"fmul" ,getparam(cvpjopname+"_freqmul")) 
-            opnplug_addvalue(opnplug_params, opnplugopname+"trem" ,getparam(cvpjopname+"_tremolo")) 
-            opnplug_addvalue(opnplug_params, opnplugopname+"vib" ,getparam(cvpjopname+"_vibrato"))  
-            opnplug_addvalue(opnplug_params, opnplugopname+"sus" ,getparam(cvpjopname+"_sust"))  
-            opnplug_addvalue(opnplug_params, opnplugopname+"env" ,getparam(cvpjopname+"_perc_env")) 
-            opnplug_addvalue(opnplug_params, opnplugopname+"wave" ,getparam(cvpjopname+"_waveform"))
+        for opnum in range(4):  
+            s_opadltxt = opadltxt[opnum]    
+            opnplug_addvalue(opnplug_params, s_opadltxt+"attack" ,getparam(s_opadltxt+"_env_attack"))    
+            opnplug_addvalue(opnplug_params, s_opadltxt+"decay" ,getparam(s_opadltxt+"_env_decay"))  
+            opnplug_addvalue(opnplug_params, s_opadltxt+"sustain" ,getparam(s_opadltxt+"_env_sustain"))  
+            opnplug_addvalue(opnplug_params, s_opadltxt+"release" ,getparam(s_opadltxt+"_env_release"))  
+            opnplug_addvalue(opnplug_params, s_opadltxt+"level" ,getparam(s_opadltxt+"_level"))  
+            opnplug_addvalue(opnplug_params, s_opadltxt+"ksl" ,getparam(s_opadltxt+"_ksr"))  
+            opnplug_addvalue(opnplug_params, s_opadltxt+"fmul" ,getparam(s_opadltxt+"_freqmul")) 
+            opnplug_addvalue(opnplug_params, s_opadltxt+"trem" ,getparam(s_opadltxt+"_tremolo")) 
+            opnplug_addvalue(opnplug_params, s_opadltxt+"vib" ,getparam(s_opadltxt+"_vibrato"))  
+            opnplug_addvalue(opnplug_params, s_opadltxt+"sus" ,getparam(s_opadltxt+"_sust"))  
+            opnplug_addvalue(opnplug_params, s_opadltxt+"env" ,getparam(s_opadltxt+"_perc_env")) 
+            opnplug_addvalue(opnplug_params, s_opadltxt+"wave" ,getparam(s_opadltxt+"_waveform"))
     
         opnplug_addvalue(opnplug_params, "delay_off_ms" ,160)   
         opnplug_addvalue(opnplug_params, "delay_on_ms" ,386)    
@@ -84,7 +85,7 @@ class plugconv(plugin_plugconv.base):
         opnplug_chip = ET.SubElement(adlplug_root, 'chip')  
         opnplug_addvalue(opnplug_chip, "emulator" ,2)   
         opnplug_addvalue(opnplug_chip, "chip_count" ,2) 
-        opnplug_addvalue(opnplug_chip, "4op_count" ,0)
+        opnplug_addvalue(opnplug_chip, "4op_count" ,1)
     
         opnplug_global = ET.SubElement(adlplug_root, 'global')  
         opnplug_addvalue(opnplug_global, "volume_model" ,0) 
@@ -100,5 +101,5 @@ class plugconv(plugin_plugconv.base):
     
         plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'ADLplug', 'chunk', data_vc2xml.make(adlplug_root), None)
     
-        plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', 12)   
+        plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', -12)   
         return True

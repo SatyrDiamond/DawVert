@@ -294,11 +294,10 @@ def lmms_decodeplugin(trkX_insttr):
 
         elif pluginname == "OPL2" or pluginname == "opulenz":
             plugins.add_plug(cvpj_l, pluginid, 'fm', 'opl2')
-            for opnum in range(2):
-                opl2_optxt = 'op'+str(opnum+1)
+            for lmms_opname, cvpj_opname in [['op1', 'mod'],['op2', 'car']]:
                 for varname in opl2opvarnames:
-                    plugval = lmms_auto_getvalue(xml_plugin, opl2_optxt+varname[0], 0, 'int', None, ['plugin', pluginid, opl2_optxt+varname[1]])
-                    plugins.add_plug_param(cvpj_l, pluginid, opl2_optxt+varname[1], plugval, 'int', opl2_optxt+varname[1])
+                    plugval = lmms_auto_getvalue(xml_plugin, lmms_opname+varname[0], 0, 'int', None, ['plugin', pluginid, cvpj_opname+varname[1]])
+                    plugins.add_plug_param(cvpj_l, pluginid, cvpj_opname+varname[1], plugval, 'int', lmms_opname+varname[1])
                 
             for varname in opl2varnames:
                 plugval = lmms_auto_getvalue(xml_plugin, varname[0], 0, 'int', None,  ['plugin', pluginid, varname[1]])

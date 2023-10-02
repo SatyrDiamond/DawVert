@@ -44,11 +44,12 @@ class plugconv(plugin_plugconv.base):
         if plugintype[1] == 'bitinvader':
             print('[plug-conv] LMMS to VST2: BitInvader > Vital:',pluginid)
             params_vital.create()
+            interpolation = getparam('interpolation')
             bitinvader_shape_data = base64.b64decode(plugins.get_plug_dataval(cvpj_l, pluginid, 'sampleShape', ''))
             bitinvader_shape_vals = struct.unpack('f'*(len(bitinvader_shape_data)//4), bitinvader_shape_data)
             params_vital.setvalue('osc_1_on', 1)
             params_vital.setvalue('osc_1_transpose', 12)
-            params_vital.replacewave(0, wave.resizewave(bitinvader_shape_vals))
+            params_vital.replacewave(0, wave.resizewave(bitinvader_shape_vals, smooth=bool(interpolation)))
             params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 1, 'volume')
             vitaldata = params_vital.getdata()
             plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)

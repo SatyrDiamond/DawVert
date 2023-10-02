@@ -1,0 +1,658 @@
+id;name
+#01;Sequential Circuits
+#02;IDP
+#03;Voyetra Turtle Beach, Inc.
+#04;Moog Music
+#05;Passport Designs
+#06;Lexicon Inc.
+#07;Kurzweil / Young Chang
+#08;Fender
+#09;MIDI9
+#0a;AKG Acoustics
+#0b;Voyce Music
+#0c;WaveFrame (Timeline)
+#0d;ADA Signal Processors, Inc.
+#0e;Garfield Electronics
+#0f;Ensoniq
+#10;Oberheim / Gibson Labs
+#11;Apple
+#12;Grey Matter Response
+#13;Digidesign Inc.
+#14;Palmtree Instruments
+#15;JLCooper Electronics
+#16;Lowrey Organ Company
+#17;Adams-Smith
+#18;E-mu
+#19;Harmony Systems
+#1a;ART
+#1b;Baldwin
+#1c;Eventide
+#1d;Inventronics
+#1e;Key Concepts
+#1f;Clarity
+#20;Passac
+#21;Proel Labs (SIEL)
+#22;Synthaxe (UK)
+#23;Stepp
+#24;Hohner
+#25;Twister
+#26;Ketron s.r.l.
+#27;Jellinghaus MS
+#28;Southworth Music Systems
+#29;PPG (Germany)
+#2a;JEN
+#2b;Solid State Logic Organ Systems
+#2c;Audio Veritrieb-P. Struven
+#2d;Neve
+#2e;Soundtracs Ltd.
+#2f;Elka
+#30;Dynacord
+#31;Viscount International Spa (Intercontinental Electronics)
+#32;Drawmer
+#33;Clavia Digital Instruments
+#34;Audio Architecture
+#35;Generalmusic Corp SpA
+#36;Cheetah Marketing
+#37;C.T.M.
+#38;Simmons UK
+#39;Soundcraft Electronics
+#3a;Steinberg Media Technologies GmbH
+#3b;Wersi Gmbh
+#3c;AVAB Niethammer AB
+#3d;Digigram
+#3e;Waldorf Electronics GmbH
+#3f;Quasimidi
+#40;Kawai Musical Instruments MFG. CO. Ltd
+#41;Roland Corporation
+#42;Korg Inc.
+#43;Yamaha Corporation
+#44;Casio Computer Co. Ltd
+#46;Kamiya Studio Co. Ltd
+#47;Akai Electric Co. Ltd.
+#48;Victor Company of Japan, Ltd.
+#4b;Fujitsu Limited
+#4c;Sony Corporation
+#4e;Teac Corporation
+#50;Matsushita Electric Industrial Co. , Ltd
+#51;Fostex Corporation
+#52;Zoom Corporation
+#54;Matsushita Communication Industrial Co., Ltd.
+#55;Suzuki Musical Instruments MFG. Co., Ltd.
+#56;Fuji Sound Corporation Ltd.
+#57;Acoustic Technical Laboratory, Inc.
+#59;Faith, Inc.
+#5a;Internet Corporation
+#5c;Seekers Co. Ltd.
+#5f;"SD Card Association"""
+#000001;Time/Warner Interactive
+#000002;Advanced Gravis Comp. Tech Ltd.
+#000003;Media Vision
+#000004;Dornes Research Group
+#000005;K-Muse
+#000006;Stypher
+#000007;Digital Music Corp.
+#000008;IOTA Systems
+#000009;New England Digital
+#00000a;Artisyn
+#00000b;IVL Technologies Ltd.
+#00000c;Southern Music Systems
+#00000d;Lake Butler Sound Company
+#00000e;Alesis Studio Electronics
+#00000f;Sound Creation
+#000001;Time/Warner Interactive
+#000010;DOD Electronics Corp.
+#000011;Studer-Editech
+#000012;Sonus
+#000013;Temporal Acuity Products
+#000014;Perfect Fretworks
+#000015;KAT Inc.
+#000016;Opcode Systems
+#000017;Rane Corporation
+#000018;Anadi Electronique
+#000019;KMX
+#00001a;Allen & Heath Brenell
+#00001b;Peavey Electronics
+#00001c;360 Systems
+#00001d;Spectrum Design and Development
+#00001e;Marquis Music
+#00001f;Zeta Systems
+#000020;Axxes (Brian Parsonett)
+#000021;Orban
+#000022;Indian Valley Mfg.
+#000023;Triton
+#000024;KTI
+#000025;Breakaway Technologies
+#000026;Leprecon / CAE Inc.
+#000027;Harrison Systems Inc.
+#000028;Future Lab/Mark Kuo
+#000029;Rocktron Corporation
+#00002a;PianoDisc
+#00002b;Cannon Research Group
+#00002c;Reserved
+#00002d;Rodgers Instrument LLC
+#00002e;Blue Sky Logic
+#00002f;Encore Electronics
+#000030;Uptown
+#000031;Voce
+#000032;CTI Audio, Inc. (Musically Intel. Devs.)
+#000033;S3 Incorporated
+#000034;Broderbund / Red Orb
+#000035;Allen Organ Co.
+#000036;Reserved
+#000037;Music Quest
+#000038;Aphex
+#000039;Gallien Krueger
+#00003a;IBM
+#00003b;Mark Of The Unicorn
+#00003c;Hotz Corporation
+#00003d;ETA Lighting
+#00003e;NSI Corporation
+#00003f;Ad Lib, Inc.
+#000040;Richmond Sound Design
+#000041;Microsoft
+#000042;Mindscape (Software Toolworks)
+#000043;Russ Jones Marketing / Niche
+#000044;Intone
+#000045;Advanced Remote Technologies
+#000046;White Instruments
+#000047;GT Electronics/Groove Tubes
+#000048;Pacific Research & Engineering
+#000049;Timeline Vista, Inc.
+#00004a;Mesa Boogie Ltd.
+#00004b;FSLI
+#00004c;Sequoia Development Group
+#00004d;Studio Electronics
+#00004e;Euphonix, Inc
+#00004f;InterMIDI, Inc.
+#000050;MIDI Solutions Inc.
+#000051;3DO Company
+#000052;Lightwave Research / High End Systems
+#000053;Micro-W Corporation
+#000054;Spectral Synthesis, Inc.
+#000055;Lone Wolf
+#000056;Studio Technologies Inc.
+#000057;Peterson Electro-Musical Product, Inc.
+#000058;Atari Corporation
+#000059;Marion Systems Corporation
+#00005a;Design Event
+#00005b;Winjammer Software Ltd.
+#00005c;AT&T Bell Laboratories
+#00005d;Reserved
+#00005e;Symetrix
+#00005f;MIDI the World
+#000060;Spatializer
+#000061;Micros 'N MIDI
+#000062;Accordians International
+#000063;EuPhonics (now 3Com)
+#000064;Musonix
+#000065;Turtle Beach Systems (Voyetra)
+#000066;Loud Technologies / Mackie
+#000067;Compuserve
+#000068;BEC Technologies
+#000069;QRS Music Inc
+#00006a;P.G. Music
+#00006b;Sierra Semiconductor
+#00006c;EpiGraf
+#00006d;Electronics Diversified Inc
+#00006e;Tune 1000
+#00006f;Advanced Micro Devices
+#000070;Mediamation
+#000071;Sabine Musical Mfg. Co. Inc.
+#000072;Woog Labs
+#000073;Micropolis Corp
+#000074;Ta Horng Musical Instrument
+#000075;e-Tek Labs (Forte Tech)
+#000076;Electro-Voice
+#000077;Midisoft Corporation
+#000078;QSound Labs
+#000079;Westrex
+#00007a;Nvidia
+#00007b;ESS Technology
+#00007c;Media Trix Peripherals
+#00007d;Brooktree Corp
+#00007e;Otari Corp
+#00007f;Key Electronics, Inc.
+#000100;Shure Incorporated
+#000101;AuraSound
+#000102;Crystal Semiconductor
+#000103;Conexant (Rockwell)
+#000104;Silicon Graphics
+#000105;M-Audio (Midiman)
+#000106;PreSonus
+#000108;Topaz Enterprises
+#000109;Cast Lighting
+#00010a;Microsoft Consumer Division
+#00010b;Sonic Foundry
+#00010c;Line 6 (Fast Forward) (Yamaha)
+#00010d;Beatnik Inc
+#00010e;Van Koevering Company
+#00010f;Altech Systems
+#000110;S & S Research
+#000111;VLSI Technology
+#000112;Chromatic Research
+#000113;Sapphire
+#000114;IDRC
+#000115;Justonic Tuning
+#000116;TorComp Research Inc.
+#000117;Newtek Inc.
+#000118;Sound Sculpture
+#000119;Walker Technical
+#00011a;Digital Harmony (PAVO)
+#00011b;InVision Interactive
+#00011c;T-Square Design
+#00011d;Nemesys Music Technology
+#00011e;DBX Professional (Harman Intl)
+#00011f;Syndyne Corporation
+#000120;Bitheadz
+#000121;BandLab Technologies
+#000122;Analog Devices
+#000123;National Semiconductor
+#000124;Boom Theory / Adinolfi Alternative Percussion
+#000125;Virtual DSP Corporation
+#000126;Antares Systems
+#000127;Angel Software
+#000128;St Louis Music
+#000129;Passport Music Software LLC (Gvox)
+#00012a;Ashley Audio Inc.
+#00012b;Vari-Lite Inc.
+#00012c;Summit Audio Inc.
+#00012d;Aureal Semiconductor Inc.
+#00012e;SeaSound LLC
+#00012f;U.S. Robotics
+#000130;Aurisis Research
+#000131;Nearfield Research
+#000132;FM7 Inc
+#000133;Swivel Systems
+#000134;Hyperactive Audio Systems
+#000135;MidiLite (Castle Studios Productions)
+#000136;Radikal Technologies
+#000137;Roger Linn Design
+#000138;TC-Helicon Vocal Technologies
+#000139;Event Electronics
+#00013a;Sonic Network Inc
+#00013b;Realtime Music Solutions
+#00013c;Apogee Digital
+#00013d;Classical Organs, Inc.
+#00013e;Microtools Inc.
+#00013f;Numark Industries
+#000140;Frontier Design Group, LLC
+#000141;Recordare LLC
+#000142;Starr Labs
+#000143;Voyager Sound Inc.
+#000144;Manifold Labs
+#000145;Aviom Inc.
+#000146;Mixmeister Technology
+#000147;Notation Software
+#000148;Mercurial Communications
+#000149;Wave Arts
+#00014a;Logic Sequencing Devices
+#00014b;Axess Electronics
+#00014c;Muse Research
+#00014d;Open Labs
+#00014e;Guillemot Corp
+#00014f;Samson Technologies
+#000150;Electronic Theatre Controls
+#000151;Blackberry (RIM)
+#000152;Mobileer
+#000153;Synthogy
+#000154;Lynx Studio Technology Inc.
+#000155;Damage Control Engineering LLC
+#000156;Yost Engineering, Inc.
+#000157;Brooks & Forsman Designs LLC / DrumLite
+#000158;Infinite Response
+#000159;Garritan Corp
+#00015a;Plogue Art et Technologie, Inc
+#00015b;RJM Music Technology
+#00015c;Custom Solutions Software
+#00015d;Sonarcana LLC / Highly Liquid
+#00015e;Centrance
+#00015f;Kesumo LLC
+#000160;Stanton (Gibson Brands)
+#000161;Livid Instruments
+#000162;First Act / 745 Media
+#000163;Pygraphics, Inc.
+#000164;Panadigm Innovations Ltd
+#000165;Avedis Zildjian Co
+#000166;Auvital Music Corp
+#000167;You Rock Guitar (was: Inspired Instruments)
+#000168;Chris Grigg Designs
+#000169;Slate Digital LLC
+#00016a;Mixware
+#00016b;Social Entropy
+#00016c;Source Audio LLC
+#00016d;Ernie Ball / Music Man
+#00016e;Fishman
+#00016f;Custom Audio Electronics
+#000170;American Audio/DJ
+#000171;Mega Control Systems
+#000172;Kilpatrick Audio
+#000173;iConnectivity
+#000174;Fractal Audio
+#000175;NetLogic Microsystems
+#000176;Music Computing
+#000177;Nektar Technology Inc
+#000178;Zenph Sound Innovations
+#000179;DJTechTools.com
+#00017a;Rezonance Labs
+#00017b;Decibel Eleven
+#00017c;CNMAT
+#00017d;Media Overkill
+#00017e;Confusion Studios
+#00017f;moForte Inc
+#000200;Miselu Inc
+#000201;Amelia's Compass LLC
+#000202;Zivix LLC
+#000203;Artiphon
+#000204;Synclavier Digital
+#000205;Light & Sound Control Devices LLC
+#000206;Retronyms Inc
+#000207;JS Technologies
+#000208;Quicco Sound
+#000209;A-Designs Audio
+#00020a;McCarthy Music Corp
+#00020b;Denon DJ
+#00020c;Keith Robert Murray
+#00020d;Google
+#00020e;ISP Technologies
+#00020f;Abstrakt Instruments LLC
+#000210;Meris LLC
+#000211;Sensorpoint LLC
+#000212;Hi-Z Labs
+#000213;Imitone
+#000214;Intellijel Designs Inc.
+#000215;Dasz Instruments Inc.
+#000216;Remidi
+#000217;Disaster Area Designs LLC
+#000218;Universal Audio
+#000219;Carter Duncan Corp
+#00021a;Essential Technology
+#00021b;Cantux Research LLC
+#00021c;Hummel Technologies
+#00021d;Sensel Inc
+#00021e;DBML Group
+#00021f;Madrona Labs
+#000220;Mesa Boogie
+#000221;Effigy Labs
+#000222;                              Amenote
+#000223;Red Panda LLC
+#000224;OnSong LLC
+#000225;Jamboxx Inc.
+#000226;Electro-Harmonix 
+#000227;RnD64 Inc
+#000228;Neunaber Technology LLC 
+#000229;Kaom Inc.
+#00022a;Hallowell EMC
+#00022b;Sound Devices, LLC
+#00022c;Spectrasonics, Inc
+#00022d;Second Sound, LLC
+#00022e;8eo (Horn)
+#00022f;VIDVOX LLC
+#000230;                              Matthews Effects
+#000231;Bright Blue Beetle
+#000232;Audio Impressions
+#000233; Looperlative
+#000234;Steinway
+#000235;Ingenious Arts and Technologies LLC
+#000236;DCA Audio
+#000237;Buchla USA
+#000238;Sinicon
+#000239;Isla Instruments
+#00023a;Soundiron LLC
+#00023b;Sonoclast, LLC
+#00023c;Copper and Cedar
+#00023d;Whirled Notes
+#00023e;Cejetvole, LLC
+#00023f;DAWn Audio LLC
+#000240;Space Brain Circuits
+#000241;Caedence 
+#000242;HCN Designs, LLC (The MIDI Maker)
+#000243;PTZOptics
+#000244;Noise Engineering
+#000245;Synthesia LLC
+#000246;Jeff Whitehead Lutherie LLC
+#000247;Wampler Pedals Inc.
+#000248;Tapis Magique
+#000249;Leaf Secrets
+#00024a;Groove Synthesis
+#002000;Dream SAS
+#002001;Strand Lighting
+#002002;Amek Div of Harman Industries
+#002003;Casa Di Risparmio Di Loreto
+#002004;Böhm electronic GmbH
+#002005;Syntec Digital Audio
+#002006;Trident Audio Developments
+#002007;Real World Studio
+#002008;Evolution Synthesis, Ltd
+#002009;Yes Technology
+#00200a;Audiomatica
+#00200b;Bontempi SpA (Sigma)
+#00200c;F.B.T. Elettronica SpA
+#00200d;MidiTemp GmbH
+#00200e;LA Audio (Larking Audio)
+#00200f;Zero 88 Lighting Limited
+#002010;Micon Audio Electronics GmbH
+#002011;Forefront Technology
+#002012;Studio Audio and Video Ltd.
+#002013;Kenton Electronics
+#002014;Celco/ Electrosonic
+#002015;ADB
+#002016;Marshall Products Limited
+#002017;DDA
+#002018;BSS Audio Ltd.
+#002019;MA Lighting Technology
+#00201a;Fatar SRL c/o Music Industries
+#00201b;QSC Audio Products Inc.
+#00201c;Artisan Clasic Organ Inc.
+#00201d;Orla Spa
+#00201e;Pinnacle Audio (Klark Teknik PLC)
+#00201f;TC Electronics
+#002020;Doepfer Musikelektronik GmbH
+#002021;Creative ATC / E-mu
+#002022;Seyddo/Minami
+#002023;LG Electronics (Goldstar)
+#002024;Midisoft sas di M.Cima & C
+#002025;Samick Musical Inst. Co. Ltd.
+#002026;Penny and Giles (Bowthorpe PLC)
+#002027;Acorn Computer
+#002028;LSC Electronics Pty. Ltd.
+#002029;Focusrite/Novation
+#00202a;Samkyung Mechatronics
+#00202b;Medeli Electronics Co.
+#00202c;Charlie Lab SRL
+#00202d;Blue Chip Music Technology
+#00202e;BEE OH Corp
+#00202f;LG Semicon America
+#002030;TESI
+#002031;EMAGIC
+#002032;Behringer GmbH
+#002033;Access Music Electronics
+#002034;Synoptic
+#002035;Hanmesoft
+#002036;Terratec Electronic GmbH
+#002037;Proel SpA
+#002038;IBK MIDI
+#002039;IRCAM
+#00203a;Propellerhead Software
+#00203b;Red Sound Systems Ltd
+#00203c;Elektron ESI AB
+#00203d;Sintefex Audio
+#00203e;MAM (Music and More)
+#00203f;Amsaro GmbH
+#002040;CDS Advanced Technology BV (Lanbox)
+#002041;Mode Machines (Touched By Sound GmbH)
+#002042;DSP Arts
+#002043;Phil Rees Music Tech
+#002044;Stamer Musikanlagen GmbH
+#002045;Musical Muntaner S.A. dba Soundart
+#002046;C-Mexx Software
+#002047;Klavis Technologies
+#002048;Noteheads AB
+#002049;Algorithmix
+#00204a;Skrydstrup R&D
+#00204b;Professional Audio Company
+#00204c;NewWave Labs (MadWaves)
+#00204d;Vermona
+#00204e;Nokia
+#00204f;Wave Idea
+#002050;Hartmann GmbH
+#002051;Lion's Tracs
+#002052;Analogue Systems
+#002053;Focal-JMlab
+#002054;Ringway Electronics (Chang-Zhou) Co Ltd
+#002055;Faith Technologies (Digiplug)
+#002056;Showworks
+#002057;Manikin Electronic
+#002058;1 Come Tech
+#002059;Phonic Corp
+#00205a;Dolby Australia (Lake)
+#00205b;Silansys Technologies
+#00205c;Winbond Electronics
+#00205d;Cinetix Medien und Interface GmbH
+#00205e;A&G Soluzioni Digitali
+#00205f;Sequentix GmbH
+#002060;Oram Pro Audio
+#002061;Be4 Ltd
+#002062;Infection Music
+#002063;Central Music Co. (CME)
+#002064;genoQs Machines GmbH
+#002065;Medialon
+#002066;Waves Audio Ltd
+#002067;Jerash Labs
+#002068;Da Fact
+#002069;Elby Designs
+#00206a;Spectral Audio
+#00206b;Arturia
+#00206c;Vixid
+#00206d;C-Thru Music
+#00206e;Ya Horng Electronic Co LTD
+#00206f;SM Pro Audio
+#002070;OTO Machines
+#002071;ELZAB S.A. (G LAB)
+#002072;Blackstar Amplification Ltd
+#002073;M3i Technologies GmbH
+#002074;Gemalto (from Xiring)
+#002075;Prostage SL
+#002076;Teenage Engineering
+#002077;Tobias Erichsen Consulting
+#002078;Nixer Ltd
+#002079;Hanpin Electron Co Ltd
+#00207a;"""MIDI-hardware"" R.Sowa"
+#00207b;Beyond Music Industrial Ltd
+#00207c;Kiss Box B.V.
+#00207d;Misa Digital Technologies Ltd
+#00207e;AI Musics Technology Inc
+#00207f;Serato Inc LP
+#002100;Limex
+#002101;Kyodday (Tokai)
+#002102;Mutable Instruments
+#002103;PreSonus Software Ltd
+#002104;Ingenico (was Xiring)
+#002105;Fairlight Instruments Pty Ltd
+#002106;Musicom Lab
+#002107;Modal Electronics (Modulus/VacoLoco)
+#002108;RWA (Hong Kong) Limited
+#002109;Native Instruments
+#00210a;Naonext
+#00210b;MFB
+#00210c;Teknel Research
+#00210d;Ploytec GmbH
+#00210e;Surfin Kangaroo Studio
+#00210f;Philips Electronics HK Ltd
+#002110;ROLI Ltd
+#002111;Panda-Audio Ltd
+#002112;BauM Software
+#002113;Machinewerks Ltd.
+#002114;Xiamen Elane Electronics
+#002115;Marshall Amplification PLC
+#002116;Kiwitechnics Ltd
+#002117;Rob Papen
+#002118;Spicetone OU
+#002119;V3Sound
+#00211a;IK Multimedia
+#00211b;Novalia Ltd
+#00211c;Modor Music
+#00211d;Ableton
+#00211e;Dtronics
+#00211f;ZAQ Audio
+#002120;Muabaobao Education Technology Co Ltd
+#002121;Flux Effects
+#002122;Audiothingies (MCDA)
+#002123;Retrokits
+#002124;Morningstar FX Pte Ltd
+#002125;Changsha Hotone Audio Co Ltd
+#002126;Expressive E
+#002127;Expert Sleepers Ltd
+#002128;Timecode-Vision Technology
+#002129;Hornberg Research GbR
+#00212a;Sonic Potions
+#00212b;Audiofront
+#00212c;Fred's Lab
+#00212d;Audio Modeling
+#00212e;C. Bechstein Digital GmbH
+#00212f;Motas Electronics Ltd
+#002130;Elk Audio
+#002131;Sonic Academy Ltd
+#002132;Bome Software
+#002133;AODYO SAS
+#002134;Pianoforce S.R.O
+#002135;Dreadbox P.C.
+#002136;TouchKeys Instruments Ltd
+#002137;The Gigrig Ltd
+#002138;ALM Co
+#002139;CH Sound Design
+#00213a;Beat Bars
+#00213b;Blokas
+#00213c;GEWA Music GmbH
+#00213d;dadamachines
+#00213e;Augmented Instruments Ltd (Bela)
+#00213f;Supercritical Ltd
+#002140;Genki Instruments
+#002141;Marienberg Devices Germany
+#002142;Supperware Ltd
+#002143;Imoxplus BVBA 
+#002144;Swapp Technologies SRL
+#002145;Electra One S.R.O.
+#002146;Digital Clef Limited
+#002147;Paul Whittington Group Ltd
+#002148;Music Hackspace
+#002149;Bitwig GMBH
+#00214a;Enhancia
+#00214b;KV 331
+#00214c;Tehnicadelarte
+#00214d;Endlesss Studio
+#00214e;Dongguan MIDIPLUS Co., LTD
+#00214f;Gracely Pty Ltd.
+#002150;Embodme
+#002151;MuseScore
+#002152;EPFL (E-Lab)
+#002153;Orb3 Ltd.
+#002154;Pitch Innovations
+#002155;Playces 
+#002156;UDO Audio LTD
+#002157;RSS Sound Design
+#002158;Nonlinear Labs GmbH
+#002159;Robkoo Information & Technologies Co., Ltd.
+#00215a;Cari Electronic
+#00215b;Oxi Electronic Instruments SL
+#00215c;XMPT
+#00215d;SHANGHAI HUAXIN MUSICAL INSTRUMENT 
+#00215e;Shenzhen Huashi Technology Co., Ltd
+#002160;Guangzhou Rantion Technology Co., Ltd. 
+#002161;Ryme Music
+#002162;GS Music
+#002163;Shenzhen Flamma Innovation Co., Ltd
+#002164;Shenzhen Mooer Audio Co.,LTD. 
+#002165;Raw Material Software Limited (JUCE)
+#002166;Birdkids
+#002167;Beijing QianYinHuLian Tech. Co
+#002168;Nimikry Music OG
+#002169;Newzik
+#00216a;Hamburg Wave
+#00216b;Grimm Audio
+#00216c;Arcana Instruments LTD.
+#00216d;GameChanger Audio
+#00216e;OakTone
+#00216f;The Digi-Gurdy: A MIDI Hurdy Gurdy
+#002170;MusiKraken
+#002171;PhotoSynth > InterFACE
+#002172;Instruments of Things

@@ -131,7 +131,6 @@ class input_orgyana(plugin_input.base):
                 tracks.r_add_param(cvpj_l, idval, 'pitch', (org_pitch-1000)/1800, 'float')
                 tracks.r_pl_notes(cvpj_l, idval, placement_data.nl2pl(s_cvpj_nl))
 
-
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 

@@ -63,7 +63,6 @@ def parse_event(bio_stream):
 
     return [position, unitnum, eventnum, value]
 
-
 def readextra(data):
     output = b''
     terminated = 0

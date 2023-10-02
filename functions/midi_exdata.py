@@ -5,6 +5,7 @@ import struct
 
 from functions_midi_exdata import roland as sysex_roland
 from functions_midi_exdata import yamaha as sysex_yamaha
+from functions_midi_exdata import sony as sysex_sony
 from functions_midi_exdata import universal as sysex_universal
 
 from functions import data_bytes
@@ -144,6 +145,9 @@ def decode(i_sysexdata):
 		
 			if out_vendor == 127 and out_model in [3, 4]: 
 				devicename, groups, nameval = sysex_universal.decode(out_model, out_device, out_command, out_data)
+
+			elif out_vendor == 76: 
+				devicename, groups, nameval = sysex_sony.decode(out_model, out_device, out_command, out_data)
 
 			elif out_vendor == 65: 
 				devicename, groups, nameval = sysex_roland.decode(out_model, out_device, out_command, out_data)

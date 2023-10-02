@@ -21,5 +21,3 @@ def decode(model, device, command, data):
 				nameval = ['data', data[2:]]
 
 	return devicename, groups, nameval
-
-#list_chunks(i_list, i_amount)

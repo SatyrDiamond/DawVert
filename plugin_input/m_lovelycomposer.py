@@ -102,6 +102,12 @@ lc_instlist[129]= ['_EXT_E'          ,'_EXT'      ,0  ,1  ,0  ,False ,False]
 
 used_instruments = []
 
+def decode_pan(panbyte):
+    if panbyte == 8: return 0
+    elif panbyte == 15: return 1
+    elif panbyte == 1: return -1
+    else: return 0
+
 def chord_parser(chordbytes_chord, chordbytes_seven, chordbytes_nine):
     chordtype = chordbytes_chord-1
     if chordtype == 0: output_val = None
@@ -172,21 +178,10 @@ def lc_parse_voice(sl_json, tracknum, length):
             out_inst = None
             out_fadeout = 0
 
-        out_key = None
-        if 'n' in lc_notedata: 
-            if lc_notedata['n'] != None: out_key = lc_notedata['n']-60
-
-        out_vol = 14
-        if 'x' in lc_notedata: 
-            if lc_notedata['x'] != None: out_vol = lc_notedata['x']
-
-        out_pan = 0
-        if 'p' in lc_notedata: 
-            if lc_notedata['p'] != None: 
-                panbyte = lc_notedata['p']
-                if panbyte == 8: out_pan = 0
-                if panbyte == 15: out_pan = 1
-                if panbyte == 1: out_pan = -1
+        out_key = lc_notedata['n'] if 'n' in lc_notedata else None
+        if out_key != None: out_key-60
+        out_vol = lc_notedata['x'] if 'x' in lc_notedata else 14
+        out_pan = decode_pan(lc_notedata['p'] if 'p' in lc_notedata else 8)
 
         if out_inst != '_EXT': curinst = out_inst
         out_notetable = [out_pos, curinst, out_key, out_fadeout, 1, [], []]

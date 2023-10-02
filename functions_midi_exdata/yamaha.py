@@ -41,7 +41,9 @@ def decode(model, device, command, data):
 				if firstval== 0: groups[1], nameval[0] = 'reset', 'drum_setup_1'
 				if firstval== 1: groups[1], nameval[0] = 'reset', 'drum_setup_2'
 			if mem_paramid[1] == 126 and firstval== 0: groups[1], nameval[0] = None, 'xg_on'
-			if mem_paramid[1] == 126 and firstval== 0: groups[1], nameval[0] = 'reset', 'all_params'
+			if mem_paramid[1] == 126 and firstval== 0: 
+				groups[1], nameval[0] = 'reset', 'all_params'
+				fx_paramvals = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 		if command == 2 and mem_paramid[0] == 1:
 			groups[0] = 'effects'

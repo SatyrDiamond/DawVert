@@ -341,11 +341,11 @@ def song_end(cvpj_l):
 			if fx_color == None and ifsamegroups: fx_c_namefrom, fx_color = 'groups', idvals.get_idval(idvals_midi_inst_group, str(s_fx_usedinstid[0][4]), 'color')
 			if fx_color == None: fx_c_namefrom, fx_color = 'none', [0.4, 0.4, 0.4]
 
-		if usedinlen != 0: print(
-			fxnum, usedinlen, '|', 
-			fx_n_namefrom, fx_name, '|', 
-			fx_c_namefrom, fx_color, '|', 
-			s_fx_usedinstid)
+		#if usedinlen != 0: print(
+		#	fxnum, usedinlen, '|', 
+		#	fx_n_namefrom, fx_name, '|', 
+		#	fx_c_namefrom, fx_color, '|', 
+		#	s_fx_usedinstid)
 
 		if fx_name != None: fxchannames[fxnum] = fx_name
 		if fx_color != None: fxchancolors[fxnum] = fx_color

@@ -24,14 +24,28 @@ def tripleoct(x, shape, pw, one, two):
     else: samplepoint = x
     return samplepoint
 
-def resizewave(imputwave, **kwargs):
-    dur_input = len(imputwave)
-    numpoints = data_values.get_value(kwargs, 'points', 2048)
+def resizewave(inputwave, **kwargs):
+    dur_input = len(inputwave)
+    numpoints = kwargs['points'] if 'points' in kwargs else 2048
     numpointshalf = numpoints // 2
     wave_data = []
-    for num in range(2048): 
-        s_pos = num/2048
-        wave_data.append(imputwave[math.floor(s_pos*dur_input)])
+    smooth = kwargs['smooth'] if 'smooth' in kwargs else True if dur_input > 10 else False
+
+    if smooth == False:
+        for num in range(numpoints): 
+            s_pos = num/numpoints
+            wave_data.append(inputwave[math.floor(s_pos*dur_input)])
+
+    else:
+        inputwave += [inputwave[0]]
+        for num in range(numpoints): 
+            s_pos = num/numpoints
+            wpn_float = s_pos*dur_input
+            wpn_floor = int(math.floor(wpn_float))
+            betweenpoints = wpn_float-wpn_floor
+            out_val = xtramath.between_from_one(inputwave[wpn_floor], inputwave[wpn_floor+1], betweenpoints)
+            wave_data.append(out_val)
+
     return wave_data
 
 def create_wave(shape, mul, pw, **kwargs):

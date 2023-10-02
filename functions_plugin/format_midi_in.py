@@ -294,7 +294,7 @@ def song_end(cvpj_l):
 		if usedinlen == 1:
 			usedinstid = s_fx_usedinstid[0]
 
-			iftrackname = global_miditracks[usedinstid[0]][1] not in [None, '']
+			iftrackname = (global_miditracks[usedinstid[0]][1] not in [None, '']) and tracknum != 1
 			iftrackcolor = global_miditracks[usedinstid[0]][4]
 
 			if fx_name == None and iftrackname: 
@@ -329,6 +329,11 @@ def song_end(cvpj_l):
 				else: fx_n_namefrom, fx_name = 'inst', idvals.get_idval(idvals_midi_inst, str(s_fx_usedinstid[0][1]), 'name')
 			if fx_name == None and ifsamegroups: fx_n_namefrom, fx_name = 'groups', idvals.get_idval(idvals_midi_inst_group, str(s_fx_usedinstid[0][4]), 'name')
 			if fx_name == None and ifsamealldrums: fx_n_namefrom, fx_name = 'drums', 'Drums'
+			if fx_name == None:
+				usedgroups = list(set([s_fx_usedinstid[x][4] for x in range(usedinlen)]))
+				usedgroups = [idvals.get_idval(idvals_midi_inst_group, x, 'name') for x in usedgroups]
+				fx_n_namefrom, fx_name = 'mulgroup', ' + '.join(usedgroups)
+
 
 			if fx_color == None and ifsametrackid: fx_c_namefrom, fx_color = 'track', global_miditracks[s_fx_usedinstid[0][0]][4]
 			if fx_color == None and ifsamealldrums: fx_c_namefrom, fx_color = 'drums', [0.81, 0.80, 0.82]
@@ -336,14 +341,14 @@ def song_end(cvpj_l):
 			if fx_color == None and ifsamegroups: fx_c_namefrom, fx_color = 'groups', idvals.get_idval(idvals_midi_inst_group, str(s_fx_usedinstid[0][4]), 'color')
 			if fx_color == None: fx_c_namefrom, fx_color = 'none', [0.4, 0.4, 0.4]
 
-		#if usedinlen != 0: print(
-		#	fxnum, usedinlen, '|', 
-		#	fx_n_namefrom, fx_name, '|', 
-		#	fx_c_namefrom, fx_color, '|', 
-		#	s_fx_usedinstid)
+		if usedinlen != 0: print(
+			fxnum, usedinlen, '|', 
+			fx_n_namefrom, fx_name, '|', 
+			fx_c_namefrom, fx_color, '|', 
+			s_fx_usedinstid)
 
-		if fx_name == None: fxchancolors[fxnum] = fx_name
-		if fx_color == None: fxchancolors[fxnum] = fx_color
+		if fx_name != None: fxchannames[fxnum] = fx_name
+		if fx_color != None: fxchancolors[fxnum] = fx_color
 
 	tracks.fxrack_add(cvpj_l, 0, "Master", [0.3, 0.3, 0.3], 1.0, None)
 

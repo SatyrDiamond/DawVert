@@ -3,7 +3,10 @@
 
 from functions import data_bytes
 
+fx_paramvals = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+
 def decode(model, device, command, data):
+	global fx_paramvals
 	devicename = 'unknown'
 	parsed = []
 
@@ -13,7 +16,6 @@ def decode(model, device, command, data):
 	firstval = int(mem_data[0]) if len(mem_data) != 0 else 0
 
 	fx_set = ['off']
-	fx_paramvals = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
 	groups = [None, None]
 	nameval = [None, None]

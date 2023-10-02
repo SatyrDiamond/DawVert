@@ -15,9 +15,13 @@ def decode(model, device, command, data):
 			groups[0] = 'system'
 			nameval = ['enable?', data[0]]
 
-		if command == 2 and data[1]:
-			groups =['unknown',data[1]]
-			if data[0] == 2:
+		elif command == 2 and data[1]:
+			groups =['2',data[1]]
+			if data[0] == 2: 
+				groups.append(data[0])
+				nameval = ['data', data[2:]]
+			if data[0] == 3: 
+				groups.append(data[0])
 				nameval = ['data', data[2:]]
 
 	return devicename, groups, nameval

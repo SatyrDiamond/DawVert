@@ -63,6 +63,7 @@ def song_start(numchannels, ppq, numtracks, tempo, timesig):
 	global auto_chanmode
 	global global_miditracks
 	global global_data
+	global loop_data
 
 	global_miditracks = []
 
@@ -75,6 +76,7 @@ def song_start(numchannels, ppq, numtracks, tempo, timesig):
 	auto_chanmode = [{0: False} for _ in range(numchannels)]
 	auto_chanmode[9] = {0: True}
 	global_data = {}
+	loop_data = [None, None]
 
 
 	ppq_g = ppq
@@ -100,6 +102,7 @@ def add_track(startpos, midicmds):
 	global auto_markers
 	global auto_chanmode
 	global global_data
+	global loop_data
 
 	track_name = None
 	track_color = None
@@ -113,6 +116,8 @@ def add_track(startpos, midicmds):
 	t_chan_current_inst = [[0, 0] for x in range(song_channels)]
 	t_chan_used_inst = [[] for x in range(song_channels)]
 	track_active_notes = [[[] for x in range(128)] for x in range(song_channels)]
+
+	loop_data = [None, None]
 
 	for midicmd in midicmds:
 
@@ -134,7 +139,7 @@ def add_track(startpos, midicmds):
 
 		elif midicmd[0] == 'control_change': 
 			if midicmd[2] == 0: t_chan_current_inst[midicmd[1]][1] = midicmd[3]
-			elif midicmd[2] == 111: global_data['loop'] = track_curpos/ppq_step
+			elif midicmd[2] == 111: loop_data[0] = track_curpos/ppq_step
 			else: add_chautopoint(track_curpos, midicmd[1], midicmd[2], midicmd[3])
 
 		elif midicmd[0] == 'pitchwheel': add_chautopoint(track_curpos, midicmd[1], 'pitch', midicmd[2])
@@ -200,6 +205,7 @@ def song_end(cvpj_l):
 	global auto_markers
 	global global_miditracks
 	global global_data
+	global loop_data
 
 	used_insts = []
 	firstchanusepos = [None for x in range(song_channels)]
@@ -423,8 +429,8 @@ def song_end(cvpj_l):
 		song.add_timemarker_timesig(cvpj_l, str(timesig[0])+'/'+str(timesig[1]), (timesigpoint/ppq_step), timesig[0], timesig[1])
 
 	#timesig
-	if 'loop' in global_data:
-		song.add_timemarker_loop(cvpj_l, global_data['loop'], 'Loop')
+	if loop_data[1] != None: song.add_timemarker_looparea(cvpj_l, 'Loop', loop_data[0], loop_data[1])
+	elif loop_data[0] != None: song.add_timemarker_loop(cvpj_l, loop_data[0], 'Loop')
 	
 	tracks.a_auto_nopl_to_cvpj(cvpj_l)
 

@@ -109,6 +109,11 @@ def cutloop(position, duration, startoffset, loopstart, loopend):
     else: cutpoints = loop_after(position, duration, startoffset, loopstart, loopend)
     return cutpoints
 
+def similar(first, second):
+    if first == second: return 1.0
+    elif first == second == []: return 1.0
+    else: return len(set(first) & set(second)) / float(len(set(first) | set(second)))
+
 
 
 

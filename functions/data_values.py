@@ -149,3 +149,5 @@ def closest(i_dict, in_value):
     for num in i_dict:
         if num <= in_value: outnum = num
     return outnum
+
+def most_frequent(i_list): return max(set(i_list), key = i_list.count)

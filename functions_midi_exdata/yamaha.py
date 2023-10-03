@@ -3,10 +3,7 @@
 
 from functions import data_bytes
 
-fx_paramvals = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-
 def decode(model, device, command, data):
-	global fx_paramvals
 	devicename = 'unknown'
 	parsed = []
 
@@ -27,7 +24,7 @@ def decode(model, device, command, data):
 			if mem_paramid[1] == 0: groups[1], nameval = 'main', ['ad_12_part_on', firstval]
 			if mem_paramid[1] == 1: groups[1], nameval = 'main', ['karaoke_on', firstval]
 
-	if model == 76:
+	elif model == 76:
 		devicename = 'yamaha_xg'
 
 		if command == 0 and mem_paramid[0] == 0:
@@ -43,9 +40,8 @@ def decode(model, device, command, data):
 			if mem_paramid[1] == 126 and firstval== 0: groups[1], nameval[0] = None, 'xg_on'
 			if mem_paramid[1] == 126 and firstval== 0: 
 				groups[1], nameval[0] = 'reset', 'all_params'
-				fx_paramvals = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
-		if command == 2 and mem_paramid[0] == 1:
+		elif command == 2 and mem_paramid[0] == 1:
 			groups[0] = 'effects'
 
 			if mem_paramid[1] == 0: groups[1], nameval = 'reverb', ['type', list(mem_data)]
@@ -85,7 +81,7 @@ def decode(model, device, command, data):
 			if mem_paramid[1] == 52: groups[1], nameval = 'chorus', ['input_mode', firstval]
 
 			if mem_paramid[1] == 64: 
-				value = list(data[2:4])
+				value = list(mem_data)
 				groups[1], nameval = 'variation', ['effect_type', value]
 				if value == [0,0]: fx_set = ['off']
 				if value[0] in [1,2,3,4]: 
@@ -127,40 +123,17 @@ def decode(model, device, command, data):
 
 			fxval = int.from_bytes(mem_data, "little")
 			if mem_paramid[1] in [66,68,70,72,74,76,78,80,82,84]:
-				if mem_paramid[1] == 66: fx_paramvals[0] = fxval
-				if mem_paramid[1] == 68: fx_paramvals[1] = fxval
-				if mem_paramid[1] == 70: fx_paramvals[2] = fxval
-				if mem_paramid[1] == 72: fx_paramvals[3] = fxval
-				if mem_paramid[1] == 74: fx_paramvals[4] = fxval
-				if mem_paramid[1] == 76: fx_paramvals[5] = fxval
-				if mem_paramid[1] == 78: fx_paramvals[6] = fxval
-				if mem_paramid[1] == 80: fx_paramvals[7] = fxval
-				if mem_paramid[1] == 82: fx_paramvals[8] = fxval
-				if mem_paramid[1] == 84: fx_paramvals[9] = fxval
-				groups[1], nameval = 'variation', ['params_vals', fx_paramvals]
-
-			#if fx_set[0] == 'reverb':
-			#	if mem_paramid[1] == 112: groups[1], nameval = 'reverb', 'delay', firstval
-			#	if mem_paramid[1] == 113: groups[1], nameval = 'reverb', 'CracleDensity', firstval
-			#	if mem_paramid[1] == 114: groups[1], nameval = 'reverb', 'early_reflect', firstval
-			#	if mem_paramid[1] == 116: groups[1], nameval = 'reverb', 'feedback', firstval
-
-			#if fx_set[0] in ['delay_lr', 'delay_lcr', 'echo', 'delay_cross']:
-			#	if mem_paramid[1] == 114: groups[1], nameval = fx_set[0], 'low_freq', firstval
-			#	if mem_paramid[1] == 115: groups[1], nameval = fx_set[0], 'low_gain', firstval
-			#	if mem_paramid[1] == 116: groups[1], nameval = fx_set[0], 'hi_freq', firstval
-			#	if mem_paramid[1] == 117: groups[1], nameval = fx_set[0], 'hi_gain', firstval
-			#
-			#if fx_set[0] in ['early_reflect', 'gate_reverb']:
-			#	if mem_paramid[1] == 114: groups[1], nameval = fx_set[0], 'liveness', firstval
-			#	if mem_paramid[1] == 115: groups[1], nameval = fx_set[0], 'density', firstval
-			#	if mem_paramid[1] == 116: groups[1], nameval = fx_set[0], 'high_damp', firstval
-
-			#if fx_set[0] in ['chorus', 'celeste']:
-			#	if mem_paramid[1] == 116: groups[1], nameval = fx_set[0], 'input_mode', firstval
-
-			#if fx_set[0] in ['flanger']:
-			#	if mem_paramid[1] == 116: groups[1], nameval = fx_set[0], 'lfo_phase_diff', firstval
+				groups[1], nameval[1] = 'variation_param', fxval
+				if mem_paramid[1] == 66: nameval[0] = 0
+				if mem_paramid[1] == 68: nameval[0] = 1
+				if mem_paramid[1] == 70: nameval[0] = 2
+				if mem_paramid[1] == 72: nameval[0] = 3
+				if mem_paramid[1] == 74: nameval[0] = 4
+				if mem_paramid[1] == 76: nameval[0] = 5
+				if mem_paramid[1] == 78: nameval[0] = 6
+				if mem_paramid[1] == 80: nameval[0] = 7
+				if mem_paramid[1] == 82: nameval[0] = 8
+				if mem_paramid[1] == 84: nameval[0] = 9
 
 			if mem_paramid[1] == 86: groups[1], nameval = 'variation', ['return', firstval]
 			if mem_paramid[1] == 87: groups[1], nameval = 'variation', ['panorama', firstval]
@@ -174,7 +147,77 @@ def decode(model, device, command, data):
 			if mem_paramid[1] == 95: groups[1], nameval = 'variation', ['ctrl_1', firstval]
 			if mem_paramid[1] == 96: groups[1], nameval = 'variation', ['ctrl_2', firstval]
 
-		if command == 8:
+			if mem_paramid[1] == 112: groups[1], nameval = 'variation_param', [10, firstval]
+			if mem_paramid[1] == 113: groups[1], nameval = 'variation_param', [11, firstval]
+			if mem_paramid[1] == 114: groups[1], nameval = 'variation_param', [12, firstval]
+			if mem_paramid[1] == 115: groups[1], nameval = 'variation_param', [13, firstval]
+			if mem_paramid[1] == 116: groups[1], nameval = 'variation_param', [14, firstval]
+			if mem_paramid[1] == 117: groups[1], nameval = 'variation_param', [15, firstval]
+
+		elif command == 2 and mem_paramid[0] == 64:
+			groups[0] = 'effects'
+			if mem_paramid[1] == 0: groups[1], nameval = 'eq', ['type', firstval]
+
+			if mem_paramid[1] == 1: groups[1], nameval = 'eq_1', ['gain', firstval]
+			if mem_paramid[1] == 2: groups[1], nameval = 'eq_1', ['freq', firstval]
+			if mem_paramid[1] == 3: groups[1], nameval = 'eq_1', ['q', firstval]
+			if mem_paramid[1] == 4: groups[1], nameval = 'eq_1', ['shape', firstval]
+
+			if mem_paramid[1] == 5: groups[1], nameval = 'eq_2', ['gain', firstval]
+			if mem_paramid[1] == 6: groups[1], nameval = 'eq_2', ['freq', firstval]
+			if mem_paramid[1] == 7: groups[1], nameval = 'eq_2', ['q', firstval]
+			if mem_paramid[1] == 8: groups[1], nameval = 'eq_2', ['shape', firstval]
+
+			if mem_paramid[1] == 9: groups[1], nameval = 'eq_3', ['gain', firstval]
+			if mem_paramid[1] == 10: groups[1], nameval = 'eq_3', ['freq', firstval]
+			if mem_paramid[1] == 11: groups[1], nameval = 'eq_3', ['q', firstval]
+			if mem_paramid[1] == 12: groups[1], nameval = 'eq_3', ['shape', firstval]
+
+			if mem_paramid[1] == 13: groups[1], nameval = 'eq_4', ['gain', firstval]
+			if mem_paramid[1] == 14: groups[1], nameval = 'eq_4', ['freq', firstval]
+			if mem_paramid[1] == 15: groups[1], nameval = 'eq_4', ['q', firstval]
+			if mem_paramid[1] == 16: groups[1], nameval = 'eq_4', ['shape', firstval]
+
+			if mem_paramid[1] == 17: groups[1], nameval = 'eq_5', ['gain', firstval]
+			if mem_paramid[1] == 18: groups[1], nameval = 'eq_5', ['freq', firstval]
+			if mem_paramid[1] == 19: groups[1], nameval = 'eq_5', ['q', firstval]
+			if mem_paramid[1] == 20: groups[1], nameval = 'eq_5', ['shape', firstval]
+
+		elif command == 3 and mem_paramid[0] == 0:
+			groups[0] = 'effects'
+			if mem_paramid[1] == 0: groups[1], nameval = 'xg_fx', ['type', list(mem_data)]
+			if mem_paramid[1] == 2: groups[1], nameval = 'xg_fx_param', [0, firstval]
+			if mem_paramid[1] == 3: groups[1], nameval = 'xg_fx_param', [1, firstval]
+			if mem_paramid[1] == 4: groups[1], nameval = 'xg_fx_param', [2, firstval]
+			if mem_paramid[1] == 5: groups[1], nameval = 'xg_fx_param', [3, firstval]
+			if mem_paramid[1] == 6: groups[1], nameval = 'xg_fx_param', [4, firstval]
+			if mem_paramid[1] == 7: groups[1], nameval = 'xg_fx_param', [5, firstval]
+			if mem_paramid[1] == 8: groups[1], nameval = 'xg_fx_param', [6, firstval]
+			if mem_paramid[1] == 9: groups[1], nameval = 'xg_fx_param', [7, firstval]
+			if mem_paramid[1] == 10: groups[1], nameval = 'xg_fx_param', [8, firstval]
+			if mem_paramid[1] == 11: groups[1], nameval = 'xg_fx_param', [9, firstval]
+			if mem_paramid[1] == 12: groups[1], nameval = 'xg_fx', ['part', firstval]
+
+			if mem_paramid[1] == 13: groups[1], nameval = 'xg_fx', ['mw_depth', firstval]
+			if mem_paramid[1] == 14: groups[1], nameval = 'xg_fx', ['bend', firstval]
+			if mem_paramid[1] == 15: groups[1], nameval = 'xg_fx', ['cat', firstval]
+			if mem_paramid[1] == 16: groups[1], nameval = 'xg_fx', ['ac1', firstval]
+			if mem_paramid[1] == 17: groups[1], nameval = 'xg_fx', ['ac2', firstval]
+
+			if mem_paramid[1] == 32: groups[1], nameval = 'xg_fx_param', [10, firstval]
+			if mem_paramid[1] == 33: groups[1], nameval = 'xg_fx_param', [11, firstval]
+			if mem_paramid[1] == 34: groups[1], nameval = 'xg_fx_param', [12, firstval]
+			if mem_paramid[1] == 35: groups[1], nameval = 'xg_fx_param', [13, firstval]
+			if mem_paramid[1] == 36: groups[1], nameval = 'xg_fx_param', [14, firstval]
+
+		elif command == 6 and mem_paramid[0] == 0:
+			groups, nameval = ['display', 'text'], ['text', mem_data]
+
+		elif command == 7:
+			bmpext = data_bytes.splitbyte(mem_paramid[0])
+			groups, nameval = ['display', 'bitmap'], [bmpext, mem_data]
+
+		elif command == 8:
 			groups = ['part', mem_paramid[0]]
 			if mem_paramid[1] != 9: nameval[1] = firstval
 			else: nameval[1] = mem_data
@@ -285,7 +328,8 @@ def decode(model, device, command, data):
 			if mem_paramid[1] == 115: nameval[0] = "eq_treble_gain"
 			if mem_paramid[1] == 118: nameval[0] = "eq_bass_frequency"
 			if mem_paramid[1] == 119: nameval[0] = "eq_treble_frequency"
-			
-	#print('[Yamaha]', devicename, model, hex(model), command, groups, nameval)
+		
+	#else:
+	#	print('[UNK Yamaha]', devicename, model, hex(model), command, groups, nameval)
 
 	return devicename, groups, nameval

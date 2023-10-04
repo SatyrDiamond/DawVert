@@ -3,6 +3,7 @@
 
 from functions import data_bytes
 from functions import song_tracker
+from functions import song_tracker_fx_mod
 from functions import tracks
 from functions import plugins
 from functions import song
@@ -38,50 +39,15 @@ chipname['sample'] = 'Sample'
 chipname['c64'] = 'C64'
 
 def fxget(fxtype, fxparam, output_param, output_extra): 
-    if fxtype == 0 and fxparam != 0:
-        arpeggio_first = fxparam >> 4
-        arpeggio_second = fxparam & 0x0F
-        output_param['arpeggio'] = [arpeggio_first, arpeggio_second]
 
-    if fxtype == 1: output_param['slide_up'] = fxparam
-
-    if fxtype == 2: output_param['slide_down'] = fxparam
-
-    if fxtype == 3: output_param['slide_to_note'] = fxparam
-
-    if fxtype == 4: 
-        vibrato_params = {}
-        vibrato_params['speed'], vibrato_params['depth'] = data_bytes.splitbyte(fxparam)
-        output_param['vibrato'] = vibrato_params
-
-    if fxtype == 5:
-        pos, neg = data_bytes.splitbyte(fxparam)
-        output_param['vol_slide'] = (neg*-1) + pos
-        output_param['slide_to_note'] = (neg*-1) + pos
-
-    if fxtype == 6:
-        pos, neg = data_bytes.splitbyte(fxparam)
-        output_param['vibrato'] = {'speed': 0, 'depth': 0}
-        output_param['vol_slide'] = (neg*-1) + pos
+    song_tracker_fx_mod.do_fx(None, output_extra, output_param, fxtype, fxparam)
 
     if fxtype == 7:
         tremolo_params = {}
         tremolo_params['speed'], tremolo_params['depth'] = data_bytes.splitbyte(fxparam)
         output_param['tremolo'] = tremolo_params
 
-    if fxtype == 8: output_param['pan'] = (fxparam-128)/128
-
-    if fxtype == 9: output_param['sample_offset'] = fxparam*256
-
-    if fxtype == 10:
-        pos, neg = data_bytes.splitbyte(fxparam)
-        output_param['vol_slide'] = (neg*-1) + pos
-
-    if fxtype == 11: output_extra['pattern_jump'] = fxparam
-
     if fxtype == 12: output_param['vol'] = fxparam/64
-
-    if fxtype == 13: output_extra['break_to_row'] = fxparam
 
     if fxtype == 15:
         if fxparam < 32: output_extra['speed'] = fxparam

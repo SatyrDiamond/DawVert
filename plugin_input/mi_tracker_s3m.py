@@ -5,6 +5,7 @@ import plugin_input
 import os.path
 import json
 from functions import song_tracker
+from functions import song_tracker_fx_s3m
 from functions import audio_wav
 from functions import data_bytes
 from functions import placements
@@ -240,62 +241,7 @@ class input_s3m(plugin_input.base):
 
                             if packed_what_command_info == 1:
 
-                                if packed_command == 1:
-                                    pattern_row[0]['speed'] = packed_info
-                                    current_speed = packed_info
-
-                                if packed_command == 2: 
-                                    pattern_row[0]['pattern_jump'] = packed_info
-
-                                if packed_command == 3:
-                                    pattern_row[0]['break_to_row'] = packed_info
-
-                                if packed_command == 4: 
-                                    j_note_cmdval['vol_slide'] = song_tracker.getfineval(packed_info)
-
-                                if packed_command == 5:
-                                    j_note_cmdval['slide_down_cont'] = song_tracker.calcbendpower_down(packed_info, current_speed)
-
-                                if packed_command == 6:
-                                    j_note_cmdval['slide_up_cont'] = song_tracker.calcbendpower_up(packed_info, current_speed)
-
-                                if packed_command == 7:
-                                    j_note_cmdval['slide_to_note'] = song_tracker.calcslidepower(packed_info, current_speed)
-                            
-                                if packed_command == 8: 
-                                    vibrato_params = {}
-                                    vibrato_params['speed'], vibrato_params['depth'] = data_bytes.splitbyte(packed_info)
-                                    j_note_cmdval['vibrato'] = vibrato_params
-                                
-                                if packed_command == 9: 
-                                    tremor_params = {}
-                                    tremor_params['ontime'], tremor_params['offtime'] = data_bytes.splitbyte(packed_info)
-                                    j_note_cmdval['tremor'] = tremor_params
-                            
-                                if packed_command == 10: 
-                                    arp_params = [0,0]
-                                    arp_params[0], arp_params[1] = data_bytes.splitbyte(packed_info)
-                                    j_note_cmdval['arp'] = arp_params
-                            
-                                if packed_command == 11: 
-                                    j_note_cmdval['vol_slide'] = song_tracker.getfineval(packed_info)
-                                    j_note_cmdval['vibrato'] = {'speed': 0, 'depth': 0}
-                            
-                                if packed_command == 12: 
-                                    j_note_cmdval['vol_slide'] = song_tracker.getfineval(packed_info)
-                                    j_note_cmdval['slide_to_note'] = song_tracker.getfineval(packed_info)
-
-                                if packed_command == 13: 
-                                    j_note_cmdval['channel_vol'] = packed_info/64
-
-                                if packed_command == 14: 
-                                    j_note_cmdval['channel_vol_slide'] = song_tracker.getfineval(packed_info)
-
-                                if packed_command == 15: 
-                                    j_note_cmdval['sample_offset'] = packed_info*256
-
-                                if packed_command == 16: 
-                                    j_note_cmdval['pan_slide'] = song_tracker.getfineval(packed_info)*-1
+                                current_speed = song_tracker_fx_s3m.do_fx(current_speed, pattern_row[0], j_note_cmdval, packed_command, packed_info)
 
                                 if packed_command == 17: 
                                     retrigger_params = {}

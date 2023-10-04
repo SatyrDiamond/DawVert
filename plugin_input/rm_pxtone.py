@@ -165,7 +165,7 @@ class input_pxtone(plugin_input.base):
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'ptcop'
     def getname(self): return 'PxTone'
-    def gettype(self): return 'm'
+    def gettype(self): return 'rm'
     def getdawcapabilities(self): 
         return {
         'samples_inside': True,
@@ -432,7 +432,10 @@ class input_pxtone(plugin_input.base):
             for cvpj_note in cvpj_notelist: note_mod.notemod_conv(cvpj_note)
             if unitnum in ptcop_name_unit: plt_name = ptcop_name_unit[unitnum]
             else: plt_name = None
-            tracks.m_playlist_pl(cvpj_l, unitnum+1, plt_name, [0.14, 0.00, 0.29], placement_data.nl2pl(cvpj_notelist))
+            cvpj_instcolor = getcolor()
+            cvpj_trackid = str(unitnum+1)
+            tracks.c_create_track(cvpj_l, 'instruments', cvpj_trackid, name=plt_name, color=cvpj_instcolor)
+            tracks.c_pl_notes(cvpj_l, cvpj_trackid, placement_data.nl2pl(cvpj_notelist))
 
         for voicenum in range(ptcop_voice_num):
             if voicenum in ptcop_name_voice: cvpj_instname = ptcop_name_voice[voicenum]
@@ -441,19 +444,20 @@ class input_pxtone(plugin_input.base):
             else: cvpj_instvol = 1.0
             pluginid = plugins.get_id()
 
+            cvpj_instid = 'ptcop_'+str(voicenum)
+
+            tracks.c_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=[0.14, 0.00, 0.29])
+
             plugindata = t_voice_data[voicenum][1]
             if t_voice_data[voicenum][0] == 'sampler':
                 plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, plugindata['file'])
+                tracks.c_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
                 plugins.add_plug_data(cvpj_l, pluginid, 'trigger', plugindata['trigger'])
                 plugins.add_plug_data(cvpj_l, pluginid, 'interpolation', plugindata['interpolation'])
                 plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0, 0, 0, 1, 0, 1)
 
-            cvpj_instid = 'ptcop_'+str(voicenum)
-
-            tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=getcolor())
-            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-            tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
-            tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'middlenote', t_voice_data[voicenum][2])
+            tracks.c_inst_add_param(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
+            tracks.c_inst_add_dataval(cvpj_l, cvpj_instid, None, 'middlenote', t_voice_data[voicenum][2])
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True

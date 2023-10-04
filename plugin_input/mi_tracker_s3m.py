@@ -13,8 +13,6 @@ from functions import plugins
 from functions import tracks
 from functions import song
 
-t_retg_alg = [['mul', 1], ['minus', 1], ['minus', 2], ['minus', 4], ['minus', 8], ['minus', 16], ['mul', 2/3], ['mul', 1/2], ['mul', 1], ['plus', 1], ['plus', 2], ['plus', 4], ['plus', 8], ['plus', 16], ['mul', 3/2], ['mul', 2]]
-
 class input_s3m(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -243,35 +241,6 @@ class input_s3m(plugin_input.base):
 
                                 current_speed = song_tracker_fx_s3m.do_fx(current_speed, pattern_row[0], j_note_cmdval, packed_command, packed_info)
 
-                                if packed_command == 17: 
-                                    retrigger_params = {}
-                                    retrigger_alg, retrigger_params['speed'] = data_bytes.splitbyte(packed_info)
-                                    retrigger_params['alg'], retrigger_params['val'] = t_retg_alg[retrigger_alg]
-                                    j_note_cmdval['retrigger'] = retrigger_params
-                            
-                                if packed_command == 18: 
-                                    tremolo_params = {}
-                                    tremolo_params['speed'], tremolo_params['depth'] = data_bytes.splitbyte(packed_info)
-                                    j_note_cmdval['tremolo'] = tremolo_params
-
-                                if packed_command == 19: 
-                                    ext_type, ext_value = data_bytes.splitbyte(packed_info)
-                                    if ext_type == 1: j_note_cmdval['glissando_control'] = ext_value
-                                    if ext_type == 2: j_note_cmdval['set_finetune'] = ext_value
-                                    if ext_type == 3: j_note_cmdval['vibrato_waveform'] = ext_value
-                                    if ext_type == 4: j_note_cmdval['tremolo_waveform'] = ext_value
-                                    if ext_type == 5: j_note_cmdval['panbrello_waveform'] = ext_value
-                                    if ext_type == 6: j_note_cmdval['fine_pattern_delay'] = ext_value
-                                    if ext_type == 7: j_note_cmdval['it_inst_control'] = ext_value
-                                    if ext_type == 8: j_note_cmdval['set_pan'] = ext_value/16
-                                    if ext_type == 9: j_note_cmdval['it_sound_control'] = ext_value
-                                    if ext_type == 10: j_note_cmdval['sample_offset_high'] = ext_value*65536
-                                    if ext_type == 11: j_note_cmdval['loop_start'] = ext_value
-                                    if ext_type == 12: j_note_cmdval['note_cut'] = ext_value
-                                    if ext_type == 13: j_note_cmdval['note_delay'] = ext_value
-                                    if ext_type == 14: j_note_cmdval['pattern_delay'] = ext_value
-                                    if ext_type == 15: j_note_cmdval['it_active_macro'] = ext_value
-
                                 if packed_command == 20: 
                                     tempoval = packed_info
                                     if packed_info == 0:
@@ -282,27 +251,6 @@ class input_s3m(plugin_input.base):
                                     if packed_info > 32:
                                         current_tempo = packed_info
                                     pattern_row[0]['tempo'] = current_tempo
-
-                                if packed_command == 21: 
-                                    fine_vib_sp, fine_vib_de = data_bytes.splitbyte(packed_info)
-                                    vibrato_params = {}
-                                    vibrato_params['speed'] = fine_vib_sp/15
-                                    vibrato_params['depth'] = fine_vib_sp/15
-                                    j_note_cmdval['vibrato'] = vibrato_params
-
-                                if packed_command == 22: 
-                                    pattern_row[0]['global_volume'] = packed_info/64
-                            
-                                if packed_command == 23: 
-                                    pattern_row[0]['global_volume_slide'] = song_tracker.getfineval(packed_info)
-
-                                if packed_command == 24: 
-                                    j_note_cmdval['set_pan'] = packed_info/255
-
-                                if packed_command == 25: 
-                                    panbrello_params = {}
-                                    panbrello_params['speed'], panbrello_params['depth'] = data_bytes.splitbyte(packed_info)
-                                    j_note_cmdval['panbrello'] = panbrello_params
 
                                 if packed_command == 26: 
                                     j_note_cmdval['pan'] = ((packed_info/128)-0.5)*2

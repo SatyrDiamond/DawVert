@@ -125,11 +125,9 @@ class input_it(plugin_input.base):
             it_file.read(1)
             it_singleinst['name'] = data_bytes.readstring_fixedlen(it_file, 26, "windows-1252")
             inst_filtercutoff = it_file.read(1)[0]
-            if inst_filtercutoff >= 128: it_singleinst['filtercutoff'] = inst_filtercutoff-128
-            else: it_singleinst['filtercutoff'] = None
+            it_singleinst['filtercutoff'] = inst_filtercutoff-128 if inst_filtercutoff >= 128 else None
             inst_filterresonance = it_file.read(1)[0]
-            if inst_filterresonance >= 128: it_singleinst['filterresonance'] =  inst_filterresonance-128
-            else: it_singleinst['filterresonance'] = None
+            it_singleinst['filterresonance'] = inst_filterresonance-128 if inst_filterresonance >= 128 else None
             it_inst_midi_chan = it_file.read(1)[0] # MIDI Channel
             it_inst_midi_inst = it_file.read(1)[0] # MIDI Program
             it_inst_midi_bank = int.from_bytes(it_file.read(2), "little") # MIDI Bank
@@ -213,16 +211,11 @@ class input_it(plugin_input.base):
                 it_file.read(4)
                 firstrow = 1
                 rowcount = 0
-                table_lastnote = []
-                for _ in range(64): table_lastnote.append(None)
-                table_lastinstrument = []
-                for _ in range(64):  table_lastinstrument.append(None)
-                table_lastvolpan = []
-                for _ in range(64): table_lastvolpan.append(None)
-                table_lastcommand = []
-                for _ in range(64): table_lastcommand.append([None, None])
-                table_previousmaskvariable = []
-                for _ in range(64): table_previousmaskvariable.append(None)
+                table_lastnote = [None for _ in range(64)]
+                table_lastinstrument = [None for _ in range(64)]
+                table_lastvolpan = [None for _ in range(64)]
+                table_lastcommand = [[None, None] for _ in range(64)]
+                table_previousmaskvariable = [None for _ in range(64)]
                 for _ in range(pattern_rows):
                     pattern_done = 0
                     pattern_row_local = []
@@ -234,7 +227,6 @@ class input_it(plugin_input.base):
                         cell_channel = int(channelvariable[1:8], 2) - 1
                         if int(channelvariable, 2) == 0: pattern_done = 1
                         else:
-                            #print('ch:' + str(cell_channel) + '|', end=' ')
                             if cell_previous_maskvariable == 1:
                                 maskvariable = bin(it_file.read(1)[0])[2:].zfill(8)
                                 table_previousmaskvariable[cell_channel] = maskvariable
@@ -289,13 +281,8 @@ class input_it(plugin_input.base):
                             j_note_cmdval = pattern_row[1][cell_channel][2]
 
                             current_speed = song_tracker_fx_s3m.do_fx(current_speed, pattern_row[0], j_note_cmdval, cell_commandtype, cell_commandval)
-
-                            if cell_commandtype == 20: 
-                                pattern_row[0]['tempo'] = cell_commandval
-                            
-                            if cell_commandtype == 26: 
-                                j_note_cmdval['pan'] = ((cell_commandval/255)-0.5)*2
-                            
+                            if cell_commandtype == 20: pattern_row[0]['tempo'] = cell_commandval
+                            if cell_commandtype == 26: j_note_cmdval['pan'] = ((cell_commandval/255)-0.5)*2
                             if firstrow == 1: pattern_row[0]['firstrow'] = 1
                             rowcount += 1
                     firstrow = 0

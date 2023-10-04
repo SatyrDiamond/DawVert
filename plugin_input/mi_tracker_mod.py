@@ -149,11 +149,11 @@ class input_mod(plugin_input.base):
 
                 plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loopdata)
 
-        mod_orderlist_length = int.from_bytes(file_stream.read(1), "big")
-        mod_extravalue = int.from_bytes(file_stream.read(1), "big")
+        mod_orderlist_length = file_stream.read(1)[0]
+        mod_extravalue = file_stream.read(1)[0]
         t_orderlist = []
         for number in range(128):
-            ordernum = int.from_bytes(file_stream.read(1), "big")
+            ordernum = file_stream.read(1)[0]
             if number < mod_orderlist_length: t_orderlist.append(ordernum)
         print("[input-mod] Order List: " + str(t_orderlist))
         mod_inst_tag = file_stream.read(4).decode()

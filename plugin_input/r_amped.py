@@ -215,10 +215,8 @@ class input_amped(plugin_input.base):
             for amped_tr_automation in amped_tr_automations:
                 autoname = amped_tr_automation['param']
                 autopoints = tracks.a_auto_nopl_to_pl(ampedauto_to_cvpjauto(amped_tr_automation['points']))
-                if autoname == 'volume': 
-                    tracks.a_add_auto_pl(cvpj_l, 'float', ['track',amped_tr_id,'vol'], autopoints)
-                if autoname == 'pan': 
-                    tracks.a_add_auto_pl(cvpj_l, 'float', ['track',amped_tr_id,'pan'], autopoints)
+                if autoname == 'volume': tracks.a_add_auto_pl(cvpj_l, 'float', ['track',amped_tr_id,'vol'], autopoints)
+                if autoname == 'pan': tracks.a_add_auto_pl(cvpj_l, 'float', ['track',amped_tr_id,'pan'], autopoints)
                 
             tracks.r_create_track(cvpj_l, 'hybrid', amped_tr_id, name=amped_tr_name, color=amped_colors[amped_tr_color])
             tracks.r_add_param(cvpj_l, amped_tr_id, 'vol', amped_tr_volume, 'float')

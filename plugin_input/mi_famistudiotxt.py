@@ -242,23 +242,12 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
         instpan += int(bool(fst_Instrument['EpsmReg'][1] & 0x80))*-1
         instpan += int(bool(fst_Instrument['EpsmReg'][1] & 0x40))
 
-    if WaveType == 'EPSM_Kick':
-        plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'kick')
-
-    if WaveType == 'EPSM_Snare':
-        plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'snare')
-
-    if WaveType == 'EPSM_Cymbal':
-        plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'cymbal')
-
-    if WaveType == 'EPSM_HiHat':
-        plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'hihat')
-
-    if WaveType == 'EPSM_Tom':
-        plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'tom')
-
-    if WaveType == 'EPSM_Rimshot':
-        plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'rimshot')
+    if WaveType == 'EPSM_Kick': plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'kick')
+    if WaveType == 'EPSM_Snare': plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'snare')
+    if WaveType == 'EPSM_Cymbal': plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'cymbal')
+    if WaveType == 'EPSM_HiHat': plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'hihat')
+    if WaveType == 'EPSM_Tom': plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'tom')
+    if WaveType == 'EPSM_Rimshot': plugins.add_plug(cvpj_l, pluginid, 'epsm_rhythm', 'rimshot')
 
     #print('DATA ------------' , fst_Instrument)
     #print('OUT ------------' , plugname, cvpj_plugdata)

@@ -36,11 +36,8 @@ def get_plugins(xml_track, trackid):
                             paramval = xml_getvalue(xml_part, waveform_pv, paramfb)
                             plugins.add_plug_param(cvpj_l, pluginid, waveform_pv, paramval, paramtype, waveform_pv)
                     
-                        if plugintype == 'pitchShifter':
-                            plugins.add_plug_data(cvpj_l, pluginid, 'elastiqueOptions', xml_getvalue(xml_part, 'elastiqueOptions', '1/0/0/0/64'))
-
-                        if plugintype == 'lowpass':
-                            plugins.add_plug_data(cvpj_l, pluginid, 'mode', xml_getvalue(xml_part, 'mode', 'lowpass'))
+                        if plugintype == 'pitchShifter': plugins.add_plug_data(cvpj_l, pluginid, 'elastiqueOptions', xml_getvalue(xml_part, 'elastiqueOptions', '1/0/0/0/64'))
+                        if plugintype == 'lowpass': plugins.add_plug_data(cvpj_l, pluginid, 'mode', xml_getvalue(xml_part, 'mode', 'lowpass'))
 
                         if trackid == None: tracks.insert_fxslot(cvpj_l, ['master'], 'audio', pluginid)
                         else: tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)

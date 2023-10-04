@@ -87,8 +87,17 @@ def subfind(lst_numberlist_in, foundlocs, patnum):
 	else:
 		return []
 
-def find(lst_numberlist):
+def find(in_numberlist, in_reversed):
 	#print('---------------- repeat find ----------------')
+
+	lst_numberlist = in_numberlist.copy()
+
+	len_numberlist = len(in_numberlist)
+
+	#print(lst_numberlist)
+
+	if in_reversed == True: lst_numberlist = lst_numberlist[::-1]
+
 	lst_existing = []
 	for x in lst_numberlist:
 		if x != None: lst_existing.append(x)
@@ -106,6 +115,9 @@ def find(lst_numberlist):
 		if patnum not in numbdone:
 			if len(foundlocs) > 1:
 				regions = subfind(lst_numberlist, foundlocs, patnum)
+
+				if in_reversed == True: regions = [[(len_numberlist-region[0])-region[1], region[1]] for region in regions]
+
 				if regions != []:
 					regionsdata.append([patnum, regions])
 			numbdone.append(patnum)

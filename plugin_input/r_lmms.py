@@ -158,16 +158,6 @@ def lmms_auto_getvalue(x_tag, x_name, i_fbv, i_type, i_addmul, i_loc):
 
     return outval
 
-def lmms_getvalue_int(json_name, xml_in): 
-    if xml_in != None: json_in[json_name] = int(xml_in)
-def lmms_getvalue_float(json_name, xml_in): 
-    if xml_in != None: json_in[json_name] = float(xml_in)
-def lmms_getvalue_100(json_name, xml_in): 
-    if xml_in != None: json_in[json_name] = hundredto1(float(xml_in))
-def lmms_getvalue_exp(json_name, xml_in): 
-    if xml_in != None: json_in[json_name] = exp2sec(float(xml_in))
-
-
 def lmms_getvalue(xmltag, xmlname, fallbackval): 
     xmlval = xmltag.get(xmlname)
     if xmlval != None: return xmlval
@@ -190,9 +180,7 @@ def asdflfo_get(trkX_insttr, pluginid):
             filter_reso = float(lmms_getvalue(eldataX, 'fres', 0))
             filter_enabled = float(lmms_getvalue(eldataX, 'fwet', 0))
             filter_type, filter_subtype = filtertype[int(eldataX.get('ftype'))]
-            plugins.add_filter(cvpj_l, pluginid, 
-                filter_enabled, filter_cutoff, filter_reso, 
-                filter_type, filter_subtype)
+            plugins.add_filter(cvpj_l, pluginid, filter_enabled, filter_cutoff, filter_reso, filter_type, filter_subtype)
 
 def asdflfo(pluginid, xmlO, asdrtype):
     envelopeparams = {}

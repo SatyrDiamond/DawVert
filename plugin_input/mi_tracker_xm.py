@@ -6,6 +6,7 @@ import os.path
 import json
 import struct
 from functions import song_tracker
+from functions import song_tracker_fx_mod
 from functions import data_values
 from functions import data_bytes
 from functions import plugins
@@ -62,77 +63,10 @@ def parse_xm_cell(databytes, firstrow):
 
     if current_speed == 0: current_speed = 3
 
-    if cell_effect == 0:
-        arpeggio_first = cell_param >> 4
-        arpeggio_second = cell_param & 0x0F
-        output_param['arp'] = [arpeggio_first, arpeggio_second]
-
-    if cell_effect == 1: 
-        output_param['slide_up'] = song_tracker.calcbendpower_up(cell_param, current_speed)
-
-    if cell_effect == 2: 
-        output_param['slide_down'] = song_tracker.calcbendpower_down(cell_param, current_speed)
-
-    if cell_effect == 3: 
-        output_param['slide_to_note'] = song_tracker.calcslidepower(cell_param, current_speed)
-
-    if cell_effect == 4: 
-        vibrato_params = {}
-        vibrato_params['speed'], vibrato_params['depth'] = data_bytes.splitbyte(cell_param)
-        output_param['vibrato'] = vibrato_params
-
-    if cell_effect == 5:
-        pos, neg = data_bytes.splitbyte(cell_param)
-        output_param['vol_slide'] = (neg*-1) + pos
-        output_param['slide_to_note'] = (neg*-1) + pos
-
-    if cell_effect == 6:
-        pos, neg = data_bytes.splitbyte(cell_param)
-        output_param['vibrato'] = {'speed': 0, 'depth': 0}
-        output_param['vol_slide'] = (neg*-1) + pos
-
-    if cell_effect == 7:
-        tremolo_params = {}
-        tremolo_params['speed'], tremolo_params['depth'] = data_bytes.splitbyte(cell_param)
-        output_param['tremolo'] = tremolo_params
-
-    if cell_effect == 8: 
-        output_param['pan'] = (cell_param-128)/128
-
-    if cell_effect == 9: 
-        output_param['sample_offset'] = cell_param*256
-
-    if cell_effect == 10:
-        pos, neg = data_bytes.splitbyte(cell_param)
-        output_param['vol_slide'] = (neg*-1) + pos
-
-    if cell_effect == 11: 
-        output_extra['pattern_jump'] = cell_param
+    current_speed = song_tracker_fx_mod.do_fx(current_speed, output_extra, output_param, cell_effect, cell_param)
 
     if cell_effect == 12: 
         output_param['vol'] = cell_param/64
-
-    if cell_effect == 13: 
-        output_extra['break_to_row'] = cell_param
-
-    if cell_effect == 14: 
-        ext_type, ext_value = data_bytes.splitbyte(cell_param)
-        if ext_type == 0: output_param['filter_amiga_led'] = ext_value
-        if ext_type == 1: output_param['fine_slide_up'] = ext_value
-        if ext_type == 2: output_param['fine_slide_down'] = ext_value
-        if ext_type == 3: output_param['glissando_control'] = ext_value
-        if ext_type == 4: output_param['vibrato_waveform'] = ext_value
-        if ext_type == 5: output_param['set_finetune'] = ext_value
-        if ext_type == 6: output_param['pattern_loop'] = ext_value
-        if ext_type == 7: output_param['tremolo_waveform'] = ext_value
-        if ext_type == 8: output_param['set_pan'] = ext_value
-        if ext_type == 9: output_param['retrigger_note'] = ext_value
-        if ext_type == 10: output_param['fine_vol_slide_up'] = ext_value
-        if ext_type == 11: output_param['fine_vol_slide_down'] = ext_value
-        if ext_type == 12: output_param['note_cut'] = ext_value
-        if ext_type == 13: output_param['note_delay'] = ext_value
-        if ext_type == 14: output_param['pattern_delay'] = ext_value
-        if ext_type == 15: output_param['invert_loop'] = ext_value
 
     if cell_effect == 15:
         output_extra['speed'] = cell_param

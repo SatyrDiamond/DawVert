@@ -5,7 +5,7 @@ from functions import song
 
 def create_points_cut(projJ):
     songduration = song.r_getduration(projJ)
-    if 'timesig_numerator' in projJ: timesig_numerator = projJ['timesig_numerator']
+    if 'timesig' in projJ: timesig_numerator = projJ['timesig'][0]
     else: timesig_numerator = 4
 
     timesigposs = []

@@ -3,6 +3,7 @@
 
 from functions import xtramath
 from functions import data_values
+from functions import data_regions
 
 # ---------------------------------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------------------------------------
@@ -116,7 +117,7 @@ def find(in_numberlist, in_reversed):
 			if len(foundlocs) > 1:
 				regions = subfind(lst_numberlist, foundlocs, patnum)
 
-				if in_reversed == True: regions = [[(len_numberlist-region[0])-region[1], region[1]] for region in regions]
+				if in_reversed == True: regions = data_regions.reverse(regions, len_numberlist)
 
 				if regions != []:
 					regionsdata.append([patnum, regions])

@@ -432,7 +432,8 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     xmltag.set('solo', str(trkJ['solo'] if 'solo' in trkJ else 0))
 
     trackname = trkJ['name'] if 'name' in trkJ else 'noname'
-    xmltag.set('name', trackname)
+
+    xmltag.set('name', data_values.xml_compat(trackname) )
 
     if 'color' in trkJ: xmltag.set('color', '#' + colors.rgb_float_to_hex(trkJ['color']))
 
@@ -794,7 +795,7 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
         if 'muted' in fxchannelJ: muted = fxchannelJ['muted']
         else: muted = 0
 
-        fxcX.set('name', name)
+        fxcX.set('name', data_values.xml_compat(name))
         fxcX.set('muted', str(muted))
         lmms_encode_fxchain(fxcX, fxchannelJ)
 

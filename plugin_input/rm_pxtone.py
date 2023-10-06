@@ -11,6 +11,7 @@ from functions import note_data
 from functions import song
 import plugin_input
 import json
+import math
 import varint
 import struct
 import os
@@ -41,6 +42,8 @@ colors_inst = [
 
 global colornum
 colornum = 0
+
+def get_float(in_int): return struct.unpack("<f", struct.pack("I", in_int))[0]
 
 def getcolor():
     global colornum
@@ -82,7 +85,7 @@ def parse_ptvoice_unit(bio_ptvoice, unitnum):
     print('[input-ptcop]   Vol: '+str(l_unit['vol']))
     l_unit['pan'] = ((varint.decode_stream(bio_ptvoice)/128) - 0.5) *2
     print('[input-ptcop]   Pan: '+str(l_unit['pan']))
-    l_unit['detune'] = ((struct.unpack("<f", struct.pack("I", varint.decode_stream(bio_ptvoice)))[0]-1)/0.0127)*26
+    l_unit['detune'] = ((get_float(varint.decode_stream(bio_ptvoice))-1)/0.0127)*26
     print('[input-ptcop]   Detune: '+str(l_unit['detune']))
 
     bio_ptvoice.read(2)
@@ -372,7 +375,12 @@ class input_pxtone(plugin_input.base):
         t_notelist = {}
 
         velpanpos = None
+        unitnum = 0
+
+        trackautop = []
+
         for unit_eventnum in ptcop_unit_events:
+            cvpj_trackid = str(unitnum+1)
             t_notelist[unit_eventnum] = []
             prevpos = 0
             position_global = 0
@@ -381,6 +389,13 @@ class input_pxtone(plugin_input.base):
             cur_pitch = 9
             cur_porta = 0
             cur_voice = 0
+
+            auto_vol = {}
+            auto_pan = {}
+            auto_pitch = {}
+
+            firstnote = None
+
             for unit_event in ptcop_unit_events[unit_eventnum]:
                 #print(
                 #    str(unit_event[0]).ljust(6),
@@ -389,7 +404,6 @@ class input_pxtone(plugin_input.base):
                 #    ptcop_events[unit_event[2]],
                 #    str(unit_event[3]).ljust(12),
                 #    str(noteend).ljust(7),
-                #    end=""
                 #    )
 
                 if unit_event[2] == 2: cur_pitch = unit_event[3][0]+12
@@ -399,6 +413,7 @@ class input_pxtone(plugin_input.base):
                 position_global = unit_event[0]
 
                 if unit_event[2] == 1: 
+                    if firstnote == None: firstnote = velpanpos
                     velpanpos = unit_event[0]
                     notedur = unit_event[3]
                     noteend = position_global+notedur
@@ -415,10 +430,9 @@ class input_pxtone(plugin_input.base):
                         lastnotedata['notemod']['slide'] = []
                         lastnotedata['notemod']['auto'] = {}
 
-                if unit_event[2] == 15:
-                    if 0 <= (unit_event[0]-noteend)+notedur < notedur:
-                        if 'pan' not in lastnotedata['notemod']['auto']: lastnotedata['notemod']['auto']['pan'] = [{'position': 0, 'value': 0}]
-                        lastnotedata['notemod']['auto']['pan'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'value': ((unit_event[3]/128)-0.5)*2, 'type': 'instant'})
+                if unit_event[2] == 5: auto_vol[unit_event[0]] = unit_event[3]/128
+                if unit_event[2] == 15: auto_pan[unit_event[0]] = ((unit_event[3]/128)-0.5)*2
+                if unit_event[2] == 14: auto_pitch[unit_event[0]] = math.log2(get_float(unit_event[3]))*12
 
                 if unit_event[2] == 2:
                     if 0 <= (unit_event[0]-noteend)+notedur < notedur: lastnotedata['notemod']['slide'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'duration': cur_porta, 'key': cur_pitch-noteon_note})
@@ -427,8 +441,17 @@ class input_pxtone(plugin_input.base):
                     if unit_event[2] == 3: t_notelist[unit_eventnum][-1]['pan'] = ((unit_event[3]/128)-0.5)*2
                     if unit_event[2] == 4: t_notelist[unit_eventnum][-1]['vol'] = unit_event[3]
 
+            out_vol = tracks.a_auto_nopl_paramauto(['track', cvpj_trackid, 'vol'], 'float', auto_vol, timebase, firstnote, 1, 1, 0)
+            out_pan = tracks.a_auto_nopl_paramauto(['track', cvpj_trackid, 'pan'], 'float', auto_pan, timebase, firstnote, 0, 1, 0)
+            out_pitch = tracks.a_auto_nopl_paramauto(['track', cvpj_trackid, 'pitch'], 'float', auto_pitch, timebase, firstnote, 0, 1, 0)
+
+            trackautop.append([out_vol,out_pan,out_pitch])
+
+            unitnum += 1
+
         for unitnum in t_notelist:
             cvpj_notelist = t_notelist[unitnum]
+            cvpj_trackparams = trackautop[unitnum]
             for cvpj_note in cvpj_notelist: note_mod.notemod_conv(cvpj_note)
             if unitnum in ptcop_name_unit: plt_name = ptcop_name_unit[unitnum]
             else: plt_name = None
@@ -436,6 +459,9 @@ class input_pxtone(plugin_input.base):
             cvpj_trackid = str(unitnum+1)
             tracks.c_create_track(cvpj_l, 'instruments', cvpj_trackid, name=plt_name, color=cvpj_instcolor)
             tracks.c_pl_notes(cvpj_l, cvpj_trackid, placement_data.nl2pl(cvpj_notelist))
+            tracks.r_add_param(cvpj_l, cvpj_trackid, 'vol', cvpj_trackparams[0], 'float')
+            tracks.r_add_param(cvpj_l, cvpj_trackid, 'pan', cvpj_trackparams[1], 'float')
+            tracks.r_add_param(cvpj_l, cvpj_trackid, 'pitch', cvpj_trackparams[2], 'float')
 
         for voicenum in range(ptcop_voice_num):
             if voicenum in ptcop_name_voice: cvpj_instname = ptcop_name_voice[voicenum]
@@ -467,6 +493,8 @@ class input_pxtone(plugin_input.base):
         if ptcop_song_name != None: song.add_info(cvpj_l, 'title', ptcop_song_name)
         if ptcop_song_comment != None: song.add_info_msg(cvpj_l, 'text', ptcop_song_comment)
         if ptcop_mas_repeat != 0: song.add_timemarker_looparea(cvpj_l, None, ptcop_mas_repeat/timebase, ptcop_mas_last/timebase)
+
+        tracks.a_auto_nopl_to_cvpj(cvpj_l)
 
         song.add_param(cvpj_l, 'bpm', ptcop_mas_beattempo)
         return json.dumps(cvpj_l)

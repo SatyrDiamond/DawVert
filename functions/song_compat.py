@@ -35,6 +35,7 @@ def process_part(process_name, classname, cvpj_proj, cvpj_type, in_compat, out_c
     global finished_processes
     if process_name not in finished_processes:
         if classname.process(cvpj_proj, cvpj_type, in_compat, out_compat):
+            print('[compat] ' + process_name, 'Done.')
             finished_processes.append(process_name)
 
 def set_dawcapabilities(in_dawcapabilities, out_dawcapabilities):

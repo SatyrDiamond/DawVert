@@ -24,9 +24,27 @@ def get_plugins(xml_track, trackid):
             if plugintype not in ['volume', 'level']:
 
                 if plugintype != None:
-                    if plugintype in waveform_params:
 
-                        pluginid = plugins.get_id()
+                    pluginid = plugins.get_id()
+
+                    if plugintype == 'comp':
+                        plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
+                        waveform_pvs = waveform_params[plugintype]
+                        print('comp')
+                        for waveform_pv in waveform_pvs:
+                            print('-', waveform_pv)
+                            paramtype, paramfb = waveform_pvs[waveform_pv]
+                            paramval = xml_getvalue(xml_part, waveform_pv, paramfb)
+                            if waveform_pv == 'attack': plugins.add_plug_param(cvpj_l, pluginid, 'attack', float(paramval)/1000, 'float', 'threshold')
+                            if waveform_pv == 'inputDb': plugins.add_plug_param(cvpj_l, pluginid, 'pregain', float(paramval), 'float', 'pregain')
+                            if waveform_pv == 'knee': plugins.add_plug_param(cvpj_l, pluginid, 'knee', float(paramval), 'float', 'knee')
+                            if waveform_pv == 'outputDb': plugins.add_plug_param(cvpj_l, pluginid, 'postgain', float(paramval), 'float', 'postgain')
+                            if waveform_pv == 'ratio': plugins.add_plug_param(cvpj_l, pluginid, 'ratio', float(paramval), 'float', 'ratio')
+                            if waveform_pv == 'release': plugins.add_plug_param(cvpj_l, pluginid, 'release', float(paramval)/1000, 'float', 'threshold')
+                            if waveform_pv == 'sidechainTrigger': plugins.add_plug_param(cvpj_l, pluginid, 'sidechain_on', bool(paramval), 'float', 'sidechain on')
+                            if waveform_pv == 'threshold': plugins.add_plug_param(cvpj_l, pluginid, 'threshold', float(paramval), 'float', 'threshold')
+
+                    elif plugintype in waveform_params:
                         waveform_pvs = waveform_params[plugintype]
                         plugins.add_plug(cvpj_l, pluginid, 'native-tracktion', plugintype)
                         plugins.add_plug_fxdata(cvpj_l, pluginid, int(xml_getvalue(xml_part, 'enabled', 1)), 1)
@@ -39,8 +57,8 @@ def get_plugins(xml_track, trackid):
                         if plugintype == 'pitchShifter': plugins.add_plug_data(cvpj_l, pluginid, 'elastiqueOptions', xml_getvalue(xml_part, 'elastiqueOptions', '1/0/0/0/64'))
                         if plugintype == 'lowpass': plugins.add_plug_data(cvpj_l, pluginid, 'mode', xml_getvalue(xml_part, 'mode', 'lowpass'))
 
-                        if trackid == None: tracks.insert_fxslot(cvpj_l, ['master'], 'audio', pluginid)
-                        else: tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
+                    if trackid == None: tracks.insert_fxslot(cvpj_l, ['master'], 'audio', pluginid)
+                    else: tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
 
 class input_cvpj_f(plugin_input.base):
     def __init__(self): pass

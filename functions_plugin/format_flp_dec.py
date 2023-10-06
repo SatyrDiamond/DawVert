@@ -445,7 +445,8 @@ def parse(inputfile):
                 #print('\\__NewPlugin')
                 FXPlugin = {}
                 FXPlugin['plugin'] = DefPluginName
-                FXPlugin['data'] = event_data
+                #FXPlugin['window'] = struct.unpack('iiii', event_data[36:52])
+
             if event_id == 155: FXPlugin['icon'] = event_data
             if event_id == 128: FXPlugin['color'] = event_data
             if event_id == 203: FXPlugin['name'] = decodetext(event_data)

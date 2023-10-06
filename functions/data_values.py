@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import re
+
 def nested_dict_add_value(i_dict, i_keys, i_value):
     if len(i_keys) == 1: i_dict.setdefault(i_keys[0], i_value)
     else:
@@ -151,3 +153,6 @@ def closest(i_dict, in_value):
     return outnum
 
 def most_frequent(i_list): return max(set(i_list), key = i_list.count)
+
+def xml_compat(i_text):
+    return re.sub(u'[^\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\U00010000-\U0010FFFF]+', '', i_text)

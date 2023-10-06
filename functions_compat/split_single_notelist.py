@@ -7,6 +7,7 @@ timesigblocks = None
 from functions import xtramath
 from functions import data_values
 from functions import repeatfind
+from functions import data_regions
 
 def get_similarity_val(first, second, nlb_exists):
 	first_pos = [x[0] for x in nlb_exists[first]]
@@ -60,7 +61,9 @@ def smart_merge(global_regions, local_region_count_list):
 				nlb_patnum.append(nlb_exists.index(nlb_notes))
 
 		#used_areas = repeatfind.find(nlb_patnum, False)
-		used_areas = repeatfind.find(nlb_patnum, False)
+		used_areas_n = repeatfind.find(nlb_patnum, False)
+		used_areas_r = repeatfind.find(nlb_patnum, True)
+		used_areas = data_regions.merge_used_areas(used_areas_n, used_areas_r)
 
 		for nlb_num in range(nlb_pos, nlb_pos+lregc):
 			used_area = used_areas[nlb_num-nlb_pos]

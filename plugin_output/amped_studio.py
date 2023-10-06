@@ -98,6 +98,67 @@ def amped_parse_effects(fxchain_audio):
         plugtype = plugins.get_plug_type(cvpj_l, pluginid)
         fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid])
         fx_on = not params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
+        if plugtype[0] == 'universal':
+
+            if plugtype[1] in ['compressor', 'expander']:
+                device_params = []
+
+                preGainDB = plugins.get_plug_param(cvpj_l, pluginid, 'pregain', 0)[0]
+                ratio = plugins.get_plug_param(cvpj_l, pluginid, 'ratio', 0)[0]
+                thresholdDB = plugins.get_plug_param(cvpj_l, pluginid, 'threshold', 0)[0]
+                attackTimeMS = plugins.get_plug_param(cvpj_l, pluginid, 'attack', 0)[0]*1000
+                releaseTimeMS = plugins.get_plug_param(cvpj_l, pluginid, 'release', 0)[0]*1000
+                postGainDB = plugins.get_plug_param(cvpj_l, pluginid, 'postgain', 0)[0]
+                lookaheadTimeMS = plugins.get_plug_param(cvpj_l, pluginid, 'lookahead', 0)[0]*1000
+                softKneeWidth = plugins.get_plug_param(cvpj_l, pluginid, 'knee', 0)[0]/6
+
+                detect_mode = plugins.get_plug_dataval(cvpj_l, pluginid, 'detect_mode', 'rms')
+                circuit_mode = plugins.get_plug_dataval(cvpj_l, pluginid, 'circuit_mode', 'digital')
+
+                detectMode = 1
+                if detect_mode == 'peak': detectMode = 0
+
+                circuitMode = 1
+                if detect_mode == 'analog': detectMode = 0
+
+                filt_enabled, filt_cutoff, filt_reso, filt_type, filt_subtype = plugins.get_filter(cvpj_l, pluginid)
+
+                filterMode = 0
+                if filt_type == 'lowpass': filterMode = 0
+                if filt_type == 'highpass': filterMode = 1
+                if filt_type == 'bandpass': filterMode = 2
+
+                filterFrequency = filt_cutoff
+                filterQ = filt_reso
+                filterGainDB = plugins.get_plug_dataval(cvpj_l, pluginid, 'filter_gain', 0)
+                filterActive = int(filt_enabled)
+                filterAudition = 0
+
+                device_params.append({'id': 0, 'name': 'preGainDB', 'value': preGainDB})
+                device_params.append({'id': 8, 'name': 'ratio', 'value': ratio})
+                device_params.append({'id': 5, 'name': 'thresholdDB', 'value': thresholdDB})
+                device_params.append({'id': 2, 'name': 'attackTimeMS', 'value': attackTimeMS})
+                device_params.append({'id': 3, 'name': 'releaseTimeMS', 'value': releaseTimeMS})
+                device_params.append({'id': 1, 'name': 'postGainDB', 'value': postGainDB})
+                device_params.append({'id': 4, 'name': 'lookaheadTimeMS', 'value': lookaheadTimeMS})
+                device_params.append({'id': 7, 'name': 'softKneeWidth', 'value': softKneeWidth})
+                device_params.append({'id': 12, 'name': 'detectMode', 'value': detectMode})
+                device_params.append({'id': 13, 'name': 'circuitMode', 'value': circuitMode})
+                device_params.append({'id': 14, 'name': 'filterMode', 'value': filterMode})
+                device_params.append({'id': 15, 'name': 'filterFrequency', 'value': filterFrequency})
+                device_params.append({'id': 16, 'name': 'filterQ', 'value': filterQ})
+                device_params.append({'id': 17, 'name': 'filterGainDB', 'value': filterGainDB})
+                device_params.append({'id': 18, 'name': 'filterActive', 'value': filterActive})
+                device_params.append({'id': 19, 'name': 'filterAudition', 'value': filterAudition})
+
+                if plugtype[1] == 'compressor': devicedata = amped_makedevice('Compressor', 'Compressor')
+                if plugtype[1] == 'expander': devicedata = amped_makedevice('Expander', 'Expander')
+                
+                devicedata['bypass'] = fx_on
+                devicedata['params'] = device_params
+                outdata.append(devicedata)
+
+
         if plugtype[0] == 'native-amped':
 
             if plugtype[1] in ["Amp Sim Utility", 'Clean Machine', 'Distortion Machine', 'Metal Machine']:
@@ -111,8 +172,8 @@ def amped_parse_effects(fxchain_audio):
                 devicedata['wamPreset'] = plugins.get_plug_dataval(cvpj_l, pluginid, 'data', '{}')
                 outdata.append(devicedata)
 
-            elif plugtype[1] in ['BitCrusher', 'Chorus', 'Compressor', 
-        'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 'Expander', 
+            elif plugtype[1] in ['BitCrusher', 'Chorus', 
+        'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 
         'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
         'Reverb', 'Tremolo', 'Vibrato', 'EqualizerPro']:
                 classname = plugtype[1]

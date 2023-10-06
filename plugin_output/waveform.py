@@ -17,8 +17,31 @@ def get_plugins(xml_tag, cvpj_fxids):
         plugtype = plugins.get_plug_type(cvpj_l, cvpj_fxid)
         fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', cvpj_fxid])
         fx_on = params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
-        if plugtype[0] == 'native-tracktion' and plugtype[1] in waveform_params:
+        if plugtype == ['universal', 'compressor']:
+            wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
+            wf_PLUGIN.set('type', 'comp')
+            wf_PLUGIN.set('presetDirty', '1')
+            wf_PLUGIN.set('enabled', str(fx_on))
 
+            v_attack = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'attack', 0)[0]*1000
+            v_postgain = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'postgain', 0)[0]
+            v_pregain = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'pregain', 0)[0]
+            v_ratio = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'ratio', 0)[0]
+            v_knee = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'knee', 0)[0]
+            v_release = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'release', 0)[0]*1000
+            v_sidechain_on = int(plugins.get_plug_param(cvpj_l, cvpj_fxid, 'sidechain_on', 0)[0])
+            v_threshold = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'threshold', 0)[0]
+
+            wf_PLUGIN.set('threshold', str(v_threshold))
+            wf_PLUGIN.set('ratio', str(v_ratio))
+            wf_PLUGIN.set('attack', str(v_attack))
+            wf_PLUGIN.set('release', str(v_release))
+            wf_PLUGIN.set('knee', str(v_knee))
+            wf_PLUGIN.set('outputDb', str(v_postgain))
+            wf_PLUGIN.set('sidechainTrigger', str(v_sidechain_on))
+            wf_PLUGIN.set('inputDb', str(v_pregain))
+
+        if plugtype[0] == 'native-tracktion' and plugtype[1] in waveform_params:
             wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
             wf_PLUGIN.set('type', plugtype[1])
             wf_PLUGIN.set('presetDirty', '1')

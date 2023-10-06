@@ -51,8 +51,7 @@ def make_arrangement(data_FLdt, arrangements):
             BytesIO_arrangement.write(item['trackindex'].to_bytes(4, 'little'))
             BytesIO_arrangement.write(item['unknown1'].to_bytes(2, 'little'))
             BytesIO_arrangement.write(item['flags'].to_bytes(2, 'little'))
-            BytesIO_arrangement.write(item['unknown2'].to_bytes(2, 'little'))
-            BytesIO_arrangement.write(item['unknown3'].to_bytes(2, 'little'))
+            BytesIO_arrangement.write(item['unknown2'].to_bytes(4, 'little'))
 
 
             if int(item['itemindex']) > item['patternbase']:
@@ -492,15 +491,16 @@ def make_mixer(data_FLdt, mixer):
             if 'routing' in fxparams: fltrki_routing = fxparams['routing']
             if 'inchannum' in fxparams: fltrki_inchannum = fxparams['inchannum']
             if 'outchannum' in fxparams: fltrki_outchannum = fxparams['outchannum']
-            if 'name' in fxparams: 
-                make_flevent(data_FLdt, 204, utf16encode(fxparams['name']))
+            if 'name' in fxparams:  make_flevent(data_FLdt, 204, utf16encode(fxparams['name']))
         make_flevent(data_FLdt, 236, fltrki_data)
         for fltrki_slot in fltrki_slots:
             fxslotL = fltrki_slots[fltrki_slot]
             if fxslotL != None:
-                #print(fxslotL)
                 make_flevent(data_FLdt, 201, utf16encode(fxslotL['plugin']))
-                make_flevent(data_FLdt, 212, fxslotL['data'])
+                dataout = i.to_bytes(4, "little") + fltrki_slot.to_bytes(4, "little")
+                dataout += b'\x02\x00\x00\x00\x00\x00\x00\x00@\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                dataout += b'\x00\x00\x00\x00'*4
+                make_flevent(data_FLdt, 212, dataout)
                 if 'name' in fxslotL: make_flevent(data_FLdt, 203, utf16encode(fxslotL['name']))
                 if 'icon' in fxslotL: make_flevent(data_FLdt, 155, fxslotL['icon'])
                 if 'color' in fxslotL: make_flevent(data_FLdt, 128, fxslotL['color'])

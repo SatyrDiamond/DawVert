@@ -132,8 +132,46 @@ def encode_devices(amped_tr_devices, trackid):
                 cvpj_region['r_key'] = [int(amped_samp_part['key']['min'])-60, int(amped_samp_part['key']['max'])-60]
                 plugins.add_plug_multisampler_region(cvpj_l, pluginid, cvpj_region)
 
-        elif devicetype[0] in ['BitCrusher', 'Chorus', 'Compressor', 
-        'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 'Expander', 
+        elif devicetype[0] in ['Compressor', 'Expander']:
+            if devicetype[0] == 'Compressor': plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
+            if devicetype[0] == 'Expander': plugins.add_plug(cvpj_l, pluginid, 'universal', 'expander')
+            for param in amped_tr_device['params']:
+
+                paramname = param['name']
+                paramvalue = param['value']
+                if paramname == 'preGainDB': plugins.add_plug_param(cvpj_l, pluginid, 'pregain', paramvalue, 'float', 'pregain')
+                if paramname == 'ratio': plugins.add_plug_param(cvpj_l, pluginid, 'ratio', paramvalue, 'float', 'ratio')
+                if paramname == 'thresholdDB': plugins.add_plug_param(cvpj_l, pluginid, 'threshold', paramvalue, 'float', 'threshold')
+                if paramname == 'attackTimeMS': plugins.add_plug_param(cvpj_l, pluginid, 'attack', paramvalue/1000, 'float', 'attack')
+                if paramname == 'releaseTimeMS': plugins.add_plug_param(cvpj_l, pluginid, 'release', paramvalue/1000, 'float', 'release')
+                if paramname == 'postGainDB': plugins.add_plug_param(cvpj_l, pluginid, 'postgain', paramvalue, 'float', 'postgain')
+                if paramname == 'lookaheadTimeMS': plugins.add_plug_param(cvpj_l, pluginid, 'lookahead', paramvalue/1000, 'float', 'lookahead')
+                if paramname == 'softKneeWidth': plugins.add_plug_param(cvpj_l, pluginid, 'knee', paramvalue*6, 'float', 'knee')
+
+                if paramname == 'detectMode': plugins.add_plug_data(cvpj_l, pluginid, 'detect_mode', ('rms' if paramvalue == 1 else 'peak') )
+                if paramname == 'circuitMode': plugins.add_plug_data(cvpj_l, pluginid, 'circuit_mode', ('digital' if paramvalue == 1 else 'analog') )
+
+                filter_enabled = False
+                filter_cutoff = 44100
+                filter_reso = 0
+                filter_type = 'lowpass'
+                filter_subtype = None
+
+                if paramname == 'filterGainDB': plugins.add_plug_data(cvpj_l, pluginid, 'filter_gain', paramvalue)
+
+                if paramname == 'filterFrequency': filter_cutoff = paramvalue
+                if paramname == 'filterQ': filter_reso = paramvalue
+                if paramname == 'filterActive': filter_enabled = bool(paramvalue)
+
+                if paramname == 'filterMode':
+                    if paramvalue == 0: filter_type = 'lowpass'
+                    if paramvalue == 1: filter_type = 'highpass'
+                    if paramvalue == 2: filter_type = 'bandpass'
+
+                plugins.add_filter(cvpj_l, pluginid, filter_enabled, filter_cutoff, filter_reso, filter_type, filter_subtype)
+
+        elif devicetype[0] in ['BitCrusher', 'Chorus',  
+        'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 
         'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
         'Reverb', 'Tremolo', 'Vibrato', 'EqualizerPro']:
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', devicetype[0])

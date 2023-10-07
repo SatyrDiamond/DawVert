@@ -3,15 +3,15 @@
 
 import json
 
-from functions import tracks
+from functions_tracks import tracks_mi
 
 m2mi_sample_names = ['file', 'name', 'color', 'audiomod', 'vol', 'pan', 'fxrack_channel']
 m2mi_notes_names = ['id', 'notelist', 'name', 'color']
 
 def convert(song):
     print('[song-convert] Converting from Multiple > MultipleIndexed')
-    cvpj_proj = json.loads(song)
-    cvpj_playlist = cvpj_proj['playlist']
+    cvpj_l = json.loads(song)
+    cvpj_playlist = cvpj_l['playlist']
 
     pattern_number = 1
     existingpatterns = []
@@ -41,8 +41,8 @@ def convert(song):
             cvpj_placement['fromindex'] = dupepatternfound
 
     for existingpattern in existingpatterns:
-        tracks.m_add_nle(cvpj_proj, existingpattern[0], existingpattern[1][0])
-        tracks.m_add_nle_info(cvpj_proj, existingpattern[0], existingpattern[1][1], existingpattern[1][2])
+        tracks_mi.notelistindex_add(cvpj_l, existingpattern[0], existingpattern[1][0])
+        tracks_mi.notelistindex_visual(cvpj_l, existingpattern[0], name=existingpattern[1][1], color=existingpattern[1][2])
 
     sample_number = 1
     cvpj_sampleindex = {}
@@ -76,8 +76,8 @@ def convert(song):
         cvpj_sampleindex['m2mi_audio_' + str(sample_number)] = cvpj_sampledata
         sample_number += 1
 
-    if 'notelistindex' not in cvpj_proj: cvpj_proj['notelistindex'] = {}
+    if 'notelistindex' not in cvpj_l: cvpj_l['notelistindex'] = {}
 
-    cvpj_proj['sampleindex'] = cvpj_sampleindex
+    cvpj_l['sampleindex'] = cvpj_sampleindex
 
-    return json.dumps(cvpj_proj)
+    return json.dumps(cvpj_l)

@@ -16,9 +16,11 @@ from functions import data_values
 from functions import plugins
 from functions import notelist_data
 from functions import params
-from functions import tracks
 from functions import audio
 from functions import auto
+from functions_tracks import tracks_r
+from functions_tracks import tracks_master
+from functions_tracks import auto_nopl
 
 def adddevice_a(i_dict, i_id, i_name, i_type, i_portalType, i_trackId, i_x, i_y): 
     i_dict[i_id] = {'id': i_id, 'name': i_name, 'type': i_type, 'portalType': i_portalType, 'trackId': i_trackId, 'x': i_x, 'y': i_y}
@@ -180,7 +182,7 @@ class output_wavtool(plugin_output.base):
         wt_deviceRouting["auxSum.inputs[0]"] = "masterFader.output"
         wt_deviceRouting["auxSum.inputs[1]"] = "metronome.output"
 
-        for cvpj_trackid, s_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+        for cvpj_trackid, s_trackdata, track_placements in tracks_r.iter(cvpj_l):
             tracktype = s_trackdata['type']
 
             wt_trackid = 'DawVert-Track-'+cvpj_trackid
@@ -212,9 +214,11 @@ class output_wavtool(plugin_output.base):
                     adddevice_c(wt_devices, wt_trackid_MIDIRec, 'Track MIDI', 'PortalOut', 'MIDI', wt_trackid, 10, 35.75)
                     adddevice_e(wt_devices, wt_trackid_ChanStrip, 'Channel Strip', 'JS', 'a19792b0-326f-4b82-93a8-2422ffe215b5', wt_trackid, 350, 10, 0.5011872336272722)
                     pluginid = data_values.nested_dict_get_value(s_trackdata, ['instdata', 'pluginid'])
+                    middlenote = data_values.nested_dict_get_value(s_trackdata, ['instdata', 'middlenote'])
 
                     inst_supported = False
-                    middlenote = data_values.get_value(s_trackdata, 'middlenote', 0)+60
+
+                    middlenote = middlenote+60 if middlenote != None else 0
 
                     if pluginid != None:
                         plugtype = plugins.get_plug_type(cvpj_l, pluginid)
@@ -387,14 +391,14 @@ class output_wavtool(plugin_output.base):
                 wt_tracks.append(wt_track)
 
                 for autoname in [['vol','gain'],['pan','balance']]:
-                    autopoints = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,autoname[0]])
+                    autopoints = auto_nopl.getpoints(cvpj_l, ['track',cvpj_trackid,autoname[0]])
                     if autopoints != None: 
                         autopoints = auto.remove_instant(autopoints, 0, False)
                         if autoname[0] == 'pan': autopoints = auto.multiply_nopl(autopoints, 1, 0.5)
                         wt_trackauto = make_automation(autoname[0], cvpj_trackid, autoname[1], wt_trackid_ChanStrip, wt_trackid, autopoints, trackcolor, True)
                         wt_tracks.append(wt_trackauto)
 
-        mas_cvpjauto_vol = tracks.a_auto_nopl_getpoints(cvpj_l, ['master','vol'])
+        mas_cvpjauto_vol = auto_nopl.getpoints(cvpj_l, ['master','vol'])
         if mas_cvpjauto_vol != None:
             mas_cvpjauto_vol = auto.remove_instant(mas_cvpjauto_vol, 0, False)
             wt_trackauto = make_automation('vol', 'master', 'gain', 'masterFader', 'master', mas_cvpjauto_vol, 'AAAAAA', False)

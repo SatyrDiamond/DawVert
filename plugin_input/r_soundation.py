@@ -2,13 +2,17 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_bytes
-from functions import tracks
 from functions import colors
 from functions import plugins
 from functions import xtramath
 from functions import note_data
 from functions import placement_data
 from functions import song
+from functions_tracks import auto_nopl
+from functions_tracks import auto_data
+from functions_tracks import fxslot
+from functions_tracks import tracks_r
+from functions_tracks import tracks_master
 import plugin_input
 import struct
 import json
@@ -116,36 +120,38 @@ class input_soundation(plugin_input.base):
             ismaster = False
             if sound_chan_type == 'master':
                 ismaster = True
-                tracks.a_addtrack_master(cvpj_l, sndstat_chan['name'], sndstat_chan['volume'], None)
-                tracks.a_addtrack_master_param(cvpj_l, 'pan', (sndstat_chan['pan']-0.5)*2, 'float')
-                tracks.a_addtrack_master_param(cvpj_l, 'enabled', int(not sndstat_chan['mute']), 'bool')
-                tracks.a_addtrack_master_param(cvpj_l, 'solo', int(sndstat_chan['solo']), 'bool')
+                tracks_master.create(cvpj_l, sndstat_chan['volume'])
+                tracks_master.visual(cvpj_l, name=sndstat_chan['name'])
+                tracks_master.param_add(cvpj_l, 'pan', (sndstat_chan['pan']-0.5)*2, 'float')
+                tracks_master.param_add(cvpj_l, 'enabled', int(not sndstat_chan['mute']), 'bool')
+                tracks_master.param_add(cvpj_l, 'solo', int(sndstat_chan['solo']), 'bool')
 
                 for autoname in [['vol','volumeAutomation'],['pan','panAutomation']]:
                     if sndstat_chan[autoname[1]] != []:
                         autodata = sngauto_to_cvpjauto(sndstat_chan[autoname[1]])
                         if autoname[0] == 'pan': autodata = auto.multiply_nopl(autodata, -1, 2)
-                        tracks.a_add_auto_pl(cvpj_l, 'float', ['master',autoname[0]], tracks.a_auto_nopl_to_pl(autodata))
+                        auto_data.add_pl(cvpj_l, 'float', ['master',autoname[0]], auto_nopl.to_pl(autodata))
 
             if sound_chan_type == 'instrument':
                 pluginid = plugins.get_id()
-                tracks.r_create_track(cvpj_l, 'instrument', trackid, name=sndstat_chan['name'], color=[trackcolor[0], trackcolor[1], trackcolor[2]])
-                tracks.r_track_pluginid(cvpj_l, trackid, pluginid)
-                tracks.r_add_param(cvpj_l, trackid, 'vol', sndstat_chan['volume'], 'float')
-                tracks.r_add_param(cvpj_l, trackid, 'pan', (sndstat_chan['pan']-0.5)*2, 'float')
-                tracks.r_add_param(cvpj_l, trackid, 'enabled', int(not sndstat_chan['mute']), 'bool')
-                tracks.r_add_param(cvpj_l, trackid, 'solo', int(sndstat_chan['solo']), 'bool')
+                tracks_r.track_create(cvpj_l, trackid, 'instrument')
+                tracks_r.track_visual(cvpj_l, trackid, name=sndstat_chan['name'], color=[trackcolor[0], trackcolor[1], trackcolor[2]])
+                tracks_r.track_inst_pluginid(cvpj_l, trackid, pluginid)
+                tracks_r.track_param_add(cvpj_l, trackid, 'vol', sndstat_chan['volume'], 'float')
+                tracks_r.track_param_add(cvpj_l, trackid, 'pan', (sndstat_chan['pan']-0.5)*2, 'float')
+                tracks_r.track_param_add(cvpj_l, trackid, 'enabled', int(not sndstat_chan['mute']), 'bool')
+                tracks_r.track_param_add(cvpj_l, trackid, 'solo', int(sndstat_chan['solo']), 'bool')
 
                 for autoname in [['vol','volumeAutomation'],['pan','panAutomation']]:
                     if sndstat_chan[autoname[1]] != []:
                         autodata = sngauto_to_cvpjauto(sndstat_chan[autoname[1]])
                         if autoname[0] == 'pan': autodata = auto.multiply_nopl(autodata, -1, 2)
-                        tracks.a_add_auto_pl(cvpj_l, 'float', ['track',trackid,autoname[0]], tracks.a_auto_nopl_to_pl(autodata))
+                        auto_data.add_pl(cvpj_l, 'float', ['track',trackid,autoname[0]], auto_nopl.to_pl(autodata))
 
                 sound_instdata = sndstat_chan['instrument']
 
                 for sndstat_region in sndstat_chan['regions']:
-                    tracks.r_pl_notes(cvpj_l, trackid, parse_clip_notes(sndstat_region))
+                    tracks_r.add_pl(cvpj_l, trackid, 'notes', parse_clip_notes(sndstat_region))
 
                 if 'identifier' in sound_instdata:
                     instpluginname = sound_instdata['identifier']
@@ -216,8 +222,8 @@ class input_soundation(plugin_input.base):
                 fxenabled = not sound_chan_effect['bypass']
                 plugins.add_plug(cvpj_l, fxpluginid, 'native-soundation', fxpluginname)
                 plugins.add_plug_fxdata(cvpj_l, fxpluginid, fxenabled, 1)
-                if ismaster: tracks.insert_fxslot(cvpj_l, ['master'], 'audio', fxpluginid)
-                else: tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', fxpluginid)
+                if ismaster: fxslot.insert(cvpj_l, ['master'], 'audio', fxpluginid)
+                else: fxslot.insert(cvpj_l, ['track', trackid], 'audio', fxpluginid)
                 
                 snd_params = []
 

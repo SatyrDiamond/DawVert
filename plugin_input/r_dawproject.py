@@ -3,13 +3,13 @@
 
 from functions import data_bytes
 from functions import colors
-from functions import tracks
 from functions import song
 from functions import placement_data
 import plugin_input
 import json
 import zipfile
 import xml.etree.ElementTree as ET
+from functions_tracks import tracks_r
 
 def getvalue(varx, name, fallbackval):
     if len(varx.findall(name)) != 0:
@@ -58,9 +58,10 @@ def dp_parse_trackinfo(dpx_track):
     cvpj_l_track_vol = getvalue(dpx_chan, 'Volume', 1)
 
     if track_role == "instrument" or track_role == "audio":
-        tracks.r_create_track(cvpj_l, track_role, dpt_cid, name=dpt_name, color=dpt_color)
-        tracks.r_add_param(cvpj_l, dpt_cid, 'vol', float(cvpj_l_track_vol[0]), 'float', visname=cvpj_l_track_vol[1])
-        tracks.r_add_param(cvpj_l, dpt_cid, 'pan', float(cvpj_l_track_pan[0]), 'float', visname=cvpj_l_track_pan[1])
+        tracks_r.track_create(cvpj_l, dpt_cid, track_role)
+        tracks_r.track_visual(cvpj_l, dpt_cid, name=dpt_name, color=dpt_color)
+        tracks_r.track_param_add(cvpj_l, dpt_cid, 'vol', float(cvpj_l_track_vol[0]), 'float', visname=cvpj_l_track_vol[1])
+        tracks_r.track_param_add(cvpj_l, dpt_cid, 'pan', float(cvpj_l_track_pan[0]), 'float', visname=cvpj_l_track_pan[1])
 
 def parse_auto(pointsxml):
     cvpj_auto_out = []
@@ -211,7 +212,7 @@ class input_dawproject(plugin_input.base):
 
                                     cvpj_pldata["notelist"].append(cvpj_note)
 
-                                tracks.r_pl_notes(cvpj_l, trackidchan, cvpj_pldata)
+                                tracks_r.add_pl(cvpj_l, trackidchan, 'notes', cvpj_pldata)
 
 
         cvpj_l['use_instrack'] = False

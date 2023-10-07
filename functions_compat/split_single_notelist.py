@@ -61,9 +61,8 @@ def smart_merge(global_regions, local_region_count_list):
 				nlb_patnum.append(nlb_exists.index(nlb_notes))
 
 		#used_areas = repeatfind.find(nlb_patnum, False)
-		used_areas_n = repeatfind.find(nlb_patnum, False)
-		used_areas_r = repeatfind.find(nlb_patnum, True)
-		used_areas = data_regions.merge_used_areas(used_areas_n, used_areas_r)
+		used_areas = repeatfind.find(nlb_patnum, False)
+		#used_areas_r = repeatfind.find(nlb_patnum, True)
 
 		for nlb_num in range(nlb_pos, nlb_pos+lregc):
 			used_area = used_areas[nlb_num-nlb_pos]

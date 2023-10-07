@@ -5,9 +5,10 @@ from functions import colors
 from functions import data_bytes
 from functions import data_values
 from functions import note_data
-from functions import tracks
 from functions import song
 from functions import placement_data
+from functions_tracks import tracks_r
+from functions_tracks import tracks_master
 
 import plugin_input
 import json
@@ -136,20 +137,22 @@ def parse_track(j_wvtl_track):
     print('[input-wavtool] '+j_wvtl_tracktype+' Track: '+j_wvtl_trackname)
 
     if j_wvtl_tracktype == 'MIDI':
-        tracks.r_create_track(cvpj_l, 'instrument', j_wvtl_trackid, name=j_wvtl_trackname, color=j_wvtl_trackcolor)
-        tracks.r_add_param(cvpj_l, j_wvtl_trackid, 'vol', j_wvtl_gain, 'float')
-        tracks.r_add_param(cvpj_l, j_wvtl_trackid, 'pan', j_wvtl_balance, 'float')
-        tracks.r_add_param(cvpj_l, j_wvtl_trackid, 'enabled', int(not j_wvtl_mute), 'bool')
+        tracks_r.track_create(cvpj_l, j_wvtl_trackid, 'instrument')
+        tracks_r.track_visual(cvpj_l, j_wvtl_trackid, name=j_wvtl_trackname, color=j_wvtl_trackcolor)
+        tracks_r.track_param_add(cvpj_l, j_wvtl_trackid, 'vol', j_wvtl_gain, 'float')
+        tracks_r.track_param_add(cvpj_l, j_wvtl_trackid, 'pan', j_wvtl_balance, 'float')
+        tracks_r.track_param_add(cvpj_l, j_wvtl_trackid, 'enabled', int(not j_wvtl_mute), 'bool')
         for j_wvtl_trackclip in j_wvtl_trackclips:
-            tracks.r_pl_notes(cvpj_l, j_wvtl_trackid, parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype))
+            tracks_r.add_pl(cvpj_l, j_wvtl_trackid, 'notes', parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype))
 
     if j_wvtl_tracktype == 'Audio':
-        tracks.r_create_track(cvpj_l, 'audio', j_wvtl_trackid, name=j_wvtl_trackname, color=j_wvtl_trackcolor)
-        tracks.r_add_param(cvpj_l, j_wvtl_trackid, 'vol', j_wvtl_gain, 'float')
-        tracks.r_add_param(cvpj_l, j_wvtl_trackid, 'pan', j_wvtl_balance, 'float')
-        tracks.r_add_param(cvpj_l, j_wvtl_trackid, 'enabled', int(not j_wvtl_mute), 'bool')
+        tracks_r.track_create(cvpj_l, j_wvtl_trackid, 'audio')
+        tracks_r.track_visual(cvpj_l, j_wvtl_trackid, name=j_wvtl_trackname, color=j_wvtl_trackcolor)
+        tracks_r.track_param_add(cvpj_l, j_wvtl_trackid, 'vol', j_wvtl_gain, 'float')
+        tracks_r.track_param_add(cvpj_l, j_wvtl_trackid, 'pan', j_wvtl_balance, 'float')
+        tracks_r.track_param_add(cvpj_l, j_wvtl_trackid, 'enabled', int(not j_wvtl_mute), 'bool')
         for j_wvtl_trackclip in j_wvtl_trackclips:
-            tracks.r_pl_audio(cvpj_l, j_wvtl_trackid, parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype))
+            tracks_r.add_pl(cvpj_l, j_wvtl_trackid, 'audio', parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype))
 
 # -------------------------------------------- main --------------------------------------------
 
@@ -197,7 +200,8 @@ class input_wavtool(plugin_input.base):
         for j_wvtl_track in j_wvtl_tracks:
             parse_track(j_wvtl_track)
 
-        tracks.a_addtrack_master(cvpj_l, 'Master', 1, [0.14, 0.14, 0.14])
+        tracks_master.create(cvpj_l, 1)
+        tracks_master.visual(cvpj_l, name='Master', color=[0.14, 0.14, 0.14])
 
         cvpj_l['timesig'] = [j_wvtl_beatNumerator, j_wvtl_beatDenominator]
         song.add_param(cvpj_l, 'bpm', j_wvtl_bpm)

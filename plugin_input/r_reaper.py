@@ -3,11 +3,11 @@
 
 from functions import data_bytes
 from functions import song
-from functions import tracks
 from functions import colors
 from functions import note_data
 from functions import notelist_data
 from functions import data_values
+from functions_tracks import tracks_r
 import plugin_input
 import json
 import os
@@ -76,9 +76,11 @@ class input_reaper(plugin_input.base):
                         else:
                             if rpp_trackvar.tag == 'ITEM': rpp_trackitems.append(rpp_trackvar.children)
 
-                    tracks.r_create_track(cvpj_l, 'hybrid', cvpj_trackid, name=cvpj_trackname, color=cvpj_trackcolor)
-                    tracks.r_add_param(cvpj_l, cvpj_trackid, 'vol', cvpj_trackvol, 'float')
-                    tracks.r_add_param(cvpj_l, cvpj_trackid, 'pan', cvpj_trackpan, 'float')
+                    tracks_r.track_create(cvpj_l, cvpj_trackid, 'hybrid')
+                    tracks_r.track_visual(cvpj_l, cvpj_trackid, name=cvpj_trackname, color=cvpj_trackcolor)
+                    
+                    tracks_r.track_param_add(cvpj_l, cvpj_trackid, 'vol', cvpj_trackvol, 'float')
+                    tracks_r.track_param_add(cvpj_l, cvpj_trackid, 'pan', cvpj_trackpan, 'float')
 
                     for rpp_trackitem in rpp_trackitems:
                         cvpj_placement = {}
@@ -153,7 +155,7 @@ class input_reaper(plugin_input.base):
                             cvpj_cutend = (  (cvpj_duration+cvpj_offset) *8)*tempomul
                             cvpj_placement['duration'] = cvpj_duration
                             cvpj_placement['cut'] = {'type': 'cut', 'start': cvpj_offset_bpm, 'end': cvpj_cutend}
-                            tracks.r_pl_notes(cvpj_l, cvpj_trackid, cvpj_placement)
+                            tracks_r.add_pl(cvpj_l, cvpj_trackid, 'notes', cvpj_placement)
 
                         if cvpj_placement_type == 'audio': 
                             cvpj_offset /= cvpj_audio_rate
@@ -168,7 +170,7 @@ class input_reaper(plugin_input.base):
                             cvpj_placement['audiomod']['pitch'] = cvpj_audio_pitch
                             cvpj_placement['audiomod']['stretch_method'] = 'rate_speed'
                             cvpj_placement['audiomod']['stretch_data'] = {'rate': cvpj_audio_rate}
-                            tracks.r_pl_audio(cvpj_l, cvpj_trackid, cvpj_placement)
+                            tracks_r.add_pl(cvpj_l, cvpj_trackid, 'audio', cvpj_placement)
 
                         #print(cvpj_placement['duration'], cvpj_placement['cut'])
 

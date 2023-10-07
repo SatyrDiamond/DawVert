@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_values
-from functions import tracks
 from functions import xtramath
 
 import json

@@ -13,9 +13,10 @@ from functions import audio_wav
 from functions import data_values
 from functions import placements
 from functions import plugins
-from functions import tracks
 from functions import data_bytes
 from functions import song
+from functions_tracks import tracks_mi
+from functions_tracks import auto_data
 
 try: import xmodits
 except: xmodits_exists = False
@@ -377,9 +378,9 @@ class input_it(plugin_input.base):
                         else: outputreso = 1
                         plugins.add_filter(cvpj_l, pluginid, True, outputcutoff, outputreso, "lowpass", None)
 
-                tracks.m_inst_create(cvpj_l, it_instname, name=cvpj_instname, color=[0.71, 0.58, 0.47])
-
-                tracks.m_inst_pluginid(cvpj_l, it_instname, pluginid)
+                tracks_mi.inst_create(cvpj_l, it_instname)
+                tracks_mi.inst_visual(cvpj_l, it_instname, name=cvpj_instname, color=[0.71, 0.58, 0.47])
+                tracks_mi.inst_pluginid(cvpj_l, it_instname, pluginid)
 
                 cvpj_instdata_midiout = {}
                 if 'midi_chan' in it_singleinst: 
@@ -387,7 +388,7 @@ class input_it(plugin_input.base):
                     cvpj_instdata_midiout['channel'] = it_singleinst['midi_chan']+1
                 if 'midi_inst' in it_singleinst: cvpj_instdata_midiout['program'] = it_singleinst['midi_inst']+1
                 if 'midi_bank' in it_singleinst: cvpj_instdata_midiout['bank'] = it_singleinst['midi_bank']+1
-                tracks.m_inst_add_dataval(cvpj_l, it_instname, 'midi', 'output', cvpj_instdata_midiout)
+                tracks_mi.inst_dataval_add(cvpj_l, it_instname, 'midi', 'output', cvpj_instdata_midiout)
 
                 filterenv_used = False
 
@@ -434,7 +435,7 @@ class input_it(plugin_input.base):
 
                 plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
                 plugins.env_point_to_asdr(cvpj_l, pluginid, 'cutoff')
-                tracks.m_inst_add_param(cvpj_l, it_instname, 'vol', track_volume, 'float')
+                tracks_mi.inst_param_add(cvpj_l, it_instname, 'vol', track_volume, 'float')
 
                 instrumentcount += 1
         if it_header_flag_useinst == 0:
@@ -462,9 +463,10 @@ class input_it(plugin_input.base):
 
                     plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
 
-                tracks.m_inst_create(cvpj_l, it_instname, name=cvpj_instname, color=[0.71, 0.58, 0.47])
-                tracks.m_inst_pluginid(cvpj_l, it_instname, pluginid)
-                tracks.m_inst_add_param(cvpj_l, it_instname, 'vol', track_volume, 'float')
+                tracks_mi.inst_create(cvpj_l, it_instname)
+                tracks_mi.inst_visual(cvpj_l, it_instname, name=cvpj_instname, color=[0.71, 0.58, 0.47])
+                tracks_mi.inst_pluginid(cvpj_l, it_instname, pluginid)
+                tracks_mi.inst_param_add(cvpj_l, it_instname, 'vol', track_volume, 'float')
 
                 samplecount += 1
 
@@ -474,7 +476,7 @@ class input_it(plugin_input.base):
         it_file.seek(it_header_msgoffset)
         it_songmessage = data_bytes.readstring_fixedlen(it_file, it_header_msglength, "windows-1252")
 
-        tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo))
+        auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, table_orders, it_header_speed, it_header_tempo))
         placements.make_timemarkers(cvpj_l, [4,16], patlentable, None)
         song.add_info(cvpj_l, 'title', it_header_songname)
         song.add_info_msg(cvpj_l, 'text', it_songmessage.replace('\r', '\n'))

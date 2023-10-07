@@ -2,9 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import placement_data
-from functions import tracks
 from functions import note_data
 from functions import song
+from functions_tracks import tracks_r
+from functions_tracks import tracks_master
 import plugin_input
 import json
 
@@ -47,14 +48,13 @@ class input_cvpj_f(plugin_input.base):
         cvpj_l = {}
 
         mmc_bpm, notelen = song.get_lower_tempo(mmc_bpm, 1, 200)
-        tracks.a_addtrack_master(cvpj_l, 'MAS', mmc_mastervolume*1.5, maincolor)
+
+        tracks_master.create(cvpj_l, mmc_mastervolume*1.5)
+        tracks_master.visual(cvpj_l, name='MAS', color=maincolor)
 
         tracknum = 0
         for mmc_track in mmc_tracks:
             cvpj_instid = 'CH'+str(tracknum)
-            tracks.r_create_track(cvpj_l, 'instrument', cvpj_instid, color=maincolor)
-            tracks.r_add_param(cvpj_l, cvpj_instid, 'enabled', int(not getvalue(mmc_track, 'Mute', False)), 'bool')
-            tracks.r_add_param(cvpj_l, cvpj_instid, 'solo', int(getvalue(mmc_track, 'Solo', False)), 'bool')
 
             cvpj_notelist = []
 
@@ -80,7 +80,11 @@ class input_cvpj_f(plugin_input.base):
                 cvpj_notedata = note_data.rx_makenote(notepos, notedur, notekey, notevol, notepan)
                 cvpj_notelist.append(cvpj_notedata)
 
-            tracks.r_pl_notes(cvpj_l, cvpj_instid, placement_data.nl2pl(cvpj_notelist))
+            tracks_r.track_create(cvpj_l, cvpj_instid, 'instrument')
+            tracks_r.track_visual(cvpj_l, cvpj_instid, name=cvpj_instid, color=maincolor)
+            tracks_r.track_param_add(cvpj_l, cvpj_instid, 'enabled', int(not getvalue(mmc_track, 'Mute', False)), 'bool')
+            tracks_r.track_param_add(cvpj_l, cvpj_instid, 'solo', int(getvalue(mmc_track, 'Solo', False)), 'bool')
+            tracks_r.add_pl(cvpj_l, cvpj_instid, 'notes', placement_data.nl2pl(cvpj_notelist))
 
             tracknum += 1
 

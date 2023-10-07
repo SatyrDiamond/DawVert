@@ -7,9 +7,9 @@ import experiments_plugin_input
 import os
 import json
 from functions import data_values
-from functions import tracks
 from functions import audio
 from functions import song
+from functions_tracks import tracks_r
 
 def datachunk_to_placements(poschunk): 
 
@@ -53,11 +53,13 @@ class input_color_art(experiments_plugin_input.base):
         chandata = {}
 
         for trackid in range(11, 17):
-            tracks.r_create_track(cvpj_l, 'audio', str(trackid), name='Player 1: '+str(trackid-10))
+            tracks_r.track_create(cvpj_l, str(trackid), 'audio')
+            tracks_r.track_visual(cvpj_l, str(trackid), name='Player 1: '+str(trackid-10))
             chandata[trackid] = {}
 
         for trackid in range(20, 27):
-            tracks.r_create_track(cvpj_l, 'audio', str(trackid), name='Player 2: '+str(trackid-19))
+            tracks_r.track_create(cvpj_l, str(trackid), 'audio')
+            tracks_r.track_visual(cvpj_l, str(trackid), name='Player 2: '+str(trackid-19))
             chandata[trackid] = {}
 
         audio_data = {}
@@ -114,13 +116,14 @@ class input_color_art(experiments_plugin_input.base):
 
         for trackid in range(11, 27):
             if trackid in chandata:
-                tracks.r_pl_audio(cvpj_l, trackid, datachunk_to_placements(chandata[trackid]))
+                tracks_r.add_pl(cvpj_l, trackid, 'audio', datachunk_to_placements(chandata[trackid]))
 
         for s_chandata_bgm in chandata_bgm:
             print(s_chandata_bgm, chandata_bgm[s_chandata_bgm])
             trackid = 'bgm_'+str(s_chandata_bgm)
-            tracks.r_create_track(cvpj_l, 'audio', trackid, name='BGM #'+str(s_chandata_bgm))
-            tracks.r_pl_audio(cvpj_l, trackid, datachunk_to_placements(chandata_bgm[s_chandata_bgm]))
+            tracks_r.track_create(cvpj_l, trackid, 'audio')
+            tracks_r.track_visual(cvpj_l, trackid, name='BGM #'+str(s_chandata_bgm))
+            tracks_r.add_pl(cvpj_l, trackid, 'audio', datachunk_to_placements(chandata_bgm[s_chandata_bgm]))
 
 
         #exit()

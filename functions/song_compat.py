@@ -6,7 +6,6 @@ from functions import notelist_data
 from functions import data_values
 from functions import xtramath
 from functions import params
-from functions import tracks
 from functions import audio
 
 from functions_compat import fxrack2trackfx

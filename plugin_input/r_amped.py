@@ -3,13 +3,18 @@
 
 from functions import data_bytes
 from functions import song
-from functions import tracks
 from functions import colors
 from functions import note_data
 from functions import plugins
 from functions import notelist_data
 from functions import placement_data
 from functions import data_values
+from functions_tracks import auto_data
+from functions_tracks import auto_nopl
+from functions_tracks import fxslot
+from functions_tracks import trackfx
+from functions_tracks import tracks_master
+from functions_tracks import tracks_r
 import plugin_input
 import json
 import os
@@ -177,10 +182,10 @@ def encode_devices(amped_tr_devices, trackid):
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', devicetype[0])
             do_idparams(amped_tr_device['params'], pluginid)
 
-        if is_instrument == True: tracks.r_track_pluginid(cvpj_l, trackid, pluginid)
+        if is_instrument == True: tracks_r.track_inst_pluginid(cvpj_l, trackid, pluginid)
         else:
-            if trackid == None: tracks.insert_fxslot(cvpj_l, ['master'], 'audio', pluginid)
-            else: tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
+            if trackid == None: fxslot.insert(cvpj_l, ['master'], 'audio', pluginid)
+            else: fxslot.insert(cvpj_l, ['track', trackid], 'audio', pluginid)
 
 def ampedauto_to_cvpjauto(autopoints):
     ampedauto = []
@@ -252,15 +257,16 @@ class input_amped(plugin_input.base):
 
             for amped_tr_automation in amped_tr_automations:
                 autoname = amped_tr_automation['param']
-                autopoints = tracks.a_auto_nopl_to_pl(ampedauto_to_cvpjauto(amped_tr_automation['points']))
-                if autoname == 'volume': tracks.a_add_auto_pl(cvpj_l, 'float', ['track',amped_tr_id,'vol'], autopoints)
-                if autoname == 'pan': tracks.a_add_auto_pl(cvpj_l, 'float', ['track',amped_tr_id,'pan'], autopoints)
+                autopoints = auto_nopl.to_pl(ampedauto_to_cvpjauto(amped_tr_automation['points']))
+                if autoname == 'volume': auto_data.add_pl(cvpj_l, 'float', ['track',amped_tr_id,'vol'], autopoints)
+                if autoname == 'pan': auto_data.add_pl(cvpj_l, 'float', ['track',amped_tr_id,'pan'], autopoints)
                 
-            tracks.r_create_track(cvpj_l, 'hybrid', amped_tr_id, name=amped_tr_name, color=amped_colors[amped_tr_color])
-            tracks.r_add_param(cvpj_l, amped_tr_id, 'vol', amped_tr_volume, 'float')
-            tracks.r_add_param(cvpj_l, amped_tr_id, 'pan', amped_tr_pan, 'float')
-            tracks.r_add_param(cvpj_l, amped_tr_id, 'enabled', int(not amped_tr_mute), 'bool')
-            tracks.r_add_param(cvpj_l, amped_tr_id, 'solo', int(amped_tr_solo), 'bool')
+            tracks_r.track_create(cvpj_l, amped_tr_id, 'hybrid')
+            tracks_r.track_visual(cvpj_l, amped_tr_id, name=amped_tr_name, color=amped_colors[amped_tr_color])
+            tracks_r.track_param_add(cvpj_l, amped_tr_id, 'vol', amped_tr_volume, 'float')
+            tracks_r.track_param_add(cvpj_l, amped_tr_id, 'pan', amped_tr_pan, 'float')
+            tracks_r.track_param_add(cvpj_l, amped_tr_id, 'enabled', int(not amped_tr_mute), 'bool')
+            tracks_r.track_param_add(cvpj_l, amped_tr_id, 'solo', int(amped_tr_solo), 'bool')
             encode_devices(amped_tr_devices, amped_tr_id)
             for amped_reg in amped_tr_regions:
                 amped_reg_position = amped_reg['position']*4
@@ -276,13 +282,15 @@ class input_amped(plugin_input.base):
                 cvpj_placement_base['name'] = amped_reg['name']
                 cvpj_placement_base['color'] = amped_colors[amped_reg_color]
                 cvpj_placement_base['cut'] = {'type': 'cut', 'start':amped_reg_offset, 'end': amped_reg_length+amped_reg_offset}
+
                 if amped_reg_midi != {'notes': [], 'events': [], 'chords': []}: 
                     cvpj_placement_notes = cvpj_placement_base.copy()
                     cvpj_placement_notes['notelist'] = []
                     for amped_note in amped_reg_midi['notes']:
                         cvpj_note = note_data.rx_makenote(amped_note['position']*4, amped_note['length']*4, amped_note['key']-60,  amped_note['velocity']/127, None)
                         cvpj_placement_notes['notelist'].append(cvpj_note)
-                    tracks.r_pl_notes(cvpj_l, amped_tr_id, cvpj_placement_notes)
+                    tracks_r.add_pl(cvpj_l, amped_tr_id, 'notes', cvpj_placement_notes)
+
                 if amped_reg_clips != []:
                     temp_pls = []
                     for amped_reg_clip in amped_reg_clips:
@@ -305,6 +313,6 @@ class input_amped(plugin_input.base):
 
                     for temp_pl in trimpls:
                         temp_pl['color'] = amped_colors[amped_reg_color]
-                        tracks.r_pl_audio(cvpj_l, amped_tr_id, temp_pl)
+                        tracks_r.add_pl(cvpj_l, amped_tr_id, 'audio', temp_pl)
 
         return json.dumps(cvpj_l)

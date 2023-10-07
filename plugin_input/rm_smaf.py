@@ -8,8 +8,8 @@ import math
 from functions import data_bytes
 from functions import note_mod
 from functions import song
-from functions import tracks
 from functions_plugin import format_midi_in
+from functions_tracks import tracks_rm
 
 def calc_gatetime(bio_mmf_Mtsq):
     out_duration = 0
@@ -112,12 +112,14 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
         instid = '_'.join([str(usedinst[0]), str(usedinst[1]), str(usedinst[2]), str(usedinst[3])])
         
         if usedinst[2] == 124: 
-            tracks.c_inst_create(cvpj_l, instid, name='MA-3 User #'+str(usedinst[1]), color=[0.3,0.3,0.3])
-            tracks.c_inst_add_dataval(cvpj_l, instid, None, 'fxrack_channel', int(usedinst[0]+1))
+            tracks_rm.inst_create(cvpj_l, instid)
+            tracks_rm.inst_visual(cvpj_l, instid, name='MA-3 User #'+str(usedinst[1]), color=[0.3,0.3,0.3])
+            tracks_rm.inst_fxrackchan_add(cvpj_l, instid, int(usedinst[0]+1))
 
         elif usedinst[2] == 125: 
-            tracks.c_inst_create(cvpj_l, instid, name='MA-3 PCM #'+str(usedinst[1]), color=[0.3,0.3,0.3])
-            tracks.c_inst_add_dataval(cvpj_l, instid, None, 'fxrack_channel', int(usedinst[0]+1))
+            tracks_rm.inst_create(cvpj_l, instid)
+            tracks_rm.inst_visual(cvpj_l, instid, name='MA-3 PCM #'+str(usedinst[1]), color=[0.3,0.3,0.3])
+            tracks_rm.inst_fxrackchan_add(cvpj_l, instid, int(usedinst[0]+1))
 
     return cvpj_l
 

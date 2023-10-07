@@ -2,13 +2,13 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_values
-from functions import tracks
+from functions_tracks import tracks_r
 
 def process_r(cvpj_l):
     new_trackdata = {}
     new_trackpl = {}
     new_trackordering = []
-    for cvpj_trackid, s_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+    for cvpj_trackid, s_trackdata, track_placements in tracks_r.iter(cvpj_l):
         tracktype = s_trackdata['type']
         trackauto = data_values.nested_dict_get_value(cvpj_l, ['automation', 'track', cvpj_trackid])
         if trackauto != None: del cvpj_l['automation']['track'][cvpj_trackid]

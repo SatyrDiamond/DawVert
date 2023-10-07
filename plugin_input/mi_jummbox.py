@@ -4,13 +4,17 @@
 from functions import data_bytes
 from functions import auto
 from functions import idvals
-from functions import tracks
 from functions import plugins
 from functions import note_data
 from functions import data_values
 from functions import placement_data
 from functions import placements
 from functions import song
+from functions_tracks import auto_data
+from functions_tracks import fxrack
+from functions_tracks import fxslot
+from functions_tracks import tracks_master
+from functions_tracks import tracks_mi
 import plugin_input
 import json
 
@@ -160,14 +164,14 @@ def addfx(cvpj_instid, fxname):
 	pluginid = cvpj_instid+'_'+fxname
 	plugins.add_plug(cvpj_l, pluginid, 'native-jummbox', fxname)
 	plugins.add_plug_fxdata(cvpj_l, pluginid, True, 1)
-	tracks.insert_fxslot(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
+	fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
 	return pluginid
 
 def addfx_eq(cvpj_instid):
 	pluginid = cvpj_instid+'_'+'eq'
 	plugins.add_plug(cvpj_l, pluginid, 'eq', 'peaks')
 	plugins.add_plug_fxdata(cvpj_l, pluginid, True, 1)
-	tracks.insert_fxslot(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
+	fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
 	return pluginid
 
 def get_harmonics(i_harmonics):
@@ -200,9 +204,11 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 		plugins.add_plug_gm_midi(cvpj_l, cvpj_instid, 0, gm_inst)
 		cvpj_instname = idvals.get_idval(idvals_inst_beepbox, bb_preset, 'name')
 
-		tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=bb_color)
-		tracks.m_inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
-		tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, 'midi', 'output', {'program': gm_inst})
+		tracks_mi.inst_create(cvpj_l, cvpj_instid)
+		tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname, color=bb_color)
+
+		tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
+		tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'midi', 'output', {'program': gm_inst})
 	else:
 		bb_inst_type = bb_instrument['type']
 		plugins.add_plug(cvpj_l, cvpj_instid, 'native-jummbox', bb_inst_type)
@@ -256,9 +262,10 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 			customChipWave = [customChipWave[str(i)] for i in range(64)]
 			plugins.add_wave(cvpj_l, cvpj_instid, 'chipwave', customChipWave, -24, 24)
 
-		tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=bb_color)
-		tracks.m_inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
-		tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', cvpj_volume, 'float')
+		tracks_mi.inst_create(cvpj_l, cvpj_instid)
+		tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname, color=bb_color)
+		tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
+		tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', cvpj_volume, 'float')
 
 		if 'eqFilterType' in bb_instrument:
 			if bb_instrument['eqFilterType'] == False:
@@ -421,11 +428,12 @@ def parse_channel(channeldata, channum, durpos):
 			parse_instrument(channum, t_instnum, bb_instrument, bb_type, bb_color, bb_inst_effects)
 			cvpj_instid = 'bb_ch'+str(channum)+'_inst'+str(t_instnum)
 
-			if 'panning' in bb_inst_effects: tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pan', bb_instrument['pan']/50, 'float')
-			#if 'pitch shift' in bb_instrument['effects']: tracks.m_param_instdata(cvpj_l, cvpj_instid, 'pitch', (bb_instrument['pitchShiftSemitones']-12)*100 )
-			if 'detune' in bb_inst_effects: tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pitch', bb_instrument['detuneCents']/100, 'float')
+			if 'panning' in bb_inst_effects: tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'pan', bb_instrument['pan']/50, 'float')
+			if 'detune' in bb_inst_effects: tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'pitch', bb_instrument['detuneCents']/100, 'float')
 
-			tracks.m_playlist_pl(cvpj_l, str(channum), None, bb_color, None)
+			tracks_mi.playlist_add(cvpj_l, str(channum))
+			tracks_mi.playlist_visual(cvpj_l, str(channum), color=bb_color)
+
 			t_instnum += 1
 
 		patterncount = 0
@@ -435,7 +443,9 @@ def parse_channel(channeldata, channum, durpos):
 			bb_notes = bb_pattern['notes']
 			if 'instruments' in bb_pattern: bb_instruments = bb_pattern['instruments']
 			else: bb_instruments = [1]
-			if bb_notes != []: tracks.m_add_nle(cvpj_l, cvpj_patid, parse_notes(channum, bb_notes, bb_instruments))
+			if bb_notes != []: 
+				tracks_mi.notelistindex_add(cvpj_l, cvpj_patid, parse_notes(channum, bb_notes, bb_instruments))
+				tracks_mi.notelistindex_visual(cvpj_l, cvpj_patid, name=nid_name)
 			patterncount += 1
 
 		placement_pos = 0
@@ -444,7 +454,7 @@ def parse_channel(channeldata, channum, durpos):
 			bb_partdur = durpos[partnum]
 			if bb_part != 0:
 				cvpj_l_placement = placement_data.makepl_n_mi(calcval(placement_pos), calcval(bb_partdur), 'bb_ch'+str(channum)+'_pat'+str(bb_part-1))
-				tracks.m_playlist_pl_add(cvpj_l, str(channum), cvpj_l_placement)
+				tracks_mi.add_pl(cvpj_l, str(channum), 'notes', cvpj_l_placement)
 				bbcvpj_placementnames[channum].append('bb_ch'+str(channum)+'_pat'+str(bb_part-1))
 			else:
 				bbcvpj_placementnames[channum].append(None)
@@ -485,13 +495,13 @@ def parse_channel(channeldata, channum, durpos):
 						if bb_mod_target[0] == -1:
 							if bb_mod_target[2] == 1: 
 								cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.01)
-								tracks.a_add_auto_pl(cvpj_l, 'float', ['master', 'vol'], cvpj_autopl[0])
+								auto_data.add_pl(cvpj_l, 'float', ['master', 'vol'], cvpj_autopl[0])
 							elif bb_mod_target[2] == 2: 
 								cvpj_autopl = auto.multiply([cvpj_autodata], 30, 1)
-								tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], cvpj_autopl[0])
+								auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], cvpj_autopl[0])
 							elif bb_mod_target[2] == 17: 
 								cvpj_autopl = auto.multiply([cvpj_autodata], -250, 0.01)
-								tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'pitch'], cvpj_autopl[0])
+								auto_data.add_pl(cvpj_l, 'float', ['main', 'pitch'], cvpj_autopl[0])
 
 						else:
 							auto_instnum = 1
@@ -499,13 +509,13 @@ def parse_channel(channeldata, channum, durpos):
 
 							if bb_mod_target[2] == 6: 
 								cvpj_autopl = auto.multiply([cvpj_autodata], -50, 0.02)
-								tracks.a_add_auto_pl(cvpj_l, 'float', ['track', auto_cvpj_instid, 'pan'], cvpj_autopl[0])
+								auto_data.add_pl(cvpj_l, 'float', ['track', auto_cvpj_instid, 'pan'], cvpj_autopl[0])
 							elif bb_mod_target[2] == 15: 
 								cvpj_autopl = auto.multiply([cvpj_autodata], -200, 1)
-								tracks.a_add_auto_pl(cvpj_l, 'float', ['track', auto_cvpj_instid, 'pitch'], cvpj_autodata)
+								auto_data.add_pl(cvpj_l, 'float', ['track', auto_cvpj_instid, 'pitch'], cvpj_autodata)
 							elif bb_mod_target[2] == 36: 
 								cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.04)
-								tracks.a_add_auto_pl(cvpj_l, 'float', ['track', auto_cvpj_instid, 'vol'], cvpj_autopl[0])
+								auto_data.add_pl(cvpj_l, 'float', ['track', auto_cvpj_instid, 'vol'], cvpj_autopl[0])
 
 			placement_pos += bb_partdur
 
@@ -584,7 +594,9 @@ class input_jummbox(plugin_input.base):
 		bytestream = open(input_file, 'r', encoding='utf8')
 		jummbox_json = json.load(bytestream)
 
-		tracks.a_addtrack_master(cvpj_l, 'Master', jummbox_json['masterGain'], None)
+		tracks_master.create(cvpj_l, jummbox_json['masterGain'])
+		tracks_master.visual(cvpj_l, name='Master')
+
 		cvpj_l_track_data = {}
 		cvpj_l_track_order = []
 		cvpj_l_track_placements = {}

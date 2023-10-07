@@ -9,7 +9,7 @@ from functions import data_values
 from functions import params
 from functions import idvals
 from functions import plugins
-from functions import tracks
+from functions_tracks import tracks_r
 
 def float2int(value): return struct.unpack("<I", struct.pack("<f", value))[0]
 
@@ -65,7 +65,7 @@ class output_onlineseq(plugin_output.base):
 
         glob_markerdata = {}
 
-        for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+        for cvpj_trackid, cvpj_trackdata, track_placements in tracks_r.iter(cvpj_l):
             #print('[output-midi] Trk# | Ch# | Bnk | Prog | Key | Name')
             if 'notes' in track_placements:
                 onlineseqinst = 43

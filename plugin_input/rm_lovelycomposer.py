@@ -7,13 +7,14 @@ import os.path
 import struct
 from functions import placements
 from functions import placement_data
-from functions import tracks
 from functions import plugins
 from functions import auto
 from functions import note_data
 from functions import data_bytes
 from functions import data_values
 from functions import song
+from functions_tracks import tracks_rm
+from functions_tracks import auto_data
 
 #               Name,              Type, FadeIn, FadeOut, PitchMod, Slide, Vib, Color
 lc_instlist = {}
@@ -262,7 +263,7 @@ class input_lc(plugin_input.base):
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'lovelycomposer'
     def getname(self): return 'Lovely Composer'
-    def gettype(self): return 'm'
+    def gettype(self): return 'rm'
     def getdawcapabilities(self): 
         return {
         'track_lanes': True
@@ -275,11 +276,6 @@ class input_lc(plugin_input.base):
         lc_l_song = json.loads(lc_f_lines[1])
 
         lc_channels = lc_l_song['channels']["channels"]
-        lc_ch_p1 = lc_channels[0]["sl"]
-        lc_ch_p2 = lc_channels[1]["sl"]
-        lc_ch_p3 = lc_channels[2]["sl"]
-        lc_ch_p4 = lc_channels[3]["sl"]
-        lc_ch_chords = lc_channels[4]["sl"]
 
         lc_enable_loop = lc_l_song['enable_loop']
         lc_loop_end_bar = lc_l_song['loop_end_bar']
@@ -289,11 +285,12 @@ class input_lc(plugin_input.base):
 
         cvpj_l = {}
 
-        tracks.m_playlist_pl(cvpj_l, 1, "Part 1", lc_colors[0], lc_parse_placements(lc_ch_p1, 0, lc_colors[0], False))
-        tracks.m_playlist_pl(cvpj_l, 2, "Part 2", lc_colors[1], lc_parse_placements(lc_ch_p2, 1, lc_colors[1], False))
-        tracks.m_playlist_pl(cvpj_l, 3, "Part 3", lc_colors[2], lc_parse_placements(lc_ch_p3, 2, lc_colors[2], False))
-        tracks.m_playlist_pl(cvpj_l, 4, "Part 4", lc_colors[3], lc_parse_placements(lc_ch_p4, 3, lc_colors[3], False))
-        tracks.m_playlist_pl(cvpj_l, 5, "Chord", lc_colors[4], lc_parse_placements(lc_ch_chords, 4, lc_colors[4], True))
+        for num in range(5):
+            cvpj_placements = lc_parse_placements(lc_channels[num]["sl"], num, lc_colors[num], num == 4)
+            cvpj_plname = "Part "+str(num+1) if num != 4 else "Chord"
+            tracks_rm.track_create(cvpj_l, str(num), 'instruments')
+            tracks_rm.track_visual(cvpj_l, str(num), name=cvpj_plname)
+            tracks_rm.add_pl(cvpj_l, str(num), 'notes', cvpj_placements)
 
         for used_instrument in used_instruments:
             pluginid = plugins.get_id()
@@ -326,21 +323,24 @@ class input_lc(plugin_input.base):
                 plugins.add_plug(cvpj_l, pluginid, 'lovelycomposer', used_instrument[1])
                 plugins.add_plug_data(cvpj_l, pluginid, 'duty', 2)
 
-            tracks.m_inst_create(cvpj_l, cvpj_instid, name=used_instrument[1], color=lc_colors[used_instrument[0]])
-            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+            tracks_rm.inst_create(cvpj_l, cvpj_instid)
+            tracks_rm.inst_visual(cvpj_l, cvpj_instid, name=used_instrument[1], color=lc_colors[used_instrument[0]])
+            tracks_rm.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
-        tracks.m_inst_create(cvpj_l, 'chord', name='Chord', color=lc_colors[4])
+        tracks_rm.inst_create(cvpj_l, 'chord')
+        tracks_rm.inst_visual(cvpj_l, 'chord', name='Chord', color=lc_colors[4])
+
         startinststr = 'lc_instlist_'
 
         tempoauto = []
         position = 0
         prevtempo = 0
-        for chandata in lc_ch_p1:
+        for chandata in lc_channels[0]["sl"]:
             duration = chandata['play_notes'] if 'play_notes' in chandata else 32
             bpm = (3614.75409836/chandata['play_speed'])/2 if 'play_speed' in chandata else 120
             tempopldata = auto.makepl(position, duration, [{"position": 0, "value": bpm}])
             if prevtempo != bpm:
-                tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], tempopldata)
+                auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], tempopldata)
                 prevtempo = bpm
             position += duration
 

@@ -9,8 +9,8 @@ from functions import colors
 from functions import data_values
 from functions import params
 from functions import plugins
-from functions import tracks
 from functions_plugin import waveform_values
+from functions_tracks import tracks_r
 
 def get_plugins(xml_tag, cvpj_fxids):
     for cvpj_fxid in cvpj_fxids:
@@ -115,7 +115,7 @@ class output_waveform_edit(plugin_output.base):
             if 'name' in cvpj_track_master: wf_MASTERTRACK.set('name', cvpj_track_master['name'])
             wf_globalid =+ 1
 
-        for cvpj_trackid, s_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+        for cvpj_trackid, s_trackdata, track_placements in tracks_r.iter(cvpj_l):
 
             wf_TRACK = ET.SubElement(wf_proj, "TRACK")
             wf_TRACK.set('id', str(wf_globalid))

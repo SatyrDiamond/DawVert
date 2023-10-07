@@ -5,7 +5,7 @@ from PIL import Image
 
 import experiments_plugin_input
 import json
-from functions import tracks
+from functions_tracks import tracks_r
 
 class input_color_art(experiments_plugin_input.base):
     def __init__(self): pass
@@ -41,7 +41,8 @@ class input_color_art(experiments_plugin_input.base):
         for height in range(h-1):
             trackid = str('track'+str(height))
 
-            tracks.r_create_track(cvpj_l, 'instrument', trackid, name='.')
+            tracks_r.track_create(cvpj_l, trackid, 'instrument')
+            tracks_r.track_visual(cvpj_l, trackid, name='.')
 
             for width in range(w):
                 coordinate = width, height
@@ -53,7 +54,7 @@ class input_color_art(experiments_plugin_input.base):
                 placement_pl['position'] = width*16
                 placement_pl['duration'] = 16
                 placement_pl['notelist'] = [{"key": 0, "position": 0, "duration": 0.2}]
-                tracks.r_pl_notes(cvpj_l, trackid, placement_pl)
+                tracks_r.add_pl(cvpj_l, trackid, 'notes', placement_pl)
 
         cvpj_l['bpm'] = 140
         return json.dumps(cvpj_l)

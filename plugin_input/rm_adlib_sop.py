@@ -10,11 +10,12 @@ from functions_plugparams import opl_sbi
 from functions import audio_wav
 from functions import data_bytes
 from functions import placement_data
-from functions import tracks
 from functions import plugins
 from functions import song
 from functions import note_data
 from functions import params
+from functions_tracks import tracks_rm
+from functions_tracks import auto_nopl
 
 def add_point(i_list, time, value):
     if time not in i_list: i_list[time] = []
@@ -133,7 +134,8 @@ class input_sop(plugin_input.base):
             sop_data_s_inst = sop_data_inst[instnum]
             instname = sop_data_s_inst[2] if sop_data_s_inst[2] != '' else sop_data_s_inst[1]
             cvpj_instname = str(instnum)
-            tracks.c_inst_create(cvpj_l, cvpj_instname, name=instname, color=[0.39, 0.16, 0.78])
+            tracks_rm.inst_create(cvpj_l, cvpj_instname)
+            tracks_rm.inst_visual(cvpj_l, cvpj_instname, name=instname, color=[0.39, 0.16, 0.78])
 
             #print(sop_data_s_inst, instname)
 
@@ -232,12 +234,13 @@ class input_sop(plugin_input.base):
                             str(curinst), curtick/sop_tickStep, sop_track_cmd[3]/sop_tickStep, sop_track_cmd[2]-48, None, None
                             ))
 
-            out_param = tracks.a_auto_nopl_paramauto(['track', cvpj_trackid, 'vol'], 'float', auto_vol, sop_tickStep, firstnotepos, 127, 127, 0)
-            tracks.r_add_param(cvpj_l, cvpj_trackid, 'vol', out_param, 'float')
+            out_param = auto_nopl.paramauto(['track', cvpj_trackid, 'vol'], 'float', auto_vol, sop_tickStep, firstnotepos, 127, 127, 0)
+            tracks_rm.track_param_add(cvpj_l, cvpj_trackid, 'vol', out_param, 'float')
 
             placementdata = placement_data.nl2pl(cvpj_notelist)
-            tracks.c_create_track(cvpj_l, 'instruments', cvpj_trackid, name=cvpj_trackid)
-            tracks.c_pl_notes(cvpj_l, cvpj_trackid, placementdata)
+            tracks_rm.track_create(cvpj_l, cvpj_trackid, 'instruments')
+            tracks_rm.track_visual(cvpj_l, cvpj_trackid, name=cvpj_trackid)
+            tracks_rm.add_pl(cvpj_l, cvpj_trackid, 'notes', placementdata)
 
         auto_bpm = {}
         for sop_track_cmd in sop_data_ctrltrack:
@@ -245,11 +248,11 @@ class input_sop(plugin_input.base):
             if sop_track_cmd[1] == 'TEMPO': auto_bpm[curtick] = sop_track_cmd[2]
 
 
-        param_tempo = tracks.a_auto_nopl_paramauto(['main', 'bpm'], 'float', auto_bpm, sop_tickStep, all_notepos, 120, 1, 0)
+        param_tempo = auto_nopl.paramauto(['main', 'bpm'], 'float', auto_bpm, sop_tickStep, all_notepos, 120, 1, 0)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
-        tracks.a_auto_nopl_to_cvpj(cvpj_l)
+        auto_nopl.to_cvpj(cvpj_l)
 
         return json.dumps(cvpj_l)

@@ -10,8 +10,9 @@ from functions import song_tracker_fx_mod
 from functions import data_values
 from functions import data_bytes
 from functions import plugins
-from functions import tracks
 from functions import song
+from functions_tracks import tracks_mi
+from functions_tracks import auto_data
 
 try: import xmodits
 except: xmodits_exists = False
@@ -194,13 +195,14 @@ def parse_instrument(file_stream, samplecount):
     pluginid = plugins.get_id()
     cvpj_instid = startinststr + str(samplecount+1)
 
-    tracks.m_inst_create(cvpj_l, cvpj_instid, name=xm_inst_name, color=[0.16, 0.33, 0.53])
-    tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+    tracks_mi.inst_create(cvpj_l, cvpj_instid)
+    tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=xm_inst_name, color=[0.16, 0.33, 0.53])
+    tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
     if xm_inst_num_samples == 0:
         pass
     elif xm_inst_num_samples == 1:
-        tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', 0.3*(t_sampleheaders[0][0][3]/64), 'float')
+        tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', 0.3*(t_sampleheaders[0][0][3]/64), 'float')
         plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, samplefolder+str(xm_cursamplenum)+'.wav')
         plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
         plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
@@ -221,7 +223,7 @@ def parse_instrument(file_stream, samplecount):
             plugins.add_plug_data(cvpj_l, pluginid, 'loop', 
                 {"enabled": 1, "mode": loopon, "points": [xm_loop_start,xm_loop_start+xm_loop_len]})
     else:
-        tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
+        tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
         sampleregions = data_values.list_to_reigons(xm_inst_e_table, 48)
         plugins.add_plug_multisampler(cvpj_l, pluginid)
         plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
@@ -381,7 +383,7 @@ class input_xm(plugin_input.base):
 
         cvpj_l_playlist = song_tracker.song2playlist(patterntable_all, xm_song_num_channels, t_orderlist, startinststr, [0.16, 0.33, 0.53])
 
-        tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, xm_song_bpm))
+        auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, xm_song_bpm))
 
         song.add_info(cvpj_l, 'title', xm_name)
         

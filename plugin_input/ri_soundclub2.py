@@ -11,7 +11,8 @@ from functions import notelist_data
 from functions import placement_data
 from functions import plugins
 from functions import song
-from functions import tracks
+from functions_tracks import tracks_ri
+from functions_tracks import auto_data
 import plugin_input
 import struct
 import json
@@ -150,8 +151,9 @@ class input_soundclub2(plugin_input.base):
                     sc2idvinst_gminst = idvals.get_idval(idvals_inst_soundclub2, t_instname, 'gm_inst')
                     if sc2idvinst_gminst != None: 
                         plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, sc2idvinst_gminst)
-                    tracks.r_create_track(cvpj_l, 'instrument', cvpj_instid, name=sc2_insdata[1:].decode('ascii'))
-                    tracks.r_track_pluginid(cvpj_l, cvpj_instid, pluginid)
+                    tracks_ri.track_create(cvpj_l, cvpj_instid, 'instrument')
+                    tracks_ri.track_visual(cvpj_l, trackid, name=sc2_insdata[1:].decode('ascii'))
+                    tracks_ri.track_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
                 elif sc2_insdata[0] == 0:
                     bio_sc2_insdata = data_bytes.to_bytesio(sc2_insdata)
@@ -177,10 +179,12 @@ class input_soundclub2(plugin_input.base):
                         plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
                         audio_wav.generate(wave_path, cvpj_wavdata, 1, sc2_i_freq, 8, cvpj_loop)
 
-                        tracks.r_create_track(cvpj_l, 'instrument', cvpj_instid, name=cvpj_instname)
-                        tracks.r_track_pluginid(cvpj_l, cvpj_instid, pluginid)
-                        tracks.r_add_param(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
-                tracks.r_pl_notes(cvpj_l, cvpj_instid, [])
+                        tracks_ri.track_create(cvpj_l, cvpj_instid, 'instrument')
+                        tracks_ri.track_visual(cvpj_l, cvpj_instid, name=cvpj_instname)
+                        tracks_ri.track_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+                        tracks_ri.track_param_add(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
+
+                tracks_ri.add_pl(cvpj_l, cvpj_instid, 'notes', [])
                 cur_instnum += 1
             else:  print('UNK', sc2object[0])
 
@@ -191,7 +195,11 @@ class input_soundclub2(plugin_input.base):
                 for nldata in nlpd[1][instnum]:
                     if instnum not in dupeinst: dupeinst[instnum] = 1
                     else: dupeinst[instnum] = 1 + dupeinst[instnum]
-                    tracks.ri_nle_add(cvpj_l, 'sc2_'+str(instnum), str(instnum)+'_'+str(patnum)+'_'+str(dupeinst[instnum]), nldata, t_patnames[patnum])
+                    nle_trkid = 'sc2_'+str(instnum)
+                    nle_patid = str(instnum)+'_'+str(patnum)+'_'+str(dupeinst[instnum])
+                    nle_patname = t_patnames[patnum]
+                    tracks_ri.notelistindex_add(cvpj_l, nle_patid, nle_trkid, nldata)
+                    tracks_ri.notelistindex_visual(cvpj_l, nle_patid, nle_trkid, name=nle_patname)
 
         song_curpos = 0
 
@@ -207,12 +215,12 @@ class input_soundclub2(plugin_input.base):
                     pl_placement = placement_data.makepl_n_mi(song_curpos, songpartdur, str(instnum)+'_'+str(patnum)+'_'+str(dupeinst[instnum]))
                     t_laneddata[instnum][dupeinst[instnum]].append(pl_placement)
             song.add_timemarker_timesig(cvpj_l, t_patnames[patnum], song_curpos, sc2_headerdata[4], sc2_headerdata[5])
-            tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], auto.makepl(song_curpos, songpartdur, pat_tempopoints[patnum]))
+            auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], auto.makepl(song_curpos, songpartdur, pat_tempopoints[patnum]))
             song_curpos += songpartdur
 
         for s_laneddata in t_laneddata:
             for s_laned in t_laneddata[s_laneddata]:
-                tracks.r_pl_notes_laned(cvpj_l, 'sc2_'+str(s_laneddata), str(s_laned), t_laneddata[s_laneddata][s_laned])
+                tracks_ri.add_pl_laned(cvpj_l, 'sc2_'+str(s_laneddata), 'notes', t_laneddata[s_laneddata][s_laned], str(s_laned))
 
         cvpj_l['do_addloop'] = True
         song.add_info_msg(cvpj_l, 'text', sc2_songdisc)

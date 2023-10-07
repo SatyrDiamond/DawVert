@@ -1,0 +1,12 @@
+id;name;color_r;color_g;color_b
+adpcma;ADPCM-A;1;0.9;0.2
+c64;C64;0.8;0.8;0.8
+fmop;FM 1op;0.2;0.4;1
+noise;Noise;0.8;0.8;0.8
+opn2;FM 4op;0.2;0.8;1
+pce;PC Engine;1;0.5;0.2
+pcm;PCM;1;0.9;0.2
+pulse;Pulse;0.4;1;0.2
+sample;Sample;1;0.9;0.2
+square;Square;0.4;1;0.2
+wavetable;Wavetable;1;0.5;0.2

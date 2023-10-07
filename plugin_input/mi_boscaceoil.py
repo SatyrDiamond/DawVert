@@ -4,9 +4,11 @@
 from functions import placements
 from functions import placement_data
 from functions import idvals
-from functions import tracks
 from functions import plugins
 from functions import song
+from functions_tracks import fxslot
+from functions_tracks import tracks_mi
+from functions_tracks import tracks_master
 import plugin_input
 import json
 
@@ -77,10 +79,12 @@ class input_ceol(plugin_input.base):
         ceol_basic_barlength = ceol_read()
         print('[input-boscaceoil] Bar Length: '+str(ceol_basic_barlength))
 
-        tracks.a_addtrack_master(cvpj_l, 'Master', 1, [0.31373, 0.39608, 0.41569])
+        tracks_master.create(cvpj_l, 1)
+        tracks_master.visual(cvpj_l, name='Master', color=[0.31373, 0.39608, 0.41569])
+
         plugins.add_plug(cvpj_l, 'master-effect', 'native-boscaceoil', globalfxname[ceol_basic_effect])
         plugins.add_plug_param(cvpj_l, 'master-effect', 'power', ceol_basic_effectvalue, 'int', 'power')
-        tracks.insert_fxslot(cvpj_l, ['master'], 'audio', 'master-effect')
+        fxslot.insert(cvpj_l, ['master'], 'audio', 'master-effect')
         plugins.add_plug_fxvisual(cvpj_l, 'master-effect', globalfxname_vis[ceol_basic_effect], None)
 
         ceol_numinstrument = ceol_read()
@@ -134,11 +138,13 @@ class input_ceol(plugin_input.base):
             if ceol_inst_number == 365: t_key_offset.append(24)
             else: t_key_offset.append(0)
 
-            tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)
-            tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
-            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+            tracks_mi.inst_create(cvpj_l, cvpj_instid)
+            tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)
+            tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+            tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
+
             if ceol_inst_number <= 127:
-                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, 'midi', 'output', {'program': ceol_inst_number})
+                tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'midi', 'output', {'program': ceol_inst_number})
 
         ceol_numpattern = ceol_read()
         for patnum in range(ceol_numpattern):
@@ -184,17 +190,14 @@ class input_ceol(plugin_input.base):
             if ceol_pat_palette in ceol_colors: patcolor = ceol_colors[ceol_pat_palette]
             else: patcolor = [0.55, 0.55, 0.55]
 
-            tracks.m_add_nle(cvpj_l, cvpj_pat_id, cvpj_notelist)
-            tracks.m_add_nle_info(cvpj_l, cvpj_pat_id, str(patnum), patcolor)
+            tracks_mi.notelistindex_add(cvpj_l, cvpj_pat_id, cvpj_notelist)
+            tracks_mi.notelistindex_visual(cvpj_l, cvpj_pat_id, name=str(patnum), color=patcolor)
 
-        tracks.m_playlist_pl(cvpj_l, 1, None, [0.43, 0.52, 0.55], None)
-        tracks.m_playlist_pl(cvpj_l, 2, None, [0.31, 0.40, 0.42], None)
-        tracks.m_playlist_pl(cvpj_l, 3, None, [0.43, 0.52, 0.55], None)
-        tracks.m_playlist_pl(cvpj_l, 4, None, [0.31, 0.40, 0.42], None)
-        tracks.m_playlist_pl(cvpj_l, 5, None, [0.43, 0.52, 0.55], None)
-        tracks.m_playlist_pl(cvpj_l, 6, None, [0.31, 0.40, 0.42], None)
-        tracks.m_playlist_pl(cvpj_l, 7, None, [0.43, 0.52, 0.55], None)
-        tracks.m_playlist_pl(cvpj_l, 8, None, [0.31, 0.40, 0.42], None)
+        for num in range(8):
+            tracks_mi.playlist_add(cvpj_l, num+1)
+            if (num % 2) == 0: color = [0.43, 0.52, 0.55]
+            else: color = [0.31, 0.40, 0.42]
+            tracks_mi.playlist_visual(cvpj_l, num+1, color=color)
 
         ceol_arr_length = ceol_read()
         ceol_arr_loopstart = ceol_read()
@@ -205,7 +208,7 @@ class input_ceol(plugin_input.base):
                 plpatnum = ceol_read()
                 if plpatnum != -1:
                     cvpj_l_placement = placement_data.makepl_n_mi(plpos*ceol_basic_patternlength, ceol_basic_patternlength, 'ceol_'+str(plpatnum).zfill(3))
-                    tracks.m_playlist_pl_add(cvpj_l, plnum+1, cvpj_l_placement)
+                    tracks_mi.add_pl(cvpj_l, plnum+1, 'notes', cvpj_l_placement)
 
         timesig = placements.get_timesig(ceol_basic_patternlength, ceol_basic_barlength)
 

@@ -3,11 +3,12 @@
 
 from functions import colors
 from functions import idvals
-from functions import tracks
 from functions import song
 from functions import note_data
 from functions import plugins
 from functions import placement_data
+from functions_tracks import tracks_m
+from functions_tracks import auto_data
 import plugin_input
 import json
 import xml.etree.ElementTree as ET
@@ -37,7 +38,7 @@ def addnotes(n_pos, n_len, inst, txt, chordvolume):
 def add_tempo_point(cvpj_l, position, value, notelen): 
     tempo_placement = {'position': position, 'duration': notelen}
     tempo_placement['points'] = [{"position": 0, "value": value*(notelen/4)}]
-    tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], tempo_placement)
+    auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], tempo_placement)
 
 class input_mariopaint_mss(plugin_input.base):
     def __init__(self): pass
@@ -82,7 +83,8 @@ class input_mariopaint_mss(plugin_input.base):
                 add_tempo_point(cvpj_l, curpos, t_sm_tempo, notelen)
             curpos += notelen
 
-        tracks.m_playlist_pl(cvpj_l, 1, None, None, placement_data.nl2pl(cvpj_notelist))
+        tracks_m.playlist_add(cvpj_l, 1)
+        tracks_m.add_pl(cvpj_l, 1, 'notes', placement_data.nl2pl(cvpj_notelist))
 
         for instname in instnames:
             s_inst_name = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'name')
@@ -90,9 +92,10 @@ class input_mariopaint_mss(plugin_input.base):
             if s_inst_color != None: s_inst_color = colors.moregray(s_inst_color)
             mpinstid = instnames.index(instname)
             plugins.add_plug_gm_midi(cvpj_l, instname, 0, mpinstid)
-            tracks.m_inst_create(cvpj_l, instname, name=s_inst_name, color=s_inst_color)
-            tracks.m_inst_pluginid(cvpj_l, instname, instname)
-            tracks.m_inst_add_dataval(cvpj_l, instname, 'midi', 'output', {'program': mpinstid})
+            tracks_m.inst_create(cvpj_l, instname)
+            tracks_m.inst_visual(cvpj_l, instname, name=s_inst_name, color=s_inst_color)
+            tracks_m.inst_pluginid(cvpj_l, instname, instname)
+            tracks_m.inst_dataval_add(cvpj_l, instname, 'midi', 'output', {'program': mpinstid})
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True

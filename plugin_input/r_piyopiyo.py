@@ -8,10 +8,10 @@ import os.path
 from functions import audio_wav
 from functions import data_bytes
 from functions import placement_data
-from functions import tracks
 from functions import plugins
 from functions import song
 from functions import note_data
+from functions_tracks import tracks_r
 
 track_colors = [[0.25, 0.38, 0.49], [0.36, 0.43, 0.46], [0.51, 0.57, 0.47], [0.58, 0.64, 0.40]]
 
@@ -75,15 +75,18 @@ class input_piyopiyo(plugin_input.base):
             plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trk_envelope, 128, None, None)
             plugins.add_points_from_blocks(cvpj_l, pluginid, 'vol')
             idval = str(tracknum)
-            tracks.r_create_track(cvpj_l, 'instrument', idval, name='note'+str(tracknum), color=track_colors[tracknum])
-            tracks.r_track_pluginid(cvpj_l, idval, pluginid)
-            tracks.r_add_param(cvpj_l, idval, 'vol', trk_volume/250, 'float')
+
+            tracks_r.track_create(cvpj_l, idval, 'instrument')
+            tracks_r.track_visual(cvpj_l, idval, name='Inst #'+str(tracknum), color=track_colors[tracknum])
+            tracks_r.track_inst_pluginid(cvpj_l, idval, pluginid)
+            tracks_r.track_param_add(cvpj_l, idval, 'vol', trk_volume/250, 'float')
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
         plugins.add_plug(cvpj_l, "3", 'native-piyopiyo', 'drums')
-        tracks.r_create_track(cvpj_l, 'instrument', "3", name='perc', color=track_colors[3])
-        tracks.r_track_pluginid(cvpj_l, "3", "3")
-        tracks.r_add_param(cvpj_l, "3", 'vol', TrackPVol/250, 'float')
+        tracks_r.track_create(cvpj_l, "3", 'instrument')
+        tracks_r.track_visual(cvpj_l, "3", name='perc', color=track_colors[3])
+        tracks_r.track_inst_pluginid(cvpj_l, "3", "3")
+        tracks_r.track_param_add(cvpj_l, "3", 'vol', TrackPVol/250, 'float')
 
         pmdfile.seek(trackdatapos)
         for tracknum in range(4):
@@ -100,7 +103,7 @@ class input_piyopiyo(plugin_input.base):
                     notenum -= 1
             if notelist != []: t_placements = placement_data.nl2pl(notelist)
             else: t_placements = []
-            tracks.r_pl_notes(cvpj_l, str(tracknum), t_placements)
+            tracks_r.add_pl(cvpj_l, str(tracknum), 'notes', t_placements)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['timesig'] = [4, 4]

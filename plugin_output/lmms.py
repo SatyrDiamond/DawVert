@@ -15,8 +15,9 @@ from functions import plugins
 from functions import note_mod
 from functions import notelist_data
 from functions import colors
-from functions import tracks
 from functions import params
+from functions_tracks import auto_id
+from functions_tracks import tracks_r
 
 lfoshape = {'sine': 0,'tri': 1,'saw': 2,'square': 3,'custom': 4,'random': 5}
 chord = {'0': 0, '0,4,7': 1, '0,4,6': 2, '0,3,7': 3, '0,3,6': 4, '0,2,7': 5, '0,5,7': 6, '0,4,8': 7, '0,5,8': 8, '0,3,6,9': 9, '0,4,7,9': 10, '0,5,7,9': 11, '0,4,7,9,14': 12, '0,3,7,9': 13, '0,3,7,9,14': 14, '0,4,7,10': 15, '0,5,7,10': 16, '0,4,8,10': 17, '0,4,6,10': 18, '0,4,7,10,15': 19, '0,4,7,10,13': 20, '0,4,8,10,15': 21, '0,4,8,10,13': 22, '0,4,6,10,13': 23, '0,4,7,10,17': 24, '0,4,7,10,21': 25, '0,4,7,10,18': 26, '0,4,7,11': 27, '0,4,6,11': 28, '0,4,8,11': 29, '0,4,7,11,18': 30, '0,4,7,11,21': 31, '0,3,7,10': 32, '0,3,6,10': 33, '0,3,7,10,13': 34, '0,3,7,10,17': 35, '0,3,7,10,21': 36, '0,3,7,11': 37, '0,3,7,11,17': 38, '0,3,7,11,21': 39, '0,4,7,10,14': 40, '0,5,7,10,14': 41, '0,4,7,14': 42, '0,4,8,10,14': 43, '0,4,6,10,14': 44, '0,4,7,10,14,18': 45, '0,4,7,10,14,20': 46, '0,4,7,11,14': 47, '0,5,7,11,15': 48, '0,4,8,11,14': 49, '0,4,7,11,14,18': 50, '0,3,7,10,14': 51, '0,3,7,14': 52, '0,3,6,10,14': 53, '0,3,7,11,14': 54, '0,4,7,10,14,17': 55, '0,4,7,10,13,17': 56, '0,4,7,11,14,17': 57, '0,3,7,10,14,17': 58, '0,3,7,11,14,17': 59, '0,4,7,10,14,21': 60, '0,4,7,10,15,21': 61, '0,4,7,10,13,21': 62, '0,4,6,10,13,21': 63, '0,4,7,11,14,21': 64, '0,3,7,10,14,21': 65, '0,3,7,11,14,21': 66, '0,2,4,5,7,9,11': 67, '0,2,3,5,7,8,11': 68, '0,2,3,5,7,9,11': 69, '0,2,4,6,8,10': 70, '0,2,3,5,6,8,9,11': 71, '0,2,4,7,9': 72, '0,3,5,7,10': 73, '0,1,5,7,10': 74, '0,2,4,5,7,8,9,11': 75, '0,2,4,5,7,9,10,11': 76, '0,3,5,6,7,10': 77, '0,1,4,5,7,8,11': 78, '0,1,4,6,8,10,11': 79, '0,1,3,5,7,9,11': 80, '0,1,3,5,7,8,11': 81, '0,2,3,6,7,8,11': 82, '0,2,3,5,7,9,10': 83, '0,1,3,5,7,8,10': 84, '0,2,4,6,7,9,11': 85, '0,2,4,5,7,9,10': 86, '0,2,3,5,7,8,10': 87, '0,1,3,5,6,8,10': 88, '0,1,2,3,4,5,6,7,8,9,10,11': 90, '0,1,3,4,6,7,9,10': 91, '0,7': 92, '0,1,4,5,7,8,10': 93, '0,1,4,5,6,8,11': 94}
@@ -92,13 +93,13 @@ def setvstparams(cvpj_plugindata, pluginid, xmldata):
             pval, ptype, pname = plugins.get_plug_param(cvpj_l, pluginid, 'vst_param_'+str(param), 0)
             xmldata.set('param'+str(param), str(param)+':'+pname+':'+str(pval))
              
-    pluginautoid = tracks.autoid_out_getlist(['plugin', pluginid])
+    pluginautoid = auto_id.out_getlist(['plugin', pluginid])
     if pluginautoid != None:
         for paramname in pluginautoid:
             if 'vst_param_' in paramname:
                 paramid = paramname[10:]
                 paramvisname = int(paramname[10:])+1
-                aid_id, aid_data = tracks.autoid_out_get(['plugin', pluginid, paramname])
+                aid_id, aid_data = auto_id.out_get(['plugin', pluginid, paramname])
                 if aid_id != None and len(aid_data['placements']) != 0:
                     lmms_make_main_auto_track(aid_id, aid_data, 'VST2: #'+str(paramvisname))
                     autovarX = ET.SubElement(xmldata, 'param'+paramid)
@@ -206,7 +207,7 @@ def get_plugin_param(pluginautoid, xmltag, xmlname, pluginid, paramname, fallbac
     isslot = data_values.get_value(kwargs, 'isslot', False)
     pluginparam = plugins.get_plug_param(cvpj_l, pluginid, paramname, fallback)
 
-    aid_id, aid_data = tracks.autoid_out_get(['plugin', pluginid, paramname])
+    aid_id, aid_data = auto_id.out_get(['plugin', pluginid, paramname])
 
     if pluginparam[1] != 'bool': outparam = pluginparam[0]
     else: outparam = int(pluginparam[0])
@@ -248,7 +249,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
 
         cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
 
-        pluginautoid = tracks.autoid_out_getlist(['plugin', pluginid])
+        pluginautoid = auto_id.out_getlist(['plugin', pluginid])
 
         if plugintype == ['sampler', 'single']:
             print('[output-lmms]       Plugin: Sampler (Single) > audiofileprocessor')
@@ -442,21 +443,19 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     #instrumenttrack
     trkX_insttr = ET.SubElement(xmltag, "instrumenttrack")
     trkX_insttr.set('usemasterpitch', "1")
-    if 'usemasterpitch' in instJ: trkX_insttr.set('usemasterpitch', str(instJ['usemasterpitch']))
     trkX_insttr.set('pitch', "0")
     if 'plugin' in instJ: instplugin = instJ['plugin']
     else: instplugin = None
 
-    if 'fxrack_channel' in trkJ: trkX_insttr.set('fxch', str(trkJ['fxrack_channel']))
-    else: trkX_insttr.set('fxch', '0')
+    trkX_insttr.set('fxch', str(tracks_r.track_fxrackchan_get(cvpj_l, trackid)))
     trkX_insttr.set('pitchrange', "12")
 
+    add_auto_placements(1, [0, 100], ['track', trackid], 'usemasterpitch', trkJ, 'usemasterpitch', trkX_insttr, 'usemasterpitch', trackname, 'Use Master Pitch')
     add_auto_placements(1, [0, 100], ['track', trackid], 'vol', trkJ, 'vol', trkX_insttr, 'vol', trackname, 'Volume')
     add_auto_placements(0, [0, 100], ['track', trackid], 'pan', trkJ, 'pan', trkX_insttr, 'pan', trackname, 'Pan')
     add_auto_placements(1, [-1, -1], ['track', trackid], 'enabled', trkJ, 'enabled', xmltag, 'muted', trackname, 'Muted')
     add_auto_placements(0, [0, 100], ['track', trackid], 'pitch', trkJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
 
-    #TO BE DONE
     if 'chain_fx_notes' in trkJ:
         trkJ_notefx = trkJ['chain_fx_notes']
 
@@ -464,8 +463,8 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
             plugintype = plugins.get_plug_type(cvpj_l, pluginid)
 
             if plugintype[0] == 'native-lmms' and plugintype[1] in ['arpeggiator', 'chordcreator']:
-                pluginautoid = tracks.autoid_out_getlist(['plugin', pluginid])
-                slotautoid = tracks.autoid_out_getlist(['slot', pluginid])
+                pluginautoid = auto_id.out_getlist(['plugin', pluginid])
+                slotautoid = auto_id.out_getlist(['slot', pluginid])
 
                 fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid])
 
@@ -483,7 +482,6 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
                     get_plugin_param(pluginautoid, trkX_notefx, paramid, pluginid, paramid, 0)
 
 
-    middlenote = 0
 
     print('[output-lmms] Instrument Track')
     if 'name' in trkJ: print('[output-lmms]       Name: ' + trkJ['name'])
@@ -492,7 +490,9 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
 
     plugintype, middlenotefix = lmms_encode_plugin(trkX_insttr, trkJ, trackid, trackname, trkX_insttr)
 
-    if 'middlenote' in trkJ: middlenote = trkJ['middlenote']
+    middlenote = data_values.nested_dict_get_value(trkJ, ['instdata', 'middlenote'])
+    if middlenote == None: middlenote = 0
+
     middlenote += middlenotefix
     trkX_insttr.set('basenote', str(middlenote+57))
 
@@ -586,8 +586,7 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
     add_auto_placements(1, [0, 100], ['track', trackid], 'vol', trkJ, 'vol', trkX_samptr, 'vol', trackname, 'Volume')
     add_auto_placements(0, [0, 100], ['track', trackid], 'pan', trkJ, 'pan', trkX_samptr, 'pan', trackname, 'Pan')
 
-    if 'fxrack_channel' in trkJ: 
-        trkX_samptr.set('fxch', str(trkJ['fxrack_channel']))
+    trkX_samptr.set('mixch', str(tracks_r.track_fxrackchan_get(cvpj_l, trackid)))
     
     if 'chain_fx_audio' in trkJ: lmms_encode_fxchain(trkX_samptr, trkJ)
 
@@ -623,7 +622,7 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
 
     cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
 
-    pluginautoid = tracks.autoid_out_getlist(['plugin', pluginid])
+    pluginautoid = auto_id.out_getlist(['plugin', pluginid])
 
     if plugintype == ['eq', 'peaks']:
         #used, active, freq, gain, res/bw
@@ -877,7 +876,7 @@ def add_auto_placements(i_fallback, i_addmul, i_id, i_autoname, j_tag, j_name, x
     if isinstance(i_value, bool):
         i_value = int(i_value)
 
-    if i_id != None and i_autoname != None: aid_id, aid_data = tracks.autoid_out_get(i_id+[i_autoname])
+    if i_id != None and i_autoname != None: aid_id, aid_data = auto_id.out_get(i_id+[i_autoname])
     else: aid_id, aid_data = None, None
 
     if x_tag != None:
@@ -933,7 +932,7 @@ class output_lmms(plugin_output.base):
 
         cvpj_l = json.loads(convproj_json)
 
-        tracks.autoid_out_load(cvpj_l)
+        auto_id.out_load(cvpj_l)
 
         trksJ = cvpj_l['track_data'] if 'track_data' in cvpj_l else {}
         trkorderJ = cvpj_l['track_order'] if 'track_order' in cvpj_l else []

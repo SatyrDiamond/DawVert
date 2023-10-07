@@ -2,11 +2,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_bytes
-from functions import tracks
 from functions import note_data
 from functions import placement_data
 from functions import plugins
 from functions import song
+from functions_tracks import tracks_r
 import plugin_input
 import io
 import struct
@@ -61,8 +61,10 @@ class input_petaporon(plugin_input.base):
             cvpj_notelists[instnum] = []
             pluginid = plugins.get_id()
             instid = 'petaporon'+str(instnum)
-            tracks.r_create_track(cvpj_l, 'instrument', instid, name='Inst #'+str(instnum+1), color=peta_colors[instnum])
-            tracks.r_track_pluginid(cvpj_l, instid, pluginid)
+
+            tracks_r.track_create(cvpj_l, instid, 'instrument')
+            tracks_r.track_visual(cvpj_l, instid, name='Inst #'+str(instnum+1), color=peta_colors[instnum])
+            tracks_r.track_inst_pluginid(cvpj_l, instid, pluginid)
 
             if instnum in [0,1,2,3,4,7]: plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
             if instnum in [5,6]: plugins.add_plug(cvpj_l, pluginid, 'retro', 'triangle')
@@ -92,7 +94,7 @@ class input_petaporon(plugin_input.base):
             cvpj_notelists[peta_inst].append(note_data.rx_makenote(peta_pos, peta_len, peta_note-12, None, None))
 
         for instnum in range(10):
-            tracks.r_pl_notes(cvpj_l, 'petaporon'+str(instnum), placement_data.nl2pl(cvpj_notelists[instnum]))
+            tracks_r.add_pl(cvpj_l, 'petaporon'+str(instnum), 'notes', placement_data.nl2pl(cvpj_notelists[instnum]))
 
         cvpj_l['do_singlenotelistcut'] = True
 

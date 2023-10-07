@@ -2,12 +2,13 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import placement_data
-from functions import tracks
 from functions import note_data
 from functions import song
 from functions import colors
 from functions import plugins
 from functions_plugin import waveform_values
+from functions_tracks import tracks_r
+from functions_tracks import fxslot
 from lxml import etree
 import plugin_input
 import json
@@ -57,8 +58,8 @@ def get_plugins(xml_track, trackid):
                         if plugintype == 'pitchShifter': plugins.add_plug_data(cvpj_l, pluginid, 'elastiqueOptions', xml_getvalue(xml_part, 'elastiqueOptions', '1/0/0/0/64'))
                         if plugintype == 'lowpass': plugins.add_plug_data(cvpj_l, pluginid, 'mode', xml_getvalue(xml_part, 'mode', 'lowpass'))
 
-                    if trackid == None: tracks.insert_fxslot(cvpj_l, ['master'], 'audio', pluginid)
-                    else: tracks.insert_fxslot(cvpj_l, ['track', trackid], 'audio', pluginid)
+                    if trackid == None: fxslot.insert(cvpj_l, ['master'], 'audio', pluginid)
+                    else: fxslot.insert(cvpj_l, ['track', trackid], 'audio', pluginid)
 
 class input_cvpj_f(plugin_input.base):
     def __init__(self): pass
@@ -115,7 +116,8 @@ class input_cvpj_f(plugin_input.base):
                 track_name = xml_getvalue(xml_part, 'name', '')
                 track_colour = xml_getvalue(xml_part, 'colour', None)
                 if track_colour != None: track_colour = colors.hex_to_rgb_float(track_colour[2:])
-                tracks.r_create_track(cvpj_l, 'instrument', cvpj_trackid, name=track_name, color=track_colour)
+                tracks_r.track_create(cvpj_l, cvpj_trackid, 'instrument')
+                tracks_r.track_visual(cvpj_l, cvpj_trackid, name=track_name, color=track_colour)
 
                 MIDICLIP_parts = xml_part.findall('MIDICLIP')
                 for MIDICLIP_part in MIDICLIP_parts:
@@ -149,8 +151,7 @@ class input_cvpj_f(plugin_input.base):
                                 cvpj_notelist.append(cvpj_note)
 
                     cvpj_pldata["notelist"] = cvpj_notelist
-                    tracks.r_pl_notes(cvpj_l, cvpj_trackid, cvpj_pldata)
-
+                    tracks.add_pl(cvpj_l, cvpj_trackid, 'notes', cvpj_pldata)
 
                 get_plugins(xml_part, cvpj_trackid)
 

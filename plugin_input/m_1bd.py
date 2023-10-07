@@ -3,11 +3,11 @@
 
 from functions import data_bytes
 from functions import data_values
-from functions import tracks
 from functions import note_data
 from functions import placement_data
 from functions import plugins
 from functions import song
+from functions_tracks import tracks_m
 import plugin_input
 import base64
 import json
@@ -101,7 +101,7 @@ def decodeblock(cvpj_l, input_block, position):
 
             longpldata = placement_data.longpl_split(placementdata)
             for longpls in longpldata:
-                tracks.m_playlist_pl_add(cvpj_l, instnum+1, longpls)
+                tracks_m.add_pl(cvpj_l, instnum+1, 'notes', longpls)
 
     for drumnum in range(5):
         drumnumminv = -drumnum+4
@@ -114,7 +114,7 @@ def decodeblock(cvpj_l, input_block, position):
             placementdata['color'] = onebd_colors[drumnumminv+4]
             longpldata = placement_data.longpl_split(placementdata)
             for longpls in longpldata:
-                tracks.m_playlist_pl_add(cvpj_l, drumnumminv+5, longpls)
+                tracks_m.add_pl(cvpj_l, drumnumminv+5, 'notes', longpls)
 
     return pl_dur
 
@@ -164,7 +164,8 @@ class input_1bitdragon(plugin_input.base):
         cvpj_scale = [x+cvpj_scale[1]+onebitd_scalekey for x in cvpj_scale[0]]
 
         for plnum in range(9):
-            tracks.m_playlist_pl(cvpj_l, plnum+1, None, onebd_colors[plnum], [])
+            tracks_m.playlist_add(cvpj_l, plnum+1)
+            tracks_m.playlist_visual(cvpj_l, plnum+1, color=onebd_colors[plnum])
 
         curpos = 0
         for blocknum in range(len(decompdata['blocks'])):
@@ -176,9 +177,11 @@ class input_1bitdragon(plugin_input.base):
             for part_used_instrument in part_used_instruments:
                 usedinstdata = used_instrument_data[part_used_instrument]
                 instname = usedinstdata['preset']
-                tracks.m_inst_create(cvpj_l, part_used_instrument, name=instname, color=onebd_colors[instnum])
-                tracks.m_inst_add_param(cvpj_l, part_used_instrument, 'vol', usedinstdata['volume'], 'float')
-                tracks.m_inst_add_param(cvpj_l, part_used_instrument, 'enabled', usedinstdata['on'], 'bool')
+                tracks_m.inst_create(cvpj_l, part_used_instrument)
+                tracks_m.inst_visual(cvpj_l, part_used_instrument, name=instname, color=onebd_colors[instnum])
+
+                tracks_m.inst_param_add(cvpj_l, part_used_instrument, 'vol', usedinstdata['volume'], 'float')
+                tracks_m.inst_param_add(cvpj_l, part_used_instrument, 'enabled', usedinstdata['on'], 'bool')
 
         cvpj_l['timesig'] = [4, 4]
         song.add_param(cvpj_l, 'bpm', onebitd_bpm)

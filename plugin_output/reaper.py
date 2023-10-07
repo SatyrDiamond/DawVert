@@ -14,8 +14,8 @@ from functions import data_values
 from functions import colors
 from functions import notelist_data
 from functions import params
-from functions import tracks
 from functions import xtramath
+from functions_tracks import tracks_r
 
 def make_vst2(rpp_fxchain, cvpj_plugindata): 
     vst_fx_name = cvpj_plugindata['plugin']['name']
@@ -295,7 +295,7 @@ class output_reaper(plugin_output.base):
         rppdata.children.append(['MASTER_FX','1'])
         rppdata.children.append(['MASTER_SEL','0'])
 
-        for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+        for cvpj_trackid, cvpj_trackdata, track_placements in tracks_r.iter(cvpj_l):
             cvpj_trackcolor = "0"
             cvpj_trackname = data_values.get_value(cvpj_trackdata, 'name', '')
             cvpj_trackvol = params.get(cvpj_trackdata, [], 'vol', 1)[0]

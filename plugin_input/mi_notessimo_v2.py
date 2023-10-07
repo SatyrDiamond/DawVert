@@ -8,8 +8,11 @@ from functions import note_data
 from functions import placement_data
 from functions import song
 from functions import plugins
-from functions import tracks
 from functions import song
+from functions_tracks import tracks_mi
+from functions_tracks import fxrack
+from functions_tracks import fxslot
+from functions_tracks import auto_data
 import json
 import plugin_input
 import struct
@@ -65,7 +68,7 @@ class input_notessimo_v2(plugin_input.base):
         cvpj_l = {}
         idvals_inst_notetess = idvals.parse_idvalscsv('data_idvals/notessimo_v2_inst.csv')
 
-        tracks.fxrack_add(cvpj_l, 1, 'Drums', None, 1, 0)
+        fxrack.add(cvpj_l, 1, 1, 0, name='Drums')
 
         notess_sheets = {}
         for sheetnum in range(100):
@@ -77,8 +80,8 @@ class input_notessimo_v2(plugin_input.base):
                 for layer in sheetdata:
                     print(layer,end=' ')
                     patid = str(sheetnum)+'_'+str(layer)
-                    tracks.m_add_nle(cvpj_l, patid, sheetdata[layer])
-                    tracks.m_add_nle_info(cvpj_l, patid, '#'+str(sheetnum+1)+' Layer '+str(layer+1), None)
+                    tracks_mi.notelistindex_add(cvpj_l, patid, sheetdata[layer])
+                    tracks_mi.notelistindex_visual(cvpj_l, patid, name='#'+str(sheetnum+1)+' Layer '+str(layer+1))
                 print()
 
         fxnum = 2
@@ -93,23 +96,27 @@ class input_notessimo_v2(plugin_input.base):
             pluginid = plugins.get_id()
 
             cvpj_instid = str(used_instrument)
-            tracks.m_inst_create(cvpj_l, cvpj_instid, name=notetess_instname, color=notetess_instcolor)
-            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
+
+            tracks_mi.inst_create(cvpj_l, cvpj_instid)
+            tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=notetess_instname, color=notetess_instcolor)
+
+            tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
 
             if notetess_gminst != None: 
                 plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, notetess_gminst)
-                tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, 'midi', 'output', {'program': notetess_gminst})
+                tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+                tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'midi', 'output', {'program': notetess_gminst})
 
             if notetess_isdrum == True:
-                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', 1)
+                tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
             else:
-                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', fxnum)
-                tracks.fxrack_add(cvpj_l, fxnum, notetess_instname, notetess_instcolor, None, None)
+                tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, fxnum)
+                fxrack.add(cvpj_l, fxnum, 1, 0, name=notetess_instname, color=notetess_instcolor)
                 fxnum += 1
                 
         for idnum in range(9):
-            tracks.m_playlist_pl(cvpj_l, idnum, 'Layer ' + str(idnum), None, [])
+            tracks_mi.playlist_add(cvpj_l, idnum)
+            tracks_mi.playlist_visual(cvpj_l, idnum, name='Layer '+str(idnum))
 
         curpos = 0
         for sheetnum in arr_order:
@@ -117,10 +124,10 @@ class input_notessimo_v2(plugin_input.base):
             for layer in cursheet_data[2]:
                 patid = str(sheetnum)+'_'+str(layer)
                 cvpj_l_placement = placement_data.makepl_n_mi(curpos, cursheet_data[0]*cursheet_data[1], patid)
-                tracks.m_playlist_pl_add(cvpj_l, layer+1, cvpj_l_placement)
+                tracks_mi.add_pl(cvpj_l, layer+1, 'notes', cvpj_l_placement)
             song.add_timemarker_timesig(cvpj_l, None, curpos, 4, 4)
             autoplacement = auto.makepl(curpos, cursheet_data[0]*cursheet_data[1], [{"position": 0, "value": tempo_table[sheetnum]*cursheet_data[1]}])
-            tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], autoplacement)
+            auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], autoplacement)
             curpos += cursheet_data[0]*cursheet_data[1]
         
         song.add_info(cvpj_l, 'title', text_songname)

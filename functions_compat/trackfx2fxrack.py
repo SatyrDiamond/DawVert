@@ -2,8 +2,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import params
-from functions import tracks
 from functions import data_values
+from functions_tracks import tracks_r
+from functions_tracks import auto_data
+from functions_tracks import fxrack
+from functions_tracks import fxslot
 
 def list2fxrack(cvpj_l, input_list, fxnum, defualtname, starttext, dontremoveboth):
     fx_name = starttext+input_list['name'] if 'name' in input_list else starttext+defualtname
@@ -16,10 +19,10 @@ def list2fxrack(cvpj_l, input_list, fxnum, defualtname, starttext, dontremovebot
     if dontremoveboth == True:
         params.remove(input_list, 'pan')
 
-    tracks.fxrack_add(cvpj_l, fxnum, fx_name, fx_color, vol, pan)
+    fxrack.add(cvpj_l, fxnum, vol, pan, name=fx_name, color=fx_color)
     if 'chain_fx_audio' in input_list: 
         for plugid in input_list['chain_fx_audio']:
-            tracks.insert_fxslot(cvpj_l, ['fxrack', fxnum], 'audio', plugid)
+            fxslot.insert(cvpj_l, ['fxrack', fxnum], 'audio', plugid)
         del input_list['chain_fx_audio']
 
 def process_r(cvpj_l):
@@ -84,7 +87,7 @@ def process_r(cvpj_l):
                     if send_data['sendid'] in returnids:
                         sendautoid = None
                         if 'sendautoid' in send_data: sendautoid = send_data['sendautoid']
-                        tracks.fxrack_addsend(cvpj_l, fxnum, returnids[send_data['sendid']], send_data['amount'], sendautoid)
+                        fxrack.addsend(cvpj_l, fxnum, returnids[send_data['sendid']], send_data['amount'], sendautoid)
                 del s_trkdata['sends_audio']
 
             track_dest_type = None
@@ -103,7 +106,7 @@ def process_r(cvpj_l):
                         audiopl['fxrack_channel'] = int(fxnum)
 
             list2fxrack(cvpj_l, s_trkdata, fxnum, trackid, '', False)
-            tracks.r_add_dataval(cvpj_l, trackid, None, 'fxrack_channel', int(fxnum))
+            tracks_r.track_fxrackchan_add(cvpj_l, trackid, int(fxnum))
 
             fxnum += 1
 
@@ -118,7 +121,7 @@ def process_r(cvpj_l):
                     if slotdata[1][1] in outfxnum['group']:
                         out_fx_send = outfxnum['group'][slotdata[1][1]]
 
-            tracks.fxrack_addsend(cvpj_l, fxslot, out_fx_send[0], out_fx_send[1], None)
+            fxrack.addsend(cvpj_l, fxslot, out_fx_send[0], out_fx_send[1], None)
 
             print('[trackfx2fxrack] '+str(fxslot).rjust(4), 
                   str(slotdata[0][0]).ljust(8), 
@@ -128,16 +131,16 @@ def process_r(cvpj_l):
                   out_fx_send)
 
             if slotdata[0][0] == 'master': 
-                tracks.a_move_auto(cvpj_l, ['master','vol'], ['fxmixer',str(fxslot),'vol'])
+                auto_data.move(cvpj_l, ['master','vol'], ['fxmixer',str(fxslot),'vol'])
             if slotdata[0][0] == 'group': 
-                tracks.a_move_auto(cvpj_l, ['group',slotdata[0][1],'vol'], ['fxmixer',str(fxslot),'vol'])
-                tracks.a_move_auto(cvpj_l, ['group',slotdata[0][1],'pan'], ['fxmixer',str(fxslot),'pan'])
+                auto_data.move(cvpj_l, ['group',slotdata[0][1],'vol'], ['fxmixer',str(fxslot),'vol'])
+                auto_data.move(cvpj_l, ['group',slotdata[0][1],'pan'], ['fxmixer',str(fxslot),'pan'])
             if slotdata[0][0] == 'return': 
-                tracks.a_move_auto(cvpj_l, ['return',slotdata[0][1],'vol'], ['fxmixer',str(fxslot),'vol'])
-                tracks.a_move_auto(cvpj_l, ['return',slotdata[0][1],'pan'], ['fxmixer',str(fxslot),'pan'])
+                auto_data.move(cvpj_l, ['return',slotdata[0][1],'vol'], ['fxmixer',str(fxslot),'vol'])
+                auto_data.move(cvpj_l, ['return',slotdata[0][1],'pan'], ['fxmixer',str(fxslot),'pan'])
             if slotdata[0][0] == 'track': 
-                tracks.a_move_auto(cvpj_l, ['track',slotdata[0][1],'vol'], ['fxmixer',str(fxslot),'vol'])
-                tracks.a_move_auto(cvpj_l, ['track',slotdata[0][1],'pan'], ['fxmixer',str(fxslot),'pan'])
+                auto_data.move(cvpj_l, ['track',slotdata[0][1],'vol'], ['fxmixer',str(fxslot),'vol'])
+                auto_data.move(cvpj_l, ['track',slotdata[0][1],'pan'], ['fxmixer',str(fxslot),'pan'])
 
         return True
     else: return False
@@ -153,7 +156,7 @@ def process_m(cvpj_l):
         if 'track_master' in cvpj_l:
             print('[trackfx2fxrack] Master to FX 0')
             cvpj_l['fxrack']['0'] = cvpj_l['track_master']
-            tracks.a_move_auto(cvpj_l, ['master','vol'], ['fxmixer','0','vol'])
+            auto_data.move(cvpj_l, ['master','vol'], ['fxmixer','0','vol'])
 
         for trackid in c_orderingdata:
             trackdata = c_trackdata[trackid]

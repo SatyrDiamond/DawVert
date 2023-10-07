@@ -11,9 +11,10 @@ from functions import data_bytes
 from functions import song_tracker
 from functions import song_tracker_fx_mod
 from functions import audio_wav
-from functions import tracks
 from functions import plugins
 from functions import song
+from functions_tracks import tracks_mi
+from functions_tracks import auto_data
 
 modfinetune = [8363, 8413, 8463, 8529, 8581, 8651, 8723, 8757, 7895, 7941, 7985, 8046, 8107, 8169, 8232, 8280]
 
@@ -127,9 +128,12 @@ class input_mod(plugin_input.base):
             pluginid = plugins.get_id()
             if mod_inst_mod_name != "": cvpj_instname = mod_inst_mod_name
             else: cvpj_instname = ' '
-            tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=[0.33, 0.33, 0.33])
-            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-            tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
+
+            tracks_mi.inst_create(cvpj_l, cvpj_instid)
+            tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname, color=[0.71, 0.58, 0.47])
+            tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+
+            tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
             
             if mod_inst_length != 0 and mod_inst_length != 1:
                 wave_path = samplefolder + str(mod_numinst).zfill(2) + '.wav'
@@ -207,7 +211,7 @@ class input_mod(plugin_input.base):
         if 'tempo' in veryfirstrow: cvpj_bpm = veryfirstrow['tempo']
         print("[input-mod] Tempo: " + str(cvpj_bpm))
 
-        tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, cvpj_bpm))
+        auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, 6, cvpj_bpm))
 
         song.add_info(cvpj_l, 'title', mod_name)
         

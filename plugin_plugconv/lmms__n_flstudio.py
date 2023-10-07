@@ -9,7 +9,7 @@ import os
 import math
 
 from functions import plugins
-from functions import tracks
+from functions_tracks import auto_data
 
 threeosc_shapes = {
     0: 0,
@@ -41,7 +41,7 @@ class plugconv(plugin_plugconv.base):
 
         if plugintype[1].lower() == 'fruity balance':  
             print('[plug-conv] FL Studio to LMMS: Fruity Balance > Amplifier:',pluginid)
-            tracks.a_del_auto_plugin(cvpj_l, pluginid)
+            auto_data.del_plugin(cvpj_l, pluginid)
             bal_pan = getparam('pan')
             bal_vol = getparam('vol')
             plugins.replace_plug(cvpj_l, pluginid, 'native-lmms', 'amplifier')
@@ -53,7 +53,7 @@ class plugconv(plugin_plugconv.base):
 
         if plugintype[1].lower() == 'fruity stereo shaper':
             print('[plug-conv] FL Studio to LMMS: Stereo Shaper > Stereo Matrix:',pluginid)
-            tracks.a_del_auto_plugin(cvpj_l, pluginid)
+            auto_data.del_plugin(cvpj_l, pluginid)
             fl_shape_r2l = getparam('r2l')/12800
             fl_shape_l2l = getparam('l2l')/12800
             fl_shape_r2r = getparam('r2r')/12800
@@ -67,7 +67,7 @@ class plugconv(plugin_plugconv.base):
 
         if plugintype[1].lower() == '3x osc':   
             print('[plug-conv] FL Studio to LMMS: 3xOsc > TripleOscillator:',pluginid)
-            tracks.a_del_auto_plugin(cvpj_l, pluginid)
+            auto_data.del_plugin(cvpj_l, pluginid)
             fl_osc1_coarse = getparam('osc1_coarse')
             fl_osc1_detune = getparam('osc1_detune')
             fl_osc1_fine = getparam('osc1_fine')

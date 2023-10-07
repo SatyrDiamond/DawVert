@@ -7,10 +7,10 @@ from functions import data_bytes
 from functions import data_values
 from functions import auto
 from functions import audio
-from functions import tracks
 from functions import plugins
 from functions import params
 from functions_plugin import ableton_values
+from functions_tracks import tracks_r
 import plugin_output
 import math
 import json
@@ -1423,7 +1423,7 @@ class output_cvpj(plugin_output.base):
         x_Tracks = ET.SubElement(x_LiveSet, "Tracks")
 
         LaneHeight = 35
-        for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+        for cvpj_trackid, cvpj_trackdata, track_placements in tracks_r.iter(cvpj_l):
             tracktype = cvpj_trackdata['type']
             if tracktype == 'instrument': ableton_make_midi_track(cvpj_trackid, track_placements)
             if tracktype == 'audio': ableton_make_audio_track(cvpj_trackid, track_placements)

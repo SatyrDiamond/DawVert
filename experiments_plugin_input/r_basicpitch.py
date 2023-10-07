@@ -3,8 +3,8 @@
 
 from functions import data_bytes
 from functions import note_data
-from functions import tracks
 from functions import placement_data
+from functions_tracks import tracks_r
 import experiments_plugin_input
 import json
 
@@ -53,8 +53,8 @@ class input_ex_basic_pitch(experiments_plugin_input.base):
                     autonum += 0.1
             cvpj_notelist.append(cvpj_note)
 
-        tracks.r_create_track(cvpj_l, 'instrument', 'basicpitch')
-        tracks.r_pl_notes(cvpj_l, 'basicpitch', placement_data.nl2pl(cvpj_notelist))
+        tracks_r.track_create(cvpj_l, 'basicpitch', 'instrument')
+        tracks_r.add_pl(cvpj_l, 'basicpitch', 'notes', placement_data.nl2pl(cvpj_notelist))
 
         cvpj_l['bpm'] = 120
         return json.dumps(cvpj_l)

@@ -4,39 +4,14 @@
 from functions import data_bytes
 from functions import song_tracker
 from functions import song_tracker_fx_mod
-from functions import tracks
 from functions import plugins
+from functions import idvals
 from functions import song
+from functions_tracks import tracks_mi
 import plugin_input
 import zlib
 import struct
 import json
-
-chiptypecolors = {}
-chiptypecolors['opn2'] = [0.20, 0.80, 1.00]
-chiptypecolors['square'] = [0.40, 1.00, 0.20]
-chiptypecolors['pulse'] = [0.40, 1.00, 0.20]
-chiptypecolors['noise'] = [0.80, 0.80, 0.80]
-chiptypecolors['fmop'] = [0.20, 0.40, 1.00]
-chiptypecolors['wavetable'] = [1.00, 0.50, 0.20]
-chiptypecolors['pce'] = [1.00, 0.50, 0.20]
-chiptypecolors['pcm'] = [1.00, 0.90, 0.20]
-chiptypecolors['sample'] = [1.00, 0.90, 0.20]
-chiptypecolors['adpcma'] = [1.00, 0.90, 0.20]
-chiptypecolors['c64'] = [0.80, 0.80, 0.80]
-
-chipname = {}
-chipname['opn2'] = 'FM 4op'
-chipname['square'] = 'Square'
-chipname['pulse'] = 'Pulse'
-chipname['noise'] = 'Noise'
-chipname['fmop'] = 'FM OP'
-chipname['wavetable'] = 'Wavetable'
-chipname['pce'] = 'PC Engine'
-chipname['pcm'] = 'PCM'
-chipname['adpcma'] = 'ADPCM-A'
-chipname['sample'] = 'Sample'
-chipname['c64'] = 'C64'
 
 def fxget(fxtype, fxparam, output_param, output_extra): 
 
@@ -93,6 +68,8 @@ class input_cvpj_r(plugin_input.base):
             exit()
 
         cvpj_l = {}
+
+        idvals_inst = idvals.parse_idvalscsv('data_idvals/multichip_inst.csv')
 
         # FORMAT FLAGS
         dmf_version = bio_dmf.read(1)[0]
@@ -301,7 +278,6 @@ class input_cvpj_r(plugin_input.base):
         mt_ord = t_orders
         mt_ch_insttype = t_chantype
         mt_ch_names = t_channames
-        mt_type_colors = chiptypecolors
 
         len_table = song_tracker.multi_get_len_table(dmf_TOTAL_ROWS_PER_PATTERN, mt_pat, mt_ord, mt_ch_insttype)
 
@@ -317,10 +293,10 @@ class input_cvpj_r(plugin_input.base):
 
             cvpj_instid = insttype+'_'+dmf_instid
             cvpj_inst = {}
-            #print(dmf_instnames)
-            cvpj_instname = dmf_instnames[int(dmf_instid)]+' ('+chipname[insttype]+')'
-            cvpj_instcolor = None
-            if insttype in chiptypecolors: cvpj_instcolor = chiptypecolors[insttype]
+
+            cvpj_instname = dmf_instnames[int(dmf_instid)]+' ('+idvals.get_idval(idvals_inst, str(insttype), 'name')+')'
+            cvpj_instcolor = idvals.get_idval(idvals_inst, str(insttype), 'color')
+
             cvpj_instdata = {}
             cvpj_instdata["plugindata"] = {}
             if insttype == 'square' or insttype == 'noise':
@@ -337,8 +313,9 @@ class input_cvpj_r(plugin_input.base):
             else: 
                 cvpj_instdata["plugin"] = 'none'
             
-            tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)
-            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+            tracks_mi.inst_create(cvpj_l, cvpj_instid)
+            tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)
+            tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
         #dmf_insts
 

@@ -11,7 +11,8 @@ from functions import xtramath
 # ------------- Functions -------------
 
 def utf16encode(text):
-    return text.encode('utf-16le') + b'\x00\x00'
+    out_text = text if text != None else ''
+    return out_text.encode('utf-16le') + b'\x00\x00'
 
 def calctempotimed(i_value):
     i_out = i_value*125

@@ -10,10 +10,11 @@ from functions import placements
 from functions import plugins
 from functions import data_values
 from functions import params
-from functions import tracks
 from functions import audio
 from functions import auto
 from functions import notelist_data
+from functions_tracks import auto_nopl
+from functions_tracks import tracks_r
 
 id_out_num = 10000
 devid_out_num = 30000
@@ -238,7 +239,7 @@ class output_cvpj_f(plugin_output.base):
         amped_tracks = []
         amped_filenames = {}
 
-        for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+        for cvpj_trackid, cvpj_trackdata, track_placements in tracks_r.iter(cvpj_l):
             amped_trackdata = amped_maketrack()
             amped_trackdata["name"] = cvpj_trackdata['name'] if 'name' in cvpj_trackdata else ''
             amped_trackdata["pan"] = params.get(cvpj_trackdata, [], 'pan', 0)[0]
@@ -416,7 +417,7 @@ class output_cvpj_f(plugin_output.base):
                     amped_trackdata["regions"].append(amped_region)
 
                 for autoname in [['vol','volume'], ['pan','pan']]:
-                    autopoints = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,autoname[0]])
+                    autopoints = auto_nopl.getpoints(cvpj_l, ['track',cvpj_trackid,autoname[0]])
                     if autopoints != None: 
                         ampedauto = cvpjauto_to_ampedauto(auto.remove_instant(autopoints, 0, False))
                         amped_trackdata["automations"].append({"param": autoname[1], "points": ampedauto})

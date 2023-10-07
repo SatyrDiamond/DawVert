@@ -4,9 +4,9 @@
 import plugin_input
 import json
 from functions import placement_data
-from functions import tracks
 from functions import note_data
 from functions import song
+from functions_tracks import tracks_r
 
 class input_fmf(plugin_input.base):
     def __init__(self): pass
@@ -92,8 +92,9 @@ class input_fmf(plugin_input.base):
 
         cvpj_l = {}
 
-        tracks.r_create_track(cvpj_l, 'instrument', 'flipperzero', name='Flipper Zero', color=[0.94, 0.58, 0.23])
-        tracks.r_pl_notes(cvpj_l, 'flipperzero', placement_data.nl2pl(notelist))
+        tracks_r.track_create(cvpj_l, 'flipperzero', 'instrument')
+        tracks_r.track_visual(cvpj_l, 'flipperzero', name='Flipper Zero', color=[0.94, 0.58, 0.23])
+        tracks_r.add_pl(cvpj_l, 'flipperzero', 'notes', placement_data.nl2pl(notelist))
 
         cvpj_l['do_singlenotelistcut'] = True
         cvpj_l['timesig'] = [4, 4]

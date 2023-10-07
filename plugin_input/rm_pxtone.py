@@ -4,11 +4,12 @@
 from functions import data_bytes
 from functions import note_mod
 from functions import audio_wav
-from functions import tracks
 from functions import plugins
 from functions import placement_data
 from functions import note_data
 from functions import song
+from functions_tracks import tracks_rm
+from functions_tracks import auto_nopl
 import plugin_input
 import json
 import math
@@ -441,9 +442,9 @@ class input_pxtone(plugin_input.base):
                     if unit_event[2] == 3: t_notelist[unit_eventnum][-1]['pan'] = ((unit_event[3]/128)-0.5)*2
                     if unit_event[2] == 4: t_notelist[unit_eventnum][-1]['vol'] = unit_event[3]
 
-            out_vol = tracks.a_auto_nopl_paramauto(['track', cvpj_trackid, 'vol'], 'float', auto_vol, timebase, firstnote, 1, 1, 0)
-            out_pan = tracks.a_auto_nopl_paramauto(['track', cvpj_trackid, 'pan'], 'float', auto_pan, timebase, firstnote, 0, 1, 0)
-            out_pitch = tracks.a_auto_nopl_paramauto(['track', cvpj_trackid, 'pitch'], 'float', auto_pitch, timebase, firstnote, 0, 1, 0)
+            out_vol = auto_nopl.paramauto(['track', cvpj_trackid, 'vol'], 'float', auto_vol, timebase, firstnote, 1, 1, 0)
+            out_pan = auto_nopl.paramauto(['track', cvpj_trackid, 'pan'], 'float', auto_pan, timebase, firstnote, 0, 1, 0)
+            out_pitch = auto_nopl.paramauto(['track', cvpj_trackid, 'pitch'], 'float', auto_pitch, timebase, firstnote, 0, 1, 0)
 
             trackautop.append([out_vol,out_pan,out_pitch])
 
@@ -457,11 +458,13 @@ class input_pxtone(plugin_input.base):
             else: plt_name = None
             cvpj_instcolor = getcolor()
             cvpj_trackid = str(unitnum+1)
-            tracks.c_create_track(cvpj_l, 'instruments', cvpj_trackid, name=plt_name, color=cvpj_instcolor)
-            tracks.c_pl_notes(cvpj_l, cvpj_trackid, placement_data.nl2pl(cvpj_notelist))
-            tracks.r_add_param(cvpj_l, cvpj_trackid, 'vol', cvpj_trackparams[0], 'float')
-            tracks.r_add_param(cvpj_l, cvpj_trackid, 'pan', cvpj_trackparams[1], 'float')
-            tracks.r_add_param(cvpj_l, cvpj_trackid, 'pitch', cvpj_trackparams[2], 'float')
+            tracks_rm.track_create(cvpj_l, cvpj_trackid, 'instruments')
+            tracks_rm.track_visual(cvpj_l, cvpj_trackid, name=plt_name, color=cvpj_instcolor)
+            tracks_rm.add_pl(cvpj_l, cvpj_trackid, 'notes', placement_data.nl2pl(cvpj_notelist))
+
+            tracks_rm.track_param_add(cvpj_l, cvpj_trackid, 'vol', cvpj_trackparams[0], 'float')
+            tracks_rm.track_param_add(cvpj_l, cvpj_trackid, 'pan', cvpj_trackparams[1], 'float')
+            tracks_rm.track_param_add(cvpj_l, cvpj_trackid, 'pitch', cvpj_trackparams[2], 'float')
 
         for voicenum in range(ptcop_voice_num):
             if voicenum in ptcop_name_voice: cvpj_instname = ptcop_name_voice[voicenum]
@@ -472,18 +475,19 @@ class input_pxtone(plugin_input.base):
 
             cvpj_instid = 'ptcop_'+str(voicenum)
 
-            tracks.c_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=[0.14, 0.00, 0.29])
+            tracks_rm.inst_create(cvpj_l, cvpj_instid)
+            tracks_rm.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname, color=[0.14, 0.00, 0.29])
 
             plugindata = t_voice_data[voicenum][1]
             if t_voice_data[voicenum][0] == 'sampler':
                 plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, plugindata['file'])
-                tracks.c_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+                tracks_rm.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
                 plugins.add_plug_data(cvpj_l, pluginid, 'trigger', plugindata['trigger'])
                 plugins.add_plug_data(cvpj_l, pluginid, 'interpolation', plugindata['interpolation'])
                 plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0, 0, 0, 1, 0, 1)
 
-            tracks.c_inst_add_param(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
-            tracks.c_inst_add_dataval(cvpj_l, cvpj_instid, None, 'middlenote', t_voice_data[voicenum][2])
+            tracks_rm.inst_param_add(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
+            tracks_rm.inst_dataval_add(cvpj_l, cvpj_instid, 'instdata', 'middlenote', t_voice_data[voicenum][2])
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
@@ -494,7 +498,7 @@ class input_pxtone(plugin_input.base):
         if ptcop_song_comment != None: song.add_info_msg(cvpj_l, 'text', ptcop_song_comment)
         if ptcop_mas_repeat != 0: song.add_timemarker_looparea(cvpj_l, None, ptcop_mas_repeat/timebase, ptcop_mas_last/timebase)
 
-        tracks.a_auto_nopl_to_cvpj(cvpj_l)
+        auto_nopl.to_cvpj(cvpj_l)
 
         song.add_param(cvpj_l, 'bpm', ptcop_mas_beattempo)
         return json.dumps(cvpj_l)

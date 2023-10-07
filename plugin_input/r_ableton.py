@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_bytes
-from functions import tracks
 from functions import colors
 from functions import audio
 from functions import data_values
@@ -10,6 +9,13 @@ from functions import placement_data
 from functions import plugins
 from functions import song
 from functions_plugin import ableton_values
+from functions_tracks import auto_id
+from functions_tracks import auto_nopl
+from functions_tracks import fxrack
+from functions_tracks import fxslot
+from functions_tracks import tracks_r
+from functions_tracks import groups
+from functions_tracks import tracks_master
 
 import base64
 import xml.etree.ElementTree as ET
@@ -47,7 +53,7 @@ def get_param(xmldata, varname, vartype, fallback, i_loc, i_addmul):
 		autonumid = int(get_id(param_data, 'AutomationTarget', None))
 		outdata = use_valuetype(vartype, out_value)
 		if autonumid != None:
-			tracks.autoid_in_define(autonumid, i_loc, vartype, i_addmul)
+			auto_id.in_define(autonumid, i_loc, vartype, i_addmul)
 		return outdata
 	else:
 		return fallback
@@ -79,7 +85,7 @@ def get_auto(x_track_data):
 					"value": float(env_AutoEvent.get('Value'))
 					})
 
-		tracks.autoid_in_add_pl(autotarget, tracks.a_auto_nopl_to_pl(cvpj_autopoints))
+		auto_id.in_add_pl(autotarget, auto_nopl.to_pl(cvpj_autopoints))
 
 def get_Range_cross(x_xml, rangename):
 	x_range = x_xml.findall(rangename)[0]
@@ -249,7 +255,9 @@ class input_ableton(plugin_input.base):
 		mas_track_vol = get_param(x_mastertrack_Mixer, 'Volume', 'float', 0, ['master', 'vol'], None)
 		mas_track_pan = get_param(x_mastertrack_Mixer, 'Pan', 'float', 0, ['master', 'pan'], None)
 		tempo = get_param(x_mastertrack_Mixer, 'Tempo', 'float', 140, ['main', 'bpm'], None)
-		tracks.a_addtrack_master(cvpj_l, mastertrack_name, mas_track_vol, mastertrack_color)
+		tracks_master.create(cvpj_l, mas_track_vol)
+		tracks_master.visual(cvpj_l, name=mastertrack_name, color=bpm)
+		tracks_master.param_add(cvpj_l, 'pan', mas_track_pan, 'float')
 		song.add_param(cvpj_l, 'bpm', tempo)
 
 		sendnum = 1
@@ -280,13 +288,13 @@ class input_ableton(plugin_input.base):
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['track', track_id, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['track', track_id, 'pan'], None)
 
-				tracks.r_create_track(cvpj_l, 'instrument', track_id, name=track_name, color=track_color)
-				tracks.r_add_param(cvpj_l, track_id, 'vol', track_vol, 'float')
-				tracks.r_add_param(cvpj_l, track_id, 'pan', track_pan, 'float')
-				tracks.r_pl_notes(cvpj_l, track_id, [])
+				tracks_r.track_create(cvpj_l, track_id, 'instrument')
+				tracks_r.track_visual(cvpj_l, track_id, name=track_name, color=track_color)
+				tracks_r.track_param_add(cvpj_l, track_id, 'vol', track_vol, 'float')
+				tracks_r.track_param_add(cvpj_l, track_id, 'pan', track_pan, 'float')
 
 				if track_inside_group != -1:
-					tracks.r_add_dataval(cvpj_l, track_id, None, 'group', 'group_'+str(track_inside_group))
+					tracks_r.track_group(cvpj_l, track_id, 'group_'+str(track_inside_group))
 
 				x_track_MainSequencer = x_track_DeviceChain.findall('MainSequencer')[0]
 				x_track_ClipTimeable = x_track_MainSequencer.findall('ClipTimeable')[0]
@@ -365,7 +373,7 @@ class input_ableton(plugin_input.base):
 					for t_note in t_notes:
 						cvpj_placement['notelist'].append(t_notes[t_note])
 
-					tracks.r_pl_notes(cvpj_l, track_id, cvpj_placement)  
+					tracks_r.add_pl(cvpj_l, track_id, 'notes', cvpj_placement)  
 
 			if tracktype == 'AudioTrack':
 				fxloc = ['track', track_id]
@@ -373,10 +381,10 @@ class input_ableton(plugin_input.base):
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['track', track_id, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['track', track_id, 'pan'], None)
 
-				tracks.r_create_track(cvpj_l, 'audio', track_id, name=track_name, color=track_color)
-				tracks.r_add_param(cvpj_l, track_id, 'vol', track_vol, 'float')
-				tracks.r_add_param(cvpj_l, track_id, 'pan', track_pan, 'float')
-				tracks.r_pl_audio(cvpj_l, track_id, [])
+				tracks_r.track_create(cvpj_l, track_id, 'audio')
+				tracks_r.track_visual(cvpj_l, track_id, name=track_name, color=track_color)
+				tracks_r.track_param_add(cvpj_l, track_id, 'vol', track_vol, 'float')
+				tracks_r.track_param_add(cvpj_l, track_id, 'pan', track_pan, 'float')
 
 				x_track_MainSequencer = x_track_DeviceChain.findall('MainSequencer')[0]
 				x_track_Sample = x_track_MainSequencer.findall('Sample')[0]
@@ -507,7 +515,7 @@ class input_ableton(plugin_input.base):
 							data_values.time_from_steps(cvpj_placement['cut'], 'loopstart', False, audio_placement_loop_l_start, 1)
 							data_values.time_from_steps(cvpj_placement['cut'], 'loopend', False, audio_placement_loop_l_end, 1)
 
-					tracks.r_pl_audio(cvpj_l, track_id, cvpj_placement)  
+					tracks_r.add_pl(cvpj_l, track_id, 'audio', cvpj_placement)
 
 			sendcount = 1
 			if tracktype in ['MidiTrack', 'AudioTrack']:
@@ -516,7 +524,7 @@ class input_ableton(plugin_input.base):
 					sendid = sendcount
 					sendautoid = 'send_'+track_id+'_'+str(sendid)
 					sendlevel = get_param(track_sendholder, 'Send', 'float', 0, ['send', sendautoid, 'amount'], None)
-					tracks.r_add_send(cvpj_l, track_id, 'return_'+str(sendid), sendlevel, sendautoid)
+					trackfx.send_add(cvpj_l, track_id, 'return_'+str(sendid), sendlevel, sendautoid)
 					sendcount += 1
 
 			if tracktype == 'ReturnTrack':
@@ -524,8 +532,10 @@ class input_ableton(plugin_input.base):
 				cvpj_returntrackid = 'return_'+str(returnid)
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['return', cvpj_returntrackid, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['return', cvpj_returntrackid, 'pan'], None)
-				tracks.r_add_return(cvpj_l, ['master'], cvpj_returntrackid)
-				tracks.r_add_return_basicdata(cvpj_l, ['master'], cvpj_returntrackid, track_name, track_color, track_vol, track_pan)
+				trackfx.return_add(cvpj_l, ['master'], cvpj_returntrackid)
+				trackfx.return_visual(cvpj_l, ['master'], cvpj_returntrackid, name=track_name, color=track_color)
+				trackfx.return_param_add(cvpj_l, ['master'], cvpj_returntrackid, 'vol', track_vol, 'float')
+				trackfx.return_param_add(cvpj_l, ['master'], cvpj_returntrackid, 'pan', track_pan, 'float')
 				returnid += 1
 
 			if tracktype == 'GroupTrack':
@@ -533,8 +543,10 @@ class input_ableton(plugin_input.base):
 				cvpj_grouptrackid = 'group_'+str(track_id)
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['group', cvpj_grouptrackid, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['group', cvpj_grouptrackid, 'pan'], None)
-				tracks.group_add(cvpj_l, cvpj_grouptrackid, None)
-				tracks.group_basicdata(cvpj_l, cvpj_grouptrackid, track_name, track_color, track_vol, track_pan)
+				trackfx.group_add(cvpj_l, cvpj_grouptrackid, None)
+				trackfx.group_visual(cvpj_l, cvpj_grouptrackid, name=track_name, color=track_color)
+				trackfx.group_param_add(cvpj_l, ['master'], cvpj_grouptrackid, 'vol', track_vol, 'float')
+				trackfx.group_param_add(cvpj_l, ['master'], cvpj_grouptrackid, 'pan', track_pan, 'float')
 
 			x_track_DeviceChain_inside = x_track_DeviceChain.findall('DeviceChain')[0]
 			x_trackdevices = x_track_DeviceChain_inside.findall('Devices')[0]
@@ -742,9 +754,9 @@ class input_ableton(plugin_input.base):
 					else: plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite2', '')
 						
 				if is_instrument == True:
-					tracks.r_track_pluginid(cvpj_l, track_id, pluginid)
+					tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
 				else:
-					if fxloc != None: tracks.insert_fxslot(cvpj_l, fxloc, 'audio', pluginid)
+					if fxloc != None: fxslot.insert(cvpj_l, fxloc, 'audio', pluginid)
 					plugins.add_plug_fxdata(cvpj_l, pluginid, able_plug_id, devfx_wet)
 
 				#_______paramfinder_data[devicename] = {}
@@ -778,7 +790,7 @@ class input_ableton(plugin_input.base):
 
 
 		get_auto(x_MasterTrack)
-		tracks.autoid_in_output(cvpj_l)
+		auto_id.in_output(cvpj_l)
 
 		return json.dumps(cvpj_l)
 

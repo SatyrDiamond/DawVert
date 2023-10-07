@@ -15,6 +15,7 @@ from functions import notelist_data
 from functions import xtramath
 from functions import plugins
 from functions import params
+from functions_tracks import tracks_mi
 
 filename_len = {}
 
@@ -86,19 +87,19 @@ class output_cvpjs(plugin_output.base):
             infoJ = cvpj_l['info']
             FL_Main['ShowInfo'] = 1
             if 'title' in infoJ: 
-                if 'title' != '': FL_Main['Title'] = infoJ['title']
+                if 'title' not in ['', None]: FL_Main['Title'] = infoJ['title']
             else: FL_Main['Title'] = ''
 
             if 'author' in infoJ: 
-                if 'author' != '':  FL_Main['Author'] = infoJ['author']
+                if 'author' not in ['', None]:  FL_Main['Author'] = infoJ['author']
             else: FL_Main['Author'] = ''
 
             if 'url' in infoJ: 
-                if 'url' != '':  FL_Main['URL'] = infoJ['url']
+                if 'url' not in ['', None]:  FL_Main['URL'] = infoJ['url']
             else: FL_Main['URL'] = ''
 
             if 'genre' in infoJ: 
-                if 'genre' != '':  FL_Main['Genre'] = infoJ['genre']
+                if 'genre' not in ['', None]:  FL_Main['Genre'] = infoJ['genre']
             else: FL_Main['Genre'] = ''
 
             if 'message' in infoJ: 
@@ -151,12 +152,13 @@ class output_cvpjs(plugin_output.base):
             T_Main['pitch'] = params.get(CVPJ_Data, [], 'pitch', 0)[0]
             T_Main['main_pitch'] = int(params.get(CVPJ_Data, [], 'usemasterpitch', True)[0])
 
-            if 'middlenote' in CVPJ_Data: T_Main['middlenote'] = CVPJ_Data['middlenote']+60
-            if 'name' in CVPJ_Data: T_Main['name'] = CVPJ_Data['name']
-            if 'fxrack_channel' in CVPJ_Data: T_Main['fxchannel'] = CVPJ_Data['fxrack_channel']
-            if 'filtergroup' in CVPJ_Data:
-                if CVPJ_Data['filtergroup'] in filtergroups_id:
-                    T_Main['filtergroup'] = filtergroups_id[CVPJ_Data['filtergroup']]
+            middlenote = data_values.nested_dict_get_value(CVPJ_Data, ['instdata', 'middlenote'])
+            if middlenote == None: middlenote = 0
+
+            if 'middlenote' in CVPJ_Data: T_Main['middlenote'] = middlenote+60
+            if 'name' in CVPJ_Data: T_Main['name'] = CVPJ_Data['name'] if CVPJ_Data['name'] != None else ''
+
+            T_Main['fxchannel'] = tracks_mi.inst_fxrackchan_get(cvpj_l, CVPJ_Entry)
 
             if 'instdata' in CVPJ_Data:
                 CVPJ_Inst = CVPJ_Data['instdata']

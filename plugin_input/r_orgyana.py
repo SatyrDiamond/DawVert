@@ -2,10 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import placement_data
-from functions import tracks
 from functions import song
 from functions import note_data
 from functions import idvals
+from functions_tracks import tracks_r
 import plugin_input
 import json
 
@@ -127,9 +127,11 @@ class input_orgyana(plugin_input.base):
                 if tracknum < 8: trackname = "Melody "+str(tracknum+1)
                 else: trackname = idvals.get_idval(idvals_orgyana_inst_drums, str(org_insttable[tracknum]), 'name')
                 idval = 'org_'+str(tracknum)
-                tracks.r_create_track(cvpj_l, 'instrument', idval, name=trackname, color=l_org_colors[tracknum])
-                tracks.r_add_param(cvpj_l, idval, 'pitch', (org_pitch-1000)/1800, 'float')
-                tracks.r_pl_notes(cvpj_l, idval, placement_data.nl2pl(s_cvpj_nl))
+
+                tracks_r.track_create(cvpj_l, idval, 'instrument')
+                tracks_r.track_visual(cvpj_l, idval, name=trackname, color=l_org_colors[tracknum])
+                tracks_r.track_param_add(cvpj_l, idval, 'pitch', (org_pitch-1000)/1800, 'float')
+                tracks_r.add_pl(cvpj_l, idval, 'notes', placement_data.nl2pl(s_cvpj_nl))
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True

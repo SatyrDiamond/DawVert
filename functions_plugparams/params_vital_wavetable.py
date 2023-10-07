@@ -21,14 +21,10 @@ def tripleoct(x, shape, pw, one, two):
 
 def create_wave(shape, mul, pw):
     vital_osc_shape = []
-    if shape == 'sine': 
-        for num in range(2048): vital_osc_shape.append(wave_sine(num/2048))
-    if shape == 'saw':
-        for num in range(2048): vital_osc_shape.append(wave_saw(num/2048))
-    if shape == 'triangle':
-        for num in range(2048): vital_osc_shape.append(wave_tri(num/2048))
-    if shape == 'square':
-        for num in range(2048): vital_osc_shape.append(wave_squ(num/2048, pw))
+    if shape == 'sine': vital_osc_shape = [wave_sine(num/2048) for num in range(2048)]
+    if shape == 'saw': vital_osc_shape = [wave_saw(num/2048) for num in range(2048)]
+    if shape == 'triangle': vital_osc_shape = [wave_tri(num/2048) for num in range(2048)]
+    if shape == 'square': vital_osc_shape = [wave_squ(num/2048) for num in range(2048)]
     if shape == 'square_roundend':
         for num in range(2048): 
             if num <= 1024: vital_osc_shape.append((wave_sine(num/4096)*-1))
@@ -37,7 +33,6 @@ def create_wave(shape, mul, pw):
         for num in range(2048): 
             if num <= 1024: vital_osc_shape.append(num/1024)
             else: vital_osc_shape.append(wave_tri((num+1024)/2048)**3)
-    if shape == 'exp':
-        for num in range(2048): vital_osc_shape.append(wave_tri((num+1024)/2048)**3)
+    if shape == 'exp': vital_osc_shape = [wave_tri((num+1024)/2048)**3 for num in range(2048)]
     return vital_osc_shape
 

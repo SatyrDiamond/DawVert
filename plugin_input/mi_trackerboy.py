@@ -3,10 +3,10 @@
 
 from functions import data_bytes
 from functions import song_tracker
-from functions import tracks
 from functions import plugins
 from functions import song
 from functions import xtramath
+from functions_tracks import tracks_mi
 import plugin_input
 import json
 import struct
@@ -271,9 +271,10 @@ class input_trackerboy(plugin_input.base):
                     else: 
                         plugins.add_wave(cvpj_l, pluginid, 'main', t_waves[trackerboy_instdata[6]+1][1], 0, 15)
 
-                tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)
-                tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', 0.4, 'float')
+                tracks_mi.inst_create(cvpj_l, cvpj_instid)
+                tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)
+                tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+                tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', 0.4, 'float')
 
         song.add_info(cvpj_l, 'title', trackerboy_title)
         song.add_info(cvpj_l, 'author', trackerboy_artist)

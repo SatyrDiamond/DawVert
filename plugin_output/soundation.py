@@ -12,8 +12,9 @@ from functions import plugins
 from functions import idvals
 from functions import notelist_data
 from functions import params
-from functions import tracks
 from functions import auto
+from functions_tracks import auto_nopl
+from functions_tracks import tracks_r
 
 def makechannel(i_type): 
     return {
@@ -135,11 +136,11 @@ class output_soundation(plugin_output.base):
             add_fx(sng_master, cvpj_master)
         sng_channels.append(sng_master)
 
-        mas_cvpjauto_vol = tracks.a_auto_nopl_getpoints(cvpj_l, ['master','vol'])
+        mas_cvpjauto_vol = auto_nopl.getpoints(cvpj_l, ['master','vol'])
         if mas_cvpjauto_vol != None:
             mas_cvpjauto_vol = auto.remove_instant(mas_cvpjauto_vol, 0, False)
             sng_master['volumeAutomation'] = cvpjauto_to_sngauto(mas_cvpjauto_vol, ticksdiv)
-        mas_cvpjauto_pan = tracks.a_auto_nopl_getpoints(cvpj_l, ['master','pan'])
+        mas_cvpjauto_pan = auto_nopl.getpoints(cvpj_l, ['master','pan'])
         if mas_cvpjauto_pan != None:
             mas_cvpjauto_pan = auto.remove_instant(mas_cvpjauto_pan, 0, False)
             sng_master['panAutomation'] = cvpjauto_to_sngauto(auto.multiply_nopl(mas_cvpjauto_pan, 1, 0.5), ticksdiv)
@@ -148,7 +149,7 @@ class output_soundation(plugin_output.base):
             ts_numerator, ts_denominator = cvpj_l['timesig']
             sng_output["timeSignature"] = str(ts_numerator)+'/'+str(ts_denominator)
 
-        for cvpj_trackid, s_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+        for cvpj_trackid, s_trackdata, track_placements in tracks_r.iter(cvpj_l):
             tracktype = s_trackdata['type']
             if tracktype == 'instrument':
                 sng_trkdata = makechannel("instrument")
@@ -161,11 +162,11 @@ class output_soundation(plugin_output.base):
                 trackcolor = data_values.get_value(s_trackdata, 'color', [0.5,0.5,0.5])
                 sng_instparams = sng_trkdata['instrument'] = {"identifier": "com.soundation.GM-2"}
 
-                cvpjauto_vol = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,'vol'])
+                cvpjauto_vol = auto_nopl.getpoints(cvpj_l, ['track',cvpj_trackid,'vol'])
                 if cvpjauto_vol != None:
                     cvpjauto_vol = auto.remove_instant(cvpjauto_vol, 0, False)
                     sng_trkdata['volumeAutomation'] = cvpjauto_to_sngauto(cvpjauto_vol, ticksdiv)
-                cvpjauto_pan = tracks.a_auto_nopl_getpoints(cvpj_l, ['track',cvpj_trackid,'pan'])
+                cvpjauto_pan = auto_nopl.getpoints(cvpj_l, ['track',cvpj_trackid,'pan'])
                 if cvpjauto_pan != None:
                     cvpjauto_pan = auto.remove_instant(cvpjauto_pan, 0, False)
                     sng_trkdata['panAutomation'] = cvpjauto_to_sngauto(auto.multiply_nopl(cvpjauto_pan, 1, 0.5), ticksdiv)

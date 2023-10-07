@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import tracks
 from functions import note_data
 from functions import song
 from functions import plugins
@@ -10,6 +9,10 @@ import xml.etree.ElementTree as ET
 import plugin_input
 import json
 import zipfile
+from functions_tracks import tracks_r
+from functions_tracks import tracks_master
+from functions_tracks import trackfx
+from functions_tracks import fxslot
 
 as_pattern_color = {
     0: [0.07, 0.64, 0.86],
@@ -143,15 +146,19 @@ class input_audiosanua(plugin_input.base):
         cvpj_plnotes = {}
         as_patt_notes = {}
 
-        tracks.a_addtrack_master(cvpj_l, 'Master', int(getvalue(x_proj,'appMasterVolume',100))/100, None)
+        tracks_master.create(cvpj_l, int(getvalue(x_proj,'appMasterVolume',100))/100)
+        tracks_master.visual(cvpj_l, name='Master')
 
-        tracks.r_add_return(cvpj_l, ['master'], 'audiosauna_send_tape_delay')
-        tracks.r_add_return_basicdata(cvpj_l, ['master'], 'audiosauna_send_tape_delay', 'Tape Delay', None, int(getvalue(x_proj,'dlyLevel',100))/100, None)
-        tracks.insert_fxslot(cvpj_l, ['return', None, 'audiosauna_send_tape_delay'], 'audio', make_fxslot(x_proj, 'tape_delay', None))
 
-        tracks.r_add_return(cvpj_l, ['master'], 'audiosauna_send_reverb')
-        tracks.r_add_return_basicdata(cvpj_l, ['master'], 'audiosauna_send_reverb', 'Reverb', None, int(getvalue(x_proj,'rvbLevel',100))/100, None)
-        tracks.insert_fxslot(cvpj_l, ['return', None, 'audiosauna_send_reverb'], 'audio', make_fxslot(x_proj, 'reverb', None))
+        trackfx.return_add(cvpj_l, ['master'], 'audiosauna_send_tape_delay')
+        trackfx.return_visual(cvpj_l, ['master'], 'audiosauna_send_tape_delay', name='Tape Delay')
+        trackfx.return_param_add(cvpj_l, ['master'], 'audiosauna_send_tape_delay', 'vol', int(getvalue(x_proj,'dlyLevel',100))/100, 'float')
+        fxslot.insert(cvpj_l, ['return', None, 'audiosauna_send_tape_delay'], 'audio', make_fxslot(x_proj, 'tape_delay', None))
+
+        trackfx.return_add(cvpj_l, ['master'], 'audiosauna_send_reverb')
+        trackfx.return_visual(cvpj_l, ['master'], 'audiosauna_send_reverb', name='Reverb')
+        trackfx.return_param_add(cvpj_l, ['master'], 'audiosauna_send_reverb', 'vol', int(getvalue(x_proj,'rvbLevel',100))/100, 'float')
+        fxslot.insert(cvpj_l, ['return', None, 'audiosauna_send_reverb'], 'audio', make_fxslot(x_proj, 'reverb', None))
 
         # ------------------------------------------ tracks ------------------------------------------
         for x_track in xt_track:
@@ -181,13 +188,15 @@ class input_audiosanua(plugin_input.base):
 
             cvpj_tr_color = as_pattern_color[as_channum]
 
-            tracks.r_create_track(cvpj_l, 'instrument', cvpj_id, name=cvpj_tr_name, color=cvpj_tr_color)
-            tracks.r_add_param(cvpj_l, cvpj_id, 'vol', cvpj_tr_vol, 'float')
-            tracks.r_add_param(cvpj_l, cvpj_id, 'pan', cvpj_tr_pan, 'float')
-            tracks.r_add_param(cvpj_l, cvpj_id, 'enabled', int(not getbool(x_chan.get('mute'))), 'bool')
-            tracks.r_add_param(cvpj_l, cvpj_id, 'solo', getbool(x_chan.get('solo')), 'bool')
-            tracks.r_add_send(cvpj_l, cvpj_id, 'audiosauna_send_tape_delay', int(x_chan.get('delay'))/100, None)
-            tracks.r_add_send(cvpj_l, cvpj_id, 'audiosauna_send_reverb', int(x_chan.get('reverb'))/100, None)
+            tracks_r.track_create(cvpj_l, cvpj_id, 'instrument')
+            tracks_r.track_visual(cvpj_l, cvpj_id, name=cvpj_tr_name, color=cvpj_tr_color)
+
+            tracks_r.track_param_add(cvpj_l, cvpj_id, 'vol', cvpj_tr_vol, 'float')
+            tracks_r.track_param_add(cvpj_l, cvpj_id, 'pan', cvpj_tr_pan, 'float')
+            tracks_r.track_param_add(cvpj_l, cvpj_id, 'enabled', int(not getbool(x_chan.get('mute'))), 'bool')
+            tracks_r.track_param_add(cvpj_l, cvpj_id, 'solo', getbool(x_chan.get('solo')), 'bool')
+            trackfx.send_add(cvpj_l, cvpj_id, 'audiosauna_send_tape_delay', int(x_chan.get('delay'))/100, None)
+            trackfx.send_add(cvpj_l, cvpj_id, 'audiosauna_send_reverb', int(x_chan.get('reverb'))/100, None)
 
         # ------------------------------------------ patterns ------------------------------------------
         for x_pattern in xt_pattern:
@@ -209,7 +218,7 @@ class input_audiosanua(plugin_input.base):
                     cvpj_note['cutoff'] = t_note[5]
                     cvpj_pldata['notelist'].append(cvpj_note)
 
-            tracks.r_pl_notes(cvpj_l, 'audiosanua'+str(as_pattern_trackNro), cvpj_pldata)
+            tracks_r.add_pl(cvpj_l, 'audiosanua'+str(as_pattern_trackNro), 'notes', cvpj_pldata)
         # ------------------------------------------ patterns ------------------------------------------
         devicenum = 0
         for x_device in xt_devices:
@@ -334,10 +343,10 @@ class input_audiosanua(plugin_input.base):
             plugins.add_lfo(cvpj_l, pluginid, 'cutoff', 
                 g_lfo_shape, 'seconds', g_lfo_speed, 0, g_lfo_attack, c_lfo_amount)
             
-            tracks.r_track_pluginid(cvpj_l, cvpj_trackid, pluginid)
+            tracks_r.track_inst_pluginid(cvpj_l, cvpj_trackid, pluginid)
 
             for fx_name in ['distortion', 'bitcrush', 'chorus', 'amp']:
-                tracks.insert_fxslot(cvpj_l, ['track', cvpj_trackid], 'audio', make_fxslot(x_proj, fx_name, v_device_deviceType))
+                fxslot.insert(cvpj_l, ['track', cvpj_trackid], 'audio', make_fxslot(x_proj, fx_name, v_device_deviceType))
 
             devicenum += 1
 

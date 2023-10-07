@@ -14,7 +14,7 @@ from functions import data_bytes
 from functions import data_values
 from functions import plugin_vst2
 from functions import plugins
-from functions import tracks
+from functions_tracks import auto_data
 
 from functions_plugparams import params_various_inst
 from functions_plugparams import params_kickmess
@@ -315,7 +315,7 @@ class plugconv(plugin_plugconv.base):
 
         elif flpluginname == 'fruity compressor':  
             print('[plug-conv] FL Studio to VST2: Fruity Compressor > Compressor:',pluginid)
-            tracks.a_del_auto_plugin(cvpj_l, pluginid)
+            auto_data.del_plugin(cvpj_l, pluginid)
             comp_threshold = plugins.get_plug_param(cvpj_l, pluginid, 'threshold', 0)[0]/10
             comp_ratio = plugins.get_plug_param(cvpj_l, pluginid, 'ratio', 0)[0]/10
             comp_gain = plugins.get_plug_param(cvpj_l, pluginid, 'gain', 0)[0]/10

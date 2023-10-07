@@ -15,7 +15,7 @@ from functions import data_bytes
 from functions import data_values
 from functions import plugin_vst2
 from functions import plugins
-from functions import tracks
+from functions_tracks import auto_data
 
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
@@ -27,7 +27,7 @@ class plugconv(plugin_plugconv.base):
     
         if plugintype[1].lower() == 'fruity compressor':  
             print('[plug-conv] FL Studio to Ableton: Fruity Compressor > Compressor2:',pluginid)
-            tracks.a_del_auto_plugin(cvpj_l, pluginid)
+            auto_data.del_plugin(cvpj_l, pluginid)
             comp_threshold = plugins.get_plug_param(cvpj_l, pluginid, 'threshold', 0)[0]/10
             comp_ratio = plugins.get_plug_param(cvpj_l, pluginid, 'ratio', 0)[0]/10
             comp_gain = plugins.get_plug_param(cvpj_l, pluginid, 'gain', 0)[0]/10
@@ -55,7 +55,7 @@ class plugconv(plugin_plugconv.base):
 
         if plugintype[1].lower() == 'fruity balance':  
             print('[plug-conv] FL Studio to Ableton: Fruity Balance > StereoGain:',pluginid)
-            tracks.a_del_auto_plugin(cvpj_l, pluginid)
+            auto_data.del_plugin(cvpj_l, pluginid)
             bal_pan = plugins.get_plug_param(cvpj_l, pluginid, 'pan', 0)[0]
             bal_vol = plugins.get_plug_param(cvpj_l, pluginid, 'vol', 256)[0]
 
@@ -78,7 +78,7 @@ class plugconv(plugin_plugconv.base):
 
         if plugintype[1].lower() == 'fruity convolver':  
             print('[plug-conv] FL Studio to Ableton: Fruity convolver > Hybrid:',pluginid)
-            tracks.a_del_auto_plugin(cvpj_l, pluginid)
+            auto_data.del_plugin(cvpj_l, pluginid)
             conv_file = plugins.get_plug_dataval(cvpj_l, pluginid, 'file', 0)
 
             plugins.replace_plug(cvpj_l, pluginid, 'native-ableton', 'Hybrid')

@@ -10,8 +10,9 @@ from functions import audio_wav
 from functions import data_bytes
 from functions import placements
 from functions import plugins
-from functions import tracks
 from functions import song
+from functions_tracks import tracks_mi
+from functions_tracks import auto_data
 
 class input_s3m(plugin_input.base):
     def __init__(self): pass
@@ -133,10 +134,11 @@ class input_s3m(plugin_input.base):
             else:
                 cvpj_inst_color = [0.32, 0.27, 0.16]
 
-            tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_inst_name, color=cvpj_inst_color)
-            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-            tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
+            tracks_mi.inst_create(cvpj_l, cvpj_instid)
+            tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_inst_name, color=cvpj_inst_color)
+            tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
+            tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
 
             plugins.add_plug_data(cvpj_l, pluginid, 'length', s3m_inst_length)
             plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
@@ -266,7 +268,7 @@ class input_s3m(plugin_input.base):
 
         patlentable = song_tracker.get_len_table(patterntable_all, t_orderlist)
 
-        tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, s3m_speed, s3m_tempo))
+        auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, s3m_speed, s3m_tempo))
         placements.make_timemarkers(cvpj_l, [4,16], patlentable, None)
         song.add_info(cvpj_l, 'title', s3m_name)
         

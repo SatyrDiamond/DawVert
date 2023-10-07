@@ -5,13 +5,16 @@ from functions import data_bytes
 from functions import note_mod
 from functions import colors
 from functions import idvals
-from functions import tracks
 from functions import notelist_data
 from functions import placement_data
 from functions import note_data
 from functions import auto
 from functions import plugins
 from functions import song
+from functions_tracks import auto_data
+from functions_tracks import tracks_mi
+from functions_tracks import fxrack
+from functions_tracks import fxslot
 import plugin_input
 import json
 import zipfile
@@ -197,8 +200,8 @@ def parse_sheets(notess_sheets):
 
         print("[input-notessimo_v3]")
 
-        tracks.m_add_nle(cvpj_l, sheet, notelist_data.sort(notelist))
-        tracks.m_add_nle_info(cvpj_l, sheet, sheet_name, sheet_color)
+        tracks_mi.notelistindex_add(cvpj_l, sheet, notelist_data.sort(notelist))
+        tracks_mi.notelistindex_visual(cvpj_l, sheet, name=sheet_name, color=sheet_color)
 
 # ----------------------------------- Song -----------------------------------
 
@@ -216,7 +219,8 @@ def parse_song(songid):
     for s_item in items:
         item_name = s_item.get('name')
         item_order = int(s_item.get('order'))+1
-        tracks.m_playlist_pl(cvpj_l, item_order, item_name, None, [])
+        tracks_mi.playlist_add(cvpj_l, item_order)
+        tracks_mi.playlist_visual(cvpj_l, item_order, name=item_name)
 
     # ---------------- vars ----------------
     bpm = None
@@ -261,10 +265,10 @@ def parse_song(songid):
             tlslen = tls[1]-tls[0]
             if tls[2] == 1:
                 cvpj_placement = placement_data.makepl_n_mi(cvpj_p_totalpos*8, tlslen/(120/tls[3])*8, tls[4])
-                tracks.m_playlist_pl_add(cvpj_l, tlsnum+1, cvpj_placement)
+                tracks_mi.add_pl(cvpj_l, tlsnum+1, 'notes', cvpj_placement)
                 if tlsnum == 0:
                     autoplacement = auto.makepl(cvpj_p_totalpos*8, tlslen/(120/tls[3])*8, [{"position": 0, "value": tls[3]}])
-                    tracks.a_add_auto_pl(cvpj_l, 'float', ['main', 'bpm'], autoplacement)
+                    auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], autoplacement)
                 cvpj_p_totalpos += tlslen/(120/tls[3])
             else: 
                 cvpj_p_totalpos += tlslen
@@ -301,7 +305,7 @@ class input_notessimo_v3(plugin_input.base):
         zip_data = zipfile.ZipFile(input_file, 'r')
         cvpj_l = {}
 
-        tracks.fxrack_add(cvpj_l, 1, 'Drums', None, 1, 0)
+        fxrack.add(cvpj_l, 1, 1, 0, name='Drums')
 
         if 'instruments.xml' in zip_data.namelist():
             notess_instruments = ET.fromstring(zip_data.read('instruments.xml'))
@@ -345,17 +349,19 @@ class input_notessimo_v3(plugin_input.base):
 
             cvpj_instid = str(inst)
 
-            tracks.m_inst_create(cvpj_l, cvpj_instid, name=inst_name, color=inst_color)
+            tracks_mi.inst_create(cvpj_l, cvpj_instid)
+            tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=inst_name, color=inst_color)
+
             if midiinst != None: 
                 plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, midiinst)
-                tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, 'midi', 'output', {'program': midiinst})
+                tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+                tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'midi', 'output', {'program': midiinst})
 
             if isbuiltindrum == 1: 
-                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', 1)
+                tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
             else:
-                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', fxnum)
-                tracks.fxrack_add(cvpj_l, fxnum, inst_name, inst_color, None, None)
+                tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
+                fxrack.add(cvpj_l, fxnum, 1, 0, name=inst_name, color=inst_color)
                 fxnum += 1
 
         song.add_param(cvpj_l, 'bpm', 120)

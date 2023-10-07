@@ -13,7 +13,7 @@ from functions import colors
 from functions import params
 from functions import data_values
 from functions import plugins
-from functions import tracks
+from functions_tracks import tracks_r
 
 def addvalue(xmltag, name, value):
     x_temp = ET.SubElement(xmltag, name)
@@ -255,7 +255,7 @@ class output_cvpj(plugin_output.base):
 
         routelist = []
 
-        for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+        for cvpj_trackid, cvpj_trackdata, track_placements in tracks_r.iter(cvpj_l):
             if cvpj_trackdata['type'] == 'instrument':
                 track_placements_islaned = False
                 if 'laned' in track_placements: 

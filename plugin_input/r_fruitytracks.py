@@ -6,9 +6,9 @@ from functions import colors
 from functions import data_bytes
 from functions import data_values
 from functions import note_data
-from functions import tracks
 from functions import song
 from functions import audio
+from functions_tracks import tracks_r
 
 import plugin_input
 import json
@@ -56,7 +56,8 @@ class input_fruitytracks(plugin_input.base):
             if event[0] == 2: 
                 tracknum += 1
                 sampledata.append([])
-                tracks.r_create_track(cvpj_l, 'audio', str(tracknum), name=str(tracknum))
+                tracks_r.track_create(cvpj_l, str(tracknum), 'audio')
+                tracks_r.track_visual(cvpj_l, str(tracknum), name='Track '+str(tracknum))
 
             if event[0] == 5: sampledata[tablenum].append({})
             if event[0] == 66: bpm = event[1]
@@ -110,7 +111,7 @@ class input_fruitytracks(plugin_input.base):
                     cvpj_pldata['audiomod']['stretch_method'] = 'rate_tempo'
                     cvpj_pldata['audiomod']['stretch_data'] = {'rate': audduration/stretch}
 
-                tracks.r_pl_audio(cvpj_l, str(tracknum), cvpj_pldata)
+                tracks_r.add_pl(cvpj_l, str(tracknum), 'audio', cvpj_pldata)
 
         song.add_param(cvpj_l, 'bpm', bpm)
         return json.dumps(cvpj_l)

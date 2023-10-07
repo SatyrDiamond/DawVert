@@ -7,12 +7,15 @@ import json
 from functions import placements
 from functions import note_data
 from functions import data_values
-from functions import tracks
 from functions import plugins
 from functions import placement_data
 from functions import song
 from functions import xtramath
 
+from functions_tracks import fxslot
+from functions_tracks import fxrack
+from functions_tracks import tracks_mi
+from functions_tracks import tracks_master
 
 def get_used_insts(channeldata):
     usedinsts = []
@@ -181,7 +184,7 @@ def add_envelopes(pluginid, fst_Instrument):
         add_envelope(pluginid, fst_Instrument, 'duty', 'DutyCycle')
         add_envelope(pluginid, fst_Instrument, 'pitch', 'Pitch')
 
-def create_inst(WaveType, fst_Instrument, fxrack_channel):
+def create_inst(WaveType, fst_Instrument, fxrackchan):
     instname = fst_Instrument['Name']
 
     instvolume = 0.2
@@ -256,25 +259,27 @@ def create_inst(WaveType, fst_Instrument, fxrack_channel):
 
     cvpj_instid = WaveType+'-'+instname
 
-    tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instid, color=inst_color)
-    tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-    tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', instvolume, 'float')
-    tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pan', instpan, 'float')
-    tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pitch', 0, 'float')
-    tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'usemasterpitch', True, 'bool')
+    tracks_mi.inst_create(cvpj_l, cvpj_instid)
+    tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instid, color=inst_color)
+    tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+    tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', instvolume, 'float')
+    tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'pan', instpan, 'float')
+    tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'pitch', 0, 'float')
+    tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'usemasterpitch', True, 'bool')
 
     if WaveType in ['EPSMFM', 'EPSMSquare']:
-        tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'middlenote', 12)
+        tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, None, 'middlenote', 12)
 
-    tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', fxrack_channel)
+    tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, fxrackchan)
 
 
-def create_dpcm_inst(DPCMMappings, DPCMSamples, fxrack_channel):
-    tracks.m_inst_create(cvpj_l, 'DPCM', name='DPCM', color= [0.48, 0.83, 0.49])
-    tracks.m_inst_add_param(cvpj_l, 'DPCM', 'vol', 0.6, 'float')
-    tracks.m_inst_add_param(cvpj_l, 'DPCM', 'pitch', 0, 'float')
-    tracks.m_inst_add_param(cvpj_l, 'DPCM', 'usemasterpitch', False, 'bool')
-    tracks.m_inst_add_dataval(cvpj_l, 'DPCM', None, 'fxrack_channel', fxrack_channel)
+def create_dpcm_inst(DPCMMappings, DPCMSamples, fxrackchan):
+    tracks_mi.inst_create(cvpj_l, 'DPCM')
+    tracks_mi.inst_visual(cvpj_l, 'DPCM', name='DPCM', color= [0.48, 0.83, 0.49])
+    tracks_mi.inst_param_add(cvpj_l, 'DPCM', 'vol', 0.6, 'float')
+    tracks_mi.inst_param_add(cvpj_l, 'DPCM', 'pitch', 0, 'float')
+    tracks_mi.inst_param_add(cvpj_l, 'DPCM', 'usemasterpitch', False, 'bool')
+    tracks_mi.inst_fxrackchan_add(cvpj_l, 'DPCM', fxrackchan)
 
 def NoteToMidi(keytext):
     l_key = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
@@ -440,13 +445,14 @@ class input_famistudio(plugin_input.base):
                 for inst in used_insts:
                     create_inst(WaveType, fst_instruments[inst], channum)
 
-            tracks.fxrack_add(cvpj_l, channum, fxtrack_name, fxtrack_color, 1, 0)
+            fxrack.add(cvpj_l, channum, 1, 0, name=fxtrack_name, color=fxtrack_color)
             channum += 1
 
         playlistnum = 1
         for Channel in fst_channels:
             ChannelName = Channel
-            tracks.m_playlist_pl(cvpj_l, playlistnum, Channel, [0.13, 0.15, 0.16], [])
+            tracks_mi.playlist_add(cvpj_l, playlistnum)
+            tracks_mi.playlist_visual(cvpj_l, playlistnum, name=Channel, color=[0.13, 0.15, 0.16])
             Channel_Patterns = fst_channels[Channel]['Patterns']
             for Pattern in Channel_Patterns:
                 t_patternnotelist = []
@@ -494,8 +500,8 @@ class input_famistudio(plugin_input.base):
                             t_patternnotelist.append(cvpj_note)
 
                 cvpj_patternid = Channel+'-'+Pattern
-                tracks.m_add_nle(cvpj_l, cvpj_patternid, t_patternnotelist)
-                tracks.m_add_nle_info(cvpj_l, cvpj_patternid, Pattern+' ('+Channel+')', [0.13, 0.15, 0.16])
+                tracks_mi.notelistindex_add(cvpj_l, cvpj_patternid, t_patternnotelist)
+                tracks_mi.notelistindex_visual(cvpj_l, cvpj_patternid, name=Pattern+' ('+Channel+')', color=[0.13, 0.15, 0.16])
 
             Channel_Instances = fst_channels[Channel]['Instances']
             durationnum = 0
@@ -503,7 +509,7 @@ class input_famistudio(plugin_input.base):
                 fst_PData = Channel_Instances[fst_Placement]
                 fst_time = int(fst_PData['Time'])
                 cvpj_l_placement = placement_data.makepl_n_mi(PointsPos[int(fst_time)], PatternLengthList[durationnum], Channel+'-'+fst_PData['Pattern'])
-                tracks.m_playlist_pl_add(cvpj_l, playlistnum, cvpj_l_placement)
+                tracks_mi.add_pl(cvpj_l, playlistnum, 'notes', cvpj_l_placement)
                 durationnum += 1
             playlistnum += 1
 

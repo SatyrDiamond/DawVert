@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import tracks
 from functions import note_data
 from functions import placement_data
 from functions import idvals
@@ -9,6 +8,8 @@ from functions import auto
 from functions import data_bytes
 from functions import plugins
 from functions import song
+from functions_tracks import tracks_rm
+from functions_tracks import auto_nopl
 import plugin_input
 import json
 import struct
@@ -120,12 +121,13 @@ def parsetrack(file_stream, tracknum, notelen):
 
     print('[input-adlib_rol] Track: "'+rol_tr_voice[0]+'"')
 
-    if len(rol_tr_volume) > 1: tracks.a_auto_nopl_twopoints(['track', tracknum+1, 'vol'], 'float', rol_tr_volume[1], notelen, 'instant')
-    if len(rol_tr_pitch[1]) > 1: tracks.a_auto_nopl_twopoints(['track', tracknum+1, 'pitch'], 'float', rol_tr_pitch[1], notelen, 'instant')
+    if len(rol_tr_volume) > 1: auto_nopl.twopoints(['track', tracknum+1, 'vol'], 'float', rol_tr_volume[1], notelen, 'instant')
+    if len(rol_tr_pitch[1]) > 1: auto_nopl.twopoints(['track', tracknum+1, 'pitch'], 'float', rol_tr_pitch[1], notelen, 'instant')
     
     placementdata = placement_data.nl2pl(cvpj_notelist)
-    tracks.c_create_track(cvpj_l, 'instruments', cvpj_trackid, name=rol_tr_voice[0])
-    tracks.c_pl_notes(cvpj_l, cvpj_trackid, placementdata)
+    tracks_rm.track_create(cvpj_l, cvpj_trackid, 'instruments')
+    tracks_rm.track_visual(cvpj_l, cvpj_trackid, name=rol_tr_voice[0])
+    tracks_rm.add_pl(cvpj_l, cvpj_trackid, 'notes', placementdata)
 
 # --------------------------------------- Plugin ----------------------------------------
 
@@ -160,15 +162,16 @@ class input_adlib_rol(plugin_input.base):
             for instname in adlib_bnk[0]:
                 instname_upper = instname.upper()
                 adlibrol_instname = idvals.get_idval(idvals_inst_adlib_rol, instname_upper, 'name')
-                tracks.c_inst_create(cvpj_l, instname_upper, name=adlibrol_instname)
-                tracks.c_inst_pluginid(cvpj_l, instname_upper, instname_upper)
+                tracks_rm.inst_create(cvpj_l, instname_upper)
+                tracks_rm.inst_visual(cvpj_l, instname_upper, name=adlibrol_instname)
+                tracks_rm.inst_pluginid(cvpj_l, instname_upper, instname_upper)
                 instdatanum = adlib_bnk[0][instname][0]
                 if instdatanum <= numinst:
                     opl2data = adlib_bnk[1][adlib_bnk[0][instname][0]]
 
                     plugins.add_plug(cvpj_l, instname_upper, 'fm', 'opl2')
 
-                    tracks.c_inst_add_dataval(cvpj_l, instname_upper, None, 'middlenote', 0)
+                    tracks_rm.inst_dataval_add(cvpj_l, instname_upper, 'instdata', 'middlenote', 0)
                     if opl2data[0][0] == 1: plugins.add_plug_param(cvpj_l, instname_upper, 'perctype', opl2data[0][1]-6, 'int', 'perctype')
                     else: plugins.add_plug_param(cvpj_l, instname_upper, 'perctype', 0, 'int', 'perctype')
                     plugins.add_plug_param(cvpj_l, instname_upper, 'tremolo_depth', 0, 'int', 'tremolo_depth')
@@ -204,10 +207,11 @@ class input_adlib_rol(plugin_input.base):
             for instassocgm in idvals_inst_adlib_rol:
                 gmmidiinst = idvals_inst_adlib_rol[instassocgm]['gm_inst']
                 rolname = idvals_inst_adlib_rol[instassocgm]['name']
-                tracks.c_inst_create(cvpj_l, instassocgm, name=rolname)
+                tracks_rm.inst_create(cvpj_l, instassocgm)
+                tracks_rm.inst_visual(cvpj_l, instassocgm, name=rolname)
                 if gmmidiinst != None:
-                    tracks.c_inst_pluginid(cvpj_l, instassocgm, instassocgm)
                     plugins.add_plug_gm_midi(cvpj_l, instassocgm, 0, gmmidiinst-1)
+                    tracks_rm.inst_pluginid(cvpj_l, instassocgm, instassocgm)
 
         rol_header_majorVersion = int.from_bytes(song_file.read(2), 'little')
         print("[input-adlib_rol] majorVersion: " + str(rol_header_majorVersion))
@@ -247,12 +251,12 @@ class input_adlib_rol(plugin_input.base):
         notelen = (2/rol_header_tickBeat)*2
         t_tempo_data = parsetrack_tempo(song_file, notelen)
         
-        tracks.a_auto_nopl_twopoints(['main', 'bpm'], 'float', t_tempo_data[2], notelen, 'instant')
+        auto_nopl.twopoints(['main', 'bpm'], 'float', t_tempo_data[2], notelen, 'instant')
 
         for tracknum in range(10):
             parsetrack(song_file, tracknum, (2/rol_header_tickBeat)*2)
 
-        tracks.a_auto_nopl_to_cvpj(cvpj_l)
+        auto_nopl.to_cvpj(cvpj_l)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True

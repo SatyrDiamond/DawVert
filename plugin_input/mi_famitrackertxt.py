@@ -4,9 +4,9 @@
 from functions import data_bytes
 from functions import song_tracker
 from functions import note_data
-from functions import tracks
 from functions import plugins
 from functions import song
+from functions_tracks import tracks_mi
 import plugin_input
 import json
 
@@ -18,7 +18,7 @@ def setmacro(pluginid, macro_list, listname, macronum, famitrkr_instdata_macro_i
         macrodata = macro_list[macronum][famitrkr_instdata_macro_id]
         looploc = None
         if 'loop' in macrodata: looploc = macrodata['loop']
-        plugins.add_env_blocks(cvpj_l, pluginid, listname, macrodata['values'], looploc, None)
+        plugins.add_env_blocks(cvpj_l, pluginid, listname, macrodata['values'], 15, looploc, None)
 
 def parsecell(celldata):
     cellsplit = celldata.split(' ')
@@ -62,7 +62,6 @@ class input_famitrkr_txt(plugin_input.base):
         'fxrack': False,
         'track_lanes': True,
         'placement_cut': False,
-        'placement_loop': False,
         'auto_nopl': False,
         'track_nopl': False
         }
@@ -293,8 +292,9 @@ class input_famitrkr_txt(plugin_input.base):
                     setmacro(pluginid, macro_nes_vrc6, "hipitch", 3, famitrkr_instdata_vrc6[int(instid)][4]*-1)
                     setmacro(pluginid, macro_nes_vrc6, "duty", 4, famitrkr_instdata_vrc6[int(instid)][5])
 
-            tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_instname)
-            tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+            tracks_mi.inst_create(cvpj_l, cvpj_instid)
+            tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname)
+            tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_lanefit'] = True

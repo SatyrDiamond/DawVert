@@ -3,11 +3,11 @@
 
 from functions import colors
 from functions import idvals
-from functions import tracks
 from functions import song
 from functions import note_data
 from functions import plugins
 from functions import placement_data
+from functions_tracks import tracks_m
 import plugin_input
 import json
 import io
@@ -75,7 +75,8 @@ class input_mariopaint_smp(plugin_input.base):
                 makenote(s_pos_out, s_notes, s_vol, notelen)
             linecount += 1
 
-        tracks.m_playlist_pl(cvpj_l, 1, None, None, placement_data.nl2pl(cvpj_notelist))
+        tracks_m.playlist_add(cvpj_l, 1)
+        tracks_m.add_pl(cvpj_l, 1, 'notes', placement_data.nl2pl(cvpj_notelist))
 
         for instname in instnames:
             s_inst_name = idvals.get_idval(idvals_mariopaint_inst, smpnames[instname], 'name')
@@ -83,9 +84,10 @@ class input_mariopaint_smp(plugin_input.base):
             if s_inst_color != None: s_inst_color = colors.moregray(s_inst_color)
             mpinstid = instnames.index(instname)
             plugins.add_plug_gm_midi(cvpj_l, instname, 0, mpinstid)
-            tracks.m_inst_create(cvpj_l, instname, name=s_inst_name, color=s_inst_color)
-            tracks.m_inst_pluginid(cvpj_l, instname, instname)
-            tracks.m_inst_add_dataval(cvpj_l, instname, 'midi', 'output', {'program': mpinstid})
+            tracks_m.inst_create(cvpj_l, instname)
+            tracks_m.inst_visual(cvpj_l, instname, name=s_inst_name, color=s_inst_color)
+            tracks_m.inst_pluginid(cvpj_l, instname, instname)
+            tracks_m.inst_dataval_add(cvpj_l, instname, 'midi', 'output', {'program': mpinstid})
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True

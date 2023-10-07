@@ -8,10 +8,13 @@ from functions import idvals
 from functions import midi_exdata
 from functions import params
 from functions import plugins
-from functions import tracks
 from functions import song
 from functions import colors
 from functions import auto
+from functions_tracks import tracks_rm
+from functions_tracks import fxrack
+from functions_tracks import fxslot
+from functions_tracks import auto_nopl
 
 import chardet	
 
@@ -258,8 +261,9 @@ def song_end(cvpj_l):
 		trackname = None
 		if numtracks == 1: song.add_info(cvpj_l, 'title', global_miditrack[1])
 		else: trackname = global_miditrack[1]
-		tracks.c_create_track(cvpj_l, 'instruments', cvpj_trackid, name=trackname, color=track_color)
-		tracks.c_pl_notes(cvpj_l, cvpj_trackid, placementdata)
+		tracks_rm.track_create(cvpj_l, cvpj_trackid, 'instruments')
+		tracks_rm.track_visual(cvpj_l, cvpj_trackid, name=trackname, color=track_color)
+		tracks_rm.add_pl(cvpj_l, cvpj_trackid, 'notes', placementdata)
 		tracknum += 1
 
 	for instnum in range(len(used_insts)):
@@ -282,9 +286,10 @@ def song_end(cvpj_l):
 		if used_inst[3] == 0: plugins.add_plug_gm_midi(cvpj_l, instid, used_inst[2], used_inst[1])
 		else: plugins.add_plug_gm_midi(cvpj_l, instid, 128, 1)
 
-		tracks.c_inst_create(cvpj_l, instid, name=instname, color=instcolor)
-		tracks.c_inst_add_dataval(cvpj_l, instid, None, 'fxrack_channel', int(used_inst[0]+1))
-		tracks.c_inst_pluginid(cvpj_l, instid, instid)
+		tracks_rm.inst_create(cvpj_l, instid)
+		tracks_rm.inst_visual(cvpj_l, instid, name=instname, color=instcolor)
+		tracks_rm.inst_fxrackchan_add(cvpj_l, instid, int(used_inst[0]+1))
+		tracks_rm.inst_pluginid(cvpj_l, instid, instid)
 
 	for fxnum in range(song_channels):
 		s_fx_usedinstid = fx_usedinstid[fxnum]
@@ -356,14 +361,14 @@ def song_end(cvpj_l):
 		if fx_name != None: fxchannames[fxnum] = fx_name
 		if fx_color != None: fxchancolors[fxnum] = fx_color
 
-	tracks.fxrack_add(cvpj_l, 0, "Master", [0.3, 0.3, 0.3], 1.0, None)
+	fxrack.add(cvpj_l, 0, 1.0, None, name="Master", color=[0.3, 0.3, 0.3])
 
 	usedeffects = [False,False]
 
 	for midi_channum in range(song_channels):
 		s_chanauto = automation_channel[midi_channum]
 		fxrack_chan = str(midi_channum+1)
-		tracks.fxrack_add(cvpj_l, fxrack_chan, fxchannames[midi_channum], fxchancolors[midi_channum], None, None)
+		fxrack.add(cvpj_l, fxrack_chan, None, None, name=fxchannames[midi_channum], color=fxchancolors[midi_channum])
 
 		for ccnum, name, defval, valdiv, valadd in [
 			[  1 ,'modulation',    1,  127,   0],
@@ -373,53 +378,53 @@ def song_end(cvpj_l):
 			['pitch','pitch',      0,  1,     0],
 		]:
 			if ccnum in s_chanauto: 
-				out_param = tracks.a_auto_nopl_paramauto(
+				out_param = auto_nopl.paramauto(
 					['fxmixer', fxrack_chan, name], 'float', s_chanauto[ccnum], ppq_step, firstchanusepos[midi_channum], defval, valdiv, valadd)
-				tracks.fxrack_param(cvpj_l, midi_channum+1, name, out_param, 'float')
+				fxrack.param_add(cvpj_l, midi_channum+1, name, out_param, 'float')
 
 		for ccnum, fx2, fx1, fxname in [[91,0,0,'reverb'],[93,0,1,'chorus'],[92,1,0,'tremolo'],[95,1,1,'phaser']]:
 			if ccnum in s_chanauto:
 				sendname = str(midi_channum)+fxname
 				usedeffects[fx2] = True
 				sendtofx = song_channels+1+fx1+(fx2*2)
-				out_param = tracks.a_auto_nopl_paramauto(['send', sendname, 'amount'], 'float', s_chanauto[ccnum], ppq_step, firstchanusepos[midi_channum], 0, 127, 0)
-				tracks.fxrack_addsend(cvpj_l, midi_channum+1, 0, 1, None)
-				tracks.fxrack_addsend(cvpj_l, midi_channum+1, sendtofx, out_param, sendname)
+				out_param = auto_nopl.paramauto(['send', sendname, 'amount'], 'float', s_chanauto[ccnum], ppq_step, firstchanusepos[midi_channum], 0, 127, 0)
+				fxrack.addsend(cvpj_l, midi_channum+1, 0, 1, None)
+				fxrack.addsend(cvpj_l, midi_channum+1, sendtofx, out_param, sendname)
 
 	if usedeffects[0] == True:
 		plugins.add_plug(cvpj_l, 'plugin-reverb', 'simple', 'reverb-send')
 		plugins.add_plug(cvpj_l, 'plugin-chorus', 'simple', 'chorus-send')
 		plugins.add_plug_fxvisual(cvpj_l, 'plugin-reverb', 'Reverb', None)
 		plugins.add_plug_fxvisual(cvpj_l, 'plugin-chorus', 'Chorus', None)
-		tracks.fxrack_add(cvpj_l, song_channels+1, "[S] Reverb", [0.4, 0.4, 0.4], 1.0, None)
-		tracks.fxrack_add(cvpj_l, song_channels+2, "[S] Chorus", [0.4, 0.4, 0.4], 1.0, None)
-		tracks.insert_fxslot(cvpj_l, ['fxrack', song_channels+1], 'audio', 'plugin-reverb')
-		tracks.insert_fxslot(cvpj_l, ['fxrack', song_channels+2], 'audio', 'plugin-chorus')
-		tracks.fxrack_addsend(cvpj_l, song_channels+1, 0, 1, None)
-		tracks.fxrack_addsend(cvpj_l, song_channels+2, 0, 1, None)
+		fxrack.add(cvpj_l, song_channels+1, 1.0, None, name="[S] Reverb", color=[0.4, 0.4, 0.4])
+		fxrack.add(cvpj_l, song_channels+2, 1.0, None, name="[S] Chorus", color=[0.4, 0.4, 0.4])
+		fxslot.insert(cvpj_l, ['fxrack', song_channels+1], 'audio', 'plugin-reverb')
+		fxslot.insert(cvpj_l, ['fxrack', song_channels+2], 'audio', 'plugin-chorus')
+		fxrack.addsend(cvpj_l, song_channels+1, 0, 1, None)
+		fxrack.addsend(cvpj_l, song_channels+2, 0, 1, None)
 
 	if usedeffects[1] == True:
 		plugins.add_plug(cvpj_l, 'plugin-tremelo', 'simple', 'tremelo-send')
 		plugins.add_plug(cvpj_l, 'plugin-phaser', 'simple', 'phaser-send')
 		plugins.add_plug_fxvisual(cvpj_l, 'plugin-tremelo', 'Tremelo', None)
 		plugins.add_plug_fxvisual(cvpj_l, 'plugin-phaser', 'Phaser', None)
-		tracks.fxrack_add(cvpj_l, song_channels+3, "[S] Tremelo", [0.4, 0.4, 0.4], 1.0, None)
-		tracks.fxrack_add(cvpj_l, song_channels+4, "[S] Phaser", [0.4, 0.4, 0.4], 1.0, None)
-		tracks.insert_fxslot(cvpj_l, ['fxrack', song_channels+3], 'audio', 'plugin-tremelo')
-		tracks.insert_fxslot(cvpj_l, ['fxrack', song_channels+4], 'audio', 'plugin-phaser')
-		tracks.fxrack_addsend(cvpj_l, song_channels+3, 0, 1, None)
-		tracks.fxrack_addsend(cvpj_l, song_channels+4, 0, 1, None)
+		fxrack.add(cvpj_l, song_channels+3, 1.0, None, name="[S] Tremelo", color=[0.4, 0.4, 0.4])
+		fxrack.add(cvpj_l, song_channels+4, 1.0, None, name="[S] Phaser", color=[0.4, 0.4, 0.4])
+		fxslot.insert(cvpj_l, ['fxrack', song_channels+3], 'audio', 'plugin-tremelo')
+		fxslot.insert(cvpj_l, ['fxrack', song_channels+4], 'audio', 'plugin-phaser')
+		fxrack.addsend(cvpj_l, song_channels+3, 0, 1, None)
+		fxrack.addsend(cvpj_l, song_channels+4, 0, 1, None)
 
 	veryfirstnotepos = getbeforenoteall(firstchanusepos)
 
 	#tempo
-	out_param = tracks.a_auto_nopl_paramauto(['main', 'bpm'], 'float', auto_bpm, ppq_step, veryfirstnotepos, 120, 1, 0)
+	out_param = auto_nopl.paramauto(['main', 'bpm'], 'float', auto_bpm, ppq_step, veryfirstnotepos, 120, 1, 0)
 	params.add(cvpj_l, [], 'bpm', out_param, 'float')
 
 	#volume
 	if 'volume' in auto_master:
-		out_param = tracks.a_auto_nopl_paramauto(['fxmixer', '0', 'vol'], 'float', auto_master['volume'], ppq_step, veryfirstnotepos, 127, 1, 0)
-		tracks.fxrack_param(cvpj_l, 0, 'vol', out_param, 'float')
+		out_param = auto_nopl.paramauto(['fxmixer', '0', 'vol'], 'float', auto_master['volume'], ppq_step, veryfirstnotepos, 127, 1, 0)
+		fxrack.param_add(cvpj_l, 0, 'vol', out_param, 'float')
 
 	#timesig
 	for timesigpoint in auto_timesig:
@@ -432,6 +437,6 @@ def song_end(cvpj_l):
 	if loop_data[1] != None: song.add_timemarker_looparea(cvpj_l, 'Loop', loop_data[0], loop_data[1])
 	elif loop_data[0] != None: song.add_timemarker_loop(cvpj_l, loop_data[0], 'Loop')
 	
-	tracks.a_auto_nopl_to_cvpj(cvpj_l)
+	auto_nopl.to_cvpj(cvpj_l)
 
 	return used_insts

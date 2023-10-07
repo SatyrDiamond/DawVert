@@ -20,8 +20,10 @@ from functions import data_values
 from functions import song
 from functions import audio
 from functions import plugins
-from functions import tracks
 from functions import params
+from functions_tracks import tracks_mi
+from functions_tracks import fxrack
+from functions_tracks import fxslot
 
 filename_len = {}
 
@@ -147,37 +149,34 @@ class input_flp(plugin_input.base):
             channeldata = FL_Channels[instrument]
             instdata = {}
             if channeldata['type'] in [0,1,2,3]:
-
                 cvpj_instid = 'FLInst' + str(instrument)
 
-                if 'name' in channeldata: cvpj_inst_name = channeldata['name']
-                else: cvpj_inst_name = ''
-
+                tracks_mi.inst_create(cvpj_l, cvpj_instid)
+                cvpj_inst_name = channeldata['name'] if 'name' in channeldata else ''
                 color = channeldata['color'].to_bytes(4, "little")
                 cvpj_inst_color = [color[0]/255,color[1]/255,color[2]/255]
+                tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_inst_name, color=cvpj_inst_color)
 
-                tracks.m_inst_create(cvpj_l, cvpj_instid, name=cvpj_inst_name, color=cvpj_inst_color)
-
-                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'enabled', channeldata['enabled'], 'bool')
+                tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'enabled', channeldata['enabled'], 'bool')
 
                 if 'middlenote' in channeldata: 
-                    tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'middlenote', channeldata['middlenote']-60)
+                    tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'instdata', 'middlenote', channeldata['middlenote']-60)
 
-                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pitch', channeldata['pitch']/100, 'float')
-                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'usemasterpitch', channeldata['main_pitch'], 'bool')
-                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'pan', channeldata['pan'], 'float')
-                tracks.m_inst_add_param(cvpj_l, cvpj_instid, 'vol', channeldata['volume'], 'float')
-                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'fxrack_channel', channeldata['fxchannel'])
+                tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'pitch', channeldata['pitch']/100, 'float')
+                tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'usemasterpitch', channeldata['main_pitch'], 'bool')
+                tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'pan', channeldata['pan'], 'float')
+                tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', channeldata['volume'], 'float')
+                tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, channeldata['fxchannel'])
 
                 pluginid = plugins.get_id()
 
                 if channeldata['type'] == 0:
-                    tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+                    tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
                     plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, getsamplefile(channeldata, input_file))
 
-                    tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'remove_dc', channeldata['remove_dc'])
-                    tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'normalize', channeldata['normalize'])
-                    tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'reversepolarity', channeldata['reversepolarity'])
+                    tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, None, 'remove_dc', channeldata['remove_dc'])
+                    tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, None, 'normalize', channeldata['normalize'])
+                    tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, None, 'reversepolarity', channeldata['reversepolarity'])
 
                     cvpj_loopdata = {}
                     if 'sampleflags' in channeldata:
@@ -185,7 +184,7 @@ class input_flp(plugin_input.base):
                         cvpj_loopdata['enabled'] = fl_sampleflags[4]
                         interpolation = "none"
                         if fl_sampleflags[7] == 1: interpolation = "sinc"
-                        tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, None, 'interpolation', interpolation)
+                        tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, None, 'interpolation', interpolation)
 
                     if 'looptype' in channeldata:
                         fl_looptype = channeldata['looptype']
@@ -195,7 +194,7 @@ class input_flp(plugin_input.base):
                     plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loopdata)
                     
                 if channeldata['type'] == 2:
-                    tracks.m_inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+                    tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
                     filename_sample = getsamplefile(channeldata, input_file)
                     plugins.add_fileref(cvpj_l, pluginid, 'audiofile', filename_sample)
 
@@ -211,7 +210,7 @@ class input_flp(plugin_input.base):
                     if 'pluginparams' in channeldata: 
                         flp_dec_pluginparams.getparams(cvpj_l, pluginid, channeldata['plugin'], channeldata['pluginparams'], samplefolder)
 
-                tracks.m_inst_add_dataval(cvpj_l, cvpj_instid, 'poly', 'max', channeldata['polymax'])
+                tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'poly', 'max', channeldata['polymax'])
 
                 id_inst[str(instrument)] = 'FLInst' + str(instrument)
 
@@ -431,11 +430,11 @@ class input_flp(plugin_input.base):
                 fx_volume = struct.unpack('i', fl_fxdata_initvals[b'\x1f\xc0'])[0]/12800 if b'\x1f\xc0' in fl_fxdata_initvals else 1
                 fx_pan = struct.unpack('i', fl_fxdata_initvals[b'\x1f\xc1'])[0]/6400 if b'\x1f\xc1' in fl_fxdata_initvals else 0
 
-            tracks.fxrack_add(cvpj_l, fxchannel, fx_name, fx_color, fx_volume, fx_pan)
+            fxrack.add(cvpj_l, fxchannel, fx_volume, fx_pan, name=fx_name, color=fx_color)
 
             if 'routing' in fl_fx_chan:
                 for route in fl_fx_chan['routing']:
-                    tracks.fxrack_addsend(cvpj_l, fxchannel, route, 1, None)
+                    fxrack.addsend(cvpj_l, fxchannel, route, 1, None)
 
             if 'slots' in fl_fx_chan:
                 for fl_fxslotnum in range(10):
@@ -460,7 +459,7 @@ class input_flp(plugin_input.base):
                             color = fl_fxslotdata['color'].to_bytes(4, "little")
                             v_color = [color[0]/255,color[1]/255,color[2]/255]
                         plugins.add_plug_fxvisual(cvpj_l, fxslotid, v_name, v_color)
-                        tracks.insert_fxslot(cvpj_l, ['fxrack', fxchannel], 'audio', fxslotid)
+                        fxslot.insert(cvpj_l, ['fxrack', fxchannel], 'audio', fxslotid)
 
         for timemarker in FL_TimeMarkers:
             tm_pos = FL_TimeMarkers[timemarker]['pos']/ppq*4

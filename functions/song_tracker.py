@@ -4,8 +4,9 @@
 from functions import note_convert
 from functions import auto
 from functions import note_mod
-from functions import tracks
 from functions import data_bytes
+from functions_tracks import tracks_m
+from functions_tracks import tracks_mi
 
 global used_instruments_num
 used_instruments_num = []
@@ -342,7 +343,8 @@ def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype, i_len_table)
         s_patterns = i_patterns[channum]
         s_orders = i_orders[channum]
 
-        tracks.m_playlist_pl(cvpj_l, channum+1, s_chantype, None, None)
+        tracks_mi.playlist_add(cvpj_l, channum+1)
+        tracks_mi.playlist_visual(cvpj_l, channum+1, name=s_chantype)
 
         for patnum in s_patterns:
             s_pattern = s_patterns[patnum]
@@ -356,8 +358,10 @@ def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype, i_len_table)
 
             if NLP != []:
                 patid = str(channum)+'_'+str(patnum)
-                tracks.m_add_nle(cvpj_l, patid, NLP[0]['notelist'])
-                tracks.m_add_nle_info(cvpj_l, patid, s_chantype+' ('+str(patnum)+')', None)
+
+                tracks_mi.notelistindex_add(cvpj_l, patid, NLP[0]['notelist'])
+                tracks_mi.notelistindex_visual(cvpj_l, patid, name=s_chantype+' ('+str(patnum)+')')
+
 
         curpatnum = 0
         curpos = 0
@@ -367,7 +371,7 @@ def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype, i_len_table)
                 cvpj_l_placement['position'] = curpos
                 cvpj_l_placement['duration'] = i_len_table[curpatnum]
                 cvpj_l_placement['fromindex'] = str(channum)+'_'+str(s_order)
-                cvpj_l_playlist[str(channum+1)]['placements_notes'].append(cvpj_l_placement)
+                tracks_mi.add_pl(cvpj_l, str(channum+1), 'notes', cvpj_l_placement)
             curpos += i_len_table[curpatnum]
             curpatnum += 1
 

@@ -13,7 +13,7 @@ from functions import data_values
 from functions import params
 from functions import auto
 from functions import colors
-from functions import tracks
+from functions_tracks import tracks_r
 
 truefalse = ['false','true']
 
@@ -175,7 +175,7 @@ class output_cvpj(plugin_output.base):
 
         # ----------------------------------------- Tracks -----------------------------------------
 
-        for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+        for cvpj_trackid, cvpj_trackdata, track_placements in tracks_r.iter(cvpj_l):
             maketrack(x_str, cvpj_trackdata, cvpj_trackid)
             
             if 'notes' in track_placements:

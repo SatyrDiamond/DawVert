@@ -11,7 +11,7 @@ from functions import notelist_data
 from functions import xtramath
 from functions import params
 from functions import colors
-from functions import tracks
+from functions_tracks import tracks_r
 
 unusedchannel = 0
 
@@ -79,7 +79,7 @@ class output_cvpj_f(plugin_output.base):
 
             multi_miditrack[0].append(mido.MetaMessage('set_tempo', tempo=midi_tempo, time=0))
 
-            for cvpj_trackid, cvpj_trackdata, track_placements in tracks.r_track_iter(cvpj_l):
+            for cvpj_trackid, cvpj_trackdata, track_placements in tracks_r.iter(cvpj_l):
                 midi_defined = False
                 midi_channel = None
                 midi_bank = None
@@ -110,9 +110,8 @@ class output_cvpj_f(plugin_output.base):
                                 else:
                                     midi_bank = trackinstdata['plugindata']['bank']-128
 
-                if 'fxrack_channel' in cvpj_trackdata:
-                    if 16 > cvpj_trackdata['fxrack_channel'] > 1:
-                        midi_channel = cvpj_trackdata['fxrack_channel']-1
+                fxrackchan = tracks_r.track_fxrackchan_get(cvpj_l, cvpj_trackid)
+                if 16 > fxrackchan > 1: midi_channel = fxrackchan-1
 
                 #print(cvpj_trackdata)
 

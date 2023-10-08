@@ -8,6 +8,7 @@ from functions import placement_data
 from functions import plugins
 from functions import song
 from functions_tracks import tracks_m
+from functions_tracks import tracks_master
 import plugin_input
 import base64
 import json
@@ -185,6 +186,8 @@ class input_1bitdragon(plugin_input.base):
 
         cvpj_l['timesig'] = [4, 4]
         song.add_param(cvpj_l, 'bpm', onebitd_bpm)
-        song.add_param(cvpj_l, 'vol', onebitd_volume)
+
+        tracks_master.create(cvpj_l, onebitd_volume)
+        tracks_master.visual(cvpj_l, name='Master')
 
         return json.dumps(cvpj_l)

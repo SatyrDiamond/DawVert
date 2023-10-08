@@ -410,9 +410,9 @@ def do_device_data_single(fxpluginid, xmltag, deviceid):
             addvalue(x_Player, 'UseConstPowCrossfade', 'true')
 
     if plugtype[0] == 'universal' and plugtype[1] in ['compressor','expander']:
-        fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', fxpluginid])
-        fx_on = params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
-        fx_name = fxdata['name'] if 'name' in fxdata else ''
+        fx_on, fx_wet = get_plug_fxdata(cvpj_l, fxpluginid)
+        fx_name, fx_color = get_plug_fxvisual(cvpj_l, fxpluginid)
+        if fx_name == None: fx_name = ''
 
         xml_device = do_device_data_intro(xmltag, deviceid, 'Compressor2', fx_on, fx_name)
 
@@ -444,9 +444,9 @@ def do_device_data_single(fxpluginid, xmltag, deviceid):
 
         print('[output-ableton] Device', ableton_devicename)
 
-        fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', fxpluginid])
-        fx_on = params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
-        fx_name = fxdata['name'] if 'name' in fxdata else ''
+        fx_on, fx_wet = get_plug_fxdata(cvpj_l, fxpluginid)
+        fx_name, fx_color = get_plug_fxvisual(cvpj_l, fxpluginid)
+        if fx_name == None: fx_name = ''
 
         xml_device = do_device_data_intro(xmltag, deviceid, ableton_devicename, fx_on, fx_name)
 

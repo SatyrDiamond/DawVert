@@ -679,15 +679,15 @@ class input_ableton(plugin_input.base):
 				elif devicename == 'Compressor2':
 					device_defparams = abletondatadef_params[devicename]
 
-					v_Threshold = get_param(x_trackdevice, 'Threshold', 'float', 'false', None, None)
-					v_Ratio = get_param(x_trackdevice, 'Ratio', 'float', 'false', None, None)
-					v_ExpansionRatio = get_param(x_trackdevice, 'ExpansionRatio', 'float', 'false', None, None)
-					v_Attack = get_param(x_trackdevice, 'Attack', 'float', 'false', None, None)
-					v_Release = get_param(x_trackdevice, 'Release', 'float', 'false', None, None)
-					v_Gain = get_param(x_trackdevice, 'Gain', 'float', 'false', None, None)
-					v_DryWet = get_param(x_trackdevice, 'DryWet', 'float', 'false', None, None)
-					v_Model = get_param(x_trackdevice, 'Model', 'int', 'false', None, None)
-					v_Knee = get_param(x_trackdevice, 'Knee', 'float', 'false', None, None)
+					v_Threshold = get_param(x_trackdevice, 'Threshold', 'float', 0, None, None)
+					v_Ratio = get_param(x_trackdevice, 'Ratio', 'float', 0, None, None)
+					v_ExpansionRatio = get_param(x_trackdevice, 'ExpansionRatio', 'float', 0, None, None)
+					v_Attack = get_param(x_trackdevice, 'Attack', 'float', 0, None, None)
+					v_Release = get_param(x_trackdevice, 'Release', 'float', 0, None, None)
+					v_Gain = get_param(x_trackdevice, 'Gain', 'float', 0, None, None)
+					devfx_wet = get_param(x_trackdevice, 'DryWet', 'float', 1, None, None)
+					v_Model = get_param(x_trackdevice, 'Model', 'int', 0, None, None)
+					v_Knee = get_param(x_trackdevice, 'Knee', 'float', 0, None, None)
 
 					v_Threshold = -math.log(v_Threshold, 0.8913)
 

@@ -32,7 +32,7 @@ def in_output(cvpj_l):
         #print(i_id, in_data[i_id][0:3], out_auto_data)
         if in_data[i_id][0:4] != [None, None, None] and out_auto_data != []:
             if out_auto_addmul != None: out_auto_data = auto.multiply(out_auto_data, out_auto_addmul[0], out_auto_addmul[1])
-            a_add_auto_pl(cvpj_l, out_auto_type, out_auto_loc, out_auto_data)
+            auto_data.add_pl(cvpj_l, out_auto_type, out_auto_loc, out_auto_data)
 
 # ------------------------ cvpjauto to autoid ------------------------
 

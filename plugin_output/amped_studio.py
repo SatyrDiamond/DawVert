@@ -214,7 +214,7 @@ class output_cvpj_f(plugin_output.base):
         'placement_audio_stretch': ['rate']
         }
     def getsupportedplugformats(self): return ['vst2', 'midi']
-    def getsupportedplugins(self): return ['sampler:single', 'midi']
+    def getsupportedplugins(self): return ['sampler:single', 'midi', 'universal:compressor', 'universal:expander']
     def getfileextension(self): return 'zip'
     def parse(self, convproj_json, output_file):
         global audio_id

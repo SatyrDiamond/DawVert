@@ -55,13 +55,13 @@ def add_fx(sng_trkdata, s_trackdata):
         for fxpluginid in chainfxdata:
             plugtype = plugins.get_plug_type(cvpj_l, fxpluginid)
             fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', fxpluginid])
-            fx_on = not params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
+            fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, fxpluginid)
 
             if plugtype[0] == 'native-soundation':
                 fxpluginname = plugtype[1]
                 sng_fxdata = {}
                 sng_fxdata['identifier'] = fxpluginname
-                sng_fxdata['bypass'] = fx_on
+                sng_fxdata['bypass'] = not fx_on
 
                 if fxpluginname == 'com.soundation.compressor': snd_params = ['gain','release','ratio','threshold','attack']
                 elif fxpluginname == 'com.soundation.degrader': snd_params = ['gain','rate','reduction','mix']

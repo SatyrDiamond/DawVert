@@ -70,7 +70,7 @@ class output_waveform_edit(plugin_output.base):
         'placement_audio_stretch': ['rate']
         }
     def getsupportedplugformats(self): return []
-    def getsupportedplugins(self): return []
+    def getsupportedplugins(self): return ['universal:compressor', 'universal:expander']
     def getfileextension(self): return 'tracktionedit'
     def parse(self, convproj_json, output_file):
         global cvpj_l

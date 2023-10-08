@@ -410,8 +410,8 @@ def do_device_data_single(fxpluginid, xmltag, deviceid):
             addvalue(x_Player, 'UseConstPowCrossfade', 'true')
 
     if plugtype[0] == 'universal' and plugtype[1] in ['compressor','expander']:
-        fx_on, fx_wet = get_plug_fxdata(cvpj_l, fxpluginid)
-        fx_name, fx_color = get_plug_fxvisual(cvpj_l, fxpluginid)
+        fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, fxpluginid)
+        fx_name, fx_color = plugins.get_plug_fxvisual(cvpj_l, fxpluginid)
         if fx_name == None: fx_name = ''
 
         xml_device = do_device_data_intro(xmltag, deviceid, 'Compressor2', fx_on, fx_name)
@@ -436,6 +436,7 @@ def do_device_data_single(fxpluginid, xmltag, deviceid):
         set_add_param(xml_device, 'Gain', v_gain, str(get_unused_id()), None, None, None)
         set_add_param(xml_device, 'Knee', v_knee, str(get_unused_id()), None, None, None)
         set_add_param(xml_device, 'Model', v_model, str(get_unused_id()), None, None, None)
+        set_add_param(xml_device, 'DryWet', fx_wet, str(get_unused_id()), None, None, None)
 
     if plugtype[0] in ['native-ableton']:
         ableton_devicename = plugtype[1]
@@ -444,8 +445,8 @@ def do_device_data_single(fxpluginid, xmltag, deviceid):
 
         print('[output-ableton] Device', ableton_devicename)
 
-        fx_on, fx_wet = get_plug_fxdata(cvpj_l, fxpluginid)
-        fx_name, fx_color = get_plug_fxvisual(cvpj_l, fxpluginid)
+        fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, fxpluginid)
+        fx_name, fx_color = plugins.get_plug_fxvisual(cvpj_l, fxpluginid)
         if fx_name == None: fx_name = ''
 
         xml_device = do_device_data_intro(xmltag, deviceid, ableton_devicename, fx_on, fx_name)
@@ -1357,7 +1358,7 @@ class output_cvpj(plugin_output.base):
         'placement_audio_stretch': ['warp']
         }
     def getsupportedplugformats(self): return ['vst2', 'vst3']
-    def getsupportedplugins(self): return ['sampler:single', 'sampler:multi', 'sampler:slicer']
+    def getsupportedplugins(self): return ['sampler:single', 'sampler:multi', 'sampler:slicer', 'universal:compressor', 'universal:expander']
     def getfileextension(self): return 'als'
     def parse(self, convproj_json, output_file):
         global cvpj_l

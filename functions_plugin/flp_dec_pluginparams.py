@@ -45,8 +45,71 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
     fl_plugstr = data_bytes.to_bytesio(chunkdata)
     pluginname = pluginname.lower()
 
+    # ------------------------------------------------------------------------------------------- VST
+    if pluginname == 'fruity wrapper':
+        fl_plugstr.seek(0,2)
+        fl_plugstr_size = fl_plugstr.tell()
+        fl_plugstr.seek(0)
+        fl_plugstr.read(4)
+
+        wrapperdata = {}
+        while fl_plugstr.tell() < fl_plugstr_size:
+            chunktype = int.from_bytes(fl_plugstr.read(4), "little")
+            chunksize = int.from_bytes(fl_plugstr.read(4), "little")
+            fl_plugstr.read(4)
+            chunkdata = fl_plugstr.read(chunksize)
+            if chunktype == 1: wrapperdata['midi'] = chunkdata
+            if chunktype == 2: wrapperdata['flags'] = chunkdata
+            if chunktype == 30: wrapperdata['io'] = chunkdata
+            if chunktype == 32: wrapperdata['outputs'] = chunkdata
+            if chunktype == 50: wrapperdata['plugin_info'] = chunkdata
+            if chunktype == 51: wrapperdata['fourid'] = int.from_bytes(chunkdata, "little")
+            if chunktype == 53: wrapperdata['state'] = chunkdata
+            if chunktype == 54: wrapperdata['name'] = chunkdata.decode()
+            if chunktype == 55: wrapperdata['file'] = chunkdata.decode()
+            if chunktype == 56: wrapperdata['vendor'] = chunkdata.decode()
+            if chunktype == 57: wrapperdata['57'] = chunkdata
+
+        if 'plugin_info' in wrapperdata:
+            wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
+            if 'fourid' in wrapperdata:
+                pluginstate = wrapperdata['state']
+                wrapper_vststate = pluginstate[0:9]
+                wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
+                wrapper_vstpad = pluginstate[13:17]
+                wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
+                wrapper_vstdata = pluginstate[21:]
+                plugin_vst2.replace_data(cvpj_l, pluginid, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
+                plugins.add_plug_data(cvpj_l, pluginid, 'current_program', wrapper_vstprogram)
+
+    elif pluginname == 'fruity compressor':
+        flplugvals = struct.unpack('i'*8, chunkdata)
+        v_threshold = flplugvals[1]/10
+        v_ratio = flplugvals[2]/10
+        v_gain = flplugvals[3]/10
+        v_attack = flplugvals[4]/10000
+        v_release = flplugvals[5]/1000
+        v_type = flplugvals[6]
+        first_type = v_type>>2
+        second_type = v_type%4
+        if second_type == 0: v_knee = 0
+        if second_type == 1: v_knee = 6
+        if second_type == 2: v_knee = 7
+        if second_type == 3: v_knee = 15
+        if first_type == 0: v_tcr = 0
+        if first_type == 1: v_tcr = 1
+
+        plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
+        plugins.add_plug_data(cvpj_l, pluginid, 'tcr', bool(v_tcr) )
+        plugins.add_plug_param(cvpj_l, pluginid, 'pregain', v_gain, 'float', 'pregain')
+        plugins.add_plug_param(cvpj_l, pluginid, 'ratio', v_ratio, 'float', 'ratio')
+        plugins.add_plug_param(cvpj_l, pluginid, 'threshold', v_threshold, 'float', 'threshold')
+        plugins.add_plug_param(cvpj_l, pluginid, 'attack', v_attack, 'float', 'attack')
+        plugins.add_plug_param(cvpj_l, pluginid, 'release', v_release, 'float', 'release')
+        plugins.add_plug_param(cvpj_l, pluginid, 'knee', v_knee, 'float', 'knee')
+
     # ------------------------------------------------------------------------------------------- Inst
-    if pluginname == '3x osc':
+    elif pluginname == '3x osc':
         fl_plugstr.read(4)
         osc1_pan, osc1_shape, osc1_coarse, osc1_fine, osc1_ofs, osc1_detune, osc1_mixlevel = struct.unpack('iiiiiii', fl_plugstr.read(28))
         plugins.add_plug_param(cvpj_l, pluginid, 'osc1_pan', osc1_pan, 'int', "Osc 1 Pan")
@@ -446,16 +509,6 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
         plugins.add_plug_param(cvpj_l, pluginid, 'crosscutoff', flplugvals[11], 'int', 'Cross Cutoff')
         plugins.add_plug_param(cvpj_l, pluginid, 'wetonly', flplugvals[12], 'int', 'Wet Only')
 
-    elif pluginname == 'fruity compressor':
-        flplugvals = struct.unpack('i'*8, chunkdata)
-        plugins.add_plug_param(cvpj_l, pluginid, 'threshold', flplugvals[1], 'int', 'Threshold')
-        plugins.add_plug_param(cvpj_l, pluginid, 'ratio', flplugvals[2], 'int', 'Ratio')
-        plugins.add_plug_param(cvpj_l, pluginid, 'gain', flplugvals[3], 'int', 'Gain')
-        plugins.add_plug_param(cvpj_l, pluginid, 'attack', flplugvals[4], 'int', 'Attack')
-        plugins.add_plug_param(cvpj_l, pluginid, 'release', flplugvals[5], 'int', 'Release')
-        plugins.add_plug_param(cvpj_l, pluginid, 'type', flplugvals[6], 'int', 'Type')
-        ##print(flplugvals)
-
     elif pluginname == 'fruity convolver':
         fl_plugstr.read(20)
         fromstorage = fl_plugstr.read(1)[0]
@@ -749,43 +802,6 @@ def getparams(cvpj_l, pluginid, pluginname, chunkdata, foldername):
     #    plugins.add_plug_param(cvpj_l, pluginid, 'speed', flplugvals[0], 'int', "Correction Speed")
     #    plugins.add_plug_param(cvpj_l, pluginid, 'gender', flplugvals[2], 'int', "Gender")
     #    plugins.add_plug_param(cvpj_l, pluginid, 'finetune', flplugvals[3], 'int', "Fine Tune")
-
-    # ------------------------------------------------------------------------------------------- VST
-    elif pluginname == 'fruity wrapper':
-        fl_plugstr.seek(0,2)
-        fl_plugstr_size = fl_plugstr.tell()
-        fl_plugstr.seek(0)
-        fl_plugstr.read(4)
-
-        wrapperdata = {}
-        while fl_plugstr.tell() < fl_plugstr_size:
-            chunktype = int.from_bytes(fl_plugstr.read(4), "little")
-            chunksize = int.from_bytes(fl_plugstr.read(4), "little")
-            fl_plugstr.read(4)
-            chunkdata = fl_plugstr.read(chunksize)
-            if chunktype == 1: wrapperdata['midi'] = chunkdata
-            if chunktype == 2: wrapperdata['flags'] = chunkdata
-            if chunktype == 30: wrapperdata['io'] = chunkdata
-            if chunktype == 32: wrapperdata['outputs'] = chunkdata
-            if chunktype == 50: wrapperdata['plugin_info'] = chunkdata
-            if chunktype == 51: wrapperdata['fourid'] = int.from_bytes(chunkdata, "little")
-            if chunktype == 53: wrapperdata['state'] = chunkdata
-            if chunktype == 54: wrapperdata['name'] = chunkdata.decode()
-            if chunktype == 55: wrapperdata['file'] = chunkdata.decode()
-            if chunktype == 56: wrapperdata['vendor'] = chunkdata.decode()
-            if chunktype == 57: wrapperdata['57'] = chunkdata
-
-        if 'plugin_info' in wrapperdata:
-            wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
-            if 'fourid' in wrapperdata:
-                pluginstate = wrapperdata['state']
-                wrapper_vststate = pluginstate[0:9]
-                wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
-                wrapper_vstpad = pluginstate[13:17]
-                wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
-                wrapper_vstdata = pluginstate[21:]
-                plugin_vst2.replace_data(cvpj_l, pluginid, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
-                plugins.add_plug_data(cvpj_l, pluginid, 'current_program', wrapper_vstprogram)
 
     # ------------------------------------------------------------------------------------------- Other
 

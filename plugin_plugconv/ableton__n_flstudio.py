@@ -25,34 +25,6 @@ class plugconv(plugin_plugconv.base):
 
         if plugintype[1] == None: plugintype[1] = ''
     
-        if plugintype[1].lower() == 'fruity compressor':  
-            print('[plug-conv] FL Studio to Ableton: Fruity Compressor > Compressor2:',pluginid)
-            auto_data.del_plugin(cvpj_l, pluginid)
-            comp_threshold = plugins.get_plug_param(cvpj_l, pluginid, 'threshold', 0)[0]/10
-            comp_ratio = plugins.get_plug_param(cvpj_l, pluginid, 'ratio', 0)[0]/10
-            comp_gain = plugins.get_plug_param(cvpj_l, pluginid, 'gain', 0)[0]/10
-            comp_attack = plugins.get_plug_param(cvpj_l, pluginid, 'attack', 0)[0]/10000
-            comp_release = plugins.get_plug_param(cvpj_l, pluginid, 'release', 0)[0]/1000
-            comp_type = plugins.get_plug_param(cvpj_l, pluginid, 'type', 0)[0]
-            comp_threshold = ableton_values.compressor_threshold_in(comp_threshold)
-            first_type = comp_type>>2
-            second_type = comp_type%4
-            if second_type == 0: als_knee = 0
-            if second_type == 1: als_knee = 6
-            if second_type == 2: als_knee = 12
-            if second_type == 3: als_knee = 18
-            if first_type == 0: als_model = 0
-            if first_type == 1: als_model = 1
-            plugins.replace_plug(cvpj_l, pluginid, 'native-ableton', 'Compressor2')
-            plugins.add_plug_param(cvpj_l, pluginid, 'Threshold', comp_threshold, 'float', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'Ratio', comp_ratio, 'float', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'Attack', comp_attack*1000, 'float', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'Release', comp_release*1000, 'float', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'Gain', comp_gain, 'float', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'Model', als_model, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'Knee', als_knee, 'float', "")
-            return True
-
         if plugintype[1].lower() == 'fruity balance':  
             print('[plug-conv] FL Studio to Ableton: Fruity Balance > StereoGain:',pluginid)
             auto_data.del_plugin(cvpj_l, pluginid)

@@ -198,14 +198,13 @@ class input_flp(plugin_input.base):
                     filename_sample = getsamplefile(channeldata, input_file)
                     plugins.add_fileref(cvpj_l, pluginid, 'audiofile', filename_sample)
 
-                    flpluginname = ''
-                    if 'plugin' in channeldata: 
-                        if channeldata['plugin'].lower() in ['fruity soundfont player', 'soundfont player']:
-                            plugins.add_plug(cvpj_l, pluginid, 'soundfont2', None)
-                        elif channeldata['plugin'].lower() == 'fruity slicer':
-                            plugins.add_plug(cvpj_l, pluginid, 'sampler', 'slicer')
-                        else:
-                            plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', channeldata['plugin'])
+                    flpluginname = channeldata['plugin'] if 'plugin' in channeldata else None
+                    if channeldata['plugin'].lower() in ['fruity soundfont player', 'soundfont player']:
+                        plugins.add_plug(cvpj_l, pluginid, 'soundfont2', None)
+                    elif channeldata['plugin'].lower() == 'fruity slicer':
+                        plugins.add_plug(cvpj_l, pluginid, 'sampler', 'slicer')
+                    else:
+                        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', channeldata['plugin'])
 
                     if 'pluginparams' in channeldata: 
                         flp_dec_pluginparams.getparams(cvpj_l, pluginid, channeldata['plugin'], channeldata['pluginparams'], samplefolder)

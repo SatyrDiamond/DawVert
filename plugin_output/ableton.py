@@ -354,30 +354,35 @@ def add_range_val(xmltag, name, low_range, hi_range, low_cr_range, hi_cr_range):
     addvalue(x_subtag, 'CrossfadeMin', str(low_cr_range))
     addvalue(x_subtag, 'CrossfadeMax', str(hi_cr_range))
 
+def do_device_data_intro(xmltag, deviceid, ableton_devicename, fx_on, fx_name):
+    xml_device = ET.SubElement(xmltag, ableton_devicename)
+    xml_device.set('Id', str(deviceid))
+    addvalue(xml_device, 'LomId', '0')
+    addvalue(xml_device, 'LomIdView', '0')
+    addvalue(xml_device, 'IsExpanded', 'false')
+    set_add_param(xml_device, 'On', fx_on, str(get_unused_id()), None, [64,127], None)
+    addvalue(xml_device, 'ModulationSourceCount', '0')
+    addLomId(xml_device, 'ParametersListWrapper', '0')
+    addId(xml_device, 'Pointee', str(get_pointee()))
+    addvalue(xml_device, 'LastSelectedTimeableIndex', '0')
+    addvalue(xml_device, 'LastSelectedClipEnvelopeIndex', '0')
+    x_LastPresetRef = ET.SubElement(xml_device, 'LastPresetRef')
+    x_LastPresetRef_Value = ET.SubElement(x_LastPresetRef, 'Value')
+    x_LockedScripts = ET.SubElement(xml_device, 'LockedScripts')
+    addvalue(xml_device, 'IsFolded', 'false')
+    addvalue(xml_device, 'ShouldShowPresetName', 'false')
+    addvalue(xml_device, 'UserName', fx_name)
+    addvalue(xml_device, 'Annotation', '')
+    x_SourceContext = ET.SubElement(xml_device, 'SourceContext')
+    x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
+    return xml_device
+
+
 def do_device_data_single(fxpluginid, xmltag, deviceid):
     plugtype = plugins.get_plug_type(cvpj_l, fxpluginid)
 
     if plugtype in [['sampler', 'single'], ['sampler', 'multi']]:
-        xml_device = ET.SubElement(xmltag, 'MultiSampler')
-        xml_device.set('Id', str(deviceid))
-        addvalue(xml_device, 'LomId', '0')
-        addvalue(xml_device, 'LomIdView', '0')
-        addvalue(xml_device, 'IsExpanded', 'false')
-        set_add_param(xml_device, 'On', True, str(get_unused_id()), None, [64,127], None)
-        addvalue(xml_device, 'ModulationSourceCount', '0')
-        addLomId(xml_device, 'ParametersListWrapper', '0')
-        addId(xml_device, 'Pointee', str(get_pointee()))
-        addvalue(xml_device, 'LastSelectedTimeableIndex', '0')
-        addvalue(xml_device, 'LastSelectedClipEnvelopeIndex', '0')
-        x_LastPresetRef = ET.SubElement(xml_device, 'LastPresetRef')
-        x_LastPresetRef_Value = ET.SubElement(x_LastPresetRef, 'Value')
-        x_LockedScripts = ET.SubElement(xml_device, 'LockedScripts')
-        addvalue(xml_device, 'IsFolded', 'false')
-        addvalue(xml_device, 'ShouldShowPresetName', 'false')
-        addvalue(xml_device, 'UserName', '')
-        addvalue(xml_device, 'Annotation', '')
-        x_SourceContext = ET.SubElement(xml_device, 'SourceContext')
-        x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
+        xml_device = do_device_data_intro(xmltag, deviceid, 'MultiSampler', True, '')
 
         sampleidnum = 0
 
@@ -404,6 +409,34 @@ def do_device_data_single(fxpluginid, xmltag, deviceid):
             addvalue(x_Player, 'InterpolationMode', '1')
             addvalue(x_Player, 'UseConstPowCrossfade', 'true')
 
+    if plugtype[0] == 'universal' and plugtype[1] in ['compressor','expander']:
+        fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', fxpluginid])
+        fx_on = params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
+        fx_name = fxdata['name'] if 'name' in fxdata else ''
+
+        xml_device = do_device_data_intro(xmltag, deviceid, 'Compressor2', fx_on, fx_name)
+
+        v_threshold = plugins.get_plug_param(cvpj_l, fxpluginid, 'threshold', 0)[0]
+        v_gain = plugins.get_plug_param(cvpj_l, fxpluginid, 'postgain', 0)[0]
+        v_attack = plugins.get_plug_param(cvpj_l, fxpluginid, 'attack', 0)[0]
+        v_release = plugins.get_plug_param(cvpj_l, fxpluginid, 'release', 0)[0]
+        v_knee = plugins.get_plug_param(cvpj_l, fxpluginid, 'knee', 0)[0]
+        v_ratio = plugins.get_plug_param(cvpj_l, fxpluginid, 'ratio', 0)[0]
+        detect_mode = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'detect_mode', 'peak')
+        v_model = 1 if detect_mode == 'rms' else 0
+        if plugtype[1] == 'expander': v_model = 2
+
+        v_threshold = math.pow(0.8913,(-v_threshold))
+
+        set_add_param(xml_device, 'Threshold', v_threshold, str(get_unused_id()), None, None, None)
+        set_add_param(xml_device, 'Ratio', v_ratio, str(get_unused_id()), None, None, None)
+        set_add_param(xml_device, 'ExpansionRatio', v_ratio, str(get_unused_id()), None, None, None)
+        set_add_param(xml_device, 'Attack', v_attack*1000, str(get_unused_id()), None, None, None)
+        set_add_param(xml_device, 'Release', v_release*1000, str(get_unused_id()), None, None, None)
+        set_add_param(xml_device, 'Gain', v_gain, str(get_unused_id()), None, None, None)
+        set_add_param(xml_device, 'Knee', v_knee, str(get_unused_id()), None, None, None)
+        set_add_param(xml_device, 'Model', v_model, str(get_unused_id()), None, None, None)
+
     if plugtype[0] in ['native-ableton']:
         ableton_devicename = plugtype[1]
         ableton_deviceparams = abletondatadef_params[ableton_devicename]
@@ -415,26 +448,7 @@ def do_device_data_single(fxpluginid, xmltag, deviceid):
         fx_on = params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
         fx_name = fxdata['name'] if 'name' in fxdata else ''
 
-        xml_device = ET.SubElement(xmltag, ableton_devicename)
-        xml_device.set('Id', str(deviceid))
-        addvalue(xml_device, 'LomId', '0')
-        addvalue(xml_device, 'LomIdView', '0')
-        addvalue(xml_device, 'IsExpanded', 'false')
-        set_add_param(xml_device, 'On', fx_on, str(get_unused_id()), None, [64,127], None)
-        addvalue(xml_device, 'ModulationSourceCount', '0')
-        addLomId(xml_device, 'ParametersListWrapper', '0')
-        addId(xml_device, 'Pointee', str(get_pointee()))
-        addvalue(xml_device, 'LastSelectedTimeableIndex', '0')
-        addvalue(xml_device, 'LastSelectedClipEnvelopeIndex', '0')
-        x_LastPresetRef = ET.SubElement(xml_device, 'LastPresetRef')
-        x_LastPresetRef_Value = ET.SubElement(x_LastPresetRef, 'Value')
-        x_LockedScripts = ET.SubElement(xml_device, 'LockedScripts')
-        addvalue(xml_device, 'IsFolded', 'false')
-        addvalue(xml_device, 'ShouldShowPresetName', 'false')
-        addvalue(xml_device, 'UserName', fx_name)
-        addvalue(xml_device, 'Annotation', '')
-        x_SourceContext = ET.SubElement(xml_device, 'SourceContext')
-        x_SourceContext_Value = ET.SubElement(x_SourceContext, 'Value')
+        xml_device = do_device_data_intro(xmltag, deviceid, ableton_devicename, fx_on, fx_name)
 
         if ableton_devicename not in ['MultiSampler', 'OriginalSimpler']:
 

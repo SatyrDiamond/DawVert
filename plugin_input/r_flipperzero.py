@@ -70,13 +70,9 @@ class input_fmf(plugin_input.base):
                                 if notepart.isnumeric() == True: part_Oct += notepart
                                 if notepart == '.': part_Period += 1
                         
-
-                        if part_Oct == '': output_Oct = (fmf_Octave-5)*12
-                        else: output_Oct = (int(part_Oct)-5)*12
-                        if part_Note in l_key: output_Note = l_key.index(part_Note)+output_Oct
-                        else: output_Note = None
-                        if part_Duration == '': output_Duration = (fmf_Duration/16)/8
-                        else: output_Duration = (fmf_Duration*(1/int(part_Duration)))/8
+                        output_Oct = (fmf_Octave-5)*12 if part_Oct == '' else (int(part_Oct)-5)*12
+                        output_Note = l_key.index(part_Note)+output_Oct if part_Note in l_key else  None
+                        output_Duration = (fmf_Duration/16)/8 if part_Duration == '' else (fmf_Duration*(1/int(part_Duration)))/8
 
                         Notes.append([output_Note, output_Duration])
 

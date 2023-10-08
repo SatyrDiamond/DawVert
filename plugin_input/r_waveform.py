@@ -31,9 +31,8 @@ def get_plugins(xml_track, trackid):
                     if plugintype == 'comp':
                         plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
                         waveform_pvs = waveform_params[plugintype]
-                        print('comp')
                         for waveform_pv in waveform_pvs:
-                            print('-', waveform_pv)
+                            #print('-', waveform_pv)
                             paramtype, paramfb = waveform_pvs[waveform_pv]
                             paramval = xml_getvalue(xml_part, waveform_pv, paramfb)
                             if waveform_pv == 'attack': plugins.add_plug_param(cvpj_l, pluginid, 'attack', float(paramval)/1000, 'float', 'threshold')

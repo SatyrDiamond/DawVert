@@ -67,7 +67,7 @@ class input_soundclub2(plugin_input.base):
         for sc2object in sc2objects:
             sc2_datatype = sc2object[0]
 
-            if sc2_datatype == b'NAM':  sc2_songdisc = sc2object[1].decode('ascii')
+            if sc2_datatype == b'NAM': sc2_songdisc = sc2object[1].decode('ascii')
 
             elif sc2_datatype == b'PAT': 
                 t_patid = 'sc2_'+str(cur_patnum)
@@ -149,8 +149,7 @@ class input_soundclub2(plugin_input.base):
                     print(t_instname)
                     sc2idvinst_instname = idvals.get_idval(idvals_inst_soundclub2, t_instname, 'name')
                     sc2idvinst_gminst = idvals.get_idval(idvals_inst_soundclub2, t_instname, 'gm_inst')
-                    if sc2idvinst_gminst != None: 
-                        plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, sc2idvinst_gminst)
+                    if sc2idvinst_gminst != None: plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, sc2idvinst_gminst)
                     tracks_ri.track_create(cvpj_l, cvpj_instid, 'instrument')
                     tracks_ri.track_visual(cvpj_l, trackid, name=sc2_insdata[1:].decode('ascii'))
                     tracks_ri.track_inst_pluginid(cvpj_l, cvpj_instid, pluginid)

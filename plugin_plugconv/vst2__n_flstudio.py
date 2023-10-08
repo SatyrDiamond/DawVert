@@ -204,6 +204,8 @@ class plugconv(plugin_plugconv.base):
                 osc_lvl = getparam(starttextparam+'_lvl')
                 osc_warm = int(getparam(starttextparam+'_warm'))
 
+                print(osc_crs, osc_fine, starttextparam+'_crs', starttextparam+'_fine')
+
                 vital_osc_shape = []
                 for num in range(2048): 
                     vital_osc_shape.append(wave.tripleoct(num/2048, simsynth_shapes[osc_shape], osc_pw, osc_o1, osc_o2))
@@ -220,6 +222,9 @@ class plugconv(plugin_plugconv.base):
             params_vital.setvalue_timed('env_1_attack', simsynth_time(getparam('amp_att'))*3.5)
             params_vital.setvalue_timed('env_1_decay', simsynth_2time(getparam('amp_dec'))*3.5)
             params_vital.setvalue('env_1_sustain', getparam('amp_sus'))
+            params_vital.setvalue('env_1_attack_power', 0)
+            params_vital.setvalue('env_1_decay_power', 0)
+            params_vital.setvalue('env_1_release_power', 0)
             params_vital.setvalue_timed('env_1_release', simsynth_2time(getparam('amp_rel'))*3.5)
 
             # ------------ SVF ------------
@@ -236,6 +241,9 @@ class plugconv(plugin_plugconv.base):
             params_vital.setvalue('filter_fx_cutoff', outfilter)
             params_vital.setvalue('filter_fx_on', 1)
             params_vital.set_modulation(1, 'env_2', 'filter_fx_cutoff', getparam('svf_env')*0.6, 0, 0, 0, 0)
+            params_vital.set_modulation(2, 'env_1', 'osc_1_transpose', (getparam('osc1_env')-0.5)*0.5, 0, 0, 0, 0)
+            params_vital.set_modulation(3, 'env_1', 'osc_2_transpose', (getparam('osc2_env')-0.5)*0.5, 0, 0, 0, 0)
+            params_vital.set_modulation(4, 'env_1', 'osc_3_transpose', (getparam('osc3_env')-0.5)*0.5, 0, 0, 0, 0)
 
             # ------------ Chorus ------------
             params_vital.setvalue('chorus_mod_depth', 0.35)

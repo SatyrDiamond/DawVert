@@ -48,12 +48,12 @@ def setparams(cvpj_l, pluginid):
         else: flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R = int(v_attack/1024), int(v_decay/1024), int(v_sustain/127), int(v_release/1024)
 
         fl_pluginparams = b''
-        fl_pluginparams += struct.pack('iiiiii', *(6, sf2_patch, sf2_bank, 128, 128, 0) )
+        fl_pluginparams += struct.pack('iiiiii', *(2, sf2_patch+1, sf2_bank, 128, 128, 0) )
         fl_pluginparams += struct.pack('iiii', *(flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R) )
         fl_pluginparams += struct.pack('iiii', *(flsf_lfo_predelay, flsf_lfo_amount, flsf_lfo_speed, -1) )
         fl_pluginparams += len(sf2_file).to_bytes(1, "little")
         fl_pluginparams += sf2_file.encode('utf-8')
-        fl_pluginparams += b'\xff\xff\xff\xff\x00\xff\xff\xff\xff\x00\x00\x01\x01\xff\xff\xff\xff\x01\x00\x00\x00\x00\x00\x00\x00\x01\x01\x01\x00\x00\x00\x00'
+        fl_pluginparams += b'\xff\xff\xff\xff\x00\xff\xff\xff\xff\x00\x00'
 
     if plug_type[0] == 'vst2':
         vst_chunk = plugins.get_plug_dataval(cvpj_l, pluginid, 'chunk', '')

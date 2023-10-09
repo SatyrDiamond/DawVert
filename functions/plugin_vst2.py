@@ -98,8 +98,9 @@ def replace_data(cvpj_l, pluginid, bycat, platform, in_name, datatype, data, num
 			plugins.replace_plug(cvpj_l, pluginid, 'vst2', platformtxt)
 
 		if bycat == 'name': 
-			if plugintype[1] != None: print('[plugin-vst2] ' + ':'.join(plugintype) +' > ' + vst_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
-			else: print('[plugin-vst2] ' + plugintype[0] +' > ' + vst_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
+			if plugintype[0] == None and plugintype[1] == None: print('[plugin-vst2] ' + vst_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
+			if plugintype[0] != None and plugintype[1] == None: print('[plugin-vst2] ' + plugintype[0] +' > ' + vst_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
+			if plugintype[0] != None and plugintype[1] != None: print('[plugin-vst2] ' + ':'.join(plugintype) +' > ' + vst_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
 
 		plugins.add_plug_data(cvpj_l, pluginid, 'name', vst_name)
 		plugins.add_plug_data(cvpj_l, pluginid, 'path', vst_path)

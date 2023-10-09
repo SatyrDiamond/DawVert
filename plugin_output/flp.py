@@ -8,6 +8,7 @@ import base64
 import struct
 from bs4 import BeautifulSoup
 from functions_plugin import format_flp_enc
+from functions_plugin import flp_enc_plugins
 from functions import note_mod
 from functions import data_values
 from functions import audio
@@ -38,7 +39,7 @@ class output_cvpjs(plugin_output.base):
         'placement_audio_stretch': ['rate', 'rate_ignoretempo']
         }
     def getsupportedplugformats(self): return ['vst2', 'vst3']
-    def getsupportedplugins(self): return ['sampler:single']
+    def getsupportedplugins(self): return ['sampler:single', 'soundfont2']
     def getfileextension(self): return 'flp'
     def parse(self, convproj_json, output_file):
         cvpj_l = json.loads(convproj_json)
@@ -155,7 +156,8 @@ class output_cvpjs(plugin_output.base):
             middlenote = data_values.nested_dict_get_value(CVPJ_Data, ['instdata', 'middlenote'])
             if middlenote == None: middlenote = 0
 
-            if 'middlenote' in CVPJ_Data: T_Main['middlenote'] = middlenote+60
+            T_Main['middlenote'] = middlenote+60
+
             if 'name' in CVPJ_Data: T_Main['name'] = CVPJ_Data['name'] if CVPJ_Data['name'] != None else ''
 
             T_Main['fxchannel'] = tracks_mi.inst_fxrackchan_get(cvpj_l, CVPJ_Entry)
@@ -164,12 +166,25 @@ class output_cvpjs(plugin_output.base):
                 CVPJ_Inst = CVPJ_Data['instdata']
 
                 if 'pluginid' in CVPJ_Inst:
-                    plugintype = plugins.get_plug_type(cvpj_l, CVPJ_Inst['pluginid'])
+                    pluginid = CVPJ_Inst['pluginid']
+                    plugintype = plugins.get_plug_type(cvpj_l, pluginid)
+
+                    fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(cvpj_l, pluginid)
+
                     if plugintype == ['sampler', 'single']:
                         T_Main['type'] = 0
                         T_Main['plugin'] = ''
-                        cvpj_plugindata = plugins.get_plug_data(cvpj_l, CVPJ_Inst['pluginid'])
+                        cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
                         T_Main['samplefilename'] = data_values.get_value(cvpj_plugindata, 'file', '')
+
+                    elif fl_plugin != None:
+                        fl_plugindata = b'\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00Q\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                        fl_plugindata += b'\x00\x00\x00\x00'*4
+                        T_Main['plugindata'] = fl_plugindata
+                        T_Main['type'] = 2
+                        T_Main['plugin'] = fl_plugin
+                        T_Main['pluginparams'] = fl_pluginparams
+
                     else:
                         T_Main['type'] = 0
                         T_Main['plugin'] = ''
@@ -470,6 +485,27 @@ class output_cvpjs(plugin_output.base):
                     FL_Mixer[cvpj_fx]['name'] = cvpj_fxdata['name']
                 if 'color' in cvpj_fxdata:
                     FL_Mixer[cvpj_fx]['color'] = decode_color(cvpj_fxdata['color'])
+
+                if 'chain_fx_audio' in cvpj_fxdata:
+                    slotnum = 0
+                    FL_Mixer[cvpj_fx]['slots'] = {0: None, 1: None, 2: None, 3: None, 4: None, 5: None, 6: None, 7: None, 8: None, 9: None}
+
+                    for pluginid in cvpj_fxdata['chain_fx_audio']:
+
+                        fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(cvpj_l, pluginid)
+                        if fl_plugin != None:
+                            FL_Mixer[cvpj_fx]['slots'][slotnum] = {}
+                            slotdata = FL_Mixer[cvpj_fx]['slots'][slotnum]
+                            slotdata['plugin'] = fl_plugin
+                            slotdata['pluginparams'] = fl_pluginparams
+                            fx_name, fx_color = plugins.get_plug_fxvisual(cvpj_l, fl_plugin)
+
+                            if fx_name: slotdata['name'] = fx_name
+                            if fx_color: slotdata['color'] = decode_color(fx_color)
+
+
+                        slotnum += 1
+                        if slotnum == 10: break
 
         FL_Arrangements['0'] = {}
         FL_Arrangements['0']['items'] = FL_Playlist

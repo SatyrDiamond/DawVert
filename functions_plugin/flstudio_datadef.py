@@ -376,6 +376,37 @@ def get_datadef(pluginname):
 			["i",True,"fb_cut","Feedback Cut"],
 		]
 
+	elif pluginname == 'fruity delay 3':
+		out = [
+			["i",False,"version","Version"],
+			["i",True,"wet",""],
+			["i",True,"delay_type",""],
+			["i",True,"tempo_sync",""],
+			["i",True,"keep_pitch",""],
+			["i",True,"delay_time",""],
+			["i",True,"offset",""],
+			["i",True,"smoothing",""],
+			["i",True,"stereo",""],
+			["i",True,"mod_rate",""],
+			["i",True,"mod_time",""],
+			["i",True,"mod_cutoff",""],
+			["i",True,"diffusion_level",""],
+			["i",True,"diffusion_spread",""],
+			["i",True,"feedbackdist_type",""],
+			["i",True,"feedback_level",""],
+			["i",True,"unknown_1",""],
+			["i",True,"feedback_cutoff",""],
+			["i",True,"feedback_reso",""],
+			["i",True,"feedbackdist_level",""],
+			["i",True,"feedbackdist_knee",""],
+			["i",True,"feedbackdist_symmetry",""],
+			["i",True,"feedback_sample_rate",""],
+			["i",True,"feedback_bits",""],
+			["i",True,"wet",""],
+			["i",True,"tone",""],
+			["i",True,"dry",""],
+		]
+
 	elif pluginname == 'fruity fast dist':
 		out = [
 			["i",True,"pre","Pre Amp"],
@@ -403,6 +434,35 @@ def get_datadef(pluginname):
 			["b",False,"center","Center"],
 		]
 
+	elif pluginname == 'fruity flanger':
+		out = [
+			["i",False,"version","Version"],
+			["I",True,"delay",""],
+			["I",True,"depth",""],
+			["I",True,"rate",""],
+			["I",True,"phase",""],
+			["I",True,"damp",""],
+			["I",True,"shape",""],
+			["I",True,"feed",""],
+			["I",True,"inv_feedback",""],
+			["I",True,"inv_wet",""],
+			["I",True,"dry",""],
+			["I",True,"wet",""],
+			["I",True,"cross",""],
+		]
+
+	elif pluginname == 'fruity flangus':
+		out = [
+			["i",True,"ord",""],
+			["i",True,"depth",""],
+			["i",True,"speed",""],
+			["i",True,"delay",""],
+			["i",True,"spread",""],
+			["i",True,"cross",""],
+			["i",True,"dry",""],
+			["i",True,"wet",""],
+		]
+
 	elif pluginname == 'fruity free filter':
 		out = [
 			["I",True,"type","Type"],
@@ -410,6 +470,56 @@ def get_datadef(pluginname):
 			["I",True,"lowpass","Q"],
 			["I",True,"gain","Gain"],
 			["I",True,"center","Center"],
+		]
+
+	elif pluginname == 'fruity limiter':
+		out = [
+			["i",True,"gain","Gain"],
+			["i",True,"sat","Soft Saturation Threshold"],
+
+			["i",True,"limiter_ceil","Limiter Ceil"],
+			["i",True,"limiter_att","Limiter Attack"],
+			["i",True,"limiter_att_curve","Limiter Attack Curve"],
+			["i",True,"limiter_rel","Limiter Release"],
+			["i",True,"limiter_rel_curve","Limiter Release Curve"],
+			["i",True,"limiter_sus","Limiter Sustain"],
+
+			["i",True,"comp_thres","Comp Threshold"],
+			["i",True,"comp_knee","Comp Knee"],
+			["i",True,"comp_ratio","Comp Ratio"],
+			["i",True,"comp_att","Comp Attack"],
+			["i",True,"comp_rel","Comp Release"],
+			["i",True,"comp_att_curve","Comp Attack Curve"],
+			["i",True,"comp_sus","Comp Sustain"],
+
+			["i",True,"noise_gain","Noise Gain"],
+			["i",True,"noise_thres","Noise Threshold"],
+			["i",True,"noise_rel","Noise Release"],
+
+			["x",18*4],
+
+			["i",True,"unknown_0",""],
+			["b",True,"unknown_1",""],
+			["b",True,"unknown_2",""],
+			["b",True,"unknown_3",""],
+			["b",True,"unknown_4",""],
+			["b",True,"unknown_5",""],
+			["b",True,"unknown_6",""],
+			["b",True,"unknown_7",""],
+			["b",True,"unknown_8",""],
+			["b",True,"unknown_9",""],
+			["b",True,"unknown_10",""],
+			["b",True,"unknown_11",""],
+			["b",True,"unknown_12",""],
+			["b",True,"unknown_13",""],
+			["b",True,"unknown_14",""],
+			["b",True,"unknown_15",""],
+			["b",True,"unknown_16",""],
+			["b",True,"sidechain_number",""],
+			["b",True,"unknown_18",""],
+			["b",True,"unknown_19",""],
+			["b",True,"unknown_20",""],
+			["b",True,"unknown_21",""],
 		]
 
 	elif pluginname == 'fruity mute 2':
@@ -559,7 +669,40 @@ def get_datadef(pluginname):
 			["b",False,"stereo",""],
 		]
 
+	elif pluginname == 'tuner':
+		out = [
+			["i",False,"version","Version"],
 
+			["I",True,"refrence","Refrence"],
+			["I",True,"reactivity","Reactivity"],
+			["I",True,"bass","Bass"],
+			["I",False,"display_mode","Display Mode"],
+		]
+
+	elif pluginname == 'transient processor':
+		out = [
+			["i",False,"version","Version"],
+
+			["I",True,"attack",""],
+			["I",True,"drive",""],
+			["I",True,"release",""],
+			["I",True,"gain",""],
+			["I",True,"attack_shape",""],
+			["I",True,"release_shape",""],
+			["I",True,"split_freq",""],
+			["I",True,"split_balance",""],
+			["I",True,"effect_on",""],
+			["I",False,"display_flags",""],
+			["I",False,"display_scroll",""],
+		]
+
+	elif pluginname == 'soundgoodizer':
+		out = [
+			["i",False,"version","Version"],
+
+			["I",True,"mode",""],
+			["I",True,"amount",""],
+		]
 
 
 

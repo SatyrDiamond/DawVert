@@ -68,6 +68,9 @@ def plugtype_match(first, second):
 	outval = False
 	if first == second: outval = True
 	if first[0] == second[0] and second[1] == None: outval = True
+
+	if first[0] == first[1]: outval = False
+
 	return outval
 
 def commalist2plugtypes(inputdata):
@@ -138,13 +141,14 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw,
 					if ______debugtxt______: print('- output')
 					is_converted, plugintype = convertpluginconvproj(sep_pl_pc_out__native, cvpj_l, pluginid, plugintype, extra_json)
 
-					is_plugin_unsupported = plugintype not in out_supportedplugins
-					if ______debugtxt______: print('---pluugin not supported:', is_plugin_unsupported)
+					if is_converted == False:
+						is_plugin_unsupported = plugintype not in out_supportedplugins
+						if ______debugtxt______: print('---pluugin not supported:', is_plugin_unsupported)
 
-					if is_plugin_unsupported:
-						for out_getsupportedplugformat in out_getsupportedplugformats:
-							if out_getsupportedplugformat in sep_pl_pc_out__plugins:
-								is_converted, plugintype = convertpluginconvproj(sep_pl_pc_out__plugins[out_getsupportedplugformat], cvpj_l, pluginid, plugintype, extra_json)
+						if is_plugin_unsupported:
+							for out_getsupportedplugformat in out_getsupportedplugformats:
+								if out_getsupportedplugformat in sep_pl_pc_out__plugins:
+									is_converted, plugintype = convertpluginconvproj(sep_pl_pc_out__plugins[out_getsupportedplugformat], cvpj_l, pluginid, plugintype, extra_json)
 
 
 		return json.dumps(cvpj_l, indent=2)

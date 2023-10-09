@@ -12,7 +12,6 @@ from functions import plugin_vst2
 from functions_plugin import flstudio_datadef
 from functions_plugparams import datadef
 
-
 def wrapper_addchunk(chunkid, chunkdata):
     return chunkid.to_bytes(4, "little") + len(chunkdata).to_bytes(4, "little") + b'\x00\x00\x00\x00' + chunkdata
 
@@ -57,15 +56,54 @@ def setparams(cvpj_l, pluginid):
 
     if plug_type[0] == 'vst2':
         vst_chunk = plugins.get_plug_dataval(cvpj_l, pluginid, 'chunk', '')
+        vst_programs = plugins.get_plug_dataval(cvpj_l, pluginid, 'programs', '')
+        vst_numparams = plugins.get_plug_dataval(cvpj_l, pluginid, 'numparams', 0)
         vst_current_program = plugins.get_plug_dataval(cvpj_l, pluginid, 'current_program', 0)
-        vst_datatype = plugins.get_plug_dataval(cvpj_l, pluginid, 'datatype', None)
+        vst_datatype = plugins.get_plug_dataval(cvpj_l, pluginid, 'datatype', 'chunk')
         vst_fourid = plugins.get_plug_dataval(cvpj_l, pluginid, 'fourid', None)
         vst_name = plugins.get_plug_dataval(cvpj_l, pluginid, 'name', None)
         vst_path = plugins.get_plug_dataval(cvpj_l, pluginid, 'path', None)
 
         vstdata_bytes = base64.b64decode(vst_chunk)
 
-        wrapper_state = b'\xf7\xff\xff\xff\r\xfe\xff\xff\xff' + len(vstdata_bytes).to_bytes(4, "little") + b'\x00\x00\x00\x00' + vst_current_program.to_bytes(4, "little") + vstdata_bytes
+        if vst_datatype == 'chunk':
+            wrapper_state = b'\xf7\xff\xff\xff\r\xfe\xff\xff\xff' + len(vstdata_bytes).to_bytes(4, "little") + b'\x00\x00\x00\x00' + vst_current_program.to_bytes(4, "little") + vstdata_bytes
+
+        if vst_datatype == 'bank':
+            wrapper_state = b'\xf7\xff\xff\xff\x05\xfe\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+
+            vst_total_params = 0
+            vst_params_data = b''
+            vst_num_names = len(vst_programs)
+            vst_names = b''
+
+            for vst_program in vst_programs:
+                vst_total_params += vst_program['numparams']
+                for num in range(vst_program['numparams']):
+                    vst_params_data += struct.pack('f', vst_program['params'][str(num)]['value'])
+                vst_names += data_bytes.makestring_fixedlen(vst_program['program_name'], 25)
+
+            wrapper_state += vst_total_params.to_bytes(4, "little")
+            wrapper_state += vst_params_data
+            wrapper_state += vst_num_names.to_bytes(4, "little")
+            wrapper_state += vst_names
+
+        if vst_datatype == 'param':
+            wrapper_state = b'\xf7\xff\xff\xff\x05\xfe\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+
+            vst_total_params = vst_numparams
+            vst_params_data = b''
+            
+            for num in range(vst_numparams):
+                pval, ptype, pname = plugins.get_plug_param(cvpj_l, pluginid, 'vst_param_'+str(num), 0)
+                vst_params_data += struct.pack('f', pval)
+            vst_num_names = 1
+            vst_names = data_bytes.makestring_fixedlen('Converted', 25)
+
+            wrapper_state += vst_total_params.to_bytes(4, "little")
+            wrapper_state += vst_params_data
+            wrapper_state += vst_num_names.to_bytes(4, "little")
+            wrapper_state += vst_names
 
         wrapper_data = b'\n\x00\x00\x00'
         if vst_fourid != None: wrapper_data += wrapper_addchunk(51, data_bytes.swap32(vst_fourid).to_bytes(4, "little") )
@@ -73,6 +111,7 @@ def setparams(cvpj_l, pluginid):
         if vst_name != None: wrapper_data += wrapper_addchunk(54, vst_name.encode() )
         wrapper_data += wrapper_addchunk(55, vst_path.encode() )
         wrapper_data += wrapper_addchunk(53, wrapper_state )
+
 
         fl_plugin = 'fruity wrapper'
         fl_pluginparams = wrapper_data

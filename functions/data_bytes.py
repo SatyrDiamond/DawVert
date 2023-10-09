@@ -30,6 +30,10 @@ def readstring_fixedlen(file_stream, length, codec):
 	if codec != None: return file_stream.read(length).split(b'\x00')[0].decode(codec).translate(dict.fromkeys(range(32)))
 	else: return file_stream.read(length).split(b'\x00')[0].decode().translate(dict.fromkeys(range(32)))
 
+def makestring_fixedlen(textin, length):
+	textbytes = textin.encode()
+	return textbytes[:length] + b'\x00'*(length-len(textbytes))
+
 def splitbyte(value):
     first = value >> 4
     second = value & 0x0F

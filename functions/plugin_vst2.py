@@ -130,6 +130,9 @@ def replace_data(cvpj_l, pluginid, bycat, platform, in_name, datatype, data, num
 			plugins.add_plug_data(cvpj_l, pluginid, 'chunk', base64.b64encode(data).decode('ascii'))
 		if datatype == 'param':
 			plugins.add_plug_data(cvpj_l, pluginid, 'datatype', 'param')
-			plugins.add_plug_data(cvpj_l, pluginid, 'numparams', numparams)
+			plugins.add_plug_data(cvpj_l, pluginid, 'numparams', numparams) 
+		if datatype == 'bank':
+			plugins.add_plug_data(cvpj_l, pluginid, 'datatype', 'bank')
+			plugins.add_plug_data(cvpj_l, pluginid, 'programs', data) 
 	else:
 		print('[plugin-vst2] Plugin, '+in_name+' not found.')

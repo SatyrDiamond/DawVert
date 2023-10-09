@@ -204,8 +204,8 @@ class input_flp(plugin_input.base):
                     plug_exists = None
                     if 'pluginparams' in channeldata: 
                         plug_exists = flp_dec_plugins.getparams(cvpj_l, pluginid, flpluginname, channeldata['pluginparams'], samplefolder)
-                    if plug_exists == True:
-                        print(channeldata['plugin'])
+                    #if plug_exists == True:
+                    #    print(channeldata['plugin'])
 
                 tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'poly', 'max', channeldata['polymax'])
 

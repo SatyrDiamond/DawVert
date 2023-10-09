@@ -27,8 +27,6 @@ class plugconv(plugin_plugconv.base):
         pluginid_g = pluginid   
         cvpj_l_g = cvpj_l
 
-        print(plugintype[1])
-
         if plugintype[1] == 'stereomatrix':  
             print('[plug-conv] LMMS to FL Studio: Stereo Matrix > Fruity Stereo Shaper:',pluginid)
 

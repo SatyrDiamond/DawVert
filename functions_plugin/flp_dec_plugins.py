@@ -6,10 +6,12 @@ import struct
 import os
 import math
 from functions import data_bytes
+from functions import data_values
 from functions import plugins
 from functions import plugin_vst2
 from functions_plugin import flstudio_datadef
 from functions_plugparams import datadef
+from io import BytesIO
 
 def decode_pointdata(fl_plugstr):
     autoheader = struct.unpack('bii', fl_plugstr.read(12))
@@ -44,7 +46,7 @@ envshapes = {
 }
 
 def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
-    fl_plugstr = data_bytes.to_bytesio(chunkpdata)
+    fl_plugstr = BytesIO(chunkpdata)
     pluginname = pluginname.lower()
 
     # ------------------------------------------------------------------------------------------- VST
@@ -72,8 +74,6 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
             if chunktype == 56: wrapperdata['vendor'] = chunkdata.decode()
             if chunktype == 57: wrapperdata['57'] = chunkdata
 
-            #if chunktype != 53: print(chunktype, chunkdata)
-
         if 'plugin_info' in wrapperdata:
             wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
             if 'fourid' in wrapperdata:
@@ -83,8 +83,37 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
                 wrapper_vstpad = pluginstate[13:17]
                 wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
                 wrapper_vstdata = pluginstate[21:]
-                plugin_vst2.replace_data(cvpj_l, pluginid, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
-                plugins.add_plug_data(cvpj_l, pluginid, 'current_program', wrapper_vstprogram)
+
+                if wrapper_vststate == b'\xf7\xff\xff\xff\r\xfe\xff\xff\xff':
+                    plugin_vst2.replace_data(cvpj_l, pluginid, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
+                    plugins.add_plug_data(cvpj_l, pluginid, 'current_program', wrapper_vstprogram)
+
+                if wrapper_vststate == b'\xf7\xff\xff\xff\x05\xfe\xff\xff\xff':
+                    stream_data = BytesIO(wrapper_vstdata)
+                    vst_total_params = int.from_bytes(stream_data.read(4), "little")
+                    vst_params_data = struct.unpack('f'*vst_total_params, stream_data.read(4*vst_total_params))
+                    vst_num_names = int.from_bytes(stream_data.read(4), "little")
+                    vst_names = []
+                    for _ in range(vst_num_names):
+                        vst_names.append( data_bytes.readstring_fixedlen(stream_data, 25, 'utf-8') )
+
+                    numparamseach = vst_total_params//vst_num_names
+                    bankparams = data_values.list_chunks(vst_params_data, numparamseach)
+
+                    cvpj_programs = []
+                    for num in range(vst_num_names):
+                        cvpj_program = {}
+                        cvpj_program['datatype'] = 'params'
+                        cvpj_program['numparams'] = numparamseach
+                        cvpj_program['params'] = {}
+                        for paramnum in range(numparamseach):
+                            cvpj_program['params'][str(paramnum)] = {'value': bankparams[num][paramnum]}
+                        cvpj_program['program_name'] = vst_names[num]
+                        cvpj_programs.append(cvpj_program)
+
+                    plugin_vst2.replace_data(cvpj_l, pluginid, 'name' ,'win', wrapperdata['name'], 'bank', cvpj_programs, None)
+                    plugins.add_plug_data(cvpj_l, pluginid, 'current_program', wrapper_vstprogram)
+
         return True
 
     elif pluginname == 'fruity compressor':
@@ -311,7 +340,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
 
     #elif pluginname == 'pitcher': LATER
     #    chunkdata = data_bytes.riff_read(chunkdata, 0)
-    #    riffbio = data_bytes.to_bytesio(chunkdata[0][1][4:])
+    #    riffbio = BytesIO(chunkdata[0][1][4:])
     #    flplugvals = struct.unpack('f'*33, riffbio.read(33*4))
     #    flplugflags = struct.unpack('b'*16, riffbio.read(16))
     #    for test in range(len(flplugvals)):

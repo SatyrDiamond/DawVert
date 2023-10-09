@@ -10,7 +10,7 @@ import os.path
 import varint
 from pathlib import Path
 
-from functions_plugin import flp_dec_pluginparams
+from functions_plugin import flp_dec_plugins
 from functions_plugin import format_flp_dec
 from functions import note_mod
 from functions import data_bytes
@@ -108,6 +108,7 @@ class input_flp(plugin_input.base):
         FL_Patterns = FLP_Data['FL_Patterns']
         FL_Channels = FLP_Data['FL_Channels']
         FL_Mixer = FLP_Data['FL_Mixer']
+
         FL_Arrangements = FLP_Data['FL_Arrangements']
         FL_TimeMarkers = FLP_Data['FL_TimeMarkers']
         FL_FilterGroups = FLP_Data['FL_FilterGroups']
@@ -199,15 +200,12 @@ class input_flp(plugin_input.base):
                     plugins.add_fileref(cvpj_l, pluginid, 'audiofile', filename_sample)
 
                     flpluginname = channeldata['plugin'] if 'plugin' in channeldata else None
-                    if channeldata['plugin'].lower() in ['fruity soundfont player', 'soundfont player']:
-                        plugins.add_plug(cvpj_l, pluginid, 'soundfont2', None)
-                    elif channeldata['plugin'].lower() == 'fruity slicer':
-                        plugins.add_plug(cvpj_l, pluginid, 'sampler', 'slicer')
-                    else:
-                        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', channeldata['plugin'])
 
+                    plug_exists = None
                     if 'pluginparams' in channeldata: 
-                        flp_dec_pluginparams.getparams(cvpj_l, pluginid, channeldata['plugin'], channeldata['pluginparams'], samplefolder)
+                        plug_exists = flp_dec_plugins.getparams(cvpj_l, pluginid, flpluginname, channeldata['pluginparams'], samplefolder)
+                    if plug_exists == True:
+                        print(channeldata['plugin'])
 
                 tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'poly', 'max', channeldata['polymax'])
 
@@ -448,17 +446,21 @@ class input_flp(plugin_input.base):
                             fx_slot_wet = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x01'])[0]/12800 if b'\x1f\x01' in fl_fxslot_initvals else 0
                             plugins.add_plug_fxdata(cvpj_l, fxslotid, fx_slot_on, fx_slot_wet)
 
-                        flpluginname = fl_fxslotdata['plugin'] if 'plugin' in fl_fxslotdata else None
-                        plugins.add_plug(cvpj_l, fxslotid, 'native-flstudio', flpluginname)
-                        if 'pluginparams' in fl_fxslotdata: flp_dec_pluginparams.getparams(cvpj_l, fxslotid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder)
 
-                        v_name = fl_fxslotdata["name"] if "name" in fl_fxslotdata else None
-                        v_color = None
-                        if 'color' in fl_fxslotdata:
-                            color = fl_fxslotdata['color'].to_bytes(4, "little")
-                            v_color = [color[0]/255,color[1]/255,color[2]/255]
-                        plugins.add_plug_fxvisual(cvpj_l, fxslotid, v_name, v_color)
-                        fxslot.insert(cvpj_l, ['fxrack', fxchannel], 'audio', fxslotid)
+                        flpluginname = fl_fxslotdata['plugin'] if 'plugin' in fl_fxslotdata else None
+
+                        plug_exists = None
+                        if 'pluginparams' in fl_fxslotdata: 
+                            plug_exists = flp_dec_plugins.getparams(cvpj_l, fxslotid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder)
+
+                        if plug_exists == True:
+                            v_name = fl_fxslotdata["name"] if "name" in fl_fxslotdata else None
+                            v_color = None
+                            if 'color' in fl_fxslotdata:
+                                color = fl_fxslotdata['color'].to_bytes(4, "little")
+                                v_color = [color[0]/255,color[1]/255,color[2]/255]
+                            plugins.add_plug_fxvisual(cvpj_l, fxslotid, v_name, v_color)
+                            fxslot.insert(cvpj_l, ['fxrack', fxchannel], 'audio', fxslotid)
 
         for timemarker in FL_TimeMarkers:
             tm_pos = FL_TimeMarkers[timemarker]['pos']/ppq*4

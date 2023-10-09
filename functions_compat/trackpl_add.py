@@ -5,7 +5,7 @@ from functions_compat import timesigblocks
 from functions_compat import split_single_notelist
 
 def process_r(projJ):
-    timesigposs, tsblocks = timesigblocks.create_points_cut(projJ)
+    timesigposs, tsblocks = timesigblocks.create_points_cut(projJ, 'r')
     split_single_notelist.add_timesigblocks(tsblocks)
 
     if 'do_singlenotelistcut' in projJ:
@@ -33,7 +33,7 @@ def process_r(projJ):
     return True
 
 def process_m(projJ):
-    timesigposs, tsblocks = timesigblocks.create_points_cut(projJ)
+    timesigposs, tsblocks = timesigblocks.create_points_cut(projJ, 'm')
     split_single_notelist.add_timesigblocks(tsblocks)
 
     if 'do_singlenotelistcut' in projJ:
@@ -43,12 +43,13 @@ def process_m(projJ):
                 if 'placements_notes' in track_playlist[plnum]:
                     placementdata = track_playlist[plnum]['placements_notes']
                     if len(placementdata) == 1:
-                        split_single_notelist.add_notelist([False, trackid], placementdata[0]['notelist'])
+                        split_single_notelist.add_notelist([False, plnum], placementdata[0]['notelist'])
+
+    for inid, out_placements in split_single_notelist.get_notelist():
+        track_playlist[plnum]['placements_notes'] = out_placements
 
     projJ['do_singlenotelistcut'] = False
     return True
-
-
 
 def process(cvpj_proj, cvpj_type, in__track_nopl, out__track_nopl):
     if in__track_nopl == True and out__track_nopl == False:

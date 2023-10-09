@@ -3,8 +3,10 @@
 
 from functions import song
 
-def create_points_cut(projJ):
-    songduration = song.r_getduration(projJ)
+def create_points_cut(projJ, cvpj_type):
+    if cvpj_type == 'r': songduration = song.r_getduration(projJ)
+    if cvpj_type == 'm': songduration = song.m_getduration(projJ)
+
     if 'timesig' in projJ: timesig_numerator = projJ['timesig'][0]
     else: timesig_numerator = 4
 

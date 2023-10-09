@@ -30,6 +30,18 @@ def r_getduration(projJ):
                             songduration = p_pos+p_dur
     return songduration + 64
 
+def m_getduration(projJ):
+    playlistdata = projJ['playlist']
+    songduration = 0
+    for plnum in playlistdata:
+        for placement_type in ['placements_notes', 'placements_audio']:
+            if placement_type in playlistdata[plnum]:
+                for placement in playlistdata[plnum][placement_type]:
+                    p_pos = placement['position']
+                    p_dur = placement['duration']
+                    if songduration < p_pos+p_dur: songduration = p_pos+p_dur
+    return songduration + 64
+
 def get_lower_tempo(i_tempo, i_notelen, maxtempo):
     while i_tempo > maxtempo:
         i_tempo = i_tempo/2

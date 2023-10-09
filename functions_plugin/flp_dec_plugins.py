@@ -119,7 +119,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
     elif pluginname in ['fruity soundfont player', 'soundfont player']:
         # flsf_asdf_A max 5940 - flsf_asdf_D max 5940 - flsf_asdf_S max 127 - flsf_asdf_R max 5940
         # flsf_lfo_predelay max 5900 - flsf_lfo_amount max 127 - flsf_lfo_speed max 127 - flsf_cutoff max 127
-        flsf_unk, flsf_patch, flsf_bank, flsf_reverb_sendlvl, flsf_chorus_sendlvl, flsf_mod = struct.unpack('iiiiii', fl_plugstr.read(24))
+        flsf_vers, flsf_patch, flsf_bank, flsf_reverb_sendlvl, flsf_chorus_sendlvl, flsf_mod = struct.unpack('iiiiii', fl_plugstr.read(24))
 
         flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R = struct.unpack('iiii', fl_plugstr.read(16))
         flsf_lfo_predelay, flsf_lfo_amount, flsf_lfo_speed, flsf_cutoff = struct.unpack('iiii', fl_plugstr.read(16))
@@ -154,6 +154,10 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
         pitch_amount = flsf_lfo_amount/128 if flsf_lfo_amount != -128 else 0
         pitch_predelay = flsf_lfo_predelay/256 if flsf_lfo_predelay != -1 else 0
         pitch_speed = 1/(flsf_lfo_speed/6) if flsf_lfo_speed != -1 else 1
+
+        #if flsf_vers == 6:
+        #    continue
+        #    newsf2data = struct.unpack('<bbiii', fl_plugstr.read(14))
 
         plugins.add_lfo(cvpj_l, pluginid, 'pitch', 'sine', 'seconds', pitch_speed, pitch_predelay, 0, pitch_amount)
         return True

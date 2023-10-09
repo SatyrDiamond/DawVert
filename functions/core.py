@@ -235,9 +235,11 @@ def convert_type_output(extra_json):
 		convproj_j[0] = convert_rm2r.convert(convproj_j[0])
 	elif in_type == 'rm' and out_type == 'm': 
 		convproj_j[0] = convert_rm2r.convert(convproj_j[0])
+		convproj_j[0] = song_compat.makecompat(convproj_j[0], 'r')
 		convproj_j[0] = convert_r2m.convert(convproj_j[0])
 	elif in_type == 'rm' and out_type == 'mi': 
 		convproj_j[0] = convert_rm2r.convert(convproj_j[0])
+		convproj_j[0] = song_compat.makecompat(convproj_j[0], 'r')
 		convproj_j[0] = convert_r2m.convert(convproj_j[0])
 		convproj_j[0] = convert_m2mi.convert(convproj_j[0])
 

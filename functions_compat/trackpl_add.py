@@ -32,8 +32,27 @@ def process_r(projJ):
     projJ['do_singlenotelistcut'] = False
     return True
 
+def process_m(projJ):
+    timesigposs, tsblocks = timesigblocks.create_points_cut(projJ)
+    split_single_notelist.add_timesigblocks(tsblocks)
+
+    if 'do_singlenotelistcut' in projJ:
+        if projJ['do_singlenotelistcut'] == True:
+            track_playlist = projJ['playlist']
+            for plnum in track_playlist:
+                if 'placements_notes' in track_playlist[plnum]:
+                    placementdata = track_playlist[plnum]['placements_notes']
+                    if len(placementdata) == 1:
+                        split_single_notelist.add_notelist([False, trackid], placementdata[0]['notelist'])
+
+    projJ['do_singlenotelistcut'] = False
+    return True
+
+
+
 def process(cvpj_proj, cvpj_type, in__track_nopl, out__track_nopl):
     if in__track_nopl == True and out__track_nopl == False:
         if cvpj_type in ['r']: return process_r(cvpj_proj)
+        elif cvpj_type in ['m']: return process_m(cvpj_proj)
         else: return False
     else: return False

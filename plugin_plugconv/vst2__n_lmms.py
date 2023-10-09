@@ -41,6 +41,60 @@ class plugconv(plugin_plugconv.base):
         pluginid_g = pluginid
         cvpj_l_g = cvpj_l
 
+        if plugintype[1] == 'tripleoscillator':
+            print('[plug-conv] LMMS to VST2: Triple Oscillator > Vital:',pluginid)
+            params_vital.create()
+
+            for oscnum in range(3):
+                vital_oscnum = 'osc_'+str(oscnum+1)
+                str_oscnum = str(oscnum)
+
+                params_vital.setvalue(vital_oscnum+'_on', 1)
+                params_vital.setvalue(vital_oscnum+'_level', getparam('vol'+str_oscnum)/100)
+                params_vital.setvalue(vital_oscnum+'_transpose', getparam('coarse'+str_oscnum))
+                params_vital.setvalue(vital_oscnum+'_pan', getparam('pan'+str_oscnum)/100)
+
+                soscfine_l = int(getparam('finel'+str_oscnum))/100
+                soscfine_r = int(getparam('finer'+str_oscnum))/100
+
+                finetune = (soscfine_l+soscfine_r)/2
+                unison_detune = abs(soscfine_l)+abs(soscfine_r)
+
+                params_vital.setvalue(vital_oscnum+'_tune', finetune )
+                params_vital.setvalue(vital_oscnum+'_unison_detune', unison_detune*3.5)
+                params_vital.setvalue(vital_oscnum+'_unison_voices', 2)
+                params_vital.setvalue(vital_oscnum+'_phase', int(getparam('phoffset'+str_oscnum))/360)
+
+                soscwave = int(getparam('wavetype'+str_oscnum))
+                vital_shape = None
+                if soscwave == 0: vital_shape = wave.create_wave('sine', 0, None)
+                if soscwave == 1: vital_shape = wave.create_wave('triangle', 0, None)
+                if soscwave == 2: vital_shape = wave.create_wave('saw', 0, None)
+                if soscwave == 3: vital_shape = wave.create_wave('square', 0, 0.5)
+                if soscwave == 4: vital_shape = wave.create_wave('mooglike', 0, None)
+                if soscwave == 5: vital_shape = wave.create_wave('exp', 0, None)
+                if vital_shape != None:
+                    params_vital.replacewave(oscnum, vital_shape)
+
+            modalgo1 = int(getparam('modalgo1'))
+            modalgo2 = int(getparam('modalgo2'))
+
+            #coarse0','coarse1','coarse2',
+            #'finel0','finel1','finel2','finer0','finer1','finer2',
+            #'modalgo1','modalgo2','modalgo3',
+            #'pan0','pan1','pan2',
+            #'phoffset0','phoffset1','phoffset2',
+            #'stphdetun0','stphdetun1','stphdetun2',
+            #'vol0','vol1','vol2',
+            #'wavetype0','wavetype1','wavetype2
+
+            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 1, 'vol')
+            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 2, 'cutoff')
+            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 3, 'reso')
+
+            vitaldata = params_vital.getdata()
+            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
+
         if plugintype[1] == 'bitinvader':
             print('[plug-conv] LMMS to VST2: BitInvader > Vital:',pluginid)
             params_vital.create()
@@ -49,8 +103,13 @@ class plugconv(plugin_plugconv.base):
             bitinvader_shape_vals = struct.unpack('f'*(len(bitinvader_shape_data)//4), bitinvader_shape_data)
             params_vital.setvalue('osc_1_on', 1)
             params_vital.setvalue('osc_1_transpose', 12)
+
             params_vital.replacewave(0, wave.resizewave(bitinvader_shape_vals, smooth=bool(interpolation)))
-            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 1, 'volume')
+
+            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 1, 'vol')
+            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 2, 'cutoff')
+            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 3, 'reso')
+
             vitaldata = params_vital.getdata()
             plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
             return True

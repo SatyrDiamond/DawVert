@@ -71,7 +71,9 @@ trackscount_forprinting = 0
 def setvstparams(cvpj_plugindata, pluginid, xmldata):
 
     vstpath = data_values.get_value(cvpj_plugindata, 'path', '')
-    xmldata.set('program', str(data_values.get_value(cvpj_plugindata, 'current_program', 0)) )
+
+    current_program = data_values.get_value(cvpj_plugindata, 'current_program', 0)
+    xmldata.set('program', str(current_program) )
     xmldata.set('plugin', vstpath)
 
     xml_vst_key = ET.SubElement(xmldata, 'key')
@@ -83,6 +85,19 @@ def setvstparams(cvpj_plugindata, pluginid, xmldata):
 
     datatype = data_values.get_value(cvpj_plugindata, 'datatype', 'none')
     numparams = data_values.get_value(cvpj_plugindata, 'numparams', 0)
+
+
+    if datatype == 'bank':
+        bank_programs = data_values.get_value(cvpj_plugindata, 'programs', 0)
+        cur_bank_prog = bank_programs[current_program]
+        bankprog_type = cur_bank_prog['datatype']
+
+        if bankprog_type == 'params':
+            numparams = cur_bank_prog['numparams']
+            xmldata.set('numparams', str(numparams))
+            for param in range(numparams):
+                pval = cur_bank_prog['params'][str(param)]['value']
+                xmldata.set('param'+str(param), str(param)+':noname:'+str(pval) )
 
     if datatype == 'chunk':
         xmldata.set('chunk', data_values.get_value(cvpj_plugindata, 'chunk', 0))

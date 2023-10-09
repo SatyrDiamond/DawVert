@@ -37,7 +37,7 @@ def resizewave(inputwave, **kwargs):
             wave_data.append(inputwave[math.floor(s_pos*dur_input)])
 
     else:
-        inputwave += [inputwave[0]]
+        inputwave += inputwave
         for num in range(numpoints): 
             s_pos = num/numpoints
             wpn_float = s_pos*dur_input

@@ -3,6 +3,7 @@
 
 from functions import data_values
 from functions import params
+from functions import auto
 from functions_tracks import auto_data
 
 # ------------------------ autoid to cvpjauto ------------------------

@@ -17,7 +17,7 @@
 ## How to Use
 
 ```
-python3 DawVert.py -i <input> -ot <output type> -o <output>
+python3 dawvert_cmd.py -i <input> -ot <output type> -o <output>
 
 input type: -it 
 input file: -i 
@@ -25,9 +25,9 @@ output type: -ot
 output file: -o
 
 e.g: 
-    python3 DawVert.py -i song.txt -ot flp -o out.flp
+    python3 dawvert_cmd.py -i song.txt -ot flp -o out.flp
 
-    python3 DawVert.py -it jummbox -i song.txt -ot flp -o out.flp
+    python3 dawvert_cmd.py -it jummbox -i song.txt -ot flp -o out.flp
 
 ```
 
@@ -46,11 +46,11 @@ MultipleIndexed2Multiple:
 --mi2m--output-unused-nle           (Output Unused Patterns)
 
 e.g: 
-    python3 DawVert.py --soundfont "MuseScore_General.sf2" -it notessimo_v2 -i song.note -ot flp -o out.flp
+    python3 dawvert_cmd.py --soundfont "MuseScore_General.sf2" -it notessimo_v2 -i song.note -ot flp -o out.flp
 
-    python3 DawVert.py --samplefolder "a diffrent folder" -i "song.s3m" -ot lmms -o out.mmp
+    python3 dawvert_cmd.py --samplefolder "a diffrent folder" -i "song.s3m" -ot lmms -o out.mmp
 
-    python3 DawVert.py --songnum 3 -it famistudio_txt -i "song.txt" -ot lmms -o out.mmp
+    python3 dawvert_cmd.py --songnum 3 -it famistudio_txt -i "song.txt" -ot lmms -o out.mmp
 ```
 
 ## Required Libraries
@@ -64,6 +64,7 @@ av
 beautifulsoup4
 blackboxprotobuf
 git+https://github.com/Perlence/rpp
+tinydb
 ```
 
 ## Optional Libraries

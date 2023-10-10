@@ -98,7 +98,10 @@ def amped_parse_effects(fxchain_audio):
     for pluginid in fxchain_audio:
         plugtype = plugins.get_plug_type(cvpj_l, pluginid)
         fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid])
-        fx_on = not params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
+        fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, pluginid)
+
+        fx_on = not fx_on
+
         if plugtype[0] == 'universal':
 
             if plugtype[1] in ['compressor', 'expander']:
@@ -159,8 +162,30 @@ def amped_parse_effects(fxchain_audio):
                 devicedata['params'] = device_params
                 outdata.append(devicedata)
 
+            elif plugtype[1] == 'delay-c':
+                d_time_type = plugins.get_plug_dataval(cvpj_l, pluginid, 'time_type', 'seconds')
+                d_time = plugins.get_plug_dataval(cvpj_l, pluginid, 'time', 1)
+                d_wet = plugins.get_plug_dataval(cvpj_l, pluginid, 'wet', fx_wet)
+                d_feedback = plugins.get_plug_dataval(cvpj_l, pluginid, 'feedback', 0.0)
+                devicedata = amped_makedevice('Delay', 'Delay')
 
-        if plugtype[0] == 'native-amped':
+                device_params = []
+                if d_time_type == 'seconds':
+                    device_params.append({'id': 0, 'name': 'time', 'value': d_time})
+
+                if d_time_type == 'steps':
+                    device_params.append({'id': 0, 'name': 'time', 'value': (d_time/8)*((amped_bpm)/120) })
+
+                device_params.append({'id': 1, 'name': 'fb', 'value': d_feedback})
+                device_params.append({'id': 2, 'name': 'mix', 'value': d_wet})
+                device_params.append({'id': 3, 'name': 'damp', 'value': 0})
+                device_params.append({'id': 4, 'name': 'cross', 'value': 0})
+                device_params.append({'id': 5, 'name': 'offset', 'value': 0})
+                devicedata['bypass'] = fx_on
+                devicedata['params'] = device_params
+                outdata.append(devicedata)
+
+        elif plugtype[0] == 'native-amped':
 
             if plugtype[1] in ["Amp Sim Utility", 'Clean Machine', 'Distortion Machine', 'Metal Machine']:
                 devicedata = amped_makedevice('WAM', 'Amp Sim Utility')
@@ -219,6 +244,7 @@ class output_cvpj_f(plugin_output.base):
     def parse(self, convproj_json, output_file):
         global audio_id
         global cvpj_l
+        global amped_bpm
 
         cvpj_l = json.loads(convproj_json)
         audio_id = {}

@@ -82,10 +82,19 @@ class input_ceol(plugin_input.base):
         tracks_master.create(cvpj_l, 1)
         tracks_master.visual(cvpj_l, name='Master', color=[0.31373, 0.39608, 0.41569])
 
-        plugins.add_plug(cvpj_l, 'master-effect', 'native-boscaceoil', globalfxname[ceol_basic_effect])
-        plugins.add_plug_param(cvpj_l, 'master-effect', 'power', ceol_basic_effectvalue, 'int', 'power')
-        fxslot.insert(cvpj_l, ['master'], 'audio', 'master-effect')
-        plugins.add_plug_fxvisual(cvpj_l, 'master-effect', globalfxname_vis[ceol_basic_effect], None)
+        if globalfxname[ceol_basic_effect] == 'delay':
+            plugins.add_plug(cvpj_l, 'master-effect', 'universal', 'delay-c')
+            plugins.add_plug_data(cvpj_l, 'master-effect', 'time_type', 'seconds')
+            plugins.add_plug_data(cvpj_l, 'master-effect', 'time', ((300*ceol_basic_effectvalue)/100)/1000 )
+            plugins.add_plug_data(cvpj_l, 'master-effect', 'feedback', 0.1)
+            fxslot.insert(cvpj_l, ['master'], 'audio', 'master-effect')
+            plugins.add_plug_fxvisual(cvpj_l, 'master-effect', globalfxname_vis[ceol_basic_effect], None)
+            plugins.add_plug_fxdata(cvpj_l, 'master-effect', 1, 0.5)
+        else:
+            plugins.add_plug(cvpj_l, 'master-effect', 'native-boscaceoil', globalfxname[ceol_basic_effect])
+            plugins.add_plug_param(cvpj_l, 'master-effect', 'power', ceol_basic_effectvalue, 'int', 'power')
+            fxslot.insert(cvpj_l, ['master'], 'audio', 'master-effect')
+            plugins.add_plug_fxvisual(cvpj_l, 'master-effect', globalfxname_vis[ceol_basic_effect], None)
 
         ceol_numinstrument = ceol_read()
 

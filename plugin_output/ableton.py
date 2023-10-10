@@ -21,7 +21,16 @@ from xml.dom import minidom
 colorlist = ['FF94A6','FFA529','CC9927','F7F47C','BFFB00','1AFF2F','25FFA8','5CFFE8','8BC5FF','5480E4','92A7FF','D86CE4','E553A0','FFFFFF','FF3636','F66C03','99724B','FFF034','87FF67','3DC300','00BFAF','19E9FF','10A4EE','007DC0','886CE4','B677C6','FF39D4','D0D0D0','E2675A','FFA374','D3AD71','EDFFAE','D2E498','BAD074','9BC48D','D4FDE1','CDF1F8','B9C1E3','CDBBE4','AE98E5','E5DCE1','A9A9A9','C6928B','B78256','99836A','BFBA69','A6BE00','7DB04D','88C2BA','9BB3C4','85A5C2','8393CC','A595B5','BF9FBE','BC7196','7B7B7B','AF3333','A95131','724F41','DBC300','85961F','539F31','0A9C8E','236384','1A2F96','2F52A2','624BAD','A34BAD','CC2E6E','3C3C3C']
 colorlist_one = [colors.hex_to_rgb_float(color) for color in colorlist]
  
-
+delaytime = [
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [4, 5],
+    [5, 6],
+    [6, 8],
+    [7, 16],
+    ]
 # ---------------------------------------------- Functions Main ----------------------------------------------
 # ---------  Main  ---------
 
@@ -408,6 +417,35 @@ def do_device_data_single(fxpluginid, xmltag, deviceid):
             set_add_param(x_Player, 'SampleSelector', 0, str(get_unused_id()), None, None, None)
             addvalue(x_Player, 'InterpolationMode', '1')
             addvalue(x_Player, 'UseConstPowCrossfade', 'true')
+
+    if plugtype[0] == 'universal' and plugtype[1] in ['delay-c']:
+        fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, fxpluginid)
+        fx_name, fx_color = plugins.get_plug_fxvisual(cvpj_l, fxpluginid)
+        if fx_name == None: fx_name = ''
+        xml_device = do_device_data_intro(xmltag, deviceid, 'Delay', fx_on, fx_name)
+
+        d_time_type = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'time_type', 'seconds')
+        d_time = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'time', 1)
+        d_feedback = plugins.get_plug_dataval(cvpj_l, fxpluginid, 'feedback', 0.0)
+
+        set_add_param(xml_device, 'DelayLine_Link', True, str(get_unused_id()), None, None, None)
+
+        set_add_param(xml_device, 'Feedback', d_feedback, str(get_unused_id()), None, None, None)
+        set_add_param(xml_device, 'DryWet', fx_wet, str(get_unused_id()), None, None, None)
+
+        if d_time_type == 'seconds':
+            set_add_param(xml_device, 'DelayLine_SyncL', False, str(get_unused_id()), None, None, None)
+            set_add_param(xml_device, 'DelayLine_SyncR', False, str(get_unused_id()), None, None, None)
+            set_add_param(xml_device, 'DelayLine_TimeL', d_time/1000, str(get_unused_id()), None, None, None)
+            set_add_param(xml_device, 'DelayLine_TimeR', d_time/1000, str(get_unused_id()), None, None, None)
+
+        if d_time_type == 'steps':
+            d_delay_sync = data_values.list_tab_closest(delaytime, d_time, 1)[0][0]
+            set_add_param(xml_device, 'DelayLine_SyncL', True, str(get_unused_id()), None, None, None)
+            set_add_param(xml_device, 'DelayLine_SyncR', True, str(get_unused_id()), None, None, None)
+            set_add_param(xml_device, 'DelayLine_SyncedSixteenthL', d_delay_sync, str(get_unused_id()), None, None, None)
+            set_add_param(xml_device, 'DelayLine_SyncedSixteenthR', d_delay_sync, str(get_unused_id()), None, None, None)
+
 
     if plugtype[0] == 'universal' and plugtype[1] in ['compressor','expander']:
         fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, fxpluginid)

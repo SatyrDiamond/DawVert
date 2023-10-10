@@ -56,8 +56,11 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
         fl_plugstr.seek(0)
         fl_plugstr.read(4)
 
+
         wrapperdata = {}
         while fl_plugstr.tell() < fl_plugstr_size:
+
+
             chunktype = int.from_bytes(fl_plugstr.read(4), "little")
             chunksize = int.from_bytes(fl_plugstr.read(4), "little")
             fl_plugstr.read(4)
@@ -78,6 +81,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
             wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
             if 'fourid' in wrapperdata:
                 pluginstate = wrapperdata['state']
+                print(wrapperdata['name'], pluginstate)
                 wrapper_vststate = pluginstate[0:9]
                 wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
                 wrapper_vstpad = pluginstate[13:17]
@@ -332,6 +336,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
 
     else:
         fl_datadef = flstudio_datadef.get_datadef(pluginname)
+
         if fl_datadef != []:
             plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', pluginname)
             datadef.to_plugdata(cvpj_l, pluginid, fl_datadef, fl_plugstr)

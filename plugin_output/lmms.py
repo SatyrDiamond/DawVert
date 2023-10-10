@@ -702,17 +702,23 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
         get_plugin_param(pluginautoid, xml_lmmseq, 'Outputgain', pluginid, 'gain_out', 0)
         get_plugin_param(pluginautoid, xml_lmmseq, 'Inputgain', pluginid, 'gain_in', 0)
 
-    elif plugintype == ['delay', 'single']:
+    elif plugintype == ['universal', 'delay-c']:
 
         print('[output-lmms]       Audio FX: [delay] ')
         fxslotX.set('name', 'delay')
         xml_lmmsdelay = ET.SubElement(fxslotX, 'Delay')
 
-        time_type = plugins.get_plug_dataval(cvpj_l, pluginid, 'timetype', 'seconds')
+        d_time_type = plugins.get_plug_dataval(cvpj_l, pluginid, 'time_type', 'seconds')
+        d_time = plugins.get_plug_dataval(cvpj_l, pluginid, 'time', 1)
+        d_wet = plugins.get_plug_dataval(cvpj_l, pluginid, 'wet', 0.5)
+        d_feedback = plugins.get_plug_dataval(cvpj_l, pluginid, 'feedback', 0.0)
 
-        if time_type == 'seconds': 
-            get_plugin_param(pluginautoid, xml_lmmsdelay, 'DelayTimeSamples', pluginid, 'time_seconds', 0)
-        get_plugin_param(pluginautoid, xml_lmmsdelay, 'FeebackAmount', pluginid, 'feedback', 0)
+        if d_time_type == 'seconds': 
+            get_plugin_param(pluginautoid, xml_lmmsdelay, 'DelayTimeSamples', pluginid, 'time_seconds', d_time)
+        if d_time_type == 'steps':
+            get_plugin_param(pluginautoid, xml_lmmsdelay, 'DelayTimeSamples', pluginid, 'time_seconds', (d_time/8)*((lmms_bpm)/120))
+
+        get_plugin_param(pluginautoid, xml_lmmsdelay, 'FeebackAmount', pluginid, 'feedback', d_feedback)
         get_plugin_param(pluginautoid, xml_lmmsdelay, 'LfoAmount', pluginid, 'lfo_amount', 0)
         get_plugin_param(pluginautoid, xml_lmmsdelay, 'LfoFrequency', pluginid, 'lfo_freq', 0)
         get_plugin_param(pluginautoid, xml_lmmsdelay, 'OutGain', pluginid, 'gain_out', 0)
@@ -941,6 +947,7 @@ class output_lmms(plugin_output.base):
         global autoidnum
         global trkcX
         global cvpj_l
+        global lmms_bpm
 
         autoidnum = 340000
         print('[output-lmms] Output Start')
@@ -963,6 +970,8 @@ class output_lmms(plugin_output.base):
         trkcX = ET.SubElement(songX, "trackcontainer")
 
         auto_nameiddata_main = {}
+
+        lmms_bpm = params.get(cvpj_l, [], 'bpm', 140)[0]
 
         add_auto_placements(120, None, ['main'], 'bpm', cvpj_l, 'bpm', headX, 'bpm', 'Song', 'Tempo')
         add_auto_placements(0, None, ['main'], 'pitch', cvpj_l, 'pitch', headX, 'masterpitch', 'Song', 'Pitch')

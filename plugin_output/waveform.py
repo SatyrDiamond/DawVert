@@ -11,12 +11,82 @@ from functions import params
 from functions import plugins
 from functions_plugin import waveform_values
 from functions_tracks import tracks_r
+import math
+
+delaytime = [
+    [0, 16*32],
+    [1, 16*28],
+    [2, 16*24],
+    [3, 16*20],
+    [4, 16*16],
+    [5, 16*12],
+    [6, 16*10],
+    [7, 16*8],
+    [8, 16*6],
+    [9, 16*5],
+    [10, 16*4],
+    [11, 16*3],
+    [12, 16*2],
+    [13, 16*1],
+    [14, 20],
+    [15, 16],
+    [16, 11],
+    [17, 12],
+    [18, 8],
+    [19, 5],
+    [20, 6],
+    [21, 4],
+    [22, 2.5],
+    [23, 3],
+    [24, 2],
+    [25, 1.5],
+    [26, 1.5],
+    [27, 1],
+    [28, 0.75],
+    [29, 0.75],
+    [30, 0.5],
+    [31, 3/8],
+    [32, 0.25],
+    [33, 0.125],
+    [34, 0],
+]
 
 def get_plugins(xml_tag, cvpj_fxids):
     for cvpj_fxid in cvpj_fxids:
         plugtype = plugins.get_plug_type(cvpj_l, cvpj_fxid)
-        fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', cvpj_fxid])
-        fx_on = params.get(fxdata, [], 'enabled', True, groupname='params_slot')[0]
+        fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, cvpj_fxid)
+
+        if plugtype == ['universal', 'delay-c']:
+            d_time_type = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'time_type', 'seconds')
+            d_time = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'time', 1)
+            d_feedback = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'feedback', 0.0)
+
+            wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
+            wf_PLUGIN.set('type', 'stereoDelay')
+            wf_PLUGIN.set('presetDirty', '1')
+            wf_PLUGIN.set('enabled', str(fx_on))
+
+            if d_time_type == 'seconds':
+                wf_PLUGIN.set('sync', '0.0')
+                wf_PLUGIN.set('delaySyncOffL', str(d_time*1000))
+                wf_PLUGIN.set('delaySyncOffR', str(d_time*1000))
+
+            if d_time_type == 'steps':
+                wf_delaySync = data_values.list_tab_closest(delaytime, d_time, 1)
+                wf_PLUGIN.set('sync', '1.0')
+                wf_PLUGIN.set('delaySyncOnL', str(wf_delaySync[0][0]))
+                wf_PLUGIN.set('delaySyncOnR', str(wf_delaySync[0][0]))
+
+            wf_PLUGIN.set('crossL', '0.0')
+            wf_PLUGIN.set('crossR', '0.0')
+            wf_PLUGIN.set('feedbackL', str(d_feedback*100))
+            wf_PLUGIN.set('feedbackR', str(d_feedback*100))
+            wf_PLUGIN.set('mix', str(fx_wet))
+            wf_PLUGIN.set('mixLock', '0.0')
+            wf_PLUGIN.set('panL', '-1.0')
+            wf_PLUGIN.set('panR', '1.0')
+
+
         if plugtype == ['universal', 'compressor']:
             wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
             wf_PLUGIN.set('type', 'comp')
@@ -41,7 +111,7 @@ def get_plugins(xml_tag, cvpj_fxids):
             wf_PLUGIN.set('sidechainTrigger', str(v_sidechain_on))
             wf_PLUGIN.set('inputDb', str(v_pregain))
 
-        if plugtype[0] == 'native-tracktion' and plugtype[1] in waveform_params:
+        elif plugtype[0] == 'native-tracktion' and plugtype[1] in waveform_params:
             wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
             wf_PLUGIN.set('type', plugtype[1])
             wf_PLUGIN.set('presetDirty', '1')
@@ -175,7 +245,8 @@ class output_waveform_edit(plugin_output.base):
                             wf_NOTE.set('p', str(cvpj_note['key']+60))
                             wf_NOTE.set('b', str(cvpj_note['position']/4))
                             wf_NOTE.set('l', str(cvpj_note['duration']/4))
-                            if 'vol' in cvpj_note: wf_NOTE.set('v', str(int(xtramath.clamp(cvpj_note['vol']*127, 0, 127))))
+                            note_volume = cvpj_note['vol'] if 'vol' in cvpj_note else 1
+                            wf_NOTE.set('v', str(int(xtramath.clamp(note_volume*127, 0, 127))))
 
             wf_globalid += 1
 

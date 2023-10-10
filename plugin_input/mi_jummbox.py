@@ -167,6 +167,13 @@ def addfx(cvpj_instid, fxname):
 	fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
 	return pluginid
 
+def addfx_universal(cvpj_instid, fxname):
+	pluginid = cvpj_instid+'_'+fxname
+	plugins.add_plug(cvpj_l, pluginid, 'universal', fxname)
+	plugins.add_plug_fxdata(cvpj_l, pluginid, True, 1)
+	fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
+	return pluginid
+
 def addfx_eq(cvpj_instid):
 	pluginid = cvpj_instid+'_'+'eq'
 	plugins.add_plug(cvpj_l, pluginid, 'eq', 'peaks')
@@ -321,10 +328,13 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 			plugins.add_plug_param(cvpj_l, pluginid, 'amount', bb_instrument['chorus']/100, 'float', "")
 
 		if 'echo' in bb_inst_effects:
-			pluginid = addfx(cvpj_instid, 'echo')
+			pluginid = addfx_universal(cvpj_instid, 'delay-c')
 			plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Echo', None)
-			plugins.add_plug_param(cvpj_l, pluginid, 'sustain', bb_instrument['echoSustain']/100, 'float', "")
-			plugins.add_plug_param(cvpj_l, pluginid, 'delay_beats', bb_instrument['echoDelayBeats'], 'int', "")
+			plugins.add_plug_fxdata(cvpj_l, pluginid, 1, 0.5)
+
+			plugins.add_plug_data(cvpj_l, pluginid, 'time_type', 'steps')
+			plugins.add_plug_data(cvpj_l, pluginid, 'time', bb_instrument['echoDelayBeats']*8)
+			plugins.add_plug_data(cvpj_l, pluginid, 'feedback', bb_instrument['echoSustain']/120)
 
 		if 'reverb' in bb_inst_effects:
 			pluginid = addfx(cvpj_instid, 'reverb')

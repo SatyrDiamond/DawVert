@@ -105,6 +105,7 @@ def setparams(cvpj_l, pluginid):
             wrapper_state += vst_num_names.to_bytes(4, "little")
             wrapper_state += vst_names
 
+
         wrapper_data = b'\n\x00\x00\x00'
         if vst_fourid != None: wrapper_data += wrapper_addchunk(51, data_bytes.swap32(vst_fourid).to_bytes(4, "little") )
         wrapper_data += wrapper_addchunk(57, b'`\t\x00\x00' )

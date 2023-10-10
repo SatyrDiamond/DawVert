@@ -156,3 +156,20 @@ def most_frequent(i_list): return max(set(i_list), key = i_list.count)
 
 def xml_compat(i_text):
     return re.sub(u'[^\u0020-\uD7FF\u0009\u000A\u000D\uE000-\uFFFD\U00010000-\U0010FFFF]+', '', i_text)
+
+def list_tab_closest(i_list, v_target, v_num):
+    closestnumlist = [None, None, None]
+    for num in range(len(i_list)):
+        list_part = i_list[num]
+        #print(list_part, abs(v_target-list_part[v_num]) )
+        howclose = abs(v_target-list_part[v_num])
+        if closestnumlist[2] != None: 
+            if howclose < closestnumlist[2]: 
+                closestnumlist[0] = list_part
+                closestnumlist[1] = num
+                closestnumlist[2] = howclose
+        else: 
+            closestnumlist[0] = list_part
+            closestnumlist[1] = num
+            closestnumlist[2] = howclose
+    return closestnumlist

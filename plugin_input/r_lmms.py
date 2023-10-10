@@ -664,24 +664,6 @@ def lmms_decode_effectslot(fxslotX):
         HPres    = lmms_auto_getvalue(fxxml_plugin, 'HPres', 0, 'float', None,    ['slot', pluginid, 'peak_8_val'])
         plugins.add_eqband(cvpj_l, pluginid, HPactive, HPfreq, 0, 'high_pass', HPres)
 
-    elif fxpluginname == 'delay':
-        fxxml_plugin = fxslotX.findall('Delay')[0]
-        plugins.add_plug(cvpj_l, pluginid, 'delay', 'single')
-
-        DelayTimeSamples = lmms_auto_getvalue(fxxml_plugin, 'DelayTimeSamples', 0, 'float', None, ['slot', pluginid, 'time_seconds'])
-        FeebackAmount    = lmms_auto_getvalue(fxxml_plugin, 'FeebackAmount', 0, 'float', None, ['slot', pluginid, 'feedback'])
-        LfoAmount        = lmms_auto_getvalue(fxxml_plugin, 'LfoAmount', 0, 'float', None, ['slot', pluginid, 'lfo_amount'])
-        LfoFrequency     = lmms_auto_getvalue(fxxml_plugin, 'LfoFrequency', 0, 'float', None, ['slot', pluginid, 'lfo_freq'])
-        OutGain          = lmms_auto_getvalue(fxxml_plugin, 'OutGain', 0, 'float', None, ['slot', pluginid, 'gain_out'])
-
-        plugins.add_plug_data(cvpj_l, pluginid, 'traits', ['time_seconds', 'lfo', 'gain_out'])
-        plugins.add_plug_data(cvpj_l, pluginid, 'timetype', 'seconds')
-        plugins.add_plug_param(cvpj_l, pluginid, 'time_seconds', DelayTimeSamples, 'float', 'Time')
-        plugins.add_plug_param(cvpj_l, pluginid, 'feedback', FeebackAmount, 'float', 'Feedback')
-        plugins.add_plug_param(cvpj_l, pluginid, 'lfo_amount', LfoAmount, 'float', 'LFO Amount')
-        plugins.add_plug_param(cvpj_l, pluginid, 'lfo_freq', LfoFrequency, 'float', 'LFO Freq.')
-        plugins.add_plug_param(cvpj_l, pluginid, 'gain_out', OutGain, 'float', 'Out Gain')
-
     elif fxpluginname == 'vsteffect':
         fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
         print('[vst2-dll',end='] ')

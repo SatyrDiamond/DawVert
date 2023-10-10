@@ -12,6 +12,7 @@ from functions_tracks import fxslot
 from functions_tracks import tracks_r
 import plugin_input
 import json
+import math
 import struct
 import blackboxprotobuf
 
@@ -296,9 +297,14 @@ class input_onlinesequencer(plugin_input.base):
 
             if 'delay' in used_fx_inst[used_fx_inst_i]:
                 pluginid = trackid+'_delay'
-                plugins.add_plug(cvpj_l, pluginid, 'native-onlineseq', 'delay')
+                plugins.add_plug(cvpj_l, pluginid, 'universal', 'delay-c')
                 fx_enabled = bool(data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'delay_on', 0))
-                plugins.add_plug_fxdata(cvpj_l, pluginid, fx_enabled, 1)
+
+                plugins.add_plug_data(cvpj_l, pluginid, 'time_type', 'steps')
+                plugins.add_plug_data(cvpj_l, pluginid, 'time', 2)
+                plugins.add_plug_data(cvpj_l, pluginid, 'feedback', 0.25)
+
+                plugins.add_plug_fxdata(cvpj_l, pluginid, fx_enabled, 0.5)
                 plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Delay', None)
                 fxslot.insert(cvpj_l, ['track', trackid], 'audio', pluginid)
 

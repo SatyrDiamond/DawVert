@@ -48,7 +48,7 @@ def get_plugins(xml_track, trackid):
                         waveform_pvs = waveform_params[plugintype]
                         plugins.add_plug(cvpj_l, pluginid, 'native-tracktion', plugintype)
                         plugins.add_plug_fxdata(cvpj_l, pluginid, int(xml_getvalue(xml_part, 'enabled', 1)), 1)
-
+                        
                         for waveform_pv in waveform_pvs:
                             paramtype, paramfb = waveform_pvs[waveform_pv]
                             paramval = xml_getvalue(xml_part, waveform_pv, paramfb)
@@ -150,7 +150,7 @@ class input_cvpj_f(plugin_input.base):
                                 cvpj_notelist.append(cvpj_note)
 
                     cvpj_pldata["notelist"] = cvpj_notelist
-                    tracks.add_pl(cvpj_l, cvpj_trackid, 'notes', cvpj_pldata)
+                    tracks_r.add_pl(cvpj_l, cvpj_trackid, 'notes', cvpj_pldata)
 
                 get_plugins(xml_part, cvpj_trackid)
 

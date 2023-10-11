@@ -195,17 +195,19 @@ def get_lfo_all(cvpj_l, pluginid, a_type):
 
 # -------------------------------------------------- eqbands
 
-def add_eqband(cvpj_l, pluginid, b_on, b_freq, b_gain, b_type, b_var):
+def add_eqband(cvpj_l, pluginid, b_on, b_freq, b_gain, b_type, b_var, group):
 	banddata = {}
 	banddata['on'] = b_on
 	banddata['freq'] = b_freq
 	banddata['gain'] = b_gain
 	banddata['type'] = b_type
 	banddata['var'] = b_var
-	data_values.nested_dict_add_to_list(cvpj_l, ['plugins', pluginid, 'eqbands'], banddata)
+	if group == None: data_values.nested_dict_add_to_list(cvpj_l, ['plugins', pluginid, 'eqbands'], banddata)
+	else: data_values.nested_dict_add_to_list(cvpj_l, ['plugins', pluginid, 'eqbands_'+group], banddata)
 
-def get_eqband(cvpj_l, pluginid):
-	banddata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'eqbands'])
+def get_eqband(cvpj_l, pluginid, group):
+	if group == None: banddata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'eqbands'])
+	else: banddata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid, 'eqbands_'+group])
 	if banddata != None: return banddata
 	else: return []
 

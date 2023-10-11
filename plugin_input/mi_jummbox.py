@@ -176,7 +176,7 @@ def addfx_universal(cvpj_instid, fxname):
 
 def addfx_eq(cvpj_instid):
 	pluginid = cvpj_instid+'_'+'eq'
-	plugins.add_plug(cvpj_l, pluginid, 'eq', 'peaks')
+	plugins.add_plug(cvpj_l, pluginid, 'universal', 'eq-bands')
 	plugins.add_plug_fxdata(cvpj_l, pluginid, True, 1)
 	fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
 	return pluginid
@@ -284,11 +284,11 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 						eqgain = (eqfiltdata['linearGain']-2)*6
 						eqtype = eqfiltdata['type']
 						if eqtype == 'low-pass':
-							plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'low_pass', eqgain_pass)
+							plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'low_pass', eqgain_pass, None)
 						if eqtype == 'peak':
-							plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], eqgain, 'peak', 1)
+							plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], eqgain, 'peak', 1, None)
 						if eqtype == 'high-pass':
-							plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass)
+							plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass, None)
 			else:
 				pluginid = addfx(cvpj_instid, 'filter')
 				plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Filter', None)
@@ -304,11 +304,11 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 					eqgain = (eqfiltdata['linearGain']-2)*6
 					eqtype = eqfiltdata['type']
 					if eqtype == 'low-pass':
-						plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'low_pass', eqgain_pass)
+						plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'low_pass', eqgain_pass, None)
 					if eqtype == 'peak':
-						plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], eqgain, 'peak', 1)
+						plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], eqgain, 'peak', 1, None)
 					if eqtype == 'high-pass':
-						plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass)
+						plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass, None)
 
 		if 'distortion' in bb_inst_effects:
 			pluginid = addfx(cvpj_instid, 'distortion')
@@ -604,7 +604,7 @@ class input_jummbox(plugin_input.base):
 		bytestream = open(input_file, 'r', encoding='utf8')
 		jummbox_json = json.load(bytestream)
 
-		tracks_master.create(cvpj_l, jummbox_json['masterGain'])
+		tracks_master.create(cvpj_l, jummbox_json['masterGain'] if 'masterGain' in jummbox_json else 1)
 		tracks_master.visual(cvpj_l, name='Master')
 
 		cvpj_l_track_data = {}

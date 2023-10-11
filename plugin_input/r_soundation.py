@@ -220,28 +220,56 @@ class input_soundation(plugin_input.base):
                 fxpluginid = plugins.get_id()
                 fxpluginname = sound_chan_effect['identifier']
                 fxenabled = not sound_chan_effect['bypass']
-                plugins.add_plug(cvpj_l, fxpluginid, 'native-soundation', fxpluginname)
-                plugins.add_plug_fxdata(cvpj_l, fxpluginid, fxenabled, 1)
                 if ismaster: fxslot.insert(cvpj_l, ['master'], 'audio', fxpluginid)
                 else: fxslot.insert(cvpj_l, ['track', trackid], 'audio', fxpluginid)
                 
-                snd_params = []
+                if fxpluginname == 'com.soundation.parametric-eq':
+                    plugins.add_plug(cvpj_l, fxpluginid, 'universal', 'eq-bands')
+                    plugins.add_plug_fxdata(cvpj_l, fxpluginid, fxenabled, 1)
+                    for eqname in ["highshelf","hpf","lowshelf","lpf","peak1","peak2","peak3","peak4"]:
 
-                if fxpluginname == 'com.soundation.compressor': snd_params = ['gain','release','ratio','threshold','attack']
-                elif fxpluginname == 'com.soundation.degrader': snd_params = ['gain','rate','reduction','mix']
-                elif fxpluginname == 'com.soundation.delay': snd_params = ['dry','feedback','feedback_filter','timeBpmSync','timeL','timeLSynced','timeR','timeRSynced','wet']
-                elif fxpluginname == 'com.soundation.distortion': snd_params = ['gain','volume','mode']
-                elif fxpluginname == 'com.soundation.equalizer': snd_params = ['low','mid','high']
-                elif fxpluginname == 'com.soundation.fakie': snd_params = ['attack','hold','release','depth']
-                elif fxpluginname == 'com.soundation.filter': snd_params = ['cutoff','resonance','mode']
-                elif fxpluginname == 'com.soundation.limiter': snd_params = ['attack','gain','release','threshold']
-                elif fxpluginname == 'com.soundation.parametric-eq': snd_params = ["highshelf_enable", "highshelf_freq", "highshelf_gain", "highshelf_res", "hpf_enable", "hpf_freq", "hpf_res", "hpf_slope", "lowshelf_enable", "lowshelf_freq", "lowshelf_gain", "lowshelf_res", "lpf_enable", "lpf_freq", "lpf_res", "lpf_slope", "master_gain", "peak1_enable", "peak1_freq", "peak1_gain", "peak1_res", "peak2_enable", "peak2_freq", "peak2_gain", "peak2_res", "peak3_enable", "peak3_freq", "peak3_gain", "peak3_res", "peak4_enable", "peak4_freq", "peak4_gain", "peak4_res"]
-                elif fxpluginname == 'com.soundation.phaser': snd_params = ['rateBpmSync','rateSynced','feedback','rate','range','freq','wet','dry']
-                elif fxpluginname == 'com.soundation.reverb': snd_params = ['size','damp','width','wet','dry']
-                elif fxpluginname == 'com.soundation.tremolo': snd_params = ['speed','depth','phase']
-                elif fxpluginname == 'com.soundation.wubfilter': snd_params = ['type','cutoff','resonance','drive','lfo_type','lfo_speed','lfo_depth']
+                        eq_bandtype = 'peak'
+                        if eqname == 'highshelf': eq_bandtype = 'high_shelf'
+                        if eqname == 'hpf': eq_bandtype = 'high_pass'
+                        if eqname == 'lowshelf': eq_bandtype = 'low_shelf'
+                        if eqname == 'lpf': eq_bandtype = 'low_pass'
 
-                for snd_param in snd_params:
-                    get_param(snd_param, fxpluginid, sound_chan_effect)
+                        band_enable = get_paramval(sound_chan_effect, eqname+'_enable')
+                        band_freq = get_paramval(sound_chan_effect, eqname+'_freq')
+                        band_gain = get_paramval(sound_chan_effect, eqname+'_gain')
+                        band_res = get_paramval(sound_chan_effect, eqname+'_res')
+
+                        band_freq = 20 * 1000**band_freq
+                        band_gain = (band_gain-0.5)*40
+                        band_res = 0.1 * 162**band_res
+                        
+                        plugins.add_eqband(cvpj_l, fxpluginid, int(band_enable), band_freq, band_gain, eq_bandtype, band_res, None)
+
+                    master_gain = get_paramval(sound_chan_effect, 'master_gain')
+                    master_gain = (master_gain-0.5)*40
+                    plugins.add_plug_param(cvpj_l, fxpluginid, 'gain_out', master_gain, 'float', 'Out Gain')
+
+                else:
+                    plugins.add_plug(cvpj_l, fxpluginid, 'native-soundation', fxpluginname)
+                    plugins.add_plug_fxdata(cvpj_l, fxpluginid, fxenabled, 1)
+
+                    snd_params = []
+
+                    if fxpluginname == 'com.soundation.compressor': snd_params = ['gain','release','ratio','threshold','attack']
+                    elif fxpluginname == 'com.soundation.degrader': snd_params = ['gain','rate','reduction','mix']
+                    elif fxpluginname == 'com.soundation.delay': snd_params = ['dry','feedback','feedback_filter','timeBpmSync','timeL','timeLSynced','timeR','timeRSynced','wet']
+                    elif fxpluginname == 'com.soundation.distortion': snd_params = ['gain','volume','mode']
+                    elif fxpluginname == 'com.soundation.equalizer': snd_params = ['low','mid','high']
+                    elif fxpluginname == 'com.soundation.fakie': snd_params = ['attack','hold','release','depth']
+                    elif fxpluginname == 'com.soundation.filter': snd_params = ['cutoff','resonance','mode']
+                    elif fxpluginname == 'com.soundation.limiter': snd_params = ['attack','gain','release','threshold']
+                    elif fxpluginname == 'com.soundation.parametric-eq': snd_params = ["highshelf_enable", "highshelf_freq", "highshelf_gain", "highshelf_res", "hpf_enable", "hpf_freq", "hpf_res", "hpf_slope", "lowshelf_enable", "lowshelf_freq", "lowshelf_gain", "lowshelf_res", "lpf_enable", "lpf_freq", "lpf_res", "lpf_slope", "master_gain", "peak1_enable", "peak1_freq", "peak1_gain", "peak1_res", "peak2_enable", "peak2_freq", "peak2_gain", "peak2_res", "peak3_enable", "peak3_freq", "peak3_gain", "peak3_res", "peak4_enable", "peak4_freq", "peak4_gain", "peak4_res"]
+                    elif fxpluginname == 'com.soundation.phaser': snd_params = ['rateBpmSync','rateSynced','feedback','rate','range','freq','wet','dry']
+                    elif fxpluginname == 'com.soundation.reverb': snd_params = ['size','damp','width','wet','dry']
+                    elif fxpluginname == 'com.soundation.tremolo': snd_params = ['speed','depth','phase']
+                    elif fxpluginname == 'com.soundation.wubfilter': snd_params = ['type','cutoff','resonance','drive','lfo_type','lfo_speed','lfo_depth']
+
+                    for snd_param in snd_params:
+                        get_param(snd_param, fxpluginid, sound_chan_effect)
 
         return json.dumps(cvpj_l)

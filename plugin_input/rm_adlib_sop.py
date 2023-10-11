@@ -247,7 +247,6 @@ class input_sop(plugin_input.base):
             curtick += sop_track_cmd[0]
             if sop_track_cmd[1] == 'TEMPO': auto_bpm[curtick] = sop_track_cmd[2]
 
-
         param_tempo = auto_nopl.paramauto(['main', 'bpm'], 'float', auto_bpm, sop_tickStep, all_notepos, 120, 1, 0)
 
         cvpj_l['do_addloop'] = True

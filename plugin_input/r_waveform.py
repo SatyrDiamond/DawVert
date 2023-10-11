@@ -28,7 +28,35 @@ def get_plugins(xml_track, trackid):
 
                     pluginid = plugins.get_id()
 
-                    if plugintype == 'comp':
+                    if plugintype == '8bandEq':
+                        plugins.add_plug(cvpj_l, pluginid, 'universal', 'eq-bands')
+                        plugins.add_plug_data(cvpj_l, pluginid, 'num_bands', 8)
+
+                        for num in range(8):
+                            eqnumtxt = str(num+1)
+                            for typenames in [['lm',None], ['rs','b']]:
+
+                                band_enable = float(xml_getvalue(xml_part, "enable"+eqnumtxt+typenames[0], 0))
+                                band_freq = float(xml_getvalue(xml_part, "freq"+eqnumtxt+typenames[0], 0))
+                                band_gain = float(xml_getvalue(xml_part, "gain"+eqnumtxt+typenames[0], 0))
+                                band_q = (10-float(xml_getvalue(xml_part, "q"+eqnumtxt+typenames[0], 0)))/10
+                                band_shape = int(xml_getvalue(xml_part, "shape"+eqnumtxt+typenames[0], 1))
+
+                                if band_shape == 0: band_shape = 'low_pass'
+                                if band_shape == 1: band_shape = 'low_shelf'
+                                if band_shape == 2: band_shape = 'peak'
+                                if band_shape == 3: band_shape = 'band_pass'
+                                if band_shape == 4: band_shape = 'band_stop'
+                                if band_shape == 5: band_shape = 'high_shelf'
+                                if band_shape == 6: band_shape = 'high_pass'
+
+                                band_freq = note_data.note_to_freq(band_freq-72)
+
+                                plugins.add_eqband(cvpj_l, pluginid, int(band_enable), band_freq, band_gain, band_shape, band_q, typenames[1])
+
+
+
+                    elif plugintype == 'comp':
                         plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
                         waveform_pvs = waveform_params[plugintype]
                         for waveform_pv in waveform_pvs:

@@ -54,8 +54,6 @@ def get_plugins(xml_track, trackid):
 
                                 plugins.add_eqband(cvpj_l, pluginid, int(band_enable), band_freq, band_gain, band_shape, band_q, typenames[1])
 
-
-
                     elif plugintype == 'comp':
                         plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
                         waveform_pvs = waveform_params[plugintype]

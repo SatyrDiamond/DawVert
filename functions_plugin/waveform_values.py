@@ -187,7 +187,9 @@ def devicesparam():
 	},
 "djeq":
 	{
-	'mid': ['float', '0.740818202495575'], 
+	'bass': ['float', '1'], 
+	'treble': ['float', '1'], 
+	'mid': ['float', '1'], 
 	'freq1': ['float', '59.21309661865234'], 
 	'freq2': ['float', '99.07624816894531']
 	},

@@ -5,6 +5,7 @@ import plugin_output
 import json
 import os
 import struct
+import math
 from functions import xtramath
 from functions import colors
 from functions import data_values
@@ -56,6 +57,78 @@ def add_fx(sng_trkdata, s_trackdata):
             plugtype = plugins.get_plug_type(cvpj_l, fxpluginid)
             fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', fxpluginid])
             fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, fxpluginid)
+
+            if plugtype == ['universal', 'eq-bands']:
+                sng_fxdata = {}
+                sng_fxdata['identifier'] = 'com.soundation.parametric-eq'
+                sng_fxdata['bypass'] = not fx_on
+
+                data_LP =        [False,0,0,0,0]
+                data_Lowshelf =  [False,0,0,0,0]
+                data_Peaks =     [[False,0,0,0,0],[False,0,0,0,0],[False,0,0,0,0],[False,0,0,0,0]]
+                data_HighShelf = [False,0,0,0,0]
+                data_HP =        [False,0,0,0,0]
+
+                banddata = plugins.get_eqband(cvpj_l, fxpluginid, None)
+
+                for s_band in banddata:
+                    bandtype = s_band['type']
+
+                    band_on = float(s_band['on'])
+                    band_freq = s_band['freq']
+                    band_gain = s_band['gain']
+                    band_res = s_band['var']
+
+                    band_freq = math.log(band_freq / 20) / math.log(1000)
+                    band_gain = (band_gain/40)+0.5
+                    band_res = math.log(band_res / 0.1) / math.log(162)
+
+                    part = [True, band_on, band_freq, band_gain, band_res]
+
+                    if bandtype == 'low_pass' and band_on: data_LP = part
+                    if bandtype == 'low_shelf' and band_on: data_Lowshelf = part
+                    if bandtype == 'peak' and band_on: 
+                        for peaknum in range(4):
+                            peakdata = data_Peaks[peaknum]
+                            if peakdata[0] == False: 
+                                data_Peaks[peaknum] = part
+                                break
+                    if bandtype == 'high_shelf' and band_on: data_HighShelf = part
+                    if bandtype == 'high_pass' and band_on: data_HP = part
+
+                gain_out = plugins.get_plug_param(cvpj_l, fxpluginid, 'gain_out', 0)[0]
+
+                add_sndinstparam(sng_fxdata, 'highshelf_enable', data_HighShelf[1], True)
+                add_sndinstparam(sng_fxdata, 'highshelf_freq', data_HighShelf[2], True)
+                add_sndinstparam(sng_fxdata, 'highshelf_gain', data_HighShelf[3], True)
+                add_sndinstparam(sng_fxdata, 'highshelf_res', data_HighShelf[4], True)
+
+                add_sndinstparam(sng_fxdata, 'hpf_enable', data_HP[1], True)
+                add_sndinstparam(sng_fxdata, 'hpf_freq', data_HP[2], True)
+                add_sndinstparam(sng_fxdata, 'hpf_res', data_HP[4], True)
+                add_sndinstparam(sng_fxdata, 'hpf_slope', 1.0, True)
+
+                add_sndinstparam(sng_fxdata, 'lowshelf_enable', data_Lowshelf[1], True)
+                add_sndinstparam(sng_fxdata, 'lowshelf_freq', data_Lowshelf[2], True)
+                add_sndinstparam(sng_fxdata, 'lowshelf_gain', data_Lowshelf[3], True)
+                add_sndinstparam(sng_fxdata, 'lowshelf_res', data_Lowshelf[4], True)
+
+                add_sndinstparam(sng_fxdata, 'lpf_enable', data_LP[1], True)
+                add_sndinstparam(sng_fxdata, 'lpf_freq', data_LP[2], True)
+                add_sndinstparam(sng_fxdata, 'lpf_res', data_LP[4], True)
+                add_sndinstparam(sng_fxdata, 'lpf_slope', 1.0, True)
+
+                add_sndinstparam(sng_fxdata, 'master_gain', (gain_out/40)+0.5, True)
+
+                for peaknum in range(4):
+                    peakstr = str(peaknum+1)
+                    add_sndinstparam(sng_fxdata, 'peak'+peakstr+'_enable', data_Peaks[peaknum][1], True)
+                    add_sndinstparam(sng_fxdata, 'peak'+peakstr+'_freq', data_Peaks[peaknum][2], True)
+                    add_sndinstparam(sng_fxdata, 'peak'+peakstr+'_gain', data_Peaks[peaknum][3], True)
+                    add_sndinstparam(sng_fxdata, 'peak'+peakstr+'_res', data_Peaks[peaknum][4], True)
+
+                sng_fxchain.append(sng_fxdata)
+
 
             if plugtype[0] == 'native-soundation':
                 fxpluginname = plugtype[1]
@@ -156,7 +229,7 @@ class output_soundation(plugin_output.base):
                 sng_trkdata['name'] = data_values.get_value(s_trackdata, 'name', 'noname')
                 sng_trkdata['volume'] = params.get(s_trackdata, [], 'vol', 1)[0]
                 sng_trkdata['pan'] = 0.5 + params.get(s_trackdata, [], 'pan', 0)[0]/2
-                muteddata = params.get(s_trackdata, [], 'enabled', None)[0]
+                muteddata = params.get(s_trackdata, [], 'enabled', True)[0]
                 if muteddata != None: sng_trkdata['mute'] = not muteddata
                 sng_trkdata['solo'] = params.get(s_trackdata, [], 'solo', 0)[0]
                 trackcolor = data_values.get_value(s_trackdata, 'color', [0.5,0.5,0.5])

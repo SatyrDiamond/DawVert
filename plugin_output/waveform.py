@@ -91,7 +91,6 @@ def get_plugins(xml_tag, cvpj_fxids):
                     wf_PLUGIN.set("shape"+eqnumtxt+typedata[0], str(band_shape))
 
 
-
         elif plugtype == ['universal', 'delay-c']:
             d_time_type = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'time_type', 'seconds')
             d_time = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'time', 1)

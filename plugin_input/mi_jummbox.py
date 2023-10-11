@@ -174,13 +174,6 @@ def addfx_universal(cvpj_instid, fxname):
 	fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
 	return pluginid
 
-def addfx_eq(cvpj_instid):
-	pluginid = cvpj_instid+'_'+'eq'
-	plugins.add_plug(cvpj_l, pluginid, 'universal', 'eq-bands')
-	plugins.add_plug_fxdata(cvpj_l, pluginid, True, 1)
-	fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
-	return pluginid
-
 def get_harmonics(i_harmonics):
 	harmonics = [i/100 for i in i_harmonics]
 	harmonics.append(harmonics[-1])
@@ -277,7 +270,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 		if 'eqFilterType' in bb_instrument:
 			if bb_instrument['eqFilterType'] == False:
 				if 'eqSubFilters0' in bb_instrument:
-					pluginid = addfx_eq(cvpj_instid)
+					pluginid = addfx_universal(cvpj_instid, 'eq-bands')
 					plugins.add_plug_fxvisual(cvpj_l, pluginid, 'EQ', None)
 					for eqfiltdata in bb_instrument['eqSubFilters0']:
 						eqgain_pass = eqfiltdata['linearGain']
@@ -297,7 +290,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 		elif 'eqFilter' in bb_instrument:
 			bb_eqFilter = bb_instrument['eqFilter']
 			if bb_eqFilter != []:
-				pluginid = addfx_eq(cvpj_instid)
+				pluginid = addfx_universal(cvpj_instid, 'eq-bands')
 				plugins.add_plug_fxvisual(cvpj_l, pluginid, 'EQ', None)
 				for eqfiltdata in bb_eqFilter:
 					eqgain_pass = eqfiltdata['linearGain']

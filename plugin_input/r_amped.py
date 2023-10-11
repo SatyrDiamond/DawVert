@@ -137,6 +137,27 @@ def encode_devices(amped_tr_devices, trackid):
                 cvpj_region['r_key'] = [int(amped_samp_part['key']['min'])-60, int(amped_samp_part['key']['max'])-60]
                 plugins.add_plug_multisampler_region(cvpj_l, pluginid, cvpj_region)
 
+        elif devicetype == ['EqualizerPro', 'Equalizer']:
+            plugins.add_plug(cvpj_l, pluginid, 'universal', 'eq-bands')
+            eqdata = {}
+            for param in amped_tr_device['params']:
+                data_values.nested_dict_add_value(eqdata, param['name'].split('/'), param['value'])
+
+            for bandnum in eqdata['filter']:
+                banddata = eqdata['filter'][bandnum]
+                bandtype = banddata['type']
+
+                if bandtype == 0: eq_bandtype = 'peak'
+                if bandtype == 2: eq_bandtype = 'low_pass'
+                if bandtype == 1: eq_bandtype = 'high_pass'
+                if bandtype == 4: eq_bandtype = 'low_shelf'
+                if bandtype == 3: eq_bandtype = 'high_shelf'
+
+                plugins.add_eqband(cvpj_l, pluginid, int(banddata['active']), banddata['freq'], banddata['gain'], eq_bandtype, banddata['q'], None)
+
+            plugins.add_plug_param(cvpj_l, pluginid, 'gain_out', eqdata['postGain'], 'float', 'Out Gain')
+
+
         elif devicetype[0] in ['Compressor', 'Expander']:
             if devicetype[0] == 'Compressor': plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
             if devicetype[0] == 'Expander': plugins.add_plug(cvpj_l, pluginid, 'universal', 'expander')
@@ -178,7 +199,7 @@ def encode_devices(amped_tr_devices, trackid):
         elif devicetype[0] in ['BitCrusher', 'Chorus',  
         'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 
         'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
-        'Reverb', 'Tremolo', 'Vibrato', 'EqualizerPro']:
+        'Reverb', 'Tremolo', 'Vibrato']:
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', devicetype[0])
             do_idparams(amped_tr_device['params'], pluginid)
 

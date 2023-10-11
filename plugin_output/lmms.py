@@ -639,7 +639,7 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
 
     pluginautoid = auto_id.out_getlist(['plugin', pluginid])
 
-    if plugintype == ['eq', 'peaks']:
+    if plugintype == ['universal', 'eq-bands']:
         #used, active, freq, gain, res/bw
 
         print('[output-lmms]       Audio FX: [eq] ')
@@ -652,32 +652,39 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
         data_HighShelf = [False,0,0,0,0]
         data_HP =        [False,0,0,0,0]
 
-        banddata = plugins.get_eqband(cvpj_l, pluginid)
+        banddata = plugins.get_eqband(cvpj_l, pluginid, None)
 
         for s_band in banddata:
             bandtype = s_band['type']
 
+            band_on_int = s_band['on'] if 'on' in s_band else 0
+            band_on = bool(band_on_int)
+
             part = [True,
-            data_values.get_value(s_band, 'on', 0),
-            data_values.get_value(s_band, 'freq', 0),
-            data_values.get_value(s_band, 'gain', 0),
-            data_values.get_value(s_band, 'var', 0)
+            band_on_int,
+            s_band['freq'] if 'freq' in s_band else 0,
+            s_band['gain'] if 'gain' in s_band else 0,
+            s_band['var'] if 'var' in s_band else 0
             ]
 
-            if bandtype == 'low_pass': data_LP = part
-            if bandtype == 'low_shelf': data_Lowshelf = part
-            if bandtype == 'peak': 
+            #print(s_band)
+
+            if bandtype == 'low_pass' and band_on: data_LP = part
+            if bandtype == 'low_shelf' and band_on: data_Lowshelf = part
+            if bandtype == 'peak' and band_on: 
                 for peaknum in range(4):
                     peakdata = data_Peaks[peaknum]
                     if peakdata[0] == False: 
                         data_Peaks[peaknum] = part
                         break
-            if bandtype == 'high_shelf': data_HighShelf = part
-            if bandtype == 'high_pass': data_HP = part
+            if bandtype == 'high_shelf' and band_on: data_HighShelf = part
+            if bandtype == 'high_pass' and band_on: data_HP = part
 
         xml_lmmseq.set('LPactive', str(data_LP[1]))
         xml_lmmseq.set('LPfreq', str(data_LP[2]))
         xml_lmmseq.set('LPres', str(data_LP[4]))
+
+        #print(data_LP, data_Lowshelf, data_HighShelf, data_HP)
 
         xml_lmmseq.set('Lowshelfactive', str(data_Lowshelf[1]))
         xml_lmmseq.set('LowShelffreq', str(data_Lowshelf[2]))
@@ -773,11 +780,10 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
 
 
 def lmms_encode_effectslot(pluginid, fxcX):
-    fxslotX = ET.SubElement(fxcX, "effect")
-
     fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid])
 
     if fxdata != None:
+        fxslotX = ET.SubElement(fxcX, "effect")
         add_auto_placements(1, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', fxslotX, 'on', 'Slot', 'On', isslot=True)
         add_auto_placements(1, None, ['slot', pluginid], 'wet', fxdata, 'wet', fxslotX, 'wet', 'Slot', 'Wet', isslot=True)
         lmms_encode_effectplugin(pluginid, fxslotX)

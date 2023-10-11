@@ -26,6 +26,9 @@ def keynum_to_note(i_keynum, i_oct):
 def keyletter_to_note(i_keyletter, i_oct):
     return keytable_vals[keytable.index(i_keyletter)] + (i_oct)*12
 
+def freq_to_note_noround(freq):
+    return 12*math.log2(freq/(440*pow(2, -4.75)))-60
+
 def freq_to_note(freq):
     out_note = 12*math.log2(freq/(440*pow(2, -4.75)))-60
     return round(out_note), round((out_note-round(out_note))*100)

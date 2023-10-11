@@ -7,6 +7,7 @@ import lxml.etree as ET
 from functions import xtramath
 from functions import colors
 from functions import data_values
+from functions import note_data
 from functions import params
 from functions import plugins
 from functions_plugin import waveform_values
@@ -56,7 +57,42 @@ def get_plugins(xml_tag, cvpj_fxids):
         plugtype = plugins.get_plug_type(cvpj_l, cvpj_fxid)
         fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, cvpj_fxid)
 
-        if plugtype == ['universal', 'delay-c']:
+        if plugtype == ['universal', 'eq-bands']:
+            wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
+            wf_PLUGIN.set('type', '8bandEq')
+            wf_PLUGIN.set('presetDirty', '1')
+            num_bands = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'num_bands', 8)
+
+            cvpj_bands_a = plugins.get_eqband(cvpj_l, cvpj_fxid, None)
+            cvpj_bands_b = plugins.get_eqband(cvpj_l, cvpj_fxid, 'b')
+
+            for typedata in [['lm',cvpj_bands_a], ['rs',cvpj_bands_b]]:
+                for num in range(min(len(typedata[1]),8)):
+                    eqnumtxt = str(num+1)
+
+                    eqbanddata = typedata[1][num]
+                    band_shape = eqbanddata['type']
+
+                    if band_shape == 'low_pass': band_shape = 0
+                    elif band_shape == 'low_shelf': band_shape = 1
+                    elif band_shape == 'peak': band_shape = 2
+                    elif band_shape == 'band_pass': band_shape = 3
+                    elif band_shape == 'band_stop': band_shape = 4
+                    elif band_shape == 'high_shelf': band_shape = 5
+                    elif band_shape == 'high_pass': band_shape = 6
+                    else: band_shape = 2
+
+                    band_freq = note_data.freq_to_note_noround(eqbanddata['freq'])+72
+
+                    wf_PLUGIN.set("enable"+eqnumtxt+typedata[0], str(float(eqbanddata['on'])))
+                    wf_PLUGIN.set("freq"+eqnumtxt+typedata[0], str(band_freq))
+                    wf_PLUGIN.set("gain"+eqnumtxt+typedata[0], str(eqbanddata['gain']))
+                    wf_PLUGIN.set("q"+eqnumtxt+typedata[0], str(  (10-eqbanddata['var']))*10  )
+                    wf_PLUGIN.set("shape"+eqnumtxt+typedata[0], str(band_shape))
+
+
+
+        elif plugtype == ['universal', 'delay-c']:
             d_time_type = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'time_type', 'seconds')
             d_time = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'time', 1)
             d_feedback = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'feedback', 0.0)
@@ -86,8 +122,7 @@ def get_plugins(xml_tag, cvpj_fxids):
             wf_PLUGIN.set('panL', '-1.0')
             wf_PLUGIN.set('panR', '1.0')
 
-
-        if plugtype == ['universal', 'compressor']:
+        elif plugtype == ['universal', 'compressor']:
             wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
             wf_PLUGIN.set('type', 'comp')
             wf_PLUGIN.set('presetDirty', '1')

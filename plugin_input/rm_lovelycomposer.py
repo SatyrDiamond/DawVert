@@ -180,7 +180,7 @@ def lc_parse_voice(sl_json, tracknum, length):
             out_fadeout = 0
 
         out_key = lc_notedata['n'] if 'n' in lc_notedata else None
-        if out_key != None: out_key-60
+        if out_key != None: out_key -= 60
         out_vol = lc_notedata['x'] if 'x' in lc_notedata else 14
         out_pan = decode_pan(lc_notedata['p'] if 'p' in lc_notedata else 8)
 

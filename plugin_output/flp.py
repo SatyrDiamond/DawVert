@@ -162,6 +162,9 @@ class output_cvpjs(plugin_output.base):
 
             T_Main['fxchannel'] = tracks_mi.inst_fxrackchan_get(cvpj_l, CVPJ_Entry)
 
+            T_Main['type'] = 0
+            T_Main['plugin'] = ''
+
             if 'instdata' in CVPJ_Data:
                 CVPJ_Inst = CVPJ_Data['instdata']
 
@@ -184,13 +187,6 @@ class output_cvpjs(plugin_output.base):
                         T_Main['type'] = 2
                         T_Main['plugin'] = fl_plugin
                         T_Main['pluginparams'] = fl_pluginparams
-
-                    else:
-                        T_Main['type'] = 0
-                        T_Main['plugin'] = ''
-                else:
-                    T_Main['type'] = 0
-                    T_Main['plugin'] = ''
 
             if 'poly' in CVPJ_Data: 
                 if 'max' in CVPJ_Data['poly']: 

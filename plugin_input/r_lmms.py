@@ -610,7 +610,7 @@ def lmms_decode_effectslot(fxslotX):
     if fxpluginname == 'eq':
         fxxml_plugin = fxslotX.findall('Eq')[0]
 
-        plugins.add_plug(cvpj_l, pluginid, 'eq', 'peaks')
+        plugins.add_plug(cvpj_l, pluginid, 'universal', 'eq-bands')
 
         Outputgain = lmms_auto_getvalue(fxxml_plugin, 'Outputgain', 0, 'float', None, ['slot', pluginid, 'gain_out'])
         Inputgain = lmms_auto_getvalue(fxxml_plugin, 'Inputgain', 0, 'float', None, ['slot', pluginid, 'gain_in'])

@@ -45,7 +45,7 @@ def track_dataval_get(cvpj_l, trackid, datagroup, i_name, i_fallback):
     return value
 
 def track_group(cvpj_l, trackid, groupid):
-    data_values.nested_dict_add_value(cvpj_l, ['track_data', trackid, 'group', 'groupid'], groupid)
+    data_values.nested_dict_add_value(cvpj_l, ['track_data', trackid, 'group'], groupid)
 
 def add_pl(cvpj_l, trackid, pl_type, placements_data):
     data_values.nested_dict_add_to_list(cvpj_l, ['track_placements', trackid, pl_type], placements_data)

@@ -435,25 +435,25 @@ class input_flp(plugin_input.base):
 
             if 'slots' in fl_fx_chan:
                 for fl_fxslotnum in range(10):
-                    fl_fxslotdata = fl_fx_chan['slots'][fl_fxslotnum]
+                    if fl_fxslotnum in fl_fx_chan['slots']
+                        fl_fxslotdata = fl_fx_chan['slots'][fl_fxslotnum]
 
-                    if fl_fxslotdata != None and 'plugin' in fl_fxslotdata and 'pluginparams' in fl_fxslotdata:
-                        fxslotid = plugins.get_id()
+                        if fl_fxslotdata != None and 'plugin' in fl_fxslotdata and 'pluginparams' in fl_fxslotdata:
+                            fxslotid = plugins.get_id()
 
-                        if FL_InitFXVals_exists == True:
+                            if FL_InitFXVals_exists == True:
                             fl_fxslot_initvals = FL_InitFXVals[int(fxchannel)][fl_fxslotnum]
                             fx_slot_on = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x00'])[0] if b'\x1f\x00' in fl_fxslot_initvals else 1
                             fx_slot_wet = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x01'])[0]/12800 if b'\x1f\x01' in fl_fxslot_initvals else 0
                             plugins.add_plug_fxdata(cvpj_l, fxslotid, fx_slot_on, fx_slot_wet)
 
+                            flpluginname = fl_fxslotdata['plugin'] if 'plugin' in fl_fxslotdata else None
 
-                        flpluginname = fl_fxslotdata['plugin'] if 'plugin' in fl_fxslotdata else None
-
-                        plug_exists = None
-                        if 'pluginparams' in fl_fxslotdata: 
+                            plug_exists = None
+                            if 'pluginparams' in fl_fxslotdata: 
                             plug_exists = flp_dec_plugins.getparams(cvpj_l, fxslotid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder)
 
-                        if plug_exists == True:
+                            if plug_exists == True:
                             v_name = fl_fxslotdata["name"] if "name" in fl_fxslotdata else None
                             v_color = None
                             if 'color' in fl_fxslotdata:

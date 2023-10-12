@@ -223,12 +223,14 @@ def convert_type_output(extra_json):
 		convproj_j[0] = convert_r2m.convert(convproj_j[0])
 	elif in_type == 'r' and out_type == 'mi': 
 		convproj_j[0] = convert_r2m.convert(convproj_j[0])
+		convproj_j[0] = song_compat.makecompat(convproj_j[0], 'm')
 		convproj_j[0] = convert_m2mi.convert(convproj_j[0])
 
 	elif in_type == 'mi' and out_type == 'm': 
 		convproj_j[0] = convert_mi2m.convert(convproj_j[0], extra_json)
 	elif in_type == 'mi' and out_type == 'r': 
 		convproj_j[0] = convert_mi2m.convert(convproj_j[0], extra_json)
+		convproj_j[0] = song_compat.makecompat(convproj_j[0], 'm')
 		convproj_j[0] = convert_m2r.convert(convproj_j[0])
 
 	elif in_type == 'rm' and out_type == 'r': 

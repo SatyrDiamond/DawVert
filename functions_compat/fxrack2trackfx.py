@@ -17,11 +17,12 @@ def process_r(cvpj_l):
         auto_data.move(cvpj_l, ['fxmixer','0','pan'], ['master','pan'])
         fx_trackids = {}
         for cvpj_trackid, s_trackdata, track_placements in tracks_r.iter(cvpj_l):
-            cvpj_track_fxnum = tracks_r.track_fxrackchan_get(cvpj_l, cvpj_trackid)
+            cvpj_track_fxnum = s_trackdata['fxrack_channel'] if 'fxrack_channel' in s_trackdata else 0
 
             if cvpj_track_fxnum not in fx_trackids: fx_trackids[cvpj_track_fxnum] = []
             fx_trackids[cvpj_track_fxnum].append(cvpj_trackid)
             if 'fxrack_channel' in s_trackdata: del s_trackdata['fxrack_channel']
+
             if cvpj_track_fxnum != 0: s_trackdata['group'] = 'fxrack_'+str(cvpj_track_fxnum)
 
         if 0 in fx_trackids: del fx_trackids[0]
@@ -33,10 +34,11 @@ def process_r(cvpj_l):
             trackfx.group_add(cvpj_l, groupid, None)
             cvpj_l['groups'][groupid] |= cvpj_fxdata
             print('[compat] fxrack2trackfx: FX to Tracks '+ ', '.join(fx_trackids[fx_trackid]))
+        del cvpj_l['fxrack']
     return True
 
 def process(cvpj_l, cvpj_type, in_compat, out_compat):
     if in_compat == True and out_compat == False:
-        if cvpj_type in ['r', 'ri', 'rm']: return process_r(cvpj_l)
+        if cvpj_type in ['r', 'ri']: return process_r(cvpj_l)
         else: return False
     else: return False

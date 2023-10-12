@@ -435,7 +435,7 @@ class input_flp(plugin_input.base):
 
             if 'slots' in fl_fx_chan:
                 for fl_fxslotnum in range(10):
-                    if fl_fxslotnum in fl_fx_chan['slots']
+                    if fl_fxslotnum in fl_fx_chan['slots']:
                         fl_fxslotdata = fl_fx_chan['slots'][fl_fxslotnum]
 
                         if fl_fxslotdata != None and 'plugin' in fl_fxslotdata and 'pluginparams' in fl_fxslotdata:

@@ -45,14 +45,13 @@ def group_add(cvpj_l, g_id, i_inside_group):
         data_values.nested_dict_add_value(cvpj_l, ['groups', g_id, 'audio_destination'], {'type': 'master'})
 
 def group_visual(cvpj_l, g_id, **kwargs):
-    out_location = get_sendcvpjlocation(i_location)
     if 'name' in kwargs: 
         if kwargs['name'] != None: data_values.nested_dict_add_value(cvpj_l, ['groups', g_id, 'name'], kwargs['name'])
     if 'color' in kwargs: 
         if kwargs['color'] != None: data_values.nested_dict_add_value(cvpj_l, ['groups', g_id, 'color'], kwargs['color'])
 
-def group_param_add(cvpj_l, p_id, p_value, p_type):
+def group_param_add(cvpj_l, g_id, p_id, p_value, p_type):
     if p_value != None: params.add(cvpj_l, ['groups', g_id], p_id, p_value, p_type)
 
-def group_param_get(cvpj_l, p_id, p_fallback):
+def group_param_get(cvpj_l, g_id, p_id, p_fallback):
     return params.get(cvpj_l, ['groups', g_id], p_id, p_fallback)

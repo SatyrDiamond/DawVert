@@ -545,8 +545,8 @@ class input_ableton(plugin_input.base):
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['group', cvpj_grouptrackid, 'pan'], None)
 				trackfx.group_add(cvpj_l, cvpj_grouptrackid, None)
 				trackfx.group_visual(cvpj_l, cvpj_grouptrackid, name=track_name, color=track_color)
-				trackfx.group_param_add(cvpj_l, ['master'], cvpj_grouptrackid, 'vol', track_vol, 'float')
-				trackfx.group_param_add(cvpj_l, ['master'], cvpj_grouptrackid, 'pan', track_pan, 'float')
+				trackfx.group_param_add(cvpj_l, cvpj_grouptrackid, 'vol', track_vol, 'float')
+				trackfx.group_param_add(cvpj_l, cvpj_grouptrackid, 'pan', track_pan, 'float')
 
 			x_track_DeviceChain_inside = x_track_DeviceChain.findall('DeviceChain')[0]
 			x_trackdevices = x_track_DeviceChain_inside.findall('Devices')[0]

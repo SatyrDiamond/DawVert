@@ -451,16 +451,16 @@ class input_flp(plugin_input.base):
 
                             plug_exists = None
                             if 'pluginparams' in fl_fxslotdata: 
-                            plug_exists = flp_dec_plugins.getparams(cvpj_l, fxslotid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder)
+                                plug_exists = flp_dec_plugins.getparams(cvpj_l, fxslotid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder)
 
                             if plug_exists == True:
-                            v_name = fl_fxslotdata["name"] if "name" in fl_fxslotdata else None
-                            v_color = None
-                            if 'color' in fl_fxslotdata:
-                                color = fl_fxslotdata['color'].to_bytes(4, "little")
-                                v_color = [color[0]/255,color[1]/255,color[2]/255]
-                            plugins.add_plug_fxvisual(cvpj_l, fxslotid, v_name, v_color)
-                            fxslot.insert(cvpj_l, ['fxrack', fxchannel], 'audio', fxslotid)
+                                v_name = fl_fxslotdata["name"] if "name" in fl_fxslotdata else None
+                                v_color = None
+                                if 'color' in fl_fxslotdata:
+                                    color = fl_fxslotdata['color'].to_bytes(4, "little")
+                                    v_color = [color[0]/255,color[1]/255,color[2]/255]
+                                plugins.add_plug_fxvisual(cvpj_l, fxslotid, v_name, v_color)
+                                fxslot.insert(cvpj_l, ['fxrack', fxchannel], 'audio', fxslotid)
 
         for timemarker in FL_TimeMarkers:
             tm_pos = FL_TimeMarkers[timemarker]['pos']/ppq*4

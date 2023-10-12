@@ -657,12 +657,12 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
         for s_band in banddata:
             bandtype = s_band['type']
 
-            band_enable = s_band['on']
+            band_on = s_band['on']
             band_freq = s_band['freq']
             band_gain = s_band['gain']
             band_res = s_band['var']
 
-            part = [True, band_enable, band_freq, band_gain, band_res]
+            part = [True, band_on, band_freq, band_gain, band_res]
 
             if bandtype == 'low_pass' and band_on: data_LP = part
             if bandtype == 'low_shelf' and band_on: data_Lowshelf = part

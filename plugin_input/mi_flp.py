@@ -442,10 +442,10 @@ class input_flp(plugin_input.base):
                             fxslotid = plugins.get_id()
 
                             if FL_InitFXVals_exists == True:
-                            fl_fxslot_initvals = FL_InitFXVals[int(fxchannel)][fl_fxslotnum]
-                            fx_slot_on = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x00'])[0] if b'\x1f\x00' in fl_fxslot_initvals else 1
-                            fx_slot_wet = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x01'])[0]/12800 if b'\x1f\x01' in fl_fxslot_initvals else 0
-                            plugins.add_plug_fxdata(cvpj_l, fxslotid, fx_slot_on, fx_slot_wet)
+                                fl_fxslot_initvals = FL_InitFXVals[int(fxchannel)][fl_fxslotnum]
+                                fx_slot_on = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x00'])[0] if b'\x1f\x00' in fl_fxslot_initvals else 1
+                                fx_slot_wet = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x01'])[0]/12800 if b'\x1f\x01' in fl_fxslot_initvals else 0
+                                plugins.add_plug_fxdata(cvpj_l, fxslotid, fx_slot_on, fx_slot_wet)
 
                             flpluginname = fl_fxslotdata['plugin'] if 'plugin' in fl_fxslotdata else None
 

@@ -11,7 +11,7 @@ from functions import song
 from functions_plugin import ableton_values
 from functions_tracks import auto_id
 from functions_tracks import auto_nopl
-from functions_tracks import fxrack
+from functions_tracks import trackfx
 from functions_tracks import fxslot
 from functions_tracks import tracks_r
 from functions_tracks import groups

@@ -14,6 +14,7 @@ from functions import idvals
 from functions import notelist_data
 from functions import params
 from functions import auto
+from functions_plugin import soundation_values
 from functions_tracks import auto_nopl
 from functions_tracks import tracks_r
 
@@ -21,6 +22,7 @@ def makechannel(i_type):
     return {
       "name": 'noname',
       "type": i_type,
+      "color": "#444444",
       "mute": False,
       "solo": False,
       "volume": 1,
@@ -28,7 +30,6 @@ def makechannel(i_type):
       "volumeAutomation": [],
       "panAutomation": [],
       "effects": [],
-      "regions": []
     }
 
 def set_asdr(sng_instparams, asdr_a, asdr_s, asdr_d, asdr_r):
@@ -183,8 +184,8 @@ class output_soundation(plugin_output.base):
         bpm = params.get(cvpj_l, [], 'bpm', 120)[0]
 
         sng_output = {}
-        sng_output["version"] = 2.2
-        sng_output["studio"] = "v3.0.0-1278-g1d69643f3"
+        sng_output["version"] = 2.3
+        sng_output["studio"] = "3.10.7"
         sng_output["bpm"] = int(bpm)
         sng_output["timeSignature"] = "4/4"
         if 'timesig' in cvpj_l: 
@@ -200,14 +201,14 @@ class output_soundation(plugin_output.base):
         bpmdiv = 120/bpm
         ticksdiv = 5512*bpmdiv
 
-        sng_master = makechannel("master")
-        sng_master['name'] = "Master Channel"
-        if 'track_master' in cvpj_l: 
-            cvpj_master = cvpj_l['track_master']
-            sng_master['name'] = data_values.get_value(cvpj_master, 'name', 'Master Channel')
-            sng_master['volume'] = data_values.get_value(cvpj_master, 'vol', 1.0)
-            add_fx(sng_master, cvpj_master)
-        sng_channels.append(sng_master)
+        #sng_master = makechannel("master")
+        #sng_master['name'] = "Master Channel"
+        #if 'track_master' in cvpj_l: 
+        #    cvpj_master = cvpj_l['track_master']
+        #    sng_master['name'] = data_values.get_value(cvpj_master, 'name', 'Master Channel')
+        #    sng_master['volume'] = data_values.get_value(cvpj_master, 'vol', 1.0)
+        #    add_fx(sng_master, cvpj_master)
+        #sng_channels.append(sng_master)
 
         mas_cvpjauto_vol = auto_nopl.getpoints(cvpj_l, ['master','vol'])
         if mas_cvpjauto_vol != None:
@@ -225,14 +226,18 @@ class output_soundation(plugin_output.base):
         for cvpj_trackid, s_trackdata, track_placements in tracks_r.iter(cvpj_l):
             tracktype = s_trackdata['type']
             if tracktype == 'instrument':
+                trackcolor = data_values.get_value(s_trackdata, 'color', [0.5,0.5,0.5])
+                trackcolor_hex = colors.rgb_float_to_hex(trackcolor) 
+
                 sng_trkdata = makechannel("instrument")
                 sng_trkdata['name'] = data_values.get_value(s_trackdata, 'name', 'noname')
+                sng_trkdata['color'] = '#'+trackcolor_hex.upper()
                 sng_trkdata['volume'] = params.get(s_trackdata, [], 'vol', 1)[0]
                 sng_trkdata['pan'] = 0.5 + params.get(s_trackdata, [], 'pan', 0)[0]/2
                 muteddata = params.get(s_trackdata, [], 'enabled', True)[0]
                 if muteddata != None: sng_trkdata['mute'] = not muteddata
                 sng_trkdata['solo'] = params.get(s_trackdata, [], 'solo', 0)[0]
-                trackcolor = data_values.get_value(s_trackdata, 'color', [0.5,0.5,0.5])
+
                 sng_instparams = sng_trkdata['instrument'] = {"identifier": "com.soundation.GM-2"}
 
                 cvpjauto_vol = auto_nopl.getpoints(cvpj_l, ['track',cvpj_trackid,'vol'])
@@ -257,6 +262,14 @@ class output_soundation(plugin_output.base):
                         sng_instparams['identifier'] = plugtype[1]
                         if plugtype[1] == 'com.soundation.GM-2':
                             cvpjidata_to_sngparam(sng_instparams, pluginid, 'sample_pack', '2_0_Bright_Yamaha_Grand.smplpck')
+                            a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'vol')
+                            set_asdr(sng_instparams, a_attack, a_sustain, a_decay, a_release)
+
+                        elif plugtype[1] == 'com.soundation.SAM-1':
+                            sample_pack = plugins.get_plug_dataval(cvpj_l, pluginid, 'sample_pack', None)
+                            sng_instparams['sample_pack'] = sample_pack
+                            a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'vol')
+                            set_asdr(sng_instparams, a_attack, a_sustain, a_decay, a_release)
 
                         elif plugtype[1] == 'com.soundation.simple':
 
@@ -287,21 +300,21 @@ class output_soundation(plugin_output.base):
                             set_asdr(sng_instparams, a_attack, a_sustain, a_decay, a_release)
 
                         elif plugtype[1] == 'com.soundation.drummachine':
+                            for paramname in ["gain_2", "hold_1", "pitch_6", "gain_1", "decay_5", "gain_5", "hold_0", "hold_2", "pitch_7", "gain_0", "decay_6", "gain_3", "hold_5", "pitch_3", "decay_4", "pitch_4", "gain_6", "decay_7", "pitch_2", "hold_6", "decay_1", "decay_3", "decay_0", "decay_2", "gain_7", "pitch_0", "pitch_5", "hold_3", "pitch_1", "hold_4", "hold_7", "gain_4"]:
+                                cvpjiparam_to_sngparam(sng_instparams, pluginid, paramname, 0, True)
                             cvpjidata_to_sngparam(sng_instparams, pluginid, 'kit_name', '')
-                            for num in range(8):
-                                for paramtype in ['decay','gain','hold','pitch']:
-                                    cvpjiparam_to_sngparam(sng_instparams, pluginid, paramtype+'_'+str(num), 0, True)
 
                         elif plugtype[1] == 'com.soundation.spc':
-                            cvpjiparam_to_sngparam(sng_instparams, pluginid, 'bite', 0, True)
-                            cvpjiparam_to_sngparam(sng_instparams, pluginid, 'msl', 0, True)
-                            cvpjiparam_to_sngparam(sng_instparams, pluginid, 'punch', 0, True)
-                            for dataname in ['cuts','envelopes','pack']:
+                            for paramname in soundation_values.spc_vals():
+                                cvpjiparam_to_sngparam(sng_instparams, pluginid, paramname, 0, True)
+                            for dataname in ['cuts','envelopes']:
                                 sng_instparams[dataname] = plugins.get_plug_dataval(cvpj_l, pluginid, dataname, '')
 
-                            for num in range(16):
-                                for paramtype in ['gain','pan','pitch']:
-                                    cvpjiparam_to_sngparam(sng_instparams, pluginid, paramtype+'_'+str(num), 0, True)
+                        elif plugtype[1] == 'com.soundation.europa':
+                            for paramname in soundation_values.europa_vals():
+                                value = plugins.get_plug_dataval(cvpj_l, pluginid, paramname, '')
+                                add_sndinstparam(sng_instparams, "/custom_properties/"+paramname, value, True)
+                            add_sndinstparam(sng_instparams, "/soundation/sample", None, True)
 
                         elif plugtype[1] in ['com.soundation.va_synth','com.soundation.fm_synth','com.soundation.the_wub_machine','com.soundation.mono']:
                             if plugtype[1] == 'com.soundation.va_synth': snd_params = ["aatt", "adec", "arel", "asus", "fatt", "fdec", "fdyn", "feg", "ffreq", "frel", "fres", "fsus", "glide_bend", "glide_mode", "glide_rate", "lfolpf", "lfoosc", "lforate", "octave", "osc_2_fine", "osc_2_mix", "osc_2_noise", "osc_2_octave", "tune"]
@@ -323,6 +336,7 @@ class output_soundation(plugin_output.base):
                         add_sndinstparam(sng_instparams, 'decay', 0, True)
                         add_sndinstparam(sng_instparams, 'sustain', 1, True)
                         add_sndinstparam(sng_instparams, 'release', 0, True)
+
                     elif plugtype[0] == 'retro':
                         if plugtype[1] == 'sine': gm2_samplepack = '81_8_Sine_Wave.smplpck'
                         if plugtype[1] == 'square': gm2_samplepack = '81_0_Square_Lead.smplpck'
@@ -346,8 +360,8 @@ class output_soundation(plugin_output.base):
                         add_sndinstparam(sng_instparams, 'sustain', 1, True)
                         add_sndinstparam(sng_instparams, 'release', 0, True)
 
-                sng_channels.append(sng_trkdata)
-
+                sng_trkdata['userSetName'] = data_values.get_value(s_trackdata, 'name', '')
+                sng_trkdata['regions'] = []
                 if 'notes' in track_placements:
                     cvpj_clips = notelist_data.sort(track_placements['notes'])
                     for cvpj_clip in cvpj_clips:
@@ -383,6 +397,9 @@ class output_soundation(plugin_output.base):
                                     sng_region["notes"].append(sng_note)
 
                         sng_trkdata['regions'].append(sng_region)
+
+
+                sng_channels.append(sng_trkdata)
 
                 add_fx(sng_trkdata, s_trackdata)
 

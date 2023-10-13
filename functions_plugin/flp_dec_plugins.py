@@ -81,7 +81,6 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
             wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
             if 'fourid' in wrapperdata:
                 pluginstate = wrapperdata['state']
-                print(wrapperdata['name'], pluginstate)
                 wrapper_vststate = pluginstate[0:9]
                 wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
                 wrapper_vstpad = pluginstate[13:17]

@@ -34,6 +34,9 @@ def process_r(cvpj_l):
 
         dict_returns = {}
 
+        auto_data.move(cvpj_l, ['master','vol'], ['fxmixer','0','vol'])
+        auto_data.move(cvpj_l, ['master','pan'], ['fxmixer','0','pan'])
+
         if 'track_master' in cvpj_l:
             track_master_data = cvpj_l['track_master']
             list2fxrack(cvpj_l, track_master_data, 0, 'Master', '', True)
@@ -47,14 +50,20 @@ def process_r(cvpj_l):
             
             if output_id[1] == 'return':
                 return_data = dict_returns[output_id[2]]
+                auto_data.move(cvpj_l, ['return',output_id[2],'vol'], ['fxmixer',str(output_id[0]+1),'vol'])
+                auto_data.move(cvpj_l, ['return',output_id[2],'pan'], ['fxmixer',str(output_id[0]+1),'pan'])
                 list2fxrack(cvpj_l, return_data, output_id[0]+1, 'Return', '[R] ', True)
 
             if output_id[1] == 'group':
                 group_data = cvpj_l['groups'][output_id[2]]
+                auto_data.move(cvpj_l, ['group',output_id[2],'vol'], ['fxmixer',str(output_id[0]+1),'vol'])
+                auto_data.move(cvpj_l, ['group',output_id[2],'pan'], ['fxmixer',str(output_id[0]+1),'pan'])
                 list2fxrack(cvpj_l, group_data, output_id[0]+1, 'Group', '[G] ', True)
 
             if output_id[1] == 'track':
                 track_data = cvpj_l['track_data'][output_id[2]]
+                auto_data.move(cvpj_l, ['track',output_id[2],'vol'], ['fxmixer',str(output_id[0]+1),'vol'])
+                auto_data.move(cvpj_l, ['track',output_id[2],'pan'], ['fxmixer',str(output_id[0]+1),'pan'])
                 list2fxrack(cvpj_l, track_data, output_id[0]+1, '', '', False)
                 track_data['fxrack_channel'] = output_id[0]+1
 

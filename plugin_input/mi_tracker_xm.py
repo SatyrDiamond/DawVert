@@ -322,6 +322,7 @@ class input_xm(plugin_input.base):
         file_stream = open(input_file, 'rb')
 
         xm_header = file_stream.read(17)
+
         xm_name = data_bytes.readstring_fixedlen(file_stream, 20, "windows-1252")
         print("[input-xm] Song Name: " + xm_name)
         xm_1a = file_stream.read(1)

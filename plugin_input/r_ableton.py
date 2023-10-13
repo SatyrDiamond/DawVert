@@ -198,6 +198,287 @@ def get_MultiSampleMap(x_MultiSampleMap):
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+def do_devices(x_trackdevices, track_id, fxloc):
+	for x_trackdevice in x_trackdevices:
+		able_plug_id = x_trackdevice.get('Id')
+		if track_id != None: pluginid = track_id+'_'+able_plug_id
+		else: pluginid = 'master_'+able_plug_id
+		devicename = str(x_trackdevice.tag)
+		#print(pluginid, devicename)
+		is_instrument = False
+
+		devfx_enabled = get_param(x_trackdevice, 'On', 'bool', True, ['slot', able_plug_id, 'enabled'], None)
+		devfx_wet = 1
+
+		if devicename not in ['MultiSampler', 'OriginalSimpler', 'Compressor2'] and devicename in abletondatadef_params:
+			plugins.add_plug(cvpj_l, pluginid, 'native-ableton', devicename)
+			device_defparams = abletondatadef_params[devicename]
+			for ableton_paramname in device_defparams:
+				ableton_param_data = device_defparams[ableton_paramname]
+				als_paramval = get_param(
+					x_trackdevice, ableton_paramname, ableton_param_data[0], 
+					ableton_param_data[1], ['plugin', pluginid, ableton_paramname], None)
+				plugins.add_plug_param(cvpj_l, pluginid, ableton_paramname, als_paramval, ableton_param_data[0], ableton_paramname)
+
+			device_defdata = abletondatadef_data[devicename]
+			for ableton_dataname in device_defdata:
+				ableton_data_data = device_defdata[ableton_dataname]
+				plugins.add_plug_data(cvpj_l, pluginid, ableton_dataname, use_valuetype(ableton_data_data[0], get_value(x_trackdevice, ableton_dataname, ableton_data_data[1])))
+
+			if devicename == 'Saturator':
+				x_WaveShaper = x_trackdevice.findall('WaveShaper')[0]
+				for waveshapevarname in ['Drive','Lin','Curve','Damp','Period','Depth']:
+					ws_p_name = 'waveshaper_'+waveshapevarname
+					als_paramval = get_param(x_WaveShaper, waveshapevarname, 'float', 0, ['plugin', pluginid, ws_p_name], None)
+					plugins.add_plug_param(cvpj_l, pluginid, ws_p_name, als_paramval, 'float', ws_p_name)
+
+			if devicename in ['AutoPan', 'AutoFilter', 'FrequencyShifter']:
+				x_lfo = x_trackdevice.findall('Lfo')[0]
+				lfo_data = {}
+
+				lfo_data['Type'] = get_param(x_lfo, 'Type', 'int', 0, None, None)
+				lfo_data['Frequency'] = get_param(x_lfo, 'Frequency', 'float', 0, None, None)
+				lfo_data['RateType'] = get_param(x_lfo, 'RateType', 'float', 0, None, None)
+				lfo_data['BeatRate'] = get_param(x_lfo, 'BeatRate', 'int', 0, None, None)
+				lfo_data['StereoMode'] = get_param(x_lfo, 'StereoMode', 'int', 0, None, None)
+				lfo_data['Spin'] = get_param(x_lfo, 'Spin', 'float', 0, None, None)
+				lfo_data['Phase'] = get_param(x_lfo, 'Phase', 'float', 0, None, None)
+				lfo_data['Offset'] = get_param(x_lfo, 'Offset', 'float', 0, None, None)
+				lfo_data['IsOn'] = get_param(x_lfo, 'IsOn', 'bool', False, None, None)
+				lfo_data['Quantize'] = get_param(x_lfo, 'Quantize', 'bool', False, None, None)
+				lfo_data['BeatQuantize'] = get_param(x_lfo, 'BeatQuantize', 'float', 0, None, None)
+				lfo_data['NoiseWidth'] = get_param(x_lfo, 'NoiseWidth', 'float', 0, None, None)
+				lfo_data['LfoAmount'] = get_param(x_lfo, 'LfoAmount', 'float', None, None, None)
+				lfo_data['LfoInvert'] = get_param(x_lfo, 'LfoInvert', 'bool', None, None, None)
+				lfo_data['LfoShape'] = get_param(x_lfo, 'LfoShape', 'float', None, None, None)
+
+				plugins.add_plug_data(cvpj_l, pluginid, 'lfo_data', lfo_data)
+
+			if devicename in ['Looper']:
+				hextext = x_trackdevice.findall('SavedBuffer')[0].text
+				if hextext != None:
+					base64text = base64.b64encode(bytes.fromhex(hextext)).decode()
+					plugins.add_plug_data(cvpj_l, pluginid, 'SavedBuffer', base64text)
+
+			if devicename == 'Hybrid':
+				x_Hybrid = x_trackdevice.findall('ImpulseResponseHandler')[0]
+				x_SampleSlot = x_Hybrid.findall('SampleSlot')[0]
+				x_Value = x_SampleSlot.findall('Value')[0]
+				plugins.add_plug_data(cvpj_l, pluginid, 'sample', get_sampleref(x_Value)['file'])
+
+			if devicename == 'Vocoder':
+				x_Vocoder_FilterBank = x_trackdevice.findall('FilterBank')[0]
+				banddata = []
+				for bandnum in range(40):
+					banddata.append( float(get_value(x_Vocoder_FilterBank, 'BandLevel.'+str(bandnum), 1)) )
+					float(get_value(x_Vocoder_FilterBank, 'BandLevel.'+str(bandnum), 1))
+				plugins.add_plug_data(cvpj_l, pluginid, 'banddata', banddata)
+				plugins.add_plug_data(cvpj_l, pluginid, 'bandcount', int(get_value(x_Vocoder_FilterBank, 'BandCount', 12)))
+
+			#paramletter = ['A','B']
+			#if devicename == 'Eq8':
+			#	banddata = [[],[]]
+			#	for num in range(8):
+			#		x_eq8band = x_trackdevice.findall('Bands.'+str(num))[0]
+			#		bandparams = {}
+			#		for paramletnum in range(2):
+			#			listletnum = paramletter[paramletnum]
+			#			x_eq8let = x_eq8band.findall('Parameter'+listletnum)[0]
+			#			bandparams['IsOn'] = get_param(x_eq8let, 'IsOn', 'bool', 'false', None, None)
+			#			bandparams['Mode'] = get_param(x_eq8let, 'Mode', 'int', 0, None, None)
+			#			bandparams['Freq'] = get_param(x_eq8let, 'Freq', 'float', 0, None, None)
+			#			bandparams['Gain'] = get_param(x_eq8let, 'Gain', 'float', 0, None, None)
+			#			bandparams['Q'] = get_param(x_eq8let, 'Q', 'float', 0, None, None)
+			#			print(listletnum, bandparams)
+			#			banddata[paramletnum].append(bandparams)
+			#	plugins.add_plug_data(cvpj_l, pluginid, 'band_data', banddata)
+
+			if devicename == 'InstrumentVector':
+				is_instrument = True
+				modcons = []
+				x_ModulationConnections = x_trackdevice.findall('ModulationConnections')[0]
+				x_ModulationConnectionsForInstrumentVectors = x_ModulationConnections.findall('ModulationConnectionsForInstrumentVector')
+				for x_ModulationConnectionsForInstrumentVector in x_ModulationConnectionsForInstrumentVectors:
+					s_modcon = {}
+					s_modcon_target = x_ModulationConnectionsForInstrumentVector.get('TargetId')
+					s_modcon['target'] = x_ModulationConnectionsForInstrumentVector.get('TargetId')
+					s_modcon['name'] = get_value(x_ModulationConnectionsForInstrumentVector, 'TargetName', '')
+					s_modcon['amounts'] = []
+					for num in range(13):
+						s_modcon['amounts'].append( float(get_value(x_ModulationConnectionsForInstrumentVector, 'ModulationAmounts.'+str(num), 0)) )
+					modcons.append(s_modcon)
+				plugins.add_plug_data(cvpj_l, pluginid, 'ModulationConnections', modcons)
+
+				x_UserSprite1 = x_trackdevice.findall('UserSprite1')[0]
+				x_UserSprite1Value = x_UserSprite1.findall('Value')[0]
+				x_UserSprite1SampleRef = x_UserSprite1Value.findall('SampleRef')
+				if x_UserSprite1SampleRef != []: 
+					file1data = get_sampleref(x_UserSprite1Value)
+					plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite1', file1data['file'])
+				else: plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite1', '')
+				
+				x_UserSprite2 = x_trackdevice.findall('UserSprite2')[0]
+				x_UserSprite2Value = x_UserSprite2.findall('Value')[0]
+				x_UserSprite2SampleRef = x_UserSprite2Value.findall('SampleRef')
+				if x_UserSprite2SampleRef != []: 
+					file1data = get_sampleref(x_UserSprite2Value)
+					plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite2', file1data['file'])
+				else: plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite2', '')
+		
+		elif devicename == 'Compressor2':
+			device_defparams = abletondatadef_params[devicename]
+
+			v_Threshold = get_param(x_trackdevice, 'Threshold', 'float', 0, None, None)
+			v_Ratio = get_param(x_trackdevice, 'Ratio', 'float', 0, None, None)
+			v_ExpansionRatio = get_param(x_trackdevice, 'ExpansionRatio', 'float', 0, None, None)
+			v_Attack = get_param(x_trackdevice, 'Attack', 'float', 0, None, None)
+			v_Release = get_param(x_trackdevice, 'Release', 'float', 0, None, None)
+			v_Gain = get_param(x_trackdevice, 'Gain', 'float', 0, None, None)
+			devfx_wet = get_param(x_trackdevice, 'DryWet', 'float', 1, None, None)
+			v_Model = get_param(x_trackdevice, 'Model', 'int', 0, None, None)
+			v_Knee = get_param(x_trackdevice, 'Knee', 'float', 0, None, None)
+
+			v_Threshold = -math.log(v_Threshold, 0.8913)
+
+			modeldata = 'peak'
+			if v_Model == 1: modeldata = 'rms'
+
+			if v_Model != 2: 
+				plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
+				plugins.add_plug_param(cvpj_l, pluginid, 'ratio', v_Ratio, 'float', 'ratio')
+			else: 
+				plugins.add_plug(cvpj_l, pluginid, 'universal', 'expander')
+				plugins.add_plug_param(cvpj_l, pluginid, 'ratio', v_ExpansionRatio, 'float', 'ratio')
+
+			plugins.add_plug_param(cvpj_l, pluginid, 'threshold', v_Threshold, 'float', 'threshold')
+			plugins.add_plug_param(cvpj_l, pluginid, 'attack', v_Attack/1000, 'float', 'attack')
+			plugins.add_plug_param(cvpj_l, pluginid, 'release', v_Release/1000, 'float', 'release')
+			plugins.add_plug_param(cvpj_l, pluginid, 'postgain', v_Gain, 'float', 'postgain')
+			plugins.add_plug_param(cvpj_l, pluginid, 'knee', v_Knee, 'float', 'knee')
+
+			plugins.add_plug_data(cvpj_l, pluginid, 'detect_mode', modeldata)
+
+		elif devicename in ['OriginalSimpler', 'MultiSampler']:
+			plugins.add_plug_multisampler(cvpj_l, pluginid)
+			is_instrument = True
+
+			# Player
+			x_samp_Player = x_trackdevice.findall('Player')[0]
+			x_samp_MultiSampleMap = x_samp_Player.findall('MultiSampleMap')[0]
+			x_samp_SampleParts = x_samp_MultiSampleMap.findall('SampleParts')[0]
+			x_samp_MultiSampleParts = x_samp_SampleParts.findall('MultiSamplePart')
+			for x_samp_MultiSamplePart in x_samp_MultiSampleParts:
+				regionparams = {}
+				regionparams['name'] = get_value(x_samp_MultiSamplePart, 'Name', '')
+
+				if x_samp_MultiSamplePart.findall('KeyRange')[0]:
+					x_KeyRange = x_samp_MultiSamplePart.findall('KeyRange')[0]
+					xv_Min = int(get_value(x_KeyRange, 'Min', '0'))-60
+					xv_Max = int(get_value(x_KeyRange, 'Max', '127'))-60
+					xv_CrossfadeMin = int(get_value(x_KeyRange, 'CrossfadeMin', '0'))-60
+					xv_CrossfadeMax = int(get_value(x_KeyRange, 'CrossfadeMax', '127'))-60
+					regionparams['r_key'] = [xv_Min, xv_Max]
+					regionparams['r_key_fade'] = [xv_CrossfadeMin, xv_CrossfadeMax]
+
+				if x_samp_MultiSamplePart.findall('VelocityRange')[0]:
+					x_VelocityRange = x_samp_MultiSamplePart.findall('VelocityRange')[0]
+					xv_Min = int(get_value(x_VelocityRange, 'Min', '1'))
+					xv_Max = int(get_value(x_VelocityRange, 'Max', '127'))
+					xv_CrossfadeMin = int(get_value(x_VelocityRange, 'CrossfadeMin', '1'))
+					xv_CrossfadeMax = int(get_value(x_VelocityRange, 'CrossfadeMax', '127'))
+					regionparams['r_vel'] = [xv_Min, xv_Max]
+					regionparams['r_vel_fade'] = [xv_CrossfadeMin, xv_CrossfadeMax]
+
+				regionparams['middlenote'] = int(get_value(x_samp_MultiSamplePart, 'RootKey', '60'))-60
+				regionparams['volume'] = float(get_value(x_samp_MultiSamplePart, 'volume', '1'))
+				regionparams['pan'] = float(get_value(x_samp_MultiSamplePart, 'pan', '0'))
+
+				if x_samp_MultiSamplePart.findall('SustainLoop')[0]:
+					x_SustainLoop = x_samp_MultiSamplePart.findall('SustainLoop')[0]
+					xv_Start = int(get_value(x_SustainLoop, 'Start', '0'))
+					xv_End = int(get_value(x_SustainLoop, 'End', '1'))
+					xv_Mode = int(get_value(x_SustainLoop, 'Mode', '0'))
+					xv_Crossfade = int(get_value(x_SustainLoop, 'Crossfade', '0'))
+					xv_Detune = int(get_value(x_SustainLoop, 'Detune', '0'))
+					loopdata = {}
+					if xv_Mode == 0: loopdata['enabled'] = 0
+					else:
+						loopdata['enabled'] = 1
+						loopdata['mode'] = 'normal'
+						loopdata['points'] = [xv_Start, xv_End]
+						loopdata['crossfade'] = xv_Crossfade
+						loopdata['detune'] = xv_Detune
+					regionparams['loop_sustain'] = loopdata
+
+				if x_samp_MultiSamplePart.findall('ReleaseLoop')[0]:
+					x_ReleaseLoop = x_samp_MultiSamplePart.findall('ReleaseLoop')[0]
+					xv_Start = int(get_value(x_ReleaseLoop, 'Start', '0'))
+					xv_End = int(get_value(x_ReleaseLoop, 'End', '1'))
+					xv_Mode = int(get_value(x_ReleaseLoop, 'Mode', '0'))
+					xv_Crossfade = int(get_value(x_ReleaseLoop, 'Crossfade', '0'))
+					xv_Detune = int(get_value(x_ReleaseLoop, 'Detune', '0'))
+					loopdata = {}
+					if xv_Mode == 0: loopdata['enabled'] = 0
+					else:
+						loopdata['enabled'] = 1
+						loopdata['mode'] = 'normal'
+						loopdata['points'] = [xv_Start, xv_End]
+						loopdata['crossfade'] = xv_Crossfade
+						loopdata['detune'] = xv_Detune
+					regionparams['loop'] = loopdata
+
+				sampleref = get_sampleref(x_samp_MultiSamplePart)
+				regionparams['file'] = sampleref['file']
+
+				regionparams['start'] = int(get_value(x_ReleaseLoop, 'SampleStart', '0'))
+				regionparams['end'] = int(get_value(x_ReleaseLoop, 'SampleEnd', '1'))
+
+				plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
+
+		if is_instrument == True:
+			tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
+		else:
+			if fxloc != None: fxslot.insert(cvpj_l, fxloc, 'audio', pluginid)
+			plugins.add_plug_fxdata(cvpj_l, pluginid, able_plug_id, devfx_wet)
+
+		#_______paramfinder_data[devicename] = {}
+		#_______paramfinder_param[devicename] = {}
+		if False:
+			for x_trackdevice_name in x_trackdevice:
+				tagname = x_trackdevice_name.tag
+				manualval = x_trackdevice_name.findall('Manual')
+				if tagname not in ['On', 'LomId', 'LomIdView', 'IsExpanded', 'ModulationSourceCount',
+				'ParametersListWrapper', 'Pointee', 'LastSelectedTimeableIndex', 'LastSelectedClipEnvelopeIndex',
+				'LastPresetRef', 'LockedScripts', 'IsFolded', 'ShouldShowPresetName', 'UserName', 'Annotation', 
+				'SourceContext', 'OverwriteProtectionNumber']:
+					if manualval != []:
+						findmanval = manualval[0].get('Value')
+						valuetype = isfloatboolstring(findmanval)
+						#print('--PARAM--', tagname, valuetype, findmanval)
+
+						#_______paramfinder_param[devicename][tagname] = [valuetype, findmanval, 
+						#get_Range(x_trackdevice_name, 'MidiControllerRange'), 
+						#get_Range(x_trackdevice_name, 'MidiCCOnOffThresholds')]
+					elif x_trackdevice_name.get('Value') != None :
+						findmanval = x_trackdevice_name.get('Value')
+						valuetype = isfloatboolstring(findmanval)
+						print('--DATA---', tagname, valuetype, findmanval)
+						_______paramfinder_data[devicename][tagname] = [valuetype, findmanval]
+					else:
+						print('---------', tagname)
+
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 
 
@@ -218,6 +499,10 @@ class input_ableton(plugin_input.base):
 		'auto_nopl': True,
 		}
 	def parse(self, input_file, extra_param):
+		global abletondatadef_params
+		global abletondatadef_data
+		global cvpj_l
+
 		xmlstring = ""
 
 		#_______paramfinder_param = {}
@@ -241,11 +526,17 @@ class input_ableton(plugin_input.base):
 			print('[error] Ableton version '+abletonversion+' is not supported.')
 			exit()
 
+		cvpj_l = {}
+
 		x_LiveSet = root.findall('LiveSet')[0]
 		x_Tracks = x_LiveSet.findall('Tracks')[0]
 		x_MasterTrack = x_LiveSet.findall('MasterTrack')[0]
+		x_MasterTrack_DeviceChain = x_MasterTrack.findall('DeviceChain')[0]
+		x_MasterTrack_Mixer = x_MasterTrack_DeviceChain.findall('Mixer')[0]
+		x_MasterTrack_DeviceChain_inside = x_MasterTrack_DeviceChain.findall('DeviceChain')[0]
+		x_MasterTrack_trackdevices = x_MasterTrack_DeviceChain_inside.findall('Devices')[0]
+		do_devices(x_MasterTrack_trackdevices, None, ['master'])
 
-		cvpj_l = {}
 
 		x_mastertrack_Name = x_MasterTrack.findall('Name')[0]
 		mastertrack_name = get_value(x_mastertrack_Name, 'EffectiveName', '')
@@ -558,274 +849,7 @@ class input_ableton(plugin_input.base):
 
 			x_track_DeviceChain_inside = x_track_DeviceChain.findall('DeviceChain')[0]
 			x_trackdevices = x_track_DeviceChain_inside.findall('Devices')[0]
-
-			for x_trackdevice in x_trackdevices:
-				able_plug_id = x_trackdevice.get('Id')
-				pluginid = track_id+'_'+able_plug_id
-				devicename = str(x_trackdevice.tag)
-				#print(pluginid, devicename)
-				is_instrument = False
-
-				devfx_enabled = get_param(x_trackdevice, 'On', 'bool', True, ['slot', able_plug_id, 'enabled'], None)
-				devfx_wet = 1
-
-				if devicename not in ['MultiSampler', 'OriginalSimpler', 'Compressor2'] and devicename in abletondatadef_params:
-					plugins.add_plug(cvpj_l, pluginid, 'native-ableton', devicename)
-					device_defparams = abletondatadef_params[devicename]
-					for ableton_paramname in device_defparams:
-						ableton_param_data = device_defparams[ableton_paramname]
-						als_paramval = get_param(
-							x_trackdevice, ableton_paramname, ableton_param_data[0], 
-							ableton_param_data[1], ['plugin', pluginid, ableton_paramname], None)
-						plugins.add_plug_param(cvpj_l, pluginid, ableton_paramname, als_paramval, ableton_param_data[0], ableton_paramname)
-
-					device_defdata = abletondatadef_data[devicename]
-					for ableton_dataname in device_defdata:
-						ableton_data_data = device_defdata[ableton_dataname]
-						plugins.add_plug_data(cvpj_l, pluginid, ableton_dataname, use_valuetype(ableton_data_data[0], get_value(x_trackdevice, ableton_dataname, ableton_data_data[1])))
-
-					if devicename == 'Saturator':
-						x_WaveShaper = x_trackdevice.findall('WaveShaper')[0]
-						for waveshapevarname in ['Drive','Lin','Curve','Damp','Period','Depth']:
-							ws_p_name = 'waveshaper_'+waveshapevarname
-							als_paramval = get_param(x_WaveShaper, waveshapevarname, 'float', 0, ['plugin', pluginid, ws_p_name], None)
-							plugins.add_plug_param(cvpj_l, pluginid, ws_p_name, als_paramval, 'float', ws_p_name)
-
-					if devicename in ['AutoPan', 'AutoFilter', 'FrequencyShifter']:
-						x_lfo = x_trackdevice.findall('Lfo')[0]
-						lfo_data = {}
-
-						lfo_data['Type'] = get_param(x_lfo, 'Type', 'int', 0, None, None)
-						lfo_data['Frequency'] = get_param(x_lfo, 'Frequency', 'float', 0, None, None)
-						lfo_data['RateType'] = get_param(x_lfo, 'RateType', 'float', 0, None, None)
-						lfo_data['BeatRate'] = get_param(x_lfo, 'BeatRate', 'int', 0, None, None)
-						lfo_data['StereoMode'] = get_param(x_lfo, 'StereoMode', 'int', 0, None, None)
-						lfo_data['Spin'] = get_param(x_lfo, 'Spin', 'float', 0, None, None)
-						lfo_data['Phase'] = get_param(x_lfo, 'Phase', 'float', 0, None, None)
-						lfo_data['Offset'] = get_param(x_lfo, 'Offset', 'float', 0, None, None)
-						lfo_data['IsOn'] = get_param(x_lfo, 'IsOn', 'bool', False, None, None)
-						lfo_data['Quantize'] = get_param(x_lfo, 'Quantize', 'bool', False, None, None)
-						lfo_data['BeatQuantize'] = get_param(x_lfo, 'BeatQuantize', 'float', 0, None, None)
-						lfo_data['NoiseWidth'] = get_param(x_lfo, 'NoiseWidth', 'float', 0, None, None)
-						lfo_data['LfoAmount'] = get_param(x_lfo, 'LfoAmount', 'float', None, None, None)
-						lfo_data['LfoInvert'] = get_param(x_lfo, 'LfoInvert', 'bool', None, None, None)
-						lfo_data['LfoShape'] = get_param(x_lfo, 'LfoShape', 'float', None, None, None)
-
-						plugins.add_plug_data(cvpj_l, pluginid, 'lfo_data', lfo_data)
-
-					if devicename in ['Looper']:
-						hextext = x_trackdevice.findall('SavedBuffer')[0].text
-						if hextext != None:
-							base64text = base64.b64encode(bytes.fromhex(hextext)).decode()
-							plugins.add_plug_data(cvpj_l, pluginid, 'SavedBuffer', base64text)
-
-					if devicename == 'Hybrid':
-						x_Hybrid = x_trackdevice.findall('ImpulseResponseHandler')[0]
-						x_SampleSlot = x_Hybrid.findall('SampleSlot')[0]
-						x_Value = x_SampleSlot.findall('Value')[0]
-						plugins.add_plug_data(cvpj_l, pluginid, 'sample', get_sampleref(x_Value)['file'])
-
-					if devicename == 'Vocoder':
-						x_Vocoder_FilterBank = x_trackdevice.findall('FilterBank')[0]
-						banddata = []
-						for bandnum in range(40):
-							banddata.append( float(get_value(x_Vocoder_FilterBank, 'BandLevel.'+str(bandnum), 1)) )
-							float(get_value(x_Vocoder_FilterBank, 'BandLevel.'+str(bandnum), 1))
-						plugins.add_plug_data(cvpj_l, pluginid, 'banddata', banddata)
-						plugins.add_plug_data(cvpj_l, pluginid, 'bandcount', int(get_value(x_Vocoder_FilterBank, 'BandCount', 12)))
-
-					#paramletter = ['A','B']
-					#if devicename == 'Eq8':
-					#	banddata = [[],[]]
-					#	for num in range(8):
-					#		x_eq8band = x_trackdevice.findall('Bands.'+str(num))[0]
-					#		bandparams = {}
-					#		for paramletnum in range(2):
-					#			listletnum = paramletter[paramletnum]
-					#			x_eq8let = x_eq8band.findall('Parameter'+listletnum)[0]
-					#			bandparams['IsOn'] = get_param(x_eq8let, 'IsOn', 'bool', 'false', None, None)
-					#			bandparams['Mode'] = get_param(x_eq8let, 'Mode', 'int', 0, None, None)
-					#			bandparams['Freq'] = get_param(x_eq8let, 'Freq', 'float', 0, None, None)
-					#			bandparams['Gain'] = get_param(x_eq8let, 'Gain', 'float', 0, None, None)
-					#			bandparams['Q'] = get_param(x_eq8let, 'Q', 'float', 0, None, None)
-					#			print(listletnum, bandparams)
-					#			banddata[paramletnum].append(bandparams)
-					#	plugins.add_plug_data(cvpj_l, pluginid, 'band_data', banddata)
-
-					if devicename == 'InstrumentVector':
-						is_instrument = True
-						modcons = []
-						x_ModulationConnections = x_trackdevice.findall('ModulationConnections')[0]
-						x_ModulationConnectionsForInstrumentVectors = x_ModulationConnections.findall('ModulationConnectionsForInstrumentVector')
-						for x_ModulationConnectionsForInstrumentVector in x_ModulationConnectionsForInstrumentVectors:
-							s_modcon = {}
-							s_modcon_target = x_ModulationConnectionsForInstrumentVector.get('TargetId')
-							s_modcon['target'] = x_ModulationConnectionsForInstrumentVector.get('TargetId')
-							s_modcon['name'] = get_value(x_ModulationConnectionsForInstrumentVector, 'TargetName', '')
-							s_modcon['amounts'] = []
-							for num in range(13):
-								s_modcon['amounts'].append( float(get_value(x_ModulationConnectionsForInstrumentVector, 'ModulationAmounts.'+str(num), 0)) )
-							modcons.append(s_modcon)
-						plugins.add_plug_data(cvpj_l, pluginid, 'ModulationConnections', modcons)
-
-						x_UserSprite1 = x_trackdevice.findall('UserSprite1')[0]
-						x_UserSprite1Value = x_UserSprite1.findall('Value')[0]
-						x_UserSprite1SampleRef = x_UserSprite1Value.findall('SampleRef')
-						if x_UserSprite1SampleRef != []: 
-							file1data = get_sampleref(x_UserSprite1Value)
-							plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite1', file1data['file'])
-						else: plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite1', '')
-						
-						x_UserSprite2 = x_trackdevice.findall('UserSprite2')[0]
-						x_UserSprite2Value = x_UserSprite2.findall('Value')[0]
-						x_UserSprite2SampleRef = x_UserSprite2Value.findall('SampleRef')
-						if x_UserSprite2SampleRef != []: 
-							file1data = get_sampleref(x_UserSprite2Value)
-							plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite2', file1data['file'])
-						else: plugins.add_plug_data(cvpj_l, pluginid, 'UserSprite2', '')
-				
-				elif devicename == 'Compressor2':
-					device_defparams = abletondatadef_params[devicename]
-
-					v_Threshold = get_param(x_trackdevice, 'Threshold', 'float', 0, None, None)
-					v_Ratio = get_param(x_trackdevice, 'Ratio', 'float', 0, None, None)
-					v_ExpansionRatio = get_param(x_trackdevice, 'ExpansionRatio', 'float', 0, None, None)
-					v_Attack = get_param(x_trackdevice, 'Attack', 'float', 0, None, None)
-					v_Release = get_param(x_trackdevice, 'Release', 'float', 0, None, None)
-					v_Gain = get_param(x_trackdevice, 'Gain', 'float', 0, None, None)
-					devfx_wet = get_param(x_trackdevice, 'DryWet', 'float', 1, None, None)
-					v_Model = get_param(x_trackdevice, 'Model', 'int', 0, None, None)
-					v_Knee = get_param(x_trackdevice, 'Knee', 'float', 0, None, None)
-
-					v_Threshold = -math.log(v_Threshold, 0.8913)
-
-					modeldata = 'peak'
-					if v_Model == 1: modeldata = 'rms'
-
-					if v_Model != 2: 
-						plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
-						plugins.add_plug_param(cvpj_l, pluginid, 'ratio', v_Ratio, 'float', 'ratio')
-					else: 
-						plugins.add_plug(cvpj_l, pluginid, 'universal', 'expander')
-						plugins.add_plug_param(cvpj_l, pluginid, 'ratio', v_ExpansionRatio, 'float', 'ratio')
-
-					plugins.add_plug_param(cvpj_l, pluginid, 'threshold', v_Threshold, 'float', 'threshold')
-					plugins.add_plug_param(cvpj_l, pluginid, 'attack', v_Attack/1000, 'float', 'attack')
-					plugins.add_plug_param(cvpj_l, pluginid, 'release', v_Release/1000, 'float', 'release')
-					plugins.add_plug_param(cvpj_l, pluginid, 'postgain', v_Gain, 'float', 'postgain')
-					plugins.add_plug_param(cvpj_l, pluginid, 'knee', v_Knee, 'float', 'knee')
-
-					plugins.add_plug_data(cvpj_l, pluginid, 'detect_mode', modeldata)
-
-
-				elif devicename in ['OriginalSimpler', 'MultiSampler']:
-					plugins.add_plug_multisampler(cvpj_l, pluginid)
-					is_instrument = True
-
-					# Player
-					x_samp_Player = x_trackdevice.findall('Player')[0]
-					x_samp_MultiSampleMap = x_samp_Player.findall('MultiSampleMap')[0]
-					x_samp_SampleParts = x_samp_MultiSampleMap.findall('SampleParts')[0]
-					x_samp_MultiSampleParts = x_samp_SampleParts.findall('MultiSamplePart')
-					for x_samp_MultiSamplePart in x_samp_MultiSampleParts:
-						regionparams = {}
-						regionparams['name'] = get_value(x_samp_MultiSamplePart, 'Name', '')
-
-						if x_samp_MultiSamplePart.findall('KeyRange')[0]:
-							x_KeyRange = x_samp_MultiSamplePart.findall('KeyRange')[0]
-							xv_Min = int(get_value(x_KeyRange, 'Min', '0'))-60
-							xv_Max = int(get_value(x_KeyRange, 'Max', '127'))-60
-							xv_CrossfadeMin = int(get_value(x_KeyRange, 'CrossfadeMin', '0'))-60
-							xv_CrossfadeMax = int(get_value(x_KeyRange, 'CrossfadeMax', '127'))-60
-							regionparams['r_key'] = [xv_Min, xv_Max]
-							regionparams['r_key_fade'] = [xv_CrossfadeMin, xv_CrossfadeMax]
-
-						if x_samp_MultiSamplePart.findall('VelocityRange')[0]:
-							x_VelocityRange = x_samp_MultiSamplePart.findall('VelocityRange')[0]
-							xv_Min = int(get_value(x_VelocityRange, 'Min', '1'))
-							xv_Max = int(get_value(x_VelocityRange, 'Max', '127'))
-							xv_CrossfadeMin = int(get_value(x_VelocityRange, 'CrossfadeMin', '1'))
-							xv_CrossfadeMax = int(get_value(x_VelocityRange, 'CrossfadeMax', '127'))
-							regionparams['r_vel'] = [xv_Min, xv_Max]
-							regionparams['r_vel_fade'] = [xv_CrossfadeMin, xv_CrossfadeMax]
-
-						regionparams['middlenote'] = int(get_value(x_samp_MultiSamplePart, 'RootKey', '60'))-60
-						regionparams['volume'] = float(get_value(x_samp_MultiSamplePart, 'volume', '1'))
-						regionparams['pan'] = float(get_value(x_samp_MultiSamplePart, 'pan', '0'))
-
-						if x_samp_MultiSamplePart.findall('SustainLoop')[0]:
-							x_SustainLoop = x_samp_MultiSamplePart.findall('SustainLoop')[0]
-							xv_Start = int(get_value(x_SustainLoop, 'Start', '0'))
-							xv_End = int(get_value(x_SustainLoop, 'End', '1'))
-							xv_Mode = int(get_value(x_SustainLoop, 'Mode', '0'))
-							xv_Crossfade = int(get_value(x_SustainLoop, 'Crossfade', '0'))
-							xv_Detune = int(get_value(x_SustainLoop, 'Detune', '0'))
-							loopdata = {}
-							if xv_Mode == 0: loopdata['enabled'] = 0
-							else:
-								loopdata['enabled'] = 1
-								loopdata['mode'] = 'normal'
-								loopdata['points'] = [xv_Start, xv_End]
-								loopdata['crossfade'] = xv_Crossfade
-								loopdata['detune'] = xv_Detune
-							regionparams['loop_sustain'] = loopdata
-
-						if x_samp_MultiSamplePart.findall('ReleaseLoop')[0]:
-							x_ReleaseLoop = x_samp_MultiSamplePart.findall('ReleaseLoop')[0]
-							xv_Start = int(get_value(x_ReleaseLoop, 'Start', '0'))
-							xv_End = int(get_value(x_ReleaseLoop, 'End', '1'))
-							xv_Mode = int(get_value(x_ReleaseLoop, 'Mode', '0'))
-							xv_Crossfade = int(get_value(x_ReleaseLoop, 'Crossfade', '0'))
-							xv_Detune = int(get_value(x_ReleaseLoop, 'Detune', '0'))
-							loopdata = {}
-							if xv_Mode == 0: loopdata['enabled'] = 0
-							else:
-								loopdata['enabled'] = 1
-								loopdata['mode'] = 'normal'
-								loopdata['points'] = [xv_Start, xv_End]
-								loopdata['crossfade'] = xv_Crossfade
-								loopdata['detune'] = xv_Detune
-							regionparams['loop'] = loopdata
-
-						sampleref = get_sampleref(x_samp_MultiSamplePart)
-						regionparams['file'] = sampleref['file']
-
-						regionparams['start'] = int(get_value(x_ReleaseLoop, 'SampleStart', '0'))
-						regionparams['end'] = int(get_value(x_ReleaseLoop, 'SampleEnd', '1'))
-
-						plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
-
-				if is_instrument == True:
-					tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
-				else:
-					if fxloc != None: fxslot.insert(cvpj_l, fxloc, 'audio', pluginid)
-					plugins.add_plug_fxdata(cvpj_l, pluginid, able_plug_id, devfx_wet)
-
-				#_______paramfinder_data[devicename] = {}
-				#_______paramfinder_param[devicename] = {}
-				if False:
-					for x_trackdevice_name in x_trackdevice:
-						tagname = x_trackdevice_name.tag
-						manualval = x_trackdevice_name.findall('Manual')
-						if tagname not in ['On', 'LomId', 'LomIdView', 'IsExpanded', 'ModulationSourceCount',
-						'ParametersListWrapper', 'Pointee', 'LastSelectedTimeableIndex', 'LastSelectedClipEnvelopeIndex',
-						'LastPresetRef', 'LockedScripts', 'IsFolded', 'ShouldShowPresetName', 'UserName', 'Annotation', 
-						'SourceContext', 'OverwriteProtectionNumber']:
-							if manualval != []:
-								findmanval = manualval[0].get('Value')
-								valuetype = isfloatboolstring(findmanval)
-								#print('--PARAM--', tagname, valuetype, findmanval)
-
-								#_______paramfinder_param[devicename][tagname] = [valuetype, findmanval, 
-								#get_Range(x_trackdevice_name, 'MidiControllerRange'), 
-								#get_Range(x_trackdevice_name, 'MidiCCOnOffThresholds')]
-							elif x_trackdevice_name.get('Value') != None :
-								findmanval = x_trackdevice_name.get('Value')
-								valuetype = isfloatboolstring(findmanval)
-								print('--DATA---', tagname, valuetype, findmanval)
-								_______paramfinder_data[devicename][tagname] = [valuetype, findmanval]
-							else:
-								print('---------', tagname)
+			do_devices(x_trackdevices, track_id, fxloc)
 
 		#for devicename in _______paramfinder_param:
 		#	print('"'+devicename+'":', _______paramfinder_param[devicename],',')

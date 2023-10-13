@@ -14,6 +14,7 @@ from functions import idvals
 from functions import notelist_data
 from functions import params
 from functions import auto
+from functions_compat import trackfx_to_numdata
 from functions_plugin import soundation_values
 from functions_tracks import auto_nopl
 from functions_tracks import tracks_r
@@ -222,6 +223,7 @@ class output_soundation(plugin_output.base):
         if 'timesig' in cvpj_l: 
             ts_numerator, ts_denominator = cvpj_l['timesig']
             sng_output["timeSignature"] = str(ts_numerator)+'/'+str(ts_denominator)
+
 
         for cvpj_trackid, s_trackdata, track_placements in tracks_r.iter(cvpj_l):
             tracktype = s_trackdata['type']

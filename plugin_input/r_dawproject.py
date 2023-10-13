@@ -60,8 +60,8 @@ def dp_parse_trackinfo(dpx_track):
     if track_role == "instrument" or track_role == "audio":
         tracks_r.track_create(cvpj_l, dpt_cid, track_role)
         tracks_r.track_visual(cvpj_l, dpt_cid, name=dpt_name, color=dpt_color)
-        tracks_r.track_param_add(cvpj_l, dpt_cid, 'vol', float(cvpj_l_track_vol[0]), 'float', visname=cvpj_l_track_vol[1])
-        tracks_r.track_param_add(cvpj_l, dpt_cid, 'pan', float(cvpj_l_track_pan[0]), 'float', visname=cvpj_l_track_pan[1])
+        tracks_r.track_param_add(cvpj_l, dpt_cid, 'vol', float(cvpj_l_track_vol[0]), 'float')
+        tracks_r.track_param_add(cvpj_l, dpt_cid, 'pan', float(cvpj_l_track_pan[0]), 'float')
 
 def parse_auto(pointsxml):
     cvpj_auto_out = []

@@ -36,6 +36,12 @@ def send_add(cvpj_l, i_trackid, i_sendname, i_amount, i_sendautoid):
     print('[tracks] Adding Send: "'+i_sendname+'"')
     data_values.nested_dict_add_to_list(cvpj_l, ['track_data', i_trackid, 'sends_audio'], send_data)
 
+def group_send_add(cvpj_l, g_id, i_sendname, i_amount, i_sendautoid):
+    send_data = {'amount': i_amount, 'sendid': i_sendname}
+    if i_sendautoid != None: send_data['sendautoid'] = i_sendautoid
+    print('[tracks] Adding Send: "'+i_sendname+'"')
+    data_values.nested_dict_add_to_list(cvpj_l, ['groups', g_id, 'sends_audio'], send_data)
+    
 def group_add(cvpj_l, g_id, i_inside_group):
     data_values.nested_dict_add_value(cvpj_l, ['groups', g_id], {})
     if i_inside_group != None: 

@@ -517,19 +517,10 @@ class input_ableton(plugin_input.base):
 
 					tracks_r.add_pl(cvpj_l, track_id, 'audio', cvpj_placement)
 
-			sendcount = 1
-			if tracktype in ['MidiTrack', 'AudioTrack']:
-				get_auto(x_track_data)
-				for track_sendholder in track_sendholders:
-					sendid = sendcount
-					sendautoid = 'send_'+track_id+'_'+str(sendid)
-					sendlevel = get_param(track_sendholder, 'Send', 'float', 0, ['send', sendautoid, 'amount'], None)
-					trackfx.send_add(cvpj_l, track_id, 'return_'+str(sendid), sendlevel, sendautoid)
-					sendcount += 1
-
 			if tracktype == 'ReturnTrack':
 				get_auto(x_track_data)
 				cvpj_returntrackid = 'return_'+str(returnid)
+				fxloc = ['return', None, cvpj_returntrackid]
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['return', cvpj_returntrackid, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['return', cvpj_returntrackid, 'pan'], None)
 				trackfx.return_add(cvpj_l, ['master'], cvpj_returntrackid)
@@ -541,12 +532,24 @@ class input_ableton(plugin_input.base):
 			if tracktype == 'GroupTrack':
 				get_auto(x_track_data)
 				cvpj_grouptrackid = 'group_'+str(track_id)
+				fxloc = ['group', cvpj_grouptrackid]
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['group', cvpj_grouptrackid, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['group', cvpj_grouptrackid, 'pan'], None)
 				trackfx.group_add(cvpj_l, cvpj_grouptrackid, None)
 				trackfx.group_visual(cvpj_l, cvpj_grouptrackid, name=track_name, color=track_color)
 				trackfx.group_param_add(cvpj_l, cvpj_grouptrackid, 'vol', track_vol, 'float')
 				trackfx.group_param_add(cvpj_l, cvpj_grouptrackid, 'pan', track_pan, 'float')
+
+			sendcount = 1
+			if fxloc != None:
+				get_auto(x_track_data)
+				for track_sendholder in track_sendholders:
+					sendid = sendcount
+					sendautoid = 'send_'+track_id+'_'+str(sendid)
+					sendlevel = get_param(track_sendholder, 'Send', 'float', 0, ['send', sendautoid, 'amount'], None)
+					if fxloc[0] == 'track': trackfx.send_add(cvpj_l, track_id, 'return_'+str(sendid), sendlevel, sendautoid)
+					if fxloc[0] == 'group': trackfx.group_send_add(cvpj_l, cvpj_grouptrackid, 'return_'+str(sendid), sendlevel, sendautoid)
+					sendcount += 1
 
 			x_track_DeviceChain_inside = x_track_DeviceChain.findall('DeviceChain')[0]
 			x_trackdevices = x_track_DeviceChain_inside.findall('Devices')[0]

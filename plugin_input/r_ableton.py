@@ -535,7 +535,12 @@ class input_ableton(plugin_input.base):
 				fxloc = ['group', cvpj_grouptrackid]
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['group', cvpj_grouptrackid, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['group', cvpj_grouptrackid, 'pan'], None)
-				trackfx.group_add(cvpj_l, cvpj_grouptrackid, None)
+
+				group_inside_group = None
+				if track_inside_group != -1:
+					group_inside_group = 'group_'+str(track_inside_group)
+
+				trackfx.group_add(cvpj_l, cvpj_grouptrackid, group_inside_group)
 				trackfx.group_visual(cvpj_l, cvpj_grouptrackid, name=track_name, color=track_color)
 				trackfx.group_param_add(cvpj_l, cvpj_grouptrackid, 'vol', track_vol, 'float')
 				trackfx.group_param_add(cvpj_l, cvpj_grouptrackid, 'pan', track_pan, 'float')

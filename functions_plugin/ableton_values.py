@@ -658,7 +658,7 @@ def devicesparam():
 "Tuner":
 	{'TuningFreq': ['float', '440', [410.0, 480.0], None]},
 "UltraAnalog":
-	{'Polyphony': ['float', '3', None, None], 
+	{'Polyphony': ['int', '3', None, None], 
 	'PitchBendRange': ['float', '0.1666666716', [0.0, 1.0], None], 
 	'Volume': ['float', '0.7047889829', [0.0, 1.0], None], 
 	'Octave': ['float', '0', [-3.0, 3.0], None], 
@@ -689,7 +689,7 @@ def devicesparam():
 "Collision":
 	{'ResonatorOrder': ['float', '0', None, None], 
 	'PitchBendRange': ['float', '5', [0.0, 24.0], None], 
-	'Polyphony': ['float', '2', None, None], 
+	'Polyphony': ['int', '2', None, None], 
 	'Retrigger': ['bool', 'false', None, [64.0, 127.0]], 
 	'Volume': ['float', '0.7047892213', [0.0, 1.0], None]},
 "DrumGroupDevice":
@@ -711,7 +711,7 @@ def devicesparam():
 	'MacroControls.15': ['float', '0', [0.0, 127.0], None], 
 	'ChainSelector': ['float', '0', [0.0, 127.0], None]},
 "LoungeLizard":
-	{'Polyphony': ['float', '30', None, None], 
+	{'Polyphony': ['int', '30', None, None], 
 	'PitchBendRange': ['float', '1', [0.0, 1.0], None], 
 	'Volume': ['float', '0.7047892213', [0.0, 1.0], None], 
 	'KeyboardTranspose': ['float', '12', [0.0, 24.0], None], 
@@ -736,7 +736,7 @@ def devicesparam():
 	'ForkToneBarVolume': ['float', '0.5', [0.0, 1.0], None], 
 	'PickupSymmetry': ['float', '0.5', [0.0, 1.0], None], 
 	'PickupDistance': ['float', '0.5', [0.0, 1.0], None], 
-	'PickupModel': ['float', '0', None, None], 
+	'PickupModel': ['int', '0', None, None], 
 	'PickupAmpIn': ['float', '0.4199999869', [0.0, 1.0], None], 
 	'PickupAmpOut': ['float', '0.4199999869', [0.0, 1.0], None], 
 	'PickupAmpKeyboardScaling': ['float', '0.5', [0.0, 1.0], None], 
@@ -910,7 +910,7 @@ def devicesparam():
 "Operator":
 	{},
 "StringStudio":
-	{'Polyphony': ['float', '4', None, None], 
+	{'Polyphony': ['int', '4', None, None], 
 	'PitchBendRange': ['float', '2', [0.0, 12.0], None], 
 	'Octave': ['float', '0', [-3.0, 3.0], None], 
 	'Transpose': ['float', '0', [-12.0, 12.0], None], 

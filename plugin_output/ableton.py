@@ -1409,6 +1409,7 @@ class output_cvpj(plugin_output.base):
 
         global abletondatadef_params
         global abletondatadef_data
+        global unusednum
 
         output_file_global = output_file
 
@@ -1468,7 +1469,7 @@ class output_cvpj(plugin_output.base):
         
         # XML LiveSet
         x_LiveSet = ET.SubElement(x_root, "LiveSet")
-        addvalue(x_LiveSet, 'NextPointeeId', '36943')
+        addvalue(x_LiveSet, 'NextPointeeId', str(unusednum))
         addvalue(x_LiveSet, 'OverwriteProtectionNumber', '2816')
         addvalue(x_LiveSet, 'LomId', '0')
         addvalue(x_LiveSet, 'LomIdView', '0')

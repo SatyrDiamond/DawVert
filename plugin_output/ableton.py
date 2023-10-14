@@ -1469,7 +1469,7 @@ class output_cvpj(plugin_output.base):
         
         # XML LiveSet
         x_LiveSet = ET.SubElement(x_root, "LiveSet")
-        addvalue(x_LiveSet, 'NextPointeeId', str(unusednum))
+        addvalue(x_LiveSet, 'NextPointeeId', str(unusednum+1))
         addvalue(x_LiveSet, 'OverwriteProtectionNumber', '2816')
         addvalue(x_LiveSet, 'LomId', '0')
         addvalue(x_LiveSet, 'LomIdView', '0')

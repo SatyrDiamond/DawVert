@@ -1504,7 +1504,7 @@ class output_cvpj(plugin_output.base):
 
         loop_on, loop_start, loop_end = song.get_loopdata(cvpj_l, 'r')
 
-        create_transport(x_LiveSet, str(loop_start/4), str(loop_end/4), abl_bool_val[int(loop_on)])
+        create_transport(x_LiveSet, str(loop_start/4), str(loop_end-loop_start/4), abl_bool_val[int(loop_on)])
         create_songmastervalues(x_LiveSet)
         ET.SubElement(x_LiveSet, "SignalModulations")
         addvalue(x_LiveSet, 'GlobalQuantisation', '4')

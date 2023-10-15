@@ -182,7 +182,7 @@ class input_cvpj_f(plugin_input.base):
 
                 tracknum += 1
 
-        cvpj_l['timesig'] = timesig
+        song.add_timesig(cvpj_l, timesig[0], timesig[1])
         song.add_param(cvpj_l, 'bpm', tempo)
 
         return json.dumps(cvpj_l)

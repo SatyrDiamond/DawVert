@@ -254,7 +254,7 @@ class input_amped(plugin_input.base):
         amped_timeSignature = amped_project['timeSignature']
 
         song.add_param(cvpj_l, 'bpm', amped_tempo)
-        cvpj_l['timesig'] = [amped_timeSignature['num'], amped_timeSignature['den']]
+        song.add_timesig(cvpj_l, amped_timeSignature['num'], amped_timeSignature['den'])
 
         for amped_filename in amped_filenames:
             realfilename = amped_filenames[amped_filename]

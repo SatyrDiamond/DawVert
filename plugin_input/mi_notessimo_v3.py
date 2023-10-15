@@ -226,7 +226,8 @@ def parse_song(songid):
     bpm = None
     song_vars = get_vars(notess_x_song)
 
-    cvpj_l['timesig'] = [4, 4]
+    timesig_Numerator = 4
+    timesig_Denominator = 4
 
     if 'author' in song_vars:
         song.add_info(cvpj_l, 'author', song_vars['author'])
@@ -235,12 +236,13 @@ def parse_song(songid):
         song_length = song_vars['width']*60
         print("[input-notessimo_v3] Song Length: " + str(song_vars['width']*60) + ' Seconds')
     if 'video_time' in song_vars: 
-        cvpj_l['timesig'][0] = song_vars['video_time']
+        timesig_Numerator = song_vars['video_time']
         print("[input-notessimo_v3] Song Numerator: " + str(song_vars['video_time']))
     if 'video_beat' in song_vars: 
-        cvpj_l['timesig'][1] = song_vars['video_beat']
+        timesig_Denominator = song_vars['video_beat']
         print("[input-notessimo_v3] Song Denominator: " + str(song_vars['video_beat']))
 
+    song.add_timesig(cvpj_l, timesig_Numerator, timesig_Denominator)
     # ---------------- objects ----------------
 
     timeline_sheets_all = []

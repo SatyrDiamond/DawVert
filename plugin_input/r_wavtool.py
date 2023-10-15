@@ -199,7 +199,7 @@ class input_wavtool(plugin_input.base):
         tracks_master.create(cvpj_l, 1)
         tracks_master.visual(cvpj_l, name='Master', color=[0.14, 0.14, 0.14])
 
-        cvpj_l['timesig'] = [j_wvtl_beatNumerator, j_wvtl_beatDenominator]
+        song.add_timesig(cvpj_l, j_wvtl_beatNumerator, j_wvtl_beatDenominator)
         song.add_param(cvpj_l, 'bpm', j_wvtl_bpm)
         return json.dumps(cvpj_l)
 

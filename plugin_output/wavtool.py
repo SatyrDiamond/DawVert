@@ -18,6 +18,7 @@ from functions import notelist_data
 from functions import params
 from functions import audio
 from functions import auto
+from functions import song
 from functions_tracks import tracks_r
 from functions_tracks import tracks_master
 from functions_tracks import auto_nopl
@@ -414,9 +415,7 @@ class output_wavtool(plugin_output.base):
         wt_out["loopLifted"] = False
         wt_out["loopEnabled"] = False
         wt_out["bpm"] = bpm
-        wt_out["beatNumerator"] = 4
-        wt_out["beatDenominator"] = 4
-        if 'timesig' in cvpj_l: wt_out["beatNumerator"], wt_out["beatDenominator"] = cvpj_l['timesig']
+        wt_out["beatNumerator"], wt_out["beatDenominator"] = song.get_timesig(cvpj_l)
         wt_out["name"] = data_values.nested_dict_get_value(cvpj_l, ['info', 'name'])
         wt_out["arrangementFocusCategory"] = "TrackContent"
         wt_out["tracks"] = wt_tracks
@@ -433,13 +432,10 @@ class output_wavtool(plugin_output.base):
         wt_out["countIn"] = False
         wt_out["selectedDeviceId"] = "metronome"
 
-        if 'timemarkers' in cvpj_l:
-            for timemarkdata in cvpj_l['timemarkers']:
-                if 'type' in timemarkdata:
-                    if timemarkdata['type'] == 'loop_area': 
-                        wt_out["loopStart"] = timemarkdata['position']/4
-                        wt_out["loopEnd"] = timemarkdata['end']/4
-                        wt_out["loopEnabled"] = True
+        loop_on, loop_start, loop_end = song.get_loopdata(cvpj_l, 'r')
+        wt_out["loopStart"] = loop_start/4
+        wt_out["loopEnd"] = loop_end/4
+        wt_out["loopEnabled"] = loop_on
 
         zip_wt.writestr('WavTool Project.json', json.dumps(wt_out))
         zip_wt.close()

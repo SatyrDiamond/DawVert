@@ -14,6 +14,7 @@ from functions import idvals
 from functions import notelist_data
 from functions import params
 from functions import auto
+from functions import song
 from functions_compat import trackfx_to_numdata
 from functions_plugin import soundation_values
 from functions_tracks import auto_nopl
@@ -205,13 +206,14 @@ class output_soundation(plugin_output.base):
         sng_output["version"] = 2.3
         sng_output["studio"] = "3.10.7"
         sng_output["bpm"] = int(bpm)
-        sng_output["timeSignature"] = "4/4"
-        if 'timesig' in cvpj_l: 
-            beatNumerator, beatDenominator = cvpj_l['timesig']
-            sng_output["timeSignature"] = str(beatNumerator)+'/'+str(beatDenominator)
-        sng_output["looping"] = False
-        sng_output["loopStart"] = 0
-        sng_output["loopEnd"] = 0
+        beatNumerator, beatDenominator = song.get_timesig(cvpj_l)
+        sng_output["timeSignature"] = str(beatNumerator)+'/'+str(beatDenominator)
+
+        loop_on, loop_start, loop_end = song.get_loopdata(cvpj_l, 'r')
+        sng_output["looping"] = loop_on
+        sng_output["loopStart"] = loop_start/4
+        sng_output["loopEnd"] = loop_end/4
+
         sng_channels = sng_output["channels"] = []
 
         idvals_inst_gm2 = idvals.parse_idvalscsv('data_idvals/soundation_gm_inst.csv')

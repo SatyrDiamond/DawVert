@@ -61,12 +61,12 @@ def get_plugins(xml_track, trackid):
                             #print('-', waveform_pv)
                             paramtype, paramfb = waveform_pvs[waveform_pv]
                             paramval = xml_getvalue(xml_part, waveform_pv, paramfb)
-                            if waveform_pv == 'attack': plugins.add_plug_param(cvpj_l, pluginid, 'attack', float(paramval)/1000, 'float', 'threshold')
+                            if waveform_pv == 'attack': plugins.add_plug_param(cvpj_l, pluginid, 'attack', float(paramval)/1000, 'float', 'attack')
                             if waveform_pv == 'inputDb': plugins.add_plug_param(cvpj_l, pluginid, 'pregain', float(paramval), 'float', 'pregain')
                             if waveform_pv == 'knee': plugins.add_plug_param(cvpj_l, pluginid, 'knee', float(paramval), 'float', 'knee')
                             if waveform_pv == 'outputDb': plugins.add_plug_param(cvpj_l, pluginid, 'postgain', float(paramval), 'float', 'postgain')
                             if waveform_pv == 'ratio': plugins.add_plug_param(cvpj_l, pluginid, 'ratio', float(paramval), 'float', 'ratio')
-                            if waveform_pv == 'release': plugins.add_plug_param(cvpj_l, pluginid, 'release', float(paramval)/1000, 'float', 'threshold')
+                            if waveform_pv == 'release': plugins.add_plug_param(cvpj_l, pluginid, 'release', float(paramval)/1000, 'float', 'release')
                             if waveform_pv == 'sidechainTrigger': plugins.add_plug_param(cvpj_l, pluginid, 'sidechain_on', bool(paramval), 'float', 'sidechain on')
                             if waveform_pv == 'threshold': plugins.add_plug_param(cvpj_l, pluginid, 'threshold', float(paramval), 'float', 'threshold')
 

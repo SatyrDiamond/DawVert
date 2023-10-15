@@ -3,6 +3,7 @@
 
 from functions import data_values
 from functions import params
+from functions import placements
 
 def r_getduration(projJ):
     trackplacements = projJ['track_placements']
@@ -80,6 +81,36 @@ def add_timemarker_timesig(cvpj_l, i_name, i_position, i_numerator, i_denominato
 # -------------------------------------------------------------- Song Meta -----------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------------------------------
+
+def add_timesig_lengthbeat(cvpj_l, patternLength, notesPerBeat):
+    timesig = placements.get_timesig(patternLength, notesPerBeat)
+    cvpj_l['timesig'] = timesig
+    return timesig
+
+def add_timesig(cvpj_l, i_num, i_denom):
+    cvpj_l['timesig'] = [i_num, i_denom]
+
+def get_timesig(cvpj_l):
+    return cvpj_l['timesig'] if 'timesig' in cvpj_l else [4,4]
+
+def get_loopdata(cvpj_l, cvpj_type):
+    if cvpj_type == 'r': loop_end = r_getduration(cvpj_l)-64
+    if cvpj_type == 'm': loop_end = m_getduration(cvpj_l)-64
+
+    loop_on, loop_start = False, 0
+    if 'timemarkers' in cvpj_l:
+        for timemarkdata in cvpj_l['timemarkers']:
+            if 'type' in timemarkdata:
+                if timemarkdata['type'] == 'loop': 
+                    loop_start = timemarkdata['position']
+                    loop_on = True
+                    break
+                if timemarkdata['type'] == 'loop_area': 
+                    loop_start = timemarkdata['position']
+                    loop_end = timemarkdata['end']
+                    loop_on = True
+                    break
+    return loop_on, loop_start, loop_end
 
 def add_info(cvpj_l, i_type, i_value):
     data_values.nested_dict_add_value(cvpj_l, ['info', i_type], i_value)

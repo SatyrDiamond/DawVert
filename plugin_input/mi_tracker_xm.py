@@ -395,7 +395,6 @@ class input_xm(plugin_input.base):
         cvpj_l['use_instrack'] = False
         
         cvpj_l['playlist'] = cvpj_l_playlist
-        cvpj_l['timesig'] = [4,4]
         song.add_param(cvpj_l, 'bpm', xm_song_bpm)
         return json.dumps(cvpj_l)
 

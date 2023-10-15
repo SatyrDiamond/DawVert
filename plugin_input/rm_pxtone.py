@@ -408,7 +408,6 @@ class input_pxtone(plugin_input.base):
                 #    )
 
                 if unit_event[2] == 2: cur_pitch = unit_event[3][0]+12
-
                 if unit_event[2] == 6: cur_porta = unit_event[3]/timebase
                 if unit_event[2] == 12: cur_voice = unit_event[3]
                 position_global = unit_event[0]
@@ -426,17 +425,12 @@ class input_pxtone(plugin_input.base):
                 
                 if t_notelist[unit_eventnum] != []:
                     lastnotedata = t_notelist[unit_eventnum][-1]
-                    if 'notemod' not in lastnotedata:
-                        lastnotedata['notemod'] = {}
-                        lastnotedata['notemod']['slide'] = []
-                        lastnotedata['notemod']['auto'] = {}
+                    if 'notemod' not in lastnotedata: lastnotedata['notemod'] = {'slide': [], 'auto': {}}
 
                 if unit_event[2] == 5: auto_vol[unit_event[0]] = unit_event[3]/128
                 if unit_event[2] == 15: auto_pan[unit_event[0]] = ((unit_event[3]/128)-0.5)*2
                 if unit_event[2] == 14: auto_pitch[unit_event[0]] = math.log2(get_float(unit_event[3]))*12
-
-                if unit_event[2] == 2:
-                    if 0 <= (unit_event[0]-noteend)+notedur < notedur: lastnotedata['notemod']['slide'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'duration': cur_porta, 'key': cur_pitch-noteon_note})
+                if unit_event[2] == 2 and (0 <= (unit_event[0]-noteend)+notedur < notedur): lastnotedata['notemod']['slide'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'duration': cur_porta, 'key': cur_pitch-noteon_note})
 
                 if velpanpos == unit_event[0]:
                     if unit_event[2] == 3: t_notelist[unit_eventnum][-1]['pan'] = ((unit_event[3]/128)-0.5)*2
@@ -454,8 +448,7 @@ class input_pxtone(plugin_input.base):
             cvpj_notelist = t_notelist[unitnum]
             cvpj_trackparams = trackautop[unitnum]
             for cvpj_note in cvpj_notelist: note_mod.notemod_conv(cvpj_note)
-            if unitnum in ptcop_name_unit: plt_name = ptcop_name_unit[unitnum]
-            else: plt_name = None
+            plt_name = ptcop_name_unit[unitnum] if unitnum in ptcop_name_unit else None
             cvpj_instcolor = getcolor()
             cvpj_trackid = str(unitnum+1)
             tracks_rm.track_create(cvpj_l, cvpj_trackid, 'instruments')
@@ -467,10 +460,8 @@ class input_pxtone(plugin_input.base):
             tracks_rm.track_param_add(cvpj_l, cvpj_trackid, 'pitch', cvpj_trackparams[2], 'float')
 
         for voicenum in range(ptcop_voice_num):
-            if voicenum in ptcop_name_voice: cvpj_instname = ptcop_name_voice[voicenum]
-            else: cvpj_instname = ''
-            if t_voice_data[voicenum][0] == 'sampler': cvpj_instvol = 0.3
-            else: cvpj_instvol = 1.0
+            cvpj_instname = ptcop_name_voice[voicenum] if voicenum in ptcop_name_voice else ''
+            cvpj_instvol = 0.3 if t_voice_data[voicenum][0] == 'sampler' else 1.0
             pluginid = plugins.get_id()
 
             cvpj_instid = 'ptcop_'+str(voicenum)
@@ -492,7 +483,7 @@ class input_pxtone(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
-        cvpj_l['timesig'] = [ptcop_mas_beat, 4]
+        song.add_timesig(cvpj_l, ptcop_mas_beat, 4)
 
         if ptcop_song_name != None: song.add_info(cvpj_l, 'title', ptcop_song_name)
         if ptcop_song_comment != None: song.add_info_msg(cvpj_l, 'text', ptcop_song_comment)

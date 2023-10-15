@@ -851,7 +851,8 @@ class input_lmms(plugin_input.base):
         cvpj_pitch = float(lmms_auto_getvalue(headX, 'masterpitch', 0, 'float', None, ['main', 'pitch']))
         timesig_numerator = lmms_auto_getvalue(headX, 'timesig_numerator', 4, 'int', None, None)
         timesig_denominator = lmms_auto_getvalue(headX, 'timesig_denominator', 4, 'int', None, None)
-        cvpj_l['timesig'] = [timesig_numerator, timesig_denominator]
+
+        song.add_timesig(cvpj_l, timesig_numerator, timesig_denominator)
 
         song.add_param(cvpj_l, 'bpm', cvpj_bpm)
         song.add_param(cvpj_l, 'vol', cvpj_vol)

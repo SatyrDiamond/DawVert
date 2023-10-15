@@ -29,12 +29,8 @@ onebd_colors = [
 
 def tnotedata_to_cvpj_nl(cvpj_notelist, instid, in_notedata, note):
     for tnote in in_notedata:
-        duration = 1
-        if 'duration' in tnote[1]: duration = tnote[1]['duration']
-        cvpj_notelist.append(
-            note_data.mx_makenote(instid, tnote[0], duration, note, tnote[1]['velocity'], 0)
-            )
-
+        duration = tnote[1]['duration'] if 'duration' in tnote[1] else 1
+        cvpj_notelist.append(note_data.mx_makenote(instid, tnote[0], duration, note, tnote[1]['velocity'], 0))
     return cvpj_notelist
 
 def get_instids(instdata):
@@ -184,7 +180,6 @@ class input_1bitdragon(plugin_input.base):
                 tracks_m.inst_param_add(cvpj_l, part_used_instrument, 'vol', usedinstdata['volume'], 'float')
                 tracks_m.inst_param_add(cvpj_l, part_used_instrument, 'enabled', usedinstdata['on'], 'bool')
 
-        cvpj_l['timesig'] = [4, 4]
         song.add_param(cvpj_l, 'bpm', onebitd_bpm)
 
         tracks_master.create(cvpj_l, onebitd_volume)

@@ -119,10 +119,10 @@ class input_flp(plugin_input.base):
         ppq = FL_Main['ppq']
 
         cvpj_l = {}
-        cvpj_l['timesig'] = [4, 4]
+        timesig_Numerator = FL_Main['Numerator'] if 'Numerator' in FL_Main else 4
+        timesig_Denominator = FL_Main['Denominator'] if 'Denominator' in FL_Main else 4
+        song.add_timesig(cvpj_l, timesig_Numerator, timesig_Denominator)
 
-        if 'Numerator' in FL_Main: cvpj_l['timesig'][0] = FL_Main['Numerator']
-        if 'Denominator' in FL_Main: cvpj_l['timesig'][1] = FL_Main['Denominator']
         if 'MainPitch' in FL_Main: song.add_param(cvpj_l, 'pitch', struct.unpack('h', struct.pack('H', FL_Main['MainPitch']))[0]/100)
         if 'Tempo' in FL_Main: song.add_param(cvpj_l, 'bpm', FL_Main['Tempo'])
         if 'Shuffle' in FL_Main: song.add_param(cvpj_l, 'shuffle', FL_Main['Shuffle']/128)

@@ -567,6 +567,6 @@ class input_cvpj_r(plugin_input.base):
         cvpj_l['use_fxrack'] = False
 
         song.add_param(cvpj_l, 'bpm', CausticData['Tempo'])
-        cvpj_l['timesig'] = [CausticData['Numerator'], 4]
+        song.add_timesig(cvpj_l, CausticData['Numerator'], 4)
         return json.dumps(cvpj_l)
 

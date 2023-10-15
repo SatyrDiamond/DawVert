@@ -16,6 +16,7 @@ from functions import notelist_data
 from functions import xtramath
 from functions import plugins
 from functions import params
+from functions import song
 from functions_tracks import tracks_mi
 
 filename_len = {}
@@ -119,11 +120,7 @@ class output_cvpjs(plugin_output.base):
 
         FL_Main['ProjectDataPath'] = ''
 
-        if 'timesig' in cvpj_l:
-            timesig = cvpj_l['timesig']
-            FL_Main['Numerator'] = timesig[0]
-            FL_Main['Denominator'] = timesig[1]
-
+        FL_Main['Numerator'], FL_Main['Denominator'] = song.get_timesig(cvpj_l)
         FL_Main['Tempo'] = params.get(cvpj_l, [], 'bpm', 140)[0]
         FL_Main['MainPitch'] = struct.unpack('H', struct.pack('h', int(params.get(cvpj_l, [], 'pitch', 0)[0])))[0]
         FL_Main['Shuffle'] = params.get(cvpj_l, [], 'shuffle', 0)[0]*128

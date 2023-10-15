@@ -103,6 +103,8 @@ lc_instlist[129]= ['_EXT_E'          ,'_EXT'      ,0  ,1  ,0  ,False ,False]
 
 used_instruments = []
 
+def decode_tempo(inpit_val): return (3614.75409836/inpit_val)/2
+
 def decode_pan(panbyte):
     if panbyte == 8: return 0
     elif panbyte == 15: return 1
@@ -241,8 +243,7 @@ def lc_parse_placements(sl_json, tracknum, pl_color, ischord):
     position = 0
     currentchord = None
     for sle in sl_json:
-        if 'play_notes' in sle: length = sle['play_notes']
-        else: length = 32
+        length = sle['play_notes'] if 'play_notes' in sle else 32
         lc_notes = sle['vl']
 
         if ischord == False: notelist = lc_parse_voice(lc_notes, tracknum, length)
@@ -337,7 +338,7 @@ class input_lc(plugin_input.base):
         prevtempo = 0
         for chandata in lc_channels[0]["sl"]:
             duration = chandata['play_notes'] if 'play_notes' in chandata else 32
-            bpm = (3614.75409836/chandata['play_speed'])/2 if 'play_speed' in chandata else 120
+            bpm = decode_tempo(chandata['play_speed'] if 'play_speed' in chandata else lc_speed)
             tempopldata = auto.makepl(position, duration, [{"position": 0, "value": bpm}])
             if prevtempo != bpm:
                 auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], tempopldata)
@@ -348,7 +349,7 @@ class input_lc(plugin_input.base):
 
         cvpj_l['do_addloop'] = True
         
-        song.add_param(cvpj_l, 'bpm', (3614.75409836/lc_speed)/2)
+        song.add_param(cvpj_l, 'bpm', decode_tempo(lc_speed))
 
         return json.dumps(cvpj_l)
 

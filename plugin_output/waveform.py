@@ -10,6 +10,7 @@ from functions import data_values
 from functions import note_data
 from functions import params
 from functions import plugins
+from functions import song
 from functions_plugin import waveform_values
 from functions_tracks import tracks_r
 import math
@@ -191,7 +192,7 @@ class output_waveform_edit(plugin_output.base):
         wf_numerator = 4
         wf_denominator = 4
         wf_bpmdata = params.get(cvpj_l, [], 'bpm', 120)[0]
-        if 'timesig' in cvpj_l: wf_numerator, wf_denominator = cvpj_l['timesig']
+        wf_numerator, wf_denominator = song.get_timesig(cvpj_l)
 
         tempomul = 120/wf_bpmdata
 

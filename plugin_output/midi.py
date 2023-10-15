@@ -11,6 +11,7 @@ from functions import notelist_data
 from functions import xtramath
 from functions import params
 from functions import colors
+from functions import song
 from functions_tracks import tracks_r
 
 unusedchannel = 0
@@ -61,7 +62,7 @@ class output_cvpj_f(plugin_output.base):
 
         if 'track_data' in cvpj_l and 'track_order' in cvpj_l:
             #print('[output-midi] Trk# | Ch# | Bnk | Prog | Key | Name')
-            print('[output-midi] Trk# | Ch# | Prog | Name')
+            #print('[output-midi] Trk# | Ch# | Prog | Name')
 
             for _ in range(len(cvpj_l['track_order'])+1):
                 multi_miditrack.append(mido.MidiTrack())
@@ -72,7 +73,7 @@ class output_cvpj_f(plugin_output.base):
             midi_numerator = 4
             midi_denominator = 4
 
-            if 'timesig' in cvpj_l: midi_numerator, midi_denominator = cvpj_l['timesig']
+            midi_numerator, midi_denominator = song.get_timesig(cvpj_l)
             midi_tempo = mido.bpm2tempo(params.get(cvpj_l, [], 'bpm', 120)[0])
 
             multi_miditrack[0].append(mido.MetaMessage('time_signature', numerator=midi_numerator, denominator=midi_denominator, clocks_per_click=24, notated_32nd_notes_per_beat=8, time=0))
@@ -132,8 +133,7 @@ class output_cvpj_f(plugin_output.base):
     
                 #if midi_key == None: print('---', end=" | ")
                 #else: print(str(midi_key).rjust(3), end=" | ")
-                print(midi_trackname)
-
+  
                 miditrack = multi_miditrack[tracknum+1]
 
                 if midi_trackname != '': miditrack.append(mido.MetaMessage('track_name', name=midi_trackname, time=0))

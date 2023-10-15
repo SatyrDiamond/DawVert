@@ -513,7 +513,7 @@ class input_famistudio(plugin_input.base):
                 durationnum += 1
             playlistnum += 1
 
-        timesig = placements.get_timesig(PatternLength, fst_beatlength)
+        timesig = song.add_timesig_lengthbeat(cvpj_l, PatternLength, fst_beatlength)
         placements.make_timemarkers(cvpj_l, timesig, PatternLengthList, LoopPoint)
         if 'Name' in fst_Main: song.add_info(cvpj_l, 'title', fst_Main['Name'])
         if 'Author' in fst_Main: song.add_info(cvpj_l, 'author', fst_Main['Author'])

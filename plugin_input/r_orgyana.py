@@ -137,7 +137,7 @@ class input_orgyana(plugin_input.base):
         cvpj_l['do_singlenotelistcut'] = True
 
         song.add_param(cvpj_l, 'bpm', (1/(org_wait/122))*122)
-        cvpj_l['timesig'] = [org_stepsperbar, org_beatsperstep]
+        song.add_timesig(cvpj_l, org_stepsperbar, org_beatsperstep)
        
         if org_loop_beginning != 0: song.add_timemarker_looparea(cvpj_l, None, org_loop_beginning, org_loop_end)
         return json.dumps(cvpj_l)

@@ -268,12 +268,8 @@ class input_pxtone(plugin_input.base):
                 ogg_path = samplefolder + 'ptcop_' + str(ptcop_voice_num+1).zfill(2) + '.ogg'
                 ogg_fileobj = open(ogg_path, 'wb')
                 ogg_fileobj.write(song_file.read(ptcop_ogg_datasize))
-
                 plugindata = {'file': ogg_path, 'trigger': 'normal'}
-
-                if ptcop_ogg_smooth == True: plugindata['interpolation'] = "linear"
-                else: plugindata['interpolation'] = "none"
-
+                plugindata['interpolation'] = "linear" if ptcop_ogg_smooth else "none"
                 t_voice_data.append(['sampler', plugindata, ptcop_ogg_basic_key_field-60])
                 ptcop_voice_num += 1
 

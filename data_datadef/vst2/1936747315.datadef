@@ -1,0 +1,17 @@
+# VST Speek
+
+def_start        |main
+header           |raw,4                          |73706b33
+part             |byte                           |pitch
+part             |byte                           |speed
+part             |byte                           |mouth
+part             |byte                           |throat
+part             |byte                           |sing_mode
+part             |byte                           |filter_on
+part             |byte                           |phonetic_mode
+part             |byte                           |
+part             |string_l:varint                |preset_name
+part             |string_l:varint                |speech_txt
+def_end
+
+

@@ -392,8 +392,10 @@ def song_end(cvpj_l):
 				fxrack.addsend(cvpj_l, midi_channum+1, sendtofx, out_param, sendname)
 
 	if usedeffects[0] == True:
-		plugins.add_plug(cvpj_l, 'plugin-reverb', 'simple', 'reverb-send')
-		plugins.add_plug(cvpj_l, 'plugin-chorus', 'simple', 'chorus-send')
+		plugins.add_plug(cvpj_l, 'plugin-reverb', 'simple', 'reverb')
+		plugins.add_plug(cvpj_l, 'plugin-chorus', 'simple', 'chorus')
+		plugins.add_plug_fxdata(cvpj_l, 'master-reverb', 1, 0.5)
+		plugins.add_plug_fxdata(cvpj_l, 'master-chorus', 1, 0.5)
 		plugins.add_plug_fxvisual(cvpj_l, 'plugin-reverb', 'Reverb', None)
 		plugins.add_plug_fxvisual(cvpj_l, 'plugin-chorus', 'Chorus', None)
 		fxrack.add(cvpj_l, song_channels+1, 1.0, None, name="[S] Reverb", color=[0.4, 0.4, 0.4])

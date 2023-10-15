@@ -69,14 +69,10 @@ class input_mariopaint_msq(plugin_input.base):
             msq_name, fmf_val = line.rstrip().split('=')
             msq_values[msq_name] = fmf_val
 
-        if 'TIME44' in msq_values:
-            if msq_values['TIME44'] == 'TRUE': msq_measure = 4
-            else: msq_measure = 2
+        if 'TIME44' in msq_values: msq_measure = 4 if msq_values['TIME44'] == 'TRUE' else 2
         else: msq_measure = 4
 
-        if 'TEMPO' in msq_values: msq_tempo = int(msq_values['TEMPO'])
-        else: msq_tempo = 180
-
+        msq_tempo = int(msq_values['TEMPO']) if 'TEMPO' in msq_values else 180
         msq_tempo, notelen = song.get_lower_tempo(msq_tempo, 4, 180)
         msq_score = msq_values['SCORE']
         msq_score_size = len(msq_score)

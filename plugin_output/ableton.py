@@ -9,6 +9,7 @@ from functions import auto
 from functions import audio
 from functions import plugins
 from functions import params
+from functions import song
 from functions_plugin import ableton_values
 from functions_tracks import tracks_r
 import plugin_output
@@ -1500,7 +1501,10 @@ class output_cvpj(plugin_output.base):
             x_SendPreBool.set('Value', 'false')
 
         create_Scenes(x_LiveSet)
-        create_transport(x_LiveSet, 8, 16, 'false')
+
+        loop_on, loop_start, loop_end = song.get_loopdata(cvpj_l, 'r')
+
+        create_transport(x_LiveSet, str(loop_start/4), str(loop_end/4), abl_bool_val[int(loop_on)])
         create_songmastervalues(x_LiveSet)
         ET.SubElement(x_LiveSet, "SignalModulations")
         addvalue(x_LiveSet, 'GlobalQuantisation', '4')

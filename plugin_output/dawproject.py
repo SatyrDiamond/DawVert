@@ -13,6 +13,7 @@ from functions import data_values
 from functions import params
 from functions import auto
 from functions import colors
+from functions import song
 from functions_tracks import tracks_r
 
 truefalse = ['false','true']
@@ -152,7 +153,7 @@ class output_cvpj(plugin_output.base):
 
         # ----------------------------------------- Transport -----------------------------------------
 
-        dp_numerator, dp_denominator = data_values.get_value(cvpj_l, 'timesig', [4,4])
+        dp_numerator, dp_denominator = song.get_timesig(cvpj_l)
         
         x_project_tr = ET.SubElement(x_project, "Transport")
         param_cvpj2dawp(x_project_tr, 'Tempo', cvpj_l, 'bpm', 999, 20, 'dawvert_bpm', 140, unit='bpm')

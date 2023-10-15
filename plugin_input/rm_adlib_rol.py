@@ -261,7 +261,7 @@ class input_adlib_rol(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
-        cvpj_l['timesig'] = [rol_header_beatMeasure, 4]
+        song.add_timesig(cvpj_l, rol_header_beatMeasure, 4)
         
         song.add_param(cvpj_l, 'bpm', t_tempo_data[1])
         return json.dumps(cvpj_l)

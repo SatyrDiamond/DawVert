@@ -93,7 +93,6 @@ class input_cvpj_f(plugin_input.base):
         
         cvpj_l['use_instrack'] = False
         cvpj_l['use_fxrack'] = False
-        cvpj_l['timesig'] = [4, 4]
 
         song.add_param(cvpj_l, 'bpm', mmc_bpm)
         return json.dumps(cvpj_l)

@@ -98,7 +98,7 @@ class input_petaporon(plugin_input.base):
 
         cvpj_l['do_singlenotelistcut'] = True
 
-        cvpj_l['timesig'] = [sndstat_data['c'], 4]
+        song.add_timesig(cvpj_l, sndstat_data['c'], 4)
         song.add_param(cvpj_l, 'bpm', sndstat_data['t'])
 
         return json.dumps(cvpj_l)

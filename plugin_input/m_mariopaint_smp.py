@@ -92,7 +92,6 @@ class input_mariopaint_smp(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
-        cvpj_l['timesig'] = [4, 4]
         song.add_param(cvpj_l, 'bpm', smp_tempo)
         return json.dumps(cvpj_l)
 

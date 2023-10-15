@@ -219,7 +219,8 @@ class input_ceol(plugin_input.base):
                     cvpj_l_placement = placement_data.makepl_n_mi(plpos*ceol_basic_patternlength, ceol_basic_patternlength, 'ceol_'+str(plpatnum).zfill(3))
                     tracks_mi.add_pl(cvpj_l, plnum+1, 'notes', cvpj_l_placement)
 
-        timesig = placements.get_timesig(ceol_basic_patternlength, ceol_basic_barlength)
+        song.add_timesig_lengthbeat(cvpj_l, ceol_basic_patternlength, ceol_basic_barlength)
+        song.add_param(cvpj_l, 'bpm', ceol_basic_bpm)
 
         cvpj_l['do_addloop'] = True
         
@@ -227,5 +228,4 @@ class input_ceol(plugin_input.base):
         cvpj_l['use_fxrack'] = False
         
         cvpj_l['keynames_data'] = cvpj_l_keynames_data
-        song.add_param(cvpj_l, 'bpm', ceol_basic_bpm)
         return json.dumps(cvpj_l)

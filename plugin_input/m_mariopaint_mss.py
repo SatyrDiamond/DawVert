@@ -100,7 +100,7 @@ class input_mariopaint_mss(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
-        cvpj_l['timesig'] = [mss_measure, 4]
+        song.add_timesig(cvpj_l, mss_measure, 4)
         song.add_param(cvpj_l, 'bpm', mss_tempo)
         return json.dumps(cvpj_l)
 

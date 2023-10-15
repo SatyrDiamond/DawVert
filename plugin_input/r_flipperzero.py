@@ -93,7 +93,6 @@ class input_fmf(plugin_input.base):
         tracks_r.add_pl(cvpj_l, 'flipperzero', 'notes', placement_data.nl2pl(notelist))
 
         cvpj_l['do_singlenotelistcut'] = True
-        cvpj_l['timesig'] = [4, 4]
 
         song.add_param(cvpj_l, 'bpm', fmf_BPM)
 

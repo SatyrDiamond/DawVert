@@ -120,8 +120,7 @@ class input_gt_mnbs(plugin_input.base):
         if nbs_file.tell() <= nbs_len:
             for layernum in range(nbs_layercount):
                 layername = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
-                if layername != None: 
-                    tracks_rm.track_visual(cvpj_l, str(layernum+1), name=layername)
+                if layername != None: tracks_rm.track_visual(cvpj_l, str(layernum+1), name=layername)
                 if nbs_newformat == 1: nbs_file.read(3)
 
         # OUTPUT
@@ -187,7 +186,7 @@ class input_gt_mnbs(plugin_input.base):
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
         
-        cvpj_l['timesig'] = [timesig_numerator, 4]
+        song.add_timesig(cvpj_l, timesig_numerator, 4)
         song.add_param(cvpj_l, 'bpm', tempo)
         return json.dumps(cvpj_l)
 

@@ -13,6 +13,7 @@ from functions import colors
 from functions import params
 from functions import data_values
 from functions import plugins
+from functions import song
 from functions_tracks import tracks_r
 
 def addvalue(xmltag, name, value):
@@ -71,9 +72,7 @@ def maketrack_synth(xmltag, insttrackdata, portnum):
     else: addvalue(x_synthtrack, 'name', 'Out')
     if 'vol' in insttrackdata: addcontroller(x_synthtrack, 0, insttrackdata['vol'], '#ff0000')
     addvalue(x_synthtrack, 'record', 0)
-    track_mute = 0
-    if 'muted' in insttrackdata: track_mute = insttrackdata['muted']
-    else: track_mute = 0
+    track_mute = insttrackdata['muted'] if 'muted' in insttrackdata else 0
     if 'color' in insttrackdata: addvalue(x_synthtrack, 'color', '#'+colors.rgb_float_to_hex(insttrackdata['color']))
     addvalue(x_synthtrack, 'solo', 0)
     addvalue(x_synthtrack, 'channels', 2)
@@ -231,11 +230,14 @@ class output_cvpj(plugin_output.base):
         x_song = ET.SubElement(x_muse, "song")
         addvalue(x_song, 'info', '')
         addvalue(x_song, 'showinfo', 1)
+
+        loop_on, loop_start, loop_end = song.get_loopdata(cvpj_l, 'r')
+
         addvalue(x_song, 'cpos', 0) #start
-        addvalue(x_song, 'rpos', 0) #end
-        addvalue(x_song, 'lpos', 0)
+        addvalue(x_song, 'rpos', int(loop_end*NoteStep)) #end
+        addvalue(x_song, 'lpos', int(loop_start*NoteStep))
         addvalue(x_song, 'master', 1)
-        addvalue(x_song, 'loop', 0)
+        addvalue(x_song, 'loop', int(loop_on))
         addvalue(x_song, 'punchin', 0)
         addvalue(x_song, 'punchout', 0)
         addvalue(x_song, 'record', 0)
@@ -257,18 +259,15 @@ class output_cvpj(plugin_output.base):
 
         for cvpj_trackid, cvpj_trackdata, track_placements in tracks_r.iter(cvpj_l):
             if cvpj_trackdata['type'] == 'instrument':
-                track_placements_islaned = False
-                if 'laned' in track_placements: 
-                    if track_placements['laned'] == 1: 
-                        track_placements_islaned = True
+                track_placements_islaned = bool(track_placements['laned']) if 'laned' in track_placements else False
+
                 if track_placements_islaned == False:
                     if 'notes' in track_placements: 
                         maketrack_midi(x_song, track_placements['notes'], cvpj_trackdata['name'], synthidnum, cvpj_trackdata)
                 else:
                     for laneid in track_placements['laneorder']:
                         lanedata = track_placements['lanedata'][laneid]
-                        lanename = ''
-                        if 'name' in lanedata: lanename = lanedata['name']
+                        lanename = lanedata['name'] if 'name' in lanedata else ''
                         maketrack_midi(x_song, lanedata['notes'], lanename, synthidnum, cvpj_trackdata)
     
                 maketrack_synth(x_song, cvpj_trackdata, synthidnum)
@@ -281,7 +280,7 @@ class output_cvpj(plugin_output.base):
 
         muse_bpm = int(params.get(cvpj_l, [], 'bpm', 120)[0])
 
-        muse_numerator, muse_denominator = data_values.get_value(cvpj_l, 'timesig', [4,4])
+        muse_numerator, muse_denominator = song.get_timesig(cvpj_l)
 
         x_tempolist = ET.SubElement(x_song, "tempolist")
         x_tempolist.set('fix', "0")

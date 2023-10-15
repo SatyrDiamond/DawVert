@@ -15,6 +15,7 @@ from functions import colors
 from functions import notelist_data
 from functions import params
 from functions import xtramath
+from functions import song
 from functions_tracks import tracks_r
 
 def make_vst2(rpp_fxchain, cvpj_plugindata): 
@@ -218,10 +219,8 @@ class output_reaper(plugin_output.base):
         cvpj_l = json.loads(convproj_json)
 
         reaper_tempo = 140
-        reaper_numerator = 4
-        reaper_denominator = 4
 
-        if 'timesig' in cvpj_l: reaper_numerator, reaper_denominator = cvpj_l['timesig']
+        reaper_numerator, reaper_denominator = song.get_timesig(cvpj_l)
         reaper_tempo = params.get(cvpj_l, [], 'bpm', 120)[0]
 
         tempomul = reaper_tempo/120
@@ -346,7 +345,6 @@ class output_reaper(plugin_output.base):
 
             if 'notes' in track_placements: convert_placementdata(rpp_trackdata, track_placements['notes'], 'notes', track_uuid)
             if 'audio' in track_placements: convert_placementdata(rpp_trackdata, track_placements['audio'], 'audio', track_uuid)
-
 
             rppdata.children.append(rpp_obj_data('TRACK', [track_uuid], rpp_trackdata))
 

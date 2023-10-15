@@ -223,6 +223,6 @@ class input_soundclub2(plugin_input.base):
 
         cvpj_l['do_addloop'] = True
         song.add_info_msg(cvpj_l, 'text', sc2_songdisc)
-        cvpj_l['timesig'] = [sc2_headerdata[4], sc2_headerdata[5]]
+        song.add_timesig(cvpj_l, sc2_headerdata[4], sc2_headerdata[5])
         song.add_param(cvpj_l, 'bpm', sc2_globaltempo)
         return json.dumps(cvpj_l)

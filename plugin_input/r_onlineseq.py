@@ -346,12 +346,12 @@ class input_onlinesequencer(plugin_input.base):
 
         timesig_numerator = 4
         if '2' in onlseq_data_main: timesig_numerator = int(onlseq_data_main['2'])
+        song.add_timesig(cvpj_l, timesig_numerator, 4)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
 
         cvpj_l['keynames_data'] = cvpj_l_keynames_data
         song.add_param(cvpj_l, 'bpm', bpm)
-        cvpj_l['timesig'] = [timesig_numerator, 4]
 
         return json.dumps(cvpj_l)

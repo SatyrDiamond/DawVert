@@ -106,7 +106,6 @@ class input_piyopiyo(plugin_input.base):
             tracks_r.add_pl(cvpj_l, str(tracknum), 'notes', t_placements)
 
         cvpj_l['do_addloop'] = True
-        cvpj_l['timesig'] = [4, 4]
         cvpj_l['do_singlenotelistcut'] = True
         song.add_param(cvpj_l, 'bpm', bpm)
 

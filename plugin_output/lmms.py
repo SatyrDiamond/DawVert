@@ -16,6 +16,7 @@ from functions import note_mod
 from functions import notelist_data
 from functions import colors
 from functions import params
+from functions import song
 from functions_tracks import auto_id
 from functions_tracks import tracks_r
 
@@ -281,8 +282,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             if point_value_type == 'samples' and 'length' in cvpj_plugindata:
                 trkJ_length = cvpj_plugindata['length']
                 if trkJ_length != 0:
-                    if 'start' in cvpj_plugindata: xml_sampler.set('sframe', str(cvpj_plugindata['start']/trkJ_length))
-                    else: xml_sampler.set('sframe', '0')
+                    xml_sampler.set('sframe', str(cvpj_plugindata['start']/trkJ_length) if 'start' in cvpj_plugindata else '0')
                     if 'loop' in cvpj_plugindata:
                         trkJ_loop = cvpj_plugindata['loop']
                         if 'points' in trkJ_loop:
@@ -294,8 +294,7 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
                             xml_sampler.set('eframe', str(end))
 
             if point_value_type == 'percent':
-                if 'start' in cvpj_plugindata: xml_sampler.set('sframe', str(cvpj_plugindata['start']))
-                else: xml_sampler.set('sframe', '0')
+                xml_sampler.set('sframe', str(cvpj_plugindata['start']) if 'start' in cvpj_plugindata else '0')
                 if 'loop' in cvpj_plugindata:
                     trkJ_loop = cvpj_plugindata['loop']
                     if 'points' in trkJ_loop:
@@ -409,11 +408,10 @@ def lmms_encode_notelist(xmltag, json_notelist):
         patX = ET.SubElement(xmltag, "note")
         key = json_note['key'] + 60
         position = int(round(float(json_note['position']) * 12))
-        pan = 0
-        if 'pan' in json_note: pan = oneto100(json_note['pan'])
         duration = int(round(float(json_note['duration']) * 12))
-        if 'vol' in json_note: vol = oneto100(json_note['vol'])
-        else: vol = 100
+        pan = oneto100(json_note['pan']) if 'pan' in json_note else 0
+        vol = oneto100(json_note['vol']) if 'vol' in json_note else 100
+        
         patX.set('key', str(key))
         patX.set('pos', str(int(round(position))))
         patX.set('pan', str(pan))
@@ -459,8 +457,7 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     trkX_insttr = ET.SubElement(xmltag, "instrumenttrack")
     trkX_insttr.set('usemasterpitch', "1")
     trkX_insttr.set('pitch', "0")
-    if 'plugin' in instJ: instplugin = instJ['plugin']
-    else: instplugin = None
+    instplugin = instJ['plugin'] if 'plugin' in instJ else None
 
     trkX_insttr.set('fxch', str(tracks_r.track_fxrackchan_get(cvpj_l, trackid)))
     trkX_insttr.set('pitchrange', "12")
@@ -527,13 +524,9 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
                 json_notelist = json_placement['notelist']
                 patX = ET.SubElement(xmltag, "pattern")
                 patX.set('pos', str(int(json_placement['position'] * 12)))
-                if 'muted' in json_placement: 
-                    if json_placement['muted'] == True: patX.set('muted', "1")
-                    if json_placement['muted'] == False: patX.set('muted', "0")
-                else: patX.set('muted', "0")
+                patX.set('muted', str(int(json_placement['muted'] if 'muted' in json_placement else 0)))
                 patX.set('steps', "16")
-                patX.set('name', "")
-                if 'name' in json_placement: patX.set('name', json_placement['name'])
+                patX.set('name', json_placement['name'] if 'name' in json_placement else "" )
                 patX.set('type', "1")
                 if 'color' in json_placement: patX.set('color', '#' + colors.rgb_float_to_hex(json_placement['color']))
                 lmms_encode_notelist(patX, json_notelist)
@@ -805,19 +798,15 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
         fxcX.set('num', str(num))
         print('[output-lmms] FX ' + str(num))
 
-        if 'name' in fxchannelJ: name = fxchannelJ['name']
-        else: name = 'FX ' + str(num)
+        name = fxchannelJ['name'] if 'name' in fxchannelJ else 'FX '+str(num)
         print('[output-lmms]       Name: ' + name)
+        fxcX.set('name', data_values.xml_compat(name))
 
         if 'color' in fxchannelJ: fxcX.set('color', '#' + colors.rgb_float_to_hex(fxchannelJ['color']))
 
         add_auto_placements(1, None, ['fxmixer', num], 'vol', fxchannelJ, 'vol', fxcX, 'volume', 'FX '+str(num), 'Volume')
+        fxcX.set('muted', str(fxchannelJ['muted'] if 'muted' in fxchannelJ else 0))
 
-        if 'muted' in fxchannelJ: muted = fxchannelJ['muted']
-        else: muted = 0
-
-        fxcX.set('name', data_values.xml_compat(name))
-        fxcX.set('muted', str(muted))
         lmms_encode_fxchain(fxcX, fxchannelJ)
 
         if 'sends' in fxchannelJ:
@@ -875,8 +864,7 @@ def lmms_make_main_auto_track(autoidnum, autodata, visualname):
         xml_automationpattern.set('tens', "0")
         xml_automationpattern.set('name', visualname)
         xml_automationpattern.set('mute', "0")
-        if autodata_type != 'bool': xml_automationpattern.set('prog', "1")
-        else: xml_automationpattern.set('prog', "0")
+        xml_automationpattern.set('prog', "1" if autodata_type != 'bool' else "0")
         prevvalue = 0
         if 'points' in autoplacement:
             parse_auto(xml_automationpattern, autoplacement['points'], autodata_type)
@@ -978,13 +966,9 @@ class output_lmms(plugin_output.base):
         add_auto_placements(0, None, ['main'], 'pitch', cvpj_l, 'pitch', headX, 'masterpitch', 'Song', 'Pitch')
         add_auto_placements(1, [0, 100], ['main'], 'vol', cvpj_l, 'vol', headX, 'mastervol', 'Song', 'Volume')
 
-        if 'timesig' in cvpj_l:
-            timesig = cvpj_l['timesig']
-            headX.set("timesig_numerator", str(timesig[0]))
-            headX.set("timesig_denominator", str(timesig[1]))
-        else:
-            headX.set("timesig_numerator", str(4))
-            headX.set("timesig_denominator", str(4))
+        timesig = song.get_timesig(cvpj_l)
+        headX.set("timesig_numerator", str(timesig[0]))
+        headX.set("timesig_denominator", str(timesig[1]))
 
         lmms_encode_tracks(trkcX, trksJ, trkorderJ, trkplacementsJ)
 
@@ -1018,14 +1002,12 @@ class output_lmms(plugin_output.base):
 
         trksJ = cvpj_l['track_data'] if 'track_data' in trksJ else {}
         
-        if 'timemarkers' in cvpj_l:
-            for timemarkdata in cvpj_l['timemarkers']:
-                if 'type' in timemarkdata:
-                    if timemarkdata['type'] == 'loop_area':
-                        timelineX = ET.SubElement(songX, "timeline")
-                        timelineX.set("lp0pos", str(int(timemarkdata['position']*12)))
-                        timelineX.set("lpstate", '0')
-                        timelineX.set("lp1pos", str(int(timemarkdata['end']*12)))
+        loop_on, loop_start, loop_end = song.get_loopdata(cvpj_l, 'r')
+
+        timelineX = ET.SubElement(songX, "timeline")
+        timelineX.set("lp0pos", str(int(loop_start*12)))
+        timelineX.set("lpstate", str(int(loop_on)))
+        timelineX.set("lp1pos", str(int(loop_end*12)))
 
         outfile = ET.ElementTree(projX)
         

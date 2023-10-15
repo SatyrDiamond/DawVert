@@ -103,7 +103,7 @@ class input_soundation(plugin_input.base):
         cvpj_l = {}
 
         timeSignaturesplit = sndstat_data['timeSignature'].split('/')
-        cvpj_l['timesig'] = [int(timeSignaturesplit[0]), int(timeSignaturesplit[1])]
+        song.add_timesig(cvpj_l, int(timeSignaturesplit[0]), int(timeSignaturesplit[1]))
         bpm = sndstat_data['bpm']
         song.add_param(cvpj_l, 'bpm', bpm)
         bpmdiv = 120/bpm

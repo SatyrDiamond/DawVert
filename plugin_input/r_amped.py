@@ -163,7 +163,6 @@ def encode_devices(amped_tr_devices, trackid):
 
             plugins.add_plug_param(cvpj_l, pluginid, 'gain_out', eqdata['postGain'], 'float', 'Out Gain')
 
-
         elif devicetype[0] in ['Compressor', 'Expander']:
             if devicetype[0] == 'Compressor': plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
             if devicetype[0] == 'Expander': plugins.add_plug(cvpj_l, pluginid, 'universal', 'expander')
@@ -202,10 +201,27 @@ def encode_devices(amped_tr_devices, trackid):
 
                 plugins.add_filter(cvpj_l, pluginid, filter_enabled, filter_cutoff, filter_reso, filter_type, filter_subtype)
 
+        elif devicetype[0] == 'Vibrato':
+            plugins.add_plug(cvpj_l, pluginid, 'universal', 'vibrato')
+            for param in amped_tr_device['params']:
+                paramname = param['name']
+                paramvalue = param['value']
+                if paramname == 'delayLfoRateHz': plugins.add_plug_param(cvpj_l, pluginid, 'freq', paramvalue, 'float', 'freq')
+                if paramname == 'delayLfoDepth': plugins.add_plug_param(cvpj_l, pluginid, 'depth', paramvalue, 'float', 'depth')
+
+        elif devicetype[0] == 'Tremolo':
+            plugins.add_plug(cvpj_l, pluginid, 'universal', 'tremolo')
+            for param in amped_tr_device['params']:
+                paramname = param['name']
+                paramvalue = param['value']
+                if paramname == 'lfoARateHz': plugins.add_plug_param(cvpj_l, pluginid, 'freq', paramvalue, 'float', 'freq')
+                if paramname == 'lfoADepth': plugins.add_plug_param(cvpj_l, pluginid, 'depth', paramvalue, 'float', 'depth')
+
+
         elif devicetype[0] in ['BitCrusher', 'Chorus',  
         'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 
         'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
-        'Reverb', 'Tremolo', 'Vibrato']:
+        'Reverb', 'Tremolo']:
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', devicetype[0])
             do_idparams(amped_tr_device['params'], pluginid)
 

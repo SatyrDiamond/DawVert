@@ -162,7 +162,7 @@ def amped_parse_effects(fxchain_audio):
             devicedata['params'] = device_params
             outdata.append(devicedata)
 
-        elif plugtype[0] == 'universal' and plugtype[1] == 'delay-c':
+        elif plugtype == ['universal', 'delay-c']:
             d_time_type = plugins.get_plug_dataval(cvpj_l, pluginid, 'time_type', 'seconds')
             d_time = plugins.get_plug_dataval(cvpj_l, pluginid, 'time', 1)
             d_wet = plugins.get_plug_dataval(cvpj_l, pluginid, 'wet', fx_wet)
@@ -185,7 +185,7 @@ def amped_parse_effects(fxchain_audio):
             devicedata['params'] = device_params
             outdata.append(devicedata)
 
-        elif plugtype[0] == 'universal' and plugtype[1] == 'eq-bands':
+        elif plugtype == ['universal', 'eq-bands']:
             devicedata = amped_makedevice('EqualizerPro', 'Equalizer')
             devicedata['bypass'] = fx_on
             out_params = []
@@ -231,6 +231,28 @@ def amped_parse_effects(fxchain_audio):
 
             out_params.append({"id": paramnum, "name": 'postGain', "value": postGain})
             devicedata['params'] = out_params
+            outdata.append(devicedata)
+
+        elif plugtype == ['universal', 'vibrato']:
+            d_freq = plugins.get_plug_param(cvpj_l, pluginid, 'freq', 0)[0]
+            d_depth = plugins.get_plug_param(cvpj_l, pluginid, 'depth', 0)[0]
+            devicedata = amped_makedevice('Vibrato', 'Vibrato')
+            devicedata['bypass'] = fx_on
+            device_params = []
+            device_params.append({'id': 13, 'name': 'delayLfoRateHz', 'value': d_freq})
+            device_params.append({'id': 12, 'name': 'delayLfoDepth', 'value': d_depth})
+            devicedata['params'] = device_params
+            outdata.append(devicedata)
+
+        elif plugtype == ['universal', 'tremolo']:
+            d_freq = plugins.get_plug_param(cvpj_l, pluginid, 'freq', 0)[0]
+            d_depth = plugins.get_plug_param(cvpj_l, pluginid, 'depth', 0)[0]
+            devicedata = amped_makedevice('Tremolo', 'Tremolo')
+            devicedata['bypass'] = fx_on
+            device_params = []
+            device_params.append({'id': 6, 'name': 'lfoARateHz', 'value': d_freq})
+            device_params.append({'id': 5, 'name': 'lfoADepth', 'value': d_depth})
+            devicedata['params'] = device_params
             outdata.append(devicedata)
 
         elif plugtype[0] == 'native-amped':

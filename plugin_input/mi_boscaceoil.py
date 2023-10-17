@@ -90,7 +90,6 @@ class input_ceol(plugin_input.base):
             plugins.add_plug_data(cvpj_l, 'master-effect', 'time_type', 'seconds')
             plugins.add_plug_data(cvpj_l, 'master-effect', 'time', ((300*ceol_basic_effectvalue)/100)/1000 )
             plugins.add_plug_data(cvpj_l, 'master-effect', 'feedback', 0.1)
-            fxslot.insert(cvpj_l, ['master'], 'audio', 'master-effect')
             plugins.add_plug_fxvisual(cvpj_l, 'master-effect', globalfxname_vis[ceol_basic_effect], None)
 
         elif globalfxname[ceol_basic_effect] == 'chorus':
@@ -165,8 +164,6 @@ class input_ceol(plugin_input.base):
                     plugins.add_plug(cvpj_l, pluginid, 'native-boscaceoil', 'instrument')
                     plugins.add_plug_data(cvpj_l, pluginid, 'instrument', ceol_inst_number)
 
-            plugins.add_filter(cvpj_l, pluginid, True, calc_initcutoffval, ceol_inst_resonance, "lowpass", None)
-
             if ceol_inst_number == 363: t_key_offset.append(60)
             if ceol_inst_number == 364: t_key_offset.append(48)
             if ceol_inst_number == 365: t_key_offset.append(24)
@@ -176,6 +173,10 @@ class input_ceol(plugin_input.base):
             tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)
             tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
             tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
+
+            plugins.add_plug(cvpj_l, cvpj_instid+'_filter', 'universal', 'eq-bands')
+            plugins.add_eqband(cvpj_l, cvpj_instid+'_filter', 1, calc_initcutoffval, 0, 'low_pass', ceol_inst_resonance+1, None)
+            fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', cvpj_instid+'_filter')
 
             if ceol_inst_number <= 127:
                 tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'midi', 'output', {'program': ceol_inst_number})

@@ -6,6 +6,7 @@ import json
 import io
 import os
 import zipfile
+import math
 from functions import placements
 from functions import plugins
 from functions import data_values
@@ -215,9 +216,9 @@ def amped_parse_effects(fxchain_audio):
                 if band_type == 'high_shelf': eq_bandtype = 4
 
                 if band_type in ['low_pass', 'high_pass']: 
-                    band_res = xtramath.logpowmul(band_res, 0.5)
+                    band_res = xtramath.logpowmul(band_res, 0.5) if band_res != 0 else band_res
                 if band_type in ['low_pass', 'peak']: 
-                    band_res = xtramath.logpowmul(band_res, -1)
+                    band_res = xtramath.logpowmul(band_res, -1) if band_res != 0 else band_res
 
                 out_params.append({"id": paramnum, "name": filtername+'active', "value": band_on})
                 out_params.append({"id": paramnum+1, "name": filtername+'freq', "value": band_freq})
@@ -252,6 +253,22 @@ def amped_parse_effects(fxchain_audio):
             device_params = []
             device_params.append({'id': 6, 'name': 'lfoARateHz', 'value': d_freq})
             device_params.append({'id': 5, 'name': 'lfoADepth', 'value': d_depth})
+            devicedata['params'] = device_params
+            outdata.append(devicedata)
+
+        elif plugtype == ['universal', 'bitcrush']:
+            b_bits = plugins.get_plug_param(cvpj_l, pluginid, 'bits', 0)[0]
+            b_freq = plugins.get_plug_param(cvpj_l, pluginid, 'freq', 0)[0]
+
+            b_freq = (math.log(b_freq / 100) / math.log(2))/10
+
+            devicedata = amped_makedevice('BitCrusher', 'BitCrusher')
+            devicedata['bypass'] = fx_on
+            device_params = []
+            device_params.append({'id': 0, 'name': 'bits', 'value': b_bits})
+            device_params.append({'id': 1, 'name': 'down', 'value': b_freq})
+            device_params.append({'id': 2, 'name': 'mix', 'value': fx_wet})
+
             devicedata['params'] = device_params
             outdata.append(devicedata)
 

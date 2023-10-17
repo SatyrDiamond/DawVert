@@ -341,8 +341,8 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 				bits_out *= 2
 			freq_out = (bb_instrument['bitcrusherOctave']+1)*523.25
 
-			plugins.add_plug_param(cvpj_l, pluginid, 'bits', freq_out, 'float', "")
-			plugins.add_plug_param(cvpj_l, pluginid, 'freq', bits_out, 'float', "")
+			plugins.add_plug_param(cvpj_l, pluginid, 'bits', bits_out, 'float', "")
+			plugins.add_plug_param(cvpj_l, pluginid, 'freq', freq_out, 'float', "")
 
 		if 'chorus' in bb_inst_effects:
 			pluginid = addfx_simple(cvpj_instid, 'chorus')

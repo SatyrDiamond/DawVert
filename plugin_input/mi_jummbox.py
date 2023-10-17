@@ -172,7 +172,6 @@ def addfx(cvpj_instid, fxname):
 def addfx_universal(cvpj_instid, fxname):
 	pluginid = cvpj_instid+'_'+fxname
 	plugins.add_plug(cvpj_l, pluginid, 'universal', fxname)
-	plugins.add_plug_fxdata(cvpj_l, pluginid, True, 1)
 	fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
 	return pluginid
 
@@ -311,6 +310,15 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 					if eqtype == 'high-pass':
 						plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass, None)
 
+		if 'echo' in bb_inst_effects:
+			pluginid = addfx_universal(cvpj_instid, 'delay-c')
+			plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Echo', None)
+			plugins.add_plug_fxdata(cvpj_l, pluginid, 1, 0.5)
+
+			plugins.add_plug_data(cvpj_l, pluginid, 'time_type', 'steps')
+			plugins.add_plug_data(cvpj_l, pluginid, 'time', bb_instrument['echoDelayBeats']*8)
+			plugins.add_plug_data(cvpj_l, pluginid, 'feedback', bb_instrument['echoSustain']/120)
+
 		if 'distortion' in bb_inst_effects:
 			pluginid = addfx(cvpj_instid, 'distortion')
 			plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Distortion', None)
@@ -335,15 +343,6 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 			pluginid = addfx_simple(cvpj_instid, 'chorus')
 			plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Chorus', None)
 			plugins.add_plug_fxdata(cvpj_l, pluginid, 1, bb_instrument['chorus']/100)
-
-		if 'echo' in bb_inst_effects:
-			pluginid = addfx_universal(cvpj_instid, 'delay-c')
-			plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Echo', None)
-			plugins.add_plug_fxdata(cvpj_l, pluginid, 1, 0.5)
-
-			plugins.add_plug_data(cvpj_l, pluginid, 'time_type', 'steps')
-			plugins.add_plug_data(cvpj_l, pluginid, 'time', bb_instrument['echoDelayBeats']*8)
-			plugins.add_plug_data(cvpj_l, pluginid, 'feedback', bb_instrument['echoSustain']/120)
 
 		if 'reverb' in bb_inst_effects:
 			pluginid = addfx_simple(cvpj_instid, 'reverb')
@@ -473,6 +472,7 @@ def parse_channel(channeldata, channum, durpos):
 			bb_partdur = durpos[partnum]
 			if bb_part != 0:
 				cvpj_l_placement = placement_data.makepl_n_mi(calcval(placement_pos), calcval(bb_partdur), 'bb_ch'+str(channum)+'_pat'+str(bb_part-1))
+				cvpj_l_placement['cut'] = {'type': 'cut', 'start': 0, 'end': calcval(bb_partdur)}
 				tracks_mi.add_pl(cvpj_l, str(channum), 'notes', cvpj_l_placement)
 				bbcvpj_placementnames[channum].append('bb_ch'+str(channum)+'_pat'+str(bb_part-1))
 			else:
@@ -493,7 +493,6 @@ def parse_channel(channeldata, channum, durpos):
 			bb_part = bb_sequence[partnum]
 			bb_partdur = durpos[partnum]
 			if bb_part != 0:
-				placement_pos = placement_pos*bb_partdur
 				bb_modnotes = bb_patterns[bb_part-1]['notes']
 				if bb_modnotes != []:
 					for note in bb_modnotes:
@@ -504,10 +503,11 @@ def parse_channel(channeldata, channum, durpos):
 
 						cvpj_autodata_points = []
 						for bb_mod_point in bb_mod_points:
-							cvpj_pointdata = {}
-							cvpj_pointdata["position"] = calcval(bb_mod_point['tick'])-calcval(bb_mod_pos)+calcval(placement_pos)
-							cvpj_pointdata["value"] = bb_mod_point['volume']
-							cvpj_autodata_points.append(cvpj_pointdata)
+							if bb_partdur > bb_mod_point['tick']:
+								cvpj_pointdata = {}
+								cvpj_pointdata["position"] = calcval(bb_mod_point['tick'])-calcval(bb_mod_pos)+calcval(placement_pos)
+								cvpj_pointdata["value"] = bb_mod_point['volume']
+								cvpj_autodata_points.append(cvpj_pointdata)
 
 						cvpj_autodata = auto.makepl(calcval(bb_mod_pos), calcval(bb_mod_dur), cvpj_autodata_points)
 
@@ -628,17 +628,17 @@ class input_jummbox(plugin_input.base):
 		jummbox_ticksPerBeat = jummbox_json['ticksPerBeat']
 		jummbox_beatsPerMinute = jummbox_json['beatsPerMinute']
 
-		if 'introBars' in jummbox_json and 'loopBars' in jummbox_json:
-			introbars = jummbox_json['introBars']*32
-			loopbars = jummbox_json['loopBars']*32 + introbars
-			song.add_timemarker_looparea(cvpj_l, 'Loop', introbars, loopbars)
-
 		global jummbox_notesize
 		jummbox_notesize = jummbox_beatsPerBar*jummbox_ticksPerBeat
 
 		durpos = get_durpos(jummbox_channels)
 		patlentable = [calcval(x) for x in durpos]
 		placements.make_timemarkers(cvpj_l, [4,8], patlentable, None)
+
+		if 'introBars' in jummbox_json and 'loopBars' in jummbox_json:
+			introbars = sum(patlentable[0:jummbox_json['introBars']])
+			loopbars = (sum(patlentable[0:jummbox_json['loopBars']]) + introbars)
+			song.add_timemarker_looparea(cvpj_l, 'Loop', introbars, loopbars)
 
 		chancount = 1
 		for jummbox_channel in jummbox_channels:

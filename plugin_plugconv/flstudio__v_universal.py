@@ -28,10 +28,11 @@ class plugconv(plugin_plugconv.base):
         pluginid_g = pluginid   
         cvpj_l_g = cvpj_l
 
-        if plugintype[1] == 'eq-bands':  
+        if plugintype[1] == 'eq-bands': 
+            main_lvl = plugins.get_plug_param(cvpj_l, pluginid, 'gain_out', 0)[0]*100
             plugins.replace_plug(cvpj_l, pluginid, 'native-flstudio', 'fruity parametric eq 2')
-
             banddata = plugins.get_eqband(cvpj_l, pluginid, None)
+            plugins.add_plug_param(cvpj_l, pluginid, 'main_lvl', main_lvl, 'int', "")
 
             bandnum = 0
             for s_band in banddata:

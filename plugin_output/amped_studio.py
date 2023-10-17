@@ -14,6 +14,7 @@ from functions import audio
 from functions import auto
 from functions import notelist_data
 from functions import song
+from functions import xtramath
 from functions_tracks import auto_nopl
 from functions_tracks import tracks_r
 
@@ -210,8 +211,11 @@ def amped_parse_effects(fxchain_audio):
                 if band_type == 'peak': eq_bandtype = 0
                 if band_type == 'low_pass': eq_bandtype = 2
                 if band_type == 'high_pass': eq_bandtype = 1
-                if band_type == 'low_shelf': eq_bandtype = 4
-                if band_type == 'high_shelf': eq_bandtype = 3
+                if band_type == 'low_shelf': eq_bandtype = 3
+                if band_type == 'high_shelf': eq_bandtype = 4
+
+                if band_type in ['low_pass', 'high_pass']: 
+                    band_res = xtramath.logpowmul(band_res, 0.5)
 
                 out_params.append({"id": paramnum, "name": filtername+'active', "value": band_on})
                 out_params.append({"id": paramnum+1, "name": filtername+'freq', "value": band_freq})
@@ -296,11 +300,6 @@ class output_cvpj_f(plugin_output.base):
 
         amped_bpm = int(params.get(cvpj_l, [], 'bpm', 120)[0])
         amped_numerator, amped_denominator = song.get_timesig(cvpj_l)
-
-        master_volume = 1
-        if 'track_master' in cvpj_l: 
-            cvpj_master = cvpj_l['track_master']
-            master_volume = data_values.get_value(cvpj_master, 'vol', 1.0)
 
         amped_tracks = []
         amped_filenames = {}
@@ -503,7 +502,17 @@ class output_cvpj_f(plugin_output.base):
         amped_out["createdWith"] = "nothing"
         amped_out["settings"] = {"deviceDelayCompensation": True}
         amped_out["tracks"] = amped_tracks
-        amped_out["masterTrack"] = {"volume": master_volume, "devices": []}
+        amped_out["masterTrack"] = {}
+        amped_out["masterTrack"]['volume'] = 1
+        amped_out["masterTrack"]['devices'] = []
+
+        master_volume = 1
+        if 'track_master' in cvpj_l: 
+            cvpj_master = cvpj_l['track_master']
+            amped_out["masterTrack"]['volume'] = data_values.get_value(cvpj_master, 'vol', 1.0)
+            if 'chain_fx_audio' in cvpj_master:
+                amped_out["masterTrack"]['devices'] = amped_parse_effects(cvpj_master['chain_fx_audio'])
+
         amped_out["workspace"] = {"library":False,"libraryWidth":300,"trackPanelWidth":160,"trackHeight":80,"beatWidth":24,"contentEditor":{"active":False,"trackId":5,"mode":"noteEditor","beatWidth":48,"noteEditorKeyHeight":10,"velocityPanelHeight":90,"velocityPanel":False,"audioEditorVerticalZoom":1,"height":400,"scroll":{"left":0,"top":0},"quantizationValue":0.25,"chordCreator":{"active":False,"scale":{"key":"C","mode":"Major"}}},"trackInspector":True,"trackInspectorTrackId":5,"arrangementScroll":{"left":0,"top":0},"activeTool":"arrow","timeDisplayInBeats":False,"openedDeviceIds":[],"virtualKeyboard":{"active":False,"height":187,"keyWidth":30,"octave":5,"scrollPositions":{"left":0,"top":0}},"xybeatz":{"active":False,"height":350,"zones":[{"genre":"Caribbean","beat":{"bpm":100,"name":"Zouk Electro 2"}},{"genre":"Soul Funk","beat":{"bpm":120,"name":"Defunkt"}},{"genre":"Greatest Breaks","beat":{"bpm":100,"name":"Walk This Way"}},{"genre":"Brazil","beat":{"bpm":95,"name":"Samba Partido Alto 1"}}],"parts":[{"x":0.75,"y":0.75,"gain":1},{"x":0.9,"y":0.2,"gain":1},{"x":0.8,"y":0.45,"gain":1},{"x":0.7,"y":0.7,"gain":1},{"x":0.7,"y":1,"gain":1},{"x":0.5,"y":0.5,"gain":1}],"partId":5,"fullKit":True,"soloPartId":-1,"complexity":50,"zoneId":0,"lastPartId":1},"displayedAutomations":{}}
         
         loop_on, loop_start, loop_end = song.get_loopdata(cvpj_l, 'r')

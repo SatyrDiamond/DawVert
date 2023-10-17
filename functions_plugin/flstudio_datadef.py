@@ -543,7 +543,7 @@ def get_datadef(pluginname):
 		out = [ ["i",False,"version","Version"] ]
 
 		for bandvar in [
-			['_q'," Q"],
+			['_gain',"Gain"],
 			['_freq'," Freq"],
 			['_width'," Width"],
 			['_type'," Type"],

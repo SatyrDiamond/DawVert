@@ -9,6 +9,7 @@ from functions import plugins
 from functions import notelist_data
 from functions import placement_data
 from functions import data_values
+from functions import xtramath
 from functions_tracks import auto_data
 from functions_tracks import auto_nopl
 from functions_tracks import fxslot
@@ -146,14 +147,17 @@ def encode_devices(amped_tr_devices, trackid):
             for bandnum in eqdata['filter']:
                 banddata = eqdata['filter'][bandnum]
                 bandtype = banddata['type']
+                band_res = banddata['q']
 
                 if bandtype == 0: eq_bandtype = 'peak'
                 if bandtype == 2: eq_bandtype = 'low_pass'
                 if bandtype == 1: eq_bandtype = 'high_pass'
-                if bandtype == 4: eq_bandtype = 'low_shelf'
-                if bandtype == 3: eq_bandtype = 'high_shelf'
+                if bandtype == 3: eq_bandtype = 'low_shelf'
+                if bandtype == 4: eq_bandtype = 'high_shelf'
+                if eq_bandtype in ['low_pass', 'high_pass']: 
+                    band_res = xtramath.logpowmul(band_res, 2)
 
-                plugins.add_eqband(cvpj_l, pluginid, int(banddata['active']), banddata['freq'], banddata['gain'], eq_bandtype, banddata['q'], None)
+                plugins.add_eqband(cvpj_l, pluginid, int(banddata['active']), banddata['freq'], banddata['gain'], eq_bandtype, band_res, None)
 
             plugins.add_plug_param(cvpj_l, pluginid, 'gain_out', eqdata['postGain'], 'float', 'Out Gain')
 

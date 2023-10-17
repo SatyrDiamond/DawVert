@@ -63,7 +63,6 @@ def encode_devices(amped_tr_devices, trackid):
 
         is_instrument = False
 
-        plugins.add_plug_fxdata(cvpj_l, pluginid, not amped_tr_device['bypass'], 1)
         plugins.add_plug_fxvisual(cvpj_l, pluginid, devicetype[1], None)
 
         if devicetype[0] == 'WAM': 
@@ -140,6 +139,7 @@ def encode_devices(amped_tr_devices, trackid):
 
         elif devicetype == ['EqualizerPro', 'Equalizer']:
             plugins.add_plug(cvpj_l, pluginid, 'universal', 'eq-bands')
+            plugins.add_plug_fxdata(cvpj_l, pluginid, not amped_tr_device['bypass'], 1)
             eqdata = {}
             for param in amped_tr_device['params']:
                 data_values.nested_dict_add_value(eqdata, param['name'].split('/'), param['value'])
@@ -166,6 +166,7 @@ def encode_devices(amped_tr_devices, trackid):
         elif devicetype[0] in ['Compressor', 'Expander']:
             if devicetype[0] == 'Compressor': plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
             if devicetype[0] == 'Expander': plugins.add_plug(cvpj_l, pluginid, 'universal', 'expander')
+            plugins.add_plug_fxdata(cvpj_l, pluginid, not amped_tr_device['bypass'], 1)
             for param in amped_tr_device['params']:
 
                 paramname = param['name']
@@ -203,6 +204,7 @@ def encode_devices(amped_tr_devices, trackid):
 
         elif devicetype[0] == 'Vibrato':
             plugins.add_plug(cvpj_l, pluginid, 'universal', 'vibrato')
+            plugins.add_plug_fxdata(cvpj_l, pluginid, not amped_tr_device['bypass'], 1)
             for param in amped_tr_device['params']:
                 paramname = param['name']
                 paramvalue = param['value']
@@ -211,14 +213,29 @@ def encode_devices(amped_tr_devices, trackid):
 
         elif devicetype[0] == 'Tremolo':
             plugins.add_plug(cvpj_l, pluginid, 'universal', 'tremolo')
+            plugins.add_plug_fxdata(cvpj_l, pluginid, not amped_tr_device['bypass'], 1)
             for param in amped_tr_device['params']:
                 paramname = param['name']
                 paramvalue = param['value']
                 if paramname == 'lfoARateHz': plugins.add_plug_param(cvpj_l, pluginid, 'freq', paramvalue, 'float', 'freq')
                 if paramname == 'lfoADepth': plugins.add_plug_param(cvpj_l, pluginid, 'depth', paramvalue, 'float', 'depth')
 
+        elif devicetype[0] == 'BitCrusher':
+            plugins.add_plug(cvpj_l, pluginid, 'universal', 'bitcrush')
+            fx_wet = 1
+            for param in amped_tr_device['params']:
+                paramname = param['name']
+                paramvalue = param['value']
+                if paramname == 'bits': plugins.add_plug_param(cvpj_l, pluginid, 'bits', paramvalue, 'float', 'freq')
+                if paramname == 'down': 
+                    bits_hz = 100 * 2**(paramvalue*10)
+                    plugins.add_plug_param(cvpj_l, pluginid, 'freq', bits_hz, 'float', 'depth')
+                if paramname == 'mix': fx_wet = paramvalue
+            plugins.add_plug_fxdata(cvpj_l, pluginid, not amped_tr_device['bypass'], fx_wet)
 
-        elif devicetype[0] in ['BitCrusher', 'Chorus',  
+
+
+        elif devicetype[0] in ['Chorus',  
         'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 
         'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
         'Reverb', 'Tremolo']:

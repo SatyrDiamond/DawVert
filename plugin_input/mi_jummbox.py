@@ -320,10 +320,9 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 			plugins.add_plug_data(cvpj_l, pluginid, 'feedback', bb_instrument['echoSustain']/120)
 
 		if 'distortion' in bb_inst_effects:
-			pluginid = addfx(cvpj_instid, 'distortion')
+			pluginid = addfx_simple(cvpj_instid, 'distortion')
 			plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Distortion', None)
-			plugins.add_plug_param(cvpj_l, pluginid, 'amount', bb_instrument['distortion']/100, 'float', "")
-			if 'aliases' in bb_instrument: plugins.add_plug_data(cvpj_l, pluginid, 'aliases', bb_instrument['aliases'])
+            plugins.add_plug_param(cvpj_l, pluginid, 'amount', bb_instrument['distortion']/100, 'float', 'amount')
 
 		if 'bitcrusher' in bb_inst_effects:
 			pluginid = addfx_universal(cvpj_instid, 'bitcrush')

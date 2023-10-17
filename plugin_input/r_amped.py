@@ -156,6 +156,8 @@ def encode_devices(amped_tr_devices, trackid):
                 if bandtype == 4: eq_bandtype = 'high_shelf'
                 if eq_bandtype in ['low_pass', 'high_pass']: 
                     band_res = xtramath.logpowmul(band_res, 2)
+                if eq_bandtype in ['peak']: 
+                    band_res = xtramath.logpowmul(band_res, -1)
 
                 plugins.add_eqband(cvpj_l, pluginid, int(banddata['active']), banddata['freq'], banddata['gain'], eq_bandtype, band_res, None)
 

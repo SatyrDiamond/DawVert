@@ -216,6 +216,8 @@ def amped_parse_effects(fxchain_audio):
 
                 if band_type in ['low_pass', 'high_pass']: 
                     band_res = xtramath.logpowmul(band_res, 0.5)
+                if band_type in ['low_pass', 'peak']: 
+                    band_res = xtramath.logpowmul(band_res, -1)
 
                 out_params.append({"id": paramnum, "name": filtername+'active', "value": band_on})
                 out_params.append({"id": paramnum+1, "name": filtername+'freq', "value": band_freq})

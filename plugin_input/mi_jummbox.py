@@ -295,7 +295,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 
 				filter_hz = filtervals[bb_instrument['eqSimpleCut']]
 				filter_peak = bb_instrument['eqSimplePeak']
-				if filter_hz != None and filter_peak != 0:
+				if filter_hz != None or filter_peak != 0:
 					if filter_hz == None: filter_hz = 8000
 					pluginid = addfx_universal(cvpj_instid, 'eq-bands')
 					plugins.add_eqband(cvpj_l, pluginid, 1, filter_hz, 0, 'low_pass', filter_peak*2, None)
@@ -323,7 +323,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 
 			plugins.add_plug_data(cvpj_l, pluginid, 'time_type', 'steps')
 			plugins.add_plug_data(cvpj_l, pluginid, 'time', bb_instrument['echoDelayBeats']*8)
-			plugins.add_plug_data(cvpj_l, pluginid, 'feedback', bb_instrument['echoSustain']/120)
+			plugins.add_plug_data(cvpj_l, pluginid, 'feedback', bb_instrument['echoSustain']/240)
 
 		if 'distortion' in bb_inst_effects:
 			pluginid = addfx_simple(cvpj_instid, 'distortion')
@@ -361,7 +361,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 					vibrato_speed = 0.7*(1/bb_instrument['vibratoSpeed'])
 					vibrato_amount = bb_instrument['vibratoDepth']
 					vibrato_delay = (bb_instrument['vibratoDelay']/49)*2
-					plugins.add_lfo(cvpj_l, pluginid, 'pitch', 'sine', 'seconds', vibrato_speed, vibrato_delay, 0, vibrato_amount)
+					plugins.add_lfo(cvpj_l, cvpj_instid, 'pitch', 'sine', 'seconds', vibrato_speed, vibrato_delay, 0, vibrato_amount)
 
 		a_attack = data_values.get_value(bb_instrument, 'fadeInSeconds', 0)
 		a_release = abs(data_values.get_value(bb_instrument, 'fadeOutTicks', 0)/(jummbox_ticksPerBeat*32))

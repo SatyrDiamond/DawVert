@@ -72,23 +72,31 @@ def get_plugins(xml_tag, cvpj_fxids):
                     eqnumtxt = str(num+1)
 
                     eqbanddata = typedata[1][num]
-                    band_shape = eqbanddata['type']
+                    in_band_shape = eqbanddata['type']
 
-                    if band_shape == 'low_pass': band_shape = 0
-                    elif band_shape == 'low_shelf': band_shape = 1
-                    elif band_shape == 'peak': band_shape = 2
-                    elif band_shape == 'band_pass': band_shape = 3
-                    elif band_shape == 'band_stop': band_shape = 4
-                    elif band_shape == 'high_shelf': band_shape = 5
-                    elif band_shape == 'high_pass': band_shape = 6
-                    else: band_shape = 2
+                    if in_band_shape == 'low_pass': band_shape = 0
+                    elif in_band_shape == 'low_shelf': band_shape = 1
+                    elif in_band_shape == 'peak': band_shape = 2
+                    elif in_band_shape == 'band_pass': band_shape = 3
+                    elif in_band_shape == 'band_stop': band_shape = 4
+                    elif in_band_shape == 'high_shelf': band_shape = 5
+                    elif in_band_shape == 'high_pass': band_shape = 6
+                    else: in_band_shape = 2
 
-                    band_freq = note_data.freq_to_note_noround(eqbanddata['freq'])+72
+                    if in_band_shape in ['low_pass', 'high_pass']: 
+                        eq_var = eqbanddata['var']
+                        eq_var = xtramath.logpowmul(eq_var, 0.5) if eq_var != 0 else 0
+                    elif in_band_shape in ['low_shelf', 'high_shelf']: 
+                        eq_var = eqbanddata['var']
+                    else: eq_var = (10-eqbanddata['var'])*10
+
+                    if eqbanddata['freq'] != 0: band_freq = note_data.freq_to_note_noround(eqbanddata['freq'])+72
+                    else: band_freq = 0
 
                     wf_PLUGIN.set("enable"+eqnumtxt+typedata[0], str(float(eqbanddata['on'])))
                     wf_PLUGIN.set("freq"+eqnumtxt+typedata[0], str(band_freq))
                     wf_PLUGIN.set("gain"+eqnumtxt+typedata[0], str(eqbanddata['gain']))
-                    wf_PLUGIN.set("q"+eqnumtxt+typedata[0], str(  (10-eqbanddata['var']))*10  )
+                    wf_PLUGIN.set("q"+eqnumtxt+typedata[0], str( eq_var ))
                     wf_PLUGIN.set("shape"+eqnumtxt+typedata[0], str(band_shape))
 
 

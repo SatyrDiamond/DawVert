@@ -12,6 +12,7 @@ from functions_tracks import fxslot
 from lxml import etree
 import plugin_input
 import json
+import math
 
 def xml_getvalue(xmltag, xmlname, fallbackval): 
     xmlval = xmltag.get(xmlname)
@@ -39,7 +40,7 @@ def get_plugins(xml_track, trackid):
                                 band_enable = float(xml_getvalue(xml_part, "enable"+eqnumtxt+typenames[0], 0))
                                 band_freq = float(xml_getvalue(xml_part, "freq"+eqnumtxt+typenames[0], 0))
                                 band_gain = float(xml_getvalue(xml_part, "gain"+eqnumtxt+typenames[0], 0))
-                                band_q = (10-float(xml_getvalue(xml_part, "q"+eqnumtxt+typenames[0], 0)))/10
+                                band_q = float(xml_getvalue(xml_part, "q"+eqnumtxt+typenames[0], 0))
                                 band_shape = int(xml_getvalue(xml_part, "shape"+eqnumtxt+typenames[0], 1))
 
                                 if band_shape == 0: band_shape = 'low_pass'
@@ -49,6 +50,13 @@ def get_plugins(xml_track, trackid):
                                 if band_shape == 4: band_shape = 'band_stop'
                                 if band_shape == 5: band_shape = 'high_shelf'
                                 if band_shape == 6: band_shape = 'high_pass'
+
+                                if band_shape in ['low_pass', 'high_pass']: 
+                                    band_q = band_q**2
+                                elif band_shape in ['low_shelf', 'high_shelf']:  
+                                    pass
+                                else:
+                                    band_q = (10-float(band_q))/10
 
                                 band_freq = note_data.note_to_freq(band_freq-72)
 

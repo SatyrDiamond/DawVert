@@ -17,6 +17,7 @@ from functions_plugin import soundation_values
 import plugin_input
 import struct
 import json
+import math
 
 
 
@@ -299,8 +300,21 @@ class input_soundation(plugin_input.base):
 
                         band_freq = 20 * 1000**band_freq
                         band_gain = (band_gain-0.5)*40
-                        band_res = 0.1 * 162**band_res
+
+                        if eq_bandtype in ['low_pass', 'high_pass']:
+                            band_res = band_res*math.log(162)
+                            band_res = 0.1 * math.exp(band_res)
+                            band_res = xtramath.logpowmul(band_res, 0.5)
+                        elif eq_bandtype in ['low_shelf', 'high_shelf']:
+                            band_res = band_res*math.log(162)
+                            band_res = 0.1 * math.exp(band_res)
+                        else:
+                            band_res = band_res*math.log(162)
+                            band_res = 0.1 * math.exp(band_res)
+                            band_res = xtramath.logpowmul(band_res, -1)
                         
+                        #print(eq_bandtype, band_res)
+
                         plugins.add_eqband(cvpj_l, fxpluginid, int(band_enable), band_freq, band_gain, eq_bandtype, band_res, None)
 
                     master_gain = get_paramval(sound_chan_effect, 'master_gain')

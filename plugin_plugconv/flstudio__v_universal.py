@@ -9,6 +9,7 @@ import os
 import math
 
 from functions import plugins
+from functions import xtramath
 from functions_tracks import auto_data
 
 def getparam(paramname):
@@ -57,8 +58,16 @@ class plugconv(plugin_plugconv.base):
 
                     if band_on == 1:
                         bandstarttxt = str(bandnum+1)
+
+                        if bandtype in ['low_shelf', 'high_shelf']: band_res = 1-(band_res/1.2)
+                        elif bandtype in ['low_pass', 'high_pass']: 
+                            band_res = math.log(band_res, 2) / 10
+                            band_res = xtramath.between_to_one(1, -1, band_res)
+                        else: 
+                            band_res = (band_res*65536)/4
+
                         plugins.add_plug_param(cvpj_l, pluginid, bandstarttxt+'_gain', band_gain*100, 'int', "")
                         plugins.add_plug_param(cvpj_l, pluginid, bandstarttxt+'_freq', band_freq*65536, 'int', "")
-                        plugins.add_plug_param(cvpj_l, pluginid, bandstarttxt+'_width', ((math.sqrt(band_res)/5)*65536)*2, 'int', "")
+                        plugins.add_plug_param(cvpj_l, pluginid, bandstarttxt+'_width', band_res*65536, 'int', "")
                         plugins.add_plug_param(cvpj_l, pluginid, bandstarttxt+'_type', band_shape, 'int', "")
                         bandnum += 1

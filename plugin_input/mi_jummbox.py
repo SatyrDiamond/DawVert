@@ -9,6 +9,7 @@ from functions import note_data
 from functions import data_values
 from functions import placement_data
 from functions import placements
+from functions import xtramath
 from functions import song
 from functions_tracks import auto_data
 from functions_tracks import fxrack
@@ -17,6 +18,7 @@ from functions_tracks import tracks_master
 from functions_tracks import tracks_mi
 import plugin_input
 import json
+import math
 
 global colornum_p
 global colornum_d
@@ -174,6 +176,13 @@ def addfx_universal(cvpj_instid, fxname):
 	fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
 	return pluginid
 
+def addfx_simple(cvpj_instid, fxname):
+	pluginid = cvpj_instid+'_'+fxname
+	plugins.add_plug(cvpj_l, pluginid, 'simple', fxname)
+	plugins.add_plug_fxdata(cvpj_l, pluginid, True, 1)
+	fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
+	return pluginid
+
 def get_harmonics(i_harmonics):
 	harmonics = [i/100 for i in i_harmonics]
 	harmonics.append(harmonics[-1])
@@ -310,15 +319,23 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 			if 'aliases' in bb_instrument: plugins.add_plug_data(cvpj_l, pluginid, 'aliases', bb_instrument['aliases'])
 
 		if 'bitcrusher' in bb_inst_effects:
-			pluginid = addfx(cvpj_instid, 'bitcrusher')
+			pluginid = addfx_universal(cvpj_instid, 'bitcrush')
 			plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Bitcrusher', None)
-			plugins.add_plug_param(cvpj_l, pluginid, 'octave', bb_instrument['bitcrusherOctave'], 'float', "")
-			plugins.add_plug_param(cvpj_l, pluginid, 'quantization', bb_instrument['bitcrusherQuantization']/100, 'float', "")
+
+			t_bits_val = round(xtramath.between_from_one(7, 0, bb_instrument['bitcrusherQuantization']/100))
+
+			bits_out = 1
+			for num in range(t_bits_val):
+				bits_out *= 2
+			freq_out = (bb_instrument['bitcrusherOctave']+1)*523.25
+
+			plugins.add_plug_param(cvpj_l, pluginid, 'bits', freq_out, 'float', "")
+			plugins.add_plug_param(cvpj_l, pluginid, 'freq', bits_out, 'float', "")
 
 		if 'chorus' in bb_inst_effects:
-			pluginid = addfx(cvpj_instid, 'chorus')
+			pluginid = addfx_simple(cvpj_instid, 'chorus')
 			plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Chorus', None)
-			plugins.add_plug_param(cvpj_l, pluginid, 'amount', bb_instrument['chorus']/100, 'float', "")
+			plugins.add_plug_fxdata(cvpj_l, pluginid, 1, bb_instrument['chorus']/100)
 
 		if 'echo' in bb_inst_effects:
 			pluginid = addfx_universal(cvpj_instid, 'delay-c')
@@ -330,10 +347,10 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 			plugins.add_plug_data(cvpj_l, pluginid, 'feedback', bb_instrument['echoSustain']/120)
 
 		if 'reverb' in bb_inst_effects:
-			pluginid = addfx(cvpj_instid, 'reverb')
+			pluginid = addfx_simple(cvpj_instid, 'reverb')
 			plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Reverb', None)
 			reverblvl = data_values.get_value(bb_instrument, 'reverb', 40)
-			plugins.add_plug_param(cvpj_l, pluginid, 'amount', reverblvl/100, 'float', "")
+			plugins.add_plug_fxdata(cvpj_l, pluginid, 1, reverblvl/200)
 
 		if 'vibrato' in bb_inst_effects:
 			if 'vibratoSpeed' in bb_instrument and 'vibratoDelay' in bb_instrument:

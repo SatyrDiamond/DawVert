@@ -29,6 +29,8 @@ colors_pitch = [[0, 0.6, 0.63], [0.63, 0.63, 0], [0.78, 0.31, 0], [0, 0.63, 0], 
 
 colors_drums = [ [0.44, 0.44, 0.44], [0.6, 0.4, 0.2], [0.29, 0.43, 0.56], [0.48, 0.31, 0.6], [0.38, 0.47, 0.22]]
 
+filtervals = [2378.41, 3363.59, 4756.83, 5656.85, 8000, 9513.66, 11313.71, 13454.34, 16000, 19027.31, None]
+
 rawChipWaves = {}
 rawChipWaves["rounded"] = {"expression": 0.94, "samples": [0,0.2,0.4,0.5,0.6,0.7,0.8,0.85,0.9,0.95,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0.95,0.9,0.85,0.8,0.7,0.6,0.5,0.4,0.2,0,-0.2,-0.4,-0.5,-0.6,-0.7,-0.8,-0.85,-0.9,-0.95,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-0.95,-0.9,-0.85,-0.8,-0.7,-0.6,-0.5,-0.4,-0.2]}
 rawChipWaves["triangle"] = {"expression": 1, "samples": [1/15,0.2,5/15,7/15,0.6,11/15,13/15,1,1,13/15,11/15,0.6,7/15,5/15,0.2,1/15,-1/15,-0.2,-5/15,-7/15,-0.6,-11/15,-13/15,-1,-1,-13/15,-11/15,-0.6,-7/15,-5/15,-0.2,-1/15]}
@@ -290,10 +292,14 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 						if eqtype == 'high-pass':
 							plugins.add_eqband(cvpj_l, pluginid, 1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass, None)
 			else:
-				pluginid = addfx(cvpj_instid, 'filter')
-				plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Filter', None)
-				plugins.add_plug_param(cvpj_l, pluginid, 'cutoff', bb_instrument['eqSimpleCut'], 'int', "")
-				plugins.add_plug_param(cvpj_l, pluginid, 'reso', bb_instrument['eqSimplePeak'], 'int', "")
+
+				filter_hz = filtervals[bb_instrument['eqSimpleCut']]
+				filter_peak = bb_instrument['eqSimplePeak']
+				if filter_hz != None and filter_peak != 0:
+					if filter_hz == None: filter_hz = 8000
+					pluginid = addfx_universal(cvpj_instid, 'eq-bands')
+					plugins.add_eqband(cvpj_l, pluginid, 1, filter_hz, 0, 'low_pass', filter_peak*2, None)
+
 		elif 'eqFilter' in bb_instrument:
 			bb_eqFilter = bb_instrument['eqFilter']
 			if bb_eqFilter != []:

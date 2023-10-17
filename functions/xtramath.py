@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import math
+
 def clamp(n, minn, maxn):
     return max(min(maxn, n), minn)
 
@@ -114,7 +116,10 @@ def similar(first, second):
     elif first == second == []: return 1.0
     else: return len(set(first) & set(second)) / float(len(set(first) | set(second)))
 
-
+def logpowmul(value, multiplier):
+    value = -math.log2(1/value)
+    value = pow(2, value*multiplier)
+    return value
 
 
 

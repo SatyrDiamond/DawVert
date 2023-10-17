@@ -84,7 +84,19 @@ def add_fx(sng_trkdata, s_trackdata):
 
                     band_freq = math.log(band_freq / 20) / math.log(1000)
                     band_gain = (band_gain/40)+0.5
-                    band_res = math.log(band_res / 0.1) / math.log(162)
+
+                    if bandtype in ['low_pass', 'high_pass']:
+                        band_res = xtramath.logpowmul(band_res, 0.5)
+                        band_res = math.log(band_res / 0.1)
+                        band_res = band_res / math.log(162)
+                    elif bandtype in ['low_shelf', 'high_shelf']:
+                        band_res = math.log(band_res / 0.1)
+                        band_res = band_res / math.log(162)
+                    else:
+                        band_res = xtramath.logpowmul(band_res, -1)
+                        band_res = math.log( band_res / 0.1)
+                        band_res = band_res / math.log(162)
+                    #print(bandtype, band_res)
 
                     part = [True, band_on, band_freq, band_gain, band_res]
 
@@ -109,7 +121,7 @@ def add_fx(sng_trkdata, s_trackdata):
                 add_sndinstparam(sng_fxdata, 'hpf_enable', data_HP[1], True)
                 add_sndinstparam(sng_fxdata, 'hpf_freq', data_HP[2], True)
                 add_sndinstparam(sng_fxdata, 'hpf_res', data_HP[4], True)
-                add_sndinstparam(sng_fxdata, 'hpf_slope', 1.0, True)
+                add_sndinstparam(sng_fxdata, 'hpf_slope', 0.25, True)
 
                 add_sndinstparam(sng_fxdata, 'lowshelf_enable', data_Lowshelf[1], True)
                 add_sndinstparam(sng_fxdata, 'lowshelf_freq', data_Lowshelf[2], True)
@@ -119,7 +131,7 @@ def add_fx(sng_trkdata, s_trackdata):
                 add_sndinstparam(sng_fxdata, 'lpf_enable', data_LP[1], True)
                 add_sndinstparam(sng_fxdata, 'lpf_freq', data_LP[2], True)
                 add_sndinstparam(sng_fxdata, 'lpf_res', data_LP[4], True)
-                add_sndinstparam(sng_fxdata, 'lpf_slope', 1.0, True)
+                add_sndinstparam(sng_fxdata, 'lpf_slope', 0.25, True)
 
                 add_sndinstparam(sng_fxdata, 'master_gain', (gain_out/40)+0.5, True)
 
@@ -133,7 +145,7 @@ def add_fx(sng_trkdata, s_trackdata):
                 sng_fxchain.append(sng_fxdata)
 
 
-            if plugtype[0] == 'native-soundation':
+            if plugtype[0] == 'native-soundation' and plugtype[1] != 'com.soundation.send':
                 fxpluginname = plugtype[1]
                 sng_fxdata = {}
                 sng_fxdata['identifier'] = fxpluginname

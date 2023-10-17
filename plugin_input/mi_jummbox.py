@@ -353,7 +353,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 			pluginid = addfx_simple(cvpj_instid, 'reverb')
 			plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Reverb', None)
 			reverblvl = data_values.get_value(bb_instrument, 'reverb', 40)
-			plugins.add_plug_fxdata(cvpj_l, pluginid, 1, reverblvl/200)
+			plugins.add_plug_fxdata(cvpj_l, pluginid, 1, reverblvl/100)
 
 		if 'vibrato' in bb_inst_effects:
 			if 'vibratoSpeed' in bb_instrument and 'vibratoDelay' in bb_instrument:

@@ -179,7 +179,6 @@ def addfx_universal(cvpj_instid, fxname):
 def addfx_simple(cvpj_instid, fxname):
 	pluginid = cvpj_instid+'_'+fxname
 	plugins.add_plug(cvpj_l, pluginid, 'simple', fxname)
-	plugins.add_plug_fxdata(cvpj_l, pluginid, True, 1)
 	fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', pluginid)
 	return pluginid
 

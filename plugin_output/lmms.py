@@ -632,7 +632,16 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
 
     pluginautoid = auto_id.out_getlist(['plugin', pluginid])
 
-    if plugintype == ['universal', 'eq-bands']:
+    if plugintype == ['simple', 'reverb']:
+        print('[output-lmms]       Audio FX: [reverb] ')
+        fxslotX.set('name', 'reverbsc')
+        xml_lmmsreverbsc = ET.SubElement(fxslotX, 'ReverbSCControls')
+        xml_lmmsreverbsc.set('input_gain', '0')
+        xml_lmmsreverbsc.set('size', '0.8')
+        xml_lmmsreverbsc.set('output_gain', '0')
+        xml_lmmsreverbsc.set('color', '10000')
+
+    elif plugintype == ['universal', 'eq-bands']:
         #used, active, freq, gain, res/bw
 
         print('[output-lmms]       Audio FX: [eq] ')
@@ -698,7 +707,6 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
         get_plugin_param(pluginautoid, xml_lmmseq, 'Inputgain', pluginid, 'gain_in', 0)
 
     elif plugintype == ['universal', 'delay-c']:
-
         print('[output-lmms]       Audio FX: [delay] ')
         fxslotX.set('name', 'delay')
         xml_lmmsdelay = ET.SubElement(fxslotX, 'Delay')
@@ -930,7 +938,7 @@ class output_lmms(plugin_output.base):
         'fxrack_params': ['enabled','vol']
         }
     def getsupportedplugformats(self): return ['vst2', 'ladspa']
-    def getsupportedplugins(self): return ['sampler:single', 'soundfont2']
+    def getsupportedplugins(self): return ['sampler:single', 'soundfont2', 'universal:eq-bands', 'universal:delay-c', 'simple:reverb']
     def getfileextension(self): return 'mmp'
     def parse(self, convproj_json, output_file):
         global autoidnum

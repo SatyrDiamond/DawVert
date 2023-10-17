@@ -65,7 +65,7 @@ class plugconv(plugin_plugconv.base):
                             band_res = math.log(band_res, 2) / 10
                             band_res = xtramath.between_to_one(1, -1, band_res)
                         else: 
-                            band_res = (band_res*65536)/4
+                            band_res = band_res/4
 
                         plugins.add_plug_param(cvpj_l, pluginid, bandstarttxt+'_gain', band_gain*100, 'int', "")
                         plugins.add_plug_param(cvpj_l, pluginid, bandstarttxt+'_freq', band_freq*65536, 'int', "")

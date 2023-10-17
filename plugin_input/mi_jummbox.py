@@ -322,7 +322,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 		if 'distortion' in bb_inst_effects:
 			pluginid = addfx_simple(cvpj_instid, 'distortion')
 			plugins.add_plug_fxvisual(cvpj_l, pluginid, 'Distortion', None)
-            plugins.add_plug_param(cvpj_l, pluginid, 'amount', bb_instrument['distortion']/100, 'float', 'amount')
+			plugins.add_plug_param(cvpj_l, pluginid, 'amount', bb_instrument['distortion']/100, 'float', 'amount')
 
 		if 'bitcrusher' in bb_inst_effects:
 			pluginid = addfx_universal(cvpj_instid, 'bitcrush')

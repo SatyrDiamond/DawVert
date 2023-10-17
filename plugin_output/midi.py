@@ -118,18 +118,18 @@ class output_cvpj_f(plugin_output.base):
 
                 if midi_channel == None: midi_channel = getunusedchannel()
 
-                print('[output-midi]', end=" ")
+                #print('[output-midi]', end=" ")
 
-                print(str(tracknum+1).rjust(4), end=" | ")
+                #print(str(tracknum+1).rjust(4), end=" | ")
                 
-                if midi_channel == None: print('---', end=" | ")
-                else: print(str(midi_channel).rjust(3), end=" | ")
+                #if midi_channel == None: print('---', end=" | ")
+                #else: print(str(midi_channel).rjust(3), end=" | ")
 
                 #if midi_bank == None: print('---', end=" | ")
                 #else: print(str(midi_bank).rjust(3), end=" | ")
     
-                if midi_program == None: print('----', end=" | ")
-                else: print(str(midi_program).rjust(4), end=" | ")
+                #if midi_program == None: print('----', end=" | ")
+                #else: print(str(midi_program).rjust(4), end=" | ")
     
                 #if midi_key == None: print('---', end=" | ")
                 #else: print(str(midi_key).rjust(3), end=" | ")

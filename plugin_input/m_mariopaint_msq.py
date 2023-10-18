@@ -21,9 +21,7 @@ def readpart(msq_score_str, n_pos, n_len):
     char2 = int(msq_score_str.read(1), 16)
     char3 = int(msq_score_str.read(1), 16)
     if char1 == 0:
-        if char2 == 0:
-            if char3 == 0: numnotes = 0
-            else: numnotes = 1
+        if char2 == 0: numnotes = 0 if char3 == 0 else 1
         else: numnotes = 2
     else: numnotes = 3
 

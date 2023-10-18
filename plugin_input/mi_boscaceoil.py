@@ -174,9 +174,10 @@ class input_ceol(plugin_input.base):
             tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
             tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
 
-            plugins.add_plug(cvpj_l, cvpj_instid+'_filter', 'universal', 'eq-bands')
-            plugins.add_eqband(cvpj_l, cvpj_instid+'_filter', 1, calc_initcutoffval, 0, 'low_pass', ceol_inst_resonance+1, None)
-            fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', cvpj_instid+'_filter')
+            if ceol_inst_cutoff != 127:
+                plugins.add_plug(cvpj_l, cvpj_instid+'_filter', 'universal', 'eq-bands')
+                plugins.add_eqband(cvpj_l, cvpj_instid+'_filter', 1, calc_initcutoffval, 0, 'low_pass', ceol_inst_resonance+1, None)
+                fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', cvpj_instid+'_filter')
 
             if ceol_inst_number <= 127:
                 tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'midi', 'output', {'program': ceol_inst_number})

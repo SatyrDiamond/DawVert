@@ -378,6 +378,8 @@ class output_cvpj_f(plugin_output.base):
                         europa_name = ET.SubElement(europa_patch, "DeviceNameInEnglish")
                         europa_name.text = "Europa Shapeshifting Synthesizer"
                         europa_prop = ET.SubElement(europa_patch, "Properties")
+                        europa_prop.set('deviceProductID','se.propellerheads.Europa')
+                        europa_prop.set('deviceVersion','2.0.0f')
                         europa_obj = ET.SubElement(europa_prop, "Object")
                         europa_obj.set('name','custom_properties')
                         for eur_value_name in europa_vals:

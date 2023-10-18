@@ -17,6 +17,7 @@ from functions import auto
 from functions import song
 from functions_compat import trackfx_to_numdata
 from functions_plugin import soundation_values
+from functions_plugin import synth_nonfree_values
 from functions_tracks import auto_nopl
 from functions_tracks import tracks_r
 
@@ -211,6 +212,9 @@ class output_soundation(plugin_output.base):
     def getfileextension(self): return 'sng'
     def parse(self, convproj_json, output_file):
         global cvpj_l
+        global europa_vals
+        europa_vals = synth_nonfree_values.europa_valnames()
+
         cvpj_l = json.loads(convproj_json)
         bpm = params.get(cvpj_l, [], 'bpm', 120)[0]
 
@@ -352,7 +356,23 @@ class output_soundation(plugin_output.base):
                         plugtype = plugins.get_plug_type(cvpj_l, pluginid)
                         a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'vol')
 
-                        if plugtype[0] == 'native-soundation':
+                        if plugtype == ['synth-nonfree', 'Europa']:
+                            inst_supported = True
+                            sng_instparams['identifier'] = 'com.soundation.europa'
+                            for paramname in europa_vals:
+                                eur_value_type, cvpj_val_name = europa_vals[paramname]
+
+                                if eur_value_type == 'number':
+                                    eur_value_value = plugins.get_plug_param(cvpj_l, pluginid, cvpj_val_name, 0)[0]
+                                else:
+                                    eur_value_value = plugins.get_plug_dataval(cvpj_l, pluginid, cvpj_val_name, 0)
+                                    if paramname in ['Curve1','Curve2','Curve3','Curve4','Curve']: 
+                                        eur_value_value = ','.join([str(x).zfill(2) for x in eur_value_value])
+
+                                add_sndinstparam(sng_instparams, "/custom_properties/"+paramname, eur_value_value, True)
+                            add_sndinstparam(sng_instparams, "/soundation/sample", None, True)
+
+                        elif plugtype[0] == 'native-soundation':
                             inst_supported = True
                             sng_instparams['identifier'] = plugtype[1]
                             if plugtype[1] == 'com.soundation.GM-2':
@@ -404,12 +424,6 @@ class output_soundation(plugin_output.base):
                                     cvpjiparam_to_sngparam(sng_instparams, pluginid, paramname, 0, True)
                                 for dataname in ['cuts','envelopes']:
                                     sng_instparams[dataname] = plugins.get_plug_dataval(cvpj_l, pluginid, dataname, '')
-
-                            elif plugtype[1] == 'com.soundation.europa':
-                                for paramname in soundation_values.europa_vals():
-                                    value = plugins.get_plug_dataval(cvpj_l, pluginid, paramname, '')
-                                    add_sndinstparam(sng_instparams, "/custom_properties/"+paramname, value, True)
-                                add_sndinstparam(sng_instparams, "/soundation/sample", None, True)
 
                             elif plugtype[1] in ['com.soundation.va_synth','com.soundation.fm_synth','com.soundation.the_wub_machine','com.soundation.mono']:
                                 if plugtype[1] == 'com.soundation.va_synth': snd_params = ["aatt", "adec", "arel", "asus", "fatt", "fdec", "fdyn", "feg", "ffreq", "frel", "fres", "fsus", "glide_bend", "glide_mode", "glide_rate", "lfolpf", "lfoosc", "lforate", "octave", "osc_2_fine", "osc_2_mix", "osc_2_noise", "osc_2_octave", "tune"]

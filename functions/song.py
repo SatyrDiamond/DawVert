@@ -6,7 +6,7 @@ from functions import params
 from functions import placements
 
 def r_getduration(projJ):
-    trackplacements = projJ['track_placements']
+    trackplacements = projJ['track_placements'] if 'track_placements' in projJ else {}
     songduration = 0
     for trackid in trackplacements:
         islaned = False

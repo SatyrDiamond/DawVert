@@ -206,6 +206,10 @@ class input_sop(plugin_input.base):
         for tracknum in range(sop_num_tracks):
             sop_data_track = sop_data_tracks[tracknum]
 
+            if sop_data_chanmodes[tracknum] == 0: trackname_endtext = ''
+            if sop_data_chanmodes[tracknum] == 1: trackname_endtext = '4OP (YMF-262M)'
+            if sop_data_chanmodes[tracknum] == 0: trackname_endtext = '2OP (YM-3812)'
+
             cvpj_trackid = str(tracknum)
             cvpj_notelist = []
             curinst = 0
@@ -239,7 +243,7 @@ class input_sop(plugin_input.base):
 
             placementdata = placement_data.nl2pl(cvpj_notelist)
             tracks_rm.track_create(cvpj_l, cvpj_trackid, 'instruments')
-            tracks_rm.track_visual(cvpj_l, cvpj_trackid, name=cvpj_trackid)
+            tracks_rm.track_visual(cvpj_l, cvpj_trackid, name='#'+str(cvpj_trackid)+' '+str()+trackname_endtext)
             tracks_rm.add_pl(cvpj_l, cvpj_trackid, 'notes', placementdata)
 
         auto_bpm = {}

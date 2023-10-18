@@ -189,8 +189,7 @@ class input_ceol(plugin_input.base):
             cvpj_notelist = []
 
             t_notepos_table = {}
-            for t_notepos in range(ceol_basic_patternlength):
-                t_notepos_table[t_notepos] = []
+            for t_notepos in range(ceol_basic_patternlength): t_notepos_table[t_notepos] = []
 
             cvpj_pat_id = 'ceol_'+str(patnum).zfill(3)
             ceol_pat_key = ceol_read()

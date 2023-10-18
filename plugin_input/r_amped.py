@@ -10,17 +10,21 @@ from functions import notelist_data
 from functions import placement_data
 from functions import data_values
 from functions import xtramath
+from functions import audio_wav
+from functions_plugin import synth_nonfree_values
 from functions_tracks import auto_data
 from functions_tracks import auto_nopl
 from functions_tracks import fxslot
 from functions_tracks import trackfx
 from functions_tracks import tracks_master
 from functions_tracks import tracks_r
+import xml.etree.ElementTree as ET
 import plugin_input
 import json
 import os
 import struct
 import rpp
+import base64
 import zipfile
 
 amped_colors = {
@@ -65,10 +69,43 @@ def encode_devices(amped_tr_devices, trackid):
 
         plugins.add_plug_fxvisual(cvpj_l, pluginid, devicetype[1], None)
 
-        if devicetype[0] == 'WAM': 
-            if devicetype[1] in ['Augur', 'Europa', 'OBXD', 'Dexed']: is_instrument = True
+        if devicetype[0] == 'WAM' and devicetype[1] in ['Augur', 'OBXD', 'Dexed']: 
+            is_instrument = True
             plugins.add_plug(cvpj_l, pluginid, 'native-amped', devicetype[1])
             plugins.add_plug_data(cvpj_l, pluginid, 'data', amped_tr_device['wamPreset'])
+
+        elif devicetype[0] == 'WAM' and devicetype[1] == 'Europa': 
+            is_instrument = True
+            plugins.add_plug(cvpj_l, pluginid, 'synth-nonfree', 'Europa')
+            wampreset = amped_tr_device['wamPreset']
+            wampreset = json.loads(wampreset)
+            europa_xml = ET.fromstring(wampreset['settings'])
+            europa_xml_prop = europa_xml.findall('Properties')[0]
+
+            print(wampreset['patch'])
+            #print(wampreset['settings'])
+
+            for xmlsub in europa_xml_prop:
+                if xmlsub.tag == 'Object':
+                    object_name = xmlsub.get('name')
+                    for objsub in xmlsub:
+                        if objsub.tag == 'Value':
+                            value_name = objsub.get('property')
+                            value_type = objsub.get('type')
+                            value_value = float(objsub.text) if value_type == 'number' else objsub.text
+
+                            cvpj_val_type_name = europa_vals[value_name]
+                            if cvpj_val_type_name[0] == 'number': 
+                                plugins.add_plug_param(cvpj_l, pluginid, cvpj_val_type_name[1], float(value_value), 'float', value_name)
+                            else:
+                                if value_name in ['Curve1','Curve2','Curve3','Curve4','Curve']: 
+                                    value_value = list(bytes.fromhex(value_value))
+
+                                plugins.add_plug_data(cvpj_l, pluginid, cvpj_val_type_name[1], value_value)
+
+            if 'encodedSampleData' in wampreset:
+                europa_sampledata = wampreset['encodedSampleData']
+                plugins.add_plug_data(cvpj_l, pluginid, 'encodedSampleData', europa_sampledata)
 
         elif devicetype == ['Drumpler', 'Drumpler']:
             is_instrument = True
@@ -155,9 +192,9 @@ def encode_devices(amped_tr_devices, trackid):
                 if bandtype == 3: eq_bandtype = 'low_shelf'
                 if bandtype == 4: eq_bandtype = 'high_shelf'
                 if eq_bandtype in ['low_pass', 'high_pass']: 
-                    band_res = xtramath.logpowmul(band_res, 2)
+                    band_res = xtramath.logpowmul(band_res, 2) if band_res != 0 else 1
                 if eq_bandtype in ['peak']: 
-                    band_res = xtramath.logpowmul(band_res, -1)
+                    band_res = xtramath.logpowmul(band_res, -1) if band_res != 0 else 1
 
                 plugins.add_eqband(cvpj_l, pluginid, int(banddata['active']), banddata['freq'], banddata['gain'], eq_bandtype, band_res, None)
 
@@ -278,6 +315,9 @@ class input_amped(plugin_input.base):
         global cvpj_l
         global samplefolder
         global amped_filenames
+        global europa_vals
+
+        europa_vals = synth_nonfree_values.europa_valnames()
 
         cvpj_l = {}
         samplefolder = extra_param['samplefolder']

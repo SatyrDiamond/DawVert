@@ -152,10 +152,7 @@ def lmms_auto_getvalue(x_tag, x_name, i_fbv, i_type, i_addmul, i_loc):
         xmlval = realvaluetag.get('value')
         if xmlval != None: auto_id.in_define(str(realvaluetag.get('id')), i_loc, i_type, i_addmul)
     
-    if xmlval != None:
-        if i_addmul != None: outval = (float(xmlval)+i_addmul[0])*i_addmul[1]
-        else: outval = float(xmlval)
-
+    if xmlval != None: outval = (float(xmlval)+i_addmul[0])*i_addmul[1] if i_addmul != None else float(xmlval)
     if i_type == 'float': outval = outval
     if i_type == 'int': outval = int(outval)
     if i_type == 'bool': outval = bool(int(outval))
@@ -164,8 +161,8 @@ def lmms_auto_getvalue(x_tag, x_name, i_fbv, i_type, i_addmul, i_loc):
 
 def lmms_getvalue(xmltag, xmlname, fallbackval): 
     xmlval = xmltag.get(xmlname)
-    if xmlval != None: return xmlval
-    else: return fallbackval
+    if xmlval == None: xmlval = fallbackval
+    return xmlval
 
 # ------- Instruments and Plugins -------
 
@@ -198,14 +195,12 @@ def asdflfo(pluginid, xmlO, asdrtype):
     asdr_amount = float(lmms_getvalue(xmlO, 'amt', 0))
     if asdrtype == 'cutoff': asdr_amount *= 6000
 
-    plugins.add_asdr_env(cvpj_l, pluginid, asdrtype, 
-        asdr_predelay, asdr_attack, asdr_hold, asdr_decay, asdr_sustain, asdr_release, asdr_amount)
+    plugins.add_asdr_env(cvpj_l, pluginid, asdrtype, asdr_predelay, asdr_attack, asdr_hold, asdr_decay, asdr_sustain, asdr_release, asdr_amount)
 
     lfoparams = {}
 
     speedx100 = xmlO.get('x100')
-    if speedx100 != None: speedx100 = int(speedx100)
-    else: speedx100 = 0
+    speedx100 = int(speedx100) if speedx100 != None else 0
 
     lfo_predelay = float(lmms_getvalue(xmlO, 'pdel', 0))
     lfo_attack = exp2sec(float(lmms_getvalue(xmlO, 'latt', 0)))
@@ -214,12 +209,8 @@ def asdflfo(pluginid, xmlO, asdrtype):
     if asdrtype == 'cutoff': lfo_amount *= 6000
 
     lfo_speed = 0
-    if xmlO.get('lspd') != None: 
-        if speedx100 == 1: lfo_speed = float(xmlO.get('lspd')) * 0.2
-        else: lfo_speed = float(xmlO.get('lspd')) * 20
-
-    plugins.add_lfo(cvpj_l, pluginid, asdrtype, 
-        lfo_shape, 'seconds', lfo_speed, lfo_predelay, lfo_attack, lfo_amount)
+    if xmlO.get('lspd') != None: lfo_speed = (float(xmlO.get('lspd'))*0.2) if speedx100 == 1 else (float(xmlO.get('lspd'))*20)
+    plugins.add_lfo(cvpj_l, pluginid, asdrtype, lfo_shape, 'seconds', lfo_speed, lfo_predelay, lfo_attack, lfo_amount)
 
 def lmms_decodeplugin(trkX_insttr):
     trkX_instrument = trkX_insttr.findall('instrument')[0]
@@ -239,16 +230,10 @@ def lmms_decodeplugin(trkX_insttr):
             plugins.add_plug_data(cvpj_l, pluginid, 'patch', int(xml_plugin.get('patch')))
             plugins.add_plug_data(cvpj_l, pluginid, 'file', xml_plugin.get('src'))
             plugins.add_plug_param(cvpj_l, pluginid, 'gain', float(xml_plugin.get('gain')), 'float', 'Gain')
-            plugins.add_plug_param(cvpj_l, pluginid, 'chorus_depth', float(xml_plugin.get('chorusDepth')), 'float', 'chorusDepth')
-            plugins.add_plug_param(cvpj_l, pluginid, 'chorus_level', float(xml_plugin.get('chorusLevel')), 'float', 'chorusLevel')
-            plugins.add_plug_param(cvpj_l, pluginid, 'chorus_lines', float(xml_plugin.get('chorusNum')), 'float', 'chorusNum')
+            for cvpj_name, lmmsname in [['chorus_depth','chorusDepth'],['chorus_level','chorusLevel'],['chorus_lines','chorusNum'],['chorus_speed','chorusSpeed'],['reverb_damping','reverbDamping'],['reverb_level','reverbLevel'],['reverb_roomsize','reverbRoomSize'],['reverb_width','reverbWidth']]:
+                plugins.add_plug_param(cvpj_l, pluginid, cvpj_name, float(xml_plugin.get(lmmsname)), 'float', lmmsname)
             plugins.add_plug_param(cvpj_l, pluginid, 'chorus_enabled', float(xml_plugin.get('chorusOn')), 'bool', 'chorusOn')
-            plugins.add_plug_param(cvpj_l, pluginid, 'chorus_speed', float(xml_plugin.get('chorusSpeed')), 'float', 'chorusSpeed')
-            plugins.add_plug_param(cvpj_l, pluginid, 'reverb_damping', float(xml_plugin.get('reverbDamping')), 'float', 'reverbDamping')
-            plugins.add_plug_param(cvpj_l, pluginid, 'reverb_level', float(xml_plugin.get('reverbLevel')), 'float', 'reverbLevel')
             plugins.add_plug_param(cvpj_l, pluginid, 'reverb_enabled', float(xml_plugin.get('reverbOn')), 'bool', 'reverbOn')
-            plugins.add_plug_param(cvpj_l, pluginid, 'reverb_roomsize', float(xml_plugin.get('reverbRoomSize')), 'float', 'reverbRoomSize')
-            plugins.add_plug_param(cvpj_l, pluginid, 'reverb_width', float(xml_plugin.get('reverbWidth')), 'float', 'reverbWidth')
 
         elif pluginname == "audiofileprocessor":
             plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, lmms_getvalue(xml_plugin, 'src', ''))
@@ -346,8 +331,7 @@ def lmms_decode_nlpattern(notesX):
                         pointJ = {}
                         pointJ['position'] = float(pointX.get('pos')) / 12
                         pointJ['value'] = float(pointX.get('value'))
-                        if prognum == 0: pointJ['type'] = 'instant'
-                        else: pointJ['type'] = 'normal'
+                        pointJ['type'] = 'instant' if prognum == 0 else 'normal'
                         noteJ['notemod']['auto']['pitch'].append(pointJ)
         printcountpat += 1
         notelist.append(noteJ)
@@ -426,8 +410,7 @@ def lmms_decode_inst_track(trkX, trackid):
         tracks_r.track_dataval_add(cvpj_l, trackid, 'midi', 'basevelocity', int(midiportX.get('basevelocity')))
 
     xml_a_fxchain = trkX_insttr.findall('fxchain')
-    if len(xml_a_fxchain) != 0: 
-        fxslot.insert(cvpj_l, ['track', trackid], 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
+    if len(xml_a_fxchain) != 0: fxslot.insert(cvpj_l, ['track', trackid], 'audio', lmms_decode_fxchain(xml_a_fxchain[0]))
 
 
     xml_fxch = trkX_insttr.get('fxch')
@@ -707,15 +690,11 @@ def lmms_decode_effectslot(fxslotX):
                 l_ch = notetagtxt[4]
                 l_val = notetagtxt[5:]
                 t_data = node.get('data')
-                if l_ch == '0': paramid = 'ladspa_param_'+l_val
-                else: paramid = 'ladspa_param_'+l_val+'_'+l_ch
+                paramid = 'ladspa_param_'+l_val if l_ch == '0' else 'ladspa_param_'+l_val+'_'+l_ch
                 paramval = float(lmms_auto_getvalue(node, 'data', '0', 'float', None, ['plugin', pluginid, paramid]))
                 plugins.add_plug_param(cvpj_l, pluginid, paramid, paramval, 'float', paramid)
-
-        if seperated_channels == False: 
-            plugins.add_plug_data(cvpj_l, pluginid, 'seperated_channels', False)
-        if seperated_channels == True: 
-            plugins.add_plug_data(cvpj_l, pluginid, 'seperated_channels', True)
+        plugins.add_plug_data(cvpj_l, pluginid, 'seperated_channels', seperated_channels)
+        
     else:
         fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
         print('['+fxpluginname,end='] ')

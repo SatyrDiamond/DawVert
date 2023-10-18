@@ -188,11 +188,7 @@ class input_onlinesequencer(plugin_input.base):
 
             trueinstid = instid%10000
 
-            if instid in onlseq_customnames:
-                inst_name = onlseq_customnames[instid]
-            else:
-                inst_name = idvals.get_idval(idvals_onlineseq_inst, str(trueinstid), 'name')
-
+            inst_name = onlseq_customnames[instid] if instid in onlseq_customnames else idvals.get_idval(idvals_onlineseq_inst, str(trueinstid), 'name')
             inst_color = idvals.get_idval(idvals_onlineseq_inst, str(trueinstid), 'color')
             inst_gminst = idvals.get_idval(idvals_onlineseq_inst, str(trueinstid), 'gm_inst')
             inst_isdrum = idvals.get_idval(idvals_onlineseq_inst, str(trueinstid), 'isdrum')
@@ -227,27 +223,17 @@ class input_onlinesequencer(plugin_input.base):
 
             tracks_r.add_pl(cvpj_l, cvpj_instid, 'notes', placement_data.nl2pl(cvpj_notelist))
 
-            if 'delay_on' in onlseq_s_iparams: 
-                if 'delay' not in used_fx_inst[instid]: used_fx_inst[instid].append('delay')
-            if 'distort_type' in onlseq_s_iparams: 
-                if 'distort' not in used_fx_inst[instid]: used_fx_inst[instid].append('distort')
-            if 'distort_wet' in onlseq_s_iparams: 
-                if 'distort' not in used_fx_inst[instid]: used_fx_inst[instid].append('distort')
-            if 'reverb_type' in onlseq_s_iparams: 
-                if 'reverb' not in used_fx_inst[instid]: used_fx_inst[instid].append('reverb')
-            if 'reverb_on' in onlseq_s_iparams: 
-                if 'reverb' not in used_fx_inst[instid]: used_fx_inst[instid].append('reverb')
-            if 'reverb_wet' in onlseq_s_iparams: 
-                if 'reverb' not in used_fx_inst[instid]: used_fx_inst[instid].append('reverb')
-            if 'eq_high' in onlseq_s_iparams: 
-                if 'eq' not in used_fx_inst[instid]: used_fx_inst[instid].append('eq')
-            if 'eq_mid' in onlseq_s_iparams: 
-                if 'eq' not in used_fx_inst[instid]: used_fx_inst[instid].append('eq')
-            if 'eq_low' in onlseq_s_iparams: 
-                if 'eq' not in used_fx_inst[instid]: used_fx_inst[instid].append('eq')
+            if 'delay_on' in onlseq_s_iparams and 'delay' not in used_fx_inst[instid]: used_fx_inst[instid].append('delay')
+            if 'distort_type' in onlseq_s_iparams and 'distort' not in used_fx_inst[instid]: used_fx_inst[instid].append('distort')
+            if 'distort_wet' in onlseq_s_iparams and 'distort' not in used_fx_inst[instid]: used_fx_inst[instid].append('distort')
+            if 'reverb_type' in onlseq_s_iparams and 'reverb' not in used_fx_inst[instid]: used_fx_inst[instid].append('reverb')
+            if 'reverb_on' in onlseq_s_iparams and 'reverb' not in used_fx_inst[instid]: used_fx_inst[instid].append('reverb')
+            if 'reverb_wet' in onlseq_s_iparams and 'reverb' not in used_fx_inst[instid]: used_fx_inst[instid].append('reverb')
+            if 'eq_high' in onlseq_s_iparams and 'eq' not in used_fx_inst[instid]: used_fx_inst[instid].append('eq')
+            if 'eq_mid' in onlseq_s_iparams and 'eq' not in used_fx_inst[instid]: used_fx_inst[instid].append('eq')
+            if 'eq_low' in onlseq_s_iparams and 'eq' not in used_fx_inst[instid]: used_fx_inst[instid].append('eq')
 
-        bpm = 120
-        if '1' in onlseq_data_main: bpm = int(onlseq_data_main['1'])
+        bpm = int(onlseq_data_main['1']) if '1' in onlseq_data_main else 120
 
         for onlseq_data_marker in dict2list(onlseq_data_markers):
             t_markerdata = parse_marker(onlseq_data_marker)

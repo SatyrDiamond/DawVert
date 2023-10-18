@@ -124,8 +124,7 @@ class input_orgyana(plugin_input.base):
             s_cvpj_nl = read_orgtrack(bio_org, org_instrumentinfotable, tracknum)
             if len(s_cvpj_nl) != 0:
                 org_pitch = org_instrumentinfotable[tracknum][0]
-                if tracknum < 8: trackname = "Melody "+str(tracknum+1)
-                else: trackname = idvals.get_idval(idvals_orgyana_inst_drums, str(org_insttable[tracknum]), 'name')
+                trackname = "Melody "+str(tracknum+1) if tracknum < 8 else idvals.get_idval(idvals_orgyana_inst_drums, str(org_insttable[tracknum]), 'name')
                 idval = 'org_'+str(tracknum)
 
                 tracks_r.track_create(cvpj_l, idval, 'instrument')

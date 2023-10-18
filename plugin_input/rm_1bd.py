@@ -158,7 +158,6 @@ class input_1bitdragon(plugin_input.base):
 
         cvpj_scale = [x+cvpj_scale[1]+onebitd_scalekey for x in cvpj_scale[0]]
 
-
         for plnum in range(9):
             tracks_rm.track_create(cvpj_l, str(plnum+1), 'instruments')
             tracks_rm.track_visual(cvpj_l, str(plnum+1), color=onebd_colors[plnum])

@@ -14,6 +14,7 @@ from functions_tracks import fxslot
 from functions_tracks import tracks_r
 from functions_tracks import tracks_master
 from functions_plugin import soundation_values
+from functions_plugin import synth_nonfree_values
 import plugin_input
 import struct
 import json
@@ -103,6 +104,7 @@ class input_soundation(plugin_input.base):
 
         cvpj_l = {}
 
+        europa_vals = synth_nonfree_values.europa_valnames()
         timeSignaturesplit = sndstat_data['timeSignature'].split('/')
         song.add_timesig(cvpj_l, int(timeSignaturesplit[0]), int(timeSignaturesplit[1]))
         bpm = sndstat_data['bpm']
@@ -205,7 +207,8 @@ class input_soundation(plugin_input.base):
                         plugins.add_plug_data(cvpj_l, pluginid, 'interpolation', cvpj_interpolation)
 
                     else:
-                        plugins.add_plug(cvpj_l, pluginid, 'native-soundation', instpluginname)
+                        if instpluginname != 'com.soundation.europa':
+                            plugins.add_plug(cvpj_l, pluginid, 'native-soundation', instpluginname)
 
                         if instpluginname == 'com.soundation.GM-2':
                             get_asdr(pluginid, sound_instdata)
@@ -247,9 +250,18 @@ class input_soundation(plugin_input.base):
                             plugins.add_plug_data(cvpj_l, pluginid, 'kit_name', kit_name)
 
                         elif instpluginname == 'com.soundation.europa':
-                            for paramname in soundation_values.europa_vals():
+                            plugins.add_plug(cvpj_l, pluginid, 'synth-nonfree', 'Europa')
+                            for paramname in europa_vals:
+                                eur_value_type, eur_cvpj_name = europa_vals[paramname]
                                 value = sound_instdata["/custom_properties/"+paramname]['value']
-                                plugins.add_plug_data(cvpj_l, pluginid, paramname, value)
+                                #print(paramname, eur_value_type, value)
+                                if eur_value_type == 'number': 
+                                    plugins.add_plug_param(cvpj_l, pluginid, eur_cvpj_name, float(value), 'float', paramname)
+                                else:
+                                    if paramname in ['Curve1','Curve2','Curve3','Curve4','Curve']: 
+                                        value = value.split(',')
+                                        value = [int(x) for x in value] if value != [''] else []
+                                    plugins.add_plug_data(cvpj_l, pluginid, eur_cvpj_name, value)
 
                         elif instpluginname == 'com.soundation.spc':
                             for paramname in soundation_values.spc_vals():

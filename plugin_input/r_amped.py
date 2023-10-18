@@ -82,9 +82,6 @@ def encode_devices(amped_tr_devices, trackid):
             europa_xml = ET.fromstring(wampreset['settings'])
             europa_xml_prop = europa_xml.findall('Properties')[0]
 
-            print(wampreset['patch'])
-            #print(wampreset['settings'])
-
             for xmlsub in europa_xml_prop:
                 if xmlsub.tag == 'Object':
                     object_name = xmlsub.get('name')

@@ -7,6 +7,7 @@ import io
 import os
 import zipfile
 import math
+import lxml.etree as ET
 from functions import placements
 from functions import plugins
 from functions import data_values
@@ -16,6 +17,7 @@ from functions import auto
 from functions import notelist_data
 from functions import song
 from functions import xtramath
+from functions_plugin import synth_nonfree_values
 from functions_tracks import auto_nopl
 from functions_tracks import tracks_r
 
@@ -332,6 +334,9 @@ class output_cvpj_f(plugin_output.base):
         global audio_id
         global cvpj_l
         global amped_bpm
+        global europa_vals
+
+        europa_vals = synth_nonfree_values.europa_valnames()
 
         cvpj_l = json.loads(convproj_json)
         audio_id = {}
@@ -361,7 +366,40 @@ class output_cvpj_f(plugin_output.base):
                 if pluginid != None:
                     plugtype = plugins.get_plug_type(cvpj_l, pluginid)
 
-                    if plugtype[0] == 'midi':
+                    if plugtype == ['synth-nonfree', 'Europa']:
+                        inst_supported = True
+                        europa_data = amped_makedevice('WAM','Europa')
+                        europa_data['params'] = []
+                        europa_data['bypass'] = False
+                        europa_data['wamClassName'] = 'Europa'
+                        wamPreset = {}
+                        wamPreset['patch'] = 'DawVert'
+                        europa_patch = ET.Element("JukeboxPatch")
+                        europa_name = ET.SubElement(europa_patch, "DeviceNameInEnglish")
+                        europa_name.text = "Europa Shapeshifting Synthesizer"
+                        europa_prop = ET.SubElement(europa_patch, "Properties")
+                        europa_obj = ET.SubElement(europa_prop, "Object")
+                        europa_obj.set('name','custom_properties')
+                        for eur_value_name in europa_vals:
+                            eur_value_type, cvpj_val_name = europa_vals[eur_value_name]
+                            if eur_value_type == 'number':
+                                eur_value_value = plugins.get_plug_param(cvpj_l, pluginid, cvpj_val_name, 0)[0]
+                            else:
+                                eur_value_value = plugins.get_plug_dataval(cvpj_l, pluginid, cvpj_val_name, 0)
+                                if eur_value_name in ['Curve1','Curve2','Curve3','Curve4','Curve']: eur_value_value = bytes(eur_value_value).hex().upper()
+
+                            europa_value_obj = ET.SubElement(europa_obj, "Value")
+                            europa_value_obj.set('property',eur_value_name)
+                            europa_value_obj.set('type',eur_value_type)
+                            europa_value_obj.text = str(eur_value_value)
+                        wamPreset['settings'] = ET.tostring(europa_patch).decode()
+                        wamPreset['encodedSampleData'] = plugins.get_plug_dataval(cvpj_l, pluginid, 'encodedSampleData', [])
+
+                        europa_data['wamPreset'] = json.dumps(wamPreset)
+
+                        amped_trackdata["devices"].append(europa_data)
+
+                    elif plugtype[0] == 'midi':
                         inst_supported = True
                         midi_bank = plugins.get_plug_dataval(cvpj_l, pluginid, 'bank', 0)
                         midi_patch = plugins.get_plug_dataval(cvpj_l, pluginid, 'inst', 0)

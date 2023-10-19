@@ -75,9 +75,9 @@ def list_to_reigons(i_list, offsetval):
         mscount += 1
     return output
 
-def dict_findrepeat(i_dict):
+def list_findrepeat(i_list):
     outdata = []
-    for part in i_dict:
+    for part in i_list:
         if outdata == []: outdata.append([part, 1])
         else:
             if outdata[-1][0] == part: outdata[-1][1] += 1

@@ -147,7 +147,7 @@ def lc_parse_voice_chords(sl_json, length, currentchord):
 
     cvpj_notelist = []
 
-    chords = data_values.dict_findrepeat(dictdata)
+    chords = data_values.list_findrepeat(dictdata)
     notepos = 0
     for chord in chords:
         if chord[0] != None:

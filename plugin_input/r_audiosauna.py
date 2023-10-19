@@ -245,6 +245,18 @@ class input_audiosanua(plugin_input.base):
                     )
 
                 plugins.add_asdr_env(cvpj_l, pluginid, 'volume', 0, v_attack, 0, v_decay, v_sustain, v_release, 1)
+
+                if v_device_deviceType == 1: oprange = 2
+                if v_device_deviceType == 0: oprange = 4
+                for opnum in range(oprange):
+                    opnumtxt = str(opnum+1)
+
+                    op_attack, op_decay, op_release, op_sustain = setasdr(
+                        float(getvalue(x_device_sound, 'aOp'+opnumtxt, 0)), 
+                        float(getvalue(x_device_sound, 'dOp'+opnumtxt, 0)), 
+                        -1, 
+                        float(getvalue(x_device_sound, 'sOp'+opnumtxt, 0))/100 )
+                    plugins.add_asdr_env(cvpj_l, pluginid, 'op'+opnumtxt, 0, op_attack, 0, op_decay, op_sustain, op_release, 1)
                 
             if v_device_deviceType == 2:
                 plugins.add_plug_multisampler(cvpj_l, pluginid)

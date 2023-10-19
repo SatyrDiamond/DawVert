@@ -102,7 +102,7 @@ def longpl_split(placement_data):
             if all(splitareas) == False:
                 curblocknum = 0
                 outpl = []
-                for splitarea in data_values.dict_findrepeat(splitareas):
+                for splitarea in data_values.list_findrepeat(splitareas):
                     if splitarea[0] == True:
                         splitnotelist = longpl_blkmerge(split_notelists[curblocknum:curblocknum+splitarea[1]], 16)
                         splitpldata = makepl_n(

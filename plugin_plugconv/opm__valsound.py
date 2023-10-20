@@ -40,15 +40,15 @@ class plugconv(plugin_plugconv.base):
             op_data = opdata[opnum]
             op_num = 'op'+str(opnum)
 
-        plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_attack', op_data[0], 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_decay', op_data[1], 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_decay2', op_data[2], 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_release', op_data[3], 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_sustain', op_data[4], 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, op_num+'_level', op_data[5], 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, op_num+'_keyscale', op_data[6], 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, op_num+'_freqmul', op_data[7], 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, op_num+'_detune', op_data[8], 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, op_num+'_detune2', op_data[9], 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_attack', op_data[0], 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_decay', op_data[1], 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_decay2', op_data[2], 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_release', op_data[3], 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_sustain', op_data[4], 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, op_num+'_level', op_data[5], 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, op_num+'_keyscale', op_data[6], 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, op_num+'_freqmul', op_data[7], 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, op_num+'_detune', op_data[8], 'int', "")
+            plugins.add_plug_param(cvpj_l, pluginid, op_num+'_detune2', op_data[9], 'int', "")
 
         return True

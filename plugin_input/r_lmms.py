@@ -109,6 +109,26 @@ def get_send_auto_id():
     send_auto_id += 1
     return 'send'+str(send_auto_id)
 
+def add_window_data(xmltag, cvpj_l, w_group, w_name):
+    window_x = xmltag.get('x')
+    window_y = xmltag.get('y')
+    window_visible = xmltag.get('visible')
+    window_width = xmltag.get('width')
+    window_height = xmltag.get('height')
+    window_maximized = xmltag.get('maximized')
+
+    w_pos = None
+    w_size = None
+    w_open = None
+    w_max = None
+
+    if window_x != None and window_y != None: w_pos = [int(window_x), int(window_y)]
+    if window_width != None and window_height != None: w_size = [int(window_width), int(window_height)]
+    if window_visible != None: w_open = bool(int(window_visible))
+    if window_maximized != None: w_max = bool(int(window_maximized))
+
+    song.add_visual_window(cvpj_l, w_group, w_name, w_pos, w_size, w_open, w_max)
+
 
 
 def getvstparams(pluginid, xmldata):
@@ -119,6 +139,10 @@ def getvstparams(pluginid, xmldata):
     vst_data = xmldata.get('chunk')
     vst_numparams = xmldata.get('numparams')
     vst_program = xmldata.get('program')
+
+    w_open = xmldata.get('guivisible')
+    if w_open == None: w_open = False
+    song.add_visual_window(cvpj_l, 'plugin', pluginid, None, None, bool(int(w_open)), None)
 
     if vst_program != None: 
         plugins.add_plug_data(cvpj_l, pluginid, 'current_program', int(vst_program))
@@ -372,6 +396,7 @@ def lmms_decode_inst_track(trkX, trackid):
     #trkX_insttr
     trkX_insttr = trkX.findall('instrumenttrack')[0]
     track_color, pluginname, instpluginid = lmms_decodeplugin(trkX_insttr)
+    add_window_data(trkX, cvpj_l, 'plugin', instpluginid)
     cvpj_pan = float(lmms_auto_getvalue(trkX_insttr, 'pan', 0, 'float', [0, 0.01], ['track', trackid, 'pan']))
     cvpj_vol = float(lmms_auto_getvalue(trkX_insttr, 'vol', 100, 'float', [0, 0.01], ['track', trackid, 'vol']))
     
@@ -795,6 +820,7 @@ class input_lmms(plugin_input.base):
         global lmms_ladspapath
         global cvpj_l
 
+        cvpj_l = {}
         homepath = os.path.expanduser('~')
         lmmsconfigpath_win = homepath+'\\.lmmsrc.xml'
         lmmsconfigpath_unx = homepath+'/.lmmsrc.xml'
@@ -819,12 +845,16 @@ class input_lmms(plugin_input.base):
 
         tree = get_xml_tree(input_file)
         headX = tree.findall('head')[0]
-        trksX = tree.findall('song/trackcontainer/track')
-        fxX = tree.findall('song/fxmixer/fxchannel')
-        tlX = tree.find('song/timeline')
-        projnotesX = tree.find('song/projectnotes')
+        songX = tree.findall('song')[0]
+        trkscX = songX.findall('trackcontainer')
+        if len(trkscX): add_window_data(trkscX[0], cvpj_l, 'main', 'tracklist')
+        trksX = trkscX[0].findall('track')
+        fxmixerX = songX.findall('fxmixer')
+        if len(fxmixerX): add_window_data(fxmixerX[0], cvpj_l, 'main', 'fxmixer')
+        fxX = fxmixerX[0].findall('fxchannel')
 
-        cvpj_l = {}
+        tlX = songX.find('timeline')
+
         cvpj_bpm = float(lmms_auto_getvalue(headX, 'bpm', 140, 'float', None, ['main', 'bpm']))
         cvpj_vol = float(lmms_auto_getvalue(headX, 'mastervol', 100, 'float', [0, 0.01], ['main', 'vol']))
         cvpj_pitch = float(lmms_auto_getvalue(headX, 'masterpitch', 0, 'float', None, ['main', 'pitch']))
@@ -837,7 +867,7 @@ class input_lmms(plugin_input.base):
         song.add_param(cvpj_l, 'vol', cvpj_vol)
         song.add_param(cvpj_l, 'pitch', cvpj_pitch)
 
-        if projnotesX.text != None: song.add_info_msg(cvpj_l, 'html', projnotesX.text)
+        projnotesX = songX.findall('projectnotes')
 
         lmms_decode_tracks(trksX)
         lmms_decode_fxmixer(cvpj_l, fxX)
@@ -845,6 +875,19 @@ class input_lmms(plugin_input.base):
         trackdata = cvpj_l['track_data'] if 'track_data' in cvpj_l else {}
 
         auto_id.in_output(cvpj_l)
+
+        X_controllerrackview = songX.findall('ControllerRackView')
+        if len(X_controllerrackview): add_window_data(X_controllerrackview[0], cvpj_l, 'main', 'controller_rack_view')
+
+        X_pianoroll = songX.findall('pianoroll')
+        if len(X_pianoroll): add_window_data(X_pianoroll[0], cvpj_l, 'main', 'piano_roll')
+
+        X_automationeditor = songX.findall('automationeditor')
+        if len(X_automationeditor): add_window_data(X_automationeditor[0], cvpj_l, 'main', 'automation_editor')
+
+        if len(projnotesX): 
+            song.add_info_msg(cvpj_l, 'html', projnotesX[0].text)
+            add_window_data(projnotesX[0], cvpj_l, 'main', 'project_notes')
 
         return json.dumps(cvpj_l, indent=2)
         

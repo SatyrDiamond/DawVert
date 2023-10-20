@@ -121,16 +121,23 @@ def add_info_msg(cvpj_l, i_datatype, i_value):
 def add_param(cvpj_l, p_id, p_value, **kwargs):
     params.add(cvpj_l, [], p_id, p_value, 'float', **kwargs)
 
-def add_visual_window(cvpj_l, w_group, w_name, w_open, w_pos, w_size):
-    data_values.nested_dict_add_value(cvpj_l, ['visual_window', w_group, w_name], {'active': w_open, 'pos': w_pos, 'size': w_size})
+def add_visual_window(cvpj_l, w_group, w_name, w_pos, w_size, w_open, w_max):
+    out_json = {}
+    if w_open != None: out_json['active'] = w_open
+    if w_pos != None: out_json['pos'] = w_pos
+    if w_size != None: out_json['size'] = w_size
+    if w_max != None: out_json['max'] = w_max
+    data_values.nested_dict_add_value( cvpj_l, ['visual', 'window', w_group, w_name], out_json )
 
-def get_visual_window(cvpj_l, w_group, w_name):
-    out_open = False
-    out_pos = [0,0]
-    out_size = [100,100]
-    out_data = nested_dict_get_value(i_data, ['visual_window', w_group, w_name])
+def get_visual_window(cvpj_l, w_group, w_name, w_pos, w_size, w_open, w_max):
+    out_open = w_open
+    out_pos = w_pos
+    out_size = w_size
+    out_max = w_max
+    out_data = data_values.nested_dict_get_value(cvpj_l, ['visual', 'window', w_group, w_name])
     if out_data != None:
-        out_open = out_data['active']
-        out_pos = out_data['pos']
-        out_size = out_data['size']
-    return out_open, out_pos, out_size
+         if 'active' in out_data: out_open = out_data['active']
+         if 'pos' in out_data: out_pos = out_data['pos']
+         if 'size' in out_data: out_size = out_data['size']
+         if 'max' in out_data: out_max = out_data['max']
+    return out_pos, out_size, out_open, out_max

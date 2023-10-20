@@ -178,8 +178,25 @@ class output_cvpjs(plugin_output.base):
                         T_Main['samplefilename'] = data_values.get_value(cvpj_plugindata, 'file', '')
 
                     elif fl_plugin != None:
-                        fl_plugindata = b'\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00Q\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-                        fl_plugindata += b'\x00\x00\x00\x00'*4
+
+                        plug_opened = False
+                        pos_x, pos_y = [0,0]
+                        size_x, size_y = [0,0]
+
+                        out_pos, out_size, out_open, out_max = song.get_visual_window(cvpj_l, 'plugin', pluginid, None, None, None, None)
+
+                        if out_pos != None: pos_x, pos_y = out_pos
+                        if out_size != None: size_x, size_y = out_size
+                        if out_open != None: plug_opened = out_open
+
+
+                        fl_plugindata = b'\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00'
+                        fl_plugindata += b'Q' if plug_opened else b'P'
+                        fl_plugindata += b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+
+
+                        fl_plugindata += struct.pack('iiii', pos_x, pos_y, size_x, size_y)
+
                         T_Main['plugindata'] = fl_plugindata
                         T_Main['type'] = 2
                         T_Main['plugin'] = fl_plugin

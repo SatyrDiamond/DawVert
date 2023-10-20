@@ -75,6 +75,23 @@ def list_to_reigons(i_list, offsetval):
         mscount += 1
     return output
 
+def list_to_reigons_bool(i_list):
+    found_regs = []
+    i_list_p = None
+    mscount = 0
+    for i_list_e in i_list:
+        if i_list_e != i_list_p: 
+            i_list_p = i_list_e
+            found_regs.append([i_list_p, mscount, mscount])
+        found_regs[-1][2] += 1
+        mscount += 1
+
+    output = []
+    for found_reg in found_regs:
+        if found_reg[0]: output.append(found_reg[1:])
+
+    return output
+
 def list_findrepeat(i_list):
     outdata = []
     for part in i_list:
@@ -173,3 +190,9 @@ def list_tab_closest(i_list, v_target, v_num):
             closestnumlist[1] = num
             closestnumlist[2] = howclose
     return closestnumlist
+
+def list_samesimilar(first, second):
+    out = 0
+    for x in range(len(first)):
+        if first[x] == second[x]: out += 1
+    return out/len(first)

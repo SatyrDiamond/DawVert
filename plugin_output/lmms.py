@@ -69,8 +69,22 @@ trackscount_forprinting = 0
 
 # ------- functions -------
 
-def setvstparams(cvpj_plugindata, pluginid, xmldata):
+def add_window_data(xmltag, cvpj_l, w_group, w_name, w_pos, w_size, w_open, w_max):
+    out_pos, out_size, out_open, out_max = song.get_visual_window(cvpj_l, w_group, w_name, w_pos, w_size, w_open, w_max)
 
+    if out_open != None: xmltag.set("visible", str(int(out_open)))
+    if out_max != None: xmltag.set("maximized", str(int(out_max)))
+
+    if out_pos != None: 
+        xmltag.set("x", str(out_pos[0]))
+        xmltag.set("y", str(out_pos[1]))
+
+    if out_size != None: 
+        xmltag.set("width", str(out_size[0]))
+        xmltag.set("height", str(out_size[1]))
+
+
+def setvstparams(cvpj_plugindata, pluginid, xmldata):
     vstpath = data_values.get_value(cvpj_plugindata, 'path', '')
 
     current_program = data_values.get_value(cvpj_plugindata, 'current_program', 0)
@@ -457,7 +471,10 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     trkX_insttr = ET.SubElement(xmltag, "instrumenttrack")
     trkX_insttr.set('usemasterpitch', "1")
     trkX_insttr.set('pitch', "0")
-    instplugin = instJ['plugin'] if 'plugin' in instJ else None
+    instplugin = instJ['pluginid'] if 'pluginid' in instJ else None
+
+    if instplugin != None:
+        add_window_data(xmltag, cvpj_l, 'plugin', instplugin, None, None, False, False)
 
     trkX_insttr.set('fxch', str(tracks_r.track_fxrackchan_get(cvpj_l, trackid)))
     trkX_insttr.set('pitchrange', "12")
@@ -937,7 +954,7 @@ class output_lmms(plugin_output.base):
         'fxrack': True,
         'fxrack_params': ['enabled','vol']
         }
-    def getsupportedplugformats(self): return ['vst2', 'ladspa']
+    def getsupportedplugformats(self): return ['vst2', 'ladspa', 'native-lmms']
     def getsupportedplugins(self): return ['sampler:single', 'soundfont2', 'universal:eq-bands', 'universal:delay-c', 'simple:reverb']
     def getfileextension(self): return 'mmp'
     def parse(self, convproj_json, output_file):
@@ -965,6 +982,7 @@ class output_lmms(plugin_output.base):
         headX = ET.SubElement(projX, "head") 
         songX = ET.SubElement(projX, "song")
         trkcX = ET.SubElement(songX, "trackcontainer")
+        add_window_data(trkcX, cvpj_l, 'main', 'tracklist', [5,5], [720,300], True, False)
 
         auto_nameiddata_main = {}
 
@@ -981,19 +999,23 @@ class output_lmms(plugin_output.base):
         lmms_encode_tracks(trkcX, trksJ, trkorderJ, trkplacementsJ)
 
         xml_fxmixer = ET.SubElement(songX, "fxmixer")
+        add_window_data(xml_fxmixer, cvpj_l, 'main', 'fxmixer', [102,280], [543,333], True, False)
         if 'fxrack' in cvpj_l:
             lmms_encode_fxmixer(xml_fxmixer, cvpj_l['fxrack'])
 
+        XControllerRackView = ET.SubElement(songX, "ControllerRackView")
+        add_window_data(XControllerRackView, cvpj_l, 'main', 'controller_rack_view', [680,310], [350,200], False, False)
+        Xpianoroll = ET.SubElement(songX, "pianoroll")
+        add_window_data(Xpianoroll, cvpj_l, 'main', 'piano_roll', [5,5], [970,480], False, False)
+        Xautomationeditor = ET.SubElement(songX, "automationeditor")
+        add_window_data(Xautomationeditor, cvpj_l, 'main', 'automation_editor', [1,1], [860,400], False, False)
 
         if 'info' in cvpj_l:
             infoJ = cvpj_l['info']
             if 'message' in infoJ:
                 notesX = ET.SubElement(songX, "projectnotes")
-                notesX.set("visible", "1")
-                notesX.set("x", "728" )
-                notesX.set("height", "300")
-                notesX.set("y", "5" )
-                notesX.set("width", "389")
+                add_window_data(notesX, cvpj_l, 'main', 'project_notes', [728, 5], [389, 300], True, False)
+
                 if 'type' in infoJ['message']:
                     if infoJ['message']['type'] == 'html': notesX.text = ET.CDATA(infoJ['message']['text'])
                     if infoJ['message']['type'] == 'text': notesX.text = ET.CDATA(infoJ['message']['text'].replace('\n', '<br/>').replace('\r', '<br/>'))

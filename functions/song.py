@@ -120,3 +120,17 @@ def add_info_msg(cvpj_l, i_datatype, i_value):
 
 def add_param(cvpj_l, p_id, p_value, **kwargs):
     params.add(cvpj_l, [], p_id, p_value, 'float', **kwargs)
+
+def add_visual_window(cvpj_l, w_group, w_name, w_open, w_pos, w_size):
+    data_values.nested_dict_add_value(cvpj_l, ['visual_window', w_group, w_name], {'active': w_open, 'pos': w_pos, 'size': w_size})
+
+def get_visual_window(cvpj_l, w_group, w_name):
+    out_open = False
+    out_pos = [0,0]
+    out_size = [100,100]
+    out_data = nested_dict_get_value(i_data, ['visual_window', w_group, w_name])
+    if out_data != None:
+        out_open = out_data['active']
+        out_pos = out_data['pos']
+        out_size = out_data['size']
+    return out_open, out_pos, out_size

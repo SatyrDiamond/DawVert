@@ -200,10 +200,23 @@ class input_flp(plugin_input.base):
                     plugins.add_fileref(cvpj_l, pluginid, 'audiofile', filename_sample)
 
                     flpluginname = channeldata['plugin'] if 'plugin' in channeldata else None
+                    flplugindata = channeldata['plugindata'] if 'plugindata' in channeldata else None
+                    flpluginparams = channeldata['pluginparams'] if 'pluginparams' in channeldata else b''
 
                     plug_exists = None
-                    if 'pluginparams' in channeldata: 
-                        plug_exists = flp_dec_plugins.getparams(cvpj_l, pluginid, flpluginname, channeldata['pluginparams'], samplefolder)
+
+                    if flplugindata != None:
+
+                        window_detatched = flplugindata[16]&4
+                        window_active = flplugindata[16]&1
+                        window_data = struct.unpack('iiii', flplugindata[36:52])
+                        window_size = window_data[2:4] if window_active else None
+                        song.add_visual_window(cvpj_l, 'plugin', pluginid, window_data[0:2], window_size, bool(window_active), False)
+
+                    if flpluginname != None: 
+                        plug_exists = flp_dec_plugins.getparams(cvpj_l, pluginid, flpluginname, flpluginparams, samplefolder)
+
+
                     #if plug_exists == True:
                     #    print(channeldata['plugin'])
 

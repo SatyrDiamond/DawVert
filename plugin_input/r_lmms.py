@@ -812,6 +812,7 @@ class input_lmms(plugin_input.base):
         try:
             root = get_xml_tree(input_file)
             if root.tag == "lmms-project": output = True
+            else: output = False
         except ET.ParseError: output = False
         return output
     def parse(self, input_file, extra_param):

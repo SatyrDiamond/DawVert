@@ -98,19 +98,16 @@ def parse_notelist(causticpattern, machid):
 def loopmode_cvpj(wavdata): 
     lm = wavdata['mode']
     data_end = wavdata['end']
-    if lm == 0 or lm == 1 or lm == 2 or lm == 3: data_start = wavdata['start']
-    if lm == 4 or lm == 5: data_start = 0
+    if lm in [0,1,2,3]: data_start = wavdata['start']
+    if lm in [4,5]: data_start = 0
 
-    if lm == 0: data_trigger = 'normal'
-    else: data_trigger = 'oneshot'
+    data_trigger = 'normal' if lm == 0 else 'oneshot'
 
     loopdata = {}
-    if lm == 2 or lm == 3 or lm == 4 or lm == 5:
-        loopdata['enabled'] = 1
-        loopdata['points'] = [wavdata['start'], wavdata['end']]
-    if lm == 0 or lm == 1: loopdata['enabled'] = 0
-    if lm == 2 or lm == 4: loopdata['mode'] = "normal"
-    if lm == 3 or lm == 5: loopdata['mode'] = "pingpong"
+    if lm in [2,3,4,5]: loopdata = {'enabled': 1, 'points': [wavdata['start'], wavdata['end']]}
+    if lm in [0,1]: loopdata['enabled'] = 0
+    if lm in [2,4]: loopdata['mode'] = "normal"
+    if lm in [3,5]: loopdata['mode'] = "pingpong"
     return data_start, data_end, data_trigger, loopdata
 
 def tp2cvpjp(twopoints):
@@ -221,8 +218,7 @@ class input_cvpj_r(plugin_input.base):
 
             machid = str(machnum)
 
-            if 'name' in machine: cvpj_trackname = machine['name']
-            else: cvpj_trackname = idvals.get_idval(idvals_inst_caustic, machine['id'], 'name')
+            cvpj_trackname = machine['name'] if 'name' in machine else idvals.get_idval(idvals_inst_caustic, machine['id'], 'name')
 
             cvpj_notelistindex = {}
 
@@ -279,11 +275,7 @@ class input_cvpj_r(plugin_input.base):
                         regionparams['volume'] = singlewav['volume']
                         regionparams['pan'] = (singlewav['pan']-0.5)*2
                         regionparams['file'] = wave_path
-                        data_start, data_end, data_trigger, data_loopdata = loopmode_cvpj(singlewav)
-                        regionparams['start'] = data_start
-                        regionparams['end'] = data_end
-                        regionparams['trigger'] = data_trigger
-                        regionparams['loop'] = data_loopdata
+                        regionparams['start'], regionparams['end'], regionparams['trigger'], regionparams['loop'] = loopmode_cvpj(singlewav)
                         plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
                         samplecount += 1
 

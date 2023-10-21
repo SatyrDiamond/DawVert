@@ -20,6 +20,12 @@ def mx_makenote(t_inst, t_pos, t_dur, t_key, t_vol, t_pan):
 keytable_vals = [0,2,4,5,7,9,11] 
 keytable = ['C','D','E','F','G','A','B']
 
+def text_to_note(i_keytxt):
+    keyletter = i_keytxt[0]
+    keysharp = True if i_keytxt[1] == '#' else False
+    keyoct = int(i_keytxt[-1])-5
+    return keyletter_to_note(keyletter, keyoct) + int(keysharp)
+
 def keynum_to_note(i_keynum, i_oct):
     return keytable_vals[i_keynum] + (i_oct)*12
 

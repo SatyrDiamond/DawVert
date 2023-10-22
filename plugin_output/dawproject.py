@@ -196,7 +196,7 @@ class output_cvpj(plugin_output.base):
                     if 'cut' in s_trkplacement:
                         trkplcut = s_trkplacement['cut']
                         if s_trkplacement['cut']['type'] == 'cut':
-                            x_arr_lanes_clip.set('duration', str((trkplcut['end'] - s_trkplacement['cut']['start'])/4))
+                            x_arr_lanes_clip.set('duration', str(((s_trkplacement['cut']['start']+s_trkplacement['duration']) - s_trkplacement['cut']['start'])/4))
                             x_arr_lanes_clip.set('playStart', str(trkplcut['start']/4))
                         if s_trkplacement['cut']['type'] == ['loop', 'loop_off', 'loop_adv']:
                             x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
@@ -207,6 +207,8 @@ class output_cvpj(plugin_output.base):
                         x_arr_lanes_clip.set('time', str(s_trkplacement['position']/4))
                         x_arr_lanes_clip.set('duration', str(s_trkplacement['duration']/4))
                         x_arr_lanes_clip.set('playStart', '0.0')
+
+                        
                     if 'notelist' in s_trkplacement:
                         s_trknotelist = s_trkplacement['notelist']
                         nlidcount = 1

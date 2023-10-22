@@ -20,7 +20,7 @@ def process_r(cvpj_l):
                 if track_placement_type == 'notes': 
                     new_trackdata[split_cvpj_trackid]['type'] = 'instrument'
                     print('Notes', end=' ')
-                if track_placement_type == 'audio': 
+                if track_placement_type in ['audio', 'audio_nested']: 
                     new_trackdata[split_cvpj_trackid]['type'] = 'audio'
                     print('Audio', end=' ')
                 new_trackpl[split_cvpj_trackid] = {}

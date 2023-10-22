@@ -88,6 +88,8 @@ def song_start(numchannels, ppq, numtracks, tempo, timesig):
 	automation_channel = [{} for _ in range(numchannels)]
 	song_channels = numchannels
 
+______debugtxt______ = False
+
 def add_track(startpos, midicmds):
 	global global_miditracks
 
@@ -133,6 +135,7 @@ def add_track(startpos, midicmds):
 		elif midicmd[0] == 'sequencer_specific': 
 			exdata = midi_exdata.decode_exdata(midicmd[1], True)
 
+			if ______debugtxt______: print('SEQ', exdata)
 
 			if exdata[0] == [5]:
 				if exdata[1][0] == 15: #from Anvil Studio
@@ -182,6 +185,9 @@ def add_track(startpos, midicmds):
 		elif midicmd[0] == 'sysex': 
 			#add_point(auto_sysex, track_curpos, midicmd[1])
 			sysexdata = midi_exdata.decode(midicmd[1])
+
+			if ______debugtxt______: print('SYSEX', sysexdata)
+
 			if sysexdata != None:
 				out_vendor, out_vendor_ext, out_brandname, out_device, out_model, out_command, out_data, devicename, groups, nameval = sysexdata
 
@@ -198,6 +204,9 @@ def add_track(startpos, midicmds):
 								auto_chanmode[groups[2]-1][track_curpos] = bool(nameval[1])
 
 		elif midicmd[0] == 'marker': add_point(auto_markers, track_curpos, midicmd[1])
+
+		elif midicmd[0] == 'text': 
+			if ______debugtxt______: print('TEXT', midicmd[1])
 
 		elif midicmd[0] == 'key_signature': add_point(auto_key_signature, track_curpos, midicmd[1])
 

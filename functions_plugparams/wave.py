@@ -72,14 +72,14 @@ def create_wave(shape, mul, pw, **kwargs):
         for num in range(numpoints): wave_data.append(wave_tri((num+halfpoint)/numpoints)**3)
     return wave_data
 
-def cvpjwave2wave(cvpj_l, pluginid, wave_name):
+def cvpjwave2wave(cvpj_l, pluginid, wave_name, **kwargs):
     wavedata = plugins.get_wave(cvpj_l, pluginid, wave_name)
     if wavedata != None:
         wavedata_points = wavedata['points']
         if 'range' in wavedata:
             rangedata = wavedata['range']
             wavedata_points = [xtramath.between_to_one(rangedata[0], rangedata[1], i) for i in wavedata_points]
-        return resizewave(wavedata_points)
+        return resizewave(wavedata_points, **kwargs)
     else: return None
 
 def wave2file(cvpj_l, pluginid, wave_name, fileloc):

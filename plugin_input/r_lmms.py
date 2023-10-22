@@ -44,7 +44,7 @@ opl2opvarnames = [
 ['_mul', '_freqmul'],
 ['_ksr', '_ksr'],
 ['_lvl', '_level'],
-['_perc', '_perc_env'],
+['_perc', '_sustained'],
 ['_scale', '_scale'],
 ['_trem', '_tremolo'],
 ['_vib', '_vibrato'],

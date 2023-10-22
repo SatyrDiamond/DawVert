@@ -16,6 +16,7 @@ from functions import note_data
 from functions import params
 from functions_tracks import tracks_rm
 from functions_tracks import auto_nopl
+from functions_plugparams import params_fm
 
 def add_point(i_list, time, value):
     if time not in i_list: i_list[time] = []
@@ -28,24 +29,17 @@ def decode_events(song_file):
     for _ in range(track_numEvents):
         sop_event_pos = int.from_bytes(song_file.read(2), "little")
         sop_event_code = song_file.read(1)[0]
-        if sop_event_code == 1: 
-            sop_eventdata.append([sop_event_pos, 'SPECIAL', song_file.read(1)[0]])
+        if sop_event_code == 1: sop_eventdata.append([sop_event_pos, 'SPECIAL', song_file.read(1)[0]])
         elif sop_event_code == 2: 
             note_pitch = song_file.read(1)[0]
             note_length = int.from_bytes(song_file.read(2), "little")
             sop_eventdata.append([sop_event_pos, 'NOTE', note_pitch, note_length])
-        elif sop_event_code == 3: 
-            sop_eventdata.append([sop_event_pos, 'TEMPO', song_file.read(1)[0]])
-        elif sop_event_code == 4: 
-            sop_eventdata.append([sop_event_pos, 'VOL', song_file.read(1)[0]])
-        elif sop_event_code == 5: 
-            sop_eventdata.append([sop_event_pos, 'PITCH', song_file.read(1)[0]])
-        elif sop_event_code == 6: 
-            sop_eventdata.append([sop_event_pos, 'INST', song_file.read(1)[0]])
-        elif sop_event_code == 7: 
-            sop_eventdata.append([sop_event_pos, 'PAN', song_file.read(1)[0]])
-        elif sop_event_code == 8: 
-            sop_eventdata.append([sop_event_pos, 'GVOL', song_file.read(1)[0]])
+        elif sop_event_code == 3: sop_eventdata.append([sop_event_pos, 'TEMPO', song_file.read(1)[0]])
+        elif sop_event_code == 4: sop_eventdata.append([sop_event_pos, 'VOL', song_file.read(1)[0]])
+        elif sop_event_code == 5: sop_eventdata.append([sop_event_pos, 'PITCH', song_file.read(1)[0]])
+        elif sop_event_code == 6: sop_eventdata.append([sop_event_pos, 'INST', song_file.read(1)[0]])
+        elif sop_event_code == 7: sop_eventdata.append([sop_event_pos, 'PAN', song_file.read(1)[0]])
+        elif sop_event_code == 8: sop_eventdata.append([sop_event_pos, 'GVOL', song_file.read(1)[0]])
         else:
             print('[error] unknown event code:', sop_event_code)
             exit()
@@ -137,69 +131,47 @@ class input_sop(plugin_input.base):
             tracks_rm.inst_create(cvpj_l, cvpj_instname)
             tracks_rm.inst_visual(cvpj_l, cvpj_instname, name=instname, color=[0.39, 0.16, 0.78])
 
-            #print(sop_data_s_inst, instname)
+            if sop_data_s_inst[0] in [1,6,7,8,9,10]:
+                fmdata = params_fm.fm_data('opl2')
 
-            #if sop_data_s_inst[0] in [1,6,7,8,9,10]:
-            #    tracks.c_inst_pluginid(cvpj_l, cvpj_instname, cvpj_instname)
-            #    plugins.add_plug(cvpj_l, cvpj_instname, 'fm', 'opl2')
+                tracks_rm.inst_pluginid(cvpj_l, cvpj_instname, cvpj_instname)
+                #tracks_rm.inst_dataval_add(cvpj_l, cvpj_instname, 'instdata', 'middlenote', 24)
+                plugins.add_plug(cvpj_l, cvpj_instname, 'fm', 'opl2')
 
-            #    sbidata = sop_data_s_inst[3]
-            #    iModChar = sbidata[0]
-            #    iModScale = sbidata[1]
-            #    iModAttack = sbidata[2]
-            #    iModSustain = sbidata[3]
-            #    iModWaveSel = sbidata[4]
-            #    iFeedback = sbidata[5]
-            #    iCarChar = sbidata[6]
-            #    iCarScale = sbidata[7]
-            #    iCarAttack = sbidata[8]
-            #    iCarSustain = sbidata[9]
-            #    iCarWaveSel = sbidata[10]
+                sbidata = sop_data_s_inst[3]
+                iMod = [sbidata[0], sbidata[1], sbidata[2], sbidata[3], sbidata[4]]
+                iFeedback = sbidata[5]
+                iCar = [sbidata[6], sbidata[7], sbidata[8], sbidata[9], sbidata[10]]
 
-            #    opl_sbi.opl2sbi_plugin(cvpj_l, cvpj_instname, 
-            #        iModChar, iCarChar, iModScale, iCarScale, 
-            #        iModAttack, iCarAttack, iModSustain, iCarSustain, 
-            #        iModWaveSel, iCarWaveSel, iFeedback)
+                fmdata.opl_sbi_part_op(0, iMod, False)
+                fmdata.opl_sbi_part_op(1, iCar, False)
+                fmdata.opl_sbi_part_fbcon(iFeedback, 'feedback', 'fm')
 
-            #if sop_data_s_inst[0] == 0:
-            #    tracks.c_inst_pluginid(cvpj_l, cvpj_instname, cvpj_instname)
-            #    plugins.add_plug(cvpj_l, cvpj_instname, 'fm', 'opl3')
-            #    fouropdata = sop_data_s_inst[3]
-            #    op1_data = fouropdata[0:5]
-            #    op12_fbcon = fouropdata[5]
-            #    op2_data = fouropdata[6:11]
-            #    op3_data = fouropdata[11:16]
-            #    op34_fbcon = fouropdata[16]
-            #    op4_data = fouropdata[17:22]
-            #    for opnum, opdata in [['m1',op1_data],['c1',op2_data],['m2',op3_data],['c2',op4_data]]:
-            #        iOpChar = opdata[0]
+                fmdata.to_cvpj(cvpj_l, cvpj_instname)
 
-            #        iOpScale = opdata[1]
-            #        iOpAttack = opdata[2]
-            #        iOpSustain = opdata[3]
+            if sop_data_s_inst[0] == 0:
+                fmdata = params_fm.fm_data('opl3')
 
-            #        iOpWaveSel = opdata[4]
-            #        plugins.add_plug_param(cvpj_l, cvpj_instname, opnum+"_waveform", iOpWaveSel, 'int', "")
+                tracks_rm.inst_pluginid(cvpj_l, cvpj_instname, cvpj_instname)
+                #tracks_rm.inst_dataval_add(cvpj_l, cvpj_instname, 'instdata', 'middlenote', 24)
+                plugins.add_plug(cvpj_l, cvpj_instname, 'fm', 'opl3')
+                fouropdata = sop_data_s_inst[3]
 
-            #        out_kls = iOpScale >> 6
-            #        out_lvl = iOpScale & 0x3F
-            #        plugins.add_plug_param(cvpj_l, cvpj_instname, opnum+"_level", (out_lvl*-1)+63, 'int', "")
-            #        plugins.add_plug_param(cvpj_l, cvpj_instname, opnum+"_ksr", out_kls, 'int', "")
+                op1_data = [fouropdata[0], fouropdata[1], fouropdata[2], fouropdata[3], fouropdata[4]]
+                op12_fbcon = fouropdata[5]
+                op2_data = [fouropdata[6], fouropdata[7], fouropdata[8], fouropdata[9], fouropdata[10]]
+                op3_data = fouropdata[11:16]
+                op34_fbcon = fouropdata[16]
+                op4_data = fouropdata[17:22]
 
-            #        out_att, out_dec = data_bytes.splitbyte(iOpAttack)
-            #        out_sus, out_rel = data_bytes.splitbyte(iOpSustain)
-            #        plugins.add_plug_param(cvpj_l, cvpj_instname, opnum+"_env_attack", (out_att*-1)+15, 'int', "")
-            #        plugins.add_plug_param(cvpj_l, cvpj_instname, opnum+"_env_sustain", (out_sus*-1)+15, 'int', "")
-            #        plugins.add_plug_param(cvpj_l, cvpj_instname, opnum+"_env_decay", (out_dec*-1)+15, 'int', "")
-            #        plugins.add_plug_param(cvpj_l, cvpj_instname, opnum+"_env_release", (out_rel*-1)+15, 'int', "")
+                fmdata.opl_sbi_part_op(0, op1_data, False)
+                fmdata.opl_sbi_part_fbcon(op12_fbcon, 'feedback_12', 'con_12')
+                fmdata.opl_sbi_part_op(1, op2_data, False)
+                fmdata.opl_sbi_part_op(2, op3_data, False)
+                fmdata.opl_sbi_part_fbcon(op34_fbcon, 'feedback_34', 'con_34')
+                fmdata.opl_sbi_part_op(3, op4_data, False)
 
-            #        out_flags, out_mul = data_bytes.splitbyte(iOpChar)
-            #        out_trem, out_vib, out_sust, out_krs = data_bytes.to_bin(out_flags, 4)
-            #        plugins.add_plug_param(cvpj_l, cvpj_instname, opnum+"_freqmul", out_mul, 'int', "")
-            #        plugins.add_plug_param(cvpj_l, cvpj_instname, opnum+"_tremolo", out_trem, 'int', "")
-            #        plugins.add_plug_param(cvpj_l, cvpj_instname, opnum+"_vibrato", out_vib, 'int', "")
-            #        plugins.add_plug_param(cvpj_l, cvpj_instname, opnum+"_ksr", out_krs, 'int', "")
-            #        plugins.add_plug_param(cvpj_l, cvpj_instname, opnum+"_sust", out_sust, 'int', "")
+                fmdata.to_cvpj(cvpj_l, cvpj_instname)
 
         all_notepos = None
 
@@ -208,7 +180,7 @@ class input_sop(plugin_input.base):
 
             if sop_data_chanmodes[tracknum] == 0: trackname_endtext = ''
             if sop_data_chanmodes[tracknum] == 1: trackname_endtext = '4OP (YMF-262M)'
-            if sop_data_chanmodes[tracknum] == 0: trackname_endtext = '2OP (YM-3812)'
+            if sop_data_chanmodes[tracknum] == 2: trackname_endtext = '2OP (YM-3812)'
 
             cvpj_trackid = str(tracknum)
             cvpj_notelist = []

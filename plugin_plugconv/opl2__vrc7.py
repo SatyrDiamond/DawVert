@@ -22,6 +22,7 @@ import plugin_plugconv
 
 from functions import plugins
 from functions import data_bytes
+from functions_plugparams import params_fm
 import math
 import struct
 
@@ -54,37 +55,36 @@ class plugconv(plugin_plugconv.base):
         vrc_car_sus, vrc_car_rel = data_bytes.splitbyte(vrcregs[7])
 
         plugins.replace_plug(cvpj_l, pluginid, 'fm', 'opl2')
+        fmdata = params_fm.fm_data('opl2')
 
-        plugins.add_plug_param(cvpj_l, pluginid, "feedback", vrc_fb, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "percussive", 0, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "perctype", 0, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "tremolo_depth", 0, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "vibrato_depth", 0, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "fm", 1, 'int', "")
+        fmdata.set_param('fm', 0)
+        fmdata.set_param('feedback', vrc_fb)
 
-        plugins.add_plug_param(cvpj_l, pluginid, "mod_scale", vrc_mod_kls, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "mod_freqmul", vrc_mod_mul, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "mod_env_attack", (vrc_mod_att*-1)+15, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "mod_env_sustain", (vrc_mod_sus*-1)+15, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "mod_perc_env", 0, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "mod_env_decay", (vrc_mod_dec*-1)+15, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "mod_env_release", vrc_mod_rel, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "mod_level", (vrc_mod_out*-1)+63, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "mod_tremolo", vrc_mod_trem, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "mod_vibrato", vrc_mod_vib, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "mod_ksr", vrc_mod_krs, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "mod_waveform", vrc_mod_wave, 'int', "")
+        fmdata.set_op_param(0, 'env_attack', vrc_mod_att)
+        fmdata.set_op_param(0, 'env_decay', vrc_mod_dec)
+        fmdata.set_op_param(0, 'env_release', vrc_mod_rel)
+        fmdata.set_op_param(0, 'env_sustain', vrc_mod_sus)
+        fmdata.set_op_param(0, 'freqmul', vrc_mod_mul)
+        fmdata.set_op_param(0, 'ksl', vrc_mod_kls)
+        fmdata.set_op_param(0, 'ksr', vrc_mod_krs)
+        fmdata.set_op_param(0, 'level', vrc_mod_out)
+        fmdata.set_op_param(0, 'tremolo', vrc_mod_trem)
+        fmdata.set_op_param(0, 'vibrato', vrc_mod_vib)
+        fmdata.set_op_param(0, 'waveform', vrc_mod_wave)
+        fmdata.set_op_param(0, 'sustained', vrc_mod_sust)
 
-        plugins.add_plug_param(cvpj_l, pluginid, "car_scale", vrc_car_kls, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "car_freqmul", vrc_car_mul, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "car_env_attack", (vrc_car_att*-1)+15, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "car_env_sustain", (vrc_car_sus*-1)+15, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "car_perc_env", 0, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "car_env_decay", (vrc_car_dec*-1)+15, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "car_env_release", vrc_car_rel, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "car_level", 63, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "car_tremolo", vrc_car_trem, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "car_vibrato", vrc_car_vib, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "car_ksr", vrc_car_krs, 'int', "")
-        plugins.add_plug_param(cvpj_l, pluginid, "car_waveform", vrc_car_wave, 'int', "")
+        fmdata.set_op_param(1, 'env_attack', vrc_car_att)
+        fmdata.set_op_param(1, 'env_decay', (vrc_car_dec*-1)+15)
+        fmdata.set_op_param(1, 'env_release', (vrc_car_rel*-1)+15)
+        fmdata.set_op_param(1, 'env_sustain', vrc_car_sus)
+        fmdata.set_op_param(1, 'freqmul', vrc_car_mul)
+        fmdata.set_op_param(1, 'ksl', vrc_car_kls)
+        fmdata.set_op_param(1, 'ksr', vrc_car_krs)
+        fmdata.set_op_param(1, 'tremolo', vrc_car_trem)
+        fmdata.set_op_param(1, 'vibrato', vrc_car_vib)
+        fmdata.set_op_param(1, 'waveform', vrc_car_wave)
+        fmdata.set_op_param(1, 'sustained', vrc_car_sust)
+
+        fmdata.to_cvpj(cvpj_l, pluginid)
+
         return True

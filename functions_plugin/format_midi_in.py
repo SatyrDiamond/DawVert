@@ -130,9 +130,14 @@ def add_track(startpos, midicmds):
 
 		elif midicmd[0] == 'sequencer_specific': 
 			exdata = midi_exdata.decode_exdata(midicmd[1], True)
+
 			if exdata[0] == [83]:
 				if exdata[1][0:5] == b'ign\x01\xff': #from Signal MIDI Editor
 					track_color = colors.rgb_int_to_rgb_float(exdata[1][5:8][::-1])
+			elif exdata[0] == [80]:
+				if exdata[1][0:5] == b'reS\x01\xff': #from Studio One
+					track_color = colors.rgb_int_to_rgb_float(exdata[1][5:8][::-1])
+					print([x for x in exdata[1]])
 			else:
 				sequencer_specific.append(midicmd[1])
 

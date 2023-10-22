@@ -5,6 +5,7 @@ import plugin_plugconv
 
 from functions import plugins
 from functions import idvals
+from functions_plugparams import params_fm
 
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
@@ -18,28 +19,30 @@ class plugconv(plugin_plugconv.base):
             epsmopregs = [epsmregs[2:9], epsmregs[9:16], epsmregs[16:23], epsmregs[23:30]]
 
             plugins.replace_plug(cvpj_l, pluginid, 'fm', 'opn2')
-            plugins.add_plug_param(cvpj_l, pluginid, "algorithm", epsmregs[0]&0x0F, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, "feedback", ((epsmregs[0]>>3)*2)+1, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, "ams", (epsmregs[1]>>4)&0x03, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, "fms", epsmregs[1]&0x0F, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, "lfo_enable", epsmregs[30]>>3, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, "lfo_frequency", epsmregs[30]&0x07, 'int', "")
+            fmdata = params_fm.fm_data('opn2')
+
+            fmdata.set_param('algorithm', epsmregs[0]&0x0F)
+            fmdata.set_param('feedback', ((epsmregs[0]>>3)*2)+1)
+            fmdata.set_param('fms', epsmregs[1]&0x0F)
+            fmdata.set_param('ams', (epsmregs[1]>>4)&0x03)
+            fmdata.set_param('lfo_enable', epsmregs[30]>>3)
+            fmdata.set_param('lfo_frequency', epsmregs[30]&0x07)
 
             for opnum in range(4):
                 op_reg = epsmopregs[opnum]
-                op_num = 'op'+str(opnum)
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_am', op_reg[3] >> 7, 'int', "")
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_attack', op_reg[2] & 0x3F, 'int', "")
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_decay', op_reg[3] & 0x3F, 'int', "")
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_freqmul', op_reg[0] & 0x0F, 'int', "")
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_release', op_reg[5] & 0x0F, 'int', "")
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_sustain', op_reg[5] >> 4, 'int', "") #SusLvl
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_level', (op_reg[1]*-1)+127, 'int', "")
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_detune2', 0, 'int', "")
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_ratescale', op_reg[2] >> 6, 'int', "")
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_detune', op_reg[0] >> 4, 'int', "")
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_env_decay2', op_reg[4], 'int', "") #SusRate
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_ssg_enable', op_reg[6] >> 3, 'int', "")
-                plugins.add_plug_param(cvpj_l, pluginid, op_num+'_ssg_mode', op_reg[6] & 0x08, 'int', "")
+                fmdata.set_op_param(opnum, 'am', op_reg[3] >> 7)
+                fmdata.set_op_param(opnum, 'detune', op_reg[0] >> 4)
+                fmdata.set_op_param(opnum, 'env_attack', op_reg[2] & 0x3F)
+                fmdata.set_op_param(opnum, 'env_decay', op_reg[3] & 0x3F)
+                fmdata.set_op_param(opnum, 'env_decay2', op_reg[4])
+                fmdata.set_op_param(opnum, 'env_release', op_reg[5] & 0x0F)
+                fmdata.set_op_param(opnum, 'env_sustain', op_reg[5] >> 4)
+                fmdata.set_op_param(opnum, 'freqmul', op_reg[0] & 0x0F)
+                fmdata.set_op_param(opnum, 'level', (op_reg[1]*-1)+127)
+                fmdata.set_op_param(opnum, 'ratescale', op_reg[2] >> 6)
+                fmdata.set_op_param(opnum, 'ssg_enable', op_reg[6] >> 3)
+                fmdata.set_op_param(opnum, 'ssg_mode', op_reg[6] & 0x08)
+
+            fmdata.to_cvpj(cvpj_l, pluginid)
 
         return True

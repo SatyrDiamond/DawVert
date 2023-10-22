@@ -10,6 +10,8 @@ from functions import plugins
 from functions import song
 from functions_tracks import tracks_rm
 from functions_tracks import auto_nopl
+from functions_plugparams import params_fm
+
 import plugin_input
 import json
 import struct
@@ -169,40 +171,46 @@ class input_adlib_rol(plugin_input.base):
                 if instdatanum <= numinst:
                     opl2data = adlib_bnk[1][adlib_bnk[0][instname][0]]
 
+                    fmdata = params_fm.fm_data('opl2')
+
                     plugins.add_plug(cvpj_l, instname_upper, 'fm', 'opl2')
 
                     tracks_rm.inst_dataval_add(cvpj_l, instname_upper, 'instdata', 'middlenote', 0)
-                    if opl2data[0][0] == 1: plugins.add_plug_param(cvpj_l, instname_upper, 'perctype', opl2data[0][1]-6, 'int', 'perctype')
-                    else: plugins.add_plug_param(cvpj_l, instname_upper, 'perctype', 0, 'int', 'perctype')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'tremolo_depth', 0, 'int', 'tremolo_depth')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'vibrato_depth', 0, 'int', 'vibrato_depth')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'fm', 1, 'int', 'fm')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'mod_scale', opl2data[1][0], 'int', 'mod_scale')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'mod_freqmul', opl2data[1][1], 'int', 'mod_freqmul')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'feedback', opl2data[1][2], 'int', 'feedback')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'mod_env_attack', (opl2data[1][3]*-1)+15, 'int', 'mod_env_attack')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'mod_env_sustain', (opl2data[1][4]*-1)+15, 'int', 'mod_env_sustain')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'mod_perc_env', int(not bool(opl2data[1][5])), 'int', 'mod_perc_env')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'mod_env_decay', (opl2data[1][6]*-1)+15, 'int', 'mod_env_decay')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'mod_env_release', (opl2data[1][7]*-1)+15, 'int', 'mod_env_release')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'mod_level', (opl2data[1][8]*-1)+63, 'int', 'mod_level')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'mod_tremolo', opl2data[1][9], 'int', 'mod_tremolo')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'mod_vibrato', opl2data[1][10], 'int', 'mod_vibrato')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'mod_ksr', opl2data[1][11], 'int', 'mod_ksr')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'fm', opl2data[1][12], 'int', 'fm')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'mod_waveform', opl2data[3][0], 'int', 'mod_waveform')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'car_scale', opl2data[2][0], 'int', 'car_scale')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'car_freqmul', opl2data[2][1], 'int', 'car_freqmul')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'car_env_attack', (opl2data[2][3]*-1)+15, 'int', 'car_env_attack')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'car_env_sustain', (opl2data[2][4]*-1)+15, 'int', 'car_env_sustain')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'car_perc_env', int(not bool(opl2data[2][5])), 'int', 'car_perc_env')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'car_env_decay', (opl2data[2][6]*-1)+15, 'int', 'car_env_decay')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'car_env_release', (opl2data[2][7]*-1)+15, 'int', 'car_env_release')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'car_level', (opl2data[2][8]*-1)+63, 'int', 'car_level')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'car_tremolo', opl2data[2][9], 'int', 'car_tremolo')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'car_vibrato', opl2data[2][10], 'int', 'car_vibrato')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'car_ksr', opl2data[2][11], 'int', 'car_ksr')
-                    plugins.add_plug_param(cvpj_l, instname_upper, 'car_waveform', opl2data[3][1], 'int', 'car_waveform')
+                    if opl2data[0][0] == 1: fmdata.set_param('perctype', opl2data[0][1]-6)
+                    else:
+                        fmdata.set_op_param(0, 'sustained', 1)
+                        fmdata.set_op_param(1, 'sustained', 1)
+
+                    fmdata.set_op_param(0, 'ksl', opl2data[1][0])
+                    fmdata.set_op_param(0, 'freqmul', opl2data[1][1])
+                    fmdata.set_param('feedback', opl2data[1][2])
+                    fmdata.set_op_param(0, 'env_attack', opl2data[1][3])
+                    fmdata.set_op_param(0, 'env_sustain', opl2data[1][4])
+                    fmdata.set_op_param(0, 'perc_env', int(not bool(opl2data[1][5])))
+                    fmdata.set_op_param(0, 'env_decay', opl2data[1][6])
+                    fmdata.set_op_param(0, 'env_release', opl2data[1][7])
+                    fmdata.set_op_param(0, 'level', opl2data[1][8])
+                    fmdata.set_op_param(0, 'tremolo', opl2data[1][9])
+                    fmdata.set_op_param(0, 'vibrato', opl2data[1][10])
+                    fmdata.set_op_param(0, 'ksr', opl2data[1][11])
+                    fmdata.set_param('fm', opl2data[1][12])
+                    fmdata.set_op_param(0, 'waveform', opl2data[3][0])
+
+                    fmdata.set_op_param(1, 'ksl', opl2data[2][0])
+                    fmdata.set_op_param(1, 'freqmul', opl2data[2][1])
+                    fmdata.set_op_param(1, 'env_attack', opl2data[2][3])
+                    fmdata.set_op_param(1, 'env_sustain', opl2data[2][4])
+                    fmdata.set_op_param(1, 'perc_env', int(not bool(opl2data[2][5])))
+                    fmdata.set_op_param(1, 'env_decay', opl2data[2][6])
+                    fmdata.set_op_param(1, 'env_release', opl2data[2][7])
+                    fmdata.set_op_param(1, 'level', opl2data[2][8])
+                    fmdata.set_op_param(1, 'tremolo', opl2data[2][9])
+                    fmdata.set_op_param(1, 'vibrato', opl2data[2][10])
+                    fmdata.set_op_param(1, 'ksr', opl2data[2][11])
+                    fmdata.set_op_param(1, 'waveform', opl2data[3][1])
+
+                    fmdata.to_cvpj(cvpj_l, instname_upper)
+                    
         else:
             for instassocgm in idvals_inst_adlib_rol:
                 gmmidiinst = idvals_inst_adlib_rol[instassocgm]['gm_inst']

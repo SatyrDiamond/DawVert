@@ -63,7 +63,7 @@ class input_midi(plugin_input.base):
                 elif msg.type == 'set_tempo': midicmds.append(['tempo', 60000000/msg.tempo])
                 elif msg.type == 'time_signature': midicmds.append(['timesig', msg.numerator, msg.denominator])
                 elif msg.type == 'marker': midicmds.append(['marker', msg.text])
-                elif msg.type == 'text': midicmds.append(['marker', msg.text])
+                elif msg.type == 'text': midicmds.append(['text', msg.text])
                 elif msg.type == 'sysex': midicmds.append(['sysex', msg.data])
                 elif msg.type == 'key_signature': midicmds.append(['key_signature', msg.key])
                 elif msg.type == 'track_name': midicmds.append(['track_name', msg.name])

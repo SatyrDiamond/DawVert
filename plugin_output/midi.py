@@ -140,8 +140,19 @@ class output_cvpj_f(plugin_output.base):
 
                 if midi_trackcolor != None: 
                     midi_trackcolor = colors.rgb_float_to_rgb_int(midi_trackcolor)
+
                     miditrack.append(mido.MetaMessage('sequencer_specific', data=(83, 105, 103, 110, 1, 255)+midi_trackcolor[::-1])) #from Signal MIDI Editor
                     miditrack.append(mido.MetaMessage('sequencer_specific', data=(80, 114, 101, 83, 1, 255)+midi_trackcolor[::-1])) #from Studio One
+
+                    red_p1 = midi_trackcolor[0] >> 2
+                    red_p2 = (midi_trackcolor[0] << 5) & 0x7f
+                    green_p1 = midi_trackcolor[1] >> 3
+                    green_p2 = (midi_trackcolor[1] << 4) & 0x7f
+                    blue_p1 = midi_trackcolor[2] >> 4
+                    blue_p2 = midi_trackcolor[2] & 0x0f
+
+                    anvilcolor = [blue_p2,green_p2+blue_p1,red_p2+green_p1,red_p1]
+                    miditrack.append(mido.MetaMessage('sequencer_specific', data=(5, 15, 52, anvilcolor[0], anvilcolor[1], anvilcolor[2], anvilcolor[3], 0))) #from Anvil Studio
 
                 if midi_program != None: miditrack.append(mido.Message('program_change', channel=midi_channel, program=midi_program, time=0))
                 else: miditrack.append(mido.Message('program_change', channel=midi_channel, program=0, time=0))

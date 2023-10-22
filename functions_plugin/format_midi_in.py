@@ -126,12 +126,35 @@ def add_track(startpos, midicmds):
 
 		if midicmd[0] == 'rest': track_curpos += midicmd[1]
 
-		elif midicmd[0] == 'track_name': track_name = midicmd[1]
+		elif midicmd[0] == 'track_name': 
+			track_name = midicmd[1]
+			#print('TRACK NAME, '+track_name)
 
 		elif midicmd[0] == 'sequencer_specific': 
 			exdata = midi_exdata.decode_exdata(midicmd[1], True)
 
-			if exdata[0] == [83]:
+
+			if exdata[0] == [5]:
+				if exdata[1][0] == 15: #from Anvil Studio
+					if exdata[1][1] == 52:
+						anvilcolordata = exdata[1][2:6]
+						red_p1 = anvilcolordata[3] & 0x3f 
+						red_p2 = anvilcolordata[2] & 0xe0
+						out_red = (red_p1 << 2) + (red_p2 >> 5)
+
+						green_p1 = anvilcolordata[2] & 0x1f
+						green_p2 = anvilcolordata[1] & 0xf0
+						out_green = (green_p1 << 3) + (green_p2 >> 4)
+
+						blue_p1 = anvilcolordata[1] & 0x0f
+						blue_p2 = anvilcolordata[0] & 0x0f
+						out_blue = (blue_p1 << 4) + blue_p2
+
+						track_color = colors.rgb_int_to_rgb_float([out_red, out_green, out_blue])
+					#else:
+					#	print(exdata[1][1], exdata[1][2:])
+
+			elif exdata[0] == [83]:
 				if exdata[1][0:5] == b'ign\x01\xff': #from Signal MIDI Editor
 					track_color = colors.rgb_int_to_rgb_float(exdata[1][5:8][::-1])
 			elif exdata[0] == [80]:

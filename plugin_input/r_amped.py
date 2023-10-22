@@ -306,7 +306,8 @@ class input_amped(plugin_input.base):
         'placement_cut': True,
         'placement_loop': [],
         'track_hybrid': True,
-        'placement_audio_stretch': ['rate']
+        'placement_audio_stretch': ['rate'],
+        'placement_audio_nested': True
         }
     def parse(self, input_file, extra_param):
         global cvpj_l
@@ -389,7 +390,9 @@ class input_amped(plugin_input.base):
                     tracks_r.add_pl(cvpj_l, amped_tr_id, 'notes', cvpj_placement_notes)
 
                 if amped_reg_clips != []:
-                    temp_pls = []
+                    cvpj_placement_audionested = cvpj_placement_base.copy()
+                    clip_events = []
+
                     for amped_reg_clip in amped_reg_clips:
                         temp_pl = {}
                         temp_pl['file'] = get_contentGuid(amped_reg_clip['contentGuid'])
@@ -404,12 +407,11 @@ class input_amped(plugin_input.base):
                         amped_reg_clip_offset = amped_reg_clip['offset']*4
                         if amped_reg_clip_offset != 0:
                             temp_pl['cut'] = {'type': 'cut', 'start':amped_reg_clip_offset}
-                        temp_pls.append(temp_pl)
+                        clip_events.append(temp_pl)
 
-                    trimpls = placement_data.audiotrim(temp_pls, amped_reg_position-amped_reg_offset,amped_reg_offset, amped_reg_offset+amped_reg_length)
+                    cvpj_placement_audionested['events'] = clip_events
+                    tracks_r.add_pl(cvpj_l, amped_tr_id, 'audio_nested', cvpj_placement_audionested)
 
-                    for temp_pl in trimpls:
-                        temp_pl['color'] = amped_colors[amped_reg_color]
-                        tracks_r.add_pl(cvpj_l, amped_tr_id, 'audio', temp_pl)
+
 
         return json.dumps(cvpj_l)

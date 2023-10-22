@@ -174,6 +174,8 @@ def add_track(startpos, midicmds):
 		elif midicmd[0] == 'control_change': 
 			if midicmd[2] == 0: t_chan_current_inst[midicmd[1]][1] = midicmd[3]
 			elif midicmd[2] == 111: loop_data[0] = track_curpos/ppq_step
+			elif midicmd[2] == 116: loop_data[0] = track_curpos/ppq_step
+			elif midicmd[2] == 117: loop_data[1] = track_curpos/ppq_step
 			else: add_chautopoint(track_curpos, midicmd[1], midicmd[2], midicmd[3])
 
 		elif midicmd[0] == 'pitchwheel': add_chautopoint(track_curpos, midicmd[1], 'pitch', midicmd[2])
@@ -203,7 +205,10 @@ def add_track(startpos, midicmds):
 							if nameval[0] == 'use_rhythm':
 								auto_chanmode[groups[2]-1][track_curpos] = bool(nameval[1])
 
-		elif midicmd[0] == 'marker': add_point(auto_markers, track_curpos, midicmd[1])
+		elif midicmd[0] == 'marker': 
+			add_point(auto_markers, track_curpos, midicmd[1])
+			if midicmd[1] == 'loopStart': loop_data[0] = track_curpos/ppq_step
+			if midicmd[1] == 'loopEnd': loop_data[1] = track_curpos/ppq_step
 
 		elif midicmd[0] == 'text': 
 			if ______debugtxt______: print('TEXT', midicmd[1])

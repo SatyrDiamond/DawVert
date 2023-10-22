@@ -399,6 +399,8 @@ class output_cvpjs(plugin_output.base):
                         FL_playlistitem['patternbase'] = 20480
                         FL_playlistitem['itemindex'] = sampleid
                         FL_playlistitem['length'] = int((CVPJ_Placement['duration']*ppq)/4)
+                        FL_playlistitem['startoffset'] = 0
+                        FL_playlistitem['endoffset'] = CVPJ_Placement['duration']
 
                         FL_playlistitem['unknown1'] = 120
                         FL_playlistitem['unknown2'] = 25664

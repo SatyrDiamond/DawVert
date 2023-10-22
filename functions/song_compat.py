@@ -13,6 +13,7 @@ from functions_compat import trackfx2fxrack
 
 from functions_compat import autopl_remove
 from functions_compat import changestretch
+from functions_compat import fxrack_moveparams
 from functions_compat import loops_add
 from functions_compat import loops_remove
 from functions_compat import removecut
@@ -21,7 +22,7 @@ from functions_compat import time_seconds
 from functions_compat import timesigblocks
 from functions_compat import trackpl_add
 from functions_compat import unhybrid
-from functions_compat import fxrack_moveparams
+from functions_compat import sep_nest_audio
 
 import json
 import math
@@ -48,6 +49,7 @@ def set_dawcapabilities(in_dawcapabilities, out_dawcapabilities):
 
         list__setdc['placement_cut'] = arg__dc['placement_cut'] if 'placement_cut' in arg__dc else False
         list__setdc['placement_loop'] = arg__dc['placement_loop'] if 'placement_loop' in arg__dc else []
+        list__setdc['placement_audio_nested'] = arg__dc['placement_audio_nested'] if 'placement_audio_nested' in arg__dc else False
 
         list__setdc['fxrack'] = arg__dc['fxrack'] if 'fxrack' in arg__dc else False
         list__setdc['fxrack_params'] = arg__dc['fxrack_params'] if 'fxrack_params' in arg__dc else ['vol','enabled']
@@ -56,6 +58,7 @@ def set_dawcapabilities(in_dawcapabilities, out_dawcapabilities):
         list__setdc['time_seconds'] = arg__dc['time_seconds'] if 'time_seconds' in arg__dc else False
         list__setdc['placement_audio_stretch'] = arg__dc['placement_audio_stretch'] if 'placement_audio_stretch' in arg__dc else []
 
+    print('[compat] '+str(in__dc['placement_audio_nested']).ljust(5)+' | '+str(out__dc['placement_audio_nested']).ljust(5)+' | placement_audio_nested')
     print('[compat] '+str(in__dc['placement_cut']).ljust(5)+' | '+str(out__dc['placement_cut']).ljust(5)+' | placement_cut')
     print('[compat] '+str(in__dc['placement_loop']).ljust(5)+' | '+str(out__dc['placement_loop']).ljust(5)+' | placement_loop')
 
@@ -99,6 +102,7 @@ def makecompat(cvpj_l, cvpj_type):
         process_part('trackpl_add', trackpl_add,             cvpj_proj, cvpj_type,  in__dc['track_nopl'], out__dc['track_nopl'])
         process_part('loops_remove', loops_remove,           cvpj_proj, cvpj_type,  in__dc['placement_loop'], out__dc['placement_loop'])
         process_part('removecut', removecut,                 cvpj_proj, cvpj_type,  in__dc['placement_cut'], out__dc['placement_cut'])
+        process_part('sep_nest_audio', sep_nest_audio,       cvpj_proj, cvpj_type,  in__dc['placement_audio_nested'], out__dc['placement_audio_nested'])
         process_part('loops_add', loops_add,                 cvpj_proj, cvpj_type,  in__dc['placement_loop'], out__dc['placement_loop'])
 
     process_part('time_seconds', time_seconds,               cvpj_proj, cvpj_type,  in__dc['time_seconds'], out__dc['time_seconds'])

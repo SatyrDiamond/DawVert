@@ -4,29 +4,74 @@
 from functions import data_bytes
 from functions import colors
 from functions import song
+from functions import note_data
 from functions import placement_data
 import plugin_input
 import json
 import zipfile
+import os
 import xml.etree.ElementTree as ET
 from functions_tracks import tracks_r
 
 def getvalue(varx, name, fallbackval):
     if len(varx.findall(name)) != 0:
         varxi = varx.findall(name)[0]
-        return varxi.get('value'), varxi.get('name')
+        varvalue = varxi.get('value')
+        varunit = varxi.get('unit')
+        if varxi.get('unit') == 'normalized': varvalue = (float(varvalue)-0.5)*2
+        return varvalue, varxi.get('name')
     else:
-        return fallbackval
+        return fallbackval, name
+
+
+
+def parse_notelist(dpx_clip):
+    dpx_notes = dpx_clip.findall('Notes')[0]
+    dpx_notelist = dpx_notes.findall('Note')
+    cvpj_notelist = []
+    for dpx_note in dpx_notelist:
+        cvpj_note = note_data.rx_makenote(float(dpx_note.get('time'))*4, float(dpx_note.get('duration'))*4, int(dpx_note.get('key'))-60, float(dpx_note.get('vel')), None)
+        if dpx_note.get('release') != None: cvpj_note["release"] = float(dpx_note.get('release'))
+        if dpx_note.get('channel') != None: cvpj_note["channel"] = int(dpx_note.get('channel'))
+
+        cvpj_notemod = {}
+        if dpx_note.findall('Points') != []: parse_note_points(cvpj_notemod, dpx_note.findall('Points')[0])
+        if dpx_note.findall('Lanes') != []:
+            xml_lanes = dpx_note.findall('Lanes')[0]
+            if xml_lanes.findall('Points') != []:
+                for pointxml in xml_lanes.findall('Points'):
+                    parse_note_points(cvpj_notemod, pointxml)
+        if cvpj_notemod != {}: cvpj_note["notemod"] = cvpj_notemod
+        cvpj_notelist.append(cvpj_note)
+    return cvpj_notelist
+
+def calc_time(dpx_clip, dp_tempo):
+    dpx_p_timetype = dpx_clip.get('contentTimeUnit')
+
+    calctempo = (dp_tempo/120)
+
+    dpx_p_time = dpx_clip.get('time')
+    dpx_p_duration = dpx_clip.get('duration')
+    dpx_p_playStart = dpx_clip.get('playStart')
+    dpx_p_playStop = dpx_clip.get('playStop')
+
+    if dpx_p_timetype == 'beats':
+        if dpx_p_time != None: dpx_p_time = float(dpx_p_time)*4
+        if dpx_p_duration != None: dpx_p_duration = float(dpx_p_duration)*4
+        if dpx_p_playStop != None: dpx_p_playStop = float(dpx_p_playStop)*4
+        if dpx_p_playStop != None: dpx_p_playStop = float(dpx_p_playStop)*4
+    if dpx_p_timetype == 'seconds':
+        if dpx_p_time != None: dpx_p_time = (float(dpx_p_time)*8)*calctempo
+        if dpx_p_duration != None: dpx_p_duration = (float(dpx_p_duration)*16)*calctempo
+        if dpx_p_playStart != None: dpx_p_playStart = (float(dpx_p_playStart)*16)*calctempo
+        if dpx_p_playStop != None: dpx_p_playStop = (float(dpx_p_playStop)*16)*calctempo
+
+    return dpx_p_time, dpx_p_duration, dpx_p_playStart, dpx_p_playStop
 
 
 def dp_parse_trackinfo(dpx_track): 
     global cvpj_l
     global trackchanid
-
-    track_data = cvpj_l['track_data']
-    track_order = cvpj_l['track_order']
-    track_return = cvpj_l['track_return']
-    track_master = cvpj_l['track_master']
 
     cvpj_l_track = {}
 
@@ -37,6 +82,9 @@ def dp_parse_trackinfo(dpx_track):
     dpt_role = dpx_chan.get('role')
     dpt_cid = dpx_chan.get('id')
     dpt_color = dpx_track.get('color')
+
+    if '#' in dpt_color: dpt_color = colors.hex_to_rgb_float(dpt_color[1:7])
+
     dpt_name = dpx_track.get('name')
     track_role = None
 
@@ -92,6 +140,7 @@ class input_dawproject(plugin_input.base):
         'track_lanes': False,
         'placement_cut': True,
         'placement_loop': ['loop', 'loop_off', 'loop_adv'],
+        'placement_audio_nested': True,
         'auto_nopl': True,
         'track_nopl': False
         }
@@ -99,6 +148,7 @@ class input_dawproject(plugin_input.base):
     def parse(self, input_file, extra_param):
         global cvpj_l
         global trackchanid
+        global samplefolder
 
         zip_data = zipfile.ZipFile(input_file, 'r')
 
@@ -108,12 +158,7 @@ class input_dawproject(plugin_input.base):
         dp_timesig = [4,4]
         dp_tempo = 140
 
-        cvpj_l['track_data'] = {}
-        cvpj_l['track_order'] = []
-        cvpj_l['track_return'] = {}
-        cvpj_l['track_placements'] = {}
-
-        cvpj_l['track_master'] = {}
+        samplefolder = extra_param['samplefolder']
 
         if 'project.xml' in zip_data.namelist():
             dpx_project = ET.fromstring(zip_data.read('project.xml'))
@@ -161,58 +206,57 @@ class input_dawproject(plugin_input.base):
                     if dpx_trklane.findall('Clips') != []:
                         dpx_clips = dpx_trklane.findall('Clips')[0]
                         for dpx_clip in dpx_clips.findall('Clip'):
-                            dpx_p_time = dpx_clip.get('time')
-                            dpx_p_duration = dpx_clip.get('duration')
-                            dpx_p_playStart = dpx_clip.get('playStart')
 
                             dpx_p_loopStart = dpx_clip.get('loopStart')
                             dpx_p_loopEnd = dpx_clip.get('loopEnd')
 
-                            cvpj_pldata = {}
-                            cvpj_pldata["position"] = float(dpx_p_time)*4
-                            cvpj_pldata["duration"] = float(dpx_p_duration)*4
-                            cvpj_pldata["notelist"] = []
+                            dpx_p_time, dpx_p_duration, dpx_p_playStart, dpx_p_playStop = calc_time(dpx_clip, dp_tempo)
 
-                            #print(' ----- ', end="")
-                            if dpx_p_loopStart == None and dpx_p_loopEnd == None:
-                                #print('Cut', dpx_p_playStart, dpx_p_duration)
-                                cvpj_pldata["cut"] = {}
-                                cvpj_pldata["cut"]['type'] = 'cut'
-                                cvpj_pldata["cut"]['start'] = float(dpx_p_playStart)*4
-                                cvpj_pldata["cut"]['end'] = (float(dpx_p_duration)+float(dpx_p_playStart))*4
-                            elif dpx_p_loopStart != None and dpx_p_loopEnd != None:
-                                #print('loop', dpx_p_playStart, dpx_p_duration, dpx_p_loopStart,dpx_p_loopEnd)
-                                cvpj_pldata["cut"] = placement_data.cutloopdata(float(dpx_p_playStart)*4, float(dpx_p_loopStart)*4, float(dpx_p_loopEnd)*4)
-
-                            if dpx_clip.findall('Notes') != []:
-                                dpx_notes = dpx_clip.findall('Notes')[0]
-                                dpx_notelist = dpx_notes.findall('Note')
-                                for dpx_note in dpx_notelist:
-                                    cvpj_note = {}
-                                    cvpj_note["position"] = float(dpx_note.get('time'))*4
-                                    cvpj_note["duration"] = float(dpx_note.get('duration'))*4
-                                    cvpj_note["key"] = int(dpx_note.get('key'))-60
-                                    cvpj_note["vol"] = float(dpx_note.get('vel'))
-                                    cvpj_note["release"] = float(dpx_note.get('rel'))
-                                    if dpx_note.get('channel') != None: cvpj_note["channel"] = int(dpx_note.get('channel'))
-
-                                    cvpj_notemod = {}
-
-                                    cvpj_auto_points = None
-                                    if dpx_note.findall('Points') != []:
-                                        parse_note_points(cvpj_notemod, dpx_note.findall('Points')[0])
-
-                                    if dpx_note.findall('Lanes') != []:
-                                        xml_lanes = dpx_note.findall('Lanes')[0]
-                                        if xml_lanes.findall('Points') != []:
-                                            for pointxml in xml_lanes.findall('Points'):
-                                                parse_note_points(cvpj_notemod, pointxml)
-
-                                    if cvpj_notemod != {}: cvpj_note["notemod"] = cvpj_notemod
-
-                                    cvpj_pldata["notelist"].append(cvpj_note)
-
+                            for dpx_clipnotes in dpx_clip.findall('Notes'):
+                                cvpj_pldata = placement_data.makepl_n(dpx_p_time, dpx_p_duration, parse_notelist(dpx_clipnotes))
+                                if dpx_p_loopStart == None and dpx_p_loopEnd == None: cvpj_pldata["cut"] = {'type': 'cut', 'start': float(dpx_p_playStart)*4}
+                                elif dpx_p_loopStart != None and dpx_p_loopEnd != None: cvpj_pldata["cut"] = placement_data.cutloopdata(float(dpx_p_playStart)*4, float(dpx_p_loopStart)*4, float(dpx_p_loopEnd)*4)
                                 tracks_r.add_pl(cvpj_l, trackidchan, 'notes', cvpj_pldata)
+
+                            for dpx_lanes in dpx_clip.findall('Lanes'):
+                                if dpx_lanes.findall('Notes') != []:
+                                    cvpj_pldata = placement_data.makepl_n(dpx_p_time, dpx_p_duration, parse_notelist(dpx_lanes))
+                                    if dpx_p_loopStart == None and dpx_p_loopEnd == None: cvpj_pldata["cut"] = {'type': 'cut', 'start': float(dpx_p_playStart)*4}
+                                    elif dpx_p_loopStart != None and dpx_p_loopEnd != None: cvpj_pldata["cut"] = placement_data.cutloopdata(float(dpx_p_playStart)*4, float(dpx_p_loopStart)*4, float(dpx_p_loopEnd)*4)
+                                    tracks_r.add_pl(cvpj_l, trackidchan, 'notes', cvpj_pldata)
+
+                            for dpx_clipp in dpx_clip.findall('Clips'):
+
+                                #print('audio', dpx_p_time,dpx_p_playStop)
+
+                                clip_events = []
+
+                                pl_data = {}
+                                pl_data['position'] = dpx_p_time
+                                pl_data['duration'] = dpx_p_playStop
+
+                                for dpx_insideclipp in dpx_clipp.findall('Clip'):
+
+                                    in_time, in_duration, in_playStart, in_playStop = calc_time(dpx_insideclipp, dp_tempo)
+                                    #print(in_time, in_duration, in_playStart, in_playStop, dpx_insideclipp.findall('Audio'))
+                                    inside_clip = {}
+                                    inside_clip['position'] = in_time
+                                    inside_clip['duration'] = in_duration
+                                    audio_data = dpx_insideclipp.findall('Audio')
+                                    if audio_data:
+                                        audio_file_data = audio_data[0].findall('File')
+                                        if audio_file_data:
+                                            audio_file_external = audio_file_data[0].get('external')
+                                            audio_file_path = audio_file_data[0].get('path')
+
+                                            if audio_file_path != None:
+                                                zip_data.extract(audio_file_path, path=samplefolder, pwd=None)
+                                                inside_clip['file'] = os.path.join(samplefolder,audio_file_path)
+
+                                    clip_events.append(inside_clip)
+
+                                pl_data['events'] = clip_events
+                                tracks_r.add_pl(cvpj_l, trackidchan, 'audio_nested', pl_data)
 
 
         cvpj_l['use_instrack'] = False

@@ -481,7 +481,7 @@ class input_famistudio(plugin_input.base):
 
                                 cvpj_notemod['auto']['pitch'] = [{'position': 0, 'value': 0}, {'position': t_duration, 'value': t_slidenote-t_key}]
 
-                            if ChannelName[0:4] == 'VRC7': t_key -= 24
+                            if ChannelName[0:6] == 'EPSMFM': t_key -= 12
 
                             if cvpj_multikeys == []:
                                 cvpj_note = note_data.mx_makenote(t_instrument, t_position, t_duration, t_key, None, None)

@@ -5,6 +5,8 @@ import plugin_plugconv
 
 from functions import plugins
 from functions import data_bytes
+from functions_plugparams import params_vital
+from functions import plugin_vst2
 
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass

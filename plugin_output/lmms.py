@@ -7,7 +7,7 @@ import lxml.etree as ET
 import math
 import plugin_output
 from pathlib import Path
-from functions_plugin import lmms_auto
+from functions import data_dataset
 from functions import auto
 from functions import placements
 from functions import data_values
@@ -67,7 +67,26 @@ patternscount_forprinting = 0
 notescount_forprinting = 0
 trackscount_forprinting = 0
 
-# ------- functions -------
+def dset_plugparams(pluginname, pluginid, xml_data, cvpj_plugindata):
+    global dataset
+    paramlist = dataset.params_list('plugin', pluginname)
+    if paramlist != None:
+        for paramname in paramlist:
+            paramlist = dataset.params_i_get('plugin', pluginname, paramname)
+            pv_noauto,pv_type,pv_def,pv_min,pv_max,pv_name = paramlist
+            if pv_noauto == False:
+                pl_val, pl_type, pl_name = cvpj_plugindata.param_get(paramname, pv_def)
+                create_param_auto(xml_data, paramname, ['plugin', pluginid, paramname], pl_val, None, 'Plugin', pv_name, True)
+            else:
+                xml_data.set(paramname, str(cvpj_plugindata.dataval_get(paramname, pv_def)) )
+
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------- functions ----------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
 
 def add_window_data(xmltag, cvpj_l, w_group, w_name, w_pos, w_size, w_open, w_max):
     out_pos, out_size, out_open, out_max = song.get_visual_window(cvpj_l, w_group, w_name, w_pos, w_size, w_open, w_max)
@@ -83,27 +102,49 @@ def add_window_data(xmltag, cvpj_l, w_group, w_name, w_pos, w_size, w_open, w_ma
         xmltag.set("width", str(out_size[0]))
         xmltag.set("height", str(out_size[1]))
 
+def add_keyatt(xmltag, i_dict):
+    xml_key = ET.SubElement(xmltag, 'key')
+    for item in i_dict.items():
+        xml_key_file = ET.SubElement(xml_key, 'attribute')
+        xml_key_file.set('name', str(item[0]))
+        xml_key_file.set('value', str(item[1]))
+
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------ math -------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+
+def oneto100(input): return round(float(input) * 100)
+
+def sec2exp(value): return math.sqrt(value/5)
+
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------- vst -------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
 
 def setvstparams(cvpj_plugindata, pluginid, xmldata):
-    vstpath = data_values.get_value(cvpj_plugindata, 'path', '')
+    vstpath = cvpj_plugindata.dataval_get('path', '')
 
-    current_program = data_values.get_value(cvpj_plugindata, 'current_program', 0)
+    current_program = cvpj_plugindata.dataval_get('current_program', 0)
     xmldata.set('program', str(current_program) )
     xmldata.set('plugin', vstpath)
 
-    xml_vst_key = ET.SubElement(xmldata, 'key')
-    xml_vst_key_file = ET.SubElement(xml_vst_key, 'attribute')
-    xml_vst_key_file.set('name', 'file')
-    xml_vst_key_file.set('value', vstpath)
+    add_keyatt(xmldata, {'file': vstpath})
 
-    middlenotefix = data_values.get_value(cvpj_plugindata, 'middlenotefix', 0)
-
-    datatype = data_values.get_value(cvpj_plugindata, 'datatype', 'none')
-    numparams = data_values.get_value(cvpj_plugindata, 'numparams', 0)
+    middlenotefix = cvpj_plugindata.dataval_get('middlenotefix', 0)
+    datatype = cvpj_plugindata.dataval_get('datatype', 'none')
+    numparams = cvpj_plugindata.dataval_get('numparams', 0)
 
 
     if datatype == 'bank':
-        bank_programs = data_values.get_value(cvpj_plugindata, 'programs', 0)
+        bank_programs = cvpj_plugindata.dataval_get('programs', 0)
         cur_bank_prog = bank_programs[current_program]
         bankprog_type = cur_bank_prog['datatype']
 
@@ -115,12 +156,12 @@ def setvstparams(cvpj_plugindata, pluginid, xmldata):
                 xmldata.set('param'+str(param), str(param)+':noname:'+str(pval) )
 
     if datatype == 'chunk':
-        xmldata.set('chunk', data_values.get_value(cvpj_plugindata, 'chunk', 0))
+        xmldata.set('chunk', cvpj_plugindata.dataval_get('chunk', ''))
 
     if datatype == 'param':
-        xmldata.set('numparams', str(data_values.get_value(cvpj_plugindata, 'numparams', 0)))
+        xmldata.set('numparams', str(numparams))
         for param in range(numparams):
-            pval, ptype, pname = plugins.get_plug_param(cvpj_l, pluginid, 'vst_param_'+str(param), 0)
+            pval, ptype, pname = cvpj_plugindata.param_get('vst_param_'+str(param), 0)
             xmldata.set('param'+str(param), str(param)+':'+pname+':'+str(pval))
              
     pluginautoid = auto_id.out_getlist(['plugin', pluginid])
@@ -131,26 +172,118 @@ def setvstparams(cvpj_plugindata, pluginid, xmldata):
                 paramvisname = int(paramname[10:])+1
                 aid_id, aid_data = auto_id.out_get(['plugin', pluginid, paramname])
                 if aid_id != None and len(aid_data['placements']) != 0:
-                    lmms_make_main_auto_track(aid_id, aid_data, 'VST2: #'+str(paramvisname))
+                    make_auto_track(aid_id, aid_data, 'VST2: #'+str(paramvisname))
                     autovarX = ET.SubElement(xmldata, 'param'+paramid)
                     autovarX.set('scale_type', 'linear')
                     autovarX.set('id', str(aid_id))
 
     return middlenotefix
 
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------ auto -------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
 
-def onetime2lmmstime(input): return int(round(float(input * 12)))
+def auto_add_main(xmltag, j_name, x_name, i_fallback, i_addmul, v_name):
+    i_value = params.get(cvpj_l, [], j_name, i_fallback)[0]
+    create_param_auto(xmltag, x_name, ['main', j_name], i_value, i_addmul, 'Main', v_name, True)
 
-def oneto100(input): return round(float(input) * 100)
+def auto_add_track(xmltag, j_name, x_name, i_fallback, i_addmul, i_trackid, v_trackname, v_name):
+    i_value = params.get(cvpj_l, ['track_data', i_trackid], j_name, i_fallback)[0]
+    create_param_auto(xmltag, x_name, ['track', i_trackid, j_name], i_value, i_addmul, v_trackname, v_name, True)
 
-def sec2exp(value): return math.sqrt(value/5)
+def auto_add_fxmixer(xmltag, j_name, x_name, i_fallback, i_addmul, i_fxnum, v_name):
+    i_value = params.get(cvpj_l, ['fxmixer', i_fxnum], j_name, i_fallback)[0]
+    create_param_auto(xmltag, x_name, ['fxmixer', i_fxnum, j_name], i_value, i_addmul, 'FX '+str(i_fxnum), v_name, True)
 
-# ------- Instruments and Plugins -------
+def auto_add_plugin(xmltag, j_name, x_name, i_fallback, i_addmul, i_pluginid, cvpj_plugindata):
+    pval, ptype, pname = cvpj_plugindata.param_get(j_name, i_fallback)
+    create_param_auto(xmltag, x_name, ['plugin', i_pluginid, j_name], float(pval), i_addmul, 'Plugin', pname, True)
 
-def asdrlfo_set(pluginid, trkX_insttr):
+#def add_auto_unused(paramlist, pluginautoid, pluginid, i_name):
+#    if pluginautoid != None:
+#        for paramid in pluginautoid:
+#            add_auto_placements(1, None, ['plugin', pluginid], paramid, None, paramid, None, paramid, i_name, paramid)
+#
+def create_param_auto(x_tag, x_name, autoloc, i_value, i_addmul, v_type, v_name, writeparamxml):
+    if i_addmul != None: i_value = (i_value+i_addmul[0])*i_addmul[1]
+    if isinstance(i_value, bool): i_value = int(i_value)
+    aid_id, aid_data = auto_id.out_get(autoloc)
+    if x_tag != None:
+        if aid_data != None and aid_id != None:
+            if len(aid_data['placements']) != 0:
+                writeparamxml = False
+                if i_addmul != None: aid_data['placements'] = auto.multiply(aid_data['placements'], i_addmul[0], i_addmul[1])
+                make_auto_track(aid_id, aid_data, v_type+': '+v_name)
+                autovarX = ET.SubElement(x_tag, x_name)
+                autovarX.set('value', str(i_value))
+                autovarX.set('scale_type', 'linear')
+                autovarX.set('id', str(aid_id))
+
+    elif aid_id != None and aid_data != None:
+        writeparamxml = False
+        make_auto_track(aid_id, aid_data, v_type+': '+v_name)
+
+    if writeparamxml:
+        x_tag.set(x_name, str(i_value))
+
+def parse_auto(xmltag, i_points, i_val_type):
+    curpoint = 0
+    for point in i_points:
+        if 'type' in point and curpoint != 0 and i_val_type != 'bool ':
+            if point['type'] == 'instant':
+                xml_time = ET.SubElement(xmltag, "time")
+                xml_time.set('value', str(prevvalue))
+                xml_time.set('pos', str(int(point['position']*12)-1))
+        xml_time = ET.SubElement(xmltag, "time")
+        if i_val_type == 'float': xml_time.set('value', str(point['value']))
+        elif i_val_type == 'int': xml_time.set('value', str(int(point['value'])))
+        else: xml_time.set('value', str(int(point['value'])))
+        xml_time.set('pos', str(int(point['position']*12)))
+        prevvalue = point['value']
+        curpoint += 1
+
+def make_auto_track(autoidnum, autodata, visualname):
+    global trkcX
+    print('[output-lmms] Automation Track: '+visualname)
+    xml_autotrack = ET.SubElement(trkcX, "track")
+    xml_autotrack.set('type', '5')
+    xml_autotrack.set('solo', '0')
+    xml_autotrack.set('muted', '0')
+    xml_autotrack.set('name', visualname)
+
+    autodata_type = autodata['type']
+    autodata_placements = autodata['placements']
+
+    for autoplacement in autodata_placements:
+        xml_automationpattern = ET.SubElement(xml_autotrack, "automationpattern")
+        xml_automationpattern.set('pos', str(int(autoplacement['position']*12)))
+        xml_automationpattern.set('len', str(int(autoplacement['duration']*12)))
+        xml_automationpattern.set('tens', "0")
+        xml_automationpattern.set('name', visualname)
+        xml_automationpattern.set('mute', "0")
+        xml_automationpattern.set('prog', "1" if autodata_type != 'bool' else "0")
+        prevvalue = 0
+        if 'points' in autoplacement: parse_auto(xml_automationpattern, autoplacement['points'], autodata_type)
+        if autoidnum != None:
+            xml_object = ET.SubElement(xml_automationpattern, "object")
+            xml_object.set('id', str(autoidnum))
+
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------- Instruments and Plugins -------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------
+
+def asdrlfo_set(inst_plugindata, trkX_insttr):
     eldataX = ET.SubElement(trkX_insttr, "eldata")
 
-    filt_enabled, filt_cutoff, filt_reso, filt_type, filt_subtype = plugins.get_filter(cvpj_l, pluginid)
+    filt_enabled, filt_cutoff, filt_reso, filt_type, filt_subtype = inst_plugindata.filter_get()
     eldataX.set('fcut', str(filt_cutoff))
     filtertable_e = [filt_type, filt_subtype]
     lmms_filternum = None
@@ -195,19 +328,14 @@ def asdrlfo_set(pluginid, trkX_insttr):
     eldataX.set('fwet', str(int(filt_enabled)))
     eldataX.set('fres', str(filt_reso))
 
-    asdrlfo(pluginid, eldataX, 'vol', 'vol')
-    asdrlfo(pluginid, eldataX, 'cutoff', 'cut')
-    asdrlfo(pluginid, eldataX, 'reso', 'res')
+    asdrlfo(inst_plugindata, eldataX, 'vol', 'vol')
+    asdrlfo(inst_plugindata, eldataX, 'cutoff', 'cut')
+    asdrlfo(inst_plugindata, eldataX, 'reso', 'res')
 
-def asdrlfo(pluginid, xmlobj, asdrtype, xmltype):
-
+def asdrlfo(inst_plugindata, xmlobj, asdrtype, xmltype):
     elmodX = ET.SubElement(xmlobj, 'el' + xmltype)
 
-    a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, asdrtype)
-    t_attack, t_decay, t_release = plugins.get_asdr_env_tension(cvpj_l, pluginid, asdrtype)
-    a_attack *= pow(2, min(t_attack*3.14, 0))
-    a_decay *= pow(2, min(t_decay*3.14, 0))
-    a_release *= pow(2, min(t_release*3.14, 0))
+    a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = inst_plugindata.asdr_env_get_fake_tension(asdrtype)
 
     if asdrtype == 'cutoff': elmodX.set('amt', str(a_amount/6000))
     else: elmodX.set('amt', str(float(a_amount)))
@@ -218,7 +346,7 @@ def asdrlfo(pluginid, xmlobj, asdrtype, xmltype):
     elmodX.set('sustain', str(a_sustain))
     elmodX.set('rel', str(sec2exp(a_release)))
 
-    l_predelay, l_attack, l_shape, l_speed_type, l_speed_time, l_amount = plugins.get_lfo(cvpj_l, pluginid, asdrtype)
+    l_predelay, l_attack, l_shape, l_speed_type, l_speed_time, l_amount = inst_plugindata.lfo_get(asdrtype)
     if asdrtype == 'cutoff': elmodX.set('lamt', str(l_amount/1500))
     else: elmodX.set('lamt', str(l_amount))
     elmodX.set('lpdel', str(l_predelay))
@@ -233,37 +361,6 @@ def asdrlfo(pluginid, xmlobj, asdrtype, xmltype):
     elmodX.set('lspd', str(lfospeed))
     elmodX.set('lshp', str(lfoshape[l_shape]))
 
-def get_plugin_param(pluginautoid, xmltag, xmlname, pluginid, paramname, fallback, **kwargs):
-    isslot = data_values.get_value(kwargs, 'isslot', False)
-    pluginparam = plugins.get_plug_param(cvpj_l, pluginid, paramname, fallback)
-
-    aid_id, aid_data = auto_id.out_get(['plugin', pluginid, paramname])
-
-    if pluginparam[1] != 'bool': outparam = pluginparam[0]
-    else: outparam = int(pluginparam[0])
-
-    if pluginparam[2] != '': v_name = pluginparam[2]
-    else: v_name = paramname
-
-    visname = 'Plugin: '+v_name
-
-    if 'visualname' in kwargs: visname = kwargs['visualname']
-
-    if aid_id != None and len(aid_data['placements']) != 0:
-        aid_data['placements'] = auto.multiply(aid_data['placements'], 0, 1)
-        lmms_make_main_auto_track(aid_id, aid_data, visname)
-        autovarX = ET.SubElement(xmltag, xmlname)
-        autovarX.set('value', str(outparam))
-        autovarX.set('scale_type', 'linear')
-        autovarX.set('id', str(aid_id))
-        for name in kwargs:
-            autovarX.set(name, str(kwargs[name]))
-        return autovarX
-    else:
-        xmltag.set(xmlname, str(outparam))
-
-
-
 def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
     instJ = data_values.get_value(trkJ, 'instdata', {})
     xml_instrumentpreplugin = ET.SubElement(xmltag, "instrument")
@@ -273,85 +370,90 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
 
     if 'pluginid' in instJ: 
         pluginid = instJ['pluginid']
-        plugintype = plugins.get_plug_type(cvpj_l, pluginid)
 
-        visual_plugname = str(plugintype[0])+' ('+str(plugintype[1])+')'
-
-        cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
-
+        inst_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
+        plugintype = inst_plugindata.type_get()
         pluginautoid = auto_id.out_getlist(['plugin', pluginid])
+        visual_plugname = str(plugintype[0])+' ('+str(plugintype[1])+')'
 
         if plugintype == ['sampler', 'single']:
             print('[output-lmms]       Plugin: Sampler (Single) > audiofileprocessor')
             xml_instrumentpreplugin.set('name', "audiofileprocessor")
             xml_sampler = ET.SubElement(xml_instrumentpreplugin, "audiofileprocessor")
 
-            xml_sampler.set('reversed', str(int(data_values.get_value(cvpj_plugindata, 'reverse', 0))))
-            xml_sampler.set('amp', str(oneto100(data_values.get_value(cvpj_plugindata, 'amp', 1))))
-            xml_sampler.set('stutter', str(int(data_values.get_value(cvpj_plugindata, 'continueacrossnotes', False))))
-            xml_sampler.set('src', data_values.get_value(cvpj_plugindata, 'file', ''))
+            xml_sampler.set('reversed', str(int( inst_plugindata.dataval_get('reverse', 0) )))
+            xml_sampler.set('amp', str(oneto100( inst_plugindata.dataval_get('amp', 1) )))
+            xml_sampler.set('stutter', str(int( inst_plugindata.dataval_get('continueacrossnotes', False) )))
+            xml_sampler.set('src', inst_plugindata.dataval_get('file', ''))
 
-            point_value_type = data_values.get_value(cvpj_plugindata, 'point_value_type', 'samples')
+            point_value_type = inst_plugindata.dataval_get('point_value_type', 'samples')
+            sample_length = inst_plugindata.dataval_get('length', None)
+            sample_start = inst_plugindata.dataval_get('start', 0)
+            sample_loop = inst_plugindata.dataval_get('loop', 0)
 
-            if point_value_type == 'samples' and 'length' in cvpj_plugindata:
-                trkJ_length = cvpj_plugindata['length']
-                if trkJ_length != 0:
-                    xml_sampler.set('sframe', str(cvpj_plugindata['start']/trkJ_length) if 'start' in cvpj_plugindata else '0')
-                    if 'loop' in cvpj_plugindata:
-                        trkJ_loop = cvpj_plugindata['loop']
-                        if 'points' in trkJ_loop:
-                            trkJ_loop_points = trkJ_loop['points']
-                            start = trkJ_loop_points[0] / trkJ_length
-                            end = trkJ_loop_points[1] / trkJ_length
-                            if end == 0 or start == end: end = 1.0
-                            xml_sampler.set('lframe', str(start))
-                            xml_sampler.set('eframe', str(end))
+            out_start = 0
+            out_loop = 0
+            out_end = 1
+
+            if point_value_type == 'samples' and sample_length:
+                if sample_length != 0:
+                    out_start = sample_start/sample_length
+
+                    if sample_loop:
+                        if 'points' in sample_loop:
+                            sample_loop_points = sample_loop['points']
+                            out_loop = sample_loop_points[0] / sample_length
+                            out_end = sample_loop_points[1] / sample_length
+                            if out_end == 0 or out_start == out_end: out_end = 1.0
 
             if point_value_type == 'percent':
-                xml_sampler.set('sframe', str(cvpj_plugindata['start']) if 'start' in cvpj_plugindata else '0')
-                if 'loop' in cvpj_plugindata:
-                    trkJ_loop = cvpj_plugindata['loop']
-                    if 'points' in trkJ_loop:
-                        trkJ_loop_points = trkJ_loop['points']
-                        xml_sampler.set('lframe', str(trkJ_loop_points[0]))
-                        xml_sampler.set('eframe', str(trkJ_loop_points[1]))
+                out_start = sample_start
+                if sample_loop:
+                    if 'points' in sample_loop:
+                        trkJ_loop_points = sample_loop['points']
+                        out_loop = trkJ_loop_points[0]
+                        out_end = trkJ_loop_points[1]
+
+            xml_sampler.set('sframe', str(out_start))
+            xml_sampler.set('lframe', str(out_loop))
+            xml_sampler.set('eframe', str(out_end))
 
             loopenabled = 0
             loopmode = "normal"
-            if 'loop' in cvpj_plugindata:
-                trkJ_loop = cvpj_plugindata['loop']
-                if 'enabled' in trkJ_loop: loopenabled = trkJ_loop['enabled']
-                if 'mode' in trkJ_loop: loopmode = trkJ_loop['mode']
+            if sample_loop:
+                if 'enabled' in sample_loop: loopenabled = sample_loop['enabled']
+                if 'mode' in sample_loop: loopmode = sample_loop['mode']
             if loopenabled == 0: xml_sampler.set('looped', '0')
             if loopenabled == 1:
                 if loopmode == "normal": xml_sampler.set('looped', '1')
                 if loopmode == "pingpong": xml_sampler.set('looped', '2')
-            interpolation = "none"
-            if 'interpolation' in cvpj_plugindata: interpolation = cvpj_plugindata['interpolation']
+
+            interpolation = inst_plugindata.dataval_get('interpolation', "sinc")
             if interpolation == "none": xml_sampler.set('interp', '0')
-            if interpolation == "linear": xml_sampler.set('interp', '1')
-            if interpolation == "sinc": xml_sampler.set('interp', '2')
+            elif interpolation == "linear": xml_sampler.set('interp', '1')
+            elif interpolation == "sinc": xml_sampler.set('interp', '2')
             else: xml_sampler.set('interp', '2')
+
             middlenotefix += 3
 
         elif plugintype[0] == 'soundfont2':
             print('[output-lmms]       Plugin: soundfont2 > sf2player')
             xml_instrumentpreplugin.set('name', "sf2player")
             xml_sf2 = ET.SubElement(xml_instrumentpreplugin, "sf2player")
-            xml_sf2.set('bank', str(int(data_values.get_value(cvpj_plugindata, 'bank', 0))))
-            xml_sf2.set('patch', str(int(data_values.get_value(cvpj_plugindata, 'patch', 0))))
-            xml_sf2.set('src', str(data_values.get_value(cvpj_plugindata, 'file', '')))
-            get_plugin_param(pluginautoid, xml_sf2, 'gain', pluginid, 'gain', 1)
-            get_plugin_param(pluginautoid, xml_sf2, 'chorusDepth', pluginid, 'chorus_depth', 0)
-            get_plugin_param(pluginautoid, xml_sf2, 'chorusLevel', pluginid, 'chorus_level', 0)
-            get_plugin_param(pluginautoid, xml_sf2, 'chorusNum', pluginid, 'chorus_lines', 0)
-            get_plugin_param(pluginautoid, xml_sf2, 'chorusOn', pluginid, 'chorus_enabled', 0)
-            get_plugin_param(pluginautoid, xml_sf2, 'chorusSpeed', pluginid, 'chorus_speed', 0)
-            get_plugin_param(pluginautoid, xml_sf2, 'reverbDamping', pluginid, 'reverb_damping', 0)
-            get_plugin_param(pluginautoid, xml_sf2, 'reverbLevel', pluginid, 'reverb_level', 0)
-            get_plugin_param(pluginautoid, xml_sf2, 'reverbOn', pluginid, 'reverb_enabled', 0)
-            get_plugin_param(pluginautoid, xml_sf2, 'reverbRoomSize', pluginid, 'reverb_roomsize', 0)
-            get_plugin_param(pluginautoid, xml_sf2, 'reverbWidth', pluginid, 'reverb_width', 0)
+            xml_sf2.set('bank', str(int(inst_plugindata.dataval_get('bank', 0))))
+            xml_sf2.set('patch', str(int(inst_plugindata.dataval_get('patch', 0))))
+            xml_sf2.set('src', str(inst_plugindata.dataval_get('file', '')))
+            auto_add_plugin(xml_sf2, 'gain', 'gain', 1, None, pluginid, inst_plugindata)
+            auto_add_plugin(xml_sf2, 'chorusDepth', 'chorus_depth', 0, None, pluginid, inst_plugindata)
+            auto_add_plugin(xml_sf2, 'chorusLevel', 'chorus_level', 0, None, pluginid, inst_plugindata)
+            auto_add_plugin(xml_sf2, 'chorusNum', 'chorus_lines', 0, None, pluginid, inst_plugindata)
+            auto_add_plugin(xml_sf2, 'chorusOn', 'chorus_enabled', 0, None, pluginid, inst_plugindata)
+            auto_add_plugin(xml_sf2, 'chorusSpeed', 'chorus_speed', 0, None, pluginid, inst_plugindata)
+            auto_add_plugin(xml_sf2, 'reverbDamping', 'reverb_damping', 0, None, pluginid, inst_plugindata)
+            auto_add_plugin(xml_sf2, 'reverbLevel', 'reverb_level', 0, None, pluginid, inst_plugindata)
+            auto_add_plugin(xml_sf2, 'reverbOn', 'reverb_enabled', 0, None, pluginid, inst_plugindata)
+            auto_add_plugin(xml_sf2, 'reverbRoomSize', 'reverb_roomsize', 0, None, pluginid, inst_plugindata)
+            auto_add_plugin(xml_sf2, 'reverbWidth', 'reverb_width', 0, None, pluginid, inst_plugindata)
             middlenotefix += 12
 
         elif plugintype == ['fm', 'opl2']:
@@ -360,48 +462,45 @@ def lmms_encode_plugin(xmltag, trkJ, trackid, trackname, trkX_insttr):
             xml_opl2 = ET.SubElement(xml_instrumentpreplugin, "OPL2")
             for lmms_opname, cvpj_opname in [['op1', 'mod'],['op2', 'car']]:
                 for varname in opl2opvarnames:
-                    get_plugin_param(pluginautoid, xml_opl2, lmms_opname+varname[0], pluginid, cvpj_opname+varname[1], 0)
+                    auto_add_plugin(xml_opl2, cvpj_opname+varname[1], lmms_opname+varname[0], 0, None, pluginid, inst_plugindata)
             for varname in opl2varnames:
-                get_plugin_param(pluginautoid, xml_opl2, varname[0], pluginid, varname[1], 0)
+                auto_add_plugin(xml_opl2, varname[1], varname[0], 0, None, pluginid, inst_plugindata)
             middlenotefix = 24
 
         elif plugintype == ['vst2', 'win']:
             print('[output-lmms]       Plugin: vst2 > vestige')
             xml_instrumentpreplugin.set('name', "vestige")
             xml_vst = ET.SubElement(xml_instrumentpreplugin, "vestige")
-            middlenotefix += setvstparams(cvpj_plugindata, pluginid, xml_vst)
+            middlenotefix += setvstparams(inst_plugindata, pluginid, xml_vst)
 
         elif plugintype[0] == 'native-lmms':
             print('[output-lmms]       Plugin: '+plugintype[1]+' > '+plugintype[1])
             xml_instrumentpreplugin.set('name', plugintype[1])
             xml_lmmsnat = ET.SubElement(xml_instrumentpreplugin, plugintype[1])
-            lmms_autovals = lmms_auto.get_params_inst(plugintype[1])
-            for pluginparam in lmms_autovals[0]: 
-                get_plugin_param(pluginautoid, xml_lmmsnat, pluginparam, pluginid, pluginparam, 0)
-            for pluginparam in lmms_autovals[1]: 
-                xml_lmmsnat.set(pluginparam, 
-                    str(plugins.get_plug_dataval(cvpj_l, pluginid, pluginparam, ''))
-                    )
+
+            dset_plugparams(plugintype[1], pluginid, xml_lmmsnat, inst_plugindata)
+
             if plugintype[1] == 'zynaddsubfx':
-                zdata = cvpj_plugindata['data'].encode('ascii')
-                zdataxs = ET.fromstring(base64.b64decode(zdata).decode('ascii'))
-                xml_lmmsnat.append(zdataxs)
+                zdata = inst_plugindata.dataval_get('data', None)
+                if zdata != None:
+                    zdataxs = ET.fromstring(base64.b64decode(zdata.encode('ascii')).decode('ascii'))
+                    xml_lmmsnat.append(zdataxs)
             if plugintype[1] == 'tripleoscillator':
                 for names in [['userwavefile0', 'osc_1'],
                             ['userwavefile1', 'osc_2'],
                             ['userwavefile2', 'osc_3']]:
-                    filedata = plugins.get_fileref(cvpj_l, pluginid, names[1])
+                    filedata = inst_plugindata.fileref_get(names[1])
                     if filedata != None: xml_lmmsnat.set(names[0], filedata['path'])
 
         else:
             print('[output-lmms]       Plugin: '+visual_plugname+' > None')
             xml_instrumentpreplugin.set('name', "audiofileprocessor")
-            paramlist = plugins.get_plug_paramlist(cvpj_l, pluginid)
+            #paramlist = plugins.get_plug_paramlist(cvpj_l, pluginid)
 
-            if trackname not in ['', None]: visual_plugname = trackname
-            add_auto_unused(paramlist, pluginautoid, pluginid, visual_plugname)
+            #if trackname not in ['', None]: visual_plugname = trackname
+            #add_auto_unused(paramlist, pluginautoid, pluginid, visual_plugname)
 
-        asdrlfo_set(pluginid, trkX_insttr)
+        asdrlfo_set(inst_plugindata, trkX_insttr)
 
     else:
         plugintype = [None, None]
@@ -469,8 +568,6 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
 
     #instrumenttrack
     trkX_insttr = ET.SubElement(xmltag, "instrumenttrack")
-    trkX_insttr.set('usemasterpitch', "1")
-    trkX_insttr.set('pitch', "0")
     instplugin = instJ['pluginid'] if 'pluginid' in instJ else None
 
     if instplugin != None:
@@ -479,38 +576,31 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
     trkX_insttr.set('fxch', str(tracks_r.track_fxrackchan_get(cvpj_l, trackid)))
     trkX_insttr.set('pitchrange', "12")
 
-    add_auto_placements(1, [0, 100], ['track', trackid], 'usemasterpitch', trkJ, 'usemasterpitch', trkX_insttr, 'usemasterpitch', trackname, 'Use Master Pitch')
-    add_auto_placements(1, [0, 100], ['track', trackid], 'vol', trkJ, 'vol', trkX_insttr, 'vol', trackname, 'Volume')
-    add_auto_placements(0, [0, 100], ['track', trackid], 'pan', trkJ, 'pan', trkX_insttr, 'pan', trackname, 'Pan')
-    add_auto_placements(1, [-1, -1], ['track', trackid], 'enabled', trkJ, 'enabled', xmltag, 'muted', trackname, 'Muted')
-    add_auto_placements(0, [0, 100], ['track', trackid], 'pitch', trkJ, 'pitch', trkX_insttr, 'pitch', trackname, 'Pitch')
+    auto_add_track(trkX_insttr, 'usemasterpitch', 'usemasterpitch', 1, None, trackid, trackname, 'Use Master Pitch')
+    auto_add_track(trkX_insttr, 'vol', 'vol', 1, [0, 100], trackid, trackname, 'Vol')
+    auto_add_track(trkX_insttr, 'pan', 'pan', 0, [0, 100], trackid, trackname, 'Pan')
+    auto_add_track(xmltag, 'enabled', 'muted', 1, [-1, -1], trackid, trackname, 'On')
+    auto_add_track(trkX_insttr, 'pitch', 'pitch', 0, [0, 100], trackid, trackname, 'Pitch')
 
     if 'chain_fx_notes' in trkJ:
         trkJ_notefx = trkJ['chain_fx_notes']
 
         for pluginid in trkJ_notefx:
-            plugintype = plugins.get_plug_type(cvpj_l, pluginid)
+            notefx_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
+            plugintype = notefx_plugindata.type_get()
 
             if plugintype[0] == 'native-lmms' and plugintype[1] in ['arpeggiator', 'chordcreator']:
-                pluginautoid = auto_id.out_getlist(['plugin', pluginid])
-                slotautoid = auto_id.out_getlist(['slot', pluginid])
-
-                fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid])
+                i_enabled, i_wet = notefx_plugindata.fxdata_get()
 
                 if plugintype[1] == 'arpeggiator':
                     trkX_notefx = ET.SubElement(trkX_insttr, "arpeggiator")
-                    paramlist = ['arpgate', 'arprange', 'arpmode', 'arpdir', 'arpmiss', 'arpskip', 'arptime', 'arpcycle', 'arp']
-                    add_auto_placements(0, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', trkX_notefx, 'arp-enabled', 'Arp', 'On', isslot=True)
+                    create_param_auto(trkX_notefx, 'arp-enabled', ['slot', pluginid, 'enabled'], i_enabled, None, 'Arp', 'On', True)
+                    dset_plugparams(plugintype[1], pluginid, trkX_notefx, notefx_plugindata)
 
                 if plugintype[1] == 'chordcreator':
                     trkX_notefx = ET.SubElement(trkX_insttr, "chordcreator")
-                    paramlist = ['chordrange', 'chord']
-                    add_auto_placements(0, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', trkX_notefx, 'chord-enabled', 'Chord', 'On', isslot=True)
-
-                for paramid in paramlist:
-                    get_plugin_param(pluginautoid, trkX_notefx, paramid, pluginid, paramid, 0)
-
-
+                    create_param_auto(trkX_notefx, 'chord-enabled', ['slot', pluginid, 'enabled'], i_enabled, None, 'Chord', 'On', True)
+                    dset_plugparams(plugintype[1], pluginid, trkX_notefx, notefx_plugindata)
 
     print('[output-lmms] Instrument Track')
     if 'name' in trkJ: print('[output-lmms]       Name: ' + trkJ['name'])
@@ -607,9 +697,9 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
     
     trkX_samptr = ET.SubElement(xmltag, "sampletrack")
 
-    add_auto_placements(1, [-1, -1], ['track', trackid], 'enabled', trkJ, 'enabled', xmltag, 'muted', trackname, 'Muted')
-    add_auto_placements(1, [0, 100], ['track', trackid], 'vol', trkJ, 'vol', trkX_samptr, 'vol', trackname, 'Volume')
-    add_auto_placements(0, [0, 100], ['track', trackid], 'pan', trkJ, 'pan', trkX_samptr, 'pan', trackname, 'Pan')
+    auto_add_track(trkX_samptr, 'vol', 'vol', 1, [0, 100], trackid, trackname, 'Vol')
+    auto_add_track(trkX_samptr, 'pan', 'pan', 0, [0, 100], trackid, trackname, 'Pan')
+    auto_add_track(xmltag, 'enabled', 'muted', 1, [-1, -1], trackid, trackname, 'On')
 
     trkX_samptr.set('fxch', str(tracks_r.track_fxrackchan_get(cvpj_l, trackid)))
     
@@ -642,10 +732,15 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
 
 # ------- Effects -------
 
-def lmms_encode_effectplugin(pluginid, fxslotX):
-    plugintype = plugins.get_plug_type(cvpj_l, pluginid)
+def lmms_encode_effectslot(pluginid, fxcX):
+    fx_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
+    i_enabled, i_wet = fx_plugindata.fxdata_get()
 
-    cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
+    fxslotX = ET.SubElement(fxcX, "effect")
+    create_param_auto(fxslotX, 'on', ['slot', pluginid, 'enabled'], i_enabled, None, 'Slot', 'On', True)
+    create_param_auto(fxslotX, 'wet', ['slot', pluginid, 'wet'], i_wet, None, 'Slot', 'Wet', True)
+
+    plugintype = fx_plugindata.type_get()
 
     pluginautoid = auto_id.out_getlist(['plugin', pluginid])
 
@@ -659,46 +754,15 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
         xml_lmmsreverbsc.set('color', '10000')
 
     elif plugintype == ['universal', 'eq-bands']:
-        #used, active, freq, gain, res/bw
+        data_LP, data_Lowshelf, data_Peaks, data_HighShelf, data_HP = fx_plugindata.eqband_get_limited(None)
 
         print('[output-lmms]       Audio FX: [eq] ')
         fxslotX.set('name', 'eq')
         xml_lmmseq = ET.SubElement(fxslotX, 'Eq')
 
-        data_LP =        [False,0,0,0,0]
-        data_Lowshelf =  [False,0,0,0,0]
-        data_Peaks =     [[False,0,0,0,0],[False,0,0,0,0],[False,0,0,0,0],[False,0,0,0,0]]
-        data_HighShelf = [False,0,0,0,0]
-        data_HP =        [False,0,0,0,0]
-
-        banddata = plugins.get_eqband(cvpj_l, pluginid, None)
-
-        for s_band in banddata:
-            bandtype = s_band['type']
-
-            band_on = s_band['on']
-            band_freq = s_band['freq']
-            band_gain = s_band['gain']
-            band_res = s_band['var']
-
-            part = [True, band_on, band_freq, band_gain, band_res]
-
-            if bandtype == 'low_pass' and band_on: data_LP = part
-            if bandtype == 'low_shelf' and band_on: data_Lowshelf = part
-            if bandtype == 'peak' and band_on: 
-                for peaknum in range(4):
-                    peakdata = data_Peaks[peaknum]
-                    if peakdata[0] == False: 
-                        data_Peaks[peaknum] = part
-                        break
-            if bandtype == 'high_shelf' and band_on: data_HighShelf = part
-            if bandtype == 'high_pass' and band_on: data_HP = part
-
         xml_lmmseq.set('LPactive', str(data_LP[1]))
         xml_lmmseq.set('LPfreq', str(data_LP[2]))
         xml_lmmseq.set('LPres', str(data_LP[4]))
-
-        #print(data_LP, data_Lowshelf, data_HighShelf, data_HP)
 
         xml_lmmseq.set('Lowshelfactive', str(data_Lowshelf[1]))
         xml_lmmseq.set('LowShelffreq', str(data_Lowshelf[2]))
@@ -720,86 +784,81 @@ def lmms_encode_effectplugin(pluginid, fxslotX):
         xml_lmmseq.set('HPfreq', str(data_HP[2]))
         xml_lmmseq.set('HPres', str(data_HP[4]))
 
-        get_plugin_param(pluginautoid, xml_lmmseq, 'Outputgain', pluginid, 'gain_out', 0)
-        get_plugin_param(pluginautoid, xml_lmmseq, 'Inputgain', pluginid, 'gain_in', 0)
+        xml_lmmseq.set('Outputgain', str( fx_plugindata.param_get('gain_out', 0) ))
+        xml_lmmseq.set('Inputgain', str( fx_plugindata.param_get('gain_in', 0) ))
 
     elif plugintype == ['universal', 'delay-c']:
         print('[output-lmms]       Audio FX: [delay] ')
         fxslotX.set('name', 'delay')
         xml_lmmsdelay = ET.SubElement(fxslotX, 'Delay')
 
-        d_time_type = plugins.get_plug_dataval(cvpj_l, pluginid, 'time_type', 'seconds')
-        d_time = plugins.get_plug_dataval(cvpj_l, pluginid, 'time', 1)
-        d_wet = plugins.get_plug_dataval(cvpj_l, pluginid, 'wet', 0.5)
-        d_feedback = plugins.get_plug_dataval(cvpj_l, pluginid, 'feedback', 0.0)
+        d_time_type = fx_plugindata.dataval_get('time_type', 'seconds')
+        d_time = fx_plugindata.dataval_get('time', 1)
+        d_wet = fx_plugindata.dataval_get('wet', 0.5)
+        d_feedback = fx_plugindata.dataval_get('feedback', 0.0)
 
         if d_time_type == 'seconds': 
-            get_plugin_param(pluginautoid, xml_lmmsdelay, 'DelayTimeSamples', pluginid, 'time_seconds', d_time)
+            xml_lmmsdelay.set('DelayTimeSamples', str(d_time))
         if d_time_type == 'steps':
-            get_plugin_param(pluginautoid, xml_lmmsdelay, 'DelayTimeSamples', pluginid, 'time_seconds', (d_time/8)*((lmms_bpm)/120))
+            xml_lmmsdelay.set('DelayTimeSamples', str((d_time/8)*((lmms_bpm)/120)))
 
-        get_plugin_param(pluginautoid, xml_lmmsdelay, 'FeebackAmount', pluginid, 'feedback', d_feedback)
-        get_plugin_param(pluginautoid, xml_lmmsdelay, 'LfoAmount', pluginid, 'lfo_amount', 0)
-        get_plugin_param(pluginautoid, xml_lmmsdelay, 'LfoFrequency', pluginid, 'lfo_freq', 0)
-        get_plugin_param(pluginautoid, xml_lmmsdelay, 'OutGain', pluginid, 'gain_out', 0)
+        xml_lmmsdelay.set('FeebackAmount', str(d_feedback))
+        xml_lmmsdelay.set('LfoAmount', str( fx_plugindata.param_get('lfo_amount', 0) ))
+        xml_lmmsdelay.set('LfoFrequency', str( fx_plugindata.param_get('lfo_freq', 0) ))
+        xml_lmmsdelay.set('OutGain', str( fx_plugindata.param_get('gain_out', 0) ))
 
     elif plugintype == ['vst2', 'win']:
         print('[output-lmms]       Audio FX: [vst2] ')
         fxslotX.set('name', 'vsteffect')
         xml_vst = ET.SubElement(fxslotX, "vsteffectcontrols")
-        setvstparams(cvpj_plugindata, pluginid, xml_vst)
+        setvstparams(fx_plugindata, pluginid, xml_vst)
 
     elif plugintype[0] == 'native-lmms':
-        lmms_autovals = lmms_auto.get_params_fx(plugintype[1])
         xml_name = fxlist[plugintype[1]]
         fxslotX.set('name', plugintype[1])
         print('[output-lmms]       Audio FX: ['+plugintype[1]+'] ')
         xml_lmmsnat = ET.SubElement(fxslotX, xml_name)
-        for pluginparam in lmms_autovals[0]: 
-            get_plugin_param(pluginautoid, xml_lmmsnat, pluginparam, pluginid, pluginparam, 0)
-        for pluginparam in lmms_autovals[1]: 
-            xml_lmmsnat.set(pluginparam, str(data_values.get_value(cvpj_plugindata, pluginparam, 0)))
+        dset_plugparams(plugintype[1], pluginid, xml_lmmsnat, fx_plugindata)
 
     elif plugintype[0] == 'ladspa':
         print('[output-lmms]       Audio FX: [ladspa] ')
         fxslotX.set('name', 'ladspaeffect')
 
-        ladspa_file = data_values.get_value(cvpj_plugindata, 'path', '')
-
-        ladspa_plugin = data_values.get_value(cvpj_plugindata, 'plugin', '')
-        ladspa_sep_chan = data_values.get_value(cvpj_plugindata, 'seperated_channels', False)
-        ladspa_numparams = data_values.get_value(cvpj_plugindata, 'numparams', '1')
-
+        ladspa_file = fx_plugindata.dataval_get('path', '')
+        ladspa_plugin = fx_plugindata.dataval_get('plugin', '')
+        ladspa_sep_chan = fx_plugindata.dataval_get('seperated_channels', False)
+        ladspa_numparams = fx_plugindata.dataval_get('numparams', 0)
         xml_ladspa = ET.SubElement(fxslotX, 'ladspacontrols')
-        xml_ladspa_key = ET.SubElement(fxslotX, 'key')
-        xml_ladspa_key_file = ET.SubElement(xml_ladspa_key, 'attribute')
-        xml_ladspa_key_file.set('name', 'file')
-        xml_ladspa_key_file.set('value', Path(ladspa_file).stem)
-        xml_ladspa_key_plugin = ET.SubElement(xml_ladspa_key, 'attribute')
-        xml_ladspa_key_plugin.set('name', 'plugin')
-        xml_ladspa_key_plugin.set('value', ladspa_plugin)
+        xml_ladspa.set('ports', str(ladspa_numparams*2))
+        xml_ladspa.set('link', str(int(not ladspa_sep_chan)))
 
+        if ladspa_file != None: add_keyatt(fxslotX, {'file': Path(ladspa_file).stem, 'plugin': ladspa_plugin})
         for param in range(ladspa_numparams):
-            paramid = 'ladspa_param_'+str(param)
-            paramvisname = 'LADSPA: #'+str(param+1)
-            paramxml = get_plugin_param(pluginautoid, xml_ladspa, 'port0'+str(param), pluginid, paramid, 0, visualname=paramvisname)
-            get_plugin_param(pluginautoid, xml_ladspa, 'port1'+str(param), pluginid, paramid+'_1', 0, visualname=paramvisname)
+            for channum in range(2):
+                cvpj_paramid = 'ladspa_param_'+str(param)
+                if channum == 1: cvpj_paramid += '_1'
+                lmms_paramid = 'port'+str(channum)+str(param)
+                cvpj_paramvisname = 'LADSPA: #'+str(param+1)
+
+                aid_id, aid_data = auto_id.out_get(['plugin', pluginid, cvpj_paramid])
+                lmms_paramdata = ET.SubElement(xml_ladspa, lmms_paramid)
+                paramval = fx_plugindata.param_get(cvpj_paramid, 0)[0]
+                if channum == 0: lmms_paramdata.set('link', str(int(not ladspa_sep_chan)))
+                if aid_id == None:
+                    lmms_paramdata.set('data', str(paramval))
+                else:
+                    lmms_paramdata_data = ET.SubElement(lmms_paramdata, 'data')
+                    lmms_paramdata_data.set('value', str(paramval))
+                    lmms_paramdata_data.set('scale_type', 'linear')
+                    lmms_paramdata_data.set('id', str(aid_id))
+                    make_auto_track(aid_id, aid_data, cvpj_paramvisname)
 
     else:
         fxslotX.set('name', 'stereomatrix')
         xml_lmmsnat = ET.SubElement(fxslotX, 'stereomatrixcontrols')
-        paramlist = plugins.get_plug_paramlist(cvpj_l, pluginid)
-        add_auto_unused(paramlist, pluginautoid, pluginid, 'FX Plug')
+    #    paramlist = plugins.get_plug_paramlist(cvpj_l, pluginid)
+    #    add_auto_unused(paramlist, pluginautoid, pluginid, 'FX Plug')
 
-
-def lmms_encode_effectslot(pluginid, fxcX):
-    fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid])
-
-    if fxdata != None:
-        fxslotX = ET.SubElement(fxcX, "effect")
-        add_auto_placements(1, None, ['slot', pluginid], 'enabled', fxdata, 'enabled', fxslotX, 'on', 'Slot', 'On', isslot=True)
-        add_auto_placements(1, None, ['slot', pluginid], 'wet', fxdata, 'wet', fxslotX, 'wet', 'Slot', 'Wet', isslot=True)
-        lmms_encode_effectplugin(pluginid, fxslotX)
 
 def lmms_encode_fxchain(xmltag, json_fxchannel):
     if 'chain_fx_audio' in json_fxchannel:
@@ -829,7 +888,7 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
 
         if 'color' in fxchannelJ: fxcX.set('color', '#' + colors.rgb_float_to_hex(fxchannelJ['color']))
 
-        add_auto_placements(1, None, ['fxmixer', num], 'vol', fxchannelJ, 'vol', fxcX, 'volume', 'FX '+str(num), 'Volume')
+        auto_add_fxmixer(fxcX, 'vol', 'volume', 1, None, num, 'Volume')
         fxcX.set('muted', str(fxchannelJ['muted'] if 'muted' in fxchannelJ else 0))
 
         lmms_encode_fxchain(fxcX, fxchannelJ)
@@ -841,8 +900,8 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
                 sendX.set('channel', str(json_send['channel']))
                 sendautoid = None
                 if 'sendautoid' in json_send: 
-                    sendautoid = ['send', json_send['sendautoid']]
-                    add_auto_placements(json_send['amount'], None, sendautoid, 'amount', json_send, 'amount', sendX, 'amount', 'Send '+num+' > '+str(json_send['channel']), 'Amount')
+                    visual_name = 'Send '+str(num)+' > '+str(json_send['channel'])
+                    create_param_auto(sendX, 'amount', ['send', json_send['sendautoid'], 'amount'], json_send['amount'], None, visual_name, 'Amount', True)
                 else:
                     sendX.set('amount', str(json_send['amount']))
         else:
@@ -851,86 +910,6 @@ def lmms_encode_fxmixer(xmltag, json_fxrack):
             sendX.set('amount', '1')
 
         print('[output-lmms]')
-
-# ------- Automation -------
-
-def parse_auto(xml_automationpattern, l_points, val_type):
-    curpoint = 0
-    for point in l_points:
-        if 'type' in point and curpoint != 0 and val_type != 'bool ':
-            if point['type'] == 'instant':
-                xml_time = ET.SubElement(xml_automationpattern, "time")
-                xml_time.set('value', str(prevvalue))
-                xml_time.set('pos', str(int(point['position']*12)-1))
-        xml_time = ET.SubElement(xml_automationpattern, "time")
-        if val_type == 'float': xml_time.set('value', str(point['value']))
-        elif val_type == 'int': xml_time.set('value', str(int(point['value'])))
-        else: xml_time.set('value', str(int(point['value'])))
-        xml_time.set('pos', str(int(point['position']*12)))
-        prevvalue = point['value']
-        curpoint += 1
-
-def lmms_make_main_auto_track(autoidnum, autodata, visualname):
-    global trkcX
-    print('[output-lmms] Automation Track: '+visualname)
-    xml_autotrack = ET.SubElement(trkcX, "track")
-    xml_autotrack.set('type', '5')
-    xml_autotrack.set('solo', '0')
-    xml_autotrack.set('muted', '0')
-    xml_autotrack.set('name', visualname)
-
-    autodata_type = autodata['type']
-    autodata_placements = autodata['placements']
-
-    for autoplacement in autodata_placements:
-        xml_automationpattern = ET.SubElement(xml_autotrack, "automationpattern")
-        xml_automationpattern.set('pos', str(int(autoplacement['position']*12)))
-        xml_automationpattern.set('len', str(int(autoplacement['duration']*12)))
-        xml_automationpattern.set('tens', "0")
-        xml_automationpattern.set('name', visualname)
-        xml_automationpattern.set('mute', "0")
-        xml_automationpattern.set('prog', "1" if autodata_type != 'bool' else "0")
-        prevvalue = 0
-        if 'points' in autoplacement:
-            parse_auto(xml_automationpattern, autoplacement['points'], autodata_type)
-        if autoidnum != None:
-            xml_object = ET.SubElement(xml_automationpattern, "object")
-            xml_object.set('id', str(autoidnum))
-
-def add_auto_placements(i_fallback, i_addmul, i_id, i_autoname, j_tag, j_name, x_tag, x_name, v_type, v_name, **kwargs):
-    i_value = i_fallback
-    isslot = data_values.get_value(kwargs, 'isslot', False)
-
-    if j_tag != None:
-        if isslot == False: paramdata = params.get(j_tag, [], j_name, i_fallback)
-        else: paramdata = params.get(j_tag, [], j_name, i_fallback, groupname='params_slot')
-        if paramdata != None: i_value = paramdata[0]
-
-    if i_addmul != None: i_value = (i_value+i_addmul[0])*i_addmul[1]
-
-    if isinstance(i_value, bool):
-        i_value = int(i_value)
-
-    if i_id != None and i_autoname != None: aid_id, aid_data = auto_id.out_get(i_id+[i_autoname])
-    else: aid_id, aid_data = None, None
-
-    if x_tag != None:
-        if aid_id != None and len(aid_data['placements']) != 0:
-            if i_addmul != None: aid_data['placements'] = auto.multiply(aid_data['placements'], i_addmul[0], i_addmul[1])
-            lmms_make_main_auto_track(aid_id, aid_data, v_type+': '+v_name)
-            autovarX = ET.SubElement(x_tag, x_name)
-            autovarX.set('value', str(i_value))
-            autovarX.set('scale_type', 'linear')
-            autovarX.set('id', str(aid_id))
-        else:
-            x_tag.set(x_name, str(i_value))
-    elif aid_id != None and aid_data != None:
-        lmms_make_main_auto_track(aid_id, aid_data, v_type+': '+v_name)
-
-def add_auto_unused(paramlist, pluginautoid, pluginid, i_name):
-    if pluginautoid != None:
-        for paramid in pluginautoid:
-            add_auto_placements(1, None, ['plugin', pluginid], paramid, None, paramid, None, paramid, i_name, paramid)
 
 # ------- Main -------
 
@@ -962,11 +941,14 @@ class output_lmms(plugin_output.base):
         global trkcX
         global cvpj_l
         global lmms_bpm
+        global dataset
 
         autoidnum = 340000
         print('[output-lmms] Output Start')
 
         cvpj_l = json.loads(convproj_json)
+
+        dataset = data_dataset.dataset('./data_dset/lmms.dset')
 
         auto_id.out_load(cvpj_l)
 
@@ -988,9 +970,9 @@ class output_lmms(plugin_output.base):
 
         lmms_bpm = params.get(cvpj_l, [], 'bpm', 140)[0]
 
-        add_auto_placements(120, None, ['main'], 'bpm', cvpj_l, 'bpm', headX, 'bpm', 'Song', 'Tempo')
-        add_auto_placements(0, None, ['main'], 'pitch', cvpj_l, 'pitch', headX, 'masterpitch', 'Song', 'Pitch')
-        add_auto_placements(1, [0, 100], ['main'], 'vol', cvpj_l, 'vol', headX, 'mastervol', 'Song', 'Volume')
+        auto_add_main(headX, 'bpm', 'bpm', 120, None, 'Tempo')
+        auto_add_main(headX, 'pitch', 'masterpitch', 0, None, 'Pitch')
+        auto_add_main(headX, 'vol', 'mastervol', 1, [0, 100], 'Volume')
 
         timesig = song.get_timesig(cvpj_l)
         headX.set("timesig_numerator", str(timesig[0]))
@@ -1010,19 +992,20 @@ class output_lmms(plugin_output.base):
         Xautomationeditor = ET.SubElement(songX, "automationeditor")
         add_window_data(Xautomationeditor, cvpj_l, 'main', 'automation_editor', [1,1], [860,400], False, False)
 
+
+        notes_nothing = True
         if 'info' in cvpj_l:
             infoJ = cvpj_l['info']
             if 'message' in infoJ:
+                notes_nothing = False
                 notesX = ET.SubElement(songX, "projectnotes")
                 add_window_data(notesX, cvpj_l, 'main', 'project_notes', [728, 5], [389, 300], True, False)
 
                 if 'type' in infoJ['message']:
                     if infoJ['message']['type'] == 'html': notesX.text = ET.CDATA(infoJ['message']['text'])
                     if infoJ['message']['type'] == 'text': notesX.text = ET.CDATA(infoJ['message']['text'].replace('\n', '<br/>').replace('\r', '<br/>'))
-            else:
-                notesX = ET.SubElement(songX, "projectnotes")
-                notesX.text = ET.CDATA("")
-        else:
+
+        if notes_nothing:
             notesX = ET.SubElement(songX, "projectnotes")
             notesX.text = ET.CDATA("")
 

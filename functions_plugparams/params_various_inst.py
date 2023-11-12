@@ -3,11 +3,6 @@
 
 import lxml.etree as ET
 
-def socalabs_addparam(x_sid, name, value):
-    x_temp = ET.SubElement(x_sid, 'param')
-    x_temp.set('uid', name)
-    x_temp.set('val', str(value))
-
 # -------------------- magical8bitplug --------------------
 def shape_m8bp(pluginname, plugindata):
 	m8p_root = ET.Element("root")
@@ -128,25 +123,3 @@ def m8bp_out():
 	if m8bp_params_env["volume"] != None: m8p_volumeEnv.text = ','.join(str(item) for item in m8bp_params_env["volume"])
 
 	return xml_m8p_root
-
-# -------------------- juicysfplugin --------------------
-def juicysfplugin_create(bank, patch, filename):
-	jsfp_xml = ET.Element("MYPLUGINSETTINGS")
-	jsfp_params = ET.SubElement(jsfp_xml, "params")
-	jsfp_uiState = ET.SubElement(jsfp_xml, "uiState")
-	jsfp_soundFont = ET.SubElement(jsfp_xml, "soundFont")
-	if 'bank' != None: jsfp_params.set('bank', str(bank/128))
-	else: jsfp_params.set('bank', "0")
-	if 'patch' != None: jsfp_params.set('preset', str(patch/128))
-	else: jsfp_params.set('preset', "0")
-	jsfp_params.set('attack', "0.0")
-	jsfp_params.set('decay', "0.0")
-	jsfp_params.set('sustain', "0.0")
-	jsfp_params.set('release', "0.0")
-	jsfp_params.set('filterCutOff', "0.0")
-	jsfp_params.set('filterResonance', "0.0")
-	jsfp_uiState.set('width', "500.0")
-	jsfp_uiState.set('height', "300.0")
-	if 'file' != None: jsfp_soundFont.set('path', filename)
-	else: jsfp_soundFont.set('path', '')
-	return jsfp_xml

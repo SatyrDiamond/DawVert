@@ -11,12 +11,12 @@ from functions import plugin_vst2
 from functions import plugins
 from functions import xtramath
 
-from functions_plugparams import params_various_inst
-from functions_plugparams import params_various_fx
-from functions_plugparams import params_vital
+from functions_plugdata import plugin_vital
+from functions_plugdata import plugin_socalabs
+from functions_plugdata import plugin_kickmess
+from functions_plugdata import plugin_wolfshaper
+
 from functions_plugparams import wave
-from functions_plugparams import params_kickmess
-from functions_plugparams import data_nullbytegroup
 
 def sid_shape(lmms_sid_shape):
     if lmms_sid_shape == 0: return 3 #squ
@@ -25,25 +25,23 @@ def sid_shape(lmms_sid_shape):
     if lmms_sid_shape == 3: return 4 #noise
 
 def getparam(paramname):
-    global pluginid_g
-    global cvpj_l_g
-    paramval = plugins.get_plug_param(cvpj_l_g, pluginid_g, paramname, 0)
+    global cvpj_plugindata_g
+    paramval = cvpj_plugindata_g.param_get(paramname, 0)
     return paramval[0]
 
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['native-lmms', None, 'lmms'], ['vst2', None, None], True, False
-    def convert(self, cvpj_l, pluginid, plugintype, extra_json):
+    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
+        global cvpj_plugindata_g
+        cvpj_plugindata_g = cvpj_plugindata
 
-        global pluginid_g
-        global cvpj_l_g
-        pluginid_g = pluginid
-        cvpj_l_g = cvpj_l
+        plugintype = cvpj_plugindata.type_get()
 
         if plugintype[1] == 'tripleoscillator':
             print('[plug-conv] LMMS to VST2: Triple Oscillator > Vital:',pluginid)
-            params_vital.create()
+            params_vital = plugin_vital.vital_data(cvpj_plugindata)
 
             for oscnum in range(3):
                 vital_oscnum = 'osc_'+str(oscnum+1)
@@ -73,8 +71,7 @@ class plugconv(plugin_plugconv.base):
                 if soscwave == 3: vital_shape = wave.create_wave('square', 0, 0.5)
                 if soscwave == 4: vital_shape = wave.create_wave('mooglike', 0, None)
                 if soscwave == 5: vital_shape = wave.create_wave('exp', 0, None)
-                if vital_shape != None:
-                    params_vital.replacewave(oscnum, vital_shape)
+                if vital_shape != None: params_vital.replacewave(oscnum, vital_shape)
 
             modalgo1 = int(getparam('modalgo1'))
             modalgo2 = int(getparam('modalgo2'))
@@ -88,108 +85,96 @@ class plugconv(plugin_plugconv.base):
             #'vol0','vol1','vol2',
             #'wavetype0','wavetype1','wavetype2
 
-            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 1, 'vol')
-            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 2, 'cutoff')
-            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 3, 'reso')
+            params_vital.importcvpj_env_asdr(cvpj_plugindata, 1, 'vol')
+            params_vital.importcvpj_env_asdr(cvpj_plugindata, 2, 'cutoff')
+            params_vital.importcvpj_env_asdr(cvpj_plugindata, 3, 'reso')
 
-            vitaldata = params_vital.getdata()
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
+            params_vital.to_cvpj_vst2()
+            return True
 
         if plugintype[1] == 'bitinvader':
             print('[plug-conv] LMMS to VST2: BitInvader > Vital:',pluginid)
-            params_vital.create()
             interpolation = getparam('interpolation')
-            bitinvader_shape_data = base64.b64decode(plugins.get_plug_dataval(cvpj_l, pluginid, 'sampleShape', ''))
-            bitinvader_shape_vals = struct.unpack('f'*(len(bitinvader_shape_data)//4), bitinvader_shape_data)
+            params_vital = plugin_vital.vital_data(cvpj_plugindata)
             params_vital.setvalue('osc_1_on', 1)
             params_vital.setvalue('osc_1_transpose', 12)
-
-            params_vital.replacewave(0, wave.resizewave(bitinvader_shape_vals, smooth=bool(interpolation)))
-
-            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 1, 'vol')
-            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 2, 'cutoff')
-            params_vital.importcvpj_env_asdr(cvpj_l, pluginid, 3, 'reso')
-
-            vitaldata = params_vital.getdata()
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
+            params_vital.importcvpj_wave(cvpj_plugindata, 1, 'main', smooth=bool(interpolation))
+            params_vital.importcvpj_env_asdr(cvpj_plugindata, 1, 'vol')
+            params_vital.importcvpj_env_asdr(cvpj_plugindata, 2, 'cutoff')
+            params_vital.importcvpj_env_asdr(cvpj_plugindata, 3, 'reso')
+            params_vital.to_cvpj_vst2()
             return True
 
         if plugintype[1] == 'sid':
             print("[plug-conv] LMMS to VST2: SID > SocaLabs's SID:",pluginid)
-            x_sid = ET.Element("state")
-            x_sid.set('valueTree', '<?xml version="1.0" encoding="UTF-8"?>\n<state/>')
-            x_sid.set('program', '0')
-            params_various_inst.socalabs_addparam(x_sid, "a1", getparam('attack0'))
-            params_various_inst.socalabs_addparam(x_sid, "a2", getparam('attack1'))
-            params_various_inst.socalabs_addparam(x_sid, "a3", getparam('attack2'))
-            params_various_inst.socalabs_addparam(x_sid, "cutoff", getparam('filterFC'))
-            params_various_inst.socalabs_addparam(x_sid, "d1", getparam('decay0'))
-            params_various_inst.socalabs_addparam(x_sid, "d2", getparam('decay1'))
-            params_various_inst.socalabs_addparam(x_sid, "d3", getparam('decay2'))
-            params_various_inst.socalabs_addparam(x_sid, "f1", getparam('filtered0'))
-            params_various_inst.socalabs_addparam(x_sid, "f2", getparam('filtered1'))
-            params_various_inst.socalabs_addparam(x_sid, "f3", getparam('filtered2'))
-            params_various_inst.socalabs_addparam(x_sid, "fine1", 0.0)
-            params_various_inst.socalabs_addparam(x_sid, "fine2", 0.0)
-            params_various_inst.socalabs_addparam(x_sid, "fine3", 0.0)
+            data_socalabs = plugin_socalabs.socalabs_data(cvpj_plugindata)
+            data_socalabs.set_param("a1", getparam('attack0'))
+            data_socalabs.set_param("a2", getparam('attack1'))
+            data_socalabs.set_param("a3", getparam('attack2'))
+            data_socalabs.set_param("cutoff", getparam('filterFC'))
+            data_socalabs.set_param("d1", getparam('decay0'))
+            data_socalabs.set_param("d2", getparam('decay1'))
+            data_socalabs.set_param("d3", getparam('decay2'))
+            data_socalabs.set_param("f1", getparam('filtered0'))
+            data_socalabs.set_param("f2", getparam('filtered1'))
+            data_socalabs.set_param("f3", getparam('filtered2'))
+            data_socalabs.set_param("fine1", 0.0)
+            data_socalabs.set_param("fine2", 0.0)
+            data_socalabs.set_param("fine3", 0.0)
             filterMode = getparam('filterMode')
-            if filterMode == 0.0: params_various_inst.socalabs_addparam(x_sid, "highpass", 1.0)
-            else: params_various_inst.socalabs_addparam(x_sid, "highpass", 0.0)
-            if filterMode == 1.0: params_various_inst.socalabs_addparam(x_sid, "bandpass", 1.0)
-            else: params_various_inst.socalabs_addparam(x_sid, "bandpass", 0.0)
-            if filterMode == 2.0: params_various_inst.socalabs_addparam(x_sid, "lowpass", 1.0)
-            else: params_various_inst.socalabs_addparam(x_sid, "lowpass", 0.0)
-            params_various_inst.socalabs_addparam(x_sid, "output3", getparam('voice3Off'))
-            params_various_inst.socalabs_addparam(x_sid, "pw1", getparam('pulsewidth0'))
-            params_various_inst.socalabs_addparam(x_sid, "pw2", getparam('pulsewidth1'))
-            params_various_inst.socalabs_addparam(x_sid, "pw3", getparam('pulsewidth2'))
-            params_various_inst.socalabs_addparam(x_sid, "r1", getparam('release0'))
-            params_various_inst.socalabs_addparam(x_sid, "r2", getparam('release1'))
-            params_various_inst.socalabs_addparam(x_sid, "r3", getparam('release2'))
-            params_various_inst.socalabs_addparam(x_sid, "reso", getparam('filterResonance'))
-            params_various_inst.socalabs_addparam(x_sid, "ring1", getparam('ringmod0'))
-            params_various_inst.socalabs_addparam(x_sid, "ring2", getparam('ringmod1'))
-            params_various_inst.socalabs_addparam(x_sid, "ring3", getparam('ringmod2'))
-            params_various_inst.socalabs_addparam(x_sid, "s1", getparam('sustain0'))
-            params_various_inst.socalabs_addparam(x_sid, "s2", getparam('sustain1'))
-            params_various_inst.socalabs_addparam(x_sid, "s3", getparam('sustain2'))
-            params_various_inst.socalabs_addparam(x_sid, "sync1", getparam('sync0'))
-            params_various_inst.socalabs_addparam(x_sid, "sync2", getparam('sync1'))
-            params_various_inst.socalabs_addparam(x_sid, "sync3", getparam('sync2'))
-            params_various_inst.socalabs_addparam(x_sid, "tune1", getparam('coarse0'))
-            params_various_inst.socalabs_addparam(x_sid, "tune2", getparam('coarse1'))
-            params_various_inst.socalabs_addparam(x_sid, "tune3", getparam('coarse2'))
-            params_various_inst.socalabs_addparam(x_sid, "voices", 8.0)
-            params_various_inst.socalabs_addparam(x_sid, "vol", getparam('volume'))
-            params_various_inst.socalabs_addparam(x_sid, "w1", sid_shape(getparam('waveform0')))
-            params_various_inst.socalabs_addparam(x_sid, "w2", sid_shape(getparam('waveform1')))
-            params_various_inst.socalabs_addparam(x_sid, "w3", sid_shape(getparam('waveform2')))
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'SID', 'chunk', ET.tostring(x_sid, encoding='utf-8'), None)
-            plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', -12)
+            data_socalabs.set_param("highpass", 1.0 if filterMode == 0.0 else 0.0)
+            data_socalabs.set_param("bandpass", 1.0 if filterMode == 1.0 else 0.0)
+            data_socalabs.set_param("lowpass", 1.0 if filterMode == 2.0 else 0.0)
+            data_socalabs.set_param("output3", getparam('voice3Off'))
+            data_socalabs.set_param("pw1", getparam('pulsewidth0'))
+            data_socalabs.set_param("pw2", getparam('pulsewidth1'))
+            data_socalabs.set_param("pw3", getparam('pulsewidth2'))
+            data_socalabs.set_param("r1", getparam('release0'))
+            data_socalabs.set_param("r2", getparam('release1'))
+            data_socalabs.set_param("r3", getparam('release2'))
+            data_socalabs.set_param("reso", getparam('filterResonance'))
+            data_socalabs.set_param("ring1", getparam('ringmod0'))
+            data_socalabs.set_param("ring2", getparam('ringmod1'))
+            data_socalabs.set_param("ring3", getparam('ringmod2'))
+            data_socalabs.set_param("s1", getparam('sustain0'))
+            data_socalabs.set_param("s2", getparam('sustain1'))
+            data_socalabs.set_param("s3", getparam('sustain2'))
+            data_socalabs.set_param("sync1", getparam('sync0'))
+            data_socalabs.set_param("sync2", getparam('sync1'))
+            data_socalabs.set_param("sync3", getparam('sync2'))
+            data_socalabs.set_param("tune1", getparam('coarse0'))
+            data_socalabs.set_param("tune2", getparam('coarse1'))
+            data_socalabs.set_param("tune3", getparam('coarse2'))
+            data_socalabs.set_param("voices", 8.0)
+            data_socalabs.set_param("vol", getparam('volume'))
+            data_socalabs.set_param("w1", sid_shape(getparam('waveform0')))
+            data_socalabs.set_param("w2", sid_shape(getparam('waveform1')))
+            data_socalabs.set_param("w3", sid_shape(getparam('waveform2')))
+            data_socalabs.to_cvpj_vst2(cvpj_plugindata, 1399415908)
+            #cvpj_plugindata.dataval_get('middlenotefix', -12)
             return True
 
         if plugintype[1] == 'kicker':
             print("[plug-conv] LMMS to VST2: Kicker > Kickmess:",pluginid)
-            params_kickmess.initparams()
-            params_kickmess.setvalue('pub', 'freq_start', getparam('startfreq'))
-            params_kickmess.setvalue('pub', 'freq_end', getparam('endfreq'))
-            params_kickmess.setvalue('pub', 'f_env_release', getparam('decay'))
-            params_kickmess.setvalue('pub', 'dist_start', getparam('dist')/100)
-            params_kickmess.setvalue('pub', 'dist_end', getparam('distend')/100)
-            params_kickmess.setvalue('pub', 'gain', xtramath.clamp(getparam('gain'), 0, 2)/2)
-            params_kickmess.setvalue('pub', 'env_slope', getparam('env'))
-            params_kickmess.setvalue('pub', 'freq_slope', getparam('slope'))
-            params_kickmess.setvalue('pub', 'noise', getparam('noise'))
-            if getparam('startnote') == 1: params_kickmess.setvalue('pub', 'freq_note_start', 0.5)
-            if getparam('endnote') == 1: params_kickmess.setvalue('pub', 'freq_note_end', 0.5)
-            params_kickmess.setvalue('pub', 'phase_offs', getparam('click'))
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Kickmess (VST)', 'chunk', params_kickmess.getparams(), None)
-            plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', -12)
+            data_kickmess = plugin_kickmess.kickmess_data()
+            data_kickmess.set_param('pub', 'freq_start', getparam('startfreq'))
+            data_kickmess.set_param('pub', 'freq_end', getparam('endfreq'))
+            data_kickmess.set_param('pub', 'f_env_release', getparam('decay'))
+            data_kickmess.set_param('pub', 'dist_start', getparam('dist')/100)
+            data_kickmess.set_param('pub', 'dist_end', getparam('distend')/100)
+            data_kickmess.set_param('pub', 'gain', xtramath.clamp(getparam('gain'), 0, 2)/2)
+            data_kickmess.set_param('pub', 'env_slope', getparam('env'))
+            data_kickmess.set_param('pub', 'freq_slope', getparam('slope'))
+            data_kickmess.set_param('pub', 'noise', getparam('noise'))
+            if getparam('startnote') == 1: data_kickmess.set_param('pub', 'freq_note_start', 0.5)
+            if getparam('endnote') == 1: data_kickmess.set_param('pub', 'freq_note_end', 0.5)
+            data_kickmess.set_param('pub', 'phase_offs', getparam('click'))
+            data_kickmess.to_cvpj_vst2(cvpj_plugindata)
             return True
 
         if plugintype[1] == 'lb302':
             print("[plug-conv] LMMS to VST2: LB302 > Vital:",pluginid)
-            params_vital.create()
+            params_vital = plugin_vital.vital_data(cvpj_plugindata)
             lb302_shape = getparam('shape')
             if lb302_shape == 0: vital_shape = wave.create_wave('saw', 0, None)
             if lb302_shape == 1: vital_shape = wave.create_wave('triangle', 0, None)
@@ -227,36 +212,31 @@ class plugconv(plugin_plugconv.base):
             if getparam('dead') == 0: params_vital.setvalue_timed('env_2_decay', 0.4+(getparam('vcf_dec')*3))
             else: params_vital.setvalue_timed('env_2_decay', 0)
             params_vital.setvalue('env_2_sustain', 0)
-            vitaldata = params_vital.getdata()
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Vital', 'chunk', vitaldata.encode('utf-8'), None)
-            plugins.add_plug_data(cvpj_l, pluginid, 'middlenotefix', -12)
+            params_vital.to_cvpj_vst2()
+            #cvpj_plugindata.dataval_get('middlenotefix', -12)
             return True
 
         if plugintype[1] == 'zynaddsubfx':
             print("[plug-conv] LMMS to VST2: ZynAddSubFX > ZynAddSubFX/Zyn-Fusion:",pluginid)
-            zasfxdata = plugins.get_plug_dataval(cvpj_l, pluginid, 'data', '')
+            zasfxdata = cvpj_plugindata.dataval_get('data', '')
             zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
             zasfxdatafixed = zasfxdatastart.encode('utf-8') + base64.b64decode(zasfxdata)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'ZynAddSubFX', 'chunk', zasfxdatafixed, None)
+            plugin_vst2.replace_data(cvpj_plugindata, 'name','any', 'ZynAddSubFX', 'chunk', zasfxdatafixed, None)
             return True
 
         if plugintype[1] == 'spectrumanalyzer':
             print("[plug-conv] LMMS to VST2: Spectrum Analyzer > SocaLabs's SpectrumAnalyzer:",pluginid)
-            x_spectrumanalyzer = ET.Element("state")
-            x_spectrumanalyzer.set('valueTree', '<?xml version="1.0" encoding="UTF-8"?>\n<state width="400" height="328"/>')
-            x_spectrumanalyzer.set('program', '0')
-            params_various_inst.socalabs_addparam(x_spectrumanalyzer, "mode", 0.0)
-            params_various_inst.socalabs_addparam(x_spectrumanalyzer, "log", 1.0)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'SpectrumAnalyzer', 'chunk', ET.tostring(x_spectrumanalyzer, encoding='utf-8'), None)
+            data_socalabs = plugin_socalabs.socalabs_data(cvpj_plugindata)
+            data_socalabs.set_param("mode", 0.0)
+            data_socalabs.set_param("log", 1.0)
+            data_socalabs.to_cvpj_vst2(cvpj_plugindata, 1399874915)
             return True
 
         if plugintype[1] == 'waveshaper':
             print("[plug-conv] LMMS to VST2: Wave Shaper > Wolf Shaper:",pluginid)
-            waveshapebytes = base64.b64decode(plugins.get_plug_dataval(cvpj_l, pluginid, 'waveShape', ''))
+            data_wolfshaper = plugin_wolfshaper.wolfshaper_data()
+            waveshapebytes = base64.b64decode(cvpj_plugindata.dataval_get('waveShape', ''))
             waveshapepoints = [struct.unpack('f', waveshapebytes[i:i+4]) for i in range(0, len(waveshapebytes), 4)]
-            params_various_fx.wolfshaper_init()
-            for pointnum in range(50):
-                pointdata = waveshapepoints[pointnum*4][0]
-                params_various_fx.wolfshaper_addpoint(pointnum/49,pointdata,0.5,0)
-            plugin_vst2.replace_data(cvpj_l, pluginid, 'name','any', 'Wolf Shaper', 'chunk', data_nullbytegroup.make(params_various_fx.wolfshaper_get()), None)
+            for pointnum in range(50): data_wolfshaper.add_point(pointnum/49,waveshapepoints[pointnum*4][0],0.5,0)
+            data_wolfshaper.to_cvpj_vst2(cvpj_plugindata)
             return True

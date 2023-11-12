@@ -222,11 +222,12 @@ class output_wavtool(plugin_output.base):
                     middlenote = middlenote+60 if middlenote != None else 0
 
                     if pluginid != None:
-                        plugtype = plugins.get_plug_type(cvpj_l, pluginid)
-                        a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'vol')
+                        inst_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
+                        plugtype = inst_plugindata.type_get()
+                        a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = inst_plugindata.asdr_env_get('vol')
                         if plugtype == ['sampler', 'single']:
                             inst_supported = True
-                            filename = plugins.get_plug_dataval(cvpj_l, pluginid, 'file', '')
+                            filename = inst_plugindata.dataval_get('file', '')
                             if os.path.exists(filename):
                                 audiouuid = addsample(zip_wt, filename, True)
                                 adddevice_d(wt_devices, wt_trackid_Instrument, 'MonoSampler', 'JS', 'c4888b49-3a72-4b0a-bd4a-a06e9937000a', wt_trackid, 160, 10)

@@ -2,15 +2,15 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import colors
-from functions import idvals
-from functions import song
-from functions import plugins
+from functions import data_dataset
 from functions import note_data
 from functions import placement_data
+from functions import plugins
+from functions import song
 from functions_tracks import tracks_m
-import plugin_input
-import json
 import io
+import json
+import plugin_input
 
 instnames = ['mario','toad','yoshi','star','flower','gameboy','dog','cat','pig','swan','face','plane','boat','car','heart','coin','plant','shyguy','ghost']
 keytable =  [19, 17, 16, 14, 12, 11, 9, 7, 5, 4, 2, 0, -1]
@@ -57,9 +57,12 @@ class input_mariopaint_msq(plugin_input.base):
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global cvpj_notelist
-        idvals_mariopaint_inst = idvals.parse_idvalscsv('data_idvals/mariopaint_inst.csv')
         cvpj_l = {}
         cvpj_notelist = []
+
+        dataset = data_dataset.dataset('./data_dset/onlineseq.dset')
+        dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
+
         msq_values = {}
         f_msq = open(input_file, 'r')
         lines_msq = f_msq.readlines()
@@ -85,15 +88,7 @@ class input_mariopaint_msq(plugin_input.base):
         tracks_m.add_pl(cvpj_l, 1, 'notes', placement_data.nl2pl(cvpj_notelist))
 
         for instname in instnames:
-            s_inst_name = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'name')
-            s_inst_color = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'color')
-            if s_inst_color != None: s_inst_color = colors.moregray(s_inst_color)
-            mpinstid = instnames.index(instname)
-            plugins.add_plug_gm_midi(cvpj_l, instname, 0, mpinstid)
-            tracks_m.inst_create(cvpj_l, instname)
-            tracks_m.inst_visual(cvpj_l, instname, name=s_inst_name, color=s_inst_color)
-            tracks_m.inst_pluginid(cvpj_l, instname, instname)
-            tracks_m.inst_dataval_add(cvpj_l, instname, 'midi', 'output', {'program': mpinstid})
+            tracks_m.import_dset(cvpj_l, instname, instname, dataset, dataset_midi, None, None)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True

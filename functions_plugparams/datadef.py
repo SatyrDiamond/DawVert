@@ -4,7 +4,7 @@
 from functions import plugins
 import struct
 
-def to_plugdata(cvpj_l, pluginid, in_datadef, bytestream):
+def to_plugdata(cvpj_plugindata, in_datadef, bytestream):
 	try:
 		for datapart in in_datadef:
 			if datapart[0] != 'x':
@@ -14,18 +14,18 @@ def to_plugdata(cvpj_l, pluginid, in_datadef, bytestream):
 				if datapart[0] == 'f': valueout, valtype = struct.unpack('f', bytestream.read(4))[0], 'float'
 				if datapart[0] == 'd': valueout, valtype = struct.unpack('d', bytestream.read(8))[0], 'float'
 
-				if datapart[1]: plugins.add_plug_param(cvpj_l, pluginid, datapart[2], valueout, valtype, datapart[3])
-				else: plugins.add_plug_data(cvpj_l, pluginid, datapart[2], valueout)
+				if datapart[1]: cvpj_plugindata.param_add(cvpj_l, pluginid, datapart[2], valueout, valtype, datapart[3])
+				else: cvpj_plugindata.dataval_add(cvpj_l, pluginid, datapart[2], valueout)
 			else: bytestream.read(datapart[1])
 	except:
 		pass
 
-def from_plugdata(cvpj_l, pluginid, in_datadef):
+def from_plugdata(cvpj_plugindata, in_datadef):
 	outdata = b''
 	for datapart in in_datadef:
 		if datapart[0] != 'x':
-			if datapart[1]: paramval = plugins.get_plug_param(cvpj_l, pluginid, datapart[2], 0)[0]
-			else: paramval = plugins.get_plug_dataval(cvpj_l, pluginid, datapart[2], 0)
+			if datapart[1]: paramval = cvpj_plugindata.param_get(cvpj_l, pluginid, datapart[2], 0)[0]
+			else: paramval = cvpj_plugindata.dataval_get(cvpj_l, pluginid, datapart[2], 0)
 
 			if datapart[0] == 'i': outdata += struct.pack('i', paramval)
 			if datapart[0] == 'I': outdata += struct.pack('I', paramval)

@@ -235,24 +235,30 @@ class input_trackerboy(plugin_input.base):
                 else: cvpj_instcolor = None
 
                 pluginid = plugins.get_id()
-                plugins.add_plug(cvpj_l, pluginid, 'retro', insttype)
+
+                inst_plugindata = plugins.cvpj_plugin('deftype', 'retro', insttype)
+                inst_plugindata.osc_num_oscs(1)
 
                 if trackerboy_instdata[1][0] != (): 
-                    plugins.add_env_blocks(cvpj_l, pluginid, 'arp', trackerboy_instdata[1][0], None, None, None)
+                    inst_plugindata.env_blocks_add('arp', trackerboy_instdata[1][0], None, None, None, None)
 
                 if trackerboy_instdata[2][0] != (): 
-                    plugins.add_env_blocks(cvpj_l, pluginid, 'pan', trackerboy_instdata[2][0], None, None, None)
+                    inst_plugindata.env_blocks_add('pan', trackerboy_instdata[2][0], None, None, None, None)
 
                 if trackerboy_instdata[3][0] != (): 
-                    plugins.add_env_blocks(cvpj_l, pluginid, 'pitch', trackerboy_instdata[4][0], None, None, None)
+                    inst_plugindata.env_blocks_add('pitch', trackerboy_instdata[4][0], None, None, None, None)
 
                 if trackerboy_instdata[4][0] != (): 
                     if insttype == 'pulse': 
-                        plugins.add_env_blocks(cvpj_l, pluginid, 'duty', trackerboy_instdata[4][0], 4, None, None)
+                        inst_plugindata.osc_opparam_set(0, 'shape', 'square')
+                        inst_plugindata.env_blocks_add('duty', trackerboy_instdata[4][0], None, 4, None, None)
                     if insttype == 'wavetable':
-                        plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trackerboy_instdata[4][0], 3, None, None)
+                        inst_plugindata.osc_opparam_set(0, 'shape', 'custom_wave')
+                        inst_plugindata.osc_opparam_set(0, 'wave_name', 'main')
+                        inst_plugindata.env_blocks_add('vol', trackerboy_instdata[4][0], None, 3, None, None)
                     if insttype == 'noise': 
-                        plugins.add_env_blocks(cvpj_l, pluginid, 'noise', trackerboy_instdata[4][0], 3, None, None)
+                        inst_plugindata.osc_opparam_set(0, 'shape', 'noise')
+                        inst_plugindata.env_blocks_add('noise', trackerboy_instdata[4][0], None, 3, None, None)
 
                 if insttype != 'wavetable':
                     env_attack = 0
@@ -264,12 +270,14 @@ class input_trackerboy(plugin_input.base):
                     elif trackerboy_instdata[6] >= 8:
                         env_attack = (trackerboy_instdata[6]-8)/5
                         env_sustain = 1
-                    plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, env_attack, 0, env_decay, env_sustain, 0, 1)
+                    inst_plugindata.asdr_env_add('vol', 0, env_attack, 0, env_decay, env_sustain, 0, 1)
                 else:
                     if trackerboy_instdata[6] == 0: 
-                        plugins.add_wave(cvpj_l, pluginid, 'main', t_waves[1][1], 0, 15)
+                        inst_plugindata.wave_add('main', t_waves[1][1], 0, 15)
                     else: 
-                        plugins.add_wave(cvpj_l, pluginid, 'main', t_waves[trackerboy_instdata[6]+1][1], 0, 15)
+                        inst_plugindata.wave_add('main', t_waves[trackerboy_instdata[6]+1][1], 0, 15)
+
+                inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
                 tracks_mi.inst_create(cvpj_l, cvpj_instid)
                 tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)

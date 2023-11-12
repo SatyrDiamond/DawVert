@@ -84,43 +84,45 @@ class input_ceol(plugin_input.base):
         tracks_master.create(cvpj_l, 1)
         tracks_master.visual(cvpj_l, name='Master', color=[0.31373, 0.39608, 0.41569])
 
-        if globalfxname[ceol_basic_effect] == 'delay':
-            plugins.add_plug(cvpj_l, 'master-effect', 'universal', 'delay-c')
-            plugins.add_plug_fxdata(cvpj_l, 'master-effect', 1, 0.5)
-            plugins.add_plug_data(cvpj_l, 'master-effect', 'time_type', 'seconds')
-            plugins.add_plug_data(cvpj_l, 'master-effect', 'time', ((300*ceol_basic_effectvalue)/100)/1000 )
-            plugins.add_plug_data(cvpj_l, 'master-effect', 'feedback', 0.1)
-            plugins.add_plug_fxvisual(cvpj_l, 'master-effect', globalfxname_vis[ceol_basic_effect], None)
+        if ceol_basic_effect == 0: #delay
+            masterfx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'delay-c')
+            masterfx_plugindata.fxdata_add(1, 0.5)
+            masterfx_plugindata.dataval_add('time_type', 'seconds')
+            masterfx_plugindata.dataval_add('time', ((300*ceol_basic_effectvalue)/100)/1000 )
+            masterfx_plugindata.dataval_add('feedback', 0.1)
+            masterfx_plugindata.fxvisual_add(globalfxname_vis[ceol_basic_effect], None)
 
-        elif globalfxname[ceol_basic_effect] == 'chorus':
-            plugins.add_plug(cvpj_l, 'master-effect', 'simple', 'chorus')
-            plugins.add_plug_fxdata(cvpj_l, 'master-effect', 1, ceol_basic_effectvalue/100)
+        elif ceol_basic_effect == 1: #chorus
+            masterfx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'chorus')
+            masterfx_plugindata.fxdata_add(1, ceol_basic_effectvalue/100)
 
-        elif globalfxname[ceol_basic_effect] == 'reverb':
-            plugins.add_plug(cvpj_l, 'master-effect', 'simple', 'reverb')
-            plugins.add_plug_fxdata(cvpj_l, 'master-effect', 1, (0.3)*(ceol_basic_effectvalue/100))
+        elif ceol_basic_effect == 2: #reverb
+            masterfx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'reverb')
+            masterfx_plugindata.fxdata_add(1, (0.3)*(ceol_basic_effectvalue/100))
 
-        elif globalfxname[ceol_basic_effect] == 'distortion':
-            plugins.add_plug(cvpj_l, 'master-effect', 'simple', 'distortion')
-            plugins.add_plug_param(cvpj_l, 'master-effect', 'amount', ceol_basic_effectvalue/100, 'float', 'amount')
+        elif ceol_basic_effect == 3: #distortion
+            masterfx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'distortion')
+            masterfx_plugindata.param_add('amount', ceol_basic_effectvalue/100, 'float', 'amount')
 
-        elif globalfxname[ceol_basic_effect] == 'low_boost':
-            plugins.add_plug(cvpj_l, 'master-effect', 'simple', 'bassboost')
-            plugins.add_plug_fxdata(cvpj_l, 'master-effect', 1, ceol_basic_effectvalue/100)
+        elif ceol_basic_effect == 4: #low_boost
+            masterfx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'bassboost')
+            masterfx_plugindata.fxdata_add(1, ceol_basic_effectvalue/100)
 
-        elif globalfxname[ceol_basic_effect] == 'compresser':
-            plugins.add_plug(cvpj_l, 'master-effect', 'universal', 'compressor')
-            plugins.add_plug_param(cvpj_l, 'master-effect', 'attack', 0.1, 'float', 'attack')
-            plugins.add_plug_param(cvpj_l, 'master-effect', 'pregain', 0, 'float', 'pregain')
-            plugins.add_plug_param(cvpj_l, 'master-effect', 'knee', 6, 'float', 'knee')
-            plugins.add_plug_param(cvpj_l, 'master-effect', 'postgain', 0, 'float', 'postgain')
-            plugins.add_plug_param(cvpj_l, 'master-effect', 'ratio', 4, 'float', 'ratio')
-            plugins.add_plug_param(cvpj_l, 'master-effect', 'release', 0.5, 'float', 'release')
-            plugins.add_plug_param(cvpj_l, 'master-effect', 'threshold', -20, 'float', 'threshold')
+        elif ceol_basic_effect == 5: #compresser
+            masterfx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'compressor')
+            masterfx_plugindata.param_add('attack', 0.1, 'float', 'attack')
+            masterfx_plugindata.param_add('pregain', 0, 'float', 'pregain')
+            masterfx_plugindata.param_add('knee', 6, 'float', 'knee')
+            masterfx_plugindata.param_add('postgain', 0, 'float', 'postgain')
+            masterfx_plugindata.param_add('ratio', 4, 'float', 'ratio')
+            masterfx_plugindata.param_add('release', 0.5, 'float', 'release')
+            masterfx_plugindata.param_add('threshold', -20, 'float', 'threshold')
 
-        elif globalfxname[ceol_basic_effect] == 'high_pass':
-            plugins.add_plug(cvpj_l, 'master-effect', 'universal', 'eq-bands')
-            plugins.add_eqband(cvpj_l, 'master-effect', 1, calc_cutoff(ceol_basic_effectvalue), 0, 'high_pass', 1, None)
+        elif ceol_basic_effect == 6: #high_pass
+            masterfx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'eq-bands')
+            masterfx_plugindata.eqband_add(1, calc_cutoff(ceol_basic_effectvalue), 0, 'high_pass', 1, None)
+
+        masterfx_plugindata.to_cvpj(cvpj_l, 'master-effect')
 
         fxslot.insert(cvpj_l, ['master'], 'audio', 'master-effect')
 
@@ -148,35 +150,33 @@ class input_ceol(plugin_input.base):
             cvpj_instvol = ceol_inst_volume/256
             cvpj_instcolor = ceol_colors[ceol_inst_palette] if (ceol_inst_palette in ceol_colors) else [0.55, 0.55, 0.55]
 
-            pluginid = plugins.get_id()
             if ceol_inst_number <= 127:
                 cvpj_instname = idvals.get_idval(idvals_inst_midi, str(ceol_inst_number), 'name')
-                plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, ceol_inst_number)
+                inst_plugindata = plugins.cvpj_plugin('midi', 0, ceol_inst_number)
             elif ceol_inst_number == 365: 
                 cvpj_instname = 'MIDI Drums'
-                plugins.add_plug_gm_midi(cvpj_l, pluginid, 128, 0)
+                inst_plugindata = plugins.cvpj_plugin('midi', 128, 0)
             else: 
                 cvpj_instname = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'name')
                 valsoundid = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'valsoundid')
-                if valsoundid not in [None, '']:
-                    plugins.add_plug(cvpj_l, pluginid, 'valsound', valsoundid)
-                else:
-                    plugins.add_plug(cvpj_l, pluginid, 'native-boscaceoil', 'instrument')
-                    plugins.add_plug_data(cvpj_l, pluginid, 'instrument', ceol_inst_number)
+                if valsoundid not in [None, '']: inst_plugindata = plugins.cvpj_plugin('deftype', 'valsound', valsoundid)
+                else: inst_plugindata = plugins.cvpj_plugin('deftype', 'native-boscaceoil', ceol_inst_number)
+            inst_plugindata.to_cvpj(cvpj_l, cvpj_instid)
 
             if ceol_inst_number == 363: t_key_offset.append(60)
-            if ceol_inst_number == 364: t_key_offset.append(48)
-            if ceol_inst_number == 365: t_key_offset.append(24)
+            elif ceol_inst_number == 364: t_key_offset.append(48)
+            elif ceol_inst_number == 365: t_key_offset.append(24)
             else: t_key_offset.append(0)
 
             tracks_mi.inst_create(cvpj_l, cvpj_instid)
             tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname, color=cvpj_instcolor)
-            tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+            tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
             tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
 
             if ceol_inst_cutoff != 127:
-                plugins.add_plug(cvpj_l, cvpj_instid+'_filter', 'universal', 'eq-bands')
-                plugins.add_eqband(cvpj_l, cvpj_instid+'_filter', 1, calc_initcutoffval, 0, 'low_pass', ceol_inst_resonance+1, None)
+                inst_filt_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'eq-bands')
+                inst_filt_plugindata.eqband_add(1, calc_initcutoffval, 0, 'low_pass', ceol_inst_resonance+1, None)
+                inst_filt_plugindata.to_cvpj(cvpj_l, cvpj_instid+'_filter')
                 fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', cvpj_instid+'_filter')
 
             if ceol_inst_number <= 127:

@@ -196,3 +196,11 @@ def list_samesimilar(first, second):
     for x in range(len(first)):
         if first[x] == second[x]: out += 1
     return out/len(first)
+
+def list_usefirst(i_list):
+    finalval = None
+    for p in i_list:
+        if p != None: 
+            finalval = p
+            break
+    return finalval

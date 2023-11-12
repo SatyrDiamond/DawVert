@@ -30,6 +30,8 @@ def process_r(cvpj_l):
                 else: s_trackname = None
                 if 'color' in s_trackdata: s_trackcolor = s_trackdata['color']
                 else: s_trackcolor = None
+                if 'params' in s_trackdata: s_trackparams = s_trackdata['params']
+                else: s_trackparams = None
 
                 not_laned = True
 
@@ -69,6 +71,7 @@ def process_r(cvpj_l):
 
                                 new_trackdata[splitnameid] = s_trackdata.copy()
                                 new_trackdata[splitnameid]['name'] = septrackname
+                                if s_trackparams != None: new_trackdata[splitnameid]['params'] = s_trackparams
                                 if s_trackcolor != None: new_trackdata[splitnameid]['color'] = s_trackcolor
                                 new_trackplacements[splitnameid] = {}
                                 new_trackplacements[splitnameid]['notes'] = s_lanedata[laneid]['notes']

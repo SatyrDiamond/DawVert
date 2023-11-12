@@ -15,21 +15,27 @@ from functions import colors
 from functions import notelist_data
 from functions import params
 from functions import xtramath
+from functions import plugins
 from functions import song
 from functions_tracks import tracks_r
 
 def make_vst2(rpp_fxchain, cvpj_plugindata): 
-    vst_fx_name = cvpj_plugindata['plugin']['name']
-    vst_fx_path = cvpj_plugindata['plugin']['path']
-    vst_fx_version = cvpj_plugindata['plugin']['version']
-    vst_fx_fourid = cvpj_plugindata['plugin']['fourid']
+    vst_fx_name = cvpj_plugindata.dataval_get('name', None)
+    vst_fx_path = cvpj_plugindata.dataval_get('path', None)
+    vst_fx_version = cvpj_plugindata.dataval_get('version', None)
+    vst_fx_fourid = cvpj_plugindata.dataval_get('fourid', None)
+    vst_fx_datatype = cvpj_plugindata.dataval_get('datatype', None)
+    vst_fx_numparams = cvpj_plugindata.dataval_get('numparams', 0)
+    vst_fx_chunk = cvpj_plugindata.dataval_get('chunk', None)
 
-    if cvpj_plugindata['datatype'] == 'chunk': vstparams = base64.b64decode(cvpj_plugindata['data'].encode())
-    if cvpj_plugindata['datatype'] == 'param': 
+    if vst_fx_datatype == 'chunk': 
+        vstparams = base64.b64decode(vst_fx_chunk.encode())
+    if vst_fx_datatype == 'param': 
         floatdata = []
-        for num in range(cvpj_plugindata['numparams']):
-            floatdata.append(float(cvpj_plugindata['params'][str(num)]['value']))
-        vstparams = struct.pack('f'*cvpj_plugindata['numparams'], *floatdata)
+        for num in range(vst_fx_numparams):
+            pval, ptype, pname = cvpj_plugindata.param_get('vst_param_'+str(num), 0)
+            floatdata.append(float(pval))
+        vstparams = struct.pack('f'*vst_fx_numparams, *floatdata)
 
     vstdata = []
 
@@ -336,10 +342,15 @@ class output_reaper(plugin_output.base):
 
             if 'instdata' in cvpj_trackdata:
                 cvpj_instdata = cvpj_trackdata['instdata']
-                if 'plugin' in cvpj_instdata:
-                        if cvpj_instdata['plugin'] in ['vst2-dll', 'vst2-so']:
-                            cvpj_plugindata = cvpj_instdata['plugindata']
-                            make_vst2(rpp_fxchain, cvpj_plugindata)
+
+                if 'pluginid' in cvpj_instdata:
+                    cvpj_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, cvpj_instdata['pluginid'])
+                    i_enabled, i_wet = fx_plugindata.fxdata_get()
+                    plugintype = fx_plugindata.type_get()
+
+                    if plugintype[0] == 'vst2':
+                        cvpj_plugindata = cvpj_instdata['plugindata']
+                        make_vst2(rpp_fxchain, cvpj_plugindata)
 
             rpp_trackdata.children.append(rpp_obj_data('FXCHAIN', [], rpp_fxchain))
 

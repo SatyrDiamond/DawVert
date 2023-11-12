@@ -82,24 +82,23 @@ def commalist2plugtypes(inputdata):
 		sep_supp_plugs.append(outputpart)
 	return sep_supp_plugs
 
-def convertpluginconvproj(pci_in, cvpj_l, pluginid, plugintype, extra_json):
-	is_converted = False
+def convertpluginconvproj(cvpj_l, pluginid, pci_in, cvpj_plugindata, extra_json):
+	is_converted = False 
+	plugintype = cvpj_plugindata.type_get()
+
 	for plugclassinfo in pci_in:
 		ismatched = plugtype_match(plugintype, plugclassinfo[1][0:2])
-		if ______debugtxt______: 
+		#if ______debugtxt______: 
+		#	visualplugname_in = getvisualname(plugclassinfo[1])
+		#	visualplugname_out = getvisualname(plugclassinfo[2])
+		#	print('convertpluginconvproj -------------', ismatched, plugintype, 
+		#	'    ['+visualplugname_in+' > '+visualplugname_out+'] ')
 
-			visualplugname_in = getvisualname(plugclassinfo[1])
-			visualplugname_out = getvisualname(plugclassinfo[2])
-			print('convertpluginconvproj -------------', ismatched, plugintype, 
-			'    ['+visualplugname_in+' > '+visualplugname_out+'] ')
 		if ismatched == True:
-			isconverted = plugclassinfo[0].convert(cvpj_l, pluginid, plugintype, extra_json)
-			if isconverted: 
-				plugintype = plugins.get_plug_type(cvpj_l, pluginid)
-				is_converted = True
-				break
-	plugintype = plugins.get_plug_type(cvpj_l, pluginid)
-	return is_converted, plugintype
+			isconverted = plugclassinfo[0].convert(cvpj_l, pluginid, cvpj_plugindata, extra_json)
+			if isconverted: break
+
+	return is_converted
 
 def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, 
 	out_supportedplugins, out_getsupportedplugformats, extra_json):
@@ -125,30 +124,38 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw,
 	cvpj_l = json.loads(cvpjdata)
 	if out_type != 'debug':
 		if 'plugins' in cvpj_l:
-			for pluginid in cvpj_l['plugins']:
-				plugintype = plugins.get_plug_type(cvpj_l, pluginid)
 
-				if plugintype[0] not in out_getsupportedplugformats:
+			plugindataclasses = {}
+			for pluginid in cvpj_l['plugins']:
+				plugindataclasses[pluginid] = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
+
+			for pluginid in plugindataclasses:
+				cvpj_plugindata = plugindataclasses[pluginid]
+				plugintype_plug = cvpj_plugindata.type_get()
+
+				if plugintype_plug[0] not in out_getsupportedplugformats:
 
 					if ______debugtxt______: print('-------')
 	
 					if ______debugtxt______: print('- input always')
-					is_converted, plugintype = convertpluginconvproj(pl_pc_in_always, cvpj_l, pluginid, plugintype, extra_json)
+					is_converted = convertpluginconvproj(cvpj_l, pluginid, pl_pc_in_always, cvpj_plugindata, extra_json)
+
 
 					if ______debugtxt______: print('- input')
-					is_converted, plugintype = convertpluginconvproj(pl_pc_in, cvpj_l, pluginid, plugintype, extra_json)
+					is_converted = convertpluginconvproj(cvpj_l, pluginid, pl_pc_in, cvpj_plugindata, extra_json)
 
 					if ______debugtxt______: print('- output')
-					is_converted, plugintype = convertpluginconvproj(sep_pl_pc_out__native, cvpj_l, pluginid, plugintype, extra_json)
+					is_converted = convertpluginconvproj(cvpj_l, pluginid, sep_pl_pc_out__native, cvpj_plugindata, extra_json)
 
 					if is_converted == False:
-						is_plugin_unsupported = plugintype not in out_supportedplugins
-						if ______debugtxt______: print('---pluugin not supported:', is_plugin_unsupported)
+						is_plugin_unsupported = cvpj_plugindata.type_get() not in out_supportedplugins
+					#	if ______debugtxt______: print('---pluugin not supported:', is_plugin_unsupported)
 
 						if is_plugin_unsupported:
 							for out_getsupportedplugformat in out_getsupportedplugformats:
 								if out_getsupportedplugformat in sep_pl_pc_out__plugins:
-									is_converted, plugintype = convertpluginconvproj(sep_pl_pc_out__plugins[out_getsupportedplugformat], cvpj_l, pluginid, plugintype, extra_json)
+									is_converted = convertpluginconvproj(cvpj_l, pluginid, sep_pl_pc_out__plugins[out_getsupportedplugformat], cvpj_plugindata, extra_json)
 
+					cvpj_plugindata.to_cvpj(cvpj_l, pluginid)
 
 		return json.dumps(cvpj_l, indent=2)

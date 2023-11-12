@@ -86,25 +86,24 @@ def check_exists(in_name):
 	else:
 		return False
 
-def replace_data(cvpj_l, pluginid, bycat, platform, in_name, datatype, data, numparams):
+def replace_data(cvpj_plugindata, bycat, platform, in_name, datatype, data, numparams):
 	global cpu_arch_list
 	platformtxt = getplatformtxt(platform)
 	vst_cpuarch, vst_path, vst_name = find_path(in_name, platformtxt, bycat)
 
 	if vst_path != None:
-		plugintype = plugins.get_plug_type(cvpj_l, pluginid)
+		plugintype = cvpj_plugindata.type_get()
 
-		if plugintype[0] != 'vst2':
-			plugins.replace_plug(cvpj_l, pluginid, 'vst2', platformtxt)
+		if plugintype[0] != 'vst2': cvpj_plugindata.replace('vst2', platformtxt)
 
 		if bycat == 'name': 
 			if plugintype[0] == None and plugintype[1] == None: print('[plugin-vst2] ' + vst_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
 			if plugintype[0] != None and plugintype[1] == None: print('[plugin-vst2] ' + plugintype[0] +' > ' + vst_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
 			if plugintype[0] != None and plugintype[1] != None: print('[plugin-vst2] ' + ':'.join(plugintype) +' > ' + vst_name + ' (VST2 '+str(vst_cpuarch)+'-bit)')
 
-		plugins.add_plug_data(cvpj_l, pluginid, 'name', vst_name)
-		plugins.add_plug_data(cvpj_l, pluginid, 'path', vst_path)
-		plugins.add_plug_data(cvpj_l, pluginid, 'cpu_arch', vst_cpuarch)
+		cvpj_plugindata.dataval_add('name', vst_name)
+		cvpj_plugindata.dataval_add('path', vst_path)
+		cvpj_plugindata.dataval_add('cpu_arch', vst_cpuarch)
 
 		if db_exists:
 			if bycat == 'name':
@@ -115,24 +114,24 @@ def replace_data(cvpj_l, pluginid, bycat, platform, in_name, datatype, data, num
 				versionval = db_plugins.execute("SELECT version FROM vst2 WHERE name = ?", (in_name,)).fetchone()
 
 		if fouridval != None and fouridval != (None,): 
-			if bycat == 'name':
-				plugins.add_plug_data(cvpj_l, pluginid, 'fourid', int(fouridval[0]))
-			if bycat == 'id':
-				plugins.add_plug_data(cvpj_l, pluginid, 'fourid', in_name)
+			if bycat == 'name': cvpj_plugindata.dataval_add('fourid', int(fouridval[0]))
+			if bycat == 'id': cvpj_plugindata.dataval_add('fourid', in_name)
 
 		if versionval != None and versionval != (None,) and versionval != ('',): 
 			versionsplit = [int(i) for i in versionval[0].split('.')]
 			versionbytes =  struct.pack('B'*len(versionsplit), *versionsplit)
-			plugins.add_plug_data(cvpj_l, pluginid, 'version', int.from_bytes(versionbytes, "little"))
+			cvpj_plugindata.dataval_add('version', int.from_bytes(versionbytes, "little"))
 
 		if datatype == 'chunk':
-			plugins.add_plug_data(cvpj_l, pluginid, 'datatype', 'chunk')
-			plugins.add_plug_data(cvpj_l, pluginid, 'chunk', base64.b64encode(data).decode('ascii'))
+			cvpj_plugindata.dataval_add('datatype', 'chunk')
+			cvpj_plugindata.dataval_add('chunk', base64.b64encode(data).decode('ascii'))
 		if datatype == 'param':
-			plugins.add_plug_data(cvpj_l, pluginid, 'datatype', 'param')
-			plugins.add_plug_data(cvpj_l, pluginid, 'numparams', numparams) 
+			cvpj_plugindata.dataval_add('datatype', 'param')
+			cvpj_plugindata.dataval_add('numparams', numparams) 
 		if datatype == 'bank':
-			plugins.add_plug_data(cvpj_l, pluginid, 'datatype', 'bank')
-			plugins.add_plug_data(cvpj_l, pluginid, 'programs', data) 
+			cvpj_plugindata.dataval_add('datatype', 'bank')
+			cvpj_plugindata.dataval_add('programs', data) 
 	else:
 		print('[plugin-vst2] Plugin, '+str(in_name)+' not found.')
+
+	return cvpj_plugindata

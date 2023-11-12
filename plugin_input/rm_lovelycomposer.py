@@ -7,11 +7,11 @@ import os.path
 import struct
 from functions import placements
 from functions import placement_data
-from functions import plugins
 from functions import auto
 from functions import note_data
 from functions import data_bytes
 from functions import data_values
+from functions import plugins
 from functions import song
 from functions_tracks import tracks_rm
 from functions_tracks import auto_data
@@ -294,39 +294,38 @@ class input_lc(plugin_input.base):
             tracks_rm.add_pl(cvpj_l, str(num), 'notes', cvpj_placements)
 
         for used_instrument in used_instruments:
-            pluginid = plugins.get_id()
-
             cvpj_instid = str(used_instrument[0])+'_'+used_instrument[1]
 
             cvpj_instdata = {}
             if used_instrument[1] == 'Sine': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'sine')
+                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'sine')
             elif used_instrument[1] == 'Square': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
-                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 0)
+                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'square')
+                plugindata.dataval_add('duty', 0)
             elif used_instrument[1] == 'Triangle':
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'triangle')
+                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'triangle')
             elif used_instrument[1] == 'Saw': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'saw')
+                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'saw')
             elif used_instrument[1] == 'Noise': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'noise')
-                plugins.add_plug_data(cvpj_l, pluginid, 'type', '4bit')
+                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'noise')
+                plugindata.dataval_add('type', '4bit')
             elif used_instrument[1] == 'FreqNoise': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'noise')
-                plugins.add_plug_data(cvpj_l, pluginid, 'type', '1bit_short')
+                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'noise')
+                plugindata.dataval_add('type', '1bit_short')
             elif used_instrument[1] == 'Pulse25': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
-                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 1)
+                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'square')
+                plugindata.dataval_add('duty', 1)
             elif used_instrument[1] == 'Pulse125': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
-                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 2)
+                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'square')
+                plugindata.dataval_add('duty', 2)
             else: 
-                plugins.add_plug(cvpj_l, pluginid, 'lovelycomposer', used_instrument[1])
-                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 2)
+                plugindata = plugins.cvpj_plugin('deftype', 'lovelycomposer', used_instrument[1])
+
+            plugindata.to_cvpj(cvpj_l, cvpj_instid)
 
             tracks_rm.inst_create(cvpj_l, cvpj_instid)
             tracks_rm.inst_visual(cvpj_l, cvpj_instid, name=used_instrument[1], color=lc_colors[used_instrument[0]])
-            tracks_rm.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+            tracks_rm.inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
 
         tracks_rm.inst_create(cvpj_l, 'chord')
         tracks_rm.inst_visual(cvpj_l, 'chord', name='Chord', color=lc_colors[4])

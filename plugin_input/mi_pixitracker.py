@@ -152,12 +152,14 @@ class input_cvpj_f(plugin_input.base):
                 tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'pitch', t_sounddata[2]/100, 'float')
                 tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'instdata', 'middlenote', t_sounddata[3]*-1)
                 tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', t_sounddata[4]/100, 'float')
-                plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, wave_path)
-                plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
-                plugins.add_plug_data(cvpj_l, pluginid, 'start', t_sounddata[5])
-                plugins.add_plug_data(cvpj_l, pluginid, 'end', t_sounddata[6])
-                plugins.add_plug_data(cvpj_l, pluginid, 'length', len(t_sounddata[7])//t_sounddata[0])
-                plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
+
+                inst_plugindata = plugins.cvpj_plugin('sampler', wave_path, None)
+                inst_plugindata.dataval_add('point_value_type', "samples")
+                inst_plugindata.dataval_add('start', t_sounddata[5])
+                inst_plugindata.dataval_add('end', t_sounddata[6])
+                inst_plugindata.dataval_add('length', len(t_sounddata[7])//t_sounddata[0])
+                inst_plugindata.dataval_add('trigger', 'normal')
+                inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
         for pixi_data_pattern in pixi_data_patterns:
             nli_notes = []

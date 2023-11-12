@@ -39,10 +39,6 @@ def setvalue(i_cat, i_name, i_value):
     global params
     params[i_cat][i_name] = i_value
 
-def add(bio_data, i_cat, i_name, i_value):
-    text = i_cat+' : '+i_name+'='+str(i_value)+';\n'
-    bio_data.write(str.encode(text))
-
 def getparams():
     global params
 
@@ -52,11 +48,10 @@ def getparams():
     for paramcat in params:
         for paramval in params[paramcat]:
             o_value = params[paramcat][paramval]
-            if paramval in ['freq_start']: o_value = math.sqrt((o_value-2.51)/3000)
-            if paramval in ['freq_end']: o_value = math.sqrt((o_value-2.51)/2000)
-            if paramval in ['f_env_release']: 
-                if o_value > 2.4: o_value = math.sqrt((o_value-2.51)/5000)
-            add(out, paramcat, paramval, o_value)
+            if paramval == 'freq_start': o_value = math.sqrt((o_value-2.51)/3000)
+            if paramval == 'freq_end': o_value = math.sqrt((o_value-2.51)/2000)
+            if paramval == 'f_env_release': if o_value > 2.4: o_value = math.sqrt((o_value-2.51)/5000)
+            out.write(str.encode(i_cat+' : '+i_name+'='+str(i_value)+';\n'))
 
     out.seek(0)
     return out.read()

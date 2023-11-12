@@ -4,7 +4,7 @@
 from functions import data_bytes
 from functions import note_mod
 from functions import colors
-from functions import idvals
+from functions import data_dataset
 from functions import notelist_data
 from functions import placement_data
 from functions import note_data
@@ -20,8 +20,6 @@ import json
 import zipfile
 import math
 import xml.etree.ElementTree as ET
-
-idvals_inst_notetess = idvals.parse_idvalscsv('data_idvals/notessimo_v3_inst.csv')
 
 global lists_data
 global used_inst
@@ -135,10 +133,8 @@ def parse_instruments(notess_instruments):
             notess_s_inst = ET.fromstring(zip_data.read('instruments/'+inst+'.xml'))
             inst_vars = get_vars(notess_s_inst)
             if 'color' in inst_vars: lists_data[1][inst]['color'] = colors.moregray(inst_vars['color'])
-        elif inst in idvals_inst_notetess:
-        	print("[input-notessimo_v3] Instrument: " + inst + " BUI")
         else:
-            print("[input-notessimo_v3] Instrument: " + inst + " UNK")
+            print("[input-notessimo_v3] Instrument: " + inst)
 
 # ----------------------------------- Sheets -----------------------------------
 
@@ -307,6 +303,9 @@ class input_notessimo_v3(plugin_input.base):
         zip_data = zipfile.ZipFile(input_file, 'r')
         cvpj_l = {}
 
+        dataset = data_dataset.dataset('./data_dset/notessimo_v3.dset')
+        dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
+        
         fxrack.add(cvpj_l, 1, 1, 0, name='Drums')
 
         if 'instruments.xml' in zip_data.namelist():
@@ -328,42 +327,28 @@ class input_notessimo_v3(plugin_input.base):
             isbuiltindrum = 0
             midiinst = None
 
-            if inst in idvals_inst_notetess:
-                isbuiltindrum = idvals.get_idval(idvals_inst_notetess, str(inst), 'isdrum')
-                midiinst = idvals.get_idval(idvals_inst_notetess, str(inst), 'gm_inst')
-                inst_name = idvals.get_idval(idvals_inst_notetess, str(inst), 'name')
-                inst_color = idvals.get_idval(idvals_inst_notetess, str(inst), 'color')
-            elif inst in lists_data[1]: 
-                t_instdata = lists_data[1][inst]
-                if 'name' in t_instdata: inst_name = t_instdata['name']
-                if 'color' in t_instdata: inst_color = t_instdata['color']
-            else:
-                inst_name = 'noname ('+inst+')'
-                inst_color = [0.3,0.3,0.3]
-
-            inst_color = colors.moregray(inst_color)
-
-            pluginid = plugins.get_id()
-
-            if midiinst != None: 
-                plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, midiinst)
-                cvpj_instdata = {'pluginid': pluginid}
-
             cvpj_instid = str(inst)
+            outdsd = tracks_mi.import_dset(cvpj_l, cvpj_instid, dataset, dataset_midi, None, None)
+            inst_found = False
 
-            tracks_mi.inst_create(cvpj_l, cvpj_instid)
-            tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=inst_name, color=inst_color)
+            if (outdsd[4] != None or outdsd[5] != None):
+                inst_found = True
+                pass
+            elif inst in lists_data[1]: 
+                inst_found = True
+                t_instdata = lists_data[1][inst]
+                inst_name = t_instdata['name'] if 'name' in t_instdata else None
+                inst_color = t_instdata['color'] if 'color' in t_instdata else None
+                tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=inst_name, color=inst_color)
+            else: tracks_mi.inst_visual(cvpj_l, cvpj_instid, name='noname ('+inst+')', color=[0.3,0.3,0.3])
 
-            if midiinst != None: 
-                plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, midiinst)
-                tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-                tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'midi', 'output', {'program': midiinst})
+            if inst_found: tracks_mi.inst_visual(cvpj_l, cvpj_instid, color=colors.moregray(outdsd[5]))
 
-            if isbuiltindrum == 1: 
+            if outdsd[3]: 
                 tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
             else:
                 tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
-                fxrack.add(cvpj_l, fxnum, 1, 0, name=inst_name, color=inst_color)
+                fxrack.add(cvpj_l, fxnum, 1, 0, name=outdsd[4], color=outdsd[5])
                 fxnum += 1
 
         song.add_param(cvpj_l, 'bpm', 120)

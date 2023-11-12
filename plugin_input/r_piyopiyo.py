@@ -55,8 +55,6 @@ class input_piyopiyo(plugin_input.base):
         cvpj_l = {}
 
         for tracknum in range(3):
-            pluginid = str(tracknum)
-            plugins.add_plug(cvpj_l, pluginid, 'native-piyopiyo', 'wave')
             print("[input-piyopiyo] Track " + str(tracknum+1), end=",")
             trk_octave = pmdfile.read(1)[0]
             print(" Oct:" + str(trk_octave), end=",")
@@ -71,10 +69,14 @@ class input_piyopiyo(plugin_input.base):
             trk_waveform = struct.unpack('b'*256, pmdfile.read(256))
             trk_envelope = struct.unpack('B'*64, pmdfile.read(64))
             keyoffset[tracknum] = (trk_octave-2)*12
-            plugins.add_wave(cvpj_l, pluginid, 'main', trk_waveform, -128, 128)
-            plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trk_envelope, 128, None, None)
-            plugins.add_points_from_blocks(cvpj_l, pluginid, 'vol')
             idval = str(tracknum)
+
+            pluginid = str(tracknum)
+            inst_plugindata = plugins.cvpj_plugin('deftype', 'native-piyopiyo', 'wave')
+            inst_plugindata.wave_add('main', trk_waveform, -128, 128)
+            inst_plugindata.env_blocks_add('vol', trk_envelope, 1/64, 128, None, None)
+            inst_plugindata.env_points_from_blocks('vol')
+            inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
             tracks_r.track_create(cvpj_l, idval, 'instrument')
             tracks_r.track_visual(cvpj_l, idval, name='Inst #'+str(tracknum), color=track_colors[tracknum])
@@ -82,7 +84,10 @@ class input_piyopiyo(plugin_input.base):
             tracks_r.track_param_add(cvpj_l, idval, 'vol', trk_volume/250, 'float')
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
-        plugins.add_plug(cvpj_l, "3", 'native-piyopiyo', 'drums')
+
+        inst_plugindata = plugins.cvpj_plugin('deftype', 'native-piyopiyo', 'drums')
+        inst_plugindata.to_cvpj(cvpj_l, "3")
+
         tracks_r.track_create(cvpj_l, "3", 'instrument')
         tracks_r.track_visual(cvpj_l, "3", name='perc', color=track_colors[3])
         tracks_r.track_inst_pluginid(cvpj_l, "3", "3")

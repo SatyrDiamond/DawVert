@@ -8,7 +8,8 @@ from functions import plugins
 from functions import idvals
 from functions import song
 from functions_tracks import tracks_mi
-from functions_plugparams import params_fm
+from functions_plugdata import plugin_fm
+
 import plugin_input
 import zlib
 import struct
@@ -302,15 +303,15 @@ class input_cvpj_r(plugin_input.base):
             cvpj_instdata = {}
             cvpj_instdata["plugindata"] = {}
             if insttype == 'square' or insttype == 'noise':
-                plugins.add_plug(cvpj_l, pluginid, 'retro', insttype)
+                inst_plugindata = plugins.cvpj_plugin('deftype', 'retro', insttype)
                 if 'env_volume' in dmf_instdata:
                     loopval = None
                     if dmf_instdata['env_volume']['looppos'] != -1: loopval = dmf_instdata['env_volume']['looppos']
-                    add_env_blocks(cvpj_l, pluginid, 'vol', dmf_instdata['env_volume']['values'], loopval, None)
+                    inst_plugindata.env_blocks_add('vol', dmf_instdata['env_volume']['values'], None, loopval, None)
+                    inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
             elif insttype == 'opn2':
-                plugins.add_plug(cvpj_l, pluginid, 'fm', 'opn2')
-                fmdata = params_fm.fm_data('opn2')
+                fmdata = plugin_fm.fm_data('opn2')
                 dmf_fmdata = dmf_instdata['fmdata']
                 dmf_fmopdata = dmf_fmdata['ops']
 

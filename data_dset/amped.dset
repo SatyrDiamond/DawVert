@@ -1,0 +1,4199 @@
+{
+    "plugin": {
+        "objects": {
+            "BitCrusher": {
+                "params": {
+                    "bits": {
+                        "def": 12.22,
+                        "max": 16,
+                        "min": 2,
+                        "name": "bits",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "down": {
+                        "def": 0.7,
+                        "max": 1,
+                        "min": 0,
+                        "name": "down",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "BitCrusher"
+                }
+            },
+            "Chorus": {
+                "params": {
+                    "delayLfoDepth": {
+                        "def": 0.15,
+                        "max": 1,
+                        "min": 0,
+                        "name": "delayLfoDepth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delayLfoRateHz": {
+                        "def": 0.7585000000000001,
+                        "max": 5,
+                        "min": 0.01,
+                        "name": "delayLfoRateHz",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 0.85,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "tone": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "tone",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Chorus"
+                }
+            },
+            "Compressor": {
+                "params": {
+                    "attackTimeMS": {
+                        "def": 9,
+                        "max": 300,
+                        "min": 0,
+                        "name": "attackTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "circuitMode": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "circuitMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detectMode": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "detectMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterActive": {
+                        "def": 1,
+                        "max": true,
+                        "min": false,
+                        "name": "filterActive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterAudition": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterAudition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterFrequency": {
+                        "def": 2017.9999999999982,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filterFrequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterGainDB": {
+                        "def": 0,
+                        "max": 60,
+                        "min": 0,
+                        "name": "filterGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterMode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "filterMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterQ": {
+                        "def": 0.05,
+                        "max": 1,
+                        "min": 0.05,
+                        "name": "filterQ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lookaheadTimeMS": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "lookaheadTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "postGainDB": {
+                        "def": 2.16,
+                        "max": 24,
+                        "min": 0,
+                        "name": "postGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -12,
+                        "name": "preGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ratio": {
+                        "def": 4.04,
+                        "max": 20,
+                        "min": 1,
+                        "name": "ratio",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "releaseTimeMS": {
+                        "def": 199.99999999999994,
+                        "max": 5000,
+                        "min": 0,
+                        "name": "releaseTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "softKneeWidth": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "softKneeWidth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "thresholdDB": {
+                        "def": -19.200000000000003,
+                        "max": 0,
+                        "min": -60,
+                        "name": "thresholdDB",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Compressor"
+                }
+            },
+            "CompressorMini": {
+                "params": {
+                    "squash": {
+                        "def": 0.15,
+                        "max": 1,
+                        "min": 0,
+                        "name": "squash",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Compressor Mini"
+                }
+            },
+            "Delay": {
+                "params": {
+                    "cross": {
+                        "def": 1,
+                        "max": 0.99,
+                        "min": 0,
+                        "name": "cross",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "damp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "damp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "fb": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "fb",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "offset": {
+                        "def": 0,
+                        "max": 0.1,
+                        "min": 0,
+                        "name": "offset",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "time": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "time",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Delay"
+                }
+            },
+            "Distortion": {
+                "params": {
+                    "blend": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "blend",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "boost": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "boost",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "feedback": {
+                        "def": 0.30000001192092896,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "intensity": {
+                        "def": 0.4,
+                        "max": 1,
+                        "min": 0,
+                        "name": "intensity",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mode": {
+                        "def": 3,
+                        "max": 10,
+                        "min": 0,
+                        "name": "mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "postGainDB": {
+                        "def": -3,
+                        "max": 30,
+                        "min": -30,
+                        "name": "postGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preGainDB": {
+                        "def": 12,
+                        "max": 30,
+                        "min": -30,
+                        "name": "preGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "tone": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "tone",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Distortion"
+                }
+            },
+            "Drumpler": {
+                "params": {},
+                "visual": {
+                    "name": "Drumpler"
+                }
+            },
+            "Equalizer": {
+                "params": {
+                    "hpfreq": {
+                        "def": 20,
+                        "max": 10000,
+                        "min": 20,
+                        "name": "hpfreq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lpfreq": {
+                        "def": 10000,
+                        "max": 10000,
+                        "min": 20,
+                        "name": "lpfreq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peakfreq": {
+                        "def": 2000,
+                        "max": 10000,
+                        "min": 20,
+                        "name": "peakfreq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peakgain": {
+                        "def": 0,
+                        "max": 48,
+                        "min": -96,
+                        "name": "peakgain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peakq": {
+                        "def": 1,
+                        "max": 10,
+                        "min": 0.5,
+                        "name": "peakq",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Equalizer Mini"
+                }
+            },
+            "EqualizerPro": {
+                "params": {
+                    "filter__1__active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter__1__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__1__freq": {
+                        "def": 60,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter__1__freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__1__gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter__1__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__1__q": {
+                        "def": 0.7099999999999995,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter__1__q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__1__type": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter__1__type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__2__active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter__2__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__2__freq": {
+                        "def": 120,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter__2__freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__2__gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter__2__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__2__q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter__2__q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__2__type": {
+                        "def": 3,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter__2__type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__3__active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter__3__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__3__freq": {
+                        "def": 400,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter__3__freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__3__gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter__3__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__3__q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter__3__q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__3__type": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter__3__type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__4__active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter__4__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__4__freq": {
+                        "def": 1200,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter__4__freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__4__gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter__4__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__4__q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter__4__q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__4__type": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter__4__type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__5__active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter__5__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__5__freq": {
+                        "def": 3000,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter__5__freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__5__gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter__5__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__5__q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter__5__q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__5__type": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter__5__type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__6__active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter__6__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__6__freq": {
+                        "def": 6000,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter__6__freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__6__gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter__6__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__6__q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter__6__q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__6__type": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter__6__type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__7__active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter__7__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__7__freq": {
+                        "def": 9000,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter__7__freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__7__gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter__7__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__7__q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter__7__q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__7__type": {
+                        "def": 4,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter__7__type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__8__active": {
+                        "def": 0,
+                        "max": true,
+                        "min": true,
+                        "name": "filter__8__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__8__freq": {
+                        "def": 15000,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter__8__freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__8__gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter__8__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__8__q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter__8__q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__8__type": {
+                        "def": 2,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter__8__type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "postGain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": 0,
+                        "name": "postGain",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Equalizer"
+                }
+            },
+            "Expander": {
+                "params": {
+                    "attackTimeMS": {
+                        "def": 0,
+                        "max": 300,
+                        "min": 0,
+                        "name": "attackTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "circuitMode": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "circuitMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detectMode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "detectMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterActive": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterActive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterAudition": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterAudition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterFrequency": {
+                        "def": 200,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filterFrequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterGainDB": {
+                        "def": 0,
+                        "max": 60,
+                        "min": 0,
+                        "name": "filterGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterMode": {
+                        "def": 2,
+                        "max": 2,
+                        "min": 0,
+                        "name": "filterMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterQ": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filterQ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lookaheadTimeMS": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "lookaheadTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "postGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": 0,
+                        "name": "postGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -12,
+                        "name": "preGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ratio": {
+                        "def": 2,
+                        "max": 20,
+                        "min": 1,
+                        "name": "ratio",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "releaseTimeMS": {
+                        "def": 150.00000000000003,
+                        "max": 5000,
+                        "min": 0,
+                        "name": "releaseTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "softKneeWidth": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "softKneeWidth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "thresholdDB": {
+                        "def": -60,
+                        "max": 0,
+                        "min": -60,
+                        "name": "thresholdDB",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Expander"
+                }
+            },
+            "Flanger": {
+                "params": {
+                    "delayLfoDepth": {
+                        "def": 0.75,
+                        "max": 1,
+                        "min": 0,
+                        "name": "delayLfoDepth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delayLfoRateHz": {
+                        "def": 1.0579,
+                        "max": 5,
+                        "min": 0.01,
+                        "name": "delayLfoRateHz",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delayTimeMS": {
+                        "def": 4,
+                        "max": 10,
+                        "min": 2,
+                        "name": "delayTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "tone": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "tone",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "voices": {
+                        "def": 2,
+                        "max": 3,
+                        "min": 1,
+                        "name": "voices",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Flanger"
+                }
+            },
+            "Gate": {
+                "params": {
+                    "attackCurve": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "attackCurve",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "attackTimeMS": {
+                        "def": 0,
+                        "max": 300,
+                        "min": 0,
+                        "name": "attackTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "circuitMode": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "circuitMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detectMode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "detectMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterActive": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterActive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterAudition": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterAudition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterFrequency": {
+                        "def": 200,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filterFrequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterGainDB": {
+                        "def": 0,
+                        "max": 60,
+                        "min": 0,
+                        "name": "filterGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterMode": {
+                        "def": 2,
+                        "max": 2,
+                        "min": 0,
+                        "name": "filterMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterQ": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filterQ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hysteresisDB": {
+                        "def": 0,
+                        "max": 0,
+                        "min": -24,
+                        "name": "hysteresisDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lookaheadTimeMS": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "lookaheadTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "postGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": 0,
+                        "name": "postGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -12,
+                        "name": "preGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "releaseCurve": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "releaseCurve",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "releaseTimeMS": {
+                        "def": 50,
+                        "max": 5000,
+                        "min": 0,
+                        "name": "releaseTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "thresholdDB": {
+                        "def": -90,
+                        "max": 0,
+                        "min": -90,
+                        "name": "thresholdDB",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Gate"
+                }
+            },
+            "Granny": {
+                "params": {
+                    "amp__eg__A": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "amp__eg__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp__eg__D": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "amp__eg__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp__eg__R": {
+                        "def": 0.83,
+                        "max": 1,
+                        "min": 0.83,
+                        "name": "amp__eg__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp__eg__S": {
+                        "def": 0.16,
+                        "max": 1,
+                        "min": 0.16,
+                        "name": "amp__eg__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp__level": {
+                        "def": 0.37,
+                        "max": 1,
+                        "min": 0.37,
+                        "name": "amp__level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__eg__A": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filter__eg__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__eg__D": {
+                        "def": 0.86,
+                        "max": 1,
+                        "min": 0.86,
+                        "name": "filter__eg__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__eg__R": {
+                        "def": 0.77,
+                        "max": 1,
+                        "min": 0.77,
+                        "name": "filter__eg__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__eg__S": {
+                        "def": 0.12,
+                        "max": 1,
+                        "min": 0.12,
+                        "name": "filter__eg__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__egamount": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "filter__egamount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__freq": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "filter__freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter__res": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filter__res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__amp__compression": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc__amp__compression",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__amp__level": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0.5,
+                        "name": "osc__amp__level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__amp__random": {
+                        "def": 0,
+                        "max": 0.99,
+                        "min": 0,
+                        "name": "osc__amp__random",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__amp__width": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0.5,
+                        "name": "osc__amp__width",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__grain__duration": {
+                        "def": 0.07,
+                        "max": 1,
+                        "min": 0.07,
+                        "name": "osc__grain__duration",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__grain__keyfollow": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "osc__grain__keyfollow",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__grain__randomDuration": {
+                        "def": 0.09,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc__grain__randomDuration",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__grain__randomInterval": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "osc__grain__randomInterval",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__grain__randomPitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc__grain__randomPitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__shaper__alpha": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "osc__shaper__alpha",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__shaper__length": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc__shaper__length",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__shaper__shape": {
+                        "def": 4,
+                        "max": 8,
+                        "min": 0,
+                        "name": "osc__shaper__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__stream__count": {
+                        "def": 0.21,
+                        "max": 1,
+                        "min": 0.21,
+                        "name": "osc__stream__count",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__stream__duration": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0.5,
+                        "name": "osc__stream__duration",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__stream__pitch": {
+                        "def": -1,
+                        "max": 1,
+                        "min": -1,
+                        "name": "osc__stream__pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__stream__pitchmod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc__stream__pitchmod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc__stream__position": {
+                        "def": 0.1,
+                        "max": 1,
+                        "min": 0.1,
+                        "name": "osc__stream__position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch__coarse": {
+                        "def": 0.34,
+                        "max": 1,
+                        "min": 0.34,
+                        "name": "pitch__coarse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch__fine": {
+                        "def": -0.11,
+                        "max": 1,
+                        "min": -0.11,
+                        "name": "pitch__fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch__fixed": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch__fixed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch__formant": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "pitch__formant",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch__formantmod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch__formantmod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch__octave": {
+                        "def": 0.32,
+                        "max": 1,
+                        "min": 0.32,
+                        "name": "pitch__octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample__end": {
+                        "def": 1.0,
+                        "max": 1.0016260162601627,
+                        "min": 0.0,
+                        "name": "sample__end",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample__index": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "sample__index",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample__length": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "sample__length",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample__offset": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "sample__offset",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample__position": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0.01,
+                        "name": "sample__position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample__randomPosition": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "sample__randomPosition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample__rate": {
+                        "def": 44100,
+                        "max": 44100,
+                        "min": 44100,
+                        "name": "sample__rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample__rootKey": {
+                        "def": 60,
+                        "max": 60,
+                        "min": 60,
+                        "name": "sample__rootKey",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample__speed": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "sample__speed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample__start": {
+                        "def": 0,
+                        "max": 0.9885807504078303,
+                        "min": 0,
+                        "name": "sample__start",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Granny"
+                }
+            },
+            "Limiter": {
+                "params": {
+                    "attackTimeMS": {
+                        "def": 0,
+                        "max": 300,
+                        "min": 0,
+                        "name": "attackTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "circuitMode": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "circuitMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detectMode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "detectMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterActive": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterActive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterAudition": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterAudition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterFrequency": {
+                        "def": 200,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filterFrequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterGainDB": {
+                        "def": 0,
+                        "max": 60,
+                        "min": 0,
+                        "name": "filterGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterMode": {
+                        "def": 2,
+                        "max": 2,
+                        "min": 0,
+                        "name": "filterMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterQ": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filterQ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lookaheadTimeMS": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "lookaheadTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "postGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": 0,
+                        "name": "postGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -12,
+                        "name": "preGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "releaseTimeMS": {
+                        "def": 199.99999999999994,
+                        "max": 5000,
+                        "min": 0,
+                        "name": "releaseTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "thresholdDB": {
+                        "def": 0,
+                        "max": 0,
+                        "min": -60,
+                        "name": "thresholdDB",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Limiter"
+                }
+            },
+            "LimiterMini": {
+                "params": {
+                    "postGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": 0,
+                        "name": "postGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -12,
+                        "name": "preGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "releaseTimeMS": {
+                        "def": 200,
+                        "max": 5000,
+                        "min": 200,
+                        "name": "releaseTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "thresholdDB": {
+                        "def": 0,
+                        "max": 0,
+                        "min": -60,
+                        "name": "thresholdDB",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Limiter Mini"
+                }
+            },
+            "Phaser": {
+                "params": {
+                    "feedback": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hzmin": {
+                        "def": 400,
+                        "max": 1000,
+                        "min": 100,
+                        "name": "hzmin",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hzrange": {
+                        "def": 4,
+                        "max": 10,
+                        "min": 2,
+                        "name": "hzrange",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "rate": {
+                        "def": 1.5,
+                        "max": 5,
+                        "min": 0,
+                        "name": "rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stages": {
+                        "def": 8,
+                        "max": 16,
+                        "min": 2,
+                        "name": "stages",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Phaser"
+                }
+            },
+            "Reverb": {
+                "params": {
+                    "fb": {
+                        "def": 0.6500000000000001,
+                        "max": 1,
+                        "min": 0,
+                        "name": "fb",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lpf": {
+                        "def": 10005.999999999998,
+                        "max": 20000,
+                        "min": 12,
+                        "name": "lpf",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Reverb"
+                }
+            },
+            "SF2": {
+                "params": {
+                    "bank": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 128,
+                        "name": "bank",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain": {
+                        "def": 0.75,
+                        "max": 0.75,
+                        "min": 0.75,
+                        "name": "gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "omni": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "omni",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "patch": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "patch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preset": {
+                        "def": 0,
+                        "max": 127,
+                        "min": 127,
+                        "name": "preset",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "GM Player"
+                }
+            },
+            "Sampler": {
+                "params": {},
+                "visual": {
+                    "name": "Sampler"
+                }
+            },
+            "Tremolo": {
+                "params": {
+                    "lfoADepth": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfoADepth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfoARateHz": {
+                        "def": 3.004,
+                        "max": 5,
+                        "min": 0.01,
+                        "name": "lfoARateHz",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Tremolo"
+                }
+            },
+            "Vibrato": {
+                "params": {
+                    "delayLfoDepth": {
+                        "def": 0.7,
+                        "max": 1,
+                        "min": 0,
+                        "name": "delayLfoDepth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delayLfoRateHz": {
+                        "def": 2.8043999999999967,
+                        "max": 5,
+                        "min": 0.01,
+                        "name": "delayLfoRateHz",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Vibrato"
+                }
+            },
+            "Volt": {
+                "params": {
+                    "global__glide": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "global__glide",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "global__jr": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "global__jr",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "global__solo": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "global__solo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__active": {
+                        "def": 1,
+                        "max": true,
+                        "min": 1,
+                        "name": "part__1__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__amp__level": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__amp__level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__A": {
+                        "def": 0.01,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__R": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__1__curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__1__curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__1__curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__velocityTracker__gain__amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__velocityTracker__gain__amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__2__A": {
+                        "def": 0.01,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__2__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__2__D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__2__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__2__L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__2__L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__2__R": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__2__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__2__S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__2__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__2__curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__2__curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__2__curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__2__curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__2__curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__2__curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__2__detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__2__detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__2__pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__2__pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__2__shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__2__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__2__velocityTracker__gain__amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__2__velocityTracker__gain__amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__A": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__3__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__D": {
+                        "def": 0.0264,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__3__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__L": {
+                        "def": 0.77,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__3__L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__R": {
+                        "def": 0.0023,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__3__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__S": {
+                        "def": 0.19,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__3__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__3__curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__curveD": {
+                        "def": 0.19,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__3__curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__curveR": {
+                        "def": 0.28,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__3__curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__velocityTracker__gain__amount": {
+                        "def": 0.74,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__3__velocityTracker__gain__amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__A": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__4__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__4__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__4__L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__R": {
+                        "def": 0.0029,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__4__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__4__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__4__curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__4__curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__curveR": {
+                        "def": 0.21,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__4__curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__velocityTracker__gain__amount": {
+                        "def": 0.805,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__4__velocityTracker__gain__amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__filter__Q": {
+                        "def": 1.1,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__filter__Q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__filter__bypass": {
+                        "def": 0.0,
+                        "max": false,
+                        "min": 0.0,
+                        "name": "part__1__filter__bypass",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__filter__drive": {
+                        "def": 0.27607,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__filter__drive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__filter__fc": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__filter__fc",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__filter__mode": {
+                        "def": 1,
+                        "max": 6,
+                        "min": 0,
+                        "name": "part__1__filter__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__1__amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__1__delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__1__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__lfo__1__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__1__pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__1__pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__1__rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__1__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__1__lfo__1__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__2__amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__2__amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__2__delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__2__delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__2__gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__2__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__2__mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__lfo__2__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__2__pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__2__pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__2__pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__2__pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__2__rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__2__rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__2__shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__2__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__2__wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__1__lfo__2__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__3__amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__3__amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__3__delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__3__delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__3__mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__lfo__3__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__3__rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__3__rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__3__wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__1__lfo__3__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__4__amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__4__amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__4__delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__4__delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__4__mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__lfo__4__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__4__rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__4__rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__4__wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__1__lfo__4__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__active": {
+                        "def": 1,
+                        "max": true,
+                        "min": false,
+                        "name": "part__1__osc__1__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__coarse": {
+                        "def": 0,
+                        "max": 12,
+                        "min": -12,
+                        "name": "part__1__osc__1__coarse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__detune": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__1__detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__fine": {
+                        "def": -10,
+                        "max": 100,
+                        "min": -100,
+                        "name": "part__1__osc__1__fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__gain": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__osc__1__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__1__mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__octave": {
+                        "def": -2,
+                        "max": 3,
+                        "min": -3,
+                        "name": "part__1__osc__1__octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__1__pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__quality": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__1__quality",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__1__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__stereo": {
+                        "def": 0.84,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__1__stereo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__unison": {
+                        "def": 5,
+                        "max": 7,
+                        "min": 1,
+                        "name": "part__1__osc__1__unison",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__wave": {
+                        "def": 3,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__1__osc__1__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__active": {
+                        "def": 1,
+                        "max": true,
+                        "min": false,
+                        "name": "part__1__osc__2__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__coarse": {
+                        "def": 0,
+                        "max": 12,
+                        "min": -12,
+                        "name": "part__1__osc__2__coarse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__detune": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__2__detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__fine": {
+                        "def": 9,
+                        "max": 100,
+                        "min": -100,
+                        "name": "part__1__osc__2__fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__gain": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__osc__2__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__2__mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__octave": {
+                        "def": -2,
+                        "max": 3,
+                        "min": -3,
+                        "name": "part__1__osc__2__octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__2__pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__quality": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__2__quality",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__shape": {
+                        "def": 0.1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__2__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__stereo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__2__stereo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__unison": {
+                        "def": 1,
+                        "max": 7,
+                        "min": 1,
+                        "name": "part__1__osc__2__unison",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__2__wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__1__osc__2__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__oscmix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__oscmix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__oscmod": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__oscmod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__active": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "part__2__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__amp__level": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__2__amp__level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__1__A": {
+                        "def": 0.01,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__1__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__1__D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__1__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__1__L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__1__L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__1__R": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__1__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__1__S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__1__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__1__curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__2__eg__1__curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__1__curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__2__eg__1__curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__1__curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__2__eg__1__curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__1__detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__1__detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__1__pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__1__pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__1__shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__1__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__1__velocityTracker__gain__amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__1__velocityTracker__gain__amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__2__A": {
+                        "def": 0.01,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__2__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__2__D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__2__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__2__L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__2__L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__2__R": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__2__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__2__S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__2__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__2__curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__2__eg__2__curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__2__curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__2__eg__2__curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__2__curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__2__eg__2__curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__2__detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__2__detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__2__pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__2__pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__2__shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__2__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__2__velocityTracker__gain__amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__2__velocityTracker__gain__amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__3__A": {
+                        "def": 0.01,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__3__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__3__D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__3__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__3__L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__3__L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__3__R": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__3__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__3__S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__3__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__3__curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__2__eg__3__curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__3__curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__2__eg__3__curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__3__curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__2__eg__3__curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__3__velocityTracker__gain__amount": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__3__velocityTracker__gain__amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__4__A": {
+                        "def": 0.01,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__4__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__4__D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__4__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__4__L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__4__L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__4__R": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__4__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__4__S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__4__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__4__curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__2__eg__4__curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__4__curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__2__eg__4__curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__4__curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__2__eg__4__curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__eg__4__velocityTracker__gain__amount": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__eg__4__velocityTracker__gain__amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__filter__Q": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__2__filter__Q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__filter__bypass": {
+                        "def": 0.0,
+                        "max": false,
+                        "min": 0.0,
+                        "name": "part__2__filter__bypass",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__filter__drive": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__filter__drive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__filter__fc": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__filter__fc",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__filter__mode": {
+                        "def": 1.0,
+                        "max": 6,
+                        "min": 0.0,
+                        "name": "part__2__filter__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__1__amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__lfo__1__amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__1__delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__2__lfo__1__delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__1__gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__lfo__1__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__1__mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__2__lfo__1__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__1__pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__lfo__1__pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__1__pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__lfo__1__pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__1__rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__2__lfo__1__rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__1__shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__lfo__1__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__1__wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__2__lfo__1__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__2__amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__lfo__2__amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__2__delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__2__lfo__2__delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__2__gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__lfo__2__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__2__mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__2__lfo__2__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__2__pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__lfo__2__pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__2__pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__lfo__2__pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__2__rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__2__lfo__2__rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__2__shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__lfo__2__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__2__wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__2__lfo__2__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__3__amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__lfo__3__amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__3__delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__2__lfo__3__delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__3__mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__2__lfo__3__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__3__rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__2__lfo__3__rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__3__wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__2__lfo__3__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__4__amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__lfo__4__amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__4__delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__2__lfo__4__delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__4__mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__2__lfo__4__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__4__rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__2__lfo__4__rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__lfo__4__wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__2__lfo__4__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__active": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "part__2__osc__1__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__coarse": {
+                        "def": 0,
+                        "max": 12,
+                        "min": -12,
+                        "name": "part__2__osc__1__coarse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__detune": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__osc__1__detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__fine": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "part__2__osc__1__fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__gain": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__2__osc__1__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__osc__1__mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__octave": {
+                        "def": -1,
+                        "max": 3,
+                        "min": -3,
+                        "name": "part__2__osc__1__octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__osc__1__pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__quality": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__osc__1__quality",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__osc__1__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__stereo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__osc__1__stereo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__unison": {
+                        "def": 1,
+                        "max": 7,
+                        "min": 1,
+                        "name": "part__2__osc__1__unison",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__1__wave": {
+                        "def": 3,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__2__osc__1__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__active": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "part__2__osc__2__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__coarse": {
+                        "def": 0,
+                        "max": 12,
+                        "min": -12,
+                        "name": "part__2__osc__2__coarse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__detune": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__osc__2__detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__fine": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "part__2__osc__2__fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__gain": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__2__osc__2__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__osc__2__mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__octave": {
+                        "def": -1,
+                        "max": 3,
+                        "min": -3,
+                        "name": "part__2__osc__2__octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__osc__2__pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__quality": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__osc__2__quality",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__osc__2__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__stereo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__osc__2__stereo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__unison": {
+                        "def": 1,
+                        "max": 7,
+                        "min": 1,
+                        "name": "part__2__osc__2__unison",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__osc__2__wave": {
+                        "def": 3,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__2__osc__2__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__oscmix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__2__oscmix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__2__oscmod": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__2__oscmod",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "VOLT"
+                }
+            },
+            "VoltMini": {
+                "params": {
+                    "global__glide": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "global__glide",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "global__jr": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "global__jr",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "global__solo": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "global__solo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__active": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "part__1__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__amp__level": {
+                        "def": 0.56,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__amp__level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__A": {
+                        "def": 0.0253,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__D": {
+                        "def": 0.0082,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__R": {
+                        "def": 0.17,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__S": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__curveA": {
+                        "def": -0.41,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__1__curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__curveD": {
+                        "def": 0.35,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__1__curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__1__curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__shape": {
+                        "def": 0.07,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__1__velocityTracker__gain__amount": {
+                        "def": 0.58,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__1__velocityTracker__gain__amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__A": {
+                        "def": 0.0002,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__3__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__D": {
+                        "def": 0.0812,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__3__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__L": {
+                        "def": 0.87,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__3__L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__R": {
+                        "def": 0.0319,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__3__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__S": {
+                        "def": 0.22,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__3__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__curveA": {
+                        "def": 0.56,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__3__curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__curveD": {
+                        "def": -0.31,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__3__curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__3__curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__3__velocityTracker__gain__amount": {
+                        "def": 0.74,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__3__velocityTracker__gain__amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__A": {
+                        "def": 0.0005,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__4__A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__D": {
+                        "def": 0.0216,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__4__D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__4__L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__R": {
+                        "def": 0.0153,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__4__R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__eg__4__S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__4__curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__4__curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part__1__eg__4__curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__eg__4__velocityTracker__gain__amount": {
+                        "def": 0.77,
+                        "max": 1,
+                        "min": 0.77,
+                        "name": "part__1__eg__4__velocityTracker__gain__amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__filter__Q": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__filter__Q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__filter__bypass": {
+                        "def": 0,
+                        "max": false,
+                        "min": true,
+                        "name": "part__1__filter__bypass",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__filter__drive": {
+                        "def": 0.19783,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__filter__drive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__filter__fc": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__filter__fc",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__filter__mode": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__1__filter__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__1__amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__1__delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__1__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__lfo__1__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__1__pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__1__pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__1__rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__1__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__1__wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__1__lfo__1__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__3__amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__3__amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__3__delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__3__delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__3__mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__lfo__3__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__3__rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__3__rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__3__wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__1__lfo__3__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__4__amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__lfo__4__amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__4__delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__4__delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__4__mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__lfo__4__mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__4__rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part__1__lfo__4__rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__lfo__4__wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__1__lfo__4__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__active": {
+                        "def": 1,
+                        "max": true,
+                        "min": false,
+                        "name": "part__1__osc__1__active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__coarse": {
+                        "def": 0,
+                        "max": 12,
+                        "min": -12,
+                        "name": "part__1__osc__1__coarse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__detune": {
+                        "def": 0.14,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__1__detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__fine": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "part__1__osc__1__fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__gain": {
+                        "def": 0.8,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part__1__osc__1__gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__mix": {
+                        "def": 0.45,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__1__mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__octave": {
+                        "def": 1,
+                        "max": 3,
+                        "min": -3,
+                        "name": "part__1__osc__1__octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__1__pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__quality": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__1__quality",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__shape": {
+                        "def": 0.32,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__1__shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__stereo": {
+                        "def": 0.62,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part__1__osc__1__stereo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__unison": {
+                        "def": 7,
+                        "max": 7,
+                        "min": 1,
+                        "name": "part__1__osc__1__unison",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__osc__1__wave": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part__1__osc__1__wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__oscmix": {
+                        "def": 0.5,
+                        "max": 0.5,
+                        "min": 0.5,
+                        "name": "part__1__oscmix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part__1__oscmod": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "part__1__oscmod",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "VOLT Mini"
+                }
+            },
+            "WAM": {
+                "params": {},
+                "visual": {
+                    "name": "Metal Machine"
+                }
+            }
+        }
+    },
+    "plugin_wam": {
+        "objects": {
+            "AUGUR": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.27450981736183167,
+                        0.5098039507865906,
+                        0.7058823704719543
+                    ],
+                    "name": "Augur"
+                }
+            },
+            "DEXED": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.32549020648002625,
+                        0.3019607961177826,
+                        0.2666666805744171
+                    ],
+                    "name": "Dexed"
+                }
+            },
+            "Europa": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.6823529601097107,
+                        0.0941176488995552,
+                        0.027450980618596077
+                    ],
+                    "name": "Europa"
+                }
+            },
+            "OBXD": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.5176470875740051,
+                        0.6666666865348816,
+                        0.8392156958580017
+                    ],
+                    "name": "OBXD"
+                }
+            },
+            "WASABI_SC.CleanMachine": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.8901960849761963,
+                        0.7372549176216125,
+                        0.545098066329956
+                    ],
+                    "name": "Clean Machine"
+                }
+            },
+            "WASABI_SC.DistoMachine": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.7411764860153198,
+                        0.7450980544090271,
+                        0.7529411911964417
+                    ],
+                    "name": "Distortion Machine"
+                }
+            },
+            "WASABI_SC.MetalMachine": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.47058823704719543,
+                        0.47058823704719543,
+                        0.4745098054409027
+                    ],
+                    "name": "Metal Machine"
+                }
+            },
+            "WASABI_SC.Utility": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.47058823704719543,
+                        0.47058823704719543,
+                        0.4745098054409027
+                    ],
+                    "name": "Amp Sim Utility"
+                }
+            }
+        }
+    }
+}

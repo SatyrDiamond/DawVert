@@ -1,0 +1,1538 @@
+{
+    "inst": {
+        "objects": {
+            "0": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.01,
+                        0.66,
+                        0.96
+                    ],
+                    "name": "Elec. Piano (Classic)"
+                }
+            },
+            "1": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.6,
+                        0.0
+                    ],
+                    "name": "Acoustic Guitar"
+                }
+            },
+            "10": {
+                "group": "orchestra",
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.92,
+                        0.0
+                    ],
+                    "name": "Trombone"
+                }
+            },
+            "11": {
+                "group": "orchestra",
+                "visual": {
+                    "color": [
+                        0.55,
+                        0.43,
+                        0.39
+                    ],
+                    "name": "Violin"
+                }
+            },
+            "12": {
+                "group": "orchestra",
+                "visual": {
+                    "color": [
+                        0.31,
+                        0.2,
+                        0.18
+                    ],
+                    "name": "Cello"
+                }
+            },
+            "13": {
+                "group": "electronic",
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.39,
+                        0.39
+                    ],
+                    "name": "8-Bit Sine"
+                }
+            },
+            "14": {
+                "group": "electronic",
+                "visual": {
+                    "color": [
+                        0.46,
+                        1.0,
+                        0.39
+                    ],
+                    "name": "8-Bit Square"
+                }
+            },
+            "15": {
+                "group": "electronic",
+                "visual": {
+                    "color": [
+                        0.39,
+                        0.88,
+                        1.0
+                    ],
+                    "name": "8-Bit Sawtooth"
+                }
+            },
+            "16": {
+                "group": "electronic",
+                "visual": {
+                    "color": [
+                        0.99,
+                        0.39,
+                        1.0
+                    ],
+                    "name": "8-Bit Triangle"
+                }
+            },
+            "17": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.34,
+                        0.13
+                    ],
+                    "name": "Harpsichord"
+                }
+            },
+            "18": {
+                "group": "orchestra",
+                "visual": {
+                    "color": [
+                        0.11,
+                        0.37,
+                        0.13
+                    ],
+                    "name": "Concert Harp"
+                }
+            },
+            "19": {
+                "group": "perc",
+                "visual": {
+                    "color": [
+                        0.96,
+                        0.26,
+                        0.21
+                    ],
+                    "name": "Xylophone"
+                }
+            },
+            "2": {
+                "drumset": {
+                    "-1": {
+                        "visual": {
+                            "name": "Ride Cymbal 2"
+                        }
+                    },
+                    "-10": {
+                        "visual": {
+                            "name": "High Tom"
+                        }
+                    },
+                    "-11": {
+                        "visual": {
+                            "name": "Crash Cymbal 1"
+                        }
+                    },
+                    "-12": {
+                        "visual": {
+                            "name": "Hi-Mid Tom"
+                        }
+                    },
+                    "-13": {
+                        "visual": {
+                            "name": "Low-Mid Tom"
+                        }
+                    },
+                    "-14": {
+                        "visual": {
+                            "name": "Open Hi-Hat"
+                        }
+                    },
+                    "-15": {
+                        "visual": {
+                            "name": "Low Tom"
+                        }
+                    },
+                    "-16": {
+                        "visual": {
+                            "name": "Pedal Hi-Hat"
+                        }
+                    },
+                    "-17": {
+                        "visual": {
+                            "name": "High Floor Tom"
+                        }
+                    },
+                    "-18": {
+                        "visual": {
+                            "name": "Closed Hi-Hat"
+                        }
+                    },
+                    "-19": {
+                        "visual": {
+                            "name": "Low Floor Tom"
+                        }
+                    },
+                    "-2": {
+                        "visual": {
+                            "name": "Vibraslap"
+                        }
+                    },
+                    "-20": {
+                        "visual": {
+                            "name": "Electric Snare"
+                        }
+                    },
+                    "-21": {
+                        "visual": {
+                            "name": "Hand Clap"
+                        }
+                    },
+                    "-22": {
+                        "visual": {
+                            "name": "Acoustic Snare"
+                        }
+                    },
+                    "-23": {
+                        "visual": {
+                            "name": "Side Stick"
+                        }
+                    },
+                    "-24": {
+                        "visual": {
+                            "name": "Bass Drum 1"
+                        }
+                    },
+                    "-25": {
+                        "visual": {
+                            "name": "Acoustic Bass Drum"
+                        }
+                    },
+                    "-26": {
+                        "visual": {
+                            "name": "Metronome Bell"
+                        }
+                    },
+                    "-27": {
+                        "visual": {
+                            "name": "Metronome Click"
+                        }
+                    },
+                    "-28": {
+                        "visual": {
+                            "name": "Square Click"
+                        }
+                    },
+                    "-29": {
+                        "visual": {
+                            "name": "Sticks"
+                        }
+                    },
+                    "-3": {
+                        "visual": {
+                            "name": "Crash Symbol 2"
+                        }
+                    },
+                    "-30": {
+                        "visual": {
+                            "name": "Scratch Pull"
+                        }
+                    },
+                    "-31": {
+                        "visual": {
+                            "name": "Scratch Push"
+                        }
+                    },
+                    "-32": {
+                        "visual": {
+                            "name": "Slap"
+                        }
+                    },
+                    "-33": {
+                        "visual": {
+                            "name": "High Q"
+                        }
+                    },
+                    "-4": {
+                        "visual": {
+                            "name": "Cowbell"
+                        }
+                    },
+                    "-5": {
+                        "visual": {
+                            "name": "Splash Cymbal"
+                        }
+                    },
+                    "-6": {
+                        "visual": {
+                            "name": "Tambourine"
+                        }
+                    },
+                    "-7": {
+                        "visual": {
+                            "name": "Ride Bell"
+                        }
+                    },
+                    "-8": {
+                        "visual": {
+                            "name": "Chinese Cymbal"
+                        }
+                    },
+                    "-9": {
+                        "visual": {
+                            "name": "Ride Cymbal 1"
+                        }
+                    },
+                    "0": {
+                        "visual": {
+                            "name": "Hi Bongo"
+                        }
+                    },
+                    "1": {
+                        "visual": {
+                            "name": "Low Bongo"
+                        }
+                    },
+                    "10": {
+                        "visual": {
+                            "name": "Maracas"
+                        }
+                    },
+                    "11": {
+                        "visual": {
+                            "name": "Short Whistle"
+                        }
+                    },
+                    "12": {
+                        "visual": {
+                            "name": "Long Whistle"
+                        }
+                    },
+                    "13": {
+                        "visual": {
+                            "name": "Short Guiro"
+                        }
+                    },
+                    "14": {
+                        "visual": {
+                            "name": "Long Guiro"
+                        }
+                    },
+                    "15": {
+                        "visual": {
+                            "name": "Claves"
+                        }
+                    },
+                    "16": {
+                        "visual": {
+                            "name": "Hi Wood Block"
+                        }
+                    },
+                    "17": {
+                        "visual": {
+                            "name": "Low Wood Block"
+                        }
+                    },
+                    "18": {
+                        "visual": {
+                            "name": "Mute Cuica"
+                        }
+                    },
+                    "19": {
+                        "visual": {
+                            "name": "Open Cuica"
+                        }
+                    },
+                    "2": {
+                        "visual": {
+                            "name": "Mute Hi Conga"
+                        }
+                    },
+                    "20": {
+                        "visual": {
+                            "name": "Mute Triangle"
+                        }
+                    },
+                    "21": {
+                        "visual": {
+                            "name": "Open Triangle"
+                        }
+                    },
+                    "22": {
+                        "visual": {
+                            "name": "Shaker"
+                        }
+                    },
+                    "23": {
+                        "visual": {
+                            "name": "Jingle Bell"
+                        }
+                    },
+                    "24": {
+                        "visual": {
+                            "name": "Belltree"
+                        }
+                    },
+                    "25": {
+                        "visual": {
+                            "name": "Castanets"
+                        }
+                    },
+                    "26": {
+                        "visual": {
+                            "name": "Closed Surdo"
+                        }
+                    },
+                    "27": {
+                        "visual": {
+                            "name": "Open Surdo"
+                        }
+                    },
+                    "3": {
+                        "visual": {
+                            "name": "Open Hi Conga"
+                        }
+                    },
+                    "4": {
+                        "visual": {
+                            "name": "Low Conga"
+                        }
+                    },
+                    "5": {
+                        "visual": {
+                            "name": "High Timbale"
+                        }
+                    },
+                    "6": {
+                        "visual": {
+                            "name": "Low Timbale"
+                        }
+                    },
+                    "7": {
+                        "visual": {
+                            "name": "High Agogo"
+                        }
+                    },
+                    "8": {
+                        "visual": {
+                            "name": "Low Agogo"
+                        }
+                    },
+                    "9": {
+                        "visual": {
+                            "name": "Cabasa"
+                        }
+                    }
+                },
+                "group": "drumkit",
+                "visual": {
+                    "color": [
+                        0.72,
+                        0.11,
+                        0.11
+                    ],
+                    "name": "Drum Kit"
+                }
+            },
+            "20": {
+                "group": "orchestra",
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.88,
+                        0.7
+                    ],
+                    "name": "Pizzicato"
+                }
+            },
+            "21": {
+                "group": "perc",
+                "visual": {
+                    "color": [
+                        0.46,
+                        0.46,
+                        0.46
+                    ],
+                    "name": "Steel Drums"
+                }
+            },
+            "22": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.88,
+                        0.68,
+                        0.0
+                    ],
+                    "name": "Sitar"
+                }
+            },
+            "23": {
+                "group": "orchestra",
+                "visual": {
+                    "color": [
+                        0.91,
+                        0.98,
+                        0.74
+                    ],
+                    "name": "Flute"
+                }
+            },
+            "24": {
+                "group": "testing",
+                "visual": {
+                    "color": [
+                        0.66,
+                        0.78,
+                        0.33
+                    ],
+                    "name": "Saxophone"
+                }
+            },
+            "25": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.05,
+                        0.28,
+                        0.63
+                    ],
+                    "name": "Ragtime Piano"
+                }
+            },
+            "26": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.11,
+                        0.62,
+                        0.62
+                    ],
+                    "name": "Music Box"
+                }
+            },
+            "27": {
+                "group": "testing",
+                "visual": {
+                    "color": [
+                        0.12,
+                        0.77,
+                        0.48
+                    ],
+                    "name": "Synth Bass"
+                }
+            },
+            "28": {
+                "group": "testing",
+                "visual": {
+                    "color": [
+                        0.08,
+                        0.13,
+                        0.31
+                    ],
+                    "name": "Church Organ"
+                }
+            },
+            "29": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.02,
+                        0.06,
+                        0.18
+                    ],
+                    "name": "Slap Bass"
+                }
+            },
+            "3": {
+                "group": "electronic",
+                "visual": {
+                    "color": [
+                        0.91,
+                        0.12,
+                        0.39
+                    ],
+                    "name": "Smooth Synth"
+                }
+            },
+            "30": {
+                "group": "testing",
+                "visual": {
+                    "color": [
+                        0.42,
+                        0.95,
+                        0.72
+                    ],
+                    "name": "Pop Synth"
+                }
+            },
+            "31": {
+                "drumset": {
+                    "-1": {
+                        "visual": {
+                            "name": "Ride Cymbal 2"
+                        }
+                    },
+                    "-10": {
+                        "visual": {
+                            "name": "High Tom"
+                        }
+                    },
+                    "-11": {
+                        "visual": {
+                            "name": "Crash Cymbal 1"
+                        }
+                    },
+                    "-12": {
+                        "visual": {
+                            "name": "Hi-Mid Tom"
+                        }
+                    },
+                    "-13": {
+                        "visual": {
+                            "name": "Low-Mid Tom"
+                        }
+                    },
+                    "-14": {
+                        "visual": {
+                            "name": "Open Hi-Hat"
+                        }
+                    },
+                    "-15": {
+                        "visual": {
+                            "name": "Low Tom"
+                        }
+                    },
+                    "-16": {
+                        "visual": {
+                            "name": "Pedal Hi-Hat"
+                        }
+                    },
+                    "-17": {
+                        "visual": {
+                            "name": "High Floor Tom"
+                        }
+                    },
+                    "-18": {
+                        "visual": {
+                            "name": "Closed Hi-Hat"
+                        }
+                    },
+                    "-19": {
+                        "visual": {
+                            "name": "Low Floor Tom"
+                        }
+                    },
+                    "-2": {
+                        "visual": {
+                            "name": "Vibraslap"
+                        }
+                    },
+                    "-20": {
+                        "visual": {
+                            "name": "Electric Snare"
+                        }
+                    },
+                    "-21": {
+                        "visual": {
+                            "name": "Hand Clap"
+                        }
+                    },
+                    "-22": {
+                        "visual": {
+                            "name": "Acoustic Snare"
+                        }
+                    },
+                    "-23": {
+                        "visual": {
+                            "name": "Side Stick"
+                        }
+                    },
+                    "-24": {
+                        "visual": {
+                            "name": "Bass Drum 1"
+                        }
+                    },
+                    "-25": {
+                        "visual": {
+                            "name": "Acoustic Bass Drum"
+                        }
+                    },
+                    "-26": {
+                        "visual": {
+                            "name": "Metronome Bell"
+                        }
+                    },
+                    "-27": {
+                        "visual": {
+                            "name": "Metronome Click"
+                        }
+                    },
+                    "-28": {
+                        "visual": {
+                            "name": "Square Click"
+                        }
+                    },
+                    "-29": {
+                        "visual": {
+                            "name": "Sticks"
+                        }
+                    },
+                    "-3": {
+                        "visual": {
+                            "name": "Crash Symbol 2"
+                        }
+                    },
+                    "-30": {
+                        "visual": {
+                            "name": "Scratch Pull"
+                        }
+                    },
+                    "-31": {
+                        "visual": {
+                            "name": "Scratch Push"
+                        }
+                    },
+                    "-32": {
+                        "visual": {
+                            "name": "Slap"
+                        }
+                    },
+                    "-33": {
+                        "visual": {
+                            "name": "High Q"
+                        }
+                    },
+                    "-4": {
+                        "visual": {
+                            "name": "Cowbell"
+                        }
+                    },
+                    "-5": {
+                        "visual": {
+                            "name": "Splash Cymbal"
+                        }
+                    },
+                    "-6": {
+                        "visual": {
+                            "name": "Tambourine"
+                        }
+                    },
+                    "-7": {
+                        "visual": {
+                            "name": "Ride Bell"
+                        }
+                    },
+                    "-8": {
+                        "visual": {
+                            "name": "Chinese Cymbal"
+                        }
+                    },
+                    "-9": {
+                        "visual": {
+                            "name": "Ride Cymbal 1"
+                        }
+                    },
+                    "0": {
+                        "visual": {
+                            "name": "Hi Bongo"
+                        }
+                    },
+                    "1": {
+                        "visual": {
+                            "name": "Low Bongo"
+                        }
+                    },
+                    "10": {
+                        "visual": {
+                            "name": "Maracas"
+                        }
+                    },
+                    "11": {
+                        "visual": {
+                            "name": "Short Whistle"
+                        }
+                    },
+                    "12": {
+                        "visual": {
+                            "name": "Long Whistle"
+                        }
+                    },
+                    "13": {
+                        "visual": {
+                            "name": "Short Guiro"
+                        }
+                    },
+                    "14": {
+                        "visual": {
+                            "name": "Long Guiro"
+                        }
+                    },
+                    "15": {
+                        "visual": {
+                            "name": "Claves"
+                        }
+                    },
+                    "16": {
+                        "visual": {
+                            "name": "Hi Wood Block"
+                        }
+                    },
+                    "17": {
+                        "visual": {
+                            "name": "Low Wood Block"
+                        }
+                    },
+                    "18": {
+                        "visual": {
+                            "name": "Mute Cuica"
+                        }
+                    },
+                    "19": {
+                        "visual": {
+                            "name": "Open Cuica"
+                        }
+                    },
+                    "2": {
+                        "visual": {
+                            "name": "Mute Hi Conga"
+                        }
+                    },
+                    "20": {
+                        "visual": {
+                            "name": "Mute Triangle"
+                        }
+                    },
+                    "21": {
+                        "visual": {
+                            "name": "Open Triangle"
+                        }
+                    },
+                    "22": {
+                        "visual": {
+                            "name": "Shaker"
+                        }
+                    },
+                    "23": {
+                        "visual": {
+                            "name": "Jingle Bell"
+                        }
+                    },
+                    "24": {
+                        "visual": {
+                            "name": "Belltree"
+                        }
+                    },
+                    "25": {
+                        "visual": {
+                            "name": "Castanets"
+                        }
+                    },
+                    "26": {
+                        "visual": {
+                            "name": "Closed Surdo"
+                        }
+                    },
+                    "27": {
+                        "visual": {
+                            "name": "Open Surdo"
+                        }
+                    },
+                    "3": {
+                        "visual": {
+                            "name": "Open Hi Conga"
+                        }
+                    },
+                    "4": {
+                        "visual": {
+                            "name": "Low Conga"
+                        }
+                    },
+                    "5": {
+                        "visual": {
+                            "name": "High Timbale"
+                        }
+                    },
+                    "6": {
+                        "visual": {
+                            "name": "Low Timbale"
+                        }
+                    },
+                    "7": {
+                        "visual": {
+                            "name": "High Agogo"
+                        }
+                    },
+                    "8": {
+                        "visual": {
+                            "name": "Low Agogo"
+                        }
+                    },
+                    "9": {
+                        "visual": {
+                            "name": "Cabasa"
+                        }
+                    }
+                },
+                "group": "drumkit",
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.44,
+                        0.44
+                    ],
+                    "name": "Electric Drum Kit"
+                }
+            },
+            "32": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.63,
+                        0.65,
+                        0.21
+                    ],
+                    "name": "Jazz Guitar"
+                }
+            },
+            "33": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.92,
+                        0.47,
+                        0.0
+                    ],
+                    "name": "Koto"
+                }
+            },
+            "34": {
+                "group": "perc",
+                "visual": {
+                    "color": [
+                        0.33,
+                        0.79,
+                        0.79
+                    ],
+                    "name": "Vibraphone"
+                }
+            },
+            "35": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.5,
+                        0.25
+                    ],
+                    "name": "Muted E-Guitar"
+                }
+            },
+            "36": {
+                "drumset": {
+                    "-16": {
+                        "visual": {
+                            "name": "Click"
+                        }
+                    },
+                    "-17": {
+                        "visual": {
+                            "name": "High Tom"
+                        }
+                    },
+                    "-18": {
+                        "visual": {
+                            "name": "808 Cowbell"
+                        }
+                    },
+                    "-19": {
+                        "visual": {
+                            "name": "Mid Tom 1"
+                        }
+                    },
+                    "-20": {
+                        "visual": {
+                            "name": "Mid Tom 2"
+                        }
+                    },
+                    "-21": {
+                        "visual": {
+                            "name": "Low Tom 1"
+                        }
+                    },
+                    "-22": {
+                        "visual": {
+                            "name": "Low Tom 2"
+                        }
+                    },
+                    "-23": {
+                        "visual": {
+                            "name": "808 Cymbal"
+                        }
+                    },
+                    "-24": {
+                        "visual": {
+                            "name": "Open Hi-Hat"
+                        }
+                    },
+                    "-25": {
+                        "visual": {
+                            "name": "Closed Hi-Hat"
+                        }
+                    },
+                    "-26": {
+                        "visual": {
+                            "name": "Snare Click"
+                        }
+                    },
+                    "-27": {
+                        "visual": {
+                            "name": "Snare Drum 1"
+                        }
+                    },
+                    "-28": {
+                        "visual": {
+                            "name": "Snare Drum 2"
+                        }
+                    },
+                    "-29": {
+                        "visual": {
+                            "name": "Hand Clap 1"
+                        }
+                    },
+                    "-30": {
+                        "visual": {
+                            "name": "Hand Clap 2"
+                        }
+                    },
+                    "-31": {
+                        "visual": {
+                            "name": "Kick Drum 1"
+                        }
+                    },
+                    "-32": {
+                        "visual": {
+                            "name": "Kick Drum 2"
+                        }
+                    },
+                    "-33": {
+                        "visual": {
+                            "name": "Kick Drum 3"
+                        }
+                    }
+                },
+                "group": "drumkit_classic",
+                "visual": {
+                    "color": [
+                        0.5,
+                        0.06,
+                        0.28
+                    ],
+                    "name": "808 Drum Kit"
+                }
+            },
+            "37": {
+                "group": "testing",
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "name": "808 Bass"
+                }
+            },
+            "38": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.27,
+                        0.12
+                    ],
+                    "name": "Distortion Guitar"
+                }
+            },
+            "39": {
+                "drumset": {
+                    "-24": {
+                        "visual": {
+                            "name": "Snare Drum 1"
+                        }
+                    },
+                    "-25": {
+                        "visual": {
+                            "name": "Snare Drum 2"
+                        }
+                    },
+                    "-26": {
+                        "visual": {
+                            "name": "Snare Drum 3"
+                        }
+                    },
+                    "-27": {
+                        "visual": {
+                            "name": "Hi-Hat"
+                        }
+                    },
+                    "-28": {
+                        "visual": {
+                            "name": "Snare Drum 4"
+                        }
+                    },
+                    "-29": {
+                        "visual": {
+                            "name": "Kick Drum"
+                        }
+                    }
+                },
+                "group": "drumkit_classic",
+                "visual": {
+                    "color": [
+                        0.62,
+                        0.06,
+                        0.13
+                    ],
+                    "name": "8-Bit Drum Kit"
+                }
+            },
+            "4": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.3,
+                        0.69,
+                        0.31
+                    ],
+                    "name": "Electric Guitar"
+                }
+            },
+            "40": {
+                "drumset": {
+                    "-10": {
+                        "visual": {
+                            "name": "Tambourine"
+                        }
+                    },
+                    "-11": {
+                        "visual": {
+                            "name": "Ride Bell 1"
+                        }
+                    },
+                    "-12": {
+                        "visual": {
+                            "name": "Crash Cymbal 2"
+                        }
+                    },
+                    "-13": {
+                        "visual": {
+                            "name": "Ride Cymbal 1"
+                        }
+                    },
+                    "-14": {
+                        "visual": {
+                            "name": "Mid Tom 2"
+                        }
+                    },
+                    "-15": {
+                        "visual": {
+                            "name": "Crash Cymbal 1"
+                        }
+                    },
+                    "-16": {
+                        "visual": {
+                            "name": "Mid Tom 1"
+                        }
+                    },
+                    "-17": {
+                        "visual": {
+                            "name": "Low Tom 4"
+                        }
+                    },
+                    "-18": {
+                        "visual": {
+                            "name": "Loose Hi-Hat"
+                        }
+                    },
+                    "-19": {
+                        "visual": {
+                            "name": "Low Tom 3"
+                        }
+                    },
+                    "-2": {
+                        "visual": {
+                            "name": "Snare Drum 6"
+                        }
+                    },
+                    "-20": {
+                        "visual": {
+                            "name": "Open Hi-Hat"
+                        }
+                    },
+                    "-21": {
+                        "visual": {
+                            "name": "Low Tom 2"
+                        }
+                    },
+                    "-22": {
+                        "visual": {
+                            "name": "Closed Hi-Hat"
+                        }
+                    },
+                    "-23": {
+                        "visual": {
+                            "name": "Low Tom 1"
+                        }
+                    },
+                    "-24": {
+                        "visual": {
+                            "name": "Snare Drum 4"
+                        }
+                    },
+                    "-25": {
+                        "visual": {
+                            "name": "Snare Drum 3"
+                        }
+                    },
+                    "-26": {
+                        "visual": {
+                            "name": "Snare Drum 2"
+                        }
+                    },
+                    "-27": {
+                        "visual": {
+                            "name": "Snare Drum 1"
+                        }
+                    },
+                    "-28": {
+                        "visual": {
+                            "name": "Kick Drum 2"
+                        }
+                    },
+                    "-29": {
+                        "visual": {
+                            "name": "Kick Drum"
+                        }
+                    },
+                    "-3": {
+                        "visual": {
+                            "name": "Crash Cymbal 4"
+                        }
+                    },
+                    "-4": {
+                        "visual": {
+                            "name": "Snare Drum 5"
+                        }
+                    },
+                    "-5": {
+                        "visual": {
+                            "name": "Ride Bell 2"
+                        }
+                    },
+                    "-6": {
+                        "visual": {
+                            "name": "Ride Cymbal 2"
+                        }
+                    },
+                    "-7": {
+                        "visual": {
+                            "name": "Crash Cymbal 3"
+                        }
+                    },
+                    "-8": {
+                        "visual": {
+                            "name": "Cowbell"
+                        }
+                    },
+                    "-9": {
+                        "visual": {
+                            "name": "Splash Cymbal"
+                        }
+                    }
+                },
+                "group": "drumkit_classic",
+                "visual": {
+                    "color": [
+                        0.51,
+                        0.02,
+                        0.08
+                    ],
+                    "name": "2013 Drum Kit"
+                }
+            },
+            "41": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.08,
+                        0.4,
+                        0.75
+                    ],
+                    "name": "Grand Piano"
+                }
+            },
+            "42": {
+                "drumset": {
+                    "-14": {
+                        "visual": {
+                            "name": "Ride Cymbal"
+                        }
+                    },
+                    "-15": {
+                        "visual": {
+                            "name": "Crash Cymbal"
+                        }
+                    },
+                    "-16": {
+                        "visual": {
+                            "name": "Open Hi-Hat 1"
+                        }
+                    },
+                    "-17": {
+                        "visual": {
+                            "name": "Open Hi-Hat 2"
+                        }
+                    },
+                    "-18": {
+                        "visual": {
+                            "name": "Closed Hi-Hat 1"
+                        }
+                    },
+                    "-19": {
+                        "visual": {
+                            "name": "Closed Hi-Hat 2"
+                        }
+                    },
+                    "-20": {
+                        "visual": {
+                            "name": "Clap"
+                        }
+                    },
+                    "-21": {
+                        "visual": {
+                            "name": "Rim"
+                        }
+                    },
+                    "-22": {
+                        "visual": {
+                            "name": "High Tom 1"
+                        }
+                    },
+                    "-23": {
+                        "visual": {
+                            "name": "High Tom 2"
+                        }
+                    },
+                    "-24": {
+                        "visual": {
+                            "name": "Mid Tom 1"
+                        }
+                    },
+                    "-25": {
+                        "visual": {
+                            "name": "Mid Tom 2"
+                        }
+                    },
+                    "-26": {
+                        "visual": {
+                            "name": "Low Tom 1"
+                        }
+                    },
+                    "-27": {
+                        "visual": {
+                            "name": "Low Tom 2"
+                        }
+                    },
+                    "-28": {
+                        "visual": {
+                            "name": "Snare Drum 1"
+                        }
+                    },
+                    "-29": {
+                        "visual": {
+                            "name": "Snare Drum 2"
+                        }
+                    },
+                    "-30": {
+                        "visual": {
+                            "name": "Snare Drum 3"
+                        }
+                    },
+                    "-31": {
+                        "visual": {
+                            "name": "Kick Drum 1"
+                        }
+                    },
+                    "-32": {
+                        "visual": {
+                            "name": "Kick Drum 2"
+                        }
+                    },
+                    "-33": {
+                        "visual": {
+                            "name": "Kick Drum 3"
+                        }
+                    }
+                },
+                "group": "drumkit_classic",
+                "visual": {
+                    "color": [
+                        0.6,
+                        0.0,
+                        1.0
+                    ],
+                    "name": "909 Drum Kit"
+                }
+            },
+            "43": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.01,
+                        0.66,
+                        0.96
+                    ],
+                    "name": "Electric Piano"
+                }
+            },
+            "45": {
+                "group": "orchestra",
+                "visual": {
+                    "color": [
+                        0.31,
+                        0.2,
+                        0.18
+                    ],
+                    "name": "Cello (Sustain)"
+                }
+            },
+            "46": {
+                "group": "orchestra",
+                "visual": {
+                    "color": [
+                        0.55,
+                        0.43,
+                        0.39
+                    ],
+                    "name": "Violin (Sustain)"
+                }
+            },
+            "47": {
+                "group": "orchestra",
+                "visual": {
+                    "color": [
+                        0.56,
+                        0.46,
+                        1.0
+                    ],
+                    "name": "Strings (Sustain)"
+                }
+            },
+            "48": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.13,
+                        0.13,
+                        0.13
+                    ],
+                    "name": "Bass"
+                }
+            },
+            "49": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.88,
+                        0.83,
+                        0.09
+                    ],
+                    "name": "Clean Guitar"
+                }
+            },
+            "5": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.13,
+                        0.13,
+                        0.13
+                    ],
+                    "name": "Bass (Classic)"
+                }
+            },
+            "53": {
+                "group": "drumkit",
+                "visual": {
+                    "color": [
+                        0.44,
+                        0.0,
+                        0.65
+                    ],
+                    "name": "2023 Drum Kit"
+                }
+            },
+            "6": {
+                "group": "electronic",
+                "visual": {
+                    "color": [
+                        0.25,
+                        0.32,
+                        0.71
+                    ],
+                    "name": "Synth Pluck"
+                }
+            },
+            "7": {
+                "group": "electronic",
+                "visual": {
+                    "color": [
+                        0.8,
+                        0.86,
+                        0.22
+                    ],
+                    "name": "Scifi"
+                }
+            },
+            "8": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.08,
+                        0.4,
+                        0.75
+                    ],
+                    "name": "Grand Piano (Classic)"
+                }
+            },
+            "9": {
+                "group": "orchestra",
+                "visual": {
+                    "color": [
+                        0.51,
+                        0.47,
+                        0.09
+                    ],
+                    "name": "French Horn"
+                }
+            }
+        }
+    }
+}

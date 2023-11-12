@@ -181,8 +181,11 @@ class input_1bitdragon(plugin_input.base):
         tracks_master.create(cvpj_l, onebitd_volume)
         tracks_master.visual(cvpj_l, name='Master')
 
-        plugins.add_plug(cvpj_l, 'master-reverb', 'simple', 'reverb')
-        plugins.add_plug_fxdata(cvpj_l, 'master-reverb', int(onebitd_reverb), 0.5)
+        fx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'reverb')
+        fx_plugindata.fxvisual_add('Reverb', None)
+        fx_plugindata.fxdata_add(onebitd_reverb, 0.5)
+        fx_plugindata.to_cvpj(cvpj_l, 'master-reverb')
+
         fxslot.insert(cvpj_l, ['master'], 'audio', 'master-reverb')
 
         return json.dumps(cvpj_l)

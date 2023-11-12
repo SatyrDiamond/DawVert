@@ -1,8 +1,6 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_values
-
 # -------------------- wolfshaper --------------------
 
 def wolfshaper_init():
@@ -21,9 +19,11 @@ def wolfshaper_init():
 	wolfshaperparams['warpamount'] = 0.000000
 	wolfshaperparams['vwarptype'] = 0.000000
 	wolfshaperparams['vwarpamount'] = 0.000000
+
 def wolfshaper_setvalue(name, value):
 	global wolfshaperparams
 	wolfshaperparams[name] = value
+	
 def wolfshaper_addshape(cvpj_auto):
 	for cvpj_point in cvpj_auto['points']:
 		tension = data_values.get_value(cvpj_point, 'tension', 0)

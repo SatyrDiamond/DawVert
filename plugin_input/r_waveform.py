@@ -6,7 +6,7 @@ from functions import note_data
 from functions import song
 from functions import colors
 from functions import plugins
-from functions_plugin import waveform_values
+from functions import data_dataset
 from functions_tracks import tracks_r
 from functions_tracks import fxslot
 from lxml import etree
@@ -26,12 +26,12 @@ def get_plugins(xml_track, trackid):
             if plugintype not in ['volume', 'level']:
 
                 if plugintype != None:
-
                     pluginid = plugins.get_id()
 
                     if plugintype == '8bandEq':
-                        plugins.add_plug(cvpj_l, pluginid, 'universal', 'eq-bands')
-                        plugins.add_plug_data(cvpj_l, pluginid, 'num_bands', 8)
+
+                        fx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'eq-bands')
+                        fx_plugindata.dataval_add('num_bands', 8)
 
                         for num in range(8):
                             eqnumtxt = str(num+1)
@@ -57,39 +57,40 @@ def get_plugins(xml_track, trackid):
                                     pass
                                 else:
                                     band_q = (10-float(band_q))/10
-
+                                    
                                 band_freq = note_data.note_to_freq(band_freq-72)
-
-                                plugins.add_eqband(cvpj_l, pluginid, int(band_enable), band_freq, band_gain, band_shape, band_q, typenames[1])
+                                fx_plugindata.eqband_add(int(band_enable), band_freq, band_gain, band_shape, band_q, typenames[1])
+                        fx_plugindata.to_cvpj(cvpj_l, pluginid)
 
                     elif plugintype == 'comp':
-                        plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
-                        waveform_pvs = waveform_params[plugintype]
-                        for waveform_pv in waveform_pvs:
-                            #print('-', waveform_pv)
-                            paramtype, paramfb = waveform_pvs[waveform_pv]
-                            paramval = xml_getvalue(xml_part, waveform_pv, paramfb)
-                            if waveform_pv == 'attack': plugins.add_plug_param(cvpj_l, pluginid, 'attack', float(paramval)/1000, 'float', 'attack')
-                            if waveform_pv == 'inputDb': plugins.add_plug_param(cvpj_l, pluginid, 'pregain', float(paramval), 'float', 'pregain')
-                            if waveform_pv == 'knee': plugins.add_plug_param(cvpj_l, pluginid, 'knee', float(paramval), 'float', 'knee')
-                            if waveform_pv == 'outputDb': plugins.add_plug_param(cvpj_l, pluginid, 'postgain', float(paramval), 'float', 'postgain')
-                            if waveform_pv == 'ratio': plugins.add_plug_param(cvpj_l, pluginid, 'ratio', float(paramval), 'float', 'ratio')
-                            if waveform_pv == 'release': plugins.add_plug_param(cvpj_l, pluginid, 'release', float(paramval)/1000, 'float', 'release')
-                            if waveform_pv == 'sidechainTrigger': plugins.add_plug_param(cvpj_l, pluginid, 'sidechain_on', bool(paramval), 'float', 'sidechain on')
-                            if waveform_pv == 'threshold': plugins.add_plug_param(cvpj_l, pluginid, 'threshold', float(paramval), 'float', 'threshold')
+                        fx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'compressor')
+                        paramlist = dataset.params_list('plugin', plugintype)
+                        if paramlist:
+                            for paramid in paramlist:
+                                dset_paramdata = dataset.params_i_get('plugin', plugintype, paramid)
+                                paramtype, paramfb = dset_paramdata[1], dset_paramdata[2]
+                                paramval = xml_getvalue(xml_part, paramid, paramfb)
+                                if paramid == 'attack': fx_plugindata.param_add('attack', float(paramval)/1000, 'float', 'attack')
+                                if paramid == 'inputDb': fx_plugindata.param_add('pregain', float(paramval), 'float', 'pregain')
+                                if paramid == 'knee': fx_plugindata.param_add('knee', float(paramval), 'float', 'knee')
+                                if paramid == 'outputDb': fx_plugindata.param_add('postgain', float(paramval), 'float', 'postgain')
+                                if paramid == 'ratio': fx_plugindata.param_add('ratio', float(paramval), 'float', 'ratio')
+                                if paramid == 'release': fx_plugindata.param_add('release', float(paramval)/1000, 'float', 'release')
+                                if paramid == 'sidechainTrigger': fx_plugindata.param_add('sidechain_on', bool(paramval), 'float', 'sidechain on')
+                                if paramid == 'threshold': fx_plugindata.param_add('threshold', float(paramval), 'float', 'threshold')
+                            fx_plugindata.to_cvpj(cvpj_l, pluginid)
 
-                    elif plugintype in waveform_params:
-                        waveform_pvs = waveform_params[plugintype]
-                        plugins.add_plug(cvpj_l, pluginid, 'native-tracktion', plugintype)
-                        plugins.add_plug_fxdata(cvpj_l, pluginid, int(xml_getvalue(xml_part, 'enabled', 1)), 1)
-                        
-                        for waveform_pv in waveform_pvs:
-                            paramtype, paramfb = waveform_pvs[waveform_pv]
-                            paramval = xml_getvalue(xml_part, waveform_pv, paramfb)
-                            plugins.add_plug_param(cvpj_l, pluginid, waveform_pv, paramval, paramtype, waveform_pv)
+                    else:
+                        fx_plugindata = plugins.cvpj_plugin('deftype', 'native-tracktion', plugintype)
+                        paramlist = dataset.params_list('plugin', plugintype)
+                        if paramlist:
+                            for paramid in paramlist:
+                                dset_paramdata = dataset.params_i_get('plugin', plugintype, paramid)
+                                paramval = xml_getvalue(xml_part, paramid, dset_paramdata[2])
+                                fx_plugindata.param_add_dset(paramid, paramval, dataset, 'plugin', plugintype)
+                        fx_plugindata.fxdata_add(int(xml_getvalue(xml_part, 'enabled', 1)), 1)
                     
-                        if plugintype == 'pitchShifter': plugins.add_plug_data(cvpj_l, pluginid, 'elastiqueOptions', xml_getvalue(xml_part, 'elastiqueOptions', '1/0/0/0/64'))
-                        if plugintype == 'lowpass': plugins.add_plug_data(cvpj_l, pluginid, 'mode', xml_getvalue(xml_part, 'mode', 'lowpass'))
+                    fx_plugindata.to_cvpj(cvpj_l, pluginid)
 
                     if trackid == None: fxslot.insert(cvpj_l, ['master'], 'audio', pluginid)
                     else: fxslot.insert(cvpj_l, ['track', trackid], 'audio', pluginid)
@@ -109,7 +110,7 @@ class input_cvpj_f(plugin_input.base):
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
-        global waveform_params
+        global dataset
         global cvpj_l
         #bytestream = open(input_file, 'r')
         #file_data = bytestream.read()
@@ -119,7 +120,7 @@ class input_cvpj_f(plugin_input.base):
 
         cvpj_l = {}
 
-        waveform_params = waveform_values.devicesparam()
+        dataset = data_dataset.dataset('./data_dset/waveform.dset')
 
         tempo = 120
         timesig = [4,4]

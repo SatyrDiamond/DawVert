@@ -29,7 +29,7 @@ def resizewave(inputwave, **kwargs):
     numpoints = kwargs['points'] if 'points' in kwargs else 2048
     numpointshalf = numpoints // 2
     wave_data = []
-    smooth = kwargs['smooth'] if 'smooth' in kwargs else True if dur_input > 10 else False
+    smooth = kwargs['smooth'] if 'smooth' in kwargs else True if dur_input > 32 else False
 
     if smooth == False:
         for num in range(numpoints): 
@@ -72,8 +72,8 @@ def create_wave(shape, mul, pw, **kwargs):
         for num in range(numpoints): wave_data.append(wave_tri((num+halfpoint)/numpoints)**3)
     return wave_data
 
-def cvpjwave2wave(cvpj_l, pluginid, wave_name, **kwargs):
-    wavedata = plugins.get_wave(cvpj_l, pluginid, wave_name)
+def cvpjwave2wave(cvpj_plugdata, wave_name, **kwargs):
+    wavedata = cvpj_plugdata.wave_get(wave_name)
     if wavedata != None:
         wavedata_points = wavedata['points']
         if 'range' in wavedata:
@@ -82,15 +82,15 @@ def cvpjwave2wave(cvpj_l, pluginid, wave_name, **kwargs):
         return resizewave(wavedata_points, **kwargs)
     else: return None
 
-def wave2file(cvpj_l, pluginid, wave_name, fileloc):
-    wavedata = cvpjwave2wave(cvpj_l, pluginid, wave_name)
+def wave2file(cvpj_plugdata, wave_name, fileloc):
+    wavedata = cvpjwave2wave(cvpj_plugdata, wave_name)
     if wavedata != None:
         audiowavdata = [int(i*65535) for i in wavedata]
         wave_data = data_bytes.unsign_16(struct.pack('H'*len(audiowavdata), *audiowavdata))
         audio_wav.generate(fileloc, wave_data, 1, 44100, 16, None)
 
-def cvpjharm2wave(cvpj_l, pluginid, harm_name):
-    harmdata = plugins.get_harmonics(cvpj_l, pluginid, harm_name)
+def cvpjharm2wave(cvpj_plugdata, harm_name):
+    harmdata = cvpj_plugdata.harmonics_get(harm_name)
     if harmdata != None: 
         harmonics_data = harmdata['harmonics']
         wavedata_points = []
@@ -108,8 +108,8 @@ def cvpjharm2wave(cvpj_l, pluginid, harm_name):
         return wavedata_points
     else: return None
 
-def harm2file(cvpj_l, pluginid, harm_name, fileloc):
-    wavedata = cvpjharm2wave(cvpj_l, pluginid, harm_name)
+def harm2file(cvpj_plugdata, harm_name, fileloc):
+    wavedata = cvpjharm2wave(cvpj_plugdata, harm_name)
     audiowavdata = [int(i*65535) for i in wavedata]
     wave_data = data_bytes.unsign_16(struct.pack('H'*len(audiowavdata), *audiowavdata))
     audio_wav.generate(fileloc, wave_data, 1, 44100, 16, None)

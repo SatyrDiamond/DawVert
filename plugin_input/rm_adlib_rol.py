@@ -3,14 +3,14 @@
 
 from functions import note_data
 from functions import placement_data
-from functions import idvals
+from functions import data_dataset
 from functions import auto
 from functions import data_bytes
 from functions import plugins
 from functions import song
 from functions_tracks import tracks_rm
 from functions_tracks import auto_nopl
-from functions_plugparams import params_fm
+from functions_plugdata import plugin_fm
 
 import plugin_input
 import json
@@ -155,7 +155,8 @@ class input_adlib_rol(plugin_input.base):
         global cvpj_l
         song_file = open(input_file, 'rb')
         cvpj_l = {}
-        idvals_inst_adlib_rol = idvals.parse_idvalscsv('data_idvals/adlib_rol_inst.csv')
+        dataset = data_dataset.dataset('./data_dset/adlib_rol.dset')
+        dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
 
         adlib_bnk = None
         if 'extrafile' in extra_param:
@@ -163,7 +164,7 @@ class input_adlib_rol(plugin_input.base):
             numinst = len(adlib_bnk[0])
             for instname in adlib_bnk[0]:
                 instname_upper = instname.upper()
-                adlibrol_instname = idvals.get_idval(idvals_inst_adlib_rol, instname_upper, 'name')
+                adlibrol_instname, _ = dataset.object_get_name_color('inst', instname_upper)
                 tracks_rm.inst_create(cvpj_l, instname_upper)
                 tracks_rm.inst_visual(cvpj_l, instname_upper, name=adlibrol_instname)
                 tracks_rm.inst_pluginid(cvpj_l, instname_upper, instname_upper)
@@ -172,8 +173,6 @@ class input_adlib_rol(plugin_input.base):
                     opl2data = adlib_bnk[1][adlib_bnk[0][instname][0]]
 
                     fmdata = params_fm.fm_data('opl2')
-
-                    plugins.add_plug(cvpj_l, instname_upper, 'fm', 'opl2')
 
                     tracks_rm.inst_dataval_add(cvpj_l, instname_upper, 'instdata', 'middlenote', 0)
                     if opl2data[0][0] == 1: fmdata.set_param('perctype', opl2data[0][1]-6)
@@ -212,14 +211,8 @@ class input_adlib_rol(plugin_input.base):
                     fmdata.to_cvpj(cvpj_l, instname_upper)
                     
         else:
-            for instassocgm in idvals_inst_adlib_rol:
-                gmmidiinst = idvals_inst_adlib_rol[instassocgm]['gm_inst']
-                rolname = idvals_inst_adlib_rol[instassocgm]['name']
-                tracks_rm.inst_create(cvpj_l, instassocgm)
-                tracks_rm.inst_visual(cvpj_l, instassocgm, name=rolname)
-                if gmmidiinst != None:
-                    plugins.add_plug_gm_midi(cvpj_l, instassocgm, 0, gmmidiinst-1)
-                    tracks_rm.inst_pluginid(cvpj_l, instassocgm, instassocgm)
+            for instid in dataset.midito_list('inst'):
+                tracks_rm.import_dset(cvpj_l, instid, dataset, dataset_midi, None, None)
 
         rol_header_majorVersion = int.from_bytes(song_file.read(2), 'little')
         print("[input-adlib_rol] majorVersion: " + str(rol_header_majorVersion))

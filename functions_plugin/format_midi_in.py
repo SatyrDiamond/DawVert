@@ -18,9 +18,7 @@ from functions_tracks import auto_nopl
 
 import chardet	
 
-idvals_midi_ctrl = idvals.parse_idvalscsv('data_idvals/midi_ctrl.csv')
 idvals_midi_inst = idvals.parse_idvalscsv('data_idvals/midi_inst.csv')
-idvals_midi_inst_drums = idvals.parse_idvalscsv('data_idvals/midi_inst_drums.csv')
 idvals_midi_inst_group = idvals.parse_idvalscsv('data_idvals/midi_inst_group.csv')
 
 tracknumber = 0
@@ -325,8 +323,9 @@ def song_end(cvpj_l):
 		instname = used_inst[4]
 		instcolor = used_inst[5]
 
-		if used_inst[3] == 0: plugins.add_plug_gm_midi(cvpj_l, instid, used_inst[2], used_inst[1])
-		else: plugins.add_plug_gm_midi(cvpj_l, instid, 128, 1)
+		if used_inst[3] == 0: inst_plugindata = plugins.cvpj_plugin('midi', used_inst[2], used_inst[1])
+		else: inst_plugindata = plugins.cvpj_plugin('midi', 128, used_inst[1])
+		inst_plugindata.to_cvpj(cvpj_l, instid)
 
 		tracks_rm.inst_create(cvpj_l, instid)
 		tracks_rm.inst_visual(cvpj_l, instid, name=instname, color=instcolor)
@@ -434,29 +433,35 @@ def song_end(cvpj_l):
 				fxrack.addsend(cvpj_l, midi_channum+1, sendtofx, out_param, sendname)
 
 	if usedeffects[0] == True:
-		plugins.add_plug(cvpj_l, 'plugin-reverb', 'simple', 'reverb')
-		plugins.add_plug(cvpj_l, 'plugin-chorus', 'simple', 'chorus')
-		plugins.add_plug_fxdata(cvpj_l, 'master-reverb', 1, 0.5)
-		plugins.add_plug_fxdata(cvpj_l, 'master-chorus', 1, 0.5)
-		plugins.add_plug_fxvisual(cvpj_l, 'plugin-reverb', 'Reverb', None)
-		plugins.add_plug_fxvisual(cvpj_l, 'plugin-chorus', 'Chorus', None)
+		fx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'reverb')
+		fx_plugindata.fxdata_add(1, 0.5)
+		fx_plugindata.fxvisual_add('Reverb', None)
+		fx_plugindata.to_cvpj(cvpj_l, 'plugin-reverb')
 		fxrack.add(cvpj_l, song_channels+1, 1.0, None, name="[S] Reverb", color=[0.4, 0.4, 0.4])
-		fxrack.add(cvpj_l, song_channels+2, 1.0, None, name="[S] Chorus", color=[0.4, 0.4, 0.4])
 		fxslot.insert(cvpj_l, ['fxrack', song_channels+1], 'audio', 'plugin-reverb')
-		fxslot.insert(cvpj_l, ['fxrack', song_channels+2], 'audio', 'plugin-chorus')
 		fxrack.addsend(cvpj_l, song_channels+1, 0, 1, None)
+
+		fx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'chorus')
+		fx_plugindata.fxdata_add(1, 0.5)
+		fx_plugindata.fxvisual_add('Chorus', None)
+		fx_plugindata.to_cvpj(cvpj_l, 'plugin-chorus')
+		fxrack.add(cvpj_l, song_channels+2, 1.0, None, name="[S] Chorus", color=[0.4, 0.4, 0.4])
+		fxslot.insert(cvpj_l, ['fxrack', song_channels+2], 'audio', 'plugin-chorus')
 		fxrack.addsend(cvpj_l, song_channels+2, 0, 1, None)
 
 	if usedeffects[1] == True:
-		plugins.add_plug(cvpj_l, 'plugin-tremelo', 'simple', 'tremelo-send')
-		plugins.add_plug(cvpj_l, 'plugin-phaser', 'simple', 'phaser-send')
-		plugins.add_plug_fxvisual(cvpj_l, 'plugin-tremelo', 'Tremelo', None)
-		plugins.add_plug_fxvisual(cvpj_l, 'plugin-phaser', 'Phaser', None)
+		fx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'tremelo')
+		fx_plugindata.fxvisual_add('Tremelo', None)
+		fx_plugindata.to_cvpj(cvpj_l, 'plugin-tremelo')
 		fxrack.add(cvpj_l, song_channels+3, 1.0, None, name="[S] Tremelo", color=[0.4, 0.4, 0.4])
-		fxrack.add(cvpj_l, song_channels+4, 1.0, None, name="[S] Phaser", color=[0.4, 0.4, 0.4])
 		fxslot.insert(cvpj_l, ['fxrack', song_channels+3], 'audio', 'plugin-tremelo')
-		fxslot.insert(cvpj_l, ['fxrack', song_channels+4], 'audio', 'plugin-phaser')
 		fxrack.addsend(cvpj_l, song_channels+3, 0, 1, None)
+
+		fx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'phaser')
+		fx_plugindata.fxvisual_add('Phaser', None)
+		fx_plugindata.to_cvpj(cvpj_l, 'plugin-phaser')
+		fxrack.add(cvpj_l, song_channels+4, 1.0, None, name="[S] Phaser", color=[0.4, 0.4, 0.4])
+		fxslot.insert(cvpj_l, ['fxrack', song_channels+4], 'audio', 'plugin-phaser')
 		fxrack.addsend(cvpj_l, song_channels+4, 0, 1, None)
 
 	veryfirstnotepos = getbeforenoteall(firstchanusepos)

@@ -128,21 +128,17 @@ class input_s3m(plugin_input.base):
             else: cvpj_inst_name = ' '
 
             wave_path = samplefolder+str(s3m_numinst).zfill(2)+'.wav'
-            if s3m_inst_type == 1:
-                cvpj_inst_color = [0.65, 0.57, 0.33]
-                plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, wave_path)
-            else:
-                cvpj_inst_color = [0.32, 0.27, 0.16]
+            inst_plugindata = plugins.cvpj_plugin('sampler', wave_path, None)
+            if s3m_inst_type == 1: cvpj_inst_color = [0.65, 0.57, 0.33]
+            else: cvpj_inst_color = [0.32, 0.27, 0.16]
 
             tracks_mi.inst_create(cvpj_l, cvpj_instid)
             tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_inst_name, color=cvpj_inst_color)
-            tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-
             tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
 
-            plugins.add_plug_data(cvpj_l, pluginid, 'length', s3m_inst_length)
-            plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
-            plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
+            inst_plugindata.dataval_add('length', s3m_inst_length)
+            inst_plugindata.dataval_add('trigger', 'normal')
+            inst_plugindata.dataval_add('point_value_type', "samples")
 
             if cvpj_inst_samplelocation != 0 and s3m_inst_length != 0:
                 cvpj_loop = {}
@@ -155,7 +151,7 @@ class input_s3m(plugin_input.base):
                     cvpj_loop['enabled'] = 0
                     loopdata = None
 
-                plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
+                inst_plugindata.dataval_add('loop', cvpj_loop)
 
                 print("[input-st3] Ripping Sample " + str(s3m_numinst))
                 bio_mainfile.seek(cvpj_inst_samplelocation)
@@ -179,6 +175,9 @@ class input_s3m(plugin_input.base):
                 if s3m_inst_16bit == 1 and s3m_samptype == 2: wave_sampledata = data_bytes.unsign_16(wave_sampledata)
                 audio_wav.generate(wave_path, wave_sampledata, wave_channels, s3m_inst_c2spd, wave_bits, loopdata)
 
+            if s3m_inst_type == 1: 
+                inst_plugindata.to_cvpj(cvpj_l, pluginid)
+                tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
             s3m_numinst += 1
 
         patterncount = 1

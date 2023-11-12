@@ -55,17 +55,18 @@ delaytime = [
 
 def get_plugins(xml_tag, cvpj_fxids):
     for cvpj_fxid in cvpj_fxids:
-        plugtype = plugins.get_plug_type(cvpj_l, cvpj_fxid)
-        fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, cvpj_fxid)
+        fx_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, cvpj_fxid)
+        plugtype = fx_plugindata.type_get()
+        fx_on, fx_wet = fx_plugindata.fxdata_get()
 
         if plugtype == ['universal', 'eq-bands']:
             wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
             wf_PLUGIN.set('type', '8bandEq')
             wf_PLUGIN.set('presetDirty', '1')
-            num_bands = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'num_bands', 8)
+            num_bands = fx_plugindata.dataval_get('num_bands', 8)
 
-            cvpj_bands_a = plugins.get_eqband(cvpj_l, cvpj_fxid, None)
-            cvpj_bands_b = plugins.get_eqband(cvpj_l, cvpj_fxid, 'b')
+            cvpj_bands_a = fx_plugindata.eqband_get(None)
+            cvpj_bands_b = fx_plugindata.eqband_get('b')
 
             for typedata in [['lm',cvpj_bands_a], ['rs',cvpj_bands_b]]:
                 for num in range(min(len(typedata[1]),8)):
@@ -101,9 +102,9 @@ def get_plugins(xml_tag, cvpj_fxids):
 
 
         elif plugtype == ['universal', 'delay-c']:
-            d_time_type = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'time_type', 'seconds')
-            d_time = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'time', 1)
-            d_feedback = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'feedback', 0.0)
+            d_time_type = fx_plugindata.dataval_get('time_type', 'seconds')
+            d_time = fx_plugindata.dataval_get('time', 1)
+            d_feedback = fx_plugindata.dataval_get('feedback', 0.0)
 
             wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
             wf_PLUGIN.set('type', 'stereoDelay')
@@ -136,14 +137,14 @@ def get_plugins(xml_tag, cvpj_fxids):
             wf_PLUGIN.set('presetDirty', '1')
             wf_PLUGIN.set('enabled', str(fx_on))
 
-            v_attack = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'attack', 0)[0]*1000
-            v_postgain = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'postgain', 0)[0]
-            v_pregain = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'pregain', 0)[0]
-            v_ratio = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'ratio', 0)[0]
-            v_knee = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'knee', 0)[0]
-            v_release = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'release', 0)[0]*1000
-            v_sidechain_on = int(plugins.get_plug_param(cvpj_l, cvpj_fxid, 'sidechain_on', 0)[0])
-            v_threshold = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'threshold', 0)[0]
+            v_attack = cvpj_plugindata.param_get('attack', 0)[0]*1000
+            v_postgain = cvpj_plugindata.param_get('postgain', 0)[0]
+            v_pregain = cvpj_plugindata.param_get('pregain', 0)[0]
+            v_ratio = cvpj_plugindata.param_get('ratio', 0)[0]
+            v_knee = cvpj_plugindata.param_get('knee', 0)[0]
+            v_release = cvpj_plugindata.param_get('release', 0)[0]*1000
+            v_sidechain_on = int(cvpj_plugindata.param_get('sidechain_on', 0)[0])
+            v_threshold = cvpj_plugindata.param_get('threshold', 0)[0]
 
             wf_PLUGIN.set('threshold', str(v_threshold))
             wf_PLUGIN.set('ratio', str(v_ratio))
@@ -162,7 +163,7 @@ def get_plugins(xml_tag, cvpj_fxids):
 
             for waveform_param in waveform_params[plugtype[1]]:
                 defvaluevals = waveform_params[plugtype[1]][waveform_param]
-                paramdata = plugins.get_plug_param(cvpj_l, cvpj_fxid, waveform_param, defvaluevals[1])[0]
+                paramdata = cvpj_plugindata.param_get(waveform_param, defvaluevals[1])[0]
                 wf_PLUGIN.set(waveform_param, str(paramdata))
 
 

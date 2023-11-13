@@ -377,10 +377,10 @@ def encode_devices(amped_tr_devices, trackid, amped_autodata):
         #    device_plugindata.fxvisual_add(devicetype[1], None)
         #    device_plugindata.to_cvpj(cvpj_l, pluginid)
 
-        #    if is_instrument == True: tracks_r.track_inst_pluginid(cvpj_l, trackid, pluginid)
-        #    else:
-        #        if trackid == None: fxslot.insert(cvpj_l, ['master'], 'audio', pluginid)
-        #        else: fxslot.insert(cvpj_l, ['track', trackid], 'audio', pluginid)
+        if is_instrument == True: tracks_r.track_inst_pluginid(cvpj_l, trackid, pluginid)
+        else:
+            if trackid == None: fxslot.insert(cvpj_l, ['master'], 'audio', pluginid)
+            else: fxslot.insert(cvpj_l, ['track', trackid], 'audio', pluginid)
 
 def ampedauto_to_cvpjauto(autopoints):
     ampedauto = []

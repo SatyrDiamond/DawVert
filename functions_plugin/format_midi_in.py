@@ -4,8 +4,8 @@
 from functions import placement_data
 from functions import note_data
 from functions import data_values
-from functions import idvals
 from functions import midi_exdata
+from functions import data_dataset
 from functions import params
 from functions import plugins
 from functions import song
@@ -18,8 +18,7 @@ from functions_tracks import auto_nopl
 
 import chardet	
 
-idvals_midi_inst = idvals.parse_idvalscsv('data_idvals/midi_inst.csv')
-idvals_midi_inst_group = idvals.parse_idvalscsv('data_idvals/midi_inst_group.csv')
+dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
 
 tracknumber = 0
 
@@ -308,13 +307,8 @@ def song_end(cvpj_l):
 
 	for instnum in range(len(used_insts)):
 		used_inst = used_insts[instnum]
-		if used_inst[3] == 0: 
-			instname = idvals.get_idval(idvals_midi_inst, str(used_inst[1]), 'name')
-			instcolor = idvals.get_idval(idvals_midi_inst, str(used_inst[1]), 'color')
-		else:
-			instname = 'Drums'
-			instcolor = [0.81, 0.80, 0.82]
-
+		if used_inst[3] == 0: instname, instcolor = dataset_midi.object_get_name_color('inst', str(used_inst[1]))
+		else: instname, instcolor = 'Drums', [0.81, 0.80, 0.82]
 		used_insts[instnum] += [instname,instcolor]
 
 	for used_inst in used_insts:
@@ -336,11 +330,14 @@ def song_end(cvpj_l):
 		s_fx_usedinstid = fx_usedinstid[fxnum]
 
 		for i_fx_usedinstid in s_fx_usedinstid:
-			groupname = idvals.get_idval(idvals_midi_inst, str(i_fx_usedinstid[1]), 'group')
+			_, groupname = dataset_midi.object_group_get('inst', str(i_fx_usedinstid[1]))
 			i_fx_usedinstid.append(groupname)
 
 		fx_name = None
 		fx_color = None
+
+		name_usable = []
+		color_usable = []
 
 		usedinlen = len(s_fx_usedinstid)
 		if usedinlen == 1:
@@ -349,22 +346,16 @@ def song_end(cvpj_l):
 			iftrackname = (global_miditracks[usedinstid[0]][1] not in [None, '']) and tracknum != 1
 			iftrackcolor = global_miditracks[usedinstid[0]][4]
 
-			if fx_name == None and iftrackname: 
-				fx_n_namefrom, fx_name = '1_track', global_miditracks[usedinstid[0]][1]
-			if fx_name == None: 
-				if usedinstid[3] == 0: 
-					fx_n_namefrom, fx_name = '1_inst', idvals.get_idval(idvals_midi_inst, str(usedinstid[1]), 'name')
-				else: 
-					fx_n_namefrom, fx_name = '1_drums', 'Drums'
-	
-			if fx_color == None and iftrackcolor != None:
-				fx_c_namefrom, fx_color = '1_track', global_miditracks[usedinstid[0]][4]
-			if fx_color == None:
-				if usedinstid[3] == 0: 
-					fx_c_namefrom, fx_color = '1_inst', idvals.get_idval(idvals_midi_inst, str(usedinstid[1]), 'color')
-				else: 
-					fx_c_namefrom, fx_color = '1_drums',[0.81, 0.80, 0.82]
-	
+			if iftrackname: name_usable.append(global_miditracks[usedinstid[0]][1])
+			color_usable.append(global_miditracks[usedinstid[0]][4])
+
+			if usedinstid[3]:
+				name_usable.append('Drums')
+				color_usable.append([0.81, 0.80, 0.82])
+
+			fx_name, fx_color = dataset_midi.object_get_name_color('inst', str(usedinstid[1]))
+			name_usable.append(fx_name)
+			color_usable.append(fx_color)
 
 		elif usedinlen > 1:
 			ifsametrackid = data_values.ifallsame([s_fx_usedinstid[x][0] for x in range(usedinlen)])
@@ -372,35 +363,36 @@ def song_end(cvpj_l):
 			ifsamegroups = data_values.ifallsame([s_fx_usedinstid[x][4] for x in range(usedinlen)])
 			ifsamealldrums = data_values.ifallsame([s_fx_usedinstid[x][3] for x in range(usedinlen)]) and s_fx_usedinstid[0][3]
 
-			fx_n_namefrom = None
-			fx_c_namefrom = None
+			if ifsametrackid:
+				name_usable.append(global_miditracks[s_fx_usedinstid[0][0]][1])
+				color_usable.append(global_miditracks[s_fx_usedinstid[0][0]][4])
 
-			if fx_name == None and ifsametrackid: fx_n_namefrom, fx_name = 'track', global_miditracks[s_fx_usedinstid[0][0]][1]
-			if fx_name == None and ifsameinstid: 
-				if ifsamealldrums: fx_n_namefrom, fx_name = 'inst-drums', 'Drums'
-				else: fx_n_namefrom, fx_name = 'inst', idvals.get_idval(idvals_midi_inst, str(s_fx_usedinstid[0][1]), 'name')
-			if fx_name == None and ifsamegroups: fx_n_namefrom, fx_name = 'groups', idvals.get_idval(idvals_midi_inst_group, str(s_fx_usedinstid[0][4]), 'name')
-			if fx_name == None and ifsamealldrums: fx_n_namefrom, fx_name = 'drums', 'Drums'
-			if fx_name == None:
-				usedgroups = list(set([s_fx_usedinstid[x][4] for x in range(usedinlen)]))
-				usedgroups = [idvals.get_idval(idvals_midi_inst_group, x, 'name') for x in usedgroups]
-				fx_n_namefrom, fx_name = 'mulgroup', ' + '.join(usedgroups)
+			if ifsameinstid:
+				if not ifsamealldrums: 
+					name, color = dataset_midi.object_visual_get('inst', used_inst[1])
+					name_usable.append(name)
+					color_usable.append(color)
 
+			if ifsamegroups: 
+				name, color = dataset_midi.groups_get_name_color('inst', s_fx_usedinstid[0][4])
+				name_usable.append(name)
+				color_usable.append(color)
 
-			if fx_color == None and ifsametrackid: fx_c_namefrom, fx_color = 'track', global_miditracks[s_fx_usedinstid[0][0]][4]
-			if fx_color == None and ifsamealldrums: fx_c_namefrom, fx_color = 'drums', [0.81, 0.80, 0.82]
-			if fx_color == None and ifsameinstid: fx_c_namefrom, fx_color = 'inst', idvals.get_idval(idvals_midi_inst, str(s_fx_usedinstid[0][1]), 'color')
-			if fx_color == None and ifsamegroups: fx_c_namefrom, fx_color = 'groups', idvals.get_idval(idvals_midi_inst_group, str(s_fx_usedinstid[0][4]), 'color')
-			if fx_color == None: fx_c_namefrom, fx_color = 'none', [0.4, 0.4, 0.4]
+			usedgroups = list(set([s_fx_usedinstid[x][4] for x in range(usedinlen)]))
+			usedgroups = [dataset_midi.groups_get_name_color('inst', s_fx_usedinstid[0][4])[0] for x in usedgroups]
+			name_usable.append(' + '.join(usedgroups))
 
-		#if usedinlen != 0: print(
-		#	fxnum, usedinlen, '|', 
-		#	fx_n_namefrom, fx_name, '|', 
-		#	fx_c_namefrom, fx_color, '|', 
-		#	s_fx_usedinstid)
+			if ifsamealldrums: 
+				name_usable.append('Drums')
+				color_usable.append([0.81, 0.80, 0.82])
 
-		if fx_name != None: fxchannames[fxnum] = fx_name
-		if fx_color != None: fxchancolors[fxnum] = fx_color
+			color_usable.append([0.4, 0.4, 0.4])
+
+		out_name = data_values.list_usefirst(name_usable)
+		out_color = data_values.list_usefirst(color_usable)
+
+		if out_name != None: fxchannames[fxnum] = out_name
+		if out_color != None: fxchancolors[fxnum] = out_color
 
 	fxrack.add(cvpj_l, 0, 1.0, None, name="Master", color=[0.3, 0.3, 0.3])
 

@@ -212,7 +212,7 @@ class input_adlib_rol(plugin_input.base):
                     
         else:
             for instid in dataset.midito_list('inst'):
-                tracks_rm.import_dset(cvpj_l, instid, dataset, dataset_midi, None, None)
+                tracks_rm.import_dset(cvpj_l, instid, instid, dataset, dataset_midi, None, None)
 
         rol_header_majorVersion = int.from_bytes(song_file.read(2), 'little')
         print("[input-adlib_rol] majorVersion: " + str(rol_header_majorVersion))

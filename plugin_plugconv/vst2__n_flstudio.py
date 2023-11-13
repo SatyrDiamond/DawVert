@@ -17,6 +17,7 @@ from functions_plugparams import wave
 from functions_plugdata import plugin_kickmess
 from functions_plugdata import plugin_vital
 from functions_plugdata import plugin_wolfshaper
+from functions_plugdata import plugin_socalabs
 
 
 simsynth_shapes = {0.4: 'noise', 0.3: 'sine', 0.2: 'square', 0.1: 'saw', 0.0: 'triangle'}
@@ -288,7 +289,7 @@ class plugconv(plugin_plugconv.base):
         elif flpluginname == 'fruity spectroman':
             print("[plug-conv] FL Studio to VST2: Fruity Spectroman > SocaLabs's SpectrumAnalyzer:",pluginid)
             spectroman_mode = getparam('outputmode')
-            data_socalabs = plugin_socalabs.socalabs_data()
+            data_socalabs = plugin_socalabs.socalabs_data(cvpj_plugindata)
             data_socalabs.set_param("mode", float(spectroman_mode))
             data_socalabs.set_param("log", 1.0)
             data_socalabs.to_cvpj_vst2(cvpj_plugindata, 1399874915)

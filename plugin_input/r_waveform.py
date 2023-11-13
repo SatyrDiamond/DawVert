@@ -23,10 +23,17 @@ def get_plugins(xml_track, trackid):
     for xml_part in xml_track:
         if xml_part.tag == 'PLUGIN':
             plugintype = xml_part.get('type')
+
+            plugin_xpos = x_device.get('windowX')
+            plugin_ypos = x_device.get('windowY')
+
             if plugintype not in ['volume', 'level']:
 
                 if plugintype != None:
                     pluginid = plugins.get_id()
+
+                    if plugin_xpos and plugin_ypos:
+                        song.add_visual_window(cvpj_l, 'plugin', pluginid, [int(plugin_xpos), int(plugin_ypos)], None, False, False)
 
                     if plugintype == '8bandEq':
 

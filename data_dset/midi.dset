@@ -282,16 +282,6 @@
     },
     "inst": {
         "groups": {
-            "ethnic": {
-                "visual": {
-                    "color": [
-                        0.45,
-                        0.18,
-                        0.15
-                    ],
-                    "name": "Ethnic"
-                }
-            },
             "bass": {
                 "visual": {
                     "color": [
@@ -330,6 +320,16 @@
                         0.02
                     ],
                     "name": "Ensembles"
+                }
+            },
+            "ethnic": {
+                "visual": {
+                    "color": [
+                        0.45,
+                        0.18,
+                        0.15
+                    ],
+                    "name": "Ethnic"
                 }
             },
             "guitar": {

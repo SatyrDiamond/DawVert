@@ -5,6 +5,7 @@ import base64
 import struct
 import os
 import math
+import varint
 from functions import data_bytes
 from functions import data_values
 from functions import plugins
@@ -46,8 +47,9 @@ envshapes = {
 }
 
 def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
-    fl_plugstr = BytesIO(chunkpdata)
+    fl_plugstr = BytesIO(chunkpdata if chunkpdata else b'')
     pluginname = pluginname.lower()
+    cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
 
     # ------------------------------------------------------------------------------------------- VST
     if pluginname == 'fruity wrapper':
@@ -80,6 +82,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
         if 'plugin_info' in wrapperdata:
             wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
             if 'fourid' in wrapperdata:
+                cvpj_plugindata = plugins.cvpj_plugin('deftype', 'vst2', None)
                 pluginstate = wrapperdata['state']
                 wrapper_vststate = pluginstate[0:9]
                 wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
@@ -88,8 +91,8 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
                 wrapper_vstdata = pluginstate[21:]
 
                 if wrapper_vststate == b'\xf7\xff\xff\xff\r\xfe\xff\xff\xff':
-                    plugin_vst2.replace_data(cvpj_l, pluginid, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
-                    plugins.add_plug_data(cvpj_l, pluginid, 'current_program', wrapper_vstprogram)
+                    plugin_vst2.replace_data(cvpj_plugindata, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
+                    cvpj_plugindata.dataval_add('current_program', wrapper_vstprogram)
 
                 if wrapper_vststate == b'\xf7\xff\xff\xff\x05\xfe\xff\xff\xff':
                     stream_data = BytesIO(wrapper_vstdata)
@@ -114,10 +117,10 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
                         cvpj_program['program_name'] = vst_names[num]
                         cvpj_programs.append(cvpj_program)
 
-                    plugin_vst2.replace_data(cvpj_l, pluginid, 'name' ,'win', wrapperdata['name'], 'bank', cvpj_programs, None)
-                    plugins.add_plug_data(cvpj_l, pluginid, 'current_program', wrapper_vstprogram)
+                    plugin_vst2.replace_data(cvpj_plugindata, 'name' ,'win', wrapperdata['name'], 'bank', cvpj_programs, None)
+                    cvpj_plugindata.dataval_add('current_program', wrapper_vstprogram)
 
-        return True
+                    
 
     elif pluginname == 'fruity compressor':
         flplugvals = struct.unpack('i'*8, chunkpdata)
@@ -136,15 +139,15 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
         if first_type == 0: v_tcr = 0
         if first_type == 1: v_tcr = 1
 
-        plugins.add_plug(cvpj_l, pluginid, 'universal', 'compressor')
-        plugins.add_plug_data(cvpj_l, pluginid, 'tcr', bool(v_tcr) )
-        plugins.add_plug_param(cvpj_l, pluginid, 'pregain', v_gain, 'float', 'pregain')
-        plugins.add_plug_param(cvpj_l, pluginid, 'ratio', v_ratio, 'float', 'ratio')
-        plugins.add_plug_param(cvpj_l, pluginid, 'threshold', v_threshold, 'float', 'threshold')
-        plugins.add_plug_param(cvpj_l, pluginid, 'attack', v_attack, 'float', 'attack')
-        plugins.add_plug_param(cvpj_l, pluginid, 'release', v_release, 'float', 'release')
-        plugins.add_plug_param(cvpj_l, pluginid, 'knee', v_knee, 'float', 'knee')
-        return True
+        cvpj_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'compressor')
+        cvpj_plugindata.dataval_add('tcr', bool(v_tcr) )
+        cvpj_plugindata.param_add('pregain', v_gain, 'float', 'pregain')
+        cvpj_plugindata.param_add('ratio', v_ratio, 'float', 'ratio')
+        cvpj_plugindata.param_add('threshold', v_threshold, 'float', 'threshold')
+        cvpj_plugindata.param_add('attack', v_attack, 'float', 'attack')
+        cvpj_plugindata.param_add('release', v_release, 'float', 'release')
+        cvpj_plugindata.param_add('knee', v_knee, 'float', 'knee')
+        
 
     # ------------------------------------------------------------------------------------------- Inst
 
@@ -161,10 +164,10 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
         flsf_chorus_sendto, flsf_chorus_builtin = struct.unpack('ib', fl_plugstr.read(5))
         flsf_hqrender = int.from_bytes(fl_plugstr.read(1), "little")
 
-        plugins.add_plug(cvpj_l, pluginid, 'soundfont2', None)
+        cvpj_plugindata = plugins.cvpj_plugin('deftype', 'soundfont2', None)
 
-        #plugins.add_plug_data(cvpj_l, pluginid, 'reverb_enabled', flsf_reverb_builtin)
-        #plugins.add_plug_data(cvpj_l, pluginid, 'chorus_enabled', flsf_chorus_builtin)
+        #cvpj_plugindata.dataval_add('reverb_enabled', flsf_reverb_builtin)
+        #cvpj_plugindata.dataval_add('chorus_enabled', flsf_chorus_builtin)
 
         asdflfo_att = flsf_asdf_A/1024 if flsf_asdf_A != -1 else 0
         asdflfo_dec = flsf_asdf_D/1024 if flsf_asdf_D != -1 else 0
@@ -172,16 +175,16 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
         asdflfo_rel = flsf_asdf_R/1024 if flsf_asdf_R != -1 else 0
         asdflfo_amt = int( (flsf_asdf_A == flsf_asdf_D == flsf_asdf_S == flsf_asdf_R == -1) == False )
 
-        plugins.add_plug_data(cvpj_l, pluginid, 'file', flsf_filename)
+        cvpj_plugindata.dataval_add('file', flsf_filename)
 
-        plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, asdflfo_att, 0, asdflfo_dec, asdflfo_sus, asdflfo_rel, asdflfo_amt)
+        cvpj_plugindata.asdr_env_add('vol', 0, asdflfo_att, 0, asdflfo_dec, asdflfo_sus, asdflfo_rel, asdflfo_amt)
 
         if flsf_patch > 127:
-            plugins.add_plug_data(cvpj_l, pluginid, 'bank', 128)
-            plugins.add_plug_data(cvpj_l, pluginid, 'patch', flsf_patch-128)
+            cvpj_plugindata.dataval_add('bank', 128)
+            cvpj_plugindata.dataval_add('patch', flsf_patch-128)
         else:
-            plugins.add_plug_data(cvpj_l, pluginid, 'bank', flsf_bank)
-            plugins.add_plug_data(cvpj_l, pluginid, 'patch', flsf_patch)
+            cvpj_plugindata.dataval_add('bank', flsf_bank)
+            cvpj_plugindata.dataval_add('patch', flsf_patch)
         
         pitch_amount = flsf_lfo_amount/128 if flsf_lfo_amount != -128 else 0
         pitch_predelay = flsf_lfo_predelay/256 if flsf_lfo_predelay != -1 else 0
@@ -191,11 +194,11 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
         #    continue
         #    newsf2data = struct.unpack('<bbiii', fl_plugstr.read(14))
 
-        plugins.add_lfo(cvpj_l, pluginid, 'pitch', 'sine', 'seconds', pitch_speed, pitch_predelay, 0, pitch_amount)
-        return True
+        cvpj_plugindata.lfo_add('pitch', 'sine', 'seconds', pitch_speed, pitch_predelay, 0, pitch_amount)
+        
 
     elif pluginname == 'fruity slicer':
-        plugins.add_plug(cvpj_l, pluginid, 'sampler', 'slicer')
+        cvpj_plugindata = plugins.cvpj_plugin('deftype', 'sampler', 'slicer')
         fl_plugstr.read(4)
         slicer_beats = struct.unpack('f', fl_plugstr.read(4))[0]
         slicer_bpm = struct.unpack('f', fl_plugstr.read(4))[0]
@@ -217,7 +220,7 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
 
         slicer_filename = fl_plugstr.read(slicer_filelen).decode('utf-8')
         if slicer_filename != "": 
-            plugins.add_plug_data(cvpj_l, pluginid, 'file', slicer_filename)
+            cvpj_plugindata.dataval_add('file', slicer_filename)
         slicer_numslices = int.from_bytes(fl_plugstr.read(4), "little")
 
         cvpj_slices = []
@@ -236,15 +239,15 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
             if slicenum-1 >= 0 and slicenum != len(cvpj_slices): cvpj_slices[slicenum-1]['end'] = cvpj_slices[slicenum]['pos']-1
             if slicenum == len(cvpj_slices)-1: cvpj_slices[slicenum]['end'] = cvpj_slices[slicenum]['pos']+100000000
 
-        plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'oneshot')
-        plugins.add_plug_data(cvpj_l, pluginid, 'bpm', slicer_bpm)
-        plugins.add_plug_data(cvpj_l, pluginid, 'beats', slicer_beats)
-        plugins.add_plug_data(cvpj_l, pluginid, 'slices', cvpj_slices)
-        plugins.add_plug_data(cvpj_l, pluginid, 'pitch', slicer_pitch/100)
-        plugins.add_plug_data(cvpj_l, pluginid, 'fade_in', slicer_att)
-        plugins.add_plug_data(cvpj_l, pluginid, 'fade_out', slicer_dec)
-        plugins.add_plug_data(cvpj_l, pluginid, 'stretch', stretch_data)
-        return True
+        cvpj_plugindata.dataval_add('trigger', 'oneshot')
+        cvpj_plugindata.dataval_add('bpm', slicer_bpm)
+        cvpj_plugindata.dataval_add('beats', slicer_beats)
+        cvpj_plugindata.dataval_add('slices', cvpj_slices)
+        cvpj_plugindata.dataval_add('pitch', slicer_pitch/100)
+        cvpj_plugindata.dataval_add('fade_in', slicer_att)
+        cvpj_plugindata.dataval_add('fade_out', slicer_dec)
+        cvpj_plugindata.dataval_add('stretch', stretch_data)
+        
         
     # ------------------------------------------------------------------------------------------- FX
 
@@ -258,29 +261,29 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
             filename = os.path.join(foldername, pluginid+'_custom_audio.wav')
             with open(filename, "wb") as customconvolverfile:
                 customconvolverfile.write(fl_plugstr.read(audiosize))
-        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', pluginname)
-        plugins.add_plug_data(cvpj_l, pluginid, 'file', filename.decode())
+        cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
+        cvpj_plugindata.dataval_add('file', filename.decode())
         fl_plugstr.read(36)
         autodata = {}
         for autoname in ['pan', 'vol', 'stereo', 'allpurpose', 'eq']:
             autodata_table = decode_pointdata(fl_plugstr)
             for point in autodata_table:
                 #print(autoname, test)
-                plugins.add_env_point(cvpj_l, pluginid, autoname, point[0], point[1][0], tension=point[2], type=envshapes[point[3]])
+                cvpj_plugindata.env_points_add(autoname, point[0], point[1][0], tension=point[2], type=envshapes[point[3]])
             autodata[autoname] = autodata_table
-        return True
+        
 
     elif pluginname == 'fruity html notebook':
-        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', pluginname)
+        cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
         version = int.from_bytes(fl_plugstr.read(4), "little")
-        if version == 1: plugins.add_plug_data(cvpj_l, pluginid, 'url', data_bytes.readstring_lenbyte(fl_plugstr, 1, 'little', 'utf-8'))
-        return True
+        if version == 1: cvpj_plugindata.dataval_add('url', data_bytes.readstring_lenbyte(fl_plugstr, 1, 'little', 'utf-8'))
+        
 
     elif pluginname in ['fruity notebook 2', 'fruity notebook']:
-        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', pluginname)
+        cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
         version = int.from_bytes(fl_plugstr.read(4), "little")
         if version == 0 and pluginname == 'fruity notebook 2' or version == 1000 and pluginname == 'fruity notebook': 
-            plugins.add_plug_data(cvpj_l, pluginid, 'currentpage', int.from_bytes(fl_plugstr.read(4), "little"))
+            cvpj_plugindata.dataval_add('currentpage', int.from_bytes(fl_plugstr.read(4), "little"))
             pagesdata = {}
             while True:
                 pagenum = int.from_bytes(fl_plugstr.read(4), "little")
@@ -292,54 +295,53 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
                     length = int.from_bytes(fl_plugstr.read(4), "little")
                     text = fl_plugstr.read(length).decode('ascii')
                 pagesdata[pagenum] = text
-            plugins.add_plug_data(cvpj_l, pluginid, 'pages', pagesdata)
-            plugins.add_plug_data(cvpj_l, pluginid, 'editing_enabled', fl_plugstr.read(1)[0])
-        return True
+            cvpj_plugindata.dataval_add('pages', pagesdata)
+            cvpj_plugindata.dataval_add('editing_enabled', fl_plugstr.read(1)[0])
+        
 
     elif pluginname == 'fruity vocoder':
-        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', pluginname)
+        cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
         flplugvals = struct.unpack('iiiib', fl_plugstr.read(17))
         vocbands = struct.unpack('f'*flplugvals[1], fl_plugstr.read(flplugvals[1]*4))
-        plugins.add_plug_data(cvpj_l, pluginid, 'bands', vocbands)
-        plugins.add_plug_data(cvpj_l, pluginid, 'filter', flplugvals[2])
-        plugins.add_plug_data(cvpj_l, pluginid, 'left_right', flplugvals[4])
+        cvpj_plugindata.dataval_add('bands', vocbands)
+        cvpj_plugindata.dataval_add('filter', flplugvals[2])
+        cvpj_plugindata.dataval_add('left_right', flplugvals[4])
         flplugvalsafter = struct.unpack('i'*12, fl_plugstr.read(12*4))
         #print(flplugvalsafter)
-        plugins.add_plug_param(cvpj_l, pluginid, 'freq_min', flplugvalsafter[0], 'int', "Freq Min")
-        plugins.add_plug_param(cvpj_l, pluginid, 'freq_max', flplugvalsafter[1], 'int', "Freq Max")
-        plugins.add_plug_param(cvpj_l, pluginid, 'freq_scale', flplugvalsafter[2], 'int', "Freq Scale")
-        plugins.add_plug_param(cvpj_l, pluginid, 'freq_invert', flplugvalsafter[3], 'bool', "Freq Invert")
-        plugins.add_plug_param(cvpj_l, pluginid, 'freq_formant', flplugvalsafter[4], 'int', "Freq Formant")
-        plugins.add_plug_param(cvpj_l, pluginid, 'freq_bandwidth', flplugvalsafter[5], 'int', "Freq BandWidth")
-        plugins.add_plug_param(cvpj_l, pluginid, 'env_att', flplugvalsafter[6], 'int', "Env Att")
-        plugins.add_plug_param(cvpj_l, pluginid, 'env_rel', flplugvalsafter[7], 'int', "Env Rel")
-        plugins.add_plug_param(cvpj_l, pluginid, 'mix_mod', flplugvalsafter[9], 'int', "Mix Mod")
-        plugins.add_plug_param(cvpj_l, pluginid, 'mix_car', flplugvalsafter[10], 'int', "Mix Car")
-        plugins.add_plug_param(cvpj_l, pluginid, 'mix_wet', flplugvalsafter[11], 'int', "Mix Wet")
-        return True
+        cvpj_plugindata.param_add('freq_min', flplugvalsafter[0], 'int', "Freq Min")
+        cvpj_plugindata.param_add('freq_max', flplugvalsafter[1], 'int', "Freq Max")
+        cvpj_plugindata.param_add('freq_scale', flplugvalsafter[2], 'int', "Freq Scale")
+        cvpj_plugindata.param_add('freq_invert', flplugvalsafter[3], 'bool', "Freq Invert")
+        cvpj_plugindata.param_add('freq_formant', flplugvalsafter[4], 'int', "Freq Formant")
+        cvpj_plugindata.param_add('freq_bandwidth', flplugvalsafter[5], 'int', "Freq BandWidth")
+        cvpj_plugindata.param_add('env_att', flplugvalsafter[6], 'int', "Env Att")
+        cvpj_plugindata.param_add('env_rel', flplugvalsafter[7], 'int', "Env Rel")
+        cvpj_plugindata.param_add('mix_mod', flplugvalsafter[9], 'int', "Mix Mod")
+        cvpj_plugindata.param_add('mix_car', flplugvalsafter[10], 'int', "Mix Car")
+        cvpj_plugindata.param_add('mix_wet', flplugvalsafter[11], 'int', "Mix Wet")
+        
 
     elif pluginname == 'fruity waveshaper':
-        plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', pluginname)
+        cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
         flplugvals = struct.unpack('bHHIIbbbbbb', fl_plugstr.read(22))
         #print(flplugvals)
-        plugins.add_plug_param(cvpj_l, pluginid, 'preamp', flplugvals[2], 'int', "Pre Amp")
-        plugins.add_plug_param(cvpj_l, pluginid, 'wet', flplugvals[3], 'int', "Wet")
-        plugins.add_plug_param(cvpj_l, pluginid, 'postgain', flplugvals[4], 'int', "Post Gain")
-        plugins.add_plug_param(cvpj_l, pluginid, 'bipolarmode', flplugvals[5], 'bool', "Bi-polar Mode")
-        plugins.add_plug_param(cvpj_l, pluginid, 'removedc', flplugvals[6], 'bool', "Remove DC")
+        cvpj_plugindata.param_add('preamp', flplugvals[2], 'int', "Pre Amp")
+        cvpj_plugindata.param_add('wet', flplugvals[3], 'int', "Wet")
+        cvpj_plugindata.param_add('postgain', flplugvals[4], 'int', "Post Gain")
+        cvpj_plugindata.param_add('bipolarmode', flplugvals[5], 'bool', "Bi-polar Mode")
+        cvpj_plugindata.param_add('removedc', flplugvals[6], 'bool', "Remove DC")
 
         autodata_table = decode_pointdata(fl_plugstr)
         for point in autodata_table:
-            plugins.add_env_point(cvpj_l, pluginid, 'shape', point[0], point[1][0], tension=point[2], type=envshapes[point[3]])
-        return True
+            cvpj_plugindata.env_points_add('shape', point[0], point[1][0], tension=point[2], type=envshapes[point[3]])
+        
 
     else:
         fl_datadef = flstudio_datadef.get_datadef(pluginname)
 
         if fl_datadef != []:
-            plugins.add_plug(cvpj_l, pluginid, 'native-flstudio', pluginname)
-            datadef.to_plugdata(cvpj_l, pluginid, fl_datadef, fl_plugstr)
-            return True
+            cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
+            datadef.to_plugdata(cvpj_plugindata, fl_datadef, fl_plugstr)
         #if pluginname == 'simsynth': exit()
 
     #elif pluginname == 'pitcher': LATER
@@ -349,10 +351,11 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
     #    flplugflags = struct.unpack('b'*16, riffbio.read(16))
     #    for test in range(len(flplugvals)):
     #        print(test, flplugvals[test])
-    #    plugins.add_plug_param(cvpj_l, pluginid, 'speed', flplugvals[0], 'int', "Correction Speed")
-    #    plugins.add_plug_param(cvpj_l, pluginid, 'gender', flplugvals[2], 'int', "Gender")
-    #    plugins.add_plug_param(cvpj_l, pluginid, 'finetune', flplugvals[3], 'int', "Fine Tune")
+    #    cvpj_plugindata.param_add('speed', flplugvals[0], 'int', "Correction Speed")
+    #    cvpj_plugindata.param_add('gender', flplugvals[2], 'int', "Gender")
+    #    cvpj_plugindata.param_add('finetune', flplugvals[3], 'int', "Fine Tune")
 
     # ------------------------------------------------------------------------------------------- Other
 
-    plugins.add_plug_data(cvpj_l, pluginid, 'chunk', base64.b64encode(chunkpdata).decode('ascii'))
+    cvpj_plugindata.dataval_add('chunk', base64.b64encode(chunkpdata).decode('ascii'))
+    return cvpj_plugindata

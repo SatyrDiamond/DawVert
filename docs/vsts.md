@@ -4,16 +4,20 @@
 # Samplers
 
 [juicysfplugin](https://github.com/Birch-san/juicysfplugin) - Soundfont 2
-
+ 
 [Ninjas2](https://github.com/clearly-broken-software/ninjas2) - Fruity Slicer
 
 # Synths
 
-[Vital](https://vital.audio/) - Beepbox
+[Vital](https://vital.audio/) - Various
 
 # FX
 
 [Airwindows](https://www.airwindows.com/) - Various
+
+[Compressor](https://socalabs.com/effects/compressor/) - Compressor
+
+[Expander](https://socalabs.com/effects/expander/) - Expander
 
 # Retro
 

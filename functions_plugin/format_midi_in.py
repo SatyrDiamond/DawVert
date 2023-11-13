@@ -369,7 +369,7 @@ def song_end(cvpj_l):
 
 			if ifsameinstid:
 				if not ifsamealldrums: 
-					name, color = dataset_midi.object_visual_get('inst', used_inst[1])
+					name, color = dataset_midi.object_get_name_color('inst', used_inst[1])
 					name_usable.append(name)
 					color_usable.append(color)
 
@@ -377,10 +377,10 @@ def song_end(cvpj_l):
 				name, color = dataset_midi.groups_get_name_color('inst', s_fx_usedinstid[0][4])
 				name_usable.append(name)
 				color_usable.append(color)
-
-			usedgroups = list(set([s_fx_usedinstid[x][4] for x in range(usedinlen)]))
-			usedgroups = [dataset_midi.groups_get_name_color('inst', s_fx_usedinstid[0][4])[0] for x in usedgroups]
-			name_usable.append(' + '.join(usedgroups))
+			else:
+				usedgroups = list(set([s_fx_usedinstid[x][4] for x in range(usedinlen)]))
+				usedgroups = [dataset_midi.groups_get_name_color('inst', x)[0] for x in usedgroups]
+				name_usable.append(' + '.join(usedgroups))
 
 			if ifsamealldrums: 
 				name_usable.append('Drums')

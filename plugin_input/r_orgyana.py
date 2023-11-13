@@ -4,7 +4,7 @@
 from functions import placement_data
 from functions import song
 from functions import note_data
-from functions import idvals
+from functions import data_dataset
 from functions_tracks import tracks_r
 import plugin_input
 import json
@@ -91,7 +91,7 @@ class input_orgyana(plugin_input.base):
     def parse(self, input_file, extra_param):
         cvpj_l = {}
 
-        idvals_orgyana_inst_drums = idvals.parse_idvalscsv('data_idvals/orgyana_inst_drums.csv')
+        dataset = data_dataset.dataset('./data_dset/orgyana.dset')
 
         bio_org = open(input_file, 'rb')
         org_type = bio_org.read(6)
@@ -124,7 +124,7 @@ class input_orgyana(plugin_input.base):
             s_cvpj_nl = read_orgtrack(bio_org, org_instrumentinfotable, tracknum)
             if len(s_cvpj_nl) != 0:
                 org_pitch = org_instrumentinfotable[tracknum][0]
-                trackname = "Melody "+str(tracknum+1) if tracknum < 8 else idvals.get_idval(idvals_orgyana_inst_drums, str(org_insttable[tracknum]), 'name')
+                trackname = "Melody "+str(tracknum+1) if tracknum < 8 else dataset.object_get_name_color('drums', str(org_insttable[tracknum]))[0]
                 idval = 'org_'+str(tracknum)
 
                 tracks_r.track_create(cvpj_l, idval, 'instrument')

@@ -328,7 +328,7 @@ class input_notessimo_v3(plugin_input.base):
             midiinst = None
 
             cvpj_instid = str(inst)
-            outdsd = tracks_mi.import_dset(cvpj_l, cvpj_instid, dataset, dataset_midi, None, None)
+            outdsd = tracks_mi.import_dset(cvpj_l, cvpj_instid, cvpj_instid, dataset, dataset_midi, None, None)
             inst_found = False
 
             if (outdsd[4] != None or outdsd[5] != None):
@@ -348,7 +348,7 @@ class input_notessimo_v3(plugin_input.base):
                 tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
             else:
                 tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
-                fxrack.add(cvpj_l, fxnum, 1, 0, name=outdsd[4], color=outdsd[5])
+                fxrack.add(cvpj_l, fxnum, 1, 0, name=outdsd[4], color=colors.moregray(outdsd[5]))
                 fxnum += 1
 
         song.add_param(cvpj_l, 'bpm', 120)

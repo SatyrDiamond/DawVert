@@ -15,24 +15,24 @@ from functions_plugparams import datadef
 def wrapper_addchunk(chunkid, chunkdata):
     return chunkid.to_bytes(4, "little") + len(chunkdata).to_bytes(4, "little") + b'\x00\x00\x00\x00' + chunkdata
 
-def setparams(cvpj_l, pluginid):
+def setparams(cvpj_plugdata):
     fl_plugin, fl_pluginparams = None, None
-    plug_type = plugins.get_plug_type(cvpj_l, pluginid)
+    plug_type = cvpj_plugdata.type_get()
 
     if plug_type[0] == 'native-flstudio':
         fl_datadef = flstudio_datadef.get_datadef(plug_type[1])
         if fl_datadef != []:
             fl_plugin = plug_type[1]
-            fl_pluginparams = datadef.from_plugdata(cvpj_l, pluginid, fl_datadef)
+            fl_pluginparams = datadef.from_plugdata(cvpj_plugdata, fl_datadef)
 
     if plug_type[0] == 'soundfont2':
         fl_plugin = 'fruity soundfont player'
 
-        v_predelay, v_attack, v_hold, v_decay, v_sustain, v_release, v_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'vol')
-        p_predelay, p_attack, p_shape, p_speed_type, p_speed_time, p_amount = plugins.get_lfo(cvpj_l, pluginid, 'pitch')
-        sf2_file = plugins.get_plug_dataval(cvpj_l, pluginid, 'file', '')
-        sf2_bank = plugins.get_plug_dataval(cvpj_l, pluginid, 'bank', 0)
-        sf2_patch = plugins.get_plug_dataval(cvpj_l, pluginid, 'patch', 0)
+        v_predelay, v_attack, v_hold, v_decay, v_sustain, v_release, v_amount = cvpj_plugdata.asdr_env_get('vol')
+        p_predelay, p_attack, p_shape, p_speed_type, p_speed_time, p_amount = cvpj_plugdata.lfo_get('pitch')
+        sf2_file = cvpj_plugdata.dataval_get('file', '')
+        sf2_bank = cvpj_plugdata.dataval_get('bank', 0)
+        sf2_patch = cvpj_plugdata.dataval_get('patch', 0)
 
         if p_speed_type == 'seconds':
             flsf_lfo_predelay = int(p_predelay*256) if p_predelay != 0 else -1
@@ -55,14 +55,14 @@ def setparams(cvpj_l, pluginid):
         fl_pluginparams += b'\xff\xff\xff\xff\x00\xff\xff\xff\xff\x00\x00'
 
     if plug_type[0] == 'vst2':
-        vst_chunk = plugins.get_plug_dataval(cvpj_l, pluginid, 'chunk', '')
-        vst_programs = plugins.get_plug_dataval(cvpj_l, pluginid, 'programs', '')
-        vst_numparams = plugins.get_plug_dataval(cvpj_l, pluginid, 'numparams', 0)
-        vst_current_program = plugins.get_plug_dataval(cvpj_l, pluginid, 'current_program', 0)
-        vst_datatype = plugins.get_plug_dataval(cvpj_l, pluginid, 'datatype', 'chunk')
-        vst_fourid = plugins.get_plug_dataval(cvpj_l, pluginid, 'fourid', None)
-        vst_name = plugins.get_plug_dataval(cvpj_l, pluginid, 'name', None)
-        vst_path = plugins.get_plug_dataval(cvpj_l, pluginid, 'path', None)
+        vst_chunk = cvpj_plugdata.dataval_get('chunk', '')
+        vst_programs = cvpj_plugdata.dataval_get('programs', '')
+        vst_numparams = cvpj_plugdata.dataval_get('numparams', 0)
+        vst_current_program = cvpj_plugdata.dataval_get('current_program', 0)
+        vst_datatype = cvpj_plugdata.dataval_get('datatype', 'chunk')
+        vst_fourid = cvpj_plugdata.dataval_get('fourid', None)
+        vst_name = cvpj_plugdata.dataval_get('name', None)
+        vst_path = cvpj_plugdata.dataval_get('path', None)
 
         vstdata_bytes = base64.b64decode(vst_chunk)
 
@@ -95,7 +95,7 @@ def setparams(cvpj_l, pluginid):
             vst_params_data = b''
             
             for num in range(vst_numparams):
-                pval, ptype, pname = plugins.get_plug_param(cvpj_l, pluginid, 'vst_param_'+str(num), 0)
+                pval, ptype, pname = cvpj_plugdata.param_get('vst_param_'+str(num), 0)
                 vst_params_data += struct.pack('f', pval)
             vst_num_names = 1
             vst_names = data_bytes.makestring_fixedlen('Converted', 25)

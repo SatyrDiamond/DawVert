@@ -3,7 +3,6 @@
 
 from functions import data_bytes
 from functions import auto
-from functions import idvals
 from functions import data_dataset
 from functions import plugins
 from functions import note_data

@@ -244,7 +244,7 @@ class dataset:
                 if visual_data != None: objdata['visual'] = visual_data
 
     def groups_get_name_color(self, c_name, g_name):
-        isobjfound, visualdata = groups_visual_get(c_name, g_name)
+        isobjfound, visualdata = self.groups_visual_get(c_name, g_name)
         name = None
         color = None
         if visualdata != None:

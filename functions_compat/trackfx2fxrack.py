@@ -46,6 +46,15 @@ def process_r(cvpj_l):
                     dict_returns[returnid] = return_data
             del cvpj_l['track_master']
 
+
+        if 'track_placements' in cvpj_l:
+            for output_id in output_ids:
+                if output_id[2] in cvpj_l['track_placements']:
+                    track_placements = cvpj_l['track_placements'][output_id[2]]
+                    if 'audio_nested' in track_placements:
+                        for spld in track_placements['audio_nested']:
+                            spld['fxrack_channel'] = output_id[0]+1
+
         for output_id in output_ids:
             
             if output_id[1] == 'return':

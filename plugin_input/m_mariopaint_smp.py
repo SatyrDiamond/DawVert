@@ -50,7 +50,7 @@ class input_mariopaint_smp(plugin_input.base):
         cvpj_l = {}
         cvpj_notelist = []
 
-        dataset = data_dataset.dataset('./data_dset/onlineseq.dset')
+        dataset = data_dataset.dataset('./data_dset/mariopaint.dset')
         dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
 
         smp_values = {}

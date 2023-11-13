@@ -6,9 +6,13 @@ class dataset:
     def __init__(self, in_dataset):
         print(in_dataset)
         if in_dataset != None:
-            f = open(in_dataset, "r")
-            self.dataset = json.load(f)
-            self.category_list = [x for x in self.dataset]
+            try:
+                f = open(in_dataset, "r")
+                self.dataset = json.load(f)
+                self.category_list = [x for x in self.dataset]
+            except:
+                self.dataset = {}
+                self.category_list = []
         else:
             self.dataset = {}
             self.category_list = []
@@ -238,6 +242,15 @@ class dataset:
             if g_name in self.dataset[c_name]['groups']:
                 objdata = self.dataset[c_name]['groups'][g_name]
                 if visual_data != None: objdata['visual'] = visual_data
+
+    def groups_get_name_color(self, c_name, g_name):
+        isobjfound, visualdata = groups_visual_get(c_name, g_name)
+        name = None
+        color = None
+        if visualdata != None:
+            if 'name' in visualdata: name = visualdata['name']
+            if 'color' in visualdata: color = visualdata['color']
+        return name, color
 
 # ####################################################################################################
 # ####################################################################################################

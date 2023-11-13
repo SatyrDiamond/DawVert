@@ -40,7 +40,7 @@ class wolfshaper_data:
 		for cvpj_point in cvpj_auto['points']:
 			tension = cvpj_point['tension'] if 'tension' in cvpj_point else 0
 			pointtype = cvpj_point['type'] if 'type' in cvpj_point else 'normal'
-			add_point(cvpj_point['position'],cvpj_point['value'],tension,pointtype)
+			self.add_point(cvpj_point['position'],cvpj_point['value'],tension,pointtype)
 
 	def to_cvpj_vst2(self, cvpj_plugindata):
 		plugin_vst2.replace_data(cvpj_plugindata, 'name', 'any', 'Wolf Shaper', 'chunk', data_nullbytegroup.make([{'graph': self.graph}, self.params]), None)

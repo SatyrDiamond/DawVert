@@ -92,7 +92,7 @@ class input_notessimo_v2(plugin_input.base):
 
             cvpj_instid = str(used_instrument)
 
-            outdsd = tracks_mi.import_dset(cvpj_l, cvpj_instid, dataset, dataset_midi, None, None)
+            outdsd = tracks_mi.import_dset(cvpj_l, cvpj_instid, cvpj_instid, dataset, dataset_midi, None, None)
             print("[input-notessimo_v2] Instrument: " + str(outdsd[4]))
 
             if outdsd[3]: 

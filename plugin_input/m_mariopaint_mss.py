@@ -64,7 +64,7 @@ class input_mariopaint_mss(plugin_input.base):
         cvpj_l = {}
         cvpj_notelist = []
 
-        dataset = data_dataset.dataset('./data_dset/onlineseq.dset')
+        dataset = data_dataset.dataset('./data_dset/mariopaint.dset')
         dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
 
         mss_measure = int(root.get('measure'))

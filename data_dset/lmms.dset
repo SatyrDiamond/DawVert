@@ -3935,7 +3935,7 @@
                         "type": "int"
                     },
                     "modalgo1": {
-                        "def": 0,
+                        "def": 2,
                         "max": 4,
                         "min": 0,
                         "name": "Modulation type 1",
@@ -3943,7 +3943,7 @@
                         "type": "int"
                     },
                     "modalgo2": {
-                        "def": 0,
+                        "def": 2,
                         "max": 4,
                         "min": 0,
                         "name": "Modulation type 2",
@@ -3951,7 +3951,7 @@
                         "type": "int"
                     },
                     "modalgo3": {
-                        "def": 0,
+                        "def": 2,
                         "max": 4,
                         "min": 0,
                         "name": "Modulation type 3",

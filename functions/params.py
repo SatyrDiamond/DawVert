@@ -42,10 +42,11 @@ def get(cvpj_l, location, p_id, fallbackval, **kwargs):
 def get_minmax(cvpj_l, location, p_id, fallbackval, **kwargs):
     paramsvalname = data_values.get_value(kwargs, 'groupname', 'params')
     paramdata = data_values.nested_dict_get_value(cvpj_l, location+[paramsvalname, p_id])
-    if paramdata != None: return paramdata['value'], paramdata['type'], paramdata['name']
-    v_min = paramdata['min'] if 'min' in paramdata else None
-    v_max = paramdata['max'] if 'max' in paramdata else None
-    return fallbackval, 'notfound', '', v_min, v_max
+    if paramdata != None: 
+        v_min = paramdata['min'] if 'min' in paramdata else None
+        v_max = paramdata['max'] if 'max' in paramdata else None
+        return paramdata['value'], paramdata['type'], paramdata['name'], v_min, v_max
+    return fallbackval, 'notfound', '', 0, 1
 
 def remove(cvpj_l, p_id):
     if 'params' in cvpj_l:

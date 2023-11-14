@@ -359,7 +359,7 @@ def encode_devices(amped_tr_devices, trackid, amped_autodata):
                 if s_amped_auto[0] == 'mix': autoloc = ['slot',pluginid,'wet']
                 if s_amped_auto[0] == 'down': 
                     for autopoint in s_amped_auto[1]: autopoint['value'] = 100*(2**(autopoint['value']*10))
-                    auto_data.add_pl(cvpj_l, 'float', ['plugin',pluginid,s_amped_auto[0]], s_amped_auto[1])
+                    auto_data.add_pl(cvpj_l, 'float', ['plugin',pluginid,'freq'], auto_nopl.to_pl(s_amped_auto[1]))
                 auto_data.add_pl(cvpj_l, 'float', autoloc, auto_nopl.to_pl(s_amped_auto[1]))
 
 

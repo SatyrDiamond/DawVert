@@ -349,7 +349,11 @@ def song_end(cvpj_l):
 			if iftrackname: name_usable.append(global_miditracks[usedinstid[0]][1])
 			color_usable.append(global_miditracks[usedinstid[0]][4])
 
-			if usedinstid[3]:
+			if not usedinstid[3]: 
+				name, color = dataset_midi.object_get_name_color('inst', str(usedinstid[1]))
+				name_usable.append(name)
+				color_usable.append(color)
+			else:
 				name_usable.append('Drums')
 				color_usable.append([0.81, 0.80, 0.82])
 
@@ -361,17 +365,16 @@ def song_end(cvpj_l):
 			ifsametrackid = data_values.ifallsame([s_fx_usedinstid[x][0] for x in range(usedinlen)])
 			ifsameinstid = data_values.ifallsame([s_fx_usedinstid[x][1] for x in range(usedinlen)])
 			ifsamegroups = data_values.ifallsame([s_fx_usedinstid[x][4] for x in range(usedinlen)])
-			ifsamealldrums = data_values.ifallsame([s_fx_usedinstid[x][3] for x in range(usedinlen)]) and s_fx_usedinstid[0][3]
+			ifsamealldrums = bool(data_values.ifallsame([s_fx_usedinstid[x][3] for x in range(usedinlen)]) and s_fx_usedinstid[0][3])
 
 			if ifsametrackid:
-				name_usable.append(global_miditracks[s_fx_usedinstid[0][0]][1])
+				if global_miditracks[s_fx_usedinstid[0][0]][1] != '': name_usable.append(global_miditracks[s_fx_usedinstid[0][0]][1])
 				color_usable.append(global_miditracks[s_fx_usedinstid[0][0]][4])
 
-			if ifsameinstid:
-				if not ifsamealldrums: 
-					name, color = dataset_midi.object_get_name_color('inst', used_inst[1])
-					name_usable.append(name)
-					color_usable.append(color)
+			if ifsameinstid and not ifsamealldrums:
+				name, color = dataset_midi.object_get_name_color('inst', str(s_fx_usedinstid[0][1]))
+				name_usable.append(name)
+				color_usable.append(color)
 
 			if ifsamegroups: 
 				name, color = dataset_midi.groups_get_name_color('inst', s_fx_usedinstid[0][4])
@@ -387,6 +390,8 @@ def song_end(cvpj_l):
 				color_usable.append([0.81, 0.80, 0.82])
 
 			color_usable.append([0.4, 0.4, 0.4])
+
+		print(usedinlen, name_usable, color_usable)
 
 		out_name = data_values.list_usefirst(name_usable)
 		out_color = data_values.list_usefirst(color_usable)

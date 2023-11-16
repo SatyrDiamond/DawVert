@@ -4,28 +4,11 @@
 from functions import placement_data
 from functions import song
 from functions import note_data
+from functions import colors
 from functions import data_dataset
 from functions_tracks import tracks_r
 import plugin_input
 import json
-
-l_org_colors = [[0.23, 0.30, 0.99],
-[0.62, 0.11, 0.12],
-[0.62, 0.16, 0.87],
-[0.14, 0.45, 0.26],
-[0.13, 0.46, 0.57],
-[0.67, 0.50, 0.11],
-[0.59, 0.64, 0.71],
-[0.58, 0.53, 0.49],
-[0.23, 0.30, 0.99],
-[0.62, 0.11, 0.12],
-[0.62, 0.16, 0.87],
-[0.14, 0.45, 0.26],
-[0.13, 0.46, 0.57],
-[0.67, 0.50, 0.11],
-[0.59, 0.64, 0.71],
-[0.58, 0.53, 0.49]
-]
 
 def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
     global cur_note
@@ -92,6 +75,7 @@ class input_orgyana(plugin_input.base):
         cvpj_l = {}
 
         dataset = data_dataset.dataset('./data_dset/orgyana.dset')
+        colordata = colors.colorset(dataset.colorset_e_list('track', 'orgmaker_2'))
 
         bio_org = open(input_file, 'rb')
         org_type = bio_org.read(6)
@@ -128,7 +112,7 @@ class input_orgyana(plugin_input.base):
                 idval = 'org_'+str(tracknum)
 
                 tracks_r.track_create(cvpj_l, idval, 'instrument')
-                tracks_r.track_visual(cvpj_l, idval, name=trackname, color=l_org_colors[tracknum])
+                tracks_r.track_visual(cvpj_l, idval, name=trackname, color=colordata.getcolornum(tracknum))
                 tracks_r.track_param_add(cvpj_l, idval, 'pitch', (org_pitch-1000)/1800, 'float')
                 tracks_r.add_pl(cvpj_l, idval, 'notes', placement_data.nl2pl(s_cvpj_nl))
 

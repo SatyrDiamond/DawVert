@@ -167,13 +167,45 @@ class dataset:
 
 # ####################################################################################################
 # ####################################################################################################
+# --- Colorset
+# ####################################################################################################
+# ####################################################################################################
+
+    def colorset_list(self, c_name):
+        colorset = None
+        if data_values.nested_dict_get_value(self.dataset, [c_name, 'colorset']) != None:
+            colorset = [x for x in self.dataset[c_name]['colorset']]
+        return colorset
+
+    def colorset_create(self, c_name):
+        if c_name in self.dataset: self.dataset[c_name]['colorset'] = {}
+
+    def colorset_add(self, c_name, s_name):
+        if data_values.nested_dict_get_value(self.dataset, [c_name, 'colorset']) != None:
+            self.dataset[c_name]['colorset'][s_name] = []
+
+    def colorset_e_list(self, c_name, s_name):
+        outval = []
+        if data_values.nested_dict_get_value(self.dataset, [c_name, 'colorset', s_name]) != None:
+            outval = [x for x in self.dataset[c_name]['colorset'][s_name]]
+        return outval
+
+    def colorset_e_add(self, c_name, s_name, i_color):
+        if data_values.nested_dict_get_value(self.dataset, [c_name, 'colorset', s_name]) != None:
+            self.dataset[c_name]['colorset'][s_name].append(i_color)
+
+    def colorset_e_del(self, c_name, s_name, num):
+        if data_values.nested_dict_get_value(self.dataset, [c_name, 'colorset', s_name]) != None:
+            del self.dataset[c_name]['colorset'][s_name][num]
+
+# ####################################################################################################
+# ####################################################################################################
 # --- Midi Map
 # ####################################################################################################
 # ####################################################################################################
 
     def midid_to_num(self, i_bank, i_patch, i_isdrum): return i_bank*256 + i_patch + int(i_isdrum)*128
     def midid_from_num(self, value): return (value>>8), (value%128), int(bool(value&0b10000000))
-
 
     def midito_list(self, c_name):
         pmap = None

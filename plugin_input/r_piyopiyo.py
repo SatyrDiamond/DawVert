@@ -11,9 +11,9 @@ from functions import placement_data
 from functions import plugins
 from functions import song
 from functions import note_data
+from functions import colors
+from functions import data_dataset
 from functions_tracks import tracks_r
-
-track_colors = [[0.25, 0.38, 0.49], [0.36, 0.43, 0.46], [0.51, 0.57, 0.47], [0.58, 0.64, 0.40]]
 
 class input_piyopiyo(plugin_input.base):
     def __init__(self): pass
@@ -47,12 +47,13 @@ class input_piyopiyo(plugin_input.base):
         recordspertrack = int.from_bytes(pmdfile.read(4), "little")
         print("[input-piyopiyo] Records Per Track: " + str(recordspertrack))
 
-        #samplefolder = extra_param['samplefolder']
-
         pmdtrackdata = []
         keyoffset = [0,0,0,0]
 
         cvpj_l = {}
+
+        dataset = data_dataset.dataset('./data_dset/piyopiyo.dset')
+        colordata = colors.colorset(dataset.colorset_e_list('inst', 'main'))
 
         for tracknum in range(3):
             print("[input-piyopiyo] Track " + str(tracknum+1), end=",")
@@ -79,7 +80,7 @@ class input_piyopiyo(plugin_input.base):
             inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
             tracks_r.track_create(cvpj_l, idval, 'instrument')
-            tracks_r.track_visual(cvpj_l, idval, name='Inst #'+str(tracknum), color=track_colors[tracknum])
+            tracks_r.track_visual(cvpj_l, idval, name='Inst #'+str(tracknum), color=colordata.getcolornum(tracknum))
             tracks_r.track_inst_pluginid(cvpj_l, idval, pluginid)
             tracks_r.track_param_add(cvpj_l, idval, 'vol', trk_volume/250, 'float')
 
@@ -89,7 +90,7 @@ class input_piyopiyo(plugin_input.base):
         inst_plugindata.to_cvpj(cvpj_l, "3")
 
         tracks_r.track_create(cvpj_l, "3", 'instrument')
-        tracks_r.track_visual(cvpj_l, "3", name='perc', color=track_colors[3])
+        tracks_r.track_visual(cvpj_l, "3", name='perc', color=colordata.getcolornum(3))
         tracks_r.track_inst_pluginid(cvpj_l, "3", "3")
         tracks_r.track_param_add(cvpj_l, "3", 'vol', TrackPVol/250, 'float')
 

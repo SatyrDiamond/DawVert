@@ -1,5 +1,146 @@
 {
+    "drums": {
+        "colorset": {
+            "beepbox_dark": [
+                [
+                    0.44,
+                    0.44,
+                    0.44
+                ],
+                [
+                    0.6,
+                    0.4,
+                    0.2
+                ],
+                [
+                    0.29,
+                    0.43,
+                    0.56
+                ],
+                [
+                    0.48,
+                    0.31,
+                    0.6
+                ],
+                [
+                    0.38,
+                    0.47,
+                    0.22
+                ]
+            ]
+        },
+        "objects": {
+            "drumset": {
+                "visual": {
+                    "name": "Drum Set"
+                }
+            },
+            "noise": {
+                "visual": {
+                    "name": "Basic Noise"
+                }
+            }
+        }
+    },
     "inst": {
+        "colorset": {
+            "beepbox_dark": [
+                [
+                    0,
+                    0.6,
+                    0.63
+                ],
+                [
+                    0.63,
+                    0.63,
+                    0
+                ],
+                [
+                    0.78,
+                    0.31,
+                    0
+                ],
+                [
+                    0,
+                    0.63,
+                    0
+                ],
+                [
+                    0.82,
+                    0.13,
+                    0.82
+                ],
+                [
+                    0.47,
+                    0.47,
+                    0.69
+                ],
+                [
+                    0.54,
+                    0.63,
+                    0
+                ],
+                [
+                    0.87,
+                    0,
+                    0.1
+                ],
+                [
+                    0,
+                    0.63,
+                    0.44
+                ],
+                [
+                    0.57,
+                    0.12,
+                    1
+                ]
+            ]
+        },
+        "objects": {
+            "FM": {
+                "visual": {
+                    "name": "FM"
+                }
+            },
+            "FM6op": {
+                "visual": {
+                    "name": "Advanced FM"
+                }
+            },
+            "PWM": {
+                "visual": {
+                    "name": "Pulse Width"
+                }
+            },
+            "Picked String": {
+                "visual": {
+                    "name": "Picked String"
+                }
+            },
+            "chip": {
+                "visual": {
+                    "name": "Chip Wave"
+                }
+            },
+            "custom chip": {
+                "visual": {
+                    "name": "Custom Chip"
+                }
+            },
+            "harmonics": {
+                "visual": {
+                    "name": "Harmonics"
+                }
+            },
+            "spectrum": {
+                "visual": {
+                    "name": "Spectrum"
+                }
+            }
+        }
+    },
+    "preset": {
         "midi_to": {
             "1024": 120,
             "1025": 86,

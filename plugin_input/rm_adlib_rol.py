@@ -247,23 +247,17 @@ class input_adlib_rol(plugin_input.base):
         print("[input-adlib_rol] cVolumeEvents: " + str(rol_header_cVolumeEvents))
         print("[input-adlib_rol] cPitchEvents: " + str(rol_header_cPitchEvents))
         print("[input-adlib_rol] cTempoEvents: " + str(rol_header_cTempoEvents))
-        
         song_file.read(38) #Padding
         notelen = (2/rol_header_tickBeat)*2
         t_tempo_data = parsetrack_tempo(song_file, notelen)
-        
+
         auto_nopl.twopoints(['main', 'bpm'], 'float', t_tempo_data[2], notelen, 'instant')
-
-        for tracknum in range(10):
-            parsetrack(song_file, tracknum, (2/rol_header_tickBeat)*2)
-
+        for tracknum in range(10): parsetrack(song_file, tracknum, (2/rol_header_tickBeat)*2)
         auto_nopl.to_cvpj(cvpj_l)
-
+        
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True
-
         song.add_timesig(cvpj_l, rol_header_beatMeasure, 4)
-        
         song.add_param(cvpj_l, 'bpm', t_tempo_data[1])
         return json.dumps(cvpj_l)
 

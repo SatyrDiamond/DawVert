@@ -478,6 +478,9 @@ class cvpj_plugin:
         data_HP =        [False,0,0,0,0]
         banddata = self.eqband_get(group)
 
+        data_auto = [None, None, [None,None,None,None], None, None]
+
+        bandnum = 1
         for s_band in banddata:
             bandtype = s_band['type']
 
@@ -488,17 +491,27 @@ class cvpj_plugin:
 
             part = [True, band_on, band_freq, band_gain, band_res]
 
-            if bandtype == 'low_pass' and band_on: data_LP = part
-            if bandtype == 'low_shelf' and band_on: data_Lowshelf = part
+            if bandtype == 'low_pass': 
+                data_LP = part
+                data_auto[0] = bandnum
+            if bandtype == 'low_shelf': 
+                data_Lowshelf = part
+                data_auto[1] = bandnum
             if bandtype == 'peak' and band_on: 
                 for peaknum in range(4):
                     peakdata = data_Peaks[peaknum]
                     if peakdata[0] == False: 
                         data_Peaks[peaknum] = part
+                        data_auto[2][peaknum] = bandnum
                         break
-            if bandtype == 'high_shelf' and band_on: data_HighShelf = part
-            if bandtype == 'high_pass' and band_on: data_HP = part
-        return data_LP, data_Lowshelf, data_Peaks, data_HighShelf, data_HP
+            if bandtype == 'high_shelf': 
+                data_HighShelf = part
+                data_auto[3] = bandnum
+            if bandtype == 'high_pass': 
+                data_HP = part
+                data_auto[4] = bandnum
+            bandnum += 1
+        return data_LP, data_Lowshelf, data_Peaks, data_HighShelf, data_HP, data_auto
 
     # -------------------------------------------------- wave
     def wave_add(self, i_name, i_wavepoints, i_min, i_max):

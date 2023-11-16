@@ -5,12 +5,14 @@ import plugin_input
 import json
 import os.path
 import struct
-from functions import placements
-from functions import placement_data
 from functions import auto
-from functions import note_data
+from functions import colors
 from functions import data_bytes
+from functions import data_dataset
 from functions import data_values
+from functions import note_data
+from functions import placement_data
+from functions import placements
 from functions import plugins
 from functions import song
 from functions_tracks import tracks_rm
@@ -257,8 +259,6 @@ def lc_parse_placements(sl_json, tracknum, pl_color, ischord):
         position += length
     return placements
 
-lc_colors = [[0.83, 0.09, 0.42],[0.91, 0.76, 0.36],[0.22, 0.36, 0.60],[0.44, 0.78, 0.66],[0.64, 0.64, 0.64]]
-
 class input_lc(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -286,8 +286,11 @@ class input_lc(plugin_input.base):
 
         cvpj_l = {}
 
+        dataset = data_dataset.dataset('./data_dset/lovelycomposer.dset')
+        colordata = colors.colorset(dataset.colorset_e_list('track', 'main'))
+
         for num in range(5):
-            cvpj_placements = lc_parse_placements(lc_channels[num]["sl"], num, lc_colors[num], num == 4)
+            cvpj_placements = lc_parse_placements(lc_channels[num]["sl"], num, colordata.getcolornum(num), num == 4)
             cvpj_plname = "Part "+str(num+1) if num != 4 else "Chord"
             tracks_rm.track_create(cvpj_l, str(num), 'instruments')
             tracks_rm.track_visual(cvpj_l, str(num), name=cvpj_plname)
@@ -324,11 +327,11 @@ class input_lc(plugin_input.base):
             plugindata.to_cvpj(cvpj_l, cvpj_instid)
 
             tracks_rm.inst_create(cvpj_l, cvpj_instid)
-            tracks_rm.inst_visual(cvpj_l, cvpj_instid, name=used_instrument[1], color=lc_colors[used_instrument[0]])
+            tracks_rm.inst_visual(cvpj_l, cvpj_instid, name=used_instrument[1], color=colordata.getcolornum(used_instrument[0]))
             tracks_rm.inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
 
         tracks_rm.inst_create(cvpj_l, 'chord')
-        tracks_rm.inst_visual(cvpj_l, 'chord', name='Chord', color=lc_colors[4])
+        tracks_rm.inst_visual(cvpj_l, 'chord', name='Chord', color=colordata.getcolornum(4))
 
         startinststr = 'lc_instlist_'
 

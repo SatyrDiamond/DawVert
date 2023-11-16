@@ -93,42 +93,42 @@
                     },
                     "curve": {
                         "def": "",
-                        "max": 1,
-                        "min": 0,
+                        "max": null,
+                        "min": null,
                         "name": "Curve",
-                        "noauto": false,
+                        "noauto": true,
                         "type": "string"
                     },
                     "curve1": {
                         "def": "",
-                        "max": 1,
-                        "min": 0,
+                        "max": null,
+                        "min": null,
                         "name": "Curve1",
-                        "noauto": false,
+                        "noauto": true,
                         "type": "string"
                     },
                     "curve2": {
                         "def": "",
-                        "max": 1,
-                        "min": 0,
+                        "max": null,
+                        "min": null,
                         "name": "Curve2",
-                        "noauto": false,
+                        "noauto": true,
                         "type": "string"
                     },
                     "curve3": {
                         "def": "",
-                        "max": 1,
-                        "min": 0,
+                        "max": null,
+                        "min": null,
                         "name": "Curve3",
-                        "noauto": false,
+                        "noauto": true,
                         "type": "string"
                     },
                     "curve4": {
                         "def": "",
-                        "max": 1,
-                        "min": 0,
+                        "max": null,
+                        "min": null,
                         "name": "Curve4",
-                        "noauto": false,
+                        "noauto": true,
                         "type": "string"
                     },
                     "delay_amount": {

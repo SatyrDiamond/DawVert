@@ -5,6 +5,7 @@ from functions import note_data
 from functions import placement_data
 from functions import plugins
 from functions import song
+from functions import colors
 from functions import data_dataset
 from functions_tracks import fxslot
 from functions_tracks import trackfx
@@ -14,19 +15,6 @@ import json
 import plugin_input
 import xml.etree.ElementTree as ET
 import zipfile
-
-as_pattern_color = {
-    0: [0.07, 0.64, 0.86],
-    1: [0.07, 0.84, 0.90],
-    2: [0.05, 0.71, 0.56],
-    3: [0.05, 0.69, 0.30],
-    4: [0.64, 0.94, 0.22],
-    5: [0.95, 0.79, 0.38],
-    6: [0.95, 0.49, 0.32],
-    7: [0.94, 0.25, 0.38],
-    8: [0.93, 0.20, 0.70],
-    9: [0.69, 0.06, 0.79],
-}
 
 def getvalue(xmltag, xmlname, fallbackval): 
     if xmltag.findall(xmlname) != []: return xmltag.findall(xmlname)[0].text.strip()
@@ -109,7 +97,6 @@ def make_fxslot(x_device_sound, fx_type, as_device):
             fx_plugindata.fxvisual_add('Amp', None)
             fx_plugindata.to_cvpj(cvpj_l, pluginid)
         
-
     return pluginid
 
 class input_audiosanua(plugin_input.base):
@@ -134,6 +121,7 @@ class input_audiosanua(plugin_input.base):
         cvpj_l = {}
 
         dataset = data_dataset.dataset('./data_dset/audiosauna.dset')
+        colordata = colors.colorset(dataset.colorset_e_list('track', 'main'))
 
         songdataxml_filename = None
 
@@ -196,7 +184,7 @@ class input_audiosanua(plugin_input.base):
             cvpj_tr_mute = getbool(x_chan.get('mute'))
             cvpj_tr_solo = getbool(x_chan.get('solo'))
 
-            cvpj_tr_color = as_pattern_color[as_channum]
+            cvpj_tr_color = colordata.getcolornum(as_channum)
 
             tracks_r.track_create(cvpj_l, cvpj_id, 'instrument')
             tracks_r.track_visual(cvpj_l, cvpj_id, name=cvpj_tr_name, color=cvpj_tr_color)
@@ -219,7 +207,7 @@ class input_audiosanua(plugin_input.base):
 
             cvpj_pldata = placement_data.makepl_n(as_pattern_startTick/32, (as_pattern_endTick-as_pattern_startTick)/32, [])
             cvpj_pldata['cut'] = {'type': 'cut', 'start': 0, 'end': as_pattern_patternLength/32}
-            cvpj_pldata['color'] = as_pattern_color[as_pattern_patternColor]
+            cvpj_pldata['color'] = colordata.getcolornum(as_pattern_patternColor)
 
             if as_pattern_patternId in as_patt_notes:
                 t_notelist = as_patt_notes[as_pattern_patternId]

@@ -30,10 +30,22 @@ def widgit_txt_manip(i_text):
         btn_del = imgui.button("Del")
     return btn_add, btn_del, i_text
 
+def widgit_color_manip(i_color):
+    wc_color, wi_color = imgui.color_edit3('##colorin', i_color)
+    if wc_color: i_color = wi_color
+    btn_add = False
+    btn_del = False
+    if i_color != '':
+        imgui.same_line()
+        btn_add = imgui.button("Add")
+        imgui.same_line()
+        btn_del = imgui.button("Del")
+    return btn_add, btn_del, i_color
+
 def widgit_list_manip(i_text, i_list, i_numname, i_vlist):
     imgui.separator()
     imgui.push_item_width(400)
-    c_listdata, w_listdata = imgui.list_box('##', i_numname[0], i_list if i_vlist == None else i_vlist)
+    c_listdata, w_listdata = imgui.list_box('##wlistm', i_numname[0], i_list if i_vlist == None else i_vlist)
     if c_listdata: 
         i_numname[0] = w_listdata
         i_numname[1] = i_list[i_numname[0]]
@@ -46,11 +58,10 @@ def widgit_txt_but(i_text, i_list, i_numname, i_vlist):
     i_text, i_numname, c_listdata, w_listdata = widgit_list_manip(i_text, i_list, i_numname, i_vlist)
     return btn_add, btn_del, i_text, i_numname, w_listdata
 
-def widgit_txtint_but(i_text, i_value, i_list, i_numname, i_vlist):
+def widgit_color_but(i_text, i_list, i_numname, i_vlist):
     btn_add, btn_del, i_text = widgit_txt_manip(i_text)
-    val_m, i_value = imgui.input_text("##val", i_value)
     i_text, i_numname, c_listdata, w_listdata = widgit_list_manip(i_text, i_list, i_numname, i_vlist)
-    return btn_add, btn_del, i_text, i_value, i_numname, c_listdata, w_listdata, val_m
+    return btn_add, btn_del, i_text, i_numname, w_listdata
 
 def widgit_dict_txt(dict_data, dict_name, ctrl_txt, ctrl_type):
     paramfound = False
@@ -113,6 +124,7 @@ g_current_param = [0, None]
 g_current_map = [0, None]
 g_current_group = [0, None]
 g_current_drumset = [0, None]
+g_current_colorset = [0, None]
 
 # ####################################################################################################
 # ####################################################################################################
@@ -505,6 +517,61 @@ def widgits___drumset_editor():
             if imgui.button('Create Drumset'): main_dataset.drumset_create(g_current_cat[1], g_current_object[1])
 
 # ####################################################################################################
+
+txtbox_colorset_name = ''
+colorbox_colorset_color = [0,0,0]
+
+def window___colorset_list():
+    window_data = hello_imgui.DockableWindow()
+    window_data.label = "Colorset List"
+    window_data.dock_space_name = "VisualEditor"
+    window_data.gui_function = widgits___colorset_list
+    return window_data
+
+def widgits___colorset_list():
+    global g_current_cat
+    global g_current_colorset
+    global txtbox_colorset_name
+    global colorbox_colorset_color
+    if g_current_cat[1]:
+        colorsetlist = main_dataset.colorset_list(g_current_cat[1])
+        if colorsetlist != None:
+            #colorset = main_dataset.colorset_e_list(g_current_cat[1], g_current_colorset[1])
+            #c_btn_add, c_btn_del, colorbox_colorset_color = widgit_color_manip(colorbox_colorset_color)
+            #if colorset != None:
+            #    for color in colorset:
+            #        imgui.color_edit3('##', color)
+            #imgui.separator()
+            btn_add, btn_del, txtbox_colorset_name, g_current_colorset, w_listdata = widgit_txt_but(txtbox_colorset_name, colorsetlist, g_current_colorset, None)
+            if btn_add: 
+                print(txtbox_colorset_name)
+                main_dataset.colorset_add(g_current_cat[1], txtbox_colorset_name)
+        else: 
+            if imgui.button('Create Colorset'): main_dataset.colorset_create(g_current_cat[1])
+
+def window___colorset_editor():
+    window_data = hello_imgui.DockableWindow()
+    window_data.label = "Colorset Editor"
+    window_data.dock_space_name = "ExEditorSpace"
+    window_data.gui_function = widgits___colorset_editor
+    return window_data
+
+def widgits___colorset_editor():
+    global g_current_cat
+    global g_current_colorset
+    global txtbox_colorset_name
+    global colorbox_colorset_color
+    if g_current_cat[1]:
+        colorsetlist = main_dataset.colorset_list(g_current_cat[1])
+        if colorsetlist != None:
+            colorset = main_dataset.colorset_e_list(g_current_cat[1], g_current_colorset[1])
+            c_btn_add, c_btn_del, colorbox_colorset_color = widgit_color_manip(colorbox_colorset_color)
+            if c_btn_add: main_dataset.colorset_e_add(g_current_cat[1], g_current_colorset[1], colorbox_colorset_color)
+            imgui.separator()
+            if colorset != None:
+                for color in colorset: imgui.color_edit3('##', color)
+
+# ####################################################################################################
 # ####################################################################################################
 # --- Param Viewer Window
 # ####################################################################################################
@@ -697,6 +764,8 @@ def create_dockable_windows() -> List[hello_imgui.DockableWindow]:
         window___gm_map(),
         window___group_list(),
         window___drumset_editor(),
+        window___colorset_list(),
+        window___colorset_editor(),
         window___param_editor(),
         window___param_viewer(),
         ]

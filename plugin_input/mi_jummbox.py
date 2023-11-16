@@ -10,6 +10,7 @@ from functions import data_values
 from functions import placement_data
 from functions import placements
 from functions import xtramath
+from functions import colors
 from functions import song
 from functions_tracks import auto_data
 from functions_tracks import fxrack
@@ -19,15 +20,6 @@ from functions_tracks import tracks_mi
 import plugin_input
 import json
 import math
-
-global colornum_p
-global colornum_d
-colornum_p = 0
-colornum_d = 0
-
-colors_pitch = [[0, 0.6, 0.63], [0.63, 0.63, 0], [0.78, 0.31, 0], [0, 0.63, 0], [0.82, 0.13, 0.82], [0.47, 0.47, 0.69], [0.54, 0.63, 0], [0.87, 0, 0.1], [0, 0.63, 0.44], [0.57, 0.12, 1]]
-
-colors_drums = [ [0.44, 0.44, 0.44], [0.6, 0.4, 0.2], [0.29, 0.43, 0.56], [0.48, 0.31, 0.6], [0.38, 0.47, 0.22]]
 
 filtervals = [2378.41, 3363.59, 4756.83, 5656.85, 8000, 9513.66, 11313.71, 13454.34, 16000, 19027.31, None]
 
@@ -133,33 +125,6 @@ noteoffset['D'] = 2
 noteoffset['C♯'] = 1
 noteoffset['C'] = 0
 
-inst_names = {
-"FM6op": "advanced FM",
-"chip": "Chip Wave",
-"PWM": "Pulse Width",
-"harmonics": "Harmonics",
-"Picked String": "Picked String",
-"spectrum": "Spectrum",
-"FM": "FM",
-"custom chip": "Custom Chip",
-"noise": "Basic Noise",
-"drumset": "Drum Set"
-}
-
-def getcolor_p():
-	global colornum_p
-	out_color = colors_pitch[colornum_p]
-	colornum_p += 1
-	if colornum_p == 10: colornum_p = 0
-	return out_color
-
-def getcolor_d():
-	global colornum_d
-	out_color = colors_drums[colornum_d]
-	colornum_d += 1
-	if colornum_d == 5: colornum_d = 0
-	return out_color
-
 def calcval(value):
 	global jummbox_beatsPerBar
 	global jummbox_ticksPerBeat
@@ -204,7 +169,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 	a_decay = 3
 	a_sustain = 1
 
-	m_bank, m_inst, m_drum = dataset.midito_get('inst', bb_preset)
+	m_bank, m_inst, m_drum = dataset.midito_get('preset', bb_preset)
 
 	if m_inst != None:
 		tracks_mi.import_dset(cvpj_l, cvpj_instid, bb_preset, dataset, dataset_midi, None, bb_color)
@@ -214,7 +179,8 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 
 		if 'unison' in bb_instrument: inst_plugindata.dataval_add('unison', bb_instrument['unison'])
 
-		cvpj_instname = inst_names[bb_inst_type]
+		if bb_type == 'pitch': cvpj_instname, _ = dataset.object_get_name_color('inst', bb_inst_type)
+		if bb_type == 'drum': cvpj_instname, _ = dataset.object_get_name_color('drums', bb_inst_type)
 
 		if bb_inst_type == 'chip':
 			bb_inst_wave = bb_instrument['wave']
@@ -430,8 +396,8 @@ def parse_channel(channeldata, channum, durpos):
 	bb_sequence = channeldata['sequence']
 
 	if bb_type == 'pitch' or bb_type == 'drum':
-		if bb_type == 'pitch': bb_color = getcolor_p()
-		if bb_type == 'drum': bb_color = getcolor_d()
+		if bb_type == 'pitch': bb_color = colors_pitch.getcolor()
+		if bb_type == 'drum': bb_color = colors_drums.getcolor()
 
 		t_instnum = 1
 		for bb_instrument in bb_instruments:
@@ -556,7 +522,7 @@ def parse_channel(channeldata, channum, durpos):
 									cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.04)
 									auto_data.add_pl(cvpj_l, 'float', ['track', auto_cvpj_instid, 'vol'], cvpj_autopl[0])
 
-			placement_pos += bb_partdur
+				placement_pos += bb_partdur
 
 def get_durpos(jummbox_channels):
 	global jummbox_notesize
@@ -618,6 +584,9 @@ class input_jummbox(plugin_input.base):
 		global dataset
 		global dataset_midi
 
+		global colors_pitch
+		global colors_drums
+
 		global jummbox_beatsPerBar
 		global jummbox_ticksPerBeat
 		global jummbox_key
@@ -629,6 +598,9 @@ class input_jummbox(plugin_input.base):
 
 		dataset = data_dataset.dataset('./data_dset/beepbox.dset')
 		dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
+
+		colors_pitch = colors.colorset(dataset.colorset_e_list('inst', 'beepbox_dark'))
+		colors_drums = colors.colorset(dataset.colorset_e_list('drums', 'beepbox_dark'))
 
 		bbcvpj_placementsize = []
 		bbcvpj_placementnames = {}

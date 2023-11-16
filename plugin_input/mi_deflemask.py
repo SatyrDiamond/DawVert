@@ -16,7 +16,6 @@ import struct
 import json
 
 def fxget(fxtype, fxparam, output_param, output_extra): 
-
     song_tracker_fx_mod.do_fx(None, output_extra, output_param, fxtype, fxparam)
 
     if fxtype == 7:

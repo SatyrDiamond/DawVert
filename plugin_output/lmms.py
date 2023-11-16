@@ -701,7 +701,7 @@ def lmms_encode_audio_track(xmltag, trkJ, trackid, trkplacementsJ):
     auto_add_track(trkX_samptr, 'pan', 'pan', 0, [0, 100], trackid, trackname, 'Pan')
     auto_add_track(xmltag, 'enabled', 'muted', 1, [-1, -1], trackid, trackname, 'On')
 
-    trkX_samptr.set('fxch', str(tracks_r.track_fxrackchan_get(cvpj_l, trackid)))
+    trkX_samptr.set('mixch', str(tracks_r.track_fxrackchan_get(cvpj_l, trackid)))
     
     if 'chain_fx_audio' in trkJ: lmms_encode_fxchain(trkX_samptr, trkJ)
 
@@ -754,7 +754,7 @@ def lmms_encode_effectslot(pluginid, fxcX):
         xml_lmmsreverbsc.set('color', '10000')
 
     elif plugintype == ['universal', 'eq-bands']:
-        data_LP, data_Lowshelf, data_Peaks, data_HighShelf, data_HP = fx_plugindata.eqband_get_limited(None)
+        data_LP, data_Lowshelf, data_Peaks, data_HighShelf, data_HP, data_auto = fx_plugindata.eqband_get_limited(None)
 
         print('[output-lmms]       Audio FX: [eq] ')
         fxslotX.set('name', 'eq')

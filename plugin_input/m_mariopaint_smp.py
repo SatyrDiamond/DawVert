@@ -82,7 +82,7 @@ class input_mariopaint_smp(plugin_input.base):
         tracks_m.add_pl(cvpj_l, 1, 'notes', placement_data.nl2pl(cvpj_notelist))
 
         for instname in instnames:
-            tracks_m.import_dset(cvpj_l, instname, instname, dataset, dataset_midi, None, None)
+            tracks_m.import_dset(cvpj_l, instname, smpnames[instname], dataset, dataset_midi, None, None)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True

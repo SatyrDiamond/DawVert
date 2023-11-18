@@ -84,6 +84,8 @@ class input_ceol(plugin_input.base):
         tracks_master.create(cvpj_l, 1)
         tracks_master.visual(cvpj_l, name='Master', color=[0.31373, 0.39608, 0.41569])
 
+        masterfx_plugindata = None
+
         if ceol_basic_effect == 0: #delay
             masterfx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'delay-c')
             masterfx_plugindata.fxdata_add(1, 0.5)
@@ -122,7 +124,7 @@ class input_ceol(plugin_input.base):
             masterfx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'eq-bands')
             masterfx_plugindata.eqband_add(1, calc_cutoff(ceol_basic_effectvalue), 0, 'high_pass', 1, None)
 
-        masterfx_plugindata.to_cvpj(cvpj_l, 'master-effect')
+        if masterfx_plugindata: masterfx_plugindata.to_cvpj(cvpj_l, 'master-effect')
 
         fxslot.insert(cvpj_l, ['master'], 'audio', 'master-effect')
 

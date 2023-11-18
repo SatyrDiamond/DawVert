@@ -10,29 +10,32 @@ from functions_tracks import tracks_r
 import plugin_input
 import json
 
+cur_val = 0
+
+def org_stream(bio_org, org_numofnotes, maxchange, org_notelist, tnum):
+    global cur_val
+    for x in range(org_numofnotes):
+        pre_val = bio_org.read(1)[0]
+        if maxchange != None:
+            if 0 <= pre_val <= maxchange: cur_val = pre_val
+            org_notelist[x][tnum] = cur_val
+        else:
+            org_notelist[x][tnum] = pre_val
+
+
 def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
-    global cur_note
-    global cur_vol
-    global cur_pan
+    global cur_val
     org_numofnotes = instrumentinfotable_input[trackid][3]
     org_notelist = []
     for x in range(org_numofnotes): org_notelist.append([0,0,0,0,0])
     for x in range(org_numofnotes): #position
         org_notelist[x][0] = int.from_bytes(bio_org.read(4), "little")
-    for x in range(org_numofnotes): #note
-        pre_note = bio_org.read(1)[0]
-        if 0 <= pre_note <= 95: cur_note = pre_note
-        org_notelist[x][1] = cur_note
-    for x in range(org_numofnotes): #duration
-        org_notelist[x][2] = bio_org.read(1)[0]
-    for x in range(org_numofnotes): #vol
-        pre_vol = bio_org.read(1)[0]
-        if 0 <= pre_vol <= 254: cur_vol = pre_vol
-        org_notelist[x][3] = cur_vol
-    for x in range(org_numofnotes): #pan
-        pre_pan = bio_org.read(1)[0]
-        if 0 <= pre_pan <= 12: cur_pan = pre_pan
-        org_notelist[x][4] = cur_pan
+
+    org_stream(bio_org, org_numofnotes, 95, org_notelist, 1) #note
+    org_stream(bio_org, org_numofnotes, 256, org_notelist, 2) #duration
+    org_stream(bio_org, org_numofnotes, 254, org_notelist, 3) #vol
+    org_stream(bio_org, org_numofnotes, 12, org_notelist, 4) #pan
+
     org_l_nl = {}
     for org_note in org_notelist: org_l_nl[org_note[0]] = org_note[1:5]
     org_l_nl = dict(sorted(org_l_nl.items(), key=lambda item: item[0]))
@@ -46,9 +49,7 @@ def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
         if notedata[1] != 1:
             notedur = notedata[1]
             endnote = org_l_n+notedur
-        if endnote != None:
-            if endnote-org_l_n == notedur: isinsidenote = False
-            else: isinsidenote = True
+        if endnote != None: isinsidenote = False if endnote-org_l_n == notedur else True
         else: isinsidenote = False
         if isinsidenote == False: cvpj_nl.append(note_data.rx_makenote(org_l_n, notedata[1], notedata[0]-48, notedata[2]/254, (notedata[3]-6)/6))
     return cvpj_nl

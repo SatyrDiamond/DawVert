@@ -36,18 +36,14 @@ def parse_clip_notes(j_wvtl_trackclip, j_wvtl_tracktype):
     cvpj_pldata["duration"] = j_wvtl_trc_timelineEnd*4 - j_wvtl_trc_timelineStart*4
     cvpj_pldata['cut'] = placement_data.cutloopdata(j_wvtl_trc_readStart*4, j_wvtl_trc_loopStart*4, j_wvtl_trc_loopEnd*4)
 
+    cvpj_notelist = note_data.notelist(1, None)
+
     if j_wvtl_trc_type == 'MIDI':
         if 'notes' in j_wvtl_trackclip:
             for j_wvtl_n in j_wvtl_trackclip['notes']:
-                cvpj_notelist.append(
-                    note_data.rx_makenote(
-                        j_wvtl_n['start']*4, 
-                        j_wvtl_n['end']*4 - j_wvtl_n['start']*4, 
-                        j_wvtl_n['pitch']-60, 
-                        j_wvtl_n['velocity'], 
-                        None))
+                cvpj_notelist.add_r(j_wvtl_n['start'], j_wvtl_n['end']-j_wvtl_n['start'], j_wvtl_n['pitch']-60, j_wvtl_n['velocity'], None)
 
-    cvpj_pldata["notelist"] = cvpj_notelist
+    cvpj_pldata["notelist"] = cvpj_notelist.to_cvpj()
     return cvpj_pldata
 
 # -------------------------------------------- audio --------------------------------------------
@@ -98,8 +94,6 @@ def parse_clip_audio(j_wvtl_trackclip, j_wvtl_tracktype):
     cvpj_pldata['cut']['start'] = j_wvtl_trc_readStart*4
     cvpj_pldata['cut']['loopstart'] = j_wvtl_trc_loopStart*4
     cvpj_pldata['cut']['loopend'] = j_wvtl_trc_loopEnd*4
-
-    #print( j_wvtl_trc_transpose, pow(2, j_wvtl_trc_transpose/12)  )
 
     cvpj_pldata['audiomod'] = {}
     cvpj_pldata['audiomod']['stretch_algorithm'] = 'beats'

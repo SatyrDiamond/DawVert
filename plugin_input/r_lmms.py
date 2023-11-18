@@ -322,6 +322,7 @@ def lmms_decodeplugin(trkX_insttr):
                 wave_data = struct.unpack('f'*sampleshape_size, sampleshape)
                 inst_plugindata.wave_add('main', wave_data, -1, 1)
                 inst_plugindata.osc_num_oscs(1)
+                inst_plugindata.osc_opparam_set(0, 'shape', 'custom_wave')
                 inst_plugindata.osc_opparam_set(0, 'wave_name', 'main')
 
             if pluginname == "sid":
@@ -374,30 +375,26 @@ def lmms_decodeplugin(trkX_insttr):
 # ------- Notelist -------
 
 def lmms_decode_nlpattern(notesX):
-    notelist = []
     printcountpat = 0
+    cvpj_notelist = note_data.notelist(48, None)
     for noteX in notesX:
-        noteJ = note_data.rx_makenote(float(noteX.get('pos'))/12, float(noteX.get('len'))/12, int(noteX.get('key'))-60, hundredto1(noteX.get('vol')), hundredto1(noteX.get('pan')))
+        cvpj_notelist.add_r(int(noteX.get('pos')), int(noteX.get('len')), int(noteX.get('key'))-60, hundredto1(noteX.get('vol')), {'pan': hundredto1(noteX.get('pan'))})
+
         noteX_auto = noteX.findall('automationpattern')
         if len(noteX_auto) != 0: 
-            noteJ['notemod'] = {}
-            noteJ['notemod']['auto'] = {}
-            noteJ['notemod']['auto']['pitch'] = []
             noteX_auto = noteX.findall('automationpattern')[0]
             if len(noteX_auto.findall('detuning')) != 0: 
                 noteX_detuning = noteX_auto.findall('detuning')[0]
                 if len(noteX_detuning.findall('time')) != 0: 
                     prognum = int(noteX_detuning.get('prog'))
                     for pointX in noteX_detuning.findall('time'):
-                        pointJ = {}
-                        pointJ['position'] = float(pointX.get('pos')) / 12
-                        pointJ['value'] = float(pointX.get('value'))
-                        pointJ['type'] = 'instant' if prognum == 0 else 'normal'
-                        noteJ['notemod']['auto']['pitch'].append(pointJ)
+                        cvpj_notelist.auto_add_last('pitch', 
+                            int(pointX.get('pos')), float(pointX.get('value')), 
+                            'instant' if prognum == 0 else 'normal', None)
         printcountpat += 1
-        notelist.append(noteJ)
     print('['+str(printcountpat), end='] ')
-    return notelist
+    return cvpj_notelist.to_cvpj()
+    
 def lmms_decode_nlplacements(trkX):
     nlplacements = []
     patsX = trkX.findall('pattern')
@@ -432,7 +429,10 @@ def lmms_decode_inst_track(trkX, trackid):
 
     #trkX_insttr
     trkX_insttr = trkX.findall('instrumenttrack')[0]
-    track_color, pluginname, instpluginid = lmms_decodeplugin(trkX_insttr)
+    plug_color, pluginname, instpluginid = lmms_decodeplugin(trkX_insttr)
+    track_color = trkX.get('color')
+    if track_color == None: track_color = plug_color
+    else: track_color = track_color = colors.hex_to_rgb_float(track_color)
     add_window_data(trkX, cvpj_l, 'plugin', instpluginid)
     cvpj_pan = float(lmms_auto_getvalue(trkX_insttr, 'pan', 0, 'float', [0, 0.01], ['track', trackid, 'pan']))
     cvpj_vol = float(lmms_auto_getvalue(trkX_insttr, 'vol', 100, 'float', [0, 0.01], ['track', trackid, 'vol']))
@@ -876,8 +876,9 @@ class input_lmms(plugin_input.base):
         if len(trkscX): add_window_data(trkscX[0], cvpj_l, 'main', 'tracklist')
         trksX = trkscX[0].findall('track')
         fxmixerX = songX.findall('fxmixer')
-        if len(fxmixerX): add_window_data(fxmixerX[0], cvpj_l, 'main', 'fxmixer')
-        fxX = fxmixerX[0].findall('fxchannel')
+        if len(fxmixerX): 
+            add_window_data(fxmixerX[0], cvpj_l, 'main', 'fxmixer')
+            fxX = fxmixerX[0].findall('fxchannel')
 
         tlX = songX.find('timeline')
 
@@ -896,7 +897,7 @@ class input_lmms(plugin_input.base):
         projnotesX = songX.findall('projectnotes')
 
         lmms_decode_tracks(trksX)
-        lmms_decode_fxmixer(cvpj_l, fxX)
+        if len(fxmixerX): lmms_decode_fxmixer(cvpj_l, fxX)
 
         trackdata = cvpj_l['track_data'] if 'track_data' in cvpj_l else {}
 

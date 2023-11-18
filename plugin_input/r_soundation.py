@@ -35,10 +35,10 @@ def get_param(i_name, plugindata, i_params):
     return automation
 
 def get_asdr(pluginid, plugindata, sound_instdata):
-    asdr_a = get_paramval(sound_instdata, 'attack')
-    asdr_s = get_paramval(sound_instdata, 'sustain')
-    asdr_d = get_paramval(sound_instdata, 'decay')
-    asdr_r = get_paramval(sound_instdata, 'release')
+    asdr_a = get_paramval(sound_instdata, 'attack')[0]
+    asdr_s = get_paramval(sound_instdata, 'sustain')[0]
+    asdr_d = get_paramval(sound_instdata, 'decay')[0]
+    asdr_r = get_paramval(sound_instdata, 'release')[0]
     plugindata.asdr_env_add('vol', 0, asdr_a, 0, asdr_d, asdr_s, asdr_r, 1)
 
 def parse_clip_notes(sndstat_clip):
@@ -65,17 +65,9 @@ def parse_clip_notes(sndstat_clip):
     cvpj_pldata["duration"] = sndstat_clip_loopduration
     cvpj_pldata['cut'] = placement_data.cutloopdata(-sndstat_clip_contentPosition, -sndstat_clip_contentPosition, sndstat_clip_duration)
 
-    for sndstat_note in sndstat_clip['notes']:
-        cvpj_notelist.append(
-            note_data.rx_makenote(
-                sndstat_note['position']/ticksdiv, 
-                sndstat_note['length']/ticksdiv, 
-                sndstat_note['note']-60, 
-                sndstat_note['velocity'], 
-                None)
-            )
-
-    cvpj_pldata["notelist"] = cvpj_notelist
+    cvpj_notelist = note_data.notelist(ticksdiv*4, None)
+    for sndstat_note in sndstat_clip['notes']: cvpj_notelist.add_r(sndstat_note['position'], sndstat_note['length'], sndstat_note['note']-60, sndstat_note['velocity'], None)
+    cvpj_pldata["notelist"] = cvpj_notelist.to_cvpj()
     placement_data.unminus(cvpj_pldata)
     return cvpj_pldata
 

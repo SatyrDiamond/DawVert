@@ -376,3 +376,26 @@ def multi_convert(cvpj_l, i_rows, i_patterns, i_orders, i_chantype, i_len_table)
             curpatnum += 1
 
     #print(multi_used_instruments)
+
+
+
+
+class patterndata:
+    def __init__(self, number_of_channels):
+        self.patterndata = {}
+        self.num_chans = number_of_channels
+
+    def pattern_add(self, num, rows):
+        s_patdata = []
+        for _ in range(rows):
+            s_patdata.append([{}, [[None, None, {}] for _ in range(self.num_chans)]])
+        self.patterndata[num] = s_patdata
+
+    def cell_data(self, n_pat, n_row, n_chan, c_note, c_inst, c_partype, c_parval):
+        if n_pat in self.patterndata:
+            if n_row < len(self.patterndata[n_pat]):
+                if n_chan < self.num_chans:
+                    patdata = self.patterndata[n_pat][n_row][1][n_chan]
+                    if c_note != None: patdata[0] = c_note
+                    if c_inst != None: patdata[1] = c_note
+                    if c_partype != None: patdata[2][c_partype] = c_parval

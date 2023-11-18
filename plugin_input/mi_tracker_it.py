@@ -409,17 +409,17 @@ class input_it(plugin_input.base):
                         for itpd in envvardata['points']:
                             if envtype == 'vol': 
                                 inst_plugindata.env_points_add('vol', itpd['pos']/48, itpd['value']/64)
-                                if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'vol', 'sustain', envvardata['susloop_start']+1)
+                                if susenabled == 1: inst_plugindata.env_points_addvar('vol', 'sustain', envvardata['susloop_start']+1)
                             if envtype == 'pan': 
                                 inst_plugindata.env_points_add('pan', itpd['pos']/48, (itpd['value'])/32)
-                                if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'pan', 'sustain', envvardata['susloop_start']+1)
+                                if susenabled == 1: inst_plugindata.env_points_addvar('pan', 'sustain', envvardata['susloop_start']+1)
                             if envtype == 'pitch': 
                                 if envvardata['usepitch'] != 1:
                                     inst_plugindata.env_points_add('pitch', itpd['pos']/48, (itpd['value']))
-                                    if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'pitch', 'sustain', envvardata['susloop_start']+1)
+                                    if susenabled == 1: inst_plugindata.env_points_addvar('pitch', 'sustain', envvardata['susloop_start']+1)
                                 else:
                                     inst_plugindata.env_points_add('cutoff', itpd['pos']/48, (itpd['value']/64))
-                                    if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'cutoff', 'sustain', envvardata['susloop_start']+1)
+                                    if susenabled == 1: inst_plugindata.env_points_addvar('cutoff', 'sustain', envvardata['susloop_start']+1)
                                     filterenv_used = True
 
                 if it_singleinst['fadeout'] != 0:

@@ -21,19 +21,6 @@ class plugconv(plugin_plugconv.base):
             plugin_vst2.replace_data(cvpj_plugindata, 'name','any', 'Density2', 'chunk', struct.pack('<ffff', distlevel, 0, 1, 1), None)
             return True
 
-        if plugintype[1] == 'delay':
-            print('[plug-conv] Online Sequencer to VST2: Delay > ZamDelay:',pluginid)
-            plugin_vst2.replace_data(cvpj_plugindata, 'name','any', 'ZamDelay', 'param', None, 8)
-            cvpj_plugindata.param_add('vst_param_0', 0, 'float', "Invert")
-            cvpj_plugindata.param_add('vst_param_1', 0.019877, 'float', "Time")
-            cvpj_plugindata.param_add('vst_param_2', 1, 'float', "Sync BPM")
-            cvpj_plugindata.param_add('vst_param_3', 1, 'float', "LPF")
-            cvpj_plugindata.param_add('vst_param_4', 0.75, 'float', "Divisor")
-            cvpj_plugindata.param_add('vst_param_5', 1, 'float', "Output Gain")
-            cvpj_plugindata.param_add('vst_param_6', 0.24, 'float', "Dry/Wet")
-            cvpj_plugindata.param_add('vst_param_7', 0.265, 'float', "Feedback")
-            return True
-
         elif plugintype[1] == 'eq':
             print('[plug-conv] Online Sequencer to VST2: EQ > 3 Band EQ:',pluginid)
             eq_high = cvpj_plugindata.param_get('eq_high', 0)[0]

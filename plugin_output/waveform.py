@@ -11,7 +11,7 @@ from functions import note_data
 from functions import params
 from functions import plugins
 from functions import song
-from functions_plugin import waveform_values
+from functions import data_dataset
 from functions_tracks import tracks_r
 import math
 
@@ -161,10 +161,12 @@ def get_plugins(xml_tag, cvpj_fxids):
             wf_PLUGIN.set('presetDirty', '1')
             wf_PLUGIN.set('enabled', str(fx_on))
 
-            for waveform_param in waveform_params[plugtype[1]]:
-                defvaluevals = waveform_params[plugtype[1]][waveform_param]
-                paramdata = cvpj_plugindata.param_get(waveform_param, defvaluevals[1])[0]
-                wf_PLUGIN.set(waveform_param, str(paramdata))
+            paramlist = dataset.params_list('plugin', plugintype)
+
+            for paramid in paramlist:
+                dset_paramdata = dataset.params_i_get('plugin', plugintype, paramid)
+                paramdata = cvpj_plugindata.param_get(paramid, dset_paramdata[2])[0]
+                wf_PLUGIN.set(paramid, str(paramdata))
 
 
 
@@ -188,14 +190,15 @@ class output_waveform_edit(plugin_output.base):
     def getfileextension(self): return 'tracktionedit'
     def parse(self, convproj_json, output_file):
         global cvpj_l
-        global waveform_params
+        global dataset
+
         wf_proj = ET.Element("EDIT")
         wf_proj.set('appVersion', "Waveform 11.5.18")
         wf_proj.set('modifiedBy', "DawVert")
 
-        waveform_params = waveform_values.devicesparam()
-
         cvpj_l = json.loads(convproj_json)
+
+        dataset = data_dataset.dataset('./data_dset/waveform.dset')
 
         wf_bpmdata = 120
         wf_numerator = 4

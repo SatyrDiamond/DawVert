@@ -375,25 +375,30 @@ def lmms_decodeplugin(trkX_insttr):
 # ------- Notelist -------
 
 def lmms_decode_nlpattern(notesX):
+    notelist = []
     printcountpat = 0
-    cvpj_notelist = note_data.notelist(48, None)
     for noteX in notesX:
-        cvpj_notelist.add_r(int(noteX.get('pos')), int(noteX.get('len')), int(noteX.get('key'))-60, hundredto1(noteX.get('vol')), {'pan': hundredto1(noteX.get('pan'))})
-
+        noteJ = note_data.rx_makenote(float(noteX.get('pos'))/12, float(noteX.get('len'))/12, int(noteX.get('key'))-60, hundredto1(noteX.get('vol')), hundredto1(noteX.get('pan')))
         noteX_auto = noteX.findall('automationpattern')
         if len(noteX_auto) != 0: 
+            noteJ['notemod'] = {}
+            noteJ['notemod']['auto'] = {}
+            noteJ['notemod']['auto']['pitch'] = []
             noteX_auto = noteX.findall('automationpattern')[0]
             if len(noteX_auto.findall('detuning')) != 0: 
                 noteX_detuning = noteX_auto.findall('detuning')[0]
                 if len(noteX_detuning.findall('time')) != 0: 
                     prognum = int(noteX_detuning.get('prog'))
                     for pointX in noteX_detuning.findall('time'):
-                        cvpj_notelist.auto_add_last('pitch', 
-                            int(pointX.get('pos')), float(pointX.get('value')), 
-                            'instant' if prognum == 0 else 'normal', None)
+                        pointJ = {}
+                        pointJ['position'] = float(pointX.get('pos')) / 12
+                        pointJ['value'] = float(pointX.get('value'))
+                        pointJ['type'] = 'instant' if prognum == 0 else 'normal'
+                        noteJ['notemod']['auto']['pitch'].append(pointJ)
         printcountpat += 1
+        notelist.append(noteJ)
     print('['+str(printcountpat), end='] ')
-    return cvpj_notelist.to_cvpj()
+    return notelist
     
 def lmms_decode_nlplacements(trkX):
     nlplacements = []

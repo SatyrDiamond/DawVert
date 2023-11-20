@@ -345,43 +345,59 @@ class plugconv(plugin_plugconv.base):
 
         elif flpluginname == 'fruity reeverb':
             print("[plug-conv] FL Studio to VST2: Fruity Reeverb > Dragonfly Hall Reverb:",pluginid)
-
             data_dragonfly = plugin_dragonfly_reverb.dragonfly_hall_data()
-
             flr_lowcut = getparam('lowcut')
-            flr_highcut = getparam('highcut')
-            flr_predelay = getparam('predelay')
-            flr_room_size = getparam('room_size')
-            flr_diffusion = getparam('diffusion')/65536
-
             flr_lowcut = xtramath.between_from_one(20, 3000, flr_lowcut/65536) if flr_lowcut != 0 else 0
-            flr_highcut = xtramath.between_from_one(500, 22050, flr_highcut/65536)
-            flr_room_size = xtramath.between_from_one(1, 100, flr_room_size/65536)
-
             data_dragonfly.set_param('low_cut', xtramath.clamp(flr_lowcut, 0, 200))
+            flr_highcut = getparam('highcut')
+            flr_highcut = xtramath.between_from_one(500, 22050, flr_highcut/65536)
             data_dragonfly.set_param('high_cut', xtramath.clamp(flr_highcut, 0, 16000))
-            data_dragonfly.set_param('delay', xtramath.clamp(flr_predelay, 0, 100))
+            flr_room_size = getparam('room_size')
+            flr_room_size = xtramath.between_from_one(1, 100, flr_room_size/65536)
+            data_dragonfly.set_param('delay', xtramath.clamp(getparam('predelay'), 0, 100))
             data_dragonfly.set_param('size', int(xtramath.clamp(flr_room_size, 10, 60)))
-            data_dragonfly.set_param('diffuse', flr_diffusion*100)
-
-
-
-            flr_color = getparam('color')
-            flr_decay = getparam('decay')
-            flr_hidamping = getparam('hidamping')
-            flr_dry = getparam('dry')/65536
-            flr_reverb = getparam('reverb')/65536
-
-            flr_decay = xtramath.between_from_one(0.1, 20, flr_decay/65536)
-            flr_hidamping = xtramath.between_from_one(500, 22050, flr_hidamping/65536)
-
+            data_dragonfly.set_param('diffuse', (getparam('diffusion')/65536)*100)
+            flr_decay = xtramath.between_from_one(0.1, 20, getparam('decay')/65536)
             data_dragonfly.set_param('decay', xtramath.clamp(flr_decay, 0.1, 10))
+            flr_hidamping = xtramath.between_from_one(500, 22050, getparam('hidamping')/65536)
             data_dragonfly.set_param('high_xo', xtramath.clamp(flr_hidamping, 0, 16000))
-            data_dragonfly.set_param('dry_level', flr_dry*100)
-            data_dragonfly.set_param('late_level', flr_reverb*100)
-
+            data_dragonfly.set_param('dry_level', (getparam('dry')/65536)*100)
+            data_dragonfly.set_param('late_level', (getparam('reverb')/65536)*100)
             data_dragonfly.to_cvpj_vst2(cvpj_plugindata)
 
+        elif flpluginname == 'fruity reeverb 2':
+            print("[plug-conv] FL Studio to VST2: Fruity Reeverb 2 > Dragonfly Hall Reverb:",pluginid)
+            data_dragonfly = plugin_dragonfly_reverb.dragonfly_hall_data()
+            data_dragonfly.set_param('low_cut', xtramath.clamp(getparam('lowcut'), 0, 200))
+            data_dragonfly.set_param('high_cut', xtramath.clamp(getparam('highcut')*100, 0, 16000))
+            data_dragonfly.set_param('delay', xtramath.clamp((getparam('predelay')/384)*1000, 0, 100))
+            data_dragonfly.set_param('size', int(xtramath.clamp(getparam('room_size'), 10, 60)))
+            data_dragonfly.set_param('diffuse', getparam('diffusion'))
+            data_dragonfly.set_param('decay', xtramath.clamp(getparam('decay')/10, 0.1, 10))
+            data_dragonfly.set_param('high_xo', xtramath.clamp(getparam('hidamping')*100, 0, 16000))
+            data_dragonfly.set_param('low_mult', xtramath.clamp(getparam('bass')/100, 0.5, 2.5))
+            data_dragonfly.set_param('high_mult', 0.7)
+            data_dragonfly.set_param('dry_level', xtramath.clamp((getparam('dry')/128)*100, 0, 100))
+            #data_dragonfly.set_param('early_level', xtramath.clamp((getparam('er')/128)*100, 0, 100))
+            data_dragonfly.set_param('late_level', xtramath.clamp((getparam('wet')/128)*100, 0, 100))
+            data_dragonfly.to_cvpj_vst2(cvpj_plugindata)
+
+        elif flpluginname == 'fruity phase inverter':
+            print("[plug-conv] FL Studio to VST2: Fruity Phase Inverter > Airwindows Flipity:",pluginid)
+            stateval = int((getparam('state')/1024)*3)
+            flipstate = 0
+            if stateval == 1: flipstate = 1
+            if stateval == 2: flipstate = 2
+            plugin_vst2.replace_data(cvpj_plugindata, 'name', 'any', 'Flipity', 'chunk', struct.pack('<f', (flipstate/8)+0.01), 0)
+
+        #elif flpluginname == 'fruity free filter':
+        #    fff_type = getparam('type')
+        #    fff_freq = getparam('freq')
+        #    fff_q = getparam('q')
+        #    fff_gain = getparam('gain')
+        #    fff_center = getparam('center')/512
+        #    print(fff_type, fff_freq, fff_q, fff_gain, fff_center)
+        #    exit()
 
         #elif flpluginname == 'fruity compressor':  
         #    print('[plug-conv] FL Studio to VST2: Fruity Compressor > Compressor:',pluginid)

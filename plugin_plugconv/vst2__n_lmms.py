@@ -105,6 +105,55 @@ class plugconv(plugin_plugconv.base):
             params_vital.to_cvpj_vst2()
             return True
 
+        if plugintype[1] == 'papu':
+            print("[plug-conv] LMMS to VST2: Freeboy > SocaLabs's PAPU:",pluginid)
+            data_socalabs = plugin_socalabs.socalabs_data(cvpj_plugindata)
+
+            sweep_time = getparam('st')
+            if getparam('sd'): sweep_time = -sweep_time
+
+            data_socalabs.set_param("OL1", int(getparam('ch1so1')))
+            data_socalabs.set_param("OR1", int(getparam('ch1so2')))
+            data_socalabs.set_param("duty1", getparam('ch1wpd'))
+            if getparam('ch1vsd'):
+                data_socalabs.set_param("A1", getparam('ch1ssl'))
+                data_socalabs.set_param("R1", 0.0)
+            else:
+                data_socalabs.set_param("A1", 0.0)
+                data_socalabs.set_param("R1", getparam('ch1ssl'))
+            data_socalabs.set_param("tune1", 0.0)
+            data_socalabs.set_param("fine1", 0.0)
+            data_socalabs.set_param("sweep1", sweep_time)
+            data_socalabs.set_param("shift1", getparam('srs'))
+
+            data_socalabs.set_param("OL2", int(getparam('ch2so1')))
+            data_socalabs.set_param("OR2", int(getparam('ch2so2')))
+            data_socalabs.set_param("duty2", getparam('ch2wpd'))
+            if getparam('ch2vsd'):
+                data_socalabs.set_param("A2", getparam('ch2ssl'))
+                data_socalabs.set_param("R2", 0.0)
+            else:
+                data_socalabs.set_param("A2", 0.0)
+                data_socalabs.set_param("R2", getparam('ch2ssl'))
+            data_socalabs.set_param("tune2", 0.0)
+            data_socalabs.set_param("fine2", 0.0)
+
+            data_socalabs.set_param("OLN", int(getparam('ch4so1')))
+            data_socalabs.set_param("ORL", int(getparam('ch4so2')))
+            if getparam('ch4vsd'):
+                data_socalabs.set_param("AN", getparam('ch4ssl'))
+                data_socalabs.set_param("AR", 0.0)
+            else:
+                data_socalabs.set_param("AN", 0.0)
+                data_socalabs.set_param("AR", getparam('ch4ssl'))
+            data_socalabs.set_param("shiftN", 10)
+            data_socalabs.set_param("stepN", int(getparam('srw')))
+            data_socalabs.set_param("ratioN", 0.0)
+
+            data_socalabs.set_param("output", 7.0)
+            data_socalabs.set_param("param", 8.0)
+            data_socalabs.to_cvpj_vst2(cvpj_plugindata, 1348563061)
+
         if plugintype[1] == 'sid':
             print("[plug-conv] LMMS to VST2: SID > SocaLabs's SID:",pluginid)
             data_socalabs = plugin_socalabs.socalabs_data(cvpj_plugindata)

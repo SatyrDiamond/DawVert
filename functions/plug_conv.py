@@ -95,8 +95,13 @@ def convertpluginconvproj(cvpj_l, pluginid, pci_in, cvpj_plugindata, extra_json)
 		#	'    ['+visualplugname_in+' > '+visualplugname_out+'] ')
 
 		if ismatched == True:
-			isconverted = plugclassinfo[0].convert(cvpj_l, pluginid, cvpj_plugindata, extra_json)
-			if isconverted: break
+			#visualplugname_in = getvisualname(plugclassinfo[1])
+			#visualplugname_out = getvisualname(plugclassinfo[2])
+			#print('convertpluginconvproj -------------', ismatched, plugintype, 
+			#'    ['+visualplugname_in+' > '+visualplugname_out+'] ')
+
+			is_converted = plugclassinfo[0].convert(cvpj_l, pluginid, cvpj_plugindata, extra_json)
+			if is_converted == True: break
 
 	return is_converted
 
@@ -147,7 +152,7 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw,
 					if ______debugtxt______: print('- output')
 					is_converted = convertpluginconvproj(cvpj_l, pluginid, sep_pl_pc_out__native, cvpj_plugindata, extra_json)
 
-					if is_converted == False:
+					if is_converted != True:
 						is_plugin_unsupported = cvpj_plugindata.type_get() not in out_supportedplugins
 					#	if ______debugtxt______: print('---pluugin not supported:', is_plugin_unsupported)
 

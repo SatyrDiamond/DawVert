@@ -67,7 +67,7 @@ class plugconv(plugin_plugconv.base):
         else:
             params_vital = plugin_vital.vital_data(cvpj_plugindata)
             params_vital.setvalue('osc_1_on', 1)
-            params_vital.setvalue('osc_1_level', 0.5)
+            params_vital.setvalue('osc_1_level', 1)
             params_vital.setvalue('volume', 5000)
 
             r_duty = cvpj_plugindata.dataval_get('duty', 0)

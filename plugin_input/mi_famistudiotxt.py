@@ -175,7 +175,7 @@ def add_envelope(inst_plugindata, fst_Instrument, cvpj_name, fst_name):
                 envdata_loop = fst_Instrument['Envelopes'][fst_name]['Loop']
             if 'Release' in fst_Instrument['Envelopes'][fst_name]: 
                 envdata_release = fst_Instrument['Envelopes'][fst_name]['Release']
-            inst_plugindata.env_blocks_add(cvpj_name, envdata_values, 0.017, 15, envdata_loop, envdata_release)
+            inst_plugindata.env_blocks_add(cvpj_name, envdata_values, 0.05, 15, envdata_loop, envdata_release)
 
 
 def add_envelopes(inst_plugindata, fst_Instrument):
@@ -196,7 +196,9 @@ def create_inst(WaveType, fst_Instrument, fxrackchan):
         if WaveType == 'Square1' or WaveType == 'Square2': wavetype = 'square'
         if WaveType == 'Triangle': wavetype = 'triangle'
         if WaveType == 'Noise': wavetype = 'noise'
-        inst_plugindata = plugins.cvpj_plugin('deftype', 'retro', wavetype)
+        inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
+        inst_plugindata.osc_num_oscs(1)
+        inst_plugindata.osc_opparam_set(0, 'shape', wavetype)
         add_envelopes(inst_plugindata, fst_Instrument)
         inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
@@ -215,7 +217,9 @@ def create_inst(WaveType, fst_Instrument, fxrackchan):
     if WaveType == 'VRC6Square' or WaveType == 'VRC6Saw':
         if WaveType == 'VRC6Saw': wavetype = 'saw'
         if WaveType == 'VRC6Square': wavetype = 'square'
-        inst_plugindata = plugins.cvpj_plugin('deftype', 'retro', wavetype)
+        inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
+        inst_plugindata.osc_num_oscs(1)
+        inst_plugindata.osc_opparam_set(0, 'shape', wavetype)
         add_envelopes(inst_plugindata, fst_Instrument)
         inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
@@ -233,16 +237,22 @@ def create_inst(WaveType, fst_Instrument, fxrackchan):
         inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
     if WaveType == 'S5B':
-        inst_plugindata = plugins.cvpj_plugin('deftype', 'sunsoft_5b', None)
+        inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
+        inst_plugindata.osc_num_oscs(1)
+        inst_plugindata.osc_opparam_set(0, 'shape', 'square')
         add_envelopes(inst_plugindata, fst_Instrument)
         inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
     if WaveType == 'MMC5':
-        inst_plugindata = plugins.cvpj_plugin('deftype', 'mmc5', None)
+        inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
+        inst_plugindata.osc_num_oscs(1)
+        inst_plugindata.osc_opparam_set(0, 'shape', 'square')
         inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
     if WaveType == 'EPSMSquare':
-        inst_plugindata = plugins.cvpj_plugin('deftype', 'epsm_square', None)
+        inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
+        inst_plugindata.osc_num_oscs(1)
+        inst_plugindata.osc_opparam_set(0, 'shape', 'square')
         add_envelopes(inst_plugindata, fst_Instrument)
         inst_plugindata.to_cvpj(cvpj_l, pluginid)
 

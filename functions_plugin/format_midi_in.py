@@ -391,7 +391,7 @@ def song_end(cvpj_l):
 
 			color_usable.append([0.4, 0.4, 0.4])
 
-		print(usedinlen, name_usable, color_usable)
+		if ______debugtxt______: print(usedinlen, name_usable, color_usable)
 
 		out_name = data_values.list_usefirst(name_usable)
 		out_color = data_values.list_usefirst(color_usable)

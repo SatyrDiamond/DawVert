@@ -236,7 +236,7 @@ class input_trackerboy(plugin_input.base):
 
                 pluginid = plugins.get_id()
 
-                inst_plugindata = plugins.cvpj_plugin('deftype', 'retro', insttype)
+                inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
                 inst_plugindata.osc_num_oscs(1)
 
                 if trackerboy_instdata[1][0] != (): 
@@ -250,15 +250,19 @@ class input_trackerboy(plugin_input.base):
 
                 if trackerboy_instdata[4][0] != (): 
                     if insttype == 'pulse': 
-                        inst_plugindata.osc_opparam_set(0, 'shape', 'square')
                         inst_plugindata.env_blocks_add('duty', trackerboy_instdata[4][0], None, 4, None, None)
                     if insttype == 'wavetable':
-                        inst_plugindata.osc_opparam_set(0, 'shape', 'custom_wave')
-                        inst_plugindata.osc_opparam_set(0, 'wave_name', 'main')
                         inst_plugindata.env_blocks_add('vol', trackerboy_instdata[4][0], None, 3, None, None)
                     if insttype == 'noise': 
-                        inst_plugindata.osc_opparam_set(0, 'shape', 'noise')
                         inst_plugindata.env_blocks_add('noise', trackerboy_instdata[4][0], None, 3, None, None)
+
+                if insttype == 'pulse': 
+                    inst_plugindata.osc_opparam_set(0, 'shape', 'square')
+                if insttype == 'wavetable':
+                        inst_plugindata.osc_opparam_set(0, 'shape', 'custom_wave')
+                        inst_plugindata.osc_opparam_set(0, 'wave_name', 'main')
+                if insttype == 'noise': 
+                    inst_plugindata.osc_opparam_set(0, 'shape', 'noise')
 
                 if insttype != 'wavetable':
                     env_attack = 0

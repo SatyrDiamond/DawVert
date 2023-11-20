@@ -73,7 +73,10 @@ class input_piyopiyo(plugin_input.base):
             idval = str(tracknum)
 
             pluginid = str(tracknum)
-            inst_plugindata = plugins.cvpj_plugin('deftype', 'native-piyopiyo', 'wave')
+            inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
+            inst_plugindata.osc_num_oscs(1)
+            inst_plugindata.osc_opparam_set(0, 'shape', 'custom_wave')
+            inst_plugindata.osc_opparam_set(0, 'wave_name', 'main')
             inst_plugindata.wave_add('main', trk_waveform, -128, 128)
             inst_plugindata.env_blocks_add('vol', trk_envelope, 1/64, 128, None, None)
             inst_plugindata.env_points_from_blocks('vol')

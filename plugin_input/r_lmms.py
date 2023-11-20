@@ -327,7 +327,6 @@ def lmms_decodeplugin(trkX_insttr):
 
             if pluginname == "sid":
                 inst_plugindata.osc_num_oscs(3)
-                inst_plugindata.oscdata_add('traits', ['coarse', 'pulse_width'])
                 for num in range(3):
                     sid_waveform = inst_plugindata.param_get('waveform'+str(num), 0)[0]
                     sid_pulsewidth = inst_plugindata.param_get('pulsewidth'+str(num), 0)[0]
@@ -343,10 +342,9 @@ def lmms_decodeplugin(trkX_insttr):
                     asdr_name = 'osc'+str(num)
                     inst_plugindata.asdr_env_add(asdr_name, 0, sid_attack, 0, sid_decay, sid_sustain, sid_release, 1)
                     inst_plugindata.osc_opparam_set(num, 'shape', sid_wave[int(sid_waveform)])
-                    inst_plugindata.osc_opparam_set(num, 'env_adsr', {'vol': asdr_name})
+                    inst_plugindata.osc_opparam_set(num, 'env', {'vol': asdr_name})
                     inst_plugindata.osc_opparam_set(num, 'pulse_width', int(sid_pulsewidth)/4095)
                     inst_plugindata.osc_opparam_set(num, 'coarse', int(sid_coarse))
-                    inst_plugindata.osc_opparam_set(num, 'vol', 1)
                 sid_voice3Off = inst_plugindata.param_get('voice3Off', 0)[0]
                 inst_plugindata.osc_opparam_set(2, 'vol', int(not int(sid_voice3Off)))
 

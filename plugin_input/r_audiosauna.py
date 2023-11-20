@@ -251,6 +251,7 @@ class input_audiosanua(plugin_input.base):
 
                 if v_device_deviceType == 1: oprange = 2
                 if v_device_deviceType == 0: oprange = 4
+                inst_plugindata.osc_num_oscs(oprange)
                 for opnum in range(oprange):
                     opnumtxt = str(opnum+1)
 
@@ -260,6 +261,25 @@ class input_audiosanua(plugin_input.base):
                         -1, 
                         float(getvalue(x_device_sound, 'sOp'+opnumtxt, 0))/100 )
                     inst_plugindata.asdr_env_add('op'+opnumtxt, 0, op_attack, 0, op_decay, op_sustain, op_release, 1)
+                    inst_plugindata.osc_opparam_set(opnum, 'env', {'vol': 'op'+opnumtxt})
+
+                    if v_device_deviceType == 0: 
+                        as_oct = int(getvalue(x_device_sound, 'oct'+opnumtxt, 0))*12
+                        as_fine = int(getvalue(x_device_sound, 'oct'+opnumtxt, 0))
+                        as_semi = int(getvalue(x_device_sound, 'semi'+opnumtxt, 0))
+                        as_shape = int(getvalue(x_device_sound, 'wave'+opnumtxt, 0))
+                        as_vol = int(getvalue(x_device_sound, 'osc'+opnumtxt+'Vol', 1))
+
+                        inst_plugindata.osc_opparam_set(opnum, 'course', as_oct+as_fine)
+                        inst_plugindata.osc_opparam_set(opnum, 'fine', as_semi/100)
+                        inst_plugindata.osc_opparam_set(opnum, 'vol', as_vol)
+
+                        if as_shape == 0: inst_plugindata.osc_opparam_set(opnum, 'shape', 'saw')
+                        if as_shape == 1: inst_plugindata.osc_opparam_set(opnum, 'shape', 'square')
+                        if as_shape == 2: inst_plugindata.osc_opparam_set(opnum, 'shape', 'triangle')
+                        if as_shape == 3: inst_plugindata.osc_opparam_set(opnum, 'shape', 'noise')
+                        if as_shape == 4: inst_plugindata.osc_opparam_set(opnum, 'shape', 'sine')
+
 
             if v_device_deviceType == 2:
                 inst_plugindata = plugins.cvpj_plugin('multisampler', None, None)

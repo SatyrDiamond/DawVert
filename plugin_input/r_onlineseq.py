@@ -190,12 +190,8 @@ class input_onlinesequencer(plugin_input.base):
 
             if not ismidifound:
                 inst_plugindata = None
-                if instid == 13: inst_plugindata = plugins.cvpj_plugin('deftype', 'retro', 'sine')
-                elif instid == 14: inst_plugindata = plugins.cvpj_plugin('deftype', 'retro', 'square')
-                elif instid == 15: inst_plugindata = plugins.cvpj_plugin('deftype', 'retro', 'saw')
-                elif instid == 16: inst_plugindata = plugins.cvpj_plugin('deftype', 'retro', 'triangle')
-
                 if instid in [13,14,15,16]: 
+                    inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
                     inst_plugindata.osc_num_oscs(1)
                     if instid == 13: inst_plugindata.osc_opparam_set(0, 'shape', 'sine')
                     if instid == 14: inst_plugindata.osc_opparam_set(0, 'shape', 'square')

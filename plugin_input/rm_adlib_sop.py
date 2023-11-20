@@ -148,7 +148,7 @@ class input_sop(plugin_input.base):
                 fmdata.to_cvpj(cvpj_l, cvpj_instname)
 
             if sop_data_s_inst[0] == 0:
-                fmdata = params_fm.fm_data('opl3')
+                fmdata = plugin_fm.fm_data('opl3')
 
                 tracks_rm.inst_pluginid(cvpj_l, cvpj_instname, cvpj_instname)
                 #tracks_rm.inst_dataval_add(cvpj_l, cvpj_instname, 'instdata', 'middlenote', 24)

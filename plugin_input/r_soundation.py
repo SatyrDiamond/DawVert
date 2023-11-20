@@ -350,6 +350,15 @@ class input_soundation(plugin_input.base):
                     master_gain = (master_gain-0.5)*40
                     fx_plugindata.param_add('gain_out', master_gain, 'float', 'Out Gain')
 
+                elif fxpluginname == 'com.soundation.filter':
+                    filterfx_cutoff = 20 * 1000**get_paramval(sound_chan_effect, 'cutoff')[0]
+                    filterfx_resonance = get_paramval(sound_chan_effect, 'resonance')[0]
+                    filterfx_mode = get_paramval(sound_chan_effect, 'mode')[0]
+                    fx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'eq-bands')
+                    eq_bandtype = 'low_pass' if filterfx_mode == 0 else 'high_pass'
+                    band_res = eq_calc_q(eq_bandtype, filterfx_resonance)
+                    fx_plugindata.eqband_add(1, 20*(1000**filterfx_cutoff), 0, eq_bandtype, band_res, None)
+
                 else:
                     fx_plugindata = plugins.cvpj_plugin('deftype', 'native-soundation', fxpluginname)
                     fx_plugindata.fxdata_add(fxenabled, 1)

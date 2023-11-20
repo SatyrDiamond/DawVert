@@ -98,6 +98,8 @@ def encode_devices(amped_tr_devices, trackid, amped_autodata):
             europa_xml = ET.fromstring(wampreset['settings'])
             europa_xml_prop = europa_xml.findall('Properties')[0]
 
+            europa_params = {}
+
             for xmlsub in europa_xml_prop:
                 if xmlsub.tag == 'Object':
                     object_name = xmlsub.get('name')
@@ -106,14 +108,19 @@ def encode_devices(amped_tr_devices, trackid, amped_autodata):
                             value_name = objsub.get('property')
                             value_type = objsub.get('type')
                             value_value = float(objsub.text) if value_type == 'number' else objsub.text
+                            europa_params[value_name] = [value_type, value_value]
 
-                            if value_type == 'number': 
-                                device_plugindata.param_add_dset(value_name, value_value, dataset_synth_nonfree, 'plugin', 'europa')
-                            else:
-                                if value_name in ['Curve1','Curve2','Curve3','Curve4','Curve']: 
-                                    value_value = list(bytes.fromhex(value_value))
+            paramlist = dataset_synth_nonfree.params_list('plugin', 'europa')
+            for paramname in paramlist:
+                dset_paramdata = dataset_synth_nonfree.params_i_get('plugin', 'europa', paramname)
+                if dset_paramdata[5] in europa_params:
+                    s_paramdata = europa_params[dset_paramdata[5]]
 
-                                device_plugindata.dataval_add(value_name, value_value)
+                    if s_paramdata[0] == 'number': 
+                        device_plugindata.param_add_dset(paramname, s_paramdata[1], dataset_synth_nonfree, 'plugin', 'europa')
+                    else:
+                        if value_name in ['Curve1','Curve2','Curve3','Curve4','Curve']: value_value = list(bytes.fromhex(value_value))
+                        device_plugindata.dataval_add(paramname, s_paramdata[1])
 
             if 'encodedSampleData' in wampreset:
                 europa_sampledata = wampreset['encodedSampleData']

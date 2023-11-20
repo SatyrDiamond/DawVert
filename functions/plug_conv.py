@@ -154,7 +154,7 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw,
 
 					if is_converted != True:
 						is_plugin_unsupported = cvpj_plugindata.type_get() not in out_supportedplugins
-					#	if ______debugtxt______: print('---pluugin not supported:', is_plugin_unsupported)
+						if ______debugtxt______: print('---pluugin not supported:', is_plugin_unsupported)
 
 						if is_plugin_unsupported:
 							for out_getsupportedplugformat in out_getsupportedplugformats:

@@ -12,9 +12,11 @@ import lxml.etree as ET
 from functions import note_data
 from functions import data_bytes
 from functions import plugin_vst2
+from functions import xtramath
 from functions_tracks import auto_data
 from functions_plugparams import wave
 
+from functions_plugdata import plugin_dragonfly_reverb
 from functions_plugdata import plugin_kickmess
 from functions_plugdata import plugin_vital
 from functions_plugdata import plugin_wolfshaper
@@ -99,8 +101,6 @@ class plugconv(plugin_plugconv.base):
                 cvpj_plugindata.param_add('vst_param_5', paramvals[5], 'float', " PostGain ")
                 return True
 
-            print(flpluginname)
-
             if flpluginname in nonfree_il_plugnames:
                 print("[plug-conv] FL Studio to VST2: "+plugintype[1]+":",pluginid)
 
@@ -109,7 +109,7 @@ class plugconv(plugin_plugconv.base):
 
                 if flpluginname in ['equo', 'fruity delay 2', 'fruity delay bank', 'fruity flangus', 'fruity love philter'
                                     'fruity multiband compressor', 'fruity notebook', 'fruity parametric eq 2', 'fruity parametric eq',
-                                    'fruity spectroman','fruity stereo enhancer','fruity vocoder','fruity waveshaper', 'wave candy',
+                                    'fruity spectroman','fruity stereo enhancer','fruity vocoder','fruity waveshaper', 'wave candy'
                                     ]: 
 
                     subdata = il_vst_chunk(1, bytes([0xFF])*512)
@@ -120,7 +120,7 @@ class plugconv(plugin_plugconv.base):
                     headerpart = b'd\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
 
                     dataout += il_headersize(il_vst_chunk(5, headerpart))
-                    dataout += il_vst_chunk('name', 'DawVert')
+                    dataout += il_vst_chunk('name', 'Defualt')
                     dataout += il_vst_chunk(1, subdata)
                     dataout += il_vst_chunk(0, ilchunk)
 
@@ -137,6 +137,9 @@ class plugconv(plugin_plugconv.base):
 
                 return True
 
+
+        if flpluginname not in []:
+            auto_data.del_plugin(cvpj_l, pluginid)
 
         #---------------------------------------- Fruit Kick ----------------------------------------
         if flpluginname == 'fruit kick':
@@ -326,6 +329,59 @@ class plugconv(plugin_plugconv.base):
             if shapeenv != None: data_wolfshaper.add_env(shapeenv)
             data_wolfshaper.to_cvpj_vst2(cvpj_plugindata)
             return True
+
+        elif flpluginname == 'fruity stereo enhancer':
+            print("[plug-conv] FL Studio to VST2: Fruity Stereo Enhancer > SocaLabs's StereoProcessor:",pluginid)
+            data_socalabs = plugin_socalabs.socalabs_data(cvpj_plugindata)
+            data_socalabs.set_param("width1", 0.5)
+            data_socalabs.set_param("center1", (getparam('stereo')/(256))+0.5)
+            data_socalabs.set_param("pan1", 0.0)
+            data_socalabs.set_param("rotation", 0.5)
+            data_socalabs.set_param("pan2", getparam('pan')/128)
+            data_socalabs.set_param("center2", 0.5)
+            data_socalabs.set_param("width2", 0.5)
+            data_socalabs.set_param("output", getparam('vol')/640)
+            data_socalabs.to_cvpj_vst2(cvpj_plugindata, 1282634853)
+
+        elif flpluginname == 'fruity reeverb':
+            print("[plug-conv] FL Studio to VST2: Fruity Reeverb > Dragonfly Hall Reverb:",pluginid)
+
+            data_dragonfly = plugin_dragonfly_reverb.dragonfly_hall_data()
+
+            flr_lowcut = getparam('lowcut')
+            flr_highcut = getparam('highcut')
+            flr_predelay = getparam('predelay')
+            flr_room_size = getparam('room_size')
+            flr_diffusion = getparam('diffusion')/65536
+
+            flr_lowcut = xtramath.between_from_one(20, 3000, flr_lowcut/65536) if flr_lowcut != 0 else 0
+            flr_highcut = xtramath.between_from_one(500, 22050, flr_highcut/65536)
+            flr_room_size = xtramath.between_from_one(1, 100, flr_room_size/65536)
+
+            data_dragonfly.set_param('low_cut', xtramath.clamp(flr_lowcut, 0, 200))
+            data_dragonfly.set_param('high_cut', xtramath.clamp(flr_highcut, 0, 16000))
+            data_dragonfly.set_param('delay', xtramath.clamp(flr_predelay, 0, 100))
+            data_dragonfly.set_param('size', int(xtramath.clamp(flr_room_size, 10, 60)))
+            data_dragonfly.set_param('diffuse', flr_diffusion*100)
+
+
+
+            flr_color = getparam('color')
+            flr_decay = getparam('decay')
+            flr_hidamping = getparam('hidamping')
+            flr_dry = getparam('dry')/65536
+            flr_reverb = getparam('reverb')/65536
+
+            flr_decay = xtramath.between_from_one(0.1, 20, flr_decay/65536)
+            flr_hidamping = xtramath.between_from_one(500, 22050, flr_hidamping/65536)
+
+            data_dragonfly.set_param('decay', xtramath.clamp(flr_decay, 0.1, 10))
+            data_dragonfly.set_param('high_xo', xtramath.clamp(flr_hidamping, 0, 16000))
+            data_dragonfly.set_param('dry_level', flr_dry*100)
+            data_dragonfly.set_param('late_level', flr_reverb*100)
+
+            data_dragonfly.to_cvpj_vst2(cvpj_plugindata)
+
 
         #elif flpluginname == 'fruity compressor':  
         #    print('[plug-conv] FL Studio to VST2: Fruity Compressor > Compressor:',pluginid)

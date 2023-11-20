@@ -566,7 +566,7 @@ class cvpj_plugin:
         self.cvpjdata['osc'][i_oscnum][i_name] = i_value
 
     def osc_op_getall(self, i_oscnum, i_name, i_value):
-        return self.cvpjdata['osc']
+        if 'osc' in self.cvpjdata: return self.cvpjdata['osc']
 
 
 

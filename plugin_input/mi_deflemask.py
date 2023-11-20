@@ -302,7 +302,9 @@ class input_cvpj_r(plugin_input.base):
             cvpj_instdata = {}
             cvpj_instdata["plugindata"] = {}
             if insttype == 'square' or insttype == 'noise':
-                inst_plugindata = plugins.cvpj_plugin('deftype', 'retro', insttype)
+                inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
+                inst_plugindata.osc_num_oscs(1)
+                inst_plugindata.osc_opparam_set(0, 'shape', insttype)
                 if 'env_volume' in dmf_instdata:
                     loopval = None
                     if dmf_instdata['env_volume']['looppos'] != -1: loopval = dmf_instdata['env_volume']['looppos']

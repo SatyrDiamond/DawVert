@@ -299,32 +299,34 @@ class input_lc(plugin_input.base):
         for used_instrument in used_instruments:
             cvpj_instid = str(used_instrument[0])+'_'+used_instrument[1]
 
-            cvpj_instdata = {}
-            if used_instrument[1] == 'Sine': 
-                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'sine')
-            elif used_instrument[1] == 'Square': 
-                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'square')
-                plugindata.dataval_add('duty', 0)
-            elif used_instrument[1] == 'Triangle':
-                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'triangle')
-            elif used_instrument[1] == 'Saw': 
-                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'saw')
-            elif used_instrument[1] == 'Noise': 
-                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'noise')
-                plugindata.dataval_add('type', '4bit')
-            elif used_instrument[1] == 'FreqNoise': 
-                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'noise')
-                plugindata.dataval_add('type', '1bit_short')
-            elif used_instrument[1] == 'Pulse25': 
-                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'square')
-                plugindata.dataval_add('duty', 1)
-            elif used_instrument[1] == 'Pulse125': 
-                plugindata = plugins.cvpj_plugin('deftype', 'retro', 'square')
-                plugindata.dataval_add('duty', 2)
-            else: 
-                plugindata = plugins.cvpj_plugin('deftype', 'lovelycomposer', used_instrument[1])
+            inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
+            inst_plugindata.osc_num_oscs(1)
 
-            plugindata.to_cvpj(cvpj_l, cvpj_instid)
+            if used_instrument[1] == 'Sine': 
+                inst_plugindata.osc_opparam_set(0, 'shape', 'sine')
+            elif used_instrument[1] == 'Square': 
+                inst_plugindata.osc_opparam_set(0, 'shape', 'square')
+                inst_plugindata.osc_opparam_set(0, 'pulse_width', 1/2)
+            elif used_instrument[1] == 'Triangle':
+                inst_plugindata.osc_opparam_set(0, 'shape', 'triangle')
+            elif used_instrument[1] == 'Saw': 
+                inst_plugindata.osc_opparam_set(0, 'shape', 'saw')
+            elif used_instrument[1] == 'Noise': 
+                inst_plugindata.osc_opparam_set(0, 'shape', 'noise')
+                inst_plugindata.osc_opparam_set(0, 'noise_type', '4bit')
+            elif used_instrument[1] == 'FreqNoise': 
+                inst_plugindata.osc_opparam_set(0, 'shape', 'noise')
+                inst_plugindata.osc_opparam_set(0, 'noise_type', '1bit_short')
+            elif used_instrument[1] == 'Pulse25': 
+                inst_plugindata.osc_opparam_set(0, 'shape', 'square')
+                inst_plugindata.osc_opparam_set(0, 'pulse_width', 1/4)
+            elif used_instrument[1] == 'Pulse125': 
+                inst_plugindata.osc_opparam_set(0, 'shape', 'square')
+                inst_plugindata.osc_opparam_set(0, 'pulse_width', 1/8)
+            else: 
+                inst_plugindata = plugins.cvpj_plugin('deftype', 'lovelycomposer', used_instrument[1])
+
+            inst_plugindata.to_cvpj(cvpj_l, cvpj_instid)
 
             tracks_rm.inst_create(cvpj_l, cvpj_instid)
             tracks_rm.inst_visual(cvpj_l, cvpj_instid, name=used_instrument[1], color=colordata.getcolornum(used_instrument[0]))

@@ -12,13 +12,7 @@ from functions import data_values
 from functions import plugin_vst2
 from functions import plugins
 
-from functions_plugparams import data_vc2xml
-from functions_plugparams import params_various_fx
-from functions_plugparams import params_vital
-
-
 ______debugtxt______ = False
-
 
 pl_pc_in = []
 pl_pc_in_always = []

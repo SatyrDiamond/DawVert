@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import plugin_vst2
-from functions_plugparams import data_nullbytegroup
+from functions_plugdata import data_nullbytegroup
 
 class wolfshaper_data:
 	def __init__(self):

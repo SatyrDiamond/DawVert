@@ -3,7 +3,7 @@
 
 import lxml.etree as ET
 from functions import plugin_vst2
-from functions_plugparams import data_vc2xml
+from functions_plugdata import data_vc2xml
 
 class socalabs_data:
 	def __init__(self, cvpj_plugindata):

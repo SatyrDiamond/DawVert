@@ -3,7 +3,7 @@
 
 import lxml.etree as ET
 from functions import plugin_vst2
-from functions_plugparams import data_vc2xml
+from functions_plugdata import data_vc2xml
 
 def addvalue(xmltag, name, value):
     temp_xml = ET.SubElement(xmltag, 'VALUE')

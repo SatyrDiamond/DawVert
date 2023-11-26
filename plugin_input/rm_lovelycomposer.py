@@ -252,7 +252,7 @@ def lc_parse_placements(sl_json, tracknum, pl_color, ischord):
         else: notelist, currentchord = lc_parse_voice_chords(lc_notes, length, currentchord)
 
         placement = placement_data.makepl_n(position, length, notelist)
-        placement['color'] = pl_color
+        if pl_color != None: placement['color'] = pl_color
         if notelist != []: placements.append(placement)
         patternpos.append(position)
         patternlen.append(length)

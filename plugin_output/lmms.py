@@ -635,7 +635,8 @@ def lmms_encode_inst_track(xmltag, trkJ, trackid, trkplacementsJ):
                 patX.set('steps', "16")
                 patX.set('name', json_placement['name'] if 'name' in json_placement else "" )
                 patX.set('type', "1")
-                if 'color' in json_placement: patX.set('color', '#' + colors.rgb_float_to_hex(json_placement['color']))
+                if 'color' in json_placement: 
+                    patX.set('color', '#' + colors.rgb_float_to_hex(json_placement['color']))
                 lmms_encode_notelist(patX, json_notelist)
                 tracksnum += 1
             print(' ')

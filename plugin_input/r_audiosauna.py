@@ -207,7 +207,8 @@ class input_audiosanua(plugin_input.base):
 
             cvpj_pldata = placement_data.makepl_n(as_pattern_startTick/32, (as_pattern_endTick-as_pattern_startTick)/32, [])
             cvpj_pldata['cut'] = {'type': 'cut', 'start': 0, 'end': as_pattern_patternLength/32}
-            cvpj_pldata['color'] = colordata.getcolornum(as_pattern_patternColor)
+            plcolor = colordata.getcolornum(as_pattern_patternColor)
+            if plcolor: cvpj_pldata['color'] = plcolor
 
             if as_pattern_patternId in as_patt_notes:
                 t_notelist = as_patt_notes[as_pattern_patternId]

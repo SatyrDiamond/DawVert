@@ -244,13 +244,14 @@ class input_soundation(plugin_input.base):
                     elif instpluginname == 'com.soundation.europa':
                         inst_plugindata = plugins.cvpj_plugin('deftype', 'synth-nonfree', 'europa')
                         paramlist = dataset_synth_nonfree.params_list('plugin', 'europa')
-                        for paramid in paramlist:
-                            outval = None
-                            param = dataset_synth_nonfree.params_i_get('plugin', 'europa', paramid)
-                            sng_paramid = "/custom_properties/"+param[5]
-                            if sng_paramid in sound_instdata:
-                                if 'value' in sound_instdata[sng_paramid]: outval = sound_instdata[sng_paramid]['value']
-                            inst_plugindata.param_add_dset(paramid, outval, dataset_synth_nonfree, 'plugin', 'europa')
+                        if paramlist:
+                            for paramid in paramlist:
+                                outval = None
+                                param = dataset_synth_nonfree.params_i_get('plugin', 'europa', paramid)
+                                sng_paramid = "/custom_properties/"+param[5]
+                                if sng_paramid in sound_instdata:
+                                    if 'value' in sound_instdata[sng_paramid]: outval = sound_instdata[sng_paramid]['value']
+                                inst_plugindata.param_add_dset(paramid, outval, dataset_synth_nonfree, 'plugin', 'europa')
 
                     elif instpluginname == 'com.soundation.GM-2':
                         inst_plugindata = plugins.cvpj_plugin('deftype', 'native-soundation', instpluginname)
@@ -271,11 +272,13 @@ class input_soundation(plugin_input.base):
                     elif instpluginname in ['com.soundation.fm_synth', 'com.soundation.mono', 'com.soundation.spc', 'com.soundation.supersaw', 'com.soundation.the_wub_machine', 'com.soundation.va_synth']:
                         inst_plugindata = plugins.cvpj_plugin('deftype', 'native-soundation', instpluginname)
                         paramlist = dataset.params_list('plugin', instpluginname)
-                        for paramid in paramlist:
-                            outval = None
-                            if paramid in sound_instdata:
-                                if 'value' in sound_instdata[paramid]: outval = sound_instdata[paramid]['value']
-                            inst_plugindata.param_add_dset(paramid, outval, dataset, 'plugin', instpluginname)
+
+                        if paramlist:
+                            for paramid in paramlist:
+                                outval = None
+                                if paramid in sound_instdata:
+                                    if 'value' in sound_instdata[paramid]: outval = sound_instdata[paramid]['value']
+                                inst_plugindata.param_add_dset(paramid, outval, dataset, 'plugin', instpluginname)
 
                         if instpluginname == 'com.soundation.spc':
                             inst_plugindata.dataval_add('cuts', sound_instdata['cuts'])

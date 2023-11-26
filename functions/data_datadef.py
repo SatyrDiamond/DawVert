@@ -8,8 +8,8 @@ import json
 def string_fix(inputtxt):
     return inputtxt.split(b'\x00')[0].decode().translate(dict.fromkeys(range(32)))
 
-class datadef_data:
-    def __init__(self):
+class datadef:
+    def __init__(self, filepath):
         self.structs = {}
         self.cases = {}
         self.metadata = {}
@@ -19,6 +19,7 @@ class datadef_data:
         self.debugoutput = []
         self.leftoverbytes = b''
         self.bytestream = BytesIO()
+        if filepath: self.load_file(filepath)
 
 # ####################################################################################################
 # ####################################################################################################
@@ -320,6 +321,7 @@ class datadef_data:
 
         if in_datadef != None:
             f = open(in_datadef, "r")
+            print('[datadef] Loaded '+in_datadef)
             ddlines = [x.strip().split('#')[0].split('|') for x in f.readlines()]
             ddlines = [[p.strip() for p in l] for l in ddlines]
 

@@ -110,7 +110,7 @@ def setparams(cvpj_plugdata, datadef, dataset):
         if vst_fourid != None: wrapper_data += wrapper_addchunk(51, data_bytes.swap32(vst_fourid).to_bytes(4, "little") )
         wrapper_data += wrapper_addchunk(57, b'`\t\x00\x00' )
         if vst_name != None: wrapper_data += wrapper_addchunk(54, vst_name.encode() )
-        wrapper_data += wrapper_addchunk(55, vst_path.encode() )
+        if vst_path != None: wrapper_data += wrapper_addchunk(55, vst_path.encode() )
         wrapper_data += wrapper_addchunk(53, wrapper_state )
 
 

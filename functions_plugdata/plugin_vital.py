@@ -5,7 +5,7 @@ import json
 import base64
 import struct
 import math
-from functions_plugparams import wave
+from functions_plugdata import data_wave
 from functions import data_values
 from functions import plugins
 from functions import xtramath
@@ -438,11 +438,11 @@ class vital_data:
                 return True
 
     def importcvpj_wave(self, cvpj_plugdata, osc_num, wave_name, **kwargs):
-        wavedata = wave.cvpjwave2wave(cvpj_plugdata, wave_name, **kwargs)
+        wavedata = data_wave.cvpjwave2wave(cvpj_plugdata, wave_name, **kwargs)
         if wavedata != None: self.replacewave(osc_num-1, wavedata)
 
     def importcvpj_harm(self, cvpj_plugdata, osc_num, harm_name):
-        wavedata = wave.cvpjharm2wave(cvpj_plugdata, harm_name)
+        wavedata = data_wave.cvpjharm2wave(cvpj_plugdata, harm_name)
         if wavedata != None: self.replacewave(osc_num-1, wavedata)
 
     def importcvpj_wavetable(self, cvpj_plugdata, osc_num, lfo_num, wave_name, **kwargs):
@@ -458,7 +458,7 @@ class vital_data:
 
             vital_keyframes = {}
             for num in range(cvpj_wt_len):
-                vital_keyframes[cvpj_wt_locs[num]*256] = wave.cvpjwave2wave(cvpj_plugdata, cvpj_wt_ids[num], **kwargs)
+                vital_keyframes[cvpj_wt_locs[num]*256] = data_wave.cvpjwave2wave(cvpj_plugdata, cvpj_wt_ids[num], **kwargs)
 
             self.replacemultiwave(osc_num, vital_keyframes)
 

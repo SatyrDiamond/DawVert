@@ -172,11 +172,12 @@ def widgits___object_vis_editor():
     global g_current_cat
     global g_current_object
 
-    group_isobjfound, group_data = main_dataset.object_group_get(g_current_cat[1], g_current_object[1])
-    if group_isobjfound:
-        if group_data == None: group_data = ''
-        c_pard_group, v_pard_group = imgui.input_text('Group', group_data)
-        if c_pard_group: main_dataset.object_group_set(g_current_cat[1], g_current_object[1], v_pard_group)
+    for nameval in [['group','Group'],['dataset','DataSet'],['dataset_struct','DataSet Struct']]:
+        group_isobjfound, group_data = main_dataset.object_var_get(nameval[0], g_current_cat[1], g_current_object[1])
+        if group_isobjfound:
+            if group_data == None: group_data = ''
+            c_pard_group, v_pard_group = imgui.input_text(nameval[1], group_data)
+            if c_pard_group: main_dataset.object_var_set(nameval[0], g_current_cat[1], g_current_object[1], v_pard_group)
 
 # ####################################################################################################
 # ####################################################################################################

@@ -86,21 +86,21 @@ class dataset:
                 objdata = self.dataset[c_name]['objects'][o_name]
                 if visual_data != None: objdata['visual'] = visual_data
 
-    def object_group_get(self, c_name, o_name):
+    def object_var_get(self, v_name, c_name, o_name):
         group_data = None
         isobjfound = False
         if c_name in self.dataset: 
             if o_name in self.dataset[c_name]['objects']:
                 objdata = self.dataset[c_name]['objects'][o_name]
                 isobjfound = True
-                if 'group' in objdata: group_data = objdata['group']
+                if v_name in objdata: group_data = objdata[v_name]
         return isobjfound, group_data
 
-    def object_group_set(self, c_name, o_name, group_data):
+    def object_var_set(self, v_name, c_name, o_name, group_data):
         if c_name in self.dataset: 
             if o_name in self.dataset[c_name]['objects']:
                 objdata = self.dataset[c_name]['objects'][o_name]
-                if group_data != None: objdata['group'] = group_data
+                if group_data != None: objdata[v_name] = group_data
 
     def object_get_name_color(self, c_name, o_name):
         visualdata = data_values.nested_dict_get_value(self.dataset, [c_name, 'objects', o_name, 'visual'])

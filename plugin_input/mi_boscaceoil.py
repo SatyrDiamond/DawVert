@@ -4,6 +4,7 @@
 from functions import placements
 from functions import placement_data
 from functions import idvals
+from functions import data_dataset
 from functions import plugins
 from functions import song
 from functions_tracks import fxslot
@@ -53,15 +54,9 @@ class input_ceol(plugin_input.base):
 
         cvpj_l_keynames_data = {}
 
-        idvals_inst_midi = idvals.parse_idvalscsv('data_idvals/midi_inst.csv')
+        dataset = data_dataset.dataset('./data_dset/boscaceoil.dset')
+        dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
         idvals_inst_bosca = idvals.parse_idvalscsv('data_idvals/boscaceoil_inst.csv')
-        idvals_drumkit_midi = idvals.parse_idvalscsv('data_idvals/boscaceoil_drumkit_midi.csv')
-        idvals_drumkit_simple = idvals.parse_idvalscsv('data_idvals/boscaceoil_drumkit_simple.csv')
-        idvals_drumkit_sion = idvals.parse_idvalscsv('data_idvals/boscaceoil_drumkit_sion.csv')
-
-        cvpj_l_keynames_data['drumkit_midi'] = idvals.idval2drumkeynames(idvals_drumkit_midi)
-        cvpj_l_keynames_data['drumkit_simple'] = idvals.idval2drumkeynames(idvals_drumkit_simple)
-        cvpj_l_keynames_data['drumkit_sion'] = idvals.idval2drumkeynames(idvals_drumkit_sion)
 
         bio_mainfile = open(input_file, 'r')
         ceol_data = bio_mainfile.readline().split(',')
@@ -153,13 +148,13 @@ class input_ceol(plugin_input.base):
             cvpj_instcolor = ceol_colors[ceol_inst_palette] if (ceol_inst_palette in ceol_colors) else [0.55, 0.55, 0.55]
 
             if ceol_inst_number <= 127:
-                cvpj_instname = idvals.get_idval(idvals_inst_midi, str(ceol_inst_number), 'name')
+                cvpj_instname, _ = dataset_midi.object_get_name_color('inst', str(ceol_inst_number))
                 inst_plugindata = plugins.cvpj_plugin('midi', 0, ceol_inst_number)
             elif ceol_inst_number == 365: 
                 cvpj_instname = 'MIDI Drums'
                 inst_plugindata = plugins.cvpj_plugin('midi', 128, 0)
             else: 
-                cvpj_instname = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'name')
+                cvpj_instname, _ = dataset.object_get_name_color('inst', str(ceol_inst_number))
                 valsoundid = idvals.get_idval(idvals_inst_bosca, str(ceol_inst_number), 'valsoundid')
                 if valsoundid not in [None, '']: inst_plugindata = plugins.cvpj_plugin('deftype', 'valsound', valsoundid)
                 else: inst_plugindata = plugins.cvpj_plugin('deftype', 'native-boscaceoil', ceol_inst_number)

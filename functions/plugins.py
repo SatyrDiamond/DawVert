@@ -578,6 +578,20 @@ class cvpj_plugin:
         if i_name in self.cvpjdata['osc_data']:
             return self.cvpjdata['osc_data'][i_name]
 
+    # -------------------------------------------------- dsf_import
+
+    def param_dict_dataset_get(self, i_dict, dataset, catname, pluginname):
+        paramlist = dataset.params_list(catname, pluginname)
+        for param in paramlist:
+            outval = i_dict[param] if param in i_dict else None
+            self.param_add_dset(param, outval, dataset, catname, pluginname)
+
+    def param_dict_dataset_set(self, dataset, catname, pluginname):
+        paramlist = dataset.params_list(catname, pluginname)
+        outdict = {}
+        for param in paramlist:
+            outdict[param] = self.param_get(param, 0)[0]
+        return outdict
     # -------------------------------------------------- to_cvpj
     def to_cvpj(self, cvpj_l, pluginid):
         if 'plugins' not in cvpj_l: cvpj_l['plugins'] = {}

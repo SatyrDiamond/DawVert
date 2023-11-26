@@ -65,9 +65,9 @@ def add_pl(cvpj_l, idnum, pl_type, placements_data):
         data_values.nested_dict_add_to_list(cvpj_l, ['playlist', str(idnum), placement_name], placements_data)
 
 
-def import_dset(cvpj_l, trackid, instid, main_dataset, midi_dataset, def_name, def_color):
-    m_bank, m_inst, m_drum = main_dataset.midito_get('inst', instid)
-    di_name, di_color = main_dataset.object_get_name_color('inst', instid)
+def import_dset(cvpj_l, instid, dsetinstname, main_dataset, midi_dataset, def_name, def_color):
+    m_bank, m_inst, m_drum = main_dataset.midito_get('inst', str(dsetinstname))
+    di_name, di_color = main_dataset.object_get_name_color('inst', str(dsetinstname))
     if m_inst != None:
         dm_name, dm_color = midi_dataset.object_get_name_color('inst', str(m_inst))
         out_name = data_values.list_usefirst([def_name, di_name, instid])

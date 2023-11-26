@@ -18,10 +18,10 @@ class plugconv(plugin_plugconv.base):
         if plugintype[1] == 'stereomatrix':  
             print('[plug-conv] LMMS to FL Studio: Stereo Matrix > Fruity Stereo Shaper:',pluginid)
 
-            fl_r_l = cvpj_plugindata.param_get('r-l', 0)*12800
-            fl_l_l = cvpj_plugindata.param_get('l-l', 0)*12800
-            fl_r_r = cvpj_plugindata.param_get('r-r', 0)*12800
-            fl_l_r = cvpj_plugindata.param_get('l-r', 0)*12800
+            fl_r_l = cvpj_plugindata.param_get('r-l', 0)[0]*12800
+            fl_l_l = cvpj_plugindata.param_get('l-l', 0)[0]*12800
+            fl_r_r = cvpj_plugindata.param_get('r-r', 0)[0]*12800
+            fl_l_r = cvpj_plugindata.param_get('l-r', 0)[0]*12800
 
             cvpj_plugindata.replace('native-flstudio', 'fruity stereo shaper')
             cvpj_plugindata.param_add('r2l', fl_r_l, 'int', "")

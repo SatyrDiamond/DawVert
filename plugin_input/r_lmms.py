@@ -435,7 +435,7 @@ def lmms_decode_inst_track(trkX, trackid):
     plug_color, pluginname, instpluginid = lmms_decodeplugin(trkX_insttr)
     track_color = trkX.get('color')
     if track_color == None: track_color = plug_color
-    else: track_color = track_color = colors.hex_to_rgb_float(track_color)
+    else: track_color = colors.hex_to_rgb_float(track_color)
     add_window_data(trkX, cvpj_l, 'plugin', instpluginid)
     cvpj_pan = float(lmms_auto_getvalue(trkX_insttr, 'pan', 0, 'float', [0, 0.01], ['track', trackid, 'pan']))
     cvpj_vol = float(lmms_auto_getvalue(trkX_insttr, 'vol', 100, 'float', [0, 0.01], ['track', trackid, 'vol']))

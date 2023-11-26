@@ -14,7 +14,7 @@ from functions import data_bytes
 from functions import plugin_vst2
 from functions import xtramath
 from functions_tracks import auto_data
-from functions_plugparams import wave
+from functions_plugdata import data_wave
 
 from functions_plugdata import plugin_dragonfly_reverb
 from functions_plugdata import plugin_kickmess
@@ -223,7 +223,7 @@ class plugconv(plugin_plugconv.base):
                 osc_warm = int(getparam(starttextparam+'_warm'))
 
                 vital_osc_shape = []
-                for num in range(2048): vital_osc_shape.append(wave.tripleoct(num/2048, simsynth_shapes[osc_shape], osc_pw, osc_o1, osc_o2))
+                for num in range(2048): vital_osc_shape.append(data_wave.tripleoct(num/2048, simsynth_shapes[osc_shape], osc_pw, osc_o1, osc_o2))
                 params_vital.replacewave(oscnum, vital_osc_shape)
                 params_vital.setvalue(starttextparam_vital+'_on', osc_on)
                 params_vital.setvalue(starttextparam_vital+'_transpose', (osc_crs-0.5)*48)

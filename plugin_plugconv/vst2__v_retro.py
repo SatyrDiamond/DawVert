@@ -10,7 +10,7 @@ from functions import plugins
 from functions_plugdata import plugin_m8bp
 from functions_plugdata import plugin_vital
 
-from functions_plugparams import wave
+from functions_plugdata import data_wave
 
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
@@ -75,12 +75,12 @@ class plugconv(plugin_plugconv.base):
             if r_duty == 1: vital_duty = 0.25
             if r_duty == 2: vital_duty = 0.125
 
-            if plugintype[1] == 'sine': vital_shape = wave.create_wave('sine', 0, None)
-            if plugintype[1] == 'square': vital_shape = wave.create_wave('square', 0, vital_duty)
-            if plugintype[1] == 'pulse': vital_shape = wave.create_wave('square', 0, vital_duty)
-            if plugintype[1] == 'triangle': vital_shape = wave.create_wave('triangle', 0, None)
-            if plugintype[1] == 'saw': vital_shape = wave.create_wave('saw', 0, None)
-            if plugintype[1] == 'wavetable': vital_shape = wave.cvpjwave2wave(cvpj_plugindata, None)
+            if plugintype[1] == 'sine': vital_shape = data_wave.create_wave('sine', 0, None)
+            if plugintype[1] == 'square': vital_shape = data_wave.create_wave('square', 0, vital_duty)
+            if plugintype[1] == 'pulse': vital_shape = data_wave.create_wave('square', 0, vital_duty)
+            if plugintype[1] == 'triangle': vital_shape = data_wave.create_wave('triangle', 0, None)
+            if plugintype[1] == 'saw': vital_shape = data_wave.create_wave('saw', 0, None)
+            if plugintype[1] == 'wavetable': vital_shape = data_wave.cvpjwave2wave(cvpj_plugindata, None)
 
             params_vital.replacewave(0, vital_shape)
 

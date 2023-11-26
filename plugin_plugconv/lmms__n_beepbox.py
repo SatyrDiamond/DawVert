@@ -3,7 +3,7 @@
 
 import os
 import plugin_plugconv
-from functions_plugparams import wave
+from functions_plugdata import data_wave
 
 class plugconv(plugin_plugconv.base):
 	def __init__(self): pass
@@ -19,8 +19,8 @@ class plugconv(plugin_plugconv.base):
 			os.makedirs(samplefolder, exist_ok=True)
 			wave_path = os.path.join(samplefolder, pluginid+'_wave.wav')
 
-			if plugintype[1] in ['custom chip', 'chip']: wave.wave2file(cvpj_plugindata, 'chipwave', wave_path)
-			if plugintype[1] in ['harmonics']: wave.harm2file(cvpj_plugindata, 'harmonics', wave_path)
+			if plugintype[1] in ['custom chip', 'chip']: data_wave.wave2file(cvpj_plugindata, 'chipwave', wave_path)
+			if plugintype[1] in ['harmonics']: data_wave.harm2file(cvpj_plugindata, 'harmonics', wave_path)
 
 			cvpj_plugindata.replace('native-lmms', 'tripleoscillator')
 

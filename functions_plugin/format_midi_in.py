@@ -330,7 +330,7 @@ def song_end(cvpj_l):
 		s_fx_usedinstid = fx_usedinstid[fxnum]
 
 		for i_fx_usedinstid in s_fx_usedinstid:
-			_, groupname = dataset_midi.object_group_get('inst', str(i_fx_usedinstid[1]))
+			_, groupname = dataset_isobjfound, dataset_data = dataset_midi.object_var_get('group', 'inst', str(i_fx_usedinstid[1]))
 			i_fx_usedinstid.append(groupname)
 
 		fx_name = None

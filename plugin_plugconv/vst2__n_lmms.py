@@ -11,12 +11,13 @@ from functions import plugin_vst2
 from functions import plugins
 from functions import xtramath
 
+from functions_plugdata import data_nullbytegroup
 from functions_plugdata import plugin_vital
 from functions_plugdata import plugin_socalabs
 from functions_plugdata import plugin_kickmess
 from functions_plugdata import plugin_wolfshaper
 
-from functions_plugparams import wave
+from functions_plugdata import data_wave
 
 def sid_shape(lmms_sid_shape):
     if lmms_sid_shape == 0: return 3 #squ
@@ -25,7 +26,7 @@ def sid_shape(lmms_sid_shape):
     if lmms_sid_shape == 3: return 4 #noise
 
 def getparam(paramname):
-    global cvpj_plugindata_g
+    global cvpj_plugindata_gav
     paramval = cvpj_plugindata_g.param_get(paramname, 0)
     return paramval[0]
 
@@ -65,12 +66,12 @@ class plugconv(plugin_plugconv.base):
 
                 soscwave = int(getparam('wavetype'+str_oscnum))
                 vital_shape = None
-                if soscwave == 0: vital_shape = wave.create_wave('sine', 0, None)
-                if soscwave == 1: vital_shape = wave.create_wave('triangle', 0, None)
-                if soscwave == 2: vital_shape = wave.create_wave('saw', 0, None)
-                if soscwave == 3: vital_shape = wave.create_wave('square', 0, 0.5)
-                if soscwave == 4: vital_shape = wave.create_wave('mooglike', 0, None)
-                if soscwave == 5: vital_shape = wave.create_wave('exp', 0, None)
+                if soscwave == 0: vital_shape = data_wave.create_wave('sine', 0, None)
+                if soscwave == 1: vital_shape = data_wave.create_wave('triangle', 0, None)
+                if soscwave == 2: vital_shape = data_wave.create_wave('saw', 0, None)
+                if soscwave == 3: vital_shape = data_wave.create_wave('square', 0, 0.5)
+                if soscwave == 4: vital_shape = data_wave.create_wave('mooglike', 0, None)
+                if soscwave == 5: vital_shape = data_wave.create_wave('exp', 0, None)
                 if vital_shape != None: params_vital.replacewave(oscnum, vital_shape)
 
             modalgo1 = int(getparam('modalgo1'))
@@ -225,17 +226,17 @@ class plugconv(plugin_plugconv.base):
             print("[plug-conv] LMMS to VST2: LB302 > Vital:",pluginid)
             params_vital = plugin_vital.vital_data(cvpj_plugindata)
             lb302_shape = getparam('shape')
-            if lb302_shape == 0: vital_shape = wave.create_wave('saw', 0, None)
-            if lb302_shape == 1: vital_shape = wave.create_wave('triangle', 0, None)
-            if lb302_shape == 2: vital_shape = wave.create_wave('square', 0, 0.5)
-            if lb302_shape == 3: vital_shape = wave.create_wave('square_roundend', 0, None)
-            if lb302_shape == 4: vital_shape = wave.create_wave('mooglike', 0, None)
-            if lb302_shape == 5: vital_shape = wave.create_wave('sine', 0, None)
-            if lb302_shape == 6: vital_shape = wave.create_wave('exp', 0, None)
-            if lb302_shape == 8: vital_shape = wave.create_wave('saw', 0, None)
-            if lb302_shape == 9: vital_shape = wave.create_wave('square', 0, 0.5)
-            if lb302_shape == 10: vital_shape = wave.create_wave('triangle', 0, None)
-            if lb302_shape == 11: vital_shape = wave.create_wave('mooglike', 0, None)
+            if lb302_shape == 0: vital_shape = data_wave.create_wave('saw', 0, None)
+            if lb302_shape == 1: vital_shape = data_wave.create_wave('triangle', 0, None)
+            if lb302_shape == 2: vital_shape = data_wave.create_wave('square', 0, 0.5)
+            if lb302_shape == 3: vital_shape = data_wave.create_wave('square_roundend', 0, None)
+            if lb302_shape == 4: vital_shape = data_wave.create_wave('mooglike', 0, None)
+            if lb302_shape == 5: vital_shape = data_wave.create_wave('sine', 0, None)
+            if lb302_shape == 6: vital_shape = data_wave.create_wave('exp', 0, None)
+            if lb302_shape == 8: vital_shape = data_wave.create_wave('saw', 0, None)
+            if lb302_shape == 9: vital_shape = data_wave.create_wave('square', 0, 0.5)
+            if lb302_shape == 10: vital_shape = data_wave.create_wave('triangle', 0, None)
+            if lb302_shape == 11: vital_shape = data_wave.create_wave('mooglike', 0, None)
             if lb302_shape != 7: 
                 params_vital.setvalue('osc_1_on', 1)
                 params_vital.replacewave(0, vital_shape)
@@ -273,6 +274,17 @@ class plugconv(plugin_plugconv.base):
             plugin_vst2.replace_data(cvpj_plugindata, 'name','any', 'ZynAddSubFX', 'chunk', zasfxdatafixed, None)
             return True
 
+        if plugintype[1] == 'reverbsc':
+            print("[plug-conv] LMMS to VST2: ReverbSC > Castello Reverb:",pluginid)
+            value_size = getparam('size')
+            value_color = getparam('color')
+            plugin_vst2.replace_data(cvpj_plugindata, 'name', 'any', 'Castello Reverb', 'chunk', 
+                data_nullbytegroup.make(
+                    [{'ui_size': ''}, 
+                    {'mix': '1', 'size': str(value_size), 'brightness': str(value_color/15000)}]), 
+                None)
+            return True
+
         if plugintype[1] == 'spectrumanalyzer':
             print("[plug-conv] LMMS to VST2: Spectrum Analyzer > SocaLabs's SpectrumAnalyzer:",pluginid)
             data_socalabs = plugin_socalabs.socalabs_data(cvpj_plugindata)
@@ -286,6 +298,6 @@ class plugconv(plugin_plugconv.base):
             data_wolfshaper = plugin_wolfshaper.wolfshaper_data()
             waveshapebytes = base64.b64decode(cvpj_plugindata.dataval_get('waveShape', ''))
             waveshapepoints = [struct.unpack('f', waveshapebytes[i:i+4]) for i in range(0, len(waveshapebytes), 4)]
-            for pointnum in range(50): data_wolfshaper.add_point(pointnum/49,waveshapepoints[pointnum*4][0],0.5,0)
+            for pointnum in range(50): data_wolfshaper.add_point(pointnum/49,waveshapepoints[pointnum*4][0],0.0,0)
             data_wolfshaper.to_cvpj_vst2(cvpj_plugindata)
             return True

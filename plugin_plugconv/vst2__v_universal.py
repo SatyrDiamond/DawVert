@@ -8,7 +8,7 @@ from functions_tracks import auto_data
 from functions_plugdata import plugin_socalabs
 from functions_plugdata import plugin_m8bp
 from functions_plugdata import plugin_vital
-from functions_plugparams import wave
+from functions_plugdata import data_wave
 
 def getthree(cvpj_plugindata, env_name):
     env_blocks = cvpj_plugindata.env_blocks_get(env_name)
@@ -130,14 +130,14 @@ class plugconv(plugin_plugconv.base):
                         params_vital.setvalue('volume', 4000)
 
                         r_duty = cvpj_plugindata.dataval_get('duty', 0)
-                        if osc_shape == 'sine': vital_shape = wave.create_wave('sine', 0, None)
-                        if osc_shape == 'square': vital_shape = wave.create_wave('square', 0, pulse_width)
-                        if osc_shape == 'pulse': vital_shape = wave.create_wave('square', 0, pulse_width)
-                        if osc_shape == 'triangle': vital_shape = wave.create_wave('triangle', 0, None)
-                        if osc_shape == 'saw': vital_shape = wave.create_wave('saw', 0, None)
+                        if osc_shape == 'sine': vital_shape = data_wave.create_wave('sine', 0, None)
+                        if osc_shape == 'square': vital_shape = data_wave.create_wave('square', 0, pulse_width)
+                        if osc_shape == 'pulse': vital_shape = data_wave.create_wave('square', 0, pulse_width)
+                        if osc_shape == 'triangle': vital_shape = data_wave.create_wave('triangle', 0, None)
+                        if osc_shape == 'saw': vital_shape = data_wave.create_wave('saw', 0, None)
                         if osc_shape == 'custom_wave': 
                             wave_name = s_osc['wave_name'] if 'wave_name' in s_osc else None
-                            vital_shape = wave.cvpjwave2wave(cvpj_plugindata, wave_name)
+                            vital_shape = data_wave.cvpjwave2wave(cvpj_plugindata, wave_name)
 
                         params_vital.replacewave(0, vital_shape)
 

@@ -184,7 +184,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 
 		if bb_inst_type == 'chip':
 			bb_inst_wave = bb_instrument['wave']
-			cvpj_instname = bb_inst_wave+' ('+cvpj_instname+')'
+			cvpj_instname = bb_inst_wave+' ('+cvpj_instname+')' if cvpj_instname != None else bb_inst_wave+' ('+bb_inst_type+')'
 			if bb_inst_wave in rawChipWaves:
 				wavesample = rawChipWaves[bb_inst_wave]['samples']
 				inst_plugindata.wave_add('chipwave', wavesample, min(wavesample), max(wavesample))

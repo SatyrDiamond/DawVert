@@ -319,25 +319,28 @@ class datadef:
         self.metadata = {}
         self.cases = {}
 
-        if in_datadef != None:
-            f = open(in_datadef, "r")
-            print('[datadef] Loaded '+in_datadef)
-            ddlines = [x.strip().split('#')[0].split('|') for x in f.readlines()]
-            ddlines = [[p.strip() for p in l] for l in ddlines]
+        try:
+            if in_datadef != None:
+                f = open(in_datadef, "r")
+                print('[datadef] Loaded '+in_datadef)
+                ddlines = [x.strip().split('#')[0].split('|') for x in f.readlines()]
+                ddlines = [[p.strip() for p in l] for l in ddlines]
 
-            current_struct = None
-            for ddline in ddlines:
-                if ddline != ['']:
-                    if ddline[0] == 'meta':
-                        self.metadata[ddline[1]] = ddline[2]
-                    if ddline[0] == 'area_struct':
-                        current_struct = ddline[1]
-                        self.structs[ddline[1]] = []
-                    if ddline[0] == 'part':
-                        valtypes = ddline[1].split('/')
-                        valtypes = [x.split('.') for x in valtypes]
-                        valtypes = [x if len(x) > 1 else [x[0], ''] for x in valtypes]
-                        self.structs[current_struct].append([ddline[0], valtypes, ddline[2]])
+                current_struct = None
+                for ddline in ddlines:
+                    if ddline != ['']:
+                        if ddline[0] == 'meta':
+                            self.metadata[ddline[1]] = ddline[2]
+                        if ddline[0] == 'area_struct':
+                            current_struct = ddline[1]
+                            self.structs[ddline[1]] = []
+                        if ddline[0] == 'part':
+                            valtypes = ddline[1].split('/')
+                            valtypes = [x.split('.') for x in valtypes]
+                            valtypes = [x if len(x) > 1 else [x[0], ''] for x in valtypes]
+                            self.structs[current_struct].append([ddline[0], valtypes, ddline[2]])
+        except:
+            pass
 
     def save_file(self, file_name):
         linesdata = []

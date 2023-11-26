@@ -299,7 +299,7 @@ def main():
 
     argsd = vars(aparser.parse_args())
 
-    datadef = data_datadef.datadef_data()
+    datadef = data_datadef.datadef()
 
     if argsd['d'] != None:
         df_file = argsd['d']

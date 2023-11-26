@@ -43,7 +43,17 @@ class output_cvpj(plugin_output.base):
 
 
                 param_list = cvpj_plugindata.param_list()
-                if param_list: print('\t\t Params:',', '.join(param_list))
+                if param_list: 
+                    print('\t\t Params:',', '.join(param_list))
+                    for pid in param_list:
+                        param_mm = cvpj_plugindata.param_get_minmax(pid, None)
+                        #print(param_mm)
+                        if param_mm[3] != None: 
+                            if param_mm[0] < param_mm[3]: 
+                                print(pid+': '+str(param_mm[0])+" is lower then "+str(param_mm[3]))
+                        if param_mm[4] != None: 
+                            if param_mm[0] > param_mm[4]: 
+                                print(pid+': '+str(param_mm[0])+" is higher then "+str(param_mm[4]))
 
 
                 dataval_list = cvpj_plugindata.dataval_list()
@@ -78,12 +88,12 @@ class output_cvpj(plugin_output.base):
                 if harmonics: print('\t\t Harmonics:',len(harmonics))
 
 
-                data_wave.data = cvpj_plugindata.data_wave.list()
-                if data_wave.data: print('\t\t Waves:',len(data_wave.data))
+                wavedata = cvpj_plugindata.wave_list()
+                if wavedata: print('\t\t Waves:',len(wavedata))
 
 
-                data_wave.able = cvpj_plugindata.data_wave.able_list()
-                if data_wave.able: print('\t\t Wavetable:',len(data_wave.able))
+                waveable = cvpj_plugindata.wavetable_list()
+                if waveable: print('\t\t Wavetable:',len(waveable))
 
 
 

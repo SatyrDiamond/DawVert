@@ -10,8 +10,6 @@ from functions import data_bytes
 from functions import data_values
 from functions import plugins
 from functions import plugin_vst2
-from functions_plugin import flstudio_datadef
-from functions_plugparams import datadef
 from io import BytesIO
 
 def decode_pointdata(fl_plugstr):
@@ -46,7 +44,7 @@ envshapes = {
     12: 'doublecurve3',
 }
 
-def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
+def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername, datadef, dataset):
     fl_plugstr = BytesIO(chunkpdata if chunkpdata else b'')
     pluginname = pluginname.lower()
     cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
@@ -337,12 +335,11 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername):
         
 
     else:
-        fl_datadef = flstudio_datadef.get_datadef(pluginname)
-
-        if fl_datadef != []:
+        datadef_struct = dataset.object_var_get('datadef_struct', 'plugin', pluginname)
+        if datadef_struct[0]:
             cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
-            datadef.to_plugdata(cvpj_plugindata, fl_datadef, fl_plugstr)
-        #if pluginname == 'simsynth': exit()
+            jsondecoded = datadef.parse(datadef_struct[1], chunkpdata)
+            cvpj_plugindata.param_dict_dataset_get(jsondecoded, dataset, 'plugin', pluginname)
 
     #elif pluginname == 'pitcher': LATER
     #    chunkdata = data_bytes.riff_read(chunkdata, 0)

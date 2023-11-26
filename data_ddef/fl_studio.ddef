@@ -1,18 +1,18 @@
 
-area_struct|effector
-part|int|version
-part|float|effect
-part|float|bypass
-part|float|wet
-part|float|x_param
-part|float|y_param
-part|float|mod_rate
-part|float|tempo
-part|float|x_mod
-part|float|y_mod
-part|float|mod_shape
-part|float|input_level
-part|float|output_gain
+# area_struct|effector
+# part|int|version
+# part|float|effect
+# part|float|bypass
+# part|float|wet
+# part|float|x_param
+# part|float|y_param
+# part|float|mod_rate
+# part|float|tempo
+# part|float|x_mod
+# part|float|y_mod
+# part|float|mod_shape
+# part|float|input_level
+# part|float|output_gain
 
 area_struct|frequency_shifter
 part|int|version
@@ -38,16 +38,16 @@ part|int|osc_click
 part|int|osc_dist
 
 area_struct|fruity_7_band_eq
-part|int|band_1
-part|int|band_2
-part|int|band_3
-part|int|band_4
-part|int|band_5
-part|int|band_6
-part|int|band_7
+part|s_int|band_1
+part|s_int|band_2
+part|s_int|band_3
+part|s_int|band_4
+part|s_int|band_5
+part|s_int|band_6
+part|s_int|band_7
 
 area_struct|fruity_balance
-part|int|pan
+part|s_int|pan
 part|int|vol
 
 area_struct|fruity_bass_boost
@@ -91,12 +91,12 @@ part|s_int|crosscutoff
 part|s_int|wetonly
 
 area_struct|fruity_delay_2
-part|int|input_pan
+part|s_int|input_pan
 part|int|input_vol
 part|int|dry
 part|int|fb_vol
 part|int|time
-part|int|time_stereo_offset
+part|s_int|time_stereo_offset
 part|int|fb_mode
 part|int|fb_cut
 
@@ -171,11 +171,12 @@ part|int|mix
 part|int|post
 
 area_struct|fruity_fast_lp
+part|int|version
 part|s_int|cutoff
 part|s_int|reso
-part|s_int|unknown_1
 
 area_struct|fruity_filter
+part|int|version
 part|s_int|cutoff
 part|s_int|reso
 part|s_int|lowpass
@@ -205,9 +206,9 @@ part|int|depth
 part|int|speed
 part|int|delay
 part|int|spread
-part|int|cross
-part|int|dry
-part|int|wet
+part|s_int|cross
+part|s_int|dry
+part|s_int|wet
 
 area_struct|fruity_free_filter
 part|s_int|type
@@ -217,6 +218,7 @@ part|s_int|gain
 part|s_int|center
 
 area_struct|fruity_limiter
+part|int|
 part|int|gain
 part|int|sat
 part|int|limiter_ceil
@@ -235,6 +237,10 @@ part|int|comp_sus
 part|int|noise_gain
 part|int|noise_thres
 part|int|noise_rel
+part|skip.18|
+part|skip.18|
+part|skip.18|
+part|skip.18|
 part|int|unknown_0
 part|byte|unknown_1
 part|byte|unknown_2
@@ -273,13 +279,13 @@ part|s_int|lfo_speed
 
 area_struct|fruity_parametric_eq_2
 part|int|version
-part|int|1_gain
-part|int|2_gain
-part|int|3_gain
-part|int|4_gain
-part|int|5_gain
-part|int|6_gain
-part|int|7_gain
+part|s_int|1_gain
+part|s_int|2_gain
+part|s_int|3_gain
+part|s_int|4_gain
+part|s_int|5_gain
+part|s_int|6_gain
+part|s_int|7_gain
 part|int|1_freq
 part|int|2_freq
 part|int|3_freq
@@ -301,23 +307,23 @@ part|int|4_type
 part|int|5_type
 part|int|6_type
 part|int|7_type
-part|int|1_order
-part|int|2_order
-part|int|3_order
-part|int|4_order
-part|int|5_order
-part|int|6_order
-part|int|7_order
+part|s_int|1_order
+part|s_int|2_order
+part|s_int|3_order
+part|s_int|4_order
+part|s_int|5_order
+part|s_int|6_order
+part|s_int|7_order
 part|s_int|main_lvl
 
 area_struct|fruity_parametric_eq
-part|int|1_q
-part|int|2_q
-part|int|3_q
-part|int|4_q
-part|int|5_q
-part|int|6_q
-part|int|7_q
+part|s_int|1_q
+part|s_int|2_q
+part|s_int|3_q
+part|s_int|4_q
+part|s_int|5_q
+part|s_int|6_q
+part|s_int|7_q
 part|int|1_freq
 part|int|2_freq
 part|int|3_freq
@@ -404,22 +410,23 @@ part|byte|show_peaks
 part|byte|stereo
 
 area_struct|fruity_stereo_enhancer
-part|int|pan
-part|int|vol
-part|int|stereo
-part|int|phase_offs
-part|int|prepost
-part|int|phaseinvert
+part|s_int|pan
+part|s_int|vol
+part|s_int|stereo
+part|s_int|phase_offs
+part|s_int|prepost
+part|s_int|phaseinvert
 
 area_struct|fruity_stereo_shaper
-part|int|r2l
-part|int|l2l
-part|int|r2r
-part|int|l2r
-part|int|delay
-part|int|dephase
-part|int|iodiff
-part|int|prepost
+part|int|
+part|s_int|r2l
+part|s_int|l2l
+part|s_int|r2r
+part|s_int|l2r
+part|s_int|delay
+part|s_int|dephase
+part|s_int|iodiff
+part|s_int|prepost
 
 area_struct|plucked!
 part|int|decay
@@ -474,6 +481,8 @@ part|double|svf_att
 part|double|svf_dec
 part|double|svf_sus
 part|double|svf_rel
+part|skip_n.64|
+part|skip_n.12|
 part|int|osc1_on
 part|int|osc1_o1
 part|int|osc1_o2
@@ -629,26 +638,26 @@ part|int|wnoise
 
 area_struct|3x_osc
 part|int|version
-part|int|osc1_pan
+part|s_int|osc1_pan
 part|int|osc1_shape
-part|int|osc1_coarse
-part|int|osc1_fine
-part|int|osc1_ofs
-part|int|osc1_detune
+part|s_int|osc1_coarse
+part|s_int|osc1_fine
+part|s_int|osc1_ofs
+part|s_int|osc1_detune
 part|int|osc1_mixlevel
-part|int|osc2_pan
+part|s_int|osc2_pan
 part|int|osc2_shape
-part|int|osc2_coarse
-part|int|osc2_fine
-part|int|osc2_ofs
-part|int|osc2_detune
+part|s_int|osc2_coarse
+part|s_int|osc2_fine
+part|s_int|osc2_ofs
+part|s_int|osc2_detune
 part|int|osc2_mixlevel
-part|int|osc3_pan
+part|s_int|osc3_pan
 part|int|osc3_shape
-part|int|osc3_coarse
-part|int|osc3_fine
-part|int|osc3_ofs
-part|int|osc3_detune
+part|s_int|osc3_coarse
+part|s_int|osc3_fine
+part|s_int|osc3_ofs
+part|s_int|osc3_detune
 part|int|phase_rand
 part|byte|osc1_invert
 part|byte|osc2_invert

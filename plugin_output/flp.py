@@ -19,6 +19,9 @@ from functions import params
 from functions import song
 from functions_tracks import tracks_mi
 
+from functions import data_datadef
+from functions import data_dataset
+
 filename_len = {}
 
 def decode_color(color):
@@ -44,6 +47,9 @@ class output_cvpjs(plugin_output.base):
     def getfileextension(self): return 'flp'
     def parse(self, convproj_json, output_file):
         cvpj_l = json.loads(convproj_json)
+
+        datadef = data_datadef.datadef('./data_ddef/fl_studio.ddef')
+        dataset = data_dataset.dataset('./data_dset/fl_studio.dset')
 
         FLP_Data = {}
 
@@ -170,7 +176,7 @@ class output_cvpjs(plugin_output.base):
                     inst_plugdata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
                     plugintype = inst_plugdata.type_get()
 
-                    fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(inst_plugdata)
+                    fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(inst_plugdata, datadef, dataset)
 
                     if plugintype == ['sampler', 'single']:
                         T_Main['type'] = 0
@@ -502,7 +508,7 @@ class output_cvpjs(plugin_output.base):
                     for pluginid in cvpj_fxdata['chain_fx_audio']:
 
                         fx_plugdata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
-                        fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(fx_plugdata)
+                        fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(fx_plugdata, datadef, dataset)
                         if fl_plugin != None:
                             FL_Mixer[cvpj_fx]['slots'][slotnum] = {}
                             slotdata = FL_Mixer[cvpj_fx]['slots'][slotnum]

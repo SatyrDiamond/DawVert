@@ -172,7 +172,7 @@ def widgits___object_vis_editor():
     global g_current_cat
     global g_current_object
 
-    for nameval in [['group','Group'],['dataset','DataSet'],['dataset_struct','DataSet Struct']]:
+    for nameval in [['group','Group'],['datadef','DataDef'],['datadef_struct','DataDef Struct']]:
         group_isobjfound, group_data = main_dataset.object_var_get(nameval[0], g_current_cat[1], g_current_object[1])
         if group_isobjfound:
             if group_data == None: group_data = ''

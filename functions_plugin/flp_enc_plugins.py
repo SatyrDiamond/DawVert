@@ -9,21 +9,21 @@ import base64
 from functions import data_bytes
 from functions import plugins
 from functions import plugin_vst2
-from functions_plugin import flstudio_datadef
-from functions_plugparams import datadef
 
 def wrapper_addchunk(chunkid, chunkdata):
     return chunkid.to_bytes(4, "little") + len(chunkdata).to_bytes(4, "little") + b'\x00\x00\x00\x00' + chunkdata
 
-def setparams(cvpj_plugdata):
+def setparams(cvpj_plugdata, datadef, dataset):
     fl_plugin, fl_pluginparams = None, None
     plug_type = cvpj_plugdata.type_get()
 
     if plug_type[0] == 'native-flstudio':
-        fl_datadef = flstudio_datadef.get_datadef(plug_type[1])
-        if fl_datadef != []:
+        datadef_struct = dataset.object_var_get('datadef_struct', 'plugin', plug_type[1])
+        if datadef_struct[0]:
+            dictdata = cvpj_plugdata.param_dict_dataset_set(dataset, 'plugin', plug_type[1])
             fl_plugin = plug_type[1]
-            fl_pluginparams = datadef.from_plugdata(cvpj_plugdata, fl_datadef)
+            datadef.create(datadef_struct[1], dictdata)
+            fl_pluginparams = datadef.bytestream.getvalue()
 
     if plug_type[0] == 'soundfont2':
         fl_plugin = 'fruity soundfont player'

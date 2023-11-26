@@ -4,12 +4,12 @@ from functions import data_values
 
 class dataset:
     def __init__(self, in_dataset):
-        print(in_dataset)
         if in_dataset != None:
             try:
                 f = open(in_dataset, "r")
                 self.dataset = json.load(f)
                 self.category_list = [x for x in self.dataset]
+                print('[dataset] Loaded '+in_dataset)
             except:
                 self.dataset = {}
                 self.category_list = []

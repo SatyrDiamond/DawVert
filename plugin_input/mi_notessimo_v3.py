@@ -342,13 +342,16 @@ class input_notessimo_v3(plugin_input.base):
                 tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=inst_name, color=inst_color)
             else: tracks_mi.inst_visual(cvpj_l, cvpj_instid, name='noname ('+inst+')', color=[0.3,0.3,0.3])
 
-            if inst_found: tracks_mi.inst_visual(cvpj_l, cvpj_instid, color=colors.moregray(outdsd[5]))
+            if outdsd[5] != None: colors.moregray(outdsd[5])
+            
+            if inst_found: 
+                tracks_mi.inst_visual(cvpj_l, cvpj_instid, color=outdsd[5])
 
             if outdsd[3]: 
                 tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
             else:
                 tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
-                fxrack.add(cvpj_l, fxnum, 1, 0, name=outdsd[4], color=colors.moregray(outdsd[5]))
+                fxrack.add(cvpj_l, fxnum, 1, 0, name=outdsd[4], color=outdsd[5])
                 fxnum += 1
 
         song.add_param(cvpj_l, 'bpm', 120)

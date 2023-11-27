@@ -7,6 +7,7 @@ import os
 import math
 import base64
 from functions import data_bytes
+from functions import data_values
 from functions import plugins
 from functions import plugin_vst2
 

@@ -1189,6 +1189,1779 @@
                     }
                 }
             },
+            "fruity delay bank": {
+                "datadef_struct": "fruity_delay_bank",
+                "params": {
+                    "bank_1_e/enabled": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_e/fbfilter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_e/fbfilter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_e/feedback_leave_first_echo": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_e/feedback_mode": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_e/feedback_tempo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_e/filter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_e/filter_post": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_e/filter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_e/grain_div": {
+                        "def": 0,
+                        "max": 4096,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_e/grain_sh": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/fbfilter_cut": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/fbfilter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/fbfilter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/feedback_ofs": {
+                        "def": 0,
+                        "max": 512,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/feedback_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/feedback_sep": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/feedback_time": {
+                        "def": 0,
+                        "max": 7680,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/feedback_vol": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/filter_cutoff": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/filter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/filter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/out_next": {
+                        "def": 0,
+                        "max": 160,
+                        "min": -1,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/out_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/out_vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_1_v/vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_e/enabled": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_e/fbfilter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_e/fbfilter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_e/feedback_leave_first_echo": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_e/feedback_mode": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_e/feedback_tempo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_e/filter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_e/filter_post": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_e/filter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_e/grain_div": {
+                        "def": 0,
+                        "max": 4096,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_e/grain_sh": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/fbfilter_cut": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/fbfilter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/fbfilter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/feedback_ofs": {
+                        "def": 0,
+                        "max": 512,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/feedback_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/feedback_sep": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/feedback_time": {
+                        "def": 0,
+                        "max": 7680,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/feedback_vol": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/filter_cutoff": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/filter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/filter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/out_next": {
+                        "def": 0,
+                        "max": 160,
+                        "min": -1,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/out_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/out_vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_2_v/vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_e/enabled": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_e/fbfilter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_e/fbfilter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_e/feedback_leave_first_echo": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_e/feedback_mode": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_e/feedback_tempo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_e/filter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_e/filter_post": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_e/filter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_e/grain_div": {
+                        "def": 0,
+                        "max": 4096,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_e/grain_sh": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/fbfilter_cut": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/fbfilter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/fbfilter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/feedback_ofs": {
+                        "def": 0,
+                        "max": 512,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/feedback_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/feedback_sep": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/feedback_time": {
+                        "def": 0,
+                        "max": 7680,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/feedback_vol": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/filter_cutoff": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/filter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/filter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/out_next": {
+                        "def": 0,
+                        "max": 160,
+                        "min": -1,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/out_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/out_vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_3_v/vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_e/enabled": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_e/fbfilter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_e/fbfilter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_e/feedback_leave_first_echo": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_e/feedback_mode": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_e/feedback_tempo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_e/filter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_e/filter_post": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_e/filter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_e/grain_div": {
+                        "def": 0,
+                        "max": 4096,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_e/grain_sh": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/fbfilter_cut": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/fbfilter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/fbfilter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/feedback_ofs": {
+                        "def": 0,
+                        "max": 512,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/feedback_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/feedback_sep": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/feedback_time": {
+                        "def": 0,
+                        "max": 7680,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/feedback_vol": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/filter_cutoff": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/filter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/filter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/out_next": {
+                        "def": 0,
+                        "max": 160,
+                        "min": -1,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/out_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/out_vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_4_v/vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_e/enabled": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_e/fbfilter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_e/fbfilter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_e/feedback_leave_first_echo": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_e/feedback_mode": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_e/feedback_tempo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_e/filter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_e/filter_post": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_e/filter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_e/grain_div": {
+                        "def": 0,
+                        "max": 4096,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_e/grain_sh": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/fbfilter_cut": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/fbfilter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/fbfilter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/feedback_ofs": {
+                        "def": 0,
+                        "max": 512,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/feedback_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/feedback_sep": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/feedback_time": {
+                        "def": 0,
+                        "max": 7680,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/feedback_vol": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/filter_cutoff": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/filter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/filter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/out_next": {
+                        "def": 0,
+                        "max": 160,
+                        "min": -1,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/out_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/out_vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_5_v/vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_e/enabled": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_e/fbfilter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_e/fbfilter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_e/feedback_leave_first_echo": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_e/feedback_mode": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_e/feedback_tempo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_e/filter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_e/filter_post": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_e/filter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_e/grain_div": {
+                        "def": 0,
+                        "max": 4096,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_e/grain_sh": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/fbfilter_cut": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/fbfilter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/fbfilter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/feedback_ofs": {
+                        "def": 0,
+                        "max": 512,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/feedback_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/feedback_sep": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/feedback_time": {
+                        "def": 0,
+                        "max": 7680,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/feedback_vol": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/filter_cutoff": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/filter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/filter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/out_next": {
+                        "def": 0,
+                        "max": 160,
+                        "min": -1,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/out_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/out_vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_6_v/vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_e/enabled": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_e/fbfilter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_e/fbfilter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_e/feedback_leave_first_echo": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_e/feedback_mode": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_e/feedback_tempo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_e/filter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_e/filter_post": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_e/filter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_e/grain_div": {
+                        "def": 0,
+                        "max": 4096,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_e/grain_sh": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/fbfilter_cut": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/fbfilter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/fbfilter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/feedback_ofs": {
+                        "def": 0,
+                        "max": 512,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/feedback_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/feedback_sep": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/feedback_time": {
+                        "def": 0,
+                        "max": 7680,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/feedback_vol": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/filter_cutoff": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/filter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/filter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/out_next": {
+                        "def": 0,
+                        "max": 160,
+                        "min": -1,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/out_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/out_vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_7_v/vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_e/enabled": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_e/fbfilter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_e/fbfilter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_e/feedback_leave_first_echo": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_e/feedback_mode": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_e/feedback_tempo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_e/filter_mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_e/filter_post": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_e/filter_type": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_e/grain_div": {
+                        "def": 0,
+                        "max": 4096,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_e/grain_sh": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/fbfilter_cut": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/fbfilter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/fbfilter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/feedback_ofs": {
+                        "def": 0,
+                        "max": 512,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/feedback_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/feedback_sep": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/feedback_time": {
+                        "def": 0,
+                        "max": 7680,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/feedback_vol": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/filter_cutoff": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/filter_gain": {
+                        "def": 0,
+                        "max": 256,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/filter_res": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/out_next": {
+                        "def": 0,
+                        "max": 160,
+                        "min": -1,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/out_pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/out_vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/pan": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "bank_8_v/vol": {
+                        "def": 0,
+                        "max": 160,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "dry": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "fb": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "in": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "version": {
+                        "def": 0,
+                        "max": 16,
+                        "min": 0,
+                        "name": "",
+                        "noauto": true,
+                        "type": "int"
+                    },
+                    "wet": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                }
+            },
             "fruity dx10": {
                 "datadef": "",
                 "datadef_struct": "fruity_dx10",
@@ -2074,6 +3847,260 @@
                         "name": "",
                         "noauto": false,
                         "type": "bool"
+                    }
+                }
+            },
+            "fruity multiband compressor": {
+                "datadef": "",
+                "datadef_struct": "fruity_multiband_compressor",
+                "params": {
+                    "__unknown": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "filter_type": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "gain": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "hi_att": {
+                        "def": 0,
+                        "max": 1000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "hi_freq": {
+                        "def": 0,
+                        "max": 20000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "hi_gain": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "hi_knee": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "hi_ratio": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "hi_rel": {
+                        "def": 0,
+                        "max": 10000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "hi_state": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "hi_thres": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "limiter": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "low_att": {
+                        "def": 0,
+                        "max": 1000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "low_freq": {
+                        "def": 0,
+                        "max": 20000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "low_gain": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "low_knee": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "low_ratio": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "low_rel": {
+                        "def": 0,
+                        "max": 10000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "low_state": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "low_thres": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mid_att": {
+                        "def": 0,
+                        "max": 1000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mid_freq_h": {
+                        "def": 0,
+                        "max": 20000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mid_freq_l": {
+                        "def": 0,
+                        "max": 20000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mid_gain": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mid_knee": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mid_ratio": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mid_rel": {
+                        "def": 0,
+                        "max": 10000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mid_state": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mid_thres": {
+                        "def": 0,
+                        "max": 65536,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "version": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "visual_speed": {
+                        "def": 0,
+                        "max": 100,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
                     }
                 }
             },
@@ -4006,6 +6033,424 @@
                         "max": 1,
                         "min": 0,
                         "name": "Version",
+                        "noauto": true,
+                        "type": "int"
+                    }
+                }
+            },
+            "vintage chorus": {
+                "datadef_struct": "vintage_chorus",
+                "params": {
+                    "delay_feedback": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delay_hp": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delay_time1": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delay_time2": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "invert_wet": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mod_phase_lr": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mod_phase_start": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mod_shape_sine": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mod_speed": {
+                        "def": 0,
+                        "max": 245760,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mod_tempo_sync": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mono_input": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "noise": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "noise_gain": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "noise_gate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "version": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": true,
+                        "type": "int"
+                    },
+                    "wet": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                }
+            },
+            "vintage phaser": {
+                "datadef_struct": "vintage_phaser",
+                "params": {
+                    "color_freq": {
+                        "def": 0,
+                        "max": 650000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "color_gain": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delay_feedback": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delay_hp": {
+                        "def": 0,
+                        "max": 204800,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delay_keeppitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delay_lp": {
+                        "def": 0,
+                        "max": 204800,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delay_mix": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delay_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delay_stereo": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delay_tempo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delay_time": {
+                        "def": 0,
+                        "max": 768,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "feedback_hp": {
+                        "def": 0,
+                        "max": 80000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "input_hp": {
+                        "def": 0,
+                        "max": 80000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "levels_mix": {
+                        "def": 0,
+                        "max": 100,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "levels_mono": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "levels_noise": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "levels_noise_gate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "lfo_pull": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "lfo_scale": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mod_phase_lr": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mod_phase_start": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mod_shape_sine": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mod_speed": {
+                        "def": 0,
+                        "max": 245760,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mod_tempo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mod_tension": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "phaser_feedback": {
+                        "def": 0,
+                        "max": 6000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "phaser_freq": {
+                        "def": 0,
+                        "max": 2048000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "phaser_hq": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "phaser_manual": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "phaser_max": {
+                        "def": 0,
+                        "max": 2048000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "phaser_min": {
+                        "def": 0,
+                        "max": 2048000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "rate_freq1": {
+                        "def": 0,
+                        "max": 150000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "rate_freq2": {
+                        "def": 0,
+                        "max": 150000,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "version": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "",
                         "noauto": true,
                         "type": "int"
                     }

@@ -333,24 +333,13 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername, datadef, dat
         for point in autodata_table:
             cvpj_plugindata.env_points_add('shape', point[0], point[1][0], tension=point[2], type=envshapes[point[3]])
         
-
     else:
         datadef_struct = dataset.object_var_get('datadef_struct', 'plugin', pluginname)
+        #print(     chunkpdata.hex()     )
         if datadef_struct[0]:
             cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
             jsondecoded = datadef.parse(datadef_struct[1], chunkpdata)
             cvpj_plugindata.param_dict_dataset_get(jsondecoded, dataset, 'plugin', pluginname)
-
-    #elif pluginname == 'pitcher': LATER
-    #    chunkdata = data_bytes.riff_read(chunkdata, 0)
-    #    riffbio = BytesIO(chunkdata[0][1][4:])
-    #    flplugvals = struct.unpack('f'*33, riffbio.read(33*4))
-    #    flplugflags = struct.unpack('b'*16, riffbio.read(16))
-    #    for test in range(len(flplugvals)):
-    #        print(test, flplugvals[test])
-    #    cvpj_plugindata.param_add('speed', flplugvals[0], 'int', "Correction Speed")
-    #    cvpj_plugindata.param_add('gender', flplugvals[2], 'int', "Gender")
-    #    cvpj_plugindata.param_add('finetune', flplugvals[3], 'int', "Fine Tune")
 
     # ------------------------------------------------------------------------------------------- Other
 

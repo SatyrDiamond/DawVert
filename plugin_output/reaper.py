@@ -136,9 +136,8 @@ def convert_placementdata(rpp_trackdata, trackplacements, cliptype, track_uuid):
         if 'audiomod' in trackplacement_data:
             audiomoddata = trackplacement_data['audiomod']
             #print(audiomoddata)
-            if 'pitch' in audiomoddata: pitch = audiomoddata['pitch']
-
-            stretch_algorithm = audiomoddata['stretch_algorithm']
+            pitch = audiomoddata['pitch'] if 'pitch' in audiomoddata else 0
+            stretch_algorithm = audiomoddata['stretch_algorithm'] if 'stretch_algorithm' in audiomoddata else 'stretch'
 
             if stretch_algorithm != 'resample': preserve_pitch = 1
 

@@ -204,3 +204,10 @@ def list_usefirst(i_list):
             finalval = p
             break
     return finalval
+
+def get_all_keys(i_dict, nestedval):
+    for key, value in i_dict.items():
+        if isinstance(value, dict):
+            yield from get_all_keys(value, nestedval+[key])
+        else:
+            yield nestedval+[key], value

@@ -582,16 +582,22 @@ class cvpj_plugin:
 
     def param_dict_dataset_get(self, i_dict, dataset, catname, pluginname):
         paramlist = dataset.params_list(catname, pluginname)
-        for param in paramlist:
-            outval = i_dict[param] if param in i_dict else None
-            self.param_add_dset(param, outval, dataset, catname, pluginname)
+        if paramlist:
+            for param in paramlist:
+                outval = data_values.nested_dict_get_value(i_dict, param.split('/'))
+                self.param_add_dset(param, outval, dataset, catname, pluginname)
 
     def param_dict_dataset_set(self, dataset, catname, pluginname):
         paramlist = dataset.params_list(catname, pluginname)
         outdict = {}
-        for param in paramlist:
-            outdict[param] = self.param_get(param, 0)[0]
+        if paramlist:
+            for param in paramlist:
+                defparams = dataset.params_i_get(catname, pluginname, param)
+                if not defparams[0]: outdata = self.param_get(param, defparams[2])[0]
+                else: outdata = self.dataval_get(param, defparams[2])
+                data_values.nested_dict_add_value(outdict, param.split('/'), outdata)
         return outdict
+
     # -------------------------------------------------- to_cvpj
     def to_cvpj(self, cvpj_l, pluginid):
         if 'plugins' not in cvpj_l: cvpj_l['plugins'] = {}

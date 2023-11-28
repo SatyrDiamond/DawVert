@@ -1,24 +1,24 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import plugin_plugconv
+import plugin_plugconv_extern
 
 from functions import data_dataset
 from functions import plugin_vst2
 from functions_plugdata import data_vc2xml
 import lxml.etree as ET
 
-class plugconv(plugin_plugconv.base):
+class plugconv(plugin_plugconv_extern.base):
     def __init__(self): pass
-    def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['synth-nonfree', None, None], ['vst2', None, None], True, False
-    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
+    def is_dawvert_plugin(self): return 'plugconv_ext'
+    def getplugconvinfo(self): return ['synth-nonfree', None], ['vst2'], None
+    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json, extplugtype):
         plugintype = cvpj_plugindata.type_get()
         dataset_synth_nonfree = data_dataset.dataset('./data_dset/synth_nonfree.dset')
 
         plugname = plugintype[1]
 
-        if plugname == 'Europa':
+        if plugname == 'Europa' and extplugtype == 'vst2':
             europa_patch = ET.Element("JukeboxPatch")
             europa_patch.set('patchname', "DawVert")
             europa_samp = ET.SubElement(europa_patch, "Samples")

@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import plugin_plugconv
+import plugin_plugconv_extern
 
 import lxml.etree as ET
 from functions_tracks import auto_data
@@ -23,16 +23,14 @@ def blocks_minmax(env_blocks):
         if 'max' in env_blocks: blk_max = env_blocks['max']
     return blk_max
 
-class plugconv(plugin_plugconv.base):
+class plugconv(plugin_plugconv_extern.base):
     def __init__(self): pass
-    def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['universal', None, None], ['vst2', None, None], True, False
-    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
+    def is_dawvert_plugin(self): return 'plugconv_ext'
+    def getplugconvinfo(self): return ['universal', None], ['vst2'], None
+    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json, extplugtype):
         plugintype = cvpj_plugindata.type_get()
 
-        fxtype = plugintype[1]
-
-        if fxtype == 'compressor':
+        if plugintype[1] == 'compressor' and extplugtype == 'vst2':
             print('[plug-conv] UniV to VST2: Compressor > Compressor:',pluginid)
             auto_data.del_plugin(cvpj_l, pluginid)
 
@@ -47,7 +45,7 @@ class plugconv(plugin_plugconv.base):
             data_socalabs.to_cvpj_vst2(cvpj_plugindata, 1397515120)
             return True
 
-        if fxtype == 'expander':
+        if plugintype[1] == 'expander' and extplugtype == 'vst2':
             print('[plug-conv] UniV to VST2: Expander > Expander:',pluginid)
             auto_data.del_plugin(cvpj_l, pluginid)
 
@@ -62,7 +60,7 @@ class plugconv(plugin_plugconv.base):
             data_socalabs.to_cvpj_vst2(cvpj_plugindata, 1397515640)
             return True
 
-        if fxtype == 'synth-osc':
+        if plugintype[1] == 'synth-osc' and extplugtype == 'vst2':
             if 'osc' in cvpj_plugindata.cvpjdata:
                 oscops = cvpj_plugindata.cvpjdata['osc']
 

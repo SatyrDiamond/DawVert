@@ -10,6 +10,7 @@ from functions import data_bytes
 from functions import data_values
 from functions import plugins
 from functions import plugin_vst2
+from functions import plugin_vst3
 from io import BytesIO
 
 def decode_pointdata(fl_plugstr):
@@ -78,9 +79,10 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername, datadef, dat
             if chunktype == 57: wrapperdata['57'] = chunkdata
 
         if 'plugin_info' in wrapperdata:
+
             wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
             if 'fourid' in wrapperdata:
-                cvpj_plugindata = plugins.cvpj_plugin('deftype', 'vst2', None)
+                cvpj_plugindata = plugins.cvpj_plugin('deftype', 'vst2', 'win')
                 pluginstate = wrapperdata['state']
                 wrapper_vststate = pluginstate[0:9]
                 wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
@@ -88,37 +90,52 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername, datadef, dat
                 wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
                 wrapper_vstdata = pluginstate[21:]
 
-                if wrapper_vststate == b'\xf7\xff\xff\xff\r\xfe\xff\xff\xff':
-                    plugin_vst2.replace_data(cvpj_plugindata, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
-                    cvpj_plugindata.dataval_add('current_program', wrapper_vstprogram)
+                if wrapper_vststate[0:4] == b'\xf7\xff\xff\xff' and wrapper_vststate[5:9] == b'\xfe\xff\xff\xff':
 
-                if wrapper_vststate == b'\xf7\xff\xff\xff\x05\xfe\xff\xff\xff':
-                    stream_data = BytesIO(wrapper_vstdata)
-                    vst_total_params = int.from_bytes(stream_data.read(4), "little")
-                    vst_params_data = struct.unpack('f'*vst_total_params, stream_data.read(4*vst_total_params))
-                    vst_num_names = int.from_bytes(stream_data.read(4), "little")
-                    vst_names = []
-                    for _ in range(vst_num_names):
-                        vst_names.append( data_bytes.readstring_fixedlen(stream_data, 25, 'utf-8') )
+                    if wrapper_vststate[4] == 13:
+                        plugin_vst2.replace_data(cvpj_plugindata, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, 0)
+                        cvpj_plugindata.dataval_add('current_program', wrapper_vstprogram)
 
-                    numparamseach = vst_total_params//vst_num_names
-                    bankparams = data_values.list_chunks(vst_params_data, numparamseach)
+                    if wrapper_vststate[4] == 5:
+                        stream_data = BytesIO(wrapper_vstdata)
+                        vst_total_params = int.from_bytes(stream_data.read(4), "little")
+                        vst_params_data = struct.unpack('f'*vst_total_params, stream_data.read(4*vst_total_params))
+                        vst_num_names = int.from_bytes(stream_data.read(4), "little")
+                        vst_names = []
+                        for _ in range(vst_num_names):
+                            vst_names.append( data_bytes.readstring_fixedlen(stream_data, 25, 'utf-8') )
 
-                    cvpj_programs = []
-                    for num in range(vst_num_names):
-                        cvpj_program = {}
-                        cvpj_program['datatype'] = 'params'
-                        cvpj_program['numparams'] = numparamseach
-                        cvpj_program['params'] = {}
-                        for paramnum in range(numparamseach):
-                            cvpj_program['params'][str(paramnum)] = {'value': bankparams[num][paramnum]}
-                        cvpj_program['program_name'] = vst_names[num]
-                        cvpj_programs.append(cvpj_program)
+                        numparamseach = vst_total_params//vst_num_names
+                        bankparams = data_values.list_chunks(vst_params_data, numparamseach)
 
-                    plugin_vst2.replace_data(cvpj_plugindata, 'name' ,'win', wrapperdata['name'], 'bank', cvpj_programs, None)
-                    cvpj_plugindata.dataval_add('current_program', wrapper_vstprogram)
+                        cvpj_programs = []
+                        for num in range(vst_num_names):
+                            cvpj_program = {}
+                            cvpj_program['datatype'] = 'params'
+                            cvpj_program['numparams'] = numparamseach
+                            cvpj_program['params'] = {}
+                            for paramnum in range(numparamseach): cvpj_program['params'][str(paramnum)] = {'value': bankparams[num][paramnum]}
+                            cvpj_program['program_name'] = vst_names[num]
+                            cvpj_programs.append(cvpj_program)
 
-                    
+                        plugin_vst2.replace_data(cvpj_plugindata, 'name' ,'win', wrapperdata['name'], 'bank', cvpj_programs, None)
+                        cvpj_plugindata.dataval_add('current_program', wrapper_vstprogram)
+            else:
+                pluginstate = wrapperdata['state']
+                pluginstate_str = BytesIO(pluginstate)
+                stateheader = pluginstate_str.read(80)
+
+                vststatedata = {}
+
+                while pluginstate_str.tell() < len(pluginstate):
+                    chunktype = int.from_bytes(pluginstate_str.read(4), 'little')
+                    chunksize = int.from_bytes(pluginstate_str.read(4), 'little')
+                    pluginstate_str.read(4)
+                    chunkdata = pluginstate_str.read(chunksize)
+                    vststatedata[chunktype] = chunkdata
+
+                plugin_vst3.replace_data(cvpj_plugindata, 'name', 'win', wrapperdata['name'], vststatedata[3] if 3 in vststatedata else b'')
+
 
     elif pluginname == 'fruity compressor':
         flplugvals = struct.unpack('i'*8, chunkpdata)
@@ -343,5 +360,5 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername, datadef, dat
 
     # ------------------------------------------------------------------------------------------- Other
 
-    cvpj_plugindata.dataval_add('chunk', base64.b64encode(chunkpdata).decode('ascii'))
+    if pluginname != 'fruity wrapper': cvpj_plugindata.rawdata_add(chunkpdata)
     return cvpj_plugindata

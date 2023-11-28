@@ -156,7 +156,7 @@ def setvstparams(cvpj_plugindata, pluginid, xmldata):
                 xmldata.set('param'+str(param), str(param)+':noname:'+str(pval) )
 
     if datatype == 'chunk':
-        xmldata.set('chunk', cvpj_plugindata.dataval_get('chunk', ''))
+        xmldata.set('chunk', cvpj_plugindata.rawdata_get_b64())
 
     if datatype == 'param':
         xmldata.set('numparams', str(numparams))

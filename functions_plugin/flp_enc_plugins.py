@@ -65,7 +65,7 @@ def setparams(cvpj_plugdata, datadef, dataset):
         vst_name = cvpj_plugdata.dataval_get('name', None)
         vst_path = cvpj_plugdata.dataval_get('path', None)
 
-        vstdata_bytes = base64.b64decode(vst_chunk)
+        vstdata_bytes = cvpj_plugdata.rawdata_get()
 
         if vst_datatype == 'chunk':
             wrapper_state = b'\xf7\xff\xff\xff\r\xfe\xff\xff\xff' + len(vstdata_bytes).to_bytes(4, "little") + b'\x00\x00\x00\x00' + vst_current_program.to_bytes(4, "little") + vstdata_bytes

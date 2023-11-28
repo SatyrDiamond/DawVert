@@ -1,9 +1,8 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import plugin_plugconv
+import plugin_plugconv_extern
 
-import base64
 import struct
 import os
 import math
@@ -73,11 +72,11 @@ nonfree_il_plugnames = {
 }
 
 
-class plugconv(plugin_plugconv.base):
+class plugconv(plugin_plugconv_extern.base):
     def __init__(self): pass
-    def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['native-flstudio', None, 'flp'], ['vst2', None, None], True, False
-    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
+    def is_dawvert_plugin(self): return 'plugconv_ext'
+    def getplugconvinfo(self): return ['native-flstudio', None], ['vst2'], 'flp'
+    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json, extplugtype):
         global cvpj_plugindata_g
         cvpj_plugindata_g = cvpj_plugindata
 
@@ -87,7 +86,7 @@ class plugconv(plugin_plugconv.base):
         flpluginname = plugintype[1].lower()
 
         if 'nonfree-plugins' in extra_json:
-            if flpluginname == 'fruity blood overdrive':
+            if flpluginname == 'fruity blood overdrive' and extplugtype == 'vst2':
                 print("[plug-conv] FL Studio to VST2: Fruity Blood Overdrive > Blood Overdrive:",pluginid)
 
                 paramvals = [getparam('preband')/10000, getparam('color')/10000, getparam('preamp')/10000,
@@ -101,11 +100,10 @@ class plugconv(plugin_plugconv.base):
                 cvpj_plugindata.param_add('vst_param_5', paramvals[5], 'float', " PostGain ")
                 return True
 
-            if flpluginname in nonfree_il_plugnames:
+            if flpluginname in nonfree_il_plugnames and extplugtype == 'vst2':
                 print("[plug-conv] FL Studio to VST2: "+plugintype[1]+":",pluginid)
 
-                chunkb64 = cvpj_plugindata.dataval_get('chunk', '')
-                ilchunk = base64.b64decode(chunkb64)
+                ilchunk = cvpj_plugindata.rawdata_get()
 
                 if flpluginname in ['equo', 'fruity delay 2', 'fruity delay bank', 'fruity flangus', 'fruity love philter'
                                     'fruity multiband compressor', 'fruity notebook', 'fruity parametric eq 2', 'fruity parametric eq',
@@ -124,25 +122,24 @@ class plugconv(plugin_plugconv.base):
                     dataout += il_vst_chunk(1, subdata)
                     dataout += il_vst_chunk(0, ilchunk)
 
-                elif flpluginname in ['toxic biohazard', 'sawer', 'sakura', 'poizone', 'morphine', 'drumaxx']:
-                    dataout = b''
-                    for chunkdata in data_bytes.riff_read(ilchunk, 0):
-                        print(chunkdata)
-                        if chunkdata[0] == b'SSLF': dataout = chunkdata[1]
+                #elif flpluginname in ['toxic biohazard', 'sawer', 'sakura', 'poizone', 'morphine', 'drumaxx']:
+                #    dataout = b''
+                #    for chunkdata in data_bytes.riff_read(ilchunk, 0):
+                #        if chunkdata[0] == b'SSLF': dataout = chunkdata[1]
 
-                elif flpluginname in ['directwave']:
-                    dataout = ilchunk
+                #elif flpluginname in ['directwave']:
+                #    dataout = ilchunk
 
                 plugin_vst2.replace_data(cvpj_plugindata, 'name', 'win', nonfree_il_plugnames[flpluginname], 'chunk', dataout, None)
 
                 return True
 
 
-        if flpluginname not in []:
+        if flpluginname not in [] and extplugtype == 'vst2':
             auto_data.del_plugin(cvpj_l, pluginid)
 
         #---------------------------------------- Fruit Kick ----------------------------------------
-        if flpluginname == 'fruit kick':
+        if flpluginname == 'fruit kick' and extplugtype == 'vst2':
             print("[plug-conv] FL Studio to VST2: Fruit Kick > Kickmess:",pluginid)
             max_freq = note_data.note_to_freq((getparam('max_freq')/100)+12) #1000
             min_freq = note_data.note_to_freq((getparam('min_freq')/100)-36) #130.8128
@@ -167,7 +164,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         # ---------------------------------------- DX10 ----------------------------------------
-        elif flpluginname == 'fruity dx10':
+        elif flpluginname == 'fruity dx10' and extplugtype == 'vst2':
             print("[plug-conv] FL Studio to VST2: Fruity DX10 > mda DX10:",pluginid)
             param_amp_att = getparam('amp_att')/65536
             param_amp_dec = getparam('amp_dec')/65536
@@ -205,7 +202,7 @@ class plugconv(plugin_plugconv.base):
             return True
 
         # ---------------------------------------- SimSynth ----------------------------------------
-        elif flpluginname == 'simsynth':
+        elif flpluginname == 'simsynth' and extplugtype == 'vst2':
             print("[plug-conv] FL Studio to VST2: SimSynth > Vital:",pluginid)
             params_vital = plugin_vital.vital_data(cvpj_plugindata)
 
@@ -269,7 +266,7 @@ class plugconv(plugin_plugconv.base):
             params_vital.to_cvpj_vst2()
             return True
 
-        elif flpluginname == 'fruity bass boost':
+        elif flpluginname == 'fruity bass boost' and extplugtype == 'vst2':
             print("[plug-conv] FL Studio to VST2: Fruity Bass Boost > Airwindows Weight:",pluginid)
             param_freq = (getparam('freq')/1024)*0.8
             param_amount = (getparam('amount')/1024)*0.8
@@ -278,7 +275,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('vst_param_1', param_amount, 'float', "Weight")
             return True
 
-        elif flpluginname == 'fruity phaser':
+        elif flpluginname == 'fruity phaser' and extplugtype == 'vst2':
             print("[plug-conv] FL Studio to VST2: Fruity Phaser > SupaPhaser:",pluginid)
             param_sweep_freq = getparam('sweep_freq')/5000
             param_depth_min = getparam('depth_min')/1000
@@ -308,7 +305,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('vst_param_15', 0, 'float', "invert")
             return True
 
-        elif flpluginname == 'fruity spectroman':
+        elif flpluginname == 'fruity spectroman' and extplugtype == 'vst2':
             print("[plug-conv] FL Studio to VST2: Fruity Spectroman > SocaLabs's SpectrumAnalyzer:",pluginid)
             spectroman_mode = getparam('outputmode')
             data_socalabs = plugin_socalabs.socalabs_data(cvpj_plugindata)
@@ -317,7 +314,7 @@ class plugconv(plugin_plugconv.base):
             data_socalabs.to_cvpj_vst2(cvpj_plugindata, 1399874915)
             return True
 
-        elif flpluginname == 'fruity waveshaper':
+        elif flpluginname == 'fruity waveshaper' and extplugtype == 'vst2':
             print("[plug-conv] FL Studio to VST2: Fruity Waveshaper > Wolf Shaper:",pluginid)
             data_wolfshaper = plugin_wolfshaper.wolfshaper_data()
             data_wolfshaper.set_param('pregain', ((getparam('preamp')/128)-0.5)*2)
@@ -330,7 +327,7 @@ class plugconv(plugin_plugconv.base):
             data_wolfshaper.to_cvpj_vst2(cvpj_plugindata)
             return True
 
-        elif flpluginname == 'fruity stereo enhancer':
+        elif flpluginname == 'fruity stereo enhancer' and extplugtype == 'vst2':
             print("[plug-conv] FL Studio to VST2: Fruity Stereo Enhancer > SocaLabs's StereoProcessor:",pluginid)
             data_socalabs = plugin_socalabs.socalabs_data(cvpj_plugindata)
             data_socalabs.set_param("width1", 0.5)
@@ -342,8 +339,9 @@ class plugconv(plugin_plugconv.base):
             data_socalabs.set_param("width2", 0.5)
             data_socalabs.set_param("output", getparam('vol')/640)
             data_socalabs.to_cvpj_vst2(cvpj_plugindata, 1282634853)
+            return True
 
-        elif flpluginname == 'fruity reeverb':
+        elif flpluginname == 'fruity reeverb' and extplugtype == 'vst2':
             print("[plug-conv] FL Studio to VST2: Fruity Reeverb > Dragonfly Hall Reverb:",pluginid)
             data_dragonfly = plugin_dragonfly_reverb.dragonfly_hall_data()
             flr_lowcut = getparam('lowcut')
@@ -364,8 +362,9 @@ class plugconv(plugin_plugconv.base):
             data_dragonfly.set_param('dry_level', (getparam('dry')/65536)*100)
             data_dragonfly.set_param('late_level', (getparam('reverb')/65536)*100)
             data_dragonfly.to_cvpj_vst2(cvpj_plugindata)
+            return True
 
-        elif flpluginname == 'fruity reeverb 2':
+        elif flpluginname == 'fruity reeverb 2' and extplugtype == 'vst2':
             print("[plug-conv] FL Studio to VST2: Fruity Reeverb 2 > Dragonfly Hall Reverb:",pluginid)
             data_dragonfly = plugin_dragonfly_reverb.dragonfly_hall_data()
             data_dragonfly.set_param('low_cut', xtramath.clamp(getparam('lowcut'), 0, 200))
@@ -381,14 +380,16 @@ class plugconv(plugin_plugconv.base):
             #data_dragonfly.set_param('early_level', xtramath.clamp((getparam('er')/128)*100, 0, 100))
             data_dragonfly.set_param('late_level', xtramath.clamp((getparam('wet')/128)*100, 0, 100))
             data_dragonfly.to_cvpj_vst2(cvpj_plugindata)
+            return True
 
-        elif flpluginname == 'fruity phase inverter':
+        elif flpluginname == 'fruity phase inverter' and extplugtype == 'vst2':
             print("[plug-conv] FL Studio to VST2: Fruity Phase Inverter > Airwindows Flipity:",pluginid)
             stateval = int((getparam('state')/1024)*3)
             flipstate = 0
             if stateval == 1: flipstate = 1
             if stateval == 2: flipstate = 2
             plugin_vst2.replace_data(cvpj_plugindata, 'name', 'any', 'Flipity', 'chunk', struct.pack('<f', (flipstate/8)+0.01), 0)
+            return True
 
         #elif flpluginname == 'fruity free filter':
         #    fff_type = getparam('type')

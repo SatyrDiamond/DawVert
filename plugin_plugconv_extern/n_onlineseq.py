@@ -1,19 +1,19 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import plugin_plugconv
+import plugin_plugconv_extern
 
 import struct
 from functions import plugin_vst2
 
-class plugconv(plugin_plugconv.base):
+class plugconv(plugin_plugconv_extern.base):
     def __init__(self): pass
-    def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['native-onlineseq', None, 'onlineseq'], ['vst2', None, None], True, False
-    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
+    def is_dawvert_plugin(self): return 'plugconv_ext'
+    def getplugconvinfo(self): return ['native-onlineseq', None], ['vst2']
+    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json, extplugtype):
         plugintype = cvpj_plugindata.type_get()
         
-        if plugintype[1] == 'distort':
+        if plugintype[1] == 'distort' and extplugtype == 'vst2':
             print('[plug-conv] Online Sequencer to VST2: Distortion > Airwindows Density2:',pluginid)
             distlevel = 0.5
             distort_type = cvpj_plugindata.param_get('distort_type', 0)[0]
@@ -21,7 +21,7 @@ class plugconv(plugin_plugconv.base):
             plugin_vst2.replace_data(cvpj_plugindata, 'name','any', 'Density2', 'chunk', struct.pack('<ffff', distlevel, 0, 1, 1), None)
             return True
 
-        elif plugintype[1] == 'eq':
+        elif plugintype[1] == 'eq' and extplugtype == 'vst2':
             print('[plug-conv] Online Sequencer to VST2: EQ > 3 Band EQ:',pluginid)
             eq_high = cvpj_plugindata.param_get('eq_high', 0)[0]
             eq_mid = cvpj_plugindata.param_get('eq_mid', 0)[0]

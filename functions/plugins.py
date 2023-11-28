@@ -4,6 +4,7 @@
 from functions import params
 from functions import xtramath
 from functions import data_values
+import base64
 
 def namegroup_add(i_dict, i_group, i_name, i_data):
     data_values.nested_dict_add_value(i_dict, [i_group, i_name], i_data)
@@ -157,6 +158,20 @@ class cvpj_plugin:
                 datavallist.append(datavalname)
         return datavallist
 
+    # -------------------------------------------------- rawdata
+    def rawdata_add(self, i_value):
+        self.cvpjdata['rawdata'] = base64.b64encode(i_value).decode('ascii')
+
+    def rawdata_add_b64(self, i_value):
+        self.cvpjdata['rawdata'] = i_value
+
+    def rawdata_get(self):
+        if 'rawdata' in self.cvpjdata: return base64.b64decode(self.cvpjdata['rawdata'])
+        else: return b''
+
+    def rawdata_get_b64(self):
+        if 'rawdata' in self.cvpjdata: return self.cvpjdata['rawdata']
+        else: return b''
     # -------------------------------------------------- regions
     def region_add(self, regiondata):
         data_values.nested_dict_add_to_list(self.cvpjdata, ['regions'], regiondata)

@@ -517,7 +517,7 @@ class output_cvpj_f(plugin_output.base):
                         vstdatatype = cvpj_plugindata.dataval_get('datatype', '')
                         if vstdatatype == 'chunk':
                             vstcondata['pluginPath'] = cvpj_plugindata.dataval_get('path', 'path')
-                            vstcondata['pluginState'] = cvpj_plugindata.dataval_get('chunk', '')
+                            vstcondata['pluginState'] = cvpj_plugindata.rawdata_get()
                         amped_trackdata["devices"].append(vstcondata)
 
             if inst_supported == False:

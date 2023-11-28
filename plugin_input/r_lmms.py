@@ -18,6 +18,7 @@ from functions import colors
 from functions import auto
 from functions import plugins
 from functions import song
+from functions import plugin_vst2
 from functions_tracks import auto_id
 from functions_tracks import auto_nopl
 from functions_tracks import fxrack
@@ -122,6 +123,9 @@ def getvstparams(cvpj_plugindata, pluginid, xmldata):
         cvpj_plugindata.dataval_add('path', xmldata.get('plugin'))
     else:
         cvpj_plugindata.dataval_add('path', lmms_vstpath+xmldata.get('plugin'))
+
+
+
     vst_data = xmldata.get('chunk')
     vst_numparams = xmldata.get('numparams')
     vst_program = xmldata.get('program')
@@ -132,9 +136,12 @@ def getvstparams(cvpj_plugindata, pluginid, xmldata):
 
     if vst_program != None: 
         cvpj_plugindata.dataval_add('current_program', int(vst_program))
+
     if vst_data != None:
         cvpj_plugindata.dataval_add('datatype', 'chunk')
-        cvpj_plugindata.dataval_add('chunk', vst_data)
+        cvpj_plugindata.rawdata_add(vst_data)
+        plugin_vst2.replace_data(cvpj_plugindata, 'path', 'win', xmldata.get('plugin'), 'chunk', vst_data, None)
+
     elif vst_numparams != None:
         cvpj_plugindata.dataval_add('datatype', 'param')
         cvpj_plugindata.dataval_add('numparams', int(vst_numparams))
@@ -142,6 +149,7 @@ def getvstparams(cvpj_plugindata, pluginid, xmldata):
             paramdata = xmldata.get('param'+str(param)).split(':')
             paramnum = 'vst_param_'+str(param)
             cvpj_plugindata.param_add(paramnum, float(paramdata[-1]), 'float', paramdata[1])
+
     for node in xmldata.iter():
         notetagtxt = node.tag
         if notetagtxt.startswith('param'):

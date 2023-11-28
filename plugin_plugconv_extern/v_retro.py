@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import plugin_plugconv
+import plugin_plugconv_extern
 
 from functions import audio_wav
 from functions import plugin_vst2
@@ -12,11 +12,11 @@ from functions_plugdata import plugin_vital
 
 from functions_plugdata import data_wave
 
-class plugconv(plugin_plugconv.base):
+class plugconv(plugin_plugconv_extern.base):
     def __init__(self): pass
-    def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['retro', None, None], ['vst2', None, None], True, False
-    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
+    def is_dawvert_plugin(self): return 'plugconv_ext'
+    def getplugconvinfo(self): return ['retro', None], ['vst2'], None
+    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json, extplugtype):
         plugintype = cvpj_plugindata.type_get()
         
         blk_env_pitch = cvpj_plugindata.env_blocks_get('pitch')
@@ -27,7 +27,7 @@ class plugconv(plugin_plugconv.base):
         if blk_env_vol != None:
             if blk_env_vol['max'] != 15: m8bp_out = False
 
-        if plugintype[1] in ['square', 'triangle', 'noise', 'pulse'] and m8bp_out == True:
+        if plugintype[1] in ['square', 'triangle', 'noise', 'pulse'] and m8bp_out == True and extplugtype == 'vst2':
             retroplug_data = plugin_m8bp.m8bp_data(cvpj_plugindata)
 
             a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = cvpj_plugindata.asdr_env_get('vol')
@@ -64,7 +64,7 @@ class plugconv(plugin_plugconv.base):
 
             retroplug_data.to_cvpj_vst2()
             return True
-        else:
+        elif extplugtype == 'vst2':
             params_vital = plugin_vital.vital_data(cvpj_plugindata)
             params_vital.setvalue('osc_1_on', 1)
             params_vital.setvalue('osc_1_level', 1)

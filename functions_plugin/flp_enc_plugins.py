@@ -56,7 +56,7 @@ def setparams(cvpj_plugdata, datadef, dataset):
         fl_pluginparams += b'\xff\xff\xff\xff\x00\xff\xff\xff\xff\x00\x00'
 
     if plug_type[0] == 'vst2':
-        vst_chunk = cvpj_plugdata.dataval_get('chunk', '')
+        vst_chunk = cvpj_plugdata.rawdata_get()
         vst_programs = cvpj_plugdata.dataval_get('programs', '')
         vst_numparams = cvpj_plugdata.dataval_get('numparams', 0)
         vst_current_program = cvpj_plugdata.dataval_get('current_program', 0)
@@ -114,8 +114,34 @@ def setparams(cvpj_plugdata, datadef, dataset):
         if vst_path != None: wrapper_data += wrapper_addchunk(55, vst_path.encode() )
         wrapper_data += wrapper_addchunk(53, wrapper_state )
 
-
         fl_plugin = 'fruity wrapper'
         fl_pluginparams = wrapper_data
+
+    #if plug_type[0] == 'vst3':
+    #    vst_chunk = cvpj_plugdata.rawdata_get()
+    #    vst_id = cvpj_plugdata.dataval_get('guid', None)
+    #    vst_name = cvpj_plugdata.dataval_get('name', None)
+    #    vst_path = cvpj_plugdata.dataval_get('path', None)
+    #    vst_numparams = cvpj_plugdata.dataval_get('numparams', None)
+
+    #    if vst_numparams != None:
+    #        wrapper_state = b'\x01\x00\x00\x00\x01\x00\x00\x00@\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+    #        wrapper_state += wrapper_addchunk(3, vst_chunk)
+    #        fourchunkdata = vst_numparams.to_bytes(4, "little")
+    #        for paramnum in range(vst_numparams):
+    #            fourchunkdata += paramnum.to_bytes(4, "little")
+    #        wrapper_state += wrapper_addchunk(4, fourchunkdata)
+    #        wrapper_data = b'\n\x00\x00\x00'
+
+    #        print(54, vst_name.encode())
+    #        print(55, vst_path.encode())
+
+    #        if vst_name != None: wrapper_data += wrapper_addchunk(54, vst_name.encode() )
+    #        if vst_path != None: wrapper_data += wrapper_addchunk(55, vst_path.encode() )
+
+    #        wrapper_data += wrapper_addchunk(53, wrapper_state )
+    #        #print(wrapper_state.hex())
+    #        fl_plugin = 'fruity wrapper'
+    #        fl_pluginparams = wrapper_data
 
     return fl_plugin, fl_pluginparams

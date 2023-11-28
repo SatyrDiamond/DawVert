@@ -61,12 +61,14 @@ def db_search(in_data, platformtype, bycat):
 			if platformtype == 'win': out_paths = db_plugins.execute("SELECT path_32bit_win, path_64bit_win FROM vst3 WHERE name = ?", (in_data,)).fetchone()
 			else: out_paths = db_plugins.execute("SELECT path_32bit_unix, path_64bit_unix FROM vst3 WHERE name = ?", (in_data,)).fetchone()
 			vst_name = in_data
-			vst_id = db_plugins.execute("SELECT id FROM vst3 WHERE name = ?", (in_data,)).fetchone()[0]
+			vst_id_d = db_plugins.execute("SELECT id FROM vst3 WHERE name = ?", (in_data,)).fetchone()
+			if vst_id_d: vst_id = vst_id_d[0]
 
 		if bycat == 'id':
 			if platformtype == 'win': out_paths = db_plugins.execute("SELECT path_32bit_win, path_64bit_win FROM vst3 WHERE id = ?", (in_data,)).fetchone()
 			else: out_paths = db_plugins.execute("SELECT path_32bit_unix, path_64bit_unix FROM vst3 WHERE id = ?", (in_data,)).fetchone()
-			vst_name = db_plugins.execute("SELECT name FROM vst3 WHERE id = ?", (in_data,)).fetchone()[0]
+			vst_name_d = db_plugins.execute("SELECT name FROM vst3 WHERE id = ?", (in_data,)).fetchone()
+			if vst_name_d: vst_name = vst_name_d[0]
 			vst_id = in_data
 
 		if bycat == 'path':
@@ -118,15 +120,18 @@ def replace_data(cvpj_plugindata, bycat, platform, in_name, data):
 		if plugintype[0] != 'vst3': cvpj_plugindata.replace('vst3', platformtxt)
 
 		if bycat == 'name': 
-			if plugintype[0] == None and plugintype[1] == None: print('[plugin-vst3] ' + vst_name + ' (vst3 '+str(vst_cpuarch)+'-bit)')
-			if plugintype[0] != None and plugintype[1] == None: print('[plugin-vst3] ' + plugintype[0] +' > ' + vst_name + ' (vst3 '+str(vst_cpuarch)+'-bit)')
-			if plugintype[0] != None and plugintype[1] != None: print('[plugin-vst3] ' + ':'.join(plugintype) +' > ' + vst_name + ' (vst3 '+str(vst_cpuarch)+'-bit)')
+			if plugintype[0] == None and plugintype[1] == None: print('[plugin-vst3] ' + vst_name + ' (VST3 '+str(vst_cpuarch)+'-bit)')
+			if plugintype[0] != None and plugintype[1] == None: print('[plugin-vst3] ' + plugintype[0] +' > ' + vst_name + ' (VST3 '+str(vst_cpuarch)+'-bit)')
+			if plugintype[0] != None and plugintype[1] != None: print('[plugin-vst3] ' + ':'.join(plugintype) +' > ' + vst_name + ' (VST3 '+str(vst_cpuarch)+'-bit)')
 
 		cvpj_plugindata.dataval_add('name', vst_name)
 		cvpj_plugindata.dataval_add('path', vst_path)
 		cvpj_plugindata.dataval_add('cpu_arch', vst_cpuarch)
-		cvpj_plugindata.dataval_add('id', vst_id)
+		cvpj_plugindata.dataval_add('guid', vst_id)
 		cvpj_plugindata.dataval_add('version', vst_version)
+
+		vst_num_params_d = db_plugins.execute("SELECT num_params FROM vst3 WHERE id = ?", (vst_id,)).fetchone()
+		if vst_num_params_d: cvpj_plugindata.dataval_add('numparams', vst_num_params_d[0]) 
 
 		cvpj_plugindata.dataval_add('datatype', 'chunk')
 		cvpj_plugindata.rawdata_add(data)

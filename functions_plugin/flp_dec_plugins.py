@@ -66,12 +66,14 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername, datadef, dat
             chunksize = int.from_bytes(fl_plugstr.read(4), "little")
             fl_plugstr.read(4)
             chunkdata = fl_plugstr.read(chunksize)
+
             if chunktype == 1: wrapperdata['midi'] = chunkdata
             if chunktype == 2: wrapperdata['flags'] = chunkdata
             if chunktype == 30: wrapperdata['io'] = chunkdata
             if chunktype == 32: wrapperdata['outputs'] = chunkdata
             if chunktype == 50: wrapperdata['plugin_info'] = chunkdata
             if chunktype == 51: wrapperdata['fourid'] = int.from_bytes(chunkdata, "little")
+            if chunktype == 52: wrapperdata['16id'] = chunkdata
             if chunktype == 53: wrapperdata['state'] = chunkdata
             if chunktype == 54: wrapperdata['name'] = chunkdata.decode()
             if chunktype == 55: wrapperdata['file'] = chunkdata.decode()
@@ -120,21 +122,36 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername, datadef, dat
 
                         plugin_vst2.replace_data(cvpj_plugindata, 'name' ,'win', wrapperdata['name'], 'bank', cvpj_programs, None)
                         cvpj_plugindata.dataval_add('current_program', wrapper_vstprogram)
-            else:
-                pluginstate = wrapperdata['state']
-                pluginstate_str = BytesIO(pluginstate)
-                stateheader = pluginstate_str.read(80)
 
-                vststatedata = {}
+            #elif '16id' in wrapperdata:
+            #    pluginstate = wrapperdata['state']
+            #    pluginstate_str = BytesIO(pluginstate)
+            #    stateheader = pluginstate_str.read(80)
 
-                while pluginstate_str.tell() < len(pluginstate):
-                    chunktype = int.from_bytes(pluginstate_str.read(4), 'little')
-                    chunksize = int.from_bytes(pluginstate_str.read(4), 'little')
-                    pluginstate_str.read(4)
-                    chunkdata = pluginstate_str.read(chunksize)
-                    vststatedata[chunktype] = chunkdata
+            #    vststatedata = {}
 
-                plugin_vst3.replace_data(cvpj_plugindata, 'name', 'win', wrapperdata['name'], vststatedata[3] if 3 in vststatedata else b'')
+            #    while pluginstate_str.tell() < len(pluginstate):
+            #        chunktype = int.from_bytes(pluginstate_str.read(4), 'little')
+            #        chunksize = int.from_bytes(pluginstate_str.read(4), 'little')
+            #        pluginstate_str.read(4)
+            #        chunkdata = pluginstate_str.read(chunksize)
+            #        vststatedata[chunktype] = chunkdata
+
+                #print(vststatedata[3])
+
+            #    somedata = BytesIO(vststatedata[4])
+            #    somedata_num = int.from_bytes(somedata.read(4), 'little')
+
+                #print(wrapperdata['name'])
+
+                #for _ in range(somedata_num):
+                #    somedata_b = somedata.read(4)
+                #    somedata_p = int.from_bytes(somedata_b, 'little')
+                #    print(somedata_b.hex(), end=' ')
+
+                #exit()
+
+            #    plugin_vst3.replace_data(cvpj_plugindata, 'name', 'win', wrapperdata['name'], vststatedata[3] if 3 in vststatedata else b'')
 
 
     elif pluginname == 'fruity compressor':

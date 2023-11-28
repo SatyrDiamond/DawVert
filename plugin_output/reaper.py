@@ -26,10 +26,9 @@ def make_vst2(rpp_fxchain, cvpj_plugindata):
     vst_fx_fourid = cvpj_plugindata.dataval_get('fourid', None)
     vst_fx_datatype = cvpj_plugindata.dataval_get('datatype', None)
     vst_fx_numparams = cvpj_plugindata.dataval_get('numparams', 0)
-    vst_fx_chunk = cvpj_plugindata.dataval_get('chunk', None)
 
     if vst_fx_datatype == 'chunk': 
-        vstparams = base64.b64decode(vst_fx_chunk.encode())
+        vstparams = cvpj_plugindata.rawdata_get()
     if vst_fx_datatype == 'param': 
         floatdata = []
         for num in range(vst_fx_numparams):

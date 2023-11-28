@@ -3,7 +3,6 @@
 
 import plugin_plugconv
 
-import base64
 import struct
 import os
 import math

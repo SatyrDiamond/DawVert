@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import plugin_plugconv
+import plugin_plugconv_extern
 
 import base64
 import struct
@@ -30,17 +30,17 @@ def getparam(paramname):
     paramval = cvpj_plugindata_g.param_get(paramname, 0)
     return paramval[0]
 
-class plugconv(plugin_plugconv.base):
+class plugconv(plugin_plugconv_extern.base):
     def __init__(self): pass
-    def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['native-lmms', None, 'lmms'], ['vst2', None, None], True, False
-    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
+    def is_dawvert_plugin(self): return 'plugconv_ext'
+    def getplugconvinfo(self): return ['native-lmms', None], ['vst2'], 'lmms'
+    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json, extplugtype):
         global cvpj_plugindata_g
         cvpj_plugindata_g = cvpj_plugindata
 
         plugintype = cvpj_plugindata.type_get()
 
-        if plugintype[1] == 'tripleoscillator':
+        if plugintype[1] == 'tripleoscillator' and extplugtype == 'vst2':
             print('[plug-conv] LMMS to VST2: Triple Oscillator > Vital:',pluginid)
             params_vital = plugin_vital.vital_data(cvpj_plugindata)
 
@@ -93,7 +93,7 @@ class plugconv(plugin_plugconv.base):
             params_vital.to_cvpj_vst2()
             return True
 
-        if plugintype[1] == 'bitinvader':
+        if plugintype[1] == 'bitinvader' and extplugtype == 'vst2':
             print('[plug-conv] LMMS to VST2: BitInvader > Vital:',pluginid)
             interpolation = getparam('interpolation')
             params_vital = plugin_vital.vital_data(cvpj_plugindata)
@@ -106,7 +106,7 @@ class plugconv(plugin_plugconv.base):
             params_vital.to_cvpj_vst2()
             return True
 
-        if plugintype[1] == 'papu':
+        if plugintype[1] == 'papu' and extplugtype == 'vst2':
             print("[plug-conv] LMMS to VST2: Freeboy > SocaLabs's PAPU:",pluginid)
             data_socalabs = plugin_socalabs.socalabs_data(cvpj_plugindata)
 
@@ -155,7 +155,7 @@ class plugconv(plugin_plugconv.base):
             data_socalabs.set_param("param", 8.0)
             data_socalabs.to_cvpj_vst2(cvpj_plugindata, 1348563061)
 
-        if plugintype[1] == 'sid':
+        if plugintype[1] == 'sid' and extplugtype == 'vst2':
             print("[plug-conv] LMMS to VST2: SID > SocaLabs's SID:",pluginid)
             data_socalabs = plugin_socalabs.socalabs_data(cvpj_plugindata)
             data_socalabs.set_param("a1", getparam('attack0'))
@@ -204,7 +204,7 @@ class plugconv(plugin_plugconv.base):
             #cvpj_plugindata.dataval_get('middlenotefix', -12)
             return True
 
-        if plugintype[1] == 'kicker':
+        if plugintype[1] == 'kicker' and extplugtype == 'vst2':
             print("[plug-conv] LMMS to VST2: Kicker > Kickmess:",pluginid)
             data_kickmess = plugin_kickmess.kickmess_data()
             data_kickmess.set_param('pub', 'freq_start', getparam('startfreq'))
@@ -222,7 +222,7 @@ class plugconv(plugin_plugconv.base):
             data_kickmess.to_cvpj_vst2(cvpj_plugindata)
             return True
 
-        if plugintype[1] == 'lb302':
+        if plugintype[1] == 'lb302' and extplugtype == 'vst2':
             print("[plug-conv] LMMS to VST2: LB302 > Vital:",pluginid)
             params_vital = plugin_vital.vital_data(cvpj_plugindata)
             lb302_shape = getparam('shape')
@@ -266,7 +266,7 @@ class plugconv(plugin_plugconv.base):
             #cvpj_plugindata.dataval_get('middlenotefix', -12)
             return True
 
-        if plugintype[1] == 'zynaddsubfx':
+        if plugintype[1] == 'zynaddsubfx' and extplugtype == 'vst2':
             print("[plug-conv] LMMS to VST2: ZynAddSubFX > ZynAddSubFX/Zyn-Fusion:",pluginid)
             zasfxdata = cvpj_plugindata.dataval_get('data', '')
             zasfxdatastart = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ZynAddSubFX-data>' 
@@ -274,7 +274,7 @@ class plugconv(plugin_plugconv.base):
             plugin_vst2.replace_data(cvpj_plugindata, 'name','any', 'ZynAddSubFX', 'chunk', zasfxdatafixed, None)
             return True
 
-        if plugintype[1] == 'reverbsc':
+        if plugintype[1] == 'reverbsc' and extplugtype == 'vst2':
             print("[plug-conv] LMMS to VST2: ReverbSC > Castello Reverb:",pluginid)
             value_size = getparam('size')
             value_color = getparam('color')
@@ -285,7 +285,7 @@ class plugconv(plugin_plugconv.base):
                 None)
             return True
 
-        if plugintype[1] == 'spectrumanalyzer':
+        if plugintype[1] == 'spectrumanalyzer' and extplugtype == 'vst2':
             print("[plug-conv] LMMS to VST2: Spectrum Analyzer > SocaLabs's SpectrumAnalyzer:",pluginid)
             data_socalabs = plugin_socalabs.socalabs_data(cvpj_plugindata)
             data_socalabs.set_param("mode", 0.0)
@@ -293,7 +293,7 @@ class plugconv(plugin_plugconv.base):
             data_socalabs.to_cvpj_vst2(cvpj_plugindata, 1399874915)
             return True
 
-        if plugintype[1] == 'waveshaper':
+        if plugintype[1] == 'waveshaper' and extplugtype == 'vst2':
             print("[plug-conv] LMMS to VST2: Wave Shaper > Wolf Shaper:",pluginid)
             data_wolfshaper = plugin_wolfshaper.wolfshaper_data()
             waveshapebytes = base64.b64decode(cvpj_plugindata.dataval_get('waveShape', ''))

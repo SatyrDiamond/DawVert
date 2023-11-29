@@ -72,7 +72,62 @@ part|struct.__part__fruity_delay_bank_extra|bank_6_e
 part|struct.__part__fruity_delay_bank_extra|bank_7_e
 part|struct.__part__fruity_delay_bank_extra|bank_8_e
 
+area_struct|fl_slayer
+part|int|version
+part|s_int|string_type
+part|s_int|coil_type
+part|s_int|pickup_position
+part|s_int|tone
+part|s_int|slap
+part|s_int|fret
+part|s_int|harmonic
+part|s_int|damp
+part|s_int|harmonic_vel
+part|s_int|damp_vel
+part|s_int|
+part|s_int|
+part|s_int|amp_type
+part|s_int|drive
+part|s_int|presense
+part|s_int|feedback
+part|s_int|eq_low
+part|s_int|eq_mid
+part|s_int|eq_high
+part|s_int|cabinet
+part|s_int|fx_type
+part|s_int|fx_param1
+part|s_int|fx_param2
+part|s_int|
+part|s_int|mode
+part|s_int|timing
+part|s_int|hold
+part|s_int|glissando
+part|s_int|pitch_bend
 
+area_struct|fl_keys
+part|int|version
+part|string_part/byte|instrument
+part|s_int|decay
+part|s_int|release
+part|s_int|hardness
+part|s_int|hardness_from_vel
+part|s_int|muffle
+part|s_int|muffle_from_vel
+part|s_int|vel_sens
+part|s_int|stereo
+part|s_int|fine
+part|s_int|detune
+part|s_int|stretch
+part|s_int|treble
+part|s_int|pan
+part|s_int|lfo
+part|s_int|overdrive
+
+area_struct|boobass
+part|int|version
+part|int|bass
+part|int|mid
+part|int|treble
 
 area_struct|vintage_chorus
 part|int|version
@@ -179,8 +234,8 @@ part|int|mixer_track
 
 area_struct|fruit_kick
 part|int|version
-part|int|max_freq
-part|int|min_freq
+part|s_int|max_freq
+part|s_int|min_freq
 part|int|decay_freq
 part|int|decay_vol
 part|int|osc_click
@@ -414,9 +469,9 @@ part|byte|unknown_20
 part|byte|unknown_21
 
 area_struct|fruity_mute_2
+part|int|version
 part|s_int|mute
 part|s_int|channel
-part|s_int|unknown_1
 
 area_struct|fruity_panomatic
 part|s_int|pan

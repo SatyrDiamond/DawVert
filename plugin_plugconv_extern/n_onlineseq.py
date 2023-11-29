@@ -6,6 +6,8 @@ import plugin_plugconv_extern
 import struct
 from functions import plugin_vst2
 
+from functions_tracks import auto_data
+
 class plugconv(plugin_plugconv_extern.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv_ext'
@@ -23,7 +25,7 @@ class plugconv(plugin_plugconv_extern.base):
 
         elif plugintype[1] == 'eq' and extplugtype == 'vst2':
             print('[plug-conv] Online Sequencer to VST2: EQ > 3 Band EQ:',pluginid)
-            eq_high = cvpj_plugindata.param_get('eq_high', 0)[0]
+            eq_low = cvpj_plugindata.param_get('eq_low', 0)[0]
             eq_mid = cvpj_plugindata.param_get('eq_mid', 0)[0]
             eq_high = cvpj_plugindata.param_get('eq_high', 0)[0]
             plugin_vst2.replace_data(cvpj_plugindata, 'name','any', '3 Band EQ', 'param', None, 6)
@@ -33,6 +35,10 @@ class plugconv(plugin_plugconv_extern.base):
             cvpj_plugindata.param_add('vst_param_3', 0.5, 'float', "Master")
             cvpj_plugindata.param_add('vst_param_4', 0.22, 'float', "Low-Mid Freq")
             cvpj_plugindata.param_add('vst_param_5', 0.3, 'float', "Mid-High Freq")
+
+            auto_data.to_ext_one(cvpj_l, pluginid, 'eq_low', 'vst_param_0', -96, 96)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'eq_mid', 'vst_param_1', -96, 96)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'eq_high', 'vst_param_2', -96, 96)
             return True
 
         else: return False

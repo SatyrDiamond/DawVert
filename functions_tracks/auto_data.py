@@ -37,4 +37,28 @@ def move(cvpj_l, old_autolocation, new_autolocation):
 def del_plugin(cvpj_l, pluginid):
     print('[tracks] Removing Plugin Automation:',pluginid)
     dictvals = data_values.nested_dict_get_value(cvpj_l, ['automation', 'plugin', pluginid])
-    if dictvals != None: del cvpj_l['automation', 'plugin', pluginid]
+    if dictvals != None: del cvpj_l['automation']['plugin'][pluginid]
+
+def change_valrange(cvpj_l, autolocation, old_min, old_max, new_min, new_max):
+    dictvals = data_values.nested_dict_get_value(cvpj_l, ['automation']+autolocation)
+    if dictvals != None: 
+        if 'placements' in dictvals:
+            dictvals = auto.change_valrange(dictvals['placements'], old_min, old_max, new_min, new_max)
+
+def to_one(cvpj_l, autolocation, v_min, v_max):
+    dictvals = data_values.nested_dict_get_value(cvpj_l, ['automation']+autolocation)
+    if dictvals != None: 
+        if 'placements' in dictvals:
+            dictvals = auto.to_one(dictvals['placements'], v_min, v_max)
+
+def multiply(cvpj_l, autolocation, addval, mulval):
+    dictvals = data_values.nested_dict_get_value(cvpj_l, ['automation']+autolocation)
+    if dictvals != None: 
+        if 'placements' in dictvals:
+            dictvals = auto.multiply(dictvals['placements'], addval, mulval)
+
+def to_ext_one(cvpj_l, pluginid, oldname, newname, v_min, v_max):
+    move(cvpj_l, ['plugin', pluginid, oldname], ['plugin', pluginid, newname])
+    to_one(cvpj_l, ['plugin', pluginid, newname], v_min, v_max)
+
+

@@ -373,6 +373,12 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername, datadef, dat
         if datadef_struct[0]:
             cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
             jsondecoded = datadef.parse(datadef_struct[1], chunkpdata)
+
+            #if True:
+            #    for part in datadef.debugoutput:
+            #        print(part)
+            #    exit()
+
             cvpj_plugindata.param_dict_dataset_get(jsondecoded, dataset, 'plugin', pluginname)
 
     # ------------------------------------------------------------------------------------------- Other

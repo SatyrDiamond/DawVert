@@ -139,8 +139,9 @@ def getvstparams(cvpj_plugindata, pluginid, xmldata):
 
     if vst_data != None:
         cvpj_plugindata.dataval_add('datatype', 'chunk')
-        cvpj_plugindata.rawdata_add(vst_data)
-        plugin_vst2.replace_data(cvpj_plugindata, 'path', 'win', xmldata.get('plugin'), 'chunk', vst_data, None)
+        chunkdata = base64.b64decode(vst_data.encode('ascii'))
+        cvpj_plugindata.rawdata_add(chunkdata)
+        plugin_vst2.replace_data(cvpj_plugindata, 'path', 'win', xmldata.get('plugin'), 'chunk', chunkdata, None)
 
     elif vst_numparams != None:
         cvpj_plugindata.dataval_add('datatype', 'param')
@@ -150,7 +151,7 @@ def getvstparams(cvpj_plugindata, pluginid, xmldata):
             paramnum = 'vst_param_'+str(param)
             cvpj_plugindata.param_add(paramnum, float(paramdata[-1]), 'float', paramdata[1])
 
-    for node in xmldata.iter():
+    for node in xmldata:
         notetagtxt = node.tag
         if notetagtxt.startswith('param'):
             value = node.get('value')

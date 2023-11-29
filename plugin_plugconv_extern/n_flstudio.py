@@ -98,6 +98,13 @@ class plugconv(plugin_plugconv_extern.base):
                 cvpj_plugindata.param_add('vst_param_3', paramvals[3], 'float', "  x 100   ")
                 cvpj_plugindata.param_add('vst_param_4', paramvals[4], 'float', "PostFilter")
                 cvpj_plugindata.param_add('vst_param_5', paramvals[5], 'float', " PostGain ")
+
+                auto_data.to_ext_one(cvpj_l, pluginid, 'preband', 'vst_param_0', 0, 10000)
+                auto_data.to_ext_one(cvpj_l, pluginid, 'color', 'vst_param_1', 0, 10000)
+                auto_data.to_ext_one(cvpj_l, pluginid, 'preamp', 'vst_param_2', 0, 10000)
+                auto_data.to_ext_one(cvpj_l, pluginid, 'x100', 'vst_param_3', 0, 1)
+                auto_data.to_ext_one(cvpj_l, pluginid, 'postfilter', 'vst_param_4', 0, 10000)
+                auto_data.to_ext_one(cvpj_l, pluginid, 'postgain', 'vst_param_5', 0, 10000)
                 return True
 
             if flpluginname in nonfree_il_plugnames and extplugtype == 'vst2':
@@ -182,7 +189,8 @@ class plugconv(plugin_plugconv_extern.base):
             param_mod_thru = getparam('mod_thru')/65536
             param_lforate = getparam('lforate')/65536
 
-            plugin_vst2.replace_data(cvpj_plugindata, 'name','any', 'DX10', 'param', None, 16)
+            plugin_vst2.replace_data(cvpj_plugindata, 'name', 'any', 'DX10', 'param', None, 16)
+
             cvpj_plugindata.param_add('vst_param_0', param_amp_att, 'float', "Attack  ", )
             cvpj_plugindata.param_add('vst_param_1', param_amp_dec, 'float', "Decay   ", )
             cvpj_plugindata.param_add('vst_param_2', param_amp_rel, 'float', "Release ", )
@@ -199,6 +207,23 @@ class plugconv(plugin_plugconv_extern.base):
             cvpj_plugindata.param_add('vst_param_13', param_waveform, 'float', "Waveform", )
             cvpj_plugindata.param_add('vst_param_14', param_mod_thru, 'float', "Mod Thru", )
             cvpj_plugindata.param_add('vst_param_15', param_lforate, 'float', "LFO Rate", )
+
+            auto_data.to_ext_one(cvpj_l, pluginid, 'amp_att', 'vst_param_0', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'amp_dec', 'vst_param_1', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'amp_rel', 'vst_param_2', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'mod_course', 'vst_param_3', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'mod_fine', 'vst_param_4', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'mod_init', 'vst_param_5', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'mod_time', 'vst_param_6', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'mod_sus', 'vst_param_7', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'mod_rel', 'vst_param_8', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'velsen', 'vst_param_9', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'vibrato', 'vst_param_10', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'octave', 'vst_param_11', -3, 3)
+
+            auto_data.to_ext_one(cvpj_l, pluginid, 'waveform', 'vst_param_13', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'mod_thru', 'vst_param_14', 0, 65536)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'lforate', 'vst_param_15', 0, 65536)
             return True
 
         # ---------------------------------------- SimSynth ----------------------------------------
@@ -273,6 +298,9 @@ class plugconv(plugin_plugconv_extern.base):
             plugin_vst2.replace_data(cvpj_plugindata, 'name', 'any', 'Weight', 'param', None, 2)
             cvpj_plugindata.param_add('vst_param_0', param_freq, 'float', "Freq")
             cvpj_plugindata.param_add('vst_param_1', param_amount, 'float', "Weight")
+
+            auto_data.to_ext_one(cvpj_l, pluginid, 'freq', 'vst_param_0', 0, 1280)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'amount', 'vst_param_1', 0, 1280)
             return True
 
         elif flpluginname == 'fruity phaser' and extplugtype == 'vst2':
@@ -303,6 +331,16 @@ class plugconv(plugin_plugconv_extern.base):
             cvpj_plugindata.param_add('vst_param_13', param_drywet, 'float', "dry-wet")
             cvpj_plugindata.param_add('vst_param_14', param_gain, 'float', "out gain")
             cvpj_plugindata.param_add('vst_param_15', 0, 'float', "invert")
+
+            auto_data.to_ext_one(cvpj_l, pluginid, 'sweep_freq', 'vst_param_5', 0, 5000)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'depth_min', 'vst_param_6', 0, 1000)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'depth_max', 'vst_param_7', 0, 1000)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'freq_range', 'vst_param_8', 0, 1024)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'stereo', 'vst_param_9', 0, 1024)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'num_stages', 'vst_param_10', 0, 22)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'feedback', 'vst_param_12', 0, 1000)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'drywet', 'vst_param_13', 0, 1024)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'gain', 'vst_param_14', 0, 5000)
             return True
 
         elif flpluginname == 'fruity spectroman' and extplugtype == 'vst2':

@@ -517,7 +517,7 @@ class output_cvpj_f(plugin_output.base):
                         vstdatatype = cvpj_plugindata.dataval_get('datatype', '')
                         if vstdatatype == 'chunk':
                             vstcondata['pluginPath'] = cvpj_plugindata.dataval_get('path', 'path')
-                            vstcondata['pluginState'] = cvpj_plugindata.rawdata_get()
+                            vstcondata['pluginState'] = cvpj_plugindata.rawdata_get_b64()
                         amped_trackdata["devices"].append(vstcondata)
 
             if inst_supported == False:
@@ -628,8 +628,11 @@ class output_cvpj_f(plugin_output.base):
                         if cuttype == 'cut': 
                             amped_offset = cutdata['start']/4 if 'start' in cutdata else 0
 
+                    amped_audclip = {}
+                    
                     if 'audiomod' in cvpj_audioclip:
                         cvpj_audiomod = cvpj_audioclip['audiomod']
+                        amped_audclip['pitchShift'] = int(cvpj_audiomod['pitch']) if 'pitch' in cvpj_audiomod else 0
                         stretch_method = cvpj_audiomod['stretch_method'] if 'stretch_method' in cvpj_audiomod else None
                         stretch_data = cvpj_audiomod['stretch_data'] if 'stretch_data' in cvpj_audiomod else {'rate': 1.0}
                         stretch_rate = stretch_data['rate'] if 'rate' in stretch_data else 1
@@ -640,7 +643,6 @@ class output_cvpj_f(plugin_output.base):
                     audioid = None
                     if 'file' in cvpj_audioclip:
                         audioid = addsample(zip_amped, cvpj_audioclip['file'])
-                    amped_audclip = {}
                     amped_audclip['contentGuid'] = {}
                     if audioid != None: amped_audclip['contentGuid']['userAudio'] = {"exportedId": audioid}
                     amped_audclip['position'] = 0

@@ -11,6 +11,8 @@ from functions import plugin_vst2
 from functions import plugins
 from functions import xtramath
 
+from functions_tracks import auto_data
+
 from functions_plugdata import data_nullbytegroup
 from functions_plugdata import plugin_vital
 from functions_plugdata import plugin_socalabs
@@ -220,6 +222,7 @@ class plugconv(plugin_plugconv_extern.base):
             if getparam('endnote') == 1: data_kickmess.set_param('pub', 'freq_note_end', 0.5)
             data_kickmess.set_param('pub', 'phase_offs', getparam('click'))
             data_kickmess.to_cvpj_vst2(cvpj_plugindata)
+
             return True
 
         if plugintype[1] == 'lb302' and extplugtype == 'vst2':
@@ -283,6 +286,8 @@ class plugconv(plugin_plugconv_extern.base):
                     [{'ui_size': ''}, 
                     {'mix': '1', 'size': str(value_size), 'brightness': str(value_color/15000)}]), 
                 None)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'size', 'vst_param_1', 0, 1)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'color', 'vst_param_2', 0, 15000)
             return True
 
         if plugintype[1] == 'spectrumanalyzer' and extplugtype == 'vst2':

@@ -91,7 +91,7 @@ class input_ceol(plugin_input.base):
 
         elif ceol_basic_effect == 1: #chorus
             masterfx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'chorus')
-            masterfx_plugindata.fxdata_add(1, ceol_basic_effectvalue/100)
+            masterfx_plugindata.param_add('amount', ceol_basic_effectvalue/100, 'float', 'amount')
 
         elif ceol_basic_effect == 2: #reverb
             masterfx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'reverb')

@@ -61,12 +61,14 @@ def db_search(in_data, platformtype, bycat):
 			if platformtype == 'win': out_paths = db_plugins.execute("SELECT path_32bit_win, path_64bit_win FROM vst2 WHERE name = ?", (in_data,)).fetchone()
 			else: out_paths = db_plugins.execute("SELECT path_32bit_unix, path_64bit_unix FROM vst2 WHERE name = ?", (in_data,)).fetchone()
 			vst_name = in_data
-			vst_id = db_plugins.execute("SELECT id FROM vst2 WHERE name = ?", (in_data,)).fetchone()[0]
+			vst_id_d = db_plugins.execute("SELECT id FROM vst2 WHERE name = ?", (in_data,)).fetchone()
+			if vst_id_d: vst_id = vst_id_d[0]
 
 		if bycat == 'id':
 			if platformtype == 'win': out_paths = db_plugins.execute("SELECT path_32bit_win, path_64bit_win FROM vst2 WHERE id = ?", (in_data,)).fetchone()
 			else: out_paths = db_plugins.execute("SELECT path_32bit_unix, path_64bit_unix FROM vst2 WHERE id = ?", (in_data,)).fetchone()
-			vst_name = db_plugins.execute("SELECT name FROM vst2 WHERE id = ?", (in_data,)).fetchone()[0]
+			vst_name_d = db_plugins.execute("SELECT name FROM vst2 WHERE id = ?", (in_data,)).fetchone()
+			if vst_name_d: vst_name = vst_name_d[0]
 			vst_id = in_data
 
 		if bycat == 'path':

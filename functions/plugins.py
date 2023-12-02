@@ -176,6 +176,10 @@ class cvpj_plugin:
     def region_add(self, regiondata):
         data_values.nested_dict_add_to_list(self.cvpjdata, ['regions'], regiondata)
 
+    def regions_get(self):
+        if 'regions' in self.cvpjdata: return self.cvpjdata['regions']
+        else: []
+
     # -------------------------------------------------- asdr_env
     def asdr_env_add(self, a_type, a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount):
         asdrdata = {}

@@ -3,6 +3,23 @@
 
 import re
 
+class counter:
+    def __init__(self, starting_num):
+        self.current = starting_num
+
+    def get(self):
+        starting_num += 1
+        return starting_num
+
+    def get_str(self):
+        starting_num += 1
+        return starting_num
+
+    def next(self):
+        return starting_num+1
+
+
+
 def nested_dict_add_value(i_dict, i_keys, i_value):
     if len(i_keys) == 1: i_dict.setdefault(i_keys[0], i_value)
     else:

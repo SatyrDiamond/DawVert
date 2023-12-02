@@ -464,3 +464,4 @@ class vital_data:
 
     def to_cvpj_vst2(self):
         plugin_vst2.replace_data(self.cvpj_plugindata, 'name','any', 'Vital', 'chunk', json.dumps(self.vitaldata).encode('utf-8'), None)
+        plugin_vst2.replace_data(self.cvpj_plugindata, 'name','any', 'Vitalium', 'chunk', json.dumps(self.vitaldata).encode('utf-8'), None)

@@ -220,8 +220,6 @@ def maketrack_wave(xmltag, cvpj_trackplacements, insttrackdata):
                 else:
                     stretchlist[2] = 1/muse_stretch
 
-                print(stretch_algorithm, stretchlist)
-
         xp_event = ET.SubElement(x_part, 'event')
         xp_poslen = ET.SubElement(xp_event, 'poslen')
         xp_poslen.set('len', str(int(p_dur)))

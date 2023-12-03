@@ -135,6 +135,10 @@ class input_mod(plugin_input.base):
 
             tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
             
+            mod_inst_length *= 2
+            mod_inst_loopstart *= 2
+            mod_inst_looplength *= 2
+
             if mod_inst_length != 0 and mod_inst_length != 1:
                 wave_path = samplefolder + str(mod_numinst).zfill(2) + '.wav'
 

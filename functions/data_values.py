@@ -8,15 +8,15 @@ class counter:
         self.current = starting_num
 
     def get(self):
-        starting_num += 1
-        return starting_num
+        self.current += 1
+        return self.current
 
     def get_str(self):
-        starting_num += 1
-        return starting_num
+        self.current += 1
+        return str(self.current)
 
     def next(self):
-        return starting_num+1
+        return self.current+1
 
 
 

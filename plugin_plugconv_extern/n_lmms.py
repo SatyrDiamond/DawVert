@@ -286,8 +286,8 @@ class plugconv(plugin_plugconv_extern.base):
                     [{'ui_size': ''}, 
                     {'mix': '1', 'size': str(value_size), 'brightness': str(value_color/15000)}]), 
                 None)
-            auto_data.to_ext_one(cvpj_l, pluginid, 'size', 'vst_param_1', 0, 1)
-            auto_data.to_ext_one(cvpj_l, pluginid, 'color', 'vst_param_2', 0, 15000)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'size', 'ext_param_1', 0, 1)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'color', 'ext_param_2', 0, 15000)
             return True
 
         if plugintype[1] == 'spectrumanalyzer' and extplugtype == 'vst2':

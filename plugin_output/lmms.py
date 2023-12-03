@@ -162,13 +162,13 @@ def setvstparams(cvpj_plugindata, pluginid, xmldata):
         xmldata.set('numparams', str(numparams))
 
         for param in range(numparams):
-            pval, ptype, pname = cvpj_plugindata.param_get('vst_param_'+str(param), 0)
+            pval, ptype, pname = cvpj_plugindata.param_get('ext_param_'+str(param), 0)
             xmldata.set('param'+str(param), str(param)+':'+pname+':'+str(pval))
 
     pluginautoid = auto_id.out_getlist(['plugin', pluginid])
     if pluginautoid != None:
         for paramname in pluginautoid:
-            if 'vst_param_' in paramname:
+            if 'ext_param_' in paramname:
                 aid_id, aid_data = auto_id.out_get(['plugin', pluginid, paramname])
                 if aid_id != None and len(aid_data['placements']) != 0:
                     make_auto_track(aid_id, aid_data, 'VST2: #'+str(int(paramname[10:])+1))

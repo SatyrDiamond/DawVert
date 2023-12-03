@@ -41,8 +41,8 @@ class plugconv(plugin_plugconv_extern.base):
         elif plugintype[1] == 'bassboost' and extplugtype == 'vst2':
             print('[plug-conv] SimpleFX to VST2: BassBoost > Airwindows Weight:',pluginid)
             plugin_vst2.replace_data(cvpj_plugindata, 'name','any', 'Weight', 'param', None, 2)
-            cvpj_plugindata.param_add('vst_param_0', 1, 'float', "Freq")
-            cvpj_plugindata.param_add('vst_param_1', 1, 'float', "Weight")
+            cvpj_plugindata.param_add('ext_param_0', 1, 'float', "Freq")
+            cvpj_plugindata.param_add('ext_param_1', 1, 'float', "Weight")
             return True
 
         else: return False

@@ -29,16 +29,16 @@ class plugconv(plugin_plugconv_extern.base):
             eq_mid = cvpj_plugindata.param_get('eq_mid', 0)[0]
             eq_high = cvpj_plugindata.param_get('eq_high', 0)[0]
             plugin_vst2.replace_data(cvpj_plugindata, 'name','any', '3 Band EQ', 'param', None, 6)
-            cvpj_plugindata.param_add('vst_param_0', (eq_high/96)+0.5, 'float', "Low")
-            cvpj_plugindata.param_add('vst_param_1', (eq_mid/96)+0.5, 'float', "Mid")
-            cvpj_plugindata.param_add('vst_param_2', (eq_high/96)+0.5, 'float', "High")
-            cvpj_plugindata.param_add('vst_param_3', 0.5, 'float', "Master")
-            cvpj_plugindata.param_add('vst_param_4', 0.22, 'float', "Low-Mid Freq")
-            cvpj_plugindata.param_add('vst_param_5', 0.3, 'float', "Mid-High Freq")
+            cvpj_plugindata.param_add('ext_param_0', (eq_high/96)+0.5, 'float', "Low")
+            cvpj_plugindata.param_add('ext_param_1', (eq_mid/96)+0.5, 'float', "Mid")
+            cvpj_plugindata.param_add('ext_param_2', (eq_high/96)+0.5, 'float', "High")
+            cvpj_plugindata.param_add('ext_param_3', 0.5, 'float', "Master")
+            cvpj_plugindata.param_add('ext_param_4', 0.22, 'float', "Low-Mid Freq")
+            cvpj_plugindata.param_add('ext_param_5', 0.3, 'float', "Mid-High Freq")
 
-            auto_data.to_ext_one(cvpj_l, pluginid, 'eq_low', 'vst_param_0', -96, 96)
-            auto_data.to_ext_one(cvpj_l, pluginid, 'eq_mid', 'vst_param_1', -96, 96)
-            auto_data.to_ext_one(cvpj_l, pluginid, 'eq_high', 'vst_param_2', -96, 96)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'eq_low', 'ext_param_0', -96, 96)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'eq_mid', 'ext_param_1', -96, 96)
+            auto_data.to_ext_one(cvpj_l, pluginid, 'eq_high', 'ext_param_2', -96, 96)
             return True
 
         else: return False

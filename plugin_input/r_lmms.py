@@ -148,7 +148,7 @@ def getvstparams(cvpj_plugindata, pluginid, xmldata):
         cvpj_plugindata.dataval_add('numparams', int(vst_numparams))
         for param in range(int(vst_numparams)):
             paramdata = xmldata.get('param'+str(param)).split(':')
-            paramnum = 'vst_param_'+str(param)
+            paramnum = 'ext_param_'+str(param)
             cvpj_plugindata.param_add(paramnum, float(paramdata[-1]), 'float', paramdata[1])
 
     for node in xmldata:
@@ -156,7 +156,7 @@ def getvstparams(cvpj_plugindata, pluginid, xmldata):
         if notetagtxt.startswith('param'):
             value = node.get('value')
             if value != None:
-                auto_id.in_define(str(node.get('id')), ['plugin', pluginid, 'vst_param_'+notetagtxt[5:]], 'float', None)
+                auto_id.in_define(str(node.get('id')), ['plugin', pluginid, 'ext_param_'+notetagtxt[5:]], 'float', None)
 
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
 

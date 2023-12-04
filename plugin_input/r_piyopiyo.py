@@ -110,8 +110,7 @@ class input_piyopiyo(plugin_input.base):
                 for bitnote in bitnotes:
                     if bitnote == '1': notelist.append(note_data.rx_makenote(pmdpos, 1, notenum+keyoffset[tracknum], 1.0, currentpan))
                     notenum -= 1
-            if notelist != []: t_placements = placement_data.nl2pl(notelist)
-            else: t_placements = []
+            t_placements = placement_data.nl2pl(notelist) if notelist != [] else []
             tracks_r.add_pl(cvpj_l, str(tracknum), 'notes', t_placements)
 
         cvpj_l['do_addloop'] = True

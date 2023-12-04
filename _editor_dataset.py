@@ -6,6 +6,7 @@ import argparse
 import json
 from functions import xtramath
 from functions import data_dataset
+import sys
 
 table_flags = (
     imgui.TableFlags_.row_bg

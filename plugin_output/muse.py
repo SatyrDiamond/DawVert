@@ -192,33 +192,11 @@ def maketrack_wave(xmltag, cvpj_trackplacements, insttrackdata):
 
         frameval = 0
 
-        stretchlist = [0, 1, 1, 1, 7]
 
         if 'cut' in placement:
             cutdata = placement['cut']
             if cutdata['type'] == 'cut':
                 frameval = int((cutdata['start']*(wavetime*96))*(120/muse_bpm))
-
-        if 'audiomod' in placement:
-            audiomoddata = placement['audiomod']
-            stretch_pitch = audiomoddata['pitch'] if 'pitch' in audiomoddata else 0
-            if 'stretch_method' in audiomoddata:
-                stretch_method = audiomoddata['stretch_method']
-                stretch_algorithm = audiomoddata['stretch_algorithm'] if 'stretch_algorithm' in audiomoddata else 'stretch'
-                stretch_data = audiomoddata['stretch_data'] if 'stretch_data' in audiomoddata else {}
-                muse_stretch = 1
-                muse_pitch = pow(2, stretch_pitch/12)
-                stretchlist[0] = 1
-
-                if stretch_method == 'rate_speed': muse_stretch = (1/stretch_data['rate'])
-                if stretch_method == 'rate_ignoretempo': muse_stretch = (1/stretch_data['rate'])
-                if stretch_method == 'rate_tempo': muse_stretch = (1/stretch_data['rate'])*(muse_bpm/120)
-
-                if stretch_algorithm != 'resample':
-                    stretchlist[1] = muse_stretch*muse_pitch
-                    stretchlist[2] = muse_pitch
-                else:
-                    stretchlist[2] = 1/muse_stretch
 
         xp_event = ET.SubElement(x_part, 'event')
         xp_poslen = ET.SubElement(xp_event, 'poslen')
@@ -226,8 +204,37 @@ def maketrack_wave(xmltag, cvpj_trackplacements, insttrackdata):
         xp_poslen.set('sample', str(int(p_pos)))
         addvalue(xp_event, 'frame', frameval)
         addvalue(xp_event, 'file', placement['file'])
-        xp_stretchlist = ET.SubElement(xp_event, 'stretchlist')
-        xp_stretchlist.text = ' '.join([str(x) for x in stretchlist])
+        if 'audiomod' in placement:
+            audiomoddata = placement['audiomod']
+            stretch_pitch = audiomoddata['pitch'] if 'pitch' in audiomoddata else 0
+            if 'stretch_method' in audiomoddata:
+                stretch_method = audiomoddata['stretch_method']
+                stretch_algorithm = audiomoddata['stretch_algorithm'] if 'stretch_algorithm' in audiomoddata else 'stretch'
+                stretch_data = audiomoddata['stretch_data'] if 'stretch_data' in audiomoddata else {}
+
+                if stretch_method != 'warp':
+                    stretchlist = [0, 1, 1, 1, 7]
+                    muse_stretch = 1
+                    muse_pitch = pow(2, stretch_pitch/12)
+                    stretchlist[0] = 1
+
+                    print(stretch_method)
+
+                    if stretch_method == 'rate_speed': muse_stretch = (1/stretch_data['rate'])
+                    if stretch_method == 'rate_ignoretempo': muse_stretch = (1/stretch_data['rate'])
+                    if stretch_method == 'rate_tempo': muse_stretch = (1/stretch_data['rate'])*(muse_bpm/120)
+
+                    if stretch_algorithm != 'resample':
+                        stretchlist[1] = muse_stretch*muse_pitch
+                        stretchlist[2] = muse_pitch
+                    else:
+                        stretchlist[2] = 1/muse_stretch
+
+                    xp_stretchlist = ET.SubElement(xp_event, 'stretchlist')
+                    xp_stretchlist.text = ' '.join([str(x) for x in stretchlist])
+
+
+
 
         #print(placement)
     tracknum += 1
@@ -282,7 +289,7 @@ class output_cvpj(plugin_output.base):
         addvalue(x_song, 'info', '')
         addvalue(x_song, 'showinfo', 1)
         addvalue(x_song, 'cpos', 0) #start
-        addvalue(x_song, 'rpos', 0) #end
+        addvalue(x_song, 'rpos', -1) #end
         addvalue(x_song, 'lpos', 0)
         addvalue(x_song, 'master', 1)
         addvalue(x_song, 'loop', 0)

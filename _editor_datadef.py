@@ -5,6 +5,7 @@ from typing import List
 import argparse
 import json
 from functions import data_datadef
+import sys
 
 table_flags = (
     imgui.TableFlags_.row_bg
@@ -62,12 +63,12 @@ def widgits___struct_list():
     structlist = [x for x in datadef.structs]
     btn_add, btn_del, txtbox_struct_name, g_current_struct, ismodded = widgit_txt_but(txtbox_struct_name, structlist, g_current_struct, None)
 
-    if ismodded: datadef.parse(g_current_struct[1],databytes)
+    if ismodded: datadef.parse('main',databytes)
 
     if btn_add and txtbox_struct_name not in datadef.structs: datadef.structs[txtbox_struct_name] = []
     if btn_del and txtbox_struct_name in datadef.structs: del datadef.structs[txtbox_struct_name]
 
-    if btn_add or btn_del: datadef.parse(g_current_struct[1],databytes)
+    if btn_add or btn_del: datadef.parse('main',databytes)
 
 # ####################################################################################################
 # ####################################################################################################
@@ -89,21 +90,21 @@ def widgits___cmd_edit(input_list, parttxt):
         c_txttype, i_txttype = imgui.input_text('##'+listpartid+'_lp', listpart[0])
         if c_txttype: 
             listpart[0] = i_txttype
-            datadef.parse(g_current_struct[1],databytes)
+            datadef.parse('main',databytes)
 
         if listpart[0] in ['raw', 'struct', 'string', 'dstring', 'list', 'getvar', 'skip_n']:
             imgui.same_line()
             c_txtnum, i_txtnum = imgui.input_text('##'+listpartid+'_lp_num', listpart[1])
             if c_txtnum: 
                 listpart[1] = i_txtnum
-                datadef.parse(g_current_struct[1],databytes)
+                datadef.parse('main',databytes)
 
 
     imgui.same_line()
     btn_add = imgui.button("+##"+parttxt)
     if btn_add: 
         input_list.append(['byte', ''])
-        datadef.parse(g_current_struct[1],databytes)
+        datadef.parse('main',databytes)
 
     btn_rem = False
     if input_list:
@@ -111,7 +112,7 @@ def widgits___cmd_edit(input_list, parttxt):
         btn_rem = imgui.button("-##"+parttxt)
         if btn_rem: 
             del input_list[-1]
-            datadef.parse(g_current_struct[1],databytes)
+            datadef.parse('main',databytes)
 
 def window___struct_edit():
     window_data = hello_imgui.DockableWindow()
@@ -171,12 +172,12 @@ def widgits___struct_edit():
                     imgui.end_table()
                 imgui.end_child()
 
-                if is_changed: datadef.parse(g_current_struct[1],databytes)
+                if is_changed: datadef.parse('main',databytes)
 
 
             if btn_ptadd: 
                 partdata.append(['part', [['byte', '']], ''])
-                datadef.parse(g_current_struct[1],databytes)
+                datadef.parse('main',databytes)
 
 
 

@@ -256,7 +256,7 @@ def amped_parse_effects(fxchain_audio, amped_auto):
                 band_on = float(s_band['on'])
                 band_freq = s_band['freq']
                 band_gain = s_band['gain']
-                band_res = s_band['var']
+                band_res = s_band['q']
 
                 filtername = "filter/"+eqnumtxt+"/"
 

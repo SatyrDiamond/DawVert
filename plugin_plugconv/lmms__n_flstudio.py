@@ -31,8 +31,6 @@ class plugconv(plugin_plugconv.base):
 
         plugintype = cvpj_plugindata.type_get()
 
-        if plugintype[1] == None: plugintype[1] = ''
-
         if plugintype[1].lower() == 'fruity balance':  
             print('[plug-conv] FL Studio to LMMS: Fruity Balance > Amplifier:',pluginid)
             auto_data.del_plugin(cvpj_l, pluginid)

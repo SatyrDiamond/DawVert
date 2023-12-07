@@ -144,11 +144,14 @@ def add_eq_data(cvpj_instid, eqfiltbands):
 		eqgain = (eqfiltdata['linearGain']-2)*6
 		eqtype = eqfiltdata['type']
 		if eqtype == 'low-pass':
-			fx_plugindata.eqband_add(1, eqfiltdata['cutoffHz'], 0, 'low_pass', eqgain_pass, None)
+			fx_plugindata.eqband_add(1, eqfiltdata['cutoffHz'], 'low_pass', None)
+			fx_plugindata.eqband_add_param('q', eqgain_pass, None)
 		if eqtype == 'peak':
-			fx_plugindata.eqband_add(1, eqfiltdata['cutoffHz'], eqgain, 'peak', 1, None)
+			fx_plugindata.eqband_add(1, eqfiltdata['cutoffHz'], 'peak', None)
+			fx_plugindata.eqband_add_param('q', 1, None)
 		if eqtype == 'high-pass':
-			fx_plugindata.eqband_add(1, eqfiltdata['cutoffHz'], 0, 'high_pass', eqgain_pass, None)
+			fx_plugindata.eqband_add(1, eqfiltdata['cutoffHz'], 'high_pass', None)
+			fx_plugindata.eqband_add_param('q', eqgain_pass, None)
 	return fx_pluginid, fx_plugindata
 
 def get_harmonics(i_harmonics):
@@ -258,7 +261,8 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 				if filter_hz != None or filter_peak != 0:
 					if filter_hz == None: filter_hz = 8000
 					fx_pluginid, fx_plugindata = addfx('universal', cvpj_instid, 'eq-bands')
-					fx_plugindata.eqband_add(1, filter_hz, 0, 'low_pass', filter_peak*2, None)
+					fx_plugindata.eqband_add(1, filter_hz, 'low_pass', None)
+					fx_plugindata.eqband_add_param('q', filter_peak*2, None)
 					fx_plugindata.to_cvpj(cvpj_l, fx_pluginid)
 
 		elif 'eqFilter' in bb_instrument:

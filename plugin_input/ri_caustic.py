@@ -309,10 +309,12 @@ class input_cvpj_r(plugin_input.base):
             else:
                 inst_plugindata = plugins.cvpj_plugin('deftype', 'native-caustic', machine['id'])
                 if 'controls' in machine: 
-                    paramlist = dataset.params_list('plugin', machine['id'])
-                    for paramid in paramlist:
-                        paramdata = params_i_get('plugin', machine['id'], paramid)
-                        inst_plugindata.param_add_dset(str(paramid), machine['controls'][int(paramid)], dataset, 'plugin_inst', machine['id'])
+                    paramlist = dataset.params_list('plugin_inst', machine['id'])
+
+                    if paramlist != None: 
+                        for paramid in paramlist:
+                            paramdata = dataset.params_i_get('plugin_inst', machine['id'], paramid)
+                            inst_plugindata.param_add_dset(str(paramid), machine['controls'][int(paramid)], dataset, 'plugin_inst', machine['id'])
 
                 if 'customwaveform1' in machine: inst_plugindata.wave_add('customwaveform1', list(struct.unpack("<"+("h"*660), machine['customwaveform1'])), -157, 157)
                 if 'customwaveform2' in machine: inst_plugindata.wave_add('customwaveform2', list(struct.unpack("<"+("h"*660), machine['customwaveform2'])), -157, 157)
@@ -478,7 +480,7 @@ class input_cvpj_r(plugin_input.base):
         for autonum in AUTO_data['MASTER']:
             if autonum in MSTR['CCOL']:
                 t_fxtypeparam = MSTR['CCOL'][autonum]
-                defparams = dataset.params_i_get('plugin_master_fx', fxid, str(autonum))
+                defparams = params_i_get('plugin_master_fx', fxid, str(autonum))
                 if 1 <= autonum <= 9: auto_nopl.twopoints(['plugin', 'master_limiter', str(autonum)], defparams[1], AUTO_data['MASTER'][autonum], 4, 'normal')
                 if 16 <= autonum <= 25: auto_nopl.twopoints(['plugin', 'master_reverb', str(autonum)], defparams[1], AUTO_data['MASTER'][autonum], 4, 'normal')
                 if 30 <= autonum <= 34: auto_nopl.twopoints(['plugin', 'master_eq', str(autonum)], defparams[1], AUTO_data['MASTER'][autonum], 4, 'normal')

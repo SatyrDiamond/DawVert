@@ -471,21 +471,52 @@ class cvpj_plugin:
         return namegroup_list(self.cvpjdata, 'lfo')
 
     # -------------------------------------------------- eqbands
-    def eqband_add(self, b_on, b_freq, b_gain, b_type, b_var, group):
+    def eqband_add(self, b_on, b_freq, b_type, group):
         banddata = {}
         banddata['on'] = b_on
         banddata['freq'] = b_freq
-        banddata['gain'] = b_gain
         banddata['type'] = b_type
-        banddata['var'] = b_var
-        groupdataname = 'eqbands' if group == None else 'eqbands_'+group
-        if groupdataname not in self.cvpjdata: self.cvpjdata[groupdataname] = []
-        self.cvpjdata[groupdataname].append(banddata)
+        groupdataname = 'main' if group == None else group
+        if 'eqbands' not in self.cvpjdata: self.cvpjdata['eqbands'] = {}
+        if groupdataname not in self.cvpjdata['eqbands']: self.cvpjdata['eqbands'][groupdataname] = []
+        self.cvpjdata['eqbands'][groupdataname].append(banddata)
+
+    def eqband_add_param(self, b_name, b_value, group):
+        groupdataname = 'main' if group == None else group
+        if 'eqbands' in self.cvpjdata:
+            if groupdataname in self.cvpjdata['eqbands']: 
+                self.cvpjdata['eqbands'][groupdataname][-1][b_name] = b_value
 
     def eqband_get(self, group):
-        groupdataname = 'eqbands' if group == None else 'eqbands_'+group
-        if groupdataname in self.cvpjdata: return self.cvpjdata[groupdataname]
+        groupdataname = 'main' if group == None else group
+        if 'eqbands' in self.cvpjdata: 
+            if groupdataname in self.cvpjdata['eqbands']: return self.cvpjdata['eqbands'][groupdataname]
+            else: return []
         else: return []
+
+    def eqband_get_limitnum(self, group, limitnum):
+        out_eq_data = [None for _ in range(limitnum)]
+        in_eq_data = self.eqband_get(group)
+
+        reorder = []
+
+        in_num = 0
+        for eq_band in in_eq_data:
+            if None in out_eq_data:
+
+                if eq_band['type'] not in ['low_pass', 'high_shelf']: num_order = range(limitnum)
+                else: num_order = range(limitnum-1,-1,-1)
+
+                for num in num_order:
+                    if out_eq_data[num] == None:
+                        out_eq_data[num] = eq_band
+                        reorder.append([in_num, num])
+                        break
+            in_num += 1
+
+
+        return out_eq_data, reorder
+
 
     def eqband_get_limited(self, group):
         #used, active, freq, gain, res/bw

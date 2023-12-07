@@ -4,7 +4,6 @@
 import plugin_output
 import json
 import lxml.etree as ET
-from functions import xtramath
 from functions import colors
 from functions import data_values
 from functions import note_data
@@ -15,157 +14,23 @@ from functions import data_dataset
 from functions_tracks import tracks_r
 import math
 
-delaytime = [
-    [0, 16*32],
-    [1, 16*28],
-    [2, 16*24],
-    [3, 16*20],
-    [4, 16*16],
-    [5, 16*12],
-    [6, 16*10],
-    [7, 16*8],
-    [8, 16*6],
-    [9, 16*5],
-    [10, 16*4],
-    [11, 16*3],
-    [12, 16*2],
-    [13, 16*1],
-    [14, 20],
-    [15, 16],
-    [16, 11],
-    [17, 12],
-    [18, 8],
-    [19, 5],
-    [20, 6],
-    [21, 4],
-    [22, 2.5],
-    [23, 3],
-    [24, 2],
-    [25, 1.5],
-    [26, 1.5],
-    [27, 1],
-    [28, 0.75],
-    [29, 0.75],
-    [30, 0.5],
-    [31, 3/8],
-    [32, 0.25],
-    [33, 0.125],
-    [34, 0],
-]
-
 def get_plugins(xml_tag, cvpj_fxids):
     for cvpj_fxid in cvpj_fxids:
         fx_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, cvpj_fxid)
         plugtype = fx_plugindata.type_get()
         fx_on, fx_wet = fx_plugindata.fxdata_get()
 
-        if plugtype == ['universal', 'eq-bands']:
-            wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
-            wf_PLUGIN.set('type', '8bandEq')
-            wf_PLUGIN.set('presetDirty', '1')
-            num_bands = fx_plugindata.dataval_get('num_bands', 8)
-
-            cvpj_bands_a = fx_plugindata.eqband_get(None)
-            cvpj_bands_b = fx_plugindata.eqband_get('b')
-
-            for typedata in [['lm',cvpj_bands_a], ['rs',cvpj_bands_b]]:
-                for num in range(min(len(typedata[1]),8)):
-                    eqnumtxt = str(num+1)
-
-                    eqbanddata = typedata[1][num]
-                    in_band_shape = eqbanddata['type']
-
-                    if in_band_shape == 'low_pass': band_shape = 0
-                    elif in_band_shape == 'low_shelf': band_shape = 1
-                    elif in_band_shape == 'peak': band_shape = 2
-                    elif in_band_shape == 'band_pass': band_shape = 3
-                    elif in_band_shape == 'band_stop': band_shape = 4
-                    elif in_band_shape == 'high_shelf': band_shape = 5
-                    elif in_band_shape == 'high_pass': band_shape = 6
-                    else: in_band_shape = 2
-
-                    if in_band_shape in ['low_pass', 'high_pass']: 
-                        eq_var = eqbanddata['var']
-                        eq_var = xtramath.logpowmul(eq_var, 0.5) if eq_var != 0 else 0
-                    elif in_band_shape in ['low_shelf', 'high_shelf']: 
-                        eq_var = eqbanddata['var']
-                    else: eq_var = (10-eqbanddata['var'])*10
-
-                    if eqbanddata['freq'] != 0: band_freq = note_data.freq_to_note_noround(eqbanddata['freq'])+72
-                    else: band_freq = 0
-
-                    wf_PLUGIN.set("enable"+eqnumtxt+typedata[0], str(float(eqbanddata['on'])))
-                    wf_PLUGIN.set("freq"+eqnumtxt+typedata[0], str(band_freq))
-                    wf_PLUGIN.set("gain"+eqnumtxt+typedata[0], str(eqbanddata['gain']))
-                    wf_PLUGIN.set("q"+eqnumtxt+typedata[0], str( eq_var ))
-                    wf_PLUGIN.set("shape"+eqnumtxt+typedata[0], str(band_shape))
-
-
-        elif plugtype == ['universal', 'delay-c']:
-            d_time_type = fx_plugindata.dataval_get('time_type', 'seconds')
-            d_time = fx_plugindata.dataval_get('time', 1)
-            d_feedback = fx_plugindata.dataval_get('feedback', 0.0)
-
-            wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
-            wf_PLUGIN.set('type', 'stereoDelay')
-            wf_PLUGIN.set('presetDirty', '1')
-            wf_PLUGIN.set('enabled', str(fx_on))
-
-            if d_time_type == 'seconds':
-                wf_PLUGIN.set('sync', '0.0')
-                wf_PLUGIN.set('delaySyncOffL', str(d_time*1000))
-                wf_PLUGIN.set('delaySyncOffR', str(d_time*1000))
-
-            if d_time_type == 'steps':
-                wf_delaySync = data_values.list_tab_closest(delaytime, d_time, 1)
-                wf_PLUGIN.set('sync', '1.0')
-                wf_PLUGIN.set('delaySyncOnL', str(wf_delaySync[0][0]))
-                wf_PLUGIN.set('delaySyncOnR', str(wf_delaySync[0][0]))
-
-            wf_PLUGIN.set('crossL', '0.0')
-            wf_PLUGIN.set('crossR', '0.0')
-            wf_PLUGIN.set('feedbackL', str(d_feedback*100))
-            wf_PLUGIN.set('feedbackR', str(d_feedback*100))
-            wf_PLUGIN.set('mix', str(fx_wet))
-            wf_PLUGIN.set('mixLock', '0.0')
-            wf_PLUGIN.set('panL', '-1.0')
-            wf_PLUGIN.set('panR', '1.0')
-
-        elif plugtype == ['universal', 'compressor']:
-            wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
-            wf_PLUGIN.set('type', 'comp')
-            wf_PLUGIN.set('presetDirty', '1')
-            wf_PLUGIN.set('enabled', str(fx_on))
-
-            v_attack = cvpj_plugindata.param_get('attack', 0)[0]*1000
-            v_postgain = cvpj_plugindata.param_get('postgain', 0)[0]
-            v_pregain = cvpj_plugindata.param_get('pregain', 0)[0]
-            v_ratio = cvpj_plugindata.param_get('ratio', 0)[0]
-            v_knee = cvpj_plugindata.param_get('knee', 0)[0]
-            v_release = cvpj_plugindata.param_get('release', 0)[0]*1000
-            v_sidechain_on = int(cvpj_plugindata.param_get('sidechain_on', 0)[0])
-            v_threshold = cvpj_plugindata.param_get('threshold', 0)[0]
-
-            wf_PLUGIN.set('threshold', str(v_threshold))
-            wf_PLUGIN.set('ratio', str(v_ratio))
-            wf_PLUGIN.set('attack', str(v_attack))
-            wf_PLUGIN.set('release', str(v_release))
-            wf_PLUGIN.set('knee', str(v_knee))
-            wf_PLUGIN.set('outputDb', str(v_postgain))
-            wf_PLUGIN.set('sidechainTrigger', str(v_sidechain_on))
-            wf_PLUGIN.set('inputDb', str(v_pregain))
-
-        elif plugtype[0] == 'native-tracktion' and plugtype[1] in waveform_params:
+        if plugtype[0] == 'native-tracktion':
             wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
             wf_PLUGIN.set('type', plugtype[1])
             wf_PLUGIN.set('presetDirty', '1')
             wf_PLUGIN.set('enabled', str(fx_on))
 
-            paramlist = dataset.params_list('plugin', plugintype)
+            paramlist = dataset.params_list('plugin', plugtype[1])
 
             for paramid in paramlist:
-                dset_paramdata = dataset.params_i_get('plugin', plugintype, paramid)
-                paramdata = cvpj_plugindata.param_get(paramid, dset_paramdata[2])[0]
+                dset_paramdata = dataset.params_i_get('plugin', plugtype[1], paramid)
+                paramdata = fx_plugindata.param_get(paramid, dset_paramdata[2])[0]
                 wf_PLUGIN.set(paramid, str(paramdata))
 
 

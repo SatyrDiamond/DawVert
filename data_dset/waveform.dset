@@ -35,6 +35,14 @@
                         "name": "Shape",
                         "noauto": false,
                         "type": "int"
+                    },
+                    "slope": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "Slope",
+                        "noauto": false,
+                        "type": "int"
                     }
                 },
                 "visual": {
@@ -617,8 +625,8 @@
                         "type": "float"
                     },
                     "mode": {
-                        "def": "1",
-                        "max": 1,
+                        "def": 0,
+                        "max": 2,
                         "min": 0,
                         "name": "mode",
                         "noauto": false,
@@ -879,6 +887,134 @@
                         "name": "shape8rs",
                         "noauto": false,
                         "type": "float"
+                    },
+                    "slope1lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope1rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope2lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope2rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope3lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope3rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope4lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope4rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope5lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope5rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope6lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope6rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope7lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope7rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope8lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope8rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
                     }
                 },
                 "visual": {

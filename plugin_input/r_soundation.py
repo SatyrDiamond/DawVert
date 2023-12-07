@@ -78,33 +78,20 @@ def parse_clip_notes(sndstat_clip):
     cvpj_pldata["notelist"] = cvpj_notelist
     placement_data.unminus(cvpj_pldata)
     return cvpj_pldata
+
 def sngauto_to_cvpjauto(autopoints):
     sngauto = []
     for autopoint in autopoints:
         sngauto.append({"position": autopoint['pos']//ticksdiv, "value": float(autopoint['value'])})
     return sngauto
 
-def autoall_cvpj_to_sng(sng_device, cvpj_plugindata, fxpluginname):
+def autoall_sng_to_cvpj(sng_device, cvpj_plugindata, fxpluginname):
     paramlist = dataset.params_list('plugin', fxpluginname)
     if paramlist:
         for paramid in paramlist:
             outval, outauto = get_paramval(sng_device, paramid)
             cvpj_plugindata.param_add_dset(paramid, outval, dataset, 'plugin', fxpluginname)
             if outauto not in [None, []]: auto_data.add_pl(cvpj_l, 'float', ['plugin',fxpluginid,paramid], auto_nopl.to_pl(sngauto_to_cvpjauto(outauto)))
-
-def eq_calc_q(band_type, q_val):
-    if band_type in ['low_pass', 'high_pass']:
-        q_val = q_val*math.log(162)
-        q_val = 0.1 * math.exp(q_val)
-        q_val = xtramath.logpowmul(q_val, 0.5)
-    elif band_type in ['low_shelf', 'high_shelf']:
-        q_val = q_val*math.log(162)
-        q_val = 0.1 * math.exp(q_val)
-    else:
-        q_val = q_val*math.log(162)
-        #q_val = 0.1 * math.exp(q_val)
-        q_val = xtramath.logpowmul(q_val, -1)
-    return q_val
 
 class input_soundation(plugin_input.base):
     def __init__(self): pass
@@ -312,61 +299,9 @@ class input_soundation(plugin_input.base):
                 fxenabled = not sound_chan_effect['bypass']
                 fxslot.insert(cvpj_l, ['master'] if ismaster else ['track', trackid], 'audio', fxpluginid)
 
-                if fxpluginname == 'com.soundation.parametric-eq':
-                    fx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'eq-bands')
-                    fx_plugindata.fxdata_add(fxenabled, 1)
-
-                    bandnum = 1
-                    for eqname in ["highshelf","hpf","lowshelf","lpf","peak1","peak2","peak3","peak4"]:
-
-                        eq_bandtype = 'peak'
-                        if eqname == 'highshelf': eq_bandtype = 'high_shelf'
-                        if eqname == 'hpf': eq_bandtype = 'high_pass'
-                        if eqname == 'lowshelf': eq_bandtype = 'low_shelf'
-                        if eqname == 'lpf': eq_bandtype = 'low_pass'
-
-                        band_enable, auto_enable = get_paramval(sound_chan_effect, eqname+'_enable')
-                        band_freq, auto_freq = get_paramval(sound_chan_effect, eqname+'_freq')
-                        band_gain, auto_gain = get_paramval(sound_chan_effect, eqname+'_gain')
-                        band_res, auto_res = get_paramval(sound_chan_effect, eqname+'_res')
-
-                        band_freq = 20 * 1000**band_freq
-                        band_gain = (band_gain-0.5)*40
-                        band_res = eq_calc_q(eq_bandtype, band_res)
-                        
-                        if auto_enable:
-                            auto_data.add_pl(cvpj_l, 'float', ['plugin_eq',fxpluginid,str(bandnum)+'_on'], auto_nopl.to_pl(sngauto_to_cvpjauto(auto_enable)))
-                        if auto_freq: 
-                            for point in auto_freq: point['value'] = 20 * 1000**point['value']
-                            auto_data.add_pl(cvpj_l, 'float', ['plugin_eq',fxpluginid,str(bandnum)+'_freq'], auto_nopl.to_pl(sngauto_to_cvpjauto(auto_freq)))
-                        if auto_gain: 
-                            for point in auto_gain: point['value'] = (point['value']-0.5)*40
-                            auto_data.add_pl(cvpj_l, 'float', ['plugin_eq',fxpluginid,str(bandnum)+'_gain'], auto_nopl.to_pl(sngauto_to_cvpjauto(auto_gain)))
-                        if auto_res: 
-                            for point in auto_res: point['value'] = eq_calc_q(eq_bandtype, point['value'])
-                            auto_data.add_pl(cvpj_l, 'float', ['plugin_eq',fxpluginid,str(bandnum)+'_res'], auto_nopl.to_pl(sngauto_to_cvpjauto(auto_res)))
-
-                        fx_plugindata.eqband_add(int(band_enable), band_freq, band_gain, eq_bandtype, band_res, None)
-                        bandnum += 1
-
-                    master_gain = get_paramval(sound_chan_effect, 'master_gain')[0]
-                    master_gain = (master_gain-0.5)*40
-                    fx_plugindata.param_add('gain_out', master_gain, 'float', 'Out Gain')
-
-                elif fxpluginname == 'com.soundation.filter':
-                    filterfx_cutoff = 20 * 1000**get_paramval(sound_chan_effect, 'cutoff')[0]
-                    filterfx_resonance = get_paramval(sound_chan_effect, 'resonance')[0]
-                    filterfx_mode = get_paramval(sound_chan_effect, 'mode')[0]
-                    fx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'eq-bands')
-                    eq_bandtype = 'low_pass' if filterfx_mode == 0 else 'high_pass'
-                    band_res = eq_calc_q(eq_bandtype, filterfx_resonance)
-                    fx_plugindata.eqband_add(1, 20*(1000**filterfx_cutoff), 0, eq_bandtype, band_res, None)
-
-                else:
-                    fx_plugindata = plugins.cvpj_plugin('deftype', 'native-soundation', fxpluginname)
-                    fx_plugindata.fxdata_add(fxenabled, 1)
-
-                    autoall_cvpj_to_sng(sound_chan_effect, fx_plugindata, fxpluginname)
+                fx_plugindata = plugins.cvpj_plugin('deftype', 'native-soundation', fxpluginname)
+                fx_plugindata.fxdata_add(fxenabled, 1)
+                autoall_sng_to_cvpj(sound_chan_effect, fx_plugindata, fxpluginname)
 
                 fx_plugindata.to_cvpj(cvpj_l, fxpluginid)
 

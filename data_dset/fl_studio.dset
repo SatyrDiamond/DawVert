@@ -4,6 +4,7 @@
             "3x osc": {
                 "datadef": "",
                 "datadef_struct": "3x_osc",
+                "group": "inst",
                 "params": {
                     "osc1_coarse": {
                         "def": 0,
@@ -217,6 +218,7 @@
             },
             "boobass": {
                 "datadef_struct": "boobass",
+                "group": "inst",
                 "params": {
                     "bass": {
                         "def": 0,
@@ -255,6 +257,7 @@
             "effector": {
                 "datadef": "",
                 "datadef_struct": "## DISABLED effector",
+                "group": "fx",
                 "params": {
                     "bypass": {
                         "def": 0,
@@ -364,6 +367,7 @@
             },
             "fl keys": {
                 "datadef_struct": "fl_keys",
+                "group": "inst",
                 "params": {
                     "decay": {
                         "def": 0,
@@ -505,6 +509,7 @@
             },
             "fl slayer": {
                 "datadef_struct": "fl_slayer",
+                "group": "inst",
                 "params": {
                     "amp_type": {
                         "def": 0,
@@ -727,6 +732,7 @@
             "frequency shifter": {
                 "datadef": "",
                 "datadef_struct": "frequency_shifter",
+                "group": "fx",
                 "params": {
                     "feedback": {
                         "def": 0,
@@ -829,6 +835,7 @@
             "fruit kick": {
                 "datadef": "",
                 "datadef_struct": "fruit_kick",
+                "group": "inst",
                 "params": {
                     "decay_freq": {
                         "def": 0,
@@ -891,6 +898,7 @@
             "fruity 7 band eq": {
                 "datadef": "",
                 "datadef_struct": "fruity_7_band_eq",
+                "group": "fx",
                 "params": {
                     "band_1": {
                         "def": 0,
@@ -953,6 +961,7 @@
             "fruity balance": {
                 "datadef": "",
                 "datadef_struct": "fruity_balance",
+                "group": "fx",
                 "params": {
                     "pan": {
                         "def": 0,
@@ -975,6 +984,7 @@
             "fruity bass boost": {
                 "datadef": "",
                 "datadef_struct": "fruity_bass_boost",
+                "group": "fx",
                 "params": {
                     "amount": {
                         "def": 0,
@@ -1005,6 +1015,7 @@
             "fruity big clock": {
                 "datadef": "",
                 "datadef_struct": "fruity_big_clock",
+                "group": "fx",
                 "params": {
                     "beats": {
                         "def": 0,
@@ -1035,6 +1046,7 @@
             "fruity blood overdrive": {
                 "datadef": "",
                 "datadef_struct": "fruity_blood_overdrive",
+                "group": "fx",
                 "params": {
                     "color": {
                         "def": 0,
@@ -1113,6 +1125,7 @@
             "fruity center": {
                 "datadef": "",
                 "datadef_struct": "fruity_center",
+                "group": "fx",
                 "params": {
                     "on": {
                         "def": 0,
@@ -1135,6 +1148,7 @@
             "fruity chorus": {
                 "datadef": "",
                 "datadef_struct": "fruity_chorus",
+                "group": "fx",
                 "params": {
                     "crosscutoff": {
                         "def": 0,
@@ -1245,6 +1259,7 @@
             "fruity delay": {
                 "datadef": "",
                 "datadef_struct": "fruity_delay",
+                "group": "fx",
                 "params": {
                     "cutoff": {
                         "def": 0,
@@ -1307,6 +1322,7 @@
             "fruity delay 2": {
                 "datadef": "",
                 "datadef_struct": "fruity_delay_2",
+                "group": "fx",
                 "params": {
                     "dry": {
                         "def": 0,
@@ -1377,6 +1393,7 @@
             "fruity delay 3": {
                 "datadef": "",
                 "datadef_struct": "fruity_delay_3",
+                "group": "fx",
                 "params": {
                     "delay_time": {
                         "def": 0,
@@ -1590,6 +1607,7 @@
             },
             "fruity delay bank": {
                 "datadef_struct": "fruity_delay_bank",
+                "group": "fx",
                 "params": {
                     "bank_1_e/enabled": {
                         "def": 0,
@@ -3364,6 +3382,7 @@
             "fruity dx10": {
                 "datadef": "",
                 "datadef_struct": "fruity_dx10",
+                "group": "inst",
                 "params": {
                     "amp_att": {
                         "def": 0,
@@ -3554,6 +3573,7 @@
             "fruity fast dist": {
                 "datadef": "",
                 "datadef_struct": "fruity_fast_dist",
+                "group": "fx",
                 "params": {
                     "mix": {
                         "def": 0,
@@ -3600,6 +3620,7 @@
             "fruity fast lp": {
                 "datadef": "",
                 "datadef_struct": "fruity_fast_lp",
+                "group": "fx",
                 "params": {
                     "cutoff": {
                         "def": 0,
@@ -3630,6 +3651,7 @@
             "fruity filter": {
                 "datadef": "",
                 "datadef_struct": "fruity_filter",
+                "group": "fx",
                 "params": {
                     "bandpass": {
                         "def": 0,
@@ -3700,6 +3722,7 @@
             "fruity flanger": {
                 "datadef": "",
                 "datadef_struct": "fruity_flanger",
+                "group": "fx",
                 "params": {
                     "cross": {
                         "def": 0,
@@ -3810,6 +3833,7 @@
             "fruity flangus": {
                 "datadef": "",
                 "datadef_struct": "fruity_flangus",
+                "group": "fx",
                 "params": {
                     "cross": {
                         "def": 0,
@@ -3880,6 +3904,7 @@
             "fruity free filter": {
                 "datadef": "",
                 "datadef_struct": "fruity_free_filter",
+                "group": "fx",
                 "params": {
                     "center": {
                         "def": 0,
@@ -3926,6 +3951,7 @@
             "fruity limiter": {
                 "datadef": "",
                 "datadef_struct": "fruity_limiter",
+                "group": "fx",
                 "params": {
                     "comp_att": {
                         "def": 0,
@@ -4252,6 +4278,7 @@
             "fruity multiband compressor": {
                 "datadef": "",
                 "datadef_struct": "fruity_multiband_compressor",
+                "group": "fx",
                 "params": {
                     "__unknown": {
                         "def": 0,
@@ -4506,6 +4533,7 @@
             "fruity mute 2": {
                 "datadef": "",
                 "datadef_struct": "fruity_mute_2",
+                "group": "fx",
                 "params": {
                     "channel": {
                         "def": 0,
@@ -4536,6 +4564,7 @@
             "fruity panomatic": {
                 "datadef": "",
                 "datadef_struct": "fruity_panomatic",
+                "group": "fx",
                 "params": {
                     "lfo_amount": {
                         "def": 0,
@@ -4590,6 +4619,7 @@
             "fruity parametric eq": {
                 "datadef": "",
                 "datadef_struct": "fruity_parametric_eq",
+                "group": "fx",
                 "params": {
                     "1_freq": {
                         "def": 0,
@@ -4828,6 +4858,7 @@
             "fruity parametric eq 2": {
                 "datadef": "",
                 "datadef_struct": "fruity_parametric_eq_2",
+                "group": "fx",
                 "params": {
                     "1_freq": {
                         "def": 0,
@@ -5130,6 +5161,7 @@
             "fruity phase inverter": {
                 "datadef": "",
                 "datadef_struct": "fruity_phase_inverter",
+                "group": "fx",
                 "params": {
                     "state": {
                         "def": 0,
@@ -5152,6 +5184,7 @@
             "fruity phaser": {
                 "datadef": "",
                 "datadef_struct": "fruity_phaser",
+                "group": "fx",
                 "params": {
                     "depth_max": {
                         "def": 0,
@@ -5238,6 +5271,7 @@
             "fruity reeverb": {
                 "datadef": "",
                 "datadef_struct": "fruity_reeverb",
+                "group": "fx",
                 "params": {
                     "color": {
                         "def": 0,
@@ -5332,6 +5366,7 @@
             "fruity reeverb 2": {
                 "datadef": "",
                 "datadef_struct": "fruity_reeverb_2",
+                "group": "fx",
                 "params": {
                     "bass": {
                         "def": 0,
@@ -5482,6 +5517,7 @@
             "fruity soft clipper": {
                 "datadef": "",
                 "datadef_struct": "fruity_soft_clipper",
+                "group": "fx",
                 "params": {
                     "postgain": {
                         "def": 0,
@@ -5504,6 +5540,7 @@
             "fruity spectroman": {
                 "datadef": "",
                 "datadef_struct": "fruity_spectroman",
+                "group": "fx",
                 "params": {
                     "amp": {
                         "def": 0,
@@ -5566,6 +5603,7 @@
             "fruity stereo enhancer": {
                 "datadef": "",
                 "datadef_struct": "fruity_stereo_enhancer",
+                "group": "fx",
                 "params": {
                     "pan": {
                         "def": 0,
@@ -5620,6 +5658,7 @@
             "fruity stereo shaper": {
                 "datadef": "",
                 "datadef_struct": "fruity_stereo_shaper",
+                "group": "fx",
                 "params": {
                     "delay": {
                         "def": 0,
@@ -5690,6 +5729,7 @@
             "plucked!": {
                 "datadef": "",
                 "datadef_struct": "plucked!",
+                "group": "inst",
                 "params": {
                     "color": {
                         "def": 0,
@@ -5736,6 +5776,7 @@
             "simsynth": {
                 "datadef": "",
                 "datadef_struct": "simsynth",
+                "group": "inst",
                 "params": {
                     "amp_att": {
                         "def": 0,
@@ -6262,6 +6303,7 @@
             "soundgoodizer": {
                 "datadef": "",
                 "datadef_struct": "soundgoodizer",
+                "group": "fx",
                 "params": {
                     "amount": {
                         "def": 0,
@@ -6292,6 +6334,7 @@
             "transient processor": {
                 "datadef": "",
                 "datadef_struct": "transient_processor",
+                "group": "fx",
                 "params": {
                     "attack": {
                         "def": 0,
@@ -6394,6 +6437,7 @@
             "tuner": {
                 "datadef": "",
                 "datadef_struct": "tuner",
+                "group": "fx",
                 "params": {
                     "bass": {
                         "def": 0,
@@ -6439,6 +6483,7 @@
             },
             "vintage chorus": {
                 "datadef_struct": "vintage_chorus",
+                "group": "fx",
                 "params": {
                     "delay_feedback": {
                         "def": 0,
@@ -6580,6 +6625,7 @@
             },
             "vintage phaser": {
                 "datadef_struct": "vintage_phaser",
+                "group": "fx",
                 "params": {
                     "color_freq": {
                         "def": 0,
@@ -6858,6 +6904,7 @@
             "wasp": {
                 "datadef": "",
                 "datadef_struct": "wasp",
+                "group": "inst",
                 "params": {
                     "12_fade": {
                         "def": 0,
@@ -7200,6 +7247,7 @@
             "wasp xt": {
                 "datadef": "",
                 "datadef_struct": "wasp_xt",
+                "group": "inst",
                 "params": {
                     "12_fade": {
                         "def": 0,

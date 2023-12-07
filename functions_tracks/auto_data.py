@@ -34,6 +34,9 @@ def move(cvpj_l, old_autolocation, new_autolocation):
         else:
             del cvpj_l['automation'][old_autolocation[0]][old_autolocation[1]][old_autolocation[2]]
 
+def rename_plugparam(cvpj_l, pluginid, oldname, newname):
+    move(cvpj_l, ['plugin', pluginid, oldname], ['plugin', pluginid, newname])
+
 def del_plugin(cvpj_l, pluginid):
     print('[tracks] Removing Plugin Automation:',pluginid)
     dictvals = data_values.nested_dict_get_value(cvpj_l, ['automation', 'plugin', pluginid])
@@ -60,5 +63,14 @@ def multiply(cvpj_l, autolocation, addval, mulval):
 def to_ext_one(cvpj_l, pluginid, oldname, newname, v_min, v_max):
     move(cvpj_l, ['plugin', pluginid, oldname], ['plugin', pluginid, newname])
     to_one(cvpj_l, ['plugin', pluginid, newname], v_min, v_max)
+
+def function_value(cvpj_l, autolocation, i_function):
+    dictvals = data_values.nested_dict_get_value(cvpj_l, ['automation']+autolocation)
+    if dictvals != None: 
+        if 'placements' in dictvals:
+            for dictval in dictvals['placements']:
+                if 'points' in dictval:
+                    for point in dictval['points']:
+                        point['value'] = i_function(point['value'])
 
 

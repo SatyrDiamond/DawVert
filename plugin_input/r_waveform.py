@@ -24,8 +24,8 @@ def get_plugins(xml_track, trackid):
         if xml_part.tag == 'PLUGIN':
             plugintype = xml_part.get('type')
 
-            plugin_xpos = x_device.get('windowX')
-            plugin_ypos = x_device.get('windowY')
+            plugin_xpos = xml_part.get('windowX')
+            plugin_ypos = xml_part.get('windowY')
 
             if plugintype not in ['volume', 'level']:
 
@@ -35,67 +35,14 @@ def get_plugins(xml_track, trackid):
                     if plugin_xpos and plugin_ypos:
                         song.add_visual_window(cvpj_l, 'plugin', pluginid, [int(plugin_xpos), int(plugin_ypos)], None, False, False)
 
-                    if plugintype == '8bandEq':
-
-                        fx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'eq-bands')
-                        fx_plugindata.dataval_add('num_bands', 8)
-
-                        for num in range(8):
-                            eqnumtxt = str(num+1)
-                            for typenames in [['lm',None], ['rs','b']]:
-
-                                band_enable = float(xml_getvalue(xml_part, "enable"+eqnumtxt+typenames[0], 0))
-                                band_freq = float(xml_getvalue(xml_part, "freq"+eqnumtxt+typenames[0], 0))
-                                band_gain = float(xml_getvalue(xml_part, "gain"+eqnumtxt+typenames[0], 0))
-                                band_q = float(xml_getvalue(xml_part, "q"+eqnumtxt+typenames[0], 0))
-                                band_shape = int(xml_getvalue(xml_part, "shape"+eqnumtxt+typenames[0], 1))
-
-                                if band_shape == 0: band_shape = 'low_pass'
-                                if band_shape == 1: band_shape = 'low_shelf'
-                                if band_shape == 2: band_shape = 'peak'
-                                if band_shape == 3: band_shape = 'band_pass'
-                                if band_shape == 4: band_shape = 'band_stop'
-                                if band_shape == 5: band_shape = 'high_shelf'
-                                if band_shape == 6: band_shape = 'high_pass'
-
-                                if band_shape in ['low_pass', 'high_pass']: 
-                                    band_q = band_q**2
-                                elif band_shape in ['low_shelf', 'high_shelf']:  
-                                    pass
-                                else:
-                                    band_q = (10-float(band_q))/10
-                                    
-                                band_freq = note_data.note_to_freq(band_freq-72)
-                                fx_plugindata.eqband_add(int(band_enable), band_freq, band_gain, band_shape, band_q, typenames[1])
-                        fx_plugindata.to_cvpj(cvpj_l, pluginid)
-
-                    elif plugintype == 'comp':
-                        fx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'compressor')
-                        paramlist = dataset.params_list('plugin', plugintype)
-                        if paramlist:
-                            for paramid in paramlist:
-                                dset_paramdata = dataset.params_i_get('plugin', plugintype, paramid)
-                                paramtype, paramfb = dset_paramdata[1], dset_paramdata[2]
-                                paramval = xml_getvalue(xml_part, paramid, paramfb)
-                                if paramid == 'attack': fx_plugindata.param_add('attack', float(paramval)/1000, 'float', 'attack')
-                                if paramid == 'inputDb': fx_plugindata.param_add('pregain', float(paramval), 'float', 'pregain')
-                                if paramid == 'knee': fx_plugindata.param_add('knee', float(paramval), 'float', 'knee')
-                                if paramid == 'outputDb': fx_plugindata.param_add('postgain', float(paramval), 'float', 'postgain')
-                                if paramid == 'ratio': fx_plugindata.param_add('ratio', float(paramval), 'float', 'ratio')
-                                if paramid == 'release': fx_plugindata.param_add('release', float(paramval)/1000, 'float', 'release')
-                                if paramid == 'sidechainTrigger': fx_plugindata.param_add('sidechain_on', bool(paramval), 'float', 'sidechain on')
-                                if paramid == 'threshold': fx_plugindata.param_add('threshold', float(paramval), 'float', 'threshold')
-                            fx_plugindata.to_cvpj(cvpj_l, pluginid)
-
-                    else:
-                        fx_plugindata = plugins.cvpj_plugin('deftype', 'native-tracktion', plugintype)
-                        paramlist = dataset.params_list('plugin', plugintype)
-                        if paramlist:
-                            for paramid in paramlist:
-                                dset_paramdata = dataset.params_i_get('plugin', plugintype, paramid)
-                                paramval = xml_getvalue(xml_part, paramid, dset_paramdata[2])
-                                fx_plugindata.param_add_dset(paramid, paramval, dataset, 'plugin', plugintype)
-                        fx_plugindata.fxdata_add(int(xml_getvalue(xml_part, 'enabled', 1)), 1)
+                    fx_plugindata = plugins.cvpj_plugin('deftype', 'native-tracktion', plugintype)
+                    paramlist = dataset.params_list('plugin', plugintype)
+                    if paramlist:
+                        for paramid in paramlist:
+                            dset_paramdata = dataset.params_i_get('plugin', plugintype, paramid)
+                            paramval = xml_getvalue(xml_part, paramid, dset_paramdata[2])
+                            fx_plugindata.param_add_dset(paramid, paramval, dataset, 'plugin', plugintype)
+                    fx_plugindata.fxdata_add(int(xml_getvalue(xml_part, 'enabled', 1)), 1)
                     
                     fx_plugindata.to_cvpj(cvpj_l, pluginid)
 

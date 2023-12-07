@@ -117,7 +117,8 @@ class input_ceol(plugin_input.base):
 
         elif ceol_basic_effect == 6: #high_pass
             masterfx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'eq-bands')
-            masterfx_plugindata.eqband_add(1, calc_cutoff(ceol_basic_effectvalue), 0, 'high_pass', 1, None)
+            masterfx_plugindata.eqband_add(1, calc_cutoff(ceol_basic_effectvalue), 'high_pass', None)
+            masterfx_plugindata.eqband_add_param('q', 1, None)
 
         if masterfx_plugindata: masterfx_plugindata.to_cvpj(cvpj_l, 'master-effect')
 
@@ -172,7 +173,8 @@ class input_ceol(plugin_input.base):
 
             if ceol_inst_cutoff != 127:
                 inst_filt_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'eq-bands')
-                inst_filt_plugindata.eqband_add(1, calc_initcutoffval, 0, 'low_pass', ceol_inst_resonance+1, None)
+                inst_filt_plugindata.eqband_add(1, calc_initcutoffval, 'low_pass', None)
+                inst_filt_plugindata.eqband_add_param('q', ceol_inst_resonance+1, None)
                 inst_filt_plugindata.to_cvpj(cvpj_l, cvpj_instid+'_filter')
                 fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', cvpj_instid+'_filter')
 

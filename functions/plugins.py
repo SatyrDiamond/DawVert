@@ -508,7 +508,7 @@ class cvpj_plugin:
                 else: num_order = range(limitnum-1,-1,-1)
 
                 for num in num_order:
-                    if out_eq_data[num] == None:
+                    if out_eq_data[num] == None and eq_band['on'] == True:
                         out_eq_data[num] = eq_band
                         reorder.append([in_num, num])
                         break
@@ -521,47 +521,40 @@ class cvpj_plugin:
     def eqband_get_limited(self, group):
         #used, active, freq, gain, res/bw
 
-        data_LP =        [False,0,0,0,0]
-        data_Lowshelf =  [False,0,0,0,0]
-        data_Peaks =     [[False,0,0,0,0],[False,0,0,0,0],[False,0,0,0,0],[False,0,0,0,0]]
-        data_HighShelf = [False,0,0,0,0]
-        data_HP =        [False,0,0,0,0]
-        banddata = self.eqband_get(group)
+        data_HP =        None
+        data_Lowshelf =  None
+        data_Peaks =     [None,None,None,None]
+        data_HighShelf = None
+        data_LP =        None
 
-        data_auto = [None, None, [None,None,None,None], None, None]
+        cvpj_bands = self.eqband_get(group)
 
-        bandnum = 1
-        for s_band in banddata:
-            bandtype = s_band['type']
+        data_reorder = [None, None, [None,None,None,None], None, None]
 
-            band_on = s_band['on']
-            band_freq = s_band['freq']
-            band_gain = s_band['gain']
-            band_res = s_band['var']
-
-            part = [True, band_on, band_freq, band_gain, band_res]
+        for index, eq_band in enumerate(cvpj_bands, start=1):
+            bandtype = eq_band['type']
 
             if bandtype == 'low_pass': 
-                data_LP = part
-                data_auto[0] = bandnum
+                data_LP = eq_band
+                data_reorder[0] = index
             if bandtype == 'low_shelf': 
-                data_Lowshelf = part
-                data_auto[1] = bandnum
-            if bandtype == 'peak' and band_on: 
+                data_Lowshelf = eq_band
+                data_reorder[1] = index
+            if bandtype == 'peak' and eq_band['on']: 
                 for peaknum in range(4):
                     peakdata = data_Peaks[peaknum]
-                    if peakdata[0] == False: 
-                        data_Peaks[peaknum] = part
-                        data_auto[2][peaknum] = bandnum
+                    if eq_band['on'] == True and data_Peaks[peaknum] == None: 
+                        data_Peaks[peaknum] = eq_band
+                        data_reorder[2][peaknum] = index
                         break
             if bandtype == 'high_shelf': 
-                data_HighShelf = part
-                data_auto[3] = bandnum
+                data_HighShelf = eq_band
+                data_reorder[3] = index
             if bandtype == 'high_pass': 
-                data_HP = part
-                data_auto[4] = bandnum
-            bandnum += 1
-        return data_LP, data_Lowshelf, data_Peaks, data_HighShelf, data_HP, data_auto
+                data_HP = eq_band
+                data_reorder[4] = index
+
+        return data_LP, data_Lowshelf, data_Peaks, data_HighShelf, data_HP, data_reorder
 
     # -------------------------------------------------- wave
     def wave_add(self, i_name, i_wavepoints, i_min, i_max):

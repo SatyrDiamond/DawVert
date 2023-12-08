@@ -1,0 +1,1591 @@
+{
+    "LayerMixer":
+    {
+        "LayerAOn": 2,
+        "Gain A": 1,
+        "Pan A": 0,
+        "MixerTuneA": 0,
+        "Mute A": 1,
+        "LayerBOn": 1,
+        "Gain B": 1,
+        "Pan B": 0,
+        "MixerTuneB": 0,
+        "Mute B": 1,
+        "SoloBusState": 1,
+        "Volume": 1
+    },
+    "MidiSplit":
+    {
+        "MidiNoteSplit": 36,
+        "SplitOn": 1,
+        "PitchBendA": 2,
+        "Pitch Bend B": 2,
+        "DamperA": 2,
+        "DamperB": 2,
+        "Modulator1A": 2,
+        "Modulator2A": 2,
+        "Modulator1B": 2,
+        "Modulator2B": 2
+    },
+    "Clock":
+    {
+        "Tempo": 120,
+        "Tap": 1
+    },
+    "A Global":
+    {
+        "Tune": 0,
+        "PreEffectVolume": 0.99999988079071,
+        "Volume": 1
+    },
+    "A Keyboard":
+    {
+        "Mode": 1
+    },
+    "A Unison":
+    {
+        "Detune": 0.00499999942258,
+        "Delay": 0,
+        "Mode": 1,
+        "On": 1
+    },
+    "A Portamento":
+    {
+        "Mode": 2,
+        "Legato": 1,
+        "Time": 0
+    },
+    "A Modulator 1":
+    {
+        "Amount1": 0,
+        "Destination1": 3,
+        "Amount2": 0,
+        "Destination2": 1,
+        "Amount3": 0,
+        "Destination3": 1,
+        "Amount4": 0,
+        "Destination4": 1
+    },
+    "A Modulator 2":
+    {
+        "S2Amount1": 0,
+        "S2Destination1": 5,
+        "S2Amount2": 0,
+        "S2Destination2": 1,
+        "S2Amount3": 0,
+        "S2Destination3": 11,
+        "S2Amount4": 0,
+        "S2Destination4": 1
+    },
+    "A Vibrato":
+    {
+        "Rate": 5,
+        "Amount": 1.8301333995044E-16,
+        "Delay": 6.6613377242345E-15,
+        "Fade": 6.6613377242345E-15
+    },
+    "A Arpeggiator":
+    {
+        "Latch": 1,
+        "Range": 1,
+        "Order": 1,
+        "Span": 1,
+        "Rate": 119.99999237061,
+        "Sync On": 1,
+        "Sync Rate": 4,
+        "Arp 1": 2,
+        "Arp 2": 2,
+        "Arp 3": 2,
+        "Arp 4": 2,
+        "Arp 5": 2,
+        "Arp 6": 2,
+        "Arp 7": 2,
+        "Arp 8": 2,
+        "Arp 9": 2,
+        "Arp 10": 2,
+        "Arp 11": 2,
+        "Arp 12": 2,
+        "Arp 13": 2,
+        "Arp 14": 2,
+        "Arp 15": 2,
+        "Arp 16": 2,
+        "Steps": 16,
+        "Arpeggiator": 1
+    },
+    "A Excitator":
+    {
+        "excitator_type": 1,
+        "bow_force": 0.0099999997764826,
+        "bow_vc": 0.0010000000474975,
+        "bow_velocity": 0.0010000000474975,
+        "hammer_mass": 0.0000099999997473788,
+        "hammer_stiffness": 1000,
+        "hammer_velocity": 0.0099999997764826,
+        "hammer_damping": 0.0099999997764826,
+        "plectrum_protrusion": 0.00039666600059718,
+        "plectrum_stiffness": 1055900,
+        "plectrum_velocity": 0.041333299130201,
+        "plectrum_damping": 11.560899734497,
+        "fx_kbd": -0.00039482116699219,
+        "sx_kbd": -0.000016212463378906,
+        "vx_kbd": 0.00022697448730469,
+        "fx_vel": -0.00063991546630859,
+        "sx_vel": 0,
+        "vx_vel": -0.00057792663574219,
+        "excitator_on": 1
+    },
+    "A Geometry":
+    {
+        "excitator_position": 0.050000000745058,
+        "excitator_position_kbd": -0.000062942504882813,
+        "excitator_position_vel": 0,
+        "excitator_position_abs": 1,
+        "damper_position": 0.050000000745058,
+        "damper_position_kbd": 0.000640869140625,
+        "damper_position_vel": 0,
+        "damper_position_abs": 1
+    },
+    "A Pickup":
+    {
+        "pickup_position": 0.050000000745058,
+        "pickup_on": 1
+    },
+    "A Damper":
+    {
+        "damper_gated": 1,
+        "damper_mass": 0.000099999997473788,
+        "damper_mass_kbd": 0,
+        "damper_stiffness": 10000,
+        "damper_stiffness_kbd": 0,
+        "damper_velocity": 0.011560900136828,
+        "damper_velocity_kbd": -0.0010242462158203,
+        "damper_damping": 0.0099999997764826,
+        "damper_on": 1
+    },
+    "A String":
+    {
+        "string_decay_up": 0.10000000149012,
+        "string_decay_kbd": 0,
+        "string_decay_factor": 1000,
+        "string_cutoff": 200,
+        "string_cutoff_kbd": 0,
+        "inharmonicity": 0.019999999552965,
+        "gain": 1
+    },
+    "A Termination":
+    {
+        "finger_mass": 1,
+        "finger_mass_kbd": 0,
+        "finger_mass_vel": 0,
+        "finger_stiffness": 31622776,
+        "anvil_stiffness": 1000,
+        "termination_on": 1
+    },
+    "A Filter LFO":
+    {
+        "Shape": 1,
+        "Rate": 0.050000000745058,
+        "Sync On": 2,
+        "Sync Rate": 8,
+        "Delay": 0,
+        "Fade": 0
+    },
+    "A Filter":
+    {
+        "Type": 1,
+        "Order": 2,
+        "Frequency": 22000,
+        "Frequency Key": 0,
+        "Frequency LFO": 0,
+        "Frequency Env": 0,
+        "Resonance": 0.10000000149012,
+        "Resonance Key": 0,
+        "Resonance LFO": 0,
+        "Resonance Env": 0,
+        "On": 1
+    },
+    "A Filter Env":
+    {
+        "Attack": 0.0010000000474975,
+        "Attack Vel": 0,
+        "Decay": 0.0010000000474975,
+        "Sustain": 0,
+        "Sustain Vel": 0,
+        "Release": 0.0010000000474975
+    },
+    "A Body":
+    {
+        "type": 1,
+        "size": 1,
+        "decay": 0.03999999910593,
+        "low_freq_cutoff": 20,
+        "cutoff": 0.050000000745058,
+        "mix": 0,
+        "On": 1
+    },
+    "A Distortion":
+    {
+        "type": 1,
+        "drive": 0.10000000149012,
+        "tone": 1,
+        "level": 0.0015999999595806,
+        "On": 1
+    },
+    "A Equalizer":
+    {
+        "Low Freq": 200,
+        "Low Gain": 0,
+        "Mid 1 Freq": 800,
+        "Mid 1 Gain": 0,
+        "Mid 1 Q": 1.3820779323578,
+        "Mid 2 Freq": 1000,
+        "Mid 2 Gain": 0,
+        "Mid 2 Q": 0.69999998807907,
+        "High Freq": 4000,
+        "High Gain": 0,
+        "Side Chain": 1,
+        "Gain": 0.67608273029327,
+        "On": 1
+    },
+    "A Compressor":
+    {
+        "Threshold": 0,
+        "Ratio": 1,
+        "Attack": 1,
+        "Release": 100,
+        "Output": 0,
+        "Pre": 1,
+        "On": 1
+    },
+    "A Effect 1":
+    {
+        "On": 1,
+        "Type": 4
+    },
+    "A Delay 1":
+    {
+        "Wet": 0.25,
+        "Dry": 1,
+        "Sync On": 2,
+        "Sync Rate": 7,
+        "Delay": 0.5,
+        "Feedback": 0.5,
+        "Cutoff": 9000,
+        "Pan": 0.30000001192093
+    },
+    "A Distortion 1":
+    {
+        "Pre": 3.9810717105865,
+        "Post": 0.35481339693069,
+        "Shape": 1,
+        "Tone": 1,
+        "Mix": 1,
+        "Gain": 1
+    },
+    "A Phaser 1":
+    {
+        "Mix": 0,
+        "Depth": 1.6000000238419,
+        "Frequency": 233,
+        "Feedback": 0.5,
+        "Sync On": 2,
+        "Sync Rate": 3,
+        "Rate": 0.40000000596046,
+        "Gain": 1
+    },
+    "A Vintage Chorus 1":
+    {
+        "Depth": 0.00070805900031701,
+        "Spread": 0.5,
+        "Delay": 0.015827799215913,
+        "Feedback": 0.15725000202656,
+        "Sync On": 1,
+        "Sync Rate": 11,
+        "Rate": 0.19666667282581,
+        "Mix": 0.49606201052666,
+        "Mode": 1,
+        "Gain": 1
+    },
+    "A Chorus 1":
+    {
+        "Depth": 0.059999998658895,
+        "Two Four": 2,
+        "Spread": 0.30000001192093,
+        "Sync On": 1,
+        "Sync Rate": 8,
+        "Rate": 0.5,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "A Flanger 1":
+    {
+        "Depth": 0.16208262741566,
+        "Delay": 2,
+        "Feedback": 0.35481339693069,
+        "Sync On": 2,
+        "Sync Rate": 3,
+        "Rate": 0.40000000596046,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "A Auto Wah 1":
+    {
+        "Depth": 13.731249809265,
+        "Freq": 550,
+        "Speed": 15.924286842346,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "A Wah Wah 1":
+    {
+        "Depth": 0.25271999835968,
+        "Freq": 600,
+        "Sync On": 2,
+        "Sync Rate": 9,
+        "Rate": 2,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "A Notch 1":
+    {
+        "Depth": 0.59903997182846,
+        "Freq": 700,
+        "Sync On": 2,
+        "Sync Rate": 5,
+        "Rate": 1,
+        "Mix": 1,
+        "Gain": 1.4125375747681
+    },
+    "A Equalizer 1":
+    {
+        "Highpass Freq": 20,
+        "Highpass Q": 0.70710676908493,
+        "Highpass On": 1,
+        "Low Freq": 100,
+        "Low Gain": 0,
+        "Low Q": 0.70710676908493,
+        "Mid 1 Freq": 800,
+        "Mid 1 Gain": 0,
+        "Mid 1 Q": 0.70710676908493,
+        "Mid 2 Freq": 1600,
+        "Mid 2 Gain": 0,
+        "Mid 2 Q": 0.70710676908493,
+        "High Freq": 4000,
+        "High Gain": 0,
+        "High Q": 0.70710676908493,
+        "Lowpass Freq": 20000,
+        "Lowpass Q": 0.70710676908493,
+        "Lowpass On": 1,
+        "Gain": 1
+    },
+    "A Compressor 1":
+    {
+        "Threshold": 3,
+        "Ratio": 4,
+        "Attack": 10,
+        "Release": 50,
+        "Output": 0,
+        "Mix": 1
+    },
+    "A Guitar Amplifier 1":
+    {
+        "Channel": 1,
+        "Channel1Bite": 1,
+        "Channel1Drive": 10,
+        "Channel1Punch": 0,
+        "Channel1Level": -7,
+        "Channel2Drive": 20,
+        "Channel2Growl": 0,
+        "Channel2Level": -17,
+        "EqLow": 0,
+        "EqHigh": 0,
+        "AmplifierOn": 2,
+        "SpringReverbMix": 0.20000000298023,
+        "SpringReverbOn": 1,
+        "CabinetOpen": 1,
+        "CabinetOn": 2,
+        "Mix": 1,
+        "Gain": 1
+    },
+    "A Reverb 1":
+    {
+        "Size": 1,
+        "Decay": 1,
+        "Diffusion": 0.5,
+        "Low Damp": 100,
+        "High Damp": 0.10000000149012,
+        "Mix": 0.10000000149012,
+        "Gain": 1
+    },
+    "A Tremolo 1":
+    {
+        "Depth": 0.5,
+        "Sync On": 2,
+        "Sync Rate": 11,
+        "Rate": 3,
+        "Stereo": 1,
+        "Shape": 0,
+        "Gain": 1
+    },
+    "A Effect 2":
+    {
+        "On": 1,
+        "Type": 1
+    },
+    "A Delay 2":
+    {
+        "Wet": 0.5,
+        "Dry": 1,
+        "Sync On": 1,
+        "Sync Rate": 8,
+        "Delay": 0.53833109140396,
+        "Feedback": 0.546875,
+        "Cutoff": 114,
+        "Pan": -0.60629999637604
+    },
+    "A Distortion 2":
+    {
+        "Pre": 3.9810717105865,
+        "Post": 0.35481339693069,
+        "Shape": 1,
+        "Tone": 1,
+        "Mix": 1,
+        "Gain": 1
+    },
+    "A Phaser 2":
+    {
+        "Mix": 0,
+        "Depth": 1.6000000238419,
+        "Frequency": 233,
+        "Feedback": 0.5,
+        "Sync On": 2,
+        "Sync Rate": 3,
+        "Rate": 0.40000000596046,
+        "Gain": 1
+    },
+    "A Vintage Chorus 2":
+    {
+        "Depth": 0.00034657242940739,
+        "Spread": 0.625,
+        "Delay": 0.10000000149012,
+        "Feedback": 0.0099999997764826,
+        "Sync On": 1,
+        "Sync Rate": 8,
+        "Rate": 0.5,
+        "Mix": 0,
+        "Mode": 1,
+        "Gain": 1
+    },
+    "A Chorus 2":
+    {
+        "Depth": 0.059999998658895,
+        "Two Four": 2,
+        "Spread": 0.30000001192093,
+        "Sync On": 1,
+        "Sync Rate": 8,
+        "Rate": 0.5,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "A Flanger 2":
+    {
+        "Depth": 0.16208262741566,
+        "Delay": 2,
+        "Feedback": 0.35481339693069,
+        "Sync On": 2,
+        "Sync Rate": 3,
+        "Rate": 0.40000000596046,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "A Auto Wah 2":
+    {
+        "Depth": 13.731249809265,
+        "Freq": 550,
+        "Speed": 15.924286842346,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "A Wah Wah 2":
+    {
+        "Depth": 0.25271999835968,
+        "Freq": 600,
+        "Sync On": 2,
+        "Sync Rate": 9,
+        "Rate": 2,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "A Notch 2":
+    {
+        "Depth": 0.59903997182846,
+        "Freq": 700,
+        "Sync On": 2,
+        "Sync Rate": 5,
+        "Rate": 1,
+        "Mix": 1,
+        "Gain": 1.4125375747681
+    },
+    "A Equalizer 2":
+    {
+        "Highpass Freq": 20,
+        "Highpass Q": 0.70710676908493,
+        "Highpass On": 1,
+        "Low Freq": 100,
+        "Low Gain": 0,
+        "Low Q": 0.70710676908493,
+        "Mid 1 Freq": 800,
+        "Mid 1 Gain": 0,
+        "Mid 1 Q": 0.70710676908493,
+        "Mid 2 Freq": 1600,
+        "Mid 2 Gain": 0,
+        "Mid 2 Q": 0.70710676908493,
+        "High Freq": 4000,
+        "High Gain": 0,
+        "High Q": 0.70710676908493,
+        "Lowpass Freq": 20000,
+        "Lowpass Q": 0.70710676908493,
+        "Lowpass On": 1,
+        "Gain": 1
+    },
+    "A Compressor 2":
+    {
+        "Threshold": 3,
+        "Ratio": 4,
+        "Attack": 10,
+        "Release": 50,
+        "Output": 0,
+        "Mix": 1
+    },
+    "A Guitar Amplifier 2":
+    {
+        "Channel": 1,
+        "Channel1Bite": 1,
+        "Channel1Drive": 10,
+        "Channel1Punch": 0,
+        "Channel1Level": -7,
+        "Channel2Drive": 20,
+        "Channel2Growl": 0,
+        "Channel2Level": -17,
+        "EqLow": 0,
+        "EqHigh": 0,
+        "AmplifierOn": 2,
+        "SpringReverbMix": 0.20000000298023,
+        "SpringReverbOn": 1,
+        "CabinetOpen": 1,
+        "CabinetOn": 2,
+        "Mix": 1,
+        "Gain": 1
+    },
+    "A Reverb 2":
+    {
+        "Size": 1,
+        "Decay": 1,
+        "Diffusion": 0.5,
+        "Low Damp": 100,
+        "High Damp": 0.10000000149012,
+        "Mix": 0.10000000149012,
+        "Gain": 1
+    },
+    "A Tremolo 2":
+    {
+        "Depth": 0.5,
+        "Sync On": 2,
+        "Sync Rate": 11,
+        "Rate": 3,
+        "Stereo": 1,
+        "Shape": 0,
+        "Gain": 1
+    },
+    "A Reverb":
+    {
+        "Size": 4,
+        "Decay": 1.2841999530792,
+        "Diffusion": 0.61417257785797,
+        "Low Damp": 61.003601074219,
+        "High Damp": 0.187833994627,
+        "Mix": 0.099999994039536,
+        "On": 1,
+        "Room": 0
+    },
+    "B Global":
+    {
+        "Tune": 0,
+        "PreEffectVolume": 1,
+        "Volume": 1
+    },
+    "B Keyboard":
+    {
+        "Mode": 1
+    },
+    "B Unison":
+    {
+        "Detune": 0.00499999942258,
+        "Delay": 0,
+        "Mode": 1,
+        "On": 1
+    },
+    "B Portamento":
+    {
+        "Mode": 2,
+        "Legato": 1,
+        "Time": 4.4235448637409E-17
+    },
+    "B Modulator 1":
+    {
+        "Amount1": -0.00050002336502075,
+        "Destination1": 3,
+        "Amount2": 0,
+        "Destination2": 1,
+        "Amount3": 0,
+        "Destination3": 1,
+        "Amount4": 0,
+        "Destination4": 1
+    },
+    "B Modulator 2":
+    {
+        "S2Amount1": 0,
+        "S2Destination1": 5,
+        "S2Amount2": 0,
+        "S2Destination2": 1,
+        "S2Amount3": 0,
+        "S2Destination3": 1,
+        "S2Amount4": 0,
+        "S2Destination4": 1
+    },
+    "B Vibrato":
+    {
+        "Rate": 5,
+        "Amount": 1.8301333995044E-16,
+        "Delay": 6.6613377242345E-15,
+        "Fade": 6.6613377242345E-15
+    },
+    "B Arpeggiator":
+    {
+        "Latch": 1,
+        "Range": 1,
+        "Order": 1,
+        "Span": 1,
+        "Rate": 120,
+        "Sync On": 1,
+        "Sync Rate": 4,
+        "Arp 1": 2,
+        "Arp 2": 2,
+        "Arp 3": 2,
+        "Arp 4": 2,
+        "Arp 5": 2,
+        "Arp 6": 2,
+        "Arp 7": 2,
+        "Arp 8": 2,
+        "Arp 9": 2,
+        "Arp 10": 2,
+        "Arp 11": 2,
+        "Arp 12": 2,
+        "Arp 13": 2,
+        "Arp 14": 2,
+        "Arp 15": 2,
+        "Arp 16": 2,
+        "Steps": 16,
+        "Arpeggiator": 1
+    },
+    "B Excitator":
+    {
+        "excitator_type": 1,
+        "bow_force": 0.014519050717354,
+        "bow_vc": 0.0010715193348005,
+        "bow_velocity": 0.0010000000474975,
+        "hammer_mass": 0.0000099999997473788,
+        "hammer_stiffness": 1000,
+        "hammer_velocity": 0.0099999997764826,
+        "hammer_damping": 3.162278175354,
+        "plectrum_protrusion": 0.00084944197442383,
+        "plectrum_stiffness": 10752186,
+        "plectrum_velocity": 0.052790895104408,
+        "plectrum_damping": 0.99999994039536,
+        "fx_kbd": 0,
+        "sx_kbd": 0,
+        "vx_kbd": -0.5,
+        "fx_vel": 0,
+        "sx_vel": 2.5194244384766,
+        "vx_vel": 2,
+        "excitator_on": 1
+    },
+    "B Geometry":
+    {
+        "excitator_position": 0.051164649426937,
+        "excitator_position_kbd": 0,
+        "excitator_position_vel": 0,
+        "excitator_position_abs": 1,
+        "damper_position": 0.050000000745058,
+        "damper_position_kbd": 0,
+        "damper_position_vel": 0,
+        "damper_position_abs": 1
+    },
+    "B Pickup":
+    {
+        "pickup_position": 0.050000000745058,
+        "pickup_on": 1
+    },
+    "B Damper":
+    {
+        "damper_gated": 1,
+        "damper_mass": 0.00010435057629365,
+        "damper_mass_kbd": 0,
+        "damper_stiffness": 10000,
+        "damper_stiffness_kbd": 0,
+        "damper_velocity": 0.0099999997764826,
+        "damper_velocity_kbd": 0,
+        "damper_damping": 0.0099999997764826,
+        "damper_on": 1
+    },
+    "B String":
+    {
+        "string_decay_up": 70.79460144043,
+        "string_decay_kbd": 1,
+        "string_decay_factor": 27.542284011841,
+        "string_cutoff": 2244.0366210938,
+        "string_cutoff_kbd": 0,
+        "inharmonicity": 3.0169999599457,
+        "gain": 1.2589254379272
+    },
+    "B Termination":
+    {
+        "finger_mass": 0.9999994635582,
+        "finger_mass_kbd": 0,
+        "finger_mass_vel": 0,
+        "finger_stiffness": 31622776,
+        "anvil_stiffness": 5623412224,
+        "termination_on": 1
+    },
+    "B Filter LFO":
+    {
+        "Shape": 1,
+        "Rate": 0.050000000745058,
+        "Sync On": 2,
+        "Sync Rate": 8,
+        "Delay": 0,
+        "Fade": 0
+    },
+    "B Filter":
+    {
+        "Type": 1,
+        "Order": 1,
+        "Frequency": 500.00021362305,
+        "Frequency Key": 0,
+        "Frequency LFO": 0,
+        "Frequency Env": 0,
+        "Resonance": 0.69999992847443,
+        "Resonance Key": 0,
+        "Resonance LFO": 0,
+        "Resonance Env": 0,
+        "On": 1
+    },
+    "B Filter Env":
+    {
+        "Attack": 0.0010000000474975,
+        "Attack Vel": 0,
+        "Decay": 0.0010000000474975,
+        "Sustain": 0,
+        "Sustain Vel": 0,
+        "Release": 0.0010000000474975
+    },
+    "B Body":
+    {
+        "type": 1,
+        "size": 1,
+        "decay": 0.03999999910593,
+        "low_freq_cutoff": 20,
+        "cutoff": 0.050000000745058,
+        "mix": 0,
+        "On": 1
+    },
+    "B Distortion":
+    {
+        "type": 1,
+        "drive": 0.10000000149012,
+        "tone": 1,
+        "level": 0,
+        "On": 1
+    },
+    "B Equalizer":
+    {
+        "Low Freq": 100.00000762939,
+        "Low Gain": 0,
+        "Mid 1 Freq": 499.99993896484,
+        "Mid 1 Gain": 0,
+        "Mid 1 Q": 0.34999999403954,
+        "Mid 2 Freq": 999.99975585938,
+        "Mid 2 Gain": 0,
+        "Mid 2 Q": 0.34999999403954,
+        "High Freq": 3000,
+        "High Gain": 0,
+        "Side Chain": 1,
+        "Gain": 1,
+        "On": 1
+    },
+    "B Compressor":
+    {
+        "Threshold": 3,
+        "Ratio": 1,
+        "Attack": 10,
+        "Release": 49.999984741211,
+        "Output": 0,
+        "Pre": 1,
+        "On": 1
+    },
+    "B Effect 1":
+    {
+        "On": 1,
+        "Type": 5
+    },
+    "B Delay 1":
+    {
+        "Wet": 0.25,
+        "Dry": 1,
+        "Sync On": 2,
+        "Sync Rate": 7,
+        "Delay": 0.5,
+        "Feedback": 0.5,
+        "Cutoff": 9000,
+        "Pan": 0.30000001192093
+    },
+    "B Distortion 1":
+    {
+        "Pre": 3.9810717105865,
+        "Post": 0.35481339693069,
+        "Shape": 1,
+        "Tone": 1,
+        "Mix": 1,
+        "Gain": 1
+    },
+    "B Phaser 1":
+    {
+        "Mix": 0,
+        "Depth": 1.6000000238419,
+        "Frequency": 233,
+        "Feedback": 0.5,
+        "Sync On": 2,
+        "Sync Rate": 3,
+        "Rate": 0.40000000596046,
+        "Gain": 1
+    },
+    "B Vintage Chorus 1":
+    {
+        "Depth": 0.00034657242940739,
+        "Spread": 0.625,
+        "Delay": 0.10000000149012,
+        "Feedback": 0.0099999997764826,
+        "Sync On": 1,
+        "Sync Rate": 8,
+        "Rate": 0.5,
+        "Mix": 0,
+        "Mode": 1,
+        "Gain": 1
+    },
+    "B Chorus 1":
+    {
+        "Depth": 0.099999994039536,
+        "Two Four": 1,
+        "Spread": 0.62000000476837,
+        "Sync On": 1,
+        "Sync Rate": 8,
+        "Rate": 0.5,
+        "Mix": -0.5,
+        "Gain": 0.99999970197678
+    },
+    "B Flanger 1":
+    {
+        "Depth": 0.16208262741566,
+        "Delay": 2,
+        "Feedback": 0.35481339693069,
+        "Sync On": 2,
+        "Sync Rate": 3,
+        "Rate": 0.40000000596046,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "B Auto Wah 1":
+    {
+        "Depth": 13.731249809265,
+        "Freq": 550,
+        "Speed": 15.924286842346,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "B Wah Wah 1":
+    {
+        "Depth": 0.25271999835968,
+        "Freq": 600,
+        "Sync On": 2,
+        "Sync Rate": 9,
+        "Rate": 2,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "B Notch 1":
+    {
+        "Depth": 0.59903997182846,
+        "Freq": 700,
+        "Sync On": 2,
+        "Sync Rate": 5,
+        "Rate": 1,
+        "Mix": 1,
+        "Gain": 1.4125375747681
+    },
+    "B Equalizer 1":
+    {
+        "Highpass Freq": 20,
+        "Highpass Q": 0.70710676908493,
+        "Highpass On": 1,
+        "Low Freq": 100,
+        "Low Gain": 0,
+        "Low Q": 0.70710676908493,
+        "Mid 1 Freq": 800,
+        "Mid 1 Gain": 0,
+        "Mid 1 Q": 0.70710676908493,
+        "Mid 2 Freq": 1600,
+        "Mid 2 Gain": 0,
+        "Mid 2 Q": 0.70710676908493,
+        "High Freq": 4000,
+        "High Gain": 0,
+        "High Q": 0.70710676908493,
+        "Lowpass Freq": 20000,
+        "Lowpass Q": 0.70710676908493,
+        "Lowpass On": 1,
+        "Gain": 1
+    },
+    "B Compressor 1":
+    {
+        "Threshold": 3,
+        "Ratio": 4,
+        "Attack": 10,
+        "Release": 50,
+        "Output": 0,
+        "Mix": 1
+    },
+    "B Guitar Amplifier 1":
+    {
+        "Channel": 1,
+        "Channel1Bite": 1,
+        "Channel1Drive": 10,
+        "Channel1Punch": 0,
+        "Channel1Level": -7,
+        "Channel2Drive": 20,
+        "Channel2Growl": 0,
+        "Channel2Level": -17,
+        "EqLow": 0,
+        "EqHigh": 0,
+        "AmplifierOn": 2,
+        "SpringReverbMix": 0.20000000298023,
+        "SpringReverbOn": 1,
+        "CabinetOpen": 1,
+        "CabinetOn": 2,
+        "Mix": 1,
+        "Gain": 1
+    },
+    "B Reverb 1":
+    {
+        "Size": 1,
+        "Decay": 1,
+        "Diffusion": 0.5,
+        "Low Damp": 100,
+        "High Damp": 0.10000000149012,
+        "Mix": 0.10000000149012,
+        "Gain": 1
+    },
+    "B Tremolo 1":
+    {
+        "Depth": 0.5,
+        "Sync On": 2,
+        "Sync Rate": 11,
+        "Rate": 3,
+        "Stereo": 1,
+        "Shape": 0,
+        "Gain": 1
+    },
+    "B Effect 2":
+    {
+        "On": 1,
+        "Type": 12
+    },
+    "B Delay 2":
+    {
+        "Wet": 0.25,
+        "Dry": 1,
+        "Sync On": 2,
+        "Sync Rate": 7,
+        "Delay": 0.5,
+        "Feedback": 0.5,
+        "Cutoff": 9000,
+        "Pan": 0.30000001192093
+    },
+    "B Distortion 2":
+    {
+        "Pre": 3.9810717105865,
+        "Post": 0.35481339693069,
+        "Shape": 1,
+        "Tone": 1,
+        "Mix": 1,
+        "Gain": 1
+    },
+    "B Phaser 2":
+    {
+        "Mix": 0,
+        "Depth": 1.6000000238419,
+        "Frequency": 233,
+        "Feedback": 0.5,
+        "Sync On": 2,
+        "Sync Rate": 3,
+        "Rate": 0.40000000596046,
+        "Gain": 1
+    },
+    "B Vintage Chorus 2":
+    {
+        "Depth": 0.00034657242940739,
+        "Spread": 0.625,
+        "Delay": 0.10000000149012,
+        "Feedback": 0.0099999997764826,
+        "Sync On": 1,
+        "Sync Rate": 8,
+        "Rate": 0.5,
+        "Mix": 0,
+        "Mode": 1,
+        "Gain": 1
+    },
+    "B Chorus 2":
+    {
+        "Depth": 0.059999998658895,
+        "Two Four": 2,
+        "Spread": 0.30000001192093,
+        "Sync On": 1,
+        "Sync Rate": 8,
+        "Rate": 0.5,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "B Flanger 2":
+    {
+        "Depth": 0.16208262741566,
+        "Delay": 2,
+        "Feedback": 0.35481339693069,
+        "Sync On": 2,
+        "Sync Rate": 3,
+        "Rate": 0.40000000596046,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "B Auto Wah 2":
+    {
+        "Depth": 13.731249809265,
+        "Freq": 550,
+        "Speed": 15.924286842346,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "B Wah Wah 2":
+    {
+        "Depth": 0.25271999835968,
+        "Freq": 600,
+        "Sync On": 2,
+        "Sync Rate": 9,
+        "Rate": 2,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "B Notch 2":
+    {
+        "Depth": 0.59903997182846,
+        "Freq": 700,
+        "Sync On": 2,
+        "Sync Rate": 5,
+        "Rate": 1,
+        "Mix": 1,
+        "Gain": 1.4125375747681
+    },
+    "B Equalizer 2":
+    {
+        "Highpass Freq": 20,
+        "Highpass Q": 0.70710676908493,
+        "Highpass On": 1,
+        "Low Freq": 100,
+        "Low Gain": 0,
+        "Low Q": 0.70710676908493,
+        "Mid 1 Freq": 800,
+        "Mid 1 Gain": 0,
+        "Mid 1 Q": 0.70710676908493,
+        "Mid 2 Freq": 1600,
+        "Mid 2 Gain": 0,
+        "Mid 2 Q": 0.70710676908493,
+        "High Freq": 4000,
+        "High Gain": 0,
+        "High Q": 0.70710676908493,
+        "Lowpass Freq": 20000,
+        "Lowpass Q": 0.70710676908493,
+        "Lowpass On": 1,
+        "Gain": 1
+    },
+    "B Compressor 2":
+    {
+        "Threshold": 3,
+        "Ratio": 4,
+        "Attack": 10,
+        "Release": 50,
+        "Output": 0,
+        "Mix": 1
+    },
+    "B Guitar Amplifier 2":
+    {
+        "Channel": 2,
+        "Channel1Bite": 1,
+        "Channel1Drive": 12,
+        "Channel1Punch": 0,
+        "Channel1Level": -8,
+        "Channel2Drive": 0,
+        "Channel2Growl": 0,
+        "Channel2Level": -14,
+        "EqLow": -18,
+        "EqHigh": 6,
+        "AmplifierOn": 2,
+        "SpringReverbMix": 0,
+        "SpringReverbOn": 1,
+        "CabinetOpen": 1,
+        "CabinetOn": 1,
+        "Mix": -0.61000001430511,
+        "Gain": 1
+    },
+    "B Reverb 2":
+    {
+        "Size": 1,
+        "Decay": 1,
+        "Diffusion": 0.5,
+        "Low Damp": 100,
+        "High Damp": 0.10000000149012,
+        "Mix": 0.10000000149012,
+        "Gain": 1
+    },
+    "B Tremolo 2":
+    {
+        "Depth": 0.5,
+        "Sync On": 2,
+        "Sync Rate": 11,
+        "Rate": 3,
+        "Stereo": 1,
+        "Shape": 0,
+        "Gain": 1
+    },
+    "B Reverb":
+    {
+        "Size": 2,
+        "Decay": 1,
+        "Diffusion": 0.75,
+        "Low Damp": 199.99998474121,
+        "High Damp": 0.22334179282188,
+        "Mix": 0.099999994039536,
+        "On": 1,
+        "Room": 0
+    },
+    "Equalizer":
+    {
+        "Low Freq": 126,
+        "Low Gain": 0,
+        "Mid 1 Freq": 600,
+        "Mid 1 Gain": 0,
+        "Mid 1 Q": 0.70710676908493,
+        "Mid 2 Freq": 1500,
+        "Mid 2 Gain": 0,
+        "Mid 2 Q": 0.69999998807907,
+        "High Freq": 10000,
+        "High Gain": 0,
+        "Side Chain": 1,
+        "Gain": 1,
+        "On": 1
+    },
+    "Compressor":
+    {
+        "Threshold": 0,
+        "Ratio": 1,
+        "Attack": 1,
+        "Release": 100,
+        "Output": 0,
+        "Pre": 1,
+        "On": 1
+    },
+    "Effect 1":
+    {
+        "On": 1,
+        "Type": 1
+    },
+    "Delay 1":
+    {
+        "Wet": 0.25,
+        "Dry": 1,
+        "Sync On": 2,
+        "Sync Rate": 7,
+        "Delay": 0.5,
+        "Feedback": 0.5,
+        "Cutoff": 9000,
+        "Pan": 0.30000001192093
+    },
+    "Distortion 1":
+    {
+        "Pre": 3.9810717105865,
+        "Post": 0.35481339693069,
+        "Shape": 1,
+        "Tone": 1,
+        "Mix": 1,
+        "Gain": 1
+    },
+    "Phaser 1":
+    {
+        "Mix": 0,
+        "Depth": 1.6000000238419,
+        "Frequency": 233,
+        "Feedback": 0.5,
+        "Sync On": 2,
+        "Sync Rate": 3,
+        "Rate": 0.40000000596046,
+        "Gain": 1
+    },
+    "Vintage Chorus 1":
+    {
+        "Depth": 0.00034657242940739,
+        "Spread": 0.625,
+        "Delay": 0.10000000149012,
+        "Feedback": 0.0099999997764826,
+        "Sync On": 1,
+        "Sync Rate": 8,
+        "Rate": 0.5,
+        "Mix": 0,
+        "Mode": 1,
+        "Gain": 1
+    },
+    "Chorus 1":
+    {
+        "Depth": 0.059999998658895,
+        "Two Four": 2,
+        "Spread": 0.30000001192093,
+        "Sync On": 1,
+        "Sync Rate": 8,
+        "Rate": 0.5,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "Flanger 1":
+    {
+        "Depth": 0.16208262741566,
+        "Delay": 2,
+        "Feedback": 0.35481339693069,
+        "Sync On": 2,
+        "Sync Rate": 3,
+        "Rate": 0.40000000596046,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "Auto Wah 1":
+    {
+        "Depth": 13.731249809265,
+        "Freq": 550,
+        "Speed": 15.924286842346,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "Wah Wah 1":
+    {
+        "Depth": 0.25271999835968,
+        "Freq": 600,
+        "Sync On": 2,
+        "Sync Rate": 9,
+        "Rate": 2,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "Notch 1":
+    {
+        "Depth": 0.59903997182846,
+        "Freq": 700,
+        "Sync On": 2,
+        "Sync Rate": 5,
+        "Rate": 1,
+        "Mix": 1,
+        "Gain": 1.4125375747681
+    },
+    "Equalizer 1":
+    {
+        "Highpass Freq": 20,
+        "Highpass Q": 0.70710676908493,
+        "Highpass On": 1,
+        "Low Freq": 100,
+        "Low Gain": 0,
+        "Low Q": 0.70710676908493,
+        "Mid 1 Freq": 800,
+        "Mid 1 Gain": 0,
+        "Mid 1 Q": 0.70710676908493,
+        "Mid 2 Freq": 1600,
+        "Mid 2 Gain": 0,
+        "Mid 2 Q": 0.70710676908493,
+        "High Freq": 4000,
+        "High Gain": 0,
+        "High Q": 0.70710676908493,
+        "Lowpass Freq": 20000,
+        "Lowpass Q": 0.70710676908493,
+        "Lowpass On": 1,
+        "Gain": 1
+    },
+    "Compressor 1":
+    {
+        "Threshold": 3,
+        "Ratio": 4,
+        "Attack": 10,
+        "Release": 50,
+        "Output": 0,
+        "Mix": 1
+    },
+    "Guitar Amplifier 1":
+    {
+        "Channel": 1,
+        "Channel1Bite": 1,
+        "Channel1Drive": 10,
+        "Channel1Punch": 0,
+        "Channel1Level": -7,
+        "Channel2Drive": 20,
+        "Channel2Growl": 0,
+        "Channel2Level": -17,
+        "EqLow": 0,
+        "EqHigh": 0,
+        "AmplifierOn": 2,
+        "SpringReverbMix": 0.20000000298023,
+        "SpringReverbOn": 1,
+        "CabinetOpen": 1,
+        "CabinetOn": 2,
+        "Mix": 1,
+        "Gain": 1
+    },
+    "Reverb 1":
+    {
+        "Size": 1,
+        "Decay": 1,
+        "Diffusion": 0.5,
+        "Low Damp": 100,
+        "High Damp": 0.10000000149012,
+        "Mix": 0.10000000149012,
+        "Gain": 1
+    },
+    "Tremolo 1":
+    {
+        "Depth": 0.5,
+        "Sync On": 2,
+        "Sync Rate": 11,
+        "Rate": 3,
+        "Stereo": 1,
+        "Shape": 0,
+        "Gain": 1
+    },
+    "Effect 2":
+    {
+        "On": 1,
+        "Type": 2
+    },
+    "Delay 2":
+    {
+        "Wet": 0.25,
+        "Dry": 1,
+        "Sync On": 2,
+        "Sync Rate": 7,
+        "Delay": 0.5,
+        "Feedback": 0.5,
+        "Cutoff": 9000,
+        "Pan": 0.30000001192093
+    },
+    "Distortion 2":
+    {
+        "Pre": 3.9810717105865,
+        "Post": 0.35481339693069,
+        "Shape": 1,
+        "Tone": 1,
+        "Mix": 1,
+        "Gain": 1
+    },
+    "Phaser 2":
+    {
+        "Mix": 0,
+        "Depth": 1.6000000238419,
+        "Frequency": 233,
+        "Feedback": 0.5,
+        "Sync On": 2,
+        "Sync Rate": 3,
+        "Rate": 0.40000000596046,
+        "Gain": 1
+    },
+    "Vintage Chorus 2":
+    {
+        "Depth": 0.00034657242940739,
+        "Spread": 0.625,
+        "Delay": 0.10000000149012,
+        "Feedback": 0.0099999997764826,
+        "Sync On": 1,
+        "Sync Rate": 8,
+        "Rate": 0.5,
+        "Mix": 0,
+        "Mode": 1,
+        "Gain": 1
+    },
+    "Chorus 2":
+    {
+        "Depth": 0.059999998658895,
+        "Two Four": 2,
+        "Spread": 0.30000001192093,
+        "Sync On": 1,
+        "Sync Rate": 8,
+        "Rate": 0.5,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "Flanger 2":
+    {
+        "Depth": 0.16208262741566,
+        "Delay": 2,
+        "Feedback": 0.35481339693069,
+        "Sync On": 2,
+        "Sync Rate": 3,
+        "Rate": 0.40000000596046,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "Auto Wah 2":
+    {
+        "Depth": 13.731249809265,
+        "Freq": 550,
+        "Speed": 15.924286842346,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "Wah Wah 2":
+    {
+        "Depth": 0.25271999835968,
+        "Freq": 600,
+        "Sync On": 2,
+        "Sync Rate": 9,
+        "Rate": 2,
+        "Mix": 0,
+        "Gain": 1
+    },
+    "Notch 2":
+    {
+        "Depth": 0.59903997182846,
+        "Freq": 700,
+        "Sync On": 2,
+        "Sync Rate": 5,
+        "Rate": 1,
+        "Mix": 1,
+        "Gain": 1.4125375747681
+    },
+    "Equalizer 2":
+    {
+        "Highpass Freq": 20,
+        "Highpass Q": 0.70710676908493,
+        "Highpass On": 1,
+        "Low Freq": 100,
+        "Low Gain": 0,
+        "Low Q": 0.70710676908493,
+        "Mid 1 Freq": 800,
+        "Mid 1 Gain": 0,
+        "Mid 1 Q": 0.70710676908493,
+        "Mid 2 Freq": 1600,
+        "Mid 2 Gain": 0,
+        "Mid 2 Q": 0.70710676908493,
+        "High Freq": 4000,
+        "High Gain": 0,
+        "High Q": 0.70710676908493,
+        "Lowpass Freq": 20000,
+        "Lowpass Q": 0.70710676908493,
+        "Lowpass On": 1,
+        "Gain": 1
+    },
+    "Compressor 2":
+    {
+        "Threshold": 3,
+        "Ratio": 4,
+        "Attack": 10,
+        "Release": 50,
+        "Output": 0,
+        "Mix": 1
+    },
+    "Guitar Amplifier 2":
+    {
+        "Channel": 1,
+        "Channel1Bite": 1,
+        "Channel1Drive": 10,
+        "Channel1Punch": 0,
+        "Channel1Level": -7,
+        "Channel2Drive": 20,
+        "Channel2Growl": 0,
+        "Channel2Level": -17,
+        "EqLow": 0,
+        "EqHigh": 0,
+        "AmplifierOn": 2,
+        "SpringReverbMix": 0.20000000298023,
+        "SpringReverbOn": 1,
+        "CabinetOpen": 1,
+        "CabinetOn": 2,
+        "Mix": 1,
+        "Gain": 1
+    },
+    "Reverb 2":
+    {
+        "Size": 1,
+        "Decay": 1,
+        "Diffusion": 0.5,
+        "Low Damp": 100,
+        "High Damp": 0.10000000149012,
+        "Mix": 0.10000000149012,
+        "Gain": 1
+    },
+    "Tremolo 2":
+    {
+        "Depth": 0.5,
+        "Sync On": 2,
+        "Sync Rate": 11,
+        "Rate": 3,
+        "Stereo": 1,
+        "Shape": 0,
+        "Gain": 1
+    },
+    "Reverb":
+    {
+        "Size": 1,
+        "Decay": 1,
+        "Diffusion": 0.5,
+        "Low Damp": 100,
+        "High Damp": 0.10000000149012,
+        "Mix": 0.10000000149012,
+        "On": 1,
+        "Room": 0
+    },
+    "A HiddenCompressor":
+    {
+        "Mix": 0
+    },
+    "B HiddenCompressor":
+    {
+        "Mix": 0
+    },
+    "Setup":
+    {
+        "Clock Source": 1,
+        "MIDIProgramChange": 1,
+        "Voices": 4,
+        "Bend": 3,
+        "MasterTune": 440,
+        "MasterTuneRef": 440,
+        "PreEffectOutputGainModulation": 1,
+        "PreEffectOutputGainModulationMidiSource": 12,
+        "PostEffectOutputGainModulation": 1,
+        "PostEffectOutputGainModulationMidiSource": 8,
+        "MidiSource1": 4,
+        "MidiSource2": 1
+    },
+    "HiddenCompressor":
+    {
+        "Mix": 0
+    }
+}

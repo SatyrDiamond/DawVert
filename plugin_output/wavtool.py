@@ -407,7 +407,7 @@ class output_wavtool(plugin_output.base):
             wt_tracks.insert(0, wt_trackauto)
 
         wt_out = {}
-        wt_out["id"] = "projectState-b22f188e-ecb3-4ef5-96af-a41fb18a8660"
+        wt_out["id"] = "DawVertConverted-"+str(uuid.uuid4())
         wt_out["composerHasAuthority"] = False
         wt_out["metronome"] = False
         wt_out["midiOverdub"] = True

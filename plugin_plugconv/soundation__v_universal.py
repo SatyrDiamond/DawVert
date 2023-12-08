@@ -40,6 +40,8 @@ class plugconv(plugin_plugconv.base):
         plugintype = cvpj_plugindata.type_get()
 
         if plugintype[1] == 'eq-bands':
+            gain_out = cvpj_plugindata.param_get('gain_out', 0)[0]
+
             cvpj_plugindata.replace('native-soundation', 'com.soundation.parametric-eq')
 
             data_LP, data_LS, data_Peaks, data_HS, data_HP, data_reorder = cvpj_plugindata.eqband_get_limited(None)
@@ -77,4 +79,5 @@ class plugconv(plugin_plugconv.base):
                 cvpj_plugindata.param_add('hpf_res', eq_calc_pass(data_LP), 'float', '')
                 cvpj_plugindata.param_add('hpf_slope', 0.25, 'float', 'HP')
                 
+            cvpj_plugindata.param_add('master_gain', (gain_out/40)+0.5,'float', '')
             return True

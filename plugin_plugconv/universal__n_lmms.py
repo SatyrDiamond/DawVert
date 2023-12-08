@@ -86,7 +86,7 @@ class plugconv(plugin_plugconv.base):
             auto_data.rename_plugparam(cvpj_l, pluginid, "LPactive", "main/8/on")
             auto_data.rename_plugparam(cvpj_l, pluginid, "LPfreq", "main/8/freq")
             auto_data.rename_plugparam(cvpj_l, pluginid, "LPres", "main/8/q")
-            cvpj_plugindata.eqband_add(eq_HPactive, eq_LPfreq, 'high_pass', None)
+            cvpj_plugindata.eqband_add(eq_HPactive, eq_LPfreq, 'low_pass', None)
             cvpj_plugindata.eqband_add_param('q', eq_LPres, None)
             cvpj_plugindata.eqband_add_param('slope', slope_vals[eq_LP], None)
 

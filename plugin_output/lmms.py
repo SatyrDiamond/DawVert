@@ -754,40 +754,6 @@ def lmms_encode_effectslot(pluginid, fxcX):
         xml_lmmsreverbsc.set('output_gain', '0')
         xml_lmmsreverbsc.set('color', '10000')
 
-    elif plugintype == ['universal', 'eq-bands']:
-        data_LP, data_Lowshelf, data_Peaks, data_HighShelf, data_HP, data_auto = fx_plugindata.eqband_get_limited(None)
-
-        print('[output-lmms]       Audio FX: [eq] ')
-        fxslotX.set('name', 'eq')
-        xml_lmmseq = ET.SubElement(fxslotX, 'Eq')
-
-        xml_lmmseq.set('LPactive', str(data_LP[1]))
-        xml_lmmseq.set('LPfreq', str(data_LP[2]))
-        xml_lmmseq.set('LPres', str(data_LP[4]))
-
-        xml_lmmseq.set('Lowshelfactive', str(data_Lowshelf[1]))
-        xml_lmmseq.set('LowShelffreq', str(data_Lowshelf[2]))
-        xml_lmmseq.set('Lowshelfgain', str(data_Lowshelf[3]))
-        xml_lmmseq.set('LowShelfres', str(data_Lowshelf[4]))
-
-        for num in range(4):
-            xml_lmmseq.set('Peak'+str(num+1)+'active', str(data_Peaks[num][1]))
-            xml_lmmseq.set('Peak'+str(num+1)+'freq', str(data_Peaks[num][2]))
-            xml_lmmseq.set('Peak'+str(num+1)+'gain', str(data_Peaks[num][3]))
-            xml_lmmseq.set('Peak'+str(num+1)+'bw', str(data_Peaks[num][4]))
-
-        xml_lmmseq.set('Highshelfactive', str(data_HighShelf[1]))
-        xml_lmmseq.set('Highshelffreq', str(data_HighShelf[2]))
-        xml_lmmseq.set('HighShelfgain', str(data_HighShelf[3]))
-        xml_lmmseq.set('HighShelfres', str(data_HighShelf[4]))
-
-        xml_lmmseq.set('HPactive', str(data_HP[1]))
-        xml_lmmseq.set('HPfreq', str(data_HP[2]))
-        xml_lmmseq.set('HPres', str(data_HP[4]))
-
-        xml_lmmseq.set('Outputgain', str( fx_plugindata.param_get('gain_out', 0) ))
-        xml_lmmseq.set('Inputgain', str( fx_plugindata.param_get('gain_in', 0) ))
-
     elif plugintype == ['universal', 'delay-c']:
         print('[output-lmms]       Audio FX: [delay] ')
         fxslotX.set('name', 'delay')

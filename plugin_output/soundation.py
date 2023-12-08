@@ -53,29 +53,6 @@ def cvpjiparam_to_sngparam(cvpj_plugindata, i_dict, pluginid, i_name, i_fallback
     value = cvpj_plugindata.param_get(i_name, i_fallback)[0]
     add_sndinstparam(i_dict, i_name, value, i_auto)
 
-def eq_calc_pass(i_value):
-    i_value = xtramath.logpowmul(i_value, 0.5)
-    i_value = math.log(i_value / 0.1)
-    i_value = i_value / math.log(162)
-    return i_value
-
-def eq_calc_shelf(i_value):
-    i_value = math.log(i_value / 0.1)
-    i_value = i_value / math.log(162)
-    return i_value
-
-def eq_calc_peak(i_value):
-    i_value = xtramath.logpowmul(i_value, -1)
-    i_value = math.log( i_value / 0.1)
-    i_value = i_value / math.log(162)
-    return i_value
-
-def eq_calc_freq(i_value): return (math.log(i_value/20) / math.log(1000)) if i_value != 0 else 0
-
-def eq_calc_gain(i_value): return (i_value/40)+0.5
-
-
-
 
 def add_fx(sng_trkdata, s_trackdata):
     sng_fxchain = sng_trkdata['effects']
@@ -85,73 +62,6 @@ def add_fx(sng_trkdata, s_trackdata):
             fx_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, fxpluginid)
             plugtype = fx_plugindata.type_get()
             fx_on, fx_wet = fx_plugindata.fxdata_get()
-
-            if plugtype == ['universal', 'eq-bands']:
-                sng_fxdata = {}
-                sng_fxdata['identifier'] = 'com.soundation.parametric-eq'
-                sng_fxdata['bypass'] = not fx_on
-
-                data_LP, data_Lowshelf, data_Peaks, data_HighShelf, data_HP, data_auto = fx_plugindata.eqband_get_limited(None)
-
-                for num in range(4):
-                    band_res = data_Peaks[num][4]
-                    if band_res != 0: band_res = eq_calc_peak(band_res)
-                    else: band_res = 0
-                    data_Peaks[num][4] = band_res
-
-                data_LP[4] = eq_calc_pass(data_LP[4]) if data_LP[4] != 0 else 1
-                data_HP[4] = eq_calc_pass(data_HP[4]) if data_HP[4] != 0 else 1
-
-                data_Lowshelf[4] = eq_calc_shelf(data_Lowshelf[4]) if data_Lowshelf[4] != 0 else 1
-                data_HighShelf[4] = eq_calc_shelf(data_HighShelf[4]) if data_HighShelf[4] != 0 else 1
-
-                gain_out = fx_plugindata.param_get('gain_out', 0)[0]
-
-                add_sndinstparam(sng_fxdata, 'lpf_enable', data_LP[1], [])
-                add_sndinstparam(sng_fxdata, 'lpf_freq', eq_calc_freq(data_LP[2]), [])
-                add_sndinstparam(sng_fxdata, 'lpf_res', data_LP[4], [])
-                add_sndinstparam(sng_fxdata, 'lpf_slope', 0.25, [])
-
-                add_sndinstparam(sng_fxdata, 'lowshelf_enable', data_Lowshelf[1], [])
-                add_sndinstparam(sng_fxdata, 'lowshelf_freq', eq_calc_freq(data_Lowshelf[2]), [])
-                add_sndinstparam(sng_fxdata, 'lowshelf_gain', eq_calc_gain(data_Lowshelf[3]), [])
-                add_sndinstparam(sng_fxdata, 'lowshelf_res', data_Lowshelf[4], [])
-
-
-                #for peaknum in range(4):
-                #    peakstr = str(peaknum+1)
-
-                    #peak_auto = [[],[],[],[]]
-
-                    #if data_auto[2][peaknum] != None:
-                    #    auto_peak_enable = auto_nopl.getpoints(cvpj_l, ['plugin_eq',fxpluginid,str(data_auto[2][peaknum])+'_on'])
-                    #    auto_peak_freq = auto_nopl.getpoints(cvpj_l, ['plugin_eq',fxpluginid,str(data_auto[2][peaknum])+'_freq'])
-                    #    auto_peak_gain = auto_nopl.getpoints(cvpj_l, ['plugin_eq',fxpluginid,str(data_auto[2][peaknum])+'_gain'])
-                    #    auto_peak_res = auto_nopl.getpoints(cvpj_l, ['plugin_eq',fxpluginid,str(data_auto[2][peaknum])+'_res'])
-
-                        #if auto_peak_freq: for point in auto_peak_freq: point['value'] = eq_calc_freq(point['value'])
-                        #if auto_peak_gain: for point in auto_peak_gain: point['value'] = eq_calc_gain(point['value'])
-                        #if auto_peak_res: for point in auto_peak_res: point['value'] = eq_calc_peak(point['value'])
-
-                    #add_sndinstparam(sng_fxdata, 'peak'+peakstr+'_enable', data_Peaks[peaknum][1], peak_auto[0])
-                    #add_sndinstparam(sng_fxdata, 'peak'+peakstr+'_freq', eq_calc_freq(data_Peaks[peaknum][2]), peak_auto[1])
-                    #add_sndinstparam(sng_fxdata, 'peak'+peakstr+'_gain', eq_calc_gain(data_Peaks[peaknum][3]), peak_auto[2])
-                    #add_sndinstparam(sng_fxdata, 'peak'+peakstr+'_res', data_Peaks[peaknum][4], peak_auto[3])
-
-                add_sndinstparam(sng_fxdata, 'highshelf_enable', data_HighShelf[1], [])
-                add_sndinstparam(sng_fxdata, 'highshelf_freq', eq_calc_freq(data_HighShelf[2]), [])
-                add_sndinstparam(sng_fxdata, 'highshelf_gain', eq_calc_gain(data_HighShelf[3]), [])
-                add_sndinstparam(sng_fxdata, 'highshelf_res', data_HighShelf[4], [])
-
-                add_sndinstparam(sng_fxdata, 'hpf_enable', data_HP[1], [])
-                add_sndinstparam(sng_fxdata, 'hpf_freq', eq_calc_freq(data_HP[2]), [])
-                add_sndinstparam(sng_fxdata, 'hpf_res', data_HP[4], [])
-                add_sndinstparam(sng_fxdata, 'hpf_slope', 0.25, [])
-
-                add_sndinstparam(sng_fxdata, 'master_gain', (gain_out/40)+0.5, [])
-
-                sng_fxchain.append(sng_fxdata)
-
 
             if plugtype[0] == 'native-soundation' and plugtype[1] != 'com.soundation.send':
                 fxpluginname = plugtype[1]

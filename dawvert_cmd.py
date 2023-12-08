@@ -22,6 +22,7 @@ parser.add_argument("--extrafile", default=None)
 parser.add_argument("--use-experiments-input", action='store_true')
 parser.add_argument("--mi2m--output-unused-nle", action='store_true')
 parser.add_argument("--nonfree-plugins", action='store_true')
+parser.add_argument("--shareware-plugins", action='store_true')
 parser.add_argument("-y", action='store_true')
 args = parser.parse_args()
 
@@ -50,6 +51,7 @@ if args.use_experiments_input == True:
 	pluginset = 'experiments'
 
 if args.nonfree_plugins == True: extra_json['nonfree-plugins'] = True
+if args.shareware_plugins == True: extra_json['shareware-plugins'] = True
 
 
 # -------------------------------------------------------------- Input Plugin List--------------------------------------------------------------

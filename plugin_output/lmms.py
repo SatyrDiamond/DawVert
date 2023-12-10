@@ -800,25 +800,30 @@ def lmms_encode_effectslot(pluginid, fxcX):
         xml_ladspa.set('link', str(int(not ladspa_sep_chan)))
 
         if ladspa_file != None: add_keyatt(fxslotX, {'file': Path(ladspa_file).stem, 'plugin': ladspa_plugin})
-        for param in range(ladspa_numparams):
-            for channum in range(2):
-                cvpj_paramid = 'ladspa_param_'+str(param)
-                if channum == 1: cvpj_paramid += '_1'
-                lmms_paramid = 'port'+str(channum)+str(param)
-                cvpj_paramvisname = 'LADSPA: #'+str(param+1)
 
-                aid_id, aid_data = auto_id.out_get(['plugin', pluginid, cvpj_paramid])
+        paramlist = fx_plugindata.param_list()
+        for paramid in paramlist:
+            if paramid.startswith('ext_param_'):
+                paramdata = paramid[10:].split('_')
+                if len(paramdata) == 2: paramnum, channum = paramdata
+                else: paramnum, channum = paramdata[0], 0
+                paramnum = int(paramnum)
+                lmms_paramid = 'port'+str(channum)+str(paramnum)
+                cvpj_paramvisname = 'LADSPA: #'+str(paramnum+1)
+                
+                aid_id, aid_data = auto_id.out_get(['plugin', pluginid, paramid])
                 lmms_paramdata = ET.SubElement(xml_ladspa, lmms_paramid)
-                paramval = fx_plugindata.param_get(cvpj_paramid, 0)[0]
+                paramval = fx_plugindata.param_get(paramid, -1)[0]
+
                 if channum == 0: lmms_paramdata.set('link', str(int(not ladspa_sep_chan)))
-                if aid_id == None:
-                    lmms_paramdata.set('data', str(paramval))
+                if aid_id == None: lmms_paramdata.set('data', str(paramval))
                 else:
                     lmms_paramdata_data = ET.SubElement(lmms_paramdata, 'data')
                     lmms_paramdata_data.set('value', str(paramval))
                     lmms_paramdata_data.set('scale_type', 'linear')
                     lmms_paramdata_data.set('id', str(aid_id))
                     make_auto_track(aid_id, aid_data, cvpj_paramvisname)
+
 
     else:
         fxslotX.set('name', 'stereomatrix')

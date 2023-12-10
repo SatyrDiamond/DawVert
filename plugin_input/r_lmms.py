@@ -371,8 +371,6 @@ def lmms_decodeplugin(trkX_insttr):
                 inst_plugindata.fileref_add('osc_2', threeosc_userwavefile1)
                 inst_plugindata.fileref_add('osc_3', threeosc_userwavefile2)
 
-            print(pluginname)
-
         inst_plugindata.to_cvpj(cvpj_l, pluginid)
     
     _, plugincolor = dataset.object_get_name_color('plugin', pluginname)
@@ -698,7 +696,7 @@ def lmms_decode_effectslot(fxslotX):
                 l_ch = notetagtxt[4]
                 l_val = notetagtxt[5:]
                 t_data = node.get('data')
-                paramid = 'ladspa_param_'+l_val if l_ch == '0' else 'ladspa_param_'+l_val+'_'+l_ch
+                paramid = 'ext_param_'+l_val if l_ch == '0' else 'ext_param_'+l_val+'_'+l_ch
                 paramval = float(lmms_auto_getvalue(node, 'data', '0', 'float', None, ['plugin', pluginid, paramid]))
                 fx_plugindata.param_add(paramid, paramval, 'float', paramid)
         fx_plugindata.dataval_add('seperated_channels', seperated_channels)

@@ -289,67 +289,68 @@ def do_devices(x_trackdevices, track_id, fxloc):
 			paramlist = dataset.params_list('plugin', devicename)
 			device_type = dataset.object_var_get('group', 'plugin', devicename)
 
-			for paramfullname in paramlist:
-				parampath = paramfullname.split('/')
-				paramfolder = parampath[:-1]
-				paramname = parampath[-1]
-				xmltag = get_nested_xml(x_trackdevice, paramfolder)
-				defparams = dataset.params_i_get('plugin', devicename, paramfullname)
+			if paramlist:
+				for paramfullname in paramlist:
+					parampath = paramfullname.split('/')
+					paramfolder = parampath[:-1]
+					paramname = parampath[-1]
+					xmltag = get_nested_xml(x_trackdevice, paramfolder)
+					defparams = dataset.params_i_get('plugin', devicename, paramfullname)
+					
+					if defparams != None and xmltag != None:
+						isdata = defparams[0]
+						if not defparams[0]:
+							outval = get_param(xmltag, paramname, defparams[1], defparams[2], None, None)
+						else:
+							outval = get_value(xmltag, paramname, defparams[2])
+							if defparams[1] == 'int': outval = int(outval)
+							if defparams[1] == 'float': outval = float(outval)
+							if defparams[1] == 'bool': outval = (outval == 'true')
+						fx_plugindata.param_add_dset(paramfullname, outval, dataset, 'plugin', devicename)
+
+				if devicename == 'Looper':
+					hextext = x_trackdevice.findall('SavedBuffer')[0].text
+					if hextext != None: fx_plugindata.rawdata_add(bytes.fromhex(hextext))
 				
-				if defparams != None and xmltag != None:
-					isdata = defparams[0]
-					if not defparams[0]:
-						outval = get_param(xmltag, paramname, defparams[1], defparams[2], None, None)
-					else:
-						outval = get_value(xmltag, paramname, defparams[2])
-						if defparams[1] == 'int': outval = int(outval)
-						if defparams[1] == 'float': outval = float(outval)
-						if defparams[1] == 'bool': outval = (outval == 'true')
-					fx_plugindata.param_add_dset(paramfullname, outval, dataset, 'plugin', devicename)
+				if devicename == 'Hybrid':
+					x_Hybrid = x_trackdevice.findall('ImpulseResponseHandler')[0]
+					x_SampleSlot = x_Hybrid.findall('SampleSlot')[0]
+					x_Value = x_SampleSlot.findall('Value')[0]
+					fx_plugindata.dataval_add('sample', get_sampleref(x_Value)['file'])
 
-			if devicename == 'Looper':
-				hextext = x_trackdevice.findall('SavedBuffer')[0].text
-				if hextext != None: fx_plugindata.rawdata_add(bytes.fromhex(hextext))
-				
-			if devicename == 'Hybrid':
-				x_Hybrid = x_trackdevice.findall('ImpulseResponseHandler')[0]
-				x_SampleSlot = x_Hybrid.findall('SampleSlot')[0]
-				x_Value = x_SampleSlot.findall('Value')[0]
-				fx_plugindata.dataval_add('sample', get_sampleref(x_Value)['file'])
+				if devicename == 'InstrumentVector':
+					modcons = []
+					x_ModulationConnections = x_trackdevice.findall('ModulationConnections')[0]
+					x_ModulationConnectionsForInstrumentVectors = x_ModulationConnections.findall('ModulationConnectionsForInstrumentVector')
+					for x_ModulationConnectionsForInstrumentVector in x_ModulationConnectionsForInstrumentVectors:
+						s_modcon = {}
+						s_modcon_target = x_ModulationConnectionsForInstrumentVector.get('TargetId')
+						s_modcon['target'] = x_ModulationConnectionsForInstrumentVector.get('TargetId')
+						s_modcon['name'] = get_value(x_ModulationConnectionsForInstrumentVector, 'TargetName', '')
+						s_modcon['amounts'] = []
+						for num in range(13):
+							s_modcon['amounts'].append( float(get_value(x_ModulationConnectionsForInstrumentVector, 'ModulationAmounts.'+str(num), 0)) )
+						modcons.append(s_modcon)
+					fx_plugindata.dataval_add('ModulationConnections', modcons)
 
-			if devicename == 'InstrumentVector':
-				modcons = []
-				x_ModulationConnections = x_trackdevice.findall('ModulationConnections')[0]
-				x_ModulationConnectionsForInstrumentVectors = x_ModulationConnections.findall('ModulationConnectionsForInstrumentVector')
-				for x_ModulationConnectionsForInstrumentVector in x_ModulationConnectionsForInstrumentVectors:
-					s_modcon = {}
-					s_modcon_target = x_ModulationConnectionsForInstrumentVector.get('TargetId')
-					s_modcon['target'] = x_ModulationConnectionsForInstrumentVector.get('TargetId')
-					s_modcon['name'] = get_value(x_ModulationConnectionsForInstrumentVector, 'TargetName', '')
-					s_modcon['amounts'] = []
-					for num in range(13):
-						s_modcon['amounts'].append( float(get_value(x_ModulationConnectionsForInstrumentVector, 'ModulationAmounts.'+str(num), 0)) )
-					modcons.append(s_modcon)
-				fx_plugindata.dataval_add('ModulationConnections', modcons)
+					for num in range(2):
+						UserSpriteNum = 'UserSprite'+str(num+1)
+						x_UserSprite = x_trackdevice.findall(UserSpriteNum)
+						if x_UserSprite:
+							x_UserSpriteVal = x_UserSprite[0].findall('Value')
+							if x_UserSpriteVal:
+								if x_UserSpriteVal[0].findall('SampleRef'):
+									filename = get_sampleref(x_UserSpriteVal[0])['file']
+									fx_plugindata.fileref_add(UserSpriteNum, filename)
 
-				for num in range(2):
-					UserSpriteNum = 'UserSprite'+str(num+1)
-					x_UserSprite = x_trackdevice.findall(UserSpriteNum)
-					if x_UserSprite:
-						x_UserSpriteVal = x_UserSprite[0].findall('Value')
-						if x_UserSpriteVal:
-							if x_UserSpriteVal[0].findall('SampleRef'):
-								filename = get_sampleref(x_UserSpriteVal[0])['file']
-								fx_plugindata.fileref_add(UserSpriteNum, filename)
+				if device_type == (True, 'fx'):
+					fx_plugindata.fxdata_add(devfx_enabled, None)
+					if fxloc != None: fxslot.insert(cvpj_l, fxloc, 'audio', pluginid)
+					fx_plugindata.to_cvpj(cvpj_l, pluginid)
 
-			if device_type == (True, 'fx'):
-				fx_plugindata.fxdata_add(devfx_enabled, None)
-				if fxloc != None: fxslot.insert(cvpj_l, fxloc, 'audio', pluginid)
-				fx_plugindata.to_cvpj(cvpj_l, pluginid)
-
-			if device_type == (True, 'inst'):
-				tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
-				fx_plugindata.to_cvpj(cvpj_l, pluginid)
+				if device_type == (True, 'inst'):
+					tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
+					fx_plugindata.to_cvpj(cvpj_l, pluginid)
 
 
 

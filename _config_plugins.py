@@ -16,26 +16,26 @@ os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
 db_plugins = sqlite3.connect('./__config/plugins_external.db')
 
 db_plugins.execute('''
-   CREATE TABLE IF NOT EXISTS vst2(
-       name text,
-       id text,
-       type text,
-       creator text,
-       version text,
-       audio_num_inputs integer,
-       audio_num_outputs integer,
-       midi_num_inputs integer,
-       midi_num_outputs integer,
-       num_params integer,
-       path_32bit_win text,
-       path_64bit_win text,
-       path_32bit_unix text,
-       path_64bit_unix text,
-       UNIQUE(id)
-   )''')
+	CREATE TABLE IF NOT EXISTS vst2(
+		 name text,
+		 id text,
+		 type text,
+		 creator text,
+		 version text,
+		 audio_num_inputs integer,
+		 audio_num_outputs integer,
+		 midi_num_inputs integer,
+		 midi_num_outputs integer,
+		 num_params integer,
+		 path_32bit_win text,
+		 path_64bit_win text,
+		 path_32bit_unix text,
+		 path_64bit_unix text,
+		 UNIQUE(id)
+	)''')
 
 db_plugins.execute('''
-   CREATE TABLE IF NOT EXISTS vst3(
+	CREATE TABLE IF NOT EXISTS vst3(
 		name text,
 		id text,
 		creator text,
@@ -48,26 +48,27 @@ db_plugins.execute('''
 		audio_num_outputs integer,
 		midi_num_inputs integer,
 		midi_num_outputs integer,
-      num_params integer,
-      path_32bit_win text,
-      path_64bit_win text,
-      path_32bit_unix text,
-      path_64bit_unix text,
-      UNIQUE(id)
-   )''')
+		num_params integer,
+		path_32bit_win text,
+		path_64bit_win text,
+		path_32bit_unix text,
+		path_64bit_unix text,
+		UNIQUE(id)
+	)''')
 
 db_plugins.execute('''
-   CREATE TABLE IF NOT EXISTS ladspa(
+	CREATE TABLE IF NOT EXISTS ladspa(
 		name text,
 		creator text,
 		version text,
 		audio_num_inputs integer,
 		audio_num_outputs integer,
-      num_params integer,
-      path_win text,
-      path_unix text,
-      UNIQUE(name)
-   )''')
+		num_params integer,
+		path_win text,
+		path_unix text,
+		filename text,
+		UNIQUE(name)
+	)''')
 
 homepath = os.path.expanduser("~")
 
@@ -179,6 +180,7 @@ if 'waveform' in dawlist:
 					ladspa_name = pluginfo.get('name')
 					db_plugins.execute("INSERT OR IGNORE INTO ladspa (name) VALUES (?)", (ladspa_name,))
 					db_plugins.execute("UPDATE ladspa SET path_unix = ? WHERE name = ?", (pluginfo.get('file'), ladspa_name,))
+					db_plugins.execute("UPDATE ladspa SET filename = ? WHERE name = ?", (os.path.basename(pluginfo.get('file')).split('.')[0], ladspa_name,))
 					db_plugins.execute("UPDATE ladspa SET creator = ? WHERE name = ?", (pluginfo.get('manufacturer'), ladspa_name,))
 					db_plugins.execute("UPDATE ladspa SET version = ? WHERE name = ?", (pluginfo.get('version'), ladspa_name,))
 					db_plugins.execute("UPDATE ladspa SET audio_num_inputs = ? WHERE name = ?", (pluginfo.get('numInputs'), ladspa_name,))

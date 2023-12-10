@@ -21,26 +21,26 @@ os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
 db_plugins = sqlite3.connect('./__config/plugins_external.db')
 
 db_plugins.execute('''
-   CREATE TABLE IF NOT EXISTS vst2(
-       name text,
-       id text,
-       type text,
-       creator text,
-       version text,
-       audio_num_inputs integer,
-       audio_num_outputs integer,
-       midi_num_inputs integer,
-       midi_num_outputs integer,
-       num_params integer,
-       path_32bit_win text,
-       path_64bit_win text,
-       path_32bit_unix text,
-       path_64bit_unix text,
-       UNIQUE(id)
-   )''')
+	CREATE TABLE IF NOT EXISTS vst2(
+		 name text,
+		 id text,
+		 type text,
+		 creator text,
+		 version text,
+		 audio_num_inputs integer,
+		 audio_num_outputs integer,
+		 midi_num_inputs integer,
+		 midi_num_outputs integer,
+		 num_params integer,
+		 path_32bit_win text,
+		 path_64bit_win text,
+		 path_32bit_unix text,
+		 path_64bit_unix text,
+		 UNIQUE(id)
+	)''')
 
 db_plugins.execute('''
-   CREATE TABLE IF NOT EXISTS vst3(
+	CREATE TABLE IF NOT EXISTS vst3(
 		name text,
 		id text,
 		creator text,
@@ -53,39 +53,40 @@ db_plugins.execute('''
 		audio_num_outputs integer,
 		midi_num_inputs integer,
 		midi_num_outputs integer,
-      num_params integer,
-      path_32bit_win text,
-      path_64bit_win text,
-      path_32bit_unix text,
-      path_64bit_unix text,
-      UNIQUE(id)
-   )''')
+		num_params integer,
+		path_32bit_win text,
+		path_64bit_win text,
+		path_32bit_unix text,
+		path_64bit_unix text,
+		UNIQUE(id)
+	)''')
 
 db_plugins.execute('''
-   CREATE TABLE IF NOT EXISTS ladspa(
+	CREATE TABLE IF NOT EXISTS ladspa(
 		name text,
 		creator text,
 		version text,
 		audio_num_inputs integer,
 		audio_num_outputs integer,
-      num_params integer,
-      path_win text,
-      path_unix text,
-      UNIQUE(name)
-   )''')
+		num_params integer,
+		path_win text,
+		path_unix text,
+		filename text,
+		UNIQUE(name)
+	)''')
 
 db_plugins.execute('''
-   CREATE TABLE IF NOT EXISTS dssi(
+	CREATE TABLE IF NOT EXISTS dssi(
 		name text,
 		id text,
 		creator text,
 		version text,
 		audio_num_inputs integer,
 		audio_num_outputs integer,
-      num_params integer,
-      path_unix text,
-      UNIQUE(id)
-   )''')
+		num_params integer,
+		path_unix text,
+		UNIQUE(id)
+	)''')
 
 homepath = os.path.expanduser("~")
  
@@ -146,6 +147,7 @@ if 'muse' in dawlist:
 				if muse_outports != None: db_plugins.execute("UPDATE ladspa SET audio_num_outputs = ? WHERE name = ?", (muse_outports, muse_name,))
 				if muse_ctlInports != None: db_plugins.execute("UPDATE ladspa SET num_params = ? WHERE name = ?", (muse_ctlInports, muse_name,))
 				db_plugins.execute("UPDATE ladspa SET path_unix = ? WHERE name = ?", (muse_file, muse_name,))
+				db_plugins.execute("UPDATE ladspa SET filename = ? WHERE name = ?", (os.path.basename(muse_file).split('.')[0], muse_name,))
 
 	if os.path.exists(muse_g_path_dssi):
 		path_dssi_linux = muse_g_path_dssi

@@ -31,6 +31,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('freq', bitcrush_SampleRate, 'float', 'freq')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'BitDepth', 'bits')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'SampleRate', 'freq')
+            return True
 
         if plugintype[1] == 'Compressor2':
             comp_Threshold = cvpj_plugindata.param_get('Threshold', 0)[0]
@@ -74,6 +75,7 @@ class plugconv(plugin_plugconv.base):
             auto_data.multiply(cvpj_l, ['plugin', pluginid, 'attack'], 0, 0.001)
             auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 0.001)
             auto_data.function_value(cvpj_l, ['plugin', pluginid, 'threshold'], comp_threshold)
+            return True
 
 
         if plugintype[1] == 'Eq8':
@@ -101,3 +103,36 @@ class plugconv(plugin_plugconv.base):
 
             cvpj_plugindata.replace('universal', 'eq-bands')
             cvpj_plugindata.dataval_add('num_bands', 8)
+            return True
+
+        if plugintype[1] == 'Limiter':
+            limiter_ceiling = cvpj_plugindata.param_get("Ceiling", 0)[0]
+            limiter_gain = cvpj_plugindata.param_get("Gain", 0)[0]
+            limiter_release = cvpj_plugindata.param_get("Release", 0)[0]/1000
+            limiter_release_auto = cvpj_plugindata.param_get("AutoRelease", False)[0]
+
+            cvpj_plugindata.replace('universal', 'limiter')
+
+            cvpj_plugindata.param_add('ceiling', limiter_ceiling, 'float', 'ceiling')
+            cvpj_plugindata.param_add('gain', limiter_gain, 'float', 'gain')
+            cvpj_plugindata.param_add('release', limiter_release, 'float', 'release')
+            cvpj_plugindata.param_add('release_auto', limiter_release_auto, 'bool', 'release_auto')
+            return True
+
+        if plugintype[1] == 'Gate':
+            gate_attack = cvpj_plugindata.param_get("Attack", 0)[0]/1000
+            gate_hold = cvpj_plugindata.param_get("Hold", 0)[0]/1000
+            gate_release = cvpj_plugindata.param_get("Release", 0)[0]/1000
+            gate_threshold = comp_threshold(cvpj_plugindata.param_get("Threshold", 0)[0])
+            gate_flip = cvpj_plugindata.param_get("FlipMode", 0)[0]/1000
+            gate_return = cvpj_plugindata.param_get("Return", 0)[0]/1000
+
+            cvpj_plugindata.replace('universal', 'gate')
+
+            cvpj_plugindata.param_add('attack', gate_attack, 'float', 'attack')
+            cvpj_plugindata.param_add('hold', gate_hold, 'float', 'hold')
+            cvpj_plugindata.param_add('release', gate_release, 'float', 'release')
+            cvpj_plugindata.param_add('threshold', gate_threshold, 'float', 'threshold')
+            cvpj_plugindata.param_add('flip', gate_flip, 'float', 'flip')
+            cvpj_plugindata.param_add('return', gate_return, 'float', 'return')
+            return True

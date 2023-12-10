@@ -38,8 +38,9 @@ def warp2rate(cvpj_placements, tempo):
 
                     if len(t_warpmarkers) >= 2:
                         t_warpmarker_last = t_warpmarkers[-1]
+
                         new_audiomod['stretch_method'] = 'rate_tempo'
-                        audiorate = (1/((t_warpmarker_last['pos']/8)/t_warpmarkers[-1]['pos_real']))
+                        audiorate = (1/((t_warpmarker_last['pos']/8)/t_warpmarker_last['pos_real']))
                         new_audiomod['stretch_data']['rate'] = audiorate
 
             cvpj_placement['audiomod'] = new_audiomod

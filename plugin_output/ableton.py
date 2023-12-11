@@ -441,11 +441,18 @@ def do_device_data_single(cvpj_plugindata, xmltag, deviceid):
                             paramnamesplit[-1], 
                             makevaltype(cvpj_paramval, paramdata[1]), 
                             None, None, None, midi_minmax)
+                        data_values.nested_dict_add_value(paramdat, paramid.split('/'), elementdata)
                     else:
                         cvpj_paramval = cvpj_plugindata.dataval_get(paramid, paramdata[2])
-                        elementdata = addvalue_nosub(paramnamesplit[-1], makevaltype(cvpj_paramval, paramdata[1]))
-
-                    data_values.nested_dict_add_value(paramdat, paramid.split('/'), elementdata)
+                        if paramdata[1] != 'list':
+                            elementdata = addvalue_nosub(paramnamesplit[-1], makevaltype(cvpj_paramval, paramdata[1]))
+                            data_values.nested_dict_add_value(paramdat, paramid.split('/'), elementdata)
+                        else:
+                            for index, listpart in enumerate(cvpj_paramval):
+                                tempsplit = paramnamesplit.copy()
+                                tempsplit[-1] += '.'+str(index)
+                                elementdata = addvalue_nosub(tempsplit[-1], str(listpart))
+                                data_values.nested_dict_add_value(paramdat, tempsplit, elementdata)
 
                 dictxmlk(xml_device, paramdat)
 

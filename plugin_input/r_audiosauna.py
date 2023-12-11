@@ -32,7 +32,7 @@ def setasdr(i_attack, i_decay, i_release, i_sustain):
     if out_decay == 0: i_sustain = 1
     return out_attack, out_decay, out_release, out_sustain
 
-audiosanua_device_id = ['analog', 'fm']
+audiosanua_device_id = ['fm', 'analog']
 
 def make_fxslot(x_device_sound, fx_type, as_device):
     pluginid = plugins.get_id()

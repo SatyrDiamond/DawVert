@@ -279,7 +279,9 @@ class input_trackerboy(plugin_input.base):
                     if trackerboy_instdata[6] == 0: 
                         inst_plugindata.wave_add('main', t_waves[1][1], 0, 15)
                     else: 
-                        inst_plugindata.wave_add('main', t_waves[trackerboy_instdata[6]+1][1], 0, 15)
+                        outwavname = trackerboy_instdata[6]+1
+                        if trackerboy_instdata[6]+1 not in t_waves: outwavname = 1
+                        inst_plugindata.wave_add('main', t_waves[outwavname][1], 0, 15)
 
                 inst_plugindata.to_cvpj(cvpj_l, pluginid)
 

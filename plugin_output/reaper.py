@@ -21,32 +21,39 @@ from functions_tracks import tracks_r
 
 def make_vst2(rpp_fxchain, cvpj_plugindata): 
     vst_fx_name = cvpj_plugindata.dataval_get('name', None)
-    vst_fx_path = cvpj_plugindata.dataval_get('path', None)
+    vst_fx_path = cvpj_plugindata.dataval_get('path', '')
     vst_fx_version = cvpj_plugindata.dataval_get('version', None)
-    vst_fx_fourid = cvpj_plugindata.dataval_get('fourid', None)
+    vst_fx_fourid = cvpj_plugindata.dataval_get('fourid', 0)
     vst_fx_datatype = cvpj_plugindata.dataval_get('datatype', None)
     vst_fx_numparams = cvpj_plugindata.dataval_get('numparams', 0)
 
+    vstparamsnum = 0
+    vstparams = None
+
     if vst_fx_datatype == 'chunk': 
         vstparams = cvpj_plugindata.rawdata_get()
+        vstparamsnum = len(vstparams)
     if vst_fx_datatype == 'param': 
         floatdata = []
         for num in range(vst_fx_numparams):
             pval, ptype, pname = cvpj_plugindata.param_get('vst_param_'+str(num), 0)
             floatdata.append(float(pval))
         vstparams = struct.pack('f'*vst_fx_numparams, *floatdata)
+        vstparamsnum = len(vstparams)
 
     vstdata = []
 
-    vstheader_ints = (vst_fx_fourid, 4276969198,0,2,1,0,2,0,len(vstparams),1,1048576)
+
+    vstheader_ints = (vst_fx_fourid, 4276969198,0,2,1,0,2,0,vstparamsnum,1,1048576)
     vstheader = base64.b64encode( struct.pack('IIIIIIIIIII', *vstheader_ints) ).decode()
 
     rpp_vstdata = rpp_obj('VST',[])
     rpp_vstdata.children.append([vstheader])
 
-    for vstparampart in data_values.list_chunks(vstparams, 128):
-        vstparampart_b64 = base64.b64encode(vstparampart).decode()
-        rpp_vstdata.children.append([vstparampart_b64])
+    if vstparams:
+        for vstparampart in data_values.list_chunks(vstparams, 128):
+            vstparampart_b64 = base64.b64encode(vstparampart).decode()
+            rpp_vstdata.children.append([vstparampart_b64])
 
     rpp_fxchain.children.append(rpp_obj_data('VST', [vst_fx_name, os.path.basename(vst_fx_path), 0, "", vst_fx_fourid, ""], rpp_vstdata))
 
@@ -343,11 +350,11 @@ class output_reaper(plugin_output.base):
 
                 if 'pluginid' in cvpj_instdata:
                     cvpj_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, cvpj_instdata['pluginid'])
-                    i_enabled, i_wet = fx_plugindata.fxdata_get()
-                    plugintype = fx_plugindata.type_get()
+                    i_enabled, i_wet = cvpj_plugindata.fxdata_get()
+                    plugintype = cvpj_plugindata.type_get()
 
                     if plugintype[0] == 'vst2':
-                        cvpj_plugindata = cvpj_instdata['plugindata']
+                        cvpj_pluginid = cvpj_instdata['pluginid']
                         make_vst2(rpp_fxchain, cvpj_plugindata)
 
             rpp_trackdata.children.append(rpp_obj_data('FXCHAIN', [], rpp_fxchain))

@@ -124,7 +124,7 @@ class plugconv(plugin_plugconv_extern.base):
             else:
                 data_socalabs.set_param("A1", 0.0)
                 data_socalabs.set_param("R1", getparam('ch1ssl'))
-            data_socalabs.set_param("tune1", 0.0)
+            data_socalabs.set_param("tune1", 12.0)
             data_socalabs.set_param("fine1", 0.0)
             data_socalabs.set_param("sweep1", sweep_time)
             data_socalabs.set_param("shift1", getparam('srs'))
@@ -138,7 +138,7 @@ class plugconv(plugin_plugconv_extern.base):
             else:
                 data_socalabs.set_param("A2", 0.0)
                 data_socalabs.set_param("R2", getparam('ch2ssl'))
-            data_socalabs.set_param("tune2", 0.0)
+            data_socalabs.set_param("tune2", 12.0)
             data_socalabs.set_param("fine2", 0.0)
 
             data_socalabs.set_param("OLN", int(getparam('ch4so1')))
@@ -194,9 +194,9 @@ class plugconv(plugin_plugconv_extern.base):
             data_socalabs.set_param("sync1", getparam('sync0'))
             data_socalabs.set_param("sync2", getparam('sync1'))
             data_socalabs.set_param("sync3", getparam('sync2'))
-            data_socalabs.set_param("tune1", getparam('coarse0'))
-            data_socalabs.set_param("tune2", getparam('coarse1'))
-            data_socalabs.set_param("tune3", getparam('coarse2'))
+            data_socalabs.set_param("tune1", getparam('coarse0')+12)
+            data_socalabs.set_param("tune2", getparam('coarse1')+12)
+            data_socalabs.set_param("tune3", getparam('coarse2')+12)
             data_socalabs.set_param("voices", 8.0)
             data_socalabs.set_param("vol", getparam('volume'))
             data_socalabs.set_param("w1", sid_shape(getparam('waveform0')))
@@ -245,6 +245,7 @@ class plugconv(plugin_plugconv_extern.base):
                 params_vital.replacewave(0, vital_shape)
             else: params_vital.setvalue('sample_on', 1)
             params_vital.setvalue('osc_1_level', 1)
+            params_vital.setvalue('osc_1_transpose', 12)
             params_vital.setvalue('sample_level', 1)
             if getparam('db24') == 0:
                 vitalcutoff_first = (getparam('vcf_cut')*40)+50

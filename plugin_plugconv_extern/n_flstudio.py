@@ -51,7 +51,7 @@ nonfree_il_plugnames = {
 'fruity delay 2': 'IL Delay',
 'fruity delay bank': 'IL Delay Bank',
 'fruity flangus': 'IL Flangus',
-'fruity love philter': 'IL Love Philter',
+#'fruity love philter': 'IL Love Philter',
 'fruity multiband compressor': 'IL Multiband Compressor',
 #'fruity notebook': 'IL Notebook',
 'fruity parametric eq': 'IL Parametric EQ',
@@ -129,13 +129,13 @@ class plugconv(plugin_plugconv_extern.base):
                     dataout += il_vst_chunk(1, subdata)
                     dataout += il_vst_chunk(0, ilchunk)
 
-                #elif flpluginname in ['toxic biohazard', 'sawer', 'sakura', 'poizone', 'morphine', 'drumaxx']:
-                #    dataout = b''
-                #    for chunkdata in data_bytes.riff_read(ilchunk, 0):
-                #        if chunkdata[0] == b'SSLF': dataout = chunkdata[1]
+                elif flpluginname in ['toxic biohazard', 'sawer', 'sakura', 'poizone', 'morphine', 'drumaxx']:
+                    dataout = b''
+                    for chunkdata in data_bytes.riff_read(ilchunk, 0):
+                        if chunkdata[0] == b'SSLF': dataout = chunkdata[1]
 
-                #elif flpluginname in ['directwave']:
-                #    dataout = ilchunk
+                elif flpluginname in ['directwave']:
+                    dataout = ilchunk
 
                 plugin_vst2.replace_data(cvpj_plugindata, 'name', 'win', nonfree_il_plugnames[flpluginname], 'chunk', dataout, None)
 

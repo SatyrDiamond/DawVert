@@ -59,13 +59,14 @@ class plugconv(plugin_plugconv.base):
                 auto_data.rename_plugparam(cvpj_l, pluginid, 'ExpansionRatio', 'ratio')
 
             cvpj_plugindata.fxdata_add(None, comp_DryWet)
-            auto_data.move(cvpj_l, ['plugin', pluginid, 'DryWet'], ['slot', pluginid, 'wet'])
 
             cvpj_plugindata.param_add('threshold', comp_Threshold, 'float', 'threshold')
             cvpj_plugindata.param_add('attack', comp_Attack/1000, 'float', 'attack')
             cvpj_plugindata.param_add('release', comp_Release/1000, 'float', 'release')
             cvpj_plugindata.param_add('postgain', comp_Gain, 'float', 'postgain')
             cvpj_plugindata.param_add('knee', comp_Knee, 'float', 'knee')
+            
+            auto_data.move(cvpj_l, ['plugin', pluginid, 'DryWet'], ['slot', pluginid, 'wet'])
             auto_data.rename_plugparam(cvpj_l, pluginid, 'Threshold', 'threshold')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'Attack', 'attack')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'Release', 'release')
@@ -117,6 +118,14 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('gain', limiter_gain, 'float', 'gain')
             cvpj_plugindata.param_add('release', limiter_release, 'float', 'release')
             cvpj_plugindata.param_add('release_auto', limiter_release_auto, 'bool', 'release_auto')
+
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'Ceiling', 'ceiling')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'Gain', 'gain')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'Release', 'release')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'AutoRelease', 'release_auto')
+
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 0.001)
+
             return True
 
         if plugintype[1] == 'Gate':
@@ -124,7 +133,7 @@ class plugconv(plugin_plugconv.base):
             gate_hold = cvpj_plugindata.param_get("Hold", 0)[0]/1000
             gate_release = cvpj_plugindata.param_get("Release", 0)[0]/1000
             gate_threshold = comp_threshold(cvpj_plugindata.param_get("Threshold", 0)[0])
-            gate_flip = cvpj_plugindata.param_get("FlipMode", 0)[0]/1000
+            gate_flip = cvpj_plugindata.param_get("FlipMode", 0)[0]
             gate_return = cvpj_plugindata.param_get("Return", 0)[0]/1000
 
             cvpj_plugindata.replace('universal', 'gate')
@@ -135,4 +144,18 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('threshold', gate_threshold, 'float', 'threshold')
             cvpj_plugindata.param_add('flip', gate_flip, 'float', 'flip')
             cvpj_plugindata.param_add('return', gate_return, 'float', 'return')
+
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'Attack', 'attack')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'Hold', 'hold')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'Release', 'release')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'Threshold', 'threshold')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'FlipMode', 'flip')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'Return', 'return')
+
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'attack'], 0, 0.001)
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'hold'], 0, 0.001)
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 0.001)
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'return'], 0, 0.001)
+            auto_data.function_value(cvpj_l, ['plugin', pluginid, 'threshold'], comp_threshold)
+
             return True

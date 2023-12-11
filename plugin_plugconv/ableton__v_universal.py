@@ -4,6 +4,7 @@
 import plugin_plugconv
 from functions import data_values
 from functions import xtramath
+from functions_tracks import auto_data
 import math
 
 delaytime = [
@@ -52,6 +53,9 @@ class plugconv(plugin_plugconv.base):
                 cvpj_plugindata.param_add('DelayLine_SyncR', True, 'bool', "DelayLine_SyncR")
                 cvpj_plugindata.param_add('DelayLine_SyncedSixteenthL', d_delay_sync, 'float', "DelayLine_SyncedSixteenthL")
                 cvpj_plugindata.param_add('DelayLine_SyncedSixteenthR', d_delay_sync, 'float', "DelayLine_SyncedSixteenthR")
+
+            auto_data.move(cvpj_l, ['slot', pluginid, 'wet'], ['plugin', pluginid, 'DryWet'])
+
             return True
 
         if plugintype[1] in ['compressor','expander']:
@@ -65,6 +69,17 @@ class plugconv(plugin_plugconv.base):
             v_model = 1 if detect_mode == 'rms' else 0
             if plugintype[1] == 'expander': v_model = 2
 
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'attack'], 0, 1000)
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 1000)
+            auto_data.function_value(cvpj_l, ['plugin', pluginid, 'threshold'], comp_threshold)
+            
+            auto_data.move(cvpj_l, ['slot', pluginid, 'wet'], ['plugin', pluginid, 'DryWet'])
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'threshold', 'Threshold')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'attack', 'Attack')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'release', 'Release')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'postgain', 'Gain')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'knee', 'Knee')
+
             cvpj_plugindata.replace('native-ableton', 'Compressor2')
 
             cvpj_plugindata.param_add('Threshold', comp_threshold(v_threshold), 'float', "")
@@ -76,6 +91,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('Knee', v_knee, 'float', "")
             cvpj_plugindata.param_add('Model', v_model, 'float', "")
             cvpj_plugindata.param_add('DryWet', fx_wet, 'float', "")
+                
             return True
 
         if plugintype[1] == 'gate':
@@ -83,8 +99,20 @@ class plugconv(plugin_plugconv.base):
             gate_hold = cvpj_plugindata.param_get('hold', 0)[0]*1000
             gate_release = cvpj_plugindata.param_get('release', 0)[0]*1000
             gate_threshold = comp_threshold(cvpj_plugindata.param_get('threshold', 0)[0])
-            gate_flip = cvpj_plugindata.param_get('flip', 0)[0]*1000
+            gate_flip = cvpj_plugindata.param_get('flip', 0)[0]
             gate_return = cvpj_plugindata.param_get('return', 0)[0]*1000
+
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'attack'], 0, 1000)
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'hold'], 0, 1000)
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 1000)
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'return'], 0, 1000)
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'attack', 'Attack')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'hold', 'Hold')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'release', 'Release')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'threshold', 'Threshold')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'flip', 'FlipMode')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'return', 'Return')
+            auto_data.move(cvpj_l, ['slot', pluginid, 'wet'], ['plugin', pluginid, 'DryWet'])
 
             cvpj_plugindata.replace('native-ableton', 'Gate')
 
@@ -102,10 +130,29 @@ class plugconv(plugin_plugconv.base):
             limiter_release = cvpj_plugindata.param_get('release', 0)[0]*1000
             limiter_release_auto = cvpj_plugindata.param_get('release_auto', 0)[0]
 
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 1000)
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'ceiling', 'Ceiling')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'gain', 'Gain')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'release', 'Release')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'release_auto', 'AutoRelease')
+
             cvpj_plugindata.replace('native-ableton', 'Limiter')
 
             cvpj_plugindata.param_add('Ceiling', limiter_ceiling, 'float', "")
             cvpj_plugindata.param_add('Gain', limiter_gain, 'float', "")
             cvpj_plugindata.param_add('Release', limiter_release, 'float', "")
             cvpj_plugindata.param_add('AutoRelease', limiter_release_auto, 'bool', "")
+            return True
+
+
+        if plugintype[1] == 'bitcrush':
+            bitcrush_BitDepth = cvpj_plugindata.param_get('bits', 0)[0]
+            bitcrush_SampleRate = cvpj_plugindata.param_get('freq', 0)[0]
+
+            cvpj_plugindata.replace('native-ableton', 'Redux2')
+
+            cvpj_plugindata.param_add('BitDepth', bitcrush_BitDepth, 'float', "")
+            cvpj_plugindata.param_add('SampleRate', bitcrush_SampleRate, 'float', "")
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'bits', 'BitDepth')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'freq', 'SampleRate')
             return True

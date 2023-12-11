@@ -301,12 +301,24 @@ def do_devices(x_trackdevices, track_id, fxloc):
 						isdata = defparams[0]
 						if not defparams[0]:
 							outval = get_param(xmltag, paramname, defparams[1], defparams[2], None, None)
+							fx_plugindata.param_add_dset(paramfullname, outval, dataset, 'plugin', devicename)
 						else:
-							outval = get_value(xmltag, paramname, defparams[2])
-							if defparams[1] == 'int': outval = int(outval)
-							if defparams[1] == 'float': outval = float(outval)
-							if defparams[1] == 'bool': outval = (outval == 'true')
-						fx_plugindata.param_add_dset(paramfullname, outval, dataset, 'plugin', devicename)
+							if defparams[1] != 'list': 
+								outval = get_value(xmltag, paramname, defparams[2])
+								if defparams[1] == 'int': outval = int(outval)
+								if defparams[1] == 'float': outval = float(outval)
+								if defparams[1] == 'bool': outval = (outval == 'true')
+								fx_plugindata.param_add_dset(paramfullname, outval, dataset, 'plugin', devicename)
+							else:
+								outlist = []
+								iscomplete = False
+								listnum = 0
+								while iscomplete == False:
+									outval = get_value(xmltag, paramname+'.'+str(listnum), None)
+									if outval == None: iscomplete = True
+									else: outlist.append(float(outval))
+									listnum += 1
+								fx_plugindata.param_add_dset(paramfullname, outlist, dataset, 'plugin', devicename)
 
 				if devicename == 'Looper':
 					hextext = x_trackdevice.findall('SavedBuffer')[0].text

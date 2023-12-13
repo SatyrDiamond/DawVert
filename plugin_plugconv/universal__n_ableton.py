@@ -91,7 +91,7 @@ class plugconv(plugin_plugconv.base):
                     band_Mode = cvpj_plugindata.param_get(abe_starttxt+"Mode", 0)[0]
                     band_Q = cvpj_plugindata.param_get(abe_starttxt+"Q", 0)[0]
 
-                    cvpj_bandtype = ['low_pass', 'low_pass', 'low_shelf', 'peak', 'notch', 'high_shelf', 'high_pass', 'high_pass'][band_Mode]
+                    cvpj_bandtype = ['high_pass', 'high_pass', 'low_shelf', 'peak', 'notch', 'high_shelf', 'low_pass', 'low_pass'][band_Mode]
 
                     cvpj_slope = 12 if band_Mode not in [0,7] else 48
 

@@ -68,6 +68,8 @@ nonfree_il_plugnames = {
 'poizone': 'PoiZone',
 'sakura': 'Sakura',
 'sawer': 'Sawer',
+#'slicex': 'IL Slicex',
+#'vocodex': 'IL Vocodex',
 'wave candy': 'IL Wave Candy'
 }
 
@@ -112,6 +114,8 @@ class plugconv(plugin_plugconv_extern.base):
 
                 ilchunk = cvpj_plugindata.rawdata_get()
 
+                dataout = None
+
                 if flpluginname in ['equo', 'fruity delay 2', 'fruity delay bank', 'fruity flangus', 'fruity love philter'
                                     'fruity multiband compressor', 'fruity notebook', 'fruity parametric eq 2', 'fruity parametric eq',
                                     'fruity spectroman','fruity stereo enhancer','fruity vocoder','fruity waveshaper', 'wave candy'
@@ -137,7 +141,8 @@ class plugconv(plugin_plugconv_extern.base):
                 elif flpluginname in ['directwave']:
                     dataout = ilchunk
 
-                plugin_vst2.replace_data(cvpj_plugindata, 'name', 'win', nonfree_il_plugnames[flpluginname], 'chunk', dataout, None)
+                if dataout != None:
+                    plugin_vst2.replace_data(cvpj_plugindata, 'name', 'win', nonfree_il_plugnames[flpluginname], 'chunk', dataout, None)
 
                 return True
 

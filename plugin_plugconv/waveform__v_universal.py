@@ -80,9 +80,9 @@ class plugconv(plugin_plugconv.base):
                         eq_band_q = eq_band['q'] if 'q' in eq_band else 1
                         eq_band_slope = eq_band['slope'] if 'slope' in eq_band else 12
             
-                        if eq_band_shape in ['low_pass', 'high_pass']: eq_band_q = xtramath.logpowmul(eq_band_q, 0.5) if eq_band_q != 0 else 0
-                        elif eq_band_shape in ['low_shelf', 'high_shelf']: pass
-                        else: eq_band_q = (10-eq_band_q)*10
+                        #if eq_band_shape in ['low_pass', 'high_pass']: eq_band_q = xtramath.logpowmul(eq_band_q, 0.5) if eq_band_q != 0 else 0
+                        #elif eq_band_shape in ['low_shelf', 'high_shelf']: eq_band_q = xtramath.logpowmul(eq_band_q, 0.5) if eq_band_q != 0 else 0
+                        #else: eq_band_q = (10-eq_band_q)*10
 
                         if eq_band_shape == 'low_pass': wf_shape = 0
                         if eq_band_shape == 'low_shelf': wf_shape = 1

@@ -18,13 +18,15 @@ delaytime = [
     [7, 16],
     ]
 
+eq_types = ['high_pass', 'low_shelf', 'peak', 'notch', 'high_shelf', 'low_pass']
+
 def comp_threshold(i_val):
     return math.pow(0.8913,(-i_val))
 
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['universal', None, None], ['native-ableton', None, 'ableton'], True, False
+    def getplugconvinfo(self): return ['universal', None, None], ['native-ableton', None, 'ableton'], True, True
     def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
         plugintype = cvpj_plugindata.type_get()
 
@@ -156,3 +158,61 @@ class plugconv(plugin_plugconv.base):
             auto_data.rename_plugparam(cvpj_l, pluginid, 'bits', 'BitDepth')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'freq', 'SampleRate')
             return True
+
+
+        if plugintype[1] == 'eq-bands':
+            cvpj_plugindata.replace('native-ableton', 'Eq8')
+            auto_data.del_plugin(cvpj_l, pluginid)
+
+            groupname = ['main', 'b']
+            cvpj_plugindata.param_add('AdaptiveQ', True, 'bool', "")
+
+            for group_num in range(2):
+                cvpj_bands, reorder = cvpj_plugindata.eqband_get_limitnum(groupname[group_num], 8)
+                for band_num in range(8):
+                    abe_starttxt = "Bands."+str(band_num)+"/Parameter"+['A', 'B'][group_num]+"/"
+
+                    eq_band = cvpj_bands[band_num]
+                    if eq_band != None:
+
+                        eq_band_enable = eq_band['on']
+                        eq_band_freq = eq_band['freq']
+                        eq_band_gain = eq_band['gain'] if 'gain' in eq_band else 0
+                        eq_band_shape = eq_band['type']
+                        eq_band_q = eq_band['q'] if 'q' in eq_band else 1
+                        eq_band_slope = eq_band['slope'] if 'slope' in eq_band else 12
+
+                        als_shape = eq_types.index(eq_band_shape)+1 if eq_band_shape in eq_types else 3
+
+                        if als_shape == 1 and eq_band_slope > 36: als_shape = 0
+                        if als_shape == 6 and eq_band_slope > 36: als_shape = 7
+
+                        cvpj_plugindata.param_add(abe_starttxt+'Freq', eq_band_freq, 'float', "")
+                        cvpj_plugindata.param_add(abe_starttxt+'Gain', eq_band_gain, 'float', "")
+                        cvpj_plugindata.param_add(abe_starttxt+'IsOn', bool(eq_band_enable), 'bool', "")
+                        cvpj_plugindata.param_add(abe_starttxt+'Mode', als_shape, 'float', "")
+                        cvpj_plugindata.param_add(abe_starttxt+'Q', eq_band_q, 'float', "")
+
+                        cvpj_band = cvpj_bands[band_num]
+                        #print(groupname[group_num], band_num, cvpj_band, als_shape)
+
+        if plugintype[1] == 'tremolo':
+            lfo_freq = cvpj_plugindata.param_get('freq', 0)[0]
+            lfo_depth = cvpj_plugindata.param_get('depth', 0)[0]
+            cvpj_plugindata.replace('native-ableton', 'AutoPan')
+            cvpj_plugindata.param_add('Lfo/Frequency', lfo_freq, 'float', "")
+            cvpj_plugindata.param_add('Lfo/IsOn', True, 'bool', "")
+            cvpj_plugindata.param_add('Lfo/LfoAmount', lfo_depth, 'float', "")
+
+        if plugintype[1] == 'vibrato':
+            lfo_freq = cvpj_plugindata.param_get('freq', 0)[0]
+            lfo_depth = cvpj_plugindata.param_get('depth', 0)[0]
+            cvpj_plugindata.replace('native-ableton', 'Chorus2')
+            cvpj_plugindata.param_add('Mode', 2, 'int', "")
+            cvpj_plugindata.param_add('Width', 1, 'float', "")
+            cvpj_plugindata.param_add('OutputGain', 1, 'float', "")
+            cvpj_plugindata.param_add('DryWet', 1, 'float', "")
+            cvpj_plugindata.param_add('Rate', lfo_freq, 'float', "")
+            cvpj_plugindata.param_add('Amount', lfo_depth/2, 'float', "")
+
+        print(plugintype[1], cvpj_plugindata.param_list())

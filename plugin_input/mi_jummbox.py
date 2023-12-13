@@ -262,7 +262,7 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 					if filter_hz == None: filter_hz = 8000
 					fx_pluginid, fx_plugindata = addfx('universal', cvpj_instid, 'eq-bands')
 					fx_plugindata.eqband_add(1, filter_hz, 'low_pass', None)
-					fx_plugindata.eqband_add_param('q', filter_peak*2, None)
+					fx_plugindata.eqband_add_param('q', (filter_peak*2)+1, None)
 					fx_plugindata.to_cvpj(cvpj_l, fx_pluginid)
 
 		elif 'eqFilter' in bb_instrument:

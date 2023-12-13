@@ -62,7 +62,7 @@ class plugconv(plugin_plugconv.base):
                 auto_data.rename_plugparam(cvpj_l, pluginid, peak_txt+'gain', peak_autotxt+"/gain")
                 auto_data.rename_plugparam(cvpj_l, pluginid, peak_txt+'bw', peak_autotxt+"/q")
                 cvpj_plugindata.eqband_add(eq_Peak_active, eq_Peak_freq, 'peak', None)
-                cvpj_plugindata.eqband_add_param('q', eq_Peak_bw, None)
+                cvpj_plugindata.eqband_add_param('q', xtramath.logpowmul(eq_Peak_bw, -1), None)
                 cvpj_plugindata.eqband_add_param('gain', eq_Peak_gain, None)
 
             #high_shelf

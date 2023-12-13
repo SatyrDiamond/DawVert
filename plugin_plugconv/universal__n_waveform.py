@@ -59,9 +59,9 @@ class plugconv(plugin_plugconv.base):
                     if band_shape == 5: band_shape = 'high_shelf'
                     if band_shape == 6: band_shape = 'high_pass'
 
-                    if band_shape in ['low_pass', 'high_pass']: band_q = band_q**2
-                    elif band_shape in ['low_shelf', 'high_shelf']: pass
-                    else: band_q = (10-float(band_q))/10
+                    #if band_shape in ['low_pass', 'high_pass']: band_q = band_q**2
+                    #elif band_shape in ['low_shelf', 'high_shelf']: pass
+                    #else: band_q = (10-float(band_q))/10
 
                     band_freq = note_data.note_to_freq(band_freq-72)
                     eq_part.append([band_enable, band_freq, band_gain, band_q, band_shape, band_slope])

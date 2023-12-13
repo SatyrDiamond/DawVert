@@ -9,6 +9,7 @@ from functions import data_values
 from functions import note_data
 from functions import params
 from functions import plugins
+from functions import xtramath
 from functions import song
 from functions import data_dataset
 from functions_tracks import tracks_r

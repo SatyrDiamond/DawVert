@@ -9,7 +9,7 @@ import math
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['universal', None, None], ['native-flstudio', None, 'flp'], True, False
+    def getplugconvinfo(self): return ['universal', None, None], ['native-flstudio', None, 'flp'], True, True
     def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
         plugintype = cvpj_plugindata.type_get()
 
@@ -32,13 +32,17 @@ class plugconv(plugin_plugconv.base):
 
                     eq_band_freq = math.log(eq_band_freq / 20) / math.log(1000)
 
-                    if eq_band_shape in ['low_shelf', 'high_shelf']: eq_band_q = 1-(eq_band_q/1.2)
+                    if eq_band_shape in ['low_shelf', 'high_shelf']: 
+                        eq_band_q = 1-(eq_band_q/1.2)
                     elif eq_band_shape in ['low_pass', 'high_pass']: 
-                        eq_band_q = math.log(eq_band_q, 2) / 10
+                        eq_band_q = math.log(eq_band_q, 2) / 5
                         eq_band_q = xtramath.between_to_one(1, -1, eq_band_q)
                     else: 
-                        eq_band_q = eq_band_q/4
+                        eq_band_q = xtramath.logpowmul(eq_band_q, -1)
+                        eq_band_q = (eq_band_q-0.01)/3
+                        eq_band_q = xtramath.clamp(eq_band_q, 0, 1)
 
+                    band_shape = 0
                     if eq_band_shape == 'low_pass': band_shape = 1
                     if eq_band_shape == 'band_pass': band_shape = 2
                     if eq_band_shape == 'high_pass': band_shape = 3

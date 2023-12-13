@@ -25,7 +25,7 @@ def getgain(band_data):
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['universal', None, None], ['native-lmms', None, 'lmms'], True, False
+    def getplugconvinfo(self): return ['universal', None, None], ['native-lmms', None, 'lmms'], True, True
     def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
         plugintype = cvpj_plugindata.type_get()
         #print(plugintype[1])
@@ -51,10 +51,11 @@ class plugconv(plugin_plugconv.base):
                 if data_Peaks[peak_num] != None:
                     peak_txt = 'Peak'+str(peak_num+1)
                     data_peak = data_Peaks[peak_num]
+                    qdata = getq(data_peak)
                     cvpj_plugindata.param_add(peak_txt+'active', int(data_peak['on']), 'float', peak_txt+'active')
                     cvpj_plugindata.param_add(peak_txt+'freq', data_peak['freq'], 'float', peak_txt+'freq')
                     cvpj_plugindata.param_add(peak_txt+'gain', getgain(data_peak), 'float', peak_txt+'gain')
-                    cvpj_plugindata.param_add(peak_txt+'res', getq(data_peak), 'float', peak_txt+'res')
+                    cvpj_plugindata.param_add(peak_txt+'bw', xtramath.logpowmul(qdata, -1), 'float', peak_txt+'res')
 
             if data_HS != None:
                 cvpj_plugindata.param_add('Highshelfactive', int(data_HS['on']), 'float', 'Highshelfactive')

@@ -31,12 +31,15 @@ class plugconv(plugin_plugconv.base):
                 c_band_shape = 'peak'
                 c_band_enable = 0
 
-                if fl_band_type in [5, 7]: eq_res = (1-fl_band_width)*1.2
+                if fl_band_type in [5, 7]: 
+                    eq_res = (1-fl_band_width)*1.2
                 elif fl_band_type in [1, 3]: 
                     fl_band_width = xtramath.between_from_one(1, -1, fl_band_width)
-                    fl_band_width = pow(2, fl_band_width*10)
+                    fl_band_width = pow(2, fl_band_width*5)
                 else: 
-                    fl_band_width = fl_band_width*4
+                    outwid = ((fl_band_width+0.01)*3)
+                    outwid = xtramath.logpowmul(outwid, -1)
+                    fl_band_width = outwid
 
                 if fl_band_type != 0: c_band_enable = 1
                 if fl_band_type == 1: c_band_shape = 'low_pass'
@@ -46,6 +49,7 @@ class plugconv(plugin_plugconv.base):
                 if fl_band_type == 5: c_band_shape = 'low_shelf'
                 if fl_band_type == 6: c_band_shape = 'peak'
                 if fl_band_type == 7: c_band_shape = 'high_shelf'
+
 
                 cvpj_plugindata.eqband_add(c_band_enable, fl_band_freq, c_band_shape, None)
                 cvpj_plugindata.eqband_add_param('q', fl_band_width, None)

@@ -209,7 +209,6 @@ def encode_devices(amped_tr_devices, trackid, amped_autodata):
             device_plugindata.to_cvpj(cvpj_l, pluginid)
 
         elif devicetype == ['EqualizerPro', 'Equalizer']:
-            is_instrument = True
             device_plugindata = plugins.cvpj_plugin('deftype', 'native-amped', 'EqualizerPro')
             do_idparams(amped_tr_device['params'], device_plugindata, devicetype[0])
             device_plugindata.to_cvpj(cvpj_l, pluginid)

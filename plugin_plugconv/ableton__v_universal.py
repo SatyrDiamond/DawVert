@@ -26,7 +26,7 @@ def comp_threshold(i_val):
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['universal', None, None], ['native-ableton', None, 'ableton'], True, True
+    def getplugconvinfo(self): return ['universal', None, None], ['native-ableton', None, 'ableton'], True, False
     def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
         plugintype = cvpj_plugindata.type_get()
 
@@ -203,6 +203,8 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('Lfo/Frequency', lfo_freq, 'float', "")
             cvpj_plugindata.param_add('Lfo/IsOn', True, 'bool', "")
             cvpj_plugindata.param_add('Lfo/LfoAmount', lfo_depth, 'float', "")
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'freq', 'Lfo/Frequency')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'depth', 'Lfo/LfoAmount')
 
         if plugintype[1] == 'vibrato':
             lfo_freq = cvpj_plugindata.param_get('freq', 0)[0]
@@ -215,4 +217,6 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('Rate', lfo_freq, 'float', "")
             cvpj_plugindata.param_add('Amount', lfo_depth/2, 'float', "")
 
-        print(plugintype[1], cvpj_plugindata.param_list())
+            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'depth'], 0, 0.5)
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'freq', 'Rate')
+            auto_data.rename_plugparam(cvpj_l, pluginid, 'depth', 'Amount')

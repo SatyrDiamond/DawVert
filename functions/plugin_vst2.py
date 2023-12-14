@@ -128,7 +128,6 @@ def replace_data(cvpj_plugindata, bycat, platform, in_name, datatype, data, nump
 		cvpj_plugindata.dataval_add('path', vst_path)
 		cvpj_plugindata.dataval_add('cpu_arch', vst_cpuarch)
 		cvpj_plugindata.dataval_add('fourid', int(vst_id))
-		cvpj_plugindata.dataval_add('version', vst_version)
 
 		if vst_version != None: 
 			versionsplit = [int(i) for i in vst_version.split('.')]

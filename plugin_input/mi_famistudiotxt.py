@@ -68,23 +68,24 @@ def decode_fst(infile):
             dpcm_data = ''.join(format(x, '08b') for x in dpcm_data)
             dpcm_name = cmd_params['Name']
 
-            bytes_data = []
+            dpcm_samp = []
             dpcm_current = 0
-            dpcm_lvl = 8
             prev_val = 0
 
             for dpcm_part in dpcm_data:
-
-                if dpcm_part == '1': dpcm_current += dpcm_lvl
-                else: dpcm_current -= dpcm_lvl
-
-                out_dpcm = dpcm_current//2 + prev_val//2
-
-                bytes_data.append(out_dpcm+127)
-
+                if dpcm_part == '1': dpcm_current += 1
+                else: dpcm_current -= 1
+                out_dpcm = dpcm_current/2 + prev_val/2
+                dpcm_samp.append(out_dpcm)
                 prev_val = dpcm_current
 
-            dpcm_proc = bytearray(bytes_data)
+            samp_average = xtramath.average(dpcm_samp)
+            dpcm_samp = [x-samp_average for x in dpcm_samp]
+
+            normval = max(max(dpcm_samp),-min(dpcm_samp))/16
+
+            dpcm_samp = [int(  xtramath.clamp( (x*2)+128,0,255)  ) for x in dpcm_samp]
+            dpcm_proc = bytearray(dpcm_samp)
 
             fst_DPCMSamples[cmd_params['Name']] = dpcm_proc
 
@@ -344,9 +345,9 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fxrackchan, fst_instrument):
     global samplefolder
     global dpcm_rate_arr
 
-    instname = fst_instrument['Name']
+    instname = fst_instrument['Name'] if fst_instrument != None else None
     inst_color = [0.48, 0.83, 0.49]
-    cvpj_instid = 'DPCM-'+instname
+    cvpj_instid = 'DPCM-'+instname if instname != None else 'DPCM'
 
     pluginid = plugins.get_id()
 
@@ -358,14 +359,16 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fxrackchan, fst_instrument):
     tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, fxrackchan)
     inst_plugindata = plugins.cvpj_plugin('multisampler', None, None)
 
-    inst_dpcm = fst_instrument['DPCMMapping']
-    for dpcmmap in inst_dpcm:
-        dpcmdata = inst_dpcm[dpcmmap]
+    for dpcmmap in DPCMMappings:
+        dpcmdata = DPCMMappings[dpcmmap]
         dpcm_pitch = int(dpcmdata['Pitch'])
         dpcm_sample = dpcmdata['Sample']
 
         if dpcm_sample in DPCMSamples:
-            filename = samplefolder+'dpcm_'+instname+'_'+dpcm_sample+'_'+str(dpcm_pitch)+'.wav'
+            if instname:
+                filename = samplefolder+'dpcm_'+instname+'_'+dpcm_sample+'_'+str(dpcm_pitch)+'.wav'
+            else:
+                filename = samplefolder+'dpcmg_'+dpcm_sample+'_'+str(dpcm_pitch)+'.wav'
             audio_wav.generate(filename, DPCMSamples[dpcm_sample], 1, int(dpcm_rate_arr[dpcm_pitch]), 8, None)
 
             correct_key = dpcmmap+24
@@ -530,8 +533,9 @@ class input_famistudio(plugin_input.base):
             used_insts = get_used_insts(fst_channels[Channel])
             if Channel in InstShapes: WaveType = InstShapes[Channel]
             elif Channel == 'DPCM': 
+                create_dpcm_inst(DPCMMappings, DPCMSamples, channum, None)
                 for inst in used_insts:
-                    create_dpcm_inst(DPCMMappings, DPCMSamples, channum, fst_instruments[inst])
+                    create_dpcm_inst(fst_instruments[inst]['DPCMMapping'], DPCMSamples, channum, fst_instruments[inst])
                 fxtrack_name = 'DPCM'
                 fxtrack_color = [0.48, 0.83, 0.49]
             if WaveType != None:
@@ -600,8 +604,12 @@ class input_famistudio(plugin_input.base):
 
                     else:
                         if 'Duration' in notedata:
-                            cvpj_note = note_data.mx_makenote('DPCM'+'-'+notedata['Instrument'], int(notedata['Time'])/NoteLength, int(notedata['Duration'])/NoteLength, NoteToMidi(notedata['Value'])+24, None, None)
-                            t_patternnotelist.append(cvpj_note)
+                            if 'Instrument' in notedata:
+                                cvpj_note = note_data.mx_makenote('DPCM'+'-'+notedata['Instrument'], int(notedata['Time'])/NoteLength, int(notedata['Duration'])/NoteLength, NoteToMidi(notedata['Value'])+24, None, None)
+                                t_patternnotelist.append(cvpj_note)
+                            else:
+                                cvpj_note = note_data.mx_makenote('DPCM', int(notedata['Time'])/NoteLength, int(notedata['Duration'])/NoteLength, NoteToMidi(notedata['Value'])+24, None, None)
+                                t_patternnotelist.append(cvpj_note)
 
                 cvpj_patternid = Channel+'-'+Pattern
                 tracks_mi.notelistindex_add(cvpj_l, cvpj_patternid, t_patternnotelist)

@@ -9,6 +9,8 @@ from functions import placement_data
 from functions import plugins
 from functions import song
 from functions import data_dataset
+from functions import plugin_vst2
+from functions import plugin_vst3
 from functions_plugin import ableton_values
 from functions_tracks import auto_id
 from functions_tracks import auto_nopl
@@ -18,7 +20,9 @@ from functions_tracks import tracks_r
 from functions_tracks import groups
 from functions_tracks import tracks_master
 
+from io import BytesIO
 import base64
+import struct
 import xml.etree.ElementTree as ET
 import plugin_input
 import json
@@ -61,9 +65,7 @@ def get_param(xmldata, varname, vartype, fallback, i_loc, i_addmul):
 		out_value = get_value(param_data, 'Manual', fallback)
 		outdata = use_valuetype(vartype, out_value)
 		autotarget = get_id(param_data, 'AutomationTarget', None)
-		if autotarget != None:
-			autonumid = int()
-			if autonumid != None: auto_id.in_define(autonumid, i_loc, vartype, i_addmul)
+		if autotarget != None: auto_id.in_define(int(autotarget), i_loc, vartype, i_addmul)
 		return outdata
 	else:
 		return fallback
@@ -285,7 +287,7 @@ def do_devices(x_trackdevices, track_id, fxloc):
 			tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
 
 		else:
-			fx_plugindata = plugins.cvpj_plugin('deftype', 'native-ableton', devicename)
+			cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-ableton', devicename)
 			paramlist = dataset.params_list('plugin', devicename)
 			device_type = dataset.object_var_get('group', 'plugin', devicename)
 
@@ -300,15 +302,15 @@ def do_devices(x_trackdevices, track_id, fxloc):
 					if defparams != None and xmltag != None:
 						isdata = defparams[0]
 						if not defparams[0]:
-							outval = get_param(xmltag, paramname, defparams[1], defparams[2], None, None)
-							fx_plugindata.param_add_dset(paramfullname, outval, dataset, 'plugin', devicename)
+							outval = get_param(xmltag, paramname, defparams[1], defparams[2], ['plugin', pluginid, paramfullname], None)
+							cvpj_plugindata.param_add_dset(paramfullname, outval, dataset, 'plugin', devicename)
 						else:
 							if defparams[1] != 'list': 
 								outval = get_value(xmltag, paramname, defparams[2])
 								if defparams[1] == 'int': outval = int(outval)
 								if defparams[1] == 'float': outval = float(outval)
 								if defparams[1] == 'bool': outval = (outval == 'true')
-								fx_plugindata.param_add_dset(paramfullname, outval, dataset, 'plugin', devicename)
+								cvpj_plugindata.param_add_dset(paramfullname, outval, dataset, 'plugin', devicename)
 							else:
 								outlist = []
 								iscomplete = False
@@ -318,17 +320,17 @@ def do_devices(x_trackdevices, track_id, fxloc):
 									if outval == None: iscomplete = True
 									else: outlist.append(float(outval))
 									listnum += 1
-								fx_plugindata.param_add_dset(paramfullname, outlist, dataset, 'plugin', devicename)
+								cvpj_plugindata.param_add_dset(paramfullname, outlist, dataset, 'plugin', devicename)
 
 				if devicename == 'Looper':
 					hextext = x_trackdevice.findall('SavedBuffer')[0].text
-					if hextext != None: fx_plugindata.rawdata_add(bytes.fromhex(hextext))
+					if hextext != None: cvpj_plugindata.rawdata_add(bytes.fromhex(hextext))
 				
 				if devicename == 'Hybrid':
 					x_Hybrid = x_trackdevice.findall('ImpulseResponseHandler')[0]
 					x_SampleSlot = x_Hybrid.findall('SampleSlot')[0]
 					x_Value = x_SampleSlot.findall('Value')[0]
-					fx_plugindata.dataval_add('sample', get_sampleref(x_Value)['file'])
+					cvpj_plugindata.dataval_add('sample', get_sampleref(x_Value)['file'])
 
 				if devicename == 'InstrumentVector':
 					modcons = []
@@ -343,7 +345,7 @@ def do_devices(x_trackdevices, track_id, fxloc):
 						for num in range(13):
 							s_modcon['amounts'].append( float(get_value(x_ModulationConnectionsForInstrumentVector, 'ModulationAmounts.'+str(num), 0)) )
 						modcons.append(s_modcon)
-					fx_plugindata.dataval_add('ModulationConnections', modcons)
+					cvpj_plugindata.dataval_add('ModulationConnections', modcons)
 
 					for num in range(2):
 						UserSpriteNum = 'UserSprite'+str(num+1)
@@ -353,18 +355,141 @@ def do_devices(x_trackdevices, track_id, fxloc):
 							if x_UserSpriteVal:
 								if x_UserSpriteVal[0].findall('SampleRef'):
 									filename = get_sampleref(x_UserSpriteVal[0])['file']
-									fx_plugindata.fileref_add(UserSpriteNum, filename)
+									cvpj_plugindata.fileref_add(UserSpriteNum, filename)
 
 				if device_type == (True, 'fx'):
-					fx_plugindata.fxdata_add(devfx_enabled, None)
+					cvpj_plugindata.fxdata_add(devfx_enabled, None)
 					if fxloc != None: fxslot.insert(cvpj_l, fxloc, 'audio', pluginid)
-					fx_plugindata.to_cvpj(cvpj_l, pluginid)
+					cvpj_plugindata.to_cvpj(cvpj_l, pluginid)
 
 				if device_type == (True, 'inst'):
 					tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
-					fx_plugindata.to_cvpj(cvpj_l, pluginid)
+					cvpj_plugindata.to_cvpj(cvpj_l, pluginid)
 
+			else:
+				if devicename == 'PluginDevice':
+					x_plugdisc = x_trackdevice.findall('PluginDesc')
+					pluginfound = False
 
+					pluginvsttype = 0
+
+					if x_plugdisc:
+						xp_VstPluginInfo = x_plugdisc[0].findall('VstPluginInfo')
+						xp_Vst3PluginInfo = x_plugdisc[0].findall('Vst3PluginInfo')
+
+						if xp_VstPluginInfo:
+							x_VstPluginInfo = xp_VstPluginInfo[0]
+
+							pluginfound = True
+							vst_WinPosX = int(get_value(x_VstPluginInfo, 'WinPosX', '0'))
+							vst_WinPosY = int(get_value(x_VstPluginInfo, 'WinPosY', '0'))
+							vst_Path = get_value(x_VstPluginInfo, 'Path', '')
+							vst_PlugName = get_value(x_VstPluginInfo, 'PlugName', '')
+							vst_UniqueId = int(get_value(x_VstPluginInfo, 'UniqueId', 0))
+							vst_NumberOfParameters = int(get_value(x_VstPluginInfo, 'NumberOfParameters', '0'))
+							vst_NumberOfPrograms = int(get_value(x_VstPluginInfo, 'NumberOfPrograms', '0'))
+							pluginvsttype = int(get_value(x_VstPluginInfo, 'Category', '0'))
+							vst_flags = int(get_value(x_VstPluginInfo, 'Flags', '0'))
+							binflags = data_bytes.to_bin(vst_flags, 32)
+
+							cvpj_plugindata = plugins.cvpj_plugin('deftype', 'vst2', 'win')
+							song.add_visual_window(cvpj_l, 'plugin', pluginid, [vst_WinPosX, vst_WinPosY], None, False, False)
+
+							cvpj_plugindata.dataval_add('path', vst_Path)
+							cvpj_plugindata.dataval_add('fourid', vst_UniqueId)
+							cvpj_plugindata.dataval_add('numparams', vst_NumberOfParameters)
+
+							vst_version = int(get_value(x_VstPluginInfo, 'Version', '0'))
+							cvpj_plugindata.dataval_add('version_bytes', list(struct.unpack('BBBB', struct.pack('i', vst_version))) )
+
+							useschunk = binflags[21]
+
+							xp_Preset = x_VstPluginInfo.findall('Preset')
+							if xp_Preset:
+								xp_VstPreset = xp_Preset[0].findall('VstPreset')
+								if xp_VstPreset:
+									x_VstPreset = xp_VstPreset[0]
+									vst_ProgramNumber = int(get_value(x_VstPreset, 'ProgramNumber', '0'))
+
+									cvpj_plugindata.dataval_add('current_program', vst_ProgramNumber)
+									hextext = x_VstPreset.findall('Buffer')[0].text
+									rawbytes = bytes.fromhex(hextext) if hextext != None else b''
+									if useschunk: 
+										cvpj_plugindata.dataval_add('datatype', 'chunk')
+										plugin_vst2.replace_data(cvpj_plugindata, 'id' ,'win', vst_UniqueId, 'chunk', rawbytes, None)
+									else:
+										if rawbytes:
+											rawstream = BytesIO(rawbytes)
+											cvpj_plugindata.dataval_add('datatype', 'params')
+											cvpj_programs = []
+											for num in range(vst_NumberOfPrograms):
+												cvpj_program = {}
+												cvpj_program['datatype'] = 'params'
+												cvpj_program['numparams'] = vst_NumberOfParameters
+												cvpj_program['params'] = {}
+												cvpj_program['program_name'] = data_bytes.readstring_fixedlen(rawstream, 28, None)
+												for paramnum in range(vst_NumberOfParameters): 
+													cvpj_program['params'][str(paramnum)] = {'value': struct.unpack('f', rawstream.read(4))[0]}
+												cvpj_programs.append(cvpj_program)
+
+										plugin_vst2.replace_data(cvpj_plugindata, 'id' ,'win', vst_UniqueId, 'params', cvpj_programs, None)
+
+						if xp_Vst3PluginInfo:
+							x_Vst3PluginInfo = xp_Vst3PluginInfo[0]
+							vst_WinPosX = int(get_value(x_Vst3PluginInfo, 'WinPosX', '0'))
+							vst_WinPosY = int(get_value(x_Vst3PluginInfo, 'WinPosY', '0'))
+							song.add_visual_window(cvpj_l, 'plugin', pluginid, [vst_WinPosX, vst_WinPosY], None, False, False)
+							vst_Name = get_value(x_Vst3PluginInfo, 'Name', '')
+
+							xp_Preset = x_Vst3PluginInfo.findall('Preset')
+							if xp_Preset:
+								xp_Vst3Preset = xp_Preset[0].findall('Vst3Preset')
+								if xp_Vst3Preset:
+									x_Vst3Preset = xp_Vst3Preset[0]
+
+									pluginvsttype = int(get_value(x_Vst3PluginInfo, 'DeviceType', '0'))
+
+									x_Uid = x_Vst3Preset.findall('Uid')[0]
+									Fields_0 = int(get_value(x_Uid, 'Fields.0', '0'))
+									Fields_1 = int(get_value(x_Uid, 'Fields.1', '0'))
+									Fields_2 = int(get_value(x_Uid, 'Fields.2', '0'))
+									Fields_3 = int(get_value(x_Uid, 'Fields.3', '0'))
+
+									hexuuid = struct.pack('>iiii', Fields_0, Fields_1, Fields_2, Fields_3).hex().upper()
+
+									hextext = x_Vst3Preset.findall('ProcessorState')[0].text
+									rawbytes = bytes.fromhex(hextext) if hextext != None else b''
+
+									pluginfound = True
+									cvpj_plugindata = plugins.cvpj_plugin('deftype', 'vst3', 'win')
+									cvpj_plugindata.dataval_add('name', vst_Name)
+									cvpj_plugindata.dataval_add('guid', hexuuid)
+									plugin_vst3.replace_data(cvpj_plugindata, 'id', 'win', hexuuid, rawbytes)
+
+					if pluginfound:
+						xp_ParameterList = x_trackdevice.findall('ParameterList')
+
+						if xp_ParameterList:
+							x_ParameterList = xp_ParameterList[0]
+
+							pluginfloats = x_ParameterList.findall('PluginFloatParameter')
+							
+							for pluginfloat in pluginfloats:
+								ParameterName = get_value(pluginfloat, 'ParameterName', 'noname')
+								ParameterId = int(get_value(pluginfloat, 'ParameterId', '0'))
+
+								if ParameterId != -1:
+									cvpj_paramid = 'ext_param_'+str(ParameterId)
+									ParameterValue = get_param(pluginfloat, 'ParameterValue', 'float', 0, ['plugin', pluginid, cvpj_paramid], None)
+									cvpj_plugindata.param_add_minmax(cvpj_paramid, ParameterValue, 'float', ParameterName, [0,1]) 
+
+					if pluginvsttype == 2:
+						tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
+						cvpj_plugindata.to_cvpj(cvpj_l, pluginid)
+					elif pluginvsttype == 1:
+						cvpj_plugindata.fxdata_add(devfx_enabled, None)
+						if fxloc != None: fxslot.insert(cvpj_l, fxloc, 'audio', pluginid)
+						cvpj_plugindata.to_cvpj(cvpj_l, pluginid)
 
 		#if is_instrument == True:
 		#	tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
@@ -374,29 +499,29 @@ def do_devices(x_trackdevices, track_id, fxloc):
 
 		#_______paramfinder_data[devicename] = {}
 		#_______paramfinder_param[devicename] = {}
-    #    if False:
-    #        for x_trackdevice_name in x_trackdevice:
-    #            tagname = x_trackdevice_name.tag
-    #            manualval = x_trackdevice_name.findall('Manual')
-    #            if tagname not in ['On', 'LomId', 'LomIdView', 'IsExpanded', 'ModulationSourceCount',
-    #            'ParametersListWrapper', 'Pointee', 'LastSelectedTimeableIndex', 'LastSelectedClipEnvelopeIndex',
-    #            'LastPresetRef', 'LockedScripts', 'IsFolded', 'ShouldShowPresetName', 'UserName', 'Annotation', 
-    #            'SourceContext', 'OverwriteProtectionNumber']:
-    #                if manualval != []:
-    #                    findmanval = manualval[0].get('Value')
-    #                    valuetype = isfloatboolstring(findmanval)
-    #                    #print('--PARAM--', tagname, valuetype, findmanval)
+	#	if False:
+	#		for x_trackdevice_name in x_trackdevice:
+	#			tagname = x_trackdevice_name.tag
+	#			manualval = x_trackdevice_name.findall('Manual')
+	#			if tagname not in ['On', 'LomId', 'LomIdView', 'IsExpanded', 'ModulationSourceCount',
+	#			'ParametersListWrapper', 'Pointee', 'LastSelectedTimeableIndex', 'LastSelectedClipEnvelopeIndex',
+	#			'LastPresetRef', 'LockedScripts', 'IsFolded', 'ShouldShowPresetName', 'UserName', 'Annotation', 
+	#			'SourceContext', 'OverwriteProtectionNumber']:
+	#				if manualval != []:
+	#					findmanval = manualval[0].get('Value')
+	#					valuetype = isfloatboolstring(findmanval)
+	#					#print('--PARAM--', tagname, valuetype, findmanval)
 
-    #                    #_______paramfinder_param[devicename][tagname] = [valuetype, findmanval, 
-    #                    #get_Range(x_trackdevice_name, 'MidiControllerRange'), 
-    #                    #get_Range(x_trackdevice_name, 'MidiCCOnOffThresholds')]
-    #                elif x_trackdevice_name.get('Value') != None :
-    #                    findmanval = x_trackdevice_name.get('Value')
-    #                    valuetype = isfloatboolstring(findmanval)
-    #                    print('--DATA---', tagname, valuetype, findmanval)
-    #                    _______paramfinder_data[devicename][tagname] = [valuetype, findmanval]
-    #                else:
-    #                    print('---------', tagname)
+	#					#_______paramfinder_param[devicename][tagname] = [valuetype, findmanval, 
+	#					#get_Range(x_trackdevice_name, 'MidiControllerRange'), 
+	#					#get_Range(x_trackdevice_name, 'MidiCCOnOffThresholds')]
+	#				elif x_trackdevice_name.get('Value') != None :
+	#					findmanval = x_trackdevice_name.get('Value')
+	#					valuetype = isfloatboolstring(findmanval)
+	#					print('--DATA---', tagname, valuetype, findmanval)
+	#					_______paramfinder_data[devicename][tagname] = [valuetype, findmanval]
+	#				else:
+	#					print('---------', tagname)
 
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------

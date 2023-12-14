@@ -11,11 +11,14 @@ from functions import plugins
 from functions import placement_data
 from functions import song
 from functions import xtramath
+from functions import audio_wav
 
 from functions_tracks import fxslot
 from functions_tracks import fxrack
 from functions_tracks import tracks_mi
 from functions_tracks import tracks_master
+
+dpcm_rate_arr = [4181.71,4709.93,5264.04,5593.04,6257.95,7046.35,7919.35,8363.42,9419.86,11186.1,12604.0,13982.6,16884.6,21306.8,24858.0,33143.9]
 
 def get_used_insts(channeldata):
     usedinsts = []
@@ -61,20 +64,38 @@ def decode_fst(infile):
         if cmd_name == 'Project' and tabs_num == 0: fst_Main = cmd_params
     
         elif cmd_name == 'DPCMSample' and tabs_num == 1:
-            fst_DPCMSamples[cmd_params['Name']] = cmd_params['Data']
-        elif cmd_name == 'DPCMMapping' and tabs_num == 1:
-            mapnote = cmd_params['Note']
-            fst_DPCMMappings[mapnote] = {}
-            fst_DPCMMappings[mapnote]['Sample'] = cmd_params['Sample']
-            fst_DPCMMappings[mapnote]['Pitch'] = cmd_params['Pitch']
-            fst_DPCMMappings[mapnote]['Loop'] = cmd_params['Loop']
-    
+            dpcm_data = bytes.fromhex(cmd_params['Data'])
+            dpcm_data = ''.join(format(x, '08b') for x in dpcm_data)
+            dpcm_name = cmd_params['Name']
+
+            bytes_data = []
+            dpcm_current = 0
+            dpcm_lvl = 8
+            prev_val = 0
+
+            for dpcm_part in dpcm_data:
+
+                if dpcm_part == '1': dpcm_current += dpcm_lvl
+                else: dpcm_current -= dpcm_lvl
+
+                out_dpcm = dpcm_current//2 + prev_val//2
+
+                bytes_data.append(out_dpcm+127)
+
+                prev_val = dpcm_current
+
+            dpcm_proc = bytearray(bytes_data)
+
+            fst_DPCMSamples[cmd_params['Name']] = dpcm_proc
+
         elif cmd_name == 'Instrument' and tabs_num == 1:
             instname = cmd_params['Name']
             fst_instruments[instname] = {}
             fst_Instrument = fst_instruments[instname]
             fst_Instrument['Name'] = cmd_params['Name']
             fst_Instrument['Envelopes'] = {}
+            fst_Instrument['DPCMMapping'] = {}
+
             if 'N163WavePreset' in cmd_params: fst_Instrument['N163WavePreset'] = cmd_params['N163WavePreset']
             if 'N163WaveSize' in cmd_params: fst_Instrument['N163WaveSize'] = cmd_params['N163WaveSize']
             if 'N163WavePos' in cmd_params: fst_Instrument['N163WavePos'] = cmd_params['N163WavePos']
@@ -88,6 +109,21 @@ def decode_fst(infile):
                 fst_Instrument['EpsmReg'] = read_regs(cmd_params, 'EpsmReg', 31)
 
             #print(fst_Instrument)
+
+        elif cmd_name == 'DPCMMapping' and tabs_num == 1:
+            notekey = NoteToMidi(cmd_params['Note'])
+            fst_DPCMMappings[notekey] = {}
+            fst_DPCMMappings[notekey]['Sample'] = cmd_params['Sample']
+            fst_DPCMMappings[notekey]['Pitch'] = cmd_params['Pitch']
+            fst_DPCMMappings[notekey]['Loop'] = cmd_params['Loop']
+
+        elif cmd_name == 'DPCMMapping' and tabs_num == 2:
+            notekey = NoteToMidi(cmd_params['Note'])
+            fst_instrument = fst_instruments[instname]['DPCMMapping']
+            fst_instrument[notekey] = {}
+            fst_instrument[notekey]['Sample'] = cmd_params['Sample']
+            fst_instrument[notekey]['Pitch'] = cmd_params['Pitch']
+            fst_instrument[notekey]['Loop'] = cmd_params['Loop']
 
         elif cmd_name == 'Arpeggio' and tabs_num == 1:
             arpname = cmd_params['Name']
@@ -304,14 +340,45 @@ def create_inst(WaveType, fst_Instrument, fxrackchan):
 
     tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, fxrackchan)
 
+def create_dpcm_inst(DPCMMappings, DPCMSamples, fxrackchan, fst_instrument):
+    global samplefolder
+    global dpcm_rate_arr
 
-def create_dpcm_inst(DPCMMappings, DPCMSamples, fxrackchan):
-    tracks_mi.inst_create(cvpj_l, 'DPCM')
-    tracks_mi.inst_visual(cvpj_l, 'DPCM', name='DPCM', color= [0.48, 0.83, 0.49])
-    tracks_mi.inst_param_add(cvpj_l, 'DPCM', 'vol', 0.6, 'float')
-    tracks_mi.inst_param_add(cvpj_l, 'DPCM', 'pitch', 0, 'float')
-    tracks_mi.inst_param_add(cvpj_l, 'DPCM', 'usemasterpitch', False, 'bool')
-    tracks_mi.inst_fxrackchan_add(cvpj_l, 'DPCM', fxrackchan)
+    instname = fst_instrument['Name']
+    inst_color = [0.48, 0.83, 0.49]
+    cvpj_instid = 'DPCM-'+instname
+
+    pluginid = plugins.get_id()
+
+    tracks_mi.inst_create(cvpj_l, cvpj_instid)
+    tracks_mi.inst_visual(cvpj_l, cvpj_instid, name='DPCM', color= [0.48, 0.83, 0.49])
+    tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', 0.6, 'float')
+    tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'pitch', 0, 'float')
+    tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'usemasterpitch', False, 'bool')
+    tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, fxrackchan)
+    inst_plugindata = plugins.cvpj_plugin('multisampler', None, None)
+
+    inst_dpcm = fst_instrument['DPCMMapping']
+    for dpcmmap in inst_dpcm:
+        dpcmdata = inst_dpcm[dpcmmap]
+        dpcm_pitch = int(dpcmdata['Pitch'])
+        dpcm_sample = dpcmdata['Sample']
+
+        if dpcm_sample in DPCMSamples:
+            filename = samplefolder+'dpcm_'+instname+'_'+dpcm_sample+'_'+str(dpcm_pitch)+'.wav'
+            audio_wav.generate(filename, DPCMSamples[dpcm_sample], 1, int(dpcm_rate_arr[dpcm_pitch]), 8, None)
+
+            correct_key = dpcmmap+24
+
+            regionparams = {}
+            regionparams['name'] = dpcm_sample
+            regionparams['r_key'] = [correct_key, correct_key]
+            regionparams['middlenote'] = correct_key
+            regionparams['file'] = filename
+            inst_plugindata.region_add(regionparams)
+
+    inst_plugindata.to_cvpj(cvpj_l, pluginid)
+    tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
 def NoteToMidi(keytext):
     l_key = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
@@ -404,14 +471,18 @@ class input_famistudio(plugin_input.base):
     def gettype(self): return 'mi'
     def getdawcapabilities(self): 
         return {
+        'samples_inside': True,
         'track_lanes': True,
         'auto_nopl': True,
         }
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
         global cvpj_l
-        fst_Main = decode_fst(input_file)
+        global samplefolder
 
+        samplefolder = extra_param['samplefolder']
+
+        fst_Main = decode_fst(input_file)
 
         cvpj_l = {}
         
@@ -459,7 +530,8 @@ class input_famistudio(plugin_input.base):
             used_insts = get_used_insts(fst_channels[Channel])
             if Channel in InstShapes: WaveType = InstShapes[Channel]
             elif Channel == 'DPCM': 
-                create_dpcm_inst(DPCMMappings, DPCMSamples, channum)
+                for inst in used_insts:
+                    create_dpcm_inst(DPCMMappings, DPCMSamples, channum, fst_instruments[inst])
                 fxtrack_name = 'DPCM'
                 fxtrack_color = [0.48, 0.83, 0.49]
             if WaveType != None:
@@ -528,7 +600,7 @@ class input_famistudio(plugin_input.base):
 
                     else:
                         if 'Duration' in notedata:
-                            cvpj_note = note_data.mx_makenote('DPCM', int(notedata['Time'])/NoteLength, int(notedata['Duration'])/NoteLength, NoteToMidi(notedata['Value'])+24, None, None)
+                            cvpj_note = note_data.mx_makenote('DPCM'+'-'+notedata['Instrument'], int(notedata['Time'])/NoteLength, int(notedata['Duration'])/NoteLength, NoteToMidi(notedata['Value'])+24, None, None)
                             t_patternnotelist.append(cvpj_note)
 
                 cvpj_patternid = Channel+'-'+Pattern

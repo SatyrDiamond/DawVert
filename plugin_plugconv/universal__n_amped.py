@@ -45,12 +45,11 @@ class plugconv(plugin_plugconv.base):
             bitcrush_down = cvpj_plugindata.param_get('down', 0)[0]
             bitcrush_mix = cvpj_plugindata.param_get('mix', 0)[0]
             cvpj_plugindata.fxdata_add(None, bitcrush_mix)
+            auto_data.move(cvpj_l, ['plugin', pluginid, 'mix'], ['slot', pluginid, 'wet'])
             cvpj_plugindata.replace('universal', 'bitcrush')
             cvpj_plugindata.param_add('bits', bitcrush_bits, 'float', 'bits')
             cvpj_plugindata.param_add('freq', bitcrush_freq(bitcrush_down), 'float', 'freq')
 
-            auto_data.move(cvpj_l, ['plugin', pluginid, 'mix'], ['slot', pluginid, 'wet'])
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'bits', 'bits')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'down', 'freq')
             auto_data.function_value(cvpj_l, ['plugin', pluginid, 'freq'], bitcrush_freq)
             return True

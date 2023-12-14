@@ -284,26 +284,29 @@ def getparams(cvpj_l, pluginid, pluginname, chunkpdata, foldername, datadef, dat
     # ------------------------------------------------------------------------------------------- FX
 
     elif pluginname == 'fruity convolver':
-        fl_plugstr.read(20)
-        fromstorage = fl_plugstr.read(1)[0]
-        stringlen = fl_plugstr.read(1)[0]
-        filename = fl_plugstr.read(stringlen)
-        if fromstorage == 0:
-            audiosize = int.from_bytes(fl_plugstr.read(4), "little")
-            filename = os.path.join(foldername, pluginid+'_custom_audio.wav')
-            with open(filename, "wb") as customconvolverfile:
-                customconvolverfile.write(fl_plugstr.read(audiosize))
-        cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
-        cvpj_plugindata.dataval_add('file', filename.decode())
-        fl_plugstr.read(36)
-        autodata = {}
-        for autoname in ['pan', 'vol', 'stereo', 'allpurpose', 'eq']:
-            autodata_table = decode_pointdata(fl_plugstr)
-            for point in autodata_table:
-                #print(autoname, test)
-                cvpj_plugindata.env_points_add(autoname, point[0], point[1][0], tension=point[2], type=envshapes[point[3]])
-            autodata[autoname] = autodata_table
+        try:
+            fl_plugstr.read(20)
+            fromstorage = fl_plugstr.read(1)[0]
+            filename = data_bytes.readstring_lenbyte(fl_plugstr, 1, 'little', None)
+            if fromstorage == 0:
+                audiosize = int.from_bytes(fl_plugstr.read(4), "little")
+                filename = os.path.join(foldername, pluginid+'_custom_audio.wav')
+                with open(filename, "wb") as customconvolverfile:
+                    customconvolverfile.write(fl_plugstr.read(audiosize))
+            cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)
+            cvpj_plugindata.dataval_add('file', filename.decode())
+            fl_plugstr.read(36)
+            autodata = {}
+            for autoname in ['pan', 'vol', 'stereo', 'allpurpose', 'eq']:
+                autodata_table = decode_pointdata(fl_plugstr)
+                for point in autodata_table:
+                    #print(autoname, test)
+                    cvpj_plugindata.env_points_add(autoname, point[0], point[1][0], tension=point[2], type=envshapes[point[3]])
+                autodata[autoname] = autodata_table
+        except:
+            pass
         
+
 
     elif pluginname == 'fruity html notebook':
         cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-flstudio', pluginname)

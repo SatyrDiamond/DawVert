@@ -79,15 +79,21 @@ def decode_fst(infile):
                 dpcm_samp.append(out_dpcm)
                 prev_val = dpcm_current
 
-            samp_average = xtramath.average(dpcm_samp)
-            dpcm_samp = [x-samp_average for x in dpcm_samp]
+            if dpcm_samp:
+                samp_average = xtramath.average(dpcm_samp)
+                dpcm_samp = [x-samp_average for x in dpcm_samp]
 
-            normval = max(max(dpcm_samp),-min(dpcm_samp))/16
+                dpcm_samp = [x for x in dpcm_samp]
 
-            dpcm_samp = [int(  xtramath.clamp( (x*2)+128,0,255)  ) for x in dpcm_samp]
-            dpcm_proc = bytearray(dpcm_samp)
+                normval = max( max(dpcm_samp),-min(dpcm_samp) )/128
+                if normval == 0: normval = 1
 
-            fst_DPCMSamples[cmd_params['Name']] = dpcm_proc
+                dpcm_samp = [int(  xtramath.clamp( (x*(1/normval))+128,0,255)  ) for x in dpcm_samp]
+
+
+                dpcm_proc = bytearray(dpcm_samp)
+
+                fst_DPCMSamples[cmd_params['Name']] = dpcm_proc
 
         elif cmd_name == 'Instrument' and tabs_num == 1:
             instname = cmd_params['Name']

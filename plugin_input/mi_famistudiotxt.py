@@ -65,7 +65,8 @@ def decode_fst(infile):
     
         elif cmd_name == 'DPCMSample' and tabs_num == 1:
             dpcm_data = bytes.fromhex(cmd_params['Data'])
-            dpcm_data = ''.join(format(x, '08b') for x in dpcm_data)
+            dpcm_data = ''.join(format(x, '08b')[::-1] for x in dpcm_data)
+
             dpcm_name = cmd_params['Name']
 
             dpcm_samp = []

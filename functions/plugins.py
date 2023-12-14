@@ -107,7 +107,6 @@ class cvpj_plugin:
         params.add(self.cvpjdata, [], p_id, p_value, p_type, visname=p_name)
 
     def param_add_minmax(self, p_id, p_value, p_type, p_name, p_minmax): 
-        if None in p_minmax: p_minmax = None
         params.add(self.cvpjdata, [], p_id, p_value, p_type, visname=p_name, minmax=p_minmax)
 
     def param_add_dset(self, p_id, p_value, dset, ds_cat, ds_group): 

@@ -112,7 +112,7 @@ def copyauto_cvpj_to_amped_addmul(deviceid, paramid, autoloc, paramtype, minval,
 def create_autodata(deviceid, paramid, cvpj_points, paramtype, minval, maxval):
     amped_param = {}
     amped_param['param'] = {"deviceId": deviceid, "name": paramid}
-    amped_param['points'] = cvpjauto_to_ampedauto(cvpj_points)
+    amped_param['points'] = cvpjauto_to_ampedauto(cvpj_points, minval, maxval)
     if paramtype == 'float': 
         amped_param['spec'] = {"type": "numeric", "min": minval, "max": maxval, "curve": 0, "step": 0}
     if paramtype == 'int': 
@@ -207,10 +207,11 @@ def amped_parse_effects(fxchain_audio, amped_auto):
 def amped_makeparam(i_id, i_name, i_value):
     return {"id": i_id, "name": i_name, "value": i_value}
 
-def cvpjauto_to_ampedauto(autopoints):
+def cvpjauto_to_ampedauto(autopoints, i_min, i_max):
     ampedauto = []
     for autopoint in autopoints:
-        ampedauto.append({"pos": autopoint['position']/4, "value": autopoint['value']})
+        value = xtramath.between_to_one(i_min, i_max, autopoint['value'])
+        ampedauto.append({"pos": autopoint['position']/4, "value": value})
     return ampedauto
 
 class output_cvpj_f(plugin_output.base):
@@ -488,7 +489,7 @@ class output_cvpj_f(plugin_output.base):
                 for autoname in [['vol','volume'], ['pan','pan']]:
                     autopoints = auto_nopl.getpoints(cvpj_l, ['track',cvpj_trackid,autoname[0]])
                     if autopoints != None: 
-                        ampedauto = cvpjauto_to_ampedauto(auto.remove_instant(autopoints, 0, False))
+                        ampedauto = cvpjauto_to_ampedauto(auto.remove_instant(autopoints, 0, False), 0, 1)
                         amped_trackdata["automations"].append({"param": autoname[1], "points": ampedauto})
 
             if 'chain_fx_audio' in cvpj_trackdata:

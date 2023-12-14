@@ -271,72 +271,75 @@ def dictxmlk(xmltag, i_dict):
 # ---------------------------------------------------------------- Device Param/Data --------------------------------------------------------------
 
 def create_SampleParts(x_SampleParts, cvpj_samplepart, idnum):
-    samplefilepath = cvpj_samplepart['file']
-    aud_sampledata = audio.get_audiofile_info(samplefilepath)
+    try:
+        samplefilepath = cvpj_samplepart['file']
+        aud_sampledata = audio.get_audiofile_info(samplefilepath)
 
-    samp_start = 0
-    samp_vol = cvpj_samplepart['vol'] if 'vol' in cvpj_samplepart else 1
-    samp_pan = cvpj_samplepart['pan'] if 'pan' in cvpj_samplepart else 0
-    samp_loop_enabled = 0
-    samp_loop_start = 0
-    samp_loop_keyr = [0, 127]
-    samp_loop_velr = [1, 127]
-    samp_loop_root = cvpj_samplepart['middlenote']+60 if 'middlenote' in cvpj_samplepart else 60
-    samp_point_value_type = cvpj_samplepart['point_value_type'] if 'point_value_type' in cvpj_samplepart else 'percent'
+        samp_start = 0
+        samp_vol = cvpj_samplepart['vol'] if 'vol' in cvpj_samplepart else 1
+        samp_pan = cvpj_samplepart['pan'] if 'pan' in cvpj_samplepart else 0
+        samp_loop_enabled = 0
+        samp_loop_start = 0
+        samp_loop_keyr = [0, 127]
+        samp_loop_velr = [1, 127]
+        samp_loop_root = cvpj_samplepart['middlenote']+60 if 'middlenote' in cvpj_samplepart else 60
+        samp_point_value_type = cvpj_samplepart['point_value_type'] if 'point_value_type' in cvpj_samplepart else 'percent'
 
-    if 'r_key' in cvpj_samplepart: 
-        keyrange = cvpj_samplepart['r_key']
-        samp_loop_keyr = [keyrange[0]+60, keyrange[1]+60]
+        if 'r_key' in cvpj_samplepart: 
+            keyrange = cvpj_samplepart['r_key']
+            samp_loop_keyr = [keyrange[0]+60, keyrange[1]+60]
 
-    samp_end = cvpj_samplepart['length'] if 'length' in cvpj_samplepart else aud_sampledata['dur']
-    samp_loop_end = samp_end
+        samp_end = cvpj_samplepart['length'] if 'length' in cvpj_samplepart else aud_sampledata['dur']
+        samp_loop_end = samp_end
 
-    if 'loop' in cvpj_samplepart: 
-        loopdata = cvpj_samplepart['loop']
-        if 'enabled' in loopdata: 
-            if loopdata['enabled'] == 1:
-                samp_loop_enabled = 1
-                if 'points' in loopdata:
-                    if samp_point_value_type == 'samples':
-                        samp_loop_start = loopdata['points'][0]
-                        samp_loop_end = loopdata['points'][1]
-                    else:
-                        samp_loop_start = loopdata['points'][0]*samp_end
-                        samp_loop_end = loopdata['points'][1]*samp_end
+        if 'loop' in cvpj_samplepart: 
+            loopdata = cvpj_samplepart['loop']
+            if 'enabled' in loopdata: 
+                if loopdata['enabled'] == 1:
+                    samp_loop_enabled = 1
+                    if 'points' in loopdata:
+                        if samp_point_value_type == 'samples':
+                            samp_loop_start = loopdata['points'][0]
+                            samp_loop_end = loopdata['points'][1]
+                        else:
+                            samp_loop_start = loopdata['points'][0]*samp_end
+                            samp_loop_end = loopdata['points'][1]*samp_end
 
-    x_MultiSamplePart = ET.SubElement(x_SampleParts, 'MultiSamplePart')
-    x_MultiSamplePart.set('Id', str(idnum))
-    x_MultiSamplePart.set('HasImportedSlicePoints', 'false')
-    x_MultiSamplePart.set('NeedsAnalysisData', 'false')
-    addvalue(x_MultiSamplePart, 'LomId', '0')
-    addvalue(x_MultiSamplePart, 'Selection', 'true')
-    addvalue(x_MultiSamplePart, 'IsActive', 'true')
-    addvalue(x_MultiSamplePart, 'Solo', 'false')
-    add_range_val(x_MultiSamplePart, 'KeyRange', samp_loop_keyr[0], samp_loop_keyr[1], samp_loop_keyr[0], samp_loop_keyr[1])
-    add_range_val(x_MultiSamplePart, 'VelocityRange', samp_loop_velr[0], samp_loop_velr[1], samp_loop_velr[0], samp_loop_velr[1])
-    add_range_val(x_MultiSamplePart, 'SelectorRange', 0, 127, 0, 127)
-    addvalue(x_MultiSamplePart, 'RootKey', samp_loop_root)
-    addvalue(x_MultiSamplePart, 'Detune', '0')
-    addvalue(x_MultiSamplePart, 'TuneScale', '100')
-    addvalue(x_MultiSamplePart, 'Panorama', samp_pan)
-    addvalue(x_MultiSamplePart, 'Volume', samp_vol)
-    addvalue(x_MultiSamplePart, 'Link', 'false')
-    addvalue(x_MultiSamplePart, 'SampleStart', samp_start)
-    addvalue(x_MultiSamplePart, 'SampleEnd', samp_end)
-    x_SustainLoop = ET.SubElement(x_MultiSamplePart, 'SustainLoop')
-    addvalue(x_SustainLoop, 'Start', samp_loop_start)
-    addvalue(x_SustainLoop, 'End', samp_loop_end)
-    addvalue(x_SustainLoop, 'Mode', samp_loop_enabled)
-    addvalue(x_SustainLoop, 'Crossfade', '0')
-    addvalue(x_SustainLoop, 'Detune', '0')
-    x_ReleaseLoop = ET.SubElement(x_MultiSamplePart, 'ReleaseLoop')
-    addvalue(x_ReleaseLoop, 'Start', samp_loop_start)
-    addvalue(x_ReleaseLoop, 'End', samp_loop_end)
-    addvalue(x_ReleaseLoop, 'Mode', '0')
-    addvalue(x_ReleaseLoop, 'Crossfade', '0')
-    addvalue(x_ReleaseLoop, 'Detune', '0')
+        x_MultiSamplePart = ET.SubElement(x_SampleParts, 'MultiSamplePart')
+        x_MultiSamplePart.set('Id', str(idnum))
+        x_MultiSamplePart.set('HasImportedSlicePoints', 'false')
+        x_MultiSamplePart.set('NeedsAnalysisData', 'false')
+        addvalue(x_MultiSamplePart, 'LomId', '0')
+        addvalue(x_MultiSamplePart, 'Selection', 'true')
+        addvalue(x_MultiSamplePart, 'IsActive', 'true')
+        addvalue(x_MultiSamplePart, 'Solo', 'false')
+        add_range_val(x_MultiSamplePart, 'KeyRange', samp_loop_keyr[0], samp_loop_keyr[1], samp_loop_keyr[0], samp_loop_keyr[1])
+        add_range_val(x_MultiSamplePart, 'VelocityRange', samp_loop_velr[0], samp_loop_velr[1], samp_loop_velr[0], samp_loop_velr[1])
+        add_range_val(x_MultiSamplePart, 'SelectorRange', 0, 127, 0, 127)
+        addvalue(x_MultiSamplePart, 'RootKey', samp_loop_root)
+        addvalue(x_MultiSamplePart, 'Detune', '0')
+        addvalue(x_MultiSamplePart, 'TuneScale', '100')
+        addvalue(x_MultiSamplePart, 'Panorama', samp_pan)
+        addvalue(x_MultiSamplePart, 'Volume', samp_vol)
+        addvalue(x_MultiSamplePart, 'Link', 'false')
+        addvalue(x_MultiSamplePart, 'SampleStart', samp_start)
+        addvalue(x_MultiSamplePart, 'SampleEnd', samp_end)
+        x_SustainLoop = ET.SubElement(x_MultiSamplePart, 'SustainLoop')
+        addvalue(x_SustainLoop, 'Start', samp_loop_start)
+        addvalue(x_SustainLoop, 'End', samp_loop_end)
+        addvalue(x_SustainLoop, 'Mode', samp_loop_enabled)
+        addvalue(x_SustainLoop, 'Crossfade', '0')
+        addvalue(x_SustainLoop, 'Detune', '0')
+        x_ReleaseLoop = ET.SubElement(x_MultiSamplePart, 'ReleaseLoop')
+        addvalue(x_ReleaseLoop, 'Start', samp_loop_start)
+        addvalue(x_ReleaseLoop, 'End', samp_loop_end)
+        addvalue(x_ReleaseLoop, 'Mode', '0')
+        addvalue(x_ReleaseLoop, 'Crossfade', '0')
+        addvalue(x_ReleaseLoop, 'Detune', '0')
 
-    create_sampleref(x_MultiSamplePart, aud_sampledata, None)
+        create_sampleref(x_MultiSamplePart, aud_sampledata, None)
+    except:
+        pass
 
 def add_range_val(xmltag, name, low_range, hi_range, low_cr_range, hi_cr_range):
     x_subtag = ET.SubElement(xmltag, name)
@@ -369,7 +372,7 @@ def do_device_data_intro(xmltag, deviceid, ableton_devicename, fx_on, fx_name):
     return xml_device
 
 
-def do_device_data_single(cvpj_plugindata, xmltag, deviceid):
+def do_device_data_single(cvpj_plugindata, xmltag, deviceid, pluginid, is_instrument):
     plugtype = cvpj_plugindata.type_get()
 
     if plugtype in [['sampler', 'single'], ['sampler', 'multi']]:
@@ -504,20 +507,106 @@ def do_device_data_single(cvpj_plugindata, xmltag, deviceid):
                         aud_sampledata_UserSprite2 = audio.get_audiofile_info(d_UserSprite2)
                         create_sampleref(x_UserSprite2Value, aud_sampledata_UserSprite2, '2')
 
+    if plugtype[0] in ['vst2']:
+        if plugtype[0] == 'vst2':
+            fx_on, fx_wet = cvpj_plugindata.fxdata_get()
+            fx_name, fx_color = cvpj_plugindata.fxvisual_get()
+            xml_device = do_device_data_intro(xmltag, deviceid, 'PluginDevice', fx_on, fx_name)
+            x_PluginDesc = ET.SubElement(xml_device, 'PluginDesc')
+            x_VstPluginInfo = addId(x_PluginDesc, 'VstPluginInfo', '0')
+            vst_pos, vst_size, vst_open, vst_max = song.get_visual_window(cvpj_l, 'plugin', pluginid, [0,0], None, False, False)
+            if vst_pos != None:
+                addvalue(x_VstPluginInfo, 'WinPosX', vst_pos[0])
+                addvalue(x_VstPluginInfo, 'WinPosY', vst_pos[1])
+
+            vstpath = cvpj_plugindata.dataval_get('path', '')
+            vstname = os.path.basename(vstpath).split('.')[0]
+            vstid = cvpj_plugindata.dataval_get('fourid', '')
+            vstversion = cvpj_plugindata.dataval_get('version_bytes', 0)
+            vstnumparams = cvpj_plugindata.dataval_get('numparams', None)
+            current_program = cvpj_plugindata.dataval_get('current_program', 0)
+
+            vstdatatype = cvpj_plugindata.dataval_get('datatype', 'chunk')
+
+            if vstnumparams == None: vstnumparams = len(cvpj_plugindata.param_list())
+
+            addvalue(x_VstPluginInfo, 'Path', vstpath)
+            addvalue(x_VstPluginInfo, 'PlugName', vstname)
+            addvalue(x_VstPluginInfo, 'UniqueId', vstid)
+            addvalue(x_VstPluginInfo, 'Inputs', 0)
+            addvalue(x_VstPluginInfo, 'Outputs', 0)
+            addvalue(x_VstPluginInfo, 'NumberOfParameters', vstnumparams)
+            addvalue(x_VstPluginInfo, 'NumberOfPrograms', 1)
+
+            if vstdatatype == 'chunk': outflags = 67110149 if is_instrument else 67110144
+            else: outflags = 67108869 if is_instrument else 67109120
+
+            addvalue(x_VstPluginInfo, 'Flags', outflags)
+            x_Preset = ET.SubElement(x_VstPluginInfo, 'Preset')
+            x_VstPreset = addId(x_Preset, 'VstPreset', "0")
+            addvalue(x_VstPreset, 'OverwriteProtectionNumber', 2816)
+            ET.SubElement(x_VstPreset, 'ParameterSettings')
+            addvalue(x_VstPreset, 'IsOn', 'true')
+            addvalue(x_VstPreset, 'PowerMacroControlIndex', -1)
+            add_min_max(x_VstPreset, 'PowerMacroMappingRange', 64,127, False)
+
+            addvalue(x_VstPreset, 'IsFolded', "false")
+            addvalue(x_VstPreset, 'StoredAllParameters', "true")
+            addvalue(x_VstPreset, 'DeviceLomId', 0)
+            addvalue(x_VstPreset, 'DeviceViewLomId', 0)
+            addvalue(x_VstPreset, 'IsOnLomId', 0)
+            addvalue(x_VstPreset, 'ParametersListWrapperLomId', 0)
+            addvalue(x_VstPreset, 'Type', 1178747752)
+            addvalue(x_VstPreset, 'ProgramCount', 1)
+            if vstnumparams != None: addvalue(x_VstPreset, 'ParameterCount', vstnumparams)
+            addvalue(x_VstPreset, 'ProgramNumber', current_program)
+            if vstdatatype == 'chunk': 
+                rawdata = cvpj_plugindata.rawdata_get()
+                addhex(x_VstPreset, 'Buffer', rawdata)
+            addvalue(x_VstPreset, 'Name', '')
+            addvalue(x_VstPreset, 'PluginVersion', vstversion)
+            addvalue(x_VstPreset, 'UniqueId', vstid)
+            addvalue(x_VstPreset, 'ByteOrder', 2)
+
+            addvalue(x_VstPluginInfo, 'Version', vstversion)
+            addvalue(x_VstPluginInfo, 'VstVersion', "2400")
+            addvalue(x_VstPluginInfo, 'IsShellClient', "false")
+            addvalue(x_VstPluginInfo, 'Category', 2 if is_instrument else 1)
+            addvalue(x_VstPluginInfo, 'LastPresetFolder', "")
+
+        addvalue(xml_device, 'MpeEnabled', 'false')
+        x_ParameterList = ET.SubElement(xml_device, 'ParameterList')
+        paramlist = cvpj_plugindata.param_list()
+        for paramnum, paramid in enumerate(paramlist):
+            if paramid[0:10] == 'ext_param_':
+                paramidnum = int(paramid[10:].split('_')[0])
+
+                cvpj_param = cvpj_plugindata.param_get(paramid, 0)
+
+                x_PluginFloatParameter = addId(x_ParameterList, 'PluginFloatParameter', str(paramnum))
+                addvalue(x_PluginFloatParameter, 'ParameterName', cvpj_param[2])
+                addvalue(x_PluginFloatParameter, 'ParameterId', paramidnum)
+                addvalue(x_PluginFloatParameter, 'VisualIndex', paramnum)
+                set_add_param(x_PluginFloatParameter, 'ParameterValue', cvpj_param[0], None, None, None, [0,1])
+
+
+
+
+
 
 def do_device_data_instrument(cvpj_track_data, xmltag):
     if 'instdata' in cvpj_track_data:
         if 'pluginid' in cvpj_track_data['instdata']:
             pluginid = cvpj_track_data['instdata']['pluginid']
             inst_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
-            do_device_data_single(inst_plugindata, xmltag, 3)
+            do_device_data_single(inst_plugindata, xmltag, 5, pluginid, True)
 
 def do_device_data(cvpj_track_data, xmltag):
-    ableton_deviceid = 4
+    ableton_deviceid = 6
     if 'chain_fx_audio' in cvpj_track_data:
         for fxpluginid in cvpj_track_data['chain_fx_audio']:
             inst_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, fxpluginid)
-            do_device_data_single(inst_plugindata, xmltag, ableton_deviceid)
+            do_device_data_single(inst_plugindata, xmltag, ableton_deviceid, fxpluginid, False)
             ableton_deviceid += 1
 
 

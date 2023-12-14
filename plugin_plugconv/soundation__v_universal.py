@@ -35,7 +35,7 @@ def eq_calc_gain(i_dict):
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['universal', None, None], ['native-soundation', None, 'soundation'], True, True
+    def getplugconvinfo(self): return ['universal', None, None], ['native-soundation', None, 'soundation'], True, False
     def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
         plugintype = cvpj_plugindata.type_get()
 

@@ -2,133 +2,133 @@
     "inst": {
         "objects": {
             "0": {
-                "group": "piano",
+                "group": "Piano",
                 "visual": {
                     "color": [
-                        0.01,
-                        0.66,
-                        0.96
+                        0.011764705882352941,
+                        0.6627450980392157,
+                        0.9568627450980393
                     ],
                     "name": "Elec. Piano (Classic)"
                 }
             },
             "1": {
-                "group": "guitar",
+                "group": "Guitar",
                 "visual": {
                     "color": [
                         1.0,
-                        0.6,
+                        0.596078431372549,
                         0.0
                     ],
                     "name": "Acoustic Guitar"
                 }
             },
             "10": {
-                "group": "orchestra",
+                "group": "Orchestra",
                 "visual": {
                     "color": [
                         1.0,
-                        0.92,
+                        0.9176470588235294,
                         0.0
                     ],
                     "name": "Trombone"
                 }
             },
             "11": {
-                "group": "orchestra",
+                "group": "Orchestra",
                 "visual": {
                     "color": [
-                        0.55,
-                        0.43,
-                        0.39
+                        0.5529411764705883,
+                        0.43137254901960786,
+                        0.38823529411764707
                     ],
                     "name": "Violin"
                 }
             },
             "12": {
-                "group": "orchestra",
+                "group": "Orchestra",
                 "visual": {
                     "color": [
-                        0.31,
-                        0.2,
-                        0.18
+                        0.3058823529411765,
+                        0.20392156862745098,
+                        0.1803921568627451
                     ],
                     "name": "Cello"
                 }
             },
             "13": {
-                "group": "electronic",
+                "group": "Electronic",
                 "visual": {
                     "color": [
                         1.0,
-                        0.39,
-                        0.39
+                        0.38823529411764707,
+                        0.38823529411764707
                     ],
                     "name": "8-Bit Sine"
                 }
             },
             "14": {
-                "group": "electronic",
+                "group": "Electronic",
                 "visual": {
                     "color": [
-                        0.46,
+                        0.4588235294117647,
                         1.0,
-                        0.39
+                        0.38823529411764707
                     ],
                     "name": "8-Bit Square"
                 }
             },
             "15": {
-                "group": "electronic",
+                "group": "Electronic",
                 "visual": {
                     "color": [
-                        0.39,
-                        0.88,
+                        0.38823529411764707,
+                        0.8784313725490196,
                         1.0
                     ],
                     "name": "8-Bit Sawtooth"
                 }
             },
             "16": {
-                "group": "electronic",
+                "group": "Electronic",
                 "visual": {
                     "color": [
-                        0.99,
-                        0.39,
+                        0.9921568627450981,
+                        0.38823529411764707,
                         1.0
                     ],
                     "name": "8-Bit Triangle"
                 }
             },
             "17": {
-                "group": "piano",
+                "group": "Piano",
                 "visual": {
                     "color": [
                         1.0,
-                        0.34,
-                        0.13
+                        0.3411764705882353,
+                        0.13333333333333333
                     ],
                     "name": "Harpsichord"
                 }
             },
             "18": {
-                "group": "orchestra",
+                "group": "Orchestra",
                 "visual": {
                     "color": [
-                        0.11,
-                        0.37,
-                        0.13
+                        0.10588235294117647,
+                        0.3686274509803922,
+                        0.12549019607843137
                     ],
                     "name": "Concert Harp"
                 }
             },
             "19": {
-                "group": "perc",
+                "group": "Percussion (MIDI)",
                 "visual": {
                     "color": [
-                        0.96,
-                        0.26,
-                        0.21
+                        0.9568627450980393,
+                        0.2627450980392157,
+                        0.21176470588235294
                     ],
                     "name": "Xylophone"
                 }
@@ -441,122 +441,122 @@
                         }
                     }
                 },
-                "group": "drumkit",
+                "group": "Percussion (MIDI)",
                 "visual": {
                     "color": [
-                        0.72,
-                        0.11,
-                        0.11
+                        0.7176470588235294,
+                        0.10980392156862745,
+                        0.10980392156862745
                     ],
                     "name": "Drum Kit"
                 }
             },
             "20": {
-                "group": "orchestra",
+                "group": "Orchestra",
                 "visual": {
                     "color": [
                         1.0,
-                        0.88,
-                        0.7
+                        0.8784313725490196,
+                        0.6980392156862745
                     ],
                     "name": "Pizzicato"
                 }
             },
             "21": {
-                "group": "perc",
+                "group": "Percussion (MIDI)",
                 "visual": {
                     "color": [
-                        0.46,
-                        0.46,
-                        0.46
+                        0.4588235294117647,
+                        0.4588235294117647,
+                        0.4588235294117647
                     ],
                     "name": "Steel Drums"
                 }
             },
             "22": {
-                "group": "guitar",
+                "group": "Guitar",
                 "visual": {
                     "color": [
-                        0.88,
-                        0.68,
+                        0.8784313725490196,
+                        0.6784313725490196,
                         0.0
                     ],
                     "name": "Sitar"
                 }
             },
             "23": {
-                "group": "orchestra",
+                "group": "Orchestra",
                 "visual": {
                     "color": [
-                        0.91,
-                        0.98,
-                        0.74
+                        0.9137254901960784,
+                        0.9764705882352941,
+                        0.7411764705882353
                     ],
                     "name": "Flute"
                 }
             },
             "24": {
-                "group": "testing",
+                "group": "Testing",
                 "visual": {
                     "color": [
-                        0.66,
-                        0.78,
-                        0.33
+                        0.6588235294117647,
+                        0.7843137254901961,
+                        0.3254901960784314
                     ],
                     "name": "Saxophone"
                 }
             },
             "25": {
-                "group": "piano",
+                "group": "Piano",
                 "visual": {
                     "color": [
-                        0.05,
-                        0.28,
-                        0.63
+                        0.050980392156862744,
+                        0.2784313725490196,
+                        0.6313725490196078
                     ],
                     "name": "Ragtime Piano"
                 }
             },
             "26": {
-                "group": "piano",
+                "group": "Piano",
                 "visual": {
                     "color": [
-                        0.11,
-                        0.62,
-                        0.62
+                        0.11372549019607843,
+                        0.615686274509804,
+                        0.615686274509804
                     ],
                     "name": "Music Box"
                 }
             },
             "27": {
-                "group": "testing",
+                "group": "Testing",
                 "visual": {
                     "color": [
-                        0.12,
-                        0.77,
-                        0.48
+                        0.11764705882352941,
+                        0.7725490196078432,
+                        0.47843137254901963
                     ],
                     "name": "Synth Bass"
                 }
             },
             "28": {
-                "group": "testing",
+                "group": "Testing",
                 "visual": {
                     "color": [
-                        0.08,
-                        0.13,
-                        0.31
+                        0.08235294117647059,
+                        0.12941176470588237,
+                        0.30980392156862746
                     ],
                     "name": "Church Organ"
                 }
             },
             "29": {
-                "group": "guitar",
+                "group": "Guitar",
                 "visual": {
                     "color": [
-                        0.02,
-                        0.06,
-                        0.18
+                        0.0196078431372549,
+                        0.06274509803921569,
+                        0.1843137254901961
                     ],
                     "name": "Slap Bass"
                 }
@@ -565,20 +565,20 @@
                 "group": "electronic",
                 "visual": {
                     "color": [
-                        0.91,
-                        0.12,
-                        0.39
+                        0.9137254901960784,
+                        0.11764705882352941,
+                        0.38823529411764707
                     ],
-                    "name": "Smooth Synth"
+                    "name": "Smooth Synth (Classic)"
                 }
             },
             "30": {
-                "group": "testing",
+                "group": "Testing",
                 "visual": {
                     "color": [
-                        0.42,
-                        0.95,
-                        0.72
+                        0.4235294117647059,
+                        0.9529411764705882,
+                        0.7176470588235294
                     ],
                     "name": "Pop Synth"
                 }
@@ -891,56 +891,56 @@
                         }
                     }
                 },
-                "group": "drumkit",
+                "group": "Percussion (MIDI)",
                 "visual": {
                     "color": [
                         1.0,
-                        0.44,
-                        0.44
+                        0.4392156862745098,
+                        0.4392156862745098
                     ],
                     "name": "Electric Drum Kit"
                 }
             },
             "32": {
-                "group": "guitar",
+                "group": "Guitar",
                 "visual": {
                     "color": [
-                        0.63,
-                        0.65,
-                        0.21
+                        0.6313725490196078,
+                        0.6509803921568628,
+                        0.20784313725490197
                     ],
                     "name": "Jazz Guitar"
                 }
             },
             "33": {
-                "group": "guitar",
+                "group": "Guitar",
                 "visual": {
                     "color": [
-                        0.92,
-                        0.47,
+                        0.9176470588235294,
+                        0.4745098039215686,
                         0.0
                     ],
                     "name": "Koto"
                 }
             },
             "34": {
-                "group": "perc",
+                "group": "Percussion (MIDI)",
                 "visual": {
                     "color": [
-                        0.33,
-                        0.79,
-                        0.79
+                        0.3333333333333333,
+                        0.792156862745098,
+                        0.792156862745098
                     ],
                     "name": "Vibraphone"
                 }
             },
             "35": {
-                "group": "guitar",
+                "group": "Guitar",
                 "visual": {
                     "color": [
                         0.0,
-                        0.5,
-                        0.25
+                        0.5019607843137255,
+                        0.25098039215686274
                     ],
                     "name": "Muted E-Guitar"
                 }
@@ -1038,18 +1038,18 @@
                         }
                     }
                 },
-                "group": "drumkit_classic",
+                "group": "Percussion (Classic)",
                 "visual": {
                     "color": [
-                        0.5,
-                        0.06,
-                        0.28
+                        0.4980392156862745,
+                        0.058823529411764705,
+                        0.2823529411764706
                     ],
                     "name": "808 Drum Kit"
                 }
             },
             "37": {
-                "group": "testing",
+                "group": "Testing",
                 "visual": {
                     "color": [
                         0.0,
@@ -1060,12 +1060,12 @@
                 }
             },
             "38": {
-                "group": "guitar",
+                "group": "Guitar",
                 "visual": {
                     "color": [
                         0.0,
-                        0.27,
-                        0.12
+                        0.27058823529411763,
+                        0.12156862745098039
                     ],
                     "name": "Distortion Guitar"
                 }
@@ -1103,23 +1103,23 @@
                         }
                     }
                 },
-                "group": "drumkit_classic",
+                "group": "Percussion (Classic)",
                 "visual": {
                     "color": [
-                        0.62,
-                        0.06,
-                        0.13
+                        0.6235294117647059,
+                        0.058823529411764705,
+                        0.13333333333333333
                     ],
                     "name": "8-Bit Drum Kit"
                 }
             },
             "4": {
-                "group": "guitar",
+                "group": "Guitar",
                 "visual": {
                     "color": [
-                        0.3,
-                        0.69,
-                        0.31
+                        0.2980392156862745,
+                        0.6862745098039216,
+                        0.3137254901960784
                     ],
                     "name": "Electric Guitar"
                 }
@@ -1267,23 +1267,23 @@
                         }
                     }
                 },
-                "group": "drumkit_classic",
+                "group": "Percussion (Classic)",
                 "visual": {
                     "color": [
-                        0.51,
-                        0.02,
-                        0.08
+                        0.5098039215686274,
+                        0.0196078431372549,
+                        0.08235294117647059
                     ],
                     "name": "2013 Drum Kit"
                 }
             },
             "41": {
-                "group": "piano",
+                "group": "Piano",
                 "visual": {
                     "color": [
-                        0.08,
-                        0.4,
-                        0.75
+                        0.08235294117647059,
+                        0.396078431372549,
+                        0.7529411764705882
                     ],
                     "name": "Grand Piano"
                 }
@@ -1391,144 +1391,199 @@
                         }
                     }
                 },
-                "group": "drumkit_classic",
+                "group": "Percussion (Classic)",
                 "visual": {
                     "color": [
-                        0.6,
+                        0.596078431372549,
                         0.0,
-                        1.0
+                        0.996078431372549
                     ],
                     "name": "909 Drum Kit"
                 }
             },
             "43": {
-                "group": "piano",
+                "group": "Piano",
                 "visual": {
                     "color": [
-                        0.01,
-                        0.66,
-                        0.96
+                        0.011764705882352941,
+                        0.6627450980392157,
+                        0.9568627450980393
                     ],
                     "name": "Electric Piano"
                 }
             },
-            "45": {
-                "group": "orchestra",
+            "44": {
+                "group": "Guitar",
                 "visual": {
                     "color": [
-                        0.31,
-                        0.2,
-                        0.18
+                        0.0,
+                        0.27058823529411763,
+                        0.12156862745098039
+                    ],
+                    "name": "Dist. Guitar (Sustain)"
+                }
+            },
+            "45": {
+                "group": "Orchestra",
+                "visual": {
+                    "color": [
+                        0.3058823529411765,
+                        0.20392156862745098,
+                        0.1803921568627451
                     ],
                     "name": "Cello (Sustain)"
                 }
             },
             "46": {
-                "group": "orchestra",
+                "group": "Orchestra",
                 "visual": {
                     "color": [
-                        0.55,
-                        0.43,
-                        0.39
+                        0.5529411764705883,
+                        0.43137254901960786,
+                        0.38823529411764707
                     ],
                     "name": "Violin (Sustain)"
                 }
             },
             "47": {
-                "group": "orchestra",
+                "group": "Orchestra",
                 "visual": {
                     "color": [
-                        0.56,
-                        0.46,
+                        0.5568627450980392,
+                        0.4627450980392157,
                         1.0
                     ],
                     "name": "Strings (Sustain)"
                 }
             },
             "48": {
-                "group": "guitar",
+                "group": "Guitar",
                 "visual": {
                     "color": [
-                        0.13,
-                        0.13,
-                        0.13
+                        0.12941176470588237,
+                        0.12941176470588237,
+                        0.12941176470588237
                     ],
                     "name": "Bass"
                 }
             },
             "49": {
-                "group": "guitar",
+                "group": "Guitar",
                 "visual": {
                     "color": [
-                        0.88,
-                        0.83,
-                        0.09
+                        0.8784313725490196,
+                        0.8274509803921568,
+                        0.09411764705882353
                     ],
                     "name": "Clean Guitar"
                 }
             },
             "5": {
-                "group": "guitar",
+                "group": "Guitar",
                 "visual": {
                     "color": [
-                        0.13,
-                        0.13,
-                        0.13
+                        0.12941176470588237,
+                        0.12941176470588237,
+                        0.12941176470588237
                     ],
-                    "name": "Bass (Classic)"
+                    "name": "Bass Guitar (Classic)"
+                }
+            },
+            "50": {
+                "group": "Orchestra",
+                "visual": {
+                    "color": [
+                        0.5098039215686274,
+                        0.4666666666666667,
+                        0.09019607843137255
+                    ],
+                    "name": "French Horn (Sustain)"
+                }
+            },
+            "51": {
+                "group": "Orchestra",
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.9176470588235294,
+                        0.0
+                    ],
+                    "name": "Trombone (Sustain)"
+                }
+            },
+            "52": {
+                "group": "Electronic",
+                "visual": {
+                    "color": [
+                        0.9137254901960784,
+                        0.11764705882352941,
+                        0.38823529411764707
+                    ],
+                    "name": "Smooth Synth"
                 }
             },
             "53": {
-                "group": "drumkit",
+                "group": "Percussion (Classic)",
                 "visual": {
                     "color": [
-                        0.44,
+                        0.44313725490196076,
                         0.0,
-                        0.65
+                        0.6509803921568628
                     ],
                     "name": "2023 Drum Kit"
                 }
             },
-            "6": {
-                "group": "electronic",
+            "54": {
+                "group": "Guitar",
                 "visual": {
                     "color": [
-                        0.25,
-                        0.32,
-                        0.71
+                        0.12941176470588237,
+                        0.12941176470588237,
+                        0.12941176470588237
+                    ],
+                    "name": "Bass Guitar"
+                }
+            },
+            "6": {
+                "group": "Electronic",
+                "visual": {
+                    "color": [
+                        0.24705882352941178,
+                        0.3176470588235294,
+                        0.7098039215686275
                     ],
                     "name": "Synth Pluck"
                 }
             },
             "7": {
-                "group": "electronic",
+                "group": "Electronic",
                 "visual": {
                     "color": [
-                        0.8,
-                        0.86,
-                        0.22
+                        0.803921568627451,
+                        0.8627450980392157,
+                        0.2235294117647059
                     ],
                     "name": "Scifi"
                 }
             },
             "8": {
-                "group": "piano",
+                "group": "Piano",
                 "visual": {
                     "color": [
-                        0.08,
-                        0.4,
-                        0.75
+                        0.08235294117647059,
+                        0.396078431372549,
+                        0.7529411764705882
                     ],
                     "name": "Grand Piano (Classic)"
                 }
             },
             "9": {
-                "group": "orchestra",
+                "group": "Orchestra",
                 "visual": {
                     "color": [
-                        0.51,
-                        0.47,
-                        0.09
+                        0.5098039215686274,
+                        0.4666666666666667,
+                        0.09019607843137255
                     ],
                     "name": "French Horn"
                 }

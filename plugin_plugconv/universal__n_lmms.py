@@ -8,9 +8,6 @@ from functions import plugins
 from functions import xtramath
 from functions_tracks import auto_data
 
-def bitcrush_freq(i_val):
-    return 100*(2**(i_val*10))
-
 slope_vals = [12,24,48]
 
 class plugconv(plugin_plugconv.base):

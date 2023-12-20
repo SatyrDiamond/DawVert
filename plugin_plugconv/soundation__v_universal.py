@@ -21,6 +21,9 @@ def eq_calc_shelf(i_dict):
 
 def eq_calc_peak(i_dict):
     i_value = i_dict['q'] if 'q' in i_dict else 1
+
+    if i_value == 0: i_value = 1
+
     i_value = xtramath.logpowmul(i_value, -1)
     i_value = math.log( i_value / 0.1)
     i_value = i_value / math.log(162)

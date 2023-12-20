@@ -4,6 +4,7 @@
 import plugin_plugconv
 from functions import note_data
 from functions import xtramath
+from functions import data_values
 
 delaytime = [
     [0, 16*32],
@@ -101,10 +102,10 @@ class plugconv(plugin_plugconv.base):
             return True
 
         if plugintype[1] == 'delay-c':
-            d_time_type = fx_plugindata.dataval_get('time_type', 'seconds')
-            d_time = fx_plugindata.dataval_get('time', 1)
-            d_feedback = fx_plugindata.dataval_get('feedback', 0.0)
-            fx_on, fx_wet = fx_plugindata.fxdata_get()
+            d_time_type = cvpj_plugindata.dataval_get('time_type', 'seconds')
+            d_time = cvpj_plugindata.dataval_get('time', 1)
+            d_feedback = cvpj_plugindata.dataval_get('feedback', 0.0)
+            fx_on, fx_wet = cvpj_plugindata.fxdata_get()
             cvpj_plugindata.fxdata_add(None, 1)
 
             cvpj_plugindata.replace('native-tracktion', 'stereoDelay')

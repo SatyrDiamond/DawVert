@@ -52,6 +52,9 @@ class plugconv(plugin_plugconv.base):
                     peak_txt = 'Peak'+str(peak_num+1)
                     data_peak = data_Peaks[peak_num]
                     qdata = getq(data_peak)
+
+                    if qdata == 0: qdata = 1
+
                     cvpj_plugindata.param_add(peak_txt+'active', int(data_peak['on']), 'float', peak_txt+'active')
                     cvpj_plugindata.param_add(peak_txt+'freq', data_peak['freq'], 'float', peak_txt+'freq')
                     cvpj_plugindata.param_add(peak_txt+'gain', getgain(data_peak), 'float', peak_txt+'gain')

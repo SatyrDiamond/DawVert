@@ -3,6 +3,7 @@
 
 from functions import data_values
 from functions import params
+from functions import plugins
 
 def track_create(cvpj_l, trackid, tracktype):
     if 'track_data' not in cvpj_l: cvpj_l['track_data'] = {}
@@ -63,3 +64,30 @@ def iter(cvpj_l):
         track_placements = cvpj_track_placements[trackid] if trackid in cvpj_track_placements else {}
         track_data = cvpj_track_data[trackid] if trackid in cvpj_track_data else {}
         yield trackid, track_data, track_placements
+        
+def import_dset(cvpj_l, trackid, instid, main_dataset, midi_dataset, def_name, def_color):
+    m_bank, m_inst, m_drum = main_dataset.midito_get('inst', instid)
+    di_name, di_color = main_dataset.object_get_name_color('inst', instid)
+    if m_inst != None:
+        dm_name, dm_color = midi_dataset.object_get_name_color('inst', str(m_inst))
+        out_name = data_values.list_usefirst([def_name, di_name, instid])
+        out_color = data_values.list_usefirst([def_color, di_color, dm_color])
+        track_create(cvpj_l, trackid, 'instrument')
+        track_visual(cvpj_l, trackid, name=out_name, color=out_color)
+        inst_plugindata = plugins.cvpj_plugin('midi', m_bank, m_inst)
+        inst_plugindata.to_cvpj(cvpj_l, trackid)
+        if m_drum == True: 
+            track_param_add(cvpj_l, trackid, 'usemasterpitch', False, 'bool')
+            track_dataval_add(cvpj_l, trackid, 'midi', 'output', {'drums': True})
+        else: 
+            inst_plugindata = plugins.cvpj_plugin('midi', m_bank, m_inst)
+            track_param_add(cvpj_l, trackid, 'usemasterpitch', True, 'bool')
+            track_dataval_add(cvpj_l, trackid, 'midi', 'output', {'program': m_inst, 'bank': m_bank})
+        track_inst_pluginid(cvpj_l, trackid, trackid)
+        return True, m_bank, m_inst, m_drum, out_name, out_color
+    else:
+        out_name = data_values.list_usefirst([def_name, di_name, instid])
+        out_color = data_values.list_usefirst([def_color, di_color])
+        track_create(cvpj_l, trackid, 'instrument')
+        track_visual(cvpj_l, trackid, name=out_name, color=out_color)
+        return False, None, None, None, out_name, out_color

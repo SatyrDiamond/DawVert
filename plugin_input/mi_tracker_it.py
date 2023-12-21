@@ -29,26 +29,27 @@ def get_name(inst_name, dosfilename):
     elif dosfilename != '': return dosfilename
     else: return " "
 
-def add_filter(cvpj_l, pluginid, i_cutoff, i_reso):
+def add_filter(inst_plugindata, i_cutoff, i_reso):
     if i_cutoff != None:
         if i_cutoff != 127:
             computedCutoff = (i_cutoff * 512)
             outputcutoff = 131.0 * pow(2.0, computedCutoff * (5.29 / (127.0 * 512.0)))
             outputreso = ((i_reso/127)*6 + 1) if i_reso != None else 1
-            plugins.add_filter(cvpj_l, pluginid, True, outputcutoff, outputreso, "lowpass", None)
+            inst_plugindata.filter_add(True, outputcutoff, outputreso, "lowpass", None)
 
-def add_single_sampler(cvpj_l, pluginid, sampledata, sampleidnum):
-    plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, samplefolder+str(sampleidnum)+'.wav')
-    plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
-    plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
+def add_single_sampler(sampledata, sampleidnum):
+    inst_plugindata = plugins.cvpj_plugin('sampler', samplefolder+str(sampleidnum)+'.wav', None)
+    inst_plugindata.dataval_add('trigger', 'normal')
+    inst_plugindata.dataval_add('point_value_type', "samples")
     if sampledata['length'] != 0:
-        plugins.add_plug_data(cvpj_l, pluginid, 'length', sampledata['length'])
+        inst_plugindata.dataval_add('length', sampledata['length'])
         cvpj_loop = {}
         cvpj_loop['enabled'] = int(sampledata['flags'][3])
         cvpj_loop['mode'] = 'normal' if int(sampledata['flags'][1]) == 0 else 'pingpong'
         if int(sampledata['flags'][3]) != 0:
             cvpj_loop['points'] = [sampledata['loop_start'],sampledata['loop_end']]
-        plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loop)
+        inst_plugindata.dataval_add('loop', cvpj_loop)
+    return inst_plugindata
 
 class input_it(plugin_input.base):
     def __init__(self): pass
@@ -351,16 +352,17 @@ class input_it(plugin_input.base):
 
                 pluginid = plugins.get_id()
 
+                inst_used = False
                 if bn_s_t_ifsame == True and str(bn_s_t_f[1]-1) in IT_Samples:
+                    inst_used = True
                     it_singlesample = IT_Samples[str(bn_s_t_f[1]-1)]
-
                     track_volume = 0.3*it_singleinst['globalvol']*it_singlesample['defualtvolume']*it_singlesample['globalvol']
-
-                    add_single_sampler(cvpj_l, pluginid, it_singlesample, bn_s_t_f[1])
+                    inst_plugindata = add_single_sampler(it_singlesample, bn_s_t_f[1])
                 else:
+                    inst_used = True
                     sampleregions = data_values.list_to_reigons(bn_s_t, 60)
-                    plugins.add_plug_multisampler(cvpj_l, pluginid)
-                    plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
+                    inst_plugindata = plugins.cvpj_plugin('multisampler', None, None)
+                    inst_plugindata.dataval_add('point_value_type', "samples")
 
                     for sampleregion in sampleregions:
                         instrumentnum = sampleregion[0][1]
@@ -377,9 +379,9 @@ class input_it(plugin_input.base):
                             regionparams['loop'] = {}
                             regionparams['loop']['enabled'] = int(it_singlesample['flags'][3])
                             regionparams['loop']['points'] = [it_singlesample['loop_start'],it_singlesample['loop_end']]
-                            plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
+                            inst_plugindata.region_add(regionparams)
 
-                add_filter(cvpj_l, pluginid, it_singleinst['filtercutoff'], it_singleinst['filterresonance'])
+                add_filter(inst_plugindata, it_singleinst['filtercutoff'], it_singleinst['filterresonance'])
 
                 tracks_mi.inst_create(cvpj_l, it_instname)
                 tracks_mi.inst_visual(cvpj_l, it_instname, name=cvpj_instname, color=[0.71, 0.58, 0.47])
@@ -406,28 +408,30 @@ class input_it(plugin_input.base):
                             track_volume *= max([i['value']/64 for i in envvardata['points']])
                         for itpd in envvardata['points']:
                             if envtype == 'vol': 
-                                plugins.add_env_point(cvpj_l, pluginid, 'vol', itpd['pos']/48, itpd['value']/64)
-                                if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'vol', 'sustain', envvardata['susloop_start']+1)
+                                inst_plugindata.env_points_add('vol', itpd['pos']/48, itpd['value']/64)
+                                if susenabled == 1: inst_plugindata.env_points_addvar('vol', 'sustain', envvardata['susloop_start']+1)
                             if envtype == 'pan': 
-                                plugins.add_env_point(cvpj_l, pluginid, 'pan', itpd['pos']/48, (itpd['value'])/32)
-                                if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'pan', 'sustain', envvardata['susloop_start']+1)
+                                inst_plugindata.env_points_add('pan', itpd['pos']/48, (itpd['value'])/32)
+                                if susenabled == 1: inst_plugindata.env_points_addvar('pan', 'sustain', envvardata['susloop_start']+1)
                             if envtype == 'pitch': 
                                 if envvardata['usepitch'] != 1:
-                                    plugins.add_env_point(cvpj_l, pluginid, 'pitch', itpd['pos']/48, (itpd['value']))
-                                    if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'pitch', 'sustain', envvardata['susloop_start']+1)
+                                    inst_plugindata.env_points_add('pitch', itpd['pos']/48, (itpd['value']))
+                                    if susenabled == 1: inst_plugindata.env_points_addvar('pitch', 'sustain', envvardata['susloop_start']+1)
                                 else:
-                                    plugins.add_env_point(cvpj_l, pluginid, 'cutoff', itpd['pos']/48, (itpd['value']/64))
-                                    if susenabled == 1: plugins.add_env_point_var(cvpj_l, pluginid, 'cutoff', 'sustain', envvardata['susloop_start']+1)
+                                    inst_plugindata.env_points_add('cutoff', itpd['pos']/48, (itpd['value']/64))
+                                    if susenabled == 1: inst_plugindata.env_points_addvar('cutoff', 'sustain', envvardata['susloop_start']+1)
                                     filterenv_used = True
 
                 if it_singleinst['fadeout'] != 0:
-                    plugins.add_env_point_var(cvpj_l, pluginid, 'vol', 'fadeout', (256/it_singleinst['fadeout'])/8)
+                    inst_plugindata.env_points_addvar('vol', 'fadeout', (256/it_singleinst['fadeout'])/8)
 
                 if filterenv_used == False:
-                    add_filter(cvpj_l, pluginid, it_singleinst['filtercutoff'], it_singleinst['filterresonance'])
+                    add_filter(inst_plugindata, it_singleinst['filtercutoff'], it_singleinst['filterresonance'])
 
-                plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
-                plugins.env_point_to_asdr(cvpj_l, pluginid, 'cutoff')
+                inst_plugindata.env_asdr_from_points('vol')
+                inst_plugindata.env_asdr_from_points('cutoff')
+                inst_plugindata.to_cvpj(cvpj_l, pluginid)
+
                 tracks_mi.inst_param_add(cvpj_l, it_instname, 'vol', track_volume, 'float')
 
                 instrumentcount += 1
@@ -438,7 +442,8 @@ class input_it(plugin_input.base):
                 cvpj_instname = get_name(it_singlesample['name'], it_singlesample['dosfilename'])
                 track_volume = 0.3*it_singlesample['defualtvolume']*it_singlesample['globalvol']
                 pluginid = plugins.get_id()
-                add_single_sampler(cvpj_l, pluginid, it_singlesample, samplecount+1)
+                inst_plugindata = add_single_sampler(it_singlesample, samplecount+1)
+                inst_plugindata.to_cvpj(cvpj_l, pluginid)
                 tracks_mi.inst_create(cvpj_l, it_instname)
                 tracks_mi.inst_visual(cvpj_l, it_instname, name=cvpj_instname, color=[0.71, 0.58, 0.47])
                 tracks_mi.inst_pluginid(cvpj_l, it_instname, pluginid)

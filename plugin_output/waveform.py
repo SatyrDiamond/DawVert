@@ -4,166 +4,35 @@
 import plugin_output
 import json
 import lxml.etree as ET
-from functions import xtramath
 from functions import colors
 from functions import data_values
 from functions import note_data
 from functions import params
 from functions import plugins
+from functions import xtramath
 from functions import song
-from functions_plugin import waveform_values
+from functions import data_dataset
 from functions_tracks import tracks_r
 import math
 
-delaytime = [
-    [0, 16*32],
-    [1, 16*28],
-    [2, 16*24],
-    [3, 16*20],
-    [4, 16*16],
-    [5, 16*12],
-    [6, 16*10],
-    [7, 16*8],
-    [8, 16*6],
-    [9, 16*5],
-    [10, 16*4],
-    [11, 16*3],
-    [12, 16*2],
-    [13, 16*1],
-    [14, 20],
-    [15, 16],
-    [16, 11],
-    [17, 12],
-    [18, 8],
-    [19, 5],
-    [20, 6],
-    [21, 4],
-    [22, 2.5],
-    [23, 3],
-    [24, 2],
-    [25, 1.5],
-    [26, 1.5],
-    [27, 1],
-    [28, 0.75],
-    [29, 0.75],
-    [30, 0.5],
-    [31, 3/8],
-    [32, 0.25],
-    [33, 0.125],
-    [34, 0],
-]
-
 def get_plugins(xml_tag, cvpj_fxids):
     for cvpj_fxid in cvpj_fxids:
-        plugtype = plugins.get_plug_type(cvpj_l, cvpj_fxid)
-        fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, cvpj_fxid)
+        fx_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, cvpj_fxid)
+        plugtype = fx_plugindata.type_get()
+        fx_on, fx_wet = fx_plugindata.fxdata_get()
 
-        if plugtype == ['universal', 'eq-bands']:
-            wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
-            wf_PLUGIN.set('type', '8bandEq')
-            wf_PLUGIN.set('presetDirty', '1')
-            num_bands = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'num_bands', 8)
-
-            cvpj_bands_a = plugins.get_eqband(cvpj_l, cvpj_fxid, None)
-            cvpj_bands_b = plugins.get_eqband(cvpj_l, cvpj_fxid, 'b')
-
-            for typedata in [['lm',cvpj_bands_a], ['rs',cvpj_bands_b]]:
-                for num in range(min(len(typedata[1]),8)):
-                    eqnumtxt = str(num+1)
-
-                    eqbanddata = typedata[1][num]
-                    in_band_shape = eqbanddata['type']
-
-                    if in_band_shape == 'low_pass': band_shape = 0
-                    elif in_band_shape == 'low_shelf': band_shape = 1
-                    elif in_band_shape == 'peak': band_shape = 2
-                    elif in_band_shape == 'band_pass': band_shape = 3
-                    elif in_band_shape == 'band_stop': band_shape = 4
-                    elif in_band_shape == 'high_shelf': band_shape = 5
-                    elif in_band_shape == 'high_pass': band_shape = 6
-                    else: in_band_shape = 2
-
-                    if in_band_shape in ['low_pass', 'high_pass']: 
-                        eq_var = eqbanddata['var']
-                        eq_var = xtramath.logpowmul(eq_var, 0.5) if eq_var != 0 else 0
-                    elif in_band_shape in ['low_shelf', 'high_shelf']: 
-                        eq_var = eqbanddata['var']
-                    else: eq_var = (10-eqbanddata['var'])*10
-
-                    if eqbanddata['freq'] != 0: band_freq = note_data.freq_to_note_noround(eqbanddata['freq'])+72
-                    else: band_freq = 0
-
-                    wf_PLUGIN.set("enable"+eqnumtxt+typedata[0], str(float(eqbanddata['on'])))
-                    wf_PLUGIN.set("freq"+eqnumtxt+typedata[0], str(band_freq))
-                    wf_PLUGIN.set("gain"+eqnumtxt+typedata[0], str(eqbanddata['gain']))
-                    wf_PLUGIN.set("q"+eqnumtxt+typedata[0], str( eq_var ))
-                    wf_PLUGIN.set("shape"+eqnumtxt+typedata[0], str(band_shape))
-
-
-        elif plugtype == ['universal', 'delay-c']:
-            d_time_type = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'time_type', 'seconds')
-            d_time = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'time', 1)
-            d_feedback = plugins.get_plug_dataval(cvpj_l, cvpj_fxid, 'feedback', 0.0)
-
-            wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
-            wf_PLUGIN.set('type', 'stereoDelay')
-            wf_PLUGIN.set('presetDirty', '1')
-            wf_PLUGIN.set('enabled', str(fx_on))
-
-            if d_time_type == 'seconds':
-                wf_PLUGIN.set('sync', '0.0')
-                wf_PLUGIN.set('delaySyncOffL', str(d_time*1000))
-                wf_PLUGIN.set('delaySyncOffR', str(d_time*1000))
-
-            if d_time_type == 'steps':
-                wf_delaySync = data_values.list_tab_closest(delaytime, d_time, 1)
-                wf_PLUGIN.set('sync', '1.0')
-                wf_PLUGIN.set('delaySyncOnL', str(wf_delaySync[0][0]))
-                wf_PLUGIN.set('delaySyncOnR', str(wf_delaySync[0][0]))
-
-            wf_PLUGIN.set('crossL', '0.0')
-            wf_PLUGIN.set('crossR', '0.0')
-            wf_PLUGIN.set('feedbackL', str(d_feedback*100))
-            wf_PLUGIN.set('feedbackR', str(d_feedback*100))
-            wf_PLUGIN.set('mix', str(fx_wet))
-            wf_PLUGIN.set('mixLock', '0.0')
-            wf_PLUGIN.set('panL', '-1.0')
-            wf_PLUGIN.set('panR', '1.0')
-
-        elif plugtype == ['universal', 'compressor']:
-            wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
-            wf_PLUGIN.set('type', 'comp')
-            wf_PLUGIN.set('presetDirty', '1')
-            wf_PLUGIN.set('enabled', str(fx_on))
-
-            v_attack = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'attack', 0)[0]*1000
-            v_postgain = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'postgain', 0)[0]
-            v_pregain = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'pregain', 0)[0]
-            v_ratio = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'ratio', 0)[0]
-            v_knee = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'knee', 0)[0]
-            v_release = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'release', 0)[0]*1000
-            v_sidechain_on = int(plugins.get_plug_param(cvpj_l, cvpj_fxid, 'sidechain_on', 0)[0])
-            v_threshold = plugins.get_plug_param(cvpj_l, cvpj_fxid, 'threshold', 0)[0]
-
-            wf_PLUGIN.set('threshold', str(v_threshold))
-            wf_PLUGIN.set('ratio', str(v_ratio))
-            wf_PLUGIN.set('attack', str(v_attack))
-            wf_PLUGIN.set('release', str(v_release))
-            wf_PLUGIN.set('knee', str(v_knee))
-            wf_PLUGIN.set('outputDb', str(v_postgain))
-            wf_PLUGIN.set('sidechainTrigger', str(v_sidechain_on))
-            wf_PLUGIN.set('inputDb', str(v_pregain))
-
-        elif plugtype[0] == 'native-tracktion' and plugtype[1] in waveform_params:
+        if plugtype[0] == 'native-tracktion':
             wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
             wf_PLUGIN.set('type', plugtype[1])
             wf_PLUGIN.set('presetDirty', '1')
             wf_PLUGIN.set('enabled', str(fx_on))
 
-            for waveform_param in waveform_params[plugtype[1]]:
-                defvaluevals = waveform_params[plugtype[1]][waveform_param]
-                paramdata = plugins.get_plug_param(cvpj_l, cvpj_fxid, waveform_param, defvaluevals[1])[0]
-                wf_PLUGIN.set(waveform_param, str(paramdata))
+            paramlist = dataset.params_list('plugin', plugtype[1])
+
+            for paramid in paramlist:
+                dset_paramdata = dataset.params_i_get('plugin', plugtype[1], paramid)
+                paramdata = fx_plugindata.param_get(paramid, dset_paramdata[2])[0]
+                wf_PLUGIN.set(paramid, str(paramdata))
 
 
 
@@ -187,14 +56,15 @@ class output_waveform_edit(plugin_output.base):
     def getfileextension(self): return 'tracktionedit'
     def parse(self, convproj_json, output_file):
         global cvpj_l
-        global waveform_params
+        global dataset
+
         wf_proj = ET.Element("EDIT")
         wf_proj.set('appVersion', "Waveform 11.5.18")
         wf_proj.set('modifiedBy', "DawVert")
 
-        waveform_params = waveform_values.devicesparam()
-
         cvpj_l = json.loads(convproj_json)
+
+        dataset = data_dataset.dataset('./data_dset/waveform.dset')
 
         wf_bpmdata = 120
         wf_numerator = 4

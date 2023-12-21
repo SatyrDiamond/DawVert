@@ -1,0 +1,138 @@
+{
+    "plugin": {
+        "objects": {
+            "1": {
+                "params": {
+                    "aOp1": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Osc 1 Attack","noauto": false,"type": "float"},
+                    "aOp2": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Osc 2 Attack","noauto": false,"type": "float"},
+                    "attack": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Attack","noauto": false,"type": "float"},
+                    "dOp1": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Osc 1 Decay","noauto": false,"type": "float"},
+                    "dOp2": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Osc 2 Decay","noauto": false,"type": "float"},
+                    "decay": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Decay","noauto": false,"type": "float"},
+                    "fine1": {"def": 0,"max": 100,"min": 0,"name": "Osc 1 Fine","noauto": false,"type": "int"},
+                    "fine2": {"def": 0,"max": 100,"min": 0,"name": "Osc 2 Fine","noauto": false,"type": "int"},
+                    "fm": {"def": 0,"max": 100,"min": 0,"name": "FM","noauto": false,"type": "int"},
+                    "oct1": {"def": 0,"max": 8,"min": 0,"name": "Osc 1 Octave","noauto": false,"type": "int"},
+                    "oct2": {"def": 0,"max": 8,"min": 0,"name": "Osc 2 Octave","noauto": false,"type": "int"},
+                    "osc1Vol": {"def": 0.0,"max": 0.5,"min": 0.0,"name": "Osc 1 Volume","noauto": false,"type": "float"},
+                    "osc2Vol": {"def": 0.0,"max": 0.5,"min": 0.0,"name": "Osc 2 Volume","noauto": false,"type": "float"},
+                    "portamento": {"def": 0.0,"max": 2.0,"min": 0.0,"name": "Portamento","noauto": false,"type": "float"},
+                    "release": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Release","noauto": false,"type": "float"},
+                    "sOp1": {"def": 0.0,"max": 1.0,"min": 0.0,"name": "Osc 1 Sustain","noauto": false,"type": "float"},
+                    "sOp2": {"def": 0.0,"max": 1.0,"min": 0.0,"name": "Osc 2 Sustain","noauto": false,"type": "float"},
+                    "semi1": {"def": 0,"max": 12,"min": -12,"name": "Osc 1 Semi","noauto": false,"type": "int"},
+                    "semi2": {"def": 0,"max": 12,"min": -12,"name": "Osc 2 Semi","noauto": false,"type": "int"},
+                    "sustain": {"def": 0.0,"max": 1.0,"min": 0.0,"name": "Sustain","noauto": false,"type": "float"},
+                    "wave1": {"def": 0,"max": 4,"min": 0,"name": "Osc 1 Wave","noauto": false,"type": "int"},
+                    "wave2": {"def": 0,"max": 4,"min": 0,"name": "Osc 2 Wave","noauto": false,"type": "int"},
+                    "waveform": {"def": 0,"max": 2,"min": 0,"name": "Waveform","noauto": false,"type": "int"
+                    }
+                },
+                "visual": {
+                    "color": [0.2235294133424759,0.2235294133424759,0.2235294133424759
+                    ],
+                    "name": "Analog Synth"
+                }
+            },
+            "0": {
+                "params": {
+                    "aOp1": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Op1 Attack","noauto": false,"type": "float"},
+                    "aOp2": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Op2 Attack","noauto": false,"type": "float"},
+                    "aOp3": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Op3 Attack","noauto": false,"type": "float"},
+                    "aOp4": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Op4 Attack","noauto": false,"type": "float"},
+                    "attack": {"def": 0.0,"max": 2.0,"min": 0.0,"name": "Attack","noauto": false,"type": "float"},
+                    "dOp1": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Op1 Decay","noauto": false,"type": "float"},
+                    "dOp2": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Op2 Decay","noauto": false,"type": "float"},
+                    "dOp3": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Op3 Decay","noauto": false,"type": "float"},
+                    "dOp4": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Op4 Decay","noauto": false,"type": "float"},
+                    "decay": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Decay","noauto": false,"type": "float"},
+                    "fine1": {"def": 0.0,"max": 0.5,"min": -0.5,"name": "Op1 Fine","noauto": false,"type": "float"},
+                    "fine2": {"def": 0.0,"max": 0.5,"min": -0.5,"name": "Op2 Fine","noauto": false,"type": "float"},
+                    "fine3": {"def": 0.0,"max": 0.5,"min": -0.5,"name": "Op3 Fine","noauto": false,"type": "float"},
+                    "fine4": {"def": 0.0,"max": 0.5,"min": -0.5,"name": "Op4 Fine","noauto": false,"type": "float"},
+                    "fmAlgorithm": {"def": 0,"max": 8,"min": 0,"name": "Algorithm","noauto": false,"type": "int"},
+                    "fmFeedBack": {"def": 0,"max": 200,"min": 0,"name": "Feedback","noauto": false,"type": "int"},
+                    "frq1": {"def": 0,"max": 32,"min": 0,"name": "Op1 FreqMul","noauto": false,"type": "int"},
+                    "frq2": {"def": 0,"max": 32,"min": 0,"name": "Op2 FreqMul","noauto": false,"type": "int"},
+                    "frq3": {"def": 0,"max": 32,"min": 0,"name": "Op3 FreqMul","noauto": false,"type": "int"},
+                    "frq4": {"def": 0,"max": 32,"min": 0,"name": "Op4 FreqMul","noauto": false,"type": "int"},
+                    "opAmp1": {"def": 0,"max": 100,"min": 0,"name": "Op1 Amp","noauto": false,"type": "int"},
+                    "opAmp2": {"def": 0,"max": 100,"min": 0,"name": "Op2 Amp","noauto": false,"type": "int"},
+                    "opAmp3": {"def": 0,"max": 100,"min": 0,"name": "Op3 Amp","noauto": false,"type": "int"},
+                    "opAmp4": {"def": 0,"max": 100,"min": 0,"name": "Op4 Amp","noauto": false,"type": "int"},
+                    "portamento": {"def": 0.0,"max": 2.0,"min": 0.0,"name": "Portamento","noauto": false,"type": "float"},
+                    "release": {"def": 0.0,"max": 5.0,"min": 0.0,"name": "Release","noauto": false,"type": "float"},
+                    "sOp1": {"def": 0,"max": 100,"min": 0,"name": "Op1 Sustain","noauto": false,"type": "int"},
+                    "sOp2": {"def": 0,"max": 100,"min": 0,"name": "Op2 Sustain","noauto": false,"type": "int"},
+                    "sOp3": {"def": 0,"max": 100,"min": 0,"name": "Op3 Sustain","noauto": false,"type": "int"},
+                    "sOp4": {"def": 0,"max": 100,"min": 0,"name": "Op4 Sustain","noauto": false,"type": "int"},
+                    "sustain": {"def": 0.0,"max": 1.0,"min": 0.0,"name": "Sustain","noauto": false,"type": "float"},
+                    "waveform": {"def": 0.0,"max": 2.0,"min": 0.0,"name": "Waveform","noauto": false,"type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [0.0,0.49803921580314636,0.7215686440467834
+                    ],
+                    "name": "FM-Synth"
+                }
+            }
+        }
+    },
+    "track": {
+        "colorset": {
+            "main": [
+                [
+                    0.07,
+                    0.64,
+                    0.86
+                ],
+                [
+                    0.07,
+                    0.84,
+                    0.9
+                ],
+                [
+                    0.05,
+                    0.71,
+                    0.56
+                ],
+                [
+                    0.05,
+                    0.69,
+                    0.3
+                ],
+                [
+                    0.64,
+                    0.94,
+                    0.22
+                ],
+                [
+                    0.95,
+                    0.79,
+                    0.38
+                ],
+                [
+                    0.95,
+                    0.49,
+                    0.32
+                ],
+                [
+                    0.94,
+                    0.25,
+                    0.38
+                ],
+                [
+                    0.93,
+                    0.2,
+                    0.7
+                ],
+                [
+                    0.69,
+                    0.06,
+                    0.79
+                ]
+            ]
+        },
+        "objects": {}
+    }
+}

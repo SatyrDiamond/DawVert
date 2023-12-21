@@ -1,0 +1,3039 @@
+{
+    "plugin_fx": {
+        "objects": {
+            "auto_wah": {
+                "params": {
+                    "0": {
+                        "def": 2.2300000190734863,
+                        "max": 4.0,
+                        "min": 0.5,
+                        "name": "Cutoff",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.4000000059604645,
+                        "max": 0.5,
+                        "min": 0.0,
+                        "name": "Speed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Reso",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Wet",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.30980393290519714,
+                        0.658823549747467,
+                        0.7803921699523926
+                    ],
+                    "name": "Auto-Wah"
+                }
+            },
+            "autopan": {
+                "params": {
+                    "0": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Smooth",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.93,
+                        0.86,
+                        0.74
+                    ],
+                    "name": "Auto-Pan"
+                }
+            },
+            "bitcrush": {
+                "params": {
+                    "0": {
+                        "def": 3.8500001430511475,
+                        "max": 15.90296459197998,
+                        "min": 1.0485435724258423,
+                        "name": "Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.09999997913837433,
+                        "max": 0.5,
+                        "min": 0.009999999776482582,
+                        "name": "Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Wet",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Jitter",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.89,
+                        0.66,
+                        0.66
+                    ],
+                    "name": "Bitcrush"
+                }
+            },
+            "cabsim": {
+                "params": {
+                    "0": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Width",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Height",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.25242727994918823,
+                        "name": "Damp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Tone",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Wet",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.31,
+                        0.77,
+                        0.66
+                    ],
+                    "name": "Cab Sim"
+                }
+            },
+            "chorus": {
+                "drumset": {
+                    "wertfrew": {}
+                },
+                "params": {
+                    "0": {
+                        "def": 0.25,
+                        "max": 0.5,
+                        "min": 0.10000000149011612,
+                        "name": "Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.4000000059604645,
+                        "max": 2.0,
+                        "min": 0.02083333395421505,
+                        "name": "Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.0,
+                        "max": 0.699999988079071,
+                        "min": 0.0,
+                        "name": "Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.5,
+                        "max": 0.5,
+                        "min": 0.0,
+                        "name": "Wet",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.53,
+                        0.58,
+                        0.84
+                    ],
+                    "name": "Chorus"
+                }
+            },
+            "comb": {
+                "params": {
+                    "0": {
+                        "def": 0.8000000715255737,
+                        "max": 0.8999999761581421,
+                        "min": 0.006819027476012707,
+                        "name": "Wet",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 10.0,
+                        "max": 50.0,
+                        "min": 2.0,
+                        "name": "Reso",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.4750000238418579,
+                        "max": 0.949999988079071,
+                        "min": 0.0,
+                        "name": "Feedback",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.5,
+                        0.37,
+                        0.84
+                    ],
+                    "name": "Comb"
+                }
+            },
+            "compresser": {
+                "params": {
+                    "0": {
+                        "def": 0.09999997913837433,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Thresh.",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Ratio",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.009999999776482582,
+                        "max": 0.20000000298023224,
+                        "min": 9.999999747378752e-06,
+                        "name": "Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.05000000074505806,
+                        "max": 0.19935600459575653,
+                        "min": 0.0016440111212432384,
+                        "name": "Release",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.73,
+                        0.71,
+                        0.67
+                    ],
+                    "name": "Compr."
+                }
+            },
+            "delay": {
+                "params": {
+                    "0": {
+                        "def": 8.0,
+                        "max": 12.0,
+                        "min": 1.0,
+                        "name": "Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.4850299656391144,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.5538923740386963,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Wet",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.69,
+                        0.8,
+                        0.91
+                    ],
+                    "name": "Delay"
+                }
+            },
+            "distortion": {
+                "params": {
+                    "0": {
+                        "def": 3.9781441688537598,
+                        "max": 4.983819007873535,
+                        "min": 0.0,
+                        "name": "Pre",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 12.415510177612305,
+                        "max": 20.0,
+                        "min": 1.0,
+                        "name": "Amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.10000000149011612,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Post",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.0,
+                        "max": 3.0,
+                        "min": 0.0,
+                        "name": "Program",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.96,
+                        0.7,
+                        0.22
+                    ],
+                    "name": "Distortion"
+                }
+            },
+            "filter": {
+                "params": {
+                    "0": {
+                        "def": 0.5400000214576721,
+                        "max": 1.0,
+                        "min": 0.10291261225938797,
+                        "name": "Freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.0,
+                        "max": 12.0,
+                        "min": -12.0,
+                        "name": "Reso",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Gain",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.87,
+                        0.87,
+                        0.87
+                    ],
+                    "name": "Filter"
+                }
+            },
+            "flanger": {
+                "params": {
+                    "0": {
+                        "def": 0.25,
+                        "max": 0.949999988079071,
+                        "min": 0.10000000149011612,
+                        "name": "Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.4000000059604645,
+                        "max": 2.0,
+                        "min": 0.02083333395421505,
+                        "name": "Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.4000000059604645,
+                        "max": 0.8999999761581421,
+                        "min": 0.25,
+                        "name": "Feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Wet",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.41,
+                        0.6
+                    ],
+                    "name": "Flanger"
+                }
+            },
+            "limiter": {
+                "params": {
+                    "0": {
+                        "def": 2.0,
+                        "max": 4.0,
+                        "min": 0.0,
+                        "name": "Pre",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.5,
+                        "max": 1.992055058479309,
+                        "min": 0.0,
+                        "name": "Post",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.009999999776482582,
+                        "max": 0.05000000074505806,
+                        "min": 9.999999747378752e-06,
+                        "name": "Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.5,
+                        "max": 0.5,
+                        "min": 0.009999999776482582,
+                        "name": "Release",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.65,
+                        0.22,
+                        0.22
+                    ],
+                    "name": "Limiter"
+                }
+            },
+            "octaver": {
+                "params": {
+                    "0": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "-1 Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.20000000298023224,
+                        "max": 1.0,
+                        "min": 0.20000000298023224,
+                        "name": "-1 Tone",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.04530761390924454,
+                        "name": "+1 Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.30000001192092896,
+                        "max": 1.0,
+                        "min": 0.30000001192092896,
+                        "name": "+1 Tone",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.009703674353659153,
+                        "name": "Dry",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.6,
+                        0.35,
+                        0.31
+                    ],
+                    "name": "Octaver"
+                }
+            },
+            "parameq": {
+                "params": {
+                    "0": {
+                        "def": 0.5400000214576721,
+                        "max": 1.0,
+                        "min": 0.07999999821186066,
+                        "name": "Freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.0,
+                        "max": 12.0,
+                        "min": -12.0,
+                        "name": "Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": -2.019200086593628,
+                        "max": -0.574400007724762,
+                        "min": -3.4639999866485596,
+                        "name": "Bandwidth",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.65,
+                        0.52,
+                        0.44
+                    ],
+                    "name": "Param. EQ"
+                }
+            },
+            "phaser": {
+                "params": {
+                    "0": {
+                        "def": 0.8000000715255737,
+                        "max": 0.8999999761581421,
+                        "min": 0.0010000000474974513,
+                        "name": "Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 10.0,
+                        "max": 50.0,
+                        "min": 2.0,
+                        "name": "Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.4750000238418579,
+                        "max": 0.949999988079071,
+                        "min": 0.0,
+                        "name": "Feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.009977323934435844,
+                        "max": 0.5,
+                        "min": 0.0020000000949949026,
+                        "name": "Low",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 0.09070295095443726,
+                        "max": 0.5,
+                        "min": 0.0020000000949949026,
+                        "name": "High",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.48,
+                        0.76,
+                        0.44
+                    ],
+                    "name": "Phaser"
+                }
+            },
+            "reverb": {
+                "params": {
+                    "0": {
+                        "def": 0.8500000238418579,
+                        "max": 0.925000011920929,
+                        "min": 0.0,
+                        "name": "Room",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.25,
+                        "max": 0.800000011920929,
+                        "min": 0.0,
+                        "name": "Damp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.04625000059604645,
+                        "max": 0.0925000011920929,
+                        "min": 0.0,
+                        "name": "Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Width",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 0.19499999284744263,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Wet",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.95,
+                        0.96,
+                        0.75
+                    ],
+                    "name": "Reverb"
+                }
+            },
+            "staticflanger": {
+                "params": {
+                    "0": {
+                        "def": 0.0,
+                        "max": 0.949999988079071,
+                        "min": -0.949999988079071,
+                        "name": "Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.574999988079071,
+                        "max": 0.8999999761581421,
+                        "min": 0.25,
+                        "name": "Feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Wet",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.33,
+                        0.33,
+                        1.0
+                    ],
+                    "name": "S. Flanger"
+                }
+            },
+            "tremolo": {
+                "params": {
+                    "0": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Smooth",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.72,
+                        0.95,
+                        0.95
+                    ],
+                    "name": "Tremolo"
+                }
+            },
+            "vibrato": {
+                "params": {
+                    "0": {
+                        "def": 0.125,
+                        "max": 0.5,
+                        "min": 0.0,
+                        "name": "Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 1.7599999904632568,
+                        "max": 3.5,
+                        "min": 0.019999999552965164,
+                        "name": "Rate",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.62,
+                        0.85
+                    ],
+                    "name": "Vibrato"
+                }
+            },
+            "vinylsim": {
+                "params": {
+                    "0": {
+                        "def": 0.6206586956977844,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Dust",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.25,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Scratch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.33533135056495667,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Noise",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.4784518778324127,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Age",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Wet",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.36,
+                        0.36,
+                        0.36
+                    ],
+                    "name": "Vinyl Sim"
+                }
+            }
+        }
+    },
+    "plugin_inst": {
+        "objects": {
+            "8SYN": {
+                "params": {
+                    "0": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0,
+                        "max": 4,
+                        "min": -4,
+                        "name": "Octave",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "2": {
+                        "def": 0,
+                        "max": 12,
+                        "min": -12,
+                        "name": "Semis",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "3": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Cents",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 1.0,
+                        "max": 1.9841059446334839,
+                        "min": 0.0,
+                        "name": "Volume",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "6": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "A>B",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "7": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Prog",
+                        "noauto": false,
+                        "type": "bool"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.82,
+                        0.78,
+                        0.63
+                    ],
+                    "name": "8BitSynth"
+                }
+            },
+            "BBOX": {
+                "visual": {
+                    "color": [
+                        0.66,
+                        0.51,
+                        0.36
+                    ],
+                    "name": "BeatBox"
+                }
+            },
+            "BLNE": {
+                "params": {
+                    "0": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "Waveform",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "1": {
+                        "def": 0.0,
+                        "max": 12.0,
+                        "min": -12.0,
+                        "name": "Tune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "10": {
+                        "def": 1,
+                        "max": 12,
+                        "min": 0,
+                        "name": "LFO Rate",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "11": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "LFO Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "12": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "LFO Phase",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "13": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "Dist. Program",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "14": {
+                        "def": 4.050000190734863,
+                        "max": 5.0,
+                        "min": 0.0,
+                        "name": "Dist. Pre",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "15": {
+                        "def": 16.299999237060547,
+                        "max": 20.0,
+                        "min": 1.0,
+                        "name": "Dist. Amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "16": {
+                        "def": 0.10000000149011612,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Dist. Post",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "17": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "17",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.4050000011920929,
+                        "max": 0.800000011920929,
+                        "min": 0.009999999776482582,
+                        "name": "Cutoff",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.9900000095367432,
+                        "max": 0.9900000095367432,
+                        "min": 0.009999999776482582,
+                        "name": "Reso",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 0.9900000095367432,
+                        "max": 0.9900000095367432,
+                        "min": 0.009999999776482582,
+                        "name": "Env.Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "5": {
+                        "def": 0.0,
+                        "max": 0.9900000095367432,
+                        "min": 0.0,
+                        "name": "Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "6": {
+                        "def": 0.5,
+                        "max": 0.9960278272628784,
+                        "min": 0.0,
+                        "name": "Accent",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "7": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Volume",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "8": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": -0.44999998807907104,
+                        "name": "Pulse Width",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "9": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "LFO Target",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.99,
+                        0.99,
+                        0.99
+                    ],
+                    "name": "BassLine"
+                }
+            },
+            "FMSN": {
+                "params": {
+                    "0": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.0,
+                        "max": 0.24900661408901215,
+                        "min": 0.0,
+                        "name": "Feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "10": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "11": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Op1 Level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "12": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op1 Vel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "13": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op1 Fixed",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "14": {
+                        "def": 0,
+                        "max": 4,
+                        "min": -4,
+                        "name": "Op1 Octave",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "15": {
+                        "def": 0,
+                        "max": 6,
+                        "min": -6,
+                        "name": "Op1 Semi",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "16": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op1 Attack Exp",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "17": {
+                        "def": 0.0,
+                        "max": 1.7430462837219238,
+                        "min": 0.0,
+                        "name": "Op1 Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "18": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op1 Decay Exp",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "19": {
+                        "def": 0.0,
+                        "max": 1.7430464029312134,
+                        "min": 0.0,
+                        "name": "Op1 Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Feedback Vel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "20": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op1 AttRel Link",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "21": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Op1 Sustain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "22": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op1 Release Exp",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "23": {
+                        "def": 0.0,
+                        "max": 1.7430464029312134,
+                        "min": 0.0,
+                        "name": "Op1 Release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "24": {
+                        "def": 0.5,
+                        "max": 0.9920529127120972,
+                        "min": 0.0,
+                        "name": "Op2 Level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "25": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op2 Vel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "26": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op2 Fixed",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "27": {
+                        "def": 0,
+                        "max": 4,
+                        "min": -4,
+                        "name": "Op2 Octave",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "28": {
+                        "def": 0,
+                        "max": 6,
+                        "min": -6,
+                        "name": "Op2 Semi",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "29": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op2 Attack Exp",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "3": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Volume",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "30": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Op2 Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "31": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op2 Decay Exp",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "32": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Op2 Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "33": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op2 AttRel Link",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "34": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Op2 Sustain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "35": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op2 Release Exp",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "36": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Op2 Release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "37": {
+                        "def": 0.5,
+                        "max": 0.9960264563560486,
+                        "min": 0.0,
+                        "name": "Op3 Level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "38": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op3 Vel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "39": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op3 Fixed",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "4": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Volume Vel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "40": {
+                        "def": 0,
+                        "max": 4,
+                        "min": -4,
+                        "name": "Op3 Octave",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "41": {
+                        "def": 0,
+                        "max": 6,
+                        "min": -6,
+                        "name": "Op3 Semi",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "42": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op3 Attack Exp",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "43": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Op3 Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "44": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op3 Decay Exp",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "45": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Op3 Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "46": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op3 AttRel Link",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "47": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Op3 Sustain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "48": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Op3 Release Exp",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "49": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Op3 Release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "5": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "A1",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "6": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "A2",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "60": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "F1",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "61": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "F2",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "62": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "F3",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "7": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "A3",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "8": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "A0",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "9": {
+                        "def": 1.0,
+                        "max": 12.0,
+                        "min": 0.0,
+                        "name": "Rate",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.29,
+                        0.78,
+                        0.76
+                    ],
+                    "name": "FMSynth"
+                }
+            },
+            "KSSN": {
+                "params": {
+                    "0": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.6200000047683716,
+                        "max": 0.9900000095367432,
+                        "min": 0.25,
+                        "name": "Pre-Filter",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "10": {
+                        "def": 0,
+                        "max": 6,
+                        "min": -6,
+                        "name": "Unit 1 Semis",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "11": {
+                        "def": 0.0,
+                        "max": 48.41099548339844,
+                        "min": -50.0,
+                        "name": "Unit 1 Cents",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "12": {
+                        "def": 0.44999998807907104,
+                        "max": 0.8999999761581421,
+                        "min": 0.0010000000474974513,
+                        "name": "Unit 1 Damping",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "13": {
+                        "def": 0.5,
+                        "max": 0.9960264563560486,
+                        "min": 0.0,
+                        "name": "Unit 1 Damping Track",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "14": {
+                        "def": 0.5,
+                        "max": 0.9920529723167419,
+                        "min": 0.0,
+                        "name": "Unit 1 Damping Vel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "15": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Unit 1 Inv",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "2": {
+                        "def": 0.5,
+                        "max": 0.9900000095367432,
+                        "min": 9.999999747378752e-05,
+                        "name": "Pre-Filter Track",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "20": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Unit 2 KB Follow",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "21": {
+                        "def": 0,
+                        "max": 2,
+                        "min": -2,
+                        "name": "Unit 2 Octave",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "22": {
+                        "def": 0,
+                        "max": 6,
+                        "min": -6,
+                        "name": "Unit 2 Semis",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "23": {
+                        "def": 0.0,
+                        "max": 50.0,
+                        "min": -50.0,
+                        "name": "Unit 2 Cents",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "24": {
+                        "def": 0.44999998807907104,
+                        "max": 0.8999999761581421,
+                        "min": 0.0010000000474974513,
+                        "name": "Unit 2 Damping",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "25": {
+                        "def": 0.5,
+                        "max": 0.9880795478820801,
+                        "min": 0.0,
+                        "name": "Unit 2 Damping Track",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "26": {
+                        "def": 0.5,
+                        "max": 0.9960264563560486,
+                        "min": 0.0,
+                        "name": "Unit 2 Damping Vel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "27": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Unit 2 Inv",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "3": {
+                        "def": 0.5,
+                        "max": 0.9900000095367432,
+                        "min": 9.999999747378752e-05,
+                        "name": "Pre-Filter Vel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "5": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Volume",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "6": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "7": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Inv",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "8": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Unit 1 KB Follow",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "9": {
+                        "def": 0,
+                        "max": 2,
+                        "min": -2,
+                        "name": "Unit 1 Octave",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.55,
+                        0.57,
+                        0.44
+                    ],
+                    "name": "KSSynth"
+                }
+            },
+            "MDLR": {
+                "params": {
+                    "0": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Volume",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.45,
+                        0.45,
+                        0.45
+                    ],
+                    "name": "Modular"
+                }
+            },
+            "NULL": {
+                "visual": {
+                    "color": [
+                        0.1,
+                        0.1,
+                        0.1
+                    ],
+                    "name": "None"
+                }
+            },
+            "ORGN": {
+                "params": {
+                    "0": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0.1420290321111679,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Perc Tone",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.0,
+                        "max": 0.5,
+                        "min": 0.0,
+                        "name": "Perc Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "24": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Drawbar 1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "25": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Drawbar 2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "26": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Drawbar 3",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "27": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Drawbar 4",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "28": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Drawbar 5",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "29": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Drawbar 6",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.0,
+                        "max": 0.699999988079071,
+                        "min": 0.0,
+                        "name": "Leslie Speed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "30": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Drawbar 7",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "31": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Drawbar 8",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "32": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Drawbar 9",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 1.0,
+                        "max": 0.9920530915260315,
+                        "min": 0.0,
+                        "name": "Leslie Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "5": {
+                        "def": 0.3825850486755371,
+                        "max": 0.4000000059604645,
+                        "min": 0.0,
+                        "name": "Amp Drive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "6": {
+                        "def": 1.0828402042388916,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Amp Volume",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.68,
+                        0.3,
+                        0.03
+                    ],
+                    "name": "Organ"
+                }
+            },
+            "PADS": {
+                "params": {
+                    "0": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Volume",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "10": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Morph Blend",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "11": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Morph Env",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "12": {
+                        "def": 0.0,
+                        "max": 3.0,
+                        "min": 0.0,
+                        "name": "Morph Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "13": {
+                        "def": 0.0,
+                        "max": 3.0,
+                        "min": 0.0,
+                        "name": "Morph Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "14": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Morph Sustain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "15": {
+                        "def": 0.0,
+                        "max": 3.0,
+                        "min": 0.0,
+                        "name": "Morph Release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "16": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Gain 1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "17": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Gain 2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "18": {
+                        "def": 0.0,
+                        "max": 3.0,
+                        "min": 0.0,
+                        "name": "Gain Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "19": {
+                        "def": 0.0,
+                        "max": 3.0,
+                        "min": 0.0,
+                        "name": "Gain Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "LFO 1 Target",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "20": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Gain Sustain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "21": {
+                        "def": 0.0,
+                        "max": 3.0,
+                        "min": 0.0,
+                        "name": "Gain Release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 6,
+                        "max": 12,
+                        "min": 0,
+                        "name": "LFO 1 Rate",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "4": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "LFO 1 Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "5": {
+                        "def": 0.0,
+                        "max": 0.5,
+                        "min": -0.5,
+                        "name": "LFO 1 Phase",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "6": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "LFO 2 Target",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "7": {
+                        "def": 6,
+                        "max": 12,
+                        "min": 0,
+                        "name": "LFO 2 Rate",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "8": {
+                        "def": 0.0,
+                        "max": 0.9841110110282898,
+                        "min": 0.0,
+                        "name": "LFO 2 Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "9": {
+                        "def": 0.0,
+                        "max": 0.5,
+                        "min": -0.5,
+                        "name": "LFO 2 Phase",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.99,
+                        0.99,
+                        0.69
+                    ],
+                    "name": "PadSynth"
+                }
+            },
+            "PCMS": {
+                "visual": {
+                    "color": [
+                        0.78,
+                        0.84,
+                        0.65
+                    ],
+                    "name": "PCMSynth"
+                }
+            },
+            "SAWS": {
+                "params": {
+                    "0": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "Wave",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "10": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Filter Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "11": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Filter Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "12": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Filter Sustain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "13": {
+                        "def": 1.75,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Filter Release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "14": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Amp Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "15": {
+                        "def": 0.6499999761581421,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Amp Deacy",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "16": {
+                        "def": 0.25,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Amp Sustain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "17": {
+                        "def": 0.6499999761581421,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Amp Release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "18": {
+                        "def": 0,
+                        "max": 5,
+                        "min": 0,
+                        "name": "LFO Target",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "2": {
+                        "def": 0.1899999976158142,
+                        "max": 0.9960251450538635,
+                        "min": 0.0,
+                        "name": "Stereo Width",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "21": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "LFO Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "22": {
+                        "def": 6,
+                        "max": 12,
+                        "min": 0,
+                        "name": "LFO Rate",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "23": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Pitch Env Amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "24": {
+                        "def": 0.0,
+                        "max": 1.4140000343322754,
+                        "min": 0.0,
+                        "name": "Pitch Env Time",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.6499999761581421,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "31": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Volume",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "5": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Cutoff",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "6": {
+                        "def": 0.0,
+                        "max": 0.8999999761581421,
+                        "min": 0.0,
+                        "name": "Res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "7": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "Filter Type",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "8": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Filter KB Track",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "9": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Filter Env Amount",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.99,
+                        0.6,
+                        0.25
+                    ],
+                    "name": "SawSynth"
+                }
+            },
+            "SSYN": {
+                "params": {
+                    "0": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "1": {
+                        "def": 0,
+                        "max": 8,
+                        "min": 0,
+                        "name": "Osc 1 Shape",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "10": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "LFO 1 Shape",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "11": {
+                        "def": 0,
+                        "max": 9,
+                        "min": 0,
+                        "name": "LFO 1 Target",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "12": {
+                        "def": 0,
+                        "max": 12,
+                        "min": 0,
+                        "name": "LFO 1 Rate",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "13": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "LFO 1 Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "14": {
+                        "def": 0,
+                        "max": 9,
+                        "min": 0,
+                        "name": "LFO 2 Target",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "15": {
+                        "def": 0,
+                        "max": 12,
+                        "min": 0,
+                        "name": "LFO 2 Rate",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "16": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "LFO 2 Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "17": {
+                        "def": 0.2176913619041443,
+                        "max": 1.0,
+                        "min": 0.0010000000474974513,
+                        "name": "Filter Cutoff",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "18": {
+                        "def": 0.8999999761581421,
+                        "max": 0.8999999761581421,
+                        "min": 0.0,
+                        "name": "Filter Res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "19": {
+                        "def": 2.0,
+                        "max": 6.0,
+                        "min": 0.0,
+                        "name": "Filter Type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.5434775948524475,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Osc 1 Mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "20": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Filter Track",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "21": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Filter Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "22": {
+                        "def": 0.585868775844574,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Filter Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "23": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Filter Sustain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "24": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Filter Release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "25": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Volume Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "26": {
+                        "def": 1.75,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Volume Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "27": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Volume Sustain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "28": {
+                        "def": 0.0,
+                        "max": 1.75,
+                        "min": 0.0,
+                        "name": "Volume Release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "29": {
+                        "def": 0.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Volume",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.0,
+                        "max": 0.9900000095367432,
+                        "min": -0.9900000095367432,
+                        "name": "Osc 1 Bend",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "31": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Osc 1 Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 0,
+                        "max": 9,
+                        "min": 0,
+                        "name": "Osc 2 Shape",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "5": {
+                        "def": -0.004347962327301502,
+                        "max": 0.5,
+                        "min": -0.5,
+                        "name": "Osc 2 Phase",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "6": {
+                        "def": 0,
+                        "max": 4,
+                        "min": -4,
+                        "name": "Osc 2 Octave",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "7": {
+                        "def": 0,
+                        "max": 12,
+                        "min": -12,
+                        "name": "Osc 2 Semis",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "8": {
+                        "def": 4.347877502441406,
+                        "max": 50.0,
+                        "min": -50.0,
+                        "name": "Osc 2 Mod",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.79,
+                        0.82,
+                        0.91
+                    ],
+                    "name": "SubSynth"
+                }
+            },
+            "VCDR": {
+                "params": {
+                    "10": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Char 180",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "11": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Char 300",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "12": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Char 500",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "13": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Char 800",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "14": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Char 1300",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "15": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Char 2200",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "16": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Char 3600",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "17": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Char 6000",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Send Notes to Carrier",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "3": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Unison",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "30": {
+                        "def": 1.0,
+                        "max": 0.0,
+                        "min": 1.0,
+                        "name": "30",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "31": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "31",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "32": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "32",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "33": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "33",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "34": {
+                        "def": 0.0,
+                        "max": 0.0,
+                        "min": 0.0,
+                        "name": "34",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "35": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "35",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Sub",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "5": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Noise",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "6": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Dry",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "7": {
+                        "def": 0.20000000298023224,
+                        "max": 0.4000000059604645,
+                        "min": 0.0,
+                        "name": "Slew",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "8": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "HF Bypass",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "9": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Volume",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.74,
+                        0.35,
+                        0.35
+                    ],
+                    "name": "Vocoder"
+                }
+            }
+        }
+    },
+    "plugin_master_fx": {
+        "objects": {
+            "master_delay": {
+                "params": {
+                    "1": {
+                        "def": 8.0,
+                        "max": 12.0,
+                        "min": 1.0,
+                        "name": "time",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "2": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "3": {
+                        "def": 0.0,
+                        "max": 0.9998999834060669,
+                        "min": 0.0,
+                        "name": "damping",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "4": {
+                        "def": 0.5,
+                        "max": 0.976166844367981,
+                        "min": 0.0,
+                        "name": "wet",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "5": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "pan1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "6": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "pan2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "7": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "pan3",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "8": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "pan4",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "9": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "pan5",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.64,
+                        0.78,
+                        0.87
+                    ],
+                    "name": "Delay"
+                }
+            },
+            "master_eq": {
+                "params": {
+                    "30": {
+                        "def": 1.100000023841858,
+                        "max": 2.200000047683716,
+                        "min": 0.0,
+                        "name": "low",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "31": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "freq_lowmid",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "32": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "mid",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "33": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "freq_midhigh",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "34": {
+                        "def": 1.100000023841858,
+                        "max": 2.200000047683716,
+                        "min": 0.0,
+                        "name": "high",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.27,
+                        0.27
+                    ],
+                    "name": "Equalizer"
+                }
+            },
+            "master_limiter": {
+                "params": {
+                    "35": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "pre",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "36": {
+                        "def": 0.021299999207258224,
+                        "max": 0.10000000149011612,
+                        "min": 0.003000000026077032,
+                        "name": "attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "37": {
+                        "def": 0.25999999046325684,
+                        "max": 0.5,
+                        "min": 0.019999999552965164,
+                        "name": "release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "38": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "post",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.62,
+                        0.49,
+                        0.42
+                    ],
+                    "name": "Limiter"
+                }
+            },
+            "master_reverb": {
+                "params": {
+                    "16": {
+                        "def": 0.02500000037252903,
+                        "max": 0.0925000011920929,
+                        "min": 0.0,
+                        "name": "predelay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "17": {
+                        "def": 0.7549999952316284,
+                        "max": 0.925000011920929,
+                        "min": 0.0,
+                        "name": "room_size",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "18": {
+                        "def": 0.15600000321865082,
+                        "max": 0.800000011920929,
+                        "min": 0.0,
+                        "name": "hf_damping",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "19": {
+                        "def": 0.699999988079071,
+                        "max": 0.699999988079071,
+                        "min": 0.0,
+                        "name": "diffuse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "20": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "dither_echoes",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "21": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "early_reflect",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "22": {
+                        "def": 0.25,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "er_decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "23": {
+                        "def": 0.5,
+                        "max": 0.9880834817886353,
+                        "min": 0.0,
+                        "name": "stereo_delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "24": {
+                        "def": 0.5,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "stereo_spread",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "25": {
+                        "def": 0.25,
+                        "max": 0.5,
+                        "min": 0.0,
+                        "name": "wet",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.83,
+                        0.82,
+                        0.51
+                    ],
+                    "name": "Reverb"
+                }
+            }
+        }
+    }
+}

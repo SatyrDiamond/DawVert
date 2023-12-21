@@ -19,6 +19,9 @@ from functions import params
 from functions import song
 from functions_tracks import tracks_mi
 
+from functions import data_datadef
+from functions import data_dataset
+
 filename_len = {}
 
 def decode_color(color):
@@ -44,6 +47,9 @@ class output_cvpjs(plugin_output.base):
     def getfileextension(self): return 'flp'
     def parse(self, convproj_json, output_file):
         cvpj_l = json.loads(convproj_json)
+
+        datadef = data_datadef.datadef('./data_ddef/fl_studio.ddef')
+        dataset = data_dataset.dataset('./data_dset/fl_studio.dset')
 
         FLP_Data = {}
 
@@ -167,18 +173,17 @@ class output_cvpjs(plugin_output.base):
 
                 if 'pluginid' in CVPJ_Inst:
                     pluginid = CVPJ_Inst['pluginid']
-                    plugintype = plugins.get_plug_type(cvpj_l, pluginid)
+                    inst_plugdata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
+                    plugintype = inst_plugdata.type_get()
 
-                    fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(cvpj_l, pluginid)
+                    fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(inst_plugdata, datadef, dataset)
 
                     if plugintype == ['sampler', 'single']:
                         T_Main['type'] = 0
                         T_Main['plugin'] = ''
-                        cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
-                        T_Main['samplefilename'] = data_values.get_value(cvpj_plugindata, 'file', '')
+                        T_Main['samplefilename'] = inst_plugdata.dataval_get('file', '')
 
                     elif fl_plugin != None:
-
                         plug_opened = False
                         pos_x, pos_y = [0,0]
                         size_x, size_y = [0,0]
@@ -189,11 +194,9 @@ class output_cvpjs(plugin_output.base):
                         if out_size != None: size_x, size_y = out_size
                         if out_open != None: plug_opened = out_open
 
-
                         fl_plugindata = b'\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00'
                         fl_plugindata += b'Q' if plug_opened else b'P'
                         fl_plugindata += b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-
 
                         fl_plugindata += struct.pack('iiii', pos_x, pos_y, size_x, size_y)
 
@@ -504,13 +507,14 @@ class output_cvpjs(plugin_output.base):
 
                     for pluginid in cvpj_fxdata['chain_fx_audio']:
 
-                        fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(cvpj_l, pluginid)
+                        fx_plugdata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
+                        fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(fx_plugdata, datadef, dataset)
                         if fl_plugin != None:
                             FL_Mixer[cvpj_fx]['slots'][slotnum] = {}
                             slotdata = FL_Mixer[cvpj_fx]['slots'][slotnum]
                             slotdata['plugin'] = fl_plugin
                             slotdata['pluginparams'] = fl_pluginparams
-                            fx_name, fx_color = plugins.get_plug_fxvisual(cvpj_l, fl_plugin)
+                            fx_name, fx_color = fx_plugdata.fxvisual_get()
 
                             if fx_name: slotdata['name'] = fx_name
                             if fx_color: slotdata['color'] = decode_color(fx_color)

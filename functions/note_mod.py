@@ -91,14 +91,12 @@ def pitchmod2point(cvpj_note, position, ptype, maindur, slideparam, input_pitch)
 		if pitch_cur < input_pitch:
 			pitch_cur += (mainslideparam_mul)
 			pitch_exact = input_pitch < pitch_cur
-			if pitch_exact == True:
-				outdur = (mainslideparam_mul-(pitch_cur-input_pitch))/slideparam
+			if pitch_exact == True: outdur = (mainslideparam_mul-(pitch_cur-input_pitch))/slideparam
 
 		elif pitch_cur > input_pitch:
 			pitch_cur -= (mainslideparam_mul)
 			pitch_exact = input_pitch > pitch_cur
-			if pitch_exact == True:
-				outdur = (mainslideparam_mul+(pitch_cur-input_pitch))/slideparam
+			if pitch_exact == True: outdur = (mainslideparam_mul+(pitch_cur-input_pitch))/slideparam
 
 		if pitch_exact == True:
 			pitch_cur = input_pitch

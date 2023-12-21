@@ -219,7 +219,7 @@ class output_wavtool(plugin_output.base):
 
                     inst_supported = False
 
-                    middlenote = middlenote+60 if middlenote != None else 0
+                    middlenote = middlenote+60 if middlenote != None else 60
 
                     if pluginid != None:
                         plugtype = plugins.get_plug_type(cvpj_l, pluginid)

@@ -167,7 +167,7 @@ class input_adlib_rol(plugin_input.base):
                 if instdatanum <= numinst:
                     opl2data = adlib_bnk[1][adlib_bnk[0][instname][0]]
 
-                    fmdata = params_fm.fm_data('opl2')
+                    fmdata = plugin_fm.fm_data('opl2')
 
                     tracks_rm.inst_dataval_add(cvpj_l, instname_upper, 'instdata', 'middlenote', 0)
                     if opl2data[0][0] == 1: fmdata.set_param('perctype', opl2data[0][1]-6)

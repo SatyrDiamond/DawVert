@@ -202,4 +202,3 @@ class input_wavtool(plugin_input.base):
         song.add_timesig(cvpj_l, j_wvtl_beatNumerator, j_wvtl_beatDenominator)
         song.add_param(cvpj_l, 'bpm', j_wvtl_bpm)
         return json.dumps(cvpj_l)
-

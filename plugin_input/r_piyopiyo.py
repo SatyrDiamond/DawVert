@@ -11,9 +11,9 @@ from functions import placement_data
 from functions import plugins
 from functions import song
 from functions import note_data
+from functions import colors
+from functions import data_dataset
 from functions_tracks import tracks_r
-
-track_colors = [[0.25, 0.38, 0.49], [0.36, 0.43, 0.46], [0.51, 0.57, 0.47], [0.58, 0.64, 0.40]]
 
 class input_piyopiyo(plugin_input.base):
     def __init__(self): pass
@@ -47,16 +47,15 @@ class input_piyopiyo(plugin_input.base):
         recordspertrack = int.from_bytes(pmdfile.read(4), "little")
         print("[input-piyopiyo] Records Per Track: " + str(recordspertrack))
 
-        #samplefolder = extra_param['samplefolder']
-
         pmdtrackdata = []
         keyoffset = [0,0,0,0]
 
         cvpj_l = {}
 
+        dataset = data_dataset.dataset('./data_dset/piyopiyo.dset')
+        colordata = colors.colorset(dataset.colorset_e_list('inst', 'main'))
+
         for tracknum in range(3):
-            pluginid = str(tracknum)
-            plugins.add_plug(cvpj_l, pluginid, 'native-piyopiyo', 'wave')
             print("[input-piyopiyo] Track " + str(tracknum+1), end=",")
             trk_octave = pmdfile.read(1)[0]
             print(" Oct:" + str(trk_octave), end=",")
@@ -71,20 +70,30 @@ class input_piyopiyo(plugin_input.base):
             trk_waveform = struct.unpack('b'*256, pmdfile.read(256))
             trk_envelope = struct.unpack('B'*64, pmdfile.read(64))
             keyoffset[tracknum] = (trk_octave-2)*12
-            plugins.add_wave(cvpj_l, pluginid, 'main', trk_waveform, -128, 128)
-            plugins.add_env_blocks(cvpj_l, pluginid, 'vol', trk_envelope, 128, None, None)
-            plugins.add_points_from_blocks(cvpj_l, pluginid, 'vol')
             idval = str(tracknum)
 
+            pluginid = str(tracknum)
+            inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
+            inst_plugindata.osc_num_oscs(1)
+            inst_plugindata.osc_opparam_set(0, 'shape', 'custom_wave')
+            inst_plugindata.osc_opparam_set(0, 'wave_name', 'main')
+            inst_plugindata.wave_add('main', trk_waveform, -128, 128)
+            inst_plugindata.env_blocks_add('vol', trk_envelope, 1/64, 128, None, None)
+            inst_plugindata.env_points_from_blocks('vol')
+            inst_plugindata.to_cvpj(cvpj_l, pluginid)
+
             tracks_r.track_create(cvpj_l, idval, 'instrument')
-            tracks_r.track_visual(cvpj_l, idval, name='Inst #'+str(tracknum), color=track_colors[tracknum])
+            tracks_r.track_visual(cvpj_l, idval, name='Inst #'+str(tracknum), color=colordata.getcolornum(tracknum))
             tracks_r.track_inst_pluginid(cvpj_l, idval, pluginid)
             tracks_r.track_param_add(cvpj_l, idval, 'vol', trk_volume/250, 'float')
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
-        plugins.add_plug(cvpj_l, "3", 'native-piyopiyo', 'drums')
+
+        inst_plugindata = plugins.cvpj_plugin('deftype', 'native-piyopiyo', 'drums')
+        inst_plugindata.to_cvpj(cvpj_l, "3")
+
         tracks_r.track_create(cvpj_l, "3", 'instrument')
-        tracks_r.track_visual(cvpj_l, "3", name='perc', color=track_colors[3])
+        tracks_r.track_visual(cvpj_l, "3", name='perc', color=colordata.getcolornum(3))
         tracks_r.track_inst_pluginid(cvpj_l, "3", "3")
         tracks_r.track_param_add(cvpj_l, "3", 'vol', TrackPVol/250, 'float')
 
@@ -101,8 +110,7 @@ class input_piyopiyo(plugin_input.base):
                 for bitnote in bitnotes:
                     if bitnote == '1': notelist.append(note_data.rx_makenote(pmdpos, 1, notenum+keyoffset[tracknum], 1.0, currentpan))
                     notenum -= 1
-            if notelist != []: t_placements = placement_data.nl2pl(notelist)
-            else: t_placements = []
+            t_placements = placement_data.nl2pl(notelist) if notelist != [] else []
             tracks_r.add_pl(cvpj_l, str(tracknum), 'notes', t_placements)
 
         cvpj_l['do_addloop'] = True

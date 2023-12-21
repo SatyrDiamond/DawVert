@@ -2,15 +2,15 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import colors
-from functions import idvals
-from functions import song
+from functions import data_dataset
 from functions import note_data
-from functions import plugins
 from functions import placement_data
-from functions_tracks import tracks_m
+from functions import plugins
+from functions import song
 from functions_tracks import auto_data
-import plugin_input
+from functions_tracks import tracks_m
 import json
+import plugin_input
 import xml.etree.ElementTree as ET
 
 instnames = ['mario','toad','yoshi','star','flower','gameboy','dog','cat','pig','swan','face','plane','boat','car','heart','coin','plant','shyguy','ghost']
@@ -61,9 +61,12 @@ class input_mariopaint_mss(plugin_input.base):
         global cvpj_notelist
         tree = ET.parse(input_file)
         root = tree.getroot()
-        idvals_mariopaint_inst = idvals.parse_idvalscsv('data_idvals/mariopaint_inst.csv')
         cvpj_l = {}
         cvpj_notelist = []
+
+        dataset = data_dataset.dataset('./data_dset/mariopaint.dset')
+        dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
+
         mss_measure = int(root.get('measure'))
         chords = tree.findall('chord')
         mss_tempo, notelen = song.get_lower_tempo(int(root.get('tempo')), 4, 180)
@@ -87,15 +90,7 @@ class input_mariopaint_mss(plugin_input.base):
         tracks_m.add_pl(cvpj_l, 1, 'notes', placement_data.nl2pl(cvpj_notelist))
 
         for instname in instnames:
-            s_inst_name = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'name')
-            s_inst_color = idvals.get_idval(idvals_mariopaint_inst, str(instname), 'color')
-            if s_inst_color != None: s_inst_color = colors.moregray(s_inst_color)
-            mpinstid = instnames.index(instname)
-            plugins.add_plug_gm_midi(cvpj_l, instname, 0, mpinstid)
-            tracks_m.inst_create(cvpj_l, instname)
-            tracks_m.inst_visual(cvpj_l, instname, name=s_inst_name, color=s_inst_color)
-            tracks_m.inst_pluginid(cvpj_l, instname, instname)
-            tracks_m.inst_dataval_add(cvpj_l, instname, 'midi', 'output', {'program': mpinstid})
+            tracks_m.import_dset(cvpj_l, instname, instname, dataset, dataset_midi, None, None)
 
         cvpj_l['do_addloop'] = True
         cvpj_l['do_singlenotelistcut'] = True

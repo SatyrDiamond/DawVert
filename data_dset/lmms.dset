@@ -1,0 +1,5378 @@
+{
+    "plugin": {
+        "objects": {
+            "OPL2": {
+                "visual": {
+                    "color": [
+                        0.03,
+                        0.33,
+                        0.53
+                    ],
+                    "name": "OPL2"
+                }
+            },
+            "amplifier": {
+                "params": {
+                    "left": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "Left gain",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "Panning",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "right": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "Right gain",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "volume": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "Volume",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "name": "Amplifier"
+                }
+            },
+            "arpeggiator": {
+                "params": {
+                    "arp": {
+                        "def": 1,
+                        "max": 94,
+                        "min": 1,
+                        "name": "Arpeggio type",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "arpcycle": {
+                        "def": 0,
+                        "max": 6,
+                        "min": 0,
+                        "name": "Cycle steps",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "arpdir": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "Arp direction",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "arpgate": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 1,
+                        "name": "Arpeggio gate",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "arpmiss": {
+                        "def": 0,
+                        "max": 100,
+                        "min": 0,
+                        "name": "Miss rate",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "arpmode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "Arpeggio mode",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "arprange": {
+                        "def": 1,
+                        "max": 9,
+                        "min": 1,
+                        "name": "Arpeggio range",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "arpskip": {
+                        "def": 0,
+                        "max": 100,
+                        "min": 0,
+                        "name": "Skip rate",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "arptime": {
+                        "def": 200,
+                        "max": 2000,
+                        "min": 25,
+                        "name": "Arpeggio time",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "name": "Arpeggio"
+                }
+            },
+            "audiofileprocessor": {
+                "visual": {
+                    "color": [
+                        0.28,
+                        0.28,
+                        0.28
+                    ],
+                    "name": "AudioFileProcessor"
+                }
+            },
+            "bassbooster": {
+                "params": {
+                    "freq": {
+                        "def": 100.0,
+                        "max": 200.0,
+                        "min": 50.0,
+                        "name": "Frequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain": {
+                        "def": 1.0,
+                        "max": 5.0,
+                        "min": 0.10000000149011612,
+                        "name": "Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ratio": {
+                        "def": 2.0,
+                        "max": 10.0,
+                        "min": 0.10000000149011612,
+                        "name": "Ratio",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "BassBooster"
+                }
+            },
+            "bitcrush": {
+                "params": {
+                    "depthon": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Depth Input gain",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ingain": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "Input gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "innoise": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": 0.0,
+                        "name": "Input noise",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "levels": {
+                        "def": 256.0,
+                        "max": 256.0,
+                        "min": 1.0,
+                        "name": "Levels",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "outclip": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "Output clip",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "outgain": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "Output gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "rate": {
+                        "def": 44100.0,
+                        "max": 44100.0,
+                        "min": 20.0,
+                        "name": "Sample rate",
+                        "noauto": true,
+                        "type": "float"
+                    },
+                    "rateon": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Rate enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "stereodiff": {
+                        "def": 0.0,
+                        "max": 50.0,
+                        "min": -50.0,
+                        "name": "Stereo difference",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Bitcrush"
+                }
+            },
+            "bitinvader": {
+                "group": "",
+                "params": {
+                    "interpolation": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Interpolation",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "normalize": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Normalize",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "sampleLength": {
+                        "def": 128,
+                        "max": 200,
+                        "min": 4,
+                        "name": "sampleLength",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "sampleShape": {
+                        "def": "AACAPwAAgD8AAIC/AACAvw==",
+                        "max": null,
+                        "min": null,
+                        "name": "sampleShape",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "version": {
+                        "def": "0.1",
+                        "max": null,
+                        "min": null,
+                        "name": "version",
+                        "noauto": true,
+                        "type": "string"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.86,
+                        0.86,
+                        0.86
+                    ],
+                    "name": "BitInvader"
+                }
+            },
+            "chordcreator": {
+                "params": {
+                    "chord": {
+                        "def": 0,
+                        "max": 94,
+                        "min": 0,
+                        "name": "Chort Type",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "chordrange": {
+                        "def": 0,
+                        "max": 9,
+                        "min": 0,
+                        "name": "Range",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "name": "Stacking"
+                }
+            },
+            "crossovereq": {
+                "params": {
+                    "gain1": {
+                        "def": 0.0,
+                        "max": 30.0,
+                        "min": -60.0,
+                        "name": "Band 1 Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain2": {
+                        "def": 0.0,
+                        "max": 30.0,
+                        "min": -60.0,
+                        "name": "Band 2 Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain3": {
+                        "def": 0.0,
+                        "max": 30.0,
+                        "min": -60.0,
+                        "name": "Band 3 Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain4": {
+                        "def": 0.0,
+                        "max": 30.0,
+                        "min": -60.0,
+                        "name": "Band 4 Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mute1": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_mute1",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "mute2": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_mute2",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "mute3": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_mute3",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "mute4": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_mute4",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "xover12": {
+                        "def": 125.0,
+                        "max": 10000.0,
+                        "min": 50.0,
+                        "name": "Band 1/2 Crossover",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "xover23": {
+                        "def": 1250.0,
+                        "max": 20000.0,
+                        "min": 50.0,
+                        "name": "Band 2/3 Crossover",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "xover34": {
+                        "def": 5000.0,
+                        "max": 20000.0,
+                        "min": 50.0,
+                        "name": "Band 3/4 Crossover",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Crossover EQ"
+                }
+            },
+            "delay": {
+                "params": {
+                    "DelayTimeSamples": {
+                        "def": 0.5,
+                        "max": 5.0,
+                        "min": 0.01,
+                        "name": "m_delayTimeModel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "FeebackAmount": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "LfoAmount": {
+                        "def": 0.0,
+                        "max": 0.5,
+                        "min": 0.0,
+                        "name": "m_lfoAmountModel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "LfoFrequency": {
+                        "def": 2.0,
+                        "max": 5.0,
+                        "min": 0.01,
+                        "name": "m_lfoTimeModel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "OutGain": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -60.0,
+                        "name": "Output gain",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Delay"
+                }
+            },
+            "dualfilter": {
+                "params": {
+                    "cut1": {
+                        "def": 7000.0,
+                        "max": 20000.0,
+                        "min": 1.0,
+                        "name": "Cutoff frequency 1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "cut2": {
+                        "def": 7000.0,
+                        "max": 20000.0,
+                        "min": 1.0,
+                        "name": "Cutoff frequency 2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enabled": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "enabled",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enabled1": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_enabled1Model",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "filter": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "filter",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter1": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "filter1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain1": {
+                        "def": 100.0,
+                        "max": 200.0,
+                        "min": 0.0,
+                        "name": "Gain 1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain2": {
+                        "def": 100.0,
+                        "max": 200.0,
+                        "min": 0.0,
+                        "name": "Gain 2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "res1": {
+                        "def": 0.5,
+                        "max": 10.0,
+                        "min": 0.0,
+                        "name": "Q/Resonance 1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "res2": {
+                        "def": 0.5,
+                        "max": 10.0,
+                        "min": 0.0,
+                        "name": "Q/Resonance 2",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Dual Filter"
+                }
+            },
+            "dynamicsprocessor": {
+                "params": {
+                    "attack": {
+                        "def": 10.0,
+                        "max": 500.0,
+                        "min": 1.0,
+                        "name": "Attack time",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "inputGain": {
+                        "def": 1.0,
+                        "max": 5.0,
+                        "min": 0.0,
+                        "name": "Input gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "outputGain": {
+                        "def": 1.0,
+                        "max": 5.0,
+                        "min": 0.0,
+                        "name": "Output gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "release": {
+                        "def": 100.0,
+                        "max": 500.0,
+                        "min": 1.0,
+                        "name": "Release time",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stereoMode": {
+                        "def": 0.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Stereo mode ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "waveShape": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "waveShape",
+                        "noauto": true,
+                        "type": "string"
+                    }
+                },
+                "visual": {
+                    "name": "Dynamics Processor"
+                }
+            },
+            "eq": {
+                "params": {
+                    "AnalyseIn": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_analyseInModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "AnalyseOut": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_analyseOutModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "HP": {
+                        "def": 0.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "High-pass type ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "HP12": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_hp12Model",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "HP24": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_hp24Model",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "HP48": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_hp48Model",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "HPactive": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_hpActiveModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "HPfreq": {
+                        "def": 31.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "HP freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "HPres": {
+                        "def": 0.707,
+                        "max": 10.0,
+                        "min": 0.003,
+                        "name": "HP res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "HighShelfgain": {
+                        "def": 0.0,
+                        "max": 18.0,
+                        "min": -18.0,
+                        "name": "High-shelf gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "HighShelfres": {
+                        "def": 0.707,
+                        "max": 10.0,
+                        "min": 0.55,
+                        "name": "High-shelf res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Highshelfactive": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_highShelfActiveModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "Highshelffreq": {
+                        "def": 12000.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "High-shelf freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Inputgain": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -60.0,
+                        "name": "Input gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "LP": {
+                        "def": 0.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Low-pass type ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "LP12": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_lp12Model",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "LP24": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_lp24Model",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "LP48": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_lp48Model",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "LPactive": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_lpActiveModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "LPfreq": {
+                        "def": 18000.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "LP freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "LPres": {
+                        "def": 0.707,
+                        "max": 10.0,
+                        "min": 0.003,
+                        "name": "LP res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "LowShelffreq": {
+                        "def": 80.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "Low-shelf freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "LowShelfres": {
+                        "def": 0.707,
+                        "max": 10.0,
+                        "min": 0.55,
+                        "name": "Low-shelf res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Lowshelfactive": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_lowShelfActiveModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "Lowshelfgain": {
+                        "def": 0.0,
+                        "max": 18.0,
+                        "min": -18.0,
+                        "name": "Low-shelf gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Outputgain": {
+                        "def": -0.0,
+                        "max": 20.0,
+                        "min": -60.0,
+                        "name": "Output gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Peak1active": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_para1ActiveModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "Peak1bw": {
+                        "def": 0.3,
+                        "max": 4.0,
+                        "min": 0.1,
+                        "name": "Peak 1 BW",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Peak1freq": {
+                        "def": 120.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "Peak 1 freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Peak1gain": {
+                        "def": 0.0,
+                        "max": 18.0,
+                        "min": -18.0,
+                        "name": "Peak 1 gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Peak2active": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_para2ActiveModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "Peak2bw": {
+                        "def": 0.3,
+                        "max": 4.0,
+                        "min": 0.1,
+                        "name": "Peak 2 BW",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Peak2freq": {
+                        "def": 250.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "Peak 2 freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Peak2gain": {
+                        "def": 0.0,
+                        "max": 18.0,
+                        "min": -18.0,
+                        "name": "Peak 2 gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Peak3active": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_para3ActiveModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "Peak3bw": {
+                        "def": 0.3,
+                        "max": 4.0,
+                        "min": 0.1,
+                        "name": "Peak 3 BW",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Peak3freq": {
+                        "def": 2000.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "Peak 3 freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Peak3gain": {
+                        "def": 0.0,
+                        "max": 18.0,
+                        "min": -18.0,
+                        "name": "Peak 3 gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Peak4active": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_para4ActiveModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "Peak4bw": {
+                        "def": 0.3,
+                        "max": 4.0,
+                        "min": 0.1,
+                        "name": "Peak 4 BW",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Peak4freq": {
+                        "def": 4000.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "Peak 4 freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Peak4gain": {
+                        "def": 0.0,
+                        "max": 18.0,
+                        "min": -18.0,
+                        "name": "Peak 4 gain",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Equalizer"
+                }
+            },
+            "flanger": {
+                "params": {
+                    "DelayTimeSamples": {
+                        "def": 0.001,
+                        "max": 0.05,
+                        "min": 0.0001,
+                        "name": "Delay samples",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Feedback": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Regen",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Invert": {
+                        "def": -1,
+                        "max": null,
+                        "min": null,
+                        "name": "Invert",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "LfoAmount": {
+                        "def": 0.0,
+                        "max": 0.0025,
+                        "min": 0.0,
+                        "name": "Seconds",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "LfoFrequency": {
+                        "def": 0.25,
+                        "max": 60.0,
+                        "min": 0.01,
+                        "name": "m_lfoFrequencyModel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "WhiteNoise": {
+                        "def": 0.0,
+                        "max": 0.05,
+                        "min": 0.0,
+                        "name": "Noise",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Flanger"
+                }
+            },
+            "gigplayer": {
+                "params": {
+                    "bank": {
+                        "def": 0,
+                        "max": 999,
+                        "min": 0,
+                        "name": "bank",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "gain": {
+                        "def": 1.0,
+                        "max": 5.0,
+                        "min": 0.0,
+                        "name": "gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "patch": {
+                        "def": 0,
+                        "max": 127,
+                        "min": 0,
+                        "name": "patch",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "src": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "src",
+                        "noauto": true,
+                        "type": "string"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.55,
+                        0.0,
+                        0.0
+                    ],
+                    "name": "GIG Player"
+                }
+            },
+            "kicker": {
+                "params": {
+                    "click": {
+                        "def": 0.4,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Click",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "decay": {
+                        "def": 440.0,
+                        "max": 5000.0,
+                        "min": 5.0,
+                        "name": "m_decayModel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "dist": {
+                        "def": 0.8,
+                        "max": 100.0,
+                        "min": 0.0,
+                        "name": "Start distortion",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "distend": {
+                        "def": 0.8,
+                        "max": 100.0,
+                        "min": 0.0,
+                        "name": "End distortion",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "endfreq": {
+                        "def": 40.0,
+                        "max": 1000.0,
+                        "min": 5.0,
+                        "name": "End frequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "endnote": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_endNoteModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "env": {
+                        "def": 0.163,
+                        "max": 1.0,
+                        "min": 0.01,
+                        "name": "Envelope slope",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain": {
+                        "def": 1.0,
+                        "max": 5.0,
+                        "min": 0.1,
+                        "name": "Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "noise": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Noise",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slope": {
+                        "def": 0.06,
+                        "max": 1.0,
+                        "min": 0.001,
+                        "name": "Frequency slope",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "startfreq": {
+                        "def": 150.0,
+                        "max": 1000.0,
+                        "min": 5.0,
+                        "name": "Start frequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "startnote": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_startNoteModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "version": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": 0.0,
+                        "name": "version",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.51,
+                        0.58,
+                        0.58
+                    ],
+                    "name": "Kicker"
+                }
+            },
+            "lb302": {
+                "params": {
+                    "db24": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "db24Toggle",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "dead": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "deadToggle",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "dist": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Distortion",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape": {
+                        "def": 8.0,
+                        "max": 11.0,
+                        "min": 0.0,
+                        "name": "Waveform ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slide": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "slideToggle",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "slide_dec": {
+                        "def": 0.6,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Slide Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "vcf_cut": {
+                        "def": 0.75,
+                        "max": 1.5,
+                        "min": 0.0,
+                        "name": "VCF Cutoff Frequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "vcf_dec": {
+                        "def": 0.1,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "VCF Envelope Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "vcf_mod": {
+                        "def": 0.1,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "VCF Envelope Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "vcf_res": {
+                        "def": 0.75,
+                        "max": 1.25,
+                        "min": 0.0,
+                        "name": "VCF Resonance",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.81,
+                        0.65,
+                        0.72
+                    ],
+                    "name": "LB302"
+                }
+            },
+            "malletsstk": {
+                "params": {
+                    "adsr": {
+                        "def": 64.0,
+                        "max": 128.0,
+                        "min": 0.0,
+                        "name": "ADSR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "crossfade": {
+                        "def": 64.0,
+                        "max": 128.0,
+                        "min": 0.0,
+                        "name": "Crossfade",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hardness": {
+                        "def": 64.0,
+                        "max": 128.0,
+                        "min": 0.0,
+                        "name": "Hardness",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_depth": {
+                        "def": 64.0,
+                        "max": 128.0,
+                        "min": 0.0,
+                        "name": "LFO depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_speed": {
+                        "def": 64.0,
+                        "max": 128.0,
+                        "min": 0.0,
+                        "name": "LFO speed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "modulator": {
+                        "def": 64.0,
+                        "max": 128.0,
+                        "min": 0.0,
+                        "name": "Modulator",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "oldversion": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "oldversion",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "position": {
+                        "def": 64.0,
+                        "max": 64.0,
+                        "min": 0.0,
+                        "name": "Position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preset": {
+                        "def": -1,
+                        "max": null,
+                        "min": null,
+                        "name": "preset",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "pressure": {
+                        "def": 64.0,
+                        "max": 128.0,
+                        "min": 0.1,
+                        "name": "Pressure",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "spread": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "spread",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stick_mix": {
+                        "def": 0.0,
+                        "max": 128.0,
+                        "min": 0.0,
+                        "name": "Stick mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "strike": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_strikeModel",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "velocity": {
+                        "def": 64.0,
+                        "max": 128.0,
+                        "min": 0.1,
+                        "name": "Speed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "version": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "version",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "vib_freq": {
+                        "def": 0.0,
+                        "max": 128.0,
+                        "min": 0.0,
+                        "name": "Vibrato frequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "vib_gain": {
+                        "def": 0.0,
+                        "max": 128.0,
+                        "min": 0.0,
+                        "name": "Vibrato gain",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.55,
+                        0.13,
+                        0.07
+                    ],
+                    "name": "Mallets"
+                }
+            },
+            "monstro": {
+                "params": {
+                    "e1att": {
+                        "def": 0.0,
+                        "max": 2000.0,
+                        "min": 0.0,
+                        "name": "m_env1Att",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e1dec": {
+                        "def": 0.0,
+                        "max": 4000.0,
+                        "min": 0.0,
+                        "name": "m_env1Dec",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e1hol": {
+                        "def": 0.0,
+                        "max": 4000.0,
+                        "min": 0.0,
+                        "name": "m_env1Hold",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e1pre": {
+                        "def": 0.0,
+                        "max": 2000.0,
+                        "min": 0.0,
+                        "name": "m_env1Pre",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e1rel": {
+                        "def": 0.0,
+                        "max": 4000.0,
+                        "min": 0.0,
+                        "name": "m_env1Rel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e1slo": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Env 1 slope ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e1sus": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Env 1 sustain ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e2att": {
+                        "def": 0.0,
+                        "max": 2000.0,
+                        "min": 0.0,
+                        "name": "m_env2Att",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e2dec": {
+                        "def": 0.0,
+                        "max": 4000.0,
+                        "min": 0.0,
+                        "name": "m_env2Dec",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e2hol": {
+                        "def": 0.0,
+                        "max": 4000.0,
+                        "min": 0.0,
+                        "name": "m_env2Hold",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e2pre": {
+                        "def": 0.0,
+                        "max": 2000.0,
+                        "min": 0.0,
+                        "name": "m_env2Pre",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e2rel": {
+                        "def": 0.0,
+                        "max": 4000.0,
+                        "min": 0.0,
+                        "name": "m_env2Rel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e2slo": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Env 2 slope ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "e2sus": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Env 2 sustain ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "f1e1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - Pit env 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "f1e2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - Pit env 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "f1l1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - Pit LFO 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "f1l2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - Pit LFO 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "f2e1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 2 - Pit env 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "f2e2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 2 - Pit env 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "f2l1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 2 - Pit LFO 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "f2l2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 2 - Pit LFO 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "f3e1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Pit env 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "f3e2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Pit env 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "f3l1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Pit LFO 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "f3l2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Pit LFO 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "l1att": {
+                        "def": 0.0,
+                        "max": 2000.0,
+                        "min": 0.0,
+                        "name": "m_lfo1Att",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "l1phs": {
+                        "def": 0.0,
+                        "max": 180.0,
+                        "min": -180.0,
+                        "name": "LFO 1 phase ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "l1rat": {
+                        "def": 1.0,
+                        "max": 10000.0,
+                        "min": 0.1,
+                        "name": "m_lfo1Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "l1wav": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "l1wav",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "l2att": {
+                        "def": 0.0,
+                        "max": 2000.0,
+                        "min": 0.0,
+                        "name": "m_lfo2Att",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "l2phs": {
+                        "def": 0.0,
+                        "max": 180.0,
+                        "min": -180.0,
+                        "name": "LFO 2 phase ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "l2rat": {
+                        "def": 1.0,
+                        "max": 10000.0,
+                        "min": 0.1,
+                        "name": "m_lfo2Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "l2wav": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "l2wav",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o1crs": {
+                        "def": 0.0,
+                        "max": 24.0,
+                        "min": -24.0,
+                        "name": "Osc 1 coarse detune ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o1ftl": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Osc 1 fine detune left ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o1ftr": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Osc 1 fine detune right ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o1pan": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Osc 1 panning ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o1pw": {
+                        "def": 50.0,
+                        "max": 100.0,
+                        "min": 0.0,
+                        "name": "Osc 1 pulse width ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o1spo": {
+                        "def": 0.0,
+                        "max": 180.0,
+                        "min": -180.0,
+                        "name": "Osc 1 stereo phase offset ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o1ssf": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_osc1SSF",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "o1ssr": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_osc1SSR",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "o1vol": {
+                        "def": 33.0,
+                        "max": 200.0,
+                        "min": 0.0,
+                        "name": "Osc 1 volume ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o23mo": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "o23mo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o2crs": {
+                        "def": 0.0,
+                        "max": 24.0,
+                        "min": -24.0,
+                        "name": "Osc 2 coarse detune ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o2ftl": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Osc 2 fine detune left ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o2ftr": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Osc 2 fine detune right ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o2pan": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Osc 2 panning ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o2spo": {
+                        "def": 0.0,
+                        "max": 180.0,
+                        "min": -180.0,
+                        "name": "Osc 2 stereo phase offset ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o2syn": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_osc2SyncH",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "o2synr": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_osc2SyncR",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "o2vol": {
+                        "def": 33.0,
+                        "max": 200.0,
+                        "min": 0.0,
+                        "name": "Osc 2 volume ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o2wav": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "o2wav",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o3crs": {
+                        "def": 0.0,
+                        "max": 24.0,
+                        "min": -24.0,
+                        "name": "Osc 3 coarse detune ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o3pan": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Osc 3 panning ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o3spo": {
+                        "def": 0.0,
+                        "max": 180.0,
+                        "min": -180.0,
+                        "name": "Osc 3 Stereo phase offset ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o3sub": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Osc 3 sub-oscillator mix ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o3syn": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_osc3SyncH",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "o3synr": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_osc3SyncR",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "o3vol": {
+                        "def": 33.0,
+                        "max": 200.0,
+                        "min": 0.0,
+                        "name": "Osc 3 volume ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o3wav1": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "o3wav1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "o3wav2": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "o3wav2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p1e1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - Phs env 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p1e2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - Phs env 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p1l1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - Phs LFO 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p1l2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - Phs LFO 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p2e1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 2 - Phs env 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p2e2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 2 - Phs env 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p2l1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 2 - Phs LFO 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p2l2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 2 - Phs LFO 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p3e1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Phs env 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p3e2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Phs env 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p3l1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Phs LFO 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p3l2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Phs LFO 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "s3e1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Sub env 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "s3e2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Sub env 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "s3l1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Sub LFO 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "s3l2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Sub LFO 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "v1e1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - Vol env 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "v1e2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - Vol env 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "v1l1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - Vol LFO 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "v1l2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - Vol LFO 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "v2e1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 2 - Vol env 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "v2e2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 2 - Vol env 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "v2l1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 2 - Vol LFO 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "v2l2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 2 - Vol LFO 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "v3e1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Vol env 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "v3e2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Vol env 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "v3l1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Vol LFO 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "v3l2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 3 - Vol LFO 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "w1e1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - PW env 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "w1e2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - PW env 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "w1l1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - PW LFO 1 ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "w1l2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Osc 1 - PW LFO 2 ",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.65,
+                        0.68,
+                        0.7
+                    ],
+                    "name": "Monstro"
+                }
+            },
+            "multitapecho": {
+                "params": {
+                    "ampsteps": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "ampsteps",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "drygain": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -80.0,
+                        "name": "m_dryGain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lpsteps": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "lpsteps",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "stages": {
+                        "def": 1.0,
+                        "max": 4.0,
+                        "min": 1.0,
+                        "name": "m_stages",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "steplength": {
+                        "def": 100.0,
+                        "max": 500.0,
+                        "min": 1.0,
+                        "name": "m_stepLength",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "steps": {
+                        "def": 16.0,
+                        "max": 32.0,
+                        "min": 4.0,
+                        "name": "m_steps",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "swapinputs": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_swapInputs",
+                        "noauto": false,
+                        "type": "bool"
+                    }
+                },
+                "visual": {
+                    "name": "Multitap Echo"
+                }
+            },
+            "nes": {
+                "params": {
+                    "crs1": {
+                        "def": 0.0,
+                        "max": 24.0,
+                        "min": -24.0,
+                        "name": "Channel 1 coarse detune ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "crs2": {
+                        "def": 0.0,
+                        "max": 24.0,
+                        "min": -24.0,
+                        "name": "Channel 2 Coarse detune ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "crs3": {
+                        "def": 0.0,
+                        "max": 24.0,
+                        "min": -24.0,
+                        "name": "Channel 3 coarse detune ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "dc1": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "dc1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "dc2": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "dc2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "envlen1": {
+                        "def": 0.0,
+                        "max": 15.0,
+                        "min": 0.0,
+                        "name": "Channel 1 envelope length ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "envlen2": {
+                        "def": 0.0,
+                        "max": 15.0,
+                        "min": 0.0,
+                        "name": "Channel 2 envelope length ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "envlen4": {
+                        "def": 0.0,
+                        "max": 15.0,
+                        "min": 0.0,
+                        "name": "Channel 4 envelope length ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "envloop1": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch1EnvLooped",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "envloop2": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch2EnvLooped",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "envloop4": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch4EnvLooped",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "envon1": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch1EnvEnabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "envon2": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch2EnvEnabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "envon4": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch4EnvEnabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "nfreq4": {
+                        "def": 0.0,
+                        "max": 15.0,
+                        "min": 0.0,
+                        "name": "Channel 4 noise frequency ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "nfrqmode4": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch4NoiseFreqMode",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "nmode4": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch4NoiseMode",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "nq4": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch4NoiseQuantize",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "nswp4": {
+                        "def": 0.0,
+                        "max": 7.0,
+                        "min": -7.0,
+                        "name": "Channel 4 noise frequency sweep ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "on1": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch1Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "on2": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch2Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "on3": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch3Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "on4": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch4Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "swamt1": {
+                        "def": 0.0,
+                        "max": 7.0,
+                        "min": -7.0,
+                        "name": "Channel 1 sweep amount ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "swamt2": {
+                        "def": 0.0,
+                        "max": 7.0,
+                        "min": -7.0,
+                        "name": "Channel 2 sweep amount ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "sweep1": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch1SweepEnabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "sweep2": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "m_ch2SweepEnabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "swrate1": {
+                        "def": 0.0,
+                        "max": 7.0,
+                        "min": 0.0,
+                        "name": "Channel 1 sweep rate ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "swrate2": {
+                        "def": 0.0,
+                        "max": 7.0,
+                        "min": 0.0,
+                        "name": "Channel 2 sweep rate ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vibr": {
+                        "def": 0.0,
+                        "max": 15.0,
+                        "min": 0.0,
+                        "name": "Vibrato ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol": {
+                        "def": 1.0,
+                        "max": 2.0,
+                        "min": 0.0,
+                        "name": "Master volume ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol1": {
+                        "def": 15.0,
+                        "max": 15.0,
+                        "min": 0.0,
+                        "name": "Channel 1 volume ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol2": {
+                        "def": 15.0,
+                        "max": 15.0,
+                        "min": 0.0,
+                        "name": "Channel 2 Volume ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol3": {
+                        "def": 15.0,
+                        "max": 15.0,
+                        "min": 0.0,
+                        "name": "Channel 3 volume ",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol4": {
+                        "def": 15.0,
+                        "max": 15.0,
+                        "min": 0.0,
+                        "name": "Channel 4 volume ",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.9,
+                        0.13,
+                        0.09
+                    ],
+                    "name": "Nescaline"
+                }
+            },
+            "organic": {
+                "params": {
+                    "foldback": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "foldback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "newdetune0": {
+                        "def": 0,
+                        "max": 1200,
+                        "min": -1200,
+                        "name": "newdetune0",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newdetune1": {
+                        "def": 0,
+                        "max": 1200,
+                        "min": -1200,
+                        "name": "newdetune1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newdetune2": {
+                        "def": 0,
+                        "max": 1200,
+                        "min": -1200,
+                        "name": "newdetune2",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newdetune3": {
+                        "def": 0,
+                        "max": 1200,
+                        "min": -1200,
+                        "name": "newdetune3",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newdetune4": {
+                        "def": 0,
+                        "max": 1200,
+                        "min": -1200,
+                        "name": "newdetune4",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newdetune5": {
+                        "def": 0,
+                        "max": 1200,
+                        "min": -1200,
+                        "name": "newdetune5",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newdetune6": {
+                        "def": 0,
+                        "max": 1200,
+                        "min": -1200,
+                        "name": "newdetune6",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newdetune7": {
+                        "def": 0,
+                        "max": 1200,
+                        "min": -1200,
+                        "name": "newdetune7",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newharmonic0": {
+                        "def": 0,
+                        "max": 17,
+                        "min": 0,
+                        "name": "newharmonic0",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newharmonic1": {
+                        "def": 1,
+                        "max": 17,
+                        "min": 0,
+                        "name": "newharmonic1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newharmonic2": {
+                        "def": 2,
+                        "max": 17,
+                        "min": 0,
+                        "name": "newharmonic2",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newharmonic3": {
+                        "def": 3,
+                        "max": 17,
+                        "min": 0,
+                        "name": "newharmonic3",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newharmonic4": {
+                        "def": 4,
+                        "max": 17,
+                        "min": 0,
+                        "name": "newharmonic4",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newharmonic5": {
+                        "def": 5,
+                        "max": 17,
+                        "min": 0,
+                        "name": "newharmonic5",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newharmonic6": {
+                        "def": 6,
+                        "max": 17,
+                        "min": 0,
+                        "name": "newharmonic6",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "newharmonic7": {
+                        "def": 7,
+                        "max": 17,
+                        "min": 0,
+                        "name": "newharmonic7",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "num_osc": {
+                        "def": 8,
+                        "max": 8,
+                        "min": 0,
+                        "name": "num_osc",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan0": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "pan0",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan1": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "pan1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan2": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "pan2",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan3": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "pan3",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan4": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "pan4",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan5": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "pan5",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan6": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "pan6",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan7": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "pan7",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "vol",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol0": {
+                        "def": 100,
+                        "max": 100,
+                        "min": 0,
+                        "name": "vol0",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol1": {
+                        "def": 0,
+                        "max": 100,
+                        "min": 0,
+                        "name": "vol1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol2": {
+                        "def": 0,
+                        "max": 100,
+                        "min": 0,
+                        "name": "vol2",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol3": {
+                        "def": 0,
+                        "max": 100,
+                        "min": 0,
+                        "name": "vol3",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol4": {
+                        "def": 0,
+                        "max": 100,
+                        "min": 0,
+                        "name": "vol4",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol5": {
+                        "def": 0,
+                        "max": 100,
+                        "min": 0,
+                        "name": "vol5",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol6": {
+                        "def": 0,
+                        "max": 100,
+                        "min": 0,
+                        "name": "vol6",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol7": {
+                        "def": 0,
+                        "max": 100,
+                        "min": 0,
+                        "name": "vol7",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "wavetype0": {
+                        "def": 0,
+                        "max": 5,
+                        "min": 0,
+                        "name": "wavetype0",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "wavetype1": {
+                        "def": 0,
+                        "max": 5,
+                        "min": 0,
+                        "name": "wavetype1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "wavetype2": {
+                        "def": 0,
+                        "max": 5,
+                        "min": 0,
+                        "name": "wavetype2",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "wavetype3": {
+                        "def": 0,
+                        "max": 5,
+                        "min": 0,
+                        "name": "wavetype3",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "wavetype4": {
+                        "def": 0,
+                        "max": 5,
+                        "min": 0,
+                        "name": "wavetype4",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "wavetype5": {
+                        "def": 0,
+                        "max": 5,
+                        "min": 0,
+                        "name": "wavetype5",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "wavetype6": {
+                        "def": 0,
+                        "max": 5,
+                        "min": 0,
+                        "name": "wavetype6",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "wavetype7": {
+                        "def": 0,
+                        "max": 5,
+                        "min": 0,
+                        "name": "wavetype7",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.24,
+                        0.76,
+                        0.13
+                    ],
+                    "name": "Organic"
+                }
+            },
+            "papu": {
+                "params": {
+                    "Bass": {
+                        "def": 461.0,
+                        "max": 600.0,
+                        "min": -1.0,
+                        "name": "Bass ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Treble": {
+                        "def": -20.0,
+                        "max": 200.0,
+                        "min": -100.0,
+                        "name": "Treble ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ch1so1": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Channel 1 to SO1 (Right)",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ch1so2": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Channel 1 to SO2 (Left)",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ch1ssl": {
+                        "def": 0.0,
+                        "max": 7.0,
+                        "min": 0.0,
+                        "name": "Length of each step in sweep ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ch1vol": {
+                        "def": 15.0,
+                        "max": 15.0,
+                        "min": 0.0,
+                        "name": "Channel 1 volume ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ch1vsd": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Volume sweep direction ",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ch1wpd": {
+                        "def": 2.0,
+                        "max": 3.0,
+                        "min": 0.0,
+                        "name": "Wave pattern duty cycle ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ch2so1": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Channel 2 to SO1 (Right)",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ch2so2": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Channel 2 to SO2 (Left)",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ch2ssl": {
+                        "def": 0.0,
+                        "max": 7.0,
+                        "min": 0.0,
+                        "name": "Length of each step in sweep ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ch2vol": {
+                        "def": 15.0,
+                        "max": 15.0,
+                        "min": 0.0,
+                        "name": "Channel 2 volume ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ch2vsd": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Volume sweep direction ",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ch2wpd": {
+                        "def": 2.0,
+                        "max": 3.0,
+                        "min": 0.0,
+                        "name": "Wave pattern duty cycle ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ch3so1": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Channel 3 to SO1 (Right)",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ch3so2": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Channel 3 to SO2 (Left)",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ch3vol": {
+                        "def": 3.0,
+                        "max": 3.0,
+                        "min": 0.0,
+                        "name": "Channel 3 volume ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ch4so1": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Channel 4 to SO1 (Right)",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ch4so2": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Channel 4 to SO2 (Left)",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ch4ssl": {
+                        "def": 0.0,
+                        "max": 7.0,
+                        "min": 0.0,
+                        "name": "Length of each step in sweep ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ch4vol": {
+                        "def": 15.0,
+                        "max": 15.0,
+                        "min": 0.0,
+                        "name": "Channel 4 volume ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ch4vsd": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Volume sweep direction ",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "sampleShape": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "sampleShape",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "sd": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Sweep direction ",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "so1vol": {
+                        "def": 7.0,
+                        "max": 7.0,
+                        "min": 0.0,
+                        "name": "Right output level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "so2vol": {
+                        "def": 7.0,
+                        "max": 7.0,
+                        "min": 0.0,
+                        "name": "Left output level ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "srs": {
+                        "def": 4.0,
+                        "max": 7.0,
+                        "min": 0.0,
+                        "name": "Sweep rate shift amount ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "srw": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Shift Register width ",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "st": {
+                        "def": 4.0,
+                        "max": 7.0,
+                        "min": 0.0,
+                        "name": "Sweep time ",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.6,
+                        0.8,
+                        0.14
+                    ],
+                    "name": "Freeboy"
+                }
+            },
+            "patman": {
+                "visual": {
+                    "color": [
+                        0.97,
+                        1.0,
+                        0.33
+                    ],
+                    "name": "PatMan"
+                }
+            },
+            "peakcontrollereffect": {
+                "params": {
+                    "abs": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "abs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amount": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amountmult": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "amountmult",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "attack": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "base": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "base",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "decay": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "effectId": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "effectId",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mute": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "mute",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "treshold": {
+                        "def": -1,
+                        "max": -1,
+                        "min": -1,
+                        "name": "treshold",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Peak Controller"
+                }
+            },
+            "reverbsc": {
+                "params": {
+                    "color": {
+                        "def": 10000.0,
+                        "max": 15000.0,
+                        "min": 100.0,
+                        "name": "Color ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "input_gain": {
+                        "def": 0.0,
+                        "max": 15.0,
+                        "min": -60.0,
+                        "name": "Input gain ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "output_gain": {
+                        "def": 0.0,
+                        "max": 15.0,
+                        "min": -60.0,
+                        "name": "Output gain ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "size": {
+                        "def": 0.89,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Size ",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "ReverbSC"
+                }
+            },
+            "sf2player": {
+                "visual": {
+                    "color": [
+                        0.6,
+                        0.61,
+                        0.62
+                    ],
+                    "name": "Sf2 Player"
+                }
+            },
+            "sfxr": {
+                "params": {
+                    "att": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "att",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "changeAmt": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "changeAmt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "changeSpeed": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "changeSpeed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "dSlide": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "dSlide",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "dec": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "dec",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hold": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "hold",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hpFilCut": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "hpFilCut",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hpFilCutSweep": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "hpFilCutSweep",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lpFilCut": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "lpFilCut",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lpFilCutSweep": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "lpFilCutSweep",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lpFilReso": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "lpFilReso",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "minFreq": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "minFreq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "phaserOffset": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "phaserOffset",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "phaserSweep": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "phaserSweep",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "repeatSpeed": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "repeatSpeed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slide": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "slide",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sqrDuty": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "sqrDuty",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sqrSweep": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "sqrSweep",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "startFreq": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "startFreq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sus": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "sus",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "version": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "version",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "vibDepth": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "vibDepth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "vibSpeed": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "vibSpeed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "waveForm": {
+                        "def": 0.0,
+                        "max": -1.0,
+                        "min": 0.0,
+                        "name": "waveForm",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.7,
+                        0.0
+                    ],
+                    "name": "sfxr"
+                }
+            },
+            "sid": {
+                "params": {
+                    "attack0": {
+                        "def": 8,
+                        "max": 15,
+                        "min": 0,
+                        "name": "attack0",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "attack1": {
+                        "def": 8,
+                        "max": 15,
+                        "min": 0,
+                        "name": "attack1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "attack2": {
+                        "def": 8,
+                        "max": 15,
+                        "min": 0,
+                        "name": "attack2",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "chipModel": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "chipModel",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "coarse0": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "coarse0",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "coarse1": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "coarse1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "coarse2": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "coarse2",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "decay0": {
+                        "def": 8,
+                        "max": 15,
+                        "min": 0,
+                        "name": "decay0",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "decay1": {
+                        "def": 8,
+                        "max": 15,
+                        "min": 0,
+                        "name": "decay1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "decay2": {
+                        "def": 8,
+                        "max": 15,
+                        "min": 0,
+                        "name": "decay2",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "filterFC": {
+                        "def": 1024,
+                        "max": 2047,
+                        "min": 0,
+                        "name": "filterFC",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "filterMode": {
+                        "def": 2,
+                        "max": 2,
+                        "min": 0,
+                        "name": "filterMode",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "filterResonance": {
+                        "def": 8,
+                        "max": 15,
+                        "min": 0,
+                        "name": "filterResonance",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "filtered0": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "filtered0",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "filtered1": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "filtered1",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "filtered2": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "filtered2",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "pulsewidth0": {
+                        "def": 2048,
+                        "max": 4095,
+                        "min": 0,
+                        "name": "pulsewidth0",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pulsewidth1": {
+                        "def": 2048,
+                        "max": 4095,
+                        "min": 0,
+                        "name": "pulsewidth1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pulsewidth2": {
+                        "def": 2048,
+                        "max": 4095,
+                        "min": 0,
+                        "name": "pulsewidth2",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "release0": {
+                        "def": 8,
+                        "max": 15,
+                        "min": 0,
+                        "name": "release0",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "release1": {
+                        "def": 8,
+                        "max": 15,
+                        "min": 0,
+                        "name": "release1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "release2": {
+                        "def": 8,
+                        "max": 15,
+                        "min": 0,
+                        "name": "release2",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "ringmod0": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "ringmod0",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ringmod1": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "ringmod1",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "ringmod2": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "ringmod2",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "sustain0": {
+                        "def": 15,
+                        "max": 15,
+                        "min": 0,
+                        "name": "sustain0",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "sustain1": {
+                        "def": 15,
+                        "max": 15,
+                        "min": 0,
+                        "name": "sustain1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "sustain2": {
+                        "def": 15,
+                        "max": 15,
+                        "min": 0,
+                        "name": "sustain2",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "sync0": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "sync0",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "sync1": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "sync1",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "sync2": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "sync2",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "test0": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "test0",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "test1": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "test1",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "test2": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "test2",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "voice3Off": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "voice3Off",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "volume": {
+                        "def": 15,
+                        "max": 15,
+                        "min": 0,
+                        "name": "volume",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "waveform0": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "waveform0",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "waveform1": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "waveform1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "waveform2": {
+                        "def": 0,
+                        "max": 3,
+                        "min": 0,
+                        "name": "waveform2",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.73,
+                        0.69,
+                        0.63
+                    ],
+                    "name": "SID"
+                }
+            },
+            "spectrumanalyzer": {
+                "params": {},
+                "visual": {
+                    "name": "Spectrum Analyzer"
+                }
+            },
+            "stereoenhancer": {
+                "params": {
+                    "width": {
+                        "def": 0,
+                        "max": 180,
+                        "min": 0,
+                        "name": "Width",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "name": "StereoEnhancer"
+                }
+            },
+            "stereomatrix": {
+                "params": {
+                    "l-l": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Left to Left",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "l-r": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Left to Right",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "r-l": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Right to Left",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "r-r": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Right to Right",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Stereo Matrix"
+                }
+            },
+            "tripleoscillator": {
+                "params": {
+                    "coarse0": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "Osc 1 coarse detuning",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "coarse1": {
+                        "def": -12,
+                        "max": 24,
+                        "min": -24,
+                        "name": "Osc 2 coarse detuning",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "coarse2": {
+                        "def": -24,
+                        "max": 24,
+                        "min": -24,
+                        "name": "Osc 3 coarse detuning",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "finel0": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "Osc 1 fine detuning left",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "finel1": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "Osc 2 fine detuning left",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "finel2": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "Osc 3 fine detuning left",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "finer0": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "Osc 1 fine detuning right",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "finer1": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "Osc 2 fine detuning right",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "finer2": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "Osc 3 fine detuning right",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "modalgo1": {
+                        "def": 2,
+                        "max": 4,
+                        "min": 0,
+                        "name": "Modulation type 1",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "modalgo2": {
+                        "def": 2,
+                        "max": 4,
+                        "min": 0,
+                        "name": "Modulation type 2",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "modalgo3": {
+                        "def": 2,
+                        "max": 4,
+                        "min": 0,
+                        "name": "Modulation type 3",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan0": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "Osc 1 pan",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan1": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "Osc 2 pan",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan2": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "Osc 3 pan",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "phoffset0": {
+                        "def": 0,
+                        "max": 360,
+                        "min": 0,
+                        "name": "Osc 1 phase-offset",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "phoffset1": {
+                        "def": 0,
+                        "max": 360,
+                        "min": 0,
+                        "name": "Osc 2 phase-offset",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "phoffset2": {
+                        "def": 0,
+                        "max": 360,
+                        "min": 0,
+                        "name": "Osc 3 phase-offset",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "stphdetun0": {
+                        "def": 0,
+                        "max": 359,
+                        "min": 0,
+                        "name": "Osc 1 stereo phase-detuning",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "stphdetun1": {
+                        "def": 0,
+                        "max": 360,
+                        "min": 0,
+                        "name": "Osc 2 stereo phase-detuning",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "stphdetun2": {
+                        "def": 0,
+                        "max": 3601,
+                        "min": 0,
+                        "name": "Osc 3 stereo phase-detuning",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol0": {
+                        "def": 3,
+                        "max": 100,
+                        "min": 0,
+                        "name": "Osc 1 volume",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol1": {
+                        "def": 33,
+                        "max": 100,
+                        "min": 0,
+                        "name": "Osc 2 volume",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "vol2": {
+                        "def": 33,
+                        "max": 100,
+                        "min": 0,
+                        "name": "Osc 3 volume",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "wavetype0": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "Osc 1 wave shape",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "wavetype1": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "Osc 2 wave shape",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "wavetype2": {
+                        "def": 0,
+                        "max": 7,
+                        "min": 0,
+                        "name": "Osc 3 wave shape",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.34,
+                        0.13
+                    ],
+                    "name": "TripleOscillator"
+                }
+            },
+            "vestige": {
+                "visual": {
+                    "color": [
+                        0.06,
+                        0.6,
+                        0.21
+                    ],
+                    "name": "VeSTige"
+                }
+            },
+            "vibedstrings": {
+                "params": {
+                    "active0": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "String 1 Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "active1": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "String 2 Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "active2": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "String 3 Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "active3": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "String 4 Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "active4": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "String 5 Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "active5": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "String 6 Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "active6": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "String 7 Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "active7": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "String 8 Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "active8": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "String 9 Enabled",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "detune0": {
+                        "def": 0.0,
+                        "max": 0.10000000149011612,
+                        "min": -0.10000000149011612,
+                        "name": "String 1 detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detune1": {
+                        "def": 0.0,
+                        "max": 0.10000000149011612,
+                        "min": -0.10000000149011612,
+                        "name": "String 2 detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detune2": {
+                        "def": 0.0,
+                        "max": 0.10000000149011612,
+                        "min": -0.10000000149011612,
+                        "name": "String 3 detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detune3": {
+                        "def": 0.0,
+                        "max": 0.10000000149011612,
+                        "min": -0.10000000149011612,
+                        "name": "String 4 detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detune4": {
+                        "def": 0.0,
+                        "max": 0.10000000149011612,
+                        "min": -0.10000000149011612,
+                        "name": "String 5 detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detune5": {
+                        "def": 0.0,
+                        "max": 0.10000000149011612,
+                        "min": -0.10000000149011612,
+                        "name": "String 6 detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detune6": {
+                        "def": 0.0,
+                        "max": 0.10000000149011612,
+                        "min": -0.10000000149011612,
+                        "name": "String 7 detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detune7": {
+                        "def": 0.0,
+                        "max": 0.10000000149011612,
+                        "min": -0.10000000149011612,
+                        "name": "String 8 detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detune8": {
+                        "def": 0.0,
+                        "max": 0.10000000149011612,
+                        "min": -0.10000000149011612,
+                        "name": "String 9 detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "graph0": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Graph 1",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "graph1": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Graph 2",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "graph2": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Graph 3",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "graph3": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Graph 4",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "graph4": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Graph 5",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "graph5": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Graph 6",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "graph6": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Graph 7",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "graph7": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Graph 8",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "graph8": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Graph 9",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "impulse0": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Impulse 1",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "impulse1": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Impulse 2",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "impulse2": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Impulse 3",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "impulse3": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Impulse 4",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "impulse4": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Impulse 5",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "impulse5": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Impulse 6",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "impulse6": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Impulse 7",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "impulse7": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Impulse 8",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "impulse8": {
+                        "def": true,
+                        "max": null,
+                        "min": null,
+                        "name": "Impulse 9",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "length0": {
+                        "def": 1,
+                        "max": 16,
+                        "min": 1,
+                        "name": "String 1 length",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "length1": {
+                        "def": 1,
+                        "max": 16,
+                        "min": 1,
+                        "name": "String 2 length",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "length2": {
+                        "def": 1,
+                        "max": 16,
+                        "min": 1,
+                        "name": "String 3 length",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "length3": {
+                        "def": 1,
+                        "max": 16,
+                        "min": 1,
+                        "name": "String 4 length",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "length4": {
+                        "def": 1,
+                        "max": 16,
+                        "min": 1,
+                        "name": "String 5 length",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "length5": {
+                        "def": 1,
+                        "max": 16,
+                        "min": 1,
+                        "name": "String 6 length",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "length6": {
+                        "def": 1,
+                        "max": 16,
+                        "min": 1,
+                        "name": "String 7 length",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "length7": {
+                        "def": 1,
+                        "max": 16,
+                        "min": 1,
+                        "name": "String 8 length",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "length8": {
+                        "def": 1,
+                        "max": 16,
+                        "min": 1,
+                        "name": "String 9 length",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "octave0": {
+                        "def": 2,
+                        "max": 8,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "octave1": {
+                        "def": 2,
+                        "max": 8,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "octave2": {
+                        "def": 2,
+                        "max": 8,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "octave3": {
+                        "def": 2,
+                        "max": 8,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "octave4": {
+                        "def": 2,
+                        "max": 8,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "octave5": {
+                        "def": 2,
+                        "max": 8,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "octave6": {
+                        "def": 2,
+                        "max": 8,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "octave7": {
+                        "def": 2,
+                        "max": 8,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "octave8": {
+                        "def": 2,
+                        "max": 8,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "pan0": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "String 1 panning",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan1": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "String 2 panning",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan2": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "String 3 panning",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan3": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "String 4 panning",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan4": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "String 5 panning",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan5": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "String 6 panning",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan6": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "String 7 panning",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan7": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "String 8 panning",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan8": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "String 9 panning",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pick0": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pick 1 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pick1": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pick 2 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pick2": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pick 3 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pick3": {
+                        "def": -1.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pick 4 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pick4": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pick 5 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pick5": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pick 6 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pick6": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pick 7 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pick7": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pick 8 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pick8": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pick 9 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pickup0": {
+                        "def": 0.05000000074505806,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pickup 1 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pickup1": {
+                        "def": 0.05000000074505806,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pickup 2 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pickup2": {
+                        "def": 0.05000000074505806,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pickup 3 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pickup3": {
+                        "def": 0.05000000074505806,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pickup 4 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pickup4": {
+                        "def": 0.05000000074505806,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pickup 5 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pickup5": {
+                        "def": 0.05000000074505806,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pickup 6 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pickup6": {
+                        "def": 0.05000000074505806,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pickup 7 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pickup7": {
+                        "def": 0.05000000074505806,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pickup 8 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pickup8": {
+                        "def": 0.05000000074505806,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "Pickup 9 position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slap0": {
+                        "def": 0.0,
+                        "max": 0.75,
+                        "min": 0.0,
+                        "name": "slap0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slap1": {
+                        "def": 0.0,
+                        "max": 0.75,
+                        "min": 0.0,
+                        "name": "slap1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slap2": {
+                        "def": 0.0,
+                        "max": 0.75,
+                        "min": 0.0,
+                        "name": "slap2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slap3": {
+                        "def": 0.0,
+                        "max": 0.75,
+                        "min": 0.0,
+                        "name": "slap3",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slap4": {
+                        "def": 0.0,
+                        "max": 0.75,
+                        "min": 0.0,
+                        "name": "slap4",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slap5": {
+                        "def": 0.0,
+                        "max": 0.75,
+                        "min": 0.0,
+                        "name": "slap5",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slap6": {
+                        "def": 0.0,
+                        "max": 0.75,
+                        "min": 0.0,
+                        "name": "slap6",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slap7": {
+                        "def": 0.0,
+                        "max": 0.75,
+                        "min": 0.0,
+                        "name": "slap7",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slap8": {
+                        "def": 0.0,
+                        "max": 0.75,
+                        "min": 0.0,
+                        "name": "slap8",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stiffness0": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "String 1 stiffness",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stiffness1": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "String 2 stiffness",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stiffness2": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "String 3 stiffness",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stiffness3": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "String 4 stiffness",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stiffness4": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "String 5 stiffness",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stiffness5": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "String 6 stiffness",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stiffness6": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "String 7 stiffness",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stiffness7": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "String 8 stiffness",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stiffness8": {
+                        "def": 0.0,
+                        "max": 0.05000000074505806,
+                        "min": 0.0,
+                        "name": "String 9 stiffness",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "version": {
+                        "def": "0.1",
+                        "max": null,
+                        "min": null,
+                        "name": "version",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "volume0": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "String 1 volume",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "volume1": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "String 2 volume",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "volume2": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "String 3 volume",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "volume3": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "String 4 volume",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "volume4": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "String 5 volume",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "volume5": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "String 6 volume",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "volume6": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "String 7 volume",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "volume7": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "String 8 volume",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "volume8": {
+                        "def": 100,
+                        "max": 200,
+                        "min": 0,
+                        "name": "String 9 volume",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.39,
+                        0.47,
+                        0.53
+                    ],
+                    "name": "Vibed"
+                }
+            },
+            "watsyn": {
+                "params": {
+                    "a1_ltune": {
+                        "def": 0.0,
+                        "max": 600.0,
+                        "min": -600.0,
+                        "name": "Left detune A1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "a1_mult": {
+                        "def": 8.0,
+                        "max": 24.0,
+                        "min": 1.0,
+                        "name": "Freq. multiplier A1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "a1_pan": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Panning A1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "a1_rtune": {
+                        "def": 0.0,
+                        "max": 600.0,
+                        "min": -600.0,
+                        "name": "Right detune A1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "a1_vol": {
+                        "def": 100.0,
+                        "max": 200.0,
+                        "min": 0.0,
+                        "name": "Volume A1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "a1_wave": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Wave A1",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "a2_ltune": {
+                        "def": 0.0,
+                        "max": 600.0,
+                        "min": -600.0,
+                        "name": "Left detune A2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "a2_mult": {
+                        "def": 8.0,
+                        "max": 24.0,
+                        "min": 1.0,
+                        "name": "Freq. multiplier A2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "a2_pan": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Panning A2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "a2_rtune": {
+                        "def": 0.0,
+                        "max": 600.0,
+                        "min": -600.0,
+                        "name": "Right detune A2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "a2_vol": {
+                        "def": 100.0,
+                        "max": 200.0,
+                        "min": 0.0,
+                        "name": "Volume A2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "a2_wave": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Wave A2",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "abmix": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "A-B Mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amod": {
+                        "def": 0.0,
+                        "max": 3.0,
+                        "min": 0.0,
+                        "name": "A2-A1 modulation",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "b1_ltune": {
+                        "def": 0.0,
+                        "max": 600.0,
+                        "min": -600.0,
+                        "name": "Left detune B1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "b1_mult": {
+                        "def": 8.0,
+                        "max": 24.0,
+                        "min": 1.0,
+                        "name": "Freq. multiplier B1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "b1_pan": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Panning B1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "b1_rtune": {
+                        "def": 0.0,
+                        "max": 600.0,
+                        "min": -600.0,
+                        "name": "Right detune B1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "b1_vol": {
+                        "def": 100.0,
+                        "max": 200.0,
+                        "min": 0.0,
+                        "name": "Volume B1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "b1_wave": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Wave B1",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "b2_ltune": {
+                        "def": 0.0,
+                        "max": 600.0,
+                        "min": -600.0,
+                        "name": "Left detune B2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "b2_mult": {
+                        "def": 8.0,
+                        "max": 24.0,
+                        "min": 1.0,
+                        "name": "Freq. multiplier B2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "b2_pan": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": -100.0,
+                        "name": "Panning B2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "b2_rtune": {
+                        "def": 0.0,
+                        "max": 600.0,
+                        "min": -600.0,
+                        "name": "Right detune B2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "b2_vol": {
+                        "def": 100.0,
+                        "max": 200.0,
+                        "min": 0.0,
+                        "name": "Panning B2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "b2_wave": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Wave B2",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "bmod": {
+                        "def": 0.0,
+                        "max": 3.0,
+                        "min": 0.0,
+                        "name": "B2-B1 modulation",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "envAmt": {
+                        "def": 0.0,
+                        "max": 200.0,
+                        "min": -200.0,
+                        "name": "A-B Mix envelope amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "envAtt": {
+                        "def": 0.0,
+                        "max": 2000.0,
+                        "min": 0.0,
+                        "name": "A-B Mix envelope attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "envDec": {
+                        "def": 0.0,
+                        "max": 2000.0,
+                        "min": 0.0,
+                        "name": "A-B Mix envelope decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "envHold": {
+                        "def": 0.0,
+                        "max": 2000.0,
+                        "min": 0.0,
+                        "name": "A-B Mix envelope hold",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "xtalk": {
+                        "def": 0.0,
+                        "max": 100.0,
+                        "min": 0.0,
+                        "name": "A1-B2 Crosstalk",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.81,
+                        0.87,
+                        0.87
+                    ],
+                    "name": "Watsyn"
+                }
+            },
+            "waveshaper": {
+                "params": {
+                    "clipInput": {
+                        "def": -1,
+                        "max": null,
+                        "min": null,
+                        "name": "Clip input",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "inputGain": {
+                        "def": 1.0,
+                        "max": 5.0,
+                        "min": 0.0,
+                        "name": "Input gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "outputGain": {
+                        "def": 1.0,
+                        "max": 5.0,
+                        "min": 0.0,
+                        "name": "Output gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "waveShape": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Shape",
+                        "noauto": true,
+                        "type": "string"
+                    }
+                },
+                "visual": {
+                    "name": "WaveShaper"
+                }
+            },
+            "zynaddsubfx": {
+                "params": {
+                    "bandwidth": {
+                        "def": 64,
+                        "max": 127,
+                        "min": 0,
+                        "name": "Bandwidth",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "filterfreq": {
+                        "def": 64,
+                        "max": 127,
+                        "min": 0,
+                        "name": "Filter frequency",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "filterq": {
+                        "def": 64,
+                        "max": 127,
+                        "min": 0,
+                        "name": "Filter resonance",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "fmgain": {
+                        "def": 127,
+                        "max": 127,
+                        "min": 0,
+                        "name": "FM gain",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "forwardmidicc": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Forward MIDI control change events",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "modifiedcontrollers": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Modified Controllers ",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "portamento": {
+                        "def": 0,
+                        "max": 127,
+                        "min": 0,
+                        "name": "Portamento",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "resbandwidth": {
+                        "def": 64,
+                        "max": 127,
+                        "min": 0,
+                        "name": "Resonance bandwidth",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "rescenterfreq": {
+                        "def": 64,
+                        "max": 127,
+                        "min": 0,
+                        "name": "Resonance center frequency",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.75,
+                        0.75,
+                        0.75
+                    ],
+                    "name": "ZynAddSubFX"
+                }
+            }
+        }
+    }
+}

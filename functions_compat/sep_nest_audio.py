@@ -9,12 +9,14 @@ def do_placements(cvpj_placements, out__placement_loop):
     for cvpj_placement in cvpj_placements:
         main_pos = cvpj_placement['position']
         main_dur = cvpj_placement['duration']
-        main_cut = cvpj_placement['cut'] if 'cut' in cvpj_placement else  None
+        main_cut = cvpj_placement['cut'] if 'cut' in cvpj_placement else None
+        main_fxrack_channel = cvpj_placement['fxrack_channel'] if 'fxrack_channel' in cvpj_placement else None
         main_off = 0
         if main_cut != None: main_off = main_cut['start']
         main_events = cvpj_placement['events']
         trimpls = placement_data.audiotrim(main_events, main_pos-main_off,main_off, main_off+main_dur)
         for trimpl in trimpls:
+            if main_fxrack_channel != None: trimpl['fxrack_channel'] = main_fxrack_channel
             new_placements.append(trimpl)
 
     return new_placements

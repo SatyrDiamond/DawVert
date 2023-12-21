@@ -7,11 +7,11 @@ import math
 import json
 import struct
 import numpy as np
+from functions import plugins
 from functions import data_bytes
 from functions import song_tracker
 from functions import song_tracker_fx_mod
 from functions import audio_wav
-from functions import plugins
 from functions import song
 from functions_tracks import tracks_mi
 from functions_tracks import auto_data
@@ -125,7 +125,7 @@ class input_mod(plugin_input.base):
 
             cvpj_instid = text_inst_start + str(mod_numinst)
 
-            pluginid = plugins.get_id()
+            pluginid = 'sampler_'+str(mod_numinst)
             if mod_inst_mod_name != "": cvpj_instname = mod_inst_mod_name
             else: cvpj_instname = ' '
 
@@ -135,14 +135,19 @@ class input_mod(plugin_input.base):
 
             tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
             
+            mod_inst_length *= 2
+            mod_inst_loopstart *= 2
+            mod_inst_looplength *= 2
+
             if mod_inst_length != 0 and mod_inst_length != 1:
                 wave_path = samplefolder + str(mod_numinst).zfill(2) + '.wav'
-                plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, wave_path)
-                plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
-                plugins.add_plug_data(cvpj_l, pluginid, 'trigger', "normal")
-                plugins.add_plug_data(cvpj_l, pluginid, 'start', 0)
-                plugins.add_plug_data(cvpj_l, pluginid, 'end', mod_inst_length)
-                plugins.add_plug_data(cvpj_l, pluginid, 'length', mod_inst_length)
+
+                inst_plugindata = plugins.cvpj_plugin('sampler', wave_path, None)
+                inst_plugindata.dataval_add('point_value_type', 'samples')
+                inst_plugindata.dataval_add('trigger', 'normal')
+                inst_plugindata.dataval_add('start', 0)
+                inst_plugindata.dataval_add('end', mod_inst_length)
+                inst_plugindata.dataval_add('length', mod_inst_length)
 
                 cvpj_loopdata = {}
                 if mod_inst_loopstart != 0 and mod_inst_looplength != 1:
@@ -151,7 +156,8 @@ class input_mod(plugin_input.base):
                     cvpj_loopdata['points'] = [mod_inst_loopstart, mod_inst_loopstart+mod_inst_looplength]
                 else: cvpj_loopdata['enabled'] = 0
 
-                plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loopdata)
+                inst_plugindata.dataval_add('loop', cvpj_loopdata)
+                inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
         mod_orderlist_length = file_stream.read(1)[0]
         mod_extravalue = file_stream.read(1)[0]

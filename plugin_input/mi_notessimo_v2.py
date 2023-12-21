@@ -3,7 +3,7 @@
 
 from functions import auto
 from functions import data_bytes
-from functions import idvals
+from functions import data_dataset
 from functions import note_data
 from functions import placement_data
 from functions import song
@@ -66,8 +66,9 @@ class input_notessimo_v2(plugin_input.base):
         tempo_table = struct.unpack('>'+'H'*100, nv2_data.read(200))
 
         cvpj_l = {}
-        idvals_inst_notetess = idvals.parse_idvalscsv('data_idvals/notessimo_v2_inst.csv')
-
+        dataset = data_dataset.dataset('./data_dset/notessimo_v2.dset')
+        dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
+        
         fxrack.add(cvpj_l, 1, 1, 0, name='Drums')
 
         notess_sheets = {}
@@ -86,32 +87,19 @@ class input_notessimo_v2(plugin_input.base):
 
         fxnum = 2
         for used_instrument in used_instruments:
-            notetess_instname = idvals.get_idval(idvals_inst_notetess, str(used_instrument), 'name')
-            notetess_instcolor = idvals.get_idval(idvals_inst_notetess, str(used_instrument), 'color')
-            notetess_gminst = idvals.get_idval(idvals_inst_notetess, str(used_instrument), 'gm_inst')
-            notetess_isdrum = idvals.get_idval(idvals_inst_notetess, str(used_instrument), 'isdrum')
-
-            print("[input-notessimo_v2] Instrument: " + str(notetess_instname))
 
             pluginid = plugins.get_id()
 
             cvpj_instid = str(used_instrument)
 
-            tracks_mi.inst_create(cvpj_l, cvpj_instid)
-            tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=notetess_instname, color=notetess_instcolor)
+            outdsd = tracks_mi.import_dset(cvpj_l, cvpj_instid, cvpj_instid, dataset, dataset_midi, None, None)
+            print("[input-notessimo_v2] Instrument: " + str(outdsd[4]))
 
-            tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
-
-            if notetess_gminst != None: 
-                plugins.add_plug_gm_midi(cvpj_l, pluginid, 0, notetess_gminst)
-                tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-                tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'midi', 'output', {'program': notetess_gminst})
-
-            if notetess_isdrum == True:
+            if outdsd[3]: 
                 tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
             else:
                 tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, fxnum)
-                fxrack.add(cvpj_l, fxnum, 1, 0, name=notetess_instname, color=notetess_instcolor)
+                fxrack.add(cvpj_l, fxnum, 1, 0, name=outdsd[4], color=outdsd[5])
                 fxnum += 1
                 
         for idnum in range(9):

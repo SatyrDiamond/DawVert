@@ -28,7 +28,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('Mode', 0, 'int', "")
             cvpj_plugindata.param_add('Width', 1, 'float', "")
             cvpj_plugindata.param_add('OutputGain', 1, 'float', "")
-            return True
+            return 0
 
         if plugintype[1] == 'Phaser':
             print('[plug-conv] Amped to Ableton: Phaser > PhaserNew:',pluginid)  
@@ -48,4 +48,6 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('Notches', amped_stages, 'float', "")
             cvpj_plugindata.param_add('Modulation_Amount', 0.20, 'float', "")
             cvpj_plugindata.param_add('OutputGain', 1, 'float', "")
-            return True
+            return 0
+
+        return 2

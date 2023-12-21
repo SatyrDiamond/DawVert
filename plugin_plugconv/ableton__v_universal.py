@@ -57,8 +57,7 @@ class plugconv(plugin_plugconv.base):
                 cvpj_plugindata.param_add('DelayLine_SyncedSixteenthR', d_delay_sync, 'float', "DelayLine_SyncedSixteenthR")
 
             auto_data.move(cvpj_l, ['slot', pluginid, 'wet'], ['plugin', pluginid, 'DryWet'])
-
-            return True
+            return 0
 
         if plugintype[1] in ['compressor','expander']:
             v_threshold = cvpj_plugindata.param_get('threshold', 0)[0]
@@ -93,8 +92,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('Knee', v_knee, 'float', "")
             cvpj_plugindata.param_add('Model', v_model, 'float', "")
             cvpj_plugindata.param_add('DryWet', fx_wet, 'float', "")
-                
-            return True
+            return 0
 
         if plugintype[1] == 'gate':
             gate_attack = cvpj_plugindata.param_get('attack', 0)[0]*1000
@@ -124,7 +122,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('Threshold', gate_threshold, 'float', "")
             cvpj_plugindata.param_add('FlipMode', gate_flip, 'float', "")
             cvpj_plugindata.param_add('Return', gate_return, 'float', "")
-            return True
+            return 0
 
         if plugintype[1] == 'limiter':
             limiter_ceiling = cvpj_plugindata.param_get('ceiling', 0)[0]
@@ -144,7 +142,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('Gain', limiter_gain, 'float', "")
             cvpj_plugindata.param_add('Release', limiter_release, 'float', "")
             cvpj_plugindata.param_add('AutoRelease', limiter_release_auto, 'bool', "")
-            return True
+            return 0
 
 
         if plugintype[1] == 'bitcrush':
@@ -157,8 +155,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('SampleRate', bitcrush_SampleRate, 'float', "")
             auto_data.rename_plugparam(cvpj_l, pluginid, 'bits', 'BitDepth')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'freq', 'SampleRate')
-            return True
-
+            return 0
 
         if plugintype[1] == 'eq-bands':
             cvpj_plugindata.replace('native-ableton', 'Eq8')
@@ -195,6 +192,7 @@ class plugconv(plugin_plugconv.base):
 
                         cvpj_band = cvpj_bands[band_num]
                         #print(groupname[group_num], band_num, cvpj_band, als_shape)
+            return 0
 
         if plugintype[1] == 'tremolo':
             lfo_freq = cvpj_plugindata.param_get('freq', 0)[0]
@@ -205,6 +203,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('Lfo/LfoAmount', lfo_depth, 'float', "")
             auto_data.rename_plugparam(cvpj_l, pluginid, 'freq', 'Lfo/Frequency')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'depth', 'Lfo/LfoAmount')
+            return 0
 
         if plugintype[1] == 'vibrato':
             lfo_freq = cvpj_plugindata.param_get('freq', 0)[0]
@@ -220,3 +219,6 @@ class plugconv(plugin_plugconv.base):
             auto_data.multiply(cvpj_l, ['plugin', pluginid, 'depth'], 0, 0.5)
             auto_data.rename_plugparam(cvpj_l, pluginid, 'freq', 'Rate')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'depth', 'Amount')
+            return 0
+            
+        return 2

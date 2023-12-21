@@ -38,7 +38,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('LegacyGain', ((bal_vol/256)-1)*35, 'float', "")
             cvpj_plugindata.param_add('Mute', False, 'bool', "")
             cvpj_plugindata.param_add('DcFilter', False, 'bool', "")
-            return True
+            return 0
 
         if plugintype[1].lower() == 'fruity convolver':  
             print('[plug-conv] FL Studio to Ableton: Fruity convolver > Hybrid:',pluginid)
@@ -46,4 +46,6 @@ class plugconv(plugin_plugconv.base):
             conv_file = cvpj_plugindata.dataval_get('file', 0)
             cvpj_plugindata.replace('native-ableton', 'Hybrid')
             cvpj_plugindata.dataval_get('sample', conv_file)
-            return True
+            return 0
+
+        return 2

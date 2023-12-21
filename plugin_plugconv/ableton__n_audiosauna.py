@@ -63,4 +63,6 @@ class plugconv(plugin_plugconv.base):
                 cvpj_plugindata.param_add(als_stxt+'Envelope/DecaySlope', 0, 'float', "")
                 cvpj_plugindata.param_add(als_stxt+'Envelope/ReleaseSlope', 0, 'float', "")
 
-            return True
+            return 0
+
+        return 2

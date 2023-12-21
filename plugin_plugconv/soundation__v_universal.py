@@ -83,4 +83,6 @@ class plugconv(plugin_plugconv.base):
                 cvpj_plugindata.param_add('hpf_slope', 0.25, 'float', 'HP')
                 
             cvpj_plugindata.param_add('master_gain', (gain_out/40)+0.5,'float', '')
-            return True
+            return 0
+
+        return 2

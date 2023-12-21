@@ -521,7 +521,7 @@ def do_device_data_single(cvpj_plugindata, xmltag, deviceid, pluginid, is_instru
 
             vstpath = cvpj_plugindata.dataval_get('path', '')
             vstname = os.path.basename(vstpath).split('.')[0]
-            vstid = cvpj_plugindata.dataval_get('fourid', '')
+            vstid = cvpj_plugindata.dataval_get('fourid', 0)
             vstversion = cvpj_plugindata.dataval_get('version_bytes', 0)
             vstnumparams = cvpj_plugindata.dataval_get('numparams', None)
             current_program = cvpj_plugindata.dataval_get('current_program', 0)

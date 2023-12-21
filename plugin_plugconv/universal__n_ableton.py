@@ -31,7 +31,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('freq', bitcrush_SampleRate, 'float', 'freq')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'BitDepth', 'bits')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'SampleRate', 'freq')
-            return True
+            return 1
 
         if plugintype[1] == 'Compressor2':
             comp_Threshold = cvpj_plugindata.param_get('Threshold', 0)[0]
@@ -76,7 +76,7 @@ class plugconv(plugin_plugconv.base):
             auto_data.multiply(cvpj_l, ['plugin', pluginid, 'attack'], 0, 0.001)
             auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 0.001)
             auto_data.function_value(cvpj_l, ['plugin', pluginid, 'threshold'], comp_threshold)
-            return True
+            return 1
 
 
         if plugintype[1] == 'Eq8':
@@ -104,7 +104,7 @@ class plugconv(plugin_plugconv.base):
 
             cvpj_plugindata.replace('universal', 'eq-bands')
             cvpj_plugindata.dataval_add('num_bands', 8)
-            return True
+            return 1
 
         if plugintype[1] == 'Limiter':
             limiter_ceiling = cvpj_plugindata.param_get("Ceiling", 0)[0]
@@ -125,8 +125,7 @@ class plugconv(plugin_plugconv.base):
             auto_data.rename_plugparam(cvpj_l, pluginid, 'AutoRelease', 'release_auto')
 
             auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 0.001)
-
-            return True
+            return 1
 
         if plugintype[1] == 'Gate':
             gate_attack = cvpj_plugindata.param_get("Attack", 0)[0]/1000
@@ -157,5 +156,6 @@ class plugconv(plugin_plugconv.base):
             auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 0.001)
             auto_data.multiply(cvpj_l, ['plugin', pluginid, 'return'], 0, 0.001)
             auto_data.function_value(cvpj_l, ['plugin', pluginid, 'threshold'], comp_threshold)
+            return 1
 
-            return True
+        return 2

@@ -9,6 +9,7 @@ import math
 from functions import xtramath
 from functions import colors
 from functions import data_values
+from functions import data_dataset
 from functions import plugins
 from functions import idvals
 from functions import notelist_data
@@ -17,7 +18,6 @@ from functions import auto
 from functions import song
 from functions_compat import trackfx_to_numdata
 from functions_plugin import soundation_values
-from functions_plugin import synth_nonfree_values
 from functions_tracks import auto_nopl
 from functions_tracks import tracks_r
 
@@ -36,115 +36,32 @@ def makechannel(i_type):
     }
 
 def set_asdr(sng_instparams, asdr_a, asdr_s, asdr_d, asdr_r):
-    add_sndinstparam(sng_instparams, 'attack', asdr_a, True)
-    add_sndinstparam(sng_instparams, 'sustain', asdr_s, True)
-    add_sndinstparam(sng_instparams, 'decay', asdr_d, True)
-    add_sndinstparam(sng_instparams, 'release', asdr_r, True)
+    add_sndinstparam(sng_instparams, 'attack', asdr_a, [])
+    add_sndinstparam(sng_instparams, 'sustain', asdr_s, [])
+    add_sndinstparam(sng_instparams, 'decay', asdr_d, [])
+    add_sndinstparam(sng_instparams, 'release', asdr_r, [])
 
 def add_sndinstparam(i_dict, i_name, i_value, i_auto): 
-    if i_auto == True: i_dict[i_name] = {"value": i_value, "automation": []}
+    if i_auto != None: i_dict[i_name] = {"value": i_value, "automation": i_auto}
     else: i_dict[i_name] = {"value": i_value}
 
-def cvpjidata_to_sngparam(i_dict, pluginid, i_name, i_fallback): 
-    value = plugins.get_plug_dataval(cvpj_l, pluginid, i_name, i_fallback)
-    add_sndinstparam(i_dict, i_name, value, False)
+def cvpjidata_to_sngparam(cvpj_plugindata, i_dict, pluginid, i_name, i_fallback): 
+    value = cvpj_plugindata.dataval_get(i_name, i_fallback)
+    add_sndinstparam(i_dict, i_name, value, None)
 
-def cvpjiparam_to_sngparam(i_dict, pluginid, i_name, i_fallback, i_auto): 
-    value = plugins.get_plug_param(cvpj_l, pluginid, i_name, i_fallback)[0]
+def cvpjiparam_to_sngparam(cvpj_plugindata, i_dict, pluginid, i_name, i_fallback, i_auto): 
+    value = cvpj_plugindata.param_get(i_name, i_fallback)[0]
     add_sndinstparam(i_dict, i_name, value, i_auto)
+
 
 def add_fx(sng_trkdata, s_trackdata):
     sng_fxchain = sng_trkdata['effects']
     if 'chain_fx_audio' in s_trackdata:
         chainfxdata = s_trackdata['chain_fx_audio']
         for fxpluginid in chainfxdata:
-            plugtype = plugins.get_plug_type(cvpj_l, fxpluginid)
-            fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', fxpluginid])
-            fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, fxpluginid)
-
-            if plugtype == ['universal', 'eq-bands']:
-                sng_fxdata = {}
-                sng_fxdata['identifier'] = 'com.soundation.parametric-eq'
-                sng_fxdata['bypass'] = not fx_on
-
-                data_LP =        [False,0,0,0,0]
-                data_Lowshelf =  [False,0,0,0,0]
-                data_Peaks =     [[False,0,0,0,0],[False,0,0,0,0],[False,0,0,0,0],[False,0,0,0,0]]
-                data_HighShelf = [False,0,0,0,0]
-                data_HP =        [False,0,0,0,0]
-
-                banddata = plugins.get_eqband(cvpj_l, fxpluginid, None)
-
-                for s_band in banddata:
-                    bandtype = s_band['type']
-
-                    band_on = float(s_band['on'])
-                    band_freq = s_band['freq']
-                    band_gain = s_band['gain']
-                    band_res = s_band['var']
-
-                    band_freq = math.log(band_freq / 20) / math.log(1000)
-                    band_gain = (band_gain/40)+0.5
-
-                    if bandtype in ['low_pass', 'high_pass']:
-                        band_res = xtramath.logpowmul(band_res, 0.5)
-                        band_res = math.log(band_res / 0.1)
-                        band_res = band_res / math.log(162)
-                    elif bandtype in ['low_shelf', 'high_shelf']:
-                        band_res = math.log(band_res / 0.1)
-                        band_res = band_res / math.log(162)
-                    else:
-                        band_res = xtramath.logpowmul(band_res, -1)
-                        band_res = math.log( band_res / 0.1)
-                        band_res = band_res / math.log(162)
-                    #print(bandtype, band_res)
-
-                    part = [True, band_on, band_freq, band_gain, band_res]
-
-                    if bandtype == 'low_pass' and band_on: data_LP = part
-                    if bandtype == 'low_shelf' and band_on: data_Lowshelf = part
-                    if bandtype == 'peak' and band_on: 
-                        for peaknum in range(4):
-                            peakdata = data_Peaks[peaknum]
-                            if peakdata[0] == False: 
-                                data_Peaks[peaknum] = part
-                                break
-                    if bandtype == 'high_shelf' and band_on: data_HighShelf = part
-                    if bandtype == 'high_pass' and band_on: data_HP = part
-
-                gain_out = plugins.get_plug_param(cvpj_l, fxpluginid, 'gain_out', 0)[0]
-
-                add_sndinstparam(sng_fxdata, 'highshelf_enable', data_HighShelf[1], True)
-                add_sndinstparam(sng_fxdata, 'highshelf_freq', data_HighShelf[2], True)
-                add_sndinstparam(sng_fxdata, 'highshelf_gain', data_HighShelf[3], True)
-                add_sndinstparam(sng_fxdata, 'highshelf_res', data_HighShelf[4], True)
-
-                add_sndinstparam(sng_fxdata, 'hpf_enable', data_HP[1], True)
-                add_sndinstparam(sng_fxdata, 'hpf_freq', data_HP[2], True)
-                add_sndinstparam(sng_fxdata, 'hpf_res', data_HP[4], True)
-                add_sndinstparam(sng_fxdata, 'hpf_slope', 0.25, True)
-
-                add_sndinstparam(sng_fxdata, 'lowshelf_enable', data_Lowshelf[1], True)
-                add_sndinstparam(sng_fxdata, 'lowshelf_freq', data_Lowshelf[2], True)
-                add_sndinstparam(sng_fxdata, 'lowshelf_gain', data_Lowshelf[3], True)
-                add_sndinstparam(sng_fxdata, 'lowshelf_res', data_Lowshelf[4], True)
-
-                add_sndinstparam(sng_fxdata, 'lpf_enable', data_LP[1], True)
-                add_sndinstparam(sng_fxdata, 'lpf_freq', data_LP[2], True)
-                add_sndinstparam(sng_fxdata, 'lpf_res', data_LP[4], True)
-                add_sndinstparam(sng_fxdata, 'lpf_slope', 0.25, True)
-
-                add_sndinstparam(sng_fxdata, 'master_gain', (gain_out/40)+0.5, True)
-
-                for peaknum in range(4):
-                    peakstr = str(peaknum+1)
-                    add_sndinstparam(sng_fxdata, 'peak'+peakstr+'_enable', data_Peaks[peaknum][1], True)
-                    add_sndinstparam(sng_fxdata, 'peak'+peakstr+'_freq', data_Peaks[peaknum][2], True)
-                    add_sndinstparam(sng_fxdata, 'peak'+peakstr+'_gain', data_Peaks[peaknum][3], True)
-                    add_sndinstparam(sng_fxdata, 'peak'+peakstr+'_res', data_Peaks[peaknum][4], True)
-
-                sng_fxchain.append(sng_fxdata)
-
+            fx_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, fxpluginid)
+            plugtype = fx_plugindata.type_get()
+            fx_on, fx_wet = fx_plugindata.fxdata_get()
 
             if plugtype[0] == 'native-soundation' and plugtype[1] != 'com.soundation.send':
                 fxpluginname = plugtype[1]
@@ -152,22 +69,13 @@ def add_fx(sng_trkdata, s_trackdata):
                 sng_fxdata['identifier'] = fxpluginname
                 sng_fxdata['bypass'] = not fx_on
 
-                if fxpluginname == 'com.soundation.compressor': snd_params = ['gain','release','ratio','threshold','attack']
-                elif fxpluginname == 'com.soundation.degrader': snd_params = ['gain','rate','reduction','mix']
-                elif fxpluginname == 'com.soundation.delay': snd_params = ['dry','feedback','feedback_filter','timeBpmSync','timeL','timeLSynced','timeR','timeRSynced','wet']
-                elif fxpluginname == 'com.soundation.distortion': snd_params = ['gain','volume','mode']
-                elif fxpluginname == 'com.soundation.equalizer': snd_params = ['low','mid','high']
-                elif fxpluginname == 'com.soundation.fakie': snd_params = ['attack','hold','release','depth']
-                elif fxpluginname == 'com.soundation.filter': snd_params = ['cutoff','resonance','mode']
-                elif fxpluginname == 'com.soundation.limiter': snd_params = ['attack','gain','release','threshold']
-                elif fxpluginname == 'com.soundation.parametric-eq': snd_params = ["highshelf_enable", "highshelf_freq", "highshelf_gain", "highshelf_res", "hpf_enable", "hpf_freq", "hpf_res", "hpf_slope", "lowshelf_enable", "lowshelf_freq", "lowshelf_gain", "lowshelf_res", "lpf_enable", "lpf_freq", "lpf_res", "lpf_slope", "master_gain", "peak1_enable", "peak1_freq", "peak1_gain", "peak1_res", "peak2_enable", "peak2_freq", "peak2_gain", "peak2_res", "peak3_enable", "peak3_freq", "peak3_gain", "peak3_res", "peak4_enable", "peak4_freq", "peak4_gain", "peak4_res"]
-                elif fxpluginname == 'com.soundation.phaser': snd_params = ['rateBpmSync','rateSynced','feedback','rate','range','freq','wet','dry']
-                elif fxpluginname == 'com.soundation.reverb': snd_params = ['size','damp','width','wet','dry']
-                elif fxpluginname == 'com.soundation.tremolo': snd_params = ['speed','depth','phase']
-                elif fxpluginname == 'com.soundation.wubfilter': snd_params = ['type','cutoff','resonance','drive','lfo_type','lfo_speed','lfo_depth']
+                paramlist = dataset.params_list('plugin', fxpluginname)
 
-                for snd_param in snd_params:
-                    cvpjiparam_to_sngparam(sng_fxdata, fxpluginid, snd_param, 0, True)
+                for snd_param in paramlist:
+                    autodata = auto_nopl.getpoints(cvpj_l, ['plugin',fxpluginid,snd_param])
+                    if autodata != None: autodata = cvpjauto_to_sngauto(autodata, ticksdiv)
+                    else: autodata = []
+                    cvpjiparam_to_sngparam(fx_plugindata, sng_fxdata, fxpluginid, snd_param, 0, autodata)
 
                 sng_fxchain.append(sng_fxdata)
 
@@ -212,8 +120,11 @@ class output_soundation(plugin_output.base):
     def getfileextension(self): return 'sng'
     def parse(self, convproj_json, output_file):
         global cvpj_l
-        global europa_vals
-        europa_vals = synth_nonfree_values.europa_valnames()
+        global ticksdiv
+        global dataset
+
+        dataset = data_dataset.dataset('./data_dset/soundation.dset')
+        dataset_synth_nonfree = data_dataset.dataset('./data_dset/synth_nonfree.dset')
 
         cvpj_l = json.loads(convproj_json)
         bpm = params.get(cvpj_l, [], 'bpm', 120)[0]
@@ -353,77 +264,80 @@ class output_soundation(plugin_output.base):
                     pluginid = data_values.nested_dict_get_value(s_trackdata, ['instdata', 'pluginid'])
 
                     if pluginid != None:
-                        plugtype = plugins.get_plug_type(cvpj_l, pluginid)
-                        a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'vol')
+                        cvpj_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
+                        plugtype = cvpj_plugindata.type_get()
+                        a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = cvpj_plugindata.asdr_env_get('vol')
 
-                        if plugtype == ['synth-nonfree', 'Europa']:
+                        if plugtype == ['synth-nonfree', 'europa']:
                             inst_supported = True
                             sng_instparams['identifier'] = 'com.soundation.europa'
-                            for paramname in europa_vals:
-                                eur_value_type, cvpj_val_name = europa_vals[paramname]
 
-                                if eur_value_type == 'number':
-                                    eur_value_value = plugins.get_plug_param(cvpj_l, pluginid, cvpj_val_name, 0)[0]
+                            europaparamlist = dataset_synth_nonfree.params_list('plugin', 'europa')
+                            for paramname in europaparamlist:
+                                param = dataset_synth_nonfree.params_i_get('plugin', 'europa', paramname)
+
+                                if not param[0]:
+                                    eur_value_value = cvpj_plugindata.param_get(paramname, 0)[0]
                                 else:
-                                    eur_value_value = plugins.get_plug_dataval(cvpj_l, pluginid, cvpj_val_name, 0)
+                                    eur_value_value = cvpj_plugindata.dataval_get(paramname, 0)
                                     if paramname in ['Curve1','Curve2','Curve3','Curve4','Curve']: 
                                         eur_value_value = ','.join([str(x).zfill(2) for x in eur_value_value])
 
-                                add_sndinstparam(sng_instparams, "/custom_properties/"+paramname, eur_value_value, True)
-                            add_sndinstparam(sng_instparams, "/soundation/sample", None, True)
+                                add_sndinstparam(sng_instparams, "/custom_properties/"+paramname, eur_value_value, [])
+                            add_sndinstparam(sng_instparams, "/soundation/sample", None, [])
 
                         elif plugtype[0] == 'native-soundation':
                             inst_supported = True
                             sng_instparams['identifier'] = plugtype[1]
                             if plugtype[1] == 'com.soundation.GM-2':
-                                cvpjidata_to_sngparam(sng_instparams, pluginid, 'sample_pack', '2_0_Bright_Yamaha_Grand.smplpck')
-                                a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'vol')
+                                cvpjidata_to_sngparam(cvpj_plugindata, sng_instparams, pluginid, 'sample_pack', '2_0_Bright_Yamaha_Grand.smplpck')
+                                a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = cvpj_plugindata.asdr_env_get('vol')
                                 set_asdr(sng_instparams, a_attack, a_sustain, a_decay, a_release)
 
                             elif plugtype[1] == 'com.soundation.SAM-1':
-                                sample_pack = plugins.get_plug_dataval(cvpj_l, pluginid, 'sample_pack', None)
+                                sample_pack = cvpj_plugindata.dataval_get('sample_pack', None)
                                 sng_instparams['sample_pack'] = sample_pack
-                                a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'vol')
+                                a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = cvpj_plugindata.asdr_env_get('vol')
                                 set_asdr(sng_instparams, a_attack, a_sustain, a_decay, a_release)
 
                             elif plugtype[1] == 'com.soundation.simple':
 
                                 for oscnum in range(4):
                                     for paramtype in ['detune','pitch','type','vol']:
-                                        cvpjiparam_to_sngparam(sng_instparams, pluginid, 'osc_'+str(oscnum)+'_'+paramtype, 0, True)
+                                        cvpjiparam_to_sngparam(cvpj_plugindata, sng_instparams, pluginid, 'osc_'+str(oscnum)+'_'+paramtype, 0, [])
 
-                                f_predelay, f_attack, f_hold, f_decay, f_sustain, f_release, f_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'cutoff')
-                                add_sndinstparam(sng_instparams, 'filter_attack', f_attack, True)
-                                add_sndinstparam(sng_instparams, 'filter_decay', f_decay, True)
-                                add_sndinstparam(sng_instparams, 'filter_sustain', f_sustain, True)
-                                add_sndinstparam(sng_instparams, 'filter_release', f_release, True)
-                                add_sndinstparam(sng_instparams, 'filter_int', f_amount, True)
+                                f_predelay, f_attack, f_hold, f_decay, f_sustain, f_release, f_amount = cvpj_plugindata.asdr_env_get('cutoff')
+                                add_sndinstparam(sng_instparams, 'filter_attack', f_attack, [])
+                                add_sndinstparam(sng_instparams, 'filter_decay', f_decay, [])
+                                add_sndinstparam(sng_instparams, 'filter_sustain', f_sustain, [])
+                                add_sndinstparam(sng_instparams, 'filter_release', f_release, [])
+                                add_sndinstparam(sng_instparams, 'filter_int', f_amount, [])
 
-                                f_enabled, f_cutoff, f_reso, f_type, f_subtype = plugins.get_filter(cvpj_l, pluginid)
-                                add_sndinstparam(sng_instparams, 'filter_cutoff', xtramath.between_to_one(20, 7500, f_cutoff), True)
-                                add_sndinstparam(sng_instparams, 'filter_resonance', f_reso, True)
+                                f_enabled, f_cutoff, f_reso, f_type, f_subtype = cvpj_plugindata.filter_get()
+                                add_sndinstparam(sng_instparams, 'filter_cutoff', xtramath.between_to_one(20, 7500, f_cutoff), [])
+                                add_sndinstparam(sng_instparams, 'filter_resonance', f_reso, [])
 
                                 for snd_param in ['noise_vol', 'noise_color']:
-                                    cvpjiparam_to_sngparam(sng_instparams, pluginid, snd_param, 0, True)
+                                    cvpjiparam_to_sngparam(cvpj_plugindata, sng_instparams, pluginid, snd_param, 0, [])
 
                             elif plugtype[1] == 'com.soundation.supersaw':
                                 set_asdr(sng_instparams, a_attack, a_sustain, a_decay, a_release)
                                 for snd_param in ["detune", "spread"]:
-                                    cvpjiparam_to_sngparam(sng_instparams, pluginid, snd_param, 0, True)
+                                    cvpjiparam_to_sngparam(cvpj_plugindata, sng_instparams, pluginid, snd_param, 0, [])
 
                             elif plugtype[1] == 'com.soundation.noiser':
                                 set_asdr(sng_instparams, a_attack, a_sustain, a_decay, a_release)
 
                             elif plugtype[1] == 'com.soundation.drummachine':
                                 for paramname in ["gain_2", "hold_1", "pitch_6", "gain_1", "decay_5", "gain_5", "hold_0", "hold_2", "pitch_7", "gain_0", "decay_6", "gain_3", "hold_5", "pitch_3", "decay_4", "pitch_4", "gain_6", "decay_7", "pitch_2", "hold_6", "decay_1", "decay_3", "decay_0", "decay_2", "gain_7", "pitch_0", "pitch_5", "hold_3", "pitch_1", "hold_4", "hold_7", "gain_4"]:
-                                    cvpjiparam_to_sngparam(sng_instparams, pluginid, paramname, 0, True)
-                                cvpjidata_to_sngparam(sng_instparams, pluginid, 'kit_name', '')
+                                    cvpjiparam_to_sngparam(cvpj_plugindata, sng_instparams, pluginid, paramname, 0, [])
+                                cvpjidata_to_sngparam(cvpj_plugindata, sng_instparams, pluginid, 'kit_name', '')
 
                             elif plugtype[1] == 'com.soundation.spc':
                                 for paramname in soundation_values.spc_vals():
-                                    cvpjiparam_to_sngparam(sng_instparams, pluginid, paramname, 0, True)
+                                    cvpjiparam_to_sngparam(cvpj_plugindata, sng_instparams, pluginid, paramname, 0, [])
                                 for dataname in ['cuts','envelopes']:
-                                    sng_instparams[dataname] = plugins.get_plug_dataval(cvpj_l, pluginid, dataname, '')
+                                    sng_instparams[dataname] = cvpj_plugindata.dataval_get(dataname, '')
 
                             elif plugtype[1] in ['com.soundation.va_synth','com.soundation.fm_synth','com.soundation.the_wub_machine','com.soundation.mono']:
                                 if plugtype[1] == 'com.soundation.va_synth': snd_params = ["aatt", "adec", "arel", "asus", "fatt", "fdec", "fdyn", "feg", "ffreq", "frel", "fres", "fsus", "glide_bend", "glide_mode", "glide_rate", "lfolpf", "lfoosc", "lforate", "octave", "osc_2_fine", "osc_2_mix", "osc_2_noise", "osc_2_octave", "tune"]
@@ -431,43 +345,43 @@ class output_soundation(plugin_output.base):
                                 elif plugtype[1] == 'com.soundation.mono': snd_params = ['filter_int','cutoff','resonance','pw','filter_decay','mix','amp_decay','glide']
                                 elif plugtype[1] == 'com.soundation.the_wub_machine': snd_params = ['filter_cutoff','filter_drive','filter_resonance','filter_type','filth_active','filth_amount','lfo_depth','lfo_keytracking','lfo_loop','lfo_phase','lfo_retrigger','lfo_speed','lfo_type','msl_amount','osc1_gain','osc1_glide','osc1_pan','osc1_pitch','osc1_shape','osc1_type','osc2_gain','osc2_glide','osc2_pan','osc2_pitch','osc2_shape','osc2_type','osc_sub_bypass_filter','osc_sub_gain','osc_sub_glide','osc_sub_shape','osc_sub_volume_lfo','reese_active','unison_active','unison_amount','unison_count']
                                 for snd_param in snd_params:
-                                    cvpjiparam_to_sngparam(sng_instparams, pluginid, snd_param, 0, True)
+                                    cvpjiparam_to_sngparam(cvpj_plugindata, sng_instparams, pluginid, snd_param, 0, [])
 
                         elif plugtype[0] == 'midi':
                             inst_supported = True
-                            midibank = plugins.get_plug_dataval(cvpj_l, pluginid, 'bank', 0)
-                            midiinst = plugins.get_plug_dataval(cvpj_l, pluginid, 'inst', 0)+1
+                            midibank = cvpj_plugindata.dataval_get('bank', 0)
+                            midiinst = cvpj_plugindata.dataval_get('inst', 0)+1
                             gm2_samplepack = idvals.get_idval(idvals_inst_gm2, str(midiinst)+'_'+str(midibank), 'url')
                             if gm2_samplepack == None and midibank not in [0, 128]:
                                 gm2_samplepack = idvals.get_idval(idvals_inst_gm2, str(midiinst)+'_0', 'url')
-                            add_sndinstparam(sng_instparams, 'sample_pack', gm2_samplepack, False)
-                            add_sndinstparam(sng_instparams, 'attack', 0, True)
-                            add_sndinstparam(sng_instparams, 'decay', 0, True)
-                            add_sndinstparam(sng_instparams, 'sustain', 1, True)
-                            add_sndinstparam(sng_instparams, 'release', 0, True)
+                            add_sndinstparam(sng_instparams, 'sample_pack', gm2_samplepack, None)
+                            add_sndinstparam(sng_instparams, 'attack', 0, [])
+                            add_sndinstparam(sng_instparams, 'decay', 0, [])
+                            add_sndinstparam(sng_instparams, 'sustain', 1, [])
+                            add_sndinstparam(sng_instparams, 'release', 0, [])
 
                         elif plugtype[0] == 'retro':
                             if plugtype[1] == 'sine': gm2_samplepack = '81_8_Sine_Wave.smplpck'
                             if plugtype[1] == 'square': gm2_samplepack = '81_0_Square_Lead.smplpck'
                             if plugtype[1] == 'triangle': gm2_samplepack = '85_0_Charang.smplpck'
                             if plugtype[1] == 'saw': gm2_samplepack = '82_0_Saw_Wave.smplpck'
-                            add_sndinstparam(sng_instparams, 'attack', 0, True)
-                            add_sndinstparam(sng_instparams, 'decay', 0, True)
-                            add_sndinstparam(sng_instparams, 'sustain', 1, True)
-                            add_sndinstparam(sng_instparams, 'release', 0, True)
+                            add_sndinstparam(sng_instparams, 'attack', 0, [])
+                            add_sndinstparam(sng_instparams, 'decay', 0, [])
+                            add_sndinstparam(sng_instparams, 'sustain', 1, [])
+                            add_sndinstparam(sng_instparams, 'release', 0, [])
 
                     if inst_supported == False: 
                         add_sndinstparam(sng_instparams, 'sample_pack', '2_0_Bright_Yamaha_Grand.smplpck', False)
                         if pluginid != None:
-                            add_sndinstparam(sng_instparams, 'attack', a_attack, True)
-                            add_sndinstparam(sng_instparams, 'decay', a_decay, True)
-                            add_sndinstparam(sng_instparams, 'sustain', a_sustain, True)
-                            add_sndinstparam(sng_instparams, 'release', a_release, True)
+                            add_sndinstparam(sng_instparams, 'attack', a_attack, [])
+                            add_sndinstparam(sng_instparams, 'decay', a_decay, [])
+                            add_sndinstparam(sng_instparams, 'sustain', a_sustain, [])
+                            add_sndinstparam(sng_instparams, 'release', a_release, [])
                         else:
-                            add_sndinstparam(sng_instparams, 'attack', 0, True)
-                            add_sndinstparam(sng_instparams, 'decay', 0, True)
-                            add_sndinstparam(sng_instparams, 'sustain', 1, True)
-                            add_sndinstparam(sng_instparams, 'release', 0, True)
+                            add_sndinstparam(sng_instparams, 'attack', 0, [])
+                            add_sndinstparam(sng_instparams, 'decay', 0, [])
+                            add_sndinstparam(sng_instparams, 'sustain', 1, [])
+                            add_sndinstparam(sng_instparams, 'release', 0, [])
 
                     sng_trkdata['userSetName'] = data_values.get_value(s_trackdata, 'name', '')
                     sng_trkdata['regions'] = []
@@ -523,4 +437,4 @@ class output_soundation(plugin_output.base):
                         sng_output["loopEnd"] = int(timemarkdata['end']*ticksdiv)
 
         with open(output_file, "w") as fileout:
-            json.dump(sng_output, fileout, indent=2)
+            json.dump(sng_output, fileout, indent=4)

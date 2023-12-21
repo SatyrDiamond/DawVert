@@ -25,7 +25,13 @@ from functions_tracks import tracks_mi
 from functions_tracks import fxrack
 from functions_tracks import fxslot
 
+from functions import data_datadef
+from functions import data_dataset
+
 filename_len = {}
+
+stretch_algorithms = ['resample','elastique_v3','elastique_v3_mono','slice_stretch','auto','slice_map','elastique_v2','elastique_v2_transient','elastique_v2_mono','elastique_v2_speech']
+
 
 def getsamplefile(channeldata, flppath):
 
@@ -40,6 +46,12 @@ def getsamplefile(channeldata, flppath):
         return pathout
     else:
         return ''
+
+
+def conv_color(b_color):
+    color = b_color.to_bytes(4, "little")
+    cvpj_inst_color = [color[0]/255,color[1]/255,color[2]/255]
+    return cvpj_inst_color
 
 
 def calc_time(i_value):
@@ -73,8 +85,8 @@ def parse_envlfo(envlfo, pluginid, envtype):
     el_env_decay_tension = int.from_bytes(bio_envlfo.read(4), "little")
     el_env_release_tension = int.from_bytes(bio_envlfo.read(4), "little")
 
-    plugins.add_asdr_env(cvpj_l, pluginid, envtype, el_env_predelay, el_env_attack, el_env_hold, el_env_decay, el_env_sustain, el_env_release, el_env_aomunt)
-    plugins.add_asdr_env_tension(cvpj_l, pluginid, envtype, el_env_attack_tension, el_env_decay_tension, el_env_release_tension)
+    #plugins.add_asdr_env(cvpj_l, pluginid, envtype, el_env_predelay, el_env_attack, el_env_hold, el_env_decay, el_env_sustain, el_env_release, el_env_aomunt)
+    #plugins.add_asdr_env_tension(cvpj_l, pluginid, envtype, el_env_attack_tension, el_env_decay_tension, el_env_release_tension)
 
 
 
@@ -103,6 +115,9 @@ class input_flp(plugin_input.base):
     def parse(self, input_file, extra_param):
         global cvpj_l
         FLP_Data = format_flp_dec.parse(input_file)
+
+        datadef = data_datadef.datadef('./data_ddef/fl_studio.ddef')
+        dataset = data_dataset.dataset('./data_dset/fl_studio.dset')
 
         FL_Main = FLP_Data['FL_Main']
         FL_Patterns = FLP_Data['FL_Patterns']
@@ -154,8 +169,7 @@ class input_flp(plugin_input.base):
 
                 tracks_mi.inst_create(cvpj_l, cvpj_instid)
                 cvpj_inst_name = channeldata['name'] if 'name' in channeldata else ''
-                color = channeldata['color'].to_bytes(4, "little")
-                cvpj_inst_color = [color[0]/255,color[1]/255,color[2]/255]
+                cvpj_inst_color = conv_color(channeldata['color'])
                 tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_inst_name, color=cvpj_inst_color)
 
                 tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'enabled', channeldata['enabled'], 'bool')
@@ -173,11 +187,11 @@ class input_flp(plugin_input.base):
 
                 if channeldata['type'] == 0:
                     tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-                    plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, getsamplefile(channeldata, input_file))
+                    inst_plugindata = plugins.cvpj_plugin('sampler', getsamplefile(channeldata, input_file), None)
 
-                    tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, None, 'remove_dc', channeldata['remove_dc'])
-                    tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, None, 'normalize', channeldata['normalize'])
-                    tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, None, 'reversepolarity', channeldata['reversepolarity'])
+                    inst_plugindata.dataval_add('remove_dc', channeldata['remove_dc'])
+                    inst_plugindata.dataval_add('normalize', channeldata['normalize'])
+                    inst_plugindata.dataval_add('reversepolarity', channeldata['reversepolarity'])
 
                     cvpj_loopdata = {}
                     if 'sampleflags' in channeldata:
@@ -185,19 +199,17 @@ class input_flp(plugin_input.base):
                         cvpj_loopdata['enabled'] = fl_sampleflags[4]
                         interpolation = "none"
                         if fl_sampleflags[7] == 1: interpolation = "sinc"
-                        tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, None, 'interpolation', interpolation)
+                        inst_plugindata.dataval_add('interpolation', interpolation)
 
                     if 'looptype' in channeldata:
-                        fl_looptype = channeldata['looptype']
-                        if fl_looptype == 0: cvpj_loopdata['mode'] = "normal"
-                        else: cvpj_loopdata['mode'] = "pingpong"
+                        cvpj_loopdata['mode'] = "normal" if channeldata['looptype'] == 0 else "pingpong"
 
-                    plugins.add_plug_data(cvpj_l, pluginid, 'loop', cvpj_loopdata)
+                    inst_plugindata.dataval_add('loop', cvpj_loopdata)
+                    inst_plugindata.to_cvpj(cvpj_l, pluginid)
                     
                 if channeldata['type'] == 2:
                     tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
                     filename_sample = getsamplefile(channeldata, input_file)
-                    plugins.add_fileref(cvpj_l, pluginid, 'audiofile', filename_sample)
 
                     flpluginname = channeldata['plugin'] if 'plugin' in channeldata else None
                     flplugindata = channeldata['plugindata'] if 'plugindata' in channeldata else None
@@ -206,7 +218,6 @@ class input_flp(plugin_input.base):
                     plug_exists = None
 
                     if flplugindata != None:
-
                         window_detatched = flplugindata[16]&4
                         window_active = flplugindata[16]&1
                         window_data = struct.unpack('iiii', flplugindata[36:52])
@@ -214,11 +225,9 @@ class input_flp(plugin_input.base):
                         song.add_visual_window(cvpj_l, 'plugin', pluginid, window_data[0:2], window_size, bool(window_active), False)
 
                     if flpluginname != None: 
-                        plug_exists = flp_dec_plugins.getparams(cvpj_l, pluginid, flpluginname, flpluginparams, samplefolder)
-
-
-                    #if plug_exists == True:
-                    #    print(channeldata['plugin'])
+                        inst_plugindata = flp_dec_plugins.getparams(cvpj_l, pluginid, flpluginname, flpluginparams, samplefolder, datadef, dataset)
+                        inst_plugindata.fileref_add('audiofile', filename_sample)
+                        inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
                 tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'poly', 'max', channeldata['polymax'])
 
@@ -226,12 +235,10 @@ class input_flp(plugin_input.base):
 
             if channeldata['type'] == 4:
                 cvpj_s_sample = {}
-                if 'name' in channeldata: cvpj_s_sample['name'] = channeldata['name']
-                else: cvpj_s_sample['name'] = ''
+                cvpj_s_sample['name'] = channeldata['name'] if 'name' in channeldata else ''
                 cvpj_s_sample['pan'] = channeldata['pan']
                 cvpj_s_sample['vol'] = channeldata['volume']
-                color = channeldata['color'].to_bytes(4, "little")
-                cvpj_s_sample['color'] = [color[0]/255,color[1]/255,color[2]/255]
+                cvpj_s_sample['color'] = conv_color(channeldata['color'])
                 cvpj_s_sample['fxrack_channel'] = channeldata['fxchannel']
                 filename_sample = getsamplefile(channeldata, input_file)
                 cvpj_s_sample['file'] = filename_sample
@@ -258,31 +265,19 @@ class input_flp(plugin_input.base):
                 if 'stretchingmode' in channeldata: t_stretchingmode = channeldata['stretchingmode']
                 if 'stretchingmultiplier' in channeldata: t_stretchingmultiplier = pow(2, channeldata['stretchingmultiplier']/10000)
 
-                if t_stretchingmode == -1: cvpj_audiomod['stretch_algorithm'] = 'stretch'
-                if t_stretchingmode == 0: cvpj_audiomod['stretch_algorithm'] = 'resample'
-                if t_stretchingmode == 1: cvpj_audiomod['stretch_algorithm'] = 'elastique_v3'
-                if t_stretchingmode == 2: cvpj_audiomod['stretch_algorithm'] = 'elastique_v3_mono'
-                if t_stretchingmode == 3: cvpj_audiomod['stretch_algorithm'] = 'slice_stretch'
-                if t_stretchingmode == 5: cvpj_audiomod['stretch_algorithm'] = 'auto'
-                if t_stretchingmode == 4: cvpj_audiomod['stretch_algorithm'] = 'slice_map'
-                if t_stretchingmode == 6: cvpj_audiomod['stretch_algorithm'] = 'elastique_v2'
-                if t_stretchingmode == 7: cvpj_audiomod['stretch_algorithm'] = 'elastique_v2_transient'
-                if t_stretchingmode == 8: cvpj_audiomod['stretch_algorithm'] = 'elastique_v2_mono'
-                if t_stretchingmode == 9: cvpj_audiomod['stretch_algorithm'] = 'elastique_v2_speech'
+                cvpj_audiomod['stretch_algorithm'] = 'stretch' if t_stretchingmode == -1 else stretch_algorithms[t_stretchingmode]
 
                 #if t_stretchingtime != 0 or t_stretchingmultiplier != 1 or t_stretchingpitch != 0:
 
                 if ald != None:
                     if t_stretchingtime != 0:
                         cvpj_audiomod['stretch_method'] = 'rate_tempo'
-                        cvpj_audiomod['stretch_data'] = {}
-                        cvpj_audiomod['stretch_data']['rate'] = (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier
+                        cvpj_audiomod['stretch_data'] = {'rate': (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier}
                         samplestretch[instrument] = ['rate_tempo', (ald['dur_sec']/t_stretchingtime)/t_stretchingmultiplier]
 
                     elif t_stretchingtime == 0:
                         cvpj_audiomod['stretch_method'] = 'rate_speed'
-                        cvpj_audiomod['stretch_data'] = {}
-                        cvpj_audiomod['stretch_data']['rate'] = 1/t_stretchingmultiplier
+                        cvpj_audiomod['stretch_data'] = {'rate': 1/t_stretchingmultiplier}
                         samplestretch[instrument] = ['rate_speed', 1/t_stretchingmultiplier]
 
                     else:
@@ -301,8 +296,7 @@ class input_flp(plugin_input.base):
                 for flnote in patterndata['notes']:
                     cvpj_note = {}
                     cvpj_note['position'] = (flnote['pos']/ppq)*4
-                    if str(flnote['rack']) in id_inst: cvpj_note['instrument'] = id_inst[str(flnote['rack'])]
-                    else: cvpj_note['instrument'] = ''
+                    cvpj_note['instrument'] = id_inst[str(flnote['rack'])] if str(flnote['rack']) in id_inst else ''
                     cvpj_note['duration'] = (flnote['dur']/ppq)*4
                     cvpj_note['key'] = flnote['key']-60
                     cvpj_note['finepitch'] = (flnote['finep']-120)*10
@@ -339,8 +333,7 @@ class input_flp(plugin_input.base):
                 id_pat[str(pattern)] = 'FLPat' + str(pattern)
             if 'color' in patterndata:
                 color = patterndata['color'].to_bytes(4, "little")
-                if color != b'HQV\x00':
-                    cvpj_l_notelistindex['FLPat' + str(pattern)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
+                if color != b'HQV\x00': cvpj_l_notelistindex['FLPat' + str(pattern)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
             if 'name' in patterndata: cvpj_l_notelistindex['FLPat' + str(pattern)]['name'] = patterndata['name']
 
         if len(FL_Arrangements) != 0:
@@ -372,15 +365,12 @@ class input_flp(plugin_input.base):
                     arrangementitemJ['fromindex'] = 'FLSample' + str(item['itemindex'])
                     cvpj_l_playlist[str(playlistline)]['placements_audio'].append(arrangementitemJ)
 
-                    if str(item['itemindex']) in samplestretch: pl_stretch = samplestretch[str(item['itemindex'])]
-                    else: pl_stretch = ['rate_speed', 1.0]
+                    pl_stretch = samplestretch[str(item['itemindex'])] if str(item['itemindex']) in samplestretch else ['rate_speed', 1.0]
 
                     if 'startoffset' in item or 'endoffset' in item:
                         arrangementitemJ['cut'] = {}
                         arrangementitemJ['cut']['type'] = 'cut'
 
-                        #print(pl_stretch)
-  
                         if pl_stretch[0] == 'rate_speed':
                             if 'startoffset' in item: arrangementitemJ['cut']['start'] = (item['startoffset']/pl_stretch[1])/tempomul
                             if 'endoffset' in item: arrangementitemJ['cut']['end'] = (item['endoffset']/pl_stretch[1])/tempomul
@@ -389,33 +379,16 @@ class input_flp(plugin_input.base):
                             if 'endoffset' in item: arrangementitemJ['cut']['end'] = (item['endoffset']/pl_stretch[1])
                         if 'startoffset' not in item: arrangementitemJ['cut']['start'] = 0
 
-                    #for value in ['startoffset', 'endoffset']:
-                    #    outprint = None
-                    #    if value in item: outprint = round(item[value], 6)
-                    #    print(str(outprint).ljust(13), end=' ')
-                    #print(pl_stretch)
-
             FL_Tracks = FL_Arrangement['tracks']
 
             if len(FL_Tracks) != 0:
                 for track in FL_Tracks:
                     #print(track, FL_Tracks[track])
-                    if str(track) not in cvpj_l_playlist:
-                        cvpj_l_playlist[str(track)] = {}
-                    if 'color' in FL_Tracks[track]:
-                        color = FL_Tracks[track]['color'].to_bytes(4, "little")
-                        cvpj_l_playlist[str(track)]['color'] = [color[0]/255,color[1]/255,color[2]/255]
-                    if 'name' in FL_Tracks[track]:
-                        cvpj_l_playlist[str(track)]['name'] = FL_Tracks[track]['name']
-                    if 'height' in FL_Tracks[track]:
-                        cvpj_l_playlist[str(track)]['size'] = FL_Tracks[track]['height']
-                    if 'enabled' in FL_Tracks[track]:
-                        cvpj_l_playlist[str(track)]['enabled'] = FL_Tracks[track]['enabled']
-
-
-        #for hexnum in FL_InitFXVals:
-        #    print(hexnum, FL_InitFXVals[test][0])
-
+                    if str(track) not in cvpj_l_playlist: cvpj_l_playlist[str(track)] = {}
+                    if 'color' in FL_Tracks[track]: cvpj_l_playlist[str(track)]['color'] = conv_color(FL_Tracks[track]['color'])
+                    if 'name' in FL_Tracks[track]: cvpj_l_playlist[str(track)]['name'] = FL_Tracks[track]['name']
+                    if 'height' in FL_Tracks[track]: cvpj_l_playlist[str(track)]['size'] = FL_Tracks[track]['height']
+                    if 'enabled' in FL_Tracks[track]: cvpj_l_playlist[str(track)]['enabled'] = FL_Tracks[track]['enabled']
 
         for fxchannel in FL_Mixer:
             fl_fx_chan = FL_Mixer[str(fxchannel)]
@@ -424,9 +397,7 @@ class input_flp(plugin_input.base):
 
             fx_color = None
             if 'color' in fl_fx_chan:
-                if fl_fx_chan['color'] != None:
-                    color = fl_fx_chan['color'].to_bytes(4, "little")
-                    fx_color = [color[0]/255,color[1]/255,color[2]/255]
+                if fl_fx_chan['color'] != None: fx_color = conv_color(fl_fx_chan['color'])
 
             #print(fxchannel)
             #for hexnum in fl_fxdata_initvals:
@@ -451,29 +422,27 @@ class input_flp(plugin_input.base):
                     if fl_fxslotnum in fl_fx_chan['slots']:
                         fl_fxslotdata = fl_fx_chan['slots'][fl_fxslotnum]
 
-                        if fl_fxslotdata != None and 'plugin' in fl_fxslotdata and 'pluginparams' in fl_fxslotdata:
+                        if fl_fxslotdata != None and 'plugin' in fl_fxslotdata:
                             fxslotid = plugins.get_id()
-
-                            if FL_InitFXVals_exists == True:
-                                fl_fxslot_initvals = FL_InitFXVals[int(fxchannel)][fl_fxslotnum]
-                                fx_slot_on = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x00'])[0] if b'\x1f\x00' in fl_fxslot_initvals else 1
-                                fx_slot_wet = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x01'])[0]/12800 if b'\x1f\x01' in fl_fxslot_initvals else 0
-                                plugins.add_plug_fxdata(cvpj_l, fxslotid, fx_slot_on, fx_slot_wet)
 
                             flpluginname = fl_fxslotdata['plugin'] if 'plugin' in fl_fxslotdata else None
 
-                            plug_exists = None
+                            fx_plugindata = None
                             if 'pluginparams' in fl_fxslotdata: 
-                                plug_exists = flp_dec_plugins.getparams(cvpj_l, fxslotid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder)
-
-                            if plug_exists == True:
+                                fx_plugindata = flp_dec_plugins.getparams(cvpj_l, fxslotid, flpluginname, fl_fxslotdata['pluginparams'], samplefolder, datadef, dataset)
+                            if fx_plugindata != None:
                                 v_name = fl_fxslotdata["name"] if "name" in fl_fxslotdata else None
                                 v_color = None
-                                if 'color' in fl_fxslotdata:
-                                    color = fl_fxslotdata['color'].to_bytes(4, "little")
-                                    v_color = [color[0]/255,color[1]/255,color[2]/255]
-                                plugins.add_plug_fxvisual(cvpj_l, fxslotid, v_name, v_color)
+                                if 'color' in fl_fxslotdata: v_color = conv_color(fl_fxslotdata['color'])
+                                fx_plugindata.fxvisual_add(v_name, v_color)
                                 fxslot.insert(cvpj_l, ['fxrack', fxchannel], 'audio', fxslotid)
+
+                                if FL_InitFXVals_exists == True:
+                                    fl_fxslot_initvals = FL_InitFXVals[int(fxchannel)][fl_fxslotnum]
+                                    fx_slot_on = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x00'])[0] if b'\x1f\x00' in fl_fxslot_initvals else 1
+                                    fx_slot_wet = struct.unpack('i', fl_fxslot_initvals[b'\x1f\x01'])[0]/12800 if b'\x1f\x01' in fl_fxslot_initvals else 0
+                                    fx_plugindata.fxdata_add(fx_slot_on, fx_slot_wet)
+                                fx_plugindata.to_cvpj(cvpj_l, fxslotid)
 
         for timemarker in FL_TimeMarkers:
             tm_pos = FL_TimeMarkers[timemarker]['pos']/ppq*4

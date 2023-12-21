@@ -5,7 +5,7 @@ import plugin_input
 import json
 import math
 from functions import data_bytes
-from functions import idvals
+from functions import data_dataset
 from functions import plugins
 from functions import note_data
 from functions import placement_data
@@ -31,16 +31,12 @@ class input_gt_mnbs(plugin_input.base):
     def getdawcapabilities(self): return {}
     def supported_autodetect(self): return False
     def parse(self, input_file, extra_param):
-
         cvpj_l = {}
-        song_message = ""
-
+        
         nbs_file = open(input_file, 'rb')
-        nbs_file.seek(0,2)
-        nbs_len = nbs_file.tell()
-        nbs_file.seek(0)
-
-        idvals_inst_mnbs = idvals.parse_idvalscsv('data_idvals/noteblockstudio_inst.csv')
+        nbs_len = nbs_file.__sizeof__()
+        dataset = data_dataset.dataset('./data_dset/noteblockstudio.dset')
+        dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
 
         # PART 1: HEADER
         nbs_startbyte = int.from_bytes(nbs_file.read(2), "little")
@@ -126,19 +122,7 @@ class input_gt_mnbs(plugin_input.base):
         # OUTPUT
         for instnum in range(16):
             instid = 'NoteBlock'+str(instnum)
-            cvpj_instname = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'name')
-            cvpj_instcolor = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'color')
-            cvpj_instgm = idvals.get_idval(idvals_inst_mnbs, str(instnum), 'gm_inst')
-
-            tracks_rm.inst_create(cvpj_l, instid)
-            tracks_rm.inst_visual(cvpj_l, instid, name=cvpj_instname, color=cvpj_instcolor)
-
-            if cvpj_instgm != None: 
-                plugid = plugins.get_id()
-                plugins.add_plug_gm_midi(cvpj_l, plugid, 0, cvpj_instgm-1)
-                tracks_rm.inst_pluginid(cvpj_l, instid, plugid)
-                tracks_rm.inst_dataval_add(cvpj_l, instid, 'midi', 'output', {'program': cvpj_instgm})
-
+            tracks_rm.import_dset(cvpj_l, instid, instid, dataset, dataset_midi, None, None)
 
         # PART 4: CUSTOM INSTRUMENTS
         custominstid = 16
@@ -150,15 +134,16 @@ class input_gt_mnbs(plugin_input.base):
                 custominst_key = nbs_file.read(1)[0]
                 custominst_presskey = nbs_file.read(1)[0]
                 #print(custominst_name, custominst_file, custominst_key, custominst_presskey)
-                plugid = plugins.get_id()
 
                 instid = 'NoteBlock'+str(instnum)
 
                 tracks_rm.inst_create(cvpj_l, instid)
                 tracks_rm.inst_visual(cvpj_l, instid, name=custominst_name)
-                tracks_rm.inst_pluginid(cvpj_l, instid, plugid)
+                tracks_rm.inst_pluginid(cvpj_l, instid, instid)
 
-                plugins.add_plug_sampler_singlefile(cvpj_l, plugid, custominst_file)
+                plugindata = plugins.cvpj_plugindata.cvpj_plugin('sampler', 'single')
+                plugindata.dataval_add('file', custominst_file)
+                plugindata.to_cvpj(cvpj_l, instid)
                 custominstid += 1
 
         for nbs_layer in nbs_notes:

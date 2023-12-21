@@ -1,0 +1,2250 @@
+{
+    "plugin": {
+        "objects": {
+            "europa": {
+                "params": {
+                    "amp_attack": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Amp Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp_decay": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Amp Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp_gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Amp Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp_release": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Amp Release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp_sustain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Amp Sustain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp_velocity": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Amp Velocity",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "comp_attack": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Comp Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "comp_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Comp On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "comp_ratio": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Comp Ratio",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "comp_release": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Comp Release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "comp_threshold": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Comp Threshold",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "curve": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Curve",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "curve1": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Curve1",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "curve2": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Curve2",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "curve3": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Curve3",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "curve4": {
+                        "def": "",
+                        "max": null,
+                        "min": null,
+                        "name": "Curve4",
+                        "noauto": true,
+                        "type": "string"
+                    },
+                    "delay_amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Delay Amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delay_fb": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Delay FB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delay_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Delay On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delay_pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Delay Pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delay_pingpong": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Delay PingPong",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delay_sync": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Delay Sync",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delay_synced_time": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Delay Synced Time",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delay_time": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Delay Time",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "dist_amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Dist Amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "dist_drive": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Dist Drive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "dist_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Dist On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "dist_tone": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Dist Tone",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "dist_type": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Dist Type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "effect_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Effect On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "effect_order": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Effect Order",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "effect_select": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Effect Select",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "env_1_rate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Env 1 Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "env_1_syncrate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Env 1 Syncrate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "env_2_rate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Env 2 Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "env_2_syncrate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Env 2 Syncrate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "env_3_rate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Env 3 Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "env_3_syncrate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Env 3 Syncrate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "env_4_rate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Env 4 Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "env_4_syncrate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Env 4 Syncrate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "env_edit_mode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Env Edit Mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "env_select": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Env Select",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "eq_freq": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "EQ Freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "eq_gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "EQ Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "eq_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Eq On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "eq_q": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "EQ Q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_drive": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Filter Drive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_freq": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Filter Freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_kbd": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Filter Kbd",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_mod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Filter Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_mod_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Filter Mod Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_reso": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Filter Reso",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_type": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Filter Type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_vel": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Filter Vel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "key_mode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Key Mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_1_delay": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 1 Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_1_global": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 1 Global",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_1_keysync": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 1 KeySync",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_1_rate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 1 Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_1_syncrate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 1 SyncRate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_1_temposync": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 1 TempoSync",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_1_wave": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 1 Wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_2_delay": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 2 Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_2_global": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 2 Global",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_2_keysync": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 2 KeySync",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_2_rate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 2 Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_2_syncrate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 2 SyncRate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_2_temposync": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 2 TempoSync",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_2_wave": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 2 Wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_3_delay": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 3 Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_3_global": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 3 Global",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_3_keysync": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 3 KeySync",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_3_rate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 3 Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_3_syncrate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 3 SyncRate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_3_temposync": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 3 TempoSync",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_3_wave": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO 3 Wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_select": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "LFO Select",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "master_volume": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Master Volume",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_1_dest1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod1 Dest1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_1_dest1_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod1 Dest1 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_1_dest2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod1 Dest2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_1_dest2_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod1 Dest2 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_1_scale": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod1 Scale",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_1_scale_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod1 Scale Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_1_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod1 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_2_dest1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod2 Dest1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_2_dest1_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod2 Dest1 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_2_dest2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod2 Dest2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_2_dest2_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod2 Dest2 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_2_scale": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod2 Scale",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_2_scale_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod2 Scale Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_2_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod2 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_3_dest1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod3 Dest1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_3_dest1_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod3 Dest1 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_3_dest2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod3 Dest2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_3_dest2_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod3 Dest2 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_3_scale": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod3 Scale",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_3_scale_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod3 Scale Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_3_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod3 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_4_dest1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod4 Dest1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_4_dest1_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod4 Dest1 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_4_dest2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod4 Dest2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_4_dest2_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod4 Dest2 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_4_scale": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod4 Scale",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_4_scale_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod4 Scale Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_4_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod4 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_5_dest1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod5 Dest1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_5_dest1_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod5 Dest1 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_5_dest2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod5 Dest2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_5_dest2_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod5 Dest2 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_5_scale": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod5 Scale",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_5_scale_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod5 Scale Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_5_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod5 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_6_dest1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod6 Dest1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_6_dest1_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod6 Dest1 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_6_dest2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod6 Dest2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_6_dest2_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod6 Dest2 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_6_scale": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod6 Scale",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_6_scale_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod6 Scale Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_6_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod6 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_7_dest1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod7 Dest1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_7_dest1_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod7 Dest1 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_7_dest2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod7 Dest2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_7_dest2_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod7 Dest2 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_7_scale": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod7 Scale",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_7_scale_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod7 Scale Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_7_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod7 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_8_dest1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod8 Dest1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_8_dest1_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod8 Dest1 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_8_dest2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod8 Dest2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_8_dest2_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod8 Dest2 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_8_scale": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod8 Scale",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_8_scale_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod8 Scale Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_8_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod8 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_effect_amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod Effect Amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_effect_depth": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod Effect Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_effect_rate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod Effect Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_effect_spread": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod Effect Spread",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mod_effect_type": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Mod Effect Type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "modwheel": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mod_wheel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "modwheel_cv_amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "ModWheel CV Amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_blend": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Blend",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_count": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Count",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_filter": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Filter",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_filter_freq": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Filter Freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_filter_kbd": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Filter Kbd",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_filter_mod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Filter Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_filter_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Filter On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_filter_reso": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Filter Reso",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_filter_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Filter Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_filter_vel": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Filter Vel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_harm": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Harm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_harm_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Harm Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_harm_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Harm On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_harm_pos": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Harm Pos",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_level": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_mod1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Mod1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_mod1_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Mod1 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_mod1_mod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Mod1 Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_mod1_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Mod1 On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_mod1_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Mod1 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_mod2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Mod2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_mod2_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Mod2 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_mod2_mod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Mod2 Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_mod2_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Mod2 On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_mod2_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Mod2 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_oct": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Oct",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_pitch_kbd": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Pitch Kbd",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_semi": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Semi",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_shape_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Shape Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_shape_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Shape Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_shape_vel": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Shape Vel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_spread": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Spread",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_syncphase": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 SyncPhase",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_to_filter": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 To Filter",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_tune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Tune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_unison_mode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Unison Mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_unison_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Unison On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_1_wave": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc1 Wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_blend": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Blend",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_count": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Count",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_filter": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Filter",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_filter_freq": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Filter Freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_filter_kbd": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Filter Kbd",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_filter_mod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Filter Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_filter_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Filter On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_filter_reso": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Filter Reso",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_filter_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Filter Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_filter_vel": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Filter Vel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_harm": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Harm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_harm_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Harm Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_harm_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Harm On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_harm_pos": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Harm Pos",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_level": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_mod1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Mod1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_mod1_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Mod1 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_mod1_mod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Mod1 Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_mod1_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Mod1 On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_mod1_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Mod1 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_mod2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Mod2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_mod2_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Mod2 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_mod2_mod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Mod2 Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_mod2_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Mod2 On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_mod2_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Mod2 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_oct": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Oct",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_pitch_kbd": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Pitch Kbd",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_semi": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Semi",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_shape_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Shape Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_shape_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Shape Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_shape_vel": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Shape Vel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_spread": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Spread",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_syncphase": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 SyncPhase",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_to_filter": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 To Filter",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_tune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Tune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_unison_mode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Unison Mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_unison_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Unison On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_wave": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc2 Wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_blend": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Blend",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_count": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Count",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_filter": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Filter",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_filter_freq": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Filter Freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_filter_kbd": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Filter Kbd",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_filter_mod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Filter Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_filter_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Filter On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_filter_reso": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Filter Reso",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_filter_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Filter Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_filter_vel": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Filter Vel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_harm": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Harm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_harm_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Harm Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_harm_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Harm On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_harm_pos": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Harm Pos",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_level": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_mod1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Mod1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_mod1_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Mod1 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_mod1_mod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Mod1 Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_mod1_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Mod1 On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_mod1_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Mod1 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_mod2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Mod2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_mod2_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Mod2 Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_mod2_mod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Mod2 Mod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_mod2_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Mod2 On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_mod2_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Mod2 Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_oct": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Oct",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_pitch_kbd": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Pitch Kbd",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_semi": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Semi",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_shape_amt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Shape Amt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_shape_source": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Shape Source",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_shape_vel": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Shape Vel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_spread": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Spread",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_syncphase": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 SyncPhase",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_to_filter": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 To Filter",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_tune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Tune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_unison_mode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Unison Mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_unison_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Unison On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_3_wave": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Osc3 Wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_sel": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "OscSel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "phaser_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Phaser On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitchbend_cv_amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "PitchBend CV Amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitchbend_range": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Pitchbend Range",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "portamento": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Portamento",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "portamento_mode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Portamento Mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "reverb_amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Reverb Amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "reverb_damp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Reverb Damp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "reverb_decay": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Reverb Decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "reverb_on": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Reverb On",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "reverb_size": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Reverb Size",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "voices": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "Voices",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                }
+            }
+        }
+    }
+}

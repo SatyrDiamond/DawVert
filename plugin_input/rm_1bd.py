@@ -7,6 +7,8 @@ from functions import note_data
 from functions import placement_data
 from functions import plugins
 from functions import song
+from functions import colors
+from functions import data_dataset
 from functions_tracks import tracks_rm
 from functions_tracks import tracks_master
 from functions_tracks import fxslot
@@ -14,19 +16,6 @@ import plugin_input
 import base64
 import json
 import zlib
-
-onebd_colors = [
-[0.14, 1.00, 0.60],
-[1.00, 0.87, 0.18],
-[0.76, 0.41, 1.00],
-[0.97, 0.51, 0.00],
-
-[0.76, 0.76, 0.76],
-[0.76, 0.58, 0.38],
-[0.47, 0.49, 0.88],
-[0.59, 0.73, 0.23],
-[0.88, 0.35, 0.53]
-]
 
 def tnotedata_to_cvpj_nl(cvpj_notelist, instid, in_notedata, note):
     for tnote in in_notedata:
@@ -95,7 +84,7 @@ def decodeblock(cvpj_l, input_block, position):
             if blockinstid not in used_instruments:  used_instruments.append(blockinstid)
             placementdata = placement_data.makepl_n(position, pl_dur, notelist)
             placementdata['name'] = instdata[instnum]['preset']
-            placementdata['color'] = onebd_colors[instnum]
+            placementdata['color'] = colordata.getcolornum(instnum)
             longpldata = placement_data.longpl_split(placementdata)
             for longpls in longpldata:
                 tracks_rm.add_pl(cvpj_l, instnum+1, 'notes', longpls)
@@ -108,7 +97,7 @@ def decodeblock(cvpj_l, input_block, position):
             if blockdrumid not in used_instruments: used_instruments.append(blockdrumid)
             placementdata = placement_data.makepl_n(position, pl_dur, notelist)
             placementdata['name'] = drumsdata[drumnum]['preset']
-            placementdata['color'] = onebd_colors[drumnumminv+4]
+            placementdata['color'] = colordata.getcolornum(drumnumminv+4)
             longpldata = placement_data.longpl_split(placementdata)
             for longpls in longpldata:
                 tracks_rm.add_pl(cvpj_l, drumnumminv+5, 'notes', longpls)
@@ -129,12 +118,16 @@ class input_1bitdragon(plugin_input.base):
         global used_instruments
         global used_instrument_data
         global cvpj_scale
+        global colordata
 
         song_file = open(input_file, 'r')
         basebase64stream = base64.b64decode(song_file.read())
         bio_base64stream = data_bytes.to_bytesio(basebase64stream)
         bio_base64stream.seek(4)
         decompdata = json.loads(zlib.decompress(bio_base64stream.read(), 16+zlib.MAX_WBITS))
+
+        dataset = data_dataset.dataset('./data_dset/1bitdragon.dset')
+        colordata = colors.colorset(dataset.colorset_e_list('track', 'main'))
 
         cvpj_l = {}
         used_instruments = []
@@ -160,7 +153,7 @@ class input_1bitdragon(plugin_input.base):
 
         for plnum in range(9):
             tracks_rm.track_create(cvpj_l, str(plnum+1), 'instruments')
-            tracks_rm.track_visual(cvpj_l, str(plnum+1), color=onebd_colors[plnum])
+            tracks_rm.track_visual(cvpj_l, str(plnum+1), color=colordata.getcolornum(plnum))
 
         curpos = 0
         for blocknum in range(len(decompdata['blocks'])):
@@ -181,8 +174,11 @@ class input_1bitdragon(plugin_input.base):
         tracks_master.create(cvpj_l, onebitd_volume)
         tracks_master.visual(cvpj_l, name='Master')
 
-        plugins.add_plug(cvpj_l, 'master-reverb', 'simple', 'reverb')
-        plugins.add_plug_fxdata(cvpj_l, 'master-reverb', int(onebitd_reverb), 0.5)
+        fx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'reverb')
+        fx_plugindata.fxvisual_add('Reverb', None)
+        fx_plugindata.fxdata_add(onebitd_reverb, 0.5)
+        fx_plugindata.to_cvpj(cvpj_l, 'master-reverb')
+
         fxslot.insert(cvpj_l, ['master'], 'audio', 'master-reverb')
 
         return json.dumps(cvpj_l)

@@ -75,21 +75,32 @@ class output_onlineseq(plugin_output.base):
                 midiinst = None
 
                 if 'instdata' in cvpj_trackdata:
-                    pluginid = data_values.get_value(cvpj_trackdata['instdata'], 'pluginid', 1.0)
-                    plugintype = plugins.get_plug_type(cvpj_l, pluginid)
-                    cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
+                    cvpj_instdata = cvpj_trackdata['instdata']
 
-                    if plugintype[0] == 'midi':
-                        if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['inst']
-                        else: midiinst = -1
-                    if plugintype[0] == 'soundfont2':
-                        if cvpj_plugindata['bank'] != 128: midiinst = cvpj_plugindata['patch']
-                        else: midiinst = -1
-                    if plugintype[0] == 'retro':
-                        if plugintype[1] == 'sine': onlineseqinst = 13
-                        if plugintype[1] == 'square': onlineseqinst = 14
-                        if plugintype[1] == 'triangle': onlineseqinst = 16
-                        if plugintype[1] == 'saw': onlineseqinst = 15
+                    if 'pluginid' in cvpj_instdata:
+                        cvpj_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, cvpj_instdata['pluginid'])
+                        plugintype = cvpj_plugindata.type_get()
+
+                        if plugintype[0] == 'midi':
+                            midi_bank = cvpj_plugindata.dataval_get('bank', 0)
+                            midi_inst = cvpj_plugindata.dataval_get('inst', 0)
+                            if midi_bank != 128: midiinst = midi_inst
+                            else: midiinst = -1
+                        if plugintype[0] == 'soundfont2':
+                            midi_bank = cvpj_plugindata.dataval_get('bank', 0)
+                            midi_inst = cvpj_plugindata.dataval_get('patch', 0)
+                            if midi_bank != 128: midiinst = midi_inst
+                            else: midiinst = -1
+                        if plugintype == ['universal', 'synth-osc']:
+                            if 'osc' in cvpj_plugindata.cvpjdata:
+                                oscops = cvpj_plugindata.cvpjdata['osc']
+                                if len(oscops) == 1:
+                                    s_osc = oscops[0]
+                                    osc_shape = s_osc['shape'] if 'shape' in s_osc else 'square'
+                                    if osc_shape == 'sine': onlineseqinst = 13
+                                    if osc_shape == 'square': onlineseqinst = 14
+                                    if osc_shape == 'triangle': onlineseqinst = 16
+                                    if osc_shape == 'saw': onlineseqinst = 15
                 
                 t_instid = idvals.get_idval(idvals_onlineseq_inst, str(midiinst), 'outid')
 

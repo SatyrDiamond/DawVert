@@ -58,3 +58,7 @@ def notelistindex_visual(cvpj_l, patid, **kwargs):
         if kwargs['name'] != None: playlist_nle['name'] = kwargs['name']
     if 'color' in kwargs: 
         if kwargs['color'] != None: playlist_nle['color'] = kwargs['color']
+
+        
+def import_dset(cvpj_l, trackid, instid, main_dataset, midi_dataset, def_name, def_color):
+    return tracks_m.import_dset(cvpj_l, trackid, instid, main_dataset, midi_dataset, def_name, def_color)

@@ -1,0 +1,1312 @@
+{
+    "inst": {
+        "midi_to": {
+            "0": 38,
+            "1": 32,
+            "10": 47,
+            "100": 56,
+            "103": 72,
+            "104": 53,
+            "105": 52,
+            "109": 54,
+            "110": 21,
+            "111": 7,
+            "113": 6,
+            "114": 4,
+            "115": 5,
+            "116": 2,
+            "117": 18,
+            "118": 19,
+            "119": 17,
+            "12": 24,
+            "120": 16,
+            "121": 55,
+            "122": 14,
+            "123": 9,
+            "124": 12,
+            "125": 11,
+            "126": 13,
+            "127": 108,
+            "134": 114,
+            "135": 104,
+            "136": 45,
+            "17": 83,
+            "21": 39,
+            "23": 80,
+            "28": 0,
+            "31": 50,
+            "34": 81,
+            "36": 49,
+            "37": 48,
+            "39": 33,
+            "4": 115,
+            "47": 29,
+            "50": 82,
+            "52": 34,
+            "58": 62,
+            "59": 35,
+            "64": 26,
+            "7": 116,
+            "77": 27,
+            "78": 25,
+            "79": 25,
+            "8": 56,
+            "82": 28,
+            "83": 64,
+            "84": 65,
+            "87": 66,
+            "88": 67,
+            "9": 48,
+            "90": 71,
+            "91": 69,
+            "92": 68,
+            "93": 79,
+            "95": 58,
+            "96": 73,
+            "97": 57,
+            "98": 60
+        },
+        "objects": {
+            "0": {
+                "visual": {
+                    "color": [
+                        0.18,
+                        0.2,
+                        0.21
+                    ],
+                    "name": "Synth Bass"
+                }
+            },
+            "1": {
+                "visual": {
+                    "color": [
+                        0.64,
+                        0.24,
+                        0.04
+                    ],
+                    "name": "Bass"
+                }
+            },
+            "10": {
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.7,
+                        0.54
+                    ],
+                    "name": "Timpani"
+                }
+            },
+            "100": {
+                "visual": {
+                    "color": [
+                        0.58,
+                        0.51,
+                        0.33
+                    ],
+                    "name": "Trumpet #2"
+                }
+            },
+            "101": {
+                "visual": {
+                    "color": [
+                        0.6,
+                        0.56,
+                        0.45
+                    ],
+                    "name": "Trumpet Hit"
+                }
+            },
+            "102": {
+                "visual": {
+                    "color": [
+                        0.69,
+                        0.64,
+                        0.53
+                    ],
+                    "name": "Trumpet Section"
+                }
+            },
+            "103": {
+                "visual": {
+                    "color": [
+                        0.74,
+                        0.67,
+                        0.47
+                    ],
+                    "name": "Piccolo Trumpet"
+                }
+            },
+            "104": {
+                "visual": {
+                    "color": [
+                        0.98,
+                        0.81,
+                        0.86
+                    ],
+                    "name": "Oohh"
+                }
+            },
+            "105": {
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.67,
+                        0.0
+                    ],
+                    "name": "Aahh"
+                }
+            },
+            "106": {
+                "visual": {
+                    "color": [
+                        0.46,
+                        0.46,
+                        0.46
+                    ],
+                    "name": "Choir"
+                }
+            },
+            "107": {
+                "visual": {
+                    "color": [
+                        0.8,
+                        0.82,
+                        0.85
+                    ],
+                    "name": "Male Vox"
+                }
+            },
+            "108": {
+                "visual": {
+                    "color": [
+                        0.8,
+                        0.82,
+                        0.85
+                    ],
+                    "name": "Female Vox"
+                }
+            },
+            "109": {
+                "visual": {
+                    "color": [
+                        0.33,
+                        0.67,
+                        0.7
+                    ],
+                    "name": "Synth Vox"
+                }
+            },
+            "11": {
+                "visual": {
+                    "color": [
+                        0.56,
+                        0.67,
+                        0.25
+                    ],
+                    "name": "Synth"
+                }
+            },
+            "110": {
+                "visual": {
+                    "color": [
+                        0.45,
+                        0.17,
+                        0.2
+                    ],
+                    "name": "Accordian"
+                }
+            },
+            "111": {
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.76,
+                        0.76
+                    ],
+                    "name": "Clavinet"
+                }
+            },
+            "112": {
+                "visual": {
+                    "color": [
+                        0.56,
+                        0.37,
+                        0.31
+                    ],
+                    "name": "Electric Clavinet"
+                }
+            },
+            "113": {
+                "visual": {
+                    "color": [
+                        0.48,
+                        0.31,
+                        0.31
+                    ],
+                    "name": "Harpsichord"
+                }
+            },
+            "114": {
+                "visual": {
+                    "color": [
+                        0.18,
+                        0.18,
+                        0.16
+                    ],
+                    "name": "Rhodes"
+                }
+            },
+            "115": {
+                "visual": {
+                    "color": [
+                        0.68,
+                        0.68,
+                        0.68
+                    ],
+                    "name": "Rhodes #2"
+                }
+            },
+            "116": {
+                "visual": {
+                    "color": [
+                        0.79,
+                        0.04,
+                        0.09
+                    ],
+                    "name": "Electric Piano"
+                }
+            },
+            "117": {
+                "visual": {
+                    "color": [
+                        0.67,
+                        0.49,
+                        0.39
+                    ],
+                    "name": "Rock Organ"
+                }
+            },
+            "118": {
+                "visual": {
+                    "color": [
+                        0.37,
+                        0.18,
+                        0.14
+                    ],
+                    "name": "Church Organ"
+                }
+            },
+            "119": {
+                "visual": {
+                    "color": [
+                        0.34,
+                        0.31,
+                        0.35
+                    ],
+                    "name": "Percussive Organ"
+                }
+            },
+            "12": {
+                "visual": {
+                    "color": [
+                        0.81,
+                        0.59,
+                        0.35
+                    ],
+                    "name": "Acoustic Guitar"
+                }
+            },
+            "120": {
+                "visual": {
+                    "color": [
+                        0.11,
+                        0.11,
+                        0.11
+                    ],
+                    "name": "Organ"
+                }
+            },
+            "121": {
+                "visual": {
+                    "color": [
+                        0.37,
+                        0.18,
+                        0.14
+                    ],
+                    "name": "Orchestra Hit"
+                }
+            },
+            "122": {
+                "visual": {
+                    "color": [
+                        0.22,
+                        0.2,
+                        0.2
+                    ],
+                    "name": "Tubular Bell"
+                }
+            },
+            "123": {
+                "visual": {
+                    "color": [
+                        0.73,
+                        0.65,
+                        0.54
+                    ],
+                    "name": "Glockenspiel"
+                }
+            },
+            "124": {
+                "visual": {
+                    "color": [
+                        0.89,
+                        0.53,
+                        0.02
+                    ],
+                    "name": "Marimba"
+                }
+            },
+            "125": {
+                "visual": {
+                    "color": [
+                        0.6,
+                        0.61,
+                        0.63
+                    ],
+                    "name": "Vibraphone"
+                }
+            },
+            "126": {
+                "visual": {
+                    "color": [
+                        0.69,
+                        0.58,
+                        0.25
+                    ],
+                    "name": "Xylophone"
+                }
+            },
+            "127": {
+                "visual": {
+                    "color": [
+                        0.69,
+                        0.36,
+                        0.11
+                    ],
+                    "name": "Kalimba"
+                }
+            },
+            "128": {
+                "visual": {
+                    "color": [
+                        0.27,
+                        0.29,
+                        0.27
+                    ],
+                    "name": "Cowbell"
+                }
+            },
+            "129": {
+                "visual": {
+                    "color": [
+                        0.78,
+                        0.75,
+                        0.75
+                    ],
+                    "name": "Clave"
+                }
+            },
+            "13": {
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "name": "Low Piano"
+                }
+            },
+            "130": {
+                "visual": {
+                    "color": [
+                        0.71,
+                        0.46,
+                        0.24
+                    ],
+                    "name": "Conga"
+                }
+            },
+            "131": {
+                "visual": {
+                    "color": [
+                        0.98,
+                        0.42,
+                        0.15
+                    ],
+                    "name": "Conga #2"
+                }
+            },
+            "132": {
+                "visual": {
+                    "color": [
+                        0.83,
+                        0.65,
+                        0.43
+                    ],
+                    "name": "Conga #3"
+                }
+            },
+            "133": {
+                "visual": {
+                    "color": [
+                        0.07,
+                        0.18,
+                        0.26
+                    ],
+                    "name": "Techno Bass"
+                }
+            },
+            "134": {
+                "visual": {
+                    "color": [
+                        0.74,
+                        0.22,
+                        0.19
+                    ],
+                    "name": "Steel Drum"
+                }
+            },
+            "135": {
+                "visual": {
+                    "color": [
+                        0.43,
+                        0.13,
+                        0.04
+                    ],
+                    "name": "Sitar"
+                }
+            },
+            "136": {
+                "visual": {
+                    "color": [
+                        0.91,
+                        0.38,
+                        0.16
+                    ],
+                    "name": "Pizzicato"
+                }
+            },
+            "14": {
+                "visual": {
+                    "color": [
+                        0.67,
+                        0.61,
+                        0.58
+                    ],
+                    "name": "Tom Drums"
+                }
+            },
+            "15": {
+                "visual": {
+                    "color": [
+                        0.85,
+                        0.66,
+                        0.37
+                    ],
+                    "name": "Snare Drum"
+                }
+            },
+            "16": {
+                "visual": {
+                    "color": [
+                        0.35,
+                        0.36,
+                        0.4
+                    ],
+                    "name": "Grinding"
+                }
+            },
+            "17": {
+                "visual": {
+                    "color": [
+                        0.11,
+                        0.11,
+                        0.11
+                    ],
+                    "name": "Synth #2"
+                }
+            },
+            "18": {
+                "visual": {
+                    "color": [
+                        0.11,
+                        0.39,
+                        0.29
+                    ],
+                    "name": "Bass Drum #2"
+                }
+            },
+            "19": {
+                "visual": {
+                    "color": [
+                        0.89,
+                        0.72,
+                        0.34
+                    ],
+                    "name": "Open Hi Hat #2"
+                }
+            },
+            "2": {
+                "visual": {
+                    "color": [
+                        0.06,
+                        0.07,
+                        0.08
+                    ],
+                    "name": "Bass Drum"
+                }
+            },
+            "20": {
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.82,
+                        0.58
+                    ],
+                    "name": "Hand Clap"
+                }
+            },
+            "21": {
+                "visual": {
+                    "color": [
+                        0.18,
+                        0.2,
+                        0.21
+                    ],
+                    "name": "Synth Bass #2"
+                }
+            },
+            "22": {
+                "visual": {
+                    "color": [
+                        0.33,
+                        0.34,
+                        0.39
+                    ],
+                    "name": "Triangle Wave"
+                }
+            },
+            "23": {
+                "visual": {
+                    "color": [
+                        0.33,
+                        0.34,
+                        0.39
+                    ],
+                    "name": "Synthesizer"
+                }
+            },
+            "24": {
+                "visual": {
+                    "color": [
+                        0.06,
+                        0.07,
+                        0.08
+                    ],
+                    "name": "Bass Drum #3"
+                }
+            },
+            "25": {
+                "visual": {
+                    "color": [
+                        0.86,
+                        0.7,
+                        0.44
+                    ],
+                    "name": "Cymbal"
+                }
+            },
+            "26": {
+                "visual": {
+                    "color": [
+                        0.82,
+                        0.56,
+                        0.25
+                    ],
+                    "name": "Closed Hi Hat #2"
+                }
+            },
+            "27": {
+                "visual": {
+                    "color": [
+                        0.45,
+                        0.45,
+                        0.43
+                    ],
+                    "name": "High Tom"
+                }
+            },
+            "28": {
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "name": "Grand Piano"
+                }
+            },
+            "29": {
+                "visual": {
+                    "color": [
+                        0.33,
+                        0.67,
+                        0.7
+                    ],
+                    "name": "Cheers"
+                }
+            },
+            "3": {
+                "visual": {
+                    "color": [
+                        0.82,
+                        0.56,
+                        0.25
+                    ],
+                    "name": "Closed Hi Hat"
+                }
+            },
+            "30": {
+                "visual": {
+                    "color": [
+                        0.8,
+                        0.71,
+                        0.41
+                    ],
+                    "name": "Open Hi Hat #3"
+                }
+            },
+            "31": {
+                "visual": {
+                    "color": [
+                        0.4,
+                        0.53,
+                        0.42
+                    ],
+                    "name": "Synth Strings"
+                }
+            },
+            "33": {
+                "visual": {
+                    "color": [
+                        0.44,
+                        0.66,
+                        0.85
+                    ],
+                    "name": "Energy"
+                }
+            },
+            "34": {
+                "visual": {
+                    "color": [
+                        0.33,
+                        0.34,
+                        0.39
+                    ],
+                    "name": "Synthesizer #2"
+                }
+            },
+            "35": {
+                "visual": {
+                    "color": [
+                        0.22,
+                        0.79,
+                        0.98
+                    ],
+                    "name": "Crystal"
+                }
+            },
+            "36": {
+                "visual": {
+                    "color": [
+                        0.91,
+                        0.38,
+                        0.16
+                    ],
+                    "name": "Strings #2"
+                }
+            },
+            "37": {
+                "visual": {
+                    "color": [
+                        0.71,
+                        0.24,
+                        0.09
+                    ],
+                    "name": "Strings #3"
+                }
+            },
+            "38": {
+                "visual": {
+                    "color": [
+                        0.75,
+                        0.67,
+                        0.62
+                    ],
+                    "name": "Fade In"
+                }
+            },
+            "39": {
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.29,
+                        0.24
+                    ],
+                    "name": "Bass #2"
+                }
+            },
+            "4": {
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.59,
+                        0.43
+                    ],
+                    "name": "Woodblock"
+                }
+            },
+            "40": {
+                "visual": {
+                    "color": [
+                        0.88,
+                        0.78,
+                        0.67
+                    ],
+                    "name": "Drum Loop"
+                }
+            },
+            "41": {
+                "visual": {
+                    "color": [
+                        0.99,
+                        0.84,
+                        0.32
+                    ],
+                    "name": "Space"
+                }
+            },
+            "42": {
+                "visual": {
+                    "color": [
+                        0.72,
+                        0.73,
+                        0.76
+                    ],
+                    "name": "Snare Drum #2"
+                }
+            },
+            "43": {
+                "visual": {
+                    "color": [
+                        0.11,
+                        0.39,
+                        0.29
+                    ],
+                    "name": "Bass Drum #4"
+                }
+            },
+            "44": {
+                "visual": {
+                    "color": [
+                        0.88,
+                        0.78,
+                        0.67
+                    ],
+                    "name": "Snare Drum #3"
+                }
+            },
+            "45": {
+                "visual": {
+                    "color": [
+                        0.72,
+                        0.71,
+                        0.74
+                    ],
+                    "name": "Cymbal #2"
+                }
+            },
+            "46": {
+                "visual": {
+                    "color": [
+                        0.1,
+                        0.11,
+                        0.14
+                    ],
+                    "name": "Cymbal #3"
+                }
+            },
+            "47": {
+                "visual": {
+                    "color": [
+                        0.05,
+                        0.05,
+                        0.05
+                    ],
+                    "name": "Metal Guitar"
+                }
+            },
+            "49": {
+                "visual": {
+                    "color": [
+                        0.64,
+                        0.24,
+                        0.04
+                    ],
+                    "name": "Bass Guitar"
+                }
+            },
+            "5": {
+                "visual": {
+                    "color": [
+                        0.8,
+                        0.71,
+                        0.41
+                    ],
+                    "name": "Open Hi Hat"
+                }
+            },
+            "50": {
+                "visual": {
+                    "color": [
+                        0.33,
+                        0.34,
+                        0.39
+                    ],
+                    "name": "Synthesizer #3"
+                }
+            },
+            "51": {
+                "visual": {
+                    "color": [
+                        0.56,
+                        0.59,
+                        0.57
+                    ],
+                    "name": "Blast"
+                }
+            },
+            "52": {
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.36,
+                        0.12
+                    ],
+                    "name": "Bass #3"
+                }
+            },
+            "53": {
+                "visual": {
+                    "color": [
+                        0.63,
+                        0.45,
+                        0.29
+                    ],
+                    "name": "DX Tom"
+                }
+            },
+            "55": {
+                "visual": {
+                    "color": [
+                        0.93,
+                        0.93,
+                        0.93
+                    ],
+                    "name": "Nice"
+                }
+            },
+            "56": {
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.6,
+                        0.51
+                    ],
+                    "name": "Snare Drum #4"
+                }
+            },
+            "57": {
+                "visual": {
+                    "color": [
+                        0.39,
+                        0.27,
+                        0.16
+                    ],
+                    "name": "Drum Reverb"
+                }
+            },
+            "58": {
+                "visual": {
+                    "color": [
+                        0.74,
+                        0.62,
+                        0.49
+                    ],
+                    "name": "Synth Brass"
+                }
+            },
+            "59": {
+                "visual": {
+                    "color": [
+                        0.49,
+                        0.11,
+                        0.13
+                    ],
+                    "name": "Bass #4"
+                }
+            },
+            "6": {
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.76,
+                        0.75
+                    ],
+                    "name": "Tambourine"
+                }
+            },
+            "60": {
+                "visual": {
+                    "color": [
+                        0.06,
+                        0.07,
+                        0.08
+                    ],
+                    "name": "Bass Drum #5"
+                }
+            },
+            "61": {
+                "visual": {
+                    "color": [
+                        0.82,
+                        0.56,
+                        0.25
+                    ],
+                    "name": "Closed Hi Hat #3"
+                }
+            },
+            "62": {
+                "visual": {
+                    "color": [
+                        0.35,
+                        0.36,
+                        0.53
+                    ],
+                    "name": "Dry Tom"
+                }
+            },
+            "64": {
+                "visual": {
+                    "color": [
+                        0.71,
+                        0.38,
+                        0.13
+                    ],
+                    "name": "Guitar Electric"
+                }
+            },
+            "65": {
+                "visual": {
+                    "color": [
+                        0.89,
+                        0.72,
+                        0.34
+                    ],
+                    "name": "Open Hi Hat #4"
+                }
+            },
+            "66": {
+                "visual": {
+                    "color": [
+                        0.86,
+                        0.7,
+                        0.44
+                    ],
+                    "name": "Reverse Cymbal"
+                }
+            },
+            "67": {
+                "visual": {
+                    "color": [
+                        0.72,
+                        0.73,
+                        0.76
+                    ],
+                    "name": "Snare Drum #5"
+                }
+            },
+            "7": {
+                "visual": {
+                    "color": [
+                        0.82,
+                        0.27,
+                        0.11
+                    ],
+                    "name": "Taiko Drum"
+                }
+            },
+            "77": {
+                "visual": {
+                    "color": [
+                        0.23,
+                        0.21,
+                        0.21
+                    ],
+                    "name": "Clean Electric Guitar"
+                }
+            },
+            "78": {
+                "visual": {
+                    "color": [
+                        0.33,
+                        0.42,
+                        0.68
+                    ],
+                    "name": "Strat Guitar"
+                }
+            },
+            "79": {
+                "visual": {
+                    "color": [
+                        0.51,
+                        0.8,
+                        0.76
+                    ],
+                    "name": "Fender Strat Guitar"
+                }
+            },
+            "8": {
+                "visual": {
+                    "color": [
+                        0.77,
+                        0.63,
+                        0.39
+                    ],
+                    "name": "Trumpet"
+                }
+            },
+            "80": {
+                "visual": {
+                    "color": [
+                        0.33,
+                        0.33,
+                        0.33
+                    ],
+                    "name": "Fret Noise"
+                }
+            },
+            "81": {
+                "visual": {
+                    "color": [
+                        0.72,
+                        0.09,
+                        0.15
+                    ],
+                    "name": "Damant Spectrum Harm"
+                }
+            },
+            "82": {
+                "visual": {
+                    "color": [
+                        0.87,
+                        0.66,
+                        0.07
+                    ],
+                    "name": "Damant Spectrum Muted"
+                }
+            },
+            "83": {
+                "visual": {
+                    "color": [
+                        0.81,
+                        0.73,
+                        0.56
+                    ],
+                    "name": "Soprano Sax"
+                }
+            },
+            "84": {
+                "visual": {
+                    "color": [
+                        0.95,
+                        0.88,
+                        0.63
+                    ],
+                    "name": "Alto Sax"
+                }
+            },
+            "85": {
+                "visual": {
+                    "color": [
+                        0.85,
+                        0.72,
+                        0.36
+                    ],
+                    "name": "Sax Hit"
+                }
+            },
+            "86": {
+                "visual": {
+                    "color": [
+                        0.79,
+                        0.79,
+                        0.57
+                    ],
+                    "name": "Sax Sing"
+                }
+            },
+            "87": {
+                "visual": {
+                    "color": [
+                        0.67,
+                        0.52,
+                        0.31
+                    ],
+                    "name": "Tenor Sax"
+                }
+            },
+            "88": {
+                "visual": {
+                    "color": [
+                        0.73,
+                        0.59,
+                        0.37
+                    ],
+                    "name": "Baritone Sax"
+                }
+            },
+            "89": {
+                "visual": {
+                    "color": [
+                        0.62,
+                        0.61,
+                        0.63
+                    ],
+                    "name": "Bass Clarinet"
+                }
+            },
+            "9": {
+                "visual": {
+                    "color": [
+                        0.89,
+                        0.36,
+                        0.16
+                    ],
+                    "name": "Strings"
+                }
+            },
+            "90": {
+                "visual": {
+                    "color": [
+                        0.47,
+                        0.47,
+                        0.45
+                    ],
+                    "name": "Clarinet"
+                }
+            },
+            "91": {
+                "visual": {
+                    "color": [
+                        0.55,
+                        0.54,
+                        0.54
+                    ],
+                    "name": "English Horn"
+                }
+            },
+            "92": {
+                "visual": {
+                    "color": [
+                        0.49,
+                        0.43,
+                        0.42
+                    ],
+                    "name": "Oboe"
+                }
+            },
+            "93": {
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.36,
+                        0.07
+                    ],
+                    "name": "Ocarina"
+                }
+            },
+            "94": {
+                "visual": {
+                    "color": [
+                        0.62,
+                        0.5,
+                        0.27
+                    ],
+                    "name": "Wateki"
+                }
+            },
+            "95": {
+                "visual": {
+                    "color": [
+                        0.78,
+                        0.65,
+                        0.32
+                    ],
+                    "name": "Tuba"
+                }
+            },
+            "96": {
+                "visual": {
+                    "color": [
+                        0.79,
+                        0.76,
+                        0.73
+                    ],
+                    "name": "Flute"
+                }
+            },
+            "97": {
+                "visual": {
+                    "color": [
+                        0.75,
+                        0.65,
+                        0.46
+                    ],
+                    "name": "Trombone"
+                }
+            },
+            "98": {
+                "visual": {
+                    "color": [
+                        0.83,
+                        0.68,
+                        0.38
+                    ],
+                    "name": "French Horn"
+                }
+            },
+            "99": {
+                "visual": {
+                    "color": [
+                        0.75,
+                        0.65,
+                        0.47
+                    ],
+                    "name": "Trumpet Muted"
+                }
+            }
+        }
+    }
+}

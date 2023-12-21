@@ -1,0 +1,2324 @@
+{
+    "plugin": {
+        "groups": {},
+        "objects": {
+            "1bandEq": {
+                "params": {
+                    "freq": {
+                        "def": 83.21308898925781,
+                        "max": 135.07623291015625,
+                        "min": 15.486820220947266,
+                        "name": "Freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q": {
+                        "def": 0.5,
+                        "max": 4.0,
+                        "min": 0.10000000149011612,
+                        "name": "Q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape": {
+                        "def": 2,
+                        "max": 5,
+                        "min": 0,
+                        "name": "Shape",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "Slope",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "1-Band Equalizer"
+                }
+            },
+            "3bandEq": {
+                "params": {
+                    "freq1": {
+                        "def": 43.34996032714844,
+                        "max": 135.07623291015625,
+                        "min": 15.486820220947266,
+                        "name": "Freq 1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq2": {
+                        "def": 90.23263549804688,
+                        "max": 135.07623291015625,
+                        "min": 15.486820220947266,
+                        "name": "Freq 2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq3": {
+                        "def": 119.21308898925781,
+                        "max": 135.07623291015625,
+                        "min": 15.486820220947266,
+                        "name": "Freq 3",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain1": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "Gain 1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain2": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "Gain 2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain3": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "Gain 3",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "3-Band Equalizer"
+                }
+            },
+            "4bandEq": {
+                "params": {
+                    "hiFreq": {
+                        "def": 17000.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "hiFreq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hiGain": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "hiGain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hiQ": {
+                        "def": 0.4999999701976776,
+                        "max": 4.0,
+                        "min": 0.10000000149011612,
+                        "name": "hiQ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "loFreq": {
+                        "def": 79.99998474121094,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "loFreq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "loGain": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "loGain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "loQ": {
+                        "def": 0.4999999701976776,
+                        "max": 4.0,
+                        "min": 0.10000000149011612,
+                        "name": "loQ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "midFreq1": {
+                        "def": 3000.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "midFreq1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "midFreq2": {
+                        "def": 5000.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "midFreq2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "midGain1": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "midGain1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "midGain2": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "midGain2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "midQ1": {
+                        "def": 0.4999999701976776,
+                        "max": 4.0,
+                        "min": 0.10000000149011612,
+                        "name": "midQ1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "midQ2": {
+                        "def": 0.4999999701976776,
+                        "max": 4.0,
+                        "min": 0.10000000149011612,
+                        "name": "midQ2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "phaseInvert": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "phaseInvert",
+                        "noauto": false,
+                        "type": "bool"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "4-Band Equalizer"
+                }
+            },
+            "8bandEq": {
+                "params": {
+                    "analyzer": {
+                        "def": "0",
+                        "max": 1,
+                        "min": 0,
+                        "name": "analyzer",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "enable1lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable1lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable1rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable1rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable2lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable2lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable2rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable2rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable3lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable3lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable3rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable3rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable4lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable4lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable4rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable4rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable5lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable5lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable5rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable5rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable6lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable6lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable6rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable6rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable7lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable7lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable7rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable7rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable8lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable8lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "enable8rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "enable8rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq1lm": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq1lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq1rs": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq1rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq2lm": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq2lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq2rs": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq2rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq3lm": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq3lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq3rs": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq3rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq4lm": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq4lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq4rs": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq4rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq5lm": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq5lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq5rs": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq5rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq6lm": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq6lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq6rs": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq6rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq7lm": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq7lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq7rs": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq7rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq8lm": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq8lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq8rs": {
+                        "def": 22.5063,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq8rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain1lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain1lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain1rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain1rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain2lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain2lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain2rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain2rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain3lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain3lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain3rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain3rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain4lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain4lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain4rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain4rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain5lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain5lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain5rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain5rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain6lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain6lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain6rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain6rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain7lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain7lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain7rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain7rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain8lm": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain8lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain8rs": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain8rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "mode",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "q1lm": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q1lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q1rs": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q1rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q2lm": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q2lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q2rs": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q2rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q3lm": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q3lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q3rs": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q3rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q4lm": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q4lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q4rs": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q4rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q5lm": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q5lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q5rs": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q5rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q6lm": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q6lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q6rs": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q6rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q7lm": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q7lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q7rs": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q7rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q8lm": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q8lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "q8rs": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "q8rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape1lm": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape1lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape1rs": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape1rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape2lm": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape2lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape2rs": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape2rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape3lm": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape3lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape3rs": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape3rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape4lm": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape4lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape4rs": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape4rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape5lm": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape5lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape5rs": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape5rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape6lm": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape6lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape6rs": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape6rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape7lm": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape7lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape7rs": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape7rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape8lm": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape8lm",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "shape8rs": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "shape8rs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slope1lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope1rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope2lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope2rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope3lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope3rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope4lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope4rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope5lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope5rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope6lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope6rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope7lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope7rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope8lm": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "slope8rs": {
+                        "def": 12,
+                        "max": 48,
+                        "min": 12,
+                        "name": "",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "8-Band Equalizer"
+                }
+            },
+            "chorus": {
+                "params": {
+                    "depthMs": {
+                        "def": 3.0,
+                        "max": 20.0,
+                        "min": 0.10000000149011612,
+                        "name": "depthMs",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mixProportion": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mixProportion",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "speedHz": {
+                        "def": 1.0,
+                        "max": 10.0,
+                        "min": 0.10000000149011612,
+                        "name": "speedHz",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "width": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "width",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Chorus (Old)"
+                }
+            },
+            "chorusEffect": {
+                "params": {
+                    "delay": {
+                        "def": 10.0,
+                        "max": 30.0,
+                        "min": 0.0,
+                        "name": "Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "depth": {
+                        "def": 20.0,
+                        "max": 20.0,
+                        "min": 0.0,
+                        "name": "Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mixLock": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "Mix Lock",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "mode": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "Mode",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "rateSyncOff": {
+                        "def": 0.4000000059604645,
+                        "max": 5.0,
+                        "min": 0.019999999552965164,
+                        "name": "Rate Sec",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "rateSyncOn": {
+                        "def": 15,
+                        "max": 35,
+                        "min": 0,
+                        "name": "Rate Beat",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "sync": {
+                        "def": false,
+                        "max": null,
+                        "min": null,
+                        "name": "Sync",
+                        "noauto": false,
+                        "type": "bool"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Chorus"
+                }
+            },
+            "comp": {
+                "params": {
+                    "attack": {
+                        "def": 50.0,
+                        "max": 100.0,
+                        "min": 1.0,
+                        "name": "attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "inputDb": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "inputDb",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "knee": {
+                        "def": 0.0,
+                        "max": 18.0,
+                        "min": 0.0,
+                        "name": "knee",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "outputDb": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "outputDb",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ratio": {
+                        "def": 2.0,
+                        "max": 100.0,
+                        "min": 1.0,
+                        "name": "ratio",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "release": {
+                        "def": 500.0,
+                        "max": 1000.0,
+                        "min": 1.0,
+                        "name": "release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "rms": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "rms",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sidechainTrigger": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "sidechainTrigger",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "threshold": {
+                        "def": -30.0,
+                        "max": 0.0,
+                        "min": -60.0,
+                        "name": "threshold",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Compressor"
+                }
+            },
+            "compressor": {
+                "params": {
+                    "attack": {
+                        "def": 100.0,
+                        "max": 200.0,
+                        "min": 0.30000001192092896,
+                        "name": "attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "inputDb": {
+                        "def": 0.0,
+                        "max": 24.0,
+                        "min": -24.0,
+                        "name": "inputDb",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "outputDb": {
+                        "def": 0.0,
+                        "max": 24.0,
+                        "min": -10.0,
+                        "name": "outputDb",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ratio": {
+                        "def": 0.5,
+                        "max": 0.9499989748001099,
+                        "min": 0.0,
+                        "name": "ratio",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "release": {
+                        "def": 100.0,
+                        "max": 300.0,
+                        "min": 10.0,
+                        "name": "release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sidechainTrigger": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "sidechainTrigger",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "threshold": {
+                        "def": 0.5011872053146362,
+                        "max": 1.0,
+                        "min": 0.009999999776482582,
+                        "name": "threshold",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Compressor (Old)"
+                }
+            },
+            "delay": {
+                "params": {
+                    "feedback": {
+                        "def": -6.0,
+                        "max": 0.0,
+                        "min": -30.0,
+                        "name": "feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "length": {
+                        "def": 149.0,
+                        "max": 1000.0,
+                        "min": 0.0,
+                        "name": "length",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Delay (Old)"
+                }
+            },
+            "distortion": {
+                "params": {
+                    "drive": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "drive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "dtype": {
+                        "def": 0,
+                        "max": 5,
+                        "min": 0,
+                        "name": "dtype",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "emphasis": {
+                        "def": 0.25,
+                        "max": 1,
+                        "min": 0,
+                        "name": "emphasis",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mixLock": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "mixLock",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "postGain": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "postGain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "tone": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "tone",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Distortion"
+                }
+            },
+            "djeq": {
+                "params": {
+                    "bass": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "bass",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq1": {
+                        "def": 59.213096618652344,
+                        "max": 135.07623291015625,
+                        "min": 15.487000465393066,
+                        "name": "freq1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq2": {
+                        "def": 99.07624816894531,
+                        "max": 135.07623291015625,
+                        "min": 15.487000465393066,
+                        "name": "freq2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mid": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "mid",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "treble": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "treble",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "DJ EQ"
+                }
+            },
+            "djfilter": {
+                "params": {
+                    "freq": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mixLock": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "mixLock",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "q": {
+                        "def": 0.7070000171661377,
+                        "max": 4.0,
+                        "min": 0.10000000149011612,
+                        "name": "q",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "DJ Filter"
+                }
+            },
+            "gate": {
+                "params": {
+                    "attack": {
+                        "def": 3.0267577171325684,
+                        "max": 100.0,
+                        "min": 0.10000000149011612,
+                        "name": "attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hold": {
+                        "def": 29.296875,
+                        "max": 1000.0,
+                        "min": 0.0,
+                        "name": "hold",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "release": {
+                        "def": 100.0,
+                        "max": 1000.0,
+                        "min": 1.0,
+                        "name": "release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "threshold": {
+                        "def": -40.0,
+                        "max": 0.0,
+                        "min": -60.0,
+                        "name": "threshold",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Gate"
+                }
+            },
+            "limiter": {
+                "params": {
+                    "ceiling": {
+                        "def": -0.2999992370605469,
+                        "max": 0.0,
+                        "min": -60.0,
+                        "name": "ceiling",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain": {
+                        "def": 0.0,
+                        "max": 20.0,
+                        "min": -20.0,
+                        "name": "gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "release": {
+                        "def": 300.0,
+                        "max": 300.0,
+                        "min": 1.0,
+                        "name": "release",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Limiter"
+                }
+            },
+            "lowpass": {
+                "params": {
+                    "frequency": {
+                        "def": 4000.0,
+                        "max": 22000.0,
+                        "min": 10.0,
+                        "name": "Frequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mode": {
+                        "def": "lowpass",
+                        "max": null,
+                        "min": null,
+                        "name": "Mode",
+                        "noauto": true,
+                        "type": "string"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Low Pass (Old)"
+                }
+            },
+            "naturalReverb": {
+                "params": {
+                    "decay": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "definition": {
+                        "def": 0.8,
+                        "max": 1,
+                        "min": 0,
+                        "name": "definition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "diffusion": {
+                        "def": 0.829296886920929,
+                        "max": 1,
+                        "min": 0,
+                        "name": "diffusion",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "highCut": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "highCut",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "highDamp": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "highDamp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lowCut": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lowCut",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lowDamp": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lowDamp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mixLock": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "mixLock",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preDelay": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "preDelay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "size": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "size",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slope": {
+                        "def": 0.25,
+                        "max": 1,
+                        "min": 0,
+                        "name": "slope",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Natural Reverb"
+                }
+            },
+            "nonLinearReverb": {
+                "params": {
+                    "decay": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "definition": {
+                        "def": 0.25,
+                        "max": 1,
+                        "min": 0,
+                        "name": "definition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "diffusion": {
+                        "def": 0.8,
+                        "max": 1,
+                        "min": 0,
+                        "name": "diffusion",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "highCut": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "highCut",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "highDamp": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "highDamp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lowCut": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lowCut",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lowDamp": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lowDamp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mixLock": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "mixLock",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preDelay": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "preDelay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "size": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "size",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Non-linear Reverb"
+                }
+            },
+            "phaser": {
+                "params": {
+                    "depth": {
+                        "def": 5.0,
+                        "max": 7.0,
+                        "min": 0.10000000149011612,
+                        "name": "depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "feedback": {
+                        "def": 0.699999988079071,
+                        "max": 0.9900000095367432,
+                        "min": 0.0,
+                        "name": "feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "rate": {
+                        "def": 0.4000000059604645,
+                        "max": 16.0,
+                        "min": 0.009999999776482582,
+                        "name": "rate",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Phaser (Old)"
+                }
+            },
+            "phaser2": {
+                "params": {
+                    "ceiling": {
+                        "def": 20000.0,
+                        "max": 20000.0,
+                        "min": 0.0,
+                        "name": "ceiling",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "feedback": {
+                        "def": 50.0,
+                        "max": 100.0,
+                        "min": 0.0,
+                        "name": "feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "floor": {
+                        "def": 20.0,
+                        "max": 20000.0,
+                        "min": 0.0,
+                        "name": "floor",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mixLock": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "mixLock",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "rateSyncOn": {
+                        "def": 8,
+                        "max": 35,
+                        "min": 0,
+                        "name": "rateSyncOn",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "stages": {
+                        "def": 6,
+                        "max": 12,
+                        "min": 0,
+                        "name": "stages",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "sync": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "sync",
+                        "noauto": false,
+                        "type": "bool"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Phaser"
+                }
+            },
+            "pitchShifter": {
+                "group": "",
+                "params": {
+                    "elastiqueOptions": {
+                        "def": "1/0/0/0/64",
+                        "max": null,
+                        "min": null,
+                        "name": "Elastique Options",
+                        "noauto": false,
+                        "type": "string"
+                    },
+                    "semitonesUp": {
+                        "def": 0.0,
+                        "max": 24.0,
+                        "min": -24.0,
+                        "name": "Pitch",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Pitch Shifter"
+                }
+            },
+            "plateReverb": {
+                "params": {
+                    "decay": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "definition": {
+                        "def": 0.8,
+                        "max": 1,
+                        "min": 0,
+                        "name": "definition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "diffusion": {
+                        "def": 0.8,
+                        "max": 1,
+                        "min": 0,
+                        "name": "diffusion",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "highCut": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "highCut",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "highDamp": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "highDamp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lowCut": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lowCut",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lowDamp": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lowDamp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mixLock": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mixLock",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preDelay": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "preDelay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "size": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "size",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "slope": {
+                        "def": 0.25,
+                        "max": 1,
+                        "min": 0,
+                        "name": "slope",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Plate Reverb"
+                }
+            },
+            "reverb": {
+                "params": {
+                    "damp": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "damp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "dry": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "dry",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mode": {
+                        "def": 0.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "roomSize": {
+                        "def": 0.300000011920929,
+                        "max": 1,
+                        "min": 0,
+                        "name": "roomSize",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "wet": {
+                        "def": 0.3333333432674408,
+                        "max": 1,
+                        "min": 0,
+                        "name": "wet",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "width": {
+                        "def": 0.970703125,
+                        "max": 1,
+                        "min": 0,
+                        "name": "width",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Reverb (Old)"
+                }
+            },
+            "stereoDelay": {
+                "group": "",
+                "params": {
+                    "crossL": {
+                        "def": 8.0,
+                        "max": 99.0,
+                        "min": 0.0,
+                        "name": "crossL",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "crossR": {
+                        "def": 8.0,
+                        "max": 99.0,
+                        "min": 0.0,
+                        "name": "crossR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delaySyncOffL": {
+                        "def": 0.0,
+                        "max": 5000.0,
+                        "min": 0.0,
+                        "name": "delaySyncOffL",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delaySyncOffR": {
+                        "def": 0.0,
+                        "max": 5000.0,
+                        "min": 0.0,
+                        "name": "delaySyncOffR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delaySyncOnL": {
+                        "def": 1,
+                        "max": 35,
+                        "min": 0,
+                        "name": "delaySyncOnL",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "delaySyncOnR": {
+                        "def": 1,
+                        "max": 35,
+                        "min": 0,
+                        "name": "delaySyncOnR",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "feedbackL": {
+                        "def": 8.0,
+                        "max": 99.0,
+                        "min": 0.0,
+                        "name": "feedbackL",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "feedbackR": {
+                        "def": 8.0,
+                        "max": 99.0,
+                        "min": 0.0,
+                        "name": "feedbackR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "highcut": {
+                        "def": 5000.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "highcut",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lowcut": {
+                        "def": 300.0,
+                        "max": 20000.0,
+                        "min": 20.0,
+                        "name": "lowcut",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1.0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mixLock": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "mixLock",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "panL": {
+                        "def": -1.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "panL",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "panR": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "panR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sync": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "sync",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "volL": {
+                        "def": 0.0,
+                        "max": 6.0,
+                        "min": -12.0,
+                        "name": "volL",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "volR": {
+                        "def": 0.0,
+                        "max": 6.0,
+                        "min": -12.0,
+                        "name": "volR",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Delay"
+                }
+            },
+            "volume": {
+                "params": {
+                    "pan": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "Pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "volume": {
+                        "def": 1.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Volume",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.20000000298023224,
+                        0.21176470816135406,
+                        0.239215686917305
+                    ],
+                    "name": "Volume"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,4199 @@
+{
+    "plugin": {
+        "objects": {
+            "BitCrusher": {
+                "params": {
+                    "bits": {
+                        "def": 12.22,
+                        "max": 16,
+                        "min": 2,
+                        "name": "bits",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "down": {
+                        "def": 0.7,
+                        "max": 1,
+                        "min": 0,
+                        "name": "down",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "BitCrusher"
+                }
+            },
+            "Chorus": {
+                "params": {
+                    "delayLfoDepth": {
+                        "def": 0.15,
+                        "max": 1,
+                        "min": 0,
+                        "name": "delayLfoDepth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delayLfoRateHz": {
+                        "def": 0.7585000000000001,
+                        "max": 5,
+                        "min": 0.01,
+                        "name": "delayLfoRateHz",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 0.85,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "tone": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "tone",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Chorus"
+                }
+            },
+            "Compressor": {
+                "params": {
+                    "attackTimeMS": {
+                        "def": 9,
+                        "max": 300,
+                        "min": 0,
+                        "name": "attackTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "circuitMode": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "circuitMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detectMode": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "detectMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterActive": {
+                        "def": 1,
+                        "max": true,
+                        "min": false,
+                        "name": "filterActive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterAudition": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterAudition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterFrequency": {
+                        "def": 2017.9999999999982,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filterFrequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterGainDB": {
+                        "def": 0,
+                        "max": 60,
+                        "min": 0,
+                        "name": "filterGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterMode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "filterMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterQ": {
+                        "def": 0.05,
+                        "max": 1,
+                        "min": 0.05,
+                        "name": "filterQ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lookaheadTimeMS": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "lookaheadTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "postGainDB": {
+                        "def": 2.16,
+                        "max": 24,
+                        "min": 0,
+                        "name": "postGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -12,
+                        "name": "preGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ratio": {
+                        "def": 4.04,
+                        "max": 20,
+                        "min": 1,
+                        "name": "ratio",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "releaseTimeMS": {
+                        "def": 199.99999999999994,
+                        "max": 5000,
+                        "min": 0,
+                        "name": "releaseTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "softKneeWidth": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "softKneeWidth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "thresholdDB": {
+                        "def": -19.200000000000003,
+                        "max": 0,
+                        "min": -60,
+                        "name": "thresholdDB",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Compressor"
+                }
+            },
+            "CompressorMini": {
+                "params": {
+                    "squash": {
+                        "def": 0.15,
+                        "max": 1,
+                        "min": 0,
+                        "name": "squash",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Compressor Mini"
+                }
+            },
+            "Delay": {
+                "params": {
+                    "cross": {
+                        "def": 1,
+                        "max": 0.99,
+                        "min": 0,
+                        "name": "cross",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "damp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "damp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "fb": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "fb",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "offset": {
+                        "def": 0,
+                        "max": 0.1,
+                        "min": 0,
+                        "name": "offset",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "time": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "time",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Delay"
+                }
+            },
+            "Distortion": {
+                "params": {
+                    "blend": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "blend",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "boost": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "boost",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "feedback": {
+                        "def": 0.30000001192092896,
+                        "max": 1.0,
+                        "min": -1.0,
+                        "name": "feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "intensity": {
+                        "def": 0.4,
+                        "max": 1,
+                        "min": 0,
+                        "name": "intensity",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mode": {
+                        "def": 3,
+                        "max": 10,
+                        "min": 0,
+                        "name": "mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "postGainDB": {
+                        "def": -3,
+                        "max": 30,
+                        "min": -30,
+                        "name": "postGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preGainDB": {
+                        "def": 12,
+                        "max": 30,
+                        "min": -30,
+                        "name": "preGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "tone": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "tone",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Distortion"
+                }
+            },
+            "Drumpler": {
+                "params": {},
+                "visual": {
+                    "name": "Drumpler"
+                }
+            },
+            "Equalizer": {
+                "params": {
+                    "hpfreq": {
+                        "def": 20,
+                        "max": 10000,
+                        "min": 20,
+                        "name": "hpfreq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lpfreq": {
+                        "def": 10000,
+                        "max": 10000,
+                        "min": 20,
+                        "name": "lpfreq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peakfreq": {
+                        "def": 2000,
+                        "max": 10000,
+                        "min": 20,
+                        "name": "peakfreq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peakgain": {
+                        "def": 0,
+                        "max": 48,
+                        "min": -96,
+                        "name": "peakgain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peakq": {
+                        "def": 1,
+                        "max": 10,
+                        "min": 0.5,
+                        "name": "peakq",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Equalizer Mini"
+                }
+            },
+            "EqualizerPro": {
+                "params": {
+                    "filter/1/active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter/1/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/1/freq": {
+                        "def": 60,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter/1/freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/1/gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter/1/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/1/q": {
+                        "def": 0.7099999999999995,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter/1/q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/1/type": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter/1/type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/2/active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter/2/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/2/freq": {
+                        "def": 120,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter/2/freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/2/gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter/2/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/2/q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter/2/q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/2/type": {
+                        "def": 3,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter/2/type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/3/active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter/3/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/3/freq": {
+                        "def": 400,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter/3/freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/3/gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter/3/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/3/q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter/3/q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/3/type": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter/3/type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/4/active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter/4/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/4/freq": {
+                        "def": 1200,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter/4/freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/4/gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter/4/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/4/q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter/4/q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/4/type": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter/4/type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/5/active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter/5/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/5/freq": {
+                        "def": 3000,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter/5/freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/5/gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter/5/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/5/q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter/5/q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/5/type": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter/5/type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/6/active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter/6/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/6/freq": {
+                        "def": 6000,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter/6/freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/6/gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter/6/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/6/q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter/6/q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/6/type": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter/6/type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/7/active": {
+                        "def": 0,
+                        "max": true,
+                        "min": false,
+                        "name": "filter/7/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/7/freq": {
+                        "def": 9000,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter/7/freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/7/gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter/7/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/7/q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter/7/q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/7/type": {
+                        "def": 4,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter/7/type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/8/active": {
+                        "def": 0,
+                        "max": true,
+                        "min": true,
+                        "name": "filter/8/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/8/freq": {
+                        "def": 15000,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filter/8/freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/8/gain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -24,
+                        "name": "filter/8/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/8/q": {
+                        "def": 0.71,
+                        "max": 40,
+                        "min": 0.1,
+                        "name": "filter/8/q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/8/type": {
+                        "def": 2,
+                        "max": 4,
+                        "min": 0,
+                        "name": "filter/8/type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "postGain": {
+                        "def": 0,
+                        "max": 24,
+                        "min": 0,
+                        "name": "postGain",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Equalizer"
+                }
+            },
+            "Expander": {
+                "params": {
+                    "attackTimeMS": {
+                        "def": 0,
+                        "max": 300,
+                        "min": 0,
+                        "name": "attackTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "circuitMode": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "circuitMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detectMode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "detectMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterActive": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterActive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterAudition": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterAudition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterFrequency": {
+                        "def": 200,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filterFrequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterGainDB": {
+                        "def": 0,
+                        "max": 60,
+                        "min": 0,
+                        "name": "filterGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterMode": {
+                        "def": 2,
+                        "max": 2,
+                        "min": 0,
+                        "name": "filterMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterQ": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filterQ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lookaheadTimeMS": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "lookaheadTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "postGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": 0,
+                        "name": "postGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -12,
+                        "name": "preGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ratio": {
+                        "def": 2,
+                        "max": 20,
+                        "min": 1,
+                        "name": "ratio",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "releaseTimeMS": {
+                        "def": 150.00000000000003,
+                        "max": 5000,
+                        "min": 0,
+                        "name": "releaseTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "softKneeWidth": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "softKneeWidth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "thresholdDB": {
+                        "def": -60,
+                        "max": 0,
+                        "min": -60,
+                        "name": "thresholdDB",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Expander"
+                }
+            },
+            "Flanger": {
+                "params": {
+                    "delayLfoDepth": {
+                        "def": 0.75,
+                        "max": 1,
+                        "min": 0,
+                        "name": "delayLfoDepth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delayLfoRateHz": {
+                        "def": 1.0579,
+                        "max": 5,
+                        "min": 0.01,
+                        "name": "delayLfoRateHz",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delayTimeMS": {
+                        "def": 4,
+                        "max": 10,
+                        "min": 2,
+                        "name": "delayTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "tone": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "tone",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "voices": {
+                        "def": 2,
+                        "max": 3,
+                        "min": 1,
+                        "name": "voices",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Flanger"
+                }
+            },
+            "Gate": {
+                "params": {
+                    "attackCurve": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "attackCurve",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "attackTimeMS": {
+                        "def": 0,
+                        "max": 300,
+                        "min": 0,
+                        "name": "attackTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "circuitMode": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "circuitMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detectMode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "detectMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterActive": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterActive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterAudition": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterAudition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterFrequency": {
+                        "def": 200,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filterFrequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterGainDB": {
+                        "def": 0,
+                        "max": 60,
+                        "min": 0,
+                        "name": "filterGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterMode": {
+                        "def": 2,
+                        "max": 2,
+                        "min": 0,
+                        "name": "filterMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterQ": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filterQ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hysteresisDB": {
+                        "def": 0,
+                        "max": 0,
+                        "min": -24,
+                        "name": "hysteresisDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lookaheadTimeMS": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "lookaheadTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "postGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": 0,
+                        "name": "postGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -12,
+                        "name": "preGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "releaseCurve": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "releaseCurve",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "releaseTimeMS": {
+                        "def": 50,
+                        "max": 5000,
+                        "min": 0,
+                        "name": "releaseTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "thresholdDB": {
+                        "def": -90,
+                        "max": 0,
+                        "min": -90,
+                        "name": "thresholdDB",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Gate"
+                }
+            },
+            "Granny": {
+                "params": {
+                    "amp/eg/A": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "amp/eg/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp/eg/D": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "amp/eg/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp/eg/R": {
+                        "def": 0.83,
+                        "max": 1,
+                        "min": 0.83,
+                        "name": "amp/eg/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp/eg/S": {
+                        "def": 0.16,
+                        "max": 1,
+                        "min": 0.16,
+                        "name": "amp/eg/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "amp/level": {
+                        "def": 0.37,
+                        "max": 1,
+                        "min": 0.37,
+                        "name": "amp/level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/eg/A": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filter/eg/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/eg/D": {
+                        "def": 0.86,
+                        "max": 1,
+                        "min": 0.86,
+                        "name": "filter/eg/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/eg/R": {
+                        "def": 0.77,
+                        "max": 1,
+                        "min": 0.77,
+                        "name": "filter/eg/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/eg/S": {
+                        "def": 0.12,
+                        "max": 1,
+                        "min": 0.12,
+                        "name": "filter/eg/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/egamount": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "filter/egamount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/freq": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "filter/freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter/res": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filter/res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/amp/compression": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc/amp/compression",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/amp/level": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0.5,
+                        "name": "osc/amp/level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/amp/random": {
+                        "def": 0,
+                        "max": 0.99,
+                        "min": 0,
+                        "name": "osc/amp/random",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/amp/width": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0.5,
+                        "name": "osc/amp/width",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/grain/duration": {
+                        "def": 0.07,
+                        "max": 1,
+                        "min": 0.07,
+                        "name": "osc/grain/duration",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/grain/keyfollow": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "osc/grain/keyfollow",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/grain/randomDuration": {
+                        "def": 0.09,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc/grain/randomDuration",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/grain/randomInterval": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "osc/grain/randomInterval",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/grain/randomPitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc/grain/randomPitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/shaper/alpha": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "osc/shaper/alpha",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/shaper/length": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc/shaper/length",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/shaper/shape": {
+                        "def": 4,
+                        "max": 8,
+                        "min": 0,
+                        "name": "osc/shaper/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/stream/count": {
+                        "def": 0.21,
+                        "max": 1,
+                        "min": 0.21,
+                        "name": "osc/stream/count",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/stream/duration": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0.5,
+                        "name": "osc/stream/duration",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/stream/pitch": {
+                        "def": -1,
+                        "max": 1,
+                        "min": -1,
+                        "name": "osc/stream/pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/stream/pitchmod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc/stream/pitchmod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc/stream/position": {
+                        "def": 0.1,
+                        "max": 1,
+                        "min": 0.1,
+                        "name": "osc/stream/position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch/coarse": {
+                        "def": 0.34,
+                        "max": 1,
+                        "min": 0.34,
+                        "name": "pitch/coarse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch/fine": {
+                        "def": -0.11,
+                        "max": 1,
+                        "min": -0.11,
+                        "name": "pitch/fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch/fixed": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch/fixed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch/formant": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "pitch/formant",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch/formantmod": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch/formantmod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch/octave": {
+                        "def": 0.32,
+                        "max": 1,
+                        "min": 0.32,
+                        "name": "pitch/octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample/end": {
+                        "def": 1.0,
+                        "max": 1.0016260162601627,
+                        "min": 0.0,
+                        "name": "sample/end",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample/index": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "sample/index",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample/length": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "sample/length",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample/offset": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "sample/offset",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample/position": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0.01,
+                        "name": "sample/position",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample/randomPosition": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "sample/randomPosition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample/rate": {
+                        "def": 44100,
+                        "max": 44100,
+                        "min": 44100,
+                        "name": "sample/rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample/rootKey": {
+                        "def": 60,
+                        "max": 60,
+                        "min": 60,
+                        "name": "sample/rootKey",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample/speed": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "sample/speed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "sample/start": {
+                        "def": 0,
+                        "max": 0.9885807504078303,
+                        "min": 0,
+                        "name": "sample/start",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Granny"
+                }
+            },
+            "Limiter": {
+                "params": {
+                    "attackTimeMS": {
+                        "def": 0,
+                        "max": 300,
+                        "min": 0,
+                        "name": "attackTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "circuitMode": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "circuitMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "detectMode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "detectMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterActive": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterActive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterAudition": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "filterAudition",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterFrequency": {
+                        "def": 200,
+                        "max": 20000,
+                        "min": 20,
+                        "name": "filterFrequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterGainDB": {
+                        "def": 0,
+                        "max": 60,
+                        "min": 0,
+                        "name": "filterGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterMode": {
+                        "def": 2,
+                        "max": 2,
+                        "min": 0,
+                        "name": "filterMode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filterQ": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filterQ",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lookaheadTimeMS": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "lookaheadTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "postGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": 0,
+                        "name": "postGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -12,
+                        "name": "preGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "releaseTimeMS": {
+                        "def": 199.99999999999994,
+                        "max": 5000,
+                        "min": 0,
+                        "name": "releaseTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "thresholdDB": {
+                        "def": 0,
+                        "max": 0,
+                        "min": -60,
+                        "name": "thresholdDB",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Limiter"
+                }
+            },
+            "LimiterMini": {
+                "params": {
+                    "postGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": 0,
+                        "name": "postGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preGainDB": {
+                        "def": 0,
+                        "max": 24,
+                        "min": -12,
+                        "name": "preGainDB",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "releaseTimeMS": {
+                        "def": 200,
+                        "max": 5000,
+                        "min": 200,
+                        "name": "releaseTimeMS",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "thresholdDB": {
+                        "def": 0,
+                        "max": 0,
+                        "min": -60,
+                        "name": "thresholdDB",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Limiter Mini"
+                }
+            },
+            "Phaser": {
+                "params": {
+                    "feedback": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hzmin": {
+                        "def": 400,
+                        "max": 1000,
+                        "min": 100,
+                        "name": "hzmin",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hzrange": {
+                        "def": 4,
+                        "max": 10,
+                        "min": 2,
+                        "name": "hzrange",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "rate": {
+                        "def": 1.5,
+                        "max": 5,
+                        "min": 0,
+                        "name": "rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "stages": {
+                        "def": 8,
+                        "max": 16,
+                        "min": 2,
+                        "name": "stages",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Phaser"
+                }
+            },
+            "Reverb": {
+                "params": {
+                    "fb": {
+                        "def": 0.6500000000000001,
+                        "max": 1,
+                        "min": 0,
+                        "name": "fb",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lpf": {
+                        "def": 10005.999999999998,
+                        "max": 20000,
+                        "min": 12,
+                        "name": "lpf",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Reverb"
+                }
+            },
+            "SF2": {
+                "params": {
+                    "bank": {
+                        "def": 0,
+                        "max": 128,
+                        "min": 128,
+                        "name": "bank",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain": {
+                        "def": 0.75,
+                        "max": 0.75,
+                        "min": 0.75,
+                        "name": "gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "omni": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "omni",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "patch": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "patch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "preset": {
+                        "def": 0,
+                        "max": 127,
+                        "min": 127,
+                        "name": "preset",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "GM Player"
+                }
+            },
+            "Sampler": {
+                "params": {},
+                "visual": {
+                    "name": "Sampler"
+                }
+            },
+            "Tremolo": {
+                "params": {
+                    "lfoADepth": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfoADepth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfoARateHz": {
+                        "def": 3.004,
+                        "max": 5,
+                        "min": 0.01,
+                        "name": "lfoARateHz",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Tremolo"
+                }
+            },
+            "Vibrato": {
+                "params": {
+                    "delayLfoDepth": {
+                        "def": 0.7,
+                        "max": 1,
+                        "min": 0,
+                        "name": "delayLfoDepth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "delayLfoRateHz": {
+                        "def": 2.8043999999999967,
+                        "max": 5,
+                        "min": 0.01,
+                        "name": "delayLfoRateHz",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Vibrato"
+                }
+            },
+            "Volt": {
+                "params": {
+                    "global/glide": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "global/glide",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "global/jr": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "global/jr",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "global/solo": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "global/solo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/active": {
+                        "def": 1,
+                        "max": true,
+                        "min": 1,
+                        "name": "part/1/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/amp/level": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/amp/level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/A": {
+                        "def": 0.01,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/R": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/1/curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/1/curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/1/curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/velocityTracker/gain/amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/velocityTracker/gain/amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/2/A": {
+                        "def": 0.01,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/2/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/2/D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/2/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/2/L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/2/L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/2/R": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/2/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/2/S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/2/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/2/curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/2/curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/2/curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/2/curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/2/curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/2/curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/2/detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/2/detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/2/pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/2/pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/2/shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/2/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/2/velocityTracker/gain/amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/2/velocityTracker/gain/amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/A": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/3/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/D": {
+                        "def": 0.0264,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/3/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/L": {
+                        "def": 0.77,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/3/L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/R": {
+                        "def": 0.0023,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/3/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/S": {
+                        "def": 0.19,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/3/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/3/curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/curveD": {
+                        "def": 0.19,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/3/curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/curveR": {
+                        "def": 0.28,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/3/curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/velocityTracker/gain/amount": {
+                        "def": 0.74,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/3/velocityTracker/gain/amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/A": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/4/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/4/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/4/L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/R": {
+                        "def": 0.0029,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/4/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/4/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/4/curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/4/curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/curveR": {
+                        "def": 0.21,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/4/curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/velocityTracker/gain/amount": {
+                        "def": 0.805,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/4/velocityTracker/gain/amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/filter/Q": {
+                        "def": 1.1,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/filter/Q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/filter/bypass": {
+                        "def": 0.0,
+                        "max": false,
+                        "min": 0.0,
+                        "name": "part/1/filter/bypass",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/filter/drive": {
+                        "def": 0.27607,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/filter/drive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/filter/fc": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/filter/fc",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/filter/mode": {
+                        "def": 1,
+                        "max": 6,
+                        "min": 0,
+                        "name": "part/1/filter/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/1/amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/1/delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/1/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/lfo/1/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/1/pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/1/pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/1/rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/1/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/1/lfo/1/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/2/amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/2/amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/2/delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/2/delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/2/gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/2/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/2/mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/lfo/2/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/2/pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/2/pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/2/pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/2/pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/2/rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/2/rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/2/shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/2/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/2/wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/1/lfo/2/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/3/amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/3/amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/3/delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/3/delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/3/mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/lfo/3/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/3/rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/3/rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/3/wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/1/lfo/3/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/4/amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/4/amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/4/delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/4/delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/4/mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/lfo/4/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/4/rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/4/rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/4/wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/1/lfo/4/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/active": {
+                        "def": 1,
+                        "max": true,
+                        "min": false,
+                        "name": "part/1/osc/1/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/coarse": {
+                        "def": 0,
+                        "max": 12,
+                        "min": -12,
+                        "name": "part/1/osc/1/coarse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/detune": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/1/detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/fine": {
+                        "def": -10,
+                        "max": 100,
+                        "min": -100,
+                        "name": "part/1/osc/1/fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/gain": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/osc/1/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/1/mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/octave": {
+                        "def": -2,
+                        "max": 3,
+                        "min": -3,
+                        "name": "part/1/osc/1/octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/1/pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/quality": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/1/quality",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/1/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/stereo": {
+                        "def": 0.84,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/1/stereo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/unison": {
+                        "def": 5,
+                        "max": 7,
+                        "min": 1,
+                        "name": "part/1/osc/1/unison",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/wave": {
+                        "def": 3,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/1/osc/1/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/active": {
+                        "def": 1,
+                        "max": true,
+                        "min": false,
+                        "name": "part/1/osc/2/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/coarse": {
+                        "def": 0,
+                        "max": 12,
+                        "min": -12,
+                        "name": "part/1/osc/2/coarse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/detune": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/2/detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/fine": {
+                        "def": 9,
+                        "max": 100,
+                        "min": -100,
+                        "name": "part/1/osc/2/fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/gain": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/osc/2/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/2/mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/octave": {
+                        "def": -2,
+                        "max": 3,
+                        "min": -3,
+                        "name": "part/1/osc/2/octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/2/pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/quality": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/2/quality",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/shape": {
+                        "def": 0.1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/2/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/stereo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/2/stereo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/unison": {
+                        "def": 1,
+                        "max": 7,
+                        "min": 1,
+                        "name": "part/1/osc/2/unison",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/2/wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/1/osc/2/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/oscmix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/oscmix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/oscmod": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/oscmod",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/active": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "part/2/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/amp/level": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/2/amp/level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/1/A": {
+                        "def": 0.01,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/1/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/1/D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/1/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/1/L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/1/L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/1/R": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/1/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/1/S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/1/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/1/curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/2/eg/1/curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/1/curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/2/eg/1/curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/1/curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/2/eg/1/curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/1/detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/1/detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/1/pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/1/pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/1/shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/1/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/1/velocityTracker/gain/amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/1/velocityTracker/gain/amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/2/A": {
+                        "def": 0.01,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/2/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/2/D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/2/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/2/L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/2/L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/2/R": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/2/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/2/S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/2/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/2/curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/2/eg/2/curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/2/curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/2/eg/2/curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/2/curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/2/eg/2/curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/2/detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/2/detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/2/pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/2/pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/2/shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/2/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/2/velocityTracker/gain/amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/2/velocityTracker/gain/amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/3/A": {
+                        "def": 0.01,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/3/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/3/D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/3/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/3/L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/3/L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/3/R": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/3/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/3/S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/3/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/3/curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/2/eg/3/curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/3/curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/2/eg/3/curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/3/curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/2/eg/3/curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/3/velocityTracker/gain/amount": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/3/velocityTracker/gain/amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/4/A": {
+                        "def": 0.01,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/4/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/4/D": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/4/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/4/L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/4/L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/4/R": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/4/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/4/S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/4/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/4/curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/2/eg/4/curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/4/curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/2/eg/4/curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/4/curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/2/eg/4/curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/eg/4/velocityTracker/gain/amount": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/eg/4/velocityTracker/gain/amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/filter/Q": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/2/filter/Q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/filter/bypass": {
+                        "def": 0.0,
+                        "max": false,
+                        "min": 0.0,
+                        "name": "part/2/filter/bypass",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/filter/drive": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/filter/drive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/filter/fc": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/filter/fc",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/filter/mode": {
+                        "def": 1.0,
+                        "max": 6,
+                        "min": 0.0,
+                        "name": "part/2/filter/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/1/amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/lfo/1/amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/1/delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/2/lfo/1/delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/1/gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/lfo/1/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/1/mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/2/lfo/1/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/1/pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/lfo/1/pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/1/pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/lfo/1/pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/1/rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/2/lfo/1/rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/1/shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/lfo/1/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/1/wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/2/lfo/1/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/2/amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/lfo/2/amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/2/delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/2/lfo/2/delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/2/gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/lfo/2/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/2/mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/2/lfo/2/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/2/pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/lfo/2/pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/2/pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/lfo/2/pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/2/rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/2/lfo/2/rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/2/shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/lfo/2/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/2/wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/2/lfo/2/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/3/amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/lfo/3/amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/3/delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/2/lfo/3/delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/3/mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/2/lfo/3/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/3/rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/2/lfo/3/rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/3/wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/2/lfo/3/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/4/amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/lfo/4/amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/4/delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/2/lfo/4/delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/4/mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/2/lfo/4/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/4/rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/2/lfo/4/rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/lfo/4/wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/2/lfo/4/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/active": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "part/2/osc/1/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/coarse": {
+                        "def": 0,
+                        "max": 12,
+                        "min": -12,
+                        "name": "part/2/osc/1/coarse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/detune": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/osc/1/detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/fine": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "part/2/osc/1/fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/gain": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/2/osc/1/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/osc/1/mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/octave": {
+                        "def": -1,
+                        "max": 3,
+                        "min": -3,
+                        "name": "part/2/osc/1/octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/osc/1/pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/quality": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/osc/1/quality",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/osc/1/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/stereo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/osc/1/stereo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/unison": {
+                        "def": 1,
+                        "max": 7,
+                        "min": 1,
+                        "name": "part/2/osc/1/unison",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/1/wave": {
+                        "def": 3,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/2/osc/1/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/active": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "part/2/osc/2/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/coarse": {
+                        "def": 0,
+                        "max": 12,
+                        "min": -12,
+                        "name": "part/2/osc/2/coarse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/detune": {
+                        "def": 0.3,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/osc/2/detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/fine": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "part/2/osc/2/fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/gain": {
+                        "def": 1,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/2/osc/2/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/mix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/osc/2/mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/octave": {
+                        "def": -1,
+                        "max": 3,
+                        "min": -3,
+                        "name": "part/2/osc/2/octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/osc/2/pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/quality": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/osc/2/quality",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/osc/2/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/stereo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/osc/2/stereo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/unison": {
+                        "def": 1,
+                        "max": 7,
+                        "min": 1,
+                        "name": "part/2/osc/2/unison",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/osc/2/wave": {
+                        "def": 3,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/2/osc/2/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/oscmix": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/2/oscmix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/2/oscmod": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/2/oscmod",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "VOLT"
+                }
+            },
+            "VoltMini": {
+                "params": {
+                    "global/glide": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "global/glide",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "global/jr": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "global/jr",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "global/solo": {
+                        "def": 0,
+                        "max": true,
+                        "min": 0,
+                        "name": "global/solo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/active": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 1,
+                        "name": "part/1/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/amp/level": {
+                        "def": 0.56,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/amp/level",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/A": {
+                        "def": 0.0253,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/D": {
+                        "def": 0.0082,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/R": {
+                        "def": 0.17,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/S": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/curveA": {
+                        "def": -0.41,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/1/curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/curveD": {
+                        "def": 0.35,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/1/curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/1/curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/shape": {
+                        "def": 0.07,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/1/velocityTracker/gain/amount": {
+                        "def": 0.58,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/1/velocityTracker/gain/amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/A": {
+                        "def": 0.0002,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/3/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/D": {
+                        "def": 0.0812,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/3/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/L": {
+                        "def": 0.87,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/3/L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/R": {
+                        "def": 0.0319,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/3/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/S": {
+                        "def": 0.22,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/3/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/curveA": {
+                        "def": 0.56,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/3/curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/curveD": {
+                        "def": -0.31,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/3/curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/3/curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/3/velocityTracker/gain/amount": {
+                        "def": 0.74,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/3/velocityTracker/gain/amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/A": {
+                        "def": 0.0005,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/4/A",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/D": {
+                        "def": 0.0216,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/4/D",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/L": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/4/L",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/R": {
+                        "def": 0.0153,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/4/R",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/S": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/eg/4/S",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/curveA": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/4/curveA",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/curveD": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/4/curveD",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/curveR": {
+                        "def": 0,
+                        "max": 1,
+                        "min": -1,
+                        "name": "part/1/eg/4/curveR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/eg/4/velocityTracker/gain/amount": {
+                        "def": 0.77,
+                        "max": 1,
+                        "min": 0.77,
+                        "name": "part/1/eg/4/velocityTracker/gain/amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/filter/Q": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/filter/Q",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/filter/bypass": {
+                        "def": 0,
+                        "max": false,
+                        "min": true,
+                        "name": "part/1/filter/bypass",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/filter/drive": {
+                        "def": 0.19783,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/filter/drive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/filter/fc": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/filter/fc",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/filter/mode": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/1/filter/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/1/amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/1/delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/1/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/lfo/1/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/1/pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/1/pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/1/rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/1/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/1/wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/1/lfo/1/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/3/amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/3/amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/3/delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/3/delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/3/mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/lfo/3/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/3/rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/3/rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/3/wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/1/lfo/3/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/4/amp": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/lfo/4/amp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/4/delay": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/4/delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/4/mode": {
+                        "def": 0,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/lfo/4/mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/4/rate": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "part/1/lfo/4/rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/lfo/4/wave": {
+                        "def": 1,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/1/lfo/4/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/active": {
+                        "def": 1,
+                        "max": true,
+                        "min": false,
+                        "name": "part/1/osc/1/active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/coarse": {
+                        "def": 0,
+                        "max": 12,
+                        "min": -12,
+                        "name": "part/1/osc/1/coarse",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/detune": {
+                        "def": 0.14,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/1/detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/fine": {
+                        "def": 0,
+                        "max": 100,
+                        "min": -100,
+                        "name": "part/1/osc/1/fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/gain": {
+                        "def": 0.8,
+                        "max": 2,
+                        "min": 0,
+                        "name": "part/1/osc/1/gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/mix": {
+                        "def": 0.45,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/1/mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/octave": {
+                        "def": 1,
+                        "max": 3,
+                        "min": -3,
+                        "name": "part/1/osc/1/octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/pan": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/1/pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/quality": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/1/quality",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/shape": {
+                        "def": 0.32,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/1/shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/stereo": {
+                        "def": 0.62,
+                        "max": 1,
+                        "min": 0,
+                        "name": "part/1/osc/1/stereo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/unison": {
+                        "def": 7,
+                        "max": 7,
+                        "min": 1,
+                        "name": "part/1/osc/1/unison",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/osc/1/wave": {
+                        "def": 0,
+                        "max": 4,
+                        "min": 0,
+                        "name": "part/1/osc/1/wave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/oscmix": {
+                        "def": 0.5,
+                        "max": 0.5,
+                        "min": 0.5,
+                        "name": "part/1/oscmix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "part/1/oscmod": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "part/1/oscmod",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "VOLT Mini"
+                }
+            },
+            "WAM": {
+                "params": {},
+                "visual": {
+                    "name": "Metal Machine"
+                }
+            }
+        }
+    },
+    "plugin_wam": {
+        "objects": {
+            "AUGUR": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.27450981736183167,
+                        0.5098039507865906,
+                        0.7058823704719543
+                    ],
+                    "name": "Augur"
+                }
+            },
+            "DEXED": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.32549020648002625,
+                        0.3019607961177826,
+                        0.2666666805744171
+                    ],
+                    "name": "Dexed"
+                }
+            },
+            "Europa": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.6823529601097107,
+                        0.0941176488995552,
+                        0.027450980618596077
+                    ],
+                    "name": "Europa"
+                }
+            },
+            "OBXD": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.5176470875740051,
+                        0.6666666865348816,
+                        0.8392156958580017
+                    ],
+                    "name": "OBXD"
+                }
+            },
+            "WASABI_SC.CleanMachine": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.8901960849761963,
+                        0.7372549176216125,
+                        0.545098066329956
+                    ],
+                    "name": "Clean Machine"
+                }
+            },
+            "WASABI_SC.DistoMachine": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.7411764860153198,
+                        0.7450980544090271,
+                        0.7529411911964417
+                    ],
+                    "name": "Distortion Machine"
+                }
+            },
+            "WASABI_SC.MetalMachine": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.47058823704719543,
+                        0.47058823704719543,
+                        0.4745098054409027
+                    ],
+                    "name": "Metal Machine"
+                }
+            },
+            "WASABI_SC.Utility": {
+                "params": {},
+                "visual": {
+                    "color": [
+                        0.47058823704719543,
+                        0.47058823704719543,
+                        0.4745098054409027
+                    ],
+                    "name": "Amp Sim Utility"
+                }
+            }
+        }
+    }
+}

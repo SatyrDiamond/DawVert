@@ -47,3 +47,24 @@ def rgb_float_to_hex(rgb_float): return rgb_int_to_hex(rgb_float_to_rgb_int(rgb_
 def moregray(rgb_float): return [(rgb_float[0]/2)+0.25,(rgb_float[1]/2)+0.25,(rgb_float[2]/2)+0.25]
 def darker(rgb_float, minus): 
     return [xtramath.clamp(rgb_float[0]-minus, 0, 1),xtramath.clamp(rgb_float[1]-minus, 0, 1),xtramath.clamp(rgb_float[2]-minus, 0, 1)]
+
+class colorset:
+    def __init__(self, colorset):
+        self.colorset = colorset
+        self.colorlen = len(self.colorset) if self.colorset != None else 0
+        self.num = 0
+
+    def getcolor(self):
+        if self.colorset:
+            out_color = self.colorset[self.num % self.colorlen]
+            self.num += 1
+            return out_color
+        else:
+            return None
+
+    def getcolornum(self, colornum):
+        if self.colorset:
+            out_color = self.colorset[colornum % self.colorlen]
+            return out_color
+        else:
+            return None

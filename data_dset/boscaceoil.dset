@@ -1,0 +1,1975 @@
+{
+    "inst": {
+        "objects": {
+            "128": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Square Wave"
+                }
+            },
+            "129": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Saw Wave"
+                }
+            },
+            "130": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Triangle Wave"
+                }
+            },
+            "131": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Sine Wave"
+                }
+            },
+            "132": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Noise"
+                }
+            },
+            "133": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Dual Square"
+                }
+            },
+            "134": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Dual Saw"
+                }
+            },
+            "135": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Triangle LO-FI"
+                }
+            },
+            "136": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Konami Wave"
+                }
+            },
+            "137": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Ramp Wave"
+                }
+            },
+            "138": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Pulse Wave"
+                }
+            },
+            "139": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "MA3 Wave"
+                }
+            },
+            "140": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Noise (Bass)"
+                }
+            },
+            "141": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Noise (Snare)"
+                }
+            },
+            "142": {
+                "group": "CHIPTUNE",
+                "visual": {
+                    "name": "Noise (Hi-Hat)"
+                }
+            },
+            "143": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Analog Bass"
+                }
+            },
+            "144": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Analog Bass #2"
+                }
+            },
+            "145": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Analog Bass #2 (q2)"
+                }
+            },
+            "146": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Chopper Bass 0"
+                }
+            },
+            "147": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Chopper Bass 1"
+                }
+            },
+            "148": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Chopper bass 2 (CUT)"
+                }
+            },
+            "149": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Chopper bass 3"
+                }
+            },
+            "150": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Elec.Chopper Bass"
+                }
+            },
+            "151": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Effect Bass 1"
+                }
+            },
+            "152": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Effect Bass 2 to UP"
+                }
+            },
+            "153": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Effect Bass 1"
+                }
+            },
+            "154": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Mohaaa"
+                }
+            },
+            "155": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Effect FB Bass #5"
+                }
+            },
+            "156": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Magical bass"
+                }
+            },
+            "157": {
+                "group": "BASS",
+                "visual": {
+                    "name": "E.Bass #6"
+                }
+            },
+            "158": {
+                "group": "BASS",
+                "visual": {
+                    "name": "E.Bass #7"
+                }
+            },
+            "159": {
+                "group": "BASS",
+                "visual": {
+                    "name": "E.Bass 70"
+                }
+            },
+            "160": {
+                "group": "BASS",
+                "visual": {
+                    "name": "VAL006 Euro"
+                }
+            },
+            "161": {
+                "group": "BASS",
+                "visual": {
+                    "name": "E.Bass x2"
+                }
+            },
+            "162": {
+                "group": "BASS",
+                "visual": {
+                    "name": "E.Bass x4"
+                }
+            },
+            "163": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Metal pick bass X5"
+                }
+            },
+            "164": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Groove Bass #1"
+                }
+            },
+            "165": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Analog Groove #2"
+                }
+            },
+            "166": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Harmonics #1"
+                }
+            },
+            "167": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Low Bass x1"
+                }
+            },
+            "168": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Low_bass x2"
+                }
+            },
+            "169": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Low Bass Rezzo"
+                }
+            },
+            "170": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Low Bass Picked"
+                }
+            },
+            "171": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Metal Bass"
+                }
+            },
+            "172": {
+                "group": "BASS",
+                "visual": {
+                    "name": "e.n.bass 1"
+                }
+            },
+            "173": {
+                "group": "BASS",
+                "visual": {
+                    "name": "psg bass 1"
+                }
+            },
+            "174": {
+                "group": "BASS",
+                "visual": {
+                    "name": "psg bass 2"
+                }
+            },
+            "175": {
+                "group": "BASS",
+                "visual": {
+                    "name": "rezonance bass"
+                }
+            },
+            "176": {
+                "group": "BASS",
+                "visual": {
+                    "name": "slap bass"
+                }
+            },
+            "177": {
+                "group": "BASS",
+                "visual": {
+                    "name": "slap bass 1"
+                }
+            },
+            "178": {
+                "group": "BASS",
+                "visual": {
+                    "name": "slap bass 2 (1+)"
+                }
+            },
+            "179": {
+                "group": "BASS",
+                "visual": {
+                    "name": "slap bass #3"
+                }
+            },
+            "180": {
+                "group": "BASS",
+                "visual": {
+                    "name": "slap bass pull"
+                }
+            },
+            "181": {
+                "group": "BASS",
+                "visual": {
+                    "name": "slap bass mute"
+                }
+            },
+            "182": {
+                "group": "BASS",
+                "visual": {
+                    "name": "slap bass pick"
+                }
+            },
+            "183": {
+                "group": "BASS",
+                "visual": {
+                    "name": "super bass #2"
+                }
+            },
+            "184": {
+                "group": "BASS",
+                "visual": {
+                    "name": "sp_bass#3 soft"
+                }
+            },
+            "185": {
+                "group": "BASS",
+                "visual": {
+                    "name": "sp_bass#4 soft*2"
+                }
+            },
+            "186": {
+                "group": "BASS",
+                "visual": {
+                    "name": "sp_bass#5 attack"
+                }
+            },
+            "187": {
+                "group": "BASS",
+                "visual": {
+                    "name": "sp.bass#6 rezz"
+                }
+            },
+            "188": {
+                "group": "BASS",
+                "visual": {
+                    "name": "synth bass 1"
+                }
+            },
+            "189": {
+                "group": "BASS",
+                "visual": {
+                    "name": "synth bass 2 myon"
+                }
+            },
+            "190": {
+                "group": "BASS",
+                "visual": {
+                    "name": "synth bass #3 cho!"
+                }
+            },
+            "191": {
+                "group": "BASS",
+                "visual": {
+                    "name": "synth-wind-bass #4"
+                }
+            },
+            "192": {
+                "group": "BASS",
+                "visual": {
+                    "name": "synth bass #5 q2"
+                }
+            },
+            "193": {
+                "group": "BASS",
+                "visual": {
+                    "name": "old wood bass"
+                }
+            },
+            "194": {
+                "group": "BASS",
+                "visual": {
+                    "name": "w.bass bright"
+                }
+            },
+            "195": {
+                "group": "BASS",
+                "visual": {
+                    "name": "w.bass x2 bow"
+                }
+            },
+            "196": {
+                "group": "BASS",
+                "visual": {
+                    "name": "Wood Bass 3"
+                }
+            },
+            "197": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Brass strings"
+                }
+            },
+            "198": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "E.mute Trampet"
+                }
+            },
+            "199": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "HORN 2"
+                }
+            },
+            "200": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Alpine Horn #3"
+                }
+            },
+            "201": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Lead brass"
+                }
+            },
+            "202": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Normal HORN"
+                }
+            },
+            "203": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Synth Oboe"
+                }
+            },
+            "204": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Oboe 2"
+                }
+            },
+            "205": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Attack Brass (q2)"
+                }
+            },
+            "206": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "SAX"
+                }
+            },
+            "207": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Soft brass(lead)"
+                }
+            },
+            "208": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Synth Brass 1 OLD"
+                }
+            },
+            "209": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Synth Brass 2 OLD"
+                }
+            },
+            "210": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Synth Brass 3"
+                }
+            },
+            "211": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Synth Brass #4"
+                }
+            },
+            "212": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Syn.Brass 5(long)"
+                }
+            },
+            "213": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Synth Brass 6"
+                }
+            },
+            "214": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Trumpet"
+                }
+            },
+            "215": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Trumpet 2"
+                }
+            },
+            "216": {
+                "group": "BRASS",
+                "visual": {
+                    "name": "Twin Horn (or OL=25)"
+                }
+            },
+            "217": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Calm Bell"
+                }
+            },
+            "218": {
+                "group": "BELL",
+                "visual": {
+                    "name": "China Bell Double"
+                }
+            },
+            "219": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Church Bell"
+                }
+            },
+            "220": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Church Bell 2"
+                }
+            },
+            "221": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Glocken 1"
+                }
+            },
+            "222": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Harp #1"
+                }
+            },
+            "223": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Harp #2"
+                }
+            },
+            "224": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Kirakira"
+                }
+            },
+            "225": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Marimba"
+                }
+            },
+            "226": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Old Bell"
+                }
+            },
+            "227": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Percus. Bell"
+                }
+            },
+            "228": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Pretty Bell"
+                }
+            },
+            "229": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Synth Bell #0"
+                }
+            },
+            "230": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Synth Bell #1 o5"
+                }
+            },
+            "231": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Synth Bell 2"
+                }
+            },
+            "232": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Viberaphone"
+                }
+            },
+            "233": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Twin Marinba"
+                }
+            },
+            "234": {
+                "group": "BELL",
+                "visual": {
+                    "name": "Bellend"
+                }
+            },
+            "235": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Guitar VeloLow"
+                }
+            },
+            "236": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Guitar VeloHigh"
+                }
+            },
+            "237": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "A.Guitar #3"
+                }
+            },
+            "238": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Cutting E.Guitar"
+                }
+            },
+            "239": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Dis. Synth (old)"
+                }
+            },
+            "240": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Dra-spi-Dis.G."
+                }
+            },
+            "241": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Dis.Guitar 3-"
+                }
+            },
+            "242": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Dis.Guitar 3+"
+                }
+            },
+            "243": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Feed-back Guitar 1"
+                }
+            },
+            "244": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Hard Dis. Guitar 1"
+                }
+            },
+            "245": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Hard Dis.Guitar 3"
+                }
+            },
+            "246": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Dis.Guitar '94 Hard"
+                }
+            },
+            "247": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "New Dis.Guitar 1"
+                }
+            },
+            "248": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "New Dis.Guitar 2"
+                }
+            },
+            "249": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "New Dis.Guitar 3"
+                }
+            },
+            "250": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Overdrive.G. (AL=013)"
+                }
+            },
+            "251": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "METAL"
+                }
+            },
+            "252": {
+                "group": "GUITAR",
+                "visual": {
+                    "name": "Soft Dis.Guitar"
+                }
+            },
+            "253": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Aco code"
+                }
+            },
+            "254": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Analog synthe 1"
+                }
+            },
+            "255": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Bosco-lead"
+                }
+            },
+            "256": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Cosmo Lead"
+                }
+            },
+            "257": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Cosmo Lead 2"
+                }
+            },
+            "258": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Digital lead #1"
+                }
+            },
+            "259": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Double sin wave"
+                }
+            },
+            "260": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "E.Organ 2 bright"
+                }
+            },
+            "261": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "E.Organ 2 (voice)"
+                }
+            },
+            "262": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "E.Organ 4 Click"
+                }
+            },
+            "263": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "E.Organ 5 Click"
+                }
+            },
+            "264": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "E.Organ 6"
+                }
+            },
+            "265": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "E.Organ 7 Church"
+                }
+            },
+            "266": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Metal Lead"
+                }
+            },
+            "267": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Metal Lead 3"
+                }
+            },
+            "268": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "MONO Lead"
+                }
+            },
+            "269": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "PSG like PC88 (long)"
+                }
+            },
+            "270": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "PSG Cut 1"
+                }
+            },
+            "271": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Attack Synth"
+                }
+            },
+            "272": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Sin wave"
+                }
+            },
+            "273": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth, Bell 2"
+                }
+            },
+            "274": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Chorus #2(Voice)+bell"
+                }
+            },
+            "275": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth Cut 8-4"
+                }
+            },
+            "276": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth long 8-4"
+                }
+            },
+            "277": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "ACO_Code #2"
+                }
+            },
+            "278": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "ACO_Code #3"
+                }
+            },
+            "279": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth FB long 4"
+                }
+            },
+            "280": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth FB long 5"
+                }
+            },
+            "281": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth Lead 0"
+                }
+            },
+            "282": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth Lead 1"
+                }
+            },
+            "283": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth Lead 2"
+                }
+            },
+            "284": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth Lead 3"
+                }
+            },
+            "285": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth Lead 4"
+                }
+            },
+            "286": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth Lead 5"
+                }
+            },
+            "287": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth Lead 6"
+                }
+            },
+            "288": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth Lead 7 (Soft FB)"
+                }
+            },
+            "289": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth PSG"
+                }
+            },
+            "290": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth PSG 2"
+                }
+            },
+            "291": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth PSG 3"
+                }
+            },
+            "292": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth PSG 4"
+                }
+            },
+            "293": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Synth PSG 5"
+                }
+            },
+            "294": {
+                "group": "LEAD",
+                "visual": {
+                    "name": "Sin water synth"
+                }
+            },
+            "295": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Aco Piano2 (Attack)"
+                }
+            },
+            "296": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Backing 1 (Clav.)"
+                }
+            },
+            "297": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Clav. coad"
+                }
+            },
+            "298": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Deep Piano 1"
+                }
+            },
+            "299": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Deep Piano 3"
+                }
+            },
+            "300": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "E.piano #2"
+                }
+            },
+            "301": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "E.piano #3"
+                }
+            },
+            "302": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "E.piano #4(2+)"
+                }
+            },
+            "303": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "E.(Bell)Piano #5"
+                }
+            },
+            "304": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "E.Piano #6"
+                }
+            },
+            "305": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "E.Piano #7"
+                }
+            },
+            "306": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Harpci chord 1"
+                }
+            },
+            "307": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Harpci 2"
+                }
+            },
+            "308": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Piano1"
+                }
+            },
+            "309": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Piano3"
+                }
+            },
+            "310": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Piano4"
+                }
+            },
+            "311": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Digital Piano #5"
+                }
+            },
+            "312": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Piano 6 High-tone"
+                }
+            },
+            "313": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Panning Harpci"
+                }
+            },
+            "314": {
+                "group": "PIANO",
+                "visual": {
+                    "name": "Yam Harpci chord"
+                }
+            },
+            "315": {
+                "group": "SPECIAL",
+                "visual": {
+                    "name": "S.E.(Detune is needed o2c)"
+                }
+            },
+            "316": {
+                "group": "SPECIAL",
+                "visual": {
+                    "name": "S.E. 2 o0-1-2"
+                }
+            },
+            "317": {
+                "group": "SPECIAL",
+                "visual": {
+                    "name": "S.E. 3(Feedin /noise add.)"
+                }
+            },
+            "318": {
+                "group": "SPECIAL",
+                "visual": {
+                    "name": "Digital 1"
+                }
+            },
+            "319": {
+                "group": "SPECIAL",
+                "visual": {
+                    "name": "Digital 2"
+                }
+            },
+            "320": {
+                "group": "SPECIAL",
+                "visual": {
+                    "name": "Digital[BAS] 3 o2-o3"
+                }
+            },
+            "321": {
+                "group": "SPECIAL",
+                "visual": {
+                    "name": "Digital[GTR] 3 o2-o3"
+                }
+            },
+            "322": {
+                "group": "SPECIAL",
+                "visual": {
+                    "name": "Digital 4 o4a"
+                }
+            },
+            "323": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Accordion1"
+                }
+            },
+            "324": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Accordion2"
+                }
+            },
+            "325": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Accordion3"
+                }
+            },
+            "326": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Chorus #2(Voice)"
+                }
+            },
+            "327": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Chorus #3"
+                }
+            },
+            "328": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Chorus #4"
+                }
+            },
+            "329": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "F.Strings 1"
+                }
+            },
+            "330": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "F.Strings 2"
+                }
+            },
+            "331": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "F.Strings 3"
+                }
+            },
+            "332": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "F.Strings 4 (low)"
+                }
+            },
+            "333": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Pizzicate#1(KOTO2)"
+                }
+            },
+            "334": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "sound truck modoki"
+                }
+            },
+            "335": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Strings"
+                }
+            },
+            "336": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Synth Accordion"
+                }
+            },
+            "337": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Phaser synthe."
+                }
+            },
+            "338": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "FB Synth."
+                }
+            },
+            "339": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Synth Strings MB"
+                }
+            },
+            "340": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Synth Strings #2"
+                }
+            },
+            "341": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Synth.Sweep Pad #1"
+                }
+            },
+            "342": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Twin synth. #1 Calm"
+                }
+            },
+            "343": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Twin synth. #2 FB"
+                }
+            },
+            "344": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Twin synth. #3 FB"
+                }
+            },
+            "345": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Vocoder voice1"
+                }
+            },
+            "346": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Voice o3-o5"
+                }
+            },
+            "347": {
+                "group": "STRINGS",
+                "visual": {
+                    "name": "Voice' o3-o5"
+                }
+            },
+            "348": {
+                "group": "WIND",
+                "visual": {
+                    "name": "Clarinet #1"
+                }
+            },
+            "349": {
+                "group": "WIND",
+                "visual": {
+                    "name": "Clarinet #2 Brighter"
+                }
+            },
+            "350": {
+                "group": "WIND",
+                "visual": {
+                    "name": "E.Flute"
+                }
+            },
+            "351": {
+                "group": "WIND",
+                "visual": {
+                    "name": "E.Flute 2"
+                }
+            },
+            "352": {
+                "group": "WIND",
+                "visual": {
+                    "name": "Flute + Bell"
+                }
+            },
+            "353": {
+                "group": "WIND",
+                "visual": {
+                    "name": "Old flute"
+                }
+            },
+            "354": {
+                "group": "WIND",
+                "visual": {
+                    "name": "Whistle 1"
+                }
+            },
+            "355": {
+                "group": "WIND",
+                "visual": {
+                    "name": "Whistle 2"
+                }
+            },
+            "356": {
+                "group": "WORLD",
+                "visual": {
+                    "name": "Banjo (Harpci)"
+                }
+            },
+            "357": {
+                "group": "WORLD",
+                "visual": {
+                    "name": "KOTO"
+                }
+            },
+            "358": {
+                "group": "WORLD",
+                "visual": {
+                    "name": "Koto 2"
+                }
+            },
+            "359": {
+                "group": "WORLD",
+                "visual": {
+                    "name": "Sitar 1"
+                }
+            },
+            "360": {
+                "group": "WORLD",
+                "visual": {
+                    "name": "Shamisen 2"
+                }
+            },
+            "361": {
+                "group": "WORLD",
+                "visual": {
+                    "name": "Shamisen 1"
+                }
+            },
+            "362": {
+                "group": "WORLD",
+                "visual": {
+                    "name": "Synth Shamisen"
+                }
+            },
+            "363": {
+                "drumset": {
+                    "0": {
+                        "visual": {
+                            "name": "Bass Drum 1"
+                        }
+                    },
+                    "1": {
+                        "visual": {
+                            "name": "Bass Drum 2"
+                        }
+                    },
+                    "2": {
+                        "visual": {
+                            "name": "Bass Drum 3"
+                        }
+                    },
+                    "3": {
+                        "visual": {
+                            "name": "Snare Drum"
+                        }
+                    },
+                    "4": {
+                        "visual": {
+                            "name": "Snare Drum 2"
+                        }
+                    },
+                    "5": {
+                        "visual": {
+                            "name": "Open Hi-Hat"
+                        }
+                    },
+                    "6": {
+                        "visual": {
+                            "name": "Closed Hi-Hat"
+                        }
+                    },
+                    "7": {
+                        "visual": {
+                            "name": "Crash Cymbal"
+                        }
+                    }
+                },
+                "group": "DRUMKIT",
+                "visual": {
+                    "name": "Simple Drumkit"
+                }
+            },
+            "364": {
+                "drumset": {
+                    "-1": {
+                        "visual": {
+                            "name": "ETHNIC Percus.1"
+                        }
+                    },
+                    "-10": {
+                        "visual": {
+                            "name": "RUFINA BD o2c"
+                        }
+                    },
+                    "-11": {
+                        "visual": {
+                            "name": "Bass Drum 3 o1f"
+                        }
+                    },
+                    "-12": {
+                        "visual": {
+                            "name": "Bass Drum 2"
+                        }
+                    },
+                    "-2": {
+                        "visual": {
+                            "name": "ETHNIC Percus.0"
+                        }
+                    },
+                    "-3": {
+                        "visual": {
+                            "name": "Crash Noise Short"
+                        }
+                    },
+                    "-4": {
+                        "visual": {
+                            "name": "Crash Noise"
+                        }
+                    },
+                    "-5": {
+                        "visual": {
+                            "name": "Crash Cymbal (noise)"
+                        }
+                    },
+                    "-6": {
+                        "visual": {
+                            "name": "Cow-Bell 1"
+                        }
+                    },
+                    "-7": {
+                        "visual": {
+                            "name": "Cho cho 3 (o2e)"
+                        }
+                    },
+                    "-8": {
+                        "visual": {
+                            "name": "BD808_2(-vBend)"
+                        }
+                    },
+                    "-9": {
+                        "visual": {
+                            "name": "B.D.(-vBend)"
+                        }
+                    },
+                    "0": {
+                        "visual": {
+                            "name": "Heavy BD."
+                        }
+                    },
+                    "1": {
+                        "visual": {
+                            "name": "Heavy BD2"
+                        }
+                    },
+                    "10": {
+                        "visual": {
+                            "name": "Open-hat2 Metal o4c-"
+                        }
+                    },
+                    "11": {
+                        "visual": {
+                            "name": "Hi-Hat Open #4 o4f"
+                        }
+                    },
+                    "12": {
+                        "visual": {
+                            "name": "Open-hat3 Metal"
+                        }
+                    },
+                    "13": {
+                        "visual": {
+                            "name": "Metal ride o4c or o5c"
+                        }
+                    },
+                    "14": {
+                        "visual": {
+                            "name": "Rim Shot #1 o3c"
+                        }
+                    },
+                    "15": {
+                        "visual": {
+                            "name": "Snare Drum Light"
+                        }
+                    },
+                    "16": {
+                        "visual": {
+                            "name": "Snare Drum Lighter"
+                        }
+                    },
+                    "17": {
+                        "visual": {
+                            "name": "Snare Drum 808 o2-o3"
+                        }
+                    },
+                    "18": {
+                        "visual": {
+                            "name": "Snare4 -808type- o2"
+                        }
+                    },
+                    "19": {
+                        "visual": {
+                            "name": "Snare5 o1-2(Franger)"
+                        }
+                    },
+                    "2": {
+                        "visual": {
+                            "name": "Heavy SD1"
+                        }
+                    },
+                    "20": {
+                        "visual": {
+                            "name": "Tom (old)"
+                        }
+                    },
+                    "21": {
+                        "visual": {
+                            "name": "Synth tom 2 algo 3"
+                        }
+                    },
+                    "22": {
+                        "visual": {
+                            "name": "Synth (Noisy) Tom #3"
+                        }
+                    },
+                    "23": {
+                        "visual": {
+                            "name": "Synth Tom #3"
+                        }
+                    },
+                    "24": {
+                        "visual": {
+                            "name": "Synth -DX7- Tom #4"
+                        }
+                    },
+                    "25": {
+                        "visual": {
+                            "name": "Triangle 1 o5c"
+                        }
+                    },
+                    "3": {
+                        "visual": {
+                            "name": "Hi-Hat close 5_"
+                        }
+                    },
+                    "4": {
+                        "visual": {
+                            "name": "Hi-Hat close 4"
+                        }
+                    },
+                    "5": {
+                        "visual": {
+                            "name": "Hi-Hat close 5"
+                        }
+                    },
+                    "6": {
+                        "visual": {
+                            "name": "Hi-Hat Close 6 -808-"
+                        }
+                    },
+                    "7": {
+                        "visual": {
+                            "name": "Hi-hat #7 Metal o3-6"
+                        }
+                    },
+                    "8": {
+                        "visual": {
+                            "name": "Hi-Hat Close #8 o4"
+                        }
+                    },
+                    "9": {
+                        "visual": {
+                            "name": "Hi-hat Open o4e-g+"
+                        }
+                    }
+                },
+                "group": "DRUMKIT",
+                "visual": {
+                    "name": "SiON Drumkit"
+                }
+            },
+            "365": {
+                "drumset": {
+                    "-1": {
+                        "visual": {
+                            "name": "Ride Cymbal 2"
+                        }
+                    },
+                    "-10": {
+                        "visual": {
+                            "name": "High Tom"
+                        }
+                    },
+                    "-11": {
+                        "visual": {
+                            "name": "Crash Cymbal 1"
+                        }
+                    },
+                    "-12": {
+                        "visual": {
+                            "name": "Hi-Mid Tom"
+                        }
+                    },
+                    "-13": {
+                        "visual": {
+                            "name": "Low-Mid Tom"
+                        }
+                    },
+                    "-14": {
+                        "visual": {
+                            "name": "Open Hi-Hat"
+                        }
+                    },
+                    "-15": {
+                        "visual": {
+                            "name": "Low Tom"
+                        }
+                    },
+                    "-16": {
+                        "visual": {
+                            "name": "Pedal Hi-Hat"
+                        }
+                    },
+                    "-17": {
+                        "visual": {
+                            "name": "High Floor Tom"
+                        }
+                    },
+                    "-18": {
+                        "visual": {
+                            "name": "Closed Hi-Hat"
+                        }
+                    },
+                    "-19": {
+                        "visual": {
+                            "name": "Low Floor Tom"
+                        }
+                    },
+                    "-2": {
+                        "visual": {
+                            "name": "Vibraslap"
+                        }
+                    },
+                    "-20": {
+                        "visual": {
+                            "name": "Electric Snare"
+                        }
+                    },
+                    "-21": {
+                        "visual": {
+                            "name": "Hand Clap"
+                        }
+                    },
+                    "-22": {
+                        "visual": {
+                            "name": "Acoustic Snare"
+                        }
+                    },
+                    "-23": {
+                        "visual": {
+                            "name": "Side Stick"
+                        }
+                    },
+                    "-24": {
+                        "visual": {
+                            "name": "Bass Drum 1"
+                        }
+                    },
+                    "-25": {
+                        "visual": {
+                            "name": "Acoustic Bass Drum"
+                        }
+                    },
+                    "-26": {
+                        "visual": {
+                            "name": "Open Rim Shot"
+                        }
+                    },
+                    "-27": {
+                        "visual": {
+                            "name": "Bass Drum L"
+                        }
+                    },
+                    "-28": {
+                        "visual": {
+                            "name": "Sticks"
+                        }
+                    },
+                    "-29": {
+                        "visual": {
+                            "name": "Snare L"
+                        }
+                    },
+                    "-3": {
+                        "visual": {
+                            "name": "Crash Symbol 2"
+                        }
+                    },
+                    "-30": {
+                        "visual": {
+                            "name": "Castanet"
+                        }
+                    },
+                    "-31": {
+                        "visual": {
+                            "name": "Snare Roll"
+                        }
+                    },
+                    "-32": {
+                        "visual": {
+                            "name": "Brush Tap Swirl"
+                        }
+                    },
+                    "-33": {
+                        "visual": {
+                            "name": "Brush Slap"
+                        }
+                    },
+                    "-34": {
+                        "visual": {
+                            "name": "Brush Swirl"
+                        }
+                    },
+                    "-35": {
+                        "visual": {
+                            "name": "Brush Tap"
+                        }
+                    },
+                    "-36": {
+                        "visual": {
+                            "name": "Seq Click H"
+                        }
+                    },
+                    "-4": {
+                        "visual": {
+                            "name": "Cowbell"
+                        }
+                    },
+                    "-5": {
+                        "visual": {
+                            "name": "Splash Cymbal"
+                        }
+                    },
+                    "-6": {
+                        "visual": {
+                            "name": "Tambourine"
+                        }
+                    },
+                    "-7": {
+                        "visual": {
+                            "name": "Ride Bell"
+                        }
+                    },
+                    "-8": {
+                        "visual": {
+                            "name": "Chinese Cymbal"
+                        }
+                    },
+                    "-9": {
+                        "visual": {
+                            "name": "Ride Cymbal 1"
+                        }
+                    },
+                    "0": {
+                        "visual": {
+                            "name": "Hi Bongo"
+                        }
+                    },
+                    "1": {
+                        "visual": {
+                            "name": "Low Bongo"
+                        }
+                    },
+                    "10": {
+                        "visual": {
+                            "name": "Maracas"
+                        }
+                    },
+                    "11": {
+                        "visual": {
+                            "name": "Short Whistle"
+                        }
+                    },
+                    "12": {
+                        "visual": {
+                            "name": "Long Whistle"
+                        }
+                    },
+                    "13": {
+                        "visual": {
+                            "name": "Short Guiro"
+                        }
+                    },
+                    "14": {
+                        "visual": {
+                            "name": "Long Guiro"
+                        }
+                    },
+                    "15": {
+                        "visual": {
+                            "name": "Claves"
+                        }
+                    },
+                    "16": {
+                        "visual": {
+                            "name": "Hi Wood Block"
+                        }
+                    },
+                    "17": {
+                        "visual": {
+                            "name": "Low Wood Block"
+                        }
+                    },
+                    "18": {
+                        "visual": {
+                            "name": "Mute Cuica"
+                        }
+                    },
+                    "19": {
+                        "visual": {
+                            "name": "Open Cuica"
+                        }
+                    },
+                    "2": {
+                        "visual": {
+                            "name": "Mute Hi Conga"
+                        }
+                    },
+                    "20": {
+                        "visual": {
+                            "name": "Mute Triangle"
+                        }
+                    },
+                    "21": {
+                        "visual": {
+                            "name": "Open Triangle"
+                        }
+                    },
+                    "22": {
+                        "visual": {
+                            "name": "Shaker"
+                        }
+                    },
+                    "23": {
+                        "visual": {
+                            "name": "Jingle Bells"
+                        }
+                    },
+                    "24": {
+                        "visual": {
+                            "name": "Bell Tree"
+                        }
+                    },
+                    "3": {
+                        "visual": {
+                            "name": "Open Hi Conga"
+                        }
+                    },
+                    "4": {
+                        "visual": {
+                            "name": "Low Conga"
+                        }
+                    },
+                    "5": {
+                        "visual": {
+                            "name": "High Timbale"
+                        }
+                    },
+                    "6": {
+                        "visual": {
+                            "name": "Low Timbale"
+                        }
+                    },
+                    "7": {
+                        "visual": {
+                            "name": "High Agogo"
+                        }
+                    },
+                    "8": {
+                        "visual": {
+                            "name": "Low Agogo"
+                        }
+                    },
+                    "9": {
+                        "visual": {
+                            "name": "Cabasa"
+                        }
+                    }
+                },
+                "group": "DRUMKIT",
+                "visual": {
+                    "name": "Midi Drumkit"
+                }
+            }
+        }
+    }
+}

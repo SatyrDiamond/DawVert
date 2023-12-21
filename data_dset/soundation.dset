@@ -1,0 +1,3005 @@
+{
+    "plugin": {
+        "objects": {
+            "com.soundation.butterworthfilter": {
+                "params": {
+                    "cutoff": {
+                        "def": 0.75,
+                        "max": 1,
+                        "min": 0,
+                        "name": "cutoff",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "resonance": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "resonance",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Butterworth Filter"
+                }
+            },
+            "com.soundation.compressor": {
+                "params": {
+                    "attack": {
+                        "def": 0.2199999988079071,
+                        "max": 1,
+                        "min": 0,
+                        "name": "attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain": {
+                        "def": 0.30160001192092883,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ratio": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "ratio",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "release": {
+                        "def": 0.14000000059604645,
+                        "max": 1,
+                        "min": 0,
+                        "name": "release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "threshold": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "threshold",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Compressor"
+                }
+            },
+            "com.soundation.degrader": {
+                "params": {
+                    "gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "rate": {
+                        "def": 0.20000000298023224,
+                        "max": 1,
+                        "min": 0,
+                        "name": "rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "reduction": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "reduction",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Degrader"
+                }
+            },
+            "com.soundation.delay": {
+                "params": {
+                    "dry": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "dry",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "feedback": {
+                        "def": 0.1540000014901159,
+                        "max": 1,
+                        "min": 0,
+                        "name": "feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "feedback_filter": {
+                        "def": 0.1980000014901162,
+                        "max": 1,
+                        "min": 0,
+                        "name": "feedback_filter",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "timeBpmSync": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "timeBpmSync",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "timeL": {
+                        "def": 0.27840001106,
+                        "max": 1,
+                        "min": 0.27840001106,
+                        "name": "timeL",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "timeLSynced": {
+                        "def": 0.125,
+                        "max": 1,
+                        "min": 0,
+                        "name": "timeLSynced",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "timeR": {
+                        "def": 0.13920000553,
+                        "max": 1,
+                        "min": 0.13920000553,
+                        "name": "timeR",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "timeRSynced": {
+                        "def": 0.25,
+                        "max": 1,
+                        "min": 0,
+                        "name": "timeRSynced",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "wet": {
+                        "def": 0.2999999999999996,
+                        "max": 1,
+                        "min": 0,
+                        "name": "wet",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Delay"
+                }
+            },
+            "com.soundation.distortion": {
+                "params": {
+                    "gain": {
+                        "def": 0.20000000298023224,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mode": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 0,
+                        "name": "mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "volume": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "volume",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Distortion"
+                }
+            },
+            "com.soundation.equalizer": {
+                "params": {
+                    "high": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "high",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "low": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "low",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mid": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mid",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Equalizer"
+                }
+            },
+            "com.soundation.fakie": {
+                "params": {
+                    "attack": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "depth": {
+                        "def": 0.75,
+                        "max": 1,
+                        "min": 0,
+                        "name": "depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hold": {
+                        "def": 0.25,
+                        "max": 1,
+                        "min": 0,
+                        "name": "hold",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "release": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "release",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Fakie"
+                }
+            },
+            "com.soundation.filter": {
+                "params": {
+                    "cutoff": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "cutoff",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mode": {
+                        "def": 0,
+                        "max": null,
+                        "min": null,
+                        "name": "mode",
+                        "noauto": false,
+                        "type": "bool"
+                    },
+                    "resonance": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "resonance",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Filter"
+                }
+            },
+            "com.soundation.fm_synth": {
+                "params": {
+                    "p0": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p10": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p10",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p100": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p100",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p101": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p101",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p102": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p102",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p103": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p103",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p104": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p104",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p105": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p105",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p106": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p106",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p107": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p107",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p108": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p108",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p109": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p109",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p11": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p11",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p110": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p110",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p111": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p111",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p112": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p112",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p113": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p113",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p114": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p114",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p115": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p115",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p116": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p116",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p117": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p117",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p118": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p118",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p119": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p119",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p12": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p12",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p120": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p120",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p121": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p121",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p122": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p122",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p123": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p123",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p124": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p124",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p125": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p125",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p126": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p126",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p127": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p127",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p128": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p128",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p129": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p129",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p13": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p13",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p130": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p130",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p131": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p131",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p132": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p132",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p133": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p133",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p134": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p134",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p135": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p135",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p136": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p136",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p14": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p14",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p15": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p15",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p16": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p16",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p17": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p17",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p18": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p18",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p19": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p19",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p20": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p20",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p21": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p21",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p22": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p22",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p23": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p23",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p24": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p24",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p25": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p25",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p26": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p26",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p27": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p27",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p28": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p28",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p29": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p29",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p3": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p3",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p30": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p30",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p31": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p31",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p32": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p32",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p33": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p33",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p34": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p34",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p35": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p35",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p36": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p36",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p37": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p37",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p38": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p38",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p39": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p39",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p4": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p4",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p40": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p40",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p41": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p41",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p42": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p42",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p43": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p43",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p44": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p44",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p45": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p45",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p46": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p46",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p47": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p47",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p48": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p48",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p49": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p49",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p5": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p5",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p50": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p50",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p51": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p51",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p52": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p52",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p53": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p53",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p54": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p54",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p55": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p55",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p56": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p56",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p57": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p57",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p58": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p58",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p59": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p59",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p6": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p6",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p60": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p60",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p61": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p61",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p62": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p62",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p63": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p63",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p64": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p64",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p65": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p65",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p66": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p66",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p67": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p67",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p68": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p68",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p69": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p69",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p7": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p7",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p70": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p70",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p71": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p71",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p72": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p72",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p73": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p73",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p74": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p74",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p75": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p75",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p76": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p76",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p77": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p77",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p78": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p78",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p79": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p79",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p8": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p8",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p80": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p80",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p81": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p81",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p82": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p82",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p83": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p83",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p84": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p84",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p85": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p85",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p86": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p86",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p87": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p87",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p88": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p88",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p89": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p89",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p9": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p9",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p90": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p90",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p91": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p91",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p92": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p92",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p93": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p93",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p94": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p94",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p95": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p95",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p96": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p96",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p97": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p97",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p98": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p98",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "p99": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "p99",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.26274511218070984,
+                        0.7019608020782471,
+                        0.7960784435272217
+                    ],
+                    "name": "FM Synth"
+                }
+            },
+            "com.soundation.limiter": {
+                "params": {
+                    "attack": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain": {
+                        "def": 0.30160001192092883,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "release": {
+                        "def": 0.10000000149011612,
+                        "max": 1,
+                        "min": 0,
+                        "name": "release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "threshold": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "threshold",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Limiter"
+                }
+            },
+            "com.soundation.mono": {
+                "params": {
+                    "amp_decay": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "amp_decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "cutoff": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "cutoff",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_decay": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filter_decay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_int": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filter_int",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "glide": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "glide",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "mix": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pw": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pw",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "resonance": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "resonance",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Mono Synth"
+                }
+            },
+            "com.soundation.parametric-eq": {
+                "params": {
+                    "highshelf_enable": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "highshelf_enable",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "highshelf_freq": {
+                        "def": 0.8,
+                        "max": 1,
+                        "min": 0,
+                        "name": "highshelf_freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "highshelf_gain": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "highshelf_gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "highshelf_res": {
+                        "def": 0.385,
+                        "max": 1,
+                        "min": 0,
+                        "name": "highshelf_res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hpf_enable": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "hpf_enable",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hpf_freq": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "hpf_freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hpf_res": {
+                        "def": 0.385,
+                        "max": 1,
+                        "min": 0,
+                        "name": "hpf_res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "hpf_slope": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "hpf_slope",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lowshelf_enable": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lowshelf_enable",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lowshelf_freq": {
+                        "def": 0.2,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lowshelf_freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lowshelf_gain": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lowshelf_gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lowshelf_res": {
+                        "def": 0.385,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lowshelf_res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lpf_enable": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lpf_enable",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lpf_freq": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lpf_freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lpf_res": {
+                        "def": 0.385,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lpf_res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lpf_slope": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lpf_slope",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "master_gain": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "master_gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak1_enable": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak1_enable",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak1_freq": {
+                        "def": 0.4,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak1_freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak1_gain": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak1_gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak1_res": {
+                        "def": 0.385,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak1_res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak2_enable": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak2_enable",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak2_freq": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak2_freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak2_gain": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak2_gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak2_res": {
+                        "def": 0.385,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak2_res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak3_enable": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak3_enable",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak3_freq": {
+                        "def": 0.6,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak3_freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak3_gain": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak3_gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak3_res": {
+                        "def": 0.385,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak3_res",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak4_enable": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak4_enable",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak4_freq": {
+                        "def": 0.7,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak4_freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak4_gain": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak4_gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "peak4_res": {
+                        "def": 0.385,
+                        "max": 1,
+                        "min": 0,
+                        "name": "peak4_res",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Parametric EQ"
+                }
+            },
+            "com.soundation.phaser": {
+                "params": {
+                    "dry": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "dry",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "feedback": {
+                        "def": 0.20000000298023224,
+                        "max": 1,
+                        "min": 0,
+                        "name": "feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "freq": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "freq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "range": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "range",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "rate": {
+                        "def": 0.10000000149011612,
+                        "max": 1,
+                        "min": 0.10000000149011612,
+                        "name": "rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "rateBpmSync": {
+                        "def": 0,
+                        "max": 0,
+                        "min": 1,
+                        "name": "rateBpmSync",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "rateSynced": {
+                        "def": 1.0,
+                        "max": 16.0,
+                        "min": 0.01600000075995922,
+                        "name": "rateSynced",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "wet": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0,
+                        "name": "wet",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Phaser"
+                }
+            },
+            "com.soundation.pitch-correction": {
+                "params": {
+                    "amount": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "glide": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "glide",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "key": {
+                        "def": 0,
+                        "max": 11,
+                        "min": 0,
+                        "name": "key",
+                        "noauto": false,
+                        "type": "int"
+                    },
+                    "mode": {
+                        "def": 0,
+                        "max": 10,
+                        "min": 0,
+                        "name": "mode",
+                        "noauto": false,
+                        "type": "int"
+                    }
+                },
+                "visual": {
+                    "name": "Vocal Tuner"
+                }
+            },
+            "com.soundation.reverb": {
+                "params": {
+                    "damp": {
+                        "def": 0.4000000059604645,
+                        "max": 1,
+                        "min": 0,
+                        "name": "damp",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "dry": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "dry",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "size": {
+                        "def": 0.6000000238418579,
+                        "max": 1,
+                        "min": 0,
+                        "name": "size",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "wet": {
+                        "def": 0.5,
+                        "max": 1,
+                        "min": 0.004,
+                        "name": "wet",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "width": {
+                        "def": 1,
+                        "max": 1,
+                        "min": 0,
+                        "name": "width",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Reverb"
+                }
+            },
+            "com.soundation.spc": {
+                "params": {
+                    "bite": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "bite",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_0": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_10": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_10",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_11": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_11",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_12": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_12",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_13": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_13",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_14": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_14",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_15": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_15",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_3": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_3",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_4": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_4",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_5": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_5",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_6": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_6",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_7": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_7",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_8": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_8",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "gain_9": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "gain_9",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "msl": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "msl",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_0": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_10": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_10",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_11": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_11",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_12": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_12",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_13": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_13",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_14": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_14",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_15": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_15",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_3": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_3",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_4": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_4",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_5": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_5",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_6": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_6",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_7": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_7",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_8": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_8",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pan_9": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pan_9",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_0": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_0",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_1": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_1",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_10": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_10",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_11": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_11",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_12": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_12",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_13": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_13",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_14": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_14",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_15": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_15",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_2": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_2",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_3": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_3",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_4": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_4",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_5": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_5",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_6": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_6",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_7": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_7",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_8": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_8",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "pitch_9": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "pitch_9",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "punch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "punch",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.8392156958580017,
+                        0.8117647171020508,
+                        0.8039215803146362
+                    ],
+                    "name": "SPC"
+                }
+            },
+            "com.soundation.supersaw": {
+                "params": {
+                    "detune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "detune",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "spread": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "spread",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "SuperSaw"
+                }
+            },
+            "com.soundation.the_wub_machine": {
+                "params": {
+                    "filter_cutoff": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filter_cutoff",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_drive": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filter_drive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_resonance": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filter_resonance",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filter_type": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filter_type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filth_active": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filth_active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "filth_amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "filth_amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_depth": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfo_depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_keytracking": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfo_keytracking",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_loop": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfo_loop",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_phase": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfo_phase",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_retrigger": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfo_retrigger",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_speed": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfo_speed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_type": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfo_type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "msl_amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "msl_amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc1_gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc1_gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc1_glide": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc1_glide",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc1_pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc1_pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc1_pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc1_pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc1_shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc1_shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc1_type": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc1_type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc2_gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc2_gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc2_glide": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc2_glide",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc2_pan": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc2_pan",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc2_pitch": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc2_pitch",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc2_shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc2_shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc2_type": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc2_type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_sub_bypass_filter": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc_sub_bypass_filter",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_sub_gain": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc_sub_gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_sub_glide": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc_sub_glide",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_sub_shape": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc_sub_shape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_sub_volume_lfo": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc_sub_volume_lfo",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "reese_active": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "reese_active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "unison_active": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "unison_active",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "unison_amount": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "unison_amount",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "unison_count": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "unison_count",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.27450981736183167,
+                        0.2823529541492462,
+                        0.27843138575553894
+                    ],
+                    "name": "The Wub Machine"
+                }
+            },
+            "com.soundation.tremolo": {
+                "params": {
+                    "depth": {
+                        "def": 0.75,
+                        "max": 1,
+                        "min": 0,
+                        "name": "depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "phase": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "phase",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "speed": {
+                        "def": 0.30000001192092896,
+                        "max": 1,
+                        "min": 0,
+                        "name": "speed",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Tremolo"
+                }
+            },
+            "com.soundation.va_synth": {
+                "params": {
+                    "aatt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "aatt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "adec": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "adec",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "arel": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "arel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "asus": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "asus",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "fatt": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "fatt",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "fdec": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "fdec",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "fdyn": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "fdyn",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "feg": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "feg",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ffreq": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "ffreq",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "frel": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "frel",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "fres": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "fres",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "fsus": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "fsus",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "glide_bend": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "glide_bend",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "glide_mode": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "glide_mode",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "glide_rate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "glide_rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfolpf": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfolpf",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfoosc": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfoosc",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lforate": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lforate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "octave": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_fine": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc_2_fine",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_mix": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc_2_mix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_noise": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc_2_noise",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "osc_2_octave": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "osc_2_octave",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "tune": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "tune",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "color": [
+                        0.2666666805744171,
+                        0.250980406999588,
+                        0.23137255012989044
+                    ],
+                    "name": "VA Synth"
+                }
+            },
+            "com.soundation.wubfilter": {
+                "params": {
+                    "cutoff": {
+                        "def": 0.22149999999999997,
+                        "max": 1,
+                        "min": 0.002,
+                        "name": "cutoff",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "drive": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "drive",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_depth": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfo_depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_speed": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "lfo_speed",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "lfo_type": {
+                        "def": 0.0,
+                        "max": 0.75,
+                        "min": 0.0,
+                        "name": "lfo_type",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "resonance": {
+                        "def": 0.245,
+                        "max": 1,
+                        "min": 0,
+                        "name": "resonance",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "type": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "type",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Wubfilter"
+                }
+            }
+        }
+    }
+}

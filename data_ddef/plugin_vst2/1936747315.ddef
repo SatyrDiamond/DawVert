@@ -1,0 +1,13 @@
+meta|name|VST Speek
+
+area_struct|main
+part|byte|pitch
+part|byte|speed
+part|byte|mouth
+part|byte|throat
+part|byte|sing_mode
+part|byte|filter_on
+part|byte|phonetic_mode
+part|skip|
+part|string_part/varint|preset_name
+part|string_part/varint|speech_txt

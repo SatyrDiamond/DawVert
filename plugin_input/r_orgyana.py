@@ -4,52 +4,38 @@
 from functions import placement_data
 from functions import song
 from functions import note_data
-from functions import idvals
+from functions import colors
+from functions import data_dataset
 from functions_tracks import tracks_r
 import plugin_input
 import json
 
-l_org_colors = [[0.23, 0.30, 0.99],
-[0.62, 0.11, 0.12],
-[0.62, 0.16, 0.87],
-[0.14, 0.45, 0.26],
-[0.13, 0.46, 0.57],
-[0.67, 0.50, 0.11],
-[0.59, 0.64, 0.71],
-[0.58, 0.53, 0.49],
-[0.23, 0.30, 0.99],
-[0.62, 0.11, 0.12],
-[0.62, 0.16, 0.87],
-[0.14, 0.45, 0.26],
-[0.13, 0.46, 0.57],
-[0.67, 0.50, 0.11],
-[0.59, 0.64, 0.71],
-[0.58, 0.53, 0.49]
-]
+cur_val = 0
+
+def org_stream(bio_org, org_numofnotes, maxchange, org_notelist, tnum):
+    global cur_val
+    for x in range(org_numofnotes):
+        pre_val = bio_org.read(1)[0]
+        if maxchange != None:
+            if 0 <= pre_val <= maxchange: cur_val = pre_val
+            org_notelist[x][tnum] = cur_val
+        else:
+            org_notelist[x][tnum] = pre_val
+
 
 def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
-    global cur_note
-    global cur_vol
-    global cur_pan
+    global cur_val
     org_numofnotes = instrumentinfotable_input[trackid][3]
     org_notelist = []
     for x in range(org_numofnotes): org_notelist.append([0,0,0,0,0])
     for x in range(org_numofnotes): #position
         org_notelist[x][0] = int.from_bytes(bio_org.read(4), "little")
-    for x in range(org_numofnotes): #note
-        pre_note = bio_org.read(1)[0]
-        if 0 <= pre_note <= 95: cur_note = pre_note
-        org_notelist[x][1] = cur_note
-    for x in range(org_numofnotes): #duration
-        org_notelist[x][2] = bio_org.read(1)[0]
-    for x in range(org_numofnotes): #vol
-        pre_vol = bio_org.read(1)[0]
-        if 0 <= pre_vol <= 254: cur_vol = pre_vol
-        org_notelist[x][3] = cur_vol
-    for x in range(org_numofnotes): #pan
-        pre_pan = bio_org.read(1)[0]
-        if 0 <= pre_pan <= 12: cur_pan = pre_pan
-        org_notelist[x][4] = cur_pan
+
+    org_stream(bio_org, org_numofnotes, 95, org_notelist, 1) #note
+    org_stream(bio_org, org_numofnotes, 256, org_notelist, 2) #duration
+    org_stream(bio_org, org_numofnotes, 254, org_notelist, 3) #vol
+    org_stream(bio_org, org_numofnotes, 12, org_notelist, 4) #pan
+
     org_l_nl = {}
     for org_note in org_notelist: org_l_nl[org_note[0]] = org_note[1:5]
     org_l_nl = dict(sorted(org_l_nl.items(), key=lambda item: item[0]))
@@ -63,9 +49,7 @@ def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
         if notedata[1] != 1:
             notedur = notedata[1]
             endnote = org_l_n+notedur
-        if endnote != None:
-            if endnote-org_l_n == notedur: isinsidenote = False
-            else: isinsidenote = True
+        if endnote != None: isinsidenote = False if endnote-org_l_n == notedur else True
         else: isinsidenote = False
         if isinsidenote == False: cvpj_nl.append(note_data.rx_makenote(org_l_n, notedata[1], notedata[0]-48, notedata[2]/254, (notedata[3]-6)/6))
     return cvpj_nl
@@ -91,7 +75,8 @@ class input_orgyana(plugin_input.base):
     def parse(self, input_file, extra_param):
         cvpj_l = {}
 
-        idvals_orgyana_inst_drums = idvals.parse_idvalscsv('data_idvals/orgyana_inst_drums.csv')
+        dataset = data_dataset.dataset('./data_dset/orgyana.dset')
+        colordata = colors.colorset(dataset.colorset_e_list('track', 'orgmaker_2'))
 
         bio_org = open(input_file, 'rb')
         org_type = bio_org.read(6)
@@ -124,11 +109,11 @@ class input_orgyana(plugin_input.base):
             s_cvpj_nl = read_orgtrack(bio_org, org_instrumentinfotable, tracknum)
             if len(s_cvpj_nl) != 0:
                 org_pitch = org_instrumentinfotable[tracknum][0]
-                trackname = "Melody "+str(tracknum+1) if tracknum < 8 else idvals.get_idval(idvals_orgyana_inst_drums, str(org_insttable[tracknum]), 'name')
+                trackname = "Melody "+str(tracknum+1) if tracknum < 8 else dataset.object_get_name_color('drums', str(org_insttable[tracknum]))[0]
                 idval = 'org_'+str(tracknum)
 
                 tracks_r.track_create(cvpj_l, idval, 'instrument')
-                tracks_r.track_visual(cvpj_l, idval, name=trackname, color=l_org_colors[tracknum])
+                tracks_r.track_visual(cvpj_l, idval, name=trackname, color=colordata.getcolornum(tracknum))
                 tracks_r.track_param_add(cvpj_l, idval, 'pitch', (org_pitch-1000)/1800, 'float')
                 tracks_r.add_pl(cvpj_l, idval, 'notes', placement_data.nl2pl(s_cvpj_nl))
 

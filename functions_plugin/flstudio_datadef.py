@@ -467,7 +467,7 @@ def get_datadef(pluginname):
 		out = [
 			["I",True,"type","Type"],
 			["I",True,"freq","Frequency"],
-			["I",True,"lowpass","Q"],
+			["I",True,"q","Q"],
 			["I",True,"gain","Gain"],
 			["I",True,"center","Center"],
 		]

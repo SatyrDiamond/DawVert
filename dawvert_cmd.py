@@ -22,6 +22,7 @@ parser.add_argument("--extrafile", default=None)
 parser.add_argument("--use-experiments-input", action='store_true')
 parser.add_argument("--mi2m--output-unused-nle", action='store_true')
 parser.add_argument("--nonfree-plugins", action='store_true')
+parser.add_argument("--shareware-plugins", action='store_true')
 parser.add_argument("-y", action='store_true')
 args = parser.parse_args()
 
@@ -38,6 +39,7 @@ if not os.path.exists(in_file):
 extra_json = {}
 do_overwrite = False
 pluginset = 'main'
+dawvert_core = core.core()
 
 if args.y == True: do_overwrite = True
 if args.soundfont != None: extra_json['soundfont'] = args.soundfont
@@ -49,25 +51,27 @@ if args.use_experiments_input == True:
 	pluginset = 'experiments'
 
 if args.nonfree_plugins == True: extra_json['nonfree-plugins'] = True
-# -------------------------------------------------------------- Input Plugin List--------------------------------------------------------------
+if args.shareware_plugins == True: extra_json['shareware-plugins'] = True
 
-core.input_load_plugins(pluginset)
+
+# -------------------------------------------------------------- Input Plugin List--------------------------------------------------------------
+dawvert_core.input_load_plugins(pluginset)
 plug_conv.load_plugins()
 
 # -------------------------------------------------------------- Output Plugin List -------------------------------------------------------------
 
-core.output_load_plugins()
+dawvert_core.output_load_plugins()
 
 # -------------------------------------------------------------- Input Format--------------------------------------------------------------
 
 if in_format == None:
-	detect_plugin_found = core.input_autoset(in_file)
+	detect_plugin_found = dawvert_core.input_autoset(in_file)
 	if detect_plugin_found == None:
 		print('[error] could not identify the input format')
 		exit()
 else:
-	if in_format in core.input_get_plugins():
-		in_class = core.input_set(in_format)
+	if in_format in dawvert_core.input_get_plugins():
+		in_class = dawvert_core.input_set(in_format)
 	else:
 		print('[error] input format plugin not found')
 		exit()
@@ -77,13 +81,13 @@ else:
 out_file_nameext = os.path.splitext(os.path.basename(out_file))
 out_file_path = os.path.dirname(out_file)
 
-if out_format in core.output_get_plugins():
-	out_class = core.output_set(out_format)
+if out_format in dawvert_core.output_get_plugins():
+	out_class = dawvert_core.output_set(out_format)
 else:
 	print('[error] output format plugin not found')
 	exit()
 
-out_plug_ext = core.output_get_extension()
+out_plug_ext = dawvert_core.output_get_extension()
 if out_file_nameext[1] == '': out_file = os.path.join(out_file_path, out_file_nameext[0]+'.'+out_plug_ext)
 
 # -------------------------------------------------------------- convert --------------------------------------------------------------
@@ -102,7 +106,7 @@ if os.path.isfile(out_file) and do_overwrite == False:
 		print('Not overwriting - exiting')
 		exit()
 
-core.parse_input(in_file, extra_json)
-core.convert_type_output(extra_json)
-core.convert_plugins(extra_json)
-core.parse_output(out_file)
+dawvert_core.parse_input(in_file, extra_json)
+dawvert_core.convert_type_output(extra_json)
+dawvert_core.convert_plugins(extra_json)
+dawvert_core.parse_output(out_file)

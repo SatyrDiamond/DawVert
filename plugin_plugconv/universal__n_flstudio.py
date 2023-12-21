@@ -3,56 +3,60 @@
 
 import plugin_plugconv
 
-from functions import plugins
-from functions import idvals
-from functions import xtramath
-from functions import note_data
 import math
+from functions import plugins
+from functions import xtramath
+from functions_tracks import auto_data
 
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
-    def getplugconvinfo(self): return ['native-flstudio', None, 'flp'], ['universal', None, None], False, True
-    def convert(self, cvpj_l, pluginid, plugintype, extra_json):
+    def getplugconvinfo(self): return ['native-flstudio', None, 'flp'], ['universal', None, None], False, False
+    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
+        plugintype = cvpj_plugindata.type_get()
 
-        if 'nonfree-plugins' not in extra_json:
-            if plugintype[1].lower() == 'fruity parametric eq 2': 
+        if plugintype[1] == 'fruity parametric eq 2':
+            main_lvl = cvpj_plugindata.param_get('main_lvl', 0)[0]/100
 
-                main_lvl = plugins.get_plug_param(cvpj_l, pluginid, 'main_lvl', 0)[0]/100
+            for bandnum in range(7):
+                bandstarttxt = str(bandnum+1)
 
-                fl_eq_bands = []
-                for bandnum in range(7):
-                    bandstarttxt = str(bandnum+1)
-                    band_gain = plugins.get_plug_param(cvpj_l, pluginid, bandstarttxt+'_gain', 0)[0]
-                    band_freq = plugins.get_plug_param(cvpj_l, pluginid, bandstarttxt+'_freq', 0)[0]
-                    band_width = plugins.get_plug_param(cvpj_l, pluginid, bandstarttxt+'_width', 0)[0]
-                    band_type = plugins.get_plug_param(cvpj_l, pluginid, bandstarttxt+'_type', 0)[0]
-                    band_freq /= 65536
-                    fl_eq_bands.append([20 * 1000**band_freq, band_gain/100, (band_width/65536), band_type])
+                fl_band_gain = cvpj_plugindata.param_get(bandstarttxt+'_gain', 0)[0]/100
+                fl_band_freq = cvpj_plugindata.param_get(bandstarttxt+'_freq', 0)[0]/65536
+                fl_band_width = cvpj_plugindata.param_get(bandstarttxt+'_width', 0)[0]/65536
+                fl_band_type = cvpj_plugindata.param_get(bandstarttxt+'_type', 0)[0]
 
-                plugins.replace_plug(cvpj_l, pluginid, 'universal', 'eq-bands')
-                plugins.add_plug_data(cvpj_l, pluginid, 'num_bands', 7)
-                plugins.add_plug_param(cvpj_l, pluginid, 'gain_out', main_lvl, 'float', 'Out Gain')
+                fl_band_freq = 20 * 1000**fl_band_freq
 
-                for fl_eq_band in fl_eq_bands:
-                    band_shape = 'peak'
-                    band_enable = 0
+                c_band_shape = 'peak'
+                c_band_enable = 0
 
-                    if fl_eq_band[3] in [5, 7]: eq_res = (1-fl_eq_band[2])*1.2
-                    elif fl_eq_band[3] in [1, 3]: 
-                        eq_res = xtramath.between_from_one(1, -1, fl_eq_band[2])
-                        eq_res = pow(2, eq_res*10)
-                    else: 
-                        eq_res = fl_eq_band[2]*4
+                if fl_band_type in [5, 7]: 
+                    eq_res = (1-fl_band_width)*1.2
+                elif fl_band_type in [1, 3]: 
+                    fl_band_width = xtramath.between_from_one(1, -1, fl_band_width)
+                    fl_band_width = pow(2, fl_band_width*5)
+                else: 
+                    outwid = ((fl_band_width+0.01)*3)
+                    outwid = xtramath.logpowmul(outwid, -1)
+                    fl_band_width = outwid
 
-                    if fl_eq_band[3] != 0: band_enable = 1
-                    if fl_eq_band[3] == 1: band_shape = 'low_pass'
-                    if fl_eq_band[3] == 2: band_shape = 'band_pass'
-                    if fl_eq_band[3] == 3: band_shape = 'high_pass'
-                    if fl_eq_band[3] == 4: band_shape = 'notch'
-                    if fl_eq_band[3] == 5: band_shape = 'low_shelf'
-                    if fl_eq_band[3] == 6: band_shape = 'peak'
-                    if fl_eq_band[3] == 7: band_shape = 'high_shelf'
-                    plugins.add_eqband(cvpj_l, pluginid, band_enable, fl_eq_band[0], fl_eq_band[1], band_shape, eq_res, None)
+                if fl_band_type != 0: c_band_enable = 1
+                if fl_band_type == 1: c_band_shape = 'low_pass'
+                if fl_band_type == 2: c_band_shape = 'band_pass'
+                if fl_band_type == 3: c_band_shape = 'high_pass'
+                if fl_band_type == 4: c_band_shape = 'notch'
+                if fl_band_type == 5: c_band_shape = 'low_shelf'
+                if fl_band_type == 6: c_band_shape = 'peak'
+                if fl_band_type == 7: c_band_shape = 'high_shelf'
 
-            return True
+
+                cvpj_plugindata.eqband_add(c_band_enable, fl_band_freq, c_band_shape, None)
+                cvpj_plugindata.eqband_add_param('q', fl_band_width, None)
+                cvpj_plugindata.eqband_add_param('gain', fl_band_gain, None)
+
+            cvpj_plugindata.replace('universal', 'eq-bands')
+            cvpj_plugindata.param_add('gain_out', main_lvl, 'float', 'Out Gain')
+            return 1
+
+        return 2

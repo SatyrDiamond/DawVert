@@ -5,13 +5,15 @@ import plugin_input
 import json
 import os.path
 import struct
-from functions import placements
-from functions import placement_data
-from functions import plugins
 from functions import auto
-from functions import note_data
+from functions import colors
 from functions import data_bytes
+from functions import data_dataset
 from functions import data_values
+from functions import note_data
+from functions import placement_data
+from functions import placements
+from functions import plugins
 from functions import song
 from functions_tracks import tracks_rm
 from functions_tracks import auto_data
@@ -250,14 +252,12 @@ def lc_parse_placements(sl_json, tracknum, pl_color, ischord):
         else: notelist, currentchord = lc_parse_voice_chords(lc_notes, length, currentchord)
 
         placement = placement_data.makepl_n(position, length, notelist)
-        placement['color'] = pl_color
+        if pl_color != None: placement['color'] = pl_color
         if notelist != []: placements.append(placement)
         patternpos.append(position)
         patternlen.append(length)
         position += length
     return placements
-
-lc_colors = [[0.83, 0.09, 0.42],[0.91, 0.76, 0.36],[0.22, 0.36, 0.60],[0.44, 0.78, 0.66],[0.64, 0.64, 0.64]]
 
 class input_lc(plugin_input.base):
     def __init__(self): pass
@@ -286,50 +286,54 @@ class input_lc(plugin_input.base):
 
         cvpj_l = {}
 
+        dataset = data_dataset.dataset('./data_dset/lovelycomposer.dset')
+        colordata = colors.colorset(dataset.colorset_e_list('track', 'main'))
+
         for num in range(5):
-            cvpj_placements = lc_parse_placements(lc_channels[num]["sl"], num, lc_colors[num], num == 4)
+            cvpj_placements = lc_parse_placements(lc_channels[num]["sl"], num, colordata.getcolornum(num), num == 4)
             cvpj_plname = "Part "+str(num+1) if num != 4 else "Chord"
             tracks_rm.track_create(cvpj_l, str(num), 'instruments')
             tracks_rm.track_visual(cvpj_l, str(num), name=cvpj_plname)
             tracks_rm.add_pl(cvpj_l, str(num), 'notes', cvpj_placements)
 
         for used_instrument in used_instruments:
-            pluginid = plugins.get_id()
-
             cvpj_instid = str(used_instrument[0])+'_'+used_instrument[1]
 
-            cvpj_instdata = {}
+            inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
+            inst_plugindata.osc_num_oscs(1)
+
             if used_instrument[1] == 'Sine': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'sine')
+                inst_plugindata.osc_opparam_set(0, 'shape', 'sine')
             elif used_instrument[1] == 'Square': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
-                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 0)
+                inst_plugindata.osc_opparam_set(0, 'shape', 'square')
+                inst_plugindata.osc_opparam_set(0, 'pulse_width', 1/2)
             elif used_instrument[1] == 'Triangle':
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'triangle')
+                inst_plugindata.osc_opparam_set(0, 'shape', 'triangle')
             elif used_instrument[1] == 'Saw': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'saw')
+                inst_plugindata.osc_opparam_set(0, 'shape', 'saw')
             elif used_instrument[1] == 'Noise': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'noise')
-                plugins.add_plug_data(cvpj_l, pluginid, 'type', '4bit')
+                inst_plugindata.osc_opparam_set(0, 'shape', 'noise')
+                inst_plugindata.osc_opparam_set(0, 'noise_type', '4bit')
             elif used_instrument[1] == 'FreqNoise': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'noise')
-                plugins.add_plug_data(cvpj_l, pluginid, 'type', '1bit_short')
+                inst_plugindata.osc_opparam_set(0, 'shape', 'noise')
+                inst_plugindata.osc_opparam_set(0, 'noise_type', '1bit_short')
             elif used_instrument[1] == 'Pulse25': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
-                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 1)
+                inst_plugindata.osc_opparam_set(0, 'shape', 'square')
+                inst_plugindata.osc_opparam_set(0, 'pulse_width', 1/4)
             elif used_instrument[1] == 'Pulse125': 
-                plugins.add_plug(cvpj_l, pluginid, 'retro', 'square')
-                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 2)
+                inst_plugindata.osc_opparam_set(0, 'shape', 'square')
+                inst_plugindata.osc_opparam_set(0, 'pulse_width', 1/8)
             else: 
-                plugins.add_plug(cvpj_l, pluginid, 'lovelycomposer', used_instrument[1])
-                plugins.add_plug_data(cvpj_l, pluginid, 'duty', 2)
+                inst_plugindata = plugins.cvpj_plugin('deftype', 'lovelycomposer', used_instrument[1])
+
+            inst_plugindata.to_cvpj(cvpj_l, cvpj_instid)
 
             tracks_rm.inst_create(cvpj_l, cvpj_instid)
-            tracks_rm.inst_visual(cvpj_l, cvpj_instid, name=used_instrument[1], color=lc_colors[used_instrument[0]])
-            tracks_rm.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+            tracks_rm.inst_visual(cvpj_l, cvpj_instid, name=used_instrument[1], color=colordata.getcolornum(used_instrument[0]))
+            tracks_rm.inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
 
         tracks_rm.inst_create(cvpj_l, 'chord')
-        tracks_rm.inst_visual(cvpj_l, 'chord', name='Chord', color=lc_colors[4])
+        tracks_rm.inst_visual(cvpj_l, 'chord', name='Chord', color=colordata.getcolornum(4))
 
         startinststr = 'lc_instlist_'
 

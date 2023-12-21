@@ -199,14 +199,17 @@ def parse_instrument(file_stream, samplecount):
     tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=xm_inst_name, color=[0.16, 0.33, 0.53])
     tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
 
+    inst_used = False
     if xm_inst_num_samples == 0:
         pass
     elif xm_inst_num_samples == 1:
+        inst_used = True
         tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', 0.3*(t_sampleheaders[0][0][3]/64), 'float')
-        plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, samplefolder+str(xm_cursamplenum)+'.wav')
-        plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
-        plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
-        plugins.add_plug_data(cvpj_l, pluginid, 'length', t_sampleheaders[0][0][0])
+
+        inst_plugindata = plugins.cvpj_plugin('sampler', samplefolder+str(xm_cursamplenum)+'.wav', None)
+        inst_plugindata.dataval_add('trigger', 'normal')
+        inst_plugindata.dataval_add('point_value_type', "samples")
+        inst_plugindata.dataval_add('length', t_sampleheaders[0][0][0])
 
         sampleflags = data_bytes.to_bin(t_sampleheaders[0][0][5], 8)
 
@@ -218,15 +221,16 @@ def parse_instrument(file_stream, samplecount):
         if sampleflags[6] == 1: loopon = 'pingpong'
 
         if loopon == None:
-            plugins.add_plug_data(cvpj_l, pluginid, 'loop', {"enabled": 0})
+            inst_plugindata.dataval_add('loop', {"enabled": 0})
         else:
-            plugins.add_plug_data(cvpj_l, pluginid, 'loop', 
-                {"enabled": 1, "mode": loopon, "points": [xm_loop_start,xm_loop_start+xm_loop_len]})
+            inst_plugindata.dataval_add('loop', {"enabled": 1, "mode": loopon, "points": [xm_loop_start,xm_loop_start+xm_loop_len]})
     else:
+        inst_used = True
         tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', 0.3, 'float')
         sampleregions = data_values.list_to_reigons(xm_inst_e_table, 48)
-        plugins.add_plug_multisampler(cvpj_l, pluginid)
-        plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
+
+        inst_plugindata = plugins.cvpj_plugin('multisampler', None, None)
+        inst_plugindata.dataval_add('point_value_type', "samples")
 
         for sampleregion in sampleregions:
             instrumentnum = sampleregion[0]
@@ -247,7 +251,7 @@ def parse_instrument(file_stream, samplecount):
                 xm_loop_len = t_sampleheaders[instrumentnum][0][2]
                 regionparams['loop']['points'] = [xm_loop_start,xm_loop_start+xm_loop_len]
 
-            plugins.add_plug_multisampler_region(cvpj_l, pluginid, regionparams)
+            inst_plugindata.region_add(regionparams)
 
     if xm_inst_num_samples != 0:
 
@@ -265,24 +269,26 @@ def parse_instrument(file_stream, samplecount):
             zerofound = False
 
             if envflags[6] == 1:
-                plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'sustain', typedata[2]+1)
+                inst_plugindata.env_points_addvar(typedata[0], 'sustain', typedata[2]+1)
             if envflags[5] == 1: 
-                plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'loop', [typedata[4], typedata[3]+typedata[4]])
+                inst_plugindata.env_points_addvar(typedata[0], 'loop', [typedata[4], typedata[3]+typedata[4]])
 
             if typedata[0] == 'vol':
                 if xm_inst_e_volume_fadeout != 0:
-                    plugins.add_env_point_var(cvpj_l, pluginid, typedata[0], 'fadeout', (128/xm_inst_e_volume_fadeout)*5)
+                    inst_plugindata.env_points_addvar(typedata[0], 'fadeout', (128/xm_inst_e_volume_fadeout)*5)
 
             for groupval in typedata[1]:
                 if groupval[0] == 0:
                     if zerofound == True: break
                     zerofound = True
                 if typedata[0] == 'vol' and envflags[7] == 1:
-                    plugins.add_env_point(cvpj_l, pluginid, 'vol', groupval[0]/48, groupval[1]/64)
+                    inst_plugindata.env_points_add('vol', groupval[0]/48, groupval[1]/64)
                 if typedata[0] == 'pan':
-                    plugins.add_env_point(cvpj_l, pluginid, 'pan', groupval[0]/48, (groupval[1]-32)/32)
+                    inst_plugindata.env_points_add('pan', groupval[0]/48, (groupval[1]-32)/32)
 
-        plugins.env_point_to_asdr(cvpj_l, pluginid, 'vol')
+        inst_plugindata.env_asdr_from_points('vol')
+
+    if inst_used == True: inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
     if xm_inst_num_samples != 0: xm_cursamplenum += xm_inst_num_samples
 

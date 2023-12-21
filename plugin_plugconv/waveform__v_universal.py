@@ -99,7 +99,7 @@ class plugconv(plugin_plugconv.base):
                         cvpj_plugindata.param_add("q"+eqnumtxt+typename, eq_band_q, 'float', '')
                         cvpj_plugindata.param_add("shape"+eqnumtxt+typename, wf_shape, 'float', '')
                         cvpj_plugindata.param_add("slope"+eqnumtxt+typename, eq_band_slope, 'float', '')
-            return True
+            return 1
 
         if plugintype[1] == 'delay-c':
             d_time_type = cvpj_plugindata.dataval_get('time_type', 'seconds')
@@ -124,7 +124,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('feedbackL', d_feedback*100, 'float', "feedbackL")
             cvpj_plugindata.param_add('feedbackR', d_feedback*100, 'float', "feedbackR")
             cvpj_plugindata.param_add('mix', fx_wet, 'float', "mix")
-            return True
+            return 1
 
         if plugintype[1] == 'compressor':
             v_attack = cvpj_plugindata.param_get('attack', 0)[0]*1000
@@ -144,7 +144,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('knee', v_knee, 'float', "knee")
             cvpj_plugindata.param_add('outputDb', v_postgain, 'float', "outputDb")
             cvpj_plugindata.param_add('inputDb', v_pregain, 'float', "inputDb")
-            return True
+            return 1
 
         if plugintype[1] == 'gate':
             gate_attack = cvpj_plugindata.param_get('attack', 0)[0]*1000
@@ -158,7 +158,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('hold', gate_hold, 'float', "hold")
             cvpj_plugindata.param_add('release', gate_release, 'float', "release")
             cvpj_plugindata.param_add('threshold', gate_threshold, 'float', "threshold")
-            return True
+            return 1
 
         if plugintype[1] == 'limiter':
             limiter_ceiling = cvpj_plugindata.param_get('ceiling', 0)[0]
@@ -170,4 +170,6 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('ceiling', limiter_ceiling, 'float', "ceiling")
             cvpj_plugindata.param_add('gain', limiter_gain, 'float', "gain")
             cvpj_plugindata.param_add('release', limiter_release, 'float', "release")
-            return True
+            return 1
+            
+        return 2

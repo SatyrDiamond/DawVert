@@ -29,7 +29,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.replace('native-amped', 'Vibrato')
             cvpj_plugindata.param_add('delayLfoRateHz', delayLfoRateHz, 'float', '')
             cvpj_plugindata.param_add('delayLfoDepth', delayLfoDepth, 'float', '')
-            return True
+            return 0
 
         if plugintype[1] == 'tremolo':
             lfoARateHz = cvpj_plugindata.param_get('freq', 0)[0]
@@ -41,7 +41,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.replace('native-amped', 'Tremolo')
             cvpj_plugindata.param_add('lfoARateHz', lfoARateHz, 'float', '')
             cvpj_plugindata.param_add('lfoADepth', lfoADepth, 'float', '')
-            return True
+            return 0
 
         if plugintype[1] == 'bitcrush':
             bitcrush_bits = cvpj_plugindata.param_get('bits', 0)[0]
@@ -57,8 +57,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add_minmax('bits', bitcrush_bits, 'float', '', [2,16])
             cvpj_plugindata.param_add_minmax('down', bitcrush_freq(bitcrush_down), 'float', '', [0,1])
             cvpj_plugindata.param_add_minmax('mix', fx_wet, 'float', '', [0,1])
-
-            return True
+            return 0
 
         if plugintype[1] in ['compressor', 'expander']:
             preGainDB = cvpj_plugindata.param_get('pregain', 0)[0]
@@ -115,7 +114,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('filterGainDB', filterGainDB, 'float', 'depth')
             cvpj_plugindata.param_add('filterActive', filterActive, 'float', 'depth')
             cvpj_plugindata.param_add('filterAudition', filterAudition, 'float', 'depth')
-            return True
+            return 0
 
         if plugintype[1] == 'eq-bands':
             master_gain = cvpj_plugindata.param_get("gain_out", 0)[0]
@@ -157,4 +156,6 @@ class plugconv(plugin_plugconv.base):
                     #auto_data.rename_plugparam(cvpj_l, pluginid, cvpj_band_txt+"q", filtername+"q")
 
             cvpj_plugindata.param_add('postGain', master_gain, 'float', '')
-            return True
+            return 0
+            
+        return 2

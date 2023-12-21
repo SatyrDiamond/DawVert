@@ -41,7 +41,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.dataval_add('num_bands', 1)
             cvpj_plugindata.eqband_add(1, get_freq(filter_cutoff), eq_bandtype, None)
             cvpj_plugindata.eqband_add_param('q', filter_resonance, None)
-            return True
+            return 1
 
         if plugintype[1] == 'com.soundation.parametric-eq':
             for eqname in ["hpf","lowshelf","peak1","peak2","peak3","peak4","highshelf","lpf"]:
@@ -71,4 +71,6 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.replace('universal', 'eq-bands')
 
             cvpj_plugindata.param_add('gain_out', master_gain, 'float', 'Out Gain')
-            return True
+            return 1
+            
+        return 2

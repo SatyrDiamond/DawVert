@@ -34,5 +34,6 @@ class plugconv(plugin_plugconv.base):
 			cvpj_plugindata.param_add('coarse0', -12, 'int', "")
 			cvpj_plugindata.param_add('coarse1', -12, 'int', "")
 			cvpj_plugindata.param_add('coarse2', -12, 'int', "")
-			return True
-		else: return False
+			return 0
+		else: 
+			return 2

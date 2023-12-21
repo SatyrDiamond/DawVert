@@ -31,13 +31,14 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('dephase', 0, 'int', "")
             cvpj_plugindata.param_add('iodiff', 0, 'int', "")
             cvpj_plugindata.param_add('prepost', 0, 'int', "")
-            return True
+            return 0
 
         if plugintype[1] == 'spectrumanalyzer':  
             print('[plug-conv] LMMS to FL Studio: Spectrum Analyzer > Fruity Spectroman:',pluginid)
             cvpj_plugindata.replace('native-flstudio', 'fruity spectroman')
             cvpj_plugindata.param_add('amp', 128, 'int', "")
             cvpj_plugindata.param_add('scale', 128, 'int', "")
-            return True
+            return 0
 
+        return 2
 

@@ -1,0 +1,1267 @@
+{
+    "drums": {
+        "colorset": {
+            "beepbox_dark": [
+                [
+                    0.44,
+                    0.44,
+                    0.44
+                ],
+                [
+                    0.6,
+                    0.4,
+                    0.2
+                ],
+                [
+                    0.29,
+                    0.43,
+                    0.56
+                ],
+                [
+                    0.48,
+                    0.31,
+                    0.6
+                ],
+                [
+                    0.38,
+                    0.47,
+                    0.22
+                ]
+            ]
+        },
+        "objects": {
+            "drumset": {
+                "visual": {
+                    "name": "Drum Set"
+                }
+            },
+            "noise": {
+                "visual": {
+                    "name": "Basic Noise"
+                }
+            }
+        }
+    },
+    "inst": {
+        "colorset": {
+            "beepbox_dark": [
+                [
+                    0,
+                    0.6,
+                    0.63
+                ],
+                [
+                    0.63,
+                    0.63,
+                    0
+                ],
+                [
+                    0.78,
+                    0.31,
+                    0
+                ],
+                [
+                    0,
+                    0.63,
+                    0
+                ],
+                [
+                    0.82,
+                    0.13,
+                    0.82
+                ],
+                [
+                    0.47,
+                    0.47,
+                    0.69
+                ],
+                [
+                    0.54,
+                    0.63,
+                    0
+                ],
+                [
+                    0.87,
+                    0,
+                    0.1
+                ],
+                [
+                    0,
+                    0.63,
+                    0.44
+                ],
+                [
+                    0.57,
+                    0.12,
+                    1
+                ]
+            ]
+        },
+        "objects": {
+            "FM": {
+                "visual": {
+                    "name": "FM"
+                }
+            },
+            "FM6op": {
+                "visual": {
+                    "name": "Advanced FM"
+                }
+            },
+            "PWM": {
+                "visual": {
+                    "name": "Pulse Width"
+                }
+            },
+            "Picked String": {
+                "visual": {
+                    "name": "Picked String"
+                }
+            },
+            "chip": {
+                "visual": {
+                    "name": "Chip Wave"
+                }
+            },
+            "custom chip": {
+                "visual": {
+                    "name": "Custom Chip"
+                }
+            },
+            "harmonics": {
+                "visual": {
+                    "name": "Harmonics"
+                }
+            },
+            "spectrum": {
+                "visual": {
+                    "name": "Spectrum"
+                }
+            }
+        }
+    },
+    "preset": {
+        "midi_to": {
+            "1024": 120,
+            "1025": 86,
+            "1027": 97,
+            "1030": 123,
+            "1031": 124,
+            "128": 0,
+            "129": 1,
+            "130": 2,
+            "131": 3,
+            "132": 4,
+            "133": 5,
+            "134": 6,
+            "135": 7,
+            "136": 15,
+            "137": 0,
+            "192": 8,
+            "193": 9,
+            "194": 10,
+            "195": 10,
+            "196": 11,
+            "197": 12,
+            "198": 108,
+            "199": 13,
+            "200": 14,
+            "202": 96,
+            "203": 98,
+            "204": 112,
+            "205": 113,
+            "256": 24,
+            "257": 25,
+            "258": 26,
+            "259": 27,
+            "260": 28,
+            "320": 32,
+            "321": 33,
+            "322": 34,
+            "323": 35,
+            "324": 36,
+            "325": 37,
+            "326": 38,
+            "327": 39,
+            "328": 87,
+            "384": 45,
+            "385": 46,
+            "386": 104,
+            "387": 105,
+            "389": 106,
+            "390": 107,
+            "448": 29,
+            "449": 30,
+            "451": 31,
+            "512": 16,
+            "513": 16,
+            "514": 17,
+            "515": 18,
+            "516": 19,
+            "517": 20,
+            "518": 21,
+            "520": 109,
+            "576": 40,
+            "577": 41,
+            "578": 42,
+            "579": 43,
+            "581": 44,
+            "584": 50,
+            "585": 51,
+            "586": 55,
+            "587": 40,
+            "588": 55,
+            "646": 53,
+            "647": 54,
+            "648": 85,
+            "653": 102,
+            "66": 80,
+            "67": 81,
+            "68": 81,
+            "704": 56,
+            "705": 57,
+            "706": 58,
+            "707": 59,
+            "708": 60,
+            "709": 61,
+            "710": 62,
+            "711": 63,
+            "768": 64,
+            "769": 65,
+            "770": 66,
+            "771": 67,
+            "774": 68,
+            "775": 69,
+            "776": 70,
+            "777": 71,
+            "778": 22,
+            "832": 73,
+            "833": 74,
+            "834": 78,
+            "835": 79,
+            "836": 72,
+            "837": 77,
+            "838": 75,
+            "839": 76,
+            "840": 82,
+            "841": 83,
+            "843": 73,
+            "896": 88,
+            "897": 89,
+            "898": 90,
+            "900": 92,
+            "901": 93,
+            "902": 95,
+            "903": 99,
+            "904": 100,
+            "905": 101,
+            "906": 103,
+            "961": 114,
+            "963": 47
+        },
+        "objects": {
+            "1024": {
+                "group": "novelty",
+                "visual": {
+                    "name": "guitar fret noise"
+                }
+            },
+            "1025": {
+                "group": "novelty",
+                "visual": {
+                    "name": "fifth saw lead"
+                }
+            },
+            "1026": {
+                "group": "novelty",
+                "visual": {
+                    "name": "fifth swell"
+                }
+            },
+            "1027": {
+                "group": "novelty",
+                "visual": {
+                    "name": "soundtrack"
+                }
+            },
+            "1030": {
+                "group": "novelty",
+                "visual": {
+                    "name": "bird tweet"
+                }
+            },
+            "1031": {
+                "group": "novelty",
+                "visual": {
+                    "name": "telephone ring"
+                }
+            },
+            "1035": {
+                "group": "novelty",
+                "visual": {
+                    "name": "scoot"
+                }
+            },
+            "1036": {
+                "group": "novelty",
+                "visual": {
+                    "name": "buzz saw"
+                }
+            },
+            "1037": {
+                "group": "novelty",
+                "visual": {
+                    "name": "mosquito"
+                }
+            },
+            "1040": {
+                "group": "novelty",
+                "visual": {
+                    "name": "theremin"
+                }
+            },
+            "1041": {
+                "group": "novelty",
+                "visual": {
+                    "name": "sonar ping"
+                }
+            },
+            "128": {
+                "group": "keyboard",
+                "visual": {
+                    "name": "grand piano 1"
+                }
+            },
+            "129": {
+                "group": "keyboard",
+                "visual": {
+                    "name": "bright piano"
+                }
+            },
+            "130": {
+                "group": "keyboard",
+                "visual": {
+                    "name": "electric grand"
+                }
+            },
+            "131": {
+                "group": "keyboard",
+                "visual": {
+                    "name": "honky-tonk piano"
+                }
+            },
+            "132": {
+                "group": "keyboard",
+                "visual": {
+                    "name": "electric piano 1"
+                }
+            },
+            "133": {
+                "group": "keyboard",
+                "visual": {
+                    "name": "electric piano 2"
+                }
+            },
+            "134": {
+                "group": "keyboard",
+                "visual": {
+                    "name": "harpsichord"
+                }
+            },
+            "135": {
+                "group": "keyboard",
+                "visual": {
+                    "name": "clavinet"
+                }
+            },
+            "136": {
+                "group": "keyboard",
+                "visual": {
+                    "name": "dulcimer"
+                }
+            },
+            "137": {
+                "group": "keyboard",
+                "visual": {
+                    "name": "grand piano 2"
+                }
+            },
+            "192": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "celesta"
+                }
+            },
+            "193": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "glockenspiel"
+                }
+            },
+            "194": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "music box 1"
+                }
+            },
+            "195": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "music box 2"
+                }
+            },
+            "196": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "vibraphone"
+                }
+            },
+            "197": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "marimba"
+                }
+            },
+            "198": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "kalimba"
+                }
+            },
+            "199": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "xylophone"
+                }
+            },
+            "200": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "tubular bell"
+                }
+            },
+            "201": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "bell synth"
+                }
+            },
+            "202": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "rain drop"
+                }
+            },
+            "203": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "crystal"
+                }
+            },
+            "204": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "tinkle bell"
+                }
+            },
+            "205": {
+                "group": "idiophone",
+                "visual": {
+                    "name": "agogo"
+                }
+            },
+            "256": {
+                "group": "guitar",
+                "visual": {
+                    "name": "nylon guitar"
+                }
+            },
+            "257": {
+                "group": "guitar",
+                "visual": {
+                    "name": "steel guitar"
+                }
+            },
+            "258": {
+                "group": "guitar",
+                "visual": {
+                    "name": "jazz guitar"
+                }
+            },
+            "259": {
+                "group": "guitar",
+                "visual": {
+                    "name": "clean guitar"
+                }
+            },
+            "260": {
+                "group": "guitar",
+                "visual": {
+                    "name": "muted guitar"
+                }
+            },
+            "320": {
+                "group": "bass",
+                "visual": {
+                    "name": "acoustic bass"
+                }
+            },
+            "321": {
+                "group": "bass",
+                "visual": {
+                    "name": "fingered bass"
+                }
+            },
+            "322": {
+                "group": "bass",
+                "visual": {
+                    "name": "picked bass"
+                }
+            },
+            "323": {
+                "group": "bass",
+                "visual": {
+                    "name": "fretless bass"
+                }
+            },
+            "324": {
+                "group": "bass",
+                "visual": {
+                    "name": "slap bass 1"
+                }
+            },
+            "325": {
+                "group": "bass",
+                "visual": {
+                    "name": "slap bass 2"
+                }
+            },
+            "326": {
+                "group": "bass",
+                "visual": {
+                    "name": "bass synth 1"
+                }
+            },
+            "327": {
+                "group": "bass",
+                "visual": {
+                    "name": "bass synth 2"
+                }
+            },
+            "328": {
+                "group": "bass",
+                "visual": {
+                    "name": "Bass & lead"
+                }
+            },
+            "329": {
+                "group": "bass",
+                "visual": {
+                    "name": "dubstep yoi yoi"
+                }
+            },
+            "384": {
+                "group": "plucked_string",
+                "visual": {
+                    "name": "pizzicato strings"
+                }
+            },
+            "385": {
+                "group": "plucked_string",
+                "visual": {
+                    "name": "harp"
+                }
+            },
+            "386": {
+                "group": "plucked_string",
+                "visual": {
+                    "name": "sitar"
+                }
+            },
+            "387": {
+                "group": "plucked_string",
+                "visual": {
+                    "name": "banjo"
+                }
+            },
+            "388": {
+                "group": "plucked_string",
+                "visual": {
+                    "name": "ukulele"
+                }
+            },
+            "389": {
+                "group": "plucked_string",
+                "visual": {
+                    "name": "shamisen"
+                }
+            },
+            "390": {
+                "group": "plucked_string",
+                "visual": {
+                    "name": "koto"
+                }
+            },
+            "448": {
+                "group": "distortion",
+                "visual": {
+                    "name": "overdrive guitar"
+                }
+            },
+            "449": {
+                "group": "distortion",
+                "visual": {
+                    "name": "distortion guitar"
+                }
+            },
+            "450": {
+                "group": "distortion",
+                "visual": {
+                    "name": "charango synth"
+                }
+            },
+            "451": {
+                "group": "distortion",
+                "visual": {
+                    "name": "guitar harmonics"
+                }
+            },
+            "452": {
+                "group": "distortion",
+                "visual": {
+                    "name": "PWM overdrive"
+                }
+            },
+            "453": {
+                "group": "distortion",
+                "visual": {
+                    "name": "PWM distortion"
+                }
+            },
+            "454": {
+                "group": "distortion",
+                "visual": {
+                    "name": "FM overdrive"
+                }
+            },
+            "455": {
+                "group": "distortion",
+                "visual": {
+                    "name": "FM distortion"
+                }
+            },
+            "512": {
+                "group": "bellows",
+                "visual": {
+                    "name": "drawbar organ 1"
+                }
+            },
+            "513": {
+                "group": "bellows",
+                "visual": {
+                    "name": "drawbar organ 2"
+                }
+            },
+            "514": {
+                "group": "bellows",
+                "visual": {
+                    "name": "percussive organ"
+                }
+            },
+            "515": {
+                "group": "bellows",
+                "visual": {
+                    "name": "rock organ"
+                }
+            },
+            "516": {
+                "group": "bellows",
+                "visual": {
+                    "name": "pipe organ"
+                }
+            },
+            "517": {
+                "group": "bellows",
+                "visual": {
+                    "name": "reed organ"
+                }
+            },
+            "518": {
+                "group": "bellows",
+                "visual": {
+                    "name": "accordion"
+                }
+            },
+            "519": {
+                "group": "bellows",
+                "visual": {
+                    "name": "bandoneon"
+                }
+            },
+            "520": {
+                "group": "bellows",
+                "visual": {
+                    "name": "bagpipe"
+                }
+            },
+            "576": {
+                "group": "string",
+                "visual": {
+                    "name": "violin 1"
+                }
+            },
+            "577": {
+                "group": "string",
+                "visual": {
+                    "name": "viola"
+                }
+            },
+            "578": {
+                "group": "string",
+                "visual": {
+                    "name": "cello"
+                }
+            },
+            "579": {
+                "group": "string",
+                "visual": {
+                    "name": "contrabass"
+                }
+            },
+            "580": {
+                "group": "string",
+                "visual": {
+                    "name": "fiddle"
+                }
+            },
+            "581": {
+                "group": "string",
+                "visual": {
+                    "name": "tremolo strings"
+                }
+            },
+            "582": {
+                "group": "string",
+                "visual": {
+                    "name": "strings"
+                }
+            },
+            "583": {
+                "group": "string",
+                "visual": {
+                    "name": "slow strings"
+                }
+            },
+            "584": {
+                "group": "string",
+                "visual": {
+                    "name": "strings synth 1"
+                }
+            },
+            "585": {
+                "group": "string",
+                "visual": {
+                    "name": "strings synth 2"
+                }
+            },
+            "586": {
+                "group": "string",
+                "visual": {
+                    "name": "orchestra hit 1"
+                }
+            },
+            "587": {
+                "group": "string",
+                "visual": {
+                    "name": "violin 2"
+                }
+            },
+            "588": {
+                "group": "string",
+                "visual": {
+                    "name": "orchestra hit 2"
+                }
+            },
+            "64": {
+                "group": "retro",
+                "visual": {
+                    "name": "square wave"
+                }
+            },
+            "640": {
+                "group": "vocal",
+                "visual": {
+                    "name": "choir soprano"
+                }
+            },
+            "641": {
+                "group": "vocal",
+                "visual": {
+                    "name": "choir tenor"
+                }
+            },
+            "642": {
+                "group": "vocal",
+                "visual": {
+                    "name": "choir bass"
+                }
+            },
+            "643": {
+                "group": "vocal",
+                "visual": {
+                    "name": "solo soprano"
+                }
+            },
+            "644": {
+                "group": "vocal",
+                "visual": {
+                    "name": "solo tenor"
+                }
+            },
+            "645": {
+                "group": "vocal",
+                "visual": {
+                    "name": "solo bass"
+                }
+            },
+            "646": {
+                "group": "vocal",
+                "visual": {
+                    "name": "voice ooh"
+                }
+            },
+            "647": {
+                "group": "vocal",
+                "visual": {
+                    "name": "voice synth"
+                }
+            },
+            "648": {
+                "group": "vocal",
+                "visual": {
+                    "name": "vox synth lead"
+                }
+            },
+            "649": {
+                "group": "vocal",
+                "visual": {
+                    "name": "tiny robot"
+                }
+            },
+            "65": {
+                "group": "retro",
+                "visual": {
+                    "name": "triangle wave"
+                }
+            },
+            "650": {
+                "group": "vocal",
+                "visual": {
+                    "name": "yowie"
+                }
+            },
+            "651": {
+                "group": "vocal",
+                "visual": {
+                    "name": "mouse"
+                }
+            },
+            "652": {
+                "group": "vocal",
+                "visual": {
+                    "name": "gumdrop"
+                }
+            },
+            "653": {
+                "group": "vocal",
+                "visual": {
+                    "name": "echo drop"
+                }
+            },
+            "654": {
+                "group": "vocal",
+                "visual": {
+                    "name": "dark choir"
+                }
+            },
+            "66": {
+                "group": "retro",
+                "visual": {
+                    "name": "square lead"
+                }
+            },
+            "67": {
+                "group": "retro",
+                "visual": {
+                    "name": "sawtooth lead 1"
+                }
+            },
+            "68": {
+                "group": "retro",
+                "visual": {
+                    "name": "sawtooth lead 2"
+                }
+            },
+            "70": {
+                "group": "retro",
+                "visual": {
+                    "name": "FM twang"
+                }
+            },
+            "704": {
+                "group": "brass",
+                "visual": {
+                    "name": "trumpet"
+                }
+            },
+            "705": {
+                "group": "brass",
+                "visual": {
+                    "name": "trombone"
+                }
+            },
+            "706": {
+                "group": "brass",
+                "visual": {
+                    "name": "tuba"
+                }
+            },
+            "707": {
+                "group": "brass",
+                "visual": {
+                    "name": "muted trumpet"
+                }
+            },
+            "708": {
+                "group": "brass",
+                "visual": {
+                    "name": "french horn"
+                }
+            },
+            "709": {
+                "group": "brass",
+                "visual": {
+                    "name": "brass section"
+                }
+            },
+            "71": {
+                "group": "retro",
+                "visual": {
+                    "name": "FM bass"
+                }
+            },
+            "710": {
+                "group": "brass",
+                "visual": {
+                    "name": "brass synth 1"
+                }
+            },
+            "711": {
+                "group": "brass",
+                "visual": {
+                    "name": "brass synth 2"
+                }
+            },
+            "712": {
+                "group": "brass",
+                "visual": {
+                    "name": "pulse brass"
+                }
+            },
+            "72": {
+                "group": "retro",
+                "visual": {
+                    "name": "FM flute"
+                }
+            },
+            "73": {
+                "group": "retro",
+                "visual": {
+                    "name": "FM organ"
+                }
+            },
+            "74": {
+                "group": "retro",
+                "visual": {
+                    "name": "NES Pulse"
+                }
+            },
+            "75": {
+                "group": "retro",
+                "visual": {
+                    "name": "Gameboy Pulse"
+                }
+            },
+            "76": {
+                "group": "retro",
+                "visual": {
+                    "name": "VRC6 Sawtooth"
+                }
+            },
+            "768": {
+                "group": "reed",
+                "visual": {
+                    "name": "soprano sax"
+                }
+            },
+            "769": {
+                "group": "reed",
+                "visual": {
+                    "name": "alto sax"
+                }
+            },
+            "77": {
+                "group": "retro",
+                "visual": {
+                    "name": "Atari Square"
+                }
+            },
+            "770": {
+                "group": "reed",
+                "visual": {
+                    "name": "tenor sax"
+                }
+            },
+            "771": {
+                "group": "reed",
+                "visual": {
+                    "name": "baritone sax"
+                }
+            },
+            "772": {
+                "group": "reed",
+                "visual": {
+                    "name": "sax synth"
+                }
+            },
+            "773": {
+                "group": "reed",
+                "visual": {
+                    "name": "shehnai"
+                }
+            },
+            "774": {
+                "group": "reed",
+                "visual": {
+                    "name": "oboe"
+                }
+            },
+            "775": {
+                "group": "reed",
+                "visual": {
+                    "name": "english horn"
+                }
+            },
+            "776": {
+                "group": "reed",
+                "visual": {
+                    "name": "bassoon"
+                }
+            },
+            "777": {
+                "group": "reed",
+                "visual": {
+                    "name": "clarinet"
+                }
+            },
+            "778": {
+                "group": "reed",
+                "visual": {
+                    "name": "harmonica"
+                }
+            },
+            "78": {
+                "group": "retro",
+                "visual": {
+                    "name": "Atari Bass"
+                }
+            },
+            "79": {
+                "group": "retro",
+                "visual": {
+                    "name": "Sunsoft Bass"
+                }
+            },
+            "832": {
+                "group": "flute",
+                "visual": {
+                    "name": "flute 1"
+                }
+            },
+            "833": {
+                "group": "flute",
+                "visual": {
+                    "name": "recorder"
+                }
+            },
+            "834": {
+                "group": "flute",
+                "visual": {
+                    "name": "whistle"
+                }
+            },
+            "835": {
+                "group": "flute",
+                "visual": {
+                    "name": "ocarina"
+                }
+            },
+            "836": {
+                "group": "flute",
+                "visual": {
+                    "name": "piccolo"
+                }
+            },
+            "837": {
+                "group": "flute",
+                "visual": {
+                    "name": "shakuhachi"
+                }
+            },
+            "838": {
+                "group": "flute",
+                "visual": {
+                    "name": "pan flute"
+                }
+            },
+            "839": {
+                "group": "flute",
+                "visual": {
+                    "name": "blown bottle"
+                }
+            },
+            "840": {
+                "group": "flute",
+                "visual": {
+                    "name": "calliope"
+                }
+            },
+            "841": {
+                "group": "flute",
+                "visual": {
+                    "name": "chiffer"
+                }
+            },
+            "842": {
+                "group": "flute",
+                "visual": {
+                    "name": "breath noise"
+                }
+            },
+            "843": {
+                "group": "flute",
+                "visual": {
+                    "name": "flute 2"
+                }
+            },
+            "896": {
+                "group": "pad",
+                "visual": {
+                    "name": "new age pad"
+                }
+            },
+            "897": {
+                "group": "pad",
+                "visual": {
+                    "name": "warm pad"
+                }
+            },
+            "898": {
+                "group": "pad",
+                "visual": {
+                    "name": "polysynth pad"
+                }
+            },
+            "899": {
+                "group": "pad",
+                "visual": {
+                    "name": "space voice pad"
+                }
+            },
+            "900": {
+                "group": "pad",
+                "visual": {
+                    "name": "bowed glass pad"
+                }
+            },
+            "901": {
+                "group": "pad",
+                "visual": {
+                    "name": "metallic pad"
+                }
+            },
+            "902": {
+                "group": "pad",
+                "visual": {
+                    "name": "sweep pad"
+                }
+            },
+            "903": {
+                "group": "pad",
+                "visual": {
+                    "name": "atmosphere"
+                }
+            },
+            "904": {
+                "group": "pad",
+                "visual": {
+                    "name": "brightness"
+                }
+            },
+            "905": {
+                "group": "pad",
+                "visual": {
+                    "name": "goblins"
+                }
+            },
+            "906": {
+                "group": "pad",
+                "visual": {
+                    "name": "sci-fi"
+                }
+            },
+            "907": {
+                "group": "pad",
+                "visual": {
+                    "name": "flutter pad"
+                }
+            },
+            "908": {
+                "group": "pad",
+                "visual": {
+                    "name": "feedback pad"
+                }
+            },
+            "961": {
+                "group": "drum",
+                "visual": {
+                    "name": "steel pan"
+                }
+            },
+            "962": {
+                "group": "drum",
+                "visual": {
+                    "name": "steel pan synth"
+                }
+            },
+            "963": {
+                "group": "drum",
+                "visual": {
+                    "name": "timpani"
+                }
+            },
+            "964": {
+                "group": "drum",
+                "visual": {
+                    "name": "dark strike"
+                }
+            },
+            "971": {
+                "group": "drum",
+                "visual": {
+                    "name": "synth kick"
+                }
+            }
+        }
+    }
+}

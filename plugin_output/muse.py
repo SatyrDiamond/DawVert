@@ -6,12 +6,11 @@ import json
 import lxml.etree as ET
 import mido
 import zlib
-import os
 import base64
+import math
 from functions import placements
 from functions import colors
 from functions import params
-from functions import data_values
 from functions import plugins
 from functions import song
 from functions_tracks import tracks_r
@@ -19,6 +18,7 @@ from functions_tracks import tracks_r
 def addvalue(xmltag, name, value):
     x_temp = ET.SubElement(xmltag, name)
     x_temp.text = str(value)
+
 
 def addcontroller(xmltag, i_id, i_value, i_color):
     x_temp = ET.SubElement(xmltag, 'controller')
@@ -63,15 +63,15 @@ def maketrack_master(x_song):
 
 def maketrack_synth(xmltag, insttrackdata, portnum):
     global tracknum
-    print('[output-muse] Synth Track '+str(tracknum)+':', insttrackdata['name'])
     global NoteStep
     global synthidnum
+    print('[output-muse] Synth Track '+str(tracknum)+':', insttrackdata['name'])
     routelist.append([tracknum, 0])
     x_synthtrack = ET.SubElement(xmltag, "SynthI")
-    if 'name' in insttrackdata: addvalue(x_synthtrack, 'name', insttrackdata['name'])
-    else: addvalue(x_synthtrack, 'name', 'Out')
+    addvalue(x_synthtrack, 'name', insttrackdata['name'] if 'name' in insttrackdata else 'Out')
     if 'vol' in insttrackdata: addcontroller(x_synthtrack, 0, insttrackdata['vol'], '#ff0000')
     addvalue(x_synthtrack, 'record', 0)
+    track_mute = 0
     track_mute = insttrackdata['muted'] if 'muted' in insttrackdata else 0
     if 'color' in insttrackdata: addvalue(x_synthtrack, 'color', '#'+colors.rgb_float_to_hex(insttrackdata['color']))
     addvalue(x_synthtrack, 'solo', 0)
@@ -87,57 +87,32 @@ def maketrack_synth(xmltag, insttrackdata, portnum):
     addvalue(x_synthtrack, 'automation', 0)
     addvalue(x_synthtrack, 'port', portnum)
 
-    if 'chain_fx_audio' in insttrackdata: 
-        chain_fx_audio = insttrackdata['chain_fx_audio']
-        for pluginid in chain_fx_audio:
-            plugintype = plugins.get_plug_type(cvpj_l, pluginid)
-            if plugintype[0] == 'ladspa':
-                cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
-                x_fx_plugin = ET.SubElement(x_synthtrack, "plugin")
-                x_fx_plugin.set('file', cvpj_plugindata['name'])
-                x_fx_plugin.set('label', cvpj_plugindata['plugin'])
-                x_fx_plugin.set('channel', '1')
-                for paramnum in range(cvpj_plugindata['numparams']):
-                    pval, ptype, pname = plugins.get_plug_param(cvpj_l, pluginid, 'ladspa_param_'+str(paramnum), 0)
-                    x_fx_control = ET.SubElement(x_fx_plugin, "control")
-                    x_fx_control.set('name', pname)
-                    x_fx_control.set('val', str(pval))
-
+    pluginsupported = False
     if 'instdata' in insttrackdata: 
         insttrackdata_instdata = insttrackdata['instdata']
-        if 'pluginid' in insttrackdata_instdata: 
+        if 'pluginid' in insttrackdata_instdata:
             pluginid = insttrackdata_instdata['pluginid']
-            plugintype = plugins.get_plug_type(cvpj_l, pluginid)
+            inst_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
+            plugintype = inst_plugindata.type_get()
+            print(pluginid, plugintype)
+
             if plugintype == ['vst2', 'lin']:
-                cvpj_plugindata = plugins.get_plug_data(cvpj_l, pluginid)
+                pluginsupported = True
                 addvalue(x_synthtrack, 'synthType', 'VST (synths)')
-                vstpath = data_values.get_value(cvpj_plugindata, 'path', '')
-                vstname = os.path.splitext(os.path.basename(vstpath))[0]
-                addvalue(x_synthtrack, 'class', vstname)
-                datatype = data_values.get_value(cvpj_plugindata, 'datatype', 'none')
-                if datatype == 'chunk':
-                    vstdata = data_values.get_value(cvpj_plugindata, 'chunk', '')
-                    vstdata_bytes = base64.b64decode(vstdata)
-                    musevst = b''
-                    musevst += len(vstdata_bytes).to_bytes(4, 'big')
-                    musevst += zlib.compress(vstdata_bytes)
-                    addvalue(x_synthtrack, 'customData', base64.b64encode(musevst).decode('ascii'))
-                else: 
-                    numparams = data_values.get_value(cvpj_plugindata, 'numparams', 0)
-                    for param in range(numparams):
-                        pval, ptype, pname = plugins.get_plug_param(cvpj_l, pluginid, 'vst_param_'+str(param), 0)
-                        addvalue(x_synthtrack, 'param', pval)
 
-            else: 
-                addvalue(x_synthtrack, 'synthType', 'MESS')
-                addvalue(x_synthtrack, 'class', 'vam')
-                track_mute = 1
+                vstname = inst_plugindata.dataval_get('name', '')
+                vstclass = inst_plugindata.dataval_get('name', '')
+                if vstclass == 'Vitalium': vstclass = 'vitalium'
+                addvalue(x_synthtrack, 'class', vstclass)
+                addvalue(x_synthtrack, 'label', vstname)
 
-        else: 
-            addvalue(x_synthtrack, 'synthType', 'MESS')
-            addvalue(x_synthtrack, 'class', 'vam')
-            track_mute = 1
-    else:
+                vstdata_bytes = inst_plugindata.rawdata_get()
+                musevst = b''
+                musevst += len(vstdata_bytes).to_bytes(4, 'big')
+                musevst += zlib.compress(vstdata_bytes)
+                addvalue(x_synthtrack, 'customData', base64.b64encode(musevst).decode('ascii'))
+
+    if pluginsupported == False:
         addvalue(x_synthtrack, 'synthType', 'MESS')
         addvalue(x_synthtrack, 'class', 'vam')
         track_mute = 1
@@ -149,9 +124,9 @@ def maketrack_synth(xmltag, insttrackdata, portnum):
 
 def maketrack_midi(xmltag, cvpj_trackplacements, trackname, portnum, insttrackdata):
     global tracknum
-    print('[output-muse]  Midi Track '+str(tracknum)+':', insttrackdata['name'])
     global NoteStep
     global synthidnum
+    print('[output-muse]  Midi Track '+str(tracknum)+':', insttrackdata['name'])
     track_transposition = 0
     x_miditrack = ET.SubElement(xmltag, "miditrack")
     if 'color' in insttrackdata: addvalue(x_miditrack, 'color', '#'+colors.rgb_float_to_hex(insttrackdata['color']))
@@ -172,19 +147,96 @@ def maketrack_midi(xmltag, cvpj_trackplacements, trackname, portnum, insttrackda
         if 'name' in placement: addvalue(x_part, 'name', placement['name'])
         p_dur = int(placement['duration']*NoteStep)
         p_pos = int(placement['position']*NoteStep)
-        if p_dur != 0:
-            x_poslen = ET.SubElement(x_part, 'poslen')
-            x_poslen.set('len', str(p_dur))
-            x_poslen.set('tick', str(p_pos))
-            if 'notelist' in placement: 
-                notelist = placement['notelist']
-                for note in notelist:
-                    x_event = ET.SubElement(x_part, "event")
-                    x_event.set('tick', str(int(note['position']*NoteStep)+p_pos))
-                    x_event.set('len', str(int(note['duration']*NoteStep)))
-                    x_event.set('a', str(note['key']+60))
-                    if 'vol' in note: x_event.set('b', str(int(note['vol']*100)))
-                    else: x_event.set('b', '100')
+        x_poslen = ET.SubElement(x_part, 'poslen')
+        x_poslen.set('len', str(p_dur))
+        x_poslen.set('tick', str(p_pos))
+        if 'notelist' in placement: 
+            notelist = placement['notelist']
+            for note in notelist:
+                x_event = ET.SubElement(x_part, "event")
+                x_event.set('tick', str(int(note['position']*NoteStep)+p_pos))
+                x_event.set('len', str(int(note['duration']*NoteStep)))
+                x_event.set('a', str(note['key']+60))
+                x_event.set('b', str(int(note['vol']*100) if 'vol' in note else '100'))
+    tracknum += 1
+
+wavetime = 57.422
+
+def maketrack_wave(xmltag, cvpj_trackplacements, insttrackdata):
+    global tracknum
+    global NoteStep
+    global synthidnum
+    global muse_bpm
+    print('[output-muse]  Wave Track '+str(tracknum)+':', insttrackdata['name'])
+    x_wavetrack = ET.SubElement(xmltag, "wavetrack")
+    routelist.append([tracknum, 0])
+    if 'color' in insttrackdata: addvalue(x_wavetrack, 'color', '#'+colors.rgb_float_to_hex(insttrackdata['color']))
+    if 'name' in insttrackdata: addvalue(x_wavetrack, 'name', insttrackdata['name'])
+    addvalue(x_wavetrack, 'height', 70)
+    addvalue(x_wavetrack, 'record', 0)
+    addvalue(x_wavetrack, 'mute', 0)
+    addvalue(x_wavetrack, 'solo', 0)
+    addvalue(x_wavetrack, 'off', 0)
+    for placement in cvpj_trackplacements:
+        x_part = ET.SubElement(x_wavetrack, "part")
+        if 'name' in placement: addvalue(x_part, 'name', placement['name'])
+        p_dur = int(placement['duration']*NoteStep)
+        p_pos = int(placement['position']*NoteStep)
+
+        p_dur = (p_dur*wavetime)*(120/muse_bpm)
+        p_pos = (p_pos*wavetime)*(120/muse_bpm)
+
+        x_poslen = ET.SubElement(x_part, 'poslen')
+        x_poslen.set('len', str(int(p_dur)))
+        x_poslen.set('sample', str(int(p_pos)))
+
+        frameval = 0
+
+
+        if 'cut' in placement:
+            cutdata = placement['cut']
+            if cutdata['type'] == 'cut':
+                frameval = int((cutdata['start']*(wavetime*96))*(120/muse_bpm))
+
+        xp_event = ET.SubElement(x_part, 'event')
+        xp_poslen = ET.SubElement(xp_event, 'poslen')
+        xp_poslen.set('len', str(int(p_dur)))
+        xp_poslen.set('sample', str(int(p_pos)))
+        addvalue(xp_event, 'frame', frameval)
+        addvalue(xp_event, 'file', placement['file'])
+        if 'audiomod' in placement:
+            audiomoddata = placement['audiomod']
+            stretch_pitch = audiomoddata['pitch'] if 'pitch' in audiomoddata else 0
+            if 'stretch_method' in audiomoddata:
+                stretch_method = audiomoddata['stretch_method']
+                stretch_algorithm = audiomoddata['stretch_algorithm'] if 'stretch_algorithm' in audiomoddata else 'stretch'
+                stretch_data = audiomoddata['stretch_data'] if 'stretch_data' in audiomoddata else {}
+
+                if stretch_method != 'warp':
+                    stretchlist = [0, 1, 1, 1, 7]
+                    muse_stretch = 1
+                    muse_pitch = pow(2, stretch_pitch/12)
+                    stretchlist[0] = 1
+
+                    print(stretch_method)
+
+                    if stretch_method == 'rate_speed': muse_stretch = (1/stretch_data['rate'])
+                    if stretch_method == 'rate_ignoretempo': muse_stretch = (1/stretch_data['rate'])
+                    if stretch_method == 'rate_tempo': muse_stretch = (1/stretch_data['rate'])*(muse_bpm/120)
+
+                    if stretch_algorithm != 'resample':
+                        stretchlist[1] = muse_stretch*muse_pitch
+                        stretchlist[2] = muse_pitch
+                    else:
+                        stretchlist[2] = 1/muse_stretch
+
+                    xp_stretchlist = ET.SubElement(xp_event, 'stretchlist')
+                    xp_stretchlist.text = ' '.join([str(x) for x in stretchlist])
+
+
+
+
+        #print(placement)
     tracknum += 1
 
 def add_timesig(x_siglist, pos, numerator, denominator):
@@ -200,12 +252,15 @@ class output_cvpj(plugin_output.base):
     def is_dawvert_plugin(self): return 'output'
     def getshortname(self): return 'muse'
     def gettype(self): return 'r'
-    def plugin_archs(self): return None
+    def plugin_archs(self): return ['amd64', 'i386']
     def getdawcapabilities(self): 
         return {
+        'fxrack': False,
         'track_lanes': True,
         'placement_cut': True,
+        'placement_audio_stretch': ['rate'],
         'auto_nopl': True,
+        'track_nopl': False
         }
     def getsupportedplugformats(self): return ['vst2']
     def getsupportedplugins(self): return []
@@ -215,6 +270,7 @@ class output_cvpj(plugin_output.base):
         global tracknum
         global synthidnum
         global routelist
+        global muse_bpm
         global cvpj_l
 
         tracknum = 0
@@ -222,6 +278,8 @@ class output_cvpj(plugin_output.base):
 
         cvpj_l = json.loads(convproj_json)
         
+        muse_bpm = int(params.get(cvpj_l, [], 'bpm', 120)[0])
+
         midiDivision = 384
         NoteStep = midiDivision/4
         
@@ -230,14 +288,11 @@ class output_cvpj(plugin_output.base):
         x_song = ET.SubElement(x_muse, "song")
         addvalue(x_song, 'info', '')
         addvalue(x_song, 'showinfo', 1)
-
-        loop_on, loop_start, loop_end = song.get_loopdata(cvpj_l, 'r')
-
         addvalue(x_song, 'cpos', 0) #start
-        addvalue(x_song, 'rpos', int(loop_end*NoteStep)) #end
-        addvalue(x_song, 'lpos', int(loop_start*NoteStep))
+        addvalue(x_song, 'rpos', -1) #end
+        addvalue(x_song, 'lpos', 0)
         addvalue(x_song, 'master', 1)
-        addvalue(x_song, 'loop', int(loop_on))
+        addvalue(x_song, 'loop', 0)
         addvalue(x_song, 'punchin', 0)
         addvalue(x_song, 'punchout', 0)
         addvalue(x_song, 'record', 0)
@@ -259,11 +314,11 @@ class output_cvpj(plugin_output.base):
 
         for cvpj_trackid, cvpj_trackdata, track_placements in tracks_r.iter(cvpj_l):
             if cvpj_trackdata['type'] == 'instrument':
-                track_placements_islaned = bool(track_placements['laned']) if 'laned' in track_placements else False
-
-                if track_placements_islaned == False:
-                    if 'notes' in track_placements: 
-                        maketrack_midi(x_song, track_placements['notes'], cvpj_trackdata['name'], synthidnum, cvpj_trackdata)
+                cvpj_tr_islaned = False
+                if 'laned' in track_placements: 
+                    if track_placements['laned'] == 1: cvpj_tr_islaned = True
+                if cvpj_tr_islaned == False:
+                    if 'notes' in track_placements: maketrack_midi(x_song, track_placements['notes'], cvpj_trackdata['name'], synthidnum, cvpj_trackdata)
                 else:
                     for laneid in track_placements['laneorder']:
                         lanedata = track_placements['lanedata'][laneid]
@@ -272,15 +327,14 @@ class output_cvpj(plugin_output.base):
     
                 maketrack_synth(x_song, cvpj_trackdata, synthidnum)
 
+            if cvpj_trackdata['type'] == 'audio':
+                if 'audio' in track_placements: maketrack_wave(x_song, track_placements['audio'], cvpj_trackdata)
+
         addroute_audioout(x_song, 0, 0, 1, "system:playback_1")
         addroute_audioout(x_song, 1, 0, 1, "system:playback_2")
 
         for routeid in routelist:
             addroute_audio(x_song, routeid[0], routeid[1])
-
-        muse_bpm = int(params.get(cvpj_l, [], 'bpm', 120)[0])
-
-        muse_numerator, muse_denominator = song.get_timesig(cvpj_l)
 
         x_tempolist = ET.SubElement(x_song, "tempolist")
         x_tempolist.set('fix', "0")
@@ -288,6 +342,8 @@ class output_cvpj(plugin_output.base):
         x_tempo.set('at', "21474837")
         addvalue(x_tempo, 'tick', 0)
         addvalue(x_tempo, 'val', mido.bpm2tempo(muse_bpm))
+
+        muse_numerator, muse_denominator = song.get_timesig(cvpj_l)
 
         x_siglist = ET.SubElement(x_song, "siglist")
 

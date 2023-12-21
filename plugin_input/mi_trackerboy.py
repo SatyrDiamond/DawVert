@@ -270,7 +270,9 @@ class input_trackerboy(plugin_input.base):
                     env_sustain = 1
 
                     if trackerboy_instdata[6] == 0: env_sustain = 1
-                    elif trackerboy_instdata[6] < 8: env_decay = trackerboy_instdata[6]/5
+                    elif trackerboy_instdata[6] < 8: 
+                        env_decay = trackerboy_instdata[6]/5
+                        env_sustain = 0
                     elif trackerboy_instdata[6] >= 8:
                         env_attack = (trackerboy_instdata[6]-8)/5
                         env_sustain = 1

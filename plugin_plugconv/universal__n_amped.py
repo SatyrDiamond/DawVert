@@ -27,7 +27,7 @@ class plugconv(plugin_plugconv.base):
 
             auto_data.rename_plugparam(cvpj_l, pluginid, 'delayLfoRateHz', 'freq')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'delayLfoDepth', 'depth')
-            return True
+            return 1
 
         if plugintype[1] == 'Tremolo':
             lfoARateHz = cvpj_plugindata.param_get('lfoARateHz', 0)[0]
@@ -38,7 +38,7 @@ class plugconv(plugin_plugconv.base):
 
             auto_data.rename_plugparam(cvpj_l, pluginid, 'lfoARateHz', 'freq')
             auto_data.rename_plugparam(cvpj_l, pluginid, 'lfoADepth', 'depth')
-            return True
+            return 1
 
         if plugintype[1] == 'BitCrusher':
             bitcrush_bits = cvpj_plugindata.param_get('bits', 0)[0]
@@ -52,7 +52,7 @@ class plugconv(plugin_plugconv.base):
 
             auto_data.rename_plugparam(cvpj_l, pluginid, 'down', 'freq')
             auto_data.function_value(cvpj_l, ['plugin', pluginid, 'freq'], bitcrush_freq)
-            return True
+            return 1
 
         if plugintype[1] in ['Compressor', 'Expander']:
             comp_pregain = cvpj_plugindata.param_get('preGainDB', 0)[0]
@@ -106,7 +106,7 @@ class plugconv(plugin_plugconv.base):
             auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 0.001)
             auto_data.multiply(cvpj_l, ['plugin', pluginid, 'lookahead'], 0, 0.001)
             auto_data.multiply(cvpj_l, ['plugin', pluginid, 'knee'], 0, 6)
-            return True
+            return 1
 
         if plugintype[1] == 'EqualizerPro':
             master_gain = cvpj_plugindata.param_get("postGain", 0)[0]
@@ -139,5 +139,6 @@ class plugconv(plugin_plugconv.base):
 
             cvpj_plugindata.replace('universal', 'eq-bands')
             cvpj_plugindata.param_add('gain_out', master_gain, 'float', 'Out Gain')
-            return True
+            return 1
 
+        return 2

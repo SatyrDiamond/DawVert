@@ -19,4 +19,6 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.replace('native-tracktion', 'volume')
             cvpj_plugindata.param_add('volume', (bal_vol/256), 'float', "")
             cvpj_plugindata.param_add('pan', (bal_pan/128), 'float', "")
-            return True
+            return 1
+            
+        return 2

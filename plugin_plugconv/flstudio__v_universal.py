@@ -55,4 +55,6 @@ class plugconv(plugin_plugconv.base):
                     cvpj_plugindata.param_add(bandstarttxt+'_freq', eq_band_freq*65536, 'int', "")
                     cvpj_plugindata.param_add(bandstarttxt+'_width', eq_band_q*65536, 'int', "")
                     cvpj_plugindata.param_add(bandstarttxt+'_type', band_shape, 'int', "")
-            return True
+            return 0
+
+        return 2

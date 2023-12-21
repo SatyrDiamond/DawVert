@@ -71,4 +71,6 @@ class plugconv(plugin_plugconv.base):
                 cvpj_plugindata.param_add('LPfreq', data_LP['freq'], 'float', 'LPfreq')
                 cvpj_plugindata.param_add('LPres', getq(data_LP), 'float', 'LPres')
                 cvpj_plugindata.param_add('LP', getslope(data_LP), 'float', 'LP')
-                
+            return 0
+
+        return 2

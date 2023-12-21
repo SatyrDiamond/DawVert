@@ -7,13 +7,13 @@ from functions import note_data
 from functions import placement_data
 from functions import plugins
 from functions import song
+from functions import colors
+from functions import data_dataset
 from functions_tracks import tracks_mi
 import plugin_input
 import json
 import struct
 import os
-
-pixi_colors = [[1, 1, 1],[0.31, 0.31, 1],[0.31, 1, 0.31],[0.31, 1, 1],[1, 0.31, 0.31],[1, 0.31, 1],[1, 1, 0.31],[1, 0.65, 0.48],[0.48, 0.65, 1],[0.65, 1, 0.48],[0.48, 1, 0.65],[1, 0.48, 0.65],[0.65, 0.48, 1],[0.40, 1, 0.7],[0.70, 1, 0.4],[1, 0.35, 0.74]]
 
 class input_cvpj_f(plugin_input.base):
     def __init__(self): pass
@@ -43,6 +43,9 @@ class input_cvpj_f(plugin_input.base):
         
         samplefolder = extra_param['samplefolder']
         
+        dataset = data_dataset.dataset('./data_dset/pixitracker.dset')
+        colordata = colors.colorset(dataset.colorset_e_list('inst', 'main'))
+
         for _ in range(16): pixi_data_sounds.append([None,None,None,None,None,None,None,None])
 
         for pixi_chunk in pixi_chunks:
@@ -142,7 +145,7 @@ class input_cvpj_f(plugin_input.base):
             pluginid = plugins.get_id()
 
             tracks_mi.inst_create(cvpj_l, cvpj_instid)
-            tracks_mi.inst_visual(cvpj_l, cvpj_instid, name='Inst #'+str(instnum+1), color=pixi_colors[instnum])
+            tracks_mi.inst_visual(cvpj_l, cvpj_instid, name='Inst #'+str(instnum+1), color=colordata.getcolornum(instnum))
 
             if pixi_data_sounds[instnum] != [None,None,None,None,None,None,None,None]:
                 t_sounddata = pixi_data_sounds[instnum]
@@ -152,12 +155,14 @@ class input_cvpj_f(plugin_input.base):
                 tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'pitch', t_sounddata[2]/100, 'float')
                 tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'instdata', 'middlenote', t_sounddata[3]*-1)
                 tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', t_sounddata[4]/100, 'float')
-                plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, wave_path)
-                plugins.add_plug_data(cvpj_l, pluginid, 'point_value_type', "samples")
-                plugins.add_plug_data(cvpj_l, pluginid, 'start', t_sounddata[5])
-                plugins.add_plug_data(cvpj_l, pluginid, 'end', t_sounddata[6])
-                plugins.add_plug_data(cvpj_l, pluginid, 'length', len(t_sounddata[7])//t_sounddata[0])
-                plugins.add_plug_data(cvpj_l, pluginid, 'trigger', 'normal')
+
+                inst_plugindata = plugins.cvpj_plugin('sampler', wave_path, None)
+                inst_plugindata.dataval_add('point_value_type', "samples")
+                inst_plugindata.dataval_add('start', t_sounddata[5])
+                inst_plugindata.dataval_add('end', t_sounddata[6])
+                inst_plugindata.dataval_add('length', len(t_sounddata[7])//t_sounddata[0])
+                inst_plugindata.dataval_add('trigger', 'normal')
+                inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
         for pixi_data_pattern in pixi_data_patterns:
             nli_notes = []

@@ -1,0 +1,1857 @@
+{
+    "drums": {
+        "objects": {
+            "0": {
+                "drumset": {
+                    "-1": {
+                        "visual": {
+                            "name": "Ride Cymbal 2"
+                        }
+                    },
+                    "-10": {
+                        "visual": {
+                            "name": "High Tom"
+                        }
+                    },
+                    "-11": {
+                        "visual": {
+                            "name": "Crash Cymbal 1"
+                        }
+                    },
+                    "-12": {
+                        "visual": {
+                            "name": "Hi-Mid Tom"
+                        }
+                    },
+                    "-13": {
+                        "visual": {
+                            "name": "Low-Mid Tom"
+                        }
+                    },
+                    "-14": {
+                        "visual": {
+                            "name": "Open Hi-Hat"
+                        }
+                    },
+                    "-15": {
+                        "visual": {
+                            "name": "Low Tom"
+                        }
+                    },
+                    "-16": {
+                        "visual": {
+                            "name": "Pedal Hi-Hat"
+                        }
+                    },
+                    "-17": {
+                        "visual": {
+                            "name": "High Floor Tom"
+                        }
+                    },
+                    "-18": {
+                        "visual": {
+                            "name": "Closed Hi-Hat"
+                        }
+                    },
+                    "-19": {
+                        "visual": {
+                            "name": "Low Floor Tom"
+                        }
+                    },
+                    "-2": {
+                        "visual": {
+                            "name": "Vibraslap"
+                        }
+                    },
+                    "-20": {
+                        "visual": {
+                            "name": "Electric Snare"
+                        }
+                    },
+                    "-21": {
+                        "visual": {
+                            "name": "Hand Clap"
+                        }
+                    },
+                    "-22": {
+                        "visual": {
+                            "name": "Acoustic Snare"
+                        }
+                    },
+                    "-23": {
+                        "visual": {
+                            "name": "Side Stick"
+                        }
+                    },
+                    "-24": {
+                        "visual": {
+                            "name": "Bass Drum 1"
+                        }
+                    },
+                    "-25": {
+                        "visual": {
+                            "name": "Acoustic Bass Drum"
+                        }
+                    },
+                    "-3": {
+                        "visual": {
+                            "name": "Crash Symbol 2"
+                        }
+                    },
+                    "-4": {
+                        "visual": {
+                            "name": "Cowbell"
+                        }
+                    },
+                    "-5": {
+                        "visual": {
+                            "name": "Splash Cymbal"
+                        }
+                    },
+                    "-6": {
+                        "visual": {
+                            "name": "Tambourine"
+                        }
+                    },
+                    "-7": {
+                        "visual": {
+                            "name": "Ride Bell"
+                        }
+                    },
+                    "-8": {
+                        "visual": {
+                            "name": "Chinese Cymbal"
+                        }
+                    },
+                    "-9": {
+                        "visual": {
+                            "name": "Ride Cymbal 1"
+                        }
+                    },
+                    "0": {
+                        "visual": {
+                            "name": "Hi Bongo"
+                        }
+                    },
+                    "1": {
+                        "visual": {
+                            "name": "Low Bongo"
+                        }
+                    },
+                    "10": {
+                        "visual": {
+                            "name": "Maracas"
+                        }
+                    },
+                    "11": {
+                        "visual": {
+                            "name": "Short Whistle"
+                        }
+                    },
+                    "12": {
+                        "visual": {
+                            "name": "Long Whistle"
+                        }
+                    },
+                    "13": {
+                        "visual": {
+                            "name": "Short Guiro"
+                        }
+                    },
+                    "14": {
+                        "visual": {
+                            "name": "Long Guiro"
+                        }
+                    },
+                    "15": {
+                        "visual": {
+                            "name": "Claves"
+                        }
+                    },
+                    "16": {
+                        "visual": {
+                            "name": "Hi Wood Block"
+                        }
+                    },
+                    "17": {
+                        "visual": {
+                            "name": "Low Wood Block"
+                        }
+                    },
+                    "18": {
+                        "visual": {
+                            "name": "Mute Cuica"
+                        }
+                    },
+                    "19": {
+                        "visual": {
+                            "name": "Open Cuica"
+                        }
+                    },
+                    "2": {
+                        "visual": {
+                            "name": "Mute Hi Conga"
+                        }
+                    },
+                    "20": {
+                        "visual": {
+                            "name": "Mute Triangle"
+                        }
+                    },
+                    "21": {
+                        "visual": {
+                            "name": "Open Triangle"
+                        }
+                    },
+                    "22": {
+                        "visual": {
+                            "name": "Shaker"
+                        }
+                    },
+                    "3": {
+                        "visual": {
+                            "name": "Open Hi Conga"
+                        }
+                    },
+                    "4": {
+                        "visual": {
+                            "name": "Low Conga"
+                        }
+                    },
+                    "5": {
+                        "visual": {
+                            "name": "High Timbale"
+                        }
+                    },
+                    "6": {
+                        "visual": {
+                            "name": "Low Timbale"
+                        }
+                    },
+                    "7": {
+                        "visual": {
+                            "name": "High Agogo"
+                        }
+                    },
+                    "8": {
+                        "visual": {
+                            "name": "Low Agogo"
+                        }
+                    },
+                    "9": {
+                        "visual": {
+                            "name": "Cabasa"
+                        }
+                    }
+                },
+                "visual": {
+                    "name": "Standard Drum Kit"
+                }
+            },
+            "16": {
+                "visual": {
+                    "name": "Power Drum Kit"
+                }
+            },
+            "24": {
+                "visual": {
+                    "name": "Electric Drum Kit"
+                }
+            },
+            "25": {
+                "visual": {
+                    "name": "Rap TR808 Drums"
+                }
+            },
+            "32": {
+                "visual": {
+                    "name": "Jazz Drum Kit"
+                }
+            },
+            "40": {
+                "visual": {
+                    "name": "Brush Kit"
+                }
+            },
+            "8": {
+                "visual": {
+                    "name": "Room Drum Kit"
+                }
+            }
+        }
+    },
+    "inst": {
+        "groups": {
+            "bass": {
+                "visual": {
+                    "color": [
+                        0.15,
+                        0.15,
+                        0.15
+                    ],
+                    "name": "Basses"
+                }
+            },
+            "brass": {
+                "visual": {
+                    "color": [
+                        0.94,
+                        0.87,
+                        0.47
+                    ],
+                    "name": "Brass"
+                }
+            },
+            "chromaticperc": {
+                "visual": {
+                    "color": [
+                        0.82,
+                        0.32,
+                        0.18
+                    ],
+                    "name": "Chromatic Percussion"
+                }
+            },
+            "ensemble": {
+                "visual": {
+                    "color": [
+                        0.41,
+                        0.06,
+                        0.02
+                    ],
+                    "name": "Ensembles"
+                }
+            },
+            "ethnic": {
+                "visual": {
+                    "color": [
+                        0.45,
+                        0.18,
+                        0.15
+                    ],
+                    "name": "Ethnic"
+                }
+            },
+            "guitar": {
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.35,
+                        0.0
+                    ],
+                    "name": "Guitars"
+                }
+            },
+            "organ": {
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.44,
+                        0.15
+                    ],
+                    "name": "Organs"
+                }
+            },
+            "perc": {
+                "visual": {
+                    "color": [
+                        0.56,
+                        0.57,
+                        0.57
+                    ],
+                    "name": "Percussive"
+                }
+            },
+            "piano": {
+                "visual": {
+                    "color": [
+                        0.1,
+                        0.11,
+                        0.11
+                    ],
+                    "name": "Pianos"
+                }
+            },
+            "pipe": {
+                "visual": {
+                    "color": [
+                        0.27,
+                        0.27,
+                        0.27
+                    ],
+                    "name": "Pipes"
+                }
+            },
+            "reed": {
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.69,
+                        0.41
+                    ],
+                    "name": "Reeds"
+                }
+            },
+            "sfx": {
+                "visual": {
+                    "color": [
+                        0.8,
+                        0.8,
+                        0.8
+                    ],
+                    "name": "Sound FXs"
+                }
+            },
+            "strings": {
+                "visual": {
+                    "color": [
+                        0.41,
+                        0.06,
+                        0.02
+                    ],
+                    "name": "Strings"
+                }
+            },
+            "synthfx": {
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Synth FXs"
+                }
+            },
+            "synthlead": {
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Synth Leads"
+                }
+            },
+            "synthpad": {
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Synth Pads"
+                }
+            }
+        },
+        "objects": {
+            "0": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.1,
+                        0.11,
+                        0.11
+                    ],
+                    "name": "Acoustic Grand Piano"
+                }
+            },
+            "1": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.1,
+                        0.11,
+                        0.11
+                    ],
+                    "name": "Bright Acoustic Piano"
+                }
+            },
+            "10": {
+                "group": "chromaticperc",
+                "visual": {
+                    "color": [
+                        0.6,
+                        0.58,
+                        0.55
+                    ],
+                    "name": "Music Box"
+                }
+            },
+            "100": {
+                "group": "synthfx",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Brightness"
+                }
+            },
+            "101": {
+                "group": "synthfx",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Goblin"
+                }
+            },
+            "102": {
+                "group": "synthfx",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Echo Drops"
+                }
+            },
+            "103": {
+                "group": "synthfx",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Star Theme"
+                }
+            },
+            "104": {
+                "group": "Ethnic",
+                "visual": {
+                    "color": [
+                        0.4,
+                        0.2,
+                        0.12
+                    ],
+                    "name": "Sitar"
+                }
+            },
+            "105": {
+                "group": "Ethnic",
+                "visual": {
+                    "color": [
+                        0.5,
+                        0.32,
+                        0.2
+                    ],
+                    "name": "Banjo"
+                }
+            },
+            "106": {
+                "group": "Ethnic",
+                "visual": {
+                    "color": [
+                        0.45,
+                        0.18,
+                        0.15
+                    ],
+                    "name": "Shamisen"
+                }
+            },
+            "107": {
+                "group": "Ethnic",
+                "visual": {
+                    "color": [
+                        0.45,
+                        0.16,
+                        0.11
+                    ],
+                    "name": "Koto"
+                }
+            },
+            "108": {
+                "group": "Ethnic",
+                "visual": {
+                    "color": [
+                        0.69,
+                        0.27,
+                        0.16
+                    ],
+                    "name": "Kalimba"
+                }
+            },
+            "109": {
+                "group": "Ethnic",
+                "visual": {
+                    "color": [
+                        0.71,
+                        0.15,
+                        0.15
+                    ],
+                    "name": "Bag pipe"
+                }
+            },
+            "11": {
+                "group": "chromaticperc",
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.78,
+                        0.82
+                    ],
+                    "name": "Vibraphone"
+                }
+            },
+            "110": {
+                "group": "Ethnic",
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.3,
+                        0.01
+                    ],
+                    "name": "Fiddle"
+                }
+            },
+            "111": {
+                "group": "Ethnic",
+                "visual": {
+                    "color": [
+                        0.66,
+                        0.16,
+                        0.12
+                    ],
+                    "name": "Shanai"
+                }
+            },
+            "112": {
+                "group": "perc",
+                "visual": {
+                    "color": [
+                        0.67,
+                        0.45,
+                        0.15
+                    ],
+                    "name": "Tinkle Bell"
+                }
+            },
+            "113": {
+                "group": "perc",
+                "visual": {
+                    "color": [
+                        0.1,
+                        0.1,
+                        0.05
+                    ],
+                    "name": "Agogo"
+                }
+            },
+            "114": {
+                "group": "perc",
+                "visual": {
+                    "color": [
+                        0.56,
+                        0.57,
+                        0.57
+                    ],
+                    "name": "Steel Drums"
+                }
+            },
+            "115": {
+                "group": "perc",
+                "visual": {
+                    "color": [
+                        0.88,
+                        0.68,
+                        0.44
+                    ],
+                    "name": "Woodblock"
+                }
+            },
+            "116": {
+                "group": "perc",
+                "visual": {
+                    "color": [
+                        0.36,
+                        0.07,
+                        0.0
+                    ],
+                    "name": "Taiko Drum"
+                }
+            },
+            "117": {
+                "group": "perc",
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.77,
+                        0.71
+                    ],
+                    "name": "Melodic Tom"
+                }
+            },
+            "118": {
+                "group": "perc",
+                "visual": {
+                    "color": [
+                        0.77,
+                        0.04,
+                        0.03
+                    ],
+                    "name": "Synth Drum"
+                }
+            },
+            "119": {
+                "group": "perc",
+                "visual": {
+                    "color": [
+                        0.71,
+                        0.61,
+                        0.36
+                    ],
+                    "name": "Reverse Cymbal"
+                }
+            },
+            "12": {
+                "group": "chromaticperc",
+                "visual": {
+                    "color": [
+                        0.82,
+                        0.32,
+                        0.18
+                    ],
+                    "name": "Marimba"
+                }
+            },
+            "120": {
+                "group": "perc",
+                "visual": {
+                    "color": [
+                        0.9,
+                        0.62,
+                        0.35
+                    ],
+                    "name": "Guitar Fret Noise"
+                }
+            },
+            "121": {
+                "group": "sfx",
+                "visual": {
+                    "color": [
+                        0.94,
+                        0.76,
+                        0.7
+                    ],
+                    "name": "Breath Noise"
+                }
+            },
+            "122": {
+                "group": "sfx",
+                "visual": {
+                    "color": [
+                        0.23,
+                        0.55,
+                        0.53
+                    ],
+                    "name": "Seashore"
+                }
+            },
+            "123": {
+                "group": "sfx",
+                "visual": {
+                    "color": [
+                        0.89,
+                        0.81,
+                        0.18
+                    ],
+                    "name": "Bird Tweet"
+                }
+            },
+            "124": {
+                "group": "sfx",
+                "visual": {
+                    "color": [
+                        0.21,
+                        0.19,
+                        0.15
+                    ],
+                    "name": "Telephone Ring"
+                }
+            },
+            "125": {
+                "group": "sfx",
+                "visual": {
+                    "color": [
+                        0.18,
+                        0.26,
+                        0.67
+                    ],
+                    "name": "Helicopter"
+                }
+            },
+            "126": {
+                "group": "sfx",
+                "visual": {
+                    "color": [
+                        0.94,
+                        0.76,
+                        0.7
+                    ],
+                    "name": "Applause"
+                }
+            },
+            "127": {
+                "group": "sfx",
+                "visual": {
+                    "color": [
+                        0.32,
+                        0.3,
+                        0.27
+                    ],
+                    "name": "Gunshot"
+                }
+            },
+            "13": {
+                "group": "chromaticperc",
+                "visual": {
+                    "color": [
+                        0.42,
+                        0.19,
+                        0.13
+                    ],
+                    "name": "Xylophone"
+                }
+            },
+            "14": {
+                "group": "chromaticperc",
+                "visual": {
+                    "color": [
+                        0.53,
+                        0.58,
+                        0.64
+                    ],
+                    "name": "Tubular Bells"
+                }
+            },
+            "15": {
+                "group": "chromaticperc",
+                "visual": {
+                    "color": [
+                        0.69,
+                        0.34,
+                        0.08
+                    ],
+                    "name": "Dulcimer"
+                }
+            },
+            "16": {
+                "group": "organ",
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.44,
+                        0.15
+                    ],
+                    "name": "Drawbar Organ"
+                }
+            },
+            "17": {
+                "group": "organ",
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.44,
+                        0.15
+                    ],
+                    "name": "Percussive Organ"
+                }
+            },
+            "18": {
+                "group": "organ",
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.44,
+                        0.15
+                    ],
+                    "name": "Rock Organ"
+                }
+            },
+            "19": {
+                "group": "organ",
+                "visual": {
+                    "color": [
+                        0.55,
+                        0.24,
+                        0.08
+                    ],
+                    "name": "Church Organ"
+                }
+            },
+            "2": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.1,
+                        0.11,
+                        0.11
+                    ],
+                    "name": "Electric Grand Piano"
+                }
+            },
+            "20": {
+                "group": "organ",
+                "visual": {
+                    "color": [
+                        0.44,
+                        0.15,
+                        0.04
+                    ],
+                    "name": "Reed Organ"
+                }
+            },
+            "21": {
+                "group": "organ",
+                "visual": {
+                    "color": [
+                        0.27,
+                        0.25,
+                        0.23
+                    ],
+                    "name": "Accordion"
+                }
+            },
+            "22": {
+                "group": "organ",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.66
+                    ],
+                    "name": "Harmonica"
+                }
+            },
+            "23": {
+                "group": "organ",
+                "visual": {
+                    "color": [
+                        0.27,
+                        0.25,
+                        0.23
+                    ],
+                    "name": "Tango Accordion"
+                }
+            },
+            "24": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.35,
+                        0.0
+                    ],
+                    "name": "Acoustic Guitar (nylon)"
+                }
+            },
+            "25": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.9,
+                        0.62,
+                        0.35
+                    ],
+                    "name": "Acoustic Guitar (steel)"
+                }
+            },
+            "26": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.11,
+                        0.33
+                    ],
+                    "name": "Electric Guitar (jazz)"
+                }
+            },
+            "27": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.11,
+                        0.33
+                    ],
+                    "name": "Electric Guitar (clean)"
+                }
+            },
+            "28": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.11,
+                        0.33
+                    ],
+                    "name": "Electric Guitar (muted)"
+                }
+            },
+            "29": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.9,
+                        0.62,
+                        0.35
+                    ],
+                    "name": "Overdriven Guitar"
+                }
+            },
+            "3": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.6,
+                        0.19,
+                        0.07
+                    ],
+                    "name": "Honky-tonk Piano"
+                }
+            },
+            "30": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.9,
+                        0.62,
+                        0.35
+                    ],
+                    "name": "Distortion Guitar"
+                }
+            },
+            "31": {
+                "group": "guitar",
+                "visual": {
+                    "color": [
+                        0.9,
+                        0.62,
+                        0.35
+                    ],
+                    "name": "Guitar harmonics"
+                }
+            },
+            "32": {
+                "group": "bass",
+                "visual": {
+                    "color": [
+                        0.15,
+                        0.15,
+                        0.15
+                    ],
+                    "name": "Acoustic Bass"
+                }
+            },
+            "33": {
+                "group": "bass",
+                "visual": {
+                    "color": [
+                        0.09,
+                        0.09,
+                        0.09
+                    ],
+                    "name": "Electric Bass (finger)"
+                }
+            },
+            "34": {
+                "group": "bass",
+                "visual": {
+                    "color": [
+                        0.09,
+                        0.09,
+                        0.09
+                    ],
+                    "name": "Electric Bass (pick)"
+                }
+            },
+            "35": {
+                "group": "bass",
+                "visual": {
+                    "color": [
+                        0.89,
+                        0.71,
+                        0.53
+                    ],
+                    "name": "Fretless Bass"
+                }
+            },
+            "36": {
+                "group": "bass",
+                "visual": {
+                    "color": [
+                        0.89,
+                        0.71,
+                        0.53
+                    ],
+                    "name": "Slap Bass 1"
+                }
+            },
+            "37": {
+                "group": "bass",
+                "visual": {
+                    "color": [
+                        0.89,
+                        0.71,
+                        0.53
+                    ],
+                    "name": "Slap Bass 2"
+                }
+            },
+            "38": {
+                "group": "bass",
+                "visual": {
+                    "color": [
+                        0.17,
+                        0.16,
+                        0.19
+                    ],
+                    "name": "Synth Bass 1"
+                }
+            },
+            "39": {
+                "group": "bass",
+                "visual": {
+                    "color": [
+                        0.17,
+                        0.16,
+                        0.19
+                    ],
+                    "name": "Synth Bass 2"
+                }
+            },
+            "4": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.29,
+                        0.28,
+                        0.28
+                    ],
+                    "name": "Electric Piano 1"
+                }
+            },
+            "40": {
+                "group": "strings",
+                "visual": {
+                    "color": [
+                        0.58,
+                        0.32,
+                        0.14
+                    ],
+                    "name": "Violin"
+                }
+            },
+            "41": {
+                "group": "strings",
+                "visual": {
+                    "color": [
+                        0.75,
+                        0.29,
+                        0.0
+                    ],
+                    "name": "Viola"
+                }
+            },
+            "42": {
+                "group": "strings",
+                "visual": {
+                    "color": [
+                        0.69,
+                        0.24,
+                        0.01
+                    ],
+                    "name": "Cello"
+                }
+            },
+            "43": {
+                "group": "strings",
+                "visual": {
+                    "color": [
+                        0.63,
+                        0.2,
+                        0.08
+                    ],
+                    "name": "Contrabass"
+                }
+            },
+            "44": {
+                "group": "strings",
+                "visual": {
+                    "color": [
+                        0.41,
+                        0.06,
+                        0.02
+                    ],
+                    "name": "Tremolo Strings"
+                }
+            },
+            "45": {
+                "group": "strings",
+                "visual": {
+                    "color": [
+                        0.41,
+                        0.06,
+                        0.02
+                    ],
+                    "name": "Pizzicato Strings"
+                }
+            },
+            "46": {
+                "group": "strings",
+                "visual": {
+                    "color": [
+                        0.58,
+                        0.2,
+                        0.12
+                    ],
+                    "name": "Orchestral Harp"
+                }
+            },
+            "47": {
+                "group": "strings",
+                "visual": {
+                    "color": [
+                        0.81,
+                        0.78,
+                        0.71
+                    ],
+                    "name": "Timpani"
+                }
+            },
+            "48": {
+                "group": "ensemble",
+                "visual": {
+                    "color": [
+                        0.41,
+                        0.06,
+                        0.02
+                    ],
+                    "name": "String Ensemble 1"
+                }
+            },
+            "49": {
+                "group": "ensemble",
+                "visual": {
+                    "color": [
+                        0.41,
+                        0.06,
+                        0.02
+                    ],
+                    "name": "String Ensemble 2"
+                }
+            },
+            "5": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.29,
+                        0.28,
+                        0.28
+                    ],
+                    "name": "Electric Piano 2"
+                }
+            },
+            "50": {
+                "group": "ensemble",
+                "visual": {
+                    "color": [
+                        0.42,
+                        0.23,
+                        0.11
+                    ],
+                    "name": "SynthStrings 1"
+                }
+            },
+            "51": {
+                "group": "ensemble",
+                "visual": {
+                    "color": [
+                        0.42,
+                        0.23,
+                        0.11
+                    ],
+                    "name": "SynthStrings 2"
+                }
+            },
+            "52": {
+                "group": "ensemble",
+                "visual": {
+                    "color": [
+                        0.94,
+                        0.76,
+                        0.7
+                    ],
+                    "name": "Choir Aahs"
+                }
+            },
+            "53": {
+                "group": "ensemble",
+                "visual": {
+                    "color": [
+                        0.94,
+                        0.76,
+                        0.7
+                    ],
+                    "name": "Voice Oohs"
+                }
+            },
+            "54": {
+                "group": "ensemble",
+                "visual": {
+                    "color": [
+                        0.23,
+                        0.23,
+                        0.24
+                    ],
+                    "name": "Synth Voice"
+                }
+            },
+            "55": {
+                "group": "ensemble",
+                "visual": {
+                    "color": [
+                        0.6,
+                        0.18,
+                        0.07
+                    ],
+                    "name": "Orchestra Hit"
+                }
+            },
+            "56": {
+                "group": "brass",
+                "visual": {
+                    "color": [
+                        0.75,
+                        0.59,
+                        0.27
+                    ],
+                    "name": "Trumpet"
+                }
+            },
+            "57": {
+                "group": "brass",
+                "visual": {
+                    "color": [
+                        0.94,
+                        0.87,
+                        0.47
+                    ],
+                    "name": "Trombone"
+                }
+            },
+            "58": {
+                "group": "brass",
+                "visual": {
+                    "color": [
+                        0.85,
+                        0.68,
+                        0.35
+                    ],
+                    "name": "Tuba"
+                }
+            },
+            "59": {
+                "group": "brass",
+                "visual": {
+                    "color": [
+                        0.75,
+                        0.59,
+                        0.27
+                    ],
+                    "name": "Muted Trumpet"
+                }
+            },
+            "6": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.57,
+                        0.31,
+                        0.17
+                    ],
+                    "name": "Harpsichord"
+                }
+            },
+            "60": {
+                "group": "brass",
+                "visual": {
+                    "color": [
+                        0.85,
+                        0.65,
+                        0.29
+                    ],
+                    "name": "French Horn"
+                }
+            },
+            "61": {
+                "group": "brass",
+                "visual": {
+                    "color": [
+                        0.38,
+                        0.22,
+                        0.06
+                    ],
+                    "name": "Brass Section"
+                }
+            },
+            "62": {
+                "group": "brass",
+                "visual": {
+                    "color": [
+                        0.42,
+                        0.23,
+                        0.11
+                    ],
+                    "name": "SynthBrass 1"
+                }
+            },
+            "63": {
+                "group": "brass",
+                "visual": {
+                    "color": [
+                        0.42,
+                        0.23,
+                        0.11
+                    ],
+                    "name": "SynthBrass 2"
+                }
+            },
+            "64": {
+                "group": "reed",
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.69,
+                        0.41
+                    ],
+                    "name": "Soprano Sax"
+                }
+            },
+            "65": {
+                "group": "reed",
+                "visual": {
+                    "color": [
+                        0.71,
+                        0.55,
+                        0.22
+                    ],
+                    "name": "Alto Sax"
+                }
+            },
+            "66": {
+                "group": "reed",
+                "visual": {
+                    "color": [
+                        0.74,
+                        0.55,
+                        0.2
+                    ],
+                    "name": "Tenor Sax"
+                }
+            },
+            "67": {
+                "group": "reed",
+                "visual": {
+                    "color": [
+                        0.88,
+                        0.68,
+                        0.36
+                    ],
+                    "name": "Baritone Sax"
+                }
+            },
+            "68": {
+                "group": "reed",
+                "visual": {
+                    "color": [
+                        0.19,
+                        0.19,
+                        0.2
+                    ],
+                    "name": "Oboe"
+                }
+            },
+            "69": {
+                "group": "reed",
+                "visual": {
+                    "color": [
+                        0.1,
+                        0.09,
+                        0.11
+                    ],
+                    "name": "English Horn"
+                }
+            },
+            "7": {
+                "group": "piano",
+                "visual": {
+                    "color": [
+                        0.59,
+                        0.44,
+                        0.35
+                    ],
+                    "name": "Clavi"
+                }
+            },
+            "70": {
+                "group": "pipe",
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.15,
+                        0.04
+                    ],
+                    "name": "Bassoon"
+                }
+            },
+            "71": {
+                "group": "pipe",
+                "visual": {
+                    "color": [
+                        0.27,
+                        0.27,
+                        0.27
+                    ],
+                    "name": "Clarinet"
+                }
+            },
+            "72": {
+                "group": "pipe",
+                "visual": {
+                    "color": [
+                        0.07,
+                        0.07,
+                        0.1
+                    ],
+                    "name": "Piccolo"
+                }
+            },
+            "73": {
+                "group": "pipe",
+                "visual": {
+                    "color": [
+                        0.73,
+                        0.72,
+                        0.72
+                    ],
+                    "name": "Flute"
+                }
+            },
+            "74": {
+                "group": "pipe",
+                "visual": {
+                    "color": [
+                        0.87,
+                        0.71,
+                        0.6
+                    ],
+                    "name": "Recorder"
+                }
+            },
+            "75": {
+                "group": "pipe",
+                "visual": {
+                    "color": [
+                        0.68,
+                        0.54,
+                        0.3
+                    ],
+                    "name": "Pan Flute"
+                }
+            },
+            "76": {
+                "group": "pipe",
+                "visual": {
+                    "color": [
+                        0.45,
+                        0.41,
+                        0.01
+                    ],
+                    "name": "Blown Bottle"
+                }
+            },
+            "77": {
+                "group": "pipe",
+                "visual": {
+                    "color": [
+                        0.61,
+                        0.5,
+                        0.35
+                    ],
+                    "name": "Shakuhachi"
+                }
+            },
+            "78": {
+                "group": "pipe",
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.25,
+                        0.07
+                    ],
+                    "name": "Whistle"
+                }
+            },
+            "79": {
+                "group": "pipe",
+                "visual": {
+                    "color": [
+                        0.1,
+                        0.32,
+                        0.74
+                    ],
+                    "name": "Ocarina"
+                }
+            },
+            "8": {
+                "group": "chromaticperc",
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.68,
+                        0.48
+                    ],
+                    "name": "Celesta"
+                }
+            },
+            "80": {
+                "group": "synthlead",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Square Lead"
+                }
+            },
+            "81": {
+                "group": "synthlead",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Sawtooth Lead"
+                }
+            },
+            "82": {
+                "group": "synthlead",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Calliope Lead"
+                }
+            },
+            "83": {
+                "group": "synthlead",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Chiff Lead"
+                }
+            },
+            "84": {
+                "group": "synthlead",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Charang Lead"
+                }
+            },
+            "85": {
+                "group": "synthlead",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Voice Lead"
+                }
+            },
+            "86": {
+                "group": "synthlead",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Fifths Lead"
+                }
+            },
+            "87": {
+                "group": "synthlead",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Bass + Lead"
+                }
+            },
+            "88": {
+                "group": "synthpad",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "New Age Pad"
+                }
+            },
+            "89": {
+                "group": "synthpad",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Warm Pad"
+                }
+            },
+            "9": {
+                "group": "chromaticperc",
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.85,
+                        0.87
+                    ],
+                    "name": "Glockenspiel"
+                }
+            },
+            "90": {
+                "group": "synthpad",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Polysynth Pad"
+                }
+            },
+            "91": {
+                "group": "synthpad",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Choir Pad"
+                }
+            },
+            "92": {
+                "group": "synthpad",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Bowed Pad"
+                }
+            },
+            "93": {
+                "group": "synthpad",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Metallic Pad"
+                }
+            },
+            "94": {
+                "group": "synthpad",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Halo Pad"
+                }
+            },
+            "95": {
+                "group": "synthpad",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Sweep Pad"
+                }
+            },
+            "96": {
+                "group": "synthfx",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Ice Rain"
+                }
+            },
+            "97": {
+                "group": "synthfx",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Soundtrack"
+                }
+            },
+            "98": {
+                "group": "synthfx",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Crystal"
+                }
+            },
+            "99": {
+                "group": "synthfx",
+                "visual": {
+                    "color": [
+                        0.7,
+                        0.7,
+                        0.7
+                    ],
+                    "name": "Atmosphere"
+                }
+            }
+        }
+    }
+}

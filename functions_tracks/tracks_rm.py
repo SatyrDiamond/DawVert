@@ -70,3 +70,6 @@ def inst_fxrackchan_add(cvpj_l, trackid, fxrack_channel):
 
 def inst_fxrackchan_get(cvpj_l, trackid):
     return tracks_m.inst_fxrackchan_get(cvpj_l, trackid)
+
+def import_dset(cvpj_l, trackid, instid, main_dataset, midi_dataset, def_name, def_color):
+    return tracks_m.import_dset(cvpj_l, trackid, instid, main_dataset, midi_dataset, def_name, def_color)

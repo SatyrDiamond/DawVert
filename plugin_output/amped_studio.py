@@ -52,6 +52,11 @@ def addsample(zip_amped, filepath):
         outnum = audio_id[filebasename]
     return outnum
 
+def eq_calc_q(band_type, q_val):
+    if band_type in ['low_pass', 'high_pass']: q_val = xtramath.logpowmul(q_val, 0.5) if q_val != 0 else q_val
+    if band_type in ['peak']: q_val = xtramath.logpowmul(q_val, -1) if q_val != 0 else q_val
+    return q_val
+
 def amped_maketrack(): 
     amped_trackdata = {}
     amped_trackdata["id"] = getid()
@@ -90,86 +95,63 @@ def amped_makedevice(className, label):
     amped_device["bypass"] = False
     return amped_device
 
-def do_idparams(pluginid):
+def copyauto_cvpj_to_amped(deviceid, paramid, autoloc, paramtype, minval, maxval):
+    cvpj_data = auto_nopl.getpoints(cvpj_l, autoloc)
+    out_auto = []
+    if cvpj_data: out_auto += [create_autodata(deviceid, paramid, cvpj_data, paramtype, minval, maxval)]
+    return out_auto
+
+def copyauto_cvpj_to_amped_addmul(deviceid, paramid, autoloc, paramtype, minval, maxval, addval, mulval):
+    cvpj_data = auto_nopl.getpoints(cvpj_l, autoloc)
+    out_auto = []
+    if cvpj_data: 
+        for point in cvpj_data: point['value'] = (point['value']+addval)*mulval
+        out_auto += [create_autodata(deviceid, paramid, cvpj_data, paramtype, minval, maxval)]
+    return out_auto
+
+def create_autodata(deviceid, paramid, cvpj_points, paramtype, minval, maxval):
+    amped_param = {}
+    amped_param['param'] = {"deviceId": deviceid, "name": paramid}
+    amped_param['points'] = cvpjauto_to_ampedauto(cvpj_points, minval, maxval)
+    if paramtype == 'float': 
+        amped_param['spec'] = {"type": "numeric", "min": minval, "max": maxval, "curve": 0, "step": 0}
+    if paramtype == 'int': 
+        amped_param['spec'] = {"type": "numeric", "min": minval, "max": maxval, "curve": 0, "step": 1}
+    return amped_param
+
+
+def do_idparams(cvpj_plugindata, pluginid, deviceid, amped_auto):
     paramout = []
-    paramlist = plugins.get_plug_paramlist(cvpj_l, pluginid)
+    paramlist = cvpj_plugindata.param_list()
     for paramnum in range(len(paramlist)):
-        paramdata = plugins.get_plug_param(cvpj_l, pluginid, paramlist[paramnum], 0)
-        paramout.append({"id": paramnum, "name": paramdata[2], "value": paramdata[0]})
+        paramid = paramlist[paramnum]
+        paramdata = cvpj_plugindata.param_get_minmax(paramid, 0)
+        ampedpid = paramid.replace('__', '/')
+        cvpj_autodata = auto_nopl.getpoints(cvpj_l, ['plugin', pluginid, paramid])
+        if cvpj_autodata != None:
+            amped_auto.append(
+                create_autodata(deviceid, ampedpid, cvpj_autodata, ampedpid, paramdata[3], paramdata[4])
+                )
+
+        paramout.append({"id": paramnum, "name": ampedpid, "value": paramdata[0]})
     return paramout
 
-def amped_parse_effects(fxchain_audio):
+def amped_parse_effects(fxchain_audio, amped_auto):
     outdata = []
     for pluginid in fxchain_audio:
-        plugtype = plugins.get_plug_type(cvpj_l, pluginid)
-        fxdata = data_values.nested_dict_get_value(cvpj_l, ['plugins', pluginid])
-        fx_on, fx_wet = plugins.get_plug_fxdata(cvpj_l, pluginid)
+        cvpj_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
+        plugtype = cvpj_plugindata.type_get()
+        fx_on, fx_wet = cvpj_plugindata.fxdata_get()
 
         fx_on = not fx_on
 
-        if plugtype[0] == 'universal' and plugtype[1] in ['compressor', 'expander']:
-            device_params = []
+        out_auto = []
 
-            preGainDB = plugins.get_plug_param(cvpj_l, pluginid, 'pregain', 0)[0]
-            ratio = plugins.get_plug_param(cvpj_l, pluginid, 'ratio', 0)[0]
-            thresholdDB = plugins.get_plug_param(cvpj_l, pluginid, 'threshold', 0)[0]
-            attackTimeMS = plugins.get_plug_param(cvpj_l, pluginid, 'attack', 0)[0]*1000
-            releaseTimeMS = plugins.get_plug_param(cvpj_l, pluginid, 'release', 0)[0]*1000
-            postGainDB = plugins.get_plug_param(cvpj_l, pluginid, 'postgain', 0)[0]
-            lookaheadTimeMS = plugins.get_plug_param(cvpj_l, pluginid, 'lookahead', 0)[0]*1000
-            softKneeWidth = plugins.get_plug_param(cvpj_l, pluginid, 'knee', 0)[0]/6
-
-            detect_mode = plugins.get_plug_dataval(cvpj_l, pluginid, 'detect_mode', 'rms')
-            circuit_mode = plugins.get_plug_dataval(cvpj_l, pluginid, 'circuit_mode', 'digital')
-
-            detectMode = 1
-            if detect_mode == 'peak': detectMode = 0
-
-            circuitMode = 1
-            if detect_mode == 'analog': detectMode = 0
-
-            filt_enabled, filt_cutoff, filt_reso, filt_type, filt_subtype = plugins.get_filter(cvpj_l, pluginid)
-
-            filterMode = 0
-            if filt_type == 'lowpass': filterMode = 0
-            if filt_type == 'highpass': filterMode = 1
-            if filt_type == 'bandpass': filterMode = 2
-
-            filterFrequency = filt_cutoff
-            filterQ = filt_reso
-            filterGainDB = plugins.get_plug_dataval(cvpj_l, pluginid, 'filter_gain', 0)
-            filterActive = int(filt_enabled)
-            filterAudition = 0
-
-            device_params.append({'id': 0, 'name': 'preGainDB', 'value': preGainDB})
-            device_params.append({'id': 8, 'name': 'ratio', 'value': ratio})
-            device_params.append({'id': 5, 'name': 'thresholdDB', 'value': thresholdDB})
-            device_params.append({'id': 2, 'name': 'attackTimeMS', 'value': attackTimeMS})
-            device_params.append({'id': 3, 'name': 'releaseTimeMS', 'value': releaseTimeMS})
-            device_params.append({'id': 1, 'name': 'postGainDB', 'value': postGainDB})
-            device_params.append({'id': 4, 'name': 'lookaheadTimeMS', 'value': lookaheadTimeMS})
-            device_params.append({'id': 7, 'name': 'softKneeWidth', 'value': softKneeWidth})
-            device_params.append({'id': 12, 'name': 'detectMode', 'value': detectMode})
-            device_params.append({'id': 13, 'name': 'circuitMode', 'value': circuitMode})
-            device_params.append({'id': 14, 'name': 'filterMode', 'value': filterMode})
-            device_params.append({'id': 15, 'name': 'filterFrequency', 'value': filterFrequency})
-            device_params.append({'id': 16, 'name': 'filterQ', 'value': filterQ})
-            device_params.append({'id': 17, 'name': 'filterGainDB', 'value': filterGainDB})
-            device_params.append({'id': 18, 'name': 'filterActive', 'value': filterActive})
-            device_params.append({'id': 19, 'name': 'filterAudition', 'value': filterAudition})
-
-            if plugtype[1] == 'compressor': devicedata = amped_makedevice('Compressor', 'Compressor')
-            if plugtype[1] == 'expander': devicedata = amped_makedevice('Expander', 'Expander')
-            
-            devicedata['bypass'] = fx_on
-            devicedata['params'] = device_params
-            outdata.append(devicedata)
-
-        elif plugtype == ['universal', 'delay-c']:
-            d_time_type = plugins.get_plug_dataval(cvpj_l, pluginid, 'time_type', 'seconds')
-            d_time = plugins.get_plug_dataval(cvpj_l, pluginid, 'time', 1)
-            d_wet = plugins.get_plug_dataval(cvpj_l, pluginid, 'wet', fx_wet)
-            d_feedback = plugins.get_plug_dataval(cvpj_l, pluginid, 'feedback', 0.0)
+        if plugtype == ['universal', 'delay-c']:
+            d_time_type = cvpj_plugindata.dataval_get('time_type', 'seconds')
+            d_time = cvpj_plugindata.dataval_get('time', 1)
+            d_wet = cvpj_plugindata.dataval_get('wet', fx_wet)
+            d_feedback = cvpj_plugindata.dataval_get('feedback', 0.0)
             devicedata = amped_makedevice('Delay', 'Delay')
 
             device_params = []
@@ -188,92 +170,6 @@ def amped_parse_effects(fxchain_audio):
             devicedata['params'] = device_params
             outdata.append(devicedata)
 
-        elif plugtype == ['universal', 'eq-bands']:
-            devicedata = amped_makedevice('EqualizerPro', 'Equalizer')
-            devicedata['bypass'] = fx_on
-            out_params = []
-
-            banddata = plugins.get_eqband(cvpj_l, pluginid, None)
-
-            paramnum = 0
-
-            for num in range(min(len(banddata),8)):
-
-                eqnumtxt = str(num+1)
-                s_band = banddata[num]
-
-                band_type = s_band['type']
-                band_on = float(s_band['on'])
-                band_freq = s_band['freq']
-                band_gain = s_band['gain']
-                band_res = s_band['var']
-
-                filtername = "filter/"+eqnumtxt+"/"
-
-                eq_bandtype = 0
-                if band_type == 'peak': eq_bandtype = 0
-                if band_type == 'low_pass': eq_bandtype = 2
-                if band_type == 'high_pass': eq_bandtype = 1
-                if band_type == 'low_shelf': eq_bandtype = 3
-                if band_type == 'high_shelf': eq_bandtype = 4
-
-                if band_type in ['low_pass', 'high_pass']: 
-                    band_res = xtramath.logpowmul(band_res, 0.5) if band_res != 0 else band_res
-                if band_type in ['low_pass', 'peak']: 
-                    band_res = xtramath.logpowmul(band_res, -1) if band_res != 0 else band_res
-
-                out_params.append({"id": paramnum, "name": filtername+'active', "value": band_on})
-                out_params.append({"id": paramnum+1, "name": filtername+'freq', "value": band_freq})
-                out_params.append({"id": paramnum+2, "name": filtername+'gain', "value": band_gain})
-                out_params.append({"id": paramnum+3, "name": filtername+'type', "value": eq_bandtype})
-                out_params.append({"id": paramnum+4, "name": filtername+'q', "value": band_res})
-
-                paramnum += 5
-
-            postGain = plugins.get_plug_param(cvpj_l, pluginid, 'gain_out', 0)[0]
-
-            out_params.append({"id": paramnum, "name": 'postGain', "value": postGain})
-            devicedata['params'] = out_params
-            outdata.append(devicedata)
-
-        elif plugtype == ['universal', 'vibrato']:
-            d_freq = plugins.get_plug_param(cvpj_l, pluginid, 'freq', 0)[0]
-            d_depth = plugins.get_plug_param(cvpj_l, pluginid, 'depth', 0)[0]
-            devicedata = amped_makedevice('Vibrato', 'Vibrato')
-            devicedata['bypass'] = fx_on
-            device_params = []
-            device_params.append({'id': 13, 'name': 'delayLfoRateHz', 'value': d_freq})
-            device_params.append({'id': 12, 'name': 'delayLfoDepth', 'value': d_depth})
-            devicedata['params'] = device_params
-            outdata.append(devicedata)
-
-        elif plugtype == ['universal', 'tremolo']:
-            d_freq = plugins.get_plug_param(cvpj_l, pluginid, 'freq', 0)[0]
-            d_depth = plugins.get_plug_param(cvpj_l, pluginid, 'depth', 0)[0]
-            devicedata = amped_makedevice('Tremolo', 'Tremolo')
-            devicedata['bypass'] = fx_on
-            device_params = []
-            device_params.append({'id': 6, 'name': 'lfoARateHz', 'value': d_freq})
-            device_params.append({'id': 5, 'name': 'lfoADepth', 'value': d_depth})
-            devicedata['params'] = device_params
-            outdata.append(devicedata)
-
-        elif plugtype == ['universal', 'bitcrush']:
-            b_bits = plugins.get_plug_param(cvpj_l, pluginid, 'bits', 0)[0]
-            b_freq = plugins.get_plug_param(cvpj_l, pluginid, 'freq', 0)[0]
-
-            b_freq = (math.log(b_freq / 100) / math.log(2))/10
-
-            devicedata = amped_makedevice('BitCrusher', 'BitCrusher')
-            devicedata['bypass'] = fx_on
-            device_params = []
-            device_params.append({'id': 0, 'name': 'bits', 'value': b_bits})
-            device_params.append({'id': 1, 'name': 'down', 'value': b_freq})
-            device_params.append({'id': 2, 'name': 'mix', 'value': fx_wet})
-
-            devicedata['params'] = device_params
-            outdata.append(devicedata)
-
         elif plugtype[0] == 'native-amped':
 
             if plugtype[1] in ["Amp Sim Utility", 'Clean Machine', 'Distortion Machine', 'Metal Machine']:
@@ -284,13 +180,13 @@ def amped_parse_effects(fxchain_audio):
                 if plugtype[1] == "Distortion Machine": wamClassName = 'WASABI_SC.DistoMachine'
                 if plugtype[1] == "Metal Machine": wamClassName = 'WASABI_SC.MetalMachine'
                 devicedata['wamClassName'] = wamClassName
-                devicedata['wamPreset'] = plugins.get_plug_dataval(cvpj_l, pluginid, 'data', '{}')
+                devicedata['wamPreset'] = cvpj_plugindata.dataval_get('data', '{}')
                 outdata.append(devicedata)
 
             elif plugtype[1] in ['BitCrusher', 'Chorus', 
         'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 
         'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
-        'Reverb', 'Tremolo', 'Vibrato', 'Equalizer']:
+        'Reverb', 'Tremolo', 'Vibrato', 'Compressor', 'Expander', 'EqualizerPro']:
                 classname = plugtype[1]
                 classlabel = plugtype[1]
                 if classname == 'CompressorMini': classlabel = 'Equalizer Mini'
@@ -298,19 +194,24 @@ def amped_parse_effects(fxchain_audio):
                 if classname == 'LimiterMini': classlabel = 'Limiter Mini'
                 if classname == 'EqualizerPro': classlabel = 'Equalizer'
                 devicedata = amped_makedevice(classname, classlabel)
+                deviceid = devicedata['id']
+
                 devicedata['bypass'] = fx_on
-                devicedata['params'] = do_idparams(pluginid)
+                devicedata['params'] = do_idparams(cvpj_plugindata, pluginid, deviceid, out_auto)
                 outdata.append(devicedata)
+        
+        if amped_auto != None: amped_auto += out_auto
 
     return outdata
 
 def amped_makeparam(i_id, i_name, i_value):
     return {"id": i_id, "name": i_name, "value": i_value}
 
-def cvpjauto_to_ampedauto(autopoints):
+def cvpjauto_to_ampedauto(autopoints, i_min, i_max):
     ampedauto = []
     for autopoint in autopoints:
-        ampedauto.append({"pos": autopoint['position']/4, "value": autopoint['value']})
+        value = xtramath.between_to_one(i_min, i_max, autopoint['value'])
+        ampedauto.append({"pos": autopoint['position']/4, "value": value})
     return ampedauto
 
 class output_cvpj_f(plugin_output.base):
@@ -328,7 +229,7 @@ class output_cvpj_f(plugin_output.base):
         'placement_audio_stretch': ['rate']
         }
     def getsupportedplugformats(self): return ['vst2', 'midi']
-    def getsupportedplugins(self): return ['sampler:single', 'midi', 'universal:compressor', 'universal:expander']
+    def getsupportedplugins(self): return ['sampler:single', 'midi']
     def getfileextension(self): return 'zip'
     def parse(self, convproj_json, output_file):
         global audio_id
@@ -364,13 +265,34 @@ class output_cvpj_f(plugin_output.base):
                 cvpj_instadata = cvpj_trackdata['instdata']
                 pluginid = cvpj_instadata['pluginid'] if 'pluginid' in cvpj_instadata else None
                 if pluginid != None:
-                    plugtype = plugins.get_plug_type(cvpj_l, pluginid)
+                    cvpj_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
+                    plugtype = cvpj_plugindata.type_get()
+
+                    if plugtype[0] == 'native-amped':
+
+                        if plugtype[1] in ['Augur', 'OBXD', 'Dexed']:
+                            inst_supported = True
+                            devicedata = amped_makedevice('WAM', plugtype[1])
+                            if plugtype[1] == "Augur": wamClassName = 'AUGUR'
+                            if plugtype[1] == "OBXD": wamClassName = 'OBXD'
+                            if plugtype[1] == "Dexed": wamClassName = 'DEXED'
+                            devicedata['wamClassName'] = wamClassName
+                            devicedata['wamPreset'] = cvpj_plugindata.dataval_get('data', '{}')
+                            amped_trackdata["devices"].append(devicedata)
+
+                        if plugtype[1] in ['Volt', 'VoltMini', 'Granny']:
+                            inst_supported = True
+                            if plugtype[1] == "Volt": devicedata = amped_makedevice('Volt', 'VOLT')
+                            if plugtype[1] == "VoltMini": devicedata = amped_makedevice('VoltMini', 'VOLT Mini')
+                            if plugtype[1] == "Granny": devicedata = amped_makedevice('Granny', 'Granny')
+                            deviceid = devicedata['id']
+                            devicedata['params'] = do_idparams(cvpj_plugindata, pluginid, deviceid, amped_trackdata["automations"])
+                            amped_trackdata["devices"].append(devicedata)
 
                     if plugtype == ['synth-nonfree', 'Europa']:
                         inst_supported = True
                         europa_data = amped_makedevice('WAM','Europa')
                         europa_data['params'] = []
-                        europa_data['bypass'] = False
                         europa_data['wamClassName'] = 'Europa'
                         wamPreset = {}
                         wamPreset['patch'] = 'DawVert'
@@ -385,9 +307,9 @@ class output_cvpj_f(plugin_output.base):
                         for eur_value_name in europa_vals:
                             eur_value_type, cvpj_val_name = europa_vals[eur_value_name]
                             if eur_value_type == 'number':
-                                eur_value_value = plugins.get_plug_param(cvpj_l, pluginid, cvpj_val_name, 0)[0]
+                                eur_value_value = cvpj_plugindata.param_get(cvpj_val_name, 0)[0]
                             else:
-                                eur_value_value = plugins.get_plug_dataval(cvpj_l, pluginid, cvpj_val_name, 0)
+                                eur_value_value = cvpj_plugindata.dataval_get(cvpj_val_name, 0)
                                 if eur_value_name in ['Curve1','Curve2','Curve3','Curve4','Curve']: eur_value_value = bytes(eur_value_value).hex().upper()
 
                             europa_value_obj = ET.SubElement(europa_obj, "Value")
@@ -395,7 +317,7 @@ class output_cvpj_f(plugin_output.base):
                             europa_value_obj.set('type',eur_value_type)
                             europa_value_obj.text = str(eur_value_value)
                         wamPreset['settings'] = ET.tostring(europa_patch).decode()
-                        wamPreset['encodedSampleData'] = plugins.get_plug_dataval(cvpj_l, pluginid, 'encodedSampleData', [])
+                        wamPreset['encodedSampleData'] = cvpj_plugindata.dataval_get('encodedSampleData', [])
 
                         europa_data['wamPreset'] = json.dumps(wamPreset)
 
@@ -403,8 +325,8 @@ class output_cvpj_f(plugin_output.base):
 
                     elif plugtype[0] == 'midi':
                         inst_supported = True
-                        midi_bank = plugins.get_plug_dataval(cvpj_l, pluginid, 'bank', 0)
-                        midi_patch = plugins.get_plug_dataval(cvpj_l, pluginid, 'inst', 0)
+                        midi_bank = cvpj_plugindata.dataval_get('bank', 0)
+                        midi_patch = cvpj_plugindata.dataval_get('inst', 0)
                         sf2data = amped_makedevice('SF2','GM Player')
                         sf2params = []
                         sf2params.append(amped_makeparam(0, 'patch', 0))
@@ -419,10 +341,10 @@ class output_cvpj_f(plugin_output.base):
                     elif plugtype == ['vst2', 'win']:
                         inst_supported = True
                         vstcondata = amped_makedevice('VSTConnection',"VST/Remote Beta")
-                        vstdatatype = plugins.get_plug_dataval(cvpj_l, pluginid, 'datatype', '')
+                        vstdatatype = cvpj_plugindata.dataval_get('datatype', '')
                         if vstdatatype == 'chunk':
-                            vstcondata['pluginPath'] = plugins.get_plug_dataval(cvpj_l, pluginid, 'path', 'path')
-                            vstcondata['pluginState'] = plugins.get_plug_dataval(cvpj_l, pluginid, 'chunk', '')
+                            vstcondata['pluginPath'] = cvpj_plugindata.dataval_get('path', 'path')
+                            vstcondata['pluginState'] = cvpj_plugindata.rawdata_get_b64()
                         amped_trackdata["devices"].append(vstcondata)
 
             if inst_supported == False:
@@ -442,7 +364,7 @@ class output_cvpj_f(plugin_output.base):
                     #    samplerdata['samplerZones'] = []
                     #    a_predelay, a_attack, a_hold, a_decay, a_sustain, a_release, a_amount = plugins.get_asdr_env(cvpj_l, pluginid, 'vol')
 
-                    #    filepath = plugins.get_plug_dataval(cvpj_l, pluginid, 'file', '')
+                    #    filepath = cvpj_plugindata.dataval_get('file', '')
                     #    audioid = addsample(zip_amped, filepath)
 
                     #    samplervalues = {}
@@ -533,8 +455,11 @@ class output_cvpj_f(plugin_output.base):
                         if cuttype == 'cut': 
                             amped_offset = cutdata['start']/4 if 'start' in cutdata else 0
 
+                    amped_audclip = {}
+                    
                     if 'audiomod' in cvpj_audioclip:
                         cvpj_audiomod = cvpj_audioclip['audiomod']
+                        amped_audclip['pitchShift'] = int(cvpj_audiomod['pitch']) if 'pitch' in cvpj_audiomod else 0
                         stretch_method = cvpj_audiomod['stretch_method'] if 'stretch_method' in cvpj_audiomod else None
                         stretch_data = cvpj_audiomod['stretch_data'] if 'stretch_data' in cvpj_audiomod else {'rate': 1.0}
                         stretch_rate = stretch_data['rate'] if 'rate' in stretch_data else 1
@@ -545,7 +470,6 @@ class output_cvpj_f(plugin_output.base):
                     audioid = None
                     if 'file' in cvpj_audioclip:
                         audioid = addsample(zip_amped, cvpj_audioclip['file'])
-                    amped_audclip = {}
                     amped_audclip['contentGuid'] = {}
                     if audioid != None: amped_audclip['contentGuid']['userAudio'] = {"exportedId": audioid}
                     amped_audclip['position'] = 0
@@ -565,11 +489,11 @@ class output_cvpj_f(plugin_output.base):
                 for autoname in [['vol','volume'], ['pan','pan']]:
                     autopoints = auto_nopl.getpoints(cvpj_l, ['track',cvpj_trackid,autoname[0]])
                     if autopoints != None: 
-                        ampedauto = cvpjauto_to_ampedauto(auto.remove_instant(autopoints, 0, False))
+                        ampedauto = cvpjauto_to_ampedauto(auto.remove_instant(autopoints, 0, False), 0, 1)
                         amped_trackdata["automations"].append({"param": autoname[1], "points": ampedauto})
 
             if 'chain_fx_audio' in cvpj_trackdata:
-                amped_effects = amped_parse_effects(cvpj_trackdata['chain_fx_audio'])
+                amped_effects = amped_parse_effects(cvpj_trackdata['chain_fx_audio'], amped_trackdata["automations"])
                 for amped_effect in amped_effects:
                     amped_trackdata["devices"].append(amped_effect)
 
@@ -592,7 +516,7 @@ class output_cvpj_f(plugin_output.base):
             cvpj_master = cvpj_l['track_master']
             amped_out["masterTrack"]['volume'] = data_values.get_value(cvpj_master, 'vol', 1.0)
             if 'chain_fx_audio' in cvpj_master:
-                amped_out["masterTrack"]['devices'] = amped_parse_effects(cvpj_master['chain_fx_audio'])
+                amped_out["masterTrack"]['devices'] = amped_parse_effects(cvpj_master['chain_fx_audio'], None)
 
         amped_out["workspace"] = {"library":False,"libraryWidth":300,"trackPanelWidth":160,"trackHeight":80,"beatWidth":24,"contentEditor":{"active":False,"trackId":5,"mode":"noteEditor","beatWidth":48,"noteEditorKeyHeight":10,"velocityPanelHeight":90,"velocityPanel":False,"audioEditorVerticalZoom":1,"height":400,"scroll":{"left":0,"top":0},"quantizationValue":0.25,"chordCreator":{"active":False,"scale":{"key":"C","mode":"Major"}}},"trackInspector":True,"trackInspectorTrackId":5,"arrangementScroll":{"left":0,"top":0},"activeTool":"arrow","timeDisplayInBeats":False,"openedDeviceIds":[],"virtualKeyboard":{"active":False,"height":187,"keyWidth":30,"octave":5,"scrollPositions":{"left":0,"top":0}},"xybeatz":{"active":False,"height":350,"zones":[{"genre":"Caribbean","beat":{"bpm":100,"name":"Zouk Electro 2"}},{"genre":"Soul Funk","beat":{"bpm":120,"name":"Defunkt"}},{"genre":"Greatest Breaks","beat":{"bpm":100,"name":"Walk This Way"}},{"genre":"Brazil","beat":{"bpm":95,"name":"Samba Partido Alto 1"}}],"parts":[{"x":0.75,"y":0.75,"gain":1},{"x":0.9,"y":0.2,"gain":1},{"x":0.8,"y":0.45,"gain":1},{"x":0.7,"y":0.7,"gain":1},{"x":0.7,"y":1,"gain":1},{"x":0.5,"y":0.5,"gain":1}],"partId":5,"fullKit":True,"soloPartId":-1,"complexity":50,"zoneId":0,"lastPartId":1},"displayedAutomations":{}}
         

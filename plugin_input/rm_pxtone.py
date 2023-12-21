@@ -8,6 +8,8 @@ from functions import plugins
 from functions import placement_data
 from functions import note_data
 from functions import song
+from functions import colors
+from functions import data_dataset
 from functions_tracks import tracks_rm
 from functions_tracks import auto_nopl
 import plugin_input
@@ -30,28 +32,7 @@ ptcop_events[13] = 'Group # '
 ptcop_events[14] = 'Key Corr'
 ptcop_events[15] = 'Pan Time'
 
-colors_inst = [
-[0.94, 0.50, 0.00],
-[0.41, 0.47, 1.00],
-[0.79, 0.72, 0.72],
-[0.68, 0.25, 1.00],
-[0.57, 0.78, 0.00],
-[0.99, 0.20, 0.80],
-[0.00, 0.75, 0.38],
-[1.00, 0.47, 0.36],
-[0.00, 0.74, 1.00]]
-
-global colornum
-colornum = 0
-
 def get_float(in_int): return struct.unpack("<f", struct.pack("I", in_int))[0]
-
-def getcolor():
-    global colornum
-    out_color = colors_inst[colornum]
-    colornum += 1
-    if colornum == 9: colornum = 0
-    return out_color
 
 def parse_event(bio_stream):
     position = varint.decode_stream(bio_stream)
@@ -191,6 +172,9 @@ class input_pxtone(plugin_input.base):
         song_filesize = song_file.tell()
         song_file.seek(0)
         
+        dataset = data_dataset.dataset('./data_dset/pxtone.dset')
+        colordata = colors.colorset(dataset.colorset_e_list('track', 'main'))
+
         ptcop_header = song_file.read(16)
         ptcop_unk = int.from_bytes(song_file.read(4), "little")
         ptcop_unit_events = {}
@@ -445,7 +429,7 @@ class input_pxtone(plugin_input.base):
             cvpj_trackparams = trackautop[unitnum]
             for cvpj_note in cvpj_notelist: note_mod.notemod_conv(cvpj_note)
             plt_name = ptcop_name_unit[unitnum] if unitnum in ptcop_name_unit else None
-            cvpj_instcolor = getcolor()
+            cvpj_instcolor = colordata.getcolor()
             cvpj_trackid = str(unitnum+1)
             tracks_rm.track_create(cvpj_l, cvpj_trackid, 'instruments')
             tracks_rm.track_visual(cvpj_l, cvpj_trackid, name=plt_name, color=cvpj_instcolor)
@@ -467,11 +451,14 @@ class input_pxtone(plugin_input.base):
 
             plugindata = t_voice_data[voicenum][1]
             if t_voice_data[voicenum][0] == 'sampler':
-                plugins.add_plug_sampler_singlefile(cvpj_l, pluginid, plugindata['file'])
+
+                inst_plugindata = plugins.cvpj_plugin('sampler', plugindata['file'], None)
+                inst_plugindata.dataval_add('trigger', plugindata['trigger'])
+                inst_plugindata.dataval_add('interpolation', plugindata['interpolation'])
+                inst_plugindata.asdr_env_add('vol', 0, 0, 0, 0, 1, 0, 1)
+                inst_plugindata.to_cvpj(cvpj_l, pluginid)
+
                 tracks_rm.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-                plugins.add_plug_data(cvpj_l, pluginid, 'trigger', plugindata['trigger'])
-                plugins.add_plug_data(cvpj_l, pluginid, 'interpolation', plugindata['interpolation'])
-                plugins.add_asdr_env(cvpj_l, pluginid, 'vol', 0, 0, 0, 0, 1, 0, 1)
 
             tracks_rm.inst_param_add(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
             tracks_rm.inst_dataval_add(cvpj_l, cvpj_instid, 'instdata', 'middlenote', t_voice_data[voicenum][2])

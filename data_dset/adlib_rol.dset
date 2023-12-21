@@ -1,0 +1,816 @@
+{
+    "inst": {
+        "midi_to": {
+            "ACCORDN": 21,
+            "BAGPIPE1": 109,
+            "BAGPIPE2": 109,
+            "BANJO1": 105,
+            "BASS1": 34,
+            "BASS2": 35,
+            "BASSOON1": 70,
+            "BRASS1": 62,
+            "CELESTA": 8,
+            "CLAR1": 71,
+            "CLAR2": 71,
+            "CLARINET": 71,
+            "ELGUIT1": 26,
+            "ELGUIT2": 27,
+            "ELGUIT3": 26,
+            "ELGUIT4": 27,
+            "ELORGAN1": 16,
+            "ELPIANO1": 4,
+            "ELPIANO2": 5,
+            "EPIANO1A": 4,
+            "EPIANO1B": 5,
+            "FLUTE": 73,
+            "FLUTE1": 73,
+            "FLUTE2": 75,
+            "FRHORN1": 60,
+            "FRHORN2": 60,
+            "GUITAR1": 24,
+            "HARP1": 46,
+            "HARP2": 46,
+            "HARP3": 46,
+            "HARPSI1": 6,
+            "HARPSI2": 6,
+            "HARPSI3": 6,
+            "HARPSI4": 6,
+            "HARPSI5": 6,
+            "JAZZGUIT": 26,
+            "KEYBRD1": 3,
+            "KEYBRD2": 5,
+            "KEYBRD3": 2,
+            "MARIMBA1": 12,
+            "MARIMBA2": 12,
+            "OBOE1": 68,
+            "ORGAN1": 16,
+            "ORGAN2": 17,
+            "ORGAN3": 18,
+            "ORGAN3A": 19,
+            "ORGAN3B": 20,
+            "ORGNPERC": 17,
+            "PIAN1A": 0,
+            "PIAN1B": 0,
+            "PIAN1C": 0,
+            "PIANO": 0,
+            "PIANO1": 0,
+            "PIANO2": 1,
+            "PIANO3": 2,
+            "PIANO4": 3,
+            "PIANOBEL": 98,
+            "SAX1": 64,
+            "SITAR1": 104,
+            "SITAR2": 104,
+            "SOLOVLN": 40,
+            "STEELGT1": 24,
+            "STEELGT2": 25,
+            "SYNBASS1": 38,
+            "SYNBASS2": 39,
+            "SYNBASS4": 39,
+            "TROMB1": 57,
+            "TROMB2": 57,
+            "TRUMPET1": 56,
+            "TRUMPET2": 56,
+            "TRUMPET3": 56,
+            "TRUMPET4": 56,
+            "TUBA1": 58,
+            "VIBRA1": 11,
+            "VIBRA2": 11,
+            "VIBRA3": 11,
+            "VIOLIN1": 40,
+            "VIOLIN2": 40,
+            "VIOLIN3": 40,
+            "VLNPIZZ1": 45,
+            "XYLO1": 13,
+            "XYLO2": 13,
+            "XYLO3": 13
+        },
+        "objects": {
+            "ACCORDN": {
+                "visual": {
+                    "name": "Accordion"
+                }
+            },
+            "BAGPIPE1": {
+                "visual": {
+                    "name": "Bagpipe 1"
+                }
+            },
+            "BAGPIPE2": {
+                "visual": {
+                    "name": "Bagpipe 2"
+                }
+            },
+            "BANJO1": {
+                "visual": {
+                    "name": "Banjo"
+                }
+            },
+            "BASS1": {
+                "visual": {
+                    "name": "Bass 1"
+                }
+            },
+            "BASS2": {
+                "visual": {
+                    "name": "Bass 2"
+                }
+            },
+            "BASSHARP": {
+                "visual": {
+                    "name": "Bass Harp"
+                }
+            },
+            "BASSOON1": {
+                "visual": {
+                    "name": "Bassoon"
+                }
+            },
+            "BASSTRLG": {
+                "visual": {
+                    "name": "Bass String Long"
+                }
+            },
+            "BDRUM1": {
+                "visual": {
+                    "name": "Bass Drum"
+                }
+            },
+            "BELLONG": {
+                "visual": {
+                    "name": "Bell Long"
+                }
+            },
+            "BELLS": {
+                "visual": {
+                    "name": "Bells"
+                }
+            },
+            "BELSHORT": {
+                "visual": {
+                    "name": "Bell Short"
+                }
+            },
+            "BNCEBASS": {
+                "visual": {
+                    "name": "BnceBass"
+                }
+            },
+            "BRASS1": {
+                "visual": {
+                    "name": "Brass"
+                }
+            },
+            "CBASSOON": {
+                "visual": {
+                    "name": "C Bassoon"
+                }
+            },
+            "CELESTA": {
+                "visual": {
+                    "name": "Celesta"
+                }
+            },
+            "CLAR1": {
+                "visual": {
+                    "name": "Clarinet 1"
+                }
+            },
+            "CLAR2": {
+                "visual": {
+                    "name": "Clarinet 2"
+                }
+            },
+            "CLARINET": {
+                "visual": {
+                    "name": "Clarinet"
+                }
+            },
+            "CLAVECIN": {
+                "visual": {
+                    "name": "Clavecin"
+                }
+            },
+            "CROMORNE": {
+                "visual": {
+                    "name": "Cromorne"
+                }
+            },
+            "CYMBAL1": {
+                "visual": {
+                    "name": "Cymbal"
+                }
+            },
+            "ELCLAV1": {
+                "visual": {
+                    "name": "Elec Clav 1"
+                }
+            },
+            "ELCLAV2": {
+                "visual": {
+                    "name": "Elec Clav 2"
+                }
+            },
+            "ELECFL": {
+                "visual": {
+                    "name": "Elec Flute"
+                }
+            },
+            "ELECVIBE": {
+                "visual": {
+                    "name": "Elec Vibe"
+                }
+            },
+            "ELGUIT1": {
+                "visual": {
+                    "name": "Electric Guitar"
+                }
+            },
+            "ELGUIT2": {
+                "visual": {
+                    "name": "Electric Guitar 2"
+                }
+            },
+            "ELGUIT3": {
+                "visual": {
+                    "name": "Electric Guitar 3"
+                }
+            },
+            "ELGUIT4": {
+                "visual": {
+                    "name": "Electric Guitar 4"
+                }
+            },
+            "ELORGAN1": {
+                "visual": {
+                    "name": "Electric Organ"
+                }
+            },
+            "ELPIANO1": {
+                "visual": {
+                    "name": "Electric Piano 1"
+                }
+            },
+            "ELPIANO2": {
+                "visual": {
+                    "name": "Electric Piano 2"
+                }
+            },
+            "EPIANO1A": {
+                "visual": {
+                    "name": "Electric Piano 1a"
+                }
+            },
+            "EPIANO1B": {
+                "visual": {
+                    "name": "Electric Piano 1b"
+                }
+            },
+            "FLUTE": {
+                "visual": {
+                    "name": "Flute"
+                }
+            },
+            "FLUTE1": {
+                "visual": {
+                    "name": "Flute 1"
+                }
+            },
+            "FLUTE2": {
+                "visual": {
+                    "name": "Flute 2"
+                }
+            },
+            "FRHORN1": {
+                "visual": {
+                    "name": "French Horn 1"
+                }
+            },
+            "FRHORN2": {
+                "visual": {
+                    "name": "French Horn 2"
+                }
+            },
+            "FSTRP1": {
+                "visual": {
+                    "name": "fstrp1"
+                }
+            },
+            "FSTRP2": {
+                "visual": {
+                    "name": "fstrp2"
+                }
+            },
+            "FUZGUIT1": {
+                "visual": {
+                    "name": "Fuzz Guitar 1"
+                }
+            },
+            "FUZGUIT2": {
+                "visual": {
+                    "name": "Fuzz Guitar 2"
+                }
+            },
+            "GUITAR1": {
+                "visual": {
+                    "name": "Guitar"
+                }
+            },
+            "HARP1": {
+                "visual": {
+                    "name": "Harp 1"
+                }
+            },
+            "HARP2": {
+                "visual": {
+                    "name": "Harp 2"
+                }
+            },
+            "HARP3": {
+                "visual": {
+                    "name": "Harp 3"
+                }
+            },
+            "HARPE1": {
+                "visual": {
+                    "name": "Harpe"
+                }
+            },
+            "HARPSI1": {
+                "visual": {
+                    "name": "Harpsichord 1"
+                }
+            },
+            "HARPSI2": {
+                "visual": {
+                    "name": "Harpsichord 2"
+                }
+            },
+            "HARPSI3": {
+                "visual": {
+                    "name": "Harpsichord 3"
+                }
+            },
+            "HARPSI4": {
+                "visual": {
+                    "name": "Harpsichord 4"
+                }
+            },
+            "HARPSI5": {
+                "visual": {
+                    "name": "Harpsichord 5"
+                }
+            },
+            "HELICPTR": {
+                "visual": {
+                    "name": "Helicopter"
+                }
+            },
+            "HIHAT1": {
+                "visual": {
+                    "name": "Hi-Hat 1"
+                }
+            },
+            "HIHAT2": {
+                "visual": {
+                    "name": "Hi-Hat 2"
+                }
+            },
+            "JAVAICAN": {
+                "visual": {
+                    "name": "Javaican"
+                }
+            },
+            "JAZZGUIT": {
+                "visual": {
+                    "name": "Jazz Guitar"
+                }
+            },
+            "JEWSHARP": {
+                "visual": {
+                    "name": "Jew's harp"
+                }
+            },
+            "KEYBRD1": {
+                "visual": {
+                    "name": "Keyboard 1"
+                }
+            },
+            "KEYBRD2": {
+                "visual": {
+                    "name": "Keyboard 2"
+                }
+            },
+            "KEYBRD3": {
+                "visual": {
+                    "name": "Keyboard 3"
+                }
+            },
+            "LASER": {
+                "visual": {
+                    "name": "Laser"
+                }
+            },
+            "LOGDRUM1": {
+                "visual": {
+                    "name": "Log Drum"
+                }
+            },
+            "MARIMBA1": {
+                "visual": {
+                    "name": "Marimba 1"
+                }
+            },
+            "MARIMBA2": {
+                "visual": {
+                    "name": "Marimba 2"
+                }
+            },
+            "MDRNPHON": {
+                "visual": {
+                    "name": "Mdrnphon"
+                }
+            },
+            "MLTRDRUM": {
+                "visual": {
+                    "name": "Mltrdrum"
+                }
+            },
+            "MOOGSYNT": {
+                "visual": {
+                    "name": "Moog Synth"
+                }
+            },
+            "NOISE1": {
+                "visual": {
+                    "name": "Noise"
+                }
+            },
+            "OBOE1": {
+                "visual": {
+                    "name": "Oboe"
+                }
+            },
+            "ORGAN1": {
+                "visual": {
+                    "name": "Organ"
+                }
+            },
+            "ORGAN2": {
+                "visual": {
+                    "name": "Organ 2"
+                }
+            },
+            "ORGAN3": {
+                "visual": {
+                    "name": "Organ 3"
+                }
+            },
+            "ORGAN3A": {
+                "visual": {
+                    "name": "Organ 3a"
+                }
+            },
+            "ORGAN3B": {
+                "visual": {
+                    "name": "Organ 3b"
+                }
+            },
+            "ORGNPERC": {
+                "visual": {
+                    "name": "Percussive Organ"
+                }
+            },
+            "PHONE1": {
+                "visual": {
+                    "name": "Phone"
+                }
+            },
+            "PHONE2": {
+                "visual": {
+                    "name": "Phone 2"
+                }
+            },
+            "PIAN1A": {
+                "visual": {
+                    "name": "Piano 1a"
+                }
+            },
+            "PIAN1B": {
+                "visual": {
+                    "name": "Piano 1b"
+                }
+            },
+            "PIAN1C": {
+                "visual": {
+                    "name": "Piano 1c"
+                }
+            },
+            "PIANO": {
+                "visual": {
+                    "name": "Piano"
+                }
+            },
+            "PIANO1": {
+                "visual": {
+                    "name": "Piano 1"
+                }
+            },
+            "PIANO2": {
+                "visual": {
+                    "name": "Piano 2"
+                }
+            },
+            "PIANO3": {
+                "visual": {
+                    "name": "Piano 3"
+                }
+            },
+            "PIANO4": {
+                "visual": {
+                    "name": "Piano 4"
+                }
+            },
+            "PIANOBEL": {
+                "visual": {
+                    "name": "Piano Bell"
+                }
+            },
+            "PIANOF": {
+                "visual": {
+                    "name": "Piano F"
+                }
+            },
+            "POPBASS1": {
+                "visual": {
+                    "name": "Pop Bass"
+                }
+            },
+            "RKSNARE1": {
+                "visual": {
+                    "name": "RK Snare"
+                }
+            },
+            "SAX1": {
+                "visual": {
+                    "name": "Sax"
+                }
+            },
+            "SCRATCH": {
+                "visual": {
+                    "name": "Scratch"
+                }
+            },
+            "SCRATCH4": {
+                "visual": {
+                    "name": "Scratch 4"
+                }
+            },
+            "SDRUM2": {
+                "visual": {
+                    "name": "Snare Drum 2"
+                }
+            },
+            "SHRTVIBE": {
+                "visual": {
+                    "name": "Short Vibe"
+                }
+            },
+            "SITAR1": {
+                "visual": {
+                    "name": "Sitar 1"
+                }
+            },
+            "SITAR2": {
+                "visual": {
+                    "name": "Sitar 2"
+                }
+            },
+            "SNAKEFL": {
+                "visual": {
+                    "name": "Snakefl"
+                }
+            },
+            "SNARE1": {
+                "visual": {
+                    "name": "Snare 1"
+                }
+            },
+            "SNRSUST": {
+                "visual": {
+                    "name": "Snare Sustain"
+                }
+            },
+            "SOLOVLN": {
+                "visual": {
+                    "name": "Solo Violin"
+                }
+            },
+            "STEELGT1": {
+                "visual": {
+                    "name": "Acoustic Guitar 1"
+                }
+            },
+            "STEELGT2": {
+                "visual": {
+                    "name": "Acoustic Guitar 2"
+                }
+            },
+            "STRINGS1": {
+                "visual": {
+                    "name": "Strings 1"
+                }
+            },
+            "STRNLONG": {
+                "visual": {
+                    "name": "strnlong"
+                }
+            },
+            "SYN1": {
+                "visual": {
+                    "name": "Synth 1"
+                }
+            },
+            "SYN2": {
+                "visual": {
+                    "name": "Synth 2"
+                }
+            },
+            "SYN3": {
+                "visual": {
+                    "name": "Synth 3"
+                }
+            },
+            "SYN4": {
+                "visual": {
+                    "name": "Synth 4"
+                }
+            },
+            "SYN5": {
+                "visual": {
+                    "name": "Synth 5"
+                }
+            },
+            "SYN6": {
+                "visual": {
+                    "name": "Synth 6"
+                }
+            },
+            "SYN9": {
+                "visual": {
+                    "name": "Synth 9"
+                }
+            },
+            "SYNBAL1": {
+                "visual": {
+                    "name": "Synbal 1"
+                }
+            },
+            "SYNBAL2": {
+                "visual": {
+                    "name": "Synbal 2"
+                }
+            },
+            "SYNBASS1": {
+                "visual": {
+                    "name": "Synth Bass"
+                }
+            },
+            "SYNBASS2": {
+                "visual": {
+                    "name": "Synth Bass 2"
+                }
+            },
+            "SYNBASS4": {
+                "visual": {
+                    "name": "Synth Bass 4"
+                }
+            },
+            "SYNSNR1": {
+                "visual": {
+                    "name": "Synth Snare"
+                }
+            },
+            "SYNSNR2": {
+                "visual": {
+                    "name": "Synth Snare 2"
+                }
+            },
+            "TINCAN1": {
+                "visual": {
+                    "name": "Tin Can"
+                }
+            },
+            "TOM1": {
+                "visual": {
+                    "name": "Tom 1"
+                }
+            },
+            "TOM2": {
+                "visual": {
+                    "name": "Tom 2"
+                }
+            },
+            "TRAINBEL": {
+                "visual": {
+                    "name": "Train Bell"
+                }
+            },
+            "TRIANGLE": {
+                "visual": {
+                    "name": "Triangle"
+                }
+            },
+            "TROMB1": {
+                "visual": {
+                    "name": "Trombone 1"
+                }
+            },
+            "TROMB2": {
+                "visual": {
+                    "name": "Trombone 2"
+                }
+            },
+            "TRUMPET1": {
+                "visual": {
+                    "name": "Trumpet 1"
+                }
+            },
+            "TRUMPET2": {
+                "visual": {
+                    "name": "Trumpet 2"
+                }
+            },
+            "TRUMPET3": {
+                "visual": {
+                    "name": "Trumpet 3"
+                }
+            },
+            "TRUMPET4": {
+                "visual": {
+                    "name": "Trumpet 4"
+                }
+            },
+            "TUBA1": {
+                "visual": {
+                    "name": "Tuba"
+                }
+            },
+            "VIBRA1": {
+                "visual": {
+                    "name": "Vibraphone 1"
+                }
+            },
+            "VIBRA2": {
+                "visual": {
+                    "name": "Vibraphone 2"
+                }
+            },
+            "VIBRA3": {
+                "visual": {
+                    "name": "Vibraphone 3"
+                }
+            },
+            "VIOLIN1": {
+                "visual": {
+                    "name": "Violin 1"
+                }
+            },
+            "VIOLIN2": {
+                "visual": {
+                    "name": "Violin 2"
+                }
+            },
+            "VIOLIN3": {
+                "visual": {
+                    "name": "Violin 3"
+                }
+            },
+            "VLNPIZZ1": {
+                "visual": {
+                    "name": "Violin Pizzicato"
+                }
+            },
+            "WAVE": {
+                "visual": {
+                    "name": "Wave"
+                }
+            },
+            "XYLO1": {
+                "visual": {
+                    "name": "Xylophone 1"
+                }
+            },
+            "XYLO2": {
+                "visual": {
+                    "name": "Xylophone 2"
+                }
+            },
+            "XYLO3": {
+                "visual": {
+                    "name": "Xylophone 3"
+                }
+            }
+        }
+    }
+}

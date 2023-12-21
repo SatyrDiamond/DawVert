@@ -1,0 +1,113 @@
+{
+    "drums": {
+        "objects": {
+            "0": {
+                "visual": {
+                    "name": "Bass 1"
+                }
+            },
+            "1": {
+                "visual": {
+                    "name": "Bass 2"
+                }
+            },
+            "10": {
+                "visual": {
+                    "name": "Bass 3"
+                }
+            },
+            "11": {
+                "visual": {
+                    "name": "Tom 2"
+                }
+            },
+            "2": {
+                "visual": {
+                    "name": "Snare 1"
+                }
+            },
+            "3": {
+                "visual": {
+                    "name": "Snare 2"
+                }
+            },
+            "4": {
+                "visual": {
+                    "name": "Tom 1"
+                }
+            },
+            "5": {
+                "visual": {
+                    "name": "Hi-Hat Close"
+                }
+            },
+            "6": {
+                "visual": {
+                    "name": "Hi-Hat Open"
+                }
+            },
+            "7": {
+                "visual": {
+                    "name": "Crash"
+                }
+            },
+            "8": {
+                "visual": {
+                    "name": "Perc 1"
+                }
+            },
+            "9": {
+                "visual": {
+                    "name": "Perc 2"
+                }
+            }
+        }
+    },
+    "track": {
+        "colorset": {
+            "orgmaker_2": [
+                [
+                    0.23,
+                    0.3,
+                    0.99
+                ],
+                [
+                    0.62,
+                    0.11,
+                    0.12
+                ],
+                [
+                    0.62,
+                    0.16,
+                    0.87
+                ],
+                [
+                    0.14,
+                    0.45,
+                    0.26
+                ],
+                [
+                    0.13,
+                    0.46,
+                    0.57
+                ],
+                [
+                    0.67,
+                    0.5,
+                    0.11
+                ],
+                [
+                    0.59,
+                    0.64,
+                    0.71
+                ],
+                [
+                    0.58,
+                    0.53,
+                    0.49
+                ]
+            ]
+        },
+        "objects": {}
+    }
+}

@@ -3,11 +3,6 @@
 
 import plugin_plugconv
 
-import base64
-import struct
-import os
-import math
-
 from functions import plugins
 from functions_tracks import auto_data
 
@@ -22,34 +17,31 @@ threeosc_shapes = {
 
 
 def getparam(paramname):
-    global pluginid_g
-    global cvpj_l_g
-    paramval = plugins.get_plug_param(cvpj_l_g, pluginid_g, paramname, 0)
+    global cvpj_plugindata_g
+    paramval = cvpj_plugindata_g.param_get(paramname, 0)
     return paramval[0]
 
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['native-flstudio', None, 'flp'], ['native-lmms', None, 'lmms'], True, False
-    def convert(self, cvpj_l, pluginid, plugintype, extra_json):
-        global pluginid_g   
-        global cvpj_l_g 
-        pluginid_g = pluginid   
-        cvpj_l_g = cvpj_l
+    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
+        global cvpj_plugindata_g
+        cvpj_plugindata_g = cvpj_plugindata
 
-        if plugintype[1] == None: plugintype[1] = ''
+        plugintype = cvpj_plugindata.type_get()
 
         if plugintype[1].lower() == 'fruity balance':  
             print('[plug-conv] FL Studio to LMMS: Fruity Balance > Amplifier:',pluginid)
             auto_data.del_plugin(cvpj_l, pluginid)
             bal_pan = getparam('pan')
             bal_vol = getparam('vol')
-            plugins.replace_plug(cvpj_l, pluginid, 'native-lmms', 'amplifier')
-            plugins.add_plug_param(cvpj_l, pluginid, 'pan', (bal_pan/128)*100, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'right', 100, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'volume', (bal_vol/256)*100, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'left', 100, 'int', "")
-            return True
+            cvpj_plugindata.replace('native-lmms', 'amplifier')
+            cvpj_plugindata.param_add('pan', (bal_pan/128)*100, 'int', "")
+            cvpj_plugindata.param_add('right', 100, 'int', "")
+            cvpj_plugindata.param_add('volume', (bal_vol/256)*100, 'int', "")
+            cvpj_plugindata.param_add('left', 100, 'int', "")
+            return 0
 
         if plugintype[1].lower() == 'fruity stereo shaper':
             print('[plug-conv] FL Studio to LMMS: Stereo Shaper > Stereo Matrix:',pluginid)
@@ -58,12 +50,12 @@ class plugconv(plugin_plugconv.base):
             fl_shape_l2l = getparam('l2l')/12800
             fl_shape_r2r = getparam('r2r')/12800
             fl_shape_l2r = getparam('l2r')/12800
-            plugins.replace_plug(cvpj_l, pluginid, 'native-lmms', 'stereomatrix')
-            plugins.add_plug_param(cvpj_l, pluginid, 'l-r', fl_shape_l2r, 'float', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'r-l', fl_shape_r2l, 'float', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'r-r', fl_shape_r2r, 'float', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'l-l', fl_shape_l2l, 'float', "")  
-            return True
+            cvpj_plugindata.replace('native-lmms', 'stereomatrix')
+            cvpj_plugindata.param_add('l-r', fl_shape_l2r, 'float', "")  
+            cvpj_plugindata.param_add('r-l', fl_shape_r2l, 'float', "")  
+            cvpj_plugindata.param_add('r-r', fl_shape_r2r, 'float', "")  
+            cvpj_plugindata.param_add('l-l', fl_shape_l2l, 'float', "")  
+            return 0
 
         if plugintype[1].lower() == '3x osc':   
             print('[plug-conv] FL Studio to LMMS: 3xOsc > TripleOscillator:',pluginid)
@@ -131,47 +123,49 @@ class plugconv(plugin_plugconv.base):
             lmms_userwavefile1 = 0  
             lmms_userwavefile2 = 0
 
-            filedata = plugins.get_fileref(cvpj_l, pluginid, 'audiofile')
+            filedata = cvpj_plugindata.fileref_get('audiofile')
 
-            plugins.replace_plug(cvpj_l, pluginid, 'native-lmms', 'tripleoscillator')
+            cvpj_plugindata.replace('native-lmms', 'tripleoscillator')
 
-            plugins.add_plug_param(cvpj_l, pluginid, 'coarse0', lmms_coarse0, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'coarse1', lmms_coarse1, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'coarse2', lmms_coarse2, 'int', "")
+            cvpj_plugindata.param_add('coarse0', lmms_coarse0, 'int', "")
+            cvpj_plugindata.param_add('coarse1', lmms_coarse1, 'int', "")
+            cvpj_plugindata.param_add('coarse2', lmms_coarse2, 'int', "")
 
-            plugins.add_plug_param(cvpj_l, pluginid, 'finel0', lmms_finel0, 'int', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'finel1', lmms_finel1, 'int', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'finel2', lmms_finel2, 'int', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'finer0', lmms_finer0, 'int', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'finer1', lmms_finer1, 'int', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'finer2', lmms_finer2, 'int', "")
+            cvpj_plugindata.param_add('finel0', lmms_finel0, 'int', "")  
+            cvpj_plugindata.param_add('finel1', lmms_finel1, 'int', "")  
+            cvpj_plugindata.param_add('finel2', lmms_finel2, 'int', "")  
+            cvpj_plugindata.param_add('finer0', lmms_finer0, 'int', "")  
+            cvpj_plugindata.param_add('finer1', lmms_finer1, 'int', "")  
+            cvpj_plugindata.param_add('finer2', lmms_finer2, 'int', "")
 
-            plugins.add_plug_param(cvpj_l, pluginid, 'modalgo1', lmms_modalgo1, 'int', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'modalgo2', lmms_modalgo2, 'int', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'modalgo3', lmms_modalgo3, 'int', "")
+            cvpj_plugindata.param_add('modalgo1', lmms_modalgo1, 'int', "")  
+            cvpj_plugindata.param_add('modalgo2', lmms_modalgo2, 'int', "")  
+            cvpj_plugindata.param_add('modalgo3', lmms_modalgo3, 'int', "")
 
-            plugins.add_plug_param(cvpj_l, pluginid, 'pan0', lmms_pan0, 'int', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'pan1', lmms_pan1, 'int', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'pan2', lmms_pan2, 'int', "")
+            cvpj_plugindata.param_add('pan0', lmms_pan0, 'int', "")  
+            cvpj_plugindata.param_add('pan1', lmms_pan1, 'int', "")  
+            cvpj_plugindata.param_add('pan2', lmms_pan2, 'int', "")
 
-            plugins.add_plug_param(cvpj_l, pluginid, 'phoffset0', lmms_phoffset0, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'phoffset1', lmms_phoffset1, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'phoffset2', lmms_phoffset2, 'int', "")
+            cvpj_plugindata.param_add('phoffset0', lmms_phoffset0, 'int', "")
+            cvpj_plugindata.param_add('phoffset1', lmms_phoffset1, 'int', "")
+            cvpj_plugindata.param_add('phoffset2', lmms_phoffset2, 'int', "")
 
-            plugins.add_plug_param(cvpj_l, pluginid, 'stphdetun0', lmms_stphdetun0, 'int', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'stphdetun1', lmms_stphdetun1, 'int', "")  
-            plugins.add_plug_param(cvpj_l, pluginid, 'stphdetun2', lmms_stphdetun2, 'int', "")
+            cvpj_plugindata.param_add('stphdetun0', lmms_stphdetun0, 'int', "")  
+            cvpj_plugindata.param_add('stphdetun1', lmms_stphdetun1, 'int', "")  
+            cvpj_plugindata.param_add('stphdetun2', lmms_stphdetun2, 'int', "")
 
-            plugins.add_plug_param(cvpj_l, pluginid, 'vol0', lmms_vol0*33, 'int', "")   
-            plugins.add_plug_param(cvpj_l, pluginid, 'vol1', lmms_vol1*33, 'int', "")   
-            plugins.add_plug_param(cvpj_l, pluginid, 'vol2', lmms_vol2*33, 'int', "")
+            cvpj_plugindata.param_add('vol0', lmms_vol0*33, 'int', "")   
+            cvpj_plugindata.param_add('vol1', lmms_vol1*33, 'int', "")   
+            cvpj_plugindata.param_add('vol2', lmms_vol2*33, 'int', "")
 
-            plugins.add_plug_param(cvpj_l, pluginid, 'wavetype0', lmms_wavetype0, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'wavetype1', lmms_wavetype1, 'int', "")
-            plugins.add_plug_param(cvpj_l, pluginid, 'wavetype2', lmms_wavetype2, 'int', "")
+            cvpj_plugindata.param_add('wavetype0', lmms_wavetype0, 'int', "")
+            cvpj_plugindata.param_add('wavetype1', lmms_wavetype1, 'int', "")
+            cvpj_plugindata.param_add('wavetype2', lmms_wavetype2, 'int', "")
 
             if filedata != None:
-                plugins.add_fileref(cvpj_l, pluginid, 'osc_1', filedata['path'])
-                plugins.add_fileref(cvpj_l, pluginid, 'osc_2', filedata['path'])
-                plugins.add_fileref(cvpj_l, pluginid, 'osc_3', filedata['path'])
-            return True
+                cvpj_plugindata.fileref_add('osc_1', filedata['path'])
+                cvpj_plugindata.fileref_add('osc_2', filedata['path'])
+                cvpj_plugindata.fileref_add('osc_3', filedata['path'])
+            return 0
+            
+        return 2

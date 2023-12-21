@@ -40,6 +40,7 @@ def get_audiofile_info(sample_filename):
             audio_hz_b = avdata.streams.audio[0].rate
             if audio_hz_b != None: audio_hz = audio_hz_b
 
+            if audio_duration == None: audio_duration = 1
             if not db.search(samplesdb.path == audio_path):
                 out_db_data = {}
                 out_db_data['path'] = audio_path

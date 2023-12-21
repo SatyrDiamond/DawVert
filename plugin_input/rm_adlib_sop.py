@@ -6,7 +6,6 @@ import json
 import struct
 import os.path
 
-from functions_plugparams import opl_sbi
 from functions import audio_wav
 from functions import data_bytes
 from functions import placement_data
@@ -16,7 +15,7 @@ from functions import note_data
 from functions import params
 from functions_tracks import tracks_rm
 from functions_tracks import auto_nopl
-from functions_plugparams import params_fm
+from functions_plugdata import plugin_fm
 
 def add_point(i_list, time, value):
     if time not in i_list: i_list[time] = []
@@ -132,11 +131,10 @@ class input_sop(plugin_input.base):
             tracks_rm.inst_visual(cvpj_l, cvpj_instname, name=instname, color=[0.39, 0.16, 0.78])
 
             if sop_data_s_inst[0] in [1,6,7,8,9,10]:
-                fmdata = params_fm.fm_data('opl2')
+                fmdata = plugin_fm.fm_data('opl2')
 
                 tracks_rm.inst_pluginid(cvpj_l, cvpj_instname, cvpj_instname)
                 #tracks_rm.inst_dataval_add(cvpj_l, cvpj_instname, 'instdata', 'middlenote', 24)
-                plugins.add_plug(cvpj_l, cvpj_instname, 'fm', 'opl2')
 
                 sbidata = sop_data_s_inst[3]
                 iMod = [sbidata[0], sbidata[1], sbidata[2], sbidata[3], sbidata[4]]
@@ -150,11 +148,11 @@ class input_sop(plugin_input.base):
                 fmdata.to_cvpj(cvpj_l, cvpj_instname)
 
             if sop_data_s_inst[0] == 0:
-                fmdata = params_fm.fm_data('opl3')
+                fmdata = plugin_fm.fm_data('opl3')
 
                 tracks_rm.inst_pluginid(cvpj_l, cvpj_instname, cvpj_instname)
                 #tracks_rm.inst_dataval_add(cvpj_l, cvpj_instname, 'instdata', 'middlenote', 24)
-                plugins.add_plug(cvpj_l, cvpj_instname, 'fm', 'opl3')
+
                 fouropdata = sop_data_s_inst[3]
 
                 op1_data = [fouropdata[0], fouropdata[1], fouropdata[2], fouropdata[3], fouropdata[4]]

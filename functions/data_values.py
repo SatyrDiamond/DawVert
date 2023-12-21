@@ -3,6 +3,23 @@
 
 import re
 
+class counter:
+    def __init__(self, starting_num):
+        self.current = starting_num
+
+    def get(self):
+        self.current += 1
+        return self.current
+
+    def get_str(self):
+        self.current += 1
+        return str(self.current)
+
+    def next(self):
+        return self.current+1
+
+
+
 def nested_dict_add_value(i_dict, i_keys, i_value):
     if len(i_keys) == 1: i_dict.setdefault(i_keys[0], i_value)
     else:
@@ -196,3 +213,18 @@ def list_samesimilar(first, second):
     for x in range(len(first)):
         if first[x] == second[x]: out += 1
     return out/len(first)
+
+def list_usefirst(i_list):
+    finalval = None
+    for p in i_list:
+        if p != None: 
+            finalval = p
+            break
+    return finalval
+
+def get_all_keys(i_dict, nestedval):
+    for key, value in i_dict.items():
+        if isinstance(value, dict):
+            yield from get_all_keys(value, nestedval+[key])
+        else:
+            yield nestedval+[key], value

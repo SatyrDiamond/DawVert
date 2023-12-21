@@ -57,3 +57,6 @@ class plugconv(plugin_plugconv.base):
 
             cvpj_plugindata.replace('universal', 'eq-bands')
             cvpj_plugindata.param_add('gain_out', main_lvl, 'float', 'Out Gain')
+            return 1
+
+        return 2

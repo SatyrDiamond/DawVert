@@ -11,9 +11,9 @@ def tracklanename(trackname, lanename, fallback):
     return ntp_name
 
 def process_r(cvpj_l):
-    old_trackdata = cvpj_l['track_data']
-    old_trackordering = cvpj_l['track_order']
-    old_trackplacements = cvpj_l['track_placements']
+    old_trackdata = cvpj_l['track_data'] if 'track_data' in cvpj_l else {}
+    old_trackordering = cvpj_l['track_order'] if 'track_data' in cvpj_l else []
+    old_trackplacements = cvpj_l['track_placements'] if 'track_data' in cvpj_l else {}
     new_trackdata = {}
     new_trackordering = []
     new_trackplacements = {}

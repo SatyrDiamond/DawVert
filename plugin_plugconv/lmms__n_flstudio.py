@@ -41,7 +41,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('right', 100, 'int', "")
             cvpj_plugindata.param_add('volume', (bal_vol/256)*100, 'int', "")
             cvpj_plugindata.param_add('left', 100, 'int', "")
-            return True
+            return 0
 
         if plugintype[1].lower() == 'fruity stereo shaper':
             print('[plug-conv] FL Studio to LMMS: Stereo Shaper > Stereo Matrix:',pluginid)
@@ -55,7 +55,7 @@ class plugconv(plugin_plugconv.base):
             cvpj_plugindata.param_add('r-l', fl_shape_r2l, 'float', "")  
             cvpj_plugindata.param_add('r-r', fl_shape_r2r, 'float', "")  
             cvpj_plugindata.param_add('l-l', fl_shape_l2l, 'float', "")  
-            return True
+            return 0
 
         if plugintype[1].lower() == '3x osc':   
             print('[plug-conv] FL Studio to LMMS: 3xOsc > TripleOscillator:',pluginid)
@@ -166,4 +166,6 @@ class plugconv(plugin_plugconv.base):
                 cvpj_plugindata.fileref_add('osc_1', filedata['path'])
                 cvpj_plugindata.fileref_add('osc_2', filedata['path'])
                 cvpj_plugindata.fileref_add('osc_3', filedata['path'])
-            return True
+            return 0
+            
+        return 2

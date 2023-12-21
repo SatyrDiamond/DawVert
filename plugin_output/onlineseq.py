@@ -91,11 +91,16 @@ class output_onlineseq(plugin_output.base):
                             midi_inst = cvpj_plugindata.dataval_get('patch', 0)
                             if midi_bank != 128: midiinst = midi_inst
                             else: midiinst = -1
-                        if plugintype[0] == 'retro':
-                            if plugintype[1] == 'sine': onlineseqinst = 13
-                            if plugintype[1] == 'square': onlineseqinst = 14
-                            if plugintype[1] == 'triangle': onlineseqinst = 16
-                            if plugintype[1] == 'saw': onlineseqinst = 15
+                        if plugintype == ['universal', 'synth-osc']:
+                            if 'osc' in cvpj_plugindata.cvpjdata:
+                                oscops = cvpj_plugindata.cvpjdata['osc']
+                                if len(oscops) == 1:
+                                    s_osc = oscops[0]
+                                    osc_shape = s_osc['shape'] if 'shape' in s_osc else 'square'
+                                    if osc_shape == 'sine': onlineseqinst = 13
+                                    if osc_shape == 'square': onlineseqinst = 14
+                                    if osc_shape == 'triangle': onlineseqinst = 16
+                                    if osc_shape == 'saw': onlineseqinst = 15
                 
                 t_instid = idvals.get_idval(idvals_onlineseq_inst, str(midiinst), 'outid')
 

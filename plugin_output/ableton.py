@@ -1211,6 +1211,13 @@ def create_devicechain(xmltag, cvpj_track_data, tracktype, track_placements, tra
 
     add_up_lower(xmltag, 'MidiOutputRouting', 'MidiOut/None', 'None', '')
     create_devicechain_mixer(xmltag, cvpj_track_data, tracktype)
+
+    x_DeviceChain_i = ET.SubElement(xmltag, 'DeviceChain')
+    x_DeviceChain_i_Devices = ET.SubElement(x_DeviceChain_i, 'Devices')
+
+    middlenote = data_values.nested_dict_get_value(cvpj_track_data, ['instdata', 'middlenote'])
+    if middlenote == None: middlenote = 0
+
     if tracktype == 'miditrack':
         #mainsequencer
         x_MainSequencer = ET.SubElement(xmltag, 'MainSequencer')
@@ -1236,6 +1243,11 @@ def create_devicechain(xmltag, cvpj_track_data, tracktype, track_placements, tra
         set_add_sequencer_base(x_FreezeSequencer)
         x_ClipSlotList = set_add_clipslots(x_FreezeSequencer)
         set_add_sequencer_end(x_FreezeSequencer)
+
+        if middlenote != 0:
+            xml_pitch = do_device_data_intro(x_DeviceChain_i_Devices, 4, 'MidiPitcher', True, '')
+            set_add_param(xml_pitch, 'Pitch', -middlenote, None, None, [-128, 128], None)
+
 
     if tracktype == 'audiotrack':
         #mainsequencer
@@ -1282,8 +1294,6 @@ def create_devicechain(xmltag, cvpj_track_data, tracktype, track_placements, tra
 
         set_add_sequencer_end(x_AudioSequencer)
 
-    x_DeviceChain_i = ET.SubElement(xmltag, 'DeviceChain')
-    x_DeviceChain_i_Devices = ET.SubElement(x_DeviceChain_i, 'Devices')
     do_device_data_instrument(cvpj_track_data, x_DeviceChain_i_Devices)
     do_device_data(cvpj_track_data, x_DeviceChain_i_Devices)
 

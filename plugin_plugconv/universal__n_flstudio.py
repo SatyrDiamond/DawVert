@@ -4,59 +4,53 @@
 import plugin_plugconv
 
 import math
-from functions import plugins
 from functions import xtramath
-from functions_tracks import auto_data
 
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['native-flstudio', None, 'flp'], ['universal', None, None], False, False
-    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
-        plugintype = cvpj_plugindata.type_get()
-
-        if plugintype[1] == 'fruity parametric eq 2':
-            main_lvl = cvpj_plugindata.param_get('main_lvl', 0)[0]/100
+    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
+        if plugin_obj.plugin_subtype == 'fruity parametric eq 2':
+            main_lvl = plugin_obj.params.get('main_lvl', 0)[0]/100
 
             for bandnum in range(7):
                 bandstarttxt = str(bandnum+1)
 
-                fl_band_gain = cvpj_plugindata.param_get(bandstarttxt+'_gain', 0)[0]/100
-                fl_band_freq = cvpj_plugindata.param_get(bandstarttxt+'_freq', 0)[0]/65536
-                fl_band_width = cvpj_plugindata.param_get(bandstarttxt+'_width', 0)[0]/65536
-                fl_band_type = cvpj_plugindata.param_get(bandstarttxt+'_type', 0)[0]
+                filter_obj = plugin_obj.eq_add()
+                filter_obj.type = 'peak'
 
-                fl_band_freq = 20 * 1000**fl_band_freq
+                filter_obj.gain = plugin_obj.params.get(bandstarttxt+'_gain', 0)[0]/100
 
-                c_band_shape = 'peak'
-                c_band_enable = 0
+                fl_band_freq = plugin_obj.params.get(bandstarttxt+'_freq', 0)[0]/65536
+                filter_obj.freq = 20 * 1000**fl_band_freq
+
+                fl_band_type = plugin_obj.params.get(bandstarttxt+'_type', 0)[0]
+                fl_band_width = plugin_obj.params.get(bandstarttxt+'_width', 0)[0]/65536
+
+                filter_obj.type = 'peak'
 
                 if fl_band_type in [5, 7]: 
-                    eq_res = (1-fl_band_width)*1.2
+                    filter_obj.q = (1-fl_band_width)*1.2
                 elif fl_band_type in [1, 3]: 
                     fl_band_width = xtramath.between_from_one(1, -1, fl_band_width)
-                    fl_band_width = pow(2, fl_band_width*5)
+                    filter_obj.q = pow(2, fl_band_width*5)
                 else: 
                     outwid = ((fl_band_width+0.01)*3)
                     outwid = xtramath.logpowmul(outwid, -1)
-                    fl_band_width = outwid
+                    filter_obj.q = outwid
 
-                if fl_band_type != 0: c_band_enable = 1
-                if fl_band_type == 1: c_band_shape = 'low_pass'
-                if fl_band_type == 2: c_band_shape = 'band_pass'
-                if fl_band_type == 3: c_band_shape = 'high_pass'
-                if fl_band_type == 4: c_band_shape = 'notch'
-                if fl_band_type == 5: c_band_shape = 'low_shelf'
-                if fl_band_type == 6: c_band_shape = 'peak'
-                if fl_band_type == 7: c_band_shape = 'high_shelf'
+                if fl_band_type != 0: filter_obj.on = True
+                if fl_band_type == 1: filter_obj.type = 'low_pass'
+                if fl_band_type == 2: filter_obj.type = 'band_pass'
+                if fl_band_type == 3: filter_obj.type = 'high_pass'
+                if fl_band_type == 4: filter_obj.type = 'notch'
+                if fl_band_type == 5: filter_obj.type = 'low_shelf'
+                if fl_band_type == 6: filter_obj.type = 'peak'
+                if fl_band_type == 7: filter_obj.type = 'high_shelf'
 
-
-                cvpj_plugindata.eqband_add(c_band_enable, fl_band_freq, c_band_shape, None)
-                cvpj_plugindata.eqband_add_param('q', fl_band_width, None)
-                cvpj_plugindata.eqband_add_param('gain', fl_band_gain, None)
-
-            cvpj_plugindata.replace('universal', 'eq-bands')
-            cvpj_plugindata.param_add('gain_out', main_lvl, 'float', 'Out Gain')
+            plugin_obj.replace('universal', 'eq-bands')
+            plugin_obj.params.add('gain_out', main_lvl, 'float', 'Out Gain')
             return 1
 
         return 2

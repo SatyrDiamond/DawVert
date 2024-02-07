@@ -9,9 +9,9 @@ from functions_midi_exdata import sony as sysex_sony
 from functions_midi_exdata import universal as sysex_universal
 
 from functions import data_bytes
-from functions import idvals
+from objects import idvals
 
-idvals_sysex_brands = idvals.parse_idvalscsv('data_idvals/midi_sysex.csv')
+idvals_sysex_brands = idvals.idvals('data_idvals/midi_sysex.csv')
 
 def decode_exdata(sysexdata, isseqspec):
 	exdata = data_bytes.to_bytesio(struct.pack("B"*len(sysexdata),*sysexdata))
@@ -45,8 +45,8 @@ def decode(i_sysexdata):
 	
 	idval_venid = '#'+bytes.hex(out_vendor)
 
-	if idval_venid in idvals_sysex_brands: 
-		out_brandname = idvals.get_idval(idvals_sysex_brands, str(idval_venid), 'name')
+	if idvals_sysex_brands.check_exists(idval_venid):
+		out_brandname = idvals_sysex_brands.get_idval(str(idval_venid), 'name')
 
 	datlen = len(exdata.getvalue())
 

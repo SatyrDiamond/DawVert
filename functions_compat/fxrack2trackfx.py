@@ -2,43 +2,51 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_values
-from functions_tracks import tracks_r
-from functions_tracks import auto_data
-from functions_tracks import trackfx
 
-def process_r(cvpj_l):
-    if 'fxrack' in cvpj_l:
-        cvpj_fxrack = cvpj_l['fxrack']
-        if '0' in cvpj_fxrack:
-            print('[compat] fxrack2trackfx: FX 0 to Master')
-            cvpj_l['track_master'] = cvpj_fxrack['0']
+def process_r(convproj_obj):
+    if convproj_obj.fxrack:
 
-        auto_data.move(cvpj_l, ['fxmixer','0','vol'], ['master','vol'])
-        auto_data.move(cvpj_l, ['fxmixer','0','pan'], ['master','pan'])
+        if 0 in convproj_obj.fxrack:
+            fxchannel_obj = convproj_obj.fxrack[0]
+            convproj_obj.move_automation(['fxmixer','0','vol'], ['master', 'vol'])
+            convproj_obj.move_automation(['fxmixer','0','pan'], ['master', 'pan'])
+            fxchannel_obj.params.move(convproj_obj.track_master.params, 'vol')
+            fxchannel_obj.params.move(convproj_obj.track_master.params, 'pan')
+            convproj_obj.track_master.fxslots_audio = fxchannel_obj.fxslots_audio.copy()
+            fxchannel_obj.fxslots_audio = []
+            del convproj_obj.fxrack[0]
+
         fx_trackids = {}
-        for cvpj_trackid, s_trackdata, track_placements in tracks_r.iter(cvpj_l):
-            cvpj_track_fxnum = s_trackdata['fxrack_channel'] if 'fxrack_channel' in s_trackdata else 0
+        for trackid, track_obj in convproj_obj.iter_track():
+            if track_obj.fxrack_channel > 0:
+                if track_obj.fxrack_channel not in fx_trackids: fx_trackids[track_obj.fxrack_channel] = []
+                fx_trackids[track_obj.fxrack_channel].append(trackid)
+                track_obj.group = 'fxrack_'+str(track_obj.fxrack_channel)
+                track_obj.fxrack_channel = -1
 
-            if cvpj_track_fxnum not in fx_trackids: fx_trackids[cvpj_track_fxnum] = []
-            fx_trackids[cvpj_track_fxnum].append(cvpj_trackid)
-            if 'fxrack_channel' in s_trackdata: del s_trackdata['fxrack_channel']
+        #for fxnum, fxchannel_obj in convproj_obj.fxrack.items()
+        for fx_num in fx_trackids:
 
-            if cvpj_track_fxnum != 0: s_trackdata['group'] = 'fxrack_'+str(cvpj_track_fxnum)
+            if fx_num in convproj_obj.fxrack:
+                fxchannel_obj = convproj_obj.fxrack[fx_num]
+                fxchannel_obj.sends = {}
+                groupid = 'fxrack_'+str(fx_num)
+                group_obj = convproj_obj.add_group(groupid)
 
-        if 0 in fx_trackids: del fx_trackids[0]
+                convproj_obj.move_automation(['fxmixer',str(fx_num),'pan'], ['group',groupid,'pan'])
+                convproj_obj.move_automation(['fxmixer',str(fx_num),'vol'], ['group',groupid,'vol'])
+                fxchannel_obj.params.move(group_obj.params, 'vol')
+                fxchannel_obj.params.move(group_obj.params, 'pan')
+                group_obj.fxslots_audio = fxchannel_obj.fxslots_audio.copy()
+                fxchannel_obj.fxslots_audio = []
+                group_obj.visual = fxchannel_obj.visual
 
-        for fx_trackid in fx_trackids:
-            cvpj_fxdata = cvpj_fxrack[str(fx_trackid)] if str(fx_trackid) in cvpj_fxrack else {}
-            if 'sends' in cvpj_fxdata: del cvpj_fxdata['sends']
-            groupid = 'fxrack_'+str(fx_trackid)
-            trackfx.group_add(cvpj_l, groupid, None)
-            cvpj_l['groups'][groupid] |= cvpj_fxdata
-            print('[compat] fxrack2trackfx: FX to Tracks '+ ', '.join(fx_trackids[fx_trackid]))
-        del cvpj_l['fxrack']
+            print('[compat] fxrack2trackfx: FX to Tracks '+ ', '.join(fx_trackids[fx_num]))
+        convproj_obj.fxrack = {}
     return True
 
-def process(cvpj_l, cvpj_type, in_compat, out_compat):
+def process(convproj_obj, in_compat, out_compat):
     if in_compat == True and out_compat == False:
-        if cvpj_type in ['r', 'ri']: return process_r(cvpj_l)
+        if convproj_obj.type in ['r', 'ri']: return process_r(convproj_obj)
         else: return False
     else: return False

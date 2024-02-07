@@ -1,33 +1,37 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import song
-
-def create_points_cut(projJ, cvpj_type):
-    if cvpj_type == 'r': songduration = song.r_getduration(projJ)
-    if cvpj_type == 'm': songduration = song.m_getduration(projJ)
-
-    if 'timesig' in projJ: timesig_numerator = projJ['timesig'][0]
-    else: timesig_numerator = 4
+def create_points_cut(convproj_obj):
+    songduration = convproj_obj.get_dur()
+    ppq = convproj_obj.time_ppq
+    timesig_numerator, timesig_numerator = convproj_obj.timesig
 
     timesigposs = []
-    timesigblocks = []
-    if 'timemarkers' in projJ:
-        for timemarker in projJ['timemarkers']:
-            if 'type' in timemarker:
-                if timemarker['type'] == 'timesig':
-                    numerator = timemarker['numerator']
-                    denominator = timemarker['denominator']
-                    outval = (numerator/denominator)*4
-                    timesigposs.append([timemarker['position'], outval])
 
-    if timesigposs == []: timesigposs.append([0, 4])
+    for p, v in convproj_obj.timesig_auto.iter():
+        outval = (v[0]/v[1])
+        timesigposs.append([p, int(outval*ppq)])
 
+    #print(timesigposs)
+    #exit()
+
+    if timesigposs == []: timesigposs.append([0, int(4*ppq)])
     timesigposs.append([songduration, None])
-    if timesigposs == []: timesigposs = [[0, timesig_numerator],[songduration, timesig_numerator]] 
+    if timesigposs == []: timesigposs = [[0, timesig_numerator*ppq],[songduration, timesig_numerator*ppq]] 
 
+    timesigblocks = []
     for timesigposnum in range(len(timesigposs)-1):
         timesigpos = timesigposs[timesigposnum]
-        timesigblocks.append([timesigpos[0], timesigposs[timesigposnum+1][0], float(timesigpos[1])*4])
+        timesigblocks.append([timesigpos[0], timesigposs[timesigposnum+1][0], timesigpos[1]*4])
 
-    return timesigposs, timesigblocks
+    splitpoints = []
+    for timesigblock in timesigblocks:
+        remaining = timesigblock[1]%timesigblock[2]
+        for point in range(timesigblock[0], timesigblock[1], timesigblock[2]):
+            #print('P', point)
+            splitpoints.append(point)
+        if remaining: 
+            #print('R', point+remaining)
+            splitpoints.append(point+remaining)
+
+    return splitpoints, timesigposs

@@ -3,12 +3,9 @@
 
 import plugin_input
 import json
+import bisect
 from mido import MidiFile
-from functions_plugin import format_midi_in
-from functions import infofinder
-from functions import midi_exdata
-from functions import colors
-from functions import song
+from objects import midi_in
 
 class input_midi(plugin_input.base):
     def __init__(self): pass
@@ -29,30 +26,18 @@ class input_midi(plugin_input.base):
         bytesdata = bytestream.read(4)
         if bytesdata == b'MThd': return True
         else: return False
-    def parse(self, input_file, extra_param):
-
+    def parse(self, convproj_obj, input_file, extra_param):
         midifile = MidiFile(input_file, clip=True)
         ppq = midifile.ticks_per_beat
         print("[input-midi] PPQ: " + str(ppq))
-
-        num_tracks = len(midifile.tracks)
-        songdescline = []
-        midi_copyright = None
-
-        format_midi_in.song_start(16, ppq, num_tracks, 120, [4,4])
-
-        t_tracknames = []
-
+        convproj_obj.type = 'rm'
+        convproj_obj.set_timings(midifile.ticks_per_beat, False)
+        midiobj = midi_in.midi_in()
+        midiobj.song_start(16, ppq, 120, [4,4])
         for track in midifile.tracks:
-            midi_trackname = None
-
-            timepos = 0
-
             midicmds = []
-
             for msg in track:
                 midicmds.append(['rest', msg.time])
-
                 if msg.type == 'note_on':
                     if msg.velocity != 0: midicmds.append(['note_on', msg.channel, msg.note, msg.velocity])
                     else: midicmds.append(['note_off', msg.channel, msg.note])
@@ -69,33 +54,9 @@ class input_midi(plugin_input.base):
                 elif msg.type == 'track_name': midicmds.append(['track_name', msg.name])
                 elif msg.type == 'sequencer_specific': midicmds.append(['sequencer_specific', msg.data])
                 elif msg.type == 'copyright': midicmds.append(['copyright', msg.text])
-                #selif msg.type == 'end_of_track': midicmds.append(['end_of_track'])
-
-            format_midi_in.add_track(0, midicmds)
-
-        cvpj_l = {}
-
-        format_midi_in.song_end(cvpj_l)
-
-        cvpj_l['do_addloop'] = True
-        cvpj_l['do_singlenotelistcut'] = True
+                #elif msg.type == 'end_of_track': midicmds.append(['end_of_track'])
+            midiobj.add_track(0, midicmds)
+        midiobj.song_end(convproj_obj)
+        convproj_obj.do_actions.append('do_addloop')
+        convproj_obj.do_actions.append('do_singlenotelistcut')
         
-        #cvpj_l['timesig'] = s_timesig
-        #song.add_param(cvpj_l, 'bpm', s_tempo)
-
-        #author = infofinder.author
-
-        #if midi_copyright != None and author == None:
-        #    song.add_info(cvpj_l, 'author', midi_copyright)
-        #    infofinder.getinfo(cvpj_l, midi_copyright)
-
-        #for t_trackname in t_tracknames:
-        #    infofinder.getinfo(cvpj_l, t_trackname)
-
-        #for songdesc in songdescline:
-        #    song_message = song_message+songdesc+'\n'
-
-        #if num_tracks != 1: song.add_info_msg(cvpj_l, 'text', song_message)
-        #elif midi_trackname != None: song.add_info(cvpj_l, 'title', midi_trackname)
-
-        return json.dumps(cvpj_l)

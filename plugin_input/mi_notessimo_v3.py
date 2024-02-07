@@ -2,19 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_bytes
-from functions import note_mod
-from functions import colors
-from functions import data_dataset
-from functions import notelist_data
-from functions import placement_data
 from functions import note_data
-from functions import auto
-from functions import plugins
-from functions import song
-from functions_tracks import auto_data
-from functions_tracks import tracks_mi
-from functions_tracks import fxrack
-from functions_tracks import fxslot
+from objects import dv_dataset
 import plugin_input
 import json
 import zipfile
@@ -132,31 +121,30 @@ def parse_instruments(notess_instruments):
 
             notess_s_inst = ET.fromstring(zip_data.read('instruments/'+inst+'.xml'))
             inst_vars = get_vars(notess_s_inst)
-            if 'color' in inst_vars: lists_data[1][inst]['color'] = colors.moregray(inst_vars['color'])
         else:
             print("[input-notessimo_v3] Instrument: " + inst)
 
 # ----------------------------------- Sheets -----------------------------------
 
-def parse_sheets(notess_sheets): 
+def parse_sheets(convproj_obj, notess_sheets): 
     institems = {}
     items = notess_sheets.findall('items')[0]
     parse_items(items, 0)
 
     for sheet in lists_data[0]:
-        sheet_name = lists_data[0][sheet]['name']
+        nle_obj = convproj_obj.add_notelistindex(sheet)
+        nle_obj.visual.name = lists_data[0][sheet]['name']
+
         print("[input-notessimo_v3] Sheet: " + lists_data[0][sheet]['name'])
-        notelist = []
 
         notess_s_sheet = ET.fromstring(zip_data.read('sheets/'+sheet+'.xml'))
         layers = notess_s_sheet.findall('layers')[0]
 
         sheet_note_signature = [0,[[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]]]
 
-        sheet_color = None
         sheet_vars = get_vars(notess_s_sheet)
         if 'color' in sheet_vars: 
-            sheet_color = colors.moregray(sheet_vars['color'])
+            nle_obj.visual.color = sheet_vars['color']
         if 'signature' in sheet_vars:
             if sheet_vars['signature'] in notess_noteoffset: 
                 sheet_note_signature = notess_noteoffset[sheet_vars['signature']]
@@ -191,17 +179,14 @@ def parse_sheets(notess_sheets):
                 if notess_n_dur != None: note_dur = float(notess_n_dur)*4
                 else: note_dur = 1
 
-                notelist.append( note_data.mx_makenote(notess_n_id, notess_n_pos*2, note_dur, notess_no_note, None, None) )
+                nle_obj.notelist.add_m(notess_n_id, notess_n_pos*2, note_dur, notess_no_note, 1, {})
                 if notess_n_id not in used_inst: used_inst.append(notess_n_id)
 
         print("[input-notessimo_v3]")
 
-        tracks_mi.notelistindex_add(cvpj_l, sheet, notelist_data.sort(notelist))
-        tracks_mi.notelistindex_visual(cvpj_l, sheet, name=sheet_name, color=sheet_color)
-
 # ----------------------------------- Song -----------------------------------
 
-def parse_song(songid):
+def parse_song(convproj_obj, songid):
     global bpm
     global song_length
 
@@ -213,10 +198,9 @@ def parse_song(songid):
 
     # ---------------- items ----------------
     for s_item in items:
-        item_name = s_item.get('name')
-        item_order = int(s_item.get('order'))+1
-        tracks_mi.playlist_add(cvpj_l, item_order)
-        tracks_mi.playlist_visual(cvpj_l, item_order, name=item_name)
+        item_order = int(s_item.get('order'))
+        playlist_obj = convproj_obj.add_playlist(item_order, 1, True)
+        playlist_obj.visual.name = s_item.get('name')
 
     # ---------------- vars ----------------
     bpm = None
@@ -226,7 +210,7 @@ def parse_song(songid):
     timesig_Denominator = 4
 
     if 'author' in song_vars:
-        song.add_info(cvpj_l, 'author', song_vars['author'])
+        convproj_obj.metadata.author = song_vars['author']
         print("[input-notessimo_v3] Song Author: " + song_vars['author'])
     if 'width' in song_vars: 
         song_length = song_vars['width']*60
@@ -238,7 +222,7 @@ def parse_song(songid):
         timesig_Denominator = song_vars['video_beat']
         print("[input-notessimo_v3] Song Denominator: " + str(song_vars['video_beat']))
 
-    song.add_timesig(cvpj_l, timesig_Numerator, timesig_Denominator)
+    convproj_obj.timesig = [timesig_Numerator,timesig_Denominator]
     # ---------------- objects ----------------
 
     timeline_sheets_all = []
@@ -262,17 +246,22 @@ def parse_song(songid):
         for tls in timeline_sheets:
             tlslen = tls[1]-tls[0]
             if tls[2] == 1:
-                cvpj_placement = placement_data.makepl_n_mi(cvpj_p_totalpos*8, tlslen/(120/tls[3])*8, tls[4])
-                tracks_mi.add_pl(cvpj_l, tlsnum+1, 'notes', cvpj_placement)
+                placement_obj = convproj_obj.playlist[tlsnum].placements.add_notes()
+                placement_obj.position = cvpj_p_totalpos*8
+                placement_obj.duration = tlslen/(120/tls[3])*8
+                placement_obj.fromindex = tls[4]
                 if tlsnum == 0:
-                    autoplacement = auto.makepl(cvpj_p_totalpos*8, tlslen/(120/tls[3])*8, [{"position": 0, "value": tls[3]}])
-                    auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], autoplacement)
+                    autopl_obj = convproj_obj.add_automation_pl('main/bpm', 'float')
+                    autopl_obj.position = cvpj_p_totalpos*8
+                    autopl_obj.duration = tlslen/(120/tls[3])*8
+                    autopoint_obj = autopl_obj.data.add_point()
+                    autopoint_obj.value = tls[3]
                 cvpj_p_totalpos += tlslen/(120/tls[3])
             else: 
                 cvpj_p_totalpos += tlslen
 
 
-def parse_songs(notess_songs):
+def parse_songs(convproj_obj, notess_songs):
     songlist = []
     items = notess_songs.findall('items')[0]
     for item in items:
@@ -280,7 +269,7 @@ def parse_songs(notess_songs):
         itemname = item.get('name')
         songlist.append([itemid, itemname])
     selected_song = songlist[0]
-    parse_song(selected_song[0])
+    parse_song(convproj_obj, selected_song[0])
 
 # ----------------------------------- Main -----------------------------------
  
@@ -296,17 +285,20 @@ class input_notessimo_v3(plugin_input.base):
         'track_lanes': True
         }
     def supported_autodetect(self): return False
-    def parse(self, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, extra_param):
         global zip_data
-        global cvpj_l
+
+        # ---------- CVPJ Start ----------
+        convproj_obj.type = 'mi'
+        convproj_obj.set_timings(8, True)
 
         zip_data = zipfile.ZipFile(input_file, 'r')
-        cvpj_l = {}
 
-        dataset = data_dataset.dataset('./data_dset/notessimo_v3.dset')
-        dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
+        dataset = dv_dataset.dataset('./data_dset/notessimo_v3.dset')
+        dataset_midi = dv_dataset.dataset('./data_dset/midi.dset')
         
-        fxrack.add(cvpj_l, 1, 1, 0, name='Drums')
+        fxchan_data = convproj_obj.add_fxchan(1)
+        fxchan_data.visual.name = 'Drums'
 
         if 'instruments.xml' in zip_data.namelist():
             notess_instruments = ET.fromstring(zip_data.read('instruments.xml'))
@@ -317,10 +309,10 @@ class input_notessimo_v3(plugin_input.base):
         #    parse_samples(notess_samples)
 
         notess_sheets = ET.fromstring(zip_data.read('sheets.xml'))
-        parse_sheets(notess_sheets)
+        parse_sheets(convproj_obj, notess_sheets)
 
         notess_songs = ET.fromstring(zip_data.read('songs.xml'))
-        parse_songs(notess_songs)
+        parse_songs(convproj_obj, notess_songs)
 
         fxnum = 2
         for inst in used_inst:
@@ -328,34 +320,31 @@ class input_notessimo_v3(plugin_input.base):
             midiinst = None
 
             cvpj_instid = str(inst)
-            outdsd = tracks_mi.import_dset(cvpj_l, cvpj_instid, cvpj_instid, dataset, dataset_midi, None, None)
+
+            inst_obj, plugin_obj = convproj_obj.add_instrument_from_dset(cvpj_instid, cvpj_instid, dataset, dataset_midi, cvpj_instid, None, None)
+
             inst_found = False
 
-            if (outdsd[4] != None or outdsd[5] != None):
+            if (inst_obj.visual.name != None or inst_obj.visual.color != None):
                 inst_found = True
                 pass
             elif inst in lists_data[1]: 
                 inst_found = True
                 t_instdata = lists_data[1][inst]
-                inst_name = t_instdata['name'] if 'name' in t_instdata else None
-                inst_color = t_instdata['color'] if 'color' in t_instdata else None
-                tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=inst_name, color=inst_color)
-            else: tracks_mi.inst_visual(cvpj_l, cvpj_instid, name='noname ('+inst+')', color=[0.3,0.3,0.3])
+                if 'name' in t_instdata: inst_obj.visual.name = t_instdata['name']
+                if 'color' in t_instdata: inst_obj.visual.color = t_instdata['color']
+            else: 
+                inst_obj.visual.name = 'noname ('+inst+')'
+                inst_obj.visual.color = [0.3,0.3,0.3]
 
-            if outdsd[5] != None: colors.moregray(outdsd[5])
-            
-            if inst_found: 
-                tracks_mi.inst_visual(cvpj_l, cvpj_instid, color=outdsd[5])
-
-            if outdsd[3]: 
-                tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
+            if inst_obj.midi.drum_mode: 
+                inst_obj.fxrack_channel = 1
             else:
-                tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
-                fxrack.add(cvpj_l, fxnum, 1, 0, name=outdsd[4], color=outdsd[5])
+                inst_obj.fxrack_channel = fxnum
+                fxchan_data = convproj_obj.add_fxchan(fxnum)
+                fxchan_data.visual.name = inst_obj.visual.name
+                fxchan_data.visual.color = inst_obj.visual.color
                 fxnum += 1
 
-        song.add_param(cvpj_l, 'bpm', 120)
-
-        return json.dumps(cvpj_l)
-
+        convproj_obj.params.add('bpm', 120, 'float')
 

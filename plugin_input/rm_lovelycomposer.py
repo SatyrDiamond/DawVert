@@ -5,18 +5,10 @@ import plugin_input
 import json
 import os.path
 import struct
-from functions import auto
 from functions import colors
 from functions import data_bytes
-from functions import data_dataset
 from functions import data_values
-from functions import note_data
-from functions import placement_data
-from functions import placements
-from functions import plugins
-from functions import song
-from functions_tracks import tracks_rm
-from functions_tracks import auto_data
+from objects import dv_dataset
 
 #               Name,              Type, FadeIn, FadeOut, PitchMod, Slide, Vib, Color
 lc_instlist = {}
@@ -128,7 +120,7 @@ def chord_parser(chordbytes_chord, chordbytes_seven, chordbytes_nine):
         if chordbytes_nine == 2: output_val.append(13)
     return output_val
 
-def lc_parse_voice_chords(sl_json, length, currentchord):
+def lc_parse_voice_chords(cvpj_notelist, sl_json, length, currentchord):
     position = 0
 
     dictdata = []
@@ -147,22 +139,33 @@ def lc_parse_voice_chords(sl_json, length, currentchord):
 
         position += 1
 
-    cvpj_notelist = []
-
     chords = data_values.list_findrepeat(dictdata)
     notepos = 0
     for chord in chords:
         if chord[0] != None:
             key = chord[0][0]-60
             for chordnote in chord[0][1:]:
-                cvpj_notelist.append(
-                    note_data.mx_makenote('chord', notepos, chord[1], key+chordnote, None, None)
-                    )
+                cvpj_notelist.add_m('chord', notepos, chord[1], key+chordnote, 1, {})
         notepos += chord[1]
 
-    return cvpj_notelist, currentchord
+    return currentchord
 
-def lc_parse_voice(sl_json, tracknum, length):
+
+def get_valauto(val_def, valtable):
+    out_val = val_def
+    out_auto = []
+    if None not in valtable and len(valtable) != 0:
+        if len(valtable) == 1:
+            val_def = valtable[0]
+        elif len(valtable) > 1:
+            if len(set(valtable)) == 1:
+                val_def = valtable[0]
+            else:
+                val_def = max(valtable)/15
+                for pos, value in enumerate(valtable): out_auto.append([pos, value])
+    return val_def, out_auto
+
+def lc_parse_voice(cvpj_notelist, sl_json, tracknum, length):
     global used_instruments
     position = 0
 
@@ -211,53 +214,48 @@ def lc_parse_voice(sl_json, tracknum, length):
 
         position += 1
 
-    cvpj_notelist = []
-
     for t_note in t_notelist:
         cvpj_instid = str(tracknum)+'_'+t_note[1]
-        cvpj_notedata = note_data.mx_makenote(cvpj_instid, t_note[0], t_note[4], t_note[2], None, None)
 
-        if None not in t_note[5] and len(t_note[5]) != 0:
-            auto_vals = auto.values2points(t_note[5], [0, 15])
-            cvpj_notedata['vol'] = max(t_note[5])/15
-            data_values.nested_dict_add_value(cvpj_notedata, ['notemod','auto','gain'], auto_vals)
+        note_vol, cvpj_n_vol = get_valauto(1, t_note[5])
+        note_pan, cvpj_n_pan = get_valauto(0, t_note[6])
 
-        if None not in t_note[6]:
-            if len(t_note[6]) == 1:
-                cvpj_notedata['pan'] = t_note[6][0]
-            elif len(t_note[6]) != 0:
-                auto_vals = auto.values2points(t_note[6], None)
-                data_values.nested_dict_add_value(cvpj_notedata, ['notemod','auto','pan'], auto_vals)
+        if note_vol == 0: note_vol = 15
 
-        cvpj_notelist.append(cvpj_notedata)
+        cvpj_notelist.add_m(cvpj_instid, t_note[0], t_note[4], t_note[2], note_vol/15, {'pan': note_pan})
 
-        if [tracknum, t_note[1]] not in used_instruments:
-            used_instruments.append([tracknum, t_note[1]])
+        for ad in cvpj_n_vol: 
+            autopoint_obj = cvpj_notelist.last_add_auto('gain')
+            autopoint_obj.pos = ad[0]
+            autopoint_obj.value = ad[1]*(15/note_vol)
 
-    return cvpj_notelist
+        for ad in cvpj_n_pan: 
+            autopoint_obj = cvpj_notelist.last_add_auto('pan')
+            autopoint_obj.pos = ad[0]
+            autopoint_obj.value = ad[1]
 
-def lc_parse_placements(sl_json, tracknum, pl_color, ischord):
-    global patternpos
+        if [tracknum, t_note[1]] not in used_instruments: used_instruments.append([tracknum, t_note[1]])
+
+    return cvpj_notelist.to_cvpj()
+
+def lc_do_track(convproj_obj, sl_json, tracknum, pl_color, ischord):
     global patternlen
-    patternpos = []
     patternlen = []
-    placements = []
     position = 0
     currentchord = None
+    track_obj = convproj_obj.add_track(str(tracknum), 'instruments', 1, False)
     for sle in sl_json:
         length = sle['play_notes'] if 'play_notes' in sle else 32
         lc_notes = sle['vl']
-
-        if ischord == False: notelist = lc_parse_voice(lc_notes, tracknum, length)
-        else: notelist, currentchord = lc_parse_voice_chords(lc_notes, length, currentchord)
-
-        placement = placement_data.makepl_n(position, length, notelist)
-        if pl_color != None: placement['color'] = pl_color
-        if notelist != []: placements.append(placement)
-        patternpos.append(position)
+        placement_obj = track_obj.placements.add_notes()
+        placement_obj.position = position
+        placement_obj.duration = length
+        placement_obj.visual.color = pl_color
+        if ischord == False: lc_parse_voice(placement_obj.notelist, lc_notes, tracknum, length)
+        else: currentchord = lc_parse_voice_chords(placement_obj.notelist, lc_notes, length, currentchord)
         patternlen.append(length)
         position += length
-    return placements
+    return track_obj
 
 class input_lc(plugin_input.base):
     def __init__(self): pass
@@ -270,7 +268,10 @@ class input_lc(plugin_input.base):
         'track_lanes': True
         }
     def supported_autodetect(self): return False
-    def parse(self, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, extra_param):
+        convproj_obj.type = 'rm'
+        convproj_obj.set_timings(4, False)
+
         lc_f_stream = open(input_file, 'r')
         lc_f_lines = lc_f_stream.readlines()
         lc_l_info = json.loads(lc_f_lines[0])
@@ -286,54 +287,51 @@ class input_lc(plugin_input.base):
 
         cvpj_l = {}
 
-        dataset = data_dataset.dataset('./data_dset/lovelycomposer.dset')
+        dataset = dv_dataset.dataset('./data_dset/lovelycomposer.dset')
         colordata = colors.colorset(dataset.colorset_e_list('track', 'main'))
 
         for num in range(5):
-            cvpj_placements = lc_parse_placements(lc_channels[num]["sl"], num, colordata.getcolornum(num), num == 4)
-            cvpj_plname = "Part "+str(num+1) if num != 4 else "Chord"
-            tracks_rm.track_create(cvpj_l, str(num), 'instruments')
-            tracks_rm.track_visual(cvpj_l, str(num), name=cvpj_plname)
-            tracks_rm.add_pl(cvpj_l, str(num), 'notes', cvpj_placements)
+            track_obj = lc_do_track(convproj_obj, lc_channels[num]["sl"], num, colordata.getcolornum(num), num == 4)
+            track_obj.visual.name = "Part "+str(num+1) if num != 4 else "Chord"
 
         for used_instrument in used_instruments:
             cvpj_instid = str(used_instrument[0])+'_'+used_instrument[1]
 
-            inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
-            inst_plugindata.osc_num_oscs(1)
+            plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+            osc_data = plugin_obj.osc_add()
+
+            inst_obj = convproj_obj.add_instrument(cvpj_instid)
+            inst_obj.pluginid = pluginid
+            inst_obj.visual.name = used_instrument[1]
+            inst_obj.visual.color = colordata.getcolornum(used_instrument[0])
 
             if used_instrument[1] == 'Sine': 
-                inst_plugindata.osc_opparam_set(0, 'shape', 'sine')
+                osc_data.shape = 'sine'
             elif used_instrument[1] == 'Square': 
-                inst_plugindata.osc_opparam_set(0, 'shape', 'square')
-                inst_plugindata.osc_opparam_set(0, 'pulse_width', 1/2)
+                osc_data.shape = 'square'
+                osc_data.params['pulse_width'] = 1/2
             elif used_instrument[1] == 'Triangle':
-                inst_plugindata.osc_opparam_set(0, 'shape', 'triangle')
+                osc_data.shape = 'triangle'
             elif used_instrument[1] == 'Saw': 
-                inst_plugindata.osc_opparam_set(0, 'shape', 'saw')
+                osc_data.shape = 'saw'
             elif used_instrument[1] == 'Noise': 
-                inst_plugindata.osc_opparam_set(0, 'shape', 'noise')
-                inst_plugindata.osc_opparam_set(0, 'noise_type', '4bit')
+                osc_data.shape = 'noise'
+                osc_data.params['noise_type'] = '4bit'
             elif used_instrument[1] == 'FreqNoise': 
-                inst_plugindata.osc_opparam_set(0, 'shape', 'noise')
-                inst_plugindata.osc_opparam_set(0, 'noise_type', '1bit_short')
+                osc_data.shape = 'noise'
+                osc_data.params['noise_type'], '1bit_short'
             elif used_instrument[1] == 'Pulse25': 
-                inst_plugindata.osc_opparam_set(0, 'shape', 'square')
-                inst_plugindata.osc_opparam_set(0, 'pulse_width', 1/4)
+                osc_data.shape = 'square'
+                osc_data.params['pulse_width'] = 1/4
             elif used_instrument[1] == 'Pulse125': 
-                inst_plugindata.osc_opparam_set(0, 'shape', 'square')
-                inst_plugindata.osc_opparam_set(0, 'pulse_width', 1/8)
-            else: 
-                inst_plugindata = plugins.cvpj_plugin('deftype', 'lovelycomposer', used_instrument[1])
+                osc_data.shape = 'square'
+                osc_data.params['pulse_width'] = 1/8
+            #else: 
+            #    inst_plugindata = plugins.cvpj_plugin('deftype', 'lovelycomposer', used_instrument[1])
 
-            inst_plugindata.to_cvpj(cvpj_l, cvpj_instid)
-
-            tracks_rm.inst_create(cvpj_l, cvpj_instid)
-            tracks_rm.inst_visual(cvpj_l, cvpj_instid, name=used_instrument[1], color=colordata.getcolornum(used_instrument[0]))
-            tracks_rm.inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
-
-        tracks_rm.inst_create(cvpj_l, 'chord')
-        tracks_rm.inst_visual(cvpj_l, 'chord', name='Chord', color=colordata.getcolornum(4))
+        inst_obj = convproj_obj.add_instrument('chord')
+        inst_obj.visual.name = 'Chord'
+        inst_obj.visual.color = colordata.getcolornum(4)
 
         startinststr = 'lc_instlist_'
 
@@ -342,20 +340,21 @@ class input_lc(plugin_input.base):
         prevtempo = 0
         for chandata in lc_channels[0]["sl"]:
             duration = chandata['play_notes'] if 'play_notes' in chandata else 32
+
             bpm = decode_tempo(chandata['play_speed'] if 'play_speed' in chandata else lc_speed)
-            tempopldata = auto.makepl(position, duration, [{"position": 0, "value": bpm}])
+
             if prevtempo != bpm:
-                auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], tempopldata)
+                autopl_obj = convproj_obj.add_automation_pl('main/bpm', 'float')
+                autopl_obj.position = position
+                autopl_obj.duration = duration
+                autopoint_obj = autopl_obj.data.add_point()
+                autopoint_obj.value = bpm
                 prevtempo = bpm
+
             position += duration
 
-        placements.make_timemarkers(cvpj_l, [4, 4], patternlen, lc_loop_start_bar)
-
-        cvpj_l['do_addloop'] = True
-        
-        song.add_param(cvpj_l, 'bpm', decode_tempo(lc_speed))
-
-        return json.dumps(cvpj_l)
-
+        convproj_obj.patlenlist_to_timemarker(patternlen, lc_loop_start_bar)
+        convproj_obj.do_actions.append('do_addloop')
+        convproj_obj.params.add('bpm', decode_tempo(lc_speed), 'float')
 
 

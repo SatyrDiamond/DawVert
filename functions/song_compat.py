@@ -1,17 +1,13 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import song
-from functions import notelist_data
 from functions import data_values
 from functions import xtramath
-from functions import params
-from functions import audio
 
 from functions_compat import fxrack2trackfx
 from functions_compat import trackfx2fxrack
 
-from functions_compat import autopl_remove
+from functions_compat import autopl_addrem
 from functions_compat import changestretch
 from functions_compat import fxrack_moveparams
 from functions_compat import loops_add
@@ -20,7 +16,7 @@ from functions_compat import removecut
 from functions_compat import removelanes
 from functions_compat import time_seconds
 from functions_compat import timesigblocks
-from functions_compat import trackpl_add
+from functions_compat import nopl_track
 from functions_compat import unhybrid
 from functions_compat import sep_nest_audio
 
@@ -35,9 +31,9 @@ class song_compat:
         self.out__dc = {}
         self.currenttime = None
 
-    def process_part(self, process_name, classname, cvpj_d, cvpj_type, in_compat, out_compat):
+    def process_part(self, process_name, classname, convproj_obj, cvpj_type, in_compat, out_compat):
         if process_name not in self.finished_processes:
-            if classname.process(cvpj_d, cvpj_type, in_compat, out_compat):
+            if classname.process(convproj_obj, in_compat, out_compat):
                 print('[compat] ' + process_name, 'Done.')
                 self.finished_processes.append(process_name)
 
@@ -73,31 +69,27 @@ class song_compat:
         print('[compat] '+str(self.in__dc['time_seconds']).ljust(5)+' | '+str(self.out__dc['time_seconds']).ljust(5)+' | time_seconds')
         print('[compat] '+str(self.in__dc['placement_audio_stretch']).ljust(5)+' | '+str(self.out__dc['placement_audio_stretch']).ljust(5)+' | placement_audio_stretch')
 
-    def makecompat(self, cvpj_l, cvpj_type):
-        cvpj_d = json.loads(cvpj_l)
-    
+    def makecompat(self, convproj_obj, cvpj_type):
         if self.currenttime == None: self.currenttime = self.in__dc['time_seconds']
-    
         if 'time_seconds' in self.finished_processes: self.currenttime = self.out__dc['time_seconds']
     
-        self.process_part('trackfx2fxrack', trackfx2fxrack,           cvpj_d, cvpj_type,  self.in__dc['fxrack'], self.out__dc['fxrack'])
-        self.process_part('fxrack2trackfx', fxrack2trackfx,           cvpj_d, cvpj_type,  self.in__dc['fxrack'], self.out__dc['fxrack'])
+        self.process_part('trackfx2fxrack', trackfx2fxrack,           convproj_obj, cvpj_type,  self.in__dc['fxrack'], self.out__dc['fxrack'])
+        self.process_part('fxrack2trackfx', fxrack2trackfx,           convproj_obj, cvpj_type,  self.in__dc['fxrack'], self.out__dc['fxrack'])
     
         if self.in__dc['fxrack'] == self.out__dc['fxrack'] == True:
-            self.process_part('fxrack_moveparams', fxrack_moveparams, cvpj_d, cvpj_type,  self.in__dc['fxrack_params'], self.out__dc['fxrack_params'])
+            self.process_part('fxrack_moveparams', fxrack_moveparams, convproj_obj, cvpj_type,  self.in__dc['fxrack_params'], self.out__dc['fxrack_params'])
     
-        self.process_part('changestretch', changestretch,             cvpj_d, cvpj_type,  self.in__dc['placement_audio_stretch'], self.out__dc['placement_audio_stretch'])
-        self.process_part('unhybrid', unhybrid,                       cvpj_d, cvpj_type,  self.in__dc['track_hybrid'], self.out__dc['track_hybrid'])
-        self.process_part('removelanes', removelanes,                 cvpj_d, cvpj_type,  self.in__dc['track_lanes'], self.out__dc['track_lanes'])
+        self.process_part('unhybrid', unhybrid,                       convproj_obj, cvpj_type,  self.in__dc['track_hybrid'], self.out__dc['track_hybrid'])
+        self.process_part('removelanes', removelanes,                 convproj_obj, cvpj_type,  self.in__dc['track_lanes'], self.out__dc['track_lanes'])
     
+        self.process_part('changestretch', changestretch,             convproj_obj, cvpj_type,  self.in__dc['placement_audio_stretch'], self.out__dc['placement_audio_stretch'])
+
         if self.currenttime == False:
-            self.process_part('autopl_remove', autopl_remove,         cvpj_d, cvpj_type,  self.in__dc['auto_nopl'], self.out__dc['auto_nopl'])
-            self.process_part('trackpl_add', trackpl_add,             cvpj_d, cvpj_type,  self.in__dc['track_nopl'], self.out__dc['track_nopl'])
-            self.process_part('loops_remove', loops_remove,           cvpj_d, cvpj_type,  self.in__dc['placement_loop'], self.out__dc['placement_loop'])
-            self.process_part('removecut', removecut,                 cvpj_d, cvpj_type,  self.in__dc['placement_cut'], self.out__dc['placement_cut'])
-            self.process_part('sep_nest_audio', sep_nest_audio,       cvpj_d, cvpj_type,  self.in__dc['placement_audio_nested'], self.out__dc['placement_audio_nested'])
-            self.process_part('loops_add', loops_add,                 cvpj_d, cvpj_type,  self.in__dc['placement_loop'], self.out__dc['placement_loop'])
+            self.process_part('autopl_addrem', autopl_addrem,         convproj_obj, cvpj_type,  self.in__dc['auto_nopl'], self.out__dc['auto_nopl'])
+            self.process_part('nopl_track', nopl_track,             convproj_obj, cvpj_type,  self.in__dc['track_nopl'], self.out__dc['track_nopl'])
+            self.process_part('loops_remove', loops_remove,           convproj_obj, cvpj_type,  self.in__dc['placement_loop'], self.out__dc['placement_loop'])
+            self.process_part('sep_nest_audio', sep_nest_audio,       convproj_obj, cvpj_type,  self.in__dc['placement_audio_nested'], self.out__dc['placement_audio_nested'])
+            self.process_part('removecut', removecut,                 convproj_obj, cvpj_type,  self.in__dc['placement_cut'], self.out__dc['placement_cut'])
+            self.process_part('loops_add', loops_add,                 convproj_obj, cvpj_type,  self.in__dc['placement_loop'], self.out__dc['placement_loop'])
     
-        self.process_part('time_seconds', time_seconds,               cvpj_d, cvpj_type,  self.in__dc['time_seconds'], self.out__dc['time_seconds'])
-    
-        return json.dumps(cvpj_d)
+        self.process_part('time_seconds', time_seconds,               convproj_obj, cvpj_type,  self.in__dc['time_seconds'], self.out__dc['time_seconds'])

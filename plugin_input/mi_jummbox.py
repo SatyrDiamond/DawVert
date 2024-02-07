@@ -2,21 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_bytes
-from functions import auto
-from functions import data_dataset
-from functions import plugins
-from functions import note_data
 from functions import data_values
-from functions import placement_data
-from functions import placements
 from functions import xtramath
 from functions import colors
-from functions import song
-from functions_tracks import auto_data
-from functions_tracks import fxrack
-from functions_tracks import fxslot
-from functions_tracks import tracks_master
-from functions_tracks import tracks_mi
+from objects import dv_dataset
 import plugin_input
 import json
 import math
@@ -130,42 +119,44 @@ def calcval(value):
 	global jummbox_ticksPerBeat
 	return (value*(jummbox_beatsPerBar/jummbox_ticksPerBeat))/2
 
-def addfx(fxgroupname, cvpj_instid, fxname):
+def addfx(inst_obj, fxgroupname, cvpj_instid, fxname):
 	fx_pluginid = cvpj_instid+'_'+fxname
-	fx_plugindata = plugins.cvpj_plugin('deftype', fxgroupname, fxname)
-	fxslot.insert(cvpj_l, ['instrument', cvpj_instid], 'audio', fx_pluginid)
-	return fx_pluginid, fx_plugindata
+	plugin_obj = convproj_obj.add_plugin(fx_pluginid, fxgroupname, fxname)
+	inst_obj.fxslots_audio.append(fx_pluginid)
+	return plugin_obj
 
-def add_eq_data(cvpj_instid, eqfiltbands):
-	fx_pluginid, fx_plugindata = addfx('universal', cvpj_instid, 'eq-bands')
-	fx_plugindata.fxvisual_add('EQ', None)
+def add_eq_data(inst_obj, cvpj_instid, eqfiltbands):
+	plugin_obj = addfx(inst_obj, 'universal', cvpj_instid, 'eq-bands')
+	plugin_obj.visual.name = 'EQ'
 	for eqfiltdata in eqfiltbands:
 		eqgain_pass = eqfiltdata['linearGain']
 		eqgain = (eqfiltdata['linearGain']-2)*6
 		eqtype = eqfiltdata['type']
+
+		filter_obj = plugin_obj.eq_add()
+		filter_obj.freq  = eqfiltdata['cutoffHz']
+
 		if eqtype == 'low-pass':
-			fx_plugindata.eqband_add(1, eqfiltdata['cutoffHz'], 'low_pass', None)
-			fx_plugindata.eqband_add_param('q', eqgain_pass, None)
+			filter_obj.type = 'low_pass'
+			filter_obj.q = eqgain_pass
 		if eqtype == 'peak':
-			fx_plugindata.eqband_add(1, eqfiltdata['cutoffHz'], 'peak', None)
-			fx_plugindata.eqband_add_param('q', 1, None)
+			filter_obj.type = 'peak'
 		if eqtype == 'high-pass':
-			fx_plugindata.eqband_add(1, eqfiltdata['cutoffHz'], 'high_pass', None)
-			fx_plugindata.eqband_add_param('q', eqgain_pass, None)
-	return fx_pluginid, fx_plugindata
+			filter_obj.type = 'high_pass'
+			filter_obj.q = eqgain_pass
 
-def get_harmonics(i_harmonics):
-	harmonics = [i/100 for i in i_harmonics]
-	harmonics.append(harmonics[-1])
-	harmonics.append(harmonics[-1])
-	harmonics.append(harmonics[-1])
-	return harmonics
+def get_harmonics(harmonics_obj, i_harmonics):
+	n = 1
+	for i in i_harmonics:
+		harmonics_obj.add(n, i/100, {})
+		n += 1
+	harmonics_obj.add(n, i_harmonics[-1]/100, {})
+	harmonics_obj.add(n+1, i_harmonics[-1]/100, {})
+	harmonics_obj.add(n+2, i_harmonics[-1]/100, {})
 
-def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst_effects):
+def parse_instrument(bb_instrument, bb_type, bb_color, bb_inst_effects, cvpj_instid):
 	bb_volume = bb_instrument['volume']
 	bb_preset = str(bb_instrument['preset']) if 'preset' in bb_instrument else None
-
-	cvpj_instid = 'bb_ch'+str(channum)+'_inst'+str(instnum)
 
 	cvpj_volume = (bb_volume/50)+0.5
 
@@ -175,12 +166,15 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 	m_bank, m_inst, m_drum = dataset.midito_get('preset', bb_preset)
 
 	if m_inst != None:
-		tracks_mi.import_dset(cvpj_l, cvpj_instid, bb_preset, dataset, dataset_midi, None, bb_color)
+		inst_obj, plugin_obj = convproj_obj.add_instrument_from_dset(cvpj_instid, bb_preset, dataset, dataset_midi, bb_preset, None, bb_color)
 	else:
-		bb_inst_type = bb_instrument['type']
-		inst_plugindata = plugins.cvpj_plugin('deftype', 'native-jummbox', bb_inst_type)
+		inst_obj = convproj_obj.add_instrument(cvpj_instid)
+		inst_obj.pluginid = cvpj_instid
 
-		if 'unison' in bb_instrument: inst_plugindata.dataval_add('unison', bb_instrument['unison'])
+		bb_inst_type = bb_instrument['type']
+		plugin_obj = convproj_obj.add_plugin(cvpj_instid, 'native-jummbox', bb_inst_type)
+
+		if 'unison' in bb_instrument: plugin_obj.datavals.add('unison', bb_instrument['unison'])
 
 		if bb_type == 'pitch': cvpj_instname, _ = dataset.object_get_name_color('inst', bb_inst_type)
 		if bb_type == 'drum': cvpj_instname, _ = dataset.object_get_name_color('drums', bb_inst_type)
@@ -190,201 +184,175 @@ def parse_instrument(channum, instnum, bb_instrument, bb_type, bb_color, bb_inst
 			cvpj_instname = bb_inst_wave+' ('+cvpj_instname+')' if cvpj_instname != None else bb_inst_wave+' ('+bb_inst_type+')'
 			if bb_inst_wave in rawChipWaves:
 				wavesample = rawChipWaves[bb_inst_wave]['samples']
-				inst_plugindata.wave_add('chipwave', wavesample, min(wavesample), max(wavesample))
+				wave_obj = plugin_obj.wave_add('chipwave')
+				wave_obj.set_all(wavesample)
 
 		if bb_inst_type == 'PWM':
 			pulseWidth = bb_instrument['pulseWidth']
 			cvpj_instname = str(pulseWidth)+'% pulse ('+cvpj_instname+')'
-			inst_plugindata.param_add("pulse_width", pulseWidth/100, 'float', "Pulse Width")
+			param_obj = plugin_obj.params.add("pulse_width", pulseWidth/100, 'float')
+			param_obj.visual.name = "Pulse Width"
 
 		if bb_inst_type == 'harmonics':
-			harmonics = get_harmonics(bb_instrument['harmonics'])
-			inst_plugindata.harmonics_add('harmonics', harmonics)
+			harmonics_obj = plugin_obj.harmonics_add('harmonics')
+			get_harmonics(harmonics_obj, bb_instrument['harmonics'])
 
 		if bb_inst_type == 'Picked String':
-			harmonics = get_harmonics(bb_instrument['harmonics'])
-			inst_plugindata.harmonics_add('harmonics', harmonics)
+			harmonics_obj = plugin_obj.harmonics_add('harmonics')
+			get_harmonics(harmonics_obj, bb_instrument['harmonics'])
 			a_sustain = bb_instrument['stringSustain']/100
 
 		if bb_inst_type == 'spectrum':
-			inst_plugindata.dataval_add('spectrum', bb_instrument['spectrum'])
+			plugin_obj.datavals.add('spectrum', bb_instrument['spectrum'])
 
 		if bb_inst_type == 'FM':
-			inst_plugindata.dataval_add('algorithm', bb_instrument['algorithm'])
-			inst_plugindata.dataval_add('feedback_type', bb_instrument['feedbackType'])
-			inst_plugindata.param_add("feedback_amplitude", bb_instrument['feedbackAmplitude'], 'int', "Feedback Amplitude")
+			plugin_obj.datavals.add('algorithm', bb_instrument['algorithm'])
+			plugin_obj.datavals.add('feedback_type', bb_instrument['feedbackType'])
+			param_obj = plugin_obj.params.add("feedback_amplitude", bb_instrument['feedbackAmplitude'], 'int')
+			param_obj.visual.name = "Feedback Amplitude"
 
 			for opnum in range(4):
 				opdata = bb_instrument['operators'][opnum]
-				opnumtext = 'op'+str(opnum+1)+'_'
-				inst_plugindata.dataval_add(opnumtext+'frequency', opdata['frequency'])
-				op_waveform = data_values.get_value(opdata, 'waveform', 'sine')
-				inst_plugindata.dataval_add(opnumtext+'waveform', op_waveform)
-				op_pulseWidth = data_values.get_value(opdata, 'waveform', 'sine')
-				inst_plugindata.dataval_add(opnumtext+'pulseWidth', op_pulseWidth)
-				inst_plugindata.param_add(opnumtext+"amplitude", opdata['amplitude'], 'int', "")
+				opnumtext = 'op'+str(opnum+1)+'/'
+				plugin_obj.datavals.add(opnumtext+'frequency', opdata['frequency'])
+				plugin_obj.datavals.add(opnumtext+'waveform', data_values.get_value(opdata, 'waveform', 'sine'))
+				plugin_obj.datavals.add(opnumtext+'pulseWidth', data_values.get_value(opdata, 'pulseWidth', 0))
+				plugin_obj.params.add(opnumtext+"amplitude", opdata['amplitude'], 'int')
 
 		if bb_inst_type == 'custom chip':
 			customChipWave = bb_instrument['customChipWave']
 			customChipWave = [customChipWave[str(i)] for i in range(64)]
-			inst_plugindata.wave_add('chipwave', customChipWave, -24, 24)
+			wave_obj = plugin_obj.wave_add('chipwave')
+			wave_obj.set_all_range(customChipWave, -24, 24)
 
 		if bb_inst_type == 'FM6op': #goldbox
-			inst_plugindata.dataval_add('algorithm', bb_instrument['algorithm'])
-			inst_plugindata.dataval_add('feedback_type', bb_instrument['feedbackType'])
-			inst_plugindata.param_add("feedback_amplitude", bb_instrument['feedbackAmplitude'], 'int', "Feedback Amplitude")
+			plugin_obj.datavals.add('algorithm', bb_instrument['algorithm'])
+			plugin_obj.datavals.add('feedback_type', bb_instrument['feedbackType'])
+			param_obj = plugin_obj.params.add("feedback_amplitude", bb_instrument['feedbackAmplitude'], 'int')
+			param_obj.visual.name = "Feedback Amplitude"
 
 			for opnum in range(4):
 				opdata = bb_instrument['operators'][opnum]
 				opnumtext = 'op'+str(opnum+1)+'_'
-				inst_plugindata.dataval_add(opnumtext+'frequency', opdata['frequency'])
-				op_waveform = data_values.get_value(opdata, 'waveform', 'sine')
-				inst_plugindata.dataval_add(opnumtext+'waveform', op_waveform)
-				op_pulseWidth = data_values.get_value(opdata, 'waveform', 'sine')
-				inst_plugindata.dataval_add(opnumtext+'pulseWidth', op_pulseWidth)
-				inst_plugindata.param_add(opnumtext+"amplitude", opdata['amplitude'], 'int', "")
+				plugin_obj.datavals.add(opnumtext+'frequency', opdata['frequency'])
+				plugin_obj.datavals.add(opnumtext+'waveform', data_values.get_value(opdata, 'waveform', 'sine'))
+				plugin_obj.datavals.add(opnumtext+'pulseWidth', data_values.get_value(opdata, 'pulseWidth', 0))
+				plugin_obj.params.add(opnumtext+"amplitude", opdata['amplitude'], 'int')
 
-			if bb_instrument['algorithm'] == 'Custom':
-				inst_plugindata.dataval_add('customAlgorithm', bb_instrument['customAlgorithm'])
+			if bb_instrument['algorithm'] == 'Custom': plugin_obj.datavals.add('customAlgorithm', bb_instrument['customAlgorithm'])
 
-		tracks_mi.inst_create(cvpj_l, cvpj_instid)
-		tracks_mi.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname, color=bb_color)
-		tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
-		tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', cvpj_volume, 'float')
+		inst_obj.visual.name = cvpj_instname
+		inst_obj.visual.color = bb_color
+
+		inst_obj.params.add('vol', cvpj_volume, 'float')
 
 		if 'eqFilterType' in bb_instrument:
-			if bb_instrument['eqFilterType'] == False and 'eqSubFilters0' in bb_instrument: add_eq_data(cvpj_instid, bb_instrument['eqSubFilters0'])
+			if bb_instrument['eqFilterType'] == False and 'eqSubFilters0' in bb_instrument: 
+				add_eq_data(inst_obj, cvpj_instid, bb_instrument['eqSubFilters0'])
 
 			else:
 				filter_hz = filtervals[bb_instrument['eqSimpleCut']]
 				filter_peak = bb_instrument['eqSimplePeak']
 				if filter_hz != None or filter_peak != 0:
 					if filter_hz == None: filter_hz = 8000
-					fx_pluginid, fx_plugindata = addfx('universal', cvpj_instid, 'eq-bands')
-					fx_plugindata.eqband_add(1, filter_hz, 'low_pass', None)
-					fx_plugindata.eqband_add_param('q', (filter_peak*2)+1, None)
-					fx_plugindata.to_cvpj(cvpj_l, fx_pluginid)
+					plugin_obj = addfx(inst_obj, 'universal', cvpj_instid, 'eq-bands')
+					filter_obj = plugin_obj.eq_add()
+					filter_obj.freq  = filter_hz
+					filter_obj.type = 'low_pass'
+					filter_obj.q = (filter_peak*2)+1
 
 		elif 'eqFilter' in bb_instrument:
 			bb_eqFilter = bb_instrument['eqFilter']
 			if bb_eqFilter != []: 
-				fx_pluginid, fx_plugindata = add_eq_data(cvpj_instid, bb_eqFilter)
-				fx_plugindata.to_cvpj(cvpj_l, fx_pluginid)
-
+				fx_pluginid, fx_plugindata = add_eq_data(inst_obj, cvpj_instid, bb_eqFilter)
+				
 		if 'echo' in bb_inst_effects:
-			fx_pluginid, fx_plugindata = addfx('universal', cvpj_instid, 'delay-c')
-			fx_plugindata.fxvisual_add('Echo', None)
-			fx_plugindata.fxdata_add(1, 0.5)
-
-			fx_plugindata.dataval_add('time_type', 'steps')
-			fx_plugindata.dataval_add('time', bb_instrument['echoDelayBeats']*8)
-			fx_plugindata.dataval_add('feedback', bb_instrument['echoSustain']/240)
-			fx_plugindata.to_cvpj(cvpj_l, fx_pluginid)
-
+			plugin_obj = addfx(inst_obj, 'universal', cvpj_instid, 'delay-c')
+			plugin_obj.visual.name = 'Echo'
+			plugin_obj.fxdata_add(1, 0.5)
+			plugin_obj.datavals.add('time_type', 'steps')
+			plugin_obj.datavals.add('time', bb_instrument['echoDelayBeats']*8)
+			plugin_obj.datavals.add('feedback', bb_instrument['echoSustain']/240)
+			
 		if 'distortion' in bb_inst_effects:
-			fx_pluginid, fx_plugindata = addfx('simple', cvpj_instid, 'distortion')
-			fx_plugindata.fxvisual_add('Distortion', None)
-			fx_plugindata.param_add_minmax('amount', bb_instrument['distortion']/100, 'float', 'Amount', [0,1])
-			fx_plugindata.to_cvpj(cvpj_l, fx_pluginid)
-
+			plugin_obj = addfx(inst_obj, 'simple', cvpj_instid, 'distortion')
+			plugin_obj.visual.name = 'Distortion'
+			param_obj = plugin_obj.params.add('amount', bb_instrument['distortion']/100, 'float')
+			param_obj.visual.name = 'Amount'
+			param_obj.min = 0
+			param_obj.max = 1
+		
 		if 'bitcrusher' in bb_inst_effects:
-			fx_pluginid, fx_plugindata = addfx('universal', cvpj_instid, 'bitcrush')
-			fx_plugindata.fxvisual_add('Bitcrusher', None)
-
+			plugin_obj = addfx(inst_obj, 'universal', cvpj_instid, 'bitcrush')
+			plugin_obj.visual.name = 'Bitcrusher'
 			t_bits_val = round(xtramath.between_from_one(7, 0, bb_instrument['bitcrusherQuantization']/100))
-
-			bits_out = 2**t_bits_val
-			freq_out = (bb_instrument['bitcrusherOctave']+1)*523.25
-
-			fx_plugindata.param_add('bits', bits_out, 'float', "")
-			fx_plugindata.param_add('freq', freq_out, 'float', "")
-			fx_plugindata.to_cvpj(cvpj_l, fx_pluginid)
-
+			plugin_obj.params.add('bits', 2**t_bits_val, 'float')
+			plugin_obj.params.add('freq', (bb_instrument['bitcrusherOctave']+1)*523.25, 'float')
+			
 		if 'chorus' in bb_inst_effects:
-			fx_pluginid, fx_plugindata = addfx('simple', cvpj_instid, 'chorus')
-			fx_plugindata.fxvisual_add('Chorus', None)
-			fx_plugindata.param_add_minmax('amount', bb_instrument['chorus']/100, 'float', "Amount", [0,1])
-			fx_plugindata.to_cvpj(cvpj_l, fx_pluginid)
-
+			plugin_obj = addfx(inst_obj, 'simple', cvpj_instid, 'chorus')
+			plugin_obj.visual.name = 'Chorus'
+			param_obj = plugin_obj.params.add('amount', bb_instrument['chorus']/100, 'float')
+			param_obj.visual.name = 'Amount'
+			param_obj.min = 0
+			param_obj.max = 1
+			
 		if 'reverb' in bb_inst_effects:
-			fx_pluginid, fx_plugindata = addfx('simple', cvpj_instid, 'reverb')
-			fx_plugindata.fxvisual_add('Reverb', None)
+			plugin_obj = addfx(inst_obj, 'simple', cvpj_instid, 'reverb')
+			plugin_obj.visual.name = 'Reverb'
 			reverblvl = data_values.get_value(bb_instrument, 'reverb', 40)
-			fx_plugindata.fxdata_add(1, reverblvl/100)
-			fx_plugindata.to_cvpj(cvpj_l, fx_pluginid)
-
+			plugin_obj.fxdata_add(1, reverblvl/100)
+			
 		if 'vibrato' in bb_inst_effects:
 			if 'vibratoSpeed' in bb_instrument and 'vibratoDelay' in bb_instrument:
 				if bb_instrument['vibratoSpeed'] != 0 and bb_instrument['vibratoDelay'] != 50:
-					vibrato_speed = 0.7*(1/bb_instrument['vibratoSpeed'])
-					vibrato_amount = bb_instrument['vibratoDepth']
-					vibrato_delay = (bb_instrument['vibratoDelay']/49)*2
-					inst_plugindata.lfo_add('pitch', 'sine', 'seconds', vibrato_speed, vibrato_delay, 0, vibrato_amount)
+					lfo_obj = plugin_obj.lfo_add('pitch')
+					lfo_obj.predelay = (bb_instrument['vibratoDelay']/49)*2
+					lfo_obj.speed_time = 0.7*(1/bb_instrument['vibratoSpeed'])
+					lfo_obj.amount = bb_instrument['vibratoDepth']
 
 		a_attack = data_values.get_value(bb_instrument, 'fadeInSeconds', 0)
 		a_release = abs(data_values.get_value(bb_instrument, 'fadeOutTicks', 0)/(jummbox_ticksPerBeat*32))
-		inst_plugindata.asdr_env_add('vol', 0, a_attack, 0, a_decay, a_sustain, a_release, 1)
+		plugin_obj.env_asdr_add('vol', 0, a_attack, 0, a_decay, a_sustain, a_release, 1)
+		return inst_obj
 
-		inst_plugindata.to_cvpj(cvpj_l, cvpj_instid)
-
-
-def parse_notes(channum, bb_notes, bb_instruments):
-	cvpj_notelist = []
+def parse_notes(cvpj_notelist, channum, bb_notes, bb_instruments):
 	for note in bb_notes:
 		points = note['points']
 		pitches = note['pitches']
 
-		cvpj_note_pos = (points[-1]['tick'] - points[0]['tick'])
-
-		t_duration = calcval(cvpj_note_pos)
-		t_position = calcval(points[0]['tick'])
-		t_auto_pitch = []
-		t_auto_gain = []
+		pitches = [(x-48 + jummbox_key) for x in pitches]
+		cvpj_note_dur = (points[-1]['tick'] - points[0]['tick'])
 
 		arr_bendvals = []
 		arr_volvals = []
 
 		for point in points:
-			t_auto_pitch.append({'position': calcval(point['tick']-points[0]['tick']), 'value': point['pitchBend']})
 			arr_bendvals.append(point['pitchBend'])
 			arr_volvals.append(point['volume'])
 
 		maxvol = max(arr_volvals)
-
-		for point in points:
-			if maxvol != 0:
-				t_auto_gain.append({'position': calcval(point['tick']-points[0]['tick']), 'value': (point['volume']*(1/maxvol))})
-
 		t_vol = maxvol/100
 
-		cvpj_notemod = {}
-		cvpj_notemod['auto'] = {}
+		for bb_instrument in bb_instruments:
+			t_instrument = 'bb_ch'+str(channum)+'_inst'+str(bb_instrument)
+			cvpj_notelist.add_m_multi(t_instrument, points[0]['tick'], cvpj_note_dur, pitches, t_vol, {})
 
-		if all(element == arr_volvals[0] for element in arr_volvals) == False:
-			cvpj_notemod['auto']['gain'] = t_auto_gain
+			ifnotsame_gain = (all(element == arr_volvals[0] for element in arr_volvals) == False) and maxvol != 0
+			ifnotsame_pitch = (all(element == arr_bendvals[0] for element in arr_bendvals) == False)
 
-		if all(element == arr_bendvals[0] for element in arr_bendvals) == False:
-			cvpj_notemod['auto']['pitch'] = t_auto_pitch
+			for point in points:
+				auto_pos = point['tick']-points[0]['tick']
 
-			if len(pitches) == 1:
-				cvpj_notemod['slide'] = []
-				for pinu in range(len(t_auto_pitch)-1):
-					slide_dur = t_auto_pitch[pinu+1]['position'] - t_auto_pitch[pinu]['position']
+				if ifnotsame_gain: 
+					autopoint_obj = cvpj_notelist.last_add_auto('gain')
+					autopoint_obj.pos = auto_pos
+					autopoint_obj.value = (point['volume']*(1/maxvol))
 
-					if t_auto_pitch[pinu+1]['value'] != t_auto_pitch[pinu]['value']:
-						cvpj_notemod['slide'].append({
-							'position': t_auto_pitch[pinu]['position'], 
-							'duration': slide_dur, 
-							'key': t_auto_pitch[pinu+1]['value']})
-
-		for pitch in pitches:
-			t_key = pitch-48 + jummbox_key
-			for bb_instrument in bb_instruments:
-				t_instrument = 'bb_ch'+str(channum)+'_inst'+str(bb_instrument)
-				cvpj_note = note_data.mx_makenote(t_instrument, t_position, t_duration, t_key, t_vol, None)
-				cvpj_note['notemod'] = cvpj_notemod
-				cvpj_notelist.append(cvpj_note)
-	return cvpj_notelist
+				if ifnotsame_pitch: 
+					autopoint_obj = cvpj_notelist.last_add_auto('pitch')
+					autopoint_obj.pos = auto_pos
+					autopoint_obj.value = point['pitchBend']
 
 
 def parse_channel(channeldata, channum, durpos):
@@ -392,7 +360,6 @@ def parse_channel(channeldata, channum, durpos):
 	global jummbox_beatsPerBar
 	global jummbox_ticksPerBeat
 
-	bbcvpj_placementnames[channum] = []
 	bb_color = None
 	bb_type = channeldata['type']
 	bb_instruments = channeldata['instruments']
@@ -403,45 +370,36 @@ def parse_channel(channeldata, channum, durpos):
 		if bb_type == 'pitch': bb_color = colors_pitch.getcolor()
 		if bb_type == 'drum': bb_color = colors_drums.getcolor()
 
-		t_instnum = 1
-		for bb_instrument in bb_instruments:
-
+		for t_instnum, bb_instrument in enumerate(bb_instruments):
 			bb_inst_effects = data_values.get_value(bb_instrument, 'effects', [])
+			cvpj_instid = 'bb_ch'+str(channum)+'_inst'+str(t_instnum+1)
+			inst_obj = parse_instrument(bb_instrument, bb_type, bb_color, bb_inst_effects, cvpj_instid)
+			if 'panning' in bb_inst_effects: inst_obj.params.add('pan', bb_instrument['pan']/50, 'float')
+			if 'detune' in bb_inst_effects: inst_obj.params.add('pitch', bb_instrument['detuneCents']/100, 'float')
+			playlist_obj = convproj_obj.add_playlist(channum-1, 1, True)
+			playlist_obj.visual.color = bb_color
 
-			parse_instrument(channum, t_instnum, bb_instrument, bb_type, bb_color, bb_inst_effects)
-			cvpj_instid = 'bb_ch'+str(channum)+'_inst'+str(t_instnum)
-
-			if 'panning' in bb_inst_effects: tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'pan', bb_instrument['pan']/50, 'float')
-			if 'detune' in bb_inst_effects: tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'pitch', bb_instrument['detuneCents']/100, 'float')
-
-			tracks_mi.playlist_add(cvpj_l, str(channum))
-			tracks_mi.playlist_visual(cvpj_l, str(channum), color=bb_color)
-
-			t_instnum += 1
-
-		patterncount = 0
-		for bb_pattern in bb_patterns:
+		for patterncount, bb_pattern in enumerate(bb_patterns):
 			nid_name = str(patterncount+1)
 			cvpj_patid = 'bb_ch'+str(channum)+'_pat'+str(patterncount)
 			bb_notes = bb_pattern['notes']
 			if 'instruments' in bb_pattern: bb_instruments = bb_pattern['instruments']
 			else: bb_instruments = [1]
 			if bb_notes != []: 
-				tracks_mi.notelistindex_add(cvpj_l, cvpj_patid, parse_notes(channum, bb_notes, bb_instruments))
-				tracks_mi.notelistindex_visual(cvpj_l, cvpj_patid, name=nid_name)
-			patterncount += 1
+				nle_obj = convproj_obj.add_notelistindex(cvpj_patid)
+				nle_obj.visual.name = nid_name
+				parse_notes(nle_obj.notelist, channum, bb_notes, bb_instruments)
 
 		placement_pos = 0
 		for partnum in range(len(bb_sequence)):
 			bb_part = bb_sequence[partnum]
 			bb_partdur = durpos[partnum]
 			if bb_part != 0:
-				cvpj_l_placement = placement_data.makepl_n_mi(calcval(placement_pos), calcval(bb_partdur), 'bb_ch'+str(channum)+'_pat'+str(bb_part-1))
-				cvpj_l_placement['cut'] = {'type': 'cut', 'start': 0, 'end': calcval(bb_partdur)}
-				tracks_mi.add_pl(cvpj_l, str(channum), 'notes', cvpj_l_placement)
-				bbcvpj_placementnames[channum].append('bb_ch'+str(channum)+'_pat'+str(bb_part-1))
-			else:
-				bbcvpj_placementnames[channum].append(None)
+				playlist_obj = convproj_obj.add_playlist(channum-1, True, True)
+				cvpj_placement = playlist_obj.placements.add_notes()
+				cvpj_placement.fromindex =  'bb_ch'+str(channum)+'_pat'+str(bb_part-1)
+				cvpj_placement.position = placement_pos
+				cvpj_placement.duration = bb_partdur
 			placement_pos += bb_partdur
 
 	if bb_type == 'mod':
@@ -467,64 +425,44 @@ def parse_channel(channeldata, channum, durpos):
 							bb_mod_dur = bb_mod_points[-1]['tick'] - bb_mod_points[0]['tick']
 							bb_mod_target = bb_def[(note['pitches'][0]*-1)+5]
 
-							cvpj_autodata_points = []
+							t_ap = []
 							for bb_mod_point in bb_mod_points:
 								if bb_partdur > bb_mod_point['tick']:
-									cvpj_pointdata = {}
-									cvpj_pointdata["position"] = calcval(bb_mod_point['tick'])-calcval(bb_mod_pos)+calcval(placement_pos)
-									cvpj_pointdata["value"] = bb_mod_point['volume']
-									cvpj_autodata_points.append(cvpj_pointdata)
+									t_ap.append([bb_mod_point['tick']-bb_mod_pos+placement_pos, bb_mod_point['volume']])
 
-							cvpj_autodata = auto.makepl(calcval(bb_mod_pos), calcval(bb_mod_dur), cvpj_autodata_points)
+							autoloc, m_add, m_mul = None, 0, 1
 
 							if bb_mod_target[0] == -1:
-								if bb_mod_target[2] == 1: 
-									cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.01)
-									auto_data.add_pl(cvpj_l, 'float', ['master', 'vol'], cvpj_autopl[0])
-								elif bb_mod_target[2] == 2: 
-									cvpj_autopl = auto.multiply([cvpj_autodata], 30, 1)
-									auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], cvpj_autopl[0])
-								elif bb_mod_target[2] == 17: 
-									cvpj_autopl = auto.multiply([cvpj_autodata], -250, 0.01)
-									auto_data.add_pl(cvpj_l, 'float', ['main', 'pitch'], cvpj_autopl[0])
-
+								if bb_mod_target[2] == 1:	autoloc, m_add, m_mul = ['master', 'vol'], 0, 0.01
+								elif bb_mod_target[2] == 2:  autoloc, m_add, m_mul = ['main', 'bpm'], 30, 1
+								elif bb_mod_target[2] == 17: autoloc, m_add, m_mul = ['main', 'bpm'], 250, 0.01
 							else:
-								auto_instnum = 1
 								auto_cvpj_instid = 'bb_ch'+str(bb_mod_target[0]+1)+'_inst'+str(bb_mod_target[1]+1)
+								#print(bb_mod_t arget, cvpj_autodata)
+								if bb_mod_target[2] == 6:	 autoloc, m_add, m_mul = ['track', auto_cvpj_instid, 'pan'], -50, 0.02
+								elif bb_mod_target[2] == 7:   autoloc, m_add, m_mul = ['slot', auto_cvpj_instid+'_reverb', 'wet'], 0, 1/32
+								elif bb_mod_target[2] == 8:   autoloc, m_add, m_mul = ['slot', auto_cvpj_instid+'_distortion', 'amount'], 0, 1/7
+								elif bb_mod_target[2] == 15:  autoloc, m_add, m_mul = ['slot', auto_cvpj_instid, 'pitch'], -200, 1
+								elif bb_mod_target[2] == 25:  autoloc = ['plugin', auto_cvpj_instid+'_bitcrush', 'bits']
+								elif bb_mod_target[2] == 26:  autoloc = ['plugin', auto_cvpj_instid+'_bitcrush', 'freq']
+								elif bb_mod_target[2] == 29:  autoloc, m_add, m_mul = ['plugin', auto_cvpj_instid+'_chorus', 'amount'], 0, 1/8
+								elif bb_mod_target[2] == 36:  autoloc, m_add, m_mul = ['track', auto_cvpj_instid, 'vol'], 0, 0.04
 
-								#print(bb_mod_target, cvpj_autodata)
+								if bb_mod_target[2] == 25: 
+									for s_ap in t_ap: s_ap[0] = 2**(7-s_ap[0])
 
-								if bb_mod_target[2] == 6: # Pan
-									cvpj_autopl = auto.multiply([cvpj_autodata], -50, 0.02)
-									auto_data.add_pl(cvpj_l, 'float', ['track', auto_cvpj_instid, 'pan'], cvpj_autopl[0])
+								if bb_mod_target[2] == 26: 
+									for s_ap in t_ap: s_ap[0] = (s_ap[0]+1)*523.25
 
-								elif bb_mod_target[2] == 7: # Reverb
-									cvpj_autopl = auto.multiply([cvpj_autodata], 0, 1/32)
-									auto_data.add_pl(cvpj_l, 'float', ['slot', auto_cvpj_instid+'_reverb', 'wet'], cvpj_autopl[0])
+							if autoloc:
+								autopl_obj = convproj_obj.add_automation_pl('main/bpm', 'float')
+								autopl_obj.position = bb_mod_pos
+								autopl_obj.duration = bb_mod_dur
 
-								elif bb_mod_target[2] == 8: # Distortion
-									cvpj_autopl = auto.multiply([cvpj_autodata], 0, 1/7)
-									auto_data.add_pl(cvpj_l, 'float', ['plugin', auto_cvpj_instid+'_distortion', 'amount'], cvpj_autopl[0])
-
-								elif bb_mod_target[2] == 15: # Pitch
-									cvpj_autopl = auto.multiply([cvpj_autodata], -200, 1)
-									auto_data.add_pl(cvpj_l, 'float', ['track', auto_cvpj_instid, 'pitch'], cvpj_autodata)
-
-								elif bb_mod_target[2] == 25: # Bitcrush Bits
-									for autopart in cvpj_autodata['points']: autopart['value'] = 2**(7-autopart['value'])
-									auto_data.add_pl(cvpj_l, 'float', ['plugin', auto_cvpj_instid+'_bitcrush', 'bits'], cvpj_autopl[0])
-
-								elif bb_mod_target[2] == 26: # Bitcrush Freq
-									for autopart in cvpj_autodata['points']: autopart['value'] = (autopart['value']+1)*523.25
-									auto_data.add_pl(cvpj_l, 'float', ['plugin', auto_cvpj_instid+'_bitcrush', 'freq'], cvpj_autopl[0])
-
-								elif bb_mod_target[2] == 29: # Chorus
-									cvpj_autopl = auto.multiply([cvpj_autodata], 0, 1/8)
-									auto_data.add_pl(cvpj_l, 'float', ['plugin', auto_cvpj_instid+'_chorus', 'amount'], cvpj_autopl[0])
-
-								elif bb_mod_target[2] == 36: # Volume
-									cvpj_autopl = auto.multiply([cvpj_autodata], 0, 0.04)
-									auto_data.add_pl(cvpj_l, 'float', ['track', auto_cvpj_instid, 'vol'], cvpj_autopl[0])
+								for s_ap in t_ap: 
+									autopoint_obj = autopl_obj.data.add_point()
+									autopoint_obj.pos = s_ap[0]
+									autopoint_obj.value = s_ap[1]
 
 				placement_pos += bb_partdur
 
@@ -582,8 +520,8 @@ class input_jummbox(plugin_input.base):
 		'track_lanes': True,
 		}
 	def supported_autodetect(self): return False
-	def parse(self, input_file, extra_param):
-		global cvpj_l
+	def parse(self, i_convproj_obj, input_file, extra_param):
+		global convproj_obj
 
 		global dataset
 		global dataset_midi
@@ -595,31 +533,21 @@ class input_jummbox(plugin_input.base):
 		global jummbox_ticksPerBeat
 		global jummbox_key
 
-		global bbcvpj_placementsize
-		global bbcvpj_placementnames
+		convproj_obj = i_convproj_obj
+		convproj_obj.type = 'mi'
+		convproj_obj.set_timings(8, True)
 
-		cvpj_l = {}
-
-		dataset = data_dataset.dataset('./data_dset/beepbox.dset')
-		dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
+		dataset = dv_dataset.dataset('./data_dset/beepbox.dset')
+		dataset_midi = dv_dataset.dataset('./data_dset/midi.dset')
 
 		colors_pitch = colors.colorset(dataset.colorset_e_list('inst', 'beepbox_dark'))
 		colors_drums = colors.colorset(dataset.colorset_e_list('drums', 'beepbox_dark'))
 
-		bbcvpj_placementsize = []
-		bbcvpj_placementnames = {}
-
 		bytestream = open(input_file, 'r', encoding='utf8')
 		jummbox_json = json.load(bytestream)
 
-		tracks_master.create(cvpj_l, jummbox_json['masterGain'] if 'masterGain' in jummbox_json else 1)
-		tracks_master.visual(cvpj_l, name='Master')
-
-		cvpj_l_track_data = {}
-		cvpj_l_track_order = []
-		cvpj_l_track_placements = {}
-
-		if 'name' in jummbox_json: song.add_info(cvpj_l, 'title', jummbox_json['name'])
+		convproj_obj.track_master.params.add('vol', jummbox_json['masterGain'] if 'masterGain' in jummbox_json else 1, 'float')
+		if 'name' in jummbox_json: convproj_obj.metadata.name = jummbox_json['name']
 		
 		jummbox_key = noteoffset[jummbox_json['key']]
 		jummbox_channels = jummbox_json['channels']
@@ -628,24 +556,26 @@ class input_jummbox(plugin_input.base):
 		jummbox_beatsPerMinute = jummbox_json['beatsPerMinute']
 
 		global jummbox_notesize
+		global ppq_data
+		
 		jummbox_notesize = jummbox_beatsPerBar*jummbox_ticksPerBeat
+		ppq_data = jummbox_notesize*4
 
 		durpos = get_durpos(jummbox_channels)
-		patlentable = [calcval(x) for x in durpos]
-		placements.make_timemarkers(cvpj_l, [4,8], patlentable, None)
+		patlentable = [x for x in get_durpos(jummbox_channels)]
 
-		if 'introBars' in jummbox_json and 'loopBars' in jummbox_json:
-			introbars = sum(patlentable[0:jummbox_json['introBars']])
-			loopbars = (sum(patlentable[0:jummbox_json['loopBars']]) + introbars)
-			song.add_timemarker_looparea(cvpj_l, 'Loop', introbars, loopbars)
+		convproj_obj.timesig = [4,8]
+		convproj_obj.patlenlist_to_timemarker(patlentable, -1)
 
-		chancount = 1
-		for jummbox_channel in jummbox_channels:
-			parse_channel(jummbox_channel, chancount, durpos)
-			chancount += 1
+		#if 'introBars' in jummbox_json and 'loopBars' in jummbox_json:
+		#	introbars = sum(patlentable[0:jummbox_json['introBars']])
+		#	loopbars = (sum(patlentable[0:jummbox_json['loopBars']]) + introbars)
+		#	convproj_obj.loop_active = True
+		#	convproj_obj.loop_start = introbars
+		#	convproj_obj.loop_end = loopbars if loopbars else patlentable[-1]
 
-		cvpj_l['do_addloop'] = True
+		for chancount, jummbox_channel in enumerate(jummbox_channels):
+			parse_channel(jummbox_channel, chancount+1, durpos)
 
-		song.add_param(cvpj_l, 'bpm', jummbox_beatsPerMinute)
-
-		return json.dumps(cvpj_l)
+		convproj_obj.do_actions.append('do_addloop')
+		convproj_obj.params.add('bpm', jummbox_beatsPerMinute, 'float')

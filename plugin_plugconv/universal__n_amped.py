@@ -4,9 +4,7 @@
 import plugin_plugconv
 
 import math
-from functions import plugins
 from functions import xtramath
-from functions_tracks import auto_data
 
 def bitcrush_freq(i_val):
     return 100*(2**(i_val*10))
@@ -15,112 +13,102 @@ class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['native-amped', None, 'amped'], ['universal', None, None], False, False
-    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
-        plugintype = cvpj_plugindata.type_get()
-
-        if plugintype[1] == 'Vibrato':
-            delayLfoRateHz = cvpj_plugindata.param_get('delayLfoRateHz', 0)[0]
-            delayLfoDepth = cvpj_plugindata.param_get('delayLfoDepth', 0)[0]
-            cvpj_plugindata.replace('universal', 'vibrato')
-            cvpj_plugindata.param_add('freq', delayLfoRateHz, 'float', 'freq')
-            cvpj_plugindata.param_add('depth', delayLfoDepth, 'float', 'depth')
-
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'delayLfoRateHz', 'freq')
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'delayLfoDepth', 'depth')
+    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
+        if plugin_obj.plugin_subtype[1] == 'Vibrato':
+            delayLfoRateHz = plugin_obj.params.get('delayLfoRateHz', 0).value
+            delayLfoDepth = plugin_obj.params.get('delayLfoDepth', 0).value
+            plugin_obj.replace('universal', 'vibrato')
+            plugin_obj.params.add('freq', delayLfoRateHz, 'float')
+            plugin_obj.params.add('depth', delayLfoDepth, 'float')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'delayLfoRateHz', 'freq')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'delayLfoDepth', 'depth')
             return 1
 
-        if plugintype[1] == 'Tremolo':
-            lfoARateHz = cvpj_plugindata.param_get('lfoARateHz', 0)[0]
-            lfoADepth = cvpj_plugindata.param_get('lfoADepth', 0)[0]
-            cvpj_plugindata.replace('universal', 'tremolo')
-            cvpj_plugindata.param_add('freq', lfoARateHz, 'float', 'freq')
-            cvpj_plugindata.param_add('depth', lfoADepth, 'float', 'depth')
-
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'lfoARateHz', 'freq')
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'lfoADepth', 'depth')
+        if plugin_obj.plugin_subtype[1] == 'Tremolo':
+            lfoARateHz = plugin_obj.params.get('lfoARateHz', 0).value
+            lfoADepth = plugin_obj.params.get('lfoADepth', 0).value
+            plugin_obj.replace('universal', 'tremolo')
+            plugin_obj.params.add('freq', lfoARateHz, 'float')
+            plugin_obj.params.add('depth', lfoADepth, 'float')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'lfoARateHz', 'freq')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'lfoADepth', 'depth')
             return 1
 
-        if plugintype[1] == 'BitCrusher':
-            bitcrush_bits = cvpj_plugindata.param_get('bits', 0)[0]
-            bitcrush_down = cvpj_plugindata.param_get('down', 0)[0]
-            bitcrush_mix = cvpj_plugindata.param_get('mix', 0)[0]
+        if plugin_obj.plugin_subtype[1] == 'BitCrusher':
+            bitcrush_bits = plugin_obj.params.get('bits', 0).value
+            bitcrush_down = plugin_obj.params.get('down', 0).value
+            bitcrush_mix = plugin_obj.params.get('mix', 0).value
             cvpj_plugindata.fxdata_add(None, bitcrush_mix)
             auto_data.move(cvpj_l, ['plugin', pluginid, 'mix'], ['slot', pluginid, 'wet'])
-            cvpj_plugindata.replace('universal', 'bitcrush')
-            cvpj_plugindata.param_add('bits', bitcrush_bits, 'float', 'bits')
-            cvpj_plugindata.param_add('freq', bitcrush_freq(bitcrush_down), 'float', 'freq')
-
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'down', 'freq')
-            auto_data.function_value(cvpj_l, ['plugin', pluginid, 'freq'], bitcrush_freq)
+            plugin_obj.replace('universal', 'bitcrush')
+            plugin_obj.params.add('bits', bitcrush_bits, 'float', 'bits')
+            plugin_obj.params.add('freq', bitcrush_freq(bitcrush_down), 'float', 'freq')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'down', 'freq')
+            convproj_obj.funcval_automation(['plugin', pluginid, 'freq'], bitcrush_freq)
             return 1
 
-        if plugintype[1] in ['Compressor', 'Expander']:
-            comp_pregain = cvpj_plugindata.param_get('preGainDB', 0)[0]
-            comp_ratio = cvpj_plugindata.param_get('ratio', 0)[0]
-            comp_threshold = cvpj_plugindata.param_get('thresholdDB', 0)[0]
-            comp_attack = cvpj_plugindata.param_get('attackTimeMS', 0)[0]
-            comp_release = cvpj_plugindata.param_get('releaseTimeMS', 0)[0]
-            comp_postgain = cvpj_plugindata.param_get('postGainDB', 0)[0]
-            comp_lookahead = cvpj_plugindata.param_get('lookaheadTimeMS', 0)[0]
-            comp_knee = cvpj_plugindata.param_get('softKneeWidth', 0)[0]
+        if plugin_obj.plugin_subtype[1] in ['Compressor', 'Expander']:
+            comp_pregain = plugin_obj.params.get('preGainDB', 0).value
+            comp_ratio = plugin_obj.params.get('ratio', 0).value
+            comp_threshold = plugin_obj.params.get('thresholdDB', 0).value
+            comp_attack = plugin_obj.params.get('attackTimeMS', 0).value
+            comp_release = plugin_obj.params.get('releaseTimeMS', 0).value
+            comp_postgain = plugin_obj.params.get('postGainDB', 0).value
+            comp_lookahead = plugin_obj.params.get('lookaheadTimeMS', 0).value
+            comp_knee = plugin_obj.params.get('softKneeWidth', 0).value
 
-            comp_detect_mode = cvpj_plugindata.param_get('detectMode', 0)[0]
-            comp_circuit_mode = cvpj_plugindata.param_get('circuitMode', 0)[0]
+            comp_detect_mode = plugin_obj.params.get('detectMode', 0).value
+            comp_circuit_mode = plugin_obj.params.get('circuitMode', 0).value
 
-            filter_gain = cvpj_plugindata.param_get('filterGainDB', 0)[0]
-            filter_cutoff = cvpj_plugindata.param_get('filterFrequency', 44100)[0]
-            filter_reso = cvpj_plugindata.param_get('filterQ', 0)[0]
-            filter_enabled = cvpj_plugindata.param_get('filterActive', False)[0]
-            filter_mode = cvpj_plugindata.param_get('filterMode', 0)[0]
+            plugin_obj.filter.gain = plugin_obj.params.get('filterGainDB', 0).value
+            plugin_obj.filter.freq = plugin_obj.params.get('filterFrequency', 44100).value
+            plugin_obj.filter.q = plugin_obj.params.get('filterQ', 0).value
+            plugin_obj.filter.on = plugin_obj.params.get('filterActive', False).value
+            filter_mode = plugin_obj.params.get('filterMode', 0).value
+            if filter_mode == 0: plugin_obj.filter.type = 'low_pass'
+            if filter_mode == 1: plugin_obj.filter.type = 'high_pass'
+            if filter_mode == 2: plugin_obj.filter.type = 'band_pass'
 
-            cvpj_filter_type = 'lowpass'
-            if cvpj_filter_type == 'filterMode':
-                if cvpj_filter_type == 0: filter_mode = 'lowpass'
-                if cvpj_filter_type == 1: filter_mode = 'highpass'
-                if cvpj_filter_type == 2: filter_mode = 'bandpass'
+            if plugin_obj.plugin_subtype[1] == 'Compressor': plugin_obj.replace('universal', 'compressor')
+            if plugin_obj.plugin_subtype[1] == 'Expander': plugin_obj.replace('universal', 'expander')
 
-            cvpj_plugindata.filter_add(filter_enabled, filter_cutoff, filter_reso, cvpj_filter_type, None)
+            plugin_obj.params.add('pregain', comp_pregain, 'float', 'pregain')
+            plugin_obj.params.add('ratio', comp_ratio, 'float', 'ratio')
+            plugin_obj.params.add('threshold', comp_threshold, 'float', 'threshold')
+            plugin_obj.params.add('attack', comp_attack/1000, 'float', 'attack')
+            plugin_obj.params.add('release', comp_release/1000, 'float', 'release')
+            plugin_obj.params.add('postgain', comp_postgain, 'float', 'postgain')
+            plugin_obj.params.add('lookahead', comp_lookahead/1000, 'float', 'lookahead')
+            plugin_obj.params.add('knee', comp_knee*6, 'float', 'knee')
 
-            if plugintype[1] == 'Compressor': cvpj_plugindata.replace('universal', 'compressor')
-            if plugintype[1] == 'Expander': cvpj_plugindata.replace('universal', 'expander')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'preGainDB', 'pregain')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'ratio', 'ratio')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'thresholdDB', 'threshold')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'attackTimeMS', 'attack')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'releaseTimeMS', 'release')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'postGainDB', 'postgain')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'lookaheadTimeMS', 'lookahead')
+            convproj_obj.moveg_automation(['plugin', pluginid], 'softKneeWidth', 'knee')
 
-            cvpj_plugindata.param_add('pregain', comp_pregain, 'float', 'pregain')
-            cvpj_plugindata.param_add('ratio', comp_ratio, 'float', 'ratio')
-            cvpj_plugindata.param_add('threshold', comp_threshold, 'float', 'threshold')
-            cvpj_plugindata.param_add('attack', comp_attack/1000, 'float', 'attack')
-            cvpj_plugindata.param_add('release', comp_release/1000, 'float', 'release')
-            cvpj_plugindata.param_add('postgain', comp_postgain, 'float', 'postgain')
-            cvpj_plugindata.param_add('lookahead', comp_lookahead/1000, 'float', 'lookahead')
-            cvpj_plugindata.param_add('knee', comp_knee*6, 'float', 'knee')
-
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'preGainDB', 'pregain')
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'ratio', 'ratio')
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'thresholdDB', 'threshold')
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'attackTimeMS', 'attack')
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'releaseTimeMS', 'release')
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'postGainDB', 'postgain')
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'lookaheadTimeMS', 'lookahead')
-            auto_data.rename_plugparam(cvpj_l, pluginid, 'softKneeWidth', 'knee')
-
-            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'attack'], 0, 0.001)
-            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 0.001)
-            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'lookahead'], 0, 0.001)
-            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'knee'], 0, 6)
+            convproj_obj.addmul_automation(['plugin', pluginid, 'attack'], 0, 0.001)
+            convproj_obj.addmul_automation(['plugin', pluginid, 'release'], 0, 0.001)
+            convproj_obj.addmul_automation(['plugin', pluginid, 'lookahead'], 0, 0.001)
+            convproj_obj.addmul_automation(['plugin', pluginid, 'knee'], 0, 6)
             return 1
 
-        if plugintype[1] == 'EqualizerPro':
-            master_gain = cvpj_plugindata.param_get("postGain", 0)[0]
+        if plugin_obj.plugin_subtype[1] == 'EqualizerPro':
+            master_gain = plugin_obj.params.get("postGain", 0).value
 
             for band_num in range(8):
                 str_band_num = str(band_num+1)
                 starttxt = 'filter/'+str_band_num+'/'
                 cvpj_band_txt = 'main/'+str_band_num+'/'
 
-                band_active = int(cvpj_plugindata.param_get(starttxt+"active", 0)[0])
-                band_freq = cvpj_plugindata.param_get(starttxt+"freq", 20)[0]
-                band_gain = cvpj_plugindata.param_get(starttxt+"gain", 0)[0]
-                band_q = cvpj_plugindata.param_get(starttxt+"q", 0.5)[0]
-                band_type = cvpj_plugindata.param_get(starttxt+"type", 0)[0]
+                band_active = int(plugin_obj.params.get(starttxt+"active", 0).value)
+                band_freq = plugin_obj.params.get(starttxt+"freq", 20).value
+                band_gain = plugin_obj.params.get(starttxt+"gain", 0).value
+                band_q = plugin_obj.params.get(starttxt+"q", 0.5).value
+                band_type = plugin_obj.params.get(starttxt+"type", 0).value
 
                 if band_type == 0: cvpj_bandtype = 'peak'
                 if band_type == 2: cvpj_bandtype = 'low_pass'
@@ -128,17 +116,17 @@ class plugconv(plugin_plugconv.base):
                 if band_type == 3: cvpj_bandtype = 'low_shelf'
                 if band_type == 4: cvpj_bandtype = 'high_shelf'
 
-                auto_data.rename_plugparam(cvpj_l, pluginid, starttxt+"active", cvpj_band_txt+"on")
-                auto_data.rename_plugparam(cvpj_l, pluginid, starttxt+"freq", cvpj_band_txt+"freq")
-                auto_data.rename_plugparam(cvpj_l, pluginid, starttxt+"gain", cvpj_band_txt+"gain")
-                auto_data.rename_plugparam(cvpj_l, pluginid, starttxt+"q", cvpj_band_txt+"q")
+                convproj_obj.moveg_automation(['plugin', pluginid], starttxt+"active", cvpj_band_txt+"on")
+                convproj_obj.moveg_automation(['plugin', pluginid], starttxt+"freq", cvpj_band_txt+"freq")
+                convproj_obj.moveg_automation(['plugin', pluginid], starttxt+"gain", cvpj_band_txt+"gain")
+                convproj_obj.moveg_automation(['plugin', pluginid], starttxt+"q", cvpj_band_txt+"q")
 
                 cvpj_plugindata.eqband_add(band_active, band_freq, cvpj_bandtype, None)
                 cvpj_plugindata.eqband_add_param('gain', band_gain, None)
                 cvpj_plugindata.eqband_add_param('q', band_q, None)
 
-            cvpj_plugindata.replace('universal', 'eq-bands')
-            cvpj_plugindata.param_add('gain_out', master_gain, 'float', 'Out Gain')
+            plugin_obj.replace('universal', 'eq-bands')
+            plugin_obj.params.add('gain_out', master_gain, 'float', 'Out Gain')
             return 1
 
         return 2

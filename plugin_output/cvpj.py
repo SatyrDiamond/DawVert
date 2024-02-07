@@ -25,8 +25,10 @@ class output_cvpj(plugin_output.base):
     def getsupportedplugformats(self): return ['vst2', 'vst3', 'clap', 'ladspa']
     def getsupportedplugins(self): return ['sampler:single', 'sampler:multi', 'sampler:slicer', 'soundfont2']
     def getfileextension(self): return 'cvpj'
-    def parse(self, convproj_json, output_file):
-        projJ = json.loads(convproj_json)
-        with open(output_file, "w") as fileout:
-            fileout.write("CONVPROJ****\n")
-            json.dump(projJ, fileout, indent=4, sort_keys=True)
+    def parse(self, convproj_obj, output_file):
+
+        exit()
+        #projJ = json.loads(convproj_json)
+        #with open(output_file, "w") as fileout:
+        #    fileout.write("CONVPROJ****\n")
+        #    json.dump(projJ, fileout, indent=4, sort_keys=True)

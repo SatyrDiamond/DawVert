@@ -1,12 +1,8 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import placement_data
-from functions import song
-from functions import note_data
 from functions import colors
-from functions import data_dataset
-from functions_tracks import tracks_r
+from objects import dv_dataset
 import plugin_input
 import json
 
@@ -39,9 +35,9 @@ def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
     org_l_nl = {}
     for org_note in org_notelist: org_l_nl[org_note[0]] = org_note[1:5]
     org_l_nl = dict(sorted(org_l_nl.items(), key=lambda item: item[0]))
-    cvpj_nl = []
     endnote = None
     notedur = 0
+    org_notelist = []
     for org_l_n in org_l_nl:
         notedata = org_l_nl[org_l_n]
         if endnote != None: 
@@ -51,8 +47,8 @@ def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
             endnote = org_l_n+notedur
         if endnote != None: isinsidenote = False if endnote-org_l_n == notedur else True
         else: isinsidenote = False
-        if isinsidenote == False: cvpj_nl.append(note_data.rx_makenote(org_l_n, notedata[1], notedata[0]-48, notedata[2]/254, (notedata[3]-6)/6))
-    return cvpj_nl
+        if isinsidenote == False: org_notelist.append([org_l_n, notedata[1], notedata[0]-48, notedata[2]/254, {'pan': (notedata[3]-6)/6}])
+    return org_notelist
 
 class input_orgyana(plugin_input.base):
     def __init__(self): pass
@@ -72,10 +68,12 @@ class input_orgyana(plugin_input.base):
         bytesdata = bytestream.read(6)
         if bytesdata == b'Org-02' or bytesdata == b'Org-03': return True
         else: return False
-    def parse(self, input_file, extra_param):
-        cvpj_l = {}
 
-        dataset = data_dataset.dataset('./data_dset/orgyana.dset')
+    def parse(self, convproj_obj, input_file, extra_param):
+        convproj_obj.type = 'r'
+        convproj_obj.set_timings(4, True)
+
+        dataset = dv_dataset.dataset('./data_dset/orgyana.dset')
         colordata = colors.colorset(dataset.colorset_e_list('track', 'orgmaker_2'))
 
         bio_org = open(input_file, 'rb')
@@ -112,16 +110,20 @@ class input_orgyana(plugin_input.base):
                 trackname = "Melody "+str(tracknum+1) if tracknum < 8 else dataset.object_get_name_color('drums', str(org_insttable[tracknum]))[0]
                 idval = 'org_'+str(tracknum)
 
-                tracks_r.track_create(cvpj_l, idval, 'instrument')
-                tracks_r.track_visual(cvpj_l, idval, name=trackname, color=colordata.getcolornum(tracknum))
-                tracks_r.track_param_add(cvpj_l, idval, 'pitch', (org_pitch-1000)/1800, 'float')
-                tracks_r.add_pl(cvpj_l, idval, 'notes', placement_data.nl2pl(s_cvpj_nl))
+                track_obj = convproj_obj.add_track(idval, 'instrument', 0, False)
+                track_obj.visual.name = trackname
+                track_obj.visual.color = colordata.getcolornum(tracknum)
+                track_obj.params.add('pitch', (org_pitch-1000)/1800, 'float')
+                placement_obj = track_obj.placements.add_notes()
+                for n_pos, n_dur, n_note, n_vol, n_extra in s_cvpj_nl: placement_obj.notelist.add_r(n_pos, n_dur, n_note, n_vol, n_extra)
+                placement_obj.duration = placement_obj.notelist.get_dur()
 
-        cvpj_l['do_addloop'] = True
-        cvpj_l['do_singlenotelistcut'] = True
+        convproj_obj.do_actions.append('do_addloop')
+        convproj_obj.do_actions.append('do_singlenotelistcut')
+        convproj_obj.params.add('bpm', (1/(org_wait/122))*122, 'float')
+        convproj_obj.timesig = [org_stepsperbar, org_beatsperstep]
 
-        song.add_param(cvpj_l, 'bpm', (1/(org_wait/122))*122)
-        song.add_timesig(cvpj_l, org_stepsperbar, org_beatsperstep)
-       
-        if org_loop_beginning != 0: song.add_timemarker_looparea(cvpj_l, None, org_loop_beginning, org_loop_end)
-        return json.dumps(cvpj_l)
+        if org_loop_beginning != 0: 
+            convproj_obj.loop_active = True
+            convproj_obj.loop_start = org_loop_beginning
+            convproj_obj.loop_end = org_loop_end

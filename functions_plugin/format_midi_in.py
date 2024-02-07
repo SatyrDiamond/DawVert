@@ -5,7 +5,7 @@ from functions import placement_data
 from functions import note_data
 from functions import data_values
 from functions import midi_exdata
-from functions import data_dataset
+from objects import dv_dataset
 from functions import params
 from functions import plugins
 from functions import song
@@ -18,7 +18,7 @@ from functions_tracks import auto_nopl
 
 import chardet	
 
-dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
+dataset_midi = dv_dataset.dataset('./data_dset/midi.dset')
 
 tracknumber = 0
 
@@ -44,6 +44,21 @@ def add_autopoint(time, i_list, param, value):
 def add_point(i_list, time, value):
 	if time not in i_list: i_list[time] = []
 	i_list[time].append(value)
+
+def add_fx(cvpj_l, fx_num, fxname, visname, wet_val):
+	fx_plugindata = plugins.cvpj_plugin('deftype', 'simple', fxname)
+	fx_plugindata.fxdata_add(1, 0.5)
+	fx_plugindata.fxvisual_add(visname, None)
+	fx_plugindata.to_cvpj(cvpj_l, 'plugin-'+fxname)
+	fxrack.add(cvpj_l, fx_num, 1.0, None, name="[S] "+visname, color=[0.4, 0.4, 0.4])
+	fxslot.insert(cvpj_l, ['fxrack', fx_num], 'audio', 'plugin-'+fxname)
+	fxrack.addsend(cvpj_l, fx_num, 0, 1, None)
+
+
+
+
+
+
 
 def song_start(numchannels, ppq, numtracks, tempo, timesig):
 	global tracknumber
@@ -129,7 +144,7 @@ def add_track(startpos, midicmds):
 			track_name = midicmd[1]
 			#print('TRACK NAME, '+track_name)
 
-		elif midicmd[0] == 'sequencer_specific': 
+		elif midicmd[0] == 'sequencer_specific':
 			exdata = midi_exdata.decode_exdata(midicmd[1], True)
 
 			if ______debugtxt______: print('SEQ', exdata)
@@ -160,7 +175,6 @@ def add_track(startpos, midicmds):
 			elif exdata[0] == [80]:
 				if exdata[1][0:5] == b'reS\x01\xff': #from Studio One
 					track_color = colors.rgb_int_to_rgb_float(exdata[1][5:8][::-1])
-					print([x for x in exdata[1]])
 			else:
 				sequencer_specific.append(midicmd[1])
 
@@ -430,36 +444,12 @@ def song_end(cvpj_l):
 				fxrack.addsend(cvpj_l, midi_channum+1, sendtofx, out_param, sendname)
 
 	if usedeffects[0] == True:
-		fx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'reverb')
-		fx_plugindata.fxdata_add(1, 0.5)
-		fx_plugindata.fxvisual_add('Reverb', None)
-		fx_plugindata.to_cvpj(cvpj_l, 'plugin-reverb')
-		fxrack.add(cvpj_l, song_channels+1, 1.0, None, name="[S] Reverb", color=[0.4, 0.4, 0.4])
-		fxslot.insert(cvpj_l, ['fxrack', song_channels+1], 'audio', 'plugin-reverb')
-		fxrack.addsend(cvpj_l, song_channels+1, 0, 1, None)
-
-		fx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'chorus')
-		fx_plugindata.fxdata_add(1, 0.5)
-		fx_plugindata.fxvisual_add('Chorus', None)
-		fx_plugindata.to_cvpj(cvpj_l, 'plugin-chorus')
-		fxrack.add(cvpj_l, song_channels+2, 1.0, None, name="[S] Chorus", color=[0.4, 0.4, 0.4])
-		fxslot.insert(cvpj_l, ['fxrack', song_channels+2], 'audio', 'plugin-chorus')
-		fxrack.addsend(cvpj_l, song_channels+2, 0, 1, None)
+		add_fx(cvpj_l, song_channels+1, 'reverb', 'Reverb', 0.5)
+		add_fx(cvpj_l, song_channels+2, 'chorus', 'Chorus', 1)
 
 	if usedeffects[1] == True:
-		fx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'tremelo')
-		fx_plugindata.fxvisual_add('Tremelo', None)
-		fx_plugindata.to_cvpj(cvpj_l, 'plugin-tremelo')
-		fxrack.add(cvpj_l, song_channels+3, 1.0, None, name="[S] Tremelo", color=[0.4, 0.4, 0.4])
-		fxslot.insert(cvpj_l, ['fxrack', song_channels+3], 'audio', 'plugin-tremelo')
-		fxrack.addsend(cvpj_l, song_channels+3, 0, 1, None)
-
-		fx_plugindata = plugins.cvpj_plugin('deftype', 'simple', 'phaser')
-		fx_plugindata.fxvisual_add('Phaser', None)
-		fx_plugindata.to_cvpj(cvpj_l, 'plugin-phaser')
-		fxrack.add(cvpj_l, song_channels+4, 1.0, None, name="[S] Phaser", color=[0.4, 0.4, 0.4])
-		fxslot.insert(cvpj_l, ['fxrack', song_channels+4], 'audio', 'plugin-phaser')
-		fxrack.addsend(cvpj_l, song_channels+4, 0, 1, None)
+		add_fx(cvpj_l, song_channels+3, 'tremelo', 'Tremelo', 1)
+		add_fx(cvpj_l, song_channels+4, 'phaser', 'Phaser', 1)
 
 	veryfirstnotepos = getbeforenoteall(firstchanusepos)
 

@@ -121,12 +121,28 @@ def logpowmul(value, multiplier):
     value = pow(2, value*multiplier)
     return value
 
+def get_timesig(pat_len, notes_p_beat):
+    MaxFactor = 1024
+    factor = 1
+    while (((pat_len * factor) % notes_p_beat) != 0 and factor <= MaxFactor): factor *= 2
+    foundValidFactor = ((pat_len * factor) % notes_p_beat) == 0
+    numer = 4
+    denom = 4
 
+    if foundValidFactor == True:
+        numer = pat_len * factor / notes_p_beat
+        denom = 4 * factor
+    else: 
+        print('Error computing valid time signature, defaulting to 4/4.')
 
+    return [int(numer), denom]
 
+def get_lower_tempo(i_tempo, i_notelen, maxtempo):
+    while i_tempo > maxtempo:
+        i_tempo = i_tempo/2
+        i_notelen = i_notelen/2
+    return (i_tempo, i_notelen)
 
-
-
-
-
-
+def change_timing(o_ppq, n_ppq, n_float, value):
+    modval = value*(n_ppq/o_ppq)
+    return modval if n_float else int(modval)

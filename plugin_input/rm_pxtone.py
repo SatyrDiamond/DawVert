@@ -1,17 +1,10 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
-from functions import note_mod
 from functions import audio_wav
-from functions import plugins
-from functions import placement_data
-from functions import note_data
-from functions import song
 from functions import colors
-from functions import data_dataset
-from functions_tracks import tracks_rm
-from functions_tracks import auto_nopl
+from functions import data_bytes
+from objects import dv_dataset
 import plugin_input
 import json
 import math
@@ -166,16 +159,23 @@ class input_pxtone(plugin_input.base):
         if bytesdata == b'PTCOLLAGE-071119': return True
         elif bytesdata == b'PTTUNE--20071119': return True
         else: return False
-    def parse(self, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, extra_param):
+        convproj_obj.type = 'rm'
+
         song_file = open(input_file, 'rb')
         song_file.seek(0,2)
         song_filesize = song_file.tell()
         song_file.seek(0)
         
-        dataset = data_dataset.dataset('./data_dset/pxtone.dset')
+        dataset = dv_dataset.dataset('./data_dset/pxtone.dset')
         colordata = colors.colorset(dataset.colorset_e_list('track', 'main'))
 
         ptcop_header = song_file.read(16)
+        timebase = 480
+        if ptcop_header == b'PTCOLLAGE-071119': timebase = 480
+        if ptcop_header == b'PTTUNE--20071119': timebase = 48
+        convproj_obj.set_timings(timebase, True)
+
         ptcop_unk = int.from_bytes(song_file.read(4), "little")
         ptcop_unit_events = {}
         ptcop_name_voice = {}
@@ -183,9 +183,6 @@ class input_pxtone(plugin_input.base):
         ptcop_song_name = None
         ptcop_song_comment = None
         ptcop_voice_num = 0
-
-        if ptcop_header == b'PTCOLLAGE-071119': timebase = 120
-        if ptcop_header == b'PTTUNE--20071119': timebase = 12
 
         t_voice_data = []
 
@@ -388,7 +385,7 @@ class input_pxtone(plugin_input.base):
                 #    )
 
                 if unit_event[2] == 2: cur_pitch = unit_event[3][0]+12
-                if unit_event[2] == 6: cur_porta = unit_event[3]/timebase
+                if unit_event[2] == 6: cur_porta = unit_event[3]
                 if unit_event[2] == 12: cur_voice = unit_event[3]
                 position_global = unit_event[0]
 
@@ -398,27 +395,26 @@ class input_pxtone(plugin_input.base):
                     notedur = unit_event[3]
                     noteend = position_global+notedur
                     noteon_note = cur_pitch
-                    cvpj_note = note_data.mx_makenote('ptcop_'+str(cur_voice), position_global/timebase, notedur/timebase, noteon_note, None, None)
-                    t_notelist[unit_eventnum].append(cvpj_note)
+                    t_notelist[unit_eventnum].append(['ptcop_'+str(cur_voice), position_global, notedur, noteon_note, 1, {}, []])
 
                 prevpos = unit_event[0]
                 
-                if t_notelist[unit_eventnum] != []:
-                    lastnotedata = t_notelist[unit_eventnum][-1]
-                    if 'notemod' not in lastnotedata: lastnotedata['notemod'] = {'slide': [], 'auto': {}}
-
-                if unit_event[2] == 5: auto_vol[unit_event[0]] = unit_event[3]/128
-                if unit_event[2] == 15: auto_pan[unit_event[0]] = ((unit_event[3]/128)-0.5)*2
-                if unit_event[2] == 14: auto_pitch[unit_event[0]] = math.log2(get_float(unit_event[3]))*12
-                if unit_event[2] == 2 and (0 <= (unit_event[0]-noteend)+notedur < notedur): lastnotedata['notemod']['slide'].append({'position': ((unit_event[0]-noteend)+notedur)/timebase, 'duration': cur_porta, 'key': cur_pitch-noteon_note})
+                if unit_event[2] == 5: 
+                    convproj_obj.add_autotick(['track', cvpj_trackid, 'vol'], unit_event[0], unit_event[3]/128)
+                if unit_event[2] == 15: 
+                    convproj_obj.add_autotick(['track', cvpj_trackid, 'pan'], unit_event[0], ((unit_event[3]/128)-0.5)*2)
+                if unit_event[2] == 14: 
+                    convproj_obj.add_autotick(['track', cvpj_trackid, 'pitch'], unit_event[0], math.log2(get_float(unit_event[3]))*12)
+                if unit_event[2] == 2 and (0 <= (unit_event[0]-noteend)+notedur < notedur): 
+                    t_notelist[unit_eventnum][-1][6].append([((unit_event[0]-noteend)+notedur), cur_porta, cur_pitch])
 
                 if velpanpos == unit_event[0]:
-                    if unit_event[2] == 3: t_notelist[unit_eventnum][-1]['pan'] = ((unit_event[3]/128)-0.5)*2
-                    if unit_event[2] == 4: t_notelist[unit_eventnum][-1]['vol'] = unit_event[3]
+                    if unit_event[2] == 3: t_notelist[unit_eventnum][-1][5]['pan'] = ((unit_event[3]/128)-0.5)*2
+                    if unit_event[2] == 4: t_notelist[unit_eventnum][-1][4] = unit_event[3]
 
-            out_vol = auto_nopl.paramauto(['track', cvpj_trackid, 'vol'], 'float', auto_vol, timebase, firstnote, 1, 1, 0)
-            out_pan = auto_nopl.paramauto(['track', cvpj_trackid, 'pan'], 'float', auto_pan, timebase, firstnote, 0, 1, 0)
-            out_pitch = auto_nopl.paramauto(['track', cvpj_trackid, 'pitch'], 'float', auto_pitch, timebase, firstnote, 0, 1, 0)
+            out_vol = convproj_obj.get_paramval_autotick(['track', cvpj_trackid, 'vol'], firstnote, 1)
+            out_pan = convproj_obj.get_paramval_autotick(['track', cvpj_trackid, 'pan'], firstnote, 0)
+            out_pitch = convproj_obj.get_paramval_autotick(['track', cvpj_trackid, 'pitch'], firstnote, 0)
 
             trackautop.append([out_vol,out_pan,out_pitch])
 
@@ -427,52 +423,53 @@ class input_pxtone(plugin_input.base):
         for unitnum in t_notelist:
             cvpj_notelist = t_notelist[unitnum]
             cvpj_trackparams = trackautop[unitnum]
-            for cvpj_note in cvpj_notelist: note_mod.notemod_conv(cvpj_note)
             plt_name = ptcop_name_unit[unitnum] if unitnum in ptcop_name_unit else None
             cvpj_instcolor = colordata.getcolor()
             cvpj_trackid = str(unitnum+1)
-            tracks_rm.track_create(cvpj_l, cvpj_trackid, 'instruments')
-            tracks_rm.track_visual(cvpj_l, cvpj_trackid, name=plt_name, color=cvpj_instcolor)
-            tracks_rm.add_pl(cvpj_l, cvpj_trackid, 'notes', placement_data.nl2pl(cvpj_notelist))
 
-            tracks_rm.track_param_add(cvpj_l, cvpj_trackid, 'vol', cvpj_trackparams[0], 'float')
-            tracks_rm.track_param_add(cvpj_l, cvpj_trackid, 'pan', cvpj_trackparams[1], 'float')
-            tracks_rm.track_param_add(cvpj_l, cvpj_trackid, 'pitch', cvpj_trackparams[2], 'float')
+            track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 0, False)
+            track_obj.visual.name = plt_name
+            track_obj.visual.color = colordata.getcolor()
+            track_obj.params.add('vol', cvpj_trackparams[0], 'float')
+            track_obj.params.add('pan', cvpj_trackparams[1], 'float')
+            track_obj.params.add('pitch', cvpj_trackparams[2], 'float')
+
+            placement_obj = track_obj.placements.add_notes()
+            for t_inst, t_pos, t_dur, t_key, t_vol, t_extra, t_slide in cvpj_notelist:
+                placement_obj.notelist.add_m(t_inst, t_pos, t_dur, t_key, t_vol, t_extra)
+                for tsl in t_slide: placement_obj.notelist.last_add_slide(tsl[0], tsl[1], tsl[2], t_vol, t_extra)
+            placement_obj.notelist.notemod_conv()
 
         for voicenum in range(ptcop_voice_num):
             cvpj_instname = ptcop_name_voice[voicenum] if voicenum in ptcop_name_voice else ''
             cvpj_instvol = 0.3 if t_voice_data[voicenum][0] == 'sampler' else 1.0
-            pluginid = plugins.get_id()
 
             cvpj_instid = 'ptcop_'+str(voicenum)
 
-            tracks_rm.inst_create(cvpj_l, cvpj_instid)
-            tracks_rm.inst_visual(cvpj_l, cvpj_instid, name=cvpj_instname, color=[0.14, 0.00, 0.29])
+            inst_obj = convproj_obj.add_instrument(cvpj_instid)
+            inst_obj.visual.name = cvpj_instname
+            inst_obj.visual.color = [0.14, 0.00, 0.29]
 
             plugindata = t_voice_data[voicenum][1]
             if t_voice_data[voicenum][0] == 'sampler':
 
-                inst_plugindata = plugins.cvpj_plugin('sampler', plugindata['file'], None)
-                inst_plugindata.dataval_add('trigger', plugindata['trigger'])
-                inst_plugindata.dataval_add('interpolation', plugindata['interpolation'])
-                inst_plugindata.asdr_env_add('vol', 0, 0, 0, 0, 1, 0, 1)
-                inst_plugindata.to_cvpj(cvpj_l, pluginid)
+                plugin_obj, pluginid, sampleref_obj = convproj_obj.add_plugin_sampler_genid(plugindata['file'])
+                plugin_obj.datavals.add('trigger', plugindata['trigger'])
+                plugin_obj.datavals.add('interpolation', plugindata['interpolation'])
+                plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 
-                tracks_rm.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
+                inst_obj.pluginid = pluginid
 
-            tracks_rm.inst_param_add(cvpj_l, cvpj_instid, 'vol', cvpj_instvol, 'float')
-            tracks_rm.inst_dataval_add(cvpj_l, cvpj_instid, 'instdata', 'middlenote', t_voice_data[voicenum][2])
+            inst_obj.params.add('vol', cvpj_instvol, 'float')
+            inst_obj.datavals.add('middlenote', t_voice_data[voicenum][2])
 
-        cvpj_l['do_addloop'] = True
-        cvpj_l['do_singlenotelistcut'] = True
-        
-        song.add_timesig(cvpj_l, ptcop_mas_beat, 4)
-
-        if ptcop_song_name != None: song.add_info(cvpj_l, 'title', ptcop_song_name)
-        if ptcop_song_comment != None: song.add_info_msg(cvpj_l, 'text', ptcop_song_comment)
-        if ptcop_mas_repeat != 0: song.add_timemarker_looparea(cvpj_l, None, ptcop_mas_repeat/timebase, ptcop_mas_last/timebase)
-
-        auto_nopl.to_cvpj(cvpj_l)
-
-        song.add_param(cvpj_l, 'bpm', ptcop_mas_beattempo)
-        return json.dumps(cvpj_l)
+        convproj_obj.do_actions.append('do_addloop')
+        convproj_obj.do_actions.append('do_singlenotelistcut')
+        convproj_obj.params.add('bpm', ptcop_mas_beattempo, 'float')
+        convproj_obj.timesig = [ptcop_mas_beat, 4]
+        if ptcop_song_name != None: convproj_obj.metadata.name = ptcop_song_name
+        if ptcop_song_comment != None: convproj_obj.metadata.comment_text = ptcop_song_comment
+        if ptcop_mas_repeat != 0: 
+            convproj_obj.loop_active = True
+            convproj_obj.loop_start = ptcop_mas_repeat
+            convproj_obj.loop_end = ptcop_mas_last

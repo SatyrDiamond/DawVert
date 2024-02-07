@@ -1,16 +1,9 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from objects import dv_dataset
+from objects import convproj
 from functions import data_values
-from functions import data_dataset
-from functions import note_data
-from functions import plugins
-from functions import data_dataset
-from functions import placement_data
-from functions import song
-from functions_tracks import auto_nopl
-from functions_tracks import fxslot
-from functions_tracks import tracks_r
 import plugin_input
 import json
 import math
@@ -107,22 +100,6 @@ def parse_marker(markerdata):
 
     return [inst_id, inst_param, data_pos, data_value, data_markertype]
 
-def parse_note(notedata):
-    global onlseq_notelist
-    ols_pos = 0
-    ols_inst = 0
-    ols_vol = 1
-    ols_note = int(notedata['1'])
-    ols_dur = 1
-    if '2' in notedata: ols_pos = int2float(int(notedata['2']))
-    if '3' in notedata: ols_dur = int2float(int(notedata['3']))
-    if '4' in notedata: ols_inst = int(notedata['4'])
-    if '5' in notedata: ols_vol = int2float(int(notedata['5']))
-    if ols_dur > 0.00001:
-        cvpj_notedata = note_data.rx_makenote(ols_pos, ols_dur, ols_note-60, ols_vol, None)
-        if ols_inst not in onlseq_notelist: onlseq_notelist[ols_inst] = []
-        onlseq_notelist[ols_inst].append(cvpj_notedata)
-
 class input_onlinesequencer(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
@@ -135,15 +112,16 @@ class input_onlinesequencer(plugin_input.base):
         'track_nopl': True
         }
     def supported_autodetect(self): return False
-    def parse(self, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, extra_param):
         global onlseq_notelist
         global onlseq_customnames
         global dataset
 
-        cvpj_l = {}
-        
-        dataset = data_dataset.dataset('./data_dset/onlineseq.dset')
-        dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
+        convproj_obj.type = 'r'
+        convproj_obj.set_timings(4, True)
+
+        dataset = dv_dataset.dataset('./data_dset/onlineseq.dset')
+        dataset_midi = dv_dataset.dataset('./data_dset/midi.dset')
 
         onlseq_customnames = {}
 
@@ -155,21 +133,28 @@ class input_onlinesequencer(plugin_input.base):
 
         onlseq_data_main = os_data["1"]
         onlseq_data_notes = os_data["2"]
-        if '3' in os_data: onlseq_data_markers = os_data["3"]
-        else: onlseq_data_markers = []
+        onlseq_data_markers = os_data["3"] if '3' in os_data else []
 
         t_auto_tempo = []
         t_auto_vol = []
         t_auto_inst = {}
 
-        if "3" in onlseq_data_main: onlseq_data_instparams = parse_inst_params(os_data["1"]["3"])
-        else: onlseq_data_instparams = {}
+        onlseq_data_instparams = parse_inst_params(os_data["1"]["3"]) if "3" in onlseq_data_main else {}
 
         onlseq_notelist = {}
 
         used_fx_inst = {}
 
-        for os_note in dict2list(onlseq_data_notes): parse_note(os_note)
+        for os_note in dict2list(onlseq_data_notes): 
+            ols_note = int(os_note['1'])
+            ols_pos = int2float(int(os_note['2'])) if '2' in os_note else 0
+            ols_dur = int2float(int(os_note['3'])) if '3' in os_note else 1
+            ols_inst = int(os_note['4']) if '4' in os_note else 0
+            ols_vol = int2float(int(os_note['5'])) if '5' in os_note else 1
+            if ols_dur > 0.00001:
+                if ols_inst not in onlseq_notelist: 
+                    onlseq_notelist[ols_inst] = []
+                onlseq_notelist[ols_inst].append([ols_pos, ols_dur, ols_note-60, ols_vol])
 
         for instid in onlseq_notelist:
             used_fx_inst[instid] = []
@@ -182,27 +167,21 @@ class input_onlinesequencer(plugin_input.base):
             onlseq_s_iparams = {}
             if instid in onlseq_data_instparams: onlseq_s_iparams = onlseq_data_instparams[instid]
 
-            ismidifound = tracks_r.import_dset(cvpj_l, cvpj_instid, str(trueinstid), dataset, dataset_midi, None, None)
-            trk_vol = data_values.get_value(onlseq_s_iparams, 'vol', 1)
-            trk_pan = data_values.get_value(onlseq_s_iparams, 'pan', 0)
-            tracks_r.track_param_add(cvpj_l, cvpj_instid, 'vol', trk_vol, 'float')
-            tracks_r.track_param_add(cvpj_l, cvpj_instid, 'pan', trk_pan, 'float')
+            track_obj, plugin_obj = convproj_obj.add_track_from_dset(cvpj_instid, cvpj_instid, dataset, dataset_midi, str(trueinstid), None, None, 0, False)
+            if 'vol' in onlseq_s_iparams: track_obj.params.add('vol', onlseq_s_iparams['vol'], 'float')
+            if 'pan' in onlseq_s_iparams: track_obj.params.add('pan', onlseq_s_iparams['pan'], 'float')
 
-            if not ismidifound:
-                inst_plugindata = None
+            if not plugin_obj.plugin_type:
                 if instid in [13,14,15,16]: 
-                    inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
-                    inst_plugindata.osc_num_oscs(1)
-                    if instid == 13: inst_plugindata.osc_opparam_set(0, 'shape', 'sine')
-                    if instid == 14: inst_plugindata.osc_opparam_set(0, 'shape', 'square')
-                    if instid == 15: inst_plugindata.osc_opparam_set(0, 'shape', 'saw')
-                    if instid == 16: inst_plugindata.osc_opparam_set(0, 'shape', 'triangle')
+                    plugin_obj.type_set('universal', 'synth-osc')
+                    osc_data = plugin_obj.osc_add()
+                    if instid == 13: osc_data.shape = 'sine'
+                    if instid == 14: osc_data.shape = 'square'
+                    if instid == 15: osc_data.shape = 'saw'
+                    if instid == 16: osc_data.shape = 'triangle'
 
-                if inst_plugindata != None: 
-                    tracks_r.track_inst_pluginid(cvpj_l, cvpj_instid, cvpj_instid)
-                    inst_plugindata.to_cvpj(cvpj_l, cvpj_instid)
-
-            tracks_r.add_pl(cvpj_l, cvpj_instid, 'notes', placement_data.nl2pl(cvpj_notelist))
+            placement_obj = track_obj.placements.add_notes()
+            for ols_pos, ols_dur, ols_note, ols_vol in cvpj_notelist: placement_obj.notelist.add_r(ols_pos, ols_dur, ols_note, ols_vol, {})
 
             if 'delay_on' in onlseq_s_iparams and 'delay' not in used_fx_inst[instid]: used_fx_inst[instid].append('delay')
             if 'distort_type' in onlseq_s_iparams and 'distort' not in used_fx_inst[instid]: used_fx_inst[instid].append('distort')
@@ -217,107 +196,103 @@ class input_onlinesequencer(plugin_input.base):
         bpm = int(onlseq_data_main['1']) if '1' in onlseq_data_main else 120
 
         for onlseq_data_marker in dict2list(onlseq_data_markers):
-            t_markerdata = parse_marker(onlseq_data_marker)
+            a_inst, a_param, a_pos, a_value, a_type = parse_marker(onlseq_data_marker)
 
-            trackid = 'os_'+str(t_markerdata[0])
-            if t_markerdata[0] != -1:
+            trackid = 'os_'+str(a_inst)
+            if a_inst != -1:
 
-                if t_markerdata[0] not in used_fx_inst: used_fx_inst[t_markerdata[0]] = []
+                if a_inst not in used_fx_inst: used_fx_inst[a_inst] = []
 
-                if t_markerdata[1] == 'vol': auto_nopl.addpoint(['track', trackid, 'vol'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                if t_markerdata[1] == 'pan': auto_nopl.addpoint(['track', trackid, 'pan'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                if t_markerdata[1] == 'detune': auto_nopl.addpoint(['track', trackid, 'pitch'], 'float', t_markerdata[2], t_markerdata[3]/100, t_markerdata[4])
+                if a_param == 'vol': convproj_obj.add_autopoint(['track', trackid, 'vol'], 'float', a_pos, a_value, a_type)
+                if a_param == 'pan': convproj_obj.add_autopoint(['track', trackid, 'pan'], 'float', a_pos, a_value, a_type)
+                if a_param == 'detune': convproj_obj.add_autopoint(['track', trackid, 'pitch'], 'float', a_pos, a_value/100, a_type)
 
-                if t_markerdata[1] in ['eq_high', 'eq_mid', 'eq_low']: 
-                    auto_nopl.addpoint(['plugin', trackid+'_eq', t_markerdata[1]], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                    if 'eq' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('eq')
+                if a_param in ['eq_high', 'eq_mid', 'eq_low']: 
+                    convproj_obj.add_autopoint(['plugin', trackid+'_eq', a_param], 'float', a_pos, a_value, a_type)
+                    if 'eq' not in used_fx_inst[a_inst]: used_fx_inst[a_inst].append('eq')
 
-                if t_markerdata[1] == 'delay_on': 
-                    auto_nopl.addpoint(['slot', trackid+'_delay', 'enabled'], 'bool', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                    if 'delay' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('delay')
+                if a_param == 'delay_on': 
+                    convproj_obj.add_autopoint(['slot', trackid+'_delay', 'enabled'], 'bool', a_pos, bool(a_value), a_type)
+                    if 'delay' not in used_fx_inst[a_inst]: used_fx_inst[a_inst].append('delay')
 
-                if t_markerdata[1] == 'reverb_type': 
-                    auto_nopl.addpoint(['plugin', trackid+'_reverb', 'reverb_type'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                    if 'reverb' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('reverb')
+                if a_param == 'reverb_type': 
+                    convproj_obj.add_autopoint(['plugin', trackid+'_reverb', 'reverb_type'], 'float', a_pos, a_value, a_type)
+                    if 'reverb' not in used_fx_inst[a_inst]: used_fx_inst[a_inst].append('reverb')
 
-                if t_markerdata[1] == 'reverb_wet': 
-                    auto_nopl.addpoint(['slot', trackid+'_reverb', 'wet'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                    if 'reverb' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('reverb')
+                if a_param == 'reverb_wet': 
+                    convproj_obj.add_autopoint(['slot', trackid+'_reverb', 'wet'], 'float', a_pos, a_value, a_type)
+                    if 'reverb' not in used_fx_inst[a_inst]: used_fx_inst[a_inst].append('reverb')
 
-                if t_markerdata[1] == 'distort_type': 
-                    if t_markerdata[3] != 0: auto_nopl.addpoint(['plugin', trackid+'_distort', 'distort_type'], 'int', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                    auto_nopl.addpoint(['slot', trackid+'_distort', 'enabled'], 'bool', t_markerdata[2], int(bool(t_markerdata[3])), t_markerdata[4])
-                    if 'distort' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('distort')
+                if a_param == 'distort_type': 
+                    if a_value != 0: convproj_obj.add_autopoint(['plugin', trackid+'_distort', 'distort_type'], 'int', a_pos, a_value, a_type)
+                    convproj_obj.add_autopoint(['slot', trackid+'_distort', 'enabled'], 'bool', a_pos, int(bool(a_value)), a_type)
+                    if 'distort' not in used_fx_inst[a_inst]: used_fx_inst[a_inst].append('distort')
 
-                if t_markerdata[1] == 'distort_wet': 
-                    auto_nopl.addpoint(['slot', trackid+'_distort', 'wet'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                    if 'distort' not in used_fx_inst[t_markerdata[0]]: used_fx_inst[t_markerdata[0]].append('distort')
+                if a_param == 'distort_wet': 
+                    convproj_obj.add_autopoint(['slot', trackid+'_distort', 'wet'], 'float', a_pos, a_value, a_type)
+                    if 'distort' not in used_fx_inst[a_inst]: used_fx_inst[a_inst].append('distort')
 
             else:
-                if t_markerdata[1] == 'vol': auto_nopl.addpoint(['song', 'vol'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
-                if t_markerdata[1] == 'bpm': auto_nopl.addpoint(['song', 'bpm'], 'float', t_markerdata[2], t_markerdata[3], t_markerdata[4])
+                if a_param == 'vol': convproj_obj.add_autopoint(['song', 'vol'], 'float', a_pos, a_value, a_type)
+                if a_param == 'bpm': convproj_obj.add_autopoint(['song', 'bpm'], 'float', a_pos, a_value, a_type)
 
-        for used_fx_inst_i in used_fx_inst:
+        for instid, instparams in used_fx_inst.items():
+            trackid = 'os_'+str(instid)
+            track_found, track_obj = convproj_obj.find_track(trackid)
+            if track_found:
+                autoid = str(instid)
 
-            autoid = str(used_fx_inst_i)
-            trackid = 'os_'+str(used_fx_inst_i)
+                delay_fx_enabled = bool(data_values.nested_dict_get_value(onlseq_data_instparams, [instid, 'delay_on']))
+                distort_type = data_values.nested_dict_get_value(onlseq_data_instparams, [instid, 'distort_type'])
+                reverb_type = data_values.nested_dict_get_value(onlseq_data_instparams, [instid, 'reverb_type'])
 
-            delay_fx_enabled = bool(data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'delay_on', 0))
-            distort_type = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'distort_type', 0)
-            reverb_type = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'reverb_type', 0)
+                if 'delay' in instparams:
+                    pluginid = trackid+'_delay'
+                    plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'delay-c')
+                    plugin_obj.datavals.add('time_type', 'steps')
+                    plugin_obj.datavals.add('time', 2)
+                    plugin_obj.datavals.add('feedback', 0.25)
+                    plugin_obj.fxdata_add(delay_fx_enabled if delay_fx_enabled else 0, 0.5)
+                    plugin_obj.visual.name = 'Delay'
+                    track_obj.fxslots_audio.append(pluginid)
 
-            if 'delay' in used_fx_inst[used_fx_inst_i]:
-                pluginid = trackid+'_delay'
-                fx_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'delay-c')
-                fx_plugindata.dataval_add('time_type', 'steps')
-                fx_plugindata.dataval_add('time', 2)
-                fx_plugindata.dataval_add('feedback', 0.25)
-                fx_plugindata.fxdata_add(delay_fx_enabled, 0.5)
-                fx_plugindata.fxvisual_add('Delay', None)
-                fx_plugindata.to_cvpj(cvpj_l, pluginid)
-                fxslot.insert(cvpj_l, ['track', trackid], 'audio', pluginid)
+                if 'distort' in instparams:
+                    pluginid = trackid+'_distort'
+                    plugin_obj = convproj_obj.add_plugin(pluginid, 'native-onlineseq', 'distort')
+                    fx_wet = data_values.nested_dict_get_value(onlseq_data_instparams, [instid, 'distort_wet'])
+                    if fx_wet == None: fx_wet = 1
+                    plugin_obj.fxdata_add(True, fx_wet)
+                    plugin_obj.params.add('distort_type', distort_type if distort_type else 0, 'int')
+                    plugin_obj.visual.name = 'Distortion'
+                    track_obj.fxslots_audio.append(pluginid)
 
-            if 'distort' in used_fx_inst[used_fx_inst_i]:
-                pluginid = trackid+'_distort'
-                fx_plugindata = plugins.cvpj_plugin('deftype', 'native-onlineseq', 'distort')
-                fx_wet = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'distort_wet', 0)
-                fx_plugindata.fxdata_add(True, fx_wet)
-                fx_plugindata.param_add('distort_type', distort_type, 'int', 'Type')
-                fx_plugindata.fxvisual_add('Distortion', None)
-                fx_plugindata.to_cvpj(cvpj_l, pluginid)
-                fxslot.insert(cvpj_l, ['track', trackid], 'audio', pluginid)
+                if 'reverb' in instparams:
+                    pluginid = trackid+'_reverb'
+                    plugin_obj = convproj_obj.add_plugin(pluginid, 'native-onlineseq', 'reverb')
+                    fx_enabled = bool(data_values.nested_dict_get_value(onlseq_data_instparams, [instid, 'reverb_on']))
+                    if fx_enabled == None: fx_enabled = 0
+                    fx_wet = data_values.nested_dict_get_value(onlseq_data_instparams, [instid, 'reverb_wet'])
+                    if fx_wet == None: fx_wet = 1
+                    plugin_obj.params.add('reverb_type', reverb_type if reverb_type else 0, 'int')
+                    plugin_obj.visual.name = 'Reverb'
+                    track_obj.fxslots_audio.append(pluginid)
 
-            if 'reverb' in used_fx_inst[used_fx_inst_i]:
-                pluginid = trackid+'_reverb'
-                fx_plugindata = plugins.cvpj_plugin('deftype', 'native-onlineseq', 'reverb')
-                fx_enabled = bool(data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'reverb_on', 0))
-                fx_wet = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'reverb_wet', 1)
-                fx_plugindata.param_add('reverb_type', reverb_type, 'int', 'Type')
-                fx_plugindata.fxvisual_add('Reverb', None)
-                fx_plugindata.to_cvpj(cvpj_l, pluginid)
-                fxslot.insert(cvpj_l, ['track', trackid], 'audio', pluginid)
-
-            if 'eq' in used_fx_inst[used_fx_inst_i]:
-                pluginid = trackid+'_eq'
-                fx_enabled = bool(data_values.get_value(onlseq_data_instparams[used_fx_inst_i], 'enable_eq', 0))
-                fx_plugindata = plugins.cvpj_plugin('deftype', 'native-onlineseq', 'eq')
-                fx_plugindata.fxdata_add(fx_enabled, 1)
-                for paramname in ['eq_high', 'eq_mid', 'eq_low']:
-                    eq_value = data_values.get_value(onlseq_data_instparams[used_fx_inst_i], paramname, 0)
-                    fx_plugindata.param_add(paramname, eq_value, 'float', paramname)
-                fx_plugindata.fxvisual_add('EQ', None)
-                fx_plugindata.to_cvpj(cvpj_l, pluginid)
-                fxslot.insert(cvpj_l, ['track', trackid], 'audio', pluginid)
-
-        auto_nopl.to_cvpj(cvpj_l)
+                if 'eq' in instparams:
+                    pluginid = trackid+'_eq'
+                    fx_enabled = bool(data_values.nested_dict_get_value(onlseq_data_instparams, [instid, 'enable_eq']))
+                    if fx_enabled == None: fx_enabled = 0
+                    plugin_obj = convproj_obj.add_plugin(pluginid, 'native-onlineseq', 'eq')
+                    plugin_obj.fxdata_add(fx_enabled, 1)
+                    for paramname in ['eq_high', 'eq_mid', 'eq_low']:
+                        eq_value = data_values.nested_dict_get_value(onlseq_data_instparams, [instid, paramname])
+                        plugin_obj.params.add(paramname, eq_value, 'float')
+                    plugin_obj.visual.name = 'EQ'
+                    track_obj.fxslots_audio.append(pluginid)
 
         timesig_numerator = 4
         if '2' in onlseq_data_main: timesig_numerator = int(onlseq_data_main['2'])
-        song.add_timesig(cvpj_l, timesig_numerator, 4)
+        convproj_obj.timesig = [timesig_numerator, 4]
 
-        cvpj_l['do_addloop'] = True
-        cvpj_l['do_singlenotelistcut'] = True
-
-        song.add_param(cvpj_l, 'bpm', bpm)
-
-        return json.dumps(cvpj_l)
+        convproj_obj.do_actions.append('do_addloop')
+        convproj_obj.do_actions.append('do_singlenotelistcut')
+        convproj_obj.params.add('bpm', bpm, 'float')

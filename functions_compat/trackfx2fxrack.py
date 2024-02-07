@@ -1,127 +1,102 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import params
 from functions import data_values
-from functions_tracks import tracks_r
-from functions_tracks import auto_data
-from functions_tracks import fxrack
-from functions_tracks import fxslot
 from functions_compat import trackfx_to_numdata
+import copy
 
-def list2fxrack(cvpj_l, input_list, fxnum, defualtname, starttext, removeboth):
-    fx_name = starttext+input_list['name'] if 'name' in input_list else starttext+defualtname
-    fx_color = input_list['color'] if 'color' in input_list else None
+def list2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, removeboth, autoloc):
+    fx_name = starttext+data_obj.visual.name if data_obj.visual.name else starttext+defualtname
+    fx_color = data_obj.visual.color if data_obj.visual.color else None
 
-    vol = params.get(input_list, [], 'vol', 1)[0]
-    pan = params.get(input_list, [], 'pan', 0)[0]
+    fxchannel_obj = convproj_obj.add_fxchan(fxnum)
+    fxchannel_obj.visual.name = fx_name
+    fxchannel_obj.visual.color = fx_color
+    fxchannel_obj.fxslots_audio = data_obj.fxslots_audio
 
-    params.remove(input_list, 'vol')
-    if removeboth == True:
-        params.remove(input_list, 'pan')
+    vol = data_obj.params.get('vol', 1).value
+    data_obj.params.remove('vol')
+    fxchannel_obj.params.add('vol', vol, 'float')
+    convproj_obj.move_automation(autoloc+['vol'], ['fxmixer',str(fxnum),'vol'])
 
-    fxrack.add(cvpj_l, fxnum, vol, pan, name=fx_name, color=fx_color)
-    if 'chain_fx_audio' in input_list: 
-        for plugid in input_list['chain_fx_audio']:
-            fxslot.insert(cvpj_l, ['fxrack', fxnum], 'audio', plugid)
-        del input_list['chain_fx_audio']
+    if removeboth == True: 
+        pan = data_obj.params.get('pan', 0).value
+        data_obj.params.remove('pan')
+        fxchannel_obj.params.add('pan', pan, 'float')
+        convproj_obj.move_automation(autoloc+['pan'], ['fxmixer',str(fxnum),'pan'])
 
-def process_r(cvpj_l):
-    if 'fxrack' not in cvpj_l:
-        cvpj_l['fxrack'] = {}
+    return fxchannel_obj
 
-        output_ids = trackfx_to_numdata.trackfx_to_numdata(cvpj_l, 1)
-
+def process_r(convproj_obj):
+    if not convproj_obj.fxrack:
+        t2m = trackfx_to_numdata.to_numdata()
+        output_ids = t2m.trackfx_to_numdata(convproj_obj, 1)
         dict_returns = {}
+        for returnid, return_obj in convproj_obj.track_master.returns.items(): dict_returns[returnid] = return_obj
 
-        auto_data.move(cvpj_l, ['master','vol'], ['fxmixer','0','vol'])
-        auto_data.move(cvpj_l, ['master','pan'], ['fxmixer','0','pan'])
-
-        if 'track_master' in cvpj_l:
-            track_master_data = cvpj_l['track_master']
-            list2fxrack(cvpj_l, track_master_data, 0, 'Master', '', True)
-            if 'returns' in track_master_data:
-                for returnid in track_master_data['returns']:
-                    return_data = track_master_data['returns'][returnid]
-                    dict_returns[returnid] = return_data
-            del cvpj_l['track_master']
-
-
-        if 'track_placements' in cvpj_l:
-            for output_id in output_ids:
-                if output_id[2] in cvpj_l['track_placements']:
-                    track_placements = cvpj_l['track_placements'][output_id[2]]
-                    if 'audio_nested' in track_placements:
-                        for spld in track_placements['audio_nested']: spld['fxrack_channel'] = output_id[0]+1
-                    if 'audio' in track_placements:
-                        for spld in track_placements['audio']: spld['fxrack_channel'] = output_id[0]+1
+        list2fxrack(convproj_obj, convproj_obj.track_master, 0, 'Master', '', True, ['master'])
 
         for output_id in output_ids:
             
             if output_id[1] == 'return':
-                return_data = dict_returns[output_id[2]]
-                auto_data.move(cvpj_l, ['return',output_id[2],'vol'], ['fxmixer',str(output_id[0]+1),'vol'])
-                auto_data.move(cvpj_l, ['return',output_id[2],'pan'], ['fxmixer',str(output_id[0]+1),'pan'])
-                list2fxrack(cvpj_l, return_data, output_id[0]+1, 'Return', '[R] ', True)
+                fxchannel_obj = list2fxrack(convproj_obj, dict_returns[output_id[2]], output_id[0]+1, 'Return', '[R] ', True, ['return',output_id[2]])
 
             if output_id[1] == 'group':
-                group_data = cvpj_l['groups'][output_id[2]]
-                auto_data.move(cvpj_l, ['group',output_id[2],'vol'], ['fxmixer',str(output_id[0]+1),'vol'])
-                auto_data.move(cvpj_l, ['group',output_id[2],'pan'], ['fxmixer',str(output_id[0]+1),'pan'])
-                list2fxrack(cvpj_l, group_data, output_id[0]+1, 'Group', '[G] ', True)
+                fxchannel_obj = list2fxrack(convproj_obj, convproj_obj.groups[output_id[2]], output_id[0]+1, 'Group', '[G] ', True, ['group',output_id[2]])
 
             if output_id[1] == 'track':
-                track_data = cvpj_l['track_data'][output_id[2]]
-                auto_data.move(cvpj_l, ['track',output_id[2],'vol'], ['fxmixer',str(output_id[0]+1),'vol'])
-                auto_data.move(cvpj_l, ['track',output_id[2],'pan'], ['fxmixer',str(output_id[0]+1),'pan'])
-                list2fxrack(cvpj_l, track_data, output_id[0]+1, '', '', False)
-                track_data['fxrack_channel'] = output_id[0]+1
+                fxnum = output_id[0]+1
+                track_obj = convproj_obj.track_data[output_id[2]]
+                fxchannel_obj = list2fxrack(convproj_obj, track_obj, fxnum, '', '', False, ['track',output_id[2]])
+                track_obj.fxrack_channel = output_id[0]+1
+                if not track_obj.placements.is_indexed:
+                    for pl_obj in track_obj.placements.data_audio:
+                        if pl_obj.fxrack_channel == -1: pl_obj.fxrack_channel = fxnum
+                    for nestedpl_obj in track_obj.placements.data_audio_nested:
+                        for e in nestedpl_obj.events:
+                            e.fxrack_channel = fxnum
 
-            fxrack.addsend(cvpj_l, output_id[0]+1, output_id[3][0]+1, output_id[3][1], output_id[3][2])
+            fxchannel_obj.sends.add(output_id[3][0]+1, output_id[3][2], output_id[3][1])
 
-            for senddata in output_id[4]:
-                fxrack.addsend(cvpj_l, output_id[0]+1, senddata[0]+1, senddata[1], senddata[2])
-
+            for senddata in output_id[4]: fxchannel_obj.sends.add(senddata[0]+1, senddata[2], senddata[1])
         return True
-
     else: return False
 
-def process_m(cvpj_l):
-    if 'fxrack' not in cvpj_l:
+def process_m(convproj_obj):
+    if not convproj_obj.fxrack:
+        print('[trackfx2fxrack] Master to FX 0')
+        fxchannel_obj = convproj_obj.add_fxchan(0)
+        fxchannel_obj.visual = copy.deepcopy(convproj_obj.track_master.visual)
+        fxchannel_obj.params = copy.deepcopy(convproj_obj.track_master.params)
+        fxchannel_obj.fxslots_audio = convproj_obj.track_master.fxslots_audio.copy()
+        convproj_obj.track_master.fxslots_audio = []
+
+        convproj_obj.move_automation(['master','vol'], ['fxmixer','0','vol'])
+        convproj_obj.move_automation(['master','pan'], ['fxmixer','0','pan'])
+
         fxnum = 1
-        cvpj_l['fxrack'] = {}
+        for inst_id, inst_obj in convproj_obj.iter_instrument():
+            fxchannel_obj = convproj_obj.add_fxchan(fxnum)
+            fxchannel_obj.visual = copy.deepcopy(inst_obj.visual)
+            fxchannel_obj.params = copy.deepcopy(inst_obj.params)
+            fxchannel_obj.fxslots_audio = inst_obj.fxslots_audio.copy()
+            inst_obj.fxslots_audio = []
+            inst_obj.fxrack_channel = fxnum
+            fxchannel_obj.visual.name = inst_obj.visual.name
+            fxchannel_obj.visual.color = inst_obj.visual.color
 
-        c_orderingdata = cvpj_l['instruments_order']
-        c_trackdata = cvpj_l['instruments_data']
+            convproj_obj.move_automation(['track',inst_id,'vol'], ['fxmixer',str(fxnum),'vol'])
+            inst_obj.params.move(fxchannel_obj.params, 'vol')
 
-        if 'track_master' in cvpj_l:
-            print('[trackfx2fxrack] Master to FX 0')
-            cvpj_l['fxrack']['0'] = cvpj_l['track_master']
-            auto_data.move(cvpj_l, ['master','vol'], ['fxmixer','0','vol'])
-
-        for trackid in c_orderingdata:
-            trackdata = c_trackdata[trackid]
-            trackdata['fxrack_channel'] = fxnum
-            fxtrack = {}
-            if 'name' in trackdata: 
-                fxtrack['name'] = trackdata['name']
-                print('[trackfx2fxrack] Track to FX '+str(fxnum)+' ('+str(trackdata['name'])+')')
-            else:
-                print('[trackfx2fxrack] Track to FX '+str(fxnum))
-
-            if 'color' in trackdata: fxtrack['color'] = trackdata['color']
-            if 'chain_fx_audio' in trackdata: 
-                fxtrack['chain_fx_audio'] = trackdata['chain_fx_audio']
-                del trackdata['chain_fx_audio']
-            cvpj_l['fxrack'][str(fxnum)] = fxtrack
-
+            print('[trackfx2fxrack] Instrument to FX '+str(fxnum)+(' ('+fxchannel_obj.visual.name+')' if fxchannel_obj.visual.name else ''))
             fxnum += 1
+
         return True
     else: return False
 
-def process(cvpj_l, cvpj_type, in_compat, out_compat):
+def process(convproj_obj, in_compat, out_compat):
     if in_compat == False and out_compat == True:
-        if cvpj_type in ['r', 'ri', 'rm']: return process_r(cvpj_l)
-        elif cvpj_type in ['m', 'mi']: return process_m(cvpj_l)
+        if convproj_obj.type in ['r', 'ri', 'rm']: return process_r(convproj_obj)
+        elif convproj_obj.type in ['m', 'mi']: return process_m(convproj_obj)
         else: return False
     else: return False

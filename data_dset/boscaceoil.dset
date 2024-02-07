@@ -1,4 +1,43 @@
 {
+    "fx": {
+        "objects": {
+            "chorus": {
+                "visual": {
+                    "name": "Chorus"
+                }
+            },
+            "compressor": {
+                "visual": {
+                    "name": "Compressor"
+                }
+            },
+            "delay": {
+                "visual": {
+                    "name": "Delay"
+                }
+            },
+            "distortion": {
+                "visual": {
+                    "name": "Distortion"
+                }
+            },
+            "high_pass": {
+                "visual": {
+                    "name": "High Pass"
+                }
+            },
+            "low_boost": {
+                "visual": {
+                    "name": "Low Boost"
+                }
+            },
+            "reverb": {
+                "visual": {
+                    "name": "Reverb"
+                }
+            }
+        }
+    },
     "inst": {
         "objects": {
             "128": {

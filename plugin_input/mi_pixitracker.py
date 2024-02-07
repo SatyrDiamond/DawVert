@@ -3,17 +3,12 @@
 
 from functions import data_bytes
 from functions import audio_wav
-from functions import note_data
-from functions import placement_data
-from functions import plugins
-from functions import song
-from functions import colors
-from functions import data_dataset
-from functions_tracks import tracks_mi
 import plugin_input
 import json
 import struct
 import os
+
+pixi_colors = [[1, 1, 1],[0.31, 0.31, 1],[0.31, 1, 0.31],[0.31, 1, 1],[1, 0.31, 0.31],[1, 0.31, 1],[1, 1, 0.31],[1, 0.65, 0.48],[0.48, 0.65, 1],[0.65, 1, 0.48],[0.48, 1, 0.65],[1, 0.48, 0.65],[0.65, 0.48, 1],[0.40, 1, 0.7],[0.70, 1, 0.4],[1, 0.35, 0.74]]
 
 class input_cvpj_f(plugin_input.base):
     def __init__(self): pass
@@ -33,19 +28,18 @@ class input_cvpj_f(plugin_input.base):
         bytesdata = bytestream.read(8)
         if bytesdata == b'PIXIMOD1': return True
         else: return False
-    def parse(self, input_file, extra_param):
+
+    def parse(self, convproj_obj, input_file, extra_param):
+        convproj_obj.type = 'mi'
+        convproj_obj.set_timings(4, False)
+
         song_file = open(input_file, 'rb')
         pixi_chunks = data_bytes.riff_read(song_file, 8)
         pixi_data_patterns = {}
         pixi_data_sounds = []
 
-        cvpj_l = {}
-        
         samplefolder = extra_param['samplefolder']
         
-        dataset = data_dataset.dataset('./data_dset/pixitracker.dset')
-        colordata = colors.colorset(dataset.colorset_e_list('inst', 'main'))
-
         for _ in range(16): pixi_data_sounds.append([None,None,None,None,None,None,None,None])
 
         for pixi_chunk in pixi_chunks:
@@ -87,7 +81,7 @@ class input_cvpj_f(plugin_input.base):
                     for c_trk_num in range(pixi_c_pat_tracks):
                         t_patdata[c_trk_num][c_len_num] = struct.unpack('bbbb', pixi_c_pat_data.read(4))
 
-                cvpj_notelist = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
+                t_notelist = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 
                 for t_pattrack in t_patdata:
                     t_pos = 0
@@ -98,10 +92,10 @@ class input_cvpj_f(plugin_input.base):
                         t_pos += 1
                     for t_note in t_notes:
                         if t_note[4] != 0:
-                            cvpj_note = note_data.mx_makenote('pixi_'+str(t_note[3]), t_note[1], t_note[0], t_note[2]-78, t_note[4]/100, None)
-                            cvpj_notelist[t_note[3]].append(cvpj_note)
+                            cvpj_note = ['pixi_'+str(t_note[3]), t_note[1], t_note[0], t_note[2]-78, t_note[4]/100]
+                            t_notelist[t_note[3]].append(cvpj_note)
 
-                pixi_data_patterns[pixi_pattern_num] = {'len': pixi_c_pat_len, 'notes': cvpj_notelist}
+                pixi_data_patterns[pixi_pattern_num] = [pixi_c_pat_len, t_notelist]
 
             elif pixi_chunk[0] == b'SNDN':
                 pixi_sound_num = int.from_bytes(pixi_chunk[1], "little")
@@ -142,47 +136,50 @@ class input_cvpj_f(plugin_input.base):
             cvpj_instid = 'pixi_'+str(instnum)
             cvpj_instvol = 1.0
 
-            pluginid = plugins.get_id()
-
-            tracks_mi.inst_create(cvpj_l, cvpj_instid)
-            tracks_mi.inst_visual(cvpj_l, cvpj_instid, name='Inst #'+str(instnum+1), color=colordata.getcolornum(instnum))
+            inst_obj = convproj_obj.add_instrument(cvpj_instid)
+            inst_obj.visual.name = 'Inst #'+str(instnum+1)
+            inst_obj.visual.color = pixi_colors[instnum]
 
             if pixi_data_sounds[instnum] != [None,None,None,None,None,None,None,None]:
                 t_sounddata = pixi_data_sounds[instnum]
                 wave_path = samplefolder + str(instnum) + '.wav'
                 audio_wav.generate(wave_path, t_sounddata[7], t_sounddata[0], t_sounddata[1], 16, None)
-                tracks_mi.inst_pluginid(cvpj_l, cvpj_instid, pluginid)
-                tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'pitch', t_sounddata[2]/100, 'float')
-                tracks_mi.inst_dataval_add(cvpj_l, cvpj_instid, 'instdata', 'middlenote', t_sounddata[3]*-1)
-                tracks_mi.inst_param_add(cvpj_l, cvpj_instid, 'vol', t_sounddata[4]/100, 'float')
 
-                inst_plugindata = plugins.cvpj_plugin('sampler', wave_path, None)
-                inst_plugindata.dataval_add('point_value_type', "samples")
-                inst_plugindata.dataval_add('start', t_sounddata[5])
-                inst_plugindata.dataval_add('end', t_sounddata[6])
-                inst_plugindata.dataval_add('length', len(t_sounddata[7])//t_sounddata[0])
-                inst_plugindata.dataval_add('trigger', 'normal')
-                inst_plugindata.to_cvpj(cvpj_l, pluginid)
+                plugin_obj, inst_obj.pluginid, sampleref_obj = convproj_obj.add_plugin_sampler_genid(wave_path)
+
+                inst_obj.params.add('pitch', t_sounddata[2]/100, 'float')
+                inst_obj.params.add('vol', t_sounddata[4]/100, 'float')
+                inst_obj.datavals.add('middlenote', t_sounddata[3]*-1)
+
+                plugin_obj.datavals.add('point_value_type', "samples")
+                plugin_obj.datavals.add('start', t_sounddata[5])
+                plugin_obj.datavals.add('end', t_sounddata[6])
+                plugin_obj.datavals.add('length', len(t_sounddata[7])//t_sounddata[0])
+                plugin_obj.datavals.add('trigger', 'normal')
+            instnum += 1
 
         for pixi_data_pattern in pixi_data_patterns:
+            nle_obj = convproj_obj.add_notelistindex('pixi_'+str(pixi_data_pattern))
+            nle_obj.visual.name = 'Pattern '+str(pixi_data_pattern+1)
+
             nli_notes = []
-            for pixi_data_pattern_inst in pixi_data_patterns[pixi_data_pattern]['notes']:
-                for pixi_data_pattern_note in pixi_data_pattern_inst:
-                    nli_notes.append(pixi_data_pattern_note)
+            for pixi_data_pattern_inst in pixi_data_patterns[pixi_data_pattern][1]:
+                for tn in pixi_data_pattern_inst: nle_obj.notelist.add_m(tn[0], tn[1], tn[2], tn[3], tn[4], {})
 
-            tracks_mi.notelistindex_add(cvpj_l, 'pixi_'+str(pixi_data_pattern), nli_notes)
-            tracks_mi.notelistindex_visual(cvpj_l, 'pixi_'+str(pixi_data_pattern), name='Pattern '+str(pixi_data_pattern+1))
+        playlist_obj = convproj_obj.add_playlist(0, 1, True)
 
-        placements = []
         placements_pos = 0
         for patnum in pixi_patternorder:
-            placements.append( placement_data.makepl_n_mi(placements_pos, pixi_data_patterns[pixi_data_pattern]['len'], 'pixi_'+str(patnum)) )
-            placements_pos += pixi_data_patterns[pixi_data_pattern]['len']
+            patlen = pixi_data_patterns[pixi_data_pattern][0]
 
-        tracks_mi.add_pl(cvpj_l, 1, 'notes', placements)
+            cvpj_placement = playlist_obj.placements.add_notes()
+            cvpj_placement.fromindex = 'pixi_'+str(patnum)
+            cvpj_placement.position = placements_pos
+            cvpj_placement.duration = patlen
 
-        cvpj_l['do_addloop'] = True
+            placements_pos += patlen
 
-        song.add_param(cvpj_l, 'vol', pixi_vol/100)
-        song.add_param(cvpj_l, 'bpm', pixi_bpm)
-        return json.dumps(cvpj_l)
+        convproj_obj.do_actions.append('do_addloop')
+        convproj_obj.do_actions.append('do_lanefit')
+        convproj_obj.params.add('bpm', pixi_bpm, 'float')
+        convproj_obj.track_master.params.add('vol', pixi_vol/100, 'float')

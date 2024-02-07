@@ -1,18 +1,11 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import auto
 from functions import data_bytes
-from functions import data_dataset
 from functions import note_data
-from functions import placement_data
-from functions import song
-from functions import plugins
-from functions import song
-from functions_tracks import tracks_mi
-from functions_tracks import fxrack
-from functions_tracks import fxslot
-from functions_tracks import auto_data
+from functions import xtramath
+from objects import convproj
+from objects import dv_dataset
 import json
 import plugin_input
 import struct
@@ -33,7 +26,8 @@ def parsenotes(bio_data, notelen):
         if n_sharp == 2: out_offset = 1
         if n_sharp == 1: out_offset = -1
         out_note = note_data.keynum_to_note(out_key, out_oct-3)
-        notesout[n_layer].append(note_data.mx_makenote(str(n_inst), (n_pos)*notelen, (n_len/4)*notelen, out_note+out_offset, n_vol/1.5, n_pan))
+        notesout[n_layer].append([n_inst, (n_pos)*notelen, (n_len/4)*notelen, out_note+out_offset, n_vol/1.5, n_pan])
+        #notesout[n_layer].add_m(str(n_inst), (n_pos)*notelen, (n_len/4)*notelen, out_note+out_offset, n_vol/1.5, {'pan': n_pan})
     return patsize-32, notelen, notesout
 
 class input_notessimo_v2(plugin_input.base):
@@ -48,81 +42,101 @@ class input_notessimo_v2(plugin_input.base):
         'track_lanes': True
         }
     def supported_autodetect(self): return False
-    def parse(self, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, extra_param):
         global used_instruments
         used_instruments = []
 
+        # ---------- CVPJ Start ----------
+        convproj_obj.type = 'mi'
+        convproj_obj.set_timings(4, True)
+
+        # ---------- File ----------
         bytestream = open(input_file, 'rb')
         nv2_data = data_bytes.to_bytesio(zlib.decompress(bytestream.read()))
         text_songname = data_bytes.readstring_lenbyte(nv2_data, 2, "big", None)
+        print("[input-notessimo_v2] Song Name: " + str(text_songname))
         text_songauthor = data_bytes.readstring_lenbyte(nv2_data, 2, "big", None)
+        print("[input-notessimo_v2] Song Author: " + str(text_songauthor))
         text_date1 = data_bytes.readstring_lenbyte(nv2_data, 2, "big", None)
         text_date2 = data_bytes.readstring_lenbyte(nv2_data, 2, "big", None)
-        print("[input-notessimo_v2] Song Name: " + str(text_songname))
-        print("[input-notessimo_v2] Song Author: " + str(text_songauthor))
+
+        try:
+            t_date, t_time = text_date1.split(', ')
+            t_month, t_day, t_year = t_date.split('/')
+            t_hours, t_min = t_time.split(':')
+            convproj_obj.metadata.t_hours = int(t_hours)
+            convproj_obj.metadata.t_minutes = int(t_min)
+            convproj_obj.metadata.t_day = int(t_day)
+            convproj_obj.metadata.t_month = int(t_month)
+            convproj_obj.metadata.t_year = int(t_year)
+        except: pass
+
         len_order = int.from_bytes(nv2_data.read(2), "big")
         arr_order = struct.unpack('b'*len_order, nv2_data.read(len_order))
         print("[input-notessimo_v2] Order List: " + str(arr_order))
         tempo_table = struct.unpack('>'+'H'*100, nv2_data.read(200))
 
-        cvpj_l = {}
-        dataset = data_dataset.dataset('./data_dset/notessimo_v2.dset')
-        dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
+        dataset = dv_dataset.dataset('./data_dset/notessimo_v2.dset')
+        dataset_midi = dv_dataset.dataset('./data_dset/midi.dset')
         
-        fxrack.add(cvpj_l, 1, 1, 0, name='Drums')
+        fxchan_data = convproj_obj.add_fxchan(1)
+        fxchan_data.visual.name = 'Drums'
 
         notess_sheets = {}
         for sheetnum in range(100):
-            tempo, notelen = song.get_lower_tempo(tempo_table[sheetnum], 1, 200)
+            tempo, notelen = xtramath.get_lower_tempo(tempo_table[sheetnum], 1, 200)
             notess_sheets[sheetnum] = parsenotes(nv2_data, notelen)
             sheetdata = notess_sheets[sheetnum][2]
             if len(sheetdata) != 0: 
-                print("[input-notessimo_v2] Sheet "+str(sheetnum)+", Layers:",end=' ')
+                print("[input-notessimo_v2] Sheet "+str(sheetnum)+", Layers: "+', '.join([str(x) for x in sheetdata]))
                 for layer in sheetdata:
-                    print(layer,end=' ')
-                    patid = str(sheetnum)+'_'+str(layer)
-                    tracks_mi.notelistindex_add(cvpj_l, patid, sheetdata[layer])
-                    tracks_mi.notelistindex_visual(cvpj_l, patid, name='#'+str(sheetnum+1)+' Layer '+str(layer+1))
-                print()
+                    nle_obj = convproj_obj.add_notelistindex(str(sheetnum)+'_'+str(layer))
+                    for nn in sheetdata[layer]:
+                        nle_obj.notelist.add_m(str(nn[0]), nn[1], nn[2], nn[3], nn[4], {'pan': nn[5]})
+                    nle_obj.visual.name = '#'+str(sheetnum+1)+' Layer '+str(layer+1)
 
         fxnum = 2
         for used_instrument in used_instruments:
-
-            pluginid = plugins.get_id()
-
             cvpj_instid = str(used_instrument)
 
-            outdsd = tracks_mi.import_dset(cvpj_l, cvpj_instid, cvpj_instid, dataset, dataset_midi, None, None)
-            print("[input-notessimo_v2] Instrument: " + str(outdsd[4]))
+            inst_obj, plugin_obj = convproj_obj.add_instrument_from_dset(cvpj_instid, cvpj_instid, dataset, dataset_midi, cvpj_instid, None, None)
 
-            if outdsd[3]: 
-                tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, 1)
+            print("[input-notessimo_v2] Instrument: " + str(inst_obj.visual.name))
+
+            if inst_obj.midi.drum_mode: 
+                inst_obj.fxrack_channel = 1
             else:
-                tracks_mi.inst_fxrackchan_add(cvpj_l, cvpj_instid, fxnum)
-                fxrack.add(cvpj_l, fxnum, 1, 0, name=outdsd[4], color=outdsd[5])
+                inst_obj.fxrack_channel = fxnum
+                fxchan_data = convproj_obj.add_fxchan(fxnum)
+                fxchan_data.visual.name = inst_obj.visual.name
+                fxchan_data.visual.color = inst_obj.visual.color
                 fxnum += 1
                 
         for idnum in range(9):
-            tracks_mi.playlist_add(cvpj_l, idnum)
-            tracks_mi.playlist_visual(cvpj_l, idnum, name='Layer '+str(idnum))
+            playlist_obj = convproj_obj.add_playlist(idnum, 1, True)
+            playlist_obj.visual.name = 'Layer '+str(idnum+1)
+
 
         curpos = 0
         for sheetnum in arr_order:
             cursheet_data = notess_sheets[sheetnum]
             for layer in cursheet_data[2]:
-                patid = str(sheetnum)+'_'+str(layer)
-                cvpj_l_placement = placement_data.makepl_n_mi(curpos, cursheet_data[0]*cursheet_data[1], patid)
-                tracks_mi.add_pl(cvpj_l, layer+1, 'notes', cvpj_l_placement)
-            song.add_timemarker_timesig(cvpj_l, None, curpos, 4, 4)
-            autoplacement = auto.makepl(curpos, cursheet_data[0]*cursheet_data[1], [{"position": 0, "value": tempo_table[sheetnum]*cursheet_data[1]}])
-            auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], autoplacement)
+                placement_obj = convproj_obj.playlist[layer].placements.add_notes()
+                placement_obj.position = curpos
+                placement_obj.duration = cursheet_data[0]*cursheet_data[1]
+                placement_obj.fromindex = str(sheetnum)+'_'+str(layer)
+            convproj_obj.timesig_auto.add_point(curpos, [4,4])
+
+            autopl_obj = convproj_obj.add_automation_pl('main/bpm', 'float')
+            autopl_obj.position = curpos
+            autopl_obj.duration = cursheet_data[0]*cursheet_data[1]
+            autopoint_obj = autopl_obj.data.add_point()
+            autopoint_obj.value = tempo_table[sheetnum]*cursheet_data[1]
             curpos += cursheet_data[0]*cursheet_data[1]
         
-        song.add_info(cvpj_l, 'title', text_songname)
-        song.add_info(cvpj_l, 'author', text_songauthor)
+        convproj_obj.metadata.name = text_songname
+        convproj_obj.metadata.author = text_songauthor
 
-        cvpj_l['do_addloop'] = True
-        cvpj_l['do_lanefit'] = True
-        
-        song.add_param(cvpj_l, 'bpm', tempo_table[0]*notess_sheets[arr_order[0]][1])
-        return json.dumps(cvpj_l)
+        convproj_obj.do_actions.append('do_addloop')
+        convproj_obj.do_actions.append('do_lanefit')
+        convproj_obj.params.add('bpm', tempo_table[0]*notess_sheets[arr_order[0]][1], 'float')

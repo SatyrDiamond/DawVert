@@ -8,44 +8,46 @@ import math
 import base64
 from functions import data_bytes
 from functions import data_values
-from functions import plugins
-from functions import plugin_vst2
 
 def wrapper_addchunk(chunkid, chunkdata):
     return chunkid.to_bytes(4, "little") + len(chunkdata).to_bytes(4, "little") + b'\x00\x00\x00\x00' + chunkdata
 
-def setparams(cvpj_plugdata, datadef, dataset):
+def setparams(convproj_obj, plugin_obj, datadef, dataset):
     fl_plugin, fl_pluginparams = None, None
-    plug_type = cvpj_plugdata.type_get()
+    plug_type = plugin_obj.type_get()
 
-    if plug_type[0] == 'native-flstudio':
+    if plugin_obj.check_wildmatch('native-flstudio', None):
         datadef_struct = dataset.object_var_get('datadef_struct', 'plugin', plug_type[1])
         if datadef_struct[0]:
-            dictdata = cvpj_plugdata.param_dict_dataset_set(dataset, 'plugin', plug_type[1])
+            dictdata = plugin_obj.param_dict_dataset_set(dataset, 'plugin', plug_type[1])
             fl_plugin = plug_type[1]
             datadef.create(datadef_struct[1], dictdata)
             fl_pluginparams = datadef.bytestream.getvalue()
+        #else:
+        #    fl_pluginparams = plugin_obj.rawdata_get('fl')
 
-    if plug_type[0] == 'soundfont2':
+    if plugin_obj.check_wildmatch('soundfont2', None):
         fl_plugin = 'fruity soundfont player'
 
-        v_predelay, v_attack, v_hold, v_decay, v_sustain, v_release, v_amount = cvpj_plugdata.asdr_env_get('vol')
-        p_predelay, p_attack, p_shape, p_speed_type, p_speed_time, p_amount = cvpj_plugdata.lfo_get('pitch')
-        sf2_file = cvpj_plugdata.dataval_get('file', '')
-        sf2_bank = cvpj_plugdata.dataval_get('bank', 0)
-        sf2_patch = cvpj_plugdata.dataval_get('patch', 0)
+        asdr_vol = plugin_obj.env_asdr_get('vol')
+        lfo_pitch = plugin_obj.lfo_get('pitch')
 
-        if p_speed_type == 'seconds':
-            flsf_lfo_predelay = int(p_predelay*256) if p_predelay != 0 else -1
-            flsf_lfo_amount = int(p_amount*128) if p_amount != 0 else -1
-            flsf_lfo_speed = int(6/p_speed_time)
+        ref_found, fileref_obj = plugin_obj.get_fileref('file', convproj_obj)
+        sf2_file = fileref_obj.get_path('win', True) if ref_found else ''
+        sf2_bank = plugin_obj.datavals.get('bank', 0)
+        sf2_patch = plugin_obj.datavals.get('patch', 0)
+
+        if lfo_pitch.speed_type == 'seconds':
+            flsf_lfo_predelay = int(lfo_pitch.predelay*256) if lfo_pitch.predelay != 0 else -1
+            flsf_lfo_amount = int(lfo_pitch.amount*128) if lfo_pitch.amount != 0 else -1
+            flsf_lfo_speed = int(6/lfo_pitch.speed_time)
         else:
             flsf_lfo_predelay = -1
             flsf_lfo_amount = -1
             flsf_lfo_speed = -1
 
-        if v_amount == 0: flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R = -1, -1, -1, -1
-        else: flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R = int(v_attack/1024), int(v_decay/1024), int(v_sustain/127), int(v_release/1024)
+        if asdr_vol.amount == 0: flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R = -1, -1, -1, -1
+        else: flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R = int(asdr_vol.attack/1024), int(asdr_vol.decay/1024), int(asdr_vol.sustain/127), int(asdr_vol.release/1024)
 
         fl_pluginparams = b''
         fl_pluginparams += struct.pack('iiiiii', *(2, sf2_patch+1, sf2_bank, 128, 128, 0) )
@@ -55,17 +57,18 @@ def setparams(cvpj_plugdata, datadef, dataset):
         fl_pluginparams += sf2_file.encode('utf-8')
         fl_pluginparams += b'\xff\xff\xff\xff\x00\xff\xff\xff\xff\x00\x00'
 
-    if plug_type[0] == 'vst2':
-        vst_chunk = cvpj_plugdata.rawdata_get()
-        vst_programs = cvpj_plugdata.dataval_get('programs', '')
-        vst_numparams = cvpj_plugdata.dataval_get('numparams', 0)
-        vst_current_program = cvpj_plugdata.dataval_get('current_program', 0)
-        vst_datatype = cvpj_plugdata.dataval_get('datatype', 'chunk')
-        vst_fourid = cvpj_plugdata.dataval_get('fourid', None)
-        vst_name = cvpj_plugdata.dataval_get('name', None)
-        vst_path = cvpj_plugdata.dataval_get('path', None)
+    if plugin_obj.check_wildmatch('vst2', None):
+        vst_programs = plugin_obj.datavals.get('programs', '')
+        vst_numparams = plugin_obj.datavals.get('numparams', 0)
+        vst_current_program = plugin_obj.datavals.get('current_program', 0)
+        vst_datatype = plugin_obj.datavals.get('datatype', 'chunk')
+        vst_fourid = plugin_obj.datavals.get('fourid', None)
+        vst_name = plugin_obj.datavals.get('name', None)
 
-        vstdata_bytes = cvpj_plugdata.rawdata_get()
+        ref_found, fileref_obj = plugin_obj.get_fileref('file', convproj_obj)
+        vst_path = fileref_obj.get_path('win', True) if ref_found else None
+
+        vstdata_bytes = plugin_obj.rawdata_get('chunk')
 
         if vst_datatype == 'chunk':
             wrapper_state = b'\xf7\xff\xff\xff\r\xfe\xff\xff\xff' + len(vstdata_bytes).to_bytes(4, "little") + b'\x00\x00\x00\x00' + vst_current_program.to_bytes(4, "little") + vstdata_bytes
@@ -96,7 +99,7 @@ def setparams(cvpj_plugdata, datadef, dataset):
             vst_params_data = b''
             
             for num in range(vst_numparams):
-                pval, ptype, pname = cvpj_plugdata.param_get('vst_param_'+str(num), 0)
+                pval, ptype, pname = plugin_obj.param_get('vst_param_'+str(num), 0)
                 vst_params_data += struct.pack('f', pval)
             vst_num_names = 1
             vst_names = data_bytes.makestring_fixedlen('Converted', 25)
@@ -118,11 +121,11 @@ def setparams(cvpj_plugdata, datadef, dataset):
         fl_pluginparams = wrapper_data
 
     #if plug_type[0] == 'vst3':
-    #    vst_chunk = cvpj_plugdata.rawdata_get()
-    #    vst_id = cvpj_plugdata.dataval_get('guid', None)
-    #    vst_name = cvpj_plugdata.dataval_get('name', None)
-    #    vst_path = cvpj_plugdata.dataval_get('path', None)
-    #    vst_numparams = cvpj_plugdata.dataval_get('numparams', None)
+    #    vst_chunk = plugin_obj.rawdata_get()
+    #    vst_id = plugin_obj.datavals.get('guid', None)
+    #    vst_name = plugin_obj.datavals.get('name', None)
+    #    vst_path = plugin_obj.datavals.get('path', None)
+    #    vst_numparams = plugin_obj.datavals.get('numparams', None)
 
     #    if vst_numparams != None:
     #        wrapper_state = b'\x01\x00\x00\x00\x01\x00\x00\x00@\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'

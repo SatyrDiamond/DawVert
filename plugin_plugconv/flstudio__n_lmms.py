@@ -3,7 +3,6 @@
 
 import plugin_plugconv
 
-import struct
 import os
 import math
 
@@ -11,33 +10,31 @@ class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['native-lmms', None, 'lmms'], ['native-flstudio', None, 'flp'], True, False
-    def convert(self, cvpj_l, pluginid, cvpj_plugindata, extra_json):
-        plugintype = cvpj_plugindata.type_get()
-
-        if plugintype[1] == 'stereomatrix':  
+    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
+        
+        if plugin_obj.plugin_subtype == 'stereomatrix':  
             print('[plug-conv] LMMS to FL Studio: Stereo Matrix > Fruity Stereo Shaper:',pluginid)
 
-            fl_r_l = cvpj_plugindata.param_get('r-l', 0)[0]*12800
-            fl_l_l = cvpj_plugindata.param_get('l-l', 0)[0]*12800
-            fl_r_r = cvpj_plugindata.param_get('r-r', 0)[0]*12800
-            fl_l_r = cvpj_plugindata.param_get('l-r', 0)[0]*12800
-
-            cvpj_plugindata.replace('native-flstudio', 'fruity stereo shaper')
-            cvpj_plugindata.param_add('r2l', fl_r_l, 'int', "")
-            cvpj_plugindata.param_add('l2l', fl_l_l, 'int', "")
-            cvpj_plugindata.param_add('r2r', fl_r_r, 'int', "")
-            cvpj_plugindata.param_add('l2r', fl_l_r, 'int', "")
-            cvpj_plugindata.param_add('delay', 0, 'int', "")
-            cvpj_plugindata.param_add('dephase', 0, 'int', "")
-            cvpj_plugindata.param_add('iodiff', 0, 'int', "")
-            cvpj_plugindata.param_add('prepost', 0, 'int', "")
+            fl_r_l = plugin_obj.params.get('r-l', 0).value*12800
+            fl_l_l = plugin_obj.params.get('l-l', 0).value*12800
+            fl_r_r = plugin_obj.params.get('r-r', 0).value*12800
+            fl_l_r = plugin_obj.params.get('l-r', 0).value*12800
+            plugin_obj.replace('native-flstudio', 'fruity stereo shaper')
+            plugin_obj.params.add('r2l', fl_r_l, 'int')
+            plugin_obj.params.add('l2l', fl_l_l, 'int')
+            plugin_obj.params.add('r2r', fl_r_r, 'int')
+            plugin_obj.params.add('l2r', fl_l_r, 'int')
+            plugin_obj.params.add('delay', 0, 'int')
+            plugin_obj.params.add('dephase', 0, 'int')
+            plugin_obj.params.add('iodiff', 0, 'int')
+            plugin_obj.params.add('prepost', 0, 'int')
             return 0
 
-        if plugintype[1] == 'spectrumanalyzer':  
+        if plugin_obj.plugin_subtype == 'spectrumanalyzer':  
             print('[plug-conv] LMMS to FL Studio: Spectrum Analyzer > Fruity Spectroman:',pluginid)
-            cvpj_plugindata.replace('native-flstudio', 'fruity spectroman')
-            cvpj_plugindata.param_add('amp', 128, 'int', "")
-            cvpj_plugindata.param_add('scale', 128, 'int', "")
+            plugin_obj.replace('native-flstudio', 'fruity spectroman')
+            plugin_obj.params.add('amp', 128, 'int', "")
+            plugin_obj.params.add('scale', 128, 'int', "")
             return 0
 
         return 2

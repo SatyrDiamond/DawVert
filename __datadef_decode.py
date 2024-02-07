@@ -1,6 +1,6 @@
 import argparse
 import json
-from functions import data_datadef
+from objects import dv_datadef
 import sys
 sys.path.append('../')
 
@@ -23,7 +23,7 @@ if argsd['f'] != None:
 if argsd['s'] != None: 
     structname = argsd['s']
 
-datadef = data_datadef.datadef(df_file)
+datadef = dv_datadef.datadef(df_file)
 
 datadef.parse(structname,databytes)
 

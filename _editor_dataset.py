@@ -5,7 +5,7 @@ from typing import List
 import argparse
 import json
 from functions import xtramath
-from functions import data_dataset
+from objects import dv_dataset
 import sys
 
 table_flags = (
@@ -800,7 +800,7 @@ def main():
     in_file = args.inp
     print(in_file)
 
-    main_dataset = data_dataset.dataset(in_file)
+    main_dataset = dv_dataset.dataset(in_file)
 
     if ____debug____:
         main_dataset.category_add('test1')

@@ -1,5 +1,5 @@
 import json
-from functions import data_dataset
+from objects import dv_dataset
 from functions import colors
 
 onlineseq_settings_str = open('settings.php', 'r') # https://onlinesequencer.net/ajax/settings.php
@@ -12,7 +12,7 @@ os_instruments = onlineseq_settings_dict['instruments']
 os_instrumentColors = onlineseq_settings_dict['instrumentColors']
 os_instrumentCategories = onlineseq_settings_dict['instrumentCategories']
 
-os_dataset = data_dataset.dataset('./data_dset/onlineseq.dset')
+os_dataset = dv_dataset.dataset('./data_dset/onlineseq.dset')
 
 os_dataset.category_add('inst')
 

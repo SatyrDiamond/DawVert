@@ -1,14 +1,7 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
-from functions import note_data
-from functions import placement_data
-from functions import plugins
-from functions import song
-from functions import colors
-from functions import data_dataset
-from functions_tracks import tracks_r
+from objects import dv_dataset
 import plugin_input
 import io
 import struct
@@ -36,48 +29,22 @@ class input_petaporon(plugin_input.base):
         return {
         'track_nopl': True
         }
-    def parse(self, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, extra_param):
         bytestream = open(input_file, 'r')
         sndstat_data = json.load(bytestream)
-        cvpj_l = {}
+
+        convproj_obj.type = 'r'
+        convproj_obj.set_timings(4, True)
+
         peta_notedata = sndstat_data['n'].encode('ascii')
         peta_noteints = struct.unpack("B"*len(peta_notedata), peta_notedata)
         peta_instset = sndstat_data['i']
         bio_peta_notebytes = data_bytes.to_bytesio(bytes(peta_noteints))
 
-        cvpj_notelists = {}
+        peta_notelists = {}
 
-        dataset = data_dataset.dataset('./data_dset/petaporon.dset')
+        dataset = dv_dataset.dataset('./data_dset/petaporon.dset')
         colordata = colors.colorset(dataset.colorset_e_list('inst', 'main'))
-
-        for instnum in range(10):
-            cvpj_notelists[instnum] = []
-            pluginid = plugins.get_id()
-            instid = 'petaporon'+str(instnum)
-
-            tracks_r.track_create(cvpj_l, instid, 'instrument')
-            tracks_r.track_visual(cvpj_l, instid, name='Inst #'+str(instnum+1), color=colordata.getcolornum(instnum))
-            tracks_r.track_inst_pluginid(cvpj_l, instid, pluginid)
-
-            inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
-            inst_plugindata.osc_num_oscs(1)
-            if instnum in [0,1,2,3,4,7]: inst_plugindata.osc_opparam_set(0, 'shape', 'square')
-            if instnum in [5,6]: inst_plugindata.osc_opparam_set(0, 'shape', 'triangle')
-            if instnum in [8]: inst_plugindata.osc_opparam_set(0, 'shape', 'noise')
-            if instnum in [0,1]: inst_plugindata.osc_opparam_set(0, 'pulse_width', 1/8)
-            if instnum in [2,7]: inst_plugindata.osc_opparam_set(0, 'pulse_width', 1/4)
-            if instnum in [3,4,5,6]: inst_plugindata.osc_opparam_set(0, 'pulse_width', 1/2)
-
-            if instnum == 0: inst_plugindata.asdr_env_add('vol', 0, 0, 0, 0.1, 0, 0, 1)
-            if instnum == 1: inst_plugindata.asdr_env_add('vol', 0, 0, 0, 0.1, 0.7, 0, 1)
-            if instnum == 2: inst_plugindata.asdr_env_add('vol', 0, 0, 0, 0.25, 0, 0, 1)
-            if instnum == 3: inst_plugindata.asdr_env_add('vol', 0, 0, 0, 0.2, 0, 0, 1)
-            if instnum == 4: inst_plugindata.asdr_env_add('vol', 0, 0, 0, 0, 1, 0, 1)
-            if instnum == 5: inst_plugindata.asdr_env_add('vol', 0, 0, 0, 0, 1, 0, 1)
-            if instnum == 6: inst_plugindata.asdr_env_add('vol', 0, 0, 0, 0.2, 0, 0, 1)
-            if instnum == 7: inst_plugindata.asdr_env_add('vol', 0, 0.3, 0, 0.3, 0.2, 0.3, 1)
-            if instnum == 8: inst_plugindata.asdr_env_add('vol', 0, 0, 0, 0.4, 0, 0, 1)
-            inst_plugindata.to_cvpj(cvpj_l, pluginid)
 
         for _ in range(len(peta_noteints)//5):
             partdata = bio_peta_notebytes.read(5)
@@ -87,14 +54,41 @@ class input_petaporon(plugin_input.base):
             peta_poshigh = getval(partdata[3]-35)
             peta_poslow = getval(partdata[4]-35)
             peta_pos = peta_poslow+(peta_poshigh*94)
-            cvpj_notelists[peta_inst].append(note_data.rx_makenote(peta_pos, peta_len, peta_note-12, None, None))
+            peta_notelists[peta_inst].append([peta_pos, peta_len, peta_note-12])
 
         for instnum in range(10):
-            tracks_r.add_pl(cvpj_l, 'petaporon'+str(instnum), 'notes', placement_data.nl2pl(cvpj_notelists[instnum]))
+            peta_notelists[instnum] = dv_notelist.cvpj_notelist(4)
+            pluginid = plugins.get_id()
+            instid = 'petaporon'+str(instnum)
 
-        cvpj_l['do_singlenotelistcut'] = True
+            track_obj = convproj_obj.add_track(instid, 'instrument', 0, False)
+            track_obj.visual.name = 'Inst #'+str(instnum+1)
+            track_obj.visual.color = colordata.getcolornum(instnum)
+            plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+            track_obj.inst_pluginid = pluginid
 
-        song.add_timesig(cvpj_l, sndstat_data['c'], 4)
-        song.add_param(cvpj_l, 'bpm', sndstat_data['t'])
+            osc_data = plugin_obj.osc_add()
+            
+            if instnum in [0,1,2,3,4,7]: osc_data.shape = 'square'
+            if instnum in [5,6]: osc_data.shape = 'triangle'
+            if instnum in [8]: osc_data.shape = 'noise'
+            if instnum in [0,1]: osc_data.params['pulse_width'] = 1/8
+            if instnum in [2,7]: osc_data.params['pulse_width'] = 1/4
+            if instnum in [3,4,5,6]: osc_data.params['pulse_width'] = 1/2
 
-        return json.dumps(cvpj_l)
+            if instnum == 0: plugin_obj.asdr_env_add('vol', 0, 0, 0, 0.1, 0, 0, 1)
+            if instnum == 1: plugin_obj.asdr_env_add('vol', 0, 0, 0, 0.1, 0.7, 0, 1)
+            if instnum == 2: plugin_obj.asdr_env_add('vol', 0, 0, 0, 0.25, 0, 0, 1)
+            if instnum == 3: plugin_obj.asdr_env_add('vol', 0, 0, 0, 0.2, 0, 0, 1)
+            if instnum == 4: plugin_obj.asdr_env_add('vol', 0, 0, 0, 0, 1, 0, 1)
+            if instnum == 5: plugin_obj.asdr_env_add('vol', 0, 0, 0, 0, 1, 0, 1)
+            if instnum == 6: plugin_obj.asdr_env_add('vol', 0, 0, 0, 0.2, 0, 0, 1)
+            if instnum == 7: plugin_obj.asdr_env_add('vol', 0, 0.3, 0, 0.3, 0.2, 0.3, 1)
+            if instnum == 8: plugin_obj.asdr_env_add('vol', 0, 0, 0, 0.4, 0, 0, 1)
+
+            placement_obj = track_obj.placements.add_notes()
+            for n in peta_notelists[instnum]: placement_obj.notelist.add_r(n[0], n[1], n[2], 1, {})
+
+        convproj_obj.do_actions.append('do_singlenotelistcut')
+        convproj_obj.params.add('bpm', sndstat_data['t'], 'float')
+        convproj_obj.timesig[0] = sndstat_data['c']

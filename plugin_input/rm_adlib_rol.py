@@ -1,17 +1,10 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import note_data
-from functions import placement_data
-from functions import data_dataset
-from functions import auto
+from functions_plugin_cvpj import params_fm
+from objects import dv_dataset
 from functions import data_bytes
 from functions import data_values
-from functions import plugins
-from functions import song
-from functions_tracks import tracks_rm
-from functions_tracks import auto_nopl
-from functions_plugdata import plugin_fm
 
 import plugin_input
 import json
@@ -51,7 +44,7 @@ def load_bank(filename):
 
 # --------------------------------------- Track Data ----------------------------------------
 
-def parsetrack_tempo(file_stream, tickBeat):
+def parsetrack_tempo(file_stream):
     track_name = data_bytes.readstring_fixedlen(file_stream, 15, 'ascii')
     track_tempo = struct.unpack("f", file_stream.read(4))[0]
     track_num_events = int.from_bytes(file_stream.read(2), 'little')
@@ -96,7 +89,7 @@ def parsetrack_float(file_stream, i_mul, i_add):
         track_rol_events.append(track_rol_part)
     return track_name, track_rol_events
 
-def parsetrack(file_stream, tracknum, notelen):
+def parsetrack(convproj_obj, file_stream, tracknum):
     rol_tr_voice = parsetrack_voice(file_stream)
     rol_tr_timbre = parsetrack_timbre(file_stream)
     rol_tr_volume = parsetrack_float(file_stream, 1, 0)
@@ -108,24 +101,21 @@ def parsetrack(file_stream, tracknum, notelen):
     for timbrepos in rol_tr_timbre[1]:
         timbrepoints.append(timbrepos)
 
-    cvpj_notelist = []
+    print('[input-adlib_rol] Track: "'+rol_tr_voice[0]+'"')
+    track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 0, False)
+    track_obj.visual.name = rol_tr_voice[0]
+    placement_obj = track_obj.placements.add_notes()
+
     curtrackpos = 0
     for rol_notedata in rol_tr_voice[1]:
         if rol_notedata[0] >= 12:
             cvpj_noteinst = rol_tr_timbre[1][data_values.closest(timbrepoints, curtrackpos)]
-            cvpj_notelist.append(note_data.mx_makenote(cvpj_noteinst.upper(), curtrackpos*notelen, rol_notedata[1]*notelen, rol_notedata[0]-48, None, None))
+            placement_obj.notelist.add_m(cvpj_noteinst.upper(), curtrackpos, rol_notedata[1], rol_notedata[0]-48, 1, {})
         curtrackpos += rol_notedata[1]
 
-    print('[input-adlib_rol] Track: "'+rol_tr_voice[0]+'"')
-
-    if len(rol_tr_volume) > 1: auto_nopl.twopoints(['track', tracknum+1, 'vol'], 'float', rol_tr_volume[1], notelen, 'instant')
-    if len(rol_tr_pitch[1]) > 1: auto_nopl.twopoints(['track', tracknum+1, 'pitch'], 'float', rol_tr_pitch[1], notelen, 'instant')
+    for a in rol_tr_volume[1]: convproj_obj.add_autotick(['track', cvpj_trackid, 'vol'], a[0], a[1])
+    for a in rol_tr_pitch[1]: convproj_obj.add_autotick(['track', cvpj_trackid, 'pitch'], a[0], a[1])
     
-    placementdata = placement_data.nl2pl(cvpj_notelist)
-    tracks_rm.track_create(cvpj_l, cvpj_trackid, 'instruments')
-    tracks_rm.track_visual(cvpj_l, cvpj_trackid, name=rol_tr_voice[0])
-    tracks_rm.add_pl(cvpj_l, cvpj_trackid, 'notes', placementdata)
-
 # --------------------------------------- Plugin ----------------------------------------
 
 class input_adlib_rol(plugin_input.base):
@@ -146,12 +136,12 @@ class input_adlib_rol(plugin_input.base):
         bytesdata = bytestream.read(40)
         if bytesdata == b'\\roll\\default\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00': return True
         else: return False
-    def parse(self, input_file, extra_param):
-        global cvpj_l
+    def parse(self, convproj_obj, input_file, extra_param):
+        convproj_obj.type = 'rm'
+
         song_file = open(input_file, 'rb')
-        cvpj_l = {}
-        dataset = data_dataset.dataset('./data_dset/adlib_rol.dset')
-        dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
+        dataset = dv_dataset.dataset('./data_dset/adlib_rol.dset')
+        dataset_midi = dv_dataset.dataset('./data_dset/midi.dset')
 
         adlib_bnk = None
         if 'extrafile' in extra_param:
@@ -160,16 +150,18 @@ class input_adlib_rol(plugin_input.base):
             for instname in adlib_bnk[0]:
                 instname_upper = instname.upper()
                 adlibrol_instname, _ = dataset.object_get_name_color('inst', instname_upper)
-                tracks_rm.inst_create(cvpj_l, instname_upper)
-                tracks_rm.inst_visual(cvpj_l, instname_upper, name=adlibrol_instname)
-                tracks_rm.inst_pluginid(cvpj_l, instname_upper, instname_upper)
+
+                inst_obj = convproj_obj.add_instrument(instname_upper)
+                inst_obj.pluginid = instname_upper
+                inst_obj.visual.name = adlibrol_instname
+
                 instdatanum = adlib_bnk[0][instname][0]
                 if instdatanum <= numinst:
                     opl2data = adlib_bnk[1][adlib_bnk[0][instname][0]]
 
-                    fmdata = plugin_fm.fm_data('opl2')
+                    fmdata = params_fm.fm_data('opl2')
 
-                    tracks_rm.inst_dataval_add(cvpj_l, instname_upper, 'instdata', 'middlenote', 0)
+                    inst_obj.datavals.add('middlenote', 0)
                     if opl2data[0][0] == 1: fmdata.set_param('perctype', opl2data[0][1]-6)
                     else:
                         fmdata.set_op_param(0, 'sustained', 1)
@@ -203,13 +195,13 @@ class input_adlib_rol(plugin_input.base):
                     fmdata.set_op_param(1, 'ksr', opl2data[2][11])
                     fmdata.set_op_param(1, 'waveform', opl2data[3][1])
 
-                    fmdata.to_cvpj(cvpj_l, instname_upper)
+                    fmdata.to_cvpj(convproj_obj, instname_upper)
                     
         else:
             miditolist = dataset.midito_list('inst')
             if miditolist:
                 for instid in miditolist:
-                    tracks_rm.import_dset(cvpj_l, instid, instid, dataset, dataset_midi, None, None)
+                    convproj_obj.add_instrument_from_dset(instid, instid, dataset, dataset_midi, instid, None, None)
 
         rol_header_majorVersion = int.from_bytes(song_file.read(2), 'little')
         print("[input-adlib_rol] majorVersion: " + str(rol_header_majorVersion))
@@ -221,7 +213,8 @@ class input_adlib_rol(plugin_input.base):
 
         rol_header_tickBeat = int.from_bytes(song_file.read(2), 'little')
         print("[input-adlib_rol] tickBeat: " + str(rol_header_tickBeat))
-        
+        convproj_obj.set_timings(rol_header_tickBeat, False)
+
         rol_header_beatMeasure = int.from_bytes(song_file.read(2), 'little')
         print("[input-adlib_rol] beatMeasure: " + str(rol_header_beatMeasure))
         
@@ -245,16 +238,12 @@ class input_adlib_rol(plugin_input.base):
         print("[input-adlib_rol] cPitchEvents: " + str(rol_header_cPitchEvents))
         print("[input-adlib_rol] cTempoEvents: " + str(rol_header_cTempoEvents))
         song_file.read(38) #Padding
-        notelen = (2/rol_header_tickBeat)*2
-        t_tempo_data = parsetrack_tempo(song_file, notelen)
+        t_tempo_data = parsetrack_tempo(song_file)
 
-        auto_nopl.twopoints(['main', 'bpm'], 'float', t_tempo_data[2], notelen, 'instant')
-        for tracknum in range(10): parsetrack(song_file, tracknum, (2/rol_header_tickBeat)*2)
-        auto_nopl.to_cvpj(cvpj_l)
+        for a in t_tempo_data[2]: convproj_obj.add_autotick(['track', 'bpm'], a[0], a[1])
+        for tracknum in range(10): parsetrack(convproj_obj, song_file, tracknum)
         
-        cvpj_l['do_addloop'] = True
-        cvpj_l['do_singlenotelistcut'] = True
-        song.add_timesig(cvpj_l, rol_header_beatMeasure, 4)
-        song.add_param(cvpj_l, 'bpm', t_tempo_data[1])
-        return json.dumps(cvpj_l)
-
+        convproj_obj.do_actions.append('do_addloop')
+        convproj_obj.do_actions.append('do_singlenotelistcut')
+        convproj_obj.timesig = [rol_header_beatMeasure, 4]
+        convproj_obj.params.add('bpm', t_tempo_data[1], 'float')

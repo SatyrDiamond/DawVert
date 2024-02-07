@@ -6,30 +6,22 @@ import json
 import struct
 import blackboxprotobuf
 from functions import data_values
-from functions import params
-from functions import idvals
-from functions import plugins
-from functions_tracks import tracks_r
+from objects import idvals
 
 def float2int(value): return struct.unpack("<I", struct.pack("<f", value))[0]
 
-def create_markers(cvpj_auto, inst_id, instparam, mul):
-    if len(cvpj_auto['placements']) != 0:
-        mainauto = cvpj_auto['placements'][0]
-        basepos = mainauto['position']
-        points = mainauto['points']
-
-        for point in points:
-            markerdata = {}
-            posdata = point['position']+basepos
-            markerdata[1] = float2int(point['position']+basepos)
-            markerdata[2] = instparam
-            markerdata[3] = inst_id
-            markerdata[4] = float2int(point['value']*mul)
-            pointtype = data_values.get_value(point, 'type', 'normal')
-            if pointtype == 'normal': markerdata[5] = 1
-            if posdata not in glob_markerdata: glob_markerdata[posdata] = []
-            glob_markerdata[posdata].append(markerdata)
+def create_markers(autopoints_obj, inst_id, instparam, mul):
+    for autopoint_obj in autopoints_obj.iter():
+        markerdata = {}
+        posdata = autopoint_obj.pos
+        markerdata[1] = float2int(posdata)
+        markerdata[2] = instparam
+        markerdata[3] = inst_id
+        markerdata[4] = float2int(autopoint_obj.value*mul)
+        pointtype = autopoint_obj.value
+        if autopoint_obj.type == 'normal': markerdata[5] = 1
+        if posdata not in glob_markerdata: glob_markerdata[posdata] = []
+        glob_markerdata[posdata].append(markerdata)
 
 class output_onlineseq(plugin_output.base):
     def __init__(self): pass
@@ -46,111 +38,90 @@ class output_onlineseq(plugin_output.base):
     def getsupportedplugformats(self): return []
     def getsupportedplugins(self): return ['midi']
     def getfileextension(self): return 'sequence'
-    def parse(self, convproj_json, output_file):
+    def parse(self, convproj_obj, output_file):
         global glob_markerdata
-        cvpj_l = json.loads(convproj_json)
 
-        tempo = int(params.get(cvpj_l, [], 'bpm', 120)[0])
+        convproj_obj.change_timings(4, True)
+
+        tempo = convproj_obj.params.get('bpm', 120).value
 
         onlineseqdata = {}
-        onlineseqdata[1] = {1: tempo, 3: []}
+        onlineseqdata[1] = {1: int(tempo), 3: []}
         onlineseqdata[2] = []
         onlineseqdata[3] = []
 
-        idvals_onlineseq_inst = idvals.parse_idvalscsv('data_idvals/onlineseq_map_midi.csv')
-
+        idvals_onlineseq_inst = idvals.idvals('data_idvals/onlineseq_map_midi.csv')
         repeatedolinst = {}
-
         cvpjid_onlineseqid = {}
-
         glob_markerdata = {}
 
-        for cvpj_trackid, cvpj_trackdata, track_placements in tracks_r.iter(cvpj_l):
-            #print('[output-midi] Trk# | Ch# | Bnk | Prog | Key | Name')
-            if 'notes' in track_placements:
-                onlineseqinst = 43
-                trackname = data_values.get_value(cvpj_trackdata, 'name', 'noname')
-                trackvol = params.get(cvpj_trackdata, [], 'vol', 1.0)[0]
+        for trackid, track_obj in convproj_obj.iter_track():
+            onlineseqinst = 43
+            trackvol = track_obj.params.get('vol', 1).value
+            midiinst = None
 
-                midiinst = None
+            plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+            if plugin_found: 
 
-                if 'instdata' in cvpj_trackdata:
-                    cvpj_instdata = cvpj_trackdata['instdata']
+                if plugin_obj.check_wildmatch('midi', None):
+                    midi_bank = plugin_obj.datavals.get('bank', 0)
+                    midi_inst = plugin_obj.datavals.get('inst', 0)
+                    midiinst = midi_inst if midi_bank != 128 else -1
 
-                    if 'pluginid' in cvpj_instdata:
-                        cvpj_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, cvpj_instdata['pluginid'])
-                        plugintype = cvpj_plugindata.type_get()
+                if plugin_obj.check_wildmatch('soundfont2', None):
+                    midi_bank = plugin_obj.datavals.get('bank', 0)
+                    midi_inst = plugin_obj.datavals.get('patch', 0)
+                    midiinst = midi_inst if midi_bank != 128 else -1
 
-                        if plugintype[0] == 'midi':
-                            midi_bank = cvpj_plugindata.dataval_get('bank', 0)
-                            midi_inst = cvpj_plugindata.dataval_get('inst', 0)
-                            if midi_bank != 128: midiinst = midi_inst
-                            else: midiinst = -1
-                        if plugintype[0] == 'soundfont2':
-                            midi_bank = cvpj_plugindata.dataval_get('bank', 0)
-                            midi_inst = cvpj_plugindata.dataval_get('patch', 0)
-                            if midi_bank != 128: midiinst = midi_inst
-                            else: midiinst = -1
-                        if plugintype == ['universal', 'synth-osc']:
-                            if 'osc' in cvpj_plugindata.cvpjdata:
-                                oscops = cvpj_plugindata.cvpjdata['osc']
-                                if len(oscops) == 1:
-                                    s_osc = oscops[0]
-                                    osc_shape = s_osc['shape'] if 'shape' in s_osc else 'square'
-                                    if osc_shape == 'sine': onlineseqinst = 13
-                                    if osc_shape == 'square': onlineseqinst = 14
-                                    if osc_shape == 'triangle': onlineseqinst = 16
-                                    if osc_shape == 'saw': onlineseqinst = 15
+                if plugin_obj.check_wildmatch('synth-osc', None):
+                    if len(plugin_obj.oscs) == 1:
+                        s_osc = plugin_obj.oscs[0]
+                        if s_osc.shape == 'sine': onlineseqinst = 13
+                        if s_osc.shape == 'square': onlineseqinst = 14
+                        if s_osc.shape == 'triangle': onlineseqinst = 16
+                        if s_osc.shape == 'saw': onlineseqinst = 15
                 
-                t_instid = idvals.get_idval(idvals_onlineseq_inst, str(midiinst), 'outid')
-
-                if t_instid not in ['null', None]: 
-                    onlineseqinst = int(t_instid)
-                #print(str(onlineseqinst).rjust(10), trackname)
+                t_instid = idvals_onlineseq_inst.get_idval(str(midiinst), 'outid')
+                if t_instid not in ['null', None]: onlineseqinst = int(t_instid)
 
                 if onlineseqinst not in repeatedolinst: repeatedolinst[onlineseqinst] = 0
                 else: repeatedolinst[onlineseqinst] += 1 
 
-                track_pls = track_placements['notes']
-
                 onlineseqnum = onlineseqinst + repeatedolinst[onlineseqinst]*10000
 
-                onlseqinst = {1: onlineseqnum, 2: {1: float2int(trackvol), 10: 1, 15: trackname}}
+                onlseqinst = {}
+                onlseqinst[1] = onlineseqnum
+                onlseqinst[2] = {1: float2int(trackvol), 10: 1}
+                if track_obj.visual.name: onlseqinst[2][15] = track_obj.visual.name
                 onlineseqdata[1][3].append(onlseqinst)
 
-                for track_pl in track_pls:
-                    basepos = track_pl['position']
-                    notelist = track_pl['notelist']
-                    for cvpj_note in notelist:
-                        onlineseq_note = {
-                            "1": int(cvpj_note['key']+60),
-                            "2": float2int(cvpj_note['position']+basepos),
-                            "3": float2int(cvpj_note['duration']),
-                            "4": onlineseqnum,
-                            "5": float2int(data_values.get_value(cvpj_note, 'vol', 1.0))
-                            }
-                        onlineseqdata[2].append(onlineseq_note)
+                for notespl_obj in track_obj.placements.iter_notes():
+                    basepos = notespl_obj.position
 
-                cvpjid_onlineseqid[onlineseqnum] = onlineseqnum
+                    notespl_obj.notelist.sort()
+                    for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+                        for t_key in t_keys:
+                            onlineseq_note = {
+                                "1": int(t_key+60),
+                                "2": float2int(t_pos+basepos),
+                                "3": float2int(t_dur),
+                                "4": onlineseqnum,
+                                "5": float2int(t_vol)
+                                }
+                            onlineseqdata[2].append(onlineseq_note)
 
-        if 'automation' in cvpj_l:
-            cvpj_autodata = cvpj_l['automation']
-            for autogroup in cvpj_autodata:
-                autogroupdata = cvpj_autodata[autogroup]
-                for autoname in autogroupdata:
-                    s_autodata = autogroupdata[autoname]
-                    if [autogroup, autoname] == ['main', 'bpm']: create_markers(s_autodata, 0, 0, 1)
-                    if [autogroup, autoname] == ['master', 'vol']: create_markers(s_autodata, 0, 8, 1)
-                    if autogroup == 'track': 
-                        for trackautodata in s_autodata:
-                            s_trackautodata = s_autodata[trackautodata]
-                            if autoname in cvpjid_onlineseqid:
-                                onlineseqid = cvpjid_onlineseqid[autoname]
-                                if trackautodata == 'vol': create_markers(s_trackautodata, onlineseqid, 1, 1)
-                                if trackautodata == 'pan': create_markers(s_trackautodata, onlineseqid, 2, 1)
-                                if trackautodata == 'pitch': create_markers(s_trackautodata, onlineseqid, 11, 100)
+                cvpjid_onlineseqid[trackid] = onlineseqnum
 
         protobuf_typedef = {'1': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '3': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '2': {'type': 'message', 'message_typedef': {'1': {'type': 'fixed32', 'name': ''}, '10': {'type': 'int', 'name': ''}, '15': {'type': 'bytes', 'name': ''}}, 'name': ''}}, 'name': ''}}, 'name': ''}, '2': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '3': {'type': 'fixed32', 'name': ''}, '4': {'type': 'int', 'name': ''}, '5': {'type': 'fixed32', 'name': ''}, '2': {'type': 'fixed32', 'name': ''}}, 'name': ''}, '3': {'type': 'message', 'message_typedef': {'1': {'type': 'fixed32', 'name': ''}, '4': {'type': 'fixed32', 'name': ''}, '5': {'type': 'int', 'name': ''}, '2': {'type': 'int', 'name': ''}, '3': {'type': 'int', 'name': ''}}, 'name': ''}}
+
+        for autopath, autopoints_obj in convproj_obj.iter_autopoints():
+            if autopath == ['main', 'bpm']: create_markers(autopoints_obj, 0, 0, 1)
+            if autopath == ['master', 'vol']: create_markers(autopoints_obj, 0, 8, 1)
+            if autopath[0] == 'track': 
+                onlineseqid = cvpjid_onlineseqid[autopath[1]]
+                if autopath[2] == 'vol': create_markers(autopoints_obj, onlineseqid, 1, 1)
+                if autopath[2] == 'pan': create_markers(autopoints_obj, onlineseqid, 2, 1)
+                if autopath[2] == 'pitch': create_markers(autopoints_obj, onlineseqid, 11, 100)
 
         for num in sorted(glob_markerdata):
             for markdata in glob_markerdata[num]:

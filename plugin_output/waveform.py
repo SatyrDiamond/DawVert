@@ -4,35 +4,30 @@
 import plugin_output
 import json
 import lxml.etree as ET
-from functions import colors
-from functions import data_values
-from functions import note_data
-from functions import params
-from functions import plugins
 from functions import xtramath
-from functions import song
-from functions import data_dataset
-from functions_tracks import tracks_r
+from functions import colors
+from objects import dv_dataset
 import math
 
-def get_plugins(xml_tag, cvpj_fxids):
+def get_plugins(convproj_obj, xml_tag, cvpj_fxids):
     for cvpj_fxid in cvpj_fxids:
-        fx_plugindata = plugins.cvpj_plugin('cvpj', cvpj_l, cvpj_fxid)
-        plugtype = fx_plugindata.type_get()
-        fx_on, fx_wet = fx_plugindata.fxdata_get()
+        plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+        if plugin_found: 
+            fx_on, fx_wet = plugin_obj.fxdata_get()
 
-        if plugtype[0] == 'native-tracktion':
-            wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
-            wf_PLUGIN.set('type', plugtype[1])
-            wf_PLUGIN.set('presetDirty', '1')
-            wf_PLUGIN.set('enabled', str(fx_on))
+            if plugin_obj.check_wildmatch('native-tracktion', None):
+                wf_PLUGIN = ET.SubElement(xml_tag, "PLUGIN")
+                wf_PLUGIN.set('type', plugin_obj.plugin_subtype)
+                wf_PLUGIN.set('presetDirty', '1')
+                wf_PLUGIN.set('enabled', str(fx_on))
 
-            paramlist = dataset.params_list('plugin', plugtype[1])
+                paramlist = dataset.params_list('plugin', plugin_obj.plugin_subtype)
 
-            for paramid in paramlist:
-                dset_paramdata = dataset.params_i_get('plugin', plugtype[1], paramid)
-                paramdata = fx_plugindata.param_get(paramid, dset_paramdata[2])[0]
-                wf_PLUGIN.set(paramid, str(paramdata))
+                if paramlist:
+                    for paramid in paramlist:
+                        dset_paramdata = dataset.params_i_get('plugin', plugin_obj.plugin_subtype, paramid)
+                        paramdata = track_obj.params.get(paramid, dset_paramdata[2]).value
+                        wf_PLUGIN.set(paramid, str(paramdata))
 
 
 
@@ -54,23 +49,21 @@ class output_waveform_edit(plugin_output.base):
     def getsupportedplugformats(self): return []
     def getsupportedplugins(self): return ['universal:compressor', 'universal:expander']
     def getfileextension(self): return 'tracktionedit'
-    def parse(self, convproj_json, output_file):
-        global cvpj_l
+    def parse(self, convproj_obj, output_file):
         global dataset
+
+        convproj_obj.change_timings(4, True)
 
         wf_proj = ET.Element("EDIT")
         wf_proj.set('appVersion', "Waveform 11.5.18")
         wf_proj.set('modifiedBy', "DawVert")
 
-        cvpj_l = json.loads(convproj_json)
+        dataset = dv_dataset.dataset('./data_dset/waveform.dset')
 
-        dataset = data_dataset.dataset('./data_dset/waveform.dset')
-
-        wf_bpmdata = 120
         wf_numerator = 4
         wf_denominator = 4
-        wf_bpmdata = params.get(cvpj_l, [], 'bpm', 120)[0]
-        wf_numerator, wf_denominator = song.get_timesig(cvpj_l)
+        wf_bpmdata = convproj_obj.params.get('bpm', 140).value
+        wf_numerator, wf_denominator = convproj_obj.timesig
 
         tempomul = 120/wf_bpmdata
 
@@ -86,80 +79,72 @@ class output_waveform_edit(plugin_output.base):
         wf_TIMESIG.set('denominator', str(wf_denominator))
         wf_TIMESIG.set('startBeat', str(0.0))
 
-        if 'track_master' in cvpj_l:
-            cvpj_track_master = cvpj_l['track_master']
+        wf_MASTERPLUGINS = ET.SubElement(wf_proj, "MASTERPLUGINS")
+        get_plugins(convproj_obj, wf_MASTERPLUGINS, convproj_obj.track_master.fxslots_audio)
+        wf_MASTERTRACK = ET.SubElement(wf_proj, "MASTERTRACK")
+        wf_MASTERTRACK.set('id', str(wf_globalid))
+        if convproj_obj.track_master.visual.name: wf_MASTERTRACK.set('name', convproj_obj.track_master.visual.name)
+        wf_globalid =+ 1
 
-            wf_MASTERPLUGINS = ET.SubElement(wf_proj, "MASTERPLUGINS")
-            if 'chain_fx_audio' in cvpj_track_master: 
-                get_plugins(wf_MASTERPLUGINS, cvpj_track_master['chain_fx_audio'])
-
-            wf_MASTERTRACK = ET.SubElement(wf_proj, "MASTERTRACK")
-            wf_MASTERTRACK.set('id', str(wf_globalid))
-            if 'name' in cvpj_track_master: wf_MASTERTRACK.set('name', cvpj_track_master['name'])
-            wf_globalid =+ 1
-
-        for cvpj_trackid, s_trackdata, track_placements in tracks_r.iter(cvpj_l):
-
+        for trackid, track_obj in convproj_obj.iter_track():
             wf_TRACK = ET.SubElement(wf_proj, "TRACK")
             wf_TRACK.set('id', str(wf_globalid))
-            if 'name' in s_trackdata: wf_TRACK.set('name', s_trackdata['name'])
-            if 'color' in s_trackdata: wf_TRACK.set('colour', 'ff'+colors.rgb_float_to_hex(s_trackdata['color']))
+            wf_TRACK.set('name', track_obj.visual.name)
+            wf_TRACK.set('colour', 'ff'+colors.rgb_float_to_hex(track_obj.visual.color))
             
-            #cvpj_track_vol = params.get(s_trackdata, [], 'vol', 1.0)
-            #cvpj_track_pan = params.get(s_trackdata, [], 'pan', 0)
-
-            #wf_PLUGINVOLPAN = ET.SubElement(wf_TRACK, "PLUGIN")
-            #wf_PLUGINVOLPAN.set('type', 'volume')
-            #wf_PLUGINVOLPAN.set('enabled', '1')
-            #wf_PLUGINVOLPAN.set('volume', str(cvpj_track_vol))
-            #wf_PLUGINVOLPAN.set('pan', str(cvpj_track_pan))
-
             wf_INST = ET.SubElement(wf_TRACK, "PLUGIN")
             wf_INST.set('type', '4osc')
             wf_INST.set('enabled', '1')
 
-            if 'chain_fx_audio' in s_trackdata: 
-                get_plugins(wf_TRACK, s_trackdata['chain_fx_audio'])
+            get_plugins(convproj_obj, wf_TRACK, track_obj.fxslots_audio)
+
+            track_obj.placements.sort_notes()
+            for notespl_obj in track_obj.placements.iter_notes():
+
+                wf_MIDICLIP = ET.SubElement(wf_TRACK, "MIDICLIP")
+
+                offset = notespl_obj.cut_data['start'] if 'start' in notespl_obj.cut_data else 0
+                loopstart = notespl_obj.cut_data['loopstart'] if 'loopstart' in notespl_obj.cut_data else 0
+                loopend = notespl_obj.cut_data['loopend'] if 'loopend' in notespl_obj.cut_data else notespl_obj.duration
+
+                wf_MIDICLIP.set('start', str((notespl_obj.position/8)*tempomul))
+                wf_MIDICLIP.set('length', str((notespl_obj.duration/8)*tempomul))
+
+                if notespl_obj.cut_type == 'cut':
+                    wf_MIDICLIP.set('offset', str((offset/8)*tempomul))
+                elif notespl_obj.cut_type in ['loop', 'loop_off', 'loop_adv']:
+                    wf_MIDICLIP.set('offset', str((offset/8)*tempomul))
+                    wf_MIDICLIP.set('loopStartBeats', str((loopstart/4)))
+                    wf_MIDICLIP.set('loopLengthBeats', str((loopend/4)))
+
+                wf_MIDICLIP.set('name', notespl_obj.visual.name)
+                if notespl_obj.visual.color: wf_MIDICLIP.set('colour', 'ff'+colors.rgb_float_to_hex(notespl_obj.visual.color))
+                wf_MIDICLIP.set('mute', str(int(notespl_obj.muted)))
+
+                wf_SEQUENCE = ET.SubElement(wf_MIDICLIP, "SEQUENCE")
+                wf_SEQUENCE.set('ver', '1')
+                wf_SEQUENCE.set('channelNumber', '1')
+
+                notespl_obj.notelist.sort()
+                for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+                    for t_key in t_keys:
+                        wf_NOTE = ET.SubElement(wf_SEQUENCE, "NOTE")
+                        wf_NOTE.set('p', str(t_key+60))
+                        wf_NOTE.set('b', str(t_pos/4))
+                        wf_NOTE.set('l', str(t_dur/4))
+                        wf_NOTE.set('v', str(int(xtramath.clamp(t_vol*127, 0, 127))))
+
+            cvpj_track_vol = track_obj.params.get('vol', 1.0).value
+            cvpj_track_pan = track_obj.params.get('pan', 0).value
+            wf_PLUGINVOLPAN = ET.SubElement(wf_TRACK, "PLUGIN")
+            wf_PLUGINVOLPAN.set('type', 'volume')
+            wf_PLUGINVOLPAN.set('enabled', '1')
+            wf_PLUGINVOLPAN.set('volume', str(cvpj_track_vol))
+            wf_PLUGINVOLPAN.set('pan', str(cvpj_track_pan))
 
             wf_PLUGINMETER = ET.SubElement(wf_TRACK, "PLUGIN")
             wf_PLUGINMETER.set('type', 'level')
             wf_PLUGINMETER.set('enabled', '1')
-
-            if 'notes' in track_placements:
-                cvpj_midiplacements = track_placements['notes']
-                for cvpj_midiplacement in cvpj_midiplacements:
-
-                    wf_MIDICLIP = ET.SubElement(wf_TRACK, "MIDICLIP")
-                    if 'cut' in cvpj_midiplacement:
-                        cutdata = cvpj_midiplacement['cut']
-                        if cutdata['type'] == 'cut':
-                            wf_MIDICLIP.set('offset', str((cutdata['start']/8)*tempomul))
-                            wf_MIDICLIP.set('start', str(cvpj_midiplacement['position']))
-                            wf_MIDICLIP.set('length', str(cvpj_midiplacement['duration']))
-                        if cutdata['type'] in ['loop', 'loop_off', 'loop_adv']:
-                            wf_MIDICLIP.set('start', str(cvpj_midiplacement['position']))
-                            wf_MIDICLIP.set('length', str(cvpj_midiplacement['duration']))
-                            wf_MIDICLIP.set('offset', str((cutdata['start']/8 if 'start' in cutdata else 0)*tempomul))
-                            wf_MIDICLIP.set('loopStartBeats', str((cutdata['loopstart']/4 if 'loopstart' in cutdata else 0)))
-                            wf_MIDICLIP.set('loopLengthBeats', str((cutdata['loopend']/4)))
-                    else:
-                        wf_MIDICLIP.set('start', str(cvpj_midiplacement['position']))
-                        wf_MIDICLIP.set('length', str(cvpj_midiplacement['duration']))
-
-                    if 'name' in cvpj_midiplacement: wf_MIDICLIP.set('name', cvpj_midiplacement['name'])
-                    if 'color' in cvpj_midiplacement: wf_MIDICLIP.set('colour', 'ff'+colors.rgb_float_to_hex(cvpj_midiplacement['color']))
-                    if 'muted' in cvpj_midiplacement: wf_MIDICLIP.set('mute', str(int(cvpj_midiplacement['muted'])))
-                    if 'notelist' in cvpj_midiplacement: 
-                        wf_SEQUENCE = ET.SubElement(wf_MIDICLIP, "SEQUENCE")
-                        wf_SEQUENCE.set('ver', '1')
-                        wf_SEQUENCE.set('channelNumber', '1')
-                        for cvpj_note in cvpj_midiplacement['notelist']:
-                            wf_NOTE = ET.SubElement(wf_SEQUENCE, "NOTE")
-                            wf_NOTE.set('p', str(cvpj_note['key']+60))
-                            wf_NOTE.set('b', str(cvpj_note['position']/4))
-                            wf_NOTE.set('l', str(cvpj_note['duration']/4))
-                            note_volume = cvpj_note['vol'] if 'vol' in cvpj_note else 1
-                            wf_NOTE.set('v', str(int(xtramath.clamp(note_volume*127, 0, 127))))
 
             wf_globalid += 1
 

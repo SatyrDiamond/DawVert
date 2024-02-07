@@ -1,6 +1,6 @@
 import argparse
 import json
-from functions import data_datadef
+from objects import dv_datadef
 import sys
 sys.path.append('../')
 
@@ -11,7 +11,7 @@ aparser.add_argument("-s", default='main')
 
 argsd = vars(aparser.parse_args())
 
-datadef = data_datadef.datadef()
+datadef = dv_datadef.datadef()
 
 if argsd['d'] != None:
     df_file = argsd['d']

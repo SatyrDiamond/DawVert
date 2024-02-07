@@ -6,10 +6,7 @@ import json
 import struct
 import math
 from functions import data_bytes
-from functions import note_mod
-from functions import song
-from functions_plugin import format_midi_in
-from functions_tracks import tracks_rm
+from objects import midi_in
 
 def calc_gatetime(bio_mmf_Mtsq):
     out_duration = 0
@@ -36,14 +33,15 @@ def calc_gatetime(bio_mmf_Mtsq):
 def noteresize(value):
     return value*8
 
-def parse_ma3_Mtsq(Mtsqdata, tb_ms):
+def parse_ma3_Mtsq(Mtsqdata, tb_ms, convproj_obj):
     bio_mmf_Mtsq = data_bytes.to_bytesio(Mtsqdata)
     bio_mmf_Mtsq_size = len(Mtsqdata)
     notecount = 0
     #print('size', bio_mmf_Mtsq_size)
     #print('      1ST 2ND | CH#  CMD')
 
-    format_midi_in.song_start(16, int(tb_ms*(math.pi*10000)), 1, 120, [4,4])
+    midiobj = midi_in.midi_in()
+    midiobj.song_start(16, int(tb_ms*(math.pi*10000)), 120, [4,4])
 
     midicmds = []
 
@@ -103,27 +101,30 @@ def parse_ma3_Mtsq(Mtsqdata, tb_ms):
             print('Unknown Command', firstbyte[0], "0x%X" % firstbyte[0])
             exit()
 
-    format_midi_in.add_track(0, midicmds)
+    midiobj.add_track(0, midicmds)
 
-    cvpj_l = {}
-    usedinsts = format_midi_in.song_end(cvpj_l)
+    usedinsts = midiobj.song_end(convproj_obj)
 
     for usedinst in usedinsts:
-        instid = '_'.join([str(usedinst[0]), str(usedinst[1]), str(usedinst[2]), str(usedinst[3])])
-        
-        if usedinst[2] == 124: 
-            tracks_rm.inst_create(cvpj_l, instid)
-            tracks_rm.inst_visual(cvpj_l, instid, name='MA-3 User #'+str(usedinst[1]), color=[0.3,0.3,0.3])
-            tracks_rm.inst_fxrackchan_add(cvpj_l, instid, int(usedinst[0]+1))
+        if usedinst:
+            ui = usedinst[0]
+            instid = '_'.join([str(ui[0]), str(ui[1]), str(ui[2]), str(ui[3])])
 
-        elif usedinst[2] == 125: 
-            tracks_rm.inst_create(cvpj_l, instid)
-            tracks_rm.inst_visual(cvpj_l, instid, name='MA-3 PCM #'+str(usedinst[1]), color=[0.3,0.3,0.3])
-            tracks_rm.inst_fxrackchan_add(cvpj_l, instid, int(usedinst[0]+1))
+            if ui[2] == 124: 
+                inst_obj = convproj_obj.add_instrument(instid)
+                inst_obj.visual.name = 'MA-3 User #'+str(ui[1])
+                inst_obj.visual.color = [0.3,0.3,0.3]
+                inst_obj.fxrack_channel = ui[0]+1
 
-    return cvpj_l
+            elif ui[2] == 125: 
+                inst_obj = convproj_obj.add_instrument(instid)
+                inst_obj.visual.name = 'MA-3 PCM #'+str(ui[1])
+                inst_obj.visual.color = [0.3,0.3,0.3]
+                inst_obj.fxrack_channel = ui[0]+1
 
-def parse_ma3_track(datain, tracknum):
+    return True
+
+def parse_ma3_track(datain, tracknum, convproj_obj):
     bio_mmf_track = data_bytes.to_bytesio(datain)
     trk_type_format, trk_type_seq, trk_tb_d, trk_tb_g = struct.unpack("BBBB", bio_mmf_track.read(4))
     if trk_tb_d == 2: tb_ms = 0.004
@@ -136,16 +137,14 @@ def parse_ma3_track(datain, tracknum):
     trk_chanstat = struct.unpack("IIII", bio_mmf_track.read(16))
     #print(trk_type_format, trk_type_seq, trk_tb_d, trk_tb_g, trk_chanstat)
     trk_chunks = data_bytes.riff_read_big(bio_mmf_track.read(), 0)
-    outputdata = None
+    is_found = None
     for trk_chunk in trk_chunks:
         print('[input-smaf] MTR CHUNK:',trk_chunk[0])
         if trk_chunk[0] == b'Mtsq':
-            outputdata = parse_ma3_Mtsq(trk_chunk[1], tb_ms)
-    if outputdata == None:
+            is_found = parse_ma3_Mtsq(trk_chunk[1], tb_ms, convproj_obj)
+    if is_found == None:
         print('[input-smaf] No Mtsq found.')
         exit()
-    else:
-        return outputdata
 
 
 class input_mmf(plugin_input.base):
@@ -169,7 +168,7 @@ class input_mmf(plugin_input.base):
         if bytesdata == b'MMMD': return True
         else: return False
         bytestream.seek(0)
-    def parse(self, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, extra_param):
         mmf_f_stream = open(input_file, 'rb')
         mmf_chunks_main = data_bytes.riff_read(mmf_f_stream.read(), 0)
         if mmf_chunks_main[0][0] != b'MMMD':
@@ -198,10 +197,8 @@ class input_mmf(plugin_input.base):
                         if mmf_tracknum in range(5, 8):
                             print('[input-smaf] Format: MA3')
                             trackparsed = True
-                            cvpj_l = parse_ma3_track(mmf_cnti_chunk[1], 3)
+                            cvpj_l = parse_ma3_track(mmf_cnti_chunk[1], 3, convproj_obj)
 
-        cvpj_l['use_instrack'] = False
-        cvpj_l['use_fxrack'] = True
-        
-        song.add_param(cvpj_l, 'bpm', 120)
-        return json.dumps(cvpj_l)
+        convproj_obj.do_actions.append('do_addloop')
+        convproj_obj.do_actions.append('do_singlenotelistcut')
+        convproj_obj.params.add('bpm', 120, 'float')

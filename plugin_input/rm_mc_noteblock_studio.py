@@ -5,12 +5,7 @@ import plugin_input
 import json
 import math
 from functions import data_bytes
-from functions import data_dataset
-from functions import plugins
-from functions import note_data
-from functions import placement_data
-from functions import song
-from functions_tracks import tracks_rm
+from objects import dv_dataset
 
 def nbs_parsekey(nbs_file, nbs_newformat):
     nbs_inst = nbs_file.read(1)[0]
@@ -30,13 +25,14 @@ class input_gt_mnbs(plugin_input.base):
     def gettype(self): return 'rm'
     def getdawcapabilities(self): return {}
     def supported_autodetect(self): return False
-    def parse(self, input_file, extra_param):
-        cvpj_l = {}
+    def parse(self, convproj_obj, input_file, extra_param):
+        convproj_obj.type = 'rm'
+        convproj_obj.set_timings(4, True)
         
         nbs_file = open(input_file, 'rb')
         nbs_len = nbs_file.__sizeof__()
-        dataset = data_dataset.dataset('./data_dset/noteblockstudio.dset')
-        dataset_midi = data_dataset.dataset('./data_dset/midi.dset')
+        dataset = dv_dataset.dataset('./data_dset/noteblockstudio.dset')
+        dataset_midi = dv_dataset.dataset('./data_dset/midi.dset')
 
         # PART 1: HEADER
         nbs_startbyte = int.from_bytes(nbs_file.read(2), "little")
@@ -54,11 +50,12 @@ class input_gt_mnbs(plugin_input.base):
             nbs_newformat = 0
 
         nbs_notes = {}
-        for playlistid in range(nbs_layercount):
-            cvpj_trackid = str(playlistid+1)
-            tracks_rm.track_create(cvpj_l, cvpj_trackid, 'instruments')
-            tracks_rm.track_visual(cvpj_l, cvpj_trackid, color=[0.23, 0.23, 0.23])
-            nbs_notes[playlistid+1] = {}
+        for nbs_layer in range(nbs_layercount):
+            cvpj_trackid = str(nbs_layer+1)
+            track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 1, False)
+            track_obj.visual.name = cvpj_trackid
+            track_obj.visual.color = [0.23, 0.23, 0.23]
+            nbs_notes[nbs_layer+1] = {}
 
         nbs_song_name = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
         print('[input-mnbs] Song Title: '+nbs_song_name)
@@ -116,13 +113,15 @@ class input_gt_mnbs(plugin_input.base):
         if nbs_file.tell() <= nbs_len:
             for layernum in range(nbs_layercount):
                 layername = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
-                if layername != None: tracks_rm.track_visual(cvpj_l, str(layernum+1), name=layername)
+                if layername != None: 
+                    track_found, track_obj = convproj_obj.find_track(cvpj_trackid)
+                    if track_found: track_obj.visual.name = layername
                 if nbs_newformat == 1: nbs_file.read(3)
 
         # OUTPUT
         for instnum in range(16):
             instid = 'NoteBlock'+str(instnum)
-            tracks_rm.import_dset(cvpj_l, instid, instid, dataset, dataset_midi, None, None)
+            convproj_obj.add_instrument_from_dset(instid, instid, dataset, dataset_midi, instid, None, None)
 
         # PART 4: CUSTOM INSTRUMENTS
         custominstid = 16
@@ -133,17 +132,14 @@ class input_gt_mnbs(plugin_input.base):
                 custominst_file = data_bytes.readstring_lenbyte(nbs_file, 4, "little", "utf-8")
                 custominst_key = nbs_file.read(1)[0]
                 custominst_presskey = nbs_file.read(1)[0]
-                #print(custominst_name, custominst_file, custominst_key, custominst_presskey)
 
                 instid = 'NoteBlock'+str(instnum)
 
-                tracks_rm.inst_create(cvpj_l, instid)
-                tracks_rm.inst_visual(cvpj_l, instid, name=custominst_name)
-                tracks_rm.inst_pluginid(cvpj_l, instid, instid)
+                inst_obj = convproj_obj.add_instrument(inst_id)
+                inst_obj.visual.name = custominst_name
+                plugin_obj, sampleref_obj = convproj_obj.add_plugin_sampler(instid, custominst_file)
+                inst_obj.pluginid = instid
 
-                plugindata = plugins.cvpj_plugindata.cvpj_plugin('sampler', 'single')
-                plugindata.dataval_add('file', custominst_file)
-                plugindata.to_cvpj(cvpj_l, instid)
                 custominstid += 1
 
         for nbs_layer in nbs_notes:
@@ -152,26 +148,36 @@ class input_gt_mnbs(plugin_input.base):
             for note in nbs_layerdata:
                 nbs_notedata = nbs_layerdata[note]
                 placementnum = math.floor(note/split_duration)*split_duration
-                if placementnum not in layer_placements: layer_placements[placementnum] = []
-                cvpj_notedata = {}
+                if placementnum not in layer_placements: 
+                    layer_placements[placementnum] = []
+
                 if nbs_notedata[2] != None:
-                    cvpj_notedata = note_data.mx_makenote('NoteBlock'+str(nbs_notedata[1]), note-placementnum, 2, nbs_notedata[0], nbs_notedata[2][0]/100, (nbs_notedata[2][1]/100)-1)
-                    cvpj_notedata['finepitch'] = nbs_notedata[2][2]
+                    layer_placements[placementnum].append([
+                        'NoteBlock'+str(nbs_notedata[1]), 
+                        note-placementnum, 
+                        2, nbs_notedata[0], nbs_notedata[2][0]/100, 
+                        {'pan': (nbs_notedata[2][1]/100)-1, 'finepitch': nbs_notedata[2][2]}])
                 else:
-                    cvpj_notedata = note_data.mx_makenote('NoteBlock'+str(nbs_notedata[1]), note-placementnum, 2, nbs_notedata[0], None, None)
-                layer_placements[placementnum].append(cvpj_notedata)
+                    layer_placements[placementnum].append([
+                        'NoteBlock'+str(nbs_notedata[1]), 
+                        note-placementnum, 
+                        2, nbs_notedata[0], 1, 
+                        {}])
+                
             for placenum in layer_placements:
-                tracks_rm.add_pl(cvpj_l, str(nbs_layer), 'notes', placement_data.makepl_n(placenum, split_duration, layer_placements[placenum]))
+                track_found, track_obj = convproj_obj.find_track(str(nbs_layer))
+                if track_found:
+                    placement_obj = track_obj.placements.add_notes()
+                    placement_obj.position = placenum
+                    placement_obj.duration = split_duration
+                    for n in layer_placements[placenum]: placement_obj.notelist.add_m(n[0], n[1], n[2], n[3], n[4], n[5])
 
-        song.add_info(cvpj_l, 'title', nbs_song_name)
-        song.add_info(cvpj_l, 'author', nbs_song_author)
-        song.add_info(cvpj_l, 'original_author', nbs_song_orgauthor)
-        song.add_info_msg(cvpj_l, 'text', nbs_description)
+        convproj_obj.metadata.name = nbs_song_name
+        convproj_obj.metadata.author = nbs_song_author
+        convproj_obj.metadata.original_author = nbs_song_orgauthor
+        convproj_obj.metadata.comment_text = nbs_description
 
-        cvpj_l['do_addloop'] = True
-        cvpj_l['do_singlenotelistcut'] = True
-        
-        song.add_timesig(cvpj_l, timesig_numerator, 4)
-        song.add_param(cvpj_l, 'bpm', tempo)
-        return json.dumps(cvpj_l)
-
+        convproj_obj.do_actions.append('do_addloop')
+        convproj_obj.do_actions.append('do_singlenotelistcut')
+        convproj_obj.params.add('bpm', tempo, 'float')
+        convproj_obj.timesig = [timesig_numerator, 4]

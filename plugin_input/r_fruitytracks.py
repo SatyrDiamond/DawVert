@@ -2,14 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions_plugin import format_flp_tlv
-from functions import colors
-from functions import data_bytes
-from functions import data_values
-from functions import note_data
-from functions import song
-from functions import audio
-from functions_tracks import tracks_r
-
 import plugin_input
 import json
 import os
@@ -33,9 +25,10 @@ class input_fruitytracks(plugin_input.base):
         if bytesdata == b'FThd': return True
         else: return False
     def supported_autodetect(self): return True
-    def parse(self, input_file, extra_param):
 
-        cvpj_l = {}
+    def parse(self, convproj_obj, input_file, extra_param):
+        convproj_obj.type = 'r'
+        convproj_obj.set_timings(4, True)
 
         fileobject = open(input_file, 'rb')
         headername = fileobject.read(4)
@@ -56,20 +49,14 @@ class input_fruitytracks(plugin_input.base):
             if event[0] == 2: 
                 tracknum += 1
                 sampledata.append([])
-                tracks_r.track_create(cvpj_l, str(tracknum), 'audio')
-                tracks_r.track_visual(cvpj_l, str(tracknum), name='Track '+str(tracknum))
+
+                track_obj = convproj_obj.add_track(str(tracknum), 'audio', 1, False)
+                track_obj.visual.name = 'Track '+str(tracknum)
+                track_obj.visual.color = maincolor
 
             if event[0] == 5: sampledata[tablenum].append({})
             if event[0] == 66: bpm = event[1]
-            if event[0] == 196: 
-                filename = event[1].decode().rstrip('\x00')
-                filenamesplit = filename.split('\\')
-                if filenamesplit[0] == '':
-                    basefolder = os.path.dirname(input_file)
-                    filename = os.path.normpath(os.path.join(basefolder, '..','Samples',*filenamesplit[1:]))
-
-                sampledata[tablenum][-1]['file'] = filename 
-
+            if event[0] == 196: sampledata[tablenum][-1]['file'] = event[1].decode().rstrip('\x00')
             if event[0] == 193: sampledata[tablenum][-1]['name'] = event[1].decode().rstrip('\x00')
             if event[0] == 129: sampledata[tablenum][-1]['pos'] = event[1]
             if event[0] == 130: sampledata[tablenum][-1]['dur'] = event[1]
@@ -79,39 +66,38 @@ class input_fruitytracks(plugin_input.base):
         bpmdiv = 120/bpm
         bpmticks = 5512
 
-        tracknum = 1
-        for trackdata in sampledata:
-            tracknum += 1
-            for sampleda in trackdata:
+        for tracknum in sampledata:
 
-                cvpj_pldata = {}
+            track_found, track_obj = convproj_obj.find_track(str(tracknum+1))
 
-                cvpj_pldata["file"] = sampleda['file']
-                cvpj_pldata["name"] = sampleda['name']
+            if track_found:
+                for sampleda in tracknum:
 
-                stretch = sampleda["stretch"]
+                    placement_obj = track_obj.placements.add_audio()
+                    placement_obj.position = (sampleda["pos"]/bpmticks)/bpmdiv
+                    placement_obj.visual.name = sampleda['name']
 
-                cvpj_pldata["position"] = (sampleda["pos"]/bpmticks)/bpmdiv
+                    filepath = sampleda['file']
+                    sampleref_obj = convproj_obj.add_sampleref(filepath, filepath)
+                    placement_obj.sampleref = filepath
 
-                cvpj_pldata['cut'] = {}
-                cvpj_pldata['cut']['type'] = 'loop'
-                if stretch == 0:
-                    cvpj_pldata["duration"] = (sampleda["dur"]/bpmticks)
-                    cvpj_pldata['cut']['loopend'] = (sampleda["repeatlen"]/bpmticks)
-                else:
-                    audioinfo = audio.get_audiofile_info(sampleda['file'])
-                    duration = audioinfo['dur']
-                    audduration = audioinfo["dur_sec"]*8
+                    placement_obj.cut_type = 'loop'
+                    placement_obj.cut_data = {}
 
-                    cvpj_pldata["duration"] = (sampleda["dur"]/bpmticks)/bpmdiv
-                    cvpj_pldata['cut']['loopstart'] = 0
-                    cvpj_pldata['cut']['loopend'] = (sampleda["repeatlen"]/bpmticks)/bpmdiv
-                    cvpj_pldata['audiomod'] = {}
-                    cvpj_pldata['audiomod']['stretch_algorithm'] = 'resample'
-                    cvpj_pldata['audiomod']['stretch_method'] = 'rate_tempo'
-                    cvpj_pldata['audiomod']['stretch_data'] = {'rate': audduration/stretch}
+                    stretch = sampleda["stretch"]
 
-                tracks_r.add_pl(cvpj_l, str(tracknum), 'audio', cvpj_pldata)
+                    if stretch == 0:
+                        placement_obj.duration = (sampleda["dur"]/bpmticks)
+                        placement_obj.cut_data['loopend'] = (sampleda["repeatlen"]/bpmticks)
+                    else:
+                        duration = sampleref_obj.dur_samples
+                        audduration = sampleref_obj.dur_sec*8
 
-        song.add_param(cvpj_l, 'bpm', bpm)
-        return json.dumps(cvpj_l)
+                        placement_obj.duration = (sampleda["dur"]/bpmticks)/bpmdiv
+                        placement_obj.cut_data['loopstart'] = 0
+                        placement_obj.cut_data['loopend'] = (sampleda["repeatlen"]/bpmticks)/bpmdiv
+                        placement_obj.stretch_algorithm = 'resample'
+                        placement_obj.stretch_method = 'rate_tempo'
+                        placement_obj.stretch_rate = audduration/stretch
+
+        convproj_obj.params.add('bpm', bpm, 'float')

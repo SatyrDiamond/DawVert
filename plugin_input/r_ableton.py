@@ -3,22 +3,12 @@
 
 from functions import data_bytes
 from functions import colors
-from functions import audio
 from functions import data_values
-from functions import placement_data
-from functions import plugins
-from functions import song
-from functions import data_dataset
-from functions import plugin_vst2
-from functions import plugin_vst3
+from objects import dv_dataset
+#from functions_plugin_ext import plugin_vst2
+#from functions_plugin_ext import plugin_vst3
 from functions_plugin import ableton_values
-from functions_tracks import auto_id
-from functions_tracks import auto_nopl
-from functions_tracks import trackfx
-from functions_tracks import fxslot
-from functions_tracks import tracks_r
-from functions_tracks import groups
-from functions_tracks import tracks_master
+from objects import auto_id
 
 from io import BytesIO
 import base64
@@ -60,27 +50,19 @@ def use_valuetype(i_valtype, i_value):
 	if i_valtype == 'bool': return ['false','true'].index(i_value) if i_value in ['false','true'] else i_value
 
 def get_param(xmldata, varname, vartype, fallback, i_loc, i_addmul): 
+	global autoid_assoc
 	if len(xmldata.findall(varname)) != 0:
 		param_data = xmldata.findall(varname)[0]
 		out_value = get_value(param_data, 'Manual', fallback)
 		outdata = use_valuetype(vartype, out_value)
 		autotarget = get_id(param_data, 'AutomationTarget', None)
-		if autotarget != None: auto_id.in_define(int(autotarget), i_loc, vartype, i_addmul)
+		if autotarget != None: autoid_assoc.define(int(autotarget), i_loc, vartype, i_addmul)
 		return outdata
 	else:
 		return fallback
 
-def get_sampleref(xmldata):
-	x_sampleref = xmldata.findall('SampleRef')[0]
-	x_fileref = x_sampleref.findall('FileRef')[0]
-	out_data = {}
-	out_data['file'] = get_value(x_fileref, 'Path', '')
-	out_data['samples'] = float(get_value(x_sampleref, 'DefaultDuration', 1))
-	out_data['rate'] = float(get_value(x_sampleref, 'DefaultSampleRate', 1))
-	out_data['seconds'] = out_data['samples'] / out_data['rate']
-	return out_data
-
 def get_auto(x_track_data): 
+	global autoid_assoc
 	track_AutomationEnvelopes = x_track_data.findall('AutomationEnvelopes')[0]
 	track_Envelopes = track_AutomationEnvelopes.findall('Envelopes')[0]
 	for AutomationEnvelope in track_Envelopes.findall('AutomationEnvelope'):
@@ -89,15 +71,24 @@ def get_auto(x_track_data):
 		env_AutoEvents = env_Automation.findall('Events')[0]
 		autotarget = int(get_value(env_EnvelopeTarget, 'PointeeId', None))
 
-		cvpj_autopoints = []
+		autopl_obj = autoid_assoc.add_pl(autotarget, 'float')
 		for env_AutoEvent in env_AutoEvents:
 			if env_AutoEvent.tag == 'FloatEvent':
-				cvpj_autopoints.append({
-					"position": max(0,float(env_AutoEvent.get('Time'))*4), 
-					"value": float(env_AutoEvent.get('Value'))
-					})
+				autopoint_obj = autopl_obj.data.add_point()
+				autopoint_obj.pos = float(env_AutoEvent.get('Time'))*4
+				autopoint_obj.value = float(env_AutoEvent.get('Value'))
 
-		auto_id.in_add_pl(autotarget, auto_nopl.to_pl(cvpj_autopoints))
+def get_sampleref(convproj_obj, xmldata):
+	x_sampleref = xmldata.findall('SampleRef')[0]
+	x_fileref = x_sampleref.findall('FileRef')[0]
+	out_data = {}
+	filename = get_value(x_fileref, 'Path', '')
+	sampleref_obj = convproj_obj.add_sampleref(filename, filename)
+	sampleref_obj.dur_samples = float(get_value(x_sampleref, 'DefaultDuration', 1))
+	sampleref_obj.hz = float(get_value(x_sampleref, 'DefaultSampleRate', 1))
+	sampleref_obj.timebase = sampleref_obj.hz
+	sampleref_obj.dur_sec = sampleref_obj.dur_samples / sampleref_obj.hz
+	return filename
 
 def get_Range_cross(x_xml, rangename):
 	x_range = x_xml.findall(rangename)[0]
@@ -132,14 +123,6 @@ for lfo_beatstep in [1/64, 1/48, 1/32, 1/24, 1/16, 1/12, 1/8,
 	lfo_beatsteps.append( math.log2(lfo_beatstep) )
 
 
-
-
-
-
-
-
-
-
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -156,9 +139,8 @@ def get_MultiSampleMap(x_MultiSampleMap):
 	x_sampleparts = x_MultiSampleMap.findall('SampleParts')[0]
 	xs_sampleparts = x_sampleparts.findall('MultiSamplePart')
 	for xs_samplepart in xs_sampleparts:
-		audiodata = get_sampleref(xs_samplepart)
 		t_samppart = {}
-		t_samppart['audiodata'] = audiodata
+		t_samppart['sampleref'] = get_sampleref(convproj_obj, xs_samplepart)
 		t_samppart['Name'] = get_value(xs_samplepart, 'Name', '')
 		t_samppart['KeyRange'] = get_Range_cross(xs_samplepart, 'KeyRange')
 		t_samppart['VelocityRange'] = get_Range_cross(xs_samplepart, 'VelocityRange')
@@ -210,20 +192,18 @@ def get_MultiSampleMap(x_MultiSampleMap):
 # -------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-def do_devices(x_trackdevices, track_id, fxloc):
+def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 	for x_trackdevice in x_trackdevices:
 		able_plug_id = x_trackdevice.get('Id')
 		if track_id != None: pluginid = track_id+'_'+able_plug_id
 		else: pluginid = 'master_'+able_plug_id
 		devicename = str(x_trackdevice.tag)
-		#print(pluginid, devicename)
 		is_instrument = False
-
 		devfx_enabled = int(get_param(x_trackdevice, 'On', 'bool', True, ['slot', able_plug_id, 'enabled'], None))
 
 		if devicename in ['OriginalSimpler', 'MultiSampler']:
-			inst_plugindata = plugins.cvpj_plugin('multisampler', None, None)
-			is_instrument = True
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
+			track_obj.inst_pluginid = pluginid
 
 			x_samp_Player = x_trackdevice.findall('Player')[0]
 			x_samp_MultiSampleMap = x_samp_Player.findall('MultiSampleMap')[0]
@@ -234,13 +214,15 @@ def do_devices(x_trackdevices, track_id, fxloc):
 				regionparams = {}
 				regionparams['name'] = get_value(x_samp_MultiSamplePart, 'Name', '')
 
+				min_max = [0,0]
+
 				if x_samp_MultiSamplePart.findall('KeyRange')[0]:
 					x_KeyRange = x_samp_MultiSamplePart.findall('KeyRange')[0]
 					xv_Min = int(get_value(x_KeyRange, 'Min', '0'))-60
 					xv_Max = int(get_value(x_KeyRange, 'Max', '127'))-60
 					xv_CrossfadeMin = int(get_value(x_KeyRange, 'CrossfadeMin', '0'))-60
 					xv_CrossfadeMax = int(get_value(x_KeyRange, 'CrossfadeMax', '127'))-60
-					regionparams['r_key'] = [xv_Min, xv_Max]
+					min_max = [xv_Min, xv_Max]
 					regionparams['r_key_fade'] = [xv_CrossfadeMin, xv_CrossfadeMax]
 
 				if x_samp_MultiSamplePart.findall('VelocityRange')[0]:
@@ -278,16 +260,12 @@ def do_devices(x_trackdevices, track_id, fxloc):
 							regionparams['start'] = int(get_value(x_Loop, 'SampleStart', '0'))
 							regionparams['end'] = int(get_value(x_Loop, 'SampleEnd', '1'))
 
-				sampleref = get_sampleref(x_samp_MultiSamplePart)
-				regionparams['file'] = sampleref['file']
-
-				inst_plugindata.region_add(regionparams)
-
-			inst_plugindata.to_cvpj(cvpj_l, pluginid)
-			tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
+				regionparams['sampleref'] = get_sampleref(convproj_obj, x_samp_MultiSamplePart)
+				plugin_obj.regions.add(min_max[0], min_max[1], regionparams)
 
 		else:
-			cvpj_plugindata = plugins.cvpj_plugin('deftype', 'native-ableton', devicename)
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-ableton', devicename)
+
 			paramlist = dataset.params_list('plugin', devicename)
 			device_type = dataset.object_var_get('group', 'plugin', devicename)
 
@@ -303,14 +281,14 @@ def do_devices(x_trackdevices, track_id, fxloc):
 						isdata = defparams[0]
 						if not defparams[0]:
 							outval = get_param(xmltag, paramname, defparams[1], defparams[2], ['plugin', pluginid, paramfullname], None)
-							cvpj_plugindata.param_add_dset(paramfullname, outval, dataset, 'plugin', devicename)
+							plugin_obj.add_from_dset(paramfullname, outval, dataset, 'plugin', devicename)
 						else:
 							if defparams[1] != 'list': 
 								outval = get_value(xmltag, paramname, defparams[2])
 								if defparams[1] == 'int': outval = int(outval)
 								if defparams[1] == 'float': outval = float(outval)
 								if defparams[1] == 'bool': outval = (outval == 'true')
-								cvpj_plugindata.param_add_dset(paramfullname, outval, dataset, 'plugin', devicename)
+								plugin_obj.add_from_dset(paramfullname, outval, dataset, 'plugin', devicename)
 							else:
 								outlist = []
 								iscomplete = False
@@ -320,17 +298,19 @@ def do_devices(x_trackdevices, track_id, fxloc):
 									if outval == None: iscomplete = True
 									else: outlist.append(float(outval))
 									listnum += 1
-								cvpj_plugindata.param_add_dset(paramfullname, outlist, dataset, 'plugin', devicename)
+								plugin_obj.add_from_dset(paramfullname, outlist, dataset, 'plugin', devicename)
 
 				if devicename == 'Looper':
 					hextext = x_trackdevice.findall('SavedBuffer')[0].text
-					if hextext != None: cvpj_plugindata.rawdata_add(bytes.fromhex(hextext))
+					if hextext != None: 
+						plugin_obj.rawdata_add('SavedBuffer', bytes.fromhex(hextext))
 				
 				if devicename == 'Hybrid':
 					x_Hybrid = x_trackdevice.findall('ImpulseResponseHandler')[0]
 					x_SampleSlot = x_Hybrid.findall('SampleSlot')[0]
 					x_Value = x_SampleSlot.findall('Value')[0]
-					cvpj_plugindata.dataval_add('sample', get_sampleref(x_Value)['file'])
+
+					plugin_obj.samplerefs['sample'] = get_sampleref(convproj_obj, x_Value)
 
 				if devicename == 'InstrumentVector':
 					modcons = []
@@ -345,7 +325,7 @@ def do_devices(x_trackdevices, track_id, fxloc):
 						for num in range(13):
 							s_modcon['amounts'].append( float(get_value(x_ModulationConnectionsForInstrumentVector, 'ModulationAmounts.'+str(num), 0)) )
 						modcons.append(s_modcon)
-					cvpj_plugindata.dataval_add('ModulationConnections', modcons)
+					plugin_obj.datavals.add('ModulationConnections', modcons)
 
 					for num in range(2):
 						UserSpriteNum = 'UserSprite'+str(num+1)
@@ -354,142 +334,139 @@ def do_devices(x_trackdevices, track_id, fxloc):
 							x_UserSpriteVal = x_UserSprite[0].findall('Value')
 							if x_UserSpriteVal:
 								if x_UserSpriteVal[0].findall('SampleRef'):
-									filename = get_sampleref(x_UserSpriteVal[0])['file']
-									cvpj_plugindata.fileref_add(UserSpriteNum, filename)
+									plugin_obj.samplerefs['sample'] = get_sampleref(convproj_obj, x_UserSpriteVal[0])['file']
 
 				if device_type == (True, 'fx'):
-					cvpj_plugindata.fxdata_add(devfx_enabled, None)
-					if fxloc != None: fxslot.insert(cvpj_l, fxloc, 'audio', pluginid)
-					cvpj_plugindata.to_cvpj(cvpj_l, pluginid)
+					plugin_obj.fxdata_add(devfx_enabled, None)
+					track_obj.fxslots_audio.append(pluginid)
 
 				if device_type == (True, 'inst'):
-					tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
-					cvpj_plugindata.to_cvpj(cvpj_l, pluginid)
+					track_obj.inst_pluginid = pluginid
 
-			else:
-				if devicename == 'PluginDevice':
-					x_plugdisc = x_trackdevice.findall('PluginDesc')
-					pluginfound = False
+			#else:
+			#	if devicename == 'PluginDevice':
+			#		x_plugdisc = x_trackdevice.findall('PluginDesc')
+			#		pluginfound = False
 
-					pluginvsttype = 0
+			#		pluginvsttype = 0
 
-					if x_plugdisc:
-						xp_VstPluginInfo = x_plugdisc[0].findall('VstPluginInfo')
-						xp_Vst3PluginInfo = x_plugdisc[0].findall('Vst3PluginInfo')
+			#		if x_plugdisc:
+			#			xp_VstPluginInfo = x_plugdisc[0].findall('VstPluginInfo')
+			#			xp_Vst3PluginInfo = x_plugdisc[0].findall('Vst3PluginInfo')
 
-						if xp_VstPluginInfo:
-							x_VstPluginInfo = xp_VstPluginInfo[0]
+			#			if xp_VstPluginInfo:
+			#				x_VstPluginInfo = xp_VstPluginInfo[0]
 
-							pluginfound = True
-							vst_WinPosX = int(get_value(x_VstPluginInfo, 'WinPosX', '0'))
-							vst_WinPosY = int(get_value(x_VstPluginInfo, 'WinPosY', '0'))
-							vst_Path = get_value(x_VstPluginInfo, 'Path', '')
-							vst_PlugName = get_value(x_VstPluginInfo, 'PlugName', '')
-							vst_UniqueId = int(get_value(x_VstPluginInfo, 'UniqueId', 0))
-							vst_NumberOfParameters = int(get_value(x_VstPluginInfo, 'NumberOfParameters', '0'))
-							vst_NumberOfPrograms = int(get_value(x_VstPluginInfo, 'NumberOfPrograms', '0'))
-							pluginvsttype = int(get_value(x_VstPluginInfo, 'Category', '0'))
-							vst_flags = int(get_value(x_VstPluginInfo, 'Flags', '0'))
-							binflags = data_bytes.to_bin(vst_flags, 32)
+			#				pluginfound = True
+			#				vst_WinPosX = int(get_value(x_VstPluginInfo, 'WinPosX', '0'))
+			#				vst_WinPosY = int(get_value(x_VstPluginInfo, 'WinPosY', '0'))
+			#				vst_Path = get_value(x_VstPluginInfo, 'Path', '')
+			#				vst_PlugName = get_value(x_VstPluginInfo, 'PlugName', '')
+			#				vst_UniqueId = int(get_value(x_VstPluginInfo, 'UniqueId', 0))
+			#				vst_NumberOfParameters = int(get_value(x_VstPluginInfo, 'NumberOfParameters', '0'))
+			#				vst_NumberOfPrograms = int(get_value(x_VstPluginInfo, 'NumberOfPrograms', '0'))
+			#				pluginvsttype = int(get_value(x_VstPluginInfo, 'Category', '0'))
+			#				vst_flags = int(get_value(x_VstPluginInfo, 'Flags', '0'))
+			#				binflags = data_bytes.to_bin(vst_flags, 32)
 
-							cvpj_plugindata = plugins.cvpj_plugin('deftype', 'vst2', 'win')
-							song.add_visual_window(cvpj_l, 'plugin', pluginid, [vst_WinPosX, vst_WinPosY], None, False, False)
+			#				cvpj_plugindata = plugins.cvpj_plugin('deftype', 'vst2', 'win')
+			#				song.add_visual_window(cvpj_l, 'plugin', pluginid, [vst_WinPosX, vst_WinPosY], None, False, False)
 
-							cvpj_plugindata.dataval_add('path', vst_Path)
-							cvpj_plugindata.dataval_add('fourid', vst_UniqueId)
-							cvpj_plugindata.dataval_add('numparams', vst_NumberOfParameters)
+			#				plugin_obj.datavals.add('path', vst_Path)
+			#				plugin_obj.datavals.add('fourid', vst_UniqueId)
+			#				plugin_obj.datavals.add('numparams', vst_NumberOfParameters)
 
-							vst_version = int(get_value(x_VstPluginInfo, 'Version', '0'))
-							cvpj_plugindata.dataval_add('version_bytes', list(struct.unpack('BBBB', struct.pack('i', vst_version))) )
+			#				vst_version = int(get_value(x_VstPluginInfo, 'Version', '0'))
+			#				plugin_obj.datavals.add('version_bytes', list(struct.unpack('BBBB', struct.pack('i', vst_version))) )
 
-							useschunk = binflags[21]
+			#				useschunk = binflags[21]
 
-							xp_Preset = x_VstPluginInfo.findall('Preset')
-							if xp_Preset:
-								xp_VstPreset = xp_Preset[0].findall('VstPreset')
-								if xp_VstPreset:
-									x_VstPreset = xp_VstPreset[0]
-									vst_ProgramNumber = int(get_value(x_VstPreset, 'ProgramNumber', '0'))
+			#				xp_Preset = x_VstPluginInfo.findall('Preset')
+			#				if xp_Preset:
+			#					xp_VstPreset = xp_Preset[0].findall('VstPreset')
+			#					if xp_VstPreset:
+			#						x_VstPreset = xp_VstPreset[0]
+			#						vst_ProgramNumber = int(get_value(x_VstPreset, 'ProgramNumber', '0'))
 
-									cvpj_plugindata.dataval_add('current_program', vst_ProgramNumber)
-									hextext = x_VstPreset.findall('Buffer')[0].text
-									rawbytes = bytes.fromhex(hextext) if hextext != None else b''
-									if useschunk: 
-										cvpj_plugindata.dataval_add('datatype', 'chunk')
-										plugin_vst2.replace_data(cvpj_plugindata, 'id' ,'win', vst_UniqueId, 'chunk', rawbytes, None)
-									else:
-										if rawbytes:
-											rawstream = BytesIO(rawbytes)
-											cvpj_plugindata.dataval_add('datatype', 'params')
-											cvpj_programs = []
-											for num in range(vst_NumberOfPrograms):
-												cvpj_program = {}
-												cvpj_program['datatype'] = 'params'
-												cvpj_program['numparams'] = vst_NumberOfParameters
-												cvpj_program['params'] = {}
-												cvpj_program['program_name'] = data_bytes.readstring_fixedlen(rawstream, 28, None)
-												for paramnum in range(vst_NumberOfParameters): 
-													cvpj_program['params'][str(paramnum)] = {'value': struct.unpack('f', rawstream.read(4))[0]}
-												cvpj_programs.append(cvpj_program)
+			#						plugin_obj.datavals.add('current_program', vst_ProgramNumber)
+			#						hextext = x_VstPreset.findall('Buffer')[0].text
+			#						rawbytes = bytes.fromhex(hextext) if hextext != None else b''
+			#						if useschunk: 
+			#							plugin_obj.datavals.add('datatype', 'chunk')
+			#							plugin_vst2.replace_data(cvpj_plugindata, 'id' ,'win', vst_UniqueId, 'chunk', rawbytes, None)
+			#						else:
+			#							if rawbytes:
+			#								rawstream = BytesIO(rawbytes)
+			#								plugin_obj.datavals.add('datatype', 'params')
+			#								cvpj_programs = []
+			#								for num in range(vst_NumberOfPrograms):
+			#									cvpj_program = {}
+			#									cvpj_program['datatype'] = 'params'
+			#									cvpj_program['numparams'] = vst_NumberOfParameters
+			#									cvpj_program['params'] = {}
+			#									cvpj_program['program_name'] = data_bytes.readstring_fixedlen(rawstream, 28, None)
+			#									for paramnum in range(vst_NumberOfParameters): 
+			#										cvpj_program['params'][str(paramnum)] = {'value': struct.unpack('f', rawstream.read(4))[0]}
+			#									cvpj_programs.append(cvpj_program)
 
-										plugin_vst2.replace_data(cvpj_plugindata, 'id' ,'win', vst_UniqueId, 'params', cvpj_programs, None)
+			#							plugin_vst2.replace_data(cvpj_plugindata, 'id' ,'win', vst_UniqueId, 'params', cvpj_programs, None)
 
-						if xp_Vst3PluginInfo:
-							x_Vst3PluginInfo = xp_Vst3PluginInfo[0]
-							vst_WinPosX = int(get_value(x_Vst3PluginInfo, 'WinPosX', '0'))
-							vst_WinPosY = int(get_value(x_Vst3PluginInfo, 'WinPosY', '0'))
-							song.add_visual_window(cvpj_l, 'plugin', pluginid, [vst_WinPosX, vst_WinPosY], None, False, False)
-							vst_Name = get_value(x_Vst3PluginInfo, 'Name', '')
+			#			if xp_Vst3PluginInfo:
+			#				x_Vst3PluginInfo = xp_Vst3PluginInfo[0]
+			#				vst_WinPosX = int(get_value(x_Vst3PluginInfo, 'WinPosX', '0'))
+			#				vst_WinPosY = int(get_value(x_Vst3PluginInfo, 'WinPosY', '0'))
+			#				song.add_visual_window(cvpj_l, 'plugin', pluginid, [vst_WinPosX, vst_WinPosY], None, False, False)
+			#				vst_Name = get_value(x_Vst3PluginInfo, 'Name', '')
 
-							xp_Preset = x_Vst3PluginInfo.findall('Preset')
-							if xp_Preset:
-								xp_Vst3Preset = xp_Preset[0].findall('Vst3Preset')
-								if xp_Vst3Preset:
-									x_Vst3Preset = xp_Vst3Preset[0]
+			#				xp_Preset = x_Vst3PluginInfo.findall('Preset')
+			#				if xp_Preset:
+			#					xp_Vst3Preset = xp_Preset[0].findall('Vst3Preset')
+			#					if xp_Vst3Preset:
+			#						x_Vst3Preset = xp_Vst3Preset[0]
 
-									pluginvsttype = int(get_value(x_Vst3PluginInfo, 'DeviceType', '0'))
+			#						pluginvsttype = int(get_value(x_Vst3PluginInfo, 'DeviceType', '0'))
 
-									x_Uid = x_Vst3Preset.findall('Uid')[0]
-									Fields_0 = int(get_value(x_Uid, 'Fields.0', '0'))
-									Fields_1 = int(get_value(x_Uid, 'Fields.1', '0'))
-									Fields_2 = int(get_value(x_Uid, 'Fields.2', '0'))
-									Fields_3 = int(get_value(x_Uid, 'Fields.3', '0'))
+			#						x_Uid = x_Vst3Preset.findall('Uid')[0]
+			#						Fields_0 = int(get_value(x_Uid, 'Fields.0', '0'))
+			#						Fields_1 = int(get_value(x_Uid, 'Fields.1', '0'))
+			#						Fields_2 = int(get_value(x_Uid, 'Fields.2', '0'))
+			#						Fields_3 = int(get_value(x_Uid, 'Fields.3', '0'))
 
-									hexuuid = struct.pack('>iiii', Fields_0, Fields_1, Fields_2, Fields_3).hex().upper()
+			#						hexuuid = struct.pack('>iiii', Fields_0, Fields_1, Fields_2, Fields_3).hex().upper()
 
-									hextext = x_Vst3Preset.findall('ProcessorState')[0].text
-									rawbytes = bytes.fromhex(hextext) if hextext != None else b''
+			#						hextext = x_Vst3Preset.findall('ProcessorState')[0].text
+			#						rawbytes = bytes.fromhex(hextext) if hextext != None else b''
 
-									pluginfound = True
-									cvpj_plugindata = plugins.cvpj_plugin('deftype', 'vst3', 'win')
-									cvpj_plugindata.dataval_add('name', vst_Name)
-									cvpj_plugindata.dataval_add('guid', hexuuid)
-									plugin_vst3.replace_data(cvpj_plugindata, 'id', 'win', hexuuid, rawbytes)
+			#						pluginfound = True
+			#						cvpj_plugindata = plugins.cvpj_plugin('deftype', 'vst3', 'win')
+			#						plugin_obj.datavals.add('name', vst_Name)
+			#						plugin_obj.datavals.add('guid', hexuuid)
+			#						plugin_vst3.replace_data(cvpj_plugindata, 'id', 'win', hexuuid, rawbytes)
 
-					if pluginfound:
-						xp_ParameterList = x_trackdevice.findall('ParameterList')
+			#		if pluginfound:
+			#			xp_ParameterList = x_trackdevice.findall('ParameterList')
 
-						if xp_ParameterList:
-							x_ParameterList = xp_ParameterList[0]
+			#			if xp_ParameterList:
+			#				x_ParameterList = xp_ParameterList[0]
 
-							pluginfloats = x_ParameterList.findall('PluginFloatParameter')
+			#				pluginfloats = x_ParameterList.findall('PluginFloatParameter')
 							
-							for pluginfloat in pluginfloats:
-								ParameterName = get_value(pluginfloat, 'ParameterName', 'noname')
-								ParameterId = int(get_value(pluginfloat, 'ParameterId', '0'))
+			#				for pluginfloat in pluginfloats:
+			#					ParameterName = get_value(pluginfloat, 'ParameterName', 'noname')
+			#					ParameterId = int(get_value(pluginfloat, 'ParameterId', '0'))
 
-								if ParameterId != -1:
-									cvpj_paramid = 'ext_param_'+str(ParameterId)
-									ParameterValue = get_param(pluginfloat, 'ParameterValue', 'float', 0, ['plugin', pluginid, cvpj_paramid], None)
-									cvpj_plugindata.param_add_minmax(cvpj_paramid, ParameterValue, 'float', ParameterName, [0,1]) 
+			#					if ParameterId != -1:
+			#						cvpj_paramid = 'ext_param_'+str(ParameterId)
+			#						ParameterValue = get_param(pluginfloat, 'ParameterValue', 'float', 0, ['plugin', pluginid, cvpj_paramid], None)
+			#						cvpj_plugindata.param_add_minmax(cvpj_paramid, ParameterValue, 'float', ParameterName, [0,1]) 
 
-					if pluginvsttype == 2:
-						tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
-						cvpj_plugindata.to_cvpj(cvpj_l, pluginid)
-					elif pluginvsttype == 1:
-						cvpj_plugindata.fxdata_add(devfx_enabled, None)
-						if fxloc != None: fxslot.insert(cvpj_l, fxloc, 'audio', pluginid)
-						cvpj_plugindata.to_cvpj(cvpj_l, pluginid)
+			#		if pluginvsttype == 2:
+			#			tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
+			#			cvpj_plugindata.to_cvpj(cvpj_l, pluginid)
+			#		elif pluginvsttype == 1:
+			#			cvpj_plugindata.fxdata_add(devfx_enabled, None)
+			#			if fxloc != None: fxslot.insert(cvpj_l, fxloc, 'audio', pluginid)
+			#			cvpj_plugindata.to_cvpj(cvpj_l, pluginid)
 
 		#if is_instrument == True:
 		#	tracks_r.track_inst_pluginid(cvpj_l, track_id, pluginid)
@@ -554,18 +531,20 @@ class input_ableton(plugin_input.base):
 		'placement_audio_stretch': ['warp'],
 		'auto_nopl': True,
 		}
-	def parse(self, input_file, extra_param):
+	def parse(self, convproj_obj, input_file, extra_param):
 		global abletondatadef_params
 		global abletondatadef_data
-		global cvpj_l
 		global dataset
+		global autoid_assoc
+		global tempomul
 
 		xmlstring = ""
 
-		dataset = data_dataset.dataset('./data_dset/ableton.dset')
+		convproj_obj.type = 'r'
+		convproj_obj.set_timings(4, True)
+		autoid_assoc = auto_id.convproj2autoid(4, True)
 
-		#_______paramfinder_param = {}
-		#_______paramfinder_data = {}
+		dataset = dv_dataset.dataset('./data_dset/ableton.dset')
 
 		with open(input_file, 'rb') as alsbytes:
 			if alsbytes.read(2) == b'\x1f\x8b': 
@@ -585,8 +564,6 @@ class input_ableton(plugin_input.base):
 			print('[error] Ableton version '+abletonversion+' is not supported.')
 			exit()
 
-		cvpj_l = {}
-
 		x_LiveSet = root.findall('LiveSet')[0]
 		x_Tracks = x_LiveSet.findall('Tracks')[0]
 		x_MasterTrack = x_LiveSet.findall('MasterTrack')[0]
@@ -594,8 +571,6 @@ class input_ableton(plugin_input.base):
 		x_MasterTrack_Mixer = x_MasterTrack_DeviceChain.findall('Mixer')[0]
 		x_MasterTrack_DeviceChain_inside = x_MasterTrack_DeviceChain.findall('DeviceChain')[0]
 		x_MasterTrack_trackdevices = x_MasterTrack_DeviceChain_inside.findall('Devices')[0]
-		do_devices(x_MasterTrack_trackdevices, None, ['master'])
-
 
 		x_mastertrack_Name = x_MasterTrack.findall('Name')[0]
 		mastertrack_name = get_value(x_mastertrack_Name, 'EffectiveName', '')
@@ -605,10 +580,17 @@ class input_ableton(plugin_input.base):
 		mas_track_vol = get_param(x_mastertrack_Mixer, 'Volume', 'float', 0, ['master', 'vol'], None)
 		mas_track_pan = get_param(x_mastertrack_Mixer, 'Pan', 'float', 0, ['master', 'pan'], None)
 		tempo = get_param(x_mastertrack_Mixer, 'Tempo', 'float', 140, ['main', 'bpm'], None)
-		tracks_master.create(cvpj_l, mas_track_vol)
-		tracks_master.visual(cvpj_l, name=mastertrack_name, color=mastertrack_color)
-		tracks_master.param_add(cvpj_l, 'pan', mas_track_pan, 'float')
-		song.add_param(cvpj_l, 'bpm', tempo)
+	
+		tempomul = tempo/120
+
+		convproj_obj.track_master.visual.name = mastertrack_name
+		convproj_obj.track_master.visual.color = mastertrack_color
+		convproj_obj.track_master.params.add('vol', mas_track_vol, 'float')
+		convproj_obj.track_master.params.add('pan', mas_track_pan, 'float')
+		convproj_obj.params.add('bpm', tempo, 'float')
+		do_devices(x_MasterTrack_trackdevices, None, convproj_obj.track_master, convproj_obj)
+
+
 
 		sendnum = 1
 		returnid = 1
@@ -626,9 +608,7 @@ class input_ableton(plugin_input.base):
 			track_id = x_track_data.get('Id')
 			track_name = get_value(x_track_Name, 'EffectiveName', '')
 			track_color = colorlist_one[int(get_value(x_track_data, 'Color', ''))]
-
 			track_inside_group = int(get_value(x_track_data, 'TrackGroupId', '-1'))
-
 			track_sends = x_track_Mixer.findall('Sends')[0]
 			track_sendholders = track_sends.findall('TrackSendHolder')
 
@@ -638,13 +618,13 @@ class input_ableton(plugin_input.base):
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['track', track_id, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['track', track_id, 'pan'], None)
 
-				tracks_r.track_create(cvpj_l, track_id, 'instrument')
-				tracks_r.track_visual(cvpj_l, track_id, name=track_name, color=track_color)
-				tracks_r.track_param_add(cvpj_l, track_id, 'vol', track_vol, 'float')
-				tracks_r.track_param_add(cvpj_l, track_id, 'pan', track_pan, 'float')
+				track_obj = convproj_obj.add_track(track_id, 'instrument', 1, False)
+				track_obj.visual.name = track_name
+				track_obj.visual.color = track_color
 
-				if track_inside_group != -1:
-					tracks_r.track_group(cvpj_l, track_id, 'group_'+str(track_inside_group))
+				track_obj.params.add('vol', track_vol, 'float')
+				track_obj.params.add('pan', track_pan, 'float')
+				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
 
 				x_track_MainSequencer = x_track_DeviceChain.findall('MainSequencer')[0]
 				x_track_ClipTimeable = x_track_MainSequencer.findall('ClipTimeable')[0]
@@ -652,18 +632,12 @@ class input_ableton(plugin_input.base):
 				x_track_Events = x_track_ArrangerAutomation.findall('Events')[0]
 				x_track_MidiClips = x_track_Events.findall('MidiClip')
 				for x_track_MidiClip in x_track_MidiClips:
-					note_placement_pos = float(get_value(x_track_MidiClip, 'CurrentStart', 0))*4
-					note_placement_dur = float(get_value(x_track_MidiClip, 'CurrentEnd', 0))*4 - note_placement_pos
-					note_placement_name = get_value(x_track_MidiClip, 'Name', '')
-					note_placement_color = colorlist_one[int(get_value(x_track_MidiClip, 'Color', 0))]
-					note_placement_muted = ['false','true'].index(get_value(x_track_MidiClip, 'Disabled', 'false'))
-
-					cvpj_placement = {}
-					cvpj_placement['position'] = note_placement_pos
-					cvpj_placement['duration'] = note_placement_dur
-					cvpj_placement['name'] = note_placement_name
-					cvpj_placement['color'] = note_placement_color
-					cvpj_placement['muted'] = note_placement_muted
+					placement_obj = track_obj.placements.add_notes()
+					placement_obj.position = float(get_value(x_track_MidiClip, 'CurrentStart', 0))*4
+					placement_obj.duration = float(get_value(x_track_MidiClip, 'CurrentEnd', 0))*4 - placement_obj.position
+					placement_obj.visual.name = get_value(x_track_MidiClip, 'Name', '')
+					placement_obj.visual.color = colorlist_one[int(get_value(x_track_MidiClip, 'Color', 0))]
+					placement_obj.muted = ['false','true'].index(get_value(x_track_MidiClip, 'Disabled', 'false'))
 
 					x_track_MidiClip_loop = x_track_MidiClip.findall('Loop')[0]
 					note_placement_loop_l_start = float(get_value(x_track_MidiClip_loop, 'LoopStart', 0))*4
@@ -672,58 +646,46 @@ class input_ableton(plugin_input.base):
 					note_placement_loop_on = ['false','true'].index(get_value(x_track_MidiClip_loop, 'LoopOn', 'false'))
 
 					if note_placement_loop_on == 1:
-						cvpj_placement['cut'] = placement_data.cutloopdata(note_placement_loop_start, note_placement_loop_l_start, note_placement_loop_l_end)
+						placement_obj.cut_loop_data(note_placement_loop_start, note_placement_loop_l_start, note_placement_loop_l_end)
 					else:
-						cvpj_placement['cut'] = {}
-						cvpj_placement['cut']['type'] = 'cut'
-						cvpj_placement['cut']['start'] = note_placement_loop_l_start
-						cvpj_placement['cut']['end'] = note_placement_loop_l_end
-
-					cvpj_placement['notelist'] = []
+						placement_obj.cut_type = 'cut'
+						placement_obj.cut_data['start'] = note_placement_loop_l_start
 
 					x_track_MidiClip_Notes = x_track_MidiClip.findall('Notes')[0]
-					x_track_MidiClip_KT = x_track_MidiClip_Notes.findall('KeyTracks')[0]
 
-					t_notes = {}
-
-					for x_track_MidiClip_KT_KT_s in x_track_MidiClip_KT.findall('KeyTrack'):
-						t_ableton_note_key = int(get_value(x_track_MidiClip_KT_KT_s, 'MidiKey', 60))-60
-						x_track_MidiClip_KT_KT_Notes = x_track_MidiClip_KT_KT_s.findall('Notes')[0]
-						for x_track_MidiClip_MNE in x_track_MidiClip_KT_KT_Notes.findall('MidiNoteEvent'):
-							t_note_data = {}
-							t_note_data['key'] = t_ableton_note_key
-							t_note_data['position'] = float(x_track_MidiClip_MNE.get('Time'))*4
-							t_note_data['duration'] = float(x_track_MidiClip_MNE.get('Duration'))*4
-							t_note_data['vol'] = float(x_track_MidiClip_MNE.get('Velocity'))/100
-							t_note_data['off_vol'] = float(x_track_MidiClip_MNE.get('OffVelocity'))/100
-							t_note_data['probability'] = float(x_track_MidiClip_MNE.get('Probability'))
-							t_note_data['enabled'] = ['false','true'].index(x_track_MidiClip_MNE.get('IsEnabled'))
-							note_id = int(x_track_MidiClip_MNE.get('NoteId'))
-							t_notes[note_id] = t_note_data
-
+					t_notes_auto = {}
 					x_track_MidiClip_NES = x_track_MidiClip_Notes.findall('PerNoteEventStore')[0]
 					x_track_MidiClip_NES_EL = x_track_MidiClip_NES.findall('EventLists')[0]
-
 					for x_note_nevent in x_track_MidiClip_NES_EL.findall('PerNoteEventList'):
 						auto_note_id = int(x_note_nevent.get('NoteId'))
 						auto_note_cc = int(x_note_nevent.get('CC'))
-						t_notes[auto_note_id]['notemod'] = {}
-						t_notes[auto_note_id]['notemod']['auto'] = {}
-
+						t_notes_auto[auto_note_id] = []
 						if auto_note_cc == -2:
-							t_notes[auto_note_id]['notemod']['auto']['pitch'] = []
-							cvpj_noteauto_pitch = t_notes[auto_note_id]['notemod']['auto']['pitch']
 							x_note_nevent_ev = x_note_nevent.findall('Events')[0]
-
 							for ableton_point in x_note_nevent_ev.findall('PerNoteEvent'):
 								ap_pos = float(ableton_point.get('TimeOffset'))*4
 								ap_val = float(ableton_point.get('Value'))/170
-								cvpj_noteauto_pitch.append({'position': ap_pos, 'value': ap_val})
+								t_notes_auto[auto_note_id].append([ap_pos, ap_val])
 
-					for t_note in t_notes:
-						cvpj_placement['notelist'].append(t_notes[t_note])
-
-					tracks_r.add_pl(cvpj_l, track_id, 'notes', cvpj_placement)  
+					x_track_MidiClip_KT = x_track_MidiClip_Notes.findall('KeyTracks')[0]
+					for x_track_MidiClip_KT_KT_s in x_track_MidiClip_KT.findall('KeyTrack'):
+						t_note_key = int(get_value(x_track_MidiClip_KT_KT_s, 'MidiKey', 60))-60
+						x_track_MidiClip_KT_KT_Notes = x_track_MidiClip_KT_KT_s.findall('Notes')[0]
+						for x_track_MidiClip_MNE in x_track_MidiClip_KT_KT_Notes.findall('MidiNoteEvent'):
+							t_note_id = int(x_track_MidiClip_MNE.get('NoteId'))
+							t_note_position = float(x_track_MidiClip_MNE.get('Time'))*4
+							t_note_duration = float(x_track_MidiClip_MNE.get('Duration'))*4
+							t_note_vol = float(x_track_MidiClip_MNE.get('Velocity'))/100
+							t_note_extra = {}
+							t_note_extra['off_vol'] = float(x_track_MidiClip_MNE.get('OffVelocity'))/100
+							t_note_extra['probability'] = float(x_track_MidiClip_MNE.get('Probability'))
+							t_note_extra['enabled'] = ['false','true'].index(x_track_MidiClip_MNE.get('IsEnabled'))
+							placement_obj.notelist.add_r(t_note_position, t_note_duration, t_note_key, t_note_vol, t_note_extra)
+							if t_note_id in t_notes_auto:
+								for autopoints in t_notes_auto[t_note_id]:
+									autopoint_obj = placement_obj.notelist.last_add_auto('pitch')
+									autopoint_obj.pos = autopoints[0]
+									autopoint_obj.value = autopoints[1]
 
 			if tracktype == 'AudioTrack':
 				fxloc = ['track', track_id]
@@ -731,45 +693,34 @@ class input_ableton(plugin_input.base):
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['track', track_id, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['track', track_id, 'pan'], None)
 
-				tracks_r.track_create(cvpj_l, track_id, 'audio')
-				tracks_r.track_visual(cvpj_l, track_id, name=track_name, color=track_color)
-				tracks_r.track_param_add(cvpj_l, track_id, 'vol', track_vol, 'float')
-				tracks_r.track_param_add(cvpj_l, track_id, 'pan', track_pan, 'float')
+				track_obj = convproj_obj.add_track(track_id, 'audio', 1, False)
+				track_obj.visual.name = track_name
+				track_obj.visual.color = track_color
+
+				track_obj.params.add('vol', track_vol, 'float')
+				track_obj.params.add('pan', track_pan, 'float')
 
 				x_track_MainSequencer = x_track_DeviceChain.findall('MainSequencer')[0]
 				x_track_Sample = x_track_MainSequencer.findall('Sample')[0]
 				x_track_ArrangerAutomation = x_track_Sample.findall('ArrangerAutomation')[0]
 				x_track_Events = x_track_ArrangerAutomation.findall('Events')[0]
 				x_track_AudioClips = x_track_Events.findall('AudioClip')
-				audiorate = 1
 				for x_track_AudioClip in x_track_AudioClips:
 
 					t_CurrentStart = float(get_value(x_track_AudioClip, 'CurrentStart', 0))
 					t_CurrentEnd = float(get_value(x_track_AudioClip, 'CurrentEnd', 0))
 
-					audio_placement_pos = t_CurrentStart*4
-					audio_placement_dur = (t_CurrentEnd-t_CurrentStart)*4
-					audio_placement_name = get_value(x_track_AudioClip, 'Name', '')
-					audio_placement_color = colorlist_one[int(get_value(x_track_AudioClip, 'Color', 0))]
-					audio_placement_muted = ['false','true'].index(get_value(x_track_AudioClip, 'Disabled', 'false'))
-					audio_placement_vol = float(get_value(x_track_AudioClip, 'SampleVolume', 0))
-
 					audio_placement_warp_on = ['false','true'].index(get_value(x_track_AudioClip, 'IsWarped', 'false'))
 					audio_placement_warp_mode = int(get_value(x_track_AudioClip, 'WarpMode', 0))
 
-					audio_sampleref = get_sampleref(x_track_AudioClip)
-					audio_sampleref_steps = audio_sampleref['seconds']*8
-
-					cvpj_placement = {}
-					cvpj_placement['position'] = audio_placement_pos
-					cvpj_placement['duration'] = audio_placement_dur
-					cvpj_placement['name'] = audio_placement_name
-					cvpj_placement['color'] = audio_placement_color
-					cvpj_placement['muted'] = audio_placement_muted
-					cvpj_placement['vol'] = audio_placement_vol
-
-					cvpj_placement['file'] = audio_sampleref['file']
-					aud_sampledata = audio.get_audiofile_info(audio_sampleref['file'])
+					placement_obj = track_obj.placements.add_audio()
+					placement_obj.position = t_CurrentStart*4
+					placement_obj.duration = (t_CurrentEnd-t_CurrentStart)*4
+					placement_obj.visual.name = get_value(x_track_AudioClip, 'Name', '')
+					placement_obj.visual.color = colorlist_one[int(get_value(x_track_AudioClip, 'Color', 0))]
+					placement_obj.muted = ['false','true'].index(get_value(x_track_AudioClip, 'Disabled', 'false'))
+					placement_obj.vol = float(get_value(x_track_AudioClip, 'SampleVolume', 0))
+					placement_obj.sampleref = get_sampleref(convproj_obj, x_track_AudioClip)
 
 					x_track_AudioClip_loop = x_track_AudioClip.findall('Loop')[0]
 
@@ -786,86 +737,74 @@ class input_ableton(plugin_input.base):
 					x_track_AudioClip_fades = x_track_AudioClip.findall('Fades')[0]
 
 					if audio_placement_Fade == 1:
-						cvpj_placement['fade'] = {}
-						cvpj_placement['fade']['in'] = {}
-						cvpj_placement['fade']['in']['duration'] = float(get_value(x_track_AudioClip_fades, 'FadeInLength', 0))*8
-						cvpj_placement['fade']['in']['skew'] = float(get_value(x_track_AudioClip_fades, 'FadeInCurveSkew', 0))
-						cvpj_placement['fade']['in']['slope'] = float(get_value(x_track_AudioClip_fades, 'FadeInCurveSlope', 0))
-						cvpj_placement['fade']['out'] = {}
-						cvpj_placement['fade']['out']['duration'] = float(get_value(x_track_AudioClip_fades, 'FadeOutLength', 0))*8
-						cvpj_placement['fade']['out']['skew'] = float(get_value(x_track_AudioClip_fades, 'FadeOutCurveSkew', 0))
-						cvpj_placement['fade']['out']['slope'] = float(get_value(x_track_AudioClip_fades, 'FadeOutCurveSlope', 0))
-
-					cvpj_placement['audiomod'] = {}
-					cvpj_audiomod = cvpj_placement['audiomod']
+						placement_obj.fade_in['duration'] = float(get_value(x_track_AudioClip_fades, 'FadeInLength', 0))*8
+						placement_obj.fade_in['skew'] = float(get_value(x_track_AudioClip_fades, 'FadeInCurveSkew', 0))
+						placement_obj.fade_in['slope'] = float(get_value(x_track_AudioClip_fades, 'FadeInCurveSlope', 0))
+						placement_obj.fade_out['duration'] = float(get_value(x_track_AudioClip_fades, 'FadeOutLength', 0))*8
+						placement_obj.fade_out['skew'] = float(get_value(x_track_AudioClip_fades, 'FadeOutCurveSkew', 0))
+						placement_obj.fade_out['slope'] = float(get_value(x_track_AudioClip_fades, 'FadeOutCurveSlope', 0))
 
 					if audio_placement_warp_on == 1:
-						cvpj_audiomod['stretch_method'] = 'warp'
-						cvpj_audiomod['stretch_params'] = {}
+						placement_obj.stretch.is_warped = True
+						placement_obj.stretch.params = {}
 						if audio_placement_warp_mode == 0:
-							cvpj_audiomod['stretch_algorithm'] = 'beats'
-							cvpj_audiomod['stretch_params']['TransientResolution'] = int(get_value(x_track_AudioClip, 'TransientResolution', 6))
-							cvpj_audiomod['stretch_params']['TransientLoopMode'] = int(get_value(x_track_AudioClip, 'TransientLoopMode', 2))
-							cvpj_audiomod['stretch_params']['TransientEnvelope'] = int(get_value(x_track_AudioClip, 'TransientEnvelope', 100))
+							placement_obj.stretch.algorithm = 'beats'
+							placement_obj.stretch.params['TransientResolution'] = int(get_value(x_track_AudioClip, 'TransientResolution', 6))
+							placement_obj.stretch.params['TransientLoopMode'] = int(get_value(x_track_AudioClip, 'TransientLoopMode', 2))
+							placement_obj.stretch.params['TransientEnvelope'] = int(get_value(x_track_AudioClip, 'TransientEnvelope', 100))
 						if audio_placement_warp_mode == 1:
-							cvpj_audiomod['stretch_algorithm'] = 'ableton_tones'
-							cvpj_audiomod['stretch_params']['GranularityTones'] = float(get_value(x_track_AudioClip, 'GranularityTones', 30))
+							placement_obj.stretch.algorithm = 'ableton_tones'
+							placement_obj.stretch.params['GranularityTones'] = float(get_value(x_track_AudioClip, 'GranularityTones', 30))
 						if audio_placement_warp_mode == 2:
-							cvpj_audiomod['stretch_algorithm'] = 'ableton_texture'
-							cvpj_audiomod['stretch_params']['GranularityTexture'] = float(get_value(x_track_AudioClip, 'GranularityTexture', 71.328125))
-							cvpj_audiomod['stretch_params']['FluctuationTexture'] = float(get_value(x_track_AudioClip, 'FluctuationTexture', 27.34375))
+							placement_obj.stretch.algorithm = 'ableton_texture'
+							placement_obj.stretch.params['GranularityTexture'] = float(get_value(x_track_AudioClip, 'GranularityTexture', 71.328125))
+							placement_obj.stretch.params['FluctuationTexture'] = float(get_value(x_track_AudioClip, 'FluctuationTexture', 27.34375))
 						if audio_placement_warp_mode == 3:
-							cvpj_audiomod['stretch_algorithm'] = 'resample'
+							placement_obj.stretch.algorithm = 'resample'
 						if audio_placement_warp_mode == 4:
-							cvpj_audiomod['stretch_algorithm'] = 'ableton_complex'
+							placement_obj.stretch.algorithm = 'ableton_complex'
 						if audio_placement_warp_mode == 6:
-							cvpj_audiomod['stretch_algorithm'] = 'stretch_complexpro'
-							cvpj_audiomod['stretch_params']['ComplexProFormants'] = float(get_value(x_track_AudioClip, 'ComplexProFormants', 100))
-							cvpj_audiomod['stretch_params']['ComplexProEnvelope'] = int(get_value(x_track_AudioClip, 'ComplexProEnvelope', 120))
+							placement_obj.stretch.algorithm = 'stretch_complexpro'
+							placement_obj.stretch.params['ComplexProFormants'] = float(get_value(x_track_AudioClip, 'ComplexProFormants', 100))
+							placement_obj.stretch.params['ComplexProEnvelope'] = int(get_value(x_track_AudioClip, 'ComplexProEnvelope', 120))
 
 						x_track_AudioClip_WarpMarkers_bef = x_track_AudioClip.findall('WarpMarkers')[0]
 						x_track_AudioClip_WarpMarkers = x_track_AudioClip_WarpMarkers_bef.findall('WarpMarker')
-						t_warpmarkers = []
 						for x_track_AudioClip_WarpMarker in x_track_AudioClip_WarpMarkers:
-							t_warpmarker = {}
-							t_warpmarker['pos'] = float(x_track_AudioClip_WarpMarker.get('BeatTime'))*4
-							t_warpmarker['pos_real'] = float(x_track_AudioClip_WarpMarker.get('SecTime'))
-							onedur = t_warpmarker['pos_real']/audio_sampleref['seconds']
-							t_warpmarkers.append(t_warpmarker)
-						
-						cvpj_audiomod['stretch_data'] = t_warpmarkers
-						
+							warp_pos = float(x_track_AudioClip_WarpMarker.get('BeatTime'))*4
+							warp_pos_real = float(x_track_AudioClip_WarpMarker.get('SecTime'))
+							placement_obj.stretch.warp.append([warp_pos, warp_pos_real])
 					else:
-						cvpj_audiomod['stretch_method'] = None
+						placement_obj.stretch.is_warped = False
+						placement_obj.stretch.rate = (tempo/120)
 
 					audio_placement_PitchCoarse = float(get_value(x_track_AudioClip, 'PitchCoarse', 0))
 					audio_placement_PitchFine = float(get_value(x_track_AudioClip, 'PitchFine', 0))
-					cvpj_audiomod['pitch'] = audio_placement_PitchCoarse + audio_placement_PitchFine/100
+					placement_obj.pitch = audio_placement_PitchCoarse + audio_placement_PitchFine/100
 
 					#for value in ["CurrentStart", "CurrentEnd", "StartRelative", "LoopStart", "LoopEnd"]:
 					#	print(str(get_value(x_track_AudioClip, value, 0)).ljust(20), end=' ')
 					#print()
 
+					#print(audio_placement_loop_start, audio_placement_loop_l_start, audio_placement_loop_l_end)
+
 					if audio_placement_warp_on == False:
 						if audio_placement_loop_on == 0:
-							cvpj_placement['cut'] = {}
-							cvpj_placement['cut']['type'] = 'cut'
-							data_values.time_from_seconds(cvpj_placement['cut'], 'start', False, audio_placement_loop_l_start/4, 1)
-							data_values.time_from_seconds(cvpj_placement['cut'], 'end', False, audio_placement_loop_l_end/4, 1)
+							out_is_speed, out_rate = placement_obj.stretch.get(tempo, False)
+							print(out_is_speed, out_rate)
+
+							placement_obj.cut_type = 'cut'
+							placement_obj.cut_data['start'] = audio_placement_loop_l_start*2
+							placement_obj.duration /= out_rate
 					else:
 						if audio_placement_loop_on == 0:
-							cvpj_placement['cut'] = {}
-							cvpj_placement['cut']['type'] = 'cut'
-							data_values.time_from_seconds(cvpj_placement['cut'], 'start', True, audio_placement_loop_l_start/8, 1)
-							data_values.time_from_seconds(cvpj_placement['cut'], 'end', True, audio_placement_loop_l_end/8, 1)
+							placement_obj.cut_type = 'cut'
+							placement_obj.cut_data['start'] = audio_placement_loop_l_start
 						else:
-							cvpj_placement['cut'] = {}
-							cvpj_placement['cut']['type'] = 'loop'
-							data_values.time_from_steps(cvpj_placement['cut'], 'start', False, audio_placement_loop_start, 1)
-							data_values.time_from_steps(cvpj_placement['cut'], 'loopstart', False, audio_placement_loop_l_start, 1)
-							data_values.time_from_steps(cvpj_placement['cut'], 'loopend', False, audio_placement_loop_l_end, 1)
-
-					tracks_r.add_pl(cvpj_l, track_id, 'audio', cvpj_placement)
+							placement_obj.cut_type = 'loop'
+							placement_obj.cut_data['start'] = audio_placement_loop_start
+							placement_obj.cut_data['loopstart'] = audio_placement_loop_l_start
+							placement_obj.cut_data['loopend'] = audio_placement_loop_l_end
 
 			if tracktype == 'ReturnTrack':
 				get_auto(x_track_data)
@@ -873,10 +812,11 @@ class input_ableton(plugin_input.base):
 				fxloc = ['return', None, cvpj_returntrackid]
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['return', cvpj_returntrackid, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['return', cvpj_returntrackid, 'pan'], None)
-				trackfx.return_add(cvpj_l, ['master'], cvpj_returntrackid)
-				trackfx.return_visual(cvpj_l, ['master'], cvpj_returntrackid, name=track_name, color=track_color)
-				trackfx.return_param_add(cvpj_l, ['master'], cvpj_returntrackid, 'vol', track_vol, 'float')
-				trackfx.return_param_add(cvpj_l, ['master'], cvpj_returntrackid, 'pan', track_pan, 'float')
+				track_obj = convproj_obj.track_master.add_return(cvpj_returntrackid)
+				track_obj.visual.name = track_name
+				track_obj.visual.color = track_color
+				track_obj.params.add('vol', track_vol, 'float')
+				track_obj.params.add('pan', track_pan, 'float')
 				returnid += 1
 
 			if tracktype == 'GroupTrack':
@@ -886,14 +826,12 @@ class input_ableton(plugin_input.base):
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['group', cvpj_grouptrackid, 'vol'], None)
 				track_pan = get_param(x_track_Mixer, 'Pan', 'float', 0, ['group', cvpj_grouptrackid, 'pan'], None)
 
-				group_inside_group = None
-				if track_inside_group != -1:
-					group_inside_group = 'group_'+str(track_inside_group)
-
-				trackfx.group_add(cvpj_l, cvpj_grouptrackid, group_inside_group)
-				trackfx.group_visual(cvpj_l, cvpj_grouptrackid, name=track_name, color=track_color)
-				trackfx.group_param_add(cvpj_l, cvpj_grouptrackid, 'vol', track_vol, 'float')
-				trackfx.group_param_add(cvpj_l, cvpj_grouptrackid, 'pan', track_pan, 'float')
+				track_obj = convproj_obj.add_group(cvpj_grouptrackid)
+				track_obj.visual.name = track_name
+				track_obj.visual.color = track_color
+				track_obj.params.add('vol', track_vol, 'float')
+				track_obj.params.add('pan', track_pan, 'float')
+				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
 
 			sendcount = 1
 			if fxloc != None:
@@ -902,20 +840,16 @@ class input_ableton(plugin_input.base):
 					sendid = sendcount
 					sendautoid = 'send_'+track_id+'_'+str(sendid)
 					sendlevel = get_param(track_sendholder, 'Send', 'float', 0, ['send', sendautoid, 'amount'], None)
-					if fxloc[0] == 'track': trackfx.send_add(cvpj_l, track_id, 'return_'+str(sendid), sendlevel, sendautoid)
-					if fxloc[0] == 'group': trackfx.group_send_add(cvpj_l, cvpj_grouptrackid, 'return_'+str(sendid), sendlevel, sendautoid)
+					track_obj.sends.add('return_'+str(sendid), sendautoid, sendlevel)
 					sendcount += 1
 
 			x_track_DeviceChain_inside = x_track_DeviceChain.findall('DeviceChain')[0]
 			x_trackdevices = x_track_DeviceChain_inside.findall('Devices')[0]
-			do_devices(x_trackdevices, track_id, fxloc)
+			do_devices(x_trackdevices, track_id, track_obj, convproj_obj)
 
 		#for devicename in _______paramfinder_param:
 		#	print('"'+devicename+'":', _______paramfinder_param[devicename],',')
 
-
 		get_auto(x_MasterTrack)
-		auto_id.in_output(cvpj_l)
 
-		return json.dumps(cvpj_l)
-
+		autoid_assoc.output(convproj_obj)

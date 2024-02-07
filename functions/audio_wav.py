@@ -112,38 +112,41 @@ def generate(file, data, channels, freq, bits, instdata):
 	print('Channels: ' + str(channels),end=', ')
 	print('Freq: ' + str(freq),end=', ')
 	print('Bits: ' + str(bits))
-	file_object = open(file, 'wb')
-	table_chunks = []
+	try:
+		file_object = open(file, 'wb')
+		table_chunks = []
 
-	# ----- fmt -----
-	wav_wFormatTag = 1
-	wav_nChannels = channels
-	wav_nSamplesPerSec = freq
-	wav_nAvgBytesPerSec = freq*channels
-	wav_nBlockAlign = int((bits/8)*channels)
-	wav_wBitsPerSample = bits
-	chunk_wavdata_fmt = BytesIO()
-	chunk_wavdata_fmt.write(wav_wFormatTag.to_bytes(2, 'little'))
-	chunk_wavdata_fmt.write(wav_nChannels.to_bytes(2, 'little'))
-	chunk_wavdata_fmt.write(wav_nSamplesPerSec.to_bytes(4, 'little'))
-	chunk_wavdata_fmt.write(wav_nAvgBytesPerSec.to_bytes(4, 'little'))
-	chunk_wavdata_fmt.write(wav_nBlockAlign.to_bytes(2, 'little'))
-	chunk_wavdata_fmt.write(wav_wBitsPerSample.to_bytes(2, 'little'))
-	chunk_wavdata_fmt.seek(0)
-	wav_CHUNK_fmt = chunk_wavdata_fmt.read()
-	table_chunks.append([b'fmt ',wav_CHUNK_fmt])
-	# ----- data -----
-	table_chunks.append([b'data',data])
-	# ----- smpl -----
-	#wav_CHUNK_smpl = makesmpl(instdata)
-	#if wav_CHUNK_smpl != None:
-	#	table_chunks.append(wav_CHUNK_smpl)
+		# ----- fmt -----
+		wav_wFormatTag = 1
+		wav_nChannels = channels
+		wav_nSamplesPerSec = freq
+		wav_nAvgBytesPerSec = freq*channels
+		wav_nBlockAlign = int((bits/8)*channels)
+		wav_wBitsPerSample = bits
+		chunk_wavdata_fmt = BytesIO()
+		chunk_wavdata_fmt.write(wav_wFormatTag.to_bytes(2, 'little'))
+		chunk_wavdata_fmt.write(wav_nChannels.to_bytes(2, 'little'))
+		chunk_wavdata_fmt.write(wav_nSamplesPerSec.to_bytes(4, 'little'))
+		chunk_wavdata_fmt.write(wav_nAvgBytesPerSec.to_bytes(4, 'little'))
+		chunk_wavdata_fmt.write(wav_nBlockAlign.to_bytes(2, 'little'))
+		chunk_wavdata_fmt.write(wav_wBitsPerSample.to_bytes(2, 'little'))
+		chunk_wavdata_fmt.seek(0)
+		wav_CHUNK_fmt = chunk_wavdata_fmt.read()
+		table_chunks.append([b'fmt ',wav_CHUNK_fmt])
+		# ----- data -----
+		table_chunks.append([b'data',data])
+		# ----- smpl -----
+		#wav_CHUNK_smpl = makesmpl(instdata)
+		#if wav_CHUNK_smpl != None:
+		#	table_chunks.append(wav_CHUNK_smpl)
 
-	chunk_data_bytes = data_bytes.riff_make(table_chunks)
-	bytes_wavdata = b'WAVE' + chunk_data_bytes
-	chunks_main = data_bytes.riff_make([[b'RIFF',bytes_wavdata]])
+		chunk_data_bytes = data_bytes.riff_make(table_chunks)
+		bytes_wavdata = b'WAVE' + chunk_data_bytes
+		chunks_main = data_bytes.riff_make([[b'RIFF',bytes_wavdata]])
 
-	file_object.write(chunks_main)
+		file_object.write(chunks_main)
+	except:
+		pass
 
 def complete_wav_info(sampler_file_data):
 	if 'file' in sampler_file_data:

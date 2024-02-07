@@ -5,15 +5,8 @@ import plugin_input
 import json
 import struct
 import os.path
-from functions import audio_wav
-from functions import data_bytes
-from functions import placement_data
-from functions import plugins
-from functions import song
-from functions import note_data
 from functions import colors
-from functions import data_dataset
-from functions_tracks import tracks_r
+from objects import dv_dataset
 
 class input_piyopiyo(plugin_input.base):
     def __init__(self): pass
@@ -33,7 +26,11 @@ class input_piyopiyo(plugin_input.base):
         bytesdata = bytestream.read(3)
         if bytesdata == b'PMD': return True
         else: return False
-    def parse(self, input_file, extra_param):
+
+    def parse(self, convproj_obj, input_file, extra_param):
+        convproj_obj.type = 'r'
+        convproj_obj.set_timings(4, True)
+
         pmdfile = open(input_file, 'rb')
         header = pmdfile.read(4)
         trackdatapos = int.from_bytes(pmdfile.read(4), "little")
@@ -52,7 +49,7 @@ class input_piyopiyo(plugin_input.base):
 
         cvpj_l = {}
 
-        dataset = data_dataset.dataset('./data_dset/piyopiyo.dset')
+        dataset = dv_dataset.dataset('./data_dset/piyopiyo.dset')
         colordata = colors.colorset(dataset.colorset_e_list('inst', 'main'))
 
         for tracknum in range(3):
@@ -72,50 +69,51 @@ class input_piyopiyo(plugin_input.base):
             keyoffset[tracknum] = (trk_octave-2)*12
             idval = str(tracknum)
 
-            pluginid = str(tracknum)
-            inst_plugindata = plugins.cvpj_plugin('deftype', 'universal', 'synth-osc')
-            inst_plugindata.osc_num_oscs(1)
-            inst_plugindata.osc_opparam_set(0, 'shape', 'custom_wave')
-            inst_plugindata.osc_opparam_set(0, 'wave_name', 'main')
-            inst_plugindata.wave_add('main', trk_waveform, -128, 128)
-            inst_plugindata.env_blocks_add('vol', trk_envelope, 1/64, 128, None, None)
-            inst_plugindata.env_points_from_blocks('vol')
-            inst_plugindata.to_cvpj(cvpj_l, pluginid)
+            track_obj = convproj_obj.add_track(idval, 'instrument', 0, False)
+            track_obj.visual.name = 'Inst #'+str(tracknum)
+            track_obj.visual.color = colordata.getcolornum(tracknum)
+            track_obj.params.add('vol', trk_volume/250, 'float')
 
-            tracks_r.track_create(cvpj_l, idval, 'instrument')
-            tracks_r.track_visual(cvpj_l, idval, name='Inst #'+str(tracknum), color=colordata.getcolornum(tracknum))
-            tracks_r.track_inst_pluginid(cvpj_l, idval, pluginid)
-            tracks_r.track_param_add(cvpj_l, idval, 'vol', trk_volume/250, 'float')
+            plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+            osc_data = plugin_obj.osc_add()
+            osc_data.shape = 'custom_wave'
+            osc_data.name_id = 'main'
+            wave_obj = plugin_obj.wave_add('main')
+            wave_obj.set_all_range(trk_waveform, -128, 128)
+            plugin_obj.env_blocks_add('vol', trk_envelope, 1/64, 128, None, None)
+            plugin_obj.env_points_from_blocks('vol')
+            track_obj.inst_pluginid = pluginid
 
         TrackPVol = int.from_bytes(pmdfile.read(4), "little")
 
-        inst_plugindata = plugins.cvpj_plugin('deftype', 'native-piyopiyo', 'drums')
-        inst_plugindata.to_cvpj(cvpj_l, "3")
-
-        tracks_r.track_create(cvpj_l, "3", 'instrument')
-        tracks_r.track_visual(cvpj_l, "3", name='perc', color=colordata.getcolornum(3))
-        tracks_r.track_inst_pluginid(cvpj_l, "3", "3")
-        tracks_r.track_param_add(cvpj_l, "3", 'vol', TrackPVol/250, 'float')
+        track_obj = convproj_obj.add_track("3", 'instrument', False, False)
+        track_obj.visual.name = 'Drums'
+        track_obj.visual.color = colordata.getcolornum(3)
+        track_obj.params.add('vol', trk_volume/250, 'float')
+        plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-piyopiyo', 'drums')
+        track_obj.inst_pluginid = pluginid
 
         pmdfile.seek(trackdatapos)
+
         for tracknum in range(4):
-            notelist = []
-            t_placements = []
+            track_found, track_obj = convproj_obj.find_track(str(tracknum))
+            placement_obj = track_obj.placements.add_notes()
             currentpan = 0
             for pmdpos in range(recordspertrack):
                 bitnotes = bin(int.from_bytes(pmdfile.read(3), "little"))[2:].zfill(24)
                 pan = pmdfile.read(1)[0]
                 if pan != 0: currentpan = (pan-4)/3
                 notenum = 11
+                pitches = []
                 for bitnote in bitnotes:
-                    if bitnote == '1': notelist.append(note_data.rx_makenote(pmdpos, 1, notenum+keyoffset[tracknum], 1.0, currentpan))
+                    if bitnote == '1': pitches.append(notenum)
                     notenum -= 1
-            t_placements = placement_data.nl2pl(notelist) if notelist != [] else []
-            tracks_r.add_pl(cvpj_l, str(tracknum), 'notes', t_placements)
+                if pitches: placement_obj.notelist.add_r_multi(pmdpos, 1, [x+keyoffset[tracknum] for x in pitches], 1, {'pan':currentpan})
 
-        cvpj_l['do_addloop'] = True
-        cvpj_l['do_singlenotelistcut'] = True
-        song.add_param(cvpj_l, 'bpm', bpm)
+        convproj_obj.do_actions.append('do_addloop')
+        convproj_obj.do_actions.append('do_singlenotelistcut')
+        convproj_obj.params.add('bpm', bpm, 'float')
 
-        song.add_timemarker_looparea(cvpj_l, None, loopstart, loopend)
-        return json.dumps(cvpj_l)
+        convproj_obj.loop_active = True
+        convproj_obj.loop_start = loopstart
+        convproj_obj.loop_end = loopend

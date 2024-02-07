@@ -9,9 +9,9 @@ import os
 import struct
 import math
 import base64
-from functions import data_values
-from functions import plugin_vst2
-from functions import plugins
+#from functions import data_values
+#from functions_plugin_ext import plugin_vst2
+#from functions import plugins
 
 ______debugtxt______ = False
 
@@ -41,12 +41,12 @@ def load_plugins():
 			plugtype = plco_class_data.is_dawvert_plugin()
 			if plugtype == 'plugconv': 
 				pcp_i_data, pcp_o_data, pcp_isoutput, pcp_i_always = plco_class_data.getplugconvinfo()
+				print(pcp_i_data, pcp_o_data, pcp_isoutput, pcp_i_always)
 				if not pcp_isoutput: 
 					if pcp_i_always: pl_pc_in_always.append([plco_class_data, pcp_i_data, pcp_o_data])
 					else: pl_pc_in.append([plco_class_data, pcp_i_data, pcp_o_data])
 				else: pl_pc_out.append([plco_class_data, pcp_i_data, pcp_o_data])
 		except: pass
-
 
 	for plugconvplugin in dv_pluginclasses_ext.plugins:
 		plco_class_data = plugconvplugin()
@@ -98,34 +98,17 @@ def commalist2plugtypes(inputdata):
 		sep_supp_plugs.append(outputpart)
 	return sep_supp_plugs
 
-def convertpluginconvproj(converted_val, cvpj_l, pluginid, pci_in, cvpj_plugindata, extra_json):
-	plugintype = cvpj_plugindata.type_get()
-
+def convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, pci_in, extra_json):
 	for plugclassinfo in pci_in:
-		ismatched = plugtype_match(plugintype, plugclassinfo[1][0:2])
-		#if ______debugtxt______: 
-		#	visualplugname_in = getvisualname(plugclassinfo[1])
-		#	visualplugname_out = getvisualname(plugclassinfo[2])
-		#	print('convertpluginconvproj -------------', ismatched, plugintype, 
-		#	'    ['+visualplugname_in+' > '+visualplugname_out+'] ')
-
-		if ismatched == True:
-			#visualplugname_in = getvisualname(plugclassinfo[1])
-			#visualplugname_out = getvisualname(plugclassinfo[2])
-			#print('convertpluginconvproj -------------', ismatched, plugintype, 
-			#'    ['+visualplugname_in+' > '+visualplugname_out+'] ')
-
-			converted_val_p = plugclassinfo[0].convert(cvpj_l, pluginid, cvpj_plugindata, extra_json)
-
+		if plugin_obj.check_wildmatch(plugclassinfo[1][0], plugclassinfo[1][1]):
+			converted_val_p = plugclassinfo[0].convert(convproj_obj, plugin_obj, pluginid, extra_json)
 			if converted_val_p < converted_val: converted_val = converted_val_p
-
 			if converted_val == 0: break
 
 	return converted_val
 
-def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw, 
+def convproj(convproj_obj, platform_id, in_daw, out_daw, 
 	out_supportedplugins, out_supportedplugformats, extra_json):
-
 	global pl_pc_in
 	global pl_pc_in_always
 	global pl_pc_out
@@ -145,56 +128,35 @@ def convproj(cvpjdata, platform_id, in_type, out_type, in_daw, out_daw,
 			if supplugtype not in sep_pl_pc_out__plugins: sep_pl_pc_out__plugins[supplugtype] = []
 			sep_pl_pc_out__plugins[supplugtype].append(cpv)
 
-	cvpj_l = json.loads(cvpjdata)
-	if out_type != 'debug':
-		if 'plugins' in cvpj_l:
+	if convproj_obj.type != 'debug':
 
-			plugindataclasses = {}
-			for pluginid in cvpj_l['plugins']:
-				plugindataclasses[pluginid] = plugins.cvpj_plugin('cvpj', cvpj_l, pluginid)
+		for pluginid, plugin_obj in convproj_obj.plugins.items():
+			converted_val = 2
 
-			ext_plug_needed = {}
+			ext_plug_needed = False
 
-			for pluginid in plugindataclasses:
-				cvpj_plugindata = plugindataclasses[pluginid]
-				plugintype_plug = cvpj_plugindata.type_get()
-
-				converted_val = 2
-
-				if plugintype_plug[0] not in out_supportedplugins:
-
-					if ______debugtxt______: print('-------')
+			if plugin_obj.plugin_type not in out_supportedplugins:
+				if ______debugtxt______: print('-------')
 	
-					if ______debugtxt______: print('- input always')
-					converted_val = convertpluginconvproj(converted_val, cvpj_l, pluginid, pl_pc_in_always, cvpj_plugindata, extra_json)
+				if ______debugtxt______: print('- input always')
+				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, pl_pc_in_always, extra_json)
 
-					if ______debugtxt______: print('- input')
-					converted_val = convertpluginconvproj(converted_val, cvpj_l, pluginid, pl_pc_in, cvpj_plugindata, extra_json)
+				if ______debugtxt______: print('- input')
+				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, pl_pc_in, extra_json)
 
-					if ______debugtxt______: print('- output')
-					converted_val = convertpluginconvproj(converted_val, cvpj_l, pluginid, sep_pl_pc_out__native, cvpj_plugindata, extra_json)
+				if ______debugtxt______: print('- output')
+				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, sep_pl_pc_out__native, extra_json)
 
-					#print(converted_val)
+				if converted_val != 0: ext_plug_needed = True
 
-					if converted_val != 0:
-						ext_plug_needed[pluginid] = cvpj_plugindata
-
-					cvpj_plugindata.to_cvpj(cvpj_l, pluginid)
-
-			for pluginid in ext_plug_needed:
-				cvpj_plugindata = ext_plug_needed[pluginid]
-				plugintype_plug = cvpj_plugindata.type_get()
-
+			if ext_plug_needed:
 				ext_conv_val = False
 
-				if not (True in [plugtype_match(plugintype_plug, x) for x in out_supportedplugins]):
+				if not (True in [plugin_obj.check_wildmatch(x[0], x[1]) for x in out_supportedplugins]):
 					for p_pl_pc_ext in pl_pc_ext:
-						ismatched = plugtype_match(plugintype_plug, p_pl_pc_ext[1])
+						ismatched = plugin_obj.check_wildmatch(p_pl_pc_ext[1][0], p_pl_pc_ext[1][1])
 						if ismatched and p_pl_pc_ext[3] != out_daw:
 							for plugformat in out_supportedplugformats:
-								ext_conv_val = p_pl_pc_ext[0].convert(cvpj_l, pluginid, cvpj_plugindata, extra_json, plugformat)
+								ext_conv_val = p_pl_pc_ext[0].convert(convproj_obj, plugin_obj, pluginid, extra_json, plugformat)
 								if ext_conv_val: break
 						if ext_conv_val: break
-
-
-		return json.dumps(cvpj_l, indent=2)

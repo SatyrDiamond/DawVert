@@ -15,6 +15,8 @@ from functions_song import convert_m2r
 from functions_song import convert_m2mi
 from functions_song import convert_mi2m
 
+from objects import convproj
+
 import platform
 import os
 
@@ -38,8 +40,6 @@ class core:
 
 		self.pluglist_output = {}
 		self.currentplug_output = [None, None]
-
-		self.convproj_j = {}
 
 	def input_load_plugins(self, pluginset):
 		self.pluglist_input = {}
@@ -136,19 +136,21 @@ class core:
 			return pluginname
 		else: return None
 
-	def get_cvpj(self, extra_json): return self.convproj_j
+	def get_cvpj(self, extra_json): return self.convproj_obj
 
 	def parse_input(self, in_file, extra_json): 
 		if 'samples_inside' in self.currentplug_input[4]: os.makedirs(extra_json['samplefolder'], exist_ok=True)
 
-		self.convproj_j = [self.currentplug_input[0].parse(in_file, extra_json), self.currentplug_input[3], self.currentplug_input[4]]
-		if self.convproj_j == '{}' or self.convproj_j == None:
-			print('[error] Input Plugin outputted no json')
-			exit()
+		self.convproj_obj = convproj.cvpj_project()
+		self.currentplug_input[0].parse(self.convproj_obj, in_file, extra_json)
+
+		self.convproj_obj.sample_folders.append(os.path.dirname(in_file))
+
+		for sample_folder in self.convproj_obj.sample_folders:
+			self.convproj_obj.fill_samplerefs(sample_folder)
 
 	def convert_plugins(self, extra_json): 
-		CVPJ_C = plug_conv.convproj(self.convproj_j[0], self.platform_id, self.convproj_j[1], self.currentplug_output[3], self.currentplug_input[1], self.currentplug_output[1], self.currentplug_output[5], self.currentplug_output[6], extra_json)
-		if CVPJ_C != None: self.convproj_j[0] = CVPJ_C
+		plug_conv.convproj(self.convproj_obj, self.platform_id, self.currentplug_input[1], self.currentplug_output[1], self.currentplug_output[5], self.currentplug_output[6], extra_json)
 
 	def convert_type_output(self, extra_json): 
 		in_type = self.currentplug_input[3]
@@ -162,46 +164,46 @@ class core:
 
 		print('[core] ' + typelist[in_type] + ' > ' + typelist[out_type])
 
-		#if in_type in ['r', 'm']: self.convproj_j[0] = compactclass.makecompat_audiostretch(self.convproj_j[0], in_type, in_dawcapabilities, out_dawcapabilities)
+		#if in_type in ['r', 'm']: compactclass.makecompat_audiostretch(self.convproj_obj, in_type, in_dawcapabilities, out_dawcapabilities)
 	
 		if out_type != 'debug':
-			self.convproj_j[0] = compactclass.makecompat(self.convproj_j[0], in_type)
+			compactclass.makecompat(self.convproj_obj, in_type)
 
 		if in_type == 'ri' and out_type == 'mi': 
-			self.convproj_j[0] = convert_ri2mi.convert(self.convproj_j[0])
+			convert_ri2mi.convert(self.convproj_obj)
 		elif in_type == 'ri' and out_type == 'r': 
-			self.convproj_j[0] = convert_ri2r.convert(self.convproj_j[0])
+			convert_ri2r.convert(self.convproj_obj)
 
 		elif in_type == 'm' and out_type == 'mi': 
-			self.convproj_j[0] = convert_m2mi.convert(self.convproj_j[0])
+			convert_m2mi.convert(self.convproj_obj)
 		elif in_type == 'm' and out_type == 'r': 
-			self.convproj_j[0] = convert_m2r.convert(self.convproj_j[0])
+			convert_m2r.convert(self.convproj_obj)
 
 		elif in_type == 'r' and out_type == 'm': 
-			self.convproj_j[0] = convert_r2m.convert(self.convproj_j[0])
+			convert_r2m.convert(self.convproj_obj)
 		elif in_type == 'r' and out_type == 'mi': 
-			self.convproj_j[0] = convert_r2m.convert(self.convproj_j[0])
-			self.convproj_j[0] = compactclass.makecompat(self.convproj_j[0], 'm')
-			self.convproj_j[0] = convert_m2mi.convert(self.convproj_j[0])
+			convert_r2m.convert(self.convproj_obj)
+			compactclass.makecompat(self.convproj_obj, 'm')
+			convert_m2mi.convert(self.convproj_obj)
 
 		elif in_type == 'mi' and out_type == 'm': 
-			self.convproj_j[0] = convert_mi2m.convert(self.convproj_j[0], extra_json)
+			convert_mi2m.convert(self.convproj_obj, extra_json)
 		elif in_type == 'mi' and out_type == 'r': 
-			self.convproj_j[0] = convert_mi2m.convert(self.convproj_j[0], extra_json)
-			self.convproj_j[0] = compactclass.makecompat(self.convproj_j[0], 'm')
-			self.convproj_j[0] = convert_m2r.convert(self.convproj_j[0])
+			convert_mi2m.convert(self.convproj_obj, extra_json)
+			compactclass.makecompat(self.convproj_obj, 'm')
+			convert_m2r.convert(self.convproj_obj)
 	
 		elif in_type == 'rm' and out_type == 'r': 
-			self.convproj_j[0] = convert_rm2r.convert(self.convproj_j[0])
+			convert_rm2r.convert(self.convproj_obj)
 		elif in_type == 'rm' and out_type == 'm': 
-			self.convproj_j[0] = convert_rm2r.convert(self.convproj_j[0])
-			self.convproj_j[0] = compactclass.makecompat(self.convproj_j[0], 'r')
-			self.convproj_j[0] = convert_r2m.convert(self.convproj_j[0])
+			convert_rm2r.convert(self.convproj_obj)
+			compactclass.makecompat(self.convproj_obj, 'r')
+			convert_r2m.convert(self.convproj_obj)
 		elif in_type == 'rm' and out_type == 'mi': 
-			self.convproj_j[0] = convert_rm2r.convert(self.convproj_j[0])
-			self.convproj_j[0] = compactclass.makecompat(self.convproj_j[0], 'r')
-			self.convproj_j[0] = convert_r2m.convert(self.convproj_j[0])
-			self.convproj_j[0] = convert_m2mi.convert(self.convproj_j[0])
+			convert_rm2r.convert(self.convproj_obj)
+			compactclass.makecompat(self.convproj_obj, 'r')
+			convert_r2m.convert(self.convproj_obj)
+			convert_m2mi.convert(self.convproj_obj)
 
 		elif in_type == out_type: 
 			pass
@@ -214,10 +216,7 @@ class core:
 			exit()
 
 		if out_type != 'debug':
-			self.convproj_j[0] = compactclass.makecompat(self.convproj_j[0], out_type)
-
-		self.convproj_j[1] = self.currentplug_output[3]
-		self.convproj_j[2] = self.currentplug_output[4]
+			compactclass.makecompat(self.convproj_obj, out_type)
 
 	def parse_output(self, out_file): 
-		self.currentplug_output[0].parse(self.convproj_j[0], out_file)
+		self.currentplug_output[0].parse(self.convproj_obj, out_file)

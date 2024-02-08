@@ -489,7 +489,7 @@ class cvpj_plugin:
         return False, None
 
     def getpath_fileref(self, convproj_obj, refname, os_type, relative): 
-        ref_found, fileref_obj = plugin_obj.get_fileref(refname, convproj_obj)
+        ref_found, fileref_obj = self.get_fileref(refname, convproj_obj)
         return fileref_obj.get_path(os_type, relative) if ref_found else ''
 
     # -------------------------------------------------- eq

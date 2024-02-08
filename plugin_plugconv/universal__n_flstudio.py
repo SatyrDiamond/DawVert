@@ -12,7 +12,8 @@ class plugconv(plugin_plugconv.base):
     def getplugconvinfo(self): return ['native-flstudio', None, 'flp'], ['universal', None, None], False, False
     def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
         if plugin_obj.plugin_subtype == 'fruity parametric eq 2':
-            main_lvl = plugin_obj.params.get('main_lvl', 0)[0]/100
+            print('[plug-conv] FL Studio to Universal: Fruity Parametric EQ 2 > EQ Bands:',pluginid)
+            main_lvl = plugin_obj.params.get('main_lvl', 0).value/100
 
             for bandnum in range(7):
                 bandstarttxt = str(bandnum+1)
@@ -20,13 +21,13 @@ class plugconv(plugin_plugconv.base):
                 filter_obj = plugin_obj.eq_add()
                 filter_obj.type = 'peak'
 
-                filter_obj.gain = plugin_obj.params.get(bandstarttxt+'_gain', 0)[0]/100
+                filter_obj.gain = plugin_obj.params.get(bandstarttxt+'_gain', 0).value/100
 
-                fl_band_freq = plugin_obj.params.get(bandstarttxt+'_freq', 0)[0]/65536
+                fl_band_freq = plugin_obj.params.get(bandstarttxt+'_freq', 0).value/65536
                 filter_obj.freq = 20 * 1000**fl_band_freq
 
-                fl_band_type = plugin_obj.params.get(bandstarttxt+'_type', 0)[0]
-                fl_band_width = plugin_obj.params.get(bandstarttxt+'_width', 0)[0]/65536
+                fl_band_type = plugin_obj.params.get(bandstarttxt+'_type', 0).value
+                fl_band_width = plugin_obj.params.get(bandstarttxt+'_width', 0).value/65536
 
                 filter_obj.type = 'peak'
 
@@ -50,7 +51,7 @@ class plugconv(plugin_plugconv.base):
                 if fl_band_type == 7: filter_obj.type = 'high_shelf'
 
             plugin_obj.replace('universal', 'eq-bands')
-            plugin_obj.params.add('gain_out', main_lvl, 'float', 'Out Gain')
+            param_obj = plugin_obj.params.add('gain_out', main_lvl, 'float')
             return 1
 
         return 2

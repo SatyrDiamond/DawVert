@@ -324,7 +324,6 @@ class datadef:
         try:
             if in_datadef != None:
                 f = open(in_datadef, "r")
-                print('[datadef] Loaded '+in_datadef)
                 ddlines = [x.strip().split('#')[0].split('|') for x in f.readlines()]
                 ddlines = [[p.strip() for p in l] for l in ddlines]
 
@@ -341,6 +340,7 @@ class datadef:
                             valtypes = [x.split('.') for x in valtypes]
                             valtypes = [x if len(x) > 1 else [x[0], ''] for x in valtypes]
                             self.structs[current_struct].append([ddline[0], valtypes, ddline[2]])
+                print('[datadef] Loaded '+in_datadef)
         except:
             pass
 

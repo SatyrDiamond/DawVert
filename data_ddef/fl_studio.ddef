@@ -606,7 +606,7 @@ part|int|postgain
 
 area_struct|fruity_spectroman
 part|byte|unknown_1
-part|float|outputmode
+part|int_b|outputmode
 part|float|amp
 part|float|scale
 part|byte|windowing

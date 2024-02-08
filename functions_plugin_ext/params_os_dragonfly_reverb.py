@@ -33,5 +33,5 @@ class dragonfly_hall_data:
 	def set_param(self, name, value):
 		self.params[name] = value
 	
-	def to_cvpj_vst2(self, plugin_obj):
-		plugin_vst2.replace_data(plugin_obj, 'name', 'any', 'Dragonfly Hall Reverb', 'chunk', data_nullbytegroup.make([{'preset': 'Small Dark Hall'}, self.params]), None)
+	def to_cvpj_vst2(self, convproj_obj, plugin_obj):
+		plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name', 'any', 'Dragonfly Hall Reverb', 'chunk', data_nullbytegroup.make([{'preset': 'Small Dark Hall'}, self.params]), None)

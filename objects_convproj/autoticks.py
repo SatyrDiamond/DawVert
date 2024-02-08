@@ -43,8 +43,9 @@ class cvpj_autoticks:
             if out_pos > p: out_pos = p
         return out_pos, out_dur
 
-    def move(self, pos):
-        for p in self.points: self.points[p] += pos
+    #def move(self, pos):
+    #    for p in self.points: 
+    #        self.points[p += pos] == self.points[p]
 
     def addmul(self, addval, mulval):
         for p in self.points: self.points[p] = (self.points[p]+addval)*mulval
@@ -57,6 +58,9 @@ class cvpj_autoticks:
 
     def from_one(self, i_min, i_max):
         for p in self.points: self.points[p] = xtramath.between_from_one(i_min, i_max, self.points[p])
+
+    def funcval(self, i_function):
+        for p in self.points: self.points[p] = i_function(self.points[p])
 
     def check(self):
         return len(self.points) != 0

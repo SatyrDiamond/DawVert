@@ -55,4 +55,4 @@ class spaceship_delay_data:
         xmldata = ET.Element("SPSHIPDELAY1.0.5")  
         for key, value in self.params.iteritems():
         	xmldata.set(key) = value
-		plugin_vst2.replace_data(cvpj_plugindata, 'id', 'any', 1181644592, 'chunk', data_vc2xml.make(xmldata), None)
+		plugin_vst2.replace_data(convproj_obj, cvpj_plugindata, 'id', 'any', 1181644592, 'chunk', data_vc2xml.make(xmldata), None)

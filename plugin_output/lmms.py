@@ -310,7 +310,7 @@ def lmms_encode_plugin(trkX_insttr, track_obj, trackid, trackname):
         return [None, None], middlenotefix
 
 def setvstparams(xml_vst, plugin_obj, pluginid):
-    vstpath = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
+    vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', None, True)
 
     xml_vst.set('program', str(plugin_obj.datavals.get('current_program', 0)))
     xml_vst.set('plugin', vstpath)
@@ -339,7 +339,7 @@ def setvstparams(xml_vst, plugin_obj, pluginid):
         xml_vst.set('numparams', str(numparams))
         for param in range(numparams):
             param_obj = plugin_obj.params.get('ext_param_'+str(param), 0)
-            xml_vst.set('param'+str(param), str(param)+':'+param_obj.visual.name+':'+str(param_obj.value))
+            xml_vst.set('param'+str(param), str(param)+':'+(param_obj.visual.name if param_obj.visual.name else '')+':'+str(param_obj.value))
 
     for paramname in plugin_obj.params.list():
         if 'ext_param_' in paramname:

@@ -16,5 +16,5 @@ class socalabs_data:
 		x_temp.set('uid', name)
 		x_temp.set('val', str(value))
 
-	def to_cvpj_vst2(self, fourid):
-		plugin_vst2.replace_data(plugin_obj, 'id','any', fourid, 'chunk', ET.tostring(self.x_sl_data, encoding='utf-8'), None)
+	def to_cvpj_vst2(self, convproj_obj, plugin_obj, fourid):
+		plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id','any', fourid, 'chunk', ET.tostring(self.x_sl_data, encoding='utf-8'), None)

@@ -5,9 +5,7 @@ import json
 import base64
 import struct
 import math
-from functions_plugdata import data_wave
 from functions import data_values
-from functions import plugins
 from functions import xtramath
 from functions_plugin_ext import plugin_vst2
 
@@ -457,6 +455,6 @@ class vital_data:
 
         self.replacemultiwave(osc_num, vital_keyframes)
 
-    def to_cvpj_vst2(self):
-        plugin_vst2.replace_data(self.plugin_obj, 'name','any', 'Vital', 'chunk', json.dumps(self.vitaldata).encode('utf-8'), None)
-        plugin_vst2.replace_data(self.plugin_obj, 'name','any', 'Vitalium', 'chunk', json.dumps(self.vitaldata).encode('utf-8'), None)
+    def to_cvpj_vst2(self, convproj_obj):
+        plugin_vst2.replace_data(convproj_obj, self.plugin_obj, 'name','any', 'Vital', 'chunk', json.dumps(self.vitaldata).encode('utf-8'), None)
+        plugin_vst2.replace_data(convproj_obj, self.plugin_obj, 'name','any', 'Vitalium', 'chunk', json.dumps(self.vitaldata).encode('utf-8'), None)

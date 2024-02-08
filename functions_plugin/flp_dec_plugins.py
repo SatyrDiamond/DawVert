@@ -118,7 +118,7 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
                             cvpj_program['program_name'] = vst_names[num]
                             cvpj_programs.append(cvpj_program)
 
-                        plugin_vst2.replace_data(plugin_obj, 'name' ,'win', wrapperdata['name'], 'bank', cvpj_programs, None)
+                        plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name' ,'win', wrapperdata['name'], 'bank', cvpj_programs, None)
                         plugin_obj.datavals.add('current_program', wrapper_vstprogram)
 
             #elif '16id' in wrapperdata:
@@ -149,7 +149,7 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
 
                 #exit()
 
-            #    plugin_vst3.replace_data(plugin_obj, 'name', 'win', wrapperdata['name'], vststatedata[3] if 3 in vststatedata else b'')
+            #    plugin_vst3.replace_data(convproj_obj, plugin_obj, 'name', 'win', wrapperdata['name'], vststatedata[3] if 3 in vststatedata else b'')
 
 
     elif pluginname == 'fruity compressor':
@@ -250,10 +250,13 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
         slicer_filelen = int.from_bytes(fl_plugstr.read(1), "little")
         slicer_filename = fl_plugstr.read(slicer_filelen).decode('utf-8')
         slicechannels = 2
+        max_dur = 10000000
+
         if slicer_filename != "": 
             plugin_obj.samplerefs['sample'] = slicer_filename
             sampleref_obj = convproj_obj.add_sampleref(slicer_filename, slicer_filename)
             slicechannels = sampleref_obj.channels
+            max_dur = sampleref_obj.dur_samples
 
         slicer_numslices = int.from_bytes(fl_plugstr.read(4), "little")
 
@@ -264,7 +267,7 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
             slicer_s_slice = struct.unpack('iihBBB', fl_plugstr.read(13))
             slicer_data.append([slicer_s_slice, slicer_slicename])
 
-        slicepos = [int(x[0][0]*(slicechannels/2)) for x in slicer_data]+[sampleref_obj.dur_samples]
+        slicepos = [int(x[0][0]*(slicechannels/2)) for x in slicer_data]+[max_dur]
 
         prev_pos = -1
         for slicenum, fl_slicedata in enumerate(slicer_data):

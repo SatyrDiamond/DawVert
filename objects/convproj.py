@@ -193,12 +193,12 @@ class cvpj_project:
         if autopath in self.autopoints: self.autopoints[autopath].from_one(i_min, i_max)
         if autopath in self.autoticks: self.autoticks[autopath].from_one(i_min, i_max)
 
-    def funcval_automation(self, autopath, function):
+    def funcval_automation(self, autopath, i_function):
         autopath = autopath_encode(autopath)
-        if autopath in self.automation: 
-            for ap in self.automation[autopath].iter():
-                ap.value = function(ap.value)
-
+        if autopath in self.automation: self.automation[autopath].funcval(i_function)
+        if autopath in self.autopoints: self.autopoints[autopath].funcval(i_function)
+        if autopath in self.autoticks: self.autoticks[autopath].funcval(i_function)
+        
     def iter_automation(self):
         for autopath in self.automation:
             yield autopath.split(';'), self.automation[autopath]

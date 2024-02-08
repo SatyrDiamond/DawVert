@@ -399,6 +399,9 @@ class cvpj_placements_auto:
     def from_one(self, i_min, i_max):
         for pl in self.data: pl.data.from_one(i_min, i_max)
 
+    def funcval(self, i_function):
+        for pl in self.data: pl.data.funcval(i_function)
+
     def iter(self):
         for x in self.data: yield x
 

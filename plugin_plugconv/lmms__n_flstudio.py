@@ -20,9 +20,8 @@ class plugconv(plugin_plugconv.base):
 
         if plugin_obj.plugin_subtype.lower() == 'fruity balance':  
             print('[plug-conv] FL Studio to LMMS: Fruity Balance > Amplifier:',pluginid)
-            auto_data.del_plugin(cvpj_l, pluginid)
-            bal_pan = plugin_obj.params.get('pan', 0)
-            bal_vol = plugin_obj.params.get('vol', 0)
+            bal_pan = plugin_obj.params.get('pan', 0).value
+            bal_vol = plugin_obj.params.get('vol', 0).value
             plugin_obj.replace('native-lmms', 'amplifier')
             plugin_obj.params.add('pan', (bal_pan/128)*100, 'int')
             plugin_obj.params.add('right', 100, 'int')
@@ -32,11 +31,10 @@ class plugconv(plugin_plugconv.base):
 
         if plugin_obj.plugin_subtype.lower() == 'fruity stereo shaper':
             print('[plug-conv] FL Studio to LMMS: Stereo Shaper > Stereo Matrix:',pluginid)
-            auto_data.del_plugin(cvpj_l, pluginid)
-            fl_shape_r2l = plugin_obj.params.get('r2l', 0)/12800
-            fl_shape_l2l = plugin_obj.params.get('l2l', 0)/12800
-            fl_shape_r2r = plugin_obj.params.get('r2r', 0)/12800
-            fl_shape_l2r = plugin_obj.params.get('l2r', 0)/12800
+            fl_shape_r2l = plugin_obj.params.get('r2l', 0).value/12800
+            fl_shape_l2l = plugin_obj.params.get('l2l', 0).value/12800
+            fl_shape_r2r = plugin_obj.params.get('r2r', 0).value/12800
+            fl_shape_l2r = plugin_obj.params.get('l2r', 0).value/12800
             plugin_obj.replace('native-lmms', 'stereomatrix')
             plugin_obj.params.add('l-r', fl_shape_l2r, 'float')  
             plugin_obj.params.add('r-l', fl_shape_r2l, 'float')  
@@ -46,35 +44,34 @@ class plugconv(plugin_plugconv.base):
 
         if plugin_obj.plugin_subtype.lower() == '3x osc':   
             print('[plug-conv] FL Studio to LMMS: 3xOsc > TripleOscillator:',pluginid)
-            auto_data.del_plugin(cvpj_l, pluginid)
-            fl_osc1_coarse = plugin_obj.params.get('osc1_coarse', 0)
-            fl_osc1_detune = plugin_obj.params.get('osc1_detune', 0)
-            fl_osc1_fine = plugin_obj.params.get('osc1_fine', 0)
-            fl_osc1_invert = plugin_obj.params.get('osc1_invert', 0)
-            fl_osc1_mixlevel = plugin_obj.params.get('osc1_mixlevel', 0)/128
-            fl_osc1_ofs = plugin_obj.params.get('osc1_ofs', 0)/64   
-            fl_osc1_pan = plugin_obj.params.get('osc1_pan', 0)/64   
-            fl_osc1_shape = plugin_obj.params.get('osc1_shape', 0)
+            fl_osc1_coarse = plugin_obj.params.get('osc1_coarse', 0).value
+            fl_osc1_detune = plugin_obj.params.get('osc1_detune', 0).value
+            fl_osc1_fine = plugin_obj.params.get('osc1_fine', 0).value
+            fl_osc1_invert = plugin_obj.params.get('osc1_invert', 0).value
+            fl_osc1_mixlevel = plugin_obj.params.get('osc1_mixlevel', 0).value/128
+            fl_osc1_ofs = plugin_obj.params.get('osc1_ofs', 0).value/64   
+            fl_osc1_pan = plugin_obj.params.get('osc1_pan', 0).value/64   
+            fl_osc1_shape = plugin_obj.params.get('osc1_shape', 0).value
 
-            fl_osc2_coarse = plugin_obj.params.get('osc2_coarse', 0)
-            fl_osc2_detune = plugin_obj.params.get('osc2_detune', 0)
-            fl_osc2_fine = plugin_obj.params.get('osc2_fine', 0)
-            fl_osc2_invert = plugin_obj.params.get('osc2_invert', 0)
-            fl_osc2_mixlevel = plugin_obj.params.get('osc2_mixlevel', 0)/128
-            fl_osc2_ofs = plugin_obj.params.get('osc2_ofs', 0)/64   
-            fl_osc2_pan = plugin_obj.params.get('osc2_pan', 0)/64   
-            fl_osc2_shape = plugin_obj.params.get('osc2_shape', 0)
+            fl_osc2_coarse = plugin_obj.params.get('osc2_coarse', 0).value
+            fl_osc2_detune = plugin_obj.params.get('osc2_detune', 0).value
+            fl_osc2_fine = plugin_obj.params.get('osc2_fine', 0).value
+            fl_osc2_invert = plugin_obj.params.get('osc2_invert', 0).value
+            fl_osc2_mixlevel = plugin_obj.params.get('osc2_mixlevel', 0).value/128
+            fl_osc2_ofs = plugin_obj.params.get('osc2_ofs', 0).value/64   
+            fl_osc2_pan = plugin_obj.params.get('osc2_pan', 0).value/64   
+            fl_osc2_shape = plugin_obj.params.get('osc2_shape', 0).value
 
-            fl_osc3_coarse = plugin_obj.params.get('osc3_coarse', 0)
-            fl_osc3_detune = plugin_obj.params.get('osc3_detune', 0)
-            fl_osc3_fine = plugin_obj.params.get('osc3_fine', 0)
-            fl_osc3_invert = plugin_obj.params.get('osc3_invert', 0)
-            fl_osc3_ofs = plugin_obj.params.get('osc3_ofs', 0)/64   
-            fl_osc3_pan = plugin_obj.params.get('osc3_pan', 0)/64   
-            fl_osc3_shape = plugin_obj.params.get('osc3_shape', 0)
+            fl_osc3_coarse = plugin_obj.params.get('osc3_coarse', 0).value
+            fl_osc3_detune = plugin_obj.params.get('osc3_detune', 0).value
+            fl_osc3_fine = plugin_obj.params.get('osc3_fine', 0).value
+            fl_osc3_invert = plugin_obj.params.get('osc3_invert', 0).value
+            fl_osc3_ofs = plugin_obj.params.get('osc3_ofs', 0).value/64   
+            fl_osc3_pan = plugin_obj.params.get('osc3_pan', 0).value/64   
+            fl_osc3_shape = plugin_obj.params.get('osc3_shape', 0).value
 
-            fl_osc3_am = plugin_obj.params.get('osc3_am', 0)
-            fl_phase_rand = plugin_obj.params.get('phase_rand', 0)
+            fl_osc3_am = plugin_obj.params.get('osc3_am', 0).value
+            fl_phase_rand = plugin_obj.params.get('phase_rand', 0).value
 
             lmms_coarse0 = fl_osc1_coarse   
             lmms_coarse1 = fl_osc2_coarse   
@@ -110,7 +107,9 @@ class plugconv(plugin_plugconv.base):
             lmms_userwavefile1 = 0  
             lmms_userwavefile2 = 0
 
-            filedata = cvpj_plugindata.fileref_get('audiofile')
+            samplerefid = plugin_obj.samplerefs['audiofile'] if 'audiofile' in plugin_obj.samplerefs else None
+
+            fileref_exists, filedata = plugin_obj.get_fileref('audiofile', convproj_obj)
 
             plugin_obj.replace('native-lmms', 'tripleoscillator')
 
@@ -149,10 +148,12 @@ class plugconv(plugin_plugconv.base):
             plugin_obj.params.add('wavetype1', lmms_wavetype1, 'int')
             plugin_obj.params.add('wavetype2', lmms_wavetype2, 'int')
 
-            if filedata != None:
-                cvpj_plugindata.fileref_add('osc_1', filedata['path'])
-                cvpj_plugindata.fileref_add('osc_2', filedata['path'])
-                cvpj_plugindata.fileref_add('osc_3', filedata['path'])
+            if samplerefid:
+                for oscnum in range(1, 4):
+                    out_str = 'userwavefile'+str(oscnum)
+                    plugin_obj.samplerefs[out_str] = samplerefid
+                    plugin_obj.samplerefs[out_str] = samplerefid
+                    plugin_obj.samplerefs[out_str] = samplerefid
             return 0
             
         return 2

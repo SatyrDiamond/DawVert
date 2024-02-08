@@ -20,6 +20,8 @@ class cvpj_datavals:
     def add(self, i_name, i_value): self.data[i_name] = i_value
     def get(self, i_name, fallbackval): return self.data[i_name] if i_name in self.data else fallbackval
     def list(self): return [x for x in self.data]
+    def remove(self, i_name): 
+        if i_name in self.data: del self.data[i_name]
 
 class cvpj_param:
     __slots__ = ['value','type','min','max','visual','found']

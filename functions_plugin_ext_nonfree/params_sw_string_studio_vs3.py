@@ -92,4 +92,4 @@ class aas_vs3_data: #String Studio VS-3
 		return stringdata.getvalue()
 
 	def to_cvpj_vst2(self, cvpj_plugindata):
-		plugin_vst2.replace_data(cvpj_plugindata, 'id', 'win', 1213417780, 'chunk', self.outputval().encode(), None)
+		plugin_vst2.replace_data(convproj_obj, cvpj_plugindata, 'id', 'win', 1213417780, 'chunk', self.outputval().encode(), None)

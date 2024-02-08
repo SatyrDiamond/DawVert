@@ -151,6 +151,7 @@ class core:
 
 	def convert_plugins(self, extra_json): 
 		plug_conv.convproj(self.convproj_obj, self.platform_id, self.currentplug_input[1], self.currentplug_output[1], self.currentplug_output[5], self.currentplug_output[6], extra_json)
+		#exit()
 
 	def convert_type_output(self, extra_json): 
 		in_type = self.currentplug_input[3]

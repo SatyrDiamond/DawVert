@@ -393,7 +393,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 			#						rawbytes = bytes.fromhex(hextext) if hextext != None else b''
 			#						if useschunk: 
 			#							plugin_obj.datavals.add('datatype', 'chunk')
-			#							plugin_vst2.replace_data(cvpj_plugindata, 'id' ,'win', vst_UniqueId, 'chunk', rawbytes, None)
+			#							plugin_vst2.replace_data(convproj_obj, cvpj_plugindata, 'id' ,'win', vst_UniqueId, 'chunk', rawbytes, None)
 			#						else:
 			#							if rawbytes:
 			#								rawstream = BytesIO(rawbytes)
@@ -409,7 +409,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 			#										cvpj_program['params'][str(paramnum)] = {'value': struct.unpack('f', rawstream.read(4))[0]}
 			#									cvpj_programs.append(cvpj_program)
 
-			#							plugin_vst2.replace_data(cvpj_plugindata, 'id' ,'win', vst_UniqueId, 'params', cvpj_programs, None)
+			#							plugin_vst2.replace_data(convproj_obj, cvpj_plugindata, 'id' ,'win', vst_UniqueId, 'params', cvpj_programs, None)
 
 			#			if xp_Vst3PluginInfo:
 			#				x_Vst3PluginInfo = xp_Vst3PluginInfo[0]
@@ -441,7 +441,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 			#						cvpj_plugindata = plugins.cvpj_plugin('deftype', 'vst3', 'win')
 			#						plugin_obj.datavals.add('name', vst_Name)
 			#						plugin_obj.datavals.add('guid', hexuuid)
-			#						plugin_vst3.replace_data(cvpj_plugindata, 'id', 'win', hexuuid, rawbytes)
+			#						plugin_vst3.replace_data(convproj_obj, cvpj_plugindata, 'id', 'win', hexuuid, rawbytes)
 
 			#		if pluginfound:
 			#			xp_ParameterList = x_trackdevice.findall('ParameterList')

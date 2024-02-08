@@ -3,7 +3,6 @@
 
 from os.path import exists
 from functions import data_values
-from functions import plugins
 import configparser
 import base64
 import struct
@@ -109,17 +108,19 @@ def check_exists(in_name):
 	else:
 		return False
 
-def replace_data(plugin_obj, bycat, platform, in_name, data):
+def replace_data(convproj_obj, plugin_obj, bycat, platform, in_name, data):
 	global cpu_arch_list
 	platformtxt = getplatformtxt(platform)
 	vst_cpuarch, vst_path, vst_name, vst_id, vst_version = db_search(in_name, platformtxt, bycat)
 
 	if vst_path != None:
-		if plugin_obj.plugin_subtype != 'vst3': plugin_obj.replace('vst3', platformtxt)
+		if plugin_obj.plugin_type != 'vst3': plugin_obj.replace('vst3', platformtxt)
 		if bycat == 'name': print('[plugin-vst3] ' + plugin_obj.get_type_visual() + ' (VST3 '+str(vst_cpuarch)+'-bit)')
 
+		convproj_obj.add_fileref(vst_path, vst_path)
+		plugin_obj.filerefs['plugin'] = vst_path
+
 		plugin_obj.datavals.add('name', vst_name)
-		plugin_obj.datavals.add('path', vst_path)
 		plugin_obj.datavals.add('cpu_arch', vst_cpuarch)
 		plugin_obj.datavals.add('guid', vst_id)
 		plugin_obj.datavals.add('version', vst_version)

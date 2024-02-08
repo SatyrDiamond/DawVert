@@ -103,6 +103,9 @@ class cvpj_autopoints:
     def from_one(self, i_min, i_max):
         for p in self.points: p.pos = xtramath.between_from_one(i_min, i_max, p.pos)
 
+    def funcval(self, i_function):
+        for p in self.points: p.value = i_function(p.value)
+
     def sort(self):
         ta_bsort = {}
         ta_sorted = {}

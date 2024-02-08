@@ -111,7 +111,7 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, xmldata):
 
     vst2_pathid = pluginid+'_vstpath'
     convproj_obj.add_fileref(vst2_pathid, xmldata.get('plugin'))
-    plugin_obj.filerefs['file'] = vst2_pathid
+    plugin_obj.filerefs['plugin'] = vst2_pathid
 
     vst_numparams = xmldata.get('numparams')
 

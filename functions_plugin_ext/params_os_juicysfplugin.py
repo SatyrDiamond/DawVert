@@ -34,5 +34,5 @@ class juicysfplugin_data:
 	def set_sffile(self, value):
 		self.jsfp_soundFont.set('path', value)
 
-	def to_cvpj_vst2(self, plugin_obj):
+	def to_cvpj_vst2(self, convproj_obj, plugin_obj):
 		plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name','any', 'juicysfplugin', 'chunk', data_vc2xml.make(self.jsfp_xml), None)

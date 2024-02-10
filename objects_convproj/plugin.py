@@ -40,9 +40,9 @@ class cvpj_lfo:
 
 class cvpj_wavetable:
     def __init__(self):
-        self.ids = ids
-        self.locs = locs
-        self.phase = phase
+        self.ids = []
+        self.locs = []
+        self.phase = 0
 
 class cvpj_regions:
     def __init__(self):
@@ -57,6 +57,17 @@ class cvpj_osc:
         self.name_id = ''
         self.params = {}
         self.env = {}
+
+class cvpj_eq:
+    def __init__(self):
+        self.num_bands = 0
+        self.bands = []
+
+    def add(self):
+        filter_obj = cvpj_filter()
+        self.bands.append(filter_obj)
+        self.num_bands += 1
+        return filter_obj
 
 class cvpj_plugin:
     def __init__(self):
@@ -74,7 +85,7 @@ class cvpj_plugin:
         self.env_points_vars = {}
         self.env_blocks = {}
         self.filter = cvpj_filter()
-        self.eq = []
+        self.eq = cvpj_eq()
         self.named_eq = {}
         self.lfos = {}
         self.waves = {}
@@ -425,11 +436,13 @@ class cvpj_plugin:
     def harmonics_list(self): return [x for x in self.harmonics]
 
     # -------------------------------------------------- wave
-    def wavetable_add(self, i_name, i_wavenames, i_wavelocs, i_phase): 
-        self.wavetable[i_name] = cvpj_wavetable()
-        self.wavetable[i_name].ids = i_wavenames
-        self.wavetable[i_name].locs = i_wavelocs
-        self.wavetable[i_name].phase = i_phase
+    def wavetable_add(self, i_name): 
+        wavetable_obj = cvpj_wavetable()
+        self.wavetables[i_name] = wavetable_obj
+        return wavetable_obj
+        #wavetable_obj.ids = i_wavenames
+        #wavetable_obj.locs = i_wavelocs
+        #wavetable_obj.phase = i_phase
     def wavetable_get(self, i_name): return self.wavetables[i_name] if i_name in self.wavetables else cvpj_wavetable()
     def wavetable_list(self):  return [x for x in self.wavetables]
 
@@ -467,18 +480,19 @@ class cvpj_plugin:
 
     # -------------------------------------------------- sampleref
 
-    def sampleref_fileref(self, sampleref_name, convproj_obj): 
+    def sampleref_fileref(self, sampleref_name, convproj_obj):
         if sampleref_name in self.samplerefs:
             sampleref_id = self.samplerefs[sampleref_name]
             return convproj_obj.get_sampleref(sampleref_id)
         return False, None
 
     def getpath_sampleref(self, sampleref_name, convproj_obj, os_type, relative): 
-        outpath = ''
         if sampleref_name in self.samplerefs:
             ref_found, sampleref_obj = convproj_obj.get_sampleref(self.samplerefs[sampleref_name])
-            if ref_found: outpath = sampleref_obj.fileref.get_path(os_type, relative)
-        return outpath
+            if ref_found: 
+                return sampleref_obj.fileref.get_path(os_type, relative)
+            return ''
+        return ''
 
     # -------------------------------------------------- fileref
 
@@ -494,13 +508,9 @@ class cvpj_plugin:
 
     # -------------------------------------------------- eq
     def eq_add(self): 
-        filter_obj = cvpj_filter()
-        self.eq.append(filter_obj)
-        return filter_obj
+        return self.eq.add()
 
     # -------------------------------------------------- named_eq
     def named_eq_add(self, eq_name): 
-        if eq_name not in self.named_eq: self.named_eq[eq_name] = []
-        filter_obj = cvpj_filter()
-        self.named_eq[eq_name].append(filter_obj)
-        return filter_obj
+        if eq_name not in self.named_eq: self.named_eq[eq_name] = cvpj_eq()
+        return self.named_eq[eq_name].add()

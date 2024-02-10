@@ -11,13 +11,15 @@ class plugconv(plugin_plugconv.base):
     def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
         if 'soundfont' in extra_json:
             print('[plug-conv] MIDI to SoundFont2:',pluginid)
-            sffile = extra_json['soundfont']
+            sf2_path = extra_json['soundfont']
+            v_drums = plugin_obj.datavals.get('is_drum', False)
             v_bank = plugin_obj.datavals.get('bank', 0)
-            v_inst = plugin_obj.datavals.get('inst', 0)
+            v_inst = plugin_obj.datavals.get('patch', 1)-1
             plugin_obj.replace('soundfont2', None)
-            plugin_obj.datavals.add('bank', v_bank)
-            plugin_obj.datavals.add('patch', v_inst)
-            plugin_obj.datavals.add('file', sffile)
+            plugin_obj.datavals.add('bank', v_bank if not v_drums else 128)
+            plugin_obj.datavals.add('patch', v_inst+1)
+            convproj_obj.add_fileref(sf2_path, sf2_path)
+            plugin_obj.filerefs['file'] = sf2_path
             return 1
         print('[plug-conv] No Soundfont Argument Defined:',pluginid)
         return 2

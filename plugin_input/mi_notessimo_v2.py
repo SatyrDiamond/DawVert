@@ -127,7 +127,7 @@ class input_notessimo_v2(plugin_input.base):
                 placement_obj.fromindex = str(sheetnum)+'_'+str(layer)
             convproj_obj.timesig_auto.add_point(curpos, [4,4])
 
-            autopl_obj = convproj_obj.add_automation_pl('main/bpm', 'float')
+            autopl_obj = convproj_obj.add_automation_pl(['main','bpm'], 'float')
             autopl_obj.position = curpos
             autopl_obj.duration = cursheet_data[0]*cursheet_data[1]
             autopoint_obj = autopl_obj.data.add_point()

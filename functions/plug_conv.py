@@ -41,7 +41,7 @@ def load_plugins():
 			plugtype = plco_class_data.is_dawvert_plugin()
 			if plugtype == 'plugconv': 
 				pcp_i_data, pcp_o_data, pcp_isoutput, pcp_i_always = plco_class_data.getplugconvinfo()
-				print(pcp_i_data, pcp_o_data, pcp_isoutput, pcp_i_always)
+				#print(pcp_i_data, pcp_o_data, pcp_isoutput, pcp_i_always)
 				if not pcp_isoutput: 
 					if pcp_i_always: pl_pc_in_always.append([plco_class_data, pcp_i_data, pcp_o_data])
 					else: pl_pc_in.append([plco_class_data, pcp_i_data, pcp_o_data])
@@ -133,8 +133,6 @@ def convproj(convproj_obj, platform_id, in_daw, out_daw,
 		for pluginid, plugin_obj in convproj_obj.plugins.items():
 			converted_val = 2
 
-			ext_plug_needed = False
-
 			if plugin_obj.plugin_type not in out_supportedplugins:
 				if ______debugtxt______: print('-------')
 	
@@ -147,16 +145,16 @@ def convproj(convproj_obj, platform_id, in_daw, out_daw,
 				if ______debugtxt______: print('- output')
 				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, sep_pl_pc_out__native, extra_json)
 
-				if converted_val != 0: ext_plug_needed = True
-
-			if ext_plug_needed:
+			if converted_val:
 				ext_conv_val = False
 
 				if not (True in [plugin_obj.check_wildmatch(x[0], x[1]) for x in out_supportedplugins]):
 					for p_pl_pc_ext in pl_pc_ext:
 						ismatched = plugin_obj.check_wildmatch(p_pl_pc_ext[1][0], p_pl_pc_ext[1][1])
+						#print(ismatched, p_pl_pc_ext, p_pl_pc_ext[1][0], p_pl_pc_ext[1][1])
 						if ismatched and p_pl_pc_ext[3] != out_daw:
 							for plugformat in out_supportedplugformats:
 								ext_conv_val = p_pl_pc_ext[0].convert(convproj_obj, plugin_obj, pluginid, extra_json, plugformat)
 								if ext_conv_val: break
 						if ext_conv_val: break
+		#exit()

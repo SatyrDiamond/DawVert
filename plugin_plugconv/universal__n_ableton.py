@@ -69,15 +69,15 @@ class plugconv(plugin_plugconv.base):
             convproj_obj.moveg_automation(['plugin', pluginid], 'Gain', 'postgain')
             convproj_obj.moveg_automation(['plugin', pluginid], 'Knee', 'knee')
 
-            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'attack'], 0, 0.001)
-            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 0.001)
-            auto_data.function_value(cvpj_l, ['plugin', pluginid, 'threshold'], comp_threshold)
+            convproj_obj.addmul_automation(['plugin', pluginid, 'attack'], 0, 0.001)
+            convproj_obj.addmul_automation(['plugin', pluginid, 'release'], 0, 0.001)
+            convproj_obj.funcval_automation(['plugin', pluginid, 'threshold'], comp_threshold)
             return 1
 
 
         if plugin_obj.plugin_subtype == 'Eq8':
             for band_num in range(8):
-                groupname = ['main', 'b'][group_num]
+                groupname = ['main', 'b']
                 abe_starttxt = "Bands."+str(band_num)+"/ParameterA/"
                 abe_starttxt_alt = "Bands."+str(band_num)+"/ParameterB/"
                     
@@ -127,7 +127,7 @@ class plugconv(plugin_plugconv.base):
             convproj_obj.moveg_automation(['plugin', pluginid], 'Release', 'release')
             convproj_obj.moveg_automation(['plugin', pluginid], 'AutoRelease', 'release_auto')
 
-            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 0.001)
+            convproj_obj.addmul_automation(['plugin', pluginid, 'release'], 0, 0.001)
             return 1
 
         if plugin_obj.plugin_subtype == 'Gate':
@@ -154,11 +154,13 @@ class plugconv(plugin_plugconv.base):
             convproj_obj.moveg_automation(['plugin', pluginid], 'FlipMode', 'flip')
             convproj_obj.moveg_automation(['plugin', pluginid], 'Return', 'return')
 
-            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'attack'], 0, 0.001)
-            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'hold'], 0, 0.001)
-            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'release'], 0, 0.001)
-            auto_data.multiply(cvpj_l, ['plugin', pluginid, 'return'], 0, 0.001)
-            auto_data.function_value(cvpj_l, ['plugin', pluginid, 'threshold'], comp_threshold)
+            convproj_obj.addmul_automation(['plugin', pluginid, 'attack'], 0, 0.001)
+            convproj_obj.addmul_automation(['plugin', pluginid, 'hold'], 0, 0.001)
+            convproj_obj.addmul_automation(['plugin', pluginid, 'release'], 0, 0.001)
+            convproj_obj.addmul_automation(['plugin', pluginid, 'return'], 0, 0.001)
+            convproj_obj.addmul_automation(['plugin', pluginid, 'knee'], 0, 6)
+
+            convproj_obj.funcval_automation(['plugin', pluginid, 'threshold'], comp_threshold)
             return 1
 
         return 2

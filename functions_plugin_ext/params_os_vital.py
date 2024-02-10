@@ -231,7 +231,7 @@ class vital_data:
         l_settings["phaser_phase_offset"] = 0.3333333432674408
         l_settings["phaser_sync"] = 1.0
         l_settings["phaser_tempo"] = 3.0
-        l_settings["pitch_bend_range"] = 2.0
+        l_settings["pitch_bend_range"] = 12.0
         l_settings["pitch_wheel"] = 0.0
         l_settings["polyphony"] = 8.0
         l_settings["portamento_force"] = 0.0
@@ -282,7 +282,7 @@ class vital_data:
         l_settings["sample_transpose_quantize"] = 0.0
         l_settings["sample_tune"] = 0.0
         l_settings["stereo_mode"] = 0.0
-        l_settings["stereo_routing"] = 1.0
+        l_settings["stereo_routing"] = 0.0
         l_settings["velocity_track"] = 0.0
         l_settings["view_spectrogram"] = 0.0
         l_settings["voice_amplitude"] = 1.0
@@ -387,7 +387,7 @@ class vital_data:
         self.vitaldata["settings"]["lfos"][num-1] = {"name":name, "num_points":num_points, "points":points,"powers":powers,"smooth":smooth}
 
     def importcvpj_env_asdr(self, env_num, a_type):
-        asdrdata_obj = self.plugin_obj.env_points_get(a_type)
+        asdrdata_obj = self.plugin_obj.env_asdr_get(a_type)
         self.setvalue_timed('env_'+str(env_num)+'_delay', asdrdata_obj.predelay)
         self.setvalue_timed('env_'+str(env_num)+'_attack', asdrdata_obj.attack)
         self.setvalue_timed('env_'+str(env_num)+'_hold', asdrdata_obj.hold)
@@ -413,23 +413,24 @@ class vital_data:
         return True
 
     def importcvpj_env_block(self, lfo_num, a_type):
-        blockdata = self.plugin_obj.env_blocks_get(a_type)
+        blockexists, blockdata = self.plugin_obj.env_blocks_get_exists(a_type)
 
-        blockvals = blockdata.values.copy()
-        blockcount = len(blockvals)
-        blockvals = [xtramath.between_to_one(0, blockdata.max, i) for i in blockvals]
-        vital_points = []
-        vital_powers = []
-        for pointnum, envpoint in blockvals:
-            vital_points.append(pointnum/(blockcount-1))
-            vital_points.append(1+(envpoint*-1))
-            vital_powers.append(0.0)
-        self.set_lfo(lfo_num, blockcount, vital_points, vital_powers, False, '')
-        lfo_freq_out = blockdata.time*blockcount
-        self.setvalue('lfo_'+str(lfo_num)+'_frequency', -math.log2(lfo_freq_out) )
-        self.setvalue('lfo_'+str(lfo_num)+'_sync_type', 2.0)
-        self.setvalue('lfo_'+str(lfo_num)+'_sync', 0.0)
-        return True
+        if blockexists:
+            blockvals = blockdata.values.copy()
+            blockcount = len(blockvals)
+            blockvals = [xtramath.between_to_one(0, blockdata.max, i) for i in blockvals]
+            vital_points = []
+            vital_powers = []
+            for pointnum, envpoint in enumerate(blockvals):
+                vital_points.append(pointnum/(blockcount-1))
+                vital_points.append(1+(envpoint*-1))
+                vital_powers.append(0.0)
+            self.set_lfo(lfo_num, blockcount, vital_points, vital_powers, False, '')
+            lfo_freq_out = blockdata.time*blockcount
+            self.setvalue('lfo_'+str(lfo_num)+'_frequency', -math.log2(lfo_freq_out) )
+            self.setvalue('lfo_'+str(lfo_num)+'_sync_type', 2.0)
+            self.setvalue('lfo_'+str(lfo_num)+'_sync', 0.0)
+        return blockexists
 
     def importcvpj_wave(self, osc_num, wave_name):
         wave_obj = self.plugin_obj.wave_get(wave_name)
@@ -440,7 +441,7 @@ class vital_data:
         wave_obj = harmonics_obj.to_wave()
         self.replacewave(osc_num-1, wave_obj.get_wave(2048))
 
-    def importcvpj_wavetable(self, osc_num, lfo_num, wave_name, **kwargs):
+    def importcvpj_wavetable(self, osc_num, lfo_num, wave_name):
         wavetable_obj = self.plugin_obj.wavetable_get(wave_name)
 
         cvpj_wt_len = len(wavetable_obj.ids)

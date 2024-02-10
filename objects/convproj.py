@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects import convproj_plugin
 from objects import counter
 from functions import xtramath
 from functions import data_values
@@ -10,6 +9,8 @@ import base64
 import bisect
 
 from objects import convproj_placements
+
+from objects_convproj import plugin
 from objects_convproj import fileref
 from objects_convproj import params
 from objects_convproj import tracks
@@ -355,7 +356,7 @@ class cvpj_project:
 
         if m_inst != None:
             dm_name, dm_color = midi_ds.object_get_name_color('inst', str(m_inst))
-            track_obj, plugin_obj = self.add_track_midi(track_id, plug_id, m_bank, m_inst, bool(m_drum))
+            track_obj, plugin_obj = self.add_track_midi_dset(track_id, plug_id, m_bank, m_inst, m_drum, midi_ds, def_name, def_color, uses_pl, indexed)
             track_obj.visual.name = data_values.list_usefirst([def_name, di_name])
             track_obj.visual.color = data_values.list_usefirst([def_color, di_color, dm_color])
 
@@ -386,7 +387,7 @@ class cvpj_project:
 
     def add_plugin(self, plug_id, i_type, i_subtype):
         cprint('[convproj] Plugin - '+str(plug_id)+' - '+vis_plugin(i_type, i_subtype), 'green')
-        plugin_obj = convproj_plugin.cvpj_plugin()
+        plugin_obj = plugin.cvpj_plugin()
         plugin_obj.replace(i_type, i_subtype)
         self.plugins[plug_id] = plugin_obj
         return self.plugins[plug_id]
@@ -394,7 +395,7 @@ class cvpj_project:
     def add_plugin_genid(self, i_type, i_subtype):
         plug_id = plugin_id_counter.get_str_txt()
         cprint('[convproj] Plugin - '+str(plug_id)+' - '+vis_plugin(i_type, i_subtype), 'green')
-        plugin_obj = convproj_plugin.cvpj_plugin()
+        plugin_obj = plugin.cvpj_plugin()
         plugin_obj.replace(i_type, i_subtype)
         self.plugins[plug_id] = plugin_obj
         return self.plugins[plug_id], plug_id

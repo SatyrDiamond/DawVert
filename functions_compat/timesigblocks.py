@@ -27,7 +27,7 @@ def create_points_cut(convproj_obj):
     splitpoints = []
     for timesigblock in timesigblocks:
         remaining = timesigblock[1]%timesigblock[2]
-        for point in range(timesigblock[0], timesigblock[1], timesigblock[2]):
+        for point in range(timesigblock[0], timesigblock[1].__floor__(), timesigblock[2]):
             #print('P', point)
             splitpoints.append(point)
         if remaining: 

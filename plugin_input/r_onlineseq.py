@@ -171,6 +171,8 @@ class input_onlinesequencer(plugin_input.base):
             if 'vol' in onlseq_s_iparams: track_obj.params.add('vol', onlseq_s_iparams['vol'], 'float')
             if 'pan' in onlseq_s_iparams: track_obj.params.add('pan', onlseq_s_iparams['pan'], 'float')
 
+            #print(plugin_obj.plugin_type, plugin_obj.plugin_subtype)
+
             if not plugin_obj.plugin_type:
                 if instid in [13,14,15,16]: 
                     plugin_obj.type_set('universal', 'synth-osc')
@@ -285,6 +287,7 @@ class input_onlinesequencer(plugin_input.base):
                     plugin_obj.fxdata_add(fx_enabled, 1)
                     for paramname in ['eq_high', 'eq_mid', 'eq_low']:
                         eq_value = data_values.nested_dict_get_value(onlseq_data_instparams, [instid, paramname])
+                        if eq_value == None: eq_value = 0
                         plugin_obj.params.add(paramname, eq_value, 'float')
                     plugin_obj.visual.name = 'EQ'
                     track_obj.fxslots_audio.append(pluginid)

@@ -251,11 +251,11 @@ def parse_song(convproj_obj, songid):
                 placement_obj.duration = tlslen/(120/tls[3])*8
                 placement_obj.fromindex = tls[4]
                 if tlsnum == 0:
-                    autopl_obj = convproj_obj.add_automation_pl('main/bpm', 'float')
+                    autopl_obj = convproj_obj.add_automation_pl(['main','bpm'], 'float')
                     autopl_obj.position = cvpj_p_totalpos*8
                     autopl_obj.duration = tlslen/(120/tls[3])*8
                     autopoint_obj = autopl_obj.data.add_point()
-                    autopoint_obj.value = tls[3]
+                    autopoint_obj.value = tls[3]/2
                 cvpj_p_totalpos += tlslen/(120/tls[3])
             else: 
                 cvpj_p_totalpos += tlslen

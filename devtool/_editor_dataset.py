@@ -4,9 +4,12 @@ from imgui_bundle.demos_python import demo_utils
 from typing import List
 import argparse
 import json
+
+import sys
+sys.path.append('../')
+
 from functions import xtramath
 from objects import dv_dataset
-import sys
 
 table_flags = (
     imgui.TableFlags_.row_bg

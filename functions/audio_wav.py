@@ -5,6 +5,7 @@ from functions import data_bytes
 from io import BytesIO
 import pathlib
 from os.path import exists
+import os
 
 def makesmpl(instdata):
 	if instdata != None:
@@ -108,11 +109,9 @@ def decode(wavfile):
 	return out_wavinfo, out_wavdata, out_instdata
 
 def generate(file, data, channels, freq, bits, instdata):
-	print("[audio-wav] Generating Sample:",end=' ')
-	print('Channels: ' + str(channels),end=', ')
-	print('Freq: ' + str(freq),end=', ')
-	print('Bits: ' + str(bits))
 	try:
+		filepath = pathlib.Path(file)
+		if not os.path.exists(filepath.parent): os.makedirs(filepath.parent)
 		file_object = open(file, 'wb')
 		table_chunks = []
 
@@ -139,6 +138,11 @@ def generate(file, data, channels, freq, bits, instdata):
 		#wav_CHUNK_smpl = makesmpl(instdata)
 		#if wav_CHUNK_smpl != None:
 		#	table_chunks.append(wav_CHUNK_smpl)
+
+		print("[audio-wav] Generating Sample:",end=' ')
+		print('Channels: ' + str(channels),end=', ')
+		print('Freq: ' + str(freq),end=', ')
+		print('Bits: ' + str(bits))
 
 		chunk_data_bytes = data_bytes.riff_make(table_chunks)
 		bytes_wavdata = b'WAVE' + chunk_data_bytes

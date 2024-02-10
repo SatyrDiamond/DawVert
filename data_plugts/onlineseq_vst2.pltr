@@ -1,0 +1,28 @@
+
+################################ EQ > 3 Band EQ
+new|eq_vst2
+
+in_type|native-onlineseq
+in_subtype|eq
+out_type|vst2
+out_subtype|
+
+in_param|eq_low
+in_param|eq_mid
+in_param|eq_high
+
+calc|eq_low|div|96
+calc|eq_mid|div|96
+calc|eq_high|div|96
+
+calc|eq_low|add|0.5
+calc|eq_mid|add|0.5
+calc|eq_high|add|0.5
+
+out_param|ext_param_0|eq_low|Low
+out_param|ext_param_1|eq_mid|Mid
+out_param|ext_param_2|eq_high|High
+out_v_param|ext_param_3|0.5|Master
+out_v_param|ext_param_4|0.22|Low-Mid Freq
+out_v_param|ext_param_5|0.3|Mid-High Freq
+

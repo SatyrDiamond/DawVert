@@ -33,8 +33,8 @@ class plugconv(plugin_plugconv.base):
         if plugin_obj.plugin_subtype == 'spectrumanalyzer':  
             print('[plug-conv] LMMS to FL Studio: Spectrum Analyzer > Fruity Spectroman:',pluginid)
             plugin_obj.replace('native-flstudio', 'fruity spectroman')
-            plugin_obj.params.add('amp', 128, 'int', "")
-            plugin_obj.params.add('scale', 128, 'int', "")
+            plugin_obj.params.add('amp', 128, 'int')
+            plugin_obj.params.add('scale', 128, 'int')
             return 0
 
         return 2

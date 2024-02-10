@@ -56,7 +56,8 @@ def parse_clip_audio(convproj_obj, placement_obj, j_wvtl_trackclip):
         placement_obj.stretch.method = 'warp' if j_wvtl_trc_warp['enabled'] else 'rate_tempo'
         sourcebpm = j_wvtl_trc_warp['sourceBPM']/120
         for anchor in j_wvtl_trc_warp['anchors']: placement_obj.stretch.warp.append([j_wvtl_trc_warp['anchors'][anchor]['destination']*4, (float(anchor)/sourcebpm)/2])
-    else: placement_obj.stretch.method = 'rate_tempo'
+    else: 
+        placement_obj.stretch.set_rate(j_wvtl_bpm, 1)
 
     if 'color' in j_wvtl_trackclip: placement_obj.visual.color = colors.hex_to_rgb_float(j_wvtl_trackclip['color'])
     if 'name' in j_wvtl_trackclip: placement_obj.visual.name = j_wvtl_trackclip['name']

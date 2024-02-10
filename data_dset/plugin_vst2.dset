@@ -2,43 +2,73 @@
     "plugin": {
         "objects": {
             "1129066801": {
-                "datadef": "plugin_vst2\\the_colorspace\\1129066801.ddef",
-                "datadef_struct": "main",
+                "datadef": "plugin_vst2\\the_colorspace.ddef",
+                "datadef_struct": "cloud",
                 "group": "The Colorspace",
-                "visual": {
-                    "name": "The CS Cloud"
-                }
+                "visual": {"name": "The CS Cloud"}
             },
             "1145450801": {
-                "datadef": "plugin_vst2\\the_colorspace\\1145450801.ddef",
-                "datadef_struct": "main",
+                "datadef": "plugin_vst2\\the_colorspace.ddef",
+                "datadef_struct": "drafter",
                 "group": "The Colorspace",
-                "visual": {
-                    "name": "The CS Drafter"
-                }
+                "visual": {"name": "The CS Drafter"}
             },
             "1179398449": {
-                "datadef": "plugin_vst2\\the_colorspace\\1179398449.ddef",
-                "datadef_struct": "main",
+                "datadef": "plugin_vst2\\the_colorspace.ddef",
+                "datadef_struct": "feeling",
                 "group": "The Colorspace",
-                "visual": {
-                    "name": "The CS Feeling"
-                }
+                "visual": {"name": "The CS Feeling"}
             },
             "1395863857": {
-                "datadef": "plugin_vst2\\the_colorspace\\1395863857.ddef",
-                "datadef_struct": "main",
+                "datadef": "plugin_vst2\\the_colorspace.ddef",
+                "datadef_struct": "serio3",
                 "group": "The Colorspace",
-                "visual": {
-                    "name": "The CS Serio3"
-                }
+                "visual": {"name": "The CS Serio3"}
+            },
+            "1146309430": {
+                "datadef": "plugin_vst2\\dsk_music.ddef",
+                "datadef_struct": "xxx",
+                "group": "DSK Music",
+                "visual": {"name": "DSK xXx"}
+            },
+            "1146309487": {
+                "datadef": "plugin_vst2\\dsk_music.ddef",
+                "datadef_struct": "oranze",
+                "group": "DSK Music",
+                "visual": {"name": "DSK OranZe"}
+            },
+            "1160016720": {
+                "datadef": "plugin_vst2\\creatorum_genius_lab.ddef",
+                "datadef_struct": "grey_apparatus_2",
+                "group": "Creatorum Genius Lab",
+                "visual": {"name": "The Grey Apparatus 2"}
+            },
+            "1464615774": {
+                "datadef": "plugin_vst2\\cfa-sound.ddef",
+                "datadef_struct": "super7",
+                "group": "CFA Sound",
+                "visual": {"name": "Super 7"}
+            },
+            "1448038477": {
+                "datadef": "plugin_vst2\\vopm.ddef",
+                "datadef_struct": "patch",
+                "visual": {"name": "VOPM"}
+            },
+            "826699079": {
+                "datadef": "plugin_vst2\\solcito-musica.ddef",
+                "datadef_struct": "crio",
+                "group": "Solcito Musica",
+                "visual": {"name": "Crio"}
+            },
+            "2036618308": {
+                "datadef": "plugin_vst2\\trancedrive.ddef",
+                "datadef_struct": "main",
+                "visual": {"name": "TranceDrive"}
             },
             "1936747315": {
                 "datadef": "plugin_vst2\\1936747315.ddef",
                 "datadef_struct": "main",
-                "visual": {
-                    "name": "VST Speek"
-                }
+                "visual": {"name": "VST Speek"}
             }
         }
     }

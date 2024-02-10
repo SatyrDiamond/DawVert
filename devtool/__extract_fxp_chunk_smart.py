@@ -44,9 +44,8 @@ if vstdata['datatype'] == 'raw':
 		datadefpath = '../data_ddef/'+v_datadef
 		datadef = dv_datadef.datadef(datadefpath)
 		jsondecoded = datadef.parse(v_struct, vstchunk)
-		with open('vst_'+str(fourid)+'_chunk', "wb") as fileout: fileout.write(vstchunk)
-
-		with open('vst_'+str(fourid)+'_decoded.json', "w") as fileout:
-			json.dump(jsondecoded, fileout, indent=4)
+		for i, v in jsondecoded.items():
+			print(i, v)
+		with open('vst_'+str(fourid)+'_decoded.json', "w") as fileout: json.dump(jsondecoded, fileout, indent=4)
 
 

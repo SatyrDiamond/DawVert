@@ -12,6 +12,7 @@ def convert(convproj_obj):
 
         used_inst = False
         if track_obj.type == 'instruments': used_inst = True
+        if track_obj.type == 'instrument': used_inst = True
         if track_obj.placements.data_notes: used_inst = True
 
 

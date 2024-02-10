@@ -22,6 +22,7 @@ def process(convproj_obj, in__track_nopl, out__track_nopl):
                     if nl_found: 
                         nls_obj.to_pl(track_obj.placements)
                         track_obj.placements.uses_placements = True
+                return True
         else: return False
 
     elif in__track_nopl == False and out__track_nopl == True:

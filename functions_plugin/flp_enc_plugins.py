@@ -65,7 +65,7 @@ def setparams(convproj_obj, plugin_obj, datadef, dataset):
         vst_fourid = plugin_obj.datavals.get('fourid', None)
         vst_name = plugin_obj.datavals.get('name', None)
 
-        ref_found, fileref_obj = plugin_obj.get_fileref('file', convproj_obj)
+        ref_found, fileref_obj = plugin_obj.get_fileref('plugin', convproj_obj)
         vst_path = fileref_obj.get_path('win', True) if ref_found else None
 
         vstdata_bytes = plugin_obj.rawdata_get('chunk')
@@ -99,8 +99,8 @@ def setparams(convproj_obj, plugin_obj, datadef, dataset):
             vst_params_data = b''
             
             for num in range(vst_numparams):
-                pval, ptype, pname = plugin_obj.param_get('vst_param_'+str(num), 0)
-                vst_params_data += struct.pack('f', pval)
+                param_obj = plugin_obj.params.get('vst_param_'+str(num), 0)
+                vst_params_data += struct.pack('f', param_obj.value)
             vst_num_names = 1
             vst_names = data_bytes.makestring_fixedlen('Converted', 25)
 

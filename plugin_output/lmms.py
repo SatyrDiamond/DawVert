@@ -294,7 +294,7 @@ def lmms_encode_plugin(trkX_insttr, track_obj, trackid, trackname):
                     xml_lmmsnat.append(zdataxs)
 
             if plugin_obj.plugin_subtype == 'tripleoscillator':
-                for oscnum in range(1, 4):
+                for oscnum in range(3):
                     out_str = 'userwavefile'+str(oscnum)
                     filepath = plugin_obj.getpath_sampleref(out_str, convproj_obj, None, True)
                     xml_lmmsnat.set(out_str, filepath)
@@ -345,7 +345,7 @@ def setvstparams(xml_vst, plugin_obj, pluginid):
         if 'ext_param_' in paramname:
             aid_found, aid_id, aid_data = autoid_assoc.get(['plugin', pluginid, paramname], convproj_obj)
             if aid_found:
-                make_auto_track(aid_id, aid_data, 'VST2: #'+str(int(paramname[10:])+1))
+                make_auto_track(aid_id, aid_data, 'VST2: #'+str(int(paramname[10:])+1), 1)
                 param_autoid(xml_vst, 'param'+paramname[10:], None, 'linear', aid_id)
             
     return middlenotefix

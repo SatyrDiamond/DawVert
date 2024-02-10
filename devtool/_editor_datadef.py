@@ -4,8 +4,12 @@ from imgui_bundle.demos_python import demo_utils
 from typing import List
 import argparse
 import json
-from objects import dv_datadef
+
 import sys
+sys.path.append('../')
+
+from objects import dv_datadef
+
 
 table_flags = (
     imgui.TableFlags_.row_bg

@@ -55,6 +55,13 @@ class cvpj_wave:
             outmod = xtramath.between_from_one(self.range_min, self.range_max, (calc_val(outval, shape, pw)/2)+0.5  )
             self.points[num] = (outmod*mixvol)+((1-mixvol)*self.points[num])
 
+    def add_wave_func(self, i_func, i_var, mul, mixvol):
+        halfpoint = self.numpoints//2
+        for num in range(self.numpoints):
+            outval = ((num/self.numpoints)*mul)%1
+            outmod = xtramath.between_from_one(self.range_min, self.range_max, (i_func(outval, i_var)/2)+0.5  )
+            self.points[num] = (outmod*mixvol)+((1-mixvol)*self.points[num])
+
     def to_audio(self, fileloc):
         tempdata = self.get_wave(2048)
         audiowavdata = [int(i*65535) for i in tempdata]

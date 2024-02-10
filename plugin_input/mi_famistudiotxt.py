@@ -197,7 +197,10 @@ def add_envelope(plugin_obj, fst_Instrument, cvpj_name, fst_name):
                     wave_obj = plugin_obj.wave_add(str(wavenum))
                     wave_obj.set_all_range(wavedata, 0, 15)
                     waveids.append(str(wavenum))
-            plugin_obj.wavetable_add('N163', waveids, None, envdata['loop']/((envdata['size']*envdata['count'])-1))
+            wavetable_obj = plugin_obj.wavetable_add('N163')
+            wavetable_obj.ids = waveids
+            wavetable_obj.locs = None
+            wavetable_obj.phase = envdata['loop']/((envdata['size']*envdata['count'])-1)
 
         else:
             envdata_values = [int(i) for i in f_env_data['Values'].split(',')]

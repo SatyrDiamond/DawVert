@@ -331,7 +331,19 @@ def lmms_decodeplugin(convproj_obj, trkX_insttr):
                 sampleshape = base64.b64decode(sampleshape.encode('ascii'))
                 sampleshape_size = len(sampleshape)//4
                 wave_data = struct.unpack('f'*sampleshape_size, sampleshape)
-                plugin_obj.wave_add('main', wave_data, -1, 1)
+
+                wave_obj = plugin_obj.wave_add('main')
+                wave_obj.set_all_range(wave_data, -1, 1)
+                wave_obj.smooth = False
+
+                wave_obj = plugin_obj.wave_add('main_smooth')
+                wave_obj.set_all_range(wave_data, -1, 1)
+                wave_obj.smooth = True
+
+                wavetable_obj = plugin_obj.wavetable_add('main')
+                wavetable_obj.ids = ['main', 'main_smooth']
+                wavetable_obj.locs = [0, 1]
+
                 osc_data = plugin_obj.osc_add()
                 osc_data.shape = 'custom_wave'
                 osc_data.name_id = 'main'

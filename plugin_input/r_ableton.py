@@ -791,7 +791,6 @@ class input_ableton(plugin_input.base):
 					if audio_placement_warp_on == False:
 						if audio_placement_loop_on == 0:
 							out_is_speed, out_rate = placement_obj.stretch.get(tempo, False)
-							print(out_is_speed, out_rate)
 
 							placement_obj.cut_type = 'cut'
 							placement_obj.cut_data['start'] = audio_placement_loop_l_start*2

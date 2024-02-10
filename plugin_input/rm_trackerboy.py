@@ -239,7 +239,7 @@ class input_trackerboy(plugin_input.base):
                     osc_data.params['pulse_width'] = 0.25
                 if insttype == 'wavetable':
                     osc_data.shape = 'custom_wave'
-                    osc_data.params['wave_name'] = 'main'
+                    osc_data.name_id = 'main'
                 if insttype == 'noise': 
                     osc_data.shape = 'noise'
 

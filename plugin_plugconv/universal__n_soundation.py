@@ -57,7 +57,7 @@ class plugconv(plugin_plugconv.base):
                 band_res = plugin_obj.params.get(eqname+'_q', 0).value
 
                 filter_obj = plugin_obj.eq_add()
-                filter_obj.type = 'low_pass' if filter_mode else 'high_pass'
+                filter_obj.type = eq_bandtype
                 filter_obj.freq = get_freq(band_freq)
                 filter_obj.q = eq_calc_q(eq_bandtype, band_res)
                 filter_obj.gain = (band_gain-0.5)*40

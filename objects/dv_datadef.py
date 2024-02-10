@@ -342,6 +342,7 @@ class datadef:
                             self.structs[current_struct].append([ddline[0], valtypes, ddline[2]])
                 print('[datadef] Loaded '+in_datadef)
         except:
+            print('error loading datadef')
             pass
 
     def save_file(self, file_name):

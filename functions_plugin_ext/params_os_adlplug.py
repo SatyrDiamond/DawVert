@@ -60,8 +60,8 @@ class adlplug_data:
         addvalue(adlplug_global, "deep_tremolo" ,deep_tremolo)  
         addvalue(adlplug_global, "deep_vibrato" ,deep_vibrato)
 
-    def adlplug_to_cvpj_vst2(self, plugin_obj):
+    def adlplug_to_cvpj_vst2(self, convproj_obj, plugin_obj):
         plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name', 'any', 'ADLplug', 'chunk', data_vc2xml.make(self.adlplug_root), None)
 
-    def opnplug_to_cvpj_vst2(self, plugin_obj):
+    def opnplug_to_cvpj_vst2(self, convproj_obj, plugin_obj):
         plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name', 'any', 'OPNplug', 'chunk', data_vc2xml.make(self.adlplug_root), None) 

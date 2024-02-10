@@ -1,1 +1,45 @@
-{}
+{
+    "plugin": {
+        "objects": {
+            "1129066801": {
+                "datadef": "plugin_vst2\\the_colorspace\\1129066801.ddef",
+                "datadef_struct": "main",
+                "group": "The Colorspace",
+                "visual": {
+                    "name": "The CS Cloud"
+                }
+            },
+            "1145450801": {
+                "datadef": "plugin_vst2\\the_colorspace\\1145450801.ddef",
+                "datadef_struct": "main",
+                "group": "The Colorspace",
+                "visual": {
+                    "name": "The CS Drafter"
+                }
+            },
+            "1179398449": {
+                "datadef": "plugin_vst2\\the_colorspace\\1179398449.ddef",
+                "datadef_struct": "main",
+                "group": "The Colorspace",
+                "visual": {
+                    "name": "The CS Feeling"
+                }
+            },
+            "1395863857": {
+                "datadef": "plugin_vst2\\the_colorspace\\1395863857.ddef",
+                "datadef_struct": "main",
+                "group": "The Colorspace",
+                "visual": {
+                    "name": "The CS Serio3"
+                }
+            },
+            "1936747315": {
+                "datadef": "plugin_vst2\\1936747315.ddef",
+                "datadef_struct": "main",
+                "visual": {
+                    "name": "VST Speek"
+                }
+            }
+        }
+    }
+}

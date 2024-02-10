@@ -34,7 +34,6 @@ class cvpj_stretch:
         return s_rate and s_warp and s_algorithm and s_params and s_is_warped and s_use_tempo
 
     def changestretch(self, samplereflist, sampleref, target, tempo, ppq):
-        tempomul = (120/tempo)
         iffound = sampleref in samplereflist
         #print(iffound, sampleref, target, tempomul, self.method, self.rate, self.warp, self.algorithm)
         pos_offset = 0
@@ -44,10 +43,7 @@ class cvpj_stretch:
             sampleref_obj = samplereflist[sampleref]
 
             if not self.is_warped and target == 'warp':
-                pos_real = sampleref_obj.dur_sec*self.rate
-                if self.method == 'rate_ignoretempo': pos_real = (sampleref_obj.dur_sec*self.rate)/tempomul
-                if self.method == 'rate_tempo': pos_real = sampleref_obj.dur_sec*self.rate
-                if self.method == 'rate_speed': pos_real = (sampleref_obj.dur_sec*self.rate)*tempomul
+                pos_real = sampleref_obj.dur_sec*self.rate_tempo
                 self.warp.append([0.0, 0.0])
                 self.warp.append([sampleref_obj.dur_sec, pos_real])
 

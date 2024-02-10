@@ -11,6 +11,7 @@ onlineseq_settings_dict = json.loads(onlineseq_settings)
 os_instruments = onlineseq_settings_dict['instruments']
 os_instrumentColors = onlineseq_settings_dict['instrumentColors']
 os_instrumentCategories = onlineseq_settings_dict['instrumentCategories']
+os_midiInstrumentMap = onlineseq_settings_dict['midiInstrumentMap']
 
 os_dataset = dv_dataset.dataset('./data_dset/onlineseq.dset')
 
@@ -24,6 +25,7 @@ for instnum in range(len(os_instruments)):
 
     os_dataset.object_add('inst', strinstnum)
     os_dataset.object_visual_set('inst', strinstnum, {'name':vis_instname, 'color':vis_color})
+    os_dataset.midito_add('inst', strinstnum, 0, os_midiInstrumentMap[instnum]-1, False)
 
 for groupname in os_instrumentCategories:
     for instnum in os_instrumentCategories[groupname]:

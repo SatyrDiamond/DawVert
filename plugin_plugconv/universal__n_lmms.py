@@ -42,8 +42,8 @@ class plugconv(plugin_plugconv.base):
 
             #peak
             for peak_num in range(4):
-                eq_Peak_bw = plugin_obj.params.get(peak_txt+'bw', 0).value
                 peak_txt = 'Peak'+str(peak_num+1)
+                eq_Peak_bw = plugin_obj.params.get(peak_txt+'bw', 0).value
                 filter_obj = plugin_obj.eq_add()
                 filter_obj.on = bool(plugin_obj.params.get(peak_txt+'active', 0).value)
                 filter_obj.type = 'peak'

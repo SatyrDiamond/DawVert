@@ -9,6 +9,7 @@ from objects_convproj import stretch
 from objects_convproj import visual
 from objects_convproj import autopoints
 from objects_convproj import notelist
+from objects_convproj import tracks
 
 def step2sec(i_value, i_bpm): return (i_value/8)*(120/i_bpm)
 def sec2step(i_value, i_bpm): return (i_value*8)/(120/i_bpm)
@@ -168,6 +169,7 @@ class cvpj_placements:
                     if 'loopend' in x.cut_data: x.cut_data['loopend'] += cut_offset
                     if 'loopstart' in x.cut_data: x.cut_data['loopstart'] += cut_offset
 
+                if 'start' not in x.cut_data: x.cut_data['start'] = 0
                 x.cut_data['start'] -= pos_offset
 
                 #print(pos_offset, cut_offset, x.cut_type, x.cut_data)
@@ -293,7 +295,7 @@ class cvpj_placements:
     def to_indexed_audio(self, existingsamples, sample_number):
         new_data_audio = []
         for audiopl_obj in self.data_audio:
-            sle_obj = convproj.cvpj_sle()
+            sle_obj = tracks.cvpj_sle()
             sle_obj.visual = audiopl_obj.visual
             sle_obj.sampleref = audiopl_obj.sampleref
             sle_obj.pan = audiopl_obj.pan

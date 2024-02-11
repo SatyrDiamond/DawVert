@@ -29,7 +29,7 @@ def convert(convproj_obj):
 
         for nle_id, nle_obj in track_obj.notelist_index.items():
             for n in nle_obj.notelist.nl: n[4] = trackid
-            x.notelist.used_inst = [trackid]
+            nle_obj.notelist.used_inst = [trackid]
             convproj_obj.notelist_index[starttxt+nle_id] = nle_obj
 
         track_obj.notelist_index = {}

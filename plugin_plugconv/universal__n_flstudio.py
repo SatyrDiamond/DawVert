@@ -11,6 +11,7 @@ class plugconv(plugin_plugconv.base):
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['native-flstudio', None, 'flp'], ['universal', None, None], False, False
     def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
+
         if plugin_obj.plugin_subtype == 'fruity parametric eq 2':
             print('[plug-conv] FL Studio to Universal: Fruity Parametric EQ 2 > EQ Bands:',pluginid)
             main_lvl = plugin_obj.params.get('main_lvl', 0).value/100

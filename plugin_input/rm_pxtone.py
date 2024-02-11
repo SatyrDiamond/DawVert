@@ -437,7 +437,7 @@ class input_pxtone(plugin_input.base):
             placement_obj = track_obj.placements.add_notes()
             for t_inst, t_pos, t_dur, t_key, t_vol, t_extra, t_slide in cvpj_notelist:
                 placement_obj.notelist.add_m(t_inst, t_pos, t_dur, t_key, t_vol, t_extra)
-                for tsl in t_slide: placement_obj.notelist.last_add_slide(tsl[0], tsl[1], tsl[2], t_vol, t_extra)
+                for tsl in t_slide: placement_obj.notelist.last_add_slide(tsl[0], tsl[1], tsl[2]-t_key, t_vol, t_extra)
             placement_obj.notelist.notemod_conv()
 
         for voicenum in range(ptcop_voice_num):

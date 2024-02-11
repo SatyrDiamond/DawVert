@@ -306,11 +306,13 @@ class patterndata:
                     for ui in tpl[3]:
                         if ui not in used_inst: used_inst.append(ui)
 
-                    placement_obj = playlist_obj.placements.add_notes()
-                    placement_obj.position = cur_pl_pos
-                    placement_obj.duration = tpl[0]
-                    placement_obj.notelist = tpl[1]
-                    placement_obj.visual.name = 'Pattern '+str(tpl[2]+1)
+                    if tpl[1].notesfound():
+                        tpl[1].notemod_conv()
+                        placement_obj = playlist_obj.placements.add_notes()
+                        placement_obj.position = cur_pl_pos
+                        placement_obj.duration = tpl[0]
+                        placement_obj.notelist = tpl[1]
+                        placement_obj.visual.name = 'Pattern '+str(tpl[2]+1)
                 cur_pl_pos += tpl[0]
 
         patlentable = [x[0] for x in notepl[0].placements]

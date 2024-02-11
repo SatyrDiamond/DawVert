@@ -205,6 +205,9 @@ class output_cvpjs(plugin_output.base):
             if nle_obj.visual.color: FL_Pattern['color'] = decode_color(nle_obj.visual.color)
 
             FL_Pattern['notes'] = []
+
+            nle_obj.notelist.notemod_conv()
+
             nle_obj.notelist.sort()
             for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in nle_obj.notelist.iter():
                 for t_key in t_keys:
@@ -232,10 +235,10 @@ class output_cvpjs(plugin_output.base):
                             FL_Note['pos'] = M_FL_Note_Pos + int(s_pos)
                             FL_Note['dur'] = int(s_dur)
                             FL_Note['flags'] = 16392
+                            FL_Note['velocity'] = int(xtramath.clamp(s_vol,0,1)*100)
                             if 'finepitch' in s_extra: FL_Note['finep'] = int((s_extra['finepitch']/10)+120)
                             if 'release' in s_extra: FL_Note['rel'] = int(xtramath.clamp(s_extra['release'],0,1)*128)
                             if s_vol: FL_Note['velocity'] = int(xtramath.clamp(s_vol,0,1)*100)
-                            elif 'vol' in note: FL_Note['velocity'] = int(xtramath.clamp(t_vol,0,1)*100)
                             if 'cutoff' in s_extra: FL_Note['mod_x'] = int(xtramath.clamp(s_extra['cutoff'],0,1)*255)
                             if 'reso' in s_extra: FL_Note['mod_y'] = int(xtramath.clamp(s_extra['reso'],0,1)*255)
                             if 'pan' in s_extra: FL_Note['pan'] = int((xtramath.clamp(float(s_extra['pan']),-1,1)*64)+64)

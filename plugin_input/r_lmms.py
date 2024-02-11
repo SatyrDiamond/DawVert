@@ -10,11 +10,11 @@ import struct
 import zlib
 import sys
 import xml.etree.ElementTree as ET
-#from functions import song
 #from functions_plugin_ext import plugin_vst2
 from objects import counter
 from objects import dv_dataset
 from objects import auto_id
+from functions import colors
 
 lfoshape = ['sine', 'tri', 'saw', 'square', 'custom', 'random']
 arpdirection = ['up', 'down', 'updown', 'downup', 'random']
@@ -77,6 +77,7 @@ fxlist['stereoenhancer'] = 'stereoenhancercontrols'
 fxlist['stereomatrix'] = 'stereomatrixcontrols'
 fxlist['waveshaper'] = 'waveshapercontrols'
 fxlist['vsteffect'] = 'vsteffectcontrols'
+fxlist['vectorscope'] = 'Vectorscope'
 
 # ------- functions -------
 
@@ -157,7 +158,7 @@ def lmms_auto_getvalue(x_tag, x_name, i_fbv, i_type, i_addmul, i_loc):
     elif x_tag.findall(x_name) != []: 
         realvaluetag = x_tag.findall(x_name)[0]
         xmlval = realvaluetag.get('value')
-        if xmlval != None: autoid_assoc.define(str(realvaluetag.get('id')), i_loc, i_type, i_addmul)
+        if xmlval != None and i_loc: autoid_assoc.define(str(realvaluetag.get('id')), i_loc, i_type, i_addmul)
     
     if xmlval != None: outval = (float(xmlval)+i_addmul[0])*i_addmul[1] if i_addmul != None else float(xmlval)
     if i_type == 'float': outval = outval
@@ -474,7 +475,7 @@ def lmms_decode_inst_track(convproj_obj, trkX, trackid):
         basenote = int(trkX_insttr.get('basenote'))-57
         noteoffset = 0
         if pluginname == 'audiofileprocessor': noteoffset = 3
-        if pluginname == 'sf2player': noteoffset = 0
+        if pluginname == 'sf2player': noteoffset = 12
         if pluginname == 'OPL2': noteoffset = 24
         middlenote = basenote - noteoffset
         track_obj.datavals.add('middlenote', middlenote)
@@ -619,7 +620,7 @@ def lmms_decode_effectslot(convproj_obj, fxslotX):
                 plugin_obj.params.add(paramid, paramval, 'float')
         plugin_obj.datavals.add('seperated_channels', seperated_channels)
         
-    else:
+    elif fxpluginname in fxlist:
         fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
         plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-lmms', fxpluginname)
         dset_plugparams(fxpluginname, pluginid, fxxml_plugin, plugin_obj)

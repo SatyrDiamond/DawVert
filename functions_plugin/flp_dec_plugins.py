@@ -404,7 +404,7 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
         
     else:
         datadef_struct = dataset.object_var_get('datadef_struct', 'plugin', pluginname)
-        #print(     chunkpdata.hex()     )
+        #print(     pluginname, chunkpdata.hex()     )
         if datadef_struct[0]:
             plugin_obj.type_set( 'native-flstudio', pluginname)
             jsondecoded = datadef.parse(datadef_struct[1], chunkpdata)
@@ -415,6 +415,8 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
             #    exit()
 
             plugin_obj.param_dict_dataset_get(jsondecoded, dataset, 'plugin', pluginname)
+
+        #exit()
 
     # ------------------------------------------------------------------------------------------- Other
 

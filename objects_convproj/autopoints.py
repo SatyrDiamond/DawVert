@@ -149,6 +149,29 @@ class cvpj_autopoints:
             prev_val = p.value
         self.points = new_points
 
+    def blocks(self):
+        prev_val = 0
+        prev_prev = 0
+        cur_num = 0
+
+        blocks_out = []
+
+        while cur_num < len(self.points)-1:
+            p = self.points[cur_num]
+            pn = self.points[cur_num+1]
+            #print(p.pos, p.value, p.type,'|',pn.pos, pn.value, pn.type)
+            if cur_num==0 and p.pos!=0 and p.value!=0: 
+                blocks_out.append([p.pos, 0, p.value])
+            if (p.value != pn.value):
+                slidesize = pn.pos-p.pos
+                if p.type != 'instant': 
+                    blocks_out.append([p.pos, 0 if slidesize<(self.time_ppq/64) else slidesize, pn.value])
+                else: 
+                    blocks_out.append([p.pos, 0, p.value])
+            cur_num += 1
+
+        return blocks_out
+
     def to_cvpj(self):
         out_cvpj = []
         for autod in self.points:

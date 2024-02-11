@@ -90,6 +90,13 @@ class plugconv(plugin_plugconv_extern.base):
                 plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name', 'win', 'BloodOverdrive', 'param', None, 6)
                 return True
             
+            elif flpluginname == 'tuner' and extplugtype == 'vst2':
+                print("[plug-conv] FL Studio to VST2: Tuner > GTune:",pluginid)
+                plugts_obj.transform('vst2_tuner', convproj_obj, plugin_obj, pluginid, extra_json)
+                plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name', 'win', 'GTune', 'param', None, 1)
+                return True
+
+
         if 'shareware-plugins' in extra_json:
             if flpluginname in shareware_il_plugnames and extplugtype == 'vst2':
                 print("[plug-conv] FL Studio to VST2: "+plugin_obj.plugin_subtype+":",pluginid)

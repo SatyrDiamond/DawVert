@@ -29,17 +29,18 @@ class plugconv(plugin_plugconv.base):
     def getplugconvinfo(self): return ['native-soundation', None, 'soundation'], ['universal', None, None], False, False
     def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
 
+        print(plugin_obj.plugin_subtype)
+
         if plugin_obj.plugin_subtype == 'com.soundation.filter':
             filter_cutoff = plugin_obj.params.get('cutoff', 0).value
             filter_resonance = plugin_obj.params.get('resonance', 0).value
             filter_mode = plugin_obj.params.get('mode', 0).value
 
-            plugin_obj.replace('universal', 'eq-bands')
-
-            filter_obj = plugin_obj.eq_add()
-            filter_obj.type = 'low_pass' if filter_mode else 'high_pass'
-            filter_obj.freq = get_freq(filter_cutoff)
-            filter_obj.q = filter_resonance
+            plugin_obj.replace('universal', 'filter')
+            plugin_obj.filter.on = True
+            plugin_obj.filter.type = 'low_pass' if filter_mode else 'high_pass'
+            plugin_obj.filter.freq = get_freq(filter_cutoff)
+            plugin_obj.filter.q = filter_resonance
             return 1
 
         if plugin_obj.plugin_subtype == 'com.soundation.parametric-eq':

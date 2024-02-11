@@ -144,5 +144,5 @@ def get_lower_tempo(i_tempo, i_notelen, maxtempo):
     return (i_tempo, i_notelen)
 
 def change_timing(o_ppq, n_ppq, n_float, value):
-    modval = value*(n_ppq/o_ppq)
+    modval = float(value)*(n_ppq/o_ppq)
     return modval if n_float else int(modval)

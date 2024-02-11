@@ -37,5 +37,12 @@ class plugconv(plugin_plugconv.base):
             plugin_obj.params.add('scale', 128, 'int')
             return 0
 
+        if plugin_obj.plugin_subtype == 'stereoenhancer':  
+            print('[plug-conv] LMMS to FL Studio: Stereo Enhancer > Fruity Stereo Enhancer:',pluginid)
+            width = plugin_obj.params.get('width', 0).value
+            plugin_obj.replace('native-flstudio', 'fruity stereo enhancer')
+            plugin_obj.params.add('phase_offs', width, 'int') #512 = 500
+            return 0
+
         return 2
 

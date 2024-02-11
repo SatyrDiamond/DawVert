@@ -3953,6 +3953,14 @@
                 "datadef_struct": "fruity_limiter",
                 "group": "fx",
                 "params": {
+                    "0.2_limiter_safety": {
+                        "def": 0,
+                        "max": 1,
+                        "min": 0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "bool"
+                    },
                     "comp_att": {
                         "def": 0,
                         "max": 10000,
@@ -4105,172 +4113,52 @@
                         "noauto": false,
                         "type": "bool"
                     },
-                    "unknown_0": {
-                        "def": 0,
-                        "max": 1000,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "int"
-                    },
-                    "unknown_1": {
+                    "mode": {
                         "def": 0,
                         "max": 1,
                         "min": 0,
                         "name": "",
-                        "noauto": false,
+                        "noauto": true,
                         "type": "bool"
                     },
-                    "unknown_10": {
+                    "visual_analysis": {
                         "def": 0,
                         "max": 1,
                         "min": 0,
                         "name": "",
-                        "noauto": false,
+                        "noauto": true,
                         "type": "bool"
                     },
-                    "unknown_11": {
+                    "visual_input_peak": {
                         "def": 0,
                         "max": 1,
                         "min": 0,
                         "name": "",
-                        "noauto": false,
+                        "noauto": true,
                         "type": "bool"
                     },
-                    "unknown_12": {
+                    "visual_lvl_markers": {
                         "def": 0,
                         "max": 1,
                         "min": 0,
                         "name": "",
-                        "noauto": false,
+                        "noauto": true,
                         "type": "bool"
                     },
-                    "unknown_13": {
+                    "visual_output_peak": {
                         "def": 0,
                         "max": 1,
                         "min": 0,
                         "name": "",
-                        "noauto": false,
+                        "noauto": true,
                         "type": "bool"
                     },
-                    "unknown_14": {
+                    "visual_scroll_speed": {
                         "def": 0,
                         "max": 1,
                         "min": 0,
                         "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_15": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_16": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_18": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_19": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_2": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_20": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_21": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_3": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_4": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_5": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_6": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_7": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_8": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
-                        "type": "bool"
-                    },
-                    "unknown_9": {
-                        "def": 0,
-                        "max": 1,
-                        "min": 0,
-                        "name": "",
-                        "noauto": false,
+                        "noauto": true,
                         "type": "bool"
                     }
                 }
@@ -5646,7 +5534,7 @@
                         "type": "int"
                     },
                     "vol": {
-                        "def": 0,
+                        "def": 256,
                         "max": 320,
                         "min": 0,
                         "name": "Volume",

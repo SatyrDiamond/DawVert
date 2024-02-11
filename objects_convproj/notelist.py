@@ -254,6 +254,8 @@ class cvpj_notelist:
             noteautopitch_exists = note[6] != None
             noteslide_exists = note[7] != None
 
+            #print(noteslide_exists, noteautopitch_exists)
+
             if noteslide_exists == True and noteautopitch_exists == False:
                 pointsdata = pitchmod(note[2][0])
                 for slidenote in note[7]:
@@ -266,6 +268,17 @@ class cvpj_notelist:
                     autopoint = self.nl[index][6]['pitch'].add_point()
                     autopoint.pos = nmps[0]
                     autopoint.value = nmps[1]
+
+            if noteslide_exists == False and noteautopitch_exists == True:
+                if 'pitch' in note[6]:
+                    pitchauto = note[6]['pitch']
+                    pitchauto.remove_instant()
+                    pitchblocks = pitchauto.blocks()
+                    if not note[7]: note[7] = []
+                    for pb in pitchblocks:
+                        note[7].append([pb[0], pb[1], pb[2], note[3], {}])
+
+
 
     def iter(self):
         for note in self.nl:

@@ -312,7 +312,9 @@ def lmms_encode_plugin(trkX_insttr, track_obj, trackid, trackname):
 def setvstparams(xml_vst, plugin_obj, pluginid):
     vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', None, True)
 
-    xml_vst.set('program', str(plugin_obj.datavals.get('current_program', 0)))
+    current_program = plugin_obj.datavals.get('current_program', 0)
+
+    xml_vst.set('program', str(current_program))
     xml_vst.set('plugin', vstpath)
     add_keyatt(xml_vst, {'file': vstpath})
 
@@ -481,7 +483,7 @@ class output_lmms(plugin_output.base):
         'fxrack': True,
         'fxrack_params': ['enabled','vol']
         }
-    def getsupportedplugformats(self): return ['vst2', 'ladspa', 'native-lmms']
+    def getsupportedplugformats(self): return ['vst2', 'ladspa']
     def getsupportedplugins(self): return ['sampler:single', 'soundfont2', 'universal:eq-bands', 'universal:delay-c', 'simple:reverb']
     def getfileextension(self): return 'mmp'
     def parse(self, i_convproj_obj, output_file):

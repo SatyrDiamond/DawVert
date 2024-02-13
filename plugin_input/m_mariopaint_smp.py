@@ -85,3 +85,5 @@ class input_mariopaint_smp(plugin_input.base):
         convproj_obj.do_actions.append('do_addloop')
         convproj_obj.do_actions.append('do_singlenotelistcut')
         convproj_obj.params.add('bpm', smp_tempo, 'float')
+
+        placement_obj.duration = placement_obj.notelist.get_dur()

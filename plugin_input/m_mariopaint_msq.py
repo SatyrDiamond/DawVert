@@ -91,3 +91,4 @@ class input_mariopaint_msq(plugin_input.base):
         convproj_obj.timesig = [msq_measure,4]
         convproj_obj.params.add('bpm', msq_tempo, 'float')
         
+        cvpj_placement.duration = cvpj_placement.notelist.get_dur()

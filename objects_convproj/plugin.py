@@ -271,14 +271,14 @@ class cvpj_plugin:
         env_pointsdata = self.env_points_get(a_type)
         env_pointsdata.change_timings(1, True)
 
-        sustainpoint = env_pointsdata.data['sustain'] if 'sustain' in env_pointsdata.data else None
         fadeout = env_pointsdata.data['fadeout'] if 'fadeout' in env_pointsdata.data else 0
         pointsdata = env_pointsdata.points
         numpoints = len(pointsdata)
 
         adsr_obj = self.env_asdr_add(a_type, 0, 0, 0, 0, 1, 0, 1)
 
-        sustainnum = None if (sustainpoint == None or sustainpoint == numpoints) else sustainpoint
+        sustainnum = -1 if (not env_pointsdata.sustain_on or env_pointsdata.sustain_point > numpoints) else env_pointsdata.sustain_point
+
         isenvconverted = 0
 
         #print('numpoints', numpoints)
@@ -289,7 +289,7 @@ class cvpj_plugin:
             minval = min(pointsdata[0].value, pointsdata[1].value)
     
             if pointsdata[0].value != pointsdata[1].value:
-                if sustainnum == None:
+                if sustainnum == -1:
                     if env_value > 0:
                         adsr_obj.decay = env_duration
                         adsr_obj.sustain = 0
@@ -302,7 +302,7 @@ class cvpj_plugin:
                         print("[env_asdr_from_points] 2 | _^")
                         isenvconverted = 202 #debug
     
-                elif sustainnum == 1:
+                elif sustainnum == 0:
                     if env_value >= 0: 
                         adsr_obj.release = env_duration
                         isenvconverted = 203 #debug
@@ -311,6 +311,8 @@ class cvpj_plugin:
                         adsr_obj.amount = -1
                         isenvconverted = 204 #debug
     
+                print(sustainnum, isenvconverted)
+
         elif numpoints == 3:
             envp_middle = pointsdata[1].pos
             envp_end = pointsdata[2].pos
@@ -319,54 +321,60 @@ class cvpj_plugin:
             envv_end = pointsdata[2].value
             firstmid_s = envv_first-envv_middle
             midend_s = envv_end-envv_middle
+
+            #print(pointsdata[0].pos, pointsdata[0].value)
+            #print(pointsdata[1].pos, pointsdata[1].value)
+            #print(pointsdata[2].pos, pointsdata[2].value)
+
             #print(envp_middle, envp_end, '|', envv_first, envv_middle, envv_end)
-            if firstmid_s > 0 and sustainnum == None: a_sustain = 0
+            if firstmid_s > 0 and sustainnum == -1: a_sustain = 0
 
             if firstmid_s > 0 and midend_s == 0:
                 print("[env_asdr_from_points] 3 | ^__" )
-                if sustainnum == None: adsr_obj.decay = envp_middle
-                if sustainnum == 1: adsr_obj.release = envp_middle
+                if sustainnum == -1: adsr_obj.decay = envp_middle
+                if sustainnum == 0: adsr_obj.release = envp_middle
                 isenvconverted = 300
 
             elif firstmid_s > 0 and midend_s < 0:
                 print("[env_asdr_from_points] 3 | ^._" )
-                if sustainnum == None: 
+                if sustainnum == -1: 
                     adsr_obj.decay = envp_end
                     adsr_obj.decay_tension = (envv_middle-(envv_first/2))*2
+                    adsr_obj.sustain = 0
+                    adsr_obj.release = fadeout
                     isenvconverted = 301
     
-                if sustainnum == 1: 
+                if sustainnum == 0: 
                     adsr_obj.release = envp_end
                     adsr_obj.release_tension = ((((envp_middle/envp_end)/2)+(envv_middle/2))-0.5)*2
                     isenvconverted = 302
     
-                if sustainnum == 2: 
+                if sustainnum == 1: 
                     adsr_obj.decay = envp_middle
                     adsr_obj.release = envp_end-envp_middle
                     adsr_obj.sustain = envv_middle
                     isenvconverted = 303
-    
-
+               
             elif firstmid_s < 0 and midend_s < 0:
                 print("[env_asdr_from_points] 3 | _^." )
-                if sustainnum in [None, 1]: 
+                if sustainnum == 0: 
                     adsr_obj.attack = envp_middle
                     adsr_obj.decay = (envp_end-envp_middle)
                     adsr_obj.sustain = envv_end
                     isenvconverted = 304
-                if sustainnum == 2: 
+                if sustainnum == 1: 
                     adsr_obj.attack = envp_middle
                     adsr_obj.release = (envp_end-envp_middle)
                     isenvconverted = 305
 
             elif firstmid_s == 0 and midend_s < 0:
                 print("[env_asdr_from_points] 3 | ^^.")
-                if sustainnum in [None, 1]:
+                if sustainnum == -1:
                     adsr_obj.hold = envp_middle
                     adsr_obj.decay = envp_end-envp_middle
                     adsr_obj.sustain = envv_end
                     isenvconverted = 306
-                if sustainnum == 2: 
+                if sustainnum == 0: 
                     adsr_obj.hold = envp_middle
                     adsr_obj.release = envp_end-envp_middle
                     isenvconverted = 307
@@ -395,13 +403,83 @@ class cvpj_plugin:
             #        adsr_obj.attack = envp_middle
             #        a_decay = (envp_end-envp_middle)
             #        a_amount = envv_middle-1
-            #    if sustainnum == 2: 
+            #    if sustainnum == 1: 
             #        adsr_obj.attack = envp_middle
             #        adsr_obj.release = (envp_end-envp_middle)
             #        a_amount = envv_middle-1
             #    isenvconverted = True
     
+            #print(sustainnum, isenvconverted)
+        
             if isenvconverted != 0 and adsr_obj.sustain != 0 and adsr_obj.release == 0: adsr_obj.release = fadeout
+
+        elif numpoints > 3:
+            if sustainnum == 2 and numpoints == 4 and pointsdata[0].value == 0 and pointsdata[3].value == 0 and pointsdata[1].value>=pointsdata[2].value:
+                adsr_obj.attack = pointsdata[1].pos
+                adsr_obj.decay = pointsdata[2].pos-pointsdata[1].pos
+                adsr_obj.sustain = pointsdata[2].value
+                adsr_obj.release = pointsdata[3].pos-pointsdata[2].pos
+            elif env_pointsdata.points[-1].pos != 0:
+                last_pos = env_pointsdata.points[-1].pos
+                t_pos = [x.pos for x in env_pointsdata.points]
+                t_val = [x.value for x in env_pointsdata.points]
+                p_min = min(t_val)
+                p_max = max(t_val)
+                t_val = [xtramath.between_to_one(p_min, p_max, x) for x in t_val]
+                
+                pcv = 1/(numpoints-1)
+
+                t_pos_chan = []
+                prev = None
+                for x in t_pos:
+                    if prev != None: t_pos_chan.append( ((x-prev)/last_pos)/pcv )
+                    prev = x
+
+                t_val_chan = []
+                prev = None
+                for x in t_val:
+                    if prev != None: t_val_chan.append(x-prev)
+                    prev = x
+
+                t_val_chan_a = [abs(x) for x in t_val_chan]
+                t_val_chan_d = []
+                for x in t_val_chan:
+                    if x>0: t_val_chan_d.append(1)
+                    elif x<0: t_val_chan_d.append(-1)
+                    else: t_val_chan_d.append(0)
+
+                t_comb = [(t_val_chan_a[n]/pcv)/v for n, v in enumerate(t_pos_chan)]
+                t_comb_c = [(1/t_comb[n] if t_comb[n] != 0 else 1) for n, v in enumerate(t_comb)]
+                t_comb_s = [1/(x+1) for x in range(numpoints-1)]
+                t_comb_e = t_comb_s[::-1]
+                maxcval = sum(t_comb_s)
+                tens_start = 0
+                tens_end = 0
+                for x in range(numpoints-1):
+                    tens_start += t_comb_c[x]*t_comb_s[x]
+                    tens_end += t_comb_c[x]*t_comb_e[x]
+                tens_start /= maxcval
+                tens_end /= maxcval
+                tension = (tens_start-1)+(1-tens_end)
+
+                posneg = xtramath.average(t_val_chan_d)*3
+                adsr_obj.release = fadeout
+
+                if sustainnum == 0 and posneg<=-1:
+                    print("[env_asdr_from_points] 4 | ^_")
+                    adsr_obj.release = last_pos
+                    adsr_obj.release_tension = (tension/2)
+
+                elif sustainnum == -1 and posneg>=1:
+                    print("[env_asdr_from_points] 4 | _^")
+                    adsr_obj.attack = last_pos
+                    adsr_obj.attack_tension = -(tension/2)
+
+                elif sustainnum == -1 and posneg<=-1:
+                    print("[env_asdr_from_points] 4 | ^_")
+                    adsr_obj.decay = last_pos
+                    adsr_obj.decay_tension = (tension/2)
+
 
     def env_points_list(self): 
         return [x for x in self.env_points]

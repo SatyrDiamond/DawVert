@@ -215,6 +215,16 @@ class cvpj_notelist:
             if duration_final < noteendpos: duration_final = noteendpos
         return duration_final
 
+    def get_start_end(self):
+        duration_final = 0
+        position_final = 100000000000000
+        for note in self.nl:
+            notestartpos = note[0]
+            noteendpos = note[0]+note[1]
+            if duration_final < noteendpos: duration_final = noteendpos
+            if note[0] < position_final: position_final = note[0]
+        return position_final, duration_final
+
     def edit_move(self, pos):
         new_nl = []
         for new_n in self.nl.copy():

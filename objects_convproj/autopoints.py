@@ -19,8 +19,9 @@ class cvpj_s_autopoint:
         s_tension = self.tension == aps.tension
         return s_pos and s_value and s_type and s_tension
 
+
 class cvpj_autopoints:
-    __slots__ = ['type','time_ppq','time_float','val_type','points','data']
+    __slots__ = ['type','time_ppq','time_float','val_type','points','data','enabled','loop_on','loop_start','loop_end','sustain_on','sustain_point','sustain_end']
 
     def __init__(self, time_ppq, time_float, val_type):
         self.time_ppq = time_ppq
@@ -28,6 +29,15 @@ class cvpj_autopoints:
         self.val_type = val_type
         self.data = {}
         self.points = []
+
+        self.enabled = True
+        self.loop_on = False
+        self.loop_start = 0
+        self.loop_end = 0
+
+        self.sustain_on = False
+        self.sustain_point = 0
+        self.sustain_end = 0
 
     def __eq__(self, aps):
         s_time_ppq = self.time_ppq == aps.time_ppq

@@ -38,8 +38,9 @@ def convert(convproj_obj):
         splitted_pl = playlist_obj.placements.inst_split()
 
         for inst_id, placements in splitted_pl.items():
-            lane_obj = track_stor[inst_id].add_lane(str(pl_id))
-            lane_obj.placements.data_notes = placements
+            if inst_id in track_stor:
+                lane_obj = track_stor[inst_id].add_lane(str(pl_id))
+                lane_obj.placements.data_notes = placements
 
         fxrack_audio_pl = {}
         if playlist_obj.placements.data_audio:

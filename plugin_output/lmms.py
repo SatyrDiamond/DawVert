@@ -670,9 +670,6 @@ class output_lmms(plugin_output.base):
         Xautomationeditor = ET.SubElement(songX, "automationeditor")
         add_window_data(Xautomationeditor, 'main', 'automation_editor', [1,1], [860,400], False, False)
 
-        convproj_obj.metadata.comment_text
-        convproj_obj.metadata.comment_datatype
-
         if convproj_obj.metadata.comment_text:
             notesX = ET.SubElement(songX, "projectnotes")
             add_window_data(notesX, 'main', 'project_notes', [728, 5], [389, 300], True, False)

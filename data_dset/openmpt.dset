@@ -1,0 +1,485 @@
+{
+    "plugin": {
+        "objects": {
+            "chorus": {
+                "params": {
+                    "Delay": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Depth": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Feedback": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Frequency": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Frequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Phase": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Phase",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "WaveShape": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "WaveShape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "WetDryMix": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "WetDryMix",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Chorus"
+                }
+            },
+            "compressor": {
+                "params": {
+                    "Attack": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Attack",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Gain": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Predelay": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Predelay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Ratio": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Ratio",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Release": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Release",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Threshold": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Threshold",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Compressor"
+                }
+            },
+            "distortion": {
+                "params": {
+                    "Edge": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Edge",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Gain": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Gain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "PostEQBandwidth": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Post-EQ Bandwidth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "PostEQCenterFrequency": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Post-EQ Center Frequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "PreLowpassCutoff": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Pre-Lowpass Cutoff",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Distortion"
+                }
+            },
+            "echo": {
+                "params": {
+                    "Feedback": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "LeftDelay": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Left Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "PanDelay": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Pan Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "RightDelay": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Right Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "WetDry": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "WetDryMix",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Echo"
+                }
+            },
+            "flanger": {
+                "params": {
+                    "Delay": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Delay",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Depth": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Depth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Feedback": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Feedback",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Frequency": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Frequency",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Phase": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Phase",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "WaveShape": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "WaveShape",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "WetDryMix": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "WetDryMix",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Flanger"
+                }
+            },
+            "gargle": {
+                "params": {
+                    "Rate": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Rate",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "WaveShape": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "WaveShape",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "Gargle"
+                }
+            },
+            "i3dl2reverb": {
+                "params": {
+                    "DecayHFRatio": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "DecayTime": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Density": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Diffusion": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "HFReference": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Quality": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Reflections": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ReflectionsDelay": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Reverb": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ReverbDelay": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Room": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "RoomHF": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "RoomRolloffFactor": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "I3DL2Reverb"
+                }
+            },
+            "parameq": {
+                "params": {
+                    "Bandwidth": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Bandwidth",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "Center": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Center",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "EqGain": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "Gain",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "ParamEq"
+                }
+            },
+            "wavesreverb": {
+                "params": {
+                    "HighFreqRTRatio": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "HighFreqRTRatio",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "InGain": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "InGain",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ReverbMix": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "ReverbMix",
+                        "noauto": false,
+                        "type": "float"
+                    },
+                    "ReverbTime": {
+                        "def": 0.0,
+                        "max": 1.0,
+                        "min": 0.0,
+                        "name": "ReverbTime",
+                        "noauto": false,
+                        "type": "float"
+                    }
+                },
+                "visual": {
+                    "name": "WavesReverb"
+                }
+            }
+        }
+    }
+}

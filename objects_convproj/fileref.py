@@ -111,6 +111,7 @@ class cvpj_sampleref:
                 avdata = av.open(wav_realpath)
                 if len(avdata.streams.audio) != 0:
                     self.dur_samples = avdata.streams.audio[0].duration
+                    if self.dur_samples == None: self.dur_samples = 0
                     self.timebase = avdata.streams.audio[0].time_base.denominator
                     audio_hz_b = avdata.streams.audio[0].rate
                     if audio_hz_b != None: self.hz = audio_hz_b

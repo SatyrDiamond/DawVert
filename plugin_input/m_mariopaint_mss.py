@@ -102,3 +102,5 @@ class input_mariopaint_mss(plugin_input.base):
         convproj_obj.do_actions.append('do_singlenotelistcut')
         convproj_obj.timesig = [mss_measure,4]
         convproj_obj.params.add('bpm', mss_tempo, 'float')
+
+        placement_obj.duration = placement_obj.notelist.get_dur()

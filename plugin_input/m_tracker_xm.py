@@ -7,6 +7,7 @@ import json
 import struct
 from functions import data_values
 from functions import data_bytes
+from functions_plugin import openmpt_chunks
 from io import BytesIO
 from objects import dv_trackerpattern
 
@@ -17,151 +18,130 @@ else: xmodits_exists = True
 startinststr = 'XM_Inst_'
 maincolor = [0.16, 0.33, 0.53]
 
-def parse_instrument(convproj_obj, file_stream, samplecount):
-    global xm_cursamplenum
+class xm_env:
+    def __init__(self): 
+        self.points = []
+        self.numpoints = 0
+        self.sustain = 0
+        self.type = 0
+        self.loop_start = 0
+        self.loop_end = 0
+        self.enabled = False
+        self.sustain_on = False
+        self.loop_on = False
 
-    basepos = file_stream.tell()
-    xm_inst_header_length = int.from_bytes(file_stream.read(4), "little")
-    print("[input-xm]     Header Length: " + str(xm_inst_header_length))
+    def set_type(self, i_type): 
+        self.type = i_type
+        self.enabled = bool(i_type&1)
+        self.sustain_on = bool(i_type&2)
+        self.loop_on = bool(i_type&4)
 
-    xm_inst_name = data_bytes.readstring_fixedlen(file_stream, 22, "latin1")
-    print("[input-xm]     Name: " + str(xm_inst_name))
-    xm_inst_type = file_stream.read(1)[0]
-    print("[input-xm]     Type: " + str(xm_inst_type))
-    xm_inst_num_samples = file_stream.read(1)[0]
-    print("[input-xm]     # of samples: " + str(xm_inst_num_samples))
+    def to_cvpj(self, plugin_obj, ispan, fadeout):
+        autopoints_obj = plugin_obj.env_points_add('pan' if ispan else 'vol', 48, False, 'float')
+        autopoints_obj.enabled       = self.enabled
+        autopoints_obj.sustain_on    = self.sustain_on
+        autopoints_obj.sustain_point = self.sustain+1
+        autopoints_obj.sustain_end   = self.sustain+1
+        autopoints_obj.loop_on       = self.loop_on
+        autopoints_obj.loop_start    = self.loop_start
+        autopoints_obj.loop_end      = self.loop_end
+        for n in range(self.numpoints):
+            xm_point = self.points[n]
+            autopoint_obj = autopoints_obj.add_point()
+            autopoint_obj.pos = xm_point[0]
+            autopoint_obj.value = (xm_point[1]-32)/32 if ispan else xm_point[1]/64
+        if not ispan: 
+            if fadeout: autopoints_obj.data['fadeout'] = (256/fadeout)
+            plugin_obj.env_asdr_from_points('vol')
 
-    if xm_inst_num_samples != 0:
-        xm_inst_e_head_size = int.from_bytes(file_stream.read(4), "little")
-        print("[input-xm]     Sample header size: " + str(xm_inst_e_head_size))
-        xm_inst_e_table = struct.unpack('B'*96, file_stream.read(96))
-        xm_inst_e_env_v = struct.unpack('>'+'H'*24, file_stream.read(48))
-        xm_inst_e_env_p = struct.unpack('>'+'H'*24, file_stream.read(48))
-        file_stream.read(1)
-        xm_inst_e_number_of_volume_points = file_stream.read(1)[0]
-        xm_inst_e_number_of_panning_points = file_stream.read(1)[0]
-        xm_inst_e_volume_sustain_point = file_stream.read(1)[0]
-        xm_inst_e_volume_loop_start_point = file_stream.read(1)[0]
-        xm_inst_e_volume_loop_end_point = file_stream.read(1)[0]
-        xm_inst_e_panning_sustain_point = file_stream.read(1)[0]
-        xm_inst_e_panning_loop_start_point = file_stream.read(1)[0]
-        xm_inst_e_panning_loop_end_point = file_stream.read(1)[0]
-        xm_inst_e_volume_type = file_stream.read(1)[0]
-        xm_inst_e_panning_type = file_stream.read(1)[0]
-        xm_inst_e_vibrato_type = file_stream.read(1)[0]
-        xm_inst_e_vibrato_sweep = file_stream.read(1)[0]
-        xm_inst_e_vibrato_depth = file_stream.read(1)[0]
-        xm_inst_e_vibrato_rate = file_stream.read(1)[0]
-        xm_inst_e_volume_fadeout = int.from_bytes(file_stream.read(2), "little")
-        xm_inst_e_reserved = int.from_bytes(file_stream.read(2), "little")
+class xm_sample_header:
+    def __init__(self, fs): 
+        self.length, self.loop_start, self.loop_end, self.vol, self.fine, self.type, self.pan, self.note, self.reserved = struct.unpack('IIIBBBBBB', fs.read(18))
+        self.name = data_bytes.readstring_fixedlen(fs, 22, "windows-1252")
+        self.vol /= 64
+        if self.type&1: self.loop = 1
+        elif self.type&2: self.loop = 2
+        else: self.loop = 0
+        self.loop_on = bool(self.loop)
+        self.double = bool(self.type&16)
+        if self.double: self.loop_start /= 2
+        if self.double: self.loop_end /= 2
 
-    t_sampleheaders = []
-    basepos_end = file_stream.tell()
-
-    xm_pat_extra_data = file_stream.read(xm_inst_header_length - (basepos_end-basepos))
-
-    for _ in range(xm_inst_num_samples):
-        sampheader = struct.unpack('IIIBBBBBB', file_stream.read(18))
-        sampname = data_bytes.readstring_fixedlen(file_stream, 22, "windows-1252")
-        t_sampleheaders.append([sampheader, sampname])
-
-    for t_sampleheader in t_sampleheaders:
-        file_stream.read(t_sampleheader[0][0])
-
-    cvpj_instid = startinststr + str(samplecount+1)
-
-    inst_obj = convproj_obj.add_instrument(cvpj_instid)
-    inst_obj.visual.name = xm_inst_name
-    inst_obj.visual.color = maincolor
-    inst_obj.params.add('vol', 0.3, 'float')
-
-    inst_used = False
-    if xm_inst_num_samples == 0:
-        pass
-    elif xm_inst_num_samples == 1:
-        inst_used = True
-        inst_obj.params.add('vol', 0.3*(t_sampleheaders[0][0][3]/64), 'float')
-
-        filename = samplefolder+str(xm_cursamplenum)+'.wav'
-        plugin_obj, inst_obj.pluginid, sampleref_obj = convproj_obj.add_plugin_sampler_genid(filename)
-        plugin_obj.datavals.add('point_value_type', "samples")
-
-        sampleflags = data_bytes.to_bin(t_sampleheaders[0][0][5], 8)
-
-        loopon = None
-        xm_loop_start = t_sampleheaders[0][0][1]
-        xm_loop_len = t_sampleheaders[0][0][2]
-
-        if sampleflags[7] == 1: loopon = 'normal'
-        if sampleflags[6] == 1: loopon = 'pingpong'
-
-        if loopon == None:
-            plugin_obj.datavals.add('loop', {"enabled": 0})
+    def cvpj_loop(self): 
+        if not self.loop:
+            return {"enabled": 0}
         else:
-            plugin_obj.datavals.add('loop', {"enabled": 1, "mode": loopon, "points": [xm_loop_start,xm_loop_start+xm_loop_len]})
-    else:
-        inst_used = True
-        inst_obj.params.add('vol', 0.3, 'float')
-        sampleregions = data_values.list_to_reigons(xm_inst_e_table, 48)
+            return {"enabled": 1, "mode": ('normal' if self.loop != 2 else 'pingpong'), "points": [self.loop_start,self.loop_start+self.loop_end]}
 
-        plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
-        plugin_obj.datavals.add('point_value_type', "samples")
 
-        for sampleregion in sampleregions:
-            instrumentnum = sampleregion[0]
 
-            filename = samplefolder + str(xm_cursamplenum+instrumentnum) + '.wav'
-            sampleref_obj = convproj_obj.add_sampleref(filename, filename)
+class xm_instrument:
+    def __init__(self, fs): 
+        basepos = fs.tell()
+        header_length = int.from_bytes(fs.read(4), "little")
+        self.name = data_bytes.readstring_fixedlen(fs, 22, "latin1")
+        self.type = fs.read(1)[0]
+        self.num_samples = fs.read(1)[0]
 
-            regionparams = {}
-            regionparams['sampleref'] = filename
-            regionparams['loop'] = {}
-            if t_sampleheaders[instrumentnum][0][1:3] == (0, 0): 
-                regionparams['loop']['enabled'] = 0
-            else:
-                regionparams['loop']['enabled'] = 1
-                xm_loop_start = t_sampleheaders[instrumentnum][0][1]
-                xm_loop_len = t_sampleheaders[instrumentnum][0][2]
-                regionparams['loop']['points'] = [xm_loop_start,xm_loop_start+xm_loop_len]
+        print("[input-xm] Instrument:")
+        print("[input-xm]     Name: " + str(self.name))
+        print("[input-xm]     Type: " + str(self.type))
+        print("[input-xm]     # of samples: " + str(self.num_samples-1))
 
-            plugin_obj.regions.add(sampleregion[1], sampleregion[2], regionparams)
+        self.env_vol = xm_env()
+        self.env_pan = xm_env()
+        self.vibrato_type = 0
+        self.vibrato_sweep = 0
+        self.vibrato_depth = 0
+        self.vibrato_rate = 0
+        self.fadeout = 0
 
-    if xm_inst_num_samples != 0:
+        self.notesampletable = []
 
-        splitted_points_v = data_values.list_chunks(xm_inst_e_env_v[0:xm_inst_e_number_of_volume_points*2], 2)
-        splitted_points_p = data_values.list_chunks(xm_inst_e_env_p[0:xm_inst_e_number_of_panning_points*2], 2)
+        if self.num_samples != 0:
+            xm_inst_e_head_size = int.from_bytes(fs.read(4), "little")
+            print("[input-xm]     Sample header size: " + str(xm_inst_e_head_size))
+            self.notesampletable = struct.unpack('B'*96, fs.read(96))
+            self.env_vol.points = [[v for v in struct.unpack('>HH', fs.read(4))] for x in range(12)]
+            self.env_pan.points = [[v for v in struct.unpack('>HH', fs.read(4))] for x in range(12)]
+            fs.read(1)
+            self.env_vol.numpoints = fs.read(1)[0]
+            self.env_pan.numpoints = fs.read(1)[0]
+            self.env_vol.sustain = fs.read(1)[0]-1
+            self.env_vol.loop_start = fs.read(1)[0]
+            self.env_vol.loop_end = fs.read(1)[0]
+            self.env_pan.sustain = fs.read(1)[0]-1
+            self.env_pan.loop_start = fs.read(1)[0]
+            self.env_pan.loop_end = fs.read(1)[0]
+            self.env_vol.set_type(fs.read(1)[0])
+            self.env_pan.set_type(fs.read(1)[0])
+            self.vibrato_type = fs.read(1)[0]
+            self.vibrato_sweep = fs.read(1)[0]
+            self.vibrato_depth = fs.read(1)[0]
+            self.vibrato_rate = fs.read(1)[0]
+            self.fadeout = int.from_bytes(fs.read(2), "little")
+            self.reserved = int.from_bytes(fs.read(2), "little")
 
-        pointsdata = [
-        ['vol', splitted_points_v, xm_inst_e_volume_sustain_point, xm_inst_e_volume_loop_start_point, xm_inst_e_volume_loop_end_point], 
-        ['pan', splitted_points_p, xm_inst_e_panning_sustain_point, xm_inst_e_panning_loop_start_point, xm_inst_e_panning_loop_end_point]
-        ]
+        basepos_end = fs.tell()
+        xm_pat_extra_data = fs.read(header_length - (basepos_end-basepos))
 
-        vol_envflags = data_bytes.to_bin(xm_inst_e_volume_type, 8)
+        self.pluginnum = 0
 
-        for typedata in pointsdata:
-            if typedata[0] == 'vol':
-                autopoints_obj = plugin_obj.env_points_add('vol', 48, False, 'float')
-                if vol_envflags[6] == 1: autopoints_obj.data['sustain'] = typedata[2]+1
-                if vol_envflags[5] == 1: autopoints_obj.data['loop'] = [typedata[4], typedata[3]+typedata[4]]
-                if xm_inst_e_volume_fadeout != 0: autopoints_obj.data['fadeout'] = (128/xm_inst_e_volume_fadeout)*5
+        self.samp_head = [xm_sample_header(fs) for _ in range(self.num_samples)]
+        self.samp_data = [fs.read(x.length) for x in self.samp_head]
 
-            if typedata[0] == 'pan':
-                autopoints_obj = plugin_obj.env_points_add('pan', 48, False, 'float')
+    def vibrato_lfo(self, plugin_obj): 
+        if self.vibrato_rate != 0:
+            vibrato_speed = self.vibrato_rate
+            vibrato_depth = (self.vibrato_depth/15)*0.23
+            vibrato_wave = ['sine','square','ramp_up','ramp_down'][self.vibrato_type&3]
+            vibrato_sweep = self.vibrato_sweep/50
 
-            zerofound = False
-            for groupval in typedata[1]:
-                if groupval[0] == 0:
-                    if zerofound == True: break
-                    zerofound = True
-
-                autopoint_obj = autopoints_obj.add_point()
-                autopoint_obj.pos = groupval[0]
-                if typedata[0] == 'vol' and vol_envflags[7] == 1: autopoint_obj.value = groupval[1]/64
-                if typedata[0] == 'pan': autopoint_obj.value = (groupval[1]-32)/32
-
-        plugin_obj.env_asdr_from_points('vol')
-
-    if xm_inst_num_samples != 0: xm_cursamplenum += xm_inst_num_samples
+            lfo_obj = plugin_obj.lfo_add('pitch')
+            lfo_obj.attack = vibrato_sweep
+            lfo_obj.shape = vibrato_wave
+            lfo_obj.speed_time = vibrato_speed
+            lfo_obj.amount = vibrato_depth
 
 class input_xm(plugin_input.base):
     def __init__(self): pass
@@ -278,47 +258,95 @@ class input_xm(plugin_input.base):
                             cell_param = int.from_bytes(bio_patdata.read(1), "little")
 
                         output_note = cell_note
-                        if cell_note != None:
-                            if cell_note == 97: output_note = 'off'
-                            else: output_note = cell_note - 49
-
+                        if cell_note != None: output_note = 'off' if cell_note == 97 else cell_note-49
                         patterndata.cell_note(channel, output_note, output_inst)
                         patterndata.cell_param(channel, 'vol', cell_vol/64)
-
                         patterndata.cell_fx_mod(channel, cell_effect, cell_param)
-
-                        if cell_effect == 12: 
-                            patterndata.cell_param(channel, 'vol', cell_param/64)
-
-                        if cell_effect == 15: 
-                            patterndata.cell_g_param('speed', cell_param)
-
-                        if cell_effect == 16: 
-                            patterndata.cell_param(channel, 'global_volume', cell_param/64)
-
-                        if cell_effect == 17: 
-                            patterndata.cell_param(channel, 'global_volume_slide', dv_trackerpattern.getfineval(cell_param))
-
+                        if cell_effect == 12: patterndata.cell_param(channel, 'vol', cell_param/64)
+                        if cell_effect == 15: patterndata.cell_g_param('speed', cell_param)
+                        if cell_effect == 16: patterndata.cell_param(channel, 'global_volume', cell_param/64)
+                        if cell_effect == 17: patterndata.cell_param(channel, 'global_volume_slide', dv_trackerpattern.getfineval(cell_param))
                         if cell_effect == 34:
                             panbrello_params = {}
                             panbrello_params['speed'], panbrello_params['depth'] = data_bytes.splitbyte(cell_param)
                             patterndata.cell_param(n_chan, 'panbrello', panbrello_params)
-
-
-
                 patterndata.row_next()
 
-
-
         # ------------- Instruments -------------
+
+        xm_insts = [xm_instrument(file_stream) for x in range(xm_song_num_instruments)]
+
+        patnames, channames = openmpt_chunks.parse_start(file_stream, convproj_obj)
+        XTPM_data, STPM_data = openmpt_chunks.parse_xtst(file_stream, xm_song_num_instruments)
+
+        for n, d in enumerate(XTPM_data):
+            for c, v in d:
+                if c == b'.PiM': xm_insts[n].pluginnum = v[0]
+
+        for c, d in enumerate(STPM_data):
+            if c == b'...C': patterndata.num_chans = int.from_bytes(chunk_value, "little")
+            elif c == b'AUTH': convproj_obj.metadata.author = chunk_value.decode()
+            elif c == b'CCOL': patterndata.ch_colors = d
+
         for instnum in range(xm_song_num_instruments):
-            print("[input-xm] Instrument:")
-            parse_instrument(convproj_obj, file_stream, instnum)
+            xm_inst = xm_insts[instnum]
+
+            cvpj_instid = startinststr + str(instnum+1)
+
+            inst_obj = convproj_obj.add_instrument(cvpj_instid)
+            inst_obj.visual.name = xm_inst.name
+            inst_obj.visual.color = maincolor
+            inst_obj.params.add('vol', 0.3, 'float')
+
+            sampleregions = data_values.list_to_reigons(xm_inst.notesampletable, 48)
+
+            inst_used = False
+            if xm_inst.num_samples == 0: pass
+            elif xm_inst.num_samples == 1:
+                inst_used = True
+                first_s_obj = xm_inst.samp_head[0]
+                inst_obj.params.add('vol', 0.3*(first_s_obj.vol), 'float')
+                filename = samplefolder+str(xm_cursamplenum)+'.wav'
+                plugin_obj, inst_obj.pluginid, sampleref_obj = convproj_obj.add_plugin_sampler_genid(filename)
+                plugin_obj.datavals.add('point_value_type', "samples")
+                plugin_obj.datavals.add('loop', first_s_obj.cvpj_loop())
+            else:
+                inst_used = True
+                inst_obj.params.add('vol', 0.3, 'float')
+                plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
+                plugin_obj.datavals.add('point_value_type', "samples")
+                for instnum, r_start, e_end in sampleregions:
+                    filename = samplefolder + str(xm_cursamplenum+instnum) + '.wav'
+                    sampleref_obj = convproj_obj.add_sampleref(filename, filename)
+                    regionparams = {}
+                    regionparams['sampleref'] = filename
+                    regionparams['loop'] = xm_inst.samp_head[instnum].cvpj_loop()
+                    plugin_obj.regions.add(r_start, e_end, regionparams)
+
+            if xm_inst.num_samples != 0:
+                xm_inst.vibrato_lfo(plugin_obj)
+                xm_inst.env_vol.to_cvpj(plugin_obj, False, xm_inst.fadeout)
+                xm_inst.env_pan.to_cvpj(plugin_obj, True, xm_inst.fadeout)
+
+            if xm_inst.pluginnum: 
+                inst_obj.fxslots_audio.append('FX'+str(xm_inst.pluginnum))
+
+            xm_cursamplenum += xm_inst.num_samples
+
+        #exit()
 
         # ------------- Samples -------------
         if xmodits_exists == True:
             try: xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
             except: pass
+
+        if channames:
+            for n, v in enumerate(channames):
+                patterndata.ch_names[n] = v
+        
+        if patnames:
+            for n, v in enumerate(channames):
+                patterndata.pat_names[n] = v
 
         patterndata.to_cvpj(convproj_obj, t_orderlist, startinststr, xm_song_bpm, xm_song_speed, maincolor)
 

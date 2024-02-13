@@ -63,11 +63,11 @@ class autostream:
     def to_cvpj(self, convproj_obj, autoloc):
         for tpl in self.placements:
             autopl_obj = convproj_obj.add_automation_pl(autoloc, 'float')
-            autopl_obj.position = (tpl[0])
+            autopl_obj.position = (tpl[0])+tpl[1][0][0]
             autopl_obj.duration = tpl[2]
-            for tap in tpl[1]:
+            for tap in tpl[1]: 
                 autopoint_obj = autopl_obj.data.add_point()
-                autopoint_obj.pos = tap[0]
+                autopoint_obj.pos = tap[0]-tpl[1][0][0]
                 autopoint_obj.value = tap[1]
                 autopoint_obj.type = 'instant'
 
@@ -81,14 +81,16 @@ class notestream:
         self.cur_pos = 0
         self.note_pos = 0
         self.slide_speed = 0
+        self.vol = 1
 
     def note_on(self, c_note, c_fx):
         self.note_active = True
         last_nl = self.placements[-1][1]
         self.note_pos = 0
-        init_vol = c_fx['vol'] if 'vol' in c_fx else 1
+        if 'vol' in c_fx: self.vol = c_fx['vol']
         init_pan = c_fx['pan'] if 'pan' in c_fx else 0
-        last_nl.add_m(self.text_inst_start+str(self.cur_inst), self.cur_pos, 0, c_note, init_vol, {'pan': init_pan})
+        if self.cur_inst != None:
+            last_nl.add_m(self.text_inst_start+str(self.cur_inst), self.cur_pos, 0, c_note, self.vol, {'pan': init_pan})
         self.slide_pitch = notelist.pitchmod(c_note)
 
     def note_off(self):
@@ -99,6 +101,7 @@ class notestream:
     def do_cell(self, c_note, c_inst, c_fx, s_speed):
         if c_inst != None: 
             self.cur_inst = c_inst
+            self.vol = 1
             if c_inst not in self.used_inst: self.used_inst.append(c_inst)
 
         if c_note != None:
@@ -243,6 +246,9 @@ class patterndata:
         self.patterndata = {}
         self.num_chans = number_of_channels
         self.cur_pat = 0
+        self.ch_names = ['Channel '+str(x+1) for x in range(self.num_chans)]
+        self.ch_colors = [maincolor for x in range(self.num_chans)]
+        self.pat_names = {}
 
     def to_cvpj(self, convproj_obj, order_list, text_inst_start, s_bpm, s_speed, maincolor):
         convproj_obj.type = 'm'
@@ -268,16 +274,21 @@ class patterndata:
                         celld = rowdata[1][ch_num]
                         notepl[ch_num].do_cell(celld[0], celld[1], celld[2], cur_speed)
 
-                    if 'break_to_row' in rowdata[0]: break
                     if 'speed' in rowdata[0]: 
                         cur_speed = rowdata[0]['speed']
                         bpm_changed = True
                     if 'tempo' in rowdata[0]: 
                         cur_tempo = rowdata[0]['tempo']
                         bpm_changed = True
-                    if 'pattern_jump' in rowdata[0]: break
+                    if 'pattern_jump' in rowdata[0]: 
+                        tempo_autopl.next()
+                        break
+                    if 'break_to_row' in rowdata[0]: 
+                        tempo_autopl.next()
+                        break
 
                     if bpm_changed:
+                        if cur_speed == 0: cur_speed = 3
                         tempo_autopl.do_point(cur_tempo*(6/cur_speed))
 
                     tempo_autopl.next()
@@ -297,8 +308,8 @@ class patterndata:
 
         for ch_num in range(self.num_chans):
             playlist_obj = convproj_obj.add_playlist(ch_num, True, False)
-            playlist_obj.visual.name = "Channel "+str(ch_num)
-            playlist_obj.visual.color = maincolor
+            playlist_obj.visual.name = self.ch_names[ch_num]
+            playlist_obj.visual.color = self.ch_colors[ch_num]
 
             cur_pl_pos = 0
             for tpl in notepl[ch_num].placements:
@@ -312,7 +323,7 @@ class patterndata:
                         placement_obj.position = cur_pl_pos
                         placement_obj.duration = tpl[0]
                         placement_obj.notelist = tpl[1]
-                        placement_obj.visual.name = 'Pattern '+str(tpl[2]+1)
+                        placement_obj.visual.name = self.pat_names[tpl[2]+1]
                 cur_pl_pos += tpl[0]
 
         patlentable = [x[0] for x in notepl[0].placements]
@@ -329,6 +340,8 @@ class patterndata:
         self.patterndata[num] = s_patdata
         self.cur_pat = num
         self.cur_row = 0
+        if num+1 not in self.pat_names:
+            self.pat_names[num+1] = 'Pattern '+str(num)
 
     def pattern_set_cur(self, num):
         self.cur_pat = num

@@ -89,6 +89,7 @@ class input_mod(plugin_input.base):
             if number < mod_orderlist_length: t_orderlist.append(ordernum)
         print("[input-mod] Order List: " + str(t_orderlist))
         mod_inst_tag = file_stream.read(4).decode()
+        print("[input-mod] TAG: " + str(mod_inst_tag))
         mod_num_patterns = max(t_orderlist)
         print("[input-mod] Patterns: " + str(mod_num_patterns))
         mod_num_channels = 4

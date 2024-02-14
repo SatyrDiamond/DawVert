@@ -152,10 +152,10 @@ class it_env:
 
     def to_cvpj(self, plugin_obj, t_type, i_div): 
         autopoints_obj = plugin_obj.env_points_add(t_type, 48, False, 'float')
-        autopoints_obj.sustain_on    = self.susloop_enabled
+        autopoints_obj.sustain_on    = bool(self.susloop_enabled)
         autopoints_obj.sustain_point = self.susloop_start
         autopoints_obj.sustain_end   = self.susloop_end
-        autopoints_obj.loop_on       = self.loop_enabled
+        autopoints_obj.loop_on       = bool(self.loop_enabled)
         autopoints_obj.loop_start    = self.loop_start
         autopoints_obj.loop_end      = self.loop_end
 
@@ -238,9 +238,9 @@ class input_it(plugin_input.base):
         print("[input-it] # of Samples: " + str(it_header_smpnum))
         print("[input-it] # of Patterns: " + str(it_header_patnum))
         
-        it_header_cwtv = int.from_bytes(it_file.read(2), "little")
-        it_header_cmwt = int.from_bytes(it_file.read(2), "little")
-        print("[input-it] CMWT: " + str(it_header_cmwt))
+        it_header_cwtv = data_bytes.splitbyte(it_file.read(1)[0])+data_bytes.splitbyte(it_file.read(1)[0])
+        it_header_cmwt = it_file.read(2)
+        print("[input-it] Cwt/v: " + str(it_header_cwtv))
         
         it_header_flags = bin(int.from_bytes(it_file.read(2), "little"))[2:].zfill(16)
         it_header_flag_useinst = it_header_flags[13]
@@ -477,6 +477,12 @@ class input_it(plugin_input.base):
                 inst_obj.visual.name = cvpj_instname
                 inst_obj.visual.color = maincolor
 
+                if bn_s_t_ifsame:
+                    if (not ''.join(list(map(lambda x: x.strip(), cvpj_instname.split())))):
+                        inst_obj.visual.name = it_samples[bn_s_t_f[1]-1].name
+                        if not inst_obj.visual.name: 
+                            inst_obj.visual.name = it_samples[bn_s_t_f[1]-1].dosfilename
+
                 if it_inst.pitchpanseparation:
                     plugin_obj, pluginid = convproj_obj.add_plugin_genid('pitch_pan_separation', None)
                     plugin_obj.params.add('range', 1/(it_inst.pitchpanseparation/32), 'float')
@@ -531,6 +537,8 @@ class input_it(plugin_input.base):
                         if it_inst.resampling == 3: interpolation = 'sinc'
                         if it_inst.resampling == 4: interpolation = 'sinc_lowpass'
                         plugin_obj.datavals.add('interpolation', interpolation)
+                    else:
+                        plugin_obj.datavals.add('interpolation', 'none')
 
                 if it_inst.midi_chan != None: 
                     inst_obj.midi.out_enabled = 1
@@ -552,7 +560,6 @@ class input_it(plugin_input.base):
                         add_filter(plugin_obj, it_inst.filtercutoff, it_inst.filterresonance)
 
                     plugin_obj.env_asdr_from_points('vol')
-                    plugin_obj.env_asdr_from_points('cutoff')
 
                 if it_inst.filtermode == 1: plugin_obj.filter.type = 'high_pass'
 

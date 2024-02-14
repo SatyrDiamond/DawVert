@@ -12,7 +12,7 @@ STPM_valid = [b'...C',b'..MT',b'..PR',b'..TD',b'.APS',b'.BPR',b'.FSM',b'.MMP',b'
 def add_plugin(convproj_obj, omptp_num, omptp_type, omptp_id, omptp_name, omptp_libname, omptp_chunkdata, datadef, dataset):
     pluginid = 'FX'+str(omptp_num)
     if omptp_type == b'OMXD':
-        plugin_obj = convproj_obj.add_plugin(pluginid, 'dmo', omptp_libname)
+        plugin_obj = convproj_obj.add_plugin(pluginid, 'directx', omptp_libname)
         jsondecoded = datadef.parse(omptp_libname.lower(), omptp_chunkdata)
         plugin_obj.param_dict_dataset_get(jsondecoded, dataset, 'plugin', omptp_libname.lower())
     elif omptp_type == b'PtsV':

@@ -130,6 +130,14 @@ class notestream:
                     if c_fx['slide_down'] != 0: self.slide_speed = c_fx['slide_down']
                     self.slide_pitch.slide_tracker_down(self.note_pos, self.slide_speed, s_speed)
 
+                if 'fine_slide_up' in c_fx:
+                    self.slide_speed = c_fx['fine_slide_up']
+                    self.slide_pitch.slide_tracker_up(self.note_pos, self.slide_speed, s_speed)
+
+                if 'fine_slide_down' in c_fx:
+                    self.slide_speed = c_fx['fine_slide_down']
+                    self.slide_pitch.slide_tracker_down(self.note_pos, self.slide_speed, s_speed)
+
             self.note_pos += 1
             self.placements[-1][1].last_extend(1)
 
@@ -412,8 +420,14 @@ class patterndata:
         if fx_type == 2: self.cell_g_param('pattern_jump', fx_value)
         if fx_type == 3: self.cell_g_param('break_to_row', fx_value)
         if fx_type == 4: self.cell_param(n_chan, 'vol_slide', getfineval(fx_value))
-        if fx_type == 5: self.cell_param(n_chan, 'slide_down', fx_value)
-        if fx_type == 6: self.cell_param(n_chan, 'slide_up', fx_value)
+        if fx_type == 5: 
+            if 240 <= fx_value:         self.cell_param(n_chan, 'fine_slide_down', (fx_value-240)/8)
+            if 224 <= fx_value <= 239:  self.cell_param(n_chan, 'fine_slide_down', (fx_value-224)/16)
+            else:                       self.cell_param(n_chan, 'slide_down', fx_value)
+        if fx_type == 6: 
+            if 240 <= fx_value:         self.cell_param(n_chan, 'fine_slide_up', (fx_value-240)/8)
+            if 224 <= fx_value <= 239:  self.cell_param(n_chan, 'fine_slide_up', (fx_value-224)/16)
+            else:                       self.cell_param(n_chan, 'slide_up', fx_value)
         if fx_type == 7: self.cell_param(n_chan, 'slide_to_note', fx_value)
         if fx_type == 8: self.cell_param(n_chan, 'vibrato', splitparams(fx_value, 'speed', 'depth'))
         if fx_type == 9: self.cell_param(n_chan, 'tremor', splitparams(fx_value, 'ontime', 'offtime'))
@@ -458,3 +472,4 @@ class patterndata:
             if ext_type == 13: self.cell_param(n_chan, 'note_delay', ext_value)
             if ext_type == 14: self.cell_param(n_chan, 'pattern_delay', ext_value)
             if ext_type == 15: self.cell_param(n_chan, 'it_active_macro', ext_value)
+

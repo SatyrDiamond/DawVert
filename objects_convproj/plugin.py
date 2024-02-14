@@ -289,7 +289,7 @@ class cvpj_plugin:
             minval = min(pointsdata[0].value, pointsdata[1].value)
     
             if pointsdata[0].value != pointsdata[1].value:
-                if sustainnum == -1:
+                if sustainnum in [-1, 1]:
                     if env_value > 0:
                         adsr_obj.decay = env_duration
                         adsr_obj.sustain = 0
@@ -414,11 +414,41 @@ class cvpj_plugin:
             if isenvconverted != 0 and adsr_obj.sustain != 0 and adsr_obj.release == 0: adsr_obj.release = fadeout
 
         elif numpoints > 3:
-            if sustainnum == 2 and numpoints == 4 and pointsdata[0].value == 0 and pointsdata[3].value == 0 and pointsdata[1].value>=pointsdata[2].value:
+            if sustainnum in [-1, 2] and numpoints == 4 and pointsdata[0].value == 0 and pointsdata[3].value == 0 and pointsdata[1].value>=pointsdata[2].value:
                 adsr_obj.attack = pointsdata[1].pos
                 adsr_obj.decay = pointsdata[2].pos-pointsdata[1].pos
                 adsr_obj.sustain = pointsdata[2].value
                 adsr_obj.release = pointsdata[3].pos-pointsdata[2].pos
+            elif env_pointsdata.loop_on:
+                sv = [x.value for x in pointsdata[0:env_pointsdata.loop_start+1]]
+                sp = [x.pos for x in pointsdata[0:env_pointsdata.loop_start+1]]
+                lv = [x.value for x in pointsdata[env_pointsdata.loop_start:env_pointsdata.loop_end+1]]
+                lp = [x.pos for x in pointsdata[env_pointsdata.loop_start:env_pointsdata.loop_end+1]]
+
+                if env_pointsdata.loop_start+1 > 1:
+                    if sustainnum == -1:
+                        lfo_amt = max(lv)-min(lv)
+
+                        if sv[0] < sv[-1]: 
+                            adsr_obj.attack = sp[-1]
+                        elif sv[-1] < sv[0]: 
+                            adsr_obj.decay = sp[-1]*4
+                            adsr_obj.sustain = (sv[-1]*lfo_amt)+(1-lfo_amt)
+
+                        lfo_obj = self.lfo_add(a_type)
+                        lfo_obj.predelay = sp[-1]-sp[0]
+                        lfo_obj.speed_type = 'seconds'
+                        lfo_obj.speed_time = 1/(lp[-1]-lp[0])/2
+                        lfo_obj.amount = lfo_amt
+                    elif sustainnum == 0:
+                        if sv[0] < sv[-1]: 
+                            adsr_obj.attack = sp[-1]
+                            adsr_obj.release = fadeout
+                        elif sv[-1] < sv[0]: 
+                            adsr_obj.sustain = sv[0]
+                            adsr_obj.release = sp[-1]
+
+
             elif env_pointsdata.points[-1].pos != 0:
                 last_pos = env_pointsdata.points[-1].pos
                 t_pos = [x.pos for x in env_pointsdata.points]
@@ -462,7 +492,7 @@ class cvpj_plugin:
                 tens_end /= maxcval
                 tension = (tens_start-1)+(1-tens_end)
 
-                posneg = xtramath.average(t_val_chan_d)*3
+                posneg = xtramath.average(t_val_chan_d)*1.3
                 adsr_obj.release = fadeout
 
                 if sustainnum == 0 and posneg<=-1:
@@ -479,7 +509,6 @@ class cvpj_plugin:
                     print("[env_asdr_from_points] 4 | ^_")
                     adsr_obj.decay = last_pos
                     adsr_obj.decay_tension = (tension/2)
-
 
     def env_points_list(self): 
         return [x for x in self.env_points]

@@ -70,11 +70,20 @@ def create_autopoint(xmltag, value, pos, v_type):
 
 def parse_auto(xmltag, autopoints_obj):
     curpoint = 0
+    auto_points = {}
+    #print('-----')
     for point in autopoints_obj.iter():
-        if curpoint != 0 and autopoints_obj.val_type != 'bool' and point.type == 'instant': 
-            create_autopoint(xmltag, prevvalue, point.pos-1, autopoints_obj.val_type)
-        create_autopoint(xmltag, point.value, point.pos, autopoints_obj.val_type)
-        prevvalue = point.value
+        #print(point.pos, point.value, point.type
+        if point.pos in auto_points: 
+            auto_points[point.pos-1] = auto_points[point.pos]
+            del auto_points[point.pos]
+        auto_points[point.pos] = [point.value, point.type]
+
+    for p, d in auto_points.items():
+        if curpoint != 0 and autopoints_obj.val_type != 'bool' and d[1] == 'instant': 
+            create_autopoint(xmltag, prevvalue, p-1, autopoints_obj.val_type)
+        create_autopoint(xmltag, d[0], p, autopoints_obj.val_type)
+        prevvalue = d[0]
         curpoint += 1
 
 def make_auto_track(autoidnum, autodata, visualname, automode):
@@ -151,12 +160,12 @@ def asdrlfo(plugin_obj, xmlobj, asdrtype, xmltype):
     elmodX.set('hold', str(sec2exp(adsr_obj.hold)))
     elmodX.set('dec', str(sec2exp(adsr_obj.decay)))
     elmodX.set('sustain', str(adsr_obj.sustain))
-    elmodX.set('rel', str(sec2exp(adsr_obj.release)))
+    elmodX.set('rel', str(sec2exp(adsr_obj.release*( pow(2, adsr_obj.release_tension*2) ))))
 
     lfo_obj = plugin_obj.lfo_get(asdrtype)
     if asdrtype == 'cutoff': elmodX.set('lamt', str(lfo_obj.amount/6000))
     else: elmodX.set('lamt', str(lfo_obj.amount))
-    elmodX.set('lpdel', str(lfo_obj.predelay))
+    elmodX.set('lpdel', str(sec2exp(lfo_obj.predelay/4)))
     elmodX.set('latt', str(sec2exp(lfo_obj.attack)))
     elmodX.set('lshp', str(lfoshape[lfo_obj.shape] if lfo_obj.shape in lfoshape else 'sine'))
     elmodX.set('x100', '0')

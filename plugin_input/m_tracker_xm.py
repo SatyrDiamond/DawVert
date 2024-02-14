@@ -288,6 +288,10 @@ class input_xm(plugin_input.base):
             elif c == b'AUTH': convproj_obj.metadata.author = chunk_value.decode()
             elif c == b'CCOL': patterndata.ch_colors = d
 
+        if xmodits_exists == True:
+            try: xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
+            except: pass
+
         for instnum in range(xm_song_num_instruments):
             xm_inst = xm_insts[instnum]
 
@@ -333,26 +337,14 @@ class input_xm(plugin_input.base):
 
             xm_cursamplenum += xm_inst.num_samples
 
-        #exit()
-
-        # ------------- Samples -------------
-        if xmodits_exists == True:
-            try: xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
-            except: pass
-
         if channames:
-            for n, v in enumerate(channames):
-                patterndata.ch_names[n] = v
+            for n, v in enumerate(channames): patterndata.ch_names[n] = v
         
         if patnames:
-            for n, v in enumerate(channames):
-                patterndata.pat_names[n] = v
+            for n, v in enumerate(channames): patterndata.pat_names[n] = v
 
         patterndata.to_cvpj(convproj_obj, t_orderlist, startinststr, xm_song_bpm, xm_song_speed, maincolor)
-
         convproj_obj.metadata.name = xm_name
-        
         convproj_obj.do_actions.append('do_addloop')
         convproj_obj.do_actions.append('do_lanefit')
-
         convproj_obj.params.add('bpm', xm_song_bpm, 'float')

@@ -236,7 +236,7 @@ def asdflfo(plugin_obj, xmlO, asdrtype):
     lfo_speed = (lfo_speed*0.2) if speedx100 == 1 else (lfo_speed*20)
 
     lfo_obj = plugin_obj.lfo_add(asdrtype)
-    lfo_obj.predelay = lfo_predelay
+    lfo_obj.predelay = exp2sec(lfo_predelay*4)
     lfo_obj.attack = lfo_attack
     lfo_obj.shape = lfo_shape
     lfo_obj.speed_type = 'seconds'

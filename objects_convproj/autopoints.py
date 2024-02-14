@@ -21,7 +21,7 @@ class cvpj_s_autopoint:
 
 
 class cvpj_autopoints:
-    __slots__ = ['type','time_ppq','time_float','val_type','points','data','enabled','loop_on','loop_start','loop_end','sustain_on','sustain_point','sustain_end']
+    __slots__ = ['type','time_ppq','time_float','val_type','points','data','enabled','loop_on','loop_start','loop_end','sustain_on','sustain_loop','sustain_point','sustain_end']
 
     def __init__(self, time_ppq, time_float, val_type):
         self.time_ppq = time_ppq
@@ -36,6 +36,7 @@ class cvpj_autopoints:
         self.loop_end = 0
 
         self.sustain_on = False
+        self.sustain_loop = False
         self.sustain_point = 0
         self.sustain_end = 0
 

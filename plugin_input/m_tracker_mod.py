@@ -136,18 +136,14 @@ class input_mod(plugin_input.base):
                     patterndata.cell_note(num_ch, output_note, output_inst)
                     patterndata.cell_fx_mod(num_ch, cell_fx_type, cell_fx_param)
 
-                    if cell_fx_type == 12: 
-                        patterndata.cell_param(num_ch, 'vol', cell_fx_param/64)
+                    if cell_fx_type == 12: patterndata.cell_param(num_ch, 'vol', cell_fx_param/64)
                     else: 
                         if output_inst != None:
                             if output_inst < 32:
                                 patterndata.cell_param(num_ch, 'vol', table_samples[output_inst-1][3]/64)
 
                     if cell_fx_type == 13: patterndata.cell_g_param('break_to_row', cell_fx_param)
-
-                    if cell_fx_type == 15:
-                        if cell_fx_param < 32: patterndata.cell_g_param('speed', cell_fx_param)
-                        else: patterndata.cell_g_param('tempo', cell_fx_param)
+                    if cell_fx_type == 15: patterndata.cell_g_param('speed' if cell_fx_param < 32 else 'tempo', cell_fx_param)
 
                 patterndata.row_next()
 

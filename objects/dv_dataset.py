@@ -134,7 +134,16 @@ class dataset:
 
     def params_create(self, c_name, o_name):
         if c_name in self.dataset: 
-            if o_name in self.dataset[c_name]['objects']: self.dataset[c_name]['objects'][o_name]['params'] = {}
+            if o_name in self.dataset[c_name]['objects']: 
+                self.dataset[c_name]['objects'][o_name]['params'] = {}
+
+    def params_exists(self, c_name, o_name):
+        if c_name in self.dataset: 
+            if o_name in self.dataset[c_name]['objects']: 
+                existd = self.dataset[c_name]['objects'][o_name]
+                return ('params' in existd)
+            return False
+        return False
 
     def params_i_add(self, c_name, o_name, p_name):
         if c_name in self.dataset: 

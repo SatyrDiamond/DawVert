@@ -246,12 +246,12 @@ def parse_song(convproj_obj, songid):
         for tls in timeline_sheets:
             tlslen = tls[1]-tls[0]
             if tls[2] == 1:
-                placement_obj = convproj_obj.playlist[tlsnum].placements.add_notes()
+                placement_obj = convproj_obj.playlist[tlsnum].placements.add_notes_indexed()
                 placement_obj.position = cvpj_p_totalpos*8
                 placement_obj.duration = tlslen/(120/tls[3])*8
                 placement_obj.fromindex = tls[4]
                 if tlsnum == 0:
-                    autopl_obj = convproj_obj.add_automation_pl(['main','bpm'], 'float')
+                    autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
                     autopl_obj.position = cvpj_p_totalpos*8
                     autopl_obj.duration = tlslen/(120/tls[3])*8
                     autopoint_obj = autopl_obj.data.add_point()
@@ -277,15 +277,17 @@ class input_notessimo_v3(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'notessimo_v3'
-    def getname(self): return 'Notessimo V3'
     def gettype(self): return 'mi'
-    def getdawcapabilities(self): 
-        return {
-        'fxrack': True,
-        'track_lanes': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Notessimo V3'
+        dawinfo_obj.file_ext = 'note'
+        dawinfo_obj.auto_types = ['pl_points']
+        dawinfo_obj.fxrack = True
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.audio_filetypes = ['wav']
+        dawinfo_obj.plugin_included = ['sampler:single', 'sampler:multi']
     def supported_autodetect(self): return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         global zip_data
 
         # ---------- CVPJ Start ----------

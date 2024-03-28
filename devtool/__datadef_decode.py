@@ -12,6 +12,8 @@ aparser.add_argument("-s", default='main')
 
 argsd = vars(aparser.parse_args())
 
+datadef = dv_datadef.datadef(None)
+
 if argsd['d'] != None:
     df_file = argsd['d']
     datadef.load_file(df_file)

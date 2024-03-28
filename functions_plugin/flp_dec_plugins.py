@@ -12,6 +12,16 @@ from functions_plugin_ext import plugin_vst2
 #from functions_plugin_ext import plugin_vst3
 from io import BytesIO
 
+def decode_sslf(fl_plugstr):
+    header = fl_plugstr.read(4)
+    out = b''
+    if header == b'SSLF':
+        size = int.from_bytes(fl_plugstr.read(4), "little")
+        out = fl_plugstr.read(size)
+    return out
+
+
+
 def decode_pointdata(fl_plugstr):
     autoheader = struct.unpack('bii', fl_plugstr.read(12))
     pointdata_table = []
@@ -44,14 +54,22 @@ envshapes = {
     12: 'doublecurve3',
 }
 
-def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset):
-    fl_plugstr = BytesIO(chunkpdata if chunkpdata else b'')
-    pluginname = pluginname.lower()
+def getparams(convproj_obj, pluginid, flplugin, foldername, datadef, dataset):
+    fl_plugstr = BytesIO(flplugin.params if flplugin.params else b'')
+    flplugin.name = flplugin.name.lower()
 
-    plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-flstudio', pluginname)
+    plugin_obj = convproj_obj.add_plugin(pluginid, 'native-flstudio', flplugin.name)
+
+    windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
+    windata_obj.pos_x = flplugin.window_p_x
+    windata_obj.pos_y = flplugin.window_p_y
+    windata_obj.size_x = flplugin.window_s_x
+    windata_obj.size_y = flplugin.window_s_y
+    windata_obj.open = bool(flplugin.visible)
+    windata_obj.detatched = bool(flplugin.detached)
 
     # ------------------------------------------------------------------------------------------- VST
-    if pluginname == 'fruity wrapper':
+    if flplugin.name == 'fruity wrapper':
         fl_plugstr.seek(0,2)
         fl_plugstr_size = fl_plugstr.tell()
         fl_plugstr.seek(0)
@@ -92,9 +110,12 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
 
                 if wrapper_vststate[0:4] == b'\xf7\xff\xff\xff' and wrapper_vststate[5:9] == b'\xfe\xff\xff\xff':
 
-                    if wrapper_vststate[4] == 13:
+                    if wrapper_vststate[4] in [13, 12]:
                         plugin_obj.rawdata_add('chunk', wrapper_vstdata)
                         plugin_obj.datavals.add('current_program', wrapper_vstprogram)
+
+                        plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,'win', wrapperdata['fourid'], 'chunk', wrapper_vstdata, None)
+                        plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, None)
 
                     if wrapper_vststate[4] == 5:
                         stream_data = BytesIO(wrapper_vstdata)
@@ -151,37 +172,9 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
 
             #    plugin_vst3.replace_data(convproj_obj, plugin_obj, 'name', 'win', wrapperdata['name'], vststatedata[3] if 3 in vststatedata else b'')
 
-
-    elif pluginname == 'fruity compressor':
-        flplugvals = struct.unpack('i'*8, chunkpdata)
-        v_threshold = flplugvals[1]/10
-        v_ratio = flplugvals[2]/10
-        v_gain = flplugvals[3]/10
-        v_attack = flplugvals[4]/10000
-        v_release = flplugvals[5]/1000
-        v_type = flplugvals[6]
-        first_type = v_type>>2
-        second_type = v_type%4
-        if second_type == 0: v_knee = 0
-        if second_type == 1: v_knee = 6
-        if second_type == 2: v_knee = 7
-        if second_type == 3: v_knee = 15
-        if first_type == 0: v_tcr = 0
-        if first_type == 1: v_tcr = 1
-
-        plugin_obj.type_set('universal', 'compressor')
-        plugin_obj.datavals.add('tcr', bool(v_tcr) )
-        plugin_obj.params.add('pregain', v_gain, 'float')
-        plugin_obj.params.add('ratio', v_ratio, 'float')
-        plugin_obj.params.add('threshold', v_threshold, 'float')
-        plugin_obj.params.add('attack', v_attack, 'float')
-        plugin_obj.params.add('release', v_release, 'float')
-        plugin_obj.params.add('knee', v_knee, 'float')
-        
-
     # ------------------------------------------------------------------------------------------- Inst
 
-    elif pluginname in ['fruity soundfont player', 'soundfont player']:
+    elif flplugin.name in ['fruity soundfont player', 'soundfont player']:
         flsf_vers, flsf_patch, flsf_bank, flsf_reverb_sendlvl, flsf_chorus_sendlvl, flsf_mod = struct.unpack('iiiiii', fl_plugstr.read(24))
 
         flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R = struct.unpack('iiii', fl_plugstr.read(16))
@@ -225,10 +218,10 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
 
         lfo_obj = plugin_obj.lfo_add('pitch')
         lfo_obj.predelay = pitch_predelay
-        lfo_obj.speed_time = pitch_speed
+        lfo_obj.time.set_seconds(pitch_speed)
         lfo_obj.amount = pitch_amount
 
-    elif pluginname == 'fruity slicer':
+    elif flplugin.name == 'fruity slicer':
         plugin_obj.type_set( 'sampler', 'slicer')
         fl_plugstr.read(4)
         slicer_beats = struct.unpack('f', fl_plugstr.read(4))[0]
@@ -253,8 +246,8 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
         max_dur = 10000000
 
         if slicer_filename != "": 
-            plugin_obj.samplerefs['sample'] = slicer_filename
             sampleref_obj = convproj_obj.add_sampleref(slicer_filename, slicer_filename)
+            plugin_obj.samplerefs['sample'] = slicer_filename
             slicechannels = sampleref_obj.channels
             max_dur = sampleref_obj.dur_samples
 
@@ -289,7 +282,7 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
         
     # ------------------------------------------------------------------------------------------- FX
 
-    elif pluginname == 'fruity convolver':
+    elif flplugin.name == 'fruity convolver':
         try:
             fl_plugstr.read(20)
             fromstorage = fl_plugstr.read(1)[0]
@@ -299,7 +292,7 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
                 filename = os.path.join(foldername, pluginid+'_custom_audio.wav')
                 with open(filename, "wb") as customconvolverfile:
                     customconvolverfile.write(fl_plugstr.read(audiosize))
-            plugin_obj.type_set( 'native-flstudio', pluginname)
+            plugin_obj.type_set( 'native-flstudio', flplugin.name)
             plugin_obj.datavals.add('file', filename.decode())
             fl_plugstr.read(36)
             autodata = {}
@@ -318,25 +311,25 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
         
 
 
-    elif pluginname == 'fruity html notebook':
-        plugin_obj.type_set( 'native-flstudio', pluginname)
+    elif flplugin.name == 'fruity html notebook':
+        plugin_obj.type_set( 'native-flstudio', flplugin.name)
         version = int.from_bytes(fl_plugstr.read(4), "little")
         if version == 1: plugin_obj.datavals.add('url', data_bytes.readstring_lenbyte(fl_plugstr, 1, 'little', 'utf-8'))
         
 
-    elif pluginname in ['fruity notebook 2', 'fruity notebook']:
-        plugin_obj.type_set( 'native-flstudio', pluginname)
+    elif flplugin.name in ['fruity notebook 2', 'fruity notebook']:
+        plugin_obj.type_set( 'native-flstudio', flplugin.name)
         version = int.from_bytes(fl_plugstr.read(4), "little")
-        if version == 0 and pluginname == 'fruity notebook 2' or version == 1000 and pluginname == 'fruity notebook': 
+        if version == 0 and flplugin.name == 'fruity notebook 2' or version == 1000 and flplugin.name == 'fruity notebook': 
             plugin_obj.datavals.add('currentpage', int.from_bytes(fl_plugstr.read(4), "little"))
             pagesdata = {}
             while True:
                 pagenum = int.from_bytes(fl_plugstr.read(4), "little")
                 if pagenum == 0 or pagenum > 100: break
-                if pluginname == 'fruity notebook 2': 
+                if flplugin.name == 'fruity notebook 2': 
                     length = varint.decode_stream(fl_plugstr)
                     text = fl_plugstr.read(length*2).decode('utf-16le')
-                if pluginname == 'fruity notebook': 
+                if flplugin.name == 'fruity notebook': 
                     length = int.from_bytes(fl_plugstr.read(4), "little")
                     text = fl_plugstr.read(length).decode('ascii')
                 pagesdata[pagenum] = text
@@ -344,8 +337,8 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
             plugin_obj.datavals.add('editing_enabled', fl_plugstr.read(1)[0])
         
 
-    elif pluginname == 'fruity vocoder':
-        plugin_obj.type_set( 'native-flstudio', pluginname)
+    elif flplugin.name == 'fruity vocoder':
+        plugin_obj.type_set( 'native-flstudio', flplugin.name)
         flplugvals = struct.unpack('iiiib', fl_plugstr.read(17))
         vocbands = struct.unpack('f'*flplugvals[1], fl_plugstr.read(flplugvals[1]*4))
         plugin_obj.datavals.add('bands', vocbands)
@@ -377,8 +370,8 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
         param_obj = plugin_obj.params.add('mix_wet', flplugvalsafter[11], 'int')
         param_obj.visual.name = "Mix Wet"
 
-    elif pluginname == 'fruity waveshaper':
-        plugin_obj.type_set( 'native-flstudio', pluginname)
+    elif flplugin.name == 'fruity waveshaper':
+        plugin_obj.type_set( 'native-flstudio', flplugin.name)
         flplugvals = struct.unpack('bHHIIbbbbbb', fl_plugstr.read(22))
         #print(flplugvals)
         param_obj = plugin_obj.params.add('preamp', flplugvals[2], 'int')
@@ -401,24 +394,39 @@ def getparams(convproj_obj, pluginname, chunkpdata, foldername, datadef, dataset
             autopoint_obj.value = point[1][0]
             autopoint_obj.type = envshapes[point[3]]
             autopoint_obj.tension = point[2]
-        
+    
+    elif flplugin.name in ['bassdrum', 'pitcher']:
+        sslfdata = decode_sslf(fl_plugstr)
+
+        if flplugin.name == 'bassdrum': jsondecoded = datadef.parse('sslf_bassdrum', sslfdata)
+        if flplugin.name == 'pitcher': jsondecoded = datadef.parse('sslf_pitcher', sslfdata)
+
+        plugin_obj.type_set( 'native-flstudio', flplugin.name)
+        plugin_obj.param_dict_dataset_get(jsondecoded, dataset, 'plugin', flplugin.name)
+
+    #    if flplugin.name == 'sawer':
+    #        jsondecoded = datadef.parse('sawer', sslfdata)
+
+        if 0:
+            for x in datadef.debugoutput:
+                print(x)
+            exit()
+
     else:
-        datadef_struct = dataset.object_var_get('datadef_struct', 'plugin', pluginname)
-        #print(     pluginname, chunkpdata.hex()     )
+        datadef_struct = dataset.object_var_get('datadef_struct', 'plugin', flplugin.name)
+        #print(     flplugin.name, flplugin.params.hex()     )
         if datadef_struct[0]:
-            plugin_obj.type_set( 'native-flstudio', pluginname)
-            jsondecoded = datadef.parse(datadef_struct[1], chunkpdata)
+            plugin_obj.type_set( 'native-flstudio', flplugin.name)
+            jsondecoded = datadef.parse(datadef_struct[1], flplugin.params)
 
-            #if True:
-            #    for part in datadef.debugoutput:
-            #        print(part)
-            #    exit()
+            if 0:
+                for part in datadef.debugoutput:
+                    print(part)
+                exit()
 
-            plugin_obj.param_dict_dataset_get(jsondecoded, dataset, 'plugin', pluginname)
-
-        #exit()
+            plugin_obj.param_dict_dataset_get(jsondecoded, dataset, 'plugin', flplugin.name)
 
     # ------------------------------------------------------------------------------------------- Other
 
-    if plugin_obj.plugin_type != 'fruity wrapper': plugin_obj.rawdata_add('fl', chunkpdata)
-    return plugin_obj, pluginid
+    if plugin_obj.plugin_type != 'fruity wrapper': plugin_obj.rawdata_add('fl', flplugin.params)
+    return plugin_obj

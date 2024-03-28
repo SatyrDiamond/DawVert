@@ -11,14 +11,15 @@ class input_midi(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'midi'
-    def getname(self): return 'MIDI'
     def gettype(self): return 'rm'
-    def getdawcapabilities(self): 
-        return {
-        'fxrack': True,
-        'fxrack_params': [],
-        'auto_nopl': True, 
-        'track_nopl': True}
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'MIDI'
+        dawinfo_obj.file_ext = 'mid'
+        dawinfo_obj.fxrack = True
+        dawinfo_obj.fxrack_params = ['vol']
+        dawinfo_obj.auto_types = ['nopl_ticks']
+        dawinfo_obj.track_nopl = True
+        dawinfo_obj.plugin_included = ['midi']
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -26,7 +27,7 @@ class input_midi(plugin_input.base):
         bytesdata = bytestream.read(4)
         if bytesdata == b'MThd': return True
         else: return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         midifile = MidiFile(input_file, clip=True)
         ppq = midifile.ticks_per_beat
         print("[input-midi] PPQ: " + str(ppq))
@@ -57,6 +58,12 @@ class input_midi(plugin_input.base):
                 #elif msg.type == 'end_of_track': midicmds.append(['end_of_track'])
             midiobj.add_track(0, midicmds)
         midiobj.song_end(convproj_obj)
+
+        for global_miditrack in midiobj.global_miditracks:
+            if not global_miditrack[6] and global_miditrack[1] != None:
+                convproj_obj.metadata.comment_text += global_miditrack[1]+'\n'
+
         convproj_obj.do_actions.append('do_addloop')
         convproj_obj.do_actions.append('do_singlenotelistcut')
-        
+        #convproj_obj.do_actions.append('do_sorttracks')
+

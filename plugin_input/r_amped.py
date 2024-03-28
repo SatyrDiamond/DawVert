@@ -1,12 +1,11 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
 from functions import colors
-from objects import dv_dataset
+from functions import data_bytes
 from functions import data_values
 from functions import xtramath
-from functions import audio_wav
+from objects import dv_dataset
 import xml.etree.ElementTree as ET
 import plugin_input
 import json
@@ -52,7 +51,7 @@ def do_idauto(convproj_obj, amped_autodata, devid, amped_auto, pluginid):
         for s_amped_auto in get_dev_auto(amped_autodata, devid, amped_auto):
             autoloc = ['plugin',pluginid,s_amped_auto[0].replace('/', '__')]
             for point in s_amped_auto[1]:
-                convproj_obj.add_autopoint(autoloc, 'float', point[0], point[1], 'normal')
+                convproj_obj.automation.add_autopoint(autoloc, 'float', point[0], point[1], 'normal')
 
 def get_contentGuid(contentGuid):
     if isinstance(contentGuid, dict): return str(contentGuid['userAudio']['exportedId'])
@@ -68,10 +67,12 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
             track_obj.inst_pluginid = pluginid
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', devicetype[1])
             plugin_obj.datavals.add('data', amped_tr_device['wamPreset'])
+            plugin_obj.role = 'synth'
 
         elif devicetype[0] == 'WAM' and devicetype[1] == 'Europa': 
             track_obj.inst_pluginid = pluginid
             plugin_obj = convproj_obj.add_plugin(pluginid, 'synth-nonfree', 'Europa')
+            plugin_obj.role = 'synth'
 
             wampreset = amped_tr_device['wamPreset']
             wampreset = json.loads(wampreset)
@@ -109,12 +110,14 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
         elif devicetype[0] == 'WAM' and devicetype[1] in ['Amp Sim Utility']: 
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', devicetype[1])
             plugin_obj.datavals.add('data', amped_tr_device['wamPreset'])
+            plugin_obj.role = 'effect'
             track_obj.fxslots_audio.append(pluginid)
 
         elif devicetype == ['Drumpler', 'Drumpler']:
             track_obj.inst_pluginid = pluginid
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'Drumpler')
             plugin_obj.datavals.add('kit', amped_tr_device['kit'])
+            plugin_obj.role = 'synth'
             do_idparams(amped_tr_device['params'], plugin_obj, devicetype[0])
 
         elif devicetype == ['SF2', 'GM Player']:
@@ -134,12 +137,14 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
                 value_drum = True
 
             plugin_obj = convproj_obj.add_plugin_midi(pluginid, value_bank, value_patch, value_drum)
+            plugin_obj.role = 'synth'
             param_obj = plugin_obj.params.add('gain', paramval, 'float')
             param_obj.visual.name = 'Gain'
 
         elif devicetype == ['Granny', 'Granny']:
             track_obj.inst_pluginid = pluginid
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'Granny')
+            plugin_obj.role = 'synth'
 
             sampleuuid = amped_tr_device['grannySampleGuid']
             sampleref_obj = convproj_obj.add_sampleref(sampleuuid, '')
@@ -151,12 +156,14 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
         elif devicetype == ['Volt', 'VOLT']:
             track_obj.inst_pluginid = pluginid
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'Volt')
+            plugin_obj.role = 'synth'
             do_idparams(amped_tr_device['params'], plugin_obj, devicetype[0])
             do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device['params'], pluginid)
 
         elif devicetype == ['VoltMini', 'VOLT Mini']:
             track_obj.inst_pluginid = pluginid
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'VoltMini')
+            plugin_obj.role = 'synth'
             do_idparams(amped_tr_device['params'], plugin_obj, devicetype[0])
             do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device['params'], pluginid)
 
@@ -169,6 +176,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
             for param in amped_tr_device['samplerZones']: amped_tr_device['zonefile'][str(param['id'])] = param['contentGuid']
 
             plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
+            plugin_obj.role = 'synth'
             plugin_obj.datavals.add('point_value_type', "percent")
 
             samplerdata_voiceLimit = samplerdata['voiceLimit']
@@ -190,6 +198,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
         elif devicetype == ['EqualizerPro', 'Equalizer']:
             track_obj.fxslots_audio.append(pluginid)
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'EqualizerPro')
+            plugin_obj.role = 'effect'
             do_idparams(amped_tr_device['params'], plugin_obj, devicetype[0])
             do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device['params'], pluginid)
 
@@ -199,6 +208,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
         'Reverb', 'Tremolo', 'BitCrusher', 'Tremolo', 'Vibrato', 'Compressor', 'Expander']:
             track_obj.fxslots_audio.append(pluginid)
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', devicetype[0])
+            plugin_obj.role = 'effect'
             do_idparams(amped_tr_device['params'], plugin_obj, devicetype[0])
             do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device['params'], pluginid)
 #
@@ -224,7 +234,6 @@ class input_amped(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'amped'
-    def getname(self): return 'Amped Studio'
     def gettype(self): return 'r'
     def supported_autodetect(self): return True
     def detect(self, input_file): 
@@ -234,17 +243,19 @@ class input_amped(plugin_input.base):
             else: return False
         except:
             return False
-    def getdawcapabilities(self): 
-        return {
-        'placement_cut': True,
-        'placement_loop': [],
-        'auto_nopl': True,
-        'track_hybrid': True,
-        'placement_audio_stretch': ['rate'],
-        'placement_audio_nested': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Amped Studio'
+        dawinfo_obj.file_ext = 'amped'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.audio_filetypes = ['wav', 'mp3', 'ogg', 'flac']
+        dawinfo_obj.placement_cut = True
+        dawinfo_obj.auto_types = ['nopl_points']
+        dawinfo_obj.track_hybrid = True
+        dawinfo_obj.audio_stretch = ['rate']
+        dawinfo_obj.audio_nested = True
+        dawinfo_obj.plugin_included = ['native-amped', 'midi', 'synth-nonfree:europa', 'sampler:multi']
 
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         global samplefolder
         global europa_vals
         global dataset
@@ -256,7 +267,7 @@ class input_amped(plugin_input.base):
         dataset = dv_dataset.dataset('./data_dset/amped.dset')
         dataset_synth_nonfree = dv_dataset.dataset('./data_dset/synth_nonfree.dset')
 
-        samplefolder = extra_param['samplefolder']
+        samplefolder = dv_config.path_samples_extracted
         zip_data = zipfile.ZipFile(input_file, 'r')
         amped_project = json.loads(zip_data.read('amped-studio-project.json'))
 
@@ -306,7 +317,7 @@ class input_amped(plugin_input.base):
                 if autoname == 'pan': autoloc = ['track', amped_tr_id, 'pan']
                 if autoloc: 
                     for p, v in ampedauto_to_cvpjauto(amped_tr_automation['points']):
-                        convproj_obj.add_autopoint(autoloc, 'float', p, v, 'normal')
+                        convproj_obj.automation.add_autopoint(autoloc, 'float', p, v, 'normal')
 
             amped_autodata = {}
             for amped_tr_automation in amped_tr_automations:
@@ -326,7 +337,7 @@ class input_amped(plugin_input.base):
                 amped_reg_offset = amped_reg['offset']
                 amped_reg_midi = amped_reg['midi']
                 amped_reg_name = amped_reg['name']
-                amped_reg_color = amped_reg['color'] if 'color' in amped_reg else 'lime'
+                amped_reg_color = amped_colors[amped_reg['color']] if 'color' in amped_reg else track_obj.visual.color
 
                 amped_reg_notes = amped_reg_midi['notes']
                 if amped_reg_notes != []: 
@@ -334,7 +345,7 @@ class input_amped(plugin_input.base):
                     placement_obj.position = amped_reg_position
                     placement_obj.duration = amped_reg_length
                     placement_obj.visual.name = amped_reg['name']
-                    placement_obj.visual.color = amped_colors[amped_reg_color]
+                    placement_obj.visual.color = amped_reg_color
                     placement_obj.cut_type = 'cut'
                     placement_obj.cut_data['start'] = amped_reg_offset
                     for amped_note in amped_reg_notes:
@@ -346,7 +357,7 @@ class input_amped(plugin_input.base):
                     placement_obj.position = amped_reg_position
                     placement_obj.duration = amped_reg_length
                     placement_obj.visual.name = amped_reg['name']
-                    placement_obj.visual.color = amped_colors[amped_reg_color]
+                    placement_obj.visual.color = amped_reg_color
                     placement_obj.cut_type = 'cut'
                     placement_obj.cut_data['start'] = amped_reg_offset
 
@@ -358,7 +369,7 @@ class input_amped(plugin_input.base):
                         apl_obj.pitch = amped_reg_clip['pitchShift'] if 'pitchShift' in amped_reg_clip else 0
                         apl_obj.sampleref = get_contentGuid(amped_reg_clip['contentGuid'])
                         apl_obj.stretch.use_tempo = False
-                        apl_obj.stretch.rate = 1/amped_reg_clip['stretch']
+                        apl_obj.stretch.set_rate_tempo(bpm, amped_reg_clip['stretch'], True)
 
                         amped_reg_clip_offset = amped_reg_clip['offset']
                         if amped_reg_clip_offset != 0:

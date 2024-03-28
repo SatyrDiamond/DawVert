@@ -21,11 +21,13 @@ class input_gt_mnbs(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mnbs'
-    def getname(self): return 'Minecraft Note Block Studio'
     def gettype(self): return 'rm'
-    def getdawcapabilities(self): return {}
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Minecraft Note Block Studio'
+        dawinfo_obj.file_ext = 'nbs'
+        dawinfo_obj.plugin_included = ['midi']
     def supported_autodetect(self): return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         convproj_obj.type = 'rm'
         convproj_obj.set_timings(4, True)
         
@@ -121,7 +123,7 @@ class input_gt_mnbs(plugin_input.base):
         # OUTPUT
         for instnum in range(16):
             instid = 'NoteBlock'+str(instnum)
-            convproj_obj.add_instrument_from_dset(instid, instid, dataset, dataset_midi, instid, None, None)
+            convproj_obj.add_instrument_from_dset(instid, instid, dataset, dataset_midi, str(instnum), None, None)
 
         # PART 4: CUSTOM INSTRUMENTS
         custominstid = 16

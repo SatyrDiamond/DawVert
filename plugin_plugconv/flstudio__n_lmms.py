@@ -10,7 +10,7 @@ class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['native-lmms', None, 'lmms'], ['native-flstudio', None, 'flp'], True, False
-    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
+    def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, plugtransform):
         
         if plugin_obj.plugin_subtype == 'stereomatrix':  
             print('[plug-conv] LMMS to FL Studio: Stereo Matrix > Fruity Stereo Shaper:',pluginid)

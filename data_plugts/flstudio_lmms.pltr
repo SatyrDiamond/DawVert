@@ -1,0 +1,44 @@
+
+################################ Fruity Balance
+new|fruity_balance
+
+in_type|native-flstudio
+in_subtype|fruity balance
+out_type|native-lmms
+out_subtype|amplifier
+
+in_param|pan
+in_param|vol
+
+calc|pan|div|128
+calc|vol|div|256
+calc|pan|mul|100
+calc|vol|mul|100
+
+out_param|pan|pan
+out_param|volume|vol
+out_v_param|right|100
+out_v_param|left|100
+
+################################ Fruity Stereo Shaper
+new|fruity_stereo_shaper
+
+in_type|native-flstudio
+in_subtype|fruity stereo shaper
+out_type|native-lmms
+out_subtype|stereomatrix
+
+in_param|r2l
+in_param|l2l
+in_param|r2r
+in_param|l2r
+
+calc|r2l|div|12800
+calc|l2l|div|12800
+calc|r2r|div|12800
+calc|l2r|div|12800
+
+out_param|l-r|l2r
+out_param|r-l|r2l
+out_param|r-r|r2r
+out_param|l-l|l2l

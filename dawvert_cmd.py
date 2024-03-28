@@ -5,7 +5,6 @@ import json
 import argparse
 import os
 from functions import core
-from functions import folder_samples
 from functions import plug_conv
 
 print('DawVert: Daw Conversion Tool')
@@ -15,7 +14,7 @@ parser.add_argument("-i", default=None)
 parser.add_argument("-it", default=None)
 parser.add_argument("-o", default=None)
 parser.add_argument("-ot", default=None)
-parser.add_argument("--samplefolder", default=None)
+parser.add_argument("--sample-out-path", default=None)
 parser.add_argument("--soundfont", default=None)
 parser.add_argument("--songnum", default=1)
 parser.add_argument("--extrafile", default=None)
@@ -36,22 +35,17 @@ if not os.path.exists(in_file):
 	exit()
 
 
-extra_json = {}
-do_overwrite = False
 pluginset = 'main'
 dawvert_core = core.core()
 
-if args.y == True: do_overwrite = True
-if args.soundfont != None: extra_json['soundfont'] = args.soundfont
-if args.songnum != None: extra_json['songnum'] = args.songnum
-if args.extrafile != None: extra_json['extrafile'] = args.extrafile
-if args.mi2m__output_unused_nle == True: extra_json['mi2m-output-unused-nle'] = True
-if args.use_experiments_input == True: 
-	extra_json['use_experiments_input'] = True
-	pluginset = 'experiments'
-
-if args.nonfree_plugins == True: extra_json['nonfree-plugins'] = True
-if args.shareware_plugins == True: extra_json['shareware-plugins'] = True
+if args.y == True: dawvert_core.config.flags_core.append('overwrite')
+if args.soundfont != None: dawvert_core.config.path_soundfont_gm = args.soundfont
+if args.songnum != None: dawvert_core.config.songnum = int(args.songnum)
+if args.extrafile != None: dawvert_core.config.path_extrafile = args.extrafile
+if args.mi2m__output_unused_nle == True: dawvert_core.config.flags_convproj.append('mi2m-output-unused-nle')
+if args.use_experiments_input == True: pluginset = 'experiments'
+if args.nonfree_plugins == True: dawvert_core.config.flags_plugins.append('nonfree')
+if args.shareware_plugins == True: dawvert_core.config.flags_plugins.append('shareware')
 
 
 # -------------------------------------------------------------- Input Plugin List--------------------------------------------------------------
@@ -93,12 +87,20 @@ if out_file_nameext[1] == '': out_file = os.path.join(out_file_path, out_file_na
 # -------------------------------------------------------------- convert --------------------------------------------------------------
 
 file_name = os.path.splitext(os.path.basename(in_file))[0]
-if args.samplefolder != None: extra_json['samplefolder'] = args.samplefolder
-else: extra_json['samplefolder'] = os.getcwd() + '/__extracted_samples/' + file_name + '/'
+if args.sample_out_path != None: 
+	dawvert_core.config.path_samples_extracted = args.sample_out_path
+	dawvert_core.config.path_samples_downloaded = args.sample_out_path
+	dawvert_core.config.path_samples_generated = args.sample_out_path
+	dawvert_core.config.path_samples_converted = args.sample_out_path
+else: 
+	dawvert_core.config.path_samples_extracted += file_name + '/'
+	dawvert_core.config.path_samples_downloaded += file_name + '/'
+	dawvert_core.config.path_samples_generated += file_name + '/'
+	dawvert_core.config.path_samples_converted += file_name + '/'
 
 # -------------------------------------------------------------- convert --------------------------------------------------------------
 
-if os.path.isfile(out_file) and do_overwrite == False:
+if os.path.isfile(out_file) and 'overwrite' not in dawvert_core.config.flags_core:
 	user_input = input("File '"+out_file+"' already exists. Overwrite? [y/n]")
 	if user_input.lower() == 'y': pass
 	elif user_input.lower() == 'n': exit()
@@ -106,7 +108,7 @@ if os.path.isfile(out_file) and do_overwrite == False:
 		print('Not overwriting - exiting')
 		exit()
 
-dawvert_core.parse_input(in_file, extra_json)
-dawvert_core.convert_type_output(extra_json)
-dawvert_core.convert_plugins(extra_json)
+dawvert_core.parse_input(in_file, dawvert_core.config)
+dawvert_core.convert_type_output(dawvert_core.config)
+dawvert_core.convert_plugins(dawvert_core.config)
 dawvert_core.parse_output(out_file)

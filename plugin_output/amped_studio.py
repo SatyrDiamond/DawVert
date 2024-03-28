@@ -78,8 +78,11 @@ def do_idparams(convproj_obj, plugin_obj, pluginid, deviceid, amped_auto):
         ampedpid = paramid.replace('__', '/')
         param_obj = plugin_obj.params.get(ampedpid, 0)
 
-        ap_f, ap_d = convproj_obj.get_autopoints(['plugin', pluginid, paramid])
-        if ap_f: amped_auto.append(create_autodata(deviceid, ampedpid, ap_d, ampedpid, param_obj.min, param_obj.max))
+        ap_f, ap_d = convproj_obj.automation.get(['plugin', pluginid, paramid], 'float')
+        if ap_f: print(ap_d)
+        if ap_f: 
+            if ap_d.u_nopl_points:
+                amped_auto.append(create_autodata(deviceid, ampedpid, ap_d.nopl_points, ampedpid, param_obj.min, param_obj.max))
 
         paramout.append({"id": paramnum, "name": ampedpid, "value": param_obj.value})
     return paramout
@@ -150,17 +153,17 @@ class output_amped(plugin_output.base):
     def getshortname(self): return 'amped'
     def gettype(self): return 'r'
     def plugin_archs(self): return None
-    def getdawcapabilities(self): 
-        return {
-        'placement_cut': True,
-        'track_hybrid': True,
-        'auto_nopl': True,
-        'placement_audio_stretch': ['rate'],
-        'placement_audio_nested': False
-        }
-    def getsupportedplugformats(self): return ['vst2', 'midi']
-    def getsupportedplugins(self): return ['sampler:single', 'midi']
-    def getfileextension(self): return 'zip'
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Amped Studio'
+        dawinfo_obj.file_ext = 'amped'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.audio_filetypes = ['wav', 'mp3', 'ogg', 'flac']
+        dawinfo_obj.placement_cut = True
+        dawinfo_obj.auto_types = ['nopl_points']
+        dawinfo_obj.track_hybrid = True
+        dawinfo_obj.audio_stretch = ['rate']
+        dawinfo_obj.audio_nested = True
+        dawinfo_obj.plugin_included = ['native-amped', 'midi', 'synth-nonfree:europa', 'sampler:multi']
     def parse(self, convproj_obj, output_file):
         global counter_id
         global counter_devid
@@ -272,7 +275,7 @@ class output_amped(plugin_output.base):
                     vstdatatype = plugin_obj.datavals.get('datatype', '')
                     if vstdatatype == 'chunk':
                         vstcondata['pluginPath'] = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
-                        vstcondata['pluginState'] = cvpj_plugindata.rawdata_get_b64('chunk')
+                        vstcondata['pluginState'] = plugin_obj.rawdata_get_b64('chunk')
                     amped_trackdata["devices"].append(vstcondata)
 
             if not inst_supported:
@@ -290,7 +293,7 @@ class output_amped(plugin_output.base):
                 sf2data['sf2Preset'] = {"bank": o_midi_bank, "preset": o_midi_patch, "name": ""}
                 amped_trackdata["devices"].append(sf2data)
 
-            for notespl_obj in track_obj.placements.iter_notes():
+            for notespl_obj in track_obj.placements.pl_notes:
                 amped_offset = 0
                 if notespl_obj.cut_type == 'cut':
                     if 'start' in notespl_obj.cut_data: amped_offset = notespl_obj.cut_data['start']
@@ -312,7 +315,7 @@ class output_amped(plugin_output.base):
                 amped_region["midi"]['notes'] = amped_notes
                 amped_trackdata["regions"].append(amped_region)
 
-            for audiopl_obj in track_obj.placements.iter_audio():
+            for audiopl_obj in track_obj.placements.pl_audio:
                 amped_offset = 0
                 if audiopl_obj.cut_type == 'cut':
                     if 'start' in audiopl_obj.cut_data: amped_offset = audiopl_obj.cut_data['start']
@@ -320,12 +323,13 @@ class output_amped(plugin_output.base):
 
                 amped_audclip = {}
                 amped_audclip['contentGuid'] = {}
-                amped_audclip['contentGuid']['userAudio'] = {"exportedId": audio_id[audiopl_obj.sampleref]}
+                if audiopl_obj.sampleref in audio_id:
+                    amped_audclip['contentGuid']['userAudio'] = {"exportedId": audio_id[audiopl_obj.sampleref]}
                 amped_audclip['position'] = 0
                 amped_audclip['gain'] = audiopl_obj.vol
                 amped_audclip['length'] = audiopl_obj.duration
                 amped_audclip['offset'] = 0
-                amped_audclip['stretch'] = 1/audiopl_obj.stretch.rate_tempo
+                amped_audclip['stretch'] = audiopl_obj.stretch.calc_tempo_size
                 amped_audclip['pitchShift'] = audiopl_obj.pitch
                 amped_audclip['reversed'] = False
 

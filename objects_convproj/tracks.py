@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects import convproj_placements
 from objects_convproj import fileref
 from objects_convproj import params
 from objects_convproj import tracks
@@ -9,8 +8,39 @@ from objects_convproj import visual
 from objects_convproj import sends
 from objects_convproj import notelist
 from objects_convproj import stretch
+from objects_convproj import placements
+from objects_convproj import placements_notes
+from objects_convproj import placements_audio
+from objects_convproj import placements_index
 
 import copy
+
+class lanefit:
+    def __init__(self):
+        self.mergeddata_notes = []
+        self.mergeddata_audio = []
+
+    def add_pl(self, pl_data, is_audio):
+        nummlane = 1
+        isplaced = False
+        while not isplaced:
+            if len(self.mergeddata_notes) < nummlane: 
+                self.mergeddata_notes.append(placements_notes.cvpj_placements_notes())
+                self.mergeddata_audio.append(placements_audio.cvpj_placements_audio())
+
+            if not is_audio:
+                overlapped = self.mergeddata_notes[-1].check_overlap(pl_data.position, pl_data.duration)
+                if not overlapped: 
+                    self.mergeddata_notes[-1].append(pl_data)
+                    isplaced = True
+                else: nummlane += 1
+            else:
+                overlapped = self.mergeddata_audio[-1].check_overlap(pl_data.position, pl_data.duration)
+                if not overlapped: 
+                    self.mergeddata_audio[-1].append(pl_data)
+                    isplaced = True
+                else: nummlane += 1
+
 
 class cvpj_nle:
     __slots__ = ['visual','notelist']
@@ -40,8 +70,8 @@ class cvpj_sle:
         s_pitch = self.pitch == sle_obj.pitch
         s_fxrack_channel = self.fxrack_channel == sle_obj.fxrack_channel
         s_stretch = self.stretch == sle_obj.stretch
-
-        return s_sampleref and s_audiomod and s_pan and s_vol and s_enabled and s_pitch and s_fxrack_channel and s_stretch
+        s_visual = self.visual == sle_obj.visual
+        return s_sampleref and s_audiomod and s_pan and s_vol and s_enabled and s_pitch and s_fxrack_channel and s_stretch and s_visual
 
 class cvpj_midiport:
     def __init__(self):
@@ -72,7 +102,7 @@ class cvpj_instrument:
         self.pluginid = ''
 
 class cvpj_return_track:
-    __slots__ = ['visual','visual_ui','params','datavals','fxslots_notes','fxslots_audio','sends']
+    __slots__ = ['visual','visual_ui','params','datavals','fxslots_notes','fxslots_audio','fxslots_mixer','sends']
     def __init__(self):
         self.visual = visual.cvpj_visual()
         self.visual_ui = visual.cvpj_visual_ui()
@@ -80,6 +110,7 @@ class cvpj_return_track:
         self.datavals = params.cvpj_datavals()
         self.fxslots_notes = []
         self.fxslots_audio = []
+        self.fxslots_mixer = []
         self.sends = sends.cvpj_sends()
 
 class cvpj_lane:
@@ -88,10 +119,10 @@ class cvpj_lane:
         self.visual_ui = visual.cvpj_visual_ui()
         self.params = params.cvpj_paramset()
         self.datavals = params.cvpj_datavals()
-        self.placements = convproj_placements.cvpj_placements(time_ppq, time_float, uses_placements, is_indexed)
+        self.placements = placements.cvpj_placements(time_ppq, time_float, uses_placements, is_indexed)
 
 class cvpj_track:
-    __slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','inst_pluginid','datavals','visual','visual_ui','params','midi','fxrack_channel','fxslots_notes','fxslots_audio','placements','sends','group','returns','notelist_index']
+    __slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','inst_pluginid','datavals','visual','visual_ui','params','midi','fxrack_channel','fxslots_notes','fxslots_audio','fxslots_mixer','placements','sends','group','returns','notelist_index']
     def __init__(self, track_type, time_ppq, time_float, uses_placements, is_indexed):
         self.time_ppq = time_ppq
         self.time_float = time_float
@@ -109,8 +140,9 @@ class cvpj_track:
         self.fxrack_channel = -1
         self.fxslots_notes = []
         self.fxslots_audio = []
+        self.fxslots_mixer = []
         self.sends = sends.cvpj_sends()
-        self.placements = convproj_placements.cvpj_placements(self.time_ppq, self.time_float, self.uses_placements, self.is_indexed)
+        self.placements = placements.cvpj_placements(self.time_ppq, self.time_float, self.uses_placements, self.is_indexed)
         self.group = None
         self.returns = {}
         self.notelist_index = {}
@@ -169,8 +201,9 @@ class cvpj_track:
         c_obj.fxrack_channel = self.fxrack_channel
         c_obj.fxslots_notes = self.fxslots_notes
         c_obj.fxslots_audio = self.fxslots_audio
+        c_obj.fxslots_mixer = self.fxslots_mixer
         c_obj.sends = copy.deepcopy(self.sends)
-        c_obj.placements = convproj_placements.cvpj_placements(self.time_ppq, self.time_float, self.uses_placements, self.is_indexed)
+        c_obj.placements = placements.cvpj_placements(self.time_ppq, self.time_float, self.uses_placements, self.is_indexed)
         c_obj.group = self.group
         c_obj.returns = self.returns
         c_obj.notelist_index = self.notelist_index
@@ -197,6 +230,23 @@ class cvpj_track:
         if laneid not in self.lanes: 
             self.lanes[laneid] = cvpj_lane(self.type, self.time_ppq, self.time_float, self.uses_placements, self.is_indexed)
         return self.lanes[laneid]
+
+    def lanefit(self):
+        old_lanes = self.lanes
+
+        lanefit_obj = lanefit()
+
+        for l_name, l_data in old_lanes.items():
+            for npl in l_data.placements.pl_notes: lanefit_obj.add_pl(npl, False)
+            for apl in l_data.placements.pl_audio: lanefit_obj.add_pl(apl, True)
+
+        if len(old_lanes) >= len(lanefit_obj.mergeddata_notes):
+            self.lanes = {}
+            for lanenum in range(len(lanefit_obj.mergeddata_notes)):
+                laneid = 'lanefit_'+str(lanenum)
+                self.lanes[laneid] = cvpj_lane(self.type, self.time_ppq, self.time_float, self.uses_placements, self.is_indexed)
+                self.lanes[laneid].placements.pl_notes = lanefit_obj.mergeddata_notes[lanenum]
+                self.lanes[laneid].placements.pl_audio = lanefit_obj.mergeddata_audio[lanenum]
 
     def change_timings(self, time_ppq, time_float):
         self.placements.change_timings(time_ppq, time_float)

@@ -28,15 +28,14 @@ class output_cvpj_f(plugin_output.base):
     def getshortname(self): return 'midi'
     def gettype(self): return 'r'
     def plugin_archs(self): return None
-    def getdawcapabilities(self): 
-        return {
-        'fxrack': True,
-        'auto_nopl': True,
-        'track_nopl': True
-        }
-    def getsupportedplugformats(self): return []
-    def getsupportedplugins(self): return []
-    def getfileextension(self): return 'mid'
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'MIDI'
+        dawinfo_obj.file_ext = 'mid'
+        dawinfo_obj.fxrack = True
+        dawinfo_obj.fxrack_params = ['vol']
+        dawinfo_obj.auto_types = ['nopl_ticks']
+        dawinfo_obj.track_nopl = True
+        dawinfo_obj.plugin_included = ['midi']
     def parse(self, convproj_obj, output_file):
         convproj_obj.change_timings(384, False)
         
@@ -89,28 +88,25 @@ class output_cvpj_f(plugin_output.base):
 
             multi_miditrack.append(miditrack)
 
-            for notespl_obj in track_obj.placements.iter_notes():
-                basepos = notespl_obj.position
-      
-                notespl_obj.notelist.sort()
-                for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
-                    for t_key in t_keys:
-                        cvmi_n_pos = int(basepos+t_pos)
-                        cvmi_n_dur = int(t_dur)
-                        cvmi_n_key = int(t_key)+60
-                        cvmi_n_vol = xtramath.clamp(int(t_vol*127), 0, 127)
-                        add_cmd(i_list, cvmi_n_pos, ['note_on', cvmi_n_key, cvmi_n_vol])
-                        add_cmd(i_list, cvmi_n_pos+cvmi_n_dur, ['note_off', cvmi_n_key])
+            track_obj.placements.notelist.sort()
+            for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in track_obj.placements.notelist.nl:
+                for t_key in t_keys:
+                    cvmi_n_pos = int(t_pos)
+                    cvmi_n_dur = int(t_dur)
+                    cvmi_n_key = int(t_key)+60
+                    cvmi_n_vol = xtramath.clamp(int(t_vol*127), 0, 127)
+                    add_cmd(i_list, cvmi_n_pos, ['note_on', cvmi_n_key, cvmi_n_vol])
+                    add_cmd(i_list, cvmi_n_pos+cvmi_n_dur, ['note_off', cvmi_n_key])
 
-                i_list = dict(sorted(i_list.items(), key=lambda item: item[0]))
+            i_list = dict(sorted(i_list.items(), key=lambda item: item[0]))
 
-                prevpos = 0
-                for i_list_e in i_list:
-                    for midi_notedata in i_list[i_list_e]:
-                        #print(i_list_e, i_list_e-prevpos, i_list[i_list_e])
-                        if midi_notedata[0] == 'note_on': miditrack.append(mido.Message('note_on', channel=midi_channel, note=midi_notedata[1], velocity=midi_notedata[2], time=i_list_e-prevpos))
-                        if midi_notedata[0] == 'note_off': miditrack.append(mido.Message('note_off', channel=midi_channel, note=midi_notedata[1], time=i_list_e-prevpos))
-                        prevpos = i_list_e
+            prevpos = 0
+            for i_list_e in i_list:
+                for midi_notedata in i_list[i_list_e]:
+                    #print(i_list_e, i_list_e-prevpos, i_list[i_list_e])
+                    if midi_notedata[0] == 'note_on': miditrack.append(mido.Message('note_on', channel=midi_channel, note=midi_notedata[1], velocity=midi_notedata[2], time=i_list_e-prevpos))
+                    if midi_notedata[0] == 'note_off': miditrack.append(mido.Message('note_off', channel=midi_channel, note=midi_notedata[1], time=i_list_e-prevpos))
+                    prevpos = i_list_e
 
             multi_miditrack.append(miditrack)
 

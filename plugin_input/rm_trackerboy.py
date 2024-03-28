@@ -45,12 +45,12 @@ class input_trackerboy(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'trackerboy'
-    def getname(self): return 'TrackerBoy'
     def gettype(self): return 'rm'
-    def getdawcapabilities(self): 
-        return {
-        'track_lanes': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'TrackerBoy'
+        dawinfo_obj.file_ext = 'tbm'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.plugin_included = ['universal:synth-osc']
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -58,7 +58,7 @@ class input_trackerboy(plugin_input.base):
         bytesdata = bytestream.read(12)
         if bytesdata == b'\x00TRACKERBOY\x00': return True
         else: return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         convproj_obj.set_timings(4, False)
 
         song_file = open(input_file, 'rb')
@@ -87,12 +87,11 @@ class input_trackerboy(plugin_input.base):
         dataset = dv_dataset.dataset('./data_dset/trackerboy.dset')
         multitrkdata = dv_trackerpattern.multipatterndata(['pulse','pulse','wavetable','noise'], dataset, 64)
 
-        selectedsong = int(extra_param['songnum']) if 'songnum' in extra_param else 1
-
+        selectedsong = dv_config.songnum
         songnum = 1
 
         song_file.seek(160)
-        trackerboy_chunks = data_bytes.riff_read(song_file.read(), 0)
+        trackerboy_chunks = data_bytes.iff_read(song_file.read(), 0)
 
         songfound = False
 
@@ -215,6 +214,7 @@ class input_trackerboy(plugin_input.base):
                 inst_obj.params.add('vol', 0.4, 'float')
 
                 plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+                plugin_obj.role = 'synth'
 
                 if trackerboy_instdata[1][0] != (): 
                     plugin_obj.env_blocks_add('arp', trackerboy_instdata[1][0], None, None, None, None)
@@ -266,7 +266,6 @@ class input_trackerboy(plugin_input.base):
                             if trackerboy_instdata[6]+1 not in t_waves: outwavname = 1
                             wave_obj = plugin_obj.wave_add('main')
                             wave_obj.set_all_range(t_waves[outwavname][1], 0, 15)
-
 
         convproj_obj.do_actions.append('do_addloop')
         convproj_obj.do_actions.append('do_lanefit')

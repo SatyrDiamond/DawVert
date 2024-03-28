@@ -34,15 +34,16 @@ class input_notessimo_v2(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'notessimo_v2'
-    def getname(self): return 'Notessimo V2'
     def gettype(self): return 'mi'
-    def getdawcapabilities(self): 
-        return {
-        'fxrack': True,
-        'track_lanes': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Notessimo V2'
+        dawinfo_obj.file_ext = 'note'
+        dawinfo_obj.auto_types = ['pl_points']
+        dawinfo_obj.fxrack = True
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.plugin_included = ['midi']
     def supported_autodetect(self): return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         global used_instruments
         used_instruments = []
 
@@ -121,13 +122,14 @@ class input_notessimo_v2(plugin_input.base):
         for sheetnum in arr_order:
             cursheet_data = notess_sheets[sheetnum]
             for layer in cursheet_data[2]:
-                placement_obj = convproj_obj.playlist[layer].placements.add_notes()
+                placement_obj = convproj_obj.playlist[layer].placements.add_notes_indexed()
                 placement_obj.position = curpos
                 placement_obj.duration = cursheet_data[0]*cursheet_data[1]
                 placement_obj.fromindex = str(sheetnum)+'_'+str(layer)
+                
             convproj_obj.timesig_auto.add_point(curpos, [4,4])
 
-            autopl_obj = convproj_obj.add_automation_pl(['main','bpm'], 'float')
+            autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
             autopl_obj.position = curpos
             autopl_obj.duration = cursheet_data[0]*cursheet_data[1]
             autopoint_obj = autopl_obj.data.add_point()

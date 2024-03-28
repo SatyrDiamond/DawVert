@@ -126,7 +126,7 @@ def maketrack_midi(xmltag, placements_obj, trackname, portnum, track_obj):
     addvalue(x_miditrack, 'off', 0)
     addvalue(x_miditrack, 'transposition', -track_obj.datavals.get('middlenote', 0))
 
-    for notespl_obj in placements_obj.iter_notes():
+    for notespl_obj in placements_obj.pl_notes:
         x_part = ET.SubElement(x_miditrack, "part")
         if notespl_obj.visual.name: addvalue(x_part, 'name', notespl_obj.visual.name)
         p_dur = int(notespl_obj.duration)
@@ -226,15 +226,16 @@ class output_cvpj(plugin_output.base):
     def getshortname(self): return 'muse'
     def gettype(self): return 'r'
     def plugin_archs(self): return ['amd64', 'i386']
-    def getdawcapabilities(self): 
-        return {
-        'fxrack': False,
-        'track_lanes': True,
-        'placement_cut': True,
-        'placement_audio_stretch': ['rate'],
-        'auto_nopl': True,
-        'track_nopl': False
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Online Sequencer'
+        dawinfo_obj.file_ext = 'sequence'
+        dawinfo_obj.fxrack = False
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.placement_cut = True
+        dawinfo_obj.audio_stretch = ['rate']
+        dawinfo_obj.auto_types = ['nopl_points']
+        dawinfo_obj.track_nopl = False
+        dawinfo_obj.plugin_included = []
     def getsupportedplugformats(self): return ['vst2']
     def getsupportedplugins(self): return []
     def getfileextension(self): return 'med'

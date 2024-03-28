@@ -1,19 +1,4 @@
 
-# area_struct|effector
-# part|int|version
-# part|float|effect
-# part|float|bypass
-# part|float|wet
-# part|float|x_param
-# part|float|y_param
-# part|float|mod_rate
-# part|float|tempo
-# part|float|x_mod
-# part|float|y_mod
-# part|float|mod_shape
-# part|float|input_level
-# part|float|output_gain
-
 area_struct|__part__fruity_delay_bank
 part|s_int|pan
 part|s_int|vol
@@ -88,7 +73,7 @@ part|s_int|
 part|s_int|
 part|s_int|amp_type
 part|s_int|drive
-part|s_int|presense
+part|s_int|presence
 part|s_int|feedback
 part|s_int|eq_low
 part|s_int|eq_mid
@@ -242,6 +227,7 @@ part|int|osc_click
 part|int|osc_dist
 
 area_struct|fruity_7_band_eq
+part|int|version
 part|s_int|band_1
 part|s_int|band_2
 part|s_int|band_3
@@ -767,12 +753,12 @@ part|int|pw
 part|int|fm
 part|int|ringmod
 part|int|amp_A
-part|int|amp_S
 part|int|amp_D
+part|int|amp_S
 part|int|amp_R
 part|int|fil_A
-part|int|fil_S
 part|int|fil_D
+part|int|fil_S
 part|int|fil_R
 part|int|fil_kbtrack
 part|int|fil_qtype
@@ -811,12 +797,12 @@ part|int|pw
 part|int|fm
 part|int|ringmod
 part|int|amp_A
-part|int|amp_S
 part|int|amp_D
+part|int|amp_S
 part|int|amp_R
 part|int|fil_A
-part|int|fil_S
 part|int|fil_D
+part|int|fil_S
 part|int|fil_R
 part|int|fil_kbtrack
 part|int|fil_qtype
@@ -881,3 +867,164 @@ part|byte|osc1_invert
 part|byte|osc2_invert
 part|byte|osc3_invert
 part|byte|osc3_am
+
+area_struct|sslf_bassdrum
+part|skip_n.4|header
+part|string.256|name
+part|string.256|filename
+part|skip_n.256|
+part|skip_n.256|
+part|skip_n.256|
+part|float|out_level
+part|float|sampling_ratio
+part|float|duration
+part|float|butt
+part|float|drive
+part|float|attack
+part|float|base
+part|float|peak
+part|float|slide_time
+part|float|var_base
+part|float|var_peak
+part|float|var_slide_time
+part|float|var_phase
+part|float|click_cut
+part|float|click_freq
+part|float|click_amount
+part|float|noise_a
+part|float|noise_d
+part|float|noise_s
+part|float|noise_start
+part|float|noise_pitch
+part|float|noise_mix
+part|float|noise_filter
+
+area_struct|razer_chroma
+part|int|version
+part|int|amplitude
+part|int|mode
+part|int|decay
+part|int|color_mode
+part|int|enabled_keyboard
+part|int|enabled_chroma_link
+part|int|enabled_headset
+part|int|enabled_mouse
+part|int|enabled_mouse_mat
+part|int|enabled_keypad
+
+area_struct|sslf_pitcher
+part|skip_n.4|header
+part|float|correction_speed
+part|float|stereo
+part|float|gender
+part|float|finetune
+part|float|bypass_all
+part|list.12/float|bypass
+part|float|voice1_pan
+part|float|voice2_pan
+part|float|voice3_pan
+part|float|voice4_pan
+part|float|
+part|float|formant
+part|float|hz
+part|float|ref_chan
+part|float|use_midi
+part|float|octaves
+part|float|harmonize
+part|float|selector_key
+part|float|selector_type
+part|float|harmonize_mix
+part|float|harmonize_vel
+part|float|min_freq
+part|list.12/byte|key_on
+part|raw.4|
+
+area_struct|fruity_compressor
+part|int|version
+part|s_int|threshold
+part|int|ratio
+part|int|gain
+part|int|attack
+part|int|release
+part|int|type
+
+area_struct|fruity_formula_controller
+part|int|version
+part|int|in_a
+part|int|in_b
+part|int|in_c
+part|raw_part/byte|formula
+part|dstring_part/byte|comment
+
+
+
+
+
+
+
+
+
+# area_struct|effector
+# part|int|version
+# part|float|effect
+# part|float|bypass
+# part|float|wet
+# part|float|x_param
+# part|float|y_param
+# part|float|mod_rate
+# part|float|tempo
+# part|float|x_mod
+# part|float|y_mod
+# part|float|mod_shape
+# part|float|input_level
+# part|float|output_gain
+
+area_struct|__part__multiband_delay
+part|list.16/float|delay
+part|list.16/float|vol
+part|list.16/float|pan
+
+area_struct|multiband_delay__UNFINISHED
+part|int|version
+part|int|
+part|struct.__part__multiband_delay|bank_1
+part|struct.__part__multiband_delay|bank_2
+part|struct.__part__multiband_delay|bank_3
+part|struct.__part__multiband_delay|bank_4
+part|struct.__part__multiband_delay|bank_5
+part|struct.__part__multiband_delay|bank_6
+part|struct.__part__multiband_delay|bank_7
+part|struct.__part__multiband_delay|bank_8
+
+area_struct|pitch_shifter_NOT_FINISHED
+part|int|version
+part|s_int|pitch
+part|s_int|formant
+part|s_int|channel
+part|s_int|wet
+part|s_int|duration
+part|s_int|density
+part|s_int|jitter
+part|s_int|rand
+part|s_int|delay
+part|s_int|feedback
+part|s_int|delay_mode
+part|s_int|formant_correction
+part|s_int|pitch_mode
+part|s_int|
+part|byte|
+part|byte|
+part|byte|
+part|byte|
+part|byte|
+part|byte|
+part|byte|
+part|byte|
+part|byte|
+part|byte|
+part|byte|display_speed
+part|byte|
+part|byte|
+part|byte|display_on
+part|byte|display_mono
+part|raw.256|

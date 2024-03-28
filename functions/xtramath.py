@@ -3,26 +3,20 @@
 
 import math
 
-def clamp(n, minn, maxn):
-    return max(min(maxn, n), minn)
+def clamp(n, minn, maxn): return max(min(maxn, n), minn)
 
-def overlap(start1, end1, start2, end2):
-    return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
+def overlap(start1, end1, start2, end2): return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
 
-def average(lst):
-    return sum(lst) / len(lst)
+def average(lst): return sum(lst) / len(lst)
 
-def between_from_one(minval, maxval, value): 
-    return (minval*(1-value))+(maxval*value)
+def between_from_one(minval, maxval, value):  return (minval*(1-value))+(maxval*value)
 
-def between_to_one(minval, maxval, value): 
-    if minval == maxval: return 0
-    else: return (value-minval)/(maxval-minval)
+def between_to_one(minval, maxval, value): return 0 if minval == maxval else (value-minval)/(maxval-minval)
 
-def is_between(i_min, i_max, i_value): 
-    return min(i_min, i_max) <= i_value <= max(i_min, i_max)
+def is_between(i_min, i_max, i_value): return min(i_min, i_max) <= i_value <= max(i_min, i_max)
 
 def gen_float_range(start,stop,step):
+    print(start,stop,step)
     istop = int((stop-start) // step)
     for i in range(int(istop)):
         yield start + i * step
@@ -33,6 +27,11 @@ def gen_float_blocks(size,step):
     while curval > 0:
         yield min(curval,step)
         curval -= step
+
+def gen_float_blocks_range(start,end,step):
+    end = end-start
+    for x in gen_float_blocks(end,step):
+        yield x+start
 
 def steps_to_one(in_val, steps):
     prev_step = steps[0]
@@ -146,3 +145,15 @@ def get_lower_tempo(i_tempo, i_notelen, maxtempo):
 def change_timing(o_ppq, n_ppq, n_float, value):
     modval = float(value)*(n_ppq/o_ppq)
     return modval if n_float else int(modval)
+
+def step2sec(i_value, i_bpm): return (i_value/8)*(120/i_bpm)
+
+def sec2step(i_value, i_bpm): return (i_value*8)/(120/i_bpm)
+
+def midi_filter(i_value): return pow(i_value*100, 2)*(925/2048)
+
+def wetdry(wet, dry):
+    vol = max(wet, dry)
+    wet = (wet/vol) if vol != 0 else 1
+    dry = (dry/vol) if vol != 0 else 1
+    return ((wet-dry)/2)+0.5

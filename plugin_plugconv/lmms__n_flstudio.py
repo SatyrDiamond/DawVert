@@ -12,37 +12,39 @@ threeosc_shapes = {
     5: 6,
     6: 7}
 
+pluckwave = [124, 219, 235, 222, 220, 214, 188, 161, 141, 109, 90, 74, 49, 41, 21, 0, 7, 37, 97, 139, 131, 116, 113, 111, 137, 180, 202, 194, 134, 64, 53, 72, 114, 150, 133, 130, 154, 160, 163, 171, 198, 216, 165, 109, 108, 130, 153, 161, 151, 131, 96, 68, 68, 82, 98, 106, 116, 100, 49, 42, 113, 191, 228, 227, 208, 197, 165, 134, 169, 200, 145, 60, 38, 112, 188, 158, 106, 116, 162, 199, 200, 172, 121, 78, 79, 89, 101, 149, 196, 195, 193, 199, 172, 138, 129, 113, 91, 99, 125, 126, 146, 201, 188, 107, 41, 16, 23, 56, 90, 113, 113, 101, 133, 180, 194, 197, 169, 103, 66, 75, 76, 75, 115, 169, 179, 133, 91, 106, 150, 167, 146, 141, 177, 181, 143, 144, 177, 200, 212, 213, 203, 170, 115, 101, 152, 194, 168, 115, 80, 56, 45, 60, 98, 143, 171, 181, 169, 144, 116, 84, 87, 116, 103, 63, 59, 84, 96, 78, 55, 86]
+
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['native-flstudio', None, 'flp'], ['native-lmms', None, 'lmms'], True, False
-    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
+    def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, plugtransform):
 
-        if plugin_obj.plugin_subtype.lower() == 'fruity balance':  
+        pluginname = plugin_obj.plugin_subtype.lower()
+
+        if pluginname == 'fruity balance':  
             print('[plug-conv] FL Studio to LMMS: Fruity Balance > Amplifier:',pluginid)
-            bal_pan = plugin_obj.params.get('pan', 0).value
-            bal_vol = plugin_obj.params.get('vol', 0).value
-            plugin_obj.replace('native-lmms', 'amplifier')
-            plugin_obj.params.add('pan', (bal_pan/128)*100, 'int')
-            plugin_obj.params.add('right', 100, 'int')
-            plugin_obj.params.add('volume', (bal_vol/256)*100, 'int')
-            plugin_obj.params.add('left', 100, 'int')
+            plugtransform.transform('./data_plugts/flstudio_lmms.pltr', 'fruity_balance', convproj_obj, plugin_obj, pluginid, dv_config)
             return 0
 
-        if plugin_obj.plugin_subtype.lower() == 'fruity stereo shaper':
+        if pluginname == 'fruity stereo shaper':
             print('[plug-conv] FL Studio to LMMS: Stereo Shaper > Stereo Matrix:',pluginid)
-            fl_shape_r2l = plugin_obj.params.get('r2l', 0).value/12800
-            fl_shape_l2l = plugin_obj.params.get('l2l', 0).value/12800
-            fl_shape_r2r = plugin_obj.params.get('r2r', 0).value/12800
-            fl_shape_l2r = plugin_obj.params.get('l2r', 0).value/12800
-            plugin_obj.replace('native-lmms', 'stereomatrix')
-            plugin_obj.params.add('l-r', fl_shape_l2r, 'float')  
-            plugin_obj.params.add('r-l', fl_shape_r2l, 'float')  
-            plugin_obj.params.add('r-r', fl_shape_r2r, 'float')  
-            plugin_obj.params.add('l-l', fl_shape_l2l, 'float')  
+            plugtransform.transform('./data_plugts/flstudio_lmms.pltr', 'fruity_stereo_shaper', convproj_obj, plugin_obj, pluginid, dv_config)
             return 0
 
-        if plugin_obj.plugin_subtype.lower() == '3x osc':   
+        if pluginname == 'fruity mute 2':
+            channel = int(plugin_obj.params.get('channel', 1024).value/341)
+            mute = int(plugin_obj.params.get('mute', 0).value>512)
+            left = max(1-int(channel>=1), mute)
+            right = max(1-int(channel<=1), mute)
+            plugin_obj.replace('native-lmms', 'amplifier')
+            plugin_obj.params.add('pan', 0, 'int')
+            plugin_obj.params.add('volume', 100, 'int')
+            plugin_obj.params.add('right', 100*left, 'int')
+            plugin_obj.params.add('left', 100*right, 'int')
+            return 0
+
+        if pluginname == '3x osc':   
             print('[plug-conv] FL Studio to LMMS: 3xOsc > TripleOscillator:',pluginid)
             fl_osc1_coarse = plugin_obj.params.get('osc1_coarse', 0).value
             fl_osc1_detune = plugin_obj.params.get('osc1_detune', 0).value
@@ -156,4 +158,27 @@ class plugconv(plugin_plugconv.base):
                     plugin_obj.samplerefs[out_str] = samplerefid
             return 0
             
+        if pluginname == 'plucked!':
+            print('[plug-conv] FL Studio to LMMS: Plucked! > Vibed:',pluginid)
+            color = plugin_obj.params.get('color', 0).value/128
+            decay = plugin_obj.params.get('decay', 0).value/256
+
+            plugin_obj.replace('native-lmms', 'vibedstrings')
+
+            plugin_obj.params.add('active0', 1, 'int')
+            plugin_obj.params.add('slap0', 0.5, 'float')
+            plugin_obj.params.add('stiffness0', (1-decay)*0.05, 'float')
+
+            wave_obj = plugin_obj.wave_add('graph0')
+            wave_obj.set_all_range(pluckwave, 128, 255)
+            wave_obj.smooth = True
+            
+            #plugin_obj.params.add('volume0', color*100, 'float')
+            #plugin_obj.params.add('active1', 1, 'int')
+            #plugin_obj.params.add('volume1', (1-color)*100, 'float')
+
+            #wave_obj = plugin_obj.wave_add('graph1')
+            #wave_obj.set_numpoints(128)
+            #wave_obj.add_wave('square', 0.5, 1, 1)
+
         return 2

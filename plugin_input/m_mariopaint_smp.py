@@ -36,19 +36,21 @@ class input_mariopaint_smp(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mariopaint_smp'
-    def getname(self): return 'Super Mario Paint'
     def gettype(self): return 'm'
-    def getdawcapabilities(self):
-        return {'track_lanes': True, 'track_nopl': True}
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.file_ext = 'txt'
+        dawinfo_obj.name = 'Super Mario Paint'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.track_nopl = True
+        dawinfo_obj.plugin_included = ['midi']
     def supported_autodetect(self): return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
 
         # ---------- CVPJ Start ----------
         convproj_obj.type = 'm'
         convproj_obj.set_timings(4, False)
  
         playlist_obj = convproj_obj.add_playlist(0, 0, False)
-        placement_obj = playlist_obj.placements.add_notes()
 
         # ---------- Parse ----------
         smp_values = {}
@@ -73,7 +75,7 @@ class input_mariopaint_smp(plugin_input.base):
                 s_pos_out = ((int(s_pos[0])-1)*4) + int(s_pos[1])
                 s_notes = s_data[:-1]
                 s_vol = int(s_data[-1:][0].split(':')[1])
-                makenote(placement_obj.notelist, s_pos_out, s_notes, s_vol, notelen)
+                makenote(playlist_obj.placements.notelist, s_pos_out, s_notes, s_vol, notelen)
             linecount += 1
 
         # ---------- CVPJ ----------
@@ -85,5 +87,3 @@ class input_mariopaint_smp(plugin_input.base):
         convproj_obj.do_actions.append('do_addloop')
         convproj_obj.do_actions.append('do_singlenotelistcut')
         convproj_obj.params.add('bpm', smp_tempo, 'float')
-
-        placement_obj.duration = placement_obj.notelist.get_dur()

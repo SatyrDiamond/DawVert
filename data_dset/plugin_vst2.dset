@@ -7,6 +7,12 @@
                 "group": "The Colorspace",
                 "visual": {"name": "The CS Cloud"}
             },
+            "1349337720": {
+                "datadef": "plugin_vst2\\exakt_lite.ddef",
+                "datadef_struct": "main",
+                "group": "The SONICBITS",
+                "visual": {"name": "Exakt Lite"}
+            },
             "1145450801": {
                 "datadef": "plugin_vst2\\the_colorspace.ddef",
                 "datadef_struct": "drafter",

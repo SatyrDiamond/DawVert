@@ -28,11 +28,53 @@ typelist['m'] = 'Multiple'
 typelist['mi'] = 'MultipleIndexed'
 typelist['debug'] = 'debug'
 
+class config_data:
+	path_samples_extracted = os.getcwd() + '/__samples_extracted/'
+	path_samples_downloaded = os.getcwd() + '/__samples_downloaded/'
+	path_samples_generated = os.getcwd() + '/__samples_generated/'
+	path_samples_converted = os.getcwd() + '/__samples_converted/'
+	path_soundfont_gm = None
+	path_soundfont_xg = None
+	path_soundfont_sc55 = None
+	path_soundfont_mt32 = None
+	path_extrafile = None
+	allow_download = True
+	songnum = 1
+	flags_plugins = []
+	flags_convproj = []
+	flags_core = []
+
+class dawinfo:
+	def __init__(self):
+		self.name = ""
+		self.file_ext = ''
+		self.plugin_arch = [32, 64]
+		self.plugin_ext = []
+		self.plugin_included = []
+
+		self.audio_filetypes = []
+
+		self.track_lanes = False
+		self.track_nopl = False
+		self.track_hybrid = False
+		self.placement_cut = False
+		self.placement_loop = []
+		self.audio_nested = False
+		self.audio_stretch = []
+		self.fxrack = False
+		self.fxrack_params = ['vol','enabled']
+		self.auto_types = []
+		self.fxchain_mixer = False
+
+		self.time_seconds = False
+
 class core:
 	def __init__(self):
 		platform_architecture = platform.architecture()
 		if platform_architecture[1] == 'WindowsPE': self.platform_id = 'win'
 		else: self.platform_id = 'lin'
+
+		self.config = config_data()
 
 		self.pluglist_input = {}
 		self.pluglist_input_auto = {}
@@ -72,27 +114,25 @@ class core:
 
 	def input_set(self, pluginname): 
 		if pluginname in self.pluglist_input:
+			inputclass = self.pluglist_input[pluginname]
+			dawinfo_obj = dawinfo()
+			inputclass.getdawinfo(dawinfo_obj)
 			self.currentplug_input = [
-				self.pluglist_input[pluginname], 
+				inputclass, 
 				pluginname, 
-				self.pluglist_input[pluginname].getname(),
-				self.pluglist_input[pluginname].gettype(),
-				self.pluglist_input[pluginname].getdawcapabilities()
+				dawinfo_obj
 				]
-			print('[core] Set input format:',self.currentplug_input[2],'('+ self.currentplug_input[1]+')')
+			print('[core] Set input format:',self.currentplug_input[2].name,'('+ self.currentplug_input[1]+')')
 			print('[core] Input Format:',self.currentplug_input[1])
-			print('[core] Input DataType:',typelist[self.currentplug_input[3]])
 			return pluginname
 		else: return None
 
 	def input_autoset(self, in_file):
 		outputname = None
-		for autoplugin in self.pluglist_input_auto:
-			temp_in_class = self.pluglist_input_auto[autoplugin]
-			detected_format = temp_in_class.detect(in_file)
+		for pluginname, inputclass in self.pluglist_input_auto.items():
+			detected_format = inputclass.detect(in_file)
 			if detected_format == True:
-				outputname = temp_in_class.getshortname()
-				full_name = temp_in_class.getname()
+				outputname = inputclass.getshortname()
 				self.input_set(outputname)
 				break
 		return outputname
@@ -117,58 +157,52 @@ class core:
 
 	def output_get_current(self): return self.currentplug_output[1]
 
-	def output_get_extension(self): return self.currentplug_output[7]
+	def output_get_extension(self): return self.currentplug_output[2].file_ext
 
 	def output_set(self, pluginname): 
 		if pluginname in self.pluglist_output:
+
+			dawinfo_obj = dawinfo()
+			self.pluglist_output[pluginname].getdawinfo(dawinfo_obj)
 			self.currentplug_output = [
 				self.pluglist_output[pluginname], 
 				pluginname, 
-				self.pluglist_output[pluginname].getname(),
-				self.pluglist_output[pluginname].gettype(),
-				self.pluglist_output[pluginname].getdawcapabilities(),
-				self.pluglist_output[pluginname].getsupportedplugins(),
-				self.pluglist_output[pluginname].getsupportedplugformats(),
-				self.pluglist_output[pluginname].getfileextension()
+				dawinfo_obj,
+				self.pluglist_output[pluginname].gettype()
 				]
+
 			print('[core] Output Format:',self.currentplug_output[1])
 			print('[core] Output DataType:',typelist[self.currentplug_output[3]])
 			return pluginname
 		else: return None
 
-	def get_cvpj(self, extra_json): return self.convproj_obj
-
-	def parse_input(self, in_file, extra_json): 
-		if 'samples_inside' in self.currentplug_input[4]: os.makedirs(extra_json['samplefolder'], exist_ok=True)
-
+	def parse_input(self, in_file, dv_config): 
 		self.convproj_obj = convproj.cvpj_project()
-		self.currentplug_input[0].parse(self.convproj_obj, in_file, extra_json)
+		self.currentplug_input[0].parse(self.convproj_obj, in_file, dv_config)
 
 		self.convproj_obj.sample_folders.append(os.path.dirname(in_file))
 
 		for sample_folder in self.convproj_obj.sample_folders:
 			self.convproj_obj.fill_samplerefs(sample_folder)
 
-	def convert_plugins(self, extra_json): 
-		plug_conv.convproj(self.convproj_obj, self.platform_id, self.currentplug_input[1], self.currentplug_output[1], self.currentplug_output[5], self.currentplug_output[6], extra_json)
+	def convert_plugins(self, dv_config): 
+		plug_conv.convproj(self.convproj_obj, self.platform_id, self.currentplug_input[1], self.currentplug_output[1], self.currentplug_output[2], dv_config)
 		#exit()
 
-	def convert_type_output(self, extra_json): 
-		in_type = self.currentplug_input[3]
+	def convert_type_output(self, dv_config): 
+		in_type = self.convproj_obj.type
 		out_type = self.currentplug_output[3]
-		in_dawcapabilities = self.currentplug_input[4]
-		out_dawcapabilities = self.currentplug_output[4]
+		in_dawinfo = self.currentplug_input[2]
+		out_dawinfo = self.currentplug_output[2]
 
 		compactclass = song_compat.song_compat()
 
-		compactclass.set_dawcapabilities(in_dawcapabilities, out_dawcapabilities)
-
 		print('[core] ' + typelist[in_type] + ' > ' + typelist[out_type])
 
-		#if in_type in ['r', 'm']: compactclass.makecompat_audiostretch(self.convproj_obj, in_type, in_dawcapabilities, out_dawcapabilities)
+		#if in_type in ['r', 'm']: compactclass.makecompat_audiostretch(self.convproj_obj, in_type, in_dawinfo, out_dawinfo)
 	
 		if out_type != 'debug':
-			compactclass.makecompat(self.convproj_obj, in_type)
+			compactclass.makecompat(self.convproj_obj, in_type, in_dawinfo, out_dawinfo)
 
 		if in_type == 'ri' and out_type == 'mi': 
 			convert_ri2mi.convert(self.convproj_obj)
@@ -184,25 +218,25 @@ class core:
 			convert_r2m.convert(self.convproj_obj)
 		elif in_type == 'r' and out_type == 'mi': 
 			convert_r2m.convert(self.convproj_obj)
-			compactclass.makecompat(self.convproj_obj, 'm')
+			compactclass.makecompat(self.convproj_obj, 'm', in_dawinfo, out_dawinfo)
 			convert_m2mi.convert(self.convproj_obj)
 
 		elif in_type == 'mi' and out_type == 'm': 
-			convert_mi2m.convert(self.convproj_obj, extra_json)
+			convert_mi2m.convert(self.convproj_obj, dv_config)
 		elif in_type == 'mi' and out_type == 'r': 
-			convert_mi2m.convert(self.convproj_obj, extra_json)
-			compactclass.makecompat(self.convproj_obj, 'm')
+			convert_mi2m.convert(self.convproj_obj, dv_config)
+			compactclass.makecompat(self.convproj_obj, 'm', in_dawinfo, out_dawinfo)
 			convert_m2r.convert(self.convproj_obj)
 	
 		elif in_type == 'rm' and out_type == 'r': 
 			convert_rm2r.convert(self.convproj_obj)
 		elif in_type == 'rm' and out_type == 'm': 
 			convert_rm2r.convert(self.convproj_obj)
-			compactclass.makecompat(self.convproj_obj, 'r')
+			compactclass.makecompat(self.convproj_obj, 'r', in_dawinfo, out_dawinfo)
 			convert_r2m.convert(self.convproj_obj)
 		elif in_type == 'rm' and out_type == 'mi': 
 			convert_rm2r.convert(self.convproj_obj)
-			compactclass.makecompat(self.convproj_obj, 'r')
+			compactclass.makecompat(self.convproj_obj, 'r', in_dawinfo, out_dawinfo)
 			convert_r2m.convert(self.convproj_obj)
 			convert_m2mi.convert(self.convproj_obj)
 
@@ -216,8 +250,11 @@ class core:
 			print(typelist[in_type],'to',typelist[out_type],'is not supported')
 			exit()
 
+		if 'do_sorttracks' in self.convproj_obj.do_actions:
+			self.convproj_obj.sort_tracks()
+
 		if out_type != 'debug':
-			compactclass.makecompat(self.convproj_obj, out_type)
+			compactclass.makecompat(self.convproj_obj, out_type, in_dawinfo, out_dawinfo)
 
 	def parse_output(self, out_file): 
 		self.currentplug_output[0].parse(self.convproj_obj, out_file)

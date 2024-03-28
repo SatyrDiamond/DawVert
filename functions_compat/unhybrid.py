@@ -14,15 +14,17 @@ def process_r(convproj_obj):
         if trackid in org_track_data:
             track_obj = org_track_data[trackid]
 
-            if_audio = len(track_obj.placements.data_audio) != 0
-            if_notes = len(track_obj.placements.data_notes) != 0
+            if_audio = (len(track_obj.placements.pl_audio.data) != 0) or (len(track_obj.placements.pl_audio_nested.data) != 0)
+            if_notes = (len(track_obj.placements.pl_notes.data) != 0) or (len(track_obj.placements.notelist.nl) != 0)
 
             if track_obj.type == 'hybrid':
                 a_track_obj = track_obj.make_base()
                 n_track_obj = track_obj.make_base()
 
-                n_track_obj.placements.data_notes = track_obj.placements.data_notes
-                a_track_obj.placements.data_audio = track_obj.placements.data_audio
+                a_track_obj.placements.pl_audio = track_obj.placements.pl_audio
+                a_track_obj.placements.pl_audio_nested = track_obj.placements.pl_audio_nested
+                n_track_obj.placements.pl_notes = track_obj.placements.pl_notes
+                n_track_obj.placements.notelist = track_obj.placements.notelist
 
                 if if_notes:
                     trackid_s = trackid+'_unhybrid_notes'

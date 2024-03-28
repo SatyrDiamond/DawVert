@@ -41,13 +41,13 @@ def convert(convproj_obj):
             playlist_obj.visual = copy.deepcopy(track_obj.visual)
             playlist_obj.visual_ui = copy.deepcopy(track_obj.visual_ui)
             playlist_obj.placements = copy.deepcopy(track_obj.placements)
-            for placement_obj in playlist_obj.placements.iter_notes(): 
+            for placement_obj in playlist_obj.placements.pl_notes_indexed: 
                 placement_obj.fromindex = starttxt+placement_obj.fromindex
         else:
             print('[song-convert] ri2mi: laned:', trackid)
             for lane_id, lane_obj in track_obj.lanes.items():
                 plnum += 1
-                for placement_obj in lane_obj.placements.iter_notes(): 
+                for placement_obj in lane_obj.placements.pl_notes_indexed: 
                     placement_obj.fromindex = starttxt+placement_obj.fromindex
                 playlist_obj = convproj_obj.add_playlist(plnum, track_obj.uses_placements, track_obj.is_indexed)
                 playlist_obj.visual = copy.deepcopy(track_obj.visual)

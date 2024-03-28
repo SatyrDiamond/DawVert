@@ -140,20 +140,20 @@ class xm_instrument:
             lfo_obj = plugin_obj.lfo_add('pitch')
             lfo_obj.attack = vibrato_sweep
             lfo_obj.shape = vibrato_wave
-            lfo_obj.speed_time = vibrato_speed
+            lfo_obj.time.set_seconds(vibrato_speed)
             lfo_obj.amount = vibrato_depth
 
 class input_xm(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'xm'
-    def getname(self): return 'FastTracker 2'
     def gettype(self): return 'm'
-    def getdawcapabilities(self): 
-        return {
-        'samples_inside': True,
-        'track_lanes': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'FastTracker 2'
+        dawinfo_obj.file_ext = 'xm'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.audio_filetypes = ['wav']
+        dawinfo_obj.plugin_included = ['sampler:single', 'sampler:multi']
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -162,13 +162,13 @@ class input_xm(plugin_input.base):
         else: return False
         bytestream.seek(0)
 
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         global samplefolder
         global xm_cursamplenum
 
         xm_cursamplenum = 1
 
-        samplefolder = extra_param['samplefolder']
+        samplefolder = dv_config.path_samples_extracted
         
         file_stream = open(input_file, 'rb')
 
@@ -289,6 +289,7 @@ class input_xm(plugin_input.base):
             elif c == b'CCOL': patterndata.ch_colors = d
 
         if xmodits_exists == True:
+            if not os.path.exists(samplefolder): os.makedirs(samplefolder)
             try: xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
             except: pass
 
@@ -345,6 +346,7 @@ class input_xm(plugin_input.base):
 
         patterndata.to_cvpj(convproj_obj, t_orderlist, startinststr, xm_song_bpm, xm_song_speed, maincolor)
         convproj_obj.metadata.name = xm_name
+        convproj_obj.metadata.comment_text = '\r'.join([i.name for i in xm_insts])
         convproj_obj.do_actions.append('do_addloop')
         convproj_obj.do_actions.append('do_lanefit')
         convproj_obj.params.add('bpm', xm_song_bpm, 'float')

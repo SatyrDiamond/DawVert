@@ -3,20 +3,43 @@
 
 from functions import xtramath
 from functions import data_values
+import wave as audio_wav
 import base64
+import struct
 
-from objects import convproj_placements
 from objects_convproj import params
 from objects_convproj import visual
 from objects_convproj import autopoints
 from objects_convproj import envelope
 from objects_convproj import wave
 from objects_convproj import harmonics
+from objects_convproj import time
+from objects_convproj import chord
 
 def vis_plugin(p_type, p_subtype):
     if p_type != None and p_subtype != None: return p_type+':'+p_subtype
     elif p_type != None and p_subtype == None: return p_type
     elif p_type == None and p_subtype == None: return 'None'
+
+class cvpj_audioports:
+    def __init__(self):
+        self.num_inputs = 2
+        self.num_outputs = 2
+        self.ports = [[0],[1]]
+
+    def __getitem__(self, index):
+        return self.ports[index]
+
+    def append(self, val):
+        self.ports.append(val)
+
+    def setnums_auto(self, i_in, i_out):
+        self.num_inputs = i_in if i_in != None else 2
+        self.num_outputs = i_out if i_out != None else 2
+        self.ports = []
+        for x in range(max(self.num_inputs, self.num_outputs)):
+            self.ports.append([x])
+
 
 class cvpj_filter:
     def __init__(self):
@@ -34,8 +57,7 @@ class cvpj_lfo:
         self.predelay = 0
         self.attack = 0
         self.shape = 'sine'
-        self.speed_type = 'seconds'
-        self.speed_time = 1
+        self.time = time.cvpj_time()
         self.amount = 0
 
 class cvpj_wavetable:
@@ -50,6 +72,10 @@ class cvpj_regions:
 
     def add(self, i_min, i_max, i_data):
         self.data.append([i_min, i_max, i_data])
+
+    def __iter__(self):
+        for x in self.data:
+            yield x
 
 class cvpj_osc:
     def __init__(self):
@@ -78,6 +104,8 @@ class cvpj_plugin:
         self.params = params.cvpj_paramset()
         self.params_slot = params.cvpj_paramset()
         self.datavals = params.cvpj_datavals()
+        self.audioports = cvpj_audioports()
+        self.poly = {}
         self.bytesdata = {}
         self.regions = cvpj_regions()
         self.env_adsr = {}
@@ -85,6 +113,7 @@ class cvpj_plugin:
         self.env_points_vars = {}
         self.env_blocks = {}
         self.filter = cvpj_filter()
+        self.named_filter = {}
         self.eq = cvpj_eq()
         self.named_eq = {}
         self.lfos = {}
@@ -94,6 +123,9 @@ class cvpj_plugin:
         self.filerefs = {}
         self.samplerefs = {}
         self.oscs = []
+        self.timing = {}
+        self.chord = {}
+        self.role = {}
 
     def type_set(self, i_type, i_subtype):
         self.plugin_type = i_type
@@ -437,8 +469,7 @@ class cvpj_plugin:
 
                         lfo_obj = self.lfo_add(a_type)
                         lfo_obj.predelay = sp[-1]-sp[0]
-                        lfo_obj.speed_type = 'seconds'
-                        lfo_obj.speed_time = 1/(lp[-1]-lp[0])/2
+                        lfo_obj.set_seconds(1/(lp[-1]-lp[0])/2)
                         lfo_obj.amount = lfo_amt
                     elif sustainnum == 0:
                         if sv[0] < sv[-1]: 
@@ -535,6 +566,20 @@ class cvpj_plugin:
     def wave_get(self, i_name): return self.waves[i_name] if i_name in self.waves else wave.cvpj_wave()
     def wave_list(self):  return [x for x in self.waves]
 
+    # -------------------------------------------------- timing
+    def timing_add(self, i_name): 
+        self.timing[i_name] = time.cvpj_time()
+        return self.timing[i_name]
+    def timing_get(self, i_name): return self.timing[i_name] if i_name in self.timing else time.cvpj_time()
+    def timing_list(self):  return [x for x in self.timing]
+
+    # -------------------------------------------------- chord
+    def chord_add(self, i_name): 
+        self.chord[i_name] = chord.cvpj_chord()
+        return self.chord[i_name]
+    def chord_get(self, i_name): return self.chord[i_name] if i_name in self.chord else chord.cvpj_chord()
+    def chord_list(self):  return [x for x in self.chord]
+
     # -------------------------------------------------- harmonics
     def harmonics_add(self, i_name): 
         self.harmonics[i_name] = harmonics.cvpj_harmonics()
@@ -552,6 +597,28 @@ class cvpj_plugin:
         #wavetable_obj.phase = i_phase
     def wavetable_get(self, i_name): return self.wavetables[i_name] if i_name in self.wavetables else cvpj_wavetable()
     def wavetable_list(self):  return [x for x in self.wavetables]
+    def wavetable_add_from_wav(self, i_name, sampleref_obj, pointssize):
+        if sampleref_obj.fileref.extension == 'wav':
+            wavetable_obj = self.wavetable_add(i_name)
+            wavetable_obj.locs = None
+
+            sourcefile = sampleref_obj.fileref.get_path(None, True)
+            aud_wav_obj = audio_wav.open(sourcefile, 'r')
+            numshapes = (aud_wav_obj.getnframes()/pointssize).__ceil__()
+            wav_parts = []
+            for i in range(0, numshapes):
+                wavedata = aud_wav_obj.readframes(pointssize)
+                wavdata = [x/32767 for x in struct.unpack("h"*(len(wavedata)//2), wavedata)]
+                out_wav = [0 for x in range(pointssize)]
+                for n,x in enumerate(wavdata): out_wav[n] = x
+                wav_parts.append(out_wav)
+
+            for n, wav_part in enumerate(wav_parts):
+                wavename = i_name+'_'+str(n)
+                wave_obj = self.wave_add(wavename)
+                wave_obj.set_all_range(wav_part, 0, 1)
+                wavetable_obj.ids.append(wavename)
+
 
     # -------------------------------------------------- sampler
     def sampler_calc_pos(self, sampleref_obj, sample_start, sample_loop): 
@@ -621,3 +688,12 @@ class cvpj_plugin:
     def named_eq_add(self, eq_name): 
         if eq_name not in self.named_eq: self.named_eq[eq_name] = cvpj_eq()
         return self.named_eq[eq_name].add()
+
+    # -------------------------------------------------- named_filter
+    def named_filter_add(self, filt_name): 
+        if filt_name not in self.named_filter: self.named_filter[filt_name] = cvpj_filter()
+        return self.named_filter[filt_name]
+
+    def named_filter_get(self, filt_name):
+        if filt_name in self.named_filter: return self.named_filter[filt_name]
+        else: return cvpj_filter()

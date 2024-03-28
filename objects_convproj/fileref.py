@@ -104,7 +104,9 @@ class cvpj_sampleref:
             self.file_size = os.path.getsize(wav_realpath)
             self.file_date = int(os.path.getmtime(wav_realpath))
 
-            if self.fileref.extension.lower() in ['wav', 'mp3', 'flac', 'ogg']:
+            fileextlow = self.fileref.extension.lower()
+
+            if fileextlow in ['wav', 'mp3', 'flac', 'ogg']:
                 self.found = True
 
                 self.visual.name = self.fileref.filename
@@ -116,4 +118,5 @@ class cvpj_sampleref:
                     audio_hz_b = avdata.streams.audio[0].rate
                     if audio_hz_b != None: self.hz = audio_hz_b
                     self.dur_sec = (self.dur_samples/self.timebase)
-                    self.channels = avdata.streams.audio[0].channels
+                    if avdata.streams.audio[0].channels: 
+                        self.channels = avdata.streams.audio[0].channels

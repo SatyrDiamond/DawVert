@@ -261,14 +261,14 @@ class input_lc(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'lovelycomposer'
-    def getname(self): return 'Lovely Composer'
     def gettype(self): return 'rm'
-    def getdawcapabilities(self): 
-        return {
-        'track_lanes': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Lovely Composer'
+        dawinfo_obj.file_ext = 'jsonl'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.plugin_included = ['universal:synth-osc']
     def supported_autodetect(self): return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         convproj_obj.type = 'rm'
         convproj_obj.set_timings(4, False)
 
@@ -298,6 +298,7 @@ class input_lc(plugin_input.base):
             cvpj_instid = str(used_instrument[0])+'_'+used_instrument[1]
 
             plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+            plugin_obj.role = 'synth'
             osc_data = plugin_obj.osc_add()
 
             inst_obj = convproj_obj.add_instrument(cvpj_instid)
@@ -344,7 +345,7 @@ class input_lc(plugin_input.base):
             bpm = decode_tempo(chandata['play_speed'] if 'play_speed' in chandata else lc_speed)
 
             if prevtempo != bpm:
-                autopl_obj = convproj_obj.add_automation_pl('main/bpm', 'float')
+                autopl_obj = convproj_obj.automation.add_pl_points('main/bpm', 'float')
                 autopl_obj.position = position
                 autopl_obj.duration = duration
                 autopoint_obj = autopl_obj.data.add_point()

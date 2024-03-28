@@ -11,7 +11,7 @@ import math
 
 def get_plugins(convproj_obj, xml_tag, cvpj_fxids):
     for cvpj_fxid in cvpj_fxids:
-        plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+        plugin_found, plugin_obj = convproj_obj.get_plugin(cvpj_fxid)
         if plugin_found: 
             fx_on, fx_wet = plugin_obj.fxdata_get()
 
@@ -38,17 +38,14 @@ class output_waveform_edit(plugin_output.base):
     def getshortname(self): return 'waveform_edit'
     def gettype(self): return 'r'
     def plugin_archs(self): return None
-    def getdawcapabilities(self): 
-        return {
-        'placement_cut': True,
-        'placement_loop': ['loop', 'loop_off', 'loop_adv'],
-        'time_seconds': True,
-        'track_hybrid': True,
-        'placement_audio_stretch': ['rate']
-        }
-    def getsupportedplugformats(self): return []
-    def getsupportedplugins(self): return ['universal:compressor', 'universal:expander']
-    def getfileextension(self): return 'tracktionedit'
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Waveform'
+        dawinfo_obj.file_ext = 'tracktionedit'
+        dawinfo_obj.placement_cut = True
+        dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
+        dawinfo_obj.time_seconds = True
+        dawinfo_obj.audio_stretch = ['rate']
+        dawinfo_obj.plugin_included = ['native-tracktion']
     def parse(self, convproj_obj, output_file):
         global dataset
 
@@ -89,8 +86,8 @@ class output_waveform_edit(plugin_output.base):
         for trackid, track_obj in convproj_obj.iter_track():
             wf_TRACK = ET.SubElement(wf_proj, "TRACK")
             wf_TRACK.set('id', str(wf_globalid))
-            wf_TRACK.set('name', track_obj.visual.name)
-            wf_TRACK.set('colour', 'ff'+colors.rgb_float_to_hex(track_obj.visual.color))
+            if track_obj.visual.name: wf_TRACK.set('name', track_obj.visual.name)
+            if track_obj.visual.color: wf_TRACK.set('colour', 'ff'+colors.rgb_float_to_hex(track_obj.visual.color))
             
             wf_INST = ET.SubElement(wf_TRACK, "PLUGIN")
             wf_INST.set('type', '4osc')
@@ -98,8 +95,7 @@ class output_waveform_edit(plugin_output.base):
 
             get_plugins(convproj_obj, wf_TRACK, track_obj.fxslots_audio)
 
-            track_obj.placements.sort_notes()
-            for notespl_obj in track_obj.placements.iter_notes():
+            for notespl_obj in track_obj.placements.pl_notes:
 
                 wf_MIDICLIP = ET.SubElement(wf_TRACK, "MIDICLIP")
 
@@ -107,8 +103,8 @@ class output_waveform_edit(plugin_output.base):
                 loopstart = notespl_obj.cut_data['loopstart'] if 'loopstart' in notespl_obj.cut_data else 0
                 loopend = notespl_obj.cut_data['loopend'] if 'loopend' in notespl_obj.cut_data else notespl_obj.duration
 
-                wf_MIDICLIP.set('start', str((notespl_obj.position/8)*tempomul))
-                wf_MIDICLIP.set('length', str((notespl_obj.duration/8)*tempomul))
+                wf_MIDICLIP.set('start', str(notespl_obj.position))
+                wf_MIDICLIP.set('length', str(notespl_obj.duration))
 
                 if notespl_obj.cut_type == 'cut':
                     wf_MIDICLIP.set('offset', str((offset/8)*tempomul))
@@ -117,7 +113,7 @@ class output_waveform_edit(plugin_output.base):
                     wf_MIDICLIP.set('loopStartBeats', str((loopstart/4)))
                     wf_MIDICLIP.set('loopLengthBeats', str((loopend/4)))
 
-                wf_MIDICLIP.set('name', notespl_obj.visual.name)
+                if notespl_obj.visual.name: wf_MIDICLIP.set('name', notespl_obj.visual.name)
                 if notespl_obj.visual.color: wf_MIDICLIP.set('colour', 'ff'+colors.rgb_float_to_hex(notespl_obj.visual.color))
                 wf_MIDICLIP.set('mute', str(int(notespl_obj.muted)))
 

@@ -3,7 +3,7 @@
 
 from functions import xtramath
 from functions import data_bytes
-from functions import audio_wav
+from objects_file import audio_wav
 import struct
 import math
 
@@ -65,8 +65,11 @@ class cvpj_wave:
     def to_audio(self, fileloc):
         tempdata = self.get_wave(2048)
         audiowavdata = [int(i*65535) for i in tempdata]
-        wave_data = data_bytes.unsign_16(struct.pack('H'*len(audiowavdata), *audiowavdata))
-        audio_wav.generate(fileloc, wave_data, 1, 44100, 16, None)
+        wavfile_obj = audio_wav.wav_main()
+        wavfile_obj.set_freq(44100)
+        wavfile_obj.data_add_data(16, 1, True, audiowavdata)
+        wavfile_obj.add_loop(0, 2048)
+        wavfile_obj.write(fileloc)
 
     def get_wave(self, i_size):
         tempdata = resizewave(self.points, i_size, self.smooth)

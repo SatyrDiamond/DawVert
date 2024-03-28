@@ -8,7 +8,7 @@ import json
 import struct
 import numpy as np
 from functions import data_bytes
-from functions import audio_wav
+from objects_file import audio_wav
 from objects import dv_trackerpattern
 
 modfinetune = [8363, 8413, 8463, 8529, 8581, 8651, 8723, 8757, 7895, 7941, 7985, 8046, 8107, 8169, 8232, 8280]
@@ -19,16 +19,16 @@ class input_mod(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mod'
-    def getname(self): return 'Protracker Module'
     def gettype(self): return 'm'
-    def getdawcapabilities(self): 
-        return {
-        'samples_inside': True,
-        'track_lanes': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Protracker Module'
+        dawinfo_obj.file_ext = 'mod'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.audio_filetypes = ['wav']
+        dawinfo_obj.plugin_included = ['sampler:single']
     def supported_autodetect(self): return False
 
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         global mod_num_patterns
         global mod_num_channels
         global table_samples
@@ -36,7 +36,7 @@ class input_mod(plugin_input.base):
 
         maincolor = [0.47, 0.47, 0.47]
 
-        samplefolder = extra_param['samplefolder']
+        samplefolder = dv_config.path_samples_extracted
 
         file_stream = open(input_file, 'rb')
         mod_name = data_bytes.readstring_fixedlen(file_stream, 20, "ascii")
@@ -161,12 +161,18 @@ class input_mod(plugin_input.base):
             t_sampledata = np.array(t_sampledata) + 128
             wave_data = t_sampledata.tobytes('C')
             finetune = modfinetune[table_samples[sample][2]]
+
+            wavfile_obj = audio_wav.wav_main()
+            wavfile_obj.data_add_data(8, 1, False, wave_data)
             if mod_inst_entry[4] == 0 and mod_inst_entry[5] == 1:
-                audio_wav.generate(wave_path, wave_data, 1, finetune, 8, None)
+                pass
             elif mod_inst_entry[4] == 0 and mod_inst_entry[5] == 2:
-                audio_wav.generate(wave_path, wave_data, 1, finetune, 8, None)
+                pass
             else:
-                audio_wav.generate(wave_path, wave_data, 1, finetune, 8, {'loop':[mod_inst_entry[4]*2, (mod_inst_entry[4]*2)+(mod_inst_entry[5]*2)]})
+                wavfile_obj.add_loop(mod_inst_entry[4], (mod_inst_entry[4])+(mod_inst_entry[5]))
+
+            wavfile_obj.set_freq(finetune)
+            wavfile_obj.write(wave_path)
 
         if 'tempo' in veryfirstrow: cvpj_bpm = veryfirstrow['tempo']
         if 'speed' in veryfirstrow: cvpj_bpm = cvpj_bpm*(6/veryfirstrow['speed'])

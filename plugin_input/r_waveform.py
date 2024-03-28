@@ -22,6 +22,7 @@ def get_plugins(convproj_obj, xml_track, track_obj):
 
             if plugintype not in ['volume', 'level'] and plugintype != None:
                 plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-tracktion', plugintype)
+                plugin_obj.role = 'effect'
 
                 if plugin_xpos and plugin_ypos:
                     windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
@@ -43,22 +44,22 @@ class input_cvpj_f(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'waveform_edit'
-    def getname(self): return 'Waveform Edit'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): 
-        return {
-        'placement_cut': True,
-        'placement_loop': ['loop', 'loop_off', 'loop_adv'],
-        'time_seconds': True,
-        'placement_audio_stretch': ['rate']
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Waveform'
+        dawinfo_obj.file_ext = 'tracktionedit'
+        dawinfo_obj.placement_cut = True
+        dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
+        dawinfo_obj.time_seconds = True
+        dawinfo_obj.audio_stretch = ['rate']
+        dawinfo_obj.plugin_included = ['native-tracktion']
     def supported_autodetect(self): return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         global dataset
         global cvpj_l
 
         convproj_obj.type = 'r'
-        convproj_obj.set_timings(4, True)
+        convproj_obj.set_timings(1, True)
 
         parser = etree.XMLParser(recover=True, encoding='utf-8')
         xml_data = etree.parse(input_file, parser)
@@ -90,14 +91,14 @@ class input_cvpj_f(plugin_input.base):
 
             if xml_part.tag == 'TRACK':
                 cvpj_trackid = str(tracknum)
-                track_obj = convproj_obj.track_add(j_wvtl_trackid, 'instrument')
+                track_obj = convproj_obj.add_track(cvpj_trackid, 'instrument', 1, False)
                 track_obj.visual.name = xml_getvalue(xml_part, 'name', '')
                 track_colour = xml_getvalue(xml_part, 'colour', None)
                 if track_colour != None: track_obj.visual.color = colors.hex_to_rgb_float(track_colour[2:])
 
                 MIDICLIP_parts = xml_part.findall('MIDICLIP')
                 for MIDICLIP_part in MIDICLIP_parts:
-                    placement_obj = track_obj.pl_notes.add()
+                    placement_obj = track_obj.placements.add_notes()
                     clip_start = float(xml_getvalue(MIDICLIP_part, 'start', '0'))
                     clip_length = float(xml_getvalue(MIDICLIP_part, 'length', '0'))
                     clip_offset = float(xml_getvalue(MIDICLIP_part, 'offset', '0'))
@@ -108,8 +109,8 @@ class input_cvpj_f(plugin_input.base):
                     placement_obj.duration = clip_length
                     if clip_loopStartBeats == 0 and clip_loopLengthBeats == 0:
                         if clip_start == 0:
-                            self.cut_type = 'cut'
-                            self.cut_data['start'] = clip_offset
+                            placement_obj.cut_type = 'cut'
+                            placement_obj.cut_data['start'] = clip_offset
                     else:
                         placement_obj.cut_loop_data(clip_offset, clip_loopStartBeats, clip_loopStartBeats+clip_loopLengthBeats)
     
@@ -126,9 +127,3 @@ class input_cvpj_f(plugin_input.base):
                 get_plugins(convproj_obj, xml_part, track_obj)
 
                 tracknum += 1
-
-        convproj_obj.timesig = timesig
-        convproj_obj.params.add('bpm', tempo, 'float')
-
-        return json.dumps(cvpj_l)
-

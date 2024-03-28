@@ -28,11 +28,12 @@ def makechannel(i_type):
       "effects": [],
     }
 
-def set_asdr(sng_instparams, vol_adsr_obj):
-    add_sndinstparam(sng_instparams, 'attack', vol_adsr_obj.attack, [])
-    add_sndinstparam(sng_instparams, 'sustain', vol_adsr_obj.sustain, [])
-    add_sndinstparam(sng_instparams, 'decay', vol_adsr_obj.decay, [])
-    add_sndinstparam(sng_instparams, 'release', vol_adsr_obj.release, [])
+def set_asdr(sng_instparams, plugin_obj):
+    adsr_obj = plugin_obj.env_asdr_get('vol')
+    add_sndinstparam(sng_instparams, 'attack', adsr_obj.attack, [])
+    add_sndinstparam(sng_instparams, 'sustain', adsr_obj.sustain, [])
+    add_sndinstparam(sng_instparams, 'decay', adsr_obj.decay, [])
+    add_sndinstparam(sng_instparams, 'release', adsr_obj.release, [])
 
 def add_sndinstparam(i_dict, i_name, i_value, i_auto): 
     if i_auto != None: i_dict[i_name] = {"value": i_value, "automation": i_auto}
@@ -60,7 +61,7 @@ def add_fx(convproj_obj, sng_trkdata, fxchain_audio):
                 paramlist = dataset.params_list('plugin', plugin_obj.plugin_subtype)
                 if paramlist:
                     for snd_param in paramlist:
-                        ap_f, ap_d = convproj_obj.get_autopoints(['plugin',pluginid,snd_param])
+                        ap_f, ap_d = convproj_obj.automation.get_autopoints(['plugin',pluginid,snd_param])
                         autodata = cvpjauto_to_sngauto(autodata, ticksdiv) if ap_f else []
                         cvpjiparam_to_sngparam(plugin_obj, sng_fxdata, pluginid, snd_param, 0, autodata)
                 sng_fxchain.append(sng_fxdata)
@@ -97,14 +98,14 @@ def trackparams(track_obj, sng_trkdata, visual_obj, params_obj, start_str, fallb
 
 
 def auto_volpan(convproj_obj, sng_trkdata, autoloc):
-    v_ap_f, v_ap_d = convproj_obj.get_autopoints(autoloc+['vol'])
-    p_ap_f, p_ap_d = convproj_obj.get_autopoints(autoloc+['pan'])
+    v_ap_f, v_ap_d = convproj_obj.automation.get_autopoints(autoloc+['vol'])
+    p_ap_f, p_ap_d = convproj_obj.automation.get_autopoints(autoloc+['pan'])
     if v_ap_f:
         v_ap_d.remove_instant()
         sng_trkdata['volumeAutomation'] = cvpjauto_to_sngauto(v_ap_d)
     if p_ap_f:
         p_ap_d.remove_instant()
-        v_ap_d.addmul(1, 0.5)
+        p_ap_d.addmul(1, 0.5)
         sng_trkdata['panAutomation'] = cvpjauto_to_sngauto(p_ap_d)
 
 class output_soundation(plugin_output.base):
@@ -114,15 +115,13 @@ class output_soundation(plugin_output.base):
     def getshortname(self): return 'soundation'
     def gettype(self): return 'r'
     def plugin_archs(self): return None
-    def getdawcapabilities(self): 
-        return {
-        'placement_cut': True,
-        'placement_loop': ['loop'],
-        'auto_nopl': True
-        }
-    def getsupportedplugformats(self): return ['midi']
-    def getsupportedplugins(self): return []
-    def getfileextension(self): return 'sng'
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Soundation'
+        dawinfo_obj.file_ext = 'sng'
+        dawinfo_obj.placement_cut = True
+        dawinfo_obj.placement_loop = ['loop']
+        dawinfo_obj.plugin_included = ['sampler:single','synth-nonfree:europa','native-soundation','midi']
+        dawinfo_obj.auto_types = ['nopl_points']
     def parse(self, convproj_obj, output_file):
         global dataset
 
@@ -227,12 +226,12 @@ class output_soundation(plugin_output.base):
                             sng_instparams['identifier'] = plugin_obj.plugin_subtype
                             if plugin_obj.plugin_subtype == 'com.soundation.GM-2':
                                 cvpjidata_to_sngparam(plugin_obj, sng_instparams, track_obj.inst_pluginid, 'sample_pack', '2_0_Bright_Yamaha_Grand.smplpck')
-                                set_asdr(sng_instparams, vol_adsr_obj)
+                                set_asdr(sng_instparams, plugin_obj)
 
                             elif plugin_obj.plugin_subtype == 'com.soundation.SAM-1':
                                 sample_pack = plugin_obj.datavals.get('sample_pack', None)
                                 sng_instparams['sample_pack'] = sample_pack
-                                set_asdr(sng_instparams, vol_adsr_obj)
+                                set_asdr(sng_instparams, plugin_obj)
 
                             elif plugin_obj.plugin_subtype == 'com.soundation.simple':
 
@@ -254,12 +253,12 @@ class output_soundation(plugin_output.base):
                                     cvpjiparam_to_sngparam(plugin_obj, sng_instparams, track_obj.inst_pluginid, snd_param, 0, [])
 
                             elif plugin_obj.plugin_subtype == 'com.soundation.supersaw':
-                                set_asdr(sng_instparams, vol_adsr_obj)
+                                set_asdr(sng_instparams, plugin_obj)
                                 for snd_param in ["detune", "spread"]:
                                     cvpjiparam_to_sngparam(plugin_obj, sng_instparams, track_obj.inst_pluginid, snd_param, 0, [])
 
                             elif plugin_obj.plugin_subtype == 'com.soundation.noiser':
-                                set_asdr(sng_instparams, vol_adsr_obj)
+                                set_asdr(sng_instparams, plugin_obj)
 
                             elif plugin_obj.plugin_subtype == 'com.soundation.drummachine':
                                 for paramname in ["gain_2", "hold_1", "pitch_6", "gain_1", "decay_5", "gain_5", "hold_0", "hold_2", "pitch_7", "gain_0", "decay_6", "gain_3", "hold_5", "pitch_3", "decay_4", "pitch_4", "gain_6", "decay_7", "pitch_2", "hold_6", "decay_1", "decay_3", "decay_0", "decay_2", "gain_7", "pitch_0", "pitch_5", "hold_3", "pitch_1", "hold_4", "hold_7", "gain_4"]:
@@ -280,7 +279,7 @@ class output_soundation(plugin_output.base):
                                 for snd_param in snd_params:
                                     cvpjiparam_to_sngparam(plugin_obj, sng_instparams, track_obj.inst_pluginid, snd_param, 0, [])
 
-                    if not inst_supported:
+                    if not inst_supported and plugin_obj:
                         if len(plugin_obj.oscs) == 1:
                             s_osc = plugin_obj.oscs[0]
                             if s_osc.shape == 'sine': gm2_samplepack = '81_8_Sine_Wave.smplpck'
@@ -288,18 +287,23 @@ class output_soundation(plugin_output.base):
                             if s_osc.shape == 'triangle': gm2_samplepack = '85_0_Charang.smplpck'
                             if s_osc.shape == 'saw': gm2_samplepack = '82_0_Saw_Wave.smplpck'
                             add_sndinstparam(sng_instparams, 'sample_pack', gm2_samplepack, None)
-                            set_asdr(sng_instparams, vol_adsr_obj)
+                            set_asdr(sng_instparams, plugin_obj)
                         else:
                             midi_found, midi_bank, midi_inst, midi_drum = track_obj.get_midi(convproj_obj)
                             gm2_samplepack = idvals_inst_gm2.get_idval(str(midi_inst+1)+'_'+str(midi_bank), 'url')
                             if midi_drum: gm2_samplepack = idvals_inst_gm2.get_idval(str(midi_bank+127)+'_0', 'url')
                             add_sndinstparam(sng_instparams, 'sample_pack', gm2_samplepack, None)
-                            set_asdr(sng_instparams, vol_adsr_obj)
+                            set_asdr(sng_instparams, plugin_obj)
+                    else:
+                        midi_found, midi_bank, midi_inst, midi_drum = track_obj.get_midi(convproj_obj)
+                        gm2_samplepack = idvals_inst_gm2.get_idval(str(midi_inst+1)+'_'+str(midi_bank), 'url')
+                        if midi_drum: gm2_samplepack = idvals_inst_gm2.get_idval(str(midi_bank+127)+'_0', 'url')
+                        add_sndinstparam(sng_instparams, 'sample_pack', gm2_samplepack, None)
 
                     if track_obj.visual.name: sng_trkdata['userSetName'] = track_obj.visual.name
                     sng_trkdata['regions'] = []
 
-                    for notespl_obj in track_obj.placements.iter_notes():
+                    for notespl_obj in track_obj.placements.pl_notes:
                         sng_region = {}
                         if notespl_obj.visual.color: sng_region["color"] = int.from_bytes(struct.pack("3B", *colors.rgb_float_to_rgb_int(notespl_obj.visual.color)), "little")
                         sng_region["position"] = int(notespl_obj.position)
@@ -310,7 +314,7 @@ class output_soundation(plugin_output.base):
                         if notespl_obj.cut_type in ['loop', 'loop_off']:
                             sng_region["length"] = notespl_obj.cut_data['loopend']
                             sng_region["loopcount"] = notespl_obj.duration/notespl_obj.cut_data['loopend']
-                            if notespl_obj.cut_data['type'] == 'loop_off': 
+                            if notespl_obj.cut_type == 'loop_off': 
                                 sng_region["contentPosition"] = -(notespl_obj.cut_data['start'])
 
                         if notespl_obj.cut_type == 'cut': 

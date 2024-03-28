@@ -20,12 +20,25 @@ def convert(convproj_obj):
 
     splitted_trks = {}
     for trackid, track_obj in convproj_obj.iter_track():
-        used_insts = track_obj.placements.used_notes()
+
         splitted_pl = track_obj.placements.inst_split()
-        for inst_id, placements in splitted_pl.items():
-            if inst_id not in splitted_trks: splitted_trks[inst_id] = []
-            if inst_id in convproj_obj.instruments:
-                inst_obj = convproj_obj.instruments[inst_id]
+        splitted_nl = track_obj.placements.notelist.inst_split()
+
+        comb_split = {}
+        for i, d in splitted_pl.items():
+            if i not in comb_split: comb_split[i] = [None, None]
+            comb_split[i][0] = d
+
+        for i, d in splitted_nl.items():
+            if i not in comb_split: comb_split[i] = [None, None]
+            comb_split[i][1] = d
+
+        for i, d in comb_split.items():
+            pls, nl = d
+            if i not in splitted_trks: splitted_trks[i] = []
+            if i in convproj_obj.instruments:
+                inst_obj = convproj_obj.instruments[i]
+
                 new_track_obj = track_obj.make_base_inst(inst_obj)
                 used_plugins.append(new_track_obj.inst_pluginid)
 
@@ -37,18 +50,20 @@ def convert(convproj_obj):
                 if not new_track_obj.visual.color: new_track_obj.visual.color = inst_obj.visual.color
             else:
                 new_track_obj = track_obj.make_base()
-                new_track_obj.visual.name = inst_id+' ('+new_track_obj.visual.name+')'
-            splitted_trks[inst_id].append([trackid, new_track_obj, placements])
+                new_track_obj.visual.name = i+' ('+new_track_obj.visual.name+')'
+
+            splitted_trks[i].append([trackid, new_track_obj, pls, nl])
 
     for x in old_track_order:
         convproj_obj.track_order.remove(x)
         del convproj_obj.track_data[x]
 
     for xc, trackdata in splitted_trks.items():
-        for oldtrackid, track_obj, track_pls in trackdata:
+        for oldtrackid, track_obj, track_pls, track_nl in trackdata:
             cvpj_trackid = 'rm2r_'+xc+'_'+oldtrackid
             track_obj.type = 'instrument'
-            track_obj.placements.data_notes = track_pls
+            if track_pls: track_obj.placements.pl_notes.data = track_pls
+            if track_nl: track_obj.placements.notelist = track_nl
             convproj_obj.track_data[cvpj_trackid] = track_obj
             convproj_obj.track_order.append(cvpj_trackid)
 

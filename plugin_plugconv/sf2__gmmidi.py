@@ -8,10 +8,10 @@ class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['midi', None, None], ['soundfont2', None, None], False, True
-    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
-        if 'soundfont' in extra_json:
+    def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, plugtransform):
+        if dv_config.path_soundfont_gm:
             print('[plug-conv] MIDI to SoundFont2:',pluginid)
-            sf2_path = extra_json['soundfont']
+            sf2_path = dv_config.path_soundfont_gm
             v_drums = plugin_obj.datavals.get('is_drum', False)
             v_bank = plugin_obj.datavals.get('bank', 0)
             v_inst = plugin_obj.datavals.get('patch', 1)-1

@@ -18,6 +18,7 @@ import plugin_input
 import json
 import gzip
 import math
+import os
 
 colorlist = ['FF94A6','FFA529','CC9927','F7F47C','BFFB00','1AFF2F','25FFA8','5CFFE8','8BC5FF','5480E4','92A7FF','D86CE4','E553A0','FFFFFF','FF3636','F66C03','99724B','FFF034','87FF67','3DC300','00BFAF','19E9FF','10A4EE','007DC0','886CE4','B677C6','FF39D4','D0D0D0','E2675A','FFA374','D3AD71','EDFFAE','D2E498','BAD074','9BC48D','D4FDE1','CDF1F8','B9C1E3','CDBBE4','AE98E5','E5DCE1','A9A9A9','C6928B','B78256','99836A','BFBA69','A6BE00','7DB04D','88C2BA','9BB3C4','85A5C2','8393CC','A595B5','BF9FBE','BC7196','7B7B7B','AF3333','A95131','724F41','DBC300','85961F','539F31','0A9C8E','236384','1A2F96','2F52A2','624BAD','A34BAD','CC2E6E','3C3C3C']
 colorlist_one = [colors.hex_to_rgb_float(color) for color in colorlist]
@@ -61,7 +62,7 @@ def get_param(xmldata, varname, vartype, fallback, i_loc, i_addmul):
 	else:
 		return fallback
 
-def get_auto(x_track_data): 
+def get_auto(x_track_data, convproj_obj): 
 	global autoid_assoc
 	track_AutomationEnvelopes = x_track_data.findall('AutomationEnvelopes')[0]
 	track_Envelopes = track_AutomationEnvelopes.findall('Envelopes')[0]
@@ -71,12 +72,9 @@ def get_auto(x_track_data):
 		env_AutoEvents = env_Automation.findall('Events')[0]
 		autotarget = int(get_value(env_EnvelopeTarget, 'PointeeId', None))
 
-		autopl_obj = autoid_assoc.add_pl(autotarget, 'float')
 		for env_AutoEvent in env_AutoEvents:
 			if env_AutoEvent.tag == 'FloatEvent':
-				autopoint_obj = autopl_obj.data.add_point()
-				autopoint_obj.pos = float(env_AutoEvent.get('Time'))*4
-				autopoint_obj.value = float(env_AutoEvent.get('Value'))
+				convproj_obj.automation.add_autopoint(['id', str(autotarget)], 'float', float(env_AutoEvent.get('Time'))*4, float(env_AutoEvent.get('Value')), 'normal')
 
 def get_sampleref(convproj_obj, xmldata):
 	x_sampleref = xmldata.findall('SampleRef')[0]
@@ -193,6 +191,7 @@ def get_MultiSampleMap(x_MultiSampleMap):
 
 
 def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
+	global vector_shapesdata
 	for x_trackdevice in x_trackdevices:
 		able_plug_id = x_trackdevice.get('Id')
 		if track_id != None: pluginid = track_id+'_'+able_plug_id
@@ -203,6 +202,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 
 		if devicename in ['OriginalSimpler', 'MultiSampler']:
 			plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
+			plugin_obj.role = 'synth'
 			track_obj.inst_pluginid = pluginid
 
 			x_samp_Player = x_trackdevice.findall('Player')[0]
@@ -327,20 +327,45 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 						modcons.append(s_modcon)
 					plugin_obj.datavals.add('ModulationConnections', modcons)
 
+					presetpath_x = get_nested_xml(x_trackdevice, ['LastPresetRef', 'Value', 'AbletonDefaultPresetRef', 'FileRef', 'Path'])
+					if presetpath_x == None: presetpath_x = get_nested_xml(x_trackdevice, ['LastPresetRef', 'Value', 'FilePresetRef', 'FileRef', 'Path'])
+					presetpath = presetpath_x.get('Value') if presetpath_x != None else None
+
+					if presetpath != None and vector_shapesdata == None:
+						presetsplit = presetpath.split('/')
+						if 'Resources':
+							resourcesind = presetsplit.index('Resources')
+							presetsplit = presetsplit[0:resourcesind+1]+['Builtin','Samples','Vector','Sprites']
+							fullpath = '/'.join(presetsplit)
+							if os.path.exists(fullpath):
+								vector_shapesdata = {}
+								for samplename in os.listdir(fullpath):
+									noext = samplename.split('.wav')[0]
+									if len(noext) > 1:
+										vector_shapesdata[noext.split(' ', 1)[1]] = '/'.join(presetsplit+[samplename])
+					
 					for num in range(2):
+						SpriteName = get_value(x_trackdevice, 'SpriteName'+str(num+1), None)
 						UserSpriteNum = 'UserSprite'+str(num+1)
 						x_UserSprite = x_trackdevice.findall(UserSpriteNum)
 						if x_UserSprite:
 							x_UserSpriteVal = x_UserSprite[0].findall('Value')
 							if x_UserSpriteVal:
 								if x_UserSpriteVal[0].findall('SampleRef'):
-									plugin_obj.samplerefs['sample'] = get_sampleref(convproj_obj, x_UserSpriteVal[0])['file']
+									plugin_obj.samplerefs['sample'+str(num+1)] = get_sampleref(convproj_obj, x_UserSpriteVal[0])
+								else:
+									if SpriteName in vector_shapesdata:
+										filename = vector_shapesdata[SpriteName]
+										convproj_obj.add_sampleref(filename, filename)
+										plugin_obj.samplerefs['sample'+str(num+1)] = filename
 
 				if device_type == (True, 'fx'):
+					plugin_obj.role = 'effect'
 					plugin_obj.fxdata_add(devfx_enabled, None)
 					track_obj.fxslots_audio.append(pluginid)
 
 				if device_type == (True, 'inst'):
+					plugin_obj.role = 'synth'
 					track_obj.inst_pluginid = pluginid
 
 			#else:
@@ -531,12 +556,15 @@ class input_ableton(plugin_input.base):
 		'placement_audio_stretch': ['warp'],
 		'auto_nopl': True,
 		}
-	def parse(self, convproj_obj, input_file, extra_param):
+	def parse(self, convproj_obj, input_file, dv_config):
 		global abletondatadef_params
 		global abletondatadef_data
 		global dataset
 		global autoid_assoc
 		global tempomul
+		global vector_shapesdata
+		
+		vector_shapesdata = None
 
 		xmlstring = ""
 
@@ -736,6 +764,10 @@ class input_ableton(plugin_input.base):
 					audio_placement_Fade = ['false','true'].index(get_value(x_track_AudioClip, 'Fade', 'false'))
 					x_track_AudioClip_fades = x_track_AudioClip.findall('Fades')[0]
 
+					audio_placement_PitchCoarse = float(get_value(x_track_AudioClip, 'PitchCoarse', 0))
+					audio_placement_PitchFine = float(get_value(x_track_AudioClip, 'PitchFine', 0))
+					placement_obj.pitch = audio_placement_PitchCoarse + audio_placement_PitchFine/100
+
 					if audio_placement_Fade == 1:
 						placement_obj.fade_in['duration'] = float(get_value(x_track_AudioClip_fades, 'FadeInLength', 0))*8
 						placement_obj.fade_in['skew'] = float(get_value(x_track_AudioClip_fades, 'FadeInCurveSkew', 0))
@@ -775,12 +807,10 @@ class input_ableton(plugin_input.base):
 							warp_pos_real = float(x_track_AudioClip_WarpMarker.get('SecTime'))
 							placement_obj.stretch.warp.append([warp_pos, warp_pos_real])
 					else:
+						pitchcalc = math.pow(2, placement_obj.pitch/12)
 						placement_obj.stretch.is_warped = False
-						placement_obj.stretch.rate = (tempo/120)
-
-					audio_placement_PitchCoarse = float(get_value(x_track_AudioClip, 'PitchCoarse', 0))
-					audio_placement_PitchFine = float(get_value(x_track_AudioClip, 'PitchFine', 0))
-					placement_obj.pitch = audio_placement_PitchCoarse + audio_placement_PitchFine/100
+						placement_obj.stretch.set_rate_speed(tempo, pitchcalc, False)
+						placement_obj.stretch.uses_tempo = False
 
 					#for value in ["CurrentStart", "CurrentEnd", "StartRelative", "LoopStart", "LoopEnd"]:
 					#	print(str(get_value(x_track_AudioClip, value, 0)).ljust(20), end=' ')
@@ -790,11 +820,11 @@ class input_ableton(plugin_input.base):
 
 					if audio_placement_warp_on == False:
 						if audio_placement_loop_on == 0:
-							out_is_speed, out_rate = placement_obj.stretch.get(tempo, False)
-
 							placement_obj.cut_type = 'cut'
-							placement_obj.cut_data['start'] = audio_placement_loop_l_start*2
-							placement_obj.duration /= out_rate
+							pitchcalc = math.pow(2, placement_obj.pitch/12)
+							placement_obj.cut_data['start'] = audio_placement_loop_l_start*2/pitchcalc
+							placement_obj.duration *= pitchcalc
+							placement_obj.duration /= placement_obj.stretch.calc_tempo_speed
 					else:
 						if audio_placement_loop_on == 0:
 							placement_obj.cut_type = 'cut'
@@ -806,7 +836,7 @@ class input_ableton(plugin_input.base):
 							placement_obj.cut_data['loopend'] = audio_placement_loop_l_end
 
 			if tracktype == 'ReturnTrack':
-				get_auto(x_track_data)
+				get_auto(x_track_data, convproj_obj)
 				cvpj_returntrackid = 'return_'+str(returnid)
 				fxloc = ['return', None, cvpj_returntrackid]
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['return', cvpj_returntrackid, 'vol'], None)
@@ -819,7 +849,7 @@ class input_ableton(plugin_input.base):
 				returnid += 1
 
 			if tracktype == 'GroupTrack':
-				get_auto(x_track_data)
+				get_auto(x_track_data, convproj_obj)
 				cvpj_grouptrackid = 'group_'+str(track_id)
 				fxloc = ['group', cvpj_grouptrackid]
 				track_vol = get_param(x_track_Mixer, 'Volume', 'float', 0, ['group', cvpj_grouptrackid, 'vol'], None)
@@ -834,7 +864,7 @@ class input_ableton(plugin_input.base):
 
 			sendcount = 1
 			if fxloc != None:
-				get_auto(x_track_data)
+				get_auto(x_track_data, convproj_obj)
 				for track_sendholder in track_sendholders:
 					sendid = sendcount
 					sendautoid = 'send_'+track_id+'_'+str(sendid)
@@ -849,6 +879,6 @@ class input_ableton(plugin_input.base):
 		#for devicename in _______paramfinder_param:
 		#	print('"'+devicename+'":', _______paramfinder_param[devicename],',')
 
-		get_auto(x_MasterTrack)
+		get_auto(x_MasterTrack, convproj_obj)
 
 		autoid_assoc.output(convproj_obj)

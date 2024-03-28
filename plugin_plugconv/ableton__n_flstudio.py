@@ -10,10 +10,10 @@ class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['native-flstudio', None, 'flp'], ['native-ableton', None, 'ableton'], True, False
-    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
-        plugintype = cvpj_plugindata.type_get()
+    def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, plugtransform):
+        plugintype = plugin_obj.plugin_subtype
 
-        if plugin_obj.plugin_subtype.lower() == 'fruity balance':  
+        if plugintype == 'fruity balance':  
             print('[plug-conv] FL Studio to Ableton: Fruity Balance > StereoGain:',pluginid)
             bal_pan = plugin_obj.params.get('pan', 0).value
             bal_vol = plugin_obj.params.get('vol', 256).value

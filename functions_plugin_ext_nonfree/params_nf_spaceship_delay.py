@@ -51,8 +51,7 @@ class spaceship_delay_data:
 	def set_param(self, name, value):
 		self.params[name] = value
 	
-	def to_cvpj_vst2(self, cvpj_plugindata):
+	def to_cvpj_vst3(self, convproj_obj, plugin_obj):
         xmldata = ET.Element("SPSHIPDELAY1.0.5")  
-        for key, value in self.params.iteritems():
-        	xmldata.set(key) = value
-		plugin_vst2.replace_data(convproj_obj, cvpj_plugindata, 'id', 'any', 1181644592, 'chunk', data_vc2xml.make(xmldata), None)
+        for key, value in self.params.iteritems(): xmldata.set(key) = value
+		plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'any', 1181644592, 'chunk', data_vc2xml.make(xmldata), None)

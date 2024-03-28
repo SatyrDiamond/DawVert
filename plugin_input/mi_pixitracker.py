@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_bytes
-from functions import audio_wav
+from objects_file import audio_wav
 import plugin_input
 import json
 import struct
@@ -14,14 +14,14 @@ class input_cvpj_f(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'pixitracker'
-    def getname(self): return 'pixitracker'
     def gettype(self): return 'mi'
     def supported_autodetect(self): return True
-    def getdawcapabilities(self): 
-        return {
-        'samples_inside': True,
-        'track_lanes': True,
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Pixitracker'
+        dawinfo_obj.file_ext = 'piximod'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.audio_filetypes = ['wav']
+        dawinfo_obj.plugin_included = ['sampler:single']
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
         bytestream.seek(0)
@@ -29,16 +29,16 @@ class input_cvpj_f(plugin_input.base):
         if bytesdata == b'PIXIMOD1': return True
         else: return False
 
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         convproj_obj.type = 'mi'
         convproj_obj.set_timings(4, False)
 
         song_file = open(input_file, 'rb')
-        pixi_chunks = data_bytes.riff_read(song_file, 8)
+        pixi_chunks = data_bytes.iff_read(song_file, 8)
         pixi_data_patterns = {}
         pixi_data_sounds = []
 
-        samplefolder = extra_param['samplefolder']
+        samplefolder = dv_config.path_samples_extracted
         
         for _ in range(16): pixi_data_sounds.append([None,None,None,None,None,None,None,None])
 
@@ -143,7 +143,11 @@ class input_cvpj_f(plugin_input.base):
             if pixi_data_sounds[instnum] != [None,None,None,None,None,None,None,None]:
                 t_sounddata = pixi_data_sounds[instnum]
                 wave_path = samplefolder + str(instnum) + '.wav'
-                audio_wav.generate(wave_path, t_sounddata[7], t_sounddata[0], t_sounddata[1], 16, None)
+                
+                wavfile_obj = audio_wav.wav_main()
+                wavfile_obj.set_freq(t_sounddata[1])
+                wavfile_obj.data_add_data(16, t_sounddata[0], False, t_sounddata[7])
+                wavfile_obj.write(wave_path)
 
                 plugin_obj, inst_obj.pluginid, sampleref_obj = convproj_obj.add_plugin_sampler_genid(wave_path)
 
@@ -172,7 +176,7 @@ class input_cvpj_f(plugin_input.base):
         for patnum in pixi_patternorder:
             patlen = pixi_data_patterns[pixi_data_pattern][0]
 
-            cvpj_placement = playlist_obj.placements.add_notes()
+            cvpj_placement = playlist_obj.placements.add_notes_indexed()
             cvpj_placement.fromindex = 'pixi_'+str(patnum)
             cvpj_placement.position = placements_pos
             cvpj_placement.duration = patlen

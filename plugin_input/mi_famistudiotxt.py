@@ -6,9 +6,9 @@ import plugin_input
 import json
 from functions import data_values
 from functions import xtramath
-from functions import audio_wav
 
 from objects import dv_dataset
+from objects_file import audio_wav
 
 dpcm_rate_arr = [4181.71,4709.93,5264.04,5593.04,6257.95,7046.35,7919.35,8363.42,9419.86,11186.1,12604.0,13982.6,16884.6,21306.8,24858.0,33143.9]
 
@@ -303,6 +303,7 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
     if WaveType == 'EPSM_Rimshot': 
         plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('epsm_rhythm', 'rimshot')
 
+    plugin_obj.role = 'synth'
     #print('DATA ------------' , fst_Instrument)
     #print('OUT ------------' , plugname, cvpj_plugdata)
 
@@ -327,6 +328,7 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fx_num, fst_instrument):
     inst_obj.visual.name = 'DPCM'
     inst_obj.fxrack_channel = fx_num
     plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
+    plugin_obj.role = 'synth'
 
     for dpcmmap in DPCMMappings:
         dpcmdata = DPCMMappings[dpcmmap]
@@ -336,7 +338,10 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fx_num, fst_instrument):
         if dpcm_sample in DPCMSamples:
             if instname: filename = samplefolder+'dpcm_'+instname+'_'+dpcm_sample+'_'+str(dpcm_pitch)+'.wav'
             else: filename = samplefolder+'dpcmg_'+dpcm_sample+'_'+str(dpcm_pitch)+'.wav'
-            audio_wav.generate(filename, DPCMSamples[dpcm_sample], 1, int(dpcm_rate_arr[dpcm_pitch]), 8, None)
+            wavfile_obj = audio_wav.wav_main()
+            wavfile_obj.set_freq(int(dpcm_rate_arr[dpcm_pitch]))
+            wavfile_obj.data_add_data(8, 1, False, DPCMSamples[dpcm_sample])
+            wavfile_obj.write(filename)
             correct_key = dpcmmap+24
             sampleref_obj = convproj_obj.add_sampleref(filename, filename)
             regionparams = {}
@@ -408,16 +413,16 @@ class input_famistudio(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'famistudio_txt'
-    def getname(self): return 'FamiStudio Text'
     def gettype(self): return 'mi'
-    def getdawcapabilities(self): 
-        return {
-        'samples_inside': True,
-        'track_lanes': True,
-        'auto_nopl': True,
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'FamiStudio Text'
+        dawinfo_obj.file_ext = 'txt'
+        dawinfo_obj.auto_types = ['nopl_points']
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.audio_filetypes = ['wav']
+        dawinfo_obj.plugin_included = ['epsm_rhythm','fds','fm:epsm','fm:vrc7','namco163_famistudio','sampler:multi','universal:synth-osc']
     def supported_autodetect(self): return False
-    def parse(self, i_convproj_obj, input_file, extra_param):
+    def parse(self, i_convproj_obj, input_file, dv_config):
         global samplefolder
         global dataset
         global convproj_obj
@@ -426,7 +431,7 @@ class input_famistudio(plugin_input.base):
         convproj_obj.type = 'mi'
         convproj_obj.set_timings(4, True)
 
-        samplefolder = extra_param['samplefolder']
+        samplefolder = dv_config.path_samples_extracted
         fst_Main = decode_fst(input_file)
         dataset = dv_dataset.dataset('./data_dset/famistudio.dset')
         
@@ -435,8 +440,7 @@ class input_famistudio(plugin_input.base):
         DPCMMappings = fst_Main['DPCMMappings']
         DPCMSamples = fst_Main['DPCMSamples']
         songnamelist = list(fst_Main['Songs'].keys())
-        if 'songnum' in extra_param: fst_currentsong = fst_Main['Songs'][songnamelist[int(extra_param['songnum'])-1]]
-        else: fst_currentsong = fst_Main['Songs'][songnamelist[0]]
+        fst_currentsong = fst_Main['Songs'][songnamelist[dv_config.songnum-1]]
 
         fst_channels = fst_currentsong['Channels']
         fst_beatlength = int(fst_currentsong['BeatLength'])
@@ -506,14 +510,17 @@ class input_famistudio(plugin_input.base):
 
                                 if ChannelName[0:6] == 'EPSMFM': t_key -= 12
 
-                                if cvpj_multikeys == []: nle_obj.notelist.add_m(t_instrument, t_position, t_duration, t_key, 1, {})
-                                else: nle_obj.notelist.add_m_multi(t_instrument, t_position, t_duration, [t_key+int(x) for x in cvpj_multikeys], 1, {})
+                                volume = int(notedata['Volume'])/15 if 'Volume' in notedata else 1
+                                if cvpj_multikeys == []: nle_obj.notelist.add_m(t_instrument, t_position, t_duration, t_key, volume, {})
+                                else: nle_obj.notelist.add_m_multi(t_instrument, t_position, t_duration, [t_key+int(x) for x in cvpj_multikeys], volume, {})
 
                                 if 'SlideTarget' in notedata:
                                     t_slidenote = NoteToMidi(notedata['SlideTarget']) + 24
                                     nle_obj.notelist.last_add_slide(0, t_duration, t_slidenote-t_key, None, None)
-                                    nle_obj.notelist.last_add_auto('pitch', 0, 0, 'normal', 0)
-                                    nle_obj.notelist.last_add_auto('pitch', t_duration, t_slidenote-t_key, 'normal', 0)
+                                    autopoint_obj = nle_obj.notelist.last_add_auto('pitch')
+                                    autopoint_obj = nle_obj.notelist.last_add_auto('pitch')
+                                    autopoint_obj.pos = t_duration
+                                    autopoint_obj.value = t_slidenote-t_key
 
                         else:
                             if 'Instrument' in notedata: nle_obj.notelist.add_m('DPCM'+'-'+notedata['Instrument'], t_position, t_duration, t_key, 1, {})
@@ -525,9 +532,9 @@ class input_famistudio(plugin_input.base):
                 fst_PData = Channel_Instances[fst_Placement]
                 fst_time = int(fst_PData['Time'])
 
-                cvpj_placement = playlist_obj.placements.add_notes()
+                cvpj_placement = playlist_obj.placements.add_notes_indexed()
                 cvpj_placement.fromindex = Channel+'-'+fst_PData['Pattern']
-                cvpj_placement.position = int(fst_PData['Time'])*(fst_beatlength*4)
+                cvpj_placement.position = PointsPos[int(fst_PData['Time'])]
                 cvpj_placement.duration = PatternLengthList[durationnum]
 
         convproj_obj.add_timesig_lengthbeat(PatternLength, fst_beatlength)

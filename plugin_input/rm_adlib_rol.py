@@ -104,17 +104,16 @@ def parsetrack(convproj_obj, file_stream, tracknum):
     print('[input-adlib_rol] Track: "'+rol_tr_voice[0]+'"')
     track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 0, False)
     track_obj.visual.name = rol_tr_voice[0]
-    placement_obj = track_obj.placements.add_notes()
 
     curtrackpos = 0
     for rol_notedata in rol_tr_voice[1]:
         if rol_notedata[0] >= 12:
             cvpj_noteinst = rol_tr_timbre[1][data_values.closest(timbrepoints, curtrackpos)]
-            placement_obj.notelist.add_m(cvpj_noteinst.upper(), curtrackpos, rol_notedata[1], rol_notedata[0]-48, 1, {})
+            track_obj.placements.notelist.add_m(cvpj_noteinst.upper(), curtrackpos, rol_notedata[1], rol_notedata[0]-48-12, 1, {})
         curtrackpos += rol_notedata[1]
 
-    for a in rol_tr_volume[1]: convproj_obj.add_autotick(['track', cvpj_trackid, 'vol'], a[0], a[1])
-    for a in rol_tr_pitch[1]: convproj_obj.add_autotick(['track', cvpj_trackid, 'pitch'], a[0], a[1])
+    for a in rol_tr_volume[1]: convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'vol'], 'float', a[0], a[1])
+    for a in rol_tr_pitch[1]: convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'pitch'], 'float', a[0], a[1])
     
 # --------------------------------------- Plugin ----------------------------------------
 
@@ -122,13 +121,13 @@ class input_adlib_rol(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'adlib_rol'
-    def getname(self): return 'AdLib Visual Composer'
     def gettype(self): return 'rm'
-    def getdawcapabilities(self): 
-        return {
-        'auto_nopl': True,
-        'track_nopl': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'AdLib Visual Composer'
+        dawinfo_obj.file_ext = 'rol'
+        dawinfo_obj.auto_types = ['nopl_ticks']
+        dawinfo_obj.track_nopl = True
+        dawinfo_obj.plugin_included = ['fm:opl2']
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -136,7 +135,7 @@ class input_adlib_rol(plugin_input.base):
         bytesdata = bytestream.read(40)
         if bytesdata == b'\\roll\\default\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00': return True
         else: return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         convproj_obj.type = 'rm'
 
         song_file = open(input_file, 'rb')
@@ -144,8 +143,8 @@ class input_adlib_rol(plugin_input.base):
         dataset_midi = dv_dataset.dataset('./data_dset/midi.dset')
 
         adlib_bnk = None
-        if 'extrafile' in extra_param:
-            adlib_bnk = load_bank(extra_param['extrafile'])
+        if dv_config.path_extrafile:
+            adlib_bnk = load_bank(dv_config.path_extrafile)
             numinst = len(adlib_bnk[0])
             for instname in adlib_bnk[0]:
                 instname_upper = instname.upper()
@@ -240,7 +239,7 @@ class input_adlib_rol(plugin_input.base):
         song_file.read(38) #Padding
         t_tempo_data = parsetrack_tempo(song_file)
 
-        for a in t_tempo_data[2]: convproj_obj.add_autotick(['track', 'bpm'], a[0], a[1])
+        for a in t_tempo_data[2]: convproj_obj.automation.add_autotick(['track', 'bpm'], 'float', a[0], a[1])
         for tracknum in range(10): parsetrack(convproj_obj, song_file, tracknum)
         
         convproj_obj.do_actions.append('do_addloop')

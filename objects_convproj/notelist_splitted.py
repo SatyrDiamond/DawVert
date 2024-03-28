@@ -3,7 +3,7 @@
 
 from functions import xtramath
 from objects_convproj import notelist
-from objects import convproj_placements
+from objects_convproj import placements_notes
 
 class cvpj_notelist_splitted:
 	def __init__(self):
@@ -58,11 +58,11 @@ class cvpj_notelist_splitted:
 				n_pl[-1][2].append(n)
 			extend = x[5]
 		
-		placements_obj.data_notes = []
+		placements_obj.pl_notes.data = []
 		for x in n_pl:
-			placement_obj = convproj_placements.cvpj_placement_notes(self.time_ppq, self.time_float)
+			placement_obj = placements_notes.cvpj_placement_notes(self.time_ppq, self.time_float)
 			placement_obj.position = x[0]
 			placement_obj.duration = x[1]-x[0]
 			placement_obj.notelist.nl = x[2]
-			placements_obj.data_notes.append(placement_obj)
+			placements_obj.pl_notes.data.append(placement_obj)
 

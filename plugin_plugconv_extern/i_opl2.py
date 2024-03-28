@@ -3,6 +3,7 @@
 
 import plugin_plugconv_extern
 from functions_plugin_ext import params_os_adlplug
+from functions import errorprint
 
 opadltxt = ['m1', 'c1', 'm2', 'c2']
 
@@ -10,9 +11,9 @@ class plugconv(plugin_plugconv_extern.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv_ext'
     def getplugconvinfo(self): return ['fm', 'opl2'], ['vst2'], None
-    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json, extplugtype):
+    def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype, plugtransform):
 
-        if extplugtype == 'vst2':
+        if 'vst2' in extplugtype:
             print('[plug-conv] Converting OPL2 to ADLplug:',pluginid)
             adlplug_data = params_os_adlplug.adlplug_data()
 
@@ -22,8 +23,8 @@ class plugconv(plugin_plugconv_extern.base):
             adlplug_data.set_param("four_op" ,0)  
             adlplug_data.set_param("pseudo_four_op" ,0)   
             adlplug_data.set_param("blank" ,0)    
-            adlplug_data.set_param("con12" ,opl_fm)
-            adlplug_data.set_param("con34" ,0)    
+            adlplug_data.set_param("con12" ,0)
+            adlplug_data.set_param("con34" ,opl_fm)    
             adlplug_data.set_param("note_offset1" ,0)
             adlplug_data.set_param("note_offset2" ,0)
             adlplug_data.set_param("fb12" ,opl_feedback)  
@@ -33,18 +34,18 @@ class plugconv(plugin_plugconv_extern.base):
             adlplug_data.set_param("percussion_key_number" ,0)
     
             for opnplugopname, cvpjopname in [['m1', 'op1'], ['c1', 'op2'], ['m2', ''], ['c2', '']]:  
-                opl_op_attack = int(plugin_obj.params.get(cvpjopname+"_env_attack", 0).value)
-                opl_op_decay = int(plugin_obj.params.get(cvpjopname+"_env_decay", 0).value)
-                opl_op_sustain = int(plugin_obj.params.get(cvpjopname+"_env_sustain", 0).value)
-                opl_op_release = int(plugin_obj.params.get(cvpjopname+"_env_release", 0).value)
-                opl_op_level = int(plugin_obj.params.get(cvpjopname+"_level", 0).value)
-                opl_op_ksl = int(plugin_obj.params.get(cvpjopname+"_ksl", 0).value)
-                opl_op_fmul = int(plugin_obj.params.get(cvpjopname+"_freqmul", 0).value)
-                opl_op_trem = int(plugin_obj.params.get(cvpjopname+"_tremolo", 0).value)
-                opl_op_vib = int(plugin_obj.params.get(cvpjopname+"_vibrato", 0).value)
-                opl_op_sus = int(plugin_obj.params.get(cvpjopname+"_sustained", 0).value)
-                opl_op_env = int(plugin_obj.params.get(cvpjopname+"_ksr", 0).value)
-                opl_op_wave = int(plugin_obj.params.get(cvpjopname+"_waveform", 0).value)
+                opl_op_attack = int(plugin_obj.params.get(cvpjopname+"/env_attack", 0).value)
+                opl_op_decay = int(plugin_obj.params.get(cvpjopname+"/env_decay", 0).value)
+                opl_op_sustain = int(plugin_obj.params.get(cvpjopname+"/env_sustain", 0).value)
+                opl_op_release = int(plugin_obj.params.get(cvpjopname+"/env_release", 0).value)
+                opl_op_level = int(plugin_obj.params.get(cvpjopname+"/level", 0).value)
+                opl_op_ksl = int(plugin_obj.params.get(cvpjopname+"/ksl", 0).value)
+                opl_op_fmul = int(plugin_obj.params.get(cvpjopname+"/freqmul", 0).value)
+                opl_op_trem = int(plugin_obj.params.get(cvpjopname+"/tremolo", 0).value)
+                opl_op_vib = int(plugin_obj.params.get(cvpjopname+"/vibrato", 0).value)
+                opl_op_sus = int(plugin_obj.params.get(cvpjopname+"/sustained", 0).value)
+                opl_op_env = int(plugin_obj.params.get(cvpjopname+"/ksr", 0).value)
+                opl_op_wave = int(plugin_obj.params.get(cvpjopname+"/waveform", 0).value)
 
                 adlplug_data.set_param(opnplugopname+"attack" ,(opl_op_attack*-1)+15)    
                 adlplug_data.set_param(opnplugopname+"decay" ,(opl_op_decay*-1)+15)  

@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import audio_wav
+from objects_file import audio_wav
 from functions import data_bytes
 from objects import dv_dataset
 import json
@@ -16,14 +16,13 @@ class input_soundclub2(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'soundclub2'
-    def getname(self): return 'Sound Club 2'
     def gettype(self): return 'ri'
-    def getdawcapabilities(self): 
-        return {
-        'samples_inside': True,
-        'track_lanes': True,
-        'auto_nopl': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Sound Club 2'
+        dawinfo_obj.file_ext = 'sn2'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.auto_types = ['pl_points']
+        dawinfo_obj.plugin_included = ['sampler:single']
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -31,7 +30,7 @@ class input_soundclub2(plugin_input.base):
         bytesdata = bytestream.read(3)
         if bytesdata == b'SN2': return True
         else: return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         convproj_obj.type = 'ri'
         convproj_obj.set_timings(4, False)
 
@@ -42,7 +41,7 @@ class input_soundclub2(plugin_input.base):
 
         print('[input-soundclub2] Tempo', sc2_globaltempo)
 
-        samplefolder = extra_param['samplefolder']
+        samplefolder = dv_config.path_samples_extracted
 
         dataset = dv_dataset.dataset('./data_dset/soundclub2.dset')
         dataset_midi = dv_dataset.dataset('./data_dset/midi.dset')
@@ -151,24 +150,26 @@ class input_soundclub2(plugin_input.base):
                         print(cvpj_instname)
                         sc2_i_unk1 = bio_sc2_insdata.read(2)
                         sc2_i_samplesize, sc2_i_loopstart, sc2_i_unk3, sc2_i_unk4, sc2_i_freq = struct.unpack("IIIHH", bio_sc2_insdata.read(16))
-                        cvpj_wavdata = bio_sc2_insdata.read()
-
-                        if sc2_i_loopstart != 4294967295:
-                            loopdata = {'loop':[sc2_i_loopstart, sc2_i_samplesize]}
-                            cvpj_loop = {'enabled': 1, 'mode': "normal", 'points': [sc2_i_loopstart, sc2_i_samplesize]}
-                        else: 
-                            loopdata = None
-                            cvpj_loop = {'enabled': 0}
+                        wave_data = bio_sc2_insdata.read()
 
                         wave_path = samplefolder + 'sc2_'+str(cur_instnum)+'.wav'
-                        audio_wav.generate(wave_path, cvpj_wavdata, 1, sc2_i_freq, 8, loopdata)
+                        wavfile_obj = audio_wav.wav_main()
+                        wavfile_obj.set_freq(sc2_i_freq)
+                        wavfile_obj.data_add_data(8, 1, False, wave_data)
+
                         plugin_obj, pluginid, sampleref_obj = convproj_obj.add_plugin_sampler_genid(wave_path)
+
+                        if sc2_i_loopstart != 4294967295:
+                            wavfile_obj.add_loop(sc2_i_loopstart, sc2_i_samplesize)
+                            plugin_obj.datavals.add('loop', {'enabled': 1, 'mode': "normal", 'points': [sc2_i_loopstart, sc2_i_samplesize]})
+
+                        wavfile_obj.write(wave_path)
+
                         sampleref_obj.dur_samples = sc2_i_samplesize
                         sampleref_obj.dur_sec = sc2_i_samplesize/sc2_i_freq
                         sampleref_obj.timebase = sc2_i_freq
                         sampleref_obj.hz = sc2_i_freq
                         plugin_obj.datavals.add('point_value_type', 'samples')
-                        plugin_obj.datavals.add('loop', cvpj_loop)
                         plugin_obj.datavals.add('length', sc2_i_samplesize)
                         track_obj = convproj_obj.add_track(cvpj_instid, 'instrument', True, True)
                         track_obj.params.add('vol', 0.3, 'float')
@@ -194,7 +195,7 @@ class input_soundclub2(plugin_input.base):
                         for n in nldata: 
                             nle_obj.notelist.add_r(n[0], n[1], n[2], n[3], {'pan': n[4]})
                             for sn in n[5]:
-                                nle_obj.notelist.last_add_slide(sn[0], sn[1], sn[2], sn[3], {'pan': n[4]})
+                                nle_obj.notelist.last_add_slide(sn[0], sn[1], sn[2]+n[2], sn[3], {'pan': n[4]})
                         nle_obj.notelist.notemod_conv()
 
         song_curpos = 0
@@ -214,8 +215,8 @@ class input_soundclub2(plugin_input.base):
             timemarker_obj = convproj_obj.add_timemarker()
             timemarker_obj.visual.name = t_patnames[patnum]
             timemarker_obj.position = song_curpos*240
-\
-            autopl_obj = convproj_obj.add_automation_pl(['main','bpm'], 'float')
+
+            autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
             autopl_obj.position = song_curpos
             autopl_obj.duration = songpartdur
             for tempop in pat_tempopoints[patnum]:
@@ -231,7 +232,7 @@ class input_soundclub2(plugin_input.base):
                 if track_found:
                     lane_obj = track_obj.add_lane(str(lane_num))
                     for p in t_laneddata[track_id][lane_num]:
-                        placement_obj = lane_obj.placements.add_notes()
+                        placement_obj = lane_obj.placements.add_notes_indexed()
                         placement_obj.position = p[0]
                         placement_obj.duration = p[1]
                         placement_obj.fromindex = p[2]

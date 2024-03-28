@@ -29,7 +29,7 @@ def read_vst2_fxProgram(in_stream):
 def read_vst2_fxChunkSet(in_stream):
 	#print('[vst-data] Chunks')
 	fx_fourid = int.from_bytes(in_stream.read(4), "big")
-	fx_version = in_stream.read(4)
+	fx_version = int.from_bytes(in_stream.read(4), "big")
 	fx_num_programs = int.from_bytes(in_stream.read(4), "big")
 	fx_prgname_bytes = in_stream.read(28)
 	#print(fx_prgname_bytes)
@@ -41,6 +41,7 @@ def read_vst2_fxChunkSet(in_stream):
 	out_cvpj_data['plugin'] = {}
 	out_cvpj_data['plugin']['fourid'] = fx_fourid
 	out_cvpj_data['data'] = fx_chunk
+	out_cvpj_data['version'] = fx_version
 	#out_cvpj_data['program_name'] = fx_prgname
 	return out_cvpj_data
 

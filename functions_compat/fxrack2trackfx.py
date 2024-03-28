@@ -8,12 +8,14 @@ def process_r(convproj_obj):
 
         if 0 in convproj_obj.fxrack:
             fxchannel_obj = convproj_obj.fxrack[0]
-            convproj_obj.move_automation(['fxmixer','0','vol'], ['master', 'vol'])
-            convproj_obj.move_automation(['fxmixer','0','pan'], ['master', 'pan'])
+            convproj_obj.automation.move(['fxmixer','0','vol'], ['master', 'vol'])
+            convproj_obj.automation.move(['fxmixer','0','pan'], ['master', 'pan'])
             fxchannel_obj.params.move(convproj_obj.track_master.params, 'vol')
             fxchannel_obj.params.move(convproj_obj.track_master.params, 'pan')
             convproj_obj.track_master.fxslots_audio = fxchannel_obj.fxslots_audio.copy()
+            convproj_obj.track_master.fxslots_mixer = fxchannel_obj.fxslots_mixer.copy()
             fxchannel_obj.fxslots_audio = []
+            fxchannel_obj.fxslots_mixer = []
             del convproj_obj.fxrack[0]
 
         fx_trackids = {}
@@ -33,11 +35,12 @@ def process_r(convproj_obj):
                 groupid = 'fxrack_'+str(fx_num)
                 group_obj = convproj_obj.add_group(groupid)
 
-                convproj_obj.move_automation(['fxmixer',str(fx_num),'pan'], ['group',groupid,'pan'])
-                convproj_obj.move_automation(['fxmixer',str(fx_num),'vol'], ['group',groupid,'vol'])
+                convproj_obj.automation.move(['fxmixer',str(fx_num),'pan'], ['group',groupid,'pan'])
+                convproj_obj.automation.move(['fxmixer',str(fx_num),'vol'], ['group',groupid,'vol'])
                 fxchannel_obj.params.move(group_obj.params, 'vol')
                 fxchannel_obj.params.move(group_obj.params, 'pan')
                 group_obj.fxslots_audio = fxchannel_obj.fxslots_audio.copy()
+                group_obj.fxslots_mixer = fxchannel_obj.fxslots_mixer.copy()
                 fxchannel_obj.fxslots_audio = []
                 group_obj.visual = fxchannel_obj.visual
 

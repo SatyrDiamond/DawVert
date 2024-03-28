@@ -57,4 +57,4 @@ class kickmess_data:
 		return out.read()
 
 	def to_cvpj_vst2(self, convproj_obj, plugin_obj):
-		plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name', 'any', 'Kickmess (VST)', 'chunk', self.data_out(), None)
+		plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'any', 934843292, 'chunk', self.data_out(), None)

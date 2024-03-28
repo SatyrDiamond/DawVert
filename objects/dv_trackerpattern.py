@@ -62,7 +62,7 @@ class autostream:
 
     def to_cvpj(self, convproj_obj, autoloc):
         for tpl in self.placements:
-            autopl_obj = convproj_obj.add_automation_pl(autoloc, 'float')
+            autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
             autopl_obj.position = (tpl[0])+tpl[1][0][0]
             autopl_obj.duration = tpl[2]
             for tap in tpl[1]: 
@@ -170,7 +170,7 @@ class multipatterndata:
             self.mul_pd.append(patterndata(1, insttype+'_', inst_color))
 
     def to_cvpj(self, convproj_obj, order_list, s_bpm, s_speed):
-        convproj_obj.type = 'm'
+        convproj_obj.type = 'rm'
         convproj_obj.set_timings(4, True)
 
         notepl = [notestream(x+"_") for x in self.mul_types]

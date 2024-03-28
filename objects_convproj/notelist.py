@@ -69,8 +69,7 @@ class pitchmod:
                 partslide = slidepart[1]/slidepart[3] if slidepart[3] != 0 else 1
                 cur_pitch += (slidepart[4]-cur_pitch)*partslide
                 output_blk = True
-                #print(slidepart, partslide)
-
+                
             if slidepart[2] == 'porta': 
                 max_dur = min(abs(cur_pitch-slidepart[4]), slidepart[3])
                 if cur_pitch > slidepart[4]: 
@@ -119,6 +118,10 @@ class cvpj_notelist:
         time_ppq_same = self.time_ppq == nlo.time_ppq
         time_float_same = self.time_float == nlo.time_float
         return nl_same and time_ppq_same and time_float_same
+
+    def clear(self):
+        self.nl = []
+        self.used_inst = []
 
     def inst_split(self):
         out_nl_inst = {}
@@ -201,7 +204,7 @@ class cvpj_notelist:
                 nn_inst = nn[4]
                 if nn_pos <= t_pos < nn_pos+nn_dur and t_inst == nn_inst:
                     sn_pos = t_pos - nn_pos 
-                    sn_key = t_key - nn_key[0]
+                    sn_key = t_key
                     if nn[7] == None: nn[7] = []
                     nn[7].append([sn_pos, t_dur, sn_key, t_vol, t_extra])
 
@@ -264,8 +267,6 @@ class cvpj_notelist:
             noteautopitch_exists = note[6] != None
             noteslide_exists = note[7] != None
 
-            #print(noteslide_exists, noteautopitch_exists)
-
             if noteslide_exists == True and noteautopitch_exists == False:
                 pointsdata = pitchmod(note[2][0])
                 for slidenote in note[7]:
@@ -285,8 +286,9 @@ class cvpj_notelist:
                     pitchauto.remove_instant()
                     pitchblocks = pitchauto.blocks()
                     if not note[7]: note[7] = []
+                    maxnote = max(note[2])
                     for pb in pitchblocks:
-                        note[7].append([pb[0], pb[1], pb[2], note[3], {}])
+                        note[7].append([pb[0], pb[1], pb[2]+maxnote, note[3], {}])
 
 
 

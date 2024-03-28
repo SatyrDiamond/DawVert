@@ -26,18 +26,15 @@ def create_markers(autopoints_obj, inst_id, instparam, mul):
 class output_onlineseq(plugin_output.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'output'
-    def getname(self): return 'Online Sequencer'
     def getshortname(self): return 'onlineseq'
     def gettype(self): return 'r'
     def plugin_archs(self): return None
-    def getdawcapabilities(self): 
-        return {
-        'auto_nopl': True,
-        'track_nopl': True
-        }
-    def getsupportedplugformats(self): return []
-    def getsupportedplugins(self): return ['midi']
-    def getfileextension(self): return 'sequence'
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Online Sequencer'
+        dawinfo_obj.file_ext = 'sequence'
+        dawinfo_obj.auto_types = ['nopl_points']
+        dawinfo_obj.track_nopl = True
+        dawinfo_obj.plugin_included = ['midi','native-onlineseq','universal:synth-osc']
     def parse(self, convproj_obj, output_file):
         global glob_markerdata
 
@@ -84,44 +81,42 @@ class output_onlineseq(plugin_output.base):
                 t_instid = idvals_onlineseq_inst.get_idval(str(midiinst), 'outid')
                 if t_instid not in ['null', None]: onlineseqinst = int(t_instid)
 
-                if onlineseqinst not in repeatedolinst: repeatedolinst[onlineseqinst] = 0
-                else: repeatedolinst[onlineseqinst] += 1 
+            if onlineseqinst not in repeatedolinst: repeatedolinst[onlineseqinst] = 0
+            else: repeatedolinst[onlineseqinst] += 1 
+            onlineseqnum = onlineseqinst + repeatedolinst[onlineseqinst]*10000
 
-                onlineseqnum = onlineseqinst + repeatedolinst[onlineseqinst]*10000
+            onlseqinst = {}
+            onlseqinst[1] = onlineseqnum
+            onlseqinst[2] = {1: float2int(trackvol), 10: 1}
+            if track_obj.visual.name: onlseqinst[2][15] = track_obj.visual.name
+            onlineseqdata[1][3].append(onlseqinst)
 
-                onlseqinst = {}
-                onlseqinst[1] = onlineseqnum
-                onlseqinst[2] = {1: float2int(trackvol), 10: 1}
-                if track_obj.visual.name: onlseqinst[2][15] = track_obj.visual.name
-                onlineseqdata[1][3].append(onlseqinst)
+            for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in track_obj.placements.notelist.nl:
+                for t_key in t_keys:
+                    onlineseq_note = {
+                        "1": int(t_key+60),
+                        "2": float2int(t_pos),
+                        "3": float2int(t_dur),
+                        "4": onlineseqnum,
+                        "5": float2int(t_vol)
+                        }
+                    onlineseqdata[2].append(onlineseq_note)
 
-                for notespl_obj in track_obj.placements.iter_notes():
-                    basepos = notespl_obj.position
+            v_ap_e, v_ap_d = convproj_obj.automation.get_autopoints(['track', trackid, 'vol'])
+            c_ap_e, c_ap_d = convproj_obj.automation.get_autopoints(['track', trackid, 'pan'])
+            p_ap_e, p_ap_d = convproj_obj.automation.get_autopoints(['track', trackid, 'pitch'])
 
-                    notespl_obj.notelist.sort()
-                    for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
-                        for t_key in t_keys:
-                            onlineseq_note = {
-                                "1": int(t_key+60),
-                                "2": float2int(t_pos+basepos),
-                                "3": float2int(t_dur),
-                                "4": onlineseqnum,
-                                "5": float2int(t_vol)
-                                }
-                            onlineseqdata[2].append(onlineseq_note)
-
-                cvpjid_onlineseqid[trackid] = onlineseqnum
+            if v_ap_e: create_markers(v_ap_d, onlineseqnum, 1, 1)
+            if c_ap_e: create_markers(c_ap_d, onlineseqnum, 2, 1)
+            if p_ap_e: create_markers(p_ap_d, onlineseqnum, 11, 100)
 
         protobuf_typedef = {'1': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '3': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '2': {'type': 'message', 'message_typedef': {'1': {'type': 'fixed32', 'name': ''}, '10': {'type': 'int', 'name': ''}, '15': {'type': 'bytes', 'name': ''}}, 'name': ''}}, 'name': ''}}, 'name': ''}, '2': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '3': {'type': 'fixed32', 'name': ''}, '4': {'type': 'int', 'name': ''}, '5': {'type': 'fixed32', 'name': ''}, '2': {'type': 'fixed32', 'name': ''}}, 'name': ''}, '3': {'type': 'message', 'message_typedef': {'1': {'type': 'fixed32', 'name': ''}, '4': {'type': 'fixed32', 'name': ''}, '5': {'type': 'int', 'name': ''}, '2': {'type': 'int', 'name': ''}, '3': {'type': 'int', 'name': ''}}, 'name': ''}}
 
-        for autopath, autopoints_obj in convproj_obj.iter_autopoints():
-            if autopath == ['main', 'bpm']: create_markers(autopoints_obj, 0, 0, 1)
-            if autopath == ['master', 'vol']: create_markers(autopoints_obj, 0, 8, 1)
-            if autopath[0] == 'track': 
-                onlineseqid = cvpjid_onlineseqid[autopath[1]]
-                if autopath[2] == 'vol': create_markers(autopoints_obj, onlineseqid, 1, 1)
-                if autopath[2] == 'pan': create_markers(autopoints_obj, onlineseqid, 2, 1)
-                if autopath[2] == 'pitch': create_markers(autopoints_obj, onlineseqid, 11, 100)
+        b_map_e, b_map_d = convproj_obj.automation.get_autopoints(['main', 'bpm'])
+        v_map_e, v_map_d = convproj_obj.automation.get_autopoints(['master', 'vol'])
+
+        if b_map_e: create_markers(b_map_d, 0, 0, 1)
+        if v_map_e: create_markers(v_map_d, 0, 8, 1)
 
         for num in sorted(glob_markerdata):
             for markdata in glob_markerdata[num]:

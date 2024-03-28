@@ -54,13 +54,12 @@ class input_orgyana(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'orgyana'
-    def getname(self): return 'orgyana'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): 
-        return {
-        'auto_nopl': True,
-        'track_nopl': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Orgyana'
+        dawinfo_obj.file_ext = 'org'
+        dawinfo_obj.auto_types = ['nopl_points']
+        dawinfo_obj.track_nopl = True
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -69,7 +68,7 @@ class input_orgyana(plugin_input.base):
         if bytesdata == b'Org-02' or bytesdata == b'Org-03': return True
         else: return False
 
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         convproj_obj.type = 'r'
         convproj_obj.set_timings(4, True)
 
@@ -114,9 +113,7 @@ class input_orgyana(plugin_input.base):
                 track_obj.visual.name = trackname
                 track_obj.visual.color = colordata.getcolornum(tracknum)
                 track_obj.params.add('pitch', (org_pitch-1000)/1800, 'float')
-                placement_obj = track_obj.placements.add_notes()
-                for n_pos, n_dur, n_note, n_vol, n_extra in s_cvpj_nl: placement_obj.notelist.add_r(n_pos, n_dur, n_note, n_vol, n_extra)
-                placement_obj.duration = placement_obj.notelist.get_dur()
+                for n_pos, n_dur, n_note, n_vol, n_extra in s_cvpj_nl: track_obj.placements.notelist.add_r(n_pos, n_dur, n_note, n_vol, n_extra)
 
         convproj_obj.do_actions.append('do_addloop')
         convproj_obj.do_actions.append('do_singlenotelistcut')

@@ -31,7 +31,7 @@ def addnotes(notelist_obj, n_pos, n_len, inst, txt, chordvolume):
     noteoffset = 0
 
 def add_tempo_point(convproj_obj, position, value, notelen): 
-    autopl_obj = convproj_obj.add_automation_pl(['main','bpm'], 'float')
+    autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
     autopl_obj.position = position
     autopl_obj.duration = notelen
     autopoint_obj = autopl_obj.data.add_point()
@@ -41,10 +41,13 @@ class input_mariopaint_mss(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mariopaint_mss'
-    def getname(self): return 'Advanced Mario Sequencer'
     def gettype(self): return 'm'
-    def getdawcapabilities(self): 
-        return {'track_lanes': True, 'track_nopl': True}
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.file_ext = 'mss'
+        dawinfo_obj.name = 'Advanced Mario Sequencer'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.track_nopl = True
+        dawinfo_obj.plugin_included = ['midi']
     def supported_autodetect(self): return True
     def detect(self, input_file):
         output = False
@@ -54,14 +57,13 @@ class input_mariopaint_mss(plugin_input.base):
             if root.tag == "MarioSequencerSong": output = True
         except ET.ParseError: output = False
         return output
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         
         # ---------- CVPJ Start ----------
         convproj_obj.type = 'm'
         convproj_obj.set_timings(4, False)
  
         playlist_obj = convproj_obj.add_playlist(0, 0, False)
-        placement_obj = playlist_obj.placements.add_notes()
 
         # ---------- File ----------
         tree = ET.parse(input_file)
@@ -80,7 +82,7 @@ class input_mariopaint_mss(plugin_input.base):
                 x_chord = chord.find(instname)
                 duration = curpos
                 if x_chord != None: 
-                    addnotes(placement_obj.notelist, curpos, notelen, instname, x_chord.text, chordvolume)
+                    addnotes(playlist_obj.placements.notelist, curpos, notelen, instname, x_chord.text, chordvolume)
             if chord.find('bookmark') != None: 
                 timemarker_obj = convproj_obj.add_timemarker()
                 timemarker_obj.visual.name = 'Bookmark'
@@ -102,5 +104,3 @@ class input_mariopaint_mss(plugin_input.base):
         convproj_obj.do_actions.append('do_singlenotelistcut')
         convproj_obj.timesig = [mss_measure,4]
         convproj_obj.params.add('bpm', mss_tempo, 'float')
-
-        placement_obj.duration = placement_obj.notelist.get_dur()

@@ -42,22 +42,21 @@ class input_mariopaint_msq(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mariopaint_msq'
-    def getname(self): return 'MarioSequencer'
     def gettype(self): return 'm'
-    def getdawcapabilities(self): 
-        return {
-        'track_lanes': True,
-        'track_nopl': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.file_ext = 'msq'
+        dawinfo_obj.name = 'MarioSequencer'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.track_nopl = True
+        dawinfo_obj.plugin_included = ['midi']
     def supported_autodetect(self): return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
 
         # ---------- CVPJ Start ----------
         convproj_obj.type = 'm'
         convproj_obj.set_timings(4, False)
  
         playlist_obj = convproj_obj.add_playlist(0, 0, False)
-        cvpj_placement = playlist_obj.placements.add_notes()
 
         # ---------- Parse ----------
         msq_values = {}
@@ -82,7 +81,7 @@ class input_mariopaint_msq(plugin_input.base):
         msq_tempo, notelen = xtramath.get_lower_tempo(msq_tempo, 4, 180)
         curpos = 0
         while msq_score_str.tell() < msq_score_size:
-            readpart(cvpj_placement.notelist, msq_score_str, curpos, notelen)
+            readpart(playlist_obj.placements.notelist, msq_score_str, curpos, notelen)
             curpos += notelen
 
         for instname in instnames: convproj_obj.add_instrument_from_dset(instname, instname, dataset, dataset_midi, instname, None, None)
@@ -91,4 +90,3 @@ class input_mariopaint_msq(plugin_input.base):
         convproj_obj.timesig = [msq_measure,4]
         convproj_obj.params.add('bpm', msq_tempo, 'float')
         
-        cvpj_placement.duration = cvpj_placement.notelist.get_dur()

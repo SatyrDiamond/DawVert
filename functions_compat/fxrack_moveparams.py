@@ -23,8 +23,7 @@ def process(convproj_obj, in_compat, out_compat):
                         for trackid, track_obj in fx_trackids[fx_num]:
                             for paramid in paramlist:
                                 fxchannel_obj.params.copy(track_obj.params, paramid)
-                                convproj_obj.copy_automation(['fxmixer',str(fx_num),paramid], ['track',trackid,paramid])
-
+                                convproj_obj.automation.copy(['fxmixer',str(fx_num),paramid], ['track',trackid,paramid])
 
             return True
             

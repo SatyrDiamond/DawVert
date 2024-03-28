@@ -20,15 +20,14 @@ class input_cvpj_f(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mekimekichip'
-    def getname(self): return 'メキメキチップ (MekiMeki Chip)'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): 
-        return {
-        'auto_nopl': True,
-        'track_nopl': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'メキメキチップ (MekiMeki Chip)'
+        dawinfo_obj.file_ext = 'json'
+        dawinfo_obj.auto_types = ['nopl_points']
+        dawinfo_obj.track_nopl = True
     def supported_autodetect(self): return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         bytestream = open(input_file, 'r')
         file_data = bytestream.read()
         mmc_main = json.loads(file_data)
@@ -36,8 +35,8 @@ class input_cvpj_f(plugin_input.base):
         convproj_obj.type = 'r'
         convproj_obj.set_timings(4, True)
 
-        if 'debug' in extra_param:
-            with open(input_file+'_pritty', "w") as fileout: json.dump(mmc_main, fileout, indent=4, sort_keys=True)
+        #if 'debug' in dv_config:
+        #    with open(input_file+'_pritty', "w") as fileout: json.dump(mmc_main, fileout, indent=4, sort_keys=True)
 
         mmc_tracks = mmc_main["Tracks"]
         mmc_bpm = getvalue(mmc_main, 'Bpm', 120)
@@ -62,8 +61,6 @@ class input_cvpj_f(plugin_input.base):
             track_obj.params.add('enabled', bool(int(not getvalue(mmc_track, 'Mute', 0))), 'bool')
             track_obj.params.add('solo', bool(int(getvalue(mmc_track, 'Solo', 0))), 'bool')
 
-            placement_obj = track_obj.placements.add_notes()
-
             for mmc_note in mmc_track["Notes"]:
                 mmc_wv = mmc_note['WaveVolume']
 
@@ -78,7 +75,7 @@ class input_cvpj_f(plugin_input.base):
                 notevol = getvalue(mmc_wv, 'Volume', 1)*1.5
                 notepan = getvalue(mmc_wv, 'Pan', 0)*-1
 
-                placement_obj.notelist.add_r(notepos, notedur, notekey, notevol, {'pan': notepan})
+                track_obj.placements.notelist.add_r(notepos, notedur, notekey, notevol, {'pan': notepan})
 
         convproj_obj.do_actions.append('do_addloop')
         convproj_obj.do_actions.append('do_singlenotelistcut')

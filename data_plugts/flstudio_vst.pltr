@@ -1,6 +1,6 @@
 
 ################################ Fruity Blood Overdrive > Blood Overdrive
-new|vst2_fruity_blood_overdrive
+new|nf_vst2_fruity_blood_overdrive
 
 in_type|native-flstudio
 in_subtype|fruity blood overdrive
@@ -26,6 +26,37 @@ out_param|ext_param_2|preamp|  PreAmp
 out_param|ext_param_3|x100|  x 100   
 out_param|ext_param_4|postfilter|PostFilter
 out_param|ext_param_5|postgain| PostGain 
+
+################################ Fruity Blood Overdrive > Density
+new|vst2_fruity_blood_overdrive
+
+in_type|native-flstudio
+in_subtype|fruity dx10
+out_type|vst2
+out_subtype|
+
+in_param|preband
+in_param|preamp
+in_param|postfilter
+in_param|postgain
+
+calc|preband|div|10000
+calc|preamp|div|10000
+calc|postfilter|div|10000
+calc|postgain|div|10000
+
+calc|preamp|pow|0.5
+
+calc|preamp|from_one|0.2|0.8
+calc|postfilter|div|4
+
+out_store|density|preamp
+out_store|hipass|postfilter
+
+out_param|ext_param_0|preband|Density
+out_param|ext_param_1|postfilter|Highpass
+out_v_param|ext_param_2|1|Out Leve
+out_v_param|ext_param_3|1|Dry/Wet   
 
 ################################ Fruity DX10 > mda DX10
 new|vst2_fruity_dx10
@@ -80,6 +111,7 @@ out_param|ext_param_8|mod_rel
 out_param|ext_param_9|velsen
 out_param|ext_param_10|vibrato
 out_param|ext_param_11|octave
+out_v_param|ext_param_12|0.5|FineTune
 out_param|ext_param_13|waveform
 out_param|ext_param_14|mod_thru
 out_param|ext_param_15|lforate
@@ -171,11 +203,11 @@ calc|freq_end|to_one|5|2000
 calc|f_env_release|to_one|1|1000
 calc|phase_offs|to_one|1|1000
 
-out_auto|ext_param_0|freq_start
-out_auto|ext_param_1|freq_end
-out_auto|ext_param_2|f_env_release
-out_auto|ext_param_6|env_slope
-out_auto|ext_param_12|phase_offs
+out_param|ext_param_0|freq_start
+out_param|ext_param_1|freq_end
+out_param|ext_param_2|f_env_release
+out_param|ext_param_6|env_slope
+out_param|ext_param_12|phase_offs
 
 ################################ Fruity Bass Boost > Airwindows Weight
 new|vst2_fruity_bass_boost
@@ -194,24 +226,7 @@ calc|amount|div|1280
 out_param|ext_param_0|freq|Freq
 out_param|ext_param_1|amount|Weight
 
-################################ Fruity Bass Boost > Airwindows Weight
-new|vst2_fruity_bass_boost
-
-in_type|native-flstudio
-in_subtype|fruity bass boost
-out_type|vst2
-out_subtype|
-
-in_param|freq
-in_param|amount
-
-calc|freq|div|1280
-calc|amount|div|1280
-
-out_param|ext_param_0|freq|Freq
-out_param|ext_param_1|amount|Weight
-
-################################ Fruity Spectroman > SocaLabs's SpectrumAnalyzer
+######### Fruity Spectroman > SocaLabs's SpectrumAnalyzer
 new|vst2_fruity_spectroman
 
 in_type|native-flstudio
@@ -221,7 +236,7 @@ out_subtype|
 
 in_param|mode|outputmode
 out_store|mode|mode
-out_auto|ext_param_0|mode
+out_param|ext_param_0|mode
 
 ################################ Fruity Waveshaper > Wolf Shaper
 new|vst2_fruity_waveshaper
@@ -250,10 +265,10 @@ out_store|removedc|removedc
 
 calc|preamp|to_one|0|2
 
-out_auto|ext_param_0|preamp
-out_auto|ext_param_1|wet
-out_auto|ext_param_2|postgain
-out_auto|ext_param_3|removedc
+out_param|ext_param_0|preamp
+out_param|ext_param_1|wet
+out_param|ext_param_2|postgain
+out_param|ext_param_3|removedc
 
 ################################ Fruity Stereo Enhancer > SocaLabs's StereoProcessor
 new|vst2_fruity_stereo_enhancer
@@ -278,9 +293,9 @@ out_store|vol|vol
 
 calc|pan|to_one|-1|1
 
-out_auto|ext_param_1|stereo
-out_auto|ext_param_4|pan
-out_auto|ext_param_7|vol
+out_param|ext_param_1|stereo
+out_param|ext_param_4|pan
+out_param|ext_param_7|vol
 
 ################################ Fruity Reeverb > Dragonfly Hall Reverb
 new|vst2_fruity_reeverb
@@ -337,6 +352,8 @@ out_store|high_xo|hidamping
 out_store|dry_level|dry
 out_store|late_level|reverb
 
+filter|vst2
+
 calc|lowcut|to_one|0|200
 calc|highcut|to_one|0|16000
 calc|room_size|to_one|10|60
@@ -347,15 +364,15 @@ calc|hidamping|to_one|1000|16000
 calc|dry|to_one|0|100
 calc|reverb|to_one|0|100
 
-out_auto|ext_param_7|lowcut
-out_auto|ext_param_9|highcut
-out_auto|ext_param_3|room_size
-out_auto|ext_param_5|predelay
-out_auto|ext_param_6|diffusion
-out_auto|ext_param_14|decay
-out_auto|ext_param_10|hidamping
-out_auto|ext_param_0|dry
-out_auto|ext_param_2|reverb
+out_param|ext_param_7|lowcut
+out_param|ext_param_9|highcut
+out_param|ext_param_3|room_size
+out_param|ext_param_5|predelay
+out_param|ext_param_6|diffusion
+out_param|ext_param_14|decay
+out_param|ext_param_10|hidamping
+out_param|ext_param_0|dry
+out_param|ext_param_2|reverb
 
 ################################ Fruity Reeverb 2 > Dragonfly Hall Reverb
 new|vst2_fruity_reeverb_2
@@ -405,6 +422,8 @@ out_store|low_mult|bass
 out_store|dry_level|dry
 out_store|late_level|wet
 
+filter|vst2
+
 calc|lowcut|to_one|0|200
 calc|highcut|to_one|0|16000
 calc|room_size|to_one|10|60
@@ -416,16 +435,16 @@ calc|bass|to_one|0.5|2.5
 calc|dry|to_one|0|100
 calc|wet|to_one|0|100
 
-out_auto|ext_param_7|lowcut
-out_auto|ext_param_9|highcut
-out_auto|ext_param_3|room_size
-out_auto|ext_param_5|predelay
-out_auto|ext_param_6|diffusion
-out_auto|ext_param_14|decay
-out_auto|ext_param_10|hidamping
-out_auto|ext_param_8|bass
-out_auto|ext_param_0|dry
-out_auto|ext_param_2|wet
+out_param|ext_param_7|lowcut
+out_param|ext_param_9|highcut
+out_param|ext_param_3|room_size
+out_param|ext_param_5|predelay
+out_param|ext_param_6|diffusion
+out_param|ext_param_14|decay
+out_param|ext_param_10|hidamping
+out_param|ext_param_8|bass
+out_param|ext_param_0|dry
+out_param|ext_param_2|wet
 
 ################################ Tuner > GTune
 new|vst2_tuner
@@ -440,3 +459,143 @@ calc|refrence|div|6000
 calc|refrence|from_one|400|480
 calc|refrence|to_one|420|460
 out_param|ext_param_0|refrence|Tune
+
+
+################################ Fruity Fast Dist (Type 2) > mda Overdrive
+new|vst2_fruity_fast_dist_type2
+
+in_type|native-flstudio
+in_subtype|fruity fast dist
+out_type|vst2
+out_subtype|
+
+in_param|threshold
+in_param|mix
+in_param|post
+calc|threshold|div|10
+calc|mix|div|128
+calc|post|div|128
+calc|mix|from_one|1|0
+calc|post|div|2
+out_param|ext_param_0|threshold|Drive   
+out_param|ext_param_1|mix|Muffle
+out_param|ext_param_2|post|Output
+
+################################ Fruity Fast Dist (Type 2) > mda Overdrive
+new|vst2_fruity_fast_dist_type1
+
+in_type|native-flstudio
+in_subtype|fruity fast dist
+out_type|vst2
+out_subtype|
+
+in_param|threshold
+in_param|post
+calc|threshold|div|10
+calc|post|div|128
+calc|threshold|mul|0.44
+calc|post|mul|0.4
+out_param|ext_param_0|threshold|In Trim   
+out_param|ext_param_1|post|Out Pad
+
+################################ FL Keys (mda Piano) > mda Piano
+new|vst2_fl_keys_piano
+
+in_type|native-flstudio
+in_subtype|fl keys
+out_type|vst2
+out_subtype|
+
+in_param|decay
+in_param|detune
+in_param|fine
+in_param|hardness
+in_param|hardness_from_vel
+in_param|lfo
+in_param|muffle
+in_param|muffle_from_vel
+in_param|overdrive
+in_param|pan
+in_param|release
+in_param|stereo
+in_param|stretch
+in_param|treble
+in_param|vel_sens
+
+calc|decay|to_one|-1000|1000
+calc|release|to_one|-1000|1000
+calc|hardness|to_one|-1000|1000
+calc|hardness_from_vel|to_one|-1000|1000
+calc|muffle|to_one|-1000|1000
+calc|muffle_from_vel|to_one|0|2000
+calc|vel_sens|to_one|-1000|1000
+calc|stereo|to_one|0|2000
+calc|fine|to_one|-500|500
+calc|detune|to_one|0|500
+calc|stretch|to_one|-500|500
+
+out_param|ext_param_0|decay|Envelope Decay
+out_param|ext_param_1|release|Envelope Release
+out_param|ext_param_2|hardness|Hardness Offset
+out_param|ext_param_3|hardness_from_vel|Velocity to Hardness
+out_param|ext_param_4|muffle|Muffling Filter
+out_param|ext_param_5|muffle_from_vel|Velocity to Muffling
+out_param|ext_param_6|vel_sens|Velocity Sensitivity
+out_param|ext_param_7|stereo|Stereo Width
+out_v_param|ext_param_8|1|Polyphony
+out_param|ext_param_9|fine|Fine Tuning
+out_param|ext_param_10|detune|Random Detuning
+out_param|ext_param_11|stretch|Stretch Tuning
+
+################################ FL Keys (Rhodes) > mda Piano
+new|vst2_fl_keys_epiano
+
+in_type|native-flstudio
+in_subtype|fl keys
+out_type|vst2
+out_subtype|
+
+in_param|decay
+in_param|detune
+in_param|fine
+in_param|hardness
+in_param|hardness_from_vel
+in_param|lfo
+in_param|muffle
+in_param|muffle_from_vel
+in_param|overdrive
+in_param|pan
+in_param|release
+in_param|stereo
+in_param|stretch
+in_param|treble
+in_param|vel_sens
+
+calc|decay|to_one|-1000|1000
+calc|release|to_one|-1000|1000
+calc|hardness|to_one|-1000|1000
+calc|hardness_from_vel|to_one|-1000|1000
+calc|muffle|to_one|-1000|1000
+calc|muffle_from_vel|to_one|0|2000
+calc|vel_sens|to_one|-1000|1000
+calc|stereo|to_one|0|2000
+calc|fine|to_one|-500|500
+calc|detune|to_one|0|500
+calc|stretch|to_one|-500|500
+calc|treble|to_one|-1000|1000
+calc|pan|to_one|-1000|1000
+calc|overdrive|to_one|-1000|1000
+calc|lfo|to_one|0|70000
+
+out_param|ext_param_0|decay|Envelope Decay
+out_param|ext_param_1|release|Envelope Release
+out_param|ext_param_2|hardness|Hardness Offset
+out_param|ext_param_3|treble|Treble Boost
+out_param|ext_param_4|pan|Modulation
+out_param|ext_param_5|lfo|LFO Rate
+out_param|ext_param_6|vel_sens|Velocity Sensitivity
+out_param|ext_param_7|stereo|Stereo Width
+out_v_param|ext_param_8|1|Polyphony
+out_param|ext_param_9|fine|Fine Tuning
+out_param|ext_param_10|detune|Random Detuning
+out_param|ext_param_11|overdrive|Overdrive

@@ -37,14 +37,9 @@ def setparams(convproj_obj, plugin_obj, datadef, dataset):
         sf2_bank = plugin_obj.datavals.get('bank', 0)
         sf2_patch = plugin_obj.datavals.get('patch', 0)
 
-        if lfo_pitch.speed_type == 'seconds':
-            flsf_lfo_predelay = int(lfo_pitch.predelay*256) if lfo_pitch.predelay != 0 else -1
-            flsf_lfo_amount = int(lfo_pitch.amount*128) if lfo_pitch.amount != 0 else -1
-            flsf_lfo_speed = int(6/lfo_pitch.speed_time)
-        else:
-            flsf_lfo_predelay = -1
-            flsf_lfo_amount = -1
-            flsf_lfo_speed = -1
+        flsf_lfo_predelay = int(lfo_pitch.predelay*256) if lfo_pitch.predelay != 0 else -1
+        flsf_lfo_amount = int(lfo_pitch.amount*128) if lfo_pitch.amount != 0 else -1
+        flsf_lfo_speed = int(6/lfo_pitch.time.speed_seconds)
 
         if asdr_vol.amount == 0: flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R = -1, -1, -1, -1
         else: flsf_asdf_A, flsf_asdf_D, flsf_asdf_S, flsf_asdf_R = int(asdr_vol.attack/1024), int(asdr_vol.decay/1024), int(asdr_vol.sustain/127), int(asdr_vol.release/1024)
@@ -60,7 +55,8 @@ def setparams(convproj_obj, plugin_obj, datadef, dataset):
     if plugin_obj.check_wildmatch('vst2', None):
         vst_programs = plugin_obj.datavals.get('programs', '')
         vst_numparams = plugin_obj.datavals.get('numparams', 0)
-        vst_current_program = plugin_obj.datavals.get('current_program', 0)
+        vst_current_program = plugin_obj.datavals.get('current_program', -1)
+        vst_use_program = plugin_obj.datavals.get('use_program', True)
         vst_datatype = plugin_obj.datavals.get('datatype', 'chunk')
         vst_fourid = plugin_obj.datavals.get('fourid', None)
         vst_name = plugin_obj.datavals.get('name', None)
@@ -71,7 +67,11 @@ def setparams(convproj_obj, plugin_obj, datadef, dataset):
         vstdata_bytes = plugin_obj.rawdata_get('chunk')
 
         if vst_datatype == 'chunk':
-            wrapper_state = b'\xf7\xff\xff\xff\r\xfe\xff\xff\xff' + len(vstdata_bytes).to_bytes(4, "little") + b'\x00\x00\x00\x00' + vst_current_program.to_bytes(4, "little") + vstdata_bytes
+
+            if vst_current_program >= 0:
+                wrapper_state = b'\xf7\xff\xff\xff\r\xfe\xff\xff\xff' + len(vstdata_bytes).to_bytes(4, "little") + b'\x00\x00\x00\x00' + vst_current_program.to_bytes(4, "little") + vstdata_bytes
+            else:
+                wrapper_state = b'\xf7\xff\xff\xff\x0c\xfe\xff\xff\xff' + len(vstdata_bytes).to_bytes(4, "little") + b'\x00\x00\x00\x00\xfe\xff\xff\xff' + vstdata_bytes
 
         if vst_datatype == 'bank':
             wrapper_state = b'\xf7\xff\xff\xff\x05\xfe\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
@@ -99,7 +99,7 @@ def setparams(convproj_obj, plugin_obj, datadef, dataset):
             vst_params_data = b''
             
             for num in range(vst_numparams):
-                param_obj = plugin_obj.params.get('vst_param_'+str(num), 0)
+                param_obj = plugin_obj.params.get('ext_param_'+str(num), 0)
                 vst_params_data += struct.pack('f', param_obj.value)
             vst_num_names = 1
             vst_names = data_bytes.makestring_fixedlen('Converted', 25)
@@ -111,9 +111,9 @@ def setparams(convproj_obj, plugin_obj, datadef, dataset):
 
 
         wrapper_data = b'\n\x00\x00\x00'
-        if vst_fourid != None: wrapper_data += wrapper_addchunk(51, data_bytes.swap32(vst_fourid).to_bytes(4, "little") )
+        #if vst_fourid != None: wrapper_data += wrapper_addchunk(51, data_bytes.swap32(vst_fourid).to_bytes(4, "little") )
         wrapper_data += wrapper_addchunk(57, b'`\t\x00\x00' )
-        if vst_name != None: wrapper_data += wrapper_addchunk(54, vst_name.encode() )
+        #if vst_name != None: wrapper_data += wrapper_addchunk(54, vst_name.encode() )
         if vst_path != None: wrapper_data += wrapper_addchunk(55, vst_path.encode() )
         wrapper_data += wrapper_addchunk(53, wrapper_state )
 

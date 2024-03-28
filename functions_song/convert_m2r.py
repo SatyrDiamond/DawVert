@@ -36,15 +36,26 @@ def convert(convproj_obj):
 
     for pl_id, playlist_obj in convproj_obj.playlist.items():
         splitted_pl = playlist_obj.placements.inst_split()
+        splitted_nl = playlist_obj.placements.notelist.inst_split()
 
+        comb_split = {}
         for inst_id, placements in splitted_pl.items():
+            if inst_id not in comb_split: comb_split[inst_id] = [None, None]
+            comb_split[inst_id][0] = placements
+
+        for inst_id, placements in splitted_nl.items():
+            if inst_id not in comb_split: comb_split[inst_id] = [None, None]
+            comb_split[inst_id][1] = placements
+
+        for inst_id, placements in comb_split.items():
             if inst_id in track_stor:
                 lane_obj = track_stor[inst_id].add_lane(str(pl_id))
-                lane_obj.placements.data_notes = placements
+                if placements[0]: lane_obj.placements.pl_notes.data = placements[0]
+                if placements[1]: lane_obj.placements.notelist = placements[1]
 
         fxrack_audio_pl = {}
-        if playlist_obj.placements.data_audio:
-            for a_pl in playlist_obj.placements.data_audio:
+        if playlist_obj.placements.pl_audio.data:
+            for a_pl in playlist_obj.placements.pl_audio.data:
                 if a_pl.fxrack_channel not in fxrack_audio_pl: fxrack_audio_pl[a_pl.fxrack_channel] = []
                 fxrack_audio_pl[a_pl.fxrack_channel].append(a_pl)
 
@@ -59,11 +70,19 @@ def convert(convproj_obj):
             track_obj.params = copy.deepcopy(playlist_obj.params)
             track_obj.datavals = copy.deepcopy(playlist_obj.datavals)
             track_obj.fxrack_channel = fx_num
-            track_obj.placements.data_audio = placements
+            track_obj.placements.pl_audio.data = placements
 
     convproj_obj.track_order = []
     for n, t in fxrack_order.items():
         for n in t: convproj_obj.track_order.append(n)
+
+    if 'do_lanefit' in convproj_obj.do_actions:
+        for trackid, track_obj in convproj_obj.track_data.items():
+            print('[song-convert] LaneFit: '+ trackid+': '+str(len(track_obj.lanes))+' > ', end='')
+            track_obj.lanefit()
+            print(str(len(track_obj.lanes)))
+
+
 
     convproj_obj.playlist = {}
     convproj_obj.type = 'r'

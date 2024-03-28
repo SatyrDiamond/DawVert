@@ -1,28 +1,16 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from os.path import exists
 from functions import data_values
-import configparser
-import base64
+from objects_file import preset_vst2
+from objects import manager_extplug
 import struct
 import platform
 import os
-import sqlite3
+import pathlib
+import base64
 
 cpu_arch_list = [64, 32]
-
-platform_architecture = platform.architecture()
-if platform_architecture[1] == 'WindowsPE': platformtxt = 'win'
-else: platformtxt = 'lin'
-
-os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
-
-db_exists = False
-
-if os.path.exists('./__config/plugins_external.db'):
-	db_plugins = sqlite3.connect('./__config/plugins_external.db')
-	db_exists = True
 
 def set_cpu_arch_list(cpu_arch_list_in):
 	global cpu_arch_list
@@ -31,7 +19,7 @@ def set_cpu_arch_list(cpu_arch_list_in):
 def getplatformtxt(in_platform):
 	if in_platform == 'win': platform_txt = 'win'
 	if in_platform == 'lin': platform_txt = 'lin'
-	if in_platform == 'any': 
+	else: 
 		platform_architecture = platform.architecture()
 		if platform_architecture[1] == 'WindowsPE': platform_txt = 'win'
 		else: platform_txt = 'lin'
@@ -39,97 +27,36 @@ def getplatformtxt(in_platform):
 
 # -------------------- VST List --------------------
 
-def find_locpath(out_paths):
-	vst_cpuarch = None
-	vst_path = None
-	if out_paths[0] != None and out_paths[1] == None and 32 in cpu_arch_list: vst_cpuarch, vst_path = 32, out_paths[0]
-	if out_paths[0] == None and out_paths[1] != None and 64 in cpu_arch_list: vst_cpuarch, vst_path = 64, out_paths[1]
-	if out_paths[0] != None and out_paths[1] != None and 64 in cpu_arch_list: vst_cpuarch, vst_path = 64, out_paths[1]
-	return vst_cpuarch, vst_path
+def check_exists(bycat, in_val):
+	return manager_extplug.vst2_check(bycat, in_val)
 
-def db_search(in_data, platformtype, bycat):
-	vst_cpuarch = None
-	vst_path = None
-	vst_name = None
-	vst_id = None
-	vst_version = None
-	out_paths = [None, None]
-
-	if db_exists:
-		if bycat == 'name':
-			if platformtype == 'win': out_paths = db_plugins.execute("SELECT path_32bit_win, path_64bit_win FROM vst2 WHERE name = ?", (in_data,)).fetchone()
-			else: out_paths = db_plugins.execute("SELECT path_32bit_unix, path_64bit_unix FROM vst2 WHERE name = ?", (in_data,)).fetchone()
-			vst_name = in_data
-			vst_id_d = db_plugins.execute("SELECT id FROM vst2 WHERE name = ?", (in_data,)).fetchone()
-			if vst_id_d: vst_id = vst_id_d[0]
-
-		if bycat == 'id':
-			if platformtype == 'win': out_paths = db_plugins.execute("SELECT path_32bit_win, path_64bit_win FROM vst2 WHERE id = ?", (in_data,)).fetchone()
-			else: out_paths = db_plugins.execute("SELECT path_32bit_unix, path_64bit_unix FROM vst2 WHERE id = ?", (in_data,)).fetchone()
-			vst_name_d = db_plugins.execute("SELECT name FROM vst2 WHERE id = ?", (in_data,)).fetchone()
-			if vst_name_d: vst_name = vst_name_d[0]
-			vst_id = in_data
-
-		if bycat == 'path':
-			if platformtype == 'win': 
-				vst_path = in_data.replace('/', '\\')
-				vstname_32 = db_plugins.execute("SELECT name FROM vst2 WHERE path_32bit_win = ?", (vst_path,)).fetchone()
-				vstname_64 = db_plugins.execute("SELECT name FROM vst2 WHERE path_64bit_win = ?", (vst_path,)).fetchone()
-				vstpath_32 = db_plugins.execute("SELECT name, id, path_32bit_win, path_64bit_win FROM vst2 WHERE path_32bit_win = ?", (vst_path,)).fetchone()
-				vstpath_64 = db_plugins.execute("SELECT name, id, path_32bit_win, path_64bit_win FROM vst2 WHERE path_64bit_win = ?", (vst_path,)).fetchone()
-			else: 
-				vstname_32 = db_plugins.execute("SELECT name FROM vst2 WHERE path_32bit_unix = ?", (vst_path,)).fetchone()
-				vstname_64 = db_plugins.execute("SELECT name FROM vst2 WHERE path_64bit_unix = ?", (vst_path,)).fetchone()
-				vstpath_32 = db_plugins.execute("SELECT name, id, path_32bit_unix, path_64bit_unix FROM vst2 WHERE path_32bit_unix = ?", (vst_path,)).fetchone()
-				vstpath_64 = db_plugins.execute("SELECT name, id, path_32bit_unix, path_64bit_unix FROM vst2 WHERE path_64bit_unix = ?", (vst_path,)).fetchone()
-
-			if vstname_32 != None: vst_cpuarch = 32
-			if vstname_64 != None: vst_cpuarch = 64
-
-			vst_paths = data_values.list_usefirst([vstpath_32, vstpath_64])
-			if vst_paths != None: 
-				vst_name = vst_paths[0]
-				vst_id = vst_paths[1]
-				out_paths = [vst_paths[2], vst_paths[3]]
-
-		if vst_id:
-			vst_version_db = db_plugins.execute("SELECT version FROM vst2 WHERE id = ?", (str(vst_id),)).fetchone()
-			if vst_version_db: vst_version = vst_version_db[0]
-
-	if out_paths == None: out_paths = [None, None]
-	vst_cpuarch, vst_path = find_locpath(out_paths)
-
-	return vst_cpuarch, vst_path, vst_name, vst_id, vst_version
-
-def check_exists(in_name):
-	if db_exists:
-		outval = db_plugins.execute("SELECT count(*) FROM vst2 WHERE name = ?", (in_name,)).fetchone()
-		return bool(outval[0])
-	else:
-		return False
-
-def replace_data(convproj_obj, plugin_obj, bycat, platform, in_name, datatype, data, numparams):
+def replace_data(convproj_obj, plugin_obj, bycat, platform, in_val, datatype, data, numparams):
 	global cpu_arch_list
 	platformtxt = getplatformtxt(platform)
-	vst_cpuarch, vst_path, vst_name, vst_id, vst_version = db_search(in_name, platformtxt, bycat)
 
-	if vst_path != None:
+	pluginfo_obj = manager_extplug.vst2_get(bycat, in_val, platformtxt, cpu_arch_list)
+
+	if pluginfo_obj.out_exists:
 		if plugin_obj.plugin_type != 'vst2': plugin_obj.replace('vst2', platformtxt)
 		else: plugin_obj.plugin_subtype = platformtxt
-		if bycat == 'name': print('[plugin-vst2] ' + plugin_obj.get_type_visual() + ' (VST2 '+str(vst_cpuarch)+'-bit)')
 
-		convproj_obj.add_fileref(vst_path, vst_path)
-		plugin_obj.filerefs['plugin'] = vst_path
+		vst_cpuarch, vst_path = pluginfo_obj.find_locpath(cpu_arch_list)
+		if vst_cpuarch and vst_path:
+			convproj_obj.add_fileref(vst_path, vst_path)
+			plugin_obj.filerefs['plugin'] = vst_path
+			plugin_obj.datavals.add('cpu_arch', vst_cpuarch)
 
-		plugin_obj.datavals.add('name', vst_name)
-		plugin_obj.datavals.add('cpu_arch', vst_cpuarch)
-		plugin_obj.datavals.add('fourid', int(vst_id))
+		plugin_obj.datavals.add('name', pluginfo_obj.name)
+		plugin_obj.datavals.add('fourid', int(pluginfo_obj.id))
+		plugin_obj.datavals.add('creator', pluginfo_obj.creator)
+		plugin_obj.role = pluginfo_obj.type
+		plugin_obj.audioports.setnums_auto(pluginfo_obj.audio_num_inputs, pluginfo_obj.audio_num_outputs)
 
-		if vst_version != None: 
-			versionsplit = [int(i) for i in vst_version.split('.')]
+		if pluginfo_obj.version not in [None, '']: 
+			versionsplit = [int(i) for i in pluginfo_obj.version.split('.')]
 			versionbytes =  struct.pack('B'*len(versionsplit), *versionsplit)
 			plugin_obj.datavals.add('version_bytes', int.from_bytes(versionbytes, "little"))
-			plugin_obj.datavals.add('version', vst_version)
+			plugin_obj.datavals.add('version', pluginfo_obj.version)
 
 		if datatype == 'chunk':
 			plugin_obj.datavals.add('datatype', 'chunk')
@@ -140,5 +67,97 @@ def replace_data(convproj_obj, plugin_obj, bycat, platform, in_name, datatype, d
 		if datatype == 'bank':
 			plugin_obj.datavals.add('datatype', 'bank')
 			plugin_obj.datavals.add('programs', data) 
+
+	return pluginfo_obj
+
+def import_presetdata_file(convproj_obj, plugin_obj, bio_preset, platform, preset_filename):
+	if os.path.exists(preset_filename):
+		fid = open(preset_filename, 'rb')
+		import_presetdata(convproj_obj, plugin_obj, fid, platform)
+
+def import_presetdata(convproj_obj, plugin_obj, bio_preset, platform):
+	fxp_obj = preset_vst2.vst2_main()
+	fxp_obj.parse(bio_preset)
+	vst_prog = fxp_obj.program
+	if vst_prog.type in [1,4]:
+		fpch = vst_prog.data
+		replace_data(convproj_obj, plugin_obj, 'id', platform, fpch.fourid, 'chunk', fpch.chunk, None)
+		plugin_obj.datavals.add('version_bytes', fpch.version)
+		if vst_prog.type == 4: plugin_obj.datavals.add('is_bank', True)
+	if vst_prog.type == 2:
+		fxck = vst_prog.data
+		replace_data(convproj_obj, plugin_obj, 'id', platform, fxck.fourid, 'param', None, fxck.num_params)
+		plugin_obj.datavals.add('version_bytes', fxck.version)
+		for c, p in enumerate(fxck.params): plugin_obj.params.add('ext_param_'+str(c), p, 'float')
+	if vst_prog.type == 3:
+		fxck = vst_prog.data
+		plugin_obj.datavals.add('current_program', fxck.current_program)
+		cvpj_programs = []
+		for vst_program in fxck.programs:
+			cvpj_program = {}
+			if vst_program[1].type == 2:
+				pprog = vst_program[1].data
+				cvpj_program['datatype'] = 'params'
+				cvpj_program['numparams'] = pprog.num_params
+				cvpj_program['params'] = {}
+				for paramnum, val in enumerate(pprog.params): cvpj_program['params'][str(paramnum)] = {'value': val}
+				cvpj_program['program_name'] = pprog.prgname
+				cvpj_programs.append(cvpj_program)
+		replace_data(convproj_obj, plugin_obj, 'id', platform, fxck.fourid, 'bank', None, cvpj_programs)
+
+def import_presetdata_file(plugin_obj, preset_filename):
+	filepath = pathlib.Path(preset_filename)
+	if not os.path.exists(filepath.parent): os.makedirs(filepath.parent)
+	fid = open(preset_filename, 'wb')
+	fid.write(export_presetdata(plugin_obj))
+
+def export_presetdata(plugin_obj):
+	fxp_obj = preset_vst2.vst2_main()
+	datatype = plugin_obj.datavals.get('datatype', 'chunk')
+	fourid = plugin_obj.datavals.get('fourid', None)
+	if fourid != None:
+		if datatype == 'chunk':
+			fxp_obj.program.type = 1 if not plugin_obj.datavals.get('is_bank', False) else 4
+			fxp_obj.program.data = preset_vst2.vst2_fxChunkSet(None)
+			fpch = fxp_obj.program.data
+			fpch.fourid = fourid
+			fpch.version = plugin_obj.datavals.get('version_bytes', 0)
+			fpch.num_programs = 1
+			fpch.prgname = ''
+			fpch.chunk = plugin_obj.rawdata_get('chunk')
+			return fxp_obj.write()
+
+		if datatype == 'param':
+			fxp_obj.program.type = 2
+			fxp_obj.program.data = preset_vst2.vst2_fxProgram(None)
+			fxck = fxp_obj.program.data
+			fxck.fourid = fourid
+			fxck.version = plugin_obj.datavals.get('version_bytes', 0)
+			fxck.num_params = plugin_obj.datavals.get('numparams', 0)
+			fxck.prgname = ''
+			fxck.params = [plugin_obj.params.get('ext_param_'+str(c), 0).value for c in range(fxck.num_params)]
+			return fxp_obj.write()
+
+		if datatype == 'bank':
+			fxp_obj.program.type = 3
+			fxp_obj.program.data = preset_vst2.vst2_fxBank(None)
+			fxbk = fxp_obj.program.data
+			fxbk.fourid = fourid
+			fxbk.version = plugin_obj.datavals.get('version_bytes', 0)
+			fxbk.current_program = plugin_obj.datavals.get('current_program', 0)
+			programs = plugin_obj.datavals.get('programs', 0)
+			for program in programs:
+				fxck = preset_vst2.vst2_fxProgram(None)
+				fxck.fourid = fourid
+				fxck.version = fxbk.version
+				fxck.num_params = program['numparams']
+				fxck.prgname = program['program_name']
+				fxck.params = [program['params'][str(c)]['value'] for c in range(fxck.num_params)]
+				fxbk.programs.append([fourid, fxck])
+			return fxp_obj.write()
 	else:
-		print('[plugin-vst2] Plugin, '+str(in_name)+' not found.')
+		print('[plugin-vst2] fourid is missing')
+		return b''
+
+def export_presetdata_b64(plugin_obj):
+	return base64.b64encode(export_presetdata(plugin_obj)).decode('ascii')

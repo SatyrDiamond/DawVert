@@ -9,10 +9,46 @@ import struct
 import base64
 import os.path
 from rpp import Element
+from functions_compat import trackfx_to_numdata
 from functions import data_bytes
 from functions import data_values
 from functions import colors
 from functions import xtramath
+
+def make_vst3(rpp_fxchain, plugin_obj, convproj_obj): 
+    vst_fx_name = plugin_obj.datavals.get('name', None)
+    vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
+    vst_fx_version = plugin_obj.datavals.get('version', None)
+    vst_fx_id = plugin_obj.datavals.get('id', 0)
+    chunkdata = plugin_obj.rawdata_get('chunk')
+    vstparams = struct.pack('II', len(chunkdata), 1)+chunkdata+b'\x00\x00\x00\x00\x00\x00\x00\x00'
+    vstheader = b':\xfbA+\xee^\xed\xfe'
+    vstheader += struct.pack('II', 0, plugin_obj.audioports.num_outputs)
+    for n in range(plugin_obj.audioports.num_outputs): 
+        if n < len(plugin_obj.audioports.ports):
+            vstheader += data_bytes.set_bitnums(plugin_obj.audioports.ports[n], 8)
+        else:
+            vstheader += b'\x00\x00\x00\x00\x00\x00\x00\x00'
+
+    vstheader_end = b''
+    vstheader_end += (len(chunkdata)+16).to_bytes(4, 'little')+b'\x01\x00\x00\x00\xff\xff\x10\x00'
+
+    vstparams = base64.b64encode(vstparams).decode()
+    vstheader = base64.b64encode(vstheader+vstheader_end).decode()
+    vstend = base64.b64encode(b'\x01\x00\x00\x00').decode()
+
+    rpp_vstdata = rpp_obj('VST',[])
+
+    if vstheader:
+        for vstheaderpart in data_values.list_chunks(vstheader, 128):
+            rpp_vstdata.children.append([vstheaderpart])
+
+    if vstparams:
+        for vstparampart in data_values.list_chunks(vstparams, 128):
+            rpp_vstdata.children.append([vstparampart])
+
+    rpp_vstdata.children.append([vstend])
+    rpp_fxchain.children.append(rpp_obj_data('VST', [vst_fx_name, os.path.basename(vst_fx_path), 0, "", '{'+vst_fx_id+'}', ""], rpp_vstdata))
 
 def make_vst2(rpp_fxchain, plugin_obj, convproj_obj): 
     vst_fx_name = plugin_obj.datavals.get('name', None)
@@ -31,7 +67,7 @@ def make_vst2(rpp_fxchain, plugin_obj, convproj_obj):
     if vst_fx_datatype == 'param': 
         floatdata = []
         for num in range(vst_fx_numparams):
-            pval, ptype, pname = plugin_obj.params.get('vst_param_'+str(num), 0)
+            pval = plugin_obj.params.get('vst_param_'+str(num), 0).value
             floatdata.append(float(pval))
         vstparams = struct.pack('f'*vst_fx_numparams, *floatdata)
         vstparamsnum = len(vstparams)
@@ -51,6 +87,17 @@ def make_vst2(rpp_fxchain, plugin_obj, convproj_obj):
 
     rpp_fxchain.children.append(rpp_obj_data('VST', [vst_fx_name, os.path.basename(vst_fx_path), 0, "", vst_fx_fourid, ""], rpp_vstdata))
 
+def add_plugin(rpp_fxchain, pluginid, convproj_obj):
+    plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+    if plugin_found:
+        is_vst2 = plugin_obj.check_wildmatch('vst2', None)
+        is_vst3 = plugin_obj.check_wildmatch('vst3', None)
+        fx_on, fx_wet = plugin_obj.fxdata_get()
+
+        if (is_vst2 or is_vst3): rpp_fxchain.children.append(['BYPASS',int(not fx_on),'0','0'])
+        if is_vst2: make_vst2(rpp_fxchain, plugin_obj, convproj_obj)
+        if is_vst3: make_vst3(rpp_fxchain, plugin_obj, convproj_obj)
+        if (is_vst2 or is_vst3) and fx_wet != 1: rpp_fxchain.children.append(['WET',str(fx_wet),'0'])
 
 def rpp_obj(i_name, i_vals): return Element(tag=i_name, attrib=i_vals, children=[])
 def rpp_obj_data(i_name, i_vals, i_data): return Element(tag=i_name, attrib=i_vals, children=i_data)
@@ -116,17 +163,15 @@ class output_reaper(plugin_output.base):
     def getshortname(self): return 'reaper'
     def gettype(self): return 'r'
     def plugin_archs(self): return None
-    def getdawcapabilities(self): 
-        return {
-        'placement_cut': True,
-        'placement_loop': [],
-        'time_seconds': True,
-        'track_hybrid': True,
-        'placement_audio_stretch': ['rate']
-        }
-    def getsupportedplugformats(self): return ['vst2']
-    def getsupportedplugins(self): return []
-    def getfileextension(self): return 'rpp'
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'REAPER'
+        dawinfo_obj.file_ext = 'rpp'
+        dawinfo_obj.placement_cut = True
+        dawinfo_obj.placement_loop = []
+        dawinfo_obj.time_seconds = True
+        dawinfo_obj.track_hybrid = True
+        dawinfo_obj.audio_stretch = ['rate']
+        dawinfo_obj.plugin_ext = ['vst2', 'vst3']
     def parse(self, convproj_obj, output_file):
         global reaper_tempo
         global tempomul
@@ -207,16 +252,40 @@ class output_reaper(plugin_output.base):
         rppdata.children.append(['MASTER_FX','1'])
         rppdata.children.append(['MASTER_SEL','0'])
 
-        for cvpj_trackid, track_obj in convproj_obj.iter_track():
+        t2m = trackfx_to_numdata.to_numdata()
+        output_ids = t2m.trackfx_to_numdata(convproj_obj, 0)
+
+        track_uuids = []
+        for _ in output_ids:
+            track_uuids.append('{'+str(uuid.uuid4())+'}')
+
+        trackdata = []
+
+        return_objs = {}
+        for returnid, return_obj in convproj_obj.track_master.returns.items(): 
+            return_objs[returnid] = return_obj
+
+        for output_id in output_ids:
+
+            track_uuid = '{'+str(uuid.uuid4())+'}'
+
+            starttxt = ''
+            if output_id[1] == 'track': track_obj = convproj_obj.track_data[output_id[2]]
+            if output_id[1] == 'group': 
+                _, track_obj = convproj_obj.find_group(output_id[2])
+                starttxt = '[G] '
+            if output_id[1] == 'return': 
+                track_obj = return_objs[output_id[2]]
+                starttxt = '[R] '
+
             cvpj_trackcolor = "0"
             cvpj_trackvol = track_obj.params.get('vol', 1.0).value
             cvpj_trackpan = track_obj.params.get('pan', 0).value
 
-            track_uuid = '{'+str(uuid.uuid4())+'}'
-
-            rpp_trackdata = rpp_obj('TRACK',[track_uuid])
+            rpp_trackdata = rpp_obj('TRACK',[track_uuids[output_id[0]]])
             if track_obj.visual.name: 
-                rpp_trackdata.children.append(['NAME',track_obj.visual.name])
+                rpp_trackdata.children.append(['NAME',starttxt+track_obj.visual.name])
+
             if track_obj.visual.color: 
                 cvpj_trackcolor = cvpj_color_to_reaper_color(track_obj.visual.color)
                 rpp_trackdata.children.append(['PEAKCOL',cvpj_trackcolor])
@@ -238,8 +307,8 @@ class output_reaper(plugin_output.base):
             rpp_trackdata.children.append(['FX','1'])
             rpp_trackdata.children.append(['TRACKID',track_uuid])
             rpp_trackdata.children.append(['PERF','0'])
+
             rpp_trackdata.children.append(['MIDIOUT','-1'])
-            rpp_trackdata.children.append(['MAINSEND','1','0'])
 
             rpp_fxchain = rpp_obj('FXCHAIN',[])
             rpp_fxchain.children.append(['SHOW','0'])
@@ -247,90 +316,118 @@ class output_reaper(plugin_output.base):
             rpp_fxchain.children.append(['DOCKED','0'])
             rpp_fxchain.children.append(['BYPASS','0','0','0'])
 
-            plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
-            if plugin_found:
-                if plugin_obj.check_match('vst2', 'win'):
-                    make_vst2(rpp_fxchain, plugin_obj, convproj_obj)
+            if output_id[1] == 'track': 
+
+                middlenote = track_obj.datavals.get('middlenote', 0)
+
+                if middlenote != 0:
+                    rpp_vstdata = rpp_obj('VST',[])
+                    rpp_vstdata.children.append(['ZG1jcu5e7f4AAAAAAAAAAOYAAAABAAAAAAAQAA=='])
+                    midictrlstate1 = b'\xff\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\t\x00\x00\x00\x0c\x00\x00\x00\x01\x00\x00\x00\xff?\x00\x00\x00 \x00\x00\x00 \x00\x00\x00\x00\x00\x005\x00\x00\x00C:\\Users\\colby\\AppData\\Roaming\\REAPER\\Data\\GM.reabank\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00'
+                    midictrlstate2 = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x06\x00\x00\x00Major\x00\r\x00\x00\x00102034050607\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\n\x00\x00\x00\r\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00'
+                    midictrlstate3 = struct.pack('i', -middlenote)
+                    rpp_vstdata.children.append([base64.b64encode(midictrlstate1+midictrlstate3+midictrlstate2).decode()])
+                    rpp_fxchain.children.append(rpp_obj_data('VST', ['ReaControlMIDI (Cockos)','reacontrolmidi.dll','0',"",'1919118692<56535472636D64726561636F6E74726F>'], rpp_vstdata))
+
+                add_plugin(rpp_fxchain, track_obj.inst_pluginid, convproj_obj)
+
+                for notespl_obj in track_obj.placements.pl_notes:
+                    clip_IGUID = '{'+str(uuid.uuid4())+'}'
+                    clip_GUID = '{'+str(uuid.uuid4())+'}'
+                    clip_startat = 0
+                    if notespl_obj.cut_type == 'cut':
+                        if 'start' in notespl_obj.cut_data: clip_startat = notespl_obj.cut_data['start']/8/tempomul
+                    rpp_clipdata = rpp_obj('ITEM',track_uuid)
+                    rpp_clipdata.children.append(['POSITION',notespl_obj.position])
+                    rpp_clipdata.children.append(['SNAPOFFS','0'])
+                    rpp_clipdata.children.append(['LENGTH',notespl_obj.duration])
+                    rpp_clipdata.children.append(['LOOP','0'])
+                    rpp_clipdata.children.append(['ALLTAKES','0'])
+                    rpp_clipdata.children.append(['FADEIN','1','0','0','1','0','0','0'])
+                    rpp_clipdata.children.append(['FADEOUT','1','0','0','1','0','0','0'])
+                    rpp_clipdata.children.append(['MUTE',int(notespl_obj.muted),'0'])
+                    if notespl_obj.visual.color: rpp_clipdata.children.append(['COLOR',cvpj_color_to_reaper_color_clip(notespl_obj.visual.color),'B'])
+                    rpp_clipdata.children.append(['SEL','0'])
+                    rpp_clipdata.children.append(['IGUID',clip_IGUID])
+                    rpp_clipdata.children.append(['IID','1'])
+                    if notespl_obj.visual.name: rpp_clipdata.children.append(['NAME',notespl_obj.visual.name])
+                    #rpp_clipdata.children.append(['VOLPAN',str(cvpj_pl_volume),cvpj_pl_pan,'1','-1'])
+                    rpp_clipdata.children.append(['VOLPAN','1','0','1','-1'])
+                    rpp_clipdata.children.append(['SOFFS',clip_startat,'0'])
+                    rpp_clipdata.children.append(['CHANMODE','0'])
+                    rpp_clipdata.children.append(['GUID',clip_GUID])
+                    rpp_clipdata.children.append(rpp_obj_data('SOURCE', ['MIDI'], convert_midi(notespl_obj.notelist,reaper_tempo,'4','4', notespl_obj.duration)))
+                    rpp_trackdata.children.append(rpp_obj_data('ITEM', [], rpp_clipdata))
+
+                for audiopl_obj in track_obj.placements.pl_audio:
+                    clip_IGUID = '{'+str(uuid.uuid4())+'}'
+                    clip_GUID = '{'+str(uuid.uuid4())+'}'
+                    clip_startat = 0
+                    #print(audiopl_obj.stretch.use_tempo)
+
+                    audiorate = audiopl_obj.stretch.calc_real_speed
+
+                    if audiopl_obj.cut_type == 'cut':
+                        if 'start' in audiopl_obj.cut_data: clip_startat = audiopl_obj.cut_data['start']/8
+
+                    clip_startat *= audiopl_obj.stretch.calc_tempo_speed
+
+                    rpp_clipdata = rpp_obj('ITEM',track_uuid)
+                    rpp_clipdata.children.append(['POSITION',audiopl_obj.position])
+                    rpp_clipdata.children.append(['SNAPOFFS','0'])
+                    rpp_clipdata.children.append(['LENGTH',audiopl_obj.duration])
+                    rpp_clipdata.children.append(['LOOP','0'])
+                    rpp_clipdata.children.append(['ALLTAKES','0'])
+                    rpp_clipdata.children.append(['FADEIN','1','0','0','1','0','0','0'])
+                    rpp_clipdata.children.append(['FADEOUT','1','0','0','1','0','0','0'])
+                    rpp_clipdata.children.append(['MUTE',int(audiopl_obj.muted),'0'])
+                    if audiopl_obj.visual.color: rpp_clipdata.children.append(['COLOR',cvpj_color_to_reaper_color_clip(audiopl_obj.visual.color),'B'])
+                    rpp_clipdata.children.append(['SEL','0'])
+                    rpp_clipdata.children.append(['IGUID',clip_IGUID])
+                    rpp_clipdata.children.append(['IID','1'])
+                    if audiopl_obj.visual.name: rpp_clipdata.children.append(['NAME',audiopl_obj.visual.name])
+                    rpp_clipdata.children.append(['VOLPAN',str(audiopl_obj.vol),audiopl_obj.pan,'1','-1'])
+                    rpp_clipdata.children.append(['SOFFS',clip_startat,'0'])
+
+                    preserve_pitch = int(audiopl_obj.stretch.algorithm != 'resample')
+
+                    rpp_clipdata.children.append(['PLAYRATE',audiorate,preserve_pitch,audiopl_obj.pitch,'-1','0','0.0025'])
+                    rpp_clipdata.children.append(['CHANMODE','0'])
+                    rpp_clipdata.children.append(['GUID',clip_GUID])
+
+                    ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sampleref)
+                    if ref_found:
+                        fileref_obj = sampleref_obj.fileref
+                        filename = fileref_obj.get_path(None, True)
+                        wavefiledata = rpp_obj('FILE',filename)
+                        if fileref_obj.extension == 'mp3': objaudiotype = 'MP3'
+                        elif fileref_obj.extension == 'flac': objaudiotype = 'FLAC'
+                        elif fileref_obj.extension == 'ogg': objaudiotype = 'VORBIS'
+                        else: objaudiotype = 'WAVE'
+                        rpp_wavefiledata = rpp_obj('SOURCE',[objaudiotype])
+                        rpp_wavefiledata.children.append(['FILE',filename])
+                        rpp_clipdata.children.append(rpp_wavefiledata)
+
+                    rpp_trackdata.children.append(rpp_obj_data('ITEM', [], rpp_clipdata))
+
+            for fxid in track_obj.fxslots_audio:
+                add_plugin(rpp_fxchain, fxid, convproj_obj)
 
             rpp_trackdata.children.append(rpp_obj_data('FXCHAIN', [], rpp_fxchain))
 
-            for notespl_obj in track_obj.placements.iter_notes():
-                clip_IGUID = '{'+str(uuid.uuid4())+'}'
-                clip_GUID = '{'+str(uuid.uuid4())+'}'
-                clip_startat = 0
-                if notespl_obj.cut_type == 'cut':
-                    if 'start' in notespl_obj.cut_data: clip_startat = notespl_obj.cut_data['start']/8/tempomul
-                rpp_clipdata = rpp_obj('ITEM',track_uuid)
-                rpp_clipdata.children.append(['POSITION',notespl_obj.position])
-                rpp_clipdata.children.append(['SNAPOFFS','0'])
-                rpp_clipdata.children.append(['LENGTH',notespl_obj.duration])
-                rpp_clipdata.children.append(['LOOP','0'])
-                rpp_clipdata.children.append(['ALLTAKES','0'])
-                rpp_clipdata.children.append(['FADEIN','1','0','0','1','0','0','0'])
-                rpp_clipdata.children.append(['FADEOUT','1','0','0','1','0','0','0'])
-                rpp_clipdata.children.append(['MUTE',int(notespl_obj.muted),'0'])
-                if notespl_obj.visual.color: rpp_clipdata.children.append(['COLOR',cvpj_color_to_reaper_color_clip(notespl_obj.visual.color),'B'])
-                rpp_clipdata.children.append(['SEL','0'])
-                rpp_clipdata.children.append(['IGUID',clip_IGUID])
-                rpp_clipdata.children.append(['IID','1'])
-                if notespl_obj.visual.name: rpp_clipdata.children.append(['NAME',notespl_obj.visual.name])
-                #rpp_clipdata.children.append(['VOLPAN',str(cvpj_pl_volume),cvpj_pl_pan,'1','-1'])
-                rpp_clipdata.children.append(['VOLPAN','1','0','1','-1'])
-                rpp_clipdata.children.append(['SOFFS',clip_startat,'0'])
-                rpp_clipdata.children.append(['CHANMODE','0'])
-                rpp_clipdata.children.append(['GUID',clip_GUID])
-                rpp_clipdata.children.append(rpp_obj_data('SOURCE', ['MIDI'], convert_midi(notespl_obj.notelist,reaper_tempo,'4','4', notespl_obj.duration)))
-                rpp_trackdata.children.append(rpp_obj_data('ITEM', [], rpp_clipdata))
+            trackdata.append(rpp_trackdata)
+            
+        for output_id in output_ids:
+            senddata = output_id[3]
+            if senddata[0] == -1:
+                trackdata[output_id[0]].children.append(['MAINSEND','1','0'])
+            else:
+                trackdata[output_id[0]].children.append(['MAINSEND','0','0'])
+                trackdata[senddata[0]].children.append(['AUXRECV',output_id[0],'0','1','0','0','0','0','0','0','-1:U','0','-1',''])
 
-            for audiopl_obj in track_obj.placements.iter_audio():
-                clip_IGUID = '{'+str(uuid.uuid4())+'}'
-                clip_GUID = '{'+str(uuid.uuid4())+'}'
-                clip_startat = 0
-                if audiopl_obj.cut_type == 'cut':
-                    if 'start' in audiopl_obj.cut_data: clip_startat = audiopl_obj.cut_data['start']/8/tempomul
-
-                audiorate = audiopl_obj.stretch.rate_tempo
-                clip_startat *= audiorate
-
-                rpp_clipdata = rpp_obj('ITEM',track_uuid)
-                rpp_clipdata.children.append(['POSITION',audiopl_obj.position])
-                rpp_clipdata.children.append(['SNAPOFFS','0'])
-                rpp_clipdata.children.append(['LENGTH',audiopl_obj.duration])
-                rpp_clipdata.children.append(['LOOP','0'])
-                rpp_clipdata.children.append(['ALLTAKES','0'])
-                rpp_clipdata.children.append(['FADEIN','1','0','0','1','0','0','0'])
-                rpp_clipdata.children.append(['FADEOUT','1','0','0','1','0','0','0'])
-                rpp_clipdata.children.append(['MUTE',int(audiopl_obj.muted),'0'])
-                if audiopl_obj.visual.color: rpp_clipdata.children.append(['COLOR',cvpj_color_to_reaper_color_clip(audiopl_obj.visual.color),'B'])
-                rpp_clipdata.children.append(['SEL','0'])
-                rpp_clipdata.children.append(['IGUID',clip_IGUID])
-                rpp_clipdata.children.append(['IID','1'])
-                if audiopl_obj.visual.name: rpp_clipdata.children.append(['NAME',audiopl_obj.visual.name])
-                rpp_clipdata.children.append(['VOLPAN',str(audiopl_obj.vol),audiopl_obj.pan,'1','-1'])
-                rpp_clipdata.children.append(['SOFFS',clip_startat,'0'])
-
-                preserve_pitch = int(audiopl_obj.stretch.algorithm != 'resample')
-
-                rpp_clipdata.children.append(['PLAYRATE',audiorate,preserve_pitch,audiopl_obj.pitch,'-1','0','0.0025'])
-                rpp_clipdata.children.append(['CHANMODE','0'])
-                rpp_clipdata.children.append(['GUID',clip_GUID])
-
-                ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sampleref)
-                if ref_found:
-                    fileref_obj = sampleref_obj.fileref
-                    filename = fileref_obj.get_path(None, True)
-                    wavefiledata = rpp_obj('FILE',filename)
-                    if fileref_obj.extension == 'mp3': objaudiotype = 'MP3'
-                    elif fileref_obj.extension == 'flac': objaudiotype = 'FLAC'
-                    elif fileref_obj.extension == 'ogg': objaudiotype = 'VORBIS'
-                    else: objaudiotype = 'WAVE'
-                    rpp_wavefiledata = rpp_obj('SOURCE',[objaudiotype])
-                    rpp_wavefiledata.children.append(['FILE',filename])
-                    rpp_clipdata.children.append(rpp_wavefiledata)
-
-                rpp_trackdata.children.append(rpp_obj_data('ITEM', [], rpp_clipdata))
-
-            rppdata.children.append(rpp_obj_data('TRACK', [track_uuid], rpp_trackdata))
+        for n, t in enumerate(trackdata):
+            track_uuid = track_uuids[n]
+            rppdata.children.append(rpp_obj_data('TRACK', [track_uuid], t))
 
         out_text = rpp.dumps(rppdata)
         

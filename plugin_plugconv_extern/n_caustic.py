@@ -5,14 +5,13 @@ import plugin_plugconv_extern
 
 import struct
 from functions_plugin_ext import plugin_vst2
+from functions import errorprint
 
 class plugconv(plugin_plugconv_extern.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv_ext'
-    def getplugconvinfo(self): return ['native-caustic', None], ['vst2'], None
-    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json, extplugtype):
-
-        #print(extplugtype, plugin_obj.plugin_subtype)
+    def getplugconvinfo(self): return ['native-soundation', None], ['vst2'], None
+    def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype, plugtransform):
 
         if plugin_obj.plugin_subtype == 'auto_wah':
             pass
@@ -33,9 +32,6 @@ class plugconv(plugin_plugconv_extern.base):
             pass
 
         if plugin_obj.plugin_subtype == 'compresser':
-            pass
-
-        if plugin_obj.plugin_subtype == 'delay':
             pass
 
         if plugin_obj.plugin_subtype == 'distortion':
@@ -74,7 +70,7 @@ class plugconv(plugin_plugconv_extern.base):
         if plugin_obj.plugin_subtype == 'vinylsim':
             pass
 
-
-        #exit()
+        if plugin_obj.plugin_subtype == 'SSYN':
+            return False
 
         return False

@@ -10,14 +10,31 @@ import struct
 import zlib
 import sys
 import xml.etree.ElementTree as ET
-#from functions_plugin_ext import plugin_vst2
+from functions_plugin_ext import plugin_vst2
+from objects import manager_extplug
 from objects import counter
 from objects import dv_dataset
 from objects import auto_id
 from functions import colors
 
+def get_sample(i_value):
+    if i_value:
+        if not os.path.exists(i_value):
+            for t in [
+            '/usr/share/lmms/samples/', 
+            'C:\\Program Files\\LMMS\\data\\samples\\'
+            ]:
+                if os.path.exists(t+i_value): return t+i_value
+            return i_value
+        else:
+            return i_value
+    else:
+        return ''
+
 lfoshape = ['sine', 'tri', 'saw', 'square', 'custom', 'random']
 arpdirection = ['up', 'down', 'updown', 'downup', 'random']
+
+chordids = ["major","majb5","minor","minb5","sus2","sus4","aug","augsus4","tri","6","6sus4","6add9","m6","m6add9","7","7sus4","7#5","7b5","7#9","7b9","7#5#9","7#5b9","7b5b9","7add11","7add13","7#11","maj7","maj7b5","maj7#5","maj7#11","maj7add13","m7","m7b5","m7b9","m7add11","m7add13","m-maj7","m-maj7add11","m-maj7add13","9","9sus4","add9","9#5","9b5","9#11","9b13","maj9","maj9sus4","maj9#5","maj9#11","m9","madd9","m9b5","m9-maj7","11","11b9","maj11","m11","m-maj11","13","13#9","13b9","13b5b9","maj13","m13","m-maj13","full_major","harmonic_minor","melodic_minor","whole_tone","diminished","major_pentatonic","minor_pentatonic","jap_in_sen","major_bebop","dominant_bebop","blues","arabic","enigmatic","neopolitan","neopolitan_minor","hungarian_minor","dorian","phrygian","lydian","mixolydian","aeolian","locrian","full_minor","chromatic","half-whole_diminished","5","phrygian_dominant","persian"]
 
 filtertype = [
 ['low_pass', None], ['high_pass', None], ['band_pass','csg'], 
@@ -81,6 +98,27 @@ fxlist['vectorscope'] = 'Vectorscope'
 
 # ------- functions -------
 
+def get_timedata(xmltag, x_name):
+    syncmode = xmltag.get(x_name+'_syncmode')
+    denominator = xmltag.get(x_name+'_denominator')
+    numerator = xmltag.get(x_name+'_numerator')
+
+    steps = None
+    if syncmode == '1': steps = 16*8
+    elif syncmode == '2': steps = 16
+    elif syncmode == '3': steps = 8
+    elif syncmode == '4': steps = 4
+    elif syncmode == '5': steps = 2
+    elif syncmode == '6': steps = 1
+    elif syncmode == '7': steps = 0.5
+    elif syncmode == '8': 
+        if denominator and numerator: steps = (int(numerator)/int(denominator))*4
+
+    return (steps != None), steps
+
+
+
+
 send_auto_id_counter = counter.counter(1000, 'send_')
 
 def add_window_data(xmltag, convproj_obj, w_group, w_name):
@@ -108,10 +146,13 @@ def add_window_data(xmltag, convproj_obj, w_group, w_name):
 
 def getvstparams(convproj_obj, plugin_obj, pluginid, xmldata):
     global autoid_assoc
-    plugin_obj.datavals.add('path', xmldata.get('plugin'))
+    
+    pluginpath = xmldata.get('plugin')
+
+    plugin_obj.datavals.add('path', pluginpath)
 
     vst2_pathid = pluginid+'_vstpath'
-    convproj_obj.add_fileref(vst2_pathid, xmldata.get('plugin'))
+    convproj_obj.add_fileref(vst2_pathid, pluginpath)
     plugin_obj.filerefs['plugin'] = vst2_pathid
 
     vst_numparams = xmldata.get('numparams')
@@ -145,6 +186,13 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, xmldata):
             value = node.get('value')
             if value != None:
                 autoid_assoc.define(str(node.get('id')), ['plugin', pluginid, 'ext_param_'+notetagtxt[5:]], 'float', None)
+
+    pluginfo_obj = manager_extplug.vst2_get('path', pluginpath, 'win', [32, 64])
+
+    if pluginfo_obj.out_exists:
+        plugin_obj.datavals.add('name', pluginfo_obj.name)
+        plugin_obj.datavals.add('fourid', int(pluginfo_obj.id))
+        plugin_obj.datavals.add('version', vst_version)
 
 def hundredto1(lmms_input): return float(lmms_input) * 0.01
 
@@ -239,8 +287,7 @@ def asdflfo(plugin_obj, xmlO, asdrtype):
     lfo_obj.predelay = exp2sec(lfo_predelay*4)
     lfo_obj.attack = lfo_attack
     lfo_obj.shape = lfo_shape
-    lfo_obj.speed_type = 'seconds'
-    lfo_obj.speed_time = lfo_speed
+    lfo_obj.time.set_seconds(lfo_speed)
     lfo_obj.amount = lfo_amount
 
 def lmms_decodeplugin(convproj_obj, trkX_insttr):
@@ -257,6 +304,7 @@ def lmms_decodeplugin(convproj_obj, trkX_insttr):
 
         if pluginname == "sf2player":
             plugin_obj, pluginid = convproj_obj.add_plugin_genid('soundfont2', None)
+            plugin_obj.role = 'synth'
             plugin_obj.datavals.add('bank', int(xml_plugin.get('bank')))
             plugin_obj.datavals.add('patch', int(xml_plugin.get('patch')))
             sf2_path = xml_plugin.get('src')
@@ -274,7 +322,8 @@ def lmms_decodeplugin(convproj_obj, trkX_insttr):
             param_obj.visual.name = 'reverbOn'
 
         elif pluginname == "audiofileprocessor":
-            plugin_obj, pluginid, sampleref_obj = convproj_obj.add_plugin_sampler_genid(lmms_getvalue(xml_plugin, 'src', ''))
+            filepath = get_sample(lmms_getvalue(xml_plugin, 'src', ''))
+            plugin_obj, pluginid, sampleref_obj = convproj_obj.add_plugin_sampler_genid(filepath)
             plugin_obj.datavals.add('reverse', bool(int(lmms_getvalue(xml_plugin, 'reversed', 0))))
             plugin_obj.datavals.add('amp', float(lmms_getvalue(xml_plugin, 'amp', 1))/100)
             plugin_obj.datavals.add('continueacrossnotes', bool(int(lmms_getvalue(xml_plugin, 'stutter', 0))))
@@ -320,12 +369,26 @@ def lmms_decodeplugin(convproj_obj, trkX_insttr):
 
         elif pluginname == "vestige":
             plugin_obj, pluginid = convproj_obj.add_plugin_genid('vst2', 'win')
+            plugin_obj.role = 'synth'
             getvstparams(convproj_obj, plugin_obj, pluginid, xml_plugin)
 
         else:
             plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-lmms', pluginname)
+            plugin_obj.role = 'synth'
             dset_plugparams(pluginname, pluginid, xml_plugin, plugin_obj)
             asdflfo_get(trkX_insttr, plugin_obj)
+
+            if pluginname == "vibedstrings":
+                for num in range(9):
+                    graphid = 'graph'+str(num)
+                    vibegraph = xml_plugin.get(graphid)
+                    if vibegraph:
+                        vibegraph = base64.b64decode(vibegraph.encode('ascii'))
+                        vibegraph_size = len(vibegraph)//4
+                        wave_data = struct.unpack('f'*vibegraph_size, vibegraph)
+                        wave_obj = plugin_obj.wave_add(graphid)
+                        wave_obj.set_all_range(wave_data, 0, 1)
+                        wave_obj.smooth = True
 
             if pluginname == "bitinvader":
                 sampleshape = xml_plugin.get('sampleShape')
@@ -384,7 +447,7 @@ def lmms_decodeplugin(convproj_obj, trkX_insttr):
                 for oscnum in range(1, 4):
                     out_str = 'userwavefile'+str(oscnum)
                     filepath = xml_plugin.get(out_str)
-                    if filepath == None: filepath = ''
+                    filepath = get_sample(filepath)
                     convproj_obj.add_sampleref(pluginid+'_'+out_str, filepath)
                     plugin_obj.samplerefs[out_str] = pluginid+'_'+out_str
 
@@ -417,8 +480,8 @@ def lmms_decode_nlplacements(trkX, track_obj):
         lmms_decode_nlpattern(patX.findall('note'), placement_obj.notelist)
         placement_obj.position = float(patX.get('pos'))
         placement_obj.duration = placement_obj.notelist.get_dur()
-        if placement_obj.duration == 0: placement_obj.duration = 16
-        placement_obj.duration = placement_obj.duration
+        if placement_obj.duration != 0: placement_obj.duration = (placement_obj.duration/192).__ceil__()*192
+        else: placement_obj.duration = 16
         placement_obj.visual.name = patX.get('name')
         placement_obj.muted = bool(int(patX.get('muted')))
 
@@ -484,20 +547,58 @@ def lmms_decode_inst_track(convproj_obj, trkX, trackid):
     if len(xml_a_arpeggiator) != 0:
         trkX_arpeggiator = xml_a_arpeggiator[0]
 
-        nfx_plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-lmms', 'arpeggiator')
+        nfx_plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'arpeggiator')
+        nfx_plugin_obj.role = 'notefx'
         cvpj_l_arpeggiator_enabled = lmms_auto_getvalue(trkX_arpeggiator, 'arp-enabled', 0, 'bool', None, ['slot', pluginid, 'enabled'])
-        dset_plugparams('arpeggiator', pluginid, trkX_arpeggiator, nfx_plugin_obj)
+        #dset_plugparams('arpeggiator', pluginid, trkX_arpeggiator, nfx_plugin_obj)
+
+        arp_arp = int(lmms_getvalue(trkX_arpeggiator, 'arp', 0))
+        arp_arpcycle = float(lmms_getvalue(trkX_arpeggiator, 'arpcycle', 0))
+        arp_arpdir = float(lmms_getvalue(trkX_arpeggiator, 'arpdir', 0))
+        arp_arpgate = float(lmms_getvalue(trkX_arpeggiator, 'arpgate', 0))/100
+        arp_arpmiss = float(lmms_getvalue(trkX_arpeggiator, 'arpmiss', 0))/100
+        arp_arpmode = float(lmms_getvalue(trkX_arpeggiator, 'arpmode', 0))
+        arp_arprange = float(lmms_getvalue(trkX_arpeggiator, 'arprange', 0))
+        arp_arpskip = float(lmms_getvalue(trkX_arpeggiator, 'arpskip', 0))/100
+
+        is_steps, timeval = get_timedata(trkX_arpeggiator, 'arptime')
+
+        timing_obj = nfx_plugin_obj.timing_add('main')
+        if is_steps: timing_obj.set_steps(timeval, convproj_obj)
+        else: timing_obj.set_seconds(int(lmms_getvalue(trkX_arpeggiator, 'arptime', 1000))/1000)
+
+        chord_obj = nfx_plugin_obj.chord_add('main')
+        chord_obj.find_by_id(0, chordids[arp_arp])
+
+        direction = ['up','down','up_down','up_down','random'][int(arp_arpdir)]
+        nfx_plugin_obj.datavals.add('direction', direction)
+        if arp_arpdir == 3: nfx_plugin_obj.datavals.add('direction_mode', 'reverse')
+        nfx_plugin_obj.datavals.add('mode', ['free','sort','sync'][int(arp_arpmode)])
+        nfx_plugin_obj.datavals.add('range', int(arp_arprange))
+        nfx_plugin_obj.datavals.add('gate', arp_arpgate)
+        nfx_plugin_obj.datavals.add('miss_rate', arp_arpmiss)
+        nfx_plugin_obj.datavals.add('skip_rate', arp_arpskip)
+        nfx_plugin_obj.datavals.add('cycle', int(arp_arpcycle))
+
         nfx_plugin_obj.fxdata_add(cvpj_l_arpeggiator_enabled, None)
         track_obj.fxslots_notes.append(pluginid)
-
 
     xml_a_chordcreator = trkX_insttr.findall('chordcreator')
     if len(xml_a_chordcreator) != 0:
         trkX_chordcreator = xml_a_chordcreator[0]
 
-        nfx_plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-lmms', 'chordcreator')
+        nfx_plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'chord_creator')
+        nfx_plugin_obj.role = 'notefx'
         cvpj_l_chordcreator_enabled = lmms_auto_getvalue(trkX_chordcreator, 'chord-enabled', 0, 'bool', None, ['slot', pluginid, 'enabled'])
-        dset_plugparams('chordcreator', pluginid, trkX_chordcreator, nfx_plugin_obj)
+        #dset_plugparams('chordcreator', pluginid, trkX_chordcreator, nfx_plugin_obj)
+
+        stack_chord = int(lmms_getvalue(trkX_arpeggiator, 'chord', 0))
+        stack_chordrange = int(lmms_getvalue(trkX_arpeggiator, 'chordrange', 0))
+
+        chord_obj = nfx_plugin_obj.chord_add('main')
+        chord_obj.find_by_id(0, chordids[stack_chord])
+        nfx_plugin_obj.datavals.add('range', int(stack_chordrange))
+
         nfx_plugin_obj.fxdata_add(cvpj_l_chordcreator_enabled, None)
         track_obj.fxslots_notes.append(pluginid)
 
@@ -512,7 +613,7 @@ def lmms_decode_audioplacements(convproj_obj, trkX, track_obj):
         placement_obj.position = float(samplecX.get('pos'))
         placement_obj.duration = float(samplecX.get('len'))
         placement_obj.muted = bool(int(samplecX.get('muted')))
-        filepath = samplecX.get('src')
+        filepath = get_sample(samplecX.get('src'))
         convproj_obj.add_sampleref(filepath, filepath)
         placement_obj.sampleref = filepath
         placement_obj.stretch_method = 'rate_speed'
@@ -552,14 +653,13 @@ def lmms_decode_audio_track(convproj_obj, trkX, trackid):
 # ------- Track: Automation -------
 
 def lmms_decode_autoplacements(convproj_obj, trkX):
-    global autoid_assoc
     autoplacements = []
     autopatsX = trkX.findall('automationpattern')
     for autopatX in autopatsX:
         autoobjectX = autopatX.findall('object')
         if len(autoobjectX) != 0:
             internal_id = autoobjectX[0].get('id')
-            autopl_obj = autoid_assoc.add_pl(str(autoobjectX[0].get('id')), 'float')
+            autopl_obj = convproj_obj.automation.add_pl_points(['id', str(autoobjectX[0].get('id'))], 'float')
             autopl_obj.position = float(autopatX.get('pos'))
             autopl_obj.duration = float(autopatX.get('len'))
             for pointX in autopatX.findall('time'):
@@ -567,7 +667,6 @@ def lmms_decode_autoplacements(convproj_obj, trkX):
                 autopoint_obj.pos = int(pointX.get('pos'))
                 autopoint_obj.value = float(pointX.get('value'))
                 autopoint_obj.type = 'normal'
-
 
 def lmms_decode_auto_track(convproj_obj, trkX):
     lmms_decode_autoplacements(convproj_obj, trkX)
@@ -580,6 +679,7 @@ def lmms_decode_effectslot(convproj_obj, fxslotX):
     if fxpluginname == 'vsteffect':
         fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
         plugin_obj, pluginid = convproj_obj.add_plugin_genid('vst2', 'win')
+        plugin_obj.role = 'effect'
         getvstparams(convproj_obj, plugin_obj, pluginid, fxxml_plugin)
 
     elif fxpluginname == 'ladspaeffect':
@@ -589,6 +689,7 @@ def lmms_decode_effectslot(convproj_obj, fxslotX):
         fxxml_plugin_ladspacontrols = fxslotX.findall('ladspacontrols')[0]
 
         plugin_obj, pluginid = convproj_obj.add_plugin_genid('ladspa', None)
+        plugin_obj.role = 'effect'
 
         for attribute in fxxml_plugin_key.findall('attribute'):
             attval = attribute.get('value')
@@ -622,8 +723,20 @@ def lmms_decode_effectslot(convproj_obj, fxslotX):
         
     elif fxpluginname in fxlist:
         fxxml_plugin = fxslotX.findall(fxlist[fxpluginname])[0]
-        plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-lmms', fxpluginname)
-        dset_plugparams(fxpluginname, pluginid, fxxml_plugin, plugin_obj)
+        if fxpluginname == 'delay':
+            plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'delay')
+            plugin_obj.role = 'effect'
+            DelayTimeSamples = float(lmms_getvalue(fxxml_plugin, 'DelayTimeSamples', 1))
+            FeebackAmount = float(lmms_getvalue(fxxml_plugin, 'FeebackAmount', 0.5))
+            plugin_obj.datavals.add('c_fb', FeebackAmount)
+            is_steps, timeval = get_timedata(fxxml_plugin, 'DelayTimeSamples')
+            timing_obj = plugin_obj.timing_add('center')
+            if is_steps: timing_obj.set_steps(timeval, convproj_obj)
+            else: timing_obj.set_seconds(DelayTimeSamples)
+        else:
+            plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-lmms', fxpluginname)
+            plugin_obj.role = 'effect'
+            dset_plugparams(fxpluginname, pluginid, fxxml_plugin, plugin_obj)
 
     fxenabled = lmms_auto_getvalue(fxslotX, 'on', 1, 'bool', None, ['slot', pluginid, 'enabled'])
     fxwet = lmms_auto_getvalue(fxslotX, 'wet', 1, 'float', None, ['slot', pluginid, 'wet'])
@@ -684,13 +797,15 @@ class input_lmms(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'lmms'
-    def getname(self): return 'LMMS'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): 
-        return {
-        'fxrack': True,
-        'fxrack_params': ['enabled','vol']
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'LMMS'
+        dawinfo_obj.file_ext = 'mmp'
+        dawinfo_obj.fxrack = True
+        dawinfo_obj.fxrack_params = ['enabled','vol']
+        dawinfo_obj.auto_types = ['pl_points']
+        dawinfo_obj.plugin_included = ['sampler:single','vst2','fm:opl2','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay','ladspa']
+
     def supported_autodetect(self): return True
     def detect(self, input_file):
         try:
@@ -699,7 +814,7 @@ class input_lmms(plugin_input.base):
             else: output = False
         except ET.ParseError: output = False
         return output
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         global dataset
         global autoid_assoc
 

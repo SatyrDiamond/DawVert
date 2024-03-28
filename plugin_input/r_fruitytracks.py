@@ -10,14 +10,14 @@ class input_fruitytracks(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'fruitytracks'
-    def getname(self): return 'FruityTracks'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): 
-        return {
-        'placement_cut': True,
-        'placement_loop': ['loop', 'loop_off', 'loop_adv'],
-        'placement_audio_stretch': ['rate'],
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'FruityTracks'
+        dawinfo_obj.file_ext = 'ftr'
+        dawinfo_obj.placement_cut = True
+        dawinfo_obj.audio_filetypes = ['wav', 'mp3']
+        dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
+        dawinfo_obj.audio_stretch = ['rate']
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
         bytestream.seek(0)
@@ -26,13 +26,13 @@ class input_fruitytracks(plugin_input.base):
         else: return False
     def supported_autodetect(self): return True
 
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         convproj_obj.type = 'r'
         convproj_obj.set_timings(4, True)
 
         fileobject = open(input_file, 'rb')
         headername = fileobject.read(4)
-        rifftable = data_bytes.riff_read(fileobject, 0)
+        rifftable = data_bytes.iff_read(fileobject, 0)
         for riffobj in rifftable:
             ##print(str(riffobj[0]) + str(len(riffobj[1])))
             if riffobj[0] == b'FTdt':

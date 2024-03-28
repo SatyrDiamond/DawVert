@@ -70,4 +70,4 @@ class m8bp_data:
 		return xml_m8p_root
 
 	def to_cvpj_vst2(self, convproj_obj, plugin_obj):
-		plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name','any', 'Magical 8bit Plug 2', 'chunk', data_vc2xml.make(self.out_xml()), None)
+		plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id','any', 1937337962, 'chunk', data_vc2xml.make(self.out_xml()), None)

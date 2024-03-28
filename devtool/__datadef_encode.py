@@ -12,11 +12,11 @@ aparser.add_argument("-s", default='main')
 
 argsd = vars(aparser.parse_args())
 
-datadef = dv_datadef.datadef()
+datadef = dv_datadef.datadef(argsd['d'])
 
-if argsd['d'] != None:
-    df_file = argsd['d']
-    datadef.load_file(df_file)
+#if argsd['d'] != None:
+#    df_file = argsd['d']
+#    datadef.load_file(df_file)
     
 in_data = {}
 if argsd['j'] != None:

@@ -54,6 +54,9 @@ def widgit_txt_but(i_text, i_list, i_numname, i_vlist):
 g_current_struct = [0, None]
 txtbox_struct_name = ''
 
+
+alwaysmain = False
+
 def window___struct_list():
     window_data = hello_imgui.DockableWindow()
     window_data.label = "Struct List"

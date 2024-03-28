@@ -104,15 +104,15 @@ class input_onlinesequencer(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'onlineseq'
-    def getname(self): return 'Online Sequencer'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): 
-        return {
-        'auto_nopl': True,
-        'track_nopl': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Online Sequencer'
+        dawinfo_obj.file_ext = 'sequence'
+        dawinfo_obj.auto_types = ['nopl_points']
+        dawinfo_obj.track_nopl = True
+        dawinfo_obj.plugin_included = ['midi','native-onlineseq','universal:synth-osc']
     def supported_autodetect(self): return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         global onlseq_notelist
         global onlseq_customnames
         global dataset
@@ -168,6 +168,7 @@ class input_onlinesequencer(plugin_input.base):
             if instid in onlseq_data_instparams: onlseq_s_iparams = onlseq_data_instparams[instid]
 
             track_obj, plugin_obj = convproj_obj.add_track_from_dset(cvpj_instid, cvpj_instid, dataset, dataset_midi, str(trueinstid), None, None, 0, False)
+            plugin_obj.role = 'synth'
             if 'vol' in onlseq_s_iparams: track_obj.params.add('vol', onlseq_s_iparams['vol'], 'float')
             if 'pan' in onlseq_s_iparams: track_obj.params.add('pan', onlseq_s_iparams['pan'], 'float')
 
@@ -182,8 +183,7 @@ class input_onlinesequencer(plugin_input.base):
                     if instid == 15: osc_data.shape = 'saw'
                     if instid == 16: osc_data.shape = 'triangle'
 
-            placement_obj = track_obj.placements.add_notes()
-            for ols_pos, ols_dur, ols_note, ols_vol in cvpj_notelist: placement_obj.notelist.add_r(ols_pos, ols_dur, ols_note, ols_vol, {})
+            for ols_pos, ols_dur, ols_note, ols_vol in cvpj_notelist: track_obj.placements.notelist.add_r(ols_pos, ols_dur, ols_note, ols_vol, {})
 
             if 'delay_on' in onlseq_s_iparams and 'delay' not in used_fx_inst[instid]: used_fx_inst[instid].append('delay')
             if 'distort_type' in onlseq_s_iparams and 'distort' not in used_fx_inst[instid]: used_fx_inst[instid].append('distort')
@@ -205,38 +205,38 @@ class input_onlinesequencer(plugin_input.base):
 
                 if a_inst not in used_fx_inst: used_fx_inst[a_inst] = []
 
-                if a_param == 'vol': convproj_obj.add_autopoint(['track', trackid, 'vol'], 'float', a_pos, a_value, a_type)
-                if a_param == 'pan': convproj_obj.add_autopoint(['track', trackid, 'pan'], 'float', a_pos, a_value, a_type)
-                if a_param == 'detune': convproj_obj.add_autopoint(['track', trackid, 'pitch'], 'float', a_pos, a_value/100, a_type)
+                if a_param == 'vol': convproj_obj.automation.add_autopoint(['track', trackid, 'vol'], 'float', a_pos, a_value, a_type)
+                if a_param == 'pan': convproj_obj.automation.add_autopoint(['track', trackid, 'pan'], 'float', a_pos, a_value, a_type)
+                if a_param == 'detune': convproj_obj.automation.add_autopoint(['track', trackid, 'pitch'], 'float', a_pos, a_value/100, a_type)
 
                 if a_param in ['eq_high', 'eq_mid', 'eq_low']: 
-                    convproj_obj.add_autopoint(['plugin', trackid+'_eq', a_param], 'float', a_pos, a_value, a_type)
+                    convproj_obj.automation.add_autopoint(['plugin', trackid+'_eq', a_param], 'float', a_pos, a_value, a_type)
                     if 'eq' not in used_fx_inst[a_inst]: used_fx_inst[a_inst].append('eq')
 
                 if a_param == 'delay_on': 
-                    convproj_obj.add_autopoint(['slot', trackid+'_delay', 'enabled'], 'bool', a_pos, bool(a_value), a_type)
+                    convproj_obj.automation.add_autopoint(['slot', trackid+'_delay', 'enabled'], 'bool', a_pos, bool(a_value), a_type)
                     if 'delay' not in used_fx_inst[a_inst]: used_fx_inst[a_inst].append('delay')
 
                 if a_param == 'reverb_type': 
-                    convproj_obj.add_autopoint(['plugin', trackid+'_reverb', 'reverb_type'], 'float', a_pos, a_value, a_type)
+                    convproj_obj.automation.add_autopoint(['plugin', trackid+'_reverb', 'reverb_type'], 'float', a_pos, a_value, a_type)
                     if 'reverb' not in used_fx_inst[a_inst]: used_fx_inst[a_inst].append('reverb')
 
                 if a_param == 'reverb_wet': 
-                    convproj_obj.add_autopoint(['slot', trackid+'_reverb', 'wet'], 'float', a_pos, a_value, a_type)
+                    convproj_obj.automation.add_autopoint(['slot', trackid+'_reverb', 'wet'], 'float', a_pos, a_value, a_type)
                     if 'reverb' not in used_fx_inst[a_inst]: used_fx_inst[a_inst].append('reverb')
 
                 if a_param == 'distort_type': 
-                    if a_value != 0: convproj_obj.add_autopoint(['plugin', trackid+'_distort', 'distort_type'], 'int', a_pos, a_value, a_type)
-                    convproj_obj.add_autopoint(['slot', trackid+'_distort', 'enabled'], 'bool', a_pos, int(bool(a_value)), a_type)
+                    if a_value != 0: convproj_obj.automation.add_autopoint(['plugin', trackid+'_distort', 'distort_type'], 'int', a_pos, a_value, a_type)
+                    convproj_obj.automation.add_autopoint(['slot', trackid+'_distort', 'enabled'], 'bool', a_pos, int(bool(a_value)), a_type)
                     if 'distort' not in used_fx_inst[a_inst]: used_fx_inst[a_inst].append('distort')
 
                 if a_param == 'distort_wet': 
-                    convproj_obj.add_autopoint(['slot', trackid+'_distort', 'wet'], 'float', a_pos, a_value, a_type)
+                    convproj_obj.automation.add_autopoint(['slot', trackid+'_distort', 'wet'], 'float', a_pos, a_value, a_type)
                     if 'distort' not in used_fx_inst[a_inst]: used_fx_inst[a_inst].append('distort')
 
             else:
-                if a_param == 'vol': convproj_obj.add_autopoint(['song', 'vol'], 'float', a_pos, a_value, a_type)
-                if a_param == 'bpm': convproj_obj.add_autopoint(['song', 'bpm'], 'float', a_pos, a_value, a_type)
+                if a_param == 'vol': convproj_obj.automation.add_autopoint(['song', 'vol'], 'float', a_pos, a_value, a_type)
+                if a_param == 'bpm': convproj_obj.automation.add_autopoint(['song', 'bpm'], 'float', a_pos, a_value, a_type)
 
         for instid, instparams in used_fx_inst.items():
             trackid = 'os_'+str(instid)
@@ -250,10 +250,12 @@ class input_onlinesequencer(plugin_input.base):
 
                 if 'delay' in instparams:
                     pluginid = trackid+'_delay'
-                    plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'delay-c')
-                    plugin_obj.datavals.add('time_type', 'steps')
-                    plugin_obj.datavals.add('time', 2)
-                    plugin_obj.datavals.add('feedback', 0.25)
+                    plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'delay')
+                    plugin_obj.role = 'effect'
+                    plugin_obj.datavals.add('traits', [])
+                    timing_obj = plugin_obj.timing_add('center')
+                    timing_obj.set_steps(2, convproj_obj)
+                    plugin_obj.datavals.add('c_fb', 0.25)
                     plugin_obj.fxdata_add(delay_fx_enabled if delay_fx_enabled else 0, 0.5)
                     plugin_obj.visual.name = 'Delay'
                     track_obj.fxslots_audio.append(pluginid)
@@ -261,6 +263,7 @@ class input_onlinesequencer(plugin_input.base):
                 if 'distort' in instparams:
                     pluginid = trackid+'_distort'
                     plugin_obj = convproj_obj.add_plugin(pluginid, 'native-onlineseq', 'distort')
+                    plugin_obj.role = 'effect'
                     fx_wet = data_values.nested_dict_get_value(onlseq_data_instparams, [instid, 'distort_wet'])
                     if fx_wet == None: fx_wet = 1
                     plugin_obj.fxdata_add(True, fx_wet)
@@ -271,6 +274,7 @@ class input_onlinesequencer(plugin_input.base):
                 if 'reverb' in instparams:
                     pluginid = trackid+'_reverb'
                     plugin_obj = convproj_obj.add_plugin(pluginid, 'native-onlineseq', 'reverb')
+                    plugin_obj.role = 'effect'
                     fx_enabled = bool(data_values.nested_dict_get_value(onlseq_data_instparams, [instid, 'reverb_on']))
                     if fx_enabled == None: fx_enabled = 0
                     fx_wet = data_values.nested_dict_get_value(onlseq_data_instparams, [instid, 'reverb_wet'])
@@ -284,6 +288,7 @@ class input_onlinesequencer(plugin_input.base):
                     fx_enabled = bool(data_values.nested_dict_get_value(onlseq_data_instparams, [instid, 'enable_eq']))
                     if fx_enabled == None: fx_enabled = 0
                     plugin_obj = convproj_obj.add_plugin(pluginid, 'native-onlineseq', 'eq')
+                    plugin_obj.role = 'effect'
                     plugin_obj.fxdata_add(fx_enabled, 1)
                     for paramname in ['eq_high', 'eq_mid', 'eq_low']:
                         eq_value = data_values.nested_dict_get_value(onlseq_data_instparams, [instid, paramname])

@@ -7,7 +7,7 @@ class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['native-flstudio', None, 'flp'], ['native-tracktion', None, 'waveform_edit'], True, False
-    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
+    def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, plugtransform):
         if plugin_obj.plugin_subtype == None: plugin_obj.plugin_subtype = ''
     
         if plugin_obj.plugin_subtype.lower() == 'fruity balance':  

@@ -110,10 +110,10 @@ class datadef:
                         intval, outpartdata = self.getnum(outpartdata, partnum, structname)
                         outval[1] = self.bytestream.read(intval).split(b'\x00')[0].decode()
 
-                    elif partdata[0][0] == 'dstring':        outval[1] = self.bytestream.read(subvalnum*2).decode()
+                    elif partdata[0][0] == 'dstring':        outval[1] = self.bytestream.read(subvalnum*2).decode("utf-16")
                     elif partdata[0][0] == 'dstring_part':
                         intval, outpartdata = self.getnum(outpartdata, partnum, structname)
-                        outval[1] = self.bytestream.read(intval*2).decode()
+                        outval[1] = self.bytestream.read(intval*2).decode("utf-16")
 
                     elif partdata[0][0] == 'string_t':       outval[1] = data_bytes.readstring(self.bytestream)
 
@@ -190,9 +190,13 @@ class datadef:
         try:
             if structname in self.structs: 
                 self.output = self.encode_struct(structname, dictdata)
+                return self.output
+            else:
+                return b''
         except Exception as e:
             self.errored = True
             self.errormeg = str(e)
+            return b''
 
     def encode_numdata(self, valtype, outval):
         if valtype == 'byte': outbytes = struct.pack('B', outval)
@@ -286,6 +290,8 @@ class datadef:
 
 
             else: raise Exception('unsupported valtype: '+partdata[0][0])
+
+            #print(outbytes, partdata)
 
             self.bytestream.write(outbytes)
 

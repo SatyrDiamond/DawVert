@@ -30,6 +30,7 @@ def make_fxslot(convproj_obj, x_device_sound, fx_type, as_device):
     fx_wet = 1
     if fx_type == 'chorus':
         plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-audiosauna', 'chorus')
+        plugin_obj.role = 'effect'
         plugin_obj.visual.name = 'Chorus'
 
         if as_device in [0,1]: 
@@ -39,10 +40,8 @@ def make_fxslot(convproj_obj, x_device_sound, fx_type, as_device):
             fx_wet = float(getvalue(x_device_sound, 'chorusDryWet', 0))/100
             chorus_size = float(getvalue(x_device_sound, 'chorusSize', 0))/100
 
-        param_obj = plugin_obj.params.add("speed", float(getvalue(x_device_sound, 'chorusSpeed', 0))/100, 'float')
-        param_obj.visual.name = "Speed"
-        param_obj = plugin_obj.params.add("size", chorus_size, 'float')
-        param_obj.visual.name = "Size"
+        plugin_obj.params.add_named("speed", float(getvalue(x_device_sound, 'chorusSpeed', 0))/100, 'float', 'Speed')
+        plugin_obj.params.add_named("size", chorus_size, 'float', 'Size')
         plugin_obj.fxdata_add(True, fx_wet)
 
         return pluginid
@@ -51,20 +50,20 @@ def make_fxslot(convproj_obj, x_device_sound, fx_type, as_device):
         modulate = float(getvalue(x_device_sound, 'driveModul' if as_device in [0,1] else 'modulate' , 0))/100
 
         plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-audiosauna', 'distortion')
+        plugin_obj.role = 'effect'
         plugin_obj.visual.name = 'Distortion'
-        param_obj = plugin_obj.params.add("overdrive", float(getvalue(x_device_sound, 'overdrive', 0))/100, 'float')
-        param_obj.visual.name = "Overdrive"
-        param_obj = plugin_obj.params.add("modulate", modulate, 'float')
-        param_obj.visual.name = "Modulate"
+        plugin_obj.params.add_named("overdrive", float(getvalue(x_device_sound, 'overdrive', 0))/100, 'float', 'Overdrive')
+        plugin_obj.params.add_named("modulate", modulate, 'float', 'Modulate')
         return pluginid
 
     if fx_type == 'bitcrush':
         bitrateval = float(getvalue(x_device_sound, 'bitrate', 0))
         if bitrateval != 0.0: 
-            plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-audiosauna', 'bitcrush')
+            plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'bitcrush')
+            plugin_obj.role = 'effect'
             plugin_obj.visual.name = 'Bitcrush'
-            param_obj = plugin_obj.params.add("frames", bitrateval, 'float')
-            param_obj.visual.name = "Frames"
+            plugin_obj.params.add("bits", 16, 'float')
+            plugin_obj.params.add("freq", 22050/bitrateval, 'float')
             return pluginid
 
     if fx_type == 'tape_delay':
@@ -74,16 +73,37 @@ def make_fxslot(convproj_obj, x_device_sound, fx_type, as_device):
         dlySync = getbool(getvalue(x_device_sound, 'dlySync', 0))
 
         plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-audiosauna', 'tape_delay')
+        plugin_obj.role = 'effect'
         plugin_obj.visual.name = 'Tape Delay'
 
-        param_obj = plugin_obj.params.add("time", dlyTime, 'float')
-        param_obj.visual.name = "Time"
-        param_obj = plugin_obj.params.add("damage", dlyDamage, 'float')
-        param_obj.visual.name = "Damage"
-        param_obj = plugin_obj.params.add("feedback", dlyFeed, 'float')
-        param_obj.visual.name = "Feedback"
-        param_obj = plugin_obj.params.add("sync", dlySync, 'bool')
-        param_obj.visual.name = "Sync"
+        timing_obj = plugin_obj.timing_add('main')
+        if dlySync: 
+            if dlyTime == 0: timing_obj.set_frac(1, 64, '', convproj_obj)
+            if dlyTime == 1: timing_obj.set_frac(1, 64, 't', convproj_obj)
+            if dlyTime == 2: timing_obj.set_frac(1, 64, 'd', convproj_obj)
+            if dlyTime == 3: timing_obj.set_frac(1, 32, '', convproj_obj)
+            if dlyTime == 4: timing_obj.set_frac(1, 32, 't', convproj_obj)
+            if dlyTime == 5: timing_obj.set_frac(1, 32, 'd', convproj_obj)
+            if dlyTime == 6: timing_obj.set_frac(1, 16, '', convproj_obj)
+            if dlyTime == 7: timing_obj.set_frac(1, 16, 't', convproj_obj)
+            if dlyTime == 8: timing_obj.set_frac(1, 16, 'd', convproj_obj)
+            if dlyTime == 9: timing_obj.set_frac(1, 8, '', convproj_obj)
+            if dlyTime == 10: timing_obj.set_frac(1, 8, 't', convproj_obj)
+            if dlyTime == 11: timing_obj.set_frac(1, 8, 'd', convproj_obj)
+            if dlyTime == 12: timing_obj.set_frac(1, 4, '', convproj_obj)
+            if dlyTime == 13: timing_obj.set_frac(1, 4, 't', convproj_obj)
+            if dlyTime == 14: timing_obj.set_frac(1, 4, 'd', convproj_obj)
+            if dlyTime == 15: timing_obj.set_frac(1, 2, '', convproj_obj)
+            if dlyTime == 16: timing_obj.set_frac(1, 2, 't', convproj_obj)
+            if dlyTime == 17: timing_obj.set_frac(1, 2, 'd', convproj_obj)
+            if dlyTime == 18: timing_obj.set_frac(1, 1, '', convproj_obj)
+        else: 
+            timing_obj.set_seconds(dlyTime)
+
+        plugin_obj.params.add_named("time", dlyTime, 'float', "Time")
+        plugin_obj.params.add_named("damage", dlyDamage, 'float', "Damage")
+        plugin_obj.params.add_named("feedback", dlyFeed, 'float', "Feedback")
+        plugin_obj.params.add_named("sync", dlySync, 'bool', "Sync")
         return pluginid
 
     if fx_type == 'reverb':
@@ -92,23 +112,22 @@ def make_fxslot(convproj_obj, x_device_sound, fx_type, as_device):
         rvbWidth = float(getvalue(x_device_sound, 'rvbWidth', 0))/100
 
         plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-audiosauna', 'reverb')
+        plugin_obj.role = 'effect'
         plugin_obj.visual.name = 'Reverb'
 
-        param_obj = plugin_obj.params.add("time", rvbTime, 'float')
-        param_obj.visual.name = "Time"
-        param_obj = plugin_obj.params.add("feedback", rvbFeed, 'float')
-        param_obj.visual.name = "Feedback"
-        param_obj = plugin_obj.params.add("width", rvbWidth, 'float')
-        param_obj.visual.name = "Width"
+        plugin_obj.params.add_named("time", rvbTime, 'float', 'Time')
+        plugin_obj.params.add_named("feedback", rvbFeed, 'float', 'Feedback')
+        plugin_obj.params.add_named("width", rvbWidth, 'float', 'Width')
         return pluginid
 
     if fx_type == 'amp':
-        ampval = float(getvalue(x_device_sound, 'masterAmp', 0))/100
+        ampval = float(getvalue(x_device_sound, 'masterAmp', 100))/100
+        print(ampval)
         if ampval != 1.0: 
             plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-audiosauna', 'amp')
+            plugin_obj.role = 'effect'
             plugin_obj.visual.name = 'Amp'
-            param_obj = plugin_obj.params.add("level", ampval, 'float')
-            param_obj.visual.name = "Level"
+            plugin_obj.params.add_named("level", ampval, 'float', 'Level')
             plugin_obj.fxdata_add(True, fx_wet)
             return pluginid
         
@@ -117,9 +136,13 @@ class input_audiosanua(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'audiosauna'
-    def getname(self): return 'AudioSauna'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): return {'placement_cut': True}
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'AudioSauna'
+        dawinfo_obj.file_ext = 'song'
+        dawinfo_obj.placement_cut = True
+        dawinfo_obj.audio_filetypes = ['wav', 'mp3']
+        dawinfo_obj.plugin_included = ['native-audiosauna', 'sampler:multi', 'universal:bitcrush']
     def supported_autodetect(self): return True
     def detect(self, input_file): 
         try:
@@ -128,7 +151,7 @@ class input_audiosanua(plugin_input.base):
             else: return False
         except:
             return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         global cvpj_l
         zip_data = zipfile.ZipFile(input_file, 'r')
 
@@ -144,6 +167,8 @@ class input_audiosanua(plugin_input.base):
         x_proj_tracks = x_proj.findall('tracks')[0]
         x_proj_songPatterns = x_proj.findall('songPatterns')[0]
         x_proj_devices = x_proj.findall('devices')[0]
+
+        convproj_obj.params.add('bpm', float(getvalue(x_proj, 'appTempo', 170)), 'float')
 
         xt_chan = x_proj_channels.findall('channel')
         xt_track = x_proj_tracks.findall('track')
@@ -250,6 +275,7 @@ class input_audiosanua(plugin_input.base):
 
             if v_device_deviceType == 1 or v_device_deviceType == 0:
                 plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-audiosauna', audiosanua_device_id[v_device_deviceType])
+                plugin_obj.role = 'synth'
                 x_device_sound = x_device.findall('sound')[0]
 
                 paramlist = dataset.params_list('plugin', str(v_device_deviceType))
@@ -303,6 +329,7 @@ class input_audiosanua(plugin_input.base):
                 x_device_sound = x_device.findall('sampler')[0]
 
                 plugin_obj, pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
+                plugin_obj.role = 'synth'
                 plugin_obj.datavals.add('point_value_type', "percent")
 
                 x_device_samples = x_device_sound.findall('samples')[0]
@@ -354,8 +381,8 @@ class input_audiosanua(plugin_input.base):
 
                 plugin_obj.env_asdr_add('vol', 0, v_attack, 0, v_decay, v_sustain, v_release, 1)
 
-                for fx_name in ['distortion', 'bitcrush', 'chorus', 'amp']:
-                    track_obj.fxslots_audio.append(make_fxslot(convproj_obj, x_device_sound, fx_name, v_device_deviceType))
+            for fx_name in ['distortion', 'bitcrush', 'chorus', 'amp']:
+                track_obj.fxslots_audio.append(make_fxslot(convproj_obj, x_device_sound, fx_name, v_device_deviceType))
 
             #cvpj_instdata['middlenote'] = int(getvalue(x_device_sound, 'masterTranspose', 0))*-1
 
@@ -396,23 +423,19 @@ class input_audiosanua(plugin_input.base):
             lfo_obj = plugin_obj.lfo_add('pitch')
             lfo_obj.attack = g_lfo_attack
             lfo_obj.shape = g_lfo_shape
-            lfo_obj.speed_type = 'seconds'
-            lfo_obj.speed_time = g_lfo_speed
+            lfo_obj.time.set_seconds(g_lfo_speed)
             lfo_obj.amount = p_lfo_amount
 
             lfo_obj = plugin_obj.lfo_add('cutoff')
             lfo_obj.attack = g_lfo_attack
             lfo_obj.shape = g_lfo_shape
-            lfo_obj.speed_type = 'seconds'
-            lfo_obj.speed_time = g_lfo_speed
+            lfo_obj.time.set_seconds(g_lfo_speed)
             lfo_obj.amount = c_lfo_amount
 
             if track_found: 
                 track_obj.inst_pluginid = pluginid
 
             devicenum += 1
-
-        convproj_obj.params.add('bpm', float(getvalue(x_proj, 'appTempo', 170)), 'float')
 
         as_loopstart = float(getvalue(x_proj, 'appLoopStart', 0))
         as_loopend = float(getvalue(x_proj, 'appLoopEnd', 0))

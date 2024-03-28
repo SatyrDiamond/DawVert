@@ -43,11 +43,12 @@ class input_sop(plugin_input.base):
     def getshortname(self): return 'adlib_sop'
     def getname(self): return 'Note Sequencer'
     def gettype(self): return 'rm'
-    def getdawcapabilities(self): 
-        return {
-        'auto_nopl': True,
-        'track_nopl': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Note Sequencer'
+        dawinfo_obj.file_ext = 'sop'
+        dawinfo_obj.auto_types = ['nopl_ticks']
+        dawinfo_obj.track_nopl = True
+        dawinfo_obj.plugin_included = ['fm:opl2','fm:opl3']
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -55,7 +56,7 @@ class input_sop(plugin_input.base):
         bytesdata = bytestream.read(7)
         if bytesdata == b'sopepos': return True
         else: return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         song_file = open(input_file, 'rb')
 
         convproj_obj.type = 'rm'
@@ -169,12 +170,11 @@ class input_sop(plugin_input.base):
             track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 0, False)
             track_obj.visual.name = '#'+str(cvpj_trackid)+' '+str()+trackname_endtext
             track_obj.visual.color = [0.39, 0.16, 0.78]
-            placement_obj = track_obj.placements.add_notes()
-
+            
             for sop_track_cmd in sop_data_track:
                 curtick += sop_track_cmd[0]
 
-                if sop_track_cmd[1] == 'VOL': convproj_obj.add_autotick(['track', cvpj_trackid, 'vol'], curtick, sop_track_cmd[2])
+                if sop_track_cmd[1] == 'VOL': convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'vol'], 'float', curtick, sop_track_cmd[2])
 
                 if sop_track_cmd[1] == 'INST': curinst = sop_track_cmd[2]
 
@@ -185,12 +185,12 @@ class input_sop(plugin_input.base):
                     if all_notepos == None: all_notepos = curtick
                     elif curtick < all_notepos: all_notepos = curtick
 
-                    placement_obj.notelist.add_m(str(curinst), curtick, sop_track_cmd[3], sop_track_cmd[2]-48, 1, {})
+                    track_obj.placements.notelist.add_m(str(curinst), curtick, sop_track_cmd[3], sop_track_cmd[2]-48, 1, {})
 
         auto_bpm = {}
         for sop_track_cmd in sop_data_ctrltrack:
             curtick += sop_track_cmd[0]
-            if sop_track_cmd[1] == 'TEMPO': convproj_obj.add_autotick(['main', 'bpm'], curtick, sop_track_cmd[2])
+            if sop_track_cmd[1] == 'TEMPO': convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', curtick, sop_track_cmd[2])
 
         convproj_obj.do_actions.append('do_addloop')
         convproj_obj.do_actions.append('do_singlenotelistcut')

@@ -24,13 +24,10 @@ class input_cvpj_f(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'temper'
-    def getname(self): return 'Temper'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): 
-        return {
-        #'track_hybrid': True
-        'auto_nopl': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Temper'
+        dawinfo_obj.file_ext = ''
     def supported_autodetect(self): return True
     def detect(self, input_file):
         output = False
@@ -40,7 +37,7 @@ class input_cvpj_f(plugin_input.base):
             if root.tag == "music-sequence": output = True
         except ET.ParseError: output = False
         return output
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         convproj_obj.type = 'r'
         convproj_obj.set_timings(6716, False)
 

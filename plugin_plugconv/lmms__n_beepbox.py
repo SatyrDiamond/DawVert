@@ -8,11 +8,11 @@ class plugconv(plugin_plugconv.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
 	def getplugconvinfo(self): return ['native-jummbox', None, 'jummbox'], ['native-lmms', None, 'lmms'], True, False
-	def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, plugtransform):
 		if plugin_obj.plugin_subtype in ['custom chip', 'chip', 'harmonics']:
 			print('[plug-conv] Beepbox to LMMS: '+plugin_obj.plugin_subtype+' > TripleOscillator:',pluginid)
 
-			samplefolder = extra_json['samplefolder']
+			samplefolder = dv_config.path_samples_generated
 
 			os.makedirs(samplefolder, exist_ok=True)
 			wave_path = os.path.join(samplefolder, pluginid+'_wave.wav')

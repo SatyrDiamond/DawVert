@@ -8,6 +8,16 @@ import math
 from functions import data_values
 from functions import xtramath
 from functions_plugin_ext import plugin_vst2
+from functions_plugin_ext import plugin_vst3
+from objects_convproj import wave
+
+def checksupport(supportedplugs):
+    outsupport = []
+    if 'vst3' in supportedplugs and plugin_vst3.check_exists('id', '56535456697461766974616C00000000'):
+        outsupport.append('vst3')
+    if 'vst2' in supportedplugs and plugin_vst2.check_exists('id', 1449751649):
+        outsupport.append('vst2')
+    return outsupport
 
 class vital_data:
     def __init__(self, plugin_obj):
@@ -335,25 +345,30 @@ class vital_data:
         l_keyframe['position'] = 0
         l_keyframe['wave_data'] = wave_data_str
         l_keyframes = [l_keyframe]
-        self.replacewavetables(wavenum, l_keyframes)
+        self.replacewavetables(wavenum, l_keyframes, 0)
 
-    def replacemultiwave(self, wavenum, i_frames):
+    def wavefromfile(self, osc_num, sampleref_obj, pointssize):
+        wt_name = 'vital_wav_'+str(osc_num)
+        self.plugin_obj.wavetable_add_from_wav(wt_name, sampleref_obj, pointssize)
+        self.importcvpj_wavetable(osc_num, 0, wt_name)
+
+    def replacemultiwave(self, wavenum, i_frames, interpolation_style):
         out_keyframes = []
         for i_frame in i_frames:
             waveframe = i_frames[i_frame]
             wave_data_bytes = struct.pack('f'*2048, *waveframe)
             wave_data_str = base64.b64encode(wave_data_bytes).decode('ascii')
             out_frame = {}
-            out_frame['position'] = i_frame
+            out_frame['position'] = int(i_frame)
             out_frame['wave_data'] = wave_data_str
             out_keyframes.append(out_frame)
-        self.replacewavetables(wavenum, out_keyframes)
+        self.replacewavetables(wavenum, out_keyframes, interpolation_style)
 
-    def replacewavetables(self, wavenum, l_keyframes):
+    def replacewavetables(self, wavenum, l_keyframes, interpolation_style):
         global vitaldata
         l_component = {}
         l_component['interpolation'] = 1
-        l_component['interpolation_style'] = 0
+        l_component['interpolation_style'] = interpolation_style
         l_component['type'] = "Wave Source"
         l_component['keyframes'] = l_keyframes
         l_components = [l_component]
@@ -445,17 +460,30 @@ class vital_data:
         wavetable_obj = self.plugin_obj.wavetable_get(wave_name)
 
         cvpj_wt_len = len(wavetable_obj.ids)
-        self.setvalue('lfo_'+str(lfo_num)+'_phase', wavetable_obj.phase)
+        if lfo_num > 0: self.setvalue('lfo_'+str(lfo_num)+'_phase', wavetable_obj.phase)
 
-        if wavetable_obj.locs == None: wavetable_obj.locs = [i/(cvpj_wt_len-1) for i in range(cvpj_wt_len)]
+        if wavetable_obj.locs == None: 
+            if cvpj_wt_len == 1:
+                wavetable_obj.locs = [0]
+            else:
+                wavetable_obj.locs = [i/(cvpj_wt_len-1) for i in range(cvpj_wt_len)]
 
         vital_keyframes = {}
         for num in range(cvpj_wt_len):
             wave_obj = self.plugin_obj.wave_get(wavetable_obj.ids[num])
             vital_keyframes[wavetable_obj.locs[num]*256] = wave_obj.get_wave(2048)
 
-        self.replacemultiwave(osc_num, vital_keyframes)
+        return self.replacemultiwave(osc_num, vital_keyframes, 1)
 
     def to_cvpj_vst2(self, convproj_obj):
         plugin_vst2.replace_data(convproj_obj, self.plugin_obj, 'name','any', 'Vital', 'chunk', json.dumps(self.vitaldata).encode('utf-8'), None)
-        plugin_vst2.replace_data(convproj_obj, self.plugin_obj, 'name','any', 'Vitalium', 'chunk', json.dumps(self.vitaldata).encode('utf-8'), None)
+
+    def to_cvpj_any(self, convproj_obj, supportedplugs):
+        chunkdata = json.dumps(self.vitaldata).encode('utf-8')
+        if 'vst3' in supportedplugs and plugin_vst3.check_exists('id', '56535456697461766974616C00000000'):
+            plugin_vst3.replace_data(convproj_obj, self.plugin_obj, 'id','any', '56535456697461766974616C00000000', chunkdata)
+        elif 'vst2' in supportedplugs and plugin_vst2.check_exists('id', 1449751649):
+            plugin_vst2.replace_data(convproj_obj, self.plugin_obj, 'id','any', 1449751649, 'chunk', chunkdata, None)
+
+
+

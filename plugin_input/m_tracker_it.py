@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2023 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import audio_wav
 from functions import data_bytes
 from functions import data_values
 
@@ -60,7 +59,7 @@ class it_sample:
             lfo_obj = plugin_obj.lfo_add('pitch')
             lfo_obj.attack = vibrato_sweep
             lfo_obj.shape = vibrato_wave
-            lfo_obj.speed_time = vibrato_speed
+            lfo_obj.time.set_seconds(vibrato_speed)
             lfo_obj.amount = vibrato_depth
 
 class it_instrument:
@@ -202,13 +201,13 @@ class input_it(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'it'
-    def getname(self): return 'Impulse Tracker'
     def gettype(self): return 'm'
-    def getdawcapabilities(self): 
-        return {
-        'samples_inside': True,
-        'track_lanes': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Impulse Tracker'
+        dawinfo_obj.file_ext = 'it'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.audio_filetypes = ['wav']
+        dawinfo_obj.plugin_included = ['sampler:single', 'sampler:multi']
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -217,13 +216,13 @@ class input_it(plugin_input.base):
         else: return False
         bytestream.seek(0)
 
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         global samplefolder
         global dataset
 
         it_file = open(input_file, 'rb')
 
-        samplefolder = extra_param['samplefolder']
+        samplefolder = dv_config.path_samples_extracted
         
         it_header_magic = it_file.read(4)
         if it_header_magic != b'IMPM':
@@ -291,6 +290,7 @@ class input_it(plugin_input.base):
         it_samples = [it_sample(it_file, x, c) for c, x in enumerate(table_offset_samples)]
         
         if xmodits_exists == True:
+            if not os.path.exists(samplefolder): os.makedirs(samplefolder)
             try: xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
             except: pass
 
@@ -538,7 +538,7 @@ class input_it(plugin_input.base):
                         if it_inst.resampling == 4: interpolation = 'sinc_lowpass'
                         plugin_obj.datavals.add('interpolation', interpolation)
                     else:
-                        plugin_obj.datavals.add('interpolation', 'none')
+                        plugin_obj.datavals.add('interpolation', 'linear')
 
                 if it_inst.midi_chan != None: 
                     inst_obj.midi.out_enabled = 1
@@ -586,11 +586,11 @@ class input_it(plugin_input.base):
 
         # ------------- Song Message -------------
         it_file.seek(it_header_msgoffset)
-        it_songmessage = data_bytes.readstring_fixedlen(it_file, it_header_msglength, "windows-1252")
+        it_songmessage = data_bytes.readstring_fixedlen_nofix(it_file, it_header_msglength, "windows-1252")
 
         convproj_obj.do_actions.append('do_addloop')
         convproj_obj.do_actions.append('do_lanefit')
         convproj_obj.params.add('bpm', it_header_tempo/(it_header_speed/6), 'float')
 
         convproj_obj.metadata.name = it_header_songname
-        convproj_obj.metadata.comment_text = it_songmessage.replace('\r', '\n')
+        convproj_obj.metadata.comment_text = it_songmessage

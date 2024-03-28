@@ -12,13 +12,12 @@ class input_piyopiyo(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'piyopiyo'
-    def getname(self): return 'PiyoPiyo'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): 
-        return {
-        'auto_nopl': True,
-        'track_nopl': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'PiyoPiyo'
+        dawinfo_obj.file_ext = 'pmd'
+        dawinfo_obj.track_nopl = True
+        dawinfo_obj.plugin_included = ['universal:synth-osc']
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -27,7 +26,7 @@ class input_piyopiyo(plugin_input.base):
         if bytesdata == b'PMD': return True
         else: return False
 
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         convproj_obj.type = 'r'
         convproj_obj.set_timings(4, True)
 
@@ -75,6 +74,7 @@ class input_piyopiyo(plugin_input.base):
             track_obj.params.add('vol', trk_volume/250, 'float')
 
             plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+            plugin_obj.role = 'synth'
             osc_data = plugin_obj.osc_add()
             osc_data.shape = 'custom_wave'
             osc_data.name_id = 'main'
@@ -91,13 +91,14 @@ class input_piyopiyo(plugin_input.base):
         track_obj.visual.color = colordata.getcolornum(3)
         track_obj.params.add('vol', trk_volume/250, 'float')
         plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-piyopiyo', 'drums')
+        plugin_obj.role = 'synth'
         track_obj.inst_pluginid = pluginid
 
         pmdfile.seek(trackdatapos)
 
         for tracknum in range(4):
             track_found, track_obj = convproj_obj.find_track(str(tracknum))
-            placement_obj = track_obj.placements.add_notes()
+
             currentpan = 0
             for pmdpos in range(recordspertrack):
                 bitnotes = bin(int.from_bytes(pmdfile.read(3), "little"))[2:].zfill(24)
@@ -108,7 +109,7 @@ class input_piyopiyo(plugin_input.base):
                 for bitnote in bitnotes:
                     if bitnote == '1': pitches.append(notenum)
                     notenum -= 1
-                if pitches: placement_obj.notelist.add_r_multi(pmdpos, 1, [x+keyoffset[tracknum] for x in pitches], 1, {'pan':currentpan})
+                if pitches: track_obj.placements.notelist.add_r_multi(pmdpos, 1, [x+keyoffset[tracknum] for x in pitches], 1, {'pan':currentpan})
 
         convproj_obj.do_actions.append('do_addloop')
         convproj_obj.do_actions.append('do_singlenotelistcut')

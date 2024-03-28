@@ -7,6 +7,7 @@ def process(convproj_obj, in__placement_audio_stretch, out__placement_audio_stre
     target = None
     if 'warp' in in__placement_audio_stretch and 'warp' not in out__placement_audio_stretch: target = 'rate'
     if 'rate' in in__placement_audio_stretch and 'rate' not in out__placement_audio_stretch: target = 'warp'
+    if not out__placement_audio_stretch: target = 'none'
 
     if target:
         tempo = convproj_obj.params.get('bpm', 120).value

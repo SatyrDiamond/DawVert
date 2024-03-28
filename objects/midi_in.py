@@ -25,7 +25,7 @@ class midi_note_data:
     def note_off(self, channel, notenum, position):
         for note in self.notes[channel][notenum]:
             if note[1] == None:
-                note[1] = position
+                note[1] = position-note[0]
                 break
 
     def iter(self):
@@ -102,6 +102,7 @@ class midi_in:
         self.global_miditracks = []
 
         self.ppq = ppq
+        self.pitch_gm = False
         self.song_channels = numchannels
         self.auto_bpm = autoticks.cvpj_autoticks(self.ppq, False, 'float')
         self.auto_timesig = autoticks.cvpj_autoticks(self.ppq, False, 'timesig')
@@ -131,6 +132,8 @@ class midi_in:
 
         sequencer_specific = []
         track_notes = midi_note_data(self.song_channels)
+
+        numnotes = 0
 
         for midicmd in midicmds:
 
@@ -173,17 +176,20 @@ class midi_in:
                 if sysexdata != None:
                     out_vendor, out_vendor_ext, out_brandname, out_device, out_model, out_command, out_data, devicename, groups, nameval = sysexdata
 
-                    if [out_vendor, out_vendor_ext] == [127, False]:
-                        if groups == ['device', None]:
-                            if nameval[0] == 'master_volume': self.autoset_master.add_point(track_curpos, 'volume', nameval[1][1]/127)
+                    #print(out_vendor, out_vendor_ext, out_brandname, out_device, out_model, out_command, out_data, devicename, groups, nameval)
 
-                        if [out_vendor, out_vendor_ext] == [65, False]:
-                            if groups[0] == 'patch_a':
-                                if groups[1] == None:
-                                    if nameval[0] == 'master_volume': self.autoset_master.add_point(track_curpos, 'volume', nameval[1][0]/127)
-                                if groups[1] == 'block':
-                                    if nameval[0] == 'use_rhythm':
-                                        self.autochan_mode[groups[2]-1].add_point(track_curpos, nameval[1])
+                    if [out_vendor, out_vendor_ext] == [b'\x7f', False]:
+                        if groups == ['device', None]:
+                            if nameval[0] == 'master_volume': self.autoset_master.add_point(track_curpos, 'volume', nameval[1][-1]/127)
+
+                    if [out_vendor, out_vendor_ext] == [b'A', False]:
+                        if groups[0] == 'patch_a':
+                            if groups[1] == None:
+                                if nameval[0] == 'master_volume': self.autoset_master.add_point(track_curpos, 'volume', nameval[1][0]/127)
+                                if nameval[0] == 'gs_reset': self.pitch_gm = True
+                            if groups[1] == 'block':
+                                if nameval[0] == 'use_rhythm':
+                                    self.autochan_mode[groups[2]-1].add_point(track_curpos, nameval[1])
 
             elif midicmd[0] == 'marker': 
                 self.auto_markers.add_point(track_curpos, midicmd[1])
@@ -192,9 +198,13 @@ class midi_in:
 
             elif midicmd[0] == 'key_signature': self.auto_key_signature.add_point(track_curpos, midicmd[1])
 
-            elif midicmd[0] == 'note_on': track_notes.note_on(midicmd[1], midicmd[2], track_curpos, midicmd[3])
+            elif midicmd[0] == 'note_on': 
+                track_notes.note_on(midicmd[1], midicmd[2], track_curpos, midicmd[3])
+                numnotes += 1
 
-            elif midicmd[0] == 'note': track_notes.note(midicmd[1], midicmd[2], track_curpos, midicmd[3], midicmd[4])
+            elif midicmd[0] == 'note': 
+                track_notes.note(midicmd[1], midicmd[2], track_curpos, midicmd[3], midicmd[4])
+                numnotes += 1
 
             elif midicmd[0] == 'note_off': track_notes.note_off(midicmd[1], midicmd[2], track_curpos)
 
@@ -202,7 +212,7 @@ class midi_in:
                 if self.first_use[midicmd[1]] > track_curpos or self.first_use[midicmd[1]] == -1:
                     self.first_use[midicmd[1]] = track_curpos
 
-        self.global_miditracks.append([track_notes, track_name, track_copyright, sequencer_specific, track_color, track_mode])
+        self.global_miditracks.append([track_notes, track_name, track_copyright, sequencer_specific, track_color, track_mode, numnotes])
 
     def song_end(self, convproj_obj):
         fxchan_names = ['Chan #'+str(x+1) for x in range(self.song_channels)]
@@ -232,14 +242,12 @@ class midi_in:
                 ch_used_inst = [tracknum]+n_inst[1:]
                 if ch_used_inst not in used_inst_chans[n_inst[0]]: used_inst_chans[n_inst[0]].append(ch_used_inst)
 
-            placement_obj = track_obj.placements.add_notes()
-
             for midi_note in midi_notes:
-                n_key, n_ch, n_pos, n_end, n_vol, n_inst, n_bank, n_isdrum = midi_note
-                n_dur = n_end-n_pos
+                n_key, n_ch, n_pos, n_dur, n_vol, n_inst, n_bank, n_isdrum = midi_note
                 instid = '_'.join([str(n_ch), str(n_inst), str(n_bank), str(n_isdrum)])
-                placement_obj.notelist.add_m(instid, n_pos, n_dur, n_key-60, n_vol/127, {})
-                if end_pos < n_end: end_pos = n_end
+                if n_dur != None:
+                    track_obj.placements.notelist.add_m(instid, n_pos, n_dur, n_key-60, n_vol/127, {})
+                    if end_pos < n_dur-n_pos: end_pos = n_dur-n_pos
 
             if numtracks == 1: convproj_obj.metadata.name = global_miditrack[1]
             else: track_obj.visual.name = global_miditrack[1]
@@ -325,9 +333,11 @@ class midi_in:
         fxchannel_obj.visual.name = "Master"
         fxchannel_obj.visual.color = [0.3, 0.3, 0.3]
 
-        usedeffects = [False]
+        usedeffects = False
 
         for ch_num, chan_auto in enumerate(self.chan_auto):
+
+            chorus_used = False
 
             fxchannel_obj = convproj_obj.add_fxchan(ch_num+1)
             fxchannel_obj.visual.name = fxchan_names[ch_num]
@@ -343,12 +353,12 @@ class midi_in:
                 
                 autoloc, pname, def_val, fxgrp = [], 'none', 0, 0
 
-                if a_id in [10, 64, 65, 66, 67, 68]: a_dat.addmul(-1, 2)
+                if a_id in [10, 64, 65, 66, 67, 68]: a_dat.addmul(-1, 1)
 
                 if a_id == 'pitch': autoloc, pname = ['fxmixer', autochannum], 'pitch'
                 if a_id == 1: autoloc, pname = ['fxmixer', autochannum], 'modulation'
                 if a_id == 7: autoloc, pname, def_val = ['fxmixer', autochannum], 'vol', 1
-                if a_id == 10: autoloc, pname = ['fxmixer', autochannum], 'pan'
+                #if a_id == 10: autoloc, pname = ['fxmixer', autochannum], 'pan'
                 if a_id == 64: autoloc, pname = ['fxmixer', autochannum], 'damper_pedal'
                 if a_id == 65: autoloc, pname = ['fxmixer', autochannum], 'portamento'
                 if a_id == 66: autoloc, pname = ['fxmixer', autochannum], 'sostenuto'
@@ -359,41 +369,63 @@ class midi_in:
                     autoloc, pname, def_val = ['send', autochannum+'_reverb'], 'amount', 0
                     fxgrp = 1
                 if a_id == 93: 
-                    autoloc, pname, def_val = ['send', autochannum+'_chorus'], 'amount', 0
+                    autoloc, pname, def_val = ['plugin', autochannum+'_chorus', 'amount'], 'amount', 0
                     fxgrp = 2
 
                 if a_id != 'pitch': a_dat.addmul(0, 1/127)
+                elif self.pitch_gm: a_dat.addmul(0, 6)
+
                 #send
 
                 #print(ch_num+1, a_id, len(a_dat.points), end=' ')
                 if autoloc:
                     paramval = a_dat.get_paramval(self.first_use[ch_num], def_val)
                     if len(a_dat.points) > 1:
-                        convproj_obj.autoticks[convproj.autopath_encode(autoloc+[pname])] = a_dat
+                        autopath = convproj.autopath_encode(autoloc+[pname])
+                        convproj_obj.automation.create(autoloc+[pname], 'float', False)
+                        convproj_obj.automation.data[autopath].nopl_ticks = a_dat
+                        convproj_obj.automation.data[autopath].u_nopl_ticks = True
                     #print(autoloc, paramval, end=' ')
                     if fxgrp == 0: fxchannel_obj.params.add(pname, paramval, 'float')
                     if fxgrp == 1: 
                         usedeffects = True
-                        fxchannel_obj.sends.add(str(self.song_channels+1), autochannum+'_reverb', paramval)
+                        fxchannel_obj.sends.add(self.song_channels+1, autochannum+'_reverb', paramval)
+
                     if fxgrp == 2: 
                         usedeffects = True
-                        fxchannel_obj.sends.add(str(self.song_channels+2), autochannum+'_chorus', paramval)
+                        chorus_used = True
+                        pluginid = autochannum+'_chorus'
+                        plugin_obj = convproj_obj.add_plugin(pluginid, 'simple', 'chorus')
+                        plugin_obj.visual.name = 'Chorus'
+                        plugin_obj.params.add('amount', paramval, 'float')
+                        fxchannel_obj.fxslots_audio.append(pluginid)
                 #print()
 
         if usedeffects:
             fxchannel_obj = convproj_obj.add_fxchan(self.song_channels+1)
             fxchannel_obj.visual.name = 'Reverb'
-            fxchannel_obj = convproj_obj.add_fxchan(self.song_channels+2)
-            fxchannel_obj.visual.name = 'Chorus'
+            fxchannel_obj.visual_ui.other['docked'] = 1
+            plugin_obj, pluginid = convproj_obj.add_plugin_genid('simple', 'reverb')
+            plugin_obj.visual.name = 'Reverb'
+            fxchannel_obj.fxslots_audio.append(pluginid)
 
-        convproj_obj.autoticks[convproj.autopath_encode(['main', 'bpm'])] = self.auto_bpm
+            #fxchannel_obj = convproj_obj.add_fxchan(self.song_channels+2)
+            #fxchannel_obj.visual.name = 'Chorus'
+            #fxchannel_obj.visual_ui.other['docked'] = 1
+
+        convproj_obj.automation.create(['main', 'bpm'], 'float', False)
+        bpm_nopl_ticks = convproj_obj.automation.data[convproj.autopath_encode(['main', 'bpm'])]
+        bpm_nopl_ticks.nopl_ticks = self.auto_bpm
+        bpm_nopl_ticks.u_nopl_ticks = True
         convproj_obj.timesig_auto = self.auto_timesig
 
         global_first = 1000000000000000000
         for x in self.first_use:
             if x < global_first and x != -1: global_first = x
 
-        convproj_obj.params.add('bpm', self.auto_bpm.get_paramval(global_first, 120), 'float')
+        bpm = self.auto_bpm.get_paramval(global_first, 120)
+
+        convproj_obj.params.add('bpm', bpm, 'float')
 
         self.loop_active = False
         if self.loop_data != [None, None]:

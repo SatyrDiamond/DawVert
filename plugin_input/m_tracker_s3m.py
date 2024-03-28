@@ -3,8 +3,8 @@
 
 import plugin_input
 import os.path
-from functions import audio_wav
 from functions import data_bytes
+from objects_file import audio_wav
 from objects import dv_trackerpattern
 
 class s3m_instrument:
@@ -52,7 +52,6 @@ class s3m_instrument:
             if self.sampleloc != 0 and self.length != 0:
                 fs.seek(self.sampleloc)
                 os.makedirs(samplefolder, exist_ok=True)
-                loopdata = {'loop':[self.loopStart, self.loopEnd-1]} if self.loopon else None
                 t_samplelen = self.length if not self.double else self.length*2
                 wave_sampledata = fs.read(t_samplelen)
                 wave_bits = 8 if not self.double else 16
@@ -61,19 +60,24 @@ class s3m_instrument:
                 if self.double == 1 and self.stereo == 1: wave_sampledata = data_bytes.mono2stereo(wave_sampledata, fs.read(t_samplelen), 2)
                 if self.double == 0 and s3m_samptype == 1: wave_sampledata = data_bytes.unsign_8(wave_sampledata)
                 if self.double == 1 and s3m_samptype == 2: wave_sampledata = data_bytes.unsign_16(wave_sampledata)
-                audio_wav.generate(wave_path, wave_sampledata, wave_channels, self.c2spd, wave_bits, loopdata)
+                wavfile_obj = audio_wav.wav_main()
+                wavfile_obj.data_add_data(wave_bits, wave_channels, False, wave_sampledata)
+                wavfile_obj.set_freq(self.c2spd)
+                if self.loopon: wavfile_obj.add_loop(self.loopStart, self.loopEnd-1)
+                wavfile_obj.write(wave_path)
+
 
 class input_s3m(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 's3m'
-    def getname(self): return 'Scream Tracker 3 Module'
     def gettype(self): return 'm'
-    def getdawcapabilities(self): 
-        return {
-        'samples_inside': True,
-        'track_lanes': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Scream Tracker 3 Module'
+        dawinfo_obj.file_ext = 's3m'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.audio_filetypes = ['wav']
+        dawinfo_obj.plugin_included = ['sampler:single']
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -83,12 +87,12 @@ class input_s3m(plugin_input.base):
         else: return False
         bytestream.seek(0)
 
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         fs = open(input_file, 'rb')
         
-        samplefolder = extra_param['samplefolder']
+        samplefolder = dv_config.path_samples_extracted
         
-        startinststr = 'self.'
+        startinststr = 's3m_inst_'
         maincolor = [0.65, 0.57, 0.33]
 
         s3m_name = data_bytes.readstring_fixedlen(fs, 28, "windows-1252")
@@ -248,6 +252,7 @@ class input_s3m(plugin_input.base):
         #auto_data.add_pl(cvpj_l, 'float', ['main', 'bpm'], song_tracker.tempo_auto(patterntable_all, t_orderlist, s3m_speed, s3m_tempo))
 
         convproj_obj.metadata.name = s3m_name
+        convproj_obj.metadata.comment_text = '\r'.join([i.name for i in s3m_insts])
         
         convproj_obj.do_actions.append('do_addloop')
         convproj_obj.do_actions.append('do_lanefit')

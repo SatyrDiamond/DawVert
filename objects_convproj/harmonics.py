@@ -4,7 +4,7 @@
 from functions import data_values
 from functions import data_bytes
 from functions import xtramath
-from functions import audio_wav
+from objects_file import audio_wav
 from objects_convproj import wave
 
 import struct
@@ -19,8 +19,11 @@ class cvpj_harmonics:
 
 	def to_audio(self, fileloc):
 		audiowavdata = [int(i*65535) for i in do_wave(self.waves)]
-		wave_data = data_bytes.unsign_16(struct.pack('H'*len(audiowavdata), *audiowavdata))
-		audio_wav.generate(fileloc, wave_data, 1, 44100, 16, None)
+		wavfile_obj = audio_wav.wav_main()
+		wavfile_obj.set_freq(44100)
+		wavfile_obj.data_add_data(16, 1, True, audiowavdata)
+		wavfile_obj.add_loop(0, 2048)
+		wavfile_obj.write(fileloc)
 
 	def to_wave(self):
 		wave_obj = wave.cvpj_wave()
@@ -31,7 +34,7 @@ def do_wave(harm_in):
 	tempdata = [0 for x in range(2048)]
 	for num, data in harm_in.items():
 		vol = data[0]
-		phase = data[1]['phase'] if 'phase' in data[1] else 0
+		phase = data[1]['phase'] if 'phase' in data[1] else 0.5
 		for x in range(2048):
 			sinv = (x/2048)
 			tempdata[x] = tempdata[x]*(1-(data[0]/2))

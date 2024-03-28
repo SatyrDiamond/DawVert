@@ -3,9 +3,6 @@
 
 import json
 
-m2mi_sample_names = ['file', 'name', 'color', 'audiomod', 'vol', 'pan', 'fxrack_channel']
-m2mi_notes_names = ['id', 'notelist', 'name', 'color']
-
 def convert(convproj_obj):
     print('[song-convert] Converting from Multiple > MultipleIndexed')
 
@@ -24,6 +21,7 @@ def convert(convproj_obj):
     pn = 1
     for pl_id, playlist_obj in convproj_obj.iter_playlist():
         x, pn = playlist_obj.placements.to_indexed_audio(existingsamples, pn)
-        for patid, sle_data in x: convproj_obj.sample_index[patid] = sle_data
+        for patid, sle_data in x: 
+            convproj_obj.sample_index[patid] = sle_data
 
     convproj_obj.type = 'mi'

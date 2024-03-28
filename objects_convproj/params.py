@@ -95,3 +95,7 @@ class cvpj_paramset:
             return param_obj, cvpj_obj.automation[autopath]
         else: 
             return param_obj, None
+
+    def debugtxt(self):
+        for x in self.paramset:
+            print(x, '|', self.paramset[x].value, self.paramset[x].visual.name )

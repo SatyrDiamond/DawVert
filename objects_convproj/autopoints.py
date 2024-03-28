@@ -3,14 +3,16 @@
 
 from functions import xtramath
 import bisect
+import math
 
 class cvpj_s_autopoint:
-    __slots__ = ['pos','value','type','tension']
+    __slots__ = ['pos','value','type','tension','extra']
     def __init__(self):
         self.pos = 0
         self.value = 0
         self.type = 'normal'
         self.tension = 0
+        self.extra = {}
 
     def __eq__(self, aps):
         s_pos = self.pos == aps.pos
@@ -100,22 +102,35 @@ class cvpj_autopoints:
                     cp.value = xtramath.between_from_one(cp.value, np.value, betpos)
                     cp.pos = endat
 
+        for p in self.points: p.pos -= startat
         self.points = self.points[start_point:end_point]
 
     def addmul(self, addval, mulval):
         for p in self.points: p.value = (p.value+addval)*mulval
 
     def change_valrange(self, old_min, old_max, new_min, new_max):
-        for p in self.points: p.pos = xtramath.between_from_one(new_min, new_max, xtramath.between_to_one(old_min, old_max, p.pos))
+        for p in self.points: p.value = xtramath.between_from_one(new_min, new_max, xtramath.between_to_one(old_min, old_max, p.value))
 
     def to_one(self, i_min, i_max):
-        for p in self.points: p.pos = xtramath.between_to_one(i_min, i_max, p.pos)
+        for p in self.points: p.value = xtramath.between_to_one(i_min, i_max, p.value)
 
     def from_one(self, i_min, i_max):
-        for p in self.points: p.pos = xtramath.between_from_one(i_min, i_max, p.pos)
+        for p in self.points: p.value = xtramath.between_from_one(i_min, i_max, p.value)
 
     def funcval(self, i_function):
         for p in self.points: p.value = i_function(p.value)
+
+    def pow(self, i_val):
+        for p in self.points: p.value = p.value**i_val
+
+    def pow_r(self, i_val):
+        for p in self.points: p.value = i_val**p.value
+
+    def log(self, i_val):
+        for p in self.points: p.value = math.log(p.value,i_val)
+
+    def log_r(self, i_val):
+        for p in self.points: p.value = math.log(i_val,p.value)
 
     def sort(self):
         ta_bsort = {}
@@ -182,6 +197,31 @@ class cvpj_autopoints:
             cur_num += 1
 
         return blocks_out
+
+    def from_steps(self, steps, smooth, ppq):
+        auto_duration = int(len(steps))
+        steplens = ((1-smooth)*ppq)/4
+
+        autopoints = []
+        for stepnum, value in enumerate(steps):
+            steplen = (stepnum*ppq)/4
+            if smooth == 0.0: 
+                autopoints.append([steplen, value, 'instant'])
+            elif smooth == 0.0: 
+                autopoints.append([steplen, value, 'normal'])
+            else:
+                autopoints.append([steplen, value, 'normal'])
+                autopoints.append([steplen+steplens, value, 'normal'])
+            prev_val = 0
+
+        for p_pos, p_value, p_type in autopoints:
+            autopoint_obj = self.add_point()
+            autopoint_obj.pos = p_pos
+            autopoint_obj.value = p_value
+            autopoint_obj.type = p_type
+
+
+
 
     def to_cvpj(self):
         out_cvpj = []

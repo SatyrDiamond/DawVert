@@ -23,15 +23,24 @@ class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['universal', None, None], ['native-lmms', None, 'lmms'], True, True
-    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
+    def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, plugtransform):
         #plugintype = cvpj_plugindata.type_get()
 
         if plugin_obj.plugin_subtype == 'synth-osc':
-            samplefolder = extra_json['samplefolder']
-            if plugin_obj.oscs:
-                osc_obj = plugin_obj.oscs[0]
-                if osc_obj.shape in ['square', 'triangle', 'triangle', 'pulse', 'saw', 'sine', 'custom_wave']:
+            samplefolder = dv_config.path_samples_generated
 
+            if len(plugin_obj.oscs) == 1 and not plugin_obj.env_blocks_get_exists('vol')[0]:
+                osc_obj = plugin_obj.oscs[0]
+
+                if osc_obj.shape == 'square' and 'pulse_width' in osc_obj.params:
+                    plugin_obj.replace('native-lmms', 'monstro')
+                    plugin_obj.params.add('o1vol', 50, 'int')
+                    plugin_obj.params.add('o2vol', 0, 'int')
+                    plugin_obj.params.add('o3vol', 0, 'int')
+                    plugin_obj.params.add('o1crs', -12, 'int')
+                    plugin_obj.params.add('o1pw', osc_obj.params['pulse_width']*100, 'int')
+
+                elif osc_obj.shape in ['triangle', 'pulse', 'saw', 'sine', 'custom_wave']:
                     plugin_obj.replace('native-lmms', 'tripleoscillator')
                     plugin_obj.params.add('coarse0', -12, 'int')
                     plugin_obj.params.add('finel0', 0, 'int')
@@ -57,45 +66,47 @@ class plugconv(plugin_plugconv.base):
                         plugin_obj.samplerefs['userwavefile0'] = pluginid+'_wave'
                     return 0
 
+        if plugin_obj.plugin_subtype == 'bitcrush':
+            plugtransform.transform('./data_plugts/univ_lmms.pltr', 'bitcrush', convproj_obj, plugin_obj, pluginid, dv_config)
+            return 0
+
+        if plugin_obj.plugin_subtype == 'eq-8limited':
+            fil_hp = plugin_obj.named_filter_get('high_pass')
+            fil_ls = plugin_obj.named_filter_get('low_shelf')
+            fil_p1 = plugin_obj.named_filter_get('peak_1')
+            fil_p2 = plugin_obj.named_filter_get('peak_2')
+            fil_p3 = plugin_obj.named_filter_get('peak_3')
+            fil_p4 = plugin_obj.named_filter_get('peak_4')
+            fil_hs = plugin_obj.named_filter_get('high_shelf')
+            fil_lp = plugin_obj.named_filter_get('low_pass')
+
+            plugin_obj.params.add('HPactive', int(fil_hp.on), 'float')
+            plugin_obj.params.add('HPfreq', fil_hp.freq, 'float')
+            plugin_obj.params.add('HPres', fil_hp.q, 'float')
+            plugin_obj.params.add('HP', getslope(fil_hp.slope), 'float')
+
+            plugin_obj.params.add('Lowshelfactive', int(fil_ls.on), 'float')
+            plugin_obj.params.add('LowShelffreq', fil_ls.freq, 'float')
+            plugin_obj.params.add('Lowshelfgain', fil_ls.gain, 'float')
+            plugin_obj.params.add('LowShelfres', fil_ls.q, 'float')
+
+            for peak_num in range(4):
+                fil_p = plugin_obj.named_filter_get('peak_'+str(peak_num+1))
+                peak_txt = 'peak'+str(peak_num+1)
+                plugin_obj.params.add(peak_txt+'active', int(fil_p.on), 'float')
+                plugin_obj.params.add(peak_txt+'freq', fil_p.freq, 'float')
+                plugin_obj.params.add(peak_txt+'gain', fil_p.gain, 'float')
+                plugin_obj.params.add(peak_txt+'res', fil_p.q**0.5, 'float')
+
+            plugin_obj.params.add('Highshelfactive', int(fil_hs.on), 'float')
+            plugin_obj.params.add('Highshelffreq', fil_hs.freq, 'float')
+            plugin_obj.params.add('HighShelfgain', fil_hs.gain, 'float')
+            plugin_obj.params.add('HighShelfres', fil_hs.q, 'float')
+
+            plugin_obj.params.add('LPactive', int(fil_lp.on), 'float')
+            plugin_obj.params.add('LPfreq', fil_lp.freq, 'float')
+            plugin_obj.params.add('LPres', fil_lp.q, 'float')
+            plugin_obj.params.add('LP', getslope(fil_lp.slope), 'float')
+            return 0
+
         return 2
-        #    data_LP, data_LS, data_Peaks, data_HS, data_HP, data_reorder = cvpj_plugindata.eqband_get_limited(None)
-
-        #    if data_HP != None:
-        #        plugin_obj.params.add('HPactive', int(data_HP['on']), 'float', 'HPactive')
-        #        plugin_obj.params.add('HPfreq', data_HP['freq'], 'float', 'HPfreq')
-        #        plugin_obj.params.add('HPres', getq(data_HP), 'float', 'HPres')
-        #        plugin_obj.params.add('HP', getslope(data_HP), 'float', 'HP')
-        #    
-        #    if data_LS != None:
-        #        plugin_obj.params.add('Lowshelfactive', int(data_LS['on']), 'float', 'Lowshelfactive')
-        #        plugin_obj.params.add('LowShelffreq', data_LS['freq'], 'float', 'LowShelffreq')
-        #        plugin_obj.params.add('Lowshelfgain', getgain(data_LS), 'float', 'Lowshelfgain')
-        #        plugin_obj.params.add('LowShelfres', getq(data_LS), 'float', 'LowShelfres')
-        #
-        #    for peak_num in range(4):
-        #        if data_Peaks[peak_num] != None:
-        #            peak_txt = 'Peak'+str(peak_num+1)
-        #            data_peak = data_Peaks[peak_num]
-        #            qdata = getq(data_peak)
-
-        #            if qdata == 0: qdata = 1
-
-        #            plugin_obj.params.add(peak_txt+'active', int(data_peak['on']), 'float', peak_txt+'active')
-        #            plugin_obj.params.add(peak_txt+'freq', data_peak['freq'], 'float', peak_txt+'freq')
-        #            plugin_obj.params.add(peak_txt+'gain', getgain(data_peak), 'float', peak_txt+'gain')
-        #            plugin_obj.params.add(peak_txt+'bw', xtramath.logpowmul(qdata, -1), 'float', peak_txt+'res')
-
-        #    if data_HS != None:
-        #        plugin_obj.params.add('Highshelfactive', int(data_HS['on']), 'float', 'Highshelfactive')
-        #        plugin_obj.params.add('Highshelffreq', data_HS['freq'], 'float', 'Highshelffreq')
-        #        plugin_obj.params.add('HighShelfgain', getgain(data_HS), 'float', 'HighShelfgain')
-        #        plugin_obj.params.add('HighShelfres', getq(data_HS), 'float', 'HighShelfres')
-        #    
-        #    if data_LP != None:
-        #        plugin_obj.params.add('LPactive', int(data_LP['on']), 'float', 'LPactive')
-        #        plugin_obj.params.add('LPfreq', data_LP['freq'], 'float', 'LPfreq')
-        #        plugin_obj.params.add('LPres', getq(data_LP), 'float', 'LPres')
-        #        plugin_obj.params.add('LP', getslope(data_LP), 'float', 'LP')
-        #    return 0
-
-        #return 2

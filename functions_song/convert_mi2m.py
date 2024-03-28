@@ -3,14 +3,15 @@
 
 import json
 
-def convert(convproj_obj, extra_json):
+def convert(convproj_obj, dv_config):
     nle_list = [x for x in convproj_obj.notelist_index]
     unused_nle = []
 
     for pl_id, playlist_obj in convproj_obj.iter_playlist():
-        unused_nle += [x.fromindex for x in playlist_obj.placements.data_notes]
+        unused_nle += [x.fromindex for x in playlist_obj.placements.pl_notes_indexed.data]
         playlist_obj.placements.unindex_notes(convproj_obj.notelist_index)
         playlist_obj.placements.unindex_audio(convproj_obj.sample_index)
+
 
     unused_nle = list(set(unused_nle))
 

@@ -8,15 +8,13 @@ from termcolor import colored, cprint
 import base64
 import bisect
 
-from objects import convproj_placements
-
+from objects_convproj import automation
 from objects_convproj import plugin
 from objects_convproj import fileref
 from objects_convproj import params
 from objects_convproj import tracks
 from objects_convproj import visual
 from objects_convproj import sends
-
 from objects_convproj import autoticks
 from objects_convproj import autopoints
 from objects_convproj import notelist
@@ -51,8 +49,10 @@ class cvpj_timemarker:
 class cvpj_fxchannel:
     def __init__(self):
         self.visual = visual.cvpj_visual()
+        self.visual_ui = visual.cvpj_visual_ui()
         self.params = params.cvpj_paramset()
         self.fxslots_audio = []
+        self.fxslots_mixer = []
         self.sends = sends.cvpj_sends()
 
 class cvpj_project:
@@ -69,7 +69,6 @@ class cvpj_project:
         self.instruments_order = []
         self.sample_index = {}
         self.notelist_index = {}
-        self.automation = {}
         self.params = params.cvpj_paramset()
         self.fxrack = {}
         self.playlist = {}
@@ -79,40 +78,56 @@ class cvpj_project:
         self.metadata = visual.cvpj_metadata()
         self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
         self.loop_active = False
-        self.loop_start = -1
-        self.loop_end = -1
+        self.loop_start = 0
+        self.loop_end = 0
         self.filerefs = {}
         self.samplerefs = {}
         self.window_data = {}
-        self.autoticks = {}
-        self.autopoints = {}
+        self.automation = automation.cvpj_automation(self.time_ppq, self.time_float)
         self.groups = {}
         self.sample_folders = []
 
+    def sort_tracks(self):
+        sortpos = {}
+        for track_id, track_data in self.track_data.items():
+            trackstart = track_data.placements.get_start()
+            if trackstart not in sortpos: sortpos[trackstart] = []
+            sortpos[trackstart].append([track_id])
+        self.track_order = []
+        for n in sorted(sortpos):
+            for i in sortpos[n]: self.track_order += i
+ 
     def set_timings(self, time_ppq, time_float):
         self.time_ppq = time_ppq
         self.time_float = time_float
         self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
+        self.automation.time_ppq = self.time_ppq
+        self.automation.time_float = self.time_float
 
     def change_timings(self, time_ppq, time_float):
+        print('[convprov] Changing Timings from '+str(self.time_ppq)+':'+str(self.time_float)+' to '+str(time_ppq)+':'+str(time_float))
         for p in self.track_data: 
             track_data = self.track_data[p]
             track_data.change_timings(time_ppq, time_float)
             for e in track_data.notelist_index: 
                 track_data.notelist_index[e].notelist.change_timings(time_ppq, time_float)
         for p in self.playlist: self.playlist[p].change_timings(time_ppq, time_float)
-        for p in self.automation: self.automation[p].change_timings(time_ppq, time_float)
-        for p in self.autopoints: self.autopoints[p].change_timings(time_ppq, time_float)
         for p in self.notelist_index: self.notelist_index[p].notelist.change_timings(time_ppq, time_float)
         self.loop_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_start)
         self.loop_end = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_end)
         self.timesig_auto.change_timings(time_ppq, time_float)
         self.time_ppq = time_ppq
         self.time_float = time_float
+        self.automation.change_timings(time_ppq, time_float)
 
     def get_dur(self):
         duration_final = 0
+
         for p in self.track_data: 
+            track_data = self.track_data[p]
+            trk_dur = track_data.placements.get_dur()
+            if duration_final < trk_dur: duration_final = trk_dur
+        for p in self.playlist: 
             track_data = self.track_data[p]
             trk_dur = track_data.placements.get_dur()
             if duration_final < trk_dur: duration_final = trk_dur
@@ -136,70 +151,6 @@ class cvpj_project:
             currentpos += PatternLengthPart
             blockcount += 1
 
-    def add_automation_pl(self, autopath, valtype):
-        autopath = autopath_encode(autopath)
-        if autopath not in self.automation: 
-            self.automation[autopath] = convproj_placements.cvpj_placements_auto(self.time_ppq, self.time_float, valtype)
-        autopl_obj = self.automation[autopath].add(valtype)
-        return autopl_obj
-
-
-    def del_automation(self, autopath):
-        autopath = autopath_encode(autopath)
-        if autopath in self.automation: del self.automation[autopath]
-        if autopath in self.autopoints: del self.autopoints[autopath]
-        if autopath in self.autoticks: del self.autoticks[autopath]
-
-    def move_automation(self, autopath, to_autopath):
-        autopath = autopath_encode(autopath)
-        to_autopath = autopath_encode(to_autopath)
-        print('[convproj] Auto: Moving', autopath, 'to', to_autopath)
-        if autopath in self.automation:
-            self.automation[to_autopath] = self.automation[autopath]
-            del self.automation[autopath]
-
-        if autopath in self.autopoints:
-            self.autopoints[to_autopath] = self.autopoints[autopath]
-            del self.autopoints[autopath]
-
-        if autopath in self.autoticks:
-            self.autoticks[to_autopath] = self.autoticks[autopath]
-            del self.autoticks[autopath]
-
-    def moveg_automation(self, autopath, fval, tval):
-        self.move_automation(autopath+[fval], autopath+[tval])
-
-    def copy_automation(self, autopath, to_autopath):
-        autopath = autopath_encode(autopath)
-        to_autopath = autopath_encode(to_autopath)
-        if autopath in self.automation: self.automation[to_autopath] = self.automation[autopath]
-        if autopath in self.autopoints: self.autopoints[to_autopath] = self.autopoints[autopath]
-        if autopath in self.autoticks: self.autoticks[to_autopath] = self.autoticks[autopath]
-
-    def addmul_automation(self, autopath, addval, mulval):
-        autopath = autopath_encode(autopath)
-        if autopath in self.automation: self.automation[autopath].addmul(addval, mulval)
-        if autopath in self.autopoints: self.autopoints[autopath].addmul(addval, mulval)
-        if autopath in self.autoticks: self.autoticks[autopath].addmul(addval, mulval)
-
-    def to_one_automation(self, autopath, i_min, i_max):
-        autopath = autopath_encode(autopath)
-        if autopath in self.automation: self.automation[autopath].to_one(i_min, i_max)
-        if autopath in self.autopoints: self.autopoints[autopath].to_one(i_min, i_max)
-        if autopath in self.autoticks: self.autoticks[autopath].to_one(i_min, i_max)
-
-    def from_one_automation(self, autopath, i_min, i_max):
-        autopath = autopath_encode(autopath)
-        if autopath in self.automation: self.automation[autopath].from_one(i_min, i_max)
-        if autopath in self.autopoints: self.autopoints[autopath].from_one(i_min, i_max)
-        if autopath in self.autoticks: self.autoticks[autopath].from_one(i_min, i_max)
-
-    def funcval_automation(self, autopath, i_function):
-        autopath = autopath_encode(autopath)
-        if autopath in self.automation: self.automation[autopath].funcval(i_function)
-        if autopath in self.autopoints: self.autopoints[autopath].funcval(i_function)
-        if autopath in self.autoticks: self.autoticks[autopath].funcval(i_function)
-        
     def iter_automation(self):
         for autopath in self.automation:
             yield autopath.split(';'), self.automation[autopath]
@@ -334,6 +285,7 @@ class cvpj_project:
     def add_track_midi(self, track_id, plug_id, m_bank, m_inst, m_drum, uses_pl, indexed):
         plugin_obj = self.add_plugin_midi(plug_id, m_bank, m_inst, m_drum)
         cprint('[convproj] Track - '+track_id, 'light_blue')
+        plugin_obj.role = 'synth'
 
         track_obj = self.add_track(track_id, 'instrument', uses_pl, indexed)
         track_obj.midi.out_patch = m_inst
@@ -362,6 +314,7 @@ class cvpj_project:
 
         else:
             plugin_obj = self.add_plugin(plug_id, None, None)
+            plugin_obj.role = 'synth'
             track_obj = self.add_track(track_id, 'instrument', uses_pl, indexed)
             track_obj.inst_pluginid = plug_id
             track_obj.visual.name = data_values.list_usefirst([def_name, di_name])
@@ -402,20 +355,33 @@ class cvpj_project:
 
     def add_plugin_sampler_genid(self, file_path):
         plug_id = plugin_id_counter.get_str_txt()
-        plugin_obj = self.add_plugin(plug_id, 'sampler', 'single')
-        plugin_obj.samplerefs['sample'] = file_path
-        sampleref_obj = self.add_sampleref(file_path, file_path)
+        plugin_obj, sampleref_obj = self.add_plugin_sampler(plug_id, file_path)
+        plugin_obj.role = 'synth'
         return plugin_obj, plug_id, sampleref_obj
 
     def add_plugin_sampler(self, plug_id, file_path):
-        print('[convproj] Plugin - [Sampler]: '+str(plug_id))
-        plugin_obj = self.add_plugin(plug_id, 'sampler', 'single')
-        plugin_obj.samplerefs['sample'] = file_path
         sampleref_obj = self.add_sampleref(file_path, file_path)
+        is_drumsynth = sampleref_obj.fileref.extension.lower() == 'ds'
+
+        if not is_drumsynth:
+            plugin_obj = self.add_plugin(plug_id, 'sampler', 'single')
+            plugin_obj.role = 'synth'
+            plugin_obj.samplerefs['sample'] = file_path
+        else:
+            plugin_obj = self.add_plugin(plug_id, 'sampler', 'drumsynth')
+            plugin_obj.role = 'synth'
+            plugin_obj.samplerefs['sample'] = file_path
+            from objects_file import audio_drumsynth
+            from functions_plugin_cvpj import params_drumsynth
+            drumsynth_obj = audio_drumsynth.drumsynth_main()
+            drumsynth_obj.read(file_path)
+            params_drumsynth.to_cvpj(drumsynth_obj, plugin_obj)
+
         return plugin_obj, sampleref_obj
 
     def add_plugin_midi(self, plug_id, m_bank, m_inst, m_drum):
         plugin_obj = self.add_plugin(plug_id, 'midi', None)
+        plugin_obj.role = 'synth'
         plugin_obj.datavals.add('bank', m_bank)
         plugin_obj.datavals.add('patch', m_inst)
         plugin_obj.datavals.add('is_drum', m_drum)
@@ -467,6 +433,7 @@ class cvpj_project:
         else:
             inst_obj = self.add_instrument(inst_id)
             plugin_obj = self.add_plugin(plug_id, None, None)
+            plugin_obj.role = 'synth'
             inst_obj.pluginid = plug_id
             inst_obj.visual.name = data_values.list_usefirst([def_name, di_name])
             inst_obj.visual.color = data_values.list_usefirst([def_color, di_color])
@@ -477,17 +444,6 @@ class cvpj_project:
 
 
 
-    def add_autotick(self, autopath, p_pos, p_val):
-        autopath = autopath_encode(autopath)
-        if autopath not in self.autoticks: self.autoticks[autopath] = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'float')
-        self.autoticks[autopath].add_point(p_pos, p_val)
-
-    def get_paramval_autotick(self, autopath, firstnote, fallback):
-        autopath = autopath_encode(autopath)
-        out_val = fallback
-        if autopath in self.autoticks: out_val = self.autoticks[autopath].get_paramval(firstnote, out_val)
-        return out_val
-
 
 
 
@@ -497,100 +453,6 @@ class cvpj_project:
         for x in twopoints:
             self.add_autopoint(autopath, v_type, x[0], x[1], 'normal')
 
-    def add_autopoint(self, autopath, v_type, p_pos, p_val, p_type):
-        autopath = autopath_encode(autopath)
-        if autopath not in self.autopoints: self.autopoints[autopath] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, v_type)
-        autopoint_obj = self.autopoints[autopath].add_point()
-        autopoint_obj.pos = p_pos
-        autopoint_obj.value = p_val
-        autopoint_obj.type = p_type
-
-
-
-    def autoticks_to_autopoints(self):
-        for autopath, autoticks in self.autoticks.items():
-            prev_val = -1000000000000000
-            autotspl = []
-            lastsplit = 0
-            for p, v in autoticks.iter():
-                normlvlspl = (p-prev_val)/(self.time_ppq*4)
-                normlvl = (p-prev_val)/self.time_ppq
-                normtype = normlvl<0.1
-                if normlvlspl>1: 
-                    lastsplit = p
-                    autotspl.append([p, []])
-                prev_val = p
-
-                autotspl[-1][1].append([p-lastsplit, v, normtype])
-
-            for d in autotspl:
-                if autopath not in self.automation: self.automation[autopath] = convproj_placements.cvpj_placements_auto(self.time_ppq, self.time_float, autoticks.val_type)
-                autopl_obj = self.automation[autopath].add(autoticks.val_type)
-                autopl_obj.position = d[0]
-                autopl_obj.duration = self.time_ppq
-                for x in d[1]:
-                    #print(autopath, x, autoticks.val_type)
-                    autopoint_obj = autopl_obj.data.add_point()
-                    autopoint_obj.pos = x[0]
-                    autopoint_obj.value = x[1]
-                    autopoint_obj.type = 'normal' if x[2] else 'instant'
-                    if autopoint_obj.pos > self.time_ppq:
-                        autopl_obj.duration = autopoint_obj.pos
-
-        self.autoticks = {}
-
-    def autopoints_to_pl(self):
-        for autopath, autopoints in self.autopoints.items():
-            if autopath not in self.automation: self.automation[autopath] = convproj_placements.cvpj_placements_auto(self.time_ppq, self.time_float, autopoints.val_type)
-
-            prev_val = 0
-            usedareas = []
-            for x in autopoints.iter():
-                usedareas.append((x.value != prev_val) or x.type == 'instant')
-                prev_val = x.value
-
-            cutpos = 0
-            is_first = True
-            out_regions = []
-            for x in data_values.list_findrepeat(usedareas):
-                outmin = cutpos if is_first else cutpos-1
-                if x[0]: out_regions.append([outmin, cutpos+x[1]])
-                cutpos += x[1]
-                is_first = False
-
-            for r in out_regions:
-                autopl_obj = self.automation[autopath].add(autopoints.val_type)
-                autopl_obj.position = autopoints.points[r[0]].pos
-                for x in autopoints.points[r[0]:r[1]]:
-                    autopoint_obj = autopl_obj.data.add_point()
-                    autopoint_obj.pos = x.pos-autopoints.points[r[0]].pos
-                    autopoint_obj.value = x.value
-                    autopoint_obj.type = x.type
-                    autopl_obj.duration = autopl_obj.data.get_dur()
-                    if autopl_obj.duration < self.time_ppq: autopl_obj.duration = self.time_ppq
-        self.autopoints = {}
-
-    def autopoints_from_pl(self):
-        for autopath, autopl in self.automation.items():
-            self.autopoints[autopath] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
-            for x in autopl.iter():
-                x.data.edit_trimmove(0, x.duration)
-                for c, p in enumerate(x.data.points):
-                    autopoint_obj = self.autopoints[autopath].add_point()
-                    autopoint_obj.pos = p.pos+x.position
-                    autopoint_obj.value = p.value
-                    autopoint_obj.type = p.type if c != 0 else 'instant'
-
-        self.automation = {}
-            
-    def get_autopoints(self, autoloc):
-        autopath = autopath_encode(autoloc)
-        if autopath in self.autopoints: return True, self.autopoints[autopath]
-        else: return False, None
-
-    def iter_autopoints(self):
-        for autopath in self.autopoints:
-            yield autopath.split(';'), self.autopoints[autopath]
 
 
         

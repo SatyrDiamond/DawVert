@@ -13,8 +13,8 @@ def convert(convproj_obj):
         used_inst = False
         if track_obj.type == 'instruments': used_inst = True
         if track_obj.type == 'instrument': used_inst = True
-        if track_obj.placements.data_notes: used_inst = True
-
+        if track_obj.placements.pl_notes.data: used_inst = True
+        if track_obj.placements.notelist.nl: used_inst = True
 
         if not track_obj.is_laned:
             plnum += 1
@@ -35,6 +35,7 @@ def convert(convproj_obj):
                 playlist_obj.params = copy.deepcopy(lane_obj.params)
                 playlist_obj.datavals = copy.deepcopy(lane_obj.datavals)
                 playlist_obj.placements = copy.deepcopy(lane_obj.placements)
+
         if used_inst:
             inst_obj = convproj_obj.add_instrument(trackid)
             inst_obj.visual = copy.deepcopy(track_obj.visual)

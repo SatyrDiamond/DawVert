@@ -1,0 +1,19 @@
+
+################################ EQ > 3 Band EQ
+new|eq
+
+in_type|native-onlineseq
+in_subtype|eq
+out_type|universal
+out_subtype|eq-3band
+
+in_param|eq_low
+in_param|eq_mid
+in_param|eq_high
+
+out_param|low_gain|eq_low
+out_param|mid_gain|eq_mid
+out_param|high_gain|eq_high
+out_v_param|lowmid_freq|250
+out_v_param|midhigh_freq|2500
+

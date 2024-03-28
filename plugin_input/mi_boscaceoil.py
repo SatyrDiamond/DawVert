@@ -4,6 +4,8 @@
 from objects import convproj
 from objects import idvals
 from objects import dv_dataset
+from functions_plugin_cvpj import params_fm
+from functions import xtramath
 import plugin_input
 import json
 
@@ -19,27 +21,26 @@ datapos = 0
 
 globalfxname = ['delay','chorus','reverb','distortion','low_boost','compressor','high_pass']
 
-def calc_cutoff(in_val): return pow(in_val, 2)*(925/2048)
-
 def ceol_read():
     global datapos
     global ceol_data
     output = int(ceol_data[datapos])
     datapos += 1
     return output
-
+    
 class input_ceol(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'ceol'
-    def getname(self): return 'Bosca Ceoil'
     def gettype(self): return 'mi'
-    def getdawcapabilities(self): 
-        return {
-        'track_lanes': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Bosca Ceoil'
+        dawinfo_obj.file_ext = 'ceol'
+        dawinfo_obj.track_lanes = True
+        dawinfo_obj.audio_filetypes = []
+        dawinfo_obj.plugin_included = ['simple:chorus','simple:reverb','simple:distortion','simple:bassboost','universal:compressor','universal:filter','fm:opm','native-boscaceoil','universal:filter','midi']
     def supported_autodetect(self): return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         global datapos
         global ceol_data
         
@@ -50,6 +51,7 @@ class input_ceol(plugin_input.base):
         dataset = dv_dataset.dataset('./data_dset/boscaceoil.dset')
         dataset_midi = dv_dataset.dataset('./data_dset/midi.dset')
         idvals_inst_bosca = idvals.idvals('data_idvals/boscaceoil_inst.csv')
+        idvals_valsound_opm = idvals.idvals('data_idvals/valsound_opm.csv')
 
         # ---------- File ----------
         bio_mainfile = open(input_file, 'r')
@@ -75,46 +77,48 @@ class input_ceol(plugin_input.base):
         convproj_obj.track_master.visual.color = [0.31373, 0.39608, 0.41569]
 
         if ceol_basic_effect == 0: #delay
-            masterfx_plugindata = convproj_obj.add_plugin('master-effect', 'universal', 'delay-c')
-            masterfx_plugindata.fxdata_add(1, 0.5)
-            masterfx_plugindata.datavals.add('time_type', 'seconds')
-            masterfx_plugindata.datavals.add('time', ((300*ceol_basic_effectvalue)/100)/1000 )
-            masterfx_plugindata.datavals.add('feedback', 0.1)
+            plugin_obj = convproj_obj.add_plugin('master-effect', 'universal', 'delay-c')
+            plugin_obj.fxdata_add(1, 0.5)
+            plugin_obj.datavals.add('traits', [])
+            plugin_obj.datavals.add('c_fb', 0.1)
+            timing_obj = plugin_obj.timing_add('center')
+            timing_obj.set_seconds(((300*ceol_basic_effectvalue)/100)/1000)
 
         elif ceol_basic_effect == 1: #chorus
-            masterfx_plugindata = convproj_obj.add_plugin('master-effect', 'simple', 'chorus')
-            masterfx_plugindata.params.add('amount', ceol_basic_effectvalue/100, 'float')
+            plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'chorus')
+            plugin_obj.params.add('amount', ceol_basic_effectvalue/100, 'float')
 
         elif ceol_basic_effect == 2: #reverb
-            masterfx_plugindata = convproj_obj.add_plugin('master-effect', 'simple', 'reverb')
-            masterfx_plugindata.fxdata_add(1, (0.3)*(ceol_basic_effectvalue/100))
+            plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'reverb')
+            plugin_obj.fxdata_add(1, (0.3)*(ceol_basic_effectvalue/100))
 
         elif ceol_basic_effect == 3: #distortion
-            masterfx_plugindata = convproj_obj.add_plugin('master-effect', 'simple', 'distortion')
-            masterfx_plugindata.params.add('amount', ceol_basic_effectvalue/100, 'float')
+            plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'distortion')
+            plugin_obj.params.add('amount', ceol_basic_effectvalue/100, 'float')
 
         elif ceol_basic_effect == 4: #low_boost
-            masterfx_plugindata = convproj_obj.add_plugin('master-effect', 'simple', 'bassboost')
-            masterfx_plugindata.fxdata_add(1, ceol_basic_effectvalue/100)
+            plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'bassboost')
+            plugin_obj.fxdata_add(1, ceol_basic_effectvalue/100)
 
         elif ceol_basic_effect == 5: #compressor
-            masterfx_plugindata = convproj_obj.add_plugin('master-effect', 'universal', 'compressor')
-            masterfx_plugindata.params.add('attack', 0.1, 'float')
-            masterfx_plugindata.params.add('pregain', 0, 'float')
-            masterfx_plugindata.params.add('knee', 6, 'float')
-            masterfx_plugindata.params.add('postgain', 0, 'float')
-            masterfx_plugindata.params.add('ratio', 4, 'float')
-            masterfx_plugindata.params.add('release', 0.5, 'float')
-            masterfx_plugindata.params.add('threshold', -20, 'float')
+            plugin_obj = convproj_obj.add_plugin('master-effect', 'universal', 'compressor')
+            plugin_obj.params.add('attack', 0.1, 'float')
+            plugin_obj.params.add('pregain', 0, 'float')
+            plugin_obj.params.add('knee', 6, 'float')
+            plugin_obj.params.add('postgain', 0, 'float')
+            plugin_obj.params.add('ratio', 4, 'float')
+            plugin_obj.params.add('release', 0.5, 'float')
+            plugin_obj.params.add('threshold', -20, 'float')
 
         elif ceol_basic_effect == 6: #high_pass
-            masterfx_plugindata = convproj_obj.add_plugin('master-effect', 'universal', 'eq-bands')
-            sband = masterfx_plugindata.filter_add()
-            sband.on = True
-            sband.type = 'high_pass'
-            sband.freq = calc_cutoff(ceol_basic_effectvalue)
+            plugin_obj = convproj_obj.add_plugin('master-effect', 'universal', 'filter')
+            plugin_obj.filter.on = True
+            plugin_obj.filter.type = 'high_pass'
+            plugin_obj.filter.freq = xtramath.midi_filter(ceol_basic_effectvalue/100)
+            
+        plugin_obj.role = 'effect'
 
-        masterfx_plugindata.visual.name, masterfx_plugindata.visual.color = dataset.object_get_name_color('fx', str(globalfxname[ceol_basic_effect]))
+        plugin_obj.visual.name, plugin_obj.visual.color = dataset.object_get_name_color('fx', str(globalfxname[ceol_basic_effect]))
         convproj_obj.track_master.fxslots_audio.append('master-effect')
 
         # ---------- Instruments ----------
@@ -138,11 +142,11 @@ class input_ceol(plugin_input.base):
             print('Pal: '+str(ceol_inst_palette), end=', ')
             print('CutRes: '+str(ceol_inst_cutoff)+'/'+str(ceol_inst_resonance))
 
-            calc_initcutoffval = calc_cutoff(ceol_inst_cutoff)
+            calc_initcutoffval = xtramath.midi_filter(ceol_inst_cutoff/100)
             cvpj_instcolor = ceol_colors[ceol_inst_palette] if (ceol_inst_palette in ceol_colors) else [0.55, 0.55, 0.55]
 
             if ceol_inst_number <= 127:
-                convproj_obj.instrument_midi_dset(cvpj_instid, cvpj_instid, 0, ceol_inst_number, False, dataset_midi, None, cvpj_instcolor)
+                inst_obj, plugin_obj = convproj_obj.instrument_midi_dset(cvpj_instid, cvpj_instid, 0, ceol_inst_number, False, dataset_midi, None, cvpj_instcolor)
 
             elif ceol_inst_number == 365: 
                 inst_obj, plugin_obj = convproj_obj.instrument_midi_dset(cvpj_instid, cvpj_instid, 0, 0, True, dataset_midi, None, cvpj_instcolor)
@@ -151,8 +155,28 @@ class input_ceol(plugin_input.base):
             else: 
                 inst_obj, plugin_obj = convproj_obj.add_instrument_from_dset(cvpj_instid, cvpj_instid, dataset, dataset_midi, str(ceol_inst_number), None, cvpj_instcolor)
                 valsoundid = idvals_inst_bosca.get_idval(str(ceol_inst_number), 'valsoundid')
-                if valsoundid not in [None, '']: plugin_obj.type_set('valsound', valsoundid)
-                else: plugin_obj.type_set('native-boscaceoil', ceol_inst_number)
+                if valsoundid not in [None, '']: 
+                    opm_main = [int(x) for x in idvals_valsound_opm.get_idval(valsoundid, 'opm_main').split(',')]
+                    opm_op1 = [int(x) for x in idvals_valsound_opm.get_idval(valsoundid, 'opm_op1').split(',')]
+                    opm_op2 = [int(x) for x in idvals_valsound_opm.get_idval(valsoundid, 'opm_op2').split(',')]
+                    opm_op3 = [int(x) for x in idvals_valsound_opm.get_idval(valsoundid, 'opm_op3').split(',')]
+                    opm_op4 = [int(x) for x in idvals_valsound_opm.get_idval(valsoundid, 'opm_op4').split(',')]
+                    opm_ops = [opm_op1, opm_op2, opm_op3, opm_op4]
+
+                    fmdata = params_fm.fm_data('opm')
+                    fmdata.set_param('opmsk', 120)
+                    fmdata.set_param('alg', opm_main[0])
+                    fmdata.set_param('fb', opm_main[1])
+                    for o in range(4):
+                        print(opm_ops[o])
+                        for n, t in enumerate(['ar','d1r','d2r','rr','d1l','tl','ks','ml','dt1','dt2']):
+                            fmdata.set_op_param(o, t, opm_ops[o][n])
+                    fmdata.to_cvpj(convproj_obj, cvpj_instid)
+
+                else: 
+                    plugin_obj.type_set('native-boscaceoil', str(ceol_inst_number))
+
+            plugin_obj.role = 'synth'
 
             if ceol_inst_number == 363: t_key_offset.append(60)
             elif ceol_inst_number == 364: t_key_offset.append(48)
@@ -161,19 +185,14 @@ class input_ceol(plugin_input.base):
 
             inst_obj.params.add('vol', ceol_inst_volume/256, 'float')
 
-            if ceol_inst_cutoff != 127:
-                inst_filt_plugindata = convproj.cvpj_plugin()
-                inst_filt_plugindata.type_set('universal', 'eq-bands')
-                inst_filt_plugindata.filter_add()
-                sband = inst_filt_plugindata.filters[-1]
-                sband.on = True
-                sband.type = 'low_pass'
-                sband.freq = calc_initcutoffval
-                sband.q = ceol_inst_resonance+1
-                inst_obj.fxslots_audio
-
+            if ceol_inst_cutoff < 110:
                 fx_id = cvpj_instid+'_filter'
-                convproj_obj.plugins[fx_id] = inst_filt_plugindata
+                plugin_obj = convproj_obj.add_plugin(fx_id, 'universal', 'filter')
+                plugin_obj.filter.on = True
+                plugin_obj.filter.type = 'low_pass'
+                plugin_obj.filter.freq = calc_initcutoffval
+                plugin_obj.filter.q = ceol_inst_resonance+1
+                plugin_obj.role = 'effect'
                 inst_obj.fxslots_audio.append(fx_id)
 
         # ---------- Patterns ----------
@@ -194,14 +213,12 @@ class input_ceol(plugin_input.base):
             ceol_numnotes = ceol_read()
             print('#Notes:'+str(ceol_numnotes))
 
-            print_notes = 0
             for _ in range(ceol_numnotes):
                 ceol_nl_key = ceol_read()-60 + t_key_offset[ceol_pat_instrument]
                 ceol_nl_len = ceol_read()
                 ceol_nl_pos = ceol_read()
                 ceol_read()
                 t_notepos_table[ceol_nl_pos].append(['ceol_'+str(ceol_pat_instrument).zfill(2), ceol_nl_len, ceol_nl_key])
-                print_notes += 1
 
             ceol_recordfilter = ceol_read()
             if ceol_recordfilter == 1:
@@ -217,7 +234,7 @@ class input_ceol(plugin_input.base):
             nle_obj.visual.color = ceol_colors[ceol_pat_palette] if ceol_pat_palette in ceol_colors else [0.55, 0.55, 0.55]
 
         for num in range(8):
-            playlist_obj = convproj_obj.add_playlist(num, 0, False)
+            playlist_obj = convproj_obj.add_playlist(num, 1, True)
             playlist_obj.visual.color = [0.43, 0.52, 0.55] if (num % 2) == 0 else [0.31, 0.40, 0.42]
 
         # ---------- Loop ----------
@@ -230,7 +247,7 @@ class input_ceol(plugin_input.base):
             for plnum in range(8):
                 plpatnum = ceol_read()
                 if plpatnum != -1:
-                    cvpj_placement = convproj_obj.playlist[plnum].placements.add_notes()
+                    cvpj_placement = convproj_obj.playlist[plnum].placements.add_notes_indexed()
                     cvpj_placement.fromindex = 'ceol_'+str(plpatnum).zfill(3)
                     cvpj_placement.position = plpos*ceol_basic_patternlength
                     cvpj_placement.duration = ceol_basic_patternlength

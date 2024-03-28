@@ -12,6 +12,7 @@ import math
 import av
 from functions import colors
 from functions import xtramath
+from functions_plugin_ext import plugin_vst2
 
 def adddevice_a(i_dict, i_id, i_name, i_type, i_portalType, i_trackId, i_x, i_y): 
     i_dict[i_id] = {'id': i_id, 'name': i_name, 'type': i_type, 'portalType': i_portalType, 'trackId': i_trackId, 'x': i_x, 'y': i_y}
@@ -149,21 +150,18 @@ class output_wavtool(plugin_output.base):
     def getshortname(self): return 'wavtool'
     def gettype(self): return 'r'
     def plugin_archs(self): return None
-    def getdawcapabilities(self): 
-        return {
-        'placement_cut': True,
-        'auto_nopl': True,
-        'placement_loop': ['loop', 'loop_off', 'loop_adv'],
-        'placement_audio_stretch': ['warp', 'rate']
-        }
-    def getsupportedplugformats(self): return []
-    def getsupportedplugins(self): return ['sampler:single']
-    def getfileextension(self): return 'zip'
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Wavtool'
+        dawinfo_obj.file_ext = 'zip'
+        dawinfo_obj.placement_cut = True
+        dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
+        dawinfo_obj.audio_stretch = ['warp', 'rate']
+        dawinfo_obj.plugin_included = ['sampler:single']
+        dawinfo_obj.auto_types = ['nopl_points']
     def parse(self, convproj_obj, output_file):
         global audio_id
         global wt_deviceRouting
         global wt_devices
-
         convproj_obj.change_timings(1, True)
 
         audio_id = {}
@@ -286,7 +284,7 @@ class output_wavtool(plugin_output.base):
                 wt_clips = []
 
                 if track_obj.type == 'instrument':
-                    for notespl_obj in track_obj.placements.iter_notes():
+                    for notespl_obj in track_obj.placements.pl_notes:
                         wt_clip = {}
                         wt_clip["name"] = notespl_obj.visual.name if notespl_obj.visual.name else ''
                         wt_clip["color"] = '#'+colors.rgb_float_to_hex(notespl_obj.visual.color) if notespl_obj.visual.color else trackcolor
@@ -322,7 +320,7 @@ class output_wavtool(plugin_output.base):
                         wt_clips.append(wt_clip)
 
                 if track_obj.type == 'audio':
-                    for audiopl_obj in track_obj.placements.iter_audio():
+                    for audiopl_obj in track_obj.placements.pl_audio:
                         wt_clip = {}
                         wt_clip["name"] = audiopl_obj.visual.name if audiopl_obj.visual.name else ''
                         wt_clip["color"] = '#'+colors.rgb_float_to_hex(audiopl_obj.visual.color) if audiopl_obj.visual.color else trackcolor
@@ -356,9 +354,9 @@ class output_wavtool(plugin_output.base):
                         cvpj_pitch = audiopl_obj.pitch
 
                         if not audiopl_obj.stretch.is_warped:
-                            warprate = audiopl_obj.stretch.rate_tempo if audiopl_obj.stretch.use_tempo else audiopl_obj.stretch.rate
+                            warprate = audiopl_obj.stretch.calc_real_speed
                             if audiopl_obj.stretch.algorithm == 'resample':
-                                transpose = (math.log2(warprate)*12)
+                                transpose = (math.log2(audiopl_obj.stretch.calc_real_speed)*12)
                             else:
                                 dur_seconds = sampleref_obj.dur_sec*warprate
                                 warpdata = {}
@@ -371,19 +369,19 @@ class output_wavtool(plugin_output.base):
                                 for num in range(int(maxpoints/warprate)):
                                     numpart = (num+1)/maxpoints
                                     warppoint = (dur_seconds*2)*numpart
-                                    warpdata['anchors']["%g" % warppoint] = {"destination": warppoint/warprate, "pinned": True}
+                                    warpdata['anchors']["%g" % (warppoint*bpmmul)] = {"destination": (warppoint/warprate)*bpmmul, "pinned": True}
                                 wt_clip["warp"] = warpdata
                                 transpose = cvpj_pitch
 
                         else:
                             warpdata = {}
-                            warpdata['sourceBPM'] = bpm
+                            warpdata['sourceBPM'] = 120
                             warpdata['anchors'] = {}
                             warpdata['enabled'] = True
 
-                            for warppoint in audiopl_obj.cvpj_audiomod:
-                                wt_warp_pos = warppoint[0]/4
-                                wt_warp_pos_real = (warppoint[1]/bpmmul)*2
+                            for warppoint in audiopl_obj.stretch.warp:
+                                wt_warp_pos = (warppoint[0]/4)
+                                wt_warp_pos_real = (warppoint[1])*2
                                 warpdata['anchors']["%g" % wt_warp_pos_real] = {"destination": wt_warp_pos, "pinned": False}
 
                             wt_clip["warp"] = warpdata
@@ -405,14 +403,14 @@ class output_wavtool(plugin_output.base):
                 wt_tracks.append(wt_track)
 
                 for autoname in [['vol','gain'],['pan','balance']]:
-                    if_found, autopoints = convproj_obj.get_autopoints(['track',cvpj_trackid,autoname[0]])
+                    if_found, autopoints = convproj_obj.automation.get_autopoints(['track',cvpj_trackid,autoname[0]])
                     if if_found: 
                         if autoname[0] == 'pan': autopoints.addmul(1, 0.5)
                         autopoints.remove_instant()
                         wt_trackauto = make_automation(autoname[0], cvpj_trackid, autoname[1], wt_trackid_ChanStrip, wt_trackid, autopoints, trackcolor, True)
                         wt_tracks.append(wt_trackauto)
 
-        if_found, mas_cvpjauto_vol = convproj_obj.get_autopoints(['master','vol'])
+        if_found, mas_cvpjauto_vol = convproj_obj.automation.get_autopoints(['master','vol'])
         if if_found:
             wt_trackauto = make_automation('vol', 'master', 'gain', 'masterFader', 'master', mas_cvpjauto_vol, 'AAAAAA', False)
             wt_tracks.insert(0, wt_trackauto)
@@ -422,10 +420,10 @@ class output_wavtool(plugin_output.base):
         wt_out["composerHasAuthority"] = False
         wt_out["metronome"] = False
         wt_out["midiOverdub"] = True
-        wt_out["loopStart"] = 0
-        wt_out["loopEnd"] = 0
+        wt_out["loopStart"] = max(convproj_obj.loop_start, 0)
+        wt_out["loopEnd"] = max(convproj_obj.loop_end, 0)
         wt_out["loopLifted"] = False
-        wt_out["loopEnabled"] = False
+        wt_out["loopEnabled"] = convproj_obj.loop_active
         wt_out["bpm"] = bpm
         wt_out["beatNumerator"], wt_out["beatDenominator"] = convproj_obj.timesig
         wt_out["name"] = convproj_obj.metadata.name

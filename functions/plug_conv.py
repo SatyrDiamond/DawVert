@@ -3,6 +3,8 @@
 
 from plugin_plugconv import base as base_plugconv
 from plugin_plugconv_extern import base as base_plugconv_extern
+from objects import plugts
+from functions import errorprint
 
 import json
 import os
@@ -14,6 +16,8 @@ import base64
 #from functions import plugins
 
 ______debugtxt______ = False
+
+plugtransform = plugts.storedtransform()
 
 pl_pc_in = []
 pl_pc_in_always = []
@@ -98,23 +102,23 @@ def commalist2plugtypes(inputdata):
 		sep_supp_plugs.append(outputpart)
 	return sep_supp_plugs
 
-def convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, pci_in, extra_json):
+def convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, pci_in, extra_json, plugtransform):
 	for plugclassinfo in pci_in:
 		if plugin_obj.check_wildmatch(plugclassinfo[1][0], plugclassinfo[1][1]):
-			converted_val_p = plugclassinfo[0].convert(convproj_obj, plugin_obj, pluginid, extra_json)
+			converted_val_p = plugclassinfo[0].convert(convproj_obj, plugin_obj, pluginid, extra_json, plugtransform)
 			if converted_val_p < converted_val: converted_val = converted_val_p
 			if converted_val == 0: break
 
 	return converted_val
 
-def convproj(convproj_obj, platform_id, in_daw, out_daw, 
-	out_supportedplugins, out_supportedplugformats, extra_json):
+def convproj(convproj_obj, platform_id, in_daw, out_daw, out_dawinfo, extra_json):
 	global pl_pc_in
 	global pl_pc_in_always
 	global pl_pc_out
 	global pl_pc_ext
+	global plugtransform
 
-	out_supportedplugins = commalist2plugtypes(out_supportedplugins)
+	out_dawinfo.plugin_included = commalist2plugtypes(out_dawinfo.plugin_included)
 
 	#out_daw = 'lmms'
 
@@ -133,28 +137,29 @@ def convproj(convproj_obj, platform_id, in_daw, out_daw,
 		for pluginid, plugin_obj in convproj_obj.plugins.items():
 			converted_val = 2
 
-			if plugin_obj.plugin_type not in out_supportedplugins:
+			if plugin_obj.plugin_type not in out_dawinfo.plugin_included:
 				if ______debugtxt______: print('-------')
 	
 				if ______debugtxt______: print('- input always')
-				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, pl_pc_in_always, extra_json)
+				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, pl_pc_in_always, extra_json, plugtransform)
 
 				if ______debugtxt______: print('- input')
-				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, pl_pc_in, extra_json)
+				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, pl_pc_in, extra_json, plugtransform)
 
 				if ______debugtxt______: print('- output')
-				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, sep_pl_pc_out__native, extra_json)
+				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, sep_pl_pc_out__native, extra_json, plugtransform)
 
 			if converted_val:
 				ext_conv_val = False
 
-				if not (True in [plugin_obj.check_wildmatch(x[0], x[1]) for x in out_supportedplugins]):
+				if not (True in [plugin_obj.check_wildmatch(x[0], x[1]) for x in out_dawinfo.plugin_included]):
 					for p_pl_pc_ext in pl_pc_ext:
 						ismatched = plugin_obj.check_wildmatch(p_pl_pc_ext[1][0], p_pl_pc_ext[1][1])
 						#print(ismatched, p_pl_pc_ext, p_pl_pc_ext[1][0], p_pl_pc_ext[1][1])
 						if ismatched and p_pl_pc_ext[3] != out_daw:
-							for plugformat in out_supportedplugformats:
-								ext_conv_val = p_pl_pc_ext[0].convert(convproj_obj, plugin_obj, pluginid, extra_json, plugformat)
-								if ext_conv_val: break
+							ext_conv_val = p_pl_pc_ext[0].convert(convproj_obj, plugin_obj, pluginid, extra_json, out_dawinfo.plugin_ext, plugtransform)
 						if ext_conv_val: break
-		#exit()
+
+					if not ext_conv_val:
+						if plugin_obj.plugin_type not in ['vst3','vst2','ladspa',None]:
+							errorprint.printerr('ext_noncompat', [plugin_obj.plugin_type, plugin_obj.plugin_subtype])

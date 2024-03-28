@@ -53,11 +53,17 @@ def parse_clip_audio(convproj_obj, placement_obj, j_wvtl_trackclip):
     if j_wvtl_trc_warp == None: j_wvtl_trc_warp = {}
 
     if j_wvtl_trc_warp != {}:
-        placement_obj.stretch.method = 'warp' if j_wvtl_trc_warp['enabled'] else 'rate_tempo'
+        placement_obj.stretch.use_tempo = j_wvtl_trc_warp['enabled']
+        placement_obj.stretch.is_warped = j_wvtl_trc_warp['enabled']
         sourcebpm = j_wvtl_trc_warp['sourceBPM']/120
-        for anchor in j_wvtl_trc_warp['anchors']: placement_obj.stretch.warp.append([j_wvtl_trc_warp['anchors'][anchor]['destination']*4, (float(anchor)/sourcebpm)/2])
-    else: 
-        placement_obj.stretch.set_rate(j_wvtl_bpm, 1)
+        for anchor in j_wvtl_trc_warp['anchors']: 
+            placement_obj.stretch.warp.append([
+                j_wvtl_trc_warp['anchors'][anchor]['destination']*4
+                , 
+                (float(anchor)/sourcebpm)/2
+                ])
+    else:
+        placement_obj.stretch.set_rate_speed(j_wvtl_bpm, 1, False)
 
     if 'color' in j_wvtl_trackclip: placement_obj.visual.color = colors.hex_to_rgb_float(j_wvtl_trackclip['color'])
     if 'name' in j_wvtl_trackclip: placement_obj.visual.name = j_wvtl_trackclip['name']
@@ -120,17 +126,15 @@ class input_wavtool(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'wavtool'
-    def getname(self): return 'wavtool'
     def gettype(self): return 'r'
-    def getdawcapabilities(self): 
-        return {
-        'samples_inside': True,
-        'placement_cut': True,
-        'placement_loop': ['loop', 'loop_off', 'loop_adv'],
-        'placement_audio_stretch': ['rate']
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Wavtool'
+        dawinfo_obj.file_ext = 'zip'
+        dawinfo_obj.placement_cut = True
+        dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
+        dawinfo_obj.audio_stretch = ['warp']
     def supported_autodetect(self): return False
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         global samplefolder
         global zip_data
         global j_wvtl_bpm
@@ -140,14 +144,11 @@ class input_wavtool(plugin_input.base):
 
         zip_data = zipfile.ZipFile(input_file, 'r')
         json_filename = None
-        samplefolder = extra_param['samplefolder']
+        samplefolder = dv_config.path_samples_extracted
         for jsonname in zip_data.namelist():
             if '.json' in jsonname: json_filename = jsonname
         t_wavtool_project = zip_data.read(json_filename)
         j_wvtl_project = json.loads(t_wavtool_project)
-        if 'debug' in extra_param:
-            with open('testout.json', "w") as fileout:
-                json.dump(j_wvtl_project, fileout, indent=4, sort_keys=True)
         j_wvtl_bpm = j_wvtl_project['bpm']
         j_wvtl_beatDenominator = j_wvtl_project['beatDenominator']
         j_wvtl_beatNumerator = j_wvtl_project['beatNumerator']
@@ -160,3 +161,5 @@ class input_wavtool(plugin_input.base):
 
         convproj_obj.timesig = [j_wvtl_beatNumerator, j_wvtl_beatDenominator]
         convproj_obj.params.add('bpm', j_wvtl_bpm, 'float')
+
+        if 'name' in j_wvtl_project: convproj_obj.metadata.name = j_wvtl_project['name']

@@ -1950,7 +1950,7 @@
                         "max": null,
                         "min": null,
                         "name": "Elastique Options",
-                        "noauto": false,
+                        "noauto": true,
                         "type": "string"
                     },
                     "semitonesUp": {
@@ -2259,11 +2259,11 @@
                     },
                     "sync": {
                         "def": 0,
-                        "max": null,
-                        "min": null,
+                        "max": 1,
+                        "min": 0,
                         "name": "sync",
                         "noauto": false,
-                        "type": "bool"
+                        "type": "int"
                     },
                     "volL": {
                         "def": 0.0,

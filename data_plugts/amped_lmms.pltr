@@ -1,0 +1,26 @@
+
+################################ ReverbSC > Castello Reverb
+new|reverb
+
+in_type|native-amped
+in_subtype|Reverb
+out_type|native-lmms
+out_subtype|reverbsc
+
+in_param|fb
+in_param|lpf
+in_param|mix
+
+calc|fb|pow|2
+
+out_param|size|fb
+out_param|color|lpf
+out_wet|mix
+
+
+
+
+
+
+
+

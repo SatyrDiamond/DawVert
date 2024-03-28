@@ -9,7 +9,7 @@ class output_cvpj(plugin_output.base):
     def is_dawvert_plugin(self): return 'output'
     def getname(self): return 'DEBUG'
     def getshortname(self): return 'cvpj'
-    def gettype(self): return 'debug'
+    def gettype(self): return 'r'
     def plugin_archs(self): return None
     def getdawcapabilities(self): 
         return {
@@ -26,7 +26,8 @@ class output_cvpj(plugin_output.base):
     def getsupportedplugins(self): return ['sampler:single', 'sampler:multi', 'sampler:slicer', 'soundfont2']
     def getfileextension(self): return 'cvpj'
     def parse(self, convproj_obj, output_file):
-
+  
+        
         exit()
         #projJ = json.loads(convproj_json)
         #with open(output_file, "w") as fileout:

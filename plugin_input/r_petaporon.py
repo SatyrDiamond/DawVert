@@ -22,14 +22,14 @@ class input_petaporon(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'petaporon'
-    def getname(self): return 'Petaporon'
     def gettype(self): return 'r'
     def supported_autodetect(self): return False
-    def getdawcapabilities(self): 
-        return {
-        'track_nopl': True
-        }
-    def parse(self, convproj_obj, input_file, extra_param):
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Petaporon'
+        dawinfo_obj.file_ext = 'json'
+        dawinfo_obj.track_nopl = True
+        dawinfo_obj.plugin_included = ['universal:synth-osc']
+    def parse(self, convproj_obj, input_file, dv_config):
         bytestream = open(input_file, 'r')
         sndstat_data = json.load(bytestream)
 
@@ -65,6 +65,7 @@ class input_petaporon(plugin_input.base):
             track_obj.visual.name = 'Inst #'+str(instnum+1)
             track_obj.visual.color = colordata.getcolornum(instnum)
             plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+            plugin_obj.role = 'synth'
             track_obj.inst_pluginid = pluginid
 
             osc_data = plugin_obj.osc_add()

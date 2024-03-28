@@ -4,12 +4,18 @@
 class cvpj_visual_ui:
     def __init__(self):
         self.height = 1
+        self.other = {}
 
 class cvpj_visual:
     __slots__ = ['name','color']
     def __init__(self):
         self.name = None
         self.color = None
+
+    def __eq__(self, visual_obj):
+        s_name = self.name == visual_obj.name
+        s_color = self.color == visual_obj.color
+        return s_name and s_color
 
     def add(self, v_name, v_color):
         if v_name != None: self.name = v_name

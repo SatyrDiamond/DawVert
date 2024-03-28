@@ -5,9 +5,6 @@ import plugin_plugconv
 
 import math
 from functions import xtramath
-from objects import plugts
-
-loaded_plugtransform = False
 
 slope_vals = [12,24,48]
 
@@ -15,54 +12,46 @@ class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['directx', None, None], ['universal', None, None], False, False
-    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json):
-        global loaded_plugtransform
-        global plugts_obj
-
-        if loaded_plugtransform == False:
-            plugts_obj = plugts.plugtransform()
-            plugts_obj.load_file('./data_plugts/directx.pltr')
-            loaded_plugtransform = True
+    def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, plugtransform):
 
         if plugin_obj.plugin_subtype == 'Chorus':
             print("[plug-conv] DirectX to Universal: Chorus:",pluginid)
             waveshape = 'sine' if bool(plugin_obj.params.get('waveshape', 0).value) else 'triangle'
-            plugts_obj.transform('chorus_univ', convproj_obj, plugin_obj, pluginid, extra_json)
+            plugtransform.transform('./data_plugts/directx.pltr', 'chorus_univ', convproj_obj, plugin_obj, pluginid, dv_config)
             plugin_obj.datavals.add('waveshape', waveshape)
             return 1
             
         if plugin_obj.plugin_subtype == 'Compressor':
             print("[plug-conv] DirectX to Universal: Compressor:",pluginid)
-            plugts_obj.transform('compressor_univ', convproj_obj, plugin_obj, pluginid, extra_json)
+            plugtransform.transform('./data_plugts/directx.pltr', 'compressor_univ', convproj_obj, plugin_obj, pluginid, dv_config)
             return 1
             
         if plugin_obj.plugin_subtype == 'Echo':
-            print("[plug-conv] DirectX to Universal: Echo > Stereo Delay:",pluginid)
+            print("[plug-conv] DirectX to Universal: Echo > Delay:",pluginid)
             i_feedback = plugin_obj.params.get('feedback', 0).value
             i_leftdelay = plugin_obj.params.get('leftdelay', 0).value
             i_rightdelay = plugin_obj.params.get('rightdelay', 0).value
             i_pandelay = bool(plugin_obj.params.get('pandelay', 0).value)
-
             i_leftdelay = xtramath.between_from_one(0.001, 2, i_leftdelay)
             i_rightdelay = xtramath.between_from_one(0.001, 2, i_rightdelay)
 
-            plugin_obj.replace('universal', 'delay-m')
-            plugin_obj.datavals.add('wet', 1)
-            plugin_obj.datavals.add('time_type', 'seconds')
-            plugin_obj.datavals.add('l_time', i_leftdelay)
-            plugin_obj.datavals.add('r_time', i_rightdelay)
-            if not i_pandelay:
-                plugin_obj.datavals.add('fb', i_feedback)
-                plugin_obj.datavals.add('cross_fb', 0)
-            else:
-                plugin_obj.datavals.add('fb', 0)
-                plugin_obj.datavals.add('cross_fb', i_feedback)
+            plugin_obj.replace('universal', 'delay')
+            plugin_obj.datavals.add('traits', ['stereo'])
+            plugin_obj.datavals.add('traits_seperated', ['time'])
+
+            timing_obj = plugin_obj.timing_add('left')
+            timing_obj.set_seconds(i_leftdelay)
+            timing_obj = plugin_obj.timing_add('right')
+            timing_obj.set_seconds(i_rightdelay)
+
+            plugin_obj.datavals.add('c_fb', i_feedback if i_pandelay else 0)
+            plugin_obj.datavals.add('c_cross_fb', 0 if i_pandelay else i_feedback)
             return 1
             
         if plugin_obj.plugin_subtype == 'Flanger':
             print("[plug-conv] DirectX to Universal: Flanger:",pluginid)
             waveshape = 'sine' if bool(plugin_obj.params.get('waveshape', 0).value) else 'triangle'
-            plugts_obj.transform('flanger_univ', convproj_obj, plugin_obj, pluginid, extra_json)
+            plugtransform.transform('./data_plugts/directx.pltr', 'flanger_univ', convproj_obj, plugin_obj, pluginid, dv_config)
             plugin_obj.datavals.add('waveshape', waveshape)
             return 1
 

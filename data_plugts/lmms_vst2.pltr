@@ -141,8 +141,8 @@ calc|color|div|15000
 out_store|size|size
 out_store|color|color
 
-out_auto|ext_param_1|size
-out_auto|ext_param_2|color
+out_param|ext_param_1|size
+out_param|ext_param_2|color
 
 
 

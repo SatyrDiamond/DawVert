@@ -122,11 +122,13 @@ def calcval(value):
 def addfx(inst_obj, fxgroupname, cvpj_instid, fxname):
 	fx_pluginid = cvpj_instid+'_'+fxname
 	plugin_obj = convproj_obj.add_plugin(fx_pluginid, fxgroupname, fxname)
+	plugin_obj.role = 'effect'
 	inst_obj.fxslots_audio.append(fx_pluginid)
 	return plugin_obj
 
 def add_eq_data(inst_obj, cvpj_instid, eqfiltbands):
 	plugin_obj = addfx(inst_obj, 'universal', cvpj_instid, 'eq-bands')
+	plugin_obj.role = 'effect'
 	plugin_obj.visual.name = 'EQ'
 	for eqfiltdata in eqfiltbands:
 		eqgain_pass = eqfiltdata['linearGain']
@@ -255,11 +257,10 @@ def parse_instrument(bb_instrument, bb_type, bb_color, bb_inst_effects, cvpj_ins
 				filter_peak = bb_instrument['eqSimplePeak']
 				if filter_hz != None or filter_peak != 0:
 					if filter_hz == None: filter_hz = 8000
-					plugin_obj = addfx(inst_obj, 'universal', cvpj_instid, 'eq-bands')
-					filter_obj = plugin_obj.eq_add()
-					filter_obj.freq  = filter_hz
-					filter_obj.type = 'low_pass'
-					filter_obj.q = (filter_peak*2)+1
+					plugin_obj = addfx(inst_obj, 'universal', cvpj_instid, 'filter')
+					plugin_obj.filter.freq  = filter_hz
+					plugin_obj.filter.type = 'low_pass'
+					plugin_obj.filter.q = (filter_peak*2)+1
 
 		elif 'eqFilter' in bb_instrument:
 			bb_eqFilter = bb_instrument['eqFilter']
@@ -267,12 +268,12 @@ def parse_instrument(bb_instrument, bb_type, bb_color, bb_inst_effects, cvpj_ins
 				fx_pluginid, fx_plugindata = add_eq_data(inst_obj, cvpj_instid, bb_eqFilter)
 				
 		if 'echo' in bb_inst_effects:
-			plugin_obj = addfx(inst_obj, 'universal', cvpj_instid, 'delay-c')
+			plugin_obj = addfx(inst_obj, 'universal', cvpj_instid, 'delay')
 			plugin_obj.visual.name = 'Echo'
 			plugin_obj.fxdata_add(1, 0.5)
-			plugin_obj.datavals.add('time_type', 'steps')
-			plugin_obj.datavals.add('time', bb_instrument['echoDelayBeats']*8)
-			plugin_obj.datavals.add('feedback', bb_instrument['echoSustain']/240)
+			timing_obj = plugin_obj.timing_add('center')
+			timing_obj.set_steps(bb_instrument['echoDelayBeats']*8, convproj_obj)
+			plugin_obj.datavals.add('c_fb', bb_instrument['echoSustain']/480)
 			
 		if 'distortion' in bb_inst_effects:
 			plugin_obj = addfx(inst_obj, 'simple', cvpj_instid, 'distortion')
@@ -308,14 +309,15 @@ def parse_instrument(bb_instrument, bb_type, bb_color, bb_inst_effects, cvpj_ins
 				if bb_instrument['vibratoSpeed'] != 0 and bb_instrument['vibratoDelay'] != 50:
 					lfo_obj = plugin_obj.lfo_add('pitch')
 					lfo_obj.predelay = (bb_instrument['vibratoDelay']/49)*2
-					lfo_obj.speed_time = 0.7*(1/bb_instrument['vibratoSpeed'])
+					lfo_obj.time.set_seconds(0.7*(1/bb_instrument['vibratoSpeed']))
 					lfo_obj.amount = bb_instrument['vibratoDepth']
 
 		a_attack = data_values.get_value(bb_instrument, 'fadeInSeconds', 0)
 		a_release = abs(data_values.get_value(bb_instrument, 'fadeOutTicks', 0)/(jummbox_ticksPerBeat*32))
 		plugin_obj.env_asdr_add('vol', 0, a_attack, 0, a_decay, a_sustain, a_release, 1)
 		return inst_obj
-
+	plugin_obj.role = 'synth'
+    
 def parse_notes(cvpj_notelist, channum, bb_notes, bb_instruments):
 	for note in bb_notes:
 		points = note['points']
@@ -396,7 +398,7 @@ def parse_channel(channeldata, channum, durpos):
 			bb_partdur = durpos[partnum]
 			if bb_part != 0:
 				playlist_obj = convproj_obj.add_playlist(channum-1, True, True)
-				cvpj_placement = playlist_obj.placements.add_notes()
+				cvpj_placement = playlist_obj.placements.add_notes_indexed()
 				cvpj_placement.fromindex =  'bb_ch'+str(channum)+'_pat'+str(bb_part-1)
 				cvpj_placement.position = placement_pos
 				cvpj_placement.duration = bb_partdur
@@ -455,14 +457,14 @@ def parse_channel(channeldata, channum, durpos):
 									for s_ap in t_ap: s_ap[0] = (s_ap[0]+1)*523.25
 
 							if autoloc:
-								autopl_obj = convproj_obj.add_automation_pl('main/bpm', 'float')
+								autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 								autopl_obj.position = bb_mod_pos
 								autopl_obj.duration = bb_mod_dur
 
 								for s_ap in t_ap: 
 									autopoint_obj = autopl_obj.data.add_point()
 									autopoint_obj.pos = s_ap[0]
-									autopoint_obj.value = s_ap[1]
+									autopoint_obj.value = (s_ap[1]*m_mul)+m_add
 
 				placement_pos += bb_partdur
 
@@ -513,14 +515,17 @@ class input_jummbox(plugin_input.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
 	def getshortname(self): return 'jummbox'
-	def getname(self): return 'jummbox'
 	def gettype(self): return 'mi'
-	def getdawcapabilities(self): 
-		return {
-		'track_lanes': True,
-		}
+	def getdawinfo(self, dawinfo_obj): 
+		dawinfo_obj.name = 'Jummbox'
+		dawinfo_obj.file_ext = 'json'
+		dawinfo_obj.auto_types = ['pl_points']
+		dawinfo_obj.track_lanes = True
+		dawinfo_obj.audio_filetypes = ['wav']
+		dawinfo_obj.plugin_included = ['native-jummbox','universal:eq-bands','universal:delay','simple:distortion','universal:bitcrush','simple:chorus','simple:reverb']
+
 	def supported_autodetect(self): return False
-	def parse(self, i_convproj_obj, input_file, extra_param):
+	def parse(self, i_convproj_obj, input_file, dv_config):
 		global convproj_obj
 
 		global dataset
@@ -545,6 +550,8 @@ class input_jummbox(plugin_input.base):
 
 		bytestream = open(input_file, 'r', encoding='utf8')
 		jummbox_json = json.load(bytestream)
+		jummbox_beatsPerMinute = jummbox_json['beatsPerMinute']
+		convproj_obj.params.add('bpm', jummbox_beatsPerMinute, 'float')
 
 		convproj_obj.track_master.params.add('vol', jummbox_json['masterGain'] if 'masterGain' in jummbox_json else 1, 'float')
 		if 'name' in jummbox_json: convproj_obj.metadata.name = jummbox_json['name']
@@ -553,7 +560,6 @@ class input_jummbox(plugin_input.base):
 		jummbox_channels = jummbox_json['channels']
 		jummbox_beatsPerBar = jummbox_json['beatsPerBar']
 		jummbox_ticksPerBeat = jummbox_json['ticksPerBeat']
-		jummbox_beatsPerMinute = jummbox_json['beatsPerMinute']
 
 		global jummbox_notesize
 		global ppq_data
@@ -578,4 +584,3 @@ class input_jummbox(plugin_input.base):
 			parse_channel(jummbox_channel, chancount+1, durpos)
 
 		convproj_obj.do_actions.append('do_addloop')
-		convproj_obj.params.add('bpm', jummbox_beatsPerMinute, 'float')

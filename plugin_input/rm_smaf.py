@@ -136,10 +136,13 @@ def parse_ma3_track(datain, tracknum, convproj_obj):
     print('[input-smaf] TimeBase MS:', tb_ms*1000)
     trk_chanstat = struct.unpack("IIII", bio_mmf_track.read(16))
     #print(trk_type_format, trk_type_seq, trk_tb_d, trk_tb_g, trk_chanstat)
-    trk_chunks = data_bytes.riff_read_big(bio_mmf_track.read(), 0)
+    trk_chunks = data_bytes.iff_read_big(bio_mmf_track.read(), 0)
     is_found = None
     for trk_chunk in trk_chunks:
         print('[input-smaf] MTR CHUNK:',trk_chunk[0])
+        #if trk_chunk[0] == b'Mtsu':
+        #    print(trk_chunk[1])
+        #    exit()
         if trk_chunk[0] == b'Mtsq':
             is_found = parse_ma3_Mtsq(trk_chunk[1], tb_ms, convproj_obj)
     if is_found == None:
@@ -151,15 +154,15 @@ class input_mmf(plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
     def getshortname(self): return 'mmf'
-    def getname(self): return 'Mobile Music File'
     def gettype(self): return 'rm'
-    def getdawcapabilities(self): 
-        return {
-        'fxrack': True,
-        'track_lanes': True,
-        'auto_nopl': True,
-        'track_nopl': True
-        }
+    def getdawinfo(self, dawinfo_obj): 
+        dawinfo_obj.name = 'Mobile Music File'
+        dawinfo_obj.file_ext = 'mmf'
+        dawinfo_obj.fxrack = True
+        dawinfo_obj.fxrack_params = ['vol']
+        dawinfo_obj.auto_types = ['nopl_ticks']
+        dawinfo_obj.track_nopl = True
+        dawinfo_obj.plugin_included = ['midi']
     def supported_autodetect(self): return True
     def detect(self, input_file):
         bytestream = open(input_file, 'rb')
@@ -168,13 +171,15 @@ class input_mmf(plugin_input.base):
         if bytesdata == b'MMMD': return True
         else: return False
         bytestream.seek(0)
-    def parse(self, convproj_obj, input_file, extra_param):
+    def parse(self, convproj_obj, input_file, dv_config):
         mmf_f_stream = open(input_file, 'rb')
-        mmf_chunks_main = data_bytes.riff_read(mmf_f_stream.read(), 0)
+        mmf_chunks_main = data_bytes.iff_read(mmf_f_stream.read(), 0)
         if mmf_chunks_main[0][0] != b'MMMD':
             print('[input-smaf] Not a SMAF File.'); exit()
 
-        mmf_chunks_ins = data_bytes.riff_read(mmf_chunks_main[0][1], 0)
+        convproj_obj.type = 'rm'
+
+        mmf_chunks_ins = data_bytes.iff_read(mmf_chunks_main[0][1], 0)
 
         cvpj_l = {}
 
@@ -183,7 +188,7 @@ class input_mmf(plugin_input.base):
             if mmf_chunk[0] == b'CNTI':
                 bio_mmf_cnti = data_bytes.to_bytesio(mmf_chunk[1])
                 mmf_cnti_class, mmf_cnti_type, mmf_cnti_codetype, mmf_cnti_status, mmf_cnti_counts = struct.unpack("BBBBB", bio_mmf_cnti.read(5))
-                mmf_cnti_chunks = data_bytes.riff_read_big(bio_mmf_cnti, 5)
+                mmf_cnti_chunks = data_bytes.iff_read_big(bio_mmf_cnti, 5)
                 for mmf_cnti_chunk in mmf_cnti_chunks:
                     print('[input-smaf] CNTI CHUNK:', mmf_cnti_chunk[0])
                     #if mmf_cnti_chunk[0] == b'OPDA':

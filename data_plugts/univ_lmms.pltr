@@ -1,0 +1,14 @@
+
+################################ bitcrush
+new|bitcrush
+
+in_type|universal
+in_subtype|bitcrush
+out_type|native-lmms
+out_subtype|bitcrush
+
+in_param|bits
+in_param|freq
+
+out_param|rate|freq
+out_param|levels|bits

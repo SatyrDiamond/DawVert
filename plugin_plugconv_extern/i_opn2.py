@@ -3,14 +3,15 @@
 
 import plugin_plugconv_extern
 from functions_plugin_ext import params_os_adlplug
+from functions import errorprint
 
 class plugconv(plugin_plugconv_extern.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv_ext'
     def getplugconvinfo(self): return ['fm', 'opn2'], ['vst2'], None
-    def convert(self, convproj_obj, plugin_obj, pluginid, extra_json, extplugtype):
+    def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype, plugtransform):
 
-        if extplugtype == 'vst2':
+        if 'vst2' in extplugtype:
             print('[plug-conv] Converting OPN2 > OPNPlug:',pluginid)
             adlplug_data = params_os_adlplug.adlplug_data()
   
@@ -30,18 +31,18 @@ class plugconv(plugin_plugconv_extern.base):
     
             for opnum in range(4):  
                 optxt = "op"+str(opnum+1)   
-                opn_op_detune = plugin_obj.params.get(optxt+"_detune", 0).value
-                opn_op_freqmul = plugin_obj.params.get(optxt+"_freqmul", 0).value
-                opn_op_level = plugin_obj.params.get(optxt+"_level", 0).value
-                opn_op_ratescale = plugin_obj.params.get(optxt+"_ratescale", 0).value
-                opn_op_env_attack = plugin_obj.params.get(optxt+"_env_attack", 0).value
-                opn_op_am = plugin_obj.params.get(optxt+"_am", 0).value
-                opn_op_env_decay = plugin_obj.params.get(optxt+"_env_decay", 0).value
-                opn_op_env_decay2 = plugin_obj.params.get(optxt+"_env_decay2", 0).value
-                opn_op_env_sustain = plugin_obj.params.get(optxt+"_env_sustain", 0).value
-                opn_op_env_release = plugin_obj.params.get(optxt+"_env_release", 0).value
-                opn_op_ssg_enable = plugin_obj.params.get(optxt+"_ssg_enable", 0).value
-                opn_op_ssg_mode = plugin_obj.params.get(optxt+"_ssg_mode", 0).value
+                opn_op_detune = plugin_obj.params.get(optxt+"/detune", 0).value
+                opn_op_freqmul = plugin_obj.params.get(optxt+"/freqmul", 0).value
+                opn_op_level = plugin_obj.params.get(optxt+"/level", 0).value
+                opn_op_ratescale = plugin_obj.params.get(optxt+"/ratescale", 0).value
+                opn_op_env_attack = plugin_obj.params.get(optxt+"/env_attack", 0).value
+                opn_op_am = plugin_obj.params.get(optxt+"/am", 0).value
+                opn_op_env_decay = plugin_obj.params.get(optxt+"/env_decay", 0).value
+                opn_op_env_decay2 = plugin_obj.params.get(optxt+"/env_decay2", 0).value
+                opn_op_env_sustain = plugin_obj.params.get(optxt+"/env_sustain", 0).value
+                opn_op_env_release = plugin_obj.params.get(optxt+"/env_release", 0).value
+                opn_op_ssg_enable = plugin_obj.params.get(optxt+"/ssg_enable", 0).value
+                opn_op_ssg_mode = plugin_obj.params.get(optxt+"/ssg_mode", 0).value
 
                 adlplug_data.set_param(optxt+"detune" ,opn_op_detune) 
                 adlplug_data.set_param(optxt+"fmul" ,opn_op_freqmul)  

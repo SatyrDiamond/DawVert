@@ -20,6 +20,7 @@ class plugconv(plugin_plugconv.base):
                 plugin_obj.datavals.add('bank', 0)
                 plugin_obj.datavals.add('patch', 33)
                 plugin_obj.datavals.add('is_drum', False)
+                print('[plug-conv] No Soundfont Argument Defined:',pluginid)
             else:
                 sf2_path = dv_config.path_soundfont_gm
                 plugin_obj.replace('soundfont2', None)

@@ -3,20 +3,52 @@
 
 import math
 
+# -------------------------------------------- values --------------------------------------------
+
 def clamp(n, minn, maxn): return max(min(maxn, n), minn)
 
 def overlap(start1, end1, start2, end2): return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
 
-def average(lst): return sum(lst) / len(lst)
-
-def between_from_one(minval, maxval, value):  return (minval*(1-value))+(maxval*value)
+def between_from_one(minval, maxval, value): return (minval*(1-value))+(maxval*value)
 
 def between_to_one(minval, maxval, value): return 0 if minval == maxval else (value-minval)/(maxval-minval)
 
 def is_between(i_min, i_max, i_value): return min(i_min, i_max) <= i_value <= max(i_min, i_max)
 
+def step2sec(i_value, i_bpm): return (i_value/8)*(120/i_bpm)
+
+def sec2step(i_value, i_bpm): return (i_value*8)/(120/i_bpm)
+
+def midi_filter(i_value): return pow(i_value*100, 2)*(925/2048)
+
+def wetdry(wet, dry):
+    vol = max(wet, dry)
+    wet = (wet/vol) if vol != 0 else 1
+    dry = (dry/vol) if vol != 0 else 1
+    return ((wet-dry)/2)+0.5
+
+def sep_pan_to_vol(i_left, i_right):
+    val_vol = max(i_left, i_right)
+    if val_vol != 0: 
+        i_left = i_left/val_vol
+        i_right = i_right/val_vol
+    pan_val = (i_left*-1)+i_right
+    return pan_val, val_vol
+
+def change_timing(o_ppq, n_ppq, n_float, value):
+    modval = float(value)*(n_ppq/o_ppq)
+    return modval if n_float else int(modval)
+
+def from_db(value):
+    return pow(10, value / 20)
+
+def to_db(value):
+    return 20 * math.log10(value)
+
+
+# -------------------------------------------- generators --------------------------------------------
+
 def gen_float_range(start,stop,step):
-    print(start,stop,step)
     istop = int((stop-start) // step)
     for i in range(int(istop)):
         yield start + i * step
@@ -43,14 +75,6 @@ def steps_to_one(in_val, steps):
             return between_to_one(prev_step, step, in_val)*(1/maxlen)+(index/maxlen)
         prev_step = step
     return 0
-
-def sep_pan_to_vol(i_left, i_right):
-    val_vol = max(i_left, i_right)
-    if val_vol != 0: 
-        i_left = i_left/val_vol
-        i_right = i_right/val_vol
-    pan_val = (i_left*-1)+i_right
-    return pan_val, val_vol
 
 # -------------------------------------------- placement_loop --------------------------------------------
 
@@ -105,6 +129,10 @@ def loop_after(bl_p_pos, bl_p_dur, bl_p_start, bl_l_start, bl_l_end):
         flag_first_pl = False
     return cutpoints
 
+# -------------------------------------------- multivalues --------------------------------------------
+
+def average(lst): return sum(lst) / len(lst)
+
 def cutloop(position, duration, startoffset, loopstart, loopend): 
     if loopstart > startoffset: cutpoints = loop_before(position, duration, startoffset, loopstart, loopend)
     else: cutpoints = loop_after(position, duration, startoffset, loopstart, loopend)
@@ -121,6 +149,7 @@ def logpowmul(value, multiplier):
     return value
 
 def get_timesig(pat_len, notes_p_beat):
+    # get_timesig from https://github.com/BleuBleu/FamiStudio/blob/master/FamiStudio/Source/IO/MidiFile.cs
     MaxFactor = 1024
     factor = 1
     while (((pat_len * factor) % notes_p_beat) != 0 and factor <= MaxFactor): factor *= 2
@@ -141,19 +170,3 @@ def get_lower_tempo(i_tempo, i_notelen, maxtempo):
         i_tempo = i_tempo/2
         i_notelen = i_notelen/2
     return (i_tempo, i_notelen)
-
-def change_timing(o_ppq, n_ppq, n_float, value):
-    modval = float(value)*(n_ppq/o_ppq)
-    return modval if n_float else int(modval)
-
-def step2sec(i_value, i_bpm): return (i_value/8)*(120/i_bpm)
-
-def sec2step(i_value, i_bpm): return (i_value*8)/(120/i_bpm)
-
-def midi_filter(i_value): return pow(i_value*100, 2)*(925/2048)
-
-def wetdry(wet, dry):
-    vol = max(wet, dry)
-    wet = (wet/vol) if vol != 0 else 1
-    dry = (dry/vol) if vol != 0 else 1
-    return ((wet-dry)/2)+0.5

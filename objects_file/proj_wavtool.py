@@ -9,6 +9,7 @@ class wavtool_clip:
 		self.name = ''
 		self.loopStart = 0
 		self.loopEnd = 0
+		self.loopEnabled = False
 		self.fadeIn = 0
 		self.fadeOut = 0
 		self.readStart = 0
@@ -115,7 +116,7 @@ class wavtool_track:
 			if 'points' in pd: self.points = pd['points']
 			if 'clips' in pd: 
 				for c in pd['clips']: self.clips.append(wavtool_clip(c))
-			self.input = pd['input']
+			self.input = pd['input'] if 'input' in pd else None
 			if 'setting' in pd: self.setting = pd['setting']
 
 

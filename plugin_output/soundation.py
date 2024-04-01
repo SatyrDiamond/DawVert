@@ -83,7 +83,7 @@ class output_soundation(plugin_output.base):
         dawinfo_obj.name = 'Soundation'
         dawinfo_obj.file_ext = 'sngz'
         dawinfo_obj.placement_cut = True
-        dawinfo_obj.placement_loop = []
+        dawinfo_obj.placement_loop = ['loop']
         dawinfo_obj.fxtype = 'track'
         dawinfo_obj.plugin_included = ['sampler:single','synth-nonfree:europa','native-soundation','midi']
         dawinfo_obj.auto_types = ['nopl_points']
@@ -332,7 +332,7 @@ class output_soundation(plugin_output.base):
                     soundation_region.contentPosition = 0
 
                     if notespl_obj.cut_type in ['loop', 'loop_off']:
-                        soundation_region.length = notespl_obj.cut_data['loopend']
+                        #soundation_region.length = notespl_obj.cut_data['loopend']
                         soundation_region.loopcount = notespl_obj.duration/notespl_obj.cut_data['loopend']
                         if notespl_obj.cut_type == 'loop_off': soundation_region.contentPosition = -(notespl_obj.cut_data['start'])
 
@@ -403,6 +403,34 @@ class output_soundation(plugin_output.base):
         soundation_obj.looping = convproj_obj.loop_active
         soundation_obj.loopStart = int(convproj_obj.loop_start)
         soundation_obj.loopEnd = int(convproj_obj.loop_end)
+
+        #iseffectexists = 'fx' in [convproj_obj.track_data[x].type for x in convproj_obj.track_order]
+#
+        #if iseffectexists:
+#
+        #    for trackid, sends_obj in convproj_obj.trackroute.items():
+        #        tracksendnum = convproj_obj.track_order.index(trackid)
+    #
+        #        isallfx = True
+        #        for target, send_obj in sends_obj.iter():
+        #            amount = send_obj.params.get('amount', 1).value
+        #            pan = send_obj.params.get('pan', 0).value
+        #            trackrecnum = convproj_obj.track_order.index(target)
+        #            soundation_effect = proj_soundation.soundation_device(None)
+        #            soundation_effect.identifier = 'com.soundation.send'
+        #            soundation_effect.params.add('send', amount, [])
+        #            soundation_effect.params.add('pan', (pan/2+0.5), [])
+        #            soundation_effect.params.add('output', 1, [])
+        #            soundation_effect.data['channelIndex'] = trackrecnum
+        #            sng_channels[tracksendnum].effects.append(soundation_effect)
+#
+        #        if not sends_obj.to_master_active:
+        #            soundation_effect = proj_soundation.soundation_device(None)
+        #            soundation_effect.identifier = 'com.soundation.send'
+        #            soundation_effect.params.add('send', 1, [])
+        #            soundation_effect.params.add('pan', 0.5, [])
+        #            soundation_effect.params.add('output', int(sends_obj.to_master_active), [])
+        #            sng_channels[tracksendnum].effects.append(soundation_effect)
 
         for x in sng_channels: soundation_obj.channels.append(x)
 

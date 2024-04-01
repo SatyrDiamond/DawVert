@@ -26,6 +26,7 @@ class input_wavtool(plugin_input.base):
     def getdawinfo(self, dawinfo_obj): 
         dawinfo_obj.name = 'Wavtool'
         dawinfo_obj.file_ext = 'zip'
+        dawinfo_obj.fxtype = 'track'
         dawinfo_obj.placement_cut = True
         dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
         dawinfo_obj.audio_stretch = ['warp']
@@ -81,8 +82,9 @@ class input_wavtool(plugin_input.base):
                     placement_obj.visual.name = wavtool_clip.name
                     placement_obj.position = wavtool_clip.timelineStart
                     placement_obj.duration = wavtool_clip.timelineEnd - wavtool_clip.timelineStart
-                    if wavtool_clip.loopEnabled:
-                        placement_obj.cut_loop_data(wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd)
+
+                    loopon = True
+                    if not wavtool_clip.loopEnabled: loopon = wavtool_clip.loopEnabled
 
                     placement_obj.fade_in['duration'] = wavtool_clip.fadeIn
                     placement_obj.fade_out['duration'] = wavtool_clip.fadeOut
@@ -90,6 +92,7 @@ class input_wavtool(plugin_input.base):
                     if wavtool_clip.warp != {}:
                         placement_obj.stretch.use_tempo = wavtool_clip.warp['enabled']
                         placement_obj.stretch.is_warped = wavtool_clip.warp['enabled']
+                        if placement_obj.stretch.is_warped: loopon = True
                         sourcebpm = wavtool_clip.warp['sourceBPM']/120
                         for anchor in wavtool_clip.warp['anchors']: 
                             placement_obj.stretch.warp.append([
@@ -99,6 +102,9 @@ class input_wavtool(plugin_input.base):
                     placement_obj.stretch.algorithm = 'beats'
                     placement_obj.pitch = wavtool_clip.transpose
                     placement_obj.stretch.rate = pow(2, wavtool_clip.transpose/12)*(120/wavtool_obj.bpm)
+
+                    if loopon:
+                        placement_obj.cut_loop_data(wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd)
 
                     audio_filename = extract_audio(wavtool_clip.audioBufferId)
                     convproj_obj.add_sampleref(wavtool_clip.audioBufferId, audio_filename)

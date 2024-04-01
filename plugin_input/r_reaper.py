@@ -60,6 +60,7 @@ class input_reaper(plugin_input.base):
     def getdawinfo(self, dawinfo_obj): 
         dawinfo_obj.name = 'REAPER'
         dawinfo_obj.file_ext = 'rpp'
+        dawinfo_obj.fxtype = 'track'
         dawinfo_obj.placement_cut = True
         dawinfo_obj.placement_loop = []
         dawinfo_obj.time_seconds = True
@@ -76,6 +77,8 @@ class input_reaper(plugin_input.base):
 
         bpm = 120
         
+        trackdata = []
+
         for rpp_var in rpp_data:
             if isinstance(rpp_var, list):
                 if rpp_var[0] == 'TEMPO':
@@ -84,6 +87,8 @@ class input_reaper(plugin_input.base):
                     tempomul = bpm/120
             else:
                 if rpp_var.tag == 'TRACK':
+
+                    trackroute = [1, []]
                     cvpj_trackid = 'unknown'
                     cvpj_trackname = ''
                     cvpj_trackcolor = [0.4,0.4,0.4]
@@ -101,6 +106,8 @@ class input_reaper(plugin_input.base):
                                 cvpj_trackvol = float(rpp_trackvar[1])
                                 cvpj_trackpan = float(rpp_trackvar[2])
                             if rpp_trackvar[0] == 'TRACKID': cvpj_trackid = rpp_trackvar[1]
+                            if rpp_trackvar[0] == 'MAINSEND': trackroute[0] = int(rpp_trackvar[1])
+                            if rpp_trackvar[0] == 'AUXRECV': trackroute[1].append(rpp_trackvar[1:])
                         else:
                             if rpp_trackvar.tag == 'FXCHAIN': rpp_fxchain.append(rpp_trackvar.children)
                             if rpp_trackvar.tag == 'ITEM': rpp_trackitems.append(rpp_trackvar.children)
@@ -251,3 +258,16 @@ class input_reaper(plugin_input.base):
 
                             placement_obj.cut_type = 'cut'
                             placement_obj.cut_data['start'] = cvpj_offset_bpm/cvpj_audio_rate
+
+                    convproj_obj.add_trackroute(cvpj_trackid)
+                    trackdata.append([cvpj_trackid, trackroute])
+
+        for to_track, trackroute in trackdata:
+            convproj_obj.trackroute[to_track].to_master_active = bool(trackroute[0])
+            for routedata in trackroute[1]:
+                from_track = trackdata[int(routedata[0])][0]
+                amount = float(routedata[2])
+                pan = float(routedata[3])
+                sends_obj = convproj_obj.trackroute[from_track]
+                send_obj = sends_obj.add(to_track, None, amount)
+                send_obj.params.add('pan', pan, 'float')

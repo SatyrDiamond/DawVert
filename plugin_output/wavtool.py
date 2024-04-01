@@ -15,27 +15,6 @@ from functions import xtramath
 from objects_file import proj_wavtool
 from functions_plugin_ext import plugin_vst2
 
-def adddevice_a(i_dict, i_id, i_name, i_type, i_portalType, i_trackId, i_x, i_y): 
-    i_dict[i_id] = {'id': i_id, 'name': i_name, 'type': i_type, 'portalType': i_portalType, 'trackId': i_trackId, 'x': i_x, 'y': i_y}
-
-def adddevice_b(i_dict, i_id, i_name, i_type, i_sourceId, i_trackId, i_x, i_y): 
-    i_dict[i_id] = {'id': i_id, 'name': i_name, 'sourceId': i_sourceId, 'trackId': i_trackId, 'x': i_x, 'y': i_y, 'type': i_type}
-
-def adddevice_c(i_dict, i_id, i_name, i_type, i_portalType, i_trackId, i_x, i_y): 
-    i_dict[i_id] = {'id': i_id, 'name': i_name, 'type': i_type, 'portalType': i_portalType, 'x': i_x, 'y': i_y, 'trackId': i_trackId}
-
-def adddevice_d(i_dict, i_id, i_name, i_type, i_sourceId, i_trackId, i_x, i_y): 
-    i_dict[i_id] = {'name': i_name, 'x': i_x, 'y': i_y, 'id': i_id, 'trackId': i_trackId, 'type': i_type, 'sourceId': i_sourceId}
-
-def adddevice_e(i_dict, i_id, i_name, i_type, i_sourceId, i_trackId, i_x, i_y, ingain): 
-    i_dict[i_id] = {'id': i_id, 'name': i_name, 'sourceId': i_sourceId, 'type': i_type, 'x': i_x, 'y': i_y, 'trackId': i_trackId, 'inputs': {'gain': ingain}}
-
-def adddevice_f(i_dict, i_id, i_name, i_type, i_portalType, i_trackId, i_x, i_y): 
-    i_dict[i_id] = {'id': i_id, 'name': i_name, 'type': i_type, 'portalType': i_portalType, 'x': i_x, 'y': i_y, 'trackId': i_trackId}
-
-def adddevice_g(i_dict, i_id, i_name, i_type, i_sourceId, i_trackId, i_x, i_y): 
-    i_dict[i_id] = {'id': i_id, 'name': i_name, 'sourceId': i_sourceId, 'type': i_type, 'x': i_x, 'y': i_y, 'trackId': i_trackId}
-
 def addsample(zip_wt, filepath, alredyexists): 
     global audio_id
     datauuid = str(uuid.uuid4())
@@ -121,20 +100,6 @@ def make_automation(autoid, trackid, autoname, stripdevice, trackdevice, autopoi
     wavtool_track.points = wt_points
     wavtool_track.channelStripId = wt_autoid_AutoStrip
     return wavtool_track
-
-
-
-def add_fx_device(prev_port, wt_devices, wt_deviceRouting, fxid, fxname, wt_trackid, fxnum, cvpj_fxid, wt_trackid_Instrument):
-    wt_fxname = 'DawVert-FX-'+cvpj_fxid
-    adddevice_d(wt_devices, wt_fxname, fxname, 'JS', fxid, wt_trackid, 330, 10+(fxnum*100))
-    prev_out = wt_deviceRouting[prev_port+'.input']
-    wt_deviceRouting[prev_port+'.input'] = wt_fxname+'.output'
-    wt_deviceRouting[wt_fxname+'.input'] = wt_trackid_Instrument+'.output'
-    return wt_fxname
-
-
-
-
 
 
 
@@ -265,8 +230,6 @@ class output_wavtool(plugin_output.base):
                 device_obj.type = 'PortalOut'
                 device_obj.window.pos_x = 10
                 device_obj.window.pos_y = 35.75
-
-                #adddevice_e(i_dict, i_id, i_name, i_type, i_sourceId, i_trackId, i_x, i_y, ingain): 
 
                 device_obj = wavtool_obj.devices.add_device(wt_trackid, wt_trackid_ChanStrip)
                 device_obj.visual.name = 'Channel Strip'

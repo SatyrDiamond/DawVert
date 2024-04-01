@@ -58,7 +58,7 @@ def flpauto_to_cvpjauto(i_value):
             if i_value[4] == 'wet': out = [['slot', 'FLPlug_F_'+i_value[1]+'_'+i_value[3], 'wet'], 0, 12800]
             if i_value[4] == 'on': out = [['slot', 'FLPlug_F_'+i_value[1]+'_'+i_value[3], 'enabled'], 0, 1]
         if i_value[2] == 'route':
-            out = [['send', 'send_'+str(i_value[1])+'_'+str(i_value[3]), 'amount'], 0, 12800]
+            out = [[('send' if i_value[3] else 'send_master'), 'send_'+str(i_value[1])+'_'+str(i_value[3]), 'amount'], 0, 12800]
 
     return out
 
@@ -116,7 +116,7 @@ class input_flp(plugin_input.base):
         dawinfo_obj.auto_types = ['pl_ticks']
         dawinfo_obj.track_lanes = True
         dawinfo_obj.placement_cut = True
-        dawinfo_obj.fxrack = True
+        dawinfo_obj.fxtype = 'rack'
         dawinfo_obj.fxrack_params = ['enabled','vol','pan']
         dawinfo_obj.audio_stretch = ['rate']
         dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3','wv','ds']
@@ -486,10 +486,19 @@ class input_flp(plugin_input.base):
             fxchannel_obj.params.add('vol', fx_vol, 'float')
             fxchannel_obj.params.add('pan', fx_pan, 'float')
 
+            fxchannel_obj.sends.to_master_active = False
+
             for route in mixer_obj.routing:
                 autoloctxt_route = 'fx/'+str(mixer_id)+'/route/'+str(route)
-                route_val = flp_obj.initfxvals.initvals[autoloctxt_route]/12800 if autoloctxt_route in flp_obj.initfxvals.initvals else 1
-                fxchannel_obj.sends.add(route, 'send_'+str(mixer_id)+'_'+str(route), route_val)
+                fx_amount = flp_obj.initfxvals.initvals[autoloctxt_route]/12800 if autoloctxt_route in flp_obj.initfxvals.initvals else 1
+                send_id = 'send_'+str(mixer_id)+'_'+str(route)
+                if route == 0:
+                    fxchannel_obj.sends.to_master_active = True
+                    master_send = fxchannel_obj.sends.to_master
+                    master_send.params.add('amount', fx_amount, 'float')
+                    master_send.sendautoid = send_id
+                else:
+                    fxchannel_obj.sends.add(route, send_id, fx_amount)
 
             for slot_id, slot_obj in enumerate(mixer_obj.slots):
                 autoloctxt_on = 'fx/'+str(mixer_id)+'/slot/'+str(slot_id)+'/on'

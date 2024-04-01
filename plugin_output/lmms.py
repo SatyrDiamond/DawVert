@@ -524,13 +524,20 @@ def lmms_encode_fxmixer(xmltag):
 
         lmms_encode_fxchain(fxcX, fxchannel_obj, autoname, autoloc)
 
+        if fxchannel_obj.sends.to_master_active:
+            master_send_obj = fxchannel_obj.sends.to_master
+            sendX = ET.SubElement(fxcX, "send")
+            sendX.set('channel', str(0))
+            sendX.set('amount', str(master_send_obj.params.get('amount', 1).value))
+
         if fxchannel_obj.sends.check():
             for target, send_obj in fxchannel_obj.sends.iter():
+                target = int(target)
                 sendX = ET.SubElement(fxcX, "send")
-                sendX.set('channel', str(int(target)))
+                sendX.set('channel', str(target))
                 if send_obj.sendautoid: 
                     visual_name = 'Send '+str(num)+' > '+str(target)
-                    create_param_auto(fxcX, 'amount', send_obj.params, 'amount', 1, None, ['send', send_obj.sendautoid], visual_name, 'Amount', True)
+                    create_param_auto(fxcX, 'amount', send_obj.params, 'amount', 1, None, [('send' if target else 'send_master'), send_obj.sendautoid], visual_name, 'Amount', True)
                 else:
                     sendX.set('amount', str(send_obj.params.get('amount', 1).value))
         else:
@@ -554,7 +561,7 @@ class output_lmms(plugin_output.base):
     def getdawinfo(self, dawinfo_obj): 
         dawinfo_obj.name = 'LMMS'
         dawinfo_obj.file_ext = 'mmp'
-        dawinfo_obj.fxrack = True
+        dawinfo_obj.fxtype = 'rack'
         dawinfo_obj.fxrack_params = ['enabled','vol']
         dawinfo_obj.auto_types = ['pl_points']
         dawinfo_obj.plugin_included = ['sampler:single','fm:opl2','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay']

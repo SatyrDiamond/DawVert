@@ -4,8 +4,10 @@
 from functions import data_values
 from functions import xtramath
 
-from functions_compat import fxrack2trackfx
-from functions_compat import trackfx2fxrack
+#from functions_compat import fxrack2trackfx
+#from functions_compat import trackfx2fxrack
+
+from functions_compat import fxchange
 
 from functions_compat import autopl_addrem
 from functions_compat import changestretch
@@ -40,11 +42,12 @@ class song_compat:
         if self.currenttime == None: self.currenttime = in_dawinfo.time_seconds
         if 'time_seconds' in self.finished_processes: self.currenttime = out_dawinfo.time_seconds
     
-        self.process_part('trackfx2fxrack', trackfx2fxrack,           convproj_obj, cvpj_type, in_dawinfo.fxrack, out_dawinfo.fxrack)
-        self.process_part('fxrack2trackfx', fxrack2trackfx,           convproj_obj, cvpj_type, in_dawinfo.fxrack, out_dawinfo.fxrack)
-    
-        if in_dawinfo.fxrack == out_dawinfo.fxrack == True:
-            self.process_part('fxrack_moveparams', fxrack_moveparams, convproj_obj, cvpj_type, in_dawinfo.fxrack_params, out_dawinfo.fxrack_params)
+        #self.process_part('trackfx2fxrack', trackfx2fxrack,           convproj_obj, cvpj_type, in_dawinfo.fxrack, out_dawinfo.fxrack)
+        #self.process_part('fxrack2trackfx', fxrack2trackfx,           convproj_obj, cvpj_type, in_dawinfo.fxrack, out_dawinfo.fxrack)
+        self.process_part('fxchange', fxchange,                        convproj_obj, cvpj_type, in_dawinfo.fxtype, out_dawinfo.fxtype)
+
+        #if in_dawinfo.fxrack == out_dawinfo.fxrack == True:
+        #    self.process_part('fxrack_moveparams', fxrack_moveparams, convproj_obj, cvpj_type, in_dawinfo.fxrack_params, out_dawinfo.fxrack_params)
     
         self.process_part('unhybrid', unhybrid,                       convproj_obj, cvpj_type, in_dawinfo.track_hybrid, out_dawinfo.track_hybrid)
         self.process_part('removelanes', removelanes,                 convproj_obj, cvpj_type, in_dawinfo.track_lanes, out_dawinfo.track_lanes)

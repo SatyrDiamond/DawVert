@@ -9,7 +9,7 @@ class wavtool_clip:
 		self.name = ''
 		self.loopStart = 0
 		self.loopEnd = 0
-		self.loopEnabled = False
+		self.loopEnabled = True
 		self.fadeIn = 0
 		self.fadeOut = 0
 		self.readStart = 0

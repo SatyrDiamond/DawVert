@@ -37,7 +37,7 @@ class output_cvpjs(plugin_output.base):
         dawinfo_obj.auto_types = ['pl_ticks']
         dawinfo_obj.track_lanes = True
         dawinfo_obj.placement_cut = True
-        dawinfo_obj.fxrack = True
+        dawinfo_obj.fxtype = 'rack'
         dawinfo_obj.fxrack_params = ['enabled','vol','pan']
         dawinfo_obj.audio_stretch = ['rate']
         dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3','wv','ds']
@@ -409,6 +409,7 @@ class output_cvpjs(plugin_output.base):
             flp_obj.initfxvals.initvals[fxptxt+'eq3_width'] = 17500
 
         for fx_num, fxchannel_obj in convproj_obj.fxrack.items():
+
             fl_fxchan = flp_obj.mixer[fx_num]
             if fxchannel_obj.visual.name: fl_fxchan.name = fxchannel_obj.visual.name
             if fxchannel_obj.visual.color: fl_fxchan.color = decode_color(fxchannel_obj.visual.color)
@@ -425,6 +426,11 @@ class output_cvpjs(plugin_output.base):
             flp_obj.initfxvals.initvals[fxptxt+'vol'] = int(12800*fxchannel_obj.params.get('vol', 1.0).value)
             flp_obj.initfxvals.initvals[fxptxt+'pan'] = int(6400*fxchannel_obj.params.get('pan', 0).value)
             
+            if fxchannel_obj.sends.to_master_active:
+                master_send_obj = fxchannel_obj.sends.to_master
+                fl_fxchan.routing.append(0)
+                flp_obj.initfxvals.initvals['fx/'+str(fx_num)+'/route/0'] = int(master_send_obj.params.get('amount', 1).value*12800)
+
             if fxchannel_obj.sends.check():
                 for target, send_obj in fxchannel_obj.sends.iter():
                     fl_fxchan.routing.append(target)

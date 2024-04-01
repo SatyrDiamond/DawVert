@@ -12,47 +12,23 @@ from functions import data_values
 from functions import xtramath
 from objects import counter
 from functions_plugin import synth_nonfree_values
+from objects_file import proj_amped
 
 audioidnum = 0
 
-def amped_makeparam(i_id, i_name, i_value): return {"id": i_id, "name": i_name, "value": i_value}
-
 def amped_makeregion(position, duration, offset): 
-    amped_region = {}
-    amped_region["id"] = counter_id.get()
-    amped_region["position"] = position/4
-    amped_region["length"] = duration/4
-    amped_region["offset"] = offset/4
-    amped_region["loop"] = 0
-    amped_region["clips"] = []
-    amped_region["midi"] = {"notes": [], "events": [], "chords": []}
-    amped_region["name"] = ""
-    amped_region["color"] = "mint"
+    amped_region = proj_amped.amped_region(None, 'lime')
+    amped_region.id = counter_id.get()
+    amped_region.position = position/4
+    amped_region.length = duration/4
+    amped_region.offset = offset/4
     return amped_region
 
-def amped_maketrack(): 
-    amped_trackdata = {}
-    amped_trackdata["id"] = counter_id.get()
-    amped_trackdata["name"] = ""
-    amped_trackdata["color"] = "mint"
-    amped_trackdata["pan"] = 0
-    amped_trackdata["volume"] = 1
-    amped_trackdata["mute"] = False
-    amped_trackdata["solo"] = False
-    amped_trackdata["armed"] = {"mic": False, "keys": False}
-    amped_trackdata["regions"] = []
-    amped_trackdata["devices"] = []
-    amped_trackdata["automations"] = []
-    return amped_trackdata
-
 def amped_makedevice(className, label): 
-    amped_device = {}
-    amped_device["id"] = counter_devid.get()
-    amped_device["className"] = className
-    amped_device["label"] = label
-    amped_device["params"] = []
-    amped_device["preset"] = {}
-    amped_device["bypass"] = False
+    amped_device = proj_amped.amped_device(None)
+    amped_device.id = counter_devid.get()
+    amped_device.className = className
+    amped_device.label = label
     return amped_device
 
 def cvpjauto_to_ampedauto(autopoints, i_min, i_max):
@@ -70,7 +46,7 @@ def create_autodata(deviceid, paramid, cvpj_points, paramtype, minval, maxval):
     if paramtype == 'int': amped_param['spec'] = {"type": "numeric", "min": minval, "max": maxval, "curve": 0, "step": 1}
     return amped_param
 
-def do_idparams(convproj_obj, plugin_obj, pluginid, deviceid, amped_auto):
+def do_idparams(convproj_obj, plugin_obj, pluginid, amped_device, amped_auto):
     paramout = []
     paramlist = plugin_obj.params.list()
     for paramnum in range(len(paramlist)):
@@ -82,9 +58,9 @@ def do_idparams(convproj_obj, plugin_obj, pluginid, deviceid, amped_auto):
         if ap_f: print(ap_d)
         if ap_f: 
             if ap_d.u_nopl_points:
-                amped_auto.append(create_autodata(deviceid, ampedpid, ap_d.nopl_points, ampedpid, param_obj.min, param_obj.max))
+                amped_auto.append(create_autodata(amped_device.id, ampedpid, ap_d.nopl_points, ampedpid, param_obj.min, param_obj.max))
 
-        paramout.append({"id": paramnum, "name": ampedpid, "value": param_obj.value})
+        amped_device.add_param(paramnum, ampedpid, param_obj.value)
     return paramout
 
 def amped_parse_effects(convproj_obj, fxchain_audio, amped_auto):
@@ -100,30 +76,30 @@ def amped_parse_effects(convproj_obj, fxchain_audio, amped_auto):
                 d_time = plugin_obj.datavals.get('time', 1)
                 d_wet = plugin_obj.datavals.get('wet', fx_wet)
                 d_feedback = plugin_obj.datavals.get('feedback', 0.0)
-                devicedata = amped_makedevice('Delay', 'Delay')
+                amped_device = amped_makedevice('Delay', 'Delay')
 
                 device_params = []
                 if d_time_type == 'seconds': device_params.append({'id': 0, 'name': 'time', 'value': d_time})
-                if d_time_type == 'steps': device_params.append({'id': 0, 'name': 'time', 'value': (d_time/8)*((amped_bpm)/120) })
+                if d_time_type == 'steps': device_params.append({'id': 0, 'name': 'time', 'value': (d_time/8)*((amped_obj.tempo)/120) })
                 device_params.append({'id': 1, 'name': 'fb', 'value': d_feedback})
                 device_params.append({'id': 2, 'name': 'mix', 'value': d_wet})
                 device_params.append({'id': 3, 'name': 'damp', 'value': 0})
                 device_params.append({'id': 4, 'name': 'cross', 'value': 0})
                 device_params.append({'id': 5, 'name': 'offset', 'value': 0})
-                devicedata['bypass'] = fx_on
-                devicedata['params'] = device_params
-                outdata.append(devicedata)
+                amped_device.bypass = fx_on
+                amped_device['params'] = device_params
+                outdata.append(amped_device)
 
             if plugin_obj.check_matchmulti('native-amped', ["Amp Sim Utility", 'Clean Machine', 'Distortion Machine', 'Metal Machine']):
-                devicedata = amped_makedevice('WAM', 'Amp Sim Utility')
-                devicedata['bypass'] = fx_on
+                amped_device = amped_makedevice('WAM', 'Amp Sim Utility')
+                amped_device.bypass = fx_on
                 if plugin_obj.plugin_subtype == "Amp Sim Utility": wamClassName = "WASABI_SC.Utility"
                 if plugin_obj.plugin_subtype == "Clean Machine": wamClassName = 'WASABI_SC.CleanMachine'
                 if plugin_obj.plugin_subtype == "Distortion Machine": wamClassName = 'WASABI_SC.DistoMachine'
                 if plugin_obj.plugin_subtype == "Metal Machine": wamClassName = 'WASABI_SC.MetalMachine'
-                devicedata['wamClassName'] = wamClassName
-                devicedata['wamPreset'] = plugin_obj.datavals.get('data', '{}')
-                outdata.append(devicedata)
+                amped_device.data['wamClassName'] = wamClassName
+                amped_device.data['wamPreset'] = plugin_obj.datavals.get('data', '{}')
+                outdata.append(amped_device)
 
             if plugin_obj.check_matchmulti('native-amped', ['BitCrusher', 'Chorus', 
         'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 
@@ -135,12 +111,12 @@ def amped_parse_effects(convproj_obj, fxchain_audio, amped_auto):
                 if classname == 'Equalizer': classlabel = 'Equalizer Mini'
                 if classname == 'LimiterMini': classlabel = 'Limiter Mini'
                 if classname == 'EqualizerPro': classlabel = 'Equalizer'
-                devicedata = amped_makedevice(classname, classlabel)
-                deviceid = devicedata['id']
+                amped_device = amped_makedevice(classname, classlabel)
+                deviceid = amped_device.id
 
-                devicedata['bypass'] = fx_on
-                devicedata['params'] = do_idparams(convproj_obj, plugin_obj, pluginid, deviceid, out_auto)
-                outdata.append(devicedata)
+                amped_device.bypass = fx_on
+                do_idparams(convproj_obj, plugin_obj, pluginid, amped_device, out_auto)
+                outdata.append(amped_device)
         
         if amped_auto != None: amped_auto += out_auto
 
@@ -167,7 +143,7 @@ class output_amped(plugin_output.base):
     def parse(self, convproj_obj, output_file):
         global counter_id
         global counter_devid
-        global amped_bpm
+        global amped_obj
         global europa_vals
 
         convproj_obj.change_timings(4, True)
@@ -180,19 +156,17 @@ class output_amped(plugin_output.base):
         zip_bio = io.BytesIO()
         zip_amped = zipfile.ZipFile(zip_bio, mode='w', compresslevel=None)
 
-        amped_bpm = int(convproj_obj.params.get('bpm', 120).value)
-        amped_numerator, amped_denominator = convproj_obj.timesig
+        amped_obj = proj_amped.amped_project(None)
+        amped_obj.tempo = int(convproj_obj.params.get('bpm', 120).value)
+        amped_obj.timesig_num, amped_obj.timesig_den = convproj_obj.timesig
+        amped_obj.loop_active = convproj_obj.loop_active
+        amped_obj.loop_start = convproj_obj.loop_start
+        amped_obj.loop_end = convproj_obj.loop_end
 
-        amped_tracks = []
-
-        amped_out = {}
-        amped_out["fileFormat"] = "AMPED SONG v1.3"
-        amped_out["createdWith"] = "DawVert"
-        amped_out["settings"] = {"deviceDelayCompensation": True}
-        amped_out["tracks"] = amped_tracks
-        amped_out["masterTrack"] = {}
-        amped_out["masterTrack"]['volume'] = convproj_obj.track_master.params.get('vol', 1).value
-        amped_out["masterTrack"]['devices'] = amped_parse_effects(convproj_obj, convproj_obj.track_master.fxslots_audio, None)
+        amped_obj.createdWith = "DawVert"
+        amped_obj.settings = {"deviceDelayCompensation": True}
+        amped_obj.masterTrack.volume = convproj_obj.track_master.params.get('vol', 1).value
+        amped_obj.masterTrack.devices = amped_parse_effects(convproj_obj, convproj_obj.track_master.fxslots_audio, None)
 
         audio_id = {}
         amped_filenames = {}
@@ -206,12 +180,13 @@ class output_amped(plugin_output.base):
             audioidnum += 1
 
         for trackid, track_obj in convproj_obj.iter_track():
-            amped_trackdata = amped_maketrack()
-            amped_trackdata["name"] = track_obj.visual.name if track_obj.visual.name else ''
-            amped_trackdata["pan"] = track_obj.params.get('pan', 0).value
-            amped_trackdata["volume"] = track_obj.params.get('vol', 1.0).value
-            amped_trackdata["mute"] = not track_obj.params.get('on', True).value
-            amped_trackdata["solo"] = bool(track_obj.params.get('solo', False).value)
+            amped_track = proj_amped.amped_track(None)
+            amped_track.id = counter_id.get()
+            amped_track.name = track_obj.visual.name if track_obj.visual.name else ''
+            amped_track.pan = track_obj.params.get('pan', 0).value
+            amped_track.volume = track_obj.params.get('vol', 1.0).value
+            amped_track.mute = not track_obj.params.get('on', True).value
+            amped_track.solo = bool(track_obj.params.get('solo', False).value)
 
             inst_supported = False
             plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
@@ -219,28 +194,26 @@ class output_amped(plugin_output.base):
 
                 if plugin_obj.check_matchmulti('native-amped', ['Augur', 'OBXD', 'Dexed']):
                     inst_supported = True
-                    devicedata = amped_makedevice('WAM', plugin_obj.plugin_subtype)
+                    amped_device = amped_makedevice('WAM', plugin_obj.plugin_subtype)
                     if plugin_obj.plugin_subtype == "Augur": wamClassName = 'AUGUR'
                     if plugin_obj.plugin_subtype == "OBXD": wamClassName = 'OBXD'
                     if plugin_obj.plugin_subtype == "Dexed": wamClassName = 'DEXED'
-                    devicedata['wamClassName'] = wamClassName
-                    devicedata['wamPreset'] = plugin_obj.datavals.get('data', '{}')
-                    amped_trackdata["devices"].append(devicedata)
+                    amped_device.data['wamClassName'] = wamClassName
+                    amped_device.data['wamPreset'] = plugin_obj.datavals.get('data', '{}')
+                    amped_track.devices.append(amped_device)
 
                 if plugin_obj.check_matchmulti('native-amped', ['Volt', 'VoltMini', 'Granny']):
                     inst_supported = True
-                    if plugin_obj.plugin_subtype == "Volt": devicedata = amped_makedevice('Volt', 'VOLT')
-                    if plugin_obj.plugin_subtype == "VoltMini": devicedata = amped_makedevice('VoltMini', 'VOLT Mini')
-                    if plugin_obj.plugin_subtype == "Granny": devicedata = amped_makedevice('Granny', 'Granny')
-                    deviceid = devicedata['id']
-                    devicedata['params'] = do_idparams(convproj_obj, plugin_obj, track_obj.inst_pluginid, deviceid, amped_trackdata["automations"])
-                    amped_trackdata["devices"].append(devicedata)
+                    if plugin_obj.plugin_subtype == "Volt": amped_device = amped_makedevice('Volt', 'VOLT')
+                    if plugin_obj.plugin_subtype == "VoltMini": amped_device = amped_makedevice('VoltMini', 'VOLT Mini')
+                    if plugin_obj.plugin_subtype == "Granny": amped_device = amped_makedevice('Granny', 'Granny')
+                    do_idparams(convproj_obj, plugin_obj, track_obj.inst_pluginid, amped_device, amped_track.automations)
+                    amped_track.devices.append(amped_device)
 
                 if plugin_obj.check_match('synth-nonfree', 'Europa'):
                     inst_supported = True
-                    europa_data = amped_makedevice('WAM','Europa')
-                    europa_data['params'] = []
-                    europa_data['wamClassName'] = 'Europa'
+                    amped_device = amped_makedevice('WAM','Europa')
+                    amped_device.data['wamClassName'] = 'Europa'
                     wamPreset = {}
                     wamPreset['patch'] = 'DawVert'
                     europa_patch = ET.Element("JukeboxPatch")
@@ -266,32 +239,30 @@ class output_amped(plugin_output.base):
                         europa_value_obj.text = str(eur_value_value)
                     wamPreset['settings'] = ET.tostring(europa_patch).decode()
                     wamPreset['encodedSampleData'] = plugin_obj.datavals.get('encodedSampleData', [])
-                    europa_data['wamPreset'] = json.dumps(wamPreset)
-                    amped_trackdata["devices"].append(europa_data)
+                    amped_device.data['wamPreset'] = json.dumps(wamPreset)
+                    amped_track.devices.append(amped_device)
 
-                if plugin_obj.check_match('vst2', 'win'):
-                    inst_supported = True
-                    vstcondata = amped_makedevice('VSTConnection',"VST/Remote Beta")
-                    vstdatatype = plugin_obj.datavals.get('datatype', '')
-                    if vstdatatype == 'chunk':
-                        vstcondata['pluginPath'] = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
-                        vstcondata['pluginState'] = plugin_obj.rawdata_get_b64('chunk')
-                    amped_trackdata["devices"].append(vstcondata)
+                #if plugin_obj.check_match('vst2', 'win'):
+                #    inst_supported = True
+                #    vstcondata = amped_makedevice('VSTConnection',"VST/Remote Beta")
+                #    vstdatatype = plugin_obj.datavals.get('datatype', '')
+                #    if vstdatatype == 'chunk':
+                #        vstcondata['pluginPath'] = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
+                #        vstcondata['pluginState'] = plugin_obj.rawdata_get_b64('chunk')
+                #    amped_track.devices.append(vstcondata)
 
             if not inst_supported:
                 midi_found, midi_bank, midi_inst, midi_drum = track_obj.get_midi(convproj_obj)
                 o_midi_bank = midi_bank if not midi_drum else midi_bank+128
                 o_midi_patch = midi_inst
-                sf2data = amped_makedevice('SF2','GM Player')
-                sf2params = []
-                sf2params.append(amped_makeparam(0, 'patch', 0))
-                sf2params.append(amped_makeparam(1, 'bank', midi_bank))
-                sf2params.append(amped_makeparam(2, 'preset', midi_inst))
-                sf2params.append(amped_makeparam(3, 'gain', 0.75))
-                sf2params.append(amped_makeparam(4, 'omni', 1))
-                sf2data['params'] = sf2params
-                sf2data['sf2Preset'] = {"bank": o_midi_bank, "preset": o_midi_patch, "name": ""}
-                amped_trackdata["devices"].append(sf2data)
+                amped_device = amped_makedevice('SF2','GM Player')
+                amped_device.add_param(0, 'patch', 0)
+                amped_device.add_param(1, 'bank', midi_bank)
+                amped_device.add_param(2, 'preset', midi_inst)
+                amped_device.add_param(3, 'gain', 0.75)
+                amped_device.add_param(4, 'omni', 1)
+                amped_device.data['sf2Preset'] = {"bank": o_midi_bank, "preset": o_midi_patch, "name": ""}
+                amped_track.devices.append(amped_device)
 
             for notespl_obj in track_obj.placements.pl_notes:
                 amped_offset = 0
@@ -312,8 +283,8 @@ class output_amped(plugin_output.base):
                                 "channel": 0
                                 })
 
-                amped_region["midi"]['notes'] = amped_notes
-                amped_trackdata["regions"].append(amped_region)
+                amped_region.midi_notes = amped_notes
+                amped_track.regions.append(amped_region)
 
             for audiopl_obj in track_obj.placements.pl_audio:
                 amped_offset = 0
@@ -321,42 +292,26 @@ class output_amped(plugin_output.base):
                     if 'start' in audiopl_obj.cut_data: amped_offset = audiopl_obj.cut_data['start']
                 amped_region = amped_makeregion(audiopl_obj.position, audiopl_obj.duration, amped_offset)
 
-                amped_audclip = {}
-                amped_audclip['contentGuid'] = {}
-                if audiopl_obj.sampleref in audio_id:
-                    amped_audclip['contentGuid']['userAudio'] = {"exportedId": audio_id[audiopl_obj.sampleref]}
-                amped_audclip['position'] = 0
-                amped_audclip['gain'] = audiopl_obj.vol
-                amped_audclip['length'] = audiopl_obj.duration
-                amped_audclip['offset'] = 0
-                amped_audclip['stretch'] = audiopl_obj.stretch.calc_tempo_size
-                amped_audclip['pitchShift'] = audiopl_obj.pitch
-                amped_audclip['reversed'] = False
+                amped_audclip = proj_amped.amped_clip(None)
+                amped_audclip.contentGuid.is_custom = True
+                amped_audclip.contentGuid.id = audio_id[audiopl_obj.sampleref]
+                amped_audclip.position = 0
+                amped_audclip.gain = audiopl_obj.vol
+                amped_audclip.length = audiopl_obj.duration
+                amped_audclip.offset = 0
+                amped_audclip.stretch = audiopl_obj.stretch.calc_real_size
+                amped_audclip.pitchShift = audiopl_obj.pitch
 
-                amped_region["clips"] = [amped_audclip]
-                amped_trackdata["regions"].append(amped_region)
+                amped_region.clips = [amped_audclip]
+                amped_track.regions.append(amped_region)
 
+            amped_track.devices += amped_parse_effects(convproj_obj, track_obj.fxslots_audio, amped_track.automations)
+            amped_obj.tracks.append(amped_track)
 
+        amped_obj.metronome = {"active": False, "level": 1}
+        amped_obj.playheadPosition = 0
 
-            amped_trackdata["devices"] += amped_parse_effects(convproj_obj, track_obj.fxslots_audio, amped_trackdata["automations"])
-            amped_tracks.append(amped_trackdata)
-
-
-
-
-
-
-
-
-        amped_out["workspace"] = {"library":False,"libraryWidth":300,"trackPanelWidth":160,"trackHeight":80,"beatWidth":24,"contentEditor":{"active":False,"trackId":5,"mode":"noteEditor","beatWidth":48,"noteEditorKeyHeight":10,"velocityPanelHeight":90,"velocityPanel":False,"audioEditorVerticalZoom":1,"height":400,"scroll":{"left":0,"top":0},"quantizationValue":0.25,"chordCreator":{"active":False,"scale":{"key":"C","mode":"Major"}}},"trackInspector":True,"trackInspectorTrackId":5,"arrangementScroll":{"left":0,"top":0},"activeTool":"arrow","timeDisplayInBeats":False,"openedDeviceIds":[],"virtualKeyboard":{"active":False,"height":187,"keyWidth":30,"octave":5,"scrollPositions":{"left":0,"top":0}},"xybeatz":{"active":False,"height":350,"zones":[{"genre":"Caribbean","beat":{"bpm":100,"name":"Zouk Electro 2"}},{"genre":"Soul Funk","beat":{"bpm":120,"name":"Defunkt"}},{"genre":"Greatest Breaks","beat":{"bpm":100,"name":"Walk This Way"}},{"genre":"Brazil","beat":{"bpm":95,"name":"Samba Partido Alto 1"}}],"parts":[{"x":0.75,"y":0.75,"gain":1},{"x":0.9,"y":0.2,"gain":1},{"x":0.8,"y":0.45,"gain":1},{"x":0.7,"y":0.7,"gain":1},{"x":0.7,"y":1,"gain":1},{"x":0.5,"y":0.5,"gain":1}],"partId":5,"fullKit":True,"soloPartId":-1,"complexity":50,"zoneId":0,"lastPartId":1},"displayedAutomations":{}}
-        
-        amped_out["looping"] = {"active": convproj_obj.loop_active, "start": convproj_obj.loop_start, "end": convproj_obj.loop_end}
-        amped_out["tempo"] = amped_bpm
-        amped_out["timeSignature"] = {"num": amped_numerator, "den": amped_denominator}
-        amped_out["metronome"] = {"active": False, "level": 1}
-        amped_out["playheadPosition"] = 0
-
-        zip_amped.writestr('amped-studio-project.json', json.dumps(amped_out))
+        zip_amped.writestr('amped-studio-project.json', json.dumps(amped_obj.write()))
         zip_amped.writestr('filenames.json', json.dumps(amped_filenames))
         zip_amped.close()
         open(output_file, 'wb').write(zip_bio.getbuffer())

@@ -6,6 +6,7 @@ from functions import data_bytes
 from functions import data_values
 from functions import xtramath
 from objects import dv_dataset
+from objects_file import proj_amped
 import xml.etree.ElementTree as ET
 import plugin_input
 import json
@@ -59,14 +60,14 @@ def get_contentGuid(contentGuid):
 
 def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
     for amped_tr_device in amped_tr_devices:
-        devid = amped_tr_device['id']
+        devid = amped_tr_device.id
         pluginid = str(devid)
-        devicetype = [amped_tr_device['className'], amped_tr_device['label']]
+        devicetype = [amped_tr_device.className, amped_tr_device.label]
 
         if devicetype[0] == 'WAM' and devicetype[1] in ['Augur', 'OBXD', 'Dexed']: 
             track_obj.inst_pluginid = pluginid
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', devicetype[1])
-            plugin_obj.datavals.add('data', amped_tr_device['wamPreset'])
+            plugin_obj.datavals.add('data', amped_tr_device.data['wamPreset'])
             plugin_obj.role = 'synth'
 
         elif devicetype[0] == 'WAM' and devicetype[1] == 'Europa': 
@@ -74,7 +75,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
             plugin_obj = convproj_obj.add_plugin(pluginid, 'synth-nonfree', 'Europa')
             plugin_obj.role = 'synth'
 
-            wampreset = amped_tr_device['wamPreset']
+            wampreset = amped_tr_device.data['wamPreset']
             wampreset = json.loads(wampreset)
             europa_xml = ET.fromstring(wampreset['settings'])
             europa_xml_prop = europa_xml.findall('Properties')[0]
@@ -100,8 +101,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
                     if param_type == 'number':
                         plugin_obj.add_from_dset(paramname, param_value, dataset_synth_nonfree, 'plugin', 'europa')
                     else:
-                        if dset_paramdata[5] in ['Curve1','Curve2','Curve3','Curve4','Curve']: 
-                            param_value = list(bytes.fromhex(param_value))
+                        if dset_paramdata[5] in ['Curve1','Curve2','Curve3','Curve4','Curve']: param_value = list(bytes.fromhex(param_value))
                         plugin_obj.datavals.add(paramname, param_value)
 
             if 'encodedSampleData' in wampreset:
@@ -109,16 +109,16 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 
         elif devicetype[0] == 'WAM' and devicetype[1] in ['Amp Sim Utility']: 
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', devicetype[1])
-            plugin_obj.datavals.add('data', amped_tr_device['wamPreset'])
+            plugin_obj.datavals.add('data', amped_tr_device.data['wamPreset'])
             plugin_obj.role = 'effect'
             track_obj.fxslots_audio.append(pluginid)
 
         elif devicetype == ['Drumpler', 'Drumpler']:
             track_obj.inst_pluginid = pluginid
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'Drumpler')
-            plugin_obj.datavals.add('kit', amped_tr_device['kit'])
+            plugin_obj.datavals.add('kit', amped_tr_device.kit)
             plugin_obj.role = 'synth'
-            do_idparams(amped_tr_device['params'], plugin_obj, devicetype[0])
+            do_idparams(amped_tr_device.params, plugin_obj, devicetype[0])
 
         elif devicetype == ['SF2', 'GM Player']:
             track_obj.inst_pluginid = pluginid
@@ -126,11 +126,10 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
             value_bank = 0
             value_drum = 0
             value_gain = 0.75
-            for param in amped_tr_device['params']:
-                paramname, paramval = param['name'], param['value']
-                if paramname == 'patch': value_patch = paramval
-                if paramname == 'bank': value_bank = paramval
-                if paramname == 'gain': value_gain = paramval
+            for param in amped_tr_device.params:
+                if param.name == 'patch': value_patch = param.value
+                if param.name == 'bank': value_bank = param.value
+                if param.name == 'gain': value_gain = param.value
 
             if value_bank >= 128: 
                 value_bank -= 128
@@ -138,42 +137,41 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 
             plugin_obj = convproj_obj.add_plugin_midi(pluginid, value_bank, value_patch, value_drum)
             plugin_obj.role = 'synth'
-            param_obj = plugin_obj.params.add('gain', paramval, 'float')
-            param_obj.visual.name = 'Gain'
+            param_obj = plugin_obj.params.add_named('gain', value_gain, 'float', 'Gain')
 
         elif devicetype == ['Granny', 'Granny']:
             track_obj.inst_pluginid = pluginid
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'Granny')
             plugin_obj.role = 'synth'
 
-            sampleuuid = amped_tr_device['grannySampleGuid']
+            sampleuuid = amped_tr_device.grannySampleGuid
             sampleref_obj = convproj_obj.add_sampleref(sampleuuid, '')
-            sampleref_obj.visual.name = amped_tr_device['grannySampleName']
+            sampleref_obj.visual.name = amped_tr_device.grannySampleName
             plugin_obj.samplerefs['sample'] = sampleuuid
-            do_idparams(amped_tr_device['params'], plugin_obj, devicetype[0])
-            do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device['params'], pluginid)
+            do_idparams(amped_tr_device.params, plugin_obj, devicetype[0])
+            do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
         elif devicetype == ['Volt', 'VOLT']:
             track_obj.inst_pluginid = pluginid
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'Volt')
             plugin_obj.role = 'synth'
-            do_idparams(amped_tr_device['params'], plugin_obj, devicetype[0])
-            do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device['params'], pluginid)
+            do_idparams(amped_tr_device.params, plugin_obj, devicetype[0])
+            do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
         elif devicetype == ['VoltMini', 'VOLT Mini']:
             track_obj.inst_pluginid = pluginid
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'VoltMini')
             plugin_obj.role = 'synth'
-            do_idparams(amped_tr_device['params'], plugin_obj, devicetype[0])
-            do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device['params'], pluginid)
+            do_idparams(amped_tr_device.params, plugin_obj, devicetype[0])
+            do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
         elif devicetype == ['Sampler', 'Sampler']:
             track_obj.inst_pluginid = pluginid
             samplerdata = {}
-            for param in amped_tr_device['params']: data_values.nested_dict_add_value(samplerdata, param['name'].split('/'), param['value'])
+            for param in amped_tr_device.params: data_values.nested_dict_add_value(samplerdata, param['name'].split('/'), param['value'])
 
-            amped_tr_device['zonefile'] = {}
-            for param in amped_tr_device['samplerZones']: amped_tr_device['zonefile'][str(param['id'])] = param['contentGuid']
+            amped_tr_device.zonefile = {}
+            for param in amped_tr_device.samplerZones: amped_tr_device.zonefile[str(param['id'])] = param['contentGuid']
 
             plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
             plugin_obj.role = 'synth'
@@ -183,7 +181,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
             samplerdata_filter = samplerdata['filter']
             samplerdata_eg = samplerdata['eg']
             samplerdata_zone = samplerdata['zone']
-            samplerdata_zonefile = amped_tr_device['zonefile']
+            samplerdata_zonefile = amped_tr_device.zonefile
             
             for samplerdata_zp in samplerdata_zone:
                 amped_samp_part = samplerdata_zone[samplerdata_zp]
@@ -199,8 +197,8 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
             track_obj.fxslots_audio.append(pluginid)
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'EqualizerPro')
             plugin_obj.role = 'effect'
-            do_idparams(amped_tr_device['params'], plugin_obj, devicetype[0])
-            do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device['params'], pluginid)
+            do_idparams(amped_tr_device.params, plugin_obj, devicetype[0])
+            do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
         elif devicetype[0] in ['Chorus',  
         'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 
@@ -209,8 +207,8 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
             track_obj.fxslots_audio.append(pluginid)
             plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', devicetype[0])
             plugin_obj.role = 'effect'
-            do_idparams(amped_tr_device['params'], plugin_obj, devicetype[0])
-            do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device['params'], pluginid)
+            do_idparams(amped_tr_device.params, plugin_obj, devicetype[0])
+            do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 #
 #        #if devicetype != ['VSTConnection', 'VST/Remote Beta']:
 #        #    device_plugindata.fxvisual_add(devicetype[1], None)
@@ -243,6 +241,7 @@ class input_amped(plugin_input.base):
             else: return False
         except:
             return False
+
     def getdawinfo(self, dawinfo_obj): 
         dawinfo_obj.name = 'Amped Studio'
         dawinfo_obj.file_ext = 'amped'
@@ -269,15 +268,6 @@ class input_amped(plugin_input.base):
 
         samplefolder = dv_config.path_samples_extracted
         zip_data = zipfile.ZipFile(input_file, 'r')
-        amped_project = json.loads(zip_data.read('amped-studio-project.json'))
-
-        amped_looping = amped_project['looping']
-
-        bpm = amped_project['tempo']
-        convproj_obj.params.add('bpm', bpm, 'float')
-
-        amped_timeSignature = amped_project['timeSignature']
-        convproj_obj.timesig = [amped_timeSignature['num'], amped_timeSignature['den']]
 
         amped_filenames = json.loads(zip_data.read('filenames.json'))
         for amped_filename, realfilename in amped_filenames.items():
@@ -286,93 +276,82 @@ class input_amped(plugin_input.base):
             if os.path.exists(new_file) == False:
                 zip_data.extract(amped_filename, path=samplefolder, pwd=None)
                 os.rename(old_file,new_file)
-            sampleref_obj = convproj_obj.add_sampleref(amped_filename, new_file)
+            sampleref_obj = convproj_obj.add_sampleref(str(amped_filename), new_file)
 
-        amped_masterTrack = amped_project['masterTrack']
-        convproj_obj.track_master.params.add('vol', amped_masterTrack['volume'], 'float')
+        amped_project = json.loads(zip_data.read('amped-studio-project.json'))
+        amped_obj = proj_amped.amped_project(amped_project)
+        convproj_obj.params.add('bpm', amped_obj.tempo, 'float')
+        convproj_obj.timesig = [amped_obj.timesig_num, amped_obj.timesig_den]
 
-        encode_devices(convproj_obj, amped_masterTrack['devices'], convproj_obj.track_master, None)
+        convproj_obj.track_master.params.add('vol', amped_obj.masterTrack.volume, 'float')
 
-        amped_tracks = amped_project['tracks']
-        for amped_track in amped_tracks:
-            amped_tr_id = str(amped_track['id'])
+        encode_devices(convproj_obj, amped_obj.masterTrack.devices, convproj_obj.track_master, None)
 
-            amped_tr_regions = amped_track['regions']
-            amped_tr_devices = amped_track['devices']
-            amped_tr_automations = amped_track['automations']
+        for amped_track in amped_obj.tracks:
+            amped_tr_id = str(amped_track.id)
 
             track_obj = convproj_obj.add_track(amped_tr_id, 'hybrid', 1, False)
-            track_obj.visual.name = amped_track['name']
-            track_obj.visual.color = amped_colors[amped_track['color'] if 'color' in amped_track else 'lime']
-            track_obj.params.add('vol', amped_track['volume'], 'float')
-            track_obj.params.add('pan', amped_track['pan'], 'float')
-            track_obj.params.add('enabled', bool(not amped_track['mute']), 'bool')
-            track_obj.params.add('solo', bool(amped_track['solo']), 'bool')
-
-            for amped_tr_automation in amped_tr_automations:
-                autoname = amped_tr_automation['param']
-                autoloc = None
-
-                if autoname == 'volume': autoloc = ['track', amped_tr_id, 'vol']
-                if autoname == 'pan': autoloc = ['track', amped_tr_id, 'pan']
-                if autoloc: 
-                    for p, v in ampedauto_to_cvpjauto(amped_tr_automation['points']):
-                        convproj_obj.automation.add_autopoint(autoloc, 'float', p, v, 'normal')
+            track_obj.visual.name = amped_track.name
+            track_obj.visual.color = amped_colors[amped_track.color]
+            track_obj.params.add('vol', amped_track.volume, 'float')
+            track_obj.params.add('pan', amped_track.pan, 'float')
+            track_obj.params.add('enabled', bool(not amped_track.mute), 'bool')
+            track_obj.params.add('solo', bool(amped_track.solo), 'bool')
 
             amped_autodata = {}
-            for amped_tr_automation in amped_tr_automations:
-                auto_param = amped_tr_automation['param']
-                if 'deviceId' in auto_param:
-                    amped_tr_autoparam = amped_tr_automation['param']
-                    devid = amped_tr_autoparam['deviceId']
-                    autoname = amped_tr_autoparam['name']
-                    if devid not in amped_autodata: amped_autodata[devid] = {}
-                    amped_autodata[devid][autoname] = ampedauto_to_cvpjauto_specs(amped_tr_automation['points'], amped_tr_automation['spec'])
+            for amped_automation in amped_track.automations:
+                autoname = amped_automation.param
 
-            encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata)
+                if not amped_automation.is_device:
+                    autoloc = None
+                    if autoname == 'volume': autoloc = ['track', amped_tr_id, 'vol']
+                    if autoname == 'pan': autoloc = ['track', amped_tr_id, 'pan']
+                    if autoloc: 
+                        for p, v in ampedauto_to_cvpjauto(amped_automation.points):
+                            convproj_obj.automation.add_autopoint(autoloc, 'float', p, v, 'normal')
+                else:
+                    if devid not in amped_autodata: amped_autodata[amped_automation.deviceid] = {}
+                    amped_autodata[amped_automation.deviceid][amped_tr_autoparam.name] = ampedauto_to_cvpjauto_specs(amped_automation.points, amped_automation.spec)
 
-            for amped_reg in amped_tr_regions:
-                amped_reg_position = amped_reg['position']
-                amped_reg_length = amped_reg['length']
-                amped_reg_offset = amped_reg['offset']
-                amped_reg_midi = amped_reg['midi']
-                amped_reg_name = amped_reg['name']
-                amped_reg_color = amped_colors[amped_reg['color']] if 'color' in amped_reg else track_obj.visual.color
+            encode_devices(convproj_obj, amped_track.devices, track_obj, {})
 
-                amped_reg_notes = amped_reg_midi['notes']
-                if amped_reg_notes != []: 
+            for amped_region in amped_track.regions:
+                amped_reg_color = amped_colors[amped_region.color]
+
+                if amped_region.midi_notes: 
                     placement_obj = track_obj.placements.add_notes()
-                    placement_obj.position = amped_reg_position
-                    placement_obj.duration = amped_reg_length
-                    placement_obj.visual.name = amped_reg['name']
+                    placement_obj.position = amped_region.position
+                    placement_obj.duration = amped_region.length
+                    placement_obj.visual.name = amped_region.name
                     placement_obj.visual.color = amped_reg_color
-                    placement_obj.cut_type = 'cut'
-                    placement_obj.cut_data['start'] = amped_reg_offset
-                    for amped_note in amped_reg_notes:
+                    if amped_region.offset:
+                        placement_obj.cut_type = 'cut'
+                        placement_obj.cut_data['start'] = amped_region.offset
+                    for amped_note in amped_region.midi_notes:
                         placement_obj.notelist.add_r(amped_note['position'], amped_note['length'], amped_note['key']-60, amped_note['velocity']/127, {})
 
-                amped_reg_clips = amped_reg['clips'] if 'clips' in amped_reg else []
-                if amped_reg_clips != []: 
+                if amped_region.clips != []: 
                     placement_obj = track_obj.placements.add_nested_audio()
-                    placement_obj.position = amped_reg_position
-                    placement_obj.duration = amped_reg_length
-                    placement_obj.visual.name = amped_reg['name']
+                    placement_obj.position = amped_region.position
+                    placement_obj.duration = amped_region.length
+                    placement_obj.visual.name = amped_region.name
                     placement_obj.visual.color = amped_reg_color
-                    placement_obj.cut_type = 'cut'
-                    placement_obj.cut_data['start'] = amped_reg_offset
+                    if amped_region.offset:
+                        placement_obj.cut_type = 'cut'
+                        placement_obj.cut_data['start'] = amped_region.offset
 
-                    for amped_reg_clip in amped_reg_clips:
+                    for amped_clip in amped_region.clips:
                         apl_obj = placement_obj.add()
-                        apl_obj.position = amped_reg_clip['position']
-                        apl_obj.duration = amped_reg_clip['length']
-                        apl_obj.vol = amped_reg_clip['gain']
-                        apl_obj.pitch = amped_reg_clip['pitchShift'] if 'pitchShift' in amped_reg_clip else 0
-                        apl_obj.sampleref = get_contentGuid(amped_reg_clip['contentGuid'])
-                        apl_obj.stretch.use_tempo = False
-                        apl_obj.stretch.set_rate_tempo(bpm, amped_reg_clip['stretch'], True)
+                        apl_obj.position = amped_clip.position
+                        apl_obj.duration = amped_clip.length
+                        apl_obj.vol = amped_clip.gain
+                        apl_obj.pitch = amped_clip.pitchShift
+                        apl_obj.sampleref = str(amped_clip.contentGuid.id)
+                        apl_obj.stretch.set_rate_speed(amped_obj.tempo, amped_clip.stretch, True)
+                        apl_obj.stretch.uses_tempo = True
 
-                        amped_reg_clip_offset = amped_reg_clip['offset']
-                        if amped_reg_clip_offset != 0:
+                        amped_clip_offset = amped_clip.offset
+                        if amped_clip_offset != 0:
                             apl_obj.cut_type = 'cut'
-                            apl_obj.cut_data['start'] = amped_reg_clip_offset*(120/bpm)
+                            apl_obj.cut_data['start'] = amped_clip_offset*(120/amped_obj.tempo)
  

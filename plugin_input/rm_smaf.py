@@ -158,7 +158,7 @@ class input_mmf(plugin_input.base):
     def getdawinfo(self, dawinfo_obj): 
         dawinfo_obj.name = 'Mobile Music File'
         dawinfo_obj.file_ext = 'mmf'
-        dawinfo_obj.fxrack = True
+        dawinfo_obj.fxtype = 'rack'
         dawinfo_obj.fxrack_params = ['vol']
         dawinfo_obj.auto_types = ['nopl_ticks']
         dawinfo_obj.track_nopl = True

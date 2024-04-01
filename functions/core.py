@@ -65,6 +65,7 @@ class dawinfo:
 		self.fxrack_params = ['vol','enabled']
 		self.auto_types = []
 		self.fxchain_mixer = False
+		self.fxtype = 'groupreturn'
 
 		self.time_seconds = False
 

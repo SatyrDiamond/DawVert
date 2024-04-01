@@ -71,6 +71,7 @@ class cvpj_project:
         self.notelist_index = {}
         self.params = params.cvpj_paramset()
         self.fxrack = {}
+        self.trackroute = {}
         self.playlist = {}
         self.timesig = [4,4]
         self.do_actions = []
@@ -186,6 +187,12 @@ class cvpj_project:
         if fxnum not in self.fxrack: self.fxrack[fxnum] = cvpj_fxchannel()
         return self.fxrack[fxnum]
 
+    def add_trackroute(self, trackid):
+        if trackid not in self.trackroute: 
+            cprint('[convproj] Track Route - '+str(trackid), 'yellow')
+            self.trackroute[trackid] = sends.cvpj_sends()
+        return self.trackroute[trackid]
+
     def add_notelistindex(self, i_id):
         self.notelist_index[i_id] = tracks.cvpj_nle(self.time_ppq, self.time_float)
         return self.notelist_index[i_id]
@@ -199,6 +206,11 @@ class cvpj_project:
 
     def iter_sampleindex(self):
         for i_id in self.sample_index: yield i_id, self.sample_index[i_id]
+
+
+
+
+
 
 
 

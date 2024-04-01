@@ -5,12 +5,14 @@ from objects_convproj import params
 
 class cvpj_send:
     def __init__(self):
-        self.sendautoid = {}
+        self.sendautoid = None
         self.params = params.cvpj_paramset()
 
 class cvpj_sends:
     def __init__(self):
         self.data = {}
+        self.to_master = cvpj_send()
+        self.to_master_active = True
 
     def add(self, target, sendautoid, amount):
         send_obj = cvpj_send()

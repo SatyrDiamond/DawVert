@@ -773,12 +773,22 @@ def lmms_decode_fxmixer(convproj_obj, fxX):
             fxchannel_obj.params.add('fx_enabled', bool(int(fx_enabled)), 'bool')
             fxchannel_obj.fxslots_audio += lmms_decode_fxchain(convproj_obj, fxchannel_obj, fxchainX)
 
+        fxchannel_obj.sends.to_master_active = False
+
         sendsxml = fxcX.findall('send')
         for sendxml in sendsxml:
             send_id = send_auto_id_counter.get_str()
             fx_to_num = int(sendxml.get('channel'))
-            fx_amount = lmms_auto_getvalue(sendxml, 'amount', 1, 'float', None, ['send', send_id, 'amount'])
-            fxchannel_obj.sends.add(fx_to_num, send_id, fx_amount)
+
+            if fx_to_num == 0:
+                fx_amount = lmms_auto_getvalue(sendxml, 'amount', 1, 'float', None, ['send_master', send_id, 'amount'])
+                fxchannel_obj.sends.to_master_active = True
+                master_send = fxchannel_obj.sends.to_master
+                master_send.params.add('amount', fx_amount, 'float')
+                master_send.sendautoid = send_id
+            else:
+                fx_amount = lmms_auto_getvalue(sendxml, 'amount', 1, 'float', None, ['send', send_id, 'amount'])
+                fxchannel_obj.sends.add(fx_to_num, send_id, fx_amount)
 
     return fxlist
 
@@ -801,7 +811,7 @@ class input_lmms(plugin_input.base):
     def getdawinfo(self, dawinfo_obj): 
         dawinfo_obj.name = 'LMMS'
         dawinfo_obj.file_ext = 'mmp'
-        dawinfo_obj.fxrack = True
+        dawinfo_obj.fxtype = 'rack'
         dawinfo_obj.fxrack_params = ['enabled','vol']
         dawinfo_obj.auto_types = ['pl_points']
         dawinfo_obj.plugin_included = ['sampler:single','vst2','fm:opl2','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay','ladspa']

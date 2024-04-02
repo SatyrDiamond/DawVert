@@ -237,14 +237,43 @@ class cvpj_s_automation:
 		self.convert____pl_points__nopl_points()
 
 	def convert__nopl_points____pl_points(self):
-		if self.u_nopl_points:
-			s, e = self.nopl_points.get_durpos()
-			self.nopl_points.edit_trimmove(s, e)
+		#print('--------------')
+		tres = self.nopl_points.time_ppq
 
-			pl = self.add_pl_points()
-			pl.position = s
-			pl.duration = e-s
-			pl.data = self.nopl_points
+		if self.u_nopl_points and self.nopl_points.check():
+			oldpos = 0
+			oldval = 0
+			startpos = self.nopl_points.points[0].pos
+
+			outdata = [[startpos, startpos+tres, []]]
+
+			s, e = self.nopl_points.get_durpos()
+
+			for m, point in enumerate(self.nopl_points.iter()):
+				difpos = point.pos-oldpos
+
+				diffval = (point.value != oldval) if point.type == 'normal' else False
+				dont_split = difpos<tres or diffval
+
+				if not dont_split: outdata.append([point.pos, point.pos+tres, []])
+				else: outdata[-1][1] += difpos
+				outdata[-1][2].append(point)
+
+				oldpos = point.pos
+				oldval = point.value
+
+			for ppl in outdata:
+				pl = self.add_pl_points()
+				pl.position = ppl[0]
+				pl.duration = ppl[1]-pl.position
+				for point in ppl[2]:
+					autopoint_obj = pl.data.add_point()
+					autopoint_obj.pos = point.pos-ppl[0]
+					autopoint_obj.value = point.value
+					autopoint_obj.type = point.type
+					autopoint_obj.tension = point.tension
+					autopoint_obj.extra = point.extra
+					
 
 		self.u_nopl_points = False
 		self.nopl_points = None

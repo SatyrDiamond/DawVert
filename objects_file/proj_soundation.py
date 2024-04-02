@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 class soundation_param:
 	def __init__(self, pd):

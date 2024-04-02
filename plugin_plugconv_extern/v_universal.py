@@ -74,7 +74,7 @@ class plugconv(plugin_plugconv_extern.base):
                 if plugin_vst2.check_exists('id', 1144210769):
                     print("[plug-conv] Universal to VST2: 3-Band EQ > 3 Band EQ [DISTRHO]:",pluginid)
                     plugtransform.transform('./data_plugts/univ_ext.pltr', '3band_vst2', convproj_obj, plugin_obj, pluginid, dv_config)
-                    plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name','any', '3 Band EQ', 'param', None, 6)
+                    plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'any', 1144210769, 'param', None, 6)
                     return True
                 else: errorprint.printerr('ext_notfound', ['VST2', '3 Band EQ [DISTRHO]'])
 

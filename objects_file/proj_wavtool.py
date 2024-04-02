@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects_convproj import devicenodes
 import uuid

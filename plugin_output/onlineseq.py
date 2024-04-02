@@ -5,23 +5,22 @@ import plugin_output
 import json
 import struct
 import blackboxprotobuf
+from objects_file import proj_onlineseq
 from functions import data_values
 from objects import idvals
 
-def float2int(value): return struct.unpack("<I", struct.pack("<f", value))[0]
+def create_auto(project_obj, convproj_obj, os_target, os_param, autoloc, mul):
+    auto_found, auto_points = convproj_obj.automation.get_autopoints(autoloc)
 
-def create_markers(autopoints_obj, inst_id, instparam, mul):
-    for autopoint_obj in autopoints_obj.iter():
-        markerdata = {}
-        posdata = autopoint_obj.pos
-        markerdata[1] = float2int(posdata)
-        markerdata[2] = instparam
-        markerdata[3] = inst_id
-        markerdata[4] = float2int(autopoint_obj.value*mul)
-        pointtype = autopoint_obj.value
-        if autopoint_obj.type == 'normal': markerdata[5] = 1
-        if posdata not in glob_markerdata: glob_markerdata[posdata] = []
-        glob_markerdata[posdata].append(markerdata)
+    if auto_found:
+        for auto_point in auto_points.iter():
+            os_marker = proj_onlineseq.onlineseq_marker(None)
+            os_marker.pos = auto_point.pos
+            os_marker.value = auto_point.value*mul
+            os_marker.type = 0 if auto_point.type == 'instant' else 1
+            os_marker.id = os_target
+            os_marker.param = os_param
+            project_obj.markers.append(os_marker)
 
 class output_onlineseq(plugin_output.base):
     def __init__(self): pass
@@ -36,25 +35,17 @@ class output_onlineseq(plugin_output.base):
         dawinfo_obj.track_nopl = True
         dawinfo_obj.plugin_included = ['midi','native-onlineseq','universal:synth-osc']
     def parse(self, convproj_obj, output_file):
-        global glob_markerdata
 
         convproj_obj.change_timings(4, True)
 
-        tempo = convproj_obj.params.get('bpm', 120).value
-
-        onlineseqdata = {}
-        onlineseqdata[1] = {1: int(tempo), 3: []}
-        onlineseqdata[2] = []
-        onlineseqdata[3] = []
+        project_obj = proj_onlineseq.onlineseq_project()
+        project_obj.tempo = convproj_obj.params.get('bpm', 120).value
 
         idvals_onlineseq_inst = idvals.idvals('data_idvals/onlineseq_map_midi.csv')
         repeatedolinst = {}
-        cvpjid_onlineseqid = {}
-        glob_markerdata = {}
 
         for trackid, track_obj in convproj_obj.iter_track():
             onlineseqinst = 43
-            trackvol = track_obj.params.get('vol', 1).value
             midiinst = None
 
             plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
@@ -83,44 +74,26 @@ class output_onlineseq(plugin_output.base):
 
             if onlineseqinst not in repeatedolinst: repeatedolinst[onlineseqinst] = 0
             else: repeatedolinst[onlineseqinst] += 1 
-            onlineseqnum = onlineseqinst + repeatedolinst[onlineseqinst]*10000
+            onlineseqnum = int(onlineseqinst + repeatedolinst[onlineseqinst]*10000)
 
-            onlseqinst = {}
-            onlseqinst[1] = onlineseqnum
-            onlseqinst[2] = {1: float2int(trackvol), 10: 1}
-            if track_obj.visual.name: onlseqinst[2][15] = track_obj.visual.name
-            onlineseqdata[1][3].append(onlseqinst)
+            iparams = proj_onlineseq.onlineseq_inst_param(None)
+            iparams.vol = track_obj.params.get('vol', 1).value
+            iparams.pan = track_obj.params.get('pan', 1).value
+
+            if track_obj.visual.name: iparams.name = track_obj.visual.name
 
             for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in track_obj.placements.notelist.nl:
                 for t_key in t_keys:
-                    onlineseq_note = {
-                        "1": int(t_key+60),
-                        "2": float2int(t_pos),
-                        "3": float2int(t_dur),
-                        "4": onlineseqnum,
-                        "5": float2int(t_vol)
-                        }
-                    onlineseqdata[2].append(onlineseq_note)
+                    onlineseq_note = [int(t_key+60),t_pos,t_dur,onlineseqnum,t_vol]
+                    project_obj.notes.append(onlineseq_note)
 
-            v_ap_e, v_ap_d = convproj_obj.automation.get_autopoints(['track', trackid, 'vol'])
-            c_ap_e, c_ap_d = convproj_obj.automation.get_autopoints(['track', trackid, 'pan'])
-            p_ap_e, p_ap_d = convproj_obj.automation.get_autopoints(['track', trackid, 'pitch'])
+            project_obj.params[onlineseqnum] = iparams
 
-            if v_ap_e: create_markers(v_ap_d, onlineseqnum, 1, 1)
-            if c_ap_e: create_markers(c_ap_d, onlineseqnum, 2, 1)
-            if p_ap_e: create_markers(p_ap_d, onlineseqnum, 11, 100)
+            create_auto(project_obj, convproj_obj, onlineseqnum, 1, ['track', trackid, 'vol'], 1)
+            create_auto(project_obj, convproj_obj, onlineseqnum, 2, ['track', trackid, 'pan'], 1)
+            create_auto(project_obj, convproj_obj, onlineseqnum, 11, ['track', trackid, 'pitch'], 100)
 
-        protobuf_typedef = {'1': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '3': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '2': {'type': 'message', 'message_typedef': {'1': {'type': 'fixed32', 'name': ''}, '10': {'type': 'int', 'name': ''}, '15': {'type': 'bytes', 'name': ''}}, 'name': ''}}, 'name': ''}}, 'name': ''}, '2': {'type': 'message', 'message_typedef': {'1': {'type': 'int', 'name': ''}, '3': {'type': 'fixed32', 'name': ''}, '4': {'type': 'int', 'name': ''}, '5': {'type': 'fixed32', 'name': ''}, '2': {'type': 'fixed32', 'name': ''}}, 'name': ''}, '3': {'type': 'message', 'message_typedef': {'1': {'type': 'fixed32', 'name': ''}, '4': {'type': 'fixed32', 'name': ''}, '5': {'type': 'int', 'name': ''}, '2': {'type': 'int', 'name': ''}, '3': {'type': 'int', 'name': ''}}, 'name': ''}}
+        create_auto(project_obj, convproj_obj, 0, 0, ['main', 'bpm'], 1)
+        create_auto(project_obj, convproj_obj, 0, 8, ['master', 'vol'], 1)
 
-        b_map_e, b_map_d = convproj_obj.automation.get_autopoints(['main', 'bpm'])
-        v_map_e, v_map_d = convproj_obj.automation.get_autopoints(['master', 'vol'])
-
-        if b_map_e: create_markers(b_map_d, 0, 0, 1)
-        if v_map_e: create_markers(v_map_d, 0, 8, 1)
-
-        for num in sorted(glob_markerdata):
-            for markdata in glob_markerdata[num]:
-                onlineseqdata[3].append(markdata)
-
-        with open(output_file, "wb") as fileout:
-            fileout.write(blackboxprotobuf.encode_message(onlineseqdata,protobuf_typedef))
+        project_obj.save_to_file(output_file)

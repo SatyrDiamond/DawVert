@@ -296,7 +296,7 @@ class cvpj_project:
 
     def add_track_midi(self, track_id, plug_id, m_bank, m_inst, m_drum, uses_pl, indexed):
         plugin_obj = self.add_plugin_midi(plug_id, m_bank, m_inst, m_drum)
-        cprint('[convproj] Track - '+track_id, 'light_blue')
+        #cprint('[convproj] Track - '+track_id, 'light_blue')
         plugin_obj.role = 'synth'
 
         track_obj = self.add_track(track_id, 'instrument', uses_pl, indexed)

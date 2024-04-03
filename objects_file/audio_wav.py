@@ -105,7 +105,7 @@ class wav_main:
 			else: self.data = numpy.frombuffer(data, dtype=numpy.uint8) - 128
 		if self.bits == 16:
 			if not signed: self.data = numpy.frombuffer(data, dtype=numpy.int16)
-			else: self.data = numpy.frombuffer(data, dtype=numpy.uint16) - 32768
+			else: self.data = numpy.array(data, dtype=numpy.uint16) - 32768
 		self.set_blksize()
 
 	def _read_chunk_fmt(self, fid):

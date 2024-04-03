@@ -238,9 +238,9 @@ class cvpj_s_automation:
 
 	def convert__nopl_points____pl_points(self):
 		#print('--------------')
-		tres = self.nopl_points.time_ppq
 
 		if self.u_nopl_points and self.nopl_points.check():
+			tres = self.nopl_points.time_ppq
 			oldpos = 0
 			oldval = 0
 			startpos = self.nopl_points.points[0].pos

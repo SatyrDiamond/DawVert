@@ -426,10 +426,11 @@ class output_cvpjs(plugin_output.base):
             flp_obj.initfxvals.initvals[fxptxt+'vol'] = int(12800*fxchannel_obj.params.get('vol', 1.0).value)
             flp_obj.initfxvals.initvals[fxptxt+'pan'] = int(6400*fxchannel_obj.params.get('pan', 0).value)
             
-            if fxchannel_obj.sends.to_master_active:
-                master_send_obj = fxchannel_obj.sends.to_master
-                fl_fxchan.routing.append(0)
-                flp_obj.initfxvals.initvals['fx/'+str(fx_num)+'/route/0'] = int(master_send_obj.params.get('amount', 1).value*12800)
+            if fx_num != 0:
+                if fxchannel_obj.sends.to_master_active:
+                    master_send_obj = fxchannel_obj.sends.to_master
+                    fl_fxchan.routing.append(0)
+                    flp_obj.initfxvals.initvals['fx/'+str(fx_num)+'/route/0'] = int(master_send_obj.params.get('amount', 1).value*12800)
 
             if fxchannel_obj.sends.check():
                 for target, send_obj in fxchannel_obj.sends.iter():

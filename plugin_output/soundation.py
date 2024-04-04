@@ -83,7 +83,7 @@ class output_soundation(plugin_output.base):
         dawinfo_obj.name = 'Soundation'
         dawinfo_obj.file_ext = 'sngz'
         dawinfo_obj.placement_cut = True
-        dawinfo_obj.placement_loop = ['loop']
+        dawinfo_obj.placement_loop = []
         dawinfo_obj.fxtype = 'track'
         dawinfo_obj.plugin_included = ['sampler:single','synth-nonfree:europa','native-soundation','midi']
         dawinfo_obj.auto_types = ['nopl_points']

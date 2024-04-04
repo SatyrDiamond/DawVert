@@ -5,23 +5,6 @@ from functions import colors
 from objects import dv_dataset
 from objects_file import proj_orgyana
 import plugin_input
-import json
-
-def read_orgtrack(bio_org, instrumentinfotable_input, trackid):
-	global cur_val
-	org_numofnotes = instrumentinfotable_input[trackid][3]
-	org_notelist = []
-	for x in range(org_numofnotes): org_notelist.append([0,0,0,0,0])
-	for x in range(org_numofnotes): #position
-		org_notelist[x][0] = int.from_bytes(bio_org.read(4), "little")
-
-	org_stream(bio_org, org_numofnotes, 95, org_notelist, 1) #note
-	org_stream(bio_org, org_numofnotes, 256, org_notelist, 2) #duration
-	org_stream(bio_org, org_numofnotes, 254, org_notelist, 3) #vol
-	org_stream(bio_org, org_numofnotes, 12, org_notelist, 4) #pan
-
-
-	return org_notelist
 
 class input_orgyana(plugin_input.base):
 	def __init__(self): pass

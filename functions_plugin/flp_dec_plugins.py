@@ -339,8 +339,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, datadef, dataset):
         plugin_obj.datavals.add('filter', flplugvals[2])
         plugin_obj.datavals.add('left_right', flplugvals[4])
         flplugvalsafter = struct.unpack('i'*12, fl_plugstr.read(12*4))
-        #print(flplugvalsafter)
-        
+
         param_obj = plugin_obj.params.add_named('freq_min', flplugvalsafter[0], 'int', "Freq Min")
         param_obj = plugin_obj.params.add_named('freq_max', flplugvalsafter[1], 'int', "Freq Max")
         param_obj = plugin_obj.params.add_named('freq_scale', flplugvalsafter[2], 'int', "Freq Scale")
@@ -382,9 +381,6 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, datadef, dataset):
         plugin_obj.type_set( 'native-flstudio', flplugin.name)
         plugin_obj.param_dict_dataset_get(jsondecoded, dataset, 'plugin', flplugin.name)
 
-    #    if flplugin.name == 'sawer':
-    #        jsondecoded = datadef.parse('sawer', sslfdata)
-
         if 0:
             for x in datadef.debugoutput:
                 print(x)
@@ -392,7 +388,6 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, datadef, dataset):
 
     else:
         datadef_struct = dataset.object_var_get('datadef_struct', 'plugin', flplugin.name)
-        #print(     flplugin.name, flplugin.params.hex()     )
         if datadef_struct[0]:
             plugin_obj.type_set( 'native-flstudio', flplugin.name)
             jsondecoded = datadef.parse(datadef_struct[1], flplugin.params)

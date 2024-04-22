@@ -7,11 +7,57 @@ import math
 from functions import xtramath
 from objects_params import fx_delay
 
+def oldcalc_filterfreq_1(value):
+    filter_cutoff = value**0.6
+    filter_cutoff = 10 * 1600**(value)
+    return filter_cutoff
+
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'plugconv'
     def getplugconvinfo(self): return ['native-flstudio', None, 'flp'], ['universal', None, None], False, False
     def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, plugtransform):
+
+        if plugin_obj.plugin_subtype == 'fruity parametric eq':
+            print('[plug-conv] FL Studio to Universal: Fruity Parametric EQ > EQ Bands:',pluginid)
+
+            for bandnum in range(7):
+                bandstarttxt = str(bandnum+1)
+
+                filter_obj, _ = plugin_obj.eq_add()
+                filter_obj.type = 'peak'
+
+                filter_obj.gain = plugin_obj.params.get(bandstarttxt+'_gain', 0).value/100
+
+                fl_band_freq = plugin_obj.params.get(bandstarttxt+'_freq', 0).value/65536
+                filter_obj.freq = 10 * 1600**(fl_band_freq**0.6)
+
+                fl_band_type = plugin_obj.params.get(bandstarttxt+'_type', 0).value
+                fl_band_width = plugin_obj.params.get(bandstarttxt+'_width', 0).value/65536
+
+                filter_obj.type = 'peak'
+
+                if fl_band_type in [5, 7]: 
+                    filter_obj.q = (1-fl_band_width)*1.2
+                elif fl_band_type in [1, 3]: 
+                    fl_band_width = xtramath.between_from_one(1, -1, fl_band_width)
+                    filter_obj.q = pow(2, fl_band_width*5)
+                else: 
+                    outwid = ((fl_band_width+0.01)*3)
+                    outwid = xtramath.logpowmul(outwid, -1)
+                    filter_obj.q = outwid
+
+                if fl_band_type != 0: filter_obj.on = True
+                if fl_band_type == 1: filter_obj.type = 'low_pass'
+                if fl_band_type == 2: filter_obj.type = 'band_pass'
+                if fl_band_type == 3: filter_obj.type = 'high_pass'
+                if fl_band_type == 4: filter_obj.type = 'notch'
+                if fl_band_type == 5: filter_obj.type = 'low_shelf'
+                if fl_band_type == 6: filter_obj.type = 'peak'
+                if fl_band_type == 7: filter_obj.type = 'high_shelf'
+
+            plugin_obj.replace('universal', 'eq-bands')
+            return 1
 
         if plugin_obj.plugin_subtype == 'fruity parametric eq 2':
             print('[plug-conv] FL Studio to Universal: Fruity Parametric EQ 2 > EQ Bands:',pluginid)
@@ -181,9 +227,6 @@ class plugconv(plugin_plugconv.base):
             filter_type = plugin_obj.params.get('type', 0).value/700
             filter_gain = plugin_obj.params.get('gain', 0).value/1024 
 
-            filter_cutoff = filter_cutoff**0.6
-            filter_cutoff = 10 * 1600**(filter_cutoff)
-
             filter_resonance = 0.01+(filter_resonance*0.99)
             filter_resonance = filter_resonance/0.1
 
@@ -191,7 +234,7 @@ class plugconv(plugin_plugconv.base):
             plugin_obj.filter.on = True
             plugin_obj.filter.type = ['low_pass','band_pass','high_pass','notch','low_shelf','peak','high_shelf'][int(filter_type/0.125)-1]
             plugin_obj.filter.gain = filter_gain*18
-            plugin_obj.filter.freq = filter_cutoff
+            plugin_obj.filter.freq = oldcalc_filterfreq_1(filter_cutoff)
             plugin_obj.filter.q = filter_resonance**0.8
             return 1
 
@@ -200,6 +243,15 @@ class plugconv(plugin_plugconv.base):
             plugin_obj.replace('universal', 'limiter')
             plugin_obj.params.add('attack', 0.002, 'float')
             plugin_obj.params.add('release', 0.1, 'float')
+            return 1
+
+        if plugin_obj.plugin_subtype == 'frequency shifter':
+            print("[plug-conv] FL Studio to Universal: Frequency Shifter:",pluginid)
+            plugin_obj.params.debugtxt()
+            p_frequency = plugin_obj.params.get('frequency', 0).value/70000
+            p_freqtype = plugin_obj.params.get('freqtype', 0).value
+            plugin_obj.replace('universal', 'frequency_shifter')
+            plugin_obj.params.add('pitch', ((p_frequency**7)*(200 if p_freqtype else 20000)), 'float')
             return 1
 
         if 'shareware' not in dv_config.flags_plugins:

@@ -59,7 +59,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 			for p in als_paramlist:
 				paramname = '/'.join((p[0]+[p[1][0]]))
 				als_paramvals[paramname] = [p[1][1], p[1][2]]
-				print(paramname, [p[1][1], p[1][2]])
+				#print(paramname, [p[1][1], p[1][2]])
 
 			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-ableton', device.name)
 
@@ -81,8 +81,8 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 								if defparams[1] == 'float': outval = float(outval)
 								if defparams[1] == 'bool': outval = (outval == 'true')
 							plugin_obj.add_from_dset(paramfullname, outval, dataset, 'plugin', device.name)
-					else:
-						print(defparams)
+					#else:
+					#	print(defparams)
 
 
 class input_ableton(plugin_input.base):

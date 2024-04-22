@@ -207,7 +207,7 @@ area_struct|frequency_shifter
 part|int|version
 part|int|mix
 part|int|type
-part|int|frequency
+part|s_int|frequency
 part|int|lr_phase
 part|int|shape_left
 part|int|shape_right
@@ -521,13 +521,13 @@ part|s_int|7_order
 part|s_int|main_lvl
 
 area_struct|fruity_parametric_eq
-part|s_int|1_q
-part|s_int|2_q
-part|s_int|3_q
-part|s_int|4_q
-part|s_int|5_q
-part|s_int|6_q
-part|s_int|7_q
+part|s_int|1_gain
+part|s_int|2_gain
+part|s_int|3_gain
+part|s_int|4_gain
+part|s_int|5_gain
+part|s_int|6_gain
+part|s_int|7_gain
 part|int|1_freq
 part|int|2_freq
 part|int|3_freq
@@ -972,12 +972,6 @@ part|int|time_Start
 part|int|trans_hold
 part|int|trans_mode
 part|int|key_to
-
-
-
-
-
-
 
 
 # area_struct|effector

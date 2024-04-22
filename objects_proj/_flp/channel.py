@@ -163,7 +163,6 @@ class flp_channel_params:
 		bytes_params += self.main_pitch.to_bytes(1, "little")
 		bytes_params += b'\xff\xff\xff\xff'
 		bytes_params += b'\x3c\x00\x00\x00'
-		bytes_params += b'\x00\x00\x80\x3f'*5
 		bytes_params += struct.pack('fffff', self.ds_tone, self.ds_over, self.ds_noise, self.ds_band, self.ds_time)
 		bytes_params += self.arpdirection.to_bytes(4, "little")
 		bytes_params += self.arprange.to_bytes(4, "little")

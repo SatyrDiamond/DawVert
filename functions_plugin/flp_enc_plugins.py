@@ -16,6 +16,30 @@ def setparams(convproj_obj, plugin_obj, datadef, dataset):
     fl_plugin, fl_pluginparams = None, None
     plug_type = plugin_obj.type_get()
 
+    if plugin_obj.check_wildmatch('native-flstudio', 'fruity vocoder'):
+        fl_plugin = 'fruity vocoder'
+
+        p_bands = plugin_obj.datavals.get('bands', [1,1,1,1])
+        p_filter = plugin_obj.datavals.get('filter', 2)
+        p_left_right = plugin_obj.datavals.get('left_right', 0)
+
+        p_freq_min = plugin_obj.params.get('freq_min', 0).value
+        p_freq_max = plugin_obj.params.get('freq_max', 65536).value
+        p_freq_scale = plugin_obj.params.get('freq_scale', 64).value
+        p_freq_invert = int(plugin_obj.params.get('freq_invert', 0).value)
+        p_freq_formant = plugin_obj.params.get('freq_formant', 0).value
+        p_freq_bandwidth = plugin_obj.params.get('freq_bandwidth', 50).value
+        p_env_att = plugin_obj.params.get('env_att', 1000).value
+        p_env_rel = plugin_obj.params.get('env_rel', 100).value
+        p_mix_mod = plugin_obj.params.get('mix_mod', 0).value
+        p_mix_car = plugin_obj.params.get('mix_car', 0).value
+        p_mix_wet = plugin_obj.params.get('mix_wet', 128).value
+
+        fl_pluginparams = b''
+        fl_pluginparams += struct.pack('iiiib', 2, len(p_bands), p_filter, 2, p_left_right)
+        fl_pluginparams += struct.pack('f'*len(p_bands), *p_bands)
+        fl_pluginparams += struct.pack('i'*12, p_freq_min, p_freq_max, p_freq_scale, p_freq_invert, p_freq_formant, p_freq_bandwidth, p_env_att, p_env_rel, 0, p_mix_mod, p_mix_car, p_mix_wet)
+
     if plugin_obj.check_wildmatch('native-flstudio', None):
         datadef_struct = dataset.object_var_get('datadef_struct', 'plugin', plug_type[1])
         if datadef_struct[0]:

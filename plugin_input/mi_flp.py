@@ -10,13 +10,14 @@ import os.path
 import varint
 from pathlib import Path
 
+from objects_params import fx_delay
 from functions import data_bytes
 from functions import data_values
 from functions import xtramath
 from functions_plugin import flp_dec_plugins
 from objects import dv_datadef
 from objects import dv_dataset
-from objects_file import proj_flp
+from objects_proj import proj_flp
 
 filename_len = {}
 
@@ -204,6 +205,19 @@ class input_flp(plugin_input.base):
                 if plugin_obj:
                     fl_asdr_obj_vol = fl_channel_obj.env_lfo[1]
                     fl_asdr_obj_cut = fl_channel_obj.env_lfo[2]
+                    fl_delay = fl_channel_obj.delay
+
+                    if fl_delay.feedback:
+                        chanfxpid = 'FLPlug_GD_'+str(channelnum)
+
+                        delay_obj = fx_delay.fx_delay()
+                        delay_obj.feedback_first = True
+                        delay_obj.feedback[0] = fl_delay.feedback*0.8
+                        delay_obj.num_echoes = fl_delay.echoes
+                        timing_obj = delay_obj.timing_add(0)
+                        timing_obj.set_steps(fl_delay.time, convproj_obj)
+                        chfxplugin_obj = delay_obj.to_cvpj(convproj_obj, chanfxpid)
+                        inst_obj.fxslots_audio.append(chanfxpid)
 
                     vol_enabled = bool(fl_asdr_obj_vol.el_env_enabled)
 
@@ -538,7 +552,7 @@ class input_flp(plugin_input.base):
                     eq_freq = (eq_freq**0.575)
                     eq_freq = 10 * 1600**eq_freq
 
-                    filter_obj = plugin_obj.eq_add()
+                    filter_obj, filterid = plugin_obj.eq_add()
                     filter_obj.freq = eq_freq
                     filter_obj.type = ['low_shelf','peak','high_shelf'][n]
                     filter_obj.gain = eq_level

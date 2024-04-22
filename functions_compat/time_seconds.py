@@ -4,6 +4,8 @@
 def process(convproj_obj, in_compat, out_compat):
     tempo = convproj_obj.params.get('bpm', 120).value
 
+    ppq = convproj_obj.time_ppq
+
     is_seconds = 0
     if in_compat == False and out_compat == True: is_seconds = 1
     elif in_compat == True and out_compat == False: is_seconds = -1
@@ -12,9 +14,9 @@ def process(convproj_obj, in_compat, out_compat):
         if convproj_obj.type in ['r', 'rm', 'ri']: 
             for trackid, track_obj in convproj_obj.iter_track(): 
 
-                track_obj.placements.change_seconds(is_seconds==1, tempo)
+                track_obj.placements.change_seconds(is_seconds==1, tempo, ppq)
                 for laneid, lane_obj in track_obj.lanes.items(): 
-                    lane_obj.placements.change_seconds(is_seconds==1, tempo)
+                    lane_obj.placements.change_seconds(is_seconds==1, tempo, ppq)
             return True
 
         #if convproj_obj.type in ['m', 'mi']: 

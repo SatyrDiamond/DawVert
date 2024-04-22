@@ -5,7 +5,7 @@ from functions import data_values
 from functions_compat import trackfx_to_numdata
 import copy
 
-def list2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, removeboth, autoloc):
+def track2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, removeboth, autoloc):
     fx_name = starttext+data_obj.visual.name if data_obj.visual.name else starttext+defualtname
     fx_color = data_obj.visual.color if data_obj.visual.color else None
 
@@ -30,8 +30,23 @@ def list2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, removebot
 
     return fxchannel_obj
 
-def process(convproj_obj, in_fxtype, out_fxtype):
+def process(convproj_obj, in_dawinfo, out_dawinfo):
+    in_fxtype = in_dawinfo.fxtype
+    out_fxtype = out_dawinfo.fxtype
     print('[fxchange] '+in_fxtype+' > '+out_fxtype)
+
+    paramchange = in_dawinfo.fxrack_params.copy()
+    for x in out_dawinfo.fxrack_params:
+        if x in paramchange: paramchange.remove(x)
+
+    if in_fxtype == 'rack' and out_fxtype == 'rack' and convproj_obj.type in ['r', 'ri']:
+        for trackid, track_obj in convproj_obj.iter_track():
+            if track_obj.fxrack_channel > 0:
+                for paramid in paramchange:
+                    convproj_obj.automation.copy(['fxmixer',str(track_obj.fxrack_channel),paramid], ['track',trackid,paramid])
+
+        return True
+
     if in_fxtype == 'groupreturn' and out_fxtype == 'rack' and convproj_obj.type in ['m', 'mi']:
         print('[fxchange] Master to FX 0')
         fxchannel_obj = convproj_obj.add_fxchan(0)
@@ -65,33 +80,32 @@ def process(convproj_obj, in_fxtype, out_fxtype):
         dict_returns = {}
         for returnid, return_obj in convproj_obj.track_master.returns.items(): dict_returns[returnid] = return_obj
 
-        list2fxrack(convproj_obj, convproj_obj.track_master, 0, 'Master', '', True, ['master'])
+        track2fxrack(convproj_obj, convproj_obj.track_master, 0, 'Master', '', True, ['master'])
 
         for output_id in output_ids:
             
             if output_id[1] == 'return':
-                fxchannel_obj = list2fxrack(convproj_obj, dict_returns[output_id[2]], output_id[0]+1, 'Return', '[R] ', True, ['return',output_id[2]])
+                fxchannel_obj = track2fxrack(convproj_obj, dict_returns[output_id[2]], output_id[0]+1, 'Return', '[R] ', True, ['return',output_id[2]])
                 fxchannel_obj.visual_ui.other['docked'] = 1
 
             if output_id[1] == 'group':
-                fxchannel_obj = list2fxrack(convproj_obj, convproj_obj.groups[output_id[2]], output_id[0]+1, 'Group', '[G] ', True, ['group',output_id[2]])
+                fxchannel_obj = track2fxrack(convproj_obj, convproj_obj.groups[output_id[2]], output_id[0]+1, 'Group', '[G] ', True, ['group',output_id[2]])
                 fxchannel_obj.visual_ui.other['docked'] = -1
 
             if output_id[1] == 'track':
                 fxnum = output_id[0]+1
                 track_obj = convproj_obj.track_data[output_id[2]]
-                fxchannel_obj = list2fxrack(convproj_obj, track_obj, fxnum, '', '', False, ['track',output_id[2]])
+                fxchannel_obj = track2fxrack(convproj_obj, track_obj, fxnum, '', '', False, ['track',output_id[2]])
                 track_obj.fxrack_channel = output_id[0]+1
-                if not track_obj.placements.is_indexed:
-                    for pl_obj in track_obj.placements.pl_audio:
-                        if pl_obj.fxrack_channel == -1: pl_obj.fxrack_channel = fxnum
-                    for nestedpl_obj in track_obj.placements.pl_audio_nested:
-                        for e in nestedpl_obj.events:
-                            e.fxrack_channel = fxnum
+                track_obj.placements.add_fxrack_channel(fxnum)
 
             fxchannel_obj.sends.add(output_id[3][0]+1, output_id[3][2], output_id[3][1])
 
-            for senddata in output_id[4]: fxchannel_obj.sends.add(senddata[0]+1, senddata[2], senddata[1])
+            for senddata in output_id[4]: 
+                fxchannel_obj.sends.add(senddata[0]+1, senddata[2], senddata[1])
+                #fxchannel_obj.sends[5].to_master_active = False
+
+
         return True
 
     elif in_fxtype == 'rack' and out_fxtype == 'groupreturn' and convproj_obj.type in ['r', 'ri']:
@@ -199,6 +213,33 @@ def process(convproj_obj, in_fxtype, out_fxtype):
         for sid in nofx_trackids: convproj_obj.track_order.append(sid)
 
         for fxnum in used_fxchans: convproj_obj.track_order.append('fxrack_'+str(fxnum))
+        return True
+
+    elif in_fxtype == 'track' and out_fxtype == 'rack' and convproj_obj.type in ['r', 'ri']:
+        tracknums = {}
+
+        #track2fxrack(convproj_obj, convproj_obj.track_master, 0, 'Master', '', True, ['master'])
+        if not convproj_obj.trackroute:
+            for t in convproj_obj.track_order:
+                convproj_obj.add_trackroute(t)
+
+        for num, trackid in enumerate(convproj_obj.track_order): 
+            track_obj = convproj_obj.track_data[trackid]
+            tracknums[trackid] = num+1
+
+        for trackid, track_obj in convproj_obj.iter_track():
+            fxnum = tracknums[trackid]
+            #convproj_obj, data_obj, fxnum, defualtname, starttext, removeboth, autoloc
+            fxchannel_obj = track2fxrack(convproj_obj, track_obj, fxnum, '', '', False, ['track',trackid])
+            track_obj.fxrack_channel = fxnum
+
+            oldmasteractive = convproj_obj.trackroute[trackid].to_master_active
+            oldroute = convproj_obj.trackroute[trackid].data
+            convproj_obj.trackroute[trackid].data = {}
+            for t, r in oldroute.items(): fxchannel_obj.sends.data[tracknums[t]] = r
+            fxchannel_obj.sends.to_master_active = oldmasteractive
+            track_obj.placements.add_fxrack_channel(fxnum)
+
         return True
 
     else: return False

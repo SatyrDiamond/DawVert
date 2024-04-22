@@ -85,7 +85,6 @@ class input_trackerboy(plugin_input.base):
         print("[input-trackerboy] System: " + str(trackerboy_system))
 
         dataset = dv_dataset.dataset('./data_dset/trackerboy.dset')
-        multitrkdata = dv_trackerpattern.multipatterndata(['pulse','pulse','wavetable','noise'], dataset, 64)
 
         selectedsong = dv_config.songnum
         songnum = 1
@@ -148,6 +147,8 @@ class input_trackerboy(plugin_input.base):
                     print("[input-trackerboy]     Rows: " + str(tb_rows))
                     tb_pat_num = int.from_bytes(tb_songdata.read(2), "little")
                     tb_numfxareas = tb_songdata.read(1)[0]
+
+                    multitrkdata = dv_trackerpattern.multipatterndata(['pulse','pulse','wavetable','noise'], dataset, tb_rows)
 
                     mt_ord = [[],[],[],[]]
                     for _ in range(tb_len):

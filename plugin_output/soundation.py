@@ -14,7 +14,7 @@ from functions import colors
 from functions import data_values
 from objects import dv_dataset
 from objects import idvals
-from objects_file import proj_soundation
+from objects_proj import proj_soundation
 from functions_plugin import soundation_values
 
 def autopoints_get(autoloc, add, mul):
@@ -307,9 +307,9 @@ class output_soundation(plugin_output.base):
                             if s_osc.shape == 'saw': gm2_samplepack = '82_0_Saw_Wave.smplpck'
                             set_asdr(soundation_instrument, plugin_obj)
                         else:
-                            midi_found, midi_bank, midi_inst, midi_drum = track_obj.get_midi(convproj_obj)
-                            gm2_samplepack = idvals_inst_gm2.get_idval(str(midi_inst+1)+'_'+str(midi_bank), 'url')
-                            if midi_drum: gm2_samplepack = idvals_inst_gm2.get_idval(str(midi_bank+127)+'_0', 'url')
+                            midi_found, midi_inst = track_obj.get_midi(convproj_obj)
+                            bank, patch = midi_inst.to_sf2()
+                            gm2_samplepack = idvals_inst_gm2.get_idval(str(patch+1)+'_'+str(bank), 'url')
                             set_asdr(soundation_instrument, plugin_obj)
                     else:
                         soundation_instrument.params.add('sustain', 1, [])

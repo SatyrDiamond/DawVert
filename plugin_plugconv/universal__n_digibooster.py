@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugin_plugconv
+from objects_params import fx_delay
  
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
@@ -16,13 +17,15 @@ class plugconv(plugin_plugconv.base):
             p_wet = plugin_obj.params.get("wet", 0).value/255
             p_cross_echo = plugin_obj.params.get("cross_echo", 0).value/255
             if p_delay == 0: p_delay = 0.334
-            plugin_obj.replace('universal', 'delay')
-            plugin_obj.datavals.add('traits', ['stereo'])
-            plugin_obj.datavals.add('c_fb', p_fb)
-            plugin_obj.datavals.add('c_cross_fb', p_cross_echo)
 
-            timing_obj = plugin_obj.timing_add('center')
+            delay_obj = fx_delay.fx_delay()
+            delay_obj.feedback_first = False
+            delay_obj.dry = 0
+            delay_obj.feedback[0] = p_fb*(1-p_cross_echo)
+            delay_obj.feedback_cross[0] = p_cross_echo
+            timing_obj = delay_obj.timing_add(0)
             timing_obj.set_seconds(convproj_obj, p_delay)
+            plugin_obj = delay_obj.to_cvpj(convproj_obj, pluginid)
 
             plugin_obj.fxdata_add(None, p_wet)
             return 1

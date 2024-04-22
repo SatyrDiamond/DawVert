@@ -37,7 +37,7 @@ out_param|ext_param_1|depth
 out_param|ext_param_0_1|freq
 out_param|ext_param_1_1|depth
 
-################################ Vibrato (VST2)
+################################ Tremolo (VST2)
 new|vst2_autopan
 
 in_type|universal
@@ -53,8 +53,10 @@ calc|freq|div|8
 out_store|freq|freq
 out_store|depth|depth
 
-out_auto|ext_param_0|freq
-out_auto|ext_param_3|depth
+out_param|ext_param_0|freq
+out_v_param|ext_param_1|1
+out_v_param|ext_param_2|0
+out_param|ext_param_3|depth
 
 ################################ Tremolo (LADSPA)
 new|ladspa_autopan

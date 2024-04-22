@@ -6,8 +6,11 @@ import plugin_plugconv
 from functions import data_bytes
 from functions import xtramath
 from functions import note_data
+from objects_params import fx_delay
 
 import math
+
+delaytab = [[32, 1, ''], [28, 1, ''], [24, 1, ''], [20, 1, ''], [16, 1, ''], [12, 1, ''], [10, 1, ''], [8, 1, ''], [6, 1, ''], [5, 1, ''], [4, 1, ''], [3, 1, ''], [2, 1, ''], [1, 1, ''], [1, 1, 'd'], [1, 1, ''], [1, 1, 't'], [1, 2, 'd'], [1, 2, ''], [1, 2, 't'], [1, 4, 'd'], [1, 4, ''], [1, 4, 't'], [1, 8, 'd'], [1, 8, ''], [1, 8, 't'], [1, 16, 'd'], [1, 16, ''], [1, 16, 't'], [1, 32, 'd'], [1, 32, ''], [1, 32, 't'], [1, 64, 'd'], [1, 64, ''], [1, 64, 't']]
 
 def djeq_calc_gain(lvl): return math.log2((lvl*2)**13.8) if lvl else -100 
 
@@ -165,64 +168,28 @@ class plugconv(plugin_plugconv.base):
 
             sync = int(plugin_obj.params.get('sync', 0).value)
 
-            plugin_obj.replace('universal', 'delay')
-            plugin_obj.datavals.add('traits', ['stereo'])
-            plugin_obj.datavals.add('traits_seperated', ['time', 'fb', 'cross_fb', 'pan', 'vol'])
+            delay_obj = fx_delay.fx_delay()
 
             time_m = []
-            time_m.append(plugin_obj.timing_add('left'))
-            time_m.append(plugin_obj.timing_add('right'))
+            time_m.append(delay_obj.timing_add(0))
+            time_m.append(delay_obj.timing_add(1))
             if not sync:
                 time_m[0].set_seconds(delaySyncOffL/1000)
                 time_m[1].set_seconds(delaySyncOffR/1000)
             else:
                 for n, x in enumerate([delaySyncOnL, delaySyncOnR]):
-                    if x == 0: time_m[n].set_frac(32, 1, '', convproj_obj)
-                    if x == 1: time_m[n].set_frac(28, 1, '', convproj_obj)
-                    if x == 2: time_m[n].set_frac(24, 1, '', convproj_obj)
-                    if x == 3: time_m[n].set_frac(20, 1, '', convproj_obj)
-                    if x == 4: time_m[n].set_frac(16, 1, '', convproj_obj)
-                    if x == 5: time_m[n].set_frac(12, 1, '', convproj_obj)
-                    if x == 6: time_m[n].set_frac(10, 1, '', convproj_obj)
-                    if x == 7: time_m[n].set_frac(8, 1, '', convproj_obj)
-                    if x == 8: time_m[n].set_frac(6, 1, '', convproj_obj)
-                    if x == 9: time_m[n].set_frac(5, 1, '', convproj_obj)
-                    if x == 10: time_m[n].set_frac(4, 1, '', convproj_obj)
-                    if x == 11: time_m[n].set_frac(3, 1, '', convproj_obj)
-                    if x == 12: time_m[n].set_frac(2, 1, '', convproj_obj)
-                    if x == 13: time_m[n].set_frac(1, 1, '', convproj_obj)
-                    if x == 14: time_m[n].set_frac(1, 1, 'd', convproj_obj)
-                    if x == 15: time_m[n].set_frac(1, 1, '', convproj_obj)
-                    if x == 16: time_m[n].set_frac(1, 1, 't', convproj_obj)
-                    if x == 17: time_m[n].set_frac(1, 2, 'd', convproj_obj)
-                    if x == 18: time_m[n].set_frac(1, 2, '', convproj_obj)
-                    if x == 19: time_m[n].set_frac(1, 2, 't', convproj_obj)
-                    if x == 20: time_m[n].set_frac(1, 4, 'd', convproj_obj)
-                    if x == 21: time_m[n].set_frac(1, 4, '', convproj_obj)
-                    if x == 22: time_m[n].set_frac(1, 4, 't', convproj_obj)
-                    if x == 23: time_m[n].set_frac(1, 8, 'd', convproj_obj)
-                    if x == 24: time_m[n].set_frac(1, 8, '', convproj_obj)
-                    if x == 25: time_m[n].set_frac(1, 8, 't', convproj_obj)
-                    if x == 26: time_m[n].set_frac(1, 16, 'd', convproj_obj)
-                    if x == 27: time_m[n].set_frac(1, 16, '', convproj_obj)
-                    if x == 28: time_m[n].set_frac(1, 16, 't', convproj_obj)
-                    if x == 29: time_m[n].set_frac(1, 32, 'd', convproj_obj)
-                    if x == 30: time_m[n].set_frac(1, 32, '', convproj_obj)
-                    if x == 31: time_m[n].set_frac(1, 32, 't', convproj_obj)
-                    if x == 32: time_m[n].set_frac(1, 64, 'd', convproj_obj)
-                    if x == 33: time_m[n].set_frac(1, 64, '', convproj_obj)
-                    if x == 34: time_m[n].set_frac(1, 64, 't', convproj_obj)
+                    if x < 35: 
+                        num, denum, stxt = delaytab[x]
+                        time_m[n].set_frac(num, denum, stxt, convproj_obj)
 
-            plugin_obj.datavals.add('l_vol', volL)
-            plugin_obj.datavals.add('r_vol', volR)
-            plugin_obj.datavals.add('l_pan', panL)
-            plugin_obj.datavals.add('r_pan', panR)
-            plugin_obj.datavals.add('l_fb', feedbackL/100)
-            plugin_obj.datavals.add('r_fb', feedbackR/100)
-            plugin_obj.datavals.add('l_cross_fb', crossL/100)
-            plugin_obj.datavals.add('r_cross_fb', crossR/100)
-            plugin_obj.datavals.add('cut_low', lowcut)
-            plugin_obj.datavals.add('cut_high', highcut)
+            delay_obj.feedback_pan[0] = panL
+            delay_obj.feedback_pan[1] = panR
+            delay_obj.feedback[0] = feedbackL/100
+            delay_obj.feedback[0] = feedbackR/100
+            delay_obj.feedback_cross[0] = crossL/100
+            delay_obj.feedback_cross[0] = crossR/100
+            delay_obj.cut_low = lowcut
+            delay_obj.cut_high = highcut
             plugin_obj.fxdata_add(None, mix)
 
         return 2

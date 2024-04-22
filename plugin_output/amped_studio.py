@@ -12,7 +12,7 @@ from functions import data_values
 from functions import xtramath
 from objects import counter
 from functions_plugin import synth_nonfree_values
-from objects_file import proj_amped
+from objects_proj import proj_amped
 
 audioidnum = 0
 
@@ -252,13 +252,12 @@ class output_amped(plugin_output.base):
                 #    amped_track.devices.append(vstcondata)
 
             if not inst_supported:
-                midi_found, midi_bank, midi_inst, midi_drum = track_obj.get_midi(convproj_obj)
-                o_midi_bank = midi_bank if not midi_drum else midi_bank+128
-                o_midi_patch = midi_inst
+                midi_found, midi_inst = track_obj.get_midi(convproj_obj)
+                o_midi_bank, o_midi_patch = midi_inst.to_sf2()
                 amped_device = amped_makedevice('SF2','GM Player')
                 amped_device.add_param(0, 'patch', 0)
-                amped_device.add_param(1, 'bank', midi_bank)
-                amped_device.add_param(2, 'preset', midi_inst)
+                amped_device.add_param(1, 'bank', o_midi_bank)
+                amped_device.add_param(2, 'preset', o_midi_patch)
                 amped_device.add_param(3, 'gain', 0.75)
                 amped_device.add_param(4, 'omni', 1)
                 amped_device.data['sf2Preset'] = {"bank": o_midi_bank, "preset": o_midi_patch, "name": ""}
@@ -297,7 +296,7 @@ class output_amped(plugin_output.base):
                 amped_audclip.contentGuid.id = audio_id[audiopl_obj.sampleref]
                 amped_audclip.position = 0
                 amped_audclip.gain = audiopl_obj.vol
-                amped_audclip.length = audiopl_obj.duration
+                amped_audclip.length = audiopl_obj.duration*4
                 amped_audclip.offset = 0
                 amped_audclip.stretch = audiopl_obj.stretch.calc_real_size
                 amped_audclip.pitchShift = audiopl_obj.pitch

@@ -154,6 +154,7 @@ class input_s3m(plugin_input.base):
             inst_obj.params.add('vol', 0.3, 'float')
 
             if s3m_inst.type == 1:
+                s3m_inst.rip_sample(fs, samplefolder, s3m_samptype, wave_path)
                 plugin_obj, pluginid, sampleref_obj = convproj_obj.add_plugin_sampler_genid(wave_path)
                 plugin_obj.datavals.add('point_value_type', "samples")
 
@@ -164,11 +165,11 @@ class input_s3m(plugin_input.base):
                         cvpj_loop['mode'] = "normal"
                         cvpj_loop['points'] = [s3m_inst.loopStart, s3m_inst.loopEnd-1]
                     else: cvpj_loop['enabled'] = 0
+
                     plugin_obj.datavals.add('loop', cvpj_loop)
 
                 inst_obj.pluginid = pluginid
 
-                s3m_inst.rip_sample(fs, samplefolder, s3m_samptype, wave_path)
 
         patterndata = dv_trackerpattern.patterndata(32, startinststr, maincolor)
 

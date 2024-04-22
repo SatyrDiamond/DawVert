@@ -11,53 +11,12 @@ class valuepack:
         self.value = value
         self.automation = automation
 
-    def calc_div(self, i_val):
-        self.value /= i_val
-        if self.automation: self.automation.calc_addmul(0, 1/i_val)
-
-    def calc_mul(self, i_val):
-        self.value *= i_val
-        if self.automation: self.automation.calc_addmul(0, i_val)
-
-    def calc_add(self, i_val):
-        self.value += i_val
-        if self.automation: self.automation.calc_addmul(i_val, 1)
-
-    def calc_note2freq(self):
-        self.value = note_data.note_to_freq(self.value)
-        if self.automation: self.automation.calc_funcval(note_data.note_to_freq)
-
-    def calc_addmul(self, i_add, i_mul):
-        self.value = (self.value+i_add)*i_mul
-        if self.automation: self.automation.calc_addmul(i_add, i_mul)
-
-    def calc_to_one(self, i_min, i_max):
-        self.value = xtramath.between_to_one(i_min, i_max, self.value)
-        if self.automation: self.automation.calc_to_one(i_min, i_max)
-
-    def calc_from_one(self, i_min, i_max):
-        self.value = xtramath.between_from_one(i_min, i_max, self.value)
-        if self.automation: self.automation.calc_from_one(i_min, i_max)
+    def calc(self, mathtype, val1, val2, val3, val4):
+        self.value = xtramath.do_math(self.value, mathtype, val1, val2, val3, val4)
+        if self.automation: self.automation.calc(mathtype, val1, val2, val3, val4)
 
     def calc_clamp(self, i_min, i_max):
         self.value = xtramath.clamp(self.value, i_min, i_max)
-
-    def calc_pow(self, i_val):
-        self.value = self.value**i_val
-        if self.automation: self.automation.calc_pow(i_val)
-
-    def calc_pow_r(self, i_val):
-        self.value = i_val**self.value
-        if self.automation: self.automation.calc_pow_r(i_val)
-
-    def calc_log(self, i_val):
-        self.value = math.log(self.value,i_val)
-        if self.automation: self.automation.calc_log(i_val)
-
-    def calc_log_r(self, i_val):
-        self.value = math.log(i_val,self.value)
-        if self.automation: self.automation.calc_log_r(i_val)
-
 
 class transform_store:
     def __init__(self):
@@ -145,41 +104,11 @@ class plugtransform:
         plugin_obj.datavals.remove(paramid)
         self.cur_params[storename] = valuepack(d_value, None)
 
-    def calc_div(self, storename, i_val):
-        if storename in self.cur_params: self.cur_params[storename].calc_div(i_val)
-
-    def calc_mul(self, storename, i_val):
-        if storename in self.cur_params: self.cur_params[storename].calc_mul(i_val)
-
-    def calc_add(self, storename, i_val):
-        if storename in self.cur_params: self.cur_params[storename].calc_add(i_val)
-
-    def calc_note2freq(self, storename):
-        if storename in self.cur_params: self.cur_params[storename].calc_note2freq()
-
-    def calc_addmul(self, storename, i_add, i_mul):
-        if storename in self.cur_params: self.cur_params[storename].calc_addmul(i_add, i_mul)
-
-    def calc_to_one(self, storename, i_min, i_max):
-        if storename in self.cur_params: self.cur_params[storename].calc_to_one(i_min, i_max)
-
-    def calc_from_one(self, storename, i_min, i_max):
-        if storename in self.cur_params: self.cur_params[storename].calc_from_one(i_min, i_max)
+    def calc(self, storename, mathtype, val1, val2, val3, val4):
+        if storename in self.cur_params: self.cur_params[storename].calc(mathtype, val1, val2, val3, val4)
 
     def calc_clamp(self, storename, i_min, i_max):
         if storename in self.cur_params: self.cur_params[storename].calc_clamp(i_min, i_max)
-
-    def calc_pow(self, storename, i_val):
-        if storename in self.cur_params: self.cur_params[storename].calc_pow(i_val)
-
-    def calc_pow_r(self, storename, i_val):
-        if storename in self.cur_params: self.cur_params[storename].calc_pow_r(i_val)
-
-    def calc_log(self, storename, i_val):
-        if storename in self.cur_params: self.cur_params[storename].calc_log(i_val)
-
-    def calc_log_r(self, storename, i_val):
-        if storename in self.cur_params: self.cur_params[storename].calc_log_r(i_val)
 
     def to_store(self, storename, outname):
         self.store_data[outname] = self.cur_params[storename].value
@@ -231,18 +160,15 @@ class plugtransform:
                 elif not filtername or (filtername == self.filtername):
                     if cmd[0] == 'in_wet': self.store_wet(plugin_obj, convproj_obj, pluginid, cmd[1])
                     elif cmd[0] == 'calc':
-                        if cmd[2] == 'div': self.calc_div(cmd[1], float(cmd[3]))
-                        if cmd[2] == 'mul': self.calc_mul(cmd[1], float(cmd[3]))
-                        if cmd[2] == 'add': self.calc_add(cmd[1], float(cmd[3]))
-                        if cmd[2] == 'note2freq': self.calc_note2freq(cmd[1])
-                        if cmd[2] == 'addmul': self.calc_addmul(cmd[1], float(cmd[3]), float(cmd[4]))
-                        if cmd[2] == 'to_one': self.calc_to_one(cmd[1], float(cmd[3]), float(cmd[4]))
-                        if cmd[2] == 'from_one': self.calc_from_one(cmd[1], float(cmd[3]), float(cmd[4]))
-                        if cmd[2] == 'clamp': self.calc_clamp(cmd[1], float(cmd[3]), float(cmd[4]))
-                        if cmd[2] == 'pow': self.calc_pow(cmd[1], float(cmd[3]))
-                        if cmd[2] == 'pow_r': self.calc_pow_r(cmd[1], float(cmd[3]))
-                        if cmd[2] == 'log': self.calc_log(cmd[1], float(cmd[3]))
-                        if cmd[2] == 'log_r': self.calc_log_r(cmd[1], float(cmd[3]))
+                        if cmd[2] == 'clamp': 
+                            self.calc_clamp(cmd[1], float(cmd[3]), float(cmd[4]))
+                        else:
+                            val1 = float(cmd[3]) if len(cmd) > 3 else 0
+                            val2 = float(cmd[4]) if len(cmd) > 4 else 0
+                            val3 = float(cmd[5]) if len(cmd) > 5 else 0
+                            val4 = float(cmd[6]) if len(cmd) > 6 else 0
+                            self.calc(cmd[1], cmd[2], val1, val2, val3, val4)
+
                     elif cmd[0] == 'out_store': self.to_store(cmd[2], cmd[1])
                     elif cmd[0] == 'out_auto': self.out_auto(convproj_obj, pluginid, cmd[2], cmd[1])
                     elif cmd[0] == 'out_wet': self.out_wet(convproj_obj, plugin_obj, pluginid, cmd[1])

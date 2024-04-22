@@ -5,7 +5,7 @@ import plugin_output
 import json
 import struct
 import blackboxprotobuf
-from objects_file import proj_onlineseq
+from objects_proj import proj_onlineseq
 from functions import data_values
 from objects import idvals
 
@@ -49,18 +49,12 @@ class output_onlineseq(plugin_output.base):
             midiinst = None
 
             plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+
+            midi_found, midi_inst = track_obj.get_midi(convproj_obj)
+            
+            if not midi_inst.drum: midiinst = midi_inst.patch
+
             if plugin_found: 
-
-                if plugin_obj.check_wildmatch('midi', None):
-                    midi_bank = plugin_obj.datavals.get('bank', 0)
-                    midi_inst = plugin_obj.datavals.get('inst', 0)
-                    midiinst = midi_inst if midi_bank != 128 else -1
-
-                if plugin_obj.check_wildmatch('soundfont2', None):
-                    midi_bank = plugin_obj.datavals.get('bank', 0)
-                    midi_inst = plugin_obj.datavals.get('patch', 0)
-                    midiinst = midi_inst if midi_bank != 128 else -1
-
                 if plugin_obj.check_wildmatch('synth-osc', None):
                     if len(plugin_obj.oscs) == 1:
                         s_osc = plugin_obj.oscs[0]

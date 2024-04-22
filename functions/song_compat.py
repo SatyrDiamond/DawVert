@@ -44,7 +44,7 @@ class song_compat:
     
         #self.process_part('trackfx2fxrack', trackfx2fxrack,           convproj_obj, cvpj_type, in_dawinfo.fxrack, out_dawinfo.fxrack)
         #self.process_part('fxrack2trackfx', fxrack2trackfx,           convproj_obj, cvpj_type, in_dawinfo.fxrack, out_dawinfo.fxrack)
-        self.process_part('fxchange', fxchange,                        convproj_obj, cvpj_type, in_dawinfo.fxtype, out_dawinfo.fxtype)
+        self.process_part('fxchange', fxchange,                        convproj_obj, cvpj_type, in_dawinfo, out_dawinfo)
 
         #if in_dawinfo.fxrack == out_dawinfo.fxrack == True:
         #    self.process_part('fxrack_moveparams', fxrack_moveparams, convproj_obj, cvpj_type, in_dawinfo.fxrack_params, out_dawinfo.fxrack_params)

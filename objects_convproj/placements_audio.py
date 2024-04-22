@@ -7,6 +7,7 @@ import copy
 
 from objects_convproj import stretch
 from objects_convproj import visual
+from objects_convproj import time
 
 class cvpj_placements_audio:
     __slots__ = ['data']
@@ -47,9 +48,15 @@ class cvpj_placements_audio:
             if duration_final < pl_end: duration_final = pl_end
         return duration_final
 
-    def change_seconds(self, is_seconds, bpm):
-        for pl in self.data: pl.change_seconds(is_seconds, bpm)
-
+    def change_seconds(self, is_seconds, bpm, ppq):
+        for pl in self.data: 
+            if is_seconds:
+                pl.position_real = xtramath.step2sec(pl.position, bpm)/(ppq/4)
+                pl.duration_real = xtramath.step2sec(pl.duration, bpm)/(ppq/4)
+            else:
+                pl.position = xtramath.sec2step(pl.position_real, bpm)
+                pl.duration = xtramath.sec2step(pl.duration_real, bpm)
+        
     def remove_loops(self, out__placement_loop):
         new_data = []
         for notespl_obj in self.data: 
@@ -66,11 +73,13 @@ class cvpj_placements_audio:
         self.data = new_data
 
 class cvpj_placement_audio:
-    __slots__ = ['position','duration','cut_type','cut_data','muted','pan','vol','pitch','visual','sampleref','audiomod','fxrack_channel','stretch','fade_in','fade_out']
+    __slots__ = ['position','duration','position_real','duration_real','cut_type','cut_data','muted','pan','vol','pitch','visual','sampleref','audiomod','fxrack_channel','stretch','fade_in','fade_out']
 
     def __init__(self):
         self.position = 0
         self.duration = 0
+        self.position_real = None
+        self.duration_real = None
         self.cut_type = 'none'
         self.cut_data = {}
         self.muted = False
@@ -93,10 +102,6 @@ class cvpj_placement_audio:
         loop_loopstart = self.cut_data['loopstart'] if 'loopstart' in self.cut_data else 0
         loop_loopend = self.cut_data['loopend'] if 'loopend' in self.cut_data else self.duration
         return loop_start, loop_loopstart, loop_loopend
-
-    def change_seconds(self, is_seconds, bpm):
-        self.position = xtramath.step2sec(self.position, bpm) if is_seconds else xtramath.sec2step(self.position, bpm)
-        self.duration = xtramath.step2sec(self.duration, bpm) if is_seconds else xtramath.sec2step(self.duration, bpm)
 
     def changestretch(self, convproj_obj, target, tempo):
         pos_offset, cut_offset, finalspeed = self.stretch.changestretch(convproj_obj.samplerefs, self.sampleref, target, tempo, convproj_obj.time_ppq)

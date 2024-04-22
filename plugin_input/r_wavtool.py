@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import colors
-from objects_file import proj_wavtool
+from objects_proj import proj_wavtool
 import plugin_input
 import json
 import os

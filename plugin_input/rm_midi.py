@@ -16,7 +16,7 @@ class input_midi(plugin_input.base):
         dawinfo_obj.name = 'MIDI'
         dawinfo_obj.file_ext = 'mid'
         dawinfo_obj.fxtype = 'rack'
-        dawinfo_obj.fxrack_params = ['vol']
+        dawinfo_obj.fxrack_params = ['vol','pan','pitch']
         dawinfo_obj.auto_types = ['nopl_ticks']
         dawinfo_obj.track_nopl = True
         dawinfo_obj.plugin_included = ['midi']

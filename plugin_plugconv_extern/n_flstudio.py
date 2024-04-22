@@ -604,7 +604,7 @@ class plugconv(plugin_plugconv_extern.base):
                 return True
             else: errorprint.printerr('ext_notfound', ['Shareware VST2', 'IL Multiband Compressor'])
 
-        # ---------------------------------------- IL Gross Beat ----------------------------------------
+        # ---------------------------------------- gross beat ----------------------------------------
         elif flpluginname == 'gross beat' and use_vst2 and use_shareware:
             if plugin_vst2.check_exists('id', 1179545410):
                 plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229406821, 'chunk', get_flvst2(plugin_obj), None)
@@ -759,9 +759,9 @@ class plugconv(plugin_plugconv_extern.base):
 
         # ---------------------------------------- fruity waveshaper ----------------------------------------
         elif flpluginname == 'fruity waveshaper':
-            if use_shareware and plugin_vst2.check_exists('id', 1296131385):
-                plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1296131385, 'chunk', get_flvst1(plugin_obj), None)
-            elif params_os_wolfshaper.checksupport(extplugtype):
+            #if use_shareware and plugin_vst2.check_exists('id', 1229739891):
+            #    plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229739891, 'chunk', get_flvst1(plugin_obj), None)
+            if params_os_wolfshaper.checksupport(extplugtype):
                 print("[plug-conv] FL Studio to VST2: Fruity Waveshaper > Wolf Shaper:",pluginid)
                 plugtransform.transform('./data_plugts/flstudio_vst.pltr', 'vst2_fruity_waveshaper', convproj_obj, plugin_obj, pluginid, dv_config)
                 data_wolfshaper = params_os_wolfshaper.wolfshaper_data()

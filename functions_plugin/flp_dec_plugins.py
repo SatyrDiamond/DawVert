@@ -200,13 +200,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, datadef, dataset):
         plugin_obj.filerefs['file'] = flsf_filename
         
         plugin_obj.env_asdr_add('vol', 0, asdflfo_att, 0, asdflfo_dec, asdflfo_sus, asdflfo_rel, asdflfo_amt)
-
-        if flsf_patch > 127:
-            plugin_obj.datavals.add('bank', 128)
-            plugin_obj.datavals.add('patch', flsf_patch-128)
-        else:
-            plugin_obj.datavals.add('bank', flsf_bank)
-            plugin_obj.datavals.add('patch', flsf_patch)
+        plugin_obj.midi.from_sf2(flsf_bank, flsf_patch)
         
         pitch_amount = flsf_lfo_amount/128 if flsf_lfo_amount != -128 else 0
         pitch_predelay = flsf_lfo_predelay/256 if flsf_lfo_predelay != -1 else 0
@@ -347,43 +341,27 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, datadef, dataset):
         flplugvalsafter = struct.unpack('i'*12, fl_plugstr.read(12*4))
         #print(flplugvalsafter)
         
-        param_obj = plugin_obj.params.add('freq_min', flplugvalsafter[0], 'int')
-        param_obj.visual.name = "Freq Min"
-        param_obj = plugin_obj.params.add('freq_max', flplugvalsafter[1], 'int')
-        param_obj.visual.name = "Freq Max"
-        param_obj = plugin_obj.params.add('freq_scale', flplugvalsafter[2], 'int')
-        param_obj.visual.name = "Freq Scale"
-        param_obj = plugin_obj.params.add('freq_invert', flplugvalsafter[3], 'bool')
-        param_obj.visual.name = "Freq Invert"
-        param_obj = plugin_obj.params.add('freq_formant', flplugvalsafter[4], 'int')
-        param_obj.visual.name = "Freq Formant"
-        param_obj = plugin_obj.params.add('freq_bandwidth', flplugvalsafter[5], 'int')
-        param_obj.visual.name = "Freq BandWidth"
-        param_obj = plugin_obj.params.add('env_att', flplugvalsafter[6], 'int')
-        param_obj.visual.name = "Env Att"
-        param_obj = plugin_obj.params.add('env_rel', flplugvalsafter[7], 'int')
-        param_obj.visual.name = "Env Rel"
-        param_obj = plugin_obj.params.add('mix_mod', flplugvalsafter[9], 'int')
-        param_obj.visual.name = "Mix Mod"
-        param_obj = plugin_obj.params.add('mix_car', flplugvalsafter[10], 'int')
-        param_obj.visual.name = "Mix Car"
-        param_obj = plugin_obj.params.add('mix_wet', flplugvalsafter[11], 'int')
-        param_obj.visual.name = "Mix Wet"
+        param_obj = plugin_obj.params.add_named('freq_min', flplugvalsafter[0], 'int', "Freq Min")
+        param_obj = plugin_obj.params.add_named('freq_max', flplugvalsafter[1], 'int', "Freq Max")
+        param_obj = plugin_obj.params.add_named('freq_scale', flplugvalsafter[2], 'int', "Freq Scale")
+        param_obj = plugin_obj.params.add_named('freq_invert', flplugvalsafter[3], 'bool', "Freq Invert")
+        param_obj = plugin_obj.params.add_named('freq_formant', flplugvalsafter[4], 'int', "Freq Formant")
+        param_obj = plugin_obj.params.add_named('freq_bandwidth', flplugvalsafter[5], 'int', "Freq BandWidth")
+        param_obj = plugin_obj.params.add_named('env_att', flplugvalsafter[6], 'int', "Env Att")
+        param_obj = plugin_obj.params.add_named('env_rel', flplugvalsafter[7], 'int', "Env Rel")
+        param_obj = plugin_obj.params.add_named('mix_mod', flplugvalsafter[9], 'int', "Mix Mod")
+        param_obj = plugin_obj.params.add_named('mix_car', flplugvalsafter[10], 'int', "Mix Car")
+        param_obj = plugin_obj.params.add_named('mix_wet', flplugvalsafter[11], 'int', "Mix Wet")
 
     elif flplugin.name == 'fruity waveshaper':
         plugin_obj.type_set( 'native-flstudio', flplugin.name)
         flplugvals = struct.unpack('bHHIIbbbbbb', fl_plugstr.read(22))
         #print(flplugvals)
-        param_obj = plugin_obj.params.add('preamp', flplugvals[2], 'int')
-        param_obj.visual.name = "Pre Amp"
-        param_obj = plugin_obj.params.add('wet', flplugvals[3], 'int')
-        param_obj.visual.name = "Wet"
-        param_obj = plugin_obj.params.add('postgain', flplugvals[4], 'int')
-        param_obj.visual.name = "Post Gain"
-        param_obj = plugin_obj.params.add('bipolarmode', flplugvals[5], 'bool')
-        param_obj.visual.name = "Bi-polar Mode"
-        param_obj = plugin_obj.params.add('removedc', flplugvals[6], 'bool')
-        param_obj.visual.name = "Remove DC"
+        param_obj = plugin_obj.params.add_named('preamp', flplugvals[2], 'int', "Pre Amp")
+        param_obj = plugin_obj.params.add_named('wet', flplugvals[3], 'int', "Wet")
+        param_obj = plugin_obj.params.add_named('postgain', flplugvals[4], 'int', "Post Gain")
+        param_obj = plugin_obj.params.add_named('bipolarmode', flplugvals[5], 'bool', "Bi-polar Mode")
+        param_obj = plugin_obj.params.add_named('removedc', flplugvals[6], 'bool', "Remove DC")
 
         autodata_table = decode_pointdata(fl_plugstr)
 

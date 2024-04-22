@@ -12,7 +12,7 @@ import math
 import av
 from functions import colors
 from functions import xtramath
-from objects_file import proj_wavtool
+from objects_proj import proj_wavtool
 from functions_plugin_ext import plugin_vst2
 
 def addsample(zip_wt, filepath, alredyexists): 

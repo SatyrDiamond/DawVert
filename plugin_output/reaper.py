@@ -323,9 +323,9 @@ class output_reaper(plugin_output.base):
                 if notespl_obj.cut_type == 'cut':
                     if 'start' in notespl_obj.cut_data: clip_startat = notespl_obj.cut_data['start']/8/tempomul
                 rpp_clipdata = rpp_obj('ITEM',track_uuid_txt)
-                rpp_clipdata.children.append(['POSITION',notespl_obj.position])
+                rpp_clipdata.children.append(['POSITION',notespl_obj.position_real])
                 rpp_clipdata.children.append(['SNAPOFFS','0'])
-                rpp_clipdata.children.append(['LENGTH',notespl_obj.duration])
+                rpp_clipdata.children.append(['LENGTH',notespl_obj.duration_real])
                 rpp_clipdata.children.append(['LOOP','0'])
                 rpp_clipdata.children.append(['ALLTAKES','0'])
                 rpp_clipdata.children.append(['FADEIN','1','0','0','1','0','0','0'])
@@ -341,7 +341,7 @@ class output_reaper(plugin_output.base):
                 rpp_clipdata.children.append(['SOFFS',clip_startat,'0'])
                 rpp_clipdata.children.append(['CHANMODE','0'])
                 rpp_clipdata.children.append(['GUID',clip_GUID])
-                rpp_clipdata.children.append(rpp_obj_data('SOURCE', ['MIDI'], convert_midi(notespl_obj.notelist,reaper_tempo,'4','4', notespl_obj.duration)))
+                rpp_clipdata.children.append(rpp_obj_data('SOURCE', ['MIDI'], convert_midi(notespl_obj.notelist,reaper_tempo,'4','4', notespl_obj.duration_real)))
                 rpp_trackdata.children.append(rpp_obj_data('ITEM', [], rpp_clipdata))
 
             for audiopl_obj in track_obj.placements.pl_audio:
@@ -358,9 +358,9 @@ class output_reaper(plugin_output.base):
                 clip_startat *= audiopl_obj.stretch.calc_tempo_speed
 
                 rpp_clipdata = rpp_obj('ITEM',track_uuid_txt)
-                rpp_clipdata.children.append(['POSITION',audiopl_obj.position])
+                rpp_clipdata.children.append(['POSITION',audiopl_obj.position_real])
                 rpp_clipdata.children.append(['SNAPOFFS','0'])
-                rpp_clipdata.children.append(['LENGTH',audiopl_obj.duration])
+                rpp_clipdata.children.append(['LENGTH',audiopl_obj.duration_real])
                 rpp_clipdata.children.append(['LOOP','0'])
                 rpp_clipdata.children.append(['ALLTAKES','0'])
                 rpp_clipdata.children.append(['FADEIN','1','0','0','1','0','0','0'])

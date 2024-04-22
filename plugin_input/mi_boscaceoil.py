@@ -6,6 +6,7 @@ from objects import idvals
 from objects import dv_dataset
 from functions_plugin_cvpj import params_fm
 from functions import xtramath
+from objects_params import fx_delay
 import plugin_input
 import json
 
@@ -77,12 +78,13 @@ class input_ceol(plugin_input.base):
         convproj_obj.track_master.visual.color = [0.31373, 0.39608, 0.41569]
 
         if ceol_basic_effect == 0: #delay
-            plugin_obj = convproj_obj.add_plugin('master-effect', 'universal', 'delay-c')
-            plugin_obj.fxdata_add(1, 0.5)
-            plugin_obj.datavals.add('traits', [])
-            plugin_obj.datavals.add('c_fb', 0.1)
-            timing_obj = plugin_obj.timing_add('center')
+            delay_obj = fx_delay.fx_delay()
+            delay_obj.feedback_first = True
+            delay_obj.feedback[0] = 0.1
+            timing_obj = delay_obj.timing_add(0)
             timing_obj.set_seconds(((300*ceol_basic_effectvalue)/100)/1000)
+            plugin_obj = delay_obj.to_cvpj(convproj_obj, 'master-effect')
+            plugin_obj.fxdata_add(1, 0.5)
 
         elif ceol_basic_effect == 1: #chorus
             plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'chorus')

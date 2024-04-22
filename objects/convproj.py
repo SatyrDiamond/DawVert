@@ -37,6 +37,44 @@ def autoloc_getname(autopath):
 
 plugin_id_counter = counter.counter(1000, 'plugin_')
 
+class cvpj_midi_inst:
+    __slots__ = ['bank','patch','drum','is_key','key']
+    def __init__(self):
+        self.bank = 0
+        self.patch = 0
+        self.drum = False
+        self.is_key = False
+        self.key = -1
+
+    def from_sf2(self, bank, patch):
+        if bank >= 128: 
+            self.bank = patch
+            self.patch = (bank-128)
+            self.drum = True
+        else:
+            self.bank = bank
+            self.patch = patch
+            self.drum = False
+
+    def to_sf2(self):
+        bank = 128 if self.drum else self.bank
+        patch = self.bank if self.drum else self.patch
+        return bank, patch
+
+
+    def from_num(self, value):
+        self.drum = bool(value&0b10000000)
+        self.is_key = bool((value>>8)&0b10000000)
+        if not self.is_key: self.patch = (value%128)
+        else: self.key = (value%128)
+        self.bank = (value>>8)
+
+    def to_num(self):
+        outval = self.patch if not self.is_key else self.key
+        outval += self.bank*256
+        outval += int(self.drum)<<8
+        outval += int(self.is_key)<<16
+        return outval
 
 class cvpj_timemarker:
     __slots__ = ['type','visual','position','duration']
@@ -300,9 +338,9 @@ class cvpj_project:
         plugin_obj.role = 'synth'
 
         track_obj = self.add_track(track_id, 'instrument', uses_pl, indexed)
-        track_obj.midi.out_patch = m_inst
-        track_obj.midi.out_bank = m_bank
-        track_obj.midi.drum_mode = m_drum
+        track_obj.midi.out_inst.patch = m_inst
+        track_obj.midi.out_inst.bank = m_bank
+        track_obj.midi.out_inst.drum = m_drum
         track_obj.inst_pluginid = plug_id
         track_obj.params.add('usemasterpitch', not m_drum, 'bool')
         return track_obj, plugin_obj
@@ -394,12 +432,10 @@ class cvpj_project:
     def add_plugin_midi(self, plug_id, m_bank, m_inst, m_drum):
         plugin_obj = self.add_plugin(plug_id, 'midi', None)
         plugin_obj.role = 'synth'
-        plugin_obj.datavals.add('bank', m_bank)
-        plugin_obj.datavals.add('patch', m_inst)
-        plugin_obj.datavals.add('is_drum', m_drum)
+        plugin_obj.midi.bank = m_bank
+        plugin_obj.midi.patch = m_inst
+        plugin_obj.midi.drum = m_drum
         return plugin_obj
-
-
 
 
 
@@ -418,7 +454,7 @@ class cvpj_project:
         plugin_obj = self.add_plugin_midi(plug_id, m_bank, m_inst, m_drum)
 
         inst_obj = self.add_instrument(inst_id)
-        inst_obj.midi.out_patch = m_inst
+        inst_obj.midi.out_inst.patch = m_inst
         inst_obj.midi.out_bank = m_bank
         inst_obj.midi.drum_mode = m_drum
         inst_obj.pluginid = plug_id

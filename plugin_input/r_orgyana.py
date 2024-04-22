@@ -3,7 +3,7 @@
 
 from functions import colors
 from objects import dv_dataset
-from objects_file import proj_orgyana
+from objects_proj import proj_orgyana
 import plugin_input
 
 class input_orgyana(plugin_input.base):

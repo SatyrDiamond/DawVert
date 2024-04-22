@@ -3,7 +3,8 @@
 
 from objects import dv_dataset
 from objects import convproj
-from objects_file import proj_onlineseq
+from objects_proj import proj_onlineseq
+from objects_params import fx_delay
 import plugin_input
 import struct
 
@@ -97,14 +98,13 @@ class input_onlinesequencer(plugin_input.base):
     
                 if 'delay' in s_used_fx:
                     pluginid = trackid+'_delay'
-                    plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'delay')
-                    plugin_obj.role = 'effect'
-                    timing_obj = plugin_obj.timing_add('center')
+                    delay_obj = fx_delay.fx_delay()
+                    delay_obj.feedback[0] = 0.25
+                    timing_obj = delay_obj.timing_add(0)
                     timing_obj.set_steps(2, convproj_obj)
-                    plugin_obj.datavals.add('c_fb', 0.25)
+                    plugin_obj = delay_obj.to_cvpj(convproj_obj, pluginid)
                     plugin_obj.fxdata_add(bool(i_params.delay_on), 0.5)
                     plugin_obj.visual.name = 'Delay'
-                    track_obj.fxslots_audio.append(pluginid)
     
                 if 'distort' in s_used_fx:
                     pluginid = trackid+'_distort'

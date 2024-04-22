@@ -12,6 +12,7 @@ from objects_convproj import placements
 from objects_convproj import placements_notes
 from objects_convproj import placements_audio
 from objects_convproj import placements_index
+from objects import convproj
 
 import copy
 
@@ -80,12 +81,9 @@ class cvpj_midiport:
         self.in_fixedvelocity = -1
 
         self.out_enabled = False
-        self.out_chan = -1
-        self.out_patch = 0
-        self.out_bank = 0
         self.out_fixedvelocity = -1
-        self.out_fixednote = -1
-        self.drum_mode = False
+        self.out_chan = -1
+        self.out_inst = convproj.cvpj_midi_inst()
 
         self.basevelocity = 63
 
@@ -148,36 +146,12 @@ class cvpj_track:
         self.notelist_index = {}
 
     def get_midi(self, convproj_obj):
-        midi_bank = 0
-        midi_inst = 0
-        midi_drum = False
-
-        is_found = False
-
         plugin_found, plugin_obj = convproj_obj.get_plugin(self.inst_pluginid)
         if plugin_found: 
-            if plugin_obj.check_wildmatch('midi', None):
-                midi_bank = plugin_obj.datavals.get('bank', 0)
-                midi_inst = plugin_obj.datavals.get('patch', 0)
-                if midi_bank >= 128:
-                    midi_bank -= 128
-                    midi_drum = True
-                is_found = True
-
-            if plugin_obj.check_wildmatch('soundfont2', None):
-                midi_bank = plugin_obj.datavals.get('bank', 0)
-                midi_inst = plugin_obj.datavals.get('patch', 0)
-                if midi_bank >= 128:
-                    midi_bank -= 128
-                    midi_drum = True
-                is_found = True
-
-        if (not is_found) and self.midi.out_enabled:
-            midi_bank = self.midi.out_bank
-            midi_inst = self.midi.out_patch
-            midi_drum = self.midi.drum_mode
-
-        return is_found, midi_bank, midi_inst, midi_drum
+            return True, plugin_obj.midi
+            
+        else:
+            return False, convproj.cvpj_midi_inst()
 
     def add_return(self, returnid):
         self.returns[returnid] = cvpj_track('return', self.time_ppq, self.time_float, False, False)

@@ -103,8 +103,8 @@ class output_waveform_edit(plugin_output.base):
                 loopstart = notespl_obj.cut_data['loopstart'] if 'loopstart' in notespl_obj.cut_data else 0
                 loopend = notespl_obj.cut_data['loopend'] if 'loopend' in notespl_obj.cut_data else notespl_obj.duration
 
-                wf_MIDICLIP.set('start', str(notespl_obj.position))
-                wf_MIDICLIP.set('length', str(notespl_obj.duration))
+                wf_MIDICLIP.set('start', str(notespl_obj.position_real))
+                wf_MIDICLIP.set('length', str(notespl_obj.duration_real))
 
                 if notespl_obj.cut_type == 'cut':
                     wf_MIDICLIP.set('offset', str((offset/8)*tempomul))

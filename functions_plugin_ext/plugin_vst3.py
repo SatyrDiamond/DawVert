@@ -3,6 +3,7 @@
 
 from functions import data_values
 from objects import manager_extplug
+from objects_file import preset_vst3
 import struct
 import platform
 import os
@@ -55,3 +56,25 @@ def replace_data(convproj_obj, plugin_obj, bycat, platform, in_val, data):
 		plugin_obj.rawdata_add('chunk', data)
 
 	return pluginfo_obj
+
+def import_presetdata(convproj_obj, plugin_obj, bio_preset, platform):
+	preset_obj = preset_vst3.vst3_main()
+	preset_obj.parse(bio_preset)
+	replace_data(convproj_obj, plugin_obj, 'id', platform, preset_obj.uuid, preset_obj.data)
+
+def import_presetdata_file(convproj_obj, plugin_obj, fxfile, platform):
+	preset_obj = preset_vst3.vst3_main()
+	preset_obj.read_file(fxfile)
+	replace_data(convproj_obj, plugin_obj, 'id', platform, preset_obj.uuid, preset_obj.data)
+
+def export_presetdata(plugin_obj):
+	preset_obj = preset_vst3.vst3_main()
+	datatype = plugin_obj.datavals.get('datatype', 'chunk')
+	vstid = plugin_obj.datavals.get('id', None)
+	if vstid != None:
+		preset_obj.uuid = vstid
+		preset_obj.data = plugin_obj.rawdata_get('chunk')
+		return preset_obj.write()
+	else:
+		print('[plugin-vst3] id is missing')
+		return b''

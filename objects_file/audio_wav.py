@@ -73,12 +73,6 @@ class wav_main:
 		self.datablocksize = int((self.bits/8)*self.channels)
 		self.data = numpy.float32([])
 		self.smpl = wav_smpl()
-		#self.inst_finetune = 0
-		#self.inst_gain = 0
-		#self.inst_note_low = 0
-		#self.inst_note_high = 127
-		#self.inst_vel_low = 0
-		#self.inst_vel_high = 127
 		self.uses_float = False
 		self.markers = {}
 		self.unknown_chunks = {}

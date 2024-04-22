@@ -5,6 +5,7 @@ from functions import xtramath
 from functions import placement
 from objects_convproj import autoticks
 from objects_convproj import visual
+from objects_convproj import time
 
 class cvpj_placements_autoticks:
     __slots__ = ['data','type','time_ppq','time_float','val_type']
@@ -28,30 +29,12 @@ class cvpj_placements_autoticks:
         self.time_ppq = time_ppq
         self.time_float = time_float
 
-    def addmul(self, addval, mulval):
-        for pl in self.data: pl.data.addmul(addval, mulval)
-
-    def to_one(self, i_min, i_max):
-        for pl in self.data: pl.data.to_one(i_min, i_max)
-
-    def from_one(self, i_min, i_max):
-        for pl in self.data: pl.data.from_one(i_min, i_max)
+    def calc(self, mathtype, val1, val2, val3, val4):
+        for pl in self.data: pl.data.calc(mathtype, val1, val2, val3, val4)
 
     def funcval(self, i_function):
         for pl in self.data: pl.data.funcval(i_function)
 
-    def pow(self, i_val):
-        for pl in self.data: pl.data.pow(i_val)
-        
-    def pow_r(self, i_val):
-        for pl in self.data: pl.data.pow_r(i_val)
-        
-    def log(self, i_val):
-        for pl in self.data: pl.data.log(i_val)
-        
-    def log_r(self, i_val):
-        for pl in self.data: pl.data.log_r(i_val)
-        
     def iter(self):
         for x in self.data: yield x
 
@@ -65,11 +48,13 @@ class cvpj_placements_autoticks:
                 x.data.edit_trimmove(c_start, x.duration)
 
 class cvpj_placement_autoticks:
-    __slots__ = ['position','duration','cut_type','cut_data','muted','visual','data']
+    __slots__ = ['position','duration','position_real','duration_real','cut_type','cut_data','muted','visual','data']
 
     def __init__(self, time_ppq, time_float, val_type):
         self.position = 0
         self.duration = 0
+        self.position_real = None
+        self.duration_real = None
         self.cut_type = 'none'
         self.cut_data = {}
         self.data = autoticks.cvpj_autoticks(time_ppq, time_float, val_type)

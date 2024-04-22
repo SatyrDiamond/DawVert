@@ -6,7 +6,8 @@ from functions import data_values
 from functions import xtramath
 from functions import colors
 from objects import dv_dataset
-from objects_file import proj_jummbox
+from objects_proj import proj_jummbox
+from objects_params import fx_delay
 import plugin_input
 import json
 import math
@@ -327,12 +328,16 @@ class input_jummbox(plugin_input.base):
 					inst_obj.params.add('vol', cvpj_volume, 'float')
 
 					if 'echo' in bb_fx.used:
-						fxplugin_obj = addfx(convproj_obj, inst_obj, 'universal', cvpj_instid, 'delay')
+						fx_pluginid = cvpj_instid+'_echo'
+						delay_obj = fx_delay.fx_delay()
+						delay_obj.feedback_first = True
+						delay_obj.feedback[0] = bb_fx.echoSustain/480
+						timing_obj = delay_obj.timing_add(0)
+						timing_obj.set_steps(bb_fx.echoDelayBeats*8, convproj_obj)
+						fxplugin_obj = delay_obj.to_cvpj(convproj_obj, fx_pluginid)
 						fxplugin_obj.visual.name = 'Echo'
 						fxplugin_obj.fxdata_add(1, 0.5)
-						timing_obj = fxplugin_obj.timing_add('center')
-						timing_obj.set_steps(bb_fx.echoDelayBeats*8, convproj_obj)
-						fxplugin_obj.datavals.add('c_fb', bb_fx.echoSustain/480)
+						inst_obj.fxslots_audio.append(fx_pluginid)
 						
 					if 'distortion' in bb_fx.used:
 						fxplugin_obj = addfx(convproj_obj, inst_obj, 'simple', cvpj_instid, 'distortion')

@@ -12,12 +12,7 @@ class plugconv(plugin_plugconv.base):
         if dv_config.path_soundfont_gm:
             print('[plug-conv] MIDI to SoundFont2:',pluginid)
             sf2_path = dv_config.path_soundfont_gm
-            v_drums = plugin_obj.datavals.get('is_drum', False)
-            v_bank = plugin_obj.datavals.get('bank', 0)
-            v_inst = plugin_obj.datavals.get('patch', 1)-1
             plugin_obj.replace('soundfont2', None)
-            plugin_obj.datavals.add('bank', v_bank if not v_drums else 128)
-            plugin_obj.datavals.add('patch', v_inst+1)
             convproj_obj.add_fileref(sf2_path, sf2_path)
             plugin_obj.filerefs['file'] = sf2_path
             return 1

@@ -3,6 +3,7 @@
 
 from functions import xtramath
 from functions import placement
+from objects_convproj import time
 import copy
 
 class cvpj_placements_index:
@@ -46,11 +47,13 @@ class cvpj_placements_index:
         self.data = new_data
 
 class cvpj_placement_index:
-    __slots__ = ['position','duration','cut_type','cut_data','muted','visual','fromindex']
+    __slots__ = ['position','duration','position_real','duration_real','cut_type','cut_data','muted','visual','fromindex']
 
     def __init__(self):
         self.position = 0
         self.duration = 0
+        self.position_real = None
+        self.duration_real = None
         self.cut_type = 'none'
         self.cut_data = {}
         self.fromindex = ''

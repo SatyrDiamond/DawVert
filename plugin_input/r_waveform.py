@@ -105,8 +105,8 @@ class input_cvpj_f(plugin_input.base):
                     clip_loopStartBeats = float(xml_getvalue(MIDICLIP_part, 'loopStartBeats', '0'))
                     clip_loopLengthBeats = float(xml_getvalue(MIDICLIP_part, 'loopLengthBeats', '0'))
 
-                    placement_obj.position = clip_start
-                    placement_obj.duration = clip_length
+                    placement_obj.position_real = clip_start
+                    placement_obj.duration_real = clip_length
                     if clip_loopStartBeats == 0 and clip_loopLengthBeats == 0:
                         if clip_start == 0:
                             placement_obj.cut_type = 'cut'

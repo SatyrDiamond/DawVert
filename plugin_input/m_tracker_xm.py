@@ -45,7 +45,7 @@ class xm_env:
         autopoints_obj.loop_on       = self.loop_on
         autopoints_obj.loop_start    = self.loop_start
         autopoints_obj.loop_end      = self.loop_end
-        for n in range(self.numpoints):
+        for n in range(min(self.numpoints, len(self.points))):
             xm_point = self.points[n]
             autopoint_obj = autopoints_obj.add_point()
             autopoint_obj.pos = xm_point[0]
@@ -263,7 +263,9 @@ class input_xm(plugin_input.base):
                         patterndata.cell_param(channel, 'vol', cell_vol/64)
                         patterndata.cell_fx_mod(channel, cell_effect, cell_param)
                         if cell_effect == 12: patterndata.cell_param(channel, 'vol', cell_param/64)
-                        if cell_effect == 15: patterndata.cell_g_param('speed', cell_param)
+                        if cell_effect == 15: 
+                            if cell_param < 32: patterndata.cell_g_param('speed', cell_param)
+                            else: patterndata.cell_g_param('tempo', cell_param)
                         if cell_effect == 16: patterndata.cell_param(channel, 'global_volume', cell_param/64)
                         if cell_effect == 17: patterndata.cell_param(channel, 'global_volume_slide', dv_trackerpattern.getfineval(cell_param))
                         if cell_effect == 34:
@@ -342,7 +344,7 @@ class input_xm(plugin_input.base):
             for n, v in enumerate(channames): patterndata.ch_names[n] = v
         
         if patnames:
-            for n, v in enumerate(channames): patterndata.pat_names[n] = v
+            for n, v in enumerate(patnames): patterndata.pat_names[n] = v
 
         patterndata.to_cvpj(convproj_obj, t_orderlist, startinststr, xm_song_bpm, xm_song_speed, maincolor)
         convproj_obj.metadata.name = xm_name

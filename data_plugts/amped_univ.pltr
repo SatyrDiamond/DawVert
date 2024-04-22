@@ -201,10 +201,33 @@ in_param|delayLfoRateHz
 in_param|delayLfoDepth
 in_param|mix
 
+calc|delayTimeMS|div|1000
 calc|delayLfoDepth|mul|20
 
 out_param|voices|voices|
 out_param|delay|delayTimeMS|
 out_param|rate|delayLfoRateHz|
 out_param|depth|delayLfoDepth|
+out_wet|mix|
+
+################################ phaser
+new|univ_phaser
+
+in_type|native-amped
+in_subtype|Phaser
+out_type|universal
+out_subtype|phaser
+
+in_param|stages
+in_param|rate
+in_param|feedback
+in_param|hzmin
+in_param|hzrange
+in_param|mix
+
+out_param|stages|stages|
+out_param|rate|rate|
+out_param|fb|feedback|
+out_param|hz_min|hzmin|
+out_param|hz_range|hzrange|
 out_wet|mix|

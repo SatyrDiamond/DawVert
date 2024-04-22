@@ -74,7 +74,8 @@ def convert(convproj_obj):
     if '' in used_plugins: used_plugins.remove('')
 
     for plugid in set(used_plugins):
-        convproj_obj.plugins[plugid] = useable_plugins[plugid]
+        if plugid in useable_plugins:
+            convproj_obj.plugins[plugid] = useable_plugins[plugid]
 
     convproj_obj.instruments = {}
     convproj_obj.type = 'r'

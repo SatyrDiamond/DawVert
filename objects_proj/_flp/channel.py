@@ -3,7 +3,8 @@
 
 from io import BytesIO
 from functions import xtramath
-from objects_file._flp import plugin
+from objects_proj._flp import plugin
+import struct
 
 class flp_env_lfo:
 	def __init__(self):
@@ -99,6 +100,11 @@ class flp_channel_params:
 		self.trim = 0
 		self.midi_chan_thru = 0
 		self.unkflag1 = 0
+		self.ds_tone = 1.0
+		self.ds_over = 1.0
+		self.ds_noise = 1.0
+		self.ds_band = 1.0
+		self.ds_time = 1.0
 
 	def read(self, event_data):
 		event_bio = BytesIO(event_data)
@@ -107,7 +113,8 @@ class flp_channel_params:
 		self.remove_dc = int.from_bytes(event_bio.read(1), "little")
 		self.delayflags = int.from_bytes(event_bio.read(1), "little")
 		self.main_pitch = int.from_bytes(event_bio.read(1), "little")
-		event_bio.read(28) # ffffffff3c0000000000803f0000803f0000803f0000803f0000803f
+		event_bio.read(8) # ffffffff3c000000
+		self.ds_tone, self.ds_over, self.ds_noise, self.ds_band, self.ds_time = struct.unpack('fffff', event_bio.read(20))
 		self.arpdirection = int.from_bytes(event_bio.read(4), "little")
 		self.arprange = int.from_bytes(event_bio.read(4), "little")
 		self.arpchord = int.from_bytes(event_bio.read(4), "little")
@@ -157,6 +164,7 @@ class flp_channel_params:
 		bytes_params += b'\xff\xff\xff\xff'
 		bytes_params += b'\x3c\x00\x00\x00'
 		bytes_params += b'\x00\x00\x80\x3f'*5
+		bytes_params += struct.pack('fffff', self.ds_tone, self.ds_over, self.ds_noise, self.ds_band, self.ds_time)
 		bytes_params += self.arpdirection.to_bytes(4, "little")
 		bytes_params += self.arprange.to_bytes(4, "little")
 		bytes_params += self.arpchord.to_bytes(4, "little")
@@ -267,6 +275,31 @@ class flp_channel_tracking:
 		bytes_trking += self.mod_y.to_bytes(4, "little", signed=True)
 		return bytes_trking
 
+class flp_channel_delay:
+	def __init__(self):
+		self.feedback = 0
+		self.pan = 0
+		self.pitch = 0
+		self.echoes = 4
+		self.time = 3
+
+	def read(self, event_data):
+		event_bio = BytesIO(event_data)
+		self.feedback = int.from_bytes(event_bio.read(4), "little")/12800
+		self.pan = int.from_bytes(event_bio.read(4), "little")/19200
+		self.pitch = int.from_bytes(event_bio.read(4), "little")
+		self.echoes = int.from_bytes(event_bio.read(4), "little")
+		self.time = int.from_bytes(event_bio.read(4), "little")/48
+
+	def write(self):
+		bytes_delay = b''
+		bytes_delay += int(self.feedback*12800).to_bytes(4, "little")
+		bytes_delay += int(self.pan*19200).to_bytes(4, "little")
+		bytes_delay += self.pitch.to_bytes(4, "little")
+		bytes_delay += self.echoes.to_bytes(4, "little")
+		bytes_delay += int(self.time*48).to_bytes(4, "little")
+		return bytes_delay
+
 class flp_channel:
 	def __init__(self):
 		self.type = 0
@@ -280,7 +313,8 @@ class flp_channel:
 		self.cutcutby = 0
 		self.cutoff = 1024
 		self.decay = 0
-		self.delay = b'\x00\x00\x00\x00\x00\x19\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x90\x00\x00\x00'
+		self.delay = flp_channel_delay()
+		#self.delay = b'\x00\x00\x00\x00\x00\x19\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x90\x00\x00\x00'
 		self.delayreso = 8388736
 		self.fadestereo = 0
 		self.fx = 128

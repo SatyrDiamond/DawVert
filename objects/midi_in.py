@@ -3,6 +3,7 @@
 
 from functions import midi_exdata
 from functions import data_values
+from functions import colors
 
 from objects import convproj
 from objects import dv_dataset
@@ -418,6 +419,10 @@ class midi_in:
         bpm_nopl_ticks.nopl_ticks = self.auto_bpm
         bpm_nopl_ticks.u_nopl_ticks = True
         convproj_obj.timesig_auto = self.auto_timesig
+
+        if self.auto_timesig.points:
+            firstpos = next(iter(self.auto_timesig.points))
+            convproj_obj.timesig = self.auto_timesig.points[firstpos]
 
         global_first = 1000000000000000000
         for x in self.first_use:

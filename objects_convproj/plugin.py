@@ -7,6 +7,7 @@ import wave as audio_wav
 import base64
 import struct
 
+from objects import convproj
 from objects_convproj import params
 from objects_convproj import visual
 from objects_convproj import autopoints
@@ -39,7 +40,6 @@ class cvpj_audioports:
         self.ports = []
         for x in range(max(self.num_inputs, self.num_outputs)):
             self.ports.append([x])
-
 
 class cvpj_filter:
     def __init__(self):
@@ -85,19 +85,22 @@ class cvpj_osc:
         self.env = {}
 
 class cvpj_eq:
-    def __init__(self):
+    def __init__(self, plugin_obj, basename):
+        self.basename = basename
+        self.filtnum = 0
+        self.plugin_obj = plugin_obj
         self.num_bands = 0
         self.bands = []
 
     def add(self):
-        filter_obj = cvpj_filter()
-        self.bands.append(filter_obj)
+        filter_id = self.basename+'_'+str(self.filtnum)
+        self.bands.append(filter_id)
+        self.filtnum += 1
         self.num_bands += 1
-        return filter_obj
+        return self.plugin_obj.named_filter_add(filter_id), filter_id
 
 class cvpj_plugin:
     def __init__(self):
-        self.cvpjdata = {}
         self.plugin_type = None
         self.plugin_subtype = None
         self.visual = visual.cvpj_visual()
@@ -114,7 +117,7 @@ class cvpj_plugin:
         self.env_blocks = {}
         self.filter = cvpj_filter()
         self.named_filter = {}
-        self.eq = cvpj_eq()
+        self.eq = cvpj_eq(self, 'main')
         self.named_eq = {}
         self.lfos = {}
         self.waves = {}
@@ -126,6 +129,7 @@ class cvpj_plugin:
         self.timing = {}
         self.chord = {}
         self.role = {}
+        self.midi = convproj.cvpj_midi_inst()
 
     def type_set(self, i_type, i_subtype):
         self.plugin_type = i_type
@@ -330,7 +334,7 @@ class cvpj_plugin:
                         isenvconverted = 201 #debug
                     else: 
                         adsr_obj.attack = env_duration
-                        adsr_obj.release = fadeout
+                        #adsr_obj.release = fadeout
                         print("[env_asdr_from_points] 2 | _^")
                         isenvconverted = 202 #debug
     
@@ -451,13 +455,13 @@ class cvpj_plugin:
                 adsr_obj.decay = pointsdata[2].pos-pointsdata[1].pos
                 adsr_obj.sustain = pointsdata[2].value
                 adsr_obj.release = pointsdata[3].pos-pointsdata[2].pos
-            elif env_pointsdata.loop_on:
+            elif env_pointsdata.loop_on and env_pointsdata.loop_start > env_pointsdata.loop_end:
                 sv = [x.value for x in pointsdata[0:env_pointsdata.loop_start+1]]
                 sp = [x.pos for x in pointsdata[0:env_pointsdata.loop_start+1]]
                 lv = [x.value for x in pointsdata[env_pointsdata.loop_start:env_pointsdata.loop_end+1]]
                 lp = [x.pos for x in pointsdata[env_pointsdata.loop_start:env_pointsdata.loop_end+1]]
 
-                if env_pointsdata.loop_start+1 > 1:
+                if (env_pointsdata.loop_start+1 > 1):
                     if sustainnum == -1:
                         lfo_amt = max(lv)-min(lv)
 
@@ -469,7 +473,7 @@ class cvpj_plugin:
 
                         lfo_obj = self.lfo_add(a_type)
                         lfo_obj.predelay = sp[-1]-sp[0]
-                        lfo_obj.set_seconds(1/(lp[-1]-lp[0])/2)
+                        lfo_obj.time.set_seconds(1/(lp[-1]-lp[0])/2)
                         lfo_obj.amount = lfo_amt
                     elif sustainnum == 0:
                         if sv[0] < sv[-1]: 
@@ -686,7 +690,7 @@ class cvpj_plugin:
 
     # -------------------------------------------------- named_eq
     def named_eq_add(self, eq_name): 
-        if eq_name not in self.named_eq: self.named_eq[eq_name] = cvpj_eq()
+        if eq_name not in self.named_eq: self.named_eq[eq_name] = cvpj_eq(self, eq_name)
         return self.named_eq[eq_name].add()
 
     # -------------------------------------------------- named_filter

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import math
+from functions import note_data
 
 # -------------------------------------------- values --------------------------------------------
 
@@ -9,9 +10,9 @@ def clamp(n, minn, maxn): return max(min(maxn, n), minn)
 
 def overlap(start1, end1, start2, end2): return max(max((end2-start1), 0) - max((end2-end1), 0) - max((start2-start1), 0), 0)
 
-def between_from_one(minval, maxval, value): return (minval*(1-value))+(maxval*value)
+def between_from_one(minputv, maxval, value): return (minputv*(1-value))+(maxval*value)
 
-def between_to_one(minval, maxval, value): return 0 if minval == maxval else (value-minval)/(maxval-minval)
+def between_to_one(minputv, maxval, value): return 0 if minputv == maxval else (value-minputv)/(maxval-minputv)
 
 def is_between(i_min, i_max, i_value): return min(i_min, i_max) <= i_value <= max(i_min, i_max)
 
@@ -45,6 +46,24 @@ def from_db(value):
 def to_db(value):
     return 20 * math.log10(value)
 
+
+def do_math(inputv, mathtype, val1, val2, val3, val4):
+    if mathtype == 'add': return inputv+val1
+    elif mathtype == 'sub': return inputv-val1
+    elif mathtype == 'sub_r': return val1+inputv
+    elif mathtype == 'mul': return inputv*val1
+    elif mathtype == 'div': return inputv/val1
+    elif mathtype == 'div_r': return val1/inputv
+    elif mathtype == 'addmul': return (inputv+val1)*val2
+    elif mathtype == 'valrange': return between_from_one(val3, val4, between_to_one(val1, val2, inputv))
+    elif mathtype == 'to_one': return between_to_one(val1, val2, inputv)
+    elif mathtype == 'from_one': return between_from_one(val1, val2, inputv)
+    elif mathtype == 'pow': return inputv**val1
+    elif mathtype == 'pow_r': return val1**inputv
+    elif mathtype == 'log': return math.log(inputv,val1)
+    elif mathtype == 'log_r': return math.log(val1,inputv)
+    elif mathtype == 'note2freq': return note_data.note_to_freq(inputv)
+    else: return inputv
 
 # -------------------------------------------- generators --------------------------------------------
 

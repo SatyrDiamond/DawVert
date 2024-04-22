@@ -48,7 +48,6 @@ def make_fxslot(convproj_obj, x_device_sound, fx_type, as_device):
 
     if fx_type == 'distortion':
         modulate = float(getvalue(x_device_sound, 'driveModul' if as_device in [0,1] else 'modulate' , 0))/100
-
         plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-audiosauna', 'distortion')
         plugin_obj.role = 'effect'
         plugin_obj.visual.name = 'Distortion'

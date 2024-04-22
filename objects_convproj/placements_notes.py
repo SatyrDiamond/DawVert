@@ -7,6 +7,7 @@ import copy
 
 from objects_convproj import visual
 from objects_convproj import notelist
+from objects_convproj import time
 
 class cvpj_placements_notes:
     __slots__ = ['data']
@@ -59,11 +60,15 @@ class cvpj_placements_notes:
             if pl_start < start_final: start_final = pl_start
         return start_final
 
-    def change_seconds(self, is_seconds, bpm):
+    def change_seconds(self, is_seconds, bpm, ppq):
         for pl in self.data: 
-            pl.position = xtramath.step2sec(pl.position, bpm) if is_seconds else xtramath.sec2step(pl.position, bpm)
-            pl.duration = xtramath.step2sec(pl.duration, bpm) if is_seconds else xtramath.sec2step(pl.duration, bpm)
-
+            if is_seconds:
+                pl.position_real = xtramath.step2sec(pl.position, bpm)/(ppq/4)
+                pl.duration_real = xtramath.step2sec(pl.duration, bpm)/(ppq/4)
+            else:
+                pl.position = xtramath.sec2step(pl.position_real, bpm)
+                pl.duration = xtramath.sec2step(pl.duration_real, bpm)
+        
     def remove_cut(self):
         for x in self.data: 
             if x.cut_type == 'cut':
@@ -105,10 +110,12 @@ class cvpj_placements_notes:
         self.data = new_data_notes
 
 class cvpj_placement_notes:
-    __slots__ = ['position','duration','cut_type','cut_data','muted','visual','notelist','time_ppq','time_float']
+    __slots__ = ['position','duration','position_real','duration_real','cut_type','cut_data','muted','visual','notelist','time_ppq','time_float']
     def __init__(self, time_ppq, time_float):
         self.position = 0
         self.duration = 0
+        self.position_real = None
+        self.duration_real = None
         self.cut_type = 'none'
         self.cut_data = {}
         self.time_ppq = time_ppq
@@ -123,7 +130,7 @@ class cvpj_placement_notes:
     def get_loop_data(self):
         loop_start = self.cut_data['start'] if 'start' in self.cut_data else 0
         loop_loopstart = self.cut_data['loopstart'] if 'loopstart' in self.cut_data else 0
-        loop_loopend = self.cut_data['loopend'] if 'loopend' in self.cut_data else x.duration
+        loop_loopend = self.cut_data['loopend'] if 'loopend' in self.cut_data else self.duration
         return loop_start, loop_loopstart, loop_loopend
 
     def inst_split(self, splitted_pl):

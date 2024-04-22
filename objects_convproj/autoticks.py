@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import xtramath
+from objects_convproj import time
 import math
 
 class cvpj_autoticks:
@@ -47,32 +48,11 @@ class cvpj_autoticks:
     #    for p in self.points: 
     #        self.points[p += pos] == self.points[p]
 
-    def addmul(self, addval, mulval):
-        for p in self.points: self.points[p] = (self.points[p]+addval)*mulval
-
-    def change_valrange(self, old_min, old_max, new_min, new_max):
-        for p in self.points: self.points[p] = xtramath.between_from_one(new_min, new_max, xtramath.between_to_one(old_min, old_max, self.points[p]))
-
-    def to_one(self, i_min, i_max):
-        for p in self.points: self.points[p] = xtramath.between_to_one(i_min, i_max, self.points[p])
-
-    def from_one(self, i_min, i_max):
-        for p in self.points: self.points[p] = xtramath.between_from_one(i_min, i_max, self.points[p])
+    def calc(self, mathtype, val1, val2, val3, val4):
+        for p in self.points: self.points[p] = xtramath.do_math(self.points[p], mathtype, val1, val2, val3, val4)
 
     def funcval(self, i_function):
         for p in self.points: self.points[p] = i_function(self.points[p])
-
-    def pow(self, i_val):
-        for p in self.points: self.points[p] = self.points[p]**i_val
-        
-    def pow_r(self, i_val):
-        for p in self.points: self.points[p] = i_val**self.points[p]
-        
-    def log(self, i_val):
-        for p in self.points: self.points[p] = math.log(self.points[p],i_val)
-
-    def log_r(self, i_val):
-        for p in self.points: self.points[p] = math.log(i_val,self.points[p])
 
     def check(self):
         return len(self.points) != 0

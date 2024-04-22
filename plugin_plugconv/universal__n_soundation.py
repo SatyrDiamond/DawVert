@@ -5,6 +5,7 @@ import plugin_plugconv
 
 import math
 from functions import xtramath
+from objects_params import fx_delay
 
 def get_freq(i_val):
     return 20 * 1000**i_val
@@ -49,7 +50,7 @@ class plugconv(plugin_plugconv.base):
         if plugin_obj.plugin_subtype == 'com.soundation.filter':
             print('[plug-conv] Soundation to Universal: Filter:',pluginid)
             filter_cutoff = plugin_obj.params.get('cutoff', 0).value
-            filter_resonance = plugin_obj.params.get('resonance', 0).value
+            filter_resonance = plugin_obj.params.get('resonance', 0).value+1
             filter_mode = plugin_obj.params.get('mode', 0).value
 
             plugin_obj.replace('universal', 'filter')
@@ -57,6 +58,30 @@ class plugconv(plugin_plugconv.base):
             plugin_obj.filter.type = 'low_pass' if filter_mode else 'high_pass'
             plugin_obj.filter.freq = get_freq(filter_cutoff)
             plugin_obj.filter.q = filter_resonance
+
+            convproj_obj.automation.move(['plugin', pluginid, "cutoff"], ['filter', pluginid, 'freq'])
+            convproj_obj.automation.calc_pow(['filter', pluginid, 'freq'], 1000)
+            convproj_obj.automation.calc_mul(['filter', pluginid, 'freq'], 20)
+            convproj_obj.automation.move(['plugin', pluginid, "resonance"], ['filter', pluginid, 'q'])
+            convproj_obj.automation.calc_add(['filter', pluginid, 'q'], 1)
+            return 1
+
+        if plugin_obj.plugin_subtype == 'com.soundation.butterworthfilter':
+            print('[plug-conv] Soundation to Universal: Butterworth Filter:',pluginid)
+            filter_cutoff = plugin_obj.params.get('cutoff', 0).value
+            filter_resonance = plugin_obj.params.get('resonance', 0).value+1
+
+            plugin_obj.replace('universal', 'filter')
+            plugin_obj.filter.on = True
+            plugin_obj.filter.type = 'low_pass'
+            plugin_obj.filter.freq = get_freq(filter_cutoff)
+            plugin_obj.filter.q = filter_resonance
+
+            convproj_obj.automation.move(['plugin', pluginid, "cutoff"], ['filter', pluginid, 'freq'])
+            convproj_obj.automation.calc_pow(['filter', pluginid, 'freq'], 1000)
+            convproj_obj.automation.calc_mul(['filter', pluginid, 'freq'], 20)
+            convproj_obj.automation.move(['plugin', pluginid, "resonance"], ['filter', pluginid, 'q'])
+            convproj_obj.automation.calc_add(['filter', pluginid, 'q'], 1)
             return 1
 
         if plugin_obj.plugin_subtype == 'com.soundation.parametric-eq':
@@ -163,22 +188,22 @@ class plugconv(plugin_plugconv.base):
             wet = plugin_obj.params.get('wet', 0).value
             dry = plugin_obj.params.get('dry', 0).value
 
-            plugin_obj.replace('universal', 'delay')
-            plugin_obj.datavals.add('traits', ['stereo'])
-            plugin_obj.datavals.add('traits_seperated', ['time'])
-            plugin_obj.datavals.add('c_fb', feedback)
+            delay_obj = fx_delay.fx_delay()
+            delay_obj.feedback_first = True
+            delay_obj.feedback[0] = feedback
 
             for n in range(2):
-                timing_obj = plugin_obj.timing_add('left' if not n else 'right')
+                timing_obj = delay_obj.timing_add(n)
                 if timeBpmSync: timing_obj.set_steps(16/(1/(timeLSynced if not n else timeRSynced)), convproj_obj)
                 else: timing_obj.set_seconds(timeL if not n else timeR)
 
-            plugin_obj.datavals.add('cut_high', get_freq(feedback_filter**0.5))
+            delay_obj.cut_high = get_freq(feedback_filter**0.5)
+            plugin_obj = delay_obj.to_cvpj(convproj_obj, pluginid)
             plugin_obj.params_slot.add('wet', xtramath.wetdry(wet, dry), 'float')
             return 1
             
         if plugin_obj.plugin_subtype == 'com.soundation.limiter':
-            print("[plug-conv] Soundation to Universal: Delay:",pluginid)
+            print("[plug-conv] Soundation to Universal: Limiter:",pluginid)
 
             comp_attack = plugin_obj.params.get('attack', 0).value
             comp_gain = plugin_obj.params.get('gain', 0).value
@@ -198,6 +223,7 @@ class plugconv(plugin_plugconv.base):
             return 1
 
         if plugin_obj.plugin_subtype == 'com.soundation.pitch-correction':
+            print("[plug-conv] Soundation to Universal: AutoTune:",pluginid)
             tune_amount = plugin_obj.params.get('amount', 0).value
             tune_glide = plugin_obj.params.get('glide', 0).value
             tune_key = int(plugin_obj.params.get('key', 0).value)

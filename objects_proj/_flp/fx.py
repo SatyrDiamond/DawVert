@@ -3,7 +3,7 @@
 
 from io import BytesIO
 import struct
-from objects_file._flp import plugin
+from objects_proj._flp import plugin
 
 class flp_fxchan:
 	def __init__(self):

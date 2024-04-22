@@ -956,6 +956,22 @@ part|int|in_c
 part|raw_part/byte|formula
 part|dstring_part/byte|comment
 
+area_struct|fruity_granulizer
+part|int|
+part|int|attack
+part|int|hold
+part|int|grain_spacing
+part|int|wave_spacing
+part|int|depth
+part|int|speed
+part|int|rand
+part|int|pan
+part|int|loop
+part|int|hold
+part|int|time_Start
+part|int|trans_hold
+part|int|trans_mode
+part|int|key_to
 
 
 

@@ -47,77 +47,11 @@ class cvpj_s_automation:
 			self.pl_points = placements_autopoints.cvpj_placements_autopoints(self.time_ppq, self.time_float, self.valtype)
 			self.u_pl_points = True
 
-	def calc_div(self, calcval):
-		if self.u_nopl_points: self.nopl_points.addmul(0, 1/calcval)
-		if self.u_nopl_ticks: self.nopl_ticks.addmul(0, 1/calcval)
-		if self.u_pl_points: self.pl_points.addmul(0, 1/calcval)
-		if self.u_pl_ticks: self.pl_ticks.addmul(0, 1/calcval)
-
-	def calc_mul(self, calcval):
-		if self.u_nopl_points: self.nopl_points.addmul(0, calcval)
-		if self.u_nopl_ticks: self.nopl_ticks.addmul(0, calcval)
-		if self.u_pl_points: self.pl_points.addmul(0, calcval)
-		if self.u_pl_ticks: self.pl_ticks.addmul(0, calcval)
-
-	def calc_add(self, calcval):
-		if self.u_nopl_points: self.nopl_points.addmul(calcval, 1)
-		if self.u_nopl_ticks: self.nopl_ticks.addmul(calcval, 1)
-		if self.u_pl_points: self.pl_points.addmul(calcval, 1)
-		if self.u_pl_ticks: self.pl_ticks.addmul(calcval, 1)
-
-	def calc_note2freq(self):
-		if self.u_nopl_points: self.nopl_points.funcval(note_data.note_to_freq)
-		if self.u_nopl_ticks: self.nopl_ticks.funcval(note_data.note_to_freq)
-		if self.u_pl_points: self.pl_points.funcval(note_data.note_to_freq)
-		if self.u_pl_ticks: self.pl_ticks.funcval(note_data.note_to_freq)
-
-	def calc_addmul(self, i_add, i_mul):
-		if self.u_nopl_points: self.nopl_points.addmul(i_add, i_mul)
-		if self.u_nopl_ticks: self.nopl_ticks.addmul(i_add, i_mul)
-		if self.u_pl_points: self.pl_points.addmul(i_add, i_mul)
-		if self.u_pl_ticks: self.pl_ticks.addmul(i_add, i_mul)
-
-	def calc_to_one(self, i_min, i_max):
-		if self.u_nopl_points: self.nopl_points.to_one(i_min, i_max)
-		if self.u_nopl_ticks: self.nopl_ticks.to_one(i_min, i_max)
-		if self.u_pl_points: self.pl_points.to_one(i_min, i_max)
-		if self.u_pl_ticks: self.pl_ticks.to_one(i_min, i_max)
-
-	def calc_from_one(self, i_min, i_max):
-		if self.u_nopl_points: self.nopl_points.from_one(i_min, i_max)
-		if self.u_nopl_ticks: self.nopl_ticks.from_one(i_min, i_max)
-		if self.u_pl_points: self.pl_points.from_one(i_min, i_max)
-		if self.u_pl_ticks: self.pl_ticks.from_one(i_min, i_max)
-
-	def calc_add(self, calcval):
-		if self.u_nopl_points: self.nopl_points.addmul(calcval, 1)
-		if self.u_nopl_ticks: self.nopl_ticks.addmul(calcval, 1)
-		if self.u_pl_points: self.pl_points.addmul(calcval, 1)
-		if self.u_pl_ticks: self.pl_ticks.addmul(calcval, 1)
-
-	def calc_pow(self, calcval):
-		if self.u_nopl_points: self.nopl_points.pow(calcval)
-		if self.u_nopl_ticks: self.nopl_ticks.pow(calcval)
-		if self.u_pl_points: self.pl_points.pow(calcval)
-		if self.u_pl_ticks: self.pl_ticks.pow(calcval)
-
-	def calc_pow_r(self, calcval):
-		if self.u_nopl_points: self.nopl_points.pow_r(calcval)
-		if self.u_nopl_ticks: self.nopl_ticks.pow_r(calcval)
-		if self.u_pl_points: self.pl_points.pow_r(calcval)
-		if self.u_pl_ticks: self.pl_ticks.pow_r(calcval)
-
-	def calc_log(self, calcval):
-		if self.u_nopl_points: self.nopl_points.log(calcval)
-		if self.u_nopl_ticks: self.nopl_ticks.log(calcval)
-		if self.u_pl_points: self.pl_points.log(calcval)
-		if self.u_pl_ticks: self.pl_ticks.log(calcval)
-
-	def calc_log_r(self, calcval):
-		if self.u_nopl_points: self.nopl_points.log_r(calcval)
-		if self.u_nopl_ticks: self.nopl_ticks.log_r(calcval)
-		if self.u_pl_points: self.pl_points.log_r(calcval)
-		if self.u_pl_ticks: self.pl_ticks.log_r(calcval)
+	def calc(self, mathtype, val1, val2, val3, val4):
+		if self.u_nopl_points: self.nopl_points.calc(mathtype, val1, val2, val3, val4)
+		if self.u_nopl_ticks: self.nopl_ticks.calc(mathtype, val1, val2, val3, val4)
+		if self.u_pl_points: self.pl_points.calc(mathtype, val1, val2, val3, val4)
+		if self.u_pl_ticks: self.pl_ticks.calc(mathtype, val1, val2, val3, val4)
 
 	def add_autotick(self, p_pos, p_val):
 		self.make_nopl_ticks()
@@ -378,60 +312,10 @@ class cvpj_automation:
 
 
 
-	def calc_div(self, autopath, calcval):
-		print('[automation] Auto: Math-Div', autopath)
+	def calc(self, autopath, mathtype, val1, val2, val3, val4):
+		print('[automation] Auto: Math', autopath)
 		autopath = autopath_encode(autopath)
-		if autopath in self.data: self.data[autopath].calc_div(calcval)
-
-	def calc_mul(self, autopath, calcval):
-		print('[automation] Auto: Math-Mul', autopath)
-		autopath = autopath_encode(autopath)
-		if autopath in self.data: self.data[autopath].calc_mul(calcval)
-
-	def calc_add(self, autopath, calcval):
-		print('[automation] Auto: Math-Add', autopath)
-		autopath = autopath_encode(autopath)
-		if autopath in self.data: self.data[autopath].calc_add(calcval)
-
-	def calc_note2freq(self, autopath):
-		print('[automation] Auto: Math-Note2Freq', autopath)
-		autopath = autopath_encode(autopath)
-		if autopath in self.data: self.data[autopath].calc_note2freq()
-
-	def calc_addmul(self, autopath, i_add, i_mul):
-		print('[automation] Auto: Math-AddMul', autopath)
-		autopath = autopath_encode(autopath)
-		if autopath in self.data: self.data[autopath].calc_addmul(i_add, i_mul)
-
-	def calc_to_one(self, autopath, i_min, i_max):
-		print('[automation] Auto: Math-ToOne', autopath)
-		autopath = autopath_encode(autopath)
-		if autopath in self.data: self.data[autopath].calc_to_one(i_min, i_max)
-
-	def calc_from_one(self, autopath, i_min, i_max):
-		print('[automation] Auto: Math-FromOne', autopath)
-		autopath = autopath_encode(autopath)
-		if autopath in self.data: self.data[autopath].calc_from_one(i_min, i_max)
-
-	def calc_exp(self, autopath, calcval):
-		print('[automation] Auto: Math-Exp', autopath)
-		autopath = autopath_encode(autopath)
-		if autopath in self.data: self.data[autopath].calc_exp(calcval)
-
-	def calc_exp_r(self, autopath, calcval):
-		print('[automation] Auto: Math-ExpR', autopath)
-		autopath = autopath_encode(autopath)
-		if autopath in self.data: self.data[autopath].calc_exp_r(calcval)
-
-	def calc_log(self, autopath, calcval):
-		print('[automation] Auto: Math-Log', autopath)
-		autopath = autopath_encode(autopath)
-		if autopath in self.data: self.data[autopath].calc_log(calcval)
-
-	def calc_log_r(self, autopath, calcval):
-		print('[automation] Auto: Math-LogR', autopath)
-		autopath = autopath_encode(autopath)
-		if autopath in self.data: self.data[autopath].calc_log_r(calcval)
+		if autopath in self.data: self.data[autopath].calc(mathtype, val1, val2, val3, val4)
 
 
 

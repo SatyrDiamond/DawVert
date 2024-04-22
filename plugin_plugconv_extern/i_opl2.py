@@ -17,23 +17,20 @@ class plugconv(plugin_plugconv_extern.base):
             print('[plug-conv] Converting OPL2 to ADLplug:',pluginid)
             adlplug_data = params_os_adlplug.adlplug_data()
 
-            opl_fm = int(plugin_obj.params.get('fm', 0).value)
-            opl_feedback = int(plugin_obj.params.get('feedback', 0).value)
-
             adlplug_data.set_param("four_op" ,0)  
             adlplug_data.set_param("pseudo_four_op" ,0)   
             adlplug_data.set_param("blank" ,0)    
-            adlplug_data.set_param("con12" ,0)
-            adlplug_data.set_param("con34" ,opl_fm)    
+            adlplug_data.set_param("con12" ,int(plugin_obj.params.get('fm_1', 0).value))
+            adlplug_data.set_param("con34" ,int(plugin_obj.params.get('fm_2', 0).value))    
             adlplug_data.set_param("note_offset1" ,0)
             adlplug_data.set_param("note_offset2" ,0)
-            adlplug_data.set_param("fb12" ,opl_feedback)  
-            adlplug_data.set_param("fb34" ,0) 
+            adlplug_data.set_param("fb12" ,int(plugin_obj.params.get('feedback_1', 0).value))  
+            adlplug_data.set_param("fb34" ,int(plugin_obj.params.get('feedback_2', 0).value)) 
             adlplug_data.set_param("midi_velocity_offset" ,0) 
             adlplug_data.set_param("second_voice_detune" ,0)  
             adlplug_data.set_param("percussion_key_number" ,0)
     
-            for opnplugopname, cvpjopname in [['m1', 'op1'], ['c1', 'op2'], ['m2', ''], ['c2', '']]:  
+            for opnplugopname, cvpjopname in [['m1', 'op0'], ['c1', 'op1'], ['m2', ''], ['c2', '']]:
                 opl_op_attack = int(plugin_obj.params.get(cvpjopname+"/env_attack", 0).value)
                 opl_op_decay = int(plugin_obj.params.get(cvpjopname+"/env_decay", 0).value)
                 opl_op_sustain = int(plugin_obj.params.get(cvpjopname+"/env_sustain", 0).value)

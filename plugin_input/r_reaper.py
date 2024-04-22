@@ -141,8 +141,9 @@ class input_reaper(plugin_input.base):
                                 plugin_obj = convproj_obj.add_plugin(plugid, 'vst2', None)
                                 plugin_obj.fxdata_add(not bypassval[0], 1)
                                 pluginfo_obj = plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, fourid, 'chunk', plugstate, None)
-                                if plugin_obj.role == 'synth': track_obj.inst_pluginid = plugid
-                                if plugin_obj.role == 'effect': track_obj.fxslots_audio.append(plugid)
+                                if fourid == 1919118692: track_obj.fxslots_notes.append(plugid)
+                                elif plugin_obj.role == 'synth': track_obj.inst_pluginid = plugid
+                                elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(plugid)
 
                             if '{' in vstid and plugid:
                                 uniqueid = vstid.split('{')[1].split('}')[0]
@@ -232,8 +233,8 @@ class input_reaper(plugin_input.base):
                             placement_obj = track_obj.placements.add_notes()
                             if cvpj_name: placement_obj.visual.name = cvpj_name
                             if cvpj_color: placement_obj.visual.color = cvpj_color
-                            placement_obj.position = cvpj_position
-                            placement_obj.duration = cvpj_duration
+                            placement_obj.position_real = cvpj_position
+                            placement_obj.duration_real = cvpj_duration
 
                             placement_obj.cut_type = 'loop'
                             placement_obj.cut_data['start'] = cvpj_offset_bpm
@@ -245,8 +246,8 @@ class input_reaper(plugin_input.base):
                             placement_obj = track_obj.placements.add_audio()
                             if cvpj_name: placement_obj.visual.name = cvpj_name
                             if cvpj_color: placement_obj.visual.color = cvpj_color
-                            placement_obj.position = cvpj_position
-                            placement_obj.duration = cvpj_duration
+                            placement_obj.position_real = cvpj_position
+                            placement_obj.duration_real = cvpj_duration
                             placement_obj.pan = cvpj_pan
                             placement_obj.pitch = cvpj_audio_pitch
                             placement_obj.vol = cvpj_vol

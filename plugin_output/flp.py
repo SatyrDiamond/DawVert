@@ -14,10 +14,10 @@ from functions import xtramath
 from objects import dv_datadef
 from objects import dv_dataset
 
-from objects_file import proj_flp
-from objects_file._flp import channel
-from objects_file._flp import arrangement
-from objects_file._flp import fx
+from objects_proj import proj_flp
+from objects_proj._flp import channel
+from objects_proj._flp import arrangement
+from objects_proj._flp import fx
 
 filename_len = {}
 
@@ -189,8 +189,8 @@ class output_cvpjs(plugin_output.base):
 
             if not sre_obj.stretch.uses_tempo: 
                 fl_channel_obj.params.stretchingmultiplier = int(  math.log2(1/sre_obj.stretch.calc_real_speed)*10000)
-            else: 
-                fl_channel_obj.params.stretchingtime = int((sampleref_obj.dur_sec*384)/sre_obj.stretch.calc_tempo_speed)
+            else:
+                fl_channel_obj.params.stretchingtime = int((sampleref_obj.dur_sec*384)/sre_obj.stretch.calc_tempo_speed) if sampleref_obj else 1
 
             samplestretch[samp_id] = sre_obj.stretch.calc_tempo_speed
 

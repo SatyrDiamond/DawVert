@@ -5,6 +5,7 @@ import plugin_plugconv
 
 import math
 from functions import xtramath
+from objects_params import fx_delay
 
 slope_vals = [12,24,48]
 
@@ -35,24 +36,35 @@ class plugconv(plugin_plugconv.base):
             i_leftdelay = xtramath.between_from_one(0.001, 2, i_leftdelay)
             i_rightdelay = xtramath.between_from_one(0.001, 2, i_rightdelay)
 
-            plugin_obj.replace('universal', 'delay')
-            plugin_obj.datavals.add('traits', ['stereo'])
-            plugin_obj.datavals.add('traits_seperated', ['time'])
+            delay_obj = fx_delay.fx_delay()
+            delay_obj.feedback_first = False
+            delay_obj.feedback[0] = i_feedback
 
-            timing_obj = plugin_obj.timing_add('left')
+            timing_obj = delay_obj.timing_add(0)
             timing_obj.set_seconds(i_leftdelay)
-            timing_obj = plugin_obj.timing_add('right')
+            timing_obj = delay_obj.timing_add(1)
             timing_obj.set_seconds(i_rightdelay)
 
-            plugin_obj.datavals.add('c_fb', i_feedback if i_pandelay else 0)
-            plugin_obj.datavals.add('c_cross_fb', 0 if i_pandelay else i_feedback)
+            if i_pandelay: 
+                delay_obj.mode = 'pingpong'
+                delay_obj.submode = 'normal'
+
+            plugin_obj = delay_obj.to_cvpj(convproj_obj, pluginid)
+
             return 1
+
             
         if plugin_obj.plugin_subtype == 'Flanger':
             print("[plug-conv] DirectX to Universal: Flanger:",pluginid)
+            p_frequency = plugin_obj.params.get('frequency', 0).value
+            p_depth = plugin_obj.params.get('depth', 0).value
             waveshape = 'sine' if bool(plugin_obj.params.get('waveshape', 0).value) else 'triangle'
             plugtransform.transform('./data_plugts/directx.pltr', 'flanger_univ', convproj_obj, plugin_obj, pluginid, dv_config)
             plugin_obj.datavals.add('waveshape', waveshape)
+            lfo_obj = plugin_obj.lfo_add('flanger')
+            lfo_obj.time.set_hz(p_frequency)
+            lfo_obj.amount = p_depth
+            lfo_obj.shape = waveshape
             return 1
 
         if plugin_obj.plugin_subtype == 'Gargle':
@@ -63,6 +75,10 @@ class plugconv(plugin_plugconv.base):
             plugin_obj.replace('universal', 'ringmod')
             plugin_obj.datavals.add('shape', garg_shape)
             plugin_obj.params.add('rate', garg_rate, 'float')
+            lfo_obj = plugin_obj.lfo_add('amount')
+            lfo_obj.time.set_hz(garg_rate)
+            lfo_obj.amount = 1
+            lfo_obj.shape = garg_shape
             return 1
 
         if plugin_obj.plugin_subtype == 'ParamEq':

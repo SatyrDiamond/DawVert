@@ -290,6 +290,38 @@ class cvpj_notelist:
                     for pb in pitchblocks:
                         note[7].append([pb[0], pb[1], pb[2]+maxnote, note[3], {}])
 
+    def last_arpeggio(self, notes):
+        if self.nl != []:
+            notedata = self.nl[-1]
+            key = notedata[2]
+            outnotes = []
+            for n in notes:
+                if not outnotes: outnotes.append(n)
+                elif outnotes[-1] != n: outnotes.append(n)
+            counts = {}
+            for i in outnotes: counts[i] = counts.get(i, 0) + 1
+            isduped = max([x for v, x in counts.items()])>1
+            if not isduped:
+                key = notedata[2][0]
+                notedata[2] = [x+notedata[2][0] for x in outnotes]
+
+    def add_instpos(self, instlocs):
+        if len(instlocs) == 0: 
+            pass
+        if len(instlocs) == 1: 
+            inst = instlocs[0][1]
+            for x in self.nl: x[4] = inst
+        elif len(instlocs) == 2: 
+            p_inst, a_pos, a_inst = instlocs[0][1], instlocs[1][0], instlocs[1][1]
+            for x in self.nl: x[4] = a_inst if a_pos >= x[0] else p_inst
+        else: 
+            rangelist = [x[0] for x in instlocs.copy()]+[self.get_dur()]
+            instlist = [x[1] for x in instlocs]
+            rangenum = 0
+            for x in self.nl:
+                while x[0] >= rangelist[rangenum+1]: rangenum += 1
+                x[4] = instlist[rangenum]
+
 
 
     def iter(self):

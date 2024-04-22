@@ -71,6 +71,26 @@
                     "version": {"def": 0,"max": 1,"min": 0,"name": "","noauto": true,"type": "int"}
                 }
             },
+            "fruity granulizer": {
+                "datadef_struct": "fruity_granulizer",
+                "group": "inst",
+                "params": {
+                    "attack": {"def": 0,"max": 500,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "hold": {"def": 0,"max": 500,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "grain_spacing": {"def": 0,"max": 1000,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "wave_spacing": {"def": 0,"max": 1000,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "depth": {"def": 0,"max": 384,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "speed": {"def": 0,"max": 200,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "rand": {"def": 0,"max": 256,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "pan": {"def": 0,"max": 64,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "loop": {"def": 0,"max": 1,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "hold": {"def": 0,"max": 1,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "time_Start": {"def": 0,"max": 4096,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "trans_hold": {"def": 0,"max": 500,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "trans_mode": {"def": 0,"max": 2,"min": 0,"name": "","noauto": true,"type": "int"},
+                    "key_to": {"def": 0,"max": 3,"min": 0,"name": "","noauto": true,"type": "int"}
+                }
+            },
             "effector": {
                 "datadef": "",
                 "datadef_struct": "## DISABLED effector",

@@ -34,8 +34,7 @@ def setparams(convproj_obj, plugin_obj, datadef, dataset):
 
         ref_found, fileref_obj = plugin_obj.get_fileref('file', convproj_obj)
         sf2_file = fileref_obj.get_path('win', True) if ref_found else ''
-        sf2_bank = plugin_obj.datavals.get('bank', 0)
-        sf2_patch = plugin_obj.datavals.get('patch', 0)
+        sf2_bank, sf2_patch = plugin_obj.midi.to_sf2()
 
         flsf_lfo_predelay = int(lfo_pitch.predelay*256) if lfo_pitch.predelay != 0 else -1
         flsf_lfo_amount = int(lfo_pitch.amount*128) if lfo_pitch.amount != 0 else -1

@@ -2,13 +2,15 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import xtramath
+from objects_convproj import time
 import bisect
 import math
 
 class cvpj_s_autopoint:
-    __slots__ = ['pos','value','type','tension','extra']
+    __slots__ = ['pos','pos_real','value','type','tension','extra']
     def __init__(self):
         self.pos = 0
+        self.pos_real = None
         self.value = 0
         self.type = 'normal'
         self.tension = 0
@@ -105,32 +107,11 @@ class cvpj_autopoints:
         for p in self.points: p.pos -= startat
         self.points = self.points[start_point:end_point]
 
-    def addmul(self, addval, mulval):
-        for p in self.points: p.value = (p.value+addval)*mulval
-
-    def change_valrange(self, old_min, old_max, new_min, new_max):
-        for p in self.points: p.value = xtramath.between_from_one(new_min, new_max, xtramath.between_to_one(old_min, old_max, p.value))
-
-    def to_one(self, i_min, i_max):
-        for p in self.points: p.value = xtramath.between_to_one(i_min, i_max, p.value)
-
-    def from_one(self, i_min, i_max):
-        for p in self.points: p.value = xtramath.between_from_one(i_min, i_max, p.value)
+    def calc(self, mathtype, val1, val2, val3, val4):
+        for p in self.points: p.value = xtramath.do_math(p.value, mathtype, val1, val2, val3, val4)
 
     def funcval(self, i_function):
         for p in self.points: p.value = i_function(p.value)
-
-    def pow(self, i_val):
-        for p in self.points: p.value = p.value**i_val
-
-    def pow_r(self, i_val):
-        for p in self.points: p.value = i_val**p.value
-
-    def log(self, i_val):
-        for p in self.points: p.value = math.log(p.value,i_val)
-
-    def log_r(self, i_val):
-        for p in self.points: p.value = math.log(i_val,p.value)
 
     def sort(self):
         ta_bsort = {}

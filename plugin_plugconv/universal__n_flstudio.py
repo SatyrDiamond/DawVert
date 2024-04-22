@@ -5,6 +5,7 @@ import plugin_plugconv
 
 import math
 from functions import xtramath
+from objects_params import fx_delay
 
 class plugconv(plugin_plugconv.base):
     def __init__(self): pass
@@ -19,7 +20,7 @@ class plugconv(plugin_plugconv.base):
             for bandnum in range(7):
                 bandstarttxt = str(bandnum+1)
 
-                filter_obj = plugin_obj.eq_add()
+                filter_obj, _ = plugin_obj.eq_add()
                 filter_obj.type = 'peak'
 
                 filter_obj.gain = plugin_obj.params.get(bandstarttxt+'_gain', 0).value/100
@@ -81,6 +82,7 @@ class plugconv(plugin_plugconv.base):
             plugin_obj.params.add('attack', v_attack, 'float')
             plugin_obj.params.add('release', v_release, 'float')
             plugin_obj.params.add('knee', v_knee, 'float')
+            return 1
 
         if plugin_obj.plugin_subtype == 'pitcher':
             print('[plug-conv] FL Studio to Universal: Pitcher > AutoTune:',pluginid)
@@ -99,7 +101,107 @@ class plugconv(plugin_plugconv.base):
             plugin_obj.params.add('min_freq', p_min_freq, 'float')
             plugin_obj.params.add('formant_gender', p_gender, 'float')
             plugin_obj.params.add('formant_on', p_formant, 'bool')
+            return 1
         
+        if plugin_obj.plugin_subtype == 'fruity delay':
+            d_fb = plugin_obj.params.get('fb', 0).value/1024
+            d_input = plugin_obj.params.get('input', 0).value/1024
+            d_tempo = plugin_obj.params.get('tempo', 0).value/1024
+            d_steps = plugin_obj.params.get('steps', 1).value
+            d_mode = plugin_obj.params.get('mode', 0).value
+
+            delay_obj = fx_delay.fx_delay()
+            delay_obj.feedback_first = False
+            delay_obj.feedback[0] = d_fb**2
+            delay_obj.feedback_invert = d_mode==1
+            if d_mode==2: 
+                delay_obj.mode = 'pingpong'
+                delay_obj.submode = 'normal'
+            timing_obj = delay_obj.timing_add(0)
+            if not d_tempo: timing_obj.set_steps(d_steps, convproj_obj)
+            else: timing_obj.set_steps_nonsync(d_steps, (d_tempo*220)+60)
+            delay_obj.to_cvpj(convproj_obj, pluginid)
+            return 1
+
+        if plugin_obj.plugin_subtype == 'fruity fast lp':
+            print('[plug-conv] FL Studio to Universal: Fruity Fast lp > Filter:',pluginid)
+            filter_cutoff = plugin_obj.params.get('cutoff', 0).value/1024
+            filter_resonance = plugin_obj.params.get('reso', 0).value/1024
+            filter_cutoff = 0.2+(filter_cutoff*1.0)
+            plugin_obj.replace('universal', 'filter')
+            plugin_obj.filter.on = True
+            plugin_obj.filter.type = 'low_pass'
+            plugin_obj.filter.freq = xtramath.midi_filter(filter_cutoff**1.5)
+            plugin_obj.filter.q = (filter_resonance*6)+1
+            return 1
+
+        if plugin_obj.plugin_subtype == 'fruity filter':
+            print('[plug-conv] FL Studio to Universal: Fruity Filter > Filter:',pluginid)
+            filter_cutoff = plugin_obj.params.get('cutoff', 0).value/1024
+            filter_resonance = plugin_obj.params.get('reso', 0).value/1024
+
+            filter_cutoff = (filter_cutoff*2)**0.95
+            filter_cutoff = filter_cutoff**3.325
+
+            plugin_obj.replace('universal', 'filter')
+            plugin_obj.filter.on = True
+            plugin_obj.filter.type = 'low_pass'
+            plugin_obj.filter.freq = filter_cutoff*1000
+            plugin_obj.filter.q = (filter_resonance*6)+1
+            return 1
+
+        if plugin_obj.plugin_subtype == 'fruity flanger':
+            print('[plug-conv] FL Studio to Universal: Fruity Flanger > Flanger:',pluginid)
+
+            p_rate = plugin_obj.params.get('rate', 0).value/5000
+            p_depth = plugin_obj.params.get('depth', 0).value/5000
+            p_delay = plugin_obj.params.get('delay', 0).value/5000
+            p_feed = plugin_obj.params.get('feed', 0).value/100
+            p_inv_feedback = plugin_obj.params.get('inv_feedback', 0).value>512
+
+            p_rate = (p_rate**7)*5
+            p_delay = p_delay**2.58495
+
+            plugin_obj.replace('universal', 'flanger')
+            plugin_obj.params.add('delay', p_delay*0.020, 'float')
+            plugin_obj.params.add('rate', p_rate, 'float')
+            plugin_obj.params.add('depth', p_depth, 'float')
+            plugin_obj.params.add('feedback', p_feed, 'float')
+            plugin_obj.params.add('feedback_invert', p_inv_feedback, 'bool')
+
+            lfo_obj = plugin_obj.lfo_add('flanger')
+            lfo_obj.time.set_hz(p_rate)
+            lfo_obj.amount = p_depth
+            return 1
+
+        if plugin_obj.plugin_subtype == 'fruity free filter':
+            print('[plug-conv] FL Studio to Universal: Fruity Free Filter > Filter:',pluginid)
+            filter_cutoff = plugin_obj.params.get('freq', 0).value/1024
+            filter_resonance = plugin_obj.params.get('q', 0).value/1024
+            filter_type = plugin_obj.params.get('type', 0).value/700
+            filter_gain = plugin_obj.params.get('gain', 0).value/1024 
+
+            filter_cutoff = filter_cutoff**0.6
+            filter_cutoff = 10 * 1600**(filter_cutoff)
+
+            filter_resonance = 0.01+(filter_resonance*0.99)
+            filter_resonance = filter_resonance/0.1
+
+            plugin_obj.replace('universal', 'filter')
+            plugin_obj.filter.on = True
+            plugin_obj.filter.type = ['low_pass','band_pass','high_pass','notch','low_shelf','peak','high_shelf'][int(filter_type/0.125)-1]
+            plugin_obj.filter.gain = filter_gain*18
+            plugin_obj.filter.freq = filter_cutoff
+            plugin_obj.filter.q = filter_resonance**0.8
+            return 1
+
+        if plugin_obj.plugin_subtype == 'fruity limiter':
+            print('[plug-conv] FL Studio to Universal: Fruity Limiter > Limiter:',pluginid)
+            plugin_obj.replace('universal', 'limiter')
+            plugin_obj.params.add('attack', 0.002, 'float')
+            plugin_obj.params.add('release', 0.1, 'float')
+            return 1
+
         if 'shareware' not in dv_config.flags_plugins:
             if plugin_obj.plugin_subtype == 'fruity delay 2':
                 print('[plug-conv] FL Studio to Universal: Fruity Delay 2 > Delay:',pluginid)
@@ -112,21 +214,20 @@ class plugconv(plugin_plugconv.base):
                 d_time = plugin_obj.params.get('time', 0).value/48
                 d_time_stereo_offset = plugin_obj.params.get('time_stereo_offset', 1).value/512
 
-                plugin_obj.replace('universal', 'delay')
-                plugin_obj.datavals.add('traits', ['stereo'])
-                plugin_obj.datavals.add('input_vol', d_input_vol)
-                plugin_obj.datavals.add('input_pan', d_input_pan)
-                plugin_obj.datavals.add('wet', 1)
-                plugin_obj.datavals.add('dry', d_dry)
-                timing_obj = plugin_obj.timing_add('center')
+                delay_obj = fx_delay.fx_delay()
+                delay_obj.feedback_first = False
+                delay_obj.input = d_input_vol
+                delay_obj.input_pan = d_input_pan
+                delay_obj.dry = d_dry
+                delay_obj.stereo_offset = d_time_stereo_offset
+                delay_obj.feedback[0] = d_fb_vol**2
+                delay_obj.feedback_invert = d_fb_mode==1
+                if d_fb_mode==2: 
+                    delay_obj.mode = 'pingpong'
+                    delay_obj.submode = 'normal'
+                timing_obj = delay_obj.timing_add(0)
                 timing_obj.set_steps(d_time, convproj_obj)
-                plugin_obj.datavals.add('c_invert_feedback', d_fb_mode==1)
-                if d_fb_mode==2:
-                    plugin_obj.datavals.add('c_fb', 0)
-                    plugin_obj.datavals.add('c_cross_fb', d_fb_vol)
-                else:
-                    plugin_obj.datavals.add('c_fb', d_fb_vol)
-                    plugin_obj.datavals.add('c_cross_fb', 0)
-                plugin_obj.datavals.add('stereo_offset', d_time_stereo_offset)
+                plugin_obj = delay_obj.to_cvpj(convproj_obj, pluginid)
+                return 1
 
         return 2

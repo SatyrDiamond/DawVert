@@ -11,7 +11,7 @@ from objects_convproj import tracks
 from objects_convproj import placements_notes
 from objects_convproj import placements_audio
 from objects_convproj import placements_index
-
+from objects_convproj import time
 
 class cvpj_placements:
     __slots__ = ['pl_notes','pl_audio','pl_notes_indexed','pl_audio_indexed','pl_audio_nested','notelist','time_ppq','time_float','uses_placements','is_indexed']
@@ -37,9 +37,9 @@ class cvpj_placements:
     def get_start(self):
         return min(self.pl_notes.get_start(),self.pl_audio.get_start(),self.notelist.get_start_end()[0])
 
-    def change_seconds(self, is_seconds, bpm):
-        self.pl_notes.change_seconds(is_seconds, bpm)
-        self.pl_audio.change_seconds(is_seconds, bpm)
+    def change_seconds(self, is_seconds, bpm, ppq):
+        self.pl_notes.change_seconds(is_seconds, bpm, ppq)
+        self.pl_audio.change_seconds(is_seconds, bpm, ppq)
 
     def remove_cut(self):
         self.pl_notes.remove_cut()
@@ -238,6 +238,14 @@ class cvpj_placements:
 
     def add_nested_audio(self):
         return self.pl_audio_nested.add()
+
+    def add_fxrack_channel(self, fxnum):
+        if not self.is_indexed:
+            for pl_obj in self.pl_audio:
+                if pl_obj.fxrack_channel == -1: pl_obj.fxrack_channel = fxnum
+            for nestedpl_obj in self.pl_audio_nested:
+                for e in nestedpl_obj.events:
+                    e.fxrack_channel = fxnum
 
     def remove_nested(self):
         for nestedpl_obj in self.pl_audio_nested:

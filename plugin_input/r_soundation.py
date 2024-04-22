@@ -5,7 +5,7 @@ from functions import data_bytes
 from functions import colors
 from functions import xtramath
 from objects import dv_dataset
-from objects_file import proj_soundation
+from objects_proj import proj_soundation
 import plugin_input
 import struct
 import json
@@ -227,6 +227,11 @@ class input_soundation(plugin_input.base):
                         if 'sample_pack' in soundation_inst.params.data:
                             sample_pack = get_paramval(soundation_inst, 'sample_pack')
                             plugin_obj.datavals.add('sample_pack', sample_pack)
+                            sv = sample_pack.split('_')
+                            try:
+                                if len(sv) > 1: plugin_obj.midi.from_sf2(int(sv[1]), int(sv[0])-1)
+                            except:
+                                pass
 
                     elif instpluginname == 'com.soundation.noiser':
                         plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-soundation', instpluginname)

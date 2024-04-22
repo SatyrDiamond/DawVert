@@ -320,9 +320,10 @@ def lmms_encode_plugin(trkX_insttr, track_obj, trackid, trackname):
         elif plugin_obj.check_wildmatch('soundfont2', None):
             #print('[output-lmms]       Plugin: soundfont2 > sf2player')
             xml_instrumentpreplugin.set('name', "sf2player")
+            bank, patch = plugin_obj.midi.to_sf2()
             xml_sf2 = ET.SubElement(xml_instrumentpreplugin, "sf2player")
-            xml_sf2.set('bank', str(int(plugin_obj.datavals.get('bank', 0))))
-            xml_sf2.set('patch', str(int(plugin_obj.datavals.get('patch', 0))))
+            xml_sf2.set('bank', str(bank))
+            xml_sf2.set('patch', str(patch))
             ref_found, fileref_obj = plugin_obj.get_fileref('file', convproj_obj)
             if ref_found: xml_sf2.set('src', fileref_obj.get_path(None, True))
             create_param_auto(xml_sf2, 'gain', plugin_obj.params, 'gain', 1, None, ['plugin', track_obj.inst_pluginid], 'Plugin', 'gain', True)
@@ -425,15 +426,15 @@ def lmms_encode_effectslot(plugin_obj, pluginid, fxcX):
         xml_lmmsreverbsc.set('size', str(0.2))
         xml_lmmsreverbsc.set('color', str(15000))
 
-    elif plugin_obj.check_match('universal', 'delay'):
-        #print('[output-lmms]       Audio FX: [delay] ')
-        fxslotX.set('name', 'delay')
-        xml_lmmsdelay = ET.SubElement(fxslotX, 'Delay')
-        timing_obj = plugin_obj.timing_get('center')
-        is_steps = set_timedata(xml_lmmsdelay, 'DelayTimeSamples', timing_obj)
-        if not is_steps: xml_lmmsdelay.set('DelayTimeSamples', str(timing_obj.speed_seconds))
-        d_feedback = plugin_obj.datavals.get('c_fb', 0.0)
-        xml_lmmsdelay.set('FeebackAmount', str(d_feedback))
+    #elif plugin_obj.check_match('universal', 'delay'):
+    #    #print('[output-lmms]       Audio FX: [delay] ')
+    #    fxslotX.set('name', 'delay')
+    #    xml_lmmsdelay = ET.SubElement(fxslotX, 'Delay')
+    #    timing_obj = plugin_obj.timing_get('center')
+    #    is_steps = set_timedata(xml_lmmsdelay, 'DelayTimeSamples', timing_obj)
+    #    if not is_steps: xml_lmmsdelay.set('DelayTimeSamples', str(timing_obj.speed_seconds))
+    #    d_feedback = plugin_obj.datavals.get('c_fb', 0.0)
+    #    xml_lmmsdelay.set('FeebackAmount', str(d_feedback))
 
     elif plugin_obj.check_match('universal', 'filter'):
         fxslotX.set('name', 'dualfilter')
@@ -564,7 +565,7 @@ class output_lmms(plugin_output.base):
         dawinfo_obj.fxtype = 'rack'
         dawinfo_obj.fxrack_params = ['enabled','vol']
         dawinfo_obj.auto_types = ['pl_points']
-        dawinfo_obj.plugin_included = ['sampler:single','fm:opl2','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
+        dawinfo_obj.plugin_included = ['sampler:single','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
         dawinfo_obj.plugin_ext = ['vst2','ladspa']
     def parse(self, i_convproj_obj, output_file):
         global trkcX
@@ -710,13 +711,13 @@ class output_lmms(plugin_output.base):
                     trkX_midiport.set('readable',str(int(track_obj.midi.in_enabled)))
                     trkX_midiport.set('outputcontroller',"0")
                     trkX_midiport.set('basevelocity',str(track_obj.midi.basevelocity))
-                    trkX_midiport.set('outputprogram',str(track_obj.midi.out_patch))
+                    trkX_midiport.set('outputprogram',str(track_obj.midi.out_inst.patch))
                     trkX_midiport.set('writable',str(int(track_obj.midi.out_enabled)))
                     trkX_midiport.set('fixedinputvelocity',str(track_obj.midi.in_fixedvelocity))
                     trkX_midiport.set('inputchannel',str(track_obj.midi.in_chan+1))
                     trkX_midiport.set('inputcontroller',"0")
                     trkX_midiport.set('outputchannel',str(track_obj.midi.out_chan+1))
-                    trkX_midiport.set('fixedoutputnote',str(track_obj.midi.out_fixednote))
+                    trkX_midiport.set('fixedoutputnote',str(track_obj.midi.out_inst.key))
                     lmms_encode_fxchain(trkX_insttr, track_obj, trackname, autoloc)
 
                 if track_obj.type == 'audio':

@@ -8,10 +8,10 @@ from io import BytesIO
 from functions import data_bytes
 from functions_plugin import format_flp_tlv
 
-from objects_file._flp import fx
-from objects_file._flp import channel
-from objects_file._flp import auto
-from objects_file._flp import arrangement
+from objects_proj._flp import fx
+from objects_proj._flp import channel
+from objects_proj._flp import auto
+from objects_proj._flp import arrangement
 
 def decodetext(version_split, event_data):
 	if event_data not in [b'\x00\x00', b'\x00']:
@@ -297,7 +297,8 @@ class flp_project:
 				envlfo_obj = channel.flp_env_lfo()
 				envlfo_obj.read(event_data)
 				self.current_ch_obj.env_lfo.append(envlfo_obj)
-			elif event_id == 209: self.current_ch_obj.delay = event_data
+			elif event_id == 209: 
+				self.current_ch_obj.delay.read(event_data)
 			elif event_id == 138: self.current_ch_obj.delayreso = event_data
 			elif event_id == 139: self.current_ch_obj.reverb = event_data
 			elif event_id == 89:  self.current_ch_obj.shiftdelay = event_data
@@ -476,7 +477,7 @@ class flp_project:
 			if chdat.plugin.params != None: make_flevent(data_FLdt, 213, chdat.plugin.params)
 
 			make_flevent(data_FLdt, 0, chdat.enabled)
-			make_flevent(data_FLdt, 209, chdat.delay)
+			make_flevent(data_FLdt, 209, chdat.delay.write())
 			make_flevent(data_FLdt, 138, chdat.delayreso)
 			make_flevent(data_FLdt, 139, chdat.reverb)
 			make_flevent(data_FLdt, 89, chdat.shiftdelay)

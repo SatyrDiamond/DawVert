@@ -604,6 +604,28 @@ class plugconv(plugin_plugconv_extern.base):
                 return True
             else: errorprint.printerr('ext_notfound', ['Shareware VST2', 'IL Multiband Compressor'])
 
+        # ---------------------------------------- IL Gross Beat ----------------------------------------
+        elif flpluginname == 'gross beat' and use_vst2 and use_shareware:
+            if plugin_vst2.check_exists('id', 1179545410):
+                plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229406821, 'chunk', get_flvst2(plugin_obj), None)
+                return True
+            else: errorprint.printerr('ext_notfound', ['Shareware VST2', 'IL Gross Beat'])
+
+        # ---------------------------------------- hardcore ----------------------------------------
+        elif flpluginname == 'hardcore' and use_vst2 and use_shareware:
+            if plugin_vst2.check_exists('id', 1212371505):
+                plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1212371505, 'chunk', get_sslf(plugin_obj), None)
+                return True
+            else:
+                errorprint.printerr('ext_notfound', ['Shareware VST2', 'Hardcore'])
+
+        # ---------------------------------------- maximus ----------------------------------------
+        elif flpluginname == 'maximus' and use_vst2 and use_shareware:
+            if plugin_vst2.check_exists('id', 1179545410):
+                plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229807992, 'chunk', get_flvst1(plugin_obj), None)
+                return True
+            else: errorprint.printerr('ext_notfound', ['Shareware VST2', 'IL Maximus'])
+
         # ---------------------------------------- notebook ----------------------------------------
         elif flpluginname == 'fruity notebook' and use_vst2 and use_shareware:
             if plugin_vst2.check_exists('id', 1179545410):

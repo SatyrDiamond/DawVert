@@ -5,8 +5,8 @@ from functions import data_bytes
 from functions import colors
 from functions import data_values
 from objects import dv_dataset
-#from functions_plugin_ext import plugin_vst2
-#from functions_plugin_ext import plugin_vst3
+from functions_plugin_ext import plugin_vst2
+from functions_plugin_ext import plugin_vst3
 from objects_proj import proj_ableton
 from functions_plugin import ableton_values
 from objects import auto_id
@@ -39,6 +39,9 @@ def get_param(alsparam, varname, vartype, i_fallback, i_loc, i_addmul):
 	if alsparam.AutomationTarget.exists: autoid_assoc.define(alsparam.AutomationTarget.id, i_loc, vartype, i_addmul)
 	return out_value
 
+def alsparam(dictdata, name):
+	return [int(dictdata[name+x][1]) for x in ['Min','Max']]
+
 def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 	global vector_shapesdata
 	for device in x_trackdevices:
@@ -49,19 +52,187 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 		else: pluginid = 'master_'+able_plug_id
 
 		if device.name in ['OriginalSimpler', 'MultiSampler']:
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
-			plugin_obj.role = 'synth'
 			track_obj.inst_pluginid = pluginid
 
-		else:
-			als_paramvals = {}
-			als_paramlist = device.get_paramdata(device.params, [], None)
-			for p in als_paramlist:
-				paramname = '/'.join((p[0]+[p[1][0]]))
-				als_paramvals[paramname] = [p[1][1], p[1][2]]
-				#print(paramname, [p[1][1], p[1][2]])
+			SampleParts = device.params['Player/MultiSampleMap/SampleParts']
 
+			numzones = len(SampleParts[1])
+
+			if numzones > 1:
+				for n, p in SampleParts[1].items():
+					plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
+					plugin_obj.role = 'synth'
+	
+					MultiSamplePart = p[0]
+					samplerefid = get_sampleref(convproj_obj, MultiSamplePart['MultiSamplePart/SampleRef'][1])
+	
+					key_r = alsparam(MultiSamplePart, 'MultiSamplePart/KeyRange/')
+					key_cf = alsparam(MultiSamplePart, 'MultiSamplePart/KeyRange/Crossfade')
+					vel_r = alsparam(MultiSamplePart, 'MultiSamplePart/VelocityRange/')
+					vel_cf = alsparam(MultiSamplePart, 'MultiSamplePart/VelocityRange/Crossfade')
+	
+					regionparams = {}
+					regionparams['name'] = MultiSamplePart['MultiSamplePart/Name'][1]
+					regionparams['key_fade'] = [key_cf[0]-key_r[0], key_r[1]-key_cf[1]]
+					regionparams['r_vel'] = [x/127 for x in vel_r]
+					regionparams['r_vel_fade'] = [x/127 for x in vel_cf]
+	
+					regionparams['middlenote'] = int(MultiSamplePart['MultiSamplePart/RootKey'][1])-60
+					regionparams['volume'] = float(MultiSamplePart['MultiSamplePart/Volume'][1])
+					regionparams['pan'] = float(MultiSamplePart['MultiSamplePart/Panorama'][1])
+	
+					for xmlname, dictname in [['MultiSamplePart/SustainLoop/', 'loop_sustain'], ['MultiSamplePart/ReleaseLoop/', 'loop']]:
+						xv_Start = int(MultiSamplePart[xmlname+'Start'][1])
+						xv_End = int(MultiSamplePart[xmlname+'End'][1])
+						xv_Mode = int(MultiSamplePart[xmlname+'Mode'][1])
+						xv_Crossfade = int(MultiSamplePart[xmlname+'Crossfade'][1])
+						xv_Detune = int(MultiSamplePart[xmlname+'Detune'][1])
+						loopdata = {}
+						if xv_Mode == 0: loopdata['enabled'] = 0
+						else:
+							loopdata['enabled'] = 1
+							loopdata['mode'] = 'normal'
+							loopdata['points'] = [xv_Start, xv_End]
+							loopdata['crossfade'] = xv_Crossfade
+							loopdata['detune'] = xv_Detune
+						regionparams[dictname] = loopdata
+	
+						if dictname == 'loop':
+							regionparams['start'] = int(MultiSamplePart['MultiSamplePart/SampleStart'][1])
+							regionparams['end'] = int(MultiSamplePart['MultiSamplePart/SampleEnd'][1])
+	
+					plugin_obj.regions.add(key_r[0]-60, key_r[1]-60, regionparams)
+
+			elif numzones == 1:
+				for n, p in SampleParts[1].items():
+					MultiSamplePart = p[0]
+
+					middlenote = int(MultiSamplePart['MultiSamplePart/RootKey'][1])
+					track_obj.datavals.add('middlenote', middlenote-60)
+
+					file_path = get_sampleref(convproj_obj, MultiSamplePart['MultiSamplePart/SampleRef'][1])
+					sampleref_obj = convproj_obj.add_sampleref(file_path, file_path)
+					plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'single')
+					plugin_obj.role = 'synth'
+					plugin_obj.samplerefs['sample'] = file_path
+
+					plugin_obj.datavals.add('point_value_type', "samples")
+
+					for xmlname, dictname in [['MultiSamplePart/SustainLoop/', 'loop_sustain'], ['MultiSamplePart/ReleaseLoop/', 'loop']]:
+						xv_Start = int(MultiSamplePart[xmlname+'Start'][1])
+						xv_End = int(MultiSamplePart[xmlname+'End'][1])
+						xv_Mode = int(MultiSamplePart[xmlname+'Mode'][1])
+						xv_Crossfade = int(MultiSamplePart[xmlname+'Crossfade'][1])
+						xv_Detune = int(MultiSamplePart[xmlname+'Detune'][1])
+						loopdata = {}
+
+						if xv_Mode == 0: loopdata['enabled'] = 0
+						else:
+							loopdata['enabled'] = 1
+							loopdata['mode'] = 'normal'
+							loopdata['points'] = [xv_Start, xv_End]
+							loopdata['crossfade'] = xv_Crossfade
+							loopdata['detune'] = xv_Detune
+						plugin_obj.datavals.add(dictname, loopdata)
+
+						if dictname == 'loop':
+							plugin_obj.datavals.add('start', int(MultiSamplePart['MultiSamplePart/SampleStart'][1]))
+							plugin_obj.datavals.add('end', int(MultiSamplePart['MultiSamplePart/SampleEnd'][1]))
+
+		elif device.name == 'PluginDevice':
+			track_obj.inst_pluginid = pluginid
+
+			PluginDesc = device.params['PluginDesc'][1][0][0]
+
+			pluginvsttype = 0
+			if 'VstPluginInfo/UniqueId' in PluginDesc:
+				pluginvsttype = 0
+
+				vst_WinPosX = int(PluginDesc['VstPluginInfo/WinPosX'][1])
+				vst_WinPosY = int(PluginDesc['VstPluginInfo/WinPosY'][1])
+				vst_Path = PluginDesc['VstPluginInfo/Path'][1].replace('/','\\')
+				vst_PlugName = PluginDesc['VstPluginInfo/PlugName']
+				vst_UniqueId = int(PluginDesc['VstPluginInfo/UniqueId'][1])
+				vst_NumberOfParameters = int(PluginDesc['VstPluginInfo/NumberOfParameters'][1])
+				vst_NumberOfPrograms = int(PluginDesc['VstPluginInfo/NumberOfPrograms'][1])
+				pluginvsttype = int(PluginDesc['VstPluginInfo/Category'][1])
+				vst_flags = int(PluginDesc['VstPluginInfo/Flags'][1])
+				binflags = data_bytes.to_bin(vst_flags, 32)
+				useschunk = binflags[21]
+
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'vst2', 'win')
+				windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
+				windata_obj.pos_x = vst_WinPosX
+				windata_obj.pos_y = vst_WinPosY
+
+				convproj_obj.add_fileref(vst_Path, vst_Path)
+				plugin_obj.filerefs['plugin'] = vst_Path
+
+				plugin_obj.datavals.add('fourid', vst_UniqueId)
+				plugin_obj.datavals.add('numparams', vst_NumberOfParameters)
+
+				vst_version = int(PluginDesc['VstPluginInfo/Version'][1])
+				plugin_obj.datavals.add('version_bytes', list(struct.unpack('BBBB', struct.pack('i', vst_version))) )
+
+				Preset = PluginDesc['VstPluginInfo/Preset'][1]
+				Preset = PluginDesc['VstPluginInfo/Preset'][1][list(Preset)[0]][0]
+
+				plugin_obj.datavals.add('current_program', int(Preset['VstPreset/ProgramNumber'][1]))
+
+				Buffer = Preset['VstPreset/Buffer'][1]
+				if Buffer:
+					if useschunk: 
+						plugin_obj.datavals.add('datatype', 'chunk')
+						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, vst_UniqueId, 'chunk', Buffer, None)
+					else:
+						rawstream = BytesIO(Buffer)
+						plugin_obj.datavals.add('datatype', 'params')
+						cvpj_programs = []
+						for num in range(vst_NumberOfPrograms):
+							cvpj_program = {}
+							cvpj_program['datatype'] = 'params'
+							cvpj_program['numparams'] = vst_NumberOfParameters
+							cvpj_program['params'] = {}
+							cvpj_program['program_name'] = data_bytes.readstring_fixedlen(rawstream, 28, None)
+							for paramnum in range(vst_NumberOfParameters): cvpj_program['params'][str(paramnum)] = {'value': struct.unpack('f', rawstream.read(4))[0]}
+							cvpj_programs.append(cvpj_program)
+						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,None, vst_UniqueId, 'bank', cvpj_programs, None)
+
+			if 'Vst3PluginInfo/Preset' in PluginDesc:
+				vst_DeviceType = int(PluginDesc['Vst3PluginInfo/DeviceType'][1])
+				vst_WinPosX = int(PluginDesc['Vst3PluginInfo/WinPosX'][1])
+				vst_WinPosY = int(PluginDesc['Vst3PluginInfo/WinPosY'][1])
+
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'vst3', 'win')
+				windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
+				windata_obj.pos_x = vst_WinPosX
+				windata_obj.pos_y = vst_WinPosY
+
+				Preset = PluginDesc['Vst3PluginInfo/Preset'][1]
+				Preset = PluginDesc['Vst3PluginInfo/Preset'][1][list(Preset)[0]][0]
+
+				Fields_0 = int(Preset['Vst3Preset/Uid/Fields.0'][1])
+				Fields_1 = int(Preset['Vst3Preset/Uid/Fields.1'][1])
+				Fields_2 = int(Preset['Vst3Preset/Uid/Fields.2'][1])
+				Fields_3 = int(Preset['Vst3Preset/Uid/Fields.3'][1])
+
+				hexuuid = struct.pack('>iiii', Fields_0, Fields_1, Fields_2, Fields_3).hex().upper()
+				
+				ProcessorState = Preset['Vst3Preset/ProcessorState'][1]
+
+				plugin_obj.datavals.add('id', hexuuid)
+				plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, hexuuid, ProcessorState)
+
+			if pluginvsttype == 2:
+				plugin_obj.role = 'inst'
+				track_obj.inst_pluginid = pluginid
+			elif pluginvsttype == 1:
+				plugin_obj.role = 'effect'
+				track_obj.fxslots_audio.append(pluginid)
+
+		else:
 			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-ableton', device.name)
+			plugin_obj.role = 'effect'
 
 			paramlist = dataset.params_list('plugin', device.name)
 			device_type = dataset.object_var_get('group', 'plugin', device.name)
@@ -72,11 +243,11 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 					defparams = dataset.params_i_get('plugin', device.name, paramfullname)
 					
 					if defparams[1] != 'list': 
-						if paramfullname in als_paramvals:
+						if paramfullname in device.params:
 							if not defparams[0]:
-								outval = get_param(als_paramvals[paramfullname][1], defparams[5], defparams[1], 0, ['plugin', pluginid], None)
+								outval = get_param(device.params[paramfullname][1], defparams[5], defparams[1], 0, ['plugin', pluginid], None)
 							else:
-								outval = als_paramvals[paramfullname][1]
+								outval = device.params[paramfullname][1]
 								if defparams[1] == 'int': outval = int(outval)
 								if defparams[1] == 'float': outval = float(outval)
 								if defparams[1] == 'bool': outval = (outval == 'true')
@@ -84,6 +255,8 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 					#else:
 					#	print(defparams)
 
+			if plugin_obj.role == 'effect':
+				track_obj.fxslots_audio.append(pluginid)
 
 class input_ableton(plugin_input.base):
 	def __init__(self): pass

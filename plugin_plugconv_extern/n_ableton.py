@@ -4,11 +4,14 @@
 import plugin_plugconv_extern
 
 import struct
-from objects_convproj import wave
-from functions_plugin_ext import plugin_vst2
-from functions_plugin_ext_nonfree import params_nf_exakt_lite
-from functions_plugin_ext import params_os_vital
 from functions import errorprint
+from functions import xtramath
+from functions_plugin_ext import params_os_dragonfly_reverb
+from functions_plugin_ext import params_os_vital
+from functions_plugin_ext import plugin_vst2
+from functions_plugin_ext import params_os_airwindows
+from functions_plugin_ext_nonfree import params_nf_exakt_lite
+from objects_convproj import wave
 import math
 
 class plugconv(plugin_plugconv_extern.base):
@@ -26,7 +29,122 @@ class plugconv(plugin_plugconv_extern.base):
                     pass
                 else: errorprint.printerr('ext_notfound', ['Shareware VST2', 'The Glue'])
 
-        #print(plugin_obj.plugin_subtype)
+        if plugin_obj.plugin_subtype == 'Reverb':
+            vst2_use = 'vst2' in extplugtype and plugin_vst2.check_exists('id', 1684435505)
+            if vst2_use:
+                print("[plug-conv] Ableton to VST2: Reverb > Dragonfly Hall Reverb:",pluginid)
+
+                data_dragonfly = params_os_dragonfly_reverb.dragonfly_hall_data()
+
+                p_RoomSize = plugin_obj.params.get("RoomSize", 0).value
+                data_dragonfly.set_param('size', xtramath.clamp(p_RoomSize/100, 10, 60))
+
+                p_PreDelay = plugin_obj.params.get("PreDelay", 0).value
+                data_dragonfly.set_param('delay', p_PreDelay)
+
+                p_DecayTime = plugin_obj.params.get("DecayTime", 0).value
+                data_dragonfly.set_param('decay', p_DecayTime/1000)
+
+                p_DiffuseDelay = plugin_obj.params.get("DiffuseDelay", 0).value
+                data_dragonfly.set_param('diffuse', p_DiffuseDelay*100)
+
+                p_StereoSeparation = plugin_obj.params.get("StereoSeparation", 0).value
+                data_dragonfly.set_param('width', p_StereoSeparation)
+
+                p_SpinOn = plugin_obj.params.get("SpinOn", 0).value
+                p_EarlyReflectModFreq = plugin_obj.params.get("EarlyReflectModFreq", 0).value
+                p_EarlyReflectModDepth = plugin_obj.params.get("EarlyReflectModDepth", 0).value
+                if p_SpinOn:
+                    data_dragonfly.set_param('spin', p_EarlyReflectModFreq)
+                    data_dragonfly.set_param('modulation', p_EarlyReflectModDepth)
+
+                p_ShelfLoFreq = plugin_obj.params.get("ShelfLoFreq", 0).value
+                p_ShelfLoGain = plugin_obj.params.get("ShelfLoGain", 0).value
+                p_ShelfLowOn = plugin_obj.params.get("ShelfLowOn", False).value
+                if p_ShelfLowOn:
+                    data_dragonfly.set_param('low_cut', p_ShelfLoFreq)
+                    data_dragonfly.set_param('low_xo', p_ShelfLoFreq)
+                    data_dragonfly.set_param('low_mult', p_ShelfLoGain)
+
+                p_ShelfHiFreq = plugin_obj.params.get("ShelfHiFreq", 0).value
+                p_ShelfHiGain = plugin_obj.params.get("ShelfHiGain", 0).value
+                p_ShelfHighOn = plugin_obj.params.get("ShelfHighOn", False).value
+                if p_ShelfHighOn:
+                    data_dragonfly.set_param('high_cut', p_ShelfHiFreq)
+                    data_dragonfly.set_param('high_xo', p_ShelfHiFreq)
+                    data_dragonfly.set_param('high_mult', p_ShelfHiGain)
+
+                p_MixDirect = plugin_obj.params.get("MixDirect", 1).value
+                plugin_obj.fxdata_add(None, p_MixDirect)
+                data_dragonfly.set_param('dry_level', 0)
+                data_dragonfly.set_param('early_level', 0)
+                data_dragonfly.set_param('early_send', 0)
+                data_dragonfly.set_param('late_level', 100)
+
+                data_dragonfly.to_cvpj_vst2(convproj_obj, plugin_obj)
+                return True
+            else: errorprint.printerr('ext_notfound', ['VST2', 'Dragonfly Hall Reverb'])
+
+
+        if plugin_obj.plugin_subtype == 'Amp':
+            p_AmpType = plugin_obj.params.get("AmpType", 0).value
+
+            if p_AmpType in [0,1,2,3]:
+                if plugin_vst2.check_exists('id', 1818848353):
+                    print("[plug-conv] Ableton to VST2: Amp > LilAmp:",pluginid)
+                    airwindows_obj = params_os_airwindows.airwindows_data()
+                    airwindows_obj.paramvals = [0.5, 1, 0.8, 1]
+                    airwindows_obj.paramnames = ["Gain","Tone","Output","Dry/Wet"]
+                    airwindows_obj.to_cvpj_vst2(convproj_obj, plugin_obj, 1818848353, True, True)
+                else: errorprint.printerr('ext_notfound', ['VST2', 'LilAmp [Airwindows]'])
+
+            if p_AmpType in [4,5]:
+                if plugin_vst2.check_exists('id', 1835623521):
+                    print("[plug-conv] Ableton to VST2: Amp > MidAmp:",pluginid)
+                    airwindows_obj = params_os_airwindows.airwindows_data()
+                    airwindows_obj.paramvals = [0.8, 1, 0.8, 1]
+                    airwindows_obj.paramnames = ["Gain","Tone","Output","Dry/Wet"]
+                    airwindows_obj.to_cvpj_vst2(convproj_obj, plugin_obj, 1835623521, True, True)
+                else: errorprint.printerr('ext_notfound', ['VST2', 'MidAmp [Airwindows]'])
+
+            if p_AmpType == 6:
+                if plugin_vst2.check_exists('id', 1650553697):
+                    print("[plug-conv] Ableton to VST2: Amp > BassAmp:",pluginid)
+                    airwindows_obj = params_os_airwindows.airwindows_data()
+                    airwindows_obj.paramvals = [0.5, 0, 0.5, 0.5]
+                    airwindows_obj.paramnames = ["High","Dry","Dub","Sub"]
+                    airwindows_obj.to_cvpj_vst2(convproj_obj, plugin_obj, 1650553697, True, True)
+                else: errorprint.printerr('ext_notfound', ['VST2', 'BassAmp [Airwindows]'])
+
+            p_DryWet = plugin_obj.params.get("DryWet", 1).value
+            plugin_obj.fxdata_add(None, p_DryWet)
+
+        if plugin_obj.plugin_subtype == 'DrumBuss':
+            if plugin_vst2.check_exists('id', 1835623521):
+                print("[plug-conv] Ableton to VST2: Drum Buss > DrumSlam:",pluginid)
+                p_DriveAmount = plugin_obj.params.get("DriveAmount", 0).value
+                p_DryWet = plugin_obj.params.get("DryWet", 1).value
+                plugin_obj.fxdata_add(None, p_DryWet)
+                airwindows_obj = params_os_airwindows.airwindows_data()
+                airwindows_obj.paramvals = [p_DriveAmount/2, 1, 1]
+                airwindows_obj.paramnames = ["Drive","Output","Dry/Wet"]
+                airwindows_obj.to_cvpj_vst2(convproj_obj, plugin_obj, 1835623521, True, True)
+            else: errorprint.printerr('ext_notfound', ['VST2', 'DrumSlam [Airwindows]'])
+
+        if plugin_obj.plugin_subtype == 'Overdrive':
+            if plugin_vst2.check_exists('id', 1685219702):
+                print("[plug-conv] Ableton to VST2: Overdrive > Drive:",pluginid)
+                p_Drive = plugin_obj.params.get("Drive", 0).value
+                p_Tone = plugin_obj.params.get("Tone", 0).value
+
+                p_DryWet = plugin_obj.params.get("DryWet", 1).value
+                plugin_obj.fxdata_add(None, p_DryWet)
+
+                airwindows_obj = params_os_airwindows.airwindows_data()
+                airwindows_obj.paramvals = [p_Drive/200, 0.1+(p_Tone/300), 1, 0.2]
+                airwindows_obj.paramnames = ["Drive","Highpass","Out Level","Dry/Wet"]
+                airwindows_obj.to_cvpj_vst2(convproj_obj, plugin_obj, 1685219702, True, True)
+            else: errorprint.printerr('ext_notfound', ['VST2', 'Drive [Airwindows]'])
 
         if plugin_obj.plugin_subtype == 'InstrumentVector':
             if params_os_vital.checksupport(extplugtype):

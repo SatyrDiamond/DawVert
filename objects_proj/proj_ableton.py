@@ -92,7 +92,7 @@ excludenames =  ['LomId', 'LomIdView', 'IsExpanded', 'On',
 'LastPresetRef', 'LockedScripts', 'IsFolded', 'ShouldShowPresetName', 
 'UserName', 'Annotation', 'SourceContext', 'OverwriteProtectionNumber']
 
-def paramdetect(pathd, xmltag, xmlin):
+def paramdetect(pathd, xmltag, xmlin, dictdata):
 	valuetxt = xmlin.get('Value')
 	isparam = xmlin.findall('Manual')
 	valtype = 'unknown'
@@ -126,36 +126,36 @@ def paramdetect(pathd, xmltag, xmlin):
 		numset = {}
 		groupdata = []
 		is_numset = True if xmlin else False
-		for xmlpart in xmlin:
-			iname, ivaltype, iout = paramdetect(pathd+[xmlin.tag], xmlin, xmlpart)
 
-			Id = xmlpart.get('Id')
-			groupdata.append([iname, ivaltype, iout])
-			if Id != None: 
+		ids = [xmlpart.get('Id') for xmlpart in xmlin]
+		is_numset = (None not in ids)
+
+		if not is_numset:
+			valtype = 'group'
+			out = {}
+			for xmlpart in xmlin: paramdetect(pathd+[xmlin.tag], xmlin, xmlpart, dictdata)
+		else:
+			valtype = 'numset'
+			out = {}
+			for xmlpart in xmlin: 
+				Id = int(xmlpart.get('Id'))
 				attribdata = xmlpart.attrib.copy()
 				del attribdata['Id']
-				numset[int(Id)] = [xmlpart.tag, [iname, ivaltype, iout], attribdata]
-			else: is_numset = False
+				insideo = {}
+				paramdetect([], xmlin, xmlpart, insideo)
+				out[Id] = [insideo, xmlin.tag, attribdata]
 
-		if is_numset:
-			valtype = 'numset'
-			out = numset
-		else:
-			valtype = 'group'
-			out = groupdata
-
-	#if valtype != 'group': print(valtype, '|', pathd, '|', xmlin.tag)
-
-	return xmlin.tag, valtype, out
+	if valtype != 'group':
+		paramname = '/'.join(pathd+[xmlin.tag])
+		dictdata[paramname] = [valtype, out]
 
 def paramscan(xmltag):
-	outdata = []
+	dictdata = {}
 	for xmlpart in xmltag:
 		name = xmlpart.tag
 		if name not in excludenames:
-			pname, ptype, pout = paramdetect([], xmltag, xmlpart)
-			outdata.append([pname, ptype, pout])
-	return outdata
+			paramdetect([], xmltag, xmlpart, dictdata)
+	return dictdata
 
 def paramcreate(xmltag, params):
 	for pname, ptype, pout in params:
@@ -175,12 +175,6 @@ def paramcreate(xmltag, params):
 				xmld.attrib |= xattr
 				paramcreate(xmld, iout)
 		if ptype == 'sampleref': pout.write(xmltag)
-
-def get_paramdata(params, pathd, outdata):
-	for param in params:
-		if param[1] == 'group': get_paramdata(param[2], pathd+[param[0]], outdata)
-		else: outdata.append([pathd, param])
-	return outdata
 
 class ableton_Device:
 	def __init__(self, xmltag):
@@ -205,7 +199,6 @@ class ableton_Device:
 
 	def get_paramdata(self, params, pathd, outfow):
 		return get_paramdata(params, pathd, [])
-
 
 	def write(self, xmltag):
 		x_DeviceData = ET.SubElement(xmltag, self.name)

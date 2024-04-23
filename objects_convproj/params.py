@@ -23,6 +23,10 @@ class cvpj_datavals:
     def remove(self, i_name): 
         if i_name in self.data: del self.data[i_name]
 
+    def debugtxt(self):
+        for x in self.data:
+            print(x, '|', self.data[x] )
+
 class cvpj_param:
     __slots__ = ['value','type','min','max','visual','found']
     def __init__(self, p_value, p_type):

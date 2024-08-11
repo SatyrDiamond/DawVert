@@ -26,6 +26,7 @@ class input_soundfile(plugins.base):
 			if fileextlow == 'mp3': 
 				sampleref_obj.timebase *= 320
 				sampleref_obj.dur_samples *= 320
+			sampleref_obj.fileformat = sampleref_obj.fileref.extension.lower()
 			return True
 
 		return valid

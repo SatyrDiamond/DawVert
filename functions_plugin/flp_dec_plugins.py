@@ -463,10 +463,14 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 		plugin_obj.params.add('mod_y', fl_plugstr.int32(), 'int')
 		plugin_obj.datavals.add('layering', fl_plugstr.int32())
 		plugin_obj.datavals.add('crossfade', fl_plugstr.int32())
-		fl_plugstr.skip(4*13)
+		fl_plugstr.skip(4*11 + 1)
+		data_exists = fl_plugstr.int8()
+		fl_plugstr.skip(2)
+		rawdata = fl_plugstr.raw(4)
 
-		slicex_filename = fl_plugstr.c_string__int8()
-		wavedata = fl_plugstr.c_raw__int32(False)
+		slicex_filename = get_sample(fl_plugstr.c_string__int8())
+		wavedata_size = fl_plugstr.int32()
+		wavedata = fl_plugstr.raw(wavedata_size) if data_exists else b''
 
 		plugin_obj.type_set('sampler', 'slicer')
 
@@ -481,15 +485,22 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 			sampleref_obj = convproj_obj.add_sampleref(slicex_filename, slicex_filename)
 			sre_obj.from_sampleref_obj(sampleref_obj, slicex_filename)
 
-		wave_obj = audio_wav.wav_main()
-		wave_obj.read_bytes(wavedata)
+		sampleref_obj.find_relative('extracted')
+		sampleref_obj.find_relative('projectfile')
+		sampleref_obj.find_relative('factorysamples')
 
-		sre_obj.slicer_start_key = 0
+		if not wavedata: 
+			if sampleref_obj.fileref.exists(None):
+				f = open(sre_obj.get_filepath(convproj_obj, 'win'))
+				wavedata = f.read()
 
-		for num, enudata in enumerate(wave_obj.markers.items()):
-			_, marker_obj = enudata
-			slice_obj = sre_obj.add_slice()
-			slice_obj.start = marker_obj.sampleoffset
+		if wavedata:
+			wave_obj = audio_wav.wav_main()
+			wave_obj.read_bytes(wavedata)
+			for num, enudata in enumerate(wave_obj.markers.items()):
+				_, marker_obj = enudata
+				slice_obj = sre_obj.add_slice()
+				slice_obj.start = marker_obj.sampleoffset
 
 	else:
 		plugin_obj.type_set('native-flstudio', flplugin.name)

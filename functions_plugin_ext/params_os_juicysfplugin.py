@@ -7,6 +7,7 @@ from functions_plugin_ext import data_vc2xml
 
 class juicysfplugin_data:
 	def __init__(self):
+		self.program = 0
 		self.jsfp_xml = ET.Element("MYPLUGINSETTINGS")
 		self.jsfp_params = ET.SubElement(self.jsfp_xml, "params")
 		self.jsfp_uiState = ET.SubElement(self.jsfp_xml, "uiState")
@@ -26,6 +27,7 @@ class juicysfplugin_data:
 	def set_bankpatch(self, bank, patch, filename):
 		self.jsfp_params.set('bank', str(bank/128))
 		self.jsfp_params.set('preset', str(patch/128))
+		self.program = patch
 		self.jsfp_soundFont.set('path', filename)
 
 	def set_param(self, name, value):
@@ -36,3 +38,4 @@ class juicysfplugin_data:
 
 	def to_cvpj_vst2(self, convproj_obj, plugin_obj):
 		plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'any', 1249076848, 'chunk', data_vc2xml.make(self.jsfp_xml), None)
+		plugin_obj.move_prog(self.program)

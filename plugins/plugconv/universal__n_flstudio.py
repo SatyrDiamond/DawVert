@@ -10,7 +10,7 @@ from functions import extpluglog
 
 def oldcalc_filterfreq_1(value):
 	filter_cutoff = value**0.6
-	filter_cutoff = 10 * 1600**(value)
+	filter_cutoff = 10 * 1600**(filter_cutoff)
 	return filter_cutoff
 
 class plugconv(plugins.base):
@@ -238,7 +238,7 @@ class plugconv(plugins.base):
 			plugin_obj.filter.on = True
 			plugin_obj.filter.type.set(['low_pass','band_pass','high_pass','notch','low_shelf','peak','high_shelf'][int(filter_type/0.125)-1], None)
 			plugin_obj.filter.gain = filter_gain*18
-			plugin_obj.filter.freq = oldcalc_filterfreq_1(filter_cutoff)
+			plugin_obj.filter.freq = oldcalc_filterfreq_1(min(filter_cutoff, 1024))
 			plugin_obj.filter.q = filter_resonance**0.8
 			return 1
 

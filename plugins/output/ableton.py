@@ -699,6 +699,7 @@ class output_ableton(plugins.base):
 						sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, True)
 						paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
 						paramkeys['Globals/PlaybackMode'] = ableton_parampart.as_value('PlaybackMode', 2)
+						paramkeys['VolumeAndPan/OneShotEnvelope/SustainMode'] = ableton_parampart.as_param('SustainMode', 'int', int(samplepart_obj.trigger != 'oneshot'))
 						als_device.params.import_keys(paramkeys)
 
 				if als_device_pitch: als_device_pitch.params.import_keys(pitchparamkeys)

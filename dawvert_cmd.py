@@ -118,6 +118,11 @@ else:
 	dawvert_core.config.path_samples_generated += file_name + '/'
 	dawvert_core.config.path_samples_converted += file_name + '/'
 
+os.makedirs(dawvert_core.config.path_samples_extracted, exist_ok=True)
+os.makedirs(dawvert_core.config.path_samples_downloaded, exist_ok=True)
+os.makedirs(dawvert_core.config.path_samples_generated, exist_ok=True)
+os.makedirs(dawvert_core.config.path_samples_converted, exist_ok=True)
+
 cvpj_fileref.add_searchpath_file('extracted', dawvert_core.config.path_samples_extracted)
 cvpj_fileref.add_searchpath_file('downloaded', dawvert_core.config.path_samples_downloaded)
 cvpj_fileref.add_searchpath_file('generated', dawvert_core.config.path_samples_generated)

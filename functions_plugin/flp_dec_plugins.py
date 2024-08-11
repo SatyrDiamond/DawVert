@@ -276,7 +276,6 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 			sre_obj.from_sampleref_obj(sampleref_obj, slicer_filename)
 
 		sre_obj.stretch.set_rate_speed(slicer_bpm, 1/stretch_multiplier, False)
-		sre_obj.trigger = 'oneshot'
 		sre_obj.pitch = slicer_pitch/100
 
 		slicer_numslices = fl_plugstr.uint32()

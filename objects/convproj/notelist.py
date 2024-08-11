@@ -280,6 +280,17 @@ class notelist_data:
 		self.num_notes = nonzero
 		self.cursor = nonzero-1
 
+	def extra_to_noteenv(self, nl_obj):
+		extra_d = self.assoc_extra_get()
+		auto_d = self.assoc_auto_get()
+		if extra_d != None and auto_d == None:
+			auto_d = self.assoc_auto_set()
+			auto_d['pitch'] = autopoints.cvpj_autopoints(nl_obj.time_ppq, nl_obj.time_float, 'float')
+			if 'finepitch' in extra_d:
+				autopoint = auto_d['pitch'].add_point()
+				autopoint.pos = 0
+				autopoint.value = extra_d['finepitch']/100
+
 	def notemod_conv(self, nl_obj):
 		note = self.nl[self.cursor]
 		if note['is_auto'] or note['is_slide']:
@@ -672,6 +683,10 @@ class cvpj_notelist:
 	def notemod_conv(self):
 		if verbose: print('[notelist] notemod_conv')
 		for note in self.nld: self.nld.notemod_conv(self)
+
+	def extra_to_noteenv(self):
+		if verbose: print('[notelist] extra_to_noteenv')
+		for note in self.nld: self.nld.extra_to_noteenv(self)
 
 	def merge(self, i_nl, offset):
 		if verbose: print('[notelist] merge')

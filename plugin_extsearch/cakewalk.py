@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import winreg
@@ -7,7 +7,7 @@ import plugin_extsearch
 import os
 from os.path import exists
 import xml.etree.ElementTree as ET
-from objects import manager_extplug
+from objects import globalstore
 import uuid
 
 w_regkey_cakewalk = 'SOFTWARE\\Cakewalk Music Software\\Cakewalk\\Cakewalk VST X64\\Inventory'
@@ -22,15 +22,18 @@ def reg_get(name, regpath):
 		return None
 
 def reg_list(winregpath):
-	winregobj = winreg.OpenKey(winreg.HKEY_CURRENT_USER, winregpath)
 	pathlist = []
-	i = 0
-	while True:
-		try:
-			keypath = winreg.EnumKey(winregobj, i)
-			pathlist.append(w_regkey_cakewalk + '\\' + keypath)
-			i += 1
-		except WindowsError: break
+	try: 
+		winregobj = winreg.OpenKey(winreg.HKEY_CURRENT_USER, winregpath)
+		i = 0
+		while True:
+			try:
+				keypath = winreg.EnumKey(winregobj, i)
+				pathlist.append(w_regkey_cakewalk + '\\' + keypath)
+				i += 1
+			except WindowsError: break
+	except: 
+		pass
 	return pathlist
 
 def reg_checkexist(winregpath):
@@ -71,33 +74,31 @@ class plugsearch(plugin_extsearch.base):
 					vst_numParams = winreg.QueryValueEx(registry_key, 'numParams')[0]
 
 					if vst_is_v2 == 1:
-						pluginfo_obj = manager_extplug.pluginfo()
-						pluginfo_obj.id = vst_uniqueId
-						pluginfo_obj.name = vst_name
-						if vst_is64 == 1: pluginfo_obj.path_64bit = vst_path
-						else: pluginfo_obj.path_32bit = vst_path
-						pluginfo_obj.type = 'synth' if vst_isSynth else 'effect'
-						if vst_Vendor != None: pluginfo_obj.creator = vst_Vendor
-						pluginfo_obj.audio_num_inputs = vst_numInputs
-						pluginfo_obj.audio_num_outputs = vst_numOutputs
-						pluginfo_obj.num_params = vst_numParams
-						manager_extplug.vst2_add(pluginfo_obj, 'win')
+						with globalstore.extplug.add('vst2', 'win') as pluginfo_obj:
+							pluginfo_obj.id = vst_uniqueId
+							pluginfo_obj.name = vst_name
+							if vst_is64 == 1: pluginfo_obj.path_64bit = vst_path
+							else: pluginfo_obj.path_32bit = vst_path
+							pluginfo_obj.type = 'synth' if vst_isSynth else 'effect'
+							if vst_Vendor != None: pluginfo_obj.creator = vst_Vendor
+							pluginfo_obj.audio_num_inputs = vst_numInputs
+							pluginfo_obj.audio_num_outputs = vst_numOutputs
+							pluginfo_obj.num_params = vst_numParams
 						vst2count += 1
 
 					if vst_is_v3 == 1:
 						vst_clsidPlug = uuid.UUID(winreg.QueryValueEx(registry_key, 'clsidPlug')[0]).hex.upper()
 						vst_Subcategories = winreg.QueryValueEx(registry_key, 'Subcategories')[0]
-						pluginfo_obj = manager_extplug.pluginfo()
-						pluginfo_obj.name = vst_name
-						pluginfo_obj.id = vst_clsidPlug
-						if vst_is64 == 1: pluginfo_obj.path_64bit = vst_path
-						else: pluginfo_obj.path_32bit = vst_path
-						if vst_Subcategories != None: pluginfo_obj.category = vst_Subcategories
-						if vst_Vendor != None: pluginfo_obj.creator = vst_Vendor
-						pluginfo_obj.audio_num_inputs = vst_numInputs
-						pluginfo_obj.audio_num_outputs = vst_numOutputs
-						pluginfo_obj.num_params = vst_numParams
-						manager_extplug.vst3_add(pluginfo_obj, 'win')
+						with globalstore.extplug.add('vst3', 'win') as pluginfo_obj:
+							pluginfo_obj.name = vst_name
+							pluginfo_obj.id = vst_clsidPlug
+							if vst_is64 == 1: pluginfo_obj.path_64bit = vst_path
+							else: pluginfo_obj.path_32bit = vst_path
+							if vst_Subcategories != None: pluginfo_obj.category = vst_Subcategories
+							if vst_Vendor != None: pluginfo_obj.creator = vst_Vendor
+							pluginfo_obj.audio_num_inputs = vst_numInputs
+							pluginfo_obj.audio_num_outputs = vst_numOutputs
+							pluginfo_obj.num_params = vst_numParams
 						vst3count += 1
 			print('[cakewalk] VST2: '+str(vst2count)+', VST3: '+str(vst3count))
 			return True

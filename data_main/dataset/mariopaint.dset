@@ -1,0 +1,403 @@
+{
+    "inst": {
+        "objects": {
+            "boat": {
+                "visual": {
+                    "color": [
+                        0.96,
+                        0.0,
+                        0.01
+                    ],
+                    "name": "Hat"
+                }
+            },
+            "bobomb": {
+                "midi": {
+                    "active": true,
+                    "patch": 112
+                },
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "name": "Bell"
+                }
+            },
+            "bulletbill": {
+                "midi": {
+                    "active": true,
+                    "patch": 47
+                },
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "name": "Timpani"
+                }
+            },
+            "car": {
+                "midi": {
+                    "active": true,
+                    "patch": 16
+                },
+                "visual": {
+                    "color": [
+                        0.88,
+                        0.53,
+                        0.17
+                    ],
+                    "name": "Organ"
+                }
+            },
+            "cat": {
+                "visual": {
+                    "color": [
+                        0.98,
+                        0.75,
+                        0.51
+                    ],
+                    "name": "Meow"
+                }
+            },
+            "coin": {
+                "midi": {
+                    "active": true,
+                    "patch": 1
+                },
+                "visual": {
+                    "color": [
+                        0.93,
+                        0.75,
+                        0.2
+                    ],
+                    "name": "Piano 2"
+                }
+            },
+            "dog": {
+                "visual": {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "name": "Bark"
+                }
+            },
+            "egg": {
+                "midi": {
+                    "active": true,
+                    "patch": 45
+                },
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.97,
+                        0.0
+                    ],
+                    "name": "Pizzicato strings"
+                }
+            },
+            "face": {
+                "visual": {
+                    "color": [
+                        0.98,
+                        0.76,
+                        0.51
+                    ],
+                    "name": "Face"
+                }
+            },
+            "feather": {
+                "midi": {
+                    "active": true,
+                    "patch": 73
+                },
+                "visual": {
+                    "color": [
+                        0.97,
+                        0.47,
+                        0.0
+                    ],
+                    "name": "Flute"
+                }
+            },
+            "flower": {
+                "midi": {
+                    "active": true,
+                    "patch": 56
+                },
+                "visual": {
+                    "color": [
+                        0.96,
+                        0.5,
+                        0.0
+                    ],
+                    "name": "Trumpet"
+                }
+            },
+            "fruit": {
+                "midi": {
+                    "active": true,
+                    "patch": 12
+                },
+                "visual": {
+                    "color": [
+                        0.97,
+                        0.0,
+                        0.0
+                    ],
+                    "name": "Marimba"
+                }
+            },
+            "gameboy": {
+                "midi": {
+                    "active": true,
+                    "patch": 80
+                },
+                "visual": {
+                    "color": [
+                        0.76,
+                        0.76,
+                        0.76
+                    ],
+                    "name": "Square Wave"
+                }
+            },
+            "ghost": {
+                "midi": {
+                    "active": true,
+                    "patch": 46
+                },
+                "visual": {
+                    "color": [
+                        0.57,
+                        0.96,
+                        0.99
+                    ],
+                    "name": "Harp"
+                }
+            },
+            "gnome": {
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.5,
+                        0.25
+                    ],
+                    "name": "Clown Horn"
+                }
+            },
+            "goomba": {
+                "midi": {
+                    "active": true,
+                    "patch": 70
+                },
+                "visual": {
+                    "color": [
+                        0.75,
+                        0.25,
+                        0.13
+                    ],
+                    "name": "Bassoon"
+                }
+            },
+            "heart": {
+                "midi": {
+                    "active": true,
+                    "patch": 32
+                },
+                "visual": {
+                    "color": [
+                        0.96,
+                        0.0,
+                        0.0
+                    ],
+                    "name": "Bass Guitar"
+                }
+            },
+            "luigi": {
+                "midi": {
+                    "active": true,
+                    "patch": 114
+                },
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.97,
+                        0.48
+                    ],
+                    "name": "Steel Drum"
+                }
+            },
+            "mario": {
+                "midi": {
+                    "active": true
+                },
+                "visual": {
+                    "color": [
+                        0.92,
+                        0.77,
+                        0.56
+                    ],
+                    "name": "Piano"
+                }
+            },
+            "moon": {
+                "midi": {
+                    "active": true,
+                    "patch": 81
+                },
+                "visual": {
+                    "color": [
+                        0.97,
+                        0.97,
+                        0.0
+                    ],
+                    "name": "Sawtooth Wave"
+                }
+            },
+            "oneup": {
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.97,
+                        0.0
+                    ],
+                    "name": "Hi-Hat"
+                }
+            },
+            "peach": {
+                "midi": {
+                    "active": true,
+                    "patch": 40
+                },
+                "visual": {
+                    "color": [
+                        0.97,
+                        0.31,
+                        0.56
+                    ],
+                    "name": "Violin"
+                }
+            },
+            "pig": {
+                "visual": {
+                    "color": [
+                        0.96,
+                        0.75,
+                        0.52
+                    ],
+                    "name": "Oink"
+                }
+            },
+            "plane": {
+                "midi": {
+                    "active": true,
+                    "patch": 24
+                },
+                "visual": {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "name": "Acoustic Guitar"
+                }
+            },
+            "plant": {
+                "midi": {
+                    "active": true,
+                    "patch": 30
+                },
+                "visual": {
+                    "color": [
+                        0.73,
+                        0.0,
+                        0.01
+                    ],
+                    "name": "Distorted Guitar"
+                }
+            },
+            "shyguy": {
+                "midi": {
+                    "active": true,
+                    "patch": 48
+                },
+                "visual": {
+                    "color": [
+                        0.64,
+                        0.0,
+                        0.01
+                    ],
+                    "name": "String"
+                }
+            },
+            "spiny": {
+                "midi": {
+                    "active": true,
+                    "patch": 21
+                },
+                "visual": {
+                    "color": [
+                        0.97,
+                        0.5,
+                        0.0
+                    ],
+                    "name": "Accordion"
+                }
+            },
+            "star": {
+                "midi": {
+                    "active": true,
+                    "patch": 13
+                },
+                "visual": {
+                    "color": [
+                        0.97,
+                        0.98,
+                        0.0
+                    ],
+                    "name": "Xylophone"
+                }
+            },
+            "swan": {
+                "midi": {
+                    "active": true,
+                    "patch": 45
+                },
+                "visual": {
+                    "color": [
+                        0.75,
+                        0.75,
+                        0.76
+                    ],
+                    "name": "String Hit"
+                }
+            },
+            "toad": {
+                "visual": {
+                    "color": [
+                        0.98,
+                        0.0,
+                        0.0
+                    ],
+                    "name": "Tom"
+                }
+            },
+            "yoshi": {
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.98,
+                        0.02
+                    ],
+                    "name": "SMW Yoshi"
+                }
+            }
+        }
+    }
+}

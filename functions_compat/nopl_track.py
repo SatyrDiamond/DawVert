@@ -1,42 +1,41 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions_compat import timesigblocks
-from functions_compat import split_single_notelist
-from objects_convproj import placements
+from objects.convproj import placements
 from objects import notelist_splitter
-from objects import findrepeats
 
-def process(convproj_obj, in__track_nopl, out__track_nopl):
+def process(convproj_obj, in__track_nopl, out__track_nopl, out_type):
 
-    if in__track_nopl == True and out__track_nopl == False:
-        if convproj_obj.type in ['r']: 
-            splitpoints, splitts, timesigposs = timesigblocks.create_points_cut(convproj_obj, 0)
+	if in__track_nopl == True and out__track_nopl == False:
 
-            if 'do_singlenotelistcut' in convproj_obj.do_actions:
+		if convproj_obj.type in (['r'] if 'r' in out_type else ['r', 'rm']): 
+			timesigblocks_obj = notelist_splitter.timesigblocks()
+			timesigblocks_obj.create_points_cut(convproj_obj)
 
-                npsplit = notelist_splitter.cvpj_notelist_splitter(splitpoints, splitts, convproj_obj.time_ppq, 0)
+			if 'do_singlenotelistcut' in convproj_obj.do_actions:
+				npsplit = notelist_splitter.cvpj_notelist_splitter(timesigblocks_obj, convproj_obj.time_ppq, 1)
+				for cvpj_trackid, track_obj in convproj_obj.iter_track(): 
+					npsplit.add_nl(track_obj.placements)
+				npsplit.process()
+			else:
+				for cvpj_trackid, track_obj in convproj_obj.iter_track(): 
+					placement_obj = track_obj.placements.add_notes()
+					placement_obj.notelist = track_obj.placements.notelist.__copy__()
+					placement_obj.duration = track_obj.placements.notelist.get_dur()
+					track_obj.placements.notelist.clear()
+				return True
+		else: return False
 
-                for cvpj_trackid, track_obj in convproj_obj.iter_track():
-                    npsplit.add_nl(track_obj.placements)
+	elif in__track_nopl == False and out__track_nopl == True:
+		if convproj_obj.type in ['r']: 
+			for cvpj_trackid, track_obj in convproj_obj.iter_track():
+				notes = []
+				for notespl_obj in track_obj.placements.pl_notes:
+					track_obj.placements.notelist.merge(notespl_obj.notelist, notespl_obj.position)
 
-                npsplit.process()
+				track_obj.placements.pl_notes.clear()
 
-                return True
-        else: return False
+			return True
 
-    elif in__track_nopl == False and out__track_nopl == True:
-        if convproj_obj.type in ['r']: 
-            for cvpj_trackid, track_obj in convproj_obj.iter_track():
-                notes = []
-                for notespl_obj in track_obj.placements.pl_notes:
-                    for n in notespl_obj.notelist.nl:
-                        n[0] += notespl_obj.position
-                        track_obj.placements.notelist.nl += [n]
-
-                track_obj.placements.pl_notes.clear()
-
-            return True
-
-    else: return False
-    
+	else: return False
+	

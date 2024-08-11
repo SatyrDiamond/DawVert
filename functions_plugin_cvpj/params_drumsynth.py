@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 def env_ds_to_cvpj(plugin_obj, env_name, dsenv):
 	autopoints_obj = plugin_obj.env_points_add(env_name, 44100, False, 'int')

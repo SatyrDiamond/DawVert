@@ -1,15 +1,18 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
 import copy
+import logging
+
+logger_project = logging.getLogger('project')
 
 def index_nliid(singletrack_pl, trackid):
     for placement in singletrack_pl:
         placement['fromindex'] = trackid+'_'+placement['fromindex']
 
 def convert(convproj_obj):
-    print('[song-convert] Converting from RegularIndexed > MultipleIndexed')
+    logger_project.info('ProjType Convert: RegularIndexed > MultipleIndexed')
 
 
     plnum = -1
@@ -28,14 +31,13 @@ def convert(convproj_obj):
         starttxt = trackid+'_'
 
         for nle_id, nle_obj in track_obj.notelist_index.items():
-            for n in nle_obj.notelist.nl: n[4] = trackid
-            nle_obj.notelist.used_inst = [trackid]
+            nle_obj.notelist.inst_all(trackid)
             convproj_obj.notelist_index[starttxt+nle_id] = nle_obj
 
         track_obj.notelist_index = {}
 
         if not track_obj.is_laned: 
-            print('[song-convert] ri2mi: inst non-laned:', trackid)
+            logger_project.info('ProjType Convert: ri2mi: inst non-laned:', trackid)
             plnum += 1
             playlist_obj = convproj_obj.add_playlist(plnum, track_obj.uses_placements, track_obj.is_indexed)
             playlist_obj.visual = copy.deepcopy(track_obj.visual)
@@ -44,7 +46,7 @@ def convert(convproj_obj):
             for placement_obj in playlist_obj.placements.pl_notes_indexed: 
                 placement_obj.fromindex = starttxt+placement_obj.fromindex
         else:
-            print('[song-convert] ri2mi: laned:', trackid)
+            logger_project.info('ProjType Convert: ri2mi: laned:', trackid)
             for lane_id, lane_obj in track_obj.lanes.items():
                 plnum += 1
                 for placement_obj in lane_obj.placements.pl_notes_indexed: 

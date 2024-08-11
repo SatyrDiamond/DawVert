@@ -1,7 +1,7 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-def process(convproj_obj, in_compat, out_compat):
+def process(convproj_obj, in_compat, out_compat, out_type):
 
     convproj_obj.automation.convert(
         'pl_points' in out_compat, 

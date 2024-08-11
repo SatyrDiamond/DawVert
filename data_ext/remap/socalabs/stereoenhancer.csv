@@ -1,0 +1,5 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+widthlp,widthLP,0.5,0.0,1.0,Width,0,Width,0,Width
+freqhpfader,freqHPFader,0.5,0.0,1.0,Freq HP,1,Freq HP,1,Freq HP
+widthhp,widthHP,0.0,0.0,1.0,Width HP,2,Width HP,2,Width HP

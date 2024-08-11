@@ -1,0 +1,95 @@
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+import plugins
+import lxml.etree as ET
+from objects import globalstore
+from functions import data_xml
+from functions_plugin_ext import data_vc2xml
+from functions_plugin_ext import plugin_vst2
+
+class extplugin(plugins.base):
+	def __init__(self): 
+		self.plugin_data = None
+		self.plugin_type = None
+
+	def is_dawvert_plugin(self): return 'extplugin'
+	def getshortname(self): return 'magical8bitplug2'
+	def getextpluginfo(self, plugconv_obj): 
+		plugconv_obj.ext_formats = ['vst2']
+		plugconv_obj.type = 'yokemura'
+		plugconv_obj.subtype = 'magical8bitplug2'
+
+	def check_exists(inplugname):
+		outlist = []
+		if plugin_vst2.check_exists('id', 1937337962): outlist.append('vst2')
+		return outlist
+
+	def check_plug(plugin_obj): 
+		if plugin_obj.check_wildmatch('vst2', None):
+			if plugin_obj.datavals.match('fourid', 1937337962): return 'vst2'
+		return None
+
+	def decode_data(self, plugintype, plugin_obj):
+		if plugintype == 'vst2':
+			chunkdata = plugin_obj.rawdata_get('chunk')
+			self.plugin_data = data_vc2xml.get(chunkdata)
+			self.plugin_type = 'vst2'
+
+	def encode_data(self, plugintype, convproj_obj, plugin_obj, extplat):
+		if not (self.plugin_data is None):
+			if plugintype == 'vst2':
+				chunkdata = data_vc2xml.make(self.plugin_data)
+				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', extplat, 1937337962, 'chunk', chunkdata, None)
+
+	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
+		globalstore.paramremap.load('magical8bitplug2', '.\\data_ext\\remap\\magical8bitplug2.csv')
+		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
+
+		if self.plugin_data:
+			paramsxml = data_xml.find_first(self.plugin_data, 'Params')
+			if paramsxml:
+				params = {}
+				for xmlpart in paramsxml:
+					param_id = xmlpart.get('id')
+					param_value = float(xmlpart.get('value'))
+					params[param_id] = param_value
+
+				for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('magical8bitplug2', plugintype):
+					if extparamid in params: valuepack.value = params[extparamid]
+				plugin_obj.replace('yokemura', 'magical8bitplug2')
+				manu_obj.remap_ext_to_cvpj__post('magical8bitplug2', plugintype)
+			volumeEnv = data_xml.find_first(self.plugin_data, 'volumeEnv')
+			pitchEnv = data_xml.find_first(self.plugin_data, 'pitchEnv')
+			dutyEnv = data_xml.find_first(self.plugin_data, 'dutyEnv')
+
+			for n, v in [["volumeEnv", volumeEnv], ["pitchEnv", pitchEnv], ["dutyEnv", dutyEnv]]:
+				if not (v is None): 
+					if v.text:
+						outval = [int(x) for x in v.text.split(',')]
+						plugin_obj.array_add(n, outval)
+				return True
+		return False
+
+	def params_to_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
+		globalstore.paramremap.load('magical8bitplug2', '.\\data_ext\\remap\\magical8bitplug2.csv')
+		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
+		params = {}
+		xml_m8p_root = ET.Element("root")
+		xml_m8p_params = ET.SubElement(xml_m8p_root, "Params")
+		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre('magical8bitplug2', plugintype):
+			temp_xml = ET.SubElement(xml_m8p_params, 'PARAM')
+			temp_xml.set('id', str(extparamid))
+			temp_xml.set('value', str(valuepack))
+		xml_m8p_dutyEnv = ET.SubElement(xml_m8p_root, "dutyEnv")
+		xml_m8p_pitchEnv = ET.SubElement(xml_m8p_root, "pitchEnv")
+		xml_m8p_volumeEnv = ET.SubElement(xml_m8p_root, "volumeEnv")
+
+		plugin_obj.replace('vst2', None)
+		manu_obj.remap_cvpj_to_ext__post('magical8bitplug2', plugintype)
+		
+		for n, x in [["volumeEnv", xml_m8p_volumeEnv], ["pitchEnv", xml_m8p_pitchEnv], ["dutyEnv", xml_m8p_dutyEnv]]:
+			outdata = plugin_obj.array_get_vl(n)
+			x.text = ','.join([str(p) for p in outdata])
+		self.plugin_data = xml_m8p_root
+		return True

@@ -694,6 +694,7 @@ class input_lmms(plugins.base):
 		dawinfo_obj.auto_types = ['pl_points']
 		dawinfo_obj.track_lanes = True
 		dawinfo_obj.plugin_included = ['sampler:single','vst2','fm:opl2','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay','ladspa']
+		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
 
 	def supported_autodetect(self): return True
 	def detect(self, input_file):

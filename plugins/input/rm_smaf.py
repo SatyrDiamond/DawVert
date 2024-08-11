@@ -94,10 +94,6 @@ class input_mmf(plugins.base):
 				for soundnum, hzsnd in track.audio.items():
 					hz, sounddata = hzsnd
 					strnum = str(soundnum).zfill(2)
-					#if not os.path.exists(samplefolder): os.makedirs(samplefolder)
-					#snd_path = samplefolder + 'snd_' + strnum + '.raw'
-					#snd_fileobj = open(snd_path, 'wb')
-					#snd_fileobj.write(sounddata)
 
 					wav_path = samplefolder + 'snd_' + strnum + '.wav'
 					audio_obj = audio_data.audio_obj()

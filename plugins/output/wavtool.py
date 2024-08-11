@@ -13,7 +13,6 @@ import av
 from functions import colors
 from functions import xtramath
 from objects.file_proj import proj_wavtool
-from functions_plugin_ext import plugin_vst2
 
 def addsample(zip_wt, filepath, alredyexists): 
 	global audio_id

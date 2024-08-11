@@ -1,0 +1,35 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+upper1,upper1,-8.0,-8.0,0.0,Upper Draw Bar 1,0,Upper Draw Bar 1,0,Upper Draw Bar 1
+upper2,upper2,-8.0,-8.0,0.0,Upper Draw Bar 2,1,Upper Draw Bar 2,1,Upper Draw Bar 2
+upper3,upper3,-6.0,-8.0,0.0,Upper Draw Bar 3,2,Upper Draw Bar 3,2,Upper Draw Bar 3
+upper4,upper4,0.0,-8.0,0.0,Upper Draw Bar 4,3,Upper Draw Bar 4,3,Upper Draw Bar 4
+upper5,upper5,0.0,-8.0,0.0,Upper Draw Bar 5,4,Upper Draw Bar 5,4,Upper Draw Bar 5
+upper6,upper6,0.0,-8.0,0.0,Upper Draw Bar 6,5,Upper Draw Bar 6,5,Upper Draw Bar 6
+upper7,upper7,0.0,-8.0,0.0,Upper Draw Bar 7,6,Upper Draw Bar 7,6,Upper Draw Bar 7
+upper8,upper8,0.0,-8.0,0.0,Upper Draw Bar 8,7,Upper Draw Bar 8,7,Upper Draw Bar 8
+upper9,upper9,0.0,-8.0,0.0,Upper Draw Bar 9,8,Upper Draw Bar 9,8,Upper Draw Bar 9
+lower1,lower1,-8.0,-8.0,0.0,Lower Draw Bar 1,9,Lower Draw Bar 1,9,Lower Draw Bar 1
+lower2,lower2,-8.0,-8.0,0.0,Lower Draw Bar 2,10,Lower Draw Bar 2,10,Lower Draw Bar 2
+lower3,lower3,-6.0,-8.0,0.0,Lower Draw Bar 3,11,Lower Draw Bar 3,11,Lower Draw Bar 3
+lower4,lower4,0.0,-8.0,0.0,Lower Draw Bar 4,12,Lower Draw Bar 4,12,Lower Draw Bar 4
+lower5,lower5,0.0,-8.0,0.0,Lower Draw Bar 5,13,Lower Draw Bar 5,13,Lower Draw Bar 5
+lower6,lower6,0.0,-8.0,0.0,Lower Draw Bar 6,14,Lower Draw Bar 6,14,Lower Draw Bar 6
+lower7,lower7,0.0,-8.0,0.0,Lower Draw Bar 7,15,Lower Draw Bar 7,15,Lower Draw Bar 7
+lower8,lower8,0.0,-8.0,0.0,Lower Draw Bar 8,16,Lower Draw Bar 8,16,Lower Draw Bar 8
+lower9,lower9,0.0,-8.0,0.0,Lower Draw Bar 9,17,Lower Draw Bar 9,17,Lower Draw Bar 9
+pedal1,pedal1,-8.0,-8.0,0.0,Pedal Draw Bar 1,18,Pedal Draw Bar 1,18,Pedal Draw Bar 1
+pedal2,pedal2,-8.0,-8.0,0.0,Pedal Draw Bar 2,19,Pedal Draw Bar 2,19,Pedal Draw Bar 2
+vibratoupper,vibratoUpper,0.0,0.0,1.0,Vibrato Upper,20,Vibrato Upper,20,Vibrato Upper
+vibratolower,vibratoLower,0.0,0.0,1.0,Vibrato Lower,21,Vibrato Lower,21,Vibrato Lower
+vibratochorus,vibratoChorus,0.0,0.0,5.0,Vib & Chrs,22,Vib & Chrs,22,Vib & Chrs
+leslie,leslie,0.0,0.0,2.0,Leslie,23,Leslie,23,Leslie
+prec,prec,1.0,0.0,2.0,Perc,24,Perc,24,Perc
+precvol,precVol,0.0,0.0,2.0,Perc Volume,25,Perc Volume,25,Perc Volume
+precdecay,precDecay,0.0,0.0,2.0,Prec Decay,26,Prec Decay,26,Prec Decay
+precharmsel,precHarmSel,0.0,0.0,2.0,Perc Harm Sel,27,Perc Harm Sel,27,Perc Harm Sel
+reverb,reverb,0.2000000029802322,0.0,1.0,Reverb,28,Reverb,28,Reverb
+volume,volume,1.0,0.0,1.0,Volume,29,Volume,29,Volume
+overdrive,overdrive,0.0,0.0,1.0,Overdrive,30,Overdrive,30,Overdrive
+character,character,0.0,0.0,1.0,Character,31,Character,31,Character
+split,split,0.0,0.0,1.0,Split Keys,32,Split Keys,32,Split Keys

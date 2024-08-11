@@ -1,0 +1,27 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+ol1,OL1,1.0,0.0,1.0,Pulse 1 OL,0,Pulse 1 OL,0,Pulse 1 OL
+or1,OR1,1.0,0.0,1.0,Pulse 1 OR,1,Pulse 1 OR,1,Pulse 1 OR
+duty1,duty1,0.0,0.0,3.0,Pulse 1 Duty,2,Pulse 1 Duty,2,Pulse 1 Duty
+a1,A1,1.0,0.0,7.0,Pulse 1 A,3,Pulse 1 A,3,Pulse 1 A
+r1,R1,1.0,0.0,7.0,Pulse 1 R,4,Pulse 1 R,4,Pulse 1 R
+tune1,tune1,0.0,-48.0,48.0,Pulse 1 Tune,5,Pulse 1 Tune,5,Pulse 1 Tune
+fine1,fine1,0.0,-100.0,100.0,Pulse 1 Tune Fine,6,Pulse 1 Tune Fine,6,Pulse 1 Tune Fine
+sweep1,sweep1,0.0,-7.0,7.0,Pulse 1 Sweep,7,Pulse 1 Sweep,7,Pulse 1 Sweep
+shift1,shift1,0.0,0.0,7.0,Pulse 1 Shift,8,Pulse 1 Shift,8,Pulse 1 Shift
+ol2,OL2,0.0,0.0,1.0,Pulse 2 OL,9,Pulse 2 OL,9,Pulse 2 OL
+or2,OR2,0.0,0.0,1.0,Pulse 2 OR,10,Pulse 2 OR,10,Pulse 2 OR
+duty2,duty2,0.0,0.0,3.0,Pulse 2 Duty,11,Pulse 2 Duty,11,Pulse 2 Duty
+a2,A2,1.0,0.0,7.0,Pulse 2 A,12,Pulse 2 A,12,Pulse 2 A
+r2,R2,1.0,0.0,7.0,Pulse 2 R,13,Pulse 2 R,13,Pulse 2 R
+tune2,tune2,0.0,-48.0,48.0,Pulse 2 Tune,14,Pulse 2 Tune,14,Pulse 2 Tune
+fine2,fine2,0.0,-100.0,100.0,Pulse 2 Tune Fine,15,Pulse 2 Tune Fine,15,Pulse 2 Tune Fine
+oln,OLN,0.0,0.0,1.0,Noise OL,16,Noise OL,16,Noise OL
+orl,ORL,0.0,0.0,1.0,Noise OR,17,Noise OR,17,Noise OR
+an,AN,1.0,0.0,7.0,Noise A,18,Noise A,18,Noise A
+ar,AR,1.0,0.0,7.0,Noise R,19,Noise R,19,Noise R
+shiftn,shiftN,0.0,0.0,13.0,Noise Shift,20,Noise Shift,20,Noise Shift
+stepn,stepN,0.0,0.0,1.0,Noise Step,21,Noise Step,21,Noise Step
+ration,ratioN,0.0,0.0,7.0,Noise Ratio,22,Noise Ratio,22,Noise Ratio
+output,output,7.0,0.0,7.0,Output,23,Output,23,Output
+param,param,1.0,1.0,8.0,Voices,24,Voices,24,Voices

@@ -1,142 +1,173 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import xtramath
-from objects_convproj import notelist
-from objects_convproj import placements_notes
 from objects import regions
-import bisect
-import math
-import difflib
+import numpy as np
+from functions import xtramath
+from objects import core
+
+class timesigblocks:
+	def __init__(self):
+		self.splitpoints = []
+		self.splitts = []
+		self.timesigposs = []
+
+	def create_points_cut(self, convproj_obj):
+		self.timesigposs = []
+
+		mode = core.config_data.splitter_mode
+		detect_start = core.config_data.splitter_mode
+
+		ppq = convproj_obj.time_ppq
+		songduration = convproj_obj.get_dur()+ppq
+
+		timesig_num, timesig_dem = convproj_obj.timesig
+
+		if detect_start:
+			startpos = convproj_obj.loop_start if convproj_obj.loop_start else 0
+			if not startpos: startpos = convproj_obj.start_pos if convproj_obj.start_pos else 0
+			outstart = startpos if mode in [1] else 0
+		else:
+			outstart = 0
+
+		ts_parts = [x for x in convproj_obj.timesig_auto.iter()]
+
+		if not ts_parts: 
+			if mode == 1: self.endsplit(songduration, timesig_num*timesig_dem*ppq, outstart)
+			else: self.endsplit(songduration, timesig_num*ppq, outstart)
+		else:
+			if len(ts_parts)>1: 
+				self.timesig(songduration, ts_parts, ppq, timesig_num, timesig_dem, outstart, mode)
+			else: 
+				pos, timesig = ts_parts[0]
+				self.timesig(songduration, ts_parts, ppq, timesig[0], timesig[1], outstart, mode)
+
+	def timesig(self, endpos, ts, ppq, timesig_num, timesig_dem, startpos, mode):
+		if mode == 1: 
+			tcalc = timesig_num*timesig_dem
+			startd = startpos%(ppq*tcalc)
+		else: 
+			tcalc = timesig_num
+			startd = startpos%ppq
+
+		self.timesigposs = [[0, tcalc*ppq]]
+		for p, v in ts: 
+			if mode == 1: tscalc = timesig_num*timesig_dem
+			else: tscalc = timesig_num
+			self.timesigposs.append([startd+p, tscalc*ppq])
+		self.timesigposs += [[endpos, tcalc*ppq]]
+		self.process()
+
+	def endsplit(self, endpos, splitdur, startpos):
+		startd = startpos%(splitdur)
+		if startd != 0: self.timesigposs = [[0, splitdur], [startd, splitdur], [endpos, None]]
+		else: self.timesigposs = [[startd, splitdur], [endpos, None]]
+		self.process()
+
+	def process(self):
+		self.splitpoints = []
+		self.splitts = []
+
+		timesigblocks = []
+		for timesigposnum in range(len(self.timesigposs)-1):
+			timesigpos = self.timesigposs[timesigposnum]
+			timesigblocks.append([timesigpos[0], self.timesigposs[timesigposnum+1][0], timesigpos[1]])
+
+		p_splitts = {}
+		for t in timesigblocks:
+			if t[0] not in self.splitpoints: self.splitpoints.append(t[0])
+			p_splitts[t[0]] = t[2]
+			curpos = t[0]
+			for x in xtramath.gen_float_blocks(t[1]-t[0],t[2]):
+				curpos += x
+				p_splitts[curpos] = t[2]
+				if curpos not in self.splitpoints: self.splitpoints.append(curpos)
+
+		self.splitpoints = np.array(self.splitpoints, dtype=np.uint32) 
+		self.splitts = np.array([p_splitts[x] for x in self.splitpoints], dtype=np.uint32) 
+		self.splitts[0:-1] = self.splitpoints[1:]-self.splitpoints[0:-1]
+
+		if False:
+			print(self.timesigposs)
+			print(self.splitpoints)
+			#print(self.splitpoints[1:]-self.splitpoints[0:-1])
+			print(self.splitts)
+
+		if False:
+			import matplotlib.pyplot as plt
+			import matplotlib
+			matplotlib.interactive(True)
+			plt.scatter(self.splitpoints, [0 for x in self.splitpoints])
+			plt.scatter([0,songduration], [0.3,0.3])
+			plt.scatter([x[0] for x in self.timesigposs], [0.1 for x in self.timesigposs])
+			plt.scatter([1,1], [-1,1])
+			plt.show(block=True)
+
+
+splitterdt = np.dtype([
+		('start', np.float64),
+		('end', np.float64),
+		('dur', np.float64),
+		('numer', np.uint8),
+
+		('used', np.uint8),
+		('nosplit', np.uint8),
+		('overflow', np.float64),
+		('remaining', np.float64),
+		]) 
 
 class cvpj_splittrack:
-	def __init__(self, splitpos, placements_obj):
-		self.placements_obj = placements_obj
-		self.notelist = self.placements_obj.notelist
-		self.splitted_nl = [[] for _ in range(len(splitpos))]
+	def __init__(self, splitdata, i_pl):
+		self.splitdata = splitdata.copy()
+		self.i_pl = i_pl
+		self.i_notelist = self.i_pl.notelist
 
-		self.debugprint_size = 4
-		self.debugprint_hsize = 10
+	def step_overflow(self):
+		for splitd in self.splitdata:
+			splitd['used'], splitd['overflow'] = self.i_notelist.usedoverflow(splitd['start'], splitd['end'])
 
-		self.notelist.sort()
-		for n in self.notelist.iter():
-			numsplit = bisect.bisect_right(splitpos, n[0])-1
-			if self.splitted_nl[numsplit]:
-				p = self.splitted_nl[numsplit][-1]
-				cn = n[0], n[1], n[3], n[4], n[5], n[6], n[7]
-				pn = p[0], p[1], p[3], p[4], p[5], p[6], p[7]
-				if cn == pn: p[2] += n[2]
-				else: self.splitted_nl[numsplit].append(list(n))
-			else: self.splitted_nl[numsplit].append(list(n))
+		remainval = 0
+		for splitd in self.splitdata:
+			splitd['remaining'] = remainval
+			if remainval: splitd['used'] = 1
+			remainval = max(remainval-splitd['dur'], 0)
+			remainval += splitd['overflow']
+			splitd['nosplit'] = 1+(remainval!=0) if splitd['used'] else 0
 
-		self.notelist.clear()
+	def to_placements(self):
+		slicenums = [[None, None]]
 
-	def step_overflow(self, splitranges):
-		self.overflow = []
-		self.overflow_lo = []
-		self.is_merged = []
+		sregions = regions.regions(len(self.splitdata))
+		sregions.from_boollist(self.splitdata['used'])
 
-		for c, x in enumerate(splitranges):
-			spl_obj = self.splitted_nl[c]
-			if spl_obj:
-				note_end = max([x[0]+x[1] for x in spl_obj])
-				self.overflow.append(max(0, note_end-x[1]))
-			else: self.overflow.append(0)
-			self.is_merged.append(False)
-			self.overflow_lo.append(0)
+		chopnums = np.where(self.splitdata['nosplit']==1)[0]
+		for chopnum in chopnums: sregions.chop(chopnum+1)
+		sregions.sort()
 
-		for c, sn in enumerate(self.splitted_nl):
-			for x in sn:  x[0] -= splitranges[c][0]
-
-		for c, r in enumerate(splitranges):
-			reg_start, reg_end = r
-			p_spl = self.splitted_nl[c]
-			p_of = self.overflow[c]
-
-			if p_of:
-				t_of = p_of
-				t_p = c
-				while max(0, t_of):
-					r_start, r_end = splitranges[t_p]
-					t_of -= r_end-r_start
-					t_p += 1
-					self.overflow_lo[t_p] = max(0, self.overflow_lo[t_p], t_of)
-					self.is_merged[t_p] = True
-
-		self.overflow = [max(x, self.overflow_lo[c]) for c, x in enumerate(self.overflow)]
-
-	def print(self):
-		print('N'.ljust(self.debugprint_hsize)+'|', end='')
-		for x in self.splitted_nl: print((str(len(x)).rjust(self.debugprint_size) if x != -1 else self.debugprint_size*' ')+'|', end='')
-		print('')
-
-		print('OF'.ljust(self.debugprint_hsize)+'|', end='')
-		for x in self.overflow: print((str(x).rjust(self.debugprint_size) if x != -1 else self.debugprint_size*' ')+'|', end='')
-		print('')
-
-		print('MERGE'.ljust(self.debugprint_hsize)+'|', end='')
-		for x in self.is_merged: print((str(int(x)).rjust(self.debugprint_size) if x != -1 else self.debugprint_size*' ')+'|', end='')
-		print('')
-
-		print('')
-
-	def to_placements(self, splitranges):
-		pof = False
-		for c, p in enumerate(splitranges):
-			nl = self.splitted_nl[c]
-			if nl or pof:
-				if not pof:
-					endpos = p[1]-p[0]
-					placement_obj = self.placements_obj.add_notes()
-					placement_obj.position = p[0]
-					placement_obj.duration = endpos
-					placement_obj.notelist.nl = nl
-				else:
-					for n in nl: n[0] += endpos
-					placement_obj.duration += p[1]-p[0]
-					placement_obj.notelist.nl += nl
-					endpos += p[1]-p[0]
-
-			pof = self.overflow[c]
-			#print(x, x[1]-x[0], is_merged, len(spl_obj))
-		#exit()
+		for start, end, numer in [(self.splitdata['start'][s], self.splitdata['end'][e], self.splitdata['numer'][e]) for s,e in sregions]:
+			#print(start, end, numer)
+			placement_obj = self.i_pl.add_notes()
+			placement_obj.position = start
+			placement_obj.duration = end-start
+			placement_obj.notelist = self.i_notelist.new_nl_start_end(start, end)
+		self.i_notelist.clear()
 
 class cvpj_notelist_splitter:
-	def __init__(self, splitpoints, splitts, ppq, mode):
+	def __init__(self, timesigblocks_obj, ppq, mode):
 		self.data = []
 		self.ppq = ppq
 
-		self.splitts = splitts
-		self.splittsp = [int(x/self.ppq) for x in self.splitts]
-		self.numpoints = len(splitpoints)
-		self.splitranges = [[splitpoints[x], splitpoints[x+1]] for x in range(self.numpoints-1)]
-		self.splitpos = [x[0] for x in self.splitranges]
-		self.durations = [x[1]-x[0] for x in self.splitranges]
-		self.durbeat = [x/(ppq/4) for x in self.durations]
+		self.splitdata = np.zeros(len(timesigblocks_obj.splitpoints), dtype=splitterdt)
+		self.splitdata['start'] = timesigblocks_obj.splitpoints
+		self.splitdata['end'] = self.splitdata['start']+timesigblocks_obj.splitts
+		self.splitdata['dur'] = timesigblocks_obj.splitts
+		self.splitdata['numer'] = self.splitdata['dur']/self.ppq
 
-	def add_nl(self, placements_obj):
-		trkdata = cvpj_splittrack(self.splitpos, placements_obj)
-
-		#trkdata['split_nl'] = s_spl
-		#trkdata['pat_data'] = []
-		#trkdata['pat_similar'] = []
-		#trkdata['pat_num'] = []
-		#trkdata['pat_parts'] = []
-		#trkdata['pat_startend'] = []
-		#trkdata['parts'] = []
-		#trkdata['overflow'] = []
-		#trkdata['used'] = []
-
+	def add_nl(self, i_pl):
+		trkdata = cvpj_splittrack(self.splitdata.copy(), i_pl)
 		self.data.append(trkdata)
 
 	def process(self):
 		for trk_obj in self.data:
-			trk_obj.step_overflow(self.splitranges)
-			#trk_obj.print()
-			trk_obj.to_placements(self.splitranges)
-
-
-
-
-		#print(self.splitpos)
-		#print(self.splitranges)
+			trk_obj.step_overflow()
+			trk_obj.to_placements()

@@ -1,0 +1,5 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+mode,mode,0.0,0.0,1.0,Mode,0,Mode,0,Mode
+time,time,1.0,0.0,1000.0,Time,1,Time,1,Time
+samples,samples,50.0,0.0,44100.0,Samples,2,Samples,2,Samples

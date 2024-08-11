@@ -1,0 +1,11 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+mix,MIX,100.0,0.0,100.0,Mix,0,Mix,0,Mix
+predelay,PREDELAY,50.0,0.0,100.0,Pre delay,1,Pre delay,1,Pre delay
+earlymix,EARLYMIX,100.0,0.0,100.0,Early late mix,2,Early late mix,2,Early late mix
+size,SIZE,100.0,0.0,100.0,Size,3,Size,3,Size
+density,DENSITY,50.0,0.0,100.0,Density,4,Density,4,Density
+bandwidthfreq,BANDWIDTHFREQ,90.0,0.0,100.0,Bandwidth Frequency,5,Bandwidth Frequency,5,Bandwidth Frequency
+decay,DECAY,50.0,0.0,100.0,Decay,6,Decay,6,Decay
+dampingfreq,DAMPINGFREQ,90.0,0.0,100.0,Damping Frequency,7,Damping Frequency,7,Damping Frequency
+gain,GAIN,100.0,0.0,100.0,Gain,8,Gain,8,Gain

@@ -1,0 +1,6 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+gain_l,gain_l,0.0,-100.0,100.0,Left,0,Left,0,Left
+gain_s,gain_s,0.0,-100.0,100.0,Both,1,Both,1,Both
+gain_r,gain_r,0.0,-100.0,100.0,Right,2,Right,2,Right
+clip,clip,1.0,0.0,1.0,Clip,3,Clip,3,Clip

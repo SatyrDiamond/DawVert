@@ -1,0 +1,9 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+attack,attack,0.0,0.0,5.0,Attack,0,Attack,0,Attack
+hold,hold,0.0,0.0,500.0,Hold,1,Hold,1,Hold
+release,release,5.0,1.0,500.0,Release,2,Release,2,Release
+threshold,threshold,-30.0,-100.0,0.0,Threshold,3,Threshold,3,Threshold
+knee,knee,0.0,0.0,60.0,Knee,4,Knee,4,Knee
+input,input,0.0,-30.0,30.0,Input,5,Input,5,Input
+output,output,0.0,-30.0,30.0,Output,6,Output,6,Output

@@ -1,10 +1,13 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
+import logging
+
+logger_project = logging.getLogger('project')
 
 def convert(convproj_obj):
-    print('[song-convert] Converting from RegularIndexed > Regular')
+    logger_project.info('ProjType Convert: RegularIndexed > Regular')
 
     for trackid, track_obj in convproj_obj.iter_track():
         if not track_obj.is_laned: 

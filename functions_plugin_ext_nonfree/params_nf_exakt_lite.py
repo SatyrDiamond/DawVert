@@ -1,8 +1,8 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions_plugin_ext import plugin_vst2
-from objects import dv_datadef
+from objects.data_bytes import dv_datadef
 
 class exakt_lite_env:
 	def __init__(self):
@@ -162,7 +162,7 @@ class exakt_lite_data:
 		}
 
 	def to_cvpj_vst2(self, convproj_obj, plugin_obj):
-		datadef = dv_datadef.datadef('./data_ddef/plugin_vst2/exakt_lite.ddef')
+		datadef = dv_datadef.datadef('./data_main/datadef/plugin_vst2/exakt_lite.ddef')
 		datadef.create('main', self.out())
 		outdata = datadef.bytestream.getvalue()
 		plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'any', 1349337720, 'chunk', datadef.bytestream.getvalue(), None)

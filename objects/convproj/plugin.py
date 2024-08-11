@@ -158,6 +158,10 @@ class cvpj_plugin:
 		self.preset = self.state.preset = old_preset
 		self.modulations = self.state.modulations = old_modulations
 
+	def move_prog(self, prenum):
+		self.programs[prenum] = self.state = self.programs.pop(self.current_program)
+		self.current_program = prenum
+
 	def type_set(self, i_type, i_subtype):
 		self.type.set(i_type, i_subtype)
 

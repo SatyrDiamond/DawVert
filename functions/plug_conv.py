@@ -1,16 +1,18 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from plugin_plugconv import base as base_plugconv
-from plugin_plugconv_extern import base as base_plugconv_extern
+from functions import data_values
+from functions import extpluglog
 from objects import plugts
-from functions import errorprint
-
+from plugins import base as dv_plugins
+import base64
 import json
+import logging
+import math
 import os
 import struct
-import math
-import base64
+
+logger_plugconv = logging.getLogger('plugconv')
 #from functions import data_values
 #from functions_plugin_ext import plugin_vst2
 #from functions import plugins
@@ -19,79 +21,13 @@ ______debugtxt______ = False
 
 plugtransform = plugts.storedtransform()
 
-pl_pc_in = []
-pl_pc_in_always = []
-pl_pc_out = []
-pl_pc_ext = []
-
-def getvisualname(plugidinput):
-	if plugidinput[1] == None: return plugidinput[0]+':*'
-	else: return plugidinput[0]+':'+plugidinput[1]
-
 def load_plugins():
-	global pl_pc_in
-	global pl_pc_in_always
-	global pl_pc_out
-	global pl_pc_ext
-
-	pluglist_plugconv = {}
-
-	dv_pluginclasses = base_plugconv
-	dv_pluginclasses_ext = base_plugconv_extern
-
-	for plugconvplugin in dv_pluginclasses.plugins:
-		plco_class_data = plugconvplugin()
-		try:
-			plugtype = plco_class_data.is_dawvert_plugin()
-			if plugtype == 'plugconv': 
-				pcp_i_data, pcp_o_data, pcp_isoutput, pcp_i_always = plco_class_data.getplugconvinfo()
-				#print(pcp_i_data, pcp_o_data, pcp_isoutput, pcp_i_always)
-				if not pcp_isoutput: 
-					if pcp_i_always: pl_pc_in_always.append([plco_class_data, pcp_i_data, pcp_o_data])
-					else: pl_pc_in.append([plco_class_data, pcp_i_data, pcp_o_data])
-				else: pl_pc_out.append([plco_class_data, pcp_i_data, pcp_o_data])
-		except: pass
-
-	for plugconvplugin in dv_pluginclasses_ext.plugins:
-		plco_class_data = plugconvplugin()
-		try:
-			plugtype = plco_class_data.is_dawvert_plugin()
-			if plugtype == 'plugconv_ext': 
-				plugtype, supportedplugs, nativedaw = plco_class_data.getplugconvinfo()
-				pl_pc_ext.append([plco_class_data, plugtype, supportedplugs, nativedaw])
-		except: pass
-
-
-	for vispluginlistdata in [[pl_pc_in_always, 'A-Input'], [pl_pc_in, 'Input'], [pl_pc_out, 'Output']]:
-		print('[plug_conv] Plugins ('+vispluginlistdata[1]+'): ')
-		for pl_pc_in_p in vispluginlistdata[0]:
-			visualplugname_in = getvisualname(pl_pc_in_p[1])
-			visualplugname_out = getvisualname(pl_pc_in_p[2])
-			print('    ['+visualplugname_in+' > '+visualplugname_out+'] ')
-		print('')
-
-
-	print('[plug_conv] Plugins (External): ')
-	for pl_pc_ext_p in pl_pc_ext:
-		visualplugname = getvisualname(pl_pc_ext_p[1])
-		print('    ['+visualplugname+' > '+','.join(pl_pc_ext_p[2])+'] ')
-	print('')
-
-
+	dv_plugins.load_plugindir('plugconv')
+	dv_plugins.load_plugindir('plugconv_ext')
+	dv_plugins.load_plugindir('extplug')
 
 # -------------------- convproj --------------------
 
-
-
-def plugtype_match(first, second):
-	if ______debugtxt______: print(first, second, first[0] == second[0], first[1] == second[1], second[1] == None)
-	outval = False
-	if first == second: outval = True
-	if first[0] == second[0] and second[1] == None: outval = True
-
-	if first[0] == first[1]: outval = False
-
-	return outval
 
 def commalist2plugtypes(inputdata):
 	sep_supp_plugs = []
@@ -102,64 +38,44 @@ def commalist2plugtypes(inputdata):
 		sep_supp_plugs.append(outputpart)
 	return sep_supp_plugs
 
-def convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, pci_in, extra_json, plugtransform):
-	for plugclassinfo in pci_in:
-		if plugin_obj.check_wildmatch(plugclassinfo[1][0], plugclassinfo[1][1]):
-			converted_val_p = plugclassinfo[0].convert(convproj_obj, plugin_obj, pluginid, extra_json, plugtransform)
-			if converted_val_p < converted_val: converted_val = converted_val_p
-			if converted_val == 0: break
+def convproj(convproj_obj, in_dawinfo, out_dawinfo, dv_config):
+	plugqueue = []
 
-	return converted_val
+	for plugin in dv_plugins.plugins_plugconv:
+		if in_dawinfo.shortname in plugin.in_daws: plugin.priority = 1
 
-def convproj(convproj_obj, platform_id, in_daw, out_daw, out_dawinfo, extra_json):
-	global pl_pc_in
-	global pl_pc_in_always
-	global pl_pc_out
-	global pl_pc_ext
-	global plugtransform
+	#indaw_plugs = commalist2plugtypes(in_dawinfo.plugin_included)
+	outdaw_plugs = commalist2plugtypes(out_dawinfo.plugin_included)
 
-	out_dawinfo.plugin_included = commalist2plugtypes(out_dawinfo.plugin_included)
+	norepeat = []
 
-	#out_daw = 'lmms'
+	for pluginid, plugin_obj in convproj_obj.plugins.items():
+		converted_val = 2
 
-	sep_pl_pc_out__native = []
-	sep_pl_pc_out__plugins = {}
+		for convplug_obj in dv_plugins.iter_plugconv():
+			ismatch = True in [plugin_obj.check_wildmatch(x[0], x[1]) for x in convplug_obj.in_plugins]
+			correctdaw = (out_dawinfo.shortname in convplug_obj.out_daws) if convplug_obj.out_daws else True
+			if ismatch and correctdaw:
+				converted_val_p = convplug_obj.object.convert(convproj_obj, plugin_obj, pluginid, dv_config)
+				if converted_val_p < converted_val: converted_val = converted_val_p
+				if converted_val == 0: break
 
-	for cpv in pl_pc_out:
-		if cpv[2][2] == out_daw: sep_pl_pc_out__native.append(cpv)
-		else: 
-			supplugtype = cpv[2][0]
-			if supplugtype not in sep_pl_pc_out__plugins: sep_pl_pc_out__plugins[supplugtype] = []
-			sep_pl_pc_out__plugins[supplugtype].append(cpv)
+		ext_conv_val = False
+		notsupported = not (True in [plugin_obj.check_wildmatch(x[0], x[1]) for x in outdaw_plugs])
 
-	if convproj_obj.type != 'debug':
+		if converted_val:
+			if notsupported:
+				extpluglog.extpluglist.clear()
+				for pluginfo in dv_plugins.iter_plugconv_ext():
+					convplug_obj = pluginfo.object
+					ismatch = plugin_obj.check_wildmatch(pluginfo.in_plugin[0], pluginfo.in_plugin[1])
+					extmatch = True in [(x in out_dawinfo.plugin_ext) for x in pluginfo.ext_formats]
+					catmatch = data_values.only_values(pluginfo.plugincat, dv_config.extplug_cat)
 
-		for pluginid, plugin_obj in convproj_obj.plugins.items():
-			converted_val = 2
-
-			if plugin_obj.plugin_type not in out_dawinfo.plugin_included:
-				if ______debugtxt______: print('-------')
-	
-				if ______debugtxt______: print('- input always')
-				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, pl_pc_in_always, extra_json, plugtransform)
-
-				if ______debugtxt______: print('- input')
-				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, pl_pc_in, extra_json, plugtransform)
-
-				if ______debugtxt______: print('- output')
-				converted_val = convertpluginconvproj(converted_val, convproj_obj, plugin_obj, pluginid, sep_pl_pc_out__native, extra_json, plugtransform)
-
-			if converted_val:
-				ext_conv_val = False
-
-				if not (True in [plugin_obj.check_wildmatch(x[0], x[1]) for x in out_dawinfo.plugin_included]):
-					for p_pl_pc_ext in pl_pc_ext:
-						ismatched = plugin_obj.check_wildmatch(p_pl_pc_ext[1][0], p_pl_pc_ext[1][1])
-						#print(ismatched, p_pl_pc_ext, p_pl_pc_ext[1][0], p_pl_pc_ext[1][1])
-						if ismatched and p_pl_pc_ext[3] != out_daw:
-							ext_conv_val = p_pl_pc_ext[0].convert(convproj_obj, plugin_obj, pluginid, extra_json, out_dawinfo.plugin_ext, plugtransform)
+					if ismatch and extmatch and catmatch:
+						ext_conv_val = convplug_obj.convert(convproj_obj, plugin_obj, pluginid, dv_config, out_dawinfo.plugin_ext)
 						if ext_conv_val: break
 
-					if not ext_conv_val:
-						if plugin_obj.plugin_type not in ['vst3','vst2','ladspa',None]:
-							errorprint.printerr('ext_noncompat', [plugin_obj.plugin_type, plugin_obj.plugin_subtype])
+		if converted_val==2 and not ext_conv_val and notsupported and str(plugin_obj.type) not in norepeat:
+			logger_plugconv.warning('No equivalent to "'+str(plugin_obj.type)+'" found or not supported')
+			norepeat.append(str(plugin_obj.type))

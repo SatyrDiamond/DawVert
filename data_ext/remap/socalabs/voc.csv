@@ -1,0 +1,12 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+tenseness,tenseness,0.0,0.0,1.0,Tenseness,0,Tenseness,0,Tenseness
+constrictionp,constrictionP,0.0,0.0,1.0,Constriction Position,1,Constriction Position,1,Constriction Position
+constrictiona,constrictionA,0.0,0.0,1.0,Constriction Amount,2,Constriction Amount,2,Constriction Amount
+smoothing,smoothing,0.0,0.0,1.0,Smoothing,3,Smoothing,3,Smoothing
+glide,glide,0.5,0.0,0.5,Glide,4,Glide,4,Glide
+output,output,1.0,0.0,1.0,Output,5,Output,5,Output
+attack,attack,0.009999999776482582,0.0,10.0,Attack,6,Attack,6,Attack
+decay,decay,0.009999999776482582,0.0,10.0,Decay,7,Decay,7,Decay
+sustain,sustain,1.0,0.0,1.0,Sustain,8,Sustain,8,Sustain
+release,release,0.009999999776482582,0.0,10.0,Release,9,Release,9,Release

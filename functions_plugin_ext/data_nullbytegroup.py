@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 def get(vstdata):
@@ -7,7 +7,7 @@ def get(vstdata):
 	groupnum = 0
 	isvalname = False
 	for datavalue in nbpvstdata:
-		print(datavalue)
+		#print(datavalue)
 		if isvalname == True:
 			nbp[groupnum][valname] = datavalue.decode()
 			isvalname = False

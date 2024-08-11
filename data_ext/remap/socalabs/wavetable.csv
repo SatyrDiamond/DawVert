@@ -1,0 +1,91 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+osc1enable,osc1enable,1.0,1.0,1.0,OSC1 Tune,0,OSC1 Tune,0,OSC1 Tune
+osc1unison,osc1unison,1.0,1.0,1.0,OSC1 Fine Tune,1,OSC1 Fine Tune,1,OSC1 Fine Tune
+osc1tune,osc1tune,0.0,-36.0,36.0,OSC1 Level,2,OSC1 Level,2,OSC1 Level
+osc1finetune,osc1finetune,0.0,-100.0,100.0,OSC1 Pos,3,OSC1 Pos,3,OSC1 Pos
+osc1level,osc1level,0.0,-100.0,0.0,OSC1 Detune,4,OSC1 Detune,4,OSC1 Detune
+osc1pos,osc1pos,0.0,0.0,100.0,OSC1 Spread,5,OSC1 Spread,5,OSC1 Spread
+osc1detune,osc1detune,0.0,0.0,0.5,OSC1 Pan,6,OSC1 Pan,6,OSC1 Pan
+osc1spread,osc1spread,0.0,-100.0,100.0,OSC1 Formant,7,OSC1 Formant,7,OSC1 Formant
+osc1pan,osc1pan,0.0,-1.0,1.0,OSC1 Bend,8,OSC1 Bend,8,OSC1 Bend
+osc1formant,osc1formant,0.0,-1.0,1.0,OSC2 Tune,9,OSC2 Tune,9,OSC2 Tune
+osc1bend,osc1bend,0.0,-1.0,1.0,OSC2 Fine Tune,10,OSC2 Fine Tune,10,OSC2 Fine Tune
+osc2enable,osc2enable,0.0,0.0,0.0,OSC2 Level,11,OSC2 Level,11,OSC2 Level
+osc2unison,osc2unison,1.0,1.0,1.0,OSC2 Pos,12,OSC2 Pos,12,OSC2 Pos
+osc2tune,osc2tune,0.0,-36.0,36.0,OSC2 Detune,13,OSC2 Detune,13,OSC2 Detune
+osc2finetune,osc2finetune,0.0,-100.0,100.0,OSC2 Spread,14,OSC2 Spread,14,OSC2 Spread
+osc2level,osc2level,0.0,-100.0,0.0,OSC2 Pan,15,OSC2 Pan,15,OSC2 Pan
+osc2pos,osc2pos,0.0,0.0,100.0,OSC2 Formant,16,OSC2 Formant,16,OSC2 Formant
+osc2detune,osc2detune,0.0,0.0,0.5,OSC2 Bend,17,OSC2 Bend,17,OSC2 Bend
+osc2spread,osc2spread,0.0,-100.0,100.0,SUB Tune,18,SUB Tune,18,SUB Tune
+osc2pan,osc2pan,0.0,-1.0,1.0,SUB Level,19,SUB Level,19,SUB Level
+osc2formant,osc2formant,0.0,-1.0,1.0,SUB Pan,20,SUB Pan,20,SUB Pan
+osc2bend,osc2bend,0.0,-1.0,1.0,Noise Level,21,Noise Level,21,Noise Level
+subenable,subenable,0.0,0.0,0.0,Noise Pan,22,Noise Pan,22,Noise Pan
+subwave,subwave,1.0,1.0,1.0,FLT Key,23,FLT Key,23,FLT Key
+subtune,subtune,0.0,-36.0,36.0,FLT Vel,24,FLT Vel,24,FLT Vel
+sublevel,sublevel,0.0,-100.0,0.0,FLT Freq,25,FLT Freq,25,FLT Freq
+subpan,subpan,0.0,-1.0,1.0,FLT Res,26,FLT Res,26,FLT Res
+noiseenable,noiseenable,0.0,0.0,0.0,FLT Amount,27,FLT Amount,27,FLT Amount
+noisetype,noisetype,0.0,0.0,0.0,FLT Attack,28,FLT Attack,28,FLT Attack
+noiselevel,noiselevel,0.0,-100.0,0.0,FLT Decay,29,FLT Decay,29,FLT Decay
+noisepan,noisepan,0.0,-1.0,1.0,FLT Sustain,30,FLT Sustain,30,FLT Sustain
+fltenable,fltenable,1.0,1.0,1.0,FLT Release,31,FLT Release,31,FLT Release
+flttype,flttype,0.0,0.0,0.0,ENV1 Attack,32,ENV1 Attack,32,ENV1 Attack
+fltkey,fltkey,0.0,0.0,100.0,ENV1 Decay,33,ENV1 Decay,33,ENV1 Decay
+fltvel,fltvel,0.0,0.0,100.0,ENV1 Sustain,34,ENV1 Sustain,34,ENV1 Sustain
+fltfreq,fltfreq,64.0,0.0,135.0762329101562,ENV1 Release,35,ENV1 Release,35,ENV1 Release
+fltres,fltres,0.0,0.0,100.0,ENV2 Attack,36,ENV2 Attack,36,ENV2 Attack
+fltamount,fltamount,0.0,-1.0,1.0,ENV2 Decay,37,ENV2 Decay,37,ENV2 Decay
+fltattack,fltattack,0.1000000014901161,0.0,60.0,ENV2 Sustain,38,ENV2 Sustain,38,ENV2 Sustain
+fltdecay,fltdecay,0.1000000014901161,0.0,60.0,ENV2 Release,39,ENV2 Release,39,ENV2 Release
+fltsustain,fltsustain,80.0,0.0,100.0,ENV3 Attack,40,ENV3 Attack,40,ENV3 Attack
+fltrelease,fltrelease,0.1000000014901161,0.0,60.0,ENV3 Decay,41,ENV3 Decay,41,ENV3 Decay
+fltwt1,fltwt1,1.0,1.0,1.0,ENV3 Sustain,42,ENV3 Sustain,42,ENV3 Sustain
+fltwt2,fltwt2,1.0,1.0,1.0,ENV3 Release,43,ENV3 Release,43,ENV3 Release
+fltsub,fltsub,1.0,1.0,1.0,LFO1 Rate,44,LFO1 Rate,44,LFO1 Rate
+fltnoise,fltnoise,1.0,1.0,1.0,LFO1 Depth,45,LFO1 Depth,45,LFO1 Depth
+env1enable,env1enable,0.0,0.0,0.0,LFO1 Phase,46,LFO1 Phase,46,LFO1 Phase
+env1attack,env1attack,0.1000000014901161,0.0,60.0,LFO1 Offset,47,LFO1 Offset,47,LFO1 Offset
+env1decay,env1decay,0.1000000014901161,0.0,60.0,LFO1 Fade,48,LFO1 Fade,48,LFO1 Fade
+env1sustain,env1sustain,80.0,0.0,100.0,LFO1 Delay,49,LFO1 Delay,49,LFO1 Delay
+env1release,env1release,0.1000000014901161,0.0,60.0,LFO2 Rate,50,LFO2 Rate,50,LFO2 Rate
+env2enable,env2enable,0.0,0.0,0.0,LFO2 Depth,51,LFO2 Depth,51,LFO2 Depth
+env2attack,env2attack,0.1000000014901161,0.0,60.0,LFO2 Phase,52,LFO2 Phase,52,LFO2 Phase
+env2decay,env2decay,0.1000000014901161,0.0,60.0,LFO2 Offset,53,LFO2 Offset,53,LFO2 Offset
+env2sustain,env2sustain,80.0,0.0,100.0,LFO2 Fade,54,LFO2 Fade,54,LFO2 Fade
+env2release,env2release,0.1000000014901161,0.0,60.0,LFO2 Delay,55,LFO2 Delay,55,LFO2 Delay
+env3enable,env3enable,0.0,0.0,0.0,LFO3 Rate,56,LFO3 Rate,56,LFO3 Rate
+env3attack,env3attack,0.1000000014901161,0.0,60.0,LFO3 Depth,57,LFO3 Depth,57,LFO3 Depth
+env3decay,env3decay,0.1000000014901161,0.0,60.0,LFO3 Phase,58,LFO3 Phase,58,LFO3 Phase
+env3sustain,env3sustain,80.0,0.0,100.0,LFO3 Offset,59,LFO3 Offset,59,LFO3 Offset
+env3release,env3release,0.1000000014901161,0.0,60.0,LFO3 Fade,60,LFO3 Fade,60,LFO3 Fade
+lfo1enable,lfo1enable,0.0,0.0,0.0,LFO3 Delay,61,LFO3 Delay,61,LFO3 Delay
+lfo1sync,lfo1sync,0.0,0.0,0.0,Vel,62,Vel,62,Vel
+lfo1retrig,lfo1retrig,1.0,1.0,1.0,Attack,63,Attack,63,Attack
+lfo1wave,lfo1wave,1.0,1.0,1.0,Decay,64,Decay,64,Decay
+lfo1rate,lfo1rate,10.0,0.0,50.0,Sustain,65,Sustain,65,Sustain
+lfo1beat,lfo1beat,13.0,13.0,13.0,Release,66,Release,66,Release
+lfo1depth,lfo1depth,1.0,-1.0,1.0,Glide Rate,67,Glide Rate,67,Glide Rate
+lfo1phase,lfo1phase,0.0,-1.0,1.0,Level,68,Level,68,Level
+lfo1offset,lfo1offset,0.0,-1.0,1.0,GateAttack,69,GateAttack,69,GateAttack
+lfo1fade,lfo1fade,0.0,-60.0,60.0,GateRelease,70,GateRelease,70,GateRelease
+lfo1delay,lfo1delay,0.0,0.0,60.0,Delay,71,Delay,71,Delay
+lfo2enable,lfo2enable,0.0,0.0,0.0,Depth,72,Depth,72,Depth
+lfo2sync,lfo2sync,0.0,0.0,0.0,Speed,73,Speed,73,Speed
+lfo2retrig,lfo2retrig,1.0,1.0,1.0,Width,74,Width,74,Width
+lfo2wave,lfo2wave,1.0,1.0,1.0,Mix,75,Mix,75,Mix
+lfo2rate,lfo2rate,10.0,0.0,50.0,Amount,76,Amount,76,Amount
+lfo2beat,lfo2beat,13.0,13.0,13.0,Sync,77,Sync,77,Sync
+lfo2depth,lfo2depth,1.0,-1.0,1.0,Delay,78,Delay,78,Delay
+lfo2phase,lfo2phase,0.0,-1.0,1.0,Delay,79,Delay,79,Delay
+lfo2offset,lfo2offset,0.0,-1.0,1.0,FB,80,FB,80,FB
+lfo2fade,lfo2fade,0.0,-60.0,60.0,CF,81,CF,81,CF
+lfo2delay,lfo2delay,0.0,0.0,60.0,Mix,82,Mix,82,Mix
+lfo3enable,lfo3enable,0.0,0.0,0.0,Size,83,Size,83,Size
+lfo3sync,lfo3sync,0.0,0.0,0.0,Decay,84,Decay,84,Decay
+lfo3retrig,lfo3retrig,1.0,1.0,1.0,Lowpass,85,Lowpass,85,Lowpass
+lfo3wave,lfo3wave,1.0,1.0,1.0,Damping,86,Damping,86,Damping
+lfo3rate,lfo3rate,10.0,0.0,50.0,Predelay,87,Predelay,87,Predelay
+lfo3beat,lfo3beat,13.0,13.0,13.0,Mix,88,Mix,88,Mix

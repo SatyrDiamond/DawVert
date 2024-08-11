@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 def midiid_to_num(i_bank, i_patch, i_isdrum, i_iskey): 

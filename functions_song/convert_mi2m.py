@@ -1,9 +1,14 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
+import logging
+
+logger_project = logging.getLogger('project')
 
 def convert(convproj_obj, dv_config):
+    logger_project.info('ProjType Convert: MultipleIndexed > Multiple')
+
     nle_list = [x for x in convproj_obj.notelist_index]
     unused_nle = []
 
@@ -12,10 +17,8 @@ def convert(convproj_obj, dv_config):
         playlist_obj.placements.unindex_notes(convproj_obj.notelist_index)
         playlist_obj.placements.unindex_audio(convproj_obj.sample_index)
 
-
     unused_nle = list(set(unused_nle))
 
-    #mi2m-output-unused-nle 
     for x in nle_list:
         if x in unused_nle: unused_nle.remove(x)
 

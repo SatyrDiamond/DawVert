@@ -1,11 +1,15 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import struct
 from functions import data_bytes
+from objects.data_bytes import bytewriter
 
-def il_vst_chunk(i_type, i_data): 
-    return struct.pack('iii', i_type, len(i_data), 0)+i_data
+def il_vst_chunk(i_outdata, i_type, i_data): 
+	i_outdata.uint32(i_type)
+	i_outdata.uint32(len(i_data))
+	i_outdata.uint32(0)
+	i_outdata.raw(i_data)
 
 class imageline_vststate():
 	def __init__(self): 
@@ -56,21 +60,28 @@ class imageline_vststate():
 			self.state_data = f.read()
 
 	def write(self):
-		outdata = b'\xfa\xff\xff\x7f\x01'
-		outdata += struct.pack('II', self.headertype, len(self.startchunk_data)+12 )
-		outdata += il_vst_chunk(5, self.startchunk_data)
-		if self.headertype != 4:  outdata += b'\x01\x00\x00\x00'+data_bytes.makestring_fixedlen(self.preset_name, 20)+b'\x00\x00\x00\x00'
+		outdata = bytewriter.bytewriter()
+		outdata.raw(b'\xfa\xff\xff\x7f\x01')
+		outdata.uint32(self.headertype)
+		outdata.uint32(len(self.startchunk_data)+12)
+		il_vst_chunk(outdata, 5, self.startchunk_data)
+		if self.headertype != 4: 
+			outdata.raw(b'\x01\x00\x00\x00')
+			outdata.string(self.preset_name, 20)
+			outdata.raw(b'\x00\x00\x00\x00')
 
-		subdata = il_vst_chunk(1, struct.pack('i'*128, *self.otherp1_data))
-		subdata += il_vst_chunk(2, struct.pack('i'*16, *self.otherp2_data))
-		subdata += il_vst_chunk(3, struct.pack('i'*16, *self.otherp3_data))
+		subdata = bytewriter.bytewriter()
+		il_vst_chunk(subdata, 1, struct.pack('i'*128, *self.otherp1_data))
+		il_vst_chunk(subdata, 2, struct.pack('i'*16, *self.otherp2_data))
+		il_vst_chunk(subdata, 3, struct.pack('i'*16, *self.otherp3_data))
 
-		outdata += il_vst_chunk(1, subdata)+b'\x00\x00\x00\x00'
+		il_vst_chunk(outdata, 1, subdata.getvalue())
+		outdata.raw(b'\x00\x00\x00\x00')
 
 		if self.headertype in [1,4]:
-			outdata += struct.pack('i', len(self.state_data))
-			outdata += self.state_data
+			outdata.uint32(len(self.state_data))
+			outdata.raw(self.state_data)
 		else:
-			outdata += self.state_data
+			outdata.raw(self.state_data)
 
-		return outdata
+		return outdata.getvalue()

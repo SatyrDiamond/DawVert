@@ -52,6 +52,7 @@ class input_soundation(plugins.base):
 		dawinfo_obj.auto_types = ['nopl_points']
 		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
 		dawinfo_obj.plugin_included = ['sampler:single','synth-nonfree:europa','native-soundation']
+		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
 
 	def parse(self, i_convproj_obj, input_file, dv_config):
 		global dataset

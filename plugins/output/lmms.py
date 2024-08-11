@@ -329,6 +329,8 @@ class output_lmms(plugins.base):
 		dawinfo_obj.auto_types = ['pl_points']
 		dawinfo_obj.plugin_included = ['sampler:single','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
 		dawinfo_obj.plugin_ext = ['vst2','ladspa']
+		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
+		
 	def parse(self, i_cvpj_obj, output_file):
 		global lmms_bpm
 		global cvpj_obj

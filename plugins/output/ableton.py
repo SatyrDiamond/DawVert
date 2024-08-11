@@ -385,7 +385,8 @@ class output_ableton(plugins.base):
 		dawinfo_obj.plugin_included = ['sampler:single','sampler:multi','sampler:slicer','native-ableton']
 		dawinfo_obj.plugin_ext = ['vst2']
 		dawinfo_obj.auto_types = ['nopl_points']
-
+		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
+		
 	def parse(self, convproj_obj, output_file):
 		convproj_obj.change_timings(1, True)
 		project_obj = proj_ableton.ableton_liveset()

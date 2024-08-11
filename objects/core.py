@@ -143,6 +143,7 @@ class core:
 		self.currentplug_output = None
 		dv_plugins.load_plugindir('audiofile')
 		dv_plugins.load_plugindir('audiocodecs')
+		dv_plugins.load_plugindir('audioconv')
 
 	def input_load_plugins(self, pluginset):
 		if pluginset == 'experiments': 
@@ -299,6 +300,11 @@ class core:
 
 		if out_type != 'debug':
 			compactclass.makecompat(self.convproj_obj, out_type, in_dawinfo, out_dawinfo, out_type)
+
+		for sampleref_id, sampleref_obj in self.convproj_obj.samplerefs.items():
+			if sampleref_obj.found:
+				if sampleref_obj.fileformat not in out_dawinfo.audio_filetypes:
+					sampleref_obj.convert(out_dawinfo.audio_filetypes, dv_config.path_samples_converted)
 
 	def parse_output(self, out_file): 
 		self.currentplug_output[0].parse(self.convproj_obj, out_file)

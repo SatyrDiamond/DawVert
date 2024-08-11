@@ -66,6 +66,13 @@ class info_audiofileplug:
 		self.priority = 100
 		self.file_formats = []
 
+class info_audioconvplug:
+	def __init__(self):
+		self.object = None
+		self.priority = 100
+		self.in_file_formats = []
+		self.out_file_formats = []
+
 class info_audiocodec:
 	def __init__(self):
 		self.name = ""
@@ -85,6 +92,7 @@ class base:
 	plugins_input_auto = {}
 	plugins_audio_file = {}
 	plugins_audio_codec = {}
+	plugins_audio_convert = {}
 
 	plugselector_input = None
 	plugselector_output = None
@@ -145,6 +153,13 @@ class base:
 			extplug_obj.object.getaudiocodecinfo(extplug_obj)
 			shortname = extplug_obj.object.getshortname()
 			base.plugins_audio_codec[shortname] = extplug_obj
+
+		if plugintype == 'audioconv':
+			extplug_obj = info_audioconvplug()
+			extplug_obj.object = plcv_obj()
+			extplug_obj.object.getaudioconvinfo(extplug_obj)
+			shortname = extplug_obj.object.getshortname()
+			base.plugins_audio_convert[shortname] = extplug_obj
 
 	def load_plugindir(plug_type):
 		plugincount = 0

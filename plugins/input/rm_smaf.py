@@ -34,6 +34,7 @@ class input_mmf(plugins.base):
 		dawinfo_obj.auto_types = ['nopl_ticks']
 		dawinfo_obj.track_nopl = True
 		dawinfo_obj.plugin_included = ['midi']
+		dawinfo_obj.audio_filetypes = ['wav']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

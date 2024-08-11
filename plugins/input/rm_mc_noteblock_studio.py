@@ -19,6 +19,7 @@ class input_gt_mnbs(plugins.base):
 		dawinfo_obj.file_ext = 'nbs'
 		dawinfo_obj.plugin_included = ['midi']
 		dawinfo_obj.track_nopl = True
+		dawinfo_obj.audio_filetypes = ['wav']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		convproj_obj.type = 'rm'

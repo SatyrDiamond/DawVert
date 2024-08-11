@@ -24,6 +24,7 @@ class input_pxtone(plugins.base):
 		dawinfo_obj.auto_types = ['nopl_ticks']
 		dawinfo_obj.track_nopl = True
 		dawinfo_obj.plugin_included = ['sampler:single']
+		dawinfo_obj.audio_filetypes = ['wav','ogg']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

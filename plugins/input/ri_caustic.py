@@ -103,6 +103,7 @@ class input_cvpj_r(plugins.base):
 		dawinfo_obj.auto_types = ['pl_points', 'nopl_points']
 		dawinfo_obj.plugin_included = ['native-caustic','sampler:single','sampler:multi']
 		dawinfo_obj.fxchain_mixer = True
+		dawinfo_obj.audio_filetypes = ['wav']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		global dataset

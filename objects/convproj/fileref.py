@@ -6,6 +6,7 @@ import sys
 import getpass
 
 from plugins import base as dv_plugins
+from functions import data_values
 from objects.convproj import visual
 import logging
 
@@ -87,7 +88,7 @@ class cvpj_fileref:
 		old_is_file = self.is_file
 		old_filename = self.filename
 		old_extension = self.extension
-		self.change_path(in_path)
+		self.change_path(in_path, False)
 		self.is_file = old_is_file
 		self.filename = old_filename
 		self.extension = old_extension
@@ -239,10 +240,18 @@ class cvpj_sampleref:
 					if fileextlow in audiofileplug_obj.file_formats:
 						isvalid = audiofileplug_obj.object.getinfo(wav_realpath, self, fileextlow)
 						audiofileplug_obj.file_formats
-						#print(shortname, wav_realpath, isvalid)
-						#print(self.hz, self.timebase, self.timebase/self.hz, self.dur_samples)
 						if isvalid: break
-				except:
-					#import traceback
-					#print(traceback.format_exc())
-					logger_project.warning('fileref: error using: '+shortname)
+				except: logger_project.warning('fileref: error using: '+shortname)
+
+	def convert(self, dawaudiofiles, outpath):
+		for shortname, audioconvplug_obj in dv_plugins.plugins_audio_convert.items():
+			if (self.fileformat in audioconvplug_obj.in_file_formats):
+				filesupported = data_values.in_both_lists(dawaudiofiles, audioconvplug_obj.out_file_formats)
+				if filesupported:
+					isconverted = False
+					try: isconverted = audioconvplug_obj.object.convert_file(self, filesupported[0], outpath)
+					except: pass
+					if isconverted: 
+						output_file = self.fileref.get_path(None, False)
+						logger_project.info('fileref: converted "'+output_file+'" to '+filesupported[0])
+						break

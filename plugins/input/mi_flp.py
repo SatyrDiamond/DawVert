@@ -446,6 +446,7 @@ class input_flp(plugins.base):
 				for sn in slidenotes: 
 					nle_obj.notelist.auto_add_slide(sn[0], sn[1], sn[2], sn[3], sn[4], sn[5])
 				nle_obj.notelist.notemod_conv()
+				nle_obj.notelist.extra_to_noteenv()
 
 				id_pat[str(pattern)] = 'FLPat' + str(pattern)
 

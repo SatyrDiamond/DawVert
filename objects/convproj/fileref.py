@@ -129,7 +129,7 @@ class cvpj_fileref:
 
 				if self.exists(os_type): 
 					iffound = True
-					logger_project.info('Fileref - relative found: '+self.get_path(os_type, True))
+					logger_project.info('fileref: relative found: '+self.get_path(os_type, True))
 					break
 
 		if not iffound:
@@ -193,7 +193,7 @@ class cvpj_fileref:
 
 
 class cvpj_sampleref:
-	__slots__ = ['fileref','dur_samples','dur_sec','timebase','hz','channels','found','file_size','file_date', 'visual']
+	__slots__ = ['fileref','dur_samples','dur_sec','timebase','hz','channels','found','file_size','file_date', 'visual','fileformat']
 
 	def __init__(self, in_path):
 		self.fileref = cvpj_fileref()
@@ -205,6 +205,7 @@ class cvpj_sampleref:
 		self.channels = 1
 		self.file_size = 0
 		self.file_date = 0
+		self.fileformat = ''
 		self.visual = visual.cvpj_visual()
 		self.fileref.change_path(in_path, False)
 		self.get_info()
@@ -242,4 +243,6 @@ class cvpj_sampleref:
 						#print(self.hz, self.timebase, self.timebase/self.hz, self.dur_samples)
 						if isvalid: break
 				except:
-					logger_project.error('Fileref - error using: '+shortname)
+					#import traceback
+					#print(traceback.format_exc())
+					logger_project.warning('fileref: error using: '+shortname)

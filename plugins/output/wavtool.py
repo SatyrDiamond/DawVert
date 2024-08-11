@@ -9,10 +9,11 @@ import uuid
 import lxml.etree as ET
 import os
 import math
-import av
+import base64
 from functions import colors
 from functions import xtramath
 from objects.file_proj import proj_wavtool
+from functions_plugin_ext import plugin_vst2
 
 def addsample(zip_wt, filepath, alredyexists): 
 	global audio_id
@@ -117,6 +118,7 @@ class output_wavtool(plugins.base):
 		dawinfo_obj.audio_stretch = ['warp', 'rate']
 		dawinfo_obj.plugin_included = ['sampler:single']
 		dawinfo_obj.auto_types = ['nopl_points']
+		dawinfo_obj.plugin_ext = ['vst2']
 	def parse(self, convproj_obj, output_file):
 		global audio_id
 		global wavtool_obj
@@ -282,6 +284,30 @@ class output_wavtool(plugins.base):
 							device_obj.data['inputs'] = {"gain": 1,"decay": adsr_decay*48000,"attack": adsr_attack*48000,"sustain": adsr_sustain,"release": adsr_release*48000}
 							device_obj.data['constants'] = {'sample1Pitch': middlenote, 'sample1All': audiouuid}
 							device_obj.data_internal['order'] = 1
+
+						#if plugin_obj.check_match('vst2', 'win'):
+						#	inst_supported = True
+						#	device_obj = wavtool_obj.devices.add_device(wt_trackid, wt_trackid_Instrument)
+						#	device_obj.name = plugin_obj.datavals_global.get('name', '')
+						#	device_obj.type = 'Bridge'
+						#	device_obj.x = 160
+						#	device_obj.y = 10
+#
+						#	statedata = plugin_vst2.export_presetdata(plugin_obj)
+#
+						#	chunkdata = bytes.fromhex('7143c39fc5c129ac82cd46c16ed0d0b57240f0642c791db6bc97f5c9d36739ca')
+						#	chunkdata += b'\x00'*64
+						#	chunkdata += statedata
+#
+						#	device_obj.data['sourceName'] = plugin_obj.datavals_global.get('name', '')
+						#	device_obj.data['sourceManufacturer'] = plugin_obj.datavals_global.get('creator', '')
+						#	device_obj.data['inputSpec'] = {'midiInput': {'type': 'MIDI', 'name': 'In', 'expose': True}}
+						#	device_obj.data['outputSpec'] = {'audioOutput': {'type': 'Stereo', 'name': 'Out', 'expose': True}}
+						#	device_obj.data['encodedState'] = base64.b64encode(chunkdata).decode()
+#
+						#	#print(device_obj.data['encodedState'])
+#
+						#	device_obj.data_internal['order'] = 1
 
 					if not inst_supported: 
 						device_obj = wavtool_obj.devices.add_device(wt_trackid, wt_trackid_Instrument)

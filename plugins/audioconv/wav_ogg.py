@@ -24,24 +24,12 @@ class input_soundfile(plugins.base):
 			byr_stream = riff_data.load_from_file(input_file, False)
 
 			data_pos = 0
-			data_size = 0
-
+			data_end = 0
 			fmt_format = 0
-			fmt_channels = 0
-			fmt_rate = 0
-			fmt_bytessec = 0
-			fmt_datablocksize = 0
-			fmt_bits = 0
 
 			for riff_part in riff_data.in_data:
 				if riff_part.name == b'fmt ': 
-					with byr_stream.isolate_range(riff_part.start, riff_part.end, False) as bye_stream: 
-						fmt_format = bye_stream.uint16()
-						fmt_channels = bye_stream.uint16()
-						fmt_rate = bye_stream.uint32()
-						fmt_bytessec = bye_stream.uint32()
-						fmt_datablocksize = bye_stream.uint16()
-						fmt_bits = bye_stream.uint16()
+					with byr_stream.isolate_range(riff_part.start, riff_part.end, False) as bye_stream: fmt_format = bye_stream.uint16()
 				elif riff_part.name == b'data': 
 					data_pos = riff_part.start
 					data_end = riff_part.end

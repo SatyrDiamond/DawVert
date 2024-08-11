@@ -52,7 +52,7 @@ class input_mmf(plugins.base):
 		samplefolder = dv_config.path_samples_extracted
 
 		firstma2 = False
-		if True in [isinstance(x, proj_mmf.smaf_track_ma2) for x in project_obj.tracks2]:
+		#if True in [isinstance(x, proj_mmf.smaf_track_ma2) for x in project_obj.tracks2]:
 
 			#for grpnum, track in enumerate(project_obj.tracks2):
 			#	if track:
@@ -69,8 +69,8 @@ class input_mmf(plugins.base):
 			#			if isinstance(msg, proj_mmf.ma2_event_note):
 			#				track_obj.note_dur(curpos, msg.channel+(grpnum*4), msg.note_key+36+(msg.note_oct*12), 100, msg.duration)
 
-			song_obj.postprocess()
-			song_obj.to_cvpj(convproj_obj)
+			#song_obj.postprocess()
+			#song_obj.to_cvpj(convproj_obj)
 
 		for track in project_obj.tracks3:
 			if track != None:

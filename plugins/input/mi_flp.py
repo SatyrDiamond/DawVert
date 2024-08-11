@@ -289,7 +289,7 @@ class input_flp(plugins.base):
 					samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dv_config)
 					fl_asdr_obj_vol = fl_channel_obj.env_lfo[1]
 					sampleloop = bool(fl_channel_obj.sampleflags & 8)
-					samplepart_obj.trigger = 'normal' if (bool(fl_asdr_obj_vol.el_env_enabled) or sampleloop) else 'oneshot'
+					samplepart_obj.trigger = 'normal'# if (bool(fl_asdr_obj_vol.el_env_enabled) or sampleloop) else 'oneshot'
 
 				if fl_channel_obj.type == 2:
 					if fl_channel_obj.plugin.name != None: 

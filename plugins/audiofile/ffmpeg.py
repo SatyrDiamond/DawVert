@@ -29,5 +29,6 @@ class input_pyav(plugins.base):
 				sampleref_obj.dur_sec = (sampleref_obj.dur_samples/sampleref_obj.timebase)
 				if avaudio.channels: sampleref_obj.channels = avaudio.channels
 				valid = True
+				sampleref_obj.fileformat = sampleref_obj.fileref.extension.lower()
 
 		return valid

@@ -119,7 +119,7 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 	
 	pluginpath = str(lmms_plugin.get_param('plugin', ''))
 
-	plugin_obj.datavals.add('path', pluginpath)
+	plugin_obj.datavals_global.add('path', pluginpath)
 
 	vst2_pathid = pluginid+'_vstpath'
 	convproj_obj.add_fileref(vst2_pathid, pluginpath)

@@ -3,6 +3,7 @@
 
 from functions import colors
 from objects.file_proj import proj_waveform
+from objects.inst_params import juce_plugin
 from objects import globalstore
 from lxml import etree
 import plugins
@@ -10,7 +11,25 @@ import json
 import math
 
 def do_plugin(convproj_obj, wf_plugin, track_obj): 
-	if wf_plugin.plugtype not in ['volume', 'level'] and wf_plugin.plugtype != '':
+	if wf_plugin.plugtype == 'vst':
+		juceobj = juce_plugin.juce_plugin()
+		juceobj.name = wf_plugin.params['name'] if "name" in wf_plugin.params else ''
+		juceobj.filename = wf_plugin.params['filename'] if "filename" in wf_plugin.params else ''
+		juceobj.manufacturer = wf_plugin.params['manufacturer'] if "manufacturer" in wf_plugin.params else ''
+		juceobj.memoryblock = wf_plugin.params['state']
+
+		plugin_obj, pluginid = juceobj.to_cvpj(convproj_obj, None)
+
+		if plugin_obj.role == 'inst': track_obj.inst_pluginid = pluginid
+		elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(pluginid)
+
+		if pluginid:
+			if wf_plugin.windowX and wf_plugin.windowY:
+				windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
+				windata_obj.pos_x = wf_plugin.windowX
+				windata_obj.pos_y = wf_plugin.windowY
+
+	elif wf_plugin.plugtype not in ['volume', 'level'] and wf_plugin.plugtype != '':
 		plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-tracktion', wf_plugin.plugtype)
 		plugin_obj.role = 'effect'
 
@@ -47,6 +66,8 @@ def do_track(convproj_obj, wf_track, track_obj):
 		if wf_plugin.plugtype == 'volume':
 			if 'volume' in wf_plugin.params: vol *= wf_plugin.params['volume']
 			if 'pan' in wf_plugin.params: pan = wf_plugin.params['pan']
+		else:
+			do_plugin(convproj_obj, wf_plugin, track_obj)
 
 	track_obj.params.add('vol', vol, 'float')
 	track_obj.params.add('pan', pan, 'float')
@@ -90,6 +111,7 @@ class input_cvpj_f(plugins.base):
 		dawinfo_obj.audio_stretch = ['rate']
 		dawinfo_obj.auto_types = ['nopl_points']
 		dawinfo_obj.plugin_included = ['native-tracktion']
+		dawinfo_obj.plugin_ext = ['vst2']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		global cvpj_l

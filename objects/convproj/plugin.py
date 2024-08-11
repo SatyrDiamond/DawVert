@@ -1,11 +1,11 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from plugins import base as dv_plugins
-from functions import xtramath
 from functions import data_values
+from functions import xtramath
 from objects import globalstore
 from objects.valobjs import dualstr
+from plugins import base as dv_plugins
 import wave as audio_wav
 import base64
 import struct

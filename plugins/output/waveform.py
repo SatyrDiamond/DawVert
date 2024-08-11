@@ -7,24 +7,51 @@ import lxml.etree as ET
 from functions import xtramath
 from functions import colors
 from objects.file_proj import proj_waveform
+from objects.inst_params import juce_plugin
 from objects import globalstore
 from objects import counter
 import math
 
-def get_plugins(convproj_obj, wf_plugin, cvpj_fxids):
-	for cvpj_fxid in cvpj_fxids:
-		plugin_found, plugin_obj = convproj_obj.get_plugin(cvpj_fxid)
-		if plugin_found: 
+def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
+	plugin_found, plugin_obj = convproj_obj.get_plugin(cvpj_fxid)
+	if plugin_found: 
+		fx_on, fx_wet = plugin_obj.fxdata_get()
+		if plugin_obj.check_wildmatch('vst2', None):
+			juceobj = juce_plugin.juce_plugin()
+			juceobj.from_cvpj(convproj_obj, plugin_obj)
+
 			fx_on, fx_wet = plugin_obj.fxdata_get()
+			wf_plugin = proj_waveform.waveform_plugin()
+			wf_plugin.enabled = int(fx_on)
+			wf_plugin.params['type'] = 'vst'
+			if juceobj.name: wf_plugin.params['name'] = juceobj.name
+			if juceobj.filename: wf_plugin.params['filename'] = juceobj.filename
+			if juceobj.manufacturer: wf_plugin.params['manufacturer'] = juceobj.manufacturer
+			if juceobj.fourid: 
+				wf_plugin.params['uniqueId'] = f'{juceobj.fourid:x}'
+				wf_plugin.params['uid'] = f'{juceobj.fourid:x}'
+			wf_plugin.params['state'] = juceobj.memoryblock
+			return wf_plugin
 
-			if plugin_obj.check_wildmatch('native-tracktion', None):
-				wf_plugin = proj_waveform.waveform_plugin()
-				wf_plugin.plugtype = plugin_obj.type.subtype
-				wf_plugin.presetDirty = 1
-				wf_plugin.enabled = fx_on
+		if plugin_obj.check_wildmatch('native-tracktion', None):
+			wf_plugin = proj_waveform.waveform_plugin()
+			wf_plugin.plugtype = plugin_obj.type.subtype
+			wf_plugin.presetDirty = 1
+			wf_plugin.enabled = fx_on
+			for param_id, dset_param in globalstore.dataset.get_params('waveform', 'plugin', wf_plugin.plugtype):
+				wf_plugin.params[param_id] = plugin_obj.params.get(param_id, dset_param.defv).value
+			return wf_plugin
+	elif isinstrument:
+		wf_plugin = proj_waveform.waveform_plugin()
+		wf_plugin.plugtype = '4osc'
+		wf_plugin.presetDirty = 1
+		return wf_plugin
 
-				for param_id, dset_param in globalstore.dataset.get_params('waveform', 'plugin', wf_plugin.plugtype):
-					wf_plugin.params[param_id] = plugin_obj.params.get(param_id, dset_param.defv).value
+def get_plugins(convproj_obj, wf_plugins, cvpj_fxids):
+	for cvpj_fxid in cvpj_fxids:
+		wf_plugin = get_plugin(convproj_obj, cvpj_fxid, False)
+		if wf_plugin:
+			wf_plugins.append(wf_plugin)
 
 class output_waveform_edit(plugins.base):
 	def __init__(self): pass
@@ -41,6 +68,7 @@ class output_waveform_edit(plugins.base):
 		dawinfo_obj.time_seconds = True
 		dawinfo_obj.audio_stretch = ['rate']
 		dawinfo_obj.plugin_included = ['native-tracktion']
+		dawinfo_obj.plugin_ext = ['vst2']
 	def parse(self, convproj_obj, output_file):
 		global dataset
 
@@ -67,11 +95,16 @@ class output_waveform_edit(plugins.base):
 			if track_obj.visual.name: wf_track.name = track_obj.visual.name
 			if track_obj.visual.color: wf_track.colour ='ff'+track_obj.visual.color.get_hex()
 			
-			wf_plugin = proj_waveform.waveform_plugin()
-			wf_plugin.plugtype = '4osc'
-			wf_plugin.presetDirty = 1
-			wf_plugin.enabled = 1
-			wf_track.plugins.append(wf_plugin)
+			middlenote = track_obj.datavals.get('middlenote', 0)
+			if middlenote != 0:
+				wf_plugin = proj_waveform.waveform_plugin()
+				wf_plugin.plugtype = 'midiModifier'
+				wf_plugin.presetDirty = 1
+				wf_plugin.params['semitonesUp'] = -middlenote
+				wf_track.plugins.append(wf_plugin)
+
+			wf_plugin = get_plugin(convproj_obj, track_obj.inst_pluginid, True)
+			if wf_plugin: wf_track.plugins.append(wf_plugin)
 
 			get_plugins(convproj_obj, wf_track.plugins, track_obj.fxslots_audio)
 

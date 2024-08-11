@@ -11,6 +11,9 @@ import os
 import pathlib
 import base64
 
+import logging
+logger_plugins = logging.getLogger('plugins')
+
 cpu_arch_list = [64, 32]
 
 def set_cpu_arch_list(cpu_arch_list_in):
@@ -80,5 +83,5 @@ def export_presetdata(plugin_obj):
 		preset_obj.write(byw_stream)
 		return byw_stream.getvalue()
 	else:
-		print('[plugin-vst3] id is missing')
+		logger_plugins.warning('vst3: id is missing')
 		return b''

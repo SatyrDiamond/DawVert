@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytewriter
+from objects.data_bytes import bytereader
 from functions import data_values
 from objects.file import preset_vst2
 from objects import globalstore
@@ -10,6 +11,9 @@ import platform
 import os
 import pathlib
 import base64
+
+import logging
+logger_plugins = logging.getLogger('plugins')
 
 cpu_arch_list = [64, 32]
 
@@ -50,6 +54,7 @@ def replace_data(convproj_obj, plugin_obj, bycat, platform, in_val, datatype, da
 			plugin_obj.datavals_global.add('cpu_arch', vst_cpuarch)
 
 		plugin_obj.datavals_global.add('name', pluginfo_obj.name)
+		plugin_obj.datavals_global.add('basename', pluginfo_obj.basename)
 		plugin_obj.datavals_global.add('fourid', int(pluginfo_obj.id))
 		plugin_obj.datavals_global.add('creator', pluginfo_obj.creator)
 		plugin_obj.role = pluginfo_obj.type
@@ -77,6 +82,11 @@ def import_presetdata_file(convproj_obj, plugin_obj, platform, preset_filename):
 		byr_stream = bytereader.bytereader()
 		byr_stream.load_file(preset_filename)
 		import_presetdata(convproj_obj, plugin_obj, byr_stream, platform)
+
+def import_presetdata_raw(convproj_obj, plugin_obj, rawdata, platform):
+	byr_stream = bytereader.bytereader()
+	byr_stream.load_raw(rawdata)
+	import_presetdata(convproj_obj, plugin_obj, byr_stream, platform)
 
 def import_presetdata(convproj_obj, plugin_obj, byr_stream, platform):
 	fxp_obj = preset_vst2.vst2_main()
@@ -163,7 +173,7 @@ def export_presetdata(plugin_obj):
 			fxp_obj.write(byw_stream)
 			return byw_stream.getvalue()
 	else:
-		print('[plugin-vst2] fourid is missing')
+		logger_plugins.warning('vst2: fourid is missing')
 		return b''
 
 def export_presetdata_b64(plugin_obj):

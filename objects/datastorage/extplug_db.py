@@ -9,6 +9,7 @@ class pluginfo:
 	def __init__(self):
 		self.out_exists = False
 		self.name = None
+		self.basename = None
 		self.id = None
 		self.type = None
 		self.category = None
@@ -38,13 +39,14 @@ class pluginfo:
 		return vst_cpuarch, vst_path
 
 	def from_sql_vst2(self, indata, platformtxt):
-		p_name, p_id, p_type, p_creator, p_version, p_audio_num_inputs, p_audio_num_outputs, p_midi_num_inputs, p_midi_num_outputs, p_num_params, p_path_32bit_win, p_path_64bit_win, p_path_32bit_unix, p_path_64bit_unix = indata
+		p_name, p_id, p_type, p_creator, p_version, p_audio_num_inputs, p_audio_num_outputs, p_midi_num_inputs, p_midi_num_outputs, p_num_params, p_basename, p_path_32bit_win, p_path_64bit_win, p_path_32bit_unix, p_path_64bit_unix = indata
 		self.out_exists = True
 		self.name = p_name
 		self.id = p_id
 		self.type = p_type
 		self.creator = p_creator
 		self.version = p_version
+		self.basename = p_basename
 		self.audio_num_inputs = p_audio_num_inputs
 		self.audio_num_outputs = p_audio_num_outputs
 		self.midi_num_inputs = p_midi_num_inputs
@@ -112,6 +114,7 @@ class extplug_db:
 				midi_num_inputs integer,
 				midi_num_outputs integer,
 				num_params integer,
+				basename text,
 				path_32bit_win text,
 				path_64bit_win text,
 				path_32bit_unix text,
@@ -181,7 +184,7 @@ class extplug_db:
 			extplug_db.db_plugins.commit()
 
 class vst2:
-	exe_txt_start = "SELECT name, id, type, creator, version, audio_num_inputs, audio_num_outputs, midi_num_inputs, midi_num_outputs, num_params, path_32bit_win, path_64bit_win, path_32bit_unix, path_64bit_unix FROM vst2"
+	exe_txt_start = "SELECT name, id, type, creator, version, audio_num_inputs, audio_num_outputs, midi_num_inputs, midi_num_outputs, num_params, basename, path_32bit_win, path_64bit_win, path_32bit_unix, path_64bit_unix FROM vst2"
 
 	def add(pluginfo_obj, platformtxt):
 		if pluginfo_obj.id and extplug_db.db_plugins:
@@ -196,8 +199,12 @@ class vst2:
 	
 			if pluginfo_obj.path_64bit:
 				if os.path.exists(pluginfo_obj.path_64bit):
-					if platformtxt == 'win': extplug_db.db_plugins.execute("UPDATE vst2 SET path_64bit_win = ? WHERE id = ?", (pluginfo_obj.path_64bit, pluginfo_obj.id,))
-					if platformtxt == 'lin': extplug_db.db_plugins.execute("UPDATE vst2 SET path_64bit_unix = ? WHERE id = ?", (pluginfo_obj.path_64bit, pluginfo_obj.id,))
+					if platformtxt == 'win': 
+						extplug_db.db_plugins.execute("UPDATE vst2 SET path_64bit_win = ? WHERE id = ?", (pluginfo_obj.path_64bit, pluginfo_obj.id,))
+						extplug_db.db_plugins.execute("UPDATE vst2 SET basename = ? WHERE id = ?", (os.path.splitext(os.path.basename(pluginfo_obj.path_64bit))[0], pluginfo_obj.id,))
+					if platformtxt == 'lin': 
+						extplug_db.db_plugins.execute("UPDATE vst2 SET path_64bit_unix = ? WHERE id = ?", (pluginfo_obj.path_64bit, pluginfo_obj.id,))
+						extplug_db.db_plugins.execute("UPDATE vst2 SET basename = ? WHERE id = ?", (os.path.splitext(os.path.basename(pluginfo_obj.path_64bit))[0], pluginfo_obj.id,))
 	
 			if pluginfo_obj.version: extplug_db.db_plugins.execute("UPDATE vst2 SET version = ? WHERE id = ?", (pluginfo_obj.version, pluginfo_obj.id,))
 			if pluginfo_obj.audio_num_inputs: extplug_db.db_plugins.execute("UPDATE vst2 SET audio_num_inputs = ? WHERE id = ?", (pluginfo_obj.audio_num_inputs, pluginfo_obj.id,))
@@ -227,6 +234,9 @@ class vst2:
 	
 			if bycat == 'name':
 				founddata = extplug_db.db_plugins.execute(vst2.exe_txt_start+" WHERE name = ?", (in_val,)).fetchone()
+	
+			if bycat == 'basename':
+				founddata = extplug_db.db_plugins.execute(vst2.exe_txt_start+" WHERE basename = ?", (in_val,)).fetchone()
 	
 			if bycat == 'path':
 				patharch = 'win' if in_platformtxt == 'win' else 'unix'

@@ -1,0 +1,4 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+ab,ab,0.0,0.0,1.0,A / B,0,A / B,0,A / B
+level,level,0.0,-100.0,6.0,Level,1,Level,1,Level

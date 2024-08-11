@@ -1,11 +1,15 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
 import argparse
 import os
-from functions import core
+import logging
+from objects import core
 from functions import plug_conv
+
+from objects.convproj import fileref
+cvpj_fileref = fileref.cvpj_fileref
 
 print('DawVert: Daw Conversion Tool')
 
@@ -22,7 +26,11 @@ parser.add_argument("--use-experiments-input", action='store_true')
 parser.add_argument("--mi2m--output-unused-nle", action='store_true')
 parser.add_argument("--nonfree-plugins", action='store_true')
 parser.add_argument("--shareware-plugins", action='store_true')
+parser.add_argument("--old-plugins", action='store_true')
+parser.add_argument("--splitter-mode")
+parser.add_argument("--splitter-detect-start")
 parser.add_argument("-y", action='store_true')
+parser.add_argument("-q", action='store_true')
 args = parser.parse_args()
 
 in_file = args.i
@@ -30,23 +38,32 @@ out_file = args.o
 in_format = args.it
 out_format = args.ot
 
-if not os.path.exists(in_file):
+if not in_file:
+	print('[error] Input File Not Specified.')
+	exit()
+elif not os.path.exists(in_file):
 	print('[error] Input File Not Found.')
 	exit()
 
+if args.q == True: 
+	logging.disable(logging.INFO)
 
 pluginset = 'main'
 dawvert_core = core.core()
 
-if args.y == True: dawvert_core.config.flags_core.append('overwrite')
-if args.soundfont != None: dawvert_core.config.path_soundfont_gm = args.soundfont
-if args.songnum != None: dawvert_core.config.songnum = int(args.songnum)
-if args.extrafile != None: dawvert_core.config.path_extrafile = args.extrafile
-if args.mi2m__output_unused_nle == True: dawvert_core.config.flags_convproj.append('mi2m-output-unused-nle')
-if args.use_experiments_input == True: pluginset = 'experiments'
-if args.nonfree_plugins == True: dawvert_core.config.flags_plugins.append('nonfree')
-if args.shareware_plugins == True: dawvert_core.config.flags_plugins.append('shareware')
+dawvert_core.config.load('./__config/config.ini')
 
+if args.y == True: core.config_data.flags_core.append('overwrite')
+if args.soundfont != None: core.config_data.path_soundfont = args.soundfont
+if args.songnum != None: core.config_data.songnum = int(args.songnum)
+if args.extrafile != None: core.config_data.path_extrafile = args.extrafile
+if args.mi2m__output_unused_nle == True: core.config_data.flags_convproj.append('mi2m-output-unused-nle')
+if args.use_experiments_input == True: pluginset = 'experiments'
+if args.nonfree_plugins == True: core.config_data.extplug_cat.append('nonfree')
+if args.shareware_plugins == True: core.config_data.extplug_cat.append('shareware')
+if args.old_plugins == True: core.config_data.extplug_cat.append('old')
+if args.splitter_mode != None: core.config_data.splitter_mode = int(args.splitter_mode)
+if args.splitter_detect_start != None: core.config_data.splitter_detect_start = bool(int(args.splitter_detect_start))
 
 # -------------------------------------------------------------- Input Plugin List--------------------------------------------------------------
 dawvert_core.input_load_plugins(pluginset)
@@ -72,8 +89,11 @@ else:
 
 # -------------------------------------------------------------- Output Format --------------------------------------------------------------
 
-out_file_nameext = os.path.splitext(os.path.basename(out_file))
-out_file_path = os.path.dirname(out_file)
+out_file_nameext = os.path.splitext(os.path.basename(in_file))
+out_file_path = os.path.dirname(in_file)
+
+cvpj_fileref.add_searchpath_abs('projectfile', out_file_path)
+cvpj_fileref.add_searchpath_file('projectfile', out_file_path)
 
 if out_format in dawvert_core.output_get_plugins():
 	out_class = dawvert_core.output_set(out_format)
@@ -98,6 +118,10 @@ else:
 	dawvert_core.config.path_samples_generated += file_name + '/'
 	dawvert_core.config.path_samples_converted += file_name + '/'
 
+cvpj_fileref.add_searchpath_file('extracted', dawvert_core.config.path_samples_extracted)
+cvpj_fileref.add_searchpath_file('downloaded', dawvert_core.config.path_samples_downloaded)
+cvpj_fileref.add_searchpath_file('generated', dawvert_core.config.path_samples_generated)
+cvpj_fileref.add_searchpath_file('converted', dawvert_core.config.path_samples_converted)
 # -------------------------------------------------------------- convert --------------------------------------------------------------
 
 if os.path.isfile(out_file) and 'overwrite' not in dawvert_core.config.flags_core:

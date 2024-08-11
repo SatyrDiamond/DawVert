@@ -1,0 +1,13 @@
+
+[bitcrush]
+>input
+	type|universal:bitcrush
+	param|bits
+	param|freq
+<input
+
+>output
+	type|native-lmms:bitcrush
+	param|rate<freq
+	param|levels<bits
+<output

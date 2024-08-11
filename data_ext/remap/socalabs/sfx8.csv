@@ -1,0 +1,1026 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+wavetype1,waveType1,1.0,0.0,8.0,Wave Type 1,0,Wave Type 1,0,Wave Type 1
+mastervolume1,masterVolume1,0.5,0.0,1.0,Master Volume 1,1,Master Volume 1,1,Master Volume 1
+attacktime1,attackTime1,0.0,0.0,1.0,Attack Time 1,2,Attack Time 1,2,Attack Time 1
+sustaintime1,sustainTime1,0.1665135622024536,0.0,1.0,Sustain Time 1,3,Sustain Time 1,3,Sustain Time 1
+sustainpunch1,sustainPunch1,0.0,0.0,1.0,Punch 1,4,Punch 1,4,Punch 1
+decaytime1,decayTime1,0.1682682484388351,0.0,1.0,Decay Time 1,5,Decay Time 1,5,Decay Time 1
+compressionamount1,compressionAmount1,0.300000011920929,0.0,1.0,Compression 1,6,Compression 1,6,Compression 1
+startfrequency1,startFrequency1,0.5763818621635437,0.0,1.0,Frequency 1,7,Frequency 1,7,Frequency 1
+minfrequency1,minFrequency1,0.0,0.0,1.0,Frequency Cutoff 1,8,Frequency Cutoff 1,8,Frequency Cutoff 1
+slide1,slide1,0.0,-1.0,1.0,Frequency Slide 1,9,Frequency Slide 1,9,Frequency Slide 1
+deltaslide1,deltaSlide1,0.0,-1.0,1.0,Delta Slide 1,10,Delta Slide 1,10,Delta Slide 1
+vibratodepth1,vibratoDepth1,0.0,0.0,1.0,Vibrato Depth 1,11,Vibrato Depth 1,11,Vibrato Depth 1
+vibratospeed1,vibratoSpeed1,0.0,0.0,1.0,Vibrato Speed 1,12,Vibrato Speed 1,12,Vibrato Speed 1
+overtones1,overtones1,0.0,0.0,1.0,Harmonics 1,13,Harmonics 1,13,Harmonics 1
+overtonefalloff1,overtoneFalloff1,0.0,0.0,1.0,Harmonics Falloff 1,14,Harmonics Falloff 1,14,Harmonics Falloff 1
+changerepeat1,changeRepeat1,0.0,0.0,1.0,Pitch Jump Repeat Speed 1,15,Pitch Jump Repeat Speed 1,15,Pitch Jump Repeat Speed 1
+changeamount1,changeAmount1,0.0,-1.0,1.0,Pitch Jump Amount 1 1,16,Pitch Jump Amount 1 1,16,Pitch Jump Amount 1 1
+changespeed1,changeSpeed1,0.0,0.0,1.0,Pitch Jump Onset 1 1,17,Pitch Jump Onset 1 1,17,Pitch Jump Onset 1 1
+changeamount21,changeAmount21,0.0,-1.0,1.0,Pitch Jump Amount 2 1,18,Pitch Jump Amount 2 1,18,Pitch Jump Amount 2 1
+changespeed21,changeSpeed21,0.0,0.0,1.0,Pitch Jump Onset 2 1,19,Pitch Jump Onset 2 1,19,Pitch Jump Onset 2 1
+squareduty1,squareDuty1,0.0,0.0,1.0,Square Duty 1,20,Square Duty 1,20,Square Duty 1
+dutysweep1,dutySweep1,0.0,-1.0,1.0,Duty Sweep 1,21,Duty Sweep 1,21,Duty Sweep 1
+repeatspeed1,repeatSpeed1,0.0,0.0,1.0,Repeat Speed 1,22,Repeat Speed 1,22,Repeat Speed 1
+flangeroffset1,flangerOffset1,0.0,-1.0,1.0,Flanger Offset 1,23,Flanger Offset 1,23,Flanger Offset 1
+flangersweep1,flangerSweep1,0.0,-1.0,1.0,Flanger Sweep 1,24,Flanger Sweep 1,24,Flanger Sweep 1
+lpfiltercutoff1,lpFilterCutoff1,1.0,0.0,1.0,LP Filter Cutoff 1,25,LP Filter Cutoff 1,25,LP Filter Cutoff 1
+lpfiltercutoffsweep1,lpFilterCutoffSweep1,0.0,-1.0,1.0,LP Filter Cutoff Sweep 1,26,LP Filter Cutoff Sweep 1,26,LP Filter Cutoff Sweep 1
+lpfilterresonance1,lpFilterResonance1,0.0,0.0,1.0,LP Filter Resonance 1,27,LP Filter Resonance 1,27,LP Filter Resonance 1
+hpfiltercutoff1,hpFilterCutoff1,0.1000000014901161,0.0,1.0,HP Filter Cutoff 1,28,HP Filter Cutoff 1,28,HP Filter Cutoff 1
+hpfiltercutoffsweep1,hpFilterCutoffSweep1,0.0,-1.0,1.0,HP Filter Cutoff Sweep 1,29,HP Filter Cutoff Sweep 1,29,HP Filter Cutoff Sweep 1
+bitcrush1,bitCrush1,0.0,0.0,1.0,Bit Crush 1,30,Bit Crush 1,30,Bit Crush 1
+bitcrushsweep1,bitCrushSweep1,0.0,-1.0,1.0,Bit Crush Sweep 1,31,Bit Crush Sweep 1,31,Bit Crush Sweep 1
+wavetype1l,waveType1l,0.0,0.0,1.0,Wave Type 1 Lock,32,Wave Type 1 Lock,32,Wave Type 1 Lock
+mastervolume1l,masterVolume1l,1.0,0.0,1.0,Master Volume 1 Lock,33,Master Volume 1 Lock,33,Master Volume 1 Lock
+attacktime1l,attackTime1l,0.0,0.0,1.0,Attack Time 1 Lock,34,Attack Time 1 Lock,34,Attack Time 1 Lock
+sustaintime1l,sustainTime1l,0.0,0.0,1.0,Sustain Time 1 Lock,35,Sustain Time 1 Lock,35,Sustain Time 1 Lock
+sustainpunch1l,sustainPunch1l,0.0,0.0,1.0,Punch 1 Lock,36,Punch 1 Lock,36,Punch 1 Lock
+decaytime1l,decayTime1l,0.0,0.0,1.0,Decay Time 1 Lock,37,Decay Time 1 Lock,37,Decay Time 1 Lock
+compressionamount1l,compressionAmount1l,0.0,0.0,1.0,Compression 1 Lock,38,Compression 1 Lock,38,Compression 1 Lock
+startfrequency1l,startFrequency1l,0.0,0.0,1.0,Frequency 1 Lock,39,Frequency 1 Lock,39,Frequency 1 Lock
+minfrequency1l,minFrequency1l,0.0,0.0,1.0,Frequency Cutoff 1 Lock,40,Frequency Cutoff 1 Lock,40,Frequency Cutoff 1 Lock
+slide1l,slide1l,0.0,0.0,1.0,Frequency Slide 1 Lock,41,Frequency Slide 1 Lock,41,Frequency Slide 1 Lock
+deltaslide1l,deltaSlide1l,0.0,0.0,1.0,Delta Slide 1 Lock,42,Delta Slide 1 Lock,42,Delta Slide 1 Lock
+vibratodepth1l,vibratoDepth1l,0.0,0.0,1.0,Vibrato Depth 1 Lock,43,Vibrato Depth 1 Lock,43,Vibrato Depth 1 Lock
+vibratospeed1l,vibratoSpeed1l,0.0,0.0,1.0,Vibrato Speed 1 Lock,44,Vibrato Speed 1 Lock,44,Vibrato Speed 1 Lock
+overtones1l,overtones1l,0.0,0.0,1.0,Harmonics 1 Lock,45,Harmonics 1 Lock,45,Harmonics 1 Lock
+overtonefalloff1l,overtoneFalloff1l,0.0,0.0,1.0,Harmonics Falloff 1 Lock,46,Harmonics Falloff 1 Lock,46,Harmonics Falloff 1 Lock
+changerepeat1l,changeRepeat1l,0.0,0.0,1.0,Pitch Jump Repeat Speed 1 Lock,47,Pitch Jump Repeat Speed 1 Lock,47,Pitch Jump Repeat Speed 1 Lock
+changeamount1l,changeAmount1l,0.0,0.0,1.0,Pitch Jump Amount 1 1 Lock,48,Pitch Jump Amount 1 1 Lock,48,Pitch Jump Amount 1 1 Lock
+changespeed1l,changeSpeed1l,0.0,0.0,1.0,Pitch Jump Onset 1 1 Lock,49,Pitch Jump Onset 1 1 Lock,49,Pitch Jump Onset 1 1 Lock
+changeamount21l,changeAmount21l,0.0,0.0,1.0,Pitch Jump Amount 2 1 Lock,50,Pitch Jump Amount 2 1 Lock,50,Pitch Jump Amount 2 1 Lock
+changespeed21l,changeSpeed21l,0.0,0.0,1.0,Pitch Jump Onset 2 1 Lock,51,Pitch Jump Onset 2 1 Lock,51,Pitch Jump Onset 2 1 Lock
+squareduty1l,squareDuty1l,0.0,0.0,1.0,Square Duty 1 Lock,52,Square Duty 1 Lock,52,Square Duty 1 Lock
+dutysweep1l,dutySweep1l,0.0,0.0,1.0,Duty Sweep 1 Lock,53,Duty Sweep 1 Lock,53,Duty Sweep 1 Lock
+repeatspeed1l,repeatSpeed1l,0.0,0.0,1.0,Repeat Speed 1 Lock,54,Repeat Speed 1 Lock,54,Repeat Speed 1 Lock
+flangeroffset1l,flangerOffset1l,0.0,0.0,1.0,Flanger Offset 1 Lock,55,Flanger Offset 1 Lock,55,Flanger Offset 1 Lock
+flangersweep1l,flangerSweep1l,0.0,0.0,1.0,Flanger Sweep 1 Lock,56,Flanger Sweep 1 Lock,56,Flanger Sweep 1 Lock
+lpfiltercutoff1l,lpFilterCutoff1l,0.0,0.0,1.0,LP Filter Cutoff 1 Lock,57,LP Filter Cutoff 1 Lock,57,LP Filter Cutoff 1 Lock
+lpfiltercutoffsweep1l,lpFilterCutoffSweep1l,0.0,0.0,1.0,LP Filter Cutoff Sweep 1 Lock,58,LP Filter Cutoff Sweep 1 Lock,58,LP Filter Cutoff Sweep 1 Lock
+lpfilterresonance1l,lpFilterResonance1l,0.0,0.0,1.0,LP Filter Resonance 1 Lock,59,LP Filter Resonance 1 Lock,59,LP Filter Resonance 1 Lock
+hpfiltercutoff1l,hpFilterCutoff1l,0.0,0.0,1.0,HP Filter Cutoff 1 Lock,60,HP Filter Cutoff 1 Lock,60,HP Filter Cutoff 1 Lock
+hpfiltercutoffsweep1l,hpFilterCutoffSweep1l,0.0,0.0,1.0,HP Filter Cutoff Sweep 1 Lock,61,HP Filter Cutoff Sweep 1 Lock,61,HP Filter Cutoff Sweep 1 Lock
+bitcrush1l,bitCrush1l,0.0,0.0,1.0,Bit Crush 1 Lock,62,Bit Crush 1 Lock,62,Bit Crush 1 Lock
+bitcrushsweep1l,bitCrushSweep1l,0.0,0.0,1.0,Bit Crush Sweep 1 Lock,63,Bit Crush Sweep 1 Lock,63,Bit Crush Sweep 1 Lock
+wavetype2,waveType2,1.0,0.0,8.0,Wave Type 2,64,Wave Type 2,64,Wave Type 2
+mastervolume2,masterVolume2,0.5,0.0,1.0,Master Volume 2,65,Master Volume 2,65,Master Volume 2
+attacktime2,attackTime2,0.0,0.0,1.0,Attack Time 2,66,Attack Time 2,66,Attack Time 2
+sustaintime2,sustainTime2,0.2368491291999817,0.0,1.0,Sustain Time 2,67,Sustain Time 2,67,Sustain Time 2
+sustainpunch2,sustainPunch2,0.0,0.0,1.0,Punch 2,68,Punch 2,68,Punch 2
+decaytime2,decayTime2,0.1250050216913223,0.0,1.0,Decay Time 2,69,Decay Time 2,69,Decay Time 2
+compressionamount2,compressionAmount2,0.300000011920929,0.0,1.0,Compression 2,70,Compression 2,70,Compression 2
+startfrequency2,startFrequency2,0.8613621592521667,0.0,1.0,Frequency 2,71,Frequency 2,71,Frequency 2
+minfrequency2,minFrequency2,0.2508933842182159,0.0,1.0,Frequency Cutoff 2,72,Frequency Cutoff 2,72,Frequency Cutoff 2
+slide2,slide2,-0.2951858639717102,-1.0,1.0,Frequency Slide 2,73,Frequency Slide 2,73,Frequency Slide 2
+deltaslide2,deltaSlide2,0.0,-1.0,1.0,Delta Slide 2,74,Delta Slide 2,74,Delta Slide 2
+vibratodepth2,vibratoDepth2,0.0,0.0,1.0,Vibrato Depth 2,75,Vibrato Depth 2,75,Vibrato Depth 2
+vibratospeed2,vibratoSpeed2,0.0,0.0,1.0,Vibrato Speed 2,76,Vibrato Speed 2,76,Vibrato Speed 2
+overtones2,overtones2,0.0,0.0,1.0,Harmonics 2,77,Harmonics 2,77,Harmonics 2
+overtonefalloff2,overtoneFalloff2,0.0,0.0,1.0,Harmonics Falloff 2,78,Harmonics Falloff 2,78,Harmonics Falloff 2
+changerepeat2,changeRepeat2,0.0,0.0,1.0,Pitch Jump Repeat Speed 2,79,Pitch Jump Repeat Speed 2,79,Pitch Jump Repeat Speed 2
+changeamount2,changeAmount2,0.0,-1.0,1.0,Pitch Jump Amount 1 2,80,Pitch Jump Amount 1 2,80,Pitch Jump Amount 1 2
+changespeed2,changeSpeed2,0.0,0.0,1.0,Pitch Jump Onset 1 2,81,Pitch Jump Onset 1 2,81,Pitch Jump Onset 1 2
+changeamount22,changeAmount22,0.0,-1.0,1.0,Pitch Jump Amount 2 2,82,Pitch Jump Amount 2 2,82,Pitch Jump Amount 2 2
+changespeed22,changeSpeed22,0.0,0.0,1.0,Pitch Jump Onset 2 2,83,Pitch Jump Onset 2 2,83,Pitch Jump Onset 2 2
+squareduty2,squareDuty2,0.06205284222960472,0.0,1.0,Square Duty 2,84,Square Duty 2,84,Square Duty 2
+dutysweep2,dutySweep2,0.1653917878866196,-1.0,1.0,Duty Sweep 2,85,Duty Sweep 2,85,Duty Sweep 2
+repeatspeed2,repeatSpeed2,0.0,0.0,1.0,Repeat Speed 2,86,Repeat Speed 2,86,Repeat Speed 2
+flangeroffset2,flangerOffset2,0.0,-1.0,1.0,Flanger Offset 2,87,Flanger Offset 2,87,Flanger Offset 2
+flangersweep2,flangerSweep2,0.0,-1.0,1.0,Flanger Sweep 2,88,Flanger Sweep 2,88,Flanger Sweep 2
+lpfiltercutoff2,lpFilterCutoff2,1.0,0.0,1.0,LP Filter Cutoff 2,89,LP Filter Cutoff 2,89,LP Filter Cutoff 2
+lpfiltercutoffsweep2,lpFilterCutoffSweep2,0.0,-1.0,1.0,LP Filter Cutoff Sweep 2,90,LP Filter Cutoff Sweep 2,90,LP Filter Cutoff Sweep 2
+lpfilterresonance2,lpFilterResonance2,0.0,0.0,1.0,LP Filter Resonance 2,91,LP Filter Resonance 2,91,LP Filter Resonance 2
+hpfiltercutoff2,hpFilterCutoff2,0.0,0.0,1.0,HP Filter Cutoff 2,92,HP Filter Cutoff 2,92,HP Filter Cutoff 2
+hpfiltercutoffsweep2,hpFilterCutoffSweep2,0.0,-1.0,1.0,HP Filter Cutoff Sweep 2,93,HP Filter Cutoff Sweep 2,93,HP Filter Cutoff Sweep 2
+bitcrush2,bitCrush2,0.0,0.0,1.0,Bit Crush 2,94,Bit Crush 2,94,Bit Crush 2
+bitcrushsweep2,bitCrushSweep2,0.0,-1.0,1.0,Bit Crush Sweep 2,95,Bit Crush Sweep 2,95,Bit Crush Sweep 2
+wavetype2l,waveType2l,0.0,0.0,1.0,Wave Type 2 Lock,96,Wave Type 2 Lock,96,Wave Type 2 Lock
+mastervolume2l,masterVolume2l,1.0,0.0,1.0,Master Volume 2 Lock,97,Master Volume 2 Lock,97,Master Volume 2 Lock
+attacktime2l,attackTime2l,0.0,0.0,1.0,Attack Time 2 Lock,98,Attack Time 2 Lock,98,Attack Time 2 Lock
+sustaintime2l,sustainTime2l,0.0,0.0,1.0,Sustain Time 2 Lock,99,Sustain Time 2 Lock,99,Sustain Time 2 Lock
+sustainpunch2l,sustainPunch2l,0.0,0.0,1.0,Punch 2 Lock,100,Punch 2 Lock,100,Punch 2 Lock
+decaytime2l,decayTime2l,0.0,0.0,1.0,Decay Time 2 Lock,101,Decay Time 2 Lock,101,Decay Time 2 Lock
+compressionamount2l,compressionAmount2l,0.0,0.0,1.0,Compression 2 Lock,102,Compression 2 Lock,102,Compression 2 Lock
+startfrequency2l,startFrequency2l,0.0,0.0,1.0,Frequency 2 Lock,103,Frequency 2 Lock,103,Frequency 2 Lock
+minfrequency2l,minFrequency2l,0.0,0.0,1.0,Frequency Cutoff 2 Lock,104,Frequency Cutoff 2 Lock,104,Frequency Cutoff 2 Lock
+slide2l,slide2l,0.0,0.0,1.0,Frequency Slide 2 Lock,105,Frequency Slide 2 Lock,105,Frequency Slide 2 Lock
+deltaslide2l,deltaSlide2l,0.0,0.0,1.0,Delta Slide 2 Lock,106,Delta Slide 2 Lock,106,Delta Slide 2 Lock
+vibratodepth2l,vibratoDepth2l,0.0,0.0,1.0,Vibrato Depth 2 Lock,107,Vibrato Depth 2 Lock,107,Vibrato Depth 2 Lock
+vibratospeed2l,vibratoSpeed2l,0.0,0.0,1.0,Vibrato Speed 2 Lock,108,Vibrato Speed 2 Lock,108,Vibrato Speed 2 Lock
+overtones2l,overtones2l,0.0,0.0,1.0,Harmonics 2 Lock,109,Harmonics 2 Lock,109,Harmonics 2 Lock
+overtonefalloff2l,overtoneFalloff2l,0.0,0.0,1.0,Harmonics Falloff 2 Lock,110,Harmonics Falloff 2 Lock,110,Harmonics Falloff 2 Lock
+changerepeat2l,changeRepeat2l,0.0,0.0,1.0,Pitch Jump Repeat Speed 2 Lock,111,Pitch Jump Repeat Speed 2 Lock,111,Pitch Jump Repeat Speed 2 Lock
+changeamount2l,changeAmount2l,0.0,0.0,1.0,Pitch Jump Amount 1 2 Lock,112,Pitch Jump Amount 1 2 Lock,112,Pitch Jump Amount 1 2 Lock
+changespeed2l,changeSpeed2l,0.0,0.0,1.0,Pitch Jump Onset 1 2 Lock,113,Pitch Jump Onset 1 2 Lock,113,Pitch Jump Onset 1 2 Lock
+changeamount22l,changeAmount22l,0.0,0.0,1.0,Pitch Jump Amount 2 2 Lock,114,Pitch Jump Amount 2 2 Lock,114,Pitch Jump Amount 2 2 Lock
+changespeed22l,changeSpeed22l,0.0,0.0,1.0,Pitch Jump Onset 2 2 Lock,115,Pitch Jump Onset 2 2 Lock,115,Pitch Jump Onset 2 2 Lock
+squareduty2l,squareDuty2l,0.0,0.0,1.0,Square Duty 2 Lock,116,Square Duty 2 Lock,116,Square Duty 2 Lock
+dutysweep2l,dutySweep2l,0.0,0.0,1.0,Duty Sweep 2 Lock,117,Duty Sweep 2 Lock,117,Duty Sweep 2 Lock
+repeatspeed2l,repeatSpeed2l,0.0,0.0,1.0,Repeat Speed 2 Lock,118,Repeat Speed 2 Lock,118,Repeat Speed 2 Lock
+flangeroffset2l,flangerOffset2l,0.0,0.0,1.0,Flanger Offset 2 Lock,119,Flanger Offset 2 Lock,119,Flanger Offset 2 Lock
+flangersweep2l,flangerSweep2l,0.0,0.0,1.0,Flanger Sweep 2 Lock,120,Flanger Sweep 2 Lock,120,Flanger Sweep 2 Lock
+lpfiltercutoff2l,lpFilterCutoff2l,0.0,0.0,1.0,LP Filter Cutoff 2 Lock,121,LP Filter Cutoff 2 Lock,121,LP Filter Cutoff 2 Lock
+lpfiltercutoffsweep2l,lpFilterCutoffSweep2l,0.0,0.0,1.0,LP Filter Cutoff Sweep 2 Lock,122,LP Filter Cutoff Sweep 2 Lock,122,LP Filter Cutoff Sweep 2 Lock
+lpfilterresonance2l,lpFilterResonance2l,0.0,0.0,1.0,LP Filter Resonance 2 Lock,123,LP Filter Resonance 2 Lock,123,LP Filter Resonance 2 Lock
+hpfiltercutoff2l,hpFilterCutoff2l,0.0,0.0,1.0,HP Filter Cutoff 2 Lock,124,HP Filter Cutoff 2 Lock,124,HP Filter Cutoff 2 Lock
+hpfiltercutoffsweep2l,hpFilterCutoffSweep2l,0.0,0.0,1.0,HP Filter Cutoff Sweep 2 Lock,125,HP Filter Cutoff Sweep 2 Lock,125,HP Filter Cutoff Sweep 2 Lock
+bitcrush2l,bitCrush2l,0.0,0.0,1.0,Bit Crush 2 Lock,126,Bit Crush 2 Lock,126,Bit Crush 2 Lock
+bitcrushsweep2l,bitCrushSweep2l,0.0,0.0,1.0,Bit Crush Sweep 2 Lock,127,Bit Crush Sweep 2 Lock,127,Bit Crush Sweep 2 Lock
+wavetype3,waveType3,1.0,0.0,8.0,Wave Type 3,128,Wave Type 3,128,Wave Type 3
+mastervolume3,masterVolume3,0.5,0.0,1.0,Master Volume 3,129,Master Volume 3,129,Master Volume 3
+attacktime3,attackTime3,0.0,0.0,1.0,Attack Time 3,130,Attack Time 3,130,Attack Time 3
+sustaintime3,sustainTime3,0.1242514252662659,0.0,1.0,Sustain Time 3,131,Sustain Time 3,131,Sustain Time 3
+sustainpunch3,sustainPunch3,0.0,0.0,1.0,Punch 3,132,Punch 3,132,Punch 3
+decaytime3,decayTime3,0.1368388384580612,0.0,1.0,Decay Time 3,133,Decay Time 3,133,Decay Time 3
+compressionamount3,compressionAmount3,0.300000011920929,0.0,1.0,Compression 3,134,Compression 3,134,Compression 3
+startfrequency3,startFrequency3,0.2965305149555206,0.0,1.0,Frequency 3,135,Frequency 3,135,Frequency 3
+minfrequency3,minFrequency3,0.0,0.0,1.0,Frequency Cutoff 3,136,Frequency Cutoff 3,136,Frequency Cutoff 3
+slide3,slide3,0.0,-1.0,1.0,Frequency Slide 3,137,Frequency Slide 3,137,Frequency Slide 3
+deltaslide3,deltaSlide3,0.0,-1.0,1.0,Delta Slide 3,138,Delta Slide 3,138,Delta Slide 3
+vibratodepth3,vibratoDepth3,0.0,0.0,1.0,Vibrato Depth 3,139,Vibrato Depth 3,139,Vibrato Depth 3
+vibratospeed3,vibratoSpeed3,0.0,0.0,1.0,Vibrato Speed 3,140,Vibrato Speed 3,140,Vibrato Speed 3
+overtones3,overtones3,0.0,0.0,1.0,Harmonics 3,141,Harmonics 3,141,Harmonics 3
+overtonefalloff3,overtoneFalloff3,0.0,0.0,1.0,Harmonics Falloff 3,142,Harmonics Falloff 3,142,Harmonics Falloff 3
+changerepeat3,changeRepeat3,0.0,0.0,1.0,Pitch Jump Repeat Speed 3,143,Pitch Jump Repeat Speed 3,143,Pitch Jump Repeat Speed 3
+changeamount3,changeAmount3,0.0,-1.0,1.0,Pitch Jump Amount 1 3,144,Pitch Jump Amount 1 3,144,Pitch Jump Amount 1 3
+changespeed3,changeSpeed3,0.0,0.0,1.0,Pitch Jump Onset 1 3,145,Pitch Jump Onset 1 3,145,Pitch Jump Onset 1 3
+changeamount23,changeAmount23,0.0,-1.0,1.0,Pitch Jump Amount 2 3,146,Pitch Jump Amount 2 3,146,Pitch Jump Amount 2 3
+changespeed23,changeSpeed23,0.0,0.0,1.0,Pitch Jump Onset 2 3,147,Pitch Jump Onset 2 3,147,Pitch Jump Onset 2 3
+squareduty3,squareDuty3,0.0,0.0,1.0,Square Duty 3,148,Square Duty 3,148,Square Duty 3
+dutysweep3,dutySweep3,0.0,-1.0,1.0,Duty Sweep 3,149,Duty Sweep 3,149,Duty Sweep 3
+repeatspeed3,repeatSpeed3,0.0,0.0,1.0,Repeat Speed 3,150,Repeat Speed 3,150,Repeat Speed 3
+flangeroffset3,flangerOffset3,0.0,-1.0,1.0,Flanger Offset 3,151,Flanger Offset 3,151,Flanger Offset 3
+flangersweep3,flangerSweep3,0.0,-1.0,1.0,Flanger Sweep 3,152,Flanger Sweep 3,152,Flanger Sweep 3
+lpfiltercutoff3,lpFilterCutoff3,1.0,0.0,1.0,LP Filter Cutoff 3,153,LP Filter Cutoff 3,153,LP Filter Cutoff 3
+lpfiltercutoffsweep3,lpFilterCutoffSweep3,0.0,-1.0,1.0,LP Filter Cutoff Sweep 3,154,LP Filter Cutoff Sweep 3,154,LP Filter Cutoff Sweep 3
+lpfilterresonance3,lpFilterResonance3,0.0,0.0,1.0,LP Filter Resonance 3,155,LP Filter Resonance 3,155,LP Filter Resonance 3
+hpfiltercutoff3,hpFilterCutoff3,0.1000000014901161,0.0,1.0,HP Filter Cutoff 3,156,HP Filter Cutoff 3,156,HP Filter Cutoff 3
+hpfiltercutoffsweep3,hpFilterCutoffSweep3,0.0,-1.0,1.0,HP Filter Cutoff Sweep 3,157,HP Filter Cutoff Sweep 3,157,HP Filter Cutoff Sweep 3
+bitcrush3,bitCrush3,0.0,0.0,1.0,Bit Crush 3,158,Bit Crush 3,158,Bit Crush 3
+bitcrushsweep3,bitCrushSweep3,0.0,-1.0,1.0,Bit Crush Sweep 3,159,Bit Crush Sweep 3,159,Bit Crush Sweep 3
+wavetype3l,waveType3l,0.0,0.0,1.0,Wave Type 3 Lock,160,Wave Type 3 Lock,160,Wave Type 3 Lock
+mastervolume3l,masterVolume3l,1.0,0.0,1.0,Master Volume 3 Lock,161,Master Volume 3 Lock,161,Master Volume 3 Lock
+attacktime3l,attackTime3l,0.0,0.0,1.0,Attack Time 3 Lock,162,Attack Time 3 Lock,162,Attack Time 3 Lock
+sustaintime3l,sustainTime3l,0.0,0.0,1.0,Sustain Time 3 Lock,163,Sustain Time 3 Lock,163,Sustain Time 3 Lock
+sustainpunch3l,sustainPunch3l,0.0,0.0,1.0,Punch 3 Lock,164,Punch 3 Lock,164,Punch 3 Lock
+decaytime3l,decayTime3l,0.0,0.0,1.0,Decay Time 3 Lock,165,Decay Time 3 Lock,165,Decay Time 3 Lock
+compressionamount3l,compressionAmount3l,0.0,0.0,1.0,Compression 3 Lock,166,Compression 3 Lock,166,Compression 3 Lock
+startfrequency3l,startFrequency3l,0.0,0.0,1.0,Frequency 3 Lock,167,Frequency 3 Lock,167,Frequency 3 Lock
+minfrequency3l,minFrequency3l,0.0,0.0,1.0,Frequency Cutoff 3 Lock,168,Frequency Cutoff 3 Lock,168,Frequency Cutoff 3 Lock
+slide3l,slide3l,0.0,0.0,1.0,Frequency Slide 3 Lock,169,Frequency Slide 3 Lock,169,Frequency Slide 3 Lock
+deltaslide3l,deltaSlide3l,0.0,0.0,1.0,Delta Slide 3 Lock,170,Delta Slide 3 Lock,170,Delta Slide 3 Lock
+vibratodepth3l,vibratoDepth3l,0.0,0.0,1.0,Vibrato Depth 3 Lock,171,Vibrato Depth 3 Lock,171,Vibrato Depth 3 Lock
+vibratospeed3l,vibratoSpeed3l,0.0,0.0,1.0,Vibrato Speed 3 Lock,172,Vibrato Speed 3 Lock,172,Vibrato Speed 3 Lock
+overtones3l,overtones3l,0.0,0.0,1.0,Harmonics 3 Lock,173,Harmonics 3 Lock,173,Harmonics 3 Lock
+overtonefalloff3l,overtoneFalloff3l,0.0,0.0,1.0,Harmonics Falloff 3 Lock,174,Harmonics Falloff 3 Lock,174,Harmonics Falloff 3 Lock
+changerepeat3l,changeRepeat3l,0.0,0.0,1.0,Pitch Jump Repeat Speed 3 Lock,175,Pitch Jump Repeat Speed 3 Lock,175,Pitch Jump Repeat Speed 3 Lock
+changeamount3l,changeAmount3l,0.0,0.0,1.0,Pitch Jump Amount 1 3 Lock,176,Pitch Jump Amount 1 3 Lock,176,Pitch Jump Amount 1 3 Lock
+changespeed3l,changeSpeed3l,0.0,0.0,1.0,Pitch Jump Onset 1 3 Lock,177,Pitch Jump Onset 1 3 Lock,177,Pitch Jump Onset 1 3 Lock
+changeamount23l,changeAmount23l,0.0,0.0,1.0,Pitch Jump Amount 2 3 Lock,178,Pitch Jump Amount 2 3 Lock,178,Pitch Jump Amount 2 3 Lock
+changespeed23l,changeSpeed23l,0.0,0.0,1.0,Pitch Jump Onset 2 3 Lock,179,Pitch Jump Onset 2 3 Lock,179,Pitch Jump Onset 2 3 Lock
+squareduty3l,squareDuty3l,0.0,0.0,1.0,Square Duty 3 Lock,180,Square Duty 3 Lock,180,Square Duty 3 Lock
+dutysweep3l,dutySweep3l,0.0,0.0,1.0,Duty Sweep 3 Lock,181,Duty Sweep 3 Lock,181,Duty Sweep 3 Lock
+repeatspeed3l,repeatSpeed3l,0.0,0.0,1.0,Repeat Speed 3 Lock,182,Repeat Speed 3 Lock,182,Repeat Speed 3 Lock
+flangeroffset3l,flangerOffset3l,0.0,0.0,1.0,Flanger Offset 3 Lock,183,Flanger Offset 3 Lock,183,Flanger Offset 3 Lock
+flangersweep3l,flangerSweep3l,0.0,0.0,1.0,Flanger Sweep 3 Lock,184,Flanger Sweep 3 Lock,184,Flanger Sweep 3 Lock
+lpfiltercutoff3l,lpFilterCutoff3l,0.0,0.0,1.0,LP Filter Cutoff 3 Lock,185,LP Filter Cutoff 3 Lock,185,LP Filter Cutoff 3 Lock
+lpfiltercutoffsweep3l,lpFilterCutoffSweep3l,0.0,0.0,1.0,LP Filter Cutoff Sweep 3 Lock,186,LP Filter Cutoff Sweep 3 Lock,186,LP Filter Cutoff Sweep 3 Lock
+lpfilterresonance3l,lpFilterResonance3l,0.0,0.0,1.0,LP Filter Resonance 3 Lock,187,LP Filter Resonance 3 Lock,187,LP Filter Resonance 3 Lock
+hpfiltercutoff3l,hpFilterCutoff3l,0.0,0.0,1.0,HP Filter Cutoff 3 Lock,188,HP Filter Cutoff 3 Lock,188,HP Filter Cutoff 3 Lock
+hpfiltercutoffsweep3l,hpFilterCutoffSweep3l,0.0,0.0,1.0,HP Filter Cutoff Sweep 3 Lock,189,HP Filter Cutoff Sweep 3 Lock,189,HP Filter Cutoff Sweep 3 Lock
+bitcrush3l,bitCrush3l,0.0,0.0,1.0,Bit Crush 3 Lock,190,Bit Crush 3 Lock,190,Bit Crush 3 Lock
+bitcrushsweep3l,bitCrushSweep3l,0.0,0.0,1.0,Bit Crush Sweep 3 Lock,191,Bit Crush Sweep 3 Lock,191,Bit Crush Sweep 3 Lock
+wavetype4,waveType4,0.0,0.0,8.0,Wave Type 4,192,Wave Type 4,192,Wave Type 4
+mastervolume4,masterVolume4,0.5,0.0,1.0,Master Volume 4,193,Master Volume 4,193,Master Volume 4
+attacktime4,attackTime4,0.0,0.0,1.0,Attack Time 4,194,Attack Time 4,194,Attack Time 4
+sustaintime4,sustainTime4,0.107645258307457,0.0,1.0,Sustain Time 4,195,Sustain Time 4,195,Sustain Time 4
+sustainpunch4,sustainPunch4,0.0,0.0,1.0,Punch 4,196,Punch 4,196,Punch 4
+decaytime4,decayTime4,0.1629713773727417,0.0,1.0,Decay Time 4,197,Decay Time 4,197,Decay Time 4
+compressionamount4,compressionAmount4,0.300000011920929,0.0,1.0,Compression 4,198,Compression 4,198,Compression 4
+startfrequency4,startFrequency4,0.3963069915771484,0.0,1.0,Frequency 4,199,Frequency 4,199,Frequency 4
+minfrequency4,minFrequency4,0.0,0.0,1.0,Frequency Cutoff 4,200,Frequency Cutoff 4,200,Frequency Cutoff 4
+slide4,slide4,0.157252699136734,-1.0,1.0,Frequency Slide 4,201,Frequency Slide 4,201,Frequency Slide 4
+deltaslide4,deltaSlide4,0.0,-1.0,1.0,Delta Slide 4,202,Delta Slide 4,202,Delta Slide 4
+vibratodepth4,vibratoDepth4,0.0,0.0,1.0,Vibrato Depth 4,203,Vibrato Depth 4,203,Vibrato Depth 4
+vibratospeed4,vibratoSpeed4,0.0,0.0,1.0,Vibrato Speed 4,204,Vibrato Speed 4,204,Vibrato Speed 4
+overtones4,overtones4,0.0,0.0,1.0,Harmonics 4,205,Harmonics 4,205,Harmonics 4
+overtonefalloff4,overtoneFalloff4,0.0,0.0,1.0,Harmonics Falloff 4,206,Harmonics Falloff 4,206,Harmonics Falloff 4
+changerepeat4,changeRepeat4,0.0,0.0,1.0,Pitch Jump Repeat Speed 4,207,Pitch Jump Repeat Speed 4,207,Pitch Jump Repeat Speed 4
+changeamount4,changeAmount4,0.0,-1.0,1.0,Pitch Jump Amount 1 4,208,Pitch Jump Amount 1 4,208,Pitch Jump Amount 1 4
+changespeed4,changeSpeed4,0.0,0.0,1.0,Pitch Jump Onset 1 4,209,Pitch Jump Onset 1 4,209,Pitch Jump Onset 1 4
+changeamount24,changeAmount24,0.0,-1.0,1.0,Pitch Jump Amount 2 4,210,Pitch Jump Amount 2 4,210,Pitch Jump Amount 2 4
+changespeed24,changeSpeed24,0.0,0.0,1.0,Pitch Jump Onset 2 4,211,Pitch Jump Onset 2 4,211,Pitch Jump Onset 2 4
+squareduty4,squareDuty4,0.1386417895555496,0.0,1.0,Square Duty 4,212,Square Duty 4,212,Square Duty 4
+dutysweep4,dutySweep4,0.0,-1.0,1.0,Duty Sweep 4,213,Duty Sweep 4,213,Duty Sweep 4
+repeatspeed4,repeatSpeed4,0.0,0.0,1.0,Repeat Speed 4,214,Repeat Speed 4,214,Repeat Speed 4
+flangeroffset4,flangerOffset4,0.0,-1.0,1.0,Flanger Offset 4,215,Flanger Offset 4,215,Flanger Offset 4
+flangersweep4,flangerSweep4,0.0,-1.0,1.0,Flanger Sweep 4,216,Flanger Sweep 4,216,Flanger Sweep 4
+lpfiltercutoff4,lpFilterCutoff4,1.0,0.0,1.0,LP Filter Cutoff 4,217,LP Filter Cutoff 4,217,LP Filter Cutoff 4
+lpfiltercutoffsweep4,lpFilterCutoffSweep4,0.0,-1.0,1.0,LP Filter Cutoff Sweep 4,218,LP Filter Cutoff Sweep 4,218,LP Filter Cutoff Sweep 4
+lpfilterresonance4,lpFilterResonance4,0.0,0.0,1.0,LP Filter Resonance 4,219,LP Filter Resonance 4,219,LP Filter Resonance 4
+hpfiltercutoff4,hpFilterCutoff4,0.0,0.0,1.0,HP Filter Cutoff 4,220,HP Filter Cutoff 4,220,HP Filter Cutoff 4
+hpfiltercutoffsweep4,hpFilterCutoffSweep4,0.0,-1.0,1.0,HP Filter Cutoff Sweep 4,221,HP Filter Cutoff Sweep 4,221,HP Filter Cutoff Sweep 4
+bitcrush4,bitCrush4,0.0,0.0,1.0,Bit Crush 4,222,Bit Crush 4,222,Bit Crush 4
+bitcrushsweep4,bitCrushSweep4,0.0,-1.0,1.0,Bit Crush Sweep 4,223,Bit Crush Sweep 4,223,Bit Crush Sweep 4
+wavetype4l,waveType4l,0.0,0.0,1.0,Wave Type 4 Lock,224,Wave Type 4 Lock,224,Wave Type 4 Lock
+mastervolume4l,masterVolume4l,1.0,0.0,1.0,Master Volume 4 Lock,225,Master Volume 4 Lock,225,Master Volume 4 Lock
+attacktime4l,attackTime4l,0.0,0.0,1.0,Attack Time 4 Lock,226,Attack Time 4 Lock,226,Attack Time 4 Lock
+sustaintime4l,sustainTime4l,0.0,0.0,1.0,Sustain Time 4 Lock,227,Sustain Time 4 Lock,227,Sustain Time 4 Lock
+sustainpunch4l,sustainPunch4l,0.0,0.0,1.0,Punch 4 Lock,228,Punch 4 Lock,228,Punch 4 Lock
+decaytime4l,decayTime4l,0.0,0.0,1.0,Decay Time 4 Lock,229,Decay Time 4 Lock,229,Decay Time 4 Lock
+compressionamount4l,compressionAmount4l,0.0,0.0,1.0,Compression 4 Lock,230,Compression 4 Lock,230,Compression 4 Lock
+startfrequency4l,startFrequency4l,0.0,0.0,1.0,Frequency 4 Lock,231,Frequency 4 Lock,231,Frequency 4 Lock
+minfrequency4l,minFrequency4l,0.0,0.0,1.0,Frequency Cutoff 4 Lock,232,Frequency Cutoff 4 Lock,232,Frequency Cutoff 4 Lock
+slide4l,slide4l,0.0,0.0,1.0,Frequency Slide 4 Lock,233,Frequency Slide 4 Lock,233,Frequency Slide 4 Lock
+deltaslide4l,deltaSlide4l,0.0,0.0,1.0,Delta Slide 4 Lock,234,Delta Slide 4 Lock,234,Delta Slide 4 Lock
+vibratodepth4l,vibratoDepth4l,0.0,0.0,1.0,Vibrato Depth 4 Lock,235,Vibrato Depth 4 Lock,235,Vibrato Depth 4 Lock
+vibratospeed4l,vibratoSpeed4l,0.0,0.0,1.0,Vibrato Speed 4 Lock,236,Vibrato Speed 4 Lock,236,Vibrato Speed 4 Lock
+overtones4l,overtones4l,0.0,0.0,1.0,Harmonics 4 Lock,237,Harmonics 4 Lock,237,Harmonics 4 Lock
+overtonefalloff4l,overtoneFalloff4l,0.0,0.0,1.0,Harmonics Falloff 4 Lock,238,Harmonics Falloff 4 Lock,238,Harmonics Falloff 4 Lock
+changerepeat4l,changeRepeat4l,0.0,0.0,1.0,Pitch Jump Repeat Speed 4 Lock,239,Pitch Jump Repeat Speed 4 Lock,239,Pitch Jump Repeat Speed 4 Lock
+changeamount4l,changeAmount4l,0.0,0.0,1.0,Pitch Jump Amount 1 4 Lock,240,Pitch Jump Amount 1 4 Lock,240,Pitch Jump Amount 1 4 Lock
+changespeed4l,changeSpeed4l,0.0,0.0,1.0,Pitch Jump Onset 1 4 Lock,241,Pitch Jump Onset 1 4 Lock,241,Pitch Jump Onset 1 4 Lock
+changeamount24l,changeAmount24l,0.0,0.0,1.0,Pitch Jump Amount 2 4 Lock,242,Pitch Jump Amount 2 4 Lock,242,Pitch Jump Amount 2 4 Lock
+changespeed24l,changeSpeed24l,0.0,0.0,1.0,Pitch Jump Onset 2 4 Lock,243,Pitch Jump Onset 2 4 Lock,243,Pitch Jump Onset 2 4 Lock
+squareduty4l,squareDuty4l,0.0,0.0,1.0,Square Duty 4 Lock,244,Square Duty 4 Lock,244,Square Duty 4 Lock
+dutysweep4l,dutySweep4l,0.0,0.0,1.0,Duty Sweep 4 Lock,245,Duty Sweep 4 Lock,245,Duty Sweep 4 Lock
+repeatspeed4l,repeatSpeed4l,0.0,0.0,1.0,Repeat Speed 4 Lock,246,Repeat Speed 4 Lock,246,Repeat Speed 4 Lock
+flangeroffset4l,flangerOffset4l,0.0,0.0,1.0,Flanger Offset 4 Lock,247,Flanger Offset 4 Lock,247,Flanger Offset 4 Lock
+flangersweep4l,flangerSweep4l,0.0,0.0,1.0,Flanger Sweep 4 Lock,248,Flanger Sweep 4 Lock,248,Flanger Sweep 4 Lock
+lpfiltercutoff4l,lpFilterCutoff4l,0.0,0.0,1.0,LP Filter Cutoff 4 Lock,249,LP Filter Cutoff 4 Lock,249,LP Filter Cutoff 4 Lock
+lpfiltercutoffsweep4l,lpFilterCutoffSweep4l,0.0,0.0,1.0,LP Filter Cutoff Sweep 4 Lock,250,LP Filter Cutoff Sweep 4 Lock,250,LP Filter Cutoff Sweep 4 Lock
+lpfilterresonance4l,lpFilterResonance4l,0.0,0.0,1.0,LP Filter Resonance 4 Lock,251,LP Filter Resonance 4 Lock,251,LP Filter Resonance 4 Lock
+hpfiltercutoff4l,hpFilterCutoff4l,0.0,0.0,1.0,HP Filter Cutoff 4 Lock,252,HP Filter Cutoff 4 Lock,252,HP Filter Cutoff 4 Lock
+hpfiltercutoffsweep4l,hpFilterCutoffSweep4l,0.0,0.0,1.0,HP Filter Cutoff Sweep 4 Lock,253,HP Filter Cutoff Sweep 4 Lock,253,HP Filter Cutoff Sweep 4 Lock
+bitcrush4l,bitCrush4l,0.0,0.0,1.0,Bit Crush 4 Lock,254,Bit Crush 4 Lock,254,Bit Crush 4 Lock
+bitcrushsweep4l,bitCrushSweep4l,0.0,0.0,1.0,Bit Crush Sweep 4 Lock,255,Bit Crush Sweep 4 Lock,255,Bit Crush Sweep 4 Lock
+wavetype5,waveType5,1.0,0.0,8.0,Wave Type 5,256,Wave Type 5,256,Wave Type 5
+mastervolume5,masterVolume5,0.5,0.0,1.0,Master Volume 5,257,Master Volume 5,257,Master Volume 5
+attacktime5,attackTime5,0.0,0.0,1.0,Attack Time 5,258,Attack Time 5,258,Attack Time 5
+sustaintime5,sustainTime5,0.3970775306224823,0.0,1.0,Sustain Time 5,259,Sustain Time 5,259,Sustain Time 5
+sustainpunch5,sustainPunch5,0.0,0.0,1.0,Punch 5,260,Punch 5,260,Punch 5
+decaytime5,decayTime5,0.3610389828681946,0.0,1.0,Decay Time 5,261,Decay Time 5,261,Decay Time 5
+compressionamount5,compressionAmount5,0.300000011920929,0.0,1.0,Compression 5,262,Compression 5,262,Compression 5
+startfrequency5,startFrequency5,0.2794146537780762,0.0,1.0,Frequency 5,263,Frequency 5,263,Frequency 5
+minfrequency5,minFrequency5,0.0,0.0,1.0,Frequency Cutoff 5,264,Frequency Cutoff 5,264,Frequency Cutoff 5
+slide5,slide5,0.1234427094459534,-1.0,1.0,Frequency Slide 5,265,Frequency Slide 5,265,Frequency Slide 5
+deltaslide5,deltaSlide5,0.0,-1.0,1.0,Delta Slide 5,266,Delta Slide 5,266,Delta Slide 5
+vibratodepth5,vibratoDepth5,0.0,0.0,1.0,Vibrato Depth 5,267,Vibrato Depth 5,267,Vibrato Depth 5
+vibratospeed5,vibratoSpeed5,0.0,0.0,1.0,Vibrato Speed 5,268,Vibrato Speed 5,268,Vibrato Speed 5
+overtones5,overtones5,0.0,0.0,1.0,Harmonics 5,269,Harmonics 5,269,Harmonics 5
+overtonefalloff5,overtoneFalloff5,0.0,0.0,1.0,Harmonics Falloff 5,270,Harmonics Falloff 5,270,Harmonics Falloff 5
+changerepeat5,changeRepeat5,0.0,0.0,1.0,Pitch Jump Repeat Speed 5,271,Pitch Jump Repeat Speed 5,271,Pitch Jump Repeat Speed 5
+changeamount5,changeAmount5,0.0,-1.0,1.0,Pitch Jump Amount 1 5,272,Pitch Jump Amount 1 5,272,Pitch Jump Amount 1 5
+changespeed5,changeSpeed5,0.0,0.0,1.0,Pitch Jump Onset 1 5,273,Pitch Jump Onset 1 5,273,Pitch Jump Onset 1 5
+changeamount25,changeAmount25,0.0,-1.0,1.0,Pitch Jump Amount 2 5,274,Pitch Jump Amount 2 5,274,Pitch Jump Amount 2 5
+changespeed25,changeSpeed25,0.0,0.0,1.0,Pitch Jump Onset 2 5,275,Pitch Jump Onset 2 5,275,Pitch Jump Onset 2 5
+squareduty5,squareDuty5,0.0,0.0,1.0,Square Duty 5,276,Square Duty 5,276,Square Duty 5
+dutysweep5,dutySweep5,0.0,-1.0,1.0,Duty Sweep 5,277,Duty Sweep 5,277,Duty Sweep 5
+repeatspeed5,repeatSpeed5,0.4930806457996368,0.0,1.0,Repeat Speed 5,278,Repeat Speed 5,278,Repeat Speed 5
+flangeroffset5,flangerOffset5,0.0,-1.0,1.0,Flanger Offset 5,279,Flanger Offset 5,279,Flanger Offset 5
+flangersweep5,flangerSweep5,0.0,-1.0,1.0,Flanger Sweep 5,280,Flanger Sweep 5,280,Flanger Sweep 5
+lpfiltercutoff5,lpFilterCutoff5,1.0,0.0,1.0,LP Filter Cutoff 5,281,LP Filter Cutoff 5,281,LP Filter Cutoff 5
+lpfiltercutoffsweep5,lpFilterCutoffSweep5,0.0,-1.0,1.0,LP Filter Cutoff Sweep 5,282,LP Filter Cutoff Sweep 5,282,LP Filter Cutoff Sweep 5
+lpfilterresonance5,lpFilterResonance5,0.0,0.0,1.0,LP Filter Resonance 5,283,LP Filter Resonance 5,283,LP Filter Resonance 5
+hpfiltercutoff5,hpFilterCutoff5,0.0,0.0,1.0,HP Filter Cutoff 5,284,HP Filter Cutoff 5,284,HP Filter Cutoff 5
+hpfiltercutoffsweep5,hpFilterCutoffSweep5,0.0,-1.0,1.0,HP Filter Cutoff Sweep 5,285,HP Filter Cutoff Sweep 5,285,HP Filter Cutoff Sweep 5
+bitcrush5,bitCrush5,0.0,0.0,1.0,Bit Crush 5,286,Bit Crush 5,286,Bit Crush 5
+bitcrushsweep5,bitCrushSweep5,0.0,-1.0,1.0,Bit Crush Sweep 5,287,Bit Crush Sweep 5,287,Bit Crush Sweep 5
+wavetype5l,waveType5l,0.0,0.0,1.0,Wave Type 5 Lock,288,Wave Type 5 Lock,288,Wave Type 5 Lock
+mastervolume5l,masterVolume5l,1.0,0.0,1.0,Master Volume 5 Lock,289,Master Volume 5 Lock,289,Master Volume 5 Lock
+attacktime5l,attackTime5l,0.0,0.0,1.0,Attack Time 5 Lock,290,Attack Time 5 Lock,290,Attack Time 5 Lock
+sustaintime5l,sustainTime5l,0.0,0.0,1.0,Sustain Time 5 Lock,291,Sustain Time 5 Lock,291,Sustain Time 5 Lock
+sustainpunch5l,sustainPunch5l,0.0,0.0,1.0,Punch 5 Lock,292,Punch 5 Lock,292,Punch 5 Lock
+decaytime5l,decayTime5l,0.0,0.0,1.0,Decay Time 5 Lock,293,Decay Time 5 Lock,293,Decay Time 5 Lock
+compressionamount5l,compressionAmount5l,0.0,0.0,1.0,Compression 5 Lock,294,Compression 5 Lock,294,Compression 5 Lock
+startfrequency5l,startFrequency5l,0.0,0.0,1.0,Frequency 5 Lock,295,Frequency 5 Lock,295,Frequency 5 Lock
+minfrequency5l,minFrequency5l,0.0,0.0,1.0,Frequency Cutoff 5 Lock,296,Frequency Cutoff 5 Lock,296,Frequency Cutoff 5 Lock
+slide5l,slide5l,0.0,0.0,1.0,Frequency Slide 5 Lock,297,Frequency Slide 5 Lock,297,Frequency Slide 5 Lock
+deltaslide5l,deltaSlide5l,0.0,0.0,1.0,Delta Slide 5 Lock,298,Delta Slide 5 Lock,298,Delta Slide 5 Lock
+vibratodepth5l,vibratoDepth5l,0.0,0.0,1.0,Vibrato Depth 5 Lock,299,Vibrato Depth 5 Lock,299,Vibrato Depth 5 Lock
+vibratospeed5l,vibratoSpeed5l,0.0,0.0,1.0,Vibrato Speed 5 Lock,300,Vibrato Speed 5 Lock,300,Vibrato Speed 5 Lock
+overtones5l,overtones5l,0.0,0.0,1.0,Harmonics 5 Lock,301,Harmonics 5 Lock,301,Harmonics 5 Lock
+overtonefalloff5l,overtoneFalloff5l,0.0,0.0,1.0,Harmonics Falloff 5 Lock,302,Harmonics Falloff 5 Lock,302,Harmonics Falloff 5 Lock
+changerepeat5l,changeRepeat5l,0.0,0.0,1.0,Pitch Jump Repeat Speed 5 Lock,303,Pitch Jump Repeat Speed 5 Lock,303,Pitch Jump Repeat Speed 5 Lock
+changeamount5l,changeAmount5l,0.0,0.0,1.0,Pitch Jump Amount 1 5 Lock,304,Pitch Jump Amount 1 5 Lock,304,Pitch Jump Amount 1 5 Lock
+changespeed5l,changeSpeed5l,0.0,0.0,1.0,Pitch Jump Onset 1 5 Lock,305,Pitch Jump Onset 1 5 Lock,305,Pitch Jump Onset 1 5 Lock
+changeamount25l,changeAmount25l,0.0,0.0,1.0,Pitch Jump Amount 2 5 Lock,306,Pitch Jump Amount 2 5 Lock,306,Pitch Jump Amount 2 5 Lock
+changespeed25l,changeSpeed25l,0.0,0.0,1.0,Pitch Jump Onset 2 5 Lock,307,Pitch Jump Onset 2 5 Lock,307,Pitch Jump Onset 2 5 Lock
+squareduty5l,squareDuty5l,0.0,0.0,1.0,Square Duty 5 Lock,308,Square Duty 5 Lock,308,Square Duty 5 Lock
+dutysweep5l,dutySweep5l,0.0,0.0,1.0,Duty Sweep 5 Lock,309,Duty Sweep 5 Lock,309,Duty Sweep 5 Lock
+repeatspeed5l,repeatSpeed5l,0.0,0.0,1.0,Repeat Speed 5 Lock,310,Repeat Speed 5 Lock,310,Repeat Speed 5 Lock
+flangeroffset5l,flangerOffset5l,0.0,0.0,1.0,Flanger Offset 5 Lock,311,Flanger Offset 5 Lock,311,Flanger Offset 5 Lock
+flangersweep5l,flangerSweep5l,0.0,0.0,1.0,Flanger Sweep 5 Lock,312,Flanger Sweep 5 Lock,312,Flanger Sweep 5 Lock
+lpfiltercutoff5l,lpFilterCutoff5l,0.0,0.0,1.0,LP Filter Cutoff 5 Lock,313,LP Filter Cutoff 5 Lock,313,LP Filter Cutoff 5 Lock
+lpfiltercutoffsweep5l,lpFilterCutoffSweep5l,0.0,0.0,1.0,LP Filter Cutoff Sweep 5 Lock,314,LP Filter Cutoff Sweep 5 Lock,314,LP Filter Cutoff Sweep 5 Lock
+lpfilterresonance5l,lpFilterResonance5l,0.0,0.0,1.0,LP Filter Resonance 5 Lock,315,LP Filter Resonance 5 Lock,315,LP Filter Resonance 5 Lock
+hpfiltercutoff5l,hpFilterCutoff5l,0.0,0.0,1.0,HP Filter Cutoff 5 Lock,316,HP Filter Cutoff 5 Lock,316,HP Filter Cutoff 5 Lock
+hpfiltercutoffsweep5l,hpFilterCutoffSweep5l,0.0,0.0,1.0,HP Filter Cutoff Sweep 5 Lock,317,HP Filter Cutoff Sweep 5 Lock,317,HP Filter Cutoff Sweep 5 Lock
+bitcrush5l,bitCrush5l,0.0,0.0,1.0,Bit Crush 5 Lock,318,Bit Crush 5 Lock,318,Bit Crush 5 Lock
+bitcrushsweep5l,bitCrushSweep5l,0.0,0.0,1.0,Bit Crush Sweep 5 Lock,319,Bit Crush Sweep 5 Lock,319,Bit Crush Sweep 5 Lock
+wavetype6,waveType6,3.0,0.0,8.0,Wave Type 6,320,Wave Type 6,320,Wave Type 6
+mastervolume6,masterVolume6,0.5,0.0,1.0,Master Volume 6,321,Master Volume 6,321,Master Volume 6
+attacktime6,attackTime6,0.0,0.0,1.0,Attack Time 6,322,Attack Time 6,322,Attack Time 6
+sustaintime6,sustainTime6,0.3287020921707153,0.0,1.0,Sustain Time 6,323,Sustain Time 6,323,Sustain Time 6
+sustainpunch6,sustainPunch6,0.6882900595664978,0.0,1.0,Punch 6,324,Punch 6,324,Punch 6
+decaytime6,decayTime6,0.1921594440937042,0.0,1.0,Decay Time 6,325,Decay Time 6,325,Decay Time 6
+compressionamount6,compressionAmount6,0.300000011920929,0.0,1.0,Compression 6,326,Compression 6,326,Compression 6
+startfrequency6,startFrequency6,0.7557398080825806,0.0,1.0,Frequency 6,327,Frequency 6,327,Frequency 6
+minfrequency6,minFrequency6,0.0,0.0,1.0,Frequency Cutoff 6,328,Frequency Cutoff 6,328,Frequency Cutoff 6
+slide6,slide6,0.0,-1.0,1.0,Frequency Slide 6,329,Frequency Slide 6,329,Frequency Slide 6
+deltaslide6,deltaSlide6,0.0,-1.0,1.0,Delta Slide 6,330,Delta Slide 6,330,Delta Slide 6
+vibratodepth6,vibratoDepth6,0.0,0.0,1.0,Vibrato Depth 6,331,Vibrato Depth 6,331,Vibrato Depth 6
+vibratospeed6,vibratoSpeed6,0.0,0.0,1.0,Vibrato Speed 6,332,Vibrato Speed 6,332,Vibrato Speed 6
+overtones6,overtones6,0.0,0.0,1.0,Harmonics 6,333,Harmonics 6,333,Harmonics 6
+overtonefalloff6,overtoneFalloff6,0.0,0.0,1.0,Harmonics Falloff 6,334,Harmonics Falloff 6,334,Harmonics Falloff 6
+changerepeat6,changeRepeat6,0.0,0.0,1.0,Pitch Jump Repeat Speed 6,335,Pitch Jump Repeat Speed 6,335,Pitch Jump Repeat Speed 6
+changeamount6,changeAmount6,-0.5532752871513367,-1.0,1.0,Pitch Jump Amount 1 6,336,Pitch Jump Amount 1 6,336,Pitch Jump Amount 1 6
+changespeed6,changeSpeed6,0.658386766910553,0.0,1.0,Pitch Jump Onset 1 6,337,Pitch Jump Onset 1 6,337,Pitch Jump Onset 1 6
+changeamount26,changeAmount26,0.0,-1.0,1.0,Pitch Jump Amount 2 6,338,Pitch Jump Amount 2 6,338,Pitch Jump Amount 2 6
+changespeed26,changeSpeed26,0.0,0.0,1.0,Pitch Jump Onset 2 6,339,Pitch Jump Onset 2 6,339,Pitch Jump Onset 2 6
+squareduty6,squareDuty6,0.0,0.0,1.0,Square Duty 6,340,Square Duty 6,340,Square Duty 6
+dutysweep6,dutySweep6,0.0,-1.0,1.0,Duty Sweep 6,341,Duty Sweep 6,341,Duty Sweep 6
+repeatspeed6,repeatSpeed6,0.0,0.0,1.0,Repeat Speed 6,342,Repeat Speed 6,342,Repeat Speed 6
+flangeroffset6,flangerOffset6,0.4507004618644714,-1.0,1.0,Flanger Offset 6,343,Flanger Offset 6,343,Flanger Offset 6
+flangersweep6,flangerSweep6,-0.2284148037433624,-1.0,1.0,Flanger Sweep 6,344,Flanger Sweep 6,344,Flanger Sweep 6
+lpfiltercutoff6,lpFilterCutoff6,1.0,0.0,1.0,LP Filter Cutoff 6,345,LP Filter Cutoff 6,345,LP Filter Cutoff 6
+lpfiltercutoffsweep6,lpFilterCutoffSweep6,0.0,-1.0,1.0,LP Filter Cutoff Sweep 6,346,LP Filter Cutoff Sweep 6,346,LP Filter Cutoff Sweep 6
+lpfilterresonance6,lpFilterResonance6,0.0,0.0,1.0,LP Filter Resonance 6,347,LP Filter Resonance 6,347,LP Filter Resonance 6
+hpfiltercutoff6,hpFilterCutoff6,0.0,0.0,1.0,HP Filter Cutoff 6,348,HP Filter Cutoff 6,348,HP Filter Cutoff 6
+hpfiltercutoffsweep6,hpFilterCutoffSweep6,0.0,-1.0,1.0,HP Filter Cutoff Sweep 6,349,HP Filter Cutoff Sweep 6,349,HP Filter Cutoff Sweep 6
+bitcrush6,bitCrush6,0.0,0.0,1.0,Bit Crush 6,350,Bit Crush 6,350,Bit Crush 6
+bitcrushsweep6,bitCrushSweep6,0.0,-1.0,1.0,Bit Crush Sweep 6,351,Bit Crush Sweep 6,351,Bit Crush Sweep 6
+wavetype6l,waveType6l,0.0,0.0,1.0,Wave Type 6 Lock,352,Wave Type 6 Lock,352,Wave Type 6 Lock
+mastervolume6l,masterVolume6l,1.0,0.0,1.0,Master Volume 6 Lock,353,Master Volume 6 Lock,353,Master Volume 6 Lock
+attacktime6l,attackTime6l,0.0,0.0,1.0,Attack Time 6 Lock,354,Attack Time 6 Lock,354,Attack Time 6 Lock
+sustaintime6l,sustainTime6l,0.0,0.0,1.0,Sustain Time 6 Lock,355,Sustain Time 6 Lock,355,Sustain Time 6 Lock
+sustainpunch6l,sustainPunch6l,0.0,0.0,1.0,Punch 6 Lock,356,Punch 6 Lock,356,Punch 6 Lock
+decaytime6l,decayTime6l,0.0,0.0,1.0,Decay Time 6 Lock,357,Decay Time 6 Lock,357,Decay Time 6 Lock
+compressionamount6l,compressionAmount6l,0.0,0.0,1.0,Compression 6 Lock,358,Compression 6 Lock,358,Compression 6 Lock
+startfrequency6l,startFrequency6l,0.0,0.0,1.0,Frequency 6 Lock,359,Frequency 6 Lock,359,Frequency 6 Lock
+minfrequency6l,minFrequency6l,0.0,0.0,1.0,Frequency Cutoff 6 Lock,360,Frequency Cutoff 6 Lock,360,Frequency Cutoff 6 Lock
+slide6l,slide6l,0.0,0.0,1.0,Frequency Slide 6 Lock,361,Frequency Slide 6 Lock,361,Frequency Slide 6 Lock
+deltaslide6l,deltaSlide6l,0.0,0.0,1.0,Delta Slide 6 Lock,362,Delta Slide 6 Lock,362,Delta Slide 6 Lock
+vibratodepth6l,vibratoDepth6l,0.0,0.0,1.0,Vibrato Depth 6 Lock,363,Vibrato Depth 6 Lock,363,Vibrato Depth 6 Lock
+vibratospeed6l,vibratoSpeed6l,0.0,0.0,1.0,Vibrato Speed 6 Lock,364,Vibrato Speed 6 Lock,364,Vibrato Speed 6 Lock
+overtones6l,overtones6l,0.0,0.0,1.0,Harmonics 6 Lock,365,Harmonics 6 Lock,365,Harmonics 6 Lock
+overtonefalloff6l,overtoneFalloff6l,0.0,0.0,1.0,Harmonics Falloff 6 Lock,366,Harmonics Falloff 6 Lock,366,Harmonics Falloff 6 Lock
+changerepeat6l,changeRepeat6l,0.0,0.0,1.0,Pitch Jump Repeat Speed 6 Lock,367,Pitch Jump Repeat Speed 6 Lock,367,Pitch Jump Repeat Speed 6 Lock
+changeamount6l,changeAmount6l,0.0,0.0,1.0,Pitch Jump Amount 1 6 Lock,368,Pitch Jump Amount 1 6 Lock,368,Pitch Jump Amount 1 6 Lock
+changespeed6l,changeSpeed6l,0.0,0.0,1.0,Pitch Jump Onset 1 6 Lock,369,Pitch Jump Onset 1 6 Lock,369,Pitch Jump Onset 1 6 Lock
+changeamount26l,changeAmount26l,0.0,0.0,1.0,Pitch Jump Amount 2 6 Lock,370,Pitch Jump Amount 2 6 Lock,370,Pitch Jump Amount 2 6 Lock
+changespeed26l,changeSpeed26l,0.0,0.0,1.0,Pitch Jump Onset 2 6 Lock,371,Pitch Jump Onset 2 6 Lock,371,Pitch Jump Onset 2 6 Lock
+squareduty6l,squareDuty6l,0.0,0.0,1.0,Square Duty 6 Lock,372,Square Duty 6 Lock,372,Square Duty 6 Lock
+dutysweep6l,dutySweep6l,0.0,0.0,1.0,Duty Sweep 6 Lock,373,Duty Sweep 6 Lock,373,Duty Sweep 6 Lock
+repeatspeed6l,repeatSpeed6l,0.0,0.0,1.0,Repeat Speed 6 Lock,374,Repeat Speed 6 Lock,374,Repeat Speed 6 Lock
+flangeroffset6l,flangerOffset6l,0.0,0.0,1.0,Flanger Offset 6 Lock,375,Flanger Offset 6 Lock,375,Flanger Offset 6 Lock
+flangersweep6l,flangerSweep6l,0.0,0.0,1.0,Flanger Sweep 6 Lock,376,Flanger Sweep 6 Lock,376,Flanger Sweep 6 Lock
+lpfiltercutoff6l,lpFilterCutoff6l,0.0,0.0,1.0,LP Filter Cutoff 6 Lock,377,LP Filter Cutoff 6 Lock,377,LP Filter Cutoff 6 Lock
+lpfiltercutoffsweep6l,lpFilterCutoffSweep6l,0.0,0.0,1.0,LP Filter Cutoff Sweep 6 Lock,378,LP Filter Cutoff Sweep 6 Lock,378,LP Filter Cutoff Sweep 6 Lock
+lpfilterresonance6l,lpFilterResonance6l,0.0,0.0,1.0,LP Filter Resonance 6 Lock,379,LP Filter Resonance 6 Lock,379,LP Filter Resonance 6 Lock
+hpfiltercutoff6l,hpFilterCutoff6l,0.0,0.0,1.0,HP Filter Cutoff 6 Lock,380,HP Filter Cutoff 6 Lock,380,HP Filter Cutoff 6 Lock
+hpfiltercutoffsweep6l,hpFilterCutoffSweep6l,0.0,0.0,1.0,HP Filter Cutoff Sweep 6 Lock,381,HP Filter Cutoff Sweep 6 Lock,381,HP Filter Cutoff Sweep 6 Lock
+bitcrush6l,bitCrush6l,0.0,0.0,1.0,Bit Crush 6 Lock,382,Bit Crush 6 Lock,382,Bit Crush 6 Lock
+bitcrushsweep6l,bitCrushSweep6l,0.0,0.0,1.0,Bit Crush Sweep 6 Lock,383,Bit Crush Sweep 6 Lock,383,Bit Crush Sweep 6 Lock
+wavetype7,waveType7,0.0,0.0,8.0,Wave Type 7,384,Wave Type 7,384,Wave Type 7
+mastervolume7,masterVolume7,0.5,0.0,1.0,Master Volume 7,385,Master Volume 7,385,Master Volume 7
+attacktime7,attackTime7,0.0,0.0,1.0,Attack Time 7,386,Attack Time 7,386,Attack Time 7
+sustaintime7,sustainTime7,0.3935200273990631,0.0,1.0,Sustain Time 7,387,Sustain Time 7,387,Sustain Time 7
+sustainpunch7,sustainPunch7,0.0,0.0,1.0,Punch 7,388,Punch 7,388,Punch 7
+decaytime7,decayTime7,0.1276687234640121,0.0,1.0,Decay Time 7,389,Decay Time 7,389,Decay Time 7
+compressionamount7,compressionAmount7,0.300000011920929,0.0,1.0,Compression 7,390,Compression 7,390,Compression 7
+startfrequency7,startFrequency7,0.5478406548500061,0.0,1.0,Frequency 7,391,Frequency 7,391,Frequency 7
+minfrequency7,minFrequency7,0.0,0.0,1.0,Frequency Cutoff 7,392,Frequency Cutoff 7,392,Frequency Cutoff 7
+slide7,slide7,0.272686094045639,-1.0,1.0,Frequency Slide 7,393,Frequency Slide 7,393,Frequency Slide 7
+deltaslide7,deltaSlide7,0.0,-1.0,1.0,Delta Slide 7,394,Delta Slide 7,394,Delta Slide 7
+vibratodepth7,vibratoDepth7,0.0,0.0,1.0,Vibrato Depth 7,395,Vibrato Depth 7,395,Vibrato Depth 7
+vibratospeed7,vibratoSpeed7,0.0,0.0,1.0,Vibrato Speed 7,396,Vibrato Speed 7,396,Vibrato Speed 7
+overtones7,overtones7,0.0,0.0,1.0,Harmonics 7,397,Harmonics 7,397,Harmonics 7
+overtonefalloff7,overtoneFalloff7,0.0,0.0,1.0,Harmonics Falloff 7,398,Harmonics Falloff 7,398,Harmonics Falloff 7
+changerepeat7,changeRepeat7,0.0,0.0,1.0,Pitch Jump Repeat Speed 7,399,Pitch Jump Repeat Speed 7,399,Pitch Jump Repeat Speed 7
+changeamount7,changeAmount7,0.0,-1.0,1.0,Pitch Jump Amount 1 7,400,Pitch Jump Amount 1 7,400,Pitch Jump Amount 1 7
+changespeed7,changeSpeed7,0.0,0.0,1.0,Pitch Jump Onset 1 7,401,Pitch Jump Onset 1 7,401,Pitch Jump Onset 1 7
+changeamount27,changeAmount27,0.0,-1.0,1.0,Pitch Jump Amount 2 7,402,Pitch Jump Amount 2 7,402,Pitch Jump Amount 2 7
+changespeed27,changeSpeed27,0.0,0.0,1.0,Pitch Jump Onset 2 7,403,Pitch Jump Onset 2 7,403,Pitch Jump Onset 2 7
+squareduty7,squareDuty7,0.4825095236301422,0.0,1.0,Square Duty 7,404,Square Duty 7,404,Square Duty 7
+dutysweep7,dutySweep7,0.0,-1.0,1.0,Duty Sweep 7,405,Duty Sweep 7,405,Duty Sweep 7
+repeatspeed7,repeatSpeed7,0.0,0.0,1.0,Repeat Speed 7,406,Repeat Speed 7,406,Repeat Speed 7
+flangeroffset7,flangerOffset7,0.0,-1.0,1.0,Flanger Offset 7,407,Flanger Offset 7,407,Flanger Offset 7
+flangersweep7,flangerSweep7,0.0,-1.0,1.0,Flanger Sweep 7,408,Flanger Sweep 7,408,Flanger Sweep 7
+lpfiltercutoff7,lpFilterCutoff7,1.0,0.0,1.0,LP Filter Cutoff 7,409,LP Filter Cutoff 7,409,LP Filter Cutoff 7
+lpfiltercutoffsweep7,lpFilterCutoffSweep7,0.0,-1.0,1.0,LP Filter Cutoff Sweep 7,410,LP Filter Cutoff Sweep 7,410,LP Filter Cutoff Sweep 7
+lpfilterresonance7,lpFilterResonance7,0.0,0.0,1.0,LP Filter Resonance 7,411,LP Filter Resonance 7,411,LP Filter Resonance 7
+hpfiltercutoff7,hpFilterCutoff7,0.03487822785973549,0.0,1.0,HP Filter Cutoff 7,412,HP Filter Cutoff 7,412,HP Filter Cutoff 7
+hpfiltercutoffsweep7,hpFilterCutoffSweep7,0.0,-1.0,1.0,HP Filter Cutoff Sweep 7,413,HP Filter Cutoff Sweep 7,413,HP Filter Cutoff Sweep 7
+bitcrush7,bitCrush7,0.0,0.0,1.0,Bit Crush 7,414,Bit Crush 7,414,Bit Crush 7
+bitcrushsweep7,bitCrushSweep7,0.0,-1.0,1.0,Bit Crush Sweep 7,415,Bit Crush Sweep 7,415,Bit Crush Sweep 7
+wavetype7l,waveType7l,0.0,0.0,1.0,Wave Type 7 Lock,416,Wave Type 7 Lock,416,Wave Type 7 Lock
+mastervolume7l,masterVolume7l,1.0,0.0,1.0,Master Volume 7 Lock,417,Master Volume 7 Lock,417,Master Volume 7 Lock
+attacktime7l,attackTime7l,0.0,0.0,1.0,Attack Time 7 Lock,418,Attack Time 7 Lock,418,Attack Time 7 Lock
+sustaintime7l,sustainTime7l,0.0,0.0,1.0,Sustain Time 7 Lock,419,Sustain Time 7 Lock,419,Sustain Time 7 Lock
+sustainpunch7l,sustainPunch7l,0.0,0.0,1.0,Punch 7 Lock,420,Punch 7 Lock,420,Punch 7 Lock
+decaytime7l,decayTime7l,0.0,0.0,1.0,Decay Time 7 Lock,421,Decay Time 7 Lock,421,Decay Time 7 Lock
+compressionamount7l,compressionAmount7l,0.0,0.0,1.0,Compression 7 Lock,422,Compression 7 Lock,422,Compression 7 Lock
+startfrequency7l,startFrequency7l,0.0,0.0,1.0,Frequency 7 Lock,423,Frequency 7 Lock,423,Frequency 7 Lock
+minfrequency7l,minFrequency7l,0.0,0.0,1.0,Frequency Cutoff 7 Lock,424,Frequency Cutoff 7 Lock,424,Frequency Cutoff 7 Lock
+slide7l,slide7l,0.0,0.0,1.0,Frequency Slide 7 Lock,425,Frequency Slide 7 Lock,425,Frequency Slide 7 Lock
+deltaslide7l,deltaSlide7l,0.0,0.0,1.0,Delta Slide 7 Lock,426,Delta Slide 7 Lock,426,Delta Slide 7 Lock
+vibratodepth7l,vibratoDepth7l,0.0,0.0,1.0,Vibrato Depth 7 Lock,427,Vibrato Depth 7 Lock,427,Vibrato Depth 7 Lock
+vibratospeed7l,vibratoSpeed7l,0.0,0.0,1.0,Vibrato Speed 7 Lock,428,Vibrato Speed 7 Lock,428,Vibrato Speed 7 Lock
+overtones7l,overtones7l,0.0,0.0,1.0,Harmonics 7 Lock,429,Harmonics 7 Lock,429,Harmonics 7 Lock
+overtonefalloff7l,overtoneFalloff7l,0.0,0.0,1.0,Harmonics Falloff 7 Lock,430,Harmonics Falloff 7 Lock,430,Harmonics Falloff 7 Lock
+changerepeat7l,changeRepeat7l,0.0,0.0,1.0,Pitch Jump Repeat Speed 7 Lock,431,Pitch Jump Repeat Speed 7 Lock,431,Pitch Jump Repeat Speed 7 Lock
+changeamount7l,changeAmount7l,0.0,0.0,1.0,Pitch Jump Amount 1 7 Lock,432,Pitch Jump Amount 1 7 Lock,432,Pitch Jump Amount 1 7 Lock
+changespeed7l,changeSpeed7l,0.0,0.0,1.0,Pitch Jump Onset 1 7 Lock,433,Pitch Jump Onset 1 7 Lock,433,Pitch Jump Onset 1 7 Lock
+changeamount27l,changeAmount27l,0.0,0.0,1.0,Pitch Jump Amount 2 7 Lock,434,Pitch Jump Amount 2 7 Lock,434,Pitch Jump Amount 2 7 Lock
+changespeed27l,changeSpeed27l,0.0,0.0,1.0,Pitch Jump Onset 2 7 Lock,435,Pitch Jump Onset 2 7 Lock,435,Pitch Jump Onset 2 7 Lock
+squareduty7l,squareDuty7l,0.0,0.0,1.0,Square Duty 7 Lock,436,Square Duty 7 Lock,436,Square Duty 7 Lock
+dutysweep7l,dutySweep7l,0.0,0.0,1.0,Duty Sweep 7 Lock,437,Duty Sweep 7 Lock,437,Duty Sweep 7 Lock
+repeatspeed7l,repeatSpeed7l,0.0,0.0,1.0,Repeat Speed 7 Lock,438,Repeat Speed 7 Lock,438,Repeat Speed 7 Lock
+flangeroffset7l,flangerOffset7l,0.0,0.0,1.0,Flanger Offset 7 Lock,439,Flanger Offset 7 Lock,439,Flanger Offset 7 Lock
+flangersweep7l,flangerSweep7l,0.0,0.0,1.0,Flanger Sweep 7 Lock,440,Flanger Sweep 7 Lock,440,Flanger Sweep 7 Lock
+lpfiltercutoff7l,lpFilterCutoff7l,0.0,0.0,1.0,LP Filter Cutoff 7 Lock,441,LP Filter Cutoff 7 Lock,441,LP Filter Cutoff 7 Lock
+lpfiltercutoffsweep7l,lpFilterCutoffSweep7l,0.0,0.0,1.0,LP Filter Cutoff Sweep 7 Lock,442,LP Filter Cutoff Sweep 7 Lock,442,LP Filter Cutoff Sweep 7 Lock
+lpfilterresonance7l,lpFilterResonance7l,0.0,0.0,1.0,LP Filter Resonance 7 Lock,443,LP Filter Resonance 7 Lock,443,LP Filter Resonance 7 Lock
+hpfiltercutoff7l,hpFilterCutoff7l,0.0,0.0,1.0,HP Filter Cutoff 7 Lock,444,HP Filter Cutoff 7 Lock,444,HP Filter Cutoff 7 Lock
+hpfiltercutoffsweep7l,hpFilterCutoffSweep7l,0.0,0.0,1.0,HP Filter Cutoff Sweep 7 Lock,445,HP Filter Cutoff Sweep 7 Lock,445,HP Filter Cutoff Sweep 7 Lock
+bitcrush7l,bitCrush7l,0.0,0.0,1.0,Bit Crush 7 Lock,446,Bit Crush 7 Lock,446,Bit Crush 7 Lock
+bitcrushsweep7l,bitCrushSweep7l,0.0,0.0,1.0,Bit Crush Sweep 7 Lock,447,Bit Crush Sweep 7 Lock,447,Bit Crush Sweep 7 Lock
+wavetype8,waveType8,2.0,0.0,8.0,Wave Type 8,448,Wave Type 8,448,Wave Type 8
+mastervolume8,masterVolume8,0.5,0.0,1.0,Master Volume 8,449,Master Volume 8,449,Master Volume 8
+attacktime8,attackTime8,0.0,0.0,1.0,Attack Time 8,450,Attack Time 8,450,Attack Time 8
+sustaintime8,sustainTime8,0.03076580166816711,0.0,1.0,Sustain Time 8,451,Sustain Time 8,451,Sustain Time 8
+sustainpunch8,sustainPunch8,0.5086470246315002,0.0,1.0,Punch 8,452,Punch 8,452,Punch 8
+decaytime8,decayTime8,0.1570945978164673,0.0,1.0,Decay Time 8,453,Decay Time 8,453,Decay Time 8
+compressionamount8,compressionAmount8,0.300000011920929,0.0,1.0,Compression 8,454,Compression 8,454,Compression 8
+startfrequency8,startFrequency8,0.8279492855072021,0.0,1.0,Frequency 8,455,Frequency 8,455,Frequency 8
+minfrequency8,minFrequency8,0.0,0.0,1.0,Frequency Cutoff 8,456,Frequency Cutoff 8,456,Frequency Cutoff 8
+slide8,slide8,0.0,-1.0,1.0,Frequency Slide 8,457,Frequency Slide 8,457,Frequency Slide 8
+deltaslide8,deltaSlide8,0.0,-1.0,1.0,Delta Slide 8,458,Delta Slide 8,458,Delta Slide 8
+vibratodepth8,vibratoDepth8,0.0,0.0,1.0,Vibrato Depth 8,459,Vibrato Depth 8,459,Vibrato Depth 8
+vibratospeed8,vibratoSpeed8,0.0,0.0,1.0,Vibrato Speed 8,460,Vibrato Speed 8,460,Vibrato Speed 8
+overtones8,overtones8,0.0,0.0,1.0,Harmonics 8,461,Harmonics 8,461,Harmonics 8
+overtonefalloff8,overtoneFalloff8,0.0,0.0,1.0,Harmonics Falloff 8,462,Harmonics Falloff 8,462,Harmonics Falloff 8
+changerepeat8,changeRepeat8,0.0,0.0,1.0,Pitch Jump Repeat Speed 8,463,Pitch Jump Repeat Speed 8,463,Pitch Jump Repeat Speed 8
+changeamount8,changeAmount8,0.0,-1.0,1.0,Pitch Jump Amount 1 8,464,Pitch Jump Amount 1 8,464,Pitch Jump Amount 1 8
+changespeed8,changeSpeed8,0.0,0.0,1.0,Pitch Jump Onset 1 8,465,Pitch Jump Onset 1 8,465,Pitch Jump Onset 1 8
+changeamount28,changeAmount28,0.0,-1.0,1.0,Pitch Jump Amount 2 8,466,Pitch Jump Amount 2 8,466,Pitch Jump Amount 2 8
+changespeed28,changeSpeed28,0.0,0.0,1.0,Pitch Jump Onset 2 8,467,Pitch Jump Onset 2 8,467,Pitch Jump Onset 2 8
+squareduty8,squareDuty8,0.0,0.0,1.0,Square Duty 8,468,Square Duty 8,468,Square Duty 8
+dutysweep8,dutySweep8,0.0,-1.0,1.0,Duty Sweep 8,469,Duty Sweep 8,469,Duty Sweep 8
+repeatspeed8,repeatSpeed8,0.0,0.0,1.0,Repeat Speed 8,470,Repeat Speed 8,470,Repeat Speed 8
+flangeroffset8,flangerOffset8,0.0,-1.0,1.0,Flanger Offset 8,471,Flanger Offset 8,471,Flanger Offset 8
+flangersweep8,flangerSweep8,0.0,-1.0,1.0,Flanger Sweep 8,472,Flanger Sweep 8,472,Flanger Sweep 8
+lpfiltercutoff8,lpFilterCutoff8,1.0,0.0,1.0,LP Filter Cutoff 8,473,LP Filter Cutoff 8,473,LP Filter Cutoff 8
+lpfiltercutoffsweep8,lpFilterCutoffSweep8,0.0,-1.0,1.0,LP Filter Cutoff Sweep 8,474,LP Filter Cutoff Sweep 8,474,LP Filter Cutoff Sweep 8
+lpfilterresonance8,lpFilterResonance8,0.0,0.0,1.0,LP Filter Resonance 8,475,LP Filter Resonance 8,475,LP Filter Resonance 8
+hpfiltercutoff8,hpFilterCutoff8,0.0,0.0,1.0,HP Filter Cutoff 8,476,HP Filter Cutoff 8,476,HP Filter Cutoff 8
+hpfiltercutoffsweep8,hpFilterCutoffSweep8,0.0,-1.0,1.0,HP Filter Cutoff Sweep 8,477,HP Filter Cutoff Sweep 8,477,HP Filter Cutoff Sweep 8
+bitcrush8,bitCrush8,0.0,0.0,1.0,Bit Crush 8,478,Bit Crush 8,478,Bit Crush 8
+bitcrushsweep8,bitCrushSweep8,0.0,-1.0,1.0,Bit Crush Sweep 8,479,Bit Crush Sweep 8,479,Bit Crush Sweep 8
+wavetype8l,waveType8l,0.0,0.0,1.0,Wave Type 8 Lock,480,Wave Type 8 Lock,480,Wave Type 8 Lock
+mastervolume8l,masterVolume8l,1.0,0.0,1.0,Master Volume 8 Lock,481,Master Volume 8 Lock,481,Master Volume 8 Lock
+attacktime8l,attackTime8l,0.0,0.0,1.0,Attack Time 8 Lock,482,Attack Time 8 Lock,482,Attack Time 8 Lock
+sustaintime8l,sustainTime8l,0.0,0.0,1.0,Sustain Time 8 Lock,483,Sustain Time 8 Lock,483,Sustain Time 8 Lock
+sustainpunch8l,sustainPunch8l,0.0,0.0,1.0,Punch 8 Lock,484,Punch 8 Lock,484,Punch 8 Lock
+decaytime8l,decayTime8l,0.0,0.0,1.0,Decay Time 8 Lock,485,Decay Time 8 Lock,485,Decay Time 8 Lock
+compressionamount8l,compressionAmount8l,0.0,0.0,1.0,Compression 8 Lock,486,Compression 8 Lock,486,Compression 8 Lock
+startfrequency8l,startFrequency8l,0.0,0.0,1.0,Frequency 8 Lock,487,Frequency 8 Lock,487,Frequency 8 Lock
+minfrequency8l,minFrequency8l,0.0,0.0,1.0,Frequency Cutoff 8 Lock,488,Frequency Cutoff 8 Lock,488,Frequency Cutoff 8 Lock
+slide8l,slide8l,0.0,0.0,1.0,Frequency Slide 8 Lock,489,Frequency Slide 8 Lock,489,Frequency Slide 8 Lock
+deltaslide8l,deltaSlide8l,0.0,0.0,1.0,Delta Slide 8 Lock,490,Delta Slide 8 Lock,490,Delta Slide 8 Lock
+vibratodepth8l,vibratoDepth8l,0.0,0.0,1.0,Vibrato Depth 8 Lock,491,Vibrato Depth 8 Lock,491,Vibrato Depth 8 Lock
+vibratospeed8l,vibratoSpeed8l,0.0,0.0,1.0,Vibrato Speed 8 Lock,492,Vibrato Speed 8 Lock,492,Vibrato Speed 8 Lock
+overtones8l,overtones8l,0.0,0.0,1.0,Harmonics 8 Lock,493,Harmonics 8 Lock,493,Harmonics 8 Lock
+overtonefalloff8l,overtoneFalloff8l,0.0,0.0,1.0,Harmonics Falloff 8 Lock,494,Harmonics Falloff 8 Lock,494,Harmonics Falloff 8 Lock
+changerepeat8l,changeRepeat8l,0.0,0.0,1.0,Pitch Jump Repeat Speed 8 Lock,495,Pitch Jump Repeat Speed 8 Lock,495,Pitch Jump Repeat Speed 8 Lock
+changeamount8l,changeAmount8l,0.0,0.0,1.0,Pitch Jump Amount 1 8 Lock,496,Pitch Jump Amount 1 8 Lock,496,Pitch Jump Amount 1 8 Lock
+changespeed8l,changeSpeed8l,0.0,0.0,1.0,Pitch Jump Onset 1 8 Lock,497,Pitch Jump Onset 1 8 Lock,497,Pitch Jump Onset 1 8 Lock
+changeamount28l,changeAmount28l,0.0,0.0,1.0,Pitch Jump Amount 2 8 Lock,498,Pitch Jump Amount 2 8 Lock,498,Pitch Jump Amount 2 8 Lock
+changespeed28l,changeSpeed28l,0.0,0.0,1.0,Pitch Jump Onset 2 8 Lock,499,Pitch Jump Onset 2 8 Lock,499,Pitch Jump Onset 2 8 Lock
+squareduty8l,squareDuty8l,0.0,0.0,1.0,Square Duty 8 Lock,500,Square Duty 8 Lock,500,Square Duty 8 Lock
+dutysweep8l,dutySweep8l,0.0,0.0,1.0,Duty Sweep 8 Lock,501,Duty Sweep 8 Lock,501,Duty Sweep 8 Lock
+repeatspeed8l,repeatSpeed8l,0.0,0.0,1.0,Repeat Speed 8 Lock,502,Repeat Speed 8 Lock,502,Repeat Speed 8 Lock
+flangeroffset8l,flangerOffset8l,0.0,0.0,1.0,Flanger Offset 8 Lock,503,Flanger Offset 8 Lock,503,Flanger Offset 8 Lock
+flangersweep8l,flangerSweep8l,0.0,0.0,1.0,Flanger Sweep 8 Lock,504,Flanger Sweep 8 Lock,504,Flanger Sweep 8 Lock
+lpfiltercutoff8l,lpFilterCutoff8l,0.0,0.0,1.0,LP Filter Cutoff 8 Lock,505,LP Filter Cutoff 8 Lock,505,LP Filter Cutoff 8 Lock
+lpfiltercutoffsweep8l,lpFilterCutoffSweep8l,0.0,0.0,1.0,LP Filter Cutoff Sweep 8 Lock,506,LP Filter Cutoff Sweep 8 Lock,506,LP Filter Cutoff Sweep 8 Lock
+lpfilterresonance8l,lpFilterResonance8l,0.0,0.0,1.0,LP Filter Resonance 8 Lock,507,LP Filter Resonance 8 Lock,507,LP Filter Resonance 8 Lock
+hpfiltercutoff8l,hpFilterCutoff8l,0.0,0.0,1.0,HP Filter Cutoff 8 Lock,508,HP Filter Cutoff 8 Lock,508,HP Filter Cutoff 8 Lock
+hpfiltercutoffsweep8l,hpFilterCutoffSweep8l,0.0,0.0,1.0,HP Filter Cutoff Sweep 8 Lock,509,HP Filter Cutoff Sweep 8 Lock,509,HP Filter Cutoff Sweep 8 Lock
+bitcrush8l,bitCrush8l,0.0,0.0,1.0,Bit Crush 8 Lock,510,Bit Crush 8 Lock,510,Bit Crush 8 Lock
+bitcrushsweep8l,bitCrushSweep8l,0.0,0.0,1.0,Bit Crush Sweep 8 Lock,511,Bit Crush Sweep 8 Lock,511,Bit Crush Sweep 8 Lock
+wavetype9,waveType9,0.0,0.0,8.0,Wave Type 9,512,Wave Type 9,512,Wave Type 9
+mastervolume9,masterVolume9,0.5,0.0,1.0,Master Volume 9,513,Master Volume 9,513,Master Volume 9
+attacktime9,attackTime9,0.0,0.0,1.0,Attack Time 9,514,Attack Time 9,514,Attack Time 9
+sustaintime9,sustainTime9,0.1764319539070129,0.0,1.0,Sustain Time 9,515,Sustain Time 9,515,Sustain Time 9
+sustainpunch9,sustainPunch9,0.0,0.0,1.0,Punch 9,516,Punch 9,516,Punch 9
+decaytime9,decayTime9,0.1814892888069153,0.0,1.0,Decay Time 9,517,Decay Time 9,517,Decay Time 9
+compressionamount9,compressionAmount9,0.300000011920929,0.0,1.0,Compression 9,518,Compression 9,518,Compression 9
+startfrequency9,startFrequency9,0.3158394396305084,0.0,1.0,Frequency 9,519,Frequency 9,519,Frequency 9
+minfrequency9,minFrequency9,0.0,0.0,1.0,Frequency Cutoff 9,520,Frequency Cutoff 9,520,Frequency Cutoff 9
+slide9,slide9,0.1639416962862015,-1.0,1.0,Frequency Slide 9,521,Frequency Slide 9,521,Frequency Slide 9
+deltaslide9,deltaSlide9,0.0,-1.0,1.0,Delta Slide 9,522,Delta Slide 9,522,Delta Slide 9
+vibratodepth9,vibratoDepth9,0.0,0.0,1.0,Vibrato Depth 9,523,Vibrato Depth 9,523,Vibrato Depth 9
+vibratospeed9,vibratoSpeed9,0.0,0.0,1.0,Vibrato Speed 9,524,Vibrato Speed 9,524,Vibrato Speed 9
+overtones9,overtones9,0.0,0.0,1.0,Harmonics 9,525,Harmonics 9,525,Harmonics 9
+overtonefalloff9,overtoneFalloff9,0.0,0.0,1.0,Harmonics Falloff 9,526,Harmonics Falloff 9,526,Harmonics Falloff 9
+changerepeat9,changeRepeat9,0.0,0.0,1.0,Pitch Jump Repeat Speed 9,527,Pitch Jump Repeat Speed 9,527,Pitch Jump Repeat Speed 9
+changeamount9,changeAmount9,0.0,-1.0,1.0,Pitch Jump Amount 1 9,528,Pitch Jump Amount 1 9,528,Pitch Jump Amount 1 9
+changespeed9,changeSpeed9,0.0,0.0,1.0,Pitch Jump Onset 1 9,529,Pitch Jump Onset 1 9,529,Pitch Jump Onset 1 9
+changeamount29,changeAmount29,0.0,-1.0,1.0,Pitch Jump Amount 2 9,530,Pitch Jump Amount 2 9,530,Pitch Jump Amount 2 9
+changespeed29,changeSpeed29,0.0,0.0,1.0,Pitch Jump Onset 2 9,531,Pitch Jump Onset 2 9,531,Pitch Jump Onset 2 9
+squareduty9,squareDuty9,0.4028003513813019,0.0,1.0,Square Duty 9,532,Square Duty 9,532,Square Duty 9
+dutysweep9,dutySweep9,0.0,-1.0,1.0,Duty Sweep 9,533,Duty Sweep 9,533,Duty Sweep 9
+repeatspeed9,repeatSpeed9,0.0,0.0,1.0,Repeat Speed 9,534,Repeat Speed 9,534,Repeat Speed 9
+flangeroffset9,flangerOffset9,0.0,-1.0,1.0,Flanger Offset 9,535,Flanger Offset 9,535,Flanger Offset 9
+flangersweep9,flangerSweep9,0.0,-1.0,1.0,Flanger Sweep 9,536,Flanger Sweep 9,536,Flanger Sweep 9
+lpfiltercutoff9,lpFilterCutoff9,0.7241547703742981,0.0,1.0,LP Filter Cutoff 9,537,LP Filter Cutoff 9,537,LP Filter Cutoff 9
+lpfiltercutoffsweep9,lpFilterCutoffSweep9,0.0,-1.0,1.0,LP Filter Cutoff Sweep 9,538,LP Filter Cutoff Sweep 9,538,LP Filter Cutoff Sweep 9
+lpfilterresonance9,lpFilterResonance9,0.0,0.0,1.0,LP Filter Resonance 9,539,LP Filter Resonance 9,539,LP Filter Resonance 9
+hpfiltercutoff9,hpFilterCutoff9,0.2080653756856918,0.0,1.0,HP Filter Cutoff 9,540,HP Filter Cutoff 9,540,HP Filter Cutoff 9
+hpfiltercutoffsweep9,hpFilterCutoffSweep9,0.0,-1.0,1.0,HP Filter Cutoff Sweep 9,541,HP Filter Cutoff Sweep 9,541,HP Filter Cutoff Sweep 9
+bitcrush9,bitCrush9,0.0,0.0,1.0,Bit Crush 9,542,Bit Crush 9,542,Bit Crush 9
+bitcrushsweep9,bitCrushSweep9,0.0,-1.0,1.0,Bit Crush Sweep 9,543,Bit Crush Sweep 9,543,Bit Crush Sweep 9
+wavetype9l,waveType9l,0.0,0.0,1.0,Wave Type 9 Lock,544,Wave Type 9 Lock,544,Wave Type 9 Lock
+mastervolume9l,masterVolume9l,1.0,0.0,1.0,Master Volume 9 Lock,545,Master Volume 9 Lock,545,Master Volume 9 Lock
+attacktime9l,attackTime9l,0.0,0.0,1.0,Attack Time 9 Lock,546,Attack Time 9 Lock,546,Attack Time 9 Lock
+sustaintime9l,sustainTime9l,0.0,0.0,1.0,Sustain Time 9 Lock,547,Sustain Time 9 Lock,547,Sustain Time 9 Lock
+sustainpunch9l,sustainPunch9l,0.0,0.0,1.0,Punch 9 Lock,548,Punch 9 Lock,548,Punch 9 Lock
+decaytime9l,decayTime9l,0.0,0.0,1.0,Decay Time 9 Lock,549,Decay Time 9 Lock,549,Decay Time 9 Lock
+compressionamount9l,compressionAmount9l,0.0,0.0,1.0,Compression 9 Lock,550,Compression 9 Lock,550,Compression 9 Lock
+startfrequency9l,startFrequency9l,0.0,0.0,1.0,Frequency 9 Lock,551,Frequency 9 Lock,551,Frequency 9 Lock
+minfrequency9l,minFrequency9l,0.0,0.0,1.0,Frequency Cutoff 9 Lock,552,Frequency Cutoff 9 Lock,552,Frequency Cutoff 9 Lock
+slide9l,slide9l,0.0,0.0,1.0,Frequency Slide 9 Lock,553,Frequency Slide 9 Lock,553,Frequency Slide 9 Lock
+deltaslide9l,deltaSlide9l,0.0,0.0,1.0,Delta Slide 9 Lock,554,Delta Slide 9 Lock,554,Delta Slide 9 Lock
+vibratodepth9l,vibratoDepth9l,0.0,0.0,1.0,Vibrato Depth 9 Lock,555,Vibrato Depth 9 Lock,555,Vibrato Depth 9 Lock
+vibratospeed9l,vibratoSpeed9l,0.0,0.0,1.0,Vibrato Speed 9 Lock,556,Vibrato Speed 9 Lock,556,Vibrato Speed 9 Lock
+overtones9l,overtones9l,0.0,0.0,1.0,Harmonics 9 Lock,557,Harmonics 9 Lock,557,Harmonics 9 Lock
+overtonefalloff9l,overtoneFalloff9l,0.0,0.0,1.0,Harmonics Falloff 9 Lock,558,Harmonics Falloff 9 Lock,558,Harmonics Falloff 9 Lock
+changerepeat9l,changeRepeat9l,0.0,0.0,1.0,Pitch Jump Repeat Speed 9 Lock,559,Pitch Jump Repeat Speed 9 Lock,559,Pitch Jump Repeat Speed 9 Lock
+changeamount9l,changeAmount9l,0.0,0.0,1.0,Pitch Jump Amount 1 9 Lock,560,Pitch Jump Amount 1 9 Lock,560,Pitch Jump Amount 1 9 Lock
+changespeed9l,changeSpeed9l,0.0,0.0,1.0,Pitch Jump Onset 1 9 Lock,561,Pitch Jump Onset 1 9 Lock,561,Pitch Jump Onset 1 9 Lock
+changeamount29l,changeAmount29l,0.0,0.0,1.0,Pitch Jump Amount 2 9 Lock,562,Pitch Jump Amount 2 9 Lock,562,Pitch Jump Amount 2 9 Lock
+changespeed29l,changeSpeed29l,0.0,0.0,1.0,Pitch Jump Onset 2 9 Lock,563,Pitch Jump Onset 2 9 Lock,563,Pitch Jump Onset 2 9 Lock
+squareduty9l,squareDuty9l,0.0,0.0,1.0,Square Duty 9 Lock,564,Square Duty 9 Lock,564,Square Duty 9 Lock
+dutysweep9l,dutySweep9l,0.0,0.0,1.0,Duty Sweep 9 Lock,565,Duty Sweep 9 Lock,565,Duty Sweep 9 Lock
+repeatspeed9l,repeatSpeed9l,0.0,0.0,1.0,Repeat Speed 9 Lock,566,Repeat Speed 9 Lock,566,Repeat Speed 9 Lock
+flangeroffset9l,flangerOffset9l,0.0,0.0,1.0,Flanger Offset 9 Lock,567,Flanger Offset 9 Lock,567,Flanger Offset 9 Lock
+flangersweep9l,flangerSweep9l,0.0,0.0,1.0,Flanger Sweep 9 Lock,568,Flanger Sweep 9 Lock,568,Flanger Sweep 9 Lock
+lpfiltercutoff9l,lpFilterCutoff9l,0.0,0.0,1.0,LP Filter Cutoff 9 Lock,569,LP Filter Cutoff 9 Lock,569,LP Filter Cutoff 9 Lock
+lpfiltercutoffsweep9l,lpFilterCutoffSweep9l,0.0,0.0,1.0,LP Filter Cutoff Sweep 9 Lock,570,LP Filter Cutoff Sweep 9 Lock,570,LP Filter Cutoff Sweep 9 Lock
+lpfilterresonance9l,lpFilterResonance9l,0.0,0.0,1.0,LP Filter Resonance 9 Lock,571,LP Filter Resonance 9 Lock,571,LP Filter Resonance 9 Lock
+hpfiltercutoff9l,hpFilterCutoff9l,0.0,0.0,1.0,HP Filter Cutoff 9 Lock,572,HP Filter Cutoff 9 Lock,572,HP Filter Cutoff 9 Lock
+hpfiltercutoffsweep9l,hpFilterCutoffSweep9l,0.0,0.0,1.0,HP Filter Cutoff Sweep 9 Lock,573,HP Filter Cutoff Sweep 9 Lock,573,HP Filter Cutoff Sweep 9 Lock
+bitcrush9l,bitCrush9l,0.0,0.0,1.0,Bit Crush 9 Lock,574,Bit Crush 9 Lock,574,Bit Crush 9 Lock
+bitcrushsweep9l,bitCrushSweep9l,0.0,0.0,1.0,Bit Crush Sweep 9 Lock,575,Bit Crush Sweep 9 Lock,575,Bit Crush Sweep 9 Lock
+wavetype10,waveType10,1.0,0.0,8.0,Wave Type 10,576,Wave Type 10,576,Wave Type 10
+mastervolume10,masterVolume10,0.5,0.0,1.0,Master Volume 10,577,Master Volume 10,577,Master Volume 10
+attacktime10,attackTime10,0.0,0.0,1.0,Attack Time 10,578,Attack Time 10,578,Attack Time 10
+sustaintime10,sustainTime10,0.113693967461586,0.0,1.0,Sustain Time 10,579,Sustain Time 10,579,Sustain Time 10
+sustainpunch10,sustainPunch10,0.0,0.0,1.0,Punch 10,580,Punch 10,580,Punch 10
+decaytime10,decayTime10,0.1969510763883591,0.0,1.0,Decay Time 10,581,Decay Time 10,581,Decay Time 10
+compressionamount10,compressionAmount10,0.300000011920929,0.0,1.0,Compression 10,582,Compression 10,582,Compression 10
+startfrequency10,startFrequency10,0.3956092596054077,0.0,1.0,Frequency 10,583,Frequency 10,583,Frequency 10
+minfrequency10,minFrequency10,0.0,0.0,1.0,Frequency Cutoff 10,584,Frequency Cutoff 10,584,Frequency Cutoff 10
+slide10,slide10,0.0,-1.0,1.0,Frequency Slide 10,585,Frequency Slide 10,585,Frequency Slide 10
+deltaslide10,deltaSlide10,0.0,-1.0,1.0,Delta Slide 10,586,Delta Slide 10,586,Delta Slide 10
+vibratodepth10,vibratoDepth10,0.0,0.0,1.0,Vibrato Depth 10,587,Vibrato Depth 10,587,Vibrato Depth 10
+vibratospeed10,vibratoSpeed10,0.0,0.0,1.0,Vibrato Speed 10,588,Vibrato Speed 10,588,Vibrato Speed 10
+overtones10,overtones10,0.0,0.0,1.0,Harmonics 10,589,Harmonics 10,589,Harmonics 10
+overtonefalloff10,overtoneFalloff10,0.0,0.0,1.0,Harmonics Falloff 10,590,Harmonics Falloff 10,590,Harmonics Falloff 10
+changerepeat10,changeRepeat10,0.0,0.0,1.0,Pitch Jump Repeat Speed 10,591,Pitch Jump Repeat Speed 10,591,Pitch Jump Repeat Speed 10
+changeamount10,changeAmount10,0.0,-1.0,1.0,Pitch Jump Amount 1 10,592,Pitch Jump Amount 1 10,592,Pitch Jump Amount 1 10
+changespeed10,changeSpeed10,0.0,0.0,1.0,Pitch Jump Onset 1 10,593,Pitch Jump Onset 1 10,593,Pitch Jump Onset 1 10
+changeamount210,changeAmount210,0.0,-1.0,1.0,Pitch Jump Amount 2 10,594,Pitch Jump Amount 2 10,594,Pitch Jump Amount 2 10
+changespeed210,changeSpeed210,0.0,0.0,1.0,Pitch Jump Onset 2 10,595,Pitch Jump Onset 2 10,595,Pitch Jump Onset 2 10
+squareduty10,squareDuty10,0.0,0.0,1.0,Square Duty 10,596,Square Duty 10,596,Square Duty 10
+dutysweep10,dutySweep10,0.0,-1.0,1.0,Duty Sweep 10,597,Duty Sweep 10,597,Duty Sweep 10
+repeatspeed10,repeatSpeed10,0.0,0.0,1.0,Repeat Speed 10,598,Repeat Speed 10,598,Repeat Speed 10
+flangeroffset10,flangerOffset10,0.0,-1.0,1.0,Flanger Offset 10,599,Flanger Offset 10,599,Flanger Offset 10
+flangersweep10,flangerSweep10,0.0,-1.0,1.0,Flanger Sweep 10,600,Flanger Sweep 10,600,Flanger Sweep 10
+lpfiltercutoff10,lpFilterCutoff10,1.0,0.0,1.0,LP Filter Cutoff 10,601,LP Filter Cutoff 10,601,LP Filter Cutoff 10
+lpfiltercutoffsweep10,lpFilterCutoffSweep10,0.0,-1.0,1.0,LP Filter Cutoff Sweep 10,602,LP Filter Cutoff Sweep 10,602,LP Filter Cutoff Sweep 10
+lpfilterresonance10,lpFilterResonance10,0.0,0.0,1.0,LP Filter Resonance 10,603,LP Filter Resonance 10,603,LP Filter Resonance 10
+hpfiltercutoff10,hpFilterCutoff10,0.1000000014901161,0.0,1.0,HP Filter Cutoff 10,604,HP Filter Cutoff 10,604,HP Filter Cutoff 10
+hpfiltercutoffsweep10,hpFilterCutoffSweep10,0.0,-1.0,1.0,HP Filter Cutoff Sweep 10,605,HP Filter Cutoff Sweep 10,605,HP Filter Cutoff Sweep 10
+bitcrush10,bitCrush10,0.0,0.0,1.0,Bit Crush 10,606,Bit Crush 10,606,Bit Crush 10
+bitcrushsweep10,bitCrushSweep10,0.0,-1.0,1.0,Bit Crush Sweep 10,607,Bit Crush Sweep 10,607,Bit Crush Sweep 10
+wavetype10l,waveType10l,0.0,0.0,1.0,Wave Type 10 Lock,608,Wave Type 10 Lock,608,Wave Type 10 Lock
+mastervolume10l,masterVolume10l,1.0,0.0,1.0,Master Volume 10 Lock,609,Master Volume 10 Lock,609,Master Volume 10 Lock
+attacktime10l,attackTime10l,0.0,0.0,1.0,Attack Time 10 Lock,610,Attack Time 10 Lock,610,Attack Time 10 Lock
+sustaintime10l,sustainTime10l,0.0,0.0,1.0,Sustain Time 10 Lock,611,Sustain Time 10 Lock,611,Sustain Time 10 Lock
+sustainpunch10l,sustainPunch10l,0.0,0.0,1.0,Punch 10 Lock,612,Punch 10 Lock,612,Punch 10 Lock
+decaytime10l,decayTime10l,0.0,0.0,1.0,Decay Time 10 Lock,613,Decay Time 10 Lock,613,Decay Time 10 Lock
+compressionamount10l,compressionAmount10l,0.0,0.0,1.0,Compression 10 Lock,614,Compression 10 Lock,614,Compression 10 Lock
+startfrequency10l,startFrequency10l,0.0,0.0,1.0,Frequency 10 Lock,615,Frequency 10 Lock,615,Frequency 10 Lock
+minfrequency10l,minFrequency10l,0.0,0.0,1.0,Frequency Cutoff 10 Lock,616,Frequency Cutoff 10 Lock,616,Frequency Cutoff 10 Lock
+slide10l,slide10l,0.0,0.0,1.0,Frequency Slide 10 Lock,617,Frequency Slide 10 Lock,617,Frequency Slide 10 Lock
+deltaslide10l,deltaSlide10l,0.0,0.0,1.0,Delta Slide 10 Lock,618,Delta Slide 10 Lock,618,Delta Slide 10 Lock
+vibratodepth10l,vibratoDepth10l,0.0,0.0,1.0,Vibrato Depth 10 Lock,619,Vibrato Depth 10 Lock,619,Vibrato Depth 10 Lock
+vibratospeed10l,vibratoSpeed10l,0.0,0.0,1.0,Vibrato Speed 10 Lock,620,Vibrato Speed 10 Lock,620,Vibrato Speed 10 Lock
+overtones10l,overtones10l,0.0,0.0,1.0,Harmonics 10 Lock,621,Harmonics 10 Lock,621,Harmonics 10 Lock
+overtonefalloff10l,overtoneFalloff10l,0.0,0.0,1.0,Harmonics Falloff 10 Lock,622,Harmonics Falloff 10 Lock,622,Harmonics Falloff 10 Lock
+changerepeat10l,changeRepeat10l,0.0,0.0,1.0,Pitch Jump Repeat Speed 10 Lock,623,Pitch Jump Repeat Speed 10 Lock,623,Pitch Jump Repeat Speed 10 Lock
+changeamount10l,changeAmount10l,0.0,0.0,1.0,Pitch Jump Amount 1 10 Lock,624,Pitch Jump Amount 1 10 Lock,624,Pitch Jump Amount 1 10 Lock
+changespeed10l,changeSpeed10l,0.0,0.0,1.0,Pitch Jump Onset 1 10 Lock,625,Pitch Jump Onset 1 10 Lock,625,Pitch Jump Onset 1 10 Lock
+changeamount210l,changeAmount210l,0.0,0.0,1.0,Pitch Jump Amount 2 10 Lock,626,Pitch Jump Amount 2 10 Lock,626,Pitch Jump Amount 2 10 Lock
+changespeed210l,changeSpeed210l,0.0,0.0,1.0,Pitch Jump Onset 2 10 Lock,627,Pitch Jump Onset 2 10 Lock,627,Pitch Jump Onset 2 10 Lock
+squareduty10l,squareDuty10l,0.0,0.0,1.0,Square Duty 10 Lock,628,Square Duty 10 Lock,628,Square Duty 10 Lock
+dutysweep10l,dutySweep10l,0.0,0.0,1.0,Duty Sweep 10 Lock,629,Duty Sweep 10 Lock,629,Duty Sweep 10 Lock
+repeatspeed10l,repeatSpeed10l,0.0,0.0,1.0,Repeat Speed 10 Lock,630,Repeat Speed 10 Lock,630,Repeat Speed 10 Lock
+flangeroffset10l,flangerOffset10l,0.0,0.0,1.0,Flanger Offset 10 Lock,631,Flanger Offset 10 Lock,631,Flanger Offset 10 Lock
+flangersweep10l,flangerSweep10l,0.0,0.0,1.0,Flanger Sweep 10 Lock,632,Flanger Sweep 10 Lock,632,Flanger Sweep 10 Lock
+lpfiltercutoff10l,lpFilterCutoff10l,0.0,0.0,1.0,LP Filter Cutoff 10 Lock,633,LP Filter Cutoff 10 Lock,633,LP Filter Cutoff 10 Lock
+lpfiltercutoffsweep10l,lpFilterCutoffSweep10l,0.0,0.0,1.0,LP Filter Cutoff Sweep 10 Lock,634,LP Filter Cutoff Sweep 10 Lock,634,LP Filter Cutoff Sweep 10 Lock
+lpfilterresonance10l,lpFilterResonance10l,0.0,0.0,1.0,LP Filter Resonance 10 Lock,635,LP Filter Resonance 10 Lock,635,LP Filter Resonance 10 Lock
+hpfiltercutoff10l,hpFilterCutoff10l,0.0,0.0,1.0,HP Filter Cutoff 10 Lock,636,HP Filter Cutoff 10 Lock,636,HP Filter Cutoff 10 Lock
+hpfiltercutoffsweep10l,hpFilterCutoffSweep10l,0.0,0.0,1.0,HP Filter Cutoff Sweep 10 Lock,637,HP Filter Cutoff Sweep 10 Lock,637,HP Filter Cutoff Sweep 10 Lock
+bitcrush10l,bitCrush10l,0.0,0.0,1.0,Bit Crush 10 Lock,638,Bit Crush 10 Lock,638,Bit Crush 10 Lock
+bitcrushsweep10l,bitCrushSweep10l,0.0,0.0,1.0,Bit Crush Sweep 10 Lock,639,Bit Crush Sweep 10 Lock,639,Bit Crush Sweep 10 Lock
+wavetype11,waveType11,2.0,0.0,8.0,Wave Type 11,640,Wave Type 11,640,Wave Type 11
+mastervolume11,masterVolume11,0.5,0.0,1.0,Master Volume 11,641,Master Volume 11,641,Master Volume 11
+attacktime11,attackTime11,0.0,0.0,1.0,Attack Time 11,642,Attack Time 11,642,Attack Time 11
+sustaintime11,sustainTime11,0.03418873623013496,0.0,1.0,Sustain Time 11,643,Sustain Time 11,643,Sustain Time 11
+sustainpunch11,sustainPunch11,0.4084318876266479,0.0,1.0,Punch 11,644,Punch 11,644,Punch 11
+decaytime11,decayTime11,0.105926975607872,0.0,1.0,Decay Time 11,645,Decay Time 11,645,Decay Time 11
+compressionamount11,compressionAmount11,0.300000011920929,0.0,1.0,Compression 11,646,Compression 11,646,Compression 11
+startfrequency11,startFrequency11,0.6642715930938721,0.0,1.0,Frequency 11,647,Frequency 11,647,Frequency 11
+minfrequency11,minFrequency11,0.0,0.0,1.0,Frequency Cutoff 11,648,Frequency Cutoff 11,648,Frequency Cutoff 11
+slide11,slide11,0.0,-1.0,1.0,Frequency Slide 11,649,Frequency Slide 11,649,Frequency Slide 11
+deltaslide11,deltaSlide11,0.0,-1.0,1.0,Delta Slide 11,650,Delta Slide 11,650,Delta Slide 11
+vibratodepth11,vibratoDepth11,0.0,0.0,1.0,Vibrato Depth 11,651,Vibrato Depth 11,651,Vibrato Depth 11
+vibratospeed11,vibratoSpeed11,0.0,0.0,1.0,Vibrato Speed 11,652,Vibrato Speed 11,652,Vibrato Speed 11
+overtones11,overtones11,0.0,0.0,1.0,Harmonics 11,653,Harmonics 11,653,Harmonics 11
+overtonefalloff11,overtoneFalloff11,0.0,0.0,1.0,Harmonics Falloff 11,654,Harmonics Falloff 11,654,Harmonics Falloff 11
+changerepeat11,changeRepeat11,0.0,0.0,1.0,Pitch Jump Repeat Speed 11,655,Pitch Jump Repeat Speed 11,655,Pitch Jump Repeat Speed 11
+changeamount11,changeAmount11,0.0,-1.0,1.0,Pitch Jump Amount 1 11,656,Pitch Jump Amount 1 11,656,Pitch Jump Amount 1 11
+changespeed11,changeSpeed11,0.0,0.0,1.0,Pitch Jump Onset 1 11,657,Pitch Jump Onset 1 11,657,Pitch Jump Onset 1 11
+changeamount211,changeAmount211,0.0,-1.0,1.0,Pitch Jump Amount 2 11,658,Pitch Jump Amount 2 11,658,Pitch Jump Amount 2 11
+changespeed211,changeSpeed211,0.0,0.0,1.0,Pitch Jump Onset 2 11,659,Pitch Jump Onset 2 11,659,Pitch Jump Onset 2 11
+squareduty11,squareDuty11,0.0,0.0,1.0,Square Duty 11,660,Square Duty 11,660,Square Duty 11
+dutysweep11,dutySweep11,0.0,-1.0,1.0,Duty Sweep 11,661,Duty Sweep 11,661,Duty Sweep 11
+repeatspeed11,repeatSpeed11,0.0,0.0,1.0,Repeat Speed 11,662,Repeat Speed 11,662,Repeat Speed 11
+flangeroffset11,flangerOffset11,0.0,-1.0,1.0,Flanger Offset 11,663,Flanger Offset 11,663,Flanger Offset 11
+flangersweep11,flangerSweep11,0.0,-1.0,1.0,Flanger Sweep 11,664,Flanger Sweep 11,664,Flanger Sweep 11
+lpfiltercutoff11,lpFilterCutoff11,1.0,0.0,1.0,LP Filter Cutoff 11,665,LP Filter Cutoff 11,665,LP Filter Cutoff 11
+lpfiltercutoffsweep11,lpFilterCutoffSweep11,0.0,-1.0,1.0,LP Filter Cutoff Sweep 11,666,LP Filter Cutoff Sweep 11,666,LP Filter Cutoff Sweep 11
+lpfilterresonance11,lpFilterResonance11,0.0,0.0,1.0,LP Filter Resonance 11,667,LP Filter Resonance 11,667,LP Filter Resonance 11
+hpfiltercutoff11,hpFilterCutoff11,0.0,0.0,1.0,HP Filter Cutoff 11,668,HP Filter Cutoff 11,668,HP Filter Cutoff 11
+hpfiltercutoffsweep11,hpFilterCutoffSweep11,0.0,-1.0,1.0,HP Filter Cutoff Sweep 11,669,HP Filter Cutoff Sweep 11,669,HP Filter Cutoff Sweep 11
+bitcrush11,bitCrush11,0.0,0.0,1.0,Bit Crush 11,670,Bit Crush 11,670,Bit Crush 11
+bitcrushsweep11,bitCrushSweep11,0.0,-1.0,1.0,Bit Crush Sweep 11,671,Bit Crush Sweep 11,671,Bit Crush Sweep 11
+wavetype11l,waveType11l,0.0,0.0,1.0,Wave Type 11 Lock,672,Wave Type 11 Lock,672,Wave Type 11 Lock
+mastervolume11l,masterVolume11l,1.0,0.0,1.0,Master Volume 11 Lock,673,Master Volume 11 Lock,673,Master Volume 11 Lock
+attacktime11l,attackTime11l,0.0,0.0,1.0,Attack Time 11 Lock,674,Attack Time 11 Lock,674,Attack Time 11 Lock
+sustaintime11l,sustainTime11l,0.0,0.0,1.0,Sustain Time 11 Lock,675,Sustain Time 11 Lock,675,Sustain Time 11 Lock
+sustainpunch11l,sustainPunch11l,0.0,0.0,1.0,Punch 11 Lock,676,Punch 11 Lock,676,Punch 11 Lock
+decaytime11l,decayTime11l,0.0,0.0,1.0,Decay Time 11 Lock,677,Decay Time 11 Lock,677,Decay Time 11 Lock
+compressionamount11l,compressionAmount11l,0.0,0.0,1.0,Compression 11 Lock,678,Compression 11 Lock,678,Compression 11 Lock
+startfrequency11l,startFrequency11l,0.0,0.0,1.0,Frequency 11 Lock,679,Frequency 11 Lock,679,Frequency 11 Lock
+minfrequency11l,minFrequency11l,0.0,0.0,1.0,Frequency Cutoff 11 Lock,680,Frequency Cutoff 11 Lock,680,Frequency Cutoff 11 Lock
+slide11l,slide11l,0.0,0.0,1.0,Frequency Slide 11 Lock,681,Frequency Slide 11 Lock,681,Frequency Slide 11 Lock
+deltaslide11l,deltaSlide11l,0.0,0.0,1.0,Delta Slide 11 Lock,682,Delta Slide 11 Lock,682,Delta Slide 11 Lock
+vibratodepth11l,vibratoDepth11l,0.0,0.0,1.0,Vibrato Depth 11 Lock,683,Vibrato Depth 11 Lock,683,Vibrato Depth 11 Lock
+vibratospeed11l,vibratoSpeed11l,0.0,0.0,1.0,Vibrato Speed 11 Lock,684,Vibrato Speed 11 Lock,684,Vibrato Speed 11 Lock
+overtones11l,overtones11l,0.0,0.0,1.0,Harmonics 11 Lock,685,Harmonics 11 Lock,685,Harmonics 11 Lock
+overtonefalloff11l,overtoneFalloff11l,0.0,0.0,1.0,Harmonics Falloff 11 Lock,686,Harmonics Falloff 11 Lock,686,Harmonics Falloff 11 Lock
+changerepeat11l,changeRepeat11l,0.0,0.0,1.0,Pitch Jump Repeat Speed 11 Lock,687,Pitch Jump Repeat Speed 11 Lock,687,Pitch Jump Repeat Speed 11 Lock
+changeamount11l,changeAmount11l,0.0,0.0,1.0,Pitch Jump Amount 1 11 Lock,688,Pitch Jump Amount 1 11 Lock,688,Pitch Jump Amount 1 11 Lock
+changespeed11l,changeSpeed11l,0.0,0.0,1.0,Pitch Jump Onset 1 11 Lock,689,Pitch Jump Onset 1 11 Lock,689,Pitch Jump Onset 1 11 Lock
+changeamount211l,changeAmount211l,0.0,0.0,1.0,Pitch Jump Amount 2 11 Lock,690,Pitch Jump Amount 2 11 Lock,690,Pitch Jump Amount 2 11 Lock
+changespeed211l,changeSpeed211l,0.0,0.0,1.0,Pitch Jump Onset 2 11 Lock,691,Pitch Jump Onset 2 11 Lock,691,Pitch Jump Onset 2 11 Lock
+squareduty11l,squareDuty11l,0.0,0.0,1.0,Square Duty 11 Lock,692,Square Duty 11 Lock,692,Square Duty 11 Lock
+dutysweep11l,dutySweep11l,0.0,0.0,1.0,Duty Sweep 11 Lock,693,Duty Sweep 11 Lock,693,Duty Sweep 11 Lock
+repeatspeed11l,repeatSpeed11l,0.0,0.0,1.0,Repeat Speed 11 Lock,694,Repeat Speed 11 Lock,694,Repeat Speed 11 Lock
+flangeroffset11l,flangerOffset11l,0.0,0.0,1.0,Flanger Offset 11 Lock,695,Flanger Offset 11 Lock,695,Flanger Offset 11 Lock
+flangersweep11l,flangerSweep11l,0.0,0.0,1.0,Flanger Sweep 11 Lock,696,Flanger Sweep 11 Lock,696,Flanger Sweep 11 Lock
+lpfiltercutoff11l,lpFilterCutoff11l,0.0,0.0,1.0,LP Filter Cutoff 11 Lock,697,LP Filter Cutoff 11 Lock,697,LP Filter Cutoff 11 Lock
+lpfiltercutoffsweep11l,lpFilterCutoffSweep11l,0.0,0.0,1.0,LP Filter Cutoff Sweep 11 Lock,698,LP Filter Cutoff Sweep 11 Lock,698,LP Filter Cutoff Sweep 11 Lock
+lpfilterresonance11l,lpFilterResonance11l,0.0,0.0,1.0,LP Filter Resonance 11 Lock,699,LP Filter Resonance 11 Lock,699,LP Filter Resonance 11 Lock
+hpfiltercutoff11l,hpFilterCutoff11l,0.0,0.0,1.0,HP Filter Cutoff 11 Lock,700,HP Filter Cutoff 11 Lock,700,HP Filter Cutoff 11 Lock
+hpfiltercutoffsweep11l,hpFilterCutoffSweep11l,0.0,0.0,1.0,HP Filter Cutoff Sweep 11 Lock,701,HP Filter Cutoff Sweep 11 Lock,701,HP Filter Cutoff Sweep 11 Lock
+bitcrush11l,bitCrush11l,0.0,0.0,1.0,Bit Crush 11 Lock,702,Bit Crush 11 Lock,702,Bit Crush 11 Lock
+bitcrushsweep11l,bitCrushSweep11l,0.0,0.0,1.0,Bit Crush Sweep 11 Lock,703,Bit Crush Sweep 11 Lock,703,Bit Crush Sweep 11 Lock
+wavetype12,waveType12,0.0,0.0,8.0,Wave Type 12,704,Wave Type 12,704,Wave Type 12
+mastervolume12,masterVolume12,0.5,0.0,1.0,Master Volume 12,705,Master Volume 12,705,Master Volume 12
+attacktime12,attackTime12,0.0,0.0,1.0,Attack Time 12,706,Attack Time 12,706,Attack Time 12
+sustaintime12,sustainTime12,0.3242493271827698,0.0,1.0,Sustain Time 12,707,Sustain Time 12,707,Sustain Time 12
+sustainpunch12,sustainPunch12,0.0,0.0,1.0,Punch 12,708,Punch 12,708,Punch 12
+decaytime12,decayTime12,0.2547096014022827,0.0,1.0,Decay Time 12,709,Decay Time 12,709,Decay Time 12
+compressionamount12,compressionAmount12,0.300000011920929,0.0,1.0,Compression 12,710,Compression 12,710,Compression 12
+startfrequency12,startFrequency12,0.3106392920017242,0.0,1.0,Frequency 12,711,Frequency 12,711,Frequency 12
+minfrequency12,minFrequency12,0.0,0.0,1.0,Frequency Cutoff 12,712,Frequency Cutoff 12,712,Frequency Cutoff 12
+slide12,slide12,0.2696156799793243,-1.0,1.0,Frequency Slide 12,713,Frequency Slide 12,713,Frequency Slide 12
+deltaslide12,deltaSlide12,0.0,-1.0,1.0,Delta Slide 12,714,Delta Slide 12,714,Delta Slide 12
+vibratodepth12,vibratoDepth12,0.0,0.0,1.0,Vibrato Depth 12,715,Vibrato Depth 12,715,Vibrato Depth 12
+vibratospeed12,vibratoSpeed12,0.0,0.0,1.0,Vibrato Speed 12,716,Vibrato Speed 12,716,Vibrato Speed 12
+overtones12,overtones12,0.0,0.0,1.0,Harmonics 12,717,Harmonics 12,717,Harmonics 12
+overtonefalloff12,overtoneFalloff12,0.0,0.0,1.0,Harmonics Falloff 12,718,Harmonics Falloff 12,718,Harmonics Falloff 12
+changerepeat12,changeRepeat12,0.0,0.0,1.0,Pitch Jump Repeat Speed 12,719,Pitch Jump Repeat Speed 12,719,Pitch Jump Repeat Speed 12
+changeamount12,changeAmount12,0.0,-1.0,1.0,Pitch Jump Amount 1 12,720,Pitch Jump Amount 1 12,720,Pitch Jump Amount 1 12
+changespeed12,changeSpeed12,0.0,0.0,1.0,Pitch Jump Onset 1 12,721,Pitch Jump Onset 1 12,721,Pitch Jump Onset 1 12
+changeamount212,changeAmount212,0.0,-1.0,1.0,Pitch Jump Amount 2 12,722,Pitch Jump Amount 2 12,722,Pitch Jump Amount 2 12
+changespeed212,changeSpeed212,0.0,0.0,1.0,Pitch Jump Onset 2 12,723,Pitch Jump Onset 2 12,723,Pitch Jump Onset 2 12
+squareduty12,squareDuty12,0.5922152400016785,0.0,1.0,Square Duty 12,724,Square Duty 12,724,Square Duty 12
+dutysweep12,dutySweep12,0.0,-1.0,1.0,Duty Sweep 12,725,Duty Sweep 12,725,Duty Sweep 12
+repeatspeed12,repeatSpeed12,0.0,0.0,1.0,Repeat Speed 12,726,Repeat Speed 12,726,Repeat Speed 12
+flangeroffset12,flangerOffset12,0.0,-1.0,1.0,Flanger Offset 12,727,Flanger Offset 12,727,Flanger Offset 12
+flangersweep12,flangerSweep12,0.0,-1.0,1.0,Flanger Sweep 12,728,Flanger Sweep 12,728,Flanger Sweep 12
+lpfiltercutoff12,lpFilterCutoff12,1.0,0.0,1.0,LP Filter Cutoff 12,729,LP Filter Cutoff 12,729,LP Filter Cutoff 12
+lpfiltercutoffsweep12,lpFilterCutoffSweep12,0.0,-1.0,1.0,LP Filter Cutoff Sweep 12,730,LP Filter Cutoff Sweep 12,730,LP Filter Cutoff Sweep 12
+lpfilterresonance12,lpFilterResonance12,0.0,0.0,1.0,LP Filter Resonance 12,731,LP Filter Resonance 12,731,LP Filter Resonance 12
+hpfiltercutoff12,hpFilterCutoff12,0.2717891931533813,0.0,1.0,HP Filter Cutoff 12,732,HP Filter Cutoff 12,732,HP Filter Cutoff 12
+hpfiltercutoffsweep12,hpFilterCutoffSweep12,0.0,-1.0,1.0,HP Filter Cutoff Sweep 12,733,HP Filter Cutoff Sweep 12,733,HP Filter Cutoff Sweep 12
+bitcrush12,bitCrush12,0.0,0.0,1.0,Bit Crush 12,734,Bit Crush 12,734,Bit Crush 12
+bitcrushsweep12,bitCrushSweep12,0.0,-1.0,1.0,Bit Crush Sweep 12,735,Bit Crush Sweep 12,735,Bit Crush Sweep 12
+wavetype12l,waveType12l,0.0,0.0,1.0,Wave Type 12 Lock,736,Wave Type 12 Lock,736,Wave Type 12 Lock
+mastervolume12l,masterVolume12l,1.0,0.0,1.0,Master Volume 12 Lock,737,Master Volume 12 Lock,737,Master Volume 12 Lock
+attacktime12l,attackTime12l,0.0,0.0,1.0,Attack Time 12 Lock,738,Attack Time 12 Lock,738,Attack Time 12 Lock
+sustaintime12l,sustainTime12l,0.0,0.0,1.0,Sustain Time 12 Lock,739,Sustain Time 12 Lock,739,Sustain Time 12 Lock
+sustainpunch12l,sustainPunch12l,0.0,0.0,1.0,Punch 12 Lock,740,Punch 12 Lock,740,Punch 12 Lock
+decaytime12l,decayTime12l,0.0,0.0,1.0,Decay Time 12 Lock,741,Decay Time 12 Lock,741,Decay Time 12 Lock
+compressionamount12l,compressionAmount12l,0.0,0.0,1.0,Compression 12 Lock,742,Compression 12 Lock,742,Compression 12 Lock
+startfrequency12l,startFrequency12l,0.0,0.0,1.0,Frequency 12 Lock,743,Frequency 12 Lock,743,Frequency 12 Lock
+minfrequency12l,minFrequency12l,0.0,0.0,1.0,Frequency Cutoff 12 Lock,744,Frequency Cutoff 12 Lock,744,Frequency Cutoff 12 Lock
+slide12l,slide12l,0.0,0.0,1.0,Frequency Slide 12 Lock,745,Frequency Slide 12 Lock,745,Frequency Slide 12 Lock
+deltaslide12l,deltaSlide12l,0.0,0.0,1.0,Delta Slide 12 Lock,746,Delta Slide 12 Lock,746,Delta Slide 12 Lock
+vibratodepth12l,vibratoDepth12l,0.0,0.0,1.0,Vibrato Depth 12 Lock,747,Vibrato Depth 12 Lock,747,Vibrato Depth 12 Lock
+vibratospeed12l,vibratoSpeed12l,0.0,0.0,1.0,Vibrato Speed 12 Lock,748,Vibrato Speed 12 Lock,748,Vibrato Speed 12 Lock
+overtones12l,overtones12l,0.0,0.0,1.0,Harmonics 12 Lock,749,Harmonics 12 Lock,749,Harmonics 12 Lock
+overtonefalloff12l,overtoneFalloff12l,0.0,0.0,1.0,Harmonics Falloff 12 Lock,750,Harmonics Falloff 12 Lock,750,Harmonics Falloff 12 Lock
+changerepeat12l,changeRepeat12l,0.0,0.0,1.0,Pitch Jump Repeat Speed 12 Lock,751,Pitch Jump Repeat Speed 12 Lock,751,Pitch Jump Repeat Speed 12 Lock
+changeamount12l,changeAmount12l,0.0,0.0,1.0,Pitch Jump Amount 1 12 Lock,752,Pitch Jump Amount 1 12 Lock,752,Pitch Jump Amount 1 12 Lock
+changespeed12l,changeSpeed12l,0.0,0.0,1.0,Pitch Jump Onset 1 12 Lock,753,Pitch Jump Onset 1 12 Lock,753,Pitch Jump Onset 1 12 Lock
+changeamount212l,changeAmount212l,0.0,0.0,1.0,Pitch Jump Amount 2 12 Lock,754,Pitch Jump Amount 2 12 Lock,754,Pitch Jump Amount 2 12 Lock
+changespeed212l,changeSpeed212l,0.0,0.0,1.0,Pitch Jump Onset 2 12 Lock,755,Pitch Jump Onset 2 12 Lock,755,Pitch Jump Onset 2 12 Lock
+squareduty12l,squareDuty12l,0.0,0.0,1.0,Square Duty 12 Lock,756,Square Duty 12 Lock,756,Square Duty 12 Lock
+dutysweep12l,dutySweep12l,0.0,0.0,1.0,Duty Sweep 12 Lock,757,Duty Sweep 12 Lock,757,Duty Sweep 12 Lock
+repeatspeed12l,repeatSpeed12l,0.0,0.0,1.0,Repeat Speed 12 Lock,758,Repeat Speed 12 Lock,758,Repeat Speed 12 Lock
+flangeroffset12l,flangerOffset12l,0.0,0.0,1.0,Flanger Offset 12 Lock,759,Flanger Offset 12 Lock,759,Flanger Offset 12 Lock
+flangersweep12l,flangerSweep12l,0.0,0.0,1.0,Flanger Sweep 12 Lock,760,Flanger Sweep 12 Lock,760,Flanger Sweep 12 Lock
+lpfiltercutoff12l,lpFilterCutoff12l,0.0,0.0,1.0,LP Filter Cutoff 12 Lock,761,LP Filter Cutoff 12 Lock,761,LP Filter Cutoff 12 Lock
+lpfiltercutoffsweep12l,lpFilterCutoffSweep12l,0.0,0.0,1.0,LP Filter Cutoff Sweep 12 Lock,762,LP Filter Cutoff Sweep 12 Lock,762,LP Filter Cutoff Sweep 12 Lock
+lpfilterresonance12l,lpFilterResonance12l,0.0,0.0,1.0,LP Filter Resonance 12 Lock,763,LP Filter Resonance 12 Lock,763,LP Filter Resonance 12 Lock
+hpfiltercutoff12l,hpFilterCutoff12l,0.0,0.0,1.0,HP Filter Cutoff 12 Lock,764,HP Filter Cutoff 12 Lock,764,HP Filter Cutoff 12 Lock
+hpfiltercutoffsweep12l,hpFilterCutoffSweep12l,0.0,0.0,1.0,HP Filter Cutoff Sweep 12 Lock,765,HP Filter Cutoff Sweep 12 Lock,765,HP Filter Cutoff Sweep 12 Lock
+bitcrush12l,bitCrush12l,0.0,0.0,1.0,Bit Crush 12 Lock,766,Bit Crush 12 Lock,766,Bit Crush 12 Lock
+bitcrushsweep12l,bitCrushSweep12l,0.0,0.0,1.0,Bit Crush Sweep 12 Lock,767,Bit Crush Sweep 12 Lock,767,Bit Crush Sweep 12 Lock
+wavetype13,waveType13,1.0,0.0,8.0,Wave Type 13,768,Wave Type 13,768,Wave Type 13
+mastervolume13,masterVolume13,0.5,0.0,1.0,Master Volume 13,769,Master Volume 13,769,Master Volume 13
+attacktime13,attackTime13,0.0,0.0,1.0,Attack Time 13,770,Attack Time 13,770,Attack Time 13
+sustaintime13,sustainTime13,0.1915024816989899,0.0,1.0,Sustain Time 13,771,Sustain Time 13,771,Sustain Time 13
+sustainpunch13,sustainPunch13,0.0,0.0,1.0,Punch 13,772,Punch 13,772,Punch 13
+decaytime13,decayTime13,0.03574717417359352,0.0,1.0,Decay Time 13,773,Decay Time 13,773,Decay Time 13
+compressionamount13,compressionAmount13,0.300000011920929,0.0,1.0,Compression 13,774,Compression 13,774,Compression 13
+startfrequency13,startFrequency13,0.2988311648368835,0.0,1.0,Frequency 13,775,Frequency 13,775,Frequency 13
+minfrequency13,minFrequency13,0.0,0.0,1.0,Frequency Cutoff 13,776,Frequency Cutoff 13,776,Frequency Cutoff 13
+slide13,slide13,0.0,-1.0,1.0,Frequency Slide 13,777,Frequency Slide 13,777,Frequency Slide 13
+deltaslide13,deltaSlide13,0.0,-1.0,1.0,Delta Slide 13,778,Delta Slide 13,778,Delta Slide 13
+vibratodepth13,vibratoDepth13,0.0,0.0,1.0,Vibrato Depth 13,779,Vibrato Depth 13,779,Vibrato Depth 13
+vibratospeed13,vibratoSpeed13,0.0,0.0,1.0,Vibrato Speed 13,780,Vibrato Speed 13,780,Vibrato Speed 13
+overtones13,overtones13,0.0,0.0,1.0,Harmonics 13,781,Harmonics 13,781,Harmonics 13
+overtonefalloff13,overtoneFalloff13,0.0,0.0,1.0,Harmonics Falloff 13,782,Harmonics Falloff 13,782,Harmonics Falloff 13
+changerepeat13,changeRepeat13,0.0,0.0,1.0,Pitch Jump Repeat Speed 13,783,Pitch Jump Repeat Speed 13,783,Pitch Jump Repeat Speed 13
+changeamount13,changeAmount13,0.0,-1.0,1.0,Pitch Jump Amount 1 13,784,Pitch Jump Amount 1 13,784,Pitch Jump Amount 1 13
+changespeed13,changeSpeed13,0.0,0.0,1.0,Pitch Jump Onset 1 13,785,Pitch Jump Onset 1 13,785,Pitch Jump Onset 1 13
+changeamount213,changeAmount213,0.0,-1.0,1.0,Pitch Jump Amount 2 13,786,Pitch Jump Amount 2 13,786,Pitch Jump Amount 2 13
+changespeed213,changeSpeed213,0.0,0.0,1.0,Pitch Jump Onset 2 13,787,Pitch Jump Onset 2 13,787,Pitch Jump Onset 2 13
+squareduty13,squareDuty13,0.0,0.0,1.0,Square Duty 13,788,Square Duty 13,788,Square Duty 13
+dutysweep13,dutySweep13,0.0,-1.0,1.0,Duty Sweep 13,789,Duty Sweep 13,789,Duty Sweep 13
+repeatspeed13,repeatSpeed13,0.0,0.0,1.0,Repeat Speed 13,790,Repeat Speed 13,790,Repeat Speed 13
+flangeroffset13,flangerOffset13,0.0,-1.0,1.0,Flanger Offset 13,791,Flanger Offset 13,791,Flanger Offset 13
+flangersweep13,flangerSweep13,0.0,-1.0,1.0,Flanger Sweep 13,792,Flanger Sweep 13,792,Flanger Sweep 13
+lpfiltercutoff13,lpFilterCutoff13,1.0,0.0,1.0,LP Filter Cutoff 13,793,LP Filter Cutoff 13,793,LP Filter Cutoff 13
+lpfiltercutoffsweep13,lpFilterCutoffSweep13,0.0,-1.0,1.0,LP Filter Cutoff Sweep 13,794,LP Filter Cutoff Sweep 13,794,LP Filter Cutoff Sweep 13
+lpfilterresonance13,lpFilterResonance13,0.0,0.0,1.0,LP Filter Resonance 13,795,LP Filter Resonance 13,795,LP Filter Resonance 13
+hpfiltercutoff13,hpFilterCutoff13,0.1000000014901161,0.0,1.0,HP Filter Cutoff 13,796,HP Filter Cutoff 13,796,HP Filter Cutoff 13
+hpfiltercutoffsweep13,hpFilterCutoffSweep13,0.0,-1.0,1.0,HP Filter Cutoff Sweep 13,797,HP Filter Cutoff Sweep 13,797,HP Filter Cutoff Sweep 13
+bitcrush13,bitCrush13,0.0,0.0,1.0,Bit Crush 13,798,Bit Crush 13,798,Bit Crush 13
+bitcrushsweep13,bitCrushSweep13,0.0,-1.0,1.0,Bit Crush Sweep 13,799,Bit Crush Sweep 13,799,Bit Crush Sweep 13
+wavetype13l,waveType13l,0.0,0.0,1.0,Wave Type 13 Lock,800,Wave Type 13 Lock,800,Wave Type 13 Lock
+mastervolume13l,masterVolume13l,1.0,0.0,1.0,Master Volume 13 Lock,801,Master Volume 13 Lock,801,Master Volume 13 Lock
+attacktime13l,attackTime13l,0.0,0.0,1.0,Attack Time 13 Lock,802,Attack Time 13 Lock,802,Attack Time 13 Lock
+sustaintime13l,sustainTime13l,0.0,0.0,1.0,Sustain Time 13 Lock,803,Sustain Time 13 Lock,803,Sustain Time 13 Lock
+sustainpunch13l,sustainPunch13l,0.0,0.0,1.0,Punch 13 Lock,804,Punch 13 Lock,804,Punch 13 Lock
+decaytime13l,decayTime13l,0.0,0.0,1.0,Decay Time 13 Lock,805,Decay Time 13 Lock,805,Decay Time 13 Lock
+compressionamount13l,compressionAmount13l,0.0,0.0,1.0,Compression 13 Lock,806,Compression 13 Lock,806,Compression 13 Lock
+startfrequency13l,startFrequency13l,0.0,0.0,1.0,Frequency 13 Lock,807,Frequency 13 Lock,807,Frequency 13 Lock
+minfrequency13l,minFrequency13l,0.0,0.0,1.0,Frequency Cutoff 13 Lock,808,Frequency Cutoff 13 Lock,808,Frequency Cutoff 13 Lock
+slide13l,slide13l,0.0,0.0,1.0,Frequency Slide 13 Lock,809,Frequency Slide 13 Lock,809,Frequency Slide 13 Lock
+deltaslide13l,deltaSlide13l,0.0,0.0,1.0,Delta Slide 13 Lock,810,Delta Slide 13 Lock,810,Delta Slide 13 Lock
+vibratodepth13l,vibratoDepth13l,0.0,0.0,1.0,Vibrato Depth 13 Lock,811,Vibrato Depth 13 Lock,811,Vibrato Depth 13 Lock
+vibratospeed13l,vibratoSpeed13l,0.0,0.0,1.0,Vibrato Speed 13 Lock,812,Vibrato Speed 13 Lock,812,Vibrato Speed 13 Lock
+overtones13l,overtones13l,0.0,0.0,1.0,Harmonics 13 Lock,813,Harmonics 13 Lock,813,Harmonics 13 Lock
+overtonefalloff13l,overtoneFalloff13l,0.0,0.0,1.0,Harmonics Falloff 13 Lock,814,Harmonics Falloff 13 Lock,814,Harmonics Falloff 13 Lock
+changerepeat13l,changeRepeat13l,0.0,0.0,1.0,Pitch Jump Repeat Speed 13 Lock,815,Pitch Jump Repeat Speed 13 Lock,815,Pitch Jump Repeat Speed 13 Lock
+changeamount13l,changeAmount13l,0.0,0.0,1.0,Pitch Jump Amount 1 13 Lock,816,Pitch Jump Amount 1 13 Lock,816,Pitch Jump Amount 1 13 Lock
+changespeed13l,changeSpeed13l,0.0,0.0,1.0,Pitch Jump Onset 1 13 Lock,817,Pitch Jump Onset 1 13 Lock,817,Pitch Jump Onset 1 13 Lock
+changeamount213l,changeAmount213l,0.0,0.0,1.0,Pitch Jump Amount 2 13 Lock,818,Pitch Jump Amount 2 13 Lock,818,Pitch Jump Amount 2 13 Lock
+changespeed213l,changeSpeed213l,0.0,0.0,1.0,Pitch Jump Onset 2 13 Lock,819,Pitch Jump Onset 2 13 Lock,819,Pitch Jump Onset 2 13 Lock
+squareduty13l,squareDuty13l,0.0,0.0,1.0,Square Duty 13 Lock,820,Square Duty 13 Lock,820,Square Duty 13 Lock
+dutysweep13l,dutySweep13l,0.0,0.0,1.0,Duty Sweep 13 Lock,821,Duty Sweep 13 Lock,821,Duty Sweep 13 Lock
+repeatspeed13l,repeatSpeed13l,0.0,0.0,1.0,Repeat Speed 13 Lock,822,Repeat Speed 13 Lock,822,Repeat Speed 13 Lock
+flangeroffset13l,flangerOffset13l,0.0,0.0,1.0,Flanger Offset 13 Lock,823,Flanger Offset 13 Lock,823,Flanger Offset 13 Lock
+flangersweep13l,flangerSweep13l,0.0,0.0,1.0,Flanger Sweep 13 Lock,824,Flanger Sweep 13 Lock,824,Flanger Sweep 13 Lock
+lpfiltercutoff13l,lpFilterCutoff13l,0.0,0.0,1.0,LP Filter Cutoff 13 Lock,825,LP Filter Cutoff 13 Lock,825,LP Filter Cutoff 13 Lock
+lpfiltercutoffsweep13l,lpFilterCutoffSweep13l,0.0,0.0,1.0,LP Filter Cutoff Sweep 13 Lock,826,LP Filter Cutoff Sweep 13 Lock,826,LP Filter Cutoff Sweep 13 Lock
+lpfilterresonance13l,lpFilterResonance13l,0.0,0.0,1.0,LP Filter Resonance 13 Lock,827,LP Filter Resonance 13 Lock,827,LP Filter Resonance 13 Lock
+hpfiltercutoff13l,hpFilterCutoff13l,0.0,0.0,1.0,HP Filter Cutoff 13 Lock,828,HP Filter Cutoff 13 Lock,828,HP Filter Cutoff 13 Lock
+hpfiltercutoffsweep13l,hpFilterCutoffSweep13l,0.0,0.0,1.0,HP Filter Cutoff Sweep 13 Lock,829,HP Filter Cutoff Sweep 13 Lock,829,HP Filter Cutoff Sweep 13 Lock
+bitcrush13l,bitCrush13l,0.0,0.0,1.0,Bit Crush 13 Lock,830,Bit Crush 13 Lock,830,Bit Crush 13 Lock
+bitcrushsweep13l,bitCrushSweep13l,0.0,0.0,1.0,Bit Crush Sweep 13 Lock,831,Bit Crush Sweep 13 Lock,831,Bit Crush Sweep 13 Lock
+wavetype14,waveType14,0.0,0.0,8.0,Wave Type 14,832,Wave Type 14,832,Wave Type 14
+mastervolume14,masterVolume14,0.5,0.0,1.0,Master Volume 14,833,Master Volume 14,833,Master Volume 14
+attacktime14,attackTime14,0.0,0.0,1.0,Attack Time 14,834,Attack Time 14,834,Attack Time 14
+sustaintime14,sustainTime14,0.185939759016037,0.0,1.0,Sustain Time 14,835,Sustain Time 14,835,Sustain Time 14
+sustainpunch14,sustainPunch14,0.0,0.0,1.0,Punch 14,836,Punch 14,836,Punch 14
+decaytime14,decayTime14,0.1585753411054611,0.0,1.0,Decay Time 14,837,Decay Time 14,837,Decay Time 14
+compressionamount14,compressionAmount14,0.300000011920929,0.0,1.0,Compression 14,838,Compression 14,838,Compression 14
+startfrequency14,startFrequency14,0.30245241522789,0.0,1.0,Frequency 14,839,Frequency 14,839,Frequency 14
+minfrequency14,minFrequency14,0.0,0.0,1.0,Frequency Cutoff 14,840,Frequency Cutoff 14,840,Frequency Cutoff 14
+slide14,slide14,0.0,-1.0,1.0,Frequency Slide 14,841,Frequency Slide 14,841,Frequency Slide 14
+deltaslide14,deltaSlide14,0.0,-1.0,1.0,Delta Slide 14,842,Delta Slide 14,842,Delta Slide 14
+vibratodepth14,vibratoDepth14,0.0,0.0,1.0,Vibrato Depth 14,843,Vibrato Depth 14,843,Vibrato Depth 14
+vibratospeed14,vibratoSpeed14,0.0,0.0,1.0,Vibrato Speed 14,844,Vibrato Speed 14,844,Vibrato Speed 14
+overtones14,overtones14,0.0,0.0,1.0,Harmonics 14,845,Harmonics 14,845,Harmonics 14
+overtonefalloff14,overtoneFalloff14,0.0,0.0,1.0,Harmonics Falloff 14,846,Harmonics Falloff 14,846,Harmonics Falloff 14
+changerepeat14,changeRepeat14,0.0,0.0,1.0,Pitch Jump Repeat Speed 14,847,Pitch Jump Repeat Speed 14,847,Pitch Jump Repeat Speed 14
+changeamount14,changeAmount14,0.0,-1.0,1.0,Pitch Jump Amount 1 14,848,Pitch Jump Amount 1 14,848,Pitch Jump Amount 1 14
+changespeed14,changeSpeed14,0.0,0.0,1.0,Pitch Jump Onset 1 14,849,Pitch Jump Onset 1 14,849,Pitch Jump Onset 1 14
+changeamount214,changeAmount214,0.0,-1.0,1.0,Pitch Jump Amount 2 14,850,Pitch Jump Amount 2 14,850,Pitch Jump Amount 2 14
+changespeed214,changeSpeed214,0.0,0.0,1.0,Pitch Jump Onset 2 14,851,Pitch Jump Onset 2 14,851,Pitch Jump Onset 2 14
+squareduty14,squareDuty14,0.5061501264572144,0.0,1.0,Square Duty 14,852,Square Duty 14,852,Square Duty 14
+dutysweep14,dutySweep14,0.0,-1.0,1.0,Duty Sweep 14,853,Duty Sweep 14,853,Duty Sweep 14
+repeatspeed14,repeatSpeed14,0.0,0.0,1.0,Repeat Speed 14,854,Repeat Speed 14,854,Repeat Speed 14
+flangeroffset14,flangerOffset14,0.0,-1.0,1.0,Flanger Offset 14,855,Flanger Offset 14,855,Flanger Offset 14
+flangersweep14,flangerSweep14,0.0,-1.0,1.0,Flanger Sweep 14,856,Flanger Sweep 14,856,Flanger Sweep 14
+lpfiltercutoff14,lpFilterCutoff14,1.0,0.0,1.0,LP Filter Cutoff 14,857,LP Filter Cutoff 14,857,LP Filter Cutoff 14
+lpfiltercutoffsweep14,lpFilterCutoffSweep14,0.0,-1.0,1.0,LP Filter Cutoff Sweep 14,858,LP Filter Cutoff Sweep 14,858,LP Filter Cutoff Sweep 14
+lpfilterresonance14,lpFilterResonance14,0.0,0.0,1.0,LP Filter Resonance 14,859,LP Filter Resonance 14,859,LP Filter Resonance 14
+hpfiltercutoff14,hpFilterCutoff14,0.1000000014901161,0.0,1.0,HP Filter Cutoff 14,860,HP Filter Cutoff 14,860,HP Filter Cutoff 14
+hpfiltercutoffsweep14,hpFilterCutoffSweep14,0.0,-1.0,1.0,HP Filter Cutoff Sweep 14,861,HP Filter Cutoff Sweep 14,861,HP Filter Cutoff Sweep 14
+bitcrush14,bitCrush14,0.0,0.0,1.0,Bit Crush 14,862,Bit Crush 14,862,Bit Crush 14
+bitcrushsweep14,bitCrushSweep14,0.0,-1.0,1.0,Bit Crush Sweep 14,863,Bit Crush Sweep 14,863,Bit Crush Sweep 14
+wavetype14l,waveType14l,0.0,0.0,1.0,Wave Type 14 Lock,864,Wave Type 14 Lock,864,Wave Type 14 Lock
+mastervolume14l,masterVolume14l,1.0,0.0,1.0,Master Volume 14 Lock,865,Master Volume 14 Lock,865,Master Volume 14 Lock
+attacktime14l,attackTime14l,0.0,0.0,1.0,Attack Time 14 Lock,866,Attack Time 14 Lock,866,Attack Time 14 Lock
+sustaintime14l,sustainTime14l,0.0,0.0,1.0,Sustain Time 14 Lock,867,Sustain Time 14 Lock,867,Sustain Time 14 Lock
+sustainpunch14l,sustainPunch14l,0.0,0.0,1.0,Punch 14 Lock,868,Punch 14 Lock,868,Punch 14 Lock
+decaytime14l,decayTime14l,0.0,0.0,1.0,Decay Time 14 Lock,869,Decay Time 14 Lock,869,Decay Time 14 Lock
+compressionamount14l,compressionAmount14l,0.0,0.0,1.0,Compression 14 Lock,870,Compression 14 Lock,870,Compression 14 Lock
+startfrequency14l,startFrequency14l,0.0,0.0,1.0,Frequency 14 Lock,871,Frequency 14 Lock,871,Frequency 14 Lock
+minfrequency14l,minFrequency14l,0.0,0.0,1.0,Frequency Cutoff 14 Lock,872,Frequency Cutoff 14 Lock,872,Frequency Cutoff 14 Lock
+slide14l,slide14l,0.0,0.0,1.0,Frequency Slide 14 Lock,873,Frequency Slide 14 Lock,873,Frequency Slide 14 Lock
+deltaslide14l,deltaSlide14l,0.0,0.0,1.0,Delta Slide 14 Lock,874,Delta Slide 14 Lock,874,Delta Slide 14 Lock
+vibratodepth14l,vibratoDepth14l,0.0,0.0,1.0,Vibrato Depth 14 Lock,875,Vibrato Depth 14 Lock,875,Vibrato Depth 14 Lock
+vibratospeed14l,vibratoSpeed14l,0.0,0.0,1.0,Vibrato Speed 14 Lock,876,Vibrato Speed 14 Lock,876,Vibrato Speed 14 Lock
+overtones14l,overtones14l,0.0,0.0,1.0,Harmonics 14 Lock,877,Harmonics 14 Lock,877,Harmonics 14 Lock
+overtonefalloff14l,overtoneFalloff14l,0.0,0.0,1.0,Harmonics Falloff 14 Lock,878,Harmonics Falloff 14 Lock,878,Harmonics Falloff 14 Lock
+changerepeat14l,changeRepeat14l,0.0,0.0,1.0,Pitch Jump Repeat Speed 14 Lock,879,Pitch Jump Repeat Speed 14 Lock,879,Pitch Jump Repeat Speed 14 Lock
+changeamount14l,changeAmount14l,0.0,0.0,1.0,Pitch Jump Amount 1 14 Lock,880,Pitch Jump Amount 1 14 Lock,880,Pitch Jump Amount 1 14 Lock
+changespeed14l,changeSpeed14l,0.0,0.0,1.0,Pitch Jump Onset 1 14 Lock,881,Pitch Jump Onset 1 14 Lock,881,Pitch Jump Onset 1 14 Lock
+changeamount214l,changeAmount214l,0.0,0.0,1.0,Pitch Jump Amount 2 14 Lock,882,Pitch Jump Amount 2 14 Lock,882,Pitch Jump Amount 2 14 Lock
+changespeed214l,changeSpeed214l,0.0,0.0,1.0,Pitch Jump Onset 2 14 Lock,883,Pitch Jump Onset 2 14 Lock,883,Pitch Jump Onset 2 14 Lock
+squareduty14l,squareDuty14l,0.0,0.0,1.0,Square Duty 14 Lock,884,Square Duty 14 Lock,884,Square Duty 14 Lock
+dutysweep14l,dutySweep14l,0.0,0.0,1.0,Duty Sweep 14 Lock,885,Duty Sweep 14 Lock,885,Duty Sweep 14 Lock
+repeatspeed14l,repeatSpeed14l,0.0,0.0,1.0,Repeat Speed 14 Lock,886,Repeat Speed 14 Lock,886,Repeat Speed 14 Lock
+flangeroffset14l,flangerOffset14l,0.0,0.0,1.0,Flanger Offset 14 Lock,887,Flanger Offset 14 Lock,887,Flanger Offset 14 Lock
+flangersweep14l,flangerSweep14l,0.0,0.0,1.0,Flanger Sweep 14 Lock,888,Flanger Sweep 14 Lock,888,Flanger Sweep 14 Lock
+lpfiltercutoff14l,lpFilterCutoff14l,0.0,0.0,1.0,LP Filter Cutoff 14 Lock,889,LP Filter Cutoff 14 Lock,889,LP Filter Cutoff 14 Lock
+lpfiltercutoffsweep14l,lpFilterCutoffSweep14l,0.0,0.0,1.0,LP Filter Cutoff Sweep 14 Lock,890,LP Filter Cutoff Sweep 14 Lock,890,LP Filter Cutoff Sweep 14 Lock
+lpfilterresonance14l,lpFilterResonance14l,0.0,0.0,1.0,LP Filter Resonance 14 Lock,891,LP Filter Resonance 14 Lock,891,LP Filter Resonance 14 Lock
+hpfiltercutoff14l,hpFilterCutoff14l,0.0,0.0,1.0,HP Filter Cutoff 14 Lock,892,HP Filter Cutoff 14 Lock,892,HP Filter Cutoff 14 Lock
+hpfiltercutoffsweep14l,hpFilterCutoffSweep14l,0.0,0.0,1.0,HP Filter Cutoff Sweep 14 Lock,893,HP Filter Cutoff Sweep 14 Lock,893,HP Filter Cutoff Sweep 14 Lock
+bitcrush14l,bitCrush14l,0.0,0.0,1.0,Bit Crush 14 Lock,894,Bit Crush 14 Lock,894,Bit Crush 14 Lock
+bitcrushsweep14l,bitCrushSweep14l,0.0,0.0,1.0,Bit Crush Sweep 14 Lock,895,Bit Crush Sweep 14 Lock,895,Bit Crush Sweep 14 Lock
+wavetype15,waveType15,2.0,0.0,8.0,Wave Type 15,896,Wave Type 15,896,Wave Type 15
+mastervolume15,masterVolume15,0.5,0.0,1.0,Master Volume 15,897,Master Volume 15,897,Master Volume 15
+attacktime15,attackTime15,0.0,0.0,1.0,Attack Time 15,898,Attack Time 15,898,Attack Time 15
+sustaintime15,sustainTime15,0.005732608493417501,0.0,1.0,Sustain Time 15,899,Sustain Time 15,899,Sustain Time 15
+sustainpunch15,sustainPunch15,0.4222321808338165,0.0,1.0,Punch 15,900,Punch 15,900,Punch 15
+decaytime15,decayTime15,0.4849398732185364,0.0,1.0,Decay Time 15,901,Decay Time 15,901,Decay Time 15
+compressionamount15,compressionAmount15,0.300000011920929,0.0,1.0,Compression 15,902,Compression 15,902,Compression 15
+startfrequency15,startFrequency15,0.7290945053100586,0.0,1.0,Frequency 15,903,Frequency 15,903,Frequency 15
+minfrequency15,minFrequency15,0.0,0.0,1.0,Frequency Cutoff 15,904,Frequency Cutoff 15,904,Frequency Cutoff 15
+slide15,slide15,0.0,-1.0,1.0,Frequency Slide 15,905,Frequency Slide 15,905,Frequency Slide 15
+deltaslide15,deltaSlide15,0.0,-1.0,1.0,Delta Slide 15,906,Delta Slide 15,906,Delta Slide 15
+vibratodepth15,vibratoDepth15,0.0,0.0,1.0,Vibrato Depth 15,907,Vibrato Depth 15,907,Vibrato Depth 15
+vibratospeed15,vibratoSpeed15,0.0,0.0,1.0,Vibrato Speed 15,908,Vibrato Speed 15,908,Vibrato Speed 15
+overtones15,overtones15,0.0,0.0,1.0,Harmonics 15,909,Harmonics 15,909,Harmonics 15
+overtonefalloff15,overtoneFalloff15,0.0,0.0,1.0,Harmonics Falloff 15,910,Harmonics Falloff 15,910,Harmonics Falloff 15
+changerepeat15,changeRepeat15,0.0,0.0,1.0,Pitch Jump Repeat Speed 15,911,Pitch Jump Repeat Speed 15,911,Pitch Jump Repeat Speed 15
+changeamount15,changeAmount15,0.1666666716337204,-1.0,1.0,Pitch Jump Amount 1 15,912,Pitch Jump Amount 1 15,912,Pitch Jump Amount 1 15
+changespeed15,changeSpeed15,0.5178467631340027,0.0,1.0,Pitch Jump Onset 1 15,913,Pitch Jump Onset 1 15,913,Pitch Jump Onset 1 15
+changeamount215,changeAmount215,0.0,-1.0,1.0,Pitch Jump Amount 2 15,914,Pitch Jump Amount 2 15,914,Pitch Jump Amount 2 15
+changespeed215,changeSpeed215,0.0,0.0,1.0,Pitch Jump Onset 2 15,915,Pitch Jump Onset 2 15,915,Pitch Jump Onset 2 15
+squareduty15,squareDuty15,0.0,0.0,1.0,Square Duty 15,916,Square Duty 15,916,Square Duty 15
+dutysweep15,dutySweep15,0.0,-1.0,1.0,Duty Sweep 15,917,Duty Sweep 15,917,Duty Sweep 15
+repeatspeed15,repeatSpeed15,0.0,0.0,1.0,Repeat Speed 15,918,Repeat Speed 15,918,Repeat Speed 15
+flangeroffset15,flangerOffset15,0.0,-1.0,1.0,Flanger Offset 15,919,Flanger Offset 15,919,Flanger Offset 15
+flangersweep15,flangerSweep15,0.0,-1.0,1.0,Flanger Sweep 15,920,Flanger Sweep 15,920,Flanger Sweep 15
+lpfiltercutoff15,lpFilterCutoff15,1.0,0.0,1.0,LP Filter Cutoff 15,921,LP Filter Cutoff 15,921,LP Filter Cutoff 15
+lpfiltercutoffsweep15,lpFilterCutoffSweep15,0.0,-1.0,1.0,LP Filter Cutoff Sweep 15,922,LP Filter Cutoff Sweep 15,922,LP Filter Cutoff Sweep 15
+lpfilterresonance15,lpFilterResonance15,0.0,0.0,1.0,LP Filter Resonance 15,923,LP Filter Resonance 15,923,LP Filter Resonance 15
+hpfiltercutoff15,hpFilterCutoff15,0.0,0.0,1.0,HP Filter Cutoff 15,924,HP Filter Cutoff 15,924,HP Filter Cutoff 15
+hpfiltercutoffsweep15,hpFilterCutoffSweep15,0.0,-1.0,1.0,HP Filter Cutoff Sweep 15,925,HP Filter Cutoff Sweep 15,925,HP Filter Cutoff Sweep 15
+bitcrush15,bitCrush15,0.0,0.0,1.0,Bit Crush 15,926,Bit Crush 15,926,Bit Crush 15
+bitcrushsweep15,bitCrushSweep15,0.0,-1.0,1.0,Bit Crush Sweep 15,927,Bit Crush Sweep 15,927,Bit Crush Sweep 15
+wavetype15l,waveType15l,0.0,0.0,1.0,Wave Type 15 Lock,928,Wave Type 15 Lock,928,Wave Type 15 Lock
+mastervolume15l,masterVolume15l,1.0,0.0,1.0,Master Volume 15 Lock,929,Master Volume 15 Lock,929,Master Volume 15 Lock
+attacktime15l,attackTime15l,0.0,0.0,1.0,Attack Time 15 Lock,930,Attack Time 15 Lock,930,Attack Time 15 Lock
+sustaintime15l,sustainTime15l,0.0,0.0,1.0,Sustain Time 15 Lock,931,Sustain Time 15 Lock,931,Sustain Time 15 Lock
+sustainpunch15l,sustainPunch15l,0.0,0.0,1.0,Punch 15 Lock,932,Punch 15 Lock,932,Punch 15 Lock
+decaytime15l,decayTime15l,0.0,0.0,1.0,Decay Time 15 Lock,933,Decay Time 15 Lock,933,Decay Time 15 Lock
+compressionamount15l,compressionAmount15l,0.0,0.0,1.0,Compression 15 Lock,934,Compression 15 Lock,934,Compression 15 Lock
+startfrequency15l,startFrequency15l,0.0,0.0,1.0,Frequency 15 Lock,935,Frequency 15 Lock,935,Frequency 15 Lock
+minfrequency15l,minFrequency15l,0.0,0.0,1.0,Frequency Cutoff 15 Lock,936,Frequency Cutoff 15 Lock,936,Frequency Cutoff 15 Lock
+slide15l,slide15l,0.0,0.0,1.0,Frequency Slide 15 Lock,937,Frequency Slide 15 Lock,937,Frequency Slide 15 Lock
+deltaslide15l,deltaSlide15l,0.0,0.0,1.0,Delta Slide 15 Lock,938,Delta Slide 15 Lock,938,Delta Slide 15 Lock
+vibratodepth15l,vibratoDepth15l,0.0,0.0,1.0,Vibrato Depth 15 Lock,939,Vibrato Depth 15 Lock,939,Vibrato Depth 15 Lock
+vibratospeed15l,vibratoSpeed15l,0.0,0.0,1.0,Vibrato Speed 15 Lock,940,Vibrato Speed 15 Lock,940,Vibrato Speed 15 Lock
+overtones15l,overtones15l,0.0,0.0,1.0,Harmonics 15 Lock,941,Harmonics 15 Lock,941,Harmonics 15 Lock
+overtonefalloff15l,overtoneFalloff15l,0.0,0.0,1.0,Harmonics Falloff 15 Lock,942,Harmonics Falloff 15 Lock,942,Harmonics Falloff 15 Lock
+changerepeat15l,changeRepeat15l,0.0,0.0,1.0,Pitch Jump Repeat Speed 15 Lock,943,Pitch Jump Repeat Speed 15 Lock,943,Pitch Jump Repeat Speed 15 Lock
+changeamount15l,changeAmount15l,0.0,0.0,1.0,Pitch Jump Amount 1 15 Lock,944,Pitch Jump Amount 1 15 Lock,944,Pitch Jump Amount 1 15 Lock
+changespeed15l,changeSpeed15l,0.0,0.0,1.0,Pitch Jump Onset 1 15 Lock,945,Pitch Jump Onset 1 15 Lock,945,Pitch Jump Onset 1 15 Lock
+changeamount215l,changeAmount215l,0.0,0.0,1.0,Pitch Jump Amount 2 15 Lock,946,Pitch Jump Amount 2 15 Lock,946,Pitch Jump Amount 2 15 Lock
+changespeed215l,changeSpeed215l,0.0,0.0,1.0,Pitch Jump Onset 2 15 Lock,947,Pitch Jump Onset 2 15 Lock,947,Pitch Jump Onset 2 15 Lock
+squareduty15l,squareDuty15l,0.0,0.0,1.0,Square Duty 15 Lock,948,Square Duty 15 Lock,948,Square Duty 15 Lock
+dutysweep15l,dutySweep15l,0.0,0.0,1.0,Duty Sweep 15 Lock,949,Duty Sweep 15 Lock,949,Duty Sweep 15 Lock
+repeatspeed15l,repeatSpeed15l,0.0,0.0,1.0,Repeat Speed 15 Lock,950,Repeat Speed 15 Lock,950,Repeat Speed 15 Lock
+flangeroffset15l,flangerOffset15l,0.0,0.0,1.0,Flanger Offset 15 Lock,951,Flanger Offset 15 Lock,951,Flanger Offset 15 Lock
+flangersweep15l,flangerSweep15l,0.0,0.0,1.0,Flanger Sweep 15 Lock,952,Flanger Sweep 15 Lock,952,Flanger Sweep 15 Lock
+lpfiltercutoff15l,lpFilterCutoff15l,0.0,0.0,1.0,LP Filter Cutoff 15 Lock,953,LP Filter Cutoff 15 Lock,953,LP Filter Cutoff 15 Lock
+lpfiltercutoffsweep15l,lpFilterCutoffSweep15l,0.0,0.0,1.0,LP Filter Cutoff Sweep 15 Lock,954,LP Filter Cutoff Sweep 15 Lock,954,LP Filter Cutoff Sweep 15 Lock
+lpfilterresonance15l,lpFilterResonance15l,0.0,0.0,1.0,LP Filter Resonance 15 Lock,955,LP Filter Resonance 15 Lock,955,LP Filter Resonance 15 Lock
+hpfiltercutoff15l,hpFilterCutoff15l,0.0,0.0,1.0,HP Filter Cutoff 15 Lock,956,HP Filter Cutoff 15 Lock,956,HP Filter Cutoff 15 Lock
+hpfiltercutoffsweep15l,hpFilterCutoffSweep15l,0.0,0.0,1.0,HP Filter Cutoff Sweep 15 Lock,957,HP Filter Cutoff Sweep 15 Lock,957,HP Filter Cutoff Sweep 15 Lock
+bitcrush15l,bitCrush15l,0.0,0.0,1.0,Bit Crush 15 Lock,958,Bit Crush 15 Lock,958,Bit Crush 15 Lock
+bitcrushsweep15l,bitCrushSweep15l,0.0,0.0,1.0,Bit Crush Sweep 15 Lock,959,Bit Crush Sweep 15 Lock,959,Bit Crush Sweep 15 Lock
+wavetype16,waveType16,0.0,0.0,8.0,Wave Type 16,960,Wave Type 16,960,Wave Type 16
+mastervolume16,masterVolume16,0.5,0.0,1.0,Master Volume 16,961,Master Volume 16,961,Master Volume 16
+attacktime16,attackTime16,0.0,0.0,1.0,Attack Time 16,962,Attack Time 16,962,Attack Time 16
+sustaintime16,sustainTime16,0.2431178390979767,0.0,1.0,Sustain Time 16,963,Sustain Time 16,963,Sustain Time 16
+sustainpunch16,sustainPunch16,0.1305335760116577,0.0,1.0,Punch 16,964,Punch 16,964,Punch 16
+decaytime16,decayTime16,0.3757133483886719,0.0,1.0,Decay Time 16,965,Decay Time 16,965,Decay Time 16
+compressionamount16,compressionAmount16,0.300000011920929,0.0,1.0,Compression 16,966,Compression 16,966,Compression 16
+startfrequency16,startFrequency16,0.5501021146774292,0.0,1.0,Frequency 16,967,Frequency 16,967,Frequency 16
+minfrequency16,minFrequency16,0.2000000029802322,0.0,1.0,Frequency Cutoff 16,968,Frequency Cutoff 16,968,Frequency Cutoff 16
+slide16,slide16,-0.3432634472846985,-1.0,1.0,Frequency Slide 16,969,Frequency Slide 16,969,Frequency Slide 16
+deltaslide16,deltaSlide16,0.0,-1.0,1.0,Delta Slide 16,970,Delta Slide 16,970,Delta Slide 16
+vibratodepth16,vibratoDepth16,0.0,0.0,1.0,Vibrato Depth 16,971,Vibrato Depth 16,971,Vibrato Depth 16
+vibratospeed16,vibratoSpeed16,0.0,0.0,1.0,Vibrato Speed 16,972,Vibrato Speed 16,972,Vibrato Speed 16
+overtones16,overtones16,0.0,0.0,1.0,Harmonics 16,973,Harmonics 16,973,Harmonics 16
+overtonefalloff16,overtoneFalloff16,0.0,0.0,1.0,Harmonics Falloff 16,974,Harmonics Falloff 16,974,Harmonics Falloff 16
+changerepeat16,changeRepeat16,0.0,0.0,1.0,Pitch Jump Repeat Speed 16,975,Pitch Jump Repeat Speed 16,975,Pitch Jump Repeat Speed 16
+changeamount16,changeAmount16,0.0,-1.0,1.0,Pitch Jump Amount 1 16,976,Pitch Jump Amount 1 16,976,Pitch Jump Amount 1 16
+changespeed16,changeSpeed16,0.0,0.0,1.0,Pitch Jump Onset 1 16,977,Pitch Jump Onset 1 16,977,Pitch Jump Onset 1 16
+changeamount216,changeAmount216,0.0,-1.0,1.0,Pitch Jump Amount 2 16,978,Pitch Jump Amount 2 16,978,Pitch Jump Amount 2 16
+changespeed216,changeSpeed216,0.0,0.0,1.0,Pitch Jump Onset 2 16,979,Pitch Jump Onset 2 16,979,Pitch Jump Onset 2 16
+squareduty16,squareDuty16,0.8483421802520752,0.0,1.0,Square Duty 16,980,Square Duty 16,980,Square Duty 16
+dutysweep16,dutySweep16,-0.2084497362375259,-1.0,1.0,Duty Sweep 16,981,Duty Sweep 16,981,Duty Sweep 16
+repeatspeed16,repeatSpeed16,0.0,0.0,1.0,Repeat Speed 16,982,Repeat Speed 16,982,Repeat Speed 16
+flangeroffset16,flangerOffset16,0.0,-1.0,1.0,Flanger Offset 16,983,Flanger Offset 16,983,Flanger Offset 16
+flangersweep16,flangerSweep16,0.0,-1.0,1.0,Flanger Sweep 16,984,Flanger Sweep 16,984,Flanger Sweep 16
+lpfiltercutoff16,lpFilterCutoff16,1.0,0.0,1.0,LP Filter Cutoff 16,985,LP Filter Cutoff 16,985,LP Filter Cutoff 16
+lpfiltercutoffsweep16,lpFilterCutoffSweep16,0.0,-1.0,1.0,LP Filter Cutoff Sweep 16,986,LP Filter Cutoff Sweep 16,986,LP Filter Cutoff Sweep 16
+lpfilterresonance16,lpFilterResonance16,0.0,0.0,1.0,LP Filter Resonance 16,987,LP Filter Resonance 16,987,LP Filter Resonance 16
+hpfiltercutoff16,hpFilterCutoff16,0.0,0.0,1.0,HP Filter Cutoff 16,988,HP Filter Cutoff 16,988,HP Filter Cutoff 16
+hpfiltercutoffsweep16,hpFilterCutoffSweep16,0.0,-1.0,1.0,HP Filter Cutoff Sweep 16,989,HP Filter Cutoff Sweep 16,989,HP Filter Cutoff Sweep 16
+bitcrush16,bitCrush16,0.0,0.0,1.0,Bit Crush 16,990,Bit Crush 16,990,Bit Crush 16
+bitcrushsweep16,bitCrushSweep16,0.0,-1.0,1.0,Bit Crush Sweep 16,991,Bit Crush Sweep 16,991,Bit Crush Sweep 16
+wavetype16l,waveType16l,0.0,0.0,1.0,Wave Type 16 Lock,992,Wave Type 16 Lock,992,Wave Type 16 Lock
+mastervolume16l,masterVolume16l,1.0,0.0,1.0,Master Volume 16 Lock,993,Master Volume 16 Lock,993,Master Volume 16 Lock
+attacktime16l,attackTime16l,0.0,0.0,1.0,Attack Time 16 Lock,994,Attack Time 16 Lock,994,Attack Time 16 Lock
+sustaintime16l,sustainTime16l,0.0,0.0,1.0,Sustain Time 16 Lock,995,Sustain Time 16 Lock,995,Sustain Time 16 Lock
+sustainpunch16l,sustainPunch16l,0.0,0.0,1.0,Punch 16 Lock,996,Punch 16 Lock,996,Punch 16 Lock
+decaytime16l,decayTime16l,0.0,0.0,1.0,Decay Time 16 Lock,997,Decay Time 16 Lock,997,Decay Time 16 Lock
+compressionamount16l,compressionAmount16l,0.0,0.0,1.0,Compression 16 Lock,998,Compression 16 Lock,998,Compression 16 Lock
+startfrequency16l,startFrequency16l,0.0,0.0,1.0,Frequency 16 Lock,999,Frequency 16 Lock,999,Frequency 16 Lock
+minfrequency16l,minFrequency16l,0.0,0.0,1.0,Frequency Cutoff 16 Lock,1000,Frequency Cutoff 16 Lock,1000,Frequency Cutoff 16 Lock
+slide16l,slide16l,0.0,0.0,1.0,Frequency Slide 16 Lock,1001,Frequency Slide 16 Lock,1001,Frequency Slide 16 Lock
+deltaslide16l,deltaSlide16l,0.0,0.0,1.0,Delta Slide 16 Lock,1002,Delta Slide 16 Lock,1002,Delta Slide 16 Lock
+vibratodepth16l,vibratoDepth16l,0.0,0.0,1.0,Vibrato Depth 16 Lock,1003,Vibrato Depth 16 Lock,1003,Vibrato Depth 16 Lock
+vibratospeed16l,vibratoSpeed16l,0.0,0.0,1.0,Vibrato Speed 16 Lock,1004,Vibrato Speed 16 Lock,1004,Vibrato Speed 16 Lock
+overtones16l,overtones16l,0.0,0.0,1.0,Harmonics 16 Lock,1005,Harmonics 16 Lock,1005,Harmonics 16 Lock
+overtonefalloff16l,overtoneFalloff16l,0.0,0.0,1.0,Harmonics Falloff 16 Lock,1006,Harmonics Falloff 16 Lock,1006,Harmonics Falloff 16 Lock
+changerepeat16l,changeRepeat16l,0.0,0.0,1.0,Pitch Jump Repeat Speed 16 Lock,1007,Pitch Jump Repeat Speed 16 Lock,1007,Pitch Jump Repeat Speed 16 Lock
+changeamount16l,changeAmount16l,0.0,0.0,1.0,Pitch Jump Amount 1 16 Lock,1008,Pitch Jump Amount 1 16 Lock,1008,Pitch Jump Amount 1 16 Lock
+changespeed16l,changeSpeed16l,0.0,0.0,1.0,Pitch Jump Onset 1 16 Lock,1009,Pitch Jump Onset 1 16 Lock,1009,Pitch Jump Onset 1 16 Lock
+changeamount216l,changeAmount216l,0.0,0.0,1.0,Pitch Jump Amount 2 16 Lock,1010,Pitch Jump Amount 2 16 Lock,1010,Pitch Jump Amount 2 16 Lock
+changespeed216l,changeSpeed216l,0.0,0.0,1.0,Pitch Jump Onset 2 16 Lock,1011,Pitch Jump Onset 2 16 Lock,1011,Pitch Jump Onset 2 16 Lock
+squareduty16l,squareDuty16l,0.0,0.0,1.0,Square Duty 16 Lock,1012,Square Duty 16 Lock,1012,Square Duty 16 Lock
+dutysweep16l,dutySweep16l,0.0,0.0,1.0,Duty Sweep 16 Lock,1013,Duty Sweep 16 Lock,1013,Duty Sweep 16 Lock
+repeatspeed16l,repeatSpeed16l,0.0,0.0,1.0,Repeat Speed 16 Lock,1014,Repeat Speed 16 Lock,1014,Repeat Speed 16 Lock
+flangeroffset16l,flangerOffset16l,0.0,0.0,1.0,Flanger Offset 16 Lock,1015,Flanger Offset 16 Lock,1015,Flanger Offset 16 Lock
+flangersweep16l,flangerSweep16l,0.0,0.0,1.0,Flanger Sweep 16 Lock,1016,Flanger Sweep 16 Lock,1016,Flanger Sweep 16 Lock
+lpfiltercutoff16l,lpFilterCutoff16l,0.0,0.0,1.0,LP Filter Cutoff 16 Lock,1017,LP Filter Cutoff 16 Lock,1017,LP Filter Cutoff 16 Lock
+lpfiltercutoffsweep16l,lpFilterCutoffSweep16l,0.0,0.0,1.0,LP Filter Cutoff Sweep 16 Lock,1018,LP Filter Cutoff Sweep 16 Lock,1018,LP Filter Cutoff Sweep 16 Lock
+lpfilterresonance16l,lpFilterResonance16l,0.0,0.0,1.0,LP Filter Resonance 16 Lock,1019,LP Filter Resonance 16 Lock,1019,LP Filter Resonance 16 Lock
+hpfiltercutoff16l,hpFilterCutoff16l,0.0,0.0,1.0,HP Filter Cutoff 16 Lock,1020,HP Filter Cutoff 16 Lock,1020,HP Filter Cutoff 16 Lock
+hpfiltercutoffsweep16l,hpFilterCutoffSweep16l,0.0,0.0,1.0,HP Filter Cutoff Sweep 16 Lock,1021,HP Filter Cutoff Sweep 16 Lock,1021,HP Filter Cutoff Sweep 16 Lock
+bitcrush16l,bitCrush16l,0.0,0.0,1.0,Bit Crush 16 Lock,1022,Bit Crush 16 Lock,1022,Bit Crush 16 Lock
+bitcrushsweep16l,bitCrushSweep16l,0.0,0.0,1.0,Bit Crush Sweep 16 Lock,1023,Bit Crush Sweep 16 Lock,1023,Bit Crush Sweep 16 Lock

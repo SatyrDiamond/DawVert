@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from io import BytesIO
@@ -12,32 +12,6 @@ def to_bytesio(input):
 	data.write(input)
 	data.seek(0)
 	return data
-
-def readstring(data):
-	output = b''
-	terminated = 0
-	while terminated == 0:
-		char = data.read(1)
-		if char != b'\x00' and char != b'': output += char
-		else: terminated = 1
-	return output.decode('ascii')
-
-def readstring_lenbyte(file_stream, length_size, length_endian, codec):
-	stringlen = int.from_bytes(file_stream.read(length_size), length_endian)
-	if stringlen != 0: return readstring_fixedlen(file_stream, stringlen, codec)
-	else: return ''
-
-def readstring_fixedlen(file_stream, length, codec):
-	if codec != None: return file_stream.read(length).split(b'\x00')[0].decode(codec).translate(dict.fromkeys(range(32)))
-	else: return file_stream.read(length).split(b'\x00')[0].decode().translate(dict.fromkeys(range(32)))
-
-def readstring_fixedlen_nofix(file_stream, length, codec):
-	if codec != None: return file_stream.read(length).split(b'\x00')[0].decode(codec)
-	else: return file_stream.read(length).split(b'\x00')[0].decode()
-
-def makestring_fixedlen(textin, length):
-	textbytes = textin.encode()
-	return textbytes[:length] + b'\x00'*(length-len(textbytes))
 
 def splitbyte(value):
     first = value >> 4
@@ -82,6 +56,17 @@ def swap32(x):
 def swap16(x):
     return (((x << 8) & 0xFF00) |
             ((x >> 8) & 0x00FF))
+
+def reverse_mask(x):
+    x = ((x & 0x55555555) << 1) | ((x & 0xAAAAAAAA) >> 1)
+    x = ((x & 0x33333333) << 2) | ((x & 0xCCCCCCCC) >> 2)
+    x = ((x & 0x0F0F0F0F) << 4) | ((x & 0xF0F0F0F0) >> 4)
+    x = ((x & 0x00FF00FF) << 8) | ((x & 0xFF00FF00) >> 8)
+    x = ((x & 0x0000FFFF) << 16) | ((x & 0xFFFF0000) >> 16)
+    return x
+    
+def get_bitnums_int(x):
+    return [i for i in range(x.bit_length()) if ((1 << i) & x)]
 
 def get_bitnums(x):
     x = int.from_bytes(x, 'little')

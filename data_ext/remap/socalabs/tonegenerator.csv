@@ -1,0 +1,11 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+enable,enable,1.0,0.0,1.0,Enable,0,Enable,0,Enable
+bandlimit,bandlimit,1.0,0.0,1.0,Bandlimit,1,Bandlimit,1,Bandlimit
+freq,freq,1000.0,30.0,20000.0,Frequency,2,Frequency,2,Frequency
+sine,sine,-100.0,-100.0,6.0,Sine,3,Sine,3,Sine
+triangle,triangle,-100.0,-100.0,6.0,Triangle,4,Triangle,4,Triangle
+sawup,sawup,-100.0,-100.0,6.0,Saw Up,5,Saw Up,5,Saw Up
+sawdn,sawdn,-100.0,-100.0,6.0,Saw Down,6,Saw Down,6,Saw Down
+square,square,-100.0,-100.0,6.0,Square,7,Square,7,Square
+noise,noise,-100.0,-100.0,6.0,Noise,8,Noise,8,Noise

@@ -68,6 +68,7 @@ class input_reaper(plugins.base):
 		dawinfo_obj.track_hybrid = True
 		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
 		dawinfo_obj.audio_stretch = ['rate']
+		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
 		
 	def parse(self, convproj_obj, input_file, dv_config):
 		bytestream = open(input_file, 'r')

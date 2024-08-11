@@ -15,6 +15,7 @@ class input_cvpj_f(plugins.base):
 	def getdawinfo(self, dawinfo_obj): 
 		dawinfo_obj.name = 'Temper'
 		dawinfo_obj.file_ext = ''
+		dawinfo_obj.audio_filetypes = ['wav']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		output = False

@@ -250,6 +250,11 @@ def assoc_remap(i_assoc_org, i_assoc_new):
 			outputs.append(n)
 	return outputs, remap
 
+def in_both_lists(i_list, o_list):
+	out_list = []
+	for x in i_list: 
+		if x in o_list: out_list.append(x)
+	return out_list
 
 def rangepos(posval, dur):
 	for num in range(len(posval)-1):

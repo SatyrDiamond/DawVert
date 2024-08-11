@@ -349,6 +349,7 @@ class input_ableton(plugins.base):
 		dawinfo_obj.audio_stretch = ['warp']
 		dawinfo_obj.auto_types = ['nopl_points']
 		dawinfo_obj.plugin_included = ['sampler:single','sampler:multi','sampler:slicer','native-ableton']
+		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
 
 	def parse(self, convproj_obj, input_file, dv_config):
 		global autoid_assoc

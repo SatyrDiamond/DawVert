@@ -6,7 +6,10 @@ from objects.file_proj import proj_wavtool
 from functions_plugin_ext import plugin_vst2
 from functions_plugin_ext import plugin_vst3
 from functions_plugin_ext import data_vc2xml
+from functions_plugin import juce_memoryblock
 from objects.inst_params import fx_delay
+from objects.inst_params import juce_plugin
+from functions import data_xml
 import plugins
 import json
 import os
@@ -294,12 +297,12 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 			if devicedata.type == 'Bridge':
 
-				encodedState = base64.b64decode(devicedata.data['encodedState']) if 'encodedState' in devicedata.data else b''
-				sourceId = devicedata.data['sourceId'] if 'sourceId' in devicedata.data else b''
-				sourceName = devicedata.data['sourceName'] if 'sourceName' in devicedata.data else b''
-				sourceManufacturer = devicedata.data['sourceManufacturer'] if 'sourceManufacturer' in devicedata.data else b''
-				inputSpec = devicedata.data['inputSpec'] if 'inputSpec' in devicedata.data else b''
-				outputSpec = devicedata.data['outputSpec'] if 'outputSpec' in devicedata.data else b''
+				encodedState = base64.b64decode(devicedata.data['encodedState']) if 'encodedState' in devicedata.data else ''
+				sourceId = devicedata.data['sourceId'] if 'sourceId' in devicedata.data else ''
+				sourceName = devicedata.data['sourceName'] if 'sourceName' in devicedata.data else ''
+				sourceManufacturer = devicedata.data['sourceManufacturer'] if 'sourceManufacturer' in devicedata.data else ''
+				inputSpec = devicedata.data['inputSpec'] if 'inputSpec' in devicedata.data else {}
+				outputSpec = devicedata.data['outputSpec'] if 'outputSpec' in devicedata.data else {}
 
 				isinst = 'midiInput' in inputSpec
 
@@ -308,22 +311,18 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					encodedData = encodedState[96:]
 					if encodedData[0:4] == b'CcnK':
 						plugin_obj = convproj_obj.add_plugin(deviceid, 'vst2', 'win')
-						plugin_vst2.import_presetdata(convproj_obj, plugin_obj, BytesIO(encodedData), 'win')
-						#plugin_obj.datavals.add('name', sourceName)
-					#if encodedData[0:4] == b'VC2!':
-						#xmldata = data_vc2xml.get(encodedData)
-						#if xmldata.tag == 'VST3PluginState':
-						#	plugin_obj = convproj_obj.add_plugin(deviceid, 'vst3', 'win')
-						#	IComponent = xmldata.findall('IComponent')
-						#	if IComponent:
-						#		IComponent = IComponent[0]
-						#		d_len, d_data = IComponent.text.split('.', 1)
+						plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, encodedData, None)
+					if encodedData[0:4] == b'VC2!':
+						pluginstate_x = data_vc2xml.get(encodedData)
+						IComponent = data_xml.find_first(pluginstate_x, 'IComponent')
+						if IComponent != None and sourceName:
+							chunkdata = juce_memoryblock.fromJuceBase64Encoding(IComponent.text)
+							plugin_vst3.replace_data(convproj_obj, plugin_obj, 'name', None, sourceName, chunkdata)
 
 				if isinst: instrument_dev = deviceid
 				else: effects.append(deviceid)
 
 			trackdevices.append(deviceid)
-
 
 		if TrackMIDIReceiver:
 			connections = {}

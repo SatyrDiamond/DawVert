@@ -127,39 +127,41 @@ class cvpj_placements_notes:
 			else: new_data.append(notespl_obj)
 		self.data = new_data
 
-	def add_loops(self):
+	def eq_connect(self, pl, prev, loopcompat):
+		if prev:
+			isvalid_a = pl.cut_type in ['none', 'cut']
+			isvalid_b = ((prev.position+prev.duration)-pl.position)==0
+			isvalid_c = pl.notelist==prev.notelist
+			isvalid_d = pl.cut_type==prev.cut_type
+			isvalid_e = prev.cut_type in ['none', 'cut']
+			isvalid_f = pl.cut_start==prev.cut_start
+			isvalid_g = pl.muted==prev.muted
+			isvalid_h = ('loop_adv' in loopcompat) if pl.cut_type == 'cut' else True
+			print(isvalid_a, isvalid_b, isvalid_c, isvalid_d, isvalid_e, isvalid_f, isvalid_g, isvalid_h)
+			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f & isvalid_g & isvalid_h
+		else:
+			return False
+
+	def add_loops(self, loopcompat):
 		old_data_notes = copy.deepcopy(self.data)
 		new_data_notes = []
-		prev_pos = 0
-		prev_dur = 0
-		prev_posdur = 0
-		prev_nl = None
-		prevtype = False
 
+		prev = None
 		for pl in old_data_notes:
-			nl_data = pl.notelist
-
-			ifvalid_a = (pl.position-prev_posdur)==0
-			isvalid_b = pl.cut_type=='none'
-			isvalid_c = nl_data==prev_nl if not (prev_nl is None) else False
-
-
-			ifvalid = ifvalid_a and isvalid_b and prevtype and isvalid_c
-
-			#print(ifvalid_a , isvalid_b , prevtype , isvalid_c)
-
-			if not ifvalid:
-				pl.cut_type = 'loop'
-				pl.cut_loopend = pl.duration
-				new_data_notes.append(pl)
+			if not self.eq_connect(pl, prev, loopcompat):
+				new_data_index.append(pl)
 			else:
-				new_data_notes[-1].duration += pl.duration
-
-			prevtype = isvalid_b
-			prev_nl = nl_data
-			prev_pos = pl.position
-			prev_dur = pl.duration
-			prev_posdur = prev_pos+prev_dur
+				prevreal = new_data_index[-1]
+				prevreal.duration += pl.duration
+				if prevreal.cut_type == 'none': 
+					prevreal.cut_type = 'loop'
+					prevreal.cut_loopend = pl.duration
+				if 'loop_adv' in loopcompat:
+					if prevreal.cut_type == 'cut': 
+						prevreal.cut_type = 'loop_off'
+						prevreal.cut_loopstart = pl.cut_start
+						prevreal.cut_loopend = pl.duration+pl.cut_start
+			prev = pl
 
 		self.data = new_data_notes
 

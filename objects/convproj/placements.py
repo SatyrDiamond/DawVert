@@ -61,10 +61,10 @@ class cvpj_placements:
 		self.pl_notes_indexed.remove_loops(out__placement_loop)
 		self.pl_audio_indexed.remove_loops(out__placement_loop)
 
-	def add_loops(self):
-		self.pl_notes.add_loops()
-		self.pl_notes_indexed.add_loops()
-		self.pl_audio_indexed.add_loops()
+	def add_loops(self, loopcompat):
+		self.pl_notes.add_loops(loopcompat)
+		self.pl_notes_indexed.add_loops(loopcompat)
+		self.pl_audio_indexed.add_loops(loopcompat)
 
 	def add_notes(self): return self.pl_notes.add(self.time_ppq, self.time_float)
 

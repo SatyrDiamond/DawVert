@@ -78,8 +78,6 @@ class plugconv(plugins.base):
 			osc2_freq = (fl_osc2_coarse + fl_osc2_fine/100)/12
 			osc3_freq = (fl_osc3_coarse + fl_osc3_fine/100)/12
 
-			
-
 			plugin_obj.replace('native-ableton', 'Operator')
 
 			plugin_obj.params.add('Operator.0/IsOn', True, 'bool')
@@ -125,5 +123,81 @@ class plugconv(plugins.base):
 
 			plugin_obj.params.add('Globals/Algorithm', 10, 'int')
 			
+		if plugin_obj.type.subtype == 'fruity dx10':
+			extpluglog.convinternal('FL Studio', 'Fruity DX10', 'Ableton', 'Operator')
+
+			amp_att = plugin_obj.params.get("amp_att", 0).value/65536
+			amp_dec = plugin_obj.params.get("amp_dec", 0).value/65536
+			amp_rel = plugin_obj.params.get("amp_rel", 0).value/65536
+			lforate = plugin_obj.params.get("lforate", 0).value/65536
+			mod2_course = plugin_obj.params.get("mod2_course", 0).value/65536
+			mod2_fine = plugin_obj.params.get("mod2_fine", 0).value/65536
+			mod2_init = plugin_obj.params.get("mod2_init", 0).value/65536
+			mod2_rel = plugin_obj.params.get("mod2_rel", 0).value/65536
+			mod2_sus = plugin_obj.params.get("mod2_sus", 0).value/65536
+			mod2_time = plugin_obj.params.get("mod2_time", 0).value/65536
+			mod2_velsen = plugin_obj.params.get("mod2_velsen", 0).value/65536
+			mod_course = plugin_obj.params.get("mod_course", 0).value/65536
+			mod_fine = plugin_obj.params.get("mod_fine", 0).value/65536
+			mod_init = plugin_obj.params.get("mod_init", 0).value/65536
+			mod_rel = plugin_obj.params.get("mod_rel", 0).value/65536
+			mod_sus = plugin_obj.params.get("mod_sus", 0).value/65536
+			mod_thru = plugin_obj.params.get("mod_thru", 0).value/65536
+			mod_time = plugin_obj.params.get("mod_time", 0).value/65536
+			mod_velsen = plugin_obj.params.get("mod_velsen", 0).value/65536
+			octave = plugin_obj.params.get("octave", 0).value
+			vibrato = plugin_obj.params.get("vibrato", 0).value/65536
+			waveform = plugin_obj.params.get("waveform", 0).value/65536
+
+			mod_course = int((mod_course**2)*40)
+			mod2_course = int((mod2_course**2)*40)
+
+			plugin_obj.replace('native-ableton', 'Operator')
+
+			plugin_obj.params.add('Lfo/LfoOn', True, 'float')
+			plugin_obj.params.add('Lfo/LfoAmount', vibrato/5.5, 'float')
+			plugin_obj.params.add('Lfo/LfoRate', lforate*127, 'float')
+
+			plugin_obj.params.add('Operator.0/IsOn', True, 'bool')
+			plugin_obj.params.add('Operator.0/Volume', 1, 'float')
+			plugin_obj.params.add('Operator.0/Envelope/AttackTime', ((amp_att**6)*5)*1000, 'float')
+			plugin_obj.params.add('Operator.0/Envelope/DecayTime', ((amp_dec**2)*5)*1000, 'float')
+			plugin_obj.params.add('Operator.0/Envelope/SustainLevel', amp_dec**2, 'float')
+			plugin_obj.params.add('Operator.0/Envelope/ReleaseTime', ((amp_rel**3)*5)*1000, 'float')
+			plugin_obj.params.add('Operator.0/Envelope/DecaySlope', 1, 'float')
+			plugin_obj.params.add('Operator.0/Envelope/AttackSlope', 1, 'float')
+			plugin_obj.params.add('Operator.0/Envelope/ReleaseSlope', 1, 'float')
+			plugin_obj.params.add('Operator.0/Tune/Coarse', [0,1,2,4,8,16,32][octave+3], 'float')
+
+			plugin_obj.params.add('Operator.1/IsOn', not (mod_course == 0 and mod_fine == 0), 'bool')
+			plugin_obj.params.add('Operator.1/Volume', 1, 'float')
+			plugin_obj.params.add('Operator.1/Envelope/AttackTime', 0, 'float')
+			plugin_obj.params.add('Operator.1/Envelope/AttackLevel', mod_init**2, 'float')
+			plugin_obj.params.add('Operator.1/Envelope/DecayLevel', mod_init**2, 'float')
+			plugin_obj.params.add('Operator.1/Envelope/DecayTime', ((mod_time**2)*5)*1000, 'float')
+			plugin_obj.params.add('Operator.1/Envelope/SustainLevel', mod_sus**2, 'float')
+			plugin_obj.params.add('Operator.1/Envelope/ReleaseTime', ((mod_rel**3)*5)*1000, 'float')
+			plugin_obj.params.add('Operator.1/Envelope/DecaySlope', 0, 'float')
+			plugin_obj.params.add('Operator.1/Envelope/AttackSlope', 0, 'float')
+			plugin_obj.params.add('Operator.1/Envelope/ReleaseSlope', 0, 'float')
+			plugin_obj.params.add('Operator.1/Tune/Coarse', ((mod_course-1)*2)+2, 'float')
+			plugin_obj.params.add('Operator.1/Tune/Fine', (mod_fine**4)*180, 'float')
+
+			plugin_obj.params.add('Operator.2/IsOn', not (mod2_course == 0 and mod2_fine == 0), 'bool')
+			plugin_obj.params.add('Operator.2/Volume', 1, 'float')
+			plugin_obj.params.add('Operator.2/Envelope/AttackTime', 0, 'float')
+			plugin_obj.params.add('Operator.2/Envelope/AttackLevel', mod2_init**2, 'float')
+			plugin_obj.params.add('Operator.2/Envelope/DecayLevel', mod2_init**2, 'float')
+			plugin_obj.params.add('Operator.2/Envelope/DecayTime', ((mod2_time**2)*5)*1000, 'float')
+			plugin_obj.params.add('Operator.2/Envelope/SustainLevel', mod2_sus**2, 'float')
+			plugin_obj.params.add('Operator.2/Envelope/ReleaseTime', ((mod2_rel**3)*5)*1000, 'float')
+			plugin_obj.params.add('Operator.1/Envelope/DecaySlope', 0, 'float')
+			plugin_obj.params.add('Operator.2/Envelope/AttackSlope', 0, 'float')
+			plugin_obj.params.add('Operator.2/Envelope/ReleaseSlope', 0, 'float')
+			plugin_obj.params.add('Operator.2/Tune/Coarse', ((mod2_course-1)*2)+2, 'float')
+			plugin_obj.params.add('Operator.2/Tune/Fine', (mod2_fine**4)*180, 'float')
+
+			plugin_obj.datavals_global.add('middlenotefix', 24)
+
 
 		return 2

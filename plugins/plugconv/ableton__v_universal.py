@@ -32,12 +32,11 @@ class plugconv(plugins.base):
 
 			plugin_obj.fxdata_add(fx_on, 1)
 
-			plugin_obj.params.add('Feedback', feedback, 'float')
+			plugin_obj.params.add('Feedback', feedback/2, 'float')
 			plugin_obj.params.add('DryWet', feedback/2, 'float')
 
 			for endtxt, timing_obj in [['L', timing_left],['R', timing_right]]:
 				use_seconds = True
-
 
 				if timing_obj.type == 'steps':
 					if not timing_obj.speed_steps%1 and 1<=timing_obj.speed_steps<=16:

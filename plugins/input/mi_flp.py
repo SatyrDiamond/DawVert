@@ -516,7 +516,7 @@ class input_flp(plugins.base):
 						placement_obj.cut_type = 'cut'
 						placement_obj.cut_start = offset
 
-					placement_obj.duration += offset
+					#placement_obj.duration += offset
 
 					if patnum in autoticks_pat:
 						tickdata = autoticks_pat[patnum]

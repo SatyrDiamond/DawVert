@@ -470,7 +470,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 
 		slicex_filename = get_sample(fl_plugstr.c_string__int8())
 		wavedata_size = fl_plugstr.int32()
-		wavedata = fl_plugstr.raw(wavedata_size) if data_exists else b''
+		wavedata = fl_plugstr.raw(wavedata_size)
 
 		plugin_obj.type_set('sampler', 'slicer')
 

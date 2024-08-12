@@ -59,6 +59,7 @@ class cvpj_sample_entry:
 	loop_end: float = 1
 	loop_active: bool = False
 	loop_mode: str = "normal"
+	loop_data: dict = field(default_factory=dict)
 
 	slicer_start_key: int = 0
 	slicer_active: bool = False

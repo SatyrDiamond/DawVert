@@ -317,4 +317,4 @@ class smaf_song:
 			if chunk_obj.id[:3] == b'MTR':
 				mmf_tracknum = chunk_obj.id[3:][0]
 				if mmf_tracknum in range(5, 8): self.tracks3[mmf_tracknum-5] = smaf_track_ma3(song_file, chunk_obj.end)
-				if mmf_tracknum in range(1, 5): self.tracks2[mmf_tracknum-1] = smaf_track_ma2(song_file, chunk_obj.end)
+				#if mmf_tracknum in range(1, 5): self.tracks2[mmf_tracknum-1] = smaf_track_ma2(song_file, chunk_obj.end)

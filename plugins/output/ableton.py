@@ -575,6 +575,10 @@ class output_ableton(plugins.base):
 				plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
 				if plugin_found:
 
+					middlenotefix = plugin_obj.datavals_global.get('middlenotefix', 0)
+
+					middlenote += middlenotefix
+
 					if plugin_obj.check_wildmatch('native-ableton', None):
 						if middlenote != 0:
 							als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')

@@ -85,6 +85,7 @@ class output_soundation(plugins.base):
 		dawinfo_obj.fxtype = 'track'
 		dawinfo_obj.plugin_included = ['sampler:single','synth-nonfree:europa','native-soundation','midi']
 		dawinfo_obj.auto_types = ['nopl_points']
+		dawinfo_obj.placement_loop = ['loop', 'loop_off']
 
 	def parse(self, i_convproj_obj, output_file):
 		global convproj_obj

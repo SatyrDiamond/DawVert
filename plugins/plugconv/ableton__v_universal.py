@@ -33,7 +33,7 @@ class plugconv(plugins.base):
 			plugin_obj.fxdata_add(fx_on, 1)
 
 			plugin_obj.params.add('Feedback', feedback, 'float')
-			plugin_obj.params.add('DryWet', fx_wet/2, 'float')
+			plugin_obj.params.add('DryWet', feedback/2, 'float')
 
 			for endtxt, timing_obj in [['L', timing_left],['R', timing_right]]:
 				use_seconds = True

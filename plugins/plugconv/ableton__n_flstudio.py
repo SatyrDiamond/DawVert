@@ -107,6 +107,10 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('Operator.1/Volume', osc_vol1, 'float')
 			plugin_obj.params.add('Operator.2/Volume', osc_vol2, 'float')
 
+			plugin_obj.params.add('Operator.0/VelScale', 100, 'float')
+			plugin_obj.params.add('Operator.1/VelScale', 100, 'float')
+			plugin_obj.params.add('Operator.2/VelScale', 100, 'float')
+
 			adsr_obj = plugin_obj.env_asdr_get('vol')
 			for n in range(3):
 				starttxt = 'Operator.'+str(n)

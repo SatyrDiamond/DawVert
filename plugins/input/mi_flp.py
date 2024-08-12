@@ -19,6 +19,8 @@ from objects.inst_params import fx_delay
 
 filename_len = {}
 
+ONESHOT_TRES = 0
+
 chordids = [None,"major","sus2","sus4","majb5","minor","mb5","aug","augsus4","7ri","6","6sus4","6add9","m6","m6add9","7","7sus4","7#5","7b5","7#9","7b9","7#5#9","7#5b9","7b5b9","7add","7add13","7#11","maj7","maj7b5","maj7#5","maj7#11","maj7add13","m7","m7b5","m7b9","m7add11","m7add13","m-maj7","m-maj7add11","m-maj7add13","9","9sus4","add9","9#5","9b5","9#11","9b13","maj9","maj9sus4","maj9#5","maj9#11","m9","madd9","m9b5","m9-maj7","11","11b9","maj11","m11","m-maj11","13","13#9","13b9","13b5b9","maj13","m13","m-maj13","full_major","major_pentatonic","major_bebop","minor_harmonic","minor_melodic","minor_pentatonic","aeolian","minor_neapolitan","minor_hungarian","whole_tone","diminished","dominant_bebop","jap_in_sen","blues","arabic","enigmatic","neapolitan","dorian","phrygian","lydian","mixolydian","locrian"]
 
 filtertype = [
@@ -263,14 +265,19 @@ class input_flp(plugins.base):
 		samplestretch = {}
 		samplefolder = dv_config.path_samples_extracted
 
+		instdata_chans = []
+
 		for instrument, channelnum in enumerate(flp_obj.channels):
 			fl_channel_obj = flp_obj.channels[channelnum]
 			instdata = {}
+
+			appdata = None
 
 			if fl_channel_obj.type in [0,1,2,3]:
 				cvpj_instid = 'FLInst' + str(instrument)
 
 				inst_obj = convproj_obj.add_instrument(cvpj_instid)
+
 				inst_obj.visual.name = fl_channel_obj.name if fl_channel_obj.name else ''
 				inst_obj.visual.color.set_int(conv_color(fl_channel_obj.color))
 
@@ -290,6 +297,8 @@ class input_flp(plugins.base):
 					fl_asdr_obj_vol = fl_channel_obj.env_lfo[1]
 					sampleloop = bool(fl_channel_obj.sampleflags & 8)
 					samplepart_obj.trigger = 'normal'# if (bool(fl_asdr_obj_vol.el_env_enabled) or sampleloop) else 'oneshot'
+
+					appdata = sp_obj
 
 				if fl_channel_obj.type == 2:
 					if fl_channel_obj.plugin.name != None: 
@@ -410,8 +419,13 @@ class input_flp(plugins.base):
 				if sampleref_obj.found:
 					samplestretch[instrument] = sre_obj.stretch
 
+			instdata_chans.append(appdata)
+
 		autoticks_pat = {}
 		autoticks_pl = {}
+
+		oneshotnotenum_chans = [0 for x in range(len(flp_obj.channels))]
+		numnotenum_chans = [0 for x in range(len(flp_obj.channels))]
 
 		for pattern, fl_pattern in flp_obj.patterns.items():
 
@@ -427,6 +441,9 @@ class input_flp(plugins.base):
 					note_dur = fl_note.dur
 					note_key = fl_note.key-60
 					note_vol = fl_note.velocity/100
+
+					if not note_pos: oneshotnotenum_chans[fl_note.rack] += 1
+					numnotenum_chans[fl_note.rack] += 1
 
 					note_extra = {}
 					note_extra['finepitch'] = (fl_note.finep-120)*10
@@ -454,6 +471,11 @@ class input_flp(plugins.base):
 				color = fl_pattern.color.to_bytes(4, "little")
 				if color != b'HQV\x00': nle_obj.visual.color.set_int([color[0],color[1],color[2]])
 			if fl_pattern.name: nle_obj.visual.name = fl_pattern.name
+
+		for num, sp_obj in enumerate(instdata_chans):
+			if numnotenum_chans[num] and sp_obj:
+				if oneshotnotenum_chans[num]/numnotenum_chans[num] > ONESHOT_TRES:
+					sp_obj.trigger = 'oneshot'
 
 		temp_pl_track = {}
 

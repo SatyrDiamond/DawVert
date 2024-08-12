@@ -64,6 +64,7 @@ class cvpj_placements:
 	def add_loops(self, loopcompat):
 		self.pl_notes.add_loops(loopcompat)
 		self.pl_notes_indexed.add_loops(loopcompat)
+		self.pl_audio.add_loops(loopcompat)
 		self.pl_audio_indexed.add_loops(loopcompat)
 
 	def add_notes(self): return self.pl_notes.add(self.time_ppq, self.time_float)

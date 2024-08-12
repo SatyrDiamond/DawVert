@@ -137,8 +137,8 @@ class cvpj_placements_notes:
 			isvalid_f = pl.cut_start==prev.cut_start
 			isvalid_g = pl.muted==prev.muted
 			isvalid_h = ('loop_adv' in loopcompat) if pl.cut_type == 'cut' else True
-			print(isvalid_a, isvalid_b, isvalid_c, isvalid_d, isvalid_e, isvalid_f, isvalid_g, isvalid_h)
-			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f & isvalid_g & isvalid_h
+			isvalid_i = pl.duration==prev.duration
+			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f & isvalid_g & isvalid_h & isvalid_i
 		else:
 			return False
 

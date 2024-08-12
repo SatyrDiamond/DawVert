@@ -69,8 +69,9 @@ class cvpj_placements_index:
 			isvalid_f = pl.cut_start==prev.cut_start
 			isvalid_g = pl.muted==prev.muted
 			isvalid_h = ('loop_adv' in loopcompat) if pl.cut_type == 'cut' else True
-			print(isvalid_a, isvalid_b, isvalid_c, isvalid_d, isvalid_e, isvalid_f, isvalid_g, isvalid_h)
-			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f & isvalid_g & isvalid_h
+			isvalid_i = pl.duration==prev.duration
+			#print(isvalid_a, isvalid_b, isvalid_c, isvalid_d, isvalid_e, isvalid_f, isvalid_g, isvalid_h, isvalid_i)
+			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f & isvalid_g & isvalid_h & isvalid_i
 		else:
 			return False
 
@@ -90,7 +91,8 @@ class cvpj_placements_index:
 					prevreal.cut_loopend = pl.duration
 				if 'loop_adv' in loopcompat:
 					if prevreal.cut_type == 'cut': 
-						prevreal.cut_type = 'loop_off'
+						prevreal.cut_type = 'loop_adv'
+						prevreal.cut_start = 0
 						prevreal.cut_loopstart = pl.cut_start
 						prevreal.cut_loopend = pl.duration+pl.cut_start
 			prev = pl

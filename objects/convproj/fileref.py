@@ -191,7 +191,7 @@ class cvpj_fileref:
 		print('get_path:win', self.get_path('win', False))
 		print('get_path:unix', self.get_path('unix', False))
 
-
+VERBOSE = False
 
 class cvpj_sampleref:
 	__slots__ = ['fileref','dur_samples','dur_sec','timebase','hz','channels','found','file_size','file_date', 'visual','fileformat']
@@ -241,7 +241,11 @@ class cvpj_sampleref:
 						isvalid = audiofileplug_obj.object.getinfo(wav_realpath, self, fileextlow)
 						audiofileplug_obj.file_formats
 						if isvalid: break
-				except: logger_project.warning('fileref: error using: '+shortname)
+				except: 
+					if VERBOSE:
+						import traceback
+						print(traceback.format_exc())
+					logger_project.warning('fileref: error using: '+shortname)
 
 	def convert(self, dawaudiofiles, outpath):
 		for shortname, audioconvplug_obj in dv_plugins.plugins_audio_convert.items():

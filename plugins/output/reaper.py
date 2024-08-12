@@ -30,7 +30,7 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 			vst_fx_datatype = plugin_obj.datavals.get('datatype', None)
 			vst_fx_numparams = plugin_obj.datavals.get('numparams', 0)
 
-			rpp_vst_obj.vst_name = plugin_obj.datavals.get('name', None)
+			rpp_vst_obj.vst_name = plugin_obj.datavals.get('basename', None)
 			rpp_vst_obj.vst_lib = os.path.basename(vst_fx_path)
 			rpp_vst_obj.vst_fourid = vst_fx_fourid
 

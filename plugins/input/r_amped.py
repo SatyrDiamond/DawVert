@@ -170,7 +170,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			track_obj.fxslots_audio.append(pluginid)
 
 		elif devicetype == ['Drumpler', 'Drumpler']:
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'drums')
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
 			plugin_obj.role = 'synth'
 			track_obj.inst_pluginid = pluginid
 			track_obj.params.add('usemasterpitch', False, 'bool')

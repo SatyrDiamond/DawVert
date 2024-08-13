@@ -54,6 +54,7 @@ def sampler_parse(indata):
 	return sampleheader, sampledata
 
 def do_plugin(convproj_obj, wf_plugin, track_obj): 
+
 	if wf_plugin.plugtype == 'vst':
 		vstname = wf_plugin.params['name'] if "name" in wf_plugin.params else ''
 
@@ -109,8 +110,9 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 			juceobj.memoryblock = wf_plugin.params['state']
 	
 			plugin_obj, pluginid = juceobj.to_cvpj(convproj_obj, None)
+			plugin_obj.fxdata_add(bool(wf_plugin.enabled), None)
 	
-			if plugin_obj.role == 'inst': track_obj.inst_pluginid = pluginid
+			if plugin_obj.role == 'synth': track_obj.inst_pluginid = pluginid
 			elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(pluginid)
 	
 			if pluginid:
@@ -122,6 +124,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 	elif wf_plugin.plugtype not in ['volume', 'level'] and wf_plugin.plugtype != '':
 		plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-tracktion', wf_plugin.plugtype)
 		plugin_obj.role = 'effect'
+		plugin_obj.fxdata_add(wf_plugin.enabled, None)
 
 		if wf_plugin.windowX and wf_plugin.windowY:
 			windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
@@ -152,10 +155,16 @@ def do_track(convproj_obj, wf_track, track_obj):
 	vol = 1
 	pan = 0
 
+	middlenote = 0
+
 	for wf_plugin in wf_track.plugins:
 		if wf_plugin.plugtype == 'volume':
 			if 'volume' in wf_plugin.params: vol *= wf_plugin.params['volume']
 			if 'pan' in wf_plugin.params: pan = wf_plugin.params['pan']
+
+		elif wf_plugin.plugtype == 'midiModifier':
+			if 'semitonesUp' in wf_plugin.params: middlenote -= int(wf_plugin.params['semitonesUp'])
+
 		else:
 			do_plugin(convproj_obj, wf_plugin, track_obj)
 
@@ -186,6 +195,8 @@ def do_track(convproj_obj, wf_track, track_obj):
 						autopoint_obj.pos = pos*4
 						autopoint_obj.value = val
 						autopoint_obj.type = 'instant'
+
+	track_obj.datavals.add('middlenote', middlenote)
 
 class input_cvpj_f(plugins.base):
 	def __init__(self): pass
@@ -234,4 +245,4 @@ class input_cvpj_f(plugins.base):
 			if isinstance(wf_track, proj_waveform.waveform_track):
 				track_obj = convproj_obj.add_track(str(tracknum), 'instrument', 1, False)
 				do_track(convproj_obj, wf_track, track_obj)
-
+				tracknum += 1

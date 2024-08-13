@@ -105,6 +105,9 @@ def do_automation(convproj_obj, AutomationEnvelopes):
 
 def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 	global vector_shapesdata
+
+	middlenote = 0
+
 	for device in x_trackdevices:
 		is_instrument = False
 
@@ -113,6 +116,10 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 		else: pluginid = 'master_'+able_plug_id
 
 		parampaths = device.params.get_all_keys([])
+
+		if device.name == 'MidiPitcher':
+			Pitch = parampaths['Pitch']
+			middlenote -= int(Pitch)
 
 		if device.name in ['OriginalSimpler', 'MultiSampler'] and not DEBUG_DISABLE_SAMPLER:
 			track_obj.inst_pluginid = pluginid
@@ -334,6 +341,8 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				#	if UserSprite1: plugin_obj.samplerefs['sample1'] = UserSprite1
 				#	if UserSprite2: plugin_obj.samplerefs['sample2'] = UserSprite2
 			#	exit()
+
+	return middlenote
 
 class input_ableton(plugins.base):
 	def __init__(self): pass
@@ -595,6 +604,7 @@ class input_ableton(plugins.base):
 					track_obj.sends.add('return_'+str(sendid), sendautoid, sendlevel)
 					sendcount += 1
 
-			do_devices(als_track.DeviceChain.devices, track_id, track_obj, convproj_obj)
+			middlenote = do_devices(als_track.DeviceChain.devices, track_id, track_obj, convproj_obj)
+			track_obj.datavals.add('middlenote', middlenote)
 
 		autoid_assoc.output(convproj_obj)

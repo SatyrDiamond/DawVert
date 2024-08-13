@@ -105,7 +105,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 				for n, v in enumerate(wampreset['data']):
 					plugin_obj.params.add('obxd_'+str(n), v, 'float')
 
-		if devicetype[0] == 'WAM' and devicetype[1] == 'Augur': 
+		elif devicetype[0] == 'WAM' and devicetype[1] == 'Augur': 
 			track_obj.inst_pluginid = pluginid
 			plugin_obj = convproj_obj.add_plugin(pluginid, 'smartelectronix', 'augur')
 			plugin_obj.role = 'synth'
@@ -117,7 +117,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 					if isinstance(v, float): plugin_obj.params.add(paramname, v, 'float')
 					if isinstance(v, bool): plugin_obj.params.add(paramname, v, 'bool')
 
-		if devicetype[0] == 'WAM' and devicetype[1] in 'Dexed': 
+		elif devicetype[0] == 'WAM' and devicetype[1] in 'Dexed': 
 			track_obj.inst_pluginid = pluginid
 			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', devicetype[1])
 			plugin_obj.datavals.add('data', amped_tr_device.data['wamPreset'])
@@ -301,6 +301,8 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			plugin_obj.role = 'effect'
 			do_idparams(amped_tr_device.params, plugin_obj, devicetype[0])
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
+
+		plugin_obj.fxdata_add(not amped_tr_device.bypass, None)
 
 #		#if devicetype != ['VSTConnection', 'VST/Remote Beta']:
 #		#	device_plugindata.fxvisual_add(devicetype[1], None)

@@ -85,10 +85,10 @@ def do_warpmarkers(convproj_obj, WarpMarkers, stretch_obj, dur_sec, pitch):
 	aftersec = warpmarker_obj.BeatTime = dsr if stretch_obj.uses_tempo else dsr/(2**(pitch/12))
 	WarpMarkers[3] = warpmarker_obj
 
-	warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
-	warpmarker_obj.SecTime = dur_sec+((0.03125/2)/stretch_obj.calc_real_size)
-	warpmarker_obj.BeatTime = aftersec+0.03125
-	WarpMarkers[4] = warpmarker_obj
+	#warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+	#warpmarker_obj.SecTime = dur_sec+((0.03125/2)/stretch_obj.calc_real_size)
+	#warpmarker_obj.BeatTime = aftersec+0.03125
+	#WarpMarkers[4] = warpmarker_obj
 
 	return warpenabled, 1 if stretch_obj.uses_tempo else 1/(2**(pitch/12))
 

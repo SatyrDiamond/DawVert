@@ -149,9 +149,9 @@ class cvpj_placements_notes:
 		prev = None
 		for pl in old_data_notes:
 			if not self.eq_connect(pl, prev, loopcompat):
-				new_data_index.append(pl)
+				new_data_notes.append(pl)
 			else:
-				prevreal = new_data_index[-1]
+				prevreal = new_data_notes[-1]
 				prevreal.duration += pl.duration
 				if prevreal.cut_type == 'none': 
 					prevreal.cut_type = 'loop'

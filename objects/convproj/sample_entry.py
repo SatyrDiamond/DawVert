@@ -75,19 +75,19 @@ class cvpj_sample_entry:
 		else:
 			return ''
 
-	def from_sampleref_obj(self, sampleref_obj, sampleref):
-		self.sampleref = sampleref
-		self.point_value_type = 'samples'
-		self.end = sampleref_obj.dur_samples
+	def from_sampleref_obj(self, sampleref_obj):
+		self.convpoints_samples(sampleref_obj)
 		self.loop_end = sampleref_obj.dur_samples
+		if sampleref_obj.loop_found:
+			self.loop_active = sampleref_obj.loop_found
+			self.loop_start = sampleref_obj.loop_start
+			self.loop_end = sampleref_obj.loop_end
 
 	def from_sampleref(self, convproj_obj, sampleref): 
 		ref_found, sampleref_obj = convproj_obj.get_sampleref(sampleref)
 		if ref_found:
 			self.sampleref = sampleref
-			self.point_value_type = 'samples'
-			self.end = sampleref_obj.dur_samples
-			self.loop_end = sampleref_obj.dur_samples
+			self.from_sampleref_obj(sampleref_obj)
 
 	def convpoints_percent(self, sampleref_obj): 
 		if self.point_value_type == 'samples' and sampleref_obj.dur_samples:

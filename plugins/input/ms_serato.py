@@ -45,7 +45,7 @@ class input_serato(plugins.base):
 			elif useaudioclips: track_obj = convproj_obj.add_track(cvpj_trackid, 'audio' if scene_deck.type == 'sample' else 'instruments', 1, False)
 			track_obj.visual.name = scene_deck.name
 
-			print(scene_deck.type)
+			#print(scene_deck.type)
 
 			if scene_deck.channel_strip.post_fader_effects != None:
 				for fxnum, pfe in enumerate(scene_deck.channel_strip.post_fader_effects):

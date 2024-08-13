@@ -89,20 +89,28 @@ class cvpj_placements_audio:
 			else: new_data.append(notespl_obj)
 		self.data = new_data
 
+	def eq_content(self, pl, prev):
+		if prev:
+			isvalid_a = pl.sample==prev.sample
+			isvalid_b = pl.cut_type==prev.cut_type
+			isvalid_c = pl.cut_start==prev.cut_start
+			isvalid_d = pl.cut_loopstart==prev.cut_loopstart
+			isvalid_e = pl.cut_loopend==prev.cut_loopend
+			isvalid_f = pl.muted==prev.muted
+			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f
+		else:
+			return False
+
 	def eq_connect(self, pl, prev, loopcompat):
 		if prev:
-			isvalid_a = pl.cut_type in ['none', 'cut']
-			isvalid_b = ((prev.position+prev.duration)-pl.position)==0
-			isvalid_c = pl.sample==prev.sample
-			isvalid_d = pl.cut_type==prev.cut_type
-			isvalid_e = prev.cut_type in ['none', 'cut']
-			isvalid_f = pl.cut_start==prev.cut_start
-			isvalid_g = pl.muted==prev.muted
-			isvalid_h = bool(pl.fade_in)
-			isvalid_i = bool(pl.fade_out)
-			isvalid_j = ('loop_adv' in loopcompat) if pl.cut_type == 'cut' else True
-			isvalid_k = pl.duration==prev.duration
-			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f & isvalid_g & isvalid_h & isvalid_i & isvalid_j & isvalid_k
+			isvalid_a = self.eq_content(pl, prev)
+			isvalid_b = pl.cut_type in ['none', 'cut']
+			isvalid_c = ((prev.position+prev.duration)-pl.position)==0
+			isvalid_d = prev.cut_type in ['none', 'cut']
+			isvalid_e = ('loop_adv' in loopcompat) if pl.cut_type == 'cut' else True
+			isvalid_f = pl.duration==prev.duration
+			isvalid_g = not (bool(pl.fade_in) or bool(pl.fade_out))
+			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f & isvalid_g
 		else:
 			return False
 

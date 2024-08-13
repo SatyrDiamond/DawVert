@@ -74,9 +74,9 @@ class plugconv(plugins.base):
 			osc_vol1 = fl_osc1_mixlevel*(-fl_osc2_mixlevel+1)
 			osc_vol2 = fl_osc2_mixlevel
 
-			osc1_freq = (fl_osc1_coarse + fl_osc1_fine/100)/12
-			osc2_freq = (fl_osc2_coarse + fl_osc2_fine/100)/12
-			osc3_freq = (fl_osc3_coarse + fl_osc3_fine/100)/12
+			osc1_freq = (fl_osc1_coarse)/12
+			osc2_freq = (fl_osc2_coarse)/12
+			osc3_freq = (fl_osc3_coarse)/12
 
 			plugin_obj.replace('native-ableton', 'Operator')
 

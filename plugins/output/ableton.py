@@ -92,66 +92,69 @@ def do_warpmarkers(convproj_obj, WarpMarkers, stretch_obj, dur_sec, pitch):
 
 	return warpenabled, 1 if stretch_obj.uses_tempo else 1/(2**(pitch/12))
 
-def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample):
-	_, sampleref_obj = convproj_obj.get_sampleref(cvpj_samplepart.sampleref)
-	cvpj_samplepart.convpoints_samples(sampleref_obj)
-	do_sampleref(convproj_obj, als_samplepart.SampleRef, sampleref_obj)
+def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample, warpprop):
+	iffound, sampleref_obj = convproj_obj.get_sampleref(cvpj_samplepart.sampleref)
 
-	#print(cvpj_samplepart.start, cvpj_samplepart.end, cvpj_samplepart.loop_start, cvpj_samplepart.loop_end, sampleref_obj.fileref.get_path(convproj_obj, 'win'))
-
-	als_samplepart.SampleStart = cvpj_samplepart.start
-	als_samplepart.SampleEnd = cvpj_samplepart.end
-	als_samplepart.SustainLoop.Start = cvpj_samplepart.loop_start
-	als_samplepart.SustainLoop.End = cvpj_samplepart.loop_end
-
-	if als_samplepart.SampleEnd < 2: als_samplepart.SampleEnd = sampleref_obj.dur_sec
-	if als_samplepart.SustainLoop.End < 2: als_samplepart.SustainLoop.End = sampleref_obj.dur_sec
-
-	if 'crossfade' in cvpj_samplepart.loop_data: als_samplepart.SustainLoop.Crossfade = cvpj_samplepart.loop_data['crossfade']
-	if 'detune' in cvpj_samplepart.loop_data: als_samplepart.SustainLoop.Detune = cvpj_samplepart.loop_data['detune']
-	als_samplepart.Panorama = cvpj_samplepart.pan
-	als_samplepart.Volume = cvpj_samplepart.vol
-	if cvpj_samplepart.loop_active:
-		als_samplepart.SustainLoop.Mode = 2 if cvpj_samplepart.loop_mode=='pingpong' else 1
-		als_samplepart.ReleaseLoop.Mode = 3
-	else:
-		als_samplepart.SustainLoop.Mode = 0
-		als_samplepart.ReleaseLoop.Mode = 0
-
-	warp_obj = als_samplepart.SampleWarpProperties
-
-	stretch_obj = cvpj_samplepart.stretch
-
-	if not stretch_obj.preserve_pitch and not ignoreresample: warp_obj.WarpMode = 3
-	else:
-		if stretch_obj.algorithm == 'beats':
-			warp_obj.WarpMode = 0
-			if 'TransientResolution' in stretch_obj.params: warp_obj.TransientResolution = stretch_obj.params['TransientResolution']
-			if 'TransientLoopMode' in stretch_obj.params: warp_obj.TransientLoopMode = stretch_obj.params['TransientLoopMode']
-			if 'TransientEnvelope' in stretch_obj.params: warp_obj.TransientEnvelope = stretch_obj.params['TransientEnvelope']
-		elif stretch_obj.algorithm == 'ableton_tones':
-			warp_obj.WarpMode = 1
-			if 'GranularityTones' in stretch_obj.params: warp_obj.GranularityTones = stretch_obj.params['GranularityTones']
-		elif stretch_obj.algorithm == 'ableton_texture':
-			warp_obj.WarpMode = 2
-			if 'GranularityTexture' in stretch_obj.params: warp_obj.GranularityTexture = stretch_obj.params['GranularityTexture']
-			if 'FluctuationTexture' in stretch_obj.params: warp_obj.FluctuationTexture = stretch_obj.params['FluctuationTexture']
-		elif stretch_obj.algorithm == 'ableton_complex':
-			warp_obj.WarpMode = 4
-		elif stretch_obj.algorithm == 'stretch_complexpro':
-			warp_obj.WarpMode = 6
-			if 'ComplexProFormants' in stretch_obj.params: warp_obj.ComplexProFormants = stretch_obj.params['ComplexProFormants']
-			if 'ComplexProEnvelope' in stretch_obj.params: warp_obj.ComplexProEnvelope = stretch_obj.params['ComplexProEnvelope']
+	if iffound:
+		cvpj_samplepart.convpoints_samples(sampleref_obj)
+		do_sampleref(convproj_obj, als_samplepart.SampleRef, sampleref_obj)
+	
+		#print(cvpj_samplepart.start, cvpj_samplepart.end, cvpj_samplepart.loop_start, cvpj_samplepart.loop_end, sampleref_obj.fileref.get_path(convproj_obj, 'win'))
+	
+		als_samplepart.SampleStart = cvpj_samplepart.start
+		als_samplepart.SampleEnd = cvpj_samplepart.end
+		als_samplepart.SustainLoop.Start = cvpj_samplepart.loop_start
+		als_samplepart.SustainLoop.End = cvpj_samplepart.loop_end
+	
+		if als_samplepart.SampleEnd < 2: als_samplepart.SampleEnd = sampleref_obj.dur_sec
+		if als_samplepart.SustainLoop.End < 2: als_samplepart.SustainLoop.End = sampleref_obj.dur_sec
+	
+		if 'crossfade' in cvpj_samplepart.loop_data: als_samplepart.SustainLoop.Crossfade = cvpj_samplepart.loop_data['crossfade']
+		if 'detune' in cvpj_samplepart.loop_data: als_samplepart.SustainLoop.Detune = cvpj_samplepart.loop_data['detune']
+		als_samplepart.Panorama = cvpj_samplepart.pan
+		als_samplepart.Volume = cvpj_samplepart.vol
+		if cvpj_samplepart.loop_active:
+			als_samplepart.SustainLoop.Mode = 2 if cvpj_samplepart.loop_mode=='pingpong' else 1
+			als_samplepart.ReleaseLoop.Mode = 3
 		else:
-			warp_obj.WarpMode = 4
-
-	warp_obj.IsWarped, ratespeed = do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, sampleref_obj.dur_sec, 0)
-
-	for sample_slice in cvpj_samplepart.slicer_slices:
-		als_slice = als_samplepart.add_slice()
-		als_slice.TimeInSeconds = sample_slice.start/sampleref_obj.hz
-		als_slice.Rank = 0
-		als_slice.NormalizedEnergy = 1
+			als_samplepart.SustainLoop.Mode = 0
+			als_samplepart.ReleaseLoop.Mode = 0
+	
+		warp_obj = als_samplepart.SampleWarpProperties
+	
+		stretch_obj = cvpj_samplepart.stretch
+	
+		if not stretch_obj.preserve_pitch and not ignoreresample: warp_obj.WarpMode = 3
+		else:
+			if stretch_obj.algorithm == 'beats':
+				warp_obj.WarpMode = 0
+				if 'TransientResolution' in stretch_obj.params: warp_obj.TransientResolution = stretch_obj.params['TransientResolution']
+				if 'TransientLoopMode' in stretch_obj.params: warp_obj.TransientLoopMode = stretch_obj.params['TransientLoopMode']
+				if 'TransientEnvelope' in stretch_obj.params: warp_obj.TransientEnvelope = stretch_obj.params['TransientEnvelope']
+			elif stretch_obj.algorithm == 'ableton_tones':
+				warp_obj.WarpMode = 1
+				if 'GranularityTones' in stretch_obj.params: warp_obj.GranularityTones = stretch_obj.params['GranularityTones']
+			elif stretch_obj.algorithm == 'ableton_texture':
+				warp_obj.WarpMode = 2
+				if 'GranularityTexture' in stretch_obj.params: warp_obj.GranularityTexture = stretch_obj.params['GranularityTexture']
+				if 'FluctuationTexture' in stretch_obj.params: warp_obj.FluctuationTexture = stretch_obj.params['FluctuationTexture']
+			elif stretch_obj.algorithm == 'ableton_complex':
+				warp_obj.WarpMode = 4
+			elif stretch_obj.algorithm == 'stretch_complexpro':
+				warp_obj.WarpMode = 6
+				if 'ComplexProFormants' in stretch_obj.params: warp_obj.ComplexProFormants = stretch_obj.params['ComplexProFormants']
+				if 'ComplexProEnvelope' in stretch_obj.params: warp_obj.ComplexProEnvelope = stretch_obj.params['ComplexProEnvelope']
+			else:
+				warp_obj.WarpMode = 4
+		
+		if not warpprop and stretch_obj.calc_real_size != 1:
+			warp_obj.IsWarped, ratespeed = do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, sampleref_obj.dur_sec, 0)
+	
+		for sample_slice in cvpj_samplepart.slicer_slices:
+			als_slice = als_samplepart.add_slice()
+			als_slice.TimeInSeconds = sample_slice.start/sampleref_obj.hz
+			als_slice.Rank = 0
+			als_slice.NormalizedEnergy = 1
 
 	return sampleref_obj
 
@@ -611,7 +614,7 @@ class output_ableton(plugins.base):
 							als_samplepart = spd.value[spn] = ableton_MultiSamplePart(None)
 							als_samplepart.Selection = True
 							samplepart_obj = plugin_obj.samplepart_get(samplerefid)
-							sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False)
+							sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False, False)
 
 							als_samplepart.KeyRange.Min = key_l+60
 							als_samplepart.KeyRange.Max = key_h+60
@@ -652,7 +655,7 @@ class output_ableton(plugins.base):
 							paramkeys['Player/Reverse'] = ableton_parampart.as_param('Reverse', 'bool', samplepart_obj.reverse)
 							als_samplepart = spd.value[0] = ableton_MultiSamplePart(None)
 							als_samplepart.Selection = True
-							sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False)
+							sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False, False)
 
 							trkpitch = track_obj.params.get('pitch', 0).value
 							pitchd = trkpitch+pitchin
@@ -685,7 +688,7 @@ class output_ableton(plugins.base):
 							#paramkeys['Player/Reverse'] = ableton_parampart.as_param('Reverse', 'bool', samplepart_obj.reverse)
 							als_samplepart = spd.value[0] = ableton_MultiSamplePart(None)
 							als_samplepart.Selection = True
-							sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False)
+							sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False, False)
 
 							paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
 							paramkeys['Globals/PlaybackMode'] = ableton_parampart.as_value('PlaybackMode', 1 if samplepart_obj.trigger == 'oneshot' else 0)
@@ -706,7 +709,7 @@ class output_ableton(plugins.base):
 						spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
 						als_samplepart = spd.value[0] = ableton_MultiSamplePart(None)
 						als_samplepart.Selection = True
-						sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, True)
+						sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, True, True)
 						paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
 						paramkeys['Globals/PlaybackMode'] = ableton_parampart.as_value('PlaybackMode', 2)
 						paramkeys['VolumeAndPan/OneShotEnvelope/SustainMode'] = ableton_parampart.as_param('SustainMode', 'int', int(samplepart_obj.trigger != 'oneshot'))

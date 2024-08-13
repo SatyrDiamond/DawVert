@@ -195,7 +195,7 @@ class cvpj_fileref:
 VERBOSE = False
 
 class cvpj_sampleref:
-	__slots__ = ['fileref','dur_samples','dur_sec','timebase','hz','channels','found','file_size','file_date', 'visual','fileformat','loop_found','loop_start','loop_end']
+	__slots__ = ['fileref','dur_samples','dur_sec','timebase','hz','channels','found','file_size','file_date', 'visual','fileformat','loop_found','loop_start','loop_end','slices']
 
 	def __init__(self, in_path):
 		self.fileref = cvpj_fileref()
@@ -211,6 +211,7 @@ class cvpj_sampleref:
 		self.loop_found = False
 		self.loop_start = 0
 		self.loop_end = 0
+		self.slices = []
 		self.visual = visual.cvpj_visual()
 		self.fileref.change_path(in_path, False)
 		self.get_info()
@@ -246,6 +247,7 @@ class cvpj_sampleref:
 						self.loop_found = True
 						self.loop_start = first_loop.start
 						self.loop_end = first_loop.end
+
 				except:
 					pass
 

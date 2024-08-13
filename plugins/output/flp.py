@@ -460,7 +460,7 @@ class output_cvpjs(plugins.base):
 				if fx_num == 0: fl_fxchan.docked_center, fl_fxchan.docked_pos = False, False
 
 			fxptxt = 'fx/'+str(fx_num)+'/param/'
-			vol = fxchannel_obj.params.get('vol', 1.0).value
+			vol = fxchannel_obj.params.get('vol', 1.0).value**0.5
 			if vol>1.25: vol = 1.25
 			flp_obj.initfxvals.initvals[fxptxt+'vol'] = int(12800*vol)
 			flp_obj.initfxvals.initvals[fxptxt+'pan'] = int(6400*fxchannel_obj.params.get('pan', 0).value)

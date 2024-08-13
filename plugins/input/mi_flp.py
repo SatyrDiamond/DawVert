@@ -595,7 +595,7 @@ class input_flp(plugins.base):
 			fx_vol = flp_obj.initfxvals.initvals[autoloctxt_vol]/12800 if autoloctxt_vol in flp_obj.initfxvals.initvals else 1
 			fx_pan = flp_obj.initfxvals.initvals[autoloctxt_pan]/6400 if autoloctxt_pan in flp_obj.initfxvals.initvals else 0
 
-			fxchannel_obj.params.add('vol', fx_vol, 'float')
+			fxchannel_obj.params.add('vol', fx_vol**2, 'float')
 			fxchannel_obj.params.add('pan', fx_pan, 'float')
 
 			fxchannel_obj.sends.to_master_active = False

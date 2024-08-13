@@ -400,8 +400,8 @@ class flp_project:
 		for chunk_obj in main_iff_obj.iter(0, song_data.end):
 			if chunk_obj.id == b'FLhd':
 				song_data.skip(2)
-				self.num_channels = song_data.uint8()
-				self.ppq = song_data.uint16_b()
+				self.num_channels = song_data.uint16()
+				self.ppq = song_data.uint16()
 			if chunk_obj.id == b'FLdt':
 				for event_id, event_data in format_flp_tlv.decode(song_data, chunk_obj.end): self.do_event(event_id, event_data)
 
@@ -450,7 +450,7 @@ class flp_project:
 					if patdat.notes:
 						flnotes = b''
 						for fln in patdat.notes: 
-							if fln.pos >= 0:
+							if fln.pos >= 0 and fln.key>=0:
 								flnotes += struct.pack('IHHIHHBBBBBBBB', fln.pos,fln.flags,fln.rack,fln.dur,fln.key,fln.group,fln.finep,fln.u1,fln.rel,fln.midich,fln.pan,fln.velocity,fln.mod_x,fln.mod_y)
 						format_flp_tlv.write_tlv(chunkdata, 224, flnotes)
 					if patdat.color != None: format_flp_tlv.write_tlv(chunkdata, 150, patdat.color)

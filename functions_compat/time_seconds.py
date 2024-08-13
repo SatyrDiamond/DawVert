@@ -13,11 +13,11 @@ def process(convproj_obj, in_compat, out_compat, out_type):
 	if is_seconds:
 		if convproj_obj.type in ['r', 'rm', 'ri']: 
 			for trackid, track_obj in convproj_obj.iter_track(): 
-
 				track_obj.placements.change_seconds(is_seconds==1, tempo, ppq)
 				for laneid, lane_obj in track_obj.lanes.items(): 
 					lane_obj.placements.change_seconds(is_seconds==1, tempo, ppq)
 			return True
+
 
 		#if convproj_obj.type in ['m', 'mi']: 
 		#s	for pl_id, playlist_obj in convproj_obj.playlist.items(): 

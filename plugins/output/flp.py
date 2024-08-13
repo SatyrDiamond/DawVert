@@ -79,6 +79,9 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 
 	return sre_obj.stretch.calc_tempo_speed
 
+DEBUG_IGNORE_PLACEMENTS = False
+DEBUG_IGNORE_PATTERNS = False
+
 class output_cvpjs(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
@@ -237,48 +240,49 @@ class output_cvpjs(plugins.base):
 
 			fl_notes = {}
 
-			nle_obj.notelist.sort()
-			for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in nle_obj.notelist.iter():
-				for t_key in t_keys:
-					fl_note_obj = proj_flp.flp_note()
-					fl_note_obj.rack = g_inst_id[t_inst]
-					fl_note_obj.pos = int(t_pos)
-					fl_note_obj.dur = int(t_dur)
-					fl_note_obj.key = int(t_key)+60
-					fl_note_obj.velocity = int(xtramath.clamp(t_vol,0,1)*100)
-					if t_extra:
-						if 'finepitch' in t_extra: fl_note_obj.finep = int((t_extra['finepitch']/10)+120)
-						if 'release' in t_extra: fl_note_obj.rel = int(xtramath.clamp(t_extra['release'],0,1)*128)
-						if 'cutoff' in t_extra: fl_note_obj.mod_x = int(xtramath.clamp(t_extra['cutoff'],0,1)*255)
-						if 'reso' in t_extra: fl_note_obj.mod_y = int(xtramath.clamp(t_extra['reso'],0,1)*255)
-						if 'pan' in t_extra: fl_note_obj.pan = int((xtramath.clamp(float(t_extra['pan']),-1,1)*64)+64)
-					else:
-						fl_note_obj.finep = 120
-						fl_note_obj.rel = 64
-						fl_note_obj.mod_x = 128
-						fl_note_obj.mod_y = 128
-						fl_note_obj.pan = 64
-
-					if fl_note_obj.pos not in fl_notes: fl_notes[fl_note_obj.pos] = []
-					fl_notes[fl_note_obj.pos].append(fl_note_obj)
-
-					if t_slide:
-						for s_pos, s_dur, s_key, s_vol, s_extra in t_slide:
-							fl_note_obj = proj_flp.flp_note()
-							fl_note_obj.rack = g_inst_id[t_inst]
-							fl_note_obj.pos = int(t_pos + s_pos)
-							fl_note_obj.dur = int(s_dur)
-							fl_note_obj.key = int(s_key)+60
-							fl_note_obj.velocity = int(xtramath.clamp(s_vol,0,1)*100)
-							fl_note_obj.flags = 16392
-							if s_extra:
-								if 'finepitch' in s_extra: fl_note_obj.finep = int((s_extra['finepitch']/10)+120)
-								if 'release' in s_extra: fl_note_obj.rel = int(xtramath.clamp(s_extra['release'],0,1)*128)
-								if 'cutoff' in s_extra: fl_note_obj.mod_x = int(xtramath.clamp(s_extra['cutoff'],0,1)*255)
-								if 'reso' in s_extra: fl_note_obj.mod_y = int(xtramath.clamp(s_extra['reso'],0,1)*255)
-								if 'pan' in s_extra: fl_note_obj.pan = int((xtramath.clamp(float(s_extra['pan']),-1,1)*64)+64)
-							if fl_note_obj.pos not in fl_notes: fl_notes[fl_note_obj.pos] = []
-							fl_notes[fl_note_obj.pos].append(fl_note_obj)
+			if not DEBUG_IGNORE_PATTERNS:
+				nle_obj.notelist.sort()
+				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in nle_obj.notelist.iter():
+					for t_key in t_keys:
+						fl_note_obj = proj_flp.flp_note()
+						fl_note_obj.rack = g_inst_id[t_inst]
+						fl_note_obj.pos = int(t_pos)
+						fl_note_obj.dur = int(t_dur)
+						fl_note_obj.key = int(t_key)+60
+						fl_note_obj.velocity = int(xtramath.clamp(t_vol,0,1)*100)
+						if t_extra:
+							if 'finepitch' in t_extra: fl_note_obj.finep = int((t_extra['finepitch']/10)+120)
+							if 'release' in t_extra: fl_note_obj.rel = int(xtramath.clamp(t_extra['release'],0,1)*128)
+							if 'cutoff' in t_extra: fl_note_obj.mod_x = int(xtramath.clamp(t_extra['cutoff'],0,1)*255)
+							if 'reso' in t_extra: fl_note_obj.mod_y = int(xtramath.clamp(t_extra['reso'],0,1)*255)
+							if 'pan' in t_extra: fl_note_obj.pan = int((xtramath.clamp(float(t_extra['pan']),-1,1)*64)+64)
+						else:
+							fl_note_obj.finep = 120
+							fl_note_obj.rel = 64
+							fl_note_obj.mod_x = 128
+							fl_note_obj.mod_y = 128
+							fl_note_obj.pan = 64
+	
+						if fl_note_obj.pos not in fl_notes: fl_notes[fl_note_obj.pos] = []
+						fl_notes[fl_note_obj.pos].append(fl_note_obj)
+	
+						if t_slide:
+							for s_pos, s_dur, s_key, s_vol, s_extra in t_slide:
+								fl_note_obj = proj_flp.flp_note()
+								fl_note_obj.rack = g_inst_id[t_inst]
+								fl_note_obj.pos = int(t_pos + s_pos)
+								fl_note_obj.dur = int(s_dur)
+								fl_note_obj.key = int(s_key)+60
+								fl_note_obj.velocity = int(xtramath.clamp(s_vol,0,1)*100)
+								fl_note_obj.flags = 16392
+								if s_extra:
+									if 'finepitch' in s_extra: fl_note_obj.finep = int((s_extra['finepitch']/10)+120)
+									if 'release' in s_extra: fl_note_obj.rel = int(xtramath.clamp(s_extra['release'],0,1)*128)
+									if 'cutoff' in s_extra: fl_note_obj.mod_x = int(xtramath.clamp(s_extra['cutoff'],0,1)*255)
+									if 'reso' in s_extra: fl_note_obj.mod_y = int(xtramath.clamp(s_extra['reso'],0,1)*255)
+									if 'pan' in s_extra: fl_note_obj.pan = int((xtramath.clamp(float(s_extra['pan']),-1,1)*64)+64)
+								if fl_note_obj.pos not in fl_notes: fl_notes[fl_note_obj.pos] = []
+								fl_notes[fl_note_obj.pos].append(fl_note_obj)
 			
 			for poslist in sorted(fl_notes):
 				for fl_note in fl_notes[poslist]:
@@ -301,86 +305,88 @@ class output_cvpjs(plugins.base):
 
 		arrangement_obj = arrangement.flp_arrangement()
 
-		for idnum, playlist_obj in convproj_obj.iter_playlist():
+		if not DEBUG_IGNORE_PLACEMENTS:
 
-			idnum = int(idnum)+1
-
-			for pl_obj in playlist_obj.placements.pl_notes_indexed:
-
-				if pl_obj.fromindex in pat_id:
-					fl_clip_obj = arrangement.flp_arrangement_clip()
-					fl_clip_obj.position = int(pl_obj.position)
-					fl_clip_obj.itemindex = int(pat_id[pl_obj.fromindex] + fl_clip_obj.patternbase)
-					fl_clip_obj.length = int(pl_obj.duration)
-					fl_clip_obj.startoffset = 0
-					fl_clip_obj.endoffset = int(pl_obj.duration)
-					fl_clip_obj.trackindex = (-500 + int(idnum))*-1
-					if pl_obj.muted == True: fl_clip_obj.flags = 12352
-
-					if pl_obj.cut_type == 'cut':
-						fl_clip_obj.startoffset = int(pl_obj.cut_start)
-						fl_clip_obj.endoffset += int(pl_obj.cut_start)
-					if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []
-					FL_Playlist_BeforeSort[fl_clip_obj.position].append(fl_clip_obj)
-
-
-			for pl_obj in playlist_obj.placements.pl_audio_indexed:
-				if pl_obj.fromindex in samples_id:
-					fl_clip_obj = arrangement.flp_arrangement_clip()
-					fl_clip_obj.position = int(pl_obj.position)
-					fl_clip_obj.itemindex = samples_id[pl_obj.fromindex]
-					fl_clip_obj.length = max(0, int(pl_obj.duration))
-					fl_clip_obj.endoffset = int(pl_obj.duration)/ppq
-					fl_clip_obj.trackindex = (-500 + int(idnum))*-1
-					if pl_obj.muted == True: fl_clip_obj.flags = 12352
-
-					startat = 0
-					if pl_obj.cut_type == 'cut': startat = pl_obj.cut_start
-
-					if pl_obj.fromindex in samplestretch:
-						startat = startat/ppq
-						endat = startat+(pl_obj.duration/ppq)
-
-						stretchrate = samplestretch[pl_obj.fromindex]
-						#print(out_is_speed, out_rate, end=' | ')
-						#print(pl_obj.duration/ppq, end=' | ')
-						#print(startat*out_rate, end=' -S- ')
-						#print(startat, end=' | ')
-						#print(endat*out_rate, end=' -E- ')
-						#print(endat, end=' | ')
-						#print(placement_obj.duration/ppq, end=' | ')
-						#print()
-						fl_clip_obj.startoffset = (startat*stretchrate)*4
-						fl_clip_obj.endoffset = (endat*stretchrate)*4
-
-					#print(FL_playlistitem['startoffset'])
-					#print(FL_playlistitem['endoffset'])
-
-					#	if pl_stretch[0] == 'rate_tempo':
-					#		if 'start' in pl_obj.cut_data: 
-					#			FL_playlistitem['startoffset'] = pl_obj.cut_data['start']*pl_stretch[1]
-					#			FL_playlistitem['endoffset'] = pl_obj.duration*pl_stretch[1] + FL_playlistitem['startoffset']
-					#	elif pl_stretch[0] == 'rate_ignoretempo':
-					#		if 'start' in pl_obj.cut_data: 
-					#			FL_playlistitem['startoffset'] = pl_obj.cut_data['start']
-					#			FL_playlistitem['endoffset'] = pl_obj.duration + FL_playlistitem['startoffset']
-					#	elif pl_stretch[0] == 'rate_speed':
-					#		if 'start' in pl_obj.cut_data: 
-					#			FL_playlistitem['startoffset'] = (pl_obj.cut_data['start'])*pl_stretch[1]
-					#			FL_playlistitem['endoffset'] = (pl_obj.duration)*pl_stretch[1] + FL_playlistitem['startoffset']
-
-					#FL_playlistitem['startoffset'] /= (ppq/4)
-					#FL_playlistitem['endoffset'] /= (ppq/4)
-
-					if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []
-					FL_Playlist_BeforeSort[fl_clip_obj.position].append(fl_clip_obj)
-
-			if idnum not in arrangement_obj.tracks: 
-				arrangement_obj.tracks[idnum] = arrangement.flp_track()
-			if playlist_obj.visual.name: arrangement_obj.tracks[idnum].name = playlist_obj.visual.name
-			if playlist_obj.visual.color: arrangement_obj.tracks[idnum].color = decode_color(playlist_obj.visual.color)
-			arrangement_obj.tracks[idnum].height = playlist_obj.visual_ui.height
-			arrangement_obj.tracks[idnum].enabled = int(playlist_obj.params.get('enabled',True).value)
+			for idnum, playlist_obj in convproj_obj.iter_playlist():
+	
+				idnum = int(idnum)+1
+	
+				for pl_obj in playlist_obj.placements.pl_notes_indexed:
+	
+					if pl_obj.fromindex in pat_id:
+						fl_clip_obj = arrangement.flp_arrangement_clip()
+						fl_clip_obj.position = int(pl_obj.position)
+						fl_clip_obj.itemindex = int(pat_id[pl_obj.fromindex] + fl_clip_obj.patternbase)
+						fl_clip_obj.length = int(pl_obj.duration)
+						fl_clip_obj.startoffset = 0
+						fl_clip_obj.endoffset = int(pl_obj.duration)
+						fl_clip_obj.trackindex = (-500 + int(idnum))*-1
+						if pl_obj.muted == True: fl_clip_obj.flags = 12352
+	
+						if pl_obj.cut_type == 'cut':
+							fl_clip_obj.startoffset = int(pl_obj.cut_start)
+							fl_clip_obj.endoffset += int(pl_obj.cut_start)
+						if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []
+						FL_Playlist_BeforeSort[fl_clip_obj.position].append(fl_clip_obj)
+	
+	
+				for pl_obj in playlist_obj.placements.pl_audio_indexed:
+					if pl_obj.fromindex in samples_id:
+						fl_clip_obj = arrangement.flp_arrangement_clip()
+						fl_clip_obj.position = int(pl_obj.position)
+						fl_clip_obj.itemindex = samples_id[pl_obj.fromindex]
+						fl_clip_obj.length = max(0, int(pl_obj.duration))
+						fl_clip_obj.endoffset = int(pl_obj.duration)/ppq
+						fl_clip_obj.trackindex = (-500 + int(idnum))*-1
+						if pl_obj.muted == True: fl_clip_obj.flags = 12352
+	
+						startat = 0
+						if pl_obj.cut_type == 'cut': startat = pl_obj.cut_start
+	
+						if pl_obj.fromindex in samplestretch:
+							startat = startat/ppq
+							endat = startat+(pl_obj.duration/ppq)
+	
+							stretchrate = samplestretch[pl_obj.fromindex]
+							#print(out_is_speed, out_rate, end=' | ')
+							#print(pl_obj.duration/ppq, end=' | ')
+							#print(startat*out_rate, end=' -S- ')
+							#print(startat, end=' | ')
+							#print(endat*out_rate, end=' -E- ')
+							#print(endat, end=' | ')
+							#print(placement_obj.duration/ppq, end=' | ')
+							#print()
+							fl_clip_obj.startoffset = (startat*stretchrate)*4
+							fl_clip_obj.endoffset = (endat*stretchrate)*4
+	
+						#print(FL_playlistitem['startoffset'])
+						#print(FL_playlistitem['endoffset'])
+	
+						#	if pl_stretch[0] == 'rate_tempo':
+						#		if 'start' in pl_obj.cut_data: 
+						#			FL_playlistitem['startoffset'] = pl_obj.cut_data['start']*pl_stretch[1]
+						#			FL_playlistitem['endoffset'] = pl_obj.duration*pl_stretch[1] + FL_playlistitem['startoffset']
+						#	elif pl_stretch[0] == 'rate_ignoretempo':
+						#		if 'start' in pl_obj.cut_data: 
+						#			FL_playlistitem['startoffset'] = pl_obj.cut_data['start']
+						#			FL_playlistitem['endoffset'] = pl_obj.duration + FL_playlistitem['startoffset']
+						#	elif pl_stretch[0] == 'rate_speed':
+						#		if 'start' in pl_obj.cut_data: 
+						#			FL_playlistitem['startoffset'] = (pl_obj.cut_data['start'])*pl_stretch[1]
+						#			FL_playlistitem['endoffset'] = (pl_obj.duration)*pl_stretch[1] + FL_playlistitem['startoffset']
+	
+						#FL_playlistitem['startoffset'] /= (ppq/4)
+						#FL_playlistitem['endoffset'] /= (ppq/4)
+	
+						if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []
+						FL_Playlist_BeforeSort[fl_clip_obj.position].append(fl_clip_obj)
+	
+				if idnum not in arrangement_obj.tracks: 
+					arrangement_obj.tracks[idnum] = arrangement.flp_track()
+				if playlist_obj.visual.name: arrangement_obj.tracks[idnum].name = playlist_obj.visual.name
+				if playlist_obj.visual.color: arrangement_obj.tracks[idnum].color = decode_color(playlist_obj.visual.color)
+				arrangement_obj.tracks[idnum].height = playlist_obj.visual_ui.height
+				arrangement_obj.tracks[idnum].enabled = int(playlist_obj.params.get('enabled',True).value)
 
 		FL_Playlist_Sorted = dict(sorted(FL_Playlist_BeforeSort.items(), key=lambda item: item[0]))
 

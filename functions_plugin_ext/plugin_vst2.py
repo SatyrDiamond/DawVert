@@ -86,7 +86,7 @@ def import_presetdata_file(convproj_obj, plugin_obj, platform, preset_filename):
 def import_presetdata_raw(convproj_obj, plugin_obj, rawdata, platform):
 	byr_stream = bytereader.bytereader()
 	byr_stream.load_raw(rawdata)
-	import_presetdata(convproj_obj, plugin_obj, byr_stream, platform)
+	return import_presetdata(convproj_obj, plugin_obj, byr_stream, platform)
 
 def import_presetdata(convproj_obj, plugin_obj, byr_stream, platform):
 	fxp_obj = preset_vst2.vst2_main()
@@ -94,18 +94,23 @@ def import_presetdata(convproj_obj, plugin_obj, byr_stream, platform):
 	vst_prog = fxp_obj.program
 	if vst_prog.type in [1,4]:
 		fpch = vst_prog.data
-		replace_data(convproj_obj, plugin_obj, 'id', platform, fpch.fourid, 'chunk', fpch.chunk, None)
+		plugin_obj.datavals_global.add('fourid', fpch.fourid)
+		pluginfo_obj = replace_data(convproj_obj, plugin_obj, 'id', platform, fpch.fourid, 'chunk', fpch.chunk, None)
 		plugin_obj.datavals_global.add('version_bytes', fpch.version)
 		if vst_prog.type == 4: plugin_obj.datavals_global.add('is_bank', True)
+		return pluginfo_obj
 	if vst_prog.type == 2:
 		fxck = vst_prog.data
-		replace_data(convproj_obj, plugin_obj, 'id', platform, fxck.fourid, 'param', None, fxck.num_params)
+		plugin_obj.datavals_global.add('fourid', fxck.fourid)
+		pluginfo_obj = replace_data(convproj_obj, plugin_obj, 'id', platform, fxck.fourid, 'param', None, fxck.num_params)
 		plugin_obj.datavals_global.add('version_bytes', fxck.version)
 		for c, p in enumerate(fxck.params): plugin_obj.params.add('ext_param_'+str(c), p, 'float')
+		return pluginfo_obj
 	if vst_prog.type == 3:
 		fxck = vst_prog.data
 		plugin_obj.current_program = fxck.current_program
 		cvpj_programs = []
+		plugin_obj.datavals_global.add('fourid', fxck.fourid)
 		for vst_program in fxck.programs:
 			cvpj_program = {}
 			if vst_program[1].type == 2:
@@ -116,7 +121,7 @@ def import_presetdata(convproj_obj, plugin_obj, byr_stream, platform):
 				for paramnum, val in enumerate(pprog.params): cvpj_program['params'][str(paramnum)] = {'value': val}
 				cvpj_program['program_name'] = pprog.prgname
 				cvpj_programs.append(cvpj_program)
-		replace_data(convproj_obj, plugin_obj, 'id', platform, fxck.fourid, 'bank', None, cvpj_programs)
+		return replace_data(convproj_obj, plugin_obj, 'id', platform, fxck.fourid, 'bank', None, cvpj_programs)
 
 def export_presetdata_file(plugin_obj, preset_filename):
 	filepath = pathlib.Path(preset_filename)

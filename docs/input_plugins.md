@@ -3,8 +3,9 @@
 ## DAWs
 | DataType | Short Name | Name | Ext | Autodetect | Info |
 | --- | --- | :--- | :--- | :--- | :--- |
-| R | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ | 11 only |
 | M-I | ```flp``` | FL Studio | ```.flp``` | ✔️ | FL 20+ or higher |
+| M-S | ```serato``` | Serato Studio | ```.ssp``` | ✔️ | |
+| R | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ | 11 only |
 | R | ```lmms``` | LMMS | ```.mmp```/```.mmpz``` | ✔️ | Stable and Alpha |
 | R | ```reaper``` | Reaper | ```.rpp``` | ✔️ | |
 
@@ -20,51 +21,51 @@
 ## Chiptune/Retro
 | DataType | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | :--- | :--- | :--- | :--- |
-| M-I | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | Arp is converted to Chords |
-| M-I | ```deflemask``` | DefleMask | ```.dmf``` | ✔️ | DMF Legacy only|
 | M-I | ```ceol``` | Bosca Ceoil | ```.txt``` | ❌ | |
-| R-S | ```pixitracker``` | PixiTracker | ```.piximod``` | ✔️ | |
+| M-I | ```deflemask``` | DefleMask | ```.dmf``` | ✔️ | DMF Legacy only|
+| M-I | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | Arp is converted to Chords |
 | M-I | ```trackerboy``` | TrackerBoy | ```.tbm``` | ✔️ | |
+| M-S | ```1bitdragon``` | 1BITDRAGON | ```.ibd``` | ❌ | |
 | M-S | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ❌ | |
 | R | ```mekimekichip``` | メキメキチップ (MekiMeki Chip) | ```.json``` | ❌ | |
-| M-S | ```1bitdragon``` | 1BITDRAGON | ```.ibd``` | ❌ | |
+| R-S | ```pixitracker``` | PixiTracker | ```.piximod``` | ✔️ | |
 
 ## Web
 | DataType | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | :--- | :--- | :--- | :--- |
+| M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | |
 | R | ```amped``` | Amped Studio | ```.json``` | ✔️ | |
+| R | ```audiosauna``` | AudioSauna | ```.song``` | ✔️ | |
+| R | ```onlineseq``` | Online Sequencer | ```.sequence``` | ❌ | |
+| R | ```petaporon``` | Petaporon | ```.json``` | ❌ | |
 | R | ```soundation``` | Soundation | ```.sng``` | ❌ | |
 | R | ```wavtool``` | WavTool | ```.zip``` | ❌ | |
-| M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | |
-| R | ```onlineseq``` | Online Sequencer | ```.sequence``` | ❌ | |
-| R | ```audiosauna``` | AudioSauna | ```.song``` | ✔️ | |
-| R | ```petaporon``` | Petaporon | ```.json``` | ❌ | |
 
 ## Other
 | DataType | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | :--- | :--- | :--- | :--- |
-| R-M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
-| R-M | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ❌ | 
-| R-M | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
-| R-M | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
-| R-I | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
 | R | ```flipper``` | Flipper Music Format | ```.fmf``` | ❌ | 
+| R-I | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
+| R-M | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
+| R-M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
+| R-M | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
+| R-M | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ❌ | 
 
 ## Mario Paint
 | DataType | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | :--- | :--- | :--- | :--- |
 | M-S | ```notessimo_v2``` | Notessimo V2 | ```.note``` | ❌ | |
 | M-S | ```notessimo_v3``` | Notessimo V3 | ```.note``` | ❌ | |
-| R-M | ```mariopaint_smp``` | Super Mario Paint | ```.txt``` | ❌ | |
-| R-M | ```mariopaint_mss``` | Advanced Mario Sequencer | ```.mss``` | ✔️ | |
 | R-M | ```mariopaint_msq``` | MarioSequencer | ```.msq``` | ❌ | |
+| R-M | ```mariopaint_mss``` | Advanced Mario Sequencer | ```.mss``` | ✔️ | |
+| R-M | ```mariopaint_smp``` | Super Mario Paint | ```.txt``` | ❌ | |
 
 ## Old
 | DataType | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | :--- | :--- | :--- | :--- |
-| R-M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ | |
+| R | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
 | R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ | |
 | R | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ | |
-| R | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
+| R-M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ | |
 | R-S | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | |
 

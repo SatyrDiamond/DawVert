@@ -136,6 +136,7 @@ class wav_main:
 		self.bytessec = 44100
 		self.bits = 8
 		self.datablocksize = int((self.bits/8)*self.channels)
+		self.rawdata = b''
 		self.data = numpy.float32([])
 		self.smpl = wav_smpl()
 		self.inst = wav_inst()
@@ -209,14 +210,24 @@ class wav_main:
 	def read_bytes(self, rawdata):
 		riff_data = riff_chunks.riff_chunk()
 		byr_stream = riff_data.load_from_bytes(rawdata, False)
-		self.read_internal(byr_stream, riff_data)
+		self.read_internal(byr_stream, riff_data, True)
 
 	def read(self, wavfile):
 		riff_data = riff_chunks.riff_chunk()
 		byr_stream = riff_data.load_from_file(wavfile, False)
-		self.read_internal(byr_stream, riff_data)
+		self.read_internal(byr_stream, riff_data, True)
 
-	def read_internal(self, byr_stream, riff_data):
+	def readinfo_bytes(self, rawdata):
+		riff_data = riff_chunks.riff_chunk()
+		byr_stream = riff_data.load_from_bytes(rawdata, False)
+		self.read_internal(byr_stream, riff_data, False)
+
+	def readinfo(self, wavfile):
+		riff_data = riff_chunks.riff_chunk()
+		byr_stream = riff_data.load_from_file(wavfile, False)
+		self.read_internal(byr_stream, riff_data, False)
+
+	def read_internal(self, byr_stream, riff_data, parsedata):
 		for riff_part in riff_data.in_data:
 
 			if riff_part.name == b'fmt ': 
@@ -230,8 +241,9 @@ class wav_main:
 					if (self.format == 3): self.uses_float = True
 
 			elif riff_part.name == b'data': 
-				with byr_stream.isolate_range(riff_part.start, riff_part.end, False) as bye_stream: 
-					self.read_chunk_data(bye_stream, riff_part.size)
+				if parsedata:
+					with byr_stream.isolate_range(riff_part.start, riff_part.end, False) as bye_stream: 
+						self.read_chunk_data(bye_stream, riff_part.size)
 
 			elif riff_part.name == b'smpl':
 				with byr_stream.isolate_range(riff_part.start, riff_part.end, False) as bye_stream: 
@@ -249,8 +261,8 @@ class wav_main:
 						marker_obj.read(bye_stream)
 						self.markers[marker_obj.id] = marker_obj
 
-			else:
-				logger_audiofile.warning('WAV: Unknown Chunk: '+str(riff_part.name))
+			#else:
+			#	logger_audiofile.warning('WAV: Unknown Chunk: '+str(riff_part.name))
 
 				#with byr_stream.isolate_range(riff_part.start, riff_part.end, False) as bye_stream: 
 				#	print(byr_stream.raw(riff_part.size))

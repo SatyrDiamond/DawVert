@@ -109,8 +109,6 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 	if flp_obj.zipped: sampleref_obj.find_relative('extracted')
 	sampleref_obj.find_relative('factorysamples')
 
-
-
 	sre_obj.visual.name = fl_channel_obj.name
 	sre_obj.visual.color.set_int(conv_color(fl_channel_obj.color))
 	sre_obj.sampleref = filename_sample
@@ -118,8 +116,9 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 	sre_obj.point_value_type = 'percent'
 	sre_obj.start = fl_channel_obj.params.start
 	sre_obj.end = fl_channel_obj.params.start+(fl_channel_obj.params.length*(1-fl_channel_obj.params.start))
-	sre_obj.loop_start = 0
 	sre_obj.loop_end = sre_obj.end
+
+	sre_obj.from_sampleref_obj(sampleref_obj)
 
 	sre_obj.reverse = bool(fl_channel_obj.fxflags & 2)
 	sre_obj.data['swap_stereo'] = bool(fl_channel_obj.fxflags & 256)
@@ -442,7 +441,7 @@ class input_flp(plugins.base):
 					note_key = fl_note.key-60
 					note_vol = fl_note.velocity/100
 
-					if not note_pos: oneshotnotenum_chans[fl_note.rack] += 1
+					if not note_dur: oneshotnotenum_chans[fl_note.rack] += 1
 					numnotenum_chans[fl_note.rack] += 1
 
 					note_extra = {}

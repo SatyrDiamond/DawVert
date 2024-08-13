@@ -14,8 +14,17 @@ contentpath = os.path.join(os.path.expanduser('~'), 'Music\\Serato Studio\\Conte
 def parse_filepath(i_file):
 	filename = urllib.parse.unquote(i_file)
 	if filename.startswith('content://'): filepath = contentpath+filename[10:]
+	elif filename.startswith('file://'): filepath = filename[8:]
 	else: filepath = filename
 	return filepath.replace("\\","/").replace("//","/")
+
+def calc_audiostretch(orgpoint, original_bpm, bpm, playback_speed, printd):
+	outpos = orgpoint
+	outpos *= 2
+	outpos /= 120/bpm
+	outpos /= playback_speed
+	outpos /= bpm/original_bpm
+	return outpos
 
 class input_serato(plugins.base):
 	def __init__(self): pass
@@ -44,8 +53,6 @@ class input_serato(plugins.base):
 			if not useaudioclips: track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 1, False)
 			elif useaudioclips: track_obj = convproj_obj.add_track(cvpj_trackid, 'audio' if scene_deck.type == 'sample' else 'instruments', 1, False)
 			track_obj.visual.name = scene_deck.name
-
-			#print(scene_deck.type)
 
 			if scene_deck.channel_strip.post_fader_effects != None:
 				for fxnum, pfe in enumerate(scene_deck.channel_strip.post_fader_effects):
@@ -87,6 +94,7 @@ class input_serato(plugins.base):
 							samplepart_obj.stretch.preserve_pitch = True
 							samplepart_obj.pitch = drumsamp.pitch_shift
 							samplepart_obj.stretch.set_rate_speed(project_obj.bpm, drumsamp.playback_speed, False)
+							samplepart_obj.trigger = 'oneshot'
 
 			if scene_deck.type == 'instrument':
 				inst_obj = convproj_obj.add_instrument(cvpj_instid)
@@ -135,10 +143,8 @@ class input_serato(plugins.base):
 					s_sample_entry['deck'] = scene_deck
 
 					if scene_deck.sample_file:
-
-						scene_deck.original_bpm, scene_deck.bpm
-
 						playspeed = scene_deck.playback_speed
+						playspeed *= 120/project_obj.bpm
 						playspeed *= project_obj.bpm/scene_deck.original_bpm
 
 						samplepath = parse_filepath(scene_deck.sample_file)
@@ -147,7 +153,7 @@ class input_serato(plugins.base):
 						samplepart_obj = sample_entry.cvpj_sample_entry()
 						samplepart_obj.sampleref = samplepath
 						samplepart_obj.pitch = scene_deck.key_shift
-						samplepart_obj.stretch.set_rate_speed(project_obj.bpm, playspeed, False)
+						samplepart_obj.stretch.set_rate_tempo(project_obj.bpm, playspeed, False)
 						samplepart_obj.stretch.preserve_pitch = True
 
 						s_sample_entry['part'] = samplepart_obj
@@ -177,6 +183,7 @@ class input_serato(plugins.base):
 								key = note.number+note.channel
 								if key >= 60: key -= 60
 								placement_obj.notelist.add_m('track_'+str(decknum+1)+'_'+str(key), note.start, note.duration, 0, note.velocity/100, None)
+						placement_obj.notelist.sort()
 
 					if scene_deck.type == 'instrument':
 						placement_obj = trscene_obj.add_notes()
@@ -216,17 +223,8 @@ class input_serato(plugins.base):
 									if 'color' in cuedata:
 										color = cuedata['color'][3:]
 
-									#print(cuedata['start'], sampleref.dur_sec, samplepart_obj.stretch.calc_tempo_speed)
-
-									startoffset = cuedata['start']*2 
-									startoffset *= (project_obj.bpm/120)
-									startoffset /= sampledeck.playback_speed
-									startoffset *= scene_deck.original_bpm/project_obj.bpm
-
-									endoffset = cuedata['end']*2 
-									endoffset *= (project_obj.bpm/120)
-									endoffset /= sampledeck.playback_speed
-									endoffset *= scene_deck.original_bpm/project_obj.bpm
+									startoffset = calc_audiostretch(cuedata['start'], scene_deck.original_bpm, project_obj.bpm, sampledeck.playback_speed, True)
+									endoffset = calc_audiostretch(cuedata['end'], scene_deck.original_bpm, project_obj.bpm, sampledeck.playback_speed, False)
 
 									samplenotes[note.start] = [note.duration, startoffset*960, endoffset*960, color]
 

@@ -273,7 +273,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 		if slicer_filename != "": 
 			sampleref_obj = convproj_obj.add_sampleref(slicer_filename, slicer_filename)
 			slicechannels = sampleref_obj.channels
-			sre_obj.from_sampleref_obj(sampleref_obj)
+			sre_obj.from_sampleref(convproj_obj, slicer_filename)
 
 		sre_obj.stretch.set_rate_speed(slicer_bpm, 1/stretch_multiplier, False)
 		sre_obj.pitch = slicer_pitch/100

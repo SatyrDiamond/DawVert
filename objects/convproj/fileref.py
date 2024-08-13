@@ -8,6 +8,7 @@ import getpass
 from plugins import base as dv_plugins
 from functions import data_values
 from objects.convproj import visual
+from objects.file import audio_wav
 import logging
 
 logger_project = logging.getLogger('project')
@@ -194,7 +195,7 @@ class cvpj_fileref:
 VERBOSE = False
 
 class cvpj_sampleref:
-	__slots__ = ['fileref','dur_samples','dur_sec','timebase','hz','channels','found','file_size','file_date', 'visual','fileformat']
+	__slots__ = ['fileref','dur_samples','dur_sec','timebase','hz','channels','found','file_size','file_date', 'visual','fileformat','loop_found','loop_start','loop_end']
 
 	def __init__(self, in_path):
 		self.fileref = cvpj_fileref()
@@ -207,6 +208,9 @@ class cvpj_sampleref:
 		self.file_size = 0
 		self.file_date = 0
 		self.fileformat = ''
+		self.loop_found = False
+		self.loop_start = 0
+		self.loop_end = 0
 		self.visual = visual.cvpj_visual()
 		self.fileref.change_path(in_path, False)
 		self.get_info()
@@ -232,6 +236,18 @@ class cvpj_sampleref:
 			self.file_date = int(os.path.getmtime(wav_realpath))
 
 			fileextlow = self.fileref.extension.lower()
+
+			if fileextlow == 'wav':
+				try:
+					wav_obj = audio_wav.wav_main()
+					wav_obj.readinfo(wav_realpath)
+					if wav_obj.smpl.loops:
+						first_loop = wav_obj.smpl.loops[0]
+						self.loop_found = True
+						self.loop_start = first_loop.start
+						self.loop_end = first_loop.end
+				except:
+					pass
 
 			for shortname, audiofileplug_obj in dv_plugins.plugins_audio_file.items():
 				self.found = True

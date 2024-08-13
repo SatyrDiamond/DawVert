@@ -38,7 +38,7 @@ def decode_sslf(fl_plugstr):
 		out = fl_plugstr.read(size)
 	return out
 
-def simsynth_time(value): return pow(value*2, 3)
+def simsynth_time(value): return pow(value*2, 3)/2
 
 def decode_pointdata(fl_plugstr):
 	autoheader = struct.unpack('bii', fl_plugstr.read(12))
@@ -56,7 +56,7 @@ def decode_pointdata(fl_plugstr):
 	fl_plugstr.read(20).hex()
 	return pointdata_table
 
-ss_envvol_mul = 3.5
+ss_envvol_mul = 7
 ss_envsvf_mul = 7
 
 envshapes = {
@@ -273,7 +273,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 		if slicer_filename != "": 
 			sampleref_obj = convproj_obj.add_sampleref(slicer_filename, slicer_filename)
 			slicechannels = sampleref_obj.channels
-			sre_obj.from_sampleref_obj(sampleref_obj, slicer_filename)
+			sre_obj.from_sampleref_obj(sampleref_obj)
 
 		sre_obj.stretch.set_rate_speed(slicer_bpm, 1/stretch_multiplier, False)
 		sre_obj.pitch = slicer_pitch/100
@@ -480,10 +480,10 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 			outfilename = os.path.join(foldername, pluginid+'_custom_audio.wav')
 			with open(outfilename, "wb") as slicexfile: slicexfile.write(wavedata)
 			sampleref_obj = convproj_obj.add_sampleref(outfilename, outfilename)
-			sre_obj.from_sampleref_obj(sampleref_obj, outfilename)
+			sre_obj.from_sampleref(convproj_obj, outfilename)
 		else:
 			sampleref_obj = convproj_obj.add_sampleref(slicex_filename, slicex_filename)
-			sre_obj.from_sampleref_obj(sampleref_obj, slicex_filename)
+			sre_obj.from_sampleref(convproj_obj, slicex_filename)
 
 		sampleref_obj.find_relative('extracted')
 		sampleref_obj.find_relative('projectfile')
@@ -509,15 +509,15 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 			try:
 				if not False in [(x in dfdict) for x in ('amp_att','amp_dec','amp_sus','amp_rel')]:
 					plugin_obj.env_asdr_add('vol', 0, 
-						simsynth_time(dfdict['amp_att']*ss_envvol_mul), 0, 
-						simsynth_time(dfdict['amp_dec']*ss_envvol_mul), dfdict['amp_sus'], 
-						simsynth_time(dfdict['amp_rel']*ss_envvol_mul), 1)
+						simsynth_time(dfdict['amp_att']), 0, 
+						simsynth_time(dfdict['amp_dec']), dfdict['amp_sus'], 
+						simsynth_time(dfdict['amp_rel']), 1)
 
 				if not False in [(x in dfdict) for x in ('svf_att','svf_dec','svf_sus','svf_rel')]:
 					plugin_obj.env_asdr_add('cutoff', 0, 
-						simsynth_time(dfdict['svf_att']*ss_envsvf_mul), 0, 
-						simsynth_time(dfdict['svf_dec']*ss_envsvf_mul), dfdict['svf_sus'], 
-						simsynth_time(dfdict['svf_rel']*ss_envsvf_mul), 0)
+						simsynth_time(dfdict['svf_att']), 0, 
+						simsynth_time(dfdict['svf_dec']), dfdict['svf_sus'], 
+						simsynth_time(dfdict['svf_rel']), 0)
 			except:
 				pass
 

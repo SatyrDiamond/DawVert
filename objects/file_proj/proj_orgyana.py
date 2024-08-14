@@ -22,6 +22,25 @@ def stream_encode(invals):
 		cur_val = x
 	return invals
 
+class orgyana_orgsamp():
+	def __init__(self): 
+		self.sample_data = []
+		self.drum_data = []
+		self.num_drums = 0
+		self.drum_rate = 0
+		self.loaded = False
+
+	def load_from_file(self, input_file):
+		self.loaded = True
+		byr_stream = bytereader.bytereader()
+		byr_stream.load_file(input_file)
+		byr_stream.seek(4)
+
+		self.sample_data = [byr_stream.l_int8(256) for x in range(100)]
+		self.num_drums = byr_stream.uint8()
+		self.drum_rate = byr_stream.uint16()
+		self.drum_data = [byr_stream.c_uint8__int24(True) for x in range(self.num_drums)]
+
 class orgyana_track:
 	def __init__(self):
 		self.pitch = 1000

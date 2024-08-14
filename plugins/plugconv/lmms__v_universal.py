@@ -109,7 +109,8 @@ class plugconv(plugins.base):
 						wave_obj = plugin_obj.wave_get(osc_obj.prop.nameid)
 						wave_obj.to_audio(wave_path)
 						convproj_obj.add_sampleref(pluginid+'_wave', wave_path)
-						plugin_obj.samplerefs['userwavefile0'] = pluginid+'_wave'
+						sp_obj = plugin_obj.samplepart_add('userwavefile0')
+						sp_obj.sampleref = pluginid+'_wave'
 					return 0
 
 		if plugin_obj.type.subtype == 'bitcrush':

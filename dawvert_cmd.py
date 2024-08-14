@@ -11,6 +11,8 @@ from functions import plug_conv
 from objects.convproj import fileref
 cvpj_fileref = fileref.cvpj_fileref
 
+scriptfiledir = os.path.dirname(os.path.realpath(__file__))
+
 print('DawVert: Daw Conversion Tool')
 
 parser = argparse.ArgumentParser()
@@ -127,6 +129,7 @@ cvpj_fileref.add_searchpath_file('extracted', dawvert_core.config.path_samples_e
 cvpj_fileref.add_searchpath_file('downloaded', dawvert_core.config.path_samples_downloaded)
 cvpj_fileref.add_searchpath_file('generated', dawvert_core.config.path_samples_generated)
 cvpj_fileref.add_searchpath_file('converted', dawvert_core.config.path_samples_converted)
+cvpj_fileref.add_searchpath_abs('downloaded_manual', os.path.join(scriptfiledir, '__samples_downloaded_manual'))
 # -------------------------------------------------------------- convert --------------------------------------------------------------
 
 if os.path.isfile(out_file) and 'overwrite' not in dawvert_core.config.flags_core:

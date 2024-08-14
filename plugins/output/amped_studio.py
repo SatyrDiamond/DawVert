@@ -20,7 +20,7 @@ def convauto(autopoints, param_obj):
 	ampedauto = []
 	for autopoint in autopoints.iter():
 		value = xtramath.between_to_one(param_obj.min, param_obj.max, autopoint.value)
-		ampedauto.append({"pos": autopoint.pos, "value": value})
+		ampedauto.append({"pos": autopoint.pos/4, "value": value})
 	return ampedauto
 
 def do_idparams(amped_track, convproj_obj, plugin_obj, pluginid, amped_device, amped_auto):

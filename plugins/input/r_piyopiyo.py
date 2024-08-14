@@ -71,9 +71,54 @@ class input_piyopiyo(plugins.base):
 		track_obj.visual.name = 'Drums'
 		track_obj.visual.color.set_float(colordata.getcolornum(3))
 		track_obj.params.add('vol', project_obj.perc_volume/250, 'float')
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-piyopiyo', 'drums')
+		plugin_obj, pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
 		plugin_obj.role = 'synth'
+		plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 		track_obj.inst_pluginid = pluginid
+
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS1', './__samples_downloaded_manual/piyopiyo/BASS1.wav')
+		sampleref_obj.find_relative('downloaded_manual')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS2', './__samples_downloaded_manual/piyopiyo/BASS2.wav')
+		sampleref_obj.find_relative('downloaded_manual')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SNARE1', './__samples_downloaded_manual/piyopiyo/SNARE1.wav')
+		sampleref_obj.find_relative('downloaded_manual')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT1', './__samples_downloaded_manual/piyopiyo/HAT1.wav')
+		sampleref_obj.find_relative('downloaded_manual')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT2', './__samples_downloaded_manual/piyopiyo/HAT2.wav')
+		sampleref_obj.find_relative('downloaded_manual')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SYMBAL1', './__samples_downloaded_manual/piyopiyo/SYMBAL1.wav')
+		sampleref_obj.find_relative('downloaded_manual')
+
+		sp_obj = plugin_obj.sampleregion_add(-12, -12, -12, None)
+		sp_obj.sampleref = 'PIYOPIYO_BASS1'
+		sp_obj = plugin_obj.sampleregion_add(-11, -11, -11, None)
+		sp_obj.sampleref = 'PIYOPIYO_BASS1'
+
+		sp_obj = plugin_obj.sampleregion_add(-10, -10, -10, None)
+		sp_obj.sampleref = 'PIYOPIYO_BASS2'
+		sp_obj = plugin_obj.sampleregion_add(-9, -9, -9, None)
+		sp_obj.sampleref = 'PIYOPIYO_BASS2'
+
+		sp_obj = plugin_obj.sampleregion_add(-8, -8, -8, None)
+		sp_obj.sampleref = 'PIYOPIYO_SNARE1'
+		sp_obj = plugin_obj.sampleregion_add(-7, -7, -7, None)
+		sp_obj.sampleref = 'PIYOPIYO_SNARE1'
+
+		sp_obj = plugin_obj.sampleregion_add(-4, -4, -4, None)
+		sp_obj.sampleref = 'PIYOPIYO_HAT1'
+		sp_obj = plugin_obj.sampleregion_add(-3, -3, -3, None)
+		sp_obj.sampleref = 'PIYOPIYO_HAT1'
+
+		sp_obj = plugin_obj.sampleregion_add(-2, -2, -2, None)
+		sp_obj.sampleref = 'PIYOPIYO_HAT2'
+		sp_obj = plugin_obj.sampleregion_add(-1, -1, -1, None)
+		sp_obj.sampleref = 'PIYOPIYO_HAT2'
+
+		sp_obj = plugin_obj.sampleregion_add(0, 0, 0, None)
+		sp_obj.sampleref = 'PIYOPIYO_SYMBAL1'
+		sp_obj = plugin_obj.sampleregion_add(1, 1, 1, None)
+		sp_obj.sampleref = 'PIYOPIYO_SYMBAL1'
+
 		parse_notes(convproj_obj, '3', project_obj.notes_data[3], track_obj, 0)
 
 		convproj_obj.do_actions.append('do_addloop')

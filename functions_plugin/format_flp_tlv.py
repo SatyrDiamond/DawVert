@@ -5,15 +5,30 @@ import varint
 from objects.data_bytes import bytereader
 from objects.data_bytes import bytewriter
 
+VERBOSE = False
+
 # ---------------------- decode
 
 def read_tlv(tlv_data):
 	event_id = tlv_data.uint8()
-	if event_id <= 63 and event_id >= 0: return event_id, tlv_data.uint8()
-	if event_id <= 127 and event_id >= 64: return event_id, tlv_data.uint16()
-	if event_id <= 191 and event_id >= 128: return event_id, tlv_data.uint32()
-	if event_id <= 224 and event_id >= 192: return event_id, tlv_data.raw(tlv_data.varint())
-	if event_id <= 255 and event_id >= 225: return event_id, tlv_data.raw(tlv_data.varint())
+	if event_id <= 63 and event_id >= 0: 
+		outval = tlv_data.uint8()
+		if VERBOSE: print('INT8, ', f"{event_id:#010b}"[2:],'|',str(event_id).ljust(3), f"{outval:#010b}"[2:], outval)
+		return event_id, outval
+	if event_id <= 127 and event_id >= 64: 
+		outval = tlv_data.uint16()
+		if VERBOSE: print('INT16,', f"{event_id:#010b}"[2:],'|',str(event_id).ljust(3), f"{outval:#028b}"[2:], outval)
+		return event_id, outval
+	if event_id <= 191 and event_id >= 128: 
+		outval = tlv_data.uint32()
+		if VERBOSE: print('INT32,', f"{event_id:#010b}"[2:],'|',str(event_id).ljust(3), f"{outval:#034b}"[2:], outval)
+		return event_id, outval
+	if event_id <= 224 and event_id >= 192: 
+		if VERBOSE: print('TEXT, ', f"{event_id:#010b}"[2:],'|',event_id)
+		return event_id, tlv_data.raw(tlv_data.varint())
+	if event_id <= 255 and event_id >= 225: 
+		if VERBOSE: print('RAW,  ', f"{event_id:#010b}"[2:],'|',event_id)
+		return event_id, tlv_data.raw(tlv_data.varint())
 
 def decode(song_data, endpos):
 	eventtable = []

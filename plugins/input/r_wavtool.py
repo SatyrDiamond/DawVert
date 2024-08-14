@@ -122,9 +122,11 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					plugin_obj.env_asdr_add('vol', 0, attack, 0, decay, sustain, release, 1)
 
 				elif devicedata.sourceId == 'c2fc1730-9cc9-4643-bb54-9435a920c927':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'sampler', 'drums')
+					plugin_obj = convproj_obj.add_plugin(deviceid, 'sampler', 'multi')
 					plugin_obj.role = 'synth'
 					instrument_dev = deviceid
+
+					plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 
 					for samplenum in range(1,13):
 						endstr = str(samplenum)
@@ -140,7 +142,16 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 							plugin_obj.env_asdr_add('vol_'+endstr, 0, attack, 0, decay, sustain, release, 1)
 
-							sp_obj = plugin_obj.sampleregion_add(samplenum-1, samplenum-1, samplenum-1, None)
+							samp_key = samplenum-1
+
+							sp_obj = plugin_obj.sampleregion_add(samp_key, samp_key, samp_key, None)
+							sp_obj.sampleref = bufferid
+							sp_obj.envs['vol'] = 'vol_'+endstr
+							sp_obj.pan = inputdata["pan"+endstr] if "pan"+endstr in inputdata else 0
+							sp_obj.vol = inputdata["gain"+endstr] if "gain"+endstr in inputdata else 1
+							sp_obj.pitch = inputdata["pitch"+endstr] if "pitch"+endstr in inputdata else 0
+
+							sp_obj = plugin_obj.sampleregion_add(samp_key-12, samp_key-12, samp_key-12, None)
 							sp_obj.sampleref = bufferid
 							sp_obj.envs['vol'] = 'vol_'+endstr
 							sp_obj.pan = inputdata["pan"+endstr] if "pan"+endstr in inputdata else 0

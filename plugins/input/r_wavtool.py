@@ -371,6 +371,7 @@ class input_wavtool(plugins.base):
 		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
 		dawinfo_obj.audio_stretch = ['warp']
 		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
+		dawinfo_obj.plugin_included = ['native-wavtool','sampler:single','sampler:multi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		global zip_data

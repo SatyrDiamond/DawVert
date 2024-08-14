@@ -479,9 +479,8 @@ class output_lmms(plugins.base):
 
 							if plugin_obj.type.subtype == 'tripleoscillator':
 								for oscnum in range(3):
-									sp_obj = plugin_obj.samplepart_get('userwavefile'+str(oscnum+1))
-									ref_found, sampleref_obj = cvpj_obj.get_sampleref(sp_obj.sampleref)
-									if ref_found: lmms_plug_obj.add_param('userwavefile'+str(oscnum), sampleref_obj.fileref.get_path(None, True))
+									sp_obj = plugin_obj.samplepart_get('userwavefile'+str(oscnum))
+									lmms_plug_obj.add_param('userwavefile'+str(oscnum), sp_obj.get_filepath(cvpj_obj, None))
 
 							if plugin_obj.type.subtype == 'vibedstrings':
 								for num in range(9):

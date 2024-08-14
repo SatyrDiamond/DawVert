@@ -129,6 +129,8 @@ class cvpj_fileref:
 				#print(  '-----------------------------------'  )
 				#self.debugtxt()
 
+				logger_project.debug('fileref: search: '+self.get_path(os_type, True))
+
 				if self.exists(os_type): 
 					iffound = True
 					logger_project.info('fileref: relative found: '+self.get_path(os_type, True))

@@ -391,7 +391,7 @@ class input_ableton(plugins.base):
 		for _, loc in project_obj.Locators.items():
 			timemarker_obj = convproj_obj.add_timemarker()
 			timemarker_obj.visual.name = loc.Name
-			timemarker_obj.position = loc.Time*4
+			timemarker_obj.position = loc.Time
 
 		do_automation(convproj_obj, project_obj.MasterTrack.AutomationEnvelopes)
 

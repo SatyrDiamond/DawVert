@@ -189,7 +189,10 @@ class plugconv(plugins.base):
 							plugin_obj.params.add('osc_1_level', 1, 'float')
 							plugin_obj.params.add('volume', 4000, 'float')
 
-							if env_p_vol[0]:
+							if env_b_vol[0]:
+								plugin_obj.env_asdr_add('vital_env_1', 0, 0, 0, 0, 1, 10, 1)
+								plugin_obj.env_points_copy('vol', 'vital_import_lfo_2')
+							elif env_p_vol[0]:
 								plugin_obj.params.add('osc_1_on', 1, 'float')
 								plugin_obj.env_asdr_add('vital_env_1', 0, 0, 0, 0, 1, 0, 1)
 								plugin_obj.env_points_copy('vol', 'vital_import_lfo_1')

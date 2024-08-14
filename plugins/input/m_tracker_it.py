@@ -102,7 +102,7 @@ class input_it(plugins.base):
 		
 		it_useinst = 2 in project_obj.flags
 
-		table_orders = project_obj.l_order.copy()
+		table_orders = list(project_obj.l_order.copy())
 		while -2 in table_orders: table_orders.remove(-2)
 		while -1 in table_orders: table_orders.remove(-1)
 		

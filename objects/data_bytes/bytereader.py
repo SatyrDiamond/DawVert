@@ -2,7 +2,7 @@ import struct
 import varint
 import os
 import zlib
-import numpy
+import numpy as np
 import mmap
 from io import BytesIO
 from contextlib import contextmanager
@@ -182,8 +182,8 @@ class bytereader:
 	def int16(self): return self.unpack_s_short(self.buf.read(2))[0]
 	def int16_b(self): return self.unpack_s_short_b(self.buf.read(2))[0]
 
-	def uint24(self): return self.unpack_int(b'\x00'+self.buf.read(3))[0]
-	def uint24_b(self): return self.unpack_int_b(self.buf.read(3)+b'\x00')[0]
+	def uint24(self): return self.unpack_int(self.buf.read(3)+b'\x00')[0]
+	def uint24_b(self): return self.unpack_int_b(b'\x00'+self.buf.read(3))[0]
 
 	def uint32(self): return self.unpack_int(self.buf.read(4))[0]
 	def uint32_b(self): return self.unpack_int_b(self.buf.read(4))[0]
@@ -202,20 +202,20 @@ class bytereader:
 	def flags32(self): return get_bitnums_int(self.uint32())
 
 	def table8(self, tabledata):
-		numbytes = numpy.prod(tabledata)
-		return numpy.frombuffer(self.buf.read(numbytes), numpy.uint8).reshape(*tabledata)
+		numbytes = np.prod(tabledata)
+		return np.frombuffer(self.buf.read(numbytes), np.uint8).reshape(*tabledata)
 
 	def table16(self, tabledata):
-		numbytes = numpy.prod(tabledata)*2
-		return numpy.frombuffer(self.buf.read(numbytes), numpy.uint16).reshape(*tabledata)
+		numbytes = np.prod(tabledata)*2
+		return np.frombuffer(self.buf.read(numbytes), np.uint16).reshape(*tabledata)
 
 	def stable8(self, tabledata):
-		numbytes = numpy.prod(tabledata)
-		return numpy.frombuffer(self.buf.read(numbytes), numpy.int8).reshape(*tabledata)
+		numbytes = np.prod(tabledata)
+		return np.frombuffer(self.buf.read(numbytes), np.int8).reshape(*tabledata)
 
 	def stable16(self, tabledata):
-		numbytes = numpy.prod(tabledata)*2
-		return numpy.frombuffer(self.buf.read(numbytes), numpy.int16).reshape(*tabledata)
+		numbytes = np.prod(tabledata)*2
+		return np.frombuffer(self.buf.read(numbytes), np.int16).reshape(*tabledata)
 
 	def varint(self): return varint.decode_stream(self.buf)
 
@@ -226,8 +226,8 @@ class bytereader:
 	def string(self, size, **kwargs): return self.buf.read(size).split(b'\x00')[0].decode(**kwargs)
 	def string16(self, size): return self.buf.read(size*2).decode("utf-16")
 
-	def l_uint8(self, num): return [self.uint8() for _ in range(num)]
-	def l_int8(self, num): return [self.int8() for _ in range(num)]
+	def l_uint8(self, num): return np.frombuffer(self.buf.read(num), dtype=np.uint8)
+	def l_int8(self, num): return np.frombuffer(self.buf.read(num), dtype=np.int8)
 
 	def l_uint16(self, num): return [self.uint16() for _ in range(num)]
 	def l_uint16_b(self, num): return [self.uint16_b() for _ in range(num)]
@@ -250,11 +250,23 @@ class bytereader:
 	def c_string__varint(self, **kwargs): return self.string(self.varint(), **kwargs)
 	def c_string__int8(self, **kwargs): return self.string(self.uint8(), **kwargs)
 	def c_string__int16(self, endian, **kwargs): return self.string(self.uint16_b() if endian else self.uint16(), **kwargs)
+	def c_string__int24(self, endian, **kwargs): return self.string(self.uint24_b() if endian else self.uint24(), **kwargs)
 	def c_string__int32(self, endian, **kwargs): return self.string(self.uint32_b() if endian else self.uint32(), **kwargs)
 
 	def c_raw__int8(self): return self.raw(self.uint8())
 	def c_raw__int16(self, endian): return self.raw(self.uint16_b() if endian else self.uint16())
+	def c_raw__int24(self, endian): return self.raw(self.uint24_b() if endian else self.uint24())
 	def c_raw__int32(self, endian): return self.raw(self.uint32_b() if endian else self.uint32())
+
+	def c_uint8__int8(self): return self.l_uint8(self.uint8())
+	def c_uint8__int16(self, endian): return self.l_uint8(self.uint16_b() if endian else self.uint16())
+	def c_uint8__int24(self, endian): return self.l_uint8(self.uint24_b() if endian else self.uint24())
+	def c_uint8__int32(self, endian): return self.l_uint8(self.uint32_b() if endian else self.uint32())
+
+	def c_int8__int8(self): return self.l_int8(self.uint8())
+	def c_int8__int16(self, endian): return self.l_int8(self.uint16_b() if endian else self.uint16())
+	def c_int8__int24(self, endian): return self.l_int8(self.uint24_b() if endian else self.uint24())
+	def c_int8__int32(self, endian): return self.l_int8(self.uint32_b() if endian else self.uint32())
 
 	def string_t(self, **kwargs):
 		output = b''

@@ -91,8 +91,8 @@ else:
 
 # -------------------------------------------------------------- Output Format --------------------------------------------------------------
 
-out_file_nameext = os.path.splitext(os.path.basename(in_file))
-out_file_path = os.path.dirname(in_file)
+out_file_nameext = os.path.splitext(os.path.basename(out_file))
+out_file_path = os.path.dirname(out_file)
 
 cvpj_fileref.add_searchpath_abs('projectfile', out_file_path)
 cvpj_fileref.add_searchpath_file('projectfile', out_file_path)

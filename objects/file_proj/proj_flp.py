@@ -124,9 +124,9 @@ class flp_project:
 	def do_event(self, event_id, event_data):
 		if event_id == 199: 
 			FLVersion = event_data.decode('utf-8').rstrip('\x00')
-			logger_projparse.info('FL: Version:' + FLVersion)
+			logger_projparse.info('FL: Version: ' + FLVersion)
 			self.version_split = [int(x) for x in FLVersion.split('.')]
-			if self.version_split[0] < 12:
+			if self.version_split[0] < 12 and self.version_split[0] != 24:
 				logger_projparse.error('FL: Version '+str(self.version_split[0])+' is not supported.') 
 				exit()
 			self.version = FLVersion

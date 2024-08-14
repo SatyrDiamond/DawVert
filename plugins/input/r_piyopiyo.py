@@ -24,7 +24,7 @@ class input_piyopiyo(plugins.base):
 	def getdawinfo(self, dawinfo_obj): 
 		dawinfo_obj.name = 'PiyoPiyo'
 		dawinfo_obj.file_ext = 'pmd'
-		dawinfo_obj.plugin_included = ['universal:synth-osc']
+		dawinfo_obj.plugin_included = ['universal:synth-osc','sampler:multi']
 		dawinfo_obj.auto_types = ['nopl_ticks']
 		dawinfo_obj.track_nopl = True
 	def supported_autodetect(self): return True
@@ -76,18 +76,18 @@ class input_piyopiyo(plugins.base):
 		plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 		track_obj.inst_pluginid = pluginid
 
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS1', './__samples_downloaded_manual/piyopiyo/BASS1.wav')
-		sampleref_obj.find_relative('downloaded_manual')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS2', './__samples_downloaded_manual/piyopiyo/BASS2.wav')
-		sampleref_obj.find_relative('downloaded_manual')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SNARE1', './__samples_downloaded_manual/piyopiyo/SNARE1.wav')
-		sampleref_obj.find_relative('downloaded_manual')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT1', './__samples_downloaded_manual/piyopiyo/HAT1.wav')
-		sampleref_obj.find_relative('downloaded_manual')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT2', './__samples_downloaded_manual/piyopiyo/HAT2.wav')
-		sampleref_obj.find_relative('downloaded_manual')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SYMBAL1', './__samples_downloaded_manual/piyopiyo/SYMBAL1.wav')
-		sampleref_obj.find_relative('downloaded_manual')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS1', './__external_data/piyopiyo/BASS1.wav')
+		sampleref_obj.find_relative('external_data')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS2', './__external_data/piyopiyo/BASS2.wav')
+		sampleref_obj.find_relative('external_data')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SNARE1', './__external_data/piyopiyo/SNARE1.wav')
+		sampleref_obj.find_relative('external_data')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT1', './__external_data/piyopiyo/HAT1.wav')
+		sampleref_obj.find_relative('external_data')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT2', './__external_data/piyopiyo/HAT2.wav')
+		sampleref_obj.find_relative('external_data')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SYMBAL1', './__external_data/piyopiyo/SYMBAL1.wav')
+		sampleref_obj.find_relative('external_data')
 
 		sp_obj = plugin_obj.sampleregion_add(-12, -12, -12, None)
 		sp_obj.sampleref = 'PIYOPIYO_BASS1'

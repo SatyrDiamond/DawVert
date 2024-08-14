@@ -47,7 +47,7 @@ def to_db(value): return 20 * math.log10(value)
 def do_math(inputv, mathtype, val1, val2, val3, val4):
 	if mathtype == 'add': return inputv+val1
 	elif mathtype == 'sub': return inputv-val1
-	elif mathtype == 'sub_r': return val1+inputv
+	elif mathtype == 'sub_r': return val1-inputv
 	elif mathtype == 'mul': return inputv*val1
 	elif mathtype == 'div': return inputv/val1
 	elif mathtype == 'div_r': return val1/inputv

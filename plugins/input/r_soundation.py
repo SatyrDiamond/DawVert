@@ -37,7 +37,7 @@ def autoall_sng_to_cvpj(convproj_obj, pluginid, soundation_device, plugin_obj, f
 
 def autopoints_set(autoloc, points, add, mul):
 	for point in points:
-		convproj_obj.automation.add_autopoint(autoloc, 'float', point['pos']/4, (point['value']+add)*mul, 'normal')
+		convproj_obj.automation.add_autopoint(autoloc, 'float', point['pos'], (point['value']+add)*mul, 'normal')
 
 class input_soundation(plugins.base):
 	def __init__(self): pass

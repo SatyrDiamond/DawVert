@@ -62,7 +62,7 @@ def do_param(convproj_obj, cvpj_params, cvpj_name, cvpj_fallback, cvpj_type, cvp
 					AutomationEnvelope_obj.Automation.Events.append([0, 'FloatEvent', alsevent])
 					for num, autopoint in enumerate(autopoints.iter()):
 						alsevent = proj_ableton.ableton_FloatEvent(None)
-						alsevent.Time = autopoint.pos*4
+						alsevent.Time = autopoint.pos
 						alsevent.Value = autopoint.value
 						AutomationEnvelope_obj.Automation.Events.append([num+1, 'FloatEvent', alsevent])
 

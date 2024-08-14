@@ -290,7 +290,6 @@ class output_cvpjs(plugins.base):
 
 			flp_obj.patterns[pat_num] = fl_pattern_obj
 
-
 		if len(flp_obj.patterns) > 999:
 			logger_output.error('FLP patterns over 999 is unsupported.')
 			exit()

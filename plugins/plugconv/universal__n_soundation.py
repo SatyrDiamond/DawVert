@@ -14,16 +14,16 @@ def get_freq(i_val):
 def get_gain(i_val):
 	return min((math.sqrt(i_val**1.15)*40)-20, 0)
 
-def eq_calc_q(band_type, q_val):
+def eq_calc_q(band_type, i_val):
 	if band_type in ['low_pass', 'high_pass']:
-		q_val = q_val*math.log(162)
+		q_val = i_val*math.log(162)
 		q_val = 0.1 * math.exp(q_val)
 		q_val = xtramath.logpowmul(q_val, 0.5)
 	elif band_type in ['low_shelf', 'high_shelf']:
-		q_val = q_val*math.log(162)
+		q_val = i_val*math.log(162)
 		q_val = 0.1 * math.exp(q_val)
 	else:
-		q_val = q_val*math.log(162)
+		q_val = i_val*math.log(162)
 		#q_val = 0.1 * math.exp(q_val)
 		q_val = xtramath.logpowmul(q_val, -1) if q_val != 0 else q_val
 	return q_val
@@ -66,16 +66,16 @@ class plugconv(plugins.base):
 			plugin_obj.filter.q = filter_resonance
 
 			convproj_obj.automation.move(['plugin', pluginid, "cutoff"], ['filter', pluginid, 'freq'])
+			convproj_obj.automation.move(['plugin', pluginid, "resonance"], ['filter', pluginid, 'q'])
 			convproj_obj.automation.calc(['filter', pluginid, 'freq'], 'pow_r', 1000, 0, 0, 0)
 			convproj_obj.automation.calc(['filter', pluginid, 'freq'], 'mul', 20, 0, 0, 0)
-			convproj_obj.automation.move(['plugin', pluginid, "resonance"], ['filter', pluginid, 'q'])
 			convproj_obj.automation.calc(['filter', pluginid, 'q'], 'add', 1, 0, 0, 0)
 			return 1
 
 		if plugin_obj.type.subtype == 'com.soundation.butterworthfilter':
 			extpluglog.convinternal('Soundation', 'Butterworth Filter', 'Universal', 'Filter')
 			filter_cutoff = plugin_obj.params.get('cutoff', 0).value
-			filter_resonance = plugin_obj.params.get('resonance', 0).value+1
+			filter_resonance = plugin_obj.params.get('resonance', 0).value+15
 
 			plugin_obj.replace('universal', 'filter')
 			plugin_obj.filter.on = True
@@ -84,9 +84,10 @@ class plugconv(plugins.base):
 			plugin_obj.filter.q = filter_resonance
 
 			convproj_obj.automation.move(['plugin', pluginid, "cutoff"], ['filter', pluginid, 'freq'])
+			convproj_obj.automation.move(['plugin', pluginid, "resonance"], ['filter', pluginid, 'q'])
 			convproj_obj.automation.calc(['filter', pluginid, 'freq'], 'pow_r', 1000, 0, 0, 0)
 			convproj_obj.automation.calc(['filter', pluginid, 'freq'], 'mul', 20, 0, 0, 0)
-			convproj_obj.automation.move(['plugin', pluginid, "resonance"], ['filter', pluginid, 'q'])
+			convproj_obj.automation.calc(['filter', pluginid, 'q'], 'mul', 15, 0, 0, 0)
 			convproj_obj.automation.calc(['filter', pluginid, 'q'], 'add', 1, 0, 0, 0)
 			return 1
 
@@ -100,51 +101,94 @@ class plugconv(plugins.base):
 
 			#HP
 			filter_obj = plugin_obj.named_filter_add('high_pass')
-			filter_obj.type = 'high_pass'
+			filter_obj.type.set('high_pass', None)
 			filter_obj.on = bool(plugin_obj.params.get('hpf_enable', 0).value)
 			filter_obj.freq = get_freq(plugin_obj.params.get('hpf_freq', 0).value)
-			filter_obj.gain = (plugin_obj.params.get('hpf_gain', 0).value-0.5)*40
-			filter_obj.q = eq_calc_q('hpf', plugin_obj.params.get('hpf_q', 0).value)
+			filter_obj.gain = (plugin_obj.params.get('hpf_gain', 0.5).value-0.5)*40
+			filter_obj.q = eq_calc_q('hpf', plugin_obj.params.get('hpf_res', 0).value)
+
+			convproj_obj.automation.calc(['plugin', pluginid, 'hpf_freq'], 'pow_r', 1000, 0, 0, 0)
+			convproj_obj.automation.calc(['plugin', pluginid, 'hpf_freq'], 'mul', 20, 0, 0, 0)
+			convproj_obj.automation.move(['plugin', pluginid, 'hpf_freq'], ['n_filter', pluginid, 'high_pass', 'freq'])
+			convproj_obj.automation.calc(['plugin', pluginid, 'hpf_gain'], 'add', -0.5, 0, 0, 0)
+			convproj_obj.automation.calc(['plugin', pluginid, 'hpf_gain'], 'mul', 40, 0, 0, 0)
+			convproj_obj.automation.move(['plugin', pluginid, 'hpf_gain'], ['n_filter', pluginid, 'high_pass', 'gain'])
+			convproj_obj.automation.move(['plugin', pluginid, 'hpf_enable'], ['n_filter', pluginid, 'high_pass', 'on'])
 
 			#low_shelf
 			filter_obj = plugin_obj.named_filter_add('low_shelf')
-			filter_obj.type = 'low_shelf'
+			filter_obj.type.set('low_shelf', None)
 			filter_obj.on = bool(plugin_obj.params.get('lowshelf_enable', 0).value)
 			filter_obj.freq = get_freq(plugin_obj.params.get('lowshelf_freq', 0).value)
 			filter_obj.gain = (plugin_obj.params.get('lowshelf_gain', 0).value-0.5)*40
-			filter_obj.q = eq_calc_q('lowshelf', plugin_obj.params.get('lowshelf_q', 0).value)
+			filter_obj.q = eq_calc_q('lowshelf', plugin_obj.params.get('lowshelf_res', 0).value)
+
+			convproj_obj.automation.calc(['plugin', pluginid, 'lowshelf_freq'], 'pow_r', 1000, 0, 0, 0)
+			convproj_obj.automation.calc(['plugin', pluginid, 'lowshelf_freq'], 'mul', 20, 0, 0, 0)
+			convproj_obj.automation.move(['plugin', pluginid, 'lowshelf_freq'], ['n_filter', pluginid, 'low_shelf', 'freq'])
+			convproj_obj.automation.calc(['plugin', pluginid, 'lowshelf_gain'], 'add', -0.5, 0, 0, 0)
+			convproj_obj.automation.calc(['plugin', pluginid, 'lowshelf_gain'], 'mul', 40, 0, 0, 0)
+			convproj_obj.automation.move(['plugin', pluginid, 'lowshelf_gain'], ['n_filter', pluginid, 'low_shelf', 'gain'])
+			convproj_obj.automation.move(['plugin', pluginid, 'lowshelf_enable'], ['n_filter', pluginid, 'low_shelf', 'on'])
 
 			#peak
 			for peak_num in range(4):
 				peak_txt = 'peak'+str(peak_num+1)
 				cvpj_txt = 'peak_'+str(peak_num+1)
 				filter_obj = plugin_obj.named_filter_add(cvpj_txt)
-				filter_obj.type = 'peak'
+				filter_obj.type.set('peak', None)
 				filter_obj.on = bool(plugin_obj.params.get(peak_txt+'_enable', 0).value)
 				filter_obj.freq = get_freq(plugin_obj.params.get(peak_txt+'_freq', 0).value)
 				filter_obj.gain = (plugin_obj.params.get(peak_txt+'_gain', 0).value-0.5)*40
-				filter_obj.q = eq_calc_q('peak', plugin_obj.params.get(peak_txt+'_q', 0).value)
+				filter_obj.q = eq_calc_q('peak', plugin_obj.params.get(peak_txt+'_res', 0).value)
+
+				convproj_obj.automation.calc(['plugin', pluginid, peak_txt+'_freq'], 'pow_r', 1000, 0, 0, 0)
+				convproj_obj.automation.calc(['plugin', pluginid, peak_txt+'_freq'], 'mul', 20, 0, 0, 0)
+				convproj_obj.automation.move(['plugin', pluginid, peak_txt+'_freq'], ['n_filter', pluginid, cvpj_txt, 'freq'])
+				convproj_obj.automation.calc(['plugin', pluginid, peak_txt+'_gain'], 'add', -0.5, 0, 0, 0)
+				convproj_obj.automation.calc(['plugin', pluginid, peak_txt+'_gain'], 'mul', 40, 0, 0, 0)
+				convproj_obj.automation.move(['plugin', pluginid, peak_txt+'_gain'], ['n_filter', pluginid, cvpj_txt, 'gain'])
+				convproj_obj.automation.move(['plugin', pluginid, peak_txt+'_enable'], ['n_filter', pluginid, cvpj_txt, 'on'])
 
 			#low_shelf
 			filter_obj = plugin_obj.named_filter_add('high_shelf')
-			filter_obj.type = 'high_shelf'
+			filter_obj.type.set('high_shelf', None)
 			filter_obj.on = bool(plugin_obj.params.get('highshelf_enable', 0).value)
 			filter_obj.freq = get_freq(plugin_obj.params.get('highshelf_freq', 0).value)
 			filter_obj.gain = (plugin_obj.params.get('highshelf_gain', 0).value-0.5)*40
-			filter_obj.q = eq_calc_q('highshelf', plugin_obj.params.get('highshelf_q', 0).value)
+			filter_obj.q = eq_calc_q('highshelf', plugin_obj.params.get('highshelf_res', 0).value)
+
+			convproj_obj.automation.calc(['plugin', pluginid, 'highshelf_freq'], 'pow_r', 1000, 0, 0, 0)
+			convproj_obj.automation.calc(['plugin', pluginid, 'highshelf_freq'], 'mul', 20, 0, 0, 0)
+			convproj_obj.automation.move(['plugin', pluginid, 'highshelf_freq'], ['n_filter', pluginid, 'high_shelf', 'freq'])
+			convproj_obj.automation.calc(['plugin', pluginid, 'highshelf_gain'], 'add', -0.5, 0, 0, 0)
+			convproj_obj.automation.calc(['plugin', pluginid, 'highshelf_gain'], 'mul', 40, 0, 0, 0)
+			convproj_obj.automation.move(['plugin', pluginid, 'highshelf_gain'], ['n_filter', pluginid, 'high_shelf', 'gain'])
+			convproj_obj.automation.move(['plugin', pluginid, 'highshelf_enable'], ['n_filter', pluginid, 'high_shelf', 'on'])
 
 			#low_shelf
-			filter_obj = plugin_obj.named_filter_add('low_shelf')
-			filter_obj.type = 'low_pass'
+			filter_obj = plugin_obj.named_filter_add('low_pass')
+			filter_obj.type.set('low_pass', None)
 			filter_obj.on = bool(plugin_obj.params.get('lpf_enable', 0).value)
 			filter_obj.freq = get_freq(plugin_obj.params.get('lpf_freq', 0).value)
-			filter_obj.gain = (plugin_obj.params.get('lpf_gain', 0).value-0.5)*40
-			filter_obj.q = eq_calc_q('lpf', plugin_obj.params.get('lpf_q', 0).value)
+			filter_obj.gain = (plugin_obj.params.get('lpf_gain', 0.5).value-0.5)*40
+			filter_obj.q = eq_calc_q('lpf', plugin_obj.params.get('lpf_res', 0).value)
 
+			convproj_obj.automation.calc(['plugin', pluginid, 'lpf_freq'], 'pow_r', 1000, 0, 0, 0)
+			convproj_obj.automation.calc(['plugin', pluginid, 'lpf_freq'], 'mul', 20, 0, 0, 0)
+			convproj_obj.automation.move(['plugin', pluginid, 'lpf_freq'], ['n_filter', pluginid, 'low_pass', 'freq'])
+			convproj_obj.automation.calc(['plugin', pluginid, 'lpf_gain'], 'add', -0.5, 0, 0, 0)
+			convproj_obj.automation.calc(['plugin', pluginid, 'lpf_gain'], 'mul', 40, 0, 0, 0)
+			convproj_obj.automation.move(['plugin', pluginid, 'lpf_gain'], ['n_filter', pluginid, 'low_pass', 'gain'])
+			convproj_obj.automation.move(['plugin', pluginid, 'lpf_enable'], ['n_filter', pluginid, 'low_pass', 'on'])
 
 			master_gain = plugin_obj.params.get('master_gain', 0).value
 			master_gain = (master_gain-0.5)*40
 
+			convproj_obj.automation.calc(['plugin', pluginid, 'master_gain'], 'add', -0.5, 0, 0, 0)
+			convproj_obj.automation.calc(['plugin', pluginid, 'master_gain'], 'mul', 40, 0, 0, 0)
+			convproj_obj.automation.move_group(['plugin', pluginid], 'master_gain', 'gain_out')
+			
 			plugin_obj.replace('universal', 'eq-8limited')
 
 			plugin_obj.params.add('gain_out', master_gain, 'float')
@@ -176,15 +220,18 @@ class plugconv(plugins.base):
 
 		if plugin_obj.type.subtype == 'com.soundation.degrader':
 			extpluglog.convinternal('Soundation', 'Degrader', 'Universal', 'Bitcrush')
-			crush_bits = plugin_obj.params.get('reduction', 0).value
-			crush_rate = plugin_obj.params.get('rate', 0).value
-			crush_mix = plugin_obj.params.get('mix', 0).value
-			crush_bits = 48-int(crush_bits*50)
-			crush_rate = xtramath.between_from_one(44100, 1000, crush_rate**0.1)
+			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
+			manu_obj.from_param('reduction', 'reduction', 0)
+			manu_obj.from_param('rate', 'rate', 0)
+			manu_obj.from_param('mix', 'mix', 0)
+			manu_obj.calc('reduction', 'mul', 50, 0, 0, 0)
+			manu_obj.calc('reduction', 'sub_r', 48, 0, 0, 0)
+			manu_obj.calc('rate', 'pow', 0.1, 0, 0, 0)
+			manu_obj.calc('rate', 'from_one', 44100, 1000, 0, 0)
 			plugin_obj.replace('universal', 'bitcrush')
-			plugin_obj.params.add('bits', crush_bits, 'float')
-			plugin_obj.params.add('freq', crush_rate, 'float')
-			plugin_obj.params_slot.add('wet', crush_mix, 'float')
+			manu_obj.to_param('reduction', 'bits', 0)
+			manu_obj.to_param('rate', 'freq', 0)
+			manu_obj.to_wet('mix')
 			return 1
 
 		if plugin_obj.type.subtype == 'com.soundation.delay':

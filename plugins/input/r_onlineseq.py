@@ -42,6 +42,7 @@ class input_onlinesequencer(plugins.base):
 				if (6 in params) and 'delay' not in used_fx[target]: used_fx[instid].append('delay')
 				if ((7 in params) or (12 in params)) and 'reverb' not in used_fx[target]: used_fx[instid].append('reverb')
 				if ((13 in params) or (14 in params)) and 'distort' not in used_fx[target]: used_fx[instid].append('distort')
+				if ((18 in params) or (19 in params) or (20 in params)) and 'bitcrush' not in used_fx[target]: used_fx[instid].append('bitcrush')
 
 			for paramid, markers in params.items(): 
 				autoloc = None
@@ -67,6 +68,8 @@ class input_onlinesequencer(plugins.base):
 
 					if paramid == 13: autoloc = ['plugin', trackid+'_distort', 'distort_type']
 					if paramid == 14: autoloc = ['slot', trackid+'_distort', 'wet']
+
+					if paramid == 26: autoloc = ['plugin', trackid+'_bitcrush', 'bits']
 
 				if autoloc:
 					for marker in markers: convproj_obj.automation.add_autopoint(autoloc, 'float', marker.pos, marker.value/div, 'normal' if marker.type else 'instant')
@@ -97,6 +100,13 @@ class input_onlinesequencer(plugins.base):
 				track_obj.params.add('vol', i_params.vol, 'float')
 				track_obj.params.add('pan', i_params.pan, 'float')
 	
+				if 'bitcrush' in s_used_fx:
+					pluginid = trackid+'_bitcrush'
+					plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'bitcrush')
+					plugin_obj.role = 'effect'
+					plugin_obj.params.add('bits', i_params.bitcrush_depth, 'float')
+					track_obj.fxslots_audio.append(pluginid)
+
 				if 'delay' in s_used_fx:
 					pluginid = trackid+'_delay'
 					delay_obj = fx_delay.fx_delay()

@@ -13,6 +13,18 @@ class cvpj_placements_autopoints:
 		self.val_type = val_type
 		self.data = []
 
+	def sort(self):
+		ta_bsort = {}
+		ta_sorted = {}
+		new_a = []
+		for n in self.data:
+			if n.position not in ta_bsort: ta_bsort[n.position] = []
+			ta_bsort[n.position].append(n)
+		ta_sorted = dict(sorted(ta_bsort.items(), key=lambda item: item[0]))
+		for p in ta_sorted:
+			for note in ta_sorted[p]: new_a.append(note)
+		self.data = new_a
+
 	def add(self, val_type):
 		placement_obj = cvpj_placement_autopoints(self.time_ppq, self.time_float, self.val_type)
 		self.data.append(placement_obj)

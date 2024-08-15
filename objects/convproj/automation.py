@@ -31,6 +31,9 @@ class cvpj_s_automation:
 		self.time_float = time_float
 		self.valtype = valtype
 
+	def sort(self):
+		if self.u_pl_points: self.pl_points.sort()
+
 	def make_nopl_ticks(self):
 		if not self.u_nopl_ticks: 
 			self.nopl_ticks = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, self.valtype)
@@ -259,6 +262,10 @@ class cvpj_automation:
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.auto_num = counter.counter(200000, 'auto_')
+
+	def sort(self):
+		for x, v in self.data.items():
+			v.sort()
 
 	def debugtxt(self):
 		for x, v in self.data.items():

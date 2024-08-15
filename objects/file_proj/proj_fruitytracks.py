@@ -67,7 +67,7 @@ class ftr_track:
 		self.vol = 100
 		self.pan = 64
 		self.name = ''
-		self.plugins = []
+		self.plugins = {}
 
 class ftr_plugin:
 	def __init__(self):
@@ -100,7 +100,7 @@ class ftr_song:
 		self.zoom_h = 0
 		self.zoom_v = 0
 		self.dontstart = 0
-		self.plugins = []
+		self.plugins = {}
 
 	def load_from_file(self, input_file):
 		song_data = bytereader.bytereader()
@@ -133,8 +133,8 @@ class ftr_song:
 					elif event_id == 200: 
 						plugin_obj = ftr_plugin()
 						plugin_obj.read(event_data)
-						if not cur_track: self.plugins.append(plugin_obj)
-						else: cur_track.plugins.append(plugin_obj)
+						if not cur_track: self.plugins[plugin_obj.slotnum] = plugin_obj
+						else: cur_track.plugins[plugin_obj.slotnum] = plugin_obj
 
 					elif event_id == 192: 
 						cur_track.name = event_data.decode().rstrip('\x00')

@@ -18,13 +18,43 @@ def parse_filepath(i_file):
 	else: filepath = filename
 	return filepath.replace("\\","/").replace("//","/")
 
-def calc_audiostretch(orgpoint, original_bpm, bpm, playback_speed, printd):
+def calcpos_stretch(orgpoint, original_bpm, bpm, playback_speed, printd):
 	outpos = orgpoint
 	outpos *= 2
 	outpos /= 120/bpm
 	outpos /= playback_speed
 	outpos /= bpm/original_bpm
 	return outpos
+
+def calcspeed(playback_speed, bpm, original_bpm, modchange):
+	playspeed = playback_speed*modchange
+	playspeed *= 120/bpm
+	playspeed *= bpm/original_bpm
+	return playspeed
+
+def do_chan_strip(convproj_obj, trackid, channel_strip, fxslots_audio):
+
+	if not (channel_strip.low_eq == channel_strip.mid_eq == channel_strip.high_eq == 0):
+		fxplugid = trackid+'_fx_eq'
+		fxplugin_obj = convproj_obj.add_plugin(fxplugid, 'universal', 'eq-3band')
+		fxplugin_obj.params.add('low_gain', channel_strip.low_eq, 'float')
+		fxplugin_obj.params.add('mid_gain', channel_strip.mid_eq, 'float')
+		fxplugin_obj.params.add('high_gain', channel_strip.high_eq, 'float')
+		fxplugin_obj.params.add('lowmid_freq', 500, 'float')
+		fxplugin_obj.params.add('midhigh_freq', 5000, 'float')
+		fxslots_audio.append(fxplugid)
+
+	if channel_strip.post_fader_effects != None:
+		for fxnum, pfe in enumerate(channel_strip.post_fader_effects):
+			if pfe != None:
+				fx_effect = pfe['effect']
+				fxplugid = trackid+'_fx_'+str(fxnum)
+				fxtype = fx_effect[10:] if fx_effect.startswith(':/effects/') else fx_effect
+				fxplugin_obj = convproj_obj.add_plugin(fxplugid, 'native-serato-fx', fxtype)
+				fxplugin_obj.role = 'effect'
+				if 'value' in pfe: fxplugin_obj.params.add('amount', pfe['value'], 'float')
+				fxslots_audio.append(fxplugid)
+
 
 class input_serato(plugins.base):
 	def __init__(self): pass
@@ -54,20 +84,7 @@ class input_serato(plugins.base):
 			elif useaudioclips: track_obj = convproj_obj.add_track(cvpj_trackid, 'audio' if scene_deck.type == 'sample' else 'instruments', 1, False)
 			track_obj.visual.name = scene_deck.name
 
-			if scene_deck.channel_strip.post_fader_effects != None:
-				for fxnum, pfe in enumerate(scene_deck.channel_strip.post_fader_effects):
-					if pfe != None:
-
-						fx_effect = pfe['effect']
-						fxplugid = cvpj_trackid+'_fx_'+str(fxnum)
-						fxtype = fx_effect[10:] if fx_effect.startswith(':/effects/') else fx_effect
-						fxplugin_obj = convproj_obj.add_plugin(fxplugid, 'native-serato-fx', fxtype)
-						fxplugin_obj.role = 'effect'
-						
-						if 'value' in pfe:
-							fx_value = pfe['value']
-							fxplugin_obj.params.add('amount', fx_value, 'float')
-
+			scene_strip = scene_deck.channel_strip
 
 			if scene_deck.type == 'drums':
 				for dnum, drumdata in enumerate(scene_deck.drums):
@@ -109,11 +126,8 @@ class input_serato(plugins.base):
 	
 					if scene_deck.sample_file:
 						inst_obj.visual.name = urllib.parse.unquote(scene_deck.sample_file).split('/')[-1]
-	
 						samplepath = parse_filepath(scene_deck.sample_file)
-	
 						convproj_obj.add_sampleref(samplepath, samplepath)
-	
 						samplepart_obj = plugin_obj.samplepart_add('sample')
 						samplepart_obj.sampleref = samplepath
 						samplepart_obj.stretch.set_rate_speed(project_obj.bpm, scene_deck.playback_speed, False)
@@ -143,9 +157,7 @@ class input_serato(plugins.base):
 					s_sample_entry['deck'] = scene_deck
 
 					if scene_deck.sample_file:
-						playspeed = scene_deck.playback_speed
-						playspeed *= 120/project_obj.bpm
-						playspeed *= project_obj.bpm/scene_deck.original_bpm
+						playspeed = calcspeed(scene_deck.playback_speed, project_obj.bpm, scene_deck.original_bpm, 1)
 
 						samplepath = parse_filepath(scene_deck.sample_file)
 						sampleref_obj = convproj_obj.add_sampleref(samplepath, samplepath)
@@ -158,6 +170,11 @@ class input_serato(plugins.base):
 
 						s_sample_entry['part'] = samplepart_obj
 						s_sample_entry['sampleref'] = sampleref_obj
+
+			track_obj.params.add('vol', 0.7*scene_strip.gain*scene_strip.volume, 'float')
+			track_obj.params.add('pan', scene_strip.pan, 'float')
+
+			do_chan_strip(convproj_obj, cvpj_trackid, scene_strip, track_obj.fxslots_audio)
 
 		for num, scene in enumerate(project_obj.scenes):
 			sceneid = 'scene_'+str(num+1)
@@ -219,14 +236,18 @@ class input_serato(plugins.base):
 									key = note.number
 									cuedata = sampledeck.cues[key]
 
-									color = None
-									if 'color' in cuedata:
-										color = cuedata['color'][3:]
+									c_start = cuedata['start'] if 'start' in cuedata else 0
+									c_end = cuedata['end'] if 'end' in cuedata else 10
+									color = cuedata['color'][3:] if 'color' in cuedata else None
+									reverse = cuedata['reverse'] if 'reverse' in cuedata else False 
+									if reverse: 
+										c_start = sampleref.dur_sec-c_start
+										c_end = sampleref.dur_sec-c_end
 
-									startoffset = calc_audiostretch(cuedata['start'], scene_deck.original_bpm, project_obj.bpm, sampledeck.playback_speed, True)
-									endoffset = calc_audiostretch(cuedata['end'], scene_deck.original_bpm, project_obj.bpm, sampledeck.playback_speed, False)
+									startoffset = calcpos_stretch(c_start, scene_deck.original_bpm, project_obj.bpm, sampledeck.playback_speed, True)
+									endoffset = calcpos_stretch(c_end, scene_deck.original_bpm, project_obj.bpm, sampledeck.playback_speed, False)
 
-									samplenotes[note.start] = [note.duration, startoffset*960, endoffset*960, color]
+									samplenotes[note.start] = [note.duration, startoffset*960, endoffset*960, color, cuedata]
 
 									#placement_obj.cut_type = 'cut'
 									#placement_obj.cut_start = startoffset*960
@@ -245,23 +266,34 @@ class input_serato(plugins.base):
 									samplenotes[lastpos][0] = scene.length-lastpos
 
 								for nstart, ndata in samplenotes.items():
-									nend, startoffset, endoffset, color = ndata
+									nend, startoffset, endoffset, color, cuedata = ndata
 	
 									if endoffset-startoffset:
 
 										duration = min(nend, endoffset-startoffset, scene.length-nstart)
 
 										if min(endoffset-startoffset, duration) > 3:
+											playback_speed = cuedata['playback_speed'] if 'playback_speed' in cuedata else 1
 
 											placement_obj = trscene_obj.add_audio()
-											placement_obj.sample = copy.deepcopy(samplepart)
+											samplepart_copy = placement_obj.sample = copy.deepcopy(samplepart)
 											placement_obj.position = nstart
 											placement_obj.duration = duration
-
 											placement_obj.visual.color.set_hex(color)
-
 											placement_obj.cut_type = 'cut'
-											placement_obj.cut_start = startoffset
+											placement_obj.cut_start = startoffset/playback_speed
+
+											if 'channel_strip' in cuedata:
+												cuestrip = cuedata['channel_strip']
+												if 'gain' in cuestrip: samplepart_copy.vol = cuestrip['gain']
+												if 'pan' in cuestrip: samplepart_copy.pan = cuestrip['pan']
+
+											playspeed = calcspeed(scene_deck.playback_speed, project_obj.bpm, scene_deck.original_bpm, playback_speed)
+											samplepart_copy.stretch.set_rate_tempo(project_obj.bpm, playspeed, False)
+
+											if 'pitch_shift' in cuedata: samplepart_copy.pitch += cuedata['pitch_shift']
+											if 'reverse' in cuedata: samplepart_copy.reverse = cuedata['reverse']
+
 
 		for arrangement in project_obj.arrangement.tracks:
 			if arrangement.type == 'scene':
@@ -276,6 +308,9 @@ class input_serato(plugins.base):
 		if 'artist' in project_obj.metadata: convproj_obj.metadata.author = project_obj.metadata['artist']
 		if 'genre' in project_obj.metadata: convproj_obj.metadata.genre = project_obj.metadata['genre']
 		if 'label' in project_obj.metadata: convproj_obj.metadata.comment_text = project_obj.metadata['label']
+
+		#for trackid, track_obj in convproj_obj.iter_track():
+		#	print(track_obj.fxslots_audio)
 
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')

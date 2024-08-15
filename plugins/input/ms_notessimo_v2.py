@@ -78,8 +78,7 @@ class input_notessimo_v2(plugins.base):
 						placement_obj.visual.name = 'Pat #'+str(pat_num+1)+', Layer #'+str(l_num+1)
 						placement_obj.position = 0
 						placement_obj.duration = x.size
-						for nnn in layer:
-							placement_obj.notelist.add_m(str(nnn.inst), (nnn.pos)*notelen, (nnn.dur/4)*notelen, nnn.get_note(), nnn.vol, {})
+						for nnn in layer: placement_obj.notelist.add_m(str(nnn.inst), (nnn.pos)*notelen, (nnn.dur/4)*notelen, nnn.get_note(), nnn.vol, {})
 
 		fxchan_data = convproj_obj.add_fxchan(1)
 		fxchan_data.visual.name = 'Drums'

@@ -70,6 +70,9 @@ def convert(convproj_obj, change_instnames):
 					for nlp in playlist_obj.placements.pl_notes:
 						nlp.notelist.appendtxt_inst('rm2m__'+trackid+'__', '')
 
+	for fxnum, fxchan_obj in convproj_obj.fxrack.items():
+		for x in fxchan_obj.fxslots_audio: used_plugins.append(x)
+
 	for plugid in used_plugins:
 		if plugid:
 			convproj_obj.plugins[plugid] = useable_plugins[plugid]

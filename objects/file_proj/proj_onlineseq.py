@@ -53,6 +53,9 @@ class onlineseq_inst_param:
 		self.reverb_wet = 0
 		self.distort_type = 0
 		self.distort_wet = 0
+		self.bitcrush_on = 0
+		self.bitcrush_depth = 16
+		self.bitcrush_level = 0.5
 		self.name = None
 		self.used_fx = []
 
@@ -74,6 +77,11 @@ class onlineseq_inst_param:
 			if '13' in pd: self.distort_wet = int2float(int(pd['13']))
 			if '15' in pd: self.name = pd['15']
 
+			if '18' in pd: self.bitcrush_on = int(pd['18'])
+			if '19' in pd: self.bitcrush_depth = int(pd['19'])
+			if '20' in pd: self.bitcrush_level = int2float(int(pd['20']))
+
+			if self.bitcrush_on and (('18' in pd) or ('19' in pd) or ('20' in pd)): self.used_fx.append('bitcrush')
 			if self.enable_eq and (('6' in pd) or ('7' in pd) or ('9' in pd)): self.used_fx.append('eq')
 			if self.reverb_on and (('10' in pd) or ('11' in pd)): self.used_fx.append('reverb')
 			if self.distort_type and (('12' in pd) or ('13' in pd)): self.used_fx.append('distort')
@@ -95,6 +103,9 @@ class onlineseq_inst_param:
 		if self.distort_type != 0: outjson['12'] = self.distort_type
 		if self.distort_wet != 0: outjson['13'] = float2int(self.distort_wet)
 		if self.name != None: outjson['15'] = self.name
+		if self.bitcrush_on != 0: outjson['18'] = self.bitcrush_on
+		if self.bitcrush_depth != 16: outjson['19'] = self.bitcrush_depth
+		if self.bitcrush_level != 0.5: outjson['20'] = float2int(self.bitcrush_level)
 
 		return outjson
 

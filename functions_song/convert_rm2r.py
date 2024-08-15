@@ -81,6 +81,8 @@ def convert(convproj_obj):
 		convproj_obj.track_data[trackid] = track_obj
 		convproj_obj.track_order.append(trackid)
 
+		for fxid in track_obj.fxslots_audio:
+			used_plugins.append(fxid)
 
 	for num, fxchannel_obj in convproj_obj.fxrack.items():
 		used_plugins += fxchannel_obj.fxslots_audio

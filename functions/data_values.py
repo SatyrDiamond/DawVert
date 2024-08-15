@@ -18,8 +18,6 @@ class counter:
 	def next(self):
 		return self.current+1
 
-
-
 def nested_dict_add_value(i_dict, i_keys, i_value):
 	if len(i_keys) == 1: i_dict.setdefault(i_keys[0], i_value)
 	else:
@@ -259,6 +257,13 @@ def in_both_lists(i_list, o_list):
 def rangepos(posval, dur):
 	for num in range(len(posval)-1):
 		yield posval[num][0], posval[num+1][0], posval[num][1]
-
 	yield posval[-1][0], dur, posval[-1][1]
 
+def insidename(name, subname):
+	if name and subname: return subname+' ('+name+')'
+	elif name: return name
+	elif subname: return subname
+	return None
+
+def insidename_type(name, subname, itype):
+	return subname+' ('+name+')' if name else subname+' ('+itype+')'

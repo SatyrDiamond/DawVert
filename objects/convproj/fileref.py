@@ -65,7 +65,7 @@ class cvpj_fileref:
 					self.filepath = splitpath[1:] if len(splitpath) != 1 else []
 				else:
 					self.relative = True
-					self.filepath = splitpath
+					self.filepath = splitpath[1:]
 		else:
 			self.relative = True
 			self.filepath = splitpath
@@ -128,6 +128,8 @@ class cvpj_fileref:
 
 				#print(  '-----------------------------------'  )
 				#self.debugtxt()
+
+
 
 				logger_project.debug('fileref: search: '+self.get_path(os_type, True))
 

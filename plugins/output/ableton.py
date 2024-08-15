@@ -49,6 +49,7 @@ def do_param(convproj_obj, cvpj_params, cvpj_name, cvpj_fallback, cvpj_type, cvp
 	if cvpj_autoloc:
 		if_found, autopoints = convproj_obj.automation.get_autopoints(cvpj_autoloc)
 		if if_found:
+			autopoints.sort()
 			if autopoints.check():
 				als_param.AutomationTarget.set_unused()
 				AutomationEnvelope_obj = als_auto.add(als_param.AutomationTarget.id)

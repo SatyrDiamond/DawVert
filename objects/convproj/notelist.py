@@ -6,6 +6,7 @@ from objects.convproj import autopoints
 from functions import data_values
 import numpy as np
 import copy
+import hashlib
 
 class pitchmod:
 	def __init__(self, c_note):
@@ -747,3 +748,16 @@ class cvpj_notelist:
 					for kn in foundvals[1:]: self.nld.nl['used'][kn] = 0
 
 		self.clean()
+
+	def get_hash(self):
+		m = hashlib.md5()
+		notebytes = self.nld.nl.tobytes()
+		m.update(notebytes)
+		return m.hexdigest() if len(notebytes) else None
+
+	def get_hash_range(self, startat, endat):
+		new_nl = self.new_nl_start_end(startat, endat)
+		return new_nl.get_hash()
+
+	def get_hash_split(self, splitdur, endat):
+		return [self.get_hash_range(x, x+splitdur) for x in range(0, endat, splitdur)]

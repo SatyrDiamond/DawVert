@@ -139,7 +139,7 @@ class cvpj_autopoints:
 		for n in self.points:
 			if n.pos not in ta_bsort: ta_bsort[n.pos] = []
 			ta_bsort[n.pos].append(n)
-		ta_sorted = dict(sorted(ta_bsort.items(), key=lambda item: item.pos))
+		ta_sorted = dict(sorted(ta_bsort.items(), key=lambda item: item))
 		for p in ta_sorted:
 			for note in ta_sorted[p]: new_a.append(note)
 		self.points = new_a

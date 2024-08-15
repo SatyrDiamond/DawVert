@@ -4,6 +4,7 @@
 import json
 import copy
 import logging
+from functions import data_values
 
 logger_project = logging.getLogger('project')
 
@@ -53,7 +54,7 @@ def convert(convproj_obj):
                     placement_obj.fromindex = starttxt+placement_obj.fromindex
                 playlist_obj = convproj_obj.add_playlist(plnum, track_obj.uses_placements, track_obj.is_indexed)
                 playlist_obj.visual = copy.deepcopy(track_obj.visual)
-                if lane_obj.visual.name: playlist_obj.visual.name += ' ('+lane_obj.visual.name+')'
+                playlist_obj.visual.name = data_values.insidename(playlist_obj.visual.name, lane_obj.visual.name)
                 playlist_obj.visual_ui = copy.deepcopy(lane_obj.visual_ui)
                 playlist_obj.params = copy.deepcopy(lane_obj.params)
                 playlist_obj.datavals = copy.deepcopy(lane_obj.datavals)

@@ -4,6 +4,7 @@
 from functions import xtramath
 import copy
 import math
+import numpy as np
 
 from objects.convproj import visual
 from objects.convproj import notelist
@@ -34,23 +35,37 @@ class cvpj_placements_notes:
 					copy_npl_obj.visual.color = visualfill.color
 				self.data.append(copy_npl_obj)
 
-	def autosplit(self, ppq):
-		if len(self.data) == 1:
-			spl = self.data[0]
-			if spl.position == 0 and spl.duration:
-				isbeat, num = spl.get_logdur()
-				if isbeat and num>2:
-					timesigblocks_obj = notelist_splitter.timesigblocks()
-	#				for cnum in range(int(num-1), 1, -1):
+	#def autosplit(self, ppq):
+	#	if len(self.data) == 1:
+	#		spl = self.data[0]
+	#		if spl.position == 0 and spl.duration:
+	#			isbeat, num = spl.get_logdur()
+	#			if isbeat and num>2:
+	#				timesigblocks_obj = notelist_splitter.timesigblocks()
+	#				print('BEAT', isbeat, num, spl.duration)
+#
+	#				valspldurs = [x for x in range(int(num-1), 1, -1)]
+	#				valspldurs.reverse()
+#
+	#				usedregions = np.zeros(spl.duration//16, dtype=np.uint8)
+#
+	#				for cnum in valspldurs:
 	#					beatlen = int(ppq*(2**cnum))
-	#					print(cnum, beatlen)
-	#					timesigblocks_obj.endsplit(spl.duration, beatlen)
-	#					
-	#					print(timesigblocks_obj.splitpoints[0:-1])
-	#					print(timesigblocks_obj.splitts[0:-1])
+#
+	#					print('_ PART', cnum-1, beatlen)
+#
+	#					hashlist = spl.notelist.get_hash_split(beatlen, spl.duration)
+#
+	#					print(hashlist)
 
-	#					#:
-	#				print(isbeat, num, spl.duration, beatlen)
+						#timesigblocks_obj.endsplit(spl.duration, beatlen, 0)
+						
+						#hashtxt = spl.notelist.get_hash(0, 16)
+						#print(hashtxt)
+
+						#print(timesigblocks_obj.splitpoints[0:-1])
+						#print(timesigblocks_obj.splitts[0:-1])
+
 	#	exit()
 
 	def append(self, value):

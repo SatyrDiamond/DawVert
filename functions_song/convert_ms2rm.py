@@ -11,6 +11,7 @@ def convert(convproj_obj):
 
 	for trackid, track_obj in convproj_obj.iter_track():
 		lanes = []
+
 		for _, v in track_obj.scenes.items():
 			for ln in v:
 				if ln not in lanes: lanes.append(ln)

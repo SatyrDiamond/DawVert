@@ -27,14 +27,23 @@ class serato_channel_strip:
 	def __init__(self, json_data):
 		self.used = json_data != None
 		if self.used:
-			self.post_fader_effects = json_data['post_fader_effects'] if 'post_fader_effects' in json_data else ''
-			self.volume = json_data['volume'] if 'volume' in json_data else None
-			self.high_eq = json_data['high_eq'] if 'high_eq' in json_data else None
-			self.mid_eq = json_data['mid_eq'] if 'mid_eq' in json_data else None
-			self.low_eq = json_data['low_eq'] if 'low_eq' in json_data else None
-			self.filter = json_data['filter'] if 'filter' in json_data else None
+			self.post_fader_effects = json_data['post_fader_effects'] if 'post_fader_effects' in json_data else None
+			self.volume = json_data['volume'] if 'volume' in json_data else 1
+			self.high_eq = json_data['high_eq'] if 'high_eq' in json_data else 0
+			self.mid_eq = json_data['mid_eq'] if 'mid_eq' in json_data else 0
+			self.low_eq = json_data['low_eq'] if 'low_eq' in json_data else 0
+			self.pan = json_data['pan'] if 'pan' in json_data else 0
+			self.gain = json_data['gain'] if 'gain' in json_data else 1
+			self.filter = json_data['filter'] if 'filter' in json_data else 0
 		else:
 			self.post_fader_effects = None
+			self.volume = 0
+			self.high_eq = 0
+			self.mid_eq = 0
+			self.low_eq = 0
+			self.pan = 0
+			self.gain = 0
+			self.filter = 0
 
 class serato_scene_deck:
 	def __init__(self, json_data):

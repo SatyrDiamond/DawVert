@@ -51,9 +51,10 @@ class input_fruitytracks(plugins.base):
 				placement_obj.visual.name = ftr_clip.name
 
 				sampleref_obj = convproj_obj.add_sampleref(ftr_clip.file, ftr_clip.file)
+				sampleref_obj.find_relative('projectfile')
 				placement_obj.sample.sampleref = ftr_clip.file
-				if not sampleref_obj.found:
-					sampleref_obj.find_relative(input_file)
+				#if not sampleref_obj.found:
+				#	sampleref_obj.find_relative(input_file)
 
 				placement_obj.cut_type = 'loop'
 

@@ -111,13 +111,11 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 					for _, lane_obj in scene_obj.items():
 						lane_obj.add_fxrack_channel(fxnum)
 
-
 			fxchannel_obj.sends.add(output_id[3][0]+1, output_id[3][2], output_id[3][1])
 
 			for senddata in output_id[4]: 
 				fxchannel_obj.sends.add(senddata[0]+1, senddata[2], senddata[1])
 				#fxchannel_obj.sends[5].to_master_active = False
-
 
 		return True
 

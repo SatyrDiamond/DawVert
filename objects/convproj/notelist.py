@@ -620,7 +620,8 @@ class cvpj_notelist:
 		note = self.nld.getcur()
 		counts = np.unique(notes, return_counts=True)
 		isduped = True in (counts[1]>2)
-		if isduped: self.nld.assoc_multikey_add([note['key']+x for x in notes])
+		if not isduped: 
+			self.nld.assoc_multikey_add([note['key']+x for x in notes])
 
 	def add_instpos(self, instlocs):
 		if verbose: print('[notelist] add_instpos')

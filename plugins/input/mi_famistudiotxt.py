@@ -187,6 +187,42 @@ def get_instshape(InstShape):
 	elif InstShape == 'EPSMRythm6': return 'EPSM_Rimshot'
 	else: return 'DPCM'
 
+def parse_notes(cvpj_notelist, fs_notes, chiptype, NoteLength, arpeggios):
+	for notedata in fs_notes:
+		if notedata.Duration != None:
+			t_duration = notedata.Duration/NoteLength
+			t_position = notedata.Time/NoteLength
+			if chiptype != 'DPCM':
+				if notedata.Instrument:
+					if notedata.Value not in ['Stop', None]:
+						t_key = notedata.Value + 24
+						if chiptype[0:6] == 'EPSMFM': t_key -= 12
+						t_instrument = get_instshape(chiptype)+'-'+notedata.Instrument
+						cvpj_notelist.add_m(t_instrument, t_position, t_duration, t_key, 1, {})
+
+						if notedata.SlideTarget:
+							t_slidenote = notedata.SlideTarget + 24
+							cvpj_notelist.last_add_slide(0, t_duration, t_slidenote, None, {})
+							autopoint_obj = cvpj_notelist.last_add_auto('pitch')
+							autopoint_obj = cvpj_notelist.last_add_auto('pitch')
+							autopoint_obj.pos = t_duration
+							autopoint_obj.value = t_slidenote-t_key
+
+						if notedata.Arpeggio:
+							if notedata.Arpeggio in arpeggios:
+								multikeys = arpeggios[notedata.Arpeggio].Values
+								multikeys_r = []
+								[multikeys_r.append(x) for x in multikeys if x not in multikeys_r]
+								cvpj_notelist.last_arpeggio(multikeys_r)
+
+			else:
+				t_key = notedata.Value + 24
+				if notedata.Instrument: 
+					cvpj_notelist.add_m('DPCM'+'-'+notedata.Instrument, t_position, t_duration, t_key, 1, {})
+				else: 
+					cvpj_notelist.add_m('DPCM', t_position, t_duration, t_key, 1, {})
+
+
 class input_famistudio(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -220,7 +256,15 @@ class input_famistudio(plugins.base):
 		fst_currentsong = project_obj.Songs[songnamelist[dv_config.songnum-1]]
 
 		PatternLengthList = [fst_currentsong.PatternLength for x in range(fst_currentsong.PatternSettings.Length)]
+		BPMList = [fst_currentsong.PatternSettings.bpm for x in range(fst_currentsong.PatternSettings.Length)]
+		BPMNoteMul = [1 for x in range(fst_currentsong.PatternSettings.Length)]
 		for n, d in fst_currentsong.PatternCustomSettings.items(): PatternLengthList[n] = d.Length
+		for n, d in fst_currentsong.PatternCustomSettings.items(): 
+			if d.bpm: 
+				BPMList[n] = d.bpm
+				BPMNoteMul[n] = d.bpm/fst_currentsong.PatternSettings.bpm
+
+		BPMDiff = [n for n, x in enumerate(BPMNoteMul) if x != 1]
 
 		NoteLength = fst_currentsong.PatternSettings.NoteLength
 
@@ -229,6 +273,12 @@ class input_famistudio(plugins.base):
 		for length in PatternLengthList:
 			PointsPos.append(PointsAdd)
 			PointsAdd += length
+
+		prevtempo = fst_currentsong.PatternSettings.bpm
+		for n, p in enumerate(PatternLengthList):
+			cur_tempo = BPMList[n]
+			convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', PointsPos[n], BPMList[n], 'instant')
+			prevtempo = cur_tempo
 
 		for channum, fst_channel in enumerate(fst_currentsong.Channels):
 			playlistnum = str(channum+1)
@@ -253,50 +303,35 @@ class input_famistudio(plugins.base):
 			playlist_obj.visual.name = fst_channel.Type
 			playlist_obj.visual.color.set_float([0.13, 0.15, 0.16])
 
-			for patid, patdata in fst_channel.Patterns.items():
-				nle_obj = convproj_obj.add_notelistindex(fst_channel.Type+'-'+patid)
-				nle_obj.visual.name = patid+' ('+fst_channel.Type+')'
-				nle_obj.visual.color.set_float([0.13, 0.15, 0.16])
+			modpatbpm = {}
+			for t, i in fst_channel.Instances.items():
+				if i not in modpatbpm: modpatbpm[i] = []
+				if BPMList[t] != fst_currentsong.PatternSettings.bpm: modpatbpm[i].append(BPMList[t])
 
-				for notedata in patdata.Notes:
-					if notedata.Duration != None:
-						t_duration = notedata.Duration/NoteLength
-						t_position = notedata.Time/NoteLength
-						if fst_channel.Type != 'DPCM':
-							if notedata.Instrument:
-								if notedata.Value not in ['Stop', None]:
-									t_key = notedata.Value + 24
-									if fst_channel.Type[0:6] == 'EPSMFM': t_key -= 12
-									t_instrument = get_instshape(fst_channel.Type)+'-'+notedata.Instrument
-									nle_obj.notelist.add_m(t_instrument, t_position, t_duration, t_key, 1, {})
-
-									if notedata.SlideTarget:
-										t_slidenote = notedata.SlideTarget + 24
-										nle_obj.notelist.last_add_slide(0, t_duration, t_slidenote, None, {})
-										autopoint_obj = nle_obj.notelist.last_add_auto('pitch')
-										autopoint_obj = nle_obj.notelist.last_add_auto('pitch')
-										autopoint_obj.pos = t_duration
-										autopoint_obj.value = t_slidenote-t_key
-
-									if notedata.Arpeggio:
-										if notedata.Arpeggio in project_obj.Arpeggios:
-											multikeys = project_obj.Arpeggios[notedata.Arpeggio].Values
-											multikeys_r = []
-											[multikeys_r.append(x) for x in multikeys if x not in multikeys_r]
-											nle_obj.notelist.last_arpeggio(multikeys_r)
-
-						else:
-							t_key = notedata.Value + 24
-							if notedata.Instrument: 
-								nle_obj.notelist.add_m('DPCM'+'-'+notedata.Instrument, t_position, t_duration, t_key, 1, {})
-							else: 
-								nle_obj.notelist.add_m('DPCM', t_position, t_duration, t_key, 1, {})
+			print(modpatbpm)
 
 			for pattime, patid in fst_channel.Instances.items():
 				cvpj_placement = playlist_obj.placements.add_notes_indexed()
-				cvpj_placement.fromindex = fst_channel.Type+'-'+patid
+				cvpj_placement.fromindex = fst_channel.Type+'-'+patid+'-'+str(BPMList[pattime])
 				cvpj_placement.position = PointsPos[pattime]
 				cvpj_placement.duration = PatternLengthList[pattime]
+
+			for patid, patdata in fst_channel.Patterns.items():
+				cvpj_patid = fst_channel.Type+'-'+patid+'-'+str(fst_currentsong.PatternSettings.bpm)
+				nle_obj = convproj_obj.add_notelistindex(cvpj_patid)
+				nle_obj.visual.name = patid+' ('+fst_channel.Type+')'
+				nle_obj.visual.color.set_float([0.13, 0.15, 0.16])
+				parse_notes(nle_obj.notelist, patdata.Notes, fst_channel.Type, NoteLength, project_obj.Arpeggios)
+
+				if patid in modpatbpm:
+					pattemps = modpatbpm[patid]
+					for pattemp in pattemps:
+						notemul = fst_currentsong.PatternSettings.bpm/pattemp
+						cvpj_patid = fst_channel.Type+'-'+patid+'-'+str(pattemp)
+						nle_obj = convproj_obj.add_notelistindex(cvpj_patid)
+						nle_obj.visual.name = patid+' ('+fst_channel.Type+')'
+						nle_obj.visual.color.set_float([0.13, 0.15, 0.16])
+						parse_notes(nle_obj.notelist, patdata.Notes, fst_channel.Type, NoteLength*notemul, project_obj.Arpeggios)
 
 		convproj_obj.add_timesig_lengthbeat(fst_currentsong.PatternLength, fst_currentsong.PatternSettings.BeatLength)
 		convproj_obj.patlenlist_to_timemarker(PatternLengthList, fst_currentsong.LoopPoint)

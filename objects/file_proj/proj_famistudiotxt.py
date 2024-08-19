@@ -82,9 +82,13 @@ class fs_patternsettings:
 		self.Length = int(cmd_params['Length']) if 'Length' in cmd_params else 32
 		self.BeatLength = int(cmd_params['BeatLength']) if 'BeatLength' in cmd_params else 4
 		self.NoteLength = int(cmd_params['NoteLength']) if 'NoteLength' in cmd_params else 6
-		self.Groove = [int(x) for x in cmd_params['Groove'].split('-')] if 'Groove' in cmd_params else [6]
+		if 'Groove' in cmd_params:
+			self.Groove = [int(x) for x in cmd_params['Groove'].split('-')] if 'Groove' in cmd_params else [6]
+			self.bpm = 60/(xtramath.average(self.Groove)/60*self.BeatLength)
+		else:
+			self.Groove = []
+			self.bpm = None
 		self.GroovePaddingMode = cmd_params['GroovePaddingMode'] if 'GroovePaddingMode' in cmd_params else 'Middle'
-		self.bpm = 60/(xtramath.average(self.Groove)/60*self.BeatLength)
 
 class fs_pattern:
 	__slots__ = ['Name','Notes']

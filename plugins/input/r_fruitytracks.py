@@ -6,6 +6,8 @@ import plugins
 import json
 import os
 
+from objects.convproj import fileref
+
 class input_fruitytracks(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -30,6 +32,8 @@ class input_fruitytracks(plugins.base):
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
 
+		fileref.filesearcher.add_searchpath_partial('fruitytracks', '../Samples/', 'projectfile')
+
 		project_obj = proj_fruitytracks.ftr_song()
 		project_obj.load_from_file(input_file)
 
@@ -50,11 +54,10 @@ class input_fruitytracks(plugins.base):
 				placement_obj.position = (ftr_clip.pos/bpmticks)/bpmdiv
 				placement_obj.visual.name = ftr_clip.name
 
-				sampleref_obj = convproj_obj.add_sampleref(ftr_clip.file, ftr_clip.file)
+				sampleref_obj = convproj_obj.add_sampleref(ftr_clip.file, ftr_clip.file, 'win')
 				sampleref_obj.find_relative('projectfile')
+				sampleref_obj.find_relative('fruitytracks')
 				placement_obj.sample.sampleref = ftr_clip.file
-				#if not sampleref_obj.found:
-				#	sampleref_obj.find_relative(input_file)
 
 				placement_obj.cut_type = 'loop'
 

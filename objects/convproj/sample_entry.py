@@ -71,7 +71,7 @@ class cvpj_sample_entry:
 	def get_filepath(self, convproj_obj, os_type): 
 		ref_found, sampleref_obj = convproj_obj.get_sampleref(self.sampleref)
 		if ref_found: 
-			return sampleref_obj.fileref.get_path(os_type, True)
+			return sampleref_obj.fileref.get_path(os_type, False)
 		else:
 			return ''
 

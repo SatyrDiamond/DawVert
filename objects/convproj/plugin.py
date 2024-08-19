@@ -11,7 +11,6 @@ import base64
 import struct
 import copy
 
-from objects.convproj import project as convproj
 from objects.convproj import sample_entry
 from objects.convproj import params
 from objects.convproj import visual
@@ -23,6 +22,7 @@ from objects.convproj import harmonics
 from objects.convproj import time
 from objects.convproj import chord
 from objects.convproj import plugstate
+from objects.convproj import midi_inst
 from objects import plugdatamanu
 
 class cvpj_audioports:
@@ -56,7 +56,7 @@ class cvpj_plugin:
 		self.programs = {0: plugstate.cvpj_plugin_state()}
 		self.audioports = cvpj_audioports()
 		self.role = 'effect'
-		self.midi = convproj.cvpj_midi_inst()
+		self.midi = midi_inst.cvpj_midi_inst()
 		self.current_program = 0
 		self.program_used = False
 		self.set_program(0)
@@ -329,16 +329,16 @@ class cvpj_plugin:
 			return convproj_obj.get_fileref(fileref_id)
 		return False, None
 
-	def getpath_fileref_global(self, convproj_obj, refname, os_type, relative): 
+	def getpath_fileref_global(self, convproj_obj, refname, os_type, nofile): 
 		ref_found, fileref_obj = self.get_fileref_global(refname, convproj_obj)
-		return fileref_obj.get_path(os_type, relative) if ref_found else ''
+		return fileref_obj.get_path(os_type, nofile) if ref_found else ''
 
 	# -------------------------------------------------- fileref
 	def get_fileref(self, fileref_name, convproj_obj): 
 		return self.state.get_fileref(fileref_name, convproj_obj)
 
-	def getpath_fileref(self, convproj_obj, refname, os_type, relative): 
-		return self.state.getpath_fileref(convproj_obj, refname, os_type, relative)
+	def getpath_fileref(self, convproj_obj, refname, os_type, nofile): 
+		return self.state.getpath_fileref(convproj_obj, refname, os_type, nofile)
 
 	# -------------------------------------------------- samplepart
 

@@ -8,9 +8,23 @@ class cur_speed:
 	def __init__(self, s_bpm, s_speed):
 		self.tempo = s_bpm
 		self.speed = s_speed
+		self.changed = False
 
 	def get_speed(self):
 		return self.tempo*(6/(self.speed if self.speed else 1))
+
+	def proc_data(self, idata):
+		if 'speed' in idata: 
+			self.speed = idata['speed']
+			self.bpm_changed = True
+		if 'tempo' in idata: 
+			self.tempo = idata['tempo']
+			self.bpm_changed = True
+
+	def get_change(self):
+		outval = (self.get_speed() if self.bpm_changed else None)
+		self.bpm_changed = False
+		return outval
 
 class single_playstream:
 	def __init__(self, patdata_obj):
@@ -27,16 +41,10 @@ class single_playstream:
 				if x: 
 					if x.g_fx: g_data |= x.g_fx
 
-			if 'speed' in g_data: 
-				cur_speed_obj.speed = g_data['speed']
-				self.bpm_changed = True
-			if 'tempo' in g_data: 
-				cur_speed_obj.tempo = g_data['tempo']
-				self.bpm_changed = True
+			cur_speed_obj.proc_data(g_data)
 
-			yield firstrow, g_data, self.row_num, rowdata, (cur_speed_obj.get_speed() if self.bpm_changed else None)
+			yield firstrow, g_data, self.row_num, rowdata, cur_speed_obj.get_change()
 
-			self.bpm_changed = False
 			if 'pattern_jump' in g_data: break
 			if 'break_to_row' in g_data: break
 			firstrow = False
@@ -46,7 +54,7 @@ class single_playstream:
 	def stream_song(self, s_bpm, s_speed):
 		cur_speed_obj = cur_speed(s_bpm, s_speed)
 
-		self.bpm_changed = True
+		cur_speed_obj.bpm_changed = True
 		self.cpat_num = 0
 
 		for i_num, p_num in enumerate(self.patdata_obj.orders):

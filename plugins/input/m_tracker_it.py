@@ -43,6 +43,11 @@ def get_name(inst_name, dosfilename):
 	elif dosfilename != '': return dosfilename
 	else: return " "
 
+def calc_samp_vol(it_samp):
+	defualtvolume = it_samp.defualtvolume/64
+	samp_global_vol = it_samp.globalvol/64
+	return defualtvolume*samp_global_vol
+
 def calc_filter_freq(i_cutoff):
 	return 131.0 * pow(2.0, (i_cutoff*512) * (5.29 / (127.0 * 512.0)))
 
@@ -64,7 +69,7 @@ def idsamp_spobj(it_samp, sp_obj):
 
 def add_single_sampler(convproj_obj, it_samp, sampleidnum):
 	filename = samplefolder+str(sampleidnum)+'.wav'
-	plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(filename)
+	plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(filename, None)
 	idsamp_spobj(it_samp, sp_obj)
 	sample_vibrato(it_samp, plugin_obj)
 	return plugin_obj, pluginid, sampleref_obj
@@ -185,10 +190,10 @@ class input_it(plugins.base):
 					bn_s_t.append([n_s_te[0]+basenoteadd, n_s_te[1]])
 					basenoteadd -= 1
 
-				bn_s_t_ifsame = data_values.ifallsame(bn_s_t)
+				bn_s_t_ifsame = data_values.list__ifallsame(bn_s_t)
 				if bn_s_t_ifsame: bn_s_t_f = bn_s_t[0]
 
-				bn_s_t_ifsame = data_values.ifallsame(bn_s_t[12:108])
+				bn_s_t_ifsame = data_values.list__ifallsame(bn_s_t[12:108])
 				if bn_s_t_ifsame: bn_s_t_f = bn_s_t[12]
 
 				inst_obj = convproj_obj.add_instrument(it_instname)
@@ -224,9 +229,7 @@ class input_it(plugins.base):
 					if bn_s_t_f[1]-1 < len(project_obj.samples):
 						it_samp = project_obj.samples[bn_s_t_f[1]-1]
 						global_vol = it_inst.global_vol/128
-						defualtvolume = it_samp.defualtvolume/64
-						samp_global_vol = it_samp.globalvol/64
-						track_volume = 0.3*global_vol*defualtvolume*samp_global_vol
+						track_volume = 0.3*global_vol*calc_samp_vol(it_samp)
 						plugin_obj, inst_obj.pluginid, sampleref_obj = add_single_sampler(convproj_obj, it_samp, bn_s_t_f[1])
 						inst_used = True
 				else:
@@ -249,17 +252,9 @@ class input_it(plugins.base):
 						if instrumentnum-1 < len(project_obj.samples): 
 							idsamp_spobj(project_obj.samples[instrumentnum-1], sp_obj)
 
-
 				if inst_used:
-					if it_inst.resampling != -1:
-						interpolation = 'none'
-						if it_inst.resampling == 1: interpolation = 'linear'
-						if it_inst.resampling == 2: interpolation = 'cubic_spline'
-						if it_inst.resampling == 3: interpolation = 'sinc'
-						if it_inst.resampling == 4: interpolation = 'sinc_lowpass'
-						plugin_obj.datavals.add('interpolation', interpolation)
-					else:
-						plugin_obj.datavals.add('interpolation', 'linear')
+					interpolation = data_values.list__optionalindex(it_inst.resampling, 'linear', ['none','linear','cubic_spline','sinc','sinc_lowpass'])
+					plugin_obj.datavals.add('interpolation', interpolation)
 
 				if it_inst.midi_chan != None: 
 					inst_obj.midi.out_enabled = 1
@@ -296,9 +291,7 @@ class input_it(plugins.base):
 			for samplecount, it_samp in enumerate(project_obj.samples):
 				it_instname = TEXTSTART + str(samplecount+1)
 				cvpj_instname = get_name(it_samp.name, it_samp.dosfilename)
-				defualtvolume = it_samp.defualtvolume/64
-				samp_global_vol = it_samp.globalvol/64
-				track_volume = 0.3*defualtvolume*samp_global_vol
+				track_volume = 0.3*calc_samp_vol(it_samp)
 
 				inst_obj = convproj_obj.add_instrument(it_instname)
 				inst_obj.visual.name = cvpj_instname

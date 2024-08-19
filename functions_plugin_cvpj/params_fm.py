@@ -24,6 +24,28 @@ g_paramnames['opm'] = [
 	4, 
 	['tl','ar','d1r','d1l','d2r','rr','ks','ml','dt1','dt2','ams-en'] ]
 
+g_paramnames['vrc7'] = [ 
+	['feedback'], 
+	2, 
+	['env_attack','env_decay','env_release','env_sustain','freqmul','ksr','level','ksl','tremolo','vibrato','waveform','sustained'] ]
+
+vrc7patch = {}
+vrc7patch[1] = [3,33,5,6,232,129,66,39]
+vrc7patch[2] = [19,65,20,13,216,246,35,18]
+vrc7patch[3] = [17,17,8,8,250,178,32,18]
+vrc7patch[4] = [49,97,12,7,168,100,97,39]
+vrc7patch[5] = [50,33,30,6,225,118,1,40]
+vrc7patch[6] = [2,1,6,0,163,226,244,244]
+vrc7patch[7] = [33,97,29,7,130,129,17,7]
+vrc7patch[8] = [35,33,34,23,162,114,1,23]
+vrc7patch[9] = [53,17,37,0,64,115,114,1]
+vrc7patch[10] = [181,1,15,15,168,165,81,2]
+vrc7patch[11] = [23,193,36,7,248,248,34,18]
+vrc7patch[12] = [113,35,17,6,101,116,24,22]
+vrc7patch[13] = [1,2,211,5,201,149,3,2]
+vrc7patch[14] = [97,99,12,0,148,192,51,246]
+vrc7patch[15] = [33,114,13,0,193,213,86,6]
+
 class fm_data:
 	def __init__(self, fmtype):
 		self.params = {}
@@ -62,7 +84,6 @@ class fm_data:
 
 
 
-
 	def opl_sbi_part_op(self, opnum, i_input, isreversed):
 		ixChar, ixScale, ixAttack, ixSustain, ixWaveSel = i_input
 
@@ -83,7 +104,6 @@ class fm_data:
 			self.set_op_param(opnum, 'env_decay', (opl_out_dec*-1)+15)
 			self.set_op_param(opnum, 'env_release', (opl_out_rel*-1)+15)
 
-
 		self.set_op_param(opnum, 'ksl', opl_out_kls)
 		self.set_op_param(opnum, 'freqmul', opl_out_mul)
 		self.set_op_param(opnum, 'env_sustain', opl_out_sus)
@@ -101,3 +121,55 @@ class fm_data:
 		self.set_param(txt_feedback, opl_fb)
 		self.set_param(txt_fm, opl_con)
 
+
+
+
+
+
+
+
+
+	def vrc7_regs(self, inregs, use_patch, patch_num):
+		if use_patch == True: vrcregs = vrc7patch[patch_num]
+		else: vrcregs = inregs
+	
+		vrc_mod_flags, vrc_mod_mul = data_bytes.splitbyte(vrcregs[0]) 
+		vrc_mod_trem, vrc_mod_vib, vrc_mod_sust, vrc_mod_krs = data_bytes.to_bin(vrc_mod_flags, 4)
+		vrc_car_flags, vrc_car_mul = data_bytes.splitbyte(vrcregs[1])
+		vrc_car_trem, vrc_car_vib, vrc_car_sust, vrc_car_krs = data_bytes.to_bin(vrc_car_flags, 4)
+		vrc_mod_kls = vrcregs[2] >> 6
+		vrc_mod_out = vrcregs[2] & 0x3F
+		vrc_car_kls = vrcregs[3] >> 6
+		vrc_fb = vrcregs[3] & 0x07
+		vrc_mod_wave = int(bool(vrcregs[3] & 0x08))
+		vrc_car_wave = int(bool(vrcregs[3] & 0x10))
+		vrc_mod_att, vrc_mod_dec = data_bytes.splitbyte(vrcregs[4]) 
+		vrc_car_att, vrc_car_dec = data_bytes.splitbyte(vrcregs[5]) 
+		vrc_mod_sus, vrc_mod_rel = data_bytes.splitbyte(vrcregs[6]) 
+		vrc_car_sus, vrc_car_rel = data_bytes.splitbyte(vrcregs[7])
+	
+		self.set_param("feedback", vrc_fb)
+
+		self.set_op_param(0, "scale", vrc_mod_kls)
+		self.set_op_param(0, "freqmul", vrc_mod_mul)
+		self.set_op_param(0, "env_attack", (vrc_mod_att*-1)+15)
+		self.set_op_param(0, "env_sustain", (vrc_mod_sus*-1)+15)
+		self.set_op_param(0, "env_decay", (vrc_mod_dec*-1)+15)
+		self.set_op_param(0, "env_release", vrc_mod_rel)
+		self.set_op_param(0, "level", (vrc_mod_out*-1)+63)
+		self.set_op_param(0, "tremolo", vrc_mod_trem)
+		self.set_op_param(0, "vibrato", vrc_mod_vib)
+		self.set_op_param(0, "ksr", vrc_mod_krs)
+		self.set_op_param(0, "waveform", vrc_mod_wave)
+	
+		self.set_op_param(1, "scale", vrc_car_kls)
+		self.set_op_param(1, "freqmul", vrc_car_mul)
+		self.set_op_param(1, "env_attack", (vrc_car_att*-1)+15)
+		self.set_op_param(1, "env_sustain", (vrc_car_sus*-1)+15)
+		self.set_op_param(1, "env_decay", (vrc_car_dec*-1)+15)
+		self.set_op_param(1, "env_release", vrc_car_rel)
+		self.set_op_param(1, "level", 63)
+		self.set_op_param(1, "tremolo", vrc_car_trem)
+		self.set_op_param(1, "vibrato", vrc_car_vib)
+		self.set_op_param(1, "ksr", vrc_car_krs)
+		self.set_op_param(1, "waveform", vrc_car_wave)

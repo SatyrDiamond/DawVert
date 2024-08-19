@@ -75,7 +75,7 @@ class aas_vs3_data: #String Studio VS-3
 		if group in self.outputvals: self.outputvals[group][name] = value
 
 	def outputval(self):
-		outvals = data_values.get_all_keys(self.outputvals, [])
+		outvals = data_values.dict__get_all_keys(self.outputvals, [])
 		self.out_schema = []
 		self.out_values = []
 		groupname = None

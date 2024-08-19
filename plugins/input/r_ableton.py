@@ -131,7 +131,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				SamplePart = SampleParts.value[next(iter(SampleParts.value))]
 				middlenote = int(SamplePart.RootKey)
 				track_obj.datavals.add('middlenote', middlenote-60)
-				plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(pluginid, None)
+				plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(pluginid, None, None)
 				samplerefid = do_samplepart(convproj_obj, sp_obj, SamplePart)
 				sp_obj.reverse = int(parampaths['Player/Reverse'])
 

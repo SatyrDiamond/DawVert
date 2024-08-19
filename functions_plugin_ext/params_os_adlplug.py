@@ -37,13 +37,13 @@ class adlplug_data:
 		addvalue(adlplug_common, "master_volume" ,master_volume)
 
 	def opnplug_chip(self, emulator, chip_count, chip_type):
-		adlplug_common = ET.SubElement(self.adlplug_root, 'common')  
+		adlplug_common = ET.SubElement(self.adlplug_root, 'chip')  
 		addvalue(adlplug_common, "emulator" ,emulator)   
 		addvalue(adlplug_common, "chip_count" ,chip_count) 
 		addvalue(adlplug_common, "chip_type" ,chip_type)
 
 	def adlplug_chip(self, emulator, chip_count, fop_count):
-		adlplug_common = ET.SubElement(self.adlplug_root, 'common')  
+		adlplug_common = ET.SubElement(self.adlplug_root, 'chip')  
 		addvalue(adlplug_common, "emulator" ,emulator)   
 		addvalue(adlplug_common, "chip_count" ,chip_count) 
 		addvalue(adlplug_common, "4op_count" ,fop_count)

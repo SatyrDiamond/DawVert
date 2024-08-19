@@ -14,7 +14,7 @@ from objects.convproj import placements
 from objects.convproj import placements_notes
 from objects.convproj import placements_audio
 from objects.convproj import placements_index
-from objects.convproj import project as convproj
+from objects.convproj import midi_inst
 
 import copy
 
@@ -63,7 +63,7 @@ class cvpj_midiport:
 		self.out_enabled = False
 		self.out_fixedvelocity = -1
 		self.out_chan = -1
-		self.out_inst = convproj.cvpj_midi_inst()
+		self.out_inst = midi_inst.cvpj_midi_inst()
 
 		self.basevelocity = 63
 
@@ -209,7 +209,7 @@ class cvpj_track:
 
 	def get_midi(self, convproj_obj):
 		plugin_found, plugin_obj = convproj_obj.get_plugin(self.inst_pluginid)
-		return plugin_found, plugin_obj.midi if plugin_found else convproj.cvpj_midi_inst()
+		return plugin_found, plugin_obj.midi if plugin_found else midi_inst.cvpj_midi_inst()
 
 	def add_return(self, returnid):
 		self.returns[returnid] = cvpj_track('return', self.time_ppq, self.time_float, False, False)

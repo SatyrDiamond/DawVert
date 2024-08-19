@@ -1,16 +1,16 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from dataclasses import dataclass
 from objects import audio_data
 from objects.file_proj import proj_soundclub2
 import os
 import plugins
-import struct
-
-from dataclasses import dataclass
 
 @dataclass
 class notestate:
+	__slots__ = ['active','key','start','end','vol_env','pan_env','porta']
+
 	active: int
 	key: int
 	start: int
@@ -71,7 +71,8 @@ class input_soundclub2(plugins.base):
 				if sn2_inst_obj.loopstart != -1: audio_obj.loop = [sn2_inst_obj.loopstart, sn2_inst_obj.samplesize]
 				audio_obj.to_file_wav(wave_path)
 
-				plugin_obj, track_obj.inst_pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(wave_path)
+				plugin_obj, track_obj.inst_pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(wave_path, None)
+
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				sp_obj.point_value_type = "samples"
 				sp_obj.start = 0

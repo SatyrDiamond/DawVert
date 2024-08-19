@@ -92,7 +92,7 @@ class cvpj_wavetable_source:
 
 	def wave_add_stream_wave(self, i_values, i_size, plugin_obj, starttxt):
 		self.type = 'wave'
-		wave_chunks = data_values.list_chunks(i_values, i_size)
+		wave_chunks = data_values.list__chunks(i_values, i_size)
 		total = (len(i_values)/i_size).__ceil__()
 		for wavenum, wavedata in enumerate(wave_chunks):
 			if len(wavedata) == int(i_size):

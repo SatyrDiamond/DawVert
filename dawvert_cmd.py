@@ -9,7 +9,7 @@ from objects import core
 from functions import plug_conv
 
 from objects.convproj import fileref
-cvpj_fileref = fileref.cvpj_fileref
+filesearcher = fileref.filesearcher
 
 scriptfiledir = os.path.dirname(os.path.realpath(__file__))
 
@@ -20,7 +20,6 @@ parser.add_argument("-i", default=None)
 parser.add_argument("-it", default=None)
 parser.add_argument("-o", default=None)
 parser.add_argument("-ot", default=None)
-parser.add_argument("--sample-out-path", default=None)
 parser.add_argument("--soundfont", default=None)
 parser.add_argument("--songnum", default=1)
 parser.add_argument("--extrafile", default=None)
@@ -91,17 +90,14 @@ else:
 
 # -------------------------------------------------------------- Output Format --------------------------------------------------------------
 
-out_file_nameext = os.path.splitext(os.path.basename(out_file))
-out_file_path = os.path.dirname(out_file)
-
-cvpj_fileref.add_searchpath_abs('projectfile', out_file_path)
-cvpj_fileref.add_searchpath_file('projectfile', out_file_path)
-
 if out_format in dawvert_core.output_get_plugins():
 	out_class = dawvert_core.output_set(out_format)
 else:
 	print('[error] output format plugin not found')
 	exit()
+
+out_file_nameext = os.path.splitext(os.path.basename(out_file))
+out_file_path = os.path.dirname(out_file)
 
 out_plug_ext = dawvert_core.output_get_extension()
 if out_file_nameext[1] == '': out_file = os.path.join(out_file_path, out_file_nameext[0]+'.'+out_plug_ext)
@@ -109,27 +105,28 @@ if out_file_nameext[1] == '': out_file = os.path.join(out_file_path, out_file_na
 # -------------------------------------------------------------- convert --------------------------------------------------------------
 
 file_name = os.path.splitext(os.path.basename(in_file))[0]
-if args.sample_out_path != None: 
-	dawvert_core.config.path_samples_extracted = args.sample_out_path
-	dawvert_core.config.path_samples_downloaded = args.sample_out_path
-	dawvert_core.config.path_samples_generated = args.sample_out_path
-	dawvert_core.config.path_samples_converted = args.sample_out_path
-else: 
-	dawvert_core.config.path_samples_extracted += file_name + '/'
-	dawvert_core.config.path_samples_downloaded += file_name + '/'
-	dawvert_core.config.path_samples_generated += file_name + '/'
-	dawvert_core.config.path_samples_converted += file_name + '/'
+
+dawvert_core.config.path_samples_extracted += file_name + '/'
+dawvert_core.config.path_samples_downloaded += file_name + '/'
+dawvert_core.config.path_samples_generated += file_name + '/'
+dawvert_core.config.path_samples_converted += file_name + '/'
 
 os.makedirs(dawvert_core.config.path_samples_extracted, exist_ok=True)
 os.makedirs(dawvert_core.config.path_samples_downloaded, exist_ok=True)
 os.makedirs(dawvert_core.config.path_samples_generated, exist_ok=True)
 os.makedirs(dawvert_core.config.path_samples_converted, exist_ok=True)
 
-cvpj_fileref.add_searchpath_file('extracted', dawvert_core.config.path_samples_extracted)
-cvpj_fileref.add_searchpath_file('downloaded', dawvert_core.config.path_samples_downloaded)
-cvpj_fileref.add_searchpath_file('generated', dawvert_core.config.path_samples_generated)
-cvpj_fileref.add_searchpath_file('converted', dawvert_core.config.path_samples_converted)
-cvpj_fileref.add_searchpath_abs('external_data', os.path.join(scriptfiledir, '__external_data'))
+filesearcher.add_basepath('projectfile', os.path.dirname(in_file))
+filesearcher.add_basepath('dawvert', scriptfiledir)
+
+filesearcher.add_searchpath_partial('projectfile', '.', 'projectfile')
+
+filesearcher.add_searchpath_full_filereplace('extracted', dawvert_core.config.path_samples_extracted, None)
+filesearcher.add_searchpath_full_filereplace('downloaded', dawvert_core.config.path_samples_downloaded, None)
+filesearcher.add_searchpath_full_filereplace('generated', dawvert_core.config.path_samples_generated, None)
+filesearcher.add_searchpath_full_filereplace('converted', dawvert_core.config.path_samples_converted, None)
+filesearcher.add_searchpath_full_filereplace('external_data', os.path.join(scriptfiledir, '__external_data'), None)
+
 # -------------------------------------------------------------- convert --------------------------------------------------------------
 
 if os.path.isfile(out_file) and 'overwrite' not in dawvert_core.config.flags_core:

@@ -64,7 +64,7 @@ class input_pxtone(plugins.base):
 				if not os.path.exists(samplefolder): os.makedirs(samplefolder)
 				ogg_fileobj = open(ogg_path, 'wb')
 				ogg_fileobj.write(voice_obj.data)
-				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler_genid(ogg_path)
+				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler_genid(ogg_path, None)
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				samplepart_obj.interpolation = "linear" if 1 in voice_obj.sps2 else "none"
 				inst_obj.pluginid = pluginid
@@ -80,7 +80,7 @@ class input_pxtone(plugins.base):
 				audio_obj.pcm_from_bytes(voice_obj.data)
 				audio_obj.to_file_wav(wave_path)
 
-				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler_genid(wave_path)
+				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler_genid(wave_path, None)
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				samplepart_obj.interpolation = "linear" if 1 in voice_obj.sps2 else "none"
 				inst_obj.pluginid = pluginid

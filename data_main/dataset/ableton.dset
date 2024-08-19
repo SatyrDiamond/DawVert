@@ -2206,7 +2206,7 @@
                     "BodySize": {"def": 2,"name": "BodySize","type": "int"},
                     "BodyToggle": {"def": false,"max": null,"min": null,"name": "BodyToggle","type": "bool"},
                     "BodyType": {"def": 0,"name": "BodyType","type": "int"},
-                    "CurrentTab": {"def": 1,"name": "CurrentTab","noauto": true,"type": "int"},
+                    "CurrentTab": {"def": 0,"name": "CurrentTab","noauto": true,"type": "int"},
                     "DamperDamping": {"def": 0.5,"name": "DamperDamping","type": "float"},
                     "DamperGated": {"def": false,"max": null,"min": null,"name": "DamperGated","type": "bool"},
                     "DamperMass": {"def": 0.5,"name": "DamperMass","type": "float"},

@@ -10,7 +10,6 @@ from objects.file import adlib_bnk
 
 import plugins
 import json
-import struct
 
 class input_adlib_rol(plugins.base):
 	def __init__(self): pass

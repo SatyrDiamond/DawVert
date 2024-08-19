@@ -3,6 +3,7 @@
 
 import plugins
 from functions_plugin_ext import params_os_adlplug
+from functions_plugin_ext import plugin_vst2
 from functions import extpluglog
 
 opadltxt = ['m1', 'c1', 'm2', 'c2']
@@ -19,7 +20,7 @@ class plugconv(plugins.base):
 		if 'vst2' in extplugtype:
 			extpluglog.extpluglist.add('FOSS', 'VST2', 'ADLplug', '')
 			if plugin_vst2.check_exists('id', 1094995021):
-				extpluglog.extpluglist.success('FM', 'OPL3')
+				extpluglog.extpluglist.success('FM', 'OPL2')
 				adlplug_data = params_os_adlplug.adlplug_data()
 	
 				adlplug_data.set_param("four_op" ,0)  

@@ -38,7 +38,7 @@ def convert(convproj_obj):
         track_obj.notelist_index = {}
 
         if not track_obj.is_laned: 
-            logger_project.info('ProjType Convert: ri2mi: inst non-laned:', trackid)
+            logger_project.info('ProjType Convert: ri2mi: inst non-laned'+(': '+trackid if trackid else ''))
             plnum += 1
             playlist_obj = convproj_obj.add_playlist(plnum, track_obj.uses_placements, track_obj.is_indexed)
             playlist_obj.visual = copy.deepcopy(track_obj.visual)
@@ -47,14 +47,14 @@ def convert(convproj_obj):
             for placement_obj in playlist_obj.placements.pl_notes_indexed: 
                 placement_obj.fromindex = starttxt+placement_obj.fromindex
         else:
-            logger_project.info('ProjType Convert: ri2mi: laned:', trackid)
+            logger_project.info('ProjType Convert: ri2mi: laned'+(': '+trackid if trackid else ''))
             for lane_id, lane_obj in track_obj.lanes.items():
                 plnum += 1
                 for placement_obj in lane_obj.placements.pl_notes_indexed: 
                     placement_obj.fromindex = starttxt+placement_obj.fromindex
                 playlist_obj = convproj_obj.add_playlist(plnum, track_obj.uses_placements, track_obj.is_indexed)
                 playlist_obj.visual = copy.deepcopy(track_obj.visual)
-                playlist_obj.visual.name = data_values.insidename(playlist_obj.visual.name, lane_obj.visual.name)
+                playlist_obj.visual.name = data_values.text__insidename(playlist_obj.visual.name, lane_obj.visual.name)
                 playlist_obj.visual_ui = copy.deepcopy(lane_obj.visual_ui)
                 playlist_obj.params = copy.deepcopy(lane_obj.params)
                 playlist_obj.datavals = copy.deepcopy(lane_obj.datavals)

@@ -3,6 +3,7 @@
 
 import plugins
 from functions_plugin_ext import params_os_adlplug
+from functions_plugin_ext import plugin_vst2
 from functions import extpluglog
 
 opadltxt = ['m1', 'c1', 'm2', 'c2']

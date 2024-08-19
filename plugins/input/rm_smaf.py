@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-import json
-import struct
 import math
 import os
 import numpy as np
@@ -101,7 +99,7 @@ class input_mmf(plugins.base):
 					audio_obj.rate = hz
 					audio_obj.to_file_wav(wav_path)
 
-					sampleref_obj = convproj_obj.add_sampleref(wav_path, wav_path)
+					sampleref_obj = convproj_obj.add_sampleref(wav_path, wav_path, None)
 
 				for x in song_obj.instruments:
 					if x['bank'] == 124: 

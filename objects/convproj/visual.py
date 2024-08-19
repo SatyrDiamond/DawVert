@@ -240,10 +240,9 @@ class cvpj_color:
 			self.internal_tofloat()
 
 	def set_hsv(self, h, s, v):
-		if indata:
-			self.r_f, self.g_f, self.b_f = hsv_to_rgb(h, s, v)
-			self.used = True
-			self.internal_toint()
+		self.r_f, self.g_f, self.b_f = hsv_to_rgb(h, s, v)
+		self.used = True
+		self.internal_toint()
 
 	def from_colorset(self, colorset_obj):
 		if colorset_obj:

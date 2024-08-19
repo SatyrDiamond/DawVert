@@ -40,7 +40,7 @@ class dataset_objectset:
 			self.data[name] = self.in_obj(idata) if self.in_obj else idata
 
 	def list(self): 
-		return data_values.list_fancysort([x for x in self.data])
+		return data_values.list__fancysort([x for x in self.data])
 	def setused(self): self.used = True
 	def create(self, p_name): 
 		self.setused()

@@ -24,6 +24,7 @@ class plugconv(plugins.base):
 			plugin_obj.midi.bank = 0
 			plugin_obj.midi.patch = 33
 			plugin_obj.midi.drum = False
+			plugin_obj.datavals_global.add('middlenotefix', 24)
 			#print('[plug-conv] No Soundfont Argument Defined:',pluginid)
 			return 1
 

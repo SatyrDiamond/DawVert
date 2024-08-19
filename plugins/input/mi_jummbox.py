@@ -291,7 +291,7 @@ class input_jummbox(plugins.base):
 
 						if bb_inst.type == 'chip':
 							bb_inst_wave = bb_inst.data['wave']
-							inst_obj.visual.name = data_values.insidename_type(inst_obj.visual.name, bb_inst_wave, bb_inst.type)
+							inst_obj.visual.name = data_values.text__insidename_type(inst_obj.visual.name, bb_inst_wave, bb_inst.type)
 							rawchipwaves_obj.apply_wave(plugin_obj, bb_inst_wave, 'chipwave')
 				
 						if bb_inst.type == 'PWM':

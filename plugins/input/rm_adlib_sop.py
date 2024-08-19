@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-import json
-import struct
 import os.path
 
 from functions import data_bytes

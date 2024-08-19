@@ -122,7 +122,7 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 	plugin_obj.datavals_global.add('path', pluginpath)
 
 	vst2_pathid = pluginid+'_vstpath'
-	convproj_obj.add_fileref(vst2_pathid, pluginpath)
+	convproj_obj.add_fileref(vst2_pathid, pluginpath, None)
 	plugin_obj.filerefs_global['plugin'] = vst2_pathid
 
 	windata_obj = convproj_obj.window_data_add(['plugin', pluginid])
@@ -240,7 +240,7 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname):
 		plugin_obj.midi.from_sf2(bank, patch)
 		
 		sf2_path = str(lmms_plugin.get_param('src', 0))
-		convproj_obj.add_fileref(sf2_path, sf2_path)
+		convproj_obj.add_fileref(sf2_path, sf2_path, None)
 		plugin_obj.filerefs['file'] = sf2_path
 
 		param_obj = plugin_obj.params.add('gain', float(lmms_plugin.get_param('gain', 0)), 'float')
@@ -253,7 +253,7 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname):
 
 	elif pluginname == "audiofileprocessor":
 		filepath = get_sample(str(lmms_plugin.get_param('src', '')))
-		plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(filepath)
+		plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(filepath, None)
 		lmms_interpolation = int(lmms_plugin.get_param('interp', 0))
 
 		looped = int(lmms_plugin.get_param('looped', 0))
@@ -393,8 +393,7 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname):
 				out_str = 'userwavefile'+str(oscnum)
 				sampleid = pluginid+'_'+out_str
 				filepath = get_sample(lmms_plugin.get_param(out_str, ''))
-				sampleref_obj = convproj_obj.add_sampleref(sampleid, filepath)
-				convproj_obj.add_sampleref(sampleid, filepath)
+				sampleref_obj = convproj_obj.add_sampleref(sampleid, filepath, None)
 				sp_obj = plugin_obj.samplepart_add(out_str)
 				sp_obj.sampleid = sampleid
 
@@ -653,7 +652,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 				placement_obj.duration = lmms_sampletco.len
 				placement_obj.muted = bool(lmms_sampletco.muted)
 				filepath = get_sample(lmms_sampletco.src)
-				convproj_obj.add_sampleref(filepath, filepath)
+				convproj_obj.add_sampleref(filepath, filepath, None)
 				if lmms_sampletco.off != -1:
 					placement_obj.cut_type = 'cut'
 					placement_obj.cut_start = lmms_sampletco.off*-1

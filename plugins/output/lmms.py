@@ -166,7 +166,7 @@ def set_timedata(lmms_param, timing_obj):
 def oneto100(input): return round(float(input) * 100)
 
 def setvstparams(lmms_plug_obj, plugin_obj, pluginid, keysdict):
-	vstpath = plugin_obj.getpath_fileref_global(cvpj_obj, 'plugin', 'win', True)
+	vstpath = plugin_obj.getpath_fileref_global(cvpj_obj, 'plugin', 'win', False)
 
 	lmms_plug_obj.add_param('program', str(plugin_obj.current_program))
 	lmms_plug_obj.add_param('plugin', vstpath)
@@ -429,11 +429,11 @@ class output_lmms(plugins.base):
 							sp_obj = plugin_obj.samplepart_get('sample')
 							_, sampleref_obj = cvpj_obj.get_sampleref(sp_obj.sampleref)
 							sp_obj.convpoints_percent(sampleref_obj)
-				
+
 							lmms_plug_obj.add_param('reversed', int(sp_obj.reverse))
 							lmms_plug_obj.add_param('amp', oneto100(sp_obj.vol))
 							lmms_plug_obj.add_param('stutter', int(sp_obj.get_data('continueacrossnotes', False)))
-							lmms_plug_obj.add_param('src', sp_obj.get_filepath(cvpj_obj, None) )
+							lmms_plug_obj.add_param('src', sp_obj.get_filepath(cvpj_obj, False) )
 				
 							lmms_plug_obj.add_param('sframe', sp_obj.start)
 							lmms_plug_obj.add_param('lframe', sp_obj.loop_start)
@@ -457,7 +457,7 @@ class output_lmms(plugins.base):
 							lmms_plug_obj.add_param('bank', bank)
 							lmms_plug_obj.add_param('patch', patch)
 							ref_found, fileref_obj = plugin_obj.get_fileref('file', cvpj_obj)
-							if ref_found: lmms_plug_obj.add_param('src', fileref_obj.get_path(None, True))
+							if ref_found: lmms_plug_obj.add_param('src', fileref_obj.get_path(None, False))
 							paramauto(lmms_plug_obj.add_param('gain', 1), plugin_obj.params, 'gain', 1, None, ['plugin', track_obj.inst_pluginid], 'Plugin', 'gain')
 							middlenotefix += 12
 
@@ -549,7 +549,7 @@ class output_lmms(plugins.base):
 						lmms_sampletco.pos = int(audiopl_obj.position)
 						lmms_sampletco.len = int(audiopl_obj.duration)
 						ref_found, sampleref_obj = cvpj_obj.get_sampleref(audiopl_obj.sample.sampleref)
-						if ref_found: lmms_sampletco.src = sampleref_obj.fileref.get_path(None, True)
+						if ref_found: lmms_sampletco.src = sampleref_obj.fileref.get_path(None, False)
 						lmms_sampletco.muted = int(audiopl_obj.muted)
 						if audiopl_obj.visual.color: lmms_sampletco.color = '#' + audiopl_obj.visual.color.get_hex()
 						if audiopl_obj.cut_type == 'cut': lmms_sampletco.off = int(audiopl_obj.cut_start*-1)

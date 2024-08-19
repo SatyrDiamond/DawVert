@@ -3,6 +3,7 @@
 
 import plugins
 from functions_plugin_ext import params_os_adlplug
+from functions_plugin_ext import plugin_vst2
 from functions import extpluglog
 
 class plugconv(plugins.base):
@@ -75,7 +76,7 @@ class plugconv(plugins.base):
 				adlplug_data.opnplug_chip(0, 1, 0)
 				adlplug_data.opnplug_global(0, opn_lfo_enable, opn_lfo_frequency)
 	
-				adlplug_data.add_common('DawVert', 0, 12.0)
+				adlplug_data.add_common('DawVert', 0, 9)
 	
 				adlplug_data.opnplug_to_cvpj_vst2(convproj_obj, plugin_obj)
 				return True

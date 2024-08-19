@@ -1,16 +1,16 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects import audio_data
+from dataclasses import dataclass
 from functions import data_bytes
 from functions import xtramath
-from objects.file_proj import proj_caustic
+from objects import audio_data
 from objects import globalstore
+from objects.file_proj import proj_caustic
 import json
 import os.path
 import plugins
 import struct
-from dataclasses import dataclass
 
 
 caustic_fxtype = {}
@@ -174,7 +174,7 @@ class input_cvpj_r(plugins.base):
 						if region_data['mode'] not in [0, 1]: audio_obj.loop = [region_data['start'], region_data['end']]
 						audio_obj.to_file_wav(wave_path)
 
-					plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(pluginid, wave_path)
+					plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(pluginid, wave_path, None)
 					loopmode_cvpj(region_data, sp_obj)
 					sp_obj.point_value_type = "samples"
 
@@ -196,7 +196,7 @@ class input_cvpj_r(plugins.base):
 						if region_data['mode'] not in [0, 1]: audio_obj.loop = [region_data['start'], region_data['end']]
 						audio_obj.to_file_wav(wave_path)
 
-						sampleref_obj = convproj_obj.add_sampleref(wave_path, wave_path)
+						sampleref_obj = convproj_obj.add_sampleref(wave_path, wave_path, None)
 						sp_obj = plugin_obj.sampleregion_add(region_data['key_lo']-60, region_data['key_hi']-60, region_data['key_root']-60, None)
 						sp_obj.vol = region_data['volume']
 						sp_obj.pan = (region_data['pan']-0.5)*2
@@ -210,13 +210,13 @@ class input_cvpj_r(plugins.base):
 					middlenote += int(pcms_c[1]*12)
 					middlenote += int(pcms_c[2])
 
-					track_obj.params.add('pitch', pcms_c[3], 'float')
+					track_obj.params.add('pitch', pcms_c[3]/100, 'float')
 					track_obj.datavals.add('middlenote', -middlenote)
 					plugin_obj.env_asdr_add('vol', 0, pcms_c[5], 0, pcms_c[6], pcms_c[7], pcms_c[8], 1)
 
 			# -------------------------------- BeatBox --------------------------------
 			elif machine.mach_id == 'BBOX':
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'drums')
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
 				plugin_obj.role = 'synth'
 				track_obj.params.add('usemasterpitch', False, 'bool')
 				samplecount = 0
@@ -234,11 +234,11 @@ class input_cvpj_r(plugins.base):
 
 					midkey = samplecount-12
 
-					sampleref_obj = convproj_obj.add_sampleref(wave_path, wave_path)
+					sampleref_obj = convproj_obj.add_sampleref(wave_path, wave_path, None)
 					sp_obj = plugin_obj.sampleregion_add(midkey, midkey, midkey, None)
+					sp_obj.visual.name = region_data['name']
 					sp_obj.start = 0
 					sp_obj.end = region_data['len']
-					sp_obj.length = region_data['len']
 					sp_obj.trigger = 'oneshot'
 					sp_obj.sampleref = wave_path
 
@@ -260,10 +260,16 @@ class input_cvpj_r(plugins.base):
 						if sample_data:
 							sampleref = machid + '_Vocoder_'+str(samplenum)
 							wave_path = samplefolder+sampleref+'.wav'
-							wavfile_obj = audio_wav.wav_main()
-							wavfile_obj.set_freq(sampleinfo['hz'])
-							wavfile_obj.data_add_data(16, 1, False, sample_data)
-							wavfile_obj.write(wave_path)
+							audio_obj = audio_data.audio_obj()
+
+							audio_obj.channels = 1
+							audio_obj.rate = sampleinfo['hz']
+							audio_obj.set_codec('int16')
+							audio_obj.pcm_from_bytes(sample_data)
+							audio_obj.to_file_wav(wave_path)
+
+							plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(pluginid, wave_path, None)
+							sp_obj.point_value_type = "samples"
 
 				if machine.customwaveform1: 
 					wave_obj = plugin_obj.wave_add('customwaveform1')

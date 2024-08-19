@@ -62,7 +62,7 @@ class input_s3m(plugins.base):
 
 			if s3m_inst.type == 1:
 				s3m_inst.rip_sample(fs, samplefolder, project_obj.samptype, wave_path)
-				plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(wave_path)
+				plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(wave_path, None)
 				sp_obj.point_value_type = "samples"
 
 				if s3m_inst.sampleloc != 0 and s3m_inst.length != 0:

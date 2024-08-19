@@ -5,6 +5,7 @@ from functions import data_bytes
 from functions import colors
 from objects import globalstore
 from objects.file_proj import proj_nbs
+from objects.convproj import fileref
 import json
 import math
 import plugins
@@ -20,11 +21,14 @@ class input_gt_mnbs(plugins.base):
 		dawinfo_obj.plugin_included = ['midi']
 		dawinfo_obj.track_nopl = True
 		dawinfo_obj.audio_filetypes = ['wav']
+		dawinfo_obj.plugin_included = ['sampler:single']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		convproj_obj.type = 'rm'
 		convproj_obj.set_timings(4, True)
 		
+		fileref.filesearcher.add_searchpath_partial('mnbs_sounds', '../Data/Sounds', 'projectfile')
+
 		nbs_file = proj_nbs.nbs_song()
 		nbs_file.load_from_file(input_file)
 
@@ -47,7 +51,6 @@ class input_gt_mnbs(plugins.base):
 			cvpj_trackid = str(nbs_layer+1)
 			track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 1, False)
 			track_obj.visual.name = layer_obj.name if layer_obj.name else cvpj_trackid
-			#track_obj.visual.color = [0.23, 0.23, 0.23]
 			track_obj.params.add('vol', layer_obj.vol/100, 'float')
 			track_obj.params.add('pan', (layer_obj.stereo/100)-1, 'float')
 			for note_obj in layer_obj.notes: track_obj.placements.notelist.add_m('NoteBlock'+str(note_obj.inst), note_obj.pos, 2, note_obj.key-39, note_obj.vel/100, {'pan': (note_obj.pan/100)-1, 'finepitch': note_obj.pitch})
@@ -59,10 +62,10 @@ class input_gt_mnbs(plugins.base):
 			inst_obj.visual.name = custom_obj.name
 			inst_obj.visual.color.set_hsv(custominstid*0.2, 1, 0.5)
 			inst_obj.datavals.add('middlenote', -(custom_obj.key-51))
-			plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler(instid, custom_obj.file)
+			plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler(instid, custom_obj.file, None)
+			if sampleref_obj: sampleref_obj.find_relative('mnbs_sounds')
 			plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 			inst_obj.pluginid = instid
-			sampleref_obj.find_relative('../Data/Sounds')
 
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_singlenotelistcut')

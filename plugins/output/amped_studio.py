@@ -153,7 +153,7 @@ class output_amped(plugins.base):
 
 		for sampleref_id, sampleref_obj in convproj_obj.iter_samplerefs():
 			audio_id[sampleref_id] = audioidnum
-			filepath = sampleref_obj.fileref.get_path(None, True)
+			filepath = sampleref_obj.fileref.get_path(None, False)
 			if os.path.exists(filepath): zip_amped.write(filepath, str(audioidnum))
 			amped_filenames[audioidnum] = sampleref_obj.fileref.basename
 			audioidnum += 1

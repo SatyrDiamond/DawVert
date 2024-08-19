@@ -26,19 +26,9 @@ import configparser
 import platform
 import logging
 
-typelist = {}
-typelist['r'] = 'Regular'
-typelist['ri'] = 'RegularIndexed'
-typelist['rm'] = 'RegularMultiple'
-typelist['rs'] = 'RegularScened'
-typelist['m'] = 'Multiple'
-typelist['mi'] = 'MultipleIndexed'
-typelist['ms'] = 'MultipleScened'
-typelist['debug'] = 'debug'
-
 logFormatter = logging.Formatter(fmt='%(levelname)8s | %(name)12s | %(message)s')
 consoleHandler = logging.StreamHandler()
-consoleHandler.setLevel(logging.INFO)
+consoleHandler.setLevel(logging.DEBUG)
 consoleHandler.setFormatter(logFormatter)
 
 logging.root.setLevel(logging.DEBUG)
@@ -200,7 +190,7 @@ class core:
 				]
 
 			logger_core.info('Output Format: '+self.currentplug_output[1])
-			logger_core.info('Output DataType: '+typelist[self.currentplug_output[3]])
+			logger_core.info('Output DataType: '+convproj.typelist[self.currentplug_output[3]])
 			return pluginname
 		else: return None
 
@@ -208,9 +198,6 @@ class core:
 		self.convproj_obj = convproj.cvpj_project()
 		dv_config.searchpaths.append(os.path.dirname(in_file))
 		self.currentplug_input[0].parse(self.convproj_obj, in_file, dv_config)
-		#for samplerefid, sampleref_obj in self.convproj_obj.samplerefs.items():
-		#	if not sampleref_obj.found:
-		#		print(samplerefid, sampleref_obj.found, sampleref_obj.fileref.get_path('win', True))
 
 	def convert_plugins(self, dv_config): 
 		plug_conv.convproj(self.convproj_obj, in_dawinfo, out_dawinfo, dv_config)
@@ -223,88 +210,16 @@ class core:
 		in_dawinfo = self.currentplug_input[2]
 		out_dawinfo = self.currentplug_output[2]
 
-		compactclass = song_compat.song_compat()
+		logger_core.info('' + convproj.typelist[in_type] + ' > ' + convproj.typelist[out_type])
 
-		logger_core.info('' + typelist[in_type] + ' > ' + typelist[out_type])
+		self.convproj_obj.change_projtype(in_dawinfo, out_dawinfo, out_type, dv_config)
+		if 'do_sorttracks' in self.convproj_obj.do_actions: self.convproj_obj.sort_tracks()
 
-		#if in_type in ['r', 'm']: compactclass.makecompat_audiostretch(self.convproj_obj, in_type, in_dawinfo, out_dawinfo, out_type)
-	
-		if out_type != 'debug':
-			compactclass.makecompat(self.convproj_obj, in_type, in_dawinfo, out_dawinfo, out_type)
-
-		if in_type == 'ri' and out_type == 'mi': 
-			convert_ri2mi.convert(self.convproj_obj)
-		elif in_type == 'ri' and out_type == 'r': 
-			convert_ri2r.convert(self.convproj_obj)
-
-		elif in_type == 'm' and out_type == 'mi': 
-			convert_m2mi.convert(self.convproj_obj)
-		elif in_type == 'm' and out_type == 'r': 
-			convert_m2r.convert(self.convproj_obj)
-
-		elif in_type == 'r' and out_type == 'm': 
-			convert_r2m.convert(self.convproj_obj)
-		elif in_type == 'r' and out_type == 'mi': 
-			convert_r2m.convert(self.convproj_obj)
-			compactclass.makecompat(self.convproj_obj, 'm', in_dawinfo, out_dawinfo, out_type)
-			convert_m2mi.convert(self.convproj_obj)
-
-		elif in_type == 'mi' and out_type == 'm': 
-			convert_mi2m.convert(self.convproj_obj, dv_config)
-		elif in_type == 'mi' and out_type == 'r': 
-			convert_mi2m.convert(self.convproj_obj, dv_config)
-			compactclass.makecompat(self.convproj_obj, 'm', in_dawinfo, out_dawinfo, out_type)
-			convert_m2r.convert(self.convproj_obj)
-	
-		elif in_type == 'rm' and out_type == 'r': 
-			convert_rm2r.convert(self.convproj_obj)
-		elif in_type == 'rm' and out_type == 'm': 
-			convert_rm2m.convert(self.convproj_obj, True)
-		elif in_type == 'rm' and out_type == 'mi': 
-			convert_rm2m.convert(self.convproj_obj, True)
-			compactclass.makecompat(self.convproj_obj, 'm', in_dawinfo, out_dawinfo, out_type)
-			convert_m2mi.convert(self.convproj_obj)
-
-		elif in_type == 'rs' and out_type == 'mi': 
-			convert_rs2r.convert(self.convproj_obj)
-			convert_r2m.convert(self.convproj_obj)
-			compactclass.makecompat(self.convproj_obj, 'm', in_dawinfo, out_dawinfo, out_type)
-			convert_m2mi.convert(self.convproj_obj)
-
-		elif in_type == 'rs' and out_type == 'r': 
-			convert_rs2r.convert(self.convproj_obj)
-
-		elif in_type == 'ms' and out_type == 'mi': 
-			convert_ms2rm.convert(self.convproj_obj)
-			compactclass.makecompat(self.convproj_obj, 'rm', in_dawinfo, out_dawinfo, out_type)
-			convert_rm2m.convert(self.convproj_obj, True)
-			convert_m2mi.convert(self.convproj_obj)
-
-		elif in_type == 'ms' and out_type == 'r': 
-			convert_ms2rm.convert(self.convproj_obj)
-			compactclass.makecompat(self.convproj_obj, 'r', in_dawinfo, out_dawinfo, out_type)
-			convert_rm2r.convert(self.convproj_obj)
-
-		elif in_type == out_type: 
-			pass
-		
-		elif out_type == 'debug': 
-			pass
-
-		else:
-			print(typelist[in_type],'to',typelist[out_type],'is not supported')
-			exit()
-
-		if 'do_sorttracks' in self.convproj_obj.do_actions:
-			self.convproj_obj.sort_tracks()
-
-		if out_type != 'debug':
-			compactclass.makecompat(self.convproj_obj, out_type, in_dawinfo, out_dawinfo, out_type)
-
+		isconverted = False
 		for sampleref_id, sampleref_obj in self.convproj_obj.samplerefs.items():
 			if sampleref_obj.found:
 				if sampleref_obj.fileformat not in out_dawinfo.audio_filetypes:
-					sampleref_obj.convert(out_dawinfo.audio_filetypes, dv_config.path_samples_converted)
+					isconverted = sampleref_obj.convert(out_dawinfo.audio_filetypes, dv_config.path_samples_converted)
 
 	def parse_output(self, out_file): 
 		self.currentplug_output[0].parse(self.convproj_obj, out_file)

@@ -9,6 +9,8 @@ from functions import colors
 from objects import globalstore
 from objects.file_proj import proj_piyopiyo
 
+EXTPATH_PATH = '_external_data\\piyopiyo\\'
+
 def parse_notes(convproj_obj, trackid, notes_data, track_obj, keyoffset):
 	for pos, nd in enumerate(notes_data):
 		notes, pan = nd
@@ -76,17 +78,17 @@ class input_piyopiyo(plugins.base):
 		plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 		track_obj.inst_pluginid = pluginid
 
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS1', './__external_data/piyopiyo/BASS1.wav')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS1', EXTPATH_PATH + 'BASS1.wav', None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS2', './__external_data/piyopiyo/BASS2.wav')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS2', EXTPATH_PATH + 'BASS2.wav', None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SNARE1', './__external_data/piyopiyo/SNARE1.wav')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SNARE1', EXTPATH_PATH + 'SNARE1.wav', None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT1', './__external_data/piyopiyo/HAT1.wav')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT1', EXTPATH_PATH + 'HAT1.wav', None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT2', './__external_data/piyopiyo/HAT2.wav')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT2', EXTPATH_PATH + 'HAT2.wav', None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SYMBAL1', './__external_data/piyopiyo/SYMBAL1.wav')
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SYMBAL1', EXTPATH_PATH + 'SYMBAL1.wav', None)
 		sampleref_obj.find_relative('external_data')
 
 		sp_obj = plugin_obj.sampleregion_add(-12, -12, -12, None)

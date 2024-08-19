@@ -90,84 +90,78 @@ def volt_adsr(plugin_obj, starttxt, env_name, amount):
 	asdr_obj.decay_tension = eg_curveD
 	asdr_obj.release_tension = eg_curveR
 
+def get_wampreset(amped_tr_device):
+	return json.loads(amped_tr_device.data['wamPreset']) if 'wamPreset' in amped_tr_device.data else {}
+
 def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 	for amped_tr_device in amped_tr_devices:
 		devid = amped_tr_device.id
 		pluginid = str(devid)
 		devicetype = [amped_tr_device.className, amped_tr_device.label]
 
-		if devicetype[0] == 'WAM' and devicetype[1] == 'OBXD': 
-			track_obj.inst_pluginid = pluginid
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'discodsp', 'obxd')
-			plugin_obj.role = 'synth'
-			wampreset = json.loads(amped_tr_device.data['wamPreset']) if 'wamPreset' in amped_tr_device.data else {}
-			if 'data' in wampreset:
-				for n, v in enumerate(wampreset['data']):
-					plugin_obj.params.add('obxd_'+str(n), v, 'float')
+		if amped_tr_device.className == 'WAM':
 
-		elif devicetype[0] == 'WAM' and devicetype[1] == 'Augur': 
-			track_obj.inst_pluginid = pluginid
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'smartelectronix', 'augur')
-			plugin_obj.role = 'synth'
-			wampreset = json.loads(amped_tr_device.data['wamPreset']) if 'wamPreset' in amped_tr_device.data else {}
-			if 'data' in wampreset:
-				for n, v in enumerate(wampreset['data']):
-					paramname = 'augur_'+str(n)
-					if isinstance(v, int): plugin_obj.params.add(paramname, v, 'int')
-					if isinstance(v, float): plugin_obj.params.add(paramname, v, 'float')
-					if isinstance(v, bool): plugin_obj.params.add(paramname, v, 'bool')
+			if amped_tr_device.label == 'OBXD': 
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'discodsp', 'obxd')
+				wampreset = get_wampreset(amped_tr_device)
+				if 'data' in wampreset:
+					for n, v in enumerate(wampreset['data']): plugin_obj.params.add('obxd_'+str(n), v, 'float')
 
-		elif devicetype[0] == 'WAM' and devicetype[1] in 'Dexed': 
-			track_obj.inst_pluginid = pluginid
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', devicetype[1])
-			plugin_obj.datavals.add('data', amped_tr_device.data['wamPreset'])
-			plugin_obj.role = 'synth'
-			wampreset = json.loads(amped_tr_device.data['wamPreset']) if 'wamPreset' in amped_tr_device.data else {}
+			elif amped_tr_device.label == 'Augur': 
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'smartelectronix', 'augur')
+				wampreset = get_wampreset(amped_tr_device)
+				if 'data' in wampreset:
+					for n, v in enumerate(wampreset['data']):
+						paramname = 'augur_'+str(n)
+						if isinstance(v, int): plugin_obj.params.add(paramname, v, 'int')
+						if isinstance(v, float): plugin_obj.params.add(paramname, v, 'float')
+						if isinstance(v, bool): plugin_obj.params.add(paramname, v, 'bool')
 
-			print(wampreset)
+			elif amped_tr_device.label == 'Dexed': 
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', amped_tr_device.label)
+				plugin_obj.datavals.add('data', amped_tr_device.data['wamPreset'])
+				wampreset = get_wampreset(amped_tr_device)
 
-		elif devicetype[0] == 'WAM' and devicetype[1] == 'Europa': 
-			track_obj.inst_pluginid = pluginid
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'synth-nonfree', 'Europa')
-			plugin_obj.role = 'synth'
+			elif amped_tr_device.label == 'Europa': 
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'synth-nonfree', 'Europa')
 
-			wampreset = amped_tr_device.data['wamPreset']
-			wampreset = json.loads(wampreset)
-			europa_xml = ET.fromstring(wampreset['settings'])
-			europa_xml_prop = europa_xml.findall('Properties')[0]
+				wampreset = get_wampreset(amped_tr_device)
+				europa_xml = ET.fromstring(wampreset['settings'])
+				europa_xml_prop = europa_xml.findall('Properties')[0]
 
-			europa_params = {}
+				europa_params = {}
 
-			for xmlsub in europa_xml_prop:
-				if xmlsub.tag == 'Object':
-					object_name = xmlsub.get('name')
-					for objsub in xmlsub:
-						if objsub.tag == 'Value':
-							value_name = objsub.get('property')
-							value_type = objsub.get('type')
-							value_value = float(objsub.text) if value_type == 'number' else objsub.text
-							europa_params[value_name] = [value_type, value_value]
+				for xmlsub in europa_xml_prop:
+					if xmlsub.tag == 'Object':
+						object_name = xmlsub.get('name')
+						for objsub in xmlsub:
+							if objsub.tag == 'Value':
+								value_name = objsub.get('property')
+								value_type = objsub.get('type')
+								value_value = float(objsub.text) if value_type == 'number' else objsub.text
+								europa_params[value_name] = [value_type, value_value]
 
-			dataset_synth_nonfree = globalstore.dataset.get_obj('synth_nonfree', 'plugin', 'europa')
-			if dataset_synth_nonfree:
-				for param_id, dset_param in dataset_synth_nonfree.params.iter():
-					if dset_param.name in europa_params:
-						param_type, param_value = europa_params[dset_param.name]
-	
-						if param_type == 'number':
-							plugin_obj.dset_param__add(param_id, param_value, dset_param)
-						else:
-							if dset_param.name in ['Curve1','Curve2','Curve3','Curve4','Curve']: param_value = list(bytes.fromhex(param_value))
-							plugin_obj.datavals.add(param_id, param_value)
+				dataset_synth_nonfree = globalstore.dataset.get_obj('synth_nonfree', 'plugin', 'europa')
+				if dataset_synth_nonfree:
+					for param_id, dset_param in dataset_synth_nonfree.params.iter():
+						if dset_param.name in europa_params:
+							param_type, param_value = europa_params[dset_param.name]
+							if param_type == 'number': plugin_obj.dset_param__add(param_id, param_value, dset_param)
+							else:
+								if dset_param.name in ['Curve1','Curve2','Curve3','Curve4','Curve']: param_value = list(bytes.fromhex(param_value))
+								plugin_obj.datavals.add(param_id, param_value)
 
-			if 'encodedSampleData' in wampreset:
-				plugin_obj.datavals.add('encodedSampleData', wampreset['encodedSampleData'])
+				if 'encodedSampleData' in wampreset: plugin_obj.datavals.add('encodedSampleData', wampreset['encodedSampleData'])
 
-		elif devicetype[0] == 'WAM' and devicetype[1] in ['Amp Sim Utility']: 
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', devicetype[1])
-			plugin_obj.datavals.add('data', amped_tr_device.data['wamPreset'])
-			plugin_obj.role = 'effect'
-			track_obj.fxslots_audio.append(pluginid)
+			elif amped_tr_device.label == 'Amp Sim Utility': 
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', amped_tr_device.label)
+				plugin_obj.datavals.add('data', amped_tr_device.data['wamPreset'])
+				plugin_obj.role = 'effect'
+				track_obj.fxslots_audio.append(pluginid)
+
+			if amped_tr_device.label in ['OBXD', 'Augur', 'Dexed', 'Europa']:
+				track_obj.inst_pluginid = pluginid
+				plugin_obj.role = 'synth'
 
 		elif devicetype == ['Drumpler', 'Drumpler']:
 			plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
@@ -176,7 +170,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			track_obj.params.add('usemasterpitch', False, 'bool')
 
 			drumplerdata = {}
-			for param in amped_tr_device.params: data_values.nested_dict_add_value(drumplerdata, param.name.split('/'), param.value)
+			for param in amped_tr_device.params: data_values.dict__nested_add_value(drumplerdata, param.name.split('/'), param.value)
 
 			paddata = []
 			if 'kit' in amped_tr_device.data:
@@ -225,21 +219,21 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			#sampleref_obj = convproj_obj.add_sampleref(sampleuuid, '')
 			#sampleref_obj.visual.name = amped_tr_device.grannySampleName
 			#plugin_obj.samplerefs['sample'] = sampleuuid
-			do_idparams(amped_tr_device.params, plugin_obj, devicetype[0])
+			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
 		elif devicetype == ['Volt', 'VOLT']:
 			track_obj.inst_pluginid = pluginid
 			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'Volt')
 			plugin_obj.role = 'synth'
-			do_idparams(amped_tr_device.params, plugin_obj, devicetype[0])
+			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
 		elif devicetype == ['VoltMini', 'VOLT Mini']:
 			track_obj.inst_pluginid = pluginid
 			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'VoltMini')
 			plugin_obj.role = 'synth'
-			do_idparams(amped_tr_device.params, plugin_obj, devicetype[0])
+			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
 			filt_lvl = plugin_obj.params.get("part/1/eg/3/L", 0).value
@@ -265,7 +259,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 		elif devicetype == ['Sampler', 'Sampler']:
 			track_obj.inst_pluginid = pluginid
 			samplerdata = {}
-			for param in amped_tr_device.params: data_values.nested_dict_add_value(samplerdata, param.name.split('/'), param.value)
+			for param in amped_tr_device.params: data_values.dict__nested_add_value(samplerdata, param.name.split('/'), param.value)
 
 			plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
 			plugin_obj.role = 'synth'
@@ -289,23 +283,23 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			track_obj.fxslots_audio.append(pluginid)
 			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'EqualizerPro')
 			plugin_obj.role = 'effect'
-			do_idparams(amped_tr_device.params, plugin_obj, devicetype[0])
+			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
-		elif devicetype[0] in ['Chorus',  
+		elif amped_tr_device.className in ['Chorus',  
 		'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 
 		'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
 		'Reverb', 'Tremolo', 'BitCrusher', 'Tremolo', 'Vibrato', 'Compressor', 'Expander']:
 			track_obj.fxslots_audio.append(pluginid)
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', devicetype[0])
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', amped_tr_device.className)
 			plugin_obj.role = 'effect'
-			do_idparams(amped_tr_device.params, plugin_obj, devicetype[0])
+			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
 		plugin_obj.fxdata_add(not amped_tr_device.bypass, None)
 
 #		#if devicetype != ['VSTConnection', 'VST/Remote Beta']:
-#		#	device_plugindata.fxvisual_add(devicetype[1], None)
+#		#	device_plugindata.fxvisual_add(amped_tr_device.label, None)
 #		#	device_plugindata.to_cvpj(cvpj_l, pluginid)
 #
 def ampedauto_to_cvpjauto_specs(autopoints, autospecs):

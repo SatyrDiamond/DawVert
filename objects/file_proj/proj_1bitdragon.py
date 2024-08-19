@@ -53,10 +53,10 @@ class onebitd_block:
 		self.n_drums = [[] for x in range(5)]
 		self.n_inst = [[[] for x in range(16)] for x in range(4)]
 
-		datafirst = data_values.list_chunks(notesdata, 9*128)
+		datafirst = data_values.list__chunks(notesdata, 9*128)
 		for firstnum in range(len(datafirst)):
 			datasecond = datafirst[firstnum]
-			datathird = data_values.list_chunks(datasecond, 9)
+			datathird = data_values.list__chunks(datasecond, 9)
 			for thirdnum in range(128):
 				stepnum = ((thirdnum&0b0000111)<<4)+((thirdnum&0b1111000)>>3)
 				forthdata = datathird[thirdnum]

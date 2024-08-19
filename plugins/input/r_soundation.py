@@ -206,7 +206,7 @@ class input_soundation(plugins.base):
 								zip_data.extract(filename, path=samplefolder, pwd=None)
 								filename = samplefolder+filename
 
-						plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(pluginid, filename)
+						plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(pluginid, filename, None)
 						track_obj.inst_pluginid = pluginid
 
 						get_asdr(plugin_obj, soundation_inst)

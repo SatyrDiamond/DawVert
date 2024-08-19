@@ -65,7 +65,7 @@ class extplugin(plugins.base):
 
 		if self.plugin_data:
 			for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre__one('kickmess', plugintype):
-				outval = data_values.nested_dict_get_value(self.plugin_data, extparamid.split('/'))
+				outval = data_values.dict__nested_get_value(self.plugin_data, extparamid.split('/'))
 				if not (outval is None): valuepack.value = float(outval)
 			plugin_obj.replace('weirdconstructor', 'kickmess')
 			manu_obj.remap_ext_to_cvpj__post('kickmess', plugintype)
@@ -77,7 +77,7 @@ class extplugin(plugins.base):
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 		self.plugin_data = {}
 		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre__one('kickmess', plugintype):
-			data_values.nested_dict_add_value(self.plugin_data, extparamid.split('/'), valuepack.value)
+			data_values.dict__nested_add_value(self.plugin_data, extparamid.split('/'), valuepack.value)
 
 		plugin_obj.replace('vst2', None)
 		manu_obj.remap_cvpj_to_ext__post('kickmess', plugintype)

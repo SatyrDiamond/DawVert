@@ -97,7 +97,7 @@ class input_serato(plugins.base):
 						if samplefile:
 							samplepath = parse_filepath(drumsamp.file)
 
-							plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler(cvpj_instid_p, samplepath)
+							plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler(cvpj_instid_p, samplepath, 'win')
 							inst_obj = convproj_obj.add_instrument(cvpj_instid_p)
 							inst_obj.pluginid = cvpj_instid_p
 							inst_obj.visual.name = urllib.parse.unquote(samplefile).split('/')[-1]
@@ -160,7 +160,7 @@ class input_serato(plugins.base):
 						playspeed = calcspeed(scene_deck.playback_speed, project_obj.bpm, scene_deck.original_bpm, 1)
 
 						samplepath = parse_filepath(scene_deck.sample_file)
-						sampleref_obj = convproj_obj.add_sampleref(samplepath, samplepath)
+						sampleref_obj = convproj_obj.add_sampleref(samplepath, samplepath, 'win')
 						sampleref_obj.visual.name = urllib.parse.unquote(scene_deck.sample_file).split('/')[-1]
 						samplepart_obj = sample_entry.cvpj_sample_entry()
 						samplepart_obj.sampleref = samplepath

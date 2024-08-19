@@ -1,5 +1,6 @@
 import numpy as np
 import numpy.lib.recfunctions as recfc
+import math
 
 class dynarray_premake:
 	def __init__(self, dtype, **kwargs):
@@ -39,6 +40,9 @@ class dynarray_data:
 	def __iter__(self):
 		for i in self.data:
 			if i['used']: yield i
+
+	def __eq__(self, aps):
+		return self.data[np.nonzero(self.data['used'])] == aps.data[np.nonzero(self.data['used'])]
 
 	def init_data(self):
 		self.data = np.zeros(0, dtype=self.dtype)
@@ -97,6 +101,9 @@ class dynarray_data:
 	def clean(self):
 		self.data = self.data[np.nonzero(self.data['used'])]
 
+	def remove_minus(self, name):
+		self.data = self.data[self.data[name]>=0]
+
 	def min(self, name):
 		return np.min(self.data[name]) if len(self.data) else 2147483647
 
@@ -106,9 +113,12 @@ class dynarray_data:
 	def tobytes(self):
 		return recfc.drop_fields(self.data, "used", usemask=False).tobytes()
 
+	def count(self):
+		return len(np.nonzero(self.data['used'])[0])
 
-
-
+	def fill_array_name(self, name, nparray):
+		self.data['complete'][0:len(nparray)] = 1
+		self.data[name][0:len(nparray)] = nparray
 
 	def add(self):
 		self.alloc_auto(1)
@@ -123,3 +133,20 @@ class dynarray_data:
 	def assoc_d_add(self, name, value):
 		self.data[self.cursor]['is_'+name] = 1
 		self.data[self.cursor][name] = self.idx_d_set(name, value)
+
+	def used_nums(self):
+		return np.nonzero(self.data['used'])
+
+	def unused_nums(self):
+		return np.nonzero(self.data['used']!=1)
+
+	def get_used(self):
+		return self.data[self.used_nums()]
+
+	def find_nearest_name(self, value, name):
+		temptable = self.data[name]
+		idx = np.searchsorted(temptable, value, side="left")
+		if idx > 0 and (idx == len(temptable) or math.fabs(value - temptable[idx-1]) < math.fabs(value - temptable[idx])):
+			return idx-1
+		else:
+			return idx

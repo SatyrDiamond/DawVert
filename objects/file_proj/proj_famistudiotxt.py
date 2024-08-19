@@ -5,8 +5,11 @@ import shlex
 from functions import data_values
 from functions import xtramath
 
+from objects.inst_params import fm_vrc7
+from objects.inst_params import fm_epsm
+
 def read_regs(cmd_params, startname, size):
-	regdata = [None for x in range(size)]
+	regdata = [0 for x in range(size)]
 	for regnum in range(size):
 		regname = startname+str(regnum)
 		if regname in cmd_params: regdata[regnum] = int(cmd_params[regname])
@@ -57,7 +60,7 @@ class fs_arpeggio:
 		self.Loop = int(cmd_params['Loop']) if 'Loop' in cmd_params else 0
 
 class fs_instrument:
-	__slots__ = ['Name','Expansion','Regs','Patch','DPCMMappings','Arpeggio','Envelopes','N163WavePreset','N163WaveSize','N163WavePos','N163WaveCount']
+	__slots__ = ['Name','Expansion','Regs','Patch','DPCMMappings','Arpeggio','Envelopes','N163WavePreset','N163WaveSize','N163WavePos','N163WaveCount','FM']
 	def __init__(self):
 		self.Name = ''
 		self.Expansion = ''
@@ -66,6 +69,7 @@ class fs_instrument:
 		self.DPCMMappings = dpcm_mappings()
 		self.Arpeggio = {}
 		self.Envelopes = {}
+		self.FM = None
 
 		self.N163WavePreset = ''
 		self.N163WaveSize = 0
@@ -174,12 +178,18 @@ class famistudiotxt_project:
 				if 'N163WaveCount' in cmd_params: cur_inst.N163WaveCount = int(cmd_params['N163WaveCount'])
 
 				if cur_inst.Expansion == 'EPSM':
-					if 'EpsmPatch' in cmd_params: cur_inst.Patch = int(cmd_params['EpsmPatch'])
-					if cur_inst.Patch == 0: cur_inst.Regs = read_regs(cmd_params, 'EpsmReg', 31)
+					fm_obj = cur_inst.FM = fm_epsm.epsm_inst()
+					if 'EpsmPatch' in cmd_params: fm_obj.Patch = int(cmd_params['EpsmPatch'])
+					cur_inst.Regs = read_regs(cmd_params, 'EpsmReg', 31)
+					if fm_obj.patch != 0: fm_obj.from_patch()
+					else: fm_obj.from_regs(cur_inst.Regs)
 
 				if cur_inst.Expansion == 'VRC7': 
-					if 'Vrc7Patch' in cmd_params: cur_inst.Patch = int(cmd_params['Vrc7Patch'])
-					if cur_inst.Patch == 0: cur_inst.Regs = read_regs(cmd_params, 'Vrc7Reg', 8)
+					fm_obj = cur_inst.FM = fm_vrc7.vrc7_inst()
+					if 'Vrc7Patch' in cmd_params: fm_obj.patch = int(cmd_params['Vrc7Patch'])
+					cur_inst.Regs = read_regs(cmd_params, 'Vrc7Reg', 8)
+					if fm_obj.patch != 0: fm_obj.from_patch()
+					else: fm_obj.from_regs(cur_inst.Regs)
 
 			elif cmd_name == 'DPCMMapping' and tabs_num == 1: self.DPCMMappings.add(cmd_params)
 

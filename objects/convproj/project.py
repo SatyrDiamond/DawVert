@@ -10,6 +10,8 @@ import bisect
 import os
 import logging
 
+from functions import song_compat
+
 from objects.convproj import sample_entry
 from objects.convproj import automation
 from objects.convproj import plugin
@@ -22,6 +24,27 @@ from objects.convproj import autoticks
 from objects.convproj import autopoints
 from objects.convproj import notelist
 from objects.convproj import stretch
+
+from functions_song import convert_r2m
+from functions_song import convert_ri2mi
+from functions_song import convert_ri2r
+from functions_song import convert_rm2r
+from functions_song import convert_m2r
+from functions_song import convert_m2mi
+from functions_song import convert_mi2m
+from functions_song import convert_rm2m
+
+from functions_song import convert_ms2rm
+from functions_song import convert_rs2r
+
+typelist = {}
+typelist['r'] = 'Regular'
+typelist['ri'] = 'RegularIndexed'
+typelist['rm'] = 'RegularMultiple'
+typelist['rs'] = 'RegularScened'
+typelist['m'] = 'Multiple'
+typelist['mi'] = 'MultipleIndexed'
+typelist['ms'] = 'MultipleScened'
 
 logger_project = logging.getLogger('project')
 
@@ -41,62 +64,6 @@ def autoloc_getname(autopath):
 	if autopath[0] == 'track': autoname = 'Track'
 
 plugin_id_counter = counter.counter(1000, 'plugin_')
-
-class cvpj_midi_inst:
-	__slots__ = ['bank','bank_hi','device','patch','drum','is_key','key']
-	def __init__(self):
-		self.bank_hi = 0
-		self.bank = 0
-		self.patch = 0
-		self.drum = False
-		self.is_key = False
-		self.key = -1
-		self.device = 'gm'
-
-	def from_sf2(self, bank, patch):
-		if bank >= 128: 
-			self.bank = patch
-			self.patch = (bank-128)
-			self.drum = True
-		else:
-			self.bank = bank
-			self.patch = patch
-			self.drum = False
-
-	def to_sf2(self):
-		if self.drum:
-			if self.device != 'xg':
-				bank = 128
-				patch = self.patch
-			else:
-				bank = self.bank
-				patch = self.patch
-		else:
-			if self.device != 'xg':
-				bank = self.bank
-				patch = self.patch
-			else:
-				bank = self.bank_hi
-				patch = self.patch
-
-		#print(bank, patch, self.drum, self.device, self.bank, self.bank_hi)
-
-		return bank, patch
-
-
-	def from_num(self, value):
-		self.drum = bool(value&0b10000000)
-		self.is_key = bool((value>>8)&0b10000000)
-		if not self.is_key: self.patch = (value%128)
-		else: self.key = (value%128)
-		self.bank = (value>>8)
-
-	def to_num(self):
-		outval = self.patch if not self.is_key else self.key
-		outval += self.bank*256
-		outval += int(self.drum)<<8
-		outval += int(self.is_key)<<16
-		return outval
 
 class cvpj_timemarker:
 	__slots__ = ['type','visual','position','duration']
@@ -176,10 +143,8 @@ class cvpj_project:
 		return scene_obj
 
 	def add_track_scene(self, i_track, i_sceneid, i_lane):
-		if i_track in self.track_data:
-			return self.track_data[i_track].add_scene(i_sceneid, i_lane)
-		else:
-			return None
+		if i_track in self.track_data: return self.track_data[i_track].add_scene(i_sceneid, i_lane)
+		else: return None
 
 	def sort_tracks(self):
 		sortpos = {}
@@ -218,7 +183,6 @@ class cvpj_project:
 
 	def get_dur(self):
 		duration_final = 0
-
 		for p in self.track_data: 
 			track_data = self.track_data[p]
 			trk_dur = track_data.placements.get_dur()
@@ -239,10 +203,14 @@ class cvpj_project:
 		timemarkers = []
 		currentpos = 0
 		blockcount = 0
+
+		self.loop_end = sum(PatternLengthList)
+		self.loop_active = True
+
 		for PatternLengthPart in PatternLengthList:
 			temptimesig = xtramath.get_timesig(PatternLengthPart, self.timesig[1])
 			if prevtimesig != temptimesig: self.timesig_auto.add_point(currentpos, temptimesig)
-			if pos_loop == blockcount:self.loop_start = currentpos
+			if pos_loop == blockcount: self.loop_start = currentpos
 			prevtimesig = temptimesig
 			currentpos += PatternLengthPart
 			blockcount += 1
@@ -251,22 +219,17 @@ class cvpj_project:
 		for autopath in self.automation:
 			yield autopath.split(';'), self.automation[autopath]
 
-
-
-
-
-	def add_fileref(self, fileid, filepath):
+	def add_fileref(self, fileid, filepath, os_type):
 		if fileid not in self.filerefs: 
 			self.filerefs[fileid] = fileref.cvpj_fileref()
-			self.filerefs[fileid].change_path(filepath, False)
-			#cpr_int('[project] FileRef - '+fileid+' - '+filepath, 'white')
+			self.filerefs[fileid].set_path(os_type, filepath, 0)
 			logger_project.info('FileRef - '+fileid+' - '+filepath)
 		return self.filerefs[fileid]
 
-	def add_sampleref(self, fileid, filepath):
+	def add_sampleref(self, fileid, filepath, os_type):
 		if fileid not in self.samplerefs: 
-			self.samplerefs[fileid] = fileref.cvpj_sampleref(filepath)
-			#cpr_int('[project] SampleRef - '+fileid+' - '+filepath, 'white')
+			self.samplerefs[fileid] = fileref.cvpj_sampleref()
+			self.samplerefs[fileid].set_path(os_type, filepath)
 			logger_project.info('SampleRef - '+fileid+' - '+filepath)
 		return self.samplerefs[fileid]
 
@@ -275,16 +238,13 @@ class cvpj_project:
 			yield sampleref_id, sampleref_obj
 
 	def add_fxchan(self, fxnum):
-		#cpr_int('[project] FX Channel - '+str(fxnum), 'yellow')
 		logger_project.info('FX Channel - '+str(fxnum))
 		if fxnum not in self.fxrack: self.fxrack[fxnum] = cvpj_fxchannel()
 		return self.fxrack[fxnum]
 
 	def fxchan_removeloopcrash(self):
-
 		targalredy = {}
 		crashfounds = []
-
 		for fx_num, fxchannel_obj in self.fxrack.items():
 			sendtargs = [x[0] for x in fxchannel_obj.sends.iter()]
 			for target in sendtargs:
@@ -294,7 +254,6 @@ class cvpj_project:
 				if fx_num in targalredy:
 					if target in targalredy[fx_num]: 
 						crashfounds.append([target,fx_num])
-
 		for target,fx_num in crashfounds:
 			del self.fxrack[target].sends.data[fx_num]
 
@@ -319,15 +278,6 @@ class cvpj_project:
 	def iter_sampleindex(self):
 		for i_id in self.sample_index: yield i_id, self.sample_index[i_id]
 
-
-
-
-
-
-
-
-
-
 	def get_sampleref(self, fileid):
 		if fileid in self.samplerefs: return True, self.samplerefs[fileid]
 		else: return False, None
@@ -335,9 +285,6 @@ class cvpj_project:
 	def get_fileref(self, fileid):
 		if fileid in self.filerefs: return True, self.filerefs[fileid]
 		else: return False, None
-
-
-
 
 	def add_timesig_lengthbeat(self, pat_len, notes_p_beat):
 		self.timesig = xtramath.get_timesig(pat_len, notes_p_beat)
@@ -352,14 +299,8 @@ class cvpj_project:
 		if windowpath in self.window_data: return self.window_data[windowpath]
 		else: return visual.cvpj_window_data()
 
-
-
-
-
-
 	def add_playlist(self, idnum, uses_placements, is_indexed):
 		if idnum not in self.playlist:
-			#cpr_int('[project] Playlist '+('NoPl' if not uses_placements else 'w/Pl')+(' + Indexed' if is_indexed else '')+' - '+str(idnum), 'light_blue')
 			logger_project.info('Playlist '+('NoPl' if not uses_placements else 'w/Pl')+(' + Indexed' if is_indexed else '')+' - '+str(idnum))
 			self.playlist[idnum] = tracks.cvpj_track('hybrid', self.time_ppq, self.time_float, uses_placements, is_indexed)
 		return self.playlist[idnum]
@@ -367,11 +308,6 @@ class cvpj_project:
 	def iter_playlist(self):
 		for idnum, playlist_obj in self.playlist.items():
 			yield idnum, playlist_obj
-
-
-
-
-
 
 	def find_track(self, trackid):
 		if trackid in self.track_data: return True, self.track_data[trackid]
@@ -381,11 +317,7 @@ class cvpj_project:
 		for trackid in self.track_order:
 			if trackid in self.track_data: yield trackid, self.track_data[trackid]
 
-
-
-
 	def add_group(self, groupid):
-		#cpr_int('[project] Group - '+groupid, 'yellow')
 		logger_project.info('Group - '+groupid)
 		self.groups[groupid] = tracks.cvpj_track('group', self.time_ppq, self.time_float, False, False)
 		return self.groups[groupid]
@@ -403,7 +335,6 @@ class cvpj_project:
 
 
 	def add_track(self, track_id, tracktype, uses_placements, is_indexed):
-		#cpr_int('[project] Track '+('NoPl' if not uses_placements else 'w/Pl')+(' + Indexed' if is_indexed else '')+' - '+track_id, 'light_blue')
 		logger_project.info('Track '+('NoPl' if not uses_placements else 'w/Pl')+(' + Indexed' if is_indexed else '')+' - '+track_id)
 		self.track_data[track_id] = tracks.cvpj_track(tracktype, self.time_ppq, self.time_float, uses_placements, is_indexed)
 		self.track_order.append(track_id)
@@ -411,7 +342,6 @@ class cvpj_project:
 
 	def add_track_midi(self, track_id, plug_id, m_bank, m_inst, m_drum, uses_pl, indexed):
 		plugin_obj = self.add_plugin_midi(plug_id, m_bank, m_inst, m_drum)
-		#cpr_int('[project] Track - '+track_id, 'light_blue')
 		plugin_obj.role = 'synth'
 
 		track_obj = self.add_track(track_id, 'instrument', uses_pl, indexed)
@@ -482,7 +412,6 @@ class cvpj_project:
 		else: return False, None
 
 	def add_plugin(self, plug_id, i_type, i_subtype):
-		#cpr_int('[project] Plugin - '+str(plug_id)+' - '+vis_plugin(i_type, i_subtype), 'green')
 		logger_project.info('Plugin - '+str(plug_id)+' - '+vis_plugin(i_type, i_subtype))
 		plugin_obj = plugin.cvpj_plugin()
 		plugin_obj.replace(i_type, i_subtype)
@@ -491,23 +420,22 @@ class cvpj_project:
 
 	def add_plugin_genid(self, i_type, i_subtype):
 		plug_id = plugin_id_counter.get_str_txt()
-		#cpr_int('[project] Plugin - '+str(plug_id)+' - '+vis_plugin(i_type, i_subtype), 'green')
 		logger_project.info('Plugin - '+str(plug_id)+' - '+vis_plugin(i_type, i_subtype))
 		plugin_obj = plugin.cvpj_plugin()
 		plugin_obj.replace(i_type, i_subtype)
 		self.plugins[plug_id] = plugin_obj
 		return self.plugins[plug_id], plug_id
 
-	def add_plugin_sampler_genid(self, file_path, **kwargs):
+	def add_plugin_sampler_genid(self, file_path, os_type, **kwargs):
 		plug_id = plugin_id_counter.get_str_txt()
-		plugin_obj, sampleref_obj, samplepart_obj = self.add_plugin_sampler(plug_id, file_path, **kwargs)
+		plugin_obj, sampleref_obj, samplepart_obj = self.add_plugin_sampler(plug_id, file_path, os_type, **kwargs)
 		plugin_obj.role = 'synth'
 		return plugin_obj, plug_id, sampleref_obj, samplepart_obj
 
-	def add_plugin_sampler(self, plug_id, file_path, **kwargs):
+	def add_plugin_sampler(self, plug_id, file_path, os_type, **kwargs):
 		if file_path:
 			sampleref = kwargs['sampleid'] if 'sampleid' in kwargs else file_path
-			sampleref_obj = self.add_sampleref(sampleref, file_path)
+			sampleref_obj = self.add_sampleref(sampleref, file_path, os_type)
 			is_drumsynth = sampleref_obj.fileref.extension.lower() == 'ds'
 		else:
 			sampleref_obj = None
@@ -546,7 +474,6 @@ class cvpj_project:
 
 
 	def add_instrument(self, inst_id):
-		#cpr_int('[project] Instrument - '+str(inst_id), 'cyan')
 		logger_project.info('Instrument - '+str(inst_id))
 		self.instruments[inst_id] = tracks.cvpj_instrument()
 		self.instruments_order.append(inst_id)
@@ -565,9 +492,64 @@ class cvpj_project:
 			logger_project.info('LaneFit: '+ trackid+': '+str(oldnum)+' > '+str(len(track_obj.lanes)))
 
 	def add_autopoints_twopoints(self, autopath, v_type, twopoints):
-		for x in twopoints:
-			self.add_autopoint(autopath, v_type, x[0], x[1], 'normal')
+		for x in twopoints: self.add_autopoint(autopath, v_type, x[0], x[1], 'normal')
 
 
 
+	def change_projtype(self, in_dawinfo, out_dawinfo, out_type, dv_config):
+		compactclass = song_compat.song_compat()
+
+		compactclass.makecompat(self, self.type, in_dawinfo, out_dawinfo, out_type)
+
+		if self.type == 'ri' and out_type == 'mi': convert_ri2mi.convert(self)
+		elif self.type == 'ri' and out_type == 'r': convert_ri2r.convert(self)
+
+		elif self.type == 'm' and out_type == 'mi': convert_m2mi.convert(self)
+		elif self.type == 'm' and out_type == 'r': convert_m2r.convert(self)
+
+		elif self.type == 'r' and out_type == 'm': convert_r2m.convert(self)
+		elif self.type == 'r' and out_type == 'mi': 
+			convert_r2m.convert(self)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			convert_m2mi.convert(self)
+
+		elif self.type == 'mi' and out_type == 'm': convert_mi2m.convert(self, dv_config)
+		elif self.type == 'mi' and out_type == 'r': 
+			convert_mi2m.convert(self, dv_config)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			convert_m2r.convert(self)
+	
+		elif self.type == 'rm' and out_type == 'r': convert_rm2r.convert(self)
+		elif self.type == 'rm' and out_type == 'm': convert_rm2m.convert(self, True)
+		elif self.type == 'rm' and out_type == 'mi': 
+			convert_rm2m.convert(self, True)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			convert_m2mi.convert(self)
+
+		elif self.type == 'rs' and out_type == 'mi': 
+			convert_rs2r.convert(self)
+			convert_r2m.convert(self)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			convert_m2mi.convert(self)
+
+		elif self.type == 'rs' and out_type == 'r': convert_rs2r.convert(self)
+
+		elif self.type == 'ms' and out_type == 'mi': 
+			convert_ms2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type)
+			convert_rm2m.convert(self, True)
+			convert_m2mi.convert(self)
+
+		elif self.type == 'ms' and out_type == 'r': 
+			convert_ms2rm.convert(self)
+			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type)
+			convert_rm2r.convert(self)
+
+		elif self.type == out_type: 
+			pass
 		
+		else:
+			logger_project.error(typelist[in_type]+' to '+typelist[out_type]+' is not supported.')
+			exit()
+
+		compactclass.makecompat(self, out_type, in_dawinfo, out_dawinfo, out_type)

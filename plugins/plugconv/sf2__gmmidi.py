@@ -31,7 +31,7 @@ class plugconv(plugins.base):
 		if sf2_loc != None:
 			extpluglog.convinternal('MIDI', 'MIDI', 'SoundFont2', 'SoundFont2')
 			plugin_obj.replace('soundfont2', None)
-			convproj_obj.add_fileref(sf2_loc, sf2_loc)
+			convproj_obj.add_fileref(sf2_loc, sf2_loc, None)
 			plugin_obj.filerefs['file'] = sf2_loc
 			return 1
 

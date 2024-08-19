@@ -91,7 +91,7 @@ class input_color_art(experiments_plugin_input.base):
                         bms_bartarg, bms_data = bms_split[0].split(':')
                         bms_bar = int(bms_bartarg[0:3])*16
                         bms_targ = int(bms_bartarg[3:5])
-                        bms_data_chunks = data_values.list_chunks(bms_data, 2)
+                        bms_data_chunks = data_values.list__chunks(bms_data, 2)
                         bms_data_chunk_size = len(bms_data_chunks)
                         for chunknum in range(bms_data_chunk_size):
                             chunkcmd = bms_data_chunks[chunknum]

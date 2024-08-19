@@ -79,7 +79,7 @@ class input_xm(plugins.base):
 								if cell_param < 32: pattern_obj.cell_g_param(channel, rownum, 'speed', cell_param)
 								else: pattern_obj.cell_g_param(channel, rownum, 'tempo', cell_param)
 							if cell_effect == 16: pattern_obj.cell_param(channel, rownum, 'global_volume', cell_param/64)
-							if cell_effect == 17: pattern_obj.cell_param(channel, rownum, 'global_volume_slide', dv_trackerpattern.getfineval(cell_param))
+							#if cell_effect == 17: pattern_obj.cell_param(channel, rownum, 'global_volume_slide', dv_trackerpattern.getfineval(cell_param))
 							if cell_effect == 34:
 								panbrello_params = {}
 								panbrello_params['speed'], panbrello_params['depth'] = data_bytes.splitbyte(cell_param)
@@ -121,7 +121,7 @@ class input_xm(plugins.base):
 			inst_obj.visual.color.set_float(MAINCOLOR)
 			inst_obj.params.add('vol', 0.3, 'float')
 
-			sampleregions = data_values.list_to_reigons(xm_inst.notesampletable, 48)
+			sampleregions = data_values.list__to_reigons(xm_inst.notesampletable, 48)
 
 			inst_used = False
 			if xm_inst.num_samples == 0: pass
@@ -131,7 +131,7 @@ class input_xm(plugins.base):
 				inst_obj.params.add('vol', 0.3*(first_s_obj.vol), 'float')
 				filename = samplefolder+str(xm_cursamplenum)+'.wav'
 
-				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(filename)
+				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(filename, None)
 				sp_obj.loop_active, sp_obj.loop_mode, sp_obj.loop_start, sp_obj.loop_end = first_s_obj.get_loop()
 				sp_obj.point_value_type = "samples"
 			else:

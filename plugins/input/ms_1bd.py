@@ -2,11 +2,46 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
+import os
+import logging
 from functions import data_bytes
 from functions import data_values
 from functions import colors
 from objects import globalstore
 from objects.file_proj import proj_1bitdragon
+
+logger_input = logging.getLogger('input')
+
+try: 
+	import UnityPy
+	from UnityPy.helpers import TypeTreeHelper
+	TypeTreeHelper.read_typetree_c = False
+except: UnityPy_exists = False
+else: UnityPy_exists = True
+
+class onebit_external:
+	def __init__(self):
+		self.loaded = False
+		self.env = None
+		self.audiofiles = {}
+
+	def load_file(self, filepath):
+		if os.path.exists(filepath):
+			if UnityPy_exists:
+				self.env = UnityPy.load(filepath)
+				for obj in self.env.objects:
+					data = obj.read()
+					if obj.type.name == 'AudioClip': self.audiofiles[data.name] = data
+			else:
+				logger_input.warning('1bitdragon resource file found but UnityPy is missing.')
+
+	def save_audio(self, audioname, filepath):
+		if audioname in self.audiofiles:
+			data = self.audiofiles[audioname]
+			if data.samples:
+				firstname = list(data.samples)
+				with open(filepath, "wb") as f: f.write(data.samples[firstname[0]])
+				logger_input.info('extracted '+audioname+' as '+filepath)
 
 class input_1bitdragon(plugins.base):
 	def __init__(self): pass
@@ -25,6 +60,9 @@ class input_1bitdragon(plugins.base):
 
 		project_obj = proj_1bitdragon.onebitd_song()
 		project_obj.load_from_file(input_file)
+
+		onebit_ext = onebit_external()
+		onebit_ext.load_file("_external_data/1bitdragon/1BITDRAGON_Data/resources.assets")
 
 		globalstore.dataset.load('1bitdragon', './data_main/dataset/1bitdragon.dset')
 		colordata = colors.colorset.from_dataset('1bitdragon', 'track', 'main')
@@ -45,8 +83,11 @@ class input_1bitdragon(plugins.base):
 		track_data = []
 		for plnum in range(9):
 			track_obj = convproj_obj.add_track(str(plnum), 'instruments', 1, False)
+
 			track_obj.visual.color.from_colorset_num(colordata, plnum)
 			track_data.append(track_obj)
+
+		instnames = []
 
 		used_inst = {}
 		used_drums = {}
@@ -56,23 +97,25 @@ class input_1bitdragon(plugins.base):
 
 			for inst in block_obj.instruments:
 				instid = inst.get_instid()
-				if instid not in used_inst: used_inst[instid] = inst
+				if instid not in used_inst: 
+					used_inst[instid] = inst
 
 			ids_inst = [x.get_instid() for x in block_obj.instruments]
 
 			for instnum, instdata in enumerate(block_obj.n_inst):
 				dur = max([len(x) for x in instdata])
+
 				if dur:
 					trscene_obj = convproj_obj.add_track_scene(str(instnum), str(blocknum), 'main')
 					placement_obj = trscene_obj.add_notes()
-					placement_obj.visual.name = block_obj.instruments[instnum].preset
+					placement_obj.visual.name = block_obj.instruments[3-instnum].preset
 					placement_obj.position = 0
 					placement_obj.duration = 128
 					for notenum, notesdata in enumerate(instdata):
 						for pos, notedata in notesdata:
 							dur = notedata['duration'] if 'duration' in notedata else 1
 							vol = notedata['velocity'] if 'velocity' in notedata else 1
-							placement_obj.notelist.add_m(ids_inst[instnum], pos, dur, note_scale[notenum], vol, None)
+							placement_obj.notelist.add_m(ids_inst[3-instnum], pos, dur, note_scale[notenum], vol, None)
 
 			for drum in block_obj.drums:
 				instid = drum.get_instid()
@@ -99,16 +142,38 @@ class input_1bitdragon(plugins.base):
 			curpos += 128
 
 		for instid, instdata in used_inst.items():
+			instname = instdata.preset
+ 
 			inst_obj = convproj_obj.add_instrument(instid)
-			inst_obj.visual.name = instdata.preset
+			inst_obj.visual.name = instname
 			inst_obj.params.add('enabled', instdata.on, 'int')
 			inst_obj.params.add('vol', instdata.volume, 'float')
 
+			audiofilepath = os.path.join(dv_config.path_samples_extracted, str(instname)+'.wav')
+			inst_obj.datavals.add('middlenote', -3)
+
+			if instname not in instnames:
+				onebit_ext.save_audio(instname, audiofilepath)
+				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(audiofilepath, None)
+				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
+				instnames.append(instname)
+
 		for drumid, drumdata in used_drums.items():
+			instname = drumdata.preset
+			
 			inst_obj = convproj_obj.add_instrument(drumid)
-			inst_obj.visual.name = drumdata.preset
+			inst_obj.visual.name = instname
 			inst_obj.params.add('enabled', drumdata.on, 'int')
 			inst_obj.params.add('vol', drumdata.volume, 'float')
+
+			audiofilepath = os.path.join(dv_config.path_samples_extracted, str(instname)+'.wav')
+			inst_obj.datavals.add('middlenote', -3)
+
+			if instname not in instnames:
+				onebit_ext.save_audio(instname, audiofilepath)
+				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(audiofilepath, None)
+				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
+				instnames.append(instname)
 
 		convproj_obj.do_actions.append('do_lanefit')
 

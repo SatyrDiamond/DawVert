@@ -149,7 +149,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 							vst_names.append(stream_data.string(25, encoding='utf-8'))
 
 						numparamseach = vst_total_params//vst_num_names
-						bankparams = data_values.list_chunks(vst_params_data, numparamseach)
+						bankparams = data_values.list__chunks(vst_params_data, numparamseach)
 
 						plugin_obj.clear_prog_keep(0)
 						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,'win', wrapperdata['fourid'], 'param', None, numparamseach)
@@ -231,10 +231,10 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 		asdflfo_rel = flsf_asdf_R/1024 if flsf_asdf_R != -1 else 0
 		asdflfo_amt = int( (flsf_asdf_A == flsf_asdf_D == flsf_asdf_S == flsf_asdf_R == -1) == False )
 
-		fileref_obj = convproj_obj.add_fileref(flsf_filename, flsf_filename)
-		fileref_obj.search('extracted', 'win')
-		fileref_obj.search('projectfile', 'win')
-		fileref_obj.search('factorysamples', 'win')
+		fileref_obj = convproj_obj.add_fileref(flsf_filename, flsf_filename, None)
+		fileref_obj.search('extracted')
+		fileref_obj.search('projectfile')
+		fileref_obj.search('factorysamples')
 
 		plugin_obj.filerefs['file'] = flsf_filename
 
@@ -271,7 +271,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 		sre_obj = plugin_obj.samplepart_add('sample')
 
 		if slicer_filename != "": 
-			sampleref_obj = convproj_obj.add_sampleref(slicer_filename, slicer_filename)
+			sampleref_obj = convproj_obj.add_sampleref(slicer_filename, slicer_filename, 'win')
 			slicechannels = sampleref_obj.channels
 			sre_obj.from_sampleref(convproj_obj, slicer_filename)
 
@@ -479,10 +479,10 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 		if not os.path.exists(slicex_filename):
 			outfilename = os.path.join(foldername, pluginid+'_custom_audio.wav')
 			with open(outfilename, "wb") as slicexfile: slicexfile.write(wavedata)
-			sampleref_obj = convproj_obj.add_sampleref(outfilename, outfilename)
+			sampleref_obj = convproj_obj.add_sampleref(outfilename, outfilename, 'win')
 			sre_obj.from_sampleref(convproj_obj, outfilename)
 		else:
-			sampleref_obj = convproj_obj.add_sampleref(slicex_filename, slicex_filename)
+			sampleref_obj = convproj_obj.add_sampleref(slicex_filename, slicex_filename, 'win')
 			sre_obj.from_sampleref(convproj_obj, slicex_filename)
 
 		sampleref_obj.find_relative('extracted')

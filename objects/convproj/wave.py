@@ -89,6 +89,8 @@ def resizewave(inputwave, new_size, smooth):
 	dur_input = len(inputwave)
 	wave_data = []
 
+	inputwave = list(inputwave)
+
 	if smooth == False:
 		for num in range(new_size): 
 			s_pos = num/new_size

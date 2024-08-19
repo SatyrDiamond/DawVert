@@ -249,7 +249,7 @@ class output_reaper(plugins.base):
 				ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
 				if ref_found:
 					fileref_obj = sampleref_obj.fileref
-					filename = fileref_obj.get_path(None, True)
+					filename = fileref_obj.get_path(None, False)
 					rpp_source_obj = rpp_item_obj.source = rpp_source.rpp_source()
 					if not audiopl_obj.sample.reverse: file_source(rpp_source_obj, fileref_obj, filename)
 					else:

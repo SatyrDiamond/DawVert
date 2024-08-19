@@ -53,6 +53,19 @@ def sampler_parse(indata):
 		sampler_data.skip(1)
 	return sampleheader, sampledata
 
+def soundlayer_samplepart(sp_obj, soundlayer): 
+	sp_obj.visual.name = soundlayer['name'] if 'name' in soundlayer else ''
+	sp_obj.point_value_type = 'samples'
+	if 'sampleDataName' in soundlayer: sp_obj.sampleref = soundlayer['sampleDataName']
+	if 'sampleIn' in soundlayer: sp_obj.start = soundlayer['sampleIn']
+	if 'sampleOut' in soundlayer: sp_obj.end = soundlayer['sampleOut']
+	if 'reverse' in soundlayer: sp_obj.reverse = soundlayer['reverse']
+	if 'lowVelocity' in soundlayer: sp_obj.vel_min = soundlayer['lowVelocity']/127
+	if 'highVelocity' in soundlayer: sp_obj.vel_max = soundlayer['highVelocity']/127
+	if 'sampleLoopIn' in soundlayer: sp_obj.loop_start = soundlayer['sampleLoopIn']
+	if 'sampleLoopOut' in soundlayer: sp_obj.loop_end = soundlayer['sampleLoopOut']
+	if 'looped' in soundlayer: sp_obj.loop_active = soundlayer['looped']
+
 def do_plugin(convproj_obj, wf_plugin, track_obj): 
 
 	if wf_plugin.plugtype == 'vst':
@@ -72,33 +85,13 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 					sl_lowNote = soundlayer['lowNote'] if 'lowNote' in soundlayer else 60
 					sl_highNote = soundlayer['highNote'] if 'highNote' in soundlayer else 60
 					sp_obj = plugin_obj.sampleregion_add(sl_lowNote-60, sl_highNote-60, sl_rootNote-60, None)
-					sp_obj.visual.name = soundlayer['name'] if 'name' in soundlayer else ''
-					sp_obj.point_value_type = 'samples'
-					if 'sampleDataName' in soundlayer: sp_obj.sampleref = soundlayer['sampleDataName']
-					if 'sampleIn' in soundlayer: sp_obj.start = soundlayer['sampleIn']
-					if 'sampleOut' in soundlayer: sp_obj.end = soundlayer['sampleOut']
-					if 'reverse' in soundlayer: sp_obj.reverse = soundlayer['reverse']
-					if 'lowVelocity' in soundlayer: sp_obj.vel_min = soundlayer['reverse']/127
-					if 'highVelocity' in soundlayer: sp_obj.vel_max = soundlayer['reverse']/127
-					if 'sampleLoopIn' in soundlayer: sp_obj.loop_start = soundlayer['sampleLoopIn']
-					if 'sampleLoopOut' in soundlayer: sp_obj.loop_end = soundlayer['sampleLoopOut']
-					if 'looped' in soundlayer: sp_obj.loop_active = soundlayer['reverse']
+					soundlayer_samplepart(sp_obj, soundlayer)
 			elif len(soundlayers)==1:
 				soundlayer = soundlayers[0]
 				plugin_obj, pluginid = convproj_obj.add_plugin_genid('sampler', 'single')
 				track_obj.inst_pluginid = pluginid
 				sp_obj = plugin_obj.samplepart_add('sample')
-				sp_obj.visual.name = soundlayer['name'] if 'name' in soundlayer else ''
-				sp_obj.point_value_type = 'samples'
-				if 'sampleDataName' in soundlayer: sp_obj.sampleref = soundlayer['sampleDataName']
-				if 'sampleIn' in soundlayer: sp_obj.start = soundlayer['sampleIn']
-				if 'sampleOut' in soundlayer: sp_obj.end = soundlayer['sampleOut']
-				if 'reverse' in soundlayer: sp_obj.reverse = soundlayer['reverse']
-				if 'lowVelocity' in soundlayer: sp_obj.vel_min = soundlayer['reverse']/127
-				if 'highVelocity' in soundlayer: sp_obj.vel_max = soundlayer['reverse']/127
-				if 'sampleLoopIn' in soundlayer: sp_obj.loop_start = soundlayer['sampleLoopIn']
-				if 'sampleLoopOut' in soundlayer: sp_obj.loop_end = soundlayer['sampleLoopOut']
-				if 'looped' in soundlayer: sp_obj.loop_active = soundlayer['reverse']
+				soundlayer_samplepart(sp_obj, soundlayer)
 
 
 		else:
@@ -136,10 +129,8 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 			plugin_obj.dset_param__add(param_id, paramval, dset_param)
 
 		plugin_obj.fxdata_add(wf_plugin.enabled, 1)
-		if wf_plugin.plugtype not in ['4osc']:
-			track_obj.fxslots_audio.append(pluginid)
-		else:
-			track_obj.inst_pluginid = pluginid
+		if wf_plugin.plugtype not in ['4osc']: track_obj.fxslots_audio.append(pluginid)
+		else: track_obj.inst_pluginid = pluginid
 
 autonames = {
 	'PITCHBEND': 'pitch',

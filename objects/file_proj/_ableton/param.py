@@ -345,7 +345,7 @@ class ableton_paramset:
 
 			predata[n] = outval
 
-		for n, v in predata.items(): data_values.nested_dict_add_value(foldereddata, n.split('/'), v)
+		for n, v in predata.items(): data_values.dict__nested_add_value(foldereddata, n.split('/'), v)
 		del predata
 
 		self.import_keys_f_internal(foldereddata, self.data)

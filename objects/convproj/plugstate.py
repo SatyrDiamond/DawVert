@@ -10,7 +10,6 @@ import base64
 import struct
 import copy
 
-from objects.convproj import project as convproj
 from objects.convproj import sample_entry
 from objects.convproj import params
 from objects.convproj import eqfilter
@@ -21,6 +20,7 @@ from objects.convproj import oscillator
 from objects.convproj import harmonics
 from objects.convproj import time
 from objects.convproj import chord
+from objects.convproj import midi_inst
 from objects import plugdatamanu
 from objects import audio_data
 
@@ -102,7 +102,7 @@ class cvpj_plugin_state:
 		self.chord = {}
 		self.arrays = {}
 		self.modulations = []
-		self.midi = convproj.cvpj_midi_inst()
+		self.midi = midi_inst.cvpj_midi_inst()
 		self.preset = cvpj_preset()
 
 	def create_manu_obj(self, convproj_obj, pluginid):
@@ -191,7 +191,7 @@ class cvpj_plugin_state:
 	def dset_obj__add_param(self, dataset_obj, i_dict):
 		if dataset_obj:
 			for param_id, dset_param in dataset_obj.params.iter():
-				outval = data_values.nested_dict_get_value(i_dict, param_id.split('/'))
+				outval = data_values.dict__nested_get_value(i_dict, param_id.split('/'))
 				self.dset_param__add(param_id, outval, dset_param)
 
 	def param_dict_dataset_set(self, ds_name, catname, pluginname):
@@ -204,7 +204,7 @@ class cvpj_plugin_state:
 					else: outdata = self.datavals.get(param_id, dset_param.defv)
 				else:
 					outdata = array_get(param_id, len(dset_param.defv))
-				data_values.nested_dict_add_value(outdict, param_id.split('/'), outdata)
+				data_values.dict__nested_add_value(outdict, param_id.split('/'), outdata)
 		return outdict
 
 	# -------------------------------------------------- rawdata

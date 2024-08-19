@@ -176,13 +176,13 @@ class input_audiosanua(plugins.base):
 						sp_obj.visual.name = as_cell.name
 
 						if as_cell.url != 'undefined':
-							sampleref_obj = convproj_obj.add_sampleref(as_cell.url, as_cell.url)
+							sampleref_obj = convproj_obj.add_sampleref(as_cell.url, as_cell.url, None)
 							sp_obj.sampleref = as_cell.url
 						else:
 							samp_filename = 'sample_'+str(as_channum)+'_'+str(num)+'.wav'
 							full_filename = os.path.join(samplefolder,samp_filename)
 							zip_data.extract(samp_filename, path=samplefolder, pwd=None)
-							sampleref_obj = convproj_obj.add_sampleref(full_filename, full_filename)
+							sampleref_obj = convproj_obj.add_sampleref(full_filename, full_filename, None)
 							sp_obj.sampleref = full_filename
 
 						sp_obj.point_value_type = "percent"
@@ -203,7 +203,7 @@ class input_audiosanua(plugins.base):
 					setasdr(plugin_obj, 'vol', as_device.params, False, 'masterAttack', 'masterDecay', 'masterRelease', 'masterSustain')
 
 				# distortion
-				modulate = float(getvalue(as_device.params, 'driveModul' if as_device in [0,1] else 'modulate'))/100
+				modulate = float(getvalue(as_device.params, 'driveModul' if as_device.deviceType in [0,1] else 'modulate'))/100
 				overdrive = float(getvalue(as_device.params, 'overdrive'))/100
 				if modulate == overdrive == 0:
 					fx_plugin_obj, fx_pluginid = convproj_obj.add_plugin_genid('native-audiosauna', 'distortion')

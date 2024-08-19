@@ -26,7 +26,7 @@ def writebin_named(rpp_data, name, bindata):
 	rpp_data.children.append(rpp_tempd)
 
 def writebin(rpp_data, bindata):
-	for binpart in data_values.list_chunks(bindata, 96):
+	for binpart in data_values.list__chunks(bindata, 96):
 		rpp_data.children.append(base64.b64encode(binpart).decode())
 
 def getbin(rpp_data):

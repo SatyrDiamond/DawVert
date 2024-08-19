@@ -31,7 +31,7 @@ def do_sampleref(convproj_obj, als_sampleref, cvpj_sampleref):
 	als_fileref = als_sampleref.FileRef
 	if cvpj_sampleref != None:
 		als_fileref.RelativePathType = 0
-		outpath = cvpj_sampleref.fileref.get_path(convproj_obj, 'win')
+		outpath = cvpj_sampleref.fileref.get_path('win', False)
 		#print(outpath)
 		als_fileref.Path = outpath.replace('\\','/')
 		als_fileref.Type = 1
@@ -166,7 +166,6 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 	vstid = plugin_obj.datavals_global.get('fourid', 0)
 	vstversion = plugin_obj.datavals_global.get('version_bytes', 0)
 	vstnumparams = plugin_obj.datavals_global.get('numparams', None)
-	current_program = plugin_obj.datavals_global.get('current_program', 0)
 	vstdatatype = plugin_obj.datavals_global.get('datatype', 'chunk')
 	is_instrument = plugin_obj.role == 'inst'
 
@@ -215,7 +214,7 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 		if vstnumparams != None: vstpreset['ParameterCount'] = ableton_parampart.as_value('ParameterCount', vstnumparams)
 		if vstdatatype == 'chunk': 
 			vstpreset['Buffer'] = ableton_parampart.as_buffer('Buffer', plugin_obj.rawdata_get('chunk'))
-			vstpreset['ProgramNumber'] = ableton_parampart.as_value('ProgramNumber', current_program)
+			vstpreset['ProgramNumber'] = ableton_parampart.as_value('ProgramNumber', plugin_obj.current_program)
 		if vstdatatype == 'param': 
 			pluginfo['NumberOfPrograms'] = ableton_parampart.as_value('NumberOfPrograms', len(plugin_obj.programs))
 			prognums = list(plugin_obj.programs)
@@ -578,10 +577,7 @@ class output_ableton(plugins.base):
 
 				plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
 				if plugin_found:
-
-					middlenotefix = plugin_obj.datavals_global.get('middlenotefix', 0)
-
-					middlenote += middlenotefix
+					middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 					if plugin_obj.check_wildmatch('native-ableton', None):
 						if middlenote != 0:
@@ -650,7 +646,9 @@ class output_ableton(plugins.base):
 
 						pitchin = samplepart_obj.pitch
 
-						if samplepart_obj.stretch.calc_real_speed == 1 and samplepart_obj.trigger != 'oneshot' and pitchin == 0:
+						loop_active = samplepart_obj.loop_active
+
+						if (samplepart_obj.stretch.calc_real_speed == 1 and samplepart_obj.trigger != 'oneshot' and pitchin == 0) or loop_active:
 							als_device = als_track.DeviceChain.add_device('MultiSampler')
 							spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
 							paramkeys['Player/Reverse'] = ableton_parampart.as_param('Reverse', 'bool', samplepart_obj.reverse)
@@ -793,14 +791,13 @@ class output_ableton(plugins.base):
 						als_audioclip.SampleVolume = sample_obj.vol
 	
 						ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
-	
-	
+
 						do_sampleref(convproj_obj, als_audioclip.SampleRef, sampleref_obj)
 
 						if not stretch_obj.is_warped:
 							if ref_found: 
 								second_dur = sampleref_obj.dur_sec
-								als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur, sample_obj.pitch)
+								als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
 
 								als_audioclip.Loop.StartRelative *= ratespeed
 

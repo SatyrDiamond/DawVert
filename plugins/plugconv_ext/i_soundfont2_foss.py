@@ -21,7 +21,7 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('SoundFont2', 'SoundFont2')
 				bank, patch = plugin_obj.midi.to_sf2()
 				ref_found, fileref_obj = plugin_obj.get_fileref('file', convproj_obj)
-				sf2_filename = fileref_obj.get_path(None, True) if ref_found else ''
+				sf2_filename = fileref_obj.get_path(None, False) if ref_found else ''
 				jsf2data = params_os_juicysfplugin.juicysfplugin_data()
 				jsf2data.set_bankpatch(bank, patch, sf2_filename)
 				jsf2data.to_cvpj_vst2(convproj_obj, plugin_obj)

@@ -7,12 +7,6 @@ import struct
 
 # ----- Bytes -----
 
-def to_bytesio(input):
-	data = BytesIO()
-	data.write(input)
-	data.seek(0)
-	return data
-
 def splitbyte(value):
     first = value >> 4
     second = value & 0x0F
@@ -91,8 +85,8 @@ def unsign_16(sampledata):
     return sampledatabytes.tobytes('C')
 
 def mono2stereo(leftdata, rightdata, samplebytes):
-	leftdata_stream = to_bytesio(leftdata)
-	rightdata_stream = to_bytesio(rightdata)
+	leftdata_stream = BytesIO(leftdata)
+	rightdata_stream = BytesIO(rightdata)
 	output_stream = BytesIO()
 	for _ in range(int(len(leftdata)/samplebytes)):
 		output_stream.write(leftdata_stream.read(samplebytes))
@@ -116,7 +110,7 @@ def iff_read(iffbytebuffer, offset):
 	return customchunk_read(iffbytebuffer, offset, 4, 4, "little", False)
 
 def customchunk_read(iffbytebuffer, offset, in_namesize, in_chunksize, endian, debugtxt):
-	if isinstance(iffbytebuffer, (bytes, bytearray)) == True: iffbytebuffer = to_bytesio(iffbytebuffer)
+	if isinstance(iffbytebuffer, (bytes, bytearray)) == True: iffbytebuffer = BytesIO(iffbytebuffer)
 	riffobjects = []
 	iffbytebuffer.seek(0,2)
 	filesize = iffbytebuffer.tell()

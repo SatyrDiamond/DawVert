@@ -142,7 +142,7 @@ def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bp
 			frameval *= sampleref_obj.hz/WAVE_FREQUENCY
 
 			event_obj = muse_part.new_event()
-			event_obj.file = sampleref_obj.fileref.get_path('unix', True)
+			event_obj.file = sampleref_obj.fileref.get_path('unix', False)
 			event_obj.frame = int(frameval)
 			event_obj.poslen.len = (int(audiopl_obj.duration)*wavetime)*bpmcalc
 			event_obj.poslen.sample = (int(audiopl_obj.position)*wavetime)*bpmcalc

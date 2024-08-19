@@ -162,7 +162,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					if 'sample1All' in constantsdata:
 						bufferid = constantsdata['sample1All']
 						wave_path = extract_audio(bufferid)
-						plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(deviceid, wave_path, sampleid=bufferid)
+						plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(deviceid, wave_path, None, sampleid=bufferid)
 						instrument_dev = deviceid
 
 						attack = inputdata["attack"]/48000 if "attack" in inputdata else 0.001
@@ -427,7 +427,7 @@ class input_wavtool(plugins.base):
 					sp_obj = placement_obj.sample
 
 					audio_filename = extract_audio(wavtool_clip.audioBufferId)
-					convproj_obj.add_sampleref(wavtool_clip.audioBufferId, audio_filename)
+					convproj_obj.add_sampleref(wavtool_clip.audioBufferId, audio_filename, None)
 					sp_obj.sampleref = wavtool_clip.audioBufferId
 
 					loopon = True

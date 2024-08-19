@@ -19,12 +19,9 @@ class dualstr:
 		return outobj
 
 	def __str__(self):
-		if self.type != None and self.subtype != None: 
-			return self.type+':'+self.subtype
-		elif self.type != None and self.subtype == None: 
-			return self.type
-		elif self.type == None and self.subtype == None: 
-			return ''
+		if self.type != None and self.subtype != None: return self.type+':'+self.subtype
+		elif self.type != None and self.subtype == None: return self.type
+		elif self.type == None and self.subtype == None: return ''
 
 	def get_list(self):
 		return [self.type, self.subtype]
@@ -40,8 +37,7 @@ class dualstr:
 		self.subtype = i_subtype
 
 	def set_str(self, in_str):
-		strsplit = in_str.split(':', 1)
-		self.set_list(strsplit)
+		self.set_list(in_str.split(':', 1))
 
 	def set_list(self, in_list):
 		self.type = None

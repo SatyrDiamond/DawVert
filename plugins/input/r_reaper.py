@@ -17,8 +17,8 @@ from objects.file_proj import proj_reaper
 def reaper_color_to_cvpj_color(i_color, isreversed): 
 	bytecolors = struct.pack('i', i_color)
 	if bytecolors[3]:
-		if isreversed == True: return colors.rgb_int_to_rgb_float([bytecolors[0],bytecolors[1],bytecolors[2]])
-		else: return colors.rgb_int_to_rgb_float([bytecolors[2],bytecolors[1],bytecolors[0]])
+		if isreversed == True: return [bytecolors[0],bytecolors[1],bytecolors[2]]
+		else: return [bytecolors[2],bytecolors[1],bytecolors[0]]
 	else:
 		return [0.51, 0.54, 0.54]
 
@@ -197,8 +197,9 @@ class input_reaper(plugins.base):
 					placement_obj.sample.pan = cvpj_pan
 					placement_obj.sample.pitch = cvpj_audio_pitch
 					placement_obj.sample.vol = cvpj_vol
-					sampleref_obj = convproj_obj.add_sampleref(cvpj_audio_file, cvpj_audio_file)
+					sampleref_obj = convproj_obj.add_sampleref(cvpj_audio_file, cvpj_audio_file, None)
 					sampleref_obj.find_relative('projectfile')
+
 					placement_obj.sample.sampleref = cvpj_audio_file
 					if samplemode == 3: placement_obj.sample.reverse = True
 

@@ -377,7 +377,7 @@ class output_wavtool(plugins.base):
 
 						audiofilename = ''
 						ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
-						if ref_found: audiofilename = sampleref_obj.fileref.get_path(None, True)
+						if ref_found: audiofilename = sampleref_obj.fileref.get_path(None, False)
 
 						audioBufferId = addsample(zip_wt, audiofilename, False)
 						wavtool_clip.audioBufferId = audioBufferId

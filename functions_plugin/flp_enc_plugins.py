@@ -178,7 +178,7 @@ def setparams(convproj_obj, plugin_obj):
 		lfo_pitch = plugin_obj.lfo_get('pitch')
 
 		ref_found, fileref_obj = plugin_obj.get_fileref('file', convproj_obj)
-		sf2_file = fileref_obj.get_path('win', True) if ref_found else ''
+		sf2_file = fileref_obj.get_path('win', False) if ref_found else ''
 		sf2_bank, sf2_patch = plugin_obj.midi.to_sf2()
 
 		flsf_lfo_predelay = int(lfo_pitch.predelay*256) if lfo_pitch.predelay != 0 else -1
@@ -205,7 +205,7 @@ def setparams(convproj_obj, plugin_obj):
 		vst_name = plugin_obj.datavals_global.get('name', None)
 
 		ref_found, fileref_obj = plugin_obj.get_fileref_global('plugin', convproj_obj)
-		vst_path = fileref_obj.get_path('win', True) if ref_found else None
+		vst_path = fileref_obj.get_path('win', False) if ref_found else None
 
 		vstdata_bytes = plugin_obj.rawdata_get('chunk')
 

@@ -539,7 +539,7 @@ class lmms_plugin:
 
 			for xmlpart in xmldata:
 				isvstparam = False
-				isvalid = data_values.only_values(list(xmlpart.attrib.keys()), ['value','scale_type','id'])
+				isvalid = data_values.list__only_values(list(xmlpart.attrib.keys()), ['value','scale_type','id'])
 				if isvalid:
 					if xmlpart.tag.startswith('param'):
 						paramnum = xmlpart.tag[5:]
@@ -568,7 +568,7 @@ class lmms_plugin:
 					self.params[n] = param_obj
 
 			for xmlpart in xmldata:
-				isvalid = data_values.only_values(list(xmlpart.attrib.keys()), ['value','scale_type','id'])
+				isvalid = data_values.list__only_values(list(xmlpart.attrib.keys()), ['value','scale_type','id'])
 				if isvalid:
 					param_obj = lmms_param(xmlpart.tag, '')
 					param_obj.read(xmldata)

@@ -8,7 +8,7 @@ from objects.file_proj import proj_orgyana
 import plugins
 import os
 
-ORGSAMP_FILENAME = '__external_data\\orgyana\\orgsamp.dat'
+ORGSAMP_FILENAME = '_external_data\\orgyana\\orgsamp.dat'
 
 class input_orgyana(plugins.base):
 	def __init__(self): pass
@@ -56,7 +56,7 @@ class input_orgyana(plugins.base):
 							audio_obj.rate = orgsamp_obj.drum_rate
 							audio_obj.pcm_from_list(orgsamp_obj.drum_data[orgtrack_obj.instrument])
 							audio_obj.to_file_wav(drum_filename)
-						plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(drum_filename)
+						plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(drum_filename, None)
 						sp_obj.trigger = 'oneshot'
 						track_obj.inst_pluginid = pluginid
 				else: 

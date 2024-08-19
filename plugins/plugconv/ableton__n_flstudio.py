@@ -34,6 +34,7 @@ class plugconv(plugins.base):
 			plugin_obj.replace('native-ableton', 'StereoGain')
 			manu_obj.to_param('vol', 'Gain', None)
 			manu_obj.to_param('pan', 'Balance', None)
+			return 0
 
 		if plugin_obj.type.subtype == 'fruity center':
 			extpluglog.convinternal('FL Studio', 'Fruity Center', 'Ableton', 'StereoGain')
@@ -41,6 +42,7 @@ class plugconv(plugins.base):
 			manu_obj.from_param('on', 'on', 0)
 			plugin_obj.replace('native-ableton', 'StereoGain')
 			manu_obj.to_param('on', 'DcFilter', None)
+			return 0
 
 		if plugin_obj.type.subtype == '3x osc':
 			extpluglog.convinternal('FL Studio', '3xOsc', 'Ableton', 'Operator')
@@ -122,6 +124,7 @@ class plugconv(plugins.base):
 				plugin_obj.params.add(starttxt+'/Envelope/ReleaseSlope', -adsr_obj.release_tension, 'float')
 
 			plugin_obj.params.add('Globals/Algorithm', 10, 'int')
+			return 0
 			
 		if plugin_obj.type.subtype == 'fruity dx10':
 			extpluglog.convinternal('FL Studio', 'Fruity DX10', 'Ableton', 'Operator')
@@ -198,6 +201,22 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('Operator.2/Tune/Fine', (mod2_fine**4)*180, 'float')
 
 			plugin_obj.datavals_global.add('middlenotefix', 24)
+			return 0
 
+		if plugin_obj.type.subtype == 'plucked!':
+			extpluglog.convinternal('FL Studio', 'Plucked!', 'Ableton', 'StringStudio')
+			plugin_obj.params.debugtxt()
+			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
+			manu_obj.from_param('decay', 'decay', 256)
+			manu_obj.from_param('color', 'color', 128)
+			manu_obj.calc('decay', 'div', 256, 0, 0, 0)
+			manu_obj.calc('color', 'div', 128, 0, 0, 0)
+			manu_obj.calc('decay', 'sub_r', 1, 0, 0, 0)
+			manu_obj.calc('color', 'sub_r', 1, 0, 0, 0)
+			plugin_obj.replace('native-ableton', 'StringStudio')
+			manu_obj.to_param('color', 'GeoExcitatorPosition', None)
+			manu_obj.to_param('decay', 'StringDecayRatio', None)
+			manu_obj.to_value(0.6, 'StringDamping', 'StringDamping', 'float')
+			return 0
 
 		return 2

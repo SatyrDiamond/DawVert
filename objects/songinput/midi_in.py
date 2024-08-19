@@ -5,6 +5,7 @@ import numpy as np
 
 from functions import data_values
 from functions import colors
+from functions import value_midi
 
 from objects import datastore
 from objects.data_bytes import structalloc
@@ -41,11 +42,6 @@ instauto_premake = structalloc.dynarray_premake([
 	('channel', np.uint8),
 	('type', np.uint8),
 	('value', np.uint8)])
-chanauto_premake = structalloc.dynarray_premake([
-	('pos', np.uint32),
-	('channel', np.uint8),
-	('control', np.uint8),
-	('value', np.uint8)])
 midinote_premake = structalloc.dynarray_premake([
 	('complete', np.uint8),
 	('chan', np.uint8),
@@ -62,31 +58,90 @@ otherauto_premake = structalloc.dynarray_premake([
 	('pos', np.uint32),
 	('value', np.uint8)])
 
-def get_auto(channel, ctrlnum, fxoffset):
-	autochannum = str(channel+1+fxoffset)
 
-	addmul = [0, 1]
-	defualtval = 0
-	autoloc = ['fxmixer', autochannum]
-	pname = None
+chanauto_premake = structalloc.dynarray_premake([
+	('pos', np.uint32),
+	('channel', np.uint8),
+	('control', np.uint8),
+	('value', np.uint8),
+	('smooth', np.uint8)
+	])
 
-	if ctrlnum in [10, 64, 65, 66, 67, 68]: addmul = [-0.5, 1]
+dtype_usedfx = [
+	('reverb', np.uint8),
+	('tremolo', np.uint8),
+	('chorus', np.uint8),
+	('detune', np.uint8),
+	('phaser', np.uint8)
+	]
 
-	if ctrlnum == 1: pname = 'modulation'
-	if ctrlnum == 7: pname, defualtval = 'vol', 1
-	if ctrlnum == 10: pname = 'pan'
-	if ctrlnum == 64: pname = 'damper_pedal'
-	if ctrlnum == 65: pname = 'portamento'
-	if ctrlnum == 66: pname = 'sostenuto'
-	if ctrlnum == 67: pname = 'soft_pedal'
-	if ctrlnum == 68: pname = 'legato'
-				
-	if ctrlnum == 91: 
-		autoloc, pname, defualtval = ['send', autochannum+'_reverb'], 'amount', 0
-	if ctrlnum == 93: 
-		autoloc, pname, defualtval = ['plugin', autochannum+'_chorus', 'amount'], 'amount', 0
+class midi_cc_auto_multi:
+	def __init__(self, numchannels):
+		self.data = chanauto_premake.create()
+		self.song_channels = numchannels
+		self.auto_seperated = [[] for x in range(numchannels)]
+		self.used_cc_chans = [[] for x in range(numchannels)]
 
-	return autoloc, pname, addmul, defualtval
+		self.fx_used_chans = np.zeros(numchannels, dtype=dtype_usedfx)
+		self.fx_used = np.zeros(1, dtype=dtype_usedfx)
+		self.start_vals = np.zeros(shape=(numchannels, 128), dtype=np.int8)
+		self.start_vals[:] = -1
+
+	def add_point(self, curpos, controller, value, smooth, channel):
+		ctrlchan = self.data
+		ctrlchan.add()
+		ctrlchan['pos'] = curpos
+		ctrlchan['channel'] = channel
+		ctrlchan['control'] = controller
+		ctrlchan['value'] = value
+		ctrlchan['smooth'] = smooth
+
+	def filter(self, channel, control):
+		sepchan = self.auto_seperated[channel]
+		return sepchan[sepchan['control']==control]
+
+	def postprocess(self):
+		self.data.sort(['pos'])
+		self.data.clean()
+		if len(self.data.data):
+			a_used = self.data.data['used']
+			a_data = self.data.data['channel']
+			self.auto_seperated = [self.data.data[np.where(np.logical_and(a_used==1, a_data==x))] for x in range(self.song_channels)]
+			self.used_cc_chans = [np.unique(self.auto_seperated[x]['control']) for x in range(self.song_channels)]
+
+			self.fx_used_chans['reverb'] = [(91 in x) for x in self.used_cc_chans]
+			self.fx_used_chans['tremolo'] = [(92 in x) for x in self.used_cc_chans]
+			self.fx_used_chans['chorus'] = [(93 in x) for x in self.used_cc_chans]
+			self.fx_used_chans['detune'] = [(94 in x) for x in self.used_cc_chans]
+			self.fx_used_chans['phaser'] = [(95 in x) for x in self.used_cc_chans]
+
+			self.fx_used['reverb'] = self.fx_used_chans['reverb'].sum()
+			self.fx_used['tremolo'] = self.fx_used_chans['tremolo'].sum()
+			self.fx_used['chorus'] = self.fx_used_chans['chorus'].sum()
+			self.fx_used['detune'] = self.fx_used_chans['detune'].sum()
+			self.fx_used['phaser'] = self.fx_used_chans['phaser'].sum()
+
+	def calc_startpos(self, startpos_chans):
+		for channum, ctrlnum, autodata in self.iter():
+			acp = autodata[np.where(autodata['pos']<=startpos_chans[channum])]
+			if len(acp)!=0: 
+				self.start_vals[channum][ctrlnum] = acp['value'][-1]
+
+	def iter(self):
+		for channum, chandata in enumerate(self.used_cc_chans):
+			for ctrlnum in chandata:
+				yield channum, ctrlnum, self.filter(channum, ctrlnum)
+
+	def iter_initval(self):
+		for channum, chandata in enumerate(self.used_cc_chans):
+			for ctrlnum in chandata:
+				yield channum, ctrlnum, self.start_vals[channum][ctrlnum], self.filter(channum, ctrlnum)
+
+
+
+
+
+
 
 class midi_track:
 	def __init__(self, numevents, song_obj):
@@ -108,7 +163,7 @@ class midi_track:
 			n_start = self.notes.data['start']
 			filt_chan = np.logical_and(n_used==1, n_data==channel)
 
-			for start, end, val in data_values.rangepos(posval, -1):
+			for start, end, val in data_values.gen__rangepos(posval, -1):
 				if end == -1:
 					filt_l_all = np.logical_and(filt_chan, n_start>=start)
 					self.notes.data[i_type][np.where(filt_l_all)] = val
@@ -204,13 +259,7 @@ class midi_track:
 		elif controller == 111: self.song_obj.loop_start = curpos
 		elif controller == 116: self.song_obj.loop_start = curpos
 		elif controller == 117: self.song_obj.loop_end = curpos
-		else:
-			ctrlchan = self.song_obj.auto_chan
-			ctrlchan.add()
-			ctrlchan['pos'] = curpos
-			ctrlchan['channel'] = channel
-			ctrlchan['control'] = controller
-			ctrlchan['value'] = value
+		else: self.song_obj.auto_chan.add_point(curpos, controller, value, 0, channel)
 
 	def program_change(self, curpos, channel, program):
 		instauto = self.song_obj.insts
@@ -289,7 +338,7 @@ class midi_song:
 		self.fx_offset = 0
 
 		self.auto_pitch = pitchauto_premake.create()
-		self.auto_chan = chanauto_premake.create()
+		self.auto_chan = midi_cc_auto_multi(numchannels)
 		self.insts = instauto_premake.create()
 		self.auto_timesig = timesig_premake.create()
 		self.auto_bpm = bpm_premake.create()
@@ -338,7 +387,7 @@ class midi_song:
 		self.auto_pitch.sort(['pos'])
 		self.auto_pitch.unique(['pos', 'channel'])
 
-		self.auto_chan.sort(['pos'])
+		self.auto_chan.postprocess()
 
 		self.auto_timesig.sort(['pos'])
 		self.auto_bpm.sort(['pos'])
@@ -398,17 +447,9 @@ class midi_song:
 		else:
 			chan_pitch = None
 
-		if len(self.auto_chan.data):
-			a_used = self.auto_chan.data['used']
-			a_data = self.auto_chan.data['channel']
-			chan_auto = [self.auto_chan.data[np.where(np.logical_and(a_used==1, a_data==x))] for x in range(self.song_channels)]
-			chan_auto_uni = [np.unique(chan_auto[x]['control']) for x in range(self.song_channels)]
-		else:
-			chan_auto = None
-			chan_auto_uni = None
-
 		s_prepos = np.rot90(np.array([[t.startpos_chan(c) for c in range(self.song_channels)] for t in self.miditracks]))
 		self.startpos_chan = [np.min(x) for x in s_prepos][::-1]
+		self.auto_chan.calc_startpos(self.startpos_chan)
 
 		e_prepos = np.rot90(np.array([[t.endpos_chan(c) for c in range(self.song_channels)] for t in self.miditracks]))
 		self.endpos_chan = [np.max(x) for x in e_prepos][::-1]
@@ -425,22 +466,6 @@ class midi_song:
 				self.add_instrument(num, ui['chan'], ui['i_bank'], ui['i_bank_hi'], ui['i_inst'], ui['i_drum'])
 
 		for chan in range(self.song_channels):
-			s_ctrls = chan_auto_uni[chan] if chan_auto_uni else []
-
-			if 91 in s_ctrls: self.used_fx[chan].append('reverb')
-			if 93 in s_ctrls: self.used_fx[chan].append('chorus')
-
-			if 'reverb' in self.used_fx[chan] and 'reverb' not in self.g_used_fx: 
-				self.g_used_fx.append('reverb')
-
-			for ctrlnum in s_ctrls:
-				chanauto = np.unique(chan_auto[chan][np.where(chan_auto[chan]['control']==ctrlnum)][['pos', 'value']])
-				self.chan_ctrls[chan][ctrlnum] = chanauto
-				acp = np.where(chanauto['pos']<=self.startpos_chan[chan])
-
-				if len(acp[0])!=0: 
-					self.start_ctrls[chan][ctrlnum] = chanauto['value'][acp][-1]
-
 			if chan_pitch != None:
 				s_pitch = chan_pitch[chan][['pos', 'value']]
 
@@ -451,7 +476,6 @@ class midi_song:
 		convproj_obj.set_timings(self.ppq, True)
 		self.instruments.clean()
 		self.auto_pitch.clean()
-		self.auto_chan.clean()
 		self.auto_timesig.clean()
 		self.auto_bpm.clean()
 
@@ -551,7 +575,7 @@ class midi_song:
 		fxchannel_obj.visual.name = "Master"
 		fxchannel_obj.visual.color.set_float([0.3, 0.3, 0.3])
 
-		if 'reverb' in self.g_used_fx:
+		if self.auto_chan.fx_used['reverb']:
 			reverb_fxchannel_obj = convproj_obj.add_fxchan(self.song_channels+1+self.fx_offset)
 			reverb_fxchannel_obj.visual.name = 'Reverb'
 			reverb_fxchannel_obj.visual_ui.other['docked'] = 1
@@ -560,30 +584,27 @@ class midi_song:
 			plugin_obj.fxdata_add(1, 0.5)
 			reverb_fxchannel_obj.fxslots_audio.append(reverb_pluginid)
 
-		for fx_num in range(self.fx_offset):
-			fxchannel_obj = convproj_obj.add_fxchan(fx_num+1)
+		for fx_num in range(self.fx_offset): fxchannel_obj = convproj_obj.add_fxchan(fx_num+1)
 
 		for ch_num in range(self.song_channels):
-
 			fx_num = ch_num+1+self.fx_offset
-
 			fxchannel_obj = convproj_obj.add_fxchan(ch_num+1+self.fx_offset)
 			fxchannel_obj.sends.add(0, None, 1)
 
-			used_fx = self.used_fx[ch_num]
-			start_ctrls = self.start_ctrls[ch_num]
+			used_fx = self.auto_chan.fx_used_chans[ch_num]
+			start_ctrls = self.auto_chan.start_vals[ch_num]
 			start_pitch = self.start_pitch[ch_num]
 
 			fxchannel_obj.params.add('pitch', start_pitch/8192, 'float')
-			if 7 in start_ctrls: fxchannel_obj.params.add('vol', start_ctrls[7]/127, 'float')
-			if 10 in start_ctrls: fxchannel_obj.params.add('pan', (start_ctrls[10]/127)-0.5, 'float')
+			if start_ctrls[7] != -1: fxchannel_obj.params.add('vol', start_ctrls[7]/127, 'float')
+			if start_ctrls[10] != -1: fxchannel_obj.params.add('pan', (start_ctrls[10]/127)-0.5, 'float')
 
-			if 'reverb' in used_fx:
-				reverbsend = start_ctrls[91]/127 if 91 in start_ctrls else 0
+			if used_fx['reverb']:
+				reverbsend = start_ctrls[91]/127 if start_ctrls[91] != -1 else 0
 				reverb_pluginid = str(fx_num+1)+'_reverb'
-				fxchannel_obj.sends.add(self.song_channels+1, reverb_pluginid, 0)
+				fxchannel_obj.sends.add(self.song_channels+1, reverb_pluginid, reverbsend)
 
-			if 'chorus' in used_fx:
+			if used_fx['chorus']:
 				chorus_size = start_ctrls[93]/127 if 93 in start_ctrls else 0
 				chorus_pluginid = str(fx_num+1)+'_chorus'
 				chorus_plugin_obj = convproj_obj.add_plugin(chorus_pluginid, 'simple', 'chorus')
@@ -621,21 +642,15 @@ class midi_song:
 					convproj_obj.automation.add_autotick(['fxmixer', str(ch_num+1), 'pitch'], 'float', pitchpoint['pos'], value)
 				prevval = value
 
-			chan_ctrls = self.chan_ctrls[ch_num]
-			for ctrlnum, autodata in chan_ctrls.items():
-				autoloc, pname, addmul, defualtval = get_auto(ch_num, ctrlnum, self.fx_offset)
-				i_add, i_mul = addmul
-				if pname and len( np.where(autodata['pos']>=self.startpos_chan[ch_num])[0] ):
-					prevval = 0
-					for posval in autodata:
-						value = ((posval['value']/127)+i_add)*i_mul
-						if value != prevval:
-							convproj_obj.automation.add_autotick(
-								autoloc+[pname], 'float', 
-								posval['pos'], 
-								value
-								)
-						prevval = value
+		for channum, ctrlnum, autodata in self.auto_chan.iter():
+			midiautoinfo = value_midi.get_cc_info(ctrlnum)
+			autoloc = midiautoinfo.get_autoloc(channum, self.fx_offset)
+			if midiautoinfo.name and len( np.where(autodata['pos']>=self.startpos_chan[channum])[0] ):
+				prevval = 0
+				for posval in autodata:
+					value = ((posval['value']/127)+midiautoinfo.math_add)*midiautoinfo.math_mul
+					if value != prevval: convproj_obj.automation.add_autotick(autoloc, 'float', posval['pos'], value)
+					prevval = value
 
 		if self.loop_start != None and self.loop_end != None: 
 			convproj_obj.loop_active = True

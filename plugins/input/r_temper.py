@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import note_data
+from functions import value_midi
 import xml.etree.ElementTree as ET
 from objects.file_proj import proj_temper
 import plugins
@@ -16,6 +17,7 @@ class input_cvpj_f(plugins.base):
 		dawinfo_obj.name = 'Temper'
 		dawinfo_obj.file_ext = ''
 		dawinfo_obj.audio_filetypes = ['wav']
+		dawinfo_obj.auto_types = ['pl_points']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		output = False
@@ -47,13 +49,16 @@ class input_cvpj_f(plugins.base):
 		for tracknum, tmp_track in enumerate(project_obj.track):
 			cvpj_trackid = 'track_'+str(tracknum)
 			if tmp_track.phrases:
-				track_obj = convproj_obj.add_track(str(tracknum), 'instrument', 1, False)
+				track_obj = convproj_obj.add_track(cvpj_trackid, 'instrument', 1, False)
+				track_obj.params.add('vol', 1, 'float')
+				track_obj.params.add('pan', 0, 'float')
 				if tmp_track.customname: track_obj.visual.name = tmp_track.customname
 				else: track_obj.visual.name = tmp_track.name
 				track_obj.visual.color.set_float([0.66, 0.66, 0.73])
 				curpos = 0
 				for phrase in tmp_track.phrases:
 					curpos += phrase.td
+					phraseauto = {}
 					placement_obj = track_obj.placements.add_notes()
 					placement_obj.position = curpos
 					placement_obj.duration = phrase.d
@@ -61,7 +66,28 @@ class input_cvpj_f(plugins.base):
 					for event in phrase.events:
 						ncurpos += event.td
 						if isinstance(event, proj_temper.event_note):
-							placement_obj.notelist.add_r(ncurpos, event.d, note_data.text_to_note(event.p), event.v/127, {})
+							placement_obj.notelist.add_r(ncurpos, event.d, note_data.text_to_note(event.p)+24, event.v/127, {})
+						if isinstance(event, proj_temper.event_control):
+							if event.n not in phraseauto: phraseauto[event.n] = []
+							phraseauto[event.n].append([ncurpos, event])
+
+					for pa_c, pc_d in phraseauto.items():
+						midiautoinfo = value_midi.get_cc_info(pa_c)
+						autoloc = midiautoinfo.get_autoloc_track(cvpj_trackid)
+
+						if autoloc:
+							autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
+							autopl_obj.position = curpos
+							autopl_obj.duration = phrase.d
+							prev_i = 1
+							for p_pos, p_val in pc_d:
+								autopoint_obj = autopl_obj.data.add_point()
+								autopoint_obj.pos = p_pos
+								autopoint_obj.value = ((p_val.v/127)+midiautoinfo.math_add)*midiautoinfo.math_mul
+								autopoint_obj.type = 'instant' if prev_i else 'normal'
+								prev_i = p_val.ct
+
+
 
 			elif tmp_track.audios:
 				track_obj = convproj_obj.add_track(str(tracknum), 'audio', 1, False)
@@ -77,6 +103,3 @@ class input_cvpj_f(plugins.base):
 					convproj_obj.add_sampleref(audio.file, audio.file)
 					sp_obj = placement_obj.sample
 					sp_obj.sampleref = audio.file
-
-
-

@@ -10,6 +10,7 @@ from functions import xtramath
 from objects import globalstore
 from objects import audio_data
 from objects.file_proj import proj_famistudiotxt
+from objects.inst_params import juce_plugin
 
 dpcm_rate_arr = [4181.71,4709.93,5264.04,5593.04,6257.95,7046.35,7919.35,8363.42,9419.86,11186.1,12604.0,13982.6,16884.6,21306.8,24858.0,33143.9]
 
@@ -30,7 +31,6 @@ def add_envelope(plugin_obj, fst_Instrument, cvpj_name, fst_name):
 			envdata['pos'] = fst_Instrument.N163WavePos
 			envdata['count'] = fst_Instrument.N163WaveCount
 			plugin_obj.datavals.add('wave', envdata)
-
 		else:
 			envdata_values = f_env_data.Values
 			envdata_loop = f_env_data.Loop
@@ -61,11 +61,9 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 
 	if WaveType == 'VRC7FM':
 		inst_obj.params.add('vol', 1, 'float')
-		plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('fm', 'vrc7')
+		opl2_obj = fst_Instrument.FM.to_opl2()
+		plugin_obj, inst_obj.pluginid = opl2_obj.to_cvpj_genid(convproj_obj)
 		add_envelopes(plugin_obj, fst_Instrument)
-		plugin_obj.datavals.add('patch', fst_Instrument.Patch)
-		plugin_obj.datavals.add('use_patch', bool(fst_Instrument.Patch))
-		plugin_obj.datavals.add('regs', fst_Instrument.Regs)
 
 	if WaveType == 'VRC6Square' or WaveType == 'VRC6Saw':
 		if WaveType == 'VRC6Saw': wavetype = 'saw'
@@ -104,9 +102,10 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 		add_envelopes(plugin_obj, fst_Instrument)
 
 	if WaveType == 'EPSMFM':
+		inst_obj.params.add('vol', 0.6, 'float')
 		instvolume = 0.7
-		plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('fm', 'epsm')
-		plugin_obj.datavals.add('regs', fst_Instrument.Regs)
+		opn2_obj = fst_Instrument.FM.to_opn2()
+		plugin_obj, inst_obj.pluginid = opn2_obj.to_cvpj_genid(convproj_obj)
 		instpan = 0
 		instpan += int(bool(fst_Instrument.Regs[1] & 0x80))*-1
 		instpan += int(bool(fst_Instrument.Regs[1] & 0x40))
@@ -124,7 +123,7 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 	inst_obj.visual.name = instname
 	inst_obj.visual.from_dset('famistudio', 'chip', WaveType, False)
 
-	if WaveType in ['EPSMFM', 'EPSMSquare']: inst_obj.datavals.add('middlenote', 12)
+	if WaveType in ['VRC7FM']: inst_obj.datavals.add('middlenote', 12)
 
 def create_dpcm_inst(DPCMMappings, DPCMSamples, fx_num, fst_instrument):
 	global samplefolder
@@ -154,7 +153,7 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fx_num, fst_instrument):
 			audio_obj.rate = dpcm_rate_arr[dpcm_pitch]
 			audio_obj.to_file_wav(filename)
 			correct_key = key+24
-			sampleref_obj = convproj_obj.add_sampleref(filename, filename)
+			sampleref_obj = convproj_obj.add_sampleref(filename, filename, None)
 			sp_obj = plugin_obj.sampleregion_add(correct_key, correct_key, correct_key, None)
 			sp_obj.visual.name = dpcm_sample
 			sp_obj.sampleref = filename
@@ -167,55 +166,26 @@ def NoteToMidi(keytext):
 	s_key = l_key.index(t_key)
 	return s_key + s_octave
 
-InstShapes = {'Square1': 'Square1', 
-		'Square2': 'Square2', 
-		'Triangle': 'Triangle', 
-		'Noise': 'Noise', 
-
-		'VRC6Square1': 'VRC6Square', 
-		'VRC6Square2': 'VRC6Square', 
-		'VRC6Saw': 'VRC6Saw', 
-
-		'VRC7FM1': 'VRC7FM', 
-		'VRC7FM2': 'VRC7FM', 
-		'VRC7FM3': 'VRC7FM', 
-		'VRC7FM4': 'VRC7FM', 
-		'VRC7FM5': 'VRC7FM', 
-		'VRC7FM6': 'VRC7FM', 
-
-		'FDS': 'FDS', 
-
-		'N163Wave1': 'N163', 
-		'N163Wave2': 'N163', 
-		'N163Wave3': 'N163', 
-		'N163Wave4': 'N163', 
-
-		'S5BSquare1': 'S5B', 
-		'S5BSquare2': 'S5B', 
-		'S5BSquare3': 'S5B',
-
-		'MMC5Square1': 'MMC5', 
-		'MMC5Square2': 'MMC5',
-
-		'EPSMSquare1': 'EPSMSquare',
-		'EPSMSquare2': 'EPSMSquare',
-		'EPSMSquare3': 'EPSMSquare',
-
-		'EPSMFM1': 'EPSMFM',
-		'EPSMFM2': 'EPSMFM',
-		'EPSMFM3': 'EPSMFM',
-		'EPSMFM4': 'EPSMFM',
-		'EPSMFM5': 'EPSMFM',
-		'EPSMFM6': 'EPSMFM',
-
-		'EPSMRythm1': 'EPSM_Kick',
-		'EPSMRythm2': 'EPSM_Snare',
-		'EPSMRythm3': 'EPSM_Cymbal',
-		'EPSMRythm4': 'EPSM_HiHat',
-		'EPSMRythm5': 'EPSM_Tom',
-		'EPSMRythm6': 'EPSM_Rimshot',
-		}
-
+def get_instshape(InstShape):
+	if InstShape == 'Square1': return 'Square1'
+	elif InstShape == 'Square2': return 'Square2'
+	elif InstShape == 'Triangle': return 'Triangle'
+	elif InstShape == 'Noise': return 'Noise'
+	elif InstShape.startswith('VRC6Saw'): return 'VRC6Saw'
+	elif InstShape.startswith('VRC6Square'): return 'VRC6Square'
+	elif InstShape.startswith('VRC7FM'): return 'VRC7FM'
+	elif InstShape.startswith('N163Wave'): return 'N163'
+	elif InstShape.startswith('S5BSquare'): return 'S5B'
+	elif InstShape.startswith('MMC5Square'): return 'MMC5'
+	elif InstShape.startswith('EPSMSquare'): return 'EPSMSquare'
+	elif InstShape.startswith('EPSMFM'): return 'EPSMFM'
+	elif InstShape == 'EPSMRythm1': return 'EPSM_Kick'
+	elif InstShape == 'EPSMRythm2': return 'EPSM_Snare'
+	elif InstShape == 'EPSMRythm3': return 'EPSM_Cymbal'
+	elif InstShape == 'EPSMRythm4': return 'EPSM_HiHat'
+	elif InstShape == 'EPSMRythm5': return 'EPSM_Tom'
+	elif InstShape == 'EPSMRythm6': return 'EPSM_Rimshot'
+	else: return 'DPCM'
 
 class input_famistudio(plugins.base):
 	def __init__(self): pass
@@ -262,7 +232,7 @@ class input_famistudio(plugins.base):
 
 		for channum, fst_channel in enumerate(fst_currentsong.Channels):
 			playlistnum = str(channum+1)
-			WaveType = InstShapes[fst_channel.Type] if fst_channel.Type in InstShapes else 'DPCM'
+			WaveType = get_instshape(fst_channel.Type)
 			used_insts = []
 			for pattern_name, fs_pattern in fst_channel.Patterns.items():
 				for x in fs_pattern.Notes:
@@ -297,7 +267,7 @@ class input_famistudio(plugins.base):
 								if notedata.Value not in ['Stop', None]:
 									t_key = notedata.Value + 24
 									if fst_channel.Type[0:6] == 'EPSMFM': t_key -= 12
-									t_instrument = InstShapes[fst_channel.Type]+'-'+notedata.Instrument
+									t_instrument = get_instshape(fst_channel.Type)+'-'+notedata.Instrument
 									nle_obj.notelist.add_m(t_instrument, t_position, t_duration, t_key, 1, {})
 
 									if notedata.SlideTarget:
@@ -311,9 +281,12 @@ class input_famistudio(plugins.base):
 									if notedata.Arpeggio:
 										if notedata.Arpeggio in project_obj.Arpeggios:
 											multikeys = project_obj.Arpeggios[notedata.Arpeggio].Values
-											nle_obj.notelist.last_arpeggio(multikeys)
+											multikeys_r = []
+											[multikeys_r.append(x) for x in multikeys if x not in multikeys_r]
+											nle_obj.notelist.last_arpeggio(multikeys_r)
 
 						else:
+							t_key = notedata.Value + 24
 							if notedata.Instrument: 
 								nle_obj.notelist.add_m('DPCM'+'-'+notedata.Instrument, t_position, t_duration, t_key, 1, {})
 							else: 

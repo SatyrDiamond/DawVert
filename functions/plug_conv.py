@@ -70,7 +70,7 @@ def convproj(convproj_obj, in_dawinfo, out_dawinfo, dv_config):
 					convplug_obj = pluginfo.object
 					ismatch = plugin_obj.check_wildmatch(pluginfo.in_plugin[0], pluginfo.in_plugin[1])
 					extmatch = True in [(x in out_dawinfo.plugin_ext) for x in pluginfo.ext_formats]
-					catmatch = data_values.only_values(pluginfo.plugincat, dv_config.extplug_cat)
+					catmatch = data_values.list__only_values(pluginfo.plugincat, dv_config.extplug_cat)
 
 					if ismatch and extmatch and catmatch:
 						ext_conv_val = convplug_obj.convert(convproj_obj, plugin_obj, pluginid, dv_config, out_dawinfo.plugin_ext)

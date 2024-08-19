@@ -101,7 +101,8 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 		do_sampleref(convproj_obj, als_samplepart.SampleRef, sampleref_obj)
 	
 		#print(cvpj_samplepart.start, cvpj_samplepart.end, cvpj_samplepart.loop_start, cvpj_samplepart.loop_end, sampleref_obj.fileref.get_path(convproj_obj, 'win'))
-	
+		if cvpj_samplepart.visual.name: als_samplepart.Name = cvpj_samplepart.visual.name
+
 		als_samplepart.SampleStart = cvpj_samplepart.start
 		als_samplepart.SampleEnd = cvpj_samplepart.end
 		als_samplepart.SustainLoop.Start = cvpj_samplepart.loop_start

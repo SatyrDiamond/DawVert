@@ -13,6 +13,46 @@ import plugins
 
 def get_float(in_int): return struct.unpack("<f", struct.pack("I", in_int))[0]
 
+class pxtone_cmdstream():
+	def __init__(self, cvpj_notelist, convproj_obj, cvpj_trackid):
+		self.notestart = 0
+		self.noteend = 0
+		self.cvpj_notelist = cvpj_notelist
+		self.cvpj_auto = convproj_obj.automation
+		self.cvpj_trackid = cvpj_trackid
+
+		self.cur_pitch = 9
+		self.cur_porta = 0
+		self.cur_voice = 0
+
+	def note_pitch(self, i_pos, i_value):
+		if self.noteend>i_pos:
+			slide_pitch = (i_value//256)-87
+			slidepos = int(i_pos-self.notestart)
+			self.cvpj_notelist.last_add_slide(slidepos, float(self.cur_porta), float(slide_pitch), 1, None)
+		else:
+			self.cur_pitch = (i_value//256)-87
+
+	def porta(self, i_value):
+		self.cur_porta = i_value
+
+	def voice(self, i_value):
+		self.cur_voice = i_value
+
+	def vol(self, i_pos, i_value):
+		self.cvpj_auto.add_autotick(['track', self.cvpj_trackid, 'vol'], 'float', i_pos, i_value/128)
+
+	def pan(self, i_pos, i_value):
+		self.cvpj_auto.add_autotick(['track', self.cvpj_trackid, 'pan'], 'float', i_pos, ((i_value/128)-0.5)*2)
+
+	def pitch(self, i_pos, i_value):
+		self.cvpj_auto.add_autotick(['track', self.cvpj_trackid, 'pitch'], 'float', i_pos, math.log2(get_float(i_value))*12)
+
+	def note(self, i_pos, i_value):
+		self.cvpj_notelist.add_m('ptcop_'+str(self.cur_voice), i_pos, i_value, self.cur_pitch, 1, None)
+		self.noteend = int(i_value+i_pos)
+		self.notestart = int(i_pos)
+
 class input_pxtone(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -54,7 +94,7 @@ class input_pxtone(plugins.base):
 			cvpj_instid = 'ptcop_'+str(voicenum)
 			inst_obj = convproj_obj.add_instrument(cvpj_instid)
 			inst_obj.visual.name = voice_obj.name
-			#inst_obj.visual.color = [0.14, 0.00, 0.29]
+			#inst_obj.visual.color.set_float([0.14, 0.00, 0.29])
 
 			cvpj_instvol = 1.0
 
@@ -96,36 +136,16 @@ class input_pxtone(plugins.base):
 			track_obj.visual.name = unit_obj.name
 			track_obj.visual.color.set_float(colordata.getcolor())
 
-			notestart = 0
-			noteend = 0
-
-			cur_pitch = 9
-			cur_porta = 0
-			cur_voice = 0
+			unitstream = pxtone_cmdstream(track_obj.placements.notelist, convproj_obj, cvpj_trackid)
 
 			for e in unit_notes:
-				if e['eventnum'] == 2: 
-					if noteend>e['d_position']:
-						slide_pitch = (e['value']//256)-87
-						slidepos = int(e['d_position']-notestart)
-						track_obj.placements.notelist.last_add_slide(slidepos, float(cur_porta), float(slide_pitch), 1, None)
-					else:
-						cur_pitch = (e['value']//256)-87
-
-				if e['eventnum'] == 6: cur_porta = e['value']
-				if e['eventnum'] == 12: cur_voice = e['value']
-
-				if e['eventnum'] == 5: 
-					convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'vol'], 'float', e['d_position'], e['value']/128)
-				if e['eventnum'] == 15: 
-					convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'pan'], 'float', e['d_position'], ((e['value']/128)-0.5)*2)
-				if e['eventnum'] == 14: 
-					convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'pitch'], 'float', e['d_position'], math.log2(get_float(e['value']))*12)
-
-				if e['eventnum'] == 1:
-					track_obj.placements.notelist.add_m('ptcop_'+str(cur_voice), e['d_position'], e['value'], cur_pitch, 1, None)
-					noteend = int(e['value']+e['d_position'])
-					notestart = int(e['d_position'])
+				if e['eventnum'] == 2: unitstream.note_pitch(e['d_position'], e['value'])
+				if e['eventnum'] == 6: unitstream.porta(e['value'])
+				if e['eventnum'] == 12: unitstream.voice(e['value'])
+				if e['eventnum'] == 5: unitstream.vol(e['d_position'], e['value'])
+				if e['eventnum'] == 15: unitstream.pan(e['d_position'], e['value'])
+				if e['eventnum'] == 14: unitstream.pitch(e['d_position'], e['value'])
+				if e['eventnum'] == 1: unitstream.note(e['d_position'], e['value'])
 
 			track_obj.placements.notelist.notemod_conv()
 

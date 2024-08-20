@@ -223,7 +223,6 @@ class cvpj_s_automation:
 					autopoint_obj.tension = point.tension
 					autopoint_obj.extra = point.extra
 					
-
 		self.u_nopl_points = False
 		self.nopl_points = None
 

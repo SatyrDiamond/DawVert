@@ -249,12 +249,6 @@ class input_serato(plugins.base):
 
 									samplenotes[note.start] = [note.duration, startoffset*960, endoffset*960, color, cuedata]
 
-									#placement_obj.cut_type = 'cut'
-									#placement_obj.cut_start = startoffset*960
-
-								#a.sort(key=lambda x: x[1])
-
-
 								samplenotes = dict(sorted(samplenotes.items()))
 								if extendlast and samplenotes:
 									poslist = list(samplenotes)

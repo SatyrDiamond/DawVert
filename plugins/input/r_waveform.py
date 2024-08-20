@@ -92,8 +92,6 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				track_obj.inst_pluginid = pluginid
 				sp_obj = plugin_obj.samplepart_add('sample')
 				soundlayer_samplepart(sp_obj, soundlayer)
-
-
 		else:
 			juceobj = juce_plugin.juce_plugin()
 			juceobj.uniqueId = wf_plugin.params['uniqueId'] if "uniqueId" in wf_plugin.params else ''
@@ -140,7 +138,7 @@ autonames = {
 
 def do_track(convproj_obj, wf_track, track_obj): 
 	track_obj.visual.name = wf_track.name
-	#track_obj.visual.color = colors.hex_to_rgb_float(wf_track.colour)
+	track_obj.visual.color = colors.hex_to_rgb_float(wf_track.colour)
 	track_obj.visual_ui.height = wf_track.height/35.41053828354546
 
 	vol = 1

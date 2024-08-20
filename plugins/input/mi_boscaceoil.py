@@ -1,12 +1,13 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import xtramath
 from functions import data_values
+from functions import xtramath
 from functions_plugin_cvpj import params_fm
 from objects import globalstore
 from objects.convproj import project as convproj
 from objects.file_proj import proj_boscaceoil
+from objects.inst_params import fm_opm
 from objects.inst_params import fx_delay
 import plugins
 import json
@@ -122,38 +123,12 @@ class input_ceol(plugins.base):
 				inst_obj.from_dataset("boscaceoil", 'inst', str(ceol_inst_obj.inst), False)
 
 				idval_inst = globalstore.idvals.get('boscaceoil')
-				idvalvalsound = globalstore.idvals.get('valsound_opm')
+				opm_obj = fm_opm.opm_inst()
+				if idval_inst: valsoundid = idval_inst.get_idval(str(ceol_inst_obj.inst), 'valsoundid')
+				opm_obj.from_valsound(valsoundid)
 
-				if idvalvalsound:
-					valsoundid = idval_inst.get_idval(str(ceol_inst_obj.inst), 'valsoundid')
-
-					if valsoundid not in [None, '']:
-						fm_opm_main = idvalvalsound.get_idval(valsoundid, 'opm_main')
-						fm_opm_op1 = idvalvalsound.get_idval(valsoundid, 'opm_op1')
-						fm_opm_op2 = idvalvalsound.get_idval(valsoundid, 'opm_op2')
-						fm_opm_op3 = idvalvalsound.get_idval(valsoundid, 'opm_op3')
-						fm_opm_op4 = idvalvalsound.get_idval(valsoundid, 'opm_op4')
-
-						if fm_opm_main and  fm_opm_op1 and  fm_opm_op2 and  fm_opm_op3 and  fm_opm_op4: 
-							opm_main = [int(x) for x in fm_opm_main.split(',')]
-							opm_op1 = [int(x) for x in fm_opm_op1.split(',')]
-							opm_op2 = [int(x) for x in fm_opm_op2.split(',')]
-							opm_op3 = [int(x) for x in fm_opm_op3.split(',')]
-							opm_op4 = [int(x) for x in fm_opm_op4.split(',')]
-							opm_ops = [opm_op1, opm_op2, opm_op3, opm_op4]
-							fmdata = params_fm.fm_data('opm')
-							fmdata.set_param('opmsk', 120)
-							fmdata.set_param('alg', opm_main[0])
-							fmdata.set_param('fb', opm_main[1])
-							for o in range(4):
-								#print(opm_ops[o])
-								for n, t in enumerate(['ar','d1r','d2r','rr','d1l','tl','ks','ml','dt1','dt2']):
-									fmdata.set_op_param(o, t, opm_ops[o][n])
-							fmdata.to_cvpj(convproj_obj, cvpj_instid)
-
-				else: 
-					plugin_obj.type_set('native-boscaceoil', str(ceol_inst_obj.inst))
-					plugin_obj.role = 'synth'
+				plugin_obj, inst_obj.pluginid = opm_obj.to_cvpj_genid(convproj_obj)
+				
 
 			if ceol_inst_obj.inst == 363: t_key_offset.append(60)
 			elif ceol_inst_obj.inst == 364: t_key_offset.append(48)

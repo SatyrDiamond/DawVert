@@ -188,7 +188,7 @@ def cvpj_wave_to_wavetable(plugin_obj, s_osc, wt_json):
 	wtkfs.append(keyframe)
 	wtg.append(wtgs)
 
-def cvpj_wt_to_wavetable(plugin_obj, wtid, wt_json):
+def cvpj_wt_to_wavetable(plugin_obj, wtid, wt_json, vs, vm, oscnum):
 	ifexists, wavetable_obj = plugin_obj.wavetable_get_exists(wtid)
 	if ifexists:
 		wt_json["author"] = wavetable_obj.author
@@ -203,8 +203,39 @@ def cvpj_wt_to_wavetable(plugin_obj, wtid, wt_json):
 
 			wtcs['interpolation_style'] = (2 if wavetabsource_obj.blend_smooth else 1) if wavetabsource_obj.blend_on else 0
 
+			if wavetabsource_obj.type == 'retro':
+				wtcs['interpolation'] = 1 if wavetabsource_obj.blend_mode == 'spectral' else 0
+				wtcs['type'] = 'Wave Source'
+				wtkfs = wtcs['keyframes'] = []
+				wave_obj = copy.deepcopy(plugin_obj.wave_get(wavetabsource_obj.retro_id))
+				wavsplit = wave_obj.split(wavetabsource_obj.retro_size)
+				for pos, wt_part in enumerate(wavsplit):
+					keyframe = {}
+					keyframe['position'] = int((pos/wavetabsource_obj.retro_count)*256)
+					wt_part = copy.deepcopy(wt_part)
+					wt_part.smooth = False
+					wt_part.resize(2048)
+					wt_part.balance()
+					keyframe['wave_data'] = base64.b64encode(np.asarray(wt_part.points, dtype=np.float32)).decode()
+					wtkfs.append(keyframe)
+				free_lfo = get_free_lfo(vs)
+				endtxt = 'lfo_'+str(free_lfo+1)
+				vs[endtxt+'_frequency'] = -math.log2(wavetabsource_obj.retro_time)
+				vs[endtxt+'_sync_type'] = 4.0
+				vs[endtxt+'_sync'] = 0.0
+				vs[endtxt+'_phase'] = wavetabsource_obj.retro_loop/wave_obj.numpoints
+
+				vl = vs['lfos']
+				vl[free_lfo] = {"name":"Saw","num_points":3,"points":[0.0,1.0,1.0,0.0,1.0,1.0],"powers":[0.0,0.0,0.0],"smooth":False}
+
+				wave_frame_txt = 'osc_'+str(oscnum+1)+'_wave_frame'
+				vs[wave_frame_txt] = 0.0
+
+				modnum = add_free_auto(vm, endtxt, wave_frame_txt)
+				if modnum: vs['modulation_'+str(modnum)+'_amount'] = 1
+
 			if wavetabsource_obj.type == 'audio':
-				wtcs['audio_file'] = {}
+				wtcs['audio_file'] = ''
 				wtcs['audio_sample_rate'] = 44100
 				wtcs['fade_style'] = list_fade_style.index(wavetabsource_obj.fade_style) if wavetabsource_obj.fade_style in list_fade_style else 0
 				wtcs['phase_style'] = list_phase_style.index(wavetabsource_obj.phase_style) if wavetabsource_obj.phase_style in list_phase_style else 0
@@ -674,7 +705,8 @@ class extplugin(plugins.base):
 		for n in range(3): 
 			osc_obj = plugin_obj.osc_get(n)
 			if osc_obj:
-				if osc_obj.prop.type == 'wavetable': cvpj_wt_to_wavetable(plugin_obj, osc_obj.prop.nameid, vwt[n])
+				if osc_obj.prop.type == 'wavetable': 
+					cvpj_wt_to_wavetable(plugin_obj, osc_obj.prop.nameid, vwt[n], vs, vm, n)
 				else: 
 					cvpj_wave_to_wavetable(plugin_obj, osc_obj.prop, vwt[n])
 					if osc_obj.prop.shape == 'random':

@@ -29,7 +29,6 @@ class mss_chord():
 		self.bookmark = False
 		self.speedmark = -1
 
-
 class input_mariopaint_mss(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'

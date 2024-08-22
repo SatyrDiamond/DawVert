@@ -464,7 +464,7 @@ class output_lmms(plugins.base):
 						elif plugin_obj.check_match('vst2', 'win'):
 							lmms_inst_obj.name = 'vestige'
 							lmms_plug_obj.name = 'vestige'
-							setvstparams(lmms_plug_obj, plugin_obj, track_obj.inst_pluginid, None)
+							middlenotefix += setvstparams(lmms_plug_obj, plugin_obj, track_obj.inst_pluginid, None)
 
 						elif plugin_obj.check_wildmatch('native-lmms', None):
 							lmms_inst_obj.name = plugin_obj.type.subtype

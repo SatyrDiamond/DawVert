@@ -259,6 +259,11 @@ class plugconv(plugins.base):
 			plugin_obj.plugts_transform('./data_main/plugts/flstudio_univ.pltr', 'fruity_reeverb_2', convproj_obj, pluginid)
 			return 1
 
+		if plugin_obj.type.subtype == 'fruity balance':
+			extpluglog.convinternal('FL Studio', 'Fruity Balance', 'Universal', 'Vol/Pan')
+			plugin_obj.plugts_transform('./data_main/plugts/flstudio_univ.pltr', 'fruity_balance', convproj_obj, pluginid)
+			return 1
+
 		if plugin_obj.type.subtype == 'frequency shifter':
 			extpluglog.convinternal('FL Studio', 'Frequency Shifter', 'Universal', 'Frequency Shifter')
 			p_frequency = plugin_obj.params.get('frequency', 0).value/70000

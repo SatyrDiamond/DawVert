@@ -22,6 +22,8 @@ def sec2step(i_value, i_bpm): return (i_value*8)/(120/i_bpm)
 
 def midi_filter(i_value): return pow(i_value*100, 2)*(925/2048)
 
+def transpose_tune(i_value): return round(i_value), i_value-round(i_value)
+
 def wetdry(wet, dry):
 	vol = max(wet, dry)
 	wet = (wet/vol) if vol != 0 else 1

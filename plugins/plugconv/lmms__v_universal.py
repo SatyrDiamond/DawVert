@@ -118,6 +118,11 @@ class plugconv(plugins.base):
 			plugin_obj.plugts_transform('./data_main/plugts/univ_lmms.pltr', 'bitcrush', convproj_obj, pluginid)
 			return 0
 
+		if plugin_obj.type.subtype == 'volpan':
+			extpluglog.convinternal('Universal', 'Vol/Pan', 'LMMS', 'Amplifier')
+			plugin_obj.plugts_transform('./data_main/plugts/univ_lmms.pltr', 'volpan', convproj_obj, pluginid)
+			return 0
+
 		if plugin_obj.type.subtype == 'filter':
 			extpluglog.convinternal('Universal', 'Filter', 'LMMS', 'Dual Filter')
 			filter_obj = plugin_obj.filter

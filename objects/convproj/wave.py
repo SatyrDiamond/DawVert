@@ -3,6 +3,7 @@
 
 from functions import xtramath
 from functions import data_bytes
+from functions import data_values
 from objects import audio_data
 import struct
 import math
@@ -77,6 +78,21 @@ class cvpj_wave:
 		tempdata = [xtramath.between_to_one(self.range_min, self.range_max, x) for x in tempdata]
 		return tempdata
 
+	def split(self, i_size):
+		outwavesplit = []
+		for w in data_values.list__chunks(self.points, i_size):
+			if len(w)==i_size:
+				split_wave_obj = cvpj_wave()
+				split_wave_obj.range_min = self.range_min
+				split_wave_obj.range_max = self.range_max
+				split_wave_obj.points = w
+				split_wave_obj.numpoints = i_size
+				split_wave_obj.smooth = self.smooth
+				split_wave_obj.visname = self.visname
+				split_wave_obj.author = self.author
+				split_wave_obj.data = self.data
+				outwavesplit.append(split_wave_obj)
+		return outwavesplit
 
 def calc_val(inval, shape, pw):
 	if shape == 'sine':				  return wave_sine(inval)

@@ -192,3 +192,27 @@
 	param|Lfo/Frequency<freq
 	param|Lfo/LfoAmount<depth
 <output
+
+[volpan]
+>input
+	type|universal:volpan
+	param|pan
+	param|vol
+<input
+
+>output
+	type|native-ableton:StereoGain
+	param|Balance<pan
+	param|LegacyGain%0.0
+	param|BassMono&0
+	param|BassMonoFrequency%120.0
+	param|ChannelMode%1.0
+	param|DcFilter&0
+	param|Gain<vol
+	param|MidSideBalance%1.0
+	param|Mono&0
+	param|Mute&0
+	param|PhaseInvertL&0
+	param|PhaseInvertR&0
+	param|StereoWidth%1.0
+<output

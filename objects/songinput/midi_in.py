@@ -12,6 +12,8 @@ from objects.data_bytes import structalloc
 from objects.convproj import autoticks
 from objects.convproj import project as convproj
 from objects_midi import sysex
+from objects.songinput._midi import ccauto
+from objects.songinput._midi import instauto
 
 instrument_premake = structalloc.dynarray_premake([
 	('track', np.uint8),
@@ -37,11 +39,7 @@ pitchauto_premake = structalloc.dynarray_premake([
 	('value', np.int16),
 	('mode', np.int16)]
 	)
-instauto_premake = structalloc.dynarray_premake([
-	('pos', np.uint32),
-	('channel', np.uint8),
-	('type', np.uint8),
-	('value', np.uint8)])
+
 midinote_premake = structalloc.dynarray_premake([
 	('complete', np.uint8),
 	('chan', np.uint8),
@@ -54,147 +52,28 @@ midinote_premake = structalloc.dynarray_premake([
 	('i_bank', np.uint8),
 	('i_inst', np.uint8),
 	])
+
 otherauto_premake = structalloc.dynarray_premake([
 	('pos', np.uint32),
 	('value', np.uint8)])
 
-
-chanauto_premake = structalloc.dynarray_premake([
-	('pos', np.uint32),
-	('channel', np.uint8),
-	('control', np.uint8),
-	('value', np.uint8),
-	('smooth', np.uint8)
-	])
-
-dtype_usedfx = [
-	('reverb', np.uint8),
-	('tremolo', np.uint8),
-	('chorus', np.uint8),
-	('detune', np.uint8),
-	('phaser', np.uint8)
-	]
-
-class midi_cc_auto_multi:
-	def __init__(self, numchannels):
-		self.data = chanauto_premake.create()
-		self.song_channels = numchannels
-		self.auto_seperated = [[] for x in range(numchannels)]
-		self.used_cc_chans = [[] for x in range(numchannels)]
-
-		self.fx_used_chans = np.zeros(numchannels, dtype=dtype_usedfx)
-		self.fx_used = np.zeros(1, dtype=dtype_usedfx)
-		self.start_vals = np.zeros(shape=(numchannels, 128), dtype=np.int8)
-		self.start_vals[:] = -1
-
-	def add_point(self, curpos, controller, value, smooth, channel):
-		ctrlchan = self.data
-		ctrlchan.add()
-		ctrlchan['pos'] = curpos
-		ctrlchan['channel'] = channel
-		ctrlchan['control'] = controller
-		ctrlchan['value'] = value
-		ctrlchan['smooth'] = smooth
-
-	def filter(self, channel, control):
-		sepchan = self.auto_seperated[channel]
-		return sepchan[sepchan['control']==control]
-
-	def postprocess(self):
-		self.data.sort(['pos'])
-		self.data.clean()
-		if len(self.data.data):
-			a_used = self.data.data['used']
-			a_data = self.data.data['channel']
-			self.auto_seperated = [self.data.data[np.where(np.logical_and(a_used==1, a_data==x))] for x in range(self.song_channels)]
-			self.used_cc_chans = [np.unique(self.auto_seperated[x]['control']) for x in range(self.song_channels)]
-
-			self.fx_used_chans['reverb'] = [(91 in x) for x in self.used_cc_chans]
-			self.fx_used_chans['tremolo'] = [(92 in x) for x in self.used_cc_chans]
-			self.fx_used_chans['chorus'] = [(93 in x) for x in self.used_cc_chans]
-			self.fx_used_chans['detune'] = [(94 in x) for x in self.used_cc_chans]
-			self.fx_used_chans['phaser'] = [(95 in x) for x in self.used_cc_chans]
-
-			self.fx_used['reverb'] = self.fx_used_chans['reverb'].sum()
-			self.fx_used['tremolo'] = self.fx_used_chans['tremolo'].sum()
-			self.fx_used['chorus'] = self.fx_used_chans['chorus'].sum()
-			self.fx_used['detune'] = self.fx_used_chans['detune'].sum()
-			self.fx_used['phaser'] = self.fx_used_chans['phaser'].sum()
-
-	def calc_startpos(self, startpos_chans):
-		for channum, ctrlnum, autodata in self.iter():
-			acp = autodata[np.where(autodata['pos']<=startpos_chans[channum])]
-			if len(acp)!=0: 
-				self.start_vals[channum][ctrlnum] = acp['value'][-1]
-
-	def iter(self):
-		for channum, chandata in enumerate(self.used_cc_chans):
-			for ctrlnum in chandata:
-				yield channum, ctrlnum, self.filter(channum, ctrlnum)
-
-	def iter_initval(self):
-		for channum, chandata in enumerate(self.used_cc_chans):
-			for ctrlnum in chandata:
-				yield channum, ctrlnum, self.start_vals[channum][ctrlnum], self.filter(channum, ctrlnum)
-
-
-
-
-
-
-
-class midi_track:
-	def __init__(self, numevents, song_obj):
+class midi_notes_multi:
+	def __init__(self, numevents):
 		self.active_notes = [[[] for x in range(128)] for x in range(16)]
-		self.notes = midinote_premake.create()
-		self.notes.alloc(numevents)
-		self.song_obj = song_obj
-		self.portnum = 0
+		self.data = midinote_premake.create()
+		self.data.alloc(numevents)
 
-		self.track_name = None
-		self.track_color = None
-		self.used_insts = None
-		self.seqspec = []
-
-	def applyinst(self, channel, i_type, posval):
-		if len(posval) != 0:
-			n_used = self.notes.data['used']
-			n_data = self.notes.data['chan']
-			n_start = self.notes.data['start']
-			filt_chan = np.logical_and(n_used==1, n_data==channel)
-
-			for start, end, val in data_values.gen__rangepos(posval, -1):
-				if end == -1:
-					filt_l_all = np.logical_and(filt_chan, n_start>=start)
-					self.notes.data[i_type][np.where(filt_l_all)] = val
-				else:
-					filt_l_all = np.logical_and(filt_chan, n_start>=start, end>n_start)
-					self.notes.data[i_type][np.where(filt_l_all)] = val
-
-
-	def applyinst_chan(self, channel, chan_inst):
-		n_used = self.notes.data['used']
-		n_data = self.notes.data['chan']
-		allfilt = np.where(np.logical_and(n_used==1, n_data==channel))
-		chanfilt = chan_inst[channel]
-
-		s_inst = chanfilt[np.where(chanfilt['type']==0)][['pos', 'value']]
-		s_bank_lo = chanfilt[np.where(chanfilt['type']==1)][['pos', 'value']]
-		s_bank_hi = chanfilt[np.where(chanfilt['type']==2)][['pos', 'value']]
-		s_drum = chanfilt[np.where(chanfilt['type']==3)][['pos', 'value']]
-
-		self.applyinst(channel, 'i_inst', s_inst)
-		self.applyinst(channel, 'i_drum', s_drum)
-		self.applyinst(channel, 'i_bank_hi', s_bank_hi)
-		self.applyinst(channel, 'i_bank', s_bank_lo)
+	def clean(self):
+		self.data.data['used'] = self.data.data['complete']
+		self.data.clean()
 
 	def where_chan(self, channel):
-		n_used = self.notes.data['used']
-		n_data = self.notes.data['chan']
+		n_used = self.data.data['used']
+		n_data = self.data.data['chan']
 		return np.where(np.logical_and(n_used==1, n_data==channel))
 
 	def filter_chan(self, channel):
-		return self.notes.data[self.where_chan(channel)]
+		return self.data.data[self.where_chan(channel)]
 
 	def startpos_chan(self, channel):
 		notedata = self.filter_chan(channel)
@@ -205,28 +84,68 @@ class midi_track:
 		return np.max(notedata['end']) if len(notedata) else 0
 
 	def note_on(self, curpos, channel, note, velocity):
-		self.notes.add()
-		self.notes['chan'] = channel
-		self.notes['start'] = curpos
-		self.notes['key'] = note
-		self.notes['vol'] = velocity
-		self.active_notes[channel][note].append(self.notes.cursor)
+		self.data.add()
+		self.data['chan'] = channel
+		self.data['start'] = curpos
+		self.data['key'] = note
+		self.data['vol'] = velocity
+		self.active_notes[channel][note].append(self.data.cursor)
 
 	def note_off(self, curpos, channel, note):
 		nd = self.active_notes[channel][note]
 		if nd:
 			notenum = nd.pop()
-			self.notes.data[notenum]['end'] = curpos
-			self.notes.data[notenum]['complete'] = 1
+			self.data.data[notenum]['end'] = curpos
+			self.data.data[notenum]['complete'] = 1
 
 	def note_dur(self, curpos, channel, note, velocity, duration):
-		self.notes.add()
-		self.notes['complete'] = 1
-		self.notes['chan'] = channel
-		self.notes['start'] = curpos
-		self.notes['end'] = curpos+duration
-		self.notes['key'] = note
-		self.notes['vol'] = velocity
+		self.data.add()
+		self.data['complete'] = 1
+		self.data['chan'] = channel
+		self.data['start'] = curpos
+		self.data['end'] = curpos+duration
+		self.data['key'] = note
+		self.data['vol'] = velocity
+
+	def get_used_chans(self):
+		usedchans = np.unique(self.data.data['chan'])
+		return usedchans
+
+	def to_cvpj(self, cvpj_notelist, tracknum, channum):
+		if channum > -1: tracknotes = self.filter_chan(channum)
+		else: tracknotes = self.data.data
+
+		for n in tracknotes:
+			if n['complete']:
+				instid = '_'.join([str(tracknum),str(n['chan']),str(n['i_inst']),str(n['i_bank']),str(n['i_bank_hi']),str(n['i_drum'])])
+				cvpj_notelist.add_m(instid, int(n['start']), int(n['end']-n['start']), int(n['key'])-60, float(n['vol'])/127, None)
+
+
+class midi_track:
+	def __init__(self, numevents, song_obj):
+		self.notes = midi_notes_multi(numevents)
+		self.song_obj = song_obj
+		self.portnum = 0
+
+		self.track_name = None
+		self.track_color = None
+		self.used_insts = None
+		self.seqspec = []
+
+	def startpos_chan(self, channel): 
+		return self.notes.startpos_chan(channel)
+
+	def endpos_chan(self, channel):
+		return self.notes.endpos_chan(channel)
+
+	def note_on(self, curpos, channel, note, velocity):
+		return self.notes.note_on(curpos, channel, note, velocity)
+
+	def note_off(self, curpos, channel, note):
+		return self.notes.note_off(curpos, channel, note)
+
+	def note_dur(self, curpos, channel, note, velocity, duration):
+		return self.notes.note_off(curpos, channel, note, velocity, duration)
 
 	def track_name(self, text):
 		self.track_name = text
@@ -242,32 +161,15 @@ class midi_track:
 		pitchchan['value'] = pitch
 
 	def control_change(self, curpos, channel, controller, value):
-		if controller == 0:
-			instauto = self.song_obj.insts
-			instauto.add()
-			instauto['pos'] = curpos
-			instauto['channel'] = channel
-			instauto['type'] = 1
-			instauto['value'] = value
-		elif controller == 32:
-			instauto = self.song_obj.insts
-			instauto.add()
-			instauto['pos'] = curpos
-			instauto['channel'] = channel
-			instauto['type'] = 2
-			instauto['value'] = value
+		if controller == 0: self.song_obj.insts.addp_bank(curpos, channel, value)
+		elif controller == 32: self.song_obj.insts.addp_bank_hi(curpos, channel, value)
 		elif controller == 111: self.song_obj.loop_start = curpos
 		elif controller == 116: self.song_obj.loop_start = curpos
 		elif controller == 117: self.song_obj.loop_end = curpos
 		else: self.song_obj.auto_chan.add_point(curpos, controller, value, 0, channel)
 
 	def program_change(self, curpos, channel, program):
-		instauto = self.song_obj.insts
-		instauto.add()
-		instauto['pos'] = curpos
-		instauto['channel'] = channel
-		instauto['type'] = 0
-		instauto['value'] = program
+		self.song_obj.insts.addp_inst(curpos, channel, program)
 
 	def set_tempo(self, curpos, tempo):
 		tempoauto = self.song_obj.auto_bpm
@@ -338,8 +240,8 @@ class midi_song:
 		self.fx_offset = 0
 
 		self.auto_pitch = pitchauto_premake.create()
-		self.auto_chan = midi_cc_auto_multi(numchannels)
-		self.insts = instauto_premake.create()
+		self.auto_chan = ccauto.midi_cc_auto_multi(numchannels)
+		self.insts = instauto.midi_instauto_multi(numchannels)
 		self.auto_timesig = timesig_premake.create()
 		self.auto_bpm = bpm_premake.create()
 		self.copyright = None
@@ -405,12 +307,7 @@ class midi_song:
 			for p_sysex in p_sysexs:
 				if p_sysex.model_name == 'sc88':
 					if p_sysex.category == 'patch_a' and p_sysex.group == 'block' and p_sysex.param == 'use_rhythm': 
-						instauto = self.insts
-						instauto.add()
-						instauto['pos'] = p_pos
-						instauto['channel'] = p_sysex.num if p_sysex.num!=0 else 9
-						instauto['type'] = 3
-						instauto['value'] = int(p_sysex.value!=0)
+						self.insts.addp_drum(p_pos, p_sysex.num if p_sysex.num!=0 else 9, int(p_sysex.value!=0))
 
 				if p_sysex.vendor.id == 127:
 					if p_sysex.category == 'device' and p_sysex.param == 'master_volume': 
@@ -420,14 +317,7 @@ class midi_song:
 						mastervol_auto['value'] = p_sysex.value
 
 		self.auto_master_vol.sort(['pos'])
-		self.insts.sort(['pos'])
-
-		if len(self.insts.data):
-			i_used = self.insts.data['used']
-			i_data = self.insts.data['channel']
-			chan_inst = [self.insts.data[np.where(np.logical_and(i_data==x, i_used==1))] for x in range(self.song_channels)]
-		else:
-			chan_inst = None
+		self.insts.postprocess()
 
 		if len(self.auto_pitch.data):
 			pitchdata = self.auto_pitch.data
@@ -455,12 +345,12 @@ class midi_song:
 		self.endpos_chan = [np.max(x) for x in e_prepos][::-1]
 
 		for num, track in enumerate(self.miditracks):
-			drums_where = np.where(track.notes.data['chan']==9)
-			track.notes.data['i_inst'] = 255
-			track.notes.data['i_drum'][drums_where] = 1
-			for channel in range(self.song_channels):
-				if chan_inst != None: track.applyinst_chan(channel, chan_inst)
-			track.used_insts = np.unique(track.notes.data[['chan','i_drum','i_bank_hi','i_bank','i_inst']])
+			tracknotes = track.notes.data
+			drums_where = np.where(tracknotes.data['chan']==9)
+			tracknotes.data['i_inst'] = 255
+			tracknotes.data['i_drum'][drums_where] = 1
+			for channel in range(self.song_channels): self.insts.applyinst_chan(tracknotes, channel)
+			track.used_insts = np.unique(tracknotes.data[['chan','i_drum','i_bank_hi','i_bank','i_inst']])
 
 			for ui in track.used_insts:
 				self.add_instrument(num, ui['chan'], ui['i_bank'], ui['i_bank_hi'], ui['i_inst'], ui['i_drum'])
@@ -525,17 +415,12 @@ class midi_song:
 					if not s_tin[3]:
 						track_obj.visual.from_dset('midi', self.device+'_inst', '_'.join([s_tin[0],s_tin[1],s_tin[2]]), False)
 
-				for n in track.notes:
-					if n['complete']:
-						instid = '_'.join([str(tracknum),str(n['chan']),str(n['i_inst']),str(n['i_bank']),str(n['i_bank_hi']),str(n['i_drum'])])
-						track_obj.placements.notelist.add_m(instid, int(n['start']), int(n['end']-n['start']), int(n['key'])-60, float(n['vol'])/127, {})
+				track.notes.to_cvpj(track_obj.placements.notelist, tracknum, -1)
 
 		if len(self.miditracks)==1:
 			track = self.miditracks[0]
 			convproj_obj.metadata.name = track.track_name
-			wherecomplete = np.where(track.notes.data['complete']==1)
-			tracknotes = track.notes.data[wherecomplete]
-			usedchans = np.unique(tracknotes['chan'])
+			usedchans = track.notes.get_used_chans()
 
 			for usedchan in usedchans:
 				cvpj_trackid = 'chan_'+str(usedchan)
@@ -543,9 +428,7 @@ class midi_song:
 
 				track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 0, False)
 
-				for n in tracknotes[np.where(tracknotes['chan']==usedchan)]:
-					instid = '_'.join(['0',str(n['chan']),str(n['i_inst']),str(n['i_bank']),str(n['i_bank_hi']),str(n['i_drum'])])
-					track_obj.placements.notelist.add_m(instid, int(n['start']), int(n['end']-n['start']), int(n['key'])-60, float(n['vol'])/127, {})
+				track.notes.to_cvpj(track_obj.placements.notelist, 0, usedchan)
 
 				instlist = self.instruments.data[np.where(self.instruments.data['chan']==usedchan)]
 				if len(instlist)==1:

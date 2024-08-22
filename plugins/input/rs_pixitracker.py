@@ -28,7 +28,6 @@ class input_cvpj_f(plugins.base):
 		bytesdata = bytestream.read(8)
 		if bytesdata == b'PIXIMOD1': return True
 		else: return False
-
 	def parse(self, convproj_obj, input_file, dv_config):
 		convproj_obj.type = 'rs'
 		convproj_obj.set_timings(4, False)

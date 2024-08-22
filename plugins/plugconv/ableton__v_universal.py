@@ -56,6 +56,11 @@ class plugconv(plugins.base):
 			plugin_obj.plugts_transform('./data_main/plugts/univ_ableton.pltr', 'bitcrush', convproj_obj, pluginid)
 			return 1
 
+		if plugin_obj.type.subtype == 'volpan':
+			extpluglog.convinternal('Universal', 'Vol/Pan', 'Ableton', 'StereoGain')
+			plugin_obj.plugts_transform('./data_main/plugts/univ_ableton.pltr', 'volpan', convproj_obj, pluginid)
+			return 1
+
 		if plugin_obj.type.subtype == 'limiter':
 			extpluglog.convinternal('Universal', 'Limiter', 'Ableton', 'Limiter')
 			plugin_obj.plugts_transform('./data_main/plugts/univ_ableton.pltr', 'limiter', convproj_obj, pluginid)

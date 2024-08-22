@@ -239,10 +239,10 @@ class input_audiosanua(plugins.base):
 				# amp
 				ampval = float(getvalue(as_device.params, 'masterAmp'))/100
 				if ampval != 1.0: 
-					fx_plugin_obj, fx_pluginid = convproj_obj.add_plugin_genid('native-audiosauna', 'amp')
+					fx_plugin_obj, fx_pluginid = convproj_obj.add_plugin_genid('universal', 'volpan')
 					fx_plugin_obj.role = 'effect'
 					fx_plugin_obj.visual.name = 'Amp'
-					fx_plugin_obj.params.add_named("level", ampval, 'float', 'Level')
+					fx_plugin_obj.params.add_named("vol", ampval, 'float', 'Level')
 					fx_plugin_obj.fxdata_add(True, 1)
 		
 				plugin_obj.datavals.add('middlenote', int(getvalue(as_device.params, 'masterTranspose'))*-1)

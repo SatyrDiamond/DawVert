@@ -74,7 +74,7 @@ class input_midi(plugins.base):
 
 		logger_input.info('Auto Pitch: '+str(song_obj.auto_pitch.num_parts))
 		#logger_input.info('Auto Ctrls: '+str(song_obj.old_auto_chan.num_parts))
-		logger_input.info('Auto Inst: '+str(song_obj.insts.num_parts))
+		#logger_input.info('Auto Inst: '+str(song_obj.insts.num_parts))
 		logger_input.info('Auto TimeSig: '+str(song_obj.auto_timesig.num_parts))
 		logger_input.info('Auto BPM: '+str(song_obj.auto_bpm.num_parts))
 

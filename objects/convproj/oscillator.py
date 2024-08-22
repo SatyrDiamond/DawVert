@@ -83,6 +83,12 @@ class cvpj_wavetable_source:
 		self.audio_window_size = 2048
 		self.audio_normalize_gain = False
 		self.audio_normalize_mult = False
+		self.retro_id = ''
+		self.retro_size = 1
+		self.retro_count = 0
+		self.retro_pos = 0
+		self.retro_time = 0.28
+		self.retro_loop = 0
 		self.modifiers = []
 
 	def add_modifier(self, i_type):

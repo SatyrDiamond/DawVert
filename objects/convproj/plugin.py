@@ -288,6 +288,7 @@ class cvpj_plugin:
 	def wave_get(self, i_name): return self.state.wave_get(i_name)
 	def wave_get_exists(self, i_name): return self.state.wave_get_exists(i_name)
 	def wave_list(self): return self.state.wave_list()
+	def wave_copy(self, o_type, n_type): return self.state.wave_get(o_type, n_type)
 
 	# -------------------------------------------------- audio
 	def audio_add(self, i_name): return self.state.audio_add(i_name)

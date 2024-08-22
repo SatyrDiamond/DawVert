@@ -77,3 +77,21 @@
 	param|dry<dry
 	param|wet<wet
 <output
+
+[fruity_balance]
+>input
+	type|native-flstudio:fruity balance
+	param|pan
+	param|vol
+<input
+
+>proc
+	calc|pan|div|128
+	calc|vol|div|256
+<proc
+
+>output
+	type|universal:volpan
+	param|pan<pan
+	param|vol<vol
+<output

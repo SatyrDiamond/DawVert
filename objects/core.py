@@ -70,6 +70,7 @@ class config_data:
 	path_samples_downloaded = os.getcwd() + '/__samples_downloaded/'
 	path_samples_generated = os.getcwd() + '/__samples_generated/'
 	path_samples_converted = os.getcwd() + '/__samples_converted/'
+	path_external_data = os.getcwd() + '/_external_data/'
 	path_extrafile = None
 	path_soundfont = None
 	paths_soundfonts = {}

@@ -31,6 +31,16 @@ def add_envelope(plugin_obj, fst_Instrument, cvpj_name, fst_name):
 			envdata['pos'] = fst_Instrument.N163WavePos
 			envdata['count'] = fst_Instrument.N163WaveCount
 			plugin_obj.datavals.add('wave', envdata)
+			wave_obj = plugin_obj.wave_add('n163')
+			wave_obj.set_all_range(f_env_data.Values, 0, 15)
+			wavetable_obj = plugin_obj.wavetable_add('main')
+			wt_src_obj = wavetable_obj.add_source()
+			wt_src_obj.type = 'retro'
+			wt_src_obj.retro_id = 'n163'
+			wt_src_obj.retro_size = fst_Instrument.N163WaveSize
+			wt_src_obj.retro_count = fst_Instrument.N163WaveCount
+			wt_src_obj.retro_pos = fst_Instrument.N163WavePos
+			wt_src_obj.retro_loop = f_env_data.Loop
 		else:
 			envdata_values = f_env_data.Values
 			envdata_loop = f_env_data.Loop
@@ -81,6 +91,9 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 	if WaveType == 'N163':
 		inst_obj.params.add('vol', 1, 'float')
 		plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('namco163_famistudio', None)
+		osc_obj = plugin_obj.osc_add()
+		osc_obj.prop.type = 'wavetable'
+		osc_obj.prop.nameid = 'main'
 		add_envelopes(plugin_obj, fst_Instrument)
 		add_envelope(plugin_obj, fst_Instrument, 'wave', 'N163Wave')
 

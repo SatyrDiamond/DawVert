@@ -24,18 +24,6 @@ class plugconv(plugins.base):
 		plugconv_obj.out_daws = ['ableton']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
-		if plugin_obj.type.subtype == 'fruity balance':
-			extpluglog.convinternal('FL Studio', 'Fruity Balance', 'Ableton', 'StereoGain')
-			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
-			manu_obj.from_param('pan', 'pan', 0)
-			manu_obj.from_param('vol', 'vol', 256)
-			manu_obj.calc('vol', 'div', 256, 0, 0, 0)
-			manu_obj.calc('pan', 'div', 128, 0, 0, 0)
-			plugin_obj.replace('native-ableton', 'StereoGain')
-			manu_obj.to_param('vol', 'Gain', None)
-			manu_obj.to_param('pan', 'Balance', None)
-			return 0
-
 		if plugin_obj.type.subtype == 'fruity center':
 			extpluglog.convinternal('FL Studio', 'Fruity Center', 'Ableton', 'StereoGain')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)

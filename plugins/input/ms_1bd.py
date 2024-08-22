@@ -62,7 +62,7 @@ class input_1bitdragon(plugins.base):
 		project_obj.load_from_file(input_file)
 
 		onebit_ext = onebit_external()
-		onebit_ext.load_file("_external_data/1bitdragon/1BITDRAGON_Data/resources.assets")
+		onebit_ext.load_file(os.path.join(dv_config.path_external_data,'1bitdragon','1BITDRAGON_Data','resources.assets'))
 
 		globalstore.dataset.load('1bitdragon', './data_main/dataset/1bitdragon.dset')
 		colordata = colors.colorset.from_dataset('1bitdragon', 'track', 'main')

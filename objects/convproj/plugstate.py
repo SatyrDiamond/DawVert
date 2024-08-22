@@ -352,7 +352,9 @@ class cvpj_plugin_state:
 		return self.waves[i_name]
 	def wave_get(self, i_name): return self.waves[i_name] if i_name in self.waves else wave.cvpj_wave()
 	def wave_get_exists(self, i_name): return (True, self.waves[i_name]) if i_name in self.waves else (False, wave.cvpj_wave())
-	def wave_list(self):  return [x for x in self.waves]
+	def wave_list(self): return [x for x in self.waves]
+	def wave_copy(self, o_type, n_type):
+		if o_type in self.waves: self.waves[n_type] = copy.deepcopy(self.waves[o_type])
 
 	# -------------------------------------------------- audio
 	def audio_add(self, i_name): 

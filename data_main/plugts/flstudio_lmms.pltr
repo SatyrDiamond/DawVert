@@ -1,26 +1,4 @@
 
-[fruity_balance]
->input
-	type|native-flstudio:fruity balance
-	param|pan
-	param|vol
-<input
-
->proc
-	calc|pan|div|128
-	calc|vol|div|256
-	calc|pan|mul|100
-	calc|vol|mul|100
-<proc
-
->output
-	type|native-lmms:amplifier
-	param|pan<pan
-	param|volume<vol
-	param|right%100
-	param|left%100
-<output
-
 [fruity_stereo_shaper]
 >input
 	type|native-flstudio:fruity stereo shaper

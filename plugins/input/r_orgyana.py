@@ -8,8 +8,6 @@ from objects.file_proj import proj_orgyana
 import plugins
 import os
 
-ORGSAMP_FILENAME = '_external_data\\orgyana\\orgsamp.dat'
-
 class input_orgyana(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -38,8 +36,10 @@ class input_orgyana(plugins.base):
 		project_obj = proj_orgyana.orgyana_project()
 		project_obj.load_from_file(input_file)
 
+		orgsamp_filename = os.path.join(dv_config.path_external_data, 'orgyana', 'orgsamp.dat')
+
 		orgsamp_obj = proj_orgyana.orgyana_orgsamp()
-		if os.path.exists(ORGSAMP_FILENAME): orgsamp_obj.load_from_file(ORGSAMP_FILENAME)
+		if os.path.exists(orgsamp_filename): orgsamp_obj.load_from_file(orgsamp_filename)
 
 		for tracknum, orgtrack_obj in enumerate(project_obj.tracks):
 			if len(orgtrack_obj.notes) != 0:

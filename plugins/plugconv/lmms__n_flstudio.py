@@ -27,11 +27,6 @@ class plugconv(plugins.base):
 
 		pluginname = plugin_obj.type.subtype.lower()
 
-		if pluginname == 'fruity balance':
-			extpluglog.convinternal('FL Studio', 'Fruity Balance', 'LMMS', 'Amplifier')
-			plugin_obj.plugts_transform('./data_main/plugts/flstudio_lmms.pltr', 'fruity_balance', convproj_obj, pluginid)
-			return 0
-
 		if pluginname == 'fruity stereo shaper':
 			extpluglog.convinternal('FL Studio', 'Stereo Shaper', 'LMMS', 'Stereo Matrix')
 			plugin_obj.plugts_transform('./data_main/plugts/flstudio_lmms.pltr', 'fruity_stereo_shaper', convproj_obj, pluginid)

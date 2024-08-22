@@ -45,18 +45,14 @@ class input_adlib_rol(plugins.base):
 				if used:
 					instname = adlibbnk_obj.names[instnum].replace(" ", "")
 					instname_upper = instname.upper()
-
 					inst_obj = convproj_obj.add_instrument(instname_upper)
 					midifound = inst_obj.from_dataset('adlib_rol', 'inst', instname_upper, True)
 					if midifound: inst_obj.to_midi_noplug()
-
 					inst_obj.pluginid = instname_upper
 					opli = adlibbnk_obj.get_inst_index(instnum)
 					opli.to_cvpj(convproj_obj, inst_obj.pluginid)
-
 		else:
 			instlist = globalstore.dataset.get_cat('adlib_rol', 'inst')
-
 			if instlist:
 				for instid in instlist.objects.list():
 					instname_upper = instid.upper()

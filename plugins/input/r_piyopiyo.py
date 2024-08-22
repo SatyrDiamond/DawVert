@@ -9,8 +9,6 @@ from functions import colors
 from objects import globalstore
 from objects.file_proj import proj_piyopiyo
 
-EXTPATH_PATH = '_external_data\\piyopiyo\\'
-
 def parse_notes(convproj_obj, trackid, notes_data, track_obj, keyoffset):
 	for pos, nd in enumerate(notes_data):
 		notes, pan = nd
@@ -43,6 +41,8 @@ class input_piyopiyo(plugins.base):
 
 		project_obj = proj_piyopiyo.piyopiyo_song()
 		project_obj.load_from_file(input_file)
+
+		extpath_path = os.path.join(dv_config.path_external_data, 'piyopiyo')
 
 		globalstore.dataset.load('piyopiyo', './data_main/dataset/piyopiyo.dset')
 		colordata = colors.colorset.from_dataset('piyopiyo', 'inst', 'main')
@@ -78,17 +78,17 @@ class input_piyopiyo(plugins.base):
 		plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 		track_obj.inst_pluginid = pluginid
 
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS1', EXTPATH_PATH + 'BASS1.wav', None)
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS1', os.path.join(extpath_path,'BASS1.wav'), None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS2', EXTPATH_PATH + 'BASS2.wav', None)
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS2', os.path.join(extpath_path,'BASS2.wav'), None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SNARE1', EXTPATH_PATH + 'SNARE1.wav', None)
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SNARE1', os.path.join(extpath_path,'SNARE1.wav'), None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT1', EXTPATH_PATH + 'HAT1.wav', None)
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT1', os.path.join(extpath_path,'HAT1.wav'), None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT2', EXTPATH_PATH + 'HAT2.wav', None)
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT2', os.path.join(extpath_path,'HAT2.wav'), None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SYMBAL1', EXTPATH_PATH + 'SYMBAL1.wav', None)
+		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SYMBAL1', os.path.join(extpath_path,'SYMBAL1.wav'), None)
 		sampleref_obj.find_relative('external_data')
 
 		sp_obj = plugin_obj.sampleregion_add(-12, -12, -12, None)

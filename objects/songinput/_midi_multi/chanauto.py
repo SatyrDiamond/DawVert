@@ -4,6 +4,49 @@
 import numpy as np
 from objects.data_bytes import structalloc
 
+pitchauto_premake = structalloc.dynarray_premake([
+	('pos', np.uint32),
+	('channel', np.uint8),
+	('value', np.int16),
+	('mode', np.int16)]
+	)
+
+class midi_pitch_auto_multi:
+	def __init__(self, numchannels):
+		self.auto_pitch = pitchauto_premake.create()
+		self.numchannels = numchannels
+
+	def add(self):
+		self.auto_pitch.add()
+		return self.auto_pitch
+
+	def postprocess(self):
+		self.auto_pitch.sort(['pos'])
+		self.auto_pitch.unique(['pos', 'channel'])
+
+	def from_sysex(self, auto_sysex):
+		if len(self.auto_pitch.data):
+			pitchdata = self.auto_pitch.data
+			for x in auto_sysex:
+				p_pos, p_sysexs = x
+				for p_sysex in p_sysexs:
+					if p_sysex.model_name == 'aibo' and p_sysex.param == 'on?': 
+						pitchdata['mode'][np.where(pitchdata['pos']>=p_pos)] = 1
+					if p_sysex.model_name == 'sc88':
+						if p_sysex.param in ['gs_reset', 'sys_mode']: 
+							pitchdata['mode'][np.where(pitchdata['pos']>=p_pos)] = 0
+
+	def get_chan_pitch(self):
+		if len(self.auto_pitch.data):
+			p_used = self.auto_pitch.data['used']
+			p_data = self.auto_pitch.data['channel']
+			chan_pitch = [self.auto_pitch.data[np.where(np.logical_and(p_data==x, p_used==1))] for x in range(self.numchannels)]
+		else:
+			chan_pitch = None
+
+	def filter_chan(self, ch_num):
+		return self.auto_pitch.data[np.where(self.auto_pitch.data['channel']==ch_num)]
+
 dtype_usedfx = [
 	('reverb', np.uint8),
 	('tremolo', np.uint8),
@@ -80,4 +123,3 @@ class midi_cc_auto_multi:
 		for channum, chandata in enumerate(self.used_cc_chans):
 			for ctrlnum in chandata:
 				yield channum, ctrlnum, self.start_vals[channum][ctrlnum], self.filter(channum, ctrlnum)
-

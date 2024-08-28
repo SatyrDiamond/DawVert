@@ -66,12 +66,47 @@ class dawproject_lanecontainer:
 
 		for x in self.lanes: x.write(tempxml)
 
+class dawproject_marker:
+	def __init__(self):
+		self.time = None
+		self.name = None
+		self.color = None
+
+	def read(self, xml_data):
+		if 'time' in xml_data.attrib: self.time = float(xml_data.attrib['time'])
+		if 'name' in xml_data.attrib: self.name = xml_data.attrib['name']
+		if 'color' in xml_data.attrib: self.color = xml_data.attrib['color']
+
+	def write(self, xmltag):
+		tempxml = ET.SubElement(xmltag, 'Marker')
+		if self.time: tempxml.set('time', str(self.time))
+		if self.name: tempxml.set('name', self.name)
+		if self.color: tempxml.set('color', self.color)
+
+class dawproject_markers:
+	def __init__(self):
+		self.markers = []
+		self.id = ''
+
+	def read(self, xml_data):
+		if 'id' in xml_data.attrib: self.id = xml_data.attrib['id']
+		for x_part in xml_data:
+			marker_obj = dawproject_marker()
+			marker_obj.read(x_part)
+			self.markers.append(marker_obj)
+
+	def write(self, xmltag):
+		tempxml = ET.SubElement(xmltag, 'Markers')
+		if self.id: tempxml.set('id', self.id)
+		for x in self.markers: x.write(tempxml)
+
 class dawproject_arrangement:
 	def __init__(self):
 		self.id = ''
 		self.lanes = dawproject_lanecontainer()
 		self.tempoautomation = None
 		self.timesignatureautomation = None
+		self.markers = None
 
 	def read(self, xml_data):
 		if 'id' in xml_data.attrib: self.id = xml_data.attrib['id']
@@ -84,6 +119,9 @@ class dawproject_arrangement:
 			if x_part.tag == 'TimeSignatureAutomation': 
 				self.timesignatureautomation = points.dawproject_points_timesig()
 				self.timesignatureautomation.read(x_part)
+			if x_part.tag == 'Markers': 
+				self.markers = dawproject_markers()
+				self.markers.read(x_part)
 
 	def write(self, xmltag):
 		tempxml = ET.SubElement(xmltag, 'Arrangement')
@@ -91,6 +129,7 @@ class dawproject_arrangement:
 		self.lanes.write(tempxml)
 		if self.tempoautomation: self.tempoautomation.write(tempxml, 'TempoAutomation')
 		if self.timesignatureautomation: self.timesignatureautomation.write(tempxml, 'TimeSignatureAutomation')
+		if self.markers: self.markers.write(tempxml)
 
 class dawproject_song:
 	def __init__(self):

@@ -12,7 +12,6 @@ import os
 
 def do_param(convproj_obj, paramset, dp_param, cvpj_paramid, i_addmul, i_type, i_loc):
 	global autoid_assoc
-
 	if dp_param.used:
 		if dp_param.unit == 'normalized': i_addmul = [-0.5, 2]
 		if dp_param.id and i_loc: autoid_assoc.define(str(dp_param.id), i_loc, i_type, i_addmul)
@@ -31,6 +30,11 @@ def do_trackparams(convproj_obj, dp_channel, paramset, trackid):
 	do_param(convproj_obj, paramset, dp_channel.mute, 'enabled', [-1, -1], 'bool', ['track', trackid, 'enabled'])
 	do_param(convproj_obj, paramset, dp_channel.pan, 'pan', None, 'float', ['track', trackid, 'pan'])
 	do_param(convproj_obj, paramset, dp_channel.volume, 'vol', None, 'float', ['track', trackid, 'vol'])
+
+def do_groupparams(convproj_obj, dp_channel, paramset, trackid):
+	do_param(convproj_obj, paramset, dp_channel.mute, 'enabled', [-1, -1], 'bool', ['group', trackid, 'enabled'])
+	do_param(convproj_obj, paramset, dp_channel.pan, 'pan', None, 'float', ['group', trackid, 'pan'])
+	do_param(convproj_obj, paramset, dp_channel.volume, 'vol', None, 'float', ['group', trackid, 'vol'])
 
 def do_returnparams(convproj_obj, dp_channel, paramset, trackid):
 	do_param(convproj_obj, paramset, dp_channel.mute, 'enabled', [-1, -1], 'bool', ['return', trackid, 'enabled'])
@@ -106,16 +110,17 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 		if dp_track.contentType == 'tracks' and dp_channel.role == 'master': 
 			track_obj = convproj_obj.add_group(dp_track.id)
 			do_visual(track_obj, dp_track)
-			do_trackparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
+			do_groupparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
 			do_tracks(convproj_obj, dp_track.tracks, dp_track.id)
 			do_sends(convproj_obj, track_obj, dp_channel)
 			if groupid: track_obj.group = groupid
 			if dp_channel.solo: track_obj.params.add('solo', dp_channel.solo=='true', 'bool')
 
 		if dp_track.contentType == 'audio' and dp_channel.role == 'effect': 
-			return_obj = convproj_obj.track_master.add_return(dp_channel.id)
+			return_obj = convproj_obj.track_master.add_return(dp_track.id)
 			do_visual(return_obj, dp_track)
-			do_returnparams(convproj_obj, dp_channel, return_obj.params, dp_channel.id)
+			do_returnparams(convproj_obj, dp_channel, return_obj.params, dp_track.id)
+			do_sends(convproj_obj, return_obj, dp_channel)
 			if dp_channel.solo: return_obj.params.add('solo', dp_channel.solo=='true', 'bool')
 
 		if dp_track.contentType == 'audio notes' and dp_channel.role == 'Master': 
@@ -285,8 +290,8 @@ class input_dawproject(plugins.base):
 		project_obj.load_from_data(zip_data.read('project.xml').decode())
 
 		dp_timesig = project_obj.transport.TimeSignature
-		convproj_obj.timesig[0] = dp_timesig.numerator
-		convproj_obj.timesig[1] = dp_timesig.denominator
+		convproj_obj.timesig[0] = int(dp_timesig.numerator)
+		convproj_obj.timesig[1] = int(dp_timesig.denominator)
 
 		do_param(convproj_obj, convproj_obj.params, project_obj.transport.Tempo, 'bpm', None, 'float', ['main', 'bpm'])
 		do_tracks(convproj_obj, project_obj.tracks, None)
@@ -298,14 +303,14 @@ class input_dawproject(plugins.base):
 					for clip in lane.clips.clips:
 						if clip.notes: do_notes(track_obj, clip, clip.notes)
 						if clip.clips: do_clips(convproj_obj, track_obj, clip, clip.clips)
-					for points in lane.points:
-						target_obj = points.target
-						if target_obj.parameter:
-							autoloc = ['id',target_obj.parameter]
-							for point in points.points: 
-								convproj_obj.automation.add_autopoint(autoloc, 'float', point.time, point.value, 'normal')
-							for point in points.points_bool: 
-								convproj_obj.automation.add_autopoint(autoloc, 'bool', point.time, point.value, 'instant')
+				for points in lane.points:
+					target_obj = points.target
+					if target_obj.parameter:
+						autoloc = ['id',target_obj.parameter]
+						for point in points.points: 
+							convproj_obj.automation.add_autopoint(autoloc, 'float', point.time, point.value, 'normal')
+						for point in points.points_bool: 
+							convproj_obj.automation.add_autopoint(autoloc, 'bool', point.time, point.value, 'instant')
 
 		timesigauto = project_obj.arrangement.timesignatureautomation
 		if timesigauto:
@@ -319,5 +324,13 @@ class input_dawproject(plugins.base):
 				autoloc = ['id',target_obj.parameter]
 				for point in tempoauto.points: 
 					convproj_obj.automation.add_autopoint(autoloc, 'float', point.time, point.value, 'normal')
+
+		if project_obj.arrangement.markers:
+			markers = project_obj.arrangement.markers.markers
+			for marker in markers:
+				timemarker_obj = convproj_obj.add_timemarker()
+				if marker.name: timemarker_obj.visual.name = marker.name
+				if marker.color: timemarker_obj.visual.color.set_hex(marker.color)
+				timemarker_obj.position = marker.time
 
 		autoid_assoc.output(convproj_obj)

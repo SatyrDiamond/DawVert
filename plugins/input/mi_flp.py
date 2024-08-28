@@ -506,22 +506,16 @@ class input_flp(plugins.base):
 
 				if item.itemindex > item.patternbase:
 					placement_obj = temp_pl_track[playlistline].placements.add_notes_indexed()
-					placement_obj.position = item.position
-					placement_obj.duration = item.length
+					placement_obj.time.set_posdur(item.position, item.length)
 					placement_obj.muted = bool(item.flags & 0b0001000000000000)
 					patnum = item.itemindex - item.patternbase
 					placement_obj.fromindex = 'FLPat' + str(patnum)
-					offset = item.startoffset if item.startoffset not in [4294967295, 3212836864] else 0
-
-					if offset:
-						placement_obj.cut_type = 'cut'
-						placement_obj.cut_start = offset
-
-					#placement_obj.duration += offset
+					if item.startoffset not in [4294967295, 3212836864]: 
+						placement_obj.time.set_offset(item.startoffset)
 
 					if patnum in autoticks_pat:
 						tickdata = autoticks_pat[patnum]
-						autodata = [placement_obj.position, placement_obj.duration, offset]
+						autodata = [placement_obj.time.position, placement_obj.time.duration, item.startoffset]
 						autod = autoticks_pat
 						for autoid, autodata in tickdata.items():
 							autoloc, aadd, adiv = flpauto_to_cvpjauto(autoid.split('/'))
@@ -531,18 +525,12 @@ class input_flp(plugins.base):
 
 							if autoloc: 
 								autopl_obj = convproj_obj.automation.add_pl_ticks(autoloc, 'float')
-								autopl_obj.position = placement_obj.position
-								autopl_obj.duration = placement_obj.duration
-								if offset:
-									autopl_obj.cut_type = 'cut'
-									autopl_obj.cut_start = offset
-
+								autopl_obj.time = placement_obj.time.copy()
 								for pos, val in autodata: autopoint_obj = autopl_obj.data.add_point(pos, val/adiv)
 
 				else:
 					placement_obj = temp_pl_track[playlistline].placements.add_audio_indexed()
-					placement_obj.position = item.position
-					placement_obj.duration = item.length
+					placement_obj.time.set_posdur(item.position, item.length)
 					placement_obj.fade_in['duration'] = (item.f_in_dur/flp_obj.ppq)*2
 					placement_obj.fade_out['duration'] = (item.f_out_dur/flp_obj.ppq)*2
 
@@ -551,14 +539,10 @@ class input_flp(plugins.base):
 					stretch_obj = samplestretch[item.itemindex] if item.itemindex in samplestretch else None
 
 					out_rate = stretch_obj.calc_tempo_speed if stretch_obj else 1
-					placement_obj.cut_type = 'cut'
 
-					startoffset = 0
 					if item.startoffset not in [4294967295, 3212836864]:  
 						posdata = item.startoffset/4
-						startoffset = (posdata/out_rate)*flp_obj.ppq
-
-					placement_obj.cut_start = startoffset
+						placement_obj.time.set_offset((posdata/out_rate)*flp_obj.ppq)
 
 			for fl_timemark in fl_arrangement.timemarkers:
 				if fl_timemark.type == 8:

@@ -210,8 +210,7 @@ def make_auto(convproj_obj, fs_notes, NoteLength, timemul, patpos, patdur, chann
 
 	if vol_auto:
 		autopl_obj = convproj_obj.automation.add_pl_points(['fxmixer', str(channum), 'vol'], 'float')
-		autopl_obj.position = patpos
-		autopl_obj.duration = patdur
+		autopl_obj.time.set_posdur(patpos, patdur)
 
 		prev_slidetarg = None
 		for c_pos, c_val, slitarget in vol_auto:
@@ -370,11 +369,10 @@ class input_famistudio(plugins.base):
 			for pattime, patid in fst_channel.Instances.items():
 				cvpj_placement = playlist_obj.placements.add_notes_indexed()
 				cvpj_placement.fromindex = fst_channel.Type+'-'+patid+'-'+str(BPMList[pattime])
-				cvpj_placement.position = PointsPos[pattime]
-				cvpj_placement.duration = PatternLengthList[pattime]
+				cvpj_placement.time.set_posdur(PointsPos[pattime], PatternLengthList[pattime])
 
 				if patid in fst_channel.Patterns:
-					make_auto(convproj_obj, fst_channel.Patterns[patid].Notes, NoteLength, BPMNoteMul[pattime], cvpj_placement.position, cvpj_placement.duration, fxchan)
+					make_auto(convproj_obj, fst_channel.Patterns[patid].Notes, NoteLength, BPMNoteMul[pattime], cvpj_placement.time.position, cvpj_placement.time.duration, fxchan)
 
 		convproj_obj.add_timesig_lengthbeat(fst_currentsong.PatternLength, fst_currentsong.PatternSettings.BeatLength)
 		convproj_obj.patlenlist_to_timemarker(PatternLengthList, fst_currentsong.LoopPoint)

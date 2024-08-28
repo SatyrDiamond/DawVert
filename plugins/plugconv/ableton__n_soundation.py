@@ -130,8 +130,6 @@ class plugconv(plugins.base):
 		if plugin_obj.type.subtype == 'com.soundation.simple':
 			extpluglog.convinternal('Soundation', 'Simple Synth', 'Ableton', 'Operator')
 
-			plugin_obj.params.debugtxt()
-
 			opdata = []
 
 			for oscnum in range(4):

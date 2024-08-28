@@ -60,6 +60,8 @@ class output_cvpj_f(plugins.base):
 
 			midi_found, midiinst_obj = track_obj.get_midi(convproj_obj)
 
+			middlenote = track_obj.datavals.get('middlenote', 0)
+
 			if midi_channel == None: midi_channel = getunusedchannel()
 
 			if midi_trackname != '': miditrack.append(mido.MetaMessage('track_name', name=midi_trackname, time=0))
@@ -89,7 +91,7 @@ class output_cvpj_f(plugins.base):
 				for t_key in t_keys:
 					cvmi_n_pos = int(t_pos)
 					cvmi_n_dur = int(t_dur)
-					cvmi_n_key = int(t_key)+60
+					cvmi_n_key = int(t_key)+60-middlenote
 					cvmi_n_vol = xtramath.clamp(int(t_vol*127), 0, 127)
 					add_cmd(i_list, cvmi_n_pos, ['note_on', cvmi_n_key, cvmi_n_vol])
 					add_cmd(i_list, cvmi_n_pos+cvmi_n_dur, ['note_off', cvmi_n_key])

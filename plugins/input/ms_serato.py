@@ -193,8 +193,7 @@ class input_serato(plugins.base):
 
 					if scene_deck.type == 'drums':
 						placement_obj = trscene_obj.add_notes()
-						placement_obj.position = 0
-						placement_obj.duration = scene.length
+						placement_obj.time.set_posdur(0, scene.length)
 						for note in deck_sequence.notes:
 							if note.start < scene.length:
 								key = note.number+note.channel
@@ -204,8 +203,7 @@ class input_serato(plugins.base):
 
 					if scene_deck.type == 'instrument':
 						placement_obj = trscene_obj.add_notes()
-						placement_obj.position = 0
-						placement_obj.duration = scene.length
+						placement_obj.time.set_posdur(0, scene.length)
 						for note in deck_sequence.notes:
 							if note.start < scene.length:
 								key = note.number-60
@@ -214,8 +212,7 @@ class input_serato(plugins.base):
 					if scene_deck.type == 'sample':
 						if useaudioclips == False:
 							placement_obj = trscene_obj.add_notes()
-							placement_obj.position = 0
-							placement_obj.duration = scene.length
+							placement_obj.time.set_posdur(0, scene.length)
 							for note in deck_sequence.notes:
 								if note.start < scene.length:
 									key = note.number
@@ -271,11 +268,9 @@ class input_serato(plugins.base):
 
 											placement_obj = trscene_obj.add_audio()
 											samplepart_copy = placement_obj.sample = copy.deepcopy(samplepart)
-											placement_obj.position = nstart
-											placement_obj.duration = duration
+											placement_obj.time.set_posdur(nstart, duration)
+											placement_obj.time.set_offset(startoffset/playback_speed)
 											placement_obj.visual.color.set_hex(color)
-											placement_obj.cut_type = 'cut'
-											placement_obj.cut_start = startoffset/playback_speed
 
 											if 'channel_strip' in cuedata:
 												cuestrip = cuedata['channel_strip']

@@ -26,7 +26,7 @@ DEBUG_DISABLE_SAMPLER = False
 	
 def get_sampleref(convproj_obj, alssampleref_obj):
 	filename = alssampleref_obj.FileRef.Path
-	sampleref_obj = convproj_obj.add_sampleref(filename, filename)
+	sampleref_obj = convproj_obj.add_sampleref(filename, filename, 'win')
 	sampleref_obj.dur_samples = alssampleref_obj.DefaultDuration
 	sampleref_obj.hz = alssampleref_obj.DefaultSampleRate
 	sampleref_obj.timebase = sampleref_obj.hz
@@ -433,17 +433,15 @@ class input_ableton(plugins.base):
 				if not DEBUG_DISABLE_PLACEMENTS:
 					for clipid, cliptype, clipobj in als_track.DeviceChain.MainSequencer.ClipTimeable.Events:
 						placement_obj = track_obj.placements.add_notes()
-						placement_obj.position = clipobj.CurrentStart*4
-						placement_obj.duration = clipobj.CurrentEnd*4 - placement_obj.position
+						placement_obj.time.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)
 						placement_obj.visual.name = clipobj.Name
 						placement_obj.visual.color.from_colorset_num(colordata, clipobj.Color)
 						placement_obj.muted = clipobj.Disabled
 
 						if clipobj.Loop.LoopOn == 1:
-							placement_obj.cut_loop_data(clipobj.Loop.StartRelative*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
+							placement_obj.time.set_loop_data(clipobj.Loop.StartRelative*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
 						else:
-							placement_obj.cut_type = 'cut'
-							placement_obj.cut_start = clipobj.Loop.LoopStart
+							placement_obj.time.set_offset(clipobj.Loop.LoopStart)
 
 						t_notes_auto = {}
 						for nid, nes in clipobj.Notes.PerNoteEventStore.items():
@@ -458,14 +456,26 @@ class input_ableton(plugins.base):
 								t_note_extra = {}
 								t_note_extra['off_vol'] = event.OffVelocity/100
 								t_note_extra['probability'] = event.Probability
+								t_note_extra['velocity_range'] = event.VelocityDeviation
 								t_note_extra['enabled'] = event.IsEnabled
 								placement_obj.notelist.add_r(event.Time*4, event.Duration*4, kt.MidiKey-60, event.Velocity/100, t_note_extra)
 								if t_note_id in t_notes_auto:
 									for atype, adata in t_notes_auto[t_note_id].items():
-										for autopoints in adata:
-											autopoint_obj = placement_obj.notelist.last_add_auto('pitch')
-											autopoint_obj.pos = autopoints[0]
-											autopoint_obj.value = autopoints[1]/170 if atype == -2 else autopoints[1]
+										mpetype = None
+										autodiv = 1
+
+										if atype == -2:
+											mpetype = 'pitch'
+											autodiv = 170
+
+										if atype == 74: mpetype = 'slide'
+										if atype == -1: mpetype = 'pressure'
+
+										if mpetype:
+											for autopoints in adata:
+												autopoint_obj = placement_obj.notelist.last_add_auto(mpetype)
+												autopoint_obj.pos = autopoints[0]
+												autopoint_obj.value = autopoints[1]/autodiv
 
 			elif tracktype == 'audio':
 				fxloc = ['track', track_id]
@@ -481,21 +491,33 @@ class input_ableton(plugins.base):
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
 				
 				if not DEBUG_DISABLE_PLACEMENTS:
-					for clipid, cliptype, clipobj in als_track.DeviceChain.MainSequencer.ClipTimeable.Events:
+					mainseq = als_track.DeviceChain.MainSequencer
+					
+					for clipid, cliptype, clipobj in mainseq.ClipTimeable.Events:
 						placement_obj = track_obj.placements.add_audio()
-						placement_obj.position = clipobj.CurrentStart*4
-						placement_obj.duration = clipobj.CurrentEnd*4 - placement_obj.position
+						placement_obj.time.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)
 						placement_obj.visual.name = clipobj.Name
 						placement_obj.visual.color.from_colorset_num(colordata, clipobj.Color)
 						placement_obj.muted = clipobj.Disabled
 						placement_obj.sample.vol = clipobj.SampleVolume
 						placement_obj.sample.sampleref = get_sampleref(convproj_obj, clipobj.SampleRef)
 
+						for _, e in clipobj.Envelopes.items():
+							mpetype = None
+							if int(e.PointeeId) == int(mainseq.VolumeModulationTarget.id): mpetype = 'gain'
+							if int(e.PointeeId) == int(mainseq.TranspositionModulationTarget.id): mpetype = 'pitch'
+							if mpetype:
+								autopoints_obj = placement_obj.add_autopoints(mpetype, 4, True)
+								for mid, mtype, mobj in e.Automation.Events:
+									if mtype == 'FloatEvent':
+										autopoint_obj = autopoints_obj.add_point()
+										autopoint_obj.pos = mobj.Time
+										autopoint_obj.value = mobj.Value
+
 						if clipobj.Loop.LoopOn:
-							placement_obj.cut_loop_data(clipobj.Loop.StartRelative*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
+							placement_obj.time.set_loop_data(clipobj.Loop.StartRelative*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
 						else:
-							placement_obj.cut_type = 'cut'
-							placement_obj.cut_start = clipobj.Loop.LoopStart
+							placement_obj.time.set_offset(clipobj.Loop.LoopStart)
 
 						audio_placement_PitchCoarse = clipobj.PitchCoarse
 						audio_placement_PitchFine = clipobj.PitchFine
@@ -517,10 +539,10 @@ class input_ableton(plugins.base):
 							stretch_obj.preserve_pitch = clipobj.WarpMode != 3
 
 							if clipobj.WarpMode == 0:
-								stretch_obj.algorithm = 'beats'
-								stretch_obj.params['TransientResolution'] = clipobj.TransientResolution
-								stretch_obj.params['TransientLoopMode'] = clipobj.TransientLoopMode
-								stretch_obj.params['TransientEnvelope'] = clipobj.TransientEnvelope
+								stretch_obj.algorithm = 'transient'
+								stretch_obj.params['resolution'] = clipobj.TransientResolution
+								stretch_obj.params['loopmode'] = clipobj.TransientLoopMode
+								stretch_obj.params['envelope'] = clipobj.TransientEnvelope
 							if clipobj.WarpMode == 1:
 								stretch_obj.algorithm = 'ableton_tones'
 								stretch_obj.params['GranularityTones'] = clipobj.GranularityTones
@@ -531,9 +553,9 @@ class input_ableton(plugins.base):
 							if clipobj.WarpMode == 4:
 								stretch_obj.algorithm = 'ableton_complex'
 							if clipobj.WarpMode == 6:
-								stretch_obj.algorithm = 'stretch_complexpro'
-								stretch_obj.params['ComplexProFormants'] = clipobj.ComplexProFormants
-								stretch_obj.params['ComplexProEnvelope'] = clipobj.ComplexProEnvelope
+								stretch_obj.algorithm = 'ableton_complexpro'
+								stretch_obj.params['formant'] = clipobj.ComplexProFormants
+								stretch_obj.params['envelope'] = clipobj.ComplexProEnvelope
 
 							for _, WarpMarker in clipobj.WarpMarkers.items():
 								warp_point_obj = stretch_obj.add_warp_point()
@@ -551,21 +573,17 @@ class input_ableton(plugins.base):
 
 						if not clipobj.IsWarped:
 							if clipobj.Loop.LoopOn == 0:
-								placement_obj.cut_type = 'cut'
+								placement_obj.time.cut_type = 'cut'
 								pitchcalc = math.pow(2, placement_obj.sample.pitch/12)
-								placement_obj.cut_start = (clipobj.Loop.LoopStart*8/pitchcalc)*tempomul
-								placement_obj.duration *= pitchcalc
-								placement_obj.duration /= tempomul
-								placement_obj.duration /= stretch_obj.calc_tempo_speed
+								placement_obj.time.cut_start = (clipobj.Loop.LoopStart*8/pitchcalc)*tempomul
+								placement_obj.time.duration *= pitchcalc
+								placement_obj.time.duration /= tempomul
+								placement_obj.time.duration /= stretch_obj.calc_tempo_speed
 						else:
 							if clipobj.Loop.LoopOn == 0:
-								placement_obj.cut_type = 'cut'
-								placement_obj.cut_start = clipobj.Loop.LoopStart*4
+								placement_obj.time.set_offset(clipobj.Loop.LoopStart*4)
 							else:
-								placement_obj.cut_type = 'loop'
-								placement_obj.cut_start = clipobj.Loop.StartRelative*4
-								placement_obj.cut_loopstart = clipobj.Loop.LoopStart*4
-								placement_obj.cut_loopend = clipobj.Loop.LoopEnd*4
+								placement_obj.time.set_loop_data(clipobj.Loop.StartRelative*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
 
 			elif tracktype == 'return':
 				cvpj_returntrackid = 'return_'+str(returnid)

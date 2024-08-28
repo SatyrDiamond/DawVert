@@ -514,7 +514,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 
 			for lmms_pattern in lmms_track.patterns:
 				placement_obj = track_obj.placements.add_notes() if not isbb else placements_notes.cvpj_placement_notes(track_obj.time_ppq, track_obj.time_float)
-				placement_obj.position = lmms_pattern.pos
+				placement_obj.time.position = lmms_pattern.pos
 				placement_obj.visual.name = lmms_pattern.name
 				if lmms_pattern.color: placement_obj.visual.color.set_float(lmms_pattern.color)
 				placement_obj.muted = bool(int(lmms_pattern.muted))
@@ -587,11 +587,10 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 							if pl_type == 0:
 								if pl_data.notelist.notesfound():
 									pl_copy = copy.deepcopy(pl_data)
-									pl_copy.position = bbtco.pos
-									pl_copy.duration = bbtco.len
 									pl_copy.muted = bbtco.muted
 									pl_copy.visual.name = bbtco.name
-									pl_copy.cut_loop_data(0, 0, steps*12)
+									pl_copy.time.set_posdur(bbtco.pos, bbtco.len)
+									pl_copy.time.cut_loop_data(0, 0, steps*12)
 
 									if lmms_track.color: pl_copy.visual.color.set_hex(track_color)
 									lane_pl.placements.pl_notes.data.append(pl_copy)
@@ -626,14 +625,11 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 
 			for lmms_sampletco in lmms_track.sampletcos:
 				placement_obj = track_obj.placements.add_audio() if not isbb else placements_audio.cvpj_placement_audio()
-				placement_obj.position = lmms_sampletco.pos
-				placement_obj.duration = lmms_sampletco.len
+				placement_obj.time.set_posdur(lmms_sampletco.pos, lmms_sampletco.len)
+				placement_obj.time.set_offset(lmms_sampletco.off*-1 if lmms_sampletco.off != -1 else 0)
 				placement_obj.muted = bool(lmms_sampletco.muted)
 				filepath = get_sample(lmms_sampletco.src)
 				convproj_obj.add_sampleref(filepath, filepath, None)
-				if lmms_sampletco.off != -1:
-					placement_obj.cut_type = 'cut'
-					placement_obj.cut_start = lmms_sampletco.off*-1
 				sp_obj = placement_obj.sample
 				sp_obj.sampleref = filepath
 
@@ -644,8 +640,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 				if not isbb:
 					for id_num in lmms_automationpattern.auto_target:
 						autopl_obj = convproj_obj.automation.add_pl_points(['id',str(id_num)], 'float')
-						autopl_obj.position = lmms_automationpattern.pos
-						autopl_obj.duration = lmms_automationpattern.len
+						autopl_obj.time.set_posdur(lmms_automationpattern.pos, lmms_automationpattern.len)
 						for p_pos, p_val in lmms_automationpattern.auto_points.items():
 							autopoint_obj = autopl_obj.data.add_point()
 							autopoint_obj.pos = p_pos
@@ -758,7 +753,7 @@ class input_lmms(plugins.base):
 		convproj_obj.loop_start = song_obj.timeline.lp0pos
 		convproj_obj.loop_end = song_obj.timeline.lp1pos
 		
-		convproj_obj.do_actions.append('force_addloop')
+		#convproj_obj.do_actions.append('force_addloop')
 
 def get_xml_tree(path):
 	with open(path, 'rb') as file:

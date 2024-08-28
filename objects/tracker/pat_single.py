@@ -140,8 +140,7 @@ class single_patsong:
 					if tpl[1].notesfound():
 						tpl[1].notemod_conv()
 						placement_obj = playlist_obj.placements.add_notes()
-						placement_obj.position = cur_pl_pos
-						placement_obj.duration = tpl[0]
+						placement_obj.time.set_posdur(cur_pl_pos, tpl[0])
 						placement_obj.notelist = tpl[1]
 						placement_obj.visual.name = self.patdata[tpl[2]].name
 				cur_pl_pos += tpl[0]

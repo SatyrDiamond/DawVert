@@ -362,7 +362,7 @@ class input_amped(plugins.base):
 			if os.path.exists(new_file) == False:
 				zip_data.extract(amped_filename, path=samplefolder, pwd=None)
 				os.rename(old_file,new_file)
-			sampleref_obj = convproj_obj.add_sampleref(str(amped_filename), new_file)
+			sampleref_obj = convproj_obj.add_sampleref(str(amped_filename), new_file, None)
 
 		amped_project = json.loads(zip_data.read('amped-studio-project.json'))
 		amped_obj = proj_amped.amped_project(amped_project)
@@ -407,33 +407,28 @@ class input_amped(plugins.base):
 
 				if amped_region.midi_notes: 
 					placement_obj = track_obj.placements.add_notes()
-					placement_obj.position = amped_region.position
-					placement_obj.duration = amped_region.length
+					placement_obj.time.set_posdur(amped_region.position, amped_region.length+amped_region.offset)
+					placement_obj.time.set_offset(amped_region.offset)
 					placement_obj.visual.name = amped_region.name
 					placement_obj.visual.color.set_float(amped_reg_color)
-					if amped_region.offset > 0:
-						placement_obj.cut_type = 'cut'
-						placement_obj.cut_start = amped_region.offset
-						placement_obj.duration += amped_region.offset
 					for amped_note in amped_region.midi_notes:
 						if amped_note['position'] >= 0:
 							placement_obj.notelist.add_r(amped_note['position'], amped_note['length'], amped_note['key']-60, amped_note['velocity']/127, {})
 
 				if amped_region.clips != []: 
 					placement_obj = track_obj.placements.add_nested_audio()
-					placement_obj.position = amped_region.position
-					placement_obj.duration = amped_region.length
+					placement_obj.time.set_posdur(amped_region.position, amped_region.length+amped_region.offset)
+					placement_obj.time.set_offset(amped_region.offset)
 					placement_obj.visual.name = amped_region.name
 					placement_obj.visual.color.set_float(amped_reg_color)
-					if amped_region.offset:
-						placement_obj.cut_type = 'cut'
-						placement_obj.cut_start = amped_region.offset
 
 					for amped_clip in amped_region.clips:
-						sp_obj = placement_obj.add()
-						sp_obj.position = amped_clip.position
-						sp_obj.duration = amped_clip.length
-						sample_obj = sp_obj.sample
+						npa_obj = placement_obj.add()
+						npa_obj.time.position = amped_clip.position
+						npa_obj.time.duration = amped_clip.length
+						amped_clip_offset = amped_clip.offset
+						npa_obj.time.set_offset(amped_clip_offset*(120/amped_obj.tempo))
+						sample_obj = npa_obj.sample
 						sample_obj.vol = amped_clip.gain
 						sample_obj.pitch = amped_clip.pitchShift
 						sample_obj.sampleref = str(amped_clip.contentGuid.id)
@@ -441,9 +436,3 @@ class input_amped(plugins.base):
 						sample_obj.stretch.uses_tempo = True
 						sample_obj.stretch.algorithm = 'stretch'
 						sample_obj.reverse = amped_clip.reversed
-
-						amped_clip_offset = amped_clip.offset
-						if amped_clip_offset != 0:
-							sp_obj.cut_type = 'cut'
-							sp_obj.cut_start = amped_clip_offset*(120/amped_obj.tempo)
- 

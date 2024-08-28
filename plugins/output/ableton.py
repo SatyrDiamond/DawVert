@@ -126,13 +126,14 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 	
 		stretch_obj = cvpj_samplepart.stretch
 	
-		if not stretch_obj.preserve_pitch and not ignoreresample: warp_obj.WarpMode = 3
+		if not stretch_obj.preserve_pitch and not ignoreresample: 
+			warp_obj.WarpMode = 3
 		else:
 			if stretch_obj.algorithm == 'beats':
 				warp_obj.WarpMode = 0
-				if 'TransientResolution' in stretch_obj.params: warp_obj.TransientResolution = stretch_obj.params['TransientResolution']
-				if 'TransientLoopMode' in stretch_obj.params: warp_obj.TransientLoopMode = stretch_obj.params['TransientLoopMode']
-				if 'TransientEnvelope' in stretch_obj.params: warp_obj.TransientEnvelope = stretch_obj.params['TransientEnvelope']
+				if 'resolution' in stretch_obj.params: warp_obj.TransientResolution = stretch_obj.params['resolution']
+				if 'loopmode' in stretch_obj.params: warp_obj.TransientLoopMode = stretch_obj.params['loopmode']
+				if 'envelope' in stretch_obj.params: warp_obj.TransientEnvelope = stretch_obj.params['envelope']
 			elif stretch_obj.algorithm == 'ableton_tones':
 				warp_obj.WarpMode = 1
 				if 'GranularityTones' in stretch_obj.params: warp_obj.GranularityTones = stretch_obj.params['GranularityTones']
@@ -144,8 +145,8 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 				warp_obj.WarpMode = 4
 			elif stretch_obj.algorithm == 'stretch_complexpro':
 				warp_obj.WarpMode = 6
-				if 'ComplexProFormants' in stretch_obj.params: warp_obj.ComplexProFormants = stretch_obj.params['ComplexProFormants']
-				if 'ComplexProEnvelope' in stretch_obj.params: warp_obj.ComplexProEnvelope = stretch_obj.params['ComplexProEnvelope']
+				if 'formant' in stretch_obj.params: warp_obj.ComplexProFormants = stretch_obj.params['formants']
+				if 'envelope' in stretch_obj.params: warp_obj.ComplexProEnvelope = stretch_obj.params['envelope']
 			else:
 				warp_obj.WarpMode = 4
 		
@@ -378,6 +379,30 @@ def get_timesig(timesig):
 	outval = timesig_denominator*100 + timesig_numerator+(2-timesig_denominator)
 	return outval
 
+def add_group(convproj_obj, project_obj, groupid):
+	global counter_track
+	global colordata
+	global ids_group_cvpj_als
+
+	ingroupid = None
+	if groupid not in ids_group_cvpj_als:
+		group_obj = convproj_obj.groups[groupid]
+		groupnumid = counter_track.get()
+		als_gtrack = project_obj.add_group_track(groupnumid)
+		do_effects(convproj_obj, als_gtrack, group_obj.fxslots_audio)
+		als_gtrack.Color = group_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
+		if group_obj.visual.name: als_gtrack.Name.UserName = fixtxt(group_obj.visual.name)
+		do_param(convproj_obj, group_obj.params, 'vol', 1, 'float', ['group', groupid, 'vol'], als_gtrack.DeviceChain.Mixer.Volume, als_gtrack.AutomationEnvelopes)
+		do_param(convproj_obj, group_obj.params, 'pan', 0, 'float', ['group', groupid, 'pan'], als_gtrack.DeviceChain.Mixer.Pan, als_gtrack.AutomationEnvelopes)
+		ids_group_cvpj_als[groupid] = groupnumid
+		if group_obj.group:
+			als_gtrack.TrackGroupId = add_group(convproj_obj, project_obj, group_obj.group)
+			als_gtrack.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
+	else:
+		groupnumid = ids_group_cvpj_als[groupid]
+
+	return groupnumid
+
 class output_ableton(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
@@ -390,13 +415,17 @@ class output_ableton(plugins.base):
 		dawinfo_obj.file_ext = 'als'
 		dawinfo_obj.placement_cut = True
 		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
-		dawinfo_obj.audio_stretch = ['warp']
+		dawinfo_obj.audio_stretch = ['warp', 'rate']
 		dawinfo_obj.plugin_included = ['sampler:single','sampler:multi','sampler:slicer','native-ableton']
 		dawinfo_obj.plugin_ext = ['vst2']
 		dawinfo_obj.auto_types = ['nopl_points']
 		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
 		
 	def parse(self, convproj_obj, output_file):
+		global counter_track
+		global colordata
+		global ids_group_cvpj_als
+
 		convproj_obj.change_timings(1, True)
 		project_obj = proj_ableton.ableton_liveset()
 		project_obj.make_from_scratch()
@@ -455,12 +484,9 @@ class output_ableton(plugins.base):
 		track_nongroup = {}
 		for trackid, track_obj in convproj_obj.iter_track():
 			if track_obj.group and not DEBUG_IGNORE_GROUPS: 
-				if track_obj.group not in track_group: 
-					#print(track_obj.group)
-					track_group[track_obj.group] = {}
+				if track_obj.group not in track_group: track_group[track_obj.group] = {}
 				track_group[track_obj.group][trackid] = track_obj
-			else:
-				track_nongroup[trackid] = track_obj
+			else: track_nongroup[trackid] = track_obj
 
 		outtracks = []
 		for groupid, groupdata in track_group.items():
@@ -474,22 +500,10 @@ class output_ableton(plugins.base):
 			track_obj.placements.pl_notes.sort()
 			track_color = track_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
 
-			#print(track_obj.group)
 			groupnumid = None
 			if track_obj.group:
 				if track_obj.group in convproj_obj.groups:
-					if track_obj.group not in ids_group_cvpj_als:
-						group_obj = convproj_obj.groups[track_obj.group]
-						groupnumid = counter_track.get()
-						als_gtrack = project_obj.add_group_track(groupnumid)
-						do_effects(convproj_obj, als_gtrack, group_obj.fxslots_audio)
-						als_gtrack.Color = group_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
-						if group_obj.visual.name: als_gtrack.Name.UserName = fixtxt(group_obj.visual.name)
-						do_param(convproj_obj, group_obj.params, 'vol', 1, 'float', ['group', track_obj.group, 'vol'], als_gtrack.DeviceChain.Mixer.Volume, als_gtrack.AutomationEnvelopes)
-						do_param(convproj_obj, group_obj.params, 'pan', 0, 'float', ['group', track_obj.group, 'pan'], als_gtrack.DeviceChain.Mixer.Pan, als_gtrack.AutomationEnvelopes)
-						ids_group_cvpj_als[track_obj.group] = groupnumid
-					else:
-						groupnumid = ids_group_cvpj_als[track_obj.group]
+					groupnumid = add_group(convproj_obj, project_obj, track_obj.group)
 
 			if track_obj.type == 'instrument':
 				tracknumid = counter_track.get()
@@ -508,24 +522,24 @@ class output_ableton(plugins.base):
 						als_midiclip = als_track.add_midiclip(clipid)
 						als_midiclip.Color = notespl_obj.visual.color.closest_color_index(colordata, track_color)
 						if notespl_obj.visual.name: als_midiclip.Name = fixtxt(notespl_obj.visual.name)
-						als_midiclip.Time = notespl_obj.position
+						als_midiclip.Time = notespl_obj.time.position
 						als_midiclip.Disabled = notespl_obj.muted
-						als_midiclip.CurrentStart = notespl_obj.position
-						als_midiclip.CurrentEnd = notespl_obj.position+notespl_obj.duration
+						als_midiclip.CurrentStart = notespl_obj.time.position
+						als_midiclip.CurrentEnd = notespl_obj.time.position+notespl_obj.time.duration
 	
 						notespl_obj.notelist.notemod_conv()
 	
-						if notespl_obj.cut_type == 'cut':
+						if notespl_obj.time.cut_type == 'cut':
 							als_midiclip.Loop.LoopOn = False
-							als_midiclip.Loop.LoopStart = notespl_obj.cut_start
-							als_midiclip.Loop.LoopEnd = als_midiclip.Loop.LoopStart+notespl_obj.duration
-						elif notespl_obj.cut_type in ['loop', 'loop_off', 'loop_adv']:
+							als_midiclip.Loop.LoopStart = notespl_obj.time.cut_start
+							als_midiclip.Loop.LoopEnd = als_midiclip.Loop.LoopStart+notespl_obj.time.duration
+						elif notespl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
 							als_midiclip.Loop.LoopOn = True
-							als_midiclip.Loop.StartRelative, als_midiclip.Loop.LoopStart, als_midiclip.Loop.LoopEnd = notespl_obj.get_loop_data()
+							als_midiclip.Loop.StartRelative, als_midiclip.Loop.LoopStart, als_midiclip.Loop.LoopEnd = notespl_obj.time.get_loop_data()
 						else:
 							als_midiclip.Loop.LoopOn = False
 							als_midiclip.Loop.LoopStart = 0
-							als_midiclip.Loop.LoopEnd = notespl_obj.duration
+							als_midiclip.Loop.LoopEnd = notespl_obj.time.duration
 	
 						t_keydata = {}
 						
@@ -549,22 +563,30 @@ class output_ableton(plugins.base):
 								if t_extra:
 									if 'off_vol' in t_extra: MidiNoteEvent_obj.OffVelocity = t_extra['off_vol']*100
 									if 'probability' in t_extra: MidiNoteEvent_obj.Probability = t_extra['probability']
-									if 'enabled' in t_extra: MidiNoteEvent_obj.IsEnabled = t_extra['enabled']
+									if 'enabled' in t_extra: MidiNoteEvent_obj.IsEnabled = bool(t_extra['enabled'])
+									if 'velocity_range' in t_extra: MidiNoteEvent_obj.VelocityDeviation = t_extra['velocity_range']
 	
 								if t_auto:
-									if 'pitch' in t_auto:
-										pitchdata = t_auto['pitch']
-										pitchdata.remove_instant()
-										PerNoteEventList_obj = proj_ableton.ableton_PerNoteEventList(None)
-										PerNoteEventList_obj.CC = -2
-										PerNoteEventList_obj.NoteId = t_id
-										for autopoint_obj in pitchdata.iter():
-											PerNoteEvent_obj = proj_ableton.ableton_x_PerNoteEvent(None)
-											PerNoteEvent_obj.TimeOffset = autopoint_obj.pos
-											PerNoteEvent_obj.Value = autopoint_obj.value*170
-											PerNoteEventList_obj.Events.append(PerNoteEvent_obj)
-										als_midiclip.Notes.PerNoteEventStore[PerNoteEventListID] = PerNoteEventList_obj
-										PerNoteEventListID += 1
+									for mpetype,d in t_auto.items():
+										atype = None
+										autodiv = 1
+										if mpetype == 'pitch':
+											atype = -2
+											autodiv = 170
+										if mpetype == 'slide': atype = 74
+										if mpetype == 'pressure': atype = -1
+										if atype:
+											d.remove_instant()
+											PerNoteEventList_obj = proj_ableton.ableton_PerNoteEventList(None)
+											PerNoteEventList_obj.CC = atype
+											PerNoteEventList_obj.NoteId = t_id
+											for autopoint_obj in d.iter():
+												PerNoteEvent_obj = proj_ableton.ableton_x_PerNoteEvent(None)
+												PerNoteEvent_obj.TimeOffset = autopoint_obj.pos
+												PerNoteEvent_obj.Value = autopoint_obj.value*autodiv
+												PerNoteEventList_obj.Events.append(PerNoteEvent_obj)
+											als_midiclip.Notes.PerNoteEventStore[PerNoteEventListID] = PerNoteEventList_obj
+											PerNoteEventListID += 1
 	
 								KeyTrack_obj.NoteEvents.append(MidiNoteEvent_obj)
 	
@@ -737,21 +759,21 @@ class output_ableton(plugins.base):
 						if audiopl_obj.visual.name: als_audioclip.Name = fixtxt(audiopl_obj.visual.name)
 						als_audioclip.Disabled = audiopl_obj.muted
 	
-						als_audioclip.Time = audiopl_obj.position
-						als_audioclip.CurrentStart = audiopl_obj.position
-						als_audioclip.CurrentEnd = audiopl_obj.position+audiopl_obj.duration
+						als_audioclip.Time = audiopl_obj.time.position
+						als_audioclip.CurrentStart = audiopl_obj.time.position
+						als_audioclip.CurrentEnd = audiopl_obj.time.position+audiopl_obj.time.duration
 	
-						if audiopl_obj.cut_type == 'cut':
+						if audiopl_obj.time.cut_type == 'cut':
 							als_audioclip.Loop.LoopOn = False
-							als_audioclip.Loop.LoopStart = audiopl_obj.cut_start
-							als_audioclip.Loop.LoopEnd = als_audioclip.Loop.LoopStart+audiopl_obj.duration
-						elif audiopl_obj.cut_type in ['loop', 'loop_off', 'loop_adv']:
+							als_audioclip.Loop.LoopStart = audiopl_obj.time.cut_start
+							als_audioclip.Loop.LoopEnd = als_audioclip.Loop.LoopStart+audiopl_obj.time.duration
+						elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
 							als_audioclip.Loop.LoopOn = True
-							als_audioclip.Loop.StartRelative, als_audioclip.Loop.LoopStart, als_audioclip.Loop.LoopEnd = audiopl_obj.get_loop_data()
+							als_audioclip.Loop.StartRelative, als_audioclip.Loop.LoopStart, als_audioclip.Loop.LoopEnd = audiopl_obj.time.get_loop_data()
 						else:
 							als_audioclip.Loop.LoopOn = False
 							als_audioclip.Loop.LoopStart = 0
-							als_audioclip.Loop.LoopEnd = audiopl_obj.duration
+							als_audioclip.Loop.LoopEnd = audiopl_obj.time.duration
 	
 						if 'duration' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInLength = audiopl_obj.fade_in['duration']/8
 						if 'skew' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInCurveSkew = audiopl_obj.fade_in['skew']
@@ -763,29 +785,28 @@ class output_ableton(plugins.base):
 						sample_obj = audiopl_obj.sample
 						stretch_obj = copy.deepcopy(sample_obj.stretch)
 
-						if not stretch_obj.is_warped:
-							if not stretch_obj.preserve_pitch: als_audioclip.WarpMode = 3
+						if not stretch_obj.preserve_pitch: als_audioclip.WarpMode = 3
+						else:
+							if stretch_obj.algorithm == 'transient':
+								als_audioclip.WarpMode = 0
+								if 'TransientResolution' in stretch_obj.params: als_audioclip.TransientResolution = stretch_obj.params['TransientResolution']
+								if 'TransientLoopMode' in stretch_obj.params: als_audioclip.TransientLoopMode = stretch_obj.params['TransientLoopMode']
+								if 'TransientEnvelope' in stretch_obj.params: als_audioclip.TransientEnvelope = stretch_obj.params['TransientEnvelope']
+							elif stretch_obj.algorithm == 'ableton_tones':
+								als_audioclip.WarpMode = 1
+								if 'GranularityTones' in stretch_obj.params: als_audioclip.GranularityTones = stretch_obj.params['GranularityTones']
+							elif stretch_obj.algorithm == 'ableton_texture':
+								als_audioclip.WarpMode = 2
+								if 'GranularityTexture' in stretch_obj.params: als_audioclip.GranularityTexture = stretch_obj.params['GranularityTexture']
+								if 'FluctuationTexture' in stretch_obj.params: als_audioclip.FluctuationTexture = stretch_obj.params['FluctuationTexture']
+							elif stretch_obj.algorithm == 'ableton_complex':
+								als_audioclip.WarpMode = 4
+							elif stretch_obj.algorithm == 'ableton_complexpro':
+								als_audioclip.WarpMode = 6
+								if 'ComplexProFormants' in stretch_obj.params: als_audioclip.ComplexProFormants = stretch_obj.params['ComplexProFormants']
+								if 'ComplexProEnvelope' in stretch_obj.params: als_audioclip.ComplexProEnvelope = stretch_obj.params['ComplexProEnvelope']
 							else:
-								if stretch_obj.algorithm == 'beats':
-									als_audioclip.WarpMode = 0
-									if 'TransientResolution' in stretch_obj.params: als_audioclip.TransientResolution = stretch_obj.params['TransientResolution']
-									if 'TransientLoopMode' in stretch_obj.params: als_audioclip.TransientLoopMode = stretch_obj.params['TransientLoopMode']
-									if 'TransientEnvelope' in stretch_obj.params: als_audioclip.TransientEnvelope = stretch_obj.params['TransientEnvelope']
-								elif stretch_obj.algorithm == 'ableton_tones':
-									als_audioclip.WarpMode = 1
-									if 'GranularityTones' in stretch_obj.params: als_audioclip.GranularityTones = stretch_obj.params['GranularityTones']
-								elif stretch_obj.algorithm == 'ableton_texture':
-									als_audioclip.WarpMode = 2
-									if 'GranularityTexture' in stretch_obj.params: als_audioclip.GranularityTexture = stretch_obj.params['GranularityTexture']
-									if 'FluctuationTexture' in stretch_obj.params: als_audioclip.FluctuationTexture = stretch_obj.params['FluctuationTexture']
-								elif stretch_obj.algorithm == 'ableton_complex':
-									als_audioclip.WarpMode = 4
-								elif stretch_obj.algorithm == 'stretch_complexpro':
-									als_audioclip.WarpMode = 6
-									if 'ComplexProFormants' in stretch_obj.params: als_audioclip.ComplexProFormants = stretch_obj.params['ComplexProFormants']
-									if 'ComplexProEnvelope' in stretch_obj.params: als_audioclip.ComplexProEnvelope = stretch_obj.params['ComplexProEnvelope']
-								else:
-									als_audioclip.WarpMode = 4
+								als_audioclip.WarpMode = 4
 
 						als_audioclip.PitchCoarse = round(sample_obj.pitch)
 						als_audioclip.PitchFine = (sample_obj.pitch-round(sample_obj.pitch))*100
@@ -799,13 +820,21 @@ class output_ableton(plugins.base):
 							if ref_found: 
 								second_dur = sampleref_obj.dur_sec
 								als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-
 								als_audioclip.Loop.StartRelative *= ratespeed
-
 								als_audioclip.Loop.LoopEnd += als_audioclip.Loop.StartRelative
 								if als_audioclip.Loop.LoopOn: 
 									stretch_obj.set_rate_speed(bpm, 1, False)
 									als_audioclip.IsWarped = True
+							else:
+								warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+								warpmarker_obj.BeatTime = 0
+								warpmarker_obj.SecTime = 0
+								als_audioclip.WarpMarkers[1] = warpmarker_obj
+
+								warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+								warpmarker_obj.BeatTime = 0.03125
+								warpmarker_obj.SecTime = 0.03125
+								als_audioclip.WarpMarkers[2] = warpmarker_obj
 
 						else:
 							als_audioclip.IsWarped = True

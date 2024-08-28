@@ -92,14 +92,15 @@ def do_automation(convproj_obj, AutomationEnvelopes):
 			cvpj_autotype = None
 			als_autotype = env.Automation.Events[0][1]
 			if als_autotype == 'FloatEvent': cvpj_autotype = 'float'
+			if als_autotype == 'BoolEvent': cvpj_autotype = 'bool'
 			if cvpj_autotype:
 				for _,_,alsevent in env.Automation.Events:
-					convproj_obj.automation.add_autopoint(['id',str(env.PointeeId)], cvpj_autotype, alsevent.Time, alsevent.Value, 'normal')
+					convproj_obj.automation.add_autopoint(['id',str(env.PointeeId)], cvpj_autotype, alsevent.Time*4, alsevent.Value, 'normal' if cvpj_autotype != 'bool' else 'instant')
 
 			if env.PointeeId == timesigid and als_autotype == 'EnumEvent':
 				for _,_,alsevent in env.Automation.Events:
 					if alsevent.Time > 0:
-						convproj_obj.timesig_auto.add_point(alsevent.Time, [(alsevent.Value%99)+1, 2**(alsevent.Value//99)])
+						convproj_obj.timesig_auto.add_point(alsevent.Time*4, [(alsevent.Value%99)+1, 2**(alsevent.Value//99)])
 					else:
 						convproj_obj.timesig = [(alsevent.Value%99)+1, 2**(alsevent.Value//99)]
 
@@ -114,6 +115,8 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 		able_plug_id = str(device.id)
 		if track_id != None: pluginid = track_id+'_'+able_plug_id
 		else: pluginid = 'master_'+able_plug_id
+
+		doparam(device.On, 'On', 'bool', 1, ['slot', pluginid, 'enabled'], None)
 
 		parampaths = device.params.get_all_keys([])
 
@@ -306,8 +309,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				for param_id, dset_param in fldso.params.iter():
 					if param_id in parampaths:
 						alsparam = parampaths[param_id]
-						if alsparam.type == 'param': 
-							outval = doparam(alsparam.value, param_id, dset_param.type, 0, ['plugin', pluginid, param_id], None)
+						if alsparam.type == 'param': outval = doparam(alsparam.value, param_id, dset_param.type, 0, ['plugin', pluginid, param_id], None)
 						else: outval = alsparam.value
 					else: outval = None
 					if dset_param.type == 'list':
@@ -421,6 +423,7 @@ class input_ableton(plugins.base):
 				fxloc = ['track', track_id]
 				track_vol = doparam(track_mixer.Volume, 'Volume', 'float', 0, fxloc+['vol'], None)
 				track_pan = doparam(track_mixer.Pan, 'Pan', 'float', 0, fxloc+['pan'], None)
+				track_on = doparam(track_mixer.Speaker, 'On', 'bool', 1, fxloc+['enabled'], None)
 
 				track_obj = convproj_obj.add_track(track_id, 'instrument', 1, False)
 				track_obj.visual.name = track_name
@@ -428,6 +431,8 @@ class input_ableton(plugins.base):
 
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
+				track_obj.params.add('enabled', track_on, 'bool')
+
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
 
 				if not DEBUG_DISABLE_PLACEMENTS:
@@ -481,6 +486,7 @@ class input_ableton(plugins.base):
 				fxloc = ['track', track_id]
 				track_vol = doparam(track_mixer.Volume, 'Volume', 'float', 0, fxloc+['vol'], None)
 				track_pan = doparam(track_mixer.Pan, 'Pan', 'float', 0, fxloc+['pan'], None)
+				track_on = doparam(track_mixer.On, 'On', 'bool', 0, fxloc+['enabled'], None)
 
 				track_obj = convproj_obj.add_track(track_id, 'audio', 1, False)
 				track_obj.visual.name = track_name
@@ -504,8 +510,12 @@ class input_ableton(plugins.base):
 
 						for _, e in clipobj.Envelopes.items():
 							mpetype = None
+							alsparam = track_mixer.Pan
+							if alsparam.ModulationTarget.exists:
+								if int(e.PointeeId) == int(alsparam.ModulationTarget.id): mpetype = 'pan'
 							if int(e.PointeeId) == int(mainseq.VolumeModulationTarget.id): mpetype = 'gain'
 							if int(e.PointeeId) == int(mainseq.TranspositionModulationTarget.id): mpetype = 'pitch'
+
 							if mpetype:
 								autopoints_obj = placement_obj.add_autopoints(mpetype, 4, True)
 								for mid, mtype, mobj in e.Automation.Events:
@@ -554,7 +564,7 @@ class input_ableton(plugins.base):
 								stretch_obj.algorithm = 'ableton_complex'
 							if clipobj.WarpMode == 6:
 								stretch_obj.algorithm = 'ableton_complexpro'
-								stretch_obj.params['formant'] = clipobj.ComplexProFormants
+								stretch_obj.params['formants'] = clipobj.ComplexProFormants
 								stretch_obj.params['envelope'] = clipobj.ComplexProEnvelope
 
 							for _, WarpMarker in clipobj.WarpMarkers.items():
@@ -590,6 +600,7 @@ class input_ableton(plugins.base):
 				fxloc = ['return', cvpj_returntrackid]
 				track_vol = doparam(track_mixer.Volume, 'Volume', 'float', 0, fxloc+['vol'], None)
 				track_pan = doparam(track_mixer.Pan, 'Pan', 'float', 0, fxloc+['pan'], None)
+				track_on = doparam(track_mixer.On, 'On', 'bool', 0, fxloc+['enabled'], None)
 				track_obj = convproj_obj.track_master.add_return(cvpj_returntrackid)
 				track_obj.visual.name = track_name
 				track_obj.visual.color.from_colorset_num(colordata, track_color)
@@ -602,6 +613,7 @@ class input_ableton(plugins.base):
 				fxloc = ['group', cvpj_grouptrackid]
 				track_vol = doparam(track_mixer.Volume, 'Volume', 'float', 0, fxloc+['vol'], None)
 				track_pan = doparam(track_mixer.Pan, 'Pan', 'float', 0, fxloc+['pan'], None)
+				track_on = doparam(track_mixer.On, 'On', 'bool', 0, fxloc+['enabled'], None)
 
 				track_obj = convproj_obj.add_group(cvpj_grouptrackid)
 				track_obj.visual.name = track_name

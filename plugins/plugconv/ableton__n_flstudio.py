@@ -14,6 +14,11 @@ op_3osc_shape = {
 	6: 4
 }
 
+def als_calc_pitch(infreq):
+	Coarse = (infreq//1)+2
+	Fine = (infreq%1)*800
+	return Coarse, Fine
+
 class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
@@ -82,14 +87,17 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('Operator.1/Envelope/SustainLevel', 1, 'float')
 			plugin_obj.params.add('Operator.2/Envelope/SustainLevel', 1, 'float')
 
-			plugin_obj.params.add('Operator.0/Tune/Coarse', (osc1_freq//1)+2, 'float')
-			plugin_obj.params.add('Operator.0/Tune/Fine', (osc1_freq%1)*800, 'float')
+			Coarse, Fine = als_calc_pitch(osc1_freq)
+			plugin_obj.params.add('Operator.0/Tune/Coarse', Coarse, 'float')
+			plugin_obj.params.add('Operator.0/Tune/Fine', Fine, 'float')
 
-			plugin_obj.params.add('Operator.1/Tune/Coarse', (osc2_freq//1)+2, 'float')
-			plugin_obj.params.add('Operator.1/Tune/Fine', (osc2_freq%1)*800, 'float')
+			Coarse, Fine = als_calc_pitch(osc2_freq)
+			plugin_obj.params.add('Operator.1/Tune/Coarse', Coarse, 'float')
+			plugin_obj.params.add('Operator.1/Tune/Fine', Fine, 'float')
 
-			plugin_obj.params.add('Operator.2/Tune/Coarse', (osc3_freq//1)+2, 'float')
-			plugin_obj.params.add('Operator.2/Tune/Fine', (osc3_freq%1)*800, 'float')
+			Coarse, Fine = als_calc_pitch(osc3_freq)
+			plugin_obj.params.add('Operator.2/Tune/Coarse', Coarse, 'float')
+			plugin_obj.params.add('Operator.2/Tune/Fine', Fine, 'float')
 
 			plugin_obj.params.add('Operator.0/Volume', osc_vol0, 'float')
 			plugin_obj.params.add('Operator.1/Volume', osc_vol1, 'float')
@@ -193,7 +201,6 @@ class plugconv(plugins.base):
 
 		if plugin_obj.type.subtype == 'plucked!':
 			extpluglog.convinternal('FL Studio', 'Plucked!', 'Ableton', 'StringStudio')
-			plugin_obj.params.debugtxt()
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 			manu_obj.from_param('decay', 'decay', 256)
 			manu_obj.from_param('color', 'color', 128)

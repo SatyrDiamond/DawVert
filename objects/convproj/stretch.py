@@ -1,31 +1,43 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from dataclasses import dataclass
+from dataclasses import field
+
 class cvpj_warp_point:
 	def __init__(self):
 		self.beat = 0
 		self.second = 0
 		self.speed = None
 
+	def __eq__(self, other):
+		e_beat = self.beat == other.beat
+		e_second = self.second == other.second
+		e_speed = self.speed == other.speed
+		return e_beat and e_second and e_speed
+
+	def __repr__(self):
+		return ','.join([str(self.beat),str(self.second),str(self.speed)])
+
+@dataclass
 class cvpj_stretch:
-	def __init__(self):
-		self.algorithm = 'stretch'
-		self.algorithm_mode = None
-		self.preserve_pitch = False
-		self.params = {}
-		self.is_warped = False
-		self.warppoints = []
+	algorithm: str = 'stretch'
+	algorithm_mode: str = ''
+	preserve_pitch: bool = False
+	params: dict = field(default_factory=dict)
+	is_warped: bool = False
+	warppoints: list = field(default_factory=list)
 
-		self.uses_tempo = False
+	uses_tempo: bool = False
 
-		self.bpm = 120
-		self.org_speed = 1
-		self.calc_bpm_speed = 1
-		self.calc_bpm_size = 1
-		self.calc_tempo_speed = 1
-		self.calc_tempo_size = 1
-		self.calc_real_speed = 1
-		self.calc_real_size = 1
+	bpm: float = 120
+	org_speed: float = 1
+	calc_bpm_speed: float = 1
+	calc_bpm_size: float = 1
+	calc_tempo_speed: float = 1
+	calc_tempo_size: float = 1
+	calc_real_speed: float = 1
+	calc_real_size: float = 1
 
 	def add_warp_point(self):
 		warp_point_obj = cvpj_warp_point()
@@ -53,8 +65,15 @@ class cvpj_stretch:
 			if numpoints>2:
 				self.warppoints[-1].speed = self.warppoints[-2].speed
 
+			if numpoints>0:
+				if not self.warppoints[-1].speed:
+					self.warppoints[-1].speed = self.warppoints[-2].speed
+
 			#for warp_point_obj in self.warppoints:
-			#	print(warp_point_obj.beat, warp_point_obj.second, warp_point_obj.speed*120)
+			#	print(warp_point_obj.beat, warp_point_obj.second, warp_point_obj.speed)
+
+	def __bool__(self):
+		return self.is_warped or (self.calc_tempo_speed != 1) or self.uses_tempo
 
 	def __eq__(self, x):
 		s_algorithm = self.algorithm == x.algorithm
@@ -98,7 +117,6 @@ class cvpj_stretch:
 
 	def changestretch(self, samplereflist, sampleref, target, tempo, ppq):
 		iffound = sampleref in samplereflist
-		#print(iffound, sampleref, target, tempomul, self.method, self.rate, self.warp, self.algorithm)
 		pos_offset = 0
 		cut_offset = 0
 
@@ -108,15 +126,16 @@ class cvpj_stretch:
 			sampleref_obj = samplereflist[sampleref]
 
 			if not self.is_warped and target == 'warp':
-				pos_real = sampleref_obj.dur_sec*self.calc_tempo_speed
+				pos_real = sampleref_obj.dur_sec*self.calc_tempo_size
 				self.warppoints = []
+				self.is_warped = True
 
 				warp_point_obj = self.add_warp_point()
 				warp_point_obj.beat = 0
 				warp_point_obj.second = 0
 
 				warp_point_obj = self.add_warp_point()
-				warp_point_obj.beat = pos_real
+				warp_point_obj.beat = pos_real*2
 				warp_point_obj.second = sampleref_obj.dur_sec
 
 			finalspeed = 1

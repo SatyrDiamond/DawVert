@@ -127,8 +127,8 @@ class cvpj_s_automation:
 				pl_dur = max(v.get_dur(), ppq)
 				pl = self.add_pl_ticks()
 				pl.data = v
-				pl.position = x
-				pl.duration = pl_dur
+				pl.time.position = x
+				pl.time.duration = pl_dur
 
 		self.nopl_ticks = None
 		self.u_nopl_ticks = False
@@ -148,12 +148,7 @@ class cvpj_s_automation:
 		if self.u_pl_ticks:
 			for x in self.pl_ticks.iter():
 				pl = self.add_pl_points()
-				pl.position = x.position
-				pl.duration = x.duration
-				pl.cut_type = x.cut_type
-				pl.cut_start = x.cut_start
-				pl.cut_loopstart = x.cut_loopstart
-				pl.cut_loopend = x.cut_loopend
+				pl.time = x.time.copy()
 				pl.muted = x.muted
 				pl.visual = x.visual
 				points_out = x.data.to_points()
@@ -174,9 +169,9 @@ class cvpj_s_automation:
 	def convert____pl_points__nopl_points(self):
 		if self.u_pl_points:
 			for x in self.pl_points.iter():
-				x.data.edit_trimmove(0, x.duration)
+				x.data.edit_trimmove(0, x.time.duration)
 				for c, p in enumerate(x.data.points):
-					self.add_autopoint(p.pos+x.position, p.value, p.type if c != 0 else 'instant')
+					self.add_autopoint(p.pos+x.time.position, p.value, p.type if c != 0 else 'instant')
 
 		self.pl_points = None
 		self.u_pl_points = False
@@ -213,8 +208,8 @@ class cvpj_s_automation:
 
 			for ppl in outdata:
 				pl = self.add_pl_points()
-				pl.position = ppl[0]
-				pl.duration = ppl[1]-pl.position
+				pl.time.position = ppl[0]
+				pl.time.duration = ppl[1]-pl.time.position
 				for point in ppl[2]:
 					autopoint_obj = pl.data.add_point()
 					autopoint_obj.pos = point.pos-ppl[0]

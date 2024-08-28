@@ -152,9 +152,10 @@ class midi_song:
 
 				track.notes.to_cvpj(track_obj.placements.notelist, 0, usedchan)
 
-				instlist = self.instruments.find_idx_chan(tracknum)
+				instlist = self.instruments.find_idx_chan(usedchan)
+
 				if len(instlist)==1:
-					i = instlist[0]
+					i = self.instruments.get_idx(instlist[0])
 
 					if not i['drum']: 
 						track_obj.visual.from_dset_midi(i['bank_hi'], i['bank'], i['inst'], i['drum'], self.device, False)

@@ -30,7 +30,9 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 			vst_fx_datatype = plugin_obj.datavals.get('datatype', None)
 			vst_fx_numparams = plugin_obj.datavals.get('numparams', 0)
 
-			rpp_vst_obj.vst_name = plugin_obj.datavals.get('basename', None)
+			rpp_vst_obj.vst_name = plugin_obj.datavals_global.get('basename', '')
+			if not rpp_vst_obj.vst_name: plugin_obj.datavals_global.get('name', '')
+
 			rpp_vst_obj.vst_lib = os.path.basename(vst_fx_path)
 			rpp_vst_obj.vst_fourid = vst_fx_fourid
 
@@ -107,7 +109,7 @@ def convert_midi(rpp_source_obj,notelist, tempo, num, dem, notespl_obj):
 	notelist.change_timings(960, False)
 
 	n_enddur = notelist.get_dur()
-	p_enddur = notespl_obj.duration*(960//4)
+	p_enddur = notespl_obj.time.duration*(960//4)
 
 	for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notelist.iter():
 		for t_key in t_keys:
@@ -212,9 +214,9 @@ class output_reaper(plugins.base):
 			for notespl_obj in track_obj.placements.pl_notes:
 
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
-				if notespl_obj.cut_type == 'cut': rpp_item_obj.soffs.set(notespl_obj.cut_start/8/tempomul)
-				rpp_item_obj.position.set(notespl_obj.position_real)
-				rpp_item_obj.length.set(notespl_obj.duration_real)
+				if notespl_obj.time.cut_type == 'cut': rpp_item_obj.soffs.set(notespl_obj.time.cut_start/8/tempomul)
+				rpp_item_obj.position.set(notespl_obj.time.position_real)
+				rpp_item_obj.length.set(notespl_obj.time.duration_real)
 				rpp_item_obj.mute['mute'] = int(notespl_obj.muted)
 				if notespl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color_clip(notespl_obj.visual.color))
 				if notespl_obj.visual.name: rpp_item_obj.name.set(notespl_obj.visual.name)
@@ -230,12 +232,12 @@ class output_reaper(plugins.base):
 
 				audiorate = audiopl_obj.sample.stretch.calc_real_speed
 				clip_startat = 0
-				if audiopl_obj.cut_type == 'cut': clip_startat = audiopl_obj.cut_start/8
+				if audiopl_obj.time.cut_type == 'cut': clip_startat = audiopl_obj.time.cut_start/8
 				clip_startat *= audiopl_obj.sample.stretch.calc_tempo_speed
 				rpp_item_obj.soffs.set(clip_startat)
 
-				rpp_item_obj.position.set(audiopl_obj.position_real)
-				rpp_item_obj.length.set(audiopl_obj.duration_real)
+				rpp_item_obj.position.set(audiopl_obj.time.position_real)
+				rpp_item_obj.length.set(audiopl_obj.time.duration_real)
 				rpp_item_obj.mute['mute'] = int(audiopl_obj.muted)
 				if audiopl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color_clip(audiopl_obj.visual.color))
 				if audiopl_obj.visual.name: rpp_item_obj.name.set(audiopl_obj.visual.name)

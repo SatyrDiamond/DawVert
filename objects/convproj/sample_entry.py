@@ -65,6 +65,14 @@ class cvpj_sample_entry:
 	slicer_active: bool = False
 	slicer_slices: list = field(default_factory=list)
 
+	#def __eq__(self, other):
+	#	from dataclasses import asdict
+	#	dictdata_a = asdict(self.stretch)
+	#	dictdata_b = asdict(other.stretch)
+	#	diffrence = []
+	#	for n, x in dictdata_a.items():
+	#		if dictdata_a[n] != dictdata_b[n]: diffrence.append(n)
+
 	def get_data(self, name, fallback): 
 		return self.data[name] if name in self.data else fallback
 

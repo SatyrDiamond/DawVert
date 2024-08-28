@@ -323,10 +323,8 @@ class input_cvpj_r(plugins.base):
 			patid = patids[x['key']]
 
 			placement_obj = cvpj_tracks[x['mach']].placements.add_notes_indexed()
-			placement_obj.position = x['pos']
-			placement_obj.duration = x['dur']
-			placement_obj.cut_type = 'loop'
-			placement_obj.cut_loopend = patmeasures/4
+			placement_obj.time.set_posdur(x['pos'], x['dur'])
+			placement_obj.time.set_loop_data(0, 0, patmeasures/4)
 			placement_obj.fromindex = patid
 
 			if autodata:
@@ -335,8 +333,7 @@ class input_cvpj_r(plugins.base):
 				for position, duration, loopstart, loopend in cutpoints:
 					for autoid, sauto in autodata.items():
 						autopl_obj = convproj_obj.automation.add_pl_points(['plugin', 'machine'+str(x['mach']+1), str(autoid)], 'float')
-						autopl_obj.position = position
-						autopl_obj.duration = duration
+						autopl_obj.time.set_posdur(position, duration)
 						autopl_obj.data.from_steps(sauto.data, sauto.smooth, 1)
 
 		for pos, val in project_obj.seqn.tempoauto: 

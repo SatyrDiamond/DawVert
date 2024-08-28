@@ -403,9 +403,8 @@ class input_wavtool(plugins.base):
 					placement_obj = track_obj.placements.add_notes()
 					placement_obj.visual.color.set_hex(wavtool_clip.color)
 					placement_obj.visual.name = wavtool_clip.name
-					placement_obj.position = wavtool_clip.timelineStart
-					placement_obj.duration = wavtool_clip.timelineEnd - wavtool_clip.timelineStart
-					placement_obj.cut_loop_data(wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd)
+					placement_obj.time.set_startend(wavtool_clip.timelineStart, wavtool_clip.timelineEnd)
+					placement_obj.time.set_loop_data(wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd)
 					for note in wavtool_clip.notes:
 						placement_obj.notelist.add_r(note['start'], note['end']-note['start'], note['pitch']-60, note['velocity'], {})
 				add_devices(convproj_obj, track_obj, trackid, wavtool_obj.devices)
@@ -421,8 +420,7 @@ class input_wavtool(plugins.base):
 					placement_obj = track_obj.placements.add_audio()
 					placement_obj.visual.color.set_hex(wavtool_clip.color)
 					placement_obj.visual.name = wavtool_clip.name
-					placement_obj.position = wavtool_clip.timelineStart
-					placement_obj.duration = wavtool_clip.timelineEnd - wavtool_clip.timelineStart
+					placement_obj.time.set_startend(wavtool_clip.timelineStart, wavtool_clip.timelineEnd)
 
 					sp_obj = placement_obj.sample
 
@@ -466,11 +464,9 @@ class input_wavtool(plugins.base):
 					sp_obj.vol = wavtool_clip.gain
 
 					if loopon:
-						placement_obj.cut_loop_data(wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd)
+						placement_obj.time.set_loop_data(wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd)
 					else:
-						if wavtool_clip.readStart != 0:
-							placement_obj.cut_type = 'cut'
-							placement_obj.cut_start = wavtool_clip.readStart
+						placement_obj.time.set_offset(wavtool_clip.readStart)
 
 				add_devices(convproj_obj, track_obj, trackid, wavtool_obj.devices)
 

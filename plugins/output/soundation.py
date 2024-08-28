@@ -317,17 +317,17 @@ class output_soundation(plugins.base):
 
 					if notespl_obj.visual.color: soundation_region.color =  '#'+notespl_obj.visual.color.get_hex_fb(128,128,128)
 
-					soundation_region.position = int(notespl_obj.position)
-					soundation_region.length = int(notespl_obj.duration)
+					soundation_region.position = int(notespl_obj.time.position)
+					soundation_region.length = int(notespl_obj.time.duration)
 					soundation_region.loopcount = 1
 					soundation_region.contentPosition = 0
 
-					if notespl_obj.cut_type in ['loop']:
-						soundation_region.length = notespl_obj.cut_loopend
-						soundation_region.loopcount = notespl_obj.duration/notespl_obj.cut_loopend
+					if notespl_obj.time.cut_type in ['loop']:
+						soundation_region.length = notespl_obj.time.cut_loopend
+						soundation_region.loopcount = notespl_obj.time.duration/notespl_obj.time.cut_loopend
 
-					if notespl_obj.cut_type == 'cut': 
-						soundation_region.contentPosition = -(notespl_obj.cut_start)
+					if notespl_obj.time.cut_type == 'cut': 
+						soundation_region.contentPosition = -(notespl_obj.time.cut_start)
 
 					soundation_region.type = 2
 
@@ -353,17 +353,17 @@ class output_soundation(plugins.base):
 					soundation_region = proj_soundation.soundation_region(None)
 
 					if audiopl_obj.visual.color: soundation_region.color = '#'+audiopl_obj.visual.color.get_hex_fb(128,128,128)
-					soundation_region.position = int(audiopl_obj.position)
-					soundation_region.length = int(audiopl_obj.duration)
+					soundation_region.position = int(audiopl_obj.time.position)
+					soundation_region.length = int(audiopl_obj.time.duration)
 					soundation_region.loopcount = 1
 					soundation_region.contentPosition = 0
 
-					if audiopl_obj.cut_type in ['loop', 'loop_off']:
-						soundation_region.length = audiopl_obj.cut_loopend
-						soundation_region.loopcount = audiopl_obj.duration/audiopl_obj.cut_loopend
+					if audiopl_obj.time.cut_type in ['loop', 'loop_off']:
+						soundation_region.length = audiopl_obj.time.cut_loopend
+						soundation_region.loopcount = audiopl_obj.time.duration/audiopl_obj.time.cut_loopend
 
-					if audiopl_obj.cut_type == 'cut': 
-						soundation_region.contentPosition = -(audiopl_obj.cut_start)
+					if audiopl_obj.time.cut_type == 'cut': 
+						soundation_region.contentPosition = -(audiopl_obj.time.cut_start)
 
 					soundation_region.type = 1
 

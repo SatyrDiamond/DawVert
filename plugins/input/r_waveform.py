@@ -165,12 +165,10 @@ def do_track(convproj_obj, wf_track, track_obj):
 	for midiclip in wf_track.midiclips:
 		placement_obj = track_obj.placements.add_notes()
 
-		placement_obj.position_real = midiclip.start
-		placement_obj.duration_real = midiclip.length
+		placement_obj.time.position_real = midiclip.start
+		placement_obj.time.duration_real = midiclip.length
 		if midiclip.loopStartBeats == 0 and midiclip.loopLengthBeats == 0:
-			if midiclip.start == 0:
-				placement_obj.cut_type = 'cut'
-				placement_obj.cut_start = midiclip.offset
+			placement_obj.time.set_offset(midiclip.offset)
 		else:
 			placement_obj.cut_loop_data(midiclip.offset, midiclip.loopStartBeats, midiclip.loopStartBeats+midiclip.loopLengthBeats)
 	

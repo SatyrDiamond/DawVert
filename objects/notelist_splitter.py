@@ -147,8 +147,7 @@ class cvpj_splittrack:
 		for start, end, numer in [(self.splitdata['start'][s], self.splitdata['end'][e], self.splitdata['numer'][e]) for s,e in sregions]:
 			#print(start, end, numer)
 			placement_obj = self.i_pl.add_notes()
-			placement_obj.position = start
-			placement_obj.duration = end-start
+			placement_obj.time.set_startend(start, end)
 			placement_obj.notelist = self.i_notelist.new_nl_start_end(start, end)
 		self.i_notelist.clear()
 

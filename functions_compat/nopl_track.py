@@ -21,7 +21,7 @@ def process(convproj_obj, in__track_nopl, out__track_nopl, out_type):
 				for cvpj_trackid, track_obj in convproj_obj.iter_track(): 
 					placement_obj = track_obj.placements.add_notes()
 					placement_obj.notelist = track_obj.placements.notelist.__copy__()
-					placement_obj.duration = track_obj.placements.notelist.get_dur()
+					placement_obj.time.duration = track_obj.placements.notelist.get_dur()
 					track_obj.placements.notelist.clear()
 				return True
 		else: return False
@@ -31,7 +31,7 @@ def process(convproj_obj, in__track_nopl, out__track_nopl, out_type):
 			for cvpj_trackid, track_obj in convproj_obj.iter_track():
 				notes = []
 				for notespl_obj in track_obj.placements.pl_notes:
-					track_obj.placements.notelist.merge(notespl_obj.notelist, notespl_obj.position)
+					track_obj.placements.notelist.merge(notespl_obj.notelist, notespl_obj.time.position)
 
 				track_obj.placements.pl_notes.clear()
 

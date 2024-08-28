@@ -11,17 +11,18 @@ def process(convproj_obj, in__placement_audio_stretch, out__placement_audio_stre
 
 	if target:
 		tempo = convproj_obj.params.get('bpm', 120).value
+
 		if convproj_obj.type in ['r', 'rm']: 
 			for trackid, track_obj in convproj_obj.iter_track(): 
 				track_obj.placements.changestretch(convproj_obj, target, tempo)
 				for laneid, lane_obj in track_obj.lanes.items(): 
 					lane_obj.placements.changestretch(convproj_obj, target, tempo)
-		return True
+			return True
 
 		if convproj_obj.type in ['m']: 
 			for pl_id, playlist_obj in convproj_obj.playlist.items(): 
 				playlist_obj.placements.changestretch(convproj_obj, target, tempo)
-		return True
+			return True
 
 
 	return False

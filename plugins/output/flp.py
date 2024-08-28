@@ -296,6 +296,7 @@ class output_cvpjs(plugins.base):
 
 		if len(flp_obj.channels) > 256:
 			logger_output.error('FLP channels over 256 is unsupported.')
+			logger_output.debug('Audio in Pool: '+str(len(convproj_obj.sample_index)))
 			exit()
 
 		FL_Playlist_BeforeSort = {}
@@ -314,17 +315,17 @@ class output_cvpjs(plugins.base):
 	
 					if pl_obj.fromindex in pat_id:
 						fl_clip_obj = arrangement.flp_arrangement_clip()
-						fl_clip_obj.position = int(pl_obj.position)
+						fl_clip_obj.position = int(pl_obj.time.position)
 						fl_clip_obj.itemindex = int(pat_id[pl_obj.fromindex] + fl_clip_obj.patternbase)
-						fl_clip_obj.length = int(pl_obj.duration)
+						fl_clip_obj.length = int(pl_obj.time.duration)
 						fl_clip_obj.startoffset = 0
-						fl_clip_obj.endoffset = int(pl_obj.duration)
+						fl_clip_obj.endoffset = int(pl_obj.time.duration)
 						fl_clip_obj.trackindex = (-500 + int(idnum))*-1
 						if pl_obj.muted == True: fl_clip_obj.flags = 12352
 	
-						if pl_obj.cut_type == 'cut':
-							fl_clip_obj.startoffset = int(pl_obj.cut_start)
-							fl_clip_obj.endoffset += int(pl_obj.cut_start)
+						if pl_obj.time.cut_type == 'cut':
+							fl_clip_obj.startoffset = int(pl_obj.time.cut_start)
+							fl_clip_obj.endoffset += int(pl_obj.time.cut_start)
 						if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []
 						FL_Playlist_BeforeSort[fl_clip_obj.position].append(fl_clip_obj)
 	
@@ -332,50 +333,23 @@ class output_cvpjs(plugins.base):
 				for pl_obj in playlist_obj.placements.pl_audio_indexed:
 					if pl_obj.fromindex in samples_id:
 						fl_clip_obj = arrangement.flp_arrangement_clip()
-						fl_clip_obj.position = int(pl_obj.position)
+						fl_clip_obj.position = int(pl_obj.time.position)
 						fl_clip_obj.itemindex = samples_id[pl_obj.fromindex]
-						fl_clip_obj.length = max(0, int(pl_obj.duration))
-						fl_clip_obj.endoffset = int(pl_obj.duration)/ppq
+						fl_clip_obj.length = max(0, int(pl_obj.time.duration))
+						fl_clip_obj.endoffset = int(pl_obj.time.duration)/ppq
 						fl_clip_obj.trackindex = (-500 + int(idnum))*-1
 						if pl_obj.muted == True: fl_clip_obj.flags = 12352
 	
 						startat = 0
-						if pl_obj.cut_type == 'cut': startat = pl_obj.cut_start
+						if pl_obj.time.cut_type == 'cut': startat = pl_obj.time.cut_start
 	
 						if pl_obj.fromindex in samplestretch:
 							startat = startat/ppq
-							endat = startat+(pl_obj.duration/ppq)
+							endat = startat+(pl_obj.time.duration/ppq)
 	
 							stretchrate = samplestretch[pl_obj.fromindex]
-							#print(out_is_speed, out_rate, end=' | ')
-							#print(pl_obj.duration/ppq, end=' | ')
-							#print(startat*out_rate, end=' -S- ')
-							#print(startat, end=' | ')
-							#print(endat*out_rate, end=' -E- ')
-							#print(endat, end=' | ')
-							#print(placement_obj.duration/ppq, end=' | ')
-							#print()
 							fl_clip_obj.startoffset = (startat*stretchrate)*4
 							fl_clip_obj.endoffset = (endat*stretchrate)*4
-	
-						#print(FL_playlistitem['startoffset'])
-						#print(FL_playlistitem['endoffset'])
-	
-						#	if pl_stretch[0] == 'rate_tempo':
-						#		if 'start' in pl_obj.cut_data: 
-						#			FL_playlistitem['startoffset'] = pl_obj.cut_data['start']*pl_stretch[1]
-						#			FL_playlistitem['endoffset'] = pl_obj.duration*pl_stretch[1] + FL_playlistitem['startoffset']
-						#	elif pl_stretch[0] == 'rate_ignoretempo':
-						#		if 'start' in pl_obj.cut_data: 
-						#			FL_playlistitem['startoffset'] = pl_obj.cut_data['start']
-						#			FL_playlistitem['endoffset'] = pl_obj.duration + FL_playlistitem['startoffset']
-						#	elif pl_stretch[0] == 'rate_speed':
-						#		if 'start' in pl_obj.cut_data: 
-						#			FL_playlistitem['startoffset'] = (pl_obj.cut_data['start'])*pl_stretch[1]
-						#			FL_playlistitem['endoffset'] = (pl_obj.duration)*pl_stretch[1] + FL_playlistitem['startoffset']
-	
-						#FL_playlistitem['startoffset'] /= (ppq/4)
-						#FL_playlistitem['endoffset'] /= (ppq/4)
 	
 						if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []
 						FL_Playlist_BeforeSort[fl_clip_obj.position].append(fl_clip_obj)
@@ -392,12 +366,6 @@ class output_cvpjs(plugins.base):
 		for itemposition in FL_Playlist_Sorted:
 			playlistposvalues = FL_Playlist_Sorted[itemposition]
 			for itemrow in playlistposvalues: arrangement_obj.items.append(itemrow)
-
-		#if convproj_obj.loop_active:
-		#	flp_timemarker_obj = arrangement.flp_timemarker()
-		#	flp_timemarker_obj.pos = convproj_obj.loop_start
-		#	flp_timemarker_obj.type = 2
-		#	arrangement_obj.timemarkers.append(flp_timemarker_obj)
 
 		for pos, value in convproj_obj.timesig_auto.iter():
 			flp_timemarker_obj = arrangement.flp_timemarker()

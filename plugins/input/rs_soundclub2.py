@@ -135,7 +135,7 @@ class input_soundclub2(plugins.base):
 
 				placement_obj.visual.name = sn2_pat_obj.name
 
-				placement_obj.duration = (curpos/32).__ceil__()*32
+				placement_obj.time.set_block_dur(curpos, 32)
 
 			scenedurs.append(scenedur)
 
@@ -152,8 +152,7 @@ class input_soundclub2(plugins.base):
 			pat_tempos = project_obj.patterns[pat_num].tempos
 
 			autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
-			autopl_obj.position = curpos
-			autopl_obj.duration = size
+			autopl_obj.time.set_posdur(curpos, size)
 			for pat_tempo in pat_tempos:
 				autopoint_obj = autopl_obj.data.add_point()
 				autopoint_obj.pos = pat_tempo[0]

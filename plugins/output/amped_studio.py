@@ -32,13 +32,13 @@ def do_idparams(amped_track, convproj_obj, plugin_obj, pluginid, amped_device, a
 		param_obj = plugin_obj.params.get(ampedpid, 0)
 
 		ap_f, ap_d = convproj_obj.automation.get(['plugin', pluginid, paramid], 'float')
-		if ap_f: print(ap_d)
+		#if ap_f: print(ap_d)
 		if ap_f: 
 			if ap_d.u_nopl_points:
 				autospec = {"type": "numeric", "min": param_obj.min, "max": param_obj.max, "curve": 0, "step": 1 if paramtype == 'int' else 0}
 				amped_auto = amped_track.add_auto(paramid, True, amped_device.id, convauto(cvpj_points, param_obj), autospec)
 
-				print(autospec)
+				#print(autospec)
 
 		amped_device.add_param(paramnum, ampedpid, param_obj.value)
 	return paramout
@@ -271,9 +271,9 @@ class output_amped(plugins.base):
 
 			for notespl_obj in track_obj.placements.pl_notes:
 				amped_offset = 0
-				if notespl_obj.cut_type == 'cut': amped_offset = notespl_obj.cut_start
+				if notespl_obj.time.cut_type == 'cut': amped_offset = notespl_obj.time.cut_start
 
-				amped_region = amped_track.add_region(notespl_obj.position, notespl_obj.duration, amped_offset, counter_id.get())
+				amped_region = amped_track.add_region(notespl_obj.time.position, notespl_obj.time.duration, amped_offset, counter_id.get())
 				amped_region.name = notespl_obj.visual.name if notespl_obj.visual.name else ''
 
 				notespl_obj.notelist.sort()
@@ -290,19 +290,19 @@ class output_amped(plugins.base):
 
 			for audiopl_obj in track_obj.placements.pl_audio:
 				amped_offset = 0
-				if audiopl_obj.cut_type == 'cut': amped_offset = audiopl_obj.cut_start
+				if audiopl_obj.time.cut_type == 'cut': amped_offset = audiopl_obj.time.cut_start
 
 				amped_audclip = proj_amped.amped_clip(None)
 				amped_audclip.contentGuid.is_custom = True
 				amped_audclip.contentGuid.id = audio_id[audiopl_obj.sample.sampleref]
 				amped_audclip.position = 0
 				amped_audclip.gain = audiopl_obj.sample.vol
-				amped_audclip.length = audiopl_obj.duration*4
+				amped_audclip.length = audiopl_obj.time.duration*4
 				amped_audclip.offset = 0
 				amped_audclip.stretch = audiopl_obj.sample.stretch.calc_real_size
 				amped_audclip.pitchShift = audiopl_obj.sample.pitch
 
-				amped_region = amped_track.add_region(audiopl_obj.position, audiopl_obj.duration, amped_offset, counter_id.get())
+				amped_region = amped_track.add_region(audiopl_obj.time.position, audiopl_obj.time.duration, amped_offset, counter_id.get())
 				amped_region.clips = [amped_audclip]
 
 			amped_track.devices += amped_parse_effects(amped_track, convproj_obj, track_obj.fxslots_audio, amped_track.automations)

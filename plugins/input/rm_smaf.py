@@ -101,7 +101,7 @@ class input_mmf(plugins.base):
 
 					sampleref_obj = convproj_obj.add_sampleref(wav_path, wav_path, None)
 
-				for x in song_obj.instruments:
+				for x in song_obj.instruments.midi_instruments.data:
 					if x['bank'] == 124: 
 						x['is_custom'] = 1
 						x['custom_name'] = 'MA-3 Voice #'+str(x['inst'])
@@ -134,14 +134,13 @@ class input_mmf(plugins.base):
 				filternstream = track_obj.notes.data['key']<16
 				findex = np.where(filternstream)
 
-				for audionote in track_obj.notes.data[findex]:
+				for audionote in track_obj.notes.data.data[findex]:
 					wav_path = samplefolder + 'snd_' + str(audionote['key']+1).zfill(2) + '.wav'
 					soundnum = audionote['key']+1
 					if soundnum in audiotracks:
 						audtrack_obj = audiotracks[soundnum]
 						placement_obj = audtrack_obj.placements.add_audio()
-						placement_obj.position = audionote['start']
-						placement_obj.duration = audionote['end']-audionote['start']
+						placement_obj.time.set_startend(audionote['start'], audionote['end'])
 						placement_obj.sample.sampleref = wav_path
 						placement_obj.sample.vol = audionote['vol']/127
 

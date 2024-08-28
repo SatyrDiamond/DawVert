@@ -50,6 +50,8 @@ class output_onlineseq(plugins.base):
 			onlineseqinst = 43
 			midiinst = None
 
+			middlenote = track_obj.datavals.get('middlenote', 0)
+
 			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
 
 			midi_found, midi_inst = track_obj.get_midi(convproj_obj)
@@ -81,7 +83,7 @@ class output_onlineseq(plugins.base):
 
 			for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in track_obj.placements.notelist.iter():
 				for t_key in t_keys:
-					onlineseq_note = [int(t_key+60),t_pos,t_dur,onlineseqnum,t_vol]
+					onlineseq_note = [int(t_key+60-middlenote),t_pos,t_dur,onlineseqnum,t_vol]
 					project_obj.notes.append(onlineseq_note)
 
 			project_obj.params[onlineseqnum] = iparams

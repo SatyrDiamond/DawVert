@@ -28,7 +28,7 @@ class plugconv(plugins.base):
 			#HP
 			filter_obj = plugin_obj.named_filter_add('high_pass')
 			filter_obj.on = bool(plugin_obj.params.get('HPactive', 0).value)
-			filter_obj.type = 'high_pass'
+			filter_obj.type.set('high_pass', None)
 			filter_obj.freq = plugin_obj.params.get('HPfreq', 0).value
 			filter_obj.q = plugin_obj.params.get('HPres', 0).value
 			filter_obj.slope = slope_vals[int(plugin_obj.params.get('HP', 0).value)]
@@ -36,7 +36,7 @@ class plugconv(plugins.base):
 			#low_shelf
 			filter_obj = plugin_obj.named_filter_add('low_shelf')
 			filter_obj.on = bool(plugin_obj.params.get('Lowshelfactive', 0).value)
-			filter_obj.type = 'low_shelf'
+			filter_obj.type.set('low_shelf', None)
 			filter_obj.freq = plugin_obj.params.get('LowShelffreq', 0).value
 			filter_obj.q = plugin_obj.params.get('LowShelfres', 0).value
 			filter_obj.gain = plugin_obj.params.get('Lowshelfgain', 0).value
@@ -48,7 +48,7 @@ class plugconv(plugins.base):
 				eq_Peak_bw = plugin_obj.params.get(peak_txt+'bw', 0.1).value
 				filter_obj = plugin_obj.named_filter_add(cvpj_txt)
 				filter_obj.on = bool(plugin_obj.params.get(peak_txt+'active', 0).value)
-				filter_obj.type = 'peak'
+				filter_obj.type.set('peak', None)
 				filter_obj.freq = plugin_obj.params.get(peak_txt+'freq', 0).value
 				filter_obj.q = xtramath.logpowmul(eq_Peak_bw, -1) 
 				filter_obj.gain = plugin_obj.params.get(peak_txt+'gain', 0).value
@@ -56,7 +56,7 @@ class plugconv(plugins.base):
 			#high_shelf
 			filter_obj = plugin_obj.named_filter_add('high_shelf')
 			filter_obj.on = bool(plugin_obj.params.get('Highshelfactive', 0).value)
-			filter_obj.type = 'high_shelf'
+			filter_obj.type.set('high_shelf', None)
 			filter_obj.freq = plugin_obj.params.get('Highshelffreq', 0).value
 			filter_obj.q = plugin_obj.params.get('HighShelfres', 0).value
 			filter_obj.gain = plugin_obj.params.get('HighShelfgain', 0).value
@@ -64,7 +64,7 @@ class plugconv(plugins.base):
 			#LP
 			filter_obj = plugin_obj.named_filter_add('low_pass')
 			filter_obj.on = bool(plugin_obj.params.get('LPactive', 0).value)
-			filter_obj.type = 'low_pass'
+			filter_obj.type.set('low_pass', None)
 			filter_obj.freq = plugin_obj.params.get('LPfreq', 0).value
 			filter_obj.q = plugin_obj.params.get('LPres', 0).value
 			filter_obj.slope = slope_vals[int(plugin_obj.params.get('LP', 0).value)]

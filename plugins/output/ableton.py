@@ -11,6 +11,7 @@ from objects.data_bytes import bytewriter
 from objects.file_proj import proj_ableton
 from objects.file_proj._ableton.param import ableton_parampart
 from objects.file_proj._ableton.samplepart import ableton_MultiSamplePart
+from objects.file_proj._ableton.automation import ableton_AutomationEnvelope
 from objects import counter
 from objects import globalstore
 import numpy as np
@@ -66,6 +67,16 @@ def do_param(convproj_obj, cvpj_params, cvpj_name, cvpj_fallback, cvpj_type, cvp
 						alsevent.Time = autopoint.pos
 						alsevent.Value = autopoint.value
 						AutomationEnvelope_obj.Automation.Events.append([num+1, 'FloatEvent', alsevent])
+				if cvpj_type == 'bool':
+					alsevent = proj_ableton.ableton_BoolEvent(None)
+					alsevent.Time = -63072000
+					alsevent.Value = firstval
+					AutomationEnvelope_obj.Automation.Events.append([0, 'BoolEvent', alsevent])
+					for num, autopoint in enumerate(autopoints.iter()):
+						alsevent = proj_ableton.ableton_BoolEvent(None)
+						alsevent.Time = autopoint.pos
+						alsevent.Value = autopoint.value
+						AutomationEnvelope_obj.Automation.Events.append([num+1, 'BoolEvent', alsevent])
 
 def do_warpmarkers(convproj_obj, WarpMarkers, stretch_obj, dur_sec, pitch):
 	warpenabled = False
@@ -145,7 +156,7 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 				warp_obj.WarpMode = 4
 			elif stretch_obj.algorithm == 'stretch_complexpro':
 				warp_obj.WarpMode = 6
-				if 'formant' in stretch_obj.params: warp_obj.ComplexProFormants = stretch_obj.params['formants']
+				if 'formants' in stretch_obj.params: warp_obj.ComplexProFormants = stretch_obj.params['formants']
 				if 'envelope' in stretch_obj.params: warp_obj.ComplexProEnvelope = stretch_obj.params['envelope']
 			else:
 				warp_obj.WarpMode = 4
@@ -173,6 +184,7 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 
 	if (vstdatatype=='param' and vstnumparams) or vstdatatype=='chunk':
 		als_device = als_track.DeviceChain.add_device('PluginDevice')
+		do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
 	
 		paramkeys = {}
 	
@@ -248,9 +260,11 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 				do_param(convproj_obj, plugin_obj.params, cvpj_paramid, param_obj.value, 'float', ['plugin', pluginid, cvpj_paramid], plugparam['ParameterValue'].value, als_track.AutomationEnvelopes)
 				visualnum += 1
 		als_device.params.import_keys(paramkeys)
+	return als_device
 
 def add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, pluginid):
 	als_device = als_track.DeviceChain.add_device('PluginDevice')
+	do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
 
 	paramkeys = {}
 
@@ -310,11 +324,12 @@ def add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, pluginid):
 			do_param(convproj_obj, plugin_obj.params, cvpj_paramid, param_obj.value, 'float', ['plugin', pluginid, cvpj_paramid], plugparam['ParameterValue'].value, als_track.AutomationEnvelopes)
 			visualnum += 1
 	als_device.params.import_keys(paramkeys)
+	return als_device
 
 def add_plugindevice_native(als_track, convproj_obj, plugin_obj, pluginid):
 	fx_on, fx_wet = plugin_obj.fxdata_get()
 	als_device = als_track.DeviceChain.add_device(plugin_obj.type.subtype)
-	als_device.On.setvalue(fx_on)
+	do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
 	parampaths = {}
 	fldso = globalstore.dataset.get_obj('ableton', 'plugin', plugin_obj.type.subtype)
 	if fldso:
@@ -353,6 +368,7 @@ def add_plugindevice_native(als_track, convproj_obj, plugin_obj, pluginid):
 			parampaths[param_id] = ppart_obj
 
 	als_device.params.import_keys(parampaths)
+	return als_device
 
 
 def do_effects(convproj_obj, als_track, fxslots_audio):
@@ -362,14 +378,16 @@ def do_effects(convproj_obj, als_track, fxslots_audio):
 			plugin_found, plugin_obj = convproj_obj.get_plugin(plugid)
 			if plugin_found:
 
+				als_device = None
+
 				if plugin_obj.check_wildmatch('native-ableton', None):
-					add_plugindevice_native(als_track, convproj_obj, plugin_obj, plugid)
+					als_device = add_plugindevice_native(als_track, convproj_obj, plugin_obj, plugid)
 
 				if plugin_obj.check_match('vst2', 'win'):
-					add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, plugid)
+					als_device = add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, plugid)
 	
 				if plugin_obj.check_match('vst3', 'win'):
-					add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, plugid)
+					als_device = add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, plugid)
 
 TIMESIGVALS = [1,2,4,8,16]
 
@@ -512,6 +530,7 @@ class output_ableton(plugins.base):
 				if track_obj.visual.name: als_track.Name.UserName = fixtxt(track_obj.visual.name)
 				do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
 				do_param(convproj_obj, track_obj.params, 'pan', 0, 'float', ['track', trackid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
+				do_param(convproj_obj, track_obj.params, 'enabled', 1, 'bool', ['track', trackid, 'enabled'], als_track.DeviceChain.Mixer.Speaker, als_track.AutomationEnvelopes)
 
 				if groupnumid: 
 					als_track.TrackGroupId = groupnumid
@@ -816,6 +835,29 @@ class output_ableton(plugins.base):
 
 						do_sampleref(convproj_obj, als_audioclip.SampleRef, sampleref_obj)
 
+						track_mixer = als_track.DeviceChain.Mixer
+						mainseq = als_track.DeviceChain.MainSequencer
+
+						for i, d in enumerate(audiopl_obj.auto.items()):
+							n, x = d
+							clipenv = ableton_AutomationEnvelope(None)
+
+							mpeid = None
+
+							if n == 'pan': mpeid = track_mixer.Pan.ModulationTarget.id
+							if n == 'gain': mpeid = mainseq.VolumeModulationTarget.id
+							if n == 'pitch': mpeid = mainseq.TranspositionModulationTarget.id
+
+							if mpeid:
+								clipenv.PointeeId = mpeid
+								for num, autopoint in enumerate(x.iter()):
+									alsevent = proj_ableton.ableton_FloatEvent(None)
+									alsevent.Time = autopoint.pos
+									alsevent.Value = autopoint.value
+									clipenv.Automation.Events.append([num+1, 'FloatEvent', alsevent])
+
+							als_audioclip.Envelopes[i] = clipenv
+
 						if not stretch_obj.is_warped:
 							if ref_found: 
 								second_dur = sampleref_obj.dur_sec
@@ -869,12 +911,21 @@ class output_ableton(plugins.base):
 			tracknumid = counter_track.get()
 			als_track = project_obj.add_return_track(tracknumid)
 			do_effects(convproj_obj, als_track, return_obj.fxslots_audio)
-
 			do_param(convproj_obj, return_obj.params, 'vol', 1, 'float', ['return', returnid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
 			do_param(convproj_obj, return_obj.params, 'pan', 0, 'float', ['return', returnid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
-
 			als_track.Color = return_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
 			if return_obj.visual.name: als_track.Name.UserName = fixtxt(return_obj.visual.name)
+			track_sendholders = als_track.DeviceChain.Mixer.Sends
+			numsend = 0
+			for returnid, x in master_returns.items():
+				TrackSendHolder_obj = proj_ableton.ableton_TrackSendHolder(None)
+				if returnid in return_obj.sends.data:
+					send_obj = return_obj.sends.data[returnid]
+					do_param(convproj_obj, send_obj.params, 'amount', 0, 'float', ['send', send_obj.sendautoid, 'amount'] if send_obj.sendautoid else None, TrackSendHolder_obj.Send, als_track.AutomationEnvelopes)
+				else:
+					TrackSendHolder_obj.Send.setvalue(0)
+				track_sendholders[numsend] = TrackSendHolder_obj
+				numsend += 1
 
 		for num, timemarker_obj in enumerate(convproj_obj.timemarkers):
 			locator_obj = proj_ableton.ableton_Locator(None)

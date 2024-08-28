@@ -22,7 +22,34 @@ def do_visual_clip(visual_obj, dp_clip):
 	if visual_obj.name: dp_clip.name = visual_obj.name
 	if visual_obj.color: dp_clip.color = '#'+visual_obj.color.get_hex()
 
-def do_params(paramset_obj, dp_channel, starttxt):
+def do_autopoints(autopoints_obj, dppoints_obj):
+	if autopoints_obj.val_type == 'float':
+		autopoints_obj.remove_instant()
+		for autopoint_obj in autopoints_obj.iter():
+			dppoint_obj = points.dawproject_realpoint()
+			dppoint_obj.time = autopoint_obj.pos
+			dppoint_obj.value = autopoint_obj.value
+			if autopoint_obj.type != 'instant': dppoint_obj.interpolation = "linear" 
+			dppoints_obj.points.append(dppoint_obj)
+	if autopoints_obj.val_type == 'bool':
+		for autopoint_obj in autopoints_obj.iter():
+			dppoint_obj = points.dawproject_boolpoint()
+			dppoint_obj.time = autopoint_obj.pos
+			dppoint_obj.value = bool(autopoint_obj.value)
+			dppoints_obj.points_bool.append(dppoint_obj)
+
+def from_cvpj_auto(convproj_obj, points_obj, autoloc, intype, dpautoid, i_addmul):
+	autofound, autoseries = convproj_obj.automation.get(autoloc, intype)
+	if autofound and autoseries.nopl_points:
+		if i_addmul:
+			autoseries.nopl_points.calc('addmul', i_addmul[0], i_addmul[1], 0, 0)
+		dppoints_obj = points.dawproject_points()
+		dppoints_obj.target = points.dawproject_pointtarget()
+		dppoints_obj.target.parameter = dpautoid
+		do_autopoints(autoseries.nopl_points, dppoints_obj)
+		points_obj.append(dppoints_obj)
+
+def do_params(convproj_obj, lane_obj, paramset_obj, dp_channel, starttxt, autoloc):
 	dp_channel.mute.used = True
 	dp_channel.mute.value = not paramset_obj.get('enabled', True).value
 	dp_channel.mute.id = starttxt+'enabled'
@@ -35,6 +62,10 @@ def do_params(paramset_obj, dp_channel, starttxt):
 	dp_channel.volume.value = paramset_obj.get('vol', 1).value
 	dp_channel.volume.id = starttxt+'vol'
 
+	from_cvpj_auto(convproj_obj, lane_obj.points, autoloc+['enabled'], 'bool', dp_channel.mute.id, [-1, -1])
+	from_cvpj_auto(convproj_obj, lane_obj.points, autoloc+['pan'], 'float', dp_channel.pan.id, [1, 0.5])
+	from_cvpj_auto(convproj_obj, lane_obj.points, autoloc+['vol'], 'float', dp_channel.volume.id, None)
+
 def make_time(clip_obj, cvpjtime_obj):
 	clip_obj.time = cvpjtime_obj.position
 	clip_obj.duration = cvpjtime_obj.duration
@@ -42,16 +73,6 @@ def make_time(clip_obj, cvpjtime_obj):
 	if cvpjtime_obj.cut_type in ['loop','loop_off','loop_adv']:
 		clip_obj.loopStart = cvpjtime_obj.cut_loopstart
 		clip_obj.loopEnd = cvpjtime_obj.cut_loopend
-
-def do_auto(autopoints_obj, dppoints_obj):
-	if autopoints_obj.val_type == 'float':
-		autopoints_obj.remove_instant()
-		for autopoint_obj in autopoints_obj.iter():
-			dppoint_obj = points.dawproject_realpoint()
-			dppoint_obj.time = autopoint_obj.pos
-			dppoint_obj.value = autopoint_obj.value
-			if autopoint_obj.type != 'instant': dppoint_obj.interpolation = "linear" 
-			dppoints_obj.points.append(dppoint_obj)
 
 def do_mpe_val(value, mpetype):
 	dppoints_obj = points.dawproject_points()
@@ -69,6 +90,20 @@ def do_mpe_val(value, mpetype):
 	dppoints_obj.points.append(dppoint_obj)
 	return mpetype, dppoints_obj
 
+def make_send(send_obj, returnid):
+	dp_send = track.dawproject_send()
+	dp_send.destination = 'channel_return__'+returnid
+	dp_send.type = 'post'
+	dp_send.volume.used = True
+	dp_send.volume.max = 1
+	dp_send.volume.min = 0
+	dp_send.volume.unit = 'linear'
+	dp_send.volume.value = send_obj.params.get('amount', 0).value
+	dp_send.volume.name = 'Send'
+	if send_obj.sendautoid: 
+		dp_send.volume.id = 'send__'+send_obj.sendautoid+'__param__amount'
+	return dp_send
+
 def do_auto_mpe(autopoints_obj, mpetype, dppoints_obj):
 	if mpetype == 'pitch': 
 		mpetype = 'transpose'
@@ -77,7 +112,7 @@ def do_auto_mpe(autopoints_obj, mpetype, dppoints_obj):
 	else: dppoints_obj.unit = 'linear'
 	dppoints_obj.target = points.dawproject_pointtarget()
 	dppoints_obj.target.expression = mpetype
-	do_auto(autopoints_obj, dppoints_obj)
+	do_autopoints(autopoints_obj, dppoints_obj)
 	return mpetype
 
 def make_dp_audio(convproj_obj, samplepart_obj):
@@ -110,6 +145,8 @@ def make_dp_audio(convproj_obj, samplepart_obj):
 
 		else:
 			dp_audio.algorithm = 'raw'
+
+		maxlen = 0
 
 		if stretch_obj.is_warped:
 			maxlen = 0
@@ -234,57 +271,71 @@ def make_clips(starttxt, convproj_obj, track_obj, lane_obj, trackid):
 
 		lane_obj.clips.clips.append(clip_obj)
 
-def maketrack_notes(convproj_obj, track_obj, trackid, lane_obj):
+def make_track(contentType, role, trackid, chanid):
 	dp_track = track.dawproject_track()
-	dp_track.contentType = 'notes'
+	dp_track.contentType = contentType
 	dp_track.loaded = True
-	dp_track.id = 'track__'+trackid
+	dp_track.id = trackid
 	dp_channel = dp_track.channel
-	dp_channel.role = 'regular'
+	dp_channel.role = role
 	dp_channel.audioChannels = 2
-	dp_channel.destination = 'masterchannel'
-	dp_channel.id = 'channel__'+trackid
-	do_visual(track_obj.visual, dp_track)
-	do_params(track_obj.params, dp_channel, dp_track.id+'__param__')
-	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
-	return dp_track
+	dp_channel.id = chanid
+	return dp_track, dp_channel
 
-def maketrack_audio(convproj_obj, track_obj, trackid, lane_obj):
-	dp_track = track.dawproject_track()
-	dp_track.contentType = 'audio'
-	dp_track.loaded = True
-	dp_track.id = 'track__'+trackid
-	dp_channel = dp_track.channel
-	dp_channel.role = 'regular'
-	dp_channel.audioChannels = 2
-	dp_channel.destination = 'masterchannel'
-	dp_channel.id = 'channel__'+trackid
-	do_visual(track_obj.visual, dp_track)
-	do_params(track_obj.params, dp_channel, dp_track.id+'__param__')
-	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
-	return dp_track
-
-def maketrack_master(track_obj):
-	dp_track = track.dawproject_track()
-	dp_track.contentType = 'audio notes'
-	dp_track.loaded = True
-	dp_track.id = 'mastertrack'
-	dp_channel = dp_track.channel
-	dp_channel.role = 'master'
-	dp_channel.audioChannels = 2
-	dp_channel.id = 'masterchannel'
-	track_obj.visual.name = 'Master'
-	do_visual(track_obj.visual, dp_track)
-	do_params(track_obj.params, dp_channel, dp_track.id+'__param__')
-
-	starttxt = 'mastertrack'
+def make_lane(starttxt):
 	lane_obj = clips.dawproject_lane()
 	lane_obj.track = starttxt
 	lane_obj.clips = clips.dawproject_clips()
 	lane_obj.clips.id = 'clips__'+starttxt
 	lane_obj.id = 'lanes__'+starttxt
 	arrangement_obj.lanes.lanes.append(lane_obj)
+	return lane_obj
 
+def maketrack_notes(convproj_obj, track_obj, trackid, lane_obj):
+	dp_track, dp_channel = make_track('notes', 'regular', 'track__'+trackid, 'channel__'+trackid)
+	dp_channel.destination = 'masterchannel'
+	do_visual(track_obj.visual, dp_track)
+	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['track', trackid])
+	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
+	return dp_track
+
+def maketrack_audio(convproj_obj, track_obj, trackid, lane_obj):
+	dp_track, dp_channel = make_track('audio', 'regular', 'track__'+trackid, 'channel__'+trackid)
+	dp_channel.destination = 'masterchannel'
+	do_visual(track_obj.visual, dp_track)
+	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['track', trackid])
+	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
+	return dp_track
+
+def maketrack_hybrid(convproj_obj, track_obj, trackid, lane_obj):
+	dp_track, dp_channel = make_track('audio notes', 'regular', 'track__'+trackid, 'channel__'+trackid)
+	dp_channel.destination = 'masterchannel'
+	do_visual(track_obj.visual, dp_track)
+	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['track', trackid])
+	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
+	return dp_track
+
+def maketrack_group(convproj_obj, group_obj, trackid, lane_obj):
+	dp_track, dp_channel = make_track('tracks', 'master', 'group__'+trackid, 'channel_group__'+trackid)
+	dp_channel.destination = 'masterchannel' if not group_obj.group else 'channel_group__'+group_obj.group
+	do_visual(group_obj.visual, dp_track)
+	do_params(convproj_obj, lane_obj, group_obj.params, dp_channel, dp_track.id+'__param__', ['group', trackid])
+	make_clips(dp_track.id, convproj_obj, group_obj, lane_obj, trackid)
+	return dp_track
+
+def maketrack_return(convproj_obj, return_obj, returnid):
+	dp_track, dp_channel = make_track('audio', 'effect', 'return__'+returnid, 'channel_return__'+returnid)
+	do_visual(return_obj.visual, dp_track)
+	lane_obj = make_lane('return__'+returnid)
+	do_params(convproj_obj, lane_obj, return_obj.params, dp_channel, dp_track.id+'__param__', ['return', returnid])
+	return dp_track
+
+def maketrack_master(convproj_obj, track_obj):
+	dp_track, dp_channel = make_track('audio notes', 'master', 'mastertrack', 'masterchannel')
+	track_obj.visual.name = 'Master'
+	do_visual(track_obj.visual, dp_track)
+	lane_obj = make_lane('mastertrack')
+	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['master'])
 	return dp_track
 
 class output_dawproject(plugins.base):
@@ -326,31 +377,71 @@ class output_dawproject(plugins.base):
 		dp_timesig.denominator = convproj_obj.timesig[1]
 		dp_timesig.id = 'main__timesig'
 
+		master_returns = convproj_obj.track_master.returns
+
+		groups_data = {}
+
 		for trackid, track_obj in convproj_obj.iter_track():
 
-			starttxt = 'track__'+trackid
-			lane_obj = clips.dawproject_lane()
-			lane_obj.track = starttxt
-			lane_obj.clips = clips.dawproject_clips()
-			lane_obj.clips.id = 'clips__'+starttxt
-			lane_obj.id = 'lanes__'+starttxt
-			arrangement_obj.lanes.lanes.append(lane_obj)
+			if track_obj.type in ['instrument', 'audio', 'hybrid']:
+				lane_obj = make_lane('track__'+trackid)
+				dp_tracks = project_obj.tracks
+				dp_track = None
 
-			if track_obj.type == 'instrument':
-				dp_track = maketrack_notes(convproj_obj, track_obj, trackid, lane_obj)
-				project_obj.tracks.append(dp_track)
+				if track_obj.group:
+					if track_obj.group not in groups_data and track_obj.group in convproj_obj.groups:
+						grp_lane_obj = make_lane('group__'+track_obj.group)
+						cvpj_group = convproj_obj.groups[track_obj.group]
+						dp_group = maketrack_group(convproj_obj, cvpj_group, track_obj.group, grp_lane_obj)
+						if not cvpj_group.group: project_obj.tracks.append(dp_group)
+						else: groups_data[cvpj_group.group].tracks.append(dp_group)
+						groups_data[track_obj.group] = dp_group
+					dp_tracks = groups_data[track_obj.group].tracks
 
-			if track_obj.type == 'audio':
-				dp_track = maketrack_audio(convproj_obj, track_obj, trackid, lane_obj)
-				project_obj.tracks.append(dp_track)
+				if track_obj.type == 'instrument':
+					dp_track = maketrack_notes(convproj_obj, track_obj, trackid, lane_obj)
+
+				if track_obj.type == 'audio':
+					dp_track = maketrack_audio(convproj_obj, track_obj, trackid, lane_obj)
+
+				if track_obj.type == 'hybrid':
+					dp_track = maketrack_hybrid(convproj_obj, track_obj, trackid, lane_obj)
+
+				if dp_track:
+					dp_tracks.append(dp_track)
+
+				for returnid, x in master_returns.items():
+					if returnid in track_obj.sends.data:
+						send_obj = track_obj.sends.data[returnid]
+						dp_send = make_send(send_obj, returnid)
+						dp_track.channel.sends.append(dp_send)
+
+		for returnid, return_obj in master_returns.items():
+			dp_track = maketrack_return(convproj_obj, return_obj, returnid)
+			for ireturnid, x in master_returns.items():
+				if ireturnid in return_obj.sends.data:
+					send_obj = return_obj.sends.data[ireturnid]
+					dp_send = make_send(send_obj, returnid)
+					dp_track.channel.sends.append(dp_send)
+			project_obj.tracks.append(dp_track)
 
 		project_obj.arrangement.id = 'main__arr'
 		arr_lanes = project_obj.arrangement.lanes
 		arr_lanes.timeUnit = 'beats'
 		arr_lanes.id = 'main__arrlanes'
 
-		dp_track = maketrack_master(convproj_obj.track_master)
+		dp_track = maketrack_master(convproj_obj, convproj_obj.track_master)
 		project_obj.tracks.append(dp_track)
+
+		if convproj_obj.timemarkers:
+			project_obj.arrangement.markers = proj_dawproject.dawproject_markers()
+			markers = project_obj.arrangement.markers.markers
+			for timemarker_obj in convproj_obj.timemarkers:
+				marker = proj_dawproject.dawproject_marker()
+				if timemarker_obj.visual.name: marker.name = timemarker_obj.visual.name
+				if timemarker_obj.visual.color: marker.color = '#'+timemarker_obj.visual.color.get_hex()
+				marker.time = timemarker_obj.position
+				markers.append(marker)
 
 		project_obj.save_to_file(output_file)
 

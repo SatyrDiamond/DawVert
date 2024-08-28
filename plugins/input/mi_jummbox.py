@@ -411,8 +411,7 @@ class input_jummbox(plugins.base):
 						playlist_obj.visual.color.set_float(bb_color)
 						cvpj_placement = playlist_obj.placements.add_notes_indexed()
 						cvpj_placement.fromindex = text_patternid(channum, patnum-1)
-						cvpj_placement.position = placement_pos
-						cvpj_placement.duration = bb_partdur
+						cvpj_placement.time.set_posdur(placement_pos, bb_partdur)
 					placement_pos += bb_partdur
 			else:
 				modChannels = bb_chan.instruments[0].modChannels
@@ -447,8 +446,8 @@ class input_jummbox(plugins.base):
 
 							if autoloc:
 								autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
-								autopl_obj.position = placement_pos+pos
-								autopl_obj.duration = ap[-1][0]
+								autopl_obj.time.position = placement_pos+pos
+								autopl_obj.time.duration = ap[-1][0]
 
 								for s_ap in ap: 
 									autopoint_obj = autopl_obj.data.add_point()

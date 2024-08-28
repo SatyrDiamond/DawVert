@@ -128,7 +128,7 @@ class ableton_x_MidiNoteEvent:
 			self.Time = float(xmltag.get('Time'))
 			self.Duration = float(xmltag.get('Duration'))
 			self.Velocity = float(xmltag.get('Velocity'))
-			self.VelocityDeviation = int(xmltag.get('VelocityDeviation'))
+			self.VelocityDeviation = float(xmltag.get('VelocityDeviation'))
 			self.OffVelocity = int(xmltag.get('OffVelocity'))
 			self.Probability = int(xmltag.get('Probability'))
 			self.IsEnabled = bool(['false','true'].index(xmltag.get('IsEnabled')))

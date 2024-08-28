@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import xtramath
+from objects.convproj import placements
 from objects.convproj import autopoints
 from objects.convproj import visual
 
@@ -18,8 +19,8 @@ class cvpj_placements_autopoints:
 		ta_sorted = {}
 		new_a = []
 		for n in self.data:
-			if n.position not in ta_bsort: ta_bsort[n.position] = []
-			ta_bsort[n.position].append(n)
+			if n.time.position not in ta_bsort: ta_bsort[n.time.position] = []
+			ta_bsort[n.time.position].append(n)
 		ta_sorted = dict(sorted(ta_bsort.items(), key=lambda item: item[0]))
 		for p in ta_sorted:
 			for note in ta_sorted[p]: new_a.append(note)
@@ -32,8 +33,7 @@ class cvpj_placements_autopoints:
 
 	def change_timings(self, time_ppq, time_float):
 		for pl in self.data:
-			pl.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.position)
-			pl.duration = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.duration)
+			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
 			pl.data.change_timings(time_ppq, time_float)
 
 		self.time_ppq = time_ppq
@@ -54,48 +54,27 @@ class cvpj_placements_autopoints:
 	def remove_cut(self):
 		for x in self.data: 
 			if x.cut_type == 'cut':
-				x.data.edit_trimmove(x.cut_start, x.duration)
+				x.data.edit_trimmove(x.time.cut_start, x.time.duration)
 				x.cut_start = 0
 				x.cut_type = None
 
 	def remove_unused(self):
 		for x in self.data: 
 			if x.cut_type == 'cut':
-				x.data.edit_trimmove(x.cut_start, x.duration)
+				x.data.edit_trimmove(x.time.cut_start, x.time.duration)
 			else:
-				x.data.edit_trimmove(0, x.duration)
+				x.data.edit_trimmove(0, x.time.duration)
 
 class cvpj_placement_autopoints:
-	__slots__ = ['position','duration','position_real','duration_real','cut_type','cut_start','cut_loopstart','cut_loopend','muted','visual','data']
+	__slots__ = ['time','muted','visual','data']
 
 	def __init__(self, time_ppq, time_float, val_type):
-		self.position = 0
-		self.duration = 0
-		self.position_real = None
-		self.duration_real = None
-		self.cut_type = 'none'
-		self.cut_start = 0
-		self.cut_loopstart = 0
-		self.cut_loopend = -1
+		self.time = placements.cvpj_placement_timing()
 		self.data = autopoints.cvpj_autopoints(time_ppq, time_float, val_type)
 		self.muted = False
 		self.visual = visual.cvpj_visual()
 
-	def cut_loop_data(self, start, loopstart, loopend):
-		if loopstart: self.cut_type = 'loop_adv'
-		elif start: self.cut_type = 'loop_off'
-		elif loopend: self.cut_type = 'loop'
-		self.cut_start = start
-		self.cut_loopstart = loopstart
-		self.cut_loopend = loopend
-
-	def get_loop_data(self):
-		loop_start = self.cut_start
-		loop_loopstart = self.cut_loopstart
-		loop_loopend = self.cut_loopend if self.cut_loopend>0 else self.duration
-		return loop_start, loop_loopstart, loop_loopend
-
 	def remove_cut(self):
-		if self.cut_type == 'cut':
-			self.data.edit_trimmove(self.cut_start/4, self.duration)
+		if self.time.cut_type == 'cut':
+			self.data.edit_trimmove(self.time.cut_start/4, self.time.duration)
 

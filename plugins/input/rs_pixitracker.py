@@ -101,8 +101,7 @@ class input_cvpj_f(plugins.base):
 					trscene_obj = convproj_obj.add_track_scene(cvpj_instid, sceneid, 'main')
 					placement_obj = trscene_obj.add_notes()
 					placement_obj.visual.name = 'Pat #'+str(pat_num+1)
-					placement_obj.position = 0
-					placement_obj.duration = pat_data_r.length
+					placement_obj.time.set_posdur(0, pat_data_r.length)
 
 					for nnn in instnote:
 						if nnn[2]: placement_obj.notelist.add_r(nnn[4], nnn[5], nnn[0]-78, nnn[2]/100, {})

@@ -199,8 +199,7 @@ class input_lc(plugins.base):
 					if t_notelist:
 						trscene_obj = convproj_obj.add_track_scene(cvpj_instid, str(patnum), 'main')
 						placement_obj = trscene_obj.add_notes()
-						placement_obj.position = 0
-						placement_obj.duration = voi_note.play_notes
+						placement_obj.time.set_posdur(0, voi_note.play_notes)
 						cvpj_notelist = placement_obj.notelist
 
 						for nnn in t_notelist:
@@ -244,8 +243,7 @@ class input_lc(plugins.base):
 					if t_chordlist:
 						trscene_obj = convproj_obj.add_track_scene(cvpj_instid, str(patnum), 'main')
 						placement_obj = trscene_obj.add_notes()
-						placement_obj.position = 0
-						placement_obj.duration = voi_note.play_notes
+						placement_obj.time.set_posdur(0, voi_note.play_notes)
 						cvpj_notelist = placement_obj.notelist
 						for nnn in t_chordlist:
 							if nnn[2] and nnn[1]:
@@ -307,8 +305,7 @@ class input_lc(plugins.base):
 			scenepl_obj.id = str(pat_num)
 
 			autopl_obj = convproj_obj.automation.add_pl_points('main/bpm', 'float')
-			autopl_obj.position = curpos
-			autopl_obj.duration = patlen
+			autopl_obj.time.set_posdur(curpos, patlen)
 			autopoint_obj = autopl_obj.data.add_point()
 			autopoint_obj.value = decode_tempo(voi_note.play_speed)
 

@@ -142,21 +142,11 @@ class input_soundation(plugins.base):
 				for soundation_region in soundation_channel.regions:
 					if sound_chan_type == 'instrument': placement_obj = track_obj.placements.add_notes()
 					if sound_chan_type == 'audio': placement_obj = track_obj.placements.add_audio()
-					placement_obj.position = soundation_region.position
 					clip_length = round(soundation_region.length/timing, 3)*timing
 					clip_contentPosition = soundation_region.contentPosition
 					clip_loopcount = round(soundation_region.loopcount, 3)
-					placement_obj.duration = clip_length*clip_loopcount
-
-					#if isinstance(soundation_region.color,str): 
-					#	clipcolor = colors.hex_to_rgb_float(soundation_region.color)
-					#else: 
-					#	clipcolor = struct.unpack("4B", struct.pack("i", soundation_region.color))
-					#	clipcolor = [clipcolor[2]/255, clipcolor[1]/255, clipcolor[0]/255]
-					#	clipcolor = colors.darker(clipcolor, 0.3)
-					#placement_obj.visual.color.set_float(clipcolor)
-
-					placement_obj.cut_loop_data(-clip_contentPosition, -clip_contentPosition, clip_length)
+					placement_obj.time.set_posdur(soundation_region.position, clip_length*clip_loopcount)
+					placement_obj.time.set_loop_data(-clip_contentPosition, -clip_contentPosition, clip_length)
 
 					if sound_chan_type == 'instrument':
 						for sndstat_note in soundation_region.notes: 

@@ -350,13 +350,13 @@ class output_wavtool(plugins.base):
 									wt_note['velocity'] = float(t_vol)
 									wavtool_clip.notes.append(wt_note)
 
-						wavtool_clip.timelineStart = notespl_obj.position
-						wavtool_clip.timelineEnd = notespl_obj.position+notespl_obj.duration
-						wavtool_clip.loopEnd = notespl_obj.duration
+						wavtool_clip.timelineStart = notespl_obj.time.position
+						wavtool_clip.timelineEnd = notespl_obj.time.position+notespl_obj.time.duration
+						wavtool_clip.loopEnd = notespl_obj.time.duration
 
-						wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd = notespl_obj.get_loop_data()
-						if notespl_obj.cut_type in ['loop', 'loop_off', 'loop_adv']: wavtool_clip.loopEnabled = True
-						if notespl_obj.cut_type == 'cut': wavtool_clip.loopEnd = (wavtool_clip.readStart+notespl_obj.duration)
+						wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd = notespl_obj.time.get_loop_data()
+						if notespl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']: wavtool_clip.loopEnabled = True
+						if notespl_obj.time.cut_type == 'cut': wavtool_clip.loopEnd = (wavtool_clip.readStart+notespl_obj.time.duration)
 						wavtool_track.clips.append(wavtool_clip)
 
 				if track_obj.type == 'audio':
@@ -364,14 +364,14 @@ class output_wavtool(plugins.base):
 						wavtool_clip = proj_wavtool.wavtool_clip(None)
 						wavtool_clip.name = audiopl_obj.visual.name if audiopl_obj.visual.name else ''
 						wavtool_clip.color = '#'+audiopl_obj.visual.color.get_hex_fb(50,50,50)
-						wavtool_clip.timelineStart = audiopl_obj.position
-						wavtool_clip.timelineEnd = audiopl_obj.position+audiopl_obj.duration
-						wavtool_clip.loopEnd = audiopl_obj.duration
+						wavtool_clip.timelineStart = audiopl_obj.time.position
+						wavtool_clip.timelineEnd = audiopl_obj.time.position+audiopl_obj.time.duration
+						wavtool_clip.loopEnd = audiopl_obj.time.duration
 
-						if audiopl_obj.cut_type in ['loop', 'loop_off', 'loop_adv']:
+						if audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
 							wavtool_clip.loopEnabled = True
-							wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd = audiopl_obj.get_loop_data()
-						if audiopl_obj.cut_type == 'cut': wavtool_clip.loopEnd = (wavtool_clip.readStart+audiopl_obj.duration)
+							wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd = audiopl_obj.time.get_loop_data()
+						if audiopl_obj.time.cut_type == 'cut': wavtool_clip.loopEnd = (wavtool_clip.readStart+audiopl_obj.time.duration)
 
 						wavtool_clip.type = "Audio"
 

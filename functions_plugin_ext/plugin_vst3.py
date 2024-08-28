@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from objects.data_bytes import bytereader
 from objects.data_bytes import bytewriter
 from functions import data_values
 from objects.file import preset_vst3
@@ -61,6 +62,13 @@ def replace_data(convproj_obj, plugin_obj, bycat, platform, in_val, data):
 		plugin_obj.rawdata_add('chunk', data)
 
 	return pluginfo_obj
+
+def import_presetdata_raw(convproj_obj, plugin_obj, databytes, platform):
+	byr_stream = bytereader.bytereader()
+	byr_stream.load_raw(databytes)
+	preset_obj = preset_vst3.vst3_main()
+	preset_obj.parse(byr_stream)
+	replace_data(convproj_obj, plugin_obj, 'id', platform, preset_obj.uuid, preset_obj.data)
 
 def import_presetdata(convproj_obj, plugin_obj, byr_stream, platform):
 	preset_obj = preset_vst3.vst3_main()

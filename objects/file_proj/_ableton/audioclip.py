@@ -3,10 +3,10 @@
 
 from objects.file_proj._ableton.func import *
 from objects.file_proj._ableton.clip import *
-from objects.file_proj._ableton.automation import *
 
 class ableton_AudioClip:
 	def __init__(self, xmltag):
+		from objects.file_proj._ableton.fileref import ableton_SampleRef
 		self.Time = float(xmltag.get('Time')) if xmltag != None else 0
 		self.LomId = ableton_LomId(xmltag)
 		self.CurrentStart = float(get_value(xmltag, 'CurrentStart', 0))
@@ -18,10 +18,12 @@ class ableton_AudioClip:
 
 		self.LaunchMode = int(get_value(xmltag, 'LaunchMode', 0))
 		self.LaunchQuantisation = int(get_value(xmltag, 'LaunchQuantisation', 0))
+		from objects.file_proj._ableton.automation import ableton_RemoteableTimeSignature
 		if xmltag:
 			x_TimeSignature = xmltag.findall('TimeSignature')[0]
 			self.TimeSignatures = get_list(x_TimeSignature, 'TimeSignatures', 'RemoteableTimeSignature', ableton_RemoteableTimeSignature)
 			x_Envelopes = xmltag.findall('Envelopes')[0]
+			from objects.file_proj._ableton.automation import ableton_AutomationEnvelope
 			self.Envelopes = get_list(x_Envelopes, 'Envelopes', 'ClipEnvelope', ableton_AutomationEnvelope)
 		else:
 			self.TimeSignatures = {0: ableton_RemoteableTimeSignature(None)}
@@ -121,37 +123,6 @@ class ableton_AudioClip:
 		set_list(xmltag, self.SavedWarpMarkersForStretched, 'SavedWarpMarkersForStretched', 'WarpMarker')
 		add_bool(xmltag, 'MarkersGenerated', self.MarkersGenerated)
 		add_bool(xmltag, 'IsSongTempoMaster', self.IsSongTempoMaster)
-
-class ableton_AutomationEnvelope:
-	def __init__(self, xmltag):
-		if xmltag:
-			x_EnvelopeTarget = xmltag.findall('EnvelopeTarget')[0]
-			self.PointeeId = int(get_value(x_EnvelopeTarget, 'PointeeId', 0))
-			self.Automation = ableton_Automation(xmltag, 'Automation')
-		else:
-			self.PointeeId = 0
-			self.Automation = ableton_Automation(None, 'Automation')
-	def write(self, xmltag):
-		x_EnvelopeTarget = ET.SubElement(xmltag, "EnvelopeTarget")
-		add_value(x_EnvelopeTarget, 'PointeeId', self.PointeeId)
-		self.Automation.write(xmltag)
-		
-class ableton_AutomationEnvelopes:
-	def __init__(self, xmltag):
-		if xmltag:
-			x_AutomationEnvelopes = xmltag.findall('AutomationEnvelopes')[0]
-			self.Envelopes = get_list(x_AutomationEnvelopes, 'Envelopes', 'AutomationEnvelope', ableton_AutomationEnvelope)
-		else:
-			self.Envelopes = {}
-	def add(self, PointeeId):
-		envnum = len(self.Envelopes)
-		AutomationEnvelope_obj = ableton_AutomationEnvelope(None)
-		AutomationEnvelope_obj.PointeeId = PointeeId
-		self.Envelopes[envnum] = AutomationEnvelope_obj
-		return AutomationEnvelope_obj
-	def write(self, xmltag):
-		x_AutomationEnvelopes = ET.SubElement(xmltag, "AutomationEnvelopes")
-		set_list(x_AutomationEnvelopes, self.Envelopes, 'Envelopes', 'AutomationEnvelope')
 
 class ableton_OnsetEvent:
 	__slots__ = ['Time','Energy','IsVolatile']

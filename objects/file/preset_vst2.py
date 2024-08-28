@@ -20,6 +20,7 @@ class vst2_fxBank:
 			self.current_program = byr_stream.uint32_b()
 			byr_stream.skip(124)
 			for _ in range(self.num_programs):
+				if not byr_stream.remaining(): break
 				vers = byr_stream.uint32_b()
 				size = byr_stream.uint32_b()
 				program_obj = vst2_program()

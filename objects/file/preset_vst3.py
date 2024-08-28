@@ -17,7 +17,7 @@ class vst3_main:
 		self.parse(byr_stream)
 
 	def parse(self, byr_stream):
-		byr_stream.magic_check('VST3')
+		byr_stream.magic_check(b'VST3')
 		self.version = byr_stream.uint32()
 		self.uuid = byr_stream.string(32)
 		size = byr_stream.uint32()

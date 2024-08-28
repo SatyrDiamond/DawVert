@@ -30,7 +30,7 @@ class midi_track:
 		return self.notes.note_off(curpos, channel, note)
 
 	def note_dur(self, curpos, channel, note, velocity, duration):
-		return self.notes.note_off(curpos, channel, note, velocity, duration)
+		return self.notes.note_dur(curpos, channel, note, velocity, duration)
 
 	def track_name(self, text):
 		self.track_name = text

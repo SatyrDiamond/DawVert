@@ -13,6 +13,74 @@ from objects.convproj import placements_audio
 from objects.convproj import placements_index
 from objects.convproj import time
 
+class cvpj_placement_timing:
+	__slots__ = ['position','duration','position_real','duration_real','cut_type','cut_start','cut_loopstart','cut_loopend']
+	def __init__(self):
+		self.position = 0
+		self.duration = 0
+		self.position_real = None
+		self.duration_real = None
+		self.cut_type = 'none'
+		self.cut_start = 0
+		self.cut_loopstart = 0
+		self.cut_loopend = -1
+
+	def set_block_dur(self, durval, blksize):
+		self.duration = (durval/blksize).__ceil__()*blksize
+		self.duration_real = None
+
+	def set_posdur(self, pos, dur):
+		self.position = pos
+		self.duration = dur
+		self.position_real = None
+		self.duration_real = None
+ 
+	def set_startend(self, start, end):
+		self.set_posdur(start, end-start)
+
+	def set_block_posdur(self, pos, blocksize):
+		self.set_posdur(pos*blocksize, blocksize)
+
+	def set_offset(self, offset):
+		if offset:
+			self.cut_type = 'cut'
+			self.cut_start = offset
+
+	def copy(self):
+		return copy.deepcopy(self)
+
+	def change_timing(self, old_ppq, new_ppq, is_float):
+		self.position = xtramath.change_timing(old_ppq, new_ppq, is_float, self.position)
+		self.duration = xtramath.change_timing(old_ppq, new_ppq, is_float, self.duration)
+		self.cut_start = xtramath.change_timing(old_ppq, new_ppq, is_float, self.cut_start)
+		self.cut_loopstart = xtramath.change_timing(old_ppq, new_ppq, is_float, self.cut_loopstart)
+		self.cut_loopend = xtramath.change_timing(old_ppq, new_ppq, is_float, self.cut_loopend)
+
+	def set_loop_data(self, start, loopstart, loopend):
+		if loopstart: self.cut_type = 'loop_adv'
+		elif start: self.cut_type = 'loop_off'
+		elif loopend: self.cut_type = 'loop'
+		self.cut_start = start
+		self.cut_loopstart = loopstart
+		self.cut_loopend = loopend
+
+	def get_loop_data(self):
+		loop_start = self.cut_start
+		loop_loopstart = self.cut_loopstart
+		loop_loopend = self.cut_loopend if self.cut_loopend>0 else self.duration
+		return loop_start, loop_loopstart, loop_loopend
+
+	def get_end(self):
+		return self.position+self.duration
+
+	def change_seconds(self, is_seconds, bpm, ppq):
+		if is_seconds:
+			self.position_real = xtramath.step2sec(self.position, bpm)/(ppq/4)
+			self.duration_real = xtramath.step2sec(self.duration, bpm)/(ppq/4)
+		else:
+			self.position = xtramath.sec2step(self.position_real, bpm)
+			self.duration = xtramath.sec2step(self.duration_real, bpm)
+		
 class cvpj_placements:
 	__slots__ = ['pl_notes','pl_audio','pl_notes_indexed','pl_audio_indexed','pl_audio_nested','notelist','time_ppq','time_float','uses_placements','is_indexed']
 	def __init__(self, time_ppq, time_float, uses_placements, is_indexed):
@@ -40,7 +108,6 @@ class cvpj_placements:
 		if (self.uses_placements==pl_obj.uses_placements) and (self.is_indexed==pl_obj.is_indexed) and (self.time_ppq==pl_obj.time_ppq) and (self.time_float==pl_obj.time_float):
 			self.pl_audio.merge_crop(pl_obj.pl_audio, pos, dur, visualfill)
 
-
 	def get_dur(self):
 		#print(self.pl_notes.get_dur(),self.pl_audio.get_dur(),self.notelist.get_dur())
 		return max(self.pl_notes.get_dur(),self.pl_audio.get_dur(),self.pl_notes_indexed.get_dur(),self.pl_audio_indexed.get_dur(),self.notelist.get_dur())
@@ -58,6 +125,7 @@ class cvpj_placements:
 	def remove_loops(self, out__placement_loop):
 		self.pl_notes.remove_loops(out__placement_loop)
 		self.pl_audio.remove_loops(out__placement_loop)
+		self.pl_audio_nested.remove_loops(out__placement_loop)
 		self.pl_notes_indexed.remove_loops(out__placement_loop)
 		self.pl_audio_indexed.remove_loops(out__placement_loop)
 
@@ -86,40 +154,20 @@ class cvpj_placements:
 		self.notelist.change_timings(time_ppq, time_float)
 
 		for pl in self.pl_notes:
-			pl.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.position)
-			pl.duration = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.duration)
-			pl.cut_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_start)
-			pl.cut_loopstart = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_loopstart)
-			pl.cut_loopend = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_loopend)
+			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
 			if not self.is_indexed: pl.notelist.change_timings(time_ppq, time_float)
 
 		for pl in self.pl_audio:
-			pl.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.position)
-			pl.duration = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.duration)
-			pl.cut_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_start)
-			pl.cut_loopstart = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_loopstart)
-			pl.cut_loopend = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_loopend)
+			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
 
 		for pl in self.pl_notes_indexed:
-			pl.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.position)
-			pl.duration = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.duration)
-			pl.cut_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_start)
-			pl.cut_loopstart = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_loopstart)
-			pl.cut_loopend = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_loopend)
+			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
 
 		for pl in self.pl_audio_indexed:
-			pl.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.position)
-			pl.duration = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.duration)
-			pl.cut_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_start)
-			pl.cut_loopstart = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_loopstart)
-			pl.cut_loopend = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_loopend)
+			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
 
 		for pl in self.pl_audio_nested:
-			pl.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.position)
-			pl.duration = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.duration)
-			pl.cut_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_start)
-			pl.cut_loopstart = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_loopstart)
-			pl.cut_loopend = xtramath.change_timing(self.time_ppq, time_ppq, time_float, pl.cut_loopend)
+			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
 
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -144,12 +192,7 @@ class cvpj_placements:
 	def unindex_notes(self, notelist_index):
 		for indexpl_obj in self.pl_notes_indexed:
 			new_notespl_obj = placements_notes.cvpj_placement_notes(1, 1)
-			new_notespl_obj.position = indexpl_obj.position
-			new_notespl_obj.duration = indexpl_obj.duration
-			new_notespl_obj.cut_type = indexpl_obj.cut_type
-			new_notespl_obj.cut_start = indexpl_obj.cut_start
-			new_notespl_obj.cut_loopstart = indexpl_obj.cut_loopstart
-			new_notespl_obj.cut_loopend = indexpl_obj.cut_loopend
+			new_notespl_obj.time = indexpl_obj.time.copy()
 			new_notespl_obj.muted = indexpl_obj.muted
 
 			if indexpl_obj.fromindex in notelist_index:
@@ -167,12 +210,7 @@ class cvpj_placements:
 
 			if indexpl_obj.fromindex in sample_index:
 				sle_obj = sample_index[indexpl_obj.fromindex]
-				apl_obj.position = indexpl_obj.position
-				apl_obj.duration = indexpl_obj.duration
-				apl_obj.cut_type = indexpl_obj.cut_type
-				apl_obj.cut_start = indexpl_obj.cut_start
-				apl_obj.cut_loopstart = indexpl_obj.cut_loopstart
-				apl_obj.cut_loopend = indexpl_obj.cut_loopend
+				apl_obj.time = indexpl_obj.time.copy()
 				apl_obj.muted = indexpl_obj.muted
 				apl_obj.fade_in = indexpl_obj.fade_in
 				apl_obj.fade_out = indexpl_obj.fade_out
@@ -205,12 +243,7 @@ class cvpj_placements:
 
 
 			new_index_obj = placements_index.cvpj_placement_index()
-			new_index_obj.position = notepl_obj.position
-			new_index_obj.duration = notepl_obj.duration
-			new_index_obj.cut_type = notepl_obj.cut_type
-			new_index_obj.cut_start = notepl_obj.cut_start
-			new_index_obj.cut_loopstart = notepl_obj.cut_loopstart
-			new_index_obj.cut_loopend = notepl_obj.cut_loopend
+			new_index_obj.time = notepl_obj.time.copy()
 			new_index_obj.fromindex = dupepatternfound
 			new_index_obj.muted = notepl_obj.muted
 
@@ -240,12 +273,7 @@ class cvpj_placements:
 				sample_number += 1
 
 			new_index_obj = placements_index.cvpj_placement_index()
-			new_index_obj.position = audiopl_obj.position
-			new_index_obj.duration = audiopl_obj.duration
-			new_index_obj.cut_type = audiopl_obj.cut_type
-			new_index_obj.cut_start = audiopl_obj.cut_start
-			new_index_obj.cut_loopstart = audiopl_obj.cut_loopstart
-			new_index_obj.cut_loopend = audiopl_obj.cut_loopend
+			new_index_obj.time = audiopl_obj.time.copy()
 			new_index_obj.fromindex = dupepatternfound
 			new_index_obj.muted = audiopl_obj.muted
 			self.pl_audio_indexed.data.append(new_index_obj)
@@ -267,9 +295,9 @@ class cvpj_placements:
 
 	def remove_nested(self):
 		for nestedpl_obj in self.pl_audio_nested:
-			main_s = nestedpl_obj.cut_start
-			main_e = nestedpl_obj.duration+main_s
-			basepos = nestedpl_obj.position
+			main_s = nestedpl_obj.time.cut_start
+			main_e = nestedpl_obj.time.duration+main_s
+			basepos = nestedpl_obj.time.position
 
 			#print('PL', end=' ')
 			#for x in [main_s, main_e]:
@@ -277,9 +305,10 @@ class cvpj_placements:
 			#print()
 
 			for e in nestedpl_obj.events:
-				event_s, event_et = e.position, e.duration
-				event_e = e.position+event_et
-				event_o = e.cut_start
+				event_s = e.time.position
+				event_et = e.time.duration
+				event_e = e.time.position+event_et
+				event_o = e.time.cut_start
 
 				if main_e>=event_s and main_s<=event_e:
 					out_start = max(main_s, event_s)
@@ -299,10 +328,10 @@ class cvpj_placements:
 						print()
 
 					cutplpl_obj = copy.deepcopy(e)
-					cutplpl_obj.position = (out_start+basepos)-main_s
-					cutplpl_obj.duration = out_end-out_start
-					cutplpl_obj.cut_type = 'cut'
-					cutplpl_obj.cut_start += scs
+					cutplpl_obj.time.position = (out_start+basepos)-main_s
+					cutplpl_obj.time.duration = out_end-out_start
+					cutplpl_obj.time.cut_type = 'cut'
+					cutplpl_obj.time.cut_start += scs
 					self.pl_audio.data.append(cutplpl_obj)
 
 		self.pl_audio_nested = placements_audio.cvpj_placements_nested_audio()

@@ -165,8 +165,7 @@ class input_ceol(plugins.base):
 				if plpatnum != -1:
 					cvpj_placement = convproj_obj.playlist[plnum].placements.add_notes_indexed()
 					cvpj_placement.fromindex = 'ceol_'+str(plpatnum).zfill(3)
-					cvpj_placement.position = plpos*ceol_obj.pattern_length
-					cvpj_placement.duration = ceol_obj.pattern_length
+					cvpj_placement.time.set_block_posdur(plpos, ceol_obj.pattern_length)
 
 		# ---------- Output ----------
 		convproj_obj.add_timesig_lengthbeat(ceol_obj.pattern_length, ceol_obj.bar_length)

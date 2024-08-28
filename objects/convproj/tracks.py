@@ -32,13 +32,13 @@ class lanefit:
 				self.mergeddata_audio.append(placements_audio.cvpj_placements_audio())
 
 			if not is_audio:
-				overlapped = self.mergeddata_notes[-1].check_overlap(pl_data.position, pl_data.duration)
+				overlapped = self.mergeddata_notes[-1].check_overlap(pl_data.time.position, pl_data.time.duration)
 				if not overlapped: 
 					self.mergeddata_notes[-1].append(pl_data)
 					isplaced = True
 				else: nummlane += 1
 			else:
-				overlapped = self.mergeddata_audio[-1].check_overlap(pl_data.position, pl_data.duration)
+				overlapped = self.mergeddata_audio[-1].check_overlap(pl_data.time.position, pl_data.time.duration)
 				if not overlapped: 
 					self.mergeddata_audio[-1].append(pl_data)
 					isplaced = True
@@ -141,7 +141,7 @@ class cvpj_lane:
 		self.placements = placements.cvpj_placements(time_ppq, time_float, uses_placements, is_indexed)
 
 class cvpj_track:
-	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','inst_pluginid','datavals','visual','visual_ui','params','midi','fxrack_channel','fxslots_notes','fxslots_audio','fxslots_mixer','placements','sends','group','returns','notelist_index','scenes']
+	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','inst_pluginid','datavals','visual','visual_ui','params','midi','fxrack_channel','fxslots_notes','fxslots_audio','fxslots_mixer','placements','sends','group','returns','notelist_index','scenes','audio_channels']
 	def __init__(self, track_type, time_ppq, time_float, uses_placements, is_indexed):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -166,6 +166,7 @@ class cvpj_track:
 		self.returns = {}
 		self.notelist_index = {}
 		self.scenes = {}
+		self.audio_channels = 2
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):
 		self.visual.from_dset(ds_id, ds_cat, ds_obj, ow_vis)

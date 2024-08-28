@@ -179,12 +179,11 @@ class input_reaper(plugins.base):
 					placement_obj = track_obj.placements.add_notes()
 					if cvpj_name: placement_obj.visual.name = cvpj_name
 					if cvpj_color: placement_obj.visual.color.set_float(cvpj_color)
-					placement_obj.position_real = cvpj_position
-					placement_obj.duration_real = cvpj_duration
+					placement_obj.time.position_real = cvpj_position
+					placement_obj.time.duration_real = cvpj_duration
 
-					placement_obj.cut_type = 'loop'
-					placement_obj.cut_start = cvpj_offset_bpm
-					placement_obj.cut_loopend = cvpj_end_bpm
+					placement_obj.time.cut_type = 'loop'
+					placement_obj.time.set_loop_data(cvpj_offset_bpm, 0, cvpj_end_bpm)
 
 					midi_notes_out.do_output(placement_obj.notelist, midi_ppq)
 
@@ -192,8 +191,8 @@ class input_reaper(plugins.base):
 					placement_obj = track_obj.placements.add_audio()
 					if cvpj_name: placement_obj.visual.name = cvpj_name
 					if cvpj_color: placement_obj.visual.color.set_float(cvpj_color)
-					placement_obj.position_real = cvpj_position
-					placement_obj.duration_real = cvpj_duration
+					placement_obj.time.position_real = cvpj_position
+					placement_obj.time.duration_real = cvpj_duration
 					placement_obj.sample.pan = cvpj_pan
 					placement_obj.sample.pitch = cvpj_audio_pitch
 					placement_obj.sample.vol = cvpj_vol
@@ -206,8 +205,7 @@ class input_reaper(plugins.base):
 					placement_obj.sample.stretch.set_rate_speed(bpm, cvpj_audio_rate, False)
 					placement_obj.sample.stretch.preserve_pitch = cvpj_audio_preserve_pitch
 					
-					placement_obj.cut_type = 'cut'
-					placement_obj.cut_start = (cvpj_offset_bpm/cvpj_audio_rate) + (startpos/cvpj_audio_rate)*8
+					placement_obj.time.set_offset((cvpj_offset_bpm/cvpj_audio_rate) + (startpos/cvpj_audio_rate)*8)
 
 			convproj_obj.add_trackroute(cvpj_trackid)
 			trackdata.append([cvpj_trackid, trackroute])

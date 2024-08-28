@@ -112,14 +112,14 @@ class output_waveform_edit(plugins.base):
 				wf_midiclip = proj_waveform.waveform_midiclip()
 				wf_midiclip.id_num = counter_id.get()
 
-				offset, loopstart, loopend = notespl_obj.get_loop_data()
+				offset, loopstart, loopend = notespl_obj.time.get_loop_data()
 
-				wf_midiclip.start = notespl_obj.position_real
-				wf_midiclip.length = notespl_obj.duration_real
+				wf_midiclip.start = notespl_obj.time.position_real
+				wf_midiclip.length = notespl_obj.time.duration_real
 
-				if notespl_obj.cut_type == 'cut':
+				if notespl_obj.time.cut_type == 'cut':
 					wf_midiclip.offset = (offset/8)*tempomul
-				elif notespl_obj.cut_type in ['loop', 'loop_off', 'loop_adv']:
+				elif notespl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
 					wf_midiclip.offset = (offset/8)*tempomul
 					wf_midiclip.loopStartBeats = (loopstart/4)
 					wf_midiclip.loopLengthBeats = (loopend/4)

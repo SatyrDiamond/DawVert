@@ -60,8 +60,7 @@ class input_cvpj_f(plugins.base):
 					curpos += phrase.td
 					phraseauto = {}
 					placement_obj = track_obj.placements.add_notes()
-					placement_obj.position = curpos
-					placement_obj.duration = phrase.d
+					placement_obj.time.set_posdur(curpos, phrase.d)
 					ncurpos = 0
 					for event in phrase.events:
 						ncurpos += event.td
@@ -77,8 +76,7 @@ class input_cvpj_f(plugins.base):
 
 						if autoloc:
 							autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
-							autopl_obj.position = curpos
-							autopl_obj.duration = phrase.d
+							autopl_obj.time.set_posdur(curpos, phrase.d)
 							prev_i = 1
 							for p_pos, p_val in pc_d:
 								autopoint_obj = autopl_obj.data.add_point()
@@ -98,8 +96,7 @@ class input_cvpj_f(plugins.base):
 				for audio in tmp_track.audios:
 					curpos += audio.td
 					placement_obj = track_obj.placements.add_audio()
-					placement_obj.position = curpos
-					placement_obj.duration = audio.end
+					placement_obj.time.set_posdur(curpos, audio.end)
 					convproj_obj.add_sampleref(audio.file, audio.file)
 					sp_obj = placement_obj.sample
 					sp_obj.sampleref = audio.file

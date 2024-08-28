@@ -111,9 +111,8 @@ class input_audiosanua(plugins.base):
 				pat_notes = as_chan.track.notes[as_pattern.patternId]
 
 				placement_obj = track_obj.placements.add_notes()
-				placement_obj.position = as_pattern.startTick
-				placement_obj.duration = as_pattern.endTick-as_pattern.startTick
-				placement_obj.cut_loop_data(0, 0, as_pattern.patternLength)
+				placement_obj.time.set_startend(as_pattern.startTick, as_pattern.endTick)
+				placement_obj.time.set_loop_data(0, 0, as_pattern.patternLength)
 				placement_obj.visual.color.set_float(colordata.getcolornum(as_pattern.patternColor))
 
 				for t_note in pat_notes: 

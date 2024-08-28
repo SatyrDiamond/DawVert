@@ -51,7 +51,6 @@ class input_fruitytracks(plugins.base):
 
 			for ftr_clip in ftr_track.clips:
 				placement_obj = track_obj.placements.add_audio()
-				placement_obj.position = (ftr_clip.pos/bpmticks)/bpmdiv
 				placement_obj.visual.name = ftr_clip.name
 
 				sampleref_obj = convproj_obj.add_sampleref(ftr_clip.file, ftr_clip.file, 'win')
@@ -59,16 +58,13 @@ class input_fruitytracks(plugins.base):
 				sampleref_obj.find_relative('fruitytracks')
 				placement_obj.sample.sampleref = ftr_clip.file
 
-				placement_obj.cut_type = 'loop'
-
+				plpos = (ftr_clip.pos/bpmticks)/bpmdiv
 				if ftr_clip.stretch == 0:
-					placement_obj.duration = (ftr_clip.dur/bpmticks)
-					placement_obj.cut_loopend = (ftr_clip.repeatlen/bpmticks)
+					placement_obj.time.set_posdur(plpos, (ftr_clip.dur/bpmticks))
+					placement_obj.time.set_loop_data(0, 0, (ftr_clip.repeatlen/bpmticks))
 				else:
-					duration = sampleref_obj.dur_samples
 					audduration = sampleref_obj.dur_sec*8
-
-					placement_obj.duration = (ftr_clip.dur/bpmticks)/bpmdiv
-					placement_obj.cut_loopend = (ftr_clip.repeatlen/bpmticks)/bpmdiv
+					placement_obj.time.set_posdur(plpos, (ftr_clip.dur/bpmticks)/bpmdiv)
+					placement_obj.time.set_loop_data(0, 0, (ftr_clip.repeatlen/bpmticks)/bpmdiv)
 					placement_obj.sample.stretch.algorithm = 'resample'
 					placement_obj.sample.stretch.set_rate_tempo(project_obj.bpm, audduration/ftr_clip.stretch, False)

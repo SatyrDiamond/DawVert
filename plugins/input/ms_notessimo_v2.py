@@ -76,8 +76,7 @@ class input_notessimo_v2(plugins.base):
 						trscene_obj = convproj_obj.add_track_scene(str(l_num+1), sceneid, 'main')
 						placement_obj = trscene_obj.add_notes()
 						placement_obj.visual.name = 'Pat #'+str(pat_num+1)+', Layer #'+str(l_num+1)
-						placement_obj.position = 0
-						placement_obj.duration = x.size
+						placement_obj.time.set_posdur(0, x.size)
 						for nnn in layer: placement_obj.notelist.add_m(str(nnn.inst), (nnn.pos)*notelen, (nnn.dur/4)*notelen, nnn.get_note(), nnn.vol, {})
 
 		fxchan_data = convproj_obj.add_fxchan(1)
@@ -106,8 +105,7 @@ class input_notessimo_v2(plugins.base):
 			scenepl_obj.id = str(pat_num)
 
 			autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
-			autopl_obj.position = curpos
-			autopl_obj.duration = size
+			autopl_obj.time.set_posdur(curpos, size)
 			autopoint_obj = autopl_obj.data.add_point()
 			autopoint_obj.value = tempo_len[pat_num][0]
 

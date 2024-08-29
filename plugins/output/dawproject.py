@@ -49,6 +49,15 @@ def from_cvpj_auto(convproj_obj, points_obj, autoloc, intype, dpautoid, i_addmul
 		do_autopoints(autoseries.nopl_points, dppoints_obj)
 		points_obj.append(dppoints_obj)
 
+def from_cvpj_auto_dppoints_obj(convproj_obj, dppoints_obj, autoloc, intype, dpautoid, i_addmul):
+	autofound, autoseries = convproj_obj.automation.get(autoloc, intype)
+	if autofound and autoseries.nopl_points:
+		if i_addmul:
+			autoseries.nopl_points.calc('addmul', i_addmul[0], i_addmul[1], 0, 0)
+		dppoints_obj.target = points.dawproject_pointtarget()
+		dppoints_obj.target.parameter = dpautoid
+		do_autopoints(autoseries.nopl_points, dppoints_obj)
+
 def do_params(convproj_obj, lane_obj, paramset_obj, dp_channel, starttxt, autoloc):
 	dp_channel.mute.used = True
 	dp_channel.mute.value = not paramset_obj.get('enabled', True).value
@@ -257,18 +266,14 @@ def make_clips(starttxt, convproj_obj, track_obj, lane_obj, trackid):
 		do_visual_clip(audiopl_obj.visual, clip_obj)
 		clip_obj.clips = clips.dawproject_clips()
 		make_audioclip(convproj_obj, audiopl_obj, clip_obj.clips, False)
-
 		lane_obj.clips.clips.append(clip_obj)
 
 	for nestedaudiopl_obj in track_obj.placements.pl_audio_nested:
 		clip_obj = clips.dawproject_clip()
 		make_time(clip_obj, nestedaudiopl_obj.time)
 		do_visual_clip(nestedaudiopl_obj.visual, clip_obj)
-
 		clip_obj.clips = clips.dawproject_clips()
-		for insideaudiopl_obj in nestedaudiopl_obj.events:
-			make_audioclip(convproj_obj, insideaudiopl_obj, clip_obj.clips, True)
-
+		for insideaudiopl_obj in nestedaudiopl_obj.events: make_audioclip(convproj_obj, insideaudiopl_obj, clip_obj.clips, True)
 		lane_obj.clips.clips.append(clip_obj)
 
 def make_track(contentType, role, trackid, chanid):
@@ -330,12 +335,17 @@ def maketrack_return(convproj_obj, return_obj, returnid):
 	do_params(convproj_obj, lane_obj, return_obj.params, dp_channel, dp_track.id+'__param__', ['return', returnid])
 	return dp_track
 
-def maketrack_master(convproj_obj, track_obj):
+def maketrack_master(convproj_obj, track_obj, arrangement):
 	dp_track, dp_channel = make_track('audio notes', 'master', 'mastertrack', 'masterchannel')
 	track_obj.visual.name = 'Master'
 	do_visual(track_obj.visual, dp_track)
 	lane_obj = make_lane('mastertrack')
 	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['master'])
+	autofound, autoseries = convproj_obj.automation.get(['main', 'bpm'], 'float')
+	if autofound:
+		tempoauto = arrangement.tempoautomation = points.dawproject_points()
+		tempoauto.unit = 'bpm'
+		from_cvpj_auto_dppoints_obj(convproj_obj, tempoauto, ['main', 'bpm'], 'float', 'main__bpm', None)
 	return dp_track
 
 class output_dawproject(plugins.base):
@@ -430,7 +440,7 @@ class output_dawproject(plugins.base):
 		arr_lanes.timeUnit = 'beats'
 		arr_lanes.id = 'main__arrlanes'
 
-		dp_track = maketrack_master(convproj_obj, convproj_obj.track_master)
+		dp_track = maketrack_master(convproj_obj, convproj_obj.track_master, project_obj.arrangement)
 		project_obj.tracks.append(dp_track)
 
 		if convproj_obj.timemarkers:

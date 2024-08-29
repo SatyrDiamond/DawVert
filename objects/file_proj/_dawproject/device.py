@@ -32,6 +32,7 @@ class dawproject_realparameter:
 		self.max = None
 		self.min = None
 		self.unit = None
+		self.value = None
 
 	def read(self, xml_data):
 		if 'id' in xml_data.attrib: self.id = xml_data.attrib['id']
@@ -39,6 +40,7 @@ class dawproject_realparameter:
 		if 'name' in xml_data.attrib: self.name = xml_data.attrib['name']
 		if 'max' in xml_data.attrib: self.max = float(xml_data.attrib['max'])
 		if 'min' in xml_data.attrib: self.min = float(xml_data.attrib['min'])
+		if 'value' in xml_data.attrib: self.value = float(xml_data.attrib['value'])
 		if 'unit' in xml_data.attrib: self.unit = xml_data.attrib['unit']
 
 	def write(self, xmltag):
@@ -48,6 +50,7 @@ class dawproject_realparameter:
 		if self.name != None: tempxml.set('name', self.name)
 		if self.max != None: tempxml.set('max', '%.6f' % self.max)
 		if self.min != None: tempxml.set('min', '%.6f' % self.min)
+		if self.value != None: tempxml.set('value', '%.6f' % self.value)
 		if self.unit != None: tempxml.set('unit', self.unit)
 
 class dawproject_device:

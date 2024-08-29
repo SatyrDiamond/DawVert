@@ -30,7 +30,7 @@ class vst3_main:
 		byw_stream.string(self.uuid, 32)
 		byw_stream.uint32(len(self.data))
 		byw_stream.zeros(4)
-		byr_stream.raw(self.data)
+		byw_stream.raw(self.data)
 
 	def write_to_file(self, output_file):
 		byw_stream = bytewriter.bytewriter()

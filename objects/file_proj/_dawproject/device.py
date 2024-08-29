@@ -28,6 +28,7 @@ class dawproject_band:
 class dawproject_realparameter:
 	def __init__(self):
 		self.parameterID = None
+		self.id = None
 		self.name = None
 		self.max = None
 		self.min = None
@@ -46,7 +47,7 @@ class dawproject_realparameter:
 	def write(self, xmltag):
 		tempxml = ET.SubElement(xmltag, 'RealParameter')
 		if self.id != None: tempxml.set('id', self.id)
-		if self.parameterID != None: tempxml.set('parameterID', self.parameterID)
+		if self.parameterID != None: tempxml.set('parameterID', str(self.parameterID))
 		if self.name != None: tempxml.set('name', self.name)
 		if self.max != None: tempxml.set('max', '%.6f' % self.max)
 		if self.min != None: tempxml.set('min', '%.6f' % self.min)

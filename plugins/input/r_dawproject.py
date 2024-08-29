@@ -12,14 +12,14 @@ import os
 
 def do_realparam(convproj_obj, paramset, dp_param, cvpj_paramid, i_addmul, i_type, i_loc):
 	global autoid_assoc
-	if dp_param.unit == 'normalized': i_addmul = [-0.5, 2]
 	if dp_param.id and i_loc: autoid_assoc.define(str(dp_param.id), i_loc, i_type, i_addmul)
 	outval = dp_param.value
 	if i_type == 'bool': outval = int(outval=='true')
 	outval = (float(outval)+i_addmul[0])*i_addmul[1] if i_addmul != None else float(outval)
 	if i_type == 'bool': outval = bool(outval)
 	if i_type == 'int': outval = int(outval)
-	paramset.add(cvpj_paramid, outval, i_type)
+	param_obj = paramset.add(cvpj_paramid, outval, i_type)
+	if dp_param.name: param_obj.visual.name = dp_param.name
 
 def do_param(convproj_obj, paramset, dp_param, cvpj_paramid, i_addmul, i_type, i_loc):
 	global autoid_assoc

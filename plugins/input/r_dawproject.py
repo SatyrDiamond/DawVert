@@ -10,6 +10,17 @@ import plugins
 import zipfile
 import os
 
+def do_realparam(convproj_obj, paramset, dp_param, cvpj_paramid, i_addmul, i_type, i_loc):
+	global autoid_assoc
+	if dp_param.unit == 'normalized': i_addmul = [-0.5, 2]
+	if dp_param.id and i_loc: autoid_assoc.define(str(dp_param.id), i_loc, i_type, i_addmul)
+	outval = dp_param.value
+	if i_type == 'bool': outval = int(outval=='true')
+	outval = (float(outval)+i_addmul[0])*i_addmul[1] if i_addmul != None else float(outval)
+	if i_type == 'bool': outval = bool(outval)
+	if i_type == 'int': outval = int(outval)
+	paramset.add(cvpj_paramid, outval, i_type)
+
 def do_param(convproj_obj, paramset, dp_param, cvpj_paramid, i_addmul, i_type, i_loc):
 	global autoid_assoc
 	if dp_param.used:
@@ -57,13 +68,21 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 
 		if device.plugintype == 'Vst3Plugin':
 			plugin_obj = convproj_obj.add_plugin(device.id, 'vst3', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
 			vst3_state = zip_data.read(str(device.state))
 			plugin_vst3.import_presetdata_raw(convproj_obj, plugin_obj, vst3_state, None)
+			for realparam in device.realparameter:
+				cvpj_paramid = 'ext_param_'+str(realparam.parameterID)
+				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
 
 		if device.plugintype == 'Vst2Plugin':
 			plugin_obj = convproj_obj.add_plugin(device.id, 'vst2', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
 			vst2_state = zip_data.read(str(device.state))
 			plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, vst2_state, None)
+			for realparam in device.realparameter:
+				cvpj_paramid = 'ext_param_'+str(realparam.parameterID)
+				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
 
 		if plugin_obj:
 			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
@@ -96,6 +115,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 			do_visual(track_obj, dp_track)
 			do_trackparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
 			do_sends(convproj_obj, track_obj, dp_channel)
+			do_devices(convproj_obj, track_obj, False, dp_channel.devices)
 			if groupid: track_obj.group = groupid
 			if dp_channel.solo: track_obj.params.add('solo', dp_channel.solo=='true', 'bool')
 
@@ -104,6 +124,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 			do_visual(track_obj, dp_track)
 			do_trackparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
 			do_sends(convproj_obj, track_obj, dp_channel)
+			do_devices(convproj_obj, track_obj, False, dp_channel.devices)
 			if groupid: track_obj.group = groupid
 			if dp_channel.solo: track_obj.params.add('solo', dp_channel.solo=='true', 'bool')
 
@@ -113,6 +134,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 			do_groupparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
 			do_tracks(convproj_obj, dp_track.tracks, dp_track.id)
 			do_sends(convproj_obj, track_obj, dp_channel)
+			do_devices(convproj_obj, track_obj, True, dp_channel.devices)
 			if groupid: track_obj.group = groupid
 			if dp_channel.solo: track_obj.params.add('solo', dp_channel.solo=='true', 'bool')
 
@@ -121,12 +143,14 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 			do_visual(return_obj, dp_track)
 			do_returnparams(convproj_obj, dp_channel, return_obj.params, dp_track.id)
 			do_sends(convproj_obj, return_obj, dp_channel)
+			do_devices(convproj_obj, track_obj, True, dp_channel.devices)
 			if dp_channel.solo: return_obj.params.add('solo', dp_channel.solo=='true', 'bool')
 
-		if dp_track.contentType == 'audio notes' and dp_channel.role == 'Master': 
+		if dp_track.contentType == 'audio notes' and dp_channel.role == 'master': 
 			master_track_obj = convproj_obj.track_master
 			do_visual(master_track_obj, dp_track)
 			do_masterparams(convproj_obj, dp_channel, master_track_obj.params)
+			do_devices(convproj_obj, track_obj, True, dp_channel.devices)
 
 		if dp_track.id: trackdata[dp_track.id] = track_obj
 

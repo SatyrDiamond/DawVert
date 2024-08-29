@@ -128,7 +128,7 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 	sre_obj.data['reversepolarity'] = fl_channel_obj.params.reversepolarity
 	sre_obj.interpolation = "sinc" if (fl_channel_obj.sampleflags & 1) else "none"
 
-	if sampleref_obj.fileref.extension.lower() != 'ds':
+	if sampleref_obj.fileref.file.extension.lower() != 'ds':
 		sre_obj.loop_active = bool(fl_channel_obj.sampleflags & 8)
 		sre_obj.loop_mode = "normal" if fl_channel_obj.looptype == 0 else "pingpong"
 				  
@@ -342,7 +342,7 @@ class input_flp(plugins.base):
 						adsr_obj.decay_tension = fl_asdr_obj_vol.el_env_decay_tension
 						adsr_obj.release_tension = fl_asdr_obj_vol.el_env_release_tension
 
-					elif fl_channel_obj.type == 0 and (not fl_channel_obj.sampleflags&8 or sampleref_obj.fileref.extension.lower() == 'ds'):
+					elif fl_channel_obj.type == 0 and (not fl_channel_obj.sampleflags&8 or sampleref_obj.fileref.file.extension.lower() == 'ds'):
 						plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 20, 1)
 
 					fcalc = 0

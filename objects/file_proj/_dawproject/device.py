@@ -72,7 +72,7 @@ class dawproject_device:
 		if 'deviceID' in xml_data.attrib: self.deviceID = xml_data.attrib['deviceID']
 		if 'deviceName' in xml_data.attrib: self.deviceName = xml_data.attrib['deviceName']
 		if 'deviceRole' in xml_data.attrib: self.deviceRole = xml_data.attrib['deviceRole']
-		if 'loaded' in xml_data.attrib: self.loaded = xml_data.attrib['loaded']
+		if 'loaded' in xml_data.attrib: self.loaded = xml_data.attrib['loaded']=='true'
 		if 'id' in xml_data.attrib: self.id = xml_data.attrib['id']
 		if 'name' in xml_data.attrib: self.name = xml_data.attrib['name']
 		for x_part in xml_data:
@@ -98,7 +98,7 @@ class dawproject_device:
 		if self.deviceID != None: tempxml.set('deviceID', str(self.deviceID))
 		if self.deviceName != None: tempxml.set('deviceName', str(self.deviceName))
 		if self.deviceRole != None: tempxml.set('deviceRole', str(self.deviceRole))
-		if self.loaded != None: tempxml.set('loaded', str(self.loaded))
+		if self.loaded != None: tempxml.set('loaded', 'true' if self.loaded else 'false')
 		if self.id != None: tempxml.set('id', str(self.id))
 		if self.name != None: tempxml.set('name', str(self.name))
 		parameters = ET.SubElement(tempxml, 'Parameters')

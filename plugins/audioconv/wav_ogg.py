@@ -18,7 +18,7 @@ class input_soundfile(plugins.base):
 		audioconvinfo_obj.in_file_formats = ['wav_ogg']
 		audioconvinfo_obj.out_file_formats = ['wav', 'mp3', 'flac', 'ogg']
 	def convert_file(self, sampleref_obj, to_type, outpath):
-		if sampleref_obj.fileref.extension == 'wav' and self.usable:
+		if sampleref_obj.fileref.file.extension == 'wav' and self.usable:
 			input_file = sampleref_obj.fileref.get_path(None, False)
 			riff_data = riff_chunks.riff_chunk()
 			byr_stream = riff_data.load_from_file(input_file, False)
@@ -37,7 +37,7 @@ class input_soundfile(plugins.base):
 			if fmt_format == 26447:
 				with byr_stream.isolate_range(data_pos, data_end, False) as bye_stream: audiodata = bye_stream.raw(data_end-data_pos)
 				samples, samplerate = self.soundfile.read(io.BytesIO(audiodata))
-				sampleref_obj.fileref.changefolder(outpath)
+				sampleref_obj.fileref.set_folder(None, outpath, 0)
 				sampleref_obj.fileformat = to_type
 				sampleref_obj.fileref.extension = to_type
 				output_file = sampleref_obj.fileref.get_path(None, False)

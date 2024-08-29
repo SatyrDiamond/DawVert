@@ -436,7 +436,7 @@ class cvpj_project:
 		if file_path:
 			sampleref = kwargs['sampleid'] if 'sampleid' in kwargs else file_path
 			sampleref_obj = self.add_sampleref(sampleref, file_path, os_type)
-			is_drumsynth = sampleref_obj.fileref.extension.lower() == 'ds'
+			is_drumsynth = sampleref_obj.fileref.file.extension.lower() == 'ds'
 		else:
 			sampleref_obj = None
 			is_drumsynth = False

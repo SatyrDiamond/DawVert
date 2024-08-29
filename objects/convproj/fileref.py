@@ -9,6 +9,7 @@ from plugins import base as dv_plugins
 from functions import data_values
 from objects.convproj import visual
 from objects.file import audio_wav
+import copy
 import logging
 
 logger_project = logging.getLogger('project')
@@ -41,9 +42,9 @@ class filesearcher_entry:
 
 	def apply(self, fileref_obj, basepaths):
 		if fileref_obj.exists(None): return True
-		state_obj = fileref_obj.create_state()
 
 		if self.search_type == 'partial_file' and fileref_obj.partial and self.basepath in basepaths:
+			state_obj = fileref_obj.create_state()
 			basefileref_obj = basepaths[self.basepath]
 
 			fileref_obj.folderpath = pathmod(basefileref_obj.folderpath+fileref_obj.folderpath, self.mainpath.get_all())
@@ -57,32 +58,12 @@ class filesearcher_entry:
 			return iffound
 
 		if self.search_type == 'full_append' and fileref_obj.is_file:
+			state_obj = fileref_obj.create_state()
 			fileref_obj.complete(self.mainpath)
 			iffound = fileref_obj.exists(None)
 			if iffound: logger_project.info('fileref: file found: '+fileref_obj.get_path(None, False))
 			else: fileref_obj.restore_state(state_obj)
 			return iffound
-
-
-		#if self.search_type == 'full_filereplace' and fileref_obj.is_file:
-		#	state_obj = fileref_obj.create_state()
-		#	logger_project.debug('fileref: full_filereplace | '+fileref_obj.get_path(None, False))
-		#	logger_project.debug('fileref:                  | '+self.mainpath.get_path(None, False))
-		#	logger_project.debug('fileref:                  | ')
-#
-		#	iffound = fileref_obj.exists(None)
-		#	logger_project.debug('fileref:                  \\ '+fileref_obj.get_path(None, False))
-#
-		#	if iffound: return True
-		#	else:
-		#		fileref_obj.folderpath = self.mainpath.folderpath
-		#		fileref_obj.os_type = self.mainpath.os_type
-		#		fileref_obj.win_drive = self.mainpath.win_drive
-		#		iffound = fileref_obj.exists(None)
-		#		if iffound: logger_project.info('fileref: file found: '+fileref_obj.get_path(None, False))
-#
-		#	if not (iffound and dochange): fileref_obj.restore_state(state_obj)
-		#	return iffound
 
 		return False
 
@@ -131,6 +112,37 @@ class filesearcher:
 		searchentry_obj.basepath = basepath
 		searchparts[searchseries].append(searchentry_obj)
 
+class cvpj_filename:
+	def __init__(self):
+		self.used = False
+		self.basename = None
+		self.extension = ''
+		self.filename = None
+
+	def reset(self):
+		self.used = False
+		self.basename = None
+		self.extension = ''
+		self.filename = None
+
+	def debugtxt(self):
+		print('file_basename', self.basename)
+		print('file_extension', self.extension)
+		print('file_filename', self.filename)
+
+	def set(self, basename):
+		self.used = True
+		self.basename = basename
+		filenamesplit = self.basename.split('.', 1)
+		self.filename = filenamesplit[0]
+		if len(filenamesplit) > 1: 
+			self.extension = filenamesplit[1]
+			return True
+		return False
+
+	def __str__(self):
+		return (self.filename+'.'+self.extension if self.extension else self.filename) if self.used else ''
+
 class cvpj_fileref:
 	def __init__(self):
 		self.reset()
@@ -139,30 +151,26 @@ class cvpj_fileref:
 		return ('FILE ' if self.is_file else 'FOLDER ')+self.get_path(None, False)
 
 	def search(self, searchseries):
+		iffound = False
 		if searchseries in filesearcher.searchparts:
 			for spe in filesearcher.searchparts[searchseries]:
-				#print(spe)
 				iffound = spe.apply(self, filesearcher.basepaths)
-				if iffound: return iffound
-		return False
+				if iffound: break
+		return iffound
 
 	def reset(self):
-		self.basename = None
-		self.extension = ''
-		self.filename = None
-		self.folderpath = []
+		self.file = cvpj_filename()
 		self.is_file = False
+		self.folderpath = []
 		self.os_type = None
 		self.partial = True
 		self.win_drive = None
 
 	def get_all(self):
-		return self.folderpath+([self.basename] if self.is_file else [])
+		return self.folderpath+([str(self.file)] if self.is_file else [])
 
 	def debugtxt(self):
-		print('basename', self.basename)
-		print('extension', self.extension)
-		print('filename', self.filename)
+		self.file.debugtxt()
 		print('folderpath', self.folderpath)
 		print('is_file', self.is_file)
 		print('os_type', self.os_type)
@@ -171,14 +179,19 @@ class cvpj_fileref:
 
 	def internal_basename(self, splitpath, alwaysfile):
 		if splitpath:
-			self.basename = splitpath[-1]
-			filenamesplit = self.basename.split('.', 1)
-			self.filename = filenamesplit[0]
-			if alwaysfile == 1: self.is_file = True
-			elif alwaysfile == -1: self.is_file = False
-			elif len(filenamesplit) > 1 and alwaysfile == 0: self.is_file = True
-			if len(filenamesplit) > 1: self.extension = filenamesplit[1]
-			if self.is_file: self.folderpath = self.folderpath[0:-1]
+			basename = splitpath[-1]
+			if alwaysfile == 1: 
+				self.is_file = True
+				self.file.set(splitpath[-1])
+				self.folderpath = self.folderpath[0:-1]
+			elif alwaysfile == -1: 
+				self.is_file = False
+				self.folderpath = self.folderpath
+			elif alwaysfile == 0: 
+				if '.' in basename:
+					self.is_file = self.file.set(basename)
+					self.folderpath = self.folderpath[0:-1]
+				else: self.folderpath = self.folderpath
 
 	def internal_unix_in_win(self, splitpath):
 		if not self.partial:
@@ -250,14 +263,10 @@ class cvpj_fileref:
 		else: self.internal_setpath_any(in_path, alwaysfile)
 
 	def set_folder(self, in_os_type, in_path, alwaysfile):
-		old_basename = self.basename
-		old_extension = self.extension
-		old_filename = self.filename
+		old_file = copy.deepcopy(self.file)
 		old_is_file = self.is_file
 		self.set_path(in_os_type, in_path, alwaysfile)
-		self.basename = old_basename
-		self.extension = old_extension
-		self.filename = old_filename
+		self.file = old_file
 		self.is_file = old_is_file
 
 	def get_path(self, in_os_type, nofile):
@@ -271,7 +280,7 @@ class cvpj_fileref:
 				else: outpath = ['']+self.folderpath.copy()
 		else: outpath = self.folderpath.copy()
 
-		if self.is_file and not nofile: outpath.append(self.basename)
+		if self.is_file and not nofile: outpath.append(str(self.file))
 
 		if in_os_type == 'win': return '\\'.join(outpath)
 		else: return '/'.join(outpath)
@@ -288,25 +297,21 @@ class cvpj_fileref:
 
 	def complete(self, other_fileref):
 		if self.partial == False and other_fileref.partial == True:
-			self.folderpath = pathmod(self.folderpath, other_fileref.get_all())
+			self.folderpath = pathmod(self.folderpath, other_fileref.folderpath)
 			self.partial = False
+			self.file = copy.deepcopy(other_fileref.file)
+			self.is_file = other_fileref.is_file
 
 		if self.partial == True and other_fileref.partial == False:
-			self.folderpath = pathmod(other_fileref.folderpath, self.get_all())
+			self.folderpath = pathmod(other_fileref.folderpath, self.folderpath)
 			self.partial = False
 			self.os_type = other_fileref.os_type
 			self.win_drive = other_fileref.win_drive
-			self.is_file = other_fileref.is_file
-			self.basename = other_fileref.basename
-			self.extension = other_fileref.extension
-			self.filename = other_fileref.filename
 
 	def create_state(self):
 		state_obj = cvpj_fileref_state()
 		state_obj.folderpath = self.folderpath.copy()
-		state_obj.basename = self.basename
-		state_obj.extension = self.extension
-		state_obj.filename = self.filename
+		state_obj.file = copy.deepcopy(self.file)
 		state_obj.is_file = self.is_file
 		state_obj.os_type = self.os_type
 		state_obj.partial = self.partial
@@ -315,9 +320,7 @@ class cvpj_fileref:
 
 	def restore_state(self, state_obj):
 		self.folderpath = state_obj.folderpath.copy()
-		self.basename = state_obj.basename
-		self.extension = state_obj.extension
-		self.filename = state_obj.filename
+		self.file = state_obj.file
 		self.is_file = state_obj.is_file
 		self.os_type = state_obj.os_type
 		self.partial = state_obj.partial
@@ -326,9 +329,7 @@ class cvpj_fileref:
 class cvpj_fileref_state:
 	def __init__(self):
 		self.folderpath = []
-		self.basename = None
-		self.extension = ''
-		self.filename = None
+		self.file = None
 		self.is_file = False
 		self.os_type = None
 		self.partial = True
@@ -359,10 +360,11 @@ class cvpj_sampleref:
 		self.visual = visual.cvpj_visual()
 
 	def set_path(self, in_os_type, in_path):
-		self.fileref.set_path(in_os_type, in_path, 1)
+		self.fileref.set_path(in_os_type, in_path, 0)
 		self.get_info()
 
 	def find_relative(self, searchseries):
+
 		if not self.found:
 			orgpath = self.fileref.get_path(None, False)
 
@@ -371,7 +373,11 @@ class cvpj_sampleref:
 				iffound = self.fileref.search(searchseries)
 
 			if iffound: self.get_info()
+
 			return iffound
+
+
+
 		return False
 
 	def get_info(self):
@@ -382,7 +388,7 @@ class cvpj_sampleref:
 			self.file_size = os.path.getsize(wav_realpath)
 			self.file_date = int(os.path.getmtime(wav_realpath))
 
-			fileextlow = self.fileref.extension.lower()
+			fileextlow = self.fileref.file.extension.lower()
 
 			if fileextlow == 'wav':
 				try:
@@ -399,11 +405,10 @@ class cvpj_sampleref:
 
 			for shortname, audiofileplug_obj in dv_plugins.plugins_audio_file.items():
 				self.found = True
-				self.visual.name = self.fileref.filename
+				self.visual.name = self.fileref.file.filename
 				try:
 					if fileextlow in audiofileplug_obj.file_formats:
 						isvalid = audiofileplug_obj.object.getinfo(wav_realpath, self, fileextlow)
-						audiofileplug_obj.file_formats
 						if isvalid: break
 				except: 
 					if VERBOSE:
@@ -419,7 +424,7 @@ class cvpj_sampleref:
 					isconverted = False
 					try: isconverted = audioconvplug_obj.object.convert_file(self, filesupported[0], outpath)
 					except: 
-						if VERBOSE:
+						if True:
 							import traceback
 							print(traceback.format_exc())
 						logger_project.warning('fileref: audioconv: error using: '+shortname)

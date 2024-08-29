@@ -289,8 +289,6 @@ class cvpj_automation:
 		for autopath, autodata in self.data.items(): 
 			autodata.convert(pl_points, nopl_points, pl_ticks, nopl_ticks)
 
-
-
 	def create(self, autopath, valtype, replace):
 		autopath = autopath_encode(autopath)
 		if (autopath not in self.data) or (replace):
@@ -310,8 +308,6 @@ class cvpj_automation:
 			return outauto
 		else: 
 			return None
-
-
 
 	def delete(self, autopath):
 		autopath = autopath_encode(autopath)

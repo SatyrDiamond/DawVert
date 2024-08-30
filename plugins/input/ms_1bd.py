@@ -3,13 +3,13 @@
 
 import plugins
 import os
-import logging
 from functions import data_bytes
 from functions import data_values
 from functions import colors
 from objects import globalstore
 from objects.file_proj import proj_1bitdragon
 
+import logging
 logger_input = logging.getLogger('input')
 
 try: 

@@ -12,13 +12,9 @@ from objects import auto_id
 
 from io import BytesIO
 import numpy as np
-import base64
 import struct
-import xml.etree.ElementTree as ET
 import plugins
-import json
 import gzip
-import math
 import os
 
 DEBUG_DISABLE_PLACEMENTS = False
@@ -576,7 +572,7 @@ class input_ableton(plugins.base):
 							stretch_obj.rem_last_warp_point()
 
 						else:
-							pitchcalc = math.pow(2, placement_obj.sample.pitch/12)
+							pitchcalc = 2**(placement_obj.sample.pitch/12)
 							stretch_obj.is_warped = False
 							stretch_obj.set_rate_speed(tempo, pitchcalc, False)
 							stretch_obj.uses_tempo = False
@@ -584,7 +580,7 @@ class input_ableton(plugins.base):
 						if not clipobj.IsWarped:
 							if clipobj.Loop.LoopOn == 0:
 								placement_obj.time.cut_type = 'cut'
-								pitchcalc = math.pow(2, placement_obj.sample.pitch/12)
+								pitchcalc = 2**(placement_obj.sample.pitch/12)
 								placement_obj.time.cut_start = (clipobj.Loop.LoopStart*8/pitchcalc)*tempomul
 								placement_obj.time.duration *= pitchcalc
 								placement_obj.time.duration /= tempomul

@@ -8,6 +8,9 @@ import base64
 import zlib
 from functions import data_values
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 class onebitd_instrument:
 	def __init__(self, i_dict):
 		self.on = i_dict['on']
@@ -84,7 +87,12 @@ class onebitd_song:
 		basebase64stream = base64.b64decode(song_file.read())
 		bio_base64stream = BytesIO(basebase64stream)
 		bio_base64stream.seek(4)
-		decompdata = json.loads(zlib.decompress(bio_base64stream.read(), 16+zlib.MAX_WBITS))
+		
+		try: 
+			decompdata = json.loads(zlib.decompress(bio_base64stream.read(), 16+zlib.MAX_WBITS))
+		except zlib.error as t:
+			logger_projparse.error('1bitdragon: '+str(t))
+			exit()
 
 		self.version = decompdata['version'] if 'version' in decompdata else None
 		self.reverb = decompdata['reverb']

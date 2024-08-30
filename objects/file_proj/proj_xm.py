@@ -168,7 +168,10 @@ class xm_song:
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
 
-		song_file.magic_check(b'Extended Module: ')
+		try: song_file.magic_check(b'Extended Module: ')
+		except ValueError as t:
+			logger_projparse.error('xm: '+str(t))
+			exit()
 
 		self.title = song_file.string(20, encoding="windows-1252")
 		logger_projparse.info("xm: Song Name: " + self.title)

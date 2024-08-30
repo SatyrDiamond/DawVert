@@ -3,6 +3,9 @@
 
 from lxml import etree as ET
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 class waveform_transport:
 	def __init__(self):
 		self.endToEnd = 1
@@ -748,6 +751,10 @@ class waveform_edit:
 		xml_data = ET.parse(input_file, parser)
 
 		x_EDIT = xml_data.getroot()
+		if x_EDIT == None:
+			logger_projparse.error('waveform_edit: no XML root found')
+			exit()
+
 		self.appVersion = x_EDIT.get('appVersion')
 		self.projectID = x_EDIT.get('projectID')
 		self.creationTime = x_EDIT.get('creationTime')

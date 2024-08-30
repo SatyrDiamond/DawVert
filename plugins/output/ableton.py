@@ -185,7 +185,8 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 	if (vstdatatype=='param' and vstnumparams) or vstdatatype=='chunk':
 		als_device = als_track.DeviceChain.add_device('PluginDevice')
 		do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
-	
+		als_device.On.Manual = fx_on
+
 		paramkeys = {}
 	
 		paramkeys['PluginDesc'] = ableton_parampart.as_numset('VstPluginInfo')
@@ -265,6 +266,7 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 def add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, pluginid):
 	als_device = als_track.DeviceChain.add_device('PluginDevice')
 	do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
+	als_device.On.Manual = fx_on
 
 	paramkeys = {}
 
@@ -330,6 +332,8 @@ def add_plugindevice_native(als_track, convproj_obj, plugin_obj, pluginid):
 	fx_on, fx_wet = plugin_obj.fxdata_get()
 	als_device = als_track.DeviceChain.add_device(plugin_obj.type.subtype)
 	do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
+	als_device.On.Manual = fx_on
+
 	parampaths = {}
 	fldso = globalstore.dataset.get_obj('ableton', 'plugin', plugin_obj.type.subtype)
 	if fldso:
@@ -777,7 +781,7 @@ class output_ableton(plugins.base):
 						als_audioclip.Color = audiopl_obj.visual.color.closest_color_index(colordata, track_color)
 						if audiopl_obj.visual.name: als_audioclip.Name = fixtxt(audiopl_obj.visual.name)
 						als_audioclip.Disabled = audiopl_obj.muted
-	
+
 						als_audioclip.Time = audiopl_obj.time.position
 						als_audioclip.CurrentStart = audiopl_obj.time.position
 						als_audioclip.CurrentEnd = audiopl_obj.time.position+audiopl_obj.time.duration
@@ -864,6 +868,7 @@ class output_ableton(plugins.base):
 								als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
 								als_audioclip.Loop.StartRelative *= ratespeed
 								als_audioclip.Loop.LoopEnd += als_audioclip.Loop.StartRelative
+								
 								if als_audioclip.Loop.LoopOn: 
 									stretch_obj.set_rate_speed(bpm, 1, False)
 									als_audioclip.IsWarped = True

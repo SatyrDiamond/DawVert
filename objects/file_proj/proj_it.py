@@ -189,7 +189,11 @@ class it_song:
 	def load_from_file(self, input_file):
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
-		self.load(song_file)
+		
+		try: self.load(song_file)
+		except ValueError as t:
+			logger_projparse.error('IT: '+str(t))
+			exit()
 
 	def load(self, song_file):
 		song_file.magic_check(b'IMPM')

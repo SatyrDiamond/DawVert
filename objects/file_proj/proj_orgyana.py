@@ -5,10 +5,13 @@ from objects.data_bytes import bytereader
 from objects.data_bytes import bytewriter
 import struct
 
-def stream_decode(byr_stream, org_numofnotes, maxchange, org_notelist, tnum):
+import logging
+logger_projparse = logging.getLogger('projparse')
+
+def stream_decode(song_file, org_numofnotes, maxchange, org_notelist, tnum):
 	global cur_val
 	for x in range(org_numofnotes):
-		pre_val = byr_stream.uint8()
+		pre_val = song_file.uint8()
 		if maxchange != None:
 			if 0 <= pre_val <= maxchange: cur_val = pre_val
 			org_notelist[x][tnum] = cur_val
@@ -32,14 +35,14 @@ class orgyana_orgsamp():
 
 	def load_from_file(self, input_file):
 		self.loaded = True
-		byr_stream = bytereader.bytereader()
-		byr_stream.load_file(input_file)
-		byr_stream.seek(4)
+		song_file = bytereader.bytereader()
+		song_file.load_file(input_file)
+		song_file.seek(4)
 
-		self.sample_data = [byr_stream.l_int8(256) for x in range(100)]
-		self.num_drums = byr_stream.uint8()
-		self.drum_rate = byr_stream.uint16()
-		self.drum_data = [byr_stream.c_uint8__int24(True) for x in range(self.num_drums)]
+		self.sample_data = [song_file.l_int8(256) for x in range(100)]
+		self.num_drums = song_file.uint8()
+		self.drum_rate = song_file.uint16()
+		self.drum_data = [song_file.c_uint8__int24(True) for x in range(self.num_drums)]
 
 class orgyana_track:
 	def __init__(self):
@@ -49,11 +52,11 @@ class orgyana_track:
 		self.number_of_notes = 0
 		self.notes = []
 
-	def read(self, byr_stream):
-		self.pitch = byr_stream.uint16()
-		self.instrument = byr_stream.uint8()
-		self.disable_sustaining_notes = byr_stream.uint8()
-		self.number_of_notes = byr_stream.uint16()
+	def read(self, song_file):
+		self.pitch = song_file.uint16()
+		self.instrument = song_file.uint8()
+		self.disable_sustaining_notes = song_file.uint8()
+		self.number_of_notes = song_file.uint16()
 		self.notes = [[0,0,0,0,0] for _ in range(self.number_of_notes)]
 
 	def write(self, byw_stream):
@@ -73,26 +76,32 @@ class orgyana_project:
 		self.tracks = [orgyana_track() for x in range(16)]
 
 	def load_from_file(self, input_file):
-		byr_stream = bytereader.bytereader()
-		byr_stream.load_file(input_file)
+		song_file = bytereader.bytereader()
+		song_file.load_file(input_file)
 
-		org_header = byr_stream.raw(4)
-		self.oldperc = byr_stream.raw(2) == b'03'
-		self.wait = byr_stream.uint16()
-		self.stepsperbar = byr_stream.uint8()
-		self.beatsperstep = byr_stream.uint8()
-		self.loop_beginning = byr_stream.uint32()
-		self.loop_end = byr_stream.uint32()
+		try: 
+			song_file.magic_check(b'Org-')
+		except ValueError as t:
+			logger_projparse.error('orgyana: '+str(t))
+			exit()
 
-		for n in range(16): self.tracks[n].read(byr_stream)
+		print(org_header)
+		self.oldperc = song_file.raw(2) == b'03'
+		self.wait = song_file.uint16()
+		self.stepsperbar = song_file.uint8()
+		self.beatsperstep = song_file.uint8()
+		self.loop_beginning = song_file.uint32()
+		self.loop_end = song_file.uint32()
+
+		for n in range(16): self.tracks[n].read(song_file)
 
 		for n in range(16):
 			org_track = self.tracks[n]
-			for x in range(org_track.number_of_notes): org_track.notes[x][0] = byr_stream.uint32() #position
-			stream_decode(byr_stream, org_track.number_of_notes, 95, org_track.notes, 1) #note
-			stream_decode(byr_stream, org_track.number_of_notes, 256, org_track.notes, 2) #duration
-			stream_decode(byr_stream, org_track.number_of_notes, 254, org_track.notes, 3) #vol
-			stream_decode(byr_stream, org_track.number_of_notes, 12, org_track.notes, 4) #pan
+			for x in range(org_track.number_of_notes): org_track.notes[x][0] = song_file.uint32() #position
+			stream_decode(song_file, org_track.number_of_notes, 95, org_track.notes, 1) #note
+			stream_decode(song_file, org_track.number_of_notes, 256, org_track.notes, 2) #duration
+			stream_decode(song_file, org_track.number_of_notes, 254, org_track.notes, 3) #vol
+			stream_decode(song_file, org_track.number_of_notes, 12, org_track.notes, 4) #pan
 
 	def write(self, byw_stream):
 		byw_stream.raw(b'Org-'+(b'03' if self.oldperc else b'02'))

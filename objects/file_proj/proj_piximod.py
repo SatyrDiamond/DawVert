@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
+import logging
+logger_projparse = logging.getLogger('projparse')
 
 class piximod_pattern:
 	def __init__(self, song_file):
@@ -34,7 +36,12 @@ class piximod_song:
 	def load_from_file(self, input_file):
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
-		song_file.magic_check(b'PIXIMOD1')
+
+		try: 
+			song_file.magic_check(b'PIXIMOD1')
+		except ValueError as t:
+			logger_projparse.error('piximod: '+str(t))
+			exit()
 
 		main_iff_obj = song_file.chunk_objmake()
 		cur_patnum = 0

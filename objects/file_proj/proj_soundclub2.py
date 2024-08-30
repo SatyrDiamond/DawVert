@@ -3,6 +3,9 @@
 
 from objects.data_bytes import bytereader
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 class sn2_instrument:
 	def __init__(self, song_file, chunkend):
 		self.type = song_file.uint8()
@@ -88,7 +91,11 @@ class sn2_song:
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
 
-		song_file.magic_check(b'SN2')
+		try: song_file.magic_check(b'SN2')
+		except ValueError as t:
+			logger_projparse.error('soundclub2: '+str(t))
+			exit()
+		
 		end_data = song_file.uint32()
 
 		self.unk1 = song_file.uint32()

@@ -8,6 +8,9 @@ import json
 import plugins
 import struct
 
+import logging
+logger_input = logging.getLogger('input')
+
 def getval(i_val):
 	if i_val == 91: i_val = 11
 	elif i_val == 11: i_val = 91
@@ -32,14 +35,22 @@ class input_petaporon(plugins.base):
 		dawinfo_obj.plugin_included = ['universal:synth-osc']
 	def parse(self, convproj_obj, input_file, dv_config):
 		bytestream = open(input_file, 'r')
-		sndstat_data = json.load(bytestream)
+		
+		try:
+			petapo_data = json.load(bytestream)
+		except UnicodeDecodeError as t:
+			logger_input.error('petaporon: Unicode Decode Error: '+str(t))
+			exit()
+		except json.decoder.JSONDecodeError as t:
+			logger_input.error('petaporon: JSON parsing error: '+str(t))
+			exit()
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
 
-		peta_notedata = sndstat_data['n'].encode('ascii')
+		peta_notedata = petapo_data['n'].encode('ascii')
 		peta_noteints = struct.unpack("B"*len(peta_notedata), peta_notedata)
-		peta_instset = sndstat_data['i']
+		peta_instset = petapo_data['i']
 		bio_peta_notebytes = BytesIO(bytes(peta_noteints))
 
 		peta_notelists = [[] for _ in range(10)]
@@ -89,5 +100,5 @@ class input_petaporon(plugins.base):
 			for n in peta_notelists[instnum]: track_obj.placements.notelist.add_r(n[0], n[1], n[2], 1, {})
 
 		convproj_obj.do_actions.append('do_singlenotelistcut')
-		convproj_obj.params.add('bpm', sndstat_data['t'], 'float')
-		convproj_obj.timesig[0] = sndstat_data['c']
+		convproj_obj.params.add('bpm', petapo_data['t'], 'float')
+		convproj_obj.timesig[0] = petapo_data['c']

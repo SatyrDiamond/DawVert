@@ -6,6 +6,9 @@ from objects import globalstore
 import plugins
 import xml.etree.ElementTree as ET
 
+import logging
+logger_input = logging.getLogger('input')
+
 notekeys = ['A','B','C','D','E','F','G','H','a','b','c','d','e','f','g','h','i']
 
 def parsenotes(txt):
@@ -54,7 +57,12 @@ class input_mariopaint_mss(plugins.base):
 		convproj_obj.type = 'rm'
 		mariopaint_obj = mariopaint.mariopaint_song()
 
-		tree = ET.parse(input_file)
+		try: 
+			tree = ET.parse(input_file)
+		except ET.ParseError as t:
+			logger_input.error('mariopaint_mss: XML parsing error: '+str(t))
+			exit()
+
 		root = tree.getroot()
 
 		if 'tempo' in root.attrib: mariopaint_obj.tempo = int(root.attrib['tempo'])/4

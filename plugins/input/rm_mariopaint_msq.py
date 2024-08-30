@@ -6,6 +6,9 @@ from functions import xtramath
 import io
 import plugins
 
+import logging
+logger_input = logging.getLogger('input')
+
 instnames = ['mario','toad','yoshi','star','flower','gameboy','dog','cat','pig','swan','face','plane','boat','car','heart']
 
 def readpart(msq_score_str):
@@ -55,8 +58,11 @@ class input_mariopaint_msq(plugins.base):
 		msq_values = {}
 		f_msq = open(input_file, 'r')
 		lines_msq = f_msq.readlines()
-		for line in lines_msq:
-			msq_name, fmf_val = line.rstrip().split('=')
+		for n, line in enumerate(lines_msq):
+			if '=' not in line:
+				logger_input.error('mariopaint_msq: Line '+str(n+1)+': "=" not found.')
+				exit()
+			msq_name, fmf_val = line.rstrip().split('=', 1)
 			msq_values[msq_name] = fmf_val
 
 		if 'TIME44' in msq_values: 

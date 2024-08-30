@@ -112,14 +112,12 @@ class input_pxtone(plugins.base):
 			if voice_obj.type == 'pcm':
 				cvpj_instvol = 0.4
 				wave_path = samplefolder + 'ptcop_' + str(voicenum+1).zfill(2) + '.wav'
-
 				audio_obj = audio_data.audio_obj()
 				audio_obj.set_codec('int16' if voice_obj.bits == 16 else 'int8')
 				audio_obj.rate = voice_obj.hz
 				audio_obj.channels = voice_obj.ch
 				audio_obj.pcm_from_bytes(voice_obj.data)
 				audio_obj.to_file_wav(wave_path)
-
 				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler_genid(wave_path, None)
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				samplepart_obj.interpolation = "linear" if 1 in voice_obj.sps2 else "none"
@@ -139,13 +137,13 @@ class input_pxtone(plugins.base):
 			unitstream = pxtone_cmdstream(track_obj.placements.notelist, convproj_obj, cvpj_trackid)
 
 			for e in unit_notes:
+				if e['eventnum'] == 1: unitstream.note(e['d_position'], e['value'])
 				if e['eventnum'] == 2: unitstream.note_pitch(e['d_position'], e['value'])
+				if e['eventnum'] == 5: unitstream.vol(e['d_position'], e['value'])
 				if e['eventnum'] == 6: unitstream.porta(e['value'])
 				if e['eventnum'] == 12: unitstream.voice(e['value'])
-				if e['eventnum'] == 5: unitstream.vol(e['d_position'], e['value'])
-				if e['eventnum'] == 15: unitstream.pan(e['d_position'], e['value'])
 				if e['eventnum'] == 14: unitstream.pitch(e['d_position'], e['value'])
-				if e['eventnum'] == 1: unitstream.note(e['d_position'], e['value'])
+				if e['eventnum'] == 15: unitstream.pan(e['d_position'], e['value'])
 
 			track_obj.placements.notelist.notemod_conv()
 

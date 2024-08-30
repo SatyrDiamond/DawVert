@@ -289,7 +289,11 @@ class smaf_song:
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
 
-		song_file.magic_check(b'MMMD')
+		try: song_file.magic_check(b'MMMD')
+		except ValueError as t:
+			logger_projparse.error('mmf: '+str(t))
+			exit()
+		
 		end_file = song_file.uint32_b()
 
 		main_iff_obj = song_file.chunk_objmake()

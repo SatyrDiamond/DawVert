@@ -117,7 +117,7 @@ class bytereader:
 
 	def magic_check(self, headerbytes):
 		if self.buf.read(len(headerbytes)) == headerbytes: return True
-		else: raise ValueError
+		else: raise ValueError('Magic Check Failed: '+str(headerbytes))
 
 	def detectheader(self, startloc, headerbytes):
 		pos = self.buf.tell()

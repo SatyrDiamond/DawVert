@@ -5,6 +5,9 @@ from objects.data_bytes import bytereader
 from objects.inst_params import fm_opl
 from io import BytesIO
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 def decode_events(song_file):
 	sop_eventdata = []
 	track_numEvents = song_file.uint16()
@@ -51,7 +54,12 @@ class adlib_sop_project:
 	def load_from_file(self, input_file):
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
-		song_file.magic_check(b'sopepos')
+
+		try: 
+			song_file.magic_check(b'sopepos')
+		except ValueError as t:
+			logger_projparse.error('adlib_sop: '+str(t))
+			exit()
 
 		self.majorVersion = song_file.uint8()
 		self.minorVersion = song_file.uint8()

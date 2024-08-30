@@ -99,13 +99,11 @@ class input_s3m(plugins.base):
 
 						if c_command == 20: 
 							tempoval = c_info
-							if c_info == 0:
-								current_tempo += tempo_slide
+							if c_info == 0: current_tempo += tempo_slide
 							if 0 < c_info < 32:
 								tempo_slide = c_info-16
 								current_tempo += c_info-16
-							if c_info > 32:
-								current_tempo = c_info
+							if c_info > 32: current_tempo = c_info
 							pattern_obj.cell_g_param(c_channel, rownum, 'tempo', current_tempo)
 
 						if c_command == 26: 

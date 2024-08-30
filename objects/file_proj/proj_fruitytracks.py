@@ -4,6 +4,9 @@
 from objects.data_bytes import bytereader
 from functions_plugin import format_flp_tlv
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 verbose = False
 def verboseprint(event_id, event_data):
 	cmdname = '__UNKNOWN'
@@ -118,9 +121,11 @@ class ftr_song:
 		clip_reso = 0
 		clip_cutoff = 0
 
+		tlvdatafound = False
 		main_iff_obj = song_data.chunk_objmake()
 		for chunk_obj in main_iff_obj.iter(0, song_data.end):
 			if chunk_obj.id == b'FTdt':
+				tlvdatafound = True
 				for event_id, event_data in format_flp_tlv.decode(song_data, chunk_obj.end):
 					if event_id == 2: vol = event_data
 					elif event_id == 3: pan = event_data
@@ -182,3 +187,7 @@ class ftr_song:
 					elif event_id == 199: self.video = event_data.decode().rstrip('\x00')
 
 					if verbose: verboseprint(event_id, event_data)
+
+		if not tlvdatafound:
+			logger_projparse.error('fruitytracks: TLV data not found')
+			exit()

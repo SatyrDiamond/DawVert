@@ -380,11 +380,20 @@ class input_wavtool(plugins.base):
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, True)
 
-		zip_data = zipfile.ZipFile(input_file, 'r')
+		try:
+			zip_data = zipfile.ZipFile(input_file, 'r')
+		except zipfile.BadZipFile as t:
+			logger_input.error('wavtool: Bad ZIP File: '+str(t))
+			exit()
+
 		json_filename = None
 		samplefolder = dv_config.path_samples_extracted
 		for jsonname in zip_data.namelist():
 			if '.json' in jsonname: json_filename = jsonname
+		if not json_filename:
+			logger_input.error('wavtool: JSON file not found')
+			exit()
+
 		t_wavtool_project = zip_data.read(json_filename)
 		wt_proj = json.loads(t_wavtool_project)
 		wavtool_obj = proj_wavtool.wavtool_project(wt_proj)

@@ -10,6 +10,9 @@ import plugins
 import zipfile
 import os
 
+import logging
+logger_input = logging.getLogger('input')
+
 def do_realparam(convproj_obj, paramset, dp_param, cvpj_paramid, i_addmul, i_type, i_loc):
 	global autoid_assoc
 	if dp_param.id and i_loc: autoid_assoc.define(str(dp_param.id), i_loc, i_type, i_addmul)
@@ -308,10 +311,21 @@ class input_dawproject(plugins.base):
 		autoid_assoc = auto_id.convproj2autoid(48, False)
 
 		samplefolder = dv_config.path_samples_extracted
-		zip_data = zipfile.ZipFile(input_file, 'r')
+
+		try:
+			zip_data = zipfile.ZipFile(input_file, 'r')
+		except zipfile.BadZipFile as t:
+			logger_input.error('dawproject: Bad ZIP File: '+str(t))
+			exit()
 
 		project_obj = proj_dawproject.dawproject_song()
-		project_obj.load_from_data(zip_data.read('project.xml').decode())
+		try:
+			xmldata = zip_data.read('project.xml')
+		except KeyError as t:
+			logger_input.error('dawproject: project.xml not found')
+			exit()
+
+		project_obj.load_from_data(xmldata.decode())
 
 		dp_timesig = project_obj.transport.TimeSignature
 		convproj_obj.timesig[0] = int(dp_timesig.numerator)

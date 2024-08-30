@@ -5,6 +5,9 @@ from objects.data_bytes import bytereader
 from objects.data_bytes import structalloc
 import numpy as np
 import struct
+import logging
+
+logger_projparse = logging.getLogger('projparse')
 
 class ptcop_delay:
 	def __init__(self):
@@ -162,7 +165,7 @@ class ptcop_song:
 			elif chunk_id == b'pxtoneND':
 				break
 			else:
-				print(chunk_id, song_file.raw(100))
+				logger_projparse.error('pxtone: unknown chunk: '+str(chunk_id))
 				exit()
 
 		self.events.clean()

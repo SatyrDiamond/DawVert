@@ -3,10 +3,9 @@
 
 from functions import data_bytes
 from functions import data_values
+from objects.file_proj import proj_it
 from objects.tracker import pat_single
 import os.path
-
-from objects.file_proj import proj_it
 import plugins
 
 TEXTSTART = 'it_inst_'

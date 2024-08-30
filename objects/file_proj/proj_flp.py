@@ -392,18 +392,28 @@ class flp_project:
 		if song_data.read(2) == b'PK':
 			self.zipped = True
 			self.zipfile = zipfile.ZipFile(inputfile, 'r')
+			flpfound = False
 			for filename in self.zipfile.namelist():
 				if filename.endswith('.flp'):
 					song_data.load_raw(self.zipfile.read(filename))
-				
+					flpfound = True
+			if not flpfound:
+				logger_projparse.error('FL: FLP file not found in zip')
+				exit()
+
 		main_iff_obj = song_data.chunk_objmake()
+		tlvfound = False
 		for chunk_obj in main_iff_obj.iter(0, song_data.end):
 			if chunk_obj.id == b'FLhd':
 				song_data.skip(2)
 				self.num_channels = song_data.uint16()
 				self.ppq = song_data.uint16()
 			if chunk_obj.id == b'FLdt':
+				tlvfound = True
 				for event_id, event_data in format_flp_tlv.decode(song_data, chunk_obj.end): self.do_event(event_id, event_data)
+		if not tlvfound:
+			logger_projparse.error('FL: TLV data not found')
+			exit()
 
 	def make(self, outputfile):
 

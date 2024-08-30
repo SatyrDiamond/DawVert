@@ -4,6 +4,9 @@
 from objects.data_bytes import bytereader
 from functions import data_bytes
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 class track_tempo:
 	def __init__(self): 
 		self.name = ''
@@ -90,7 +93,12 @@ class adlib_rol_project:
 		song_file.load_file(input_file)
 		self.majorVersion = song_file.uint16()
 		self.minorVersion = song_file.uint16()
-		song_file.magic_check(b'\\roll\\default\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+		
+		try: 
+			song_file.magic_check(b'\\roll\\default\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+		except ValueError as t:
+			logger_projparse.error('adlib_rol: '+str(t))
+			exit()
 
 		self.tickBeat = song_file.uint16()
 		self.beatMeasure = song_file.uint16()

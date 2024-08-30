@@ -12,6 +12,9 @@ import json
 import math
 import zipfile
 
+import logging
+logger_input = logging.getLogger('input')
+
 def get_param(soundation_device, plugin_obj, i_name, cvpj_autoloc, add_to_param):
 	global convproj_obj
 	sndparam_obj = soundation_device.params.get(i_name)
@@ -81,7 +84,7 @@ class input_soundation(plugins.base):
 			soundation_obj = proj_soundation.soundation_project(sndstat_data)
 
 		if not soundation_obj:
-			print('[error] no .sng loaded')
+			logger_input.error('soundation: no .sng loaded')
 			exit()
 
 		convproj_obj.type = 'r'

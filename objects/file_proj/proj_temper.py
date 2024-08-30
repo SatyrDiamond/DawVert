@@ -3,6 +3,9 @@
 
 from lxml import etree as ET
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 class metaevent_key:
 	def __init__(self):
 		self.td = 0
@@ -204,6 +207,9 @@ class temper_song:
 		parser = ET.XMLParser(recover=True, encoding='utf-8')
 		xml_data = ET.parse(input_file, parser)
 		xml_musseq = xml_data.getroot()
+		if xml_musseq == None:
+			logger_projparse.error('temper: no XML root found')
+			exit()
 
 		for xmlpart in xml_musseq:
 			#print(xmlpart)

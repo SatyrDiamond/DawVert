@@ -4,6 +4,9 @@
 import numpy as np
 from objects.data_bytes import bytereader
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 class ceol_instrument:
 	def __init__(self, song_file):
 		self.inst = 0
@@ -63,6 +66,10 @@ class ceol_song:
 		ceol_file = open(input_file, 'r')
 		ceol_array = np.asarray([int(x) for x in ceol_file.readline().split(',')[:-1]], dtype=np.int16)
 
+		if not ceol_array:
+			logger_projparse.error('boscaceoil: array is empty')
+			exit()
+		
 		song_file = bytereader.bytereader()
 		song_file.load_raw(ceol_array.tobytes())
 		self.versionnum = song_file.uint16()

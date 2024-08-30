@@ -145,7 +145,7 @@ class onlineseq_project:
 			for marker in dict2list(os_data['3']): self.markers.append(onlineseq_marker(marker))
 
 		s = json.dumps(os_data, indent=4)
-		open("in.json","w").write(s)
+		#open("in.json","w").write(s)
 
 	def save_to_file(self, output_file):
 		outjson = {}
@@ -170,7 +170,7 @@ class onlineseq_project:
 
 		outjson['3'] = [x.write() for x in self.markers]
 
-		open("out.json","w").write(json.dumps(outjson, indent=4))
+		#open("out.json","w").write(json.dumps(outjson, indent=4))
 
 		protobuf_typedef = {
 		'1': {

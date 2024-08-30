@@ -498,9 +498,11 @@ class caustic_project:
 		self.effxnum = 0
 		self.mixrnum = 0
 
+		rackchunkfound = False
 		main_iff_obj = song_data.chunk_objmake()
 		for chunk_obj in main_iff_obj.iter(0, song_data.end):
 			if chunk_obj.id == b'RACK':
+				rackchunkfound = True
 				header = song_data.read(264)
 				while chunk_obj.end > song_data.tell():
 					chunk_datatype = song_data.read(4)
@@ -511,6 +513,9 @@ class caustic_project:
 					elif chunk_datatype == b'MSTR': self.read_MSTR(song_data)
 					elif chunk_datatype == b'SEQN': self.read_SEQN(song_data)
 					else: break
+		if not rackchunkfound:
+			logger_projparse.error('Caustic3: RACK chunk not found')
+			exit()
 
 	def read_OUTP(self, song_data):
 		OUTP_size = song_data.uint32()

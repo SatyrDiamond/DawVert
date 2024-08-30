@@ -5,6 +5,9 @@ from objects.data_bytes import bytereader
 import xml.etree.ElementTree as ET
 import zipfile
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 def getvalue(xmltag, xmlname, fallbackval): 
 	if xmltag.findall(xmlname) != []: return xmltag.findall(xmlname)[0].text.strip()
 	else: return fallbackval
@@ -106,7 +109,12 @@ class audiosauna_song:
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
 
-		zip_data = zipfile.ZipFile(input_file, 'r')
+		try:
+			zip_data = zipfile.ZipFile(input_file, 'r')
+		except zipfile.BadZipFile as t:
+			logger_projparse.error('audiosauna: Bad ZIP File: '+str(t))
+			exit()
+		
 		as_songdata = zip_data.read('songdata.xml')
 
 		x_proj = ET.fromstring(as_songdata)

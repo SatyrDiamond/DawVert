@@ -5,6 +5,9 @@ import xml.etree.ElementTree as ET
 import zlib
 from functions import data_values
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 def is_float(inval):
 	if isinstance(inval, bool):
 		return False
@@ -1098,7 +1101,11 @@ class lmms_project:
 		self.creatorversion = '1.2.2'
 
 	def load_from_file(self, input_file):
-		xmldata = get_xml_tree(input_file)
+		try:
+			xmldata = get_xml_tree(input_file)
+		except ET.ParseError as t:
+			logger_projparse.error('lmms: XML parsing error: '+str(t))
+			exit()
 		self.type = xmldata.get('type')
 		self.version = xmldata.get('version')
 		self.creator = xmldata.get('creator')

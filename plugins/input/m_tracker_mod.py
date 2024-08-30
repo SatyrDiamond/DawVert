@@ -6,7 +6,6 @@ import os
 import numpy as np
 import math
 from objects.file_proj import proj_mod
-from objects import globalstore
 from objects import audio_data
 from objects.tracker import pat_single
 

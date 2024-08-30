@@ -15,6 +15,9 @@ import struct
 import base64
 import zipfile
 
+import logging
+logger_input = logging.getLogger('input')
+
 AMPED_COLORS = {
 				'mint': [0.20, 0.80, 0.63],
 				'lime': [0.54, 0.92, 0.16],
@@ -344,7 +347,12 @@ class input_amped(plugins.base):
 
 	def parse(self, convproj_obj, input_file, dv_config):
 		global samplefolder
-		global europa_vals
+
+		try:
+			zip_data = zipfile.ZipFile(input_file, 'r')
+		except zipfile.BadZipFile as t:
+			logger_input.error('amped: Bad ZIP File: '+str(t))
+			exit()
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, True)
@@ -353,9 +361,14 @@ class input_amped(plugins.base):
 		globalstore.dataset.load('synth_nonfree', './data_main/dataset/synth_nonfree.dset')
 
 		samplefolder = dv_config.path_samples_extracted
-		zip_data = zipfile.ZipFile(input_file, 'r')
 
-		amped_filenames = json.loads(zip_data.read('filenames.json'))
+		try:
+			jsonfilenames = zip_data.read('filenames.json')
+		except KeyError as t:
+			logger_input.error('amped: filenames.json not found')
+			exit()
+
+		amped_filenames = json.loads(jsonfilenames)
 		for amped_filename, realfilename in amped_filenames.items():
 			old_file = os.path.join(samplefolder,amped_filename)
 			new_file = os.path.join(samplefolder,realfilename)
@@ -364,7 +377,13 @@ class input_amped(plugins.base):
 				os.rename(old_file,new_file)
 			sampleref_obj = convproj_obj.add_sampleref(str(amped_filename), new_file, None)
 
-		amped_project = json.loads(zip_data.read('amped-studio-project.json'))
+		try:
+			jsonproject = zip_data.read('amped-studio-project.json')
+		except KeyError as t:
+			logger_input.error('amped: amped-studio-project.json not found')
+			exit()
+
+		amped_project = json.loads(jsonproject)
 		amped_obj = proj_amped.amped_project(amped_project)
 		convproj_obj.params.add('bpm', amped_obj.tempo, 'float')
 		convproj_obj.timesig = [amped_obj.timesig_num, amped_obj.timesig_den]

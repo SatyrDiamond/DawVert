@@ -11,6 +11,9 @@ from objects.file_proj._ableton.param import *
 from objects.file_proj._ableton.automation import *
 from objects.file_proj._ableton.tracks import *
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 mixerp_unused_id = data_values.counter(1000)
 counter_unused_id = data_values.counter(30000)
 
@@ -243,11 +246,14 @@ class ableton_liveset:
 				alsbytes.seek(0)
 				xmlstring = alsbytes.read().decode()
 
-		root = ET.fromstring(xmlstring)
+		try: root = ET.fromstring(xmlstring)
+		except ET.ParseError as t:
+			logger_projparse.error('ableton: XML parsing error: '+str(t))
+			exit()
 
 		abletonversion = root.get('MinorVersion').split('.')[0]
 		if abletonversion != '11':
-			print('[error] Ableton version '+abletonversion+' is not supported.')
+			logger_projparse.error('ableton: Version '+abletonversion+' is not supported.')
 			exit()
 
 		x_LiveSet = root.findall('LiveSet')[0]
@@ -260,7 +266,6 @@ class ableton_liveset:
 			if x_Track.tag == 'MidiTrack': self.Tracks.append(['midi', ableton_MidiTrack(x_Track)])
 			if x_Track.tag == 'AudioTrack': self.Tracks.append(['audio', ableton_AudioTrack(x_Track)])
 			if x_Track.tag == 'ReturnTrack': self.Tracks.append(['return', ableton_ReturnTrack(x_Track)])
-			print(x_Track.tag)
 		self.MasterTrack = ableton_MasterTrack(x_LiveSet.findall('MasterTrack')[0])
 		self.PreHearTrack = ableton_PreHearTrack(x_LiveSet.findall('PreHearTrack')[0])
 

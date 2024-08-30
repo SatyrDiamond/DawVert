@@ -13,7 +13,7 @@ class input_pyav(plugins.base):
 	def is_dawvert_plugin(self): return 'audiofile'
 	def getshortname(self): return 'ffmpeg'
 	def getaudiofileinfo(self, audiofileinfo_obj):
-		audiofileinfo_obj.file_formats = ['wav', 'mp3', 'flac', 'ogg']
+		audiofileinfo_obj.file_formats = ['wav', 'mp3', 'flac', 'ogg', 'wv']
 	def getinfo(self, input_file, sampleref_obj, fileextlow):
 		valid = False
 		if self.usable:

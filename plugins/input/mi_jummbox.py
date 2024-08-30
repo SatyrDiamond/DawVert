@@ -10,9 +10,13 @@ from objects.file_proj import proj_jummbox
 from objects.inst_params import fx_delay
 import plugins
 import json
+import os
 import math
 
-filtervals = [2378.41, 3363.59, 4756.83, 5656.85, 8000, 9513.66, 11313.71, 13454.34, 16000, 19027.31, None]
+import logging
+logger_input = logging.getLogger('input')
+
+FILTERFREQ = [2378.41, 3363.59, 4756.83, 5656.85, 8000, 9513.66, 11313.71, 13454.34, 16000, 19027.31, None]
 
 class rawchipwaves_part():
 	__slots__ = ['expression', 'samples']
@@ -238,10 +242,18 @@ class input_jummbox(plugins.base):
 		colors_drums = colors.colorset.from_dataset('beepbox', 'drums', 'beepbox_dark')
 
 		rawchipwaves_obj = rawchipwaves()
-		rawchipwaves_obj.load_from_file('data_main\\text\\beepbox_shapes.txt') 
+		rawchipwaves_obj.load_from_file(os.path.join('data_main','text','beepbox_shapes.txt')) 
 
 		bytestream = open(input_file, 'r', encoding='utf8')
-		jummbox_json = json.load(bytestream)
+
+		try:
+			jummbox_json = json.load(bytestream)
+		except UnicodeDecodeError as t:
+			logger_input.error('jummbox: Unicode Decode Error: '+str(t))
+			exit()
+		except json.decoder.JSONDecodeError as t:
+			logger_input.error('jummbox: JSON parsing error: '+str(t))
+			exit()
 
 		jummbox_obj = proj_jummbox.jummbox_project(jummbox_json)
 		convproj_obj.params.add('bpm', jummbox_obj.beatsPerMinute, 'float')

@@ -183,6 +183,7 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 	is_instrument = plugin_obj.role == 'inst'
 
 	if (vstdatatype=='param' and vstnumparams) or vstdatatype=='chunk':
+		fx_on, fx_wet = plugin_obj.fxdata_get()
 		als_device = als_track.DeviceChain.add_device('PluginDevice')
 		do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
 		als_device.On.Manual = fx_on
@@ -264,6 +265,7 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 	return als_device
 
 def add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, pluginid):
+	fx_on, fx_wet = plugin_obj.fxdata_get()
 	als_device = als_track.DeviceChain.add_device('PluginDevice')
 	do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
 	als_device.On.Manual = fx_on
@@ -782,17 +784,19 @@ class output_ableton(plugins.base):
 						if audiopl_obj.visual.name: als_audioclip.Name = fixtxt(audiopl_obj.visual.name)
 						als_audioclip.Disabled = audiopl_obj.muted
 
-						als_audioclip.Time = audiopl_obj.time.position
-						als_audioclip.CurrentStart = audiopl_obj.time.position
-						als_audioclip.CurrentEnd = audiopl_obj.time.position+audiopl_obj.time.duration
+						clip_position = audiopl_obj.time.position
+						clip_duration = audiopl_obj.time.duration
 	
+						startrel = 0
+
 						if audiopl_obj.time.cut_type == 'cut':
 							als_audioclip.Loop.LoopOn = False
+							startrel = audiopl_obj.time.cut_start
 							als_audioclip.Loop.LoopStart = audiopl_obj.time.cut_start
 							als_audioclip.Loop.LoopEnd = als_audioclip.Loop.LoopStart+audiopl_obj.time.duration
 						elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
 							als_audioclip.Loop.LoopOn = True
-							als_audioclip.Loop.StartRelative, als_audioclip.Loop.LoopStart, als_audioclip.Loop.LoopEnd = audiopl_obj.time.get_loop_data()
+							startrel, als_audioclip.Loop.LoopStart, als_audioclip.Loop.LoopEnd = audiopl_obj.time.get_loop_data()
 						else:
 							als_audioclip.Loop.LoopOn = False
 							als_audioclip.Loop.LoopStart = 0
@@ -865,13 +869,25 @@ class output_ableton(plugins.base):
 						if not stretch_obj.is_warped:
 							if ref_found: 
 								second_dur = sampleref_obj.dur_sec
-								als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-								als_audioclip.Loop.StartRelative *= ratespeed
-								als_audioclip.Loop.LoopEnd += als_audioclip.Loop.StartRelative
+
+								if stretch_obj.uses_tempo:
+									als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+									als_audioclip.Loop.StartRelative *= ratespeed
+									als_audioclip.Loop.LoopEnd += als_audioclip.Loop.StartRelative
 								
-								if als_audioclip.Loop.LoopOn: 
-									stretch_obj.set_rate_speed(bpm, 1, False)
-									als_audioclip.IsWarped = True
+									if als_audioclip.Loop.LoopOn: 
+										stretch_obj.set_rate_speed(bpm, 1, False)
+										als_audioclip.IsWarped = True
+								else:
+									als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+									if stretch_obj.calc_tempo_size == 1:
+										clip_duration = min(clip_duration, (second_dur*2*stretch_obj.calc_tempo_size))
+										als_audioclip.Loop.LoopStart /= 2
+										als_audioclip.Loop.LoopEnd = als_audioclip.Loop.StartRelative+(clip_duration/2)
+									else:
+										clip_duration = min(clip_duration, (second_dur*2*stretch_obj.calc_tempo_size)-startrel)
+										als_audioclip.Loop.LoopStart = startrel
+										als_audioclip.Loop.LoopEnd = startrel+clip_duration
 							else:
 								warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
 								warpmarker_obj.BeatTime = 0
@@ -898,6 +914,11 @@ class output_ableton(plugins.base):
 							warpmarker_obj.SecTime = lastpoint.second+((0.03125/2)/lastpoint.speed)
 							als_audioclip.WarpMarkers[len(stretch_obj.warppoints)+1] = warpmarker_obj
 
+						als_audioclip.Loop.StartRelative
+						als_audioclip.Time = clip_position
+						als_audioclip.CurrentStart = clip_position
+						als_audioclip.CurrentEnd = clip_position+clip_duration
+	
 			if track_obj.type in ['instrument', 'audio']:
 				do_effects(convproj_obj, als_track, track_obj.fxslots_audio)
 				track_sendholders = als_track.DeviceChain.Mixer.Sends

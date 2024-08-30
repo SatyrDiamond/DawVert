@@ -231,10 +231,12 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 		asdflfo_rel = flsf_asdf_R/1024 if flsf_asdf_R != -1 else 0
 		asdflfo_amt = int( (flsf_asdf_A == flsf_asdf_D == flsf_asdf_S == flsf_asdf_R == -1) == False )
 
-		fileref_obj = convproj_obj.add_fileref(flsf_filename, flsf_filename, None)
+		fileref_obj = convproj_obj.add_fileref(flsf_filename, flsf_filename, 'win')
 		fileref_obj.search('extracted')
 		fileref_obj.search('projectfile')
 		fileref_obj.search('factorysamples')
+
+		#print(fileref_obj.get_path('win', False))
 
 		plugin_obj.filerefs['file'] = flsf_filename
 

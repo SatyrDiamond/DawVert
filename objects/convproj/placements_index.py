@@ -90,6 +90,7 @@ class cvpj_placements_index:
 
 		prev = None
 		for pl in old_data_index:
+
 			if not self.eq_connect(pl, prev, loopcompat):
 				new_data_index.append(pl)
 			else:

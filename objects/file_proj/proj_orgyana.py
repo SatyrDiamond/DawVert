@@ -85,7 +85,6 @@ class orgyana_project:
 			logger_projparse.error('orgyana: '+str(t))
 			exit()
 
-		print(org_header)
 		self.oldperc = song_file.raw(2) == b'03'
 		self.wait = song_file.uint16()
 		self.stepsperbar = song_file.uint8()

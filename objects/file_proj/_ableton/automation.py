@@ -116,7 +116,7 @@ class ableton_BoolEvent:
 
 	def write(self, xmltag):
 		xmltag.set('Time', str(self.Time))
-		xmltag.set('Value', str(['false','true'][self.Value]))
+		xmltag.set('Value', str(['false','true'][int(bool(self.Value))]))
 
 class ableton_Automation:
 	__slots__ = ['Events', 'name']

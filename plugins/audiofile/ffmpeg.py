@@ -29,5 +29,8 @@ class input_pyav(plugins.base):
 				if avaudio.channels: sampleref_obj.channels = avaudio.channels
 				valid = True
 				sampleref_obj.fileformat = sampleref_obj.fileref.file.extension.lower()
+				if sampleref_obj.fileformat == 'wav':
+					if avaudio.codec.name not in ['pcm_f32le', 'pcm_s16le', 'pcm_s24le', 'pcm_u8']:
+						sampleref_obj.fileformat = 'wav_codec'
 
 		return valid

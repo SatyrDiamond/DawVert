@@ -39,7 +39,7 @@ class input_soundfile(plugins.base):
 				samples, samplerate = self.soundfile.read(io.BytesIO(audiodata))
 				sampleref_obj.fileref.set_folder(None, outpath, 0)
 				sampleref_obj.fileformat = to_type
-				sampleref_obj.fileref.extension = to_type
+				sampleref_obj.fileref.file.extension = to_type
 				output_file = sampleref_obj.fileref.get_path(None, False)
 				f = open(output_file, 'wb')
 				self.soundfile.write(f, samples, samplerate)

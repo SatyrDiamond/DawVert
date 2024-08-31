@@ -271,7 +271,7 @@ class input_flp(plugins.base):
 			fl_channel_obj = flp_obj.channels[channelnum]
 			instdata = {}
 
-			appdata = None
+			spdata = None
 
 			if fl_channel_obj.type in [0,1,2,3]:
 				cvpj_instid = 'FLInst' + str(instrument)
@@ -296,9 +296,11 @@ class input_flp(plugins.base):
 					samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dv_config)
 					fl_asdr_obj_vol = fl_channel_obj.env_lfo[1]
 					sampleloop = bool(fl_channel_obj.sampleflags & 8)
-					samplepart_obj.trigger = 'normal'# if (bool(fl_asdr_obj_vol.el_env_enabled) or sampleloop) else 'oneshot'
+					samplepart_obj.trigger = 'normal' # if (bool(fl_asdr_obj_vol.el_env_enabled) or sampleloop) else 'oneshot'
 
-					appdata = sp_obj
+					if not sampleref_obj.loop_found: sp_obj.loop_active = False
+					
+					spdata = sp_obj
 
 				if fl_channel_obj.type == 2:
 					if fl_channel_obj.plugin.name != None: 
@@ -420,7 +422,7 @@ class input_flp(plugins.base):
 				if sampleref_obj.found:
 					samplestretch[instrument] = sre_obj.stretch
 
-			instdata_chans.append(appdata)
+			instdata_chans.append(spdata)
 
 		autoticks_pat = {}
 		autoticks_pl = {}

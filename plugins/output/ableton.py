@@ -725,6 +725,13 @@ class output_ableton(plugins.base):
 
 							paramkeys['VolumeAndPan/VolumeVelScale'] = ableton_parampart.as_param('VolumeVelScale', 'float', 1)
 					
+							#lfo_vol_obj = plugin_obj.lfo_get('vol')
+							#lfo_pitch_obj = plugin_obj.lfo_get('pitch')
+							#lfo_filter_obj = plugin_obj.lfo_get('cutoff')
+							#print(lfo_vol_obj)
+							#print(lfo_pitch_obj)
+							#print(lfo_filter_obj)
+
 							paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
 
 							als_device.params.import_keys(paramkeys)
@@ -784,24 +791,6 @@ class output_ableton(plugins.base):
 						if audiopl_obj.visual.name: als_audioclip.Name = fixtxt(audiopl_obj.visual.name)
 						als_audioclip.Disabled = audiopl_obj.muted
 
-						clip_position = audiopl_obj.time.position
-						clip_duration = audiopl_obj.time.duration
-	
-						startrel = 0
-
-						if audiopl_obj.time.cut_type == 'cut':
-							als_audioclip.Loop.LoopOn = False
-							startrel = audiopl_obj.time.cut_start
-							als_audioclip.Loop.LoopStart = audiopl_obj.time.cut_start
-							als_audioclip.Loop.LoopEnd = als_audioclip.Loop.LoopStart+audiopl_obj.time.duration
-						elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
-							als_audioclip.Loop.LoopOn = True
-							startrel, als_audioclip.Loop.LoopStart, als_audioclip.Loop.LoopEnd = audiopl_obj.time.get_loop_data()
-						else:
-							als_audioclip.Loop.LoopOn = False
-							als_audioclip.Loop.LoopStart = 0
-							als_audioclip.Loop.LoopEnd = audiopl_obj.time.duration
-	
 						if 'duration' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInLength = audiopl_obj.fade_in['duration']/8
 						if 'skew' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInCurveSkew = audiopl_obj.fade_in['skew']
 						if 'slope' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInCurveSlope = audiopl_obj.fade_in['slope']
@@ -866,28 +855,57 @@ class output_ableton(plugins.base):
 
 							als_audioclip.Envelopes[i] = clipenv
 
+
+
+
+						clip_position = audiopl_obj.time.position
+						clip_duration = audiopl_obj.time.duration
+						clip_startrel = 0
+						clip_loop_start = 0
+						clip_loop_end = audiopl_obj.time.duration
+						clip_loop_on = False
+	
+						if audiopl_obj.time.cut_type == 'cut':
+							clip_startrel = audiopl_obj.time.cut_start
+							clip_loop_start = audiopl_obj.time.cut_start
+							clip_loop_end = clip_loop_start+clip_duration
+						elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
+							clip_loop_on = True
+							clip_startrel, clip_loop_start, clip_loop_end = audiopl_obj.time.get_loop_data()
+						else:
+							clip_loop_start = 0
+							clip_loop_end = audiopl_obj.time.duration
+	
+						second_dur = sampleref_obj.dur_sec
+
 						if not stretch_obj.is_warped:
 							if ref_found: 
 								second_dur = sampleref_obj.dur_sec
 
 								if stretch_obj.uses_tempo:
 									als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-									als_audioclip.Loop.StartRelative *= ratespeed
-									als_audioclip.Loop.LoopEnd += als_audioclip.Loop.StartRelative
-								
-									if als_audioclip.Loop.LoopOn: 
+									clip_loop_end += clip_startrel/2
+									if clip_loop_on: 
 										stretch_obj.set_rate_speed(bpm, 1, False)
 										als_audioclip.IsWarped = True
-								else:
-									als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-									if stretch_obj.calc_tempo_size == 1:
-										clip_duration = min(clip_duration, (second_dur*2*stretch_obj.calc_tempo_size))
-										als_audioclip.Loop.LoopStart /= 2
-										als_audioclip.Loop.LoopEnd = als_audioclip.Loop.StartRelative+(clip_duration/2)
 									else:
-										clip_duration = min(clip_duration, (second_dur*2*stretch_obj.calc_tempo_size)-startrel)
-										als_audioclip.Loop.LoopStart = startrel
-										als_audioclip.Loop.LoopEnd = startrel+clip_duration
+										clip_startrel = 0
+								else:
+									if not clip_loop_on:
+										als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+										if stretch_obj.calc_tempo_size == 1:
+											clip_duration = min(clip_duration, (second_dur*2*stretch_obj.calc_tempo_size))
+											clip_loop_start /= 2
+											clip_loop_end = (clip_startrel+(clip_duration/2))
+										else:
+											clip_startrel = 0
+									else:
+										als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+										clip_loop_end += clip_startrel
+										if clip_loop_on: 
+											stretch_obj.set_rate_speed(bpm, 1, False)
+											als_audioclip.IsWarped = True
+
 							else:
 								warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
 								warpmarker_obj.BeatTime = 0
@@ -914,11 +932,16 @@ class output_ableton(plugins.base):
 							warpmarker_obj.SecTime = lastpoint.second+((0.03125/2)/lastpoint.speed)
 							als_audioclip.WarpMarkers[len(stretch_obj.warppoints)+1] = warpmarker_obj
 
-						als_audioclip.Loop.StartRelative
 						als_audioclip.Time = clip_position
 						als_audioclip.CurrentStart = clip_position
 						als_audioclip.CurrentEnd = clip_position+clip_duration
-	
+						als_audioclip.Loop.StartRelative = clip_startrel
+						als_audioclip.Loop.LoopStart = clip_loop_start
+						als_audioclip.Loop.LoopEnd = clip_loop_end
+						als_audioclip.Loop.LoopOn = clip_loop_on
+						als_audioclip.Loop.HiddenLoopStart = 0
+						als_audioclip.Loop.HiddenLoopEnd = clip_duration+clip_loop_start
+
 			if track_obj.type in ['instrument', 'audio']:
 				do_effects(convproj_obj, als_track, track_obj.fxslots_audio)
 				track_sendholders = als_track.DeviceChain.Mixer.Sends

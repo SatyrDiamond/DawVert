@@ -47,7 +47,7 @@ class filesearcher_entry:
 			state_obj = fileref_obj.create_state()
 			basefileref_obj = basepaths[self.basepath]
 
-			fileref_obj.folderpath = pathmod(basefileref_obj.folderpath+fileref_obj.folderpath, self.mainpath.get_all())
+			fileref_obj.folderloc = pathmod(basefileref_obj.folderloc+fileref_obj.folderloc, self.mainpath.get_all())
 			fileref_obj.os_type = basefileref_obj.os_type
 			fileref_obj.win_drive = basefileref_obj.win_drive
 			fileref_obj.partial = False
@@ -74,13 +74,13 @@ class filesearcher:
 	def add_basepath(searchseries, in_path):
 		pathdata = cvpj_fileref()
 		pathdata.set_path(None, in_path, 0)
-		if not pathdata.partial:
+		if not pathdata.folder.partial:
 			filesearcher.basepaths[searchseries] = pathdata
 
 	def add_searchpath_full_append(searchseries, in_path, os_type):
 		pathdata = cvpj_fileref()
 		pathdata.set_path(os_type, in_path, 0)
-		if not pathdata.partial:
+		if not pathdata.folder.partial:
 			searchparts = filesearcher.searchparts
 			if searchseries not in searchparts: searchparts[searchseries] = []
 			searchentry_obj = filesearcher_entry()
@@ -92,7 +92,7 @@ class filesearcher:
 	def add_searchpath_full_filereplace(searchseries, in_path, os_type):
 		pathdata = cvpj_fileref()
 		pathdata.set_path(os_type, in_path, 0)
-		if not pathdata.partial:
+		if not pathdata.folder.partial:
 			searchparts = filesearcher.searchparts
 			if searchseries not in searchparts: searchparts[searchseries] = []
 			searchentry_obj = filesearcher_entry()
@@ -126,9 +126,9 @@ class cvpj_filename:
 		self.filename = None
 
 	def debugtxt(self):
-		print('file_basename', self.basename)
-		print('file_extension', self.extension)
-		print('file_filename', self.filename)
+		print('file___basename', self.basename)
+		print('file___extension', self.extension)
+		print('file___filename', self.filename)
 
 	def set(self, basename):
 		self.used = True
@@ -143,7 +143,44 @@ class cvpj_filename:
 	def __str__(self):
 		return (self.filename+'.'+self.extension if self.extension else self.filename) if self.used else ''
 
+class cvpj_folderpath:
+	def __init__(self):
+		self.folderloc = []
+		self.os_type = None
+		self.partial = True
+		self.win_drive = None
+
+	def reset(self):
+		self.folderloc = []
+		self.os_type = None
+		self.partial = True
+		self.win_drive = None
+
+	def debugtxt(self):
+		print('path___folderloc', self.folderloc)
+		print('path___os_type', self.os_type)
+		print('path___partial', self.partial)
+		print('path___win_drive', self.win_drive)
+
+	def set(self, splitpath, is_file):
+		self.folderloc = splitpath[0:-1] if is_file else splitpath
+
+	def get_path(self, in_os_type):
+		if in_os_type not in ['unix', 'win']: in_os_type = os_path
+		if not self.partial: 
+			if in_os_type == 'win':
+				if self.os_type == 'win': outpath = [self.win_drive+':']+self.folderloc.copy()
+				else: outpath = ['Z:']+self.folderloc.copy()
+			else:
+				if self.os_type == 'win': outpath = ['','home',username,'.wine','drive_'+self.win_drive.lower()]+self.folderloc.copy()
+				else: outpath = ['']+self.folderloc.copy()
+		else: outpath = self.folderloc.copy()
+		return outpath
+
+
 class cvpj_fileref:
+	__slots__ = ['file','folder','is_file']
+
 	def __init__(self):
 		self.reset()
 
@@ -160,81 +197,74 @@ class cvpj_fileref:
 
 	def reset(self):
 		self.file = cvpj_filename()
+		self.folder = cvpj_folderpath()
 		self.is_file = False
-		self.folderpath = []
-		self.os_type = None
-		self.partial = True
-		self.win_drive = None
 
 	def get_all(self):
-		return self.folderpath+([str(self.file)] if self.is_file else [])
+		return self.folderloc+([str(self.file)] if self.is_file else [])
 
 	def debugtxt(self):
 		self.file.debugtxt()
-		print('folderpath', self.folderpath)
+		self.folder.debugtxt()
 		print('is_file', self.is_file)
-		print('os_type', self.os_type)
-		print('partial', self.partial)
-		print('win_drive', self.win_drive)
 
 	def internal_basename(self, splitpath, alwaysfile):
 		if splitpath:
 			basename = splitpath[-1]
 			if alwaysfile == 1: 
 				self.is_file = True
-				self.file.set(splitpath[-1])
-				self.folderpath = self.folderpath[0:-1]
-			elif alwaysfile == -1: 
-				self.is_file = False
-				self.folderpath = self.folderpath
+				self.file.set(basename)
+			elif alwaysfile == -1: self.is_file = False
 			elif alwaysfile == 0: 
-				if '.' in basename:
+				if '.' in basename: 
 					self.is_file = self.file.set(basename)
-					self.folderpath = self.folderpath[0:-1]
-				else: self.folderpath = self.folderpath
+			self.folder.set(splitpath, self.is_file)
 
 	def internal_unix_in_win(self, splitpath):
-		if not self.partial:
+		if not self.folder.partial:
 			if len(splitpath)>2:
 				if splitpath[0] == 'cygdrive':
-					self.os_type = 'win'
-					self.win_drive = splitpath[1].upper()
+					self.folder.os_type = 'win'
+					self.folder.win_drive = splitpath[1].upper()
 					splitpath = splitpath[2:]
 
 			if len(splitpath)>4:
 				if splitpath[0] == 'home' and splitpath[2] == '.wine' and splitpath[3].startswith('drive_'):
-					self.os_type = 'win'
-					self.win_drive = splitpath[3][6:].upper()
+					self.folder.os_type = 'win'
+					self.folder.win_drive = splitpath[3][6:].upper()
 					splitpath = splitpath[4:]
+
 		return splitpath
 
 	def internal_setpath_win(self, in_path, alwaysfile):
 		self.reset()
-		self.os_type = 'win'
+		self.folder.os_type = 'win'
 		splitpath = splitpath_txt(in_path)
+
 		if splitpath:
 			if len(splitpath[0])==2 and ':' in splitpath[0]:
-				self.win_drive = splitpath[0][0].upper()
-				self.partial = False
+				self.folder.win_drive = splitpath[0][0].upper()
+				self.folder.partial = False
 				splitpath = splitpath[1:]
 			elif splitpath[0] == '': splitpath = splitpath[1:]
 			if splitpath:
 				if splitpath[-1] == '': splitpath = splitpath[:-1]
-			self.folderpath = splitpath
+			self.folder.folderloc = splitpath
 			self.internal_basename(splitpath, alwaysfile)
+
 
 	def internal_setpath_unix(self, in_path, alwaysfile):
 		self.reset()
-		self.os_type = 'unix'
+		self.folder.os_type = 'unix'
 		splitpath = splitpath_txt(in_path)
 		if splitpath:
 			if splitpath[0] == '':
-				self.partial = False
+				self.folder.partial = False
 				splitpath = splitpath[1:]
 			if splitpath:
 				if splitpath[-1] == '': splitpath = splitpath[:-1]
 			splitpath = self.internal_unix_in_win(splitpath)
-			self.folderpath = splitpath
+			self.folder.folderloc = splitpath
 			self.internal_basename(splitpath, alwaysfile)
 
 	def internal_setpath_any(self, in_path, alwaysfile):
@@ -242,19 +272,19 @@ class cvpj_fileref:
 		splitpath = splitpath_txt(in_path)
 		if splitpath and splitpath != ['']:
 			if splitpath[0] == '':
-				self.partial = False
+				self.folder.partial = False
 				splitpath = splitpath[1:]
-				self.os_type = 'unix'
+				self.folder.os_type = 'unix'
 			if len(splitpath[0])==2 and ':' in splitpath[0]:
-				self.win_drive = splitpath[0][0].upper()
-				self.partial = False
+				self.folder.win_drive = splitpath[0][0].upper()
+				self.folder.partial = False
 				splitpath = splitpath[1:]
-				self.os_type = 'win'
-			if not self.partial and self.os_type == 'unix':
+				self.folder.os_type = 'win'
+			if not self.folder.partial and self.folder.os_type == 'unix':
 				splitpath = self.internal_unix_in_win(splitpath)
 			if splitpath:
 				if splitpath[-1] == '': splitpath = splitpath[:-1]
-			self.folderpath = splitpath
+			self.folder.folderloc = splitpath
 			self.internal_basename(splitpath, alwaysfile)
 
 	def set_path(self, in_os_type, in_path, alwaysfile):
@@ -270,18 +300,8 @@ class cvpj_fileref:
 		self.is_file = old_is_file
 
 	def get_path(self, in_os_type, nofile):
-		if in_os_type not in ['unix', 'win']: in_os_type = os_path
-		if not self.partial: 
-			if in_os_type == 'win':
-				if self.os_type == 'win': outpath = [self.win_drive+':']+self.folderpath.copy()
-				else: outpath = ['Z:']+self.folderpath.copy()
-			else:
-				if self.os_type == 'win': outpath = ['','home',username,'.wine','drive_'+self.win_drive.lower()]+self.folderpath.copy()
-				else: outpath = ['']+self.folderpath.copy()
-		else: outpath = self.folderpath.copy()
-
+		outpath = self.folder.get_path(in_os_type)
 		if self.is_file and not nofile: outpath.append(str(self.file))
-
 		if in_os_type == 'win': return '\\'.join(outpath)
 		else: return '/'.join(outpath)
 
@@ -296,44 +316,35 @@ class cvpj_fileref:
 		return (self.filename+'.'+self.extension if self.extension else self.filename) if self.is_file else ''
 
 	def complete(self, other_fileref):
-		if self.partial == False and other_fileref.partial == True:
-			self.folderpath = pathmod(self.folderpath, other_fileref.folderpath)
+		if self.folder.partial == False and other_fileref.folder.partial == True:
+			self.folder.folderloc = pathmod(self.folder.folderloc, other_fileref.folder.folderloc)
 			self.partial = False
 			self.file = copy.deepcopy(other_fileref.file)
 			self.is_file = other_fileref.is_file
 
-		if self.partial == True and other_fileref.partial == False:
-			self.folderpath = pathmod(other_fileref.folderpath, self.folderpath)
-			self.partial = False
-			self.os_type = other_fileref.os_type
-			self.win_drive = other_fileref.win_drive
+		if self.folder.partial == True and other_fileref.folder.partial == False:
+			self.folder.folderloc = pathmod(other_fileref.folder.folderloc, self.folder.folderloc)
+			self.folder.partial = False
+			self.folder.os_type = other_fileref.folder.os_type
+			self.folder.win_drive = other_fileref.folder.win_drive
 
 	def create_state(self):
 		state_obj = cvpj_fileref_state()
-		state_obj.folderpath = self.folderpath.copy()
+		state_obj.folder = copy.deepcopy(self.folder)
 		state_obj.file = copy.deepcopy(self.file)
 		state_obj.is_file = self.is_file
-		state_obj.os_type = self.os_type
-		state_obj.partial = self.partial
-		state_obj.win_drive = self.win_drive
 		return state_obj
 
 	def restore_state(self, state_obj):
-		self.folderpath = state_obj.folderpath.copy()
+		self.folder = copy.deepcopy(state_obj.folder)
 		self.file = state_obj.file
 		self.is_file = state_obj.is_file
-		self.os_type = state_obj.os_type
-		self.partial = state_obj.partial
-		self.win_drive = state_obj.win_drive
 
 class cvpj_fileref_state:
 	def __init__(self):
-		self.folderpath = []
+		self.folder = None
 		self.file = None
 		self.is_file = False
-		self.os_type = None
-		self.partial = True
-		self.win_drive = None
 
 
 

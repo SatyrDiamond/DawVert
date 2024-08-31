@@ -487,7 +487,9 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 		if not os.path.exists(slicex_filename):
 			outfilename = os.path.join(foldername, pluginid+'_custom_audio.wav')
-			with open(outfilename, "wb") as slicexfile: slicexfile.write(wavedata)
+			try:
+				with open(outfilename, "wb") as slicexfile: slicexfile.write(wavedata)
+			except PermissionError: pass
 			sampleref_obj = convproj_obj.add_sampleref(outfilename, outfilename, 'win')
 			sre_obj.from_sampleref(convproj_obj, outfilename)
 		else:

@@ -66,7 +66,7 @@ class ceol_song:
 		ceol_file = open(input_file, 'r')
 		ceol_array = np.asarray([int(x) for x in ceol_file.readline().split(',')[:-1]], dtype=np.int16)
 
-		if not ceol_array:
+		if not len(ceol_array):
 			logger_projparse.error('boscaceoil: array is empty')
 			exit()
 		

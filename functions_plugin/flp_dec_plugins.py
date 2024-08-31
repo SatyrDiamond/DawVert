@@ -75,7 +75,7 @@ envshapes = {
 	12: 'doublecurve3',
 }
 
-def getparams(convproj_obj, pluginid, flplugin, foldername):
+def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 	fl_plugstr = bytereader.bytereader()
 	fl_plugstr.load_raw(flplugin.params if flplugin.params else b'')
 	flplugin.name = flplugin.name.lower()
@@ -232,6 +232,13 @@ def getparams(convproj_obj, pluginid, flplugin, foldername):
 		asdflfo_amt = int( (flsf_asdf_A == flsf_asdf_D == flsf_asdf_S == flsf_asdf_R == -1) == False )
 
 		fileref_obj = convproj_obj.add_fileref(flsf_filename, flsf_filename, 'win')
+		
+		if zipfile:
+			foundnames = [x for x in zipfile.namelist() if fileref_obj.file.basename in x]
+			if foundnames:
+				zipfile.extract(foundnames[0], path=foldername, pwd=None)
+				fileref_obj.set_folder(None, os.path.join(foldername, foundnames[0]), False)
+
 		fileref_obj.search('extracted')
 		fileref_obj.search('projectfile')
 		fileref_obj.search('factorysamples')

@@ -107,8 +107,8 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 	sampleref_obj = convproj_obj.add_sampleref(filename_sample, filename_sample, 'win')
 
 	if flp_obj.zipped: sampleref_obj.find_relative('extracted')
+	sampleref_obj.find_relative('projectfile')
 	sampleref_obj.find_relative('factorysamples')
-	#sampleref_obj.find_relative('projectfile')
 
 	sre_obj.visual.name = fl_channel_obj.name
 	sre_obj.visual.color.set_int(conv_color(fl_channel_obj.color))
@@ -298,14 +298,17 @@ class input_flp(plugins.base):
 					sampleloop = bool(fl_channel_obj.sampleflags & 8)
 					samplepart_obj.trigger = 'normal' # if (bool(fl_asdr_obj_vol.el_env_enabled) or sampleloop) else 'oneshot'
 
-					if not sampleref_obj.loop_found: sp_obj.loop_active = False
+					crossfade = fl_channel_obj.params.crossfade/1024
+
+					if not sampleref_obj.loop_found and not crossfade: 
+						sp_obj.loop_active = False
 					
 					spdata = sp_obj
 
 				if fl_channel_obj.type == 2:
 					if fl_channel_obj.plugin.name != None: 
 						inst_obj.pluginid = 'FLPlug_G_'+str(channelnum)
-						plugin_obj = flp_dec_plugins.getparams(convproj_obj, inst_obj.pluginid, fl_channel_obj.plugin, samplefolder)
+						plugin_obj = flp_dec_plugins.getparams(convproj_obj, inst_obj.pluginid, fl_channel_obj.plugin, samplefolder, flp_obj.zipfile)
 						if fl_channel_obj.samplefilename:
 							sp_obj = plugin_obj.samplepart_add('audiofile')
 							samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dv_config)
@@ -608,7 +611,7 @@ class input_flp(plugins.base):
 
 				if slot_obj:
 					pluginid = 'FLPlug_F_'+str(mixer_id)+'_'+str(slot_id)
-					plugin_obj = flp_dec_plugins.getparams(convproj_obj, pluginid, slot_obj.plugin, samplefolder)
+					plugin_obj = flp_dec_plugins.getparams(convproj_obj, pluginid, slot_obj.plugin, samplefolder, flp_obj.zipfile)
 					plugin_obj.fxdata_add(bool(route_on), route_wet)
 					plugin_obj.role = 'effect'
 					if slot_obj.name: plugin_obj.visual.name = slot_obj.name

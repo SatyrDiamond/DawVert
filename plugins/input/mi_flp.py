@@ -205,7 +205,7 @@ class input_flp(plugins.base):
 		dawinfo_obj.fxtype = 'rack'
 		dawinfo_obj.fxrack_params = ['enabled','vol','pan']
 		dawinfo_obj.audio_stretch = ['rate']
-		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3','wv','ds']
+		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
 		dawinfo_obj.plugin_included = ['sampler:single','universal:arpeggiator','native-flstudio','soundfont2']
 		dawinfo_obj.fxchain_mixer = True
 	def supported_autodetect(self): return True

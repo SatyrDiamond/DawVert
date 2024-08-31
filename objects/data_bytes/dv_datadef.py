@@ -9,6 +9,9 @@ import varint
 import json
 import traceback
 
+class DataDefException(Exception):
+    pass
+
 class datadef_global:
 	output = []
 	structnames = []
@@ -32,7 +35,7 @@ class datadef_part:
 			if self.vartype in ['skip_n','string','dstring','list','raw']: 
 				if len(cut_part)>1: self.p_num = int(cut_part[1])
 				else:
-					raise Exception('[datadef] '+self.vartype+' requires 2')
+					raise DataDefException(self.vartype+' requires 2')
 
 
 			if self.vartype in ['struct', 'getvar']: self.p_txt = cut_part[1]
@@ -46,13 +49,13 @@ class datadef_part:
 
 		elif self.vartype == 'struct': 
 			if self.p_txt in d_structs: 
-				if self.p_txt in datadef_global.structnames: raise Exception('recursion detected: '+self.p_txt)
+				if self.p_txt in datadef_global.structnames: raise DataDefException('recursion detected: '+self.p_txt)
 				return d_structs[self.p_txt].decode(byr_stream, d_structs, d_vars)
-			else: raise Exception('struct not found: '+self.p_txt)
+			else: raise DataDefException('struct not found: '+self.p_txt)
 
 		elif self.vartype == 'getvar':
 			if self.p_txt in d_vars: return d_vars[self.p_txt]
-			else: raise Exception('var not found: '+self.p_txt)
+			else: raise DataDefException('var not found: '+self.p_txt)
 
 		elif self.vartype == 'byte': return byr_stream.uint8()
 		elif self.vartype == 's_byte': return byr_stream.int8()
@@ -85,8 +88,8 @@ class datadef_part:
 		elif self.vartype == 'string_t': return byr_stream.string_t()
 
 		elif self.vartype == 'list':
-			if not self.inpart: Exception('[datadef] list requires a part')
-			elif not self.inpart.vartype: Exception('[datadef] list requires a part')
+			if not self.inpart: DataDefException('list requires a part')
+			elif not self.inpart.vartype: DataDefException('list requires a part')
 			elif self.inpart.vartype == 'byte': return byr_stream.l_uint8(self.p_num)
 			elif self.inpart.vartype == 's_byte': return byr_stream.l_int8(self.p_num)
 			elif self.inpart.vartype == 'short': return byr_stream.l_uint16(self.p_num)
@@ -106,7 +109,7 @@ class datadef_part:
 
 
 		else: 
-			raise Exception('unknown vartype: '+str(self.vartype))
+			raise DataDefException('unknown vartype: '+str(self.vartype))
 
 
 	def encode(self, value, byw_stream, d_structs, p_name):
@@ -187,10 +190,13 @@ class datadef_struct:
 
 		datadef_global.structnames.append(self.name)
 		for p_type, p_obj, p_name in self.parts:
-			filepos = byr_stream.tell()
-			value = p_obj.decode(byr_stream, d_structs, d_vars)
-			if p_name: output[p_name] = value
-			datadef_global.output.append([str(filepos), datadef_global.structnames[-1], p_name, p_obj.vartype, str(value)])
+			try:
+				filepos = byr_stream.tell()
+				value = p_obj.decode(byr_stream, d_structs, d_vars)
+				if p_name: output[p_name] = value
+				datadef_global.output.append([str(filepos), datadef_global.structnames[-1], p_name, p_obj.vartype, str(value)])
+			except:
+ 				pass
 
 		datadef_global.structnames.pop()
 
@@ -248,7 +254,7 @@ class datadef:
 				return self.structs[structname].decode(in_data, self.structs, None)
 			else:
 				return None
-		except Exception as e:
+		except DataDefException as e:
 			self.errored = True
 			self.errormeg = str(e)
 			self.errormegf = traceback.format_exc()

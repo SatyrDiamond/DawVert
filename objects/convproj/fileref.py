@@ -43,15 +43,19 @@ class filesearcher_entry:
 	def apply(self, fileref_obj, basepaths):
 		if fileref_obj.exists(None): return True
 
-		if self.search_type == 'partial_file' and fileref_obj.partial and self.basepath in basepaths:
+		logger_project.debug('fileref: search: '+str(self))
+
+		if self.search_type == 'full_filereplace':
 			state_obj = fileref_obj.create_state()
-			basefileref_obj = basepaths[self.basepath]
+			fileref_obj.set_folder_obj(self.mainpath)
+			iffound = fileref_obj.exists(None)
+			if iffound: logger_project.info('fileref: file found: '+fileref_obj.get_path(None, False))
+			else: fileref_obj.restore_state(state_obj)
+			return iffound
 
-			fileref_obj.folderloc = pathmod(basefileref_obj.folderloc+fileref_obj.folderloc, self.mainpath.get_all())
-			fileref_obj.os_type = basefileref_obj.os_type
-			fileref_obj.win_drive = basefileref_obj.win_drive
-			fileref_obj.partial = False
-
+		if self.search_type == 'partial_file' and self.basepath in basepaths:
+			state_obj = fileref_obj.create_state()
+			fileref_obj.set_folder_obj(basepaths[self.basepath])
 			iffound = fileref_obj.exists(None)
 			if iffound: logger_project.info('fileref: file found: '+fileref_obj.get_path(None, False))
 			else: fileref_obj.restore_state(state_obj)
@@ -59,11 +63,14 @@ class filesearcher_entry:
 
 		if self.search_type == 'full_append' and fileref_obj.is_file:
 			state_obj = fileref_obj.create_state()
-			fileref_obj.complete(self.mainpath)
-			iffound = fileref_obj.exists(None)
-			if iffound: logger_project.info('fileref: file found: '+fileref_obj.get_path(None, False))
-			else: fileref_obj.restore_state(state_obj)
-			return iffound
+			if_proc = fileref_obj.complete(self.mainpath)
+			if if_proc:
+				iffound = fileref_obj.exists(None)
+				if iffound: logger_project.info('fileref: file found: '+fileref_obj.get_path(None, False))
+				else: fileref_obj.restore_state(state_obj)
+				return iffound
+			else:
+				fileref_obj.restore_state(state_obj)
 
 		return False
 
@@ -189,7 +196,9 @@ class cvpj_fileref:
 
 	def search(self, searchseries):
 		iffound = False
+
 		if searchseries in filesearcher.searchparts:
+			logger_project.debug('fileref: search start: '+searchseries)
 			for spe in filesearcher.searchparts[searchseries]:
 				iffound = spe.apply(self, filesearcher.basepaths)
 				if iffound: break
@@ -201,7 +210,7 @@ class cvpj_fileref:
 		self.is_file = False
 
 	def get_all(self):
-		return self.folderloc+([str(self.file)] if self.is_file else [])
+		return self.folder.folderloc+([str(self.file)] if self.is_file else [])
 
 	def debugtxt(self):
 		self.file.debugtxt()
@@ -264,7 +273,6 @@ class cvpj_fileref:
 			if splitpath:
 				if splitpath[-1] == '': splitpath = splitpath[:-1]
 			splitpath = self.internal_unix_in_win(splitpath)
-			self.folder.folderloc = splitpath
 			self.internal_basename(splitpath, alwaysfile)
 
 	def internal_setpath_any(self, in_path, alwaysfile):
@@ -284,7 +292,6 @@ class cvpj_fileref:
 				splitpath = self.internal_unix_in_win(splitpath)
 			if splitpath:
 				if splitpath[-1] == '': splitpath = splitpath[:-1]
-			self.folder.folderloc = splitpath
 			self.internal_basename(splitpath, alwaysfile)
 
 	def set_path(self, in_os_type, in_path, alwaysfile):
@@ -321,12 +328,19 @@ class cvpj_fileref:
 			self.partial = False
 			self.file = copy.deepcopy(other_fileref.file)
 			self.is_file = other_fileref.is_file
+			return True
 
 		if self.folder.partial == True and other_fileref.folder.partial == False:
 			self.folder.folderloc = pathmod(other_fileref.folder.folderloc, self.folder.folderloc)
 			self.folder.partial = False
 			self.folder.os_type = other_fileref.folder.os_type
 			self.folder.win_drive = other_fileref.folder.win_drive
+			return True
+
+		return False
+
+	def set_folder_obj(self, other_fileref):
+		self.folder = copy.deepcopy(other_fileref.folder)
 
 	def create_state(self):
 		state_obj = cvpj_fileref_state()

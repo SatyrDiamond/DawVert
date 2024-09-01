@@ -4,66 +4,6 @@
 from objects.tracker import notestream
 from objects.tracker import pat_data
 
-class cur_speed:
-	def __init__(self, s_bpm, s_speed):
-		self.tempo = s_bpm
-		self.speed = s_speed
-		self.changed = False
-
-	def get_speed(self):
-		return self.tempo*(6/(self.speed if self.speed else 1))
-
-	def proc_data(self, idata):
-		if 'speed' in idata: 
-			self.speed = idata['speed']
-			self.bpm_changed = True
-		if 'tempo' in idata: 
-			self.tempo = idata['tempo']
-			self.bpm_changed = True
-
-	def get_change(self):
-		outval = (self.get_speed() if self.bpm_changed else None)
-		self.bpm_changed = False
-		return outval
-
-class single_playstream:
-	def __init__(self, patdata_obj):
-		self.row_num = 0
-		self.patdata_obj = patdata_obj
-		self.num_chans = len(self.patdata_obj.channels)
-
-	def stream_rows(self, p_num, cur_speed_obj):
-		firstrow = True
-		while self.row_num < self.cpat.num_rows:
-			rowdata = [(x.data[self.row_num] if self.row_num in x.data else None) for x in self.cpat.data]
-			g_data = {}
-			for x in rowdata:
-				if x: 
-					if x.g_fx: g_data |= x.g_fx
-
-			cur_speed_obj.proc_data(g_data)
-
-			yield firstrow, g_data, self.row_num, rowdata, cur_speed_obj.get_change()
-
-			if 'pattern_jump' in g_data: break
-			if 'break_to_row' in g_data: break
-			firstrow = False
-			self.row_num += 1
-		self.row_num = 0
-
-	def stream_song(self, s_bpm, s_speed):
-		cur_speed_obj = cur_speed(s_bpm, s_speed)
-
-		cur_speed_obj.bpm_changed = True
-		self.cpat_num = 0
-
-		for i_num, p_num in enumerate(self.patdata_obj.orders):
-			if p_num in self.patdata_obj.patdata:
-				self.cpat = self.patdata_obj.patdata[p_num]
-				self.cpat_num = p_num
-				yield self.stream_rows(p_num, cur_speed_obj)
-
-
 class single_patsong:
 	def __init__(self, num_channels, text_inst_start, maincolor):
 		self.num_chans = num_channels
@@ -93,36 +33,24 @@ class single_patsong:
 		convproj_obj.type = 'm'
 		convproj_obj.set_timings(4, True)
 
-		notepl = [notestream.notestream(text_inst_start) for _ in range(self.num_chans)]
-		autopl_tempo = notestream.autostream()
+		playstr = pat_data.playstream()
+		playstr.init_tempo(s_bpm, s_speed)
+		for _ in range(self.num_chans): playstr.add_channel(text_inst_start)
 
-		playstream_obj = single_playstream(self)
+		for n in self.orders:
+			if n in self.patdata:
+				singlepat_obj = self.patdata[n]
+				playstr.init_patinfo(singlepat_obj.num_rows, n)
+				playstr.columns = singlepat_obj.data
 
-		#notekeys = self.get_drum_notes()
+				while playstr.next_row(): pass
 
-		first_speed = None
+		if use_starttempo and playstr.first_speed: 
+			convproj_obj.params.add('bpm', playstr.first_speed, 'float')
+		playstr.auto_tempo.to_cvpj(convproj_obj, ['main','bpm'])
+		playstr.auto_mastervol.to_cvpj(convproj_obj, ['main','vol'])
 
-		for pat_gen in playstream_obj.stream_song(s_bpm, s_speed):
-			for firstrow, g_data, row_num, rowdata, speed_ch in pat_gen:
-				if first_speed == None: speed_ch
-
-				if firstrow: autopl_tempo.add_pl()
-
-				if speed_ch: autopl_tempo.do_point(speed_ch)
-
-				for c_num, x in enumerate(rowdata):
-					nsc = notepl[c_num]
-					if firstrow: nsc.add_pl(playstream_obj.cpat_num)
-					nsc.do_cell_obj(x,s_speed)
-
-				autopl_tempo.next()
-				#print(firstrow, g_data, playstream_obj.cpat_num, row_num, speed_ch, [([x.note,x.inst,x.fx,x.g_fx] if x!=None else '') for x in rowdata])
-
-		if use_starttempo and first_speed: convproj_obj.params.add('bpm', first_speed, 'float')
-		autopl_tempo.to_cvpj(convproj_obj, ['main','bpm'])
-
-		for ch_num in range(self.num_chans):
-			notepl[ch_num].add_pl(-1)
+		for chns in playstr.notestreams: chns.add_pl(-1)
 
 		used_inst = []
 
@@ -132,7 +60,7 @@ class single_patsong:
 			playlist_obj.visual.color = chan_obj.color
 
 			cur_pl_pos = 0
-			for tpl in notepl[ch_num].placements:
+			for tpl in playstr.notestreams[ch_num].placements:
 				if tpl[0]:
 					for ui in tpl[3]:
 						if ui not in used_inst: used_inst.append(ui)
@@ -145,7 +73,7 @@ class single_patsong:
 						placement_obj.visual.name = self.patdata[tpl[2]].name
 				cur_pl_pos += tpl[0]
 
-		patlentable = [x[0] for x in notepl[0].placements]
+		patlentable = [x[0] for x in playstr.notestreams[0].placements]
 		convproj_obj.patlenlist_to_timemarker(patlentable[:-1], -1)
 
 		return used_inst

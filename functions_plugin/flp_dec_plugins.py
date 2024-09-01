@@ -129,6 +129,8 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 				wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
 				wrapper_vstdata = pluginstate[21:]
 
+				if 'name' in wrapperdata: plugin_obj.datavals_global.add('name', wrapperdata['name'])
+
 				if wrapper_vststate[0:4] == b'\xf7\xff\xff\xff' and wrapper_vststate[5:9] == b'\xfe\xff\xff\xff':
 
 					if wrapper_vststate[4] in [13, 12]:

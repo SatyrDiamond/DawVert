@@ -140,6 +140,21 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 				track_obj.group = 'fxrack_'+str(track_obj.fxrack_channel)
 				track_obj.fxrack_channel = -1
 
+		routedatas = {}
+		for fx_from, d in convproj_obj.fxrack.items():
+			s = d.sends
+			if not s.to_master_active:
+				if len(s.data) == 1:
+					fx_to = list(s.data)[0]
+					if fx_to in convproj_obj.fxrack:
+						targ_data = convproj_obj.fxrack[fx_to].sends.to_master_active
+						if targ_data:
+							routedatas[fx_from] = fx_to
+
+		for x, y in routedatas.items():
+			if y not in fx_trackids: fx_trackids[y] = []
+			if x not in fx_trackids: fx_trackids[x] = []
+
 		#for fxnum, fxchannel_obj in convproj_obj.fxrack.items()
 		for fx_num in fx_trackids:
 
@@ -148,6 +163,9 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 				fxchannel_obj.sends = {}
 				groupid = 'fxrack_'+str(fx_num)
 				group_obj = convproj_obj.add_group(groupid)
+
+				#if fx_num in routedatas:
+				#	group_obj.group = 'fxrack_'+str(routedatas[fx_num])
 
 				convproj_obj.automation.move(['fxmixer',str(fx_num),'pan'], ['group',groupid,'pan'])
 				convproj_obj.automation.move(['fxmixer',str(fx_num),'vol'], ['group',groupid,'vol'])

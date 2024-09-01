@@ -244,7 +244,10 @@ class input_flp(plugins.base):
 		if flp_obj.zipped:
 			for filename in flp_obj.zipfile.namelist():
 				if not filename.endswith('.flp'):
-					flp_obj.zipfile.extract(filename, path=dv_config.path_samples_extracted, pwd=None)
+					try:
+						flp_obj.zipfile.extract(filename, path=dv_config.path_samples_extracted, pwd=None)
+					except PermissionError:
+						pass
 
 		globalstore.datadef.load('fl_studio', './data_main/datadef/fl_studio.ddef')
 		globalstore.dataset.load('fl_studio', './data_main/dataset/fl_studio.dset')

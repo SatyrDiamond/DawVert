@@ -2,10 +2,132 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_bytes
+from objects.tracker import notestream
 
 t_retg_alg = [['mul', 1], ['minus', 1], ['minus', 2], ['minus', 4], ['minus', 8], ['minus', 16], ['mul', 2/3], ['mul', 1/2], ['mul', 1], ['plus', 1], ['plus', 2], ['plus', 4], ['plus', 8], ['plus', 16], ['mul', 3/2], ['mul', 2]]
 
 LinearSlideUpTable = [0,237,475,714,953,1194,1435,1677,1920,2164,2409,2655,2902,3149,3397,3647,3897,4148,4400,4653,4907,5157,5417,5674,5932,6190,6449,6710,6971,7233,7496,7761,8026,8292,8559,8027,9096,9366,9636,9908,10181,10455,10730,11006,11283,11560,11839,12119,12400,12682,12965,13249,13533,13819,14106,14394,14684,14974,15265,15557,15850,16145,16440,16737,17034,17333,17633,17933,18235,18538,18842,19147,19454,19761,20070,20379,20690,21002,21315,21629,21944,22260,22578,22897,23216,23537,23860,24183,24507,24833,25160,25488,25817,26148,26479,26812,27146,27481,27818,28155,28494,28834,29175,29518,29862,30207,30553,30900,31248,31599,31951,32303,32657,33012,33369,33726,34085,34446,34807,35170,35534,35900,36267,36635,37004,37375,37747,38121,38496,38872,39250,39629,40009,40391,40774,41158,41544,41932,42320,42710,43102,43495,43889,44285,44682,45081,45481,45882,46285,46690,47095,47503,47917,48322,48734,49147,49562,49978,50396,50815,51236,51658,52082,52507,52934,53363,53793,54224,54658,55092,55529,55966,56406,56847,57289,57734,58179,58627,59076,59527,59979,60433,60889,61346,61805,62265,62727,63191,63657,64124,64593,65064,65536,66010,66486,66963,67442,67923,68406,68891,69377,69863,70354,70846,71339,71834,72331,72830,73330,73832,74336,74842,75350,75859,76371,76884,77399,77916,78435,78955,79478,80003,80529,81057,81587,82119,82653,83189,83727,84267,84809,85353,85898,86446,86996,87547,88101,88657,89214,89774,90336,90899,91465,91033,92603,93175,93749,94325,94903,95483,96066,96650,97237,97825,98416,99009,99604]
+
+class cur_speed:
+	def __init__(self, s_bpm, s_speed):
+		self.tempo = s_bpm
+		self.speed = s_speed
+		self.changed = True
+
+	def get_speed(self):
+		return self.tempo*(6/(self.speed if self.speed else 1))
+
+	def proc_data(self, idata):
+		if 'speed' in idata: 
+			self.speed = idata['speed']
+			self.bpm_changed = True
+		if 'tempo' in idata: 
+			self.tempo = idata['tempo']
+			self.bpm_changed = True
+
+	def get_change(self):
+		outval = (self.get_speed() if self.bpm_changed else None)
+		self.bpm_changed = False
+		return outval
+
+VISUAL_ON = False
+VISUAL_CELL_NL = False
+
+def cell_visual(celldata):
+	txt_note = '...'
+	txt_inst = '..'
+	txt_mod = '.'
+
+	if celldata:
+		if celldata.note: txt_note = str(celldata.note).rjust(3)
+		if celldata.inst: txt_inst = str(celldata.inst).rjust(2)
+		if celldata.fx: txt_mod = '#'
+
+	return ' '.join([txt_note,txt_inst,txt_mod] if VISUAL_CELL_NL else [txt_note])
+	
+class playstream:
+	def __init__(self):
+		self.columns = []
+		self.notestreams = []
+		self.patnum = 0
+		self.curpos = 0
+		self.maxpos = 4
+		self.stopped = True
+		self.stopped_reason = None
+		self.stopped_value = None
+		self.cur_tempo = cur_speed(120, 6)
+		self.auto_tempo = notestream.autostream()
+		self.auto_mastervol = notestream.autostream()
+		self.first_speed = None
+
+	def add_channel(self, text_inst_start):
+		self.columns.append(None)
+		self.notestreams.append(notestream.notestream(text_inst_start))
+
+	def init_tempo(self, s_bpm, s_speed):
+		self.cur_tempo = cur_speed(s_bpm, s_speed)
+
+	def init_patinfo(self, numrows, patnum):
+		for x in self.notestreams: x.add_pl(patnum)
+		self.auto_tempo.add_pl()
+		self.auto_mastervol.add_pl()
+
+		self.curpos = 0
+		self.maxpos = numrows
+		self.stopped = False
+		self.stopped_reason = None
+		self.stopped_value = None
+		self.patnum = patnum
+
+	def next_row(self):
+		if self.curpos < self.maxpos: self.cur_tempo.bpm_changed = False
+		else: self.stopped = True
+
+		if not self.stopped:
+			if VISUAL_ON: vistxt = str(self.patnum).rjust(3)+(' [=] ' if self.stopped else ' [>] ')
+			if VISUAL_ON: vistxt += str(self.curpos).rjust(3)+'/'+str(self.maxpos).ljust(3)
+			global_fx = None
+			for c, x in enumerate(self.columns):
+				cell_data = x.get_pos(self.curpos) if x else None
+				if VISUAL_ON: vistxt += '|'+cell_visual(cell_data)
+				if cell_data: 
+					if cell_data.g_fx: 
+						if global_fx == None: global_fx = {}
+						global_fx |= cell_data.g_fx
+						self.cur_tempo.proc_data(global_fx)
+
+				if global_fx:
+					if 'global_volume' in global_fx:
+						self.auto_mastervol.do_point(global_fx['global_volume'])
+
+				self.notestreams[c].do_cell_obj(cell_data,self.cur_tempo.speed)
+			if VISUAL_ON: vistxt += '|'+str(self.cur_tempo.tempo).rjust(4)+(' # ' if self.cur_tempo.changed else ' - ')+str(self.cur_tempo.speed).ljust(3)
+			if VISUAL_ON: vistxt += '|'
+
+			if self.cur_tempo.changed: 
+				if self.first_speed == None: self.first_speed = self.cur_tempo.get_speed()
+				changedval = self.cur_tempo.get_change()
+				if changedval:
+					self.auto_tempo.do_point(changedval)
+
+			self.auto_tempo.next()
+			self.auto_mastervol.next()
+
+			if VISUAL_ON: print(vistxt, global_fx)
+
+			if global_fx:
+				if 'break_to_row' in global_fx:
+					self.stopped = True
+					self.stopped_reason = 'break_to_row'
+					self.stopped_value = global_fx['break_to_row']
+				if 'pattern_jump' in global_fx:
+					self.stopped = True
+					self.stopped_reason = 'pattern_jump'
+					self.stopped_value = global_fx['pattern_jump']
+
+			self.curpos += 1
+
+		return not self.stopped
 
 def splitparams(value, firstname, secondname):
 	dualparams = {}
@@ -48,6 +170,9 @@ class tracker_cell:
 class tracker_column:
 	def __init__(self):
 		self.data = {}
+
+	def get_pos(self, row_num):
+		return self.data[row_num] if row_num in self.data else None
 
 	def auto_cell(self, row_num):
 		if row_num not in self.data: self.data[row_num] = tracker_cell()

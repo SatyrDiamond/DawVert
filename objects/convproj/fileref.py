@@ -448,6 +448,8 @@ class cvpj_sampleref:
 				if filesupported:
 					isconverted = False
 					try: isconverted = audioconvplug_obj.object.convert_file(self, filesupported[0], outpath)
+					except PermissionError:
+						pass
 					except: 
 						if True:
 							import traceback

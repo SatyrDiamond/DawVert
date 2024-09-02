@@ -9,11 +9,11 @@ import plugins
 
 dpcm_rate_arr = [4181.71,4709.93,5264.04,5593.04,6257.95,7046.35,7919.35,8363.42,9419.86,11186.1,12604.0,13982.6,16884.6,21306.8,24858.0,33143.9]
 
-class input_petaporon(plugins.base):
+class input_famitracker(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
 	def getshortname(self): return 'famitracker'
-	def gettype(self): return 'r'
+	def gettype(self): return 'm'
 	def supported_autodetect(self): return False
 	def getdawinfo(self, dawinfo_obj): 
 		dawinfo_obj.name = 'Famitracker'
@@ -25,11 +25,20 @@ class input_petaporon(plugins.base):
 		project_obj = proj_famitracker.famitracker_project()
 		project_obj.load_from_file(input_file)
 
+		if project_obj.title: convproj_obj.metadata.name = project_obj.title
+		if project_obj.author: convproj_obj.metadata.author = project_obj.author
+		if project_obj.copyright: 
+			if project_obj.copyright.isnumeric(): convproj_obj.metadata.t_year = int(project_obj.copyright)
+			else: convproj_obj.metadata.copyright = project_obj.copyright
+		if project_obj.comment: convproj_obj.metadata.comment_text = '\n'.join(project_obj.comment)
+
 		samplefolder = dv_config.path_samples_extracted
 
 		globalstore.dataset.load('chip_nes', './data_main/dataset/chip_nes.dset')
 
 		cur_song = project_obj.song[0]
+
+		if cur_song.name != 'New song': convproj_obj.metadata.name = cur_song.name
 
 		patterndata_obj = pat_multi.multi_patsong()
 		patterndata_obj.num_rows = cur_song.patlen
@@ -112,20 +121,15 @@ class input_petaporon(plugins.base):
 						if insttype == 'dpcm':
 							plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
 							plugin_obj.role = 'synth'
-
-							for key, dpcm_key in ft_inst.dpcm_keys.items():
-
+							for _, dpcm_key in ft_inst.dpcm_keys.items():
 								if dpcm_key.id in project_obj.dpcm:
 									filename = samplefolder+'dpcmg_'+str(dpcm_key.id)+'_'+str(dpcm_key.pitch)+'.wav'
-
 									dkey = ((dpcm_key.octave*12) + dpcm_key.note)-36
-
 									dpcm_data = project_obj.dpcm[dpcm_key.id]
 									audio_obj = audio_data.audio_obj()
 									audio_obj.decode_from_codec('dpcm', dpcm_data.data)
 									audio_obj.rate = dpcm_rate_arr[dpcm_key.pitch]
 									audio_obj.to_file_wav(filename)
-
 									sampleref_obj = convproj_obj.add_sampleref(filename, filename, None)
 									sp_obj = plugin_obj.sampleregion_add(dkey, dkey, dkey, None)
 									sp_obj.visual.name = dpcm_data.name
@@ -144,9 +148,33 @@ class input_petaporon(plugins.base):
 								plugin_obj.env_blocks_add('vol', macro_vol.data, 0.05, 15, macro_vol.loop, macro_vol.release)
 							#if ft_inst.macro_arp != -1: 
 							#	macro_arp = project_obj.macros[ft_inst.macro_arp]
-							#if ft_inst.macro_pitch != -1: 
-							#	macro_pitch = project_obj.macros[ft_inst.macro_pitch]
+							if ft_inst.macro_pitch != -1: 
+								macro_pitch = project_obj.macros[ft_inst.macro_pitch]
+								plugin_obj.env_blocks_add('pitch', macro_pitch.data, 0.05, 15, macro_pitch.loop, macro_pitch.release)
 							#if ft_inst.macro_hipitch != -1: 
 							#	macro_hipitch = project_obj.macros[ft_inst.macro_hipitch]
-							#if ft_inst.macro_duty != -1: 
-							#	macro_duty = project_obj.macros[ft_inst.macro_duty]
+							if ft_inst.macro_duty != -1: 
+								macro_duty = project_obj.macros[ft_inst.macro_duty]
+								plugin_obj.env_blocks_add('duty', macro_duty.data, 0.05, 15, macro_duty.loop, macro_duty.release)
+
+					if ft_inst.chip == 'VRC6':
+
+						if insttype == 'vrc6_square':
+							plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+							plugin_obj.role = 'synth'
+							osc_data = plugin_obj.osc_add()
+							osc_data.prop.shape = 'square'
+
+						if insttype == 'vrc6_saw':
+							plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+							plugin_obj.role = 'synth'
+							osc_data = plugin_obj.osc_add()
+							osc_data.prop.shape = 'saw'
+
+					if ft_inst.chip == 'FDS' and insttype == 'fds':
+						plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+						osc_data = plugin_obj.osc_add()
+						osc_data.prop.type = 'wave'
+						osc_data.prop.nameid = 'main'
+						wave_obj = plugin_obj.wave_add('main')
+						wave_obj.set_all_range(ft_inst.fds_wave, 0, 64)

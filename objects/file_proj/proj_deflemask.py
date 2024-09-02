@@ -9,6 +9,9 @@ from objects.data_bytes import bytereader
 from objects.inst_params import fm_opn2
 from objects.inst_params import chip_sid
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 class deflemask_envelope:
 	def __init__(self):
 		self.values = []
@@ -133,7 +136,7 @@ class deflemask_project:
 		self.version = bio_dmf.uint8()
 
 		if self.version != 24:
-			print('[error] only version 24 is supported')
+			logger_projparse.error('deflemask: only version 24 is supported.')
 			exit()
 
 		self.system = bio_dmf.uint8()
@@ -209,7 +212,7 @@ class deflemask_project:
 		for _ in range(bio_dmf.uint8()):
 			wavesize = bio_dmf.uint32()
 			self.wavetables.append(bio_dmf.l_uint32(wavesize))
-
+ 
 		for num, chan_obj in enumerate(self.channels):
 			fx_columns_count = bio_dmf.uint8()
 			for patnum in chan_obj.orders:
@@ -217,8 +220,8 @@ class deflemask_project:
 				for rownum in range(self.total_rows_per_pattern):
 					r_note = bio_dmf.uint16()
 					r_oct = bio_dmf.uint16()
-					r_vol = bio_dmf.uint16()
-					r_fx = [bio_dmf.l_uint16(2) for _ in range(fx_columns_count)]
+					r_vol = bio_dmf.int16()
+					r_fx = [bio_dmf.l_int16(2) for _ in range(fx_columns_count)]
 					r_inst = bio_dmf.int16()
 					table_rows.append([r_note, r_oct, r_vol, r_inst, r_fx])
 				chan_obj.patterns[patnum] = table_rows

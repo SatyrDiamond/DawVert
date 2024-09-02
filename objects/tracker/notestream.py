@@ -88,7 +88,7 @@ class notestream:
 			if c_inst not in self.used_inst: self.used_inst.append(c_inst)
 
 		if c_note != None:
-			if c_note not in ['off', 'cut']:
+			if c_note not in ['off', 'cut', 'fade']:
 				new_note = True
 				if c_fx:
 					if 'slide_to_note' in c_fx and self.note_active: new_note = False

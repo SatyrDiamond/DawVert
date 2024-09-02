@@ -233,7 +233,7 @@ class input_it(plugins.base):
 						inst_used = True
 				else:
 					inst_used = True
-					sampleregions = data_values.list_to_reigons(bn_s_t, 60)
+					sampleregions = data_values.list__to_reigons(bn_s_t, 60)
 
 					plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
 					plugin_obj.datavals.add('point_value_type', "samples")
@@ -245,7 +245,7 @@ class input_it(plugins.base):
 						instrumentnum = sampleregion[0][1]
 
 						filename = samplefolder + str(instrumentnum) + '.wav'
-						sampleref_obj = convproj_obj.add_sampleref(filename, filename)
+						sampleref_obj = convproj_obj.add_sampleref(filename, filename, None)
 						sp_obj = plugin_obj.sampleregion_add(sampleregion[1], sampleregion[2], -(sampleregion[0][0]-60), None)
 						sp_obj.sampleref = filename
 						if instrumentnum-1 < len(project_obj.samples): 

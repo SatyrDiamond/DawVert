@@ -22,6 +22,7 @@ class multi_patsong:
 		self.channels.append(chan_obj)
 		self.orders.append([])
 		self.num_chans += 1
+		return chan_obj
 
 	def get_channel_insttype(self, channum):
 		return self.channels[channum].insttype

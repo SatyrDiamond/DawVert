@@ -94,7 +94,7 @@ class sn2_song:
 		try: song_file.magic_check(b'SN2')
 		except ValueError as t:
 			logger_projparse.error('soundclub2: '+str(t))
-			exit()
+			return False
 		
 		end_data = song_file.uint32()
 
@@ -118,3 +118,4 @@ class sn2_song:
 			if chunk_obj.id == b'INS': self.instruments.append(sn2_instrument(song_file, chunk_obj.end))
 			if chunk_obj.id == b'PAT': self.patterns.append(sn2_pattern(song_file, chunk_obj))
 
+		return True

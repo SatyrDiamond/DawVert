@@ -35,14 +35,18 @@ class orgyana_orgsamp():
 
 	def load_from_file(self, input_file):
 		self.loaded = True
-		song_file = bytereader.bytereader()
-		song_file.load_file(input_file)
-		song_file.seek(4)
+		try:
+			song_file = bytereader.bytereader()
+			song_file.load_file(input_file)
+			song_file.seek(4)
 
-		self.sample_data = [song_file.l_int8(256) for x in range(100)]
-		self.num_drums = song_file.uint8()
-		self.drum_rate = song_file.uint16()
-		self.drum_data = [song_file.c_uint8__int24(True) for x in range(self.num_drums)]
+			self.sample_data = [song_file.l_int8(256) for x in range(100)]
+			self.num_drums = song_file.uint8()
+			self.drum_rate = song_file.uint16()
+			self.drum_data = [song_file.c_uint8__int24(True) for x in range(self.num_drums)]
+			return True
+		else:
+			return False
 
 class orgyana_track:
 	def __init__(self):
@@ -83,7 +87,7 @@ class orgyana_project:
 			song_file.magic_check(b'Org-')
 		except ValueError as t:
 			logger_projparse.error('orgyana: '+str(t))
-			exit()
+			return False
 
 		self.oldperc = song_file.raw(2) == b'03'
 		self.wait = song_file.uint16()
@@ -101,6 +105,7 @@ class orgyana_project:
 			stream_decode(song_file, org_track.number_of_notes, 256, org_track.notes, 2) #duration
 			stream_decode(song_file, org_track.number_of_notes, 254, org_track.notes, 3) #vol
 			stream_decode(song_file, org_track.number_of_notes, 12, org_track.notes, 4) #pan
+		return True
 
 	def write(self, byw_stream):
 		byw_stream.raw(b'Org-'+(b'03' if self.oldperc else b'02'))

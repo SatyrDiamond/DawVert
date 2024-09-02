@@ -114,7 +114,7 @@ class input_cvpj_r(plugins.base):
 		globalstore.dataset.load('caustic', './data_main/dataset/caustic.dset')
 
 		project_obj = proj_caustic.caustic_project()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		samplefolder = dv_config.path_samples_extracted
 

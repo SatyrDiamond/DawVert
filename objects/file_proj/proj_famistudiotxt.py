@@ -8,6 +8,9 @@ from functions import xtramath
 from objects.inst_params import fm_vrc7
 from objects.inst_params import fm_epsm
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 def read_regs(cmd_params, startname, size):
 	regdata = [0 for x in range(size)]
 	for regnum in range(size):
@@ -229,5 +232,6 @@ class famistudiotxt_project:
 				cur_pat.Notes.append(fs_note(cmd_params))
 
 			else:
-				print('unexpected command and/or wrong tabs:', cmd_name)
-				exit()
+				logger_projparse.error('famistudio: unexpected command and/or wrong tabs: '+cmd_name)
+				return False
+		return True

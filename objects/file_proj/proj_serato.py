@@ -136,3 +136,4 @@ class serato_song:
 		if 'scene_decks' in serato_json: self.scene_decks = [serato_scene_deck(x) for x in serato_json['scene_decks']]
 		if 'scenes' in serato_json: self.scenes = [serato_scene(x) for x in serato_json['scenes']]
 		if 'arrangement' in serato_json: self.arrangement = serato_arrangement(serato_json['arrangement'])
+		return True

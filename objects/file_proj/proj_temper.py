@@ -209,7 +209,7 @@ class temper_song:
 		xml_musseq = xml_data.getroot()
 		if xml_musseq == None:
 			logger_projparse.error('temper: no XML root found')
-			exit()
+			return False
 
 		for xmlpart in xml_musseq:
 			#print(xmlpart)
@@ -221,3 +221,4 @@ class temper_song:
 			if xmlpart.tag == 'track':
 				self.track.append(temper_track.fromxml(xmlpart))
 		#print(self.track)
+		return True

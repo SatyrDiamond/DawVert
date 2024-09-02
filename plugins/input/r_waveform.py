@@ -210,7 +210,7 @@ class input_cvpj_f(plugins.base):
 		globalstore.dataset.load('waveform', './data_main/dataset/waveform.dset')
 
 		project_obj = proj_waveform.waveform_edit()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		if project_obj.temposequence.tempo:
 			pos, tempo = next(iter(project_obj.temposequence.tempo.items()))

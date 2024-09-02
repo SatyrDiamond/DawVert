@@ -249,12 +249,12 @@ class ableton_liveset:
 		try: root = ET.fromstring(xmlstring)
 		except ET.ParseError as t:
 			logger_projparse.error('ableton: XML parsing error: '+str(t))
-			exit()
+			return False
 
 		abletonversion = root.get('MinorVersion').split('.')[0]
 		if abletonversion != '11':
 			logger_projparse.error('ableton: Version '+abletonversion+' is not supported.')
-			exit()
+			return False
 
 		x_LiveSet = root.findall('LiveSet')[0]
 		self.NextPointeeId = int(get_value(x_LiveSet, 'NextPointeeId', 0))
@@ -325,6 +325,7 @@ class ableton_liveset:
 		self.ViewStateSessionHasDetail = get_bool(x_LiveSet, 'ViewStateSessionHasDetail', True)
 		self.ViewStateDetailIsSample = get_bool(x_LiveSet, 'ViewStateDetailIsSample', False)
 		self.ViewStates = ableton_ViewStates(x_LiveSet.findall('ViewStates')[0])
+		return True
 
 	def make_from_scratch(self):
 		self.MasterTrack = ableton_MasterTrack(None)

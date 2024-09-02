@@ -77,7 +77,7 @@ class input_pxtone(plugins.base):
 		convproj_obj.type = 'rm'
 
 		project_obj = proj_pxtone.ptcop_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 		project_obj.postprocess()
 
 		globalstore.dataset.load('pxtone', './data_main/dataset/pxtone.dset')

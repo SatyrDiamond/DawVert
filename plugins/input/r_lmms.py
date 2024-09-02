@@ -691,7 +691,7 @@ class input_lmms(plugins.base):
 		convproj_obj.set_timings(48, False)
 
 		project_obj = proj_lmms.lmms_project()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		head_obj = project_obj.head
 		song_obj = project_obj.song

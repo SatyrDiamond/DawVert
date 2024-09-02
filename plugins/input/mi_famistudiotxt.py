@@ -289,7 +289,7 @@ class input_famistudio(plugins.base):
 		samplefolder = dv_config.path_samples_extracted
 
 		project_obj = proj_famistudiotxt.famistudiotxt_project()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		songnamelist = list(project_obj.Songs.keys())
 

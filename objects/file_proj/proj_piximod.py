@@ -41,7 +41,7 @@ class piximod_song:
 			song_file.magic_check(b'PIXIMOD1')
 		except ValueError as t:
 			logger_projparse.error('piximod: '+str(t))
-			exit()
+			return False
 
 		main_iff_obj = song_file.chunk_objmake()
 		cur_patnum = 0
@@ -73,3 +73,4 @@ class piximod_song:
 			if chunk_obj.id == b'SND2': 
 				song_file.skip(8)
 				self.sounds[cur_sound].data = song_file.raw(chunk_obj.size-8)
+		return True

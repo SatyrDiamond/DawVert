@@ -73,7 +73,7 @@ class input_serato(plugins.base):
 		useaudioclips = True
 
 		project_obj = proj_serato.serato_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		sample_data = {}
 

@@ -140,7 +140,7 @@ class input_lc(plugins.base):
 		convproj_obj.set_timings(4, False)
 
 		project_obj = proj_lovelycomposer.LCMusic()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		globalstore.dataset.load('lovelycomposer', './data_main/dataset/lovelycomposer.dset')
 		colordata = colors.colorset.from_dataset('lovelycomposer', 'track', 'main')

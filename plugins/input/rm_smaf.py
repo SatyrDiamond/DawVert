@@ -45,7 +45,7 @@ class input_mmf(plugins.base):
 		convproj_obj.type = 'rm'
 
 		project_obj = proj_mmf.smaf_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		samplefolder = dv_config.path_samples_extracted
 

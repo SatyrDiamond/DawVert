@@ -32,7 +32,7 @@ class input_onlinesequencer(plugins.base):
 		globalstore.dataset.load('onlineseq', './data_main/dataset/onlineseq.dset')
 
 		project_obj = proj_onlineseq.onlineseq_project()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		used_fx = {}
 		for instid, instparam in project_obj.params.items(): used_fx[instid] = instparam.used_fx

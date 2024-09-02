@@ -145,6 +145,7 @@ class onlineseq_project:
 			for marker in dict2list(os_data['3']): self.markers.append(onlineseq_marker(marker))
 
 		s = json.dumps(os_data, indent=4)
+		return True
 		#open("in.json","w").write(s)
 
 	def save_to_file(self, output_file):

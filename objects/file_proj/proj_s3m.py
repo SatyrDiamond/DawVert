@@ -124,12 +124,12 @@ class s3m_song:
 		self.num_instruments = song_file.uint16()
 		if self.num_instruments > 255: 
 			logger_projparse.error('s3m: # of Instruments is over 255')
-			exit()
+			return False
 		logger_projparse.info("s3m: # of Instruments: " + str(self.num_instruments))
 		self.num_patterns = song_file.uint16()
 		if self.num_patterns > 255: 
 			logger_projparse.error('s3m: # of Patterns is over 255')
-			exit()
+			return False
 		logger_projparse.info("s3m: # of Patterns: " + str(self.num_patterns))
 		self.flags = song_file.flags16()
 		self.trkrvers = song_file.raw(2)
@@ -154,3 +154,4 @@ class s3m_song:
 		self.patterns = [s3m_pattern(song_file, x) for n, x in enumerate(self.ptrs_patterns)]
 
 		#self.instruments[0].rip_sample(song_file, '.', self.samptype, 'test.wav')
+		return True

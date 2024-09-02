@@ -35,7 +35,7 @@ class input_fruitytracks(plugins.base):
 		fileref.filesearcher.add_searchpath_partial('fruitytracks', '../Samples/', 'projectfile')
 
 		project_obj = proj_fruitytracks.ftr_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')
 		convproj_obj.params.add('vol', project_obj.vol/128, 'float')

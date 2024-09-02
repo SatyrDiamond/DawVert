@@ -37,7 +37,7 @@ class input_notessimo_v2(plugins.base):
 		
 		# ---------- File ----------
 		project_obj = proj_notessimo.notev2_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		convproj_obj.metadata.name = project_obj.name
 		convproj_obj.metadata.author = project_obj.author

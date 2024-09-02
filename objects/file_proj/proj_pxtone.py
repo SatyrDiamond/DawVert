@@ -170,6 +170,8 @@ class ptcop_song:
 
 		self.events.clean()
 
+		return True
+
 	def postprocess(self):
 		curpos = 0
 		for x in self.events:

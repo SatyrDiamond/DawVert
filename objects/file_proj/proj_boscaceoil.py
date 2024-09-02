@@ -68,7 +68,7 @@ class ceol_song:
 
 		if not len(ceol_array):
 			logger_projparse.error('boscaceoil: array is empty')
-			exit()
+			return False
 		
 		song_file = bytereader.bytereader()
 		song_file.load_raw(ceol_array.tobytes())
@@ -85,4 +85,4 @@ class ceol_song:
 		self.loopstart = song_file.uint16()
 		self.loopend = song_file.uint16()
 		self.spots = song_file.stable16([self.length, 8])
-
+		return True

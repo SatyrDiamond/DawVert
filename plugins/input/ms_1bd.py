@@ -59,7 +59,7 @@ class input_1bitdragon(plugins.base):
 		convproj_obj.type = 'ms'
 
 		project_obj = proj_1bitdragon.onebitd_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		onebit_ext = onebit_external()
 		onebit_ext.load_file(os.path.join(dv_config.path_external_data,'1bitdragon','1BITDRAGON_Data','resources.assets'))

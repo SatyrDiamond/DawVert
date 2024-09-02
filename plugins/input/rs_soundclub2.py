@@ -50,7 +50,7 @@ class input_soundclub2(plugins.base):
 		convproj_obj.set_timings(4, False)
 
 		project_obj = proj_soundclub2.sn2_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		samplefolder = dv_config.path_samples_extracted
 		

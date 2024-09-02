@@ -36,6 +36,7 @@ class mod_song:
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
 		self.load(song_file)
+		return True
 
 	def load(self, song_file):
 		self.title = song_file.string(20, encoding="ascii")

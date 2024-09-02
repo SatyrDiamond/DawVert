@@ -137,7 +137,7 @@ class deflemask_project:
 
 		if self.version != 24:
 			logger_projparse.error('deflemask: only version 24 is supported.')
-			exit()
+			return False
 
 		self.system = bio_dmf.uint8()
 
@@ -225,3 +225,5 @@ class deflemask_project:
 					r_inst = bio_dmf.int16()
 					table_rows.append([r_note, r_oct, r_vol, r_inst, r_fx])
 				chan_obj.patterns[patnum] = table_rows
+
+		return True

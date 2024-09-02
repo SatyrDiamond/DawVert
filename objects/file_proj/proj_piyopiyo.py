@@ -31,7 +31,7 @@ class piyopiyo_song:
 			song_file.magic_check(b'PMD')
 		except ValueError as t:
 			logger_projparse.error('piyopiyo: '+str(t))
-			exit()
+			return False
 
 		song_file.skip(1)
 
@@ -48,3 +48,4 @@ class piyopiyo_song:
 		self.perc_volume = song_file.uint32()
 		song_file.seek(ptr__tracks)
 		self.notes_data = [ [[song_file.flags24(), song_file.uint8()] for _ in range(self.records_per_track)] for _ in range(4)]
+		return True

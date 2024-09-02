@@ -56,7 +56,7 @@ class input_xm(plugins.base):
 		global samplefolder
 
 		project_obj = proj_xm.xm_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		samplefolder = dv_config.path_samples_extracted
 		

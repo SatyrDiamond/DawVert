@@ -394,8 +394,8 @@ class cvpj_notelist:
 		self.nld.nl['is_inst'] = 1
 		self.nld.nl['assoc_inst'] = 0
 
-	def change_timings(self, time_ppq, time_float):
-		if verbose: print('[notelist] change_timings |', len(self.nld.nl), end=' | ')
+	def stretch(self, time_ppq, time_float):
+		if verbose: print('[notelist] stretch |', len(self.nld.nl), end=' | ')
 		for note in self.nld:
 			note['pos'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, note['pos'])
 			note['dur'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, note['dur'])
@@ -409,6 +409,9 @@ class cvpj_notelist:
 			for t in autos: autos[t].change_timings(time_ppq, time_float)
 
 		if verbose: print(len(self.nld.nl))
+
+	def change_timings(self, time_ppq, time_float):
+		self.stretch(time_ppq, time_float)
 
 		self.time_ppq = time_ppq
 		self.time_float = time_float

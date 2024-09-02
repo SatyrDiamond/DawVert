@@ -45,7 +45,7 @@ class orgyana_orgsamp():
 			self.drum_rate = song_file.uint16()
 			self.drum_data = [song_file.c_uint8__int24(True) for x in range(self.num_drums)]
 			return True
-		else:
+		except:
 			return False
 
 class orgyana_track:

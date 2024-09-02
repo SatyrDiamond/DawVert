@@ -21,7 +21,7 @@ class input_deflemask(plugins.base):
 		dawinfo_obj.fxtype = 'rack'
 	def parse(self, convproj_obj, input_file, dv_config):
 		project_obj = proj_deflemask.deflemask_project()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		globalstore.dataset.load('furnace', './data_main/dataset/furnace.dset')
 

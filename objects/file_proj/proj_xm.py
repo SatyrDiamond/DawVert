@@ -171,7 +171,7 @@ class xm_song:
 		try: song_file.magic_check(b'Extended Module: ')
 		except ValueError as t:
 			logger_projparse.error('xm: '+str(t))
-			exit()
+			return False
 
 		self.title = song_file.string(20, encoding="windows-1252")
 		logger_projparse.info("xm: Song Name: " + self.title)
@@ -244,6 +244,8 @@ class xm_song:
 				endd = song_file.tell()
 
 		song_file.seek(endd)
+
+		return True
 
 		#if song_file.raw(4) == b'STPM':
 		#	if song_file.tell()<song_file.end:

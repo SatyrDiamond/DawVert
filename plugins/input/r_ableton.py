@@ -375,7 +375,7 @@ class input_ableton(plugins.base):
 		colordata = colors.colorset.from_dataset('ableton', 'track', 'main')
 
 		project_obj = proj_ableton.ableton_liveset()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		mastermixer = project_obj.MasterTrack.DeviceChain.Mixer
 

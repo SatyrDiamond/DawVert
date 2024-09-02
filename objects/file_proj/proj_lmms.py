@@ -1105,7 +1105,7 @@ class lmms_project:
 			xmldata = get_xml_tree(input_file)
 		except ET.ParseError as t:
 			logger_projparse.error('lmms: XML parsing error: '+str(t))
-			exit()
+			return False
 		self.type = xmldata.get('type')
 		self.version = xmldata.get('version')
 		self.creator = xmldata.get('creator')
@@ -1113,6 +1113,7 @@ class lmms_project:
 		for xmlpart in xmldata:
 			if xmlpart.tag == 'head': self.head.read(xmlpart)
 			if xmlpart.tag == 'song': self.song.read(xmlpart)
+		return True
 
 	def save_to_file(self, output_file):
 		xmldata = ET.Element("lmms-project")

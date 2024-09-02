@@ -29,17 +29,17 @@ class input_gt_mnbs(plugins.base):
 		
 		fileref.filesearcher.add_searchpath_partial('mnbs_sounds', '../Data/Sounds', 'projectfile')
 
-		nbs_file = proj_nbs.nbs_song()
-		nbs_file.load_from_file(input_file)
+		project_obj = proj_nbs.nbs_song()
+		if not project_obj.load_from_file(input_file): exit()
 
 		globalstore.dataset.load('noteblockstudio', './data_main/dataset/noteblockstudio.dset')
 
-		convproj_obj.metadata.name = nbs_file.name
-		convproj_obj.metadata.author = nbs_file.author
-		convproj_obj.metadata.original_author = nbs_file.orgauthor
-		convproj_obj.metadata.comment_text = nbs_file.description
-		convproj_obj.params.add('bpm', (nbs_file.tempo/800)*120, 'float')
-		convproj_obj.timesig = [nbs_file.numerator, 4]
+		convproj_obj.metadata.name = project_obj.name
+		convproj_obj.metadata.author = project_obj.author
+		convproj_obj.metadata.original_author = project_obj.orgauthor
+		convproj_obj.metadata.comment_text = project_obj.description
+		convproj_obj.params.add('bpm', (project_obj.tempo/800)*120, 'float')
+		convproj_obj.timesig = [project_obj.numerator, 4]
 
 		for instnum in range(16):
 			instid = 'NoteBlock'+str(instnum)
@@ -47,7 +47,7 @@ class input_gt_mnbs(plugins.base):
 			midifound = inst_obj.from_dataset('noteblockstudio', 'inst', str(instnum), True)
 			if midifound: inst_obj.to_midi(convproj_obj, instid, True)
 
-		for nbs_layer, layer_obj in enumerate(nbs_file.layers):
+		for nbs_layer, layer_obj in enumerate(project_obj.layers):
 			cvpj_trackid = str(nbs_layer+1)
 			track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 1, False)
 			track_obj.visual.name = layer_obj.name if layer_obj.name else cvpj_trackid
@@ -56,7 +56,7 @@ class input_gt_mnbs(plugins.base):
 			for note_obj in layer_obj.notes: track_obj.placements.notelist.add_m('NoteBlock'+str(note_obj.inst), note_obj.pos, 2, note_obj.key-39, note_obj.vel/100, {'pan': (note_obj.pan/100)-1, 'finepitch': note_obj.pitch})
 
 		custominstid = 16
-		for custominstid, custom_obj in enumerate(nbs_file.custom):
+		for custominstid, custom_obj in enumerate(project_obj.custom):
 			instid = 'NoteBlock'+str(custominstid+16)
 			inst_obj = convproj_obj.add_instrument(instid)
 			inst_obj.visual.name = custom_obj.name

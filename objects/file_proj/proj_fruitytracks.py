@@ -188,6 +188,5 @@ class ftr_song:
 
 					if verbose: verboseprint(event_id, event_data)
 
-		if not tlvdatafound:
-			logger_projparse.error('fruitytracks: TLV data not found')
-			exit()
+		if not tlvdatafound: logger_projparse.error('fruitytracks: TLV data not found')
+		return tlvdatafound

@@ -3,6 +3,9 @@
 
 from objects.data_bytes import bytereader
 
+import logging
+logger_projparse = logging.getLogger('projparse')
+
 class nbs_key:
 	def __init__(self):
 		self.pos = 0
@@ -51,8 +54,8 @@ class nbs_song:
 			self.newformat = 1
 			version = song_file.uint8()
 			if version != 5:
-				print('[mnbs] only version 5 new-NBS or old format is supported.')
-				exit()
+				logger_projparse.error('[mnbs] only version 5 new-NBS or old format is supported.')
+				return False
 			self.inst_count = song_file.uint8()
 			self.song_length = song_file.uint16()
 			self.layers_count = song_file.uint16()
@@ -126,3 +129,4 @@ class nbs_song:
 				custom_obj.presskey = song_file.uint8()
 				self.custom.append(custom_obj)
 
+		return True

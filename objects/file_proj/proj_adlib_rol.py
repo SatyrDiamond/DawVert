@@ -98,7 +98,7 @@ class adlib_rol_project:
 			song_file.magic_check(b'\\roll\\default\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
 		except ValueError as t:
 			logger_projparse.error('adlib_rol: '+str(t))
-			exit()
+			return False
 
 		self.tickBeat = song_file.uint16()
 		self.beatMeasure = song_file.uint16()
@@ -120,3 +120,4 @@ class adlib_rol_project:
 
 		for tracknum in range(10): 
 			self.tracks[tracknum].load(song_file)
+		return True

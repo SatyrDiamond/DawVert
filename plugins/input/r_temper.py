@@ -32,7 +32,7 @@ class input_cvpj_f(plugins.base):
 		convproj_obj.set_timings(6716, False)
 
 		project_obj = proj_temper.temper_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		curpos = 0
 		for metaevent in project_obj.meta_track:

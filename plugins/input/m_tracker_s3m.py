@@ -36,7 +36,7 @@ class input_s3m(plugins.base):
 		samplefolder = dv_config.path_samples_extracted
 		
 		project_obj = proj_s3m.s3m_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		current_tempo = project_obj.tempo
 		current_speed = project_obj.speed

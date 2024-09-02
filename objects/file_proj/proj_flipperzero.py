@@ -55,3 +55,4 @@ class fmf_song:
 							note_obj.octave = int(note[0])
 
 						self.notes.append(note_obj)
+		return True

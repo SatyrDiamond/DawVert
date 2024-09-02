@@ -312,5 +312,6 @@ class famitracker_project:
 				elif linetype == 'COLUMNS': pass
 				elif linetype == '#': pass
 				else:
-					print(linetype, linespl[1])
-					exit()
+					#print(linetype, linespl[1])
+					return False
+		return True

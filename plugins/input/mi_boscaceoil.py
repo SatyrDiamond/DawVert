@@ -77,8 +77,8 @@ class input_ceol(plugins.base):
 	def parse(self, convproj_obj, input_file, dv_config):
 		global ceol_data
 		
-		ceol_obj = proj_boscaceoil.ceol_song()
-		ceol_obj.load_from_file(input_file)
+		project_obj = proj_boscaceoil.ceol_song()
+		if not project_obj.load_from_file(input_file): exit()
 
 		# ---------- CVPJ Start ----------
 		convproj_obj.type = 'mi'
@@ -91,13 +91,13 @@ class input_ceol(plugins.base):
 		convproj_obj.track_master.params.add('vol', 1, 'float')
 		convproj_obj.track_master.visual.color.set_float([0.31373, 0.39608, 0.41569])
 
-		add_master_fx(convproj_obj, ceol_obj.effect_type, ceol_obj.effect_value)
+		add_master_fx(convproj_obj, project_obj.effect_type, project_obj.effect_value)
 
 		# ---------- Instruments ----------
 
 		t_key_offset = []
 
-		for instnum, ceol_inst_obj in enumerate(ceol_obj.instruments):
+		for instnum, ceol_inst_obj in enumerate(project_obj.instruments):
 			cvpj_instid = 'ceol_'+str(instnum).zfill(2)
 
 			cvpj_instcolor = data_values.list__optionalindex(ceol_inst_obj.palette, [0.55, 0.55, 0.55], CEOL_COLORS)
@@ -145,7 +145,7 @@ class input_ceol(plugins.base):
 				inst_obj.fxslots_audio.append(fx_id)
 
 		# ---------- Patterns ----------
-		for patnum, ceol_pat_obj in enumerate(ceol_obj.patterns):
+		for patnum, ceol_pat_obj in enumerate(project_obj.patterns):
 			cvpj_pat_id = 'ceol_'+str(patnum).zfill(3)
 
 			nle_obj = convproj_obj.add_notelistindex(cvpj_pat_id)
@@ -160,14 +160,14 @@ class input_ceol(plugins.base):
 
 		# ---------- Placement ----------
 
-		for plpos, row_data in enumerate(ceol_obj.spots):
+		for plpos, row_data in enumerate(project_obj.spots):
 			for plnum, plpatnum in enumerate(row_data):
 				if plpatnum != -1:
 					cvpj_placement = convproj_obj.playlist[plnum].placements.add_notes_indexed()
 					cvpj_placement.fromindex = 'ceol_'+str(plpatnum).zfill(3)
-					cvpj_placement.time.set_block_posdur(plpos, ceol_obj.pattern_length)
+					cvpj_placement.time.set_block_posdur(plpos, project_obj.pattern_length)
 
 		# ---------- Output ----------
-		convproj_obj.add_timesig_lengthbeat(ceol_obj.pattern_length, ceol_obj.bar_length)
-		convproj_obj.params.add('bpm', ceol_obj.bpm, 'float')
+		convproj_obj.add_timesig_lengthbeat(project_obj.pattern_length, project_obj.bar_length)
+		convproj_obj.params.add('bpm', project_obj.bpm, 'float')
 		convproj_obj.do_actions.append('do_addloop')

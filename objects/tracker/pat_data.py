@@ -31,7 +31,7 @@ class cur_speed:
 		return outval
 
 VISUAL_ON = False
-VISUAL_CELL_NL = False
+VISUAL_CELL_NL = True
 
 def cell_visual(celldata):
 	txt_note = '...'
@@ -109,6 +109,7 @@ class playstream:
 				changedval = self.cur_tempo.get_change()
 				if changedval:
 					self.auto_tempo.do_point(changedval)
+				self.cur_tempo.changed = False
 
 			self.auto_tempo.next()
 			self.auto_mastervol.next()
@@ -154,7 +155,7 @@ class tracker_channel:
 	def __init__(self):
 		self.name = None
 		self.color = None
-		self.type = None
+		self.insttype = None
 		self.vol = 1
 		self.pan = 0
 		self.fx_plugins = []
@@ -166,6 +167,9 @@ class tracker_cell:
 		self.inst = None
 		self.fx = None
 		self.g_fx = None
+
+	def __repr__(self):
+		return ','.join([str(x) for x in [self.note,self.inst,self.fx,self.g_fx]])
 
 class tracker_column:
 	def __init__(self):

@@ -180,7 +180,7 @@ class famitracker_project:
 		self.title = None
 		self.author = None
 		self.copyright = None
-		self.comment = None
+		self.comment = []
 		self.machine = 0
 		self.framerate = 0
 		self.expansion = 0
@@ -208,7 +208,7 @@ class famitracker_project:
 				if linetype == 'TITLE': self.title = linedata[0]
 				elif linetype == 'AUTHOR': self.author = linedata[0]
 				elif linetype == 'COPYRIGHT': self.copyright = linedata[0]
-				elif linetype == 'COMMENT': self.comment = linedata[0]
+				elif linetype == 'COMMENT': self.comment.append(linedata[0])
 				elif linetype == 'MACHINE': self.machine = int(linedata[0])
 				elif linetype == 'FRAMERATE': self.framerate = int(linedata[0])
 				elif linetype == 'EXPANSION': self.expansion = int(linedata[0])

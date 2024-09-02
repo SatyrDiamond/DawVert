@@ -92,7 +92,7 @@ class onebitd_song:
 			decompdata = json.loads(zlib.decompress(bio_base64stream.read(), 16+zlib.MAX_WBITS))
 		except zlib.error as t:
 			logger_projparse.error('1bitdragon: '+str(t))
-			exit()
+			return False
 
 		self.version = decompdata['version'] if 'version' in decompdata else None
 		self.reverb = decompdata['reverb']
@@ -100,3 +100,4 @@ class onebitd_song:
 		self.scaleId = decompdata['scaleId']
 		self.volume = decompdata['volume']
 		self.blocks = [onebitd_block(x) for x in decompdata['blocks']]
+		return True

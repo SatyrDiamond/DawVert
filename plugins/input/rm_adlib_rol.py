@@ -33,7 +33,7 @@ class input_adlib_rol(plugins.base):
 		convproj_obj.type = 'rm'
 
 		project_obj = proj_adlib_rol.adlib_rol_project()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		globalstore.dataset.load('adlib_rol', './data_main/dataset/adlib_rol.dset')
 

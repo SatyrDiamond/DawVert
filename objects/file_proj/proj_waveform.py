@@ -753,7 +753,7 @@ class waveform_edit:
 		x_EDIT = xml_data.getroot()
 		if x_EDIT == None:
 			logger_projparse.error('waveform_edit: no XML root found')
-			exit()
+			return False
 
 		self.appVersion = x_EDIT.get('appVersion')
 		self.projectID = x_EDIT.get('projectID')
@@ -792,6 +792,7 @@ class waveform_edit:
 
 			#else:
 			#	print(xmlpart.tag)
+		return True
 
 
 	def save_to_file(self, output_file):

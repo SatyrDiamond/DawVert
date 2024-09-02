@@ -59,7 +59,7 @@ class adlib_sop_project:
 			song_file.magic_check(b'sopepos')
 		except ValueError as t:
 			logger_projparse.error('adlib_sop: '+str(t))
-			exit()
+			return False
 
 		self.majorVersion = song_file.uint8()
 		self.minorVersion = song_file.uint8()
@@ -137,6 +137,4 @@ class adlib_sop_project:
 		for n in range(num_tracks): self.tracks[n].events = decode_events(song_file)
 		self.controltrack = decode_events(song_file)
 
-		#chunks_ins = data_bytes.iff_read(chunks_main[0][1], 0)
-		#for inc_name, inc_data in chunks_ins:
-		#	if inc_name == b'CNTI': self.parse_cnti(inc_data)
+		return True

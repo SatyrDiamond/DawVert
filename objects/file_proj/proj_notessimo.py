@@ -74,6 +74,7 @@ class notev2_song:
 		self.order = song_data.l_uint8(song_data.uint16_b())
 		self.tempo_table = song_data.l_uint16_b(100)
 		self.patterns = [notev2_pattern(song_data, self.tempo_table[m]) for m in range(100)]
+		return True
 
 # ============================== V3 ==============================
 
@@ -629,3 +630,5 @@ class notev3_file:
 			song_obj = notev3_song()
 			ifvalid = song_obj.load(zip_data, id)
 			self.songs[id] = song_obj
+
+		return True

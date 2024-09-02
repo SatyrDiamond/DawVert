@@ -36,7 +36,7 @@ class input_sop(plugins.base):
 		convproj_obj.type = 'rm'
 		
 		project_obj = proj_adlib_sop.adlib_sop_project()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		convproj_obj.set_timings(project_obj.tickBeat, False)
 		convproj_obj.metadata.name = project_obj.title

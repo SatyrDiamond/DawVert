@@ -515,7 +515,9 @@ class caustic_project:
 					else: break
 		if not rackchunkfound:
 			logger_projparse.error('Caustic3: RACK chunk not found')
-			exit()
+			return False
+		else:
+			return True
 
 	def read_OUTP(self, song_data):
 		OUTP_size = song_data.uint32()

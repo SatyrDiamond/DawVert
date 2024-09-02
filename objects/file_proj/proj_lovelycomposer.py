@@ -179,5 +179,5 @@ class LCMusic:
 		song_file = open(input_file, 'r')
 		for num, lined in enumerate(song_file.readlines()):
 			if num == 1: self.load(json.loads(lined))
-
+		return True
 

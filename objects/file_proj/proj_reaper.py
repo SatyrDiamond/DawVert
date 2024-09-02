@@ -102,6 +102,7 @@ class rpp_song:
 		bytestream = open(input_file, 'r')
 		rpp_data = rpp.load(bytestream)
 		self.project.load(rpp_data)
+		return True
 
 	def save_to_file(self, output_file):
 		out_rpp_data = rpp_obj('REAPER_PROJECT', [0.1, "7.16/win64", 1718324687])

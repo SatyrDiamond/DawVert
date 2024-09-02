@@ -36,7 +36,7 @@ class input_cvpj_f(plugins.base):
 		colordata = colors.colorset.from_dataset('pixitracker', 'inst', 'main')
 
 		project_obj = proj_piximod.piximod_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')
 		convproj_obj.track_master.params.add('vol', project_obj.vol/100, 'float')

@@ -34,7 +34,7 @@ class input_orgyana(plugins.base):
 		colordata = colors.colorset.from_dataset('orgyana', 'track', 'orgmaker_2')
 
 		project_obj = proj_orgyana.orgyana_project()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		orgsamp_filename = os.path.join(dv_config.path_external_data, 'orgyana', 'orgsamp.dat')
 

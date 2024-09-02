@@ -75,7 +75,7 @@ class input_reaper(plugins.base):
 		rpp_data = rpp.load(bytestream)
 
 		project_obj = proj_reaper.rpp_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)

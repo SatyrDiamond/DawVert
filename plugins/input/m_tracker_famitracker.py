@@ -23,7 +23,7 @@ class input_famitracker(plugins.base):
 		dawinfo_obj.fxtype = 'rack'
 	def parse(self, convproj_obj, input_file, dv_config):
 		project_obj = proj_famitracker.famitracker_project()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		if project_obj.title: convproj_obj.metadata.name = project_obj.title
 		if project_obj.author: convproj_obj.metadata.author = project_obj.author

@@ -40,7 +40,7 @@ class input_piyopiyo(plugins.base):
 		convproj_obj.set_timings(4, True)
 
 		project_obj = proj_piyopiyo.piyopiyo_song()
-		project_obj.load_from_file(input_file)
+		if not project_obj.load_from_file(input_file): exit()
 
 		extpath_path = os.path.join(dv_config.path_external_data, 'piyopiyo')
 

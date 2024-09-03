@@ -104,6 +104,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 	global vector_shapesdata
 
 	middlenote = 0
+	issampler = False
 
 	for device in x_trackdevices:
 		is_instrument = False
@@ -121,6 +122,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 			middlenote -= int(Pitch)
 
 		if device.name in ['OriginalSimpler', 'MultiSampler'] and not DEBUG_DISABLE_SAMPLER:
+			issampler = True
 			track_obj.inst_pluginid = pluginid
 			SampleParts = parampaths['Player/MultiSampleMap/SampleParts']
 
@@ -128,7 +130,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 			numzones = len(SampleParts.value)
 			if numzones == 1:
 				SamplePart = SampleParts.value[next(iter(SampleParts.value))]
-				middlenote = int(SamplePart.RootKey)
+				middlenote = int(SamplePart.RootKey)-60
 				track_obj.datavals.add('middlenote', middlenote-60)
 				plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(pluginid, None, None)
 				samplerefid = do_samplepart(convproj_obj, sp_obj, SamplePart)
@@ -340,7 +342,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				#	if UserSprite2: plugin_obj.samplerefs['sample2'] = UserSprite2
 			#	exit()
 
-	return middlenote
+	return middlenote, issampler
 
 class input_ableton(plugins.base):
 	def __init__(self): pass
@@ -430,53 +432,6 @@ class input_ableton(plugins.base):
 				track_obj.params.add('enabled', track_on, 'bool')
 
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
-
-				if not DEBUG_DISABLE_PLACEMENTS:
-					for clipid, cliptype, clipobj in als_track.DeviceChain.MainSequencer.ClipTimeable.Events:
-						placement_obj = track_obj.placements.add_notes()
-						placement_obj.time.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)
-						placement_obj.visual.name = clipobj.Name
-						placement_obj.visual.color.from_colorset_num(colordata, clipobj.Color)
-						placement_obj.muted = clipobj.Disabled
-
-						if clipobj.Loop.LoopOn == 1:
-							placement_obj.time.set_loop_data(clipobj.Loop.StartRelative*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
-						else:
-							placement_obj.time.set_offset(clipobj.Loop.LoopStart)
-
-						t_notes_auto = {}
-						for nid, nes in clipobj.Notes.PerNoteEventStore.items():
-							points = []
-							for e in nes.Events: points.append([e.TimeOffset*4, e.Value])
-							if nes.NoteId not in t_notes_auto: t_notes_auto[nes.NoteId] = {}
-							t_notes_auto[nes.NoteId][nes.CC] = points
-
-						for nid, kt in clipobj.Notes.KeyTrack.items():
-							for event in kt.NoteEvents:
-								t_note_id = event.NoteId
-								t_note_extra = {}
-								t_note_extra['off_vol'] = event.OffVelocity/100
-								t_note_extra['probability'] = event.Probability
-								t_note_extra['velocity_range'] = event.VelocityDeviation
-								t_note_extra['enabled'] = event.IsEnabled
-								placement_obj.notelist.add_r(event.Time*4, event.Duration*4, kt.MidiKey-60, event.Velocity/100, t_note_extra)
-								if t_note_id in t_notes_auto:
-									for atype, adata in t_notes_auto[t_note_id].items():
-										mpetype = None
-										autodiv = 1
-
-										if atype == -2:
-											mpetype = 'pitch'
-											autodiv = 170
-
-										if atype == 74: mpetype = 'slide'
-										if atype == -1: mpetype = 'pressure'
-
-										if mpetype:
-											for autopoints in adata:
-												autopoint_obj = placement_obj.notelist.last_add_auto(mpetype)
-												autopoint_obj.pos = autopoints[0]
-												autopoint_obj.value = autopoints[1]/autodiv
 
 			elif tracktype == 'audio':
 				fxloc = ['track', track_id]
@@ -630,7 +585,59 @@ class input_ableton(plugins.base):
 					track_obj.sends.add('return_'+str(sendid), sendautoid, sendlevel)
 					sendcount += 1
 
-			middlenote = do_devices(als_track.DeviceChain.devices, track_id, track_obj, convproj_obj)
+			middlenote, issampler = do_devices(als_track.DeviceChain.devices, track_id, track_obj, convproj_obj)
 			track_obj.datavals.add('middlenote', middlenote)
+
+			if tracktype == 'midi':
+
+				if not DEBUG_DISABLE_PLACEMENTS:
+					for clipid, cliptype, clipobj in als_track.DeviceChain.MainSequencer.ClipTimeable.Events:
+						placement_obj = track_obj.placements.add_notes()
+						placement_obj.time.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)
+						placement_obj.visual.name = clipobj.Name
+						placement_obj.visual.color.from_colorset_num(colordata, clipobj.Color)
+						placement_obj.muted = clipobj.Disabled
+
+						if clipobj.Loop.LoopOn == 1:
+							placement_obj.time.set_loop_data(clipobj.Loop.StartRelative*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
+						else:
+							placement_obj.time.set_offset(clipobj.Loop.LoopStart)
+
+						t_notes_auto = {}
+						for nid, nes in clipobj.Notes.PerNoteEventStore.items():
+							points = []
+							for e in nes.Events: points.append([e.TimeOffset*4, e.Value])
+							if nes.NoteId not in t_notes_auto: t_notes_auto[nes.NoteId] = {}
+							t_notes_auto[nes.NoteId][nes.CC] = points
+
+						for nid, kt in clipobj.Notes.KeyTrack.items():
+							for event in kt.NoteEvents:
+								t_note_id = event.NoteId
+								t_note_extra = {}
+								t_note_extra['off_vol'] = event.OffVelocity/100
+								t_note_extra['probability'] = event.Probability
+								t_note_extra['velocity_range'] = event.VelocityDeviation
+								t_note_extra['enabled'] = event.IsEnabled
+								notevol = (event.Velocity/100)
+								if issampler: notevol = notevol**3
+								placement_obj.notelist.add_r(event.Time*4, event.Duration*4, kt.MidiKey-60, notevol, t_note_extra)
+								if t_note_id in t_notes_auto:
+									for atype, adata in t_notes_auto[t_note_id].items():
+										mpetype = None
+										autodiv = 1
+
+										if atype == -2:
+											mpetype = 'pitch'
+											autodiv = 170
+
+										if atype == 74: mpetype = 'slide'
+										if atype == -1: mpetype = 'pressure'
+
+										if mpetype:
+											for autopoints in adata:
+												autopoint_obj = placement_obj.notelist.last_add_auto(mpetype)
+												autopoint_obj.pos = autopoints[0]
+												autopoint_obj.value = autopoints[1]/autodiv
+
 
 		autoid_assoc.output(convproj_obj)

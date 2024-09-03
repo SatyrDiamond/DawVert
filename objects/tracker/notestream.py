@@ -55,6 +55,8 @@ class notestream:
 		self.note_pos = 0
 		self.slide_speed = 0
 		self.vol = 1
+		self.freeze_inst = -1
+		self.freeze_octave = 0
 
 	def note_on(self, c_note, c_fx):
 		self.note_active = True
@@ -82,6 +84,14 @@ class notestream:
 
 
 	def do_cell(self, c_note, c_inst, c_fx, s_speed):
+		if c_fx:
+			if 'freeze_inst' in c_fx:
+				self.freeze_inst = c_fx['freeze_inst']
+
+			if 'freeze_octave' in c_fx:
+				self.freeze_octave = c_fx['freeze_octave']
+
+		if self.freeze_inst != -1: c_inst = self.freeze_inst
 		if c_inst != None: 
 			self.cur_inst = c_inst
 			self.vol = 1
@@ -93,6 +103,7 @@ class notestream:
 				if c_fx:
 					if 'slide_to_note' in c_fx and self.note_active: new_note = False
 				if new_note:
+					if self.freeze_octave: c_note = c_note%12
 					self.note_off()
 					self.note_on(c_note, c_fx)
 				elif self.note_active: self.slide_pitch.slide_tracker_porta_targ(c_note)

@@ -48,7 +48,7 @@ class song_compat:
 		self.process_part('fxchange', fxchange,						convproj_obj, cvpj_type, in_dawinfo, out_dawinfo, out_type)
 
 		self.process_part('unhybrid', unhybrid,					   convproj_obj, cvpj_type, in_dawinfo.track_hybrid, out_dawinfo.track_hybrid, out_type)
-		self.process_part('removelanes', removelanes,				 convproj_obj, cvpj_type, in_dawinfo.track_lanes, out_dawinfo.track_lanes, out_type)
+		self.process_part('removelanes', removelanes,				 convproj_obj, cvpj_type, in_dawinfo.track_lanes, out_dawinfo, out_type)
 
 		if self.currenttime == False:
 			self.process_part('autopl_addrem', autopl_addrem,		 convproj_obj, cvpj_type, in_dawinfo.auto_types, out_dawinfo.auto_types, out_type)

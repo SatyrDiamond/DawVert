@@ -68,7 +68,9 @@ def convert(convproj_obj):
 		del convproj_obj.track_data[x]
 
 	for xc, trackdata in splitted_trks.items():
+
 		for oldtrackid, track_obj, track_pls, track_nl in trackdata:
+
 			cvpj_trackid = 'rm2r_'+xc+'_'+oldtrackid
 			track_obj.type = 'instrument'
 			if track_pls: track_obj.placements.pl_notes.data = track_pls

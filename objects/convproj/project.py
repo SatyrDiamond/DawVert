@@ -209,8 +209,10 @@ class cvpj_project:
 
 		for PatternLengthPart in PatternLengthList:
 			temptimesig = xtramath.get_timesig(PatternLengthPart, self.timesig[1])
-			if not temptimesig[0]%temptimesig[1]: temptimesig[0] = temptimesig[1]
-			if prevtimesig != temptimesig: self.timesig_auto.add_point(currentpos, temptimesig)
+			if prevtimesig != temptimesig: 
+				outtimesig = temptimesig.copy()
+				if not outtimesig[0]%outtimesig[1]: outtimesig[0] = outtimesig[1]
+				self.timesig_auto.add_point(currentpos, outtimesig)
 			if pos_loop == blockcount: self.loop_start = currentpos
 			prevtimesig = temptimesig
 			currentpos += PatternLengthPart

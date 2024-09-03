@@ -226,6 +226,11 @@ class bytereader:
 	def string(self, size, **kwargs): return self.buf.read(size).split(b'\x00')[0].decode(**kwargs)
 	def string16(self, size): return self.buf.read(size*2).decode("utf-16")
 
+	def l_int4(self, num): 
+		out = []
+		for _ in range(num): out += self.bytesplit()
+		return out
+
 	def l_uint8(self, num): return np.frombuffer(self.buf.read(num), dtype=np.uint8)
 	def l_int8(self, num): return np.frombuffer(self.buf.read(num), dtype=np.int8)
 

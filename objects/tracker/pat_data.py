@@ -109,7 +109,6 @@ class playstream:
 				changedval = self.cur_tempo.get_change()
 				if changedval:
 					self.auto_tempo.do_point(changedval)
-				self.cur_tempo.changed = False
 
 			self.auto_tempo.next()
 			self.auto_mastervol.next()

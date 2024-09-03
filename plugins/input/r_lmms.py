@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import base64
-import json
 import math
 import plugins
 import os

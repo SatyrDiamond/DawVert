@@ -312,5 +312,9 @@ class wav_main:
 		if data.dtype.byteorder == '>' or (data.dtype.byteorder == '=' and sys.byteorder == 'big'): data = data.byteswap()
 		in_riff.data = data.tobytes()
 
-		riff_data.write_to_file(filepath)
+		try:
+			riff_data.write_to_file(filepath)
+		except PermissionError:
+			pass
+
 

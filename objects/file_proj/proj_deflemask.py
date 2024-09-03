@@ -46,7 +46,7 @@ class deflemask_instrument:
 			self.fm_data.feedback = bio_dmf.uint8()
 			self.fm_data.fms = bio_dmf.uint8() #(FMS on YM2612, PMS on YM2151)
 			self.fm_data.ams = bio_dmf.uint8() #(AMS on YM2612, AMS on YM2151)
-			for opnum in range(4):
+			for opnum in [0,2,1,3]:
 				op_obj = self.fm_data.ops[opnum]
 				op_obj.am = bio_dmf.uint8()
 				op_obj.env_attack = bio_dmf.uint8()
@@ -126,6 +126,7 @@ class deflemask_project:
 		self.insts = []
 		self.wavetables = []
 		self.patterns = {}
+		self.samples = []
 
 	def load_from_file(self, input_file):
 		bytestream = open(input_file, 'rb')
@@ -226,4 +227,28 @@ class deflemask_project:
 					table_rows.append([r_note, r_oct, r_vol, r_inst, r_fx])
 				chan_obj.patterns[patnum] = table_rows
 
+		num_samples = bio_dmf.uint8()
+
+		for _ in range(num_samples):
+			sample_obj = deflemask_sample()
+			sample_obj.size = bio_dmf.uint32()
+			sample_obj.name = bio_dmf.c_string__int8()
+			sample_obj.rate = bio_dmf.uint8()
+			sample_obj.pitch = bio_dmf.uint8()
+			sample_obj.amp = bio_dmf.uint8()
+			sample_obj.bits = bio_dmf.uint8()
+			if sample_obj.bits == 16: sample_obj.data = bio_dmf.l_int16(sample_obj.size)
+			if sample_obj.bits == 8: sample_obj.data = bio_dmf.l_int8(sample_obj.size)
+			self.samples.append(sample_obj)
+
 		return True
+
+class deflemask_sample:
+	def __init__(self):
+		self.size = 0
+		self.name = 0
+		self.rate = 0
+		self.pitch = 0
+		self.amp = 0
+		self.bits = 0
+		self.data = []

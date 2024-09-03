@@ -542,6 +542,12 @@ class output_ableton(plugins.base):
 					als_track.TrackGroupId = groupnumid
 					als_track.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
 
+				plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+				if plugin_found:
+					issampler = plugin_obj.check_wildmatch('sampler', None)
+				else:
+					issampler = False
+
 				if not DEBUG_IGNORE_PLACEMENTS:
 					for clipid, notespl_obj in enumerate(track_obj.placements.pl_notes):
 						als_midiclip = als_track.add_midiclip(clipid)
@@ -571,7 +577,8 @@ class output_ableton(plugins.base):
 						for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
 							for t_key in t_keys:
 								if t_key not in t_keydata: t_keydata[t_key] = []
-								t_keydata[t_key].append([counter_note.get(), t_pos, t_dur, t_vol, t_inst, t_extra, t_auto, t_slide])
+								notevol = t_vol**(1/3) if issampler else t_vol
+								t_keydata[t_key].append([counter_note.get(), t_pos, t_dur, notevol, t_inst, t_extra, t_auto, t_slide])
 	
 						t_keydata = dict(sorted(t_keydata.items(), key=lambda item: item[0]))
 	
@@ -623,7 +630,6 @@ class output_ableton(plugins.base):
 				pitchparamkeys = {}
 				als_device_pitch = None
 
-				plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
 				if plugin_found:
 					middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 

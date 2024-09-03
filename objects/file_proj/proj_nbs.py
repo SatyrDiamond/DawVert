@@ -54,7 +54,7 @@ class nbs_song:
 			self.newformat = 1
 			version = song_file.uint8()
 			if version != 5:
-				logger_projparse.error('[mnbs] only version 5 new-NBS or old format is supported.')
+				logger_projparse.error('mnbs: only version 5 new-NBS or old format is supported.')
 				return False
 			self.inst_count = song_file.uint8()
 			self.song_length = song_file.uint16()

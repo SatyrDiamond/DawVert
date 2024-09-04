@@ -13,6 +13,8 @@ FINETUNE = [8363, 8413, 8463, 8529, 8581, 8651, 8723, 8757, 7895, 7941, 7985, 80
 TEXTSTART = 'MOD_Inst_'
 MAINCOLOR = [0.47, 0.47, 0.47]
 
+IGNORE_ERRORS = False
+
 class input_mod(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -29,7 +31,7 @@ class input_mod(plugins.base):
 	def parse(self, convproj_obj, input_file, dv_config):
 
 		project_obj = proj_mod.mod_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if not project_obj.load_from_file(input_file, IGNORE_ERRORS): exit()
 
 		samplefolder = dv_config.path_samples_extracted
 
@@ -57,7 +59,10 @@ class input_mod(plugins.base):
 				audio_obj = audio_data.audio_obj()
 				audio_obj.set_codec('int8')
 				audio_obj.pcm_from_bytes(sample_obj.data)
-				audio_obj.rate = FINETUNE[sample_obj.finetune]
+				if not IGNORE_ERRORS: audiorate = FINETUNE[sample_obj.finetune]
+				else: audiorate = FINETUNE[sample_obj.finetune%len(FINETUNE)]
+				audio_obj.rate = audiorate
+
 				if loopstart != 0 or loopend != 2: audio_obj.loop = [loopstart, loopend]
 
 				audio_obj.pcm_change_bits(16)

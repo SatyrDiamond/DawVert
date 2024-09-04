@@ -86,7 +86,6 @@ class input_deflemask(plugins.base):
 			audio_obj.set_codec('int16' if sample_obj.bits==16 else 'int8')
 			audio_obj.pcm_from_list(sample_obj.data)
 			audio_obj.to_file_wav(wave_path)
-			audio_obj.hz = 32000
 			sampleid = 'sample_'+str(n).zfill(2)
 			convproj_obj.add_sampleref(sampleid, wave_path, None)
 			sampleparts.append([sampleid, sample_obj.name])

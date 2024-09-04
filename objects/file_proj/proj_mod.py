@@ -10,9 +10,13 @@ logger_projparse = logging.getLogger('projparse')
 
 class mod_sample:
 	def __init__(self, song_file): 
-		self.name = song_file.string(22, encoding="ascii") if song_file else ''
+		self.errored = False
+		self.name = song_file.string(22, encoding="ascii", errors="ignore") if song_file else ''
 		self.length = song_file.uint16_b() if song_file else 0
 		self.finetune = song_file.uint8() if song_file else 0
+		if self.finetune > 15: 
+			logger_projparse.error('mod: sample finetune over 15')
+			self.errored = True
 		self.default_vol = song_file.uint8() if song_file else 0
 		self.loop_start = song_file.uint16_b() if song_file else 0
 		self.loop_length = song_file.uint16_b() if song_file else 0
@@ -32,21 +36,31 @@ class mod_song:
 		self.title = ''
 		self.samples = []
 
-	def load_from_file(self, input_file):
+	def load_from_file(self, input_file, IGNORE_ERRORS):
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
-		self.load(song_file)
-		return True
+		return self.load(song_file, IGNORE_ERRORS)
 
-	def load(self, song_file):
-		self.title = song_file.string(20, encoding="ascii")
+	def load(self, song_file, IGNORE_ERRORS):
+		self.title = song_file.string(20, encoding="ascii", errors="ignore")
 		logger_projparse.info('mod: Song Name: ' + str(self.title))
-		self.samples = [mod_sample(song_file) for _ in range(31)]
+		for _ in range(31):
+			sample_obj = mod_sample(song_file)
+			if sample_obj.errored and not IGNORE_ERRORS: return False
+			self.samples.append(sample_obj)
 		self.num_orders = song_file.uint8()
 		self.extravalue = song_file.uint8()
-		self.l_order = song_file.l_int8(128)[0:self.num_orders]
+		if not self.num_orders:
+			if IGNORE_ERRORS:
+				self.l_order = song_file.l_int8(128)
+			else:
+				logger_projparse.error('mod: Pattern Order is 0')
+				exit()
+		else:
+			self.l_order = song_file.l_int8(128)[0:self.num_orders]
 		self.num_patterns = max(self.l_order)
-		self.tag = song_file.string(4)
+
+		self.tag = song_file.string(4, errors="ignore")
 		self.num_chans = 4
 
 		logger_projparse.info('mod: Sample Tag: ' + str(self.tag))
@@ -73,3 +87,4 @@ class mod_song:
 
 		self.patterns = [mod_pattern(song_file, self.num_chans) for _ in range(self.num_patterns+1)]
 		for sample_obj in self.samples: sample_obj.data = song_file.raw(sample_obj.length*2)
+		return True

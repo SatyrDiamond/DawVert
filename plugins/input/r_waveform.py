@@ -72,45 +72,51 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 		vstname = wf_plugin.params['name'] if "name" in wf_plugin.params else ''
 
 		if vstname in ['Micro Sampler', 'Micro Drum Sampler']:
-			chunkdata = juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) if "state" in wf_plugin.params else b''
-			sampleheader, sampledata = sampler_parse(chunkdata)
-			soundlayers = []
-			for wf_smpl_part, wf_smpl_data in sampledata:
-				if wf_smpl_part == 'SOUNDLAYER': soundlayers.append(wf_smpl_data)
-			if len(soundlayers)>1:
-				plugin_obj, pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
-				track_obj.inst_pluginid = pluginid
-				for soundlayer in soundlayers:
-					sl_rootNote = soundlayer['rootNote'] if 'rootNote' in soundlayer else 60
-					sl_lowNote = soundlayer['lowNote'] if 'lowNote' in soundlayer else 60
-					sl_highNote = soundlayer['highNote'] if 'highNote' in soundlayer else 60
-					sp_obj = plugin_obj.sampleregion_add(sl_lowNote-60, sl_highNote-60, sl_rootNote-60, None)
+			try:
+				chunkdata = juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) if "state" in wf_plugin.params else b''
+				sampleheader, sampledata = sampler_parse(chunkdata)
+				soundlayers = []
+				for wf_smpl_part, wf_smpl_data in sampledata:
+					if wf_smpl_part == 'SOUNDLAYER': soundlayers.append(wf_smpl_data)
+				if len(soundlayers)>1:
+					plugin_obj, pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
+					track_obj.inst_pluginid = pluginid
+					for soundlayer in soundlayers:
+						sl_rootNote = soundlayer['rootNote'] if 'rootNote' in soundlayer else 60
+						sl_lowNote = soundlayer['lowNote'] if 'lowNote' in soundlayer else 60
+						sl_highNote = soundlayer['highNote'] if 'highNote' in soundlayer else 60
+						sp_obj = plugin_obj.sampleregion_add(sl_lowNote-60, sl_highNote-60, sl_rootNote-60, None)
+						soundlayer_samplepart(sp_obj, soundlayer)
+				elif len(soundlayers)==1:
+					soundlayer = soundlayers[0]
+					plugin_obj, pluginid = convproj_obj.add_plugin_genid('sampler', 'single')
+					track_obj.inst_pluginid = pluginid
+					sp_obj = plugin_obj.samplepart_add('sample')
 					soundlayer_samplepart(sp_obj, soundlayer)
-			elif len(soundlayers)==1:
-				soundlayer = soundlayers[0]
-				plugin_obj, pluginid = convproj_obj.add_plugin_genid('sampler', 'single')
-				track_obj.inst_pluginid = pluginid
-				sp_obj = plugin_obj.samplepart_add('sample')
-				soundlayer_samplepart(sp_obj, soundlayer)
+			except:
+				pass
 		else:
-			juceobj = juce_plugin.juce_plugin()
-			juceobj.uniqueId = wf_plugin.params['uniqueId'] if "uniqueId" in wf_plugin.params else ''
-			juceobj.name = wf_plugin.params['name'] if "name" in wf_plugin.params else ''
-			juceobj.filename = wf_plugin.params['filename'] if "filename" in wf_plugin.params else ''
-			juceobj.manufacturer = wf_plugin.params['manufacturer'] if "manufacturer" in wf_plugin.params else ''
-			juceobj.memoryblock = wf_plugin.params['state']
+			try:
+				juceobj = juce_plugin.juce_plugin()
+				juceobj.uniqueId = wf_plugin.params['uniqueId'] if "uniqueId" in wf_plugin.params else ''
+				juceobj.name = wf_plugin.params['name'] if "name" in wf_plugin.params else ''
+				juceobj.filename = wf_plugin.params['filename'] if "filename" in wf_plugin.params else ''
+				juceobj.manufacturer = wf_plugin.params['manufacturer'] if "manufacturer" in wf_plugin.params else ''
+				juceobj.memoryblock = wf_plugin.params['state']
 	
-			plugin_obj, pluginid = juceobj.to_cvpj(convproj_obj, None)
-			plugin_obj.fxdata_add(bool(wf_plugin.enabled), None)
+				plugin_obj, pluginid = juceobj.to_cvpj(convproj_obj, None)
+				plugin_obj.fxdata_add(bool(wf_plugin.enabled), None)
 	
-			if plugin_obj.role == 'synth': track_obj.inst_pluginid = pluginid
-			elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(pluginid)
+				if plugin_obj.role == 'synth': track_obj.inst_pluginid = pluginid
+				elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(pluginid)
 	
-			if pluginid:
-				if wf_plugin.windowX and wf_plugin.windowY:
-					windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
-					windata_obj.pos_x = wf_plugin.windowX
-					windata_obj.pos_y = wf_plugin.windowY
+				if pluginid:
+					if wf_plugin.windowX and wf_plugin.windowY:
+						windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
+						windata_obj.pos_x = wf_plugin.windowX
+						windata_obj.pos_y = wf_plugin.windowY
+			except:
+				pass
 
 	elif wf_plugin.plugtype not in ['volume', 'level'] and wf_plugin.plugtype != '':
 		plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-tracktion', wf_plugin.plugtype)

@@ -140,8 +140,8 @@ class input_famitracker(plugins.base):
 							plugin_obj.role = 'synth'
 							osc_data = plugin_obj.osc_add()
 							if insttype in ['square1', 'square2']: osc_data.prop.shape = 'square'
-							if insttype in ['triangle']: osc_data.prop.shape = 'triangle'
-							if insttype in ['noise']: osc_data.prop.shape = 'random'
+							if insttype == 'triangle': osc_data.prop.shape = 'triangle'
+							if insttype == 'noise': osc_data.prop.shape = 'random'
 
 							if ft_inst.macro_vol != -1: 
 								macro_vol = project_obj.macros[ft_inst.macro_vol]

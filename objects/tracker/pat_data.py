@@ -197,9 +197,9 @@ class tracker_column:
 		row.g_fx[p_name] = p_val
 
 	def cell_fx_mod(self, row_num, fx_type, fx_value):
-		if fx_type == 1: self.cell_param(row_num, 'slide_up', fx_value)
-		if fx_type == 2: self.cell_param(row_num, 'slide_down', fx_value)
-		if fx_type == 3: self.cell_param(row_num, 'slide_to_note', fx_value)
+		if fx_type == 1: self.cell_param(row_num, 'std_slide_up', fx_value)
+		if fx_type == 2: self.cell_param(row_num, 'std_slide_down', fx_value)
+		if fx_type == 3: self.cell_param(row_num, 'std_slide_to_note', fx_value)
 		if fx_type == 4: self.cell_param(row_num, 'vibrato', splitparams(fx_value, 'speed', 'depth'))
 		if fx_type == 6: self.cell_param(row_num, 'vol_slide', addminusval(fx_value))
 		if fx_type == 7: self.cell_param(row_num, 'tremolo', splitparams(fx_value, 'speed', 'depth'))

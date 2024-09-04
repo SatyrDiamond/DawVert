@@ -57,6 +57,7 @@ class notestream:
 		self.vol = 1
 		self.freeze_inst = -1
 		self.freeze_octave = 0
+		self.key_to_inst = 0
 
 	def note_on(self, c_note, c_fx):
 		self.note_active = True
@@ -85,47 +86,48 @@ class notestream:
 
 	def do_cell(self, c_note, c_inst, c_fx, s_speed):
 		if c_fx:
-			if 'freeze_inst' in c_fx:
-				self.freeze_inst = c_fx['freeze_inst']
-
-			if 'freeze_octave' in c_fx:
-				self.freeze_octave = c_fx['freeze_octave']
+			if 'freeze_inst' in c_fx: self.freeze_inst = c_fx['freeze_inst']
+			if 'freeze_octave' in c_fx: self.freeze_octave = c_fx['freeze_octave']
+			if 'key_to_inst' in c_fx: self.key_to_inst = c_fx['key_to_inst']
 
 		if self.freeze_inst != -1: c_inst = self.freeze_inst
 		if c_inst != None: 
 			self.cur_inst = c_inst
 			self.vol = 1
-			if c_inst not in self.used_inst: self.used_inst.append(c_inst)
 
 		if c_note != None:
 			if c_note not in ['off', 'cut', 'fade']:
 				new_note = True
 				if c_fx:
-					if 'slide_to_note' in c_fx and self.note_active: new_note = False
+					if 'std_slide_to_note' in c_fx and self.note_active: new_note = False
 				if new_note:
 					if self.freeze_octave: c_note = c_note%12
+					if self.key_to_inst: self.cur_inst += c_note
 					self.note_off()
-					self.note_on(c_note, c_fx)
+					self.note_on(c_note if not self.key_to_inst else 0, c_fx)
 				elif self.note_active: self.slide_pitch.slide_tracker_porta_targ(c_note)
 			else: self.note_off()
+
+		if c_inst != None: 
+			if self.cur_inst not in self.used_inst: self.used_inst.append(self.cur_inst)
 
 		self.cur_pos += 1
 		self.placements[-1][0] += 1
 		if self.note_active: 
 			if c_fx:
-				if 'slide_to_note' in c_fx:
-					if c_fx['slide_to_note'] != 0: 
-						self.slide_speed = calc_tracker_pitch_porta(c_fx['slide_to_note'], s_speed)
+				if 'std_slide_to_note' in c_fx:
+					if c_fx['std_slide_to_note'] != 0: 
+						self.slide_speed = calc_tracker_pitch_porta(c_fx['std_slide_to_note'], s_speed)
 					self.slide_pitch.slide_porta(self.note_pos, self.slide_speed)
 
-				if 'slide_up' in c_fx:
-					if c_fx['slide_up'] != 0: 
-						self.slide_speed = calc_tracker_pitch(c_fx['slide_up'], s_speed)
+				if 'std_slide_up' in c_fx:
+					if c_fx['std_slide_up'] != 0: 
+						self.slide_speed = calc_tracker_pitch(c_fx['std_slide_up'], s_speed)
 					self.slide_pitch.slide_up(self.note_pos, self.slide_speed)
 
-				if 'slide_down' in c_fx:
-					if c_fx['slide_down'] != 0: 
-						self.slide_speed = calc_tracker_pitch(c_fx['slide_down'], s_speed)
+				if 'std_slide_down' in c_fx:
+					if c_fx['std_slide_down'] != 0: 
+						self.slide_speed = calc_tracker_pitch(c_fx['std_slide_down'], s_speed)
 					self.slide_pitch.slide_down(self.note_pos, self.slide_speed)
 
 				if 'fine_slide_up' in c_fx:

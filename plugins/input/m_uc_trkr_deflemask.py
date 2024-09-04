@@ -74,6 +74,7 @@ class input_deflemask(plugins.base):
 								if fx_type == 23: 
 									pat_obj.cell_param(r_row, 'freeze_inst', 10000 if fx_param else -1)
 									pat_obj.cell_param(r_row, 'freeze_octave', 1 if fx_param else 0)
+									pat_obj.cell_param(r_row, 'key_to_inst', 1 if fx_param else 0)
 								if fx_type == 13:
 									pat_obj.cell_g_param(r_row, 'pattern_jump', 0)
 
@@ -127,13 +128,14 @@ class input_deflemask(plugins.base):
 						else:
 							plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				else:
-					inst_obj.visual.name = 'PCM'
+					samplenum = instnum-10000
 
-					plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
+					sampleid, sample_name = sampleparts[samplenum]
+
+					inst_obj.visual.name = sample_name
+					inst_obj.visual.color.set_float([.9,.9,.9])
+
+					plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'single')
+					samplepart_obj = plugin_obj.samplepart_add('sample')
+					samplepart_obj.sampleref = sampleid
 					plugin_obj.datavals.add('point_value_type', "samples")
-
-					for n, d in enumerate(sampleparts):
-						sampleid, sample_name = d
-						sp_obj = plugin_obj.sampleregion_add(n, n, n, None)
-						sp_obj.sampleref = sampleid
-						sp_obj.visual.name = sample_name

@@ -180,7 +180,7 @@ class cvpj_placement_notes:
 	def auto_dur(self, dur_p, dur_e):
 		self.time.duration = self.notelist.get_dur()
 		if self.time.duration != 0: self.time.duration = (self.time.duration/dur_p).__ceil__()*dur_p
-		else: self.duration = dur_e
+		else: self.time.duration = dur_e
 
 	def antiminus(self):
 		loop_start, loop_loopstart, loop_loopend = self.time.get_loop_data()

@@ -242,12 +242,38 @@ class cvpj_s_automation:
 				elif (pl_points, nopl_points) == (False, True):
 					self.convert____pl_ticks___nopl_points()
 
+class cvpj_autoloc:
+	def __init__(self, indata):
+		if isinstance(indata, list): self.autoloc = indata
+		elif isinstance(indata, str): self.autoloc = intxt.split(';')
+		else: self.autoloc = []
 
+	def __eq__(self, other):
+		if isinstance(other, list): return self.autoloc==other
+		elif isinstance(other, str): return self.__str__()==other
+		elif isinstance(other, cvpj_autoloc): return self.autoloc==other.autoloc
+		else: return False
 
+	def __str__(self):
+		return ';'.join(self.autoloc)
 
+	def __repr__(self):
+		return ';'.join(self.autoloc)
 
-def autopath_encode(autol):
-	return ';'.join(autol)
+	def __hash__(self):
+		return self.__str__().__hash__()
+
+	def __setitem__(self, p, v):
+		self.autoloc[p] = v
+
+	def __getitem__(self, p):
+		return self.autoloc[p]
+
+	def startswith(self, inlist):
+		return self.autoloc[0:len(inlist)]==inlist if inlist else False
+
+	def change_start(self, startlen, listin):
+		self.autoloc = listin+self.autoloc[startlen:]
 
 class cvpj_automation:
 	__slots__ = ['data','time_ppq','time_float','auto_num']
@@ -256,6 +282,9 @@ class cvpj_automation:
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.auto_num = counter.counter(200000, 'auto_')
+
+	def list(self):
+		return list(self.data)
 
 	def sort(self):
 		for x, v in self.data.items():
@@ -290,18 +319,17 @@ class cvpj_automation:
 			autodata.convert(pl_points, nopl_points, pl_ticks, nopl_ticks)
 
 	def create(self, autopath, valtype, replace):
-		autopath = autopath_encode(autopath)
+		autopath = cvpj_autoloc(autopath)
 		if (autopath not in self.data) or (replace):
 			self.data[autopath] = cvpj_s_automation(self.time_ppq, self.time_float, valtype)
 			self.data[autopath].id = self.auto_num.get()
 
 	def get(self, autopath, valtype):
-		autopath = autopath_encode(autopath)
+		autopath = cvpj_autoloc(autopath)
 		if autopath in self.data: return True, self.data[autopath]
 		else: return False, cvpj_s_automation(self.time_ppq, self.time_float, valtype)
 
 	def pop_f(self, autopath):
-		autopath = autopath_encode(autopath)
 		if autopath in self.data: 
 			outauto = self.data[autopath]
 			del self.data[autopath]
@@ -310,20 +338,20 @@ class cvpj_automation:
 			return None
 
 	def delete(self, autopath):
-		autopath = autopath_encode(autopath)
-		logger_automation.info('Removing '+autopath)
+		autopath = cvpj_autoloc(autopath)
+		logger_automation.info('Removing '+str(autopath))
 		if autopath in self.data: del self.data[autopath]
 
 	def move(self, autopath, to_autopath):
-		autopath = autopath_encode(autopath)
-		to_autopath = autopath_encode(to_autopath)
-		logger_automation.info('Moving '+autopath+' to '+to_autopath)
+		autopath = cvpj_autoloc(autopath)
+		to_autopath = cvpj_autoloc(to_autopath)
+		logger_automation.info('Moving '+str(autopath)+' to '+str(to_autopath))
 		if autopath in self.data: self.data[to_autopath] = self.data.pop(autopath)
 
 	def copy(self, autopath, to_autopath):
-		autopath = autopath_encode(autopath)
-		to_autopath = autopath_encode(to_autopath)
-		logger_automation.info('Copying '+autopath+' to '+to_autopath)
+		autopath = cvpj_autoloc(autopath)
+		to_autopath = cvpj_autoloc(to_autopath)
+		logger_automation.info('Copying '+str(autopath)+' to '+str(to_autopath))
 		if autopath in self.data: 
 			self.data[to_autopath] = copy.deepcopy(self.data[autopath])
 			self.data[to_autopath].id = self.auto_num.get()
@@ -331,61 +359,69 @@ class cvpj_automation:
 	def move_group(self, autopath, fval, tval):
 		self.move(autopath+[fval], autopath+[tval])
 
+	def move_everything(self, locset_from, locset_to):
+		logger_automation.info('Moving all from '+';'.join(locset_from)+' to '+';'.join(locset_to))
+		foundparts = [x for x in self.list() if x.startswith(locset_from)]
+		for autopath in foundparts:
+			autopart = self.pop_f(autopath)
+			autopath.change_start(len(locset_from), locset_to)
+			self.data[autopath] = autopart
+
 
 
 	def calc(self, autopath, mathtype, val1, val2, val3, val4):
-		autopath = autopath_encode(autopath)
-		logger_automation.info('Math '+autopath)
+		autopath = cvpj_autoloc(autopath)
+		logger_automation.info('Math '+str(autopath))
 		if autopath in self.data: self.data[autopath].calc(mathtype, val1, val2, val3, val4)
 
 
 
 	def add_autotick(self, autopath, valtype, p_pos, p_val):
 		self.create(autopath, valtype, False)
-		autopath = autopath_encode(autopath)
+		autopath = cvpj_autoloc(autopath)
 		self.data[autopath].add_autotick(p_pos, p_val)
 
 	def add_autopoint(self, autopath, valtype, p_pos, p_val, p_type):
 		self.create(autopath, valtype, False)
-		autopath = autopath_encode(autopath)
+		autopath = cvpj_autoloc(autopath)
 		self.data[autopath].add_autopoint(p_pos, p_val, p_type)
 
 	def add_autopoints_twopoints(self, autopath, valtype, twopoints):
 		self.create(autopath, valtype, False)
-		autopath = autopath_encode(autopath)
+		autopath = cvpj_autoloc(autopath)
 		self.data[autopath].add_autopoints_twopoints(twopoints)
 
 	def add_pl_points(self, autopath, valtype):
 		self.create(autopath, valtype, False)
-		autopath = autopath_encode(autopath)
+		autopath = cvpj_autoloc(autopath)
 		return self.data[autopath].add_pl_points()
 
 	def add_pl_ticks(self, autopath, valtype):
 		self.create(autopath, valtype, False)
-		autopath = autopath_encode(autopath)
+		autopath = cvpj_autoloc(autopath)
 		return self.data[autopath].add_pl_ticks()
 
 	def get_paramval_tick(self, autopath, firstnote, fallback):
-		autopath = autopath_encode(autopath)
+		autopath = cvpj_autoloc(autopath)
 		out_val = fallback
 		if autopath in self.data: 
 			out_val = self.data[autopath].get_paramval_tick(firstnote, fallback)
 		return out_val
 
 	def iter_nopl_points(self):
-		autopath = autopath_encode(autopath)
+		autopath = cvpj_autoloc(autopath)
 		for autopath in self.data:
 			if self.u_data[autopath].nopl_points != None: 
 				yield autopath.split(';'), self.data[autopath].nopl_points
 
 	def iter_nopl_ticks(self):
-		autopath = autopath_encode(autopath)
+		autopath = cvpj_autoloc(autopath)
 		for autopath in self.data:
 			if self.u_data[autopath].nopl_ticks != None: 
 				yield autopath.split(';'), self.data[autopath].nopl_ticks
 
 	def iter_pl_points(self):
-		autopath = autopath_encode(autopath)
+		autopath = cvpj_autoloc(autopath)
 		for autopath in self.data:
 			if self.u_data[autopath].pl_points != None: 
 				yield autopath.split(';'), self.data[autopath].pl_points
@@ -395,7 +431,7 @@ class cvpj_automation:
 
 
 	def get_autopoints(self, autopath):
-		autopath = autopath_encode(autopath)
+		autopath = cvpj_autoloc(autopath)
 		if autopath in self.data:
 			autodata = self.data[autopath]
 			if autodata.u_nopl_points: return True, autodata.nopl_points

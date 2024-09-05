@@ -81,5 +81,7 @@ def convert(convproj_obj):
 
 	convproj_obj.do_lanefit()
 
+	convproj_obj.automation.move_everything(['inst'], ['track'])
+
 	convproj_obj.playlist = {}
 	convproj_obj.type = 'r'

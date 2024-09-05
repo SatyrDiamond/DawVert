@@ -120,6 +120,10 @@ class playstream:
 					self.stopped = True
 					self.stopped_reason = 'break_to_row'
 					self.stopped_value = global_fx['break_to_row']
+				if 'skip_pattern' in global_fx:
+					self.stopped = True
+					self.stopped_reason = 'skip_pattern'
+					self.stopped_value = global_fx['skip_pattern']
 				if 'pattern_jump' in global_fx:
 					self.stopped = True
 					self.stopped_reason = 'pattern_jump'

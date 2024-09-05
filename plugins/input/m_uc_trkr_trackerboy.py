@@ -13,26 +13,26 @@ def speed_to_tempo(framerate, speed):
 
 def parse_fx_event(r_row, pat_obj, fx_p, fx_v):
 	if fx_p == 1: pat_obj.cell_g_param(r_row, 'pattern_jump', fx_v)
-	if fx_p == 2: pat_obj.cell_g_param(r_row, 'stop', fx_v)
-	if fx_p == 3: pat_obj.cell_g_param(r_row, 'skip_pattern', fx_v)
-	if fx_p == 4: pat_obj.cell_g_param(r_row, 'tempo', speed_to_tempo(60, fx_v)*20)
+	elif fx_p == 2: pat_obj.cell_g_param(r_row, 'stop', fx_v)
+	elif fx_p == 3: pat_obj.cell_g_param(r_row, 'skip_pattern', fx_v)
+	elif fx_p == 4: pat_obj.cell_g_param(r_row, 'tempo', speed_to_tempo(60, fx_v)*20)
 
-	if fx_p == 13:
+	elif fx_p == 13:
 		arp_params = [0,0]
 		arp_params[0], arp_params[1] = data_bytes.splitbyte(fx_v)
 		pat_obj.cell_param(r_row, 'arp', arp_params)
-	if fx_p == 14: pat_obj.cell_param(r_row, 'slide_up_persist', fx_v)
-	if fx_p == 15: pat_obj.cell_param(r_row, 'slide_down_persist', fx_v)
-	if fx_p == 16: pat_obj.cell_param(r_row, 'slide_to_note_persist', fx_v)
-	if fx_p == 17:
+	elif fx_p == 14: pat_obj.cell_param(r_row, 'slide_up_persist', fx_v)
+	elif fx_p == 15: pat_obj.cell_param(r_row, 'slide_down_persist', fx_v)
+	elif fx_p == 16: pat_obj.cell_param(r_row, 'slide_to_note_persist', fx_v)
+	elif fx_p == 17:
 		fine_vib_sp, fine_vib_de = data_bytes.splitbyte(fx_v)
 		vibrato_params = {}
 		vibrato_params['speed'] = fine_vib_sp/16
 		vibrato_params['depth'] = fine_vib_sp/16
 		pat_obj.cell_param(r_row, 'vibrato', vibrato_params)
-	if fx_p == 18: pat_obj.cell_param(r_row, 'vibrato_delay', fx_v)
+	elif fx_p == 18: pat_obj.cell_param(r_row, 'vibrato_delay', fx_v)
 
-	if fx_p == 22: 
+	elif fx_p == 22: 
 		vol_left, vol_right = data_bytes.splitbyte(fx_v)
 		if vol_left < 0: vol_left += 16
 		if vol_right < 0: vol_right += 16
@@ -93,7 +93,7 @@ class input_trackerboy(plugins.base):
 
 		tempo = speed_to_tempo(60, tbm_cursong.speed)*20
 		convproj_obj.params.add('bpm', tempo, 'float')
-		used_insts = patterndata_obj.to_cvpj(convproj_obj, tempo, 5)
+		used_insts = patterndata_obj.to_cvpj(convproj_obj, tempo, 6)
 
 		for instname, instnums in used_insts.items():
 			for chinst in instnums:
@@ -126,25 +126,29 @@ class input_trackerboy(plugins.base):
 					if instname == 'noise':  envname, maxenv = ('noise', 3)
 					plugin_obj.env_blocks_add(envname, tbm_inst.envs[3].values, 0.05, maxenv, 0, 0)
 
-				#if instname != 'wavetable':
-				#	env_attack = 0
-				#	env_decay = 0
-				#	env_sustain = 1
-#
-				#	if trackerboy_instdata[6] == 0: env_sustain = 1
-				#	elif trackerboy_instdata[6] < 8: 
-				#		env_decay = trackerboy_instdata[6]/5
-				#		env_sustain = 0
-				#	elif trackerboy_instdata[6] >= 8:
-				#		env_attack = (trackerboy_instdata[6]-8)/5
-				#		env_sustain = 1
-				#	inst_plugindata.asdr_env_add('vol', 0, env_attack, 0, env_decay, env_sustain, 0, 1)
-				#else:
-				#	if trackerboy_instdata[6] == 0: 
-				#		inst_plugindata.wave_add('main', t_waves[1][1], 0, 15)
-				#		wave_obj = plugin_obj.wave_add('main')
-				#		wave_obj.set_all_range(list(orgsamp_obj.sample_data[orgtrack_obj.instrument]), 0, 15)
-				#	else: 
-				#		outwavname = trackerboy_instdata[6]+1
-				#		if trackerboy_instdata[6]+1 not in t_waves: outwavname = 1
-				#		inst_plugindata.wave_add('main', t_waves[outwavname][1], 0, 15)
+				if instname != 'wavetable':
+					env_attack = 0
+					env_decay = 0
+					env_sustain = 1
+					env_amount = 1
+					if tbm_inst.envelopeEnabled:
+						instvol = tbm_inst.param1/15
+						param2v = (tbm_inst.param2&7)/7
+						if not tbm_inst.param2&8:
+							if param2v:
+								env_decay = (param2v*2)*instvol
+								env_sustain = 0
+								inst_obj.params.add('vol', instvol, 'float')
+						else:
+							if param2v:
+								env_attack = (param2v*2)*(1-instvol)
+								env_amount = instvol
+							else:
+								inst_obj.params.add('vol', instvol, 'float')
+					plugin_obj.env_asdr_add('vol', 0, env_attack, 0, env_decay, env_sustain, 0, env_amount)
+				else:
+					wavenum = tbm_inst.param2+1
+					if wavenum in project_obj.waves: 
+						wave_obj = plugin_obj.wave_add('main')
+						wave_obj.set_all_range(project_obj.waves[wavenum].wave, 0, 15)
+					inst_obj.datavals.add('middlenote', 12)

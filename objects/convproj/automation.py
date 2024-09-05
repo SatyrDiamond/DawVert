@@ -245,7 +245,7 @@ class cvpj_s_automation:
 class cvpj_autoloc:
 	def __init__(self, indata):
 		if isinstance(indata, list): self.autoloc = indata
-		elif isinstance(indata, str): self.autoloc = intxt.split(';')
+		elif isinstance(indata, str): self.autoloc = indata.split(';')
 		else: self.autoloc = []
 
 	def __eq__(self, other):
@@ -330,6 +330,7 @@ class cvpj_automation:
 		else: return False, cvpj_s_automation(self.time_ppq, self.time_float, valtype)
 
 	def pop_f(self, autopath):
+		autopath = ';'.join(autopath)
 		if autopath in self.data: 
 			outauto = self.data[autopath]
 			del self.data[autopath]
@@ -366,8 +367,6 @@ class cvpj_automation:
 			autopart = self.pop_f(autopath)
 			autopath.change_start(len(locset_from), locset_to)
 			self.data[autopath] = autopart
-
-
 
 	def calc(self, autopath, mathtype, val1, val2, val3, val4):
 		autopath = cvpj_autoloc(autopath)

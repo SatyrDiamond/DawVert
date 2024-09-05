@@ -3,12 +3,13 @@
 
 from functions import xtramath
 from objects import globalstore
+from objects.convproj import automation
 from objects.convproj import project as convproj
 
 class valuepack:
-	def __init__(self, value, automation, isbool):
+	def __init__(self, value, autodata, isbool):
 		self.value = value
-		self.automation = automation
+		self.automation = autodata
 		self.isbool = isbool
 
 	def __int__(self): return int(self.value)
@@ -82,7 +83,7 @@ class plug_manu:
 			valstored = self.cur_params[storename]
 			valauto = valstored.automation
 			if valauto: 
-				autopath = convproj.autopath_encode(['plugin', self.pluginid, paramname])
+				autopath = automation.cvpj_autoloc(['plugin', self.pluginid, paramname])
 				self.convproj_obj.automation.data[autopath] = valauto
 			param_obj = self.plugin_obj.params.add(paramname, valstored.value, 'float' if not valstored.isbool else 'bool')
 			param_obj.visual.name = valuename
@@ -95,7 +96,7 @@ class plug_manu:
 			valstored = self.cur_params[storename]
 			valauto = valstored.automation
 			if valauto: 
-				autopath = convproj.autopath_encode(['slot', self.pluginid, 'wet'])
+				autopath = automation.cvpj_autoloc(['slot', self.pluginid, 'wet'])
 				self.convproj_obj.automation.data[autopath] = valauto
 			param_obj = self.plugin_obj.params_slot.add('wet', float(valstored.value), 'float')
 			param_obj.visual.name = 'Wet'

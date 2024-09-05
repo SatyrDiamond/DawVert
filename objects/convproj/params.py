@@ -4,6 +4,7 @@
 import copy
 
 from objects.convproj import visual
+from objects.convproj import automation
 
 visname = {
 	'bpm': 'Tempo',
@@ -123,7 +124,7 @@ class cvpj_paramset:
 
 	def get_auto(self, p_id, fallbackval, cvpj_obj, autopath):
 		param_obj = self.get(p_id, fallbackval)
-		autopath = autopath_encode(autopath+[p_id])
+		autopath = automation.cvpj_autoloc(autopath+[p_id])
 		if autopath in cvpj_obj.automation: 
 			return param_obj, cvpj_obj.automation[autopath]
 		else: 

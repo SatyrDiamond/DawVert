@@ -3,13 +3,14 @@
 
 from functions import note_data
 from functions import xtramath
+from objects.convproj import automation
 from objects.convproj import project as convproj
 import math
 
 class valuepack:
-	def __init__(self, value, automation, isbool):
+	def __init__(self, value, autodata, isbool):
 		self.value = value
-		self.automation = automation
+		self.automation = autodata
 		self.isbool = isbool
 
 	def calc(self, mathtype, val1, val2, val3, val4):
@@ -100,13 +101,13 @@ class plugtransform:
 		self.filtername = val
 
 	def store_wet(self, plugin_obj, convproj_obj, storename, pluginid):
-		autopath = convproj.autopath_encode(['slot', pluginid, 'wet'])
+		autopath = cvpj_autoloc(['slot', pluginid, 'wet'])
 		d_value = plugin_obj.params_slot.get('wet', 1).value
 		plugin_obj.params_slot.remove('wet')
 		self.cur_params[storename] = valuepack(d_value, convproj_obj.automation.data[autopath] if autopath in convproj_obj.automation.data else None, False)
 
 	def store_param(self, plugin_obj, convproj_obj, paramid, storename, pluginid, defualtval, isbool):
-		autopath = convproj.autopath_encode(['plugin', pluginid, paramid])
+		autopath = cvpj_autoloc(['plugin', pluginid, paramid])
 		p_value = plugin_obj.params.get(paramid, defualtval)
 		d_value = p_value.value
 		plugin_obj.params.remove(paramid)
@@ -129,14 +130,14 @@ class plugtransform:
 	def out_auto(self, convproj_obj, pluginid, storename, paramid):
 		if storename in self.cur_params: 
 			if self.cur_params[storename].automation: 
-				autopath = convproj.autopath_encode(['plugin', pluginid, paramid])
+				autopath = cvpj_autoloc(['plugin', pluginid, paramid])
 				convproj_obj.automation.data[autopath] = self.cur_params[storename].automation
 
 	def out(self, convproj_obj, plugin_obj, pluginid, storename, paramid, valuename):
 		if storename in self.cur_params: 
 			valstored = self.cur_params[storename]
 			if valstored.automation: 
-				autopath = convproj.autopath_encode(['plugin', pluginid, paramid])
+				autopath = cvpj_autoloc(['plugin', pluginid, paramid])
 				convproj_obj.automation.data[autopath] = valstored.automation
 			param_obj = plugin_obj.params.add(paramid, valstored.value, 'float' if not valstored.isbool else 'bool')
 			param_obj.visual.name = valuename
@@ -144,7 +145,7 @@ class plugtransform:
 	def out_wet(self, convproj_obj, plugin_obj, pluginid, storename):
 		if storename in self.cur_params: 
 			if self.cur_params[storename].automation: 
-				autopath = convproj.autopath_encode(['slot', pluginid, 'wet'])
+				autopath = cvpj_autoloc(['slot', pluginid, 'wet'])
 				convproj_obj.automation.data[autopath] = self.cur_params[storename].automation
 			param_obj = plugin_obj.params_slot.add('wet', self.cur_params[storename].value, 'float')
 			param_obj.visual.name = 'Wet'

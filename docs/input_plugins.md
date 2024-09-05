@@ -8,6 +8,7 @@
 | R | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ | 11 only |
 | R | ```lmms``` | LMMS | ```.mmp```/```.mmpz``` | ✔️ | Stable and Alpha |
 | R | ```reaper``` | Reaper | ```.rpp``` | ✔️ | |
+| R | ```dawproject``` | DawProject | ```.dawproject``` | ❌ | |
 
 ## Tracker
 | DataType | Short Name | Name | Ext | Autodetect | Info | 
@@ -24,6 +25,7 @@
 | M-I | ```ceol``` | Bosca Ceoil | ```.txt``` | ❌ | |
 | M-I | ```deflemask``` | DefleMask | ```.dmf``` | ✔️ | DMF Legacy only|
 | M-I | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | Arp is converted to Chords |
+| M-I | ```famitracker_txt``` | Famitracker Text | ```.txt``` | ❌ | |
 | M-I | ```trackerboy``` | TrackerBoy | ```.tbm``` | ✔️ | |
 | M-S | ```1bitdragon``` | 1BITDRAGON | ```.ibd``` | ❌ | |
 | M-S | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ❌ | |
@@ -47,6 +49,7 @@
 | R | ```flipper``` | Flipper Music Format | ```.fmf``` | ❌ | 
 | R-I | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
 | R-M | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
+| R-M | ```adlib_sop``` | Note FM Tracker | ```.sop``` | ✔️ | 
 | R-M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | R-M | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
 | R-M | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ❌ | 
@@ -66,6 +69,7 @@
 | R | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
 | R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ | |
 | R | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ | |
+| R | ```temper``` | Temper | ```.squ``` | ❌ | |
 | R-M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ | |
 | R-S | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | |
 

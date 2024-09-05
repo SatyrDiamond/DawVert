@@ -331,11 +331,13 @@ class ableton_paramset:
 			in_path = n.split('/')
 			isnumset = isinstance(v, dict)
 
+			#print(isnumset, in_path, v)
+
 			if not isnumset: outval = v
 			else: 
 				outval = ableton_parampart()
 				outval.type = 'numset'
-				outval.groupname = n
+				outval.groupname = in_path[-1]
 				outval.value = {}
 				for ns_n, ns_v in v.items():
 					ns_num, ns_name = ns_n.split('/')
@@ -345,7 +347,8 @@ class ableton_paramset:
 
 			predata[n] = outval
 
-		for n, v in predata.items(): data_values.dict__nested_add_value(foldereddata, n.split('/'), v)
+		for n, v in predata.items(): 
+			data_values.dict__nested_add_value(foldereddata, n.split('/'), v)
 		del predata
 
 		self.import_keys_f_internal(foldereddata, self.data)

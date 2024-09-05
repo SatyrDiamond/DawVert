@@ -9,14 +9,14 @@ import plugins
 
 dpcm_rate_arr = [4181.71,4709.93,5264.04,5593.04,6257.95,7046.35,7919.35,8363.42,9419.86,11186.1,12604.0,13982.6,16884.6,21306.8,24858.0,33143.9]
 
-class input_famitracker(plugins.base):
+class input_famitracker_txt(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'famitracker'
+	def getshortname(self): return 'famitracker_txt'
 	def gettype(self): return 'm'
 	def supported_autodetect(self): return False
 	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Famitracker'
+		dawinfo_obj.name = 'Famitracker Text'
 		dawinfo_obj.file_ext = 'txt'
 		dawinfo_obj.track_lanes = True
 		dawinfo_obj.track_nopl = True

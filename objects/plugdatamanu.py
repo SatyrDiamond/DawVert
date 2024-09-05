@@ -64,8 +64,7 @@ class plug_manu:
 		if TOPLTR_DEBUG: print('	param|'+storename)
 		self.cur_params[storename] = valuepack(
 			self.plugin_obj.params.pop(paramname,fb).value, 
-			self.convproj_obj.automation.pop_f(['plugin', self.pluginid, paramname]),
-			False)
+			self.convproj_obj.automation.pop_f(['plugin', self.pluginid, paramname]), False)
 		return self.cur_params[storename]
 
 	def from_dataval(self, storename, paramname, fb):

@@ -227,7 +227,6 @@ class ableton_parampart:
 						attribdata = xmlpart.attrib.copy()
 						del attribdata['Id']
 						numdata = ableton_paramset()
-						#print(attribdata)
 						numdata.attr = attribdata
 						numdata.name = xmlpart.tag
 						numdata.scan(xmlpart)
@@ -259,7 +258,8 @@ class ableton_parampart:
 			for x, v in self.value.items():
 				xmlp = ET.SubElement(xmlg, v.name)
 				xmlp.attrib['Id'] = str(x)
-				xmlp.attrib |= v.attr
+				for f, d in v.attr.items(): xmlp.set(f, d)
+				#xmlp.attrib |= v.attr
 				v.create(xmlp)
 		if self.type == 'buffer': 
 			xmlg = ET.SubElement(xmltag, self.name)

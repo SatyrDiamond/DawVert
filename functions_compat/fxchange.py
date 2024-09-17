@@ -155,7 +155,6 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 			if y not in fx_trackids: fx_trackids[y] = []
 			if x not in fx_trackids: fx_trackids[x] = []
 
-		#for fxnum, fxchannel_obj in convproj_obj.fxrack.items()
 		for fx_num in fx_trackids:
 
 			if fx_num in convproj_obj.fxrack:
@@ -164,8 +163,8 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 				groupid = 'fxrack_'+str(fx_num)
 				group_obj = convproj_obj.add_group(groupid)
 
-				#if fx_num in routedatas:
-				#	group_obj.group = 'fxrack_'+str(routedatas[fx_num])
+				if fx_num in routedatas:
+					group_obj.group = 'fxrack_'+str(routedatas[fx_num])
 
 				convproj_obj.automation.move(['fxmixer',str(fx_num),'pan'], ['group',groupid,'pan'])
 				convproj_obj.automation.move(['fxmixer',str(fx_num),'vol'], ['group',groupid,'vol'])

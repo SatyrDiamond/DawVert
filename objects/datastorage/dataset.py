@@ -58,7 +58,7 @@ class dataset_objectset:
 		return outdict
 
 class dataset_param:
-	__slots__ = ['noauto','type','defv','min','max','name']
+	__slots__ = ['noauto','type','defv','min','max','name','num']
 
 	def __init__(self, i_param):
 		self.noauto = False
@@ -67,6 +67,7 @@ class dataset_param:
 		self.min = 0
 		self.max = 1
 		self.name = ''
+		self.num = -1
 		if i_param:
 			if 'noauto' in i_param: self.noauto = i_param['noauto']
 			if 'type' in i_param: self.type = i_param['type']
@@ -74,6 +75,7 @@ class dataset_param:
 			if 'min' in i_param: self.min = i_param['min']
 			if 'max' in i_param: self.max = i_param['max']
 			if 'name' in i_param: self.name = i_param['name']
+			if 'num' in i_param: self.num = i_param['num']
 
 	def write(self):
 		out_data = {}
@@ -82,6 +84,7 @@ class dataset_param:
 		if self.min != 0: out_data['min'] = self.min
 		if self.name: out_data['name'] = self.name
 		if self.noauto: out_data['noauto'] = self.noauto
+		if self.max != -1: out_data['num'] = self.num
 		out_data['type'] = self.type
 		return out_data
 

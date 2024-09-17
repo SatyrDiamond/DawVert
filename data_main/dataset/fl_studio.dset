@@ -176,12 +176,12 @@
                 "group": "fx",
                 "params": {
                     "version": {"max": 2,"noauto": true,"type": "int"},
-                    "threshold": {"max": 0,"min": -600,"noauto": false,"type": "int"},
-                    "ratio": {"max": 300,"noauto": false,"type": "int"},
-                    "gain": {"max": 300,"noauto": false,"type": "int"},
-                    "attack": {"max": 4000,"noauto": false,"type": "int"},
-                    "release": {"max": 4000,"noauto": false,"type": "int"},
-                    "type": {"max": 8,"noauto": false,"type": "int"}
+                    "threshold": {"num": 0, "max": 0,"min": -600,"noauto": false,"type": "int"},
+                    "ratio": {"num": 1, "max": 300,"noauto": false,"type": "int"},
+                    "gain": {"num": 2, "max": 300,"noauto": false,"type": "int"},
+                    "attack": {"num": 3, "max": 4000,"noauto": false,"type": "int"},
+                    "release": {"num": 4, "max": 4000,"noauto": false,"type": "int"},
+                    "type": {"num": 5, "max": 8,"noauto": false,"type": "int"}
                 }
             },
             "fruity formula controller": {
@@ -239,13 +239,13 @@
                 "datadef_struct": "fruity_7_band_eq",
                 "group": "fx",
                 "params": {
-                    "band_1": {"max": 1800,"min": -1800,"noauto": false,"type": "int"},
-                    "band_2": {"max": 1800,"min": -1800,"noauto": false,"type": "int"},
-                    "band_3": {"max": 1800,"min": -1800,"noauto": false,"type": "int"},
-                    "band_4": {"max": 1800,"min": -1800,"noauto": false,"type": "int"},
-                    "band_5": {"max": 1800,"min": -1800,"noauto": false,"type": "int"},
-                    "band_6": {"max": 1800,"min": -1800,"noauto": false,"type": "int"},
-                    "band_7": {"max": 1800,"min": -1800,"noauto": false,"type": "int"},
+                    "band_1": {"num": 0, "max": 1800,"min": -1800,"noauto": false,"type": "int"},
+                    "band_2": {"num": 1, "max": 1800,"min": -1800,"noauto": false,"type": "int"},
+                    "band_3": {"num": 2, "max": 1800,"min": -1800,"noauto": false,"type": "int"},
+                    "band_4": {"num": 3, "max": 1800,"min": -1800,"noauto": false,"type": "int"},
+                    "band_5": {"num": 4, "max": 1800,"min": -1800,"noauto": false,"type": "int"},
+                    "band_6": {"num": 5, "max": 1800,"min": -1800,"noauto": false,"type": "int"},
+                    "band_7": {"num": 6, "max": 1800,"min": -1800,"noauto": false,"type": "int"},
                     "version": {"max": 1,"name": "Version","noauto": true,"type": "int"}
                 }
             },
@@ -255,8 +255,8 @@
                 "datadef_struct": "fruity_balance",
                 "group": "fx",
                 "params": {
-                    "pan": {"max": 128,"min": -128,"noauto": false,"type": "int"},
-                    "vol": {"max": 320,"noauto": false,"type": "int"}
+                    "pan": {"num": 0, "max": 128,"min": -128,"noauto": false,"type": "int"},
+                    "vol": {"num": 1, "max": 320,"noauto": false,"type": "int"}
                 }
             },
             "fruity bass boost": {
@@ -265,8 +265,8 @@
                 "datadef_struct": "fruity_bass_boost",
                 "group": "fx",
                 "params": {
-                    "amount": {"max": 1024,"noauto": false,"type": "int"},
-                    "freq": {"max": 1024,"noauto": false,"type": "int"},
+                    "freq": {"num": 0, "max": 1024,"noauto": false,"type": "int"},
+                    "amount": {"num": 1, "max": 1024,"noauto": false,"type": "int"},
                     "version": {"max": 1,"name": "Version","noauto": true,"type": "int"}
                 }
             },
@@ -287,15 +287,15 @@
                 "datadef_struct": "fruity_blood_overdrive",
                 "group": "fx",
                 "params": {
-                    "color": {"max": 10000,"name": "Color","noauto": false,"type": "int"},
-                    "postfilter": {"max": 10000,"name": "PostFilter","noauto": false,"type": "int"},
-                    "postgain": {"max": 10000,"name": "PostGain","noauto": false,"type": "int"},
-                    "preamp": {"max": 10000,"name": "PreAmp","noauto": false,"type": "int"},
-                    "preband": {"max": 10000,"name": "PreBand","noauto": false,"type": "int"},
+                    "color": {"num": 1,"max": 10000,"name": "Color","noauto": false,"type": "int"},
+                    "postfilter": {"num": 4,"max": 10000,"name": "PostFilter","noauto": false,"type": "int"},
+                    "postgain": {"num": 5,"max": 10000,"name": "PostGain","noauto": false,"type": "int"},
+                    "preamp": {"num": 2,"max": 10000,"name": "PreAmp","noauto": false,"type": "int"},
+                    "preband": {"num": 0,"max": 10000,"name": "PreBand","noauto": false,"type": "int"},
                     "unknown_1": {"max": 1,"noauto": true,"type": "int"},
                     "unknown_2": {"max": 1,"noauto": true,"type": "int"},
                     "version": {"max": 1,"name": "Version","noauto": true,"type": "int"},
-                    "x100": {"max": 1,"name": "x 100","noauto": false,"type": "int"}
+                    "x100": {"num": 3,"max": 1,"name": "x 100","noauto": false,"type": "int"}
                 }
             },
             "fruity center": {
@@ -314,19 +314,19 @@
                 "datadef_struct": "fruity_chorus",
                 "group": "fx",
                 "params": {
-                    "crosscutoff": {"max": 5000,"name": "Cross Cutoff","noauto": false,"type": "int"},
-                    "crosstype": {"max": 100,"name": "Cross Type","noauto": false,"type": "int"},
-                    "delay": {"max": 1024,"name": "Delay","noauto": false,"type": "int"},
-                    "depth": {"max": 5000,"name": "Depth","noauto": false,"type": "int"},
-                    "lfo1_freq": {"max": 5000,"name": "LFO 1 Freq","noauto": false,"type": "int"},
-                    "lfo1_wave": {"max": 1024,"name": "LFO 1 wave","noauto": false,"type": "int"},
-                    "lfo2_freq": {"max": 5000,"name": "LFO 2 Freq","noauto": false,"type": "int"},
-                    "lfo2_wave": {"max": 1024,"name": "LFO 2 wave","noauto": false,"type": "int"},
-                    "lfo3_freq": {"max": 5000,"name": "LFO 3 Freq","noauto": false,"type": "int"},
-                    "lfo3_wave": {"max": 1024,"name": "LFO 3 wave","noauto": false,"type": "int"},
-                    "stereo": {"max": 1024,"name": "Stereo","noauto": false,"type": "int"},
-                    "version": {"max": 1,"name": "Version","noauto": true,"type": "int"},
-                    "wetonly": {"max": 1024,"name": "Wet Only","noauto": false,"type": "int"}
+                    "delay": {"num": 0, "max": 1024,"name": "Delay","noauto": false,"type": "int"},
+                    "depth": {"num": 1, "max": 5000,"name": "Depth","noauto": false,"type": "int"},
+                    "stereo": {"num": 2, "max": 1024,"name": "Stereo","noauto": false,"type": "int"},
+                    "lfo1_freq": {"num": 3, "max": 5000,"name": "LFO 1 Freq","noauto": false,"type": "int"},
+                    "lfo2_freq": {"num": 4, "max": 5000,"name": "LFO 2 Freq","noauto": false,"type": "int"},
+                    "lfo3_freq": {"num": 5, "max": 5000,"name": "LFO 3 Freq","noauto": false,"type": "int"},
+                    "lfo1_wave": {"num": 6, "max": 1024,"name": "LFO 1 wave","noauto": false,"type": "int"},
+                    "lfo2_wave": {"num": 7, "max": 1024,"name": "LFO 2 wave","noauto": false,"type": "int"},
+                    "lfo3_wave": {"num": 8, "max": 1024,"name": "LFO 3 wave","noauto": false,"type": "int"},
+                    "crosstype": {"num": 9, "max": 100,"name": "Cross Type","noauto": false,"type": "int"},
+                    "crosscutoff": {"num": 10, "max": 5000,"name": "Cross Cutoff","noauto": false,"type": "int"},
+                    "wetonly": {"num": 11, "max": 1024,"name": "Wet Only","noauto": false,"type": "int"},
+                    "version": {"max": 1,"name": "Version","noauto": true,"type": "int"}
                 }
             },
             "fruity delay": {
@@ -335,12 +335,12 @@
                 "datadef_struct": "fruity_delay",
                 "group": "fx",
                 "params": {
-                    "cutoff": {"max": 1024,"name": "Cutoff","noauto": false,"type": "int"},
-                    "fb": {"max": 1024,"name": "Feedback","noauto": false,"type": "int"},
-                    "input": {"max": 1024,"name": "Input","noauto": false,"type": "int"},
-                    "mode": {"max": 1024,"name": "Mode","noauto": false,"type": "int"},
-                    "steps": {"max": 16,"name": "Steps","noauto": false,"type": "int"},
-                    "tempo": {"max": 1024,"name": "Tempo","noauto": false,"type": "int"},
+                    "cutoff": {"num": 2,"max": 1024,"name": "Cutoff","noauto": false,"type": "int"},
+                    "fb": {"num": 1,"max": 1024,"name": "Feedback","noauto": false,"type": "int"},
+                    "input": {"num": 0,"max": 1024,"name": "Input","noauto": false,"type": "int"},
+                    "mode": {"num": 5,"max": 1024,"name": "Mode","noauto": false,"type": "int"},
+                    "steps": {"num": 4,"max": 16,"name": "Steps","noauto": false,"type": "int"},
+                    "tempo": {"num": 3,"max": 1024,"name": "Tempo","noauto": false,"type": "int"},
                     "version": {"max": 1,"name": "Version","noauto": true,"type": "int"}
                 }
             },
@@ -350,14 +350,14 @@
                 "datadef_struct": "fruity_delay_2",
                 "group": "fx",
                 "params": {
-                    "dry": {"max": 160,"name": "Dry","noauto": false,"type": "int"},
-                    "fb_cut": {"max": 128,"name": "Feedback Cut","noauto": false,"type": "int"},
-                    "fb_mode": {"max": 2,"name": "Feedback Mode","noauto": false,"type": "int"},
-                    "fb_vol": {"max": 127,"name": "Feedback Vol","noauto": false,"type": "int"},
-                    "input_pan": {"max": 128,"min": -128,"name": "Input Pan","noauto": false,"type": "int"},
-                    "input_vol": {"max": 160,"name": "Input Vol","noauto": false,"type": "int"},
-                    "time": {"max": 768,"name": "Time","noauto": false,"type": "int"},
-                    "time_stereo_offset": {"max": 512,"min": -512,"name": "Stereo Offset","noauto": false,"type": "int"}
+                    "dry": {"num": 2,"max": 160,"name": "Dry","noauto": false,"type": "int"},
+                    "fb_cut": {"num": 7,"max": 128,"name": "Feedback Cut","noauto": false,"type": "int"},
+                    "fb_mode": {"num": 6,"max": 2,"name": "Feedback Mode","noauto": false,"type": "int"},
+                    "fb_vol": {"num": 3,"max": 127,"name": "Feedback Vol","noauto": false,"type": "int"},
+                    "input_pan": {"num": 0,"max": 128,"min": -128,"name": "Input Pan","noauto": false,"type": "int"},
+                    "input_vol": {"num": 1,"max": 160,"name": "Input Vol","noauto": false,"type": "int"},
+                    "time": {"num": 4,"max": 768,"name": "Time","noauto": false,"type": "int"},
+                    "time_stereo_offset": {"num": 5,"max": 512,"min": -512,"name": "Stereo Offset","noauto": false,"type": "int"}
                 }
             },
             "fruity delay 3": {
@@ -658,11 +658,11 @@
                 "datadef_struct": "fruity_fast_dist",
                 "group": "fx",
                 "params": {
-                    "mix": {"max": 128,"name": "Mix","noauto": false,"type": "int"},
-                    "post": {"max": 128,"name": "Post","noauto": false,"type": "int"},
-                    "pre": {"max": 192,"name": "Pre Amp","noauto": false,"type": "int"},
-                    "threshold": {"max": 10,"name": "Threshold","noauto": false,"type": "int"},
-                    "type": {"max": 1,"name": "Type","noauto": false,"type": "int"}
+                    "mix": {"num": 3,"max": 128,"name": "Mix","noauto": false,"type": "int"},
+                    "post": {"num": 4,"max": 128,"name": "Post","noauto": false,"type": "int"},
+                    "pre": {"num": 0,"max": 192,"name": "Pre Amp","noauto": false,"type": "int"},
+                    "threshold": {"num": 1,"max": 10,"name": "Threshold","noauto": false,"type": "int"},
+                    "type": {"num": 2,"max": 1,"name": "Type","noauto": false,"type": "int"}
                 }
             },
             "fruity fast lp": {
@@ -671,8 +671,8 @@
                 "datadef_struct": "fruity_fast_lp",
                 "group": "fx",
                 "params": {
-                    "cutoff": {"max": 1024,"name": "Cutoff","noauto": false,"type": "int"},
-                    "reso": {"max": 1024,"name": "Reso","noauto": false,"type": "int"},
+                    "cutoff": {"num": 0,"max": 1024,"name": "Cutoff","noauto": false,"type": "int"},
+                    "reso": {"num": 1,"max": 1024,"name": "Reso","noauto": false,"type": "int"},
                     "version": {"max": 1,"name": "Version","noauto": false,"type": "int"}
                 }
             },
@@ -682,14 +682,14 @@
                 "datadef_struct": "fruity_filter",
                 "group": "fx",
                 "params": {
-                    "bandpass": {"max": 1024,"name": "Band Pass","noauto": false,"type": "int"},
+                    "bandpass": {"num": 3,"max": 1024,"name": "Band Pass","noauto": false,"type": "int"},
                     "center": {"max": null,"min": null,"name": "Center","noauto": true,"type": "bool"},
-                    "cutoff": {"max": 1024,"name": "Cutoff","noauto": false,"type": "int"},
-                    "hipass": {"max": 1024,"name": "High Pass","noauto": false,"type": "int"},
-                    "lowpass": {"max": 1024,"name": "Low Pass","noauto": false,"type": "int"},
-                    "reso": {"max": 1024,"name": "Reso","noauto": false,"type": "int"},
+                    "cutoff": {"num": 0,"max": 1024,"name": "Cutoff","noauto": false,"type": "int"},
+                    "hipass": {"num": 4,"max": 1024,"name": "High Pass","noauto": false,"type": "int"},
+                    "lowpass": {"num": 2,"max": 1024,"name": "Low Pass","noauto": false,"type": "int"},
+                    "reso": {"num": 1,"max": 1024,"name": "Reso","noauto": false,"type": "int"},
                     "version": {"max": 2,"name": "Version","noauto": false,"type": "int"},
-                    "x2": {"max": null,"min": null,"name": "x2","noauto": false,"type": "bool"}
+                    "x2": {"num": 5,"max": null,"min": null,"name": "x2","noauto": false,"type": "bool"}
                 }
             },
             "fruity flanger": {
@@ -698,19 +698,19 @@
                 "datadef_struct": "fruity_flanger",
                 "group": "fx",
                 "params": {
-                    "cross": {"max": 5000,"noauto": false,"type": "int"},
-                    "damp": {"max": 5000,"noauto": false,"type": "int"},
-                    "delay": {"max": 1024,"noauto": false,"type": "int"},
-                    "depth": {"max": 5000,"noauto": false,"type": "int"},
-                    "dry": {"max": 5000,"noauto": false,"type": "int"},
-                    "feed": {"max": 100,"noauto": false,"type": "int"},
-                    "inv_feedback": {"max": 1024,"noauto": false,"type": "int"},
-                    "inv_wet": {"max": 1024,"noauto": false,"type": "int"},
-                    "phase": {"max": 360,"noauto": false,"type": "int"},
-                    "rate": {"max": 5000,"noauto": false,"type": "int"},
-                    "shape": {"max": 1024,"noauto": false,"type": "int"},
-                    "version": {"max": 1,"name": "Version","noauto": true,"type": "int"},
-                    "wet": {"max": 5000,"noauto": false,"type": "int"}
+                    "delay": {"num": 0, "max": 1024,"noauto": false,"type": "int"},
+                    "depth": {"num": 1, "max": 5000,"noauto": false,"type": "int"},
+                    "rate": {"num": 2, "max": 5000,"noauto": false,"type": "int"},
+                    "phase": {"num": 3, "max": 360,"noauto": false,"type": "int"},
+                    "damp": {"num": 4, "max": 5000,"noauto": false,"type": "int"},
+                    "shape": {"num": 5, "max": 1024,"noauto": false,"type": "int"},
+                    "feed": {"num": 6, "max": 100,"noauto": false,"type": "int"},
+                    "inv_feedback": {"num": 7, "max": 1024,"noauto": false,"type": "int"},
+                    "inv_wet": {"num": 8, "max": 1024,"noauto": false,"type": "int"},
+                    "dry": {"num": 9, "max": 5000,"noauto": false,"type": "int"},
+                    "wet": {"num": 10, "max": 5000,"noauto": false,"type": "int"},
+                    "cross": {"num": 1, "max": 5000,"noauto": false,"type": "int"},
+                    "version": {"max": 1,"name": "Version","noauto": true,"type": "int"}
                 }
             },
             "fruity flangus": {
@@ -719,14 +719,14 @@
                 "datadef_struct": "fruity_flangus",
                 "group": "fx",
                 "params": {
-                    "cross": {"max": 128,"min": -128,"noauto": false,"type": "int"},
-                    "delay": {"max": 128,"noauto": false,"type": "int"},
-                    "depth": {"max": 1024,"noauto": false,"type": "int"},
-                    "dry": {"max": 128,"min": -128,"noauto": false,"type": "int"},
-                    "ord": {"max": 9,"min": 1,"noauto": false,"type": "int"},
-                    "speed": {"max": 1024,"noauto": false,"type": "int"},
-                    "spread": {"max": 128,"noauto": false,"type": "int"},
-                    "wet": {"max": 128,"min": -128,"noauto": false,"type": "int"}
+                    "ord": {"num": 0, "max": 9,"min": 1,"noauto": false,"type": "int"},
+                    "depth": {"num": 1, "max": 1024,"noauto": false,"type": "int"},
+                    "speed": {"num": 2, "max": 1024,"noauto": false,"type": "int"},
+                    "delay": {"num": 3, "max": 128,"noauto": false,"type": "int"},
+                    "spread": {"num": 4, "max": 128,"noauto": false,"type": "int"},
+                    "cross": {"num": 5, "max": 128,"min": -128,"noauto": false,"type": "int"},
+                    "dry": {"num": 6, "max": 128,"min": -128,"noauto": false,"type": "int"},
+                    "wet": {"num": 7, "max": 128,"min": -128,"noauto": false,"type": "int"}
                 }
             },
             "fruity free filter": {
@@ -737,10 +737,10 @@
                 "params": {
                     "version": {"max": 1,"noauto": true,"type": "int"},
                     "center": {"max": 1024,"name": "Center","noauto": false,"type": "int"},
-                    "freq": {"max": 700,"name": "Frequency","noauto": false,"type": "int"},
-                    "gain": {"max": 1024,"name": "Gain","noauto": false,"type": "int"},
-                    "q": {"max": 1024,"name": "Q","noauto": false,"type": "int"},
-                    "type": {"max": 2,"name": "Type","noauto": false,"type": "int"}
+                    "freq": {"num": 1, "max": 700,"name": "Frequency","noauto": false,"type": "int"},
+                    "gain": {"num": 3, "max": 1024,"name": "Gain","noauto": false,"type": "int"},
+                    "q": {"num": 2, "max": 1024,"name": "Q","noauto": false,"type": "int"},
+                    "type": {"num": 0, "max": 2,"name": "Type","noauto": false,"type": "int"}
                 }
             },
             "fruity limiter": {
@@ -822,8 +822,8 @@
                 "datadef_struct": "fruity_mute_2",
                 "group": "fx",
                 "params": {
-                    "channel": {"max": 1024,"name": "Channel","noauto": false,"type": "int"},
-                    "mute": {"max": 1024,"name": "Mute","noauto": false,"type": "int"},
+                    "channel": {"num": 1, "max": 1024,"name": "Channel","noauto": false,"type": "int"},
+                    "mute": {"num": 0, "max": 1024,"name": "Mute","noauto": false,"type": "int"},
                     "version": {"max": 1,"noauto": true,"type": "int"}
                 }
             },
@@ -833,12 +833,12 @@
                 "datadef_struct": "fruity_panomatic",
                 "group": "fx",
                 "params": {
-                    "lfo_amount": {"max": 128,"name": "LFO Amount","noauto": false,"type": "int"},
-                    "lfo_shape": {"max": 2,"name": "LFO Shape","noauto": false,"type": "int"},
-                    "lfo_speed": {"max": 55000,"name": "LFO Speed","noauto": false,"type": "int"},
-                    "lfo_target": {"max": 2,"name": "LFO Target","noauto": false,"type": "int"},
-                    "pan": {"max": 256,"name": "Pan","noauto": false,"type": "int"},
-                    "vol": {"max": 320,"name": "Vol","noauto": false,"type": "int"}
+                    "lfo_amount": {"num": 4, "max": 128,"name": "LFO Amount","noauto": false,"type": "int"},
+                    "lfo_shape": {"num": 2, "max": 2,"name": "LFO Shape","noauto": false,"type": "int"},
+                    "lfo_speed": {"num": 5, "max": 55000,"name": "LFO Speed","noauto": false,"type": "int"},
+                    "lfo_target": {"num": 3, "max": 2,"name": "LFO Target","noauto": false,"type": "int"},
+                    "pan": {"num": 0, "max": 256,"name": "Pan","noauto": false,"type": "int"},
+                    "vol": {"num": 1, "max": 320,"name": "Vol","noauto": false,"type": "int"}
                 }
             },
             "fruity parametric eq": {
@@ -884,38 +884,38 @@
                 "datadef_struct": "fruity_parametric_eq_2",
                 "group": "fx",
                 "params": {
-                    "1_freq": {"max": 65536,"name": "Band 1 Freq","noauto": false,"type": "int"},
-                    "1_gain": {"max": 1800,"min": -1800,"name": "Band 1 Gain","noauto": false,"type": "int"},
+                    "1_freq": {"num": 7,"max": 65536,"name": "Band 1 Freq","noauto": false,"type": "int"},
+                    "1_gain": {"num": 0, "max": 1800,"min": -1800,"name": "Band 1 Gain","noauto": false,"type": "int"},
                     "1_order": {"max": 3,"min": -3,"name": "Band 1 Order","noauto": false,"type": "int"},
                     "1_type": {"max": 7,"name": "Band 1 Type","noauto": false,"type": "int"},
                     "1_width": {"max": 65536,"name": "Band 1 Width","noauto": false,"type": "int"},
-                    "2_freq": {"max": 65536,"name": "Band 2 Freq","noauto": false,"type": "int"},
-                    "2_gain": {"max": 1800,"min": -1800,"name": "Band 2 Gain","noauto": false,"type": "int"},
+                    "2_freq": {"num": 8,"max": 65536,"name": "Band 2 Freq","noauto": false,"type": "int"},
+                    "2_gain": {"num": 1, "max": 1800,"min": -1800,"name": "Band 2 Gain","noauto": false,"type": "int"},
                     "2_order": {"max": 3,"min": -3,"name": "Band 2 Order","noauto": false,"type": "int"},
                     "2_type": {"max": 7,"name": "Band 2 Type","noauto": false,"type": "int"},
                     "2_width": {"max": 65536,"name": "Band 2 Width","noauto": false,"type": "int"},
-                    "3_freq": {"max": 65536,"name": "Band 3 Freq","noauto": false,"type": "int"},
-                    "3_gain": {"max": 1800,"min": -1800,"name": "Band 3 Gain","noauto": false,"type": "int"},
+                    "3_freq": {"num": 9,"max": 65536,"name": "Band 3 Freq","noauto": false,"type": "int"},
+                    "3_gain": {"num": 2, "max": 1800,"min": -1800,"name": "Band 3 Gain","noauto": false,"type": "int"},
                     "3_order": {"max": 3,"min": -3,"name": "Band 3 Order","noauto": false,"type": "int"},
                     "3_type": {"max": 7,"name": "Band 3 Type","noauto": false,"type": "int"},
                     "3_width": {"max": 65536,"name": "Band 3 Width","noauto": false,"type": "int"},
-                    "4_freq": {"max": 65536,"name": "Band 4 Freq","noauto": false,"type": "int"},
-                    "4_gain": {"max": 1800,"min": -1800,"name": "Band 4 Gain","noauto": false,"type": "int"},
+                    "4_freq": {"num": 10,"max": 65536,"name": "Band 4 Freq","noauto": false,"type": "int"},
+                    "4_gain": {"num": 3, "max": 1800,"min": -1800,"name": "Band 4 Gain","noauto": false,"type": "int"},
                     "4_order": {"max": 3,"min": -3,"name": "Band 4 Order","noauto": false,"type": "int"},
                     "4_type": {"max": 7,"name": "Band 4 Type","noauto": false,"type": "int"},
                     "4_width": {"max": 65536,"name": "Band 4 Width","noauto": false,"type": "int"},
-                    "5_freq": {"max": 65536,"name": "Band 5 Freq","noauto": false,"type": "int"},
-                    "5_gain": {"max": 1800,"min": -1800,"name": "Band 5 Gain","noauto": false,"type": "int"},
+                    "5_freq": {"num": 11,"max": 65536,"name": "Band 5 Freq","noauto": false,"type": "int"},
+                    "5_gain": {"num": 4, "max": 1800,"min": -1800,"name": "Band 5 Gain","noauto": false,"type": "int"},
                     "5_order": {"max": 3,"min": -3,"name": "Band 5 Order","noauto": false,"type": "int"},
                     "5_type": {"max": 7,"name": "Band 5 Type","noauto": false,"type": "int"},
                     "5_width": {"max": 65536,"name": "Band 5 Width","noauto": false,"type": "int"},
-                    "6_freq": {"max": 65536,"name": "Band 6 Freq","noauto": false,"type": "int"},
-                    "6_gain": {"max": 1800,"min": -1800,"name": "Band 6 Gain","noauto": false,"type": "int"},
+                    "6_freq": {"num": 12,"max": 65536,"name": "Band 6 Freq","noauto": false,"type": "int"},
+                    "6_gain": {"num": 5, "max": 1800,"min": -1800,"name": "Band 6 Gain","noauto": false,"type": "int"},
                     "6_order": {"max": 3,"min": -3,"name": "Band 6 Order","noauto": false,"type": "int"},
                     "6_type": {"max": 7,"name": "Band 6 Type","noauto": false,"type": "int"},
                     "6_width": {"max": 65536,"name": "Band 6 Width","noauto": false,"type": "int"},
-                    "7_freq": {"max": 65536,"name": "Band 7 Freq","noauto": false,"type": "int"},
-                    "7_gain": {"max": 1800,"min": -1800,"name": "Band 7 Gain","noauto": false,"type": "int"},
+                    "7_freq": {"num": 13,"max": 65536,"name": "Band 7 Freq","noauto": false,"type": "int"},
+                    "7_gain": {"num": 6, "max": 1800,"min": -1800,"name": "Band 7 Gain","noauto": false,"type": "int"},
                     "7_order": {"max": 3,"min": -3,"name": "Band 7 Order","noauto": false,"type": "int"},
                     "7_type": {"max": 7,"name": "Band 7 Type","noauto": false,"type": "int"},
                     "7_width": {"max": 65536,"name": "Band 7 Width","noauto": false,"type": "int"},
@@ -929,7 +929,7 @@
                 "datadef_struct": "fruity_phase_inverter",
                 "group": "fx",
                 "params": {
-                    "state": {"max": 1024,"name": "State","noauto": false,"type": "int"},
+                    "state": {"num": 0,"max": 1024,"name": "State","noauto": false,"type": "int"},
                     "version": {"max": 1,"name": "Version","noauto": true,"type": "int"}
                 }
             },
@@ -939,15 +939,15 @@
                 "datadef_struct": "fruity_phaser",
                 "group": "fx",
                 "params": {
-                    "depth_max": {"max": 1000,"name": "Max Depth","noauto": false,"type": "int"},
-                    "depth_min": {"max": 1000,"name": "Min Depth","noauto": false,"type": "int"},
-                    "drywet": {"max": 1024,"name": "Dry-Wet","noauto": false,"type": "int"},
-                    "feedback": {"max": 1000,"name": "Feedback","noauto": false,"type": "int"},
-                    "freq_range": {"max": 1024,"name": "Freq Range","noauto": false,"type": "int"},
-                    "gain": {"max": 5000,"name": "Gain","noauto": false,"type": "int"},
-                    "num_stages": {"max": 22,"name": "NR. Stages","noauto": false,"type": "int"},
-                    "stereo": {"max": 1024,"name": "Stereo","noauto": false,"type": "int"},
-                    "sweep_freq": {"max": 5000,"name": "Sweep Freq","noauto": false,"type": "int"},
+                    "sweep_freq": {"num": 0, "max": 5000,"name": "Sweep Freq","noauto": false,"type": "int"},
+                    "depth_min": {"num": 1, "max": 1000,"name": "Min Depth","noauto": false,"type": "int"},
+                    "depth_max": {"num": 2, "max": 1000,"name": "Max Depth","noauto": false,"type": "int"},
+                    "freq_range": {"num": 3, "max": 1024,"name": "Freq Range","noauto": false,"type": "int"},
+                    "stereo": {"num": 4, "max": 1024,"name": "Stereo","noauto": false,"type": "int"},
+                    "num_stages": {"num": 5, "max": 22,"name": "NR. Stages","noauto": false,"type": "int"},
+                    "feedback": {"num": 6, "max": 1000,"name": "Feedback","noauto": false,"type": "int"},
+                    "drywet": {"num": 7, "max": 1024,"name": "Dry-Wet","noauto": false,"type": "int"},
+                    "gain": {"num": 8, "max": 5000,"name": "Gain","noauto": false,"type": "int"},
                     "version": {"max": 1,"name": "Version","noauto": true,"type": "int"}
                 }
             },
@@ -957,16 +957,16 @@
                 "datadef_struct": "fruity_reeverb",
                 "group": "fx",
                 "params": {
-                    "color": {"max": 40,"name": "Color","noauto": false,"type": "int"},
-                    "decay": {"max": 65536,"name": "Decay","noauto": false,"type": "int"},
-                    "diffusion": {"max": 65536,"name": "Diffusion","noauto": false,"type": "int"},
-                    "dry": {"max": 65536,"name": "Dry","noauto": false,"type": "int"},
-                    "hidamping": {"max": 65536,"name": "High Damping","noauto": false,"type": "int"},
-                    "highcut": {"max": 65536,"name": "High Cut","noauto": false,"type": "int"},
-                    "lowcut": {"max": 65536,"name": "Low Cut","noauto": false,"type": "int"},
-                    "predelay": {"max": 250,"name": "Predelay","noauto": false,"type": "int"},
-                    "reverb": {"max": 65536,"name": "Reverb","noauto": false,"type": "int"},
-                    "room_size": {"max": 65536,"name": "Room Size","noauto": false,"type": "int"},
+                    "lowcut": {"num": 0, "max": 65536,"name": "Low Cut","noauto": false,"type": "int"},
+                    "highcut": {"num": 1, "max": 65536,"name": "High Cut","noauto": false,"type": "int"},
+                    "predelay": {"num": 2, "max": 250,"name": "Predelay","noauto": false,"type": "int"},
+                    "room_size": {"num": 3, "max": 65536,"name": "Room Size","noauto": false,"type": "int"},
+                    "diffusion": {"num": 4, "max": 65536,"name": "Diffusion","noauto": false,"type": "int"},
+                    "color": {"num": 5, "max": 40,"name": "Color","noauto": false,"type": "int"},
+                    "decay": {"num": 6, "max": 65536,"name": "Decay","noauto": false,"type": "int"},
+                    "hidamping": {"num": 7, "max": 65536,"name": "High Damping","noauto": false,"type": "int"},
+                    "dry": {"num": 8, "max": 65536,"name": "Dry","noauto": false,"type": "int"},
+                    "reverb": {"num": 9, "max": 65536,"name": "Reverb","noauto": false,"type": "int"},
                     "version": {"max": 1,"name": "Version","noauto": true,"type": "int"}
                 }
             },
@@ -976,24 +976,24 @@
                 "datadef_struct": "fruity_reeverb_2",
                 "group": "fx",
                 "params": {
-                    "bass": {"max": 300,"name": "Bass Multi","noauto": false,"type": "int"},
-                    "cross": {"max": 2000,"name": "Crossover","noauto": false,"type": "int"},
-                    "decay": {"max": 200,"name": "Decay","noauto": false,"type": "int"},
-                    "diffusion": {"max": 100,"name": "Diffusion","noauto": false,"type": "int"},
-                    "dry": {"max": 160,"name": "Dry","noauto": false,"type": "int"},
-                    "er": {"max": 160,"name": "Early Reflection","noauto": false,"type": "int"},
-                    "hidamping": {"max": 221,"name": "High Damping","noauto": false,"type": "int"},
-                    "highcut": {"max": 221,"name": "High Cut","noauto": false,"type": "int"},
-                    "lowcut": {"max": 3000,"name": "Low Cut","noauto": false,"type": "int"},
+                    "lowcut": {"num": 0, "max": 3000,"name": "Low Cut","noauto": false,"type": "int"},
+                    "highcut": {"num": 1, "max": 221,"name": "High Cut","noauto": false,"type": "int"},
+                    "predelay": {"num": 2, "max": 384,"name": "Predelay","noauto": false,"type": "int"},
+                    "room_size": {"num": 3, "max": 100,"name": "Room Size","noauto": false,"type": "int"},
+                    "diffusion": {"num": 4, "max": 100,"name": "Diffusion","noauto": false,"type": "int"},
+                    "decay": {"num": 5, "max": 200,"name": "Decay","noauto": false,"type": "int"},
+                    "hidamping": {"num": 6, "max": 221,"name": "High Damping","noauto": false,"type": "int"},
+                    "bass": {"num": 7, "max": 300,"name": "Bass Multi","noauto": false,"type": "int"},
+                    "cross": {"num": 8, "max": 2000,"name": "Crossover","noauto": false,"type": "int"},
+                    "stereo": {"num": 9, "max": 1,"name": "Stereo Seperation","noauto": false,"type": "int"},
+                    "dry": {"num": 10, "max": 160,"name": "Dry","noauto": false,"type": "int"},
+                    "er": {"num": 11, "max": 160,"name": "Early Reflection","noauto": false,"type": "int"},
+                    "wet": {"num": 12, "max": 160,"name": "Wet","noauto": false,"type": "int"},
+                    "mod_speed": {"num": 13, "max": 2048,"name": "Mod Speed","noauto": false,"type": "int"},
+                    "mod": {"num": 14, "max": 2048,"name": "Mod Depth","noauto": false,"type": "int"},
                     "mid_side": {"max": 1,"name": "Mid/Side Input","noauto": false,"type": "bool"},
-                    "mod": {"max": 2048,"name": "Mod Depth","noauto": false,"type": "int"},
-                    "mod_speed": {"max": 2048,"name": "Mod Speed","noauto": false,"type": "int"},
-                    "predelay": {"max": 384,"name": "Predelay","noauto": false,"type": "int"},
-                    "room_size": {"max": 100,"name": "Room Size","noauto": false,"type": "int"},
-                    "stereo": {"max": 1,"name": "Stereo Seperation","noauto": false,"type": "int"},
                     "tempo_predelay": {"max": 1,"name": "Tempo Based Predelay","noauto": false,"type": "bool"},
-                    "version": {"max": 1,"name": "Version","noauto": true,"type": "int"},
-                    "wet": {"max": 160,"name": "Wet","noauto": false,"type": "int"}
+                    "version": {"max": 1,"name": "Version","noauto": true,"type": "int"}
                 }
             },
             "fruity soft clipper": {
@@ -1002,8 +1002,8 @@
                 "datadef_struct": "fruity_soft_clipper",
                 "group": "fx",
                 "params": {
-                    "postgain": {"max": 160,"name": "PostGain","noauto": false,"type": "int"},
-                    "threshold": {"max": 127,"name": "Threshold","noauto": false,"type": "int"}
+                    "postgain": {"num": 1, "max": 160,"name": "PostGain","noauto": false,"type": "int"},
+                    "threshold": {"num": 0, "max": 127,"name": "Threshold","noauto": false,"type": "int"}
                 }
             },
             "fruity spectroman": {
@@ -1012,9 +1012,9 @@
                 "datadef_struct": "fruity_spectroman",
                 "group": "fx",
                 "params": {
-                    "amp": {"max": 1,"name": "Amp","noauto": false,"type": "int"},
-                    "outputmode": {"max": 1,"name": "Output Mode","noauto": false,"type": "int"},
-                    "scale": {"max": 1,"name": "Freq Scale","noauto": false,"type": "int"},
+                    "amp": {"num": 1, "max": 1,"name": "Amp","noauto": false,"type": "int"},
+                    "outputmode": {"num": 0, "max": 1,"name": "Output Mode","noauto": false,"type": "int"},
+                    "scale": {"num": 2, "max": 1,"name": "Freq Scale","noauto": false,"type": "int"},
                     "show_peaks": {"max": 1,"noauto": true,"type": "bool"},
                     "stereo": {"max": 1,"noauto": true,"type": "bool"},
                     "version": {"defv": 100,"max": 128,"noauto": true,"type": "int"},
@@ -1027,12 +1027,12 @@
                 "datadef_struct": "fruity_stereo_enhancer",
                 "group": "fx",
                 "params": {
-                    "pan": {"max": 128,"min": -128,"name": "Pan","noauto": false,"type": "int"},
-                    "phase_offs": {"max": 512,"min": -512,"name": "Phase Offset","noauto": false,"type": "int"},
-                    "phaseinvert": {"max": 2,"name": "Phase Invert","noauto": false,"type": "int"},
-                    "prepost": {"max": 1,"name": "Pre/Post","noauto": false,"type": "int"},
-                    "stereo": {"max": 96,"min": -96,"name": "Stereo Seperation","noauto": false,"type": "int"},
-                    "vol": {"def": 256,"max": 320,"name": "Volume","noauto": false,"type": "int"}
+                    "pan": {"num": 0, "max": 128,"min": -128,"name": "Pan","noauto": false,"type": "int"},
+                    "phase_offs": {"num": 3, "max": 512,"min": -512,"name": "Phase Offset","noauto": false,"type": "int"},
+                    "phaseinvert": {"num": 5, "max": 2,"name": "Phase Invert","noauto": false,"type": "int"},
+                    "prepost": {"num": 4, "max": 1,"name": "Pre/Post","noauto": false,"type": "int"},
+                    "stereo": {"num": 2, "max": 96,"min": -96,"name": "Stereo Seperation","noauto": false,"type": "int"},
+                    "vol": {"num": 1, "def": 256,"max": 320,"name": "Volume","noauto": false,"type": "int"}
                 }
             },
             "fruity stereo shaper": {
@@ -1041,14 +1041,14 @@
                 "datadef_struct": "fruity_stereo_shaper",
                 "group": "fx",
                 "params": {
-                    "delay": {"max": 4096,"min": -4096,"name": "Delay","noauto": false,"type": "int"},
-                    "dephase": {"max": 4096,"min": -4096,"name": "Dephaseing","noauto": false,"type": "int"},
+                    "delay": {"num": 4, "max": 4096,"min": -4096,"name": "Delay","noauto": false,"type": "int"},
+                    "dephase": {"num": 5, "max": 4096,"min": -4096,"name": "Dephaseing","noauto": false,"type": "int"},
                     "iodiff": {"max": 1,"name": "In/Out Diffrence","noauto": false,"type": "int"},
-                    "l2l": {"max": 25600,"min": -25600,"name": "Left","noauto": false,"type": "int"},
-                    "l2r": {"max": 25600,"min": -25600,"name": "Left to Right","noauto": false,"type": "int"},
+                    "l2l": {"num": 1, "max": 25600,"min": -25600,"name": "Left","noauto": false,"type": "int"},
+                    "l2r": {"num": 3, "max": 25600,"min": -25600,"name": "Left to Right","noauto": false,"type": "int"},
                     "prepost": {"max": 1,"name": "Pre/Post","noauto": false,"type": "int"},
-                    "r2l": {"max": 25600,"min": -25600,"name": "Right to Left","noauto": false,"type": "int"},
-                    "r2r": {"max": 25600,"min": -25600,"name": "Right","noauto": false,"type": "int"}
+                    "r2l": {"num": 0, "max": 25600,"min": -25600,"name": "Right to Left","noauto": false,"type": "int"},
+                    "r2r": {"num": 2, "max": 25600,"min": -25600,"name": "Right","noauto": false,"type": "int"}
                 }
             },
             "pitcher": {
@@ -1095,16 +1095,16 @@
                 "datadef_struct": "razer_chroma",
                 "group": "inst",
                 "params": {
-                    "amplitude": {"max": 6,"noauto": false,"type": "int"},
-                    "color_mode": {"max": 15,"noauto": false,"type": "int"},
-                    "decay": {"max": 100,"noauto": false,"type": "int"},
-                    "enabled_chroma_link": {"max": 1,"noauto": false,"type": "int"},
-                    "enabled_headset": {"max": 1,"noauto": false,"type": "int"},
-                    "enabled_keyboard": {"max": 1,"noauto": false,"type": "int"},
-                    "enabled_keypad": {"max": 1,"noauto": false,"type": "int"},
-                    "enabled_mouse": {"max": 1,"noauto": false,"type": "int"},
-                    "enabled_mouse_mat": {"max": 1,"noauto": false,"type": "int"},
-                    "mode": {"max": 6,"noauto": false,"type": "int"},
+                    "amplitude": {"num": 0, "max": 6,"noauto": false,"type": "int"},
+                    "color_mode": {"num": 3, "max": 15,"noauto": false,"type": "int"},
+                    "decay": {"num": 2, "max": 100,"noauto": false,"type": "int"},
+                    "enabled_chroma_link": {"num": 5, "max": 1,"noauto": false,"type": "int"},
+                    "enabled_headset": {"num": 6, "max": 1,"noauto": false,"type": "int"},
+                    "enabled_keyboard": {"num": 4, "max": 1,"noauto": false,"type": "int"},
+                    "enabled_keypad": {"num": 9, "max": 1,"noauto": false,"type": "int"},
+                    "enabled_mouse": {"num": 7, "max": 1,"noauto": false,"type": "int"},
+                    "enabled_mouse_mat": {"num": 8, "max": 1,"noauto": false,"type": "int"},
+                    "mode": {"num": 1, "max": 6,"noauto": false,"type": "int"},
                     "version": {"max": 1,"noauto": true,"type": "int"}
                 }
             },

@@ -24,6 +24,24 @@ class plugconv(plugins.base):
 		plugconv_obj.out_daws = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
+		if plugin_obj.type.subtype == 'fruity 7 band eq':
+			extpluglog.convinternal('FL Studio', 'Fruity 7 Band Equalizer', 'Universal', 'EQ Bands')
+
+			for bandnum, bandfreq in enumerate([63,250,500,1500,3000,5000,8000]):
+				bandstarttxt = str(bandnum+1)
+				gain_txt = 'band_'+bandstarttxt
+
+				filter_obj, filterid = plugin_obj.eq_add()
+				filter_obj.freq = bandfreq
+				filter_obj.gain = plugin_obj.params.get(gain_txt, 0).value/100
+				filter_obj.type.set('peak', None)
+
+				convproj_obj.automation.calc(['plugin', pluginid, gain_txt], 'div', 100, 0, 0, 0)
+				convproj_obj.automation.move(['plugin', pluginid, gain_txt], ['n_filter', pluginid, filterid, 'gain'])
+
+			plugin_obj.replace('universal', 'eq-bands')
+			return 1
+
 		if plugin_obj.type.subtype == 'fruity parametric eq':
 			extpluglog.convinternal('FL Studio', 'Fruity Parametric EQ', 'Universal', 'EQ Bands')
 
@@ -71,7 +89,7 @@ class plugconv(plugins.base):
 			for bandnum in range(7):
 				bandstarttxt = str(bandnum+1)
 
-				filter_obj, _ = plugin_obj.eq_add()
+				filter_obj, filterid = plugin_obj.eq_add()
 				filter_obj.type.set('peak', None)
 
 				filter_obj.gain = plugin_obj.params.get(bandstarttxt+'_gain', 0).value/100
@@ -101,6 +119,16 @@ class plugconv(plugins.base):
 				if fl_band_type == 6: filter_obj.type.set('peak', None)
 				if fl_band_type == 7: filter_obj.type.set('high_shelf', None)
 
+				txt_freq = bandstarttxt+'_freq'
+				convproj_obj.automation.calc(['plugin', pluginid, txt_freq], 'div', 65536, 0, 0, 0)
+				convproj_obj.automation.calc(['plugin', pluginid, txt_freq], 'pow_r', 1000, 0, 0, 0)
+				convproj_obj.automation.calc(['plugin', pluginid, txt_freq], 'mul', 20, 0, 0, 0)
+				convproj_obj.automation.move(['plugin', pluginid, txt_freq], ['n_filter', pluginid, filterid, 'freq'])
+
+				txt_gain = bandstarttxt+'_gain'
+				convproj_obj.automation.calc(['plugin', pluginid, txt_gain], 'div', 100, 0, 0, 0)
+				convproj_obj.automation.move(['plugin', pluginid, txt_gain], ['n_filter', pluginid, filterid, 'gain'])
+
 			plugin_obj.replace('universal', 'eq-bands')
 			param_obj = plugin_obj.params.add('gain_out', main_lvl, 'float')
 			return 1
@@ -112,8 +140,20 @@ class plugconv(plugins.base):
 			v_gain = plugin_obj.params.get('gain', 0).value/10
 			v_attack = plugin_obj.params.get('attack', 0).value/10000
 			v_release = plugin_obj.params.get('release', 0).value/1000
-			v_type = plugin_obj.params.get('type', 0).value
 
+			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
+			manu_obj.from_param('threshold', 'threshold', 0)
+			manu_obj.from_param('ratio', 'ratio', 0)
+			manu_obj.from_param('gain', 'gain', 0)
+			manu_obj.from_param('attack', 'attack', 0)
+			manu_obj.from_param('release', 'release', 0)
+			manu_obj.calc('threshold', 'div', 10, 0, 0, 0)
+			manu_obj.calc('ratio', 'div', 10, 0, 0, 0)
+			manu_obj.calc('gain', 'div', 10, 0, 0, 0)
+			manu_obj.calc('attack', 'div', 10000, 0, 0, 0)
+			manu_obj.calc('release', 'div', 1000, 0, 0, 0)
+
+			v_type = plugin_obj.params.get('type', 0).value
 			first_type = v_type>>2
 			second_type = v_type%4
 			if second_type == 0: v_knee = 0
@@ -125,11 +165,11 @@ class plugconv(plugins.base):
 
 			plugin_obj.replace('universal', 'compressor')
 			plugin_obj.datavals.add('tcr', bool(v_tcr) )
-			plugin_obj.params.add('pregain', v_gain, 'float')
-			plugin_obj.params.add('ratio', v_ratio, 'float')
-			plugin_obj.params.add('threshold', v_threshold, 'float')
-			plugin_obj.params.add('attack', v_attack, 'float')
-			plugin_obj.params.add('release', v_release, 'float')
+			manu_obj.to_param('gain', 'pregain', None)
+			manu_obj.to_param('ratio', 'ratio', None)
+			manu_obj.to_param('threshold', 'threshold', None)
+			manu_obj.to_param('attack', 'attack', None)
+			manu_obj.to_param('release', 'release', None)
 			plugin_obj.params.add('knee', v_knee, 'float')
 			return 1
 
@@ -236,7 +276,7 @@ class plugconv(plugins.base):
 
 			plugin_obj.replace('universal', 'filter')
 			plugin_obj.filter.on = True
-			plugin_obj.filter.type.set(['low_pass','band_pass','high_pass','notch','low_shelf','peak','high_shelf'][int(filter_type/0.125)-1], None)
+			plugin_obj.filter.type.set(['low_pass','band_pass','high_pass','notch','low_shelf','peak','high_shelf'][min(int(filter_type/0.125)-1, 6)], None)
 			plugin_obj.filter.gain = filter_gain*18
 			plugin_obj.filter.freq = oldcalc_filterfreq_1(min(filter_cutoff, 1024))
 			plugin_obj.filter.q = filter_resonance**0.8

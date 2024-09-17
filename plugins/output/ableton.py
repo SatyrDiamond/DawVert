@@ -20,6 +20,7 @@ import os
 import copy
 import struct
 
+DEBUG_IGNORE_INST = False
 DEBUG_IGNORE_FX = False
 DEBUG_IGNORE_PLACEMENTS = False
 NOCOLORNUM = 13
@@ -428,9 +429,7 @@ def add_group(convproj_obj, project_obj, groupid):
 
 	return groupnumid
 
-def add_track(convproj_obj, project_obj, trackid):
-	track_obj = convproj_obj.track_data[trackid]
-
+def add_track(convproj_obj, project_obj, trackid, track_obj):
 	track_obj.placements.pl_notes.sort()
 	track_color = track_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
 
@@ -439,7 +438,6 @@ def add_track(convproj_obj, project_obj, trackid):
 		if track_obj.group in convproj_obj.groups:
 			groupnumid = add_group(convproj_obj, project_obj, track_obj.group)
 			
-
 	if track_obj.type == 'instrument':
 		tracknumid = counter_track.get()
 		als_track = project_obj.add_midi_track(tracknumid)
@@ -452,6 +450,8 @@ def add_track(convproj_obj, project_obj, trackid):
 		if groupnumid: 
 			als_track.TrackGroupId = groupnumid
 			als_track.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
+
+		#print('NEW TRACK', tracknumid, trackid, groupnumid)
 
 		plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
 		if plugin_found:
@@ -541,8 +541,10 @@ def add_track(convproj_obj, project_obj, trackid):
 		pitchparamkeys = {}
 		als_device_pitch = None
 
-		if plugin_found:
+		if plugin_found and not DEBUG_IGNORE_INST:
 			middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
+
+			#print(str(plugin_obj.type), plugin_obj.datavals_global.get('name', ''))
 
 			if plugin_obj.check_wildmatch('native-ableton', None):
 				if middlenote != 0:
@@ -700,6 +702,8 @@ def add_track(convproj_obj, project_obj, trackid):
 		if groupnumid: 
 			als_track.TrackGroupId = groupnumid
 			als_track.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
+
+		#print('NEW TRACK', tracknumid, trackid, groupnumid)
 
 		if not DEBUG_IGNORE_PLACEMENTS:
 			track_obj.placements.pl_audio.sort()
@@ -881,7 +885,12 @@ def do_tracks(convproj_obj, project_obj, current_grouptab, track_group, groups_u
 			groups_used.append(tid)
 			do_tracks(convproj_obj, project_obj, track_group[tid], track_group, groups_used, 'GROUP: '+tid)
 		if tracktype == 'TRACK':
-			add_track(convproj_obj, project_obj, tid)
+			track_obj = convproj_obj.track_data[tid]
+			if track_obj.group:
+				if track_obj.group not in groups_used:
+					add_group(convproj_obj, project_obj, track_obj.group)
+					groups_used.append(track_obj.group)
+			add_track(convproj_obj, project_obj, tid, track_obj)
 		#print(debugtxt.ljust(20), tracktype, tid)
 
 class output_ableton(plugins.base):
@@ -909,6 +918,7 @@ class output_ableton(plugins.base):
 		global colordata
 		global ids_group_cvpj_als
 		global master_returns
+		global bpm
 
 		convproj_obj.change_timings(1, True)
 		project_obj = proj_ableton.ableton_liveset()

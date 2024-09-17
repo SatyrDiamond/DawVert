@@ -300,8 +300,7 @@ class notelist_data:
 
 			if slide_d != None and auto_d == None:
 				pointsdata = pitchmod(note['key'])
-				for slidenote in slide_d:
-					pointsdata.slide_note(slidenote[0], slidenote[2], slidenote[1])
+				for slidenote in slide_d: pointsdata.slide_note(slidenote[0], slidenote[2], slidenote[1])
 				nmp = pointsdata.to_pointdata()
 				auto_d = self.assoc_auto_set()
 				auto_d['pitch'] = autopoints.cvpj_autopoints(nl_obj.time_ppq, nl_obj.time_float, 'float')

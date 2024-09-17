@@ -83,5 +83,8 @@ def convert(convproj_obj):
 
 	convproj_obj.automation.move_everything(['inst'], ['track'])
 
+	#print(convproj_obj.automation.data)
+	#exit()
+
 	convproj_obj.playlist = {}
 	convproj_obj.type = 'r'

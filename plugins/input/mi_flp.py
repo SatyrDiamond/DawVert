@@ -46,6 +46,22 @@ def conv_color(b_color):
 def flpauto_to_cvpjauto(i_value):
 	out = [None, 0, 1]
 
+	#print(i_value)
+
+	if i_value[0] == 'fx':
+		if i_value[2] == 'plugin':
+			pluginid = 'FLPlug_F_'+str(i_value[1])+'_'+str(i_value[3])
+			out = [['id_plug', pluginid, i_value[4]], 0, 1]
+
+	if i_value[0] == 'chan':
+		cvpj_instid = 'FLInst' + str(i_value[1])
+		if i_value[2] == 'param':
+			if i_value[3] == 'vol': out = [['inst', cvpj_instid, 'vol'], 0, 16000]
+			if i_value[3] == 'pan': out = [['inst', cvpj_instid, 'pan'], 0, 6400]
+		if i_value[2] == 'plugin':
+			pluginid = 'FLPlug_G_'+str(i_value[1])
+			out = [['id_plug', pluginid, i_value[3]], 0, 1]
+
 	if i_value[0] == 'main':
 		if i_value[1] == 'tempo': out = [['main', 'bpm'], 0, 1000]
 		if i_value[1] == 'pitch': out = [['main', 'pitch'], 0, 100]
@@ -109,6 +125,8 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 	if flp_obj.zipped: sampleref_obj.find_relative('extracted')
 	sampleref_obj.find_relative('projectfile')
 	sampleref_obj.find_relative('factorysamples')
+
+	#print(sampleref_obj.fileref.get_path('win', False))
 
 	sre_obj.visual.name = fl_channel_obj.name
 	sre_obj.visual.color.set_int(conv_color(fl_channel_obj.color))
@@ -455,19 +473,20 @@ class input_flp(plugins.base):
 					numnotenum_chans[fl_note.rack] += 1
 
 					note_extra = {}
-					note_extra['finepitch'] = (fl_note.finep-120)*10
-					note_extra['release'] = fl_note.rel/128
-					note_extra['pan'] = (fl_note.pan-64)/64
-					note_extra['cutoff'] = fl_note.mod_x/255
-					note_extra['reso'] = fl_note.mod_y/255
-					note_extra['channel'] = data_bytes.splitbyte(fl_note.midich)[1]+1
+					if fl_note.finep != 120: note_extra['finepitch'] = (fl_note.finep-120)*10
+					if fl_note.finep != 64: note_extra['release'] = fl_note.rel/128
+					if fl_note.finep != 64: note_extra['pan'] = (fl_note.pan-64)/64
+					if fl_note.finep != 128: note_extra['cutoff'] = fl_note.mod_x/255
+					if fl_note.finep != 128: note_extra['reso'] = fl_note.mod_y/255
+					notechan = data_bytes.splitbyte(fl_note.midich)[1]
+					if notechan: note_extra['channel'] = notechan+1
 
 					is_slide = bool(fl_note.flags & 0b000000000001000)
 
 					if is_slide == True: 
-						slidenotes.append([note_inst, note_pos, note_dur, note_key, note_vol, note_extra])
+						slidenotes.append([note_inst, note_pos, note_dur, note_key, note_vol, note_extra if note_extra else None])
 					else: 
-						nle_obj.notelist.add_m(note_inst, note_pos, note_dur, note_key, note_vol, note_extra)
+						nle_obj.notelist.add_m(note_inst, note_pos, note_dur, note_key, note_vol, note_extra if note_extra else None)
 
 				for sn in slidenotes: 
 					nle_obj.notelist.auto_add_slide(sn[0], sn[1], sn[2], sn[3], sn[4], sn[5])

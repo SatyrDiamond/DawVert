@@ -65,6 +65,7 @@ class plugconv(plugins.base):
 				plugin_obj.params.add(starttxt+'width', int(eq2q_calc(filter_obj)*65536), 'int')
 				plugin_obj.params.add(starttxt+'freq', int(eq2q_freq(filter_obj)*65536), 'int')
 				plugin_obj.params.add(starttxt+'gain', filter_obj.gain*100, 'int')
+
 			plugin_obj.params.add('main_lvl', gain_out*100, 'int')
 			return 0
 

@@ -31,51 +31,6 @@ class note_note:
 		if self.flat: out_offset = -1
 		return out_note+out_offset
 
-	def from_v2(self, song_data):
-		self.pos = song_data.uint32_b()
-		self.note = song_data.uint8()
-		self.layer = song_data.uint8()
-		self.inst = song_data.uint16_b()
-		sharp = song_data.uint8()
-		self.sharp = sharp==2
-		self.flat = sharp==1
-		self.vol = song_data.float_b()
-		self.pan = song_data.float_b()
-		self.dur = song_data.uint16_b()
-		song_data.skip(1)
-
-# ============================== V2 ==============================
-
-class notev2_pattern:
-	def __init__(self, song_data, tempo):
-		self.tempo = tempo
-		self.notes = []
-		self.size = song_data.uint32_b()
-		num_notes = song_data.uint32_b()
-		for _ in range(num_notes):
-			note = note_note()
-			note.from_v2(song_data)
-			self.notes.append(note)
-
-class notev2_song:
-	def __init__(self):
-		pass
-
-	def load_from_file(self, input_file):
-		song_file = bytereader.bytereader()
-		song_file.load_file(input_file)
-
-		song_data = bytereader.bytereader()
-		song_data.load_raw(zlib.decompress(song_file.rest(), zlib.MAX_WBITS|32))
-		self.name = song_data.c_string__int16(True)
-		self.author = song_data.c_string__int16(True)
-		self.date1 = song_data.c_string__int16(True)
-		self.date2 = song_data.c_string__int16(True)
-		self.order = song_data.l_uint8(song_data.uint16_b())
-		self.tempo_table = song_data.l_uint16_b(100)
-		self.patterns = [notev2_pattern(song_data, self.tempo_table[m]) for m in range(100)]
-		return True
-
 # ============================== V3 ==============================
 
 def parse_items(xmldata, i_list):

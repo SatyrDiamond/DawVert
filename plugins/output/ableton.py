@@ -20,7 +20,6 @@ import os
 import copy
 import struct
 
-DEBUG_IGNORE_GROUPS = False
 DEBUG_IGNORE_FX = False
 DEBUG_IGNORE_PLACEMENTS = False
 NOCOLORNUM = 13
@@ -422,10 +421,468 @@ def add_group(convproj_obj, project_obj, groupid):
 		if group_obj.group:
 			als_gtrack.TrackGroupId = add_group(convproj_obj, project_obj, group_obj.group)
 			als_gtrack.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
+		#print('NEW GROUP', groupid, groupnumid)
 	else:
 		groupnumid = ids_group_cvpj_als[groupid]
 
+
 	return groupnumid
+
+def add_track(convproj_obj, project_obj, trackid):
+	track_obj = convproj_obj.track_data[trackid]
+
+	track_obj.placements.pl_notes.sort()
+	track_color = track_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
+
+	groupnumid = None
+	if track_obj.group:
+		if track_obj.group in convproj_obj.groups:
+			groupnumid = add_group(convproj_obj, project_obj, track_obj.group)
+			
+
+	if track_obj.type == 'instrument':
+		tracknumid = counter_track.get()
+		als_track = project_obj.add_midi_track(tracknumid)
+		als_track.Color = track_color
+		if track_obj.visual.name: als_track.Name.UserName = fixtxt(track_obj.visual.name)
+		do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
+		do_param(convproj_obj, track_obj.params, 'pan', 0, 'float', ['track', trackid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
+		do_param(convproj_obj, track_obj.params, 'enabled', 1, 'bool', ['track', trackid, 'enabled'], als_track.DeviceChain.Mixer.Speaker, als_track.AutomationEnvelopes)
+
+		if groupnumid: 
+			als_track.TrackGroupId = groupnumid
+			als_track.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
+
+		plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+		if plugin_found:
+			issampler = plugin_obj.check_wildmatch('sampler', None)
+		else:
+			issampler = False
+
+		if not DEBUG_IGNORE_PLACEMENTS:
+			for clipid, notespl_obj in enumerate(track_obj.placements.pl_notes):
+				als_midiclip = als_track.add_midiclip(clipid)
+				als_midiclip.Color = notespl_obj.visual.color.closest_color_index(colordata, track_color)
+				if notespl_obj.visual.name: als_midiclip.Name = fixtxt(notespl_obj.visual.name)
+				als_midiclip.Time = notespl_obj.time.position
+				als_midiclip.Disabled = notespl_obj.muted
+				als_midiclip.CurrentStart = notespl_obj.time.position
+				als_midiclip.CurrentEnd = notespl_obj.time.position+notespl_obj.time.duration
+	
+				notespl_obj.notelist.notemod_conv()
+	
+				if notespl_obj.time.cut_type == 'cut':
+					als_midiclip.Loop.LoopOn = False
+					als_midiclip.Loop.LoopStart = notespl_obj.time.cut_start
+					als_midiclip.Loop.LoopEnd = als_midiclip.Loop.LoopStart+notespl_obj.time.duration
+				elif notespl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
+					als_midiclip.Loop.LoopOn = True
+					als_midiclip.Loop.StartRelative, als_midiclip.Loop.LoopStart, als_midiclip.Loop.LoopEnd = notespl_obj.time.get_loop_data()
+				else:
+					als_midiclip.Loop.LoopOn = False
+					als_midiclip.Loop.LoopStart = 0
+					als_midiclip.Loop.LoopEnd = notespl_obj.time.duration
+	
+				t_keydata = {}
+				
+				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+					for t_key in t_keys:
+						if t_key not in t_keydata: t_keydata[t_key] = []
+						notevol = t_vol**(1/3) if issampler else t_vol
+						t_keydata[t_key].append([counter_note.get(), t_pos, t_dur, notevol, t_inst, t_extra, t_auto, t_slide])
+	
+				t_keydata = dict(sorted(t_keydata.items(), key=lambda item: item[0]))
+	
+				PerNoteEventListID = 0
+				for key, notedata in t_keydata.items():
+					KeyTrack_obj = proj_ableton.ableton_KeyTrack(None)
+	
+					for t_id, t_pos, t_dur, t_vol, t_inst, t_extra, t_auto, t_slide in notedata:
+						MidiNoteEvent_obj = proj_ableton.ableton_x_MidiNoteEvent(None)
+						MidiNoteEvent_obj.NoteId = t_id
+						MidiNoteEvent_obj.Time = t_pos
+						MidiNoteEvent_obj.Duration = t_dur
+						MidiNoteEvent_obj.Velocity = t_vol*100
+						if t_extra:
+							if 'off_vol' in t_extra: MidiNoteEvent_obj.OffVelocity = t_extra['off_vol']*100
+							if 'probability' in t_extra: MidiNoteEvent_obj.Probability = t_extra['probability']
+							if 'enabled' in t_extra: MidiNoteEvent_obj.IsEnabled = bool(t_extra['enabled'])
+							if 'velocity_range' in t_extra: MidiNoteEvent_obj.VelocityDeviation = t_extra['velocity_range']
+	
+						if t_auto:
+							for mpetype,d in t_auto.items():
+								atype = None
+								autodiv = 1
+								if mpetype == 'pitch':
+									atype = -2
+									autodiv = 170
+								if mpetype == 'slide': atype = 74
+								if mpetype == 'pressure': atype = -1
+								if atype:
+									d.remove_instant()
+									PerNoteEventList_obj = proj_ableton.ableton_PerNoteEventList(None)
+									PerNoteEventList_obj.CC = atype
+									PerNoteEventList_obj.NoteId = t_id
+									for autopoint_obj in d.iter():
+										PerNoteEvent_obj = proj_ableton.ableton_x_PerNoteEvent(None)
+										PerNoteEvent_obj.TimeOffset = autopoint_obj.pos
+										PerNoteEvent_obj.Value = autopoint_obj.value*autodiv
+										PerNoteEventList_obj.Events.append(PerNoteEvent_obj)
+									als_midiclip.Notes.PerNoteEventStore[PerNoteEventListID] = PerNoteEventList_obj
+									PerNoteEventListID += 1
+	
+						KeyTrack_obj.NoteEvents.append(MidiNoteEvent_obj)
+	
+					KeyTrack_obj.MidiKey = key+60
+					als_midiclip.Notes.KeyTrack[counter_keytrack.get()] = KeyTrack_obj
+
+		middlenote = track_obj.datavals.get('middlenote', 0)
+
+		pitchparamkeys = {}
+		als_device_pitch = None
+
+		if plugin_found:
+			middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
+
+			if plugin_obj.check_wildmatch('native-ableton', None):
+				if middlenote != 0:
+					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
+					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
+				add_plugindevice_native(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
+
+			if plugin_obj.check_match('vst2', 'win'):
+				if middlenote != 0:
+					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
+					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
+				add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
+
+			if plugin_obj.check_match('vst3', 'win'):
+				if middlenote != 0:
+					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
+					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
+				add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
+
+			if plugin_obj.check_match('sampler', 'multi'):
+				if middlenote != 0:
+					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
+					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
+
+				paramkeys = {}
+				als_device = als_track.DeviceChain.add_device('MultiSampler')
+				spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
+
+				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
+					key_l, key_h, key_r, samplerefid, extradata = sampleregion
+					als_samplepart = spd.value[spn] = ableton_MultiSamplePart(None)
+					als_samplepart.Selection = True
+					samplepart_obj = plugin_obj.samplepart_get(samplerefid)
+					sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False, False)
+
+					als_samplepart.KeyRange.Min = key_l+60
+					als_samplepart.KeyRange.Max = key_h+60
+					als_samplepart.KeyRange.CrossfadeMin = key_l+60
+					als_samplepart.KeyRange.CrossfadeMax = key_h+60
+					als_samplepart.RootKey = key_r+60
+
+				adsr_obj = plugin_obj.env_asdr_get('vol')
+				paramkeys['VolumeAndPan/Envelope/AttackTime'] = ableton_parampart.as_param('AttackTime', 'float', adsr_obj.attack*1000)
+				paramkeys['VolumeAndPan/Envelope/DecayTime'] = ableton_parampart.as_param('DecayTime', 'float', adsr_obj.decay*1000)
+				paramkeys['VolumeAndPan/Envelope/SustainLevel'] = ableton_parampart.as_param('SustainLevel', 'float', adsr_obj.sustain)
+				paramkeys['VolumeAndPan/Envelope/ReleaseTime'] = ableton_parampart.as_param('ReleaseTime', 'float', adsr_obj.release*1000)
+
+				paramkeys['VolumeAndPan/Envelope/AttackSlope'] = ableton_parampart.as_param('AttackSlope', 'float', -adsr_obj.attack_tension)
+				paramkeys['VolumeAndPan/Envelope/DecaySlope'] = ableton_parampart.as_param('DecaySlope', 'float', -adsr_obj.decay_tension)
+				paramkeys['VolumeAndPan/Envelope/ReleaseSlope'] = ableton_parampart.as_param('ReleaseSlope', 'float', -adsr_obj.release_tension)
+
+				paramkeys['VolumeAndPan/VolumeVelScale'] = ableton_parampart.as_param('VolumeVelScale', 'float', 1)
+			
+				paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
+
+				als_device.params.import_keys(paramkeys)
+
+			if plugin_obj.check_match('sampler', 'single'):
+
+				if middlenote != 0:
+					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
+					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
+
+				samplepart_obj = plugin_obj.samplepart_get('sample')
+				paramkeys = {}
+
+				pitchin = samplepart_obj.pitch
+
+				loop_active = samplepart_obj.loop_active
+
+				if (samplepart_obj.stretch.calc_real_speed == 1 and samplepart_obj.trigger != 'oneshot' and pitchin == 0) or loop_active:
+					als_device = als_track.DeviceChain.add_device('MultiSampler')
+					spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
+					paramkeys['Player/Reverse'] = ableton_parampart.as_param('Reverse', 'bool', samplepart_obj.reverse)
+					als_samplepart = spd.value[0] = ableton_MultiSamplePart(None)
+					als_samplepart.Selection = True
+					sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False, False)
+
+					trkpitch = track_obj.params.get('pitch', 0).value
+					pitchd = trkpitch+pitchin
+
+					TransposeKey = round(pitchd)
+					TransposeFine = (pitchd-round(pitchd))*100
+
+					als_samplepart.RootKey = 60-TransposeKey
+					als_samplepart.Detune = TransposeFine
+
+					adsr_obj = plugin_obj.env_asdr_get('vol')
+					paramkeys['VolumeAndPan/Envelope/AttackTime'] = ableton_parampart.as_param('AttackTime', 'float', adsr_obj.attack*1000)
+					paramkeys['VolumeAndPan/Envelope/DecayTime'] = ableton_parampart.as_param('DecayTime', 'float', adsr_obj.decay*1000)
+					paramkeys['VolumeAndPan/Envelope/SustainLevel'] = ableton_parampart.as_param('SustainLevel', 'float', adsr_obj.sustain)
+					paramkeys['VolumeAndPan/Envelope/ReleaseTime'] = ableton_parampart.as_param('ReleaseTime', 'float', adsr_obj.release*1000)
+
+					paramkeys['VolumeAndPan/Envelope/AttackSlope'] = ableton_parampart.as_param('AttackSlope', 'float', -adsr_obj.attack_tension)
+					paramkeys['VolumeAndPan/Envelope/DecaySlope'] = ableton_parampart.as_param('DecaySlope', 'float', -adsr_obj.decay_tension)
+					paramkeys['VolumeAndPan/Envelope/ReleaseSlope'] = ableton_parampart.as_param('ReleaseSlope', 'float', -adsr_obj.release_tension)
+
+					paramkeys['VolumeAndPan/VolumeVelScale'] = ableton_parampart.as_param('VolumeVelScale', 'float', 1)
+			
+					#lfo_vol_obj = plugin_obj.lfo_get('vol')
+					#lfo_pitch_obj = plugin_obj.lfo_get('pitch')
+					#lfo_filter_obj = plugin_obj.lfo_get('cutoff')
+					#print(lfo_vol_obj)
+					#print(lfo_pitch_obj)
+					#print(lfo_filter_obj)
+
+					paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
+
+					als_device.params.import_keys(paramkeys)
+
+				else:
+					als_device = als_track.DeviceChain.add_device('OriginalSimpler')
+					spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
+					#paramkeys['Player/Reverse'] = ableton_parampart.as_param('Reverse', 'bool', samplepart_obj.reverse)
+					als_samplepart = spd.value[0] = ableton_MultiSamplePart(None)
+					als_samplepart.Selection = True
+					sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False, False)
+
+					paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
+					paramkeys['Globals/PlaybackMode'] = ableton_parampart.as_value('PlaybackMode', 1 if samplepart_obj.trigger == 'oneshot' else 0)
+
+					paramkeys['Pitch/TransposeKey'] = ableton_parampart.as_param('TransposeKey', 'float', round(pitchin))
+					paramkeys['Pitch/TransposeFine'] = ableton_parampart.as_param('TransposeFine', 'float', (pitchin-round(pitchin))*100)
+
+					als_device.params.import_keys(paramkeys)
+
+			if plugin_obj.check_match('sampler', 'slicer'):
+				samplepart_obj = plugin_obj.samplepart_get('sample')
+
+				als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
+				pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', (-24)+samplepart_obj.slicer_start_key)
+
+				paramkeys = {}
+				als_device = als_track.DeviceChain.add_device('OriginalSimpler')
+				spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
+				als_samplepart = spd.value[0] = ableton_MultiSamplePart(None)
+				als_samplepart.Selection = True
+				sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, True, True)
+				paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
+				paramkeys['Globals/PlaybackMode'] = ableton_parampart.as_value('PlaybackMode', 2)
+				paramkeys['SimplerSlicing/PlaybackMode'] = ableton_parampart.as_value('PlaybackMode', 1)
+				paramkeys['VolumeAndPan/OneShotEnvelope/SustainMode'] = ableton_parampart.as_param('SustainMode', 'int', int(samplepart_obj.trigger != 'oneshot'))
+				als_device.params.import_keys(paramkeys)
+
+		if als_device_pitch: als_device_pitch.params.import_keys(pitchparamkeys)
+
+	if track_obj.type == 'audio':
+		tracknumid = counter_track.get()
+		als_track = project_obj.add_audio_track(tracknumid)
+		als_track.Color = track_color
+		if track_obj.visual.name: als_track.Name.UserName = fixtxt(track_obj.visual.name)
+		do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
+		do_param(convproj_obj, track_obj.params, 'pan', 0, 'float', ['track', trackid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
+
+		if groupnumid: 
+			als_track.TrackGroupId = groupnumid
+			als_track.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
+
+		if not DEBUG_IGNORE_PLACEMENTS:
+			track_obj.placements.pl_audio.sort()
+			for clipid, audiopl_obj in enumerate(track_obj.placements.pl_audio):
+				als_audioclip = als_track.add_audioclip(clipid)
+				als_audioclip.Color = audiopl_obj.visual.color.closest_color_index(colordata, track_color)
+				if audiopl_obj.visual.name: als_audioclip.Name = fixtxt(audiopl_obj.visual.name)
+				als_audioclip.Disabled = audiopl_obj.muted
+
+				if 'duration' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInLength = audiopl_obj.fade_in['duration']/8
+				if 'skew' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInCurveSkew = audiopl_obj.fade_in['skew']
+				if 'slope' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInCurveSlope = audiopl_obj.fade_in['slope']
+				if 'duration' in audiopl_obj.fade_out: als_audioclip.Fades.FadeOutLength = audiopl_obj.fade_out['duration']/8
+				if 'skew' in audiopl_obj.fade_out: als_audioclip.Fades.FadeOutCurveSkew = audiopl_obj.fade_out['skew']
+				if 'slope' in audiopl_obj.fade_out: als_audioclip.Fades.FadeOutCurveSlope = audiopl_obj.fade_out['slope']
+	
+				sample_obj = audiopl_obj.sample
+				stretch_obj = copy.deepcopy(sample_obj.stretch)
+
+				if not stretch_obj.preserve_pitch: als_audioclip.WarpMode = 3
+				else:
+					if stretch_obj.algorithm == 'transient':
+						als_audioclip.WarpMode = 0
+						if 'TransientResolution' in stretch_obj.params: als_audioclip.TransientResolution = stretch_obj.params['TransientResolution']
+						if 'TransientLoopMode' in stretch_obj.params: als_audioclip.TransientLoopMode = stretch_obj.params['TransientLoopMode']
+						if 'TransientEnvelope' in stretch_obj.params: als_audioclip.TransientEnvelope = stretch_obj.params['TransientEnvelope']
+					elif stretch_obj.algorithm == 'ableton_tones':
+						als_audioclip.WarpMode = 1
+						if 'GranularityTones' in stretch_obj.params: als_audioclip.GranularityTones = stretch_obj.params['GranularityTones']
+					elif stretch_obj.algorithm == 'ableton_texture':
+						als_audioclip.WarpMode = 2
+						if 'GranularityTexture' in stretch_obj.params: als_audioclip.GranularityTexture = stretch_obj.params['GranularityTexture']
+						if 'FluctuationTexture' in stretch_obj.params: als_audioclip.FluctuationTexture = stretch_obj.params['FluctuationTexture']
+					elif stretch_obj.algorithm == 'ableton_complex':
+						als_audioclip.WarpMode = 4
+					elif stretch_obj.algorithm == 'ableton_complexpro':
+						als_audioclip.WarpMode = 6
+						if 'ComplexProFormants' in stretch_obj.params: als_audioclip.ComplexProFormants = stretch_obj.params['ComplexProFormants']
+						if 'ComplexProEnvelope' in stretch_obj.params: als_audioclip.ComplexProEnvelope = stretch_obj.params['ComplexProEnvelope']
+					else:
+						als_audioclip.WarpMode = 4
+
+				als_audioclip.PitchCoarse = round(sample_obj.pitch)
+				als_audioclip.PitchFine = (sample_obj.pitch-round(sample_obj.pitch))*100
+				als_audioclip.SampleVolume = sample_obj.vol
+	
+				ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
+
+				do_sampleref(convproj_obj, als_audioclip.SampleRef, sampleref_obj)
+
+				track_mixer = als_track.DeviceChain.Mixer
+				mainseq = als_track.DeviceChain.MainSequencer
+
+				for i, d in enumerate(audiopl_obj.auto.items()):
+					n, x = d
+					clipenv = ableton_AutomationEnvelope(None)
+
+					mpeid = None
+
+					if n == 'pan': mpeid = track_mixer.Pan.ModulationTarget.id
+					if n == 'gain': mpeid = mainseq.VolumeModulationTarget.id
+					if n == 'pitch': mpeid = mainseq.TranspositionModulationTarget.id
+
+					if mpeid:
+						clipenv.PointeeId = mpeid
+						for num, autopoint in enumerate(x.iter()):
+							alsevent = proj_ableton.ableton_FloatEvent(None)
+							alsevent.Time = autopoint.pos
+							alsevent.Value = autopoint.value
+							clipenv.Automation.Events.append([num+1, 'FloatEvent', alsevent])
+
+					als_audioclip.Envelopes[i] = clipenv
+
+
+
+
+				clip_position = audiopl_obj.time.position
+				clip_duration = audiopl_obj.time.duration
+				clip_startrel = 0
+				clip_loop_start = 0
+				clip_loop_end = audiopl_obj.time.duration
+				clip_loop_on = False
+	
+				if audiopl_obj.time.cut_type == 'cut':
+					clip_startrel = audiopl_obj.time.cut_start
+					clip_loop_start = audiopl_obj.time.cut_start
+					clip_loop_end = clip_loop_start+clip_duration
+				elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
+					clip_loop_on = True
+					clip_startrel, clip_loop_start, clip_loop_end = audiopl_obj.time.get_loop_data()
+				else:
+					clip_loop_start = 0
+					clip_loop_end = audiopl_obj.time.duration
+	
+				second_dur = sampleref_obj.dur_sec
+
+				if not stretch_obj.is_warped:
+					if ref_found: 
+						second_dur = sampleref_obj.dur_sec
+
+						if stretch_obj.uses_tempo:
+							als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+							clip_loop_end += clip_startrel/2
+							if clip_loop_on: 
+								stretch_obj.set_rate_speed(bpm, 1, False)
+								als_audioclip.IsWarped = True
+							else:
+								clip_startrel = 0
+						else:
+							if not clip_loop_on:
+								als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+								if stretch_obj.calc_tempo_size == 1:
+									clip_duration = min(clip_duration, (second_dur*2*stretch_obj.calc_tempo_size))
+									clip_loop_start /= 2
+									clip_loop_end = (clip_startrel+(clip_duration/2))
+								else:
+									clip_startrel = 0
+							else:
+								als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+								clip_loop_end += clip_startrel
+								if clip_loop_on: 
+									stretch_obj.set_rate_speed(bpm, 1, False)
+									als_audioclip.IsWarped = True
+
+					else:
+						warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+						warpmarker_obj.BeatTime = 0
+						warpmarker_obj.SecTime = 0
+						als_audioclip.WarpMarkers[1] = warpmarker_obj
+
+						warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+						warpmarker_obj.BeatTime = 0.03125
+						warpmarker_obj.SecTime = 0.03125
+						als_audioclip.WarpMarkers[2] = warpmarker_obj
+
+				else:
+					als_audioclip.IsWarped = True
+					for num, warp_point_obj in enumerate(stretch_obj.iter_warp_points()):
+						warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+						warpmarker_obj.BeatTime = warp_point_obj.beat*2
+						warpmarker_obj.SecTime = warp_point_obj.second*2
+						als_audioclip.WarpMarkers[num+1] = warpmarker_obj
+
+					lastpoint = stretch_obj.warppoints[-1]
+
+					warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+					warpmarker_obj.BeatTime = lastpoint.beat+0.03125
+					warpmarker_obj.SecTime = lastpoint.second+((0.03125/2)/lastpoint.speed)
+					als_audioclip.WarpMarkers[len(stretch_obj.warppoints)+1] = warpmarker_obj
+
+				als_audioclip.Time = clip_position
+				als_audioclip.CurrentStart = clip_position
+				als_audioclip.CurrentEnd = clip_position+clip_duration
+				als_audioclip.Loop.StartRelative = clip_startrel
+				als_audioclip.Loop.LoopStart = clip_loop_start
+				als_audioclip.Loop.LoopEnd = clip_loop_end
+				als_audioclip.Loop.LoopOn = clip_loop_on
+				als_audioclip.Loop.HiddenLoopStart = 0
+				als_audioclip.Loop.HiddenLoopEnd = clip_duration+clip_loop_start
+
+	if track_obj.type in ['instrument', 'audio']:
+		do_effects(convproj_obj, als_track, track_obj.fxslots_audio)
+		track_sendholders = als_track.DeviceChain.Mixer.Sends
+		numsend = 0
+		for returnid, x in master_returns.items():
+			TrackSendHolder_obj = proj_ableton.ableton_TrackSendHolder(None)
+			if returnid in track_obj.sends.data:
+				send_obj = track_obj.sends.data[returnid]
+				do_param(convproj_obj, send_obj.params, 'amount', 0, 'float', ['send', send_obj.sendautoid, 'amount'] if send_obj.sendautoid else None, TrackSendHolder_obj.Send, als_track.AutomationEnvelopes)
+			else:
+				TrackSendHolder_obj.Send.setvalue(0)
+			track_sendholders[numsend] = TrackSendHolder_obj
+			numsend += 1
+
+def do_tracks(convproj_obj, project_obj, current_grouptab, track_group, groups_used, debugtxt):
+	for tracktype, tid in current_grouptab:
+		if tracktype == 'GROUP' and tid not in groups_used and tid in track_group:
+			add_group(convproj_obj, project_obj, tid)
+			groups_used.append(tid)
+			do_tracks(convproj_obj, project_obj, track_group[tid], track_group, groups_used, 'GROUP: '+tid)
+		if tracktype == 'TRACK':
+			add_track(convproj_obj, project_obj, tid)
+		#print(debugtxt.ljust(20), tracktype, tid)
 
 class output_ableton(plugins.base):
 	def __init__(self): pass
@@ -447,8 +904,11 @@ class output_ableton(plugins.base):
 		
 	def parse(self, convproj_obj, output_file):
 		global counter_track
+		global counter_note
+		global counter_keytrack
 		global colordata
 		global ids_group_cvpj_als
+		global master_returns
 
 		convproj_obj.change_timings(1, True)
 		project_obj = proj_ableton.ableton_liveset()
@@ -505,463 +965,24 @@ class output_ableton(plugins.base):
 		ids_group_cvpj_als = {}
 
 		track_group = {}
-		track_nongroup = {}
+		track_nongroup = []
+		groups_used = []
+
+		convproj_obj.remove_unused_groups()
+
+		for groupid, group_obj in convproj_obj.groups.items():
+			if group_obj.group:
+				if group_obj.group not in track_group: track_group[group_obj.group] = []
+				track_group[group_obj.group].append(['GROUP', groupid])
+			else: track_nongroup.append(['GROUP', groupid])
+
 		for trackid, track_obj in convproj_obj.iter_track():
-			if track_obj.group and not DEBUG_IGNORE_GROUPS: 
-				if track_obj.group not in track_group: track_group[track_obj.group] = {}
-				track_group[track_obj.group][trackid] = track_obj
-			else: track_nongroup[trackid] = track_obj
-
-		outtracks = []
-		for groupid, groupdata in track_group.items():
-			for trackid, track_obj in groupdata.items():
-				outtracks.append([trackid, track_obj])
-
-		for trackid, track_obj in track_nongroup.items():
-			outtracks.append([trackid, track_obj])
-
-		for trackid, track_obj in outtracks:
-			track_obj.placements.pl_notes.sort()
-			track_color = track_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
-
-			groupnumid = None
-			if track_obj.group:
-				if track_obj.group in convproj_obj.groups:
-					groupnumid = add_group(convproj_obj, project_obj, track_obj.group)
-
-			if track_obj.type == 'instrument':
-				tracknumid = counter_track.get()
-				als_track = project_obj.add_midi_track(tracknumid)
-				als_track.Color = track_color
-				if track_obj.visual.name: als_track.Name.UserName = fixtxt(track_obj.visual.name)
-				do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
-				do_param(convproj_obj, track_obj.params, 'pan', 0, 'float', ['track', trackid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
-				do_param(convproj_obj, track_obj.params, 'enabled', 1, 'bool', ['track', trackid, 'enabled'], als_track.DeviceChain.Mixer.Speaker, als_track.AutomationEnvelopes)
-
-				if groupnumid: 
-					als_track.TrackGroupId = groupnumid
-					als_track.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
-
-				plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
-				if plugin_found:
-					issampler = plugin_obj.check_wildmatch('sampler', None)
-				else:
-					issampler = False
-
-				if not DEBUG_IGNORE_PLACEMENTS:
-					for clipid, notespl_obj in enumerate(track_obj.placements.pl_notes):
-						als_midiclip = als_track.add_midiclip(clipid)
-						als_midiclip.Color = notespl_obj.visual.color.closest_color_index(colordata, track_color)
-						if notespl_obj.visual.name: als_midiclip.Name = fixtxt(notespl_obj.visual.name)
-						als_midiclip.Time = notespl_obj.time.position
-						als_midiclip.Disabled = notespl_obj.muted
-						als_midiclip.CurrentStart = notespl_obj.time.position
-						als_midiclip.CurrentEnd = notespl_obj.time.position+notespl_obj.time.duration
-	
-						notespl_obj.notelist.notemod_conv()
-	
-						if notespl_obj.time.cut_type == 'cut':
-							als_midiclip.Loop.LoopOn = False
-							als_midiclip.Loop.LoopStart = notespl_obj.time.cut_start
-							als_midiclip.Loop.LoopEnd = als_midiclip.Loop.LoopStart+notespl_obj.time.duration
-						elif notespl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
-							als_midiclip.Loop.LoopOn = True
-							als_midiclip.Loop.StartRelative, als_midiclip.Loop.LoopStart, als_midiclip.Loop.LoopEnd = notespl_obj.time.get_loop_data()
-						else:
-							als_midiclip.Loop.LoopOn = False
-							als_midiclip.Loop.LoopStart = 0
-							als_midiclip.Loop.LoopEnd = notespl_obj.time.duration
-	
-						t_keydata = {}
-						
-						for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
-							for t_key in t_keys:
-								if t_key not in t_keydata: t_keydata[t_key] = []
-								notevol = t_vol**(1/3) if issampler else t_vol
-								t_keydata[t_key].append([counter_note.get(), t_pos, t_dur, notevol, t_inst, t_extra, t_auto, t_slide])
-	
-						t_keydata = dict(sorted(t_keydata.items(), key=lambda item: item[0]))
-	
-						PerNoteEventListID = 0
-						for key, notedata in t_keydata.items():
-							KeyTrack_obj = proj_ableton.ableton_KeyTrack(None)
-	
-							for t_id, t_pos, t_dur, t_vol, t_inst, t_extra, t_auto, t_slide in notedata:
-								MidiNoteEvent_obj = proj_ableton.ableton_x_MidiNoteEvent(None)
-								MidiNoteEvent_obj.NoteId = t_id
-								MidiNoteEvent_obj.Time = t_pos
-								MidiNoteEvent_obj.Duration = t_dur
-								MidiNoteEvent_obj.Velocity = t_vol*100
-								if t_extra:
-									if 'off_vol' in t_extra: MidiNoteEvent_obj.OffVelocity = t_extra['off_vol']*100
-									if 'probability' in t_extra: MidiNoteEvent_obj.Probability = t_extra['probability']
-									if 'enabled' in t_extra: MidiNoteEvent_obj.IsEnabled = bool(t_extra['enabled'])
-									if 'velocity_range' in t_extra: MidiNoteEvent_obj.VelocityDeviation = t_extra['velocity_range']
-	
-								if t_auto:
-									for mpetype,d in t_auto.items():
-										atype = None
-										autodiv = 1
-										if mpetype == 'pitch':
-											atype = -2
-											autodiv = 170
-										if mpetype == 'slide': atype = 74
-										if mpetype == 'pressure': atype = -1
-										if atype:
-											d.remove_instant()
-											PerNoteEventList_obj = proj_ableton.ableton_PerNoteEventList(None)
-											PerNoteEventList_obj.CC = atype
-											PerNoteEventList_obj.NoteId = t_id
-											for autopoint_obj in d.iter():
-												PerNoteEvent_obj = proj_ableton.ableton_x_PerNoteEvent(None)
-												PerNoteEvent_obj.TimeOffset = autopoint_obj.pos
-												PerNoteEvent_obj.Value = autopoint_obj.value*autodiv
-												PerNoteEventList_obj.Events.append(PerNoteEvent_obj)
-											als_midiclip.Notes.PerNoteEventStore[PerNoteEventListID] = PerNoteEventList_obj
-											PerNoteEventListID += 1
-	
-								KeyTrack_obj.NoteEvents.append(MidiNoteEvent_obj)
-	
-							KeyTrack_obj.MidiKey = key+60
-							als_midiclip.Notes.KeyTrack[counter_keytrack.get()] = KeyTrack_obj
-
-				middlenote = track_obj.datavals.get('middlenote', 0)
-
-				pitchparamkeys = {}
-				als_device_pitch = None
-
-				if plugin_found:
-					middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
-
-					if plugin_obj.check_wildmatch('native-ableton', None):
-						if middlenote != 0:
-							als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
-							pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
-						add_plugindevice_native(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
-
-					if plugin_obj.check_match('vst2', 'win'):
-						if middlenote != 0:
-							als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
-							pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
-						add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
-
-					if plugin_obj.check_match('vst3', 'win'):
-						if middlenote != 0:
-							als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
-							pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
-						add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
-
-					if plugin_obj.check_match('sampler', 'multi'):
-						if middlenote != 0:
-							als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
-							pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
-
-						paramkeys = {}
-						als_device = als_track.DeviceChain.add_device('MultiSampler')
-						spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
-
-						for spn, sampleregion in enumerate(plugin_obj.sampleregions):
-							key_l, key_h, key_r, samplerefid, extradata = sampleregion
-							als_samplepart = spd.value[spn] = ableton_MultiSamplePart(None)
-							als_samplepart.Selection = True
-							samplepart_obj = plugin_obj.samplepart_get(samplerefid)
-							sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False, False)
-
-							als_samplepart.KeyRange.Min = key_l+60
-							als_samplepart.KeyRange.Max = key_h+60
-							als_samplepart.KeyRange.CrossfadeMin = key_l+60
-							als_samplepart.KeyRange.CrossfadeMax = key_h+60
-							als_samplepart.RootKey = key_r+60
-
-						adsr_obj = plugin_obj.env_asdr_get('vol')
-						paramkeys['VolumeAndPan/Envelope/AttackTime'] = ableton_parampart.as_param('AttackTime', 'float', adsr_obj.attack*1000)
-						paramkeys['VolumeAndPan/Envelope/DecayTime'] = ableton_parampart.as_param('DecayTime', 'float', adsr_obj.decay*1000)
-						paramkeys['VolumeAndPan/Envelope/SustainLevel'] = ableton_parampart.as_param('SustainLevel', 'float', adsr_obj.sustain)
-						paramkeys['VolumeAndPan/Envelope/ReleaseTime'] = ableton_parampart.as_param('ReleaseTime', 'float', adsr_obj.release*1000)
-
-						paramkeys['VolumeAndPan/Envelope/AttackSlope'] = ableton_parampart.as_param('AttackSlope', 'float', -adsr_obj.attack_tension)
-						paramkeys['VolumeAndPan/Envelope/DecaySlope'] = ableton_parampart.as_param('DecaySlope', 'float', -adsr_obj.decay_tension)
-						paramkeys['VolumeAndPan/Envelope/ReleaseSlope'] = ableton_parampart.as_param('ReleaseSlope', 'float', -adsr_obj.release_tension)
-
-						paramkeys['VolumeAndPan/VolumeVelScale'] = ableton_parampart.as_param('VolumeVelScale', 'float', 1)
-					
-						paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
-
-						als_device.params.import_keys(paramkeys)
-
-					if plugin_obj.check_match('sampler', 'single'):
-
-						if middlenote != 0:
-							als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
-							pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
-
-						samplepart_obj = plugin_obj.samplepart_get('sample')
-						paramkeys = {}
-
-						pitchin = samplepart_obj.pitch
-
-						loop_active = samplepart_obj.loop_active
-
-						if (samplepart_obj.stretch.calc_real_speed == 1 and samplepart_obj.trigger != 'oneshot' and pitchin == 0) or loop_active:
-							als_device = als_track.DeviceChain.add_device('MultiSampler')
-							spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
-							paramkeys['Player/Reverse'] = ableton_parampart.as_param('Reverse', 'bool', samplepart_obj.reverse)
-							als_samplepart = spd.value[0] = ableton_MultiSamplePart(None)
-							als_samplepart.Selection = True
-							sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False, False)
-
-							trkpitch = track_obj.params.get('pitch', 0).value
-							pitchd = trkpitch+pitchin
-
-							TransposeKey = round(pitchd)
-							TransposeFine = (pitchd-round(pitchd))*100
-
-							als_samplepart.RootKey = 60-TransposeKey
-							als_samplepart.Detune = TransposeFine
-
-							adsr_obj = plugin_obj.env_asdr_get('vol')
-							paramkeys['VolumeAndPan/Envelope/AttackTime'] = ableton_parampart.as_param('AttackTime', 'float', adsr_obj.attack*1000)
-							paramkeys['VolumeAndPan/Envelope/DecayTime'] = ableton_parampart.as_param('DecayTime', 'float', adsr_obj.decay*1000)
-							paramkeys['VolumeAndPan/Envelope/SustainLevel'] = ableton_parampart.as_param('SustainLevel', 'float', adsr_obj.sustain)
-							paramkeys['VolumeAndPan/Envelope/ReleaseTime'] = ableton_parampart.as_param('ReleaseTime', 'float', adsr_obj.release*1000)
-
-							paramkeys['VolumeAndPan/Envelope/AttackSlope'] = ableton_parampart.as_param('AttackSlope', 'float', -adsr_obj.attack_tension)
-							paramkeys['VolumeAndPan/Envelope/DecaySlope'] = ableton_parampart.as_param('DecaySlope', 'float', -adsr_obj.decay_tension)
-							paramkeys['VolumeAndPan/Envelope/ReleaseSlope'] = ableton_parampart.as_param('ReleaseSlope', 'float', -adsr_obj.release_tension)
-
-							paramkeys['VolumeAndPan/VolumeVelScale'] = ableton_parampart.as_param('VolumeVelScale', 'float', 1)
-					
-							#lfo_vol_obj = plugin_obj.lfo_get('vol')
-							#lfo_pitch_obj = plugin_obj.lfo_get('pitch')
-							#lfo_filter_obj = plugin_obj.lfo_get('cutoff')
-							#print(lfo_vol_obj)
-							#print(lfo_pitch_obj)
-							#print(lfo_filter_obj)
-
-							paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
-
-							als_device.params.import_keys(paramkeys)
-
-						else:
-							als_device = als_track.DeviceChain.add_device('OriginalSimpler')
-							spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
-							#paramkeys['Player/Reverse'] = ableton_parampart.as_param('Reverse', 'bool', samplepart_obj.reverse)
-							als_samplepart = spd.value[0] = ableton_MultiSamplePart(None)
-							als_samplepart.Selection = True
-							sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False, False)
-
-							paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
-							paramkeys['Globals/PlaybackMode'] = ableton_parampart.as_value('PlaybackMode', 1 if samplepart_obj.trigger == 'oneshot' else 0)
-
-							paramkeys['Pitch/TransposeKey'] = ableton_parampart.as_param('TransposeKey', 'float', round(pitchin))
-							paramkeys['Pitch/TransposeFine'] = ableton_parampart.as_param('TransposeFine', 'float', (pitchin-round(pitchin))*100)
-
-							als_device.params.import_keys(paramkeys)
-
-					if plugin_obj.check_match('sampler', 'slicer'):
-						samplepart_obj = plugin_obj.samplepart_get('sample')
-
-						als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
-						pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', (-24)+samplepart_obj.slicer_start_key)
-
-						paramkeys = {}
-						als_device = als_track.DeviceChain.add_device('OriginalSimpler')
-						spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
-						als_samplepart = spd.value[0] = ableton_MultiSamplePart(None)
-						als_samplepart.Selection = True
-						sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, True, True)
-						paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
-						paramkeys['Globals/PlaybackMode'] = ableton_parampart.as_value('PlaybackMode', 2)
-						paramkeys['SimplerSlicing/PlaybackMode'] = ableton_parampart.as_value('PlaybackMode', 1)
-						paramkeys['VolumeAndPan/OneShotEnvelope/SustainMode'] = ableton_parampart.as_param('SustainMode', 'int', int(samplepart_obj.trigger != 'oneshot'))
-						als_device.params.import_keys(paramkeys)
-
-				if als_device_pitch: als_device_pitch.params.import_keys(pitchparamkeys)
-
-			if track_obj.type == 'audio':
-				tracknumid = counter_track.get()
-				als_track = project_obj.add_audio_track(tracknumid)
-				als_track.Color = track_color
-				if track_obj.visual.name: als_track.Name.UserName = fixtxt(track_obj.visual.name)
-				do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
-				do_param(convproj_obj, track_obj.params, 'pan', 0, 'float', ['track', trackid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
-
-				if groupnumid: 
-					als_track.TrackGroupId = groupnumid
-					als_track.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
-
-				if not DEBUG_IGNORE_PLACEMENTS:
-					track_obj.placements.pl_audio.sort()
-					for clipid, audiopl_obj in enumerate(track_obj.placements.pl_audio):
-						als_audioclip = als_track.add_audioclip(clipid)
-						als_audioclip.Color = audiopl_obj.visual.color.closest_color_index(colordata, track_color)
-						if audiopl_obj.visual.name: als_audioclip.Name = fixtxt(audiopl_obj.visual.name)
-						als_audioclip.Disabled = audiopl_obj.muted
-
-						if 'duration' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInLength = audiopl_obj.fade_in['duration']/8
-						if 'skew' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInCurveSkew = audiopl_obj.fade_in['skew']
-						if 'slope' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInCurveSlope = audiopl_obj.fade_in['slope']
-						if 'duration' in audiopl_obj.fade_out: als_audioclip.Fades.FadeOutLength = audiopl_obj.fade_out['duration']/8
-						if 'skew' in audiopl_obj.fade_out: als_audioclip.Fades.FadeOutCurveSkew = audiopl_obj.fade_out['skew']
-						if 'slope' in audiopl_obj.fade_out: als_audioclip.Fades.FadeOutCurveSlope = audiopl_obj.fade_out['slope']
-	
-						sample_obj = audiopl_obj.sample
-						stretch_obj = copy.deepcopy(sample_obj.stretch)
-
-						if not stretch_obj.preserve_pitch: als_audioclip.WarpMode = 3
-						else:
-							if stretch_obj.algorithm == 'transient':
-								als_audioclip.WarpMode = 0
-								if 'TransientResolution' in stretch_obj.params: als_audioclip.TransientResolution = stretch_obj.params['TransientResolution']
-								if 'TransientLoopMode' in stretch_obj.params: als_audioclip.TransientLoopMode = stretch_obj.params['TransientLoopMode']
-								if 'TransientEnvelope' in stretch_obj.params: als_audioclip.TransientEnvelope = stretch_obj.params['TransientEnvelope']
-							elif stretch_obj.algorithm == 'ableton_tones':
-								als_audioclip.WarpMode = 1
-								if 'GranularityTones' in stretch_obj.params: als_audioclip.GranularityTones = stretch_obj.params['GranularityTones']
-							elif stretch_obj.algorithm == 'ableton_texture':
-								als_audioclip.WarpMode = 2
-								if 'GranularityTexture' in stretch_obj.params: als_audioclip.GranularityTexture = stretch_obj.params['GranularityTexture']
-								if 'FluctuationTexture' in stretch_obj.params: als_audioclip.FluctuationTexture = stretch_obj.params['FluctuationTexture']
-							elif stretch_obj.algorithm == 'ableton_complex':
-								als_audioclip.WarpMode = 4
-							elif stretch_obj.algorithm == 'ableton_complexpro':
-								als_audioclip.WarpMode = 6
-								if 'ComplexProFormants' in stretch_obj.params: als_audioclip.ComplexProFormants = stretch_obj.params['ComplexProFormants']
-								if 'ComplexProEnvelope' in stretch_obj.params: als_audioclip.ComplexProEnvelope = stretch_obj.params['ComplexProEnvelope']
-							else:
-								als_audioclip.WarpMode = 4
-
-						als_audioclip.PitchCoarse = round(sample_obj.pitch)
-						als_audioclip.PitchFine = (sample_obj.pitch-round(sample_obj.pitch))*100
-						als_audioclip.SampleVolume = sample_obj.vol
-	
-						ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
-
-						do_sampleref(convproj_obj, als_audioclip.SampleRef, sampleref_obj)
-
-						track_mixer = als_track.DeviceChain.Mixer
-						mainseq = als_track.DeviceChain.MainSequencer
-
-						for i, d in enumerate(audiopl_obj.auto.items()):
-							n, x = d
-							clipenv = ableton_AutomationEnvelope(None)
-
-							mpeid = None
-
-							if n == 'pan': mpeid = track_mixer.Pan.ModulationTarget.id
-							if n == 'gain': mpeid = mainseq.VolumeModulationTarget.id
-							if n == 'pitch': mpeid = mainseq.TranspositionModulationTarget.id
-
-							if mpeid:
-								clipenv.PointeeId = mpeid
-								for num, autopoint in enumerate(x.iter()):
-									alsevent = proj_ableton.ableton_FloatEvent(None)
-									alsevent.Time = autopoint.pos
-									alsevent.Value = autopoint.value
-									clipenv.Automation.Events.append([num+1, 'FloatEvent', alsevent])
-
-							als_audioclip.Envelopes[i] = clipenv
-
-
-
-
-						clip_position = audiopl_obj.time.position
-						clip_duration = audiopl_obj.time.duration
-						clip_startrel = 0
-						clip_loop_start = 0
-						clip_loop_end = audiopl_obj.time.duration
-						clip_loop_on = False
-	
-						if audiopl_obj.time.cut_type == 'cut':
-							clip_startrel = audiopl_obj.time.cut_start
-							clip_loop_start = audiopl_obj.time.cut_start
-							clip_loop_end = clip_loop_start+clip_duration
-						elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
-							clip_loop_on = True
-							clip_startrel, clip_loop_start, clip_loop_end = audiopl_obj.time.get_loop_data()
-						else:
-							clip_loop_start = 0
-							clip_loop_end = audiopl_obj.time.duration
-	
-						second_dur = sampleref_obj.dur_sec
-
-						if not stretch_obj.is_warped:
-							if ref_found: 
-								second_dur = sampleref_obj.dur_sec
-
-								if stretch_obj.uses_tempo:
-									als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-									clip_loop_end += clip_startrel/2
-									if clip_loop_on: 
-										stretch_obj.set_rate_speed(bpm, 1, False)
-										als_audioclip.IsWarped = True
-									else:
-										clip_startrel = 0
-								else:
-									if not clip_loop_on:
-										als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-										if stretch_obj.calc_tempo_size == 1:
-											clip_duration = min(clip_duration, (second_dur*2*stretch_obj.calc_tempo_size))
-											clip_loop_start /= 2
-											clip_loop_end = (clip_startrel+(clip_duration/2))
-										else:
-											clip_startrel = 0
-									else:
-										als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-										clip_loop_end += clip_startrel
-										if clip_loop_on: 
-											stretch_obj.set_rate_speed(bpm, 1, False)
-											als_audioclip.IsWarped = True
-
-							else:
-								warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
-								warpmarker_obj.BeatTime = 0
-								warpmarker_obj.SecTime = 0
-								als_audioclip.WarpMarkers[1] = warpmarker_obj
-
-								warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
-								warpmarker_obj.BeatTime = 0.03125
-								warpmarker_obj.SecTime = 0.03125
-								als_audioclip.WarpMarkers[2] = warpmarker_obj
-
-						else:
-							als_audioclip.IsWarped = True
-							for num, warp_point_obj in enumerate(stretch_obj.iter_warp_points()):
-								warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
-								warpmarker_obj.BeatTime = warp_point_obj.beat*2
-								warpmarker_obj.SecTime = warp_point_obj.second*2
-								als_audioclip.WarpMarkers[num+1] = warpmarker_obj
-
-							lastpoint = stretch_obj.warppoints[-1]
-
-							warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
-							warpmarker_obj.BeatTime = lastpoint.beat+0.03125
-							warpmarker_obj.SecTime = lastpoint.second+((0.03125/2)/lastpoint.speed)
-							als_audioclip.WarpMarkers[len(stretch_obj.warppoints)+1] = warpmarker_obj
-
-						als_audioclip.Time = clip_position
-						als_audioclip.CurrentStart = clip_position
-						als_audioclip.CurrentEnd = clip_position+clip_duration
-						als_audioclip.Loop.StartRelative = clip_startrel
-						als_audioclip.Loop.LoopStart = clip_loop_start
-						als_audioclip.Loop.LoopEnd = clip_loop_end
-						als_audioclip.Loop.LoopOn = clip_loop_on
-						als_audioclip.Loop.HiddenLoopStart = 0
-						als_audioclip.Loop.HiddenLoopEnd = clip_duration+clip_loop_start
-
-			if track_obj.type in ['instrument', 'audio']:
-				do_effects(convproj_obj, als_track, track_obj.fxslots_audio)
-				track_sendholders = als_track.DeviceChain.Mixer.Sends
-				numsend = 0
-				for returnid, x in master_returns.items():
-					TrackSendHolder_obj = proj_ableton.ableton_TrackSendHolder(None)
-					if returnid in track_obj.sends.data:
-						send_obj = track_obj.sends.data[returnid]
-						do_param(convproj_obj, send_obj.params, 'amount', 0, 'float', ['send', send_obj.sendautoid, 'amount'] if send_obj.sendautoid else None, TrackSendHolder_obj.Send, als_track.AutomationEnvelopes)
-					else:
-						TrackSendHolder_obj.Send.setvalue(0)
-					track_sendholders[numsend] = TrackSendHolder_obj
-					numsend += 1
+			if track_obj.group: 
+				if track_obj.group not in track_group: track_group[track_obj.group] = []
+				track_group[track_obj.group].append(['TRACK', trackid])
+			else: track_nongroup.append(['TRACK', trackid])
+
+		do_tracks(convproj_obj, project_obj, track_nongroup, track_group, groups_used,'    MAIN')
 
 		for returnid, return_obj in convproj_obj.track_master.iter_return():
 			tracknumid = counter_track.get()

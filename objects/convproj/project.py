@@ -1,10 +1,12 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects import counter
+from objects import counter as idcounter
 from functions import xtramath
 from functions import data_values
 from objects import globalstore
+from collections import Counter
+
 import base64
 import bisect
 import os
@@ -63,7 +65,7 @@ def autoloc_getname(autopath):
 	if autopath[0] == 'plugin': autoname = autopath[1]
 	if autopath[0] == 'track': autoname = 'Track'
 
-plugin_id_counter = counter.counter(1000, 'plugin_')
+plugin_id_counter = idcounter.counter(1000, 'plugin_')
 
 class cvpj_timemarker:
 	__slots__ = ['type','visual','position','duration']
@@ -333,6 +335,15 @@ class cvpj_project:
 		for groupid, group_obj in self.groups.items():
 			yield groupid, group_obj
 
+	def count_groupusage(self):
+		groupcount = [x.group for _, x in self.groups.items() if x.group != None]
+		groupcount += [x.group for _, x in self.track_data.items() if x.group != None]
+		return list(Counter(groupcount))
+
+	def remove_unused_groups(self):
+		groupcount = self.count_groupusage()
+		unusedgroups = [x for x in list(self.groups) if x not in groupcount]
+		for x in unusedgroups: del self.groups[x]
 
 
 
